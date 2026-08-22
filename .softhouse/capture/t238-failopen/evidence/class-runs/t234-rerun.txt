@@ -1,0 +1,24 @@
+### worktrees each sweep depends on
+  GONE    agent-a3fcb4c7f1ea451ee
+  GONE    agent-a356a016636abdd7e
+  GONE    agent-a5244bad2b6814a39
+  (owner: a3fc=A2-31 probe-sweep.sh, a356=A2-32 sweep.sh, a524=A2-33 sweep.sh)
+
+### A2-31 probe-sweep.sh, run verbatim TODAY
+  exit=127  output lines=1
+  --- first 6 lines ---
+      bash: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a71e695cfa5bea70b/.softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh: No such file or directory
+
+### A2-32 sweep.sh, run verbatim TODAY
+  exit=127  output lines=1
+  --- first 6 lines ---
+      bash: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a71e695cfa5bea70b/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh: No such file or directory
+
+### A2-33 sweep.sh, run verbatim TODAY (the sweep behind the rev-5 RATIFICATION)
+  exit=127  output lines=1
+grep: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a71e695cfa5bea70b/.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: No such file or directory
+  patterns declared : 
+  patterns reporting '(no hits)' : 0
+  actual match lines emitted     : 1
+  --- first 12 lines ---
+      bash: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a71e695cfa5bea70b/.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: No such file or directory

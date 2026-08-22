@@ -1,0 +1,1 @@
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh: line 8: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e: No such file or directory

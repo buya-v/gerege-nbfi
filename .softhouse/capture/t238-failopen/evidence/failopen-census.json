@@ -1,0 +1,8208 @@
+[
+ {
+  "file": ".softhouse/bin/build-oracle-image.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     67,
+     "RUN apk add --no-cache busybox-extras curl || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     55,
+     "/fineract-provider/build/libs/fineract-provider-*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/actualactual/src/negative-tests.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/actualactual/src/pathb-capture.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     112,
+     "/calc-T48B-*.json"
+    ],
+    [
+     128,
+     "/T48B-*-raw.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/actualactual/src/run-actualactual.sh",
+  "kind": "sh",
+  "searches": 6,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     91,
+     "find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo \"NO git.properties\""
+    ],
+    [
+     103,
+     "BAD=\"$(grep -Eic 'ojdbc|oracle|mysql|mariadb' \"$CPLIST\" || true)\""
+    ],
+    [
+     253,
+     "MODE_LINES=\"$(grep -c \"Initialized rounding mode for tenant\" \"$LOG\" || true)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     93,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     115,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     198,
+     "threadedMathContext*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/audit-t44/analysis/T175-red/drive-red.sh",
+  "kind": "sh",
+  "searches": 12,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     64,
+     "n_mentions=$(grep -ci 'skip\\|unparse\\|unscanned\\|error\\|fail' \"$SCRATCH/orig-real.txt\" || true)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     88,
+     "s/.*distinct"
+    ],
+    [
+     88,
+     "*//p"
+    ],
+    [
+     126,
+     "s/.*files"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh",
+  "kind": "sh",
+  "searches": 26,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     73,
+     "echo \"  commit    : $(git -C \"$ROOT\" rev-parse --short HEAD 2>/dev/null || echo '?')\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     150,
+     "s/.*repr"
+    ],
+    [
+     178,
+     "s/.*cases"
+    ],
+    [
+     180,
+     "s/.*cases"
+    ],
+    [
+     237,
+     "s/.*money"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants_failability.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/audit-t44/mathcontext/src/read-pathb-wiring.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     46,
+     "cat BOOT-INF/classes/git.properties 2>/dev/null | grep -E \"git.commit.id=|git.dirty|git.build.version\" || echo \"NO git.properties\""
+    ],
+    [
+     73,
+     "N_GMC=\"$(grep -c 'MoneyHelper.getMathContext' \"$OUT\" || true)\""
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     95,
+     "find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo \"NO git.properties\""
+    ],
+    [
+     107,
+     "BAD=\"$(grep -Eic 'ojdbc|oracle|mysql|mariadb' \"$CPLIST\" || true)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     97,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     118,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     78,
+     "mv \"$CAPDIR/out/__cp.txt\" \"$CPLIST\" 2>/dev/null || true"
+    ],
+    [
+     85,
+     "BAD=\"$(grep -Eic 'ojdbc|oracle|mysql|mariadb' \"$CPLIST\" || true)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     69,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     70,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/audit-t44/mathcontext/src/run-negative-tests.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     102,
+     "find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo \"NO git.properties\""
+    ],
+    [
+     114,
+     "BAD=\"$(grep -Eic 'ojdbc|oracle|mysql|mariadb' \"$CPLIST\" || true)\""
+    ],
+    [
+     224,
+     "MODE_LINES=\"$(grep -c \"Initialized rounding mode for tenant\" \"$LOG\" || true)\""
+    ],
+    [
+     225,
+     "WRONG_MODE=\"$(grep \"Initialized rounding mode for tenant\" \"$LOG\" | grep -vc \": $EXPECT_MODE\" || true)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     104,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     126,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/attest-t40.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     179,
+     "\"|| true\" % FIN)"
+    ],
+    [
+     181,
+     "\"| grep -icE 'ojdbc|oracle-jdbc|mysql-connector|mariadb-java' || true\" % FIN)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     155,
+     "BOOT-INF/lib/fineract-core-*.jar"
+    ],
+    [
+     157,
+     "BOOT-INF/lib/fineract-core-*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/attest.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     163,
+     "\"|| true\" % FIN)"
+    ],
+    [
+     165,
+     "\"| grep -icE 'ojdbc|oracle-jdbc|mysql-connector|mariadb-java' || true\" % FIN)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     138,
+     "BOOT-INF/lib/fineract-core-*.jar"
+    ],
+    [
+     140,
+     "BOOT-INF/lib/fineract-core-*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/control.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/mkcalcs.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     44,
+     "d=$(diff \"$BASE\" \"$R/calc-$_id.json\" | grep -c '^[<>]' || true)"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/mkcalcs2.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/selfcheck.sh",
+  "kind": "sh",
+  "searches": 10,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     45,
+     "/out/fc/*.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/t46-exacttext.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     6,
+     "*number*."
+    ],
+    [
+     12,
+     "**The"
+    ],
+    [
+     12,
+     "rewritten.**"
+    ],
+    [
+     19,
+     "**Every"
+    ],
+    [
+     19,
+     "SIDECAR**"
+    ],
+    [
+     20,
+     "**string**"
+    ],
+    [
+     25,
+     "**No"
+    ],
+    [
+     25,
+     "it.**"
+    ],
+    [
+     29,
+     "**Identity"
+    ],
+    [
+     29,
+     "asserted.**"
+    ],
+    [
+     33,
+     "**Admissibility"
+    ],
+    [
+     132,
+     "**LEAF"
+    ],
+    [
+     132,
+     "DIFFERS**"
+    ],
+    [
+     138,
+     "MOVED**"
+    ],
+    [
+     142,
+     "**NOT"
+    ],
+    [
+     142,
+     "TEXT**"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/t46-fix-paths.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/t46-mark-superseded.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/t48-capture.sh",
+  "kind": "sh",
+  "searches": 8,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     134,
+     "/req/calc-T48-CH-*.json"
+    ],
+    [
+     135,
+     "*TEMPLATE.json"
+    ],
+    [
+     158,
+     "/T48-CH-*-raw.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/t51-capture.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     55,
+     "s/.*"
+    ],
+    [
+     174,
+     "/req/calc-T51-*.json"
+    ],
+    [
+     175,
+     "*TEMPLATE.json"
+    ],
+    [
+     201,
+     "/T51-*-raw.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/t51-capture2.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/t51-capture3.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/t51-capture4.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     90,
+     "/T51-FTT-*-raw.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/t51-capture5.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     45,
+     "diff \"$R/prod-T51-P4-ftt-irod-true.json\" \"$R/prod-T51-P5-ftt-irod-false.json\" || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     53,
+     "s/.*"
+    ],
+    [
+     124,
+     "/T51-FTTP-*-raw.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/t51-capture6.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/t51-mkfixtures.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     59,
+     "diff \"$P/product-3-diycs-fullleapyear.json\" \"$R/prod-T51-P1-irod-true.json\" | grep -c '^[<>]' || true"
+    ],
+    [
+     61,
+     "diff \"$P/product-3-diycs-fullleapyear.json\" \"$R/prod-T51-P2-irod-false.json\" | grep -c '^[<>]' || true"
+    ],
+    [
+     63,
+     "diff \"$P/product-1-baseline.json\" \"$R/prod-T51-P3-tranche.json\" | grep -c '^[<>]' || true"
+    ],
+    [
+     65,
+     "diff \"$R/prod-T51-P1-irod-true.json\" \"$R/prod-T51-P2-irod-false.json\" || true"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/charges/bin/t51-negative.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     23,
+     "n=$(grep -c '^  FAIL' \"$N/n1-preconditions-default.txt\" 2>/dev/null || echo 0)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     106,
+     "bal*"
+    ],
+    [
+     106,
+     "RATE*f"
+    ],
+    [
+     107,
+     "bal*"
+    ],
+    [
+     107,
+     "RATE*f"
+    ],
+    [
+     143,
+     "2s/.*"
+    ],
+    [
+     143,
+     "*//p"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/leapboundary/analysis/T175-red/show-sites.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     14,
+     "except.*"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/leapboundary/analysis/T175-red/swallow-census.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/leapboundary/analysis/T207/json-load-census.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     8,
+     "**8**"
+    ],
+    [
+     9,
+     "**193"
+    ],
+    [
+     9,
+     "201**."
+    ],
+    [
+     35,
+     "*.py"
+    ],
+    [
+     59,
+     "**kwargs"
+    ],
+    [
+     77,
+     "*.py"
+    ],
+    [
+     113,
+     "**kwargs"
+    ],
+    [
+     115,
+     "**kwargs"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/leapboundary/analysis/t55-prior-capture-assessment.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/leapboundary/bin/t55-capture.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     166,
+     "/calc-LB-*.json"
+    ],
+    [
+     177,
+     "/LB-*-raw.json"
+    ],
+    [
+     198,
+     "/LB-*-raw.json"
+    ],
+    [
+     199,
+     "/LB-*-raw.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/leapboundary/bin/t55-negative-tests.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/lib/check_no_narrow_catch.py",
+  "kind": "py",
+  "searches": 2,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     272,
+     "*rel.split"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+  "kind": "py",
+  "searches": 2,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     76,
+     "**42"
+    ],
+    [
+     77,
+     "raw**"
+    ],
+    [
+     80,
+     "**ZERO**"
+    ],
+    [
+     133,
+     "*.json"
+    ],
+    [
+     134,
+     "*.req"
+    ],
+    [
+     226,
+     "*.json"
+    ],
+    [
+     350,
+     "*.json"
+    ],
+    [
+     350,
+     "*.req"
+    ],
+    [
+     359,
+     "*.json"
+    ],
+    [
+     443,
+     "Capture3*.java"
+    ],
+    [
+     480,
+     "*relparts"
+    ],
+    [
+     635,
+     "capture-prod3*"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/mathcontext/analysis/t46_assert_pathb_slot.py",
+  "kind": "py",
+  "searches": 8,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/mathcontext/analysis/t46_m5_identity.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/mathcontext/analysis/t46_mathcontext_inventory.sh",
+  "kind": "sh",
+  "searches": 20,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     30,
+     "echo \"dirty   : $( [ -n \"$(git status --porcelain 2>/dev/null)\" ] && echo YES || echo no )\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     36,
+     "*.java"
+    ],
+    [
+     39,
+     "*.java"
+    ],
+    [
+     46,
+     "*.java"
+    ],
+    [
+     48,
+     "*.java"
+    ],
+    [
+     52,
+     "*.java"
+    ],
+    [
+     55,
+     "*.java"
+    ],
+    [
+     62,
+     "*.java"
+    ],
+    [
+     63,
+     "*.java"
+    ],
+    [
+     69,
+     "*.java"
+    ],
+    [
+     71,
+     "*.java"
+    ],
+    [
+     74,
+     "*.java"
+    ],
+    [
+     76,
+     "*.java"
+    ],
+    [
+     85,
+     "*.java"
+    ],
+    [
+     87,
+     "*.java"
+    ],
+    [
+     90,
+     "*.java"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/mathcontext/src/read-pathb-wiring.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     46,
+     "cat BOOT-INF/classes/git.properties 2>/dev/null | grep -E \"git.commit.id=|git.dirty|git.build.version\" || echo \"NO git.properties\""
+    ],
+    [
+     73,
+     "N_GMC=\"$(grep -c 'MoneyHelper.getMathContext' \"$OUT\" || true)\""
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/mathcontext/src/run-mathcontext.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     95,
+     "find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo \"NO git.properties\""
+    ],
+    [
+     107,
+     "BAD=\"$(grep -Eic 'ojdbc|oracle|mysql|mariadb' \"$CPLIST\" || true)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     97,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     118,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/mathcontext/src/run-mathcontext2.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     78,
+     "mv \"$CAPDIR/out/__cp.txt\" \"$CPLIST\" 2>/dev/null || true"
+    ],
+    [
+     85,
+     "BAD=\"$(grep -Eic 'ojdbc|oracle|mysql|mariadb' \"$CPLIST\" || true)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     69,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     70,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/mathcontext/src/run-mathcontext3.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     91,
+     "find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo \"NO git.properties\""
+    ],
+    [
+     100,
+     "BAD=\"$(grep -Eic 'ojdbc|oracle|mysql|mariadb' \"$CPLIST\" || true)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     93,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     110,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/mathcontext/src/run-negative-tests.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/mathcontext/src/run-t50-tier1.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     69,
+     "find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo \"NO git.properties\""
+    ],
+    [
+     108,
+     "BAD=\"$(grep -Eic 'ojdbc|oracle|mysql|mariadb' \"$CPLIST\" || true)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     84,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     96,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     118,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/mathcontext/src/run-t50-tier2.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     69,
+     "find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo \"NO git.properties\""
+    ],
+    [
+     108,
+     "BAD=\"$(grep -Eic 'ojdbc|oracle|mysql|mariadb' \"$CPLIST\" || true)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     84,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     96,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     118,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/mathcontext/src/t46-assert-pathb-slot.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     138,
+     "echo \"verdict: $([ \"$verdict\" -eq 0 ] && echo PASS || echo FAIL)\""
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/mathcontext/src/t46-negative-vacuity.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     136,
+     "echo \"verdict: $([ \"${verdict:-1}\" -eq 0 ] && echo PASS || echo FAIL)\""
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/out/t35-newcolumn-checks.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/pathb/provenance.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     112,
+     "*args"
+    ],
+    [
+     122,
+     "*-raw.json"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-canary-red.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     71,
+     "n_literal=$(LC_ALL=C grep -ac \"'calc-pmode2-gerege.json'\" \"$T36/attest.py\" || true)"
+    ],
+    [
+     72,
+     "n_bypass=$(LC_ALL=C grep -ac 'T125 RED DEMO: OUTER precondition gate DISABLED' \"$SCRATCH\" || true)"
+    ],
+    [
+     74,
+     "nchanged=$(diff \"$T36/attest.py\" \"$SCRATCH\" | LC_ALL=C grep -ac '^[<>]' || true)"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/pathb/t147/cp-digest-census.py",
+  "kind": "py",
+  "searches": 2,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/pathb/t147/float-sweep.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/pathb/t149/prove-redgreen.sh",
+  "kind": "sh",
+  "searches": 6,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     90,
+     "*.json"
+    ],
+    [
+     212,
+     "s/.*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
+  "kind": "py",
+  "searches": 17,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     85,
+     "*.sh"
+    ],
+    [
+     85,
+     "*.py"
+    ],
+    [
+     125,
+     "*and*"
+    ],
+    [
+     139,
+     "**NO**"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/pathb/t36/attest.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     303,
+     "\"|| true\" % FIN)"
+    ],
+    [
+     305,
+     "\"| grep -icE 'ojdbc|oracle-jdbc|mysql-connector|mariadb-java' || true\" % FIN)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     84,
+     "*_parts"
+    ],
+    [
+     187,
+     "**CLOSED"
+    ],
+    [
+     187,
+     "RATIFIED**"
+    ],
+    [
+     278,
+     "BOOT-INF/lib/fineract-core-*.jar"
+    ],
+    [
+     280,
+     "BOOT-INF/lib/fineract-core-*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/pathb/t36/emiloop-probe.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     33,
+     "prefails=$(LC_ALL=C grep -ac '^  FAIL' \"$O/preconditions.txt\" || true)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     58,
+     "/emiloop-*-raw.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/pathb/t36/preconditions.sh",
+  "kind": "sh",
+  "searches": 8,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     116,
+     "env_lines=$(printf '%s\\n' \"$env_dump\" | LC_ALL=C grep -c . || true)"
+    ],
+    [
+     134,
+     "jarlines=$(printf '%s\\n' \"$jarlist\" | LC_ALL=C grep -c . || true)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     86,
+     "BOOT-INF/lib/fineract-core-*.jar"
+    ],
+    [
+     88,
+     "BOOT-INF/lib/fineract-core-*.jar"
+    ],
+    [
+     89,
+     "s/.*public"
+    ],
+    [
+     118,
+     "*org.postgresql.Driver*"
+    ],
+    [
+     120,
+     "*jdbc"
+    ],
+    [
+     147,
+     "*//p"
+    ],
+    [
+     213,
+     "*HALF_UP"
+    ],
+    [
+     275,
+     "s/.*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/pathb/t36/recapture.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     164,
+     "prefails=$(LC_ALL=C grep -ac '^  FAIL' \"$O/preconditions.txt\" || true)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     209,
+     "/B-0*-raw.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/pathb/t36/recreate-products.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     42,
+     "prefails=$(LC_ALL=C grep -ac '^  FAIL' \"$O/preconditions.txt\" || true)"
+    ],
+    [
+     67,
+     "n=$(diff \"$W/req/$f.json\" \"$REQ/$f.json\" | grep -c '^[<>]' || true)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     81,
+     "s/.*"
+    ],
+    [
+     82,
+     "s/.*"
+    ],
+    [
+     83,
+     "s/.*"
+    ],
+    [
+     84,
+     "s/.*"
+    ],
+    [
+     115,
+     "/B-0*-raw.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/forbidden-sentence.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     42,
+     "/attack-*.txt"
+    ],
+    [
+     42,
+     "/*/preconditions.txt"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/happy-path.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     38,
+     "echo \"FAIL lines: $(grep -c '^  FAIL' \"$O/recapture-gerege/preconditions.txt\" || true)\""
+    ],
+    [
+     86,
+     "|| echo \"RESULT: A CAPTURE MOVED \u2014 investigate before trusting anything above.\""
+    ]
+   ],
+   "M4_EMPTY_FORLIST": [
+    [
+     57,
+     "for f in $(sets \"$1\"); do"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1-recovery.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     142,
+     "**kw"
+    ],
+    [
+     143,
+     "**kw"
+    ],
+    [
+     433,
+     "**PRE-FIX"
+    ],
+    [
+     434,
+     "**PRESENT**"
+    ],
+    [
+     435,
+     "**PRESENT**"
+    ],
+    [
+     436,
+     "**MUTATED**"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     159,
+     "|| echo \"guard: COULD NOT restore t36/out/emiloop \u2014 run: git checkout -- $E\" >&2"
+    ],
+    [
+     234,
+     "echo \"  stamp present: $( [ -f \"$STAMP\" ] && echo yes || echo no )\""
+    ],
+    [
+     350,
+     "echo \"  stamp now present: $( [ -f \"$STAMP\" ] && echo \"YES, contents: $(cat \"$STAMP\")\" || echo no )\""
+    ],
+    [
+     391,
+     "echo \"  stamp present: $( [ -f \"$STAMP\" ] && echo \"YES \u2014 FIX FAILED, contents: $(cat \"$STAMP\")\" || echo \"no\" )\""
+    ],
+    [
+     406,
+     "echo \"prefix-defect-reproduced=$prefix_broke   fixed-run-clean=$( [ \"$rc\" = 0 ] && echo yes || echo no )\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     220,
+     "EL-*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f2.sh",
+  "kind": "sh",
+  "searches": 18,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     41,
+     "echo \"  PASS lines ................. $(LC_ALL=C grep -ac '^  PASS' \"$t\" || true)\""
+    ],
+    [
+     42,
+     "echo \"  FAIL lines ................. $(LC_ALL=C grep -ac '^  FAIL' \"$t\" || true)\""
+    ],
+    [
+     43,
+     "echo \"  P7 breach reported ......... $(LC_ALL=C grep -ac 'PostgreSQL version is' \"$t\" || true)\""
+    ],
+    [
+     45,
+     "echo \"    tenant row (P8) .......... $(LC_ALL=C grep -ac \"tenant 'gerege' exists\" \"$t\" || true)\""
+    ],
+    [
+     46,
+     "echo \"    timezone (P9) ............ $(LC_ALL=C grep -ac 'timezone_id' \"$t\" || true)\""
+    ],
+    [
+     47,
+     "echo \"    rounding-mode row (P10) .. $(LC_ALL=C grep -ac 'rounding-mode' \"$t\" || true)\""
+    ],
+    [
+     48,
+     "echo \"    JVM mode in force (P13) .. $(LC_ALL=C grep -ac 'running JVM initialized' \"$t\" || true)\""
+    ],
+    [
+     49,
+     "echo \"    CANARY digest pin (P14b) . $(LC_ALL=C grep -ac 'canary request pinned by DIGEST' \"$t\" || true)\""
+    ],
+    [
+     50,
+     "echo \"    CANARY arithmetic (P14c) . $(LC_ALL=C grep -ac 'effective rounding mode canary' \"$t\" || true)\""
+    ],
+    [
+     51,
+     "echo \"    MNT currency (P15) ....... $(LC_ALL=C grep -ac 'MNT seeded' \"$t\" || true)\""
+    ],
+    [
+     52,
+     "echo \"  breach summary printed ..... $(LC_ALL=C grep -ac 'PRECONDITIONS BREACHED' \"$t\" || true)\""
+    ],
+    [
+     53,
+     "echo \"  unbound-variable death ..... $(LC_ALL=C grep -ac 'unbound variable' \"$t\" || true)\""
+    ],
+    [
+     78,
+     "echo \"  UnicodeDecodeError ......... $(LC_ALL=C grep -ac 'UnicodeDecodeError' \"$O/.f2-attest.txt\" || true)\""
+    ],
+    [
+     79,
+     "echo \"  Traceback .................. $(LC_ALL=C grep -ac 'Traceback' \"$O/.f2-attest.txt\" || true)\""
+    ],
+    [
+     80,
+     "echo \"  clean ABORT message ........ $(LC_ALL=C grep -ac 'ABORT: preconditions breached' \"$O/.f2-attest.txt\" || true)\""
+    ],
+    [
+     81,
+     "echo \"  wrote anything into f2-attest-gerege: $( [ -d \"$O/f2-attest-gerege\" ] && echo YES || echo no )\""
+    ],
+    [
+     85,
+     "canary_prefix=$(LC_ALL=C grep -ac 'effective rounding mode canary' \"$O/.f2-prefix.txt\" || true)"
+    ],
+    [
+     86,
+     "canary_fixed=$(LC_ALL=C grep -ac 'effective rounding mode canary' \"$O/.f2-fixed.txt\" || true)"
+    ],
+    [
+     87,
+     "summary_fixed=$(LC_ALL=C grep -ac 'PRECONDITIONS BREACHED' \"$O/.f2-fixed.txt\" || true)"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/summarise.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     11,
+     "p=$(grep -c '^  PASS' \"$f\" || true)"
+    ],
+    [
+     12,
+     "q=$(grep -c '^  FAIL' \"$f\" || true)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     8,
+     "/attack-*.txt"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/pathb/t99/lib.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     136,
+     "echo \"defect reproduces on the PRE-FIX bytes: $( [ \"$1\" = 1 ] && echo YES || echo 'NO \u2014 this proof proves nothing' )\""
+    ],
+    [
+     137,
+     "echo \"defect refused by the FIXED bytes:      $( [ \"$2\" = 1 ] && echo YES || echo 'NO \u2014 the fix does not work' )\""
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/pathb/t99/prove-f1.sh",
+  "kind": "sh",
+  "searches": 6,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     75,
+     "echo \"  (the pre-fix leg produced no misfiled artefact: directory present=$( [ -d \"$TREE/$ATTACK\" ] && echo yes || echo no ), stamp='$stamp_txt' \u2014 thi"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     30,
+     "*-gerege"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/pathb/t99/prove-f2.sh",
+  "kind": "sh",
+  "searches": 10,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     58,
+     "sz=\\$(/usr/bin/stat -f %z \"\\$f\" 2>/dev/null || /usr/bin/stat -c %s \"\\$f\" 2>/dev/null || echo 999)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     149,
+     "*liar-const*"
+    ],
+    [
+     176,
+     "*liar-clever*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/pathb/t99/prove-f3.sh",
+  "kind": "sh",
+  "searches": 14,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     88,
+     "run \"$TREE\" >/dev/null 2>&1 || true"
+    ],
+    [
+     121,
+     "echo \"    '^  FAIL' lines on STDOUT: $(LC_ALL=C grep -ac '^  FAIL' \"$EXPORT/f3e-stdout.txt\" || true)\""
+    ],
+    [
+     122,
+     "echo \"    '^  FAIL' lines on STDERR: $(LC_ALL=C grep -ac '^  FAIL' \"$EXPORT/f3e-stderr.txt\" || true)\""
+    ],
+    [
+     132,
+     "echo \"    EXIT=$st   aborted before capturing: $(LC_ALL=C grep -qa 'ABORT: preconditions breached' \"$EXPORT/f3e-$side-$s.txt\" && echo YES || echo 'NO "
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/pathb/t99/prove-f4.sh",
+  "kind": "sh",
+  "searches": 8,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     70,
+     "echo \"  $d: stamp present? $( [ -f \"$P/$d/CAPTURED-FROM-TENANT\" ] && echo yes || echo no )   files: $(ls -A \"$P/$d\" | wc -l | tr -d ' ')\""
+    ],
+    [
+     73,
+     "echo \"    PROVENANCE-INDEX.json : $( [ -f \"$P/PROVENANCE-INDEX.json\" ] && echo present || echo 'ABSENT' )\""
+    ],
+    [
+     74,
+     "echo \"    provenance.py         : $( [ -f \"$P/provenance.py\" ] && echo present || echo 'ABSENT' )\""
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/pathb/t99/prove-f5-legs.sh",
+  "kind": "sh",
+  "searches": 16,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     138,
+     "_pass=$(LC_ALL=C grep -ac '^  PASS' \"$_o\" || true)"
+    ],
+    [
+     139,
+     "_fail=$(LC_ALL=C grep -ac '^  FAIL' \"$_e\" || true)"
+    ],
+    [
+     196,
+     "PC_MAIN_FAIL3=$(verdicts pc main | LC_ALL=C grep -ac 'FAIL' || true)"
+    ],
+    [
+     199,
+     "PC_BR_FAIL3=$(verdicts pc branch | LC_ALL=C grep -ac 'FAIL' || true)"
+    ],
+    [
+     216,
+     "DBLIVE=$(LC_ALL=C grep -ac 'PASS  tenant schema_server_port = 5432' \"$W/gone-main.out\" || true)"
+    ],
+    [
+     223,
+     "GONE_BR_INSP=$(LC_ALL=C grep -ac 'INSPECTED NOTHING' \"$W/gone-branch.err\" || true)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     82,
+     "*Config.Env*"
+    ],
+    [
+     86,
+     "*unzip"
+    ],
+    [
+     90,
+     "*schema_connection_parameters*"
+    ],
+    [
+     184,
+     "s/.*"
+    ],
+    [
+     185,
+     "s/.*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/pathb/t99/prove-p24-postmerge.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/pathb/t99/prove-sweep-patterns.sh",
+  "kind": "sh",
+  "searches": 12,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     59,
+     "[ -s scan.txt ] || echo PASS7                          # 7  a file test, not a variable test"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/pathb/t99/sweep.sh",
+  "kind": "sh",
+  "searches": 23,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     18,
+     "*.sh"
+    ],
+    [
+     18,
+     "*.py"
+    ],
+    [
+     18,
+     "*.txt"
+    ],
+    [
+     34,
+     "*.sh"
+    ],
+    [
+     36,
+     "*.py"
+    ],
+    [
+     38,
+     "*.sh"
+    ],
+    [
+     38,
+     "*.py"
+    ],
+    [
+     42,
+     "*.sh"
+    ],
+    [
+     42,
+     "*.py"
+    ],
+    [
+     56,
+     "*.sh"
+    ],
+    [
+     56,
+     "*.py"
+    ],
+    [
+     74,
+     "*.sh"
+    ],
+    [
+     84,
+     "*.sh"
+    ],
+    [
+     90,
+     "*.sh"
+    ],
+    [
+     93,
+     "*.py"
+    ]
+   ],
+   "M4_EMPTY_FORLIST": [
+    [
+     18,
+     "for f in $(LC_ALL=C find . -type f \\( -name '*.sh' -o -name '*.py' -o -name '*.txt' -o -name '*.md' \\) | sort); do"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/periodratio/src/run-periodratio.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     102,
+     "find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo \"NO git.properties\""
+    ],
+    [
+     114,
+     "BAD=\"$(grep -Eic 'ojdbc|oracle|mysql|mariadb' \"$CPLIST\" || true)\""
+    ],
+    [
+     224,
+     "MODE_LINES=\"$(grep -c \"Initialized rounding mode for tenant\" \"$LOG\" || true)\""
+    ],
+    [
+     225,
+     "WRONG_MODE=\"$(grep \"Initialized rounding mode for tenant\" \"$LOG\" | grep -vc \": $EXPECT_MODE\" || true)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     104,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     126,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/periodratio/src/run-t46-periodratio.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     104,
+     "find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo \"NO git.properties\""
+    ],
+    [
+     116,
+     "BAD=\"$(grep -Eic 'ojdbc|oracle|mysql|mariadb' \"$CPLIST\" || true)\""
+    ],
+    [
+     244,
+     "MODE_LINES=\"$(grep -c \"Initialized rounding mode for tenant\" \"$LOG\" || true)\""
+    ],
+    [
+     245,
+     "WRONG_MODE=\"$(grep \"Initialized rounding mode for tenant\" \"$LOG\" | grep -vc \": $EXPECT_MODE\" || true)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     106,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     128,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     199,
+     "threadedMathContext*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/src/run-pass3b.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     100,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/src/run-pass3c.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     126,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/src/run-pass3d.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     152,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/src/run-pass3e.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     156,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/src/run-pass3f.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     165,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/src/run-pass3g.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     165,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/src/run-pass3h.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     198,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/src/run-pass3i.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     236,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/src/run-rc6-rounddown-attestation.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     50,
+     "docker logs fineract-fineract-1 2>&1 | grep 'MoneyHelper' > \"$LOGL\" || true"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/src/t169-red/census_catch_narrowing.py",
+  "kind": "py",
+  "searches": 4,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/src/t169-red/mutate-guards.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     5,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-af1f5b7aebc97911d/.softhouse/capture/lib"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/src/t169-red/red-drive-stderr-refusal.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     10,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-af1f5b7aebc97911d/.softhouse/capture/t117-familyb/src/run-t117.sh"
+    ],
+    [
+     16,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-af1f5b7aebc97911d/.softhouse/capture/t117-familyb/src/CaptureT117.java"
+    ]
+   ],
+   "M2_SWALLOW": [
+    [
+     22,
+     "( [ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true )"
+    ],
+    [
+     27,
+     "( [ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true )"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/src/t169-red/run-t169.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     79,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/t100-g8-rescope/src/run-t100.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     66,
+     "[ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     53,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t108-grep/capture-env.sh",
+  "kind": "sh",
+  "searches": 16,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     59,
+     "/.claude/shell-snapshots/*.sh"
+    ],
+    [
+     95,
+     "/.claude/shell-snapshots/*.sh"
+    ],
+    [
+     116,
+     "/corpus/*.txt"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     36,
+     "echo \"command -v ugrep -> [$(command -v ugrep 2>/dev/null)]\""
+    ],
+    [
+     39,
+     "n=$(find \"$d\" -maxdepth 4 -name ugrep -type f 2>/dev/null | head -3)"
+    ],
+    [
+     40,
+     "echo \"  $d exists; ugrep found: [${n:-none}]\""
+    ],
+    [
+     46,
+     "echo \"ANSWER: no standalone ugrep binary \u2014 T107b was right about that.\""
+    ],
+    [
+     47,
+     "echo \"        ugrep is EMBEDDED IN THE \\`claude\\` EXECUTABLE and reached via argv[0].\""
+    ],
+    [
+     53,
+     "ARGV0=ugrep \"${CLAUDE_CODE_EXECPATH:-$HOME/.local/bin/claude}\" --version 2>&1 | head -1"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/t108-grep/gen-corpus.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/t108-grep/probe-conformance-guards.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t108-grep/probe-flags.sh",
+  "kind": "sh",
+  "searches": 6,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     20,
+     "ARGV0=ugrep \"$CC_BIN\" -G --ignore-files --hidden -I \\"
+    ],
+    [
+     73,
+     "out=$(\"${ENVP[@]}\" env ARGV0=ugrep \"$CC_BIN\" -G --ignore-files --hidden -I \"$fl\" \"$P\" \"$F\" 2>&1); st=$?"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t108-grep/run-matrix.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     89,
+     "/*.txt"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     43,
+     "ccfn)     ARGV0=ugrep \"$CC_BIN\" -G --ignore-files --hidden -I \\"
+    ],
+    [
+     46,
+     "ugrepGI)  ARGV0=ugrep \"$CC_BIN\" -G -I \"$@\" ;;"
+    ],
+    [
+     47,
+     "ugrepG)   ARGV0=ugrep \"$CC_BIN\" -G \"$@\" ;;"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t116-familyb-promotion/src/run-harness-mutations-t116.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t116-familyb-promotion/src/run-t116.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     74,
+     "[ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     61,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t117-familyb/src/run-t117-pass2.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     67,
+     "[ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     54,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t117-familyb/src/run-t117.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     67,
+     "[ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     54,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t131-grep/probe-commandv.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t131-grep/probe-ignorefiles.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/t131-grep/probe-stdin.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/t131-grep/probe-t80-bash.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/t131-grep/probe-vector-utf8.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     16,
+     "*.json"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/t154-nofloat/drive-leg1-e2e.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     121,
+     ".*T154-POISON-store-root.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t154-nofloat/drive-leg1.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     126,
+     "[ \"$rc\" = 0 ] && printf 'FIRES' || printf 'SILENT'"
+    ],
+    [
+     195,
+     "[ \"$zfail\" = 0 ] || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     93,
+     "*grep*"
+    ],
+    [
+     118,
+     "/corpus/*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/t154-nofloat/drive-leg2.sh",
+  "kind": "sh",
+  "searches": 11,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     65,
+     "echo \"PRE  has nofloat.go : $( [ -f \"$TMP/pre/nexus/internal/apps/loanschedule/conformance/nofloat.go\" ] && echo yes || echo no )\""
+    ],
+    [
+     66,
+     "echo \"POST has nofloat.go : $( [ -f \"$TMP/post/nexus/internal/apps/loanschedule/conformance/nofloat.go\" ] && echo yes || echo no )\""
+    ],
+    [
+     69,
+     "echo \"    -- forbidden identifiers in it: $(printf '%s' \"$PROBE_SRC\" | LC_ALL=C grep -acoE '\\bfloat(32|64)\\b|\\bbig\\.Float\\b|\\bcomplex(64|128)\\b|\\b(Par"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t154-nofloat/drive-leg3.sh",
+  "kind": "sh",
+  "searches": 7,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     56,
+     "echo \"PRE  has census    : $( LC_ALL=C grep -aq 'StoreFileCensus' \"$TMP/pre/nexus/internal/apps/loanschedule/conformance/vector.go\" && echo yes || ech"
+    ],
+    [
+     57,
+     "echo \"POST has census    : $( LC_ALL=C grep -aq 'StoreFileCensus' \"$TMP/post/nexus/internal/apps/loanschedule/conformance/vector.go\" && echo yes || ec"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     63,
+     "*.json"
+    ],
+    [
+     66,
+     "*.json"
+    ],
+    [
+     67,
+     "*.json"
+    ],
+    [
+     71,
+     "*.json"
+    ],
+    [
+     72,
+     "*.json"
+    ],
+    [
+     73,
+     "*.json"
+    ],
+    [
+     77,
+     "s/.*"
+    ],
+    [
+     81,
+     "*.json"
+    ],
+    [
+     92,
+     "s/.*parity"
+    ],
+    [
+     92,
+     "*PASS"
+    ],
+    [
+     93,
+     "s/.*cells"
+    ],
+    [
+     93,
+     "graded.*/"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/t159-review-t117/src/run-t159.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     67,
+     "[ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     54,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t170-g8-rebuild/src/paragraphs_t170.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/t177-so-nondeterminism/jvmdefaults-t177.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     20,
+     "cat /sys/fs/cgroup/memory.max 2>/dev/null || echo \"no cgroup memory.max\""
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t177-so-nondeterminism/report_t177.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     38,
+     "/ANALYSIS-*.txt"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run2.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     68,
+     "[ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     55,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run3.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     68,
+     "[ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     55,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t219-g8-residual/src/run-t219.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     68,
+     "[ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     55,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t223-g8-region-predicate/src/run-t223.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     68,
+     "[ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     55,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t223-g8-region-predicate/src/scope_table_t223.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/t223-g8-region-predicate/src/verify_merge_t223.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     6,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a01b5f9f0ceec59f4"
+    ]
+   ],
+   "M2_SWALLOW": [
+    [
+     12,
+     "git remote add up /Users/buv/gerege-nbfi 2>/dev/null || true"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t229-g8-site3/src/run-t229.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     68,
+     "[ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     55,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh",
+  "kind": "sh",
+  "searches": 10,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     20,
+     "env | grep -c '^BASH_FUNC_grep' 2>/dev/null || echo \"BASH_FUNC_grep not exported\""
+    ],
+    [
+     26,
+     "command -v ugrep 2>/dev/null || echo \"no standalone ugrep binary on PATH\""
+    ],
+    [
+     40,
+     "n=$($eng -c \"$pat\" /tmp/t234_probe.txt 2>/dev/null || echo 0)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     36,
+     "git*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     25,
+     "echo \"### ugrep present on disk?\""
+    ],
+    [
+     26,
+     "command -v ugrep 2>/dev/null || echo \"no standalone ugrep binary on PATH\""
+    ],
+    [
+     34,
+     "for eng in \"/usr/bin/grep -E\" \"/usr/bin/grep -P\" \"git grep -E\" \"git grep -P\"; do"
+    ],
+    [
+     46,
+     "echo \"### /usr/bin/grep -P supported?\""
+    ],
+    [
+     47,
+     "/usr/bin/grep -P 'x' /dev/null; echo \"  exit=$? (2 => -P unsupported by BSD grep)\""
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 5
+ },
+ {
+  "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/01-escape-matrix.sh",
+  "kind": "sh",
+  "searches": 12,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     23,
+     "n=$(printf '%s' \"$out\" | { [ -n \"$out\" ] && wc -l | tr -d ' ' || echo 0; })"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     47,
+     "echo \"### ENGINE 3: /usr/bin/grep -P  (does it exist at all?)\""
+    ],
+    [
+     48,
+     "/usr/bin/grep -P 'balance' \"$C\" >/dev/null 2>&1; echo \"  exit=$?  (2 = option rejected; NO OUTPUT, looks identical to 'no matches' to a careless calle"
+    ],
+    [
+     50,
+     "echo \"### ENGINE 4: ugrep 7.5.0 -- reachable ONLY via the interactive shell function wrapper.\""
+    ],
+    [
+     52,
+     "echo \"  T232 measured ugrep -E DOES honour \\\\b.  [UNVERIFIED here from inside a script, by construction.]\""
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh",
+  "kind": "sh",
+  "searches": 11,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     18,
+     "echo \"  pattern $p ->\"; /usr/bin/grep -E -n \"$p\" \"$C\" | sed 's/^/      /' || echo \"      (no match)\""
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/10-census.py",
+  "kind": "py",
+  "searches": 22,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     9,
+     "re.*"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     9,
+     "(git grep / grep / egrep / rg / ugrep / ack / python re.*).  Engine is derived"
+    ],
+    [
+     21,
+     "git grep -P   : PCRE2. \\\\b \\\\d \\\\s \\\\w all real."
+    ],
+    [
+     23,
+     "/usr/bin/grep -P : DOES NOT EXIST. exit 2, no output, looks like \"no matches\"."
+    ],
+    [
+     24,
+     "ugrep 7.5.0   : reachable ONLY from the agent's interactive shell (function wrapper,"
+    ],
+    [
+     80,
+     "eng = \"git grep -P (PCRE2)\" if \"P\" in flat else \\"
+    ],
+    [
+     85,
+     "eng = (\"BSD grep -P => DOES NOT EXIST (exit 2)\" if \"P\" in flat else"
+    ],
+    [
+     87,
+     "elif kind == \"ug\":  eng = \"ugrep (explicit)\""
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/11-census.py",
+  "kind": "py",
+  "searches": 27,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     31,
+     "*paths"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     19,
+     "git grep -P        : PCRE2 -- all real.  SOUND."
+    ],
+    [
+     21,
+     "(this is what a .sh script gets; ugrep is NOT exported into scripts)"
+    ],
+    [
+     22,
+     "/usr/bin/grep -P   : DOES NOT EXIST. exit 2, empty output, indistinguishable from \"no match\"."
+    ],
+    [
+     23,
+     "ugrep 7.5.0        : ONLY reachable from the agent's interactive shell function wrapper."
+    ],
+    [
+     66,
+     "if \"P\" in fl: return \"git grep -P (PCRE2)\", \"SOUND\", fl"
+    ],
+    [
+     71,
+     "if \"P\" in fl: return \"grep -P via /usr/bin/grep => NONEXISTENT OPTION\", \"NONEXISTENT\", fl"
+    ],
+    [
+     72,
+     "if \"E\" in fl or kind==\"eg\": return \"BSD grep -E (script) / ugrep -E (interactive)\", \"SOUND\", fl"
+    ],
+    [
+     73,
+     "return \"BSD grep BRE (script) / ugrep BRE (interactive)\", \"BRE\", fl"
+    ],
+    [
+     74,
+     "if kind == \"ug\": return \"ugrep (explicit)\", \"SOUND\", \"\""
+    ],
+    [
+     144,
+     "print(\"=== *** VOID BY NONEXISTENT OPTION *** : grep -P in a script :\", len(NX), \"===\")"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/12-sweep-census.py",
+  "kind": "py",
+  "searches": 14,
+  "mech": {
+   "M6_MISSING_ENGINE": [
+    [
+     68,
+     "eng=\"git grep -P\" if \"P\" in fl else (\"git grep -F\" if \"F\" in fl else (\"git grep -E\" if \"E\" in fl else \"git grep BRE\"))"
+    ],
+    [
+     70,
+     "else: eng=(\"grep -P (NONEXISTENT on BSD)\" if \"P\" in fl else (\"grep -E\" if \"E\" in fl else \"grep BRE\"))"
+    ],
+    [
+     72,
+     "if pat and ENGINE_DEP.search(pat) and eng in (\"git grep -E\",\"git grep BRE\",\"grep -P (NONEXISTENT on BSD)\"):"
+    ],
+    [
+     93,
+     "if \"grep -P (NONEXISTENT on BSD)\" in r[\"engines\"]: verdict.append(\"VOID-NOOPTION\")"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/20-rerun-dec2-sweeps.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     6,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a71e695cfa5bea70b"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/21-r11-recall-loss.sh",
+  "kind": "sh",
+  "searches": 10,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     16,
+     "echo \"  what \\\\bmain\\\\b WOULD have contributed if the engine honoured it (git grep -P, five vs four):\""
+    ],
+    [
+     17,
+     "p5=$(git grep -P -c -a -- 'merge-base|main:|origin/main|rev-parse main|\\bmain\\b' -- $P 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')"
+    ],
+    [
+     18,
+     "p4=$(git grep -P -c -a -- 'merge-base|main:|origin/main|rev-parse main' -- $P 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')"
+    ],
+    [
+     24,
+     "echo -n \"    git grep -P -c '\\\\bmain\\\\b' repo-wide : \"; git grep -P -c -- '\\bmain\\b' 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}'"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/30-sound-sweep.py",
+  "kind": "py",
+  "searches": 2,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/31-sound-sweep.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/t64-zeroprincipal/src/run-harness-mutations.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/drive-red.sh",
+  "kind": "sh",
+  "searches": 8,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     35,
+     "att-*/cf-*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/every-invocation.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/verify-on-scratch-merge.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     22,
+     "echo \"  main == HEAD ?     $([ \"$(git -C \"$C\" rev-parse main)\" = \"$(git -C \"$C\" rev-parse HEAD)\" ] && echo YES || echo no)\""
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-guards-go-red.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/run-precondition-block.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/sweep-census.py",
+  "kind": "py",
+  "searches": 4,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     12,
+     "**markdown"
+    ],
+    [
+     12,
+     "table**"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/t74-multiplesof/extract-t21v2-AB.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/capture/t83-nonamortizing/src/run-orderdep.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     48,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t83-nonamortizing/src/run-t83.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     134,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ],
+    [
+     325,
+     "inputs.ambientMoneyHelper*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t91/prove-guards.sh",
+  "kind": "sh",
+  "searches": 17,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     125,
+     "/A*.txt"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     165,
+     "echo \"   from an invalid byte rightwards \u2014 LC_ALL=C fixes it, -a does NOT.  ugrep -I skips the WHOLE\""
+    ],
+    [
+     170,
+     "if command -v ugrep >/dev/null 2>&1; then"
+    ],
+    [
+     171,
+     "LC_ALL=C ugrep -qF 'PASS  effective rounding mode canary' \"$S/poison/A2a-mutated-canary-gerege.txt\""
+    ],
+    [
+     172,
+     "echo \"   ugrep  -qF  rc=$?   (1 = 'absent' \u2014 WRONG, the sentence is there)\""
+    ],
+    [
+     173,
+     "LC_ALL=C ugrep -aqF 'PASS  effective rounding mode canary' \"$S/poison/A2a-mutated-canary-gerege.txt\""
+    ],
+    [
+     174,
+     "echo \"   ugrep -aqF  rc=$?   (0 = present \u2014 correct)\""
+    ],
+    [
+     176,
+     "echo \"   ugrep is not a BINARY on this host and never was.  T108 established that the token\""
+    ],
+    [
+     178,
+     "echo \"   \\`claude\\` binary with argv[0]=ugrep \u2014 ugrep 7.5.0 with -I hard-coded \u2014 which a script\""
+    ],
+    [
+     180,
+     "echo \"   the EXPECTED one here, and the ugrep limb is no longer unmeasured: it is [VERIFIED] in\""
+    ],
+    [
+     183,
+     "echo \"   is retired.  ugrep -I skips the whole file; -a fixes it and LC_ALL=C does not.\""
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t91/run-attacks.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/t91/t115-drive-mf1.sh",
+  "kind": "sh",
+  "searches": 7,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t91/t115-drive-mf2.sh",
+  "kind": "sh",
+  "searches": 14,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     59,
+     "*exit"
+    ],
+    [
+     61,
+     "*exit"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t91/t115-drive-mf3-mf4.sh",
+  "kind": "sh",
+  "searches": 11,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     79,
+     "*preconditions.sh*"
+    ],
+    [
+     87,
+     "*.sh"
+    ],
+    [
+     87,
+     "*.py"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t91/t115-rerun-attacks.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     89,
+     "/*.txt"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/t91/t151-drive-g4.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/t91/t151-merge-check.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/t91/verdict.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     157,
+     "[ \"$v\" = OK ] || echo \"$name $v\" >> \"$FAILS\""
+    ],
+    [
+     190,
+     "[ \"$files\" = \"$n\" ] || echo \"WARNING: $files transcripts on disk, $n attacks in the expectation table\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     161,
+     "/A*.txt"
+    ],
+    [
+     185,
+     "/A*.txt"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/capture/tierA-a2/census-a2-26.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     8,
+     "out/**/*"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/tierA-a2/census-json-float-siblings.py",
+  "kind": "py",
+  "searches": 2,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     125,
+     "req/*.json"
+    ],
+    [
+     126,
+     "req/*.json"
+    ],
+    [
+     127,
+     "req/*.json"
+    ],
+    [
+     128,
+     "req/*.json"
+    ],
+    [
+     129,
+     "req/*.json"
+    ],
+    [
+     130,
+     "req/*.json"
+    ],
+    [
+     131,
+     "req/*.json"
+    ],
+    [
+     241,
+     "mkreq*.py"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh",
+  "kind": "sh",
+  "searches": 6,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/capture/tierA-a2/prove-census-red.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     6,
+     "/*.py"
+    ],
+    [
+     6,
+     "/*.sh"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/capture/tierA-a2/red-green-a2-15.sh",
+  "kind": "sh",
+  "searches": 8,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     213,
+     "/Users/buv/gerege-nbfi/.softhouse/toolchain/gopath"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     31,
+     "/*.json"
+    ],
+    [
+     193,
+     "/*.json"
+    ],
+    [
+     201,
+     "/*.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "kind": "sh",
+  "searches": 50,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     702,
+     "| LC_ALL=C grep -acE '[-0-9][0-9]*\\.[0-9]|[0-9][eE][-+]?[0-9]')\" || true"
+    ],
+    [
+     779,
+     "| LC_ALL=C grep -acE '\\bfloat(32|64)\\b|\\bbig\\.Float\\b|\\bcomplex(64|128)\\b|\\b(Parse|Format|Append)Float\\b')\" || true"
+    ],
+    [
+     788,
+     "pkgs=\"$(find \"$NEXUS_DIR\" -name '*.go' -type f | sed 's|/[^/]*$||' | sort -u | LC_ALL=C grep -ac '' || true)\""
+    ],
+    [
+     829,
+     "seen=\"$(find \"$NEXUS_DIR\" -name '*.go' -type f | LC_ALL=C grep -ac '' || true)\""
+    ],
+    [
+     837,
+     "| LC_ALL=C grep -av \"/contract/contract.go$\" || true)\""
+    ],
+    [
+     958,
+     "cases=\"$(printf '%s\\n' \"$out\" | LC_ALL=C grep -ac '^  -> exit ' || true)\""
+    ],
+    [
+     976,
+     "red=\"$(printf '%s\\n' \"$out\" | LC_ALL=C grep -ac '^  -> exit [1-9]' || true)\""
+    ],
+    [
+     977,
+     "green=\"$(printf '%s\\n' \"$out\" | LC_ALL=C grep -ac '^  -> exit 0$' || true)\""
+    ],
+    [
+     1002,
+     "census_lines=\"$(printf '%s\\n' \"$out\" | LC_ALL=C grep -ac '^CENSUS ' || true)\""
+    ],
+    [
+     1123,
+     "| LC_ALL=C grep -acE '(/req/[^/]+\\.json|\\.req)$' || true)\""
+    ],
+    [
+     1128,
+     "| LC_ALL=C grep -ac . || true)\""
+    ],
+    [
+     1157,
+     "| LC_ALL=C grep -ac '\\.java$' || true)\""
+    ],
+    [
+     1428,
+     "nil_cov=\"$(LC_ALL=C grep -ac '^    NIL-COVERAGE \u2014 no vector in this store exempts any invariant' \"$report\" || true)\""
+    ],
+    [
+     1488,
+     "selftest_ledger=\"$(LC_ALL=C grep -ac '^    LEDGER NOT RUN IN SELF-TEST MODE' \"$report\" || true)\""
+    ],
+    [
+     1490,
+     "filtered_ledger=\"$(LC_ALL=C grep -ac '^    LEDGER NOT SELECTED' \"$report\" || true)\""
+    ],
+    [
+     1569,
+     "body=\"$(curl -sk --max-time 10 \"$ORACLE_HEALTH_URL\" 2>/dev/null || true)\""
+    ],
+    [
+     2073,
+     "| LC_ALL=C grep -acF -- 'INVARIANT principal_amortizes_to_zero VIOLATED')\" || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     708,
+     "*.json"
+    ],
+    [
+     785,
+     "*.go"
+    ],
+    [
+     788,
+     "*.go"
+    ],
+    [
+     829,
+     "*.go"
+    ],
+    [
+     925,
+     ".*inspected"
+    ],
+    [
+     1125,
+     "s/.*"
+    ],
+    [
+     1154,
+     "*.java"
+    ],
+    [
+     1436,
+     "*INSPECTED"
+    ],
+    [
+     1445,
+     "recorded.*"
+    ],
+    [
+     1450,
+     "*invariant"
+    ],
+    [
+     1450,
+     "VECTOR.*"
+    ],
+    [
+     1511,
+     "*ledger"
+    ],
+    [
+     1511,
+     "DECLARED.*"
+    ],
+    [
+     1514,
+     "*ledger"
+    ],
+    [
+     1514,
+     "*PASS"
+    ],
+    [
+     1514,
+     "*FAIL"
+    ],
+    [
+     1517,
+     "*ledger"
+    ],
+    [
+     1517,
+     "*PASS"
+    ],
+    [
+     1517,
+     "*FAIL"
+    ],
+    [
+     1520,
+     "*ledger"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/guards/check-ledger-invariants.sh",
+  "kind": "sh",
+  "searches": 7,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     125,
+     "| LC_ALL=C grep -ac '\\.go$' || true"
+    ],
+    [
+     135,
+     "cases=\"$(printf '%s\\n' \"$out\" | LC_ALL=C grep -ac '^  -> exit ' || true)\""
+    ],
+    [
+     136,
+     "red=\"$(printf '%s\\n' \"$out\"   | LC_ALL=C grep -ac '^  -> exit [1-9]' || true)\""
+    ],
+    [
+     137,
+     "green=\"$(printf '%s\\n' \"$out\" | LC_ALL=C grep -ac '^  -> exit 0$' || true)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     160,
+     ".*inspected"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/guards/drive-red-ledger-invariants.sh",
+  "kind": "sh",
+  "searches": 6,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     101,
+     "*AccountBalance"
+    ],
+    [
+     132,
+     "*SavingsPosition"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T106-evidence/prove-token-forgeable.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     72,
+     "cap() { local v; v=\"$(bash -c 'IFS= read -r v < <(printf \"%s\\n\" CAP) 2>/dev/null; printf %s \"${v:-}\"' 2>/dev/null)\"; [ \"$v\" = CAP ] && echo yes || ech"
+    ],
+    [
+     100,
+     "\"$( [ \"$wf\" = 0 ] && echo 'the PRE-FIX bytes must ADMIT the forge \u2014 that is the defect this script exists to reproduce' || echo 'the POST-FIX bytes mu"
+    ],
+    [
+     175,
+     "printf '  %-42s %s -> exit=%s\\n' \"$label\" \"$( [ \"$h\" = \"$PRE\" ] && echo PRE-FIX || echo POST-FIX )\" \"$c\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     93,
+     "*prefix*"
+    ],
+    [
+     112,
+     "*prefix*"
+    ],
+    [
+     120,
+     "*prefix*"
+    ],
+    [
+     128,
+     "*prefix*"
+    ],
+    [
+     139,
+     "*/busybox"
+    ],
+    [
+     157,
+     "*prefix*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     103,
+     "*prefix*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/readonly-sourced-edge.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     140,
+     "got=\"$(\"$@\" -c 'IFS= read -r v < <(printf \"%s\\n\" T97CAP); printf %s \"$v\"' 2>/dev/null || true)\""
+    ],
+    [
+     141,
+     "[ \"$got\" = \"T97CAP\" ] && printf yes || printf no"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/redgreen.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     9,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     8,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e"
+    ]
+   ],
+   "M2_SWALLOW": [
+    [
+     15,
+     "pat() { echo \"--- pattern: $1\"; git grep -n -i -E \"$1\" -- . || echo \"    (no hits)\"; }"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-enumerate-targets.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/handoff/T57-float-scan.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/handoff/T58-transcription-audit.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     16,
+     "*_major_text"
+    ],
+    [
+     102,
+     "*_major_text"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/handoff/T61-mutations.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     78,
+     "P*r*"
+    ],
+    [
+     196,
+     "*scheduleModel"
+    ],
+    [
+     196,
+     "*repaymentPeriod"
+    ],
+    [
+     199,
+     "*scheduleModel"
+    ],
+    [
+     199,
+     "*repaymentPeriod"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/handoff/T61-sweep/build-pass3f.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     112,
+     "18*B/1000"
+    ],
+    [
+     188,
+     "18*B/1000"
+    ],
+    [
+     189,
+     "18*B/1000"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/handoff/T61-transcription-audit.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     54,
+     "echo \"  out/POISON.status: $(cat \"$1/out/POISON.status\" 2>/dev/null || echo ABSENT)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     65,
+     "/out/*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/A2-10-probe/poison-d2-shell-matrix.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     57,
+     "*LAUNDERED*"
+    ],
+    [
+     121,
+     "*LAUNDERED*"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/A2-11/enumerate-corpus.py",
+  "kind": "py",
+  "searches": 4,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     22,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     86,
+     ".../loanproducts*"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/A2-11/prove-a2-7-guards-are-falsifiable.py",
+  "kind": "py",
+  "searches": 8,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     19,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da/.softhouse/capture/tierA-a2"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/A2-11/verify-double-entry-minor-units.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/blast-discriminate.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/blast-measure.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     17,
+     "preconditions*.txt"
+    ]
+   ],
+   "M4_EMPTY_FORLIST": [
+    [
+     17,
+     "for f in $(LC_ALL=C find . -name 'preconditions*.txt' | sort); do"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/charges-attack-expect-override.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     8,
+     "*actuator/health*"
+    ],
+    [
+     9,
+     "*calculateLoanSchedule*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/charges-attack-live.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     8,
+     "*and*"
+    ],
+    [
+     26,
+     "*actuator/health*"
+    ],
+    [
+     27,
+     "*calculateLoanSchedule*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/f3-check.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/f4-check.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     19,
+     "/t36/out/recapture-gerege/*-raw.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/f5-container-gone.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/f5-deadtool.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/f5-live.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/f5-positive-control.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/f6-prove-f1-predicate.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/f6-runall-red.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/p24-scratch-merge.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/sweep-broad.sh",
+  "kind": "sh",
+  "searches": 8,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     12,
+     "*.sh"
+    ],
+    [
+     17,
+     "*.sh"
+    ],
+    [
+     22,
+     "*.sh"
+    ],
+    [
+     26,
+     "*.sh"
+    ],
+    [
+     31,
+     "*.py"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/sweep-misscheck.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     8,
+     "LC_ALL=C grep -nE 'grep -[a-zA-Z]*c[a-zA-Z]*( |$)|wc -l' probe.sh || echo \"  (no hits)\""
+    ],
+    [
+     11,
+     "LC_ALL=C grep -nE '\\[ \"\\$[a-z_]+\" = \"?0\"? \\]|\\[ -z \"\\$[a-z_]+\" \\]' probe.sh || echo \"  (no hits)\""
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/sweep-missprobe.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     15,
+     "[ -s /tmp/t135/missprobe/scan.txt ] || echo PASS7       # test -s"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/sweep-pattern-check.sh",
+  "kind": "sh",
+  "searches": 6,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r1-mf1.sh",
+  "kind": "sh",
+  "searches": 8,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     34,
+     "/pre/.softhouse/capture/t91/out/prefix-livetwin-sh/*.txt"
+    ],
+    [
+     84,
+     "/.softhouse/capture/t91/out/*/"
+    ],
+    [
+     87,
+     "/A*.txt"
+    ],
+    [
+     90,
+     "/A*.txt"
+    ],
+    [
+     95,
+     "/post/.softhouse/capture/t91/out/happy/*.txt"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r11-hygiene.sh",
+  "kind": "sh",
+  "searches": 16,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     13,
+     "t115-*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r12-grep.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r13-vb.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     43,
+     "/verdict-A7-breach.sh.bak*"
+    ],
+    [
+     56,
+     "/verdict-all-breach.sh.bak*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r14-g4fix.sh",
+  "kind": "sh",
+  "searches": 10,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     22,
+     ".bak*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r14b-g4fix.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r15-vbfix.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     24,
+     "anchor = '[ \"$files\" = \"$n\" ] || echo \"WARNING:'"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     10,
+     "/.softhouse/capture/t91/out/*/"
+    ],
+    [
+     12,
+     "/A*.txt"
+    ],
+    [
+     13,
+     "/A*.txt"
+    ],
+    [
+     29,
+     "/A*.txt"
+    ],
+    [
+     41,
+     "/.softhouse/capture/t91/out/*/"
+    ],
+    [
+     43,
+     "/A*.txt"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r1b-mf1-red.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r2-va.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     17,
+     "/pre/.softhouse/capture/t91/out/prefix-livetwin-sh/A*.txt"
+    ],
+    [
+     34,
+     "/pre/.softhouse/capture/t91/out/prefix-livetwin-sh/A*.txt"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r3-vcef.sh",
+  "kind": "sh",
+  "searches": 9,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     93,
+     "command -v ugrep >/dev/null 2>&1 && echo \"   yes: $(command -v ugrep)\" || echo \"   no \u2014 the else-branch is the one that runs here\""
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     86,
+     "echo \"-- the ugrep else-branch, pre-fix source:\""
+    ],
+    [
+     90,
+     "echo \"-- post-fix ugrep else-branch:\""
+    ],
+    [
+     92,
+     "echo \"-- is ugrep on PATH from INSIDE a script (P-33)?\""
+    ],
+    [
+     93,
+     "command -v ugrep >/dev/null 2>&1 && echo \"   yes: $(command -v ugrep)\" || echo \"   no \u2014 the else-branch is the one that runs here\""
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r4-guards-red.sh",
+  "kind": "sh",
+  "searches": 7,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     14,
+     "[ -d \"$X/.git\" ] && echo \"UNEXPECTED: the export is a git repo\" || echo \"export at $X is NOT a git repo (no .git)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     91,
+     ".bak*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r5-mutate-g5-g7.sh",
+  "kind": "sh",
+  "searches": 7,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     35,
+     "/A*.txt"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r6-mf2.sh",
+  "kind": "sh",
+  "searches": 10,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r6b-mf2-green.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r7-mf3-mf4.sh",
+  "kind": "sh",
+  "searches": 14,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     53,
+     "*.sh"
+    ],
+    [
+     53,
+     "*.py"
+    ],
+    [
+     58,
+     "*.sh"
+    ],
+    [
+     58,
+     "*.py"
+    ],
+    [
+     63,
+     "*.sh"
+    ],
+    [
+     63,
+     "*.py"
+    ],
+    [
+     64,
+     "*.sh"
+    ],
+    [
+     64,
+     "*.py"
+    ],
+    [
+     68,
+     "*.sh"
+    ],
+    [
+     68,
+     "*.py"
+    ],
+    [
+     72,
+     "*grep"
+    ],
+    [
+     72,
+     "-av*"
+    ],
+    [
+     73,
+     "*preconditions.sh*copied*"
+    ],
+    [
+     73,
+     "verbatim*"
+    ],
+    [
+     74,
+     "*preconditions.sh*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r7b-census.sh",
+  "kind": "sh",
+  "searches": 12,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     11,
+     "*.sh"
+    ],
+    [
+     11,
+     "*.py"
+    ],
+    [
+     27,
+     "*.py"
+    ],
+    [
+     42,
+     "*.sh"
+    ],
+    [
+     42,
+     "*.py"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r9-post-merge.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     15,
+     "a=$(git rev-parse \"$MAIN:$f\" 2>/dev/null || echo ABSENT)"
+    ],
+    [
+     16,
+     "b=$(git rev-parse \"HEAD:$f\" 2>/dev/null || echo ABSENT)"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-i-invalid-byte.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     54,
+     "pre=$(f=\"$6\"; eval \"$4\" >/dev/null 2>&1 && echo FIRES || echo SILENT)"
+    ],
+    [
+     55,
+     "post=$(f=\"$6\"; eval \"$5\" >/dev/null 2>&1 && echo FIRES || echo SILENT)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     43,
+     "*perl*"
+    ],
+    [
+     43,
+     "*grep*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-ii-literals.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     74,
+     "s/.*probe"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-iii-census.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     132,
+     "*T155*"
+    ],
+    [
+     132,
+     "*.JSON"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-iiib-binary-direct.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-iv-zero-input.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-ix-sweep-and-help.sh",
+  "kind": "sh",
+  "searches": 11,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-v-census-counts.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     23,
+     "echo \"  arithmetic closes?                          : $([ $((root + ls_n + self_n)) -eq \"$all\" ] && echo yes || echo 'NO \u2014 files exist somewhere else'"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     14,
+     "*.json"
+    ],
+    [
+     15,
+     "*.json"
+    ],
+    [
+     16,
+     "*.json"
+    ],
+    [
+     17,
+     "*.json"
+    ],
+    [
+     19,
+     "*.json"
+    ],
+    [
+     26,
+     "*.json"
+    ],
+    [
+     28,
+     "*.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-vi-build-test-prove.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-vii-residual-attacks.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     32,
+     "ln \"$V/loanschedule/P-00-baseline-6x7pct.json\" \"$V/loanschedule/T155-V2-hardlink.json\" 2>/dev/null || echo \"  (hard link unsupported here)\""
+    ],
+    [
+     37,
+     "ln \"$V/loanschedule/P-00-baseline-6x7pct.json\" \"$V/T155-V3-hardlink.json\" 2>/dev/null || echo \"  (hard link unsupported here)\""
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     64,
+     "*T155*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-x-removal-and-failclosed.sh",
+  "kind": "sh",
+  "searches": 8,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     41,
+     "DIRTY_UNHARDENED=$(cat /tmp/t155/status.txt | grep -v '^?? \\.softhouse/LOCK' || true)"
+    ],
+    [
+     42,
+     "DIRTY_HARDENED=$(cat /tmp/t155/status.txt | LC_ALL=C grep -av '^?? \\.softhouse/LOCK' || true)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     16,
+     "ScanGoTreeForFloatingPoint.*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-xi-microfix.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     50,
+     "ScanGoTreeForFloatingPoint.*"
+    ],
+    [
+     59,
+     "ScanGoTreeForFloatingPoint.*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-xii-perl-microfix.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-xii-perl-true-absence.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     20,
+     "echo \"perl present in it? $(PATH=\"$B\" command -v perl >/dev/null 2>&1 && echo YES || echo NO)\""
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-xiii-deflation.sh",
+  "kind": "sh",
+  "searches": 6,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     43,
+     "P-*.json"
+    ],
+    [
+     46,
+     "/tmp/t155/victims/*.json"
+    ]
+   ],
+   "M4_EMPTY_FORLIST": [
+    [
+     43,
+     "for f in $(find \"$V\" -name 'P-*.json' -type f | sort | head -5); do mv \"$f\" /tmp/t155/victims/; n=$((n+1)); done"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     9,
+     "*.sh"
+    ],
+    [
+     10,
+     "*.py"
+    ],
+    [
+     11,
+     "*.pl"
+    ],
+    [
+     16,
+     "*.sh"
+    ],
+    [
+     17,
+     "*.sh"
+    ],
+    [
+     18,
+     "*.go"
+    ],
+    [
+     19,
+     "*.go"
+    ],
+    [
+     19,
+     "*/loanschedule/*"
+    ],
+    [
+     23,
+     ".softhouse/handoff/*-evidence/"
+    ],
+    [
+     23,
+     "*.sh"
+    ],
+    [
+     23,
+     "*.py"
+    ],
+    [
+     26,
+     "*.py"
+    ],
+    [
+     32,
+     "*.go"
+    ],
+    [
+     33,
+     "*.go"
+    ],
+    [
+     34,
+     "*.go"
+    ],
+    [
+     34,
+     "*/loanschedule/*"
+    ],
+    [
+     41,
+     "*.go"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/rerun-t154-provers-postmerge.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/run-conformance.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/show-refusals.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T158-compare-enumerators.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     9,
+     "*.sh"
+    ],
+    [
+     9,
+     "*.py"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T158-drive-followups.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     40,
+     "**NOT"
+    ],
+    [
+     40,
+     "CONFIRMED**"
+    ],
+    [
+     154,
+     "**NOT"
+    ],
+    [
+     154,
+     "CONFIRMED**"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/T158-guard-classifier-falsepositives.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/T158-rederive-sweep.py",
+  "kind": "py",
+  "searches": 18,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/T183-evidence/drive-probes.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/T184-evidence/t184-final.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     3,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     8,
+     "fineract*"
+    ],
+    [
+     8,
+     "./.git/*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T184-evidence/t184-probe-green-catch.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     7,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T184-evidence/t184-probe-green-float.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     4,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T184-evidence/t184-probe-red-catch.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     6,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T184-evidence/t184-probe-red-float.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     4,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T184-evidence/t184-sweep.sh",
+  "kind": "sh",
+  "searches": 10,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     3,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8"
+    ]
+   ],
+   "M2_SWALLOW": [
+    [
+     6,
+     "sed -n '670,815p' .softhouse/conformance.sh | grep -n 'grep -[a-z]*q' || echo \"   none\""
+    ],
+    [
+     9,
+     "sed -n '670,815p' .softhouse/conformance.sh | grep -n '|| return 0\\||| true\\|2>/dev/null\\|:-0' || echo \"   none but the two counted greps below\""
+    ],
+    [
+     11,
+     "echo \"=== C. every '|| true' in the T173 block, with what it masks\""
+    ],
+    [
+     12,
+     "sed -n '670,815p' .softhouse/conformance.sh | grep -n '|| true'"
+    ],
+    [
+     18,
+     "grep -n -A2 'except' .softhouse/capture/lib/check_wire_float_roundtrip.py | grep -n 'pass$\\|continue' || echo \"   (the one 'continue' is after append "
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     24,
+     "*LC_ALL"
+    ],
+    [
+     25,
+     "*LC_ALL"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 5
+ },
+ {
+  "file": ".softhouse/reviews/T184-evidence/t184-vacuity.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     6,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8"
+    ]
+   ],
+   "M2_SWALLOW": [
+    [
+     76,
+     "[ \"$BEFORE_WF\" = \"$AFTER_WF\" ] && [ \"$BEFORE_NC\" = \"$AFTER_NC\" ] && echo \"RESTORED OK\" || echo \"RESTORE FAILED\""
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T184-evidence/t184-vacuity2.sh",
+  "kind": "sh",
+  "searches": 8,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     5,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8"
+    ]
+   ],
+   "M2_SWALLOW": [
+    [
+     39,
+     "n=\"$(printf \"%s\\n\" \"$out\" | LC_ALL=C grep -ac \"^CENSUS \" || true)\""
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T188-probe/drive-t188.sh",
+  "kind": "sh",
+  "searches": 14,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     27,
+     "rmdir \"$W/.claude/worktrees\" 2>/dev/null || true"
+    ],
+    [
+     88,
+     "printf '  payload=%-8s rc=%-4s %s\\n' \"$n\" \"$r\" \"$([ \"$r\" = 0 ] && echo 'no inversion' || echo 'INVERTED')\""
+    ],
+    [
+     106,
+     "n=\"$(printf '%s\\n' \"$big\" | LC_ALL=C grep -ac '^CENSUS ' || true)\""
+    ],
+    [
+     107,
+     "echo \"  NEW (grep -c): census_lines=$n  -> $([ \"${n:-0}\" -gt 0 ] && echo 'census line found (CORRECT)' || echo 'NO CENSUS LINE')\""
+    ],
+    [
+     109,
+     "m=\"$(printf 'no census here\\n' | LC_ALL=C grep -ac '^CENSUS ' || true)\""
+    ],
+    [
+     110,
+     "echo \"  NEW (grep -c) on output with NO census line: census_lines=$m -> $([ \"${m:-0}\" -eq 0 ] && echo 'ERROR (correct, not over-corrected)' || echo 'w"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     138,
+     "*.go"
+    ],
+    [
+     142,
+     "*.json"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T189-probe/hardening.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     19,
+     "live()     { git status --porcelain | LC_ALL=C /usr/bin/grep -av '^?? \\.softhouse/LOCK$' || true ; }"
+    ],
+    [
+     20,
+     "wrapped()  { git status --porcelain | ( exec -a ugrep \"$CB\" -G --ignore-files --hidden -I -av '^?? \\.softhouse/LOCK$' ) || true ; }"
+    ],
+    [
+     55,
+     "echo \"  live     : [$(git status --porcelain 2>/dev/null | LC_ALL=C /usr/bin/grep -av '^?? \\.softhouse/LOCK$' || true)]  <-- empty means 'clean'\""
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     20,
+     "wrapped()  { git status --porcelain | ( exec -a ugrep \"$CB\" -G --ignore-files --hidden -I -av '^?? \\.softhouse/LOCK$' ) || true ; }"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T189-probe/matrix.sh",
+  "kind": "sh",
+  "searches": 11,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     20,
+     "s/.*grep"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     27,
+     "run_ugrep() { ( exec -a ugrep \"$CLAUDE_BIN\" -G --ignore-files --hidden -I \\"
+    ],
+    [
+     44,
+     "ugrep:file)  ( export LC_ALL=\"$loc\"; exec -a ugrep \"$CLAUDE_BIN\" -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg"
+    ],
+    [
+     45,
+     "ugrep:redir) ( export LC_ALL=\"$loc\"; exec -a ugrep \"$CLAUDE_BIN\" -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg"
+    ],
+    [
+     46,
+     "ugrep:pipe)  cat \"$f\" | ( export LC_ALL=\"$loc\"; exec -a ugrep \"$CLAUDE_BIN\" -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --excl"
+    ],
+    [
+     72,
+     "for sh in file redir pipe; do cell ugrep \"-v\" C.UTF-8 \"$sh\" \"$fx\"; done"
+    ],
+    [
+     77,
+     "for sh in file redir pipe; do cell ugrep \"-av\" C \"$sh\" \"$fx\"; done"
+    ],
+    [
+     85,
+     "echo \"################ ARM 6 \u2014 locale sweep, ugrep wrapper, -v, file shape only ############\""
+    ],
+    [
+     87,
+     "for fx in a-utf8-e2.txt b-nul.txt; do cell ugrep \"-v\" \"$loc\" file \"$fx\"; done"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T189-probe/provenance.sh",
+  "kind": "sh",
+  "searches": 10,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     31,
+     "echo \"===== 6. the claude binary run as ugrep \u2014 what does it report? =====\""
+    ],
+    [
+     34,
+     "( exec -a ugrep \"$CLAUDE_BIN\" --version 2>&1 ) | head -3 | sed -e 's/^/    /'"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/T189-probe/reachability.sh",
+  "kind": "sh",
+  "searches": 6,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     15,
+     "echo -n \"  /etc/zshenv exists? \"; test -e /etc/zshenv && echo YES || echo \"NO\""
+    ],
+    [
+     16,
+     "echo -n \"  ~/.zshenv exists?   \"; test -e \"$HOME/.zshenv\" && echo YES || echo \"NO\""
+    ],
+    [
+     46,
+     "echo \"    core.quotePath = $(git config --get core.quotePath || echo '(unset -> default true)')\""
+    ],
+    [
+     58,
+     "run_live()    { git status --porcelain | LC_ALL=C /usr/bin/grep -av '^?? \\.softhouse/LOCK$' || true ; }"
+    ],
+    [
+     60,
+     "git status --porcelain | ( exec -a ugrep \"$CB\" -G --ignore-files --hidden -I '-av' '^?? \\.softhouse/LOCK$' ) || true ; }"
+    ],
+    [
+     77,
+     "OUT=$(git -C /tmp status --porcelain 2>/dev/null | LC_ALL=C /usr/bin/grep -av '^?? \\.softhouse/LOCK$' || true)"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     60,
+     "git status --porcelain | ( exec -a ugrep \"$CB\" -G --ignore-files --hidden -I '-av' '^?? \\.softhouse/LOCK$' ) || true ; }"
+    ],
+    [
+     64,
+     "echo \"--- C2 live pattern through the ugrep WRAPPER ---\"; run_wrapped | sed -e 's/^/    | /'"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/T191-probe/drive-t191.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     109,
+     "n=\"$(sed -n \"/^$fn() {\\$/,/^}\\$/p\" \"$src\" | LC_ALL=C /usr/bin/grep -ac '')\" || true"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T84-evidence/src/run-orderdep2.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     48,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/T84-evidence/src/run-t84.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     65,
+     "[ -s \"$ERR\" ] && { printf 'RUN FAILED: stderr NOT empty:\\n' >&2; cat \"$ERR\" >&2; exit 1; } || true"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     52,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/probe-citations2.sh",
+  "kind": "sh",
+  "searches": 5,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     10,
+     "*/build/*"
+    ],
+    [
+     10,
+     "*/.git/*"
+    ],
+    [
+     39,
+     "*/build/*"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/probe-i4builder-redgreen.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     10,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee"
+    ],
+    [
+     13,
+     "/Users/buv/gerege-nbfi/.softhouse/toolchain/gopath"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     15,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/a2-33-dec2-rev5/redgreen.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     4,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 3
+ },
+ {
+  "file": ".softhouse/reviews/a2-33-dec2-rev5/sweep.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     7,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39"
+    ]
+   ],
+   "M2_SWALLOW": [
+    [
+     14,
+     "( cd \"$WT\" && git grep -n -I -i -E \"$re\" -- . ) || echo \"   (no hits)\""
+    ],
+    [
+     16,
+     "grep -n -i -E \"$re\" \"$MODE\" || echo \"   (no hits)\""
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/a2-34-review-a2-15/check-money-and-additive.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     4,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea"
+    ]
+   ],
+   "M2_SWALLOW": [
+    [
+     76,
+     "b=$(git rev-parse \"a072ecd:$p\" 2>/dev/null || echo \"<absent>\")"
+    ],
+    [
+     77,
+     "a=$(git rev-parse \"d76594a:$p\" 2>/dev/null || echo \"<absent>\")"
+    ],
+    [
+     78,
+     "n=$(git rev-parse \"HEAD:$p\" 2>/dev/null || echo \"<absent>\")"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 4
+ },
+ {
+  "file": ".softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh",
+  "kind": "sh",
+  "searches": 9,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     9,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea"
+    ],
+    [
+     12,
+     "/Users/buv/gerege-nbfi/.softhouse/toolchain/gopath"
+    ]
+   ],
+   "M2_SWALLOW": [
+    [
+     37,
+     "n=$(LC_ALL=C /usr/bin/grep -c -aF \"$needle\" \"$LOG/$tag.txt\" || true)"
+    ],
+    [
+     50,
+     "local n; n=$(LC_ALL=C /usr/bin/grep -c -aF \"$needle\" \"$LOG/$tag.txt\" || true)"
+    ],
+    [
+     57,
+     "local n; n=$(LC_ALL=C /usr/bin/grep -c -aF \"$s\" \"$f\" || true)"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     22,
+     "*.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 5
+ },
+ {
+  "file": ".softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh",
+  "kind": "sh",
+  "searches": 8,
+  "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     11,
+     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea"
+    ]
+   ],
+   "M3_EMPTY_GLOB": [
+    [
+     38,
+     "*.json"
+    ],
+    [
+     63,
+     "*.json"
+    ],
+    [
+     89,
+     "*.json"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M6_MISSING_ENGINE": [
+    [
+     19,
+     "echo \"-- does /usr/bin/grep -P exist?\""
+    ],
+    [
+     20,
+     "echo abc | LC_ALL=C /usr/bin/grep -P 'a\\wc' ; echo \"   /usr/bin/grep -P exit=$?\""
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 5
+ },
+ {
+  "file": ".softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t172-probe/run-post-fix.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     34,
+     "DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \\.softhouse/LOCK$' || true)"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/t172-probe/run-pre-fix.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     39,
+     "DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \\.softhouse/LOCK' || true)"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/t179-guard-classifier/engine_divergence.py",
+  "kind": "py",
+  "searches": 7,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "kind": "py",
+  "searches": 10,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     1169,
+     "*executed*"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     131,
+     "**FAIL**"
+    ],
+    [
+     133,
+     "**FAIL**"
+    ],
+    [
+     151,
+     "**FAIL**"
+    ],
+    [
+     165,
+     "**FAIL**"
+    ],
+    [
+     180,
+     "**FAIL**"
+    ],
+    [
+     202,
+     "**FAIL**"
+    ],
+    [
+     238,
+     "**FAIL**"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t21v2/run-probe2-attested.sh",
+  "kind": "sh",
+  "searches": 2,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     52,
+     "/work/jar/BOOT-INF/lib/*.jar"
+    ]
+   ],
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/t21v2/t21v2-invariants.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/t23-probe/t23_compare.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/t24-probe/t24_check_against_raw.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/t27-probe/t27_mutate.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     41,
+     "*args"
+    ],
+    [
+     42,
+     "*args"
+    ],
+    [
+     88,
+     "**FAIL**"
+    ],
+    [
+     101,
+     "**FAIL**"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/t38-probe/t38_no_regression.py",
+  "kind": "py",
+  "searches": 2,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     69,
+     "**not"
+    ],
+    [
+     69,
+     "precondition**"
+    ],
+    [
+     72,
+     "**not"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t41-probe/edit3.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     113,
+     "**The"
+    ],
+    [
+     113,
+     "one**"
+    ],
+    [
+     114,
+     "*span*"
+    ],
+    [
+     115,
+     "**in"
+    ],
+    [
+     115,
+     "two**."
+    ],
+    [
+     117,
+     "**The"
+    ],
+    [
+     118,
+     "multiplier**"
+    ],
+    [
+     118,
+     "**narrowed**"
+    ],
+    [
+     120,
+     "*span*"
+    ],
+    [
+     121,
+     "**inside"
+    ],
+    [
+     122,
+     "domain**"
+    ],
+    [
+     123,
+     "**every"
+    ],
+    [
+     123,
+     "on**"
+    ],
+    [
+     124,
+     "**exactly"
+    ],
+    [
+     124,
+     "unconditionally**."
+    ],
+    [
+     129,
+     "**Of"
+    ],
+    [
+     130,
+     "which.**"
+    ],
+    [
+     133,
+     "**both"
+    ],
+    [
+     134,
+     "30**"
+    ],
+    [
+     136,
+     "**The"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t41-probe/leakgrep.py",
+  "kind": "py",
+  "searches": 2,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/t41-probe/t187-reconcile-counts.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     127,
+     "edit_go*.py"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t41-probe/t187-redgreen.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     106,
+     "**FAIL**"
+    ],
+    [
+     124,
+     "*_SHA256"
+    ],
+    [
+     240,
+     "**FAIL**"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t41-probe/t196-drive.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M2_SWALLOW": [
+    [
+     195,
+     "/usr/bin/grep '^>' \"$SB/f-diff.txt\" || echo \"    none\""
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/t43-probe/t43_ambient_sites.sh",
+  "kind": "sh",
+  "searches": 3,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/t43-probe/t43_charge_membership.sh",
+  "kind": "sh",
+  "searches": 1,
+  "mech": {
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t45-probe/gen-ambient-sites.sh",
+  "kind": "sh",
+  "searches": 4,
+  "mech": {
+   "M5_NO_PIPEFAIL": [
+    [
+     "file",
+     "search in pipeline, no `set -o pipefail`"
+    ]
+   ],
+   "M7_NO_SET_E": [
+    [
+     "file",
+     "no `set -e`"
+    ]
+   ]
+  },
+  "nmech": 2
+ },
+ {
+  "file": ".softhouse/reviews/t45-probe/t45_citecheck.py",
+  "kind": "py",
+  "searches": 2,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     42,
+     "*.java"
+    ],
+    [
+     42,
+     "*/src/*"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t45-probe/t45_leakgrep.py",
+  "kind": "py",
+  "searches": 4,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/t45-probe/t45_normdiff.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     5,
+     "*the"
+    ],
+    [
+     6,
+     "text.*"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t167-reaudit-guards.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t167-redprobe.py",
+  "kind": "py",
+  "searches": 4,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     45,
+     "**kw"
+    ],
+    [
+     47,
+     "**kw"
+    ],
+    [
+     304,
+     ".t47-edit1-*.tmp"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t181-drive-guards.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t47_citecheck.py",
+  "kind": "py",
+  "searches": 2,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     42,
+     "*.java"
+    ],
+    [
+     42,
+     "*/src/*"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t47_edit_4.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     91,
+     "**This"
+    ],
+    [
+     92,
+     "deliberately**"
+    ],
+    [
+     97,
+     "**This"
+    ],
+    [
+     98,
+     "deliberately**"
+    ],
+    [
+     103,
+     "**It"
+    ],
+    [
+     104,
+     "entry**"
+    ],
+    [
+     104,
+     "**N46-1**"
+    ],
+    [
+     105,
+     "**charge**"
+    ],
+    [
+     107,
+     "**threaded**"
+    ],
+    [
+     108,
+     "*Which"
+    ],
+    [
+     108,
+     "charge*"
+    ],
+    [
+     110,
+     "**as"
+    ],
+    [
+     111,
+     "complete**"
+    ],
+    [
+     113,
+     "**WHICH"
+    ],
+    [
+     114,
+     "value.**"
+    ],
+    [
+     117,
+     "**instance"
+    ],
+    [
+     117,
+     "own**"
+    ],
+    [
+     118,
+     "**ambient**"
+    ],
+    [
+     120,
+     "**Therefore"
+    ],
+    [
+     123,
+     "it.**"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t47_edit_8.py",
+  "kind": "py",
+  "searches": 3,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     88,
+     "**Status"
+    ],
+    [
+     93,
+     "it.**"
+    ],
+    [
+     95,
+     "**Status"
+    ],
+    [
+     104,
+     "ratification.**"
+    ],
+    [
+     111,
+     "**no"
+    ],
+    [
+     111,
+     "P0**"
+    ],
+    [
+     112,
+     "**no"
+    ],
+    [
+     112,
+     "P0**"
+    ],
+    [
+     117,
+     "**Revision"
+    ],
+    [
+     117,
+     "history.**"
+    ],
+    [
+     117,
+     "**Revision"
+    ],
+    [
+     117,
+     "ERRATUM.**"
+    ],
+    [
+     119,
+     "**Revision"
+    ],
+    [
+     119,
+     "history.**"
+    ],
+    [
+     121,
+     "**Revision"
+    ],
+    [
+     121,
+     "long.**"
+    ],
+    [
+     121,
+     "**T46**"
+    ],
+    [
+     121,
+     "*after*"
+    ],
+    [
+     121,
+     "**No"
+    ],
+    [
+     121,
+     "task**"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t47_leakgrep.py",
+  "kind": "py",
+  "searches": 4,
+  "mech": {},
+  "nmech": 0
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t47_monthend.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     10,
+     "*from"
+    ],
+    [
+     10,
+     "text*."
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t47_normdiff.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {
+   "M3_EMPTY_GLOB": [
+    [
+     5,
+     "*the"
+    ],
+    [
+     6,
+     "text.*"
+    ]
+   ]
+  },
+  "nmech": 1
+ },
+ {
+  "file": ".softhouse/reviews/t49-probe/citecheck.py",
+  "kind": "py",
+  "searches": 1,
+  "mech": {},
+  "nmech": 0
+ }
+]
