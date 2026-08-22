@@ -1,0 +1,945 @@
+{
+ "rows": [
+  {
+   "absLine": 937,
+   "lineInSection": 15,
+   "text": "rule below), **T117** (measured family B past n = 1000, moved the residual to MNT 5.01 at n = 1000",
+   "why": [
+    "a bound on the failing principal / residual",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 939,
+   "lineInSection": 17,
+   "text": "review of T117 \u2014 APPROVED, then asked past n = 1000 and **doubled** the residual to **MNT 10.01 at",
+   "why": [
+    "a bound on the failing principal / residual",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 940,
+   "lineInSection": 18,
+   "text": "n = 3000**, found the fourth partial cell, detonated the shared rig's `RuntimeException` handler,",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 948,
+   "lineInSection": 26,
+   "text": "and **measured family B at 36.0 % p.a. and at 300.0 % \u2014 killing \"600 % only\"**; restated the region",
+   "why": [
+    "names the rate 600 %"
+   ]
+  },
+  {
+   "absLine": 953,
+   "lineInSection": 31,
+   "text": "restated the region as a predicate and measured family B at two rates other than 600 %**;",
+   "why": [
+    "names the rate 600 %"
+   ]
+  },
+  {
+   "absLine": 985,
+   "lineInSection": 63,
+   "text": "family-B cell \u2026 nothing above n = 250 has ever been asked\"*, and the partial shape, 20 distinct",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 986,
+   "lineInSection": 64,
+   "text": "principals and terms to n = 3000 falsified all of it.",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 993,
+   "lineInSection": 71,
+   "text": "> *\"annual rate **600.0 % \u2014 and no other rate has ever produced a family-B cell**\"* was a correct",
+   "why": [
+    "names the rate 600.0 %",
+    "'no other rate' -- a universal over rates"
+   ]
+  },
+  {
+   "absLine": 1049,
+   "lineInSection": 127,
+   "text": "| `invariant_exemptions` as a remedy | **inert** \u2014 the failure is a cell diff | **decisive** \u2014 the failure is purely invariant \u2014 **established on ONE full cell** (600.0 % / MNT 0.01 / n = 108). On a partial cell nobody has checked whether the port even reproduces the oracle, so \"purely invariant\" is **unmeasured** there |",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1050,
+   "lineInSection": 128,
+   "text": "| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 \u2264 n \u2264 600`, **312 cells** | **THREE** annual rates \u2014 600.0 % (209 cells, `104 \u2264 n \u2264 3000`, principals 1 \u2026 1001 minor), **36.0 %** (2 cells, n = 1324 and 1500, principal 50 minor) and **300.0 %** (1 cell, n = 800, principal 2 minor) \u2014 **212 cells**. *This row read \"**one** annual rate (600.0 %) \u2026 209 cells\" until T223 measured the other two rates against the live oracle.* |",
+   "why": [
+    "names the rate 600.0 %",
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1141,
+   "lineInSection": 219,
+   "text": "- **Cold start throws every time.** The disputed cell (B = 10001 minor units, n = 3000) as the",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1176,
+   "lineInSection": 254,
+   "text": "MNT 10.01 residual belongs to **B = 1001 minor units** at n = 3000 (`T159-R600p0-N3000-B1001`).",
+   "why": [
+    "a bound on the failing principal / residual",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1210,
+   "lineInSection": 288,
+   "text": "(B = 10001, n = 3000), (B = 10001, n = 2000) and (B = 1001, n = 3000) \u2014 plus a warm-up control at",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1292,
+   "lineInSection": 370,
+   "text": "21.6, 36.0, 48.0, 96.0, 300.0}** and terms up to **n = 600**, principals 1..100 000 minor.",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1297,
+   "lineInSection": 375,
+   "text": "21.6 % / n=6 / MNT 0.02, 3.6 % / n=360 / MNT 1.09, 0.12 % / n=600 / MNT 2.91 \u2014 all three fail, all",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1305,
+   "lineInSection": 383,
+   "text": "the largest failing principal by more than an order of magnitude.",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1324,
+   "lineInSection": 402,
+   "text": "| 7.0 | 56 | 1..27 | 27 | **23** (MNT 0.23) | **24** (MNT 0.24) | yes |",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1349,
+   "lineInSection": 427,
+   "text": "**21.6 % is not load-bearing for family A** \u2014 family A exists at **11 of the 12** annual rates",
+   "why": [
+    "the rate-count claims"
+   ]
+  },
+  {
+   "absLine": 1350,
+   "lineInSection": 428,
+   "text": "swept: every rate from 0.12 % to 300.0 %, and **NOT at 600.0 %**, where every failing cell is",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1358,
+   "lineInSection": 436,
+   "text": "36.0, 48.0, 96.0, 300.0} \u2014 **eleven** \u2014 and family A at 600.0 % is the **empty set**].",
+   "why": [
+    "names the rate 600.0 %",
+    "the rate-count claims"
+   ]
+  },
+  {
+   "absLine": 1438,
+   "lineInSection": 516,
+   "text": "| shape (600.0 %) | disbursed | amortized | **residual** | `totalPrincipalAmount` | balance column | last row's interest |",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1467,
+   "lineInSection": 545,
+   "text": "cares about that is now false.** Family B is still narrower in **rate** \u2014 **three** annual rates",
+   "why": [
+    "the narrower-in-rate comparison",
+    "a definitional statement about family B"
+   ]
+  },
+  {
+   "absLine": 1468,
+   "lineInSection": 546,
+   "text": "against eleven \u2014 and in the *number* of distinct failing principals: **22** against family A's",
+   "why": [
+    "the rate-count claims"
+   ]
+  },
+  {
+   "absLine": 1470,
+   "lineInSection": 548,
+   "text": "run `104 \u2264 n \u2264 3000` \u2014 and **wider in the largest failing principal**: **1001 minor units",
+   "why": [
+    "states the region by a term threshold",
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1471,
+   "lineInSection": 549,
+   "text": "(MNT 10.01)** against family A's **291 minor units (MNT 2.91)** [the four T170 figures re-derived by",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1474,
+   "lineInSection": 552,
+   "text": "and it added **no** larger residual, so MNT 10.01 at n = 3000 stands untouched].",
+   "why": [
+    "a bound on the failing principal / residual",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1476,
+   "lineInSection": 554,
+   "text": "> **CORRECTED BY T223.** This paragraph said *\"one annual rate against eleven\"* and *\"**20** (all",
+   "why": [
+    "'one annual rate' -- a cardinality claim about family B's rates",
+    "the rate-count claims"
+   ]
+  },
+  {
+   "absLine": 1488,
+   "lineInSection": 566,
+   "text": "- annual rate \u2014 **THREE rates have now produced a family-B cell: 600.0 %, 36.0 % and 300.0 %**",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1495,
+   "lineInSection": 573,
+   "text": "> **CORRECTED BY T223.** This bullet read *\"annual rate **600.0 % \u2014 and no other rate has ever",
+   "why": [
+    "names the rate 600.0 %",
+    "'no other rate' -- a universal over rates"
+   ]
+  },
+  {
+   "absLine": 1527,
+   "lineInSection": 605,
+   "text": "> All 20 principals measured at 600.0 % are odd, and T223's two new ones \u2014 **50** and **2** \u2014 are",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1528,
+   "lineInSection": 606,
+   "text": "> **even**. The odd-ness was never a property of the principal: at 600.0 % the per-period rate",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1535,
+   "lineInSection": 613,
+   "text": "- repayment counts: **`104 \u2264 n \u2264 3000`**. Family B has been observed at terms across that whole",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1539,
+   "lineInSection": 617,
+   "text": "600.0 % / MNT 0.01: T84 measured 104\u2026121 contiguously plus 150 and 200 (22 cells, of which",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1541,
+   "lineInSection": 619,
+   "text": "n = 122 and n = 250.",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1548,
+   "lineInSection": 626,
+   "text": "**n = 1000** [term set extracted by T170 from the two raw `.gz` captures].",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1551,
+   "lineInSection": 629,
+   "text": "- **The old sentence *\"Nothing above n = 250 has ever been asked at the family-B shape\"* is",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1552,
+   "lineInSection": 630,
+   "text": "false.** It has been asked to **n = 3000**, and it is family B there.",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1552,
+   "lineInSection": 630,
+   "text": "**n = 3000 is simply the",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1554,
+   "lineInSection": 632,
+   "text": "- Family B is **not a half-line in n and not a bounded island**: T117 found an interleaved band",
+   "why": [
+    "a definitional statement about family B"
+   ]
+  },
+  {
+   "absLine": 1558,
+   "lineInSection": 636,
+   "text": "at n = 1000 while B = 601, 701, 751, 901 and 999 are clean at the same term, and B = 1001 is",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1559,
+   "lineInSection": 637,
+   "text": "clean at n = 1200, 1500 and 2000 and only turns family B at n = 3000.",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1562,
+   "lineInSection": 640,
+   "text": "n at 600.0 % / MNT 0.01 is **200**.",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1572,
+   "lineInSection": 650,
+   "text": "entire reason family B is described as *\"both are wrong\"* rather than as a port defect, and on the",
+   "why": [
+    "a definitional statement about family B"
+   ]
+  },
+  {
+   "absLine": 1575,
+   "lineInSection": 653,
+   "text": "**Family B is NOT order-dependent \u2014 measured on 3 cells** [T84, 3 of 3; **re-run by T100**, 3 of 3",
+   "why": [
+    "a definitional statement about family B"
+   ]
+  },
+  {
+   "absLine": 1576,
+   "lineInSection": 654,
+   "text": "unmoved at n = 104, 108, 120, all at a 1-minor-unit disbursement, while the family-A control in the",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1586,
+   "lineInSection": 664,
+   "text": "non-zero principal row, on the last period \u2014 and must explain why B = 801 is family B at n = 1000",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1588,
+   "lineInSection": 666,
+   "text": "- ~~**Whether it exists at any other RATE**~~ \u2014 **ANSWERED BY MEASUREMENT, T223. It does.** Family B",
+   "why": [
+    "'any other rate' -- an open-question framing"
+   ]
+  },
+  {
+   "absLine": 1591,
+   "lineInSection": 669,
+   "text": "The old sentence \u2014 *\"Every family-B cell ever measured is **600.0 %** and at `n \u2265 104`\"* \u2014 is",
+   "why": [
+    "names the rate 600.0 %",
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1595,
+   "lineInSection": 673,
+   "text": "- **Whether it exists BELOW n = 104 at 600.0 %.** Still `[UNVERIFIED]` \u2014 nothing T223 did touches it,",
+   "why": [
+    "names the rate 600.0 %",
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1596,
+   "lineInSection": 674,
+   "text": "and the predicate below says it should not: at 600.0 % the region's lower edge is where the",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1597,
+   "lineInSection": 675,
+   "text": "instalment first quantizes below the first period's interest, and that is n = 104.",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1598,
+   "lineInSection": 676,
+   "text": "- **Whether it terminates.** It does **not** terminate anywhere anyone has looked: n = 3000 fails,",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1599,
+   "lineInSection": 677,
+   "text": "and **nothing above n = 3000 has been asked**.",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1599,
+   "lineInSection": 677,
+   "text": "The largest unamortized residual rose from",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1600,
+   "lineInSection": 678,
+   "text": "MNT 0.01 to **MNT 5.01 at n = 1000** (T117) to **MNT 10.01 at n = 3000** (T159) \u2014 **each time",
+   "why": [
+    "a bound on the failing principal / residual",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1626,
+   "lineInSection": 704,
+   "text": "| | **family B** (600.0 % / MNT 0.01 / n = 108) | **family A** (3.6 % / MNT 1.09 / n = 360) |",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1640,
+   "lineInSection": 718,
+   "text": "600.0 % / MNT 0.01 / n = 108, and the port has never been graded on a PARTIAL cell.** On a partial",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1687,
+   "lineInSection": 765,
+   "text": "> oracle at 600.0 % / MNT 0.01 \u2014",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1691,
+   "lineInSection": 769,
+   "text": "> boundary**, promoted with **no exemption at all**, so the exemption cannot be read as \"600 % is",
+   "why": [
+    "names the rate 600 %"
+   ]
+  },
+  {
+   "absLine": 1721,
+   "lineInSection": 799,
+   "text": "> boundary: `n=103 \u2192 0.005 \u2192 0.01`, `n=104 \u2192 0.004999999999999999999 \u2192 0.00`. **An EMI of zero means",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1728,
+   "lineInSection": 806,
+   "text": "> factor\"*. Family B is what that ambiguity does when it is allowed to run.",
+   "why": [
+    "a definitional statement about family B"
+   ]
+  },
+  {
+   "absLine": 1730,
+   "lineInSection": 808,
+   "text": "> **CONSEQUENCE FOR WHAT BUYAN IS BEING ASKED.** Family B is **NOT** a property of \"600 %\" or of",
+   "why": [
+    "names the rate 600 %",
+    "a definitional statement about family B"
+   ]
+  },
+  {
+   "absLine": 1731,
+   "lineInSection": 809,
+   "text": "> \"n \u2265 104\". It is **the EMI falling below half a minor unit**, so *the boundary moves with principal,",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1742,
+   "lineInSection": 820,
+   "text": "established that family B is the instalment falling below half a minor unit, and correctly warned",
+   "why": [
+    "a definitional statement about family B"
+   ]
+  },
+  {
+   "absLine": 1796,
+   "lineInSection": 874,
+   "text": "program has swept that is 600 % \u2192 ~108 \u00b7 300 % \u2192 ~196 \u00b7 96 % \u2192 ~568 \u00b7 48 % \u2192 ~970 \u00b7 36 % \u2192 ~1480 \u00b7",
+   "why": [
+    "names the rate 600 %"
+   ]
+  },
+  {
+   "absLine": 1798,
+   "lineInSection": 876,
+   "text": "accumulated 19-digit error decide the last few periods, which is why the measured edge at 600 % is",
+   "why": [
+    "names the rate 600 %"
+   ]
+  },
+  {
+   "absLine": 1835,
+   "lineInSection": 913,
+   "text": "**Every one of the seven is on ground nobody had swept**: no rate but 600.0 % had ever been asked",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1836,
+   "lineInSection": 914,
+   "text": "above n = 600, 300.0 % had never been asked above n = 260, and 36.0 % had never been asked above",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1837,
+   "lineInSection": 915,
+   "text": "n = 600.",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1843,
+   "lineInSection": 921,
+   "text": "**\"Family B is a 600 % phenomenon\" is dead.** `T223-R36p0-N1324-B50` is **MNT 0.50 at 36.0 % p.a.",
+   "why": [
+    "names the rate 600 %",
+    "a definitional statement about family B"
+   ]
+  },
+  {
+   "absLine": 1847,
+   "lineInSection": 925,
+   "text": "**\"Family B is a half-line in n\" is dead, and now it is dead by prediction rather than by",
+   "why": [
+    "a definitional statement about family B"
+   ]
+  },
+  {
+   "absLine": 1849,
+   "lineInSection": 927,
+   "text": "T117 discovered this band structure at 600 %; T223 predicted it at a new rate",
+   "why": [
+    "names the rate 600 %"
+   ]
+  },
+  {
+   "absLine": 1889,
+   "lineInSection": 967,
+   "text": "in the sweep is MNT 0.23)\"*.",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1894,
+   "lineInSection": 972,
+   "text": "largest failing principal is **MNT 0.23**, at 7.0 % / n = 56 [re-derived by T112 from T83's raw",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1896,
+   "lineInSection": 974,
+   "text": "- **Over the union of every cell T83, T84 and T100 have swept** (687 cells; 12 rates from 0.12 % to",
+   "why": [
+    "the rate-count claims"
+   ]
+  },
+  {
+   "absLine": 1897,
+   "lineInSection": 975,
+   "text": "600.0 %; n from 1 to 600): the largest failing principal is **MNT 2.91**, at 0.12 % / n = 600",
+   "why": [
+    "names the rate 600.0 %",
+    "a bound on the failing principal / residual",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1900,
+   "lineInSection": 978,
+   "text": "**The two absolute figures are the statement \u2014 MNT 0.23 over T83's grid,",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1901,
+   "lineInSection": 979,
+   "text": "MNT 2.91 over the union, a ratio of 291 \u00f7 23 = 12.65\u00d7.** An earlier revision wrote \"**11.6\u00d7** the",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1905,
+   "lineInSection": 983,
+   "text": "**MNT 2.91 is a FAMILY-A figure over",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1907,
+   "lineInSection": 985,
+   "text": "- **Over the union that includes T117's and T159's captures, the largest unamortized residual is",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1908,
+   "lineInSection": 986,
+   "text": "MNT 10.01 AT n = 3000** \u2014 `T159-R600p0-N3000-B1001`, 600.0 %, a disbursement of 1001 minor units,",
+   "why": [
+    "names the rate 600.0 %",
+    "a bound on the failing principal / residual",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1914,
+   "lineInSection": 992,
+   "text": "- **State it with its term, always: \"MNT 10.01 at n = 3000\".** The figure was MNT 0.01 while only",
+   "why": [
+    "a bound on the failing principal / residual",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1915,
+   "lineInSection": 993,
+   "text": "n \u2264 250 had been asked, **MNT 5.01 at n = 1000** once T117 asked (`T117P2-R600p0-N1000-B501` \u2014",
+   "why": [
+    "a bound on the failing principal / residual",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1917,
+   "lineInSection": 995,
+   "text": "frozen at `5.01` to `2107-05-01` [VERIFIED by T170 the same way]), and **MNT 10.01 at n = 3000**",
+   "why": [
+    "a bound on the failing principal / residual",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1920,
+   "lineInSection": 998,
+   "text": "- **MNT 10.01 is the largest OBSERVED residual, NOT A BOUND.** n = 3000 is simply the largest term",
+   "why": [
+    "a bound on the failing principal / residual",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1922,
+   "lineInSection": 1000,
+   "text": "and neither found a limit.** Writing \"MNT 10.01\" without its term would repeat, one level up,",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1923,
+   "lineInSection": 1001,
+   "text": "exactly the error the MNT 0.23 / MNT 2.91 restatement above was written to correct.",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1939,
+   "lineInSection": 1017,
+   "text": "nothing above 600 %, nothing at or below 0 %.",
+   "why": [
+    "names the rate 600 %"
+   ]
+  },
+  {
+   "absLine": 1940,
+   "lineInSection": 1018,
+   "text": "180 family-B cells is at 600.0 %.**",
+   "why": [
+    "names the rate 600.0 %"
+   ]
+  },
+  {
+   "absLine": 1943,
+   "lineInSection": 1021,
+   "text": "read *\"No term above n = 600 has ever been asked\"*.",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1944,
+   "lineInSection": 1022,
+   "text": "**n = 3000**, at 600.0 % only, and family B is still there. **The conclusion \u2014 that the measurement",
+   "why": [
+    "names the rate 600.0 %",
+    "a definitional statement about family B",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1947,
+   "lineInSection": 1025,
+   "text": "Above `n = 600` nothing has been asked at any rate but 600.0 %, and",
+   "why": [
+    "names the rate 600.0 %",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1948,
+   "lineInSection": 1026,
+   "text": "nothing at all has been asked above `n = 3000`.",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 1952,
+   "lineInSection": 1030,
+   "text": "record is **1001 minor units, MNT 10.01**.",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1953,
+   "lineInSection": 1031,
+   "text": "statement than it was**, because the same reading would have said \"MNT 0.23\" before T84 asked,",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1954,
+   "lineInSection": 1032,
+   "text": "\"MNT 2.91\" before T117 asked and \"MNT 5.01\" before T159 asked.",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 1968,
+   "lineInSection": 1046,
+   "text": "family-B cell** \u2014 600.0 % / B = 1 / n \u2265 104 \u2014 where the closed form predicts CLEAN (the exact gap",
+   "why": [
+    "names the rate 600.0 %",
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1969,
+   "lineInSection": 1047,
+   "text": "`B\u00b7a \u2212 \u00bd` is positive: `+2.429e-19` at n = 104, falling to `+3.025e-36` at n = 200) and the oracle",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1971,
+   "lineInSection": 1049,
+   "text": "family-B cells OF THE FOUR RECORD CAPTURES** \u2014 and **NOT** on the four at **n = 104, 105 and 106**,",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1979,
+   "lineInSection": 1057,
+   "text": "explanation for n = 104\u2026106 `[UNVERIFIED]`.",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1985,
+   "lineInSection": 1063,
+   "text": "n=104 `+2.4293e-19` = 2.43 ulp (two cells, `T84B-NSW-R600p0-N104-B1` and `T100-FAMB-R600p0-N104-B1`,",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1993,
+   "lineInSection": 1071,
+   "text": "**What the failure at n = 104\u2026106 means for the open question of family B's cause.** Family B's",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 1997,
+   "lineInSection": 1075,
+   "text": "refuted at the region's first three terms.** At n = 104 the residual is more than **two** units in",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 2000,
+   "lineInSection": 1078,
+   "text": "simple exhaustion of significant digits, and any candidate mechanism must explain n = 104, 105 and",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 2003,
+   "lineInSection": 1081,
+   "text": "region starts at n = 104 (n = 102 and n = 103 are measured clean at the same shape); the sub-ulp",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 2008,
+   "lineInSection": 1086,
+   "text": "cells, not the explanation of the family**, and it must not be used to argue that family B is",
+   "why": [
+    "a definitional statement about family B"
+   ]
+  },
+  {
+   "absLine": 2010,
+   "lineInSection": 1088,
+   "text": "rather than by caution: the residual reaches MNT 10.01 at n = 3000**, and the closed form was",
+   "why": [
+    "a bound on the failing principal / residual",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 2011,
+   "lineInSection": 1089,
+   "text": "The next worker on family B should start at **n = 104**,",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 2096,
+   "lineInSection": 1174,
+   "text": "It used to read *\"no term beyond n = 600 has been asked\"*; terms have since been asked to",
+   "why": [
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 2097,
+   "lineInSection": 1175,
+   "text": "**n = 3000** and family B is still there, with a larger residual each time somebody asked.",
+   "why": [
+    "a definitional statement about family B",
+    "states a term as a domain edge"
+   ]
+  },
+  {
+   "absLine": 2203,
+   "lineInSection": 1281,
+   "text": "> n = {104, 105, 108, 120, 121, 122, 150, 200, 250}, of which n = 104 twice and n = 105 give the 3",
+   "why": [
+    "states the region by a term threshold"
+   ]
+  },
+  {
+   "absLine": 2239,
+   "lineInSection": 1317,
+   "text": "346, all ten discriminator rows on 341 of 341 cells, the 11-of-12 rate split, MNT 0.23 / MNT 2.91 /",
+   "why": [
+    "a bound on the failing principal / residual"
+   ]
+  },
+  {
+   "absLine": 2429,
+   "lineInSection": 1507,
+   "text": "eleven POSTs and **zero reads** in the whole corpus, so the product-to-account mapping had never once been",
+   "why": [
+    "the rate-count claims"
+   ]
+  }
+ ],
+ "summary": {
+  "scopeBearingSentences": 113,
+  "sectionEndLine": 2492,
+  "sectionLines": 1570,
+  "sectionStartLine": 923,
+  "sentences": 1610
+ }
+}

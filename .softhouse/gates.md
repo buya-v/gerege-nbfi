@@ -943,10 +943,14 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
   oracle's `StackOverflowError` is a function of **JVM state**, not of the cell's inputs, and
   reconciled T159 against T169), **T170** (this rebuild: applied T159's 25 sites plus the further
   sites it found itself, split every family-B sentence into FULL and PARTIAL, added the THIRD
-  OUTCOME block, and folded in T177)
+  OUTCOME block, and folded in T177), **T223** (derived the region as a PREDICATE from T220's
+  mechanism, registered it before probing, found a THIRD load-bearing source site T220's note omits,
+  and **measured family B at 36.0 % p.a. and at 300.0 % — killing "600 % only"**; restated the region
+  in the variables the phenomenon actually has)
 - **context**: tier0-harness-schedule-poc / loan-schedule
 - **state**: **OPEN** — blocks nothing today. T112 fixed the write-up, T122 fixed two sentences in
-  T112's fix, and T170 rebuilt the family-B half after T117 and T159 moved the measurement;
+  T112's fix, T170 rebuilt the family-B half after T117 and T159 moved the measurement, and **T223
+  restated the region as a predicate and measured family B at two rates other than 600 %**;
   **none of them decided the gate, and none of them may.**
 - **raised_by**: local fire 20260820-170001, from T75's approval of T74
 - **recorded_in**: `.softhouse/gates.md`
@@ -984,6 +988,15 @@ was in **prose**, not in a measurement. **The fifth has a different mechanism fr
 and is the one to guard against next: nobody wrote anything wrong. A sentence with no scope on it
 is a standing claim about every future measurement, and it fails silently the day somebody asks a
 bigger question.** So:
+
+> **THE FIFTH MECHANISM FIRED AGAIN, AND THIS TIME IT WAS CAUGHT ON PURPOSE — T223.** The sentence
+> *"annual rate **600.0 % — and no other rate has ever produced a family-B cell**"* was a correct
+> report of everything anyone had asked and a false claim about the phenomenon. It was killed by
+> **deriving the region from the mechanism, registering the derivation in an ancestor commit, and
+> then asking the oracle cells nobody had swept** — not by another sweep of the same neighbourhood.
+> **That is the method this rule should now prefer: when a sentence's domain is the set of cells
+> somebody happened to run, the fix is a predicate, not a wider sweep.** The two rate-scoped
+> sentences that fell are corrected in place below, and each says what it used to read.
 
 1. **Nobody edits this section without rebuilding the sentence-by-sentence scope table.** Not a
    grep for the sentence you are changing — a rebuild, claim by claim, of what every sentence
@@ -1034,7 +1047,7 @@ schedule at all** — which is neither family and has its own block after this o
 | forcing the oracle's own balance `Memo` to recompute | balance goes to **`0.00`** | **does not move** — but measured on **3** of the 29 record cells only, all at 1 minor unit; **UNMEASURED** on all 180 cells T117 and T159 added, and on every partial cell |
 | the Go port | **diverges**, on exactly one cell per case | **reproduces it cell for cell — no divergence at all** on the **29** record cells (T84's 22, T100's 1 through the real grader, and T101's re-grade of all 29); **UNMEASURED** on all 180 cells T117 and T159 added, and never on a partial cell |
 | `invariant_exemptions` as a remedy | **inert** — the failure is a cell diff | **decisive** — the failure is purely invariant — **established on ONE full cell** (600.0 % / MNT 0.01 / n = 108). On a partial cell nobody has checked whether the port even reproduces the oracle, so "purely invariant" is **unmeasured** there |
-| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 ≤ n ≤ 600`, **312 cells** | **one** annual rate (600.0 %), `104 ≤ n ≤ 3000`, principals **1 … 1001 minor units**, **209 cells** |
+| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 ≤ n ≤ 600`, **312 cells** | **THREE** annual rates — 600.0 % (209 cells, `104 ≤ n ≤ 3000`, principals 1 … 1001 minor), **36.0 %** (2 cells, n = 1324 and 1500, principal 50 minor) and **300.0 %** (1 cell, n = 800, principal 2 minor) — **212 cells**. *This row read "**one** annual rate (600.0 %) … 209 cells" until T223 measured the other two rates against the live oracle.* |
 
 Cells behind that table: **312 family-A** (198 T83 + 111 T84 + 3 T100) and **209 family-B** — the
 **29** of the four record captures (22 T84 + 7 T100) plus **180** added by T117 (155) and T159 (25).
@@ -1451,18 +1464,48 @@ family-A reframing when applied to all of G-8: *"If it ever fails to sum, the re
 ### What was measured, and over what domain — narrower than family A in RATE, and now WIDER in TERM and in the largest failing PRINCIPAL
 
 **This heading used to read "a MUCH narrower domain than family A", and in the dimensions a reader
-cares about that is now false.** Family B is still narrower in **rate** — one annual rate against
-eleven — and in the *number* of distinct failing principals: **20** (all odd) against family A's
+cares about that is now false.** Family B is still narrower in **rate** — **three** annual rates
+against eleven — and in the *number* of distinct failing principals: **22** against family A's
 **66**. But it is now **wider in term** — family A's failing cells run `3 ≤ n ≤ 600` and family B's
 run `104 ≤ n ≤ 3000` — and **wider in the largest failing principal**: **1001 minor units
-(MNT 10.01)** against family A's **291 minor units (MNT 2.91)** [all four figures re-derived by T170
-from the raw captures in integer minor units].
+(MNT 10.01)** against family A's **291 minor units (MNT 2.91)** [the four T170 figures re-derived by
+T170 from the raw captures in integer minor units; **T223 raises the rate count from one to three and
+the distinct-principal count from 20 to 22** — it added 50 minor at 36.0 % and 2 minor at 300.0 %,
+and it added **no** larger residual, so MNT 10.01 at n = 3000 stands untouched].
+
+> **CORRECTED BY T223.** This paragraph said *"one annual rate against eleven"* and *"**20** (all
+> odd)"*. Both were true of everything measured before T223 and are now false as counts. **The
+> "all odd" observation is not merely a count** — it was the visible shadow of the resonance
+> condition derived below, and the two new principals are consistent with it: 50 minor at
+> r = 0.03 gives an exact first-period interest of 1.5 minor, and 2 minor at r = 0.25 gives 0.5
+> minor. **"Odd" was never the law; "lands on a half-minor-unit boundary" is**, and at r = 1/2
+> those two coincide.
 
 **T84 measured 22 family-B cells; T100 measured 7 more; T117 measured 155 and T159 measured 25 —
 209 in total, over 190 distinct (rate, n, principal) shapes** [each count re-derived by T170 from
 the raw `.gz` captures; `out/extract-t170.json`]. Union of what has been observed:
 
-- annual rate **600.0 % — and no other rate has ever produced a family-B cell.** T84 swept 300.0 %
+- annual rate — **THREE rates have now produced a family-B cell: 600.0 %, 36.0 % and 300.0 %**
+  [T223, measured against the live reference oracle: `T223-R36p0-N1324-B50` and
+  `T223-R36p0-N1500-B50` at **36.0 % p.a.**, MNT 0.50, and `T223-R300p0-N800-B2` at **300.0 %**,
+  MNT 0.02 — each emits exactly n REPAYMENT rows, every one `principal 0.00`,
+  `totalPrincipalAmount 0.00`, the balance column frozen at the disbursed amount;
+  `.softhouse/capture/t223-g8-region-predicate/out/capture-t223-raw.json.gz`,
+  `out/classify-t223.json`].
+  > **CORRECTED BY T223.** This bullet read *"annual rate **600.0 % — and no other rate has ever
+  > produced a family-B cell**"*. That was a true report of everything anyone had asked and it was
+  > **false as a statement about the phenomenon** — exactly the STANDING RULE's fifth failure mode,
+  > a sentence with no scope on it standing as a claim about every future measurement. It failed the
+  > day somebody asked a bigger question, and T223 asked it deliberately, from a predicate
+  > registered in an ancestor commit.
+  >
+  > **The rest of this bullet is UNCHANGED AND STILL CORRECT** — T84's 300.0 % cells really are all
+  > clean, and the predicate below says why: at 300.0 % the region does not start until far above
+  > **n = 260**, the largest term T84 asked. T223 found it at **n = 800** and confirmed **n = 500 and
+  > n = 1200 clean** at the same shape. **The old sentence and the new measurement do not conflict;
+  > the old sentence just had no domain on it.**
+
+  T84 swept 300.0 %
   with B = 2 at n = 100, 150, **170…204 contiguously**, 220 and 260 — **41 cells, all clean** — and
   300.0 % with B = 1 at six terms up to n = 260 (n = 100, 150, 175, 196, 220, 260): the 300 %
   failures are **family A** (their principal column sums) [VERIFIED by T100's re-classification of
@@ -1475,11 +1518,20 @@ the raw `.gz` captures; `out/extract-t170.json`]. Union of what has been observe
   `1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 51, 101, 501, 503, 551, 601, 801, 999, 1001`
   [re-derived by T170 from the raw captures: the four record captures contain exactly one of them
   (**1**); T117's two captures contain **14** — `1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 51, 101,
-  501`; and T159 added **6** — `503, 551, 601, 801, 999, 1001`]. **This bullet used to read
+  501`; and T159 added **6** — `503, 551, 601, 801, 999, 1001`; **T223 added 2 more at the two new
+  rates — `50` at 36.0 % and `2` at 300.0 % — for 22 distinct values**]. **This bullet used to read
   *"principal MNT 0.01 (1 minor unit) — no other
   principal has produced a family-B cell"*, which was true of the four record captures and is now
-  false.** Every family-B principal observed is odd; **that is an observation over 209 cells, not a
-  law**, and no even principal has been shown to be safe.
+  false.**
+  > **"EVERY ONE ODD" IS SUPERSEDED, AND BY AN EXPLANATION RATHER THAN A COUNTEREXAMPLE — T223.**
+  > All 20 principals measured at 600.0 % are odd, and T223's two new ones — **50** and **2** — are
+  > **even**. The odd-ness was never a property of the principal: at 600.0 % the per-period rate
+  > factor is exactly `1/2`, so `B_minor × r` lands on a half-minor-unit rounding boundary **iff
+  > `B_minor` is odd**. At 36.0 % (`r = 0.03`) that condition reads `B_minor ≡ 50 (mod 100)`, and at
+  > 300.0 % (`r = 1/4`) it reads `B_minor ≡ 2 (mod 4)`. **The law is the resonance condition below;
+  > "odd" was its shadow at one rate.** The old sentence's own hedge — *"that is an observation over
+  > 209 cells, not a law"* — was right, and it is the reason this correction is a refinement and not
+  > a contradiction.
 - repayment counts: **`104 ≤ n ≤ 3000`**. Family B has been observed at terms across that whole
   range — **but NOT at every term in it**; there are measured clean gaps inside otherwise-contiguous
   family-B stretches, which is the band structure below.
@@ -1533,11 +1585,16 @@ of the 180 new cells** `[UNVERIFIED]`.
   for it.** `[UNVERIFIED]` A candidate mechanism must now also explain the **partial** shape — one
   non-zero principal row, on the last period — and must explain why B = 801 is family B at n = 1000
   while B = 601, 701, 751, 901 and 999 are clean at the same term.
-- **Whether it exists at any other RATE, or below n = 104.** Every family-B cell ever measured is at
-  **600.0 %** and at `n ≥ 104`. `[UNVERIFIED]` **The "at any other principal" half of this question
-  is ANSWERED and the old sentence is deleted, not softened:** 20 distinct principals from 1 to 1001
-  minor units are family B, so "every family-B cell ever measured is 600.0 % / MNT 0.01 / n ≥ 104"
-  is **false**.
+- ~~**Whether it exists at any other RATE**~~ — **ANSWERED BY MEASUREMENT, T223. It does.** Family B
+  is measured at **36.0 % p.a.** (MNT 0.50, n = 1324 and n = 1500) and at **300.0 %** (MNT 0.02,
+  n = 800), against the live reference oracle, from a predicate registered in an ancestor commit.
+  The old sentence — *"Every family-B cell ever measured is **600.0 %** and at `n ≥ 104`"* — is
+  **false as of T223** and is struck rather than softened. **The "at any other principal" half was
+  already answered by T117/T159** (20 distinct principals from 1 to 1001 minor units), and T223 adds
+  2 more.
+- **Whether it exists BELOW n = 104 at 600.0 %.** Still `[UNVERIFIED]` — nothing T223 did touches it,
+  and the predicate below says it should not: at 600.0 % the region's lower edge is where the
+  instalment first quantizes below the first period's interest, and that is n = 104.
 - **Whether it terminates.** It does **not** terminate anywhere anyone has looked: n = 3000 fails,
   and **nothing above n = 3000 has been asked**. The largest unamortized residual rose from
   MNT 0.01 to **MNT 5.01 at n = 1000** (T117) to **MNT 10.01 at n = 3000** (T159) — **each time
@@ -1676,6 +1733,145 @@ family A at 21.6 % / MNT 0.01 / n = 6), `.softhouse/reviews/T84-evidence/propose
 > the cells that happen to have been swept, not of the phenomenon. The promoted vectors pin **two points
 > on that boundary**; they do not bound it. This must be settled before options (b) or (c) — each of
 > which would narrow the graded domain by describing a region — are put to a decision.
+
+---
+
+## THE REGION, STATED AS A PREDICATE — T223, registered before probing and then MEASURED
+
+**This block exists because the paragraph immediately above is right and was not actionable.** T220
+established that family B is the instalment falling below half a minor unit, and correctly warned
+that *"any statement of G-8's region in terms of a rate or a term length is a description of the
+cells that happen to have been swept"*. Every statement of the region in this file was still in
+rates and terms. T223 replaced it with a predicate, **registered it in a commit that is a strict
+ancestor of the capture** (`.softhouse/capture/t223-g8-region-predicate/PREDICTION.md`,
+`prediction.json`, P-9), and then asked the live reference oracle.
+
+### A THIRD load-bearing source site, which T220's note does not contain
+
+Both of T220's sites were re-verified **by content, not by line number**, at the pinned commit
+`426a23544e8426a38ae43ae404670a0a7e85b9eb`, and both still carry the quoted text at the quoted line:
+`ProgressiveEMICalculator.java:1962` reads
+`.divide(calculatedDaysInPeriod, mc).setScale(mc.getPrecision(), mc.getRoundingMode());//`, and
+`RepaymentPeriod.java:217` reads
+`return interestPeriods.stream().map(InterestPeriod::getRateFactor).reduce(BigDecimal.ONE, BigDecimal::add);`
+**[VERIFIED by T223 by re-opening both files.]** `:1962`'s text occurs **twice** in that file, also
+at `:1979` (`rateFactorByRepaymentPartialPeriod`); the G-8 shape reaches `:1962` via
+`rateFactorByRepaymentEveryMonth` (`:1925`), not `:1979`.
+
+**A third site decides the region and is absent from T220's account:**
+`ProgressiveEMICalculator.checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods` (**`:1258-1308`**)
+with `EmiAdjustment.shouldBeAdjusted()` / `adjustment()`
+(`fineract-progressive-loan/.../calc/data/EmiAdjustment.java`). It re-runs up to **three** times and
+**raises the instalment** when the residual carried to the final row is large relative to it. It is
+the only reason a cell whose instalment sits at or below the first period's interest can still
+amortize, and **it is what puts a ceiling on the failing principal.** **[VERIFIED by T223 by reading
+the source at the pinned commit.]**
+
+### The predicate
+
+In **integer minor units**, for the graded G-8 shape (MONTHS / `repaymentEvery` 1 /
+DECLINING_BALANCE / DAYS_30 / DAYS_360 / single disbursement on the schedule start date / no down
+payment / no charges / both multiples-of null / `(19, HALF_UP)` / dp 2), let
+
+- `r` be the oracle's period-1 rate factor as `:1962` computes it (19 **decimal places**);
+- `I₁ = B_minor · r` — the **exact** first-period interest, never rounded;
+- `E_q` — the oracle's instalment, re-executed digit-for-digit through `:1962` + `:217` +
+  `:1816-1828` + `:1838-1841` and quantized to dp 2 HALF_UP by `Money(..)` (`Money.java:40-53`).
+
+Then
+
+| | |
+|---|---|
+| `E_q > I₁` | **not family B** — every period leaves `E_q − I₁ > 0` for principal, so the loan amortizes, however slowly |
+| `E_q = I₁` | **not family B** — no interest deficit accrues, so the final-row residual is applied as **principal** |
+| `E_q < I₁` | **FAMILY B**, unless the third site rescues it, which needs both `B_minor > ⌊n/2⌋` and `2·B_minor ≥ n` |
+
+### What that says about the region, in the phenomenon's own variables
+
+Exact annuity arithmetic gives `E_exact = I₁ / (1 − (1+r)^−n)`, so **`E_exact > I₁` strictly, for
+every n**, by `I₁·(1+r)^−n / (1 − (1+r)^−n)` — an excess that decays **geometrically in n**. So:
+
+- **The TERM enters only through `(1+r)^n` against `10^19`.** The boundary term scales as
+  **`n* ≈ 19 / log₁₀(1+r)`** — *a property of the RATE, not of the principal.* At the rates this
+  program has swept that is 600 % → ~108 · 300 % → ~196 · 96 % → ~568 · 48 % → ~970 · 36 % → ~1480 ·
+  21.6 % → ~2452 · 7 % → ~7519. **This is an ORDER, not the boundary**: the sign and size of the
+  accumulated 19-digit error decide the last few periods, which is why the measured edge at 600 % is
+  **104** and not 108, and why the region is **banded** rather than a half-line.
+- **The PRINCIPAL enters twice, and neither time as a magnitude.** Once as **resonance** — `I₁` must
+  land on a half-minor-unit boundary, which at `r = 1/2` is exactly "`B_minor` odd", at `r = 0.03` is
+  `B_minor ≡ 50 (mod 100)`, and at `r = 1/4` is `B_minor ≡ 2 (mod 4)`. And once as the third site's
+  **rescue threshold `B_minor ≳ n/2`**, which is a **ceiling on the failing principal that does not
+  depend on the rate at all** — and which is the same `≈ n/2 minor units` law this file already
+  records for family A at 0.12 % (59, 118, 176, 234, 291 minor at n = 120, 240, 360, 480, 600).
+
+**The single most decision-relevant consequence for Buyan.** The failing disbursement is bounded by
+roughly **`n/2` minor units** — i.e. **MNT `n/200`** — *whatever the rate.* At any term a real
+Mongolian NBFI product would carry (`n ≤ 360`) that ceiling is about **MNT 1.80**. A family-B cell at
+an ordinary loan amount would need a term of order `2 × B_minor` periods: MNT 1,000,000 would need
+**~200,000,000 monthly repayments**. **That is a much stronger statement than "no commercially
+realistic loan amount has been observed to fail", which is all this file could say before — it is a
+statement about the mechanism rather than about the sweep.** It is still **not a proof**: it is the
+predicate's consequence, and the predicate is known to be incomplete (below).
+
+### What was measured, and it is 7 for 7
+
+Probed against the **live** reference oracle (Fineract) on 2026-08-22, pinned image
+`sha256:e596339626bf…`, pinned commit `426a23544e…` clean, Path A embeddable seam in a throw-away
+`docker run --rm`, `(19, HALF_UP)`, MNT dp 2, tenant ids all new (`t223_*`), **emission order
+scrambled so predicted-family-B and predicted-clean cells interleave**. Both rig calibrations
+reproduce the already-promoted `T64-ZP-A` / `T64-ZP-B` **observed blocks byte-identically with zero
+input differences**. **0 cells threw** — one attempt each, no retries.
+
+| cell | rate % | n | B minor | instalment obs / predicted | principal repaid | **verdict** |
+|---|---|---|---|---|---|---|
+| `T223-R36p0-N1323-B50` | 36.0 | 1323 | 50 | 2 / **2** | 50 of 50 | clean, **as predicted** |
+| `T223-R36p0-N1324-B50` | 36.0 | **1324** | 50 | 1 / **1** | **0 of 50** | **FAMILY B, as predicted** |
+| `T223-R36p0-N1500-B50` | 36.0 | 1500 | 50 | 1 / **1** | **0 of 50** | **FAMILY B, as predicted** |
+| `T223-R300p0-N500-B2` | 300.0 | 500 | 2 | 1 / **1** | 2 of 2 | clean, **as predicted** |
+| `T223-R300p0-N800-B2` | 300.0 | **800** | 2 | 0 / **0** | **0 of 2** | **FAMILY B, as predicted** |
+| `T223-R300p0-N1200-B2` | 300.0 | 1200 | 2 | 1 / **1** | 2 of 2 | clean, **as predicted** |
+| `T223-R21p6-N3000-B250` | 21.6 | 3000 | 250 | 5 / **5** | 250 of 250 | clean, **as predicted** |
+
+**Every one of the seven is on ground nobody had swept**: no rate but 600.0 % had ever been asked
+above n = 600, 300.0 % had never been asked above n = 260, and 36.0 % had never been asked above
+n = 600. **The instalment matched the emulated prediction exactly on all seven** — not merely the
+family classification. [`.softhouse/capture/t223-g8-region-predicate/out/capture-t223-raw.json.gz`,
+`out/classify-t223.json`, `src/*`.]
+
+**Two things this measurement kills.**
+
+1. **"Family B is a 600 % phenomenon" is dead.** `T223-R36p0-N1324-B50` is **MNT 0.50 at 36.0 % p.a.
+   — an ordinary Mongolian NBFI consumer rate** — emitting 1,324 repayment rows every one of them
+   `principal 0.00`, `totalPrincipalAmount 0.00`, and the balance frozen at `0.50`. What keeps it out
+   of a real product is the **term** (1,324 months ≈ 110 years), **not the rate**.
+2. **"Family B is a half-line in n" is dead, and now it is dead by prediction rather than by
+   accident.** At 300.0 % / MNT 0.02 the oracle is **clean at n = 500, family B at n = 800, and clean
+   again at n = 1200**. T117 discovered this band structure at 600 %; T223 predicted it at a new rate
+   before measuring it.
+
+### What the predicate does NOT do, stated so it cannot be over-read
+
+- **It is measurably incomplete, and this was written down before the probe, not after.** Validated
+  against the **1,038** observed cells of the eight committed raw captures, the emulated instalment
+  reproduces the oracle's period-1 instalment on **971 of 1,035** comparable cells; **all 64 misses
+  are cells where the third site raised the instalment**, and T223 did not finish reverse-engineering
+  that site's exact threshold. The classification rule as written **fails outright on at least one
+  committed cell — `T159-R600p0-N1000-B801`**, where the rescue threshold says "rescued" and the
+  oracle emitted family B. **That is a known defect of this predicate, recorded in
+  `prediction.json` before any probe ran.**
+- **It is scoped to the FULL family-B shape.** It makes no claim about the **PARTIAL** shape and is
+  not evidence about it either way.
+- **It says nothing about the THIRD OUTCOME**, nothing about the **Go port** (T223 graded no port),
+  and nothing about `MinorUnitDigits ≠ 2`, Path B / REST, other day-count conventions, or any rate it
+  did not ask.
+- **`n* ≈ 19 / log₁₀(1+r)` is an ORDER, not a boundary.** The exact edge comes out of the emulation,
+  and the emulation is the thing that has been tested.
+- **T223 promoted no vector.** `.softhouse/vectors` is byte-unchanged at
+  `73c3ea7b43dd75f04884072719a87fc8e1d255c1`, and `bash .softhouse/conformance.sh` on T223's branch
+  gives probe present and `up`, **VERDICT PASS (exit 0), 46 parity vectors, 7884 cells, 0
+  inadmissible, 0 invariant violations, 4 EXEMPTED BY A VECTOR**.
+
+---
 
 > Two records this supersedes rather than contradicts: **the T83-vs-T101/T112 contradiction over whether
 > `invariant_exemptions` is INERT was never a contradiction.** T83's demonstration ran on
@@ -1898,8 +2094,13 @@ day-count.
   option was first written:
   - **The term half of the old "not fully bounded" reason has changed and the reason still holds.**
     It used to read *"no term beyond n = 600 has been asked"*; terms have since been asked to
-    **n = 3000** and family B is still there, with a larger residual each time somebody asked. The
-    other half — **family B has been seen at only one rate** — is unchanged and still true.
+    **n = 3000** and family B is still there, with a larger residual each time somebody asked.
+    ~~The other half — **family B has been seen at only one rate** — is unchanged and still true.~~
+    **THAT HALF IS NOW FALSE TOO — T223 measured family B at 36.0 % and at 300.0 %.** So a refusal
+    written as a rate band would be wrong in the same way a refusal written as a term band would be:
+    the region is a **predicate over (principal, rate, term, minor-unit digits)**, and any option (b)
+    draft must be written in those terms or it will refuse the wrong cells. See *THE REGION, STATED
+    AS A PREDICATE* above.
   - **THE THIRD OUTCOME.** Part of this region cannot be evaluated by the reference implementation
     on demand at all: it can throw `java.lang.StackOverflowError` and emit no schedule. A refusal
     drafted in a graded domain that can express only "amortizes" and "does not amortize" will
@@ -1915,10 +2116,11 @@ day-count.
   `[UNVERIFIED]`.
 
 **(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n — a hard `user`
-gate no agent may cross.** Buyan decides. T83, T84, T100, T101, T112, **T114, T122, T129, T140 and
-T170** have each handled them and
+gate no agent may cross.** Buyan decides. T83, T84, T100, T101, T112, **T114, T122, T129, T140,
+T170 and T223** have each handled them and
 **decided none, recommended none, and pre-implemented none**; they attach only the measurement and
-the scoping. T112's whole mandate was the write-up: it corrected sentences and deleted a superseded
+the scoping. **T223 measured a new region and restated it; it decided nothing, promoted no vector,
+graded no port, and left `.softhouse/vectors` byte-unchanged.** T112's whole mandate was the write-up: it corrected sentences and deleted a superseded
 block, and it moved nothing about the gate's substance; T114, T122, T129, T140 and T170 likewise
 touched only the prose. **T117, T159, T169 and T177 measured for this gate and deliberately edited
 nothing in it** — T117 and T159 both refused to edit `gates.md` because this STANDING RULE demands a
