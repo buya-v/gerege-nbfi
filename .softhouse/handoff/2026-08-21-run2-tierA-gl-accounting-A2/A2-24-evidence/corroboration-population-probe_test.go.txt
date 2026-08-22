@@ -1,0 +1,131 @@
+package conformance
+
+import (
+	"bytes"
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+)
+
+// A2-24 PROBE — a store on which the narrowed and un-narrowed corroboration
+// counts DIFFER. Scratch file; not intended to be committed as it stands.
+//
+// The committed store carries ZERO provenance.corroborated_by entries, so
+// CorroborationsClaimed and RefusedCorroborationsClaimed are both 0 whatever the
+// population rule is. This probe injects one corroboration into EVERY vector of a
+// COPY of the store (t.TempDir, the pristine store is never opened for writing)
+// and then blinds monthend.reanchor on path_a_embeddable so that a whole block of
+// vectors is REFUSED. The two rules then read differently.
+func TestA2_24CorroborationPopulationProbe(t *testing.T) {
+	root := repoRoot(t)
+	blinded := copyStore(t, storeRoot(t))
+
+	injected := injectCorroborationEverywhere(t, blinded)
+	if injected == 0 {
+		t.Fatal("injected zero corroborations: this probe would measure nothing (P-35/P-64)")
+	}
+
+	perturb(t, filepath.Join(blinded, "capabilities.json"),
+		"\"schedule.core\": \"exercised\",\n        \"monthend.reanchor\": \"exercised\",",
+		"\"schedule.core\": \"exercised\",\n        \"monthend.reanchor\": \"blind\",")
+
+	impl, n, err := NewReplayImplementation(blinded, "")
+	if err != nil {
+		t.Fatalf("NewReplayImplementation: %v", err)
+	}
+	if n == 0 {
+		t.Fatal("the replay implementation learned no answers")
+	}
+	s := mustRun(t, Options{
+		RepoRoot: root, StoreRoot: blinded,
+		Implementation: impl, ImplementationName: "replay", OracleProbe: "up",
+	})
+	if s.Refused == 0 {
+		t.Fatal("the perturbation refused NO vector, so the two rules cannot differ here and this probe " +
+			"is vacuous")
+	}
+	if s.Inadmissible != 0 {
+		var why []string
+		for i, r := range s.Results {
+			if r.Outcome == OutcomeInadmissible {
+				why = append(why, s.Results[i].CaseID+": "+strings.Join(r.Detail, "; "))
+			}
+		}
+		t.Fatalf("the injection made %d vectors INADMISSIBLE, which would confound the count: %v",
+			s.Inadmissible, why)
+	}
+
+	t.Logf("A2-24 PROBE MEASURED: vectors=%d injected_corroborations=%d refused=%d inadmissible=%d",
+		len(s.Results), injected, s.Refused, s.Inadmissible)
+	t.Logf("  THIS BINARY (narrowed, A2-22): CorroborationsClaimed=%d RefusedCorroborationsClaimed=%d "+
+		"sum=%d", s.CorroborationsClaimed, s.RefusedCorroborationsClaimed,
+		s.CorroborationsClaimed+s.RefusedCorroborationsClaimed)
+	t.Logf("  counterfactuals: named=%d refusedNamed=%d unbacked=%v",
+		s.CounterfactualsNamed, s.RefusedCounterfactualsNamed, s.UncoveredGradedCapabilities)
+
+	out := render(s)
+	for _, line := range strings.Split(out, "\n") {
+		if strings.Contains(line, "corroboration claim") || strings.Contains(line, "kills carried by") {
+			t.Logf("  REPORT LINE: %s", strings.TrimSpace(line))
+		}
+	}
+}
+
+// injectCorroborationEverywhere adds one admissible corroboration to every
+// vector's provenance, in place, in the COPIED store. Numbers are decoded with
+// UseNumber so no money or rate literal ever passes through a float.
+func injectCorroborationEverywhere(t *testing.T, storeDir string) int {
+	t.Helper()
+	count := 0
+	err := filepath.Walk(storeDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() || filepath.Ext(path) != ".json" {
+			return nil
+		}
+		base := filepath.Base(path)
+		if base == "PIN.json" || base == "capabilities.json" {
+			return nil
+		}
+		raw, rerr := os.ReadFile(path)
+		if rerr != nil {
+			return rerr
+		}
+		dec := json.NewDecoder(bytes.NewReader(raw))
+		dec.UseNumber()
+		var m map[string]any
+		if derr := dec.Decode(&m); derr != nil {
+			return derr
+		}
+		prov, ok := m["provenance"].(map[string]any)
+		if !ok {
+			t.Logf("  (no provenance object in %s — skipped)", base)
+			return nil
+		}
+		prov["corroborated_by"] = []any{map[string]any{
+			"source":   "embeddable-readme-ci-stdout",
+			"row_kind": "REPAYMENT",
+			"columns":  []any{"principal", "interest"},
+			"note":     "A2-24 probe injection",
+		}}
+		var buf bytes.Buffer
+		enc := json.NewEncoder(&buf)
+		enc.SetEscapeHTML(false)
+		enc.SetIndent("", "  ")
+		if eerr := enc.Encode(m); eerr != nil {
+			return eerr
+		}
+		if werr := os.WriteFile(path, buf.Bytes(), 0o644); werr != nil {
+			return werr
+		}
+		count++
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("injectCorroborationEverywhere: %v", err)
+	}
+	return count
+}
