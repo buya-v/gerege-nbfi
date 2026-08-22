@@ -33,9 +33,9 @@ Built by local fire `20260821-125942`.
 | **G-11** | CONTRACT | **CLOSED — RATIFIED. DEC-2 revision 5 (`A2-32`) passed `A2-33`'s independent review CLEAN, local fire `20260822-140002`. Five revisions, four rejections, one ratification.** `chosen_by: agent` (driver), per CLAUDE.md § Answering gates. **Buyan may reverse it.** | Nothing — the gate is closed. **A ratified DEC-n may not be amended by an agent**; any change to DEC-2 from here is a fresh `user` gate. | `## G-11 — RATIFIED (rev 5, A2-33)` |
 | **G-12** | ENGINEERING | **OPEN — MEASURED by `A2-29`; analyst recommends (a)+(b′), driver decides.** The stored balance is a **SECOND SOURCE OF TRUTH**, not a cache — made to disagree with the derived sum by **MNT 2,000,000.00** on the live oracle, surviving 4 recomputes, served through 2 REST endpoints flagged `computed: true`. | The driver, for (a). Option (c) would narrow the graded domain and stays a hard `user` gate. Blocks nothing today. | `## G-12 — MEASURED (A2-29)` — the LIVE block. `## G-12 — Fineract STORES a running balance on the entry` is the RAISING record only. |
 | **G-13** | CONTRACT | **CLOSED — RATIFIED. DEC-2 revision 6 landed, local fire `20260822-060013`.** Prepared by `T244`, independently reviewed by `T246` (**ACCEPT**, conditional on F-2 and F-3, both applied before landing), ratified by the driver `chosen_by: agent` per CLAUDE.md § Answering gates. **Buyan may reverse it.** The evidential reason only: **8 reversed originals + 8 reversing legs = 16 rows, 3 pairs, 6 transaction ids**, re-derived by BOTH `T244` (`477dc2d`) and `T246` (`f13bf4a`). **No obligation moved.** | Nothing — the gate is closed. `PIN-ledger.json` correctly **stays at 5**; revision 6 changes no obligation and bumping it would either make all six ledger vectors inadmissible or move the vector-store digest (P-61). | `## G-13 — CLOSED, RATIFIED (rev 6)` |
-| **G-14** | CONTRACT | **OPEN — RAISED by `T246` (F-1, HIGH), local fire `20260822-060013`.** DEC-2's **OPENING BANNER** — under an instruction to *read this before any other sentence* — asserts *"NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL"*. **FALSE.** The harness grades **LEDGER 4 parity / 2 oracle-refusal / 21 money cells** on every run. **The banner NAMES THE INSTRUMENT THAT REFUTES IT** (fact 1 cites `ls .softhouse/vectors/`, which now lists `ledger/` holding six `LDG-*` files). **Seven sites: L3, L7, L10, L815, L819, L825, L2437**, plus a third live falsehood at **L87** (*"until then A2-15 stays blocked"* — `A2-15` is `done`). | A DEC-2 **revision 7** PREPARED and INDEPENDENTLY REVIEWED, then driver ratification — the same route G-13 just took. **Blocks no PORTING work** — scope decided by the driver on local fire `20260822-140002` and recorded in `program.json` `gates_pending[].blocks`; **it does still block any amendment to DEC-2 outside the prepare-only route `T247` is on**, so "nothing" was too flat and `T249` was right to flag it. It is also the first thing every reader of DEC-2 is told to read. | `## G-14 — DEC-2's OPENING BANNER IS FALSE` |
+| **G-14** | CONTRACT | **CLOSED — RATIFIED by the driver, local fire `20260822-060013`, on `T260`'s clean independent review of DEC-2 revision 8 (verdict RATIFY).** The banner was FALSE and is corrected; **revision 8 is LANDED** at `docs/adr/DEC-2-gl-accounting-adapter.md` (3039→3541 lines, 43 hunks). **NO OBLIGATION MOVED** — `T260` proved it on four independent legs, the strongest being an exhaustive table-cell census: **140 rows before, 140 after, 0 removed, 0 added, exactly 4 changed** (§4.4 I-1/I-2/I-3/I-7), **last cell only**, with I-7's `Idempotency-Key` cells byte-identical and all ten §5.3 precondition rows byte-identical. **Revision 7 was REJECTED**; revision 8 supersedes it. | **CLOSED.** Ratified under CLAUDE.md § Answering gates (DEC-n ratification is agent-decidable once the contract passes an independent review clean; Buyan may reverse it). **THE ROUTE ACTUALLY TAKEN WAS NOT THE ONE THIS ROW USED TO RECORD** — it said "a revision 7 PREPARED and INDEPENDENTLY REVIEWED, then driver ratification". Revision 7 was prepared, reviewed **twice**, and **rejected**; the amended route is P-78: prepare **AND** land in **ONE** fire, on a host that can run the BAR, because the propositions ARE coordinates into a moving file. | `## G-14 — DEC-2's OPENING BANNER IS FALSE` |
 
-**Open right now: G-4, G-5, G-8, G-10, G-12, G-14.** *(**G-13 CLOSED — RATIFIED**: DEC-2 revision 6 landed this fire on `T246`'s ACCEPT. **G-14 RAISED** by `T246`'s F-1 — DEC-2's opening banner is false.)* *(**G-11 CLOSED — RATIFIED** by the driver, local fire `20260822-140002`, on `A2-33`'s clean independent review of DEC-2 rev 5.)* *(Register refreshed by local fire `20260822-000013`.)* Of those, **G-4 and G-5 are hard `user` gates** (each amends a
+**Open right now: G-4, G-5, G-8, G-10, G-12.** *(**G-14 CLOSED — RATIFIED** by the driver, local fire `20260822-060013`, on `T260`'s RATIFY verdict over DEC-2 revision 8. Revision 7 was REJECTED by two independent reviews; revision 8 landed and was reviewed clean.)* *(**G-13 CLOSED — RATIFIED**: DEC-2 revision 6 landed this fire on `T246`'s ACCEPT. **G-14 RAISED** by `T246`'s F-1 — DEC-2's opening banner is false.)* *(**G-11 CLOSED — RATIFIED** by the driver, local fire `20260822-140002`, on `A2-33`'s clean independent review of DEC-2 rev 5.)* *(Register refreshed by local fire `20260822-000013`.)* Of those, **G-4 and G-5 are hard `user` gates** (each amends a
 ratified DEC-n); **G-8, G-10 and G-12 block no work today**. The driver has recorded a recommendation on **G-8 and G-10**.
 **G-12's measurement is now DONE** (`A2-29`, local fire `20260822-000013`) and it answered the question the
 driver deliberately refused to pre-judge: the stored balance is a **second source of truth, not a cache**.
@@ -3906,7 +3906,7 @@ Permission to land **DEC-2 revision 6**, changing the **evidential reason only**
 
 ## G-14 — DEC-2's OPENING BANNER IS FALSE, AND IT NAMES THE INSTRUMENT THAT REFUTES IT
 
-- **id**: G-14 · **class**: CONTRACT · **state**: **OPEN — RAISED**
+- **id**: G-14 · **class**: CONTRACT · **state**: **CLOSED — RATIFIED** (driver, local fire `20260822-060013`, on `T260`'s RATIFY)
 - **context**: `tierA-gl-accounting` / slice `tierA-gl-accounting-A2`
 - **raised**: local fire `20260822-060013`, from `T246`'s **F-1 (HIGH)** while reviewing revision 6
 - **blocks**: **NO PORTING WORK** — no task is parked on it, and it does **not** forbid writing Go under `nexus/` or storing contract-shaped vectors (scope decided below). **It DOES still block any amendment to DEC-2** other than the prepare-only route `T247` is on. The earlier bare *"NOTHING"* here was permissive in the wrong direction; `T249` flagged it and this is the correction. It is also the first thing every reader of DEC-2 is instructed to read.
@@ -4015,3 +4015,94 @@ fallback. A guard proved only on the shape it was designed around is P-76's taut
 **Filed `T249` for an INDEPENDENT re-derivation of this scope decision AND of the resolver patch**, because
 the driver found this, decided it, and fixed the instrument all in one fire — the same reason `T245` exists.
 Recorded in `program.json` as `blocks_reviewed_by: T249 (PENDING) — NOT independently checked yet`.
+
+
+---
+
+## G-14 — CLOSURE RECORD (driver, local fire `20260822-060013`)
+
+**CLOSED — RATIFIED.** DEC-2 **revision 8** is landed and ratified on `T260`'s independent review
+(verdict **RATIFY**, nine findings, **none an obligation move**).
+
+### Why the driver may close this without Buyan
+CLAUDE.md § Answering gates: *DEC-n ratification is agent-decidable once the contract passes an independent
+review clean; the driver ratifies, records the rationale, and proceeds — Buyan may reverse it.* What is
+**unchanged**: cutover, regulatory sign-off and licence facts remain hard `user` gates. **This closure
+authorises nothing about the port and nothing about a cutover.**
+
+### What was proved, and by whom
+`T255` prepared **and landed** revision 8 in one fire; `T260` reviewed it independently and **re-derived
+rather than read**.
+
+**No obligation moved — four independent legs.** `T260` did not accept `T255`'s proof: it measured that
+`T255`'s byte-identity population was **chosen**, covering only **18.2% of lines / 20.1% of characters**, so
+four fifths of DEC-2 rested on a modal-line diff **blind to non-modal obligations**. It closed that gap
+itself:
+
+1. **Section identity map**, derived from headings rather than chosen: 22 of 40 sections byte-identical.
+2. **Exhaustive table-cell census — the strongest result: 140 rows before, 140 after, 0 removed, 0 added,
+   exactly 4 changed** (§4.4 `I-1`/`I-2`/`I-3`/`I-7`), **last cell only**, confirmed by a dedup-free multiset
+   control. **`I-7`'s `Idempotency-Key` cells byte-identical. All ten §5.3 precondition rows byte-identical.**
+3. **Broader non-modal predicate**: 219 normative sentences against `T255`'s 87 modal lines; **14 lost — 8
+   modal, 6 non-modal — every one adjudicated by hand.**
+4. **Applier re-derivation** reproducing the landed blob **byte-for-byte** (`sha256 09e456b8…`), 43/43 hunks —
+   so 100% of the diff is 43 named BEFORE→AFTER pairs, and `T260` read all 176 removed and 656 added lines.
+   **Not a sample.**
+
+**One non-modal obligation candidate was found outside `T255`'s covered set** — §8.2's admissibility
+enumeration — and adjudicated: **all five elements survive verbatim**, only the tense moves, and the sentence
+was always scoped to `A2-15`, which is `done`. **Not an obligation move.**
+
+### The mechanism, and the measurement that settled it
+Revision 8 replaces line-number citations with **ANCHOR** (an exact unique substring, resolved by
+`git grep -n -F`) plus **DERIVED** (source properties written once in a fence, re-parsed and compared).
+
+`T255` was told to wire a line-number checker into the automatic path and **argued it down with numbers**
+(**P-81**): the checker covers **4 rows** while DEC-2 carried **115** `path:NNNN` citations, **90** into this
+repo — *"it would have enforced 4 of 90 while reading as though it enforced all."* `T260` re-derived the
+denominator independently (**117 / 26 / 91**; `SH_ROWS` exactly 4) and **UPHELD the argument**.
+
+**`T260` then measured something `T255` did not, which strengthens `T255`'s own case:**
+
+| `conformance.sh` | rev 8 anchors | line-number checker |
+|---|---|---|
+| `a71c140`, **untouched merge-base** | exit 0 | **3 of 4 MOVED** |
+| cloud `T253` | exit 0 | **4 of 4 MOVED, incl. `:1300`** |
+| mac `T253b` (net zero) | exit 0 | **3 of 4 MOVED** |
+
+**A wired line-number gate would ALREADY have been RED on `main` before `T253` touched anything.**
+
+**The document had prescribed this exact remedy at revision 4 (`FU-A2-25-3`) and left it undone. Revision 8
+performs it.**
+
+### What is NOT closed by this, carried forward as conditions
+- **`F-2` MEDIUM — the one sentence to soften.** A **NON-UNIQUE** anchor yields 2 matches and `git grep`
+  **exits 0**; nothing flags it. So *"an anchored document is correct with nothing running at all"* is
+  **overstated**. A **deleted or edited** anchor gives 0 matches and **exit 1** — the reader gets nothing,
+  loudly, which is strictly better than a rotted line number. Anchors are **worse** than line numbers under
+  whitespace/reformat (measured: one inserted space → ROT).
+- **`F-1` MEDIUM** — the checker parses **22 of the document's 25** `[ANCHOR` tokens; two **live** anchors
+  carrying a trailing `; MEASURED by …` are **silently unchecked**, contradicting its own P-66/P-70 claim.
+  Both resolve today (`T260` verified by hand).
+- **`FU-T255-1`** — the checker is **HAND-RUN**. `T255` refused to touch `T253`'s `conformance.sh` and that
+  refusal was correct, but **"wrote the wiring" ≠ installed**. Filed into **`T269`**.
+- **`C-8`'s class is not closed** — 38 bare citations survive, disclosed rather than hidden.
+
+### Corrections recorded against the driver at closure
+1. **The driver mislabelled the review findings.** Every dispatch this fire said *"`T251`'s C-1…C-8"*.
+   **`T251` issued C-1…C-6**; C-7 and C-8 are the **driver's own** labels, invented in the dispatch prompt and
+   then attributed to the reviewer. `T260` caught it. The finding numbers in `T255`'s and `T260`'s work are
+   sound; **the attribution was not.**
+2. **This register recorded a route that was never taken.** The G-14 row said *"a revision 7 PREPARED and
+   INDEPENDENTLY REVIEWED, then driver ratification."* Revision 7 was prepared, reviewed **twice**, and
+   **REJECTED**. The row has been amended to the route actually taken (**P-78**: prepare **and** land in one
+   fire, on a host that can run the BAR). `T260` flagged that this register still carried the superseded
+   route and could not edit it itself; the driver has.
+
+### Bar at closure — driver-run on the merge result, never quoted from a worker
+Probe line **PRESENT**, tested for presence **before** value (**P-83**), and reads `probe = up`.
+**`VERDICT: PASS (exit 0)` — 46 parity vectors, 7884 cells.** Fail-open census **976** tracked `.sh`/`.py`,
+**frontier 11 == pinned 11**; all census pins `== pinned`; vector store
+**`13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d`, unmoved all fire.**
+
+**IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a `user` gate, and nothing here touches it.**
