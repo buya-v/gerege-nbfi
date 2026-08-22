@@ -1,0 +1,156 @@
+== variant PRE (/tmp/t202/prefix-guard.zsh) ==
+?? .softhouse/vector.json
+?? docs/T999-handoff.md
+    ok   [PRE/B1-root] rescue commit made = yes
+    ok   [PRE/B1-root] said rescued = yes
+    ok   [PRE/B1-root] deliverable in the commit = yes
+?? .softhouse/vector.json
+?? docs/T999-handoff.md
+    FAIL [PRE/B2-subdir] rescue commit made: expected yes, got no
+    FAIL [PRE/B2-subdir] deliverable in the commit: expected yes, got no
+    FAIL [PRE/B2-subdir] deliverable no longer dirty: expected no, got yes
+    FAIL [PRE/B2-subdir] never claims a rescue it did not make: expected no, got yes
+    ok   [PRE/B3-clean] rescue commit made = no
+    ok   [PRE/B3-clean] ERROR logged = no
+    ok   [PRE/B4-lockonly] rescue commit made = no
+?? .softhouse/LOCK.bak
+?? .softhouse/LOCKDIR/
+?? .softhouse/LOCKED_STATE.md
+    ok   [PRE/B5-t172] LOCKED_STATE.md rescued = yes
+    ok   [PRE/B5-t172] LOCK.bak rescued = yes
+    ok   [PRE/B5-t172] LOCKDIR/f.md rescued = yes
+    ok   [PRE/B5-t172] real LOCK NOT committed = no
+?? docs/T999-handoff.md
+    ok   [PRE/B6-hookfail] rescue commit made = no
+    FAIL [PRE/B6-hookfail] said rescued: expected no, got yes
+    FAIL [PRE/B6-hookfail] named the COMMIT as the failure: expected yes, got no
+?? docs/T999-handoff.md
+    ok   [PRE/B7-addfail] rescue commit made = no
+    FAIL [PRE/B7-addfail] said rescued: expected no, got yes
+    FAIL [PRE/B7-addfail] named the ADD as the failure: expected yes, got no
+
+== variant POST (/tmp/t202/postfix-guard.zsh) ==
+?? .softhouse/vector.json
+?? docs/T999-handoff.md
+    ok   [POST/B1-root] rescue commit made = yes
+    ok   [POST/B1-root] said rescued = yes
+    ok   [POST/B1-root] deliverable in the commit = yes
+?? .softhouse/vector.json
+?? docs/T999-handoff.md
+    ok   [POST/B2-subdir] rescue commit made = yes
+    ok   [POST/B2-subdir] deliverable in the commit = yes
+    ok   [POST/B2-subdir] deliverable no longer dirty = no
+    ok   [POST/B2-subdir] never claims a rescue it did not make = yes
+    ok   [POST/B3-clean] rescue commit made = no
+    ok   [POST/B3-clean] ERROR logged = no
+    ok   [POST/B4-lockonly] rescue commit made = no
+?? .softhouse/LOCK.bak
+?? .softhouse/LOCKDIR/
+?? .softhouse/LOCKED_STATE.md
+    ok   [POST/B5-t172] LOCKED_STATE.md rescued = yes
+    ok   [POST/B5-t172] LOCK.bak rescued = yes
+    ok   [POST/B5-t172] LOCKDIR/f.md rescued = yes
+    ok   [POST/B5-t172] real LOCK NOT committed = no
+?? docs/T999-handoff.md
+    ok   [POST/B6-hookfail] rescue commit made = no
+    ok   [POST/B6-hookfail] said rescued = no
+    ok   [POST/B6-hookfail] named the COMMIT as the failure = yes
+?? docs/T999-handoff.md
+    ok   [POST/B7-addfail] rescue commit made = no
+    ok   [POST/B7-addfail] said rescued = no
+    ok   [POST/B7-addfail] named the ADD as the failure = yes
+
+== variant BA (/tmp/t202/mut-BA.zsh) ==
+?? .softhouse/vector.json
+?? docs/T999-handoff.md
+    ok   [BA/B1-root] rescue commit made = yes
+    ok   [BA/B1-root] said rescued = yes
+    ok   [BA/B1-root] deliverable in the commit = yes
+?? .softhouse/vector.json
+?? docs/T999-handoff.md
+    FAIL [BA/B2-subdir] rescue commit made: expected yes, got no
+    FAIL [BA/B2-subdir] deliverable in the commit: expected yes, got no
+    FAIL [BA/B2-subdir] deliverable no longer dirty: expected no, got yes
+    ok   [BA/B2-subdir] never claims a rescue it did not make = no
+    ok   [BA/B3-clean] rescue commit made = no
+    ok   [BA/B3-clean] ERROR logged = no
+    ok   [BA/B4-lockonly] rescue commit made = no
+?? .softhouse/LOCK.bak
+?? .softhouse/LOCKDIR/
+?? .softhouse/LOCKED_STATE.md
+    ok   [BA/B5-t172] LOCKED_STATE.md rescued = yes
+    ok   [BA/B5-t172] LOCK.bak rescued = yes
+    ok   [BA/B5-t172] LOCKDIR/f.md rescued = yes
+    ok   [BA/B5-t172] real LOCK NOT committed = no
+?? docs/T999-handoff.md
+    ok   [BA/B6-hookfail] rescue commit made = no
+    ok   [BA/B6-hookfail] said rescued = no
+    ok   [BA/B6-hookfail] named the COMMIT as the failure = yes
+?? docs/T999-handoff.md
+    ok   [BA/B7-addfail] rescue commit made = no
+    ok   [BA/B7-addfail] said rescued = no
+    ok   [BA/B7-addfail] named the ADD as the failure = yes
+
+== variant BB (/tmp/t202/mut-BB.zsh) ==
+?? .softhouse/vector.json
+?? docs/T999-handoff.md
+    ok   [BB/B1-root] rescue commit made = yes
+    ok   [BB/B1-root] said rescued = yes
+    ok   [BB/B1-root] deliverable in the commit = yes
+?? .softhouse/vector.json
+?? docs/T999-handoff.md
+    ok   [BB/B2-subdir] rescue commit made = yes
+    ok   [BB/B2-subdir] deliverable in the commit = yes
+    ok   [BB/B2-subdir] deliverable no longer dirty = no
+    ok   [BB/B2-subdir] never claims a rescue it did not make = yes
+    ok   [BB/B3-clean] rescue commit made = no
+    ok   [BB/B3-clean] ERROR logged = no
+    ok   [BB/B4-lockonly] rescue commit made = no
+?? .softhouse/LOCK.bak
+?? .softhouse/LOCKDIR/
+?? .softhouse/LOCKED_STATE.md
+    ok   [BB/B5-t172] LOCKED_STATE.md rescued = yes
+    ok   [BB/B5-t172] LOCK.bak rescued = yes
+    ok   [BB/B5-t172] LOCKDIR/f.md rescued = yes
+    ok   [BB/B5-t172] real LOCK NOT committed = no
+?? docs/T999-handoff.md
+    ok   [BB/B6-hookfail] rescue commit made = no
+    FAIL [BB/B6-hookfail] said rescued: expected no, got yes
+    FAIL [BB/B6-hookfail] named the COMMIT as the failure: expected yes, got no
+?? docs/T999-handoff.md
+    ok   [BB/B7-addfail] rescue commit made = no
+    ok   [BB/B7-addfail] said rescued = no
+    ok   [BB/B7-addfail] named the ADD as the failure = yes
+
+== variant BC (/tmp/t202/mut-BC.zsh) ==
+?? .softhouse/vector.json
+?? docs/T999-handoff.md
+    ok   [BC/B1-root] rescue commit made = yes
+    ok   [BC/B1-root] said rescued = yes
+    ok   [BC/B1-root] deliverable in the commit = yes
+?? .softhouse/vector.json
+?? docs/T999-handoff.md
+    ok   [BC/B2-subdir] rescue commit made = yes
+    ok   [BC/B2-subdir] deliverable in the commit = yes
+    ok   [BC/B2-subdir] deliverable no longer dirty = no
+    ok   [BC/B2-subdir] never claims a rescue it did not make = yes
+    ok   [BC/B3-clean] rescue commit made = no
+    ok   [BC/B3-clean] ERROR logged = no
+    ok   [BC/B4-lockonly] rescue commit made = no
+?? .softhouse/LOCK.bak
+?? .softhouse/LOCKDIR/
+?? .softhouse/LOCKED_STATE.md
+    ok   [BC/B5-t172] LOCKED_STATE.md rescued = yes
+    ok   [BC/B5-t172] LOCK.bak rescued = yes
+    ok   [BC/B5-t172] LOCKDIR/f.md rescued = yes
+    ok   [BC/B5-t172] real LOCK NOT committed = no
+?? docs/T999-handoff.md
+    ok   [BC/B6-hookfail] rescue commit made = no
+    ok   [BC/B6-hookfail] said rescued = no
+    ok   [BC/B6-hookfail] named the COMMIT as the failure = yes
+?? docs/T999-handoff.md
+    ok   [BC/B7-addfail] rescue commit made = no
+    ok   [BC/B7-addfail] said rescued = no
+    FAIL [BC/B7-addfail] named the ADD as the failure: expected yes, got no
+
+CHECKS INSPECTED=100  PASS=86  FAIL=14

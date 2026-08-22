@@ -1,0 +1,82 @@
+[08:41:15] fire start — repo=/tmp/t202/e2e/repo probe=0 force=0 log=/tmp/t202/e2e/logs/fire-20260822-084115.log
+[08:41:15] WARN: fineract source missing at /tmp/t202/nonexistent-fineract — source analysis will be blocked
+[08:41:15] postgres: reachable at localhost:5432
+[08:41:16] docker: running (29.6.2)
+[08:41:16] reference oracle (Fineract): UNREACHABLE at https://127.0.0.1:1/none
+There is no tracking information for the current branch.
+Please specify which branch you want to merge with.
+See git-pull(1) for details.
+
+    git pull <remote> <branch>
+
+If you wish to set tracking information for this branch you can do so with:
+
+    git branch --set-upstream-to=<remote>/<branch> main
+
+[08:41:16] WARN: git pull --ff-only failed; continuing on local state
+[08:41:16] WARN: could not push lock — cloud fire may not see it
+[08:41:16] invoking driver (chain iteration 1/1)
+[08:41:16] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+INIT session fake
+RESULT success :: fake driver done
+[08:41:17] raw event stream: /tmp/t202/e2e/logs/fire-20260822-084115.jsonl
+[08:41:17] driver exited rc=0
+[08:41:17] WARN: exit-protocol violation — driver left uncommitted work:
+ M .softhouse/RESUME.md
+?? T999-handoff.md
+[08:41:17] rescued: committed the leftovers so the next fire can see them
+fatal: invalid gitfile format: /private/tmp/t202/e2e/wt-bad/.git
+[08:41:17] WARN: worktree wt-good left 1 uncommitted path(s) — rescuing to softhouse/rescued-wt-good-20260822-084115
+[08:41:17] rescued wt-good -> softhouse/rescued-wt-good-20260822-084115
+[08:41:17] WARN: could not push after exit-protocol guard
+[08:41:18] chain: stopping — no runnable work left (program complete or all remaining work is a user gate)
+[08:41:18] chain finished after 1 iteration(s)
+[08:41:18] WARN: could not push lock release
+[08:41:18] lock released
+===== wrapper rc=0 =====
+===== log =====
+[08:41:15] fire start — repo=/tmp/t202/e2e/repo probe=0 force=0 log=/tmp/t202/e2e/logs/fire-20260822-084115.log
+[08:41:15] WARN: fineract source missing at /tmp/t202/nonexistent-fineract — source analysis will be blocked
+[08:41:15] postgres: reachable at localhost:5432
+[08:41:16] docker: running (29.6.2)
+[08:41:16] reference oracle (Fineract): UNREACHABLE at https://127.0.0.1:1/none
+There is no tracking information for the current branch.
+Please specify which branch you want to merge with.
+See git-pull(1) for details.
+
+    git pull <remote> <branch>
+
+If you wish to set tracking information for this branch you can do so with:
+
+    git branch --set-upstream-to=<remote>/<branch> main
+
+[08:41:16] WARN: git pull --ff-only failed; continuing on local state
+[08:41:16] WARN: could not push lock — cloud fire may not see it
+[08:41:16] invoking driver (chain iteration 1/1)
+[08:41:16] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+INIT session fake
+RESULT success :: fake driver done
+[08:41:17] raw event stream: /tmp/t202/e2e/logs/fire-20260822-084115.jsonl
+[08:41:17] driver exited rc=0
+[08:41:17] WARN: exit-protocol violation — driver left uncommitted work:
+ M .softhouse/RESUME.md
+?? T999-handoff.md
+[08:41:17] rescued: committed the leftovers so the next fire can see them
+fatal: invalid gitfile format: /private/tmp/t202/e2e/wt-bad/.git
+[08:41:17] WARN: worktree wt-good left 1 uncommitted path(s) — rescuing to softhouse/rescued-wt-good-20260822-084115
+[08:41:17] rescued wt-good -> softhouse/rescued-wt-good-20260822-084115
+[08:41:17] WARN: could not push after exit-protocol guard
+[08:41:18] chain: stopping — no runnable work left (program complete or all remaining work is a user gate)
+[08:41:18] chain finished after 1 iteration(s)
+[08:41:18] WARN: could not push lock release
+[08:41:18] lock released
+===== main-tree state =====
+44a6896 softhouse: release local fire lock (20260822-084115)
+33556e6 softhouse: rescue uncommitted deliverables left by fire 20260822-084115 (exit-protocol violation)
+f154c7e driver work
+452d597 softhouse: local fire lock (20260822-084115)
+-- still uncommitted:
+===== rescue branches =====
++ softhouse/rescued-wt-good-20260822-084115
+===== LOCK present? =====
+absent

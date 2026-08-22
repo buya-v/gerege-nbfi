@@ -1,0 +1,11 @@
+foreground child = sleep 0.2s;  signal sent 0.6s in
+  wrapper rc=143  wall time from signal to wrapper exit = 29.86s
+  READY at 1787359192.042274000
+  CHILD DONE at 1787359192.424203000
+  HANDLER at 1787359222.635717000
+
+foreground child = sleep 6s;  signal sent 0.6s in
+  wrapper rc=143  wall time from signal to wrapper exit = 5.46s
+  READY at 1787359222.662598000
+  HANDLER at 1787359228.841229000
+

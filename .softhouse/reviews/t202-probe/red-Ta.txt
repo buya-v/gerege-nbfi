@@ -1,0 +1,25 @@
+=== A. baseline: what git says about each worktree (both healthy) ===
+  wt-healthy:
+    ?? handoff.md
+  wt-broken:
+    ?? handoff.md
+    ?? vector.json
+
+=== B. CORRUPT wt-broken's gitdir pointer, then measure the shipped expression ===
+  wt-broken/.git now: GARBAGE-NOT-A-GITDIR-POINTER
+fatal: invalid gitfile format: /private/tmp/t202/scratch/wt-broken/.git
+  bare   git -C wt-broken status --porcelain          rc=128
+fatal: invalid gitfile format: /private/tmp/t202/scratch/wt-broken/.git
+  shipped  ... | wc -l | tr -d ' '   WD=[0]  pipeline rc=128  pipestatus=(0)
+  shipped guard verdict: WD==0 -> continue   *** WORKTREE TREATED AS CLEAN - FAIL-OPEN ***
+
+=== C. drive the SHIPPED loop end to end over the real worktree list ===
+fatal: invalid gitfile format: /private/tmp/t202/scratch/wt-broken/.git
+  [log] WARN: worktree wt-healthy left 1 uncommitted path(s) — rescuing to softhouse/rescued-wt-healthy-RED0000-000000
+  [log] rescued wt-healthy -> softhouse/rescued-wt-healthy-RED0000-000000
+
+=== D. did the stranded work survive? ===
+  rescue branches created in the main repo:
+    + softhouse/rescued-wt-healthy-RED0000-000000
+  (empty above == none)
+  wt-broken/handoff.md still uncommitted on disk: YES
