@@ -2290,6 +2290,25 @@
       "status": "pending",
       "attempts": 0,
       "note": "Raised by the driver, local fire 20260822-140002, from T230's ranked follow-ups. SERIALISED WITH T226/T145 if they touch conformance.sh."
+    },
+    {
+      "id": "T234",
+      "title": "AUDIT EVERY COMMITTED SWEEP INSTRUMENT for engine-dependent escapes \u2014 `git grep -E` reads \\b as a literal 'b' and reports zero, silently",
+      "description": "*** T232 MEASURED THIS AND IT MAY VOID SWEEPS THIS PROGRAM HAS ALREADY USED TO CLOSE POPULATIONS. *** On this machine (macOS / Apple Git 2.50.1): `git grep -c -E 'balance column'` = 14; `git grep -c -E '\\\\balance column'` = 14 -- IDENTICAL, because -E reads \\\\b as a LITERAL 'b'; `git grep -c -P '\\\\balance column'` = 0, the real word boundary. So T224's stated WIDEST net `\\\\bnot exist\\\\b` compiles under -E to a search for `bnot existb` and matches ZERO files repo-wide -- EXIT 1, NO ERROR, NO WARNING -- against 172 files under -P and 178 unanchored. T232 also measured that `grep` on PATH here is ugrep 7.5.0, NOT GNU grep, and it DOES honour \\\\b under -E. THREE ENGINES, THREE ANSWERS FOR ONE WRITTEN PATTERN. THE FAILURE IS INVISIBLE: a voided sweep returns a clean exit and an empty result, which reads exactly like 'the population is closed'. THE JOB: enumerate EVERY committed sweep instrument under .softhouse/ (scripts AND sweeps recorded only as prose in handoffs -- name those separately, they are unauditable by construction and that is itself the finding), and for each one determine (a) which engine it actually invokes, (b) whether it uses \\\\b, \\\\d, \\\\s, \\\\w or any other engine-dependent escape, (c) whether it is therefore VOID, PARTIALLY VOID, or SOUND, and (d) what it CLAIMED to have closed. Start with the named suspects: A2-31's probe-sweep.sh, A2-32's sweep.sh (.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh -- 27 patterns, 2246 hit lines, and it is the instrument behind the claim that DEC-2's population is closed), T227's re-run sweep, T224's nine terms. *** RE-RUN EVERY VOIDED SWEEP WITH A SOUND INSTRUMENT AND REPORT WHAT IT FINDS *** -- an audit that only classifies instruments and does not re-run them leaves the actual population unknown, which is the same defect one level up. CALIBRATE ON A KNOWN POSITIVE (P-72, written by T232) before reporting any negative. STATE THE ENGINE AND FLAGS for everything you run; T232's [UNVERIFIED] marker outside macOS/Apple Git 2.50.1 is correct and yours must be too. ALSO CLOSE T232's FU-T227-2 TAIL IF YOU CAN: every sweep in this chain including T232's own is LINE-ORIENTED, and T224's site straddled a line break -- a multi-line matcher has never been run against this repo. BAR: probe PRESENT and up; PASS exit 0; 46 parity / 7884 cells; 0 inadmissible; 0 invariant violations; 4 EXEMPTED; store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED. Analysis + docs; do NOT rewrite committed evidence (T114/T176 -- a quotation correctly attributed is not a defect, and a frozen transcript is evidence, not a bug).",
+      "agent_role": "analyst",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/capture/t234-sweep-instrument-audit/"
+      ],
+      "context": "tier0-harness",
+      "dependencies": [
+        "T232"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260822-140002, from T232's FU-T232-3. HIGH VALUE: this is the instrument behind several 'the population is closed' claims, including DEC-2's. The driver has already warned the LIVE A2-33 reviewer by direct message so it does not inherit A2-32's enumeration."
     }
   ],
   "cross_corroboration": {
