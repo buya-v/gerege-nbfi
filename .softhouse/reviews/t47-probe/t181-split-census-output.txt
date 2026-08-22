@@ -1,0 +1,88 @@
+==============================================================================
+T181 SPLIT CENSUS -- .softhouse/reviews/t41-probe/
+READ-ONLY.  No rewriter was executed.
+==============================================================================
+
+(A) TODAY's hardened bytes -- target read from the GUARD CONSTANT
+    that is the actual argument to the write path.
+------------------------------------------------------------------------------
+  edit.py        DEC-1
+  edit10.py      DEC-1
+  edit11.py      DEC-1
+  edit12.py      DEC-1
+  edit13.py      DEC-1
+  edit14.py      DEC-1
+  edit16.py      DEC-1
+  edit17.py      DEC-1
+  edit18.py      DEC-1 + contract.go
+  edit19.py      DEC-1
+  edit2.py       DEC-1
+  edit20.py      DEC-1
+  edit21.py      DEC-1 + contract.go
+  edit22.py      contract.go
+  edit3.py       DEC-1
+  edit4.py       DEC-1
+  edit5.py       DEC-1
+  edit6.py       DEC-1
+  edit7.py       DEC-1
+  edit8.py       DEC-1
+  edit9.py       DEC-1
+  edit_go1.py    contract.go
+  edit_go2.py    contract.go
+  edit_go3.py    contract.go
+  edit_go4.py    contract.go
+
+  files inspected            : 25
+  DEC-1 only                 : 18 ['edit.py', 'edit10.py', 'edit11.py', 'edit12.py', 'edit13.py', 'edit14.py', 'edit16.py', 'edit17.py', 'edit19.py', 'edit2.py', 'edit20.py', 'edit3.py', 'edit4.py', 'edit5.py', 'edit6.py', 'edit7.py', 'edit8.py', 'edit9.py']
+  contract.go only           : 5 ['edit22.py', 'edit_go1.py', 'edit_go2.py', 'edit_go3.py', 'edit_go4.py']
+  BOTH                       : 2 ['edit18.py', 'edit21.py']
+
+  => files targeting DEC-1       = 20
+  => files targeting contract.go = 7
+  => distinct files              = 25
+  => (file,artefact) pairs       = 27
+
+(B) FORK-POINT bytes (dfa1bfa9), classified by T178's OWN rule:
+      tgt = GO_REL if (GO_REL in src and ADR_REL not in src) else ADR_REL
+------------------------------------------------------------------------------
+  edit.py        DEC-1        names ADR
+  edit10.py      DEC-1        names ADR
+  edit11.py      DEC-1        names ADR
+  edit12.py      DEC-1        names ADR
+  edit13.py      DEC-1        names ADR
+  edit14.py      DEC-1        names ADR
+  edit16.py      DEC-1        names ADR
+  edit17.py      DEC-1        names ADR
+  edit18.py      DEC-1        names ADR, names contract.go
+  edit19.py      DEC-1        names ADR
+  edit2.py       DEC-1        names ADR
+  edit20.py      DEC-1        names ADR
+  edit21.py      DEC-1        names ADR, names contract.go
+  edit22.py      contract.go  names contract.go
+  edit3.py       DEC-1        names ADR
+  edit4.py       DEC-1        names ADR
+  edit5.py       DEC-1        names ADR
+  edit6.py       DEC-1        names ADR
+  edit7.py       DEC-1        names ADR
+  edit8.py       DEC-1        names ADR
+  edit9.py       DEC-1        names ADR
+  edit_go1.py    contract.go  names contract.go
+  edit_go2.py    contract.go  names contract.go
+  edit_go3.py    contract.go  names contract.go
+  edit_go4.py    contract.go  names contract.go
+
+  files inspected            : 25
+  T178-rule DEC-1            : 20
+  T178-rule contract.go      : 5
+  T178 PUBLISHED in F-1      : 21 DEC-1 / 4 contract.go
+  reproduces T178's split?   : NO
+
+==============================================================================
+MISCLASSIFIED BY T178 (true target vs T178's label)
+==============================================================================
+  edit18.py      TRUE=DEC-1 + contract.go    T178=DEC-1
+  edit21.py      TRUE=DEC-1 + contract.go    T178=DEC-1
+
+  files misclassified        : 2
+
+  TOTAL (25) is CORRECT in T178.  The SPLIT is not.

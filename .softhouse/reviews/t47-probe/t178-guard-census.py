@@ -301,4 +301,17 @@ print("unguarded + all anchors live (LIVE BYPASS)   %d%s"
 print("unguarded + no content gate, inert TODAY ONLY %d%s"
       % (len(skipped), (" - " + ", ".join(skipped)) if skipped else ""))
 
+# T181 MICRO-FIX (P-35).  A scan that matched NOTHING is an ERROR, not a pass.
+# The glob above is hard-wired to `t47_edit_*.py`; pointing `--scan=` at any
+# other rewriter family (e.g. `.softhouse/reviews/t41-probe/`, whose files are
+# named `edit*.py`) matched zero files and still exited 0 -- a confident GREEN
+# over 25 unguarded rewriters, two of them live.  Evidence:
+# `t181-census-zero-inspection-output.txt`.  No measured number is changed.
+if not files:
+    sys.stderr.write(
+        "t178-guard-census: ERROR - matched ZERO files under %s using the "
+        "pattern `t47_edit_*.py`. Inspecting nothing is not a pass (P-35). "
+        "Pass a directory holding that family, or extend the pattern.\n" % SCAN)
+    sys.exit(3)
+
 sys.exit(1 if (reachable or unmeasured or skipped) else 0)
