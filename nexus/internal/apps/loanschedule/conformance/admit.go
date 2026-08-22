@@ -119,6 +119,33 @@ func Admit(v *Vector, pin *Pin, repoRoot string) []string {
 	if v.Context != dirOfFile {
 		bad("context %q does not match the directory %q the file lives in", v.Context, dirOfFile)
 	}
+	// THE CONTEXT ALLOWLIST (A2-19 F1, re-measured by A2-20).
+	//
+	// The two checks above are jointly satisfiable by a file copy: `cp` a promoted
+	// parity vector into a new directory, change `case_id` and `context` to the
+	// new directory's name, and both pass — the context is non-empty and it does
+	// equal the directory. The measured result on main's bytes was
+	// `parity vectors PASS 44 FAIL 0`, `5711 cells`, exit 0, over a store whose
+	// 44th vector was a loan schedule filed as `ledger`. See SchemaContexts() for
+	// the full transcript and for why the refusal lives HERE.
+	//
+	// It is a refusal and not a warning for the reason at the head of this
+	// function: the harness cannot make a statement about the implementation from
+	// a file whose context is not one this schema grades, and a run containing one
+	// is not a run whose numbers mean what they say.
+	//
+	// Guarded on non-empty so a vector with no context at all reports the one
+	// precise defect it has, rather than that defect plus a derived echo of it.
+	if v.Context != "" && !IsSchemaContext(v.Context) {
+		bad("context %q is not a context this harness grades — %q accepts only %s. A vector "+
+			"declaring an unknown context is INADMISSIBLE and not merely unmatched: the harness "+
+			"would grade it by loanschedule rules against the loanschedule comparator while "+
+			"reporting it under a heading that claims coverage of something else, which is how a "+
+			"copied parity vector once raised the headline count to 44/5711. A second context "+
+			"arrives as a second SCHEMA with its own comparator (DEC-2 §5.2), and it declares its "+
+			"own contexts there — not by widening this list",
+			v.Context, VectorSchemaV1, strings.Join(SchemaContexts(), ", "))
+	}
 	if v.DEC1Revision != pin.DEC1Revision {
 		bad("dec1_revision %d, but the store is pinned to ratified revision %d",
 			v.DEC1Revision, pin.DEC1Revision)

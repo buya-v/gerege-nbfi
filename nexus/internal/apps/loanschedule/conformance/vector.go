@@ -24,6 +24,72 @@ const VectorSchemaV1 = "gerege.loanschedule.vector/v1"
 // parity vector, and nothing outside it may claim to be a self-test.
 const SelfTestDir = "_selftest"
 
+// LoanScheduleContext is the ONE bounded context this schema's machinery can say
+// anything about, and it is the directory name that context's vectors live in.
+const LoanScheduleContext = "loanschedule"
+
+// SchemaContexts returns the complete set of store contexts a vector bearing
+// VectorSchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
+//
+// THE DEFECT THIS EXISTS FOR (A2-19 finding F1, reproduced independently by the
+// driver and again by A2-20 before this was written).
+//
+// Until this list existed, `context` was constrained only to be non-empty and to
+// equal its own directory name. Both constraints are satisfied by `cp`: copy any
+// promoted loanschedule parity vector into a new `ledger/` directory, change
+// `case_id` and `context` and nothing else, and the harness reported
+//
+//	DRIVER-F1-PROBE   parity   path_a_e...   PASS   47 cells
+//	parity vectors    PASS 44   FAIL 0
+//	cells compared    5711 graded
+//	VERDICT: PASS (exit 0) — 44 parity vectors match the pinned reference oracle
+//
+// against 43 / 5664 for the same store without the copy [MEASURED by A2-20 on
+// the binary built from main]. Two string edits raised the one number every
+// parity claim in this program rests on. And the inflation is the smaller half of
+// it: the file sat in `ledger/` while grading a LOAN SCHEDULE, so the report read
+// as GL/ledger coverage that does not exist — the exact claim DEC-2 is being
+// written to make honestly. The same copy of a `contract-refusal` vector was
+// admitted too (PASS, exit 0, cells 5664 -> 5665), which is why the refusal is
+// here at ADMISSION and not at the comparator: a contract-refusal vector consults
+// no comparator at all, so a check phrased as "the comparator for this class does
+// not exist" would let that second form straight through.
+//
+// WHY THIS IS NOT A GLOBAL CONTEXT REGISTRY, AND HOW A SECOND CONTEXT IS ADDED.
+//
+// The set is a property of THE SCHEMA, declared in the same file and within
+// twenty lines of the schema string it belongs to. DEC-2 §5.2 has already decided
+// that the `ledger` context arrives as a SECOND schema — `gerege.ledger.vector/v1`
+// with its own Request, its own Expect, its own comparator and its own cell
+// whitelist, sharing only the store root, the file census, the duplicate-case-id
+// check, the raw-token float scan and the capability registry. Under that design
+// the ledger schema declares its own contexts alongside its own comparator, and
+// THIS function is not edited: `admit.go`'s existing schema check (a vector whose
+// `schema` is not VectorSchemaV1 is already INADMISSIBLE) is what routes a ledger
+// vector away from loanschedule's rules, and this function is what stops a
+// loanschedule vector wandering into ledger's directory. The two checks are the
+// same statement read in opposite directions — a vector's schema, its directory
+// and the comparator that grades it name ONE context — and neither is an
+// allowlist a new context has to be threaded through.
+//
+// So the answer to "how does a future context get added" is: it does not get
+// added here. It is added where its comparator is.
+func SchemaContexts() []string {
+	// Sorted, and returned by value, so the refusal message below is a function
+	// of the schema and not of anything a caller can perturb.
+	return []string{SelfTestDir, LoanScheduleContext}
+}
+
+// IsSchemaContext reports whether ctx is one of SchemaContexts().
+func IsSchemaContext(ctx string) bool {
+	for _, c := range SchemaContexts() {
+		if ctx == c {
+			return true
+		}
+	}
+	return false
+}
+
 // VectorClass is what a vector file claims to be. The class decides which
 // admissibility rules apply and which tally the result lands in.
 type VectorClass string
