@@ -1006,6 +1006,45 @@ Two independent incompatibilities in one pattern, each isolated by measurement r
 3. **This is the P-33 class reached from a new direction** — an unsupported feature returning zero looks
    exactly like absence — so the demonstration script must FAIL when the engines agree, or it is P-22 again.
 
+> ### ⚠ P-53 AMENDED TWICE — the driver, local fire `20260822-060013`, at `main` `8275f8b`
+>
+> **(A) THE DEFECT IS NOT RECALL-ONLY. `git grep -E` FABRICATED A HIT.** Every statement of this pattern in
+> the repo — here, and `P-12`'s second measurement — describes the literal-`b` reading as *lost* matches.
+> That is understated. Driver-measured on a three-line fixture (`x main y` / `bmainb` / `HEAD`) for
+> `\bmain\b`: `git grep -E` **missed line 1 and MATCHED LINE 2** — because it read the pattern as literal
+> `b`,`main`,`b`, and `bmainb` genuinely contains that. So a sweep run under this engine can report a
+> **POSITIVE THAT DOES NOT EXIST**. The practical consequence is the one that bites: *"my instrument
+> returned hits, so it works"* is **not a valid calibration**. `P-72` says calibrate on a known positive;
+> after this, **also calibrate on a known negative.** Independently found by `T239` (its finding 3) and
+> re-derived by the driver.
+>
+> **(B) THE ENGINE ROSTER IN THIS REPO WAS WRONG IN BOTH DIRECTIONS.** `RESUME.md` told four workers this
+> fire that "BSD grep and ugrep both honour the escapes; ripgrep 14.1.1 is also present — five engines, not
+> three." Measured:
+>
+> | engine | `\bmain\b` on the fixture | verdict |
+> |---|---|---|
+> | `git grep -E` | matched **line 2 `bmainb`** | **BROKEN BOTH WAYS** — misses the true hit *and* fabricates |
+> | `git grep -P` | line 1 | **SOUND — PCRE *is* available in git here** |
+> | `git grep` (basic) | line 1 | sound |
+> | `/usr/bin/grep -E` (BSD) | line 1 | sound |
+> | `/usr/bin/grep` (basic BSD) | line 1 | sound |
+> | `rg` 14.1.1 (rev `939d4325be`) | line 1 | sound, and **present** |
+> | `python3 re` | line 1 | sound |
+> | **`ugrep`** | — | **NOT INSTALLED** — `command -v ugrep`/`ug` empty across all 13 PATH dirs |
+> | `/usr/bin/grep -P` | — | option does not exist; **exit 2, silent** |
+>
+> **`git grep -P` is sound, available, and was never recorded.** The lore only ever said `/usr/bin/grep -P`
+> does not exist, and a reader generalised that to "no PCRE here". Inside a git tree it is the cheapest
+> sound route. That omission is a **`P-73`** instance: the working engine was there the whole time, unfiled.
+>
+> **(C) A CITATION THIS INVALIDATES — do not restate it as settled.** `RESUME.md` exonerates `T224`'s zero
+> with *"it ran under ugrep where `\b` works"*. **ugrep is not on this machine.** That exoneration is now
+> **`[UNVERIFIED]`**. `T224`'s "two mechanisms, one zero" is **one measured mechanism** (right-anchoring an
+> inflected stem) **plus one unverified claim about the engine**. Flagged by `T239`; the driver re-derived
+> the absence and is recording it here rather than in a handoff, because here is where the next sweep author
+> will be standing (`P-73`).
+
 **P-54 — DETECTING A GUARD IS AN AST QUESTION, AND "IS THERE A GUARD IN THIS FILE?" IS THE WRONG QUESTION.
 THE RIGHT ONE IS "IS A GUARD REACHABLE FROM THIS MUTATION?"** T179 replaced T156's file-level regex with a
 parser (`.softhouse/reviews/t179-guard-classifier/guard_classify.py`). Three defect shapes fall out, and only

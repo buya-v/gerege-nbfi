@@ -2440,9 +2440,9 @@
    "dependencies": [
     "T234"
    ],
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
-   "note": "Raised by the driver from T234's L-2. The ONLY void instrument T234 measured with a quantified live recall loss (95.3%). | DISPATCHED wave 1 of local fire 20260822-060013 at main 477dc2d; worker told to MEASURE its own fork point (P-71 twice falsified), never assert it.",
+   "note": "Raised by the driver from T234's L-2. The ONLY void instrument T234 measured with a quantified live recall loss (95.3%). | DISPATCHED wave 1 of local fire 20260822-060013 at main 477dc2d; worker told to MEASURE its own fork point (P-71 twice falsified), never assert it. | DONE and MERGED at d74e43f. Driver re-derived both structural claims from source: r11-hygiene.sh:35 does pass the $T115 commit argument (so T234 measured the wrong population and its 95.3% is a figure about the working tree; over the real T115 tree the loss is 38/38 = 100%), and :77-79 IS the fail-open dead-cd class (cd /tmp/T138-merge fails silently, && short-circuits, the UNCONDITIONAL echo then claims the merged tree was searched, exit 0). Driver re-ran the BAR on the merge result: PASS exit 0, probe PRESENT and up, store 8968c559 unchanged. ONE CLAIM NOT ACCEPTED: T239 said ugrep AND ripgrep are both absent; ugrep is absent (a correction against the driver, which briefed four workers otherwise) but ripgrep 14.1.1 IS present, driver-measured.",
    "branch": "softhouse/T239-r11-hygiene-rerun"
   },
   {
