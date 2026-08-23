@@ -3449,7 +3449,7 @@
     {
       "id": "T284",
       "title": "T274 broke three FROZEN verify call sites — they now correctly REFUSE on schema-2 captures, and nobody owns the repair",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -3467,9 +3467,9 @@
       ],
       "description": "RAISED AND MEASURED BY T274, correctly declared OUT OF ITS SCOPE rather than fixed quietly. T274's root repair introduces sidecar schema 2. Three FROZEN `verify` call sites in T250's and T261's instruments now REFUSE on schema-2 captures. The refusal is CORRECT behaviour -- they are frozen against schema 1 and they are right not to pretend they understand schema 2 -- but it means three instruments are now dead on any new capture, and a dead instrument is the exact shape this program keeps finding: something that looks installed and enforces nothing.\n\nDecide, with the reasoning recorded, whether each frozen site should be (a) taught schema 2, (b) re-frozen against a pinned schema-1 corpus and explicitly scoped to it, or (c) retired. They may not all get the same answer. Then drive each one RED on a schema-2 capture and GREEN after, and make sure a site scoped to schema 1 REFUSES a schema-2 input loudly rather than skipping it silently -- 'skips quietly' is how a frozen instrument becomes a fail-open.\n\nDo not retro-edit any pre-T274 schema-1 sidecar; T274 deliberately left them unedited and a downgrade must keep buying a refusal rather than a pass.",
       "acceptance": "Each of the three sites individually decided with its reason recorded; each driven RED on schema-2 and GREEN after; any schema-1-scoped site proven to REFUSE loudly rather than skip; zero pre-T274 sidecars retro-edited.",
-      "branch": "softhouse/t284-schema2-callsites",
       "dispatched_by_fire": "20260824-000016",
-      "note": "DISPATCHED in fire 20260824-000016, isolation: worktree, model opus. If this fire died, this task is needs_retry, NOT in_progress -- a killed worker is dead, not paused. Check the branch for rescued WIP before re-dispatching."
+      "note": "MERGED (21 files, +3373, ALL ADDED -- zero modified, zero deleted; driver verified conformance.sh, capture/lib/ and vectors/ byte-untouched). Established what FROZEN binds BEFORE touching anything: T114's standing ruling (RULING-float-derived-predicate.md:247) -- anything that produced COMMITTED EVIDENCE is superseded by a scratch copy, NEVER edited in place -- and in each case the committed evidence INCLUDES THE VERIFY TRANSCRIPTS THEMSELVES (127 and 265 files). So the repair is an explicit re-freeze, not a rewrite, and not at a caller because all three are hand-run with no caller. THE QUIETEST SITE WAS THE WORST: t261-redC-wrap.sh had 17 verifies failing while exiting 0, and printed 'verify rc=2 DETECTED' -- a SCHEMA REFUSAL SCORED AS A SECURITY WIN. Three sites got three different answers deliberately (re-freeze schema-1-scoped / teach schema 2 / split and retire), and site 1's successor proved 8-of-8 arms reproduce T250's original statuses, so its 127 evidence files are still admissible -- a question nobody had asked. F-1 REFUTED THE BRIEF'S COUNT: the population was never three; 13 files / 24 invocations, 11 REQUEST_ONLY, only six are the defect, and five are CORRECT BY DESIGN including a frozen T250 specimen whose 'repair' would have destroyed T274's RED arm. Registry guard driven red 16 ways, 16/16, plus a Z0 arm proving the real tree still green. Kept two of its own defects in the record (tamper heredocs truncating before reading; a BRE alternation printing green ticks with no evidence beneath). DRIVER VERIFIED ON THE MERGE RESULT: bar PASS exit 0, probe line present and = up.",
+      "merged_commit": null
     },
     {
       "id": "T285",
@@ -3887,6 +3887,47 @@
         ".softhouse/bin/fire-program.sh"
       ],
       "description": "INDEPENDENT review of T288 (merged d8cf2c1). RE-DERIVE, do not check. T288 disclosed its own central weakness, which is a reason to trust it and NOT a reason to skip verifying it.\n\n 1. THE GAP T288 NAMES ITSELF: no drive has exercised the reconciliation against a REAL killed `claude` worker. Every drive uses a fake driver, and the negative case uses /bin/sleep started via `exec -a claude` -- named honestly in the script. Close that gap if you can: arrange a real short-lived worker, kill it, and observe. If a dying worker can leave a claude process alive with an in-repo cwd for even a few seconds after the driver exits, the wrapper REFUSES -- safe, but INERT ON EXACTLY THE FIRES IT WAS WRITTEN FOR, which would make the whole change ceremonial. MEASURE THE LINGER TIME rather than reasoning about it.\n 2. THE LIVENESS PROBE ONLY SEES PROCESSES NAMED `claude`. What renames it -- a wrapper, a shim, a different install path, a future CLI rename? And `--reconcile` checks lock ANCESTRY, not liveness, so any future caller inherits that obligation silently. Is that obligation written where a caller will hit it?\n 3. THE REPAIR REWRITES tasks.json AT FIRE EXIT. What happens if it races a driver that is still writing? What if tasks.json is malformed or mid-write? What if the repo is dirty for an unrelated reason? Drive the ugly cases -- a repair path that corrupts the task graph is far worse than the lie it fixes.\n 4. SELF-CLEARING IS THE LOAD-BEARING PROPERTY. Verify both halves actually clear: a demoted task on retry, and the RESUME.md banner when a driver rewrites the file. If either can persist, the fix installs a new thing to remember, which is what it was written to avoid (P-45).\n 5. THE THREE-VALUED PROBE. T288 says only 'positively established that nobody is working here' authorises the rewrite. Find an input where the probe reports ESTABLISHED-EMPTY while someone IS working, or where it silently degrades to a two-valued answer.\n 6. Re-run `bash .softhouse/conformance.sh` and `fire-program.sh --probe` yourself; do not accept a pasted result. P-84: read the probe line's PRESENCE before its value.\n\nNOTE FOR YOUR OWN SAFETY, and it is also a finding you should weigh: fire-program.sh has NO SELF-SNAPSHOT, so editing it while a fire runs shifts the running interpreter's byte offsets. That hazard is filed as T301; if your review needs to modify the file, coordinate with T301 rather than racing it.\n\nVERDICT with per-finding severity and reproductions; SPLIT the verdict if part stands. Write to .softhouse/reviews/T302/. P-86: cite the rule TEXT beside any P-number. 'Not found' is a statement about the search -- say where you looked."
+    },
+    {
+      "id": "T303",
+      "title": "WIRE T284's registry guard into conformance.sh — T284 declined to cite its own work as enforced, and it is right: until the HARD line is applied the guard enforces nothing (FU-T284-1)",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "agent_role": "coder",
+      "role": "coder",
+      "context": "tierA-gl-accounting",
+      "slice": "tierA-gl-accounting-A2",
+      "dependencies": [
+        "T300"
+      ],
+      "attempts": 0,
+      "contract_independent": true,
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/capture/t284-schema2-callsites/"
+      ],
+      "description": "RAISED BY T284 AGAINST ITSELF, which is why it is being acted on rather than filed and forgotten. T284 built a registry guard and drove it RED sixteen ways, 16 of 16 as expected, with a Z0 arm proving the real tree stays green afterwards. Then it declined to claim the guard is enforced, because conformance.sh was partitioned to two other tasks that fire and the HARD line was never applied. Its exact words: until applied it is ITSELF AN UNWIRED GUARD AND MAY NOT BE CITED AS ENFORCED.\n\nThat is P-45 stated by the worker about its own deliverable -- 'a guard that only works when someone remembers to run it enforces nothing' -- and this program has now recorded that lesson five times: manifest.py verify, t44_float_roundtrip_v3, T173's float guard, guard_ledger_invariants, and now this. DO NOT LET IT BE THE SIXTH.\n\nTHE EXACT HARD LINE AND ITS P-84 DISCRIMINATOR ARE IN T284's HANDOFF: .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T284.md. Read it, then apply it -- but VERIFY the line rather than pasting it: T284 wrote it without being able to run it in place, so it is a proposal, not a tested artefact.\n\nWIRING IS THE EASY HALF. The half that matters: DRIVE THE WIRED GUARD RED THROUGH conformance.sh ITSELF, not through the standalone harness, and show the bar reports it correctly. A HARD guard failure exits 2 BEFORE the probe line is printed (run_guards is called at conformance.sh:281, the probe prints at :296), so the failure must be legible as a GUARD FAILURE and not mistakable for an oracle outage. That misreading is exactly what P-84 exists to prevent, and getting it wrong here would mean a money-non-negotiable violation could park vector work as somebody else's server being down.\n\nDEPENDS ON T300, which owns the conformance.sh census region this fire. Rebase on it; do not revert its work. Do not reflow or re-sort the file.\n\nVerify with `bash .softhouse/conformance.sh` (bash, never sh -- exit 3 is the wrong-interpreter refusal). ledgerguard reads via `git ls-files`, so stage your files before running the bar -- a bar run over an untracked tree is not the bar. Handoff to .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T303.md. P-86: cite the rule TEXT beside any P-number."
+    },
+    {
+      "id": "T304",
+      "title": "FU-T284-3: `rm -rf` OVER COMMITTED EVIDENCE IS A FOUR-INSTRUMENT PROPERTY, not the two F-T283-6 named — and T284 now RELIES on two of them",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "agent_role": "coder",
+      "role": "coder",
+      "context": "tierA-gl-accounting",
+      "slice": "tierA-gl-accounting-A2",
+      "dependencies": [],
+      "attempts": 0,
+      "contract_independent": true,
+      "files_hint": [
+        ".softhouse/capture/t304-evidence-destruction/"
+      ],
+      "description": "RAISED BY T284, correctly declared out of its scope rather than fixed quietly. F-T283-6 recorded that certain instruments `rm -rf` committed evidence. T284 measured that T274's instruments 20 and 30 DO IT TOO -- 145 and 91 TRACKED FILES respectively -- so the property spans FOUR instruments, not two. NEITHER OF THE TWO NEWLY FOUND ONES WAS RUN, and T284's own site-3 repair RELIES on instrument 20.\n\nWHY THIS IS SERIOUS AND NOT HOUSEKEEPING: committed evidence is the entire basis on which this program grades anything. T114 binds -- anything that produced committed evidence is superseded by a scratch copy, NEVER edited in place -- and an instrument that deletes tracked evidence as a side effect of running defeats that ruling by a route nobody is watching. Worse, it is LATENT: the damage only appears when someone runs the instrument, which is precisely when they are least likely to be checking git status.\n\nDO THIS:\n 1. DERIVE THE POPULATION YOURSELF, with your selector printed beside the figure. Four is T284's count, not a verified total. Sweep every instrument in the repo for destructive operations over TRACKED paths -- rm -rf, rm, mv, truncation, output redirection over a tracked file, and `git clean`. State where you looked; 'not found' is a statement about the search, never about the world.\n 2. For each, decide whether the destruction is (a) a defect, (b) correct-by-design over a scratch path that merely LOOKS tracked, or (c) correct but undeclared. They will not all get the same answer -- T284 found that five of thirteen sites in ITS population were correct by design, including one whose 'repair' would have destroyed a RED arm. DO NOT MASS-PATCH.\n 3. Make the defective ones fail closed: refuse to run when the target is tracked, rather than documenting a warning. A convention someone must remember enforces nothing (P-45).\n 4. DRIVE IT. Run each instrument you classify as (b) or (c) IN A SCRATCH CLONE and show `git status --porcelain` comes back empty. For each (a), show the refusal fires. Commit the transcripts.\n\nDO NOT run any of these instruments against the real checkout until you have classified it. Verify with `bash .softhouse/conformance.sh` (bash, never sh). P-84: exit 2 with NO probe line printed is a failed HARD guard or a build failure, not an oracle outage. Handoff to .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T304.md. P-86: cite the rule TEXT beside any P-number."
     }
   ],
   "cross_corroboration": {
