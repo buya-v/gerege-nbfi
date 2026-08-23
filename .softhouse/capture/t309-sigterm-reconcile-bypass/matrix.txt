@@ -3,50 +3,50 @@
 ############################################################
 wrapper sha256: 4469fd491657ca78
 resolver sha256: 21f15c458ba5573d
-wrapper pid=33203  log=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t309-drive.33125/logs/fire-20260823-142732.log
+wrapper pid=47765  log=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t309-drive.47715/logs/fire-20260823-143814.log
     parent pid: 1  (/sbin/launchd)
-SIGTERM -> wrapper exit: 7.06s   (launchd's grace is ~20s)
+SIGTERM -> wrapper exit: 6.96s   (launchd's grace is ~20s)
      still in_progress: 8      demoted to needs_retry: 0
 VERDICT: **NOT RECONCILED** — 8 task(s) still claim in_progress after the fire
-ELAPSED_SECONDS=7.06
+ELAPSED_SECONDS=6.96
 VERDICT_RC=10
->>> CELL PASS: PRE-FIX (main) — SIGTERM must LEAVE THE LIE  (VERDICT_RC=10, SIGTERM->exit 7.06s)
+>>> CELL PASS: PRE-FIX (main) — SIGTERM must LEAVE THE LIE  (VERDICT_RC=10, SIGTERM->exit 6.96s)
 
 ############################################################
 # CELL: POST-FIX (HEAD) — SIGTERM must RECONCILE   (expecting VERDICT_RC=0)
 ############################################################
-wrapper sha256: a570c4be46278564
+wrapper sha256: 8e398295a1970d26
 resolver sha256: 8ecc62341c6251ce
-wrapper pid=33927  log=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t309-drive.33637/logs/fire-20260823-142746.log
+wrapper pid=48290  log=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t309-drive.48210/logs/fire-20260823-143828.log
     parent pid: 1  (/sbin/launchd)
-SIGTERM -> wrapper exit: 5.24s   (launchd's grace is ~20s)
-    [14:27:51] signal-path reconcile: 8s of budget (grace 20s - 1s spent - 10s push reserve - 1s)
-    [14:27:52] reconcile: no live session owns this repo — claude processes examined=1 in-repo=0 unreadable=0 -- [pid 4692 cwd /Users/buv/gerege-nbfi elsewhere]
-    [14:27:54] signal-path reconcile: committed the state correction
+SIGTERM -> wrapper exit: 4.06s   (launchd's grace is ~20s)
+    [14:38:33] signal-path reconcile: 7s of budget (grace 20s - 1s spent - 10s push reserve - 2s teardown/commit)
+    [14:38:33] reconcile: no live session owns this repo — claude processes examined=1 in-repo=0 unreadable=0 -- [pid 4692 cwd /Users/buv/gerege-nbfi elsewhere]
+    [14:38:35] signal-path reconcile: committed the state correction
      still in_progress: 0      demoted to needs_retry: 8
      sample note: worker killed mid-flight by fire 20260823-080004 (the owning fire recorded on the task at dispatch) -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP
 VERDICT: **RECONCILED** — every dead dispatch was demoted to needs_retry.
-ELAPSED_SECONDS=5.24
+ELAPSED_SECONDS=4.06
 VERDICT_RC=0
->>> CELL PASS: POST-FIX (HEAD) — SIGTERM must RECONCILE  (VERDICT_RC=0, SIGTERM->exit 5.24s)
+>>> CELL PASS: POST-FIX (HEAD) — SIGTERM must RECONCILE  (VERDICT_RC=0, SIGTERM->exit 4.06s)
 
 ############################################################
 # CELL: POST-FIX (HEAD) + live in-repo claude — must REFUSE   (expecting VERDICT_RC=10)
 ############################################################
-wrapper sha256: a570c4be46278564
+wrapper sha256: 8e398295a1970d26
 resolver sha256: 8ecc62341c6251ce
-planted a foreign live session: pid 34781, argv0=claude 300
-wrapper pid=34803  log=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t309-drive.34667/logs/fire-20260823-142759.log
+planted a foreign live session: pid 48865, argv0=claude 300
+wrapper pid=48902  log=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t309-drive.48739/logs/fire-20260823-143839.log
     parent pid: 1  (/sbin/launchd)
-SIGTERM -> wrapper exit: 3.39s   (launchd's grace is ~20s)
-    [14:28:04] signal-path reconcile: 8s of budget (grace 20s - 1s spent - 10s push reserve - 1s)
-    [14:28:05] signal-path reconcile verdict: REFUSED — a live session is working in this repo (claude processes examined=2 in-repo=1 unreadable=0 -- [pid 4692 cwd /Users/buv/gerege-nbfi elsewhere] [pid 34781 cwd /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t309-drive.34667/repo IN-REPO])
-    [14:28:05] signal-path reconcile: no change to commit
+SIGTERM -> wrapper exit: 2.59s   (launchd's grace is ~20s)
+    [14:38:44] signal-path reconcile: 8s of budget (grace 20s - 0s spent - 10s push reserve - 2s teardown/commit)
+    [14:38:45] signal-path reconcile verdict: REFUSED — a live session is working in this repo (claude processes examined=2 in-repo=1 unreadable=0 -- [pid 4692 cwd /Users/buv/gerege-nbfi elsewhere] [pid 48865 cwd /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t309-drive.48739/repo IN-REPO])
+    [14:38:45] signal-path reconcile: no change to commit
      still in_progress: 8      demoted to needs_retry: 0
 VERDICT: **NOT RECONCILED** — 8 task(s) still claim in_progress after the fire
-ELAPSED_SECONDS=3.39
+ELAPSED_SECONDS=2.59
 VERDICT_RC=10
->>> CELL PASS: POST-FIX (HEAD) + live in-repo claude — must REFUSE  (VERDICT_RC=10, SIGTERM->exit 3.39s)
+>>> CELL PASS: POST-FIX (HEAD) + live in-repo claude — must REFUSE  (VERDICT_RC=10, SIGTERM->exit 2.59s)
 
 ==============================================================
 MATRIX: 3 passed, 0 failed
@@ -54,7 +54,7 @@ MATRIX: 3 passed, 0 failed
 ==============================================================
 TIMING — 3 trials per revision, SIGTERM to wrapper exit
 ==============================================================
-  main: 7.15 7.03 7.15
-  HEAD: 4.94 5.04 4.91
+  main: 7.04 7.08 7.29
+  HEAD: 3.85 3.97 3.97
 
 DONE
