@@ -53,6 +53,37 @@ log "fire start — repo=$REPO probe=$PROBE_ONLY force=$FORCE log=$LOG"
 # so this works whether fire-program.sh was invoked with a relative or
 # absolute path.
 SCRIPT_DIR="${0:A:h}"
+
+# T309 -- WHICH BYTES IS THIS FIRE ACTUALLY RUNNING?
+# T301 exists because a branch that changed THIS FILE was landed while a fire was live,
+# and afterwards nobody could say from the evidence whether the live fire had been
+# running the pre-landing or the post-landing bytes. That question is answerable by a
+# measurement taken at start, so take it. Two facts, because they answer different halves:
+#   * the sha256 identifies the VERSION;
+#   * the inode identifies the FILE OBJECT the running shell has open, which is what
+#     decides whether a later rewrite can reach it at all.
+#
+# WHAT THE HAZARD ACTUALLY IS, MEASURED (T309 probes, .softhouse/capture/
+# t309-sigterm-reconcile-bypass/probe-zsh-reread.txt and probe-git-inode.txt):
+#   * zsh 5.9 does NOT slurp a script: it goes back to the file for more input. A ~90 KB
+#     script rewritten IN PLACE (same inode) mid-run executed the REWRITTEN tail
+#     [probe 1 leg B]. So "editing the running wrapper" is a real hazard, not folklore.
+#   * but a rename-into-place (NEW inode) does NOT reach the running shell, which holds
+#     an fd on the old inode [probe 1 leg C] -- and every git operation that lands a
+#     change (merge, checkout -- <path>, pull --ff-only) was measured to write a NEW
+#     inode and rename it over the path [probe 2, git 2.50.1 (Apple Git-155); every leg
+#     asserts the content actually changed, because the first draft passed vacuously].
+# CONSEQUENCE: landing a branch that edits this file while a fire is live is SAFE; the
+# live fire finishes on the bytes it started with. What is NOT safe is an IN-PLACE
+# rewrite of the live path -- `sed -i ''`, `cat > fire-program.sh`, a python
+# `open(path,"w")`, or an editor that saves without an atomic rename. Do not do that to a
+# checkout that has a fire running in it; edit in a worktree and land it through git.
+if [[ -r "${0:A}" ]]; then
+  log "wrapper identity: path=${0:A} inode=$(/usr/bin/stat -f %i "${0:A}" 2>/dev/null || print '?') sha256=$(/usr/bin/shasum -a 256 "${0:A}" 2>/dev/null | cut -c1-16 || print '?') bytes=$(/usr/bin/stat -f %z "${0:A}" 2>/dev/null || print '?')"
+else
+  log "WARN: could not read this script's own bytes at ${0:A} -- the version of the wrapper this fire ran is UNRECORDED"
+fi
+
 source "$SCRIPT_DIR/lib-worktree-prune.zsh" || { log "FATAL: could not source lib-worktree-prune.zsh"; exit 1; }
 
 cd "$REPO" || { log "FATAL: repo not found"; exit 1; }
@@ -162,11 +193,20 @@ fi
 # doing the work rather than maintained beside it, and so cannot silently fall
 # behind the truth the way a remembered field can (P-45, five recorded times).
 # If heartbeat and push-recency ever disagree, believe push-recency.
+#
+# T309 -- `fire` IS RECORDED HERE, AND IT IS LOAD-BEARING, NOT DECORATION. It is the
+# only unfakeable answer to "which fire dispatched this task?" available to a process
+# running INSIDE a live fire. `ready-tasks.py --reconcile`, in `in_session` mode, demotes
+# an `in_progress` task only when the task's own `fire` differs from THIS value -- the
+# argument being the lock's exclusivity: at most one fire holds this file, so a task
+# stamped with a different fire id belongs to a fire that is over. The id was previously
+# recoverable only by parsing `"log"` for the stamp, which is a derivation, not a field.
 cat > "$LOCK" <<EOF
 {
   "holder": "local-launchd",
   "host": "$(hostname -s)",
   "pid": $$,
+  "fire": "$STAMP",
   "started_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "heartbeat": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
@@ -318,6 +358,8 @@ release_lock() {
 DRIVER_JOB_PID=0
 DRIVER_STOP_GRACE_SECS="${DRIVER_STOP_GRACE_SECS:-5}"
 typeset -ga DRIVER_TREE; DRIVER_TREE=()
+# T309: the tree stop_driver last signalled, so the liveness probe can exclude it.
+typeset -ga STOPPED_TREE; STOPPED_TREE=()
 
 # Fills DRIVER_TREE with $1 and every descendant, parents before children.
 # PROGRAM NAMED (P-58): /bin/ps, the BSD ps shipped with macOS; `-o pid=,ppid=`
@@ -381,9 +423,39 @@ stop_driver() {
   if (( ${#survivors} )); then
     log "driver did not stop on SIGTERM within ${DRIVER_STOP_GRACE_SECS}s — SIGKILLing ${survivors[*]}"
     kill -KILL "${survivors[@]}" 2>/dev/null
+    # T309 — CONFIRM THE DEATH, do not assume it. `kill -KILL` returns as soon as the
+    # signal is QUEUED; the process is not off the table yet. That mattered the moment
+    # T309 put reconcile_tasks_json on this path, because its first act is
+    # foreign_live_session_in_repo(), which reads /bin/ps and treats a live in-repo
+    # `claude` as a reason to REFUSE. Without this poll the wrapper could refuse to
+    # reconcile because of the very driver it had just killed — a race that would have
+    # made the whole fix intermittently inert, which is worse than absent because it
+    # would have tested green.
+    # Bounded at ~2s (20 x 0.1s) and it never blocks longer: SIGKILL is uncatchable, so
+    # anything still present after that is in an uninterruptible wait, and this SAYS so
+    # rather than pretending otherwise.
+    local tick; local -a left
+    for tick in {1..20}; do
+      left=()
+      for p in "${survivors[@]}"; do
+        st=$(/bin/ps -o stat= -p "$p" 2>/dev/null)
+        [[ -n "$st" && "$st" != Z* ]] && left+=("$p")
+      done
+      (( ${#left} )) || break
+      /bin/sleep 0.1
+    done
+    if (( ${#left} )); then
+      log "ERROR: ${#left} process(es) still on the process table after SIGKILL — ${left[*]} — they are in an uninterruptible wait. Anything downstream that reads process liveness will see them and may REFUSE; that is the safe direction, but it means this fire's cleanup is INCOMPLETE."
+    else
+      log "driver SIGKILLed; confirmed off the process table"
+    fi
   else
     log "driver stopped on SIGTERM; no survivors"
   fi
+  # T309: remember what we stopped. foreign_live_session_in_repo() skips these, because
+  # they are OUR driver, not a foreign session — the function's whole subject is
+  # "somebody ELSE working in this checkout" and our own corpse is not that.
+  STOPPED_TREE=("${DRIVER_TREE[@]}")
   return 0
 }
 
@@ -419,11 +491,182 @@ stop_driver() {
 # default, T217-calibrated against a real `claude` — see the constant's own
 # comment above) against launchd's ~20s SIGTERM->SIGKILL grace, and against
 # the 6h a stranded lock costs the next fire.
+#
+# T309 — AND THE RECONCILER, WHICH WAS WIRED EXCLUSIVELY TO THE PATH THAT DOES NOT NEED IT.
+#
+# THE MEASURED DEFECT. T288 built the tasks.json repair and called it from ONE place:
+# `run_exit_guard`, in the script's normal tail. `on_signal` released the lock and
+# `exit`ed directly, so SIGTERM/INT/HUP/QUIT terminated the fire WITHOUT EVER REACHING
+# IT — and the definition itself lived inside `run_exit_guard`, so on a first chain
+# iteration the name did not even exist. But a driver that reaches the normal tail has
+# ALREADY run its own STEP 5.5 exit protocol and left tasks.json truthful; the state that
+# needs repairing is precisely the state a KILLED driver leaves. The repair was attached
+# to the case that does not need it and absent from the case that does.
+#
+# WHAT IT COST, on this host: fire 20260823-080004 session 2 dispatched 8 workers, was
+# SIGTERMed at 12:06:13, logged "driver stopped on SIGTERM; no survivors", released its
+# lock and exited. Fire 20260823-140001 then opened on a tasks.json claiming 8 tasks
+# `in_progress` — 4 branches sitting at the dispatch commit with zero commits ahead of
+# main, 4 never created at all — and demoted them BY HAND.
+#
+# ORDER, AND EVERY POSITION IS ARGUED FROM THE BUDGET:
+#   1. stop_driver          — first, always. The lock exists to keep two orchestrators out
+#                             of one repo; releasing it while `claude` is alive opens the
+#                             window it was written to close (T211).
+#   2. rm the LOCAL lock    — the half of release_lock that costs nothing and matters
+#                             most. STEP 0 on THIS host reads the FILE; once it is gone
+#                             the next fire is unblocked whatever else happens to us.
+#                             `release_lock` below is idempotent about this.
+#   3. reconcile + commit   — the repair. BOUNDED (see the budget arithmetic below).
+#   4. release_lock         — stages the lock deletion, commits, and makes ONE bounded
+#                             push that carries BOTH commits. Deliberately one push, not
+#                             two: a second `git_push_bounded` would add another whole
+#                             GIT_PUSH_TIMEOUT_SECS to a handler racing a SIGKILL.
+#
+# THE BUDGET IS DERIVED, NOT PICKED. launchd sends SIGTERM then SIGKILL after its
+# ExitTimeOut; the plist (mn.gerege.nbfi.softhouse-program) sets no ExitTimeOut key, so
+# the default applies — ~20s [VERIFIED: the plist has no ExitTimeOut; the 20s figure is
+# Apple's documented default and is NOT measured here, so SIGNAL_GRACE_SECS is
+# overridable]. What is already spent before the reconcile can start is stop_driver's
+# DRIVER_STOP_GRACE_SECS (5s, T217-calibrated) plus up to ~2s confirming a SIGKILL
+# landed. What must still be affordable AFTER it is release_lock's bounded push
+# (GIT_PUSH_TIMEOUT_SECS, 10s). So the reconcile gets what is left, measured at the
+# moment it starts rather than assumed from the constants:
+#
+#     budget = SIGNAL_GRACE_SECS - (elapsed since the signal) - GIT_PUSH_TIMEOUT_SECS - 1
+#
+# and if that comes out below SIGNAL_RECONCILE_MIN_SECS the reconcile is SKIPPED, loudly,
+# with the arithmetic in the log. Skipping is safe by construction because step 2 has
+# already happened: the worst case is the pre-T309 behaviour, never a stranded lock.
+# The budget is enforced TWICE, at different layers, because they fail differently:
+#   * INNER, `ready-tasks.py --deadline-secs` — clamps every subprocess it spawns to the
+#     remaining budget and degrades WIP evidence to UNVERIFIED while still performing the
+#     demotion. Graceful: the repair lands, the colour is lost.
+#   * OUTER, `reconcile_bounded` below — wall-clock kill of the whole subtree if python
+#     itself wedges. Brutal: nothing is written. It exists because the inner bound cannot
+#     protect against the interpreter never reaching its own deadline check.
+#
+# WHAT THIS PATH DELIBERATELY DOES *NOT* DO: the worktree WIP sweep. It walks every
+# linked worktree with a `git status` each (43 of them when last counted, and the count
+# is not stable — P-69), which cannot be fitted into single-digit seconds. Uncommitted
+# worker WIP is therefore NOT rescued on the signal path. It is not lost either: the
+# worktrees persist, and the NEXT fire's `run_exit_guard` sweeps them on its way out. So
+# the cost of the omission is one fire of delay, not destruction, and that is the trade
+# being made.
+SIGNAL_GRACE_SECS="${SIGNAL_GRACE_SECS:-20}"
+SIGNAL_RECONCILE_MIN_SECS="${SIGNAL_RECONCILE_MIN_SECS:-2}"
+
+# Run reconcile_tasks_json under a hard wall-clock bound. Same shape as
+# git_push_bounded: background it, poll, and kill the whole subtree at the deadline
+# (python forks `git` and `/bin/ps`; killing only the top pid can leave those running).
+# Polls at 0.1s so a fast reconcile costs ~0.1s of waiting rather than a whole second.
+# POLARITY: fail-CLOSED — a reconcile that had to be killed reports FAILED and says the
+# state is UNVERIFIED. It never reports the reassuring answer for work it did not see
+# finish. Never blocks longer than the bound; always returns.
+reconcile_bounded() {
+  local budget=$1; shift
+  local ticks=$(( budget * 10 ))
+  RECON_VERDICT="not attempted"
+  # DEFINED YET? `on_signal` is armed by `trap` roughly 370 lines before
+  # `reconcile_tasks_json` is defined, and zsh creates a function body only when the
+  # definition is REACHED. A signal delivered inside that window would otherwise produce
+  # a bare "command not found" in the fire log and a silent non-repair. The traps are
+  # NOT moved below the definitions instead, because that would widen the window in which
+  # the LOCK is on disk with no EXIT trap behind it, which is the worse trade.
+  if ! typeset -f reconcile_tasks_json >/dev/null 2>&1; then
+    RECON_VERDICT="FAILED — the signal arrived before reconcile_tasks_json was defined"
+    log "ERROR: signal-path reconcile is not possible — $RECON_VERDICT. tasks.json is UNREPAIRED."
+    return 1
+  fi
+  # RECON_VERDICT is set by reconcile_tasks_json, which has to run in a SUBSHELL to be
+  # backgroundable — so its assignment cannot reach this scope. Hand it back through a
+  # file. If the job is killed at the deadline the file is absent and the FAILED verdict
+  # set below stands: an unread verdict is never spelled like a clean one.
+  local vf="$LOG_DIR/fire-$STAMP.recon-verdict"
+  rm -f "$vf"
+  ( reconcile_tasks_json "$@"; print -r -- "$RECON_VERDICT" > "$vf" ) &
+  local job=$! waited=0
+  while (( waited < ticks )) && kill -0 "$job" 2>/dev/null; do
+    /bin/sleep 0.1
+    (( waited++ ))
+  done
+  if kill -0 "$job" 2>/dev/null; then
+    log "ERROR: the signal-path reconcile exceeded its ${budget}s budget — killing it so this handler can still release the lock and exit inside launchd's grace. tasks.json was NOT repaired and any in_progress task in it is UNVERIFIED."
+    local -a tree
+    if driver_tree "$job"; then tree=("${DRIVER_TREE[@]}"); else tree=("$job"); fi
+    kill -TERM "${tree[@]}" 2>/dev/null
+    /bin/sleep 0.2
+    kill -KILL "${tree[@]}" 2>/dev/null
+    wait "$job" 2>/dev/null
+    # ready-tasks.py writes through `<path>.t288.tmp` + os.replace, so tasks.json itself
+    # is intact; only the temp file can be orphaned. Remove it, or the next fire's
+    # dirty-tree rescue commits it into the repo as a deliverable.
+    rm -f "$REPO/.softhouse/tasks.json.t288.tmp"
+    RECON_VERDICT="FAILED — killed at its ${budget}s signal-path budget; state is NOT truthful"
+    return 1
+  fi
+  wait "$job"
+  local rc=$?
+  if [[ -r "$vf" ]]; then
+    RECON_VERDICT="$(<"$vf")"
+    rm -f "$vf"
+  else
+    RECON_VERDICT="UNKNOWN — the reconcile subshell left no verdict; treat tasks.json as UNVERIFIED"
+  fi
+  log "signal-path reconcile verdict: $RECON_VERDICT"
+  return $rc
+}
+
+# Commit whatever the signal-path reconcile changed. NO PUSH: release_lock's single
+# bounded push, immediately after, carries this commit with it.
+commit_reconcile_result() {
+  git add -- ':(top).softhouse/tasks.json' >/dev/null 2>&1
+  git diff --cached --quiet -- ':(top).softhouse/tasks.json' 2>/dev/null && {
+    log "signal-path reconcile: no change to commit"
+    return 0
+  }
+  if git -c user.name="Buyan" -c user.email="buya.vol@gmail.com" \
+       commit -q -m "softhouse: wrapper reconciled state after fire $STAMP was signalled (T309)
+
+The driver was killed by a signal, so it never ran STEP 5.5 and never demoted its own
+dispatches. A killed worker is dead, not paused. Reconcile: $RECON_VERDICT" >/dev/null 2>&1; then
+    log "signal-path reconcile: committed the state correction"
+  else
+    log "ERROR: the signal-path reconcile's state correction could not be COMMITTED — it exists only in the working tree. The next fire's dirty-tree rescue should pick it up; if it does not, commit it by hand."
+  fi
+}
+
 on_signal() {
   local sig=$1 rc=$2
-  log "SIG$sig received — stopping the driver, releasing the lock and TERMINATING (rc=$rc). A fire must never keep working after its lock is gone."
+  local t0=$(date +%s)
+  log "SIG$sig received — stopping the driver, reconciling tasks.json, releasing the lock and TERMINATING (rc=$rc). A fire must never keep working after its lock is gone, and it must never leave `in_progress` behind for workers it just killed."
   stop_driver
+
+  # Step 2: the local half of the lock release, up front. Costs one unlink. release_lock
+  # below is idempotent (`rm -f`) and still stages/commits/pushes the deletion.
+  if [[ -e "$LOCK" ]]; then
+    rm -f "$LOCK"
+    log "local lock file removed — STEP 0 of the next fire on this host is already unblocked, whatever happens to the rest of this handler"
+  fi
+
+  # Step 3: the repair, inside a budget derived from what is actually left.
+  local elapsed=$(( $(date +%s) - t0 ))
+  local budget=$(( SIGNAL_GRACE_SECS - elapsed - GIT_PUSH_TIMEOUT_SECS - 1 ))
+  if (( budget < SIGNAL_RECONCILE_MIN_SECS )); then
+    log "WARN: SKIPPING the signal-path reconcile — budget arithmetic leaves ${budget}s (grace ${SIGNAL_GRACE_SECS}s - ${elapsed}s already spent stopping the driver - ${GIT_PUSH_TIMEOUT_SECS}s reserved for the lock-release push - 1s), below the ${SIGNAL_RECONCILE_MIN_SECS}s minimum. tasks.json is UNREPAIRED and any in_progress task in it is a DEAD dispatch; the next fire must not believe it."
+  else
+    log "signal-path reconcile: ${budget}s of budget (grace ${SIGNAL_GRACE_SECS}s - ${elapsed}s spent - ${GIT_PUSH_TIMEOUT_SECS}s push reserve - 1s)"
+    # Plain assignment, not a `VAR=x func` prefix: zsh's scoping for a prefixed
+    # assignment on a SHELL FUNCTION is not the same as on an external command, and a
+    # signal handler is not the place to depend on which one this shell implements.
+    RECONCILE_DEADLINE_SECS=$budget
+    reconcile_bounded "$budget"
+    RECONCILE_DEADLINE_SECS=""
+    commit_reconcile_result
+  fi
+
   release_lock
+  log "SIG$sig handler complete after $(( $(date +%s) - t0 ))s (launchd grace is ~${SIGNAL_GRACE_SECS}s) — exiting rc=$rc"
   exit $rc
 }
 trap 'on_signal INT  130' INT
@@ -706,6 +949,22 @@ foreign_live_session_in_repo() {
     [[ "${first:t}" == claude ]] || continue      # the CLI, not /Applications/Claude.app
     [[ "$st" == Z* ]] && continue                 # a zombie is dead, merely unreaped
     kill -0 "$pid" 2>/dev/null || continue        # exited between the snapshot and now
+    # T309 — OUR OWN driver is not a FOREIGN session, and this function's whole subject
+    # is "somebody ELSE working in this checkout". Before T309 the distinction never
+    # arose: this only ran from the wrapper's normal tail, where the driver had already
+    # been `wait`ed on and was off the table by construction. On the SIGNAL path it has
+    # been KILLED microseconds earlier by stop_driver, and stop_driver's own poll can
+    # time out on an uninterruptible wait — so without this the wrapper could refuse to
+    # reconcile because of the corpse it had just made.
+    # NOT a blanket "skip any claude": only the exact pids stop_driver signalled, and
+    # only in this fire. The residual is pid reuse inside the ~1s between the kill and
+    # this snapshot, which would let a brand-new unrelated `claude` be skipped; that is
+    # narrow, it is stated rather than hidden, and it is strictly smaller than the race
+    # it removes.
+    if (( ${STOPPED_TREE[(I)$pid]} )); then
+      FOREIGN_SESSIONS="${FOREIGN_SESSIONS} [pid ${pid} SKIPPED: this fire's own driver, already stopped]"
+      continue
+    fi
     (( checked++ ))
     lsofout=$("$LSOF_BIN" -w -a -d cwd -p "$pid" -Fn 2>/dev/null)
     cwd=""
@@ -734,6 +993,86 @@ foreign_live_session_in_repo() {
   (( found ))   && return 0
   (( unknown )) && return 2
   return 1
+}
+
+# T309 — THIS DEFINITION MOVED OUT OF `run_exit_guard`, AND THAT WAS NOT COSMETIC.
+# T288 defined `reconcile_tasks_json` INSIDE run_exit_guard, twenty lines above its only
+# call. A zsh function body is not created until the enclosing function RUNS, so before
+# the first driver had exited the name did not exist at all — and `on_signal` fires from
+# the moment the traps are installed, which is BEFORE that. So the brief's finding is
+# stronger than 'on_signal never calls the reconciler': on the first chain iteration it
+# could not have called it, because there was nothing to call. It lives at top level now,
+# beside `foreign_live_session_in_repo` which it depends on, so both call sites reach the
+# same bytes and neither is ordering-dependent.
+#
+# ---------------------------------------------- T288: repair the state, don't warn ---
+# THE DEFECT THIS REPLACES. Everything below used to be one WARN. Fire 20260822-140002
+# ended its turn with four live workers (T271/T283/T285/T286); all four died with it,
+# all four stayed `in_progress`, and RESUME.md was never rewritten. At 23:00 the next
+# fire was refused by the quota 20 seconds in, and at 23:00:32 this wrapper printed
+#     WARN: exit-protocol violation — .softhouse/RESUME.md predates this fire's start;
+#           the next fire may act on stale state. Review it by hand.
+# IT WAS RIGHT AND IT DID NOTHING. "Review it by hand" has no reader: the only thing
+# that reads a fire log is the next fire, and the next fire reads RESUME.md and
+# tasks.json instead. Two fires later the state was still lying and the 08:00 fire had
+# to reconstruct the truth from six branch names and two log files.
+#
+# REPAIR, NOT REFUSE — and here is what was rejected. A louder refusal was the obvious
+# alternative: exit non-zero, or drop a marker file the next fire is told to read.
+# Both fail for the same reason the WARN failed. A non-zero exit is read by launchd,
+# which does nothing with it; the next fire still opens a tasks.json that says four
+# workers are busy. A marker file needs (a) somebody to remember to read it and (b)
+# somebody to remember to clear it — two remembered obligations, which is P-45's exact
+# shape: "a guard that only works when someone remembers to run it enforces nothing."
+# So the wrapper edits the two artefacts the next fire actually reads, and both repairs
+# are SELF-CLEARING by construction: a demoted task leaves `needs_retry` when it is
+# retried, and the banner disappears the moment a driver rewrites RESUME.md per STEP
+# 5.5.4. Nothing new has to be remembered by anyone.
+#
+# The refusal path still exists — but only where a repair could be WRONG, i.e. when a
+# live session might own those tasks. There the wrapper says so in the log AND leaves
+# the state untouched, because demoting a live worker's task would get it dispatched
+# twice.
+RECON_VERDICT="not attempted"
+reconcile_tasks_json() {
+  local -a pairs; pairs=("$@")
+  if [[ ! -f .softhouse/tasks.json ]]; then
+    RECON_VERDICT="no tasks.json in this repo"
+    log "reconcile: $RECON_VERDICT"
+    return 0
+  fi
+  local probe_rc
+  foreign_live_session_in_repo; probe_rc=$?
+  case $probe_rc in
+    0)
+      RECON_VERDICT="REFUSED — a live session is working in this repo ($FOREIGN_SESSIONS)"
+      log "WARN: NOT reconciling tasks.json — $FOREIGN_SESSIONS. Some other session may own the in_progress tasks, and demoting a LIVE worker's task would get it dispatched twice. State left exactly as found; if that session is not in fact working, fix tasks.json by hand."
+      return 1 ;;
+    2)
+      RECON_VERDICT="REFUSED — worker liveness could not be established ($FOREIGN_SESSIONS)"
+      log "ERROR: NOT reconciling tasks.json — could not establish whether a live session owns it ($FOREIGN_SESSIONS). REFUSING to rewrite state on a guess. Any in_progress task in tasks.json is UNVERIFIED; check it by hand before the next fire trusts it."
+      return 1 ;;
+  esac
+  log "reconcile: no live session owns this repo — $FOREIGN_SESSIONS"
+  local -a args; args=(--reconcile --fire "$STAMP" --repo "$REPO")
+  # T309: the NORMAL tail leaves this empty (nothing is waiting on the wrapper there, and
+  # a budget imposed for no reason is a way to lose evidence). The SIGNAL path sets it,
+  # because it is racing launchd's SIGTERM->SIGKILL grace. Two call sites, two budgets,
+  # and the difference is deliberate rather than a default nobody chose.
+  [[ -n "${RECONCILE_DEADLINE_SECS:-}" ]] && args+=(--deadline-secs "$RECONCILE_DEADLINE_SECS")
+  local p; for p in "${pairs[@]}"; do args+=(--rescue "$p"); done
+  local out rc
+  out=$(/usr/bin/python3 "$SCRIPT_DIR/ready-tasks.py" "${args[@]}" 2>&1)
+  rc=$?
+  local l; for l in ${(f)out}; do log "reconcile| $l"; done
+  case $rc in
+    0) RECON_VERDICT="ran clean (see the reconcile| lines in $LOG)" ;;
+    3) RECON_VERDICT="FAILED — tasks.json could not be read or written; state is NOT truthful" ;;
+    4) RECON_VERDICT="REFUSED by ready-tasks.py and NOTHING was changed — either the caller could not be established as the lock holder, or it ran in \`in_session\` mode and no in_progress task could be proven to belong to a dead fire (T309). Read the reconcile| lines." ;;
+    *) RECON_VERDICT="ready-tasks.py exited $rc (unexpected)" ;;
+  esac
+  (( rc == 0 )) || log "ERROR: reconcile did not complete — $RECON_VERDICT"
+  return 0
 }
 
 # ------------------------------------------------------- exit-protocol guard ---
@@ -965,70 +1304,6 @@ for (( i = 1; i <= ${#WT_PATHS}; i++ )); do
 done
 log "worktree prune sweep: pruned=$WT_PRUNED kept=$WT_KEPT"
 
-# ---------------------------------------------- T288: repair the state, don't warn ---
-# THE DEFECT THIS REPLACES. Everything below used to be one WARN. Fire 20260822-140002
-# ended its turn with four live workers (T271/T283/T285/T286); all four died with it,
-# all four stayed `in_progress`, and RESUME.md was never rewritten. At 23:00 the next
-# fire was refused by the quota 20 seconds in, and at 23:00:32 this wrapper printed
-#     WARN: exit-protocol violation — .softhouse/RESUME.md predates this fire's start;
-#           the next fire may act on stale state. Review it by hand.
-# IT WAS RIGHT AND IT DID NOTHING. "Review it by hand" has no reader: the only thing
-# that reads a fire log is the next fire, and the next fire reads RESUME.md and
-# tasks.json instead. Two fires later the state was still lying and the 08:00 fire had
-# to reconstruct the truth from six branch names and two log files.
-#
-# REPAIR, NOT REFUSE — and here is what was rejected. A louder refusal was the obvious
-# alternative: exit non-zero, or drop a marker file the next fire is told to read.
-# Both fail for the same reason the WARN failed. A non-zero exit is read by launchd,
-# which does nothing with it; the next fire still opens a tasks.json that says four
-# workers are busy. A marker file needs (a) somebody to remember to read it and (b)
-# somebody to remember to clear it — two remembered obligations, which is P-45's exact
-# shape: "a guard that only works when someone remembers to run it enforces nothing."
-# So the wrapper edits the two artefacts the next fire actually reads, and both repairs
-# are SELF-CLEARING by construction: a demoted task leaves `needs_retry` when it is
-# retried, and the banner disappears the moment a driver rewrites RESUME.md per STEP
-# 5.5.4. Nothing new has to be remembered by anyone.
-#
-# The refusal path still exists — but only where a repair could be WRONG, i.e. when a
-# live session might own those tasks. There the wrapper says so in the log AND leaves
-# the state untouched, because demoting a live worker's task would get it dispatched
-# twice.
-RECON_VERDICT="not attempted"
-reconcile_tasks_json() {
-  local -a pairs; pairs=("$@")
-  if [[ ! -f .softhouse/tasks.json ]]; then
-    RECON_VERDICT="no tasks.json in this repo"
-    log "reconcile: $RECON_VERDICT"
-    return 0
-  fi
-  local probe_rc
-  foreign_live_session_in_repo; probe_rc=$?
-  case $probe_rc in
-    0)
-      RECON_VERDICT="REFUSED — a live session is working in this repo ($FOREIGN_SESSIONS)"
-      log "WARN: NOT reconciling tasks.json — $FOREIGN_SESSIONS. Some other session may own the in_progress tasks, and demoting a LIVE worker's task would get it dispatched twice. State left exactly as found; if that session is not in fact working, fix tasks.json by hand."
-      return 1 ;;
-    2)
-      RECON_VERDICT="REFUSED — worker liveness could not be established ($FOREIGN_SESSIONS)"
-      log "ERROR: NOT reconciling tasks.json — could not establish whether a live session owns it ($FOREIGN_SESSIONS). REFUSING to rewrite state on a guess. Any in_progress task in tasks.json is UNVERIFIED; check it by hand before the next fire trusts it."
-      return 1 ;;
-  esac
-  log "reconcile: no live session owns this repo — $FOREIGN_SESSIONS"
-  local -a args; args=(--reconcile --fire "$STAMP" --repo "$REPO")
-  local p; for p in "${pairs[@]}"; do args+=(--rescue "$p"); done
-  local out rc
-  out=$(/usr/bin/python3 "$SCRIPT_DIR/ready-tasks.py" "${args[@]}" 2>&1)
-  rc=$?
-  local l; for l in ${(f)out}; do log "reconcile| $l"; done
-  case $rc in
-    0) RECON_VERDICT="ran clean (see the reconcile| lines in $LOG)" ;;
-    3) RECON_VERDICT="FAILED — tasks.json could not be read or written; state is NOT truthful" ;;
-    4) RECON_VERDICT="REFUSED by ready-tasks.py — the caller is not the lock holder" ;;
-    *) RECON_VERDICT="ready-tasks.py exited $rc (unexpected)" ;;
-  esac
-  (( rc == 0 )) || log "ERROR: reconcile did not complete — $RECON_VERDICT"
-  return 0
-}
 reconcile_tasks_json "${RESCUE_PAIRS[@]}"
 
 # RESUME.md must have been rewritten during this fire, or a fresh session resumes
