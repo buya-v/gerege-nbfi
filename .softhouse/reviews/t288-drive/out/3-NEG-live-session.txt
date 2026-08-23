@@ -1,0 +1,41 @@
+=== planted a live in-repo session: pid 53282
+    argv:  claude 400
+    cwd:   /private/tmp/t288-drive/repo
+--- wrapper stdout ---
+[10:17:55] fire start — repo=/tmp/t288-drive/repo probe=0 force=0 log=/tmp/t288-drive/logs/fire-20260823-101755.log
+[10:17:55] fineract source: present at /tmp
+[10:17:55] postgres: reachable at localhost:5432
+[10:17:57] docker: running (29.6.2)
+[10:17:57] reference oracle (Fineract): REACHABLE at https://localhost:8443/fineract-provider/actuator/health
+[10:17:57] invoking driver (chain iteration 1/1)
+[10:17:57] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+[10:17:57] driver job pid=53368 — backgrounded; the wrapper now sits in `wait`, so a SIGTERM is handled in a fraction of a second instead of waiting out the driver
+INIT session fixture
+RESULT success :: fixture driver did nothing
+[10:17:58] raw event stream: /tmp/t288-drive/logs/fire-20260823-101755.jsonl
+[10:17:58] driver exited rc=0 — 1 model turn(s), no quota rejection recorded
+[10:17:58] WARN: worktree agent-fixture900 left 1 uncommitted path(s) — rescuing to softhouse/rescued-agent-fixture900-20260823-101755
+[10:17:58] rescued agent-fixture900 -> softhouse/rescued-agent-fixture900-20260823-101755
+[10:17:58] rescue pairing: task branch softhouse/t900-uncommitted -> softhouse/rescued-agent-fixture900-20260823-101755
+[10:17:58] pruned: removed worktree /private/tmp/t288-drive/agent-fixture900 (branch softhouse/t900-uncommitted was merged into main, clean)
+[10:17:58] pruned: deleted merged branch softhouse/t900-uncommitted
+[10:17:58] worktree prune sweep: pruned=1 kept=0
+[10:17:59] WARN: NOT reconciling tasks.json — claude processes examined=3 in-repo=1 unreadable=0 -- [pid 28980 cwd /Users/buv/gerege-nbfi elsewhere] [pid 53282 cwd /private/tmp/t288-drive/repo IN-REPO] [pid 1207 cwd /Users/buv elsewhere]. Some other session may own the in_progress tasks, and demoting a LIVE worker's task would get it dispatched twice. State left exactly as found; if that session is not in fact working, fix tasks.json by hand.
+[10:17:59] WARN: exit-protocol violation — .softhouse/RESUME.md was not rewritten by this fire. Stamping the file itself so the next fire reads the correction before the stale table.
+[10:17:59] stamped .softhouse/RESUME.md with the staleness banner
+[10:17:59] committed the wrapper's state correction
+[10:18:00] chain: stopping — iteration produced no commits (nothing advanced)
+[10:18:00] chain finished after 1 iteration(s)
+[10:18:01] lock released
+=== wrapper exited rc=0
+
+=== did the probe actually SEE the plant? (a drive that planted nothing proves nothing)
+  yes — the probe's evidence line names a cwd inside the fixture repo
+[10:17:59] WARN: NOT reconciling tasks.json — claude processes examined=3 in-repo=1 unreadable=0 -- [pid 28980 cwd /Users/buv/gerege-nbfi elsewhere] [pid 53282 cwd /private/tmp/t288-drive/repo IN-REPO] [pid 1207 cwd /Users/buv elsewhere]. Some other session may own the in_progress tasks, and demoting a LIVE worker's task would get it dispatched twice. State left exactly as found; if that session is not in fact working, fix tasks.json by hand.
+
+=== tasks.json AFTER the fire — every in_progress must STILL be in_progress
+  T900   in_progress    note=(none)
+  T901   in_progress    note=(none)
+  T902   in_progress    note=(none)
+  T903   pending        note=(none)
+  VERDICT: PASS -- the guard left a live session's tasks alone

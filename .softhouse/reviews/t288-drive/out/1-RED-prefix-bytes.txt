@@ -1,0 +1,48 @@
+=== DRIVE red — f02d849 working tree, repo /tmp/t288-drive/repo
+--- wrapper stdout ---
+[10:17:30] fire start — repo=/tmp/t288-drive/repo probe=0 force=0 log=/tmp/t288-drive/logs/fire-20260823-101730.log
+[10:17:30] fineract source: present at /tmp
+[10:17:30] postgres: reachable at localhost:5432
+[10:17:31] docker: running (29.6.2)
+[10:17:31] reference oracle (Fineract): REACHABLE at https://localhost:8443/fineract-provider/actuator/health
+[10:17:32] invoking driver (chain iteration 1/1)
+[10:17:32] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+[10:17:32] driver job pid=52886 — backgrounded; the wrapper now sits in `wait`, so a SIGTERM is handled in a fraction of a second instead of waiting out the driver
+INIT session fixture
+RESULT success :: fixture driver did nothing
+[10:17:32] raw event stream: /tmp/t288-drive/logs/fire-20260823-101730.jsonl
+[10:17:32] driver exited rc=0
+[10:17:32] WARN: worktree agent-fixture900 left 1 uncommitted path(s) — rescuing to softhouse/rescued-agent-fixture900-20260823-101730
+[10:17:32] rescued agent-fixture900 -> softhouse/rescued-agent-fixture900-20260823-101730
+[10:17:33] pruned: removed worktree /private/tmp/t288-drive/agent-fixture900 (branch softhouse/t900-uncommitted was merged into main, clean)
+[10:17:33] pruned: deleted merged branch softhouse/t900-uncommitted
+[10:17:33] worktree prune sweep: pruned=1 kept=0
+[10:17:33] WARN: exit-protocol violation — .softhouse/RESUME.md predates this fire's start; the next fire may act on stale state. Review it by hand.
+[10:17:33] chain: stopping — iteration produced no commits (nothing advanced)
+[10:17:33] chain finished after 1 iteration(s)
+[10:17:34] lock released
+=== wrapper exited rc=0
+--- ancestry the wrapper actually ran under (proves no live session was faked away):
+  (no reconcile lines — expected for the red drive, which has no reconcile at all)
+
+=== tasks.json AFTER the fire
+  T900   in_progress    branch=softhouse/t900-uncommitted
+  T901   in_progress    branch=softhouse/t901-committed
+  T902   in_progress    branch=None
+  T903   pending        branch=softhouse/t903-untouched
+
+=== first 14 lines of RESUME.md AFTER the fire
+# RESUME — t288 fixture
+
+Pause reason: this manifest is deliberately stale. It was written before the fire ran.
+
+| task | status |
+|------|--------|
+| T900 | in_progress |
+| T901 | in_progress |
+| T902 | in_progress |
+
+=== commits the wrapper made
+35f024c softhouse: release local fire lock (20260823-101730)
+140a35d softhouse: local fire lock (20260823-101730)
+7c3b5b4 fixture: repo with three dead dispatches still marked in_progress

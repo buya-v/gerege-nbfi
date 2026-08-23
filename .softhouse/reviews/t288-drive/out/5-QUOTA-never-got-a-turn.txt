@@ -1,0 +1,74 @@
+=== DRIVE green — f02d849 working tree, repo /tmp/t288-drive/repo
+--- wrapper stdout ---
+[10:18:21] fire start — repo=/tmp/t288-drive/repo probe=0 force=0 log=/tmp/t288-drive/logs/fire-20260823-101821.log
+[10:18:21] fineract source: present at /tmp
+[10:18:21] postgres: reachable at localhost:5432
+[10:18:23] docker: running (29.6.2)
+[10:18:23] reference oracle (Fineract): REACHABLE at https://localhost:8443/fineract-provider/actuator/health
+[10:18:23] invoking driver (chain iteration 1/1)
+[10:18:23] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+[10:18:23] driver job pid=53850 — backgrounded; the wrapper now sits in `wait`, so a SIGTERM is handled in a fraction of a second instead of waiting out the driver
+INIT session fixture-quota
+RESULT success :: You've hit your session limit · resets 12am (Asia/Ulaanbaatar)
+[10:18:24] raw event stream: /tmp/t288-drive/logs/fire-20260823-101821.jsonl
+[10:18:24] driver exited rc=1 — **QUOTA: THIS FIRE NEVER GOT A TURN** — 0 model turns, rate limit 'five_hour' rejected (resetsAt=1787414400). This is NOT a driver crash and nothing in the repo advanced; the window was spent on nothing.
+[10:18:24] WARN: worktree agent-fixture900 left 1 uncommitted path(s) — rescuing to softhouse/rescued-agent-fixture900-20260823-101821
+[10:18:24] rescued agent-fixture900 -> softhouse/rescued-agent-fixture900-20260823-101821
+[10:18:24] rescue pairing: task branch softhouse/t900-uncommitted -> softhouse/rescued-agent-fixture900-20260823-101821
+[10:18:24] pruned: removed worktree /private/tmp/t288-drive/agent-fixture900 (branch softhouse/t900-uncommitted was merged into main, clean)
+[10:18:24] pruned: deleted merged branch softhouse/t900-uncommitted
+[10:18:24] worktree prune sweep: pruned=1 kept=0
+[10:18:25] reconcile: no live session owns this repo — claude processes examined=2 in-repo=0 unreadable=0 -- [pid 28980 cwd /Users/buv/gerege-nbfi elsewhere] [pid 1207 cwd /Users/buv elsewhere]
+[10:18:26] reconcile| RECONCILE -- fire 20260823-101821
+[10:18:26] reconcile|   git:  /usr/bin/git
+[10:18:26] reconcile|   repo: /tmp/t288-drive/repo
+[10:18:26] reconcile|   lock: lock holder pid 53786 is an ancestor of this process and no `claude` is in the chain
+[10:18:26] reconcile|   in_progress tasks found: 3  (out of 4 in tasks.json -- every task was read to get this count, it is not a default)
+[10:18:26] reconcile|   T900     softhouse/t900-uncommitted                 WIP=absent+rescued
+[10:18:26] reconcile|            in_progress -> needs_retry
+[10:18:26] reconcile|   T901     softhouse/t901-committed                   WIP=commits
+[10:18:26] reconcile|            in_progress -> needs_retry
+[10:18:26] reconcile|   T902     (NO BRANCH RECORDED)                       WIP=none
+[10:18:26] reconcile|            in_progress -> needs_retry
+[10:18:26] reconcile|   RESULT: WROTE /tmp/t288-drive/repo/.softhouse/tasks.json -- 3 task(s) demoted in_progress -> needs_retry.
+[10:18:26] WARN: exit-protocol violation — .softhouse/RESUME.md was not rewritten by this fire. Stamping the file itself so the next fire reads the correction before the stale table.
+[10:18:26] stamped .softhouse/RESUME.md with the staleness banner
+[10:18:26] committed the wrapper's state correction
+[10:18:27] chain: stopping — driver exited rc=1
+[10:18:27] chain finished after 1 iteration(s)
+[10:18:28] lock released
+=== wrapper exited rc=1
+--- ancestry the wrapper actually ran under (proves no live session was faked away):
+[10:18:25] reconcile: no live session owns this repo — claude processes examined=2 in-repo=0 unreadable=0 -- [pid 28980 cwd /Users/buv/gerege-nbfi elsewhere] [pid 1207 cwd /Users/buv elsewhere]
+[10:18:26] reconcile|   lock: lock holder pid 53786 is an ancestor of this process and no `claude` is in the chain
+
+=== tasks.json AFTER the fire
+  T900   needs_retry    branch=softhouse/t900-uncommitted
+         note: worker killed mid-flight by fire 20260823-101821 -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.4). Its recorded branch softhouse/t900-uncommitted does not exist in this repo -- no WIP was found under that name. Uncommitted WIP left in its worktree was swept onto softhouse/rescued-agent-fixture900-20260823-101821 by this fire's worktree sweep. Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by the fire-program.sh exit guard, NOT by a driver -- the driver was already gone.
+  T901   needs_retry    branch=softhouse/t901-committed
+         note: worker killed mid-flight by fire 20260823-101821 -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.4). Its branch softhouse/t901-committed has 1 commit(s) ahead of main, head 13e1a1f74. Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by the fire-program.sh exit guard, NOT by a driver -- the driver was already gone.
+  T902   needs_retry    branch=None
+         note: worker killed mid-flight by fire 20260823-101821 -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.4). No branch was recorded for this task -- suspect an isolation violation; no WIP could be looked for. Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by the fire-program.sh exit guard, NOT by a driver -- the driver was already gone.
+  T903   pending        branch=softhouse/t903-untouched
+
+=== first 14 lines of RESUME.md AFTER the fire
+<!-- T288-WRAPPER-BANNER — written by fire-program.sh, not by a driver -->
+> ## STALE — this manifest was NOT rewritten by fire `20260823-101821`, which ended 2026-08-23T02:18:26Z.
+>
+> Everything below predates that fire, so its task table, its "next action" and its
+> pause reason are all claims about a world that has moved. The driver did not reach
+> STEP 5.5, which is why a shell script is writing this.
+>
+> - driver outcome: rc=`1` — **QUOTA: THIS FIRE NEVER GOT A TURN** — 0 model turns, rate limit 'five_hour' rejected (resetsAt=1787414400). This is NOT a driver crash and nothing in the repo advanced; the window was spent on nothing.
+> - tasks.json reconcile: ran clean (see the reconcile| lines in /tmp/t288-drive/logs/fire-20260823-101821.log)
+> - a task shown below as `in_progress` is a DEAD dispatch unless the reconcile line
+>   above says it was refused; read `tasks.json` notes, not this table.
+> - fire log: `/tmp/t288-drive/logs/fire-20260823-101821.log`
+>
+> This banner is not maintained by anyone. It disappears when a driver rewrites
+
+=== commits the wrapper made
+2ce0bb9 softhouse: release local fire lock (20260823-101821)
+985e90c softhouse: wrapper reconciled state after fire 20260823-101821 (exit-protocol enforcement)
+5e6d2ba softhouse: local fire lock (20260823-101821)
+1743514 fixture: repo with three dead dispatches still marked in_progress

@@ -1,0 +1,26 @@
+T288 — live-host measurements, 2026-08-23T02:19:42Z
+
+=== 1. A live fire is ONE claude process. There is NO process per worker —
+       a subagent is in-process, so any probe looking for a process per TASK
+       would find nothing and demote everything.
+       NOTE: this listing selects on argv[0]'s BASENAME, which is exactly what
+       foreign_live_session_in_repo() matches. It therefore includes an
+       interactive claude invoked without a path, and EXCLUDES the
+       /usr/bin/caffeinate child that merely carries claude in its arguments.
+28980 28977 /Users/buv/.local/bin/claude -p /softhouse-program\012\012Local fire on Buyan's Mac at 2026-08-23T00:00:16Z. Environment facts f
+ 1207   687 claude --dangerously-skip-permissions
+
+=== 2. cwd of each live claude, which is what the probe actually reads.
+       A session working in the repo and one that merely exists look identical
+       in ps and differ only here.
+  pid 28980 -> /Users/buv/gerege-nbfi
+  pid 1207 -> /Users/buv
+
+=== 3. The two zsh semantics that corrupted the first draft of the probe,
+       both re-derivable here rather than taken on trust.
+  a) `local x` for an x that already exists at this scope PRINTS it:
+     a=x
+     a=y
+  b) unbraced $p:c / $c:e apply history modifiers, silently:
+     unbraced: pid=28980wd=lsewhere
+     braced:   pid=28980:cwd=/Users/buv:elsewhere
