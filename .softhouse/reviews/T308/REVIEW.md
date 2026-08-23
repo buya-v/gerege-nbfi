@@ -290,10 +290,13 @@ second, independent confirmation of them; it is the same fact restated as a coun
 **Severity: HIGH (this is the brief's question answered: the counter is sensitive to the planted
 defect and blind to a different one).**
 **Reproduction: `python3 .softhouse/reviews/T308/probe/t308_survivor_mutants.py --seeds 3`.**
-**Transcript: `out/t308-survivor-mutants.txt`, `EXIT 1`. Two earlier passes of my own probe are
-preserved rather than overwritten — `out/t308-survivor-mutants-pass1.txt` (inverted gate) and
-`out/t308-survivor-mutants-pass2-stale-label.txt` (a cardinal printed under the wrong label). See
-§7.**
+**Transcripts of record: `out/t308-survivor-mutants-pass1.txt` and
+`out/t308-survivor-mutants-pass2-stale-label.txt`. Both carry the identical finding — five
+survivors, zero failing legs. Each also carries a defect of MY OWN, named in its filename and
+described in §7; the probe now on disk has both fixed, and a pass 3 was killed unfinished when the
+host went to load 24 with eight workers live. `out/t308-survivor-mutants.txt` was therefore
+DELETED rather than committed at zero bytes: a zero-byte transcript in an evidence directory is
+worse than an absent one.**
 
 T292's eight kill targets attack COVERAGE (M1/M2/M3), READ INTEGRITY (M4/M5/M10/M6), the EXIT
 PROTOCOL (M7) and DETECTION BREADTH (M9). **Not one attacks the GATE** — the disjunction in `main`
@@ -469,7 +472,7 @@ Likewise, pass 1 of `t308_survivor_mutants.py` **exited 0 while reporting five s
 the author had written his prediction into the gate — the lineage's founding shape, in the
 instrument written to find the lineage's founding shape. Preserved at
 `out/t308-survivor-mutants-pass1.txt`; the gate is now "non-zero if ANY kill target survived", and
-pass 3 exits **1**. Pass 2 then printed a per-guard reproduction number under the label
+pass 2 duly exited **1**. Pass 2 then printed a per-guard reproduction number under the label
 **`A10 driven through the mutant`** — a cardinal beside the wrong name, which is `P-86`'s exact
 species. Preserved at `out/t308-survivor-mutants-pass2-stale-label.txt`; the label now names the
 document actually driven. **Three instrument defects in three probes, all mine, all found by
