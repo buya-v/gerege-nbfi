@@ -315,6 +315,41 @@ func (GoPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 	// transaction_ids, transcribed from errors[0].args), so this port reads a
 	// length rather than a boolean somebody derived for it.
 	//
+	// ⚠ THE SENTENCE ABOVE OVERCLAIMS, AND IS CORRECTED HERE RATHER THAN
+	// DELETED, because it was quoted in T294's handoff §6 and in the vector's
+	// own `_note` as the reason this vector is non-vacuous, and a reader who
+	// meets it there must be able to find the correction. [T296 F-T296-2,
+	// discharged by T305.] T296 mutated THIS FUNCTION in four arms and
+	// re-graded the whole ledger corpus:
+	//
+	//	arm E  the rule moved BELOW the balance check   -> DIES
+	//	arm A  match on req.Command alone, id list never read  -> SURVIVES
+	//	arm B  match on the id list alone, command never read  -> SURVIVES
+	//
+	// So THIS PORT READS A LENGTH; NOTHING IN THIS STORE REQUIRES IT TO. Arm E
+	// is the part of T294's claim that measured true — the ORDERING of this
+	// rule against the balance rule really is graded, and it is the only
+	// observed refusal precedence in the corpus. But the id list is INERT FOR
+	// GRADING: a port that ignores it scores identically.
+	//
+	// WHAT THAT LETS THROUGH, named so it is not rediscovered a third time: arm
+	// A refuses EVERY defineOpeningBalance, including on an EMPTY ledger where
+	// the oracle ACCEPTS (:812's CollectionUtils.isEmpty fall-through into the
+	// writes at :742/:745), and is green on the whole corpus. That is the
+	// headerRefusingPoster class — the reasonable thing to do, which the oracle
+	// does not do. THE ONLY THING THAT KILLS IT IS AN ACCEPTING-SIDE CAPTURE,
+	// because every refusal capture in this corpus agrees with arm A. T305
+	// measured whether one can be taken safely and concluded it cannot on this
+	// rig: see .softhouse/vectors/capabilities-ledger.json under
+	// ledger.opening.balance.and.closure (token T305-ACCEPTING-SIDE-GAP, which
+	// conformance.sh enforces two-way) and the re-runnable per-tenant refusal in
+	// .softhouse/capture/t305-openingbalance-accepting-side/.
+	//
+	// THE PREDICATE IS LEFT EXACTLY AS IT IS. Narrowing or widening it now would
+	// be an unobserved change to a money path in a task that captured nothing —
+	// and it reads the length because :812 does, which is the right reason even
+	// though no vector checks it.
+	//
 	// ITS POSITION IN THIS FUNCTION IS OBSERVED AND NOT CHOSEN, and that is the
 	// one thing about it worth reading twice. OB-01's request body is UNBALANCED
 	// BY EXACTLY ONE MINOR UNIT (debit 250000.25, credit 250000.24) — so the
