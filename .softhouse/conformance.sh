@@ -1642,9 +1642,31 @@ guard_no_fail_open_instruments() {
 # (P-66/P-70 — "not found" is a statement about the search, never about the world).
 # It claims exactly one thing: no NEW literal shared-temp assignment can enter the
 # fail-open linter's corpus without a source edit to this file that a reviewer reads.
+# T271's probe_tmp_dependency_t271.sh was ADDED to this census by the driver at the close of
+# fire 20260823-080004, and the reasoning is recorded here rather than in a commit message because
+# THIS is the file a future reviewer reads. The guard did its job: T273 installed it and T271's
+# probe tripped it IN THE SAME FIRE, census 18 against a pin of 17.
+#
+# WHY PINNED RATHER THAN REPAIRED, which is the question the guard's own text asks: the adoptable
+# `mktemp -d` shape is INAPPLICABLE BY CONSTRUCTION here. That probe's entire purpose is to measure
+# whether the bar's colour depends on ONE SPECIFIC ABSOLUTE PATH that another instrument hard-codes
+# (t234's 02-escape-matrix-fix.sh:6). Naming the path IS the measurement; a fresh mktemp path would
+# measure nothing. The probe reads the path, records whether it was present, and RESTORES THE STATE
+# IT FOUND -- it is a measurement, not a dependency.
+#
+# THIS IS NOT THE MOVE P-88 REJECTS, and the distinction matters. T271 refused to create the file
+# or to move FAILOPEN_PIN_FILE_LIST to go green, because both would manufacture a green out of host
+# state. This is a different pin: a CENSUS of known literal-temp assignments, whose stated purpose
+# is that no new site enters without a source edit a reviewer reads. Adding a genuine new site with
+# its justification is what the guard ASKS FOR; the failure mode it guards against is a site
+# arriving unseen.
+#
+# NOT INDEPENDENTLY REVIEWED. Filed as T293 for adjudication next fire, and a reviewer that
+# disagrees should revert this row and repair the probe instead.
 HOSTSTATE_PIN_TEMP_ASSIGN_LIST='.softhouse/capture/t116-familyb-promotion/src/run-harness-mutations-t116.sh | SCRATCH=/tmp/t116-harness
 .softhouse/capture/t234-sweep-instrument-audit/instruments/01-escape-matrix.sh | C=/tmp/t234_matrix.txt
 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh | GIT_INDEX_FILE=/tmp/t239-red-index
+.softhouse/capture/t271-b1-t219/probe_tmp_dependency_t271.sh | TARGET=/tmp/t234_matrix2.txt
 .softhouse/capture/t91/t115-drive-mf3-mf4.sh | S=/tmp/t115-mf34.$$
 .softhouse/reviews/T138-evidence/r7-mf3-mf4.sh | B=/tmp/T138-mf2-post
 .softhouse/reviews/T138-evidence/r7-mf3-mf4.sh | X=/tmp/T138-mf3

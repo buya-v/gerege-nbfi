@@ -2941,3 +2941,99 @@ blob **byte-for-byte**. The verdict survived. **The proof did not.**
 proof sound?" but "WHAT FRACTION OF THE WORLD DOES THIS POPULATION COVER?"** A sound proof over a chosen
 fifth is a sound proof about a fifth. This is `P-67` (count both terms) raised to apply to **the evidence
 itself**, not just to the claim — and it is how a `RATIFY` verdict is earned rather than granted.
+
+---
+
+**P-91 — FIVE FIXES FOR A FAIL-OPEN, AND EVERY ONE LOST TO THE SAME EVASION RE-NESTED ONE LEVEL OUT.**
+*Local fire `20260823-080004`, the R-VPA lineage: `T259` → `T268` → `T281` → `T286` → `T291`.*
+
+`T259` shipped a rule that printed `REFUSED NIL COVERAGE` in its body and **exited GREEN**. `T268` repaired
+it and introduced a **second** fail-open. `T281` rejected that. `T286` repaired *that*, and found a **third
+inside the repair in flight for the second** plus a **fourth** nobody had looked for (`--help` raises
+`SystemExit(0)` → exit **0 with no probe line**, the one code a caller reads as *"measured, green"*).
+
+**`T286` did the sophisticated thing and it was still not enough.** It rejected the obvious phrasing — *"the
+root doesn't count"* — **precisely because** it had measured that phrasing losing to a one-line evasion, and
+chose a structural one instead: **"a record is a row reached through a list."** `T291` then defeated the
+replacement with **two characters**, by wrapping the fixture header in `[ ]`:
+
+```
+H1  {"meta": {"verdict":"AS PREDICTED"},                "cells":[]}   PRE=1  NEW=1
+X2  {"meta": {"summary": [{"verdict":"AS PREDICTED"}]}, "cells":[]}   PRE=1  NEW=0
+```
+
+Exit **0 GREEN**, `predicates=0`, where the **pre-`T268`** rule exits **1 REFUSED** — a **lost refusal**, the
+exact criterion `T281` had used to reject `T268`. Also at depth 2 and 4, as a list-of-lists, and as a
+**top-level JSON array** — the shape this program's own `t286-legs.json` and `red-green-legs.json` use.
+`T291` reproduced it **inside `T286`'s own sweep, unmodified**: *42 fixtures, 4 lost refusals, FAIL.*
+
+**THE RULE: a guard phrased as a STRUCTURAL PATTERN over the shape of its input can always be re-nested one
+level out, so enumerating shapes that COUNT and refusing the unmatched is a losing method no matter how
+carefully each shape is chosen.** Five competent, RED/GREEN-driven repairs by five different workers all lost
+the same way. The escape is not a better pattern: it is **inverting the burden** — require the document to
+POSITIVELY DEMONSTRATE coverage in a form the rule *constructs* rather than *recognises*, so that anything
+the rule does not understand **refuses** instead of passing. Fail-closed **by construction**, not by
+enumeration. Filed as `T292`, which is told in terms that a sixth shape-patch is the predicted output and
+will be rejected, and that **a measured impossibility argument is a better result than a sixth patch.**
+
+**Corollary, and it bit here:** `T286` offered *"battery 32 passed, 0 failed, **0 SKIPPED**"* as proof.
+`T291` measured that **the battery returns exit 0 with legs SKIPPED** (23/0/9 → 0). The rig could skip and
+still pass, so the `0 SKIPPED` was an observation, never a guarantee. **A test rig is inside the trust
+boundary of the thing it grades; check that it cannot pass vacuously before quoting its counts.**
+
+---
+
+**P-92 — THE PROBE THAT WOULD HAVE FIRED WAS ARMED, AND ITS AUTHOR'S OWN COMMENT SAID IT WAS SAFE.**
+*Local fire `20260823-080004`, `T289` over `T287`.*
+
+`T287` captured two oracle refusals honestly and well: it re-derived its citation before sending anything,
+**refuted the driver's premise** that a `GLClosure` is irreversible (`GLClosure.java:50` carries `is_deleted`
+but **no `@SQLDelete`**, so `repository.delete()` is a genuine hard delete), placed its closure before the
+earliest existing entry so the plan was safe **even if the delete had failed**, reversed the mutation, and
+disclosed the residue it could not reverse. The driver verified all four load-bearing numbers first-hand and
+they were all true.
+
+**`T289` checked the claims `T287` did not make.** Every probe body was a **valid, balanced, postable manual
+journal entry**. The only thing refusing them was **a precondition in the oracle** — and when a precondition
+lapses, the request does not go quiet, **it becomes a write**, and a posted journal entry cannot be deleted.
+`T287` had **deleted the closure** that refused two of them; a third armed **the next day**. All four carried
+the comment **`"Expected REFUSED, writes nothing"`** — an assertion its own author had made false — and
+`T287` §7.5 told the promotion task that **"re-taking arm 2 is cheap now, the recipe is committed and
+re-runnable."**
+
+**THE RULE: a probe whose safety comes from an EXTERNAL PRECONDITION rather than from its own content is a
+loaded weapon, and the danger is highest immediately after the capture SUCCEEDS — because taking the
+observation is often what removes the precondition.** A refusal capture must carry a **fail-closed fence that
+re-checks the precondition at fire time**, never a comment asserting the refusal, because **the comment is
+written when the precondition holds and is not re-read when it stops holding.** This is `P-89` ("prose does
+not fire on the next fire") applied to a *safety* claim rather than a coverage claim, and the consequence is
+worse: prose that does not fire leaves a gap, but prose that says *"writes nothing"* invites the write.
+
+---
+
+**P-93 — THE GUARD LANDED AND THE VERY SAME FIRE'S OTHER BRANCH TRIPPED IT.**
+*Local fire `20260823-080004`, `T273`'s `guard_no_host_state_in_lint_corpus` over `T271`'s probe.*
+
+`T273` removed the program's most dangerous signal: the bar's green had depended on a 24-byte file in `/tmp`,
+so a clean checkout got **exit 2 with no probe line**. Verified both directions — after the fix, the residue
+**deleted**, the bar is `PASS exit 0, 46 vectors / 7884 cells`, and the file **is not recreated**.
+
+At fire close the bar went **exit 2, zero probe lines**. It was not an oracle outage (`P-84` — read the
+**absence** of the line; the oracle answered SQL seconds earlier) and not a corpus defect. **`T273`'s new
+guard had caught `T271`'s new probe, both merged in the same fire**: census 18 against a pin of 17.
+
+The resolution is the part worth keeping. The guard's own text prefers **repair** (`mktemp -d`) over
+**pinning** — but that probe exists to measure whether the bar depends on **one specific absolute path
+another instrument hard-codes**, so *naming the path IS the measurement* and a fresh `mktemp` path would
+measure nothing. It reads the path, records whether it was present, and **restores the state it found**.
+Pinned, therefore — **with the reasoning written into `conformance.sh` beside the pin rather than into a
+commit message**, because that file is what a future reviewer reads, and filed as `T293` for independent
+adjudication with the instruction that a reviewer who disagrees should revert the row and repair the probe.
+
+**THE RULE: when a guard you just merged rejects work you just merged, that is the guard EARNING ITS KEEP on
+its first day — do not treat it as a merge accident.** Decide repair-vs-pin on whether the flagged site is a
+**dependency** or a **measurement**, write the reasoning where the guard lives, and **file the decision for
+review rather than letting an unreviewed judgement stand as precedent.** Distinguish this from the move
+`P-88` rejects: `T271` refused to create the file or move `FAILOPEN_PIN_FILE_LIST`, because those manufacture
+a green out of host state. A **census** whose stated purpose is that no new site enters unseen is a different
+instrument — adding a genuine site **with its justification** is what it asks for.

@@ -1,125 +1,180 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## ⚠ IN FLIGHT — local fire `20260823-080004` HAS FIVE LIVE WORKERS AS OF THIS COMMIT
+## FIRE `20260823-080004` CLOSED CLEAN — 8 dispatched, 8 completed, 7 merged, **0 live at exit**
 
-**Do not read this HEAD as a closed fire.** Written and pushed BEFORE the first worker was spawned (P-85).
+Every worker was awaited. Nothing was killed. `git status --porcelain` empty at exit.
 
-| task | role | branch | what |
-|---|---|---|---|
-| T287 | test_writer | softhouse/t287-* | **ORACLE-ONLY, NEW** — the two closure/opening-balance refusals the registry calls CHEAP and records nobody has taken |
-| T285 | reviewer | softhouse/t285-* | independent review of T273 (the `/tmp` residue guard, +222 lines into the file that grades everything) |
-| T283 | reviewer | softhouse/t283-* | independent review of T274's attestation root repair — forge a sidecar the re-derivation accepts |
-| T286 | coder | softhouse/t286-* | T268 RETRY — repair the fail-open T281 measured *inside T268's own fix* |
-| T271 | coder | softhouse/t271-* | B-1 in `t219-g8-residual`; blocks T269 on a MEASURED red bar |
-
-**Lock**: held by this fire (`pid 93922`), taken by the wrapper. Freshness read via push-recency on
-`origin/main`, per STEP 0 — `started_at` is not a freshness signal (P-85).
-
-**Oracle**: REACHABLE, `https://localhost:8443`. Bar re-run by the driver at fire open, before any dispatch:
-**PASS exit 0, probe line PRESENT and reads `up`, 46 parity vectors / 7884 cells.** `/tmp/t234_matrix2.txt`
-is present (mtime 22 Aug 22:50) and this host has **5 days 13 h uptime**, so that green is still resting on
-the residue T273 exists to remove — it has not yet been tested by a reboot.
+**BAR at close: `PASS exit 0`, probe line PRESENT and reads `up`, 46 parity vectors / 7884 cells — with
+`/tmp/t234_matrix2.txt` ABSENT.** That last clause is the fire's headline; see below.
 
 ---
 
-# HEADLINE 1: THE 14:00 FIRE EXITED WITH FOUR LIVE WORKERS, AND THE 23:00 FIRE DID NOT NOTICE
+# HEADLINE 1: THE BAR NO LONGER DEPENDS ON A 24-BYTE FILE IN `/tmp` — `T273` VERIFIED FIXED
 
-**The single most important fact for reading this repo's recent history.** Fire `20260822-140002` dispatched
-`T271`, `T283`, `T285`, `T286` and then **ended its turn**, killing all four (STEP 5.5: *"NEVER exit with live
-workers — they die with you"*). It left them `in_progress` in `tasks.json`, which told every later reader that
-work was happening when nothing was.
+Driver-verified on the merge result, both directions:
 
-Fire `20260822-230001` then opened and released the lock **with zero commits between them** — a whole
-oracle-reaching window spent on nothing, and the stale claim went uncorrected for a second time.
+```
+BEFORE T273 :  rm /tmp/t234_matrix2.txt  ->  EXIT 2, probe lines printed 0
+AFTER  T273 :  rm /tmp/t234_matrix2.txt  ->  PASS exit 0, probe = up, 46 vectors / 7884 cells
+                                             and the file is NOT recreated
+```
 
-**So `RESUME.md` described fire `20260822-060013b` while four fires' worth of history sat on `main` above it.**
-This is `P-69` (*acting on a stale measurement*) at manifest scale, and it is the second time the exit protocol
-has been the thing that failed rather than the work.
+**This is the first green bar on this host reproducible from a clean checkout** rather than resting on residue
+a previous run happened to leave. The file is still absent as this manifest is written, after a full
+multi-hour, eight-agent fire.
 
-**Corrected this fire:** all four are `needs_retry` with their rescue branch named in the note, per STEP 5.4
-(*"A task whose worker you killed is not `in_progress`"*). **WIP was NOT lost** — the wrapper's sweep caught
-six `softhouse/rescued-agent-*-20260822-140002` branches, and they are substantial:
+**`T285` earned that by splitting the branch instead of grading it as one thing.** It APPROVED T273 proper
+(`7e85a3e`…`9da1d87`) and **REJECTED the commit that arrived on top** (`2ae2c8c`), with a *measured* cut line:
 
-| rescued branch | task | size |
+> `80-host-state-bracket.py` decides "out of repo" by prefix against `git rev-parse --show-toplevel`. Every
+> agent worktree lives **under** the main checkout. **Delta = 7 rows from a worktree, 2 from the main
+> checkout. The pin is 7.**
+
+**The driver reproduced it** (`VERDICT … 2 row(s) differ`) and reverted `2ae2c8c` at `cd07c06`. Merging it
+would have made the **daily unattended fire exit 2 with no probe line** — the exact ambiguous signal T273 was
+filed to remove. T285 also settled that `rm` is a **strictly stronger** reboot simulation: the harness reads
+`os.path.exists`, not how the file went away, so the reboot case need never be observed.
+
+**The race has FOUR independent confirmations by four different routes** — `T271` incidentally while working
+on `t219`; the driver's own mtime measurement (`Aug 22 22:50` → `Aug 23 08:37` on a host with 5½ days uptime,
+recorded in `.softhouse/observations/20260823-tmp-residue-race.md`); `T283` hitting exit 2 mid-session when
+the file *"vanished on its own"*; and `T285` watching it vanish twice with no action of its own. **T285 was
+deliberately NOT told about the driver's observation**, so its adjudication stayed its own.
+
+# HEADLINE 2: THE FIRST NEW LEDGER CAPTURE IN MANY FIRES — AND ALL FOUR PROBES WERE ARMED (P-92)
+
+**`T287`** took the two refusals the registry itself prints as *"CHEAP captures … nobody has taken them"*. It
+re-derived its citation before sending anything, and **refuted the driver's own brief on the load-bearing
+point**: a `GLClosure` is **not** irreversible — `GLClosure.java:50` carries `is_deleted` but **no
+`@SQLDelete`**, so `repository.delete()` is a genuine hard delete. It flagged that its whole justification
+rested on that rather than quietly relying on it, placed the closure **before the earliest existing entry** so
+the plan was safe *even if the delete had failed*, and noted the driver's suggested fallback (a dedicated
+office) would have been **worse** — offices have no delete at all.
+
+**Driver-verified first-hand:** `acc_gl_closure` **0**, `acc_gl_journal_entry` **60 / maxid 64** (the ledger
+never moved), `acc_gl_closure_id_seq is_called=t` (**disclosed residue — the next closure is id 2, not 1**),
+`m_portfolio_command_source` 351.
+
+**`T289` then found what `T287` had not claimed.** Every probe body is a **valid, balanced, postable journal
+entry**; the only thing refusing them is a **precondition in the oracle**, and when it lapses the request
+**becomes a write** — and a posted journal entry cannot be deleted.
+
+| probe | date | armed |
 |---|---|---|
-| `a4668dbf` | T286 | 6,639 insertions / 58 files (incl. `t281-review-t268` probe fixtures) |
-| `ad426472` | T285 | 8,100 insertions / 40 files (incl. `80-host-state-bracket.py`, "the hazard is a RACE, not a reboot") |
-| `a157842e` | T273 base | 7,514 insertions / 42 files |
-| `a2dfa827` | T268 base | 4,047 insertions / 34 files |
-| `a533818f` | T271 | 1,992 insertions / 22 files |
-| `af19d6f1` | T283 | 303 insertions / 2 files — **thin; this one barely started** |
+| `a2-01` / `a2-02` | 2026-01-31 / 2026-01-15 | **NOW** — T287 deleted the closure that refused them |
+| `a1-02` | **2026-08-24** | **tomorrow** |
+| `a1-01` | 2026-12-31 | 2027-01-01 |
 
-**Completeness is UNVERIFIED for every one of them.** A rescue branch is where a worker happened to be standing
-when it died, not a handoff it chose to write. Each re-dispatch this fire is told to treat its own rescued WIP
-as *evidence*, never as *a conclusion*.
+All four carry the comment **`"Expected REFUSED, writes nothing"`** — false as of T287's own delete — and
+T287 §7.5 told the promotion task *"re-taking arm 2 is cheap now, the recipe is committed and re-runnable."*
+**`guard-probe-expiry.sh` is merged and driver-verified RED (exit 1)**, printing *"Firing this POSTS 2 JOURNAL
+ENTRIES into the reference oracle, PERMANENTLY."*
 
-# HEADLINE 2: THE ORACLE WINDOW IS BEING SPENT ON CAPTURE AGAIN — `T287`
+`T289` also **overturned T287's registry adjudication** by looking where T287 declined to: `defineOpeningBalance:703`
+reaches the same cited guard at **`:724`**, so `ledger.opening.balance.and.closure` is **coherent, not
+misnamed — DO NOT RENAME OR SPLIT IT** — and it named a **cheaper untaken capture** at `:810-816` needing
+**no mutation and no clock**.
 
-The queue is **20 READY tasks and every one is harness self-repair.** That is the same signal that raised
-`T275` last fire, and `T275` merged and was worth it (it **refuted** CAPTURE-PLAN §5's own framing: the
-oracle reconciles mappings **by key**, it does not delete-then-recreate).
+**Money-path finding for the port, verified at `:636`:** `!DateUtils.isBefore(closingDate, transactionDate)`
+— the closure boundary is **INCLUSIVE**, while the message says *"prior to"*. A port written from the message
+text gets a strict `<` **and fails open on exactly the day a period-end adjustment carries.**
 
-The ledger corpus is still **6 vectors / 21 money cells** against loanschedule's **46 / 7884**, with **8 of 14
-declared capabilities out of the graded domain.** The driver read all eight rows and picked the one that
-**names its own capture and says nobody took it**:
+# HEADLINE 3: FIVE FIXES FOR ONE FAIL-OPEN, ALL LOSING THE SAME WAY (P-91)
 
-> `ledger.opening.balance.and.closure` — *"validateBusinessRulesForJournalEntries refuses both shapes
-> [VERIFIED: …:626-640] and NEITHER refusal is observed. **Both are CHEAP captures and both belong in a refusal
-> vector; nobody has taken them.**"*
+`T259` (printed REFUSED, exited GREEN) → `T268` (second fail-open) → `T281` rejected → `T286` (found a
+**third inside the in-flight repair for the second**, plus a **fourth**: `--help` → `SystemExit(0)` → exit 0
+**with no probe line**) → **`T291` REJECTED T286.**
 
-`T287` takes them. **Arm 1** (future-dated entry) has zero side effects — a refused write writes nothing — and
-is committed before arm 2 is touched. **Arm 2** (entry before the latest `GLClosure`) needs a closure to
-*exist*, and creating one is a **tenant-wide, hard-to-reverse mutation**: after a closure at date D, every
-future capture that back-dates at or before D is refused *forever*, and the existing 46-vector corpus lives in
-this tenant. So arm 2 must **measure the blast radius in SQL first** and is explicitly permitted — and graded
-as a success — to **decline on the record**. Refusing an unsafe mutation of the reference oracle is the right
-answer, not a failed task.
+`T286` chose *"a record is a row reached through a list"* over *"the root doesn't count"* **precisely because**
+it had measured the root phrasing losing to a one-line evasion. `T291` beat the replacement with **two
+characters** — wrap the fixture header in `[ ]` — giving **exit 0 GREEN, `predicates=0`, where the pre-`T268`
+rule exits 1 REFUSED**: a **lost refusal**, the exact criterion `T281` used to reject `T268`. Also at depth 2
+and 4, as a list-of-lists, and as a **top-level JSON array** — the shape this program's own `t286-legs.json`
+uses. **Reproduced inside `T286`'s own sweep, unmodified: 42 fixtures, 4 lost refusals, FAIL.**
 
-Why the other seven were not chosen: accrual needs a new product **plus** a job run; charge-off is unmapped on
-both admissible products; gl 17's accounting path needs account transfers; multi-currency has no observation to
-take; slot resolution needs a **contract-shaped** request naming one slot (forbidden as capture work);
-running balance is **permanently refused while G-12 is open**.
+**`T292` is the retry and is told NOT to patch the bracket** — a sixth shape-patch is the predicted output and
+will be rejected. The question is whether a **fail-closed-by-construction** formulation exists (invert the
+burden: make the document *demonstrate* coverage in a form the rule constructs rather than recognises), **or a
+measured argument that none does.**
 
-# HEADLINE 3: WHAT THE FIVE WORKERS UNBLOCK
+**Corollary that bit here:** `T286` offered *"32 passed, 0 failed, **0 SKIPPED**"* as proof; `T291` measured
+that **the battery returns exit 0 with legs SKIPPED** (23/0/9 → 0). The rig is inside the trust boundary of
+what it grades.
 
-`T269` — wire all four unwired artefacts — is the drain everything runs into, and it is blocked on
-**`T268` (via `T286`)**, **`T274` (via `T283`)** and **`T271`**. All three are dispatched this fire. `T285`
-closes the last HIGH defect (`T273`, the `/tmp` residue, four independent confirmations).
+# HEADLINE 4: `T290` CONFIRMED T271'S MONEY EXACTLY AND OVERTURNED ITS READING
 
-**`P-89` still governs the lot: three artefacts have already shipped wired to nothing, each inside an artefact
-written to remove `P-45`.** `T262`'s sentence is the standing test — **"PROSE DOES NOT FIRE ON THE NEXT FIRE."**
+`T290` built an instrument that reads only the raw gz and `prediction.json`, with an `open`/`gzip.open`
+**interposer that hard-errors on any path containing `classify`/`acknowledged`**, `parse_float=Decimal`, and
+`assert type(v) is int` on every operand. It reproduced `T271` exactly: `carriers=7 agreeREG=4 agreeCORR=6
+agreeUNCOND=7 structureHolds=6`, row sums equal to the capture's own header totals 7 of 7.
+
+- **`F-T290-2` (MAJOR):** *"out of domain" is a **post-hoc narrowing***. P2 is registered **"on every
+  unrescued cell"** (`t229-g8-site3/PREDICTION.md:183`); this cell **is** unrescued; `T271` never quotes the
+  registration (**grep for `unrescued` across all 31 files + handoff: ZERO hits**); and the substitution is
+  **circular** — P2's first two conjuncts *are* the EMI-plus-balloon assertion. **Driver verified the
+  citation.** Left standing and now false as measured: `t229/PREDICTION.md:192-193`, *"the first two conjuncts
+  STAND on every unrescued cell checked."*
+- **`F-T290-1b` (MAJOR, BLOCKING, open under BOTH rules):** the **invisible route to green** (P-88). A
+  **consistent two-file edit** — retro-edit the evidence **and** re-pin the register with its rows removed —
+  is **GREEN on the live rule AND on `T286`'s rewrite**, because nothing is left to void. **Only a FLOOR on
+  `disagreements` catches it, and no rule on any branch has one.**
+
+**Attacks that FAILED, recorded as evidence of coverage:** same pairs at an unnamed path; a one-byte in-place
+edit; a new fifth disagreement (`unack=5`, cannot be absorbed); a register aimed at another file — **all
+refuse.** `T271-INDEP`'s independence **holds**, proven by audit hook and adversarial swap. Battery leg **G1
+genuinely fails** when the count drops — broken deliberately, 5 of 12 legs red.
 
 ---
 
 ## THE NEXT FIRE STARTS HERE
 
-**Run `python3 .softhouse/bin/ready-tasks.py` first**, and **check `git branch --list 'softhouse/rescued-*'`**
-before concluding any work was lost.
+**Run `python3 .softhouse/bin/ready-tasks.py` first.** Zero tasks `in_progress`; **zero live workers.**
 
-1. Merge/adjudicate whatever the five workers above landed. Their branches are the record; `tasks.json` notes
-   say what each was told.
-2. **`T269`** once `T286`/`T283`/`T271` clear — wiring a liar is worse than leaving it unwired.
-3. **Promote `T287`'s raw captures into refusal vectors** — a separate task by design, because `conformance.sh`
-   was contended this fire. This is how the ledger corpus finally grows past 6.
-4. Then `T270`, `T272`, `T277`, `T279`, `T282`, `T256`, `T257`, `T258`, `T226`, `T235`, `T145`, `T160`, `T174`,
-   `T192`, `T195`, `T266`, `T267`.
+1. **`T292`** — the R-VPA retry. Read `P-91` before writing a line. **A sixth shape-patch will be rejected.**
+   It also carries four defects `T291` measured that are *not* about the bracket: the battery passes with legs
+   SKIPPED; duplicate predicate keys go green (JSON last-wins drops a recorded `false`); **`parse_constant`
+   unset lets `NaN`/`Infinity` into a GREEN run AS FLOATS — a money non-negotiable**; and `read_text()` has no
+   encoding, so **a Cyrillic payload exits 2 under `LC_ALL=C`, and Mongolian names are Cyrillic.**
+2. **`T293`** — adjudicate the driver's **unreviewed** census-pin decision (see below). It is filed to be
+   second-guessed, and a reviewer that disagrees should revert the row and repair the probe.
+3. **`T269`** — **MUST NOT BE WIRED** until `F-T290-1b`'s floor on `disagreements` exists. Four hard
+   preconditions are recorded in its `tasks.json` note: pin **all four** counters (not just `unacknowledged=0`),
+   **anchor by content, not line 1569**, state which rule it installs, and note that **every approval this
+   fire covers merging as a DECLARED ORPHAN and none covers wiring.**
+4. **Promote `T287`'s captures** — the ledger corpus is still **6 vectors / 21 money cells**. Read `T289`'s
+   date strategy first: **none of the four is promotable as a literal-date vector**; lift `businessDate` and
+   `latestClosingDate` out of prose into the vector's `inputs` and **never re-fire the probe**. `T289` also
+   named a cheaper untaken capture at `:810-816` needing no mutation and no clock.
+5. **`T288`** — the wrapper detects the exit-protocol violation and does nothing. Then `T270`, `T272`, `T277`,
+   `T279`, `T282`, `T284`, `T256`, `T257`, `T258`, `T226`, `T235`, `T145`, `T160`, `T174`, `T192`, `T195`,
+   `T266`, `T267`.
 
-**CONTENTION MAP** — `conformance.sh` → T273/T285, T257, T258, T226, T235, T160, T192, T195, T266, T267, T269.
-`capture/lib/` → T274/T283, T195. `capture/tierA-a2/` → T270, T174. `.softhouse/capture/` (whole) → T145.
+## THE ONE UNREVIEWED JUDGEMENT THIS FIRE MADE, STATED PLAINLY
+
+At close the bar went **exit 2, zero probe lines**. Not an oracle outage (`P-84` — read the **absence** of the
+line; the oracle answered SQL seconds earlier), not a corpus defect: **`T273`'s brand-new guard had caught
+`T271`'s brand-new probe, both merged in the same fire** — census 18 against a pin of 17.
+
+The driver **PINNED the row rather than repairing the probe**, arguing `mktemp` is inapplicable by
+construction because the probe exists to measure whether the bar depends on *one specific absolute path*, so
+naming it **is** the measurement. **The reasoning is written into `conformance.sh` beside the pin**, not into
+a commit message, because that is the file a reviewer reads. **This was not independently reviewed** and is
+filed as **`T293`**. The bar returned to PASS **with the residue still absent**. See `P-93`.
 
 ## What is NOT true, and must not be inferred from the green bar
 
-**The ledger is graded on six captured cases and no more.** Accrual, account transfers (gl 17), charge-off,
-multi-currency, opening balances/`GLClosure` and **slot resolution** are all **ungraded**, and the harness
-prints all eight rows from the registry every run. **Two of the 46 loanschedule vectors have
-`principal_amortizes_to_zero` switched OFF**, legitimately and loudly. **`G-4`, `G-5`, `G-8`, `G-10`, `G-12`
-remain OPEN; `G-4` and `G-5` are hard `user` gates.** **`G-8`'s region is a conservative superset only**,
-resting on the unproven conjecture `δ ≤ 1`, and **options (b)/(c) must not be put to Buyan — unconditionally,
-with no expiry.** **Nothing was cut over, and nothing here authorises it.** The gate register at the top of
-`gates.md` is authoritative.
+**The ledger is still graded on six captured cases and no more, and NO VECTOR WAS ADDED THIS FIRE** — T287's
+captures are **raw observed** and promotion is a separate task by design. Accrual, account transfers (gl 17),
+charge-off, multi-currency, opening balances/`GLClosure` and **slot resolution** remain **ungraded**; the
+harness prints all eight rows every run. **Two of the 46 loanschedule vectors have `principal_amortizes_to_zero`
+switched OFF**, legitimately and loudly. **`G-4`, `G-5`, `G-8`, `G-10`, `G-12` remain OPEN; `G-4` and `G-5`
+are hard `user` gates.** **`G-8`'s region is a conservative superset only**, resting on the unproven
+conjecture `δ ≤ 1`, and **options (b)/(c) must not be put to Buyan — unconditionally, with no expiry.**
+**Nothing was cut over, and nothing here authorises it.** The gate register at the top of `gates.md` is
+authoritative.
 
 ## Cite the rule, or the id AND its sentence — never the id alone (P-86)
 
-The previous manifest's pattern-id block was off by one for `P-78`…`P-83` and propagated into ten worker
-prompts. **Materiality was LOW for one reason: every prompt wrote the FULL RULE TEXT beside the id**, so the
-number was decoration and the sentence carried the instruction. Keep doing that.
+Every worker prompt this fire wrote the **full rule text** beside each pattern id. Keep doing that: when the
+ids were off by one two fires ago, materiality was LOW for exactly this reason — the sentence carried the
+instruction and the number was decoration.

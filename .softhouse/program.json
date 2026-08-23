@@ -70,7 +70,7 @@
   "park_after_retries": true,
   "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
  },
- "cursor": "G-14 CLOSED, DEC-2 revision 8 RATIFIED and landed. 10/10 dispatched-completed-merged, 0 live at exit, store digest UNMOVED, BAR green on the merge result. Next fire: T273 (the BAR green depends on a /tmp file -- HIGH, four independent confirmations), T268/T274 (fail-opens inside two new guards, both BLOCK wiring), then T269 wires the four unwired artefacts once conformance.sh is free.",
+ "cursor": "Fire 20260823-080004 (local, oracle REACHABLE): 8 workers dispatched, 8 completed, 7 merged, 0 live at exit. HEADLINE: T273 VERIFIED FIXED -- the bar's green NO LONGER depends on /tmp/t234_matrix2.txt. With the file DELETED the bar is PASS exit 0, probe line present, 46 vectors / 7884 cells, and it is not recreated. First green on this host reproducible from a clean checkout. FIRST NEW LEDGER CAPTURE IN MANY FIRES: T287 took the two closure/future-date refusals the registry itself called cheap and untaken, and REVERSED the oracle mutation (closures 0, entries 60/maxid 64, verified by the driver). T289 then found ALL FOUR PROBES ARMED and shipped a fail-closed fence, verified RED. T286 REJECTED by T291 -- the fifth fail-open in the R-VPA lineage; retry is T292. T290 confirmed T271's money exactly and OVERTURNED its 'out of domain' reading. NEXT FIRE: T292 (fail-closed-by-construction, not a sixth shape-patch), T293 (adjudicate the driver's unreviewed census pin), then T269 -- which MUST NOT be wired until F-T290-1b's floor on `disagreements` exists, a hole open under BOTH the live rule and T286's rewrite.",
  "contexts": [
   {
    "id": "tier0-harness-schedule-poc",
@@ -1986,6 +1986,48 @@
     "P-88",
     "P-89",
     "P-90"
+   ]
+  },
+  {
+   "fire": "20260823-080004",
+   "host": "local (Buyan Mac mini)",
+   "oracle": "REACHABLE",
+   "dispatched": 8,
+   "completed": 8,
+   "merged": 7,
+   "rejected": 1,
+   "live_at_exit": 0,
+   "tasks": [
+    "T287",
+    "T289",
+    "T271",
+    "T290",
+    "T273",
+    "T285",
+    "T274",
+    "T283",
+    "T286(REJECTED)",
+    "T291"
+   ],
+   "bar": "PASS exit 0, probe line PRESENT and reads up, 46 parity vectors / 7884 cells, /tmp residue ABSENT",
+   "vectors_added": 0,
+   "captures_added": "T287: 2 oracle refusal captures (raw observed), promotion deferred by design",
+   "oracle_mutation": "GLClosure created and hard-deleted by T287; ledger unchanged (60 entries, maxid 64); residue acc_gl_closure_id_seq is_called=t, disclosed",
+   "reviewer_catches": [
+    "T289: all four T287 probes ARMED -- would POST to the oracle; fail-closed fence shipped",
+    "T285: REJECTED T273's second commit -- host-sensitivity guard is itself location-sensitive (delta 7 from a worktree, 2 from the main checkout, pin 7); would have made the daily fire exit 2 with no probe line",
+    "T291: REJECTED T286 -- fifth fail-open, two characters wide, reproduced inside T286's own sweep",
+    "T290: OVERTURNED T271's 'out of domain' reading (P2 registered 'on every unrescued cell'); found an invisible route to green open under BOTH rules",
+    "T283: forged TEN artefact sets past T274's repaired verifier, three inside its own written claim"
+   ],
+   "patterns_added": [
+    "P-91",
+    "P-92",
+    "P-93"
+   ],
+   "process_defects": [
+    "T288 filed: the wrapper detects the exit-protocol violation and does nothing",
+    "23:00 fire got 429 five_hour and never received a turn; 14:00 fire ran 14:00-22:52 and exited with four live workers"
    ]
   }
  ],
