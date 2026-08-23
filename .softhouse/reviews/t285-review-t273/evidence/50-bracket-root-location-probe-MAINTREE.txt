@@ -1,0 +1,37 @@
+### T285 — BRACKET ROOT-LOCATION PROBE
+  tree           : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab453599828f16264
+  HEAD           : f5072713dad511bfffa5c87708b7e29942c80edf
+  worktree prefix: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab453599828f16264
+  main prefix    : /Users/buv/gerege-nbfi
+  scratch        : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t285-bracket-probe.uqalj_55 (removed at exit)
+
+=== in_repo prefix = W (worker worktree ROOT) ===
+  host-sensitive frontier delta rows: 9
+      +TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      +TIER2 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      +TIER2 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      +TIER2 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+      -TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      -TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      -TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      -TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+      -TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+
+=== in_repo prefix = M (main checkout ROOT) ===
+  host-sensitive frontier delta rows: 4
+      +TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      +TIER2 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+      -TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      -TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+
+### ADJUDICATION
+### THE DELTA DEPENDS ON WHERE THE HARNESS WAS INVOKED FROM: 9 row(s) under a
+### worker-worktree ROOT, 4 under the main-checkout ROOT. Same tree, same linter,
+### same corpus, same process — only the in_repo prefix differs.
+  rows only under the WORKTREE prefix:
+      +TIER2 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      +TIER2 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      -TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      -TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      -TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+  rows only under the MAIN prefix:
