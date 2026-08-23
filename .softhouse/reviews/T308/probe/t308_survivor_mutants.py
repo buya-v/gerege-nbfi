@@ -70,7 +70,23 @@ MUTANTS = [
        "or rep.mute_refutations)")]),
 ]
 
-EXPECT_SURVIVE = {"N6-CONTROL-gate-drops-nil-coverage--EXPECTED-KILLED": False}
+# EVERY mutant here is a KILL TARGET.  A survivor is a HOLE in T292's adversary, so this probe
+# exits NON-ZERO when one survives -- fail-closed.  (Pass 1 of this probe expressed the same
+# result with the exit code inverted, because the author had PREDICTED the survivals and wrote
+# the prediction into the gate.  A gate that passes when the defect is present is the lineage's
+# own founding shape; recorded in out/t308-survivor-mutants-pass1.txt rather than tidied away.)
+KILL_TARGETS = {"N1", "N2", "N3", "N4", "N5", "N6"}
+
+# One executable reproduction per mutant: a document the SHIPPED rule refuses.
+DEMOS = {
+    "N1": {"cells": [{"id": "c1", "P2_x": False, "verdict": "AS PREDICTED"}]},
+    "N2": {"cells": [{"id": "c1", "P2_x": False, "conclusion": "everything is fine"}]},
+    "N3": None,     # a VOID ack needs the ack'd path AND different bytes; not reproduced here
+    "N4": {"cells": [{"id": "c1", "P2_x": True, "verdict": "WOBBLY"}]},
+    "N5": {"cells": [{"id": "c1", "P2_x": True, "someBool": True,
+                      "verdict": "AS PREDICTED"}]},
+    "N6": {"cells": []},
+}
 
 
 def build(mid, edits, tmp):
@@ -146,10 +162,18 @@ def main():
             lost = len(legs["lost_refusals"])
             widen = len(legs["widenings"])
             failed = [l for l in legs["legs"] if not l["ok"] and not l["skipped"]]
-            mrc, mprobe, msaid = demonstrate(mp, A10, tmp, mid + "-A10")
+            demo = DEMOS.get(mid.split("-")[0])
+            if demo is None:
+                srepr = mrepr = "(no reproduction document for this guard)"
+                mrc = msaid = "-"
+            else:
+                src, sprobe, ssaid = demonstrate(RULE, demo, tmp, mid + "-demo-shipped")
+                mrc, mprobe, msaid = demonstrate(mp, demo, tmp, mid + "-demo-mutant")
+                srepr = "SHIPPED rc=%s body-prints-REFUSED=%s" % (src, ssaid)
+                mrepr = "MUTANT  rc=%s body-prints-REFUSED=%s" % (mrc, msaid)
             rows.append((mid, "KILLED" if killed else "SURVIVED",
-                         "lost=%d widenings=%d failing-legs=%d | A10: rc=%s body-REFUSED=%s"
-                         % (lost, widen, len(failed), mrc, msaid), why))
+                         "lost=%d widenings=%d failing-legs=%d | %s vs %s"
+                         % (lost, widen, len(failed), srepr, mrepr), why))
             print("  %-9s %-58s adversary exit %d" % ("KILLED" if killed else "SURVIVED",
                                                       mid, r.returncode))
             print("            LOST REFUSALS: %d   ADJUDICATED WIDENINGS: %d   failing legs: %d"
@@ -178,9 +202,9 @@ def main():
                 print("  %s" % r[0])
                 print("     %s" % r[2])
         bad = [r for r in rows
-               if (r[1] == "SURVIVED") != EXPECT_SURVIVE.get(r[0], True)]
+               if r[0].split("-")[0] in KILL_TARGETS and r[1] != "KILLED"]
         print()
-        print("EXIT %d   (0 only if every mutant matched its EXPECTED disposition)"
+        print("EXIT %d   (non-zero if ANY kill target survived -- a survivor is a hole)"
               % (1 if bad else 0))
         return 1 if bad else 0
     finally:
