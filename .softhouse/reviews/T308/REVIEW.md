@@ -56,6 +56,15 @@ THE VALUE"* — the probe line's **PRESENCE** was read first, then its value; it
 **No non-negotiable is violated by this branch.** The findings below are about the *claims*, not
 about the money rules.
 
+**One `files_hint` path in my own brief does not exist on `main`.**
+`.softhouse/capture/t268-rvpa-failopen/` is absent from the working tree. It was created by
+`81eb16f` on branch `softhouse/t268-rvpa-failopen`, which is **not an ancestor of `main`**
+[VERIFIED: `git merge-base --is-ancestor 81eb16f main` → 1; `git branch -a --contains 81eb16f`
+lists only `softhouse/t268-rvpa-failopen` and a rescue branch]. T268 was rejected by T281 and never
+landed, so its capture directory exists only on that branch. I reviewed nothing in it; I used the
+branch only to extract the **T268 arm blob** for §7. Stated so the empty scope entry is not read
+as an unexamined one.
+
 ---
 
 ## 2. FINDING F-T308-1 — THEOREM 1 IS FALSE ON THREE OF THE FOUR OPERATIONS IT NAMES
