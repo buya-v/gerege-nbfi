@@ -10,7 +10,7 @@
 |---|---|
 | the rule `check_verdict_predicate_agreement_t292.py` — the WITNESS-SET formulation, the guards, the exit protocol, the read-integrity layer | **APPROVED.** Independently measured better than all three predecessors on **both** axes and on the control. The streak is broken. |
 | **THEOREM 1** ("container-blindness", with `PROOF … []`) | **REJECTED as written.** False on **3 of the 4** container operations it itself names; one of them flips **REFUSED → GREEN**, the direction its own corollary denies. |
-| **THEOREM 2** ("guard #10's ambition is a MEASURED IMPOSSIBILITY") | **REJECTED as scoped.** A separator exists, needs no register change and no external declaration, and refuses **10/10** of T291's header fixtures while permitting **both** committed corpora. Constructed and measured here. |
+| **THEOREM 2** ("guard #10's ambition is a MEASURED IMPOSSIBILITY") | **SPLIT.** The *scoped* half — no **container-blind** rule separates X5 from `classify-t229.json` — is **upheld**. The half that routes the work out of scope — *"separating them requires an EXTERNAL declaration … a change to `boolean-key-register.json`'s contract"* — is **REFUTED BY CONSTRUCTION**: a separator built here needs no external input at all and refuses **10/10** of T291's header fixtures while permitting **both** committed corpora. |
 | **"THE ZERO IS CALIBRATED"** (`LOST REFUSALS: 0` over 325 documents) | **REJECTED.** The zero is a **tautology of the shipped rule**, not a measurement, and the calibration measures a rule that is not the shipped rule. Five mutants of **T259's own founding defect** survive T292's unmodified adversary with **0 failing legs**. |
 
 Nothing here blocks the merge that already happened: the rule **has no caller anywhere**
@@ -119,12 +119,19 @@ structure"* to *"Neither consults container structure above the leaf's own key b
 **Reproduction: `python3 .softhouse/reviews/T308/probe/t308_theorem_b_counterrule.py` → EXIT 0.**
 **Transcript: `out/t308-theorem-b.txt`.**
 
-T292's claim: promoting `headerAffirmations` to a refusal *"refuses X5, X5b AND
-classify-t229.json … Guard #10's ambition is unreachable by any container-blind rule … Separating
-X5 from classify-t229.json requires an EXTERNAL declaration of which containers hold graded
-records; that changes `boolean-key-register.json`'s contract."*
+**Read the claim in two halves, because only one of them is wrong.**
 
-I did not argue with this. I **built the separator.**
+* **Half A, SCOPED — upheld.** *"no container-blind predicate separates a header from a
+  legitimately un-graded record"* (handoff §5a). **True, and I do not dispute it.** Under a
+  container-blind reading X5's header and `classify-t229.json`'s `RESCUED_BY_SITE3` rows are the
+  same object. T292 measured this properly with `negative_result_header_affirmations.py`.
+* **Half B, UNSCOPED — REFUTED BY CONSTRUCTION.** *"Separating them requires an **external
+  declaration** of which containers hold graded records — i.e. a change to
+  `boolean-key-register.json`'s contract, which is **committed evidence outside T292's
+  `files_hint`**. Specified in §7, not done here."* (handoff §5a, verbatim.)
+
+Half B is what routes the work to a later task and out of scope. **It is false.** I did not argue
+with it; I **built the separator**, using nothing but the document itself.
 
 **G10-SIBLING.** For every affirmative word (as a value **or** as a mapping key) whose immediately
 owning object contributed no witness: let `C` be the container that directly holds that owning
@@ -145,17 +152,23 @@ Graded against guard #10's own stated ambition: **T292's census promoted to a re
 violation** (it turns `classify-t229.json` red, exactly as T292 says). **G10-SIBLING → 0
 violations.**
 
-**Why this matters and what it does NOT mean.** T292's sentence is *literally* true: no
-**container-blind** rule can separate X5 from `classify-t229.json`, because the two documents are
-identical under a container-blind reading. But **guard #10 is a DETECTION guard**, and the central
-thesis of this very branch is that detection is entitled to be container-aware — `walk_objects` is
-total and the docstring calls it *"the DETECTION side, generous, as it should be."* The
-impossibility was therefore proved about a rule class guard #10 never needed to belong to. The
-honest statement is:
+**What this does and does not overturn.** Half A stands. **Half B does not:** G10-SIBLING consults
+no external declaration, reads no file the rule does not already read, and requires no change to
+`boolean-key-register.json` — so the statement that separation *"requires an external declaration
+… i.e. a change to `boolean-key-register.json`'s contract"* is refuted by a running program. And
+because Half B is the sentence that moves the work outside `files_hint` and defers it to §7/T269,
+**the deferral is unsupported by the reason given for it.**
+
+The gap between the two halves is a **category error**, not a proof error. Half A restricts to
+**container-blind** rules. But **guard #10 is a DETECTION guard**, and the central thesis of this
+very branch is that detection is entitled to be container-aware — `walk_objects` is total and the
+docstring calls it *"the DETECTION side, generous, as it should be."* The impossibility was proved
+about a rule class guard #10 never needed to belong to. The honest statement is:
 
 > *No container-blind rule can separate them, and I chose not to make guard #10 container-aware.*
 
-That is a **design decision**, and T292 did not record it as one. It recorded it as a theorem.
+That is a **design decision**, and T292 did not record it as one. It recorded it as a theorem and
+routed the consequence out of scope.
 
 **I am not asking for G10-SIBLING to ship.** I measured its limit in the same run and printed it:
 the row `EVASION-header-moved-INSIDE-the-records-list` — `{"cells":[{"verdict":"AS PREDICTED"},
@@ -166,21 +179,22 @@ that COUNT and refusing the unmatched is a losing method no matter how carefully
 chosen."* The finding is that **"impossible" is the wrong word for something a 20-line predicate
 does on this corpus.**
 
-### 3b. Sub-finding (LOW): the "5" in the impossibility argument is measured with the wrong instrument
+### 3b. Sub-finding (LOW): the rule's docstring and its own handoff disagree on the number, 5 vs 3
 
-The docstring says *"Measured, by `probe/census_real_corpus.py`: classify-t229.json contains **5**
-such affirmations (3 cells + 2 calibration)."* The **shipped rule prints 3**:
+* **rule docstring:** *"Measured, by `probe/census_real_corpus.py`: classify-t229.json contains
+  **5** such affirmations (3 cells + 2 calibration) and classify-t219.json contains **0**."*
+* **handoff §5a:** *"Measured by `probe/census_real_corpus.py`: `classify-t229.json` carries **3**
+  such affirmations under the committed register, `classify-t219.json` carries **0**."*
+* **the shipped counter, run by me:** `T259-VPA: GREEN files=1 … headerAffirmations=3 …`
 
-```
-T259-VPA: GREEN files=1 … headerAffirmations=3 …      [VERIFIED, run by me]
-```
-
-`census_real_corpus.py` counts a witness only for keys matching `^P[0-9]+_` and ignores the
-register's three PREDICATE entries `inputsIdentical` / `observedIdentical` / `threwIdentical`, so
-it wrongly treats the two `calibration` rows as ungraded. Under the rule's **own** witness
-definition those rows grade three facts each and are not header affirmations. The argument
-survives (3 committed rows still go red), but the number quoted in support of it was produced by a
-different predicate than the one that ships, and both the docstring and the merge message mix them.
+**The handoff is right and the docstring is wrong.** `census_real_corpus.py` counts a witness only
+for keys matching `^P[0-9]+_`; it ignores the register's three PREDICATE entries `inputsIdentical`
+/ `observedIdentical` / `threwIdentical`, so it treats the two `calibration` rows as ungraded and
+prints `Q3 free-floating affirmations : 5`. Under the rule's **own** witness definition those rows
+grade three facts each and are not header affirmations. The impossibility argument survives either
+way (three committed rows still go red), but the docstring quotes a number produced by a weaker
+predicate than the one that ships — the same species of mismatch this whole lineage is about, at
+one-tenth the stakes.
 
 ---
 
