@@ -32,12 +32,14 @@ set -uo pipefail
 
 REV=HEAD
 FOREIGN=0
+NORECON=0
 KEEP=0
 NTASKS=8
 for a in "$@"; do
   case "$a" in
     --rev) ;;                       # value consumed below
     --foreign-claude) FOREIGN=1 ;;
+    --no-reconcile) NORECON=1 ;;
     --keep) KEEP=1 ;;
     *) ;;
   esac
@@ -62,6 +64,7 @@ print "T309 DRIVE — wrapper bytes from revision: $REV"
 print "  source repo: $SRC"
 print "  scratch:     $WORK"
 print "  foreign live claude in repo: $FOREIGN"
+print "  reconcile disabled (A/B control): $NORECON"
 print "  in_progress tasks planted:   $NTASKS"
 print "=============================================================================="
 
@@ -125,6 +128,8 @@ chmod +x "$WORK/claude"
 # ---------------------------------------------------------------------- launcher ---
 # `exec` preserves the pid, and the ( … & ) form makes the launcher's parent exit at once
 # so the wrapper is reparented to pid 1 — a launchd-shaped ancestry with no `claude` in it.
+MINSECS=2
+(( NORECON )) && MINSECS=999
 cat > "$WORK/launch.zsh" <<EOF
 #!/bin/zsh
 print -r -- \$\$ > "$WORK/wrapper.pid"
@@ -133,6 +138,7 @@ export LOG_DIR="$WORK/logs"
 export CLAUDE_BIN="$WORK/claude"
 export FINERACT_SRC="$WORK/fineract-stub"
 export GIT_PUSH_TIMEOUT_SECS=10
+export SIGNAL_RECONCILE_MIN_SECS=$MINSECS
 exec /bin/zsh "$WORK/repo/.softhouse/bin/fire-program.sh"
 EOF
 mkdir -p "$WORK/fineract-stub" "$WORK/logs"
