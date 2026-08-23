@@ -1,0 +1,69 @@
+{
+  "_about": [
+    "T271's DRAFT of the committed target list T268 recommended and the driver adopted, so that",
+    "adding a file to R-VPA's remit is an edit to EVIDENCE and not a second contended edit to",
+    "`.softhouse/conformance.sh`.",
+    "",
+    "IT IS NOT INSTALLED AND NOTHING READS IT. T271 may not touch `conformance.sh` (a sibling",
+    "holds it) and may not touch `t256-verdict-predicate/` (T268 holds it), so this file sits in",
+    "T271's own directory in the condition R-VPA was written to condemn -- a record nobody reads.",
+    "Saying so here is the point. T269 should MOVE it to",
+    "`.softhouse/capture/t256-verdict-predicate/targets.json` (T268's suggested home) and make",
+    "`guard_verdict_predicate_agreement` read it.",
+    "",
+    "WHY EACH ENTRY CARRIES ITS OWN `acknowledgements` LIST. The acknowledgement registers are",
+    "deliberately NOT merged into one file: T259's is pinned to t229's bytes and T271's to",
+    "t219's, and copying either into a shared file would create a second copy of a pinned record",
+    "that must not drift (P-80). The rule as written today takes ONE --acknowledgements path; the",
+    "one-line change that lets it take several, and a zero-code-change fallback, are both spelled",
+    "out in T271's handoff under 'Exact wiring T269 must add'.",
+    "",
+    "ADDING A FILE HERE CAN TURN THE BAR RED. That is the instrument working. Before adding one,",
+    "run the rule against it by hand and either drive the disagreements to zero or register them."
+  ],
+  "schemaVersion": 1,
+  "probePrefix": "T259-VPA:",
+  "targets": [
+    {
+      "file": ".softhouse/capture/t229-g8-site3/out/classify-t229.json",
+      "acknowledgements": [
+        ".softhouse/capture/t256-verdict-predicate/acknowledged.json"
+      ],
+      "addedBy": "T259",
+      "statusAtT271": "GREEN -- 3 disagreements, all acknowledged, exit 0"
+    },
+    {
+      "file": ".softhouse/capture/t219-g8-residual/out/classify-t219.json",
+      "acknowledgements": [
+        ".softhouse/capture/t271-b1-t219/acknowledged-t219.json"
+      ],
+      "addedBy": "T271",
+      "statusAtT271": "GREEN -- 4 disagreements, all acknowledged, exit 0; was REFUSED unacknowledged=4 before T271"
+    }
+  ],
+  "_notTargetsAndWhy": [
+    "COMPLETENESS RE-MEASURED AT T271, NOT INHERITED. T259's handoff says its census saw 1,499",
+    "JSON files, 12 with the classification shape and 8 disagreements. Restating that number here",
+    "would be exactly the move P-83 forbids -- reconciling a pinned figure by arithmetic instead",
+    "of by running it -- so T271 RE-RAN `census_verdict_shape.py` on its own branch. Transcript:",
+    "`out/census-rerun-at-t271.txt`. MEASURED AT T271: 1,557 JSON files seen (58 more than T259",
+    "saw), 15 carrying the shape, 36 skipped unparseable and counted, 13 disagreements.",
+    "",
+    "THE 13 BREAK DOWN AS 7 REAL AND 6 DELIBERATE FIXTURES:",
+    "  REAL     4  .softhouse/capture/t219-g8-residual/out/classify-t219.json    <- listed above",
+    "  REAL     3  .softhouse/capture/t229-g8-site3/out/classify-t229.json       <- listed above",
+    "  FIXTURE  4  .softhouse/capture/t271-b1-t219/red/fixtures/X1-unacknowledged-elsewhere.json",
+    "  FIXTURE  1  .softhouse/capture/t271-b1-t219/red/fixtures/X2-novel-container-and-predicate.json",
+    "  FIXTURE  1  .softhouse/capture/t256-verdict-predicate/red/fixtures/R1-fresh-predicate-fresh-verdict-word.json",
+    "So NO new real carrier of the defect has appeared since T259, and this two-entry list is",
+    "COMPLETE for real evidence as of T271. The five fixture files exist to be RED and must never",
+    "be added to this list: a target list that acknowledges a red fixture has destroyed the",
+    "fixture. A later census reader who sees them here is being told that on purpose.",
+    "",
+    "The remaining 8 shape-carrying files record ZERO disagreements and are clean under the rule",
+    "today; they are not listed because listing a file that has never disagreed adds runtime and",
+    "no coverage -- but that is a JUDGEMENT, not a measurement, and a later task that wants the",
+    "census itself wired (so that a NEW carrier cannot appear unnoticed) should say so rather",
+    "than assume this list stays exhaustive (P-66/P-70). T271 files that as a follow-up."
+  ]
+}

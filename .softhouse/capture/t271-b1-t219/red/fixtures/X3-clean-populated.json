@@ -1,0 +1,16 @@
+{
+ "_about": "T271 GREEN CONTROL. A populated file with no disagreement: one row affirmative over true predicates, one row NEGATIVE over a false predicate (which is agreement, not disagreement). Must exit 0 with rows>0, so a green result cannot be explained by the rule inspecting nothing.",
+ "cells": [
+  {
+   "id": "T271-GREENCTRL-1",
+   "verdict": "AS PREDICTED",
+   "P2_emiDifferenceEqualsB": true,
+   "P2_totalInterestEqualsNEplusB": true
+  },
+  {
+   "id": "T271-GREENCTRL-2",
+   "verdict": "REFUTED",
+   "P2_totalInterestEqualsNEplusB": false
+  }
+ ]
+}

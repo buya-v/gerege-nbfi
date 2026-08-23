@@ -1,0 +1,148 @@
+#!/usr/bin/env bash
+# T271 -- DECISIVE TEST of an OUT-OF-SCOPE defect this task tripped over: is `.softhouse/
+# conformance.sh`'s GREEN contingent on a transient file in /tmp?
+#
+# `.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh` sets
+# `C=/tmp/t234_matrix2.txt` at line 6 and CREATES it at line 7. The fail-open linter's C1 check
+# asks whether that absolute path EXISTS ON DISK NOW:
+#
+#     path PRESENT -> C2 only            -> TIER 2 -> matches FAILOPEN_PIN_FILE_LIST -> bar GREEN
+#     path ABSENT  -> C1 dead path + C2  -> TIER 1 -> frontier != pin              -> bar EXIT 2
+#
+# T271 DELIBERATELY LEAVES THE FILE DELETED AND THE BAR RED. Creating it would be manufacturing a
+# green out of host state no reviewer can see and no commit records, which is the exact move P-88
+# records this program rejecting -- and moving the pin to match would be lowering the bar. The
+# defect is in t234's instrument and in conformance.sh's pin, both OUTSIDE T271's scope and both
+# CONTENDED this fire. REPORTED, NOT FIXED.
+#
+# IT RESTORES THE STATE IT FOUND, AND THAT MATTERS MORE THAN IT LOOKS. /tmp is SHARED across
+# every agent on this host: an earlier draft ended by unconditionally deleting the file, which
+# would silently turn a CONCURRENT worker's conformance bar red for reasons invisible to it.
+# Measured live during T271: the file reappeared seconds after this probe removed it, so some
+# other process on this Mac creates it -- which is P-88 sharpened, because the bar's colour then
+# depends on INTER-AGENT TIMING, not merely on reboot. This script therefore records whether the
+# file was present when it started and puts that back before it exits. It is a MEASUREMENT, not a
+# repair and not a side effect.
+#
+# THIS FILE'S FIRST DRAFT WAS ITSELF FAIL-OPEN, AND T259's LINT CAUGHT IT ON THE RUN THAT
+# INTRODUCED IT. It read `python3 "$LINT" | grep "$ROW" || echo "(row not on the frontier)"`,
+# which prints the same reassuring absence whether grep found nothing (exit 1) or grep BROKE
+# (exit >1) -- *`git grep`/`grep` exits 1 on NO MATCH and >1 on ERROR* (P-81), inside a probe
+# written to expose a fail-open. Kept in the record rather than quietly repaired: three
+# instruments in this program have died on this exact line shape. The repair is below -- the
+# linter's status and grep's status are each captured and CLASSIFIED, and >1 is a hard ERROR.
+#
+# EXIT 0 = the contingency was DEMONSTRATED (the defect is real and reproduced)
+#      1 = REFUTED: the classification did not move with the file, so T271's explanation of the
+#          red bar is WRONG and must not be quoted
+#      2 = ERROR: an instrument could not be run or a search broke. NEVER an absence.
+set -euo pipefail
+
+HERE="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$HERE/../../.." && pwd)"
+LINT="$ROOT/.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py"
+TARGET=/tmp/t234_matrix2.txt
+ROW='02-escape-matrix-fix.sh'
+# An ABSOLUTE path on purpose: a bare invocation may resolve to bundled ugrep, which carries a
+# hidden --exclude-dir and silently narrows the corpus (P-75).
+SEARCH=/usr/bin/grep
+
+[ -f "$LINT" ] || { echo "ERROR: the fail-open linter is absent: $LINT" >&2; exit 2; }
+
+# The state as FOUND, captured before anything is touched, and restored by the trap on every exit
+# path including an error. A probe that leaves the host different from how it found it is not a
+# probe; it is an edit nobody reviewed.
+WAS_PRESENT=0
+if [ -e "$TARGET" ]; then WAS_PRESENT=1; fi   # `[ ] && x=1` would abort under `set -e`
+restore_found_state() {
+  if [ "$WAS_PRESENT" -eq 1 ]; then
+    printf 'x1y\nxdy\nx y\nxsy\nx_y\nxwy\n' > "$TARGET"
+  else
+    rm -f "$TARGET"
+  fi
+}
+trap restore_found_state EXIT
+
+# One reading of the frontier row. NO PIPELINE, and every exit status classified.
+reading() {
+  local out json lrc=0 grc=0 row
+  out="$(mktemp)"
+  json="$(mktemp)"
+  FAILOPEN_LINT_JSON="$json" python3 "$LINT" >"$out" 2>&1 || lrc=$?
+  if [ "$lrc" -ne 0 ] && [ "$lrc" -ne 1 ]; then
+    echo "ERROR: the linter exited $lrc, which is neither clean (0) nor violations (1)." >&2
+    rm -f "$out" "$json"
+    return 2
+  fi
+  row="$("$SEARCH" "^FAILOPEN-FRONTIER.*$ROW" "$out")" || grc=$?
+  rm -f "$out" "$json"
+  case "$grc" in
+    0) printf '%s\n' "$row" ;;
+    1) printf '%s\n' "(row NOT on the frontier -- search exit 1, a TRUE no-match, P-81)" ;;
+    *) echo "ERROR: the search exited $grc. That is an ERROR, not a no-match (P-81), and this" >&2
+       echo "       probe will not report an absence it did not measure." >&2
+       return 2 ;;
+  esac
+}
+
+echo "T271 -- is the conformance bar's GREEN contingent on a file in /tmp? (P-88's shape)"
+echo "================================================================================"
+echo "  repo   : $ROOT"
+echo "  linter : .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py"
+echo "  probe  : $TARGET"
+echo ""
+
+echo "--- READING A: $TARGET ABSENT (the state this worktree is in) ---"
+rm -f "$TARGET"
+if [ -e "$TARGET" ]; then ls -la "$TARGET"; else echo "    (not present)"; fi
+A="$(reading)"
+echo "    $A"
+echo ""
+
+echo "--- READING B: the SAME tree, byte for byte, with the /tmp file PRESENT ---"
+printf 'x1y\nxdy\nx y\nxsy\nx_y\nxwy\n' > "$TARGET"
+if [ -e "$TARGET" ]; then ls -la "$TARGET"; else echo "    (not present)"; fi
+B="$(reading)"
+echo "    $B"
+echo ""
+
+echo "--- READING C: the file removed again, to show the flip is not one-way ---"
+rm -f "$TARGET"
+if [ -e "$TARGET" ]; then ls -la "$TARGET"; else echo "    (not present)"; fi
+C="$(reading)"
+echo "    $C"
+echo ""
+
+echo "NOT CAUSED BY T271 -- the three files involved are untouched on this branch:"
+# Against the MERGE BASE, not against `main`. `main` moves under a running fire, and diffing a
+# moving ref would let somebody else's later edit to t234 read as T271's. BASE is resolved
+# explicitly and its failure is an ERROR, never an empty diff read as innocence.
+BASE=""
+BASE="$(git -C "$ROOT" merge-base HEAD main)" || {
+  echo "ERROR: could not resolve merge-base(HEAD, main); refusing to print an innocence claim" >&2
+  exit 2
+}
+echo "    merge base: $BASE"
+git -C "$ROOT" diff --stat "$BASE" -- \
+  .softhouse/capture/t234-sweep-instrument-audit/ \
+  .softhouse/conformance.sh \
+  .softhouse/capture/t238-failopen/
+echo "    (no diff lines above means T271 changed none of them)"
+echo ""
+
+if [ "$A" != "$B" ] && [ "$A" = "$C" ]; then
+  echo "CONCLUSION: the tree is IDENTICAL across all three readings and the classification MOVED."
+  echo "The conformance bar's exit code is decided by whether a file exists in /tmp. That is"
+  echo "P-88's shape in a different guard: a green that depends on scratch state outside the repo."
+  echo ""
+  if [ "$WAS_PRESENT" -eq 1 ]; then FOUND=PRESENT; else FOUND=ABSENT; fi
+  echo "HOST STATE: $TARGET was $FOUND when this probe started and is put back that way by the"
+  echo "EXIT trap. T271 neither manufactures the green nor forces the red on a host it shares"
+  echo "with other workers."
+  echo "T271-TMPDEP: DEMONSTRATED contingent=1 foundPresent=$WAS_PRESENT restoredAsFound=1"
+  exit 0
+fi
+echo "CONCLUSION: the classification did NOT move with the file. The hypothesis is REFUTED and"
+echo "the bar's exit 2 has some other cause -- do not quote this script as explaining it."
+echo "T271-TMPDEP: REFUTED contingent=0 foundPresent=$WAS_PRESENT restoredAsFound=1"
+exit 1
