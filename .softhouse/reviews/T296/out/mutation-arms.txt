@@ -1,0 +1,24 @@
+=== BASE — the merged port, unmodified ===
+ LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting PASS 3 cells (0 money)
+ ledger parity PASS 4 FAIL 0
+ ledger oracle-refusal PASS 3 FAIL 0 (an HTTP status and error code the ORACLE returned
+
+=== ARM A — predicate becomes `req.Command == "defineOpeningBalance"` ===
+           (the lifted transaction-id list is no longer read at all)
+ LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting PASS 3 cells (0 money)
+ ledger parity PASS 4 FAIL 0
+ ledger oracle-refusal PASS 3 FAIL 0 (an HTTP status and error code the ORACLE returned
+
+=== ARM B — predicate becomes `len(req.PostedNonContraTransactionIDs) > 0` ===
+           (the command is no longer read at all)
+ LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting PASS 3 cells (0 money)
+ ledger parity PASS 4 FAIL 0
+ ledger oracle-refusal PASS 3 FAIL 0 (an HTTP status and error code the ORACLE returned
+
+=== ARM E — the PRECEDENCE FLIP: balance rule moved ahead of the OB rule ===
+ LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting FAIL 3 cells (0 money)
+ ledger parity PASS 4 FAIL 0
+ ledger oracle-refusal PASS 2 FAIL 1 (an HTTP status and error code the ORACLE returned
+
+=== port restored; git diff over impl.go: ===
+(empty means the tree is clean)

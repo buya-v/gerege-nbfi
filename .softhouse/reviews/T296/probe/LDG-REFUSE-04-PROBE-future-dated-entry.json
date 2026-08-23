@@ -1,0 +1,104 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-REFUSE-04-PROBE-future-dated-entry",
+  "context": "ledger",
+  "class": "oracle-refusal",
+  "title": "T296 REVIEW PROBE, NEVER FOR THE STORE. A CLOSURE-FAMILY refusal (the future-dated entry, one of the three shapes ledger.opening.balance.and.closure names) built from T287's REAL raw capture A1-01. Its only purpose is to measure whether the capability gate still refuses an UNOBSERVED shape after T294's flip.",
+  "dec2_revision": 5,
+  "_note": "T296 review probe. Not a promoted vector. Measured, then discarded.",
+  "capabilities_required": [
+    "ledger.refusal.parity",
+    "ledger.opening.balance.and.closure"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/t287-closure-refusals/out/A1-01-future-far.json",
+    "capture_sha256": "79846c37e18dc392836d0bbd7324abed5c262a9220b4216835745087581c0bf0",
+    "capture_case_id": "A1-01-future-far",
+    "request_capture_ref": ".softhouse/capture/t287-closure-refusals/out/A1-01-future-far.req",
+    "request_capture_sha256": "c023dcdf1ef1ae9ef57749bd2ff34a600fb4df9285660f86db60e669c55675e8",
+    "request_capture_case_id": "A1-01-future-far",
+    "rerun_invariant": "T296 PROBE ONLY -- this vector is never promoted and never re-run.",
+    "citation": "T296 review probe over T287's committed raw A1-01 artefacts."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_rest_posting",
+    "captured_at": "2026-08-23T02:02:47Z"
+  },
+  "request": {
+    "product_id": 0,
+    "product_type": "",
+    "accounting_rule": "",
+    "slot_family": "",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_rest_posting",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "",
+    "manual_entry": true,
+    "command": "",
+    "contra_gl_account_id": 0,
+    "posted_non_contra_transaction_ids": [],
+    "transaction_amount_major_text": "",
+    "accounts": [
+      {
+        "id": 4,
+        "gl_code": "10201",
+        "name": "Loan Portfolio",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 2,
+        "gl_code": "10100",
+        "name": "Fund Source",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 4,
+        "entry_side": "DEBIT",
+        "amount_major_text": "1000000.00"
+      },
+      {
+        "gl_account_id": 2,
+        "entry_side": "CREDIT",
+        "amount_major_text": "1000000.00"
+      }
+    ]
+  },
+  "expect": {
+    "kind": "refusal",
+    "http_status": 403,
+    "legs": [],
+    "total_debits_minor": "",
+    "total_credits_minor": "",
+    "refusal": {
+      "http_status": 403,
+      "code": "error.msg.glJournalEntry.invalid.future.date",
+      "message": "The journal entry cannot be made for a future date"
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "ledger-wrong-openingbalance-posted-entries-ignored",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "refusal.code",
+        "refusal.message"
+      ],
+      "note": "T296 PROBE ONLY -- a placeholder kill claim, present solely so the vector clears the non-empty graded_against gate and the CAPABILITY gate becomes the only thing left that could refuse it."
+    }
+  ],
+  "invariant_exemptions": []
+}
