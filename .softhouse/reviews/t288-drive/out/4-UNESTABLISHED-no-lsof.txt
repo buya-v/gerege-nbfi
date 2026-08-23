@@ -1,0 +1,58 @@
+=== DRIVE green — f02d849 working tree, repo /tmp/t288-drive/repo
+--- wrapper stdout ---
+[10:18:08] fire start — repo=/tmp/t288-drive/repo probe=0 force=0 log=/tmp/t288-drive/logs/fire-20260823-101808.log
+[10:18:08] fineract source: present at /tmp
+[10:18:08] postgres: reachable at localhost:5432
+[10:18:09] docker: running (29.6.2)
+[10:18:09] reference oracle (Fineract): REACHABLE at https://localhost:8443/fineract-provider/actuator/health
+[10:18:10] invoking driver (chain iteration 1/1)
+[10:18:10] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+[10:18:10] driver job pid=53622 — backgrounded; the wrapper now sits in `wait`, so a SIGTERM is handled in a fraction of a second instead of waiting out the driver
+INIT session fixture
+RESULT success :: fixture driver did nothing
+[10:18:10] raw event stream: /tmp/t288-drive/logs/fire-20260823-101808.jsonl
+[10:18:10] driver exited rc=0 — 1 model turn(s), no quota rejection recorded
+[10:18:11] WARN: worktree agent-fixture900 left 1 uncommitted path(s) — rescuing to softhouse/rescued-agent-fixture900-20260823-101808
+[10:18:11] rescued agent-fixture900 -> softhouse/rescued-agent-fixture900-20260823-101808
+[10:18:11] rescue pairing: task branch softhouse/t900-uncommitted -> softhouse/rescued-agent-fixture900-20260823-101808
+[10:18:11] pruned: removed worktree /private/tmp/t288-drive/agent-fixture900 (branch softhouse/t900-uncommitted was merged into main, clean)
+[10:18:11] pruned: deleted merged branch softhouse/t900-uncommitted
+[10:18:11] worktree prune sweep: pruned=1 kept=0
+[10:18:11] ERROR: NOT reconciling tasks.json — could not establish whether a live session owns it (/nonexistent/lsof is not executable — cwd of a live session cannot be read). REFUSING to rewrite state on a guess. Any in_progress task in tasks.json is UNVERIFIED; check it by hand before the next fire trusts it.
+[10:18:11] WARN: exit-protocol violation — .softhouse/RESUME.md was not rewritten by this fire. Stamping the file itself so the next fire reads the correction before the stale table.
+[10:18:11] stamped .softhouse/RESUME.md with the staleness banner
+[10:18:11] committed the wrapper's state correction
+[10:18:12] chain: stopping — iteration produced no commits (nothing advanced)
+[10:18:12] chain finished after 1 iteration(s)
+[10:18:13] lock released
+=== wrapper exited rc=0
+--- ancestry the wrapper actually ran under (proves no live session was faked away):
+  (no reconcile lines — expected for the red drive, which has no reconcile at all)
+
+=== tasks.json AFTER the fire
+  T900   in_progress    branch=softhouse/t900-uncommitted
+  T901   in_progress    branch=softhouse/t901-committed
+  T902   in_progress    branch=None
+  T903   pending        branch=softhouse/t903-untouched
+
+=== first 14 lines of RESUME.md AFTER the fire
+<!-- T288-WRAPPER-BANNER — written by fire-program.sh, not by a driver -->
+> ## STALE — this manifest was NOT rewritten by fire `20260823-101808`, which ended 2026-08-23T02:18:11Z.
+>
+> Everything below predates that fire, so its task table, its "next action" and its
+> pause reason are all claims about a world that has moved. The driver did not reach
+> STEP 5.5, which is why a shell script is writing this.
+>
+> - driver outcome: rc=`0` — 1 model turn(s), no quota rejection recorded
+> - tasks.json reconcile: REFUSED — worker liveness could not be established (/nonexistent/lsof is not executable — cwd of a live session cannot be read)
+> - a task shown below as `in_progress` is a DEAD dispatch unless the reconcile line
+>   above says it was refused; read `tasks.json` notes, not this table.
+> - fire log: `/tmp/t288-drive/logs/fire-20260823-101808.log`
+>
+> This banner is not maintained by anyone. It disappears when a driver rewrites
+
+=== commits the wrapper made
+b1cccd2 softhouse: release local fire lock (20260823-101808)
+5884a69 softhouse: wrapper reconciled state after fire 20260823-101808 (exit-protocol enforcement)
+014e2b9 softhouse: local fire lock (20260823-101808)
+c662c00 fixture: repo with three dead dispatches still marked in_progress

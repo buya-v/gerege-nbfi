@@ -1,0 +1,6 @@
+RECONCILE -- fire REFUSAL-PROBE
+  git:  /usr/bin/git
+  repo: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a1ea5204918f7c02e
+  lock: invoked from INSIDE a live session -- ancestor pid 28980 is `claude`. A driver or worker must not reconcile its own siblings; only the wrapper, after the driver is dead, may. REFUSING.
+  RESULT: REFUSED -- tasks.json was NOT modified.
+rc=4 (expect 4)

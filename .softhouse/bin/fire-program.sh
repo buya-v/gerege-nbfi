@@ -452,6 +452,74 @@ Never synthesise a vector you did not observe from the oracle, and never let con
 
 You hold the repo lock at .softhouse/LOCK; the wrapper releases it when you exit. Checkpoint at the ~90% token soft limit per the skill, push .softhouse/ state, and stop cleanly."
 
+# -------------------------------------------------- did this fire get a turn ---
+# T288(C). On 2026-08-22 at 23:00 a fire started, was refused by the five-hour quota
+# 20 seconds later, exited rc=1 without doing one unit of work, and the wrapper
+# reported that BYTE-IDENTICALLY to a driver that crashed mid-run. A whole
+# oracle-reaching window was spent on nothing and nothing said so.
+#
+# The distinction is fully machine-readable in the driver's own event stream, and the
+# discriminator is NOT the one the incident write-up assumed. MEASURED over the three
+# jsonl streams still on this host:
+#   fire-20260822-230001 (quota, never got a turn)
+#     rate_limit_event -> .rate_limit_info = {status:"rejected", rateLimitType:"five_hour",
+#                         resetsAt:1787414400}      <-- NESTED, not a top-level key
+#     assistant events: exactly 1, .message.model == "<synthetic>"
+#     result: {subtype:"success", is_error:true, num_turns:1,
+#              result:"You've hit your session limit · resets 12am (Asia/Ulaanbaatar)"}
+#   fire-20260822-080001 (a NORMAL, productive fire)
+#     rate_limit_event statuses: 1 allowed_warning AND 1 **rejected**
+#     assistant events: 100 with model claude-opus-5, 6 "<synthetic>"
+#
+# So "a rejected rate_limit_event appears" is NOT the signal — a healthy fire that
+# works until the quota runs out emits one too, and reading it as "never got a turn"
+# would mislabel this program's most productive fires. The signal is
+# **ZERO assistant events from a real model**. `<synthetic>` is the harness speaking,
+# not the model, and it is excluded by name.
+#
+# jq is used STREAMING (no -s): the largest stream on this host is 7.7 MB and slurping
+# it would be the only unbounded-memory step in the wrapper. If jq is absent, or the
+# stream is unreadable, this says UNCLASSIFIED — it never guesses a class.
+DRIVER_TURN_LINE=""
+classify_driver_turns() {
+  DRIVER_TURN_LINE="turns UNCLASSIFIED (no event stream on disk)"
+  local raw="$LOG_DIR/fire-$STAMP.jsonl"
+  [[ -r "$raw" ]] || return 0
+  if [[ ! -x /usr/bin/jq ]]; then
+    DRIVER_TURN_LINE="turns UNCLASSIFIED (/usr/bin/jq not executable; the stream is at $raw)"
+    return 0
+  fi
+  # ONE jq, NO PIPELINE, and `-n … reduce inputs` rather than `-s`: -s would load the
+  # whole stream into memory and a pipeline into wc/tail would put P-57's pipefail
+  # hazard inside a classifier (a poisoned rc is indistinguishable from a real one
+  # under `set -o pipefail`). jq's own rc is checked directly instead.
+  local out rc real rejected resets
+  out=$(/usr/bin/jq -nr 'reduce inputs as $e ({r:0,t:"",x:""};
+          if ($e.type=="assistant" and (($e.message.model // "") != "<synthetic>"))
+            then .r += 1
+          elif ($e.type=="rate_limit_event" and (($e.rate_limit_info.status // "") == "rejected"))
+            then (.t = ($e.rate_limit_info.rateLimitType // "?")
+                  | .x = (($e.rate_limit_info.resetsAt // "?") | tostring))
+          else . end)
+        | "\(.r)|\(.t)|\(.x)"' "$raw" 2>/dev/null)
+  rc=$?
+  if (( rc != 0 )) || [[ -z "$out" ]]; then
+    DRIVER_TURN_LINE="turns UNCLASSIFIED (jq exited $rc reading $raw) — read the stream by hand before concluding anything about this fire"
+    return 0
+  fi
+  real="${out%%|*}"; rejected="${${out#*|}%%|*}"; resets="${out##*|}"
+  [[ "$real" == <0-> ]] || { DRIVER_TURN_LINE="turns UNCLASSIFIED (jq answered %r for the turn count, which is not a number)"; return 0; }
+  if (( real == 0 )) && [[ -n "$rejected" ]]; then
+    DRIVER_TURN_LINE="**QUOTA: THIS FIRE NEVER GOT A TURN** — 0 model turns, rate limit '$rejected' rejected (resetsAt=$resets). This is NOT a driver crash and nothing in the repo advanced; the window was spent on nothing."
+  elif (( real == 0 )); then
+    DRIVER_TURN_LINE="**THE DRIVER PRODUCED 0 MODEL TURNS** and no quota rejection was recorded — cause UNKNOWN, read $raw before blaming the driver's logic."
+  elif [[ -n "$rejected" ]]; then
+    DRIVER_TURN_LINE="$real model turn(s), then rate limit '$rejected' rejected (resetsAt=$resets) — the fire DID work before the quota ended it."
+  else
+    DRIVER_TURN_LINE="$real model turn(s), no quota rejection recorded"
+  fi
+}
+
 # ---------------------------------------------------------------- chaining ---
 # A fire ends when the driver's CONTEXT fills, not when the work is done. Waiting
 # for the next cron slot then wastes hours of an otherwise-idle machine. So chain:
@@ -578,11 +646,101 @@ else
   log "ERROR: driver rc file $DRIVER_RC_FILE is missing or unreadable AND the job reported success. REFUSING to record a clean driver exit this fire did not observe — reporting rc=70 so the chain STOPS instead of launching a fresh driver on an unknown outcome."
 fi
 
-  log "driver exited rc=$RC"
+  classify_driver_turns
+  log "driver exited rc=$RC — $DRIVER_TURN_LINE"
+}
+
+# -------------------------------------------- T288: is ANYONE still working here ---
+# The reconcile below rewrites tasks.json, so it must first establish — POSITIVELY —
+# that no live session owns those tasks. This is the only leg of the fix that can hurt
+# if it is wrong, so it is the only one that is allowed to say "I don't know".
+#
+# WHAT A LIVE WORKER ACTUALLY LOOKS LIKE, measured on this host during a live fire with
+# six workers dispatched (`/bin/ps -Ao pid=,ppid=,command=`, 2026-08-23):
+#   * there is NO process per worker. A subagent is in-process inside `claude`; the
+#     entire fire is ONE `claude` (pid 28980, caffeinate exec'd it in place) plus its
+#     assertion-holder child. Any design that looked for a process per task would have
+#     found nothing and demoted everything.
+#   * so worker liveness == liveness of the SESSION that owns them, and the session is
+#     identifiable by its cwd:
+#         lsof -a -d cwd -p 28980 -Fn  ->  n/Users/buv/gerege-nbfi        (IN the repo)
+#         lsof -a -d cwd -p 1207  -Fn  ->  n/Users/buv                    (NOT in it)
+#     pid 1207 is an unrelated interactive `claude` that was running at the same time.
+#     A blanket "any claude is alive => refuse" would have gone permanently inert
+#     against it; reading the cwd tells the two apart, and that was measured, not assumed.
+#
+# By the time this runs the fire's OWN driver has been `wait`ed on (or killed by
+# stop_driver), so it is gone and is skipped by the kill -0 leg below. What is left is
+# exactly the case that must be protected: somebody ELSE working in this checkout.
+#
+# POLARITY: fail-CLOSED, three-valued.
+#   0 = a live foreign session WAS found            -> caller must not reconcile
+#   1 = none found, and every candidate was decided -> caller may reconcile
+#   2 = could not establish (no lsof, no ps, a live claude whose cwd would not read)
+#                                                    -> caller must not reconcile
+# Only 1 authorises the rewrite. "I could not tell" is never spelled like "nobody".
+LSOF_BIN="${LSOF_BIN:-/usr/sbin/lsof}"
+FOREIGN_SESSIONS=""
+foreign_live_session_in_repo() {
+  FOREIGN_SESSIONS=""
+  [[ -x "$LSOF_BIN" ]] || { FOREIGN_SESSIONS="$LSOF_BIN is not executable — cwd of a live session cannot be read"; return 2; }
+  local snap
+  snap=$(/bin/ps -Ao pid=,stat=,command= 2>/dev/null) || { FOREIGN_SESSIONS="/bin/ps did not answer"; return 2; }
+  local -a lines; lines=(${(f)snap})
+  (( ${#lines} > 1 )) || { FOREIGN_SESSIONS="/bin/ps returned a one-line table, which is not a table"; return 2; }
+  local repo_phys="${REPO:A}"        # :A resolves symlinks — lsof reports physical paths
+  # EVERY local is declared ONCE, here. Measured under zsh 5.9: `local x` inside a loop
+  # body, when x already exists at this scope, does not re-declare it — it PRINTS
+  # `x=<value>` to stdout (`zsh -c 'f(){ local a; for a in x y; do local a; done }; f'`
+  # emits `a=x` / `a=y`). The first draft of this function declared `local l` inside the
+  # lsof loop and leaked a line of raw lsof output into the fire log. Caught by driving
+  # it, not by reading it.
+  local line pid st first cwd lsofout l checked=0 unknown=0 found=0
+  local -a f
+  for line in $lines; do
+    f=(${=line})
+    (( ${#f} >= 3 )) || continue
+    pid=$f[1]; st=$f[2]; first=$f[3]
+    [[ "$pid" == <1-> ]] || continue
+    (( pid == $$ )) && continue
+    [[ "${first:t}" == claude ]] || continue      # the CLI, not /Applications/Claude.app
+    [[ "$st" == Z* ]] && continue                 # a zombie is dead, merely unreaped
+    kill -0 "$pid" 2>/dev/null || continue        # exited between the snapshot and now
+    (( checked++ ))
+    lsofout=$("$LSOF_BIN" -w -a -d cwd -p "$pid" -Fn 2>/dev/null)
+    cwd=""
+    for l in ${(f)lsofout}; do
+      [[ "$l" == n* ]] && cwd="${l#n}"
+    done
+    # EVERY expansion here is BRACED. Unbraced `$pid:cwd=` applies zsh's `:c` history
+    # modifier to $pid and `$cwd:elsewhere` applies `:e`, which silently turned this
+    # evidence string into `pid=28980wd=lsewhere` on the first drive — the evidence line
+    # for a fail-closed guard, quietly corrupted by the shell. Measured, then fixed.
+    if [[ -z "$cwd" ]]; then
+      if kill -0 "$pid" 2>/dev/null; then
+        FOREIGN_SESSIONS="${FOREIGN_SESSIONS} [pid ${pid} cwd UNREADABLE]"
+        (( unknown++ ))
+      fi
+      continue
+    fi
+    if [[ "$cwd" == "$repo_phys" || "$cwd" == "$repo_phys"/* ]]; then
+      FOREIGN_SESSIONS="${FOREIGN_SESSIONS} [pid ${pid} cwd ${cwd} IN-REPO]"
+      (( found++ ))
+    else
+      FOREIGN_SESSIONS="${FOREIGN_SESSIONS} [pid ${pid} cwd ${cwd} elsewhere]"
+    fi
+  done
+  FOREIGN_SESSIONS="claude processes examined=$checked in-repo=$found unreadable=$unknown --$FOREIGN_SESSIONS"
+  (( found ))   && return 0
+  (( unknown )) && return 2
+  return 1
 }
 
 # ------------------------------------------------------- exit-protocol guard ---
 run_exit_guard() {
+# Reset per iteration: a value left over from the previous chain iteration would make
+# the chain judge THIS driver's progress against a sha from the last one.
+GUARD_HEAD_BEFORE_REPAIR=""
 # The driver is required to checkpoint on EVERY exit path (skill STEP 5.5). It has
 # been observed exiting rc=0 mid-run with deliverables uncommitted and RESUME.md
 # stale, which makes the work invisible to the next fire. Detect and rescue.
@@ -693,7 +851,15 @@ else
   fi
 fi
 
-for W in "${WT_PATHS[@]}"; do
+# T288: indexed, so the branch the worktree was ON is available beside its path. The
+# sweep already knew it (WT_BRANCHES was parsed in lockstep by T213) and threw it away
+# at the moment of rescue — which is exactly the fact the 08:00 fire had to reconstruct
+# by hand from six `rescued-agent-*` names. Kept now as `<task-branch>=<rescue-branch>`
+# pairs and handed to the reconciler, which writes it into the task's note.
+local -a RESCUE_PAIRS; RESCUE_PAIRS=()
+local WI
+for (( WI = 1; WI <= ${#WT_PATHS}; WI++ )); do
+  W="${WT_PATHS[$WI]}"
   [[ -d "$W" ]] || continue
   # T202 — THE UNFIXED TWIN OF T190's FAIL-OPEN, twenty lines below its patch and
   # inside the same function. `WD=$(... | wc -l | tr -d ' ')`: `wc -l` prints `0`
@@ -733,6 +899,16 @@ for W in "${WT_PATHS[@]}"; do
 
 Committed by the orchestrator's worktree sweep. Completeness UNVERIFIED — no handoff was written. Treat as partial until re-reviewed." >/dev/null 2>&1
   log "rescued $WN -> $WB"
+  # The worktree's PRIOR branch is what a task records in tasks.json .branch. A
+  # worktree still on its harness default (`worktree-agent-<hex>`) or detached has no
+  # task to pair with, and is recorded as a rescue with no owner rather than guessed at.
+  local PRIOR="${WT_BRANCHES[$WI]}"
+  if [[ -n "$PRIOR" && "$PRIOR" != "(detached)" && "$PRIOR" != "$WB" ]]; then
+    RESCUE_PAIRS+=("$PRIOR=$WB")
+    log "rescue pairing: task branch $PRIOR -> $WB"
+  else
+    log "rescue pairing: $WB has NO task branch to pair with (worktree was on '${PRIOR:-none}') — it will not be named in any task note"
+  fi
 done
 
 # T213: the sweep above walks EVERY worktree on EVERY fire, so its cost grows
@@ -789,13 +965,145 @@ for (( i = 1; i <= ${#WT_PATHS}; i++ )); do
 done
 log "worktree prune sweep: pruned=$WT_PRUNED kept=$WT_KEPT"
 
-# RESUME.md must have been rewritten during this fire, or a fresh session resumes
-# from a stale manifest — worse than none, because it looks authoritative.
-if [[ -f .softhouse/RESUME.md ]]; then
-  RESUME_MTIME=$(/usr/bin/stat -f %m .softhouse/RESUME.md)
-  if (( RESUME_MTIME < FIRE_START_EPOCH )); then
-    log "WARN: exit-protocol violation — .softhouse/RESUME.md predates this fire's start; the next fire may act on stale state. Review it by hand."
+# ---------------------------------------------- T288: repair the state, don't warn ---
+# THE DEFECT THIS REPLACES. Everything below used to be one WARN. Fire 20260822-140002
+# ended its turn with four live workers (T271/T283/T285/T286); all four died with it,
+# all four stayed `in_progress`, and RESUME.md was never rewritten. At 23:00 the next
+# fire was refused by the quota 20 seconds in, and at 23:00:32 this wrapper printed
+#     WARN: exit-protocol violation — .softhouse/RESUME.md predates this fire's start;
+#           the next fire may act on stale state. Review it by hand.
+# IT WAS RIGHT AND IT DID NOTHING. "Review it by hand" has no reader: the only thing
+# that reads a fire log is the next fire, and the next fire reads RESUME.md and
+# tasks.json instead. Two fires later the state was still lying and the 08:00 fire had
+# to reconstruct the truth from six branch names and two log files.
+#
+# REPAIR, NOT REFUSE — and here is what was rejected. A louder refusal was the obvious
+# alternative: exit non-zero, or drop a marker file the next fire is told to read.
+# Both fail for the same reason the WARN failed. A non-zero exit is read by launchd,
+# which does nothing with it; the next fire still opens a tasks.json that says four
+# workers are busy. A marker file needs (a) somebody to remember to read it and (b)
+# somebody to remember to clear it — two remembered obligations, which is P-45's exact
+# shape: "a guard that only works when someone remembers to run it enforces nothing."
+# So the wrapper edits the two artefacts the next fire actually reads, and both repairs
+# are SELF-CLEARING by construction: a demoted task leaves `needs_retry` when it is
+# retried, and the banner disappears the moment a driver rewrites RESUME.md per STEP
+# 5.5.4. Nothing new has to be remembered by anyone.
+#
+# The refusal path still exists — but only where a repair could be WRONG, i.e. when a
+# live session might own those tasks. There the wrapper says so in the log AND leaves
+# the state untouched, because demoting a live worker's task would get it dispatched
+# twice.
+RECON_VERDICT="not attempted"
+reconcile_tasks_json() {
+  local -a pairs; pairs=("$@")
+  if [[ ! -f .softhouse/tasks.json ]]; then
+    RECON_VERDICT="no tasks.json in this repo"
+    log "reconcile: $RECON_VERDICT"
+    return 0
   fi
+  local probe_rc
+  foreign_live_session_in_repo; probe_rc=$?
+  case $probe_rc in
+    0)
+      RECON_VERDICT="REFUSED — a live session is working in this repo ($FOREIGN_SESSIONS)"
+      log "WARN: NOT reconciling tasks.json — $FOREIGN_SESSIONS. Some other session may own the in_progress tasks, and demoting a LIVE worker's task would get it dispatched twice. State left exactly as found; if that session is not in fact working, fix tasks.json by hand."
+      return 1 ;;
+    2)
+      RECON_VERDICT="REFUSED — worker liveness could not be established ($FOREIGN_SESSIONS)"
+      log "ERROR: NOT reconciling tasks.json — could not establish whether a live session owns it ($FOREIGN_SESSIONS). REFUSING to rewrite state on a guess. Any in_progress task in tasks.json is UNVERIFIED; check it by hand before the next fire trusts it."
+      return 1 ;;
+  esac
+  log "reconcile: no live session owns this repo — $FOREIGN_SESSIONS"
+  local -a args; args=(--reconcile --fire "$STAMP" --repo "$REPO")
+  local p; for p in "${pairs[@]}"; do args+=(--rescue "$p"); done
+  local out rc
+  out=$(/usr/bin/python3 "$SCRIPT_DIR/ready-tasks.py" "${args[@]}" 2>&1)
+  rc=$?
+  local l; for l in ${(f)out}; do log "reconcile| $l"; done
+  case $rc in
+    0) RECON_VERDICT="ran clean (see the reconcile| lines in $LOG)" ;;
+    3) RECON_VERDICT="FAILED — tasks.json could not be read or written; state is NOT truthful" ;;
+    4) RECON_VERDICT="REFUSED by ready-tasks.py — the caller is not the lock holder" ;;
+    *) RECON_VERDICT="ready-tasks.py exited $rc (unexpected)" ;;
+  esac
+  (( rc == 0 )) || log "ERROR: reconcile did not complete — $RECON_VERDICT"
+  return 0
+}
+reconcile_tasks_json "${RESCUE_PAIRS[@]}"
+
+# RESUME.md must have been rewritten during this fire, or a fresh session resumes
+# from a stale manifest — worse than none, because it looks authoritative. So when it
+# was NOT rewritten, the wrapper says so IN THE FILE, at the top, where the next fire
+# cannot read past it. mtime is the primary test; the banner's own presence is the
+# second, because a chained iteration re-runs this after the first one already touched
+# the mtime, and a driver that rewrote RESUME.md properly deletes the banner with it.
+STALE_BANNER_OPEN='<!-- T288-WRAPPER-BANNER — written by fire-program.sh, not by a driver -->'
+STALE_BANNER_CLOSE='<!-- /T288-WRAPPER-BANNER -->'
+if [[ -f .softhouse/RESUME.md ]]; then
+  RESUME_MTIME=$(/usr/bin/stat -f %m .softhouse/RESUME.md 2>/dev/null || print 0)
+  RESUME_BODY=$(<.softhouse/RESUME.md)
+  RESUME_STALE=0
+  (( RESUME_MTIME < FIRE_START_EPOCH )) && RESUME_STALE=1
+  [[ "$RESUME_BODY" == *"$STALE_BANNER_CLOSE"* ]] && RESUME_STALE=1
+  if (( RESUME_STALE )); then
+    log "WARN: exit-protocol violation — .softhouse/RESUME.md was not rewritten by this fire. Stamping the file itself so the next fire reads the correction before the stale table."
+    # Strip any banner this wrapper wrote earlier, so chained iterations replace rather
+    # than stack. Shortest-prefix removal through the close marker; zsh builtin, no sed.
+    [[ "$RESUME_BODY" == "$STALE_BANNER_OPEN"* ]] && RESUME_BODY="${RESUME_BODY#*$STALE_BANNER_CLOSE}"
+    RESUME_BODY="${RESUME_BODY#$'\n'}"
+    {
+      print -r -- "$STALE_BANNER_OPEN"
+      print -r -- "> ## STALE — this manifest was NOT rewritten by fire \`$STAMP\`, which ended $(date -u +%Y-%m-%dT%H:%M:%SZ)."
+      print -r -- ">"
+      print -r -- "> Everything below predates that fire, so its task table, its \"next action\" and its"
+      print -r -- "> pause reason are all claims about a world that has moved. The driver did not reach"
+      print -r -- "> STEP 5.5, which is why a shell script is writing this."
+      print -r -- ">"
+      print -r -- "> - driver outcome: rc=\`$RC\` — $DRIVER_TURN_LINE"
+      print -r -- "> - tasks.json reconcile: $RECON_VERDICT"
+      print -r -- "> - a task shown below as \`in_progress\` is a DEAD dispatch unless the reconcile line"
+      print -r -- ">   above says it was refused; read \`tasks.json\` notes, not this table."
+      print -r -- "> - fire log: \`$LOG\`"
+      print -r -- ">"
+      print -r -- "> This banner is not maintained by anyone. It disappears when a driver rewrites"
+      print -r -- "> RESUME.md per STEP 5.5.4, and it comes back on any fire that fails to."
+      print -r -- "$STALE_BANNER_CLOSE"
+      print -r -- ""
+      print -r -- "$RESUME_BODY"
+    } > .softhouse/RESUME.md.t288.tmp
+    if [[ -s .softhouse/RESUME.md.t288.tmp ]]; then
+      mv -f .softhouse/RESUME.md.t288.tmp .softhouse/RESUME.md
+      log "stamped .softhouse/RESUME.md with the staleness banner"
+    else
+      rm -f .softhouse/RESUME.md.t288.tmp
+      log "ERROR: refused to replace RESUME.md with an empty file — the banner was NOT written and the stale manifest stands. Inspect it by hand."
+    fi
+  fi
+fi
+
+# Commit whatever the two repairs above changed. Separate from the deliverable rescue
+# commit at the top of this guard: that one is worker output, this one is the wrapper
+# correcting the record, and a postmortem should be able to tell them apart.
+#
+# GUARD_HEAD_BEFORE_REPAIR — A REGRESSION THIS FIX WOULD OTHERWISE HAVE INTRODUCED,
+# found by driving it. The chain loop stops when an iteration produces NO commits
+# ("nothing advanced"). A wrapper that now commits a repair on every exit would satisfy
+# that test forever: the banner carries the fire's end timestamp, so it differs every
+# iteration, so HEAD always moves, so a driver that does nothing eight times running
+# would be re-invoked all eight times. The chain must judge the DRIVER's progress, so
+# it is handed the sha from BEFORE the wrapper's own correction.
+GUARD_HEAD_BEFORE_REPAIR=$(git rev-parse HEAD 2>/dev/null) || GUARD_HEAD_BEFORE_REPAIR=""
+git add -- ':(top).softhouse/tasks.json' ':(top).softhouse/RESUME.md' >/dev/null 2>&1
+if ! git diff --cached --quiet -- ':(top).softhouse/tasks.json' ':(top).softhouse/RESUME.md' 2>/dev/null; then
+  git -c user.name="Buyan" -c user.email="buya.vol@gmail.com" \
+      commit -q -m "softhouse: wrapper reconciled state after fire $STAMP (exit-protocol enforcement)
+
+The driver was already gone; a killed worker is dead, not paused, so any task still
+claiming in_progress was demoted to needs_retry with the WIP evidence in its note.
+Driver: rc=$RC — $DRIVER_TURN_LINE
+Reconcile: $RECON_VERDICT" >/dev/null 2>&1 \
+    && log "committed the wrapper's state correction" \
+    || log "ERROR: the wrapper's state correction could not be COMMITTED — it exists only in the working tree and the next fire will not see it. Commit it by hand."
 fi
 
   git push -q origin main 2>/dev/null || log "WARN: could not push after exit-protocol guard"
@@ -812,7 +1120,12 @@ while (( CHAIN_N < CHAIN_MAX )); do
 
   # No commits this iteration means the driver found nothing to advance. One more
   # attempt would repeat it; the next scheduled fire can try with fresh state.
-  if [[ "$(git rev-parse HEAD)" == "$HEAD_BEFORE" ]]; then
+  # T288: measured against the sha from before the wrapper's OWN state-correction
+  # commit, so the wrapper repairing a lie is never mistaken for the driver making
+  # progress. Falls back to HEAD when the guard did not reach that point, which is the
+  # pre-T288 behaviour and errs towards chaining rather than towards stopping early.
+  HEAD_AFTER="${GUARD_HEAD_BEFORE_REPAIR:-$(git rev-parse HEAD)}"
+  if [[ "$HEAD_AFTER" == "$HEAD_BEFORE" ]]; then
     log "chain: stopping — iteration produced no commits (nothing advanced)"
     break
   fi
