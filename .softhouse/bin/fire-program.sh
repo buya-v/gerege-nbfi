@@ -245,6 +245,46 @@ LOCK_RELEASED=0
 # SIGKILL — the exact regression this follow-up exists to close.
 GIT_PUSH_TIMEOUT_SECS="${GIT_PUSH_TIMEOUT_SECS:-10}"
 
+# T309 — A BOUND MUST BE MEASURED IN SECONDS, NOT IN ITERATIONS, AND THIS WAS FOUND BY
+# FAULT INJECTION RATHER THAN BY READING.
+# Both bounded waits in this file were written as `while (( waited < N ))` around a
+# `/bin/sleep`, counting TICKS and calling the product a timeout. That is only a timeout
+# if a tick costs exactly what it sleeps. It does not: each tick forks /bin/sleep and
+# runs a `kill -0`, and on a loaded machine — e.g. one with a real fire running on it,
+# which is the normal condition here — that overhead dominates a 0.1s sleep. MEASURED:
+# an 8s "budget" expressed as 80 x `/bin/sleep 0.1` took **21s** of wall clock, and the
+# SIGTERM handler that was supposed to finish inside launchd's ~20s grace took 24.29s
+# [.softhouse/capture/t309-sigterm-reconcile-bypass/wedge.txt, the pre-fix wedge run].
+# So the guard added to keep the handler inside the grace was itself what pushed it out.
+#
+# `zsh/datetime` gives $EPOCHREALTIME as a PARAMETER — read with no fork, so consulting
+# it every tick costs nothing and cannot itself distort what it measures. If the module
+# is unavailable the fallback is `date +%s`, which forks and has 1s granularity; that is
+# coarser but still a real clock, and the fallback is REPORTED rather than silent.
+zmodload zsh/datetime 2>/dev/null
+HAVE_EPOCHREALTIME=0
+[[ -n "${EPOCHREALTIME:-}" ]] && HAVE_EPOCHREALTIME=1
+(( HAVE_EPOCHREALTIME )) || log "WARN: zsh/datetime is unavailable — bounded waits fall back to \`date +%s\` at 1s granularity"
+
+# Seconds now, as a float when we can get one. Sets REPLY; no subshell, no fork on the
+# EPOCHREALTIME path.
+now_secs() {
+  if (( HAVE_EPOCHREALTIME )); then REPLY=$EPOCHREALTIME; else REPLY=$(date +%s); fi
+}
+
+# wait_bounded <pid> <seconds> -> 0 if it exited in time, 1 if the deadline passed.
+# THE LOOP IS GOVERNED BY THE CLOCK. Ticks are only how often it looks.
+wait_bounded() {
+  local job=$1 budget=$2 start
+  now_secs; start=$REPLY
+  while kill -0 "$job" 2>/dev/null; do
+    now_secs
+    (( REPLY - start >= budget )) && return 1
+    /bin/sleep 0.1
+  done
+  return 0
+}
+
 # Run `git push` in the background and give it at most GIT_PUSH_TIMEOUT_SECS
 # of wall clock. If it is still running at the deadline, TERM then KILL the
 # WHOLE tree it spawned (git push forks git-remote-https/ssh; killing only the
@@ -259,11 +299,11 @@ git_push_bounded() {
   local desc=$1; shift
   git push -q "$@" >/dev/null 2>&1 &
   local job=$!
-  local waited=0
-  while (( waited < GIT_PUSH_TIMEOUT_SECS )) && kill -0 "$job" 2>/dev/null; do
-    /bin/sleep 1
-    (( waited++ ))
-  done
+  # T309: was `while (( waited < GIT_PUSH_TIMEOUT_SECS ))` around `/bin/sleep 1`, i.e. a
+  # bound in ticks. Same defect as the one measured in reconcile_bounded, milder only
+  # because a 1s sleep dwarfs its own overhead; it is still not the bound it claims to be,
+  # and this function's stated 10s is what on_signal's budget arithmetic RESERVES.
+  wait_bounded "$job" "$GIT_PUSH_TIMEOUT_SECS"
   if kill -0 "$job" 2>/dev/null; then
     log "WARN: git push ($desc) still running after ${GIT_PUSH_TIMEOUT_SECS}s — killing it so the caller can return; the LOCAL lock file is already gone, only the remote's view of the release may lag"
     local -a tree
@@ -606,7 +646,6 @@ SIGNAL_RECONCILE_MIN_SECS="${SIGNAL_RECONCILE_MIN_SECS:-2}"
 # finish. Never blocks longer than the bound; always returns.
 reconcile_bounded() {
   local budget=$1; shift
-  local ticks=$(( budget * 10 ))
   RECON_VERDICT="not attempted"
   # DEFINED YET? `on_signal` is armed by `trap` roughly 370 lines before
   # `reconcile_tasks_json` is defined, and zsh creates a function body only when the
@@ -626,11 +665,8 @@ reconcile_bounded() {
   local vf="$LOG_DIR/fire-$STAMP.recon-verdict"
   rm -f "$vf"
   ( reconcile_tasks_json "$@"; print -r -- "$RECON_VERDICT" > "$vf" ) &
-  local job=$! waited=0
-  while (( waited < ticks )) && kill -0 "$job" 2>/dev/null; do
-    /bin/sleep 0.1
-    (( waited++ ))
-  done
+  local job=$!
+  wait_bounded "$job" "$budget"
   if kill -0 "$job" 2>/dev/null; then
     log "ERROR: the signal-path reconcile exceeded its ${budget}s budget — killing it so this handler can still release the lock and exit inside launchd's grace. tasks.json was NOT repaired and any in_progress task in it is UNVERIFIED."
     local -a tree
@@ -700,11 +736,17 @@ on_signal() {
 
   # The repair, inside a budget derived from what is actually left.
   local elapsed=$(( $(date +%s) - t0 ))
-  local budget=$(( SIGNAL_GRACE_SECS - elapsed - GIT_PUSH_TIMEOUT_SECS - 1 ))
+  # The "- 2" is not slack for its own sake: reconcile_bounded's own teardown (SIGTERM,
+  # 0.2s, SIGKILL, reap) and commit_reconcile_result's `git commit` both run AFTER the
+  # budget is spent and BEFORE release_lock's push starts. Worst case with the defaults:
+  # ~1s stopping the driver + 7s reconcile + ~0.5s teardown + ~0.3s commit + 10s push
+  # = ~18.8s, inside the ~20s grace. MEASURED wedge run after this correction is in
+  # .softhouse/capture/t309-sigterm-reconcile-bypass/wedge.txt.
+  local budget=$(( SIGNAL_GRACE_SECS - elapsed - GIT_PUSH_TIMEOUT_SECS - 2 ))
   if (( budget < SIGNAL_RECONCILE_MIN_SECS )); then
-    log "WARN: SKIPPING the signal-path reconcile — budget arithmetic leaves ${budget}s (grace ${SIGNAL_GRACE_SECS}s - ${elapsed}s already spent stopping the driver - ${GIT_PUSH_TIMEOUT_SECS}s reserved for the lock-release push - 1s), below the ${SIGNAL_RECONCILE_MIN_SECS}s minimum. tasks.json is UNREPAIRED and any in_progress task in it is a DEAD dispatch; the next fire must not believe it."
+    log "WARN: SKIPPING the signal-path reconcile — budget arithmetic leaves ${budget}s (grace ${SIGNAL_GRACE_SECS}s - ${elapsed}s already spent stopping the driver - ${GIT_PUSH_TIMEOUT_SECS}s reserved for the lock-release push - 2s for teardown and commit), below the ${SIGNAL_RECONCILE_MIN_SECS}s minimum. tasks.json is UNREPAIRED and any in_progress task in it is a DEAD dispatch; the next fire must not believe it."
   else
-    log "signal-path reconcile: ${budget}s of budget (grace ${SIGNAL_GRACE_SECS}s - ${elapsed}s spent - ${GIT_PUSH_TIMEOUT_SECS}s push reserve - 1s)"
+    log "signal-path reconcile: ${budget}s of budget (grace ${SIGNAL_GRACE_SECS}s - ${elapsed}s spent - ${GIT_PUSH_TIMEOUT_SECS}s push reserve - 2s teardown/commit)"
     # Plain assignment, not a `VAR=x func` prefix: zsh's scoping for a prefixed
     # assignment on a SHELL FUNCTION is not the same as on an external command, and a
     # signal handler is not the place to depend on which one this shell implements.
