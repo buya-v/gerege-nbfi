@@ -24,10 +24,10 @@ cd "$(git rev-parse --show-toplevel)" || exit 2
 OUT=".softhouse/reviews/t285-review-t273/evidence"
 mkdir -p "$OUT"
 
-if [ -n "$(git status --porcelain)" ]; then
+if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
   echo "T285 RED DRIVE REFUSED: the work tree is dirty before any mutation. This script"
   echo "restores by `git checkout --`, which would destroy uncommitted work. Commit first."
-  git status --porcelain
+  git status --porcelain --untracked-files=no
   exit 2
 fi
 # Only now is restoring safe.
@@ -97,9 +97,9 @@ run_bar M4-nobracket
 restore
 
 echo
-if [ -n "$(git status --porcelain)" ]; then
+if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
   echo "### T285 RED DRIVE ENDED DIRTY — the restore did not hold. Inspect before trusting:"
-  git status --porcelain
+  git status --porcelain --untracked-files=no
   exit 2
 fi
 echo "### tree restored clean (git status --porcelain empty, checked not assumed)."
