@@ -38,6 +38,21 @@ in the stated order** — *"'EXIT 2 WITH NO PROBE LINE' IS THE GUARD WORKING. RE
 THE VALUE"* — the probe line's **PRESENCE** was read first, then its value; it was present, so
 `up` is a reading and not an assumption.
 
+**And again on the FULLY COMMITTED tree** — every probe, transcript and this REVIEW.md staged and
+committed, since ledgerguard reads via `git ls-files` and an unstaged file is an unmeasured one
+[VERIFIED: `out/bar-t308-final-committed-tree.txt`]:
+
+```
+EXIT 0
+line 103  reference oracle (https://localhost:8443/…/actuator/health) probe = up   (PRESENT)
+line 490  parity vectors          PASS 46   FAIL 0
+line 496  cells compared          7884 graded, 93 ungraded
+line 512  VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle
+```
+
+**Unmoved by this branch**: `46 / 7884`, identical to the fork point. This review adds only files
+under `.softhouse/reviews/T308/`.
+
 ---
 
 ## 1. SCOPE AND THE NON-NEGOTIABLES — what I checked, so silence is distinguishable from not looking
