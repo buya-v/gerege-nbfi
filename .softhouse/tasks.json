@@ -3150,7 +3150,7 @@
   {
    "id": "T271",
    "title": "B-1: the same verdict/predicate defect in t219-g8-residual — and T259's stated expectation about it is FALSIFIED",
-   "status": "in_progress",
+   "status": "needs_retry",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -3168,7 +3168,7 @@
    ],
    "contract_independent": true,
    "description": "RAISED BY T259 as its own out-of-scope finding (correctly measured read-only, changed nothing), then CONFIRMED AND SHARPENED by T262 (F-4).\n\n`.softhouse/capture/t219-g8-residual/out/classify-t219.json` carries the same shape as T229's: a verdict field that never consults its own recorded predicate, on **3 rows / 4 pairs** (`T219-R600p0-N103-B1` x2, `-B4499`, `-B3001`). In no handoff. Nobody had looked.\n\n**THE PART THAT MAKES THIS MORE THAN A REPEAT.** T262 re-derived all SEVEN t219 carriers from raw capture in integer minor units and got agreement **6 of 7, NOT 7 of 7**. `T219-R600p0-N103-B1` carries a **CORRECTED** predicate that is FALSE under an affirmative verdict (raw-verified: n=103, E=1, B=1, P=1 -> 103 against observed interest 13). **T259 flagged `-B4499` as the risky one; that one behaves as expected, and the one it did not flag does not.** So T259's recorded expectation is falsified, and the 'disagrees nowhere' leg of its argument is weakened -- its RULING still survives, but on the STRUCTURAL argument alone (verdict is computed at lines 95/100, every `P2_*` key is assigned at 103-106, AFTER; it structurally cannot read them).\n\nTHE JOB: re-derive all seven carriers YOURSELF in integer minor units, `parse_float=Decimal` everywhere, `assert type(v) is int` on every quantity -- no floating point, including intermediates. Establish what `-B1` actually is: a genuine counterexample to the corrected predicate, a data defect, or a different row structure. **T262 notes the corrected identity `interest = totalRepayment - principalRepaid` is EXACT AND UNCONDITIONAL (6/6), while `totalRepayment = n*E + B` is CONDITIONAL and holds only 4/6** -- it needs the EMI-plus-balloon row structure, NOT full amortisation (three partial cells satisfy it exactly). Start there: `-B1` may simply not have that structure.\n\nT114/T176 BIND: `classify-t219.json` is committed evidence. DO NOT retro-edit it. Check first whether a manifest pins the bytes (T236's convention). Materiality is expected LOW -- verify rather than assume, and state it plainly. **G-8's region must not move, and options (b)/(c) must not be put to Buyan, unconditionally.**",
-   "note": "dispatched by local fire 20260822-060013b; PROMOTED because T268 measured that it BLOCKS T269 wiring (classify-t219.json turns the BAR red, exit 1, unacknowledged=4)",
+   "note": "dispatched by local fire 20260822-060013b; PROMOTED because T268 measured that it BLOCKS T269 wiring (classify-t219.json turns the BAR red, exit 1, unacknowledged=4) | WORKER KILLED MID-FLIGHT by the exit of local fire 20260822-140002, which ended without awaiting it (STEP 5.5 violation; the 20260822-230001 fire then opened and released with ZERO commits, so nobody corrected it and RESUME.md still described the 06:00 fire). NOT in_progress and nothing was running: corrected to needs_retry by fire 20260823-080004. WIP rescued by the wrapper sweep on softhouse/rescued-agent-a533818f28c9c0299-20260822-140002 — completeness UNVERIFIED, the branch is where the worker happened to be when it died, not a handoff. Re-dispatched this fire from that rescued state.",
    "branch": "softhouse/t271-b1-t219"
   },
   {
@@ -3423,7 +3423,7 @@
   {
    "id": "T283",
    "title": "INDEPENDENT review of T274's attestation root repair — try to forge a sidecar the re-derivation accepts",
-   "status": "in_progress",
+   "status": "needs_retry",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -3441,7 +3441,8 @@
     ".softhouse/reviews/t283-review-t274/"
    ],
    "description": "T274 replaced a four-way fail-open verifier with a ROOT repair: verify re-derives the entire sidecar from the wire records with the same builder derive uses, and compares exactly. That design removes the 'list of things we check' that the fail-opens fell outside of -- so the way to break it is no longer an omitted assertion but a FORGERY THE RE-DERIVATION REPRODUCES. Build one. That is the review. Also: (1) re-drive all 18 arms and confirm 0 unexpected; (2) confirm the baseline/ copy is genuinely the SHIPPED T250 rig and was copied before any edit (git order), since every RED arm's meaning depends on it; (3) T274 KEPT a refuted prediction -- verify the refutation is real and that attesting the response genuinely does NOT narrow unforgeability, because a wrong refutation is as bad as a wrong claim; (4) confirm pre-T274 schema-1 sidecars were not retro-edited and that a downgrade refuses; (5) confirm T250's attestation is STILL a declared orphan and acquired no caller here.",
-   "acceptance": "A forgery attempt against the re-derivation actually constructed and its result reported; 18 arms re-driven; baseline provenance confirmed by git order; verdict APPROVED / MICRO-FIX / REJECTED with specifics."
+   "acceptance": "A forgery attempt against the re-derivation actually constructed and its result reported; 18 arms re-driven; baseline provenance confirmed by git order; verdict APPROVED / MICRO-FIX / REJECTED with specifics.",
+   "note": "WORKER KILLED MID-FLIGHT by the exit of local fire 20260822-140002, which ended without awaiting it (STEP 5.5 violation; the 20260822-230001 fire then opened and released with ZERO commits, so nobody corrected it and RESUME.md still described the 06:00 fire). NOT in_progress and nothing was running: corrected to needs_retry by fire 20260823-080004. WIP rescued by the wrapper sweep on softhouse/rescued-agent-af19d6f14414d32f0-20260822-140002 — completeness UNVERIFIED, the branch is where the worker happened to be when it died, not a handoff. Re-dispatched this fire from that rescued state."
   },
   {
    "id": "T284",
@@ -3468,7 +3469,7 @@
   {
    "id": "T285",
    "title": "INDEPENDENT review of T273 — a +222-line guard added to conformance.sh, the file that grades everything else",
-   "status": "in_progress",
+   "status": "needs_retry",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -3486,12 +3487,13 @@
     ".softhouse/reviews/t285-review-t273/"
    ],
    "description": "T273 repaired the defect that made every green bar on this Mac contingent on a 24-byte file in /tmp, and added guard_no_host_state_in_lint_corpus to conformance.sh (+222 lines, 0 deletions, pinned at 17 rows by path+assignment). conformance.sh grades everything else in this program, so a defect introduced here is worse than the one repaired. Attack in this order: (1) the NEW GUARD's selector is claimed to be a measured SUPERSET of the linter's population (71 vs 86, holes = 0) -- re-measure it and find a file the linter classifies that the selector misses, because a guard blind to part of its own corpus is the fail-open shape this program keeps finding; (2) the pin is 17 rows where the census was 18 pre-repair -- confirm the arithmetic is a MEASURED movement and not an adjustment to fit; (3) re-drive all three red arms, and construct a fourth the author did not; (4) confirm NO pin was moved to go green and the diff is genuinely pure insertion; (5) confirm the mktemp+trap fixture leaves NOTHING behind and that the instrument's output really is byte-identical; (6) re-run the bar yourself with the residue absent and confirm PASS with the probe line PRESENT.",
-   "acceptance": "Selector superset claim independently re-measured; a fourth red arm constructed; pin movement shown to be measured; bar re-run with the residue absent; verdict APPROVED / MICRO-FIX / REJECTED with specifics."
+   "acceptance": "Selector superset claim independently re-measured; a fourth red arm constructed; pin movement shown to be measured; bar re-run with the residue absent; verdict APPROVED / MICRO-FIX / REJECTED with specifics.",
+   "note": "WORKER KILLED MID-FLIGHT by the exit of local fire 20260822-140002, which ended without awaiting it (STEP 5.5 violation; the 20260822-230001 fire then opened and released with ZERO commits, so nobody corrected it and RESUME.md still described the 06:00 fire). NOT in_progress and nothing was running: corrected to needs_retry by fire 20260823-080004. WIP rescued by the wrapper sweep on softhouse/rescued-agent-ad4264728c497493b-20260822-140002 — completeness UNVERIFIED, the branch is where the worker happened to be when it died, not a handoff. Re-dispatched this fire from that rescued state."
   },
   {
    "id": "T286",
    "title": "T268 RETRY — repair the fail-open T268's own fix introduced, plus F-2's false claim and the void_acks twin",
-   "status": "in_progress",
+   "status": "needs_retry",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -3511,7 +3513,28 @@
     ".softhouse/capture/t286-retry/"
    ],
    "description": "T268 fixed a fail-open and introduced another. T281 REJECTED it. This is the retry and it starts from T281's branch findings, not from T268's handoff.",
-   "acceptance": "R1/R2/R3 each driven RED on the T268 branch state and GREEN after; a lost-refusal leg class added to the battery; error paths enumerated by EXECUTION not by grep; no pin moved."
+   "acceptance": "R1/R2/R3 each driven RED on the T268 branch state and GREEN after; a lost-refusal leg class added to the battery; error paths enumerated by EXECUTION not by grep; no pin moved.",
+   "note": "WORKER KILLED MID-FLIGHT by the exit of local fire 20260822-140002, which ended without awaiting it (STEP 5.5 violation; the 20260822-230001 fire then opened and released with ZERO commits, so nobody corrected it and RESUME.md still described the 06:00 fire). NOT in_progress and nothing was running: corrected to needs_retry by fire 20260823-080004. WIP rescued by the wrapper sweep on softhouse/rescued-agent-a4668dbfbf66ea6a6-20260822-140002 — completeness UNVERIFIED, the branch is where the worker happened to be when it died, not a handoff. Re-dispatched this fire from that rescued state."
+  },
+  {
+   "id": "T287",
+   "title": "ORACLE-ONLY: take the two closure/opening-balance REFUSAL captures the ledger registry itself calls CHEAP and records that nobody has taken — a future-dated journal entry, and an entry dated before the latest GLClosure",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "test",
+   "agent_role": "test_writer",
+   "role": "test_writer",
+   "context": "tierA-gl-accounting",
+   "slice": "tierA-gl-accounting-A2",
+   "dependencies": [],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".softhouse/capture/t287-closure-refusals/"
+   ],
+   "description": "RAISED BY THE DRIVER, local fire 20260823-080004, on the same program-health signal that raised T275 and on the registry's own words. `capabilities-ledger.json` marks `ledger.opening.balance.and.closure` `in_graded_domain: false`, and the harness prints its reason on EVERY run:\n\n    NO OPENING BALANCES AND NO GLClosure EXIST IN THIS TENANT. validateBusinessRulesForJournalEntries\n    refuses both shapes [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java:626-640] and\n    NEITHER refusal is observed. Both are CHEAP captures and both belong in a refusal vector; NOBODY HAS\n    TAKEN THEM.\n\nThis fire reaches the reference oracle (Fineract, https://localhost:8443), and an oracle-reaching fire is the ONLY fire that can take a capture. The ledger corpus is 6 vectors / 21 money cells against loanschedule's 46. So spend the reachability on the row that names its own capture.\n\nARM 1 — FUTURE-DATED ENTRY REFUSAL. Zero side effects on the tenant: a refused write writes nothing. Post a manual journal entry dated after the tenant's business date and capture the refusal VERBATIM — HTTP status, the full error envelope, `developerMessage`, `userMessageGlobalisationCode`, every `errors[]` element, and the request you sent, byte-preserved. Take this arm FIRST and commit it before touching arm 2, so the fire banks an observation even if arm 2 is judged unsafe.\n\nARM 2 — PRE-CLOSURE ENTRY REFUSAL, AND YOU MUST MEASURE THE BLAST RADIUS BEFORE YOU CREATE ANYTHING. This arm needs a GLClosure to exist, and creating one is a TENANT-WIDE, HARD-TO-REVERSE MUTATION of the reference oracle: once an office has a closure at date D, every future capture that back-dates an entry at or before D is refused forever. The existing 46-vector corpus and every A2 capture live in this tenant. So, IN THIS ORDER:\n  (a) MEASURE first — read the existing journal-entry date range per office out of PostgreSQL (`acc_gl_journal_entry`, and `acc_gl_closure` to confirm it is empty), and state the earliest and latest entry_date and the tenant business date. Do not guess these; SQL them and paste the rows.\n  (b) DECIDE and WRITE DOWN whether a closure can be placed at a date that CANNOT poison the existing corpus or any capture the CAPTURE-PLAN still intends to take, and say which office you would place it on and why. If a safe date exists, name it and its justification; if it does not, say so.\n  (c) Only if (b) is safe, create the closure, capture the pre-closure refusal, and then record the closure you created as a PERMANENT tenant fact in `.softhouse/reference-oracle.md` — id, office, date, who created it, and what it now forbids. A mutation the next fire cannot see is a trap.\n  (d) If (b) is NOT safe, DO NOT CREATE THE CLOSURE. Record exactly what you measured, why it is unsafe, and what a safe route would cost (e.g. a dedicated office). Arm 1 alone is a real result and this task is a success with arm 2 declined-on-the-record. REFUSING AN UNSAFE MUTATION IS THE CORRECT OUTCOME, NOT A FAILURE, and it will be graded as one.\n\nRAW OBSERVED FORM ONLY. Store what the oracle actually returned, byte-preserved, under `.softhouse/capture/t287-closure-refusals/`. DO NOT write a contract-shaped vector into `.softhouse/vectors/ledger/` and DO NOT edit `conformance.sh`, `capabilities-ledger.json` or any pin — the promotion of these observations into refusal vectors is a SEPARATE task, and `conformance.sh` is contended this fire (T273/T285). NEVER SYNTHESISE A VECTOR YOU DID NOT OBSERVE. If the oracle refuses in a shape you did not predict, the OBSERVATION WINS and you write down that your prediction was wrong.\n\nRE-DERIVE THE CITATION. The registry cites JournalEntryWritePlatformServiceJpaRepositoryImpl.java:626-640 for both refusals. Open it in the pinned checkout (/Users/buv/fineract, commit 426a23544), confirm the lines say what the registry claims, and report the actual refusal codes the source emits BEFORE you send a request — then say whether the oracle agreed with the source. A citation you did not open is a citation you did not check.\n\nMONEY RULE: any amount you send or record is INTEGER MINOR UNITS. MNT, ISO 4217 numeric 496, minor unit 2. No float anywhere — not in a fixture, not in a script, not in an intermediate. The harness has a HARD guard for this and it exits 2 with NO probe line when it trips.",
+   "acceptance": "Arm 1 captured verbatim from the live oracle with the request byte-preserved. Arm 2 either captured with the closure recorded in .softhouse/reference-oracle.md, or DECLINED with the measurement that justified declining. The source citation re-derived against the pinned checkout and the oracle's actual behaviour compared to it. Raw observed form only; no vector promoted, no pin touched, no float."
   }
  ],
  "cross_corroboration": {
