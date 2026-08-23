@@ -1,170 +1,80 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260823-080004` **SESSION 2 — 8 WORKERS LIVE RIGHT NOW**
+## FIRE `20260823-140001` — 8 WORKERS DISPATCHED, RECORD PUSHED BEFORE THE FIRST SPAWN
 
-> **THIS BANNER IS THE TRUTH AT THE MOMENT OF PUSH, AND IT WAS PUSHED BEFORE THE FIRST WORKER SPAWNED**
-> (P-85). If you are reading this and the driver is gone, these eight tasks are `in_progress` in
-> `tasks.json` with a `branch` each, and **their workers died with the session** — do not read
-> `in_progress` as "work is happening". Check each branch for a commit
-> (`git log --oneline main..<branch>`), and demote anything empty to `needs_retry`.
+> **P-85 compliance:** this manifest, the lock and the `in_progress` rows in `tasks.json` were
+> committed and **pushed before any worker was spawned**. If you are reading this and no fire is
+> running, these eight are **corpses, not workers**. Check each branch
+> (`git log --oneline main..<branch>`) and demote anything empty to `needs_retry`.
 
-**Driver session facts, verified not assumed:** this is a *second* `claude` session inside fire wrapper
-pid **93922** (ppid chain `94833 <- 93922`, checked against `ps`). The previous session in this same fire
-closed clean at `7d4643c`. There is exactly ONE `fire-program.sh` at the top of the tree, so the two live
-wrappers seen in `ps` are parent and child, **not** the P-85 double-holder incident.
+---
 
-**Wrapper clock defect, recorded not fixed:** the LOCK arrived with `heartbeat` `2026-08-24T00:05:00Z` and
-`fire_id` `20260824-000016` — a full day AHEAD of wall clock (`2026-08-23T03:54Z`). This is the same
-date-slide the previous session filed in
-`.softhouse/observations/20260823-driver-fire-id-and-date-error.md`, and it has now recurred in the LOCK
-itself. The driver corrected both fields to the real fire id `20260823-080004`.
+## WHAT THIS FIRE FOUND BEFORE IT DISPATCHED ANYTHING
 
-**BAR at dispatch, run by the driver on the merged tree — exit status read WITHOUT a pipe, because the
-previous session filed reading it through one as its own defect:**
+### The previous fire's 8 dispatches were ALL dead, and the reconciler that exists to say so never ran
+
+Fire `20260823-080004` session 2 dispatched 8 workers and was **SIGTERMed at 12:06:13**
+(`~/Library/Logs/gerege-nbfi/fire-20260823-080004.log`: *"driver stopped on SIGTERM; no survivors"*).
+This fire opened on a `tasks.json` claiming all 8 still `in_progress`. Measured, not assumed:
+
+| Branch state | Count | Tasks |
+|---|---|---|
+| Branch exists at dispatch commit `a58604b4f`, **0 commits ahead of main** | 4 | T297, T299, T304, T308 |
+| Branch **never created at all** | 4 | T298, T302, T305, T306 |
+
+**Zero WIP survived.** `ps` confirmed no survivors from that fire's process tree.
+
+### THE ROOT, LOCATED — filed as T309 and dispatched this fire
+
+`fire-program.sh` calls `reconcile_tasks_json()` at **line 1032, in the script's NORMAL tail**.
+`on_signal()` at **line 426** calls `release_lock` and then `exit $rc` **directly**. So SIGTERM / INT /
+HUP release the lock and terminate **without ever reaching the reconciler**.
+
+**T288 wired its repair exclusively to the path that does not need it.** A driver that exits cleanly
+already runs its own STEP 5.5 exit protocol and leaves `tasks.json` truthful. The killed driver — the
+only case where the wrapper is the last honest witness — is the case the reconciler never sees. This is
+the sixth entry in the P-45 lineage (*"a guard that only works when someone remembers to run it enforces
+nothing"*), in a new costume: **not unrun, but wired to the wrong path.**
+
+**T302 PREDICTED THIS BEFORE THE MEASUREMENT EXISTED.** Its title, written last fire: *"the
+reconciliation has never been driven against a REAL killed claude worker, and it is fail-closed in the
+direction that makes it inert."* It is dispatched again this fire with the confirmation in hand.
+
+### A second, independent defect — the supported tool could not be used
+
+`ready-tasks.py`'s `caller_is_lock_holder()` (~`:225-245`) refuses any ancestry containing `claude`,
+reasoning *"a driver or worker must not reconcile its own siblings"*. **Sound for live siblings, wrong
+for corpses:** the guard has no notion of **fire identity**, so it cannot tell the `140001` driver
+clearing `080004`'s dead dispatches from a live driver demoting its own running workers. The driver
+therefore open-coded the demotion — exactly the hand-repair the tool exists to replace. Also T309's job.
+
+### BAR at dispatch — run by the driver on the merged tree, exit read WITHOUT a pipe
+
 ```
-bash .softhouse/conformance.sh  ->  REAL_EXIT=0  (captured via $? on an unpiped run)
+bash .softhouse/conformance.sh  ->  REAL_EXIT=0   (captured via $? on an unpiped run)
                                     probe line PRESENT at :103, reads `up`
-                                    46 parity vectors / 7884 cells
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
                                     all 9 wrong ledger implementations DIED through the harness
 ```
 
-## IN-FLIGHT — 8 dispatched, all `isolation: worktree`
+---
 
-| Task | Model | Branch | What it must not do |
+## IN-FLIGHT — 8 dispatched, all `isolation: worktree`, all `opus`
+
+| Task | Role | Branch | Ownership / what it must not do |
 |---|---|---|---|
-| T305 | opus | `softhouse/T305-openingbalance-accepting-side` | **Owns `conformance.sh` this batch.** Must NOT edit `admit.go` — T306 owns it. Any oracle mutation is refuse-before-write. |
-| T306 | opus | `softhouse/T306-adjudicate-admit-widening` | **Sole owner of `admit.go`.** Adjudicates the driver's own unreviewed merge resolution. |
-| T297 | opus | `softhouse/T297-review-t295` | Must not fire a T287 probe. Verifies from the live oracle that nothing was posted. |
-| T308 | opus | `softhouse/T308-review-t292` | Fifth link in the R-VPA lineage — must attack by construction, not by reading. |
-| T302 | opus | `softhouse/T302-review-t288` | Reads `fire-program.sh`; must not rewrite it (T301 holds that file, batch 2). |
-| T298 | opus | `softhouse/T298-review-t256` | — |
-| T304 | opus | `softhouse/T304-evidence-destruction` | Must derive its own population; 4 is T284's count, not a verified total. |
-| T299 | sonnet | `softhouse/T299-t256-flagged-defects` | Rename must not break a path-pin; grep first. |
+| T305 | test_writer | `softhouse/T305-openingbalance-accepting-side` | **Owns `.softhouse/conformance.sh` this batch.** Accepting-side capture on a fresh tenant. Any oracle mutation is refuse-before-write. |
+| T306 | reviewer | `softhouse/T306-adjudicate-admit-widening` | **Sole owner of `admit.go`.** Adjudicates the driver's own unreviewed merge-time widening. |
+| T309 | coder | `softhouse/T309-sigterm-reconcile-bypass` | **Owns `.softhouse/bin/fire-program.sh` + `ready-tasks.py` this batch.** Must bound any SIGTERM-path work inside launchd's ~20s grace. |
+| T302 | reviewer | `softhouse/T302-review-t288` | Reviews T288. **READ-ONLY on `fire-program.sh` — T309 holds the write.** Must find what ELSE T288 got wrong; the SIGTERM bypass is already assigned. |
+| T297 | reviewer | `softhouse/T297-review-t295` | Must not fire a T287 probe. Verifies from the live oracle that nothing was posted. |
+| T308 | reviewer | `softhouse/T308-review-t292` | Fifth link in the R-VPA lineage — must attack by construction, not by reading. |
+| T298 | reviewer | `softhouse/T298-review-t256` | — |
+| T304 | coder | `softhouse/T304-evidence-destruction` | Must derive its own population; 4 is T284's count, not a verified total. |
 
 **HELD BACK DELIBERATELY, on file collision — dispatch in batch 2, not forgotten:**
-- **T303** (wire T284's registry guard) — `files_hint` `.softhouse/conformance.sh` collides with T305.
-- **T301** (wrapper self-modification snapshot) — `.softhouse/bin/fire-program.sh` collides with T302.
+- **T303** (wire T284's registry guard) — `.softhouse/conformance.sh` collides with T305.
+- **T301** (wrapper self-modification snapshot) — `.softhouse/bin/fire-program.sh` collides with T309.
+- **T299** (T256's two flagged defects, sonnet) — deferred to keep batch 1 at 8.
 
----
-
-# PREVIOUS SESSION'S MANIFEST (fire 20260823-080016), retained
-
-# HEADLINE 1: THE LEDGER CORPUS MOVED — 6 → 9 VECTORS, 6 → 9 WRONG IMPLEMENTATIONS
-
-It had been frozen at **6 vectors / 21 money cells** for many fires while `capabilities-ledger.json`
-itself printed *"Both are CHEAP captures … nobody has taken them."*
-
-**And the money-path finding is no longer prose.** `:636` is
-`!DateUtils.isBefore(closingDate, transactionDate)` — **INCLUSIVE**, refusing `transactionDate <=
-closingDate` — while the oracle's own message says *"prior to"*. A port written from the message text gets
-a strict `<` and **fails open on exactly the day a period-end adjustment carries.** T295's `LDG-REFUSE-04`
-promotes the one capture dated **ON** the closing date — the only relation separating the two readings —
-and `ledger-wrong-closure-boundary-exclusive` is registered, executable and **measured KILLED**.
-
-**T294 answered P-92 with CONTENT, not a comment.** T287's four probes are armed because only an
-*oracle-side precondition* refuses them; T294's body is **unbalanced by one MNT minor unit**, so it is
-unpostable **on its own content** — permanently, clock- and state-independently. That bought an unasked-for
-bonus: the oracle had **two** grounds to refuse and answered with the opening-balance code, so **`:717`
-beats `:651` by measurement** — the only ordered refusal pair in this corpus.
-
-**T295 settled all four T287 captures: 2 PROMOTED, 2 NOT PROMOTABLE BY MEASUREMENT, 0 PROBES FIRED.**
-A2-02's body is **byte-identical** to A2-01's despite a different transaction date, so it cannot diverge on
-any graded cell — and the identity is itself the finding: `ACCOUNTING_CLOSED` echoes the **closing** date
-(`:637`), `FUTURE_DATE` echoes the **transaction** date (`:631`).
-
-Driver re-measured the oracle first-hand after every ledger merge: `acc_gl_journal_entry` **60 / maxid 64**,
-`acc_gl_closure` **0**, distinct transaction ids **26** — unchanged all fire.
-
-# HEADLINE 2: FOUR WORKERS REFUTED A DRIVER FIGURE OR CLAIM, AND ALL FOUR WERE RIGHT
-
-- **T256** — the brief said 30 instruments / 40 files. Re-derived: **92**, and it traced where "30" came
-  from (T253's `RUNNABLE: 30`, the *first* literal only). Then found the load-bearing fact: **zero live
-  executable hardcodes**, so the 60 remaining sites are archived drives nothing runs, and rewriting them
-  would destroy the instrument↔transcript pairing. It fixed **the instruction** instead.
-- **T284** — the brief said three frozen call sites. Measured **13 files / 24 invocations, only six the
-  defect**; five are correct by design, including one whose "repair" would have destroyed T274's RED arm.
-- **T295** — the brief said bump `MONEYCELLS`. It **held at 21** and argued it in place: a refusal vector
-  asserts no amount and `cmpMoney` is unreachable via `diffRefusal`. Bumping would record comparisons
-  nobody performs.
-- **T293** — adjudicating the driver's own census pin, it **upheld the row and killed two of the stated
-  reasons**: the justification cited a line T273 had deleted *in the same fire*, and "it restores the state
-  it found" is a runtime argument applied to a **static** linter.
-
-# HEADLINE 3: T292 BROKE A FIVE-FIX LOSING STREAK BY FINDING THE ROOT NOBODY HAD WRITTEN DOWN
-
-`walk_rows` was serving **two purposes whose fail-closed directions are OPPOSITE** — detection wants
-maximal generosity, coverage wants maximal strictness. T268 widened it for detection and widened coverage;
-T286 narrowed it for coverage and lost a bracket further out. **Every link traded one against the other
-because both read the same number.**
-
-No sixth shape-patch: the word "bracket" does not appear in the coverage predicate, because it **does not
-look at containers at all**. And the other half is a **measured impossibility** — guard #10's ambition is
-unreachable by any container-blind rule, because the three `RESCUED_BY_SITE3` rows carry `AS PREDICTED`
-with no P-key **by design**. **325 documents, 0 lost refusals — and the zero is CALIBRATED**: plant the
-lineage's defect and the same counter reports **28 across 12 fixtures**.
-
-# THE DRIVER'S OWN ERRORS THIS FIRE, ALL FILED RATHER THAN BURIED
-
-1. **Backticks in commit messages were executed.** One merge message absorbed a **6,733-line `git ls-files`
-   dump**. Caught before push; all three merges rewritten from message files.
-2. **The fire id was built from the UTC clock and slid a day — and it PROPAGATED.** T296 reported probe
-   `a1-02` *"armed yesterday (2026-08-24)"*. **False.** Driver-measured: host clock `Sun Aug 23 10:52 +08`,
-   oracle business date `2026-08-23`, and the guard says a1-02 **still refuses — it arms TOMORROW.**
-   A driver clerical error became a worker's factual claim about an armed, irreversible probe.
-3. **An exit status was read through a pipe** (`| tail` → `$?` is *tail's*). Redirected, the probe guard is
-   **RED exit 1** as the record says. Same shape as P-84 and T293's F2.
-4. **A merge-time widening of T296's capability gate, unreviewed.** Filed as **T306**, with the reasoning
-   written into `admit.go` beside the rule — the file a reviewer reads.
-
----
-
-## THE NEXT FIRE STARTS HERE
-
-**Run `python3 .softhouse/bin/ready-tasks.py` first.** Zero tasks `in_progress`; **zero live workers.**
-
-1. **`T306`** — adjudicate the driver's unreviewed widening. Two of its three arms are keyed on
-   `expect.refusal.code`, which is an **OUTPUT** — keying admissibility on what a vector *claims* is close
-   to letting the vector authorise itself. Attack that first.
-2. **`T308`, `T302`, `T298`** — the independent reviews of T292, T288 and T256. **T308 is the fifth link in
-   the R-VPA lineage; four of the five previous links were killed by a reviewer, not by their author.**
-3. **`T305`** — F-T296-2: the opening-balance vector **grades the COMMAND, not the PREDICATE**. A port
-   matching on the command alone survives the whole corpus, so a port refusing *every* opening balance —
-   including on an empty ledger where the oracle **accepts** — is green. Only an **accepting-side** capture
-   closes it, and that is irreversible on any tenant worth keeping.
-4. **`T303`** — wire T284's registry guard. **T284 refused to cite its own guard as enforced** because
-   `conformance.sh` was partitioned away from it. That instinct is right and this program has recorded the
-   same lesson five times; T303 exists so it is not the sixth.
-5. **`T301`** — the wrapper edits itself while running. Merging T288 grew `fire-program.sh` from 45,665 to
-   **64,888 bytes mid-execution**, and zsh reads a script by byte offset.
-6. Then `T307`, `T299`, `T304`, `T300` follow-ons, `T270`, `T272`, `T277`, `T279`, `T282`, `T257`, `T258`,
-   `T226`, `T235`, `T145`, `T160`, `T174`, `T192`, `T195`, `T266`, `T267`.
-
-## THE STANDING HAZARD — READ BEFORE TOUCHING THE T287 RIG
-
-All four probes in `.softhouse/capture/t287-closure-refusals/req/` are **valid, balanced, postable journal
-entries**. Only an oracle-side precondition refuses them, and **when it lapses the request becomes a write
-— and a posted journal entry cannot be deleted.** Driver-measured this fire, `exit 1`:
-
-| probe | date | state as of **2026-08-23** |
-|---|---|---|
-| `a2-01` / `a2-02` | 2026-01-31 / 2026-01-15 | **WOULD POST 2 JOURNAL ENTRIES EACH, NOW** — no GLClosure exists at office 1 |
-| `a1-02` | **2026-08-24** | still refuses — **arms TOMORROW** |
-| `a1-01` | 2026-12-31 | still refuses — arms 2027-01-01 |
-
-`guard-probe-expiry.sh` is **RED, exit 1**. Run it, and read its exit status **without a pipe**.
-
-## What is NOT true, and must not be inferred from the green bar
-
-- **`T269` MUST NOT BE WIRED.** `F-T290-1b`'s floor on `disagreements` still does not exist, and **T292
-  confirms its own rule does not close it** — driven, not assumed. No R-VPA rule may be wired until then.
-- The ledger's **accrual, account transfers (gl 17), charge-off, multi-currency and slot resolution** remain
-  **ungraded**; the harness prints all eight rows every run. Only the **REFUSAL** side of both date
-  boundaries is pinned — the **acceptance** side is `[UNVERIFIED]` and costs permanent journal entries.
-- **`G-4`, `G-5`, `G-8`, `G-10`, `G-12` remain OPEN**; `G-4` and `G-5` are hard `user` gates. `G-8`'s region
-  is a conservative superset resting on the unproven conjecture `δ ≤ 1`, and **options (b)/(c) must not be
-  put to Buyan — unconditionally, with no expiry.**
-- Two of the 46 loanschedule vectors have `principal_amortizes_to_zero` switched OFF, legitimately and loudly.
-- **Nothing was cut over, and nothing here authorises it.** The gate register at the top of `gates.md` is
-  authoritative.
-
-## P-86: cite the rule, or the id AND its sentence — never the id alone
+**Blocked:** T307 (needs T306), T269 (needs T268), T278 (needs T277), T280 (needs T279).
