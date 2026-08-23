@@ -164,6 +164,59 @@ func Admit(v *Vector, opts Options) []string {
 				"defensible, and no capture separates them")
 		}
 	}
+	// --- the opening-balance inputs, default-deny in both directions [T294] --
+	//
+	// These three fields exist so that a refusal whose precondition lives in
+	// AMBIENT TENANT STATE carries that state as an INPUT (T289's date strategy
+	// (c), applied to state rather than to a date). The rules below are what
+	// stops them becoming a hole:
+	//
+	//   * an unknown `command` REFUSES, rather than being ignored as a hint;
+	//   * an opening-balance command with no contra mapping REFUSES, because
+	//     :708 would have thrown a DIFFERENT error first and the vector would
+	//     be describing an observation it did not take;
+	//   * a NON-opening-balance vector carrying opening-balance inputs REFUSES,
+	//     so the fields cannot accumulate silently on the vectors that predate
+	//     them.
+	switch v.Request.Command {
+	case "", "defineOpeningBalance":
+	default:
+		add("request.command %q is not one this schema knows (\"\" for the plain create path, "+
+			"\"defineOpeningBalance\" for POST /journalentries?command=defineOpeningBalance). ABSENT "+
+			"REFUSES and UNKNOWN REFUSES: a command string nothing routes on is a field the comparator "+
+			"would silently ignore", v.Request.Command)
+	}
+	if v.Request.Command == "defineOpeningBalance" {
+		if v.Request.ContraGLAccountID <= 0 {
+			add("request.command is defineOpeningBalance and "+
+				"request.contra_gl_account_id is %d. "+
+				"JournalEntryWritePlatformServiceJpaRepositoryImpl.java:708 resolves the "+
+				"financial-activity type 300 mapping BEFORE the guard at :717, so if that mapping does "+
+				"not resolve the oracle returns a DIFFERENT refusal and this vector describes an "+
+				"observation nobody took", v.Request.ContraGLAccountID)
+		}
+		for i, id := range v.Request.PostedNonContraTransactionIDs {
+			if strings.TrimSpace(id) == "" {
+				add("request.posted_non_contra_transaction_ids[%d] is blank. It transcribes the oracle's "+
+					"own errors[0].args and a blank member is a transcription defect, not an "+
+					"observation", i)
+			}
+		}
+	} else {
+		if v.Request.ContraGLAccountID != 0 {
+			add("request.contra_gl_account_id is set on a vector whose request.command "+
+				"is %q. "+
+				"The contra mapping is read only by defineOpeningBalance:708-709; carrying it anywhere "+
+				"else records an input nothing consumes", v.Request.Command)
+		}
+		if len(v.Request.PostedNonContraTransactionIDs) > 0 {
+			add("request.posted_non_contra_transaction_ids is non-empty on a vector whose "+
+				"request.command is %q. findNonContraTransactionIds is read only by "+
+				"validateJournalEntriesArePostedBefore, which only defineOpeningBalance reaches (:717)",
+				v.Request.Command)
+		}
+	}
+
 	// G-09 / G-10 over the chart rows the vector supplies.
 	for _, a := range v.Request.Accounts {
 		switch a.Usage {

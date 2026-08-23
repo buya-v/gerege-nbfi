@@ -1,0 +1,5 @@
+GET /audits?entityName=JOURNALENTRY&actionName=DEFINEOPENINGBALANCE
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+request-body: NONE (bodyless request -- no .req artefact is written, by design)
+captured-at-utc: 2026-08-23T02:03:46Z

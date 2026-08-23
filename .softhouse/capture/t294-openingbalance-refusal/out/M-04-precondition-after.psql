@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/q1-refusal-precondition.sql
+query-bytes-artefact: M-04-precondition-after.sql
+query-sha256: 52c9d6a043609ebde8902c366e3ebbe4b0167c6b20b68783a624eb515501f136
+query-bytes: 1981
+psql-exit-status: 0
+captured-at-utc: 2026-08-23T02:02:53Z

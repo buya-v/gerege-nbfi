@@ -537,7 +537,9 @@ EXEMPTION_PIN_LEDGER_DECLARED=0
 #                          4 legs), LDG-03 (accounting path, 4 legs, overpayment),
 #                          LDG-04 (header account accepted, 2 legs).
 #   LEDGER_REFUSAL  = 2 -- LDG-REFUSE-01 (unbalanced by one minor unit) and
-#                          LDG-REFUSE-02 (manual adjustments not permitted).
+#                          LDG-REFUSE-02 (manual adjustments not permitted), and
+#                          LDG-REFUSE-03 (defining opening balances after journal
+#                          entries have been posted) [T294: 2 -> 3].
 #   LEDGER_MONEYCELLS = 21 -- the count of MONEY cells compared in int64 minor
 #                          units. It is pinned SEPARATELY from the cell total
 #                          because DEC-2 §5.5 warns that "a ledger corpus whose
@@ -548,8 +550,19 @@ EXEMPTION_PIN_LEDGER_DECLARED=0
 #                          (4 + 2), LDG-03 6 (4 + 2), LDG-04 4 (2 + 2), and 0 on
 #                          each refusal vector, which asserts no amount at all.
 #                          5 + 6 + 6 + 4 = 21.
+#                          T294 ADDED A REFUSAL VECTOR AND THIS FIGURE DID NOT
+#                          MOVE, deliberately and not by oversight. A refusal
+#                          vector asserts no amount: diffRefusal compares three
+#                          cells through cmpInt/cmpStr and cmpMoney is never
+#                          reached on that path (grade.go), so LDG-REFUSE-03
+#                          contributes 0 exactly as LDG-REFUSE-01 and -02 do.
+#                          Its request legs carry amount_major_text tokens, which
+#                          are the CALLER'S characters and are graded by nothing.
+#                          If this number ever rises on a refusal vector, the
+#                          comparator has started grading an amount nobody
+#                          observed and THAT is the defect, not this pin.
 EXEMPTION_PIN_LEDGER_PARITY=4
-EXEMPTION_PIN_LEDGER_REFUSAL=2
+EXEMPTION_PIN_LEDGER_REFUSAL=3
 EXEMPTION_PIN_LEDGER_MONEYCELLS=21
 
 # Scratch paths are script-global, not function-local: an EXIT trap fires after the
@@ -2059,7 +2072,15 @@ gate_exemption_census() {
 # not run at all there) and NOT RUN when the probe says the oracle is down (the
 # run is already refusing; a gate that manufactured a second verdict out of that
 # would be reading its own refusal as evidence). Both skips SAY SO.
-EXEMPTION_PIN_LEDGER_WRONGIMPLS=6
+#
+# [T294: 6 -> 7.] ledger-wrong-openingbalance-posted-entries-ignored joins them —
+# a port that implements defineOpeningBalance without ever reaching
+# validateJournalEntriesArePostedBefore (:717/:810-816). It is the SECOND member
+# of the family the bullet above singles out: like
+# ledger-wrong-manual-permission-ignored it passes all four parity vectors and
+# dies on an ORACLE-REFUSAL vector alone (LDG-REFUSE-03), which is why this gate
+# asserts the SUM of the two ledger FAIL counts and not the parity count.
+EXEMPTION_PIN_LEDGER_WRONGIMPLS=7
 
 gate_wrong_ledger_impls_die() {
   local bin="$1" probe="$2"

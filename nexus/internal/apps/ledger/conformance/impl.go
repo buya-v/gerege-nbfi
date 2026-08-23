@@ -250,6 +250,43 @@ func (GoPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 		legs = append(legs, ledger.PostingLeg{Side: side, Amount: amt})
 	}
 
+	// STEP 1.5 — THE OPENING-BALANCE RULE: opening balances may not be defined
+	// once journal entries have been posted. [T294]
+	//
+	// OBSERVED, not inferred. OB-01 POSTed
+	// /journalentries?command=defineOpeningBalance on tenant `gerege`, where
+	// financial-activity type 300 maps to GL 15 and 26 non-contra transaction
+	// ids exist, and the oracle returned HTTP 403 with
+	// error.msg.journalentry.defining.openingbalance.not.allowed and the
+	// message "Defining Opening balances not allowed after journal entries
+	// posted" — the source string at :814 and the wire string, character for
+	// character.
+	//
+	// THE PREDICATE IS `NON-EMPTY`, NOT `NON-ZERO COUNT`, because that is what
+	// :812 computes: `if (!CollectionUtils.isEmpty(transactionIds))`. The
+	// vector carries the oracle's own list (request.posted_non_contra_
+	// transaction_ids, transcribed from errors[0].args), so this port reads a
+	// length rather than a boolean somebody derived for it.
+	//
+	// ITS POSITION IN THIS FUNCTION IS OBSERVED AND NOT CHOSEN, and that is the
+	// one thing about it worth reading twice. OB-01's request body is UNBALANCED
+	// BY EXACTLY ONE MINOR UNIT (debit 250000.25, credit 250000.24) — so the
+	// oracle had two independent grounds to refuse it, and it returned THIS one.
+	// Source agrees and says why: :717 runs BEFORE :724, and the balance check
+	// is inside :724 (validateBusinessRulesForJournalEntries → :651
+	// checkDebitAndCreditAmounts). A port that checks the balance first returns
+	// error.msg.glJournalEntry.invalid.mismatch.debits.credits for this request
+	// and diverges from the oracle on two of the three refusal cells. Unlike the
+	// STEP 2 / STEP 3 precedence below, this ordering is NOT [UNVERIFIED]: one
+	// captured request violates both rules and the oracle answered.
+	if req.Command == "defineOpeningBalance" && len(req.PostedNonContraTransactionIDs) > 0 {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       "error.msg.journalentry.defining.openingbalance.not.allowed",
+			Message:    "Defining Opening balances not allowed after journal entries posted",
+		}, nil
+	}
+
 	// STEP 2 — THE MANUAL-ADJUSTMENT RULE, applied only to a MANUAL entry.
 	//
 	// OBSERVED, not inferred: A2-346 posted a debit leg at GL 18
@@ -387,6 +424,37 @@ func (manualPermissionIgnoringPoster) PostEntry(req Request) (PostedEntry, *Refu
 	return GoPoster{}.PostEntry(r)
 }
 
+// openingBalanceUncheckedPoster defines opening balances without ever asking
+// whether journal entries have already been posted.
+//
+// THE DEFECT: `defineOpeningBalance` looks like a seeding operation, and a port
+// written from the endpoint's NAME implements seeding — resolve the contra
+// account, reverse the previous contra entries, write the new ones. The guard
+// that makes it refusable is a single line eleven lines above the first write
+// (:717 `validateJournalEntriesArePostedBefore(contraId)`), it consults a
+// repository query rather than the request, and NOTHING in the request body
+// hints that it exists. It is exactly the shape of the flag
+// manualPermissionIgnoringPoster drops: a rule that lives in the tenant, not in
+// the payload, so a port can be complete against the API documentation and still
+// have it missing.
+//
+// WHY IT IS NOT A DUPLICATE OF ANY EXISTING WRONG IMPLEMENTATION. It passes all
+// four parity vectors and both pre-existing refusal vectors untouched — none of
+// them is an opening-balance command — and it dies on LDG-REFUSE-03 alone. It is
+// killed on refusal.code and refusal.message rather than on refusal.http_status,
+// because OB-01's body was DELIBERATELY unbalanced (the write-fence: see the rig)
+// so this implementation falls through to the balance rule and returns a
+// DIFFERENT 403. That is the sharper kill, not the weaker one: a port can get the
+// status right for the wrong reason, and the code is the cell that tells one 403
+// from another.
+type openingBalanceUncheckedPoster struct{}
+
+func (openingBalanceUncheckedPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	r := req
+	r.PostedNonContraTransactionIDs = nil
+	return GoPoster{}.PostEntry(r)
+}
+
 // nettingPoster sums every leg into one accumulator, treating a credit as a
 // negative debit, and then reports totals from it.
 //
@@ -479,6 +547,12 @@ func init() {
 		"never reads acc_gl_account.manual_journal_entries_allowed, so it posts where the oracle refuses "+
 			"with HTTP 403 (A2-346)",
 		manualPermissionIgnoringPoster{})
+	RegisterWrong("ledger-wrong-openingbalance-posted-entries-ignored",
+		"defines opening balances without checking whether journal entries have already been posted, "+
+			"so it never reaches validateJournalEntriesArePostedBefore's refusal (:717/:810-816) and "+
+			"answers a defineOpeningBalance command the oracle refused with HTTP 403 "+
+			"error.msg.journalentry.defining.openingbalance.not.allowed (T294, OB-01)",
+		openingBalanceUncheckedPoster{})
 	RegisterWrong("ledger-wrong-netting-totals",
 		"nets credits against debits into one accumulator, so I-1 holds by construction and both totals "+
 			"report the netted figure",

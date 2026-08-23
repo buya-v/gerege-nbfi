@@ -39,7 +39,7 @@
       "name": "ledger.refusal.parity",
       "description": "An ORACLE-OBSERVED refusal: the HTTP status, the oracle's own globalisation code and its message text, as returned on the wire and captured.",
       "in_graded_domain": true,
-      "evidence": "Exercised by A2-344 and A2-346, both HTTP 403 with distinct globalisation codes. It is graded on all THREE cells because a port returning 403 with an invented code is not matching the oracle. WHAT IS NOT COVERED: validateBusinessRulesForJournalEntries refuses an entry dated before the latest GLClosure and refuses a future-dated entry [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java:626-640]. NEITHER refusal is observed -- the tenant has no GLClosure at all and no future-dated entry was ever posted -- so neither is graded. Both are cheap captures and both belong in this class when somebody takes them."
+      "evidence": "Exercised by A2-344 and A2-346, both HTTP 403 with distinct globalisation codes. It is graded on all THREE cells because a port returning 403 with an invented code is not matching the oracle. A THIRD REFUSAL JOINED THEM: T294's OB-01, HTTP 403 error.msg.journalentry.defining.openingbalance.not.allowed, promoted as LDG-REFUSE-03 -- and it is the first refusal in this corpus whose PRECEDENCE is observed rather than asserted, because OB-01's body was unbalanced by one minor unit and the oracle answered with the opening-balance code, so :717 is measured to beat the balance check at :651. WHAT IS STILL NOT COVERED: validateBusinessRulesForJournalEntries also refuses an entry dated on or before the latest GLClosure and refuses a future-dated entry [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java:626-640]. NEITHER of those is graded. [CORRECTED by T294: this sentence used to say 'the tenant has no GLClosure at all and no future-dated entry was ever posted'. Both halves are now stale. T287 created a GLClosure on this tenant and deleted it -- acc_gl_closure is empty again but the sequence's is_called is permanently t, so the next closure is id 2 -- and T287 DID capture both refusals raw, in .softhouse/capture/t287-closure-refusals. What is true, and is the reason they are still ungraded, is that NOTHING PROMOTES THEM: T289 ruled all four of those observations non-promotable as literal-date vectors, because the business date and the closing date live in prose rather than in any machine-readable input, and a refusal vector that stops refusing does so by BECOMING A WRITE. Lifting those two facts into a vector's inputs is the promotion work, and it is still untaken.]"
     },
     {
       "name": "ledger.slot.resolution",
@@ -78,9 +78,9 @@
     },
     {
       "name": "ledger.opening.balance.and.closure",
-      "description": "Opening balances, GLClosure, and the two refusals a closure implies: an entry dated before the latest closure, and a future-dated entry.",
-      "in_graded_domain": false,
-      "evidence": "NO OPENING BALANCES AND NO GLClosure EXIST IN THIS TENANT. validateBusinessRulesForJournalEntries refuses both shapes [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java:626-640] and NEITHER refusal is observed. Both are CHEAP captures and both belong in a refusal vector; nobody has taken them."
+      "description": "Opening balances, GLClosure, and the refusals each implies: defining opening balances after journal entries have been posted, an entry dated before the latest closure, and a future-dated entry.",
+      "in_graded_domain": true,
+      "evidence": "EXACTLY ONE OF THE THREE SHAPES IS OBSERVED, AND THIS ROW IS SCOPED TO IT. Exercised by T294's OB-01: POST /journalentries?command=defineOpeningBalance [JournalEntriesApiResource.java:211-212] reached defineOpeningBalance:703, which resolved the financial-activity type 300 mapping at :708-709 (gl_account_id 15 on this tenant) and threw at :717 validateJournalEntriesArePostedBefore -> :810-816, HTTP 403 error.msg.journalentry.defining.openingbalance.not.allowed, promoted as LDG-REFUSE-03. THE OTHER TWO SHAPES REMAIN UNOBSERVED AND UNGRADED IN THIS STORE: the PRE-CLOSURE refusal (an entry dated on or before the latest GLClosure) and the FUTURE-DATED refusal, both at :626-640 reached from :724, are captured only in the RAW rig .softhouse/capture/t287-closure-refusals and NOTHING PROMOTES THEM -- T289 ruled all four of those observations non-promotable as literal-date vectors and required the business date and the closing date to be lifted into a vector's inputs first, which no vector has done. So a vector claiming this capability for a CLOSURE refusal would be claiming coverage this store does not have, and a reviewer meeting one should ask which capture it cites. [T289 F-T289-4 settled that this row is COHERENT AND NOT MISNAMED and must not be split or renamed: defineOpeningBalance:703 reaches the SAME guard at :724 that the manual create path reaches at :157, and the row bundles the two because they share it. T294 flipped in_graded_domain to true on the strength of the :717 half only, which is the half that is exclusively opening-balance.]"
     },
     {
       "name": "ledger.reversal.entry",
@@ -105,7 +105,8 @@
         "ledger.journal.entry.readback": "exercised",
         "ledger.accounting.path.loan.repayment": "exercised",
         "ledger.manual.entry.posting": "exercised",
-        "ledger.refusal.parity": "exercised"
+        "ledger.refusal.parity": "exercised",
+        "ledger.opening.balance.and.closure": "exercised"
       }
     },
     {
