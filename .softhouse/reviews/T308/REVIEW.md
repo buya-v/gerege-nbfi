@@ -290,8 +290,14 @@ T292's adversary passes it **82/0/0**.
 **Why every property misses it.** PROP-A is an *invariance* over container rewritings — the mutant
 is perfectly invariant (`rc=0` everywhere), so PROP-A passes. PROP-B requires `rc==0 ⟹ witness ≥
 1` — the witness is 1, so PROP-B passes. PROP-C requires `witness < 1` — see §4, unsatisfiable.
-PROP-D has **no leg asserting that any fixture REFUSES**: `A10` appears only in the invariance and
-vacuity populations, never with an expected verdict.
+PROP-D **does** carry expected-REFUSE legs — but **all eight of them are degenerate empty
+documents** (`null`, `[]`, `{}`, `7`, `"x"`, `true`, `[1,2,3]`, `[null,null]` →
+`NEG degenerate … -> 1, probe PRESENT`), and **every one of them refuses through `nil`**, the
+single term in the `refused` disjunction that the post-condition independently re-checks. That is
+the whole explanation of the table above: `N6` drops `nil` and dies on eleven of those legs;
+`N1`…`N5` drop the other five terms, for which **no leg anywhere asserts a verdict**. `A10` — a
+genuine unacknowledged disagreement, already in T292's corpus — appears only in the invariance and
+vacuity populations, never with an expected `rc`.
 
 **The structural gap: T292's adversary has no expected-verdict oracle.** It checks *shape
 invariance*, *non-vacuity*, *non-regression against PRE*, and *exit-protocol separation* — four
