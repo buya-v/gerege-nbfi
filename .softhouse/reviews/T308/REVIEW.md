@@ -226,7 +226,7 @@ one-tenth the stakes.
 
 **Severity: HIGH (the headline number of the branch).**
 **Reproduction: read the two lines below; corroborated by T292's own committed transcripts and by
-`out/t308-survivor-mutants.txt`.**
+`out/t308-survivor-mutants-pass2-stale-label.txt`.**
 
 The adversary's lost-refusal test is `PRE refuses ∧ NEW greens ∧ NEW witness < 1`
 [VERIFIED: `probe/adversary_t292.py`, the `PROP-C` block —
