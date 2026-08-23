@@ -1,0 +1,37 @@
+==============================================================
+ARM N — T306's narrowing, as committed
+==============================================================
+  === RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape
+  === RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/a_FOURTH_shape_with_none_of_the_three_request-side_facts_REFUSES
+  === RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/an_ACCEPTANCE_claiming_this_row_REFUSES,_command_notwithstanding
+  === RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/the_claim_is_NOT_bought_by_declaring_a_refusal_CODE
+  === RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/each_of_the_three_OBSERVED_shapes_is_still_ADMITTED
+  --- PASS: TestOpeningBalanceCapabilityIsScopedToTheObservedShape (0.19s)
+      --- PASS: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/a_FOURTH_shape_with_none_of_the_three_request-side_facts_REFUSES (0.00s)
+      --- PASS: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/an_ACCEPTANCE_claiming_this_row_REFUSES,_command_notwithstanding (0.01s)
+      --- PASS: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/the_claim_is_NOT_bought_by_declaring_a_refusal_CODE (0.00s)
+      --- PASS: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/each_of_the_three_OBSERVED_shapes_is_still_ADMITTED (0.01s)
+  PASS
+  ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	0.423s
+
+==============================================================
+ARM D — the DRIVER'S merged predicate put back
+==============================================================
+reverted observedShape to the driver's merged predicate
+  === RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape
+  === RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/a_FOURTH_shape_with_none_of_the_three_request-side_facts_REFUSES
+  === RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/an_ACCEPTANCE_claiming_this_row_REFUSES,_command_notwithstanding
+      openingbalance_test.go:179: an ACCEPTANCE claiming ledger.opening.balance.and.closure with request.command "defineOpeningBalance" was ADMITTED by the capability gate. No capture in this store observes an accepted opening balance or an accepted entry on either date boundary: [expect.legs has 0 entries. A journal entry with fewer than two legs is not double entry, and nothing in the captured corpus has one expect.total_debits_minor: empty minor-unit string expect.total_credits_minor: empty minor-unit string this is a PARITY vector and it names no MONEY kill. DEC-2 §5.2 requirement 7, revision 4: the disjunction that made the money half optional is replaced by a conjunction, because a ledger corpus whose money cells only ever kill structurally has graded no amount]
+  === RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/the_claim_is_NOT_bought_by_declaring_a_refusal_CODE
+      openingbalance_test.go:202: declaring expect.refusal.code "error.msg.glJournalEntry.invalid.accounting.closed" bought the capability claim with no request-side fact behind it: [this vector expects "error.msg.glJournalEntry.invalid.accounting.closed" and does not carry all three of request.transaction_date, request.business_date and request.latest_closing_date. The closing date DECIDES the refusal (:636) and the business date is what shows the FUTURE-DATE guard at :629 -- which runs first -- did not fire instead]
+  === RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/each_of_the_three_OBSERVED_shapes_is_still_ADMITTED
+  --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape (0.09s)
+      --- PASS: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/a_FOURTH_shape_with_none_of_the_three_request-side_facts_REFUSES (0.00s)
+      --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/an_ACCEPTANCE_claiming_this_row_REFUSES,_command_notwithstanding (0.01s)
+      --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/the_claim_is_NOT_bought_by_declaring_a_refusal_CODE (0.00s)
+      --- PASS: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/each_of_the_three_OBSERVED_shapes_is_still_ADMITTED (0.00s)
+  FAIL
+  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.487s
+  FAIL
+
+T306-RESTORE: before=8f6cac50d86397dbdb7deaa11bc944916e4d70d0e0be35a5f53da7f7fdf6444e after=8f6cac50d86397dbdb7deaa11bc944916e4d70d0e0be35a5f53da7f7fdf6444e restored=1
