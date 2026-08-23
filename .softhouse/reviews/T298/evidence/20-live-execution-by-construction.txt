@@ -1,0 +1,55 @@
+T298 — attacking "ZERO LIVE EXECUTABLE HARDCODES" BY CONSTRUCTION, not by grep alone.
+The declination in T256 rests entirely on this claim. If ONE of the 60 archived sites can execute,
+the declination collapses. So the reviewer went looking for a path by which one of them runs.
+
+--------------------------------------------------------------------------------------
+ATTACK 1 — is there a glob-and-execute arm anywhere in the live harness?
+  grep -rnE 'for .* in .*(capture|reviews|handoff).*\*|find .*(capture|reviews|handoff).*-name|
+              xargs .*bash|bash .*\$\{?f\}?'
+    over .softhouse/conformance.sh .softhouse/bin/*.sh .softhouse/guards/*.sh
+  RESULT: ZERO matches. There is no arm that enumerates and runs archived scripts.
+  (P-70: this is a statement about that selector. The selector covers the three shapes by which
+   a shell harness batch-runs a directory; a fourth shape would evade it.)
+
+ATTACK 2 — direct invocation. grep -rnE '(bash|sh|python3?) .*(capture|reviews|handoff)'
+    over .softhouse/bin/ .softhouse/guards/ .softhouse/launchd/
+  RESULT: one match, and it is a COMMENT
+    .softhouse/bin/fire-program.sh:107  "# facts combine (both under zsh 5.9, see .softhouse/reviews/t202-probe/):"
+  No executable invocation.
+
+ATTACK 3 — conformance.sh executes exactly ONE archived file. Is it in the population?
+    .softhouse/conformance.sh:1548  local lint="$REPO_ROOT/.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py"
+    .softhouse/conformance.sh:1565  ( cd "$REPO_ROOT" && FAILOPEN_LINT_JSON="$json" python3 "$lint" )
+  grep -c -F '/Users/buv/gerege-nbfi/.softhouse' on that file  ->  0
+  So the single archived file the graded bar EXECUTES carries NEITHER literal and is NOT one of
+  the 92. T256's claim survives its sharpest available counterexample.  CONFIRMED.
+
+ATTACK 4 — a WIDER citation surface than T256 searched. T256 searched four directories
+  (conformance.sh, bin/, guards/, launchd/). The reviewer added the surfaces an AGENT reads and
+  obeys, which is where a "documented manual invocation" would live:
+      .softhouse/tasks.json  .softhouse/state  .claude (incl. .claude/skills)  docs/  CLAUDE.md
+      .github (ABSENT, measured with -e)   Makefile (ABSENT, measured with -e)
+  All 60 basenames searched across all of them.
+  RESULT: 7 of 60 archived files are cited by a live surface. Every one of the 7 citations is
+  either (a) a COMMENT in conformance.sh, (b) a DATA PIN row in HOSTSTATE_PIN_TEMP_ASSIGN_LIST /
+  FAILOPEN_PIN_FILE_LIST, read as input, or (c) prose inside a tasks.json "note"/"description".
+  ZERO are an execution.
+  In particular: .claude/skills/** — the surface that turns a sentence into an agent action —
+  contains ZERO references to any of the 60. There is no documented manual invocation.
+
+  Restricted to T256's OWN four-directory selector, the hit count is exactly 3
+  (20-failopen-red-drive.sh comment; prove-ix-sweep-and-help.sh pin; drive-pin-red.sh pin).
+  T256's "Three hits" REPRODUCES EXACTLY.
+
+--------------------------------------------------------------------------------------
+VERDICT ON THE LOAD-BEARING CLAIM: "zero live executable hardcodes" HOLDS under a strictly
+wider search than the one that produced it. The reviewer could not construct a path — wrapper,
+env var, CI arm, skill instruction or documented manual invocation — by which any of the 60
+executes. The one thing that is NOT proven, and T256 says so itself: no search can prove that
+no human will ever type `bash <one of the 60>` at a prompt. That residue is correctly stated in
+T256 section 9 and is not a defect.
+
+CAVEAT THE REVIEWER ADDS: 2 of the 60 are graded INPUT to a live guard by path AND by source
+line (HOSTSTATE_PIN_TEMP_ASSIGN_LIST). So the second, independent reason T256 gives for not
+rewriting them is not rhetorical — it is verifiable, and it means the literal work the brief
+asked for would have reddened the bar. CONFIRMED at conformance.sh:1849-1850,1853.
