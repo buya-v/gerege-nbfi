@@ -32,21 +32,9 @@
 # checks every command's exit status explicitly, so it is correct under `sh`,
 # `bash`, `dash`, `zsh` and `ksh` and under any combination of -e/-u/pipefail.
 #
-# T274.  BOTH LEGS ARE NOW ATTESTED.  T250 derived the REQUEST from the trace and
-# left the RESPONSE -- the half a golden vector is actually graded on -- entirely
-# unattested, with that limit stated nowhere (T261 F-6: swapping NAME.json for
-# another capture's response verified clean).  `derive` now also writes
-# NAME.resphdr from the trace's `<= Recv header` blocks and puts the response
-# digest, byte count, final status line and a cross-check of NAME.status into the
-# sidecar.  Sidecars written before T274 carry no `attestation-schema:` line, are
-# schema 1, are NOT retro-edited, and remain verifiable as request-only -- but
-# presenting a response artefact against one is REFUSED, so deleting the schema
-# line does not buy a pass.
-#
 # CALLER CONTRACT
 #   OS_BASE     base URL, e.g. https://localhost:8443/fineract-provider/api/v1
-#   OS_OUTDIR   directory for
-#               out/NAME.{json,status,http,reqhdr,resphdr,req,req.sha256}
+#   OS_OUTDIR   directory for out/NAME.{json,status,http,reqhdr,req,req.sha256}
 #   OS_HEADERS  newline-separated request headers, verbatim as they go to curl
 #   oracle_send NAME METHOD RPATH [BODYFILE]
 #
@@ -100,7 +88,6 @@ oracle_send() {
     os_status="$OS_OUTDIR/$os_name.status"
     os_http="$OS_OUTDIR/$os_name.http"
     os_reqhdr="$OS_OUTDIR/$os_name.reqhdr"
-    os_resphdr="$OS_OUTDIR/$os_name.resphdr"
     os_req="$OS_OUTDIR/$os_name.req"
     os_reqsha="$OS_OUTDIR/$os_name.req.sha256"
 
@@ -145,8 +132,7 @@ oracle_send() {
     if [ "$os_rc" -ne 0 ]; then
         echo "TRANSPORT FAILURE (curl rc=$os_rc) for $os_name -- NO OBSERVATION WAS MADE." >&2
         echo "  NOTHING was written under $OS_OUTDIR for $os_name by this fire." >&2
-        for os_f in "$os_http" "$os_out" "$os_status" "$os_reqhdr" "$os_resphdr" \
-                    "$os_req" "$os_reqsha"; do
+        for os_f in "$os_http" "$os_out" "$os_status" "$os_reqhdr" "$os_req" "$os_reqsha"; do
             if [ -e "$os_f" ]; then
                 echo "  PRE-EXISTING from an EARLIER fire, left intact, NOT this fire's output: ${os_f##*/}" >&2
             fi
@@ -176,47 +162,33 @@ oracle_send() {
         os_derive_body=""
     fi
 
-    # T274.  The RESPONSE is committed BEFORE the derivation, because the
-    # derivation now attests it: its digest, its byte count, its status line and
-    # the `.status` file are part of the sidecar (T261 F-6 -- T250 attested the
-    # REQUEST only, and a golden vector is graded on the oracle's ANSWER).  The
-    # ordering invariant T250 set is preserved by the failure path below, which
-    # removes the response again: an observation whose request cannot be attested
-    # is still not evidence, and nothing is left behind pretending to be one.
-    mv "$os_tmpbody" "$os_out" || { rm -rf "$os_tmpd"; trap - EXIT; return 2; }
-    echo "$os_code" > "$os_status"
-
     # THE ATTESTATION.  Note what is NOT passed here: no method, no path, no
-    # tenant, no auth, no content type, no status code.  Every one of those comes
-    # out of the trace.  There is no argument this call could be given that would
-    # make it attest something that was not sent or not received.
+    # tenant, no auth, no content type.  Every one of those comes out of the
+    # trace.  There is no argument this call could be given that would make it
+    # attest something that was not sent.
     if ! python3 "$os_lib/wire_attestation.py" derive \
             --trace "$os_trace" \
             --headers-out "$os_reqhdr" \
             --sidecar-out "$os_http" \
             --body-file "$os_derive_body" \
-            --response-file "$os_out" \
-            --response-headers-out "$os_resphdr" \
-            --status-file "$os_status" \
             --captured-at "$os_ts"; then
         echo "REFUSING to record $os_name: the sidecar could not be derived from the" >&2
         echo "  wire trace.  The response body is NOT committed, because an" >&2
         echo "  observation whose request cannot be attested is not evidence." >&2
-        rm -f "$os_http" "$os_reqhdr" "$os_req" "$os_reqsha" "$os_out" "$os_status" \
-              "$os_resphdr"
+        rm -f "$os_http" "$os_reqhdr" "$os_req" "$os_reqsha"
         rm -rf "$os_tmpd"
         trap - EXIT
         return 1
     fi
 
+    mv "$os_tmpbody" "$os_out" || { rm -rf "$os_tmpd"; trap - EXIT; return 2; }
+    echo "$os_code" > "$os_status"
+
     # Self-check on every capture: the sidecar just written must verify against
-    # the records and artefacts written in the same breath.  If this ever fails
-    # the artefacts disagree at birth, which would mean the derivation itself is
-    # broken.  EVERY attested artefact is presented -- a schema 2 sidecar with an
-    # artefact withheld is REFUSED (exit 2) rather than partially checked.
+    # the header record just written.  If this ever fails the two artefacts
+    # disagree at birth, which would mean the derivation itself is broken.
     if ! python3 "$os_lib/wire_attestation.py" verify \
-            --sidecar "$os_http" --headers "$os_reqhdr" --req "$os_derive_body" \
-            --resp "$os_out" --resphdr "$os_resphdr" --status "$os_status" >/dev/null; then
+            --sidecar "$os_http" --headers "$os_reqhdr" --req "$os_derive_body" >/dev/null; then
         echo "SELF-CHECK FAILED for $os_name: the sidecar does not verify against the" >&2
         echo "  header record written in the same breath.  Treat every artefact for" >&2
         echo "  $os_name as void." >&2

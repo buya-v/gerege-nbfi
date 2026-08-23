@@ -1,0 +1,1 @@
+REFUSING: the request record shows `Content-Length: 46`, so a body WAS sent, but no body artefact was supplied. Absence of the artefact is not absence of a body: nothing may be attested or verified about it. Pass the committed body artefact (--body-file / --req).

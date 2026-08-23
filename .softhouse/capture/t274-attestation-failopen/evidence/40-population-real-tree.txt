@@ -1,0 +1,12 @@
+attest-population: tracked `*.http` sidecars under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7: 333
+attest-population:   DERIVED (carry the provenance line): 73, of which SCHEMA 2 (response attested): 18
+attest-population:   LEGACY  (no provenance line at all)  : 231 -- BOTH TERMS, always
+attest-population:     legacy: .softhouse/capture/t250-tenant-attestation               3
+attest-population:     legacy: .softhouse/capture/tierA-a2                              226
+attest-population:     legacy: .softhouse/reviews/t261-tenant-attestation               2
+attest-population:   EXCLUDED as declared tampered evidence: 29 sidecar(s) in 3 directory(ies)
+attest-population:     excluded: .softhouse/capture/t274-attestation-failopen/evidence/green 12
+attest-population:     excluded: .softhouse/capture/t274-attestation-failopen/evidence/red 8
+attest-population:     excluded: .softhouse/capture/t274-attestation-failopen/evidence/t250arms 9
+attest-population:   NOT CLAIMED: this counts sidecars, it does not verify one. A legacy sidecar is UNATTESTED BY THIS RIG, which is a statement about the evidence and not about the capture.
+attest-population: PASS -- legacy 231 == pinned 231; 3 declared tampered-evidence directory(ies), all pinned.

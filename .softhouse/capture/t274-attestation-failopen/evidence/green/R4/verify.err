@@ -1,0 +1,19 @@
+ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/green/R4/probe.http
+  sidecar OMITS a line the wire record and the committed artefacts derive (expected at line 22): 'response-sha256: ab2f53e6ca5572da6bcdeb71cdf026d571afa3311780040d642ce3b94696d0f4'
+  sidecar OMITS a line the wire record and the committed artefacts derive (expected at line 23): 'response-bytes: 264'
+  sidecar OMITS a line the wire record and the committed artefacts derive (expected at line 24): 'response-content-length-crosscheck: MISMATCH (Content-Length 468, artefact 264 bytes)'
+  sidecar ASSERTS a line nothing derives (sidecar line 22): 'response-sha256: 1a73a90a39da05cd450d3fd2c6be5ca37183c4b60729a3ea20a003a70fc82050'
+  sidecar ASSERTS a line nothing derives (sidecar line 23): 'response-bytes: 468'
+  sidecar ASSERTS a line nothing derives (sidecar line 24): 'response-content-length-crosscheck: MATCH (468 bytes)'
+--- re-derived (expected) vs sidecar (actual) ---
+  --- re-derived
+  +++ probe.http
+  @@ -21,5 +21,5 @@
+   response-artefact: probe.json
+  -response-sha256: ab2f53e6ca5572da6bcdeb71cdf026d571afa3311780040d642ce3b94696d0f4
+  -response-bytes: 264
+  -response-content-length-crosscheck: MISMATCH (Content-Length 468, artefact 264 bytes)
+  +response-sha256: 1a73a90a39da05cd450d3fd2c6be5ca37183c4b60729a3ea20a003a70fc82050
+  +response-bytes: 468
+  +response-content-length-crosscheck: MATCH (468 bytes)
+   response-status-crosscheck: MATCH (400)

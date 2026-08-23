@@ -1,0 +1,32 @@
+T274 (A) -- trace-ascii wrap reassembly across the 64-byte boundary
+curl: curl 8.7.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+verifier under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/lib/wire_attestation.py
+  5e0ae9a4046350e6e463228bac4ae5314fe43e72afd375ad8bc0b2df6604e541  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/lib/wire_attestation.py
+
+  L1       sent=1     attested=1     EXACT
+  L10      sent=10    attested=10    EXACT
+  L60      sent=60    attested=60    EXACT
+  L61      sent=61    attested=61    EXACT
+  L62      sent=62    attested=62    EXACT
+  L63      sent=63    attested=63    EXACT
+  L64      sent=64    attested=64    EXACT
+  L65      sent=65    attested=65    EXACT
+  L66      sent=66    attested=66    EXACT
+  L127     sent=127   attested=127   EXACT
+  L128     sent=128   attested=128   EXACT
+  L129     sent=129   attested=129   EXACT
+  L200     sent=200   attested=200   EXACT
+  L300     sent=300   attested=300   EXACT
+  L1000    sent=1000  attested=1000  EXACT
+  L4000    sent=4000  attested=4000  EXACT
+
+  -- a long value CONTAINING colons and spaces (the shape that breaks naive parsers) --
+  Lmix     sent=360   attested=360   EXACT
+
+T274 (B) -- is the WIRE RECORD itself unchanged from the T250 rig?
+  T250 rig  .reqhdr: daf513a94e87f8428c8b8b3c1fad82402f7128a3e21475962bbc9751c60d08b4
+  T274 rig  .reqhdr: daf513a94e87f8428c8b8b3c1fad82402f7128a3e21475962bbc9751c60d08b4
+  IDENTICAL -- T274 changed what is CHECKED, not what is RECORDED.
+
+INSTRUMENT VERDICT: PASS -- every length attested EXACT, every artefact set
+verified, and the request wire record is byte-identical to the T250 rig's.

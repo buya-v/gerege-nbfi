@@ -1,0 +1,32 @@
+# recv-header-block 1 of 16
+HTTP/1.1 400 
+# recv-header-block 2 of 16
+X-Notification-Refresh: false
+# recv-header-block 3 of 16
+Vary: Origin
+# recv-header-block 4 of 16
+Vary: Access-Control-Request-Method
+# recv-header-block 5 of 16
+Vary: Access-Control-Request-Headers
+# recv-header-block 6 of 16
+X-Content-Type-Options: nosniff
+# recv-header-block 7 of 16
+X-XSS-Protection: 0
+# recv-header-block 8 of 16
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+# recv-header-block 9 of 16
+Pragma: no-cache
+# recv-header-block 10 of 16
+Expires: 0
+# recv-header-block 11 of 16
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+# recv-header-block 12 of 16
+X-Frame-Options: DENY
+# recv-header-block 13 of 16
+Content-Type: application/json
+# recv-header-block 14 of 16
+Content-Length: 468
+# recv-header-block 15 of 16
+Date: Sat, 22 Aug 2026 14:32:17 GMT
+# recv-header-block 16 of 16
+Connection: close
