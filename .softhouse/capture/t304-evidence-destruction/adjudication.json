@@ -1,0 +1,210 @@
+{
+  "_what": "T304 -- per-SITE adjudication of every destructive operation whose target contains COMMITTED (tracked) files. Derived from evidence/20-resolved.json; each verdict was reached by opening the site and reading what it does with the target, not by pattern.",
+  "_verdicts": {
+    "DEFECT": "destroys committed evidence with no backup, no trap, and no restore. The evidence is gone from the working tree the moment the instrument starts, and is recoverable only from git and only if it was committed.",
+    "CORRECT_BY_DESIGN": "the destruction is the experiment, or is the restore half of a backup/restore pair. Repairing it would break the thing it exists to measure. NOT to be patched.",
+    "UNDECLARED": "correct in effect but nothing in the instrument says so; a reader cannot tell it from a DEFECT."
+  },
+  "_families": {
+    "A": "`rm -rf $EV` over the instrument's OWN committed evidence directory, unconditionally, at start-up. This is the F-T283-6 class. EIGHT instruments, not the four T284 counted.",
+    "B": "destruction over a tracked path that is backed up first and restored after -- red drives, park-and-restore, and the RESTORE half of such a pair.",
+    "C": "everything else."
+  },
+  "sites": [
+    {
+      "id": "A1", "family": "A", "verdict": "DEFECT",
+      "file": ".softhouse/capture/t250-tenant-attestation/instruments/20-redA-sidecar-tracks-the-send.sh",
+      "line": 27, "op": "rm -rf \"$EV\"",
+      "target": ".softhouse/capture/t250-tenant-attestation/evidence/redA",
+      "tracked_files": 14,
+      "reason": "Unconditional `rm -rf` of its own committed evidence at start-up. No backup, no trap, no restore. A re-run silently replaces 14 committed files with a fresh capture.",
+      "fails": "OPEN toward destruction -- the delete happens before anything is checked.",
+      "in_place_repair_permitted": true,
+      "t284_registry_frozen": false
+    },
+    {
+      "id": "A2", "family": "A", "verdict": "DEFECT",
+      "file": ".softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh",
+      "line": 38, "op": "rm -rf \"$EV\"",
+      "target": ".softhouse/capture/t250-tenant-attestation/evidence/redB",
+      "tracked_files": 70,
+      "reason": "The instrument F-T283-6 names. Its target is ALSO the pinned input of T284's site-1 replay (`20-site1-schema1-replay.sh:66-68`, CORPUS_PIN 615416e3a70d35ca5ea391416d55620ff991f51de1e7d2c27f103def6f99c774) and of T274's P1 control. Running it in place moves that digest and T284's replay exits 2 -- not because the verifier changed, but because somebody ran a sibling.",
+      "fails": "OPEN toward destruction.",
+      "in_place_repair_permitted": false,
+      "in_place_repair_blocked_by": "T284 callsite_registry.json pins this file frozen at sha256 c08602cc4f714f464afbf89baac738f6709cb426a21e305a988707b43fbbf2e0. T284 red-drive arm R3 ('a FROZEN file gains a byte') exits 1. T114 forbids editing it in place regardless.",
+      "t284_registry_frozen": true
+    },
+    {
+      "id": "A3", "family": "A", "verdict": "DEFECT",
+      "file": ".softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh",
+      "line": 42, "op": "rm -rf \"$EV\"",
+      "target": ".softhouse/capture/t250-tenant-attestation/evidence/redC",
+      "tracked_files": 24,
+      "reason": "Same idiom as A1/A2 over redC.",
+      "fails": "OPEN toward destruction.",
+      "in_place_repair_permitted": true,
+      "t284_registry_frozen": false
+    },
+    {
+      "id": "A4", "family": "A", "verdict": "DEFECT",
+      "file": ".softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh",
+      "line": 25, "op": "rm -rf \"$EV\"",
+      "target": ".softhouse/reviews/t261-tenant-attestation/evidence/redB",
+      "tracked_files": 107,
+      "reason": "Not in T284's count of four, and the second largest in the tree. T284's own registry records that this instrument 'produced 265 committed evidence files ... including the per-arm .vout/.verr transcripts that ARE the output of these two calls' -- so it names the evidence and does not name the deletion.",
+      "fails": "OPEN toward destruction.",
+      "in_place_repair_permitted": false,
+      "in_place_repair_blocked_by": "T284 callsite_registry.json pins it frozen at sha256 86a2f0ec7ebd971e38e6d859880497d6c99c5c429dd1df6e9398c8e2043398e0.",
+      "t284_registry_frozen": true
+    },
+    {
+      "id": "A5", "family": "A", "verdict": "DEFECT",
+      "file": ".softhouse/reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh",
+      "line": 23, "op": "rm -rf \"$EV\"",
+      "target": ".softhouse/reviews/t261-tenant-attestation/evidence/redC",
+      "tracked_files": 110,
+      "reason": "The largest tracked-evidence deletion outside t274, and not in T284's count of four. This is T284's own 'site 3' -- the file it superseded -- so T284 held it in its hands and adjudicated its CALL SITES without adjudicating its `rm -rf`.",
+      "fails": "OPEN toward destruction, and doubly so: FU-T284-4 records that this instrument ends `exit 0` unconditionally, so it cannot report the failure either.",
+      "in_place_repair_permitted": false,
+      "in_place_repair_blocked_by": "T284 callsite_registry.json pins it frozen at sha256 76a4dfce44e1fbd54a5d74fa16f28ad6adb20c67687e45337732111882a9e0f6.",
+      "t284_registry_frozen": true
+    },
+    {
+      "id": "A6", "family": "A", "verdict": "DEFECT",
+      "file": ".softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh",
+      "line": 71, "op": "rm -rf \"$EV/red\" \"$EV/green\"",
+      "target": ".softhouse/capture/t274-attestation-failopen/evidence/red + .../evidence/green",
+      "tracked_files": 181,
+      "reason": "TWO evidence trees in one statement, 68 + 113 tracked files, and the single largest destruction in the tree. Not in T284's count of four. It matters more than the others because this instrument HOLDS T274's P1 control -- the control F-T283-6 is about -- so the instrument that reads the fragile input also deletes 181 files of its own committed output.",
+      "fails": "OPEN toward destruction.",
+      "in_place_repair_permitted": true,
+      "t284_registry_frozen": false,
+      "census_note": "The first draft of this census took only the FIRST operand of `rm` and reported 68. A multi-operand `rm` is more than one destruction."
+    },
+    {
+      "id": "A7", "family": "A", "verdict": "DEFECT",
+      "file": ".softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh",
+      "line": 34, "op": "rm -rf \"$EV\"",
+      "target": ".softhouse/capture/t274-attestation-failopen/evidence/wrap",
+      "tracked_files": 145,
+      "reason": "One of the two T284 RELIES ON. T284's site-3 successor `t284-redC-residual-v2.sh:75` names this file as WRAP_OWNER and its LEG 0 (a) refuses if the file is absent and (b) refuses if the line `for n in 1 10 60 61 62 63 64 65 66 127 128 129 200 300 1000 4000; do` has moved.",
+      "what_breaks_if_changed": "A repair that ADDS a refusal near line 34 is survivable -- LEG 0 checks existence and one specific line, not the digest, and callsite_registry.json marks this file `frozen: false`. A repair that touches the length-list line breaks T284's site-3 successor: its red-drive arm S6 ('T274 instrument 20's length list altered -> moving target') already proves that exits 2. A repair that DELETES the file breaks arm S5.",
+      "fails": "OPEN toward destruction.",
+      "in_place_repair_permitted": true,
+      "in_place_repair_constraint": "the length-list line and the file's existence are load-bearing for T284; nothing else in the file is.",
+      "t284_registry_frozen": false
+    },
+    {
+      "id": "A8", "family": "A", "verdict": "DEFECT",
+      "file": ".softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh",
+      "line": 50, "op": "rm -rf \"$EV\"",
+      "target": ".softhouse/capture/t274-attestation-failopen/evidence/t250arms",
+      "tracked_files": 91,
+      "reason": "The second of the two T284 RELIES ON. `20-site1-schema1-replay.sh:65` names it LIVE_HALF and refuses (exit 2) if it is missing: 'this instrument deliberately does NOT duplicate it, so its absence means the live coverage is GONE, not merely elsewhere.'",
+      "what_breaks_if_changed": "EXISTENCE only. T284 does not read this file's bytes or its evidence -- `[ -f \"$LIVE_HALF\" ]` is the whole dependency [VERIFIED: 20-site1-schema1-replay.sh:68]. So an added refusal is safe; deleting or renaming the file makes T284's site-1 replay exit 2, which is red-drive arm S3.",
+      "fails": "OPEN toward destruction.",
+      "in_place_repair_permitted": true,
+      "t284_registry_frozen": false
+    },
+
+    {
+      "id": "B1", "family": "B", "verdict": "CORRECT_BY_DESIGN",
+      "file": ".softhouse/capture/t243-wiring/instruments/30-citation-red-drive.sh",
+      "line": 56, "op": "rm -rf \"$V\"  (V=.softhouse/vectors/ledger)",
+      "tracked_files": 9,
+      "reason": "The `rm -rf` is the first line of `restore()`, and `cp -R \"$V\" \"$BACKUP/ledger\"` ran before it at :52, under `trap 'restore; rm -rf \"$BACKUP\"' EXIT`. The instrument's own comment records that it does NOT use `git checkout --` because that restored to HEAD and ate the uncommitted change under test. DO NOT PATCH: adding a refuse-if-tracked here would disable the restore and leave the vector store mutated.",
+      "fails": "CLOSED in the normal case (the trap restores). The residual window is a SIGKILL between the `rm -rf` and the `cp -R`, which leaves the working tree short; recoverable from git because the vectors are committed."
+    },
+    {
+      "id": "B2", "family": "B", "verdict": "CORRECT_BY_DESIGN",
+      "file": ".softhouse/capture/tierA-a2/red-green-a2-15.sh",
+      "line": 201, "op": "mv \"$VEC\"/*.json \"$TMP/ledger-aside/\"",
+      "tracked_files": 9,
+      "reason": "THE TRAP IN THIS TASK. Emptying the ledger vector directory IS red-drive CASE 7 -- 'DEFLATION: with EVERY ledger vector deleted the run must REFUSE, not pass over a corpus that vanished'. Restored at :202 by moving them back. A guard that refused this would delete the RED arm, which is the exact mistake T284 measured (one of its thirteen sites, 'repaired', would have destroyed T274's RED arm).",
+      "fails": "CLOSED -- the script checks `ls -A \"$VEC\"` and prints SETUP FAIL rather than proceeding if the move did not happen."
+    },
+    {
+      "id": "B3", "family": "B", "verdict": "CORRECT_BY_DESIGN",
+      "file": ".softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh",
+      "line": "80, 96, 120, 154", "op": "sed -i / rm -f over .softhouse/vectors/ledger/*.json",
+      "tracked_files": 9,
+      "reason": "A review's red drive: it plants a defect in a real ledger vector, runs conformance, and restores with `git checkout -- .softhouse/vectors/ledger`. The mutation is the measurement.",
+      "fails": "OPEN under a kill -- there is no `trap`, so a SIGKILL between plant and restore leaves a POISONED vector in the working tree. That is a real residual risk on the PARITY STORE and is why .softhouse/vectors is a protected root even though this site is not a defect."
+    },
+    {
+      "id": "B4", "family": "B", "verdict": "CORRECT_BY_DESIGN",
+      "file": ".softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh",
+      "line": "67, 74", "op": "git checkout -- .softhouse/vectors/ledger ; rm -f $V/*.json",
+      "tracked_files": 9,
+      "reason": "Same shape as B3. :74's `rm -f $V/*.json` is preceded by `cp $V/*.json /tmp/a234-ledgerbak/` at :73 and followed by the copy back, and the script then prints `git status --porcelain .softhouse/vectors/` as its own check. :67's `git checkout --` is the RESTORE half.",
+      "fails": "OPEN under a kill, as B3."
+    },
+    {
+      "id": "B5", "family": "B", "verdict": "CORRECT_BY_DESIGN",
+      "file": ".softhouse/capture/t273-residue/instruments/50-red-drive.sh",
+      "line": "41, 101, 112, 124", "op": "git checkout -- <tracked instrument>",
+      "tracked_files": 1,
+      "reason": "These are RESTORES, not destructions. The census flags `git checkout --` because it discards working-tree edits; here the edits being discarded are the red drive's own planted defect. Patching these would leave planted defects in the tree."
+    },
+    {
+      "id": "B6", "family": "B", "verdict": "CORRECT_BY_DESIGN",
+      "file": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh + 80-regression-test-claim.sh",
+      "line": "70:80-82, 80:38-40,74", "op": "sed -i '' over a tracked instrument",
+      "tracked_files": 1,
+      "reason": "THE EXEMPLAR. This pair does what every family-A instrument fails to do, in three lines: it REFUSES to start on a dirty tree ('dirty tree before any mutation; the restore below would eat it', exit 2), it installs `trap restore EXIT`, and it ASSERTS at the end that `git status --porcelain` is empty and exits 2 if not ('### ENDED DIRTY -- restore did not hold'). The repair pattern for family A is this pattern.",
+      "fails": "CLOSED in all three directions -- before, during (trap) and after (assert)."
+    },
+    {
+      "id": "B7", "family": "B", "verdict": "CORRECT_BY_DESIGN",
+      "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+      "line": "117, 157", "op": "git checkout -- .softhouse/capture/pathb/t36/{attest.py,out/emiloop}",
+      "tracked_files": 15,
+      "reason": "PROTECTIVE, the opposite of the defect. `f1_clean_evidence()` restores the committed evidence set from git when `git status --porcelain` shows it dirty. :117 is inside a guard that DELIBERATELY does not restore -- 'a mismatch means bytes this script did not put there, and quietly reverting them would destroy the evidence of whoever did' -- and prints the `git checkout --` command for a human instead of running it. Two different right answers in one file, both reasoned."
+    },
+    {
+      "id": "B8", "family": "B", "verdict": "CORRECT_BY_DESIGN",
+      "file": ".softhouse/capture/pathb/t149/prove-redgreen.sh",
+      "line": "103, 127, 186", "op": "mv over a committed vector (T149-PATHB-TIE-...json)",
+      "tracked_files": 1,
+      "reason": "Park-and-restore with IDEMPOTENT RECOVERY -- the only site in the tree that handles its own previous death. If a park file survives from a run 'that died where no trap could run', it `cmp -s` it against the store copy and either discards it or moves it back, and refuses by hand if the two exist and differ.",
+      "fails": "CLOSED, including across a kill. This is the strongest of the correct-by-design sites."
+    },
+    {
+      "id": "B9", "family": "B", "verdict": "CORRECT_BY_DESIGN",
+      "file": ".softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh",
+      "line": "210, 216", "op": "mv within .../evidence/redC/out/",
+      "tracked_files": 2,
+      "reason": "Post-capture renames of files this same run just created, inside the evidence directory it owns. The destruction of the PREVIOUS run's copies is site A3 at :42, adjudicated there; these two lines are not a separate defect."
+    },
+
+    {
+      "id": "C1", "family": "C", "verdict": "CORRECT_BY_DESIGN",
+      "file": ".softhouse/bin/fire-program.sh",
+      "line": 1075, "op": "mv -f .softhouse/RESUME.md.t288.tmp .softhouse/RESUME.md",
+      "tracked_files": 1,
+      "reason": "An ATOMIC replace already guarded fail-closed: the `mv` only runs inside `if [[ -s ...tmp ]]`, and the else branch deletes the temp and logs 'refused to replace RESUME.md with an empty file'. RESUME.md is a live manifest that every fire rewrites (STEP 5.5.4) -- it is not evidence, and protecting it would stall every future fire.",
+      "guard_consequence": "EXCLUDED from the protected root set. Including it drags in its parent `.softhouse`, which is a prefix of every other root and collapses the antichain to the whole tree -- measured: `25-derive-protected-roots.py` derived exactly one root, `.softhouse`, 6777 tracked files, before this exclusion. That is the 'too eager' failure the brief names, reached in one step from a defensible-looking rule."
+    },
+    {
+      "id": "C2", "family": "C", "verdict": "DEFECT",
+      "file": ".softhouse/reviews/A2-11/re-observe.sh + re-derive-runtime.sh",
+      "line": "re-observe 19, 28; re-derive-runtime 26", "op": "rm -f \"$OUT/$name.json\"",
+      "target": ".softhouse/reviews/A2-11/obs",
+      "tracked_files": 15,
+      "reason": "On a TRANSPORT FAILURE the handler deletes the partial response file -- and `$OUT` is `.softhouse/reviews/A2-11/obs`, 15 committed observation files. A transient curl error therefore removes a committed observation and leaves the message only on stderr. This is F-T283-4's shape ('delete like the sibling path' vs 'quarantine so the failure can be diagnosed'), now on committed data.",
+      "fails": "OPEN toward destruction, and silently: `set -u` without `-e`, and `get()` returns 1 into an uninspected context.",
+      "severity": "LOW -- 15 files, and only on a transport error.",
+      "in_place_repair_permitted": true
+    },
+    {
+      "id": "C3", "family": "C", "verdict": "UNDECLARED",
+      "file": ".softhouse/capture/t131-grep/probe-ignorefiles.sh",
+      "line": 11, "op": "rm -rf \"$D\"  (D=.../t131-grep/ignoretest)",
+      "target": ".softhouse/capture/t131-grep/ignoretest",
+      "tracked_files": 2,
+      "reason": "It deletes and rebuilds a fixture whose two files (.gitignore, visible.txt) ARE committed. The rebuild is `printf` of fixed literals, so the result is byte-identical and nothing is lost in practice -- but nothing in the script says the fixture is tracked, and a reader cannot distinguish it from family A. Note also the third file it writes, `ignored.txt`, is NOT tracked, so the directory is a mix.",
+      "fails": "CLOSED in effect (byte-identical regeneration), UNDECLARED in the text.",
+      "census_note": "The first draft of this census scored this site at 28 tracked files, because the resolver dropped the `/ignoretest` suffix that follows the `$(...)` in the assignment and protected the whole t131-grep directory. Fixed; the false positive is recorded because it is the shape the brief warns about."
+    }
+  ]
+}

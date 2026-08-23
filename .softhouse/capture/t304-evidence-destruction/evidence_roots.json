@@ -1,0 +1,11 @@
+{
+  "_what": "T304 -- roots holding COMMITTED EVIDENCE that a tracked instrument is measured to destroy. Graded by 30-evidence-guard.sh.",
+  "_direction": "DECREASE-ONLY RATCHET. `min_tracked_files` is a FLOOR. Adding evidence is always allowed and never requires moving the pin; removing it is a failure. This is the shape F-T283-7 asked for: the ratchet it measured pinned an EQUALITY and went red on 22 sanctioned tierA-a2 captures.",
+  "_derivation": "25-derive-protected-roots.py, from evidence/20-resolved.json, which comes from 10-census.py over `git ls-files`.",
+  "roots": [
+    {
+      "path": ".softhouse",
+      "min_tracked_files": 6777
+    }
+  ]
+}
