@@ -348,14 +348,31 @@ type Request struct {
 	// else, because those are the only two the corpus has observed.
 	Command string `json:"command,omitempty"`
 
-	// OpeningBalanceContraAccountID is the GL account the financial-activity
-	// type 300 mapping resolves to — the `contraId` of :709.
+	// ContraGLAccountID is the GL account the financial-activity type 300
+	// mapping resolves to — the `contraId` of :709. It is a FOREIGN KEY to
+	// acc_gl_account.id, transcribed from
+	// acc_gl_financial_activity_account.gl_account_id. It is not an amount, it
+	// is never summed, and nothing in this harness treats it as money.
 	//
 	// IT IS AN INPUT AND NOT A CONVENIENCE. If the mapping does not resolve,
 	// findByFinancialActivityTypeWithNotFoundDetection throws at :708 and the
 	// oracle returns a DIFFERENT refusal, so a vector that does not record which
 	// mapping was in force has not recorded which refusal it observed.
-	OpeningBalanceContraAccountID int64 `json:"opening_balance_contra_gl_account_id,omitempty"`
+	//
+	// THE NAME DELIBERATELY DOES NOT CONTAIN "BALANCE", AND THAT IS A FIX, NOT
+	// AN EVASION. T294 first called it `OpeningBalanceContraAccountID` —
+	// Fineract's own global-configuration name for the mapping is
+	// `office-opening-balances-contra-account` — and the HARD ledger-invariants
+	// guard refused the whole run on it (class I3-FIELD-WRITE,
+	// `.softhouse/guards/ledgerguard/main.go`, whose surface is a case-
+	// insensitive /balance/ over the identifier). The guard was RIGHT to fire
+	// and the code was wrong: a field holding an ACCOUNT ID must not wear a
+	// BALANCE's name. The precedent is LoanScheduleTreeRel, renamed by T166
+	// because "a name that lies is how this hid". Note the direction — that
+	// guard's own CANNOT-CATCH item 2 warns that RENAMING A BALANCE defeats it;
+	// this is the opposite move, renaming a NON-balance so it stops reading as
+	// one, and it removes a trap for the next task rather than setting one.
+	ContraGLAccountID int64 `json:"contra_gl_account_id,omitempty"`
 
 	// PostedNonContraTransactionIDs is findNonContraTransactionIds(contraId) as
 	// the oracle itself reported it, transcribed from the refusal body's

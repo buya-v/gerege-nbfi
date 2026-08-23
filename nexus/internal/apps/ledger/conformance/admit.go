@@ -187,13 +187,13 @@ func Admit(v *Vector, opts Options) []string {
 			"would silently ignore", v.Request.Command)
 	}
 	if v.Request.Command == "defineOpeningBalance" {
-		if v.Request.OpeningBalanceContraAccountID <= 0 {
+		if v.Request.ContraGLAccountID <= 0 {
 			add("request.command is defineOpeningBalance and "+
-				"request.opening_balance_contra_gl_account_id is %d. "+
+				"request.contra_gl_account_id is %d. "+
 				"JournalEntryWritePlatformServiceJpaRepositoryImpl.java:708 resolves the "+
 				"financial-activity type 300 mapping BEFORE the guard at :717, so if that mapping does "+
 				"not resolve the oracle returns a DIFFERENT refusal and this vector describes an "+
-				"observation nobody took", v.Request.OpeningBalanceContraAccountID)
+				"observation nobody took", v.Request.ContraGLAccountID)
 		}
 		for i, id := range v.Request.PostedNonContraTransactionIDs {
 			if strings.TrimSpace(id) == "" {
@@ -203,8 +203,8 @@ func Admit(v *Vector, opts Options) []string {
 			}
 		}
 	} else {
-		if v.Request.OpeningBalanceContraAccountID != 0 {
-			add("request.opening_balance_contra_gl_account_id is set on a vector whose request.command "+
+		if v.Request.ContraGLAccountID != 0 {
+			add("request.contra_gl_account_id is set on a vector whose request.command "+
 				"is %q. "+
 				"The contra mapping is read only by defineOpeningBalance:708-709; carrying it anywhere "+
 				"else records an input nothing consumes", v.Request.Command)

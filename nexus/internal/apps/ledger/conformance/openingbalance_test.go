@@ -51,9 +51,9 @@ func TestOpeningBalanceInputsAreDefaultDeny(t *testing.T) {
 
 	t.Run("defineOpeningBalance with NO contra mapping REFUSES", func(t *testing.T) {
 		v := *base
-		v.Request.OpeningBalanceContraAccountID = 0
+		v.Request.ContraGLAccountID = 0
 		reasons := Admit(&v, opts)
-		if !containsSubstring(reasons, "opening_balance_contra_gl_account_id is 0") {
+		if !containsSubstring(reasons, "contra_gl_account_id is 0") {
 			t.Fatalf("an opening-balance vector with no financial-activity-300 mapping was ADMITTED. "+
 				":708 resolves that mapping BEFORE the guard at :717, so without it the oracle "+
 				"returns a DIFFERENT refusal and the vector describes an observation nobody "+
@@ -65,7 +65,7 @@ func TestOpeningBalanceInputsAreDefaultDeny(t *testing.T) {
 		v := *base
 		v.Request.Command = ""
 		reasons := Admit(&v, opts)
-		if !containsSubstring(reasons, "opening_balance_contra_gl_account_id is set on a vector") {
+		if !containsSubstring(reasons, "contra_gl_account_id is set on a vector") {
 			t.Fatalf("the contra mapping survived on a plain-create vector: %v", reasons)
 		}
 		if !containsSubstring(reasons, "posted_non_contra_transaction_ids is non-empty on a vector") {
