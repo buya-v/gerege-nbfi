@@ -195,14 +195,15 @@ The adversary's lost-refusal test is `PRE refuses ∧ NEW greens ∧ NEW witness
 `if pre_refuses and base_new["rc"] == 0: if int(base_new["witness"] or 0) < 1:
 lost_refusals.append(...) else: widenings.append(...)`].
 
-The shipped rule's exit path is:
+The shipped rule's exit path is
+[VERIFIED: `check_verdict_predicate_agreement_t292.py:541,548,595`]:
 
 ```python
-if not refused and (len(rep.witness) < 1 or rep.nil_files or rep.files < 1):
-    ...
-    return 2
-...
-return 1 if refused else 0
+541  refused = bool(rep.unacknowledged or rep.unclassified_keys or rep.unclassified_verdicts
+                    or rep.void_acks or rep.mute_refutations or nil)
+548  if not refused and (len(rep.witness) < 1 or rep.nil_files or rep.files < 1):
+         ... return 2
+595  return 1 if refused else 0
 ```
 
 **Therefore `rc == 0 ⟹ len(witness) ≥ 1`, unconditionally, for every possible input.** The
@@ -234,7 +235,9 @@ reproduce from the criterion T281 used.**
 **Where the 48 non-empty cases went.** The committed
 `out/t292-adversary-legs.json` records `lost_refusals: 0` and **`widenings: 48`** [VERIFIED, read
 by me], and widenings do **not** fail the run (`rc = 1 if (L.failed or L.skipped or
-lost_refusals)`). The distinct fixtures in that bucket include **`T291/X5` (3) and `T291/X5b`
+lost_refusals) else 0` — `adversary_t292.py:605`). The distinct fixtures in that bucket, counted by
+me, are `A11-FLOOR` (10), `A6-cyrillic` (7), `A7-affirmation-as-a-mapping-key` (9),
+`A9-CONTROL-genuine-green` (9), and — the ones that matter — **`T291/X5` (3) and `T291/X5b`
 (10)** — the fixtures that killed T286. Every case where PRE refused and NEW greened was routed to
 the non-failing bucket by a test the post-condition makes unconditional.
 
