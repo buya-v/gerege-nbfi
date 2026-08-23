@@ -18,7 +18,6 @@ rm-rf       107  .softhouse/reviews/t261-tenant-attestation/instruments/t261-red
 rm-rf        91  .softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh:50  -> .softhouse/capture/t274-attestation-failopen/evidence/t250arms
 rm-rf        70  .softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh:38  -> .softhouse/capture/t250-tenant-attestation/evidence/redB
 rm-rf        68  .softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh:71  -> .softhouse/capture/t274-attestation-failopen/evidence/red
-rm-rf        28  .softhouse/capture/t131-grep/probe-ignorefiles.sh:11  -> .softhouse/capture/t131-grep
 rm-rf        24  .softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh:42  -> .softhouse/capture/t250-tenant-attestation/evidence/redC
 rm-plain     15  .softhouse/reviews/A2-11/re-derive-runtime.sh:26  -> .softhouse/reviews/A2-11/obs/*.json
 rm-plain     15  .softhouse/reviews/A2-11/re-observe.sh:19  -> .softhouse/reviews/A2-11/obs/*.json
@@ -29,6 +28,7 @@ rm-rf         9  .softhouse/capture/t243-wiring/instruments/30-citation-red-driv
 mv            9  .softhouse/capture/tierA-a2/red-green-a2-15.sh:201  -> .softhouse/vectors/ledger
 git-checkout-dd     9  .softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh:67  -> .softhouse/vectors/ledger
 rm-plain      9  .softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh:74  -> .softhouse/vectors/ledger/*.json
+rm-rf         2  .softhouse/capture/t131-grep/probe-ignorefiles.sh:11  -> .softhouse/capture/t131-grep/ignoretest
 mv            1  .softhouse/bin/fire-program.sh:1075  -> .softhouse/RESUME.md
 mv            1  .softhouse/capture/pathb/t149/prove-redgreen.sh:103  -> .softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json
 mv            1  .softhouse/capture/pathb/t149/prove-redgreen.sh:127  -> .softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json

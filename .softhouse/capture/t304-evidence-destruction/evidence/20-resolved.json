@@ -3426,9 +3426,9 @@
   "what": "output redirection (truncating)",
   "text": "' \"$BASE\" > \"$R/calc-$_id.json\"",
   "raw_target": "\"$R/calc-$_id.json\"",
-  "target": ".softhouse/capture/charges/req/calc-*.json",
-  "status": "TRACKED",
-  "tracked_files": 114,
+  "target": "}/.softhouse/capture/charges/req/calc-*.json",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
   "family": "overwrite"
  },
  {
@@ -3438,9 +3438,9 @@
   "what": "output redirection (truncating)",
   "text": "' \"$BASE\" > \"$R/calc-$_id.json\"",
   "raw_target": "\"$R/calc-$_id.json\"",
-  "target": ".softhouse/capture/charges/req/calc-*.json",
-  "status": "TRACKED",
-  "tracked_files": 114,
+  "target": "}/.softhouse/capture/charges/req/calc-*.json",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
   "family": "overwrite"
  },
  {
@@ -3450,7 +3450,7 @@
   "what": "output redirection (truncating)",
   "text": "cat > \"$R/charge-01-flat-disbursement.json\" <<'EOF'",
   "raw_target": "\"$R/charge-01-flat-disbursement.json\"",
-  "target": "charge-01-flat-disbursement.json",
+  "target": "}/.softhouse/capture/charges/req/charge-01-flat-disbursement.json",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -3462,7 +3462,7 @@
   "what": "output redirection (truncating)",
   "text": "cat > \"$R/charge-02-flat-instalment.json\" <<'EOF'",
   "raw_target": "\"$R/charge-02-flat-instalment.json\"",
-  "target": "charge-02-flat-instalment.json",
+  "target": "}/.softhouse/capture/charges/req/charge-02-flat-instalment.json",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -3474,7 +3474,7 @@
   "what": "output redirection (truncating)",
   "text": "cat > \"$R/charge-03-pctamount-disbursement.json\" <<'EOF'",
   "raw_target": "\"$R/charge-03-pctamount-disbursement.json\"",
-  "target": "charge-03-pctamount-disbursement.json",
+  "target": "}/.softhouse/capture/charges/req/charge-03-pctamount-disbursement.json",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -3486,7 +3486,7 @@
   "what": "output redirection (truncating)",
   "text": "cat > \"$R/charge-04-pctinterest-instalment.json\" <<'EOF'",
   "raw_target": "\"$R/charge-04-pctinterest-instalment.json\"",
-  "target": "charge-04-pctinterest-instalment.json",
+  "target": "}/.softhouse/capture/charges/req/charge-04-pctinterest-instalment.json",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -3498,7 +3498,7 @@
   "what": "output redirection (truncating)",
   "text": "cat > \"$R/charge-05-pctamountinterest-instalment.json\" <<'EOF'",
   "raw_target": "\"$R/charge-05-pctamountinterest-instalment.json\"",
-  "target": "charge-05-pctamountinterest-instalment.json",
+  "target": "}/.softhouse/capture/charges/req/charge-05-pctamountinterest-instalment.json",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -3510,7 +3510,7 @@
   "what": "output redirection (truncating)",
   "text": "cat > \"$R/charge-06-penalty-specifieddue.json\" <<'EOF'",
   "raw_target": "\"$R/charge-06-penalty-specifieddue.json\"",
-  "target": "charge-06-penalty-specifieddue.json",
+  "target": "}/.softhouse/capture/charges/req/charge-06-penalty-specifieddue.json",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -3522,7 +3522,7 @@
   "what": "output redirection (truncating)",
   "text": "cat > \"$R/charge-07-fee-specifieddue.json\" <<'EOF'",
   "raw_target": "\"$R/charge-07-fee-specifieddue.json\"",
-  "target": "charge-07-fee-specifieddue.json",
+  "target": "}/.softhouse/capture/charges/req/charge-07-fee-specifieddue.json",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -3534,7 +3534,7 @@
   "what": "output redirection (truncating)",
   "text": "cat > \"$R/charge-08-penalty-instalment.json\" <<'EOF'",
   "raw_target": "\"$R/charge-08-penalty-instalment.json\"",
-  "target": "charge-08-penalty-instalment.json",
+  "target": "}/.softhouse/capture/charges/req/charge-08-penalty-instalment.json",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -3546,7 +3546,7 @@
   "what": "output redirection (truncating)",
   "text": "cat > \"$R/charge-09-pctamount-instalment.json\" <<'EOF'",
   "raw_target": "\"$R/charge-09-pctamount-instalment.json\"",
-  "target": "charge-09-pctamount-instalment.json",
+  "target": "}/.softhouse/capture/charges/req/charge-09-pctamount-instalment.json",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -3558,7 +3558,7 @@
   "what": "output redirection (truncating)",
   "text": "cat > \"$R/charge-10-pctamount-specifieddue.json\" <<'EOF'",
   "raw_target": "\"$R/charge-10-pctamount-specifieddue.json\"",
-  "target": "charge-10-pctamount-specifieddue.json",
+  "target": "}/.softhouse/capture/charges/req/charge-10-pctamount-specifieddue.json",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -3570,7 +3570,7 @@
   "what": "output redirection (truncating)",
   "text": "cat > \"$R/charge-11-pctinterest-specifieddue.json\" <<'EOF'",
   "raw_target": "\"$R/charge-11-pctinterest-specifieddue.json\"",
-  "target": "charge-11-pctinterest-specifieddue.json",
+  "target": "}/.softhouse/capture/charges/req/charge-11-pctinterest-specifieddue.json",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -3582,7 +3582,7 @@
   "what": "output redirection (truncating)",
   "text": "cat > \"$R/charge-12-pctamountinterest-specifieddue.json\" <<'EOF'",
   "raw_target": "\"$R/charge-12-pctamountinterest-specifieddue.json\"",
-  "target": "charge-12-pctamountinterest-specifieddue.json",
+  "target": "}/.softhouse/capture/charges/req/charge-12-pctamountinterest-specifieddue.json",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -3594,7 +3594,7 @@
   "what": "output redirection (truncating)",
   "text": "CANARY_REQ=\"$W/.softhouse/capture/pathb/t22-audit/req/calc-pmode2-gerege.json\"   sh \"$W/.softhouse/capture/charges/bin/preconditions.sh\" gerege > \"$OUT\" 2>&1",
   "raw_target": "\"$OUT\"",
-  "target": "${1:-/.softhouse/capture/charges/out/preconditions-T40.txt}",
+  "target": "${1:-}/.softhouse/capture/charges/out/preconditions-T40.txt}",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -11300,7 +11300,7 @@
   "raw_target": "/$ATTACK",
   "target": "*",
   "status": "TRACKED",
-  "tracked_files": 6852,
+  "tracked_files": 6853,
   "family": "overwrite"
  },
  {
@@ -15834,9 +15834,9 @@
   "what": "recursive delete",
   "text": "rm -rf \"$D\"; mkdir -p \"$D\"",
   "raw_target": "$D",
-  "target": ".softhouse/capture/t131-grep",
+  "target": ".softhouse/capture/t131-grep/ignoretest",
   "status": "TRACKED",
-  "tracked_files": 28,
+  "tracked_files": 2,
   "family": "destructive"
  },
  {
@@ -15846,9 +15846,9 @@
   "what": "output redirection (truncating)",
   "text": "printf 'ignored.txt\\n'            > \"$D/.gitignore\"",
   "raw_target": "\"$D/.gitignore\"",
-  "target": ".softhouse/capture/t131-grep/.gitignore",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
+  "target": ".softhouse/capture/t131-grep/ignoretest/.gitignore",
+  "status": "TRACKED",
+  "tracked_files": 1,
   "family": "overwrite"
  },
  {
@@ -15858,7 +15858,7 @@
   "what": "output redirection (truncating)",
   "text": "printf 'principal: 1250000.75\\n'  > \"$D/ignored.txt\"",
   "raw_target": "\"$D/ignored.txt\"",
-  "target": ".softhouse/capture/t131-grep/ignored.txt",
+  "target": ".softhouse/capture/t131-grep/ignoretest/ignored.txt",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -15870,9 +15870,9 @@
   "what": "output redirection (truncating)",
   "text": "printf 'principal: 1250000.75\\n'  > \"$D/visible.txt\"",
   "raw_target": "\"$D/visible.txt\"",
-  "target": ".softhouse/capture/t131-grep/visible.txt",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
+  "target": ".softhouse/capture/t131-grep/ignoretest/visible.txt",
+  "status": "TRACKED",
+  "tracked_files": 1,
   "family": "overwrite"
  },
  {
@@ -15894,7 +15894,7 @@
   "what": "python open for write",
   "text": "open('$D/vec-float-poisoned.json','wb').write(b'{\\n  \\\"note\\\": here_\\xe2 principal_minor 1250000.75,\\n  \\\"ok\\\": 1\\n}\\n')",
   "raw_target": "'$D/vec-float-poisoned.json','wb'",
-  "target": ".softhouse/capture/t131-grep/vec-float-poisoned.json','wb",
+  "target": ".softhouse/capture/t131-grep/corpus/vec-float-poisoned.json','wb",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
@@ -15906,7 +15906,7 @@
   "what": "python open for write",
   "text": "open('$D/vec-float-clean.json','wb').write(b'{\\n  \\\"note\\\": here principal_minor 1250000.75,\\n  \\\"ok\\\": 1\\n}\\n')",
   "raw_target": "'$D/vec-float-clean.json','wb'",
-  "target": ".softhouse/capture/t131-grep/vec-float-clean.json','wb",
+  "target": ".softhouse/capture/t131-grep/corpus/vec-float-clean.json','wb",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"

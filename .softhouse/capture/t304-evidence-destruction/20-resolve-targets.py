@@ -69,6 +69,35 @@ SELF_RX = re.compile(r"dirname\s+[\"']?\$\{?(0|BASH_SOURCE\[0\])\}?")
 # VAR=$(cd "$OTHER/../.." && pwd)   -- the root-walk idiom used across this repo
 CDCHAIN_RX = re.compile(r"\$\(\s*cd\s+[\"']?\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?([^\"'&)]*)[\"']?\s*(?:&&|;)\s*pwd\s*\)")
 
+
+def trailing_suffix(val):
+    """Literal path fragment appended AFTER the last `$(...)` in an assignment RHS.
+
+    `D="$(cd "$(dirname "$0")" && pwd)/ignoretest"` targets .../ignoretest, NOT the
+    script's own directory. Dropping this suffix made the first draft of this resolver
+    report `.softhouse/capture/t131-grep` (28 tracked files) as a destruction target when
+    the real target is `.softhouse/capture/t131-grep/ignoretest` (0 tracked files) --
+    a FALSE POSITIVE, and exactly the kind the brief warns is worse than no census.
+    """
+    v = val.strip().strip('"\'')
+    depth = 0
+    last = -1
+    i = 0
+    while i < len(v):
+        if v.startswith("$(", i):
+            depth += 1
+            i += 2
+            continue
+        if v[i] == ")" and depth:
+            depth -= 1
+            if depth == 0:
+                last = i
+        i += 1
+    if last < 0:
+        return ""
+    tail = v[last + 1:].strip('"\'')
+    return tail.strip("/") if "$" not in tail else ""
+
 ASSIGN_RX = re.compile(
     r"^\s*(?:export\s+|local\s+|readonly\s+|declare\s+(?:-\w+\s+)?)?"
     r"([A-Za-z_][A-Za-z0-9_]*)=(.*)$")
@@ -98,12 +127,12 @@ def classify_vars(relfile, text_lines):
             elif REPO_RX.search(val):
                 new = ("REPO", "")
             elif SELF_RX.search(val):
-                # $(cd "$(dirname "$0")" && pwd)  or with /.. suffixes
+                # $(cd "$(dirname "$0")" && pwd)[/suffix]  -- with optional /.. walk-ups
                 ups = val.count("/..")
                 d = os.path.dirname(relfile)
                 for _u in range(ups):
                     d = os.path.dirname(d)
-                new = ("SELFDIR", d)
+                new = ("SELFDIR", os.path.normpath(os.path.join(d, trailing_suffix(val))))
             elif CDCHAIN_RX.search(val):
                 # VAR=$(cd "$OTHER/rel" && pwd)  -- the dominant root-walk idiom here
                 m2 = CDCHAIN_RX.search(val)
@@ -112,7 +141,8 @@ def classify_vars(relfile, text_lines):
                 if bk == "SCRATCH":
                     new = ("SCRATCH", None)
                 elif bk in ("REPO", "SELFDIR", "LITERAL") and bl is not None:
-                    p = os.path.normpath(os.path.join(bl, rel_part.strip("/"))) if rel_part.strip("/") else bl
+                    tail = os.path.join(rel_part.strip("/"), trailing_suffix(val)).strip("/")
+                    p = os.path.normpath(os.path.join(bl, tail)) if tail else bl
                     if p in (".", "/", ""):
                         new = ("REPO", "")
                     elif p.startswith(".."):
