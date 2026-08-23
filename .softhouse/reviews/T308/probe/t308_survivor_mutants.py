@@ -132,7 +132,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=3)
     args = ap.parse_args()
-    tmp = Path(tempfile.mkdtemp(prefix=".t308-mut-", dir=str(CAP)))
+    tmp = Path(tempfile.mkdtemp(prefix=".t308-mut-", dir=str(HERE.parent)))
     rows = []
     try:
         print("T308 -- MUTANTS T292 DID NOT PLANT, GRADED BY T292'S OWN UNMODIFIED ADVERSARY")

@@ -72,7 +72,7 @@ CASES = [
 
 
 def main():
-    tmp = Path(tempfile.mkdtemp(prefix=".t308-thmA-", dir=str(CAP)))
+    tmp = Path(tempfile.mkdtemp(prefix=".t308-thmA-", dir=str(HERE.parent)))
     bad = 0
     try:
         print("T308 -- THEOREM 1 (container-blindness) DRIVEN AGAINST THE OPERATIONS IT NAMES")

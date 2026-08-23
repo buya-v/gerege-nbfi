@@ -81,7 +81,7 @@ def main():
         print("    %-8s  re.match(%s) = %-5s   head[1:].isdigit() = %s"
               % (k, pat, bool(re.match(pat, k)), head[1:].isdigit()))
     print()
-    tmp = Path(tempfile.mkdtemp(prefix=".t308-uni-", dir=str(CAP)))
+    tmp = Path(tempfile.mkdtemp(prefix=".t308-uni-", dir=str(HERE.parent)))
     bad = 0
     try:
         print("  %-52s %-4s %-8s %-9s %s" % ("document", "rc", "state", "witness",

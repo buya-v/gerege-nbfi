@@ -172,7 +172,7 @@ WANT_PERMIT = {
 def main():
     reg = load_register()
     load_corpus()
-    tmp = Path(tempfile.mkdtemp(prefix=".t308-thmB-", dir=str(CAP)))
+    tmp = Path(tempfile.mkdtemp(prefix=".t308-thmB-", dir=str(HERE.parent)))
     try:
         print("T308 -- IS GUARD #10 IMPOSSIBLE, OR MERELY UNACHIEVED?")
         print("=" * 100)

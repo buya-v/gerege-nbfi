@@ -186,7 +186,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--show-misses", type=int, default=8)
     args = ap.parse_args()
-    armdir = Path(tempfile.mkdtemp(prefix=".t308-arms-", dir=str(CAP)))
+    armdir = Path(tempfile.mkdtemp(prefix=".t308-arms-", dir=str(HERE.parent)))
     tmp = Path(tempfile.mkdtemp(prefix="t308-pop-"))
     try:
         arms = unpack(armdir)
