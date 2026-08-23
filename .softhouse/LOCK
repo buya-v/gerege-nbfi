@@ -3,11 +3,12 @@
   "host": "Buyanmunkhs-Mac-mini",
   "pid": 93922,
   "started_at": "2026-08-23T00:00:11Z",
-  "heartbeat": "2026-08-24T00:05:00Z",
+  "heartbeat": "2026-08-23T03:54:58Z",
   "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
   "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260823-080004.log",
   "oracle": "REACHABLE at https://localhost:8443/fineract-provider/actuator/health",
   "postgres": "reachable at localhost:5432",
-  "fire_id": "20260824-000016",
-  "in_flight": "6 workers about to be dispatched: T294 T295-deferred T292 T293 T284 T288 T256. See RESUME.md IN-FLIGHT section."
+  "fire_id": "20260823-080004",
+  "in_flight": "none yet this session",
+  "session_note": "second claude session within fire wrapper pid 93922 (ppid chain 94833<-93922 verified 2026-08-23T03:54:58Z); prior session closed clean at 7d4643c. PREVIOUS heartbeat/fire_id were stamped 2026-08-24, one day AHEAD of wall clock \u2014 wrapper clock defect, recorded not silently fixed."
 }

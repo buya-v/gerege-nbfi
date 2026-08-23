@@ -1,25 +1,53 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260823-080016` CLOSED CLEAN — 8 dispatched, 8 completed, **8 merged**, **0 live at exit**
+## FIRE `20260823-080004` **SESSION 2 — 8 WORKERS LIVE RIGHT NOW**
 
-Every worker was awaited. Nothing was killed. `git status --porcelain` empty at exit.
+> **THIS BANNER IS THE TRUTH AT THE MOMENT OF PUSH, AND IT WAS PUSHED BEFORE THE FIRST WORKER SPAWNED**
+> (P-85). If you are reading this and the driver is gone, these eight tasks are `in_progress` in
+> `tasks.json` with a `branch` each, and **their workers died with the session** — do not read
+> `in_progress` as "work is happening". Check each branch for a commit
+> (`git log --oneline main..<branch>`), and demote anything empty to `needs_retry`.
 
-**BAR at close, run by the driver on the final merged tree — never accepted from a worker's paste:**
+**Driver session facts, verified not assumed:** this is a *second* `claude` session inside fire wrapper
+pid **93922** (ppid chain `94833 <- 93922`, checked against `ps`). The previous session in this same fire
+closed clean at `7d4643c`. There is exactly ONE `fire-program.sh` at the top of the tree, so the two live
+wrappers seen in `ps` are parent and child, **not** the P-85 double-holder incident.
+
+**Wrapper clock defect, recorded not fixed:** the LOCK arrived with `heartbeat` `2026-08-24T00:05:00Z` and
+`fire_id` `20260824-000016` — a full day AHEAD of wall clock (`2026-08-23T03:54Z`). This is the same
+date-slide the previous session filed in
+`.softhouse/observations/20260823-driver-fire-id-and-date-error.md`, and it has now recurred in the LOCK
+itself. The driver corrected both fields to the real fire id `20260823-080004`.
+
+**BAR at dispatch, run by the driver on the merged tree — exit status read WITHOUT a pipe, because the
+previous session filed reading it through one as its own defect:**
 ```
-bash .softhouse/conformance.sh  ->  PASS exit 0
-                                    probe line PRESENT, reads `up`
+bash .softhouse/conformance.sh  ->  REAL_EXIT=0  (captured via $? on an unpiped run)
+                                    probe line PRESENT at :103, reads `up`
                                     46 parity vectors / 7884 cells
-                                    LEDGER: 4 parity + 5 oracle-refusal, 21 money cells
                                     all 9 wrong ledger implementations DIED through the harness
-                                    census == pinned (18, now DERIVED)  ·  frontier == pinned (11)
 ```
 
-> **THIS FIRE'S ID.** It is the **2026-08-23 08:00 local** fire. The driver built the id from the **UTC**
-> clock in its launch note and slid the date a day, labelling early records `20260824-000016`. Every
-> dispatch record and commit message written before the correction carries the wrong id. See
-> `.softhouse/observations/20260823-driver-fire-id-and-date-error.md` — it did not stay contained.
+## IN-FLIGHT — 8 dispatched, all `isolation: worktree`
+
+| Task | Model | Branch | What it must not do |
+|---|---|---|---|
+| T305 | opus | `softhouse/T305-openingbalance-accepting-side` | **Owns `conformance.sh` this batch.** Must NOT edit `admit.go` — T306 owns it. Any oracle mutation is refuse-before-write. |
+| T306 | opus | `softhouse/T306-adjudicate-admit-widening` | **Sole owner of `admit.go`.** Adjudicates the driver's own unreviewed merge resolution. |
+| T297 | opus | `softhouse/T297-review-t295` | Must not fire a T287 probe. Verifies from the live oracle that nothing was posted. |
+| T308 | opus | `softhouse/T308-review-t292` | Fifth link in the R-VPA lineage — must attack by construction, not by reading. |
+| T302 | opus | `softhouse/T302-review-t288` | Reads `fire-program.sh`; must not rewrite it (T301 holds that file, batch 2). |
+| T298 | opus | `softhouse/T298-review-t256` | — |
+| T304 | opus | `softhouse/T304-evidence-destruction` | Must derive its own population; 4 is T284's count, not a verified total. |
+| T299 | sonnet | `softhouse/T299-t256-flagged-defects` | Rename must not break a path-pin; grep first. |
+
+**HELD BACK DELIBERATELY, on file collision — dispatch in batch 2, not forgotten:**
+- **T303** (wire T284's registry guard) — `files_hint` `.softhouse/conformance.sh` collides with T305.
+- **T301** (wrapper self-modification snapshot) — `.softhouse/bin/fire-program.sh` collides with T302.
 
 ---
+
+# PREVIOUS SESSION'S MANIFEST (fire 20260823-080016), retained
 
 # HEADLINE 1: THE LEDGER CORPUS MOVED — 6 → 9 VECTORS, 6 → 9 WRONG IMPLEMENTATIONS
 
