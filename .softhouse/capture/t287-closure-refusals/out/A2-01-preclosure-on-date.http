@@ -1,0 +1,9 @@
+POST /journalentries
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+request-source-file: req/a2-01-preclosure-on-date.json
+request-bytes-artefact: A2-01-preclosure-on-date.req
+request-sha256: 61c9b228b517e92ffc1c29430f5515e7fe681f4527ad7d9bca2c34284dcf9351
+request-bytes: 407
+captured-at-utc: 2026-08-23T00:17:56Z

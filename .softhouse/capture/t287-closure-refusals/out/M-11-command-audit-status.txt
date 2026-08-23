@@ -1,0 +1,20 @@
+Pager usage is off.
+=== this task tail, with status, resource_id and idempotency key ===
+ id  | action_name | entity_name  | status | resource_id | office_id |           idempotency_key            |       made_on_date_utc        
+-----+-------------+--------------+--------+-------------+-----------+--------------------------------------+-------------------------------
+ 345 | CREATE      | LOANPRODUCT  |      5 |             |           | 2510d2c1-d586-41af-b391-4b26a3e83cb5 | 2026-08-22 14:32:56.137481+00
+ 346 | CREATE      | JOURNALENTRY |      5 |             |           | de463708-7a4e-4b36-9c82-81a435e6134d | 2026-08-23 00:11:49.907073+00
+ 347 | CREATE      | JOURNALENTRY |      5 |             |           | 7eaf733f-b708-49ad-bc4c-a6cf1ce4839d | 2026-08-23 00:11:57.319871+00
+ 348 | CREATE      | GLCLOSURE    |      1 |           1 |         1 | 8f4b7848-44f5-40a6-b54e-75229fe25dc3 | 2026-08-23 00:17:40.195041+00
+ 349 | CREATE      | JOURNALENTRY |      5 |             |           | 2658190f-7139-456b-9828-23501f0513c3 | 2026-08-23 00:17:56.689877+00
+ 350 | CREATE      | JOURNALENTRY |      5 |             |           | 8be05d29-36f6-4985-bafd-811b430db53c | 2026-08-23 00:17:56.987839+00
+(6 rows)
+
+
+=== status distribution across the WHOLE audit table, for context ===
+ status | rows 
+--------+------
+      1 |  156
+      5 |  194
+(2 rows)
+

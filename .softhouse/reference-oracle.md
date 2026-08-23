@@ -816,3 +816,82 @@ float in Go** (DEC-1:829). Reproduce the oracle's observed **output**; never imp
 `BigDecimal`. `LoansApiResourceSwagger.PostLoansRequest` correctly says `BigDecimal` (`:1343`, `:1357`).
 Both are documentation-only classes, never instantiated on the request path — but a Go client generated
 from the published spec would inherit a `float64`, which is a Zone B rejection.
+
+## ⚠️ ORACLE STATE MOVED BY T287 — a `GLClosure` was created and DELETED (local fire `20260823-080004`)
+
+**Read this before you assume `acc_gl_closure` has never been used, and before you hard-code a closure
+id.** Recorded here rather than only in the capture directory because the next fire will meet the
+residue in the *tenant*, not in `.softhouse/capture/t287-closure-refusals/`.
+
+### What T287 did
+
+To capture the `ACCOUNTING_CLOSED` refusal — which `capabilities-ledger.json` had been printing as
+"NOBODY HAS TAKEN THEM" on every conformance run — a closure had to exist. T287 created one, took two
+refusal captures, and **deleted it in the same fire**.
+
+| | |
+|---|---|
+| Tenant | **`gerege`** (tenant 2, `Asia/Ulaanbaatar`), database `fineract_gerege` |
+| Closure id | **1** |
+| Office | **1 (Head Office)** — the only office on this tenant |
+| Closing date | **`2026-01-31`** — chosen strictly *before* the earliest existing journal entry (`2026-02-01`) so that even a failed delete could poison nothing that exists |
+| Created by | T287, `POST /glclosures`, user `mifos` — `out/A2-00-create-closure.json` → `{"officeId":1,"resourceId":1}` |
+| Deleted by | T287, `DELETE /glclosures/1` — `out/A2-03-delete-closure.json` → `{"officeId":1,"resourceId":1}` |
+| **Surviving closure** | **NONE.** `acc_gl_closure` is back to **0 rows**; `GET /glclosures` → `[]` |
+| **What it now forbids** | **NOTHING.** The closure no longer exists, so no date is refused on its account |
+
+The removal is a **HARD DELETE**, not a flag: `GLClosure` carries an `is_deleted` column but has **no
+`@SQLDelete` annotation**, and `deleteGLClosure` calls `glClosureRepository.delete(glClosure)`
+[VERIFIED: `GLClosure.java:39-62`, `GLClosureWritePlatformServiceJpaRepositoryImpl.java:135`, pinned
+commit `426a23544`]. Confirmed by observation at both layers — 0 rows in PostgreSQL and `[]` from the API.
+
+### The residue that did NOT restore — this is the part that matters
+
+Identity is not value, and identity does not restore (the T276 lesson, one section of which lives in
+`.softhouse/capture/tierA-a2/ORACLE-STATE-MOVED-BY-T276.md`).
+
+| counter | before T287 | after T287 | restored? |
+|---|---|---|---|
+| `acc_gl_closure` rows | 0 | 0 | yes |
+| **`acc_gl_closure_id_seq`** | `last_value 1, is_called f` (never used) | `last_value 1, **is_called t**` | **NO — permanent** |
+| **`m_portfolio_command_source`** | 347 rows / max id 347 | **351 rows / max id 351** | **NO — permanent, append-only** |
+| `acc_gl_journal_entry` | 60 rows / max id 64 / seq 64 | 60 rows / max id 64 / seq 64 | yes — **never moved** |
+| `m_office` | 1 row / max id 1 | 1 row / max id 1 | yes — never moved |
+| `m_loan` | 7 rows | 7 rows | yes — never moved |
+
+**THE NEXT `GLClosure` CREATED ON THIS TENANT WILL GET `id = 2`, NOT `id = 1`.** The sequence had never
+been used before T287 and is now marked called. Any capture that hard-codes closure id 1, or asserts on
+`resourceId` returned by a closure create, will be off by one. Same class of drift as T276's
+`acc_product_mapping` row-id move.
+
+**The ledger itself was never touched.** All four journal-entry posts in T287 were *refused*, so
+`acc_gl_journal_entry` stayed at 60 rows / max id 64 / sequence 64 across before, during and after.
+
+### A related fact worth knowing before you interpret any capture on this tenant
+
+**A REFUSED COMMAND STILL WRITES AN `m_portfolio_command_source` AUDIT ROW**, with
+`status = 5` (`ERROR`) and a NULL `resource_id` [VERIFIED: `CommandProcessingResultType.java:31-37` —
+`0 INVALID, 1 PROCESSED, 2 AWAITING_APPROVAL, 3 REJECTED, 4 UNDER_PROCESSING, 5 ERROR`]. Across the whole
+`gerege` audit table the split is **156 PROCESSED / 194 ERROR**, so refusals are the majority of this
+tenant's command history — as expected for a corpus built largely out of refusal probes.
+
+Consequence: **"a refused write writes nothing" is true of the LEDGER and false of the DATABASE.** A
+write-check that watches only `acc_gl_journal_entry` will report a refusal as side-effect-free while it
+is in fact consuming command ids and idempotency keys.
+
+### Blast radius of a closure, for whoever creates the next one
+
+- The lookup is **per office with no hierarchy walk** — `WHERE closure.office.id = :officeId`
+  [VERIFIED: `GLClosureRepository.getLatestGLClosureByBranch`]. On `gerege` that scoping buys nothing:
+  `m_office` has exactly **one** row, so office 1 *is* the tenant.
+- A closure does **not** only refuse manual journal entries. The identical
+  `!DateUtils.isBefore(closingDate, transactionDate)` test lives in
+  `AccountingProcessorHelper.checkForBranchClosures` and is called from ~14 automatic accounting sites
+  (cash/accrual loan, savings, shares, client transactions, working-capital, and the reversal path at
+  `JournalEntryWritePlatformServiceJpaRepositoryImpl:392`). A closure would also refuse a **back-dated
+  disbursement or repayment on any accounting-enabled product**.
+- **The boundary is INCLUSIVE**: an entry dated *on* the closing date is refused, despite the message
+  saying "prior to". Observed, not merely read — see `ARM2-OBSERVATION.md` §2(ii).
+- **Do not reach for "use a dedicated office" as the safe route on this tenant.** Offices cannot be
+  deleted — `OfficesApiResource` exposes GET/POST/PUT and **no `@DELETE`** — so creating one trades a
+  reversible mutation for an irreversible one.

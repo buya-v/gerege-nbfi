@@ -1,0 +1,9 @@
+POST /glclosures
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+request-source-file: req/a2-00-create-closure.json
+request-bytes-artefact: A2-00-create-closure.req
+request-sha256: 77fefa8c04847044e88d6b9cbc24d75a8e455aac2dbd9cfab97fb0d98bdc1d6b
+request-bytes: 341
+captured-at-utc: 2026-08-23T00:17:40Z

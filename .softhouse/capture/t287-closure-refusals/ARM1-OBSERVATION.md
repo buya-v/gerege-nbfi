@@ -170,8 +170,33 @@ advance without a surviving row, and only `last_value` sees that. It did not adv
 after**. The date guard runs before `paymentDetailWritePlatformService.createAndPersistPaymentDetail`
 [`:150-160`], and `m_payment_detail` is unchanged too, which corroborates the ordering read from source.
 
-So arm 1 is confirmed zero-side-effect **by measurement on this tenant**, not by reasoning about what a
-rolled-back transaction ought to do.
+So arm 1 is confirmed zero-side-effect **on the ledger**, by measurement on this tenant, not by reasoning
+about what a rolled-back transaction ought to do.
+
+### CORRECTION, added after arm 2 measured something arm 1 had not thought to look at
+
+**"A refused write writes nothing" is TRUE OF THE LEDGER AND FALSE OF THE DATABASE.** Arm 2 watched
+`m_portfolio_command_source` — which `sql/q3-writecheck.sql` above does **not** — and found that Fineract's
+command bus records an audit row for a refused command just as it does for a successful one
+[out/M-11-command-audit-status.txt]:
+
+```
+ id  | action_name | entity_name  | status | resource_id | office_id
+ 346 | CREATE      | JOURNALENTRY |      5 |             |
+ 347 | CREATE      | JOURNALENTRY |      5 |             |
+```
+
+Rows **346 and 347 are arm 1's own two refusals** (their `command_as_json` carries `"transactionDate":
+"2026-12-31"` and `"2026-08-24"` — see out/M-10-command-audit.txt). `status = 5` is **ERROR**
+[VERIFIED: `CommandProcessingResultType.java:31-37` — `0 INVALID, 1 PROCESSED, 2 AWAITING_APPROVAL,
+3 REJECTED, 4 UNDER_PROCESSING, 5 ERROR`], `resource_id` is NULL, and each row consumed an id and an
+idempotency key.
+
+Nothing above about the ledger changes: `acc_gl_journal_entry` and its sequence are provably untouched.
+But the claim is now correctly scoped, and the honest statement of arm 1's footprint is: **two permanent
+append-only audit rows, no ledger rows, no sequence movement on the ledger.** I am flagging this rather
+than leaving §4's original wording to imply more than it measured — the original write-check simply did
+not look at that table.
 
 ---
 

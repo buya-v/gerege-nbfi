@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/q5-command-audit.sql
+query-bytes-artefact: M-10-command-audit.sql
+query-sha256: b5eff5132d1fbcc4c458931f492c8e6917aa96e61c44b95897a75957ec3047cc
+query-bytes: 1040
+psql-exit-status: 0
+captured-at-utc: 2026-08-23T00:18:28Z
