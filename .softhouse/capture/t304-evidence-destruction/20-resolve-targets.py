@@ -1,25 +1,38 @@
 #!/usr/bin/env python3
-"""T304 census pass 2 — resolve each destructive operation's TARGET and ask git whether
-that target contains COMMITTED (tracked) files.
+"""T304 census pass 2 — resolve each destructive operation's TARGET ROOT and ask git
+whether that target contains COMMITTED (tracked) files.
 
-Pass 1 (`10-census.py`) counted destructive OPERATIONS: 5313 of them. That number is not
-the property. The property F-T283-6 names is:
+Pass 1 (`10-census.py`) counted destructive OPERATIONS: 5313 of them over 1146 tracked
+scripts. That number is NOT the property. The property F-T283-6 names is:
 
     an instrument that destroys a path which CONTAINS COMMITTED EVIDENCE.
 
-So this pass extracts the operand of each destructive call, expands what it can, and runs
-`git ls-files -- <target>` to count the tracked files underneath it. Zero tracked files
-underneath => the operation cannot destroy committed evidence, whatever else it does.
+The whole discrimination is in the ROOT of the operand. `rm -rf "$TMP/.softhouse/vectors"`
+and `rm -rf "$REPO/.softhouse/vectors"` are textually near-identical and are opposite
+verdicts: the first deletes a scratch clone, the second destroys the vector store.
 
-RESOLVER CAPABILITY (stated so the blind spots are on the record):
-  * shell:  literal operands; `$VAR` / `${VAR}` where VAR has a literal `VAR=...`
-            assignment earlier in the same file; `$(dirname "$0")`-rooted paths mapped to
-            the script's own directory; `"$REPO"`/`"$ROOT"`-style repo roots mapped to the
-            repo root when their assignment resolves there.
-  * python: literal string operands; module-level `NAME = "literal"`; os.path.join of
-            those; f-strings whose replacement fields are all resolvable.
-  UNRESOLVED operands are NOT silently dropped -- they are reported in their own bucket and
-  listed, because an unresolved target is an unknown, not a safe one.
+So this pass classifies every shell variable in every script as one of
+
+    SCRATCH   -- derived from mktemp / $TMPDIR / a /tmp path, directly or transitively
+    REPO      -- the repository root (git rev-parse --show-toplevel, or a
+                 $(cd "$(dirname "$0")"/.. && pwd) chain that lands on the root)
+    SELFDIR   -- the script's own directory (or a descendant of it)
+    LITERAL   -- a literal string
+    UNKNOWN   -- everything else; NOT treated as safe, reported in its own bucket
+
+and then resolves each destructive operand against that classification. A REPO- or
+SELFDIR- or LITERAL-rooted operand is passed to `git ls-files -- <path>`; a non-zero count
+means the operation destroys committed evidence.
+
+`cd` INTO SCRATCH IS TRACKED TOO: a script that does `cd "$SCRATCH"` and then uses a
+relative path is operating on the clone, not the repo. Scripts containing such a `cd` are
+flagged so a relative operand in them is not mis-read as repo-relative.
+
+BLIND SPOTS, stated rather than hidden:
+  * operands built inside a loop from an array/glob the resolver cannot enumerate;
+  * operands passed in as "$1" from a caller;
+  * python operands built by a function parameter.
+  These land in UNKNOWN and are listed individually at the end. UNKNOWN is not "clean".
 """
 import json
 import os
@@ -34,85 +47,124 @@ DESTRUCTIVE = {"rm-rf", "rm-plain", "rmtree", "os-remove", "path-unlink",
                "mv", "shutil-move", "git-checkout-dd", "sed-i", "truncate"}
 OVERWRITE = {"redirect", "py-write", "write-text", "tee"}
 
-_tracked_cache = {}
+_tc = {}
 
 
 def tracked_count(path):
-    """How many TRACKED files live at or under `path` (repo-relative)?"""
-    if path in _tracked_cache:
-        return _tracked_cache[path]
+    if path in _tc:
+        return _tc[path]
     p = path.rstrip("/")
     if not p or p in (".", "/"):
-        n = -1  # whole repo; flag rather than count
+        n = -1
     else:
-        r = subprocess.run(["git", "ls-files", "-z", "--", p], cwd=ROOT,
-                           capture_output=True)
+        r = subprocess.run(["git", "ls-files", "-z", "--", p], cwd=ROOT, capture_output=True)
         n = len([x for x in r.stdout.decode("utf-8", "replace").split("\0") if x])
-    _tracked_cache[path] = n
+    _tc[path] = n
     return n
 
 
-VAR_RX = re.compile(r"^\s*(?:export\s+|local\s+|readonly\s+|declare\s+-\w+\s+)?"
-                    r"([A-Za-z_][A-Za-z0-9_]*)=(.+?)\s*$")
+SCRATCH_RX = re.compile(r"mktemp|TMPDIR|/tmp/|/var/folders|\$\(mktemp")
+REPO_RX = re.compile(r"git\s+rev-parse\s+--show-toplevel")
+SELF_RX = re.compile(r"dirname\s+[\"']?\$\{?(0|BASH_SOURCE\[0\])\}?")
+# VAR=$(cd "$OTHER/../.." && pwd)   -- the root-walk idiom used across this repo
+CDCHAIN_RX = re.compile(r"\$\(\s*cd\s+[\"']?\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?([^\"'&)]*)[\"']?\s*(?:&&|;)\s*pwd\s*\)")
+
+ASSIGN_RX = re.compile(
+    r"^\s*(?:export\s+|local\s+|readonly\s+|declare\s+(?:-\w+\s+)?)?"
+    r"([A-Za-z_][A-Za-z0-9_]*)=(.*)$")
 
 
-def shell_vars(relfile):
-    """Literal VAR=... assignments in a shell file, best-effort."""
-    env = {}
-    path = os.path.join(ROOT, relfile)
-    try:
-        lines = open(path, encoding="utf-8", errors="replace").read().splitlines()
-    except OSError:
-        return env
-    scriptdir = os.path.dirname(relfile)
-    for ln in lines:
-        m = VAR_RX.match(ln)
+def classify_vars(relfile, text_lines):
+    """name -> (kind, literal_or_None). Iterated to a fixpoint so transitive scratch propagates."""
+    raw = {}
+    order = []
+    for ln in text_lines:
+        if ln.lstrip().startswith("#"):
+            continue
+        m = ASSIGN_RX.match(ln)
         if not m:
             continue
-        name, val = m.group(1), m.group(2)
-        val = val.split("#", 1)[0].strip() if not val.startswith(("'", '"')) else val
-        val = val.strip()
-        if val.startswith(('"', "'")) and val.endswith(('"', "'")) and len(val) > 1:
-            val = val[1:-1]
-        # common repo-root idioms
-        if re.search(r"cd\s+\"?\$\(dirname", val) or "git rev-parse --show-toplevel" in val:
-            env[name] = ""            # repo root
-            continue
-        if re.fullmatch(r"\$\(\s*(cd\s+)?\"?\$\(dirname\s+\"?\$\{?BASH_SOURCE\[0\]\}?\"?\)\"?[^)]*\)", val):
-            env[name] = scriptdir
-            continue
-        if "mktemp" in val or "$(mktemp" in val:
-            env[name] = "\0MKTEMP"
-            continue
-        env[name] = val
-    return env
+        name, val = m.group(1), m.group(2).strip()
+        raw[name] = val
+        order.append(name)
+    kinds = {}
+    for _ in range(6):
+        changed = False
+        for name in order:
+            val = raw[name]
+            new = None
+            if SCRATCH_RX.search(val):
+                new = ("SCRATCH", None)
+            elif REPO_RX.search(val):
+                new = ("REPO", "")
+            elif SELF_RX.search(val):
+                # $(cd "$(dirname "$0")" && pwd)  or with /.. suffixes
+                ups = val.count("/..")
+                d = os.path.dirname(relfile)
+                for _u in range(ups):
+                    d = os.path.dirname(d)
+                new = ("SELFDIR", d)
+            elif CDCHAIN_RX.search(val):
+                # VAR=$(cd "$OTHER/rel" && pwd)  -- the dominant root-walk idiom here
+                m2 = CDCHAIN_RX.search(val)
+                base_name, rel_part = m2.group(1), (m2.group(2) or "")
+                bk, bl = kinds.get(base_name, ("UNKNOWN", None))
+                if bk == "SCRATCH":
+                    new = ("SCRATCH", None)
+                elif bk in ("REPO", "SELFDIR", "LITERAL") and bl is not None:
+                    p = os.path.normpath(os.path.join(bl, rel_part.strip("/"))) if rel_part.strip("/") else bl
+                    if p in (".", "/", ""):
+                        new = ("REPO", "")
+                    elif p.startswith(".."):
+                        new = ("UNKNOWN", None)
+                    else:
+                        new = ("SELFDIR", p)
+                else:
+                    new = ("UNKNOWN", None)
+            else:
+                refs = re.findall(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)", val)
+                refs = [a or b for a, b in refs]
+                if refs:
+                    kk = [kinds.get(r, ("UNKNOWN", None)) for r in refs]
+                    if any(k[0] == "SCRATCH" for k in kk):
+                        new = ("SCRATCH", None)
+                    elif all(k[0] in ("REPO", "SELFDIR", "LITERAL") for k in kk):
+                        # substitute and keep as literal-ish
+                        sv = val.strip('"\'')
+                        def sub(m2):
+                            r = m2.group(1) or m2.group(2)
+                            return kinds.get(r, ("UNKNOWN", ""))[1] or ""
+                        lit = re.sub(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)", sub, sv)
+                        lit = re.sub(r"\$\([^)]*\)", "", lit)
+                        new = ("LITERAL", lit.strip("/") if lit else None)
+                    else:
+                        new = ("UNKNOWN", None)
+                elif "$(" in val or "`" in val:
+                    new = ("UNKNOWN", None)
+                else:
+                    new = ("LITERAL", val.strip('"\''))
+            if kinds.get(name) != new:
+                kinds[name] = new
+                changed = True
+        if not changed:
+            break
+    return kinds
 
 
-def expand_shell(tok, env, relfile, depth=0):
-    if depth > 6:
-        return tok
-    scriptdir = os.path.dirname(relfile)
-    tok = tok.replace('$(dirname "$0")', scriptdir).replace("$(dirname $0)", scriptdir)
-    tok = re.sub(r"\$\(\s*cd\s+\"?\$\(dirname[^)]*\)\"?[^)]*&&\s*pwd\s*\)", scriptdir, tok)
-
-    def sub(m):
-        name = m.group(1) or m.group(2)
-        if name in env:
-            return env[name]
-        return "\0UNRES:%s" % name
-
-    new = re.sub(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)", sub, tok)
-    if new != tok:
-        return expand_shell(new, env, relfile, depth + 1)
-    return new
+def has_cd_to_scratch(text_lines, kinds):
+    for ln in text_lines:
+        m = re.search(r"\bcd\s+[\"']?\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?", ln)
+        if m and kinds.get(m.group(1), ("UNKNOWN",))[0] == "SCRATCH":
+            return True
+        if re.search(r"\bcd\s+[\"']?(/tmp|\$\(mktemp)", ln):
+            return True
+    return False
 
 
 ARGSPLIT = re.compile(r"""'([^']*)'|"([^"]*)"|(\S+)""")
 
 
 def shell_operands(text, verb):
-    """Operands of `rm ...` / `mv ...` etc. on a logical shell line."""
-    # take the segment starting at the verb, stop at a shell operator
     m = re.search(r"\b%s\b" % re.escape(verb), text)
     if not m:
         return []
@@ -121,129 +173,169 @@ def shell_operands(text, verb):
     ops = []
     for g in ARGSPLIT.finditer(seg):
         tok = g.group(1) or g.group(2) or g.group(3) or ""
-        if not tok:
-            continue
-        if tok.startswith("-"):
-            continue
-        if tok.startswith(("2>", ">", "<")):
+        if not tok or tok.startswith("-") or tok.startswith(("2>", ">", "<")):
             continue
         ops.append(tok)
     return ops
 
 
-PY_LIT = re.compile(r"""\(\s*(?:Path\s*\(\s*)?["']([^"']+)["']""")
-
-
 def py_operand(text):
-    m = PY_LIT.search(text)
-    return m.group(1) if m else None
-
-
-def normalise(p, relfile):
-    """Repo-relative, or None if it is clearly outside the repo / unresolvable."""
-    if not p or "\0" in p:
+    """Argument expression of the destructive python call, as source text."""
+    m = re.search(r"(shutil\.rmtree|shutil\.move|os\.remove|os\.unlink|os\.rmdir|\.unlink|\.write_text|\.write_bytes|open)\s*\(", text)
+    if not m:
         return None
-    if p.startswith(("/tmp", "/var/folders", "/dev/")):
-        return "\0EXTERNAL"
-    if "*" in p or "?" in p:
-        # glob: keep, git ls-files understands pathspecs
-        pass
-    if os.path.isabs(p):
-        real = os.path.normpath(p)
-        if real.startswith(ROOT + "/"):
-            return os.path.relpath(real, ROOT)
-        return "\0EXTERNAL"
-    q = os.path.normpath(os.path.join(os.path.dirname(relfile), p)) if p.startswith((".", "..")) else p
-    if q.startswith(".."):
-        return "\0EXTERNAL"
-    return q
+    i = m.end() - 1
+    depth = 0
+    for j in range(i, len(text)):
+        if text[j] == "(":
+            depth += 1
+        elif text[j] == ")":
+            depth -= 1
+            if depth == 0:
+                return text[i + 1:j].strip()
+    return text[i + 1:].strip()
+
+
+def resolve_shell(tok, kinds, relfile, cd_scratch):
+    """-> (kind, path_or_None)."""
+    if tok is None:
+        return ("UNKNOWN", None)
+    t = tok.strip().strip('"\'')
+    if t.startswith(("/tmp", "/var/folders", "/dev/")):
+        return ("SCRATCH", None)
+    if "$(mktemp" in t or "mktemp" in t:
+        return ("SCRATCH", None)
+    m = re.match(r"^\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?(.*)$", t)
+    if m:
+        name, rest = m.group(1), m.group(2)
+        kind, lit = kinds.get(name, ("UNKNOWN", None))
+        if kind == "SCRATCH":
+            return ("SCRATCH", None)
+        if kind in ("REPO", "SELFDIR", "LITERAL"):
+            rest2 = re.sub(r"\$\{?[A-Za-z_][A-Za-z0-9_]*\}?", "*", rest)
+            base = lit if lit is not None else ""
+            p = (base.rstrip("/") + rest2) if base else rest2.lstrip("/")
+            p = p.lstrip("/")
+            if not p:
+                return ("REPO_ROOT", None)
+            return ("PATH", os.path.normpath(p))
+        return ("UNKNOWN", None)
+    if "$" in t:
+        # embedded var somewhere other than the head
+        head = t.split("$")[0]
+        if head.startswith("."):
+            head = os.path.normpath(os.path.join(os.path.dirname(relfile), head))
+        if cd_scratch and not head.startswith(".softhouse"):
+            return ("UNKNOWN", None)
+        return ("PATH", os.path.normpath(head.rstrip("/") + "*")) if head else ("UNKNOWN", None)
+    # pure literal
+    if os.path.isabs(t):
+        rp = os.path.normpath(t)
+        if rp.startswith(ROOT + "/"):
+            return ("PATH", os.path.relpath(rp, ROOT))
+        return ("SCRATCH", None)
+    if cd_scratch:
+        return ("CD_SCRATCH_RELATIVE", t)
+    if t.startswith(("./", "../")):
+        return ("PATH", os.path.normpath(os.path.join(os.path.dirname(relfile), t)))
+    return ("PATH", os.path.normpath(t))
 
 
 def main():
     hits = json.load(open(os.path.join(HERE, "evidence", "10-census-hits.json")))["hits"]
-    envcache = {}
+    cache = {}
     rows = []
     for h in hits:
         fam = h["pattern"]
         if fam not in DESTRUCTIVE and fam not in OVERWRITE:
             continue
         rel, text = h["file"], h["text"]
-        target_raw = None
+        if rel not in cache:
+            try:
+                lines = open(os.path.join(ROOT, rel), encoding="utf-8", errors="replace").read().splitlines()
+            except OSError:
+                lines = []
+            k = classify_vars(rel, lines)
+            cache[rel] = (k, has_cd_to_scratch(lines, k))
+        kinds, cd_scratch = cache[rel]
+
         if fam in ("rm-rf", "rm-plain"):
             ops = shell_operands(text, "rm")
-            target_raw = ops[0] if ops else None
+            raw_targets = ops[:1]
         elif fam == "mv":
             ops = shell_operands(text, "mv")
-            target_raw = ops[-1] if len(ops) >= 2 else None
+            raw_targets = ops[-1:] if len(ops) >= 2 else []
         elif fam == "sed-i":
             ops = shell_operands(text, "sed")
-            target_raw = ops[-1] if ops else None
+            raw_targets = ops[-1:]
         elif fam == "truncate":
-            ops = shell_operands(text, "truncate")
-            target_raw = ops[-1] if ops else None
+            raw_targets = shell_operands(text, "truncate")[-1:]
         elif fam == "git-checkout-dd":
             m = re.search(r"git\s+checkout\s+--\s+(\S+)", text)
-            target_raw = m.group(1) if m else None
-        elif fam in ("rmtree", "os-remove", "path-unlink", "write-text", "py-write", "shutil-move"):
-            target_raw = py_operand(text)
+            raw_targets = [m.group(1)] if m else []
+        elif fam == "tee":
+            raw_targets = shell_operands(text, "tee")[:1]
         elif fam == "redirect":
             m = re.search(r"(?<![0-9<>&|])>(?!>)\s*(\"[^\"]+\"|'[^']+'|\S+)", text)
-            target_raw = m.group(1).strip("\"'") if m else None
-        elif fam == "tee":
-            ops = shell_operands(text, "tee")
-            target_raw = ops[0] if ops else None
+            raw_targets = [m.group(1)] if m else []
+        else:
+            raw_targets = [py_operand(text)]
+
+        raw = raw_targets[0] if raw_targets else None
 
         if rel.endswith(".py"):
-            expanded = target_raw
+            # python: only literal-headed expressions are resolvable here
+            if raw and re.match(r"^[\"']", raw.strip()):
+                lit = re.match(r"^[\"']([^\"']+)[\"']", raw.strip()).group(1)
+                kind, path = resolve_shell(lit, {}, rel, False)
+            elif raw and re.search(r"(tmp|TMP|mkdtemp|TemporaryDirectory|sandbox|scratch|SCRATCH|work|WORK)", raw):
+                kind, path = ("SCRATCH", None)
+            else:
+                kind, path = ("UNKNOWN", None)
         else:
-            if rel not in envcache:
-                envcache[rel] = shell_vars(rel)
-            expanded = expand_shell(target_raw, envcache[rel], rel) if target_raw else None
+            kind, path = resolve_shell(raw, kinds, rel, cd_scratch)
 
-        norm = normalise(expanded, rel) if expanded else None
-        if norm is None:
-            status, n = "UNRESOLVED", None
-        elif norm == "\0EXTERNAL" or (expanded and "\0MKTEMP" in expanded):
-            status, n = "SCRATCH_OR_EXTERNAL", 0
-        elif "\0UNRES" in norm:
-            status, n = "UNRESOLVED", None
+        if kind == "PATH":
+            n = tracked_count(path)
+            status = "TRACKED" if n > 0 else "UNTRACKED"
+        elif kind == "REPO_ROOT":
+            status, n = "WHOLE_REPO", -1
+        elif kind == "SCRATCH":
+            status, n = "SCRATCH", 0
+        elif kind == "CD_SCRATCH_RELATIVE":
+            status, n = "SCRATCH", 0
         else:
-            n = tracked_count(norm)
-            status = "TRACKED" if n and n > 0 else ("WHOLE_REPO" if n == -1 else "UNTRACKED")
-        rows.append({**h, "target_raw": target_raw, "target": None if norm and "\0" in norm else norm,
-                     "status": status, "tracked_files": n,
+            status, n = "UNKNOWN", None
+        rows.append({**h, "raw_target": raw, "target": path, "status": status,
+                     "tracked_files": n,
                      "family": "destructive" if fam in DESTRUCTIVE else "overwrite"})
 
     with open(os.path.join(HERE, "evidence", "20-resolved.json"), "w") as fh:
         json.dump(rows, fh, indent=1)
 
-    def tally(fam):
+    for fam in ("destructive", "overwrite"):
         sub = [r for r in rows if r["family"] == fam]
         agg = {}
         for r in sub:
             agg[r["status"]] = agg.get(r["status"], 0) + 1
-        return len(sub), agg
-
-    for fam in ("destructive", "overwrite"):
-        tot, agg = tally(fam)
-        print("%s: %d operations" % (fam.upper(), tot))
+        print("%s: %d operations" % (fam.upper(), len(sub)))
         for k in sorted(agg):
-            print("   %-20s %5d" % (k, agg[k]))
+            print("   %-14s %5d" % (k, agg[k]))
         print()
 
-    print("=== DESTRUCTIVE operations whose target CONTAINS TRACKED FILES ===")
+    print("=== DESTRUCTIVE ops whose target CONTAINS TRACKED FILES ===")
     tr = [r for r in rows if r["family"] == "destructive" and r["status"] in ("TRACKED", "WHOLE_REPO")]
     tr.sort(key=lambda r: (-(r["tracked_files"] or 0), r["file"], r["line"]))
     for r in tr:
-        print("%-6s %5s  %s:%s  -> %s" % (r["pattern"], r["tracked_files"], r["file"], r["line"], r["target"]))
+        print("%-9s %5s  %s:%s  -> %s" % (r["pattern"], r["tracked_files"], r["file"], r["line"], r["target"]))
     print("TOTAL: %d" % len(tr))
 
     print()
-    print("=== UNRESOLVED destructive operands (blind spot, listed not dropped) ===")
-    un = [r for r in rows if r["family"] == "destructive" and r["status"] == "UNRESOLVED"]
+    print("=== UNKNOWN destructive operands (blind spot; listed, not dropped) ===")
+    un = [r for r in rows if r["family"] == "destructive" and r["status"] == "UNKNOWN"]
     for r in un:
-        print("%-6s %s:%s  raw=%r" % (r["pattern"], r["file"], r["line"], r["target_raw"]))
-    print("TOTAL UNRESOLVED: %d" % len(un))
+        print("%-9s %s:%s  raw=%r" % (r["pattern"], r["file"], r["line"], r["raw_target"]))
+    print("TOTAL UNKNOWN: %d" % len(un))
 
 
 if __name__ == "__main__":
