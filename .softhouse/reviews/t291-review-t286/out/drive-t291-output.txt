@@ -1,0 +1,130 @@
+    arm PRE   <- blob 86f42859a1492409de9c052caf9ecbde15791212
+    arm T268  <- blob 0607ecdb943e84c0ad2ae9f16cd79fc702847c3d
+    arm WIP   <- blob a70051b6567e4418b2be4a5a965dd7ef769122af
+    arm NEW   <- blob 4f844ed2409bbcde3add574a1160601f4e55b06d
+
+================================================================================================
+### T286's OWN TWO FIXTURES -- reproduced, because a finding I cannot reproduce
+### is not a finding. NEW closes both; that part of T286 HOLDS.
+================================================================================================
+
+--- LEG BASE-N6-root-verdict-empty
+    why : T281's R1. T268 greens an affirmative verdict over nothing; NEW refuses it.
+    PRE   exit 1   (expected 1)  REFUSED  
+    T268  exit 0   (expected 0)  GREEN    
+    WIP   exit 1   (expected 1)  REFUSED  
+    NEW   exit 1   (expected 1)  REFUSED  
+    LEG BASE-N6-root-verdict-empty: PASS
+
+--- LEG BASE-H1-nested-header-empty
+    why : T286's R1b. The WIP repair, phrased about the ROOT, still greens it; NEW refuses.
+    PRE   exit 1   (expected 1)  REFUSED  
+    T268  exit 0   (expected 0)  GREEN    
+    WIP   exit 0   (expected 0)  GREEN    
+    NEW   exit 1   (expected 1)  REFUSED  
+    LEG BASE-H1-nested-header-empty: PASS
+
+================================================================================================
+### F-T291-1 -- THE FIFTH FAIL-OPEN. H1 with the inner dict wrapped in a LIST.
+### Expected values below are what T286 CLAIMS (NEW must refuse whatever PRE
+### refused). A FAIL on these legs IS the finding.
+================================================================================================
+
+--- LEG FO5-X2-header-in-nested-list
+    why : H1 + two characters: the header dict is now an element of a list one level down, so it is a RECORD, so it answers the coverage guard.
+    PRE   exit 1   (expected 1)  REFUSED  
+    T268  exit 0   (expected 0)  GREEN    
+    WIP   exit 0   (expected 0)  GREEN    
+    NEW   exit 0   (expected 1)  GREEN       <-- UNEXPECTED
+    LEG FO5-X2-header-in-nested-list: FAIL
+
+--- LEG FO5-X3-header-in-list-of-lists
+    why : The same, reached through two nested lists.
+    PRE   exit 1   (expected 1)  REFUSED  
+    T268  exit 0   (expected 0)  GREEN    
+    WIP   exit 0   (expected 0)  GREEN    
+    NEW   exit 0   (expected 1)  GREEN       <-- UNEXPECTED
+    LEG FO5-X3-header-in-list-of-lists: FAIL
+
+--- LEG FO5-X4-toplevel-array-header-only
+    why : A top-level JSON ARRAY holding only the header -- which is the shape this program's own battery evidence files (t286-legs.json, red-green-legs.json) use.
+    PRE   exit 1   (expected 1)  REFUSED  
+    T268  exit 0   (expected 0)  GREEN    
+    WIP   exit 0   (expected 0)  GREEN    
+    NEW   exit 0   (expected 1)  GREEN       <-- UNEXPECTED
+    LEG FO5-X4-toplevel-array-header-only: FAIL
+
+--- LEG FO5-X7-header-in-deep-nested-list
+    why : The same, four levels down.
+    PRE   exit 1   (expected 1)  REFUSED  
+    T268  exit 0   (expected 0)  GREEN    
+    WIP   exit 0   (expected 0)  GREEN    
+    NEW   exit 0   (expected 1)  GREEN       <-- UNEXPECTED
+    LEG FO5-X7-header-in-deep-nested-list: FAIL
+
+--- LEG FO5-X2-BATCHED-with-real-evidence
+    why : F-1's own batching shape: the empty file hides inside a batch with real evidence. PRE greens the BATCH because F-1's global nil gate is the defect T268 fixed; NEW must refuse it on the per-file counter and does not.
+    PRE   exit 0   (expected 0)  GREEN    
+    T268  exit 0   (expected 0)  GREEN    
+    WIP   exit 0   (expected 0)  GREEN    
+    NEW   exit 0   (expected 1)  GREEN       <-- UNEXPECTED
+    LEG FO5-X2-BATCHED-with-real-evidence: FAIL
+
+================================================================================================
+### F-T291-2 -- guard #10 (AFFIRMATION ON A CONTAINER ROW) loses to the same
+### two characters. X5b is the CONTROL that makes X5 non-vacuous.
+================================================================================================
+
+--- LEG FO5-X5-affirmation-in-list-over-refuted-record
+    why : A document-level 'AS PREDICTED' sitting beside a record that recorded its own predicate FALSE. Guard #10 is written for exactly this and does not fire, because the header is in a list and is therefore not a CONTAINER row.
+    PRE   exit 0   (expected 0)  GREEN    
+    T268  exit 0   (expected 0)  GREEN    
+    WIP   exit 0   (expected 0)  GREEN    
+    NEW   exit 0   (expected 1)  GREEN       <-- UNEXPECTED
+    LEG FO5-X5-affirmation-in-list-over-refuted-record: FAIL
+
+--- LEG CONTROL-X5b-affirmation-as-mapping-key
+    why : The SAME document with the header as a mapping key. Guard #10 fires here, which is what shows the guard is real and its scope is one bracket wide.
+    PRE   exit 0   (expected 0)  GREEN    
+    T268  exit 0   (expected 0)  GREEN    
+    WIP   exit 0   (expected 0)  GREEN    
+    NEW   exit 1   (expected 1)  REFUSED  
+    LEG CONTROL-X5b-affirmation-as-mapping-key: PASS
+
+================================================================================================
+### EVASIONS THAT FAILED -- the evidence that the search had coverage.
+### These are attacks on NEW that NEW correctly REFUSED.
+================================================================================================
+
+--- LEG HELD-X8-noninspectable-dict-in-list
+    why : A dict in the list that carries no evidence is not a row at all, so the root header cannot borrow coverage from it. NEW refuses. PRE greens it.
+    PRE   exit 0   (expected 0)  GREEN    
+    T268  exit 0   (expected 0)  GREEN    
+    WIP   exit 1   (expected 1)  REFUSED  
+    NEW   exit 1   (expected 1)  REFUSED  
+    LEG HELD-X8-noninspectable-dict-in-list: PASS
+
+--- LEG HELD-X1-header-in-toplevel-list
+    why : NOT a lost refusal -- PRE greens this too (its coverage rule is 'a dict in a TOP-LEVEL list'). Recorded so the finding above is not overstated: X1 is the pre-existing decoy class T286 discloses as item a2; X2/X3/X4/X7 are NOT.
+    PRE   exit 0   (expected 0)  GREEN    
+    T268  exit 0   (expected 0)  GREEN    
+    WIP   exit 0   (expected 0)  GREEN    
+    NEW   exit 0   (expected 0)  GREEN    
+    LEG HELD-X1-header-in-toplevel-list: PASS
+
+================================================================================================
+### CORPUS SHAPE -- is the repair direction viable? Measured, not assumed.
+================================================================================================
+
+    classify-t229.json     records=11  containers=0   records carrying a PREDICATE=8
+    classify-t219.json     records=11  containers=0   records carrying a PREDICATE=9
+
+    containers=0 on both files CONFIRMS T286's inertness claim for guard #10.
+    recordsWithPredicate >= 8 on both files says a coverage rule of the form
+    'a record is a row reached through a list THAT CARRIES A PREDICATE' would
+    leave the real corpus GREEN. That is a measured statement about viability,
+    not a recommendation to adopt it without its own battery.
+
+================================================================================================
+T291 BATTERY: 5 passed, 6 failed, 0 SKIPPED
+================================================================================================

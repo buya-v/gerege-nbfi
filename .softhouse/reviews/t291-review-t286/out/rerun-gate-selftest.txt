@@ -1,0 +1,31 @@
+============================================================================================
+T286/R3 -- GATE TABLE SELF-TEST
+============================================================================================
+rule     : .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+counters : 15
+
+CONTROL all-zero, files=1          gate=False   expected False
+CONTROL files=0                    gate=True   expected True
+
+counter                    declared  gate()  on probe line  verdict
+--------------------------------------------------------------------------------------------
+files                      CENSUS    False   True           ok
+rows                       CENSUS    False   True           ok
+predicates                 CENSUS    False   True           ok
+disagreements              CENSUS    False   True           ok
+acknowledged               CENSUS    False   True           ok
+unacknowledged             REFUSAL   True    True           ok
+unclassified_keys          REFUSAL   True    True           ok
+unclassified_verdicts      REFUSAL   True    True           ok
+nil_coverage_files         REFUSAL   True    True           ok
+non_bool_predicates        REFUSAL   True    True           ok
+unreadable_verdicts        REFUSAL   True    True           ok
+root_collapse              REFUSAL   True    True           ok
+void_acks                  REFUSAL   True    True           ok
+container_rows             CENSUS    False   True           ok
+container_affirmations     REFUSAL   True    True           ok
+
+probe line fields (16): files rows predicates disagreements acknowledged unacknowledged unclassifiedKeys unclassifiedVerdicts nilCoverage nilCoverageFiles nonBoolPredicates unreadableVerdicts rootCollapse voidAcks containerRows containerAffirmations
+    T268's 12-field prefix is unchanged, field for field, in name and order.
+
+GATE TABLE SELF-TEST: PASS -- every counter is gated as it declares and printed where a caller can read it.

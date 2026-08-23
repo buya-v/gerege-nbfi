@@ -1,0 +1,6 @@
+T259 fail-open lint
+  root            : .softhouse/reviews/t291-review-t286
+  files seen      : 29
+  files SCANNED   : 4  (.sh and .py, this file included)
+  files SKIPPED   : 25  (not .sh/.py -- json, md, txt; counted, P-40)
+  findings        : 0
