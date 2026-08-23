@@ -1,0 +1,24 @@
+== A. the ledger sequences -- is_called t is the permanent half of the T287 residue.
+                seq                | last_value | is_called 
+-----------------------------------+------------+-----------
+ acc_gl_journal_entry_id_seq       |         64 | t
+ acc_gl_closure_id_seq             |          1 | t
+ m_portfolio_command_source_id_seq |        352 | t
+(3 rows)
+
+== B. the audit rows this program own probes have left, ACCOUNTING entities only.
+== C. the audit table as a whole -- how much of it is ours.
+psql:<stdin>:25: ERROR:  column "api_operation" does not exist
+LINE 1: ...ame, entity_name, resource_id, status, office_id, api_operat...
+                                                             ^
+ all_audit_rows | max_audit_id | accounting_audit_rows 
+----------------+--------------+-----------------------
+            352 |          352 |                    30
+(1 row)
+
+== D. the ledger itself, for the before/after comparison this task does NOT need to make.
+ journal_entries | max_journal_entry_id | distinct_transaction_ids 
+-----------------+----------------------+--------------------------
+              60 |                   64 |                       26
+(1 row)
+
