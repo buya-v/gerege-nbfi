@@ -1,0 +1,14 @@
+{
+ "summary": [
+  {
+   "verdict": "AS PREDICTED"
+  }
+ ],
+ "cells": [
+  {
+   "id": "c1",
+   "P2_totalInterestEqualsNEplusB": false,
+   "verdict": "REFUTED"
+  }
+ ]
+}

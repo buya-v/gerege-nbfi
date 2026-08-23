@@ -1,0 +1,238 @@
+============================================================================================
+T268 R-VPA RED/GREEN -- the pre-fix rule and the fixed rule, on the same inputs
+============================================================================================
+HEAD              : 41406c6639304b6606f8de5b204df0fc29b6f564
+vector store      : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+OLD rule blob     : 86f42859a1492409de9c052caf9ecbde15791212  (unpacked to .scratch-prefix-maasjvhh/)
+NEW rule          : .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+real evidence     : .softhouse/capture/t229-g8-site3/out/classify-t229.json
+sha256(real)      : f831736f07f1a6fecd4ee69b5a1de8dac0abcae89210f997e72526070f62821a
+============================================================================================
+
+### F-1 -- NIL COVERAGE was measured PER FILE and gated GLOBALLY
+
+--- LEG F1-nil-batched-with-REAL-evidence
+    why           : THE DEFECT. The body prints REFUSED NIL COVERAGE; the OLD exit code says GREEN.
+    argv          : N1-nil-coverage.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F1-nil-batched-with-REAL-evidence: PASS
+
+--- LEG F1-nil-batched-with-scratch-populated
+    why           : Same shape with no real evidence involved -- the defect is in the gate, not the corpus.
+    argv          : N1-nil-coverage.json P1-populated-clean.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F1-nil-batched-with-scratch-populated: PASS
+
+--- LEG F1-nil-in-SECOND-position
+    why           : Argument order must not decide the verdict.
+    argv          : P1-populated-clean.json N1-nil-coverage.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F1-nil-in-SECOND-position: PASS
+
+--- LEG F1-two-nil-files-only
+    why           : CONTROL: the OLD rule got this right (the batch summed to zero rows). The fix must not be sold as repairing a case that was never broken.
+    argv          : N1-nil-coverage.json N2-nil-coverage-second.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=2 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F1-two-nil-files-only: PASS
+
+--- LEG F1-nil-alone
+    why           : CONTROL: the single-file route always worked. It is what hid the defect.
+    argv          : N1-nil-coverage.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F1-nil-alone: PASS
+
+### GREEN -- a rule that refuses everything is strictly worse than the defect
+
+--- LEG GREEN-batched-genuinely-covered
+    why           : Two genuinely covered files, no unacknowledged disagreement: STILL EXITS 0.
+    argv          : P1-populated-clean.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=25 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=25 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG GREEN-batched-genuinely-covered: PASS
+
+--- LEG GREEN-real-evidence-alone
+    why           : The committed evidence: 11 rows, 24 predicates, 3 acknowledged disagreements, GREEN and still loud.
+    argv          : classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG GREEN-real-evidence-alone: PASS
+
+### F-2 -- four error paths, two of which exited 1 (the code reserved for a measured negative)
+
+--- LEG F2-E3-wrong-autoPredicatePattern
+    why           : An ERROR by the module's own words. OLD exited 1 -- the code reserved for a measured negative -- with NO probe line, which is the only thing that saved a presence-testing caller.
+    argv          : classify-t229.json --register wrong-pattern-register.json --acknowledgements acknowledged.json
+    OLD exit      : 1   (expected 1)   probe ABSENT
+      stderr: ERROR: unexpected autoPredicatePattern in register; refusing to guess
+    NEW exit      : 2   (expected 2)   probe ABSENT
+      stderr: ERROR: unexpected autoPredicatePattern in register; refusing to guess
+    LEG F2-E3-wrong-autoPredicatePattern: PASS
+
+--- LEG F2-E4-no-git-ancestor
+    why           : repo_root() cannot find the repository. OLD exited 1, same code as a measured refusal, again with no probe line.
+    argv          : classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 1   (expected 1)   probe ABSENT
+      stderr: ERROR: no .git ancestor of /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t268-nogit-2ovjuinv
+    NEW exit      : 2   (expected 2)   probe ABSENT
+      stderr: ERROR: no .git ancestor of /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t268-nogit-2ovjuinv
+    LEG F2-E4-no-git-ancestor: PASS
+
+--- LEG F2-E1-missing-target
+    why           : CONTROL: already exited 2, and still does.
+    argv          : does-not-exist.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 2   (expected 2)   probe ABSENT
+      stderr: ERROR: no such file: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac37e9aa5648487d9/.softhouse/capture/t268-
+    NEW exit      : 2   (expected 2)   probe ABSENT
+      stderr: ERROR: no such file: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac37e9aa5648487d9/.softhouse/capture/t268-
+    LEG F2-E1-missing-target: PASS
+
+--- LEG F2-E2-unreadable-register
+    why           : CONTROL: already exited 2, and still does.
+    argv          : classify-t229.json --register unreadable-register.json --acknowledgements acknowledged.json
+    OLD exit      : 2   (expected 2)   probe ABSENT
+      stderr: ERROR: register unreadable: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 
+    NEW exit      : 2   (expected 2)   probe ABSENT
+      stderr: ERROR: register unreadable: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 
+    LEG F2-E2-unreadable-register: PASS
+
+### F-3 -- T262's twelve invented shapes, EVERY ONE DRIVEN THROUGH THE BATCHED ROUTE
+###        Ground truth for all twelve: an affirmative verdict over a predicate
+###        the row itself recorded as not holding. Correct answer: REFUSED, 1.
+
+--- LEG F3-A1-nested-one-level-deeper
+    why           : row one level deeper than the old walk went (batched with the real evidence)
+    argv          : A1-nested-one-level-deeper.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=25 disagreements=4 acknowledged=3 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F3-A1-nested-one-level-deeper: PASS
+
+--- LEG F3-A2-toplevel-array
+    why           : the document is a top-level JSON array of rows (batched with the real evidence)
+    argv          : A2-toplevel-array.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=25 disagreements=4 acknowledged=3 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F3-A2-toplevel-array: PASS
+
+--- LEG F3-A3-verdict-as-int-enum-with-sibling
+    why           : CONTROL: caught before T268, via the sibling verdictWord (batched with the real evidence)
+    argv          : A3-verdict-as-int-enum-with-sibling.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=25 disagreements=4 acknowledged=3 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=25 disagreements=4 acknowledged=3 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=1 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F3-A3-verdict-as-int-enum-with-sibling: PASS
+
+--- LEG F3-A3b-verdict-as-object
+    why           : verdict is an object carrying the word (batched with the real evidence)
+    argv          : A3b-verdict-as-object.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=25 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=25 disagreements=4 acknowledged=3 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=1 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F3-A3b-verdict-as-object: PASS
+
+--- LEG F3-A3c-verdict-as-bare-int
+    why           : verdict is a bare int, no sibling word anywhere (batched with the real evidence)
+    argv          : A3c-verdict-as-bare-int.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=25 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=25 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=1 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F3-A3c-verdict-as-bare-int: PASS
+
+--- LEG F3-A4-verdict-key-named-result
+    why           : verdict key named `result` (batched with the real evidence)
+    argv          : A4-verdict-key-named-result.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=25 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=25 disagreements=4 acknowledged=3 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F3-A4-verdict-key-named-result: PASS
+
+--- LEG F3-A4b-verdict-key-named-conclusion
+    why           : verdict key named `conclusion` (batched with the real evidence)
+    argv          : A4b-verdict-key-named-conclusion.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=25 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=25 disagreements=4 acknowledged=3 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F3-A4b-verdict-key-named-conclusion: PASS
+
+--- LEG F3-A5-predicate-null
+    why           : predicate is null (batched with the real evidence)
+    argv          : A5-predicate-null.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=1 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F3-A5-predicate-null: PASS
+
+--- LEG F3-A6-predicate-string-false
+    why           : predicate is the string "false" (batched with the real evidence)
+    argv          : A6-predicate-string-false.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=1 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F3-A6-predicate-string-false: PASS
+
+--- LEG F3-A7-predicate-zero
+    why           : predicate is 0 (batched with the real evidence)
+    argv          : A7-predicate-zero.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=1 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F3-A7-predicate-zero: PASS
+
+--- LEG F3-A8-predicate-in-nested-list
+    why           : predicate inside a nested list in the row (batched with the real evidence)
+    argv          : A8-predicate-in-nested-list.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=25 disagreements=4 acknowledged=3 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F3-A8-predicate-in-nested-list: PASS
+
+--- LEG F3-C0-control-flat-shape
+    why           : CONTROL: the shape T259 was designed around (batched with the real evidence)
+    argv          : C0-control-flat-shape.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    OLD exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=25 disagreements=4 acknowledged=3 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    NEW exit      : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=12 predicates=25 disagreements=4 acknowledged=3 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG F3-C0-control-flat-shape: PASS
+
+### OBSERVATION -- the two-file invocation T262 named as the obvious next step
+
+    classify-t229 + classify-t219 : OLD exit 1, NEW exit 1
+      OLD probe: T259-VPA: REFUSED files=2 rows=22 predicates=51 disagreements=7 acknowledged=3 unacknowledged=4 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+      NEW probe: T259-VPA: REFUSED files=2 rows=22 predicates=51 disagreements=7 acknowledged=3 unacknowledged=4 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    This is B-1 and it belongs to T271, not to T268. Reported, not gated.
+
+============================================================================================
+T268 BATTERY: 23 passed, 0 failed
+============================================================================================

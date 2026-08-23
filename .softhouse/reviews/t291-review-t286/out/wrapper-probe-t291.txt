@@ -1,0 +1,6 @@
+RULE ON DISK: blob 4f844ed2409bbcde3add574a1160601f4e55b06d
+SAY   conformance: R-VPA verdict/predicate agreement — T259-VPA: GREEN files=1 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+WRAPPER_RC=0   (PY=python3)
+RULE ON DISK: blob 4f844ed2409bbcde3add574a1160601f4e55b06d
+WARN  conformance: R-VPA printed NO probe line (exit 127). It died before it measured.
+WRAPPER_RC=1   (PY=python3-that-does-not-exist)
