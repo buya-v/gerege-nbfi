@@ -1,0 +1,335 @@
+================================================================================
+T290 -- INDEPENDENT REVIEW of T271 (B-1, t219-g8-residual)
+HEAD         : f80e1a7be38133bd6232aaa21a73f7f10742acd3
+vector store : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+================================================================================
+
+### 0. REPRODUCE BOTH DIRECTIONS MYSELF, before reading any of T271's conclusions.
+    RED: the rule as it stands on main. GREEN: the same evidence under T271's register.
+  void acknowledgement blocks: 0
+  unclassified boolean keys : 0
+  unclassified verdict words: 0
+
+  THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+  stated, or that a row with no recorded predicate was checked at all. It establishes
+  only that no row printed an affirmative verdict over its own false predicate unremarked.
+T259-VPA: REFUSED files=1 rows=11 predicates=27 disagreements=4 acknowledged=0 unacknowledged=4 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+>>> R-VPA on main's register (RED) exit 1 (expected 1)
+  void acknowledgement blocks: 0
+  unclassified boolean keys : 0
+  unclassified verdict words: 0
+
+  THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+  stated, or that a row with no recorded predicate was checked at all. It establishes
+  only that no row printed an affirmative verdict over its own false predicate unremarked.
+T259-VPA: GREEN files=1 rows=11 predicates=27 disagreements=4 acknowledged=4 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+>>> R-VPA under T271's register (GREEN) exit 0 (expected 0)
+    counted with this review's OWN instrument, not with the rule's summary line.
+    A shell count here was six fail-open findings; see the header of the counter.
+T290-COUNT: red-reproduced.txt unacknowledged=4 acknowledged=0 total=4
+T290-COUNT: green-reproduced.txt unacknowledged=0 acknowledged=4 total=4
+>>> count_disagreement_blocks_t290.py exit 0 (expected 0)
+
+### 1. RE-DERIVE THE MONEY MYSELF, from the raw capture, in integer minor units.
+    Reads the raw gz and prediction.json ONLY; an open() interposer makes reading
+    classify-t219.json or any T271 instrument a hard error.
+T219-R600p0-N3000-B2999       3000    2999    1499   1499    1499       0    4499999    4499999   4499999   4499999    4499999    4499999  T   T    T     T
+T219-R600p0-N3000-B3001       3000    3001    1500   1500    1500       1    4503001    4503001   4503000   4503000    4503001    4503000  F   T    T     T
+T219-R600p0-N3000-B4499       3000    4499    2249   2249    2249    1499    6751499    6751499   6750000   6750000    6751499    6750000  F   T    T     T
+
+  REGISTERED    interest == n*E + B         : 4 of 7
+  CORRECTED     interest == n*E + B - P     : 6 of 7
+  UNCONDITIONAL interest == sumTotal - P    : 7 of 7   (sumTotal MEASURED)
+  EMI-plus-balloon STRUCTURE holds          : 6 of 7
+  row sums == the capture's OWN header totals: 7 of 7
+
+  ROW-BY-ROW, T219-R600p0-N103-B1   (all figures integer minor units, MNT)
+    repayment rows                 : 103   (registered n = 103)
+    disbursed                      : 1
+    rows with NONZERO interest     : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+      each carries                 : [1]
+      count x value = sum          : 13 x 1 = 13
+    rows with NONZERO principal    : [14]  value [1]
+    rows with NONZERO total        : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    rows 15..103 are ALL ZERO        : True
+    fees 0, penalties 0
+    E from row 1                   : 1
+    E as the MODE of rows 1..n-1   : 0
+    last row total                 : 0   emiDifference = -1   vs registered B = 1
+    n*E + B                        : 103 * 1 + 1 = 104
+    n*E + B - P                    : 104 - 1 = 103
+    MEASURED total repayment       : 14
+    MEASURED principal repaid      : 1
+    OBSERVED total interest        : 13
+    totalRepayment - principal     : 14 - 1 = 13
+    rows that ever charge interest : 13 of 103  => n*E prices 90 rows that charge nothing
+
+T290-REDERIVE: GREEN carriers=7 sumsMatchHeader=7 agreeREG=4 agreeCORR=6 agreeUNCOND=7 structureHolds=6
+>>> rederive_t290.py exit 0 (expected 0)
+
+### 1b. Verify the three T271 claims a reviewer must not take on trust: that its INDEP
+    instrument really is independent (audit hook + adversarial swap), that the
+    conformance.sh anchors are what T271 says, and that its reported exit 1 is a true
+    no-match, calibrated on a known positive and on a deliberately broken search.
+T290 -- mechanical verification of three T271 claims
+================================================================================================
+C1 -- does independent_recheck_t271.py read classify-t219.json while deriving?
+   (a) open ORDER inside the t219 capture, as recorded by an audit hook:
+       0  .softhouse/capture/t219-g8-residual/out/capture-t219-raw.json.gz
+       1  .softhouse/capture/t219-g8-residual/prediction.json
+       2  .softhouse/capture/t219-g8-residual/prediction.json
+       3  .softhouse/capture/t219-g8-residual/out/classify-t219.json
+       4  .softhouse/capture/t219-g8-residual/out/classify-t219.json
+   (b) ADVERSARIAL SWAP -- classify-t219.json corrupted in a copy of the tree:
+       clean : T271-INDEP: GREEN carriers=7 agreeREG=4 agreeCORR=6 agreeUNCOND=7 structureHolds=6 contradictions=0
+       dirty : T271-INDEP: REFUSED carriers=7 agreeREG=4 agreeCORR=6 agreeUNCOND=7 structureHolds=6 contradictions=21
+       DERIVED figures identical; reproduction assertion RED (contradictions=21, exit 1). INDEPENDENCE HOLDS.
+
+C2 -- conformance.sh anchors (READ ONLY; the file is contended by T273/T285)
+   line 1548 : 'run_guards() {'                                     MATCHES T271
+   line 1569 : 'guard_no_fail_open_instruments      || failed=1'    MATCHES T271
+   tally block by CONTENT (every `guard_* || failed=1`) : lines [1563, 1564, 1565, 1566, 1567, 1568, 1569]
+   NOTE FOR T269: bind the insertion point to the CONTENT of the last tally line, not
+   to 1569. T273/T285 are editing this file in the same fire and P-87 measured that a
+   line-number anchor was already 3-of-4 MOVED at an untouched merge base.
+
+C3 -- 'grep of conformance.sh returned exit 1, a true no-match' (P-81 / P-72 / P-75)
+   grep : /usr/bin/grep -- grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+   'guard_no_fail_open_instruments'   exit 0  MATCH                    CALIBRATION on a known positive
+   'R-VPA'                            exit 1  NO MATCH (true absence)  
+   't256-verdict-predicate'           exit 1  NO MATCH (true absence)  
+   'check_verdict_predicate'          exit 1  NO MATCH (true absence)  
+   't271'                             exit 1  NO MATCH (true absence)  
+   'run_rvpa_over_targets'            exit 1  NO MATCH (true absence)  
+   't290'                             exit 1  NO MATCH (true absence)  
+   deliberately broken search             exit 2  <- so >1 is distinguishable on this host
+   CONCLUSION: nothing in conformance.sh reads R-VPA, T271's runner, or T290's guard.
+   Every artefact in both directories is WIRED TO NOTHING (P-89/P-45).
+
+T290-CLAIMS: GREEN claims=3 held=3 problems=0
+>>> verify_t271_claims_t290.py exit 0 (expected 0)
+
+### 2. ATTACK THE ACKNOWLEDGEMENT -- five attacks, four of which fail to break it.
+T290 -- attacks on the sha-pinned acknowledgement
+================================================================================================
+  rule     : .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+  register : .softhouse/capture/t271-b1-t219/acknowledged-t219.json
+  evidence : .softhouse/capture/t219-g8-residual/out/classify-t219.json
+  evidence sha256 as committed: 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+
+  attack                                               expected           exit    measured
+  --------------------------------------------------------------------------------------------
+  A1 same pairs at an unnamed path                     REFUSES            1       state=REFUSED dis=4 ack=0 unack=4
+  A2 one byte appended in place                        VOID + REFUSES     1       state=REFUSED dis=4 ack=0 unack=4
+  A3 a NEW fifth disagreement                          REFUSES, unack=5   1       state=REFUSED dis=5 ack=0 unack=5
+  A4 RETRO-EDIT erases the disagreement (4 flipped)    **MEASURED: GREEN** 0       state=GREEN dis=0 ack=0 unack=0
+  A5 register aimed at a different file with the same ids REFUSES            1       state=REFUSED dis=4 ack=0 unack=4
+
+  A1, A2, A3 and A5 FAILED TO BREAK THE PIN, and that is the point of printing
+  them: the register cannot be made to cover a file it does not name, cannot
+  survive one byte moving under it, and cannot absorb a disagreement that appears
+  later. Those are exactly the three evasions an acknowledgement is usually worth
+  rejecting for, and T271's register closes all three.
+
+  A4 SUCCEEDED. The pin is one-sided. It catches evidence edited WHILE the
+  disagreement stands, and does not catch evidence edited SO THAT THE
+  DISAGREEMENT NO LONGER EXISTS -- the block goes VOID, the rule prints the
+  VOID line, and then `refused = (unacknowledged or unclassifiedKeys or
+  unclassifiedVerdicts or nil)` never consults it. Exit 0.
+  The repair needs no edit to the contended rule: read the number the rule
+  already prints. See guard_rvpa_floor_t290.py and red/drive-red-t290.py.
+
+  committed evidence restored and VERIFIED by sha256: 5226eacea7ff004e
+T290-ATTACK: GREEN attacks=5 asPredicted=5 brokeThePin=1
+>>> attack_acknowledgement_t290.py exit 0 (expected 0)
+
+### 2b. BREAK T271's battery leg G1 on purpose and show the red. A claim about a guard is
+    worth what its red drive is worth; G1 is what T271's whole 'green by acknowledgement,
+    not by lowering' argument rests on.
+  rule still refuses an unacknowledged one. The substance is re-derived separately
+  by rederive_t219_carriers.py, from the raw capture, in integer minor units.
+
+T271-REDGREEN: REFUSED legs=12 passed=7 failed=5 fwdCompat=RAN fwdFailed=0
+  battery exit: 1
+
+  sha256 after restore: 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+  committed evidence restored and VERIFIED.
+
+  CONCLUSION: G1 DOES fail when the count drops. T271's claim survives this attack, and
+  "the bar went green by acknowledgement, not by lowering" is TRUE OF T271's BATTERY.
+  IT IS NOT TRUE OF THE GUARD T271 SPECIFIES FOR T269, which pins only unacknowledged=0
+  and passes this same retro-edited tree. See red/drive-red-t290.py leg R2.
+T290-BREAK-G1: DEMONSTRATED batteryWentRed=1 restored=1
+>>> break_battery_g1_t290.sh exit 0 (expected 0)
+
+### 3. THE GUARD CONDITION T269 MUST WIRE, and the red drive that separates it from the
+    one T271 specified. R2/R3 are the finding: T271-SPEC GREEN, T290-GUARD REFUSED.
+T290 -- red drive: the invisible route to green that T271's wiring spec leaves open
+================================================================================================
+  runner : .softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py
+  guard  : .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py
+  t219   : .softhouse/capture/t219-g8-residual/out/classify-t219.json  sha 5226eacea7ff004e
+  t229   : .softhouse/capture/t229-g8-site3/out/classify-t229.json  sha f831736f07f1a6fe
+
+  leg                                            T271-SPEC      T290-GUARD     verdict
+  --------------------------------------------------------------------------------------------
+  R1-clean-tree-both-green                       GREEN          GREEN          PASS
+  R2-retro-edit-t219-erases-the-disagreement     GREEN          REFUSED        PASS
+  R3-retro-edit-BOTH-targets                     GREEN          REFUSED        PASS
+  R4-one-byte-edit-keeps-the-disagreements       REFUSED        REFUSED        PASS
+  R5-CONSISTENT-two-file-edit-nothing-is-void    GREEN          REFUSED        PASS
+
+  ---- R2 IN FULL: this is the finding ----
+    !! ACKNOWLEDGEMENT BLOCK VOID -- registered for sha256 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+    T259-VPA: GREEN files=2 rows=22 predicates=51 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T271-TARGETS: GREEN targets=2 inspected=2 ruleExit=0
+    REFUSED: voidAcknowledgementBlocks=1, wanted <= 0. AN ACKNOWLEDGEMENT REGISTERED FOR BYTES THAT ARE NO LONGER ON DISK IS NOT AN ACKNOWLEDGEMENT. The rule prints this and does not act on it; this guard acts on it.
+    REFUSED: disagreements=3 has FALLEN BELOW THE COMMITTED FLOOR 7. The corpus did not get cleaner by itself: either committed evidence was retro-edited (T114/T176) or the rule stopped looking. Neither is a pass. If the drop is legitimate, LOWER THE FLOOR IN A TASK, with a reason, in writing.
+    T290-RVPA-GUARD: REFUSED runnerExit=0 disagreements=3 floor=7 acknowledged=3 unacknowledged=0 voidBlocks=1 rows=22
+
+  committed evidence restored and VERIFIED by sha256: 3 of 3
+
+  THIS DOES NOT ESTABLISH that T271's acknowledgements are wrong in substance --
+  they are not; the money re-derives. It establishes that the GUARD CONDITION T271
+  specifies for T269 passes a corpus whose committed evidence has been retro-edited
+  to erase the very disagreement the acknowledgement exists to record.
+T290-REDGREEN: GREEN legs=5 passed=5 failed=0 restored=3
+>>> drive-red-t290.py exit 0 (expected 0)
+
+### 3b. IS THE FINDING STILL CURRENT? main moved under this review and T286 rewrites the
+    rule. Measured against BOTH rules on three trees rather than read off either
+    docstring -- a reviewer shipping a stale finding is P-80 applied to a finding.
+T290 -- is the invisible route to green still live against T286's rewritten rule?
+====================================================================================================
+  live rule  : .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+  T286 rule  : softhouse/t286-t268-retry:.softhouse/capture/t256-verdict-predicate/… (extracted read-only into a temp dir inside the repo)
+  evidence   : .softhouse/capture/t219-g8-residual/out/classify-t219.json  sha 5226eacea7ff004e
+
+  CASE 0 -- clean tree (the positive control)
+  case0  live  exit 0  GREEN    disagreements=4
+  case0  t286  exit 0  GREEN    disagreements=4
+
+  CASE A -- the evidence retro-edited ALONE; the register still pins the old bytes
+         (4 false P2_* flipped to true)
+  caseA  live  exit 0  GREEN    disagreements=0
+  caseA  t286  exit 1  REFUSED  disagreements=0
+
+  CASE B -- the CONSISTENT TWO-FILE EDIT: evidence retro-edited AND the register
+         re-pinned to the NEW bytes with its rows removed. Nothing is VOID.
+  caseB  live  exit 0  GREEN    disagreements=0
+  caseB  t286  exit 0  GREEN    disagreements=0
+
+  committed evidence restored and VERIFIED by sha256: 5226eacea7ff004e
+
+  CASE A: GREEN on the live rule, REFUSED on T286's. **T286 ALREADY CLOSES THE
+  void_acks HALF**, independently and before this review. F-T290-1a is live
+  only against the rule on main today, and T269 must state WHICH rule it
+  installs.
+
+  CASE B: GREEN ON BOTH. The consistent two-file edit leaves nothing to void,
+  so `voidAcks` cannot see it and `unacknowledged=0` is satisfied. **ONLY A
+  FLOOR ON `disagreements` CATCHES THIS**, and no rule on any branch has one.
+  This is the half of F-T290-1 that survives everything, and it is the shape a
+  well-meaning worker reaches for: regenerate the evidence, update the
+  register. It looks like maintenance.
+T290-T286: GREEN caseA_live=GREEN caseA_t286=REFUSED caseB_live=GREEN caseB_t286=GREEN
+>>> probe_t286_rule_t290.py exit 0 (expected 0)
+
+### 4. The guard on the clean tree, so no green here is explicable by the guard being inert.
+T271-TARGETS: GREEN targets=2 inspected=2 ruleExit=0
+
+T290 -- R-VPA guard condition (floor + void-block, over T271's runner)
+==============================================================================
+  runner : .softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py
+  floor  : .softhouse/capture/t290-review-t271/floor-t290.json  (disagreements >= 7, rows >= 22, voidBlocks <= 0)
+  measured: disagreements=7 acknowledged=7 unacknowledged=0 voidBlocks=0 rows=22 runnerExit=0
+  every condition held. NOTE WHAT THIS DOES NOT ESTABLISH: that any acknowledgement
+  is right in SUBSTANCE. It establishes only that no disagreement is unremarked, no
+  acknowledgement is registered against bytes that moved, and the count did not
+  quietly fall.
+T290-RVPA-GUARD: GREEN runnerExit=0 disagreements=7 floor=7 acknowledged=7 unacknowledged=0 voidBlocks=0 rows=22
+>>> guard_rvpa_floor_t290.py exit 0 (expected 0)
+
+### 5. F-T290-2's disposition repair moves no measured number.
+T290 -- is the F-T290-2 disposition repair inert?
+==============================================================================
+  register (committed) : .softhouse/capture/t271-b1-t219/acknowledged-t219.json
+  register (repaired)  : a temporary copy; the committed one is NOT touched
+  rows replaced        : 2
+  rule exit  before/after : 0 / 0
+    before: T259-VPA: GREEN files=1 rows=11 predicates=27 disagreements=4 acknowledged=4 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    after : T259-VPA: GREEN files=1 rows=11 predicates=27 disagreements=4 acknowledged=4 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+  identical. The repair changes what the rule PRINTS about each disagreement
+  and no number it MEASURES.
+T290-REPAIR-INERT: GREEN rowsReplaced=2 probeLinesBefore=1 probeLinesAfter=1 identical=1
+>>> prove_repair_inert.py exit 0 (expected 0)
+
+### 6. ADJUDICATING what T271 declined to rule on: calibration[] does not reproduce.
+    EXPECTED EXIT 1 -- it is a REAL measured negative about pre-existing committed
+    evidence, not a T290 failure. A 0 here would mean the contradiction went away.
+T290 -- why does classify-t219.json's calibration[] not reproduce?
+================================================================================================
+  raw       : .softhouse/capture/t219-g8-residual/out/capture-t219-raw.json.gz
+  classify  : .softhouse/capture/t219-g8-residual/out/classify-t219.json
+  reference : .softhouse/capture/out/capture-prod3g-raw.json
+
+  COMMITTED calibration[]:
+    {"cal": "P-CAL-ZPA", "target": "T64-ZP-A", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": false, "status": "DIFFERS"}
+    {"cal": "P-CAL-ZPB", "target": "T64-ZP-B", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": false, "status": "DIFFERS"}
+
+  RE-RUN of the committed classifier's comparison, on the committed inputs:
+    {"cal": "P-CAL-ZPA", "target": "T64-ZP-A", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": true, "status": "REPRODUCED"}
+    {"cal": "P-CAL-ZPB", "target": "T64-ZP-B", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": true, "status": "REPRODUCED"}
+
+  FIELD BY FIELD, the keys the comparison actually reads:
+    P-CAL-ZPA -> T64-ZP-A
+      capture keys   : ['id', 'inputs', 'observed', 'outcome', 'purpose']
+      reference keys : ['id', 'inputs', 'observed', 'purpose']
+      .threw   capture=None reference=None  -> threwIdentical=True
+      .outcome capture='observed' reference=None   (a RIG field the comparison excludes)
+    P-CAL-ZPB -> T64-ZP-B
+      capture keys   : ['id', 'inputs', 'observed', 'outcome', 'purpose']
+      reference keys : ['id', 'inputs', 'observed', 'purpose']
+      .threw   capture=None reference=None  -> threwIdentical=True
+      .outcome capture='observed' reference=None   (a RIG field the comparison excludes)
+
+  IS THERE ANY COMMITTED REFERENCE THAT WOULD PRODUCE THE COMMITTED VERDICT?
+  Searched: every *.json under .softhouse/capture/ that parses as an object with a
+  `captures` list, recursively. `not found` is a statement about THIS search.
+    reference-shaped files inspected : 55
+    files that explain the committed verdict : 0
+
+  WHAT THIS ESTABLISHES, and nothing more:
+    * cells[] is not in question here. It reproduces exactly, and T290 re-derived the
+      four B-1 pairs from the raw capture independently. THE ACKNOWLEDGEMENT IS NOT
+      AFFECTED by this finding.
+    * the committed calibration[] block is not reproducible from the committed
+      classifier and any committed reference found by the search above, and the
+      capture directory records NO command line for the classifier, so there is no
+      invocation to re-run. That is a PROVENANCE defect in committed evidence.
+    * t229/PREDICTION.md P6 makes `DIFFERS` mean `nothing else in this capture is
+      admissible`. R-VPA cannot see it: `status` is a verdict key, `DIFFERS` is in the
+      NEGATIVE vocabulary, and the rule only fires on an AFFIRMATIVE verdict over a
+      false predicate. So the corpus contains a self-defeating assertion that no
+      instrument reads -- P-79's shape in a STRING field. IT SHOULD BE A FILED TASK.
+T290-CALIB: REFUSED committed=DIFFERS,DIFFERS rerun=REPRODUCED,REPRODUCED explainedByAnyCommittedReference=0
+>>> diagnose_calibration_t290.py exit 1 (expected 1)
+
+### 7. Fail-open lint, pointed at T290's OWN instruments first (P-81: writing the rule
+    does not immunise you against it; only the guard does).
+T259 fail-open lint
+  root            : /Users/buv/gerege-nbfi/.claude/worktrees/t290-scratch/.softhouse/capture/t290-review-t271
+  files seen      : 27
+  files SCANNED   : 11  (.sh and .py, this file included)
+  files SKIPPED   : 16  (not .sh/.py -- json, md, txt; counted, P-40)
+  findings        : 0
+>>> lint_failopen_t259.py exit 0 (expected 0)
+
+### 8. The committed evidence this review touched is byte-unchanged.
+    (empty porcelain = nothing this review ran left a file moved)
+>>> git status over the evidence exit 0 (expected 0)
+
+================================================================================
+T290 RUN: worst exit 0
+vector store at end: 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+================================================================================

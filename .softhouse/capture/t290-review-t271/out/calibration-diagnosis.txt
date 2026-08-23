@@ -1,0 +1,46 @@
+T290 -- why does classify-t219.json's calibration[] not reproduce?
+================================================================================================
+  raw       : .softhouse/capture/t219-g8-residual/out/capture-t219-raw.json.gz
+  classify  : .softhouse/capture/t219-g8-residual/out/classify-t219.json
+  reference : .softhouse/capture/out/capture-prod3g-raw.json
+
+  COMMITTED calibration[]:
+    {"cal": "P-CAL-ZPA", "target": "T64-ZP-A", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": false, "status": "DIFFERS"}
+    {"cal": "P-CAL-ZPB", "target": "T64-ZP-B", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": false, "status": "DIFFERS"}
+
+  RE-RUN of the committed classifier's comparison, on the committed inputs:
+    {"cal": "P-CAL-ZPA", "target": "T64-ZP-A", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": true, "status": "REPRODUCED"}
+    {"cal": "P-CAL-ZPB", "target": "T64-ZP-B", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": true, "status": "REPRODUCED"}
+
+  FIELD BY FIELD, the keys the comparison actually reads:
+    P-CAL-ZPA -> T64-ZP-A
+      capture keys   : ['id', 'inputs', 'observed', 'outcome', 'purpose']
+      reference keys : ['id', 'inputs', 'observed', 'purpose']
+      .threw   capture=None reference=None  -> threwIdentical=True
+      .outcome capture='observed' reference=None   (a RIG field the comparison excludes)
+    P-CAL-ZPB -> T64-ZP-B
+      capture keys   : ['id', 'inputs', 'observed', 'outcome', 'purpose']
+      reference keys : ['id', 'inputs', 'observed', 'purpose']
+      .threw   capture=None reference=None  -> threwIdentical=True
+      .outcome capture='observed' reference=None   (a RIG field the comparison excludes)
+
+  IS THERE ANY COMMITTED REFERENCE THAT WOULD PRODUCE THE COMMITTED VERDICT?
+  Searched: every *.json under .softhouse/capture/ that parses as an object with a
+  `captures` list, recursively. `not found` is a statement about THIS search.
+    reference-shaped files inspected : 55
+    files that explain the committed verdict : 0
+
+  WHAT THIS ESTABLISHES, and nothing more:
+    * cells[] is not in question here. It reproduces exactly, and T290 re-derived the
+      four B-1 pairs from the raw capture independently. THE ACKNOWLEDGEMENT IS NOT
+      AFFECTED by this finding.
+    * the committed calibration[] block is not reproducible from the committed
+      classifier and any committed reference found by the search above, and the
+      capture directory records NO command line for the classifier, so there is no
+      invocation to re-run. That is a PROVENANCE defect in committed evidence.
+    * t229/PREDICTION.md P6 makes `DIFFERS` mean `nothing else in this capture is
+      admissible`. R-VPA cannot see it: `status` is a verdict key, `DIFFERS` is in the
+      NEGATIVE vocabulary, and the rule only fires on an AFFIRMATIVE verdict over a
+      false predicate. So the corpus contains a self-defeating assertion that no
+      instrument reads -- P-79's shape in a STRING field. IT SHOULD BE A FILED TASK.
+T290-CALIB: REFUSED committed=DIFFERS,DIFFERS rerun=REPRODUCED,REPRODUCED explainedByAnyCommittedReference=0

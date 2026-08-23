@@ -1,0 +1,30 @@
+T290 -- red drive: the invisible route to green that T271's wiring spec leaves open
+================================================================================================
+  runner : .softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py
+  guard  : .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py
+  t219   : .softhouse/capture/t219-g8-residual/out/classify-t219.json  sha 5226eacea7ff004e
+  t229   : .softhouse/capture/t229-g8-site3/out/classify-t229.json  sha f831736f07f1a6fe
+
+  leg                                            T271-SPEC      T290-GUARD     verdict
+  --------------------------------------------------------------------------------------------
+  R1-clean-tree-both-green                       GREEN          GREEN          PASS
+  R2-retro-edit-t219-erases-the-disagreement     GREEN          REFUSED        PASS
+  R3-retro-edit-BOTH-targets                     GREEN          REFUSED        PASS
+  R4-one-byte-edit-keeps-the-disagreements       REFUSED        REFUSED        PASS
+  R5-CONSISTENT-two-file-edit-nothing-is-void    GREEN          REFUSED        PASS
+
+  ---- R2 IN FULL: this is the finding ----
+    !! ACKNOWLEDGEMENT BLOCK VOID -- registered for sha256 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+    T259-VPA: GREEN files=2 rows=22 predicates=51 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T271-TARGETS: GREEN targets=2 inspected=2 ruleExit=0
+    REFUSED: voidAcknowledgementBlocks=1, wanted <= 0. AN ACKNOWLEDGEMENT REGISTERED FOR BYTES THAT ARE NO LONGER ON DISK IS NOT AN ACKNOWLEDGEMENT. The rule prints this and does not act on it; this guard acts on it.
+    REFUSED: disagreements=3 has FALLEN BELOW THE COMMITTED FLOOR 7. The corpus did not get cleaner by itself: either committed evidence was retro-edited (T114/T176) or the rule stopped looking. Neither is a pass. If the drop is legitimate, LOWER THE FLOOR IN A TASK, with a reason, in writing.
+    T290-RVPA-GUARD: REFUSED runnerExit=0 disagreements=3 floor=7 acknowledged=3 unacknowledged=0 voidBlocks=1 rows=22
+
+  committed evidence restored and VERIFIED by sha256: 3 of 3
+
+  THIS DOES NOT ESTABLISH that T271's acknowledgements are wrong in substance --
+  they are not; the money re-derives. It establishes that the GUARD CONDITION T271
+  specifies for T269 passes a corpus whose committed evidence has been retro-edited
+  to erase the very disagreement the acknowledgement exists to record.
+T290-REDGREEN: GREEN legs=5 passed=5 failed=0 restored=3
