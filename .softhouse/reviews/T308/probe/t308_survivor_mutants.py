@@ -178,9 +178,14 @@ def main():
                                                       mid, r.returncode))
             print("            LOST REFUSALS: %d   ADJUDICATED WIDENINGS: %d   failing legs: %d"
                   % (lost, widen, len(failed)))
-            print("            A10 driven through the mutant: rc=%s  body prints REFUSED=%s"
-                  % (mrc, msaid))
-            if mprobe:
+            # LABEL THE DOCUMENT THAT WAS ACTUALLY DRIVEN. Pass 2 of this probe printed
+            # "A10 driven through the mutant" beside a number produced by the PER-GUARD demo
+            # document, because the label was left behind when the demo table was added. A
+            # mislabelled cardinal is the defect this whole directory is about; fixed, and the
+            # pass-2 transcript is kept at out/t308-survivor-mutants-pass2-stale-label.txt.
+            print("            reproduction %-22s SHIPPED %s | MUTANT   %s"
+                  % (mid.split("-")[0], srepr, mrepr))
+            if demo is not None and mprobe:
                 print("            %s" % mprobe)
             for l in failed[:4]:
                 print("              FAILED [%s] %s -- %s" % (l["prop"], l["name"],
