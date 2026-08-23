@@ -313,6 +313,62 @@ type Request struct {
 	// ManualEntry is acc_gl_journal_entry.manual_entry.
 	ManualEntry bool `json:"manual_entry"`
 
+	// ---------------------------------------------------------------------
+	// THE OPENING-BALANCE INPUTS — T289's date strategy (c), applied to a
+	// STATE precondition instead of a date. [T294]
+	// ---------------------------------------------------------------------
+	//
+	// T289's conclusion, reached over the closure/future-date captures and
+	// binding on every refusal promoted after it: a refusal whose precondition
+	// lives in AMBIENT ORACLE STATE and not in the request "will silently stop
+	// testing what it claims"; the fix is to LIFT THE PRECONDITION INTO THE
+	// VECTOR AS AN INPUT and never re-fire the probe at the oracle. It rejected
+	// pinning the oracle's state and rejected recomputing the input at run time,
+	// for reasons that transfer to this refusal unchanged.
+	//
+	// POST /journalentries?command=defineOpeningBalance
+	// [JournalEntriesApiResource.java:211-212] reaches
+	// defineOpeningBalance:703, which resolves the FinancialActivityAccount for
+	// type 300 at :708-709 and then calls
+	// validateJournalEntriesArePostedBefore(contraId) at :717. That guard
+	// [:810-816] refuses whenever findNonContraTransactionIds(contraId) is
+	// non-empty — a fact about the TENANT, not about the request. The three
+	// fields below are that fact, made an input.
+	//
+	// EVERY EXISTING VECTOR LEAVES ALL THREE AT THEIR ZERO VALUES and admit.go
+	// requires exactly that of a vector whose Command is empty, so a
+	// manual-posting vector cannot acquire opening-balance semantics by
+	// accident.
+
+	// Command is the wire's `?command=` query parameter as a STORED VALUE
+	// (DEC-2 §4.8 — never an ordinal, never a bool). Empty means the plain
+	// create path, which is what every capture before T294 exercised.
+	//
+	// DEFAULT-DENY: admit.go admits "" and "defineOpeningBalance" and nothing
+	// else, because those are the only two the corpus has observed.
+	Command string `json:"command,omitempty"`
+
+	// OpeningBalanceContraAccountID is the GL account the financial-activity
+	// type 300 mapping resolves to — the `contraId` of :709.
+	//
+	// IT IS AN INPUT AND NOT A CONVENIENCE. If the mapping does not resolve,
+	// findByFinancialActivityTypeWithNotFoundDetection throws at :708 and the
+	// oracle returns a DIFFERENT refusal, so a vector that does not record which
+	// mapping was in force has not recorded which refusal it observed.
+	OpeningBalanceContraAccountID int64 `json:"opening_balance_contra_gl_account_id,omitempty"`
+
+	// PostedNonContraTransactionIDs is findNonContraTransactionIds(contraId) as
+	// the oracle itself reported it, transcribed from the refusal body's
+	// errors[0].args.
+	//
+	// THE LIST AND NOT A BOOLEAN, for one reason: the oracle emitted the list,
+	// and a vector that recorded `true` would be recording this promoter's
+	// READING of the wire rather than the wire. The port is graded on the
+	// PREDICATE (non-empty ⇒ refuse), which is what :812's
+	// CollectionUtils.isEmpty computes; the members are evidence that the
+	// predicate had something to be non-empty about.
+	PostedNonContraTransactionIDs []string `json:"posted_non_contra_transaction_ids,omitempty"`
+
 	// TransactionAmountMajorText is the amount THE CALLER ASKED FOR, in the
 	// caller's own characters, taken from the recorded request body. Empty where
 	// the request carried no single total.

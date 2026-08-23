@@ -1,0 +1,9 @@
+POST /journalentries?command=defineOpeningBalance
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+request-source-file: req/ob-01-openingbalance-after-posted-entries.json
+request-bytes-artefact: OB-01-openingbalance-after-posted-entries.req
+request-sha256: dae579d2e7a34a26980acad2a09779d7aaaea017d2e1519b50e6b5cf7e70aeae
+request-bytes: 556
+captured-at-utc: 2026-08-23T02:02:47Z

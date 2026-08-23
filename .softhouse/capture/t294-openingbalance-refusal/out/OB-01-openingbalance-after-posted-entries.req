@@ -1,0 +1,20 @@
+{
+  "officeId": 1,
+  "transactionDate": "2026-01-01",
+  "dateFormat": "yyyy-MM-dd",
+  "locale": "en",
+  "currencyCode": "MNT",
+  "comments": "T294 opening-balance probe. UNBALANCED BY EXACTLY ONE MNT MINOR UNIT ON PURPOSE (debit 250000.25, credit 250000.24): the body's own content makes it unpostable, so its safety does not rest on an oracle-side precondition. See guard-precondition.sh.",
+  "debits": [
+    {
+      "glAccountId": 4,
+      "amount": 250000.25
+    }
+  ],
+  "credits": [
+    {
+      "glAccountId": 2,
+      "amount": 250000.24
+    }
+  ]
+}

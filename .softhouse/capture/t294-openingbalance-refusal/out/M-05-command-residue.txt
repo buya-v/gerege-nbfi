@@ -1,0 +1,41 @@
+ id  |     action_name      | entity_name  | resource_id | status | office_id |       api_get_url        
+-----+----------------------+--------------+-------------+--------+-----------+--------------------------
+ 352 | DEFINEOPENINGBALANCE | JOURNALENTRY |             |      5 |           | /journalentries/update
+ 351 | DELETE               | GLCLOSURE    |           1 |      1 |         1 | /glclosures/1
+ 350 | CREATE               | JOURNALENTRY |             |      5 |           | /journalentries/template
+ 349 | CREATE               | JOURNALENTRY |             |      5 |           | /journalentries/template
+(4 rows)
+
+ id  |                                                                                                                             command_as_json                                                                                                                              
+-----+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 352 | {                                                                                                                                                                                                                                                                       +
+     |   "officeId": 1,                                                                                                                                                                                                                                                        +
+     |   "transactionDate": "2026-01-01",                                                                                                                                                                                                                                      +
+     |   "dateFormat": "yyyy-MM-dd",                                                                                                                                                                                                                                           +
+     |   "locale": "en",                                                                                                                                                                                                                                                       +
+     |   "currencyCode": "MNT",                                                                                                                                                                                                                                                +
+     |   "comments": "T294 opening-balance probe. UNBALANCED BY EXACTLY ONE MNT MINOR UNIT ON PURPOSE (debit 250000.25, credit 250000.24): the body's own content makes it unpostable, so its safety does not rest on an oracle-side precondition. See guard-precondition.sh.",+
+     |   "debits": [                                                                                                                                                                                                                                                           +
+     |     {                                                                                                                                                                                                                                                                   +
+     |       "glAccountId": 4,                                                                                                                                                                                                                                                 +
+     |       "amount": 250000.25                                                                                                                                                                                                                                               +
+     |     }                                                                                                                                                                                                                                                                   +
+     |   ],                                                                                                                                                                                                                                                                    +
+     |   "credits": [                                                                                                                                                                                                                                                          +
+     |     {                                                                                                                                                                                                                                                                   +
+     |       "glAccountId": 2,                                                                                                                                                                                                                                                 +
+     |       "amount": 250000.24                                                                                                                                                                                                                                               +
+     |     }                                                                                                                                                                                                                                                                   +
+     |   ]                                                                                                                                                                                                                                                                     +
+     | }                                                                                                                                                                                                                                                                       +
+     | 
+(1 row)
+
+           sequencename            | last_value | is_called 
+-----------------------------------+------------+-----------
+ acc_gl_closure_id_seq             |          1 | t
+ acc_gl_journal_entry_id_seq       |         64 | t
+ m_command_id_seq                  |          1 | t
+ m_portfolio_command_source_id_seq |        352 | t
+(4 rows)
+
