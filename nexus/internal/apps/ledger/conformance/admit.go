@@ -217,6 +217,53 @@ func Admit(v *Vector, opts Options) []string {
 		}
 	}
 
+	// --- the capability claim is SCOPED TO THE OBSERVED SHAPE [T296] ---------
+	//
+	// `ledger.opening.balance.and.closure` names THREE shapes in its own
+	// description — defining opening balances after journal entries have been
+	// posted, an entry dated on or before the latest GLClosure, and a
+	// future-dated entry — and T294 flipped the row to in_graded_domain TRUE on
+	// the strength of the FIRST one only. The other two are captured raw in
+	// .softhouse/capture/t287-closure-refusals and nothing promotes them.
+	//
+	// THE FLIP IS MEASURED TO WIDEN THE GATE, and this rule is what puts the
+	// width back. T296 built a closure-family refusal vector from T287's real
+	// A1-01 artefacts (correct provenance sha256s, a non-empty graded_against)
+	// and ran it against two registries that differ in that one boolean:
+	//
+	//     in_graded_domain FALSE  ->  INADMISSIBLE, the capability gate refuses
+	//     in_graded_domain TRUE   ->  ADMITTED AND GRADED, 3 cells compared
+	//
+	// [.softhouse/reviews/T296/out/capgate-arm{A,B}-*.txt]. So before T294 the
+	// registry refused an UNOBSERVED shape as DATA; after T294 only the row's
+	// evidence PROSE said it should be refused, and P-89 is exactly that: "PROSE
+	// DOES NOT FIRE ON THE NEXT FIRE."
+	//
+	// WHY THIS IS NOT THE FIX T289 FORBADE. T289 F-T289-4 settled that the row is
+	// COHERENT AND MUST NOT BE RENAMED OR SPLIT, because defineOpeningBalance:703
+	// reaches the same guard at :724 that the manual create path reaches at :157.
+	// This rule renames nothing and splits nothing. The row stays one row and
+	// keeps naming all three shapes; what is scoped is the CLAIM a vector may
+	// make on it, and the scope is the one thing that was actually observed. When
+	// a closure refusal IS promoted — T294 backlog (6) — this rule is what that
+	// task must widen, deliberately and with the capture in hand, instead of
+	// finding the door already open.
+	for _, name := range v.CapabilitiesRequired {
+		if name != "ledger.opening.balance.and.closure" {
+			continue
+		}
+		if v.Request.Command != "defineOpeningBalance" {
+			add("capabilities_required names %q on a vector whose request.command is %q. "+
+				"EXACTLY ONE of the three shapes that row names is observed by this store — the "+
+				"defineOpeningBalance-after-posted-entries refusal at "+
+				"JournalEntryWritePlatformServiceJpaRepositoryImpl.java:717 — and the PRE-CLOSURE "+
+				"and FUTURE-DATED shapes at :626-640 are raw artefacts nothing promotes. A vector "+
+				"claiming this capability for a shape this store has never observed would read as "+
+				"covered when it is not. PROMOTE THE CAPTURE FIRST, then widen this rule",
+				name, v.Request.Command)
+		}
+	}
+
 	// G-09 / G-10 over the chart rows the vector supplies.
 	for _, a := range v.Request.Accounts {
 		switch a.Usage {

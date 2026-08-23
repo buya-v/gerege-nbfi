@@ -91,6 +91,61 @@ func TestOpeningBalanceInputsAreDefaultDeny(t *testing.T) {
 	})
 }
 
+// TestOpeningBalanceCapabilityIsScopedToTheObservedShape drives the T296 rule RED.
+//
+// `ledger.opening.balance.and.closure` names three shapes and this store has
+// observed one. T294 flipped the row into the graded domain on the strength of
+// that one, and T296 MEASURED the consequence: a closure-family refusal vector
+// built from T287's raw A1-01 artefacts is INADMISSIBLE against the pre-flip
+// registry and ADMITTED AND GRADED against the merged one
+// [.softhouse/reviews/T296/out/capgate-arm{A,B}-*.txt]. The rule in admit.go puts
+// the width back without renaming or splitting the row, which T289 F-T289-4
+// forbids. This is the arm that proves it can refuse — a control that cannot fail
+// is worse than none (P-22).
+//
+// THE ANTI-VACUITY CONTROL IS THE COMMITTED VECTOR ITSELF, which names this same
+// capability and must stay ADMITTED; TestOpeningBalanceInputsAreDefaultDeny's
+// first sub-test asserts exactly that, so a rule that refused everything would go
+// red there rather than pass silently here.
+func TestOpeningBalanceCapabilityIsScopedToTheObservedShape(t *testing.T) {
+	vs, opts := loadCommitted(t)
+	var base *Vector
+	for _, c := range vs {
+		if c.Request.Command == "defineOpeningBalance" {
+			base = c
+			break
+		}
+	}
+	if base == nil {
+		t.Fatal("no committed opening-balance vector; this test would assert nothing")
+	}
+	var claims bool
+	for _, name := range base.CapabilitiesRequired {
+		if name == "ledger.opening.balance.and.closure" {
+			claims = true
+		}
+	}
+	if !claims {
+		t.Fatal("the committed opening-balance vector does not name " +
+			"ledger.opening.balance.and.closure, so the rule under test has nothing to scope")
+	}
+
+	// A CLOSURE-FAMILY shape: a plain create, carrying none of the
+	// opening-balance inputs, so nothing else in Admit can account for the
+	// refusal this arm demands.
+	v := *base
+	v.Request.Command = ""
+	v.Request.ContraGLAccountID = 0
+	v.Request.PostedNonContraTransactionIDs = nil
+	reasons := Admit(&v, opts)
+	if !containsSubstring(reasons, "EXACTLY ONE of the three shapes that row names is observed") {
+		t.Fatalf("a vector claiming ledger.opening.balance.and.closure for a NON-opening-balance "+
+			"shape was ADMITTED, or refused for another reason. The pre-closure and future-dated "+
+			"refusals are raw artefacts nothing promotes, and a vector claiming this row for one "+
+			"of them reads as covered when it is not: %v", reasons)
+	}
+}
+
 // TestOpeningBalanceRefusalPrecedesTheBalanceRule locks the ONE precedence this
 // corpus actually observed.
 //
