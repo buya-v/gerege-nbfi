@@ -1,0 +1,96 @@
+Pager usage is off.
+=== 3. journal entries PER OFFICE: count, earliest and latest entry_date ===
+ office_id | office_name | entries | earliest_entry_date | latest_entry_date | manual_entries 
+-----------+-------------+---------+---------------------+-------------------+----------------
+         1 | Head Office |      60 | 2026-02-01          | 2026-08-01        |             26
+(1 row)
+
+
+=== 3c. every distinct entry_date with a count, so the shape is visible not summarised ===
+ entry_date | entries | manual 
+------------+---------+--------
+ 2026-02-01 |      16 |      0
+ 2026-03-01 |       8 |      0
+ 2026-04-01 |       4 |      0
+ 2026-05-01 |       6 |      0
+ 2026-06-01 |      16 |     16
+ 2026-06-02 |       4 |      4
+ 2026-07-01 |       4 |      4
+ 2026-08-01 |       2 |      2
+(8 rows)
+
+
+=== 4b. is the business-date feature enabled at all? (m_business_date was EMPTY) ===
+                 name                 | enabled | value | date_value 
+--------------------------------------+---------+-------+------------
+ enable-automatic-cob-date-adjustment | t       |       | 
+ enable-business-date                 | f       |       | 
+ enable-cob-bulk-event                | f       |       | 
+(3 rows)
+
+
+=== 4c. what the DATABASE thinks now is, and the tenant timezone ===
+ db_current_date |            db_now             |  db_tz  
+-----------------+-------------------------------+---------
+ 2026-08-23      | 2026-08-23 00:09:58.544452+00 | Etc/UTC
+(1 row)
+
+
+=== 6. loan products and their accounting type ===
+ id |                      name                       | short_name | currency_code | accounting_type 
+----+-------------------------------------------------+------------+---------------+-----------------
+  1 | PathB Progressive MNT                           | PBM1       | MNT           |               1
+  2 | PathB Progressive MNT mult100                   | PBM2       | MNT           |               1
+  3 | PathB DIYCS FULL_LEAP_YEAR                      | PB3        | MNT           |               1
+  4 | PathB DIYCS FEB_29_PERIOD_ONLY                  | PB4        | MNT           |               1
+  5 | T22 probe p05-diycs-sarp-full                   | TP5        | MNT           |               1
+  6 | T22 probe p06-diycs-sarp-feb29                  | TP6        | MNT           |               1
+  7 | T22 probe p07-daily-actact                      | TP7        | MNT           |               1
+  8 | T22 probe p08-daily-360-30                      | TP8        | MNT           |               1
+  9 | T22 probe p09-sarp-360-30                       | TP9        | MNT           |               1
+ 10 | T22 mode probe mult1                            | TM1        | MNT           |               1
+ 11 | T22 mode probe halfcent                         | TM2        | MNT           |               1
+ 12 | T22 rounddown probe                             | TR1        | MNT           |               1
+ 13 | T36 recreate baseline                           | T61        | MNT           |               1
+ 14 | T36 recreate mult100                            | T62        | MNT           |               1
+ 15 | T36 recreate FULL_LEAP_YEAR                     | T63        | MNT           |               1
+ 16 | T36 recreate FEB_29_PERIOD_ONLY                 | T64        | MNT           |               1
+ 17 | T51 IROD true                                   | T5A        | MNT           |               1
+ 18 | T51 IROD false                                  | T5B        | MNT           |               1
+ 19 | T51 tranche multidisburse                       | T5C        | MNT           |               1
+ 20 | T51 FTT IROD true                               | T5D        | MNT           |               1
+ 21 | T51 FTT IROD false                              | T5E        | MNT           |               1
+ 22 | A2 Cash Mapping With Channel Override           | A2C1       | MNT           |               2
+ 23 | A2 Cash Mapping No Override                     | A2C2       | MNT           |               2
+ 24 | A2 Map Header Account                           | A2R1       | MNT           |               2
+ 27 | A2 Duplicate Channel                            | A2R5       | MNT           |               2
+ 28 | A2 Accrual Complete                             | A2A1       | MNT           |               3
+ 46 | A2-7 Cash Nine Mandatory Only                   | A7M1       | MNT           |               2
+ 54 | A2-26 G10c readmit of product 46 mapping        | N46R       | MNT           |               2
+ 55 | A2-26 Ledger Coverage Cash Interest Fee Penalty | N26C       | MNT           |               2
+ 56 | T275 Charge Dimension Fee And Penalty           | T7A0       | MNT           |               2
+ 57 | T275 Fee Charge Not Attached                    | T7A1       | MNT           |               2
+ 58 | T275 Penalty Mapping On Fee Charge              | T7A2       | MNT           |               2
+ 60 | T275 Duplicate Fee Charge                       | T7A4       | MNT           |               2
+(33 rows)
+
+
+=== 7. loans that exist, their office, and their date span ===
+ id | office_id | loan_type_enum | product_id | submittedon_date | disbursedon_date | loan_status_id 
+----+-----------+----------------+------------+------------------+------------------+----------------
+  1 |         1 |              1 |         22 | 2026-02-01       | 2026-02-01       |            300
+  2 |         1 |              1 |         22 | 2026-02-01       | 2026-02-01       |            300
+  3 |         1 |              1 |         27 | 2026-02-01       | 2026-02-01       |            300
+  4 |         1 |              1 |         24 | 2026-02-01       | 2026-02-01       |            300
+  5 |         1 |              1 |         46 | 2026-02-01       | 2026-02-01       |            601
+  6 |         1 |              1 |         46 | 2026-02-01       | 2026-02-01       |            300
+  7 |         1 |              1 |         55 | 2026-02-01       | 2026-02-01       |            700
+(7 rows)
+
+
+=== 8. savings accounts (deposit activation is a user gate -- checking presence only) ===
+ savings_accounts 
+------------------
+                0
+(1 row)
+

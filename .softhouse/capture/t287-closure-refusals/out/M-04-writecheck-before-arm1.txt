@@ -1,0 +1,21 @@
+Pager usage is off.
+ je_rows | je_max_id |  earliest  |   latest   
+---------+-----------+------------+------------
+      60 |        64 | 2026-02-01 | 2026-08-01
+(1 row)
+
+ closure_rows | closure_max_id 
+--------------+----------------
+            0 |               
+(1 row)
+
+ payment_detail_rows | payment_detail_max_id 
+---------------------+-----------------------
+                   3 |                     4
+(1 row)
+
+ je_seq_last_value | is_called 
+-------------------+-----------
+                64 | t
+(1 row)
+

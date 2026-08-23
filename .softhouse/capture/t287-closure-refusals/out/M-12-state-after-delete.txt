@@ -1,0 +1,40 @@
+Pager usage is off.
+ office_rows | office_max_id 
+-------------+---------------
+           1 |             1
+(1 row)
+
+ je_rows | je_max_id |  earliest  |   latest   
+---------+-----------+------------+------------
+      60 |        64 | 2026-02-01 | 2026-08-01
+(1 row)
+
+ closure_rows | closure_max_id 
+--------------+----------------
+            0 |               
+(1 row)
+
+ id | office_id | closing_date | is_deleted | comments 
+----+-----------+--------------+------------+----------
+(0 rows)
+
+ closure_seq_last_value | is_called 
+------------------------+-----------
+                      1 | t
+(1 row)
+
+ je_seq_last_value | is_called 
+-------------------+-----------
+                64 | t
+(1 row)
+
+ command_source_rows | command_source_max_id 
+---------------------+-----------------------
+                 351 |                   351
+(1 row)
+
+ loan_rows 
+-----------
+         7
+(1 row)
+
