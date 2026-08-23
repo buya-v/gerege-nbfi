@@ -1,0 +1,10 @@
+ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/green/R3a/probe.http
+  assertion `content-length-crosscheck:` appears 2 times; exactly one is required
+  sidecar ASSERTS a line nothing derives (sidecar line 28): 'content-length-crosscheck: MATCH (99999 bytes)'
+  sidecar has 28 lines; re-derivation yields 27
+--- re-derived (expected) vs sidecar (actual) ---
+  --- re-derived
+  +++ probe.http
+  @@ -27 +27,2 @@
+   captured-at-utc: 2026-08-22T14:32:05Z
+  +content-length-crosscheck: MATCH (99999 bytes)

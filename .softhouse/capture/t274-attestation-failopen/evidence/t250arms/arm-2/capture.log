@@ -1,0 +1,2 @@
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-2/probe.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.MyThFF/trace (schema 2; 1 send-header block(s), 16 recv-header block(s))
+probe                                        HTTP 400

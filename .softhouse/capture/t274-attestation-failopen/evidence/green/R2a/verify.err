@@ -1,0 +1,13 @@
+ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/green/R2a/probe.http
+  the VERBATIM WIRE BLOCK itself disagrees with the record (see the line-level findings below); assertion-level diagnostics are WITHHELD because their position is defined relative to that block
+  sidecar ASSERTS a line nothing derives (sidecar line 9): 'Content-Type: application/json'
+  sidecar OMITS a line the wire record and the committed artefacts derive (expected at line 10): 'Content-Type: application/json'
+--- re-derived (expected) vs sidecar (actual) ---
+  --- re-derived
+  +++ probe.http
+  @@ -8,4 +8,4 @@
+   Authorization: Basic <redacted sha256:2614d66f727c25bb>
+  +Content-Type: application/json
+   Fineract-Platform-TenantId: default
+  -Content-Type: application/json
+   Content-Length: 46

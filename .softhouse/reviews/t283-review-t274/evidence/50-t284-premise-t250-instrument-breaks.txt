@@ -1,0 +1,54 @@
+== capturing a REAL exchange from the live oracle (tenant SENT = default) ==
+derived /tmp/t283rev/t274/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/out/probe.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.5RNs5l/trace (schema 2; 1 send-header block(s), 16 recv-header block(s))
+probe                                        HTTP 400
+oracle status: 400
+
+--- the sidecar as derived ---
+attestation-derivation: curl --trace-ascii; request headers AS SENT
+attestation-schema: 2
+send-header-block 1 of 1
+POST /fineract-provider/api/v1/offices HTTP/1.1
+Host: localhost:8443
+User-Agent: curl/8.7.1
+Accept: */*
+Authorization: Basic <redacted sha256:2614d66f727c25bb>
+Fineract-Platform-TenantId: default
+Content-Type: application/json
+Content-Length: 46
+request-headers-artefact: probe.reqhdr
+request-headers-sha256: f799d89dc358fc8ec16b3ebb8907e563e23e29072902e7b41bcc390e846584de
+body-wire-bytes-artefact: probe.req
+body-sha256: a4e0d3eeb2768121d86bc1b224f6a0b0fa721a035e3798f4ef7f3141eb9a1e2c
+body-bytes: 46
+content-length-crosscheck: MATCH (46 bytes)
+response-headers-artefact: probe.resphdr
+response-headers-sha256: 84136582a9e5cca749d7900f87952734184884e6bbd52fdb2c239e38ee9a6ff7
+response-status-line: HTTP/1.1 400
+response-artefact: probe.json
+response-sha256: 1a73a90a39da05cd450d3fd2c6be5ca37183c4b60729a3ea20a003a70fc82050
+response-bytes: 468
+response-content-length-crosscheck: MATCH (468 bytes)
+response-status-crosscheck: MATCH (400)
+response-status-artefact: probe.status
+captured-at-utc: 2026-08-23T00:15:07Z
+
+== arms ==
+ARM 0  expected rc=0  got rc=2  [FAIL]  POSITIVE CONTROL: nothing touched
+        REFUSING: sidecar /tmp/t283rev/t274/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-0/probe.http is SCHEMA 2 and attests a response, but --resp/--resphdr/--status was not supplied. An attested artefact that is not presented cannot be checked, and an unchecked assertion is not a passed one.
+ARM 1  expected rc=1  got rc=2  [FAIL]  sidecar edited to claim tenant 'gerege' when 'default' was sent
+        REFUSING: sidecar /tmp/t283rev/t274/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-1/probe.http is SCHEMA 2 and attests a response, but --resp/--resphdr/--status was not supplied. An attested artefact that is not presented cannot be checked, and an unchecked assertion is not a passed one.
+ARM 2  expected rc=1  got rc=2  [FAIL]  header record edited, sidecar untouched
+        REFUSING: sidecar /tmp/t283rev/t274/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-2/probe.http is SCHEMA 2 and attests a response, but --resp/--resphdr/--status was not supplied. An attested artefact that is not presented cannot be checked, and an unchecked assertion is not a passed one.
+ARM 3  expected rc=2  got rc=2  [ok]  header record DELETED -- must refuse, not pass
+        REFUSING: sidecar /tmp/t283rev/t274/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-3/probe.http is SCHEMA 2 and attests a response, but --resp/--resphdr/--status was not supplied. An attested artefact that is not presented cannot be checked, and an unchecked assertion is not a passed one.
+ARM 4  expected rc=2  got rc=2  [ok]  legacy literal sidecar, no derivation provenance
+        REFUSING: sidecar /tmp/t283rev/t274/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-4/probe.http does not begin with `attestation-derivation: curl --trace-ascii; request headers AS SENT`. It was not derived from a wire record, so it is UNVERIFIABLE -- it may be true, but nothing here can tell you. REFUSED (this is the T245 F-2 shape).
+ARM 5  expected rc=1  got rc=2  [FAIL]  body artefact swapped under a sidecar that hashed the original
+        REFUSING: sidecar /tmp/t283rev/t274/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-5/probe.http is SCHEMA 2 and attests a response, but --resp/--resphdr/--status was not supplied. An attested artefact that is not presented cannot be checked, and an unchecked assertion is not a passed one.
+ARM 6  expected rc=1  got rc=2  [FAIL]  Content-Length sent != committed body artefact byte count
+        REFUSING: sidecar /tmp/t283rev/t274/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-6/probe.http is SCHEMA 2 and attests a response, but --resp/--resphdr/--status was not supplied. An attested artefact that is not presented cannot be checked, and an unchecked assertion is not a passed one.
+ARM 7  expected rc=0  got rc=2  [FAIL]  HONEST NEGATIVE: whole artefact set forged consistently -- NOT caught here
+        REFUSING: sidecar /tmp/t283rev/t274/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-7/probe.http is SCHEMA 2 and attests a response, but --resp/--resphdr/--status was not supplied. An attested artefact that is not presented cannot be checked, and an unchecked assertion is not a passed one.
+
+arms as expected: 2    arms NOT as expected: 6
+RED-DRIVE B: FAIL
