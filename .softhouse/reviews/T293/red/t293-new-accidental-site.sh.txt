@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# T293 RED DRIVE, test 4. A GENUINELY NEW accidental host-state site, written the way an
+# unwary author would write one: a repo-wide search instrument that parks its scratch at a
+# literal absolute path under the shared temporary root instead of under `mktemp -d`.
+#
+# THIS FILE EXISTS TO BE CAUGHT. If `guard_no_host_state_in_lint_corpus` does not turn the
+# bar EXIT 2 with a '+' row naming it, the census excuses new sites and is not a census.
+# It is committed on the review branch and REMOVED from the branch tip in the same review,
+# so it never reaches main. The evidence of the red run is in ../evidence/.
+set -euo pipefail
+
+SCRATCH=/tmp/t293-accidental-scratch
+mkdir -p "$SCRATCH"
+
+git grep -n -E 'MoneyHelper' -- '*.java' >"$SCRATCH/hits.txt" || echo "(no hits)"
+echo "wrote $SCRATCH/hits.txt"

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# T293 test 2 -- THE "PARAMETERISE IT" REWRITE, DRIVEN RATHER THAN ARGUED.
+#
+# The question the brief asks: could probe_tmp_dependency_t271.sh be rewritten to take the
+# path as a PARAMETER instead of assigning the literal -- and would that be a genuine repair
+# or MERELY COSMETIC EVASION OF A LINTER?
+#
+# This file is that rewrite, in the two spellings an author would reach for. It STILL depends
+# on exactly the same absolute path, on exactly the same host, in exactly the same way. The
+# only thing that changes is whether the census and the fail-open linter can SEE it.
+#
+# Tracked briefly, measured, then removed. See ../evidence/20-param-evasion.txt.
+set -euo pipefail
+
+# Spelling 1: default-valued positional. Same path, same dependency, no literal at the
+# start of the assignment's value, so the census ERE `NAME=["']?/(tmp|...)` cannot match.
+TARGET="${1:-/tmp/t234_matrix2.txt}"
+
+# Spelling 2: one concatenation. Same path, assembled.
+TMPROOT=/tmp
+TARGET2="$TMPROOT/t234_matrix2.txt"
+
+git grep -n -E 'FAILOPEN-FRONTIER' -- '*.py' >/dev/null
+if [ -e "$TARGET" ]; then echo "present: $TARGET"; else echo "absent: $TARGET"; fi
+if [ -e "$TARGET2" ]; then echo "present: $TARGET2"; else echo "absent: $TARGET2"; fi
