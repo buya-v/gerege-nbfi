@@ -1,0 +1,25 @@
+T292 -- F-T290-1b DRIVEN AGAINST THE T292 RULE
+================================================================================================
+  BASELINE committed evidence, committed register
+     rc=0 disagreements=3 unacknowledged=0 voidAcks=0 coverageDigest=e2539db29cd16116
+  ARM 1  evidence retro-edited, register NOT re-pinned  (the ordinary tamper)
+     rc=1 state=REFUSED voidAcks=1   <- the sha pin fires
+  ARM 2  evidence retro-edited AND register re-pinned   (F-T290-1b)
+     rc=0 state=GREEN disagreements=0 unacknowledged=0 voidAcks=0 coverageDigest=e2539db29cd16116
+  ARM 3  the same consistent edit aimed at the PREDICATE, not the verdict word
+     rc=0 coverageDigest=f9c39dac95d5371f   (baseline was e2539db29cd16116)
+
+RESULT, STATED AS MEASURED AND NOT WIDER:
+  F-T290-1b is STILL OPEN under the T292 rule. rc=0.
+  It is a different defect from the one T292 closes: it does not manufacture
+  coverage, it REMOVES a disagreement by consistently rewriting both files. T290's
+  FLOOR on `disagreements` remains the correct closure and T292 does not replace it.
+  T269 MUST NOT WIRE ANY R-VPA RULE, INCLUDING THIS ONE, UNTIL THAT FLOOR EXISTS.
+
+  WHAT T292 DOES CONTRIBUTE: `coverageDigest` is a pinnable fingerprint of the
+  GRADED FACTS, so half of the two-file edit becomes detectable by pinning one
+  probe-line field -- no change to the contended rule and no new instrument:
+     verdict-word half  (ARM 2): digest UNCHANGED  -> NOT caught by the digest; needs T290's floor
+     predicate half     (ARM 3): digest moved  -> CAUGHT by pinning coverageDigest
+
+EXIT 0   (0 means every arm behaved as this file claims, INCLUDING the arm that shows the hole is open)
