@@ -140,6 +140,16 @@ echo "=== BUCKET 1 — LIVE harness (a future fire executes these): $nl ==="
 cat "$WORK"/t256-live.txt
 echo
 echo "=== BUCKET 2 — ARCHIVED evidence instruments (no live instrument EXECUTES these): $na ==="
+echo "  A TEXT SEARCH CANNOT TELL A SPECIMEN FROM A DEFECT; ONLY A READER CAN. T253's census"
+echo "  said this first and it still holds. Some members below hold the Mac path ON PURPOSE,"
+echo "  as the fixture they drive red — the hardcode is the thing under test, not a mistake:"
+echo "    .softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh    (T253's OLD_ENV_BODY)"
+echo "    .softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh"
+echo "                                                                         (this task's two vacuity arms)"
+echo "  and .softhouse/bin/go-env.sh, in BUCKET 1, carries it only inside the comment that"
+echo "  records the defect T253b removed. So this count RISES when someone writes a new red"
+echo "  drive, and a rise is not by itself evidence of a regression. The invariant that is"
+echo "  actually graded is the LIVE-HARNESS check further down, which must read zero."
 cat "$WORK"/t256-arch.txt
 echo
 echo "=== BUCKET 3 — PROSE / transcript records (must stay byte-identical): $np ==="
@@ -230,7 +240,27 @@ echo "  destroy a recorded fact; leaving an instruction manufactures the next ha
 echo "  The instruction itself now lives between the T256-ACTIVATION-LINE markers and is"
 echo "  EXECUTED by 30-portability-red-drive.sh, which asserts it names no host at all —"
 echo "  so that one is graded by a drive, not by this grep."
-grep -n -F "$L1" .softhouse/reference-oracle.md || echo "  (no match for LITERAL 1 — selector: grep -n -F over that one file)"
-grep -n -F "$L2" .softhouse/reference-oracle.md || echo "  (no match for LITERAL 2 — selector: grep -n -F over that one file)"
+# REPAIRED, NOT PINNED. This block used to be
+#     grep -n -F "$L1" <file> || echo "  (no match for LITERAL 1 — selector: ...)"
+# which is exactly the shape conformance.sh's fail-open linter refuses — and it refused
+# THIS FILE for it (C2, TIER2, frontier 12 against a pin of 11, HARD guard, exit 2, and
+# the run printed no oracle probe line at all). The `||` arm fires on rc=1, a MEASURED
+# zero, and on rc=2, an ENGINE ERROR, printing the same reassurance for both: a negative
+# the instrument did not measure. conformance.sh's own text says repair rather than pin,
+# and T238's sweeplib.sh is the adoptable shape. rc is captured, classified, and an error
+# ABORTS instead of being reported as an absence.
+site_report() {          # site_report LABEL LITERAL
+    local out rc
+    out=$(grep -n -F -- "$2" .softhouse/reference-oracle.md); rc=$?
+    case $rc in
+        0) printf '%s\n' "$out" ;;
+        1) echo "  MEASURED ZERO for $1 — grep ran over that one file and matched nothing." ;;
+        *) printf 'census: grep ERRORED rc=%s looking for %s. That is NOT a no-match, and a\n' "$rc" "$1" >&2
+           printf 'census: negative printed here would be one this instrument did not measure.\n' >&2
+           exit 2 ;;
+    esac
+}
+site_report "LITERAL 1" "$L1"
+site_report "LITERAL 2" "$L2"
 echo
 echo "census: done."

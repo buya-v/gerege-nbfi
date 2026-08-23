@@ -28,15 +28,15 @@ STEP 2 — build a scratch checkout that has NO toolchain (the cloud fire's real
   ASSERT OK   : built a PATH-only `go` shim (a compiler that exists but is not the pinned one)
 ------------------------------------------------------------------------
 STEP 3 — RED ARM A: no pinned toolchain, a `go` on PATH
-  summary  : src=fallback-path|goroot=UNSET|go=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.krYMrOoU7C/shim/go
+  summary  : src=fallback-path|goroot=UNSET|go=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.4U0M9WCmwH/shim/go
   --- stderr as a reader would see it ---
   | go-env.sh: the PINNED Go toolchain was NOT found on this host.
   | go-env.sh:   searched (needed <cand>/go/bin/go):
-  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/toolchain
-  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/bin/../../toolchain
-  | go-env.sh:   anchor: /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/toolchain
+  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
   | go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
-  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.krYMrOoU7C/shim/go
+  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.4U0M9WCmwH/shim/go
   | go-env.sh:   go version go1.26.6 darwin/arm64
   | go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
   | go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
@@ -57,9 +57,9 @@ STEP 4 — RED ARM B: no pinned toolchain and NO go on PATH at all
   --- stderr ---
   | go-env.sh: the PINNED Go toolchain was NOT found on this host.
   | go-env.sh:   searched (needed <cand>/go/bin/go):
-  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/toolchain
-  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/bin/../../toolchain
-  | go-env.sh:   anchor: /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/toolchain
+  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
   | go-env.sh: and there is NO `go` on PATH either. Nothing was exported.
   | go-env.sh: The caller's own toolchain check will now refuse — that refusal is
   | go-env.sh: correct and fail-closed. GEREGE_GO_SOURCE=absent.
@@ -70,29 +70,29 @@ STEP 4 — RED ARM B: no pinned toolchain and NO go on PATH at all
   check-ledger-invariants.sh -> rc=2
   | go-env.sh: the PINNED Go toolchain was NOT found on this host.
   | go-env.sh:   searched (needed <cand>/go/bin/go):
-  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/toolchain
-  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/bin/../../toolchain
-  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/toolchain
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
   | go-env.sh: and there is NO `go` on PATH either. Nothing was exported.
   | go-env.sh: The caller's own toolchain check will now refuse — that refusal is
   | go-env.sh: correct and fail-closed. GEREGE_GO_SOURCE=absent.
-  | ledger-invariants: no Go toolchain. Expected /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/bin/go-env.sh to put one on PATH.
+  | ledger-invariants: no Go toolchain. Expected /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/bin/go-env.sh to put one on PATH.
   | ledger-invariants: the guard is a Go program; without a compiler it inspects nothing
   | ledger-invariants: and its absence would read as a pass. EXIT 2 — NOT a pass.
   ASSERT OK   : the real guard EXITS 2 (unusable), which is a refusal and never a pass
   ASSERT OK   : the guard says 'NOT a pass' in words a transcript reader cannot misread
 ------------------------------------------------------------------------
 STEP 5 — a stale inherited GOROOT (points at a directory that is not there)
-  summary  : src=fallback-path|goroot=UNSET|go=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.krYMrOoU7C/shim/go
+  summary  : src=fallback-path|goroot=UNSET|go=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.4U0M9WCmwH/shim/go
   --- stderr ---
-  | go-env.sh: dropping inherited GOROOT=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.krYMrOoU7C/no-such-goroot — that directory does not exist.
+  | go-env.sh: dropping inherited GOROOT=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.4U0M9WCmwH/no-such-goroot — that directory does not exist.
   | go-env.sh: the PINNED Go toolchain was NOT found on this host.
   | go-env.sh:   searched (needed <cand>/go/bin/go):
-  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/toolchain
-  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/bin/../../toolchain
-  | go-env.sh:   anchor: /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.krYMrOoU7C/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/toolchain
+  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.4U0M9WCmwH/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
   | go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
-  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.krYMrOoU7C/shim/go
+  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.4U0M9WCmwH/shim/go
   | go-env.sh:   go version go1.26.6 darwin/arm64
   | go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
   | go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must

@@ -1,21 +1,31 @@
 T256 TOOLCHAIN-PATH POPULATION CENSUS
-commit   : f02d84935c91f996894b260a43ae46a9a7eda352
+commit   : f3714851addbe20d94b4aa65aa42fba8b6a70cb3
 repo     : (path deliberately not printed — it is the very thing under audit)
-date     : 2026-08-23T02:08:09Z
+date     : 2026-08-23T02:10:56Z
 
 universe : 6690 tracked files at HEAD (selector: git ls-files)
 
 LITERAL 1  /Users/buv/gerege-nbfi/.softhouse/toolchain
-  matched : 58 tracked files
+  matched : 63 tracked files
 LITERAL 2  /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh
-  matched : 39 tracked files
+  matched : 41 tracked files
 UNION (deduplicated)
-  matched : 92 tracked files
+  matched : 97 tracked files
 
 === BUCKET 1 — LIVE harness (a future fire executes these): 1 ===
 .softhouse/bin/go-env.sh
 
-=== BUCKET 2 — ARCHIVED evidence instruments (no live instrument EXECUTES these): 60 ===
+=== BUCKET 2 — ARCHIVED evidence instruments (no live instrument EXECUTES these): 61 ===
+  A TEXT SEARCH CANNOT TELL A SPECIMEN FROM A DEFECT; ONLY A READER CAN. T253's census
+  said this first and it still holds. Some members below hold the Mac path ON PURPOSE,
+  as the fixture they drive red — the hardcode is the thing under test, not a mistake:
+    .softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh    (T253's OLD_ENV_BODY)
+    .softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh
+                                                                         (this task's two vacuity arms)
+  and .softhouse/bin/go-env.sh, in BUCKET 1, carries it only inside the comment that
+  records the defect T253b removed. So this count RISES when someone writes a new red
+  drive, and a rise is not by itself evidence of a regression. The invariant that is
+  actually graded is the LIVE-HARNESS check further down, which must read zero.
 .softhouse/capture/pathb/t149/grade-scratch-store.sh
 .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py
 .softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py
@@ -29,6 +39,7 @@ UNION (deduplicated)
 .softhouse/capture/t243-wiring/instruments/90-bar.sh
 .softhouse/capture/t244-dec2-rev6/bar.sh
 .softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh
+.softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh
 .softhouse/capture/t61-halfeven/src/run-counterfactuals.py
 .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py
 .softhouse/capture/t66-unrecognized-interest/gotest.sh
@@ -77,7 +88,7 @@ UNION (deduplicated)
 .softhouse/reviews/t254-harness-portability/instruments/30-goroot-stale-repro.sh
 .softhouse/reviews/t261-tenant-attestation/instruments/t261-bar.sh
 
-=== BUCKET 3 — PROSE / transcript records (must stay byte-identical): 31 ===
+=== BUCKET 3 — PROSE / transcript records (must stay byte-identical): 35 ===
   (with ONE exception, listed here and treated oppositely: .softhouse/reference-oracle.md
    is not a record of what was run, it is an INSTRUCTION for what to run. See the
    PRESCRIPTIVE SITES section at the end.)
@@ -85,6 +96,10 @@ UNION (deduplicated)
 .softhouse/capture/t238-failopen/transcripts/10-failopen-census.txt
 .softhouse/capture/t253-portability/evidence/30-d2-red-drive.txt
 .softhouse/capture/t253-portability/evidence/60-hardcoded-toolchain-census.txt
+.softhouse/capture/t256-toolchain-population/evidence/10-population-census.txt
+.softhouse/capture/t256-toolchain-population/evidence/30-portability-drive-GREEN.txt
+.softhouse/capture/t256-toolchain-population/evidence/31-vacuity-hardcode-present.txt
+.softhouse/capture/t256-toolchain-population/evidence/32-vacuity-hardcode-absent.txt
 .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T112.md
 .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T128.md
 .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T129.md
