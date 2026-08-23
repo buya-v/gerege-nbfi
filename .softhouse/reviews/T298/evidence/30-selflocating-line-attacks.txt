@@ -1,0 +1,43 @@
+EXTRACTED FROM THE DOCUMENT: [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"]
+
+==================================================================
+SCENARIO: CONTROL — inside the repo (the case T256 drove)
+  cwd    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8a7245a580869366
+    toplevel says: [/Users/buv/gerege-nbfi/.claude/worktrees/agent-a8a7245a580869366]
+    activation rc          : 0
+    GEREGE_GO_SOURCE       : pinned
+    GOROOT                 : /Users/buv/gerege-nbfi/.softhouse/toolchain/go
+    command -v go          : /Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+    --- what the SHELL CONTINUES to do after the failure (fail open vs fail closed):
+    the script did NOT abort; this line printed.
+
+==================================================================
+SCENARIO: A1 — inside a DIFFERENT git repo: /Users/buv/fineract, the cwd reference-oracle.md:148 SETS
+  cwd    : /Users/buv/fineract
+    toplevel says: [/Users/buv/fineract]
+  _: line 4: /Users/buv/fineract/.softhouse/bin/go-env.sh: No such file or directory
+    activation rc          : 1
+    GEREGE_GO_SOURCE       : UNSET
+    GOROOT                 : UNSET
+    command -v go          : NONE
+    --- what the SHELL CONTINUES to do after the failure (fail open vs fail closed):
+    the script did NOT abort; this line printed.
+
+==================================================================
+SCENARIO: A2 — outside any git checkout (/tmp)
+  cwd    : /tmp
+    toplevel says: [fatal: not a git repository (or any of the parent directories): .git]
+  fatal: not a git repository (or any of the parent directories): .git
+  _: line 4: /.softhouse/bin/go-env.sh: No such file or directory
+    activation rc          : 1
+    GEREGE_GO_SOURCE       : UNSET
+    GOROOT                 : UNSET
+    command -v go          : NONE
+    --- what the SHELL CONTINUES to do after the failure (fail open vs fail closed):
+    the script did NOT abort; this line printed.
+
+==================================================================
+SCENARIO: A3 — inside the repo's .git directory
+  cwd    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8a7245a580869366/.git
+  cwd does not exist
+
