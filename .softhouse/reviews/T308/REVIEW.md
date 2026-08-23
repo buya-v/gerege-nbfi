@@ -536,5 +536,7 @@ Follow-ups this review does not perform and files instead:
   post-condition.
 * **T308-F4** — give the adversary an expected-verdict oracle and add a `refused`-disjunction
   mutant other than `nil`.
+* **T308-F5** — enforce `autoPredicatePattern` with `re.match`, not `str.isdigit()` (one line;
+  also applies to the pinned T259 file, which must NOT be edited — fix it in the successor only).
 * **Observation** — `classify-t219.json` carries **4 unacknowledged disagreements** under both the
   T259 and T292 rules. Pre-existing, outside T292's scope, unreviewed by anyone.
