@@ -1,0 +1,3 @@
+### T285 residue watch — 120 samples, 1 s apart, read-only
+08:37:56  PRESENT
+08:40:18  (end, PRESENT)
