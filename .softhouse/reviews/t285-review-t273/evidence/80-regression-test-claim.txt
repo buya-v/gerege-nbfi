@@ -1,0 +1,28 @@
+### T285 — IS THE PIN A REGRESSION TEST FOR 02-escape-matrix-fix.sh?
+  tree : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab453599828f16264
+  HEAD : 66720da8f2654b9df729e1cd70d31ad19f552732
+  pinned delta = 7 rows (HOSTSENSITIVE_PIN_FRONTIER_DELTA)
+
+BASELINE — repaired file, untouched:
+  ARM BASELINE: bracket delta rows = 7 ; lines naming 02-escape-matrix-fix.sh in the whole report = 2
+        17:      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+        30:      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+
+ARM A — defect reintroduced, T273's explanatory comment LEFT IN PLACE:
+      8:# It used to be `C=/tmp/t234_matrix2.txt`, created by the very next line. That one
+      12:# for a literal `> /tmp/t234_matrix2.txt` and the redirection here is `> "$C"`, so
+      24:C=/tmp/t234_matrix2.txt
+  ARM A-comment-present: bracket delta rows = 7 ; lines naming 02-escape-matrix-fix.sh in the whole report = 2
+        17:      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+        30:      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+
+ARM B — defect reintroduced AND the one comment line carrying `> /tmp/t234_matrix2.txt` removed:
+      8:# It used to be `C=/tmp/t234_matrix2.txt`, created by the very next line. That one
+      23:C=/tmp/t234_matrix2.txt
+  ARM B-comment-removed: bracket delta rows = 9 ; lines naming 02-escape-matrix-fix.sh in the whole report = 4
+        12:      TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+        30:      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+        42:      + TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+        47:      - TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+
+### tree restored clean (checked, not assumed).
