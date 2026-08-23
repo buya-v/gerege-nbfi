@@ -1,3 +1,0 @@
-T285 RED DRIVE REFUSED: the work tree is dirty before any mutation. This script
-restores by , which would destroy uncommitted work. Commit first.
-?? .softhouse/reviews/t285-review-t273/evidence/70-independent-red-drive.txt
