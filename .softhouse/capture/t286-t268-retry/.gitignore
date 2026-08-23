@@ -1,0 +1,5 @@
+# Scratch dirs created INSIDE the repo by probe/adversary_t292.py and probe/drive_f_t290_1b.py.
+# They must be inside the repo because the PRE arm walks up for a .git ancestor and exits 1
+# without one (see extract_pre). They are removed in a finally: block; this line is the fence
+# for the case where a run is killed before it gets there.
+.t292-*

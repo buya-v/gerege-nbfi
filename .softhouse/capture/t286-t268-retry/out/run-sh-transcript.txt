@@ -1,0 +1,33 @@
+T292 -- R-VPA fail-closed by construction. Reproducing all stages.
+  rule    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6b9a42195eeac6e9/.softhouse/capture/t286-t268-retry/check_verdict_predicate_agreement_t292.py
+  blob    : f6ee6d2dca179992c53ecf8b2c76a194a34678ef
+  python  : 3.9.6
+
+== 1. real-corpus census ==
+FILE /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6b9a42195eeac6e9/.softhouse/capture/t286-t268-retry/../t229-g8-site3/out/classify-t229.json
+  Q2 predicate booleans (auto ^P[0-9]+_) : 18
+     distinct owning objects             : 6
+  Q1 affirmative strings anywhere        : 9
+     of which under a verdict-named key  : 9
+     EXTRA seen by vocabulary scan       : 0
+       FREE-FLOATING: value $.cells[0].verdict 'AS PREDICTED'
+       FREE-FLOATING: value $.cells[4].verdict 'AS PREDICTED'
+       FREE-FLOATING: value $.cells[5].verdict 'AS PREDICTED'
+       FREE-FLOATING: value $.calibration[0].status 'REPRODUCED'
+       FREE-FLOATING: value $.calibration[1].status 'REPRODUCED'
+  Q3 free-floating affirmations          : 5
+  non-auto boolean keys                  : ['inputsIdentical', 'observedIdentical', 't223RulePredictedRescue', 'threwIdentical']
+
+FILE /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6b9a42195eeac6e9/.softhouse/capture/t286-t268-retry/../t219-g8-residual/out/classify-t219.json
+  Q2 predicate booleans (auto ^P[0-9]+_) : 21
+     distinct owning objects             : 7
+  Q1 affirmative strings anywhere        : 7
+     of which under a verdict-named key  : 7
+     EXTRA seen by vocabulary scan       : 0
+  Q3 free-floating affirmations          : 0
+  non-auto boolean keys                  : ['inputsIdentical', 'observedIdentical', 't223RulePredictedRescue', 'threwIdentical']
+
+   census OK
+
+== 2. adversary: PROP-A container invariance, PROP-B no vacuous green,
+      PROP-C lost-refusal ledger vs the pinned PRE blob, PROP-D error/verdict separation ==
