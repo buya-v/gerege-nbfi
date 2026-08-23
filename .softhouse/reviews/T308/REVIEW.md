@@ -275,8 +275,10 @@ second, independent confirmation of them; it is the same fact restated as a coun
 **Severity: HIGH (this is the brief's question answered: the counter is sensitive to the planted
 defect and blind to a different one).**
 **Reproduction: `python3 .softhouse/reviews/T308/probe/t308_survivor_mutants.py --seeds 3`.**
-**Transcript: `out/t308-survivor-mutants.txt` (pass 1, with an inverted gate, preserved at
-`out/t308-survivor-mutants-pass1.txt` — see §7).**
+**Transcript: `out/t308-survivor-mutants.txt`, `EXIT 1`. Two earlier passes of my own probe are
+preserved rather than overwritten — `out/t308-survivor-mutants-pass1.txt` (inverted gate) and
+`out/t308-survivor-mutants-pass2-stale-label.txt` (a cardinal printed under the wrong label). See
+§7.**
 
 T292's eight kill targets attack COVERAGE (M1/M2/M3), READ INTEGRITY (M4/M5/M10/M6), the EXIT
 PROTOCOL (M7) and DETECTION BREADTH (M9). **Not one attacks the GATE** — the disjunction in `main`
@@ -285,14 +287,18 @@ instead: **the refusal is printed in the body and the exit code stays GREEN** (T
 P-91: *"`T259` shipped a rule that printed `REFUSED NIL COVERAGE` in its body and **exited
 GREEN**"*), once at each of five guards, and ran **T292's unmodified adversary** against each.
 
-| mutant | disposition | LOST REFUSALS | failing legs |
-|---|---|---|---|
-| `N1` unacknowledged disagreement printed but not COUNTED (G5) | **SURVIVED** | 0 | **0** |
-| `N2` mute refutation printed but not COUNTED (G6) | **SURVIVED** | 0 | **0** |
-| `N3` void acknowledgement printed but not COUNTED (G4) | **SURVIVED** | 0 | **0** |
-| `N4` unclassified verdict word printed but not COUNTED (G1) | **SURVIVED** | 0 | **0** |
-| `N5` unclassified boolean key printed but not COUNTED (G2) | **SURVIVED** | 0 | **0** |
-| `N6` CONTROL — drop `nil` from the same disjunction | KILLED | 0 | 11 |
+| mutant | disposition | LOST REFUSALS | failing legs | reproduction: SHIPPED → MUTANT |
+|---|---|---|---|---|
+| `N1` unacknowledged disagreement printed but not COUNTED (G5) | **SURVIVED** | 0 | **0** | `rc=1` → **`rc=0`** |
+| `N2` mute refutation printed but not COUNTED (G6) | **SURVIVED** | 0 | **0** | `rc=1` → **`rc=0`, body still prints REFUSED** |
+| `N3` void acknowledgement printed but not COUNTED (G4) | **SURVIVED** | 0 | **0** | not reproduced (a void ack needs the acknowledged path *and* different bytes; I would not edit committed evidence to get it) |
+| `N4` unclassified verdict word printed but not COUNTED (G1) | **SURVIVED** | 0 | **0** | `rc=1` → **`rc=0`, body still prints REFUSED** |
+| `N5` unclassified boolean key printed but not COUNTED (G2) | **SURVIVED** | 0 | **0** | `rc=1` → **`rc=0`, body still prints REFUSED** |
+| `N6` CONTROL — drop `nil` from the same disjunction | KILLED | 0 | 11 | `rc=1` → `rc=2` (the post-condition catches it) |
+
+**Three of the five print `REFUSED` in the body and exit `0`.** That is not an analogy to T259's
+founding defect; it is the same sentence — P-91: *"`T259` shipped a rule that printed
+`REFUSED NIL COVERAGE` in its body and **exited GREEN**."*
 
 `N6` is the positive control and it dies, so the harness is not simply passing everything: `nil`
 is the one term in that disjunction the **post-condition independently re-checks**, which is
@@ -447,7 +453,13 @@ had I read the number instead of the direction. Draft-1 transcript preserved at
 Likewise, pass 1 of `t308_survivor_mutants.py` **exited 0 while reporting five survivors**, because
 the author had written his prediction into the gate — the lineage's founding shape, in the
 instrument written to find the lineage's founding shape. Preserved at
-`out/t308-survivor-mutants-pass1.txt`; the gate is now "non-zero if ANY kill target survived."
+`out/t308-survivor-mutants-pass1.txt`; the gate is now "non-zero if ANY kill target survived", and
+pass 3 exits **1**. Pass 2 then printed a per-guard reproduction number under the label
+**`A10 driven through the mutant`** — a cardinal beside the wrong name, which is `P-86`'s exact
+species. Preserved at `out/t308-survivor-mutants-pass2-stale-label.txt`; the label now names the
+document actually driven. **Three instrument defects in three probes, all mine, all found by
+reading an output that made no sense rather than by re-reading code** — which is the same way T292
+found its own five, and is the most transferable thing in either report.
 
 ---
 
