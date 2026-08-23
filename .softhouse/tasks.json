@@ -3493,7 +3493,7 @@
   {
    "id": "T286",
    "title": "T268 RETRY — repair the fail-open T268's own fix introduced, plus F-2's false claim and the void_acks twin",
-   "status": "in_review",
+   "status": "needs_retry",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -3514,7 +3514,7 @@
    ],
    "description": "T268 fixed a fail-open and introduced another. T281 REJECTED it. This is the retry and it starts from T281's branch findings, not from T268's handoff.",
    "acceptance": "R1/R2/R3 each driven RED on the T268 branch state and GREEN after; a lost-refusal leg class added to the battery; error paths enumerated by EXECUTION not by grep; no pin moved.",
-   "note": "Committed 73483f5 (72 files, +9836/-84). Scope guard HELD -- conformance.sh untouched (driver verified, 0 hits). FOUND A THIRD FAIL-OPEN, INSIDE THE REPAIR THAT WAS IN FLIGHT FOR THE SECOND: the rescued WIP phrases its fix about the document ROOT, but {'meta':{'verdict':'AS PREDICTED'},'cells':[]} is not a root collapse -- meta is an ordinary nested row -- and it exits 0 GREEN under T268 AND under that repair, where the pre-T268 rule exits 1. AND A FOURTH pointing the other way that neither review looked for: --help raises SystemExit(0), so the module exited 0 WITH NO PROBE LINE, the one code a caller reads as 'measured, green'. T281 confirmed right on R1, reproduced before any edit. F-2 adjudicated BOTH ways: T268's repair is real, T268's headline 'none returns 1' is FALSE as measured, and T281's own enumeration missed the exit-0 path. Self-reported its own first-draft sweep was wrong (read a bare exit 1 as a refusal) and RECORDED it rather than tidying it. Self-flagged guard #10 as possible scope creep, isolated for easy revert."
+   "note": "Committed 73483f5 (72 files, +9836/-84). Scope guard HELD -- conformance.sh untouched (driver verified, 0 hits). FOUND A THIRD FAIL-OPEN, INSIDE THE REPAIR THAT WAS IN FLIGHT FOR THE SECOND: the rescued WIP phrases its fix about the document ROOT, but {'meta':{'verdict':'AS PREDICTED'},'cells':[]} is not a root collapse -- meta is an ordinary nested row -- and it exits 0 GREEN under T268 AND under that repair, where the pre-T268 rule exits 1. AND A FOURTH pointing the other way that neither review looked for: --help raises SystemExit(0), so the module exited 0 WITH NO PROBE LINE, the one code a caller reads as 'measured, green'. T281 confirmed right on R1, reproduced before any edit. F-2 adjudicated BOTH ways: T268's repair is real, T268's headline 'none returns 1' is FALSE as measured, and T281's own enumeration missed the exit-0 path. Self-reported its own first-draft sweep was wrong (read a bare exit 1 as a refusal) and RECORDED it rather than tidying it. Self-flagged guard #10 as possible scope creep, isolated for easy revert. | REJECTED by T291 (cf5b26f). THE FIFTH FAIL-OPEN IS REAL AND TWO CHARACTERS WIDE: wrap R1b's own fixture header in [ ] and the rule exits 0 GREEN with predicates=0 where the PRE-T268 rule exits 1 REFUSED -- a LOST REFUSAL, the exact criterion T281 used to reject T268. Reproduced INSIDE T286's OWN sweep unmodified: 42 fixtures, 4 lost refusals, FAIL, battery 31/1, exit 1. BRANCH NOT MERGED; T291's review evidence merged alone at 75d9dc8. Retry filed as T292."
   },
   {
    "id": "T287",
@@ -3608,7 +3608,7 @@
   {
    "id": "T291",
    "title": "INDEPENDENT review of T286 — the third and fourth fail-opens in the R-VPA lineage; attack the structural 'a record is a row reached through a list' rephrasing and hunt the FIFTH",
-   "status": "pending",
+   "status": "merged",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -3625,7 +3625,29 @@
     ".softhouse/capture/t268-rvpa-failopen/",
     ".softhouse/capture/t286-t268-retry/"
    ],
-   "description": "see worker prompt; dispatched by local fire 20260823-080004"
+   "description": "see worker prompt; dispatched by local fire 20260823-080004",
+   "note": "MERGED 75d9dc8 (review evidence only; T286's rule NOT merged). VERDICT REJECTED."
+  },
+  {
+   "id": "T292",
+   "title": "T286 RETRY (fourth in the R-VPA lineage) — the fifth fail-open is a re-nesting of the fourth; stop naming shapes and find the formulation that does not lose one level out",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "agent_role": "coder",
+   "role": "coder",
+   "context": "tierA-gl-accounting",
+   "slice": "tierA-gl-accounting-A2",
+   "dependencies": [],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".softhouse/capture/t268-rvpa-failopen/",
+    ".softhouse/capture/t286-t268-retry/"
+   ],
+   "description": "FOURTH ATTEMPT IN THIS LINEAGE. Read the whole chain before writing a line, because THE CHAIN IS THE FINDING:\n  T259  shipped a rule that printed REFUSED NIL COVERAGE in its body and exited GREEN.\n  T268  fixed it and introduced a SECOND fail-open. T281 rejected it.\n  T286  fixed that, found a THIRD inside the in-flight repair for the second, and a FOURTH (--help ->\n        SystemExit(0) -> exit 0 with no probe line). T291 rejected it.\n  T291  found the FIFTH: T286 chose 'a record is a row reached through a list' OVER 'the root does not\n        count' PRECISELY BECAUSE the root phrasing lost to a one-line evasion. Wrapping the fixture header\n        in [ ] -- TWO CHARACTERS -- defeats the replacement. Exit 0 GREEN, predicates=0, where the PRE-T268\n        rule exits 1 REFUSED. Also at depth 2 and 4, as a list-of-lists, and as a TOP-LEVEL JSON ARRAY,\n        which is the shape t286-legs.json and red-green-legs.json actually use.\n\n**DO NOT OPEN BY PATCHING THE BRACKET.** Every link in this chain was a competent, tested, RED/GREEN-driven repair of the shape in front of it, and every one lost to the SAME SHAPE OF EVASION RE-NESTED ONE LEVEL OUT. A sixth patch of the same kind is the predicted outcome, and you should assume it is what you will produce unless you change the method.\n\nTHE ACTUAL QUESTION: is there a formulation of 'this document affirms a verdict without covering anything' that is not a structural pattern over the document shape at all? Consider inverting the burden -- instead of enumerating shapes that DO count as coverage and refusing what is not matched, require the document to POSITIVELY DEMONSTRATE coverage in a form the rule constructs rather than recognises, so that anything the rule does not understand REFUSES rather than passes. Fail-CLOSED by construction is the property the whole chain has been failing to reach by enumeration. If you conclude no such formulation exists, SAY SO WITH THE ARGUMENT -- a measured impossibility is a real result and better than a sixth patch.\n\nALSO REPAIR, all measured by T291 and all real:\n  - The BATTERY returns 0 with legs SKIPPED (23/0/9 -> exit 0). A fail-open in the TEST RIG. Note T286 reported '0 SKIPPED' as proof; the rig can skip and still pass, so that proof was not load-bearing.\n  - Duplicate predicate keys go GREEN: JSON last-wins silently drops a recorded `false`.\n  - `parse_constant` unset, so JSON NaN/Infinity enter a GREEN run AS FLOATS. **This is a money non-negotiable in CLAUDE.md, not a robustness nit.**\n  - `read_text()` has no encoding, so a Cyrillic payload exits 2 under LC_ALL=C. **Mongolian names are Cyrillic; this program will meet that payload.**\n  - The evidence is read TWICE, so the sha pin does not cover the graded bytes -- T291 made it visible as an indefinite HANG on a FIFO. Read once, grade the bytes you pinned.\n  - The draft's two greps are BARE (ugrep, P-75) and the invocation needs a timeout.\n\nGUARD #10: T291 decided it -- IN SCOPE, KEEP, revertibility verified by execution. But its stated claim is FALSE AS MEASURED and must be re-derived with the coverage predicate, because both fall to the same bracket.\n\nT269 AMENDMENTS: T291 confirms sec 8's recipe is executable and that amendments 1 and 3 are right, but AMENDMENT 2 IS OVERSTATED -- the draft already fails closed on a missing interpreter (driven: exit 127, no probe, wrapper returns 1). Do not carry the overstatement forward.\n\nSTANDING: `git grep` exits 1 on NO MATCH and >1 on ERROR (P-81). PROSE DOES NOT FIRE ON THE NEXT FIRE (P-89/P-45) -- nothing invokes this rule today, confirmed repo-wide by T291. Money is integer minor units, MNT (ISO 4217 numeric 496, minor unit 2), no float anywhere. DO NOT EDIT conformance.sh; specify wiring for T269 and leave it. T269 MUST NOT BE WIRED until F-T290-1b's floor exists -- that hole is open under BOTH the live rule and T286's rewrite.",
+   "acceptance": "Either a formulation that is fail-closed BY CONSTRUCTION rather than by enumerating shapes -- demonstrated by an adversary that tries to re-nest one level out and cannot -- or a measured argument that no such formulation exists. Plus the six repairs above, each with its own RED before and GREEN after. A sixth shape-patch that closes T291's bracket and nothing more will be rejected."
   }
  ],
  "cross_corroboration": {
