@@ -1993,6 +1993,119 @@ guard_no_host_state_in_lint_corpus() {
   return 0
 }
 
+# ---------------------------------------------------------------------------
+# guard_accepting_side_gap_declared: THE OPENING-BALANCE ACCEPTING-SIDE HOLE IS
+# DECLARED WHILE IT IS OPEN, AND THE DECLARATION IS REMOVED WHEN IT CLOSES. [T305]
+# ---------------------------------------------------------------------------
+# WHAT HOLE. T296 mutated the PORT rather than arguing about it and measured four arms.
+# Arm E (the opening-balance rule moved below the balance check) DIES, which vindicates
+# T294's precedence claim. But arm A -- a port that matches on
+# `req.Command == "defineOpeningBalance"` ALONE and NEVER reads the posted-id list, so it
+# refuses EVERY opening balance including on an empty ledger where the reference oracle
+# ACCEPTS (JournalEntryWritePlatformServiceJpaRepositoryImpl.java:812, the CollectionUtils
+# .isEmpty fall-through) -- SURVIVES the whole ledger corpus. That is the headerRefusingPoster
+# class this store already names and already kills elsewhere: LDG-04 exists precisely because
+# the reasonable-looking port REFUSES a HEADER account, and diverging from the oracle BY
+# REFUSING is still diverging.
+#
+# WHY NO REFUSAL VECTOR CAN CLOSE IT, stated here because the cheap wrong move is to add one:
+# every refusal capture in this corpus AGREES with arm A. The closer is an ACCEPTING-side
+# observation and nothing else. T305 measured whether one can be taken safely and concluded
+# it CANNOT on this rig -- neither registered tenant qualifies, by measurement, and the
+# executable form of that refusal is
+# .softhouse/capture/t305-openingbalance-accepting-side/guard-accepting-capture.sh.
+#
+# WHY THIS IS A GUARD AND NOT A SENTENCE. P-89: "PROSE DOES NOT FIRE ON THE NEXT FIRE -- a
+# limit written into a handoff, a review, or a `## Backlog` heading is invisible to the
+# scheduler." T294 wrote its own widening risk into a backlog heading and it took a whole
+# review fire to convert that into a measurement. This guard is the conversion, done up front.
+#
+# IT IS DELIBERATELY TWO-WAY, because a one-way guard becomes the next stale claim (A2-34
+# F-4: a false sentence the harness prints on every run as a measured fact). It compares two
+# facts the tree can supply for itself:
+#
+#   VECTORS  the number of ledger vectors that assert an ACCEPTED defineOpeningBalance --
+#            i.e. carry that command and are NOT of expect kind "refusal".
+#   MARKER   whether capabilities-ledger.json still carries the token T305-ACCEPTING-SIDE-GAP.
+#
+#   VECTORS=0, MARKER present  -> ok. The hole is open and the store says so.
+#   VECTORS=0, MARKER absent   -> FAIL. The hole is open and NOTHING declares it any more.
+#   VECTORS>0, MARKER present  -> FAIL. The hole is CLOSED and the declaration is now a lie.
+#   VECTORS>0, MARKER absent   -> ok. Closed, and the declaration was removed with it.
+#
+# AND ONE MORE THING IT REFUSES: a COMMITTED disposability attestation. T305's gate treats
+# `attest/<tenant>.disposable` as the one condition no measurement can supply -- permission to
+# mutate a tenant irreversibly. Such a file in the TRACKED tree is a standing authorisation to
+# post journal entries that can never be deleted, and it must be an explicit, reviewed act,
+# never something that arrives inside somebody's capture rig. Read through `git ls-files` on
+# purpose: an untracked scratch file (red-drive-gate.sh creates one and deletes it) is not an
+# authorisation, and a tracked one is.
+guard_accepting_side_gap_declared() {
+  local vecdir="$REPO_ROOT/.softhouse/vectors/ledger"
+  local capfile="$REPO_ROOT/.softhouse/vectors/capabilities-ledger.json"
+  local rc=0 vectors=0 marker=0 f
+
+  if [ ! -d "$vecdir" ] || [ ! -f "$capfile" ]; then
+    warn "conformance: ACCEPTING-SIDE GAP guard: the ledger vector directory or"
+    warn "conformance: capabilities-ledger.json is MISSING. Fail-closed: this guard cannot"
+    warn "conformance: report on a tree it cannot read, and silence would read as a pass."
+    return 1
+  fi
+
+  for f in "$vecdir"/*.json; do
+    [ -f "$f" ] || continue
+    LC_ALL=C grep -q '"command"[[:space:]]*:[[:space:]]*"defineOpeningBalance"' "$f" || continue
+    LC_ALL=C grep -q '"kind"[[:space:]]*:[[:space:]]*"refusal"' "$f" && continue
+    vectors=$((vectors + 1))
+    say "conformance:   ACCEPTING-SIDE GAP: accepting opening-balance vector found: ${f##*/}"
+  done
+
+  LC_ALL=C grep -q 'T305-ACCEPTING-SIDE-GAP' "$capfile" && marker=1
+
+  say "conformance: CENSUS opening-balance ACCEPTING side — accepting vectors $vectors,"
+  say "conformance:   capabilities-ledger declaration $( [ "$marker" -eq 1 ] && echo PRESENT || echo ABSENT )."
+
+  if [ "$vectors" -eq 0 ] && [ "$marker" -eq 0 ]; then
+    warn "conformance: THE ACCEPTING-SIDE HOLE IS OPEN AND NOTHING DECLARES IT."
+    warn "conformance: No ledger vector asserts an ACCEPTED defineOpeningBalance, so T296 arm A —"
+    warn "conformance: a port that refuses EVERY opening balance, including where the oracle"
+    warn "conformance: accepts at :812 — is UNKILLED; and the token T305-ACCEPTING-SIDE-GAP has"
+    warn "conformance: been removed from capabilities-ledger.json, so the store no longer says so."
+    warn "conformance: Restore the declaration, or CLOSE the hole with an accepting capture."
+    rc=1
+  elif [ "$vectors" -gt 0 ] && [ "$marker" -eq 1 ]; then
+    warn "conformance: THE ACCEPTING-SIDE DECLARATION IS NOW STALE."
+    warn "conformance: $vectors ledger vector(s) assert an ACCEPTED defineOpeningBalance, so the"
+    warn "conformance: hole is CLOSED — but capabilities-ledger.json still carries"
+    warn "conformance: T305-ACCEPTING-SIDE-GAP and the harness would go on printing it as a"
+    warn "conformance: measured limit. That is the A2-34 F-4 defect: a caveat outliving its"
+    warn "conformance: defect. Remove the token IN THE SAME DIFF that promotes the vector."
+    rc=1
+  elif [ "$vectors" -eq 0 ]; then
+    say "conformance:   OPEN AND DECLARED. T296 arm A is UNKILLED and the store says so. The only"
+    say "conformance:   thing that closes it is an ACCEPTING observation; every refusal capture in"
+    say "conformance:   this corpus AGREES with arm A, so no number of them can substitute."
+  else
+    say "conformance:   CLOSED, and the declaration was removed with it."
+  fi
+
+  local attest
+  attest="$(cd "$REPO_ROOT" && git ls-files -- '.softhouse/capture/*/attest/*.disposable' 2>/dev/null || true)"
+  if [ -n "$attest" ]; then
+    warn "conformance: A TRACKED DISPOSABILITY ATTESTATION IS PRESENT IN THIS TREE:"
+    printf '%s\n' "$attest" | while IFS= read -r a; do warn "conformance:   $a"; done
+    warn "conformance: That file is a standing authorisation to post journal entries into a"
+    warn "conformance: reference-oracle tenant, and A POSTED JOURNAL ENTRY HAS NO DELETE PATH IN"
+    warn "conformance: FINERACT AT ALL. It must be an explicit reviewed act, not a file that"
+    warn "conformance: arrived inside a capture rig. Remove it, or route the decision as a task."
+    rc=1
+  else
+    say "conformance:   no tracked disposability attestation — nothing authorises an irreversible"
+    say "conformance:   accepting capture in this tree."
+  fi
+  return "$rc"
+}
+
 run_guards() {
   local failed=0
   # FIRST, and it SHORT-CIRCUITS rather than joining the `failed=1` tally the others use.
@@ -2016,6 +2129,7 @@ run_guards() {
   guard_ledger_invariants             || failed=1
   guard_no_fail_open_instruments      || failed=1
   guard_no_host_state_in_lint_corpus  || failed=1
+  guard_accepting_side_gap_declared   || failed=1
   if [ "$failed" -ne 0 ]; then
     warn "conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass."
     exit "$EXIT_UNUSABLE"
