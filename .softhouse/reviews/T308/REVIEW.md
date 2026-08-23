@@ -432,7 +432,18 @@ So that silence is distinguishable from not looking:
 * **No ratified DEC-n changed**; no vector, no Go file, no `nexus/` path in the diff.
 * **The branch's self-recorded defects are honest and complete as far as I could check** — I found
   no defect T292 concealed. Every finding above is about a claim T292 **made**, not about a defect
-  it hid.
+  it hid. Handoff §5c is the strongest part of the branch: it carries explicit `[UNVERIFIED]` on
+  *"the generator's family is the whole family"*, `[NOT MEASURED]` on the `/dev/full` ENOSPC path,
+  and `[UNVERIFIED]` on TOCTOU — three places a weaker handoff would have written a plausible
+  value. §5c's own caveat *"coverage is invariant under **container** rewriting, proved; it is not
+  claimed invariant under arbitrary rewriting"* is very nearly the correction F-T308-1 asks for; it
+  is in the handoff and **not** in the rule's docstring, which is where the theorem lives.
+* **The scope claims in handoff §6 are all true, re-checked by me and not inherited:**
+  `conformance.sh` unchanged, T259's file byte-identical at blob `86f42859…`, register and
+  acknowledgements unmodified, no Go, no vector, no pin moved. The §6 note that `run.sh` originally
+  diffed against a **moving `main`** instead of the fork point — and thereby accused its own author
+  of a scope violation — is a real instrument defect, correctly diagnosed and correctly fixed to
+  `git merge-base HEAD main`.
 
 ---
 
