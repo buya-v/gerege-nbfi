@@ -1,0 +1,32 @@
+### T273 — OUTSIDE-REPO STATE SWEEP
+  tree                 : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad4264728c497493b
+  HEAD                 : ea82ff42c0206c8548857c193d2bd49fc4fde637
+  corpus               : 999 tracked .sh/.py
+  of which the fail-open linter classifies : 72
+
+### THE POPULATION, BY CLASS — BOTH TERMS
+  CLASS                                                       FILES  SITES  IN-LINT EXIST-NOW
+  C-TMP        literal shared-temp path, ANY position           216    869      132      589
+  C-TMP-ASSIGN the guarded shape: NAME=<shared-temp path>       101    153        9      108
+  C-WORKTREE   a sibling agent worktree, by absolute path        77     83        6        2
+  C-USERHOME   an absolute path under /Users (this Mac's home root)    196    274       19      173
+  C-HOME       $HOME, ~/ or expanduser                           11     24        2      n/a
+  C-ENVREAD    a shell/python read of an environment variable    229    648       75      n/a
+
+  EXIST-NOW is the second term. For C-TMP it is the number of shared-temp paths a
+  tracked instrument names that HAPPEN TO BE ON THIS HOST RIGHT NOW. Every one of
+  them is a fact no commit records and macOS deletes on reboot.
+
+### THE BAR'S OWN EXECUTION PATH — the only sites that can change a VERDICT
+  .softhouse/bin/go-env.sh                                                 C-ENVREAD
+  .softhouse/capture/lib/check_no_narrow_catch.py                          no outside-repo state on a code line
+  .softhouse/capture/lib/check_wire_float_roundtrip.py                     no outside-repo state on a code line
+  .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py         C-TMP, C-ENVREAD
+  .softhouse/conformance.sh                                                C-TMP, C-ENVREAD
+  .softhouse/guards/check-ledger-invariants.sh                             C-ENVREAD
+
+  READ THIS EXACTLY: a class name against a file on this list means the file CONTAINS
+  that shape, NOT that the shape changes a verdict. C-ENVREAD in particular fires on
+  ${TMPDIR:-/tmp} and ${1:?usage}, which are the CORRECT idioms. The one shape this
+  task PROVED can flip a verdict is C-TMP-ASSIGN inside the linter's corpus, and that
+  is what conformance.sh now pins.

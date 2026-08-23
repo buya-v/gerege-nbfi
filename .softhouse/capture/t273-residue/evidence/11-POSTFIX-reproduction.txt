@@ -1,0 +1,58 @@
+### T273 residue-dependence reproduction — label=POSTFIX
+  tree      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad4264728c497493b
+  HEAD      : 82949001d6d9770f37c8947abb0bac1ae5b15164
+  dirty     : 1 path(s)
+  residue   : /tmp/t234_matrix2.txt
+  bash      : 3.2.57(1)-release
+  date      : 2026-08-22T14:32:37Z
+  park dir  : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t273-park.R9adXfxm6X
+
+### CALIBRATION (P-72): linter banner present, frontier rows visible = 11
+
+### NOTE: the residue was ABSENT at start; this instrument SYNTHESISES it for the PRESENT arm.
+=== ARM: residue PRESENT ===
+  ls /tmp/t234_matrix2.txt -> -rw-r--r--  1 buv  wheel  24 Aug 22 22:32 /tmp/t234_matrix2.txt
+  frontier rows    : 11
+    TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+    TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+    TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+    TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+    TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+    TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+  02-escape row    : TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+  BAR exit code    : 0
+  BAR log          : .softhouse/capture/t273-residue/evidence/POSTFIX-BAR-residue-PRESENT.log
+  PROBE LINE COUNT : 1
+  probe line       : conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+  VERDICT line     : VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+  refusal line     : (no refusal line was printed)
+
+=== ARM: residue ABSENT ===
+  ls /tmp/t234_matrix2.txt -> ls: /tmp/t234_matrix2.txt: No such file or directory
+  frontier rows    : 11
+    TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+    TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+    TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+    TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+    TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+    TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+  02-escape row    : TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+  BAR exit code    : 0
+  BAR log          : .softhouse/capture/t273-residue/evidence/POSTFIX-BAR-residue-ABSENT.log
+  PROBE LINE COUNT : 1
+  probe line       : conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+  VERDICT line     : VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+  refusal line     : (no refusal line was printed)
+
+### host state RESTORED: /tmp/t234_matrix2.txt left ABSENT, as it was at start
+### done — label=POSTFIX
