@@ -1340,7 +1340,43 @@ guard_ledger_invariants() {
   # removing them changes the harness's OUTPUT, which is not a comment-only change and is not
   # T227's scope. They stay, correctly labelled, until FU-T209-1 is worked. Printed on BOTH
   # paths, pass or fail.
-  say "conformance: ledger-invariants LIMITS (CANNOT-CATCH, condensed; the full 33-line block is"
+  # THE "33-LINE" FIGURE IS NOW READ FROM THE CONST, NOT TYPED BESIDE IT. [T300] It was ACCURATE
+  # when T300 measured it (main.go:745-777 inclusive = 33 lines), and that is why it was
+  # repaired: it is a cardinal about a collection in a file THIS SCRIPT DOES NOT OWN, restated
+  # here, one edit away from being wrong on every run — P-80's shape ("A CORRECTED CARDINAL ROTS
+  # IN EVERY PLACE IT WAS RESTATED. The count is the same defect as the line number"). The
+  # paragraph above already says so in its own words: "Recount it before quoting it; every
+  # figure in this paragraph has now been stale once."
+  #
+  # READ FROM THE SOURCE, NOT FROM THE BINARY'S OUTPUT, and the distinction is the claim being
+  # made: this sentence asserts how big the CONST is, not how much of it the head's pass-path
+  # filter let through. Counting what got printed would make the figure agree with a filter that
+  # dropped half the block.
+  #
+  # PIPELINE, DELIBERATELY, AND IT IS THE ONE P-57 ENDORSES: the consumer is `grep -c`, which
+  # DRAINS its input, so there is no early exit for `set -o pipefail` to invert ("Use grep -c
+  # (consumes all input) and test the count"). A Go raw string cannot contain a backtick, so the
+  # first line ending in one after the opener is the terminator.
+  #
+  # A DERIVATION THAT FAILS SAYS SO WHERE THE NUMBER WOULD HAVE BEEN. It does not fall back to a
+  # figure and it does not fall back to 0. It does NOT change this guard's exit code either, and
+  # that is a decision, not an oversight: the graded property here is the ledger walk's verdict,
+  # and turning a rename of a documentation const into EXIT 2 for the whole bar would make the
+  # run's colour depend on a doc string. The failure is loud instead — a warn on stderr and the
+  # words NOT DERIVABLE printed inline, which no reader of the transcript can mistake for 33.
+  local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+  cc="$(LC_ALL=C sed -n '/^const cannotCatch = `/,/`$/p' "$ccsrc" | LC_ALL=C grep -ac '')"
+  case "$cc" in ''|*[!0-9]*) cc=0 ;; esac
+  if [ "$cc" -lt 2 ]; then
+    ccsize="line count NOT DERIVABLE"
+    warn "conformance: the CANNOT-CATCH block's size did not derive from $ccsrc — the"
+    warn "conformance: \`const cannotCatch = \` opener was not found at its expected shape. The"
+    warn "conformance: limits line below prints NOT DERIVABLE rather than a number that would be"
+    warn "conformance: a guess. The ledger verdict itself is unaffected and is reported as measured."
+  else
+    ccsize="full $cc-line block"
+  fi
+  say "conformance: ledger-invariants LIMITS (CANNOT-CATCH, condensed; the $ccsize is"
   say "conformance:   the cannotCatch const in .softhouse/guards/ledgerguard/main.go, which its"
   say "conformance:   head prints IN FULL ABOVE since T209 — so this is a redundant restatement):"
   say "conformance:   the detection surface is the NAME, so RENAMING A BALANCE DEFEATS THIS GUARD;"
@@ -1490,7 +1526,7 @@ guard_no_fail_open_instruments() {
     warn "conformance: it is wired into this guard, so its absence is a refusal and never a pass."
     return 1
   fi
-  local out json want got rc corpus n
+  local out json want got rc corpus n p
   out="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen.XXXXXXXXXX")"      || return 1
   json="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen-json.XXXXXXXXXX")" || return 1
   want="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen-want.XXXXXXXXXX")" || return 1
@@ -1533,8 +1569,27 @@ guard_no_fail_open_instruments() {
   n="$(LC_ALL=C grep -ac '' "$got" || true)"
   [ -n "$n" ] || n=0
 
+  # THE PIN CARDINAL IS DERIVED, for the same reason and by the same means as the host-state
+  # census two hundred lines down. [T300] This one was ACCURATE on the day it was swept, and
+  # that is precisely why it was repaired rather than left: it is a typed count sitting beside a
+  # list whose length it restates, and this exact figure HAS already rotted once — T248 moved the
+  # frontier 9 -> 10, T252 moved it 10 -> 11, and T252 found t243-wiring/instruments/
+  # 20-failopen-red-drive.sh still asserting `frontier == pinned (all 9 rows, by path)` in two
+  # live want_line checks (P-80 — "A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED...
+  # The fix is never the new number — it is to make the second site READ the first"). Waiting for
+  # the third move before deriving would buy exactly one cycle.
+  p="$(LC_ALL=C grep -ac '' "$want")"
+  case "$p" in ''|*[!0-9]*) p=-1 ;; esac
+  if [ "$p" -lt 0 ]; then
+    warn "conformance: the fail-open PIN CARDINAL did not derive from FAILOPEN_PIN_FILE_LIST. A"
+    warn "conformance: frontier that cannot count its own pin may not print a figure beside it,"
+    warn "conformance: and a fallback zero would read as 'nothing is pinned'. REFUSED."
+    rm -f "$out" "$json" "$want" "$want.raw" "$got" "$got.raw"
+    return 1
+  fi
   say "conformance: CENSUS fail-open instruments — inspected $corpus tracked .sh/.py file(s) under"
-  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at 11."
+  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at $p"
+  say "conformance:   (DERIVED from FAILOPEN_PIN_FILE_LIST by counting it, never typed)."
   say "conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a"
   say "conformance:   directory that is not there and carries on, whatever it prints afterwards. TIER2 ="
   say "conformance:   printing arm only, corpus reachable today. All are pinned by PATH, not by count."
@@ -1643,7 +1698,12 @@ guard_no_fail_open_instruments() {
 # the record of what T273 did; this bracket is the correction. The `say` line in the guard body
 # below still prints the LITERAL "pinned at 17" and is therefore wrong on every run — REQUIRED
 # FOLLOW-UP, T293 F5; not repaired here because that line is outside T293's declared file
-# partition, and a reviewer that reaches outside its partition costs two tasks a clean merge],
+# partition, and a reviewer that reaches outside its partition costs two tasks a clean merge]
+# [T300 CLOSES T293 F5: there is no literal there any more. The `say` reads the pin's length
+# with `grep -ac ''` over the same sorted file the diff compares, so the printed cardinal and
+# the pinned list cannot disagree — see the block above that `say`. This bracket is left
+# standing rather than deleted because it is the record of how the defect was found; only its
+# present tense is now false, and this sentence is what makes that visible],
 # and the row that left is
 # `…/02-escape-matrix-fix.sh | C=/tmp/t234_matrix2.txt` [VERIFIED: the census expression
 # run against HEAD prints that file's line 6 and exits 0; the same expression against
@@ -1654,7 +1714,13 @@ guard_no_fail_open_instruments() {
 # rot on every insertion above them, and this program has already paid for a pin that
 # was restated as line numbers in four places (T255/T258).
 #
-# WHAT THIS GUARD DOES NOT CLAIM. It does not claim the seventeen rows below currently
+# WHAT THIS GUARD DOES NOT CLAIM. [T300: "the seventeen rows below" stood here and was a
+# SECOND rot site for the same cardinal — spelled in words, so the numeric sweep that found
+# `pinned at 17` could not see it, and it was wrong by one against an 18-row pin. The count is
+# deleted rather than corrected: the list is nine lines further down and can be counted, and a
+# restatement that cannot be wrong is a restatement that is not there (P-80 — "The fix is never
+# the new number — it is to make the second site READ the first").]
+# It does not claim the rows below currently
 # move a tier — most do not, and the check that would say which is the linter's own,
 # not this one's. It does not claim to have found every way a graded run can read state
 # outside the repo: $HOME, an env var, a sibling worktree and a previously-run instrument
@@ -1767,7 +1833,7 @@ HOSTSTATE_PIN_TEMP_ASSIGN_LIST='.softhouse/capture/t116-familyb-promotion/src/ru
 .softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh | p=/tmp/t260/red/.softhouse/conformance.sh'
 
 guard_no_host_state_in_lint_corpus() {
-  local rw as list raw got want rc n m self f
+  local rw as list raw got want rc n m p self f
   local -a corpus
   self='.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py'
   # The linter's repo-wide-instrument selector, transliterated to POSIX ERE.
@@ -1845,9 +1911,39 @@ guard_no_host_state_in_lint_corpus() {
   m="$(LC_ALL=C grep -ac '' "$got" || true)"
   [ -n "$m" ] || m=0
 
+  # THE PIN CARDINAL IS DERIVED FROM THE PIN, NEVER TYPED BESIDE IT. [T300, closing T293 F5]
+  # Until this commit the line below printed the LITERAL "pinned at 17" against an 18-row pin,
+  # on EVERY run, pass or fail, while the list-diff underneath it was green — so nothing in the
+  # transcript ever contradicted it. That is P-80 exactly ("A CORRECTED CARDINAL ROTS IN EVERY
+  # PLACE IT WAS RESTATED. The count is the same defect as the line number"), landing inside the
+  # one guard whose stated purpose is that no new site enters unseen. The cost is not being
+  # wrong once: a census that misreports its own size teaches every reader to discount its
+  # numbers, and this guard has nothing to offer a reader who discounts its numbers.
+  #
+  # WHY NO LITERAL SURVIVES, AND WHY NO SECOND EQUALITY TEST WAS BOLTED ON TOP. `diff -u` below
+  # compares the two SORTED files for CONTENT; content equality implies length equality, so $m
+  # and $p CANNOT differ on any path that reaches the pass line. A literal kept "for safety"
+  # would then be the only thing in this guard capable of disagreeing with the pin — it would be
+  # the defect, not the safeguard — and an added `[ "$m" -ne "$p" ]` refusal would be a branch no
+  # reachable input can enter, which is a guard nobody can ever watch fail (P-45 — "a guard that
+  # only works when someone remembers to run it enforces nothing"; its point is that an
+  # unexercised guard enforces nothing, and a branch with no reachable input is unexercisable by
+  # construction). What IS checked is the DERIVATION: a cardinal that does not derive refuses
+  # rather than falling back to 0, because a fallback zero is the vacuous pass this whole file
+  # exists to refuse (P-35). Driven red in .softhouse/capture/t300-census-cardinal/red/.
+  p="$(LC_ALL=C grep -ac '' "$want")"
+  case "$p" in ''|*[!0-9]*) p=-1 ;; esac
+  if [ "$p" -lt 0 ]; then
+    warn "conformance: the host-state PIN CARDINAL did not derive from the pinned list. A census"
+    warn "conformance: that cannot count its own pin may not print a figure beside it, and a"
+    warn "conformance: fallback zero would read as 'nothing is pinned'. REFUSED, not defaulted."
+    rm -f "$list" "$list.raw" "$raw" "$got" "$got.raw" "$want" "$want.raw"
+    return 1
+  fi
   say "conformance: CENSUS host state in the lint corpus — $n repo-wide search instrument(s)"
   say "conformance:   read from git grep over tracked *.sh/*.py under $REPO_ROOT; sites that assign a"
-  say "conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: $m, pinned at 17."
+  say "conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: $m, pinned at $p"
+  say "conformance:   (DERIVED from HOSTSTATE_PIN_TEMP_ASSIGN_LIST by counting it, never typed)."
   say "conformance:   Such a path is host state — shared across worktrees, absent from every commit,"
   say "conformance:   and deleted on reboot — and C1/C6 decide TIER by asking whether a path EXISTS."
   if ! diff -u "$want" "$got" >"$raw.diff" 2>&1; then
@@ -2336,6 +2432,13 @@ prove() {
   # is the same mistake the census block above records at "fixing only the census one".
   guard_graded_root_is_this_tree || exit "$EXIT_UNUSABLE"
   local rc pass=0 fail=0 bin tmp
+  # ONE SOURCE FOR THE PROOF TAIL. [T300] `expect` and `expect_saying` below each said
+  # "--- last 6 lines of that run ---" and then ran `tail -6` on the NEXT line: two literals,
+  # four sites, able to disagree with each other and with nothing to notice if they did. Same
+  # class as the census cardinals this commit derives — P-80, "A CORRECTED CARDINAL ROTS IN
+  # EVERY PLACE IT WAS RESTATED. The count is the same defect as the line number." Here the
+  # heading now READS the value the tail uses, so a change to one is a change to both.
+  local proof_tail=6
   CONF_BIN="$(mktemp "${TMPDIR:-/tmp}/conformance.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
   CONF_TMP="$(mktemp -d "${TMPDIR:-/tmp}/conformance-prove.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
   bin="$CONF_BIN"; tmp="$CONF_TMP"
@@ -2360,8 +2463,8 @@ prove() {
       say "$out"
       fail=$((fail+1))
     fi
-    say "--- last 6 lines of that run -------------------------------------------"
-    printf '%s\n' "$out" | tail -6
+    say "--- last $proof_tail lines of that run ------------------------------------"
+    printf '%s\n' "$out" | tail -"$proof_tail"
     say ""
   }
 
@@ -2389,8 +2492,8 @@ prove() {
       say "$out"
       fail=$((fail+1))
     fi
-    say "--- last 6 lines of that run -------------------------------------------"
-    printf '%s\n' "$out" | tail -6
+    say "--- last $proof_tail lines of that run ------------------------------------"
+    printf '%s\n' "$out" | tail -"$proof_tail"
     say ""
   }
 

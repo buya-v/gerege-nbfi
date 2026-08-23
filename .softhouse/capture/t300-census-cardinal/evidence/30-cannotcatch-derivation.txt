@@ -1,0 +1,6 @@
+GREEN arm — subject: .softhouse/guards/ledgerguard/main.go
+  selector : sed -n '/^const cannotCatch = `/,/`$/p' | grep -ac ''
+  derived  : 33
+RED arm — same selector, const renamed in a scratch copy
+  derived  : 0   (< 2 => the guard prints 'line count NOT DERIVABLE' and warns on stderr)
+RESULT: BOTH ARMS AS CLAIMED (green 33, red 0).
