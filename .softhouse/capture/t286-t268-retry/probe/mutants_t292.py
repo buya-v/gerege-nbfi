@@ -27,6 +27,18 @@ Two fences, both driven:
      evidence and must still produce a PROBE LINE. A mutant that cannot measure anything is
      reported `NON-VIABLE`, is NOT counted as a kill, and fails this file -- because a corpse
      proves nothing about the murder weapon.
+
+**TWO MUTANTS ARE NEGATIVE CONTROLS AND MUST SURVIVE** (`--EXPECTED-TO-SURVIVE` in the id). A suite
+in which every edit kills cannot distinguish *"the adversary is sharp"* from *"the adversary reds
+out on anything"*, which is the failure its own first draft had. `M8` and `M5` are deliberate
+no-ops; if either is KILLED, a guard the rule treats as belt-and-braces is actually load-bearing,
+which is a finding about the RULE, and it is reported as `UNEXPECTED-KILL`.
+
+`M5` earned that status the hard way: it was written as a kill, **it survived**, and driving all
+three arms showed why -- `_assert_no_float` catches NaN by TYPE ABSENCE whether or not
+`parse_constant` is set. `M10` plants the real defect. The suite told me which of my two float
+guards was doing the work; that is the suite earning its keep, and it is recorded rather than
+tidied away.
 """
 import argparse
 import shutil
@@ -80,10 +92,28 @@ MUTANTS = [
      [("                         object_pairs_hook=_no_duplicate_keys)",
        "                         object_pairs_hook=None)")]),
 
-    ("M5-parse_constant-unset-NaN-enters-as-a-float",
-     "F-T291-5, and a MONEY NON-NEGOTIABLE in CLAUDE.md: no floating point in any monetary code "
-     "path, including intermediate calculation. NaN/Infinity arrive as `float`.",
+    # M5 WAS WRITTEN AS A KILL AND IT SURVIVED. THE SUITE WAS RIGHT AND I WAS WRONG.
+    # Removing `parse_constant` alone does NOT re-open F-T291-5, because `_assert_no_float`
+    # catches NaN/Infinity by TYPE ABSENCE a moment later. Driven, all three arms:
+    #     shipped rule                              -> exit 2  "JSON constant 'NaN'"
+    #     parse_constant removed                    -> exit 2  "a float survived the parse at $.cells[0].v: nan"
+    #     parse_constant AND _assert_no_float removed -> exit 0 GREEN, floats in the graded document
+    # So `_assert_no_float` is the LOAD-BEARING defence and `parse_constant` is belt-and-braces.
+    # M5 is therefore reclassified as a SECOND NEGATIVE CONTROL, and M10 below plants the real
+    # defect. A mutant suite that told me which of my two guards was doing the work is the suite
+    # earning its keep; recording that is worth more than quietly deleting the mutant.
+    ("M5-parse_constant-removed--EXPECTED-TO-SURVIVE",
+     "Belt-and-braces only. `_assert_no_float` still refuses NaN/Infinity by TYPE ABSENCE, so no "
+     "verdict changes. Kept as a negative control and as the record of which guard is "
+     "load-bearing. The REAL defect is M10.",
      [("                         parse_constant=_refuse_constant,", "")]),
+
+    ("M10-BOTH-float-guards-removed-NaN-enters-a-GREEN-run",
+     "F-T291-5 for real, and a MONEY NON-NEGOTIABLE in CLAUDE.md -- 'no floating-point in any "
+     "monetary code path… including intermediate calculation'. With both guards gone, NaN and "
+     "Infinity reach the graded document AS FLOATS and the run exits 0 GREEN.",
+     [("                         parse_constant=_refuse_constant,", ""),
+      ("    _assert_no_float(doc)", "")]),
 
     ("M6-read_text-with-no-encoding",
      "F-T291-6. Mongolian names are Cyrillic and are three fields -- ovog, patronymic, given "
@@ -169,7 +199,11 @@ def main():
     args = ap.parse_args()
     # INSIDE the repo -- the mutant must see the same `.git` ancestor the live rule sees.
     tmp = Path(tempfile.mkdtemp(prefix=".t292-mut-", dir=str(CAP)))
-    survived, killed, broken, nonviable = [], [], [], []
+    # FOUR BUCKETS, NOT THREE. The first draft put the negative controls in `killed`, so the
+    # summary read `10 killed, 0 SURVIVED` directly above two lines reading `SURVIVED`. That is
+    # T259's FOUNDING DEFECT -- "the summary line above it said the opposite" -- reproduced in the
+    # instrument written to grade the fix for it. Counted separately now.
+    survived, killed, broken, nonviable, controls_held = [], [], [], [], []
     try:
         print("MUTANT KILL -- each mutant re-introduces ONE defect from the R-VPA lineage.")
         print("A mutant the adversary PASSES is a hole in the adversary, reported as SURVIVED.")
@@ -216,7 +250,7 @@ def main():
             expect_survive = "EXPECTED-TO-SURVIVE" in mid
             if expect_survive:
                 if r.returncode == 0:
-                    killed.append(mid + " [NEGATIVE CONTROL: survived, as required]")
+                    controls_held.append(mid)
                     print("  SURVIVED %-52s adversary exit 0 -- AS REQUIRED (negative control)"
                           % mid)
                 else:
@@ -239,17 +273,28 @@ def main():
             print("           why it matters: %s" % why)
         print()
         print("=" * 96)
-        print("MUTANTS: %d killed, %d SURVIVED, %d NON-VIABLE, %d broken (out of %d)"
-              % (len(killed), len(survived), len(nonviable), len(broken), len(MUTANTS)))
+        n_kill_targets = len([m for m in MUTANTS if "EXPECTED-TO-SURVIVE" not in m[0]])
+        n_controls = len(MUTANTS) - n_kill_targets
+        print("MUTANTS (%d total = %d kill targets + %d negative controls):"
+              % (len(MUTANTS), n_kill_targets, n_controls))
+        print("  KILLED as required            : %d of %d" % (len(killed), n_kill_targets))
+        print("  NEGATIVE CONTROLS that SURVIVED as required : %d of %d"
+              % (len(controls_held), n_controls))
+        print("  SURVIVED but should NOT have  : %d   <-- each is a hole in the adversary"
+              % len(survived))
+        print("  NON-VIABLE                    : %d" % len(nonviable))
+        print("  BROKEN                        : %d" % len(broken))
         for mid, why in survived:
             print("  SURVIVED  %s -- %s" % (mid, why))
         for mid, msg in nonviable:
             print("  NONVIABLE %s -- %s" % (mid, msg))
         for mid, err in broken:
             print("  BROKEN    %s -- %s" % (mid, err))
-        rc = 0 if (not survived and not broken and not nonviable and ctl == 0) else 1
-        print("EXIT %d   (non-zero on any survivor, any NON-VIABLE mutant, any broken mutant, or "
-              "a failing control)" % rc)
+        rc = 0 if (not survived and not broken and not nonviable and ctl == 0
+                   and len(killed) == n_kill_targets
+                   and len(controls_held) == n_controls) else 1
+        print("EXIT %d   (non-zero unless EVERY kill target died, EVERY negative control survived, "
+              "no mutant was NON-VIABLE or broken, and the unmutated control passed)" % rc)
         return rc
     finally:
         shutil.rmtree(tmp, ignore_errors=True)

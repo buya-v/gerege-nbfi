@@ -1,0 +1,6 @@
+255fa5b merge T295 — THE INCLUSIVE CLOSURE BOUNDARY IS NOW AN EXECUTABLE KILL, and two captures were refused by measurement
+7747c3a T295 — T287's four probes ADJUDICATED: two promoted, two refused BY MEASUREMENT, none fired
+793727a T300 — the census cardinal is DERIVED, not corrected: 17 was never changed to 18
+aba2d4f merge T293 — the pin is UPHELD, and TWO OF THE DRIVER'S STATED REASONS FOR IT WERE MEASURED FALSE
+cd73a2a T293 ADJUDICATION: UPHELD-WITH-REPAIR — the pin row stays, two of its stated reasons do not
+e20d56f T294 — capture and PROMOTE the opening-balance refusal: ledger corpus 6 -> 7 vectors

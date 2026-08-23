@@ -64,6 +64,22 @@ case "$MUT_RC" in
 esac
 say ""
 
+# ------------------------------------------------------------------ 3b. calibrate the headline
+# number. A counter only ever observed reading zero is indistinguishable from one that cannot
+# count -- P-45 pointed at a statistic instead of a guard.
+say "== 3b. calibrate LOST REFUSALS: plant the lineage's defect and watch the counter FIRE =="
+CAL_RC=0
+python3 "$HERE/probe/prove_adversary_sees_a_lost_refusal.py" \
+  | tee "$OUT/lost-refusal-calibration.txt" || CAL_RC=$?
+case "$CAL_RC" in
+  0) say "   COUNTER FIRES -- 'LOST REFUSALS: 0' on the shipped rule is a measurement" ;;
+  1) say "   COUNTER DID NOT FIRE on a planted lost refusal. Every 'LOST REFUSALS: 0' in this"
+     say "   directory is decoration until this passes."
+     exit 1 ;;
+  *) say "   CALIBRATION ERROR rc=$CAL_RC"; exit 2 ;;
+esac
+say ""
+
 # ------------------------------------------------------------------ 4. the measured negatives
 say "== 4. negative result: what gating headerAffirmations would cost =="
 NEG_RC=0
@@ -100,21 +116,38 @@ esac
 say ""
 
 # ------------------------------------------------------------------ 7. scope guard, read not asserted
-say "== 7. scope: conformance.sh must be untouched (two other tasks hold it this fire) =="
+#
+# THE BASELINE IS THE MERGE BASE, NOT `main`. The first draft of this stage diffed against `main`
+# and reported `conformance.sh CHANGED (1 lines) -- scope violation` on a branch that has never
+# touched the file. `main` MOVED WHILE THIS BRANCH RAN -- T293, T294, T295 and T300 all landed
+# edits to conformance.sh -- so diffing a long-lived branch against a moving tip measures OTHER
+# PEOPLE'S WORK AND ATTRIBUTES IT TO YOU. That is the same species as everything else in this
+# directory: a guard that fires confidently while measuring the wrong thing. The question "did I
+# touch this file" has exactly one correct baseline: the commit I forked from.
+say "== 7. scope: conformance.sh must be untouched BY THIS BRANCH =="
+BASE="$(git -C "$HERE/../../.." merge-base HEAD main)"
+say "   merge-base (this branch's fork point): $BASE"
 GG=0
-git -C "$HERE/../../.." diff --name-only main -- .softhouse/conformance.sh > "$OUT/scope-conformance.txt" \
-  || GG=$?
+git -C "$HERE/../../.." diff --name-only "$BASE" HEAD -- .softhouse/conformance.sh \
+  > "$OUT/scope-conformance.txt" || GG=$?
 case "$GG" in
   0) : ;;
   *) say "   git diff rc=$GG -- the question is UNANSWERED"; exit 2 ;;
 esac
+# Recorded, not gating: how far main has moved on this file since the fork, so a reader is not
+# surprised by a merge conflict and does not mistake it for a scope violation.
+git -C "$HERE/../../.." log --oneline "$BASE..main" -- .softhouse/conformance.sh \
+  > "$OUT/scope-conformance-main-moved.txt" || true   # lint-failopen: ok -- CENSUS ONLY, not gating; the gating read is the merge-base diff above, whose status IS classified
 # NOT `grep -c`: it exits 1 on zero matches, and the only way to use it here would be to swallow
 # that status, which is the defect this whole directory is about. `wc -l` cannot lie about a
 # count it did not take.
 HITS="$(/usr/bin/wc -l < "$OUT/scope-conformance.txt" | /usr/bin/tr -d ' ')"
+MAIN_MOVED="$(/usr/bin/wc -l < "$OUT/scope-conformance-main-moved.txt" | /usr/bin/tr -d ' ')"
 case "$HITS" in
-  0) say "   conformance.sh: 0 changed lines vs main. Scope guard HELD." ;;
-  *) say "   conformance.sh CHANGED ($HITS lines) -- scope violation"; exit 1 ;;
+  0) say "   conformance.sh: 0 changed paths vs the fork point. SCOPE GUARD HELD."
+     say "   (census, not gating: main has $MAIN_MOVED commits touching conformance.sh since the"
+     say "    fork -- other tasks' work, not this branch's)" ;;
+  *) say "   conformance.sh CHANGED BY THIS BRANCH ($HITS paths) -- scope violation"; exit 1 ;;
 esac
 say ""
 say "ALL STAGES PASSED."

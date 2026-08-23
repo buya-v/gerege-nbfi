@@ -1,0 +1,60 @@
+MUTANT KILL -- each mutant re-introduces ONE defect from the R-VPA lineage.
+A mutant the adversary PASSES is a hole in the adversary, reported as SURVIVED.
+================================================================================================
+  CONTROL  unmutated rule -> adversary exit 0   T292 ADVERSARY: 82 passed, 0 failed, 0 SKIPPED   over 75 documents
+
+  KILLED   M1-coverage-is-the-object-census                     adversary exit 1, 4 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-D] NEG  degenerate empty-object       -> 1, probe PRESENT -- rc=2 probe=False (want rc=1 probe=True) ERROR: post-condition violated -- G
+             FAILED  [PROP-D] PYTHONOPTIMIZE=2 still refuses X2 -- rc=2
+             FAILED  [PROP-D] BATCH header-first refuses (T268 F-1) -- rc=2 nilFiles=None
+             FAILED  [PROP-D] BATCH evidence-first refuses (T268 F-1) -- rc=2 nilFiles=None
+           why it matters: T259/T268's metric: coverage = 'did I recognise any row'. Re-nesting manufactures it. This is the bracket, restored.
+  KILLED   M2-coverage-is-a-row-reached-through-a-list          adversary exit 1, 7 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-A] A11-FLOOR-header-buys-coverage-by-asserting-a-predicate -- NOT INVARIANT: base rc=1 w=1 d=40863cdb9def3ac5 ; 2 divergences, first: (0
+             FAILED  [PROP-A] A12-header-tries-to-buy-coverage-without-asserting-a-predicate -- NOT INVARIANT: base rc=1 w=0 d=e3b0c44298fc1c14 ; 2 divergences, fi
+             FAILED  [PROP-A] T291/H1-nested-header-empty -- NOT INVARIANT: base rc=1 w=0 d=e3b0c44298fc1c14 ; 2 divergences, first: (0, ['wrap-in-object', 'wrap-i
+             FAILED  [PROP-A] T291/N6-root-verdict-empty -- NOT INVARIANT: base rc=1 w=0 d=e3b0c44298fc1c14 ; 1 divergences, first: (0, ['wrap-3-deep-lists', 'wrap
+           why it matters: T286's exact phrasing -- 'a record is a row reached through a list' -- which T291 beat with two characters. Restored verbatim as a coverage metric.
+  KILLED   M3-nil-coverage-gated-globally-not-per-file          adversary exit 1, 1 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-D] BATCH evidence-first refuses (T268 F-1) -- rc=0 nilFiles=0
+           why it matters: T268's F-1, the SECOND fail-open in the lineage: measure per file, gate across the batch, and one populated file switches the refusal off for every other.
+  KILLED   M4-duplicate-keys-last-wins                          adversary exit 1, 1 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-D] DUP  duplicate predicate keys (last-wins drops a false) -- rc=0 probe=True (want rc=2 probe=False)
+           why it matters: F-T291-4. json.loads keeps the LAST duplicate, so a recorded `false` predicate is dropped without a word and the affirmative verdict stands.
+  SURVIVED M5-parse_constant-removed--EXPECTED-TO-SURVIVE       adversary exit 0 -- AS REQUIRED (negative control)
+           why it matters: Belt-and-braces only. `_assert_no_float` still refuses NaN/Infinity by TYPE ABSENCE, so no verdict changes. Kept as a negative control and as the record of which guard is load-bearing. The REAL defect is M10.
+  KILLED   M10-BOTH-float-guards-removed-NaN-enters-a-GREEN-run adversary exit 1, 1 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-D] NaN  NaN/Infinity JSON constants -- rc=0 probe=True (want rc=2 probe=False)
+           why it matters: F-T291-5 for real, and a MONEY NON-NEGOTIABLE in CLAUDE.md -- 'no floating-point in any monetary code path… including intermediate calculation'. With both guards gone, NaN and Infinity reach the graded document AS FLOATS and the run exits 0 GREEN.
+  KILLED   M6-read_text-with-no-encoding                        adversary exit 1, 1 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-D] CYR  Cyrillic ovog/patronymic/given name under LC_ALL=C -- rc=2 probe=False (want rc=0 probe=True) ERROR: UnicodeDecodeError: 'ascii'
+           why it matters: F-T291-6. Mongolian names are Cyrillic and are three fields -- ovog, patronymic, given name. Under LC_ALL=C the guard exits 2 on a name.
+  KILLED   M7-help-exits-0-with-no-probe-line                   adversary exit 1, 2 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-D] argv --help -> 2, no probe -- rc=0
+             FAILED  [PROP-D] argv -h -> 2, no probe -- rc=0
+           why it matters: T286's FOURTH fail-open: the one exit code a caller reads as 'measured, GREEN', printed with no probe line at all.
+  SURVIVED M8-post-condition-deleted--EXPECTED-TO-SURVIVE       adversary exit 0 -- AS REQUIRED (negative control)
+           why it matters: The belt-and-braces check that GREEN cannot be printed over an empty witness. Deleting it must NOT change any verdict; the primary gate already covers it. This mutant is the suite's negative control -- it proves the adversary does not simply red out on any edit.
+  KILLED   M9-affirmation-detection-narrowed-back-to-top-level-lists adversary exit 1, 9 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-A] A10-CONTROL-genuine-unacknowledged-disagreement -- NOT INVARIANT: base rc=1 w=1 d=edad19ab407b3e7f ; 1 divergences, first: (1, ['wrap
+             FAILED  [PROP-A] A13-verdict-VALUE-wrapped-in-a-list-over-a-false-predicate -- NOT INVARIANT: base rc=1 w=1 d=b6e72319a5c7448b ; 1 divergences, first:
+             FAILED  [PROP-A] A6-cyrillic-mongolian-name-fields -- NOT INVARIANT: base rc=0 w=1 d=2cc7b8009f2dabf1 ; 2 divergences, first: (0, ['wrap-object-then-l
+             FAILED  [PROP-A] A7-affirmation-as-a-mapping-key -- NOT INVARIANT: base rc=0 w=1 d=edad19ab407b3e7f ; 2 divergences, first: (0, ['wrap-3-deep-lists', 
+           why it matters: T259's partial walk. Detection must be TOTAL; narrowing it hides an affirmative verdict one container down.
+
+================================================================================================
+MUTANTS (10 total = 8 kill targets + 2 negative controls):
+  KILLED as required            : 8 of 8
+  NEGATIVE CONTROLS that SURVIVED as required : 2 of 2
+  SURVIVED but should NOT have  : 0   <-- each is a hole in the adversary
+  NON-VIABLE                    : 0
+  BROKEN                        : 0
+EXIT 0   (non-zero unless EVERY kill target died, EVERY negative control survived, no mutant was NON-VIABLE or broken, and the unmutated control passed)

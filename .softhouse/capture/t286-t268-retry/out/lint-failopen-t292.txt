@@ -1,6 +1,6 @@
 T259 fail-open lint
-  root            : .softhouse/capture/t286-t268-retry
-  files seen      : 10
-  files SCANNED   : 7  (.sh and .py, this file included)
-  files SKIPPED   : 3  (not .sh/.py -- json, md, txt; counted, P-40)
+  root            : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6b9a42195eeac6e9/.softhouse/capture/t286-t268-retry
+  files seen      : 22
+  files SCANNED   : 8  (.sh and .py, this file included)
+  files SKIPPED   : 14  (not .sh/.py -- json, md, txt; counted, P-40)
   findings        : 0
