@@ -1,0 +1,11 @@
+T290 -- is the F-T290-2 disposition repair inert?
+==============================================================================
+  register (committed) : .softhouse/capture/t271-b1-t219/acknowledged-t219.json
+  register (repaired)  : a temporary copy; the committed one is NOT touched
+  rows replaced        : 2
+  rule exit  before/after : 0 / 0
+    before: T259-VPA: GREEN files=1 rows=11 predicates=27 disagreements=4 acknowledged=4 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    after : T259-VPA: GREEN files=1 rows=11 predicates=27 disagreements=4 acknowledged=4 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+  identical. The repair changes what the rule PRINTS about each disagreement
+  and no number it MEASURES.
+T290-REPAIR-INERT: GREEN rowsReplaced=2 probeLinesBefore=1 probeLinesAfter=1 identical=1

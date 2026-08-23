@@ -1,0 +1,33 @@
+{
+  "_about": [
+    "T290 (review of T271). THE COMMITTED FLOOR for the R-VPA target-list guard.",
+    "",
+    "WHY A FLOOR EXISTS AT ALL. T271 turned a red bar green by ACKNOWLEDGING four disagreements.",
+    "That is legitimate, and its sha pin genuinely stops the evidence being edited while the",
+    "disagreement stands. But T290 measured an INVISIBLE ROUTE TO GREEN that the pin does not",
+    "close: retro-edit `classify-t219.json` so the four `P2_*` booleans read `true`, and",
+    "  * the acknowledgement block goes VOID and says so in the body, but",
+    "  * `check_verdict_predicate_agreement.py`'s refusal expression does NOT include",
+    "    `void_acks`, so the rule exits 0 with `disagreements=0 unacknowledged=0`, and",
+    "  * `run_rvpa_over_targets.py` passes that 0 straight through as GREEN.",
+    "Measured end to end at T290; transcript `out/attack-acknowledgement.txt and out/red-drive-t290.txt`. A guard that pins",
+    "only `unacknowledged=0` -- which is exactly what T271's handoff section 5 tells T269 to pin,",
+    "and it tells T269 explicitly NOT to pin the count -- passes the retro-edited corpus.",
+    "",
+    "THE FLOOR IS NOT `disagreements == 0`. T271 is right that pinning zero would be the bar",
+    "lowered. The correct pin is a FLOOR and a VOID-BLOCK refusal: the count may RISE (a new",
+    "disagreement must then be adjudicated and acknowledged, and the sha pin already forces that),",
+    "but it may not FALL, and no acknowledgement block may be VOID.",
+    "",
+    "RAISING THIS FLOOR IS AN EDIT TO EVIDENCE, made deliberately, in a task, with a reason.",
+    "LOWERING IT IS THE MOVE THIS FILE EXISTS TO MAKE VISIBLE. P-88: `the cloud author's refusal",
+    "to move the pin to make its own bar green is vindicated: it had an invisible route to green",
+    "and did not take it.`"
+  ],
+  "floor": {
+    "disagreements": 7,
+    "derivation": "t229-g8-site3/out/classify-t229.json 3 (T259) + t219-g8-residual/out/classify-t219.json 4 (T271) = 7. MEASURED at T290 by running the runner, not restated: `T259-VPA: GREEN files=2 rows=22 predicates=51 disagreements=7 acknowledged=7 unacknowledged=0` (out/guard-green.txt). P-83 -- two independent movements of one pinned number reconcile BY RUNNING.",
+    "rowsMinimum": 22,
+    "voidAcknowledgementBlocksMaximum": 0
+  }
+}

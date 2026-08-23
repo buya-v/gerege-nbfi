@@ -1,0 +1,44 @@
+T290 -- independent re-derivation of the T219 carriers, integer minor units only
+============================================================================================================
+  capture      : .softhouse/capture/t219-g8-residual/out/capture-t219-raw.json.gz
+  registration : .softhouse/capture/t219-g8-residual/prediction.json
+  precision    : moneyHelperPrecision=19
+
+id                               n       B   E_reg   E_r1  E_mode       P     sumTot     hdrTot   int_row   int_hdr       nE+B     nE+B-P  REG CORR UNCND STRUCT
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+T219-R600p0-N103-B1            103       1       1      1       0       1         14         14        13        13        104        103  F   F    T     F
+T219-R600p0-N104-B1            104       1       0      0       0       0          1          1         1         1          1          1  T   T    T     T
+T219-R600p0-N108-B1            108       1       0      0       0       0          1          1         1         1          1          1  T   T    T     T
+T219-R600p0-N3000-B1001       3000    1001     500    500     500       0    1501001    1501001   1501001   1501001    1501001    1501001  T   T    T     T
+T219-R600p0-N3000-B2999       3000    2999    1499   1499    1499       0    4499999    4499999   4499999   4499999    4499999    4499999  T   T    T     T
+T219-R600p0-N3000-B3001       3000    3001    1500   1500    1500       1    4503001    4503001   4503000   4503000    4503001    4503000  F   T    T     T
+T219-R600p0-N3000-B4499       3000    4499    2249   2249    2249    1499    6751499    6751499   6750000   6750000    6751499    6750000  F   T    T     T
+
+  REGISTERED    interest == n*E + B         : 4 of 7
+  CORRECTED     interest == n*E + B - P     : 6 of 7
+  UNCONDITIONAL interest == sumTotal - P    : 7 of 7   (sumTotal MEASURED)
+  EMI-plus-balloon STRUCTURE holds          : 6 of 7
+  row sums == the capture's OWN header totals: 7 of 7
+
+  ROW-BY-ROW, T219-R600p0-N103-B1   (all figures integer minor units, MNT)
+    repayment rows                 : 103   (registered n = 103)
+    disbursed                      : 1
+    rows with NONZERO interest     : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+      each carries                 : [1]
+      count x value = sum          : 13 x 1 = 13
+    rows with NONZERO principal    : [14]  value [1]
+    rows with NONZERO total        : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    rows 15..103 are ALL ZERO        : True
+    fees 0, penalties 0
+    E from row 1                   : 1
+    E as the MODE of rows 1..n-1   : 0
+    last row total                 : 0   emiDifference = -1   vs registered B = 1
+    n*E + B                        : 103 * 1 + 1 = 104
+    n*E + B - P                    : 104 - 1 = 103
+    MEASURED total repayment       : 14
+    MEASURED principal repaid      : 1
+    OBSERVED total interest        : 13
+    totalRepayment - principal     : 14 - 1 = 13
+    rows that ever charge interest : 13 of 103  => n*E prices 90 rows that charge nothing
+
+T290-REDERIVE: GREEN carriers=7 sumsMatchHeader=7 agreeREG=4 agreeCORR=6 agreeUNCOND=7 structureHolds=6
