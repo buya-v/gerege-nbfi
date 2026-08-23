@@ -1,0 +1,37 @@
+621:    warn "conformance: EXIT 2 — the harness is unusable. This is NOT a pass."
+631:    warn "conformance: enumerate files and inspect none. EXIT 2 — the harness is unusable. NOT a pass."
+641:    warn "conformance: would read as a pass. EXIT 2 — the harness is unusable. NOT a pass."
+856:  say "conformance: gofmt guard — inspected $seen .go files under $NEXUS_DIR (recursive, whole module; contract.go exempt, gate G-3)"
+1059:    warn "conformance: the $label guard's POPULATION FLOOR did not derive (caller passed '${3:-<nothing>}')."
+1550:    warn "conformance: the fail-open linter exited $rc, which is neither its clean (0) nor its"
+1551:    warn "conformance: violations (1) code. 2 is its own corpus refusal; anything else is a crash."
+1607:    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+1853:    warn "conformance: the host-state selector exited $rc. \`git grep\` exits 1 on NO MATCH and >1 on"
+1854:    warn "conformance: ERROR — 9 is this guard's own code for 'could not enter $REPO_ROOT'. An error is"
+1880:    warn "conformance: the host-state census exited $rc from \`git grep\`. >1 is an ERROR, and this"
+1962:    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+1982:    warn "conformance: EXIT 2 — no verdict is available, and NO other guard was run: their"
+1995:    warn "conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass."
+2042:    warn "conformance: the exemption census gate matched $n lines for the $3 figure; it requires exactly 1."
+2087:    warn "conformance: EXIT 2. A figure this gate cannot read is not a figure it may pass."
+2185:    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+2278:    warn "conformance: THE REPORT ABOVE MAY CARRY THE BINARY'S OWN 'VERDICT: PASS (exit 0)' LINE. IT IS"
+2281:    warn "conformance: worse. The verdict of the RUN is this one, and it is EXIT 2."
+2282:    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+2299:      say "conformance:   KILLED  $impl — exit 1, ledger parity FAIL $pfail + oracle-refusal FAIL $rfail"
+2302:      warn "conformance:   SURVIVED $impl — exit $rc (wanted 1), wrong-implementation banner $banner"
+2303:      warn "conformance:            (wanted 1), ledger FAILs $kills (wanted >= 1)."
+2317:    warn "conformance: THE REPORT ABOVE MAY CARRY THE BINARY'S OWN 'VERDICT: PASS (exit 0)' LINE. IT IS"
+2320:    warn "conformance: worse. The verdict of the RUN is this one, and it is EXIT 2."
+2321:    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+2351:    warn "conformance: the harness does not build. EXIT 2. This is NOT a pass."
+2388:      warn "conformance: conformance reports EXIT 2, not a false PASS, and 2 never becomes 0."
+2571:    say "PROOF OK   exit $rc8               the fixture PASSES and parity stays 0, stamped NOT a conformance PASS"
+2764:  printf '%s' "$out19a" | LC_ALL=C grep -aq 'WITHDRAWS from grading' || ok19=0
+2772:  printf '%s' "$out19b" | LC_ALL=C grep -aq 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' || ok19=0
+2776:  printf '%s' "$out19b" | LC_ALL=C grep -aqE 'parity vectors +PASS [0-9]+ +FAIL 0' || ok19=0
+2781:    say "PROOF FAIL exit $rc19a/$rc19b       T9-F1b coverage is not as claimed (want 2 then 0)"
+2878:    printf '%s' "$out20" | LC_ALL=C grep -aqE 'invariant assertions +[1-9][0-9]* NOT RUN' || note20 \
+2883:    printf '%s' "$out20c" | LC_ALL=C grep -aqE 'principal_amortizes_to_zero +hold [1-9][0-9]* +violated 0' || note20 \
+2918:    printf 'module stand-in\n\ngo 1.22\n' > "$other/nexus/go.mod"
+3000:    printf '%s\n' 'CENSUS ascending — inspected 7 rigs / inspected 320 tokens' \

@@ -1,0 +1,12 @@
+ARM C's subject is NOT stored here. It is a byte-for-byte copy of
+
+    git show 0e53e1a481e88b7223929d4bbd8bd764a0a9dcc2:.softhouse/conformance.sh
+
+— this branch's parent commit, i.e. the last state of the file that still carried the literal
+`pinned at 17`. 50-red-drive.sh regenerates it with that command on every run and REFUSES if the
+literal is not present, so arm C cannot silently degrade into a second run of arm A/B.
+
+The 186 KB copy is left out of the commit on purpose: it is a duplicate of a tracked file whose
+content is fully determined by a sha already recorded here, and a duplicate of a tracked file is
+one more place for a corrected byte to rot (P-80 — "A CORRECTED CARDINAL ROTS IN EVERY PLACE IT
+WAS RESTATED"; the same argument applies to a restated FILE).

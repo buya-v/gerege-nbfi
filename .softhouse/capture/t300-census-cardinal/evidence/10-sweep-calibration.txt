@@ -1,0 +1,2 @@
+  say "conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: $m, pinned at 17."
+  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at 11."
