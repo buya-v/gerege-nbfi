@@ -1,0 +1,56 @@
+T284 RED DRIVE -- every repair broken on purpose, in a throwaway clone
+  real tree (never written): /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9765922a3d1168d0
+  clone root               : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284reddrive.4vqC8h
+  registry guard sha256    : 824869a59004d239ce8029ec3683590113622ef02ccd7d75b3c37a9d16f443ff
+
+-- REGISTRY GUARD --
+  C0   expected rc=0  got rc=0  ok                   untouched clone must PASS (calibration)
+  R1   expected rc=1  got rc=1  ok                   a NEW undeclared REQUEST_ONLY call site
+         | callsite-registry: FAIL -- 1 finding(s)
+         |   * UNDECLARED call site: .softhouse/capture/t284-schema2-callsites/scratch/rogue.sh carries 1 `verify` invocation(s) and is not in the pin. Every call site must state, in the pin, which schema it is scoped to and why -- default-deny: an undeclared site is refused, never assumed compatible.
+  R2   expected rc=1  got rc=1  ok                   a declared call site DELETED
+         | callsite-registry: FAIL -- 1 finding(s)
+         |   * DECLARED call site VANISHED: .softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh is in the pin and carries no detected `verify` invocation now. Either it was deleted (remove it from the pin in the same commit) or the detector stopped seeing it (worse).
+  R3   expected rc=1  got rc=1  ok                   a FROZEN file gains a byte
+         | callsite-registry: FAIL -- 1 finding(s)
+         |   * FROZEN FILE MOVED: .softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh is declared FROZEN (it produced committed evidence -- T114's standing ruling: anything that produced committed evidence is superseded by a scratch copy, NEVER edited in place).
+  R4   expected rc=1  got rc=1  ok                   a successor's call loses its response flags
+         | callsite-registry: FAIL -- 1 finding(s)
+         |   * CLASS DRIFT at .softhouse/capture/t284-schema2-callsites/successors/t284-redC-residual-v2.sh: pin declares ['SCHEMA2_COMPLETE', 'SCHEMA2_COMPLETE'], measured ['REQUEST_ONLY', 'REQUEST_ONLY'].
+  R5   expected rc=1  got rc=1  ok                   a declared successor is deleted
+         | callsite-registry: FAIL -- 2 finding(s)
+         |   * DECLARED call site VANISHED: .softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh is in the pin and carries no detected `verify` invocation now. Either it was deleted (remove it from the pin in the same commit) or the detector stopped seeing it (worse).
+  R6   expected rc=1  got rc=1  ok                   a SCHEMA2-STATUS.md notice is deleted
+         | callsite-registry: FAIL -- 1 finding(s)
+         |   * MISSING REQUIRED FILE: .softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh declares .softhouse/capture/t250-tenant-attestation/instruments/SCHEMA2-STATUS.md, which does not exist. That file is the notice a reader meets in the directory itself; without it the decision survives only in a handoff, which is the shape P-45 names -- a guard that works only when someone remembers to read it enforces nothing.
+  F1   expected rc=2  got rc=2  ok                   the pin is removed -> REFUSE, never 'clean'
+         | callsite-registry REFUSING: the call-site pin /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284reddrive.4vqC8h/clone/.softhouse/capture/t284-schema2-callsites/instruments/callsite_registry.json does not exist. Without it there is nothing to compare the measurement against, and an unpinned census is a report, not a guard. No verdict.
+  F2   expected rc=2  got rc=2  ok                   the calibration positive loses its call -> REFUSE
+         | callsite-registry REFUSING: CALIBRATION FAILED: the known positive .softhouse/capture/lib/oracle_send.sh carries no detected `verify` invocation. A detector that cannot find a call site it is known to contain cannot report that other files have none (P-72). No verdict.
+
+-- SITE 1 SUCCESSOR (schema-1 scoped replay) --
+  S1   expected rc=2  got rc=2  ok                   T250's committed corpus altered -> corpus MOVED
+         | site1-replay REFUSING: the committed corpus MOVED.
+  S2   expected rc=2  got rc=2  ok                   corpus made SCHEMA 2, pin re-stamped -> OUT OF SCOPE
+         |   arm-0  OUT OF SCOPE -- sidecar declares `attestation-schema: 2`
+         | site1-replay REFUSING: at least one input sidecar is NOT schema 1 (listed above). This
+  S3   expected rc=2  got rc=2  ok                   T274's live half deleted -> coverage GONE, refuse
+         | site1-replay REFUSING: the LIVE half of T250's arms is declared to live at /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t284reddrive.4vqC8h/clone/.softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh and is not there. This instrument deliberately does NOT duplicate it, so its absence means the live coverage is GONE, not merely elsewhere.
+
+-- SITE 2 SUCCESSOR --
+  S4   expected rc=2  got rc=2  ok                   the FROZEN predecessor is deleted -> no supersession
+         | redB-v2 REFUSING: the frozen original this supersedes is GONE: /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t284reddrive.4vqC8h/clone/.softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh.
+
+-- SITE 3 SUCCESSOR --
+  S5   expected rc=2  got rc=2  ok                   T274 instrument 20 deleted -> retired coverage GONE
+         | redC-v2 REFUSING: the wrap sweep was retired onto
+  S6   expected rc=2  got rc=2  ok                   T274 instrument 20's length list altered -> moving target
+         | redC-v2 REFUSING: T274 instrument 20 no longer sweeps the length list this retirement
+
+-- the real tree, untouched, must still be GREEN --
+  Z0   expected rc=0  got rc=0  ok                   registry guard on the REAL tree
+
+SCORE: 16 as expected, 0 unexpected
+T284 RED DRIVE: PASS -- every repair was driven RED through the shape it exists to catch,
+and the real tree, never written, is GREEN.
+EXIT=0

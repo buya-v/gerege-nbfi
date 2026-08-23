@@ -1,0 +1,118 @@
+{
+  "_what": "T284 -- the PIN for every `wire_attestation.py verify` call site in the tree. Graded by 10-callsite-registry.py. Default-deny: a call site that is not declared here is a FAILURE, not a pass.",
+  "_measured_at": "2026-08-23, branch softhouse/t284-schema2-callsites, worktree agent-a9765922a3d1168d0",
+  "_classes": {
+    "SCHEMA2_COMPLETE": "presents --resp AND --resphdr AND --status; valid against a schema 2 sidecar",
+    "REQUEST_ONLY": "presents none of the three; valid ONLY against a schema 1 sidecar, and REFUSES (exit 2) against a schema 2 one",
+    "PARTIAL": "presents some but not all; ALWAYS a refusal at run time",
+    "INDIRECT": "the flags arrive through `$@` and are not statically readable here; must be declared with the site that supplies them"
+  },
+  "_frozen_narrowing": "`frozen: true` pins a sha256 and forbids in-place edits (T114's standing ruling: anything that produced committed evidence is superseded by a scratch copy, NEVER edited in place). T284 pins the digest only for the four files it OWNS as subject matter -- the three call sites T274 broke and the T250 baseline specimen. T274's and T283's own instruments also produced committed evidence and are equally frozen under T114, but T284 does NOT pin their digests: those files are live subject matter for other tasks, and a digest pin here would turn another worker's legitimate edit into a false red in a guard that is not about them. Their CLASS is still pinned, which is the property T284 is guarding.",
+  "sites": {
+    ".softhouse/capture/lib/oracle_send.sh": {
+      "decision": "LIVE -- the module's own capture-time self-check. Schema 2 complete. No T284 action.",
+      "invocations": ["SCHEMA2_COMPLETE"],
+      "frozen": false,
+      "successors": []
+    },
+    ".softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh": {
+      "decision": "RE-FROZEN, SCHEMA-1 SCOPED (option b). Its eight arms are RETAINED and still reproduce, but only against the SCHEMA 1 corpus it committed -- not against a fresh capture, which is schema 2 and which this REQUEST_ONLY call correctly refuses. DO NOT RUN IN PLACE: it `rm -rf`s .../evidence/redB, which is committed evidence AND the input to T274's P1 control (T283 F-T283-6).",
+      "invocations": ["REQUEST_ONLY"],
+      "frozen": true,
+      "sha256": "c08602cc4f714f464afbf89baac738f6709cb426a21e305a988707b43fbbf2e0",
+      "successors": [
+        ".softhouse/capture/t284-schema2-callsites/instruments/20-site1-schema1-replay.sh",
+        ".softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh"
+      ],
+      "required_files": [
+        ".softhouse/capture/t250-tenant-attestation/instruments/SCHEMA2-STATUS.md"
+      ]
+    },
+    ".softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh": {
+      "decision": "FROZEN SPECIMEN. A byte copy of the T250 rig as shipped, kept so T274's RED arm is the real thing and not a recollection. It is never sourced and never executed -- only digested and existence-checked at 10-four-routes-red-green.sh:63,155. Its REQUEST_ONLY call belongs to the schema 1 era and MUST NOT be repaired; repairing it would destroy the RED arm.",
+      "invocations": ["REQUEST_ONLY"],
+      "frozen": true,
+      "sha256": "8521e034a3880a34adf8684c43d3de8c8f3407f4bcbdca838df6fab381a4514f",
+      "successors": []
+    },
+    ".softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh": {
+      "decision": "LIVE. The two INDIRECT sites (L115/L124) are the red/green runner arms; their flags come from the per-arm call sites lower in the same file. L230 is control P1 -- a DELIBERATE schema-1-scoped call over T250's committed corpus, expecting 0. L249 is control P3 -- a DELIBERATE REQUEST_ONLY call over a schema 2 sidecar, expecting the REFUSAL (2). Neither is a T284 defect; both are the contract being asserted.",
+      "invocations": ["INDIRECT", "INDIRECT", "REQUEST_ONLY", "SCHEMA2_COMPLETE", "REQUEST_ONLY", "SCHEMA2_COMPLETE"],
+      "frozen": false,
+      "successors": []
+    },
+    ".softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh": {
+      "decision": "LIVE, and AUTHORITATIVE for the --trace-ascii 64-byte wrap sweep. Sweeps 1 10 60 61 62 63 64 65 66 127 128 129 200 300 1000 4000 plus a 360-byte colon-laden value, schema 2 complete. T261's redC wrap leg is retired onto this.",
+      "invocations": ["SCHEMA2_COMPLETE"],
+      "frozen": false,
+      "successors": []
+    },
+    ".softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh": {
+      "decision": "LIVE, and AUTHORITATIVE for T250's eight redB arms on a FRESH (schema 2) capture. Adds arms 7a/7b.",
+      "invocations": ["SCHEMA2_COMPLETE"],
+      "frozen": false,
+      "successors": []
+    },
+    ".softhouse/capture/t284-schema2-callsites/instruments/30-red-drive.sh": {
+      "decision": "FIXTURE, NOT AN INVOCATION -- and it is declared rather than exempted. L148 is the `printf` that plants a rogue REQUEST_ONLY call site into a THROWAWAY CLONE for red-drive arm R1; the string is never executed anywhere. The classifier read it as a call site and arm C0 went red on the first run of the fixed red drive, which is the default-deny behaviour working on its author. The alternative was to teach the detector to recognise fixture strings -- rejected: a detector with a not-really-a-call-site heuristic is a detector with a place to hide, and this program has already narrowed one such rule (the fail-open linter's LOCATION POSITION rule) only because it had MEASURED the false positives first. Declaring one line is cheaper and cannot silently widen.",
+      "invocations": ["REQUEST_ONLY"],
+      "frozen": false,
+      "successors": []
+    },
+    ".softhouse/capture/t284-schema2-callsites/instruments/20-site1-schema1-replay.sh": {
+      "decision": "LIVE. T284's successor for site 1, SCHEMA-1 SCOPED BY CONSTRUCTION: it replays T250's committed schema 1 redB corpus, pinned by digest, and REFUSES (exit 2) if any input sidecar declares an `attestation-schema:` line. Oracle-free.",
+      "invocations": ["REQUEST_ONLY"],
+      "frozen": false,
+      "successors": []
+    },
+    ".softhouse/capture/t284-schema2-callsites/successors/t284-redB-attack-v2.sh": {
+      "decision": "LIVE. T284's successor for site 2 (t261-redB-attack.sh), TAUGHT SCHEMA 2. Carries all eleven T261 attack shapes with the response leg presented.",
+      "invocations": ["SCHEMA2_COMPLETE", "SCHEMA2_COMPLETE"],
+      "frozen": false,
+      "successors": []
+    },
+    ".softhouse/capture/t284-schema2-callsites/successors/t284-redC-residual-v2.sh": {
+      "decision": "LIVE. T284's successor for the RESIDUAL legs of site 3 (t261-redC-wrap.sh) -- duplicate-identical-header multiplicity, CRLF injection, multibyte Content-Length exactness and mid-multibyte truncation -- TAUGHT SCHEMA 2. The 17-length wrap sweep is NOT reproduced here; it is retired onto T274 instrument 20, and this script ASSERTS that instrument still carries the same length list rather than citing it on trust.",
+      "invocations": ["SCHEMA2_COMPLETE", "SCHEMA2_COMPLETE"],
+      "frozen": false,
+      "successors": []
+    },
+    ".softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh": {
+      "decision": "TAUGHT SCHEMA 2 BY SUCCESSOR (option a). Six of its eleven attack shapes (A3, A5, A7, A8, A9, A11) appear in no other instrument in the tree, so retirement would drop coverage. The original is FROZEN: it produced 265 committed evidence files under .softhouse/reviews/t261-tenant-attestation/evidence/, including the per-arm .vout/.verr transcripts that ARE the output of these two calls.",
+      "invocations": ["REQUEST_ONLY", "REQUEST_ONLY"],
+      "frozen": true,
+      "sha256": "86a2f0ec7ebd971e38e6d859880497d6c99c5c429dd1df6e9398c8e2043398e0",
+      "successors": [
+        ".softhouse/capture/t284-schema2-callsites/successors/t284-redB-attack-v2.sh"
+      ],
+      "required_files": [
+        ".softhouse/reviews/t261-tenant-attestation/instruments/SCHEMA2-STATUS.md"
+      ]
+    },
+    ".softhouse/reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh": {
+      "decision": "SPLIT. The 17-length wrap sweep is RETIRED onto T274 instrument 20, which runs the identical experiment schema-2-natively. The residual legs are TAUGHT SCHEMA 2 by the successor. The original is FROZEN. Note it exits 0 UNCONDITIONALLY, so today it reports success while all 17 of its verify calls fail -- read its exit status as meaningless, never as a pass.",
+      "invocations": ["REQUEST_ONLY", "REQUEST_ONLY", "REQUEST_ONLY"],
+      "frozen": true,
+      "sha256": "76a4dfce44e1fbd54a5d74fa16f28ad6adb20c67687e45337732111882a9e0f6",
+      "successors": [
+        ".softhouse/capture/t284-schema2-callsites/successors/t284-redC-residual-v2.sh",
+        ".softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh"
+      ],
+      "required_files": [
+        ".softhouse/reviews/t261-tenant-attestation/instruments/SCHEMA2-STATUS.md"
+      ]
+    },
+    ".softhouse/reviews/t283-review-t274/instruments/10-forgery-arms.sh": {
+      "decision": "LIVE. L103 is verify_full(); L112 is verify_request_only(), a DELIBERATE schema-1 call shape used by arm FE to measure the downgrade precondition T283 found. Not a T284 defect.",
+      "invocations": ["SCHEMA2_COMPLETE", "REQUEST_ONLY"],
+      "frozen": false,
+      "successors": []
+    },
+    ".softhouse/reviews/t283-review-t274/instruments/20-sidecar-shapes-and-error-paths.sh": {
+      "decision": "LIVE. Schema 2 complete.",
+      "invocations": ["SCHEMA2_COMPLETE"],
+      "frozen": false,
+      "successors": []
+    }
+  }
+}

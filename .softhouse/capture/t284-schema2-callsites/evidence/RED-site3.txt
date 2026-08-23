@@ -1,0 +1,63 @@
+T261 RED-DRIVE C -- trace-ascii wrap reassembly
+curl: curl 8.7.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+
+Header value lengths swept across the 64-byte wrap boundary and well beyond.
+'attested' is the length of the value recovered from the derived sidecar.
+
+  L1             len=1     attested=1     EXACT
+      verify FAILED for L1
+  L10            len=10    attested=10    EXACT
+      verify FAILED for L10
+  L60            len=60    attested=60    EXACT
+      verify FAILED for L60
+  L61            len=61    attested=61    EXACT
+      verify FAILED for L61
+  L62            len=62    attested=62    EXACT
+      verify FAILED for L62
+  L63            len=63    attested=63    EXACT
+      verify FAILED for L63
+  L64            len=64    attested=64    EXACT
+      verify FAILED for L64
+  L65            len=65    attested=65    EXACT
+      verify FAILED for L65
+  L66            len=66    attested=66    EXACT
+      verify FAILED for L66
+  L127           len=127   attested=127   EXACT
+      verify FAILED for L127
+  L128           len=128   attested=128   EXACT
+      verify FAILED for L128
+  L129           len=129   attested=129   EXACT
+      verify FAILED for L129
+  L200           len=200   attested=200   EXACT
+      verify FAILED for L200
+  L300           len=300   attested=300   EXACT
+      verify FAILED for L300
+  L1000          len=1000  attested=1000  EXACT
+      verify FAILED for L1000
+  L4000          len=4000  attested=4000  EXACT
+      verify FAILED for L4000
+
+--- mixed shape: a long value CONTAINING colons and spaces ---
+  Lmix           len=360   attested=360   EXACT
+      verify FAILED for Lmix
+
+--- duplicated IDENTICAL header, one copy deleted from the sidecar ---
+  wire record carries the header 2 time(s); sidecar carries it 2 time(s)
+  dropped ONE of the 2 identical copies from the sidecar
+  verify rc=2 DETECTED
+      REFUSING: sidecar /tmp/t284red/.softhouse/reviews/t261-tenant-attestation/evidence/redC/dupid/dupid.http is SCHEMA 2 and attests a response, but --resp/--resphdr/--status was not supplied. An attested artefact that is not presented cannot be checked, and an unchecked assertion is not a passed one.
+
+--- CRLF injected into a header value ---
+  record lines mentioning X-T261:
+      'X-T261-Inj: safe.X-T261-Evil: injected'
+
+--- multibyte body: is the Content-Length crosscheck byte-exact? ---
+  body bytes on disk: 58 (chars 35)
+  Content-Length on the wire : 58
+  crosscheck line            : content-length-crosscheck: MATCH (58 bytes)
+  committed .req size        : 58
+  truncated-mid-multibyte body, all assertions intact -> verify rc=2
+      REFUSING: sidecar /tmp/t284red/.softhouse/reviews/t261-tenant-attestation/evidence/redC/mbtrunc/mb.http is SCHEMA 2 and attests a response, but --resp/--resphdr/--status was not supplied. An attested artefact that is not presented cannot be checked, and an unchecked assertion is not a passed one.
+
+RESULT: at least one length was CORRUPT or refused
+EXIT=0

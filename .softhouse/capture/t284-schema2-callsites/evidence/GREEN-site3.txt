@@ -1,0 +1,51 @@
+T284 SITE 3 -- T261's RED-DRIVE C residual legs, taught schema 2
+  supersedes : .softhouse/reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh
+               (FROZEN, sha256 76a4dfce44e1fbd54a5d74fa16f28ad6adb20c67687e45337732111882a9e0f6)
+  verifier   : 6daf0c2c4c7e85a479ea1cf669becea207bae72b5d5785779aa91ce6fd7990a8
+  oracle     : https://localhost:8443/fineract-provider/api/v1
+  curl       : curl 8.7.1
+
+-- LEG 0: the wrap sweep is RETIRED onto T274 instrument 20. Assert it, do not cite it. --
+  .softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh
+  carries the pinned length list -- 16 lengths + a 360-byte colon-laden value.
+  sha256 6dfaee773b63b6bdde78d7d15a11cdaadb568b90ab7ceff120063b8f89947f09
+
+-- LEG 1: duplicated IDENTICAL header, one copy dropped from the sidecar --
+derived /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redC.ChEVQi/dupid/dupid.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.upKe6N/trace (schema 2; 1 send-header block(s), 15 recv-header block(s))
+dupid                                        HTTP 200
+  L1a positive control: untouched set must verify      want rc=0 got rc=0  ok
+      wire record carries the header 2 time(s); sidecar carries it 2 time(s)
+      dropped ONE of the 2 identical copies from the sidecar
+  L1b one of two IDENTICAL copies dropped -> multiplicity want rc=1 got rc=1  ok
+      ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redC.ChEVQi/dupid-cut/dupid.http
+        the VERBATIM WIRE BLOCK itself disagrees with the record (see the line-level findings below); assertion-level diagnostics are WITHHELD because their position is defined relative to that block
+
+-- LEG 2: CRLF injected into a header value --
+derived /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redC.ChEVQi/crlf/crlf.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.M4vcvs/trace (schema 2; 1 send-header block(s), 6 recv-header block(s))
+crlf                                         HTTP 400
+  record lines mentioning X-T284:
+      X-T284-Inj: safe.X-T284-Evil: injected
+  sidecar lines mentioning X-T284:
+      X-T284-Inj: safe.X-T284-Evil: injected
+  L2 whatever went out, the sidecar must re-derive it  want rc=0 got rc=0  ok
+
+-- LEG 3: multibyte body -- is the Content-Length crosscheck BYTE-exact? --
+      body bytes on disk: 61 (characters 38)
+derived /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redC.ChEVQi/mb/mb.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.QOdbO5/trace (schema 2; 1 send-header block(s), 16 recv-header block(s))
+mb                                           HTTP 400
+  Content-Length on the wire : Content-Length: 61
+  crosscheck line            : content-length-crosscheck: MATCH (61 bytes)
+  committed .req size        : 61 bytes
+  L3a positive control: untouched multibyte set verifies want rc=0 got rc=0  ok
+  L3b body truncated MID-CHARACTER, assertions intact  want rc=1 got rc=1  ok
+      ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redC.ChEVQi/mbtrunc/mb.http
+        the wire record and a committed artefact DISAGREE -- content-length-crosscheck: MISMATCH (Content-Length 61, artefact 60 bytes). `derive` REFUSES to write this line, so a sidecar that repeats it does not settle it: a disagreement the sidecar agrees with is still a disagreement
+
+SITE 3 SUCCESSOR: PASS
+  Header MULTIPLICITY is now a DETECTION (rc=1), not a refusal and not a gap --
+  T250's redC recorded it as a GAP and the frozen original scores the schema
+  refusal as though it were the catch.
+  A multibyte body truncated MID-CHARACTER, with every sidecar assertion left
+  intact, is DETECTED.
+  The 17-length wrap sweep is NOT measured here: it is retired onto T274
+  instrument 20, whose presence and length list are ASSERTED in LEG 0 above.

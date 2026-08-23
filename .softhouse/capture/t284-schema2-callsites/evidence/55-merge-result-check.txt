@@ -1,0 +1,11 @@
+MERGE-RESULT CHECK -- main @ a396e01 + softhouse/t284-schema2-callsites
+
+      decision: LIVE. L103 is verify_full(); L112 is verify_request_only(), a DELIBERATE schema-1 call shape used by arm FE to measure the downgrade precondition T283 found. Not a T284 defect.
+      L103   SCHEMA2_COMPLETE 
+      L112   REQUEST_ONLY     
+  .softhouse/reviews/t283-review-t274/instruments/20-sidecar-shapes-and-error-paths.sh
+      decision: LIVE. Schema 2 complete.
+      L80    SCHEMA2_COMPLETE 
+
+callsite-registry: PASS -- 14 call site(s), all declared, all classes as pinned, 4 frozen file(s) byte-identical.
+registry on merge result rc=0
