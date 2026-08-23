@@ -3537,6 +3537,27 @@
    "acceptance": "Arm 1 captured verbatim from the live oracle with the request byte-preserved. Arm 2 either captured with the closure recorded in .softhouse/reference-oracle.md, or DECLINED with the measurement that justified declining. The source citation re-derived against the pinned checkout and the oracle's actual behaviour compared to it. Raw observed form only; no vector promoted, no pin touched, no float.",
    "branch": "softhouse/t287-closure-refusals",
    "note": "DISPATCHED by local fire 20260823-080004, worktree-isolated, model opus."
+  },
+  {
+   "id": "T288",
+   "title": "The wrapper DETECTS the exit-protocol violation and does NOTHING about it — a WARN with no consequence let four killed workers stay `in_progress` across two fires",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "agent_role": "coder",
+   "role": "coder",
+   "context": "tierA-gl-accounting",
+   "slice": "tierA-gl-accounting-A2",
+   "dependencies": [],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".softhouse/bin/fire-program.sh",
+    ".softhouse/bin/ready-tasks.py"
+   ],
+   "description": "MEASURED BY THE DRIVER, local fire 20260823-080004, from the logs of the two preceding fires. This is a P-45 instance in the WRAPPER itself: a guard that fires, prints, and changes nothing.\n\nWHAT HAPPENED, in order, all of it in `~/Library/Logs/gerege-nbfi/`:\n  1. Fire `20260822-140002` ran from 14:00 to **22:52** (its log is 1,061,986 bytes), dispatched T271/T283/T285/T286, and then ENDED ITS TURN. STEP 5.5: 'NEVER exit with live workers -- they die with you.' All four died. It left them `in_progress` in tasks.json and did NOT rewrite RESUME.md.\n  2. That run exhausted the FIVE-HOUR quota window.\n  3. Fire `20260822-230001` started 8 minutes later and got **HTTP 429, rateLimitType=five_hour, resetsAt=1787414400 (midnight Asia/Ulaanbaatar)** -- `RESULT success :: You've hit your session limit`. **It never got a single turn.** rc=1 at 23:00:21, 20 seconds after start. A whole ORACLE-REACHING window spent on nothing, and the stale `in_progress` claim went uncorrected a second time.\n  4. At 23:00:32 the wrapper printed:\n         WARN: exit-protocol violation -- .softhouse/RESUME.md predates this fire's start;\n               the next fire may act on stale state. Review it by hand.\n     **IT WAS RIGHT, AND IT DID NOTHING.** 'Review it by hand' is prose, and PROSE DOES NOT FIRE ON THE NEXT FIRE (P-89/P-45). Nobody reviewed it by hand, because the only thing that reads that log is the next fire, which reads RESUME.md instead.\n\nTHE DEFECT IS NOT THE 14:00 FIRE'S BEHAVIOUR -- that is a driver error already recorded. **The defect is that the wrapper is the ONLY component that survives a driver's death, detects the violation correctly, and then declines to act.** The 08:00 fire had to reconstruct all of this by hand from six `rescued-agent-*` branch names and two log files.\n\nWHAT TO BUILD (measure before you build -- P-82: build the suggestion, MEASURE it, and report the zero if it is zero):\n  A. **At fire EXIT, reconcile tasks.json against reality.** For every task `in_progress`, check whether a live worker process/worktree actually corresponds to it. If not, rewrite it to `needs_retry` with a note naming the fire that killed it and the `softhouse/rescued-agent-*-<fireid>` branch its WIP landed on -- the sweep ALREADY computes that mapping when it decides to KEEP a worktree, and then throws it away. Commit and push the correction. STEP 5.4 already REQUIRES this of the driver; the point is that a dead driver cannot do it, so the wrapper must.\n  B. **Escalate the RESUME.md staleness WARN from prose to a recorded fact** the next fire cannot miss -- write it into the repo (a committed marker), not only into a log nobody reads.\n  C. **Distinguish rc=1-from-quota-before-any-turn from rc=1-from-a-real-driver-error.** The 23:00 fire did zero work for a reason that is fully machine-readable in its own jsonl (`type: rate_limit_event`, `status: rejected`, `rateLimitType: five_hour`) and the wrapper reported it identically to a crash. A fire that never got a turn should say so in one line at the top of the next fire's evidence.\n\nGRADING NOTE: **do not add a field somebody must remember to refresh.** P-45 has been recorded SIX times in this program (`manifest.py verify`, `t44_float_roundtrip_v3`, T173's float guard, `guard_ledger_invariants`, T164's AST guard, T259's R-VPA rule) and the lesson is always the same -- **a guard that only works when someone remembers to run it enforces nothing.** Derive the signal from doing the work, the way STEP 0's push-recency rule derives liveness from pushes rather than from a heartbeat field.\n\nMONEY RULE: integer minor units, MNT (ISO 4217 numeric 496, minor unit 2), no float anywhere. Do NOT edit `.softhouse/conformance.sh`.",
+   "acceptance": "The wrapper reconciles tasks.json at exit so a killed worker never stays `in_progress`, with the rescue branch recorded; the staleness signal reaches the repo rather than only a log; a quota-rejected fire is distinguishable from a crashed one. Each behaviour demonstrated with a RED before and a GREEN after, driven against the real script rather than described."
   }
  ],
  "cross_corroboration": {
