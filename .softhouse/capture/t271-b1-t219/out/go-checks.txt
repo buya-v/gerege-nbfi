@@ -1,0 +1,15 @@
+PWD=/Users/buv/gerege-nbfi/.claude/worktrees/agent-aa110146c91f8c304/nexus
+BUILD_EXIT=0
+VET_EXIT=0
+ok  	github.com/gerege/nexus/internal/apps/ledger	1.069s
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	4.755s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule	8.845s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	80.712s
+?   	github.com/gerege/nexus/internal/apps/loanschedule/conformance/cmd/conformance	[no test files]
+?   	github.com/gerege/nexus/internal/apps/loanschedule/contract	[no test files]
+TEST_PIPE_EXIT=0
+--- gofmt -l ---
+internal/apps/loanschedule/contract/contract.go
+--- gofmt count ---
+       1
+EXIT=0

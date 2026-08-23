@@ -1,0 +1,17 @@
+T271 -- reconcile the two independent re-derivations BY RUNNING THEM (P-83)
+================================================================================================
+  rederive_t219_carriers.py        exit 0   probe PRESENT
+      {'carriers': '7', 'agreeREG': '4', 'agreeCORR': '6', 'agreeUNCOND': '7', 'structureHolds': '6'}
+  independent_recheck_t271.py      exit 0   probe PRESENT
+      {'carriers': '7', 'agreeREG': '4', 'agreeCORR': '6', 'agreeUNCOND': '7', 'structureHolds': '6'}
+
+  OK agreeCORR        rederive_t219_carriers.py='6'  independent_recheck_t271.py='6'  pinned='6'
+  OK agreeREG         rederive_t219_carriers.py='4'  independent_recheck_t271.py='4'  pinned='4'
+  OK agreeUNCOND      rederive_t219_carriers.py='7'  independent_recheck_t271.py='7'  pinned='7'
+  OK carriers         rederive_t219_carriers.py='7'  independent_recheck_t271.py='7'  pinned='7'
+  OK structureHolds   rederive_t219_carriers.py='6'  independent_recheck_t271.py='6'  pinned='6'
+
+  THIS DOES NOT ESTABLISH that either instrument is right -- two instruments can agree
+  and both be wrong. Only that the 6-of-7 this task reports is not one file's opinion.
+T271-RECONCILE: GREEN instruments=2 reconciled=2 disagreements=0
+EXIT=0

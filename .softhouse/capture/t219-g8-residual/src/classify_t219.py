@@ -94,6 +94,39 @@ for c in raw["captures"]:
     row["observedOutcome"] = obs
     row["_obsDeltaFromRow1"] = obs_delta - row["observedRow1TotalMinor"]
 
+    # *** T271 CORRECTION — COMMENT ONLY, NOT ONE BYTE OF BEHAVIOUR CHANGED (B-1) ***
+    #
+    # WHAT `verdict` MEANS, since its name does not say. It is a function of exactly TWO things:
+    # the observed OUTCOME FAMILY against `predictedOutcome`, and `observedPrincipalMinor ==
+    # predictedTotalPrincipalMinor`. Those are the two graded columns of PREDICTION.md section 2's
+    # cell table. It means "THE CELL-TABLE ROW HELD IN OUTCOME FAMILY AND IN PRINCIPAL REPAID" and
+    # NOTHING MORE.
+    #
+    # IT STRUCTURALLY CANNOT CONSULT ANY `P2_*` KEY: `verdict` is assigned below, and every
+    # `P2_*` key is assigned AFTER it. Four (row, predicate) pairs in the committed
+    # `out/classify-t219.json` therefore print `verdict: "AS PREDICTED"` over a `P2_*` the same
+    # row recorded `false`. That is a real disagreement, it went unread from the capture until
+    # T259 found it and T271 ruled on it, and it is now REGISTERED, not silenced:
+    #   .softhouse/capture/t271-b1-t219/acknowledged-t219.json   (sha-pinned to the output bytes)
+    #   .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py  (the rule)
+    # The rule PRINTS all four on every run either way; the acknowledgement changes only the exit
+    # code.
+    #
+    # AND THE PREDICATE, NOT THE VERDICT, IS THE BROKEN HALF — with one row where BOTH are:
+    #   * `P2_totalInterestEqualsNEplusB` as registered compares interest against `n*E + B`, which
+    #     is the total REPAYMENT column. Corrected: `n*E + B - principalRepaid`. That rescues
+    #     N3000-B4499 and N3000-B3001 exactly (T259's ruling, applying as T259 expected).
+    #   * `T219-R600p0-N103-B1` refutes BOTH forms, and refutes T259's recorded expectation with
+    #     them. `totalRepayment = n*E + B` presumes the family-B EMI-plus-balloon structure; this
+    #     is the cell registered as CLEAN and it amortises at ROW 14 OF 103, with rows 15-103 all
+    #     zero. So `emiDifference` is -1 rather than B, `n*E + B` = 104 and `n*E + B - P` = 103
+    #     against an observed interest of 13. Both conjuncts are OUT OF DOMAIN on this row.
+    #     Only `interest = totalRepayment - principalRepaid` survives (14 - 1 = 13), and only
+    #     with a MEASURED totalRepayment.
+    # Re-derived from the raw gz in integer minor units:
+    #   .softhouse/capture/t271-b1-t219/rederive_t219_carriers.py
+    # MATERIALITY IS LOW. No vector, region boundary or gate conclusion reads any P2_* key, and
+    # G-8's substance is untouched.
     pp = p["predictedTotalPrincipalMinor"]
     if p["predictedOutcome"] == "RESCUED_BY_SITE3":
         row["verdict"] = "AS PREDICTED" if obs.startswith("AMORTIZES_FULLY") else "REFUTED"

@@ -72,6 +72,47 @@ inputs come from T223's committed emulator. Nothing was fitted to any cell in th
 | `T219-R600p0-N3000-B4499` | 3000 | 4499 | 1 | 1 | **FAMILY B PARTIAL** | **1499** of 4499 | 6 751 499 | **3000** |
 | `T219-R600p0-N3000-B4501` | 3000 | 4501 | 1 | 2 | **RESCUED — amortizes** | 4501 of 4501 | not modelled | 0 |
 
+> ### \*\*\* T271 CORRECTION — the "total interest (minor)" column above is the REPAYMENT figure \*\*\*
+>
+> **Added by T271 (B-1), after the capture, as a labelled correction. The table itself is left
+> byte-for-byte as registered: it is committed evidence of what was predicted in advance, and
+> T114/T176 forbid editing it into agreement.**
+>
+> The column was computed as `n·E + B`. **That is total REPAYMENT, not total interest** — the same
+> error T259 ruled on for T229's `P2_totalInterestEqualsNEplusB` (`.softhouse/capture/`
+> `t256-verdict-predicate/DECISION-verdict-vs-predicate.md`). Where principal is repaid, the
+> registered figure overstates interest by exactly the principal repaid. Re-derived from the raw
+> capture in integer minor units by
+> `.softhouse/capture/t271-b1-t219/rederive_t219_carriers.py` — **3 of the 7 non-throwing cells
+> are refuted, and NOTHING IN THIS DIRECTORY GRADED ANY OF THEM**, because the classifier's
+> `verdict` reads only the outcome family and the principal repaid:
+>
+> | cell | registered "total interest" | **observed total interest** | corrected form |
+> |---|---|---|---|
+> | `T219-R600p0-N3000-B3001` | 4 503 001 | **4 503 000** | `n·E + B − principalRepaid` **holds** |
+> | `T219-R600p0-N3000-B4499` | 6 751 499 | **6 750 000** | `n·E + B − principalRepaid` **holds** |
+> | `T219-R600p0-N103-B1` | 104 | **13** | **neither form holds — see below** |
+>
+> **`T219-R600p0-N103-B1` is the row T259 did not expect and the reason this correction is not
+> just T259's applied twice.** The identity `totalRepayment = n·E + B` silently presumes the
+> **family-B EMI-plus-balloon structure**: every row totals `E` and the last totals `E + B`. This
+> cell is the one registered as **clean**, and it amortises: measured from the raw gz, rows 1–13
+> total `0.01` of pure interest, **row 14 of 103 carries the entire `0.01` of principal, and rows
+> 15–103 are all zero**. Only 13 rows ever charge interest, so `n·E` overcounts by about eightfold
+> and both the registered form (104) and T259's corrected form (103) miss an observed 13. The only
+> statement that survives on every cell is `interest = totalRepayment − principalRepaid` with a
+> **measured** `totalRepayment` (14 − 1 = 13), which is exact but says nothing predictive.
+>
+> **Same row, the outcome NAME.** "clean — last row carries all principal" is false in its literal
+> reading: principal lands on **row 14 of 103**. `classify_t219.py`'s observed label
+> `AMORTIZES_FULLY(last-row-only)` means "exactly one row carries principal", not "the last row
+> does", so the two strings agree by an accident of naming.
+>
+> **Materiality: LOW, and G-8 is untouched.** Nothing in G-8 rests on the interest total or on
+> which row carries the principal — only on **whether** the cell amortises, which it does, exactly
+> as registered. The residual figures in the last column, F1–F4, the region boundary and the
+> `δ ≤ 1` conjecture are all unaffected. **No region moves and no option (b)/(c) is reopened.**
+
 Three roles:
 
 - **`N103/N104/N108-B1` are the promoted-vector shapes.** `.softhouse/vectors` carries

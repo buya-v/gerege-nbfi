@@ -1,0 +1,31 @@
+T271 -- is the conformance bar's GREEN contingent on a file in /tmp? (P-88's shape)
+================================================================================
+  repo   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa110146c91f8c304
+  linter : .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py
+  probe  : /tmp/t234_matrix2.txt
+
+--- READING A: /tmp/t234_matrix2.txt ABSENT (the state this worktree is in) ---
+    (not present)
+    FAILOPEN-FRONTIER TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+
+--- READING B: the SAME tree, byte for byte, with the /tmp file PRESENT ---
+-rw-r--r--  1 buv  wheel  24 Aug 23 08:35 /tmp/t234_matrix2.txt
+    FAILOPEN-FRONTIER TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+
+--- READING C: the file removed again, to show the flip is not one-way ---
+    (not present)
+    FAILOPEN-FRONTIER TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+
+NOT CAUSED BY T271 -- the three files involved are untouched on this branch:
+    merge base: f5072713dad511bfffa5c87708b7e29942c80edf
+    (no diff lines above means T271 changed none of them)
+
+CONCLUSION: the tree is IDENTICAL across all three readings and the classification MOVED.
+The conformance bar's exit code is decided by whether a file exists in /tmp. That is
+P-88's shape in a different guard: a green that depends on scratch state outside the repo.
+
+HOST STATE: /tmp/t234_matrix2.txt was ABSENT when this probe started and is put back that way by the
+EXIT trap. T271 neither manufactures the green nor forces the red on a host it shares
+with other workers.
+T271-TMPDEP: DEMONSTRATED contingent=1 foundPresent=0 restoredAsFound=1
+PROBE_EXIT=0

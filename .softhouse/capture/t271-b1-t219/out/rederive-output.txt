@@ -1,0 +1,42 @@
+T271 -- re-derivation of every P2 carrier in t219-g8-residual, from the RAW capture
+====================================================================================================
+  raw      : capture-t219-raw.json.gz
+  moneyHelperPrecision recorded in the capture : 19
+  classify : classify-t219.json  (read SECOND, only to check reproduction)
+
+id                             n      E      B      P    totRep      nE+B    nE+B-P  interest  REG   CORR  UNCND STRUCT emiD=B  verdict       
+----------------------------------------------------------------------------------------------------------------------------------------------
+T219-R600p0-N104-B1          104      0      1      0         1         1         1         1  True  True  True  True   True    AS PREDICTED  
+T219-R600p0-N3000-B2999     3000   1499   2999      0   4499999   4499999   4499999   4499999  True  True  True  True   True    AS PREDICTED  
+T219-R600p0-N103-B1          103      1      1      1        14       104       103        13  False False True  False  False   AS PREDICTED  
+T219-R600p0-N3000-B1001     3000    500   1001      0   1501001   1501001   1501001   1501001  True  True  True  True   True    AS PREDICTED  
+T219-R600p0-N3000-B4499     3000   2249   4499   1499   6751499   6751499   6750000   6750000  False True  True  True   True    AS PREDICTED  
+T219-R600p0-N108-B1          108      0      1      0         1         1         1         1  True  True  True  True   True    AS PREDICTED  
+T219-R600p0-N3000-B3001     3000   1500   3001      1   4503001   4503001   4503000   4503000  False True  True  True   True    AS PREDICTED  
+
+  carriers                                  : 7
+  re-derived == committed record            : 7 of 7
+  REGISTERED   interest == n*E + B          : 4 of 7
+  CORRECTED    interest == n*E + B - P      : 6 of 7        <<< T259's ruling
+  UNCONDITIONAL interest == totalRep - P    : 7 of 7        <<< totalRep MEASURED, not modelled
+  EMI-plus-balloon STRUCTURE holds          : 6 of 7
+
+  THE ROW THAT FALSIFIES T259's EXPECTATION
+  ------------------------------------------------------------------------------------------------
+  T219-R600p0-N103-B1
+    registered outcome  : LAST_ROW_CARRIES_ALL_PRINCIPAL     observed: AMORTIZES_FULLY(last-row-only)
+    registered total interest (prediction.json) : 104      OBSERVED: 13
+    repayment rows 103, but principal is repaid on row 14 (rows carrying principal: 1)
+    distinct row totals except the last : [0, 1]   last row total 0
+    emiDifference -1 vs B 1  -> P2_emiDifferenceEqualsB false
+    n*E + B = 104, n*E + B - P = 103, MEASURED totalRepayment = 14
+    => the EMI-plus-balloon structure the registered form presumes DOES NOT HOLD:
+       the loan amortises early and the remaining rows are all zero, so neither
+       the registered nor the CORRECTED form is applicable. Only the
+       unconditional identity holds: 14 - 1 == 13  -> True
+
+  THIS DOES NOT ESTABLISH: that any verdict is correct; that G-8's region is right or
+  wrong; that delta <= 1; that any Go port reproduces any of this. It establishes only
+  what the oracle's captured schedules sum to, in integer minor units.
+T271-REDERIVE: GREEN carriers=7 reproduced=7 agreeREG=4 agreeCORR=6 agreeUNCOND=7 structureHolds=6 contradictions=0
+EXIT=0

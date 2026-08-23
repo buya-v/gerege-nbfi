@@ -1,0 +1,25 @@
+T271-COMMENTONLY: inputs
+  repo root        : /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa110146c91f8c304
+  HEAD             : f5072713dad511bfffa5c87708b7e29942c80edf
+  pre-edit blob    : 5b2247fc697a8ef1b3e1a1b39f61a7d9d6055e5e   (classify_t219.py as committed at 6eacc06 with its output)
+  live classify sha: 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+  pinned in ack    : 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+
+  [1] classify-t219.json UNCHANGED and matches the sha the acknowledgement pins   OK
+  [2] pre-edit and post-edit classifier outputs are BYTE-IDENTICAL                  OK
+    cells: identical (9 entries)
+  [3] re-run cells[] == committed cells[]                                           OK
+
+  PRE-EXISTING AND NOT CAUSED BY T271, stated because a reader of [3] will ask: the two
+  calibration[] rows are NOT reproducible from the committed inputs. The committed file
+  records threwIdentical=false / status=DIFFERS; re-running the committed classifier
+  against the committed raw captures and the calibration reference at its pinned sha
+  (unchanged since T64) yields threwIdentical=true / status=REPRODUCED. cells[] reproduces
+  exactly; only calibration[] does not. T271 did not touch it and does not rule on it --
+  see the handoff Follow-ups. It does not touch the four B-1 pairs, which live in cells[].
+    calibration: DIFFER
+      A (out_post.json) : [{"cal": "P-CAL-ZPA", "target": "T64-ZP-A", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": true, "status": "REPRODUCED"}, {"cal": "P-CAL-ZPB", "target": "T64-ZP-B", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": true, "status": "REPRODUCED"}]
+      B (classify-t219.json) : [{"cal": "P-CAL-ZPA", "target": "T64-ZP-A", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": false, "status": "DIFFERS"}, {"cal": "P-CAL-ZPB", "target": "T64-ZP-B", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": false, "status": "DIFFERS"}]
+
+T271-COMMENTONLY: GREEN unchanged=1 commentOnly=1 cellsReproduce=1 calibrationReproduces=0
+EXIT=0
