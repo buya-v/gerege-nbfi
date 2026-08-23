@@ -60,6 +60,15 @@ HDRS="$AUTH
 Fineract-Platform-TenantId: default
 Content-Type: application/json"
 
+# T283_FIXED=1 runs the SAME arms with the expectations the T283 micro-fix
+# predicts: the three CONFESSING forgeries must flip to a verdict of NO (rc=1),
+# and NOTHING ELSE MAY MOVE.  One instrument, two arms, so the red and the green
+# are the same measurement and not two scripts that could differ elsewhere.
+FIXED=${T283_FIXED:-0}
+if [ "$FIXED" = "1" ]; then E_FA=1; E_FB=1; E_FC=1; ARM=GREEN
+else E_FA=0; E_FB=0; E_FC=0; ARM=RED
+fi
+
 for f in "$FORGE" "$LIB/wire_attestation.py" "$LIB/oracle_send.sh"; do
     [ -f "$f" ] || { echo "REFUSING: missing $f" >&2; exit 2; }
 done
@@ -106,7 +115,7 @@ verify_request_only() {  # the schema-1 call shape
     echo "$v_rc"
 }
 
-echo "T283 -- can a forgery survive T274's exact re-derivation?"
+echo "T283 -- can a forgery survive T274's exact re-derivation?  ARM: $ARM"
 echo "date:   $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 echo "curl:   $(curl --version | head -1)"
 echo "oracle: $BASE_URL"
@@ -130,7 +139,7 @@ judge FN 1 "$(verify_full "$d" probe)" "body swapped, sidecar NOT patched"
 # ---- FA request body forged (different length), WIRE RECORD untouched ------
 d="$WORK/FA"; capture "$d" probe POST /offices "$BODY"
 python3 "$FORGE" "$LIB" "$d" probe body-swap
-judge FA 0 "$(verify_full "$d" probe)" "req forged; reqhdr UNTOUCHED"
+judge FA "$E_FA" "$(verify_full "$d" probe)" "req forged; reqhdr UNTOUCHED"
 echo "    wire record still says: $(/usr/bin/grep -i '^Content-Length:' "$d/probe.reqhdr" | tr -d '\r')"
 echo "    committed artefact is:  $(wc -c < "$d/probe.req" | tr -d ' ') bytes"
 echo "    the ACCEPTED sidecar asserts: $(/usr/bin/grep '^content-length-crosscheck:' "$d/probe.http")"
@@ -151,7 +160,7 @@ confession "$d" probe
 # ---- FB status file forged, response wire record untouched -----------------
 d="$WORK/FB"; capture "$d" probe POST /offices "$BODY"
 python3 "$FORGE" "$LIB" "$d" probe status-swap 201
-judge FB 0 "$(verify_full "$d" probe)" "NAME.status forged"
+judge FB "$E_FB" "$(verify_full "$d" probe)" "NAME.status forged"
 echo "    the ACCEPTED sidecar asserts: $(/usr/bin/grep '^response-status-crosscheck:' "$d/probe.http")"
 echo "    and:                          $(/usr/bin/grep '^response-status-line:' "$d/probe.http")"
 confession "$d" probe
@@ -160,7 +169,7 @@ confession "$d" probe
 d="$WORK/FC"; capture "$d" probe POST /offices "$BODY"
 capture "$d" other GET /offices ""
 python3 "$FORGE" "$LIB" "$d" probe resp-swap "$d/other.json"
-judge FC 0 "$(verify_full "$d" probe)" "response swapped for another capture's"
+judge FC "$E_FC" "$(verify_full "$d" probe)" "response swapped for another capture's"
 echo "    the ACCEPTED sidecar asserts: $(/usr/bin/grep '^response-content-length-crosscheck:' "$d/probe.http")"
 confession "$d" probe
 

@@ -99,9 +99,18 @@ is not a downgrade route:
 
   * schema 1 sidecar + any response artefact (`--resp`/`--resphdr`/`--status`)
     -> REFUSED (exit 2).  This sidecar attests nothing about a response, so no
-    verdict about that response is available from it.  Deleting the schema line
-    to escape the response checks therefore does not yield a pass; it yields a
-    refusal, which is the whole point.
+    verdict about that response is available from it.
+    **THE PRECONDITION, which T283 measured and the first wording of this bullet
+    left out:** that refusal fires only when the CALLER still presents a response
+    artefact.  Delete the schema line AND withhold `--resp/--resphdr/--status`
+    and the call verifies clean as schema 1, with the response artefacts sitting
+    unmentioned in the same directory.  So "deleting the schema line buys a
+    refusal, not a pass" is true of the caller `oracle_send` makes -- which
+    presents every artefact it holds -- and NOT of the general case.  [MEASURED,
+    arm FE of `.softhouse/reviews/t283-review-t274/evidence/10-forgery-arms.txt`.]
+    A CALLER MUST PRESENT EVERY ARTEFACT IT HAS; this module cannot tell that an
+    artefact exists if it is not handed one, and `RESPONSE LEG: NOT ATTESTED` in
+    the verdict is the only warning a schema 1 pass carries.
   * schema 2 sidecar with any response artefact missing -> REFUSED (exit 2).
   * any other schema value -> REFUSED (exit 2).
 
@@ -117,10 +126,25 @@ CLAIMED: the sidecar, the two committed wire records, the request body artefact,
 NOT CLAIMED, and each of these is a real limit, stated HERE rather than in a
 review, because a limit written only into a review is the exact failure this
 whole class is named for:
-  * UNFORGEABILITY.  Tamper the sidecar AND the records AND the digests
-    CONSISTENTLY and you have forged a matched artefact set; that is what the
-    outer `MANIFEST.sha256` and the vectors' `capture_sha256` pins exist to
-    catch, not this module.
+  * UNFORGEABILITY.  Tamper the sidecar AND the artefacts CONSISTENTLY and you
+    have forged a matched set; that is what the outer `MANIFEST.sha256` and the
+    vectors' `capture_sha256` pins exist to catch, not this module.
+    T283 CORRECTED THE PRICE OF THAT, because the first wording of this bullet
+    said "the sidecar AND the records AND the digests", which reads as four
+    edits and is wrong in the direction that flatters this module.  THE RECORDS
+    DO NOT HAVE TO BE TOUCHED.  Nothing committed digests either BODY: the
+    `.reqhdr` / `.resphdr` records carry `Content-Length` and no more.  So
+    replacing the request body -- or the RESPONSE BODY, the half a golden vector
+    is actually graded on -- with the SAME NUMBER OF DIFFERENT BYTES and
+    re-deriving the sidecar costs TWO file edits, produces a sidecar
+    indistinguishable in shape from an honest one, and verifies clean.
+    [MEASURED, arms FA2 and FC2 of
+    `.softhouse/reviews/t283-review-t274/evidence/10-forgery-arms.txt`.]
+    What `verify` therefore establishes is SELF-CONSISTENCY, not authenticity:
+    it catches a PARTIAL tamper -- drift, rot, an artefact edited without its
+    sidecar -- and it cannot catch a whole-set forgery by anyone who can write
+    the sidecar.  Read a `VERIFIED` as "these six files agree", never as "this
+    is what the oracle was asked and answered".
   * `captured-at-utc:` is NOT DERIVABLE.  It is the one assertion taken from the
     sidecar on trust; nothing here can tell you WHEN the exchange happened.  Its
     absence is still a failure.
@@ -655,6 +679,35 @@ def cmd_verify(args):
             "is the most that can be demanded of it -- and it IS demanded." % len(caps))
         extras.append("captured-at-utc: <ABSENT>")
 
+    # T283 (review of T274).  A CROSSCHECK THAT COMES BACK `MISMATCH (...)` IS A
+    # VERDICT OF NO ABOUT THE ARTEFACTS, AND IT DOES NOT BECOME A PASS BECAUSE
+    # THE SIDECAR AGREES WITH IT.
+    #
+    # `_crosscheck` renders a wire/artefact disagreement as a line in VERIFY mode
+    # so that it can be reported as a verdict (exit 1) rather than a refusal.  Its
+    # comment says such a line "can never equal what `derive` wrote" -- true, and
+    # beside the point, because `verify` does not compare against what `derive`
+    # wrote.  It compares against what IT re-derives, and the sidecar is the
+    # artefact under suspicion.  A forger who rewrites the sidecar with the
+    # verifier's own builder therefore gets `MISMATCH` on both sides, an exact
+    # match, and `VERIFIED` rc=0 -- over an artefact set whose own derivation says
+    # the wire record and the committed artefact DISAGREE.  Measured three ways
+    # against the shipped T274 rig (a request body of a different length; a
+    # forged `.status`; another capture's response body):
+    # `.softhouse/reviews/t283-review-t274/evidence/10-forgery-arms.txt`.
+    #
+    # `derive` REFUSES to write one of these lines, so its presence in a sidecar is
+    # by construction proof that the set is not the one that was captured.  This is
+    # therefore a verdict, never a refusal: the artefacts are all present and
+    # readable, and what they say is NO.
+    for line in extras:
+        if line.partition(":")[2].strip().startswith("MISMATCH ("):
+            failures.append(
+                "the wire record and a committed artefact DISAGREE -- %s. `derive` "
+                "REFUSES to write this line, so a sidecar that repeats it does not "
+                "settle it: a disagreement the sidecar agrees with is still a "
+                "disagreement" % line)
+
     expected = build_sidecar(record, extras, schema)
     exp_lines = expected.rstrip("\n").split("\n")
 
@@ -782,6 +835,17 @@ def main(argv=None):
         return args.fn(args)
     except Refuse as exc:
         sys.stderr.write("REFUSING: %s\n" % exc)
+        return 2
+    except OSError as exc:
+        # T283.  An artefact that EXISTS but cannot be READ used to raise, and a
+        # Python traceback exits 1 -- which this module's own exit-status contract
+        # reads as "a verdict was reached and it is NO".  No verdict was reached.
+        # An I/O error is a REFUSAL.  Measured: a sidecar at mode 000 exited 1 with
+        # a traceback against the shipped T274 rig -- arm E1 of
+        # `.softhouse/reviews/t283-review-t274/evidence/20-sidecar-shapes.txt`.
+        sys.stderr.write(
+            "REFUSING: an artefact could not be read: %s -- an I/O error is not a "
+            "verdict, and an unreadable file is not a clean one\n" % exc)
         return 2
 
 

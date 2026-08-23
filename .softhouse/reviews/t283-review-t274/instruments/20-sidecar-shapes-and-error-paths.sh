@@ -35,6 +35,10 @@ Content-Type: application/json"
 
 [ -f "$WA" ] || { echo "REFUSING: missing $WA" >&2; exit 2; }
 
+# T283_FIXED=1: after the micro-fix an unreadable artefact must REFUSE (2) rather
+# than exit 1 through a traceback.  Nothing else may move.
+if [ "${T283_FIXED:-0}" = "1" ]; then E_E1=2; ARM=GREEN; else E_E1=1; ARM=RED; fi
+
 WORK=$(mktemp -d "${TMPDIR:-/tmp}/t283shapes.XXXXXX")
 cleanup() { chmod -R u+rwX "$WORK" 2>/dev/null || true; rm -rf "$WORK"; }
 trap cleanup EXIT HUP INT TERM QUIT
@@ -45,7 +49,7 @@ judge() {
     printf '  %-4s expected rc=%s  got rc=%s  %-20s %s\n' "$1" "$2" "$3" "$j" "$4"
 }
 
-echo "T283 -- absence attacks and error paths"
+echo "T283 -- absence attacks and error paths.  ARM: $ARM"
 echo "date:   $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 echo "rig under test:"
 shasum -a 256 "$WA" | sed 's/^/  /'
@@ -136,7 +140,7 @@ echo "== E: the verifier's own error paths -- a nonzero is an ERROR, never a pas
 
 arm E1; chmod 000 "$d/probe.http"
 rc=$(run_full); chmod 644 "$d/probe.http"
-judge E1 1 "$rc" "sidecar exists but is UNREADABLE"; why
+judge E1 "$E_E1" "$rc" "sidecar exists but is UNREADABLE"; why
 
 arm E2; rm -f "$d/probe.reqhdr"; mkdir "$d/probe.reqhdr"
 judge E2 2 "$(run_full)" "the wire record is a DIRECTORY"; why

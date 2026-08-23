@@ -1,0 +1,15 @@
+T274 -- T250's seven redB arms, re-run against the T274 verifier
+  6daf0c2c4c7e85a479ea1cf669becea207bae72b5d5785779aa91ce6fd7990a8  /tmp/t283rev/t274/.softhouse/capture/lib/wire_attestation.py
+
+  ARM 0   expected rc=0  got rc=0  ok                   POSITIVE CONTROL, untouched
+  ARM 1   expected rc=1  got rc=1  ok                   sidecar claims a tenant that was not sent
+  ARM 2   expected rc=1  got rc=1  ok                   record edited, sidecar left alone
+  ARM 3   expected rc=2  got rc=2  ok                   header record DELETED
+  ARM 4   expected rc=2  got rc=2  ok                   legacy sidecar, no derivation provenance
+  ARM 5   expected rc=1  got rc=1  ok                   body artefact swapped
+  ARM 6   expected rc=1  got rc=1  ok                   Content-Length sent != committed body bytes
+  ARM 7a  expected rc=0  got rc=0  ok                   REQUEST leg forged consistently -- STILL NOT CAUGHT (my prediction of rc=1 was wrong; see the header)
+  ARM 7b  expected rc=0  got rc=0  ok                   HONEST NEGATIVE: all five artefacts forged consistently
+
+SCORE: 9 as expected, 0 unexpected
+INSTRUMENT VERDICT: PASS

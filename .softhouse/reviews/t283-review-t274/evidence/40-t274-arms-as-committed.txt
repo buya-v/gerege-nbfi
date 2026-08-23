@@ -1,0 +1,52 @@
+T274 -- four fail-open routes, RED (T250 rig as shipped) vs GREEN (T274 rig)
+curl: curl 8.7.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+oracle: https://localhost:8443/fineract-provider/api/v1
+baseline rig sha256:
+  2c442e28e5c3a2fb7326129fdbb9d76511c0c12ff928baf129e72e6bd62f5e4d  /tmp/t283rev/t274/.softhouse/capture/t274-attestation-failopen/baseline/wire_attestation.py
+  8521e034a3880a34adf8684c43d3de8c8f3407f4bcbdca838df6fab381a4514f  /tmp/t283rev/t274/.softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh
+fixed rig sha256:
+  5e0ae9a4046350e6e463228bac4ae5314fe43e72afd375ad8bc0b2df6604e541  /tmp/t283rev/t274/.softhouse/capture/lib/wire_attestation.py
+  67e4cfb78a246664b336811ff0578184fe70eed707dffd67f61464f2f81816c2  /tmp/t283rev/t274/.softhouse/capture/lib/oracle_send.sh
+
+=============== ARM: red  (lib: .softhouse/capture/t274-attestation-failopen/baseline) ===============
+  red   P0   expected rc=0  got rc=0  ok                   UNTOUCHED artefacts must verify
+  tamper: deleted `body-sha256:` from the sidecar
+  tamper: replaced probe.req (46 bytes) with 46 DIFFERENT bytes of the SAME length
+  red   R1   expected rc=0  got rc=0  ok                   body-sha256: deleted + same-length body forged
+  tamper: swapped sidecar lines 8 and 9 ('Fineract-Platform-TenantId: default' <-> 'Content-Type: application/json')
+  red   R2a  expected rc=0  got rc=0  ok                   two wire header lines reordered in the sidecar
+  tamper: wire and sidecar each carried 'Fineract-Platform-TenantId: default' 2 times; dropped ONE copy from the sidecar
+  red   R2b  expected rc=0  got rc=0  ok                   one of TWO identical tenant headers dropped
+  tamper: appended `content-length-crosscheck: MATCH (99999 bytes)` -- a byte count that is fiction, under a key the verifier recognised
+  red   R3a  expected rc=0  got rc=0  ok                   invented content-length-crosscheck (99999 bytes)
+  tamper: 'content-length-crosscheck: MATCH (46 bytes)' -> `content-length-crosscheck: MATCH (99999 bytes)`
+  red   R3b  expected rc=0  got rc=0  ok                   real crosscheck ALTERED to a fictional byte count
+  tamper: probe.json replaced by other.json (264 bytes, a DIFFERENT real oracle response)
+  red   R4   expected rc=0  got rc=0  ok                   response .json swapped for another capture's
+
+=============== ARM: green  (lib: .softhouse/capture/lib) ===============
+  green P0   expected rc=0  got rc=0  ok                   UNTOUCHED artefacts must verify
+  tamper: deleted `body-sha256:` from the sidecar
+  tamper: replaced probe.req (46 bytes) with 46 DIFFERENT bytes of the SAME length
+  green R1   expected rc=1  got rc=1  ok                   body-sha256: deleted + same-length body forged
+  tamper: swapped sidecar lines 9 and 10 ('Fineract-Platform-TenantId: default' <-> 'Content-Type: application/json')
+  green R2a  expected rc=1  got rc=1  ok                   two wire header lines reordered in the sidecar
+  tamper: wire and sidecar each carried 'Fineract-Platform-TenantId: default' 2 times; dropped ONE copy from the sidecar
+  green R2b  expected rc=1  got rc=1  ok                   one of TWO identical tenant headers dropped
+  tamper: appended `content-length-crosscheck: MATCH (99999 bytes)` -- a byte count that is fiction, under a key the verifier recognised
+  green R3a  expected rc=1  got rc=1  ok                   invented content-length-crosscheck (99999 bytes)
+  tamper: 'content-length-crosscheck: MATCH (46 bytes)' -> `content-length-crosscheck: MATCH (99999 bytes)`
+  green R3b  expected rc=1  got rc=1  ok                   real crosscheck ALTERED to a fictional byte count
+  tamper: probe.json replaced by other.json (264 bytes, a DIFFERENT real oracle response)
+  green R4   expected rc=1  got rc=1  ok                   response .json swapped for another capture's
+
+=============== CONTROLS (T274 verifier only) ===============
+  green P1   expected rc=0  got rc=0  ok                   T250 schema 1 sidecar still verifies (no retro-edit)
+  tamper: deleted the `attestation-schema: 2` line (downgrade to schema 1)
+  green P2   expected rc=2  got rc=2  ok                   schema line deleted + response swapped -> REFUSE, not pass
+  green P3   expected rc=2  got rc=2  ok                   schema 2 sidecar, response artefacts withheld -> REFUSE
+  green P4   expected rc=2  got rc=2  ok                   body artefact withheld though the wire sent one -> REFUSE
+
+SCORE: 18 as expected, 0 unexpected
+INSTRUMENT VERDICT: PASS -- every route fails open on the T250 rig and is
+detected by the T274 rig, and the controls hold.

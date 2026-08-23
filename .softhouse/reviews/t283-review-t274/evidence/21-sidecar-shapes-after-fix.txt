@@ -1,0 +1,61 @@
+T283 -- absence attacks and error paths.  ARM: GREEN
+date:   2026-08-23T00:24:11Z
+rig under test:
+  6daf0c2c4c7e85a479ea1cf669becea207bae72b5d5785779aa91ce6fd7990a8  /tmp/t283rev/t274/.softhouse/capture/lib/wire_attestation.py
+
+one live capture taken; every arm below is a COPY of it, tampered one way.
+
+== S: the ABSENCE class -- every one of these MUST be caught ==
+  S0   expected rc=0  got rc=0  ok                   positive control, untouched
+  S1   expected rc=2  got rc=2  ok                   the sidecar is DELETED
+       REFUSING: sidecar does not exist: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/S1/probe.http
+  S2   expected rc=2  got rc=2  ok                   the sidecar is EMPTY
+       REFUSING: sidecar /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/S2/probe.http does not begin with `attestation-derivation: curl --trace-ascii; request headers AS SENT`. It was not derived from a wire record, so it is UNVERIFIABLE -- it may be true, but nothing here can tell you. REFUSED (this is the T245 F-2 shape).
+  S3   expected rc=2  got rc=2  ok                   sidecar = the provenance line ONLY
+       REFUSING: sidecar /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/S3/probe.http is SCHEMA 1: it attests the REQUEST ONLY and says nothing about any response, but --resp/--resphdr/--status was supplied. No verdict about that response is available from this sidecar, so this REFUSES rather than returning a pass that would silently cover the request leg only. (Deleting the `attestation-schema:` line from a schema 2 sidecar lands here too -- a downgrade buys a refusal, not a pass.)
+  S4   expected rc=1  got rc=1  ok                   valid syntax, ZERO assertions
+       ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/S4/probe.http
+         sidecar carries 0 `captured-at-utc:` lines; exactly one is required. It is the one assertion this verifier cannot re-derive, so its presence is the most that can be demanded of it -- and it IS demanded.
+  S5   expected rc=1  got rc=1  ok                   one assertion deleted (T261 F-4)
+       ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/S5/probe.http
+         REQUIRED assertion ABSENT: `body-sha256:` -- absence of the assertion is not absence of the thing asserted
+  S6   expected rc=1  got rc=1  ok                   one assertion DUPLICATED
+       ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/S6/probe.http
+         assertion `body-sha256:` appears 2 times; exactly one is required
+  S7   expected rc=1  got rc=1  ok                   sidecar TRUNCATED mid-line
+       ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/S7/probe.http
+         sidecar carries 0 `captured-at-utc:` lines; exactly one is required. It is the one assertion this verifier cannot re-derive, so its presence is the most that can be demanded of it -- and it IS demanded.
+  S8   expected rc=1  got rc=1  ok                   the un-derivable assertion removed
+       ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/S8/probe.http
+         sidecar carries 0 `captured-at-utc:` lines; exactly one is required. It is the one assertion this verifier cannot re-derive, so its presence is the most that can be demanded of it -- and it IS demanded.
+  S9   expected rc=1  got rc=1  ok                   TWO captured-at-utc lines
+       ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/S9/probe.http
+         sidecar carries 2 `captured-at-utc:` lines; exactly one is required. It is the one assertion this verifier cannot re-derive, so its presence is the most that can be demanded of it -- and it IS demanded.
+  S10  expected rc=1  got rc=1  ok                   an UNKNOWN key invented
+       ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/S10/probe.http
+         the VERBATIM WIRE BLOCK itself disagrees with the record (see the line-level findings below); assertion-level diagnostics are WITHHELD because their position is defined relative to that block
+  S11  expected rc=1  got rc=1  ok                   a RECOGNISED key made false
+       ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/S11/probe.http
+         sidecar OMITS a line the wire record and the committed artefacts derive (expected at line 17): 'content-length-crosscheck: MATCH (46 bytes)'
+
+== E: the verifier's own error paths -- a nonzero is an ERROR, never a pass ==
+  E1   expected rc=2  got rc=2  ok                   sidecar exists but is UNREADABLE
+       REFUSING: an artefact could not be read: [Errno 13] Permission denied: '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/E1/probe.http' -- an I/O error is not a verdict, and an unreadable file is not a clean one
+  E2   expected rc=2  got rc=2  ok                   the wire record is a DIRECTORY
+       REFUSING: request header record does not exist: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/E2/probe.reqhdr
+  E3   expected rc=2  got rc=2  ok                   non-integer Content-Length [T274 UNVERIFIED]
+       REFUSING: request record carries a non-integer `Content-Length: forty-six`; it cannot be cross-checked against a byte count
+  E4   expected rc=2  got rc=2  ok                   TWO Content-Length headers [T274 UNVERIFIED]
+       REFUSING: request record carries 2 `Content-Length` headers ('46', '46'); the number of body bytes on the wire is ambiguous and nothing may be attested about it
+  E5   expected rc=2  got rc=2  ok                   the wire record is EMPTY
+       REFUSING: a body artefact was supplied (/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/E5/probe.req) but the request record carries no `Content-Length`; the record does not show that body going out and no sidecar may assert that it did
+  E6   expected rc=2  got rc=2  ok                   response record has NO status line
+       REFUSING: response record carries no `HTTP/...` status line; it is not a record of a response and no status may be attested
+  E7   expected rc=1  got rc=1  ok                   invalid UTF-8 in the wire record
+       ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/E7/probe.http
+         the VERBATIM WIRE BLOCK itself disagrees with the record (see the line-level findings below); assertion-level diagnostics are WITHHELD because their position is defined relative to that block
+  E8   expected rc=2  got rc=2  ok                   the status file is DELETED
+       REFUSING: status file does not exist: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283shapes.96Mg4c/E8/probe.status
+
+SCORE: 20 as expected, 0 unexpected
+INSTRUMENT VERDICT: PASS
