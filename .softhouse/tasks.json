@@ -3150,7 +3150,7 @@
   {
    "id": "T271",
    "title": "B-1: the same verdict/predicate defect in t219-g8-residual — and T259's stated expectation about it is FALSIFIED",
-   "status": "in_progress",
+   "status": "in_review",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -3168,7 +3168,7 @@
    ],
    "contract_independent": true,
    "description": "RAISED BY T259 as its own out-of-scope finding (correctly measured read-only, changed nothing), then CONFIRMED AND SHARPENED by T262 (F-4).\n\n`.softhouse/capture/t219-g8-residual/out/classify-t219.json` carries the same shape as T229's: a verdict field that never consults its own recorded predicate, on **3 rows / 4 pairs** (`T219-R600p0-N103-B1` x2, `-B4499`, `-B3001`). In no handoff. Nobody had looked.\n\n**THE PART THAT MAKES THIS MORE THAN A REPEAT.** T262 re-derived all SEVEN t219 carriers from raw capture in integer minor units and got agreement **6 of 7, NOT 7 of 7**. `T219-R600p0-N103-B1` carries a **CORRECTED** predicate that is FALSE under an affirmative verdict (raw-verified: n=103, E=1, B=1, P=1 -> 103 against observed interest 13). **T259 flagged `-B4499` as the risky one; that one behaves as expected, and the one it did not flag does not.** So T259's recorded expectation is falsified, and the 'disagrees nowhere' leg of its argument is weakened -- its RULING still survives, but on the STRUCTURAL argument alone (verdict is computed at lines 95/100, every `P2_*` key is assigned at 103-106, AFTER; it structurally cannot read them).\n\nTHE JOB: re-derive all seven carriers YOURSELF in integer minor units, `parse_float=Decimal` everywhere, `assert type(v) is int` on every quantity -- no floating point, including intermediates. Establish what `-B1` actually is: a genuine counterexample to the corrected predicate, a data defect, or a different row structure. **T262 notes the corrected identity `interest = totalRepayment - principalRepaid` is EXACT AND UNCONDITIONAL (6/6), while `totalRepayment = n*E + B` is CONDITIONAL and holds only 4/6** -- it needs the EMI-plus-balloon row structure, NOT full amortisation (three partial cells satisfy it exactly). Start there: `-B1` may simply not have that structure.\n\nT114/T176 BIND: `classify-t219.json` is committed evidence. DO NOT retro-edit it. Check first whether a manifest pins the bytes (T236's convention). Materiality is expected LOW -- verify rather than assume, and state it plainly. **G-8's region must not move, and options (b)/(c) must not be put to Buyan, unconditionally.**",
-   "note": "dispatched by local fire 20260822-060013b; PROMOTED because T268 measured that it BLOCKS T269 wiring (classify-t219.json turns the BAR red, exit 1, unacknowledged=4) | WORKER KILLED MID-FLIGHT by the exit of local fire 20260822-140002, which ended without awaiting it (STEP 5.5 violation; the 20260822-230001 fire then opened and released with ZERO commits, so nobody corrected it and RESUME.md still described the 06:00 fire). NOT in_progress and nothing was running: corrected to needs_retry by fire 20260823-080004. WIP rescued by the wrapper sweep on softhouse/rescued-agent-a533818f28c9c0299-20260822-140002 — completeness UNVERIFIED, the branch is where the worker happened to be when it died, not a handoff. Re-dispatched this fire from that rescued state. | DISPATCHED by local fire 20260823-080004, worktree-isolated, model opus.",
+   "note": "Committed f80e1a7, purely additive (31 files, +3904). DRIVER VERIFIED: branch additive, classify-t219.json BYTE-UNCHANGED. Failing row named: T219-R600p0-N103-B1 -- rows 1-13 carry 1 minor unit of interest each, row 14 of 103 carries the whole 1 minor unit of principal, rows 15-103 are ZERO, so n*E prices 90 rows that charge nothing (n*E+B=104, -P=103, observed interest 13). Data right, verdict right, CLAIM INAPPLICABLE -- the P2_* conjuncts presume an EMI-plus-balloon shape this cell does not have. Why T259 missed it: T259's blind spot was arithmetic MAGNITUDE, not structure; -B1 repays the smallest non-zero value so on that reasoning it was the SAFEST row. Red bar reproduced and counted first-hand (unacknowledged=4, exit 1); fixed by sha-pinned acknowledgement with disagreements/rows/predicates IDENTICAL to the red run, so 'green by looking less' is mechanically refused by battery leg G1. Also self-reported its own first-draft probe was fail-open (P-81 '| grep .. || echo') and that T259's lint caught it -- recorded in the file header, not quietly repaired.",
    "branch": "softhouse/t271-b1-t219"
   },
   {
@@ -3578,6 +3578,28 @@
    "files_hint": [
     ".softhouse/capture/t287-closure-refusals/",
     ".softhouse/reference-oracle.md"
+   ],
+   "description": "see worker prompt; dispatched by local fire 20260823-080004"
+  },
+  {
+   "id": "T290",
+   "title": "INDEPENDENT review of T271 — re-derive the 6-of-7 and the out-of-domain verdict from the RAW capture, and attack the sha-pinned acknowledgement that turned the bar green",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "agent_role": "reviewer",
+   "role": "reviewer",
+   "context": "tierA-gl-accounting",
+   "slice": "tierA-gl-accounting-A2",
+   "dependencies": [
+    "T271"
+   ],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".softhouse/capture/t271-b1-t219/",
+    ".softhouse/capture/t219-g8-residual/"
    ],
    "description": "see worker prompt; dispatched by local fire 20260823-080004"
   }
