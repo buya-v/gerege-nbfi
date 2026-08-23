@@ -1,0 +1,126 @@
+ancestry of this script (pid 43854):
+\n    43852   /bin/zsh -c source /Users/buv/.claude/shell-snapshots/snapshot-zsh-1\n    4692   /Users/buv/.local/bin/claude -p /softhouse-program\012\012Local fire\n    4689   /bin/zsh /Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh\n    4688   /bin/zsh /Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh\n    4627   /bin/zsh /Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh
+-> a `claude` IS in the chain: `in_session` mode is genuinely under test.
+
+==============================================================================
+SCENARIO 1 — PRE-FIX bytes (main). A live driver cannot clear a dead fire's
+             dispatches at all: the tool refuses on ancestry alone.
+==============================================================================
+--- pre-fix, lock carries a fire id
+      RECONCILE -- fire 20260823-140001
+        git:  /usr/bin/git
+        repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t309-insession.43854/repo
+        lock: invoked from INSIDE a live session -- ancestor pid 4692 is `claude`. A driver or worker must not reconcile its own siblings; only the wrapper, after the driver is dead, may. REFUSING.
+        RESULT: REFUSED -- tasks.json was NOT modified.
+    rc=4  (wanted 4)
+    statuses: T801=in_progress T802=in_progress T803=in_progress T804=in_progress T805=in_progress T806=in_progress
+    wanted  : T801=in_progress T802=in_progress T803=in_progress T804=in_progress T805=in_progress T806=in_progress
+    >>> PASS
+
+==============================================================================
+SCENARIO 2 — POST-FIX bytes (HEAD). The SAME call must now demote the two
+             corpses of fire 20260823-080004 and WITHHOLD everything else.
+==============================================================================
+--- in_session, mixed ownership
+      RECONCILE -- fire 20260823-140001
+        git:  /usr/bin/git
+        repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t309-insession.43854/repo
+        lock: invoked from INSIDE a live session -- ancestor pid 4692 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+        mode: in_session   (lock fire id: 20260823-140001)
+        in_progress tasks found: 6  (out of 6 in tasks.json -- every task was read to get this count, it is not a default)
+        IN-SESSION authority: 2 demotable, 4 WITHHELD (a live fire is running; only dispatches proven to belong to another fire may be touched)
+        T802     WITHHELD  dispatched by fire 20260823-140001, which is the fire holding the lock RIGHT NOW -- this is a LIVE sibling. REFUSING.
+        T803     WITHHELD  no `fire` recorded on this task, so it cannot be shown to belong to a DEAD fire -- REFUSING. Whoever dispatched it did not stamp an owner; the wrapper's exit-path reconcile will clear it.
+        T804     WITHHELD  no `fire` recorded on this task, so it cannot be shown to belong to a DEAD fire -- REFUSING. Whoever dispatched it did not stamp an owner; the wrapper's exit-path reconcile will clear it.
+        T805     WITHHELD  no `fire` recorded on this task, so it cannot be shown to belong to a DEAD fire -- REFUSING. Whoever dispatched it did not stamp an owner; the wrapper's exit-path reconcile will clear it.
+        T801     softhouse/T801-b                           WIP=absent
+                 in_progress -> needs_retry
+        T806     softhouse/T806-b                           WIP=absent
+                 in_progress -> needs_retry
+        RESULT: WROTE /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t309-insession.43854/repo/.softhouse/tasks.json -- 2 task(s) demoted in_progress -> needs_retry, 4 WITHHELD.
+    rc=0  (wanted 0)
+    statuses: T801=needs_retry T802=in_progress T803=in_progress T804=in_progress T805=in_progress T806=needs_retry
+    wanted  : T801=needs_retry T802=in_progress T803=in_progress T804=in_progress T805=in_progress T806=needs_retry
+    >>> PASS
+
+==============================================================================
+SCENARIO 3 — POST-FIX bytes, but every in_progress task belongs to the LIVE
+             fire. Nothing may be touched. This is the case whose failure
+             DESTROYS WORK, so it is graded on the file, not on the rc alone.
+==============================================================================
+--- in_session, every task is a LIVE sibling
+      RECONCILE -- fire 20260823-140001
+        git:  /usr/bin/git
+        repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t309-insession.43854/repo
+        lock: invoked from INSIDE a live session -- ancestor pid 4692 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+        mode: in_session   (lock fire id: 20260823-140001)
+        in_progress tasks found: 6  (out of 6 in tasks.json -- every task was read to get this count, it is not a default)
+        IN-SESSION authority: 0 demotable, 6 WITHHELD (a live fire is running; only dispatches proven to belong to another fire may be touched)
+        T801     WITHHELD  dispatched by fire 20260823-140001, which is the fire holding the lock RIGHT NOW -- this is a LIVE sibling. REFUSING.
+        T802     WITHHELD  dispatched by fire 20260823-140001, which is the fire holding the lock RIGHT NOW -- this is a LIVE sibling. REFUSING.
+        T803     WITHHELD  dispatched by fire 20260823-140001, which is the fire holding the lock RIGHT NOW -- this is a LIVE sibling. REFUSING.
+        T804     WITHHELD  dispatched by fire 20260823-140001, which is the fire holding the lock RIGHT NOW -- this is a LIVE sibling. REFUSING.
+        T805     WITHHELD  dispatched by fire 20260823-140001, which is the fire holding the lock RIGHT NOW -- this is a LIVE sibling. REFUSING.
+        T806     WITHHELD  dispatched by fire 20260823-140001, which is the fire holding the lock RIGHT NOW -- this is a LIVE sibling. REFUSING.
+        RESULT: REFUSED -- nothing this caller is authorised to repair; tasks.json was NOT modified. The wrapper's exit-path reconcile runs in `wrapper` mode and clears what is left.
+    rc=4  (wanted 4)
+    statuses: T801=in_progress T802=in_progress T803=in_progress T804=in_progress T805=in_progress T806=in_progress
+    wanted  : T801=in_progress T802=in_progress T803=in_progress T804=in_progress T805=in_progress T806=in_progress
+    >>> PASS
+
+==============================================================================
+SCENARIO 4 — POST-FIX bytes, LOCK carries NO fire id. 'Is this mine?' cannot
+             be decided, so nothing may be touched (fail-closed).
+==============================================================================
+--- in_session, lock has no fire id
+      RECONCILE -- fire 20260823-140001
+        git:  /usr/bin/git
+        repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t309-insession.43854/repo
+        lock: invoked from INSIDE a live session -- ancestor pid 4692 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (NONE RECORDED ON THE LOCK).
+        mode: in_session   (lock fire id: NONE RECORDED)
+        in_progress tasks found: 6  (out of 6 in tasks.json -- every task was read to get this count, it is not a default)
+        IN-SESSION authority: 0 demotable, 6 WITHHELD (a live fire is running; only dispatches proven to belong to another fire may be touched)
+        T801     WITHHELD  the LOCK records no `fire` id, so 'is this dispatch mine?' cannot be decided -- REFUSING (fail-closed)
+        T802     WITHHELD  the LOCK records no `fire` id, so 'is this dispatch mine?' cannot be decided -- REFUSING (fail-closed)
+        T803     WITHHELD  the LOCK records no `fire` id, so 'is this dispatch mine?' cannot be decided -- REFUSING (fail-closed)
+        T804     WITHHELD  the LOCK records no `fire` id, so 'is this dispatch mine?' cannot be decided -- REFUSING (fail-closed)
+        T805     WITHHELD  the LOCK records no `fire` id, so 'is this dispatch mine?' cannot be decided -- REFUSING (fail-closed)
+        T806     WITHHELD  the LOCK records no `fire` id, so 'is this dispatch mine?' cannot be decided -- REFUSING (fail-closed)
+        RESULT: REFUSED -- nothing this caller is authorised to repair; tasks.json was NOT modified. The wrapper's exit-path reconcile runs in `wrapper` mode and clears what is left.
+    rc=4  (wanted 4)
+    statuses: T801=in_progress T802=in_progress T803=in_progress T804=in_progress T805=in_progress T806=in_progress
+    wanted  : T801=in_progress T802=in_progress T803=in_progress T804=in_progress T805=in_progress T806=in_progress
+    >>> PASS
+
+==============================================================================
+SCENARIO 5 — POST-FIX bytes, NO LOCK ON DISK. No live fire exists to protect,
+             so this is wrapper authority and every dispatch is a corpse.
+==============================================================================
+--- no lock at all
+      RECONCILE -- fire 20260823-140001
+        git:  /usr/bin/git
+        repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t309-insession.43854/repo
+        lock: no .softhouse/LOCK on disk -- nobody holds this repo
+        mode: wrapper   (lock fire id: NONE RECORDED)
+        in_progress tasks found: 6  (out of 6 in tasks.json -- every task was read to get this count, it is not a default)
+        T801     softhouse/T801-b                           WIP=absent
+                 in_progress -> needs_retry
+        T802     softhouse/T802-b                           WIP=absent
+                 in_progress -> needs_retry
+        T803     softhouse/T803-b                           WIP=absent
+                 in_progress -> needs_retry
+        T804     softhouse/T804-b                           WIP=absent
+                 in_progress -> needs_retry
+        T805     softhouse/T805-b                           WIP=absent
+                 in_progress -> needs_retry
+        T806     softhouse/T806-b                           WIP=absent
+                 in_progress -> needs_retry
+        RESULT: WROTE /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t309-insession.43854/repo/.softhouse/tasks.json -- 6 task(s) demoted in_progress -> needs_retry.
+    rc=0  (wanted 0)
+    statuses: T801=needs_retry T802=needs_retry T803=needs_retry T804=needs_retry T805=needs_retry T806=needs_retry
+    wanted  : T801=needs_retry T802=needs_retry T803=needs_retry T804=needs_retry T805=needs_retry T806=needs_retry
+    >>> PASS
+
+==============================================================================
+IN-SESSION MATRIX: 5 passed, 0 failed
+DONE
