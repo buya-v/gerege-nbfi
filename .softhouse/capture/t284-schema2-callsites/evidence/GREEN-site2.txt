@@ -1,0 +1,66 @@
+T284 SITE 2 -- T261's RED-DRIVE B, taught schema 2
+  supersedes : .softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh
+               (FROZEN, sha256 86a2f0ec7ebd971e38e6d859880497d6c99c5c429dd1df6e9398c8e2043398e0)
+  verifier   : 6daf0c2c4c7e85a479ea1cf669becea207bae72b5d5785779aa91ce6fd7990a8
+  oracle     : https://localhost:8443/fineract-provider/api/v1
+  curl       : curl 8.7.1
+  scratch    : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru
+
+-- capturing base artefacts from the LIVE oracle --
+derived /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/src/post/post.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.YuivIc/trace (schema 2; 1 send-header block(s), 16 recv-header block(s))
+post                                         HTTP 400
+derived /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/src/dup/dup.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.iBmQMd/trace (schema 2; 1 send-header block(s), 15 recv-header block(s))
+dup                                          HTTP 200
+derived /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/src/colon/colon.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.h0HFns/trace (schema 2; 1 send-header block(s), 15 recv-header block(s))
+colon                                        HTTP 200
+derived /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/src/kcoll/kcoll.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.DWS8ZK/trace (schema 2; 1 send-header block(s), 15 recv-header block(s))
+kcoll                                        HTTP 200
+
+-- scope gate: every captured sidecar must BE schema 2 --
+  post   schema 2
+  dup    schema 2
+  colon  schema 2
+  kcoll  schema 2
+
+-- CALIBRATION: the untouched positive control must VERIFY --
+  A0 positive control VERIFIED rc=0
+
+-- ATTACKS (rc=1 verdict-NO or rc=2 refused is CAUGHT; rc=0 is a GAP) --
+  [CAUGHT  ] A1  duplicated header: one copy removed from sidecar       rc=1
+            ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/a1/dup.http
+              the VERBATIM WIRE BLOCK itself disagrees with the record (see the line-level findings below); assertion-level diagnostics are WITHHELD because their position is defined relative to that block
+  [CAUGHT  ] A2  body swapped (same length) + body-sha256 line deleted  rc=1
+            ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/a2/post.http
+              REQUIRED assertion ABSENT: `body-sha256:` -- absence of the assertion is not absence of the thing asserted
+  [CAUGHT  ] A3  body truncated + all three body assertions deleted     rc=1
+            ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/a3/post.http
+              the wire record and a committed artefact DISAGREE -- content-length-crosscheck: MISMATCH (Content-Length 46, artefact 23 bytes). `derive` REFUSES to write this line, so a sidecar that repeats it does not settle it: a disagreement the sidecar agrees with is still a disagreement
+  [CAUGHT  ] A4  sidecar header lines REORDERED vs the wire             rc=1
+            ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/a4/post.http
+              the VERBATIM WIRE BLOCK itself disagrees with the record (see the line-level findings below); assertion-level diagnostics are WITHHELD because their position is defined relative to that block
+  [CAUGHT  ] A5  wire header named 'body-bytes' tampered in sidecar     rc=1
+            ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/a5/kcoll.http
+              the VERBATIM WIRE BLOCK itself disagrees with the record (see the line-level findings below); assertion-level diagnostics are WITHHELD because their position is defined relative to that block
+  [CAUGHT  ] A6  invented 'content-length-crosscheck' line appended     rc=1
+            ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/a6/post.http
+              assertion `content-length-crosscheck:` appears 2 times; exactly one is required
+  [CAUGHT  ] A7  colon-bearing header value tampered in sidecar         rc=1
+            ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/a7/colon.http
+              the VERBATIM WIRE BLOCK itself disagrees with the record (see the line-level findings below); assertion-level diagnostics are WITHHELD because their position is defined relative to that block
+  [CAUGHT  ] A8  sidecar header name case-folded                        rc=1
+            ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/a8/post.http
+              the VERBATIM WIRE BLOCK itself disagrees with the record (see the line-level findings below); assertion-level diagnostics are WITHHELD because their position is defined relative to that block
+  [CAUGHT  ] A9  request record swapped for another real request's      rc=2
+            REFUSING: a body artefact was supplied (/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/a9/post.req) but the request record carries no `Content-Length`; the record does not show that body going out and no sidecar may assert that it did
+  [CAUGHT  ] A10 RESPONSE body swapped for another capture's            rc=1
+            ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/a10/post.http
+              the wire record and a committed artefact DISAGREE -- response-content-length-crosscheck: MISMATCH (Content-Length 468, artefact 264 bytes). `derive` REFUSES to write this line, so a sidecar that repeats it does not settle it: a disagreement the sidecar agrees with is still a disagreement
+  [CAUGHT  ] A11 request-headers-sha256 line deleted from sidecar       rc=1
+            ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/a11/post.http
+              REQUIRED assertion ABSENT: `request-headers-sha256:` -- absence of the assertion is not absence of the thing asserted
+  [CAUGHT  ] A12 RESPONSE HEADER record swapped for another capture's   rc=1
+            ATTESTATION MISMATCH -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t284redB.6bEJru/a12/post.http
+              the wire record and a committed artefact DISAGREE -- response-content-length-crosscheck: MISMATCH (Content-Length 264, artefact 468 bytes). `derive` REFUSES to write this line, so a sidecar that repeats it does not settle it: a disagreement the sidecar agrees with is still a disagreement
+
+SCORE: 12 caught / 0 accepted, of 12 attacks
+SITE 2 SUCCESSOR: PASS -- all 12 tamper shapes caught, positive control clean.
