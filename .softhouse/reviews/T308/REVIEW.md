@@ -330,9 +330,14 @@ SHIPPED : rc=1  T259-VPA: REFUSED … disagreements=1 acknowledged=0 unacknowled
 N1      : rc=0  T259-VPA: GREEN   … disagreements=1 acknowledged=0 unacknowledged=0 … witness=1
 ```
 
-The mutant prints `disagreements=1, acknowledged=0, unacknowledged=0` **and exits GREEN**. That is
-T259's founding defect, reproduced inside the instrument built to prove it cannot recur, and
-T292's adversary passes it **82/0/0**.
+The mutant prints `disagreements=1, acknowledged=0, unacknowledged=0` **and exits GREEN** — the
+probe line contradicts itself on its own face — while the body above it still prints
+`*** DISAGREEMENT [UNACKNOWLEDGED] … NO ACKNOWLEDGEMENT. This row asserts its prediction held
+while recording that one of its own predicates did not … do not summarise past it.` (For `N1` the
+printed evidence is that block rather than the literal word `REFUSED`, which is why the table's
+"body still prints REFUSED" column marks `N2`/`N4`/`N5` and not `N1`.) That is T259's founding
+defect, reproduced inside the instrument built to prove it cannot recur, and T292's adversary
+passes it **82/0/0**.
 
 **Why every property misses it.** PROP-A is an *invariance* over container rewritings — the mutant
 is perfectly invariant (`rc=0` everywhere), so PROP-A passes. PROP-B requires `rc==0 ⟹ witness ≥
