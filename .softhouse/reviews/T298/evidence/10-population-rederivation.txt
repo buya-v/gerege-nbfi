@@ -1,0 +1,44 @@
+T298 — INDEPENDENT re-derivation of the T256 population.
+The reviewer ran these before reading T256's own census output. Selector printed beside every figure.
+
+SELECTOR
+  universe : git ls-files at the named rev (tracked only; gitignored .softhouse/toolchain/ is outside)
+  match    : git grep -F -l -- <literal> <rev>     (fixed string, no regex)
+  rev      : f02d849  (T256's stated starting commit — the same rev it pinned its figures to)
+
+LITERAL 1 = /Users/buv/gerege-nbfi/.softhouse/toolchain
+LITERAL 2 = /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh
+
+  L1 files ............ 58     (T256 claimed 58)  REPRODUCES
+  L2 files ............ 39     (T256 claimed 39)  REPRODUCES
+  union, deduplicated . 92     (T256 claimed 92)  REPRODUCES
+
+BUCKETS, re-derived by the reviewer with an independent selector
+(extension-based, then cross-checked for extensionless executables):
+
+  executable-extension members (.sh|.py|.bash|.zsh) .... 61
+    of which .softhouse/bin/go-env.sh (LIVE) ........... 1
+    archived under capture/** reviews/** handoff/** .... 60   (T256 claimed 60)  REPRODUCES
+  non-executable-extension members ..................... 31   (T256 claimed 31)  REPRODUCES
+    breakdown: 22 .md + 7 .txt + 2 .json = 31
+  extensionless members ................................ 0
+    -> so T256's "SKIPPED: 0" is not merely a statement about its extension list: the union
+       genuinely contains no extensionless file, and nothing could have been silently dropped.
+       INDEPENDENTLY CONFIRMED.
+
+  61 + 31 = 92. Closes.
+
+THE BRIEF'S "30 / 40" — traced independently; the reviewer agrees with T256.
+  30 is RUNNABLE:30 from .softhouse/capture/t253-portability/evidence/60-hardcoded-toolchain-census.txt,
+  the FIRST LITERAL ONLY. Neither 30 nor 40 reproduces at any rev under any selector tried.
+  T256's correction of its own brief stands.
+
+THE TWO "LIVE-ADJACENT" NON-EXECUTABLES, checked individually, because a data file read by the
+driver can manufacture pastes exactly as an instruction can:
+  .softhouse/tasks.json      — 1 hit of L1, 0 of L2, at line 2230, inside a DEFECT DESCRIPTION
+                               ("D2 — .softhouse/bin/go-env.sh:12 hardcodes GEREGE_TOOLCHAIN=...").
+                               An observation, not an instruction. T256's classification is correct.
+  .softhouse/reference-oracle.md at HEAD — 1 hit of L1 (line 618, the GOROOT row, explicitly
+                               relabelled "an observation of one host, not a value to paste"),
+                               1 hit of L2 (line 639, quoting the line it removed, as history).
+                               Both are observations. T256's claim is correct.
