@@ -150,7 +150,12 @@ docker compose -f docker-compose-postgresql.yml up -d      # never the mysql/mar
 docker compose -f docker-compose-postgresql.yml down
 ```
 
-Rebuild the image after moving the pin: `/Users/buv/gerege-nbfi/.softhouse/bin/build-oracle-image.sh`
+Rebuild the image after moving the pin — same self-locating form as the toolchain activation line below, for
+the same reason (the cloud fire has no `/Users/buv`):
+
+```bash
+"$(git rev-parse --show-toplevel)/.softhouse/bin/build-oracle-image.sh"
+```
 
 ## Connection facts for vector capture
 
@@ -610,10 +615,54 @@ that the previous fire (correctly) declined to make unattended.
 | Source | `https://go.dev/dl/go1.26.6.darwin-arm64.tar.gz` — the official archive, from `https://go.dev/dl/?mode=json` |
 | Size | 64,772,321 bytes |
 | **SHA-256 asserted before extraction** | `2dc95ce4675829f2df0e86b28bcef3283635902062a5f0580ca659bf570f3204` — **published value and computed value MATCHED**; the driver would not have extracted an archive that did not match |
-| `GOROOT` | `/Users/buv/gerege-nbfi/.softhouse/toolchain/go` |
-| `GOPATH` / `GOCACHE` / `GOMODCACHE` | `…/.softhouse/toolchain/{gopath,gocache,gomodcache}` |
+| `GOROOT` | **derived, never written down**: `$GEREGE_TOOLCHAIN/go`, where `GEREGE_TOOLCHAIN` = `<main checkout>/.softhouse/toolchain`. On the local fire's host that *resolved to* `/Users/buv/gerege-nbfi/.softhouse/toolchain/go`; that is an observation of one host, **not a value to paste**. |
+| `GOPATH` / `GOCACHE` / `GOMODCACHE` | `$GEREGE_TOOLCHAIN/{gopath,gocache,gomodcache}` — same derivation |
 | Committed to git? | **No** — `.softhouse/toolchain/` is in `.gitignore` |
-| Activation | `. /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh` (committed) |
+| **Activation** | the single line in the block immediately below — copy it verbatim; it is the whole instruction |
+
+<!-- T256-ACTIVATION-LINE:BEGIN
+     THIS BLOCK IS EXECUTED, NOT JUST READ.
+     .softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh
+     EXTRACTS the line between these two markers and RUNS it, on this host and inside a
+     scratch checkout that has no toolchain. So this is not a sentence a future fire has to
+     remember to obey — replace it with a host-pinned path and the drive goes red off-host,
+     in a transcript, with the offending line quoted back. Keep it to one line. -->
+
+```bash
+. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"
+```
+
+<!-- T256-ACTIVATION-LINE:END -->
+
+#### The activation line is host-free on purpose — do not "simplify" it back to a path
+
+This row used to read `. /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh`. That was a defect of the
+**instruction**, not of the toolchain, and it is the kind that reproduces: this program is driven by **two**
+fires — a launchd fire on Buyan's Mac, and a **cloud fire that never runs on that host** — so every worker who
+followed the old line wrote a script the cloud fire structurally could not execute. **At commit `f02d849`,
+60 archived instruments in this repo carried that paste** — a figure pinned to the commit that produced it,
+because a count restated without one rots. (Measured, not remembered: re-run
+`.softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh`, which re-derives every
+figure from the tree it is run against and prints the selector beside each one. If this sentence and that
+output disagree, the output is right.)
+
+The replacement is **self-locating**: `git rev-parse --show-toplevel` answers correctly from any working
+directory, in the main checkout and in every isolated worker worktree, on any host, and names no user and no
+machine. It asks the reader to remember **nothing** — there is no variable to set first and no path to know.
+
+**It composes with `go-env.sh` rather than duplicating it.** `go-env.sh` is the seam that finds the toolchain;
+it resolves the *shared* install through `git rev-parse --git-common-dir`, so a worktree gets the main
+checkout's one toolchain and one module cache. Never re-implement that here — `export GOROOT=…` in a script of
+your own is exactly the paste this section exists to stop.
+
+**What it does when the toolchain is absent — verified, not assumed.** `go-env.sh` never exports a `GOROOT`
+that does not exist, drops a stale inherited one, and prints an unmissable stderr banner naming the paths it
+searched. If a `go` exists on `PATH` it announces the substitution and sets `GEREGE_GO_SOURCE=fallback-path`;
+if none does it sets `GEREGE_GO_SOURCE=absent` and says so, leaving the caller's own fail-closed refusal to
+fire accurately. Guards may build with a fallback toolchain; **vector capture and any parity claim may not.**
+Drive these paths yourself with
+`.softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh` — transcript beside it
+in `evidence/`. A guard nobody has watched fail enforces nothing.
 
 ### Why repo-local rather than `brew install go` or `/usr/local/go`
 
