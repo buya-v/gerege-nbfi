@@ -1,0 +1,9 @@
+POST /journalentries
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+request-source-file: req/a1-01-future-far.json
+request-bytes-artefact: A1-01-future-far.req
+request-sha256: c023dcdf1ef1ae9ef57749bd2ff34a600fb4df9285660f86db60e669c55675e8
+request-bytes: 382
+captured-at-utc: 2026-08-23T00:11:49Z

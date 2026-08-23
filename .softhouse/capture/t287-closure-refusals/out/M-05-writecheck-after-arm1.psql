@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/q3-writecheck.sql
+query-bytes-artefact: M-05-writecheck-after-arm1.sql
+query-sha256: 44f7548d15f3c17b33435d0142ad0e2c2eba5a6e86ca74ecb6b11dbc07009baf
+query-bytes: 1019
+psql-exit-status: 0
+captured-at-utc: 2026-08-23T00:12:02Z
