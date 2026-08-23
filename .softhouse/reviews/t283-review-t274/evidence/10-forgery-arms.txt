@@ -1,0 +1,67 @@
+T283 -- can a forgery survive T274's exact re-derivation?
+date:   2026-08-23T00:17:15Z
+curl:   curl 8.7.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+oracle: https://localhost:8443/fineract-provider/api/v1
+rig under test:
+  5e0ae9a4046350e6e463228bac4ae5314fe43e72afd375ad8bc0b2df6604e541  /tmp/t283rev/t274/.softhouse/capture/lib/wire_attestation.py
+  67e4cfb78a246664b336811ff0578184fe70eed707dffd67f61464f2f81816c2  /tmp/t283rev/t274/.softhouse/capture/lib/oracle_send.sh
+scratch: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283forge.lu8prJ
+
+  FP0  expected rc=0  got rc=0  ok                   untouched artefacts must verify
+  forge: NAME.req 46 -> 60 bytes, sidecar NOT patched (naive control)
+  FN   expected rc=1  got rc=1  ok                   body swapped, sidecar NOT patched
+  forge: NAME.req 46 bytes -> 60 bytes (DIFFERENT length, different bytes); NAME.reqhdr UNTOUCHED
+  FA   expected rc=0  got rc=0  ok                   req forged; reqhdr UNTOUCHED
+    wire record still says: Content-Length: 46
+    committed artefact is:  60 bytes
+    the ACCEPTED sidecar asserts: content-length-crosscheck: MISMATCH (Content-Length 46, artefact 60 bytes)
+    verifier said:                VERIFIED /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283forge.lu8prJ/FA/probe.http against /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283forge.lu8prJ/FA/probe.reqhdr and /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283forge.lu8prJ/FA/probe.resphdr
+    the accepted sidecar's own confession: 1 line(s) containing 'MISMATCH ('
+  forge: NAME.req 46 bytes -> 46 bytes, SAME LENGTH, different bytes; NAME.reqhdr UNTOUCHED
+  FA2  expected rc=0  got rc=0  ok                   SAME-LENGTH req forged
+    body digest before/after: a4e0d3eeb2768121 -> 16130a6a374351ba
+    the ACCEPTED sidecar asserts: content-length-crosscheck: MATCH (46 bytes)
+    committed body is now:        {"forged":"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"}
+    verifier said:                VERIFIED /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283forge.lu8prJ/FA2/probe.http against /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283forge.lu8prJ/FA2/probe.reqhdr and /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283forge.lu8prJ/FA2/probe.resphdr
+    the accepted sidecar's own confession: 0 line(s) containing 'MISMATCH ('
+  forge: NAME.status 400 -> 201; NAME.resphdr UNTOUCHED
+  FB   expected rc=0  got rc=0  ok                   NAME.status forged
+    the ACCEPTED sidecar asserts: response-status-crosscheck: MISMATCH (status file '201', wire 400)
+    and:                          response-status-line: HTTP/1.1 400
+    the accepted sidecar's own confession: 1 line(s) containing 'MISMATCH ('
+  forge: NAME.json 468 bytes -> 264 bytes (a DIFFERENT real oracle response); NAME.resphdr UNTOUCHED
+  FC   expected rc=0  got rc=0  ok                   response swapped for another capture's
+    the ACCEPTED sidecar asserts: response-content-length-crosscheck: MISMATCH (Content-Length 468, artefact 264 bytes)
+    the accepted sidecar's own confession: 1 line(s) containing 'MISMATCH ('
+  forge: NAME.json 468 bytes -> 468 bytes, SAME LENGTH, an answer the oracle NEVER GAVE; NAME.resphdr UNTOUCHED
+  FC2  expected rc=0  got rc=0  ok                   SAME-LENGTH response forged
+    response digest before/after: 1a73a90a39da05cd -> 4dd4900555a5b9d0
+    the ACCEPTED sidecar asserts: response-content-length-crosscheck: MATCH (468 bytes)
+    committed response now reads: {"forged":"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    the accepted sidecar's own confession: 0 line(s) containing 'MISMATCH ('
+  forge: the WIRE RECORD's tenant rewritten to 'gerege', then the sidecar re-derived from it
+  FD   expected rc=0  got rc=0  ok                   wire record's tenant rewritten
+    the ACCEPTED sidecar asserts: Fineract-Platform-TenantId: gerege
+    files the forger had to touch: probe.reqhdr, probe.http  (2 of 6)
+  forge: the WIRE RECORD's header lines REVERSED and their names UPPER-CASED, then the sidecar re-derived from it
+  FD2  expected rc=0  got rc=0  ok                   record headers reversed + upper-cased
+    the ACCEPTED sidecar's wire block now reads:
+      send-header-block 1 of 1
+      POST /fineract-provider/api/v1/offices HTTP/1.1
+      CONTENT-LENGTH: 46
+      CONTENT-TYPE: application/json
+      FINERACT-PLATFORM-TENANTID: default
+      AUTHORIZATION: Basic <redacted sha256:2614d66f727c25bb>
+      ACCEPT: */*
+      USER-AGENT: curl/8.7.1
+      HOST: localhost:8443
+      request-headers-artefact: probe.reqhdr
+  forge: sidecar DOWNGRADED to schema 1 -- `attestation-schema: 2` and every response assertion removed
+  FE   expected rc=0  got rc=0  ok                   downgrade + response withheld
+    verifier said:                VERIFIED /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283forge.lu8prJ/FE/probe.http against /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283forge.lu8prJ/FE/probe.reqhdr
+    RESPONSE LEG line printed:    1 occurrence(s)
+    the response artefacts are still on disk, unmentioned:
+      capture.log probe.http probe.json probe.req probe.req.sha256 probe.reqhdr probe.resphdr probe.status verify.err verify.out 
+
+SCORE: 10 as expected, 0 unexpected
+INSTRUMENT VERDICT: PASS -- every arm behaved as predicted.

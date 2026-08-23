@@ -1,0 +1,25 @@
+T283 -- oracle_send's behaviour when the self-check says NO
+date: 2026-08-23T00:19:55Z
+  67e4cfb78a246664b336811ff0578184fe70eed707dffd67f61464f2f81816c2  /tmp/t283rev/t274/.softhouse/capture/lib/oracle_send.sh
+
+  A   derive FAILS   -> oracle_send rc=1, capture artefacts left behind: 0
+       T283 SHIM: forced failure of `derive` (rc=1)
+       REFUSING to record probe: the sidecar could not be derived from the
+         wire trace.  The response body is NOT committed, because an
+  B   verify FAILS   -> oracle_send rc=1, capture artefacts left behind: 7
+       log probe.http probe.json probe.req probe.req.sha256 probe.reqhdr probe.resphdr probe.status 
+       derived /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283self.8eYMrt/B/probe.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.IMzhxp/trace (schema 2; 1 send-header block(s), 16 recv-header block(s))
+       T283 SHIM: forced failure of `verify` (rc=1)
+       SELF-CHECK FAILED for probe: the sidecar does not verify against the
+  C   verify ERRORS  -> oracle_send rc=1, capture artefacts left behind: 7
+       derived /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283self.8eYMrt/C/probe.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.YyhJe6/trace (schema 2; 1 send-header block(s), 16 recv-header block(s))
+       T283 SHIM: forced failure of `verify` (rc=127)
+       SELF-CHECK FAILED for probe: the sidecar does not verify against the
+  D   lib ABSENT     -> oracle_send rc=2, capture artefacts left behind: 0
+       REFUSING: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t283self.8eYMrt/libD/wire_attestation.py not found -- without it no
+         attestation can be DERIVED, and this library will not fall back to
+
+READ THIS AS: arms B and C are the finding if the residue count is nonzero --
+the capture is 'void' only in an English sentence on stderr.  A and D are the
+controls that show oracle_send CAN and DOES clean up on the path it handles.
+controls as expected: 2, unexpected: 0
