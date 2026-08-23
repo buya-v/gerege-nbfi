@@ -1,0 +1,28 @@
+--- ARM 1: BASELINE, as the tree stands. Expect REFUSED, exit 1.
+ok      ARM 1 baseline refuses                                     exit 1
+ok      ARM 1 measured 2 tenants, 0 qualify                       
+ok      ARM 1 C1 ok on gerege (HALF_UP)                           
+ok      ARM 1 C1 REFUSE on default (HALF_EVEN)                    
+ok      ARM 1 C2 ok on gerege                                     
+ok      ARM 1 C2 REFUSE on default                                
+ok      ARM 1 C3 ok on default (EMPTY)                            
+ok      ARM 1 C3 REFUSE on gerege (26 ids)                        
+ok      ARM 1 C4 ok on gerege (GL 15 EQUITY)                      
+ok      ARM 1 C4 REFUSE on default (UNMAPPED)                     
+ok      ARM 1 C5 REFUSE on both                                   
+
+--- ARM 2: unreachable database. Expect EXIT 2 -- CANNOT MEASURE, not a refusal.
+ok      ARM 2 fails CLOSED on an unreachable database              exit 2
+ok      ARM 2 says so in words                                    
+ok      ARM 2 refuses to call it a pass                           
+
+--- ARM 3: C5 WIRING. A disposability attestation is created for 'default', then removed.
+ok      ARM 3 STILL refuses (C1/C2/C4 unchanged on default)        exit 1
+ok      ARM 3 C5 FLIPPED to ok on default                         
+ok      ARM 3 default is still REFUSED overall                    
+ok      ARM 3b C5 back to REFUSE once removed                     
+
+RED-DRIVE PASS: every assertion above held. The gate refuses BY MEASUREMENT and each
+of C1-C4 was observed in BOTH states without substituting anything; C5's wiring was
+demonstrated and its authorisation removed again.
+red-drive exit 0

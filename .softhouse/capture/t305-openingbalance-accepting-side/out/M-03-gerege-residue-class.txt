@@ -7,13 +7,169 @@
 (3 rows)
 
 == B. the audit rows this program own probes have left, ACCOUNTING entities only.
+ id  |     action_name      |       entity_name        | resource_id | status | office_id |           api_get_url            |       made_on_date_utc        
+-----+----------------------+--------------------------+-------------+--------+-----------+----------------------------------+-------------------------------
+  55 | CREATE               | GLACCOUNT                |           1 |      1 |           | /glaccounts/template             | 2026-08-21 05:57:28.746886+00
+  56 | CREATE               | GLACCOUNT                |           2 |      1 |           | /glaccounts/template             | 2026-08-21 05:57:37.329272+00
+  57 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:57:48.947726+00
+  58 | CREATE               | GLACCOUNT                |           3 |      1 |           | /glaccounts/template             | 2026-08-21 05:58:00.404672+00
+  59 | CREATE               | GLACCOUNT                |           4 |      1 |           | /glaccounts/template             | 2026-08-21 05:58:08.814764+00
+  60 | CREATE               | GLACCOUNT                |           5 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:33.109859+00
+  61 | CREATE               | GLACCOUNT                |           6 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:33.228002+00
+  62 | CREATE               | GLACCOUNT                |           7 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:33.336244+00
+  63 | CREATE               | GLACCOUNT                |           8 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:33.443515+00
+  64 | CREATE               | GLACCOUNT                |           9 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:33.551067+00
+  65 | CREATE               | GLACCOUNT                |          10 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:33.661488+00
+  66 | CREATE               | GLACCOUNT                |          11 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:33.770385+00
+  67 | CREATE               | GLACCOUNT                |          12 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:33.880857+00
+  68 | CREATE               | GLACCOUNT                |          13 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:33.990854+00
+  69 | CREATE               | GLACCOUNT                |          14 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:34.100164+00
+  70 | CREATE               | GLACCOUNT                |          15 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:34.21184+00
+  71 | CREATE               | GLACCOUNT                |          16 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:34.326667+00
+  72 | CREATE               | GLACCOUNT                |          17 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:34.441539+00
+  73 | CREATE               | GLACCOUNT                |          18 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:34.559597+00
+  74 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:45.657329+00
+  75 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:45.808857+00
+  76 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:45.905308+00
+  77 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:46.003825+00
+  78 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:46.106644+00
+  79 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:46.21105+00
+  80 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:46.320898+00
+  81 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:46.42827+00
+  82 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:46.53453+00
+  83 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:46.638176+00
+  84 | CREATE               | GLACCOUNT                |          21 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:46.747161+00
+  85 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:46.847265+00
+  86 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:46.953772+00
+  87 | CREATE               | GLACCOUNT                |          22 |      1 |           | /glaccounts/template             | 2026-08-21 05:59:47.064619+00
+  88 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:47.166436+00
+  89 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 05:59:47.273153+00
+ 124 | CREATE               | FINANCIALACTIVITYACCOUNT |           1 |      1 |           | /organizationglaccounts/template | 2026-08-21 06:05:00.449498+00
+ 125 | CREATE               | FINANCIALACTIVITYACCOUNT |           2 |      1 |           | /organizationglaccounts/template | 2026-08-21 06:05:00.550781+00
+ 126 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 06:05:00.634252+00
+ 127 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 06:05:00.734459+00
+ 128 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 06:05:00.83423+00
+ 129 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 06:05:00.933411+00
+ 130 | CREATE               | FINANCIALACTIVITYACCOUNT |           4 |      1 |           | /organizationglaccounts/template | 2026-08-21 06:05:01.035809+00
+ 131 | UPDATE               | GLACCOUNT                |           1 |      5 |           | /glaccounts/1                    | 2026-08-21 06:05:33.287442+00
+ 132 | UPDATE               | GLACCOUNT                |           2 |      1 |           | /glaccounts/2                    | 2026-08-21 06:05:33.387135+00
+ 133 | UPDATE               | GLACCOUNT                |           2 |      5 |           | /glaccounts/2                    | 2026-08-21 06:05:33.484288+00
+ 134 | UPDATE               | GLACCOUNT                |           2 |      5 |           | /glaccounts/2                    | 2026-08-21 06:05:33.586867+00
+ 135 | UPDATE               | FINANCIALACTIVITYACCOUNT |           1 |      1 |           | /organizationglaccounts/1        | 2026-08-21 06:05:33.687011+00
+ 136 | DELETE               | GLACCOUNT                |           3 |      5 |           | /glaccounts/3                    | 2026-08-21 06:05:33.784322+00
+ 137 | DELETE               | GLACCOUNT                |          13 |      5 |           | /glaccounts/13                   | 2026-08-21 06:05:33.888864+00
+ 138 | DELETE               | GLACCOUNT                |           2 |      5 |           | /glaccounts/2                    | 2026-08-21 06:05:33.9928+00
+ 139 | DELETE               | GLACCOUNT                |           6 |      5 |           | /glaccounts/6                    | 2026-08-21 06:05:34.095446+00
+ 140 | DELETE               | GLACCOUNT                |          21 |      5 |           | /glaccounts/21                   | 2026-08-21 06:05:34.198857+00
+ 141 | DELETE               | GLACCOUNT                |       99999 |      5 |           | /glaccounts/99999                | 2026-08-21 06:05:34.304789+00
+ 142 | CREATE               | GLACCOUNT                |          23 |      1 |           | /glaccounts/template             | 2026-08-21 06:06:01.391893+00
+ 143 | UPDATE               | GLACCOUNT                |          23 |      1 |           | /glaccounts/23                   | 2026-08-21 06:06:05.989087+00
+ 144 | UPDATE               | GLACCOUNT                |          23 |      1 |           | /glaccounts/23                   | 2026-08-21 06:06:06.091177+00
+ 145 | DELETE               | GLACCOUNT                |          23 |      1 |           | /glaccounts/23                   | 2026-08-21 06:06:06.282138+00
+ 146 | CREATE               | GLACCOUNT                |          24 |      1 |           | /glaccounts/template             | 2026-08-21 06:06:33.621651+00
+ 147 | UPDATE               | GLACCOUNT                |          24 |      5 |           | /glaccounts/24                   | 2026-08-21 06:06:33.729548+00
+ 148 | UPDATE               | GLACCOUNT                |          24 |      5 |           | /glaccounts/24                   | 2026-08-21 06:06:33.826912+00
+ 149 | UPDATE               | GLACCOUNT                |          24 |      5 |           | /glaccounts/24                   | 2026-08-21 06:06:33.925442+00
+ 152 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:09.113283+00
+ 155 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:10.841961+00
+ 156 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:11.099084+00
+ 157 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:11.346491+00
+ 158 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:11.572422+00
+ 159 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:11.785656+00
+ 160 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:12.082475+00
+ 161 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:12.319437+00
+ 162 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:12.53552+00
+ 163 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:12.847244+00
+ 164 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:13.093337+00
+ 165 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:13.329918+00
+ 166 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:13.676516+00
+ 167 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:13.915458+00
+ 168 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 06:28:14.232362+00
+ 169 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 06:28:14.603246+00
+ 170 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 06:28:14.794575+00
+ 171 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 06:28:15.066528+00
+ 172 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 06:28:15.288838+00
+ 189 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:25.704317+00
+ 192 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:26.247283+00
+ 193 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:26.394117+00
+ 194 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:26.537478+00
+ 195 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:26.689412+00
+ 196 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:26.843847+00
+ 197 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:26.997228+00
+ 198 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:27.153443+00
+ 199 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:27.299637+00
+ 200 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:27.456668+00
+ 201 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:27.611689+00
+ 202 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:27.746547+00
+ 203 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:27.888384+00
+ 204 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:28.03984+00
+ 205 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:09:28.202778+00
+ 206 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 07:09:28.382341+00
+ 207 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 07:09:28.545529+00
+ 208 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 07:09:28.704006+00
+ 209 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 07:09:28.852458+00
+ 216 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:52.704118+00
+ 219 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:53.263517+00
+ 220 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:53.423675+00
+ 221 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:53.612825+00
+ 222 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:53.775148+00
+ 223 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:53.966153+00
+ 224 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:54.128208+00
+ 225 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:54.311922+00
+ 226 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:54.561059+00
+ 227 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:54.728462+00
+ 228 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:54.890171+00
+ 229 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:55.052521+00
+ 230 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:55.211834+00
+ 231 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:55.372494+00
+ 232 | CREATE               | GLACCOUNT                |             |      5 |           | /glaccounts/template             | 2026-08-21 07:13:55.562989+00
+ 233 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 07:13:55.735813+00
+ 234 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 07:13:55.905434+00
+ 235 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 07:13:56.072871+00
+ 236 | CREATE               | FINANCIALACTIVITYACCOUNT |             |      5 |           | /organizationglaccounts/template | 2026-08-21 07:13:56.244958+00
+ 276 | CREATE               | JOURNALENTRY             |             |      1 |         1 | /journalentries/template         | 2026-08-22 02:14:18.818172+00
+ 277 | CREATE               | JOURNALENTRY             |             |      5 |           | /journalentries/template         | 2026-08-22 02:14:19.061299+00
+ 278 | CREATE               | JOURNALENTRY             |             |      1 |         1 | /journalentries/template         | 2026-08-22 02:14:19.310572+00
+ 279 | CREATE               | JOURNALENTRY             |             |      5 |           | /journalentries/template         | 2026-08-22 02:14:19.601528+00
+ 280 | REVERSE              | JOURNALENTRY             |             |      1 |           | /journalentries/a28f54bfdaf3     | 2026-08-22 02:14:20.132789+00
+ 281 | CREATE               | JOURNALENTRY             |             |      1 |         1 | /journalentries/template         | 2026-08-22 02:16:46.821206+00
+ 282 | CREATE               | JOURNALENTRY             |             |      1 |         1 | /journalentries/template         | 2026-08-22 02:16:47.381331+00
+ 283 | CREATE               | JOURNALENTRY             |             |      1 |         1 | /journalentries/template         | 2026-08-22 02:21:17.82558+00
+ 284 | CREATE               | JOURNALENTRY             |             |      5 |           | /journalentries/template         | 2026-08-22 02:21:18.086199+00
+ 285 | CREATE               | JOURNALENTRY             |             |      1 |         1 | /journalentries/template         | 2026-08-22 02:21:18.337714+00
+ 286 | CREATE               | JOURNALENTRY             |             |      5 |           | /journalentries/template         | 2026-08-22 02:21:18.590867+00
+ 287 | REVERSE              | JOURNALENTRY             |             |      1 |           | /journalentries/a28f573f34c7     | 2026-08-22 02:21:19.111977+00
+ 290 | UPDATERUNNINGBALANCE | JOURNALENTRY             |             |      1 |           | /journalentries/update           | 2026-08-22 02:43:48.438613+00
+ 291 | CREATE               | GLACCOUNT                |          31 |      1 |           | /glaccounts/template             | 2026-08-22 02:46:24.621573+00
+ 292 | CREATE               | GLACCOUNT                |          32 |      1 |           | /glaccounts/template             | 2026-08-22 02:46:24.938616+00
+ 293 | DELETE               | GLACCOUNT                |          31 |      1 |           | /glaccounts/31                   | 2026-08-22 02:46:43.747899+00
+ 294 | DELETE               | GLACCOUNT                |          32 |      1 |           | /glaccounts/32                   | 2026-08-22 02:46:43.880315+00
+ 295 | CREATE               | GLACCOUNT                |          33 |      1 |           | /glaccounts/template             | 2026-08-22 02:46:48.586395+00
+ 296 | CREATE               | GLACCOUNT                |          34 |      1 |           | /glaccounts/template             | 2026-08-22 02:46:48.800209+00
+ 297 | CREATE               | JOURNALENTRY             |             |      1 |         1 | /journalentries/template         | 2026-08-22 02:46:49.139494+00
+ 298 | UPDATERUNNINGBALANCE | JOURNALENTRY             |             |      1 |           | /journalentries/update           | 2026-08-22 02:46:49.373615+00
+ 299 | UPDATE               | GLACCOUNT                |          33 |      1 |           | /glaccounts/33                   | 2026-08-22 02:46:49.735502+00
+ 300 | UPDATERUNNINGBALANCE | JOURNALENTRY             |             |      1 |           | /journalentries/update           | 2026-08-22 02:46:50.028549+00
+ 301 | CREATE               | JOURNALENTRY             |             |      5 |           | /journalentries/template         | 2026-08-22 02:46:50.532777+00
+ 302 | UPDATERUNNINGBALANCE | JOURNALENTRY             |             |      1 |           | /journalentries/update           | 2026-08-22 02:46:50.810279+00
+ 303 | CREATE               | JOURNALENTRY             |             |      1 |         1 | /journalentries/template         | 2026-08-22 02:47:57.858862+00
+ 304 | UPDATERUNNINGBALANCE | JOURNALENTRY             |             |      1 |           | /journalentries/update           | 2026-08-22 02:47:58.135561+00
+ 305 | REVERSE              | JOURNALENTRY             |             |      1 |           | /journalentries/a28f605fcdeb     | 2026-08-22 02:49:25.250284+00
+ 306 | UPDATERUNNINGBALANCE | JOURNALENTRY             |             |      1 |         1 | /journalentries/update           | 2026-08-22 02:49:25.537128+00
+ 307 | UPDATERUNNINGBALANCE | JOURNALENTRY             |             |      1 |           | /journalentries/update           | 2026-08-22 02:49:46.984709+00
+ 346 | CREATE               | JOURNALENTRY             |             |      5 |           | /journalentries/template         | 2026-08-23 00:11:49.907073+00
+ 347 | CREATE               | JOURNALENTRY             |             |      5 |           | /journalentries/template         | 2026-08-23 00:11:57.319871+00
+ 348 | CREATE               | GLCLOSURE                |           1 |      1 |         1 | /glclosures/template             | 2026-08-23 00:17:40.195041+00
+ 349 | CREATE               | JOURNALENTRY             |             |      5 |           | /journalentries/template         | 2026-08-23 00:17:56.689877+00
+ 350 | CREATE               | JOURNALENTRY             |             |      5 |           | /journalentries/template         | 2026-08-23 00:17:56.987839+00
+ 351 | DELETE               | GLCLOSURE                |           1 |      1 |         1 | /glclosures/1                    | 2026-08-23 00:19:28.373389+00
+ 352 | DEFINEOPENINGBALANCE | JOURNALENTRY             |             |      5 |           | /journalentries/update           | 2026-08-23 02:02:47.922269+00
+(155 rows)
+
 == C. the audit table as a whole -- how much of it is ours.
-psql:<stdin>:25: ERROR:  column "api_operation" does not exist
-LINE 1: ...ame, entity_name, resource_id, status, office_id, api_operat...
-                                                             ^
  all_audit_rows | max_audit_id | accounting_audit_rows 
 ----------------+--------------+-----------------------
-            352 |          352 |                    30
+            352 |          352 |                   155
 (1 row)
 
 == D. the ledger itself, for the before/after comparison this task does NOT need to make.

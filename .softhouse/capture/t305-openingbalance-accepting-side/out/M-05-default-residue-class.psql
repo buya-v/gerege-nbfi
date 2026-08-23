@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_default -f -
+database: fineract_default
+query-file: sql/m3-residue-class.sql
+query-bytes-artefact: M-05-default-residue-class.sql
+query-sha256: 200690d297b22c740ea671e0f038a5eb152c6230dd33b00ff7888a609e72d427
+query-bytes: 2180
+psql-exit-status: 0
+captured-at-utc: 2026-08-23T06:12:49Z

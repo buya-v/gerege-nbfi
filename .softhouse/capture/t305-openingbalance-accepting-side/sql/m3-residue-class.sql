@@ -19,15 +19,15 @@ UNION ALL
 SELECT 'm_portfolio_command_source_id_seq',  last_value, is_called FROM m_portfolio_command_source_id_seq;
 
 \echo '== B. the audit rows this program own probes have left, ACCOUNTING entities only.'
-SELECT id, action_name, entity_name, resource_id, status, office_id, api_operation, api_resource
+SELECT id, action_name, entity_name, resource_id, status, office_id, api_get_url, made_on_date_utc
   FROM m_portfolio_command_source
- WHERE entity_name IN ('JOURNALENTRY','GLCLOSURE')
+ WHERE entity_name IN ('JOURNALENTRY','GLCLOSURE','GLACCOUNT','FINANCIALACTIVITYACCOUNT')
  ORDER BY id;
 
 \echo '== C. the audit table as a whole -- how much of it is ours.'
 SELECT count(*) AS all_audit_rows,
        max(id)  AS max_audit_id,
-       count(*) FILTER (WHERE entity_name IN ('JOURNALENTRY','GLCLOSURE')) AS accounting_audit_rows
+       count(*) FILTER (WHERE entity_name IN ('JOURNALENTRY','GLCLOSURE','GLACCOUNT','FINANCIALACTIVITYACCOUNT')) AS accounting_audit_rows
   FROM m_portfolio_command_source;
 
 \echo '== D. the ledger itself, for the before/after comparison this task does NOT need to make.'
