@@ -386,6 +386,108 @@ type Request struct {
 	// predicate had something to be non-empty about.
 	PostedNonContraTransactionIDs []string `json:"posted_non_contra_transaction_ids,omitempty"`
 
+	// ---------------------------------------------------------------------
+	// THE DATE INPUTS — T289's date strategy (c), applied to the DATES it was
+	// written for. [T295]
+	// ---------------------------------------------------------------------
+	//
+	// T294 applied T289's rule to a STATE precondition. These three fields are
+	// the same rule applied to the case that produced it. T289's finding, over
+	// T287's four closure/future-date captures, was that all four are
+	// NON-PROMOTABLE AS LITERAL-DATE VECTORS: the business date and the closing
+	// date lived in PROSE, so the vector's truth depended on what day it was
+	// read, and "a vector whose truth depends on today's date is a vector that
+	// turns into a false parity claim on a specific morning with nobody
+	// watching".
+	//
+	// AND THE FAILURE IS NOT QUIET. Every one of T287's four probes is an
+	// otherwise VALID, BALANCED, POSTABLE manual journal entry on
+	// manual-permitted DETAIL accounts; the only thing refusing it is a
+	// precondition in the ORACLE. When the precondition lapses the request does
+	// not stop being interesting — IT BECOMES A SUCCESSFUL WRITE, and a posted
+	// journal entry cannot be deleted (P-92: "a probe whose safety comes from an
+	// EXTERNAL PRECONDITION rather than from its own content is a loaded
+	// weapon"). Lifting the precondition into the vector is therefore not a
+	// tidiness move: it is what lets the vector be RE-GRADED against a port
+	// forever without ever being RE-FIRED at the oracle.
+	//
+	// WHAT THE THREE FIELDS ARE, in the source's own terms
+	// [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java:626-640,
+	// pinned 426a23544, reached from :157 on the create path and from :724 on
+	// the defineOpeningBalance path]:
+	//
+	//	:628  final LocalDate transactionDate = command.getTransactionDate();
+	//	:629  if (DateUtils.isDateInTheFuture(transactionDate)) -> FUTURE_DATE
+	//	:634  final GLClosure latestGLClosure =
+	//	        this.glClosureRepository.getLatestGLClosureByBranch(command.getOfficeId());
+	//	:635  if (latestGLClosure != null) {
+	//	:636    if (!DateUtils.isBefore(latestGLClosure.getClosingDate(), transactionDate))
+	//	          -> ACCOUNTING_CLOSED
+	//
+	// TransactionDate is the request's own field. BusinessDate is what
+	// DateUtils.isDateInTheFuture reads — isAfterBusinessDate ->
+	// isAfter(date, getBusinessLocalDate()) [DateUtils.java:258-264] — and it is
+	// TENANT AMBIENT STATE, not a request field. LatestClosingDate is what :634
+	// reads, and it is TENANT AMBIENT STATE too. Both are here so that a port is
+	// graded on the PREDICATE and never on a clock.
+	//
+	// ALL THREE ARE STRICT `yyyy-MM-dd`, admit.go enforces it with a
+	// time.Parse round-trip, and NOTHING HERE IS A TIMESTAMP OR AN OFFSET.
+	// CLAUDE.md's non-negotiable is two zones and no DST; a date that carried an
+	// offset would be inviting one to be hard-coded. The zone is where the
+	// business date was DERIVED (Asia/Ulaanbaatar, recorded in the citation),
+	// not something this schema stores.
+
+	// TransactionDate is the entry date the caller asked for — `transactionDate`
+	// on the wire, `command.getTransactionDate()` at :628.
+	//
+	// It is the SUBJECT of both date rules. A vector that carries either
+	// precondition without carrying this has recorded a boundary with nothing on
+	// either side of it, and admit.go refuses that pairing in both directions.
+	TransactionDate string `json:"transaction_date,omitempty"`
+
+	// BusinessDate is the oracle's business date AT THE MOMENT OF CAPTURE, made
+	// an input.
+	//
+	// EMPTY MEANS "THIS VECTOR ASSERTS NOTHING ABOUT THE FUTURE-DATE RULE", and
+	// the reference implementation then SKIPS that rule rather than reading a
+	// clock. That is deliberate and it is the whole point: a port that fell back
+	// to time.Now() would re-introduce exactly the ambient dependence T289
+	// rejected, and a harness that let it would be grading the calendar. Every
+	// vector predating T295 leaves it empty, and admit.go requires a vector
+	// EXPECTING the future-date refusal to carry it, so the rule cannot be
+	// claimed without the input that decides it.
+	//
+	// ON THIS TENANT IT IS DERIVED, NOT PINNED, AND THE CITATION SAYS SO:
+	// `enable-business-date` is `f` and `m_business_date` is empty, so
+	// BusinessDateReadPlatformServiceImpl seeds BUSINESS_DATE with
+	// DateUtils.getLocalDateOfTenant() — today in the TENANT zone. That is
+	// precisely why it must be transcribed into the vector: a derived value is
+	// one that MOVES.
+	BusinessDate string `json:"business_date,omitempty"`
+
+	// LatestClosingDate is getLatestGLClosureByBranch(officeId).getClosingDate()
+	// at the moment of capture — the ACCOUNTING_CLOSED precondition, made an
+	// input.
+	//
+	// EMPTY MEANS "NO GLClosure EXISTS AT THIS OFFICE", which is the oracle's own
+	// `latestGLClosure != null` branch at :635 and not a P-46 conflation: the
+	// oracle has exactly two states here, a closure exists or it does not, and
+	// the repository returns null for the second. There is no third "closure
+	// exists with an unknown date" state to lose.
+	//
+	// THE COMPARISON IT FEEDS IS INCLUSIVE AND THE ORACLE'S OWN MESSAGE SAYS
+	// OTHERWISE. :636 is `!DateUtils.isBefore(closingDate, transactionDate)`,
+	// and DateUtils.isBefore(first, second) is `first.isBefore(second)` for two
+	// non-null dates [DateUtils.java:296-298], so the guard refuses whenever
+	// `transactionDate <= closingDate` — an entry dated ON the closing date is
+	// REFUSED. The wire message is "Journal entry cannot be made PRIOR TO last
+	// account closing date for the branch". A port written from the message text
+	// gets a strict `<` and FAILS OPEN on exactly the day a period-end
+	// adjustment carries. LDG-REFUSE-04 is the vector that kills that port, and
+	// `ledger-wrong-closure-boundary-exclusive` is that port, executable.
+	LatestClosingDate string `json:"latest_closing_date,omitempty"`
+
 	// TransactionAmountMajorText is the amount THE CALLER ASKED FOR, in the
 	// caller's own characters, taken from the recorded request body. Empty where
 	// the request carried no single total.
