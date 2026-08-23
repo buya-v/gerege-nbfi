@@ -77,3 +77,19 @@ PROP-D  ERROR vs MEASURED NEGATIVE, and the six repairs T291 measured
   ok  ERR  invalid utf-8 bytes                                       rc=2        probe=ABSENT
   ok  ERR  recursion bomb (3000 brackets)                            rc=2        probe=ABSENT
   ok  NEG  degenerate null               -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate empty-array        -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate empty-object       -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate bare-int           -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate bare-string        -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate bare-true          -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate list-of-scalars    -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate list-of-nulls      -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  PYTHONOPTIMIZE=2 still refuses X2                              rc=1
+  ok  BATCH header-first                                             rc=1 nilFiles=1
+  ok  BATCH evidence-first                                           rc=1 nilFiles=1
+
+================================================================================================
+T292 ADVERSARY: 82 passed, 0 failed, 0 SKIPPED   over 1025 documents
+LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+EXIT 0   (non-zero on ANY failure, ANY skip, or ANY lost refusal)
+EXIT=0

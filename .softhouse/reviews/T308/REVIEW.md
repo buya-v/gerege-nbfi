@@ -463,6 +463,31 @@ found its own five, and is the most transferable thing in either report.
 
 ---
 
+### 7b. T292's headline invariance claim REPRODUCES, and I extended it
+
+I re-ran T292's **unmodified** adversary myself, at the default `--seeds 40` rather than the `12`
+its committed transcript used (`out/adversary-t292.txt` line 5: *"rng seed 292, **12** container
+mutations per seed doc, up to depth 6"* → 25 bases + 25×12 = **325 documents**, exactly as
+claimed — the figure is honest):
+
+```
+T292 ADVERSARY: 82 passed, 0 failed, 0 SKIPPED   over 1025 documents
+LOST REFUSALS: 0
+EXIT 0
+```
+
+[VERIFIED: `out/t308-adversary-rerun.txt`, run by me, `--seeds 40`, 25 bases + 25×40 = 1025.]
+**PROP-A container invariance holds over three times as many generated rewritings as T292
+measured, with no failing leg and nothing skipped.** The `LOST REFUSALS: 0` on that line is the
+tautology of §4 and carries no information; the `82 passed, 0 failed, **0 SKIPPED**` does, and it
+is the number T286 could not honestly quote (P-91's corollary: *"the battery returns exit 0 with
+legs SKIPPED … A test rig is inside the trust boundary of the thing it grades; check that it
+cannot pass vacuously before quoting its counts"*). T292's rig **cannot** pass vacuously — `rc = 1
+if (L.failed or L.skipped or lost_refusals)` — and I confirmed the skip count is zero on my own
+run, not on T292's.
+
+---
+
 ## 8. WHAT I CHECKED AND FOUND CLEAN
 
 So that silence is distinguishable from not looking:
