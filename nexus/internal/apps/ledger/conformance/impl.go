@@ -180,6 +180,53 @@ func CorrectImplementationNames() []string {
 }
 
 // ---------------------------------------------------------------------------
+// THE TWO DATE REFUSALS OF validateBusinessRulesForJournalEntries [T295]
+// ---------------------------------------------------------------------------
+//
+// The globalisation codes and message texts below are the ORACLE'S OWN WIRE
+// BYTES, transcribed from the captured response bodies in
+// .softhouse/capture/t287-closure-refusals/out/ (A1-02 and A2-01 respectively,
+// errors[0].userMessageGlobalisationCode and errors[0].defaultUserMessage, which
+// are byte-identical to developerMessage on both errors).
+//
+// THEY ARE NAMED CONSTANTS RATHER THAN INLINE LITERALS FOR ONE REASON: admit.go
+// keys an ADMISSIBILITY rule on them — a vector expecting the future-date
+// refusal must carry the business date, one expecting the closure refusal must
+// carry the closing date, and the RELATION each asserts must be the one the
+// source says produces that refusal. Two files agreeing on a string only because
+// somebody typed it twice is how the two drift apart.
+const (
+	codeFutureDate = "error.msg.glJournalEntry.invalid.future.date"
+	msgFutureDate  = "The journal entry cannot be made for a future date"
+
+	codeAccountingClosed = "error.msg.glJournalEntry.invalid.accounting.closed"
+	msgAccountingClosed  = "Journal entry cannot be made prior to last account closing date for the branch"
+)
+
+// isoBefore and isoAfter order two STRICT `yyyy-MM-dd` calendar dates.
+//
+// PLAIN STRING COMPARISON IS THE CORRECT COMPARISON HERE, and it is worth one
+// paragraph rather than a reader's doubt. For zero-padded, fixed-width ISO-8601
+// dates, lexicographic order IS chronological order: the fields run
+// most-significant first and each has a fixed digit count, so a byte-wise
+// comparison decides the year, then the month, then the day, in that order.
+// admit.go enforces the strictness with a time.Parse round-trip
+// (`2006-01-02` -> Format -> must equal the input), so a two-digit year or an
+// unpadded month cannot reach this function from the store.
+//
+// WHY NOT time.Parse HERE. Because parsing returns an error, and an error on
+// this path would have to become either a harness error or a silent false —
+// one turns a comparison into a crash and the other turns it into a skipped
+// rule. The format is a STORE-ADMISSIBILITY concern and it is enforced where
+// admissibility is enforced.
+//
+// NO OFFSET, NO ZONE, NO TIMESTAMP. CLAUDE.md's non-negotiable is two zones and
+// no DST, and the way that rule gets broken is a comparison that quietly needs
+// an offset. These are calendar dates and nothing here has a time of day.
+func isoBefore(a, b string) bool { return a < b }
+func isoAfter(a, b string) bool  { return a > b }
+
+// ---------------------------------------------------------------------------
 // The reference implementation
 // ---------------------------------------------------------------------------
 
@@ -284,6 +331,70 @@ func (GoPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 			HTTPStatus: 403,
 			Code:       "error.msg.journalentry.defining.openingbalance.not.allowed",
 			Message:    "Defining Opening balances not allowed after journal entries posted",
+		}, nil
+	}
+
+	// STEP 1.6 — THE FUTURE-DATE RULE. [T295]
+	//
+	// :629 `if (DateUtils.isDateInTheFuture(transactionDate))` ->
+	// isAfterBusinessDate -> `isAfter(transactionDate, getBusinessLocalDate())`
+	// [DateUtils.java:258-264]. STRICT: an entry dated ON the business date is
+	// NOT future-dated and this rule does not fire on it.
+	//
+	// OBSERVED: A1-02 posted transactionDate 2026-08-24 against business date
+	// 2026-08-23 and the oracle returned HTTP 403
+	// error.msg.glJournalEntry.invalid.future.date. Promoted as LDG-REFUSE-05.
+	//
+	// THE BUSINESS DATE IS AN INPUT AND THIS FUNCTION READS NO CLOCK. An empty
+	// BusinessDate means the vector asserts nothing about this rule and the rule
+	// is SKIPPED — never "default to today", which would make the harness's
+	// answer depend on the morning it ran, which is the exact defect T289 found
+	// in T287's captures.
+	if req.BusinessDate != "" && req.TransactionDate != "" &&
+		isoAfter(req.TransactionDate, req.BusinessDate) {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       codeFutureDate,
+			Message:    msgFutureDate,
+		}, nil
+	}
+
+	// STEP 1.7 — THE ACCOUNTING-CLOSURE RULE, AND ITS BOUNDARY IS INCLUSIVE.
+	// [T295]
+	//
+	// :634-639:
+	//	final GLClosure latestGLClosure = getLatestGLClosureByBranch(officeId);
+	//	if (latestGLClosure != null) {
+	//	    if (!DateUtils.isBefore(latestGLClosure.getClosingDate(), transactionDate)) {
+	//	        throw ... ACCOUNTING_CLOSED
+	//
+	// `DateUtils.isBefore(first, second)` is `first.isBefore(second)` for two
+	// non-null LocalDates [DateUtils.java:296-298], so the negation refuses
+	// whenever `closingDate >= transactionDate`, i.e. `transactionDate <=
+	// closingDate`. AN ENTRY DATED **ON** THE CLOSING DATE IS REFUSED.
+	//
+	// THE WIRE MESSAGE DISAGREES WITH THE CODE AND THE CODE IS WHAT RUNS:
+	// "Journal entry cannot be made PRIOR TO last account closing date for the
+	// branch". A port written from that sentence gets `transactionDate <
+	// closingDate` and ACCEPTS an entry dated on the closing date — which is
+	// exactly the day a period-end adjustment carries. That port is registered
+	// as `ledger-wrong-closure-boundary-exclusive` and LDG-REFUSE-04 kills it.
+	//
+	// OBSERVED: A2-01 posted transactionDate 2026-01-31 while the office's
+	// latest GLClosure closed 2026-01-31 — the two EQUAL — and the oracle
+	// returned HTTP 403 error.msg.glJournalEntry.invalid.accounting.closed. The
+	// equal case is the only one that separates the two readings, and it is the
+	// one that was captured.
+	//
+	// EMPTY LatestClosingDate IS THE ORACLE'S `latestGLClosure == null` BRANCH
+	// (:635), not a missing input: the repository returns null when the office
+	// has no closure, and this port then refuses nothing, exactly as :635 does.
+	if req.LatestClosingDate != "" && req.TransactionDate != "" &&
+		!isoBefore(req.LatestClosingDate, req.TransactionDate) {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       codeAccountingClosed,
+			Message:    msgAccountingClosed,
 		}, nil
 	}
 
@@ -455,6 +566,86 @@ func (openingBalanceUncheckedPoster) PostEntry(req Request) (PostedEntry, *Refus
 	return GoPoster{}.PostEntry(r)
 }
 
+// futureDateIgnoringPoster never checks whether the entry is dated after the
+// business date.
+//
+// THE DEFECT: `transactionDate` arrives in the request body and looks like the
+// caller's business, so a port validates its FORMAT and posts it. The rule that
+// makes a future date refusable is one line
+// (:629 `if (DateUtils.isDateInTheFuture(transactionDate))`) that consults
+// TENANT AMBIENT STATE — the business date — which appears nowhere in the
+// payload and nowhere in the API documentation for this endpoint. It is the same
+// shape as the flag manualPermissionIgnoringPoster drops and the query
+// openingBalanceUncheckedPoster drops: a rule that lives outside the request.
+//
+// AND IT IS THE ONE A BACKDATING FEATURE INVITES. A port that supports
+// backdated entries has already decided that `transactionDate` may differ from
+// today; dropping the other half of that decision — that it may differ only
+// DOWNWARD — is a single missing comparison, and it lets a caller post into a
+// period that has not happened.
+//
+// HOW IT IS EXPRESSED: by clearing the input the rule reads, which is the
+// established shape in this file (manualPermissionIgnoringPoster clears
+// ManualEntry, openingBalanceUncheckedPoster clears the transaction-id list).
+// The port then reaches STEP 1.6 with nothing to compare against and posts.
+//
+// WHY IT IS NOT A DUPLICATE: it passes all four parity vectors, both
+// pre-T294 refusal vectors, LDG-REFUSE-03 and LDG-REFUSE-04 — LDG-REFUSE-04's
+// transaction date is 2026-01-31 against a business date of 2026-08-23, so it is
+// not future-dated and clearing the business date changes nothing there — and it
+// dies on LDG-REFUSE-05 alone, on all three refusal cells, because A1-02's body
+// is otherwise perfectly postable and this port posts it.
+type futureDateIgnoringPoster struct{}
+
+func (futureDateIgnoringPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	r := req
+	r.BusinessDate = ""
+	return GoPoster{}.PostEntry(r)
+}
+
+// closureBoundaryExclusivePoster reads the oracle's own error message and
+// implements the boundary the message describes: STRICTLY `prior to`.
+//
+// THE DEFECT, AND IT IS THE MONEY-PATH FINDING OF THIS WHOLE ARM. The wire
+// message is "Journal entry cannot be made PRIOR TO last account closing date
+// for the branch". The code is
+// `!DateUtils.isBefore(latestGLClosure.getClosingDate(), transactionDate)`
+// (:636), which refuses `transactionDate <= closingDate` — INCLUSIVE. The
+// message and the code disagree about ONE DAY, and the day they disagree about
+// is THE CLOSING DATE ITSELF, which is precisely the day a period-end adjustment
+// carries. A port written from the message text FAILS OPEN there: it accepts a
+// journal entry into a period the reference oracle had sealed, the two systems
+// diverge on a transaction that a shadow-parity run would show one side
+// accepting and the other refusing, and the divergence appears on month-end and
+// not before.
+//
+// THIS IS NOT A HYPOTHETICAL READING OF THE MESSAGE. It is the reading the
+// message's plain English gives, in a codebase where the message is the only
+// documentation of the rule most porters will ever read.
+//
+// HOW IT IS EXPRESSED: the port's OWN predicate is the strict one, and where its
+// predicate says "accept" it hands GoPoster a request with no closure at all, so
+// GoPoster's inclusive comparison has nothing to fire on. The decision that
+// differs is therefore this port's decision, made here, in one line.
+//
+// WHY IT IS NOT A DUPLICATE: it agrees with the reference implementation on
+// every vector where the transaction date is strictly before the closing date —
+// which is every pre-closure request a naive corpus would think to capture — and
+// it dies on LDG-REFUSE-04 alone, the one capture taken ON the boundary.
+type closureBoundaryExclusivePoster struct{}
+
+func (closureBoundaryExclusivePoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	r := req
+	if r.LatestClosingDate != "" && r.TransactionDate != "" &&
+		!isoBefore(r.TransactionDate, r.LatestClosingDate) {
+		// This port's rule says ACCEPT: the entry is not "prior to" the closing
+		// date. Clearing the closure is how that decision reaches the shared
+		// posting path.
+		r.LatestClosingDate = ""
+	}
+	return GoPoster{}.PostEntry(r)
+}
+
 // nettingPoster sums every leg into one accumulator, treating a credit as a
 // negative debit, and then reports totals from it.
 //
@@ -553,6 +744,19 @@ func init() {
 			"answers a defineOpeningBalance command the oracle refused with HTTP 403 "+
 			"error.msg.journalentry.defining.openingbalance.not.allowed (T294, OB-01)",
 		openingBalanceUncheckedPoster{})
+	RegisterWrong("ledger-wrong-future-date-ignored",
+		"never compares the entry's transaction date with the tenant's BUSINESS DATE, so it posts a "+
+			"future-dated entry the oracle refused with HTTP 403 "+
+			"error.msg.glJournalEntry.invalid.future.date (:629, DateUtils.isDateInTheFuture). The "+
+			"business date is tenant ambient state and appears nowhere in the request body (T295, A1-02)",
+		futureDateIgnoringPoster{})
+	RegisterWrong("ledger-wrong-closure-boundary-exclusive",
+		"implements the accounting-closure boundary as the oracle's own message text describes it "+
+			"-- STRICTLY 'prior to' the closing date -- where :636 is "+
+			"!DateUtils.isBefore(closingDate, transactionDate) and refuses transactionDate <= "+
+			"closingDate INCLUSIVE. It therefore FAILS OPEN on an entry dated ON the closing date, "+
+			"which is the day a period-end adjustment carries (T295, A2-01)",
+		closureBoundaryExclusivePoster{})
 	RegisterWrong("ledger-wrong-netting-totals",
 		"nets credits against debits into one accumulator, so I-1 holds by construction and both totals "+
 			"report the netted figure",

@@ -1,0 +1,104 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-REFUSE-05-future-dated-entry-one-day-after-business-date",
+  "context": "ledger",
+  "class": "oracle-refusal",
+  "title": "THE ORACLE REFUSES A JOURNAL ENTRY DATED AFTER THE TENANT'S BUSINESS DATE, AND ONE DAY IS ENOUGH. A1-02 posted a balanced manual journal entry dated 2026-08-24 -- the business date PLUS ONE DAY -- to office 1, and the oracle returned HTTP 403 with error.msg.glJournalEntry.invalid.future.date. The guard is JournalEntryWritePlatformServiceJpaRepositoryImpl.java:629, `DateUtils.isDateInTheFuture(transactionDate)`, which is isAfterBusinessDate -> isAfter(transactionDate, getBusinessLocalDate()) [DateUtils.java:258-264]. The business date appears NOWHERE in the request body and nowhere in the endpoint's documentation: it is tenant ambient state, and a port can be complete against the API and still have this rule missing.",
+  "dec2_revision": 5,
+  "_note": "WHAT THIS VECTOR GRADES: that the port compares the entry's transaction date against the tenant's BUSINESS DATE at all. `ledger-wrong-future-date-ignored` is the port that does not, registered and executable, and it dies here and nowhere else. THE PRECONDITION IS AN INPUT, NOT A CLOCK, and that is T289's date strategy (c) discharged for the case it was written for: request.business_date carries the business date the oracle held at capture, so this vector asserts a RELATION (transaction_date one day after business_date) rather than the literal 2026-08-24, and the reference implementation READS NO CLOCK -- with no business_date it SKIPS the rule rather than defaulting to today. That matters more here than on any other vector in this corpus: T289 measured that A1-02 'LAPSES TOMORROW', on 2026-08-24, and a vector whose truth expires overnight with nobody watching is the exact defect being closed. WHICH BOUNDARY THIS PINS, AND WHICH IT DOES NOT. It pins that businessDate + 1 IS REFUSED, which kills any port whose future-date tolerance is one day or more. It does NOT pin that the comparison is STRICT -- a port using `transactionDate >= businessDate` also refuses this request and survives. Settling that needs an entry dated ON the business date, whose expected answer is HTTP 200, and capturing an ACCEPTANCE means POSTING A JOURNAL ENTRY THAT CANNOT BE DELETED. T295 did not fire it; it is filed as backlog item B-2 in T295-ADJUDICATION.md with its exact request body. THE ORDERING OF THIS RULE AGAINST THE OTHERS IS SOURCE-DERIVED, NOT OBSERVED, and it is stated rather than left to be assumed: A1-02's body is BALANCED, both legs are on manual-permitted DETAIL accounts, and acc_gl_closure was EMPTY at capture (out/M-04 and out/M-05 are identical either side of arm 1: closure_rows 0, je_rows 60), so no captured request violates the future-date rule AND another rule. The source is unambiguous -- :629 is the FIRST statement in validateBusinessRulesForJournalEntries after the date is read, before :636, before checkDebitAndCreditAmounts at :650, and before saveAllDebitOrCreditEntries -- but that is source, not wire. Contrast LDG-REFUSE-03, whose ordering IS observed. request.latest_closing_date is ABSENT ON PURPOSE and it is not a gap: it encodes the oracle's own `latestGLClosure == null` branch at :635, and it was MEASURED (M-04/M-05, and T287's pre-mutation census 'acc_gl_closure was EMPTY (0 rows)'), not assumed. errors[0].args is NOT graded; it carries \"2026-08-24\", which on THIS refusal is the submitted transaction date (:631 constructs the exception with transactionDate) and NOT the closing date the sibling refusal echoes -- an asymmetry recorded in T287 §1 item 4 and re-measured by T295, and one the three-cell Refusal shape has no slot for. NO LEGS AND NO TOTALS ARE ASSERTED -- the request was refused, so no entry exists and no amount was observed; the two amount_major_text tokens are the CALLER'S OWN characters from the committed .req wire bytes (the integer token `1000000`, no decimal point, denoting MNT 1,000,000.00 = 100000000 minor units) and are graded by nothing. NO BALANCE IS GRADED. acc_gl_journal_entry carries office_running_balance and organization_running_balance and GATE G-12 IS OPEN on exactly them: A2-29 MEASURED them to be a SECOND SOURCE OF TRUTH rather than a cache -- made to disagree with the derived sum by MNT 2,000,000.00 on the live oracle, surviving four organisation-wide recomputes, propagating into a freshly computed row because the recompute seeds from its own prior output, and served at the contract boundary flagged runningBalanceComputed: true. This vector's schema has NO FIELD for either column. Balances are DERIVED, never written, and never read back.",
+  "capabilities_required": [
+    "ledger.refusal.parity",
+    "ledger.opening.balance.and.closure"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/t287-closure-refusals/out/A1-02-future-boundary-plus1.json",
+    "capture_sha256": "dacfce8688080d3e4796de4286278e3ed779095cf90f0ec666d701d43a8618f7",
+    "capture_case_id": "A1-02-future-boundary-plus1",
+    "request_capture_ref": ".softhouse/capture/t287-closure-refusals/out/A1-02-future-boundary-plus1.req",
+    "request_capture_sha256": "7f92fefc2deb96b4de85ce8738d2422be562e809872d45ef768c2a1f1e63f928",
+    "request_capture_case_id": "A1-02-future-boundary-plus1",
+    "rerun_invariant": "THIS VECTOR IS GRADED BY REPLAY AGAINST A PORT AND MUST NEVER BE RE-FIRED AT THE ORACLE. READ THAT SENTENCE BEFORE THE REST. A1-02's body is a VALID, BALANCED, POSTABLE manual journal entry: GL 4 and GL 2 are both manual_journal_entries_allowed = t, disabled = f, account_usage = 1 (DETAIL), and debits equal credits. THE ONLY THING THAT REFUSED IT IS THE CALENDAR, and the calendar moves on its own. T289 measured this probe as 'LAPSES TOMORROW' -- 2026-08-24 -- and on that morning re-sending this body POSTS TWO JOURNAL ENTRIES INTO THE REFERENCE ORACLE with nobody having changed anything. A POSTED JOURNAL ENTRY CANNOT BE DELETED; the only 'undo' is posting more entries. .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh measures this precondition and fails closed. THE RELATION THIS VECTOR ASSERTS, which is what a port is graded on and what no calendar can falsify: given a tenant whose business date is request.business_date and a manual journal entry dated request.transaction_date with transaction_date STRICTLY AFTER business_date, the answer is HTTP 403 error.msg.glJournalEntry.invalid.future.date. The literal dates 2026-08-24 and 2026-08-23 are the observation that established the relation; the RELATION is the claim. WHAT WOULD MAKE THIS VECTOR FALSE: a change to :629 or to DateUtils.isAfterBusinessDate, or a change to the message/globalisation code at GlJournalEntryInvalidReason.FUTURE_DATE. All are oracle-source changes, found by re-reading the pinned commit, NOT by re-posting. A tenant that PINS its business date (enable-business-date = t with an m_business_date row) does not falsify this vector either -- it changes which literal dates satisfy the relation, and the relation is what is stored. THE ANSWER TO A GENUINE FALSIFICATION IS RE-CAPTURE, NOT EXEMPTION: this schema admits no invariant_exemptions at all. AND NOTE WHAT THIS BODY DOES NOT HAVE, because LDG-REFUSE-03 has it and this one does not: OB-01 was unbalanced by one minor unit and was therefore unpostable ON ITS OWN CONTENT, permanently and state-independently. A1-02 is balanced. Its safety comes ENTIRELY from an external precondition with an expiry date on it, which is P-92's loaded weapon exactly -- 'a probe whose safety comes from an EXTERNAL PRECONDITION rather than from its own content is a loaded weapon, and the danger is highest immediately after the capture SUCCEEDS'. That is why the bytes were promoted and the probe was not re-run.",
+    "citation": "T295, promoting T287's capture under T289's rule. HTTP status 403 read from out/A1-02-future-boundary-plus1.status; code and message read from errors[0] of the captured response body (userMessageGlobalisationCode and defaultUserMessage, byte-identical to developerMessage on this error). request.legs' amount tokens, office_id and transaction_date read from the committed .req wire-bytes artefact. request.business_date 2026-08-23 is DERIVED, not read from an endpoint, and that is recorded because a derived value MOVES: `enable-business-date` is `f` and `m_business_date` is empty (out/M-07-businessdate-list.json is `[]`, out/M-06-businessdate-BUSINESS_DATE.json is 404 error.msg.businessdate.not.found, out/M-03-businessdates.json is 404 on the plural path), so BusinessDateReadPlatformServiceImpl seeds BUSINESS_DATE with DateUtils.getLocalDateOfTenant() -- today in Asia/Ulaanbaatar (+08, no DST; the ZONE is named, an offset is never hard-coded). The DB's own now() read 2026-08-23 00:09:58+00 = 08:09 on 2026-08-23 in Ulaanbaatar, and the capture was taken at 2026-08-23T00:11:57Z = 08:11 the same day. The ABSENCE of request.latest_closing_date is measured, not assumed: out/M-04-writecheck-before-arm1.txt and out/M-05-writecheck-after-arm1.txt are identical and both read closure_rows 0, je_rows 60, je_max_id 64 -- so no GLClosure existed at office 1 when this probe was taken, and the probe wrote nothing. The chart rows in request.accounts are DATA (DEC-2 §4.5), recorded twice independently: T287's handoff §2 (\"Debit GL 4 (10201 Loan Portfolio), credit GL 2 (10100 Fund Source) -- both manual-allowed, enabled, detail accounts\") and T289-CORRECTIONS.md §1 (\"GL 4 and GL 2 on tenant gerege are both manual_journal_entries_allowed = t, disabled = f, account_usage = 1 (DETAIL)\"). MANIFEST.sha256 over the rig verifies 87/87 unchanged, re-checked by T295 before transcription."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_rest_posting",
+    "captured_at": "2026-08-23T00:11:57Z"
+  },
+  "request": {
+    "product_id": 0,
+    "product_type": "",
+    "accounting_rule": "",
+    "slot_family": "",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_rest_posting",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "",
+    "manual_entry": true,
+    "transaction_date": "2026-08-24",
+    "business_date": "2026-08-23",
+    "transaction_amount_major_text": "",
+    "accounts": [
+      {
+        "id": 4,
+        "gl_code": "10201",
+        "name": "Loan Portfolio",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 2,
+        "gl_code": "10100",
+        "name": "Fund Source",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 4,
+        "entry_side": "DEBIT",
+        "amount_major_text": "1000000"
+      },
+      {
+        "gl_account_id": 2,
+        "entry_side": "CREDIT",
+        "amount_major_text": "1000000"
+      }
+    ]
+  },
+  "expect": {
+    "kind": "refusal",
+    "http_status": 403,
+    "legs": [],
+    "total_debits_minor": "",
+    "total_credits_minor": "",
+    "refusal": {
+      "http_status": 403,
+      "code": "error.msg.glJournalEntry.invalid.future.date",
+      "message": "The journal entry cannot be made for a future date"
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "ledger-wrong-future-date-ignored",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "refusal.http_status",
+        "refusal.code",
+        "refusal.message"
+      ],
+      "note": "A port that validates transactionDate's FORMAT and never compares it with the tenant's business date posts this entry. All three refusal cells diverge, because the implementation returned a posted entry where an oracle refusal was expected, and that is the maximal kill available: A1-02's body is balanced, both legs are on manual-permitted accounts and no closure existed, so nothing else in the port refuses it either. This is the rule a BACKDATING feature invites a port to half-implement -- having decided transactionDate may differ from today, dropping the constraint that it may differ only DOWNWARD is one missing comparison."
+    }
+  ],
+  "invariant_exemptions": []
+}

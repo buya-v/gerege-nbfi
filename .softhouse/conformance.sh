@@ -539,7 +539,20 @@ EXEMPTION_PIN_LEDGER_DECLARED=0
 #   LEDGER_REFUSAL  = 2 -- LDG-REFUSE-01 (unbalanced by one minor unit) and
 #                          LDG-REFUSE-02 (manual adjustments not permitted), and
 #                          LDG-REFUSE-03 (defining opening balances after journal
-#                          entries have been posted) [T294: 2 -> 3].
+#                          entries have been posted) [T294: 2 -> 3], and
+#                          LDG-REFUSE-04 (entry dated ON the latest closing date
+#                          -- the INCLUSIVE boundary at :636, which the oracle's
+#                          own "prior to" message contradicts) and LDG-REFUSE-05
+#                          (entry dated one day after the business date, :629)
+#                          [T295: 3 -> 5]. Both are PROMOTIONS OF T287's BYTES
+#                          under T289's rule, with the business date and the
+#                          closing date lifted out of prose and into the vector's
+#                          inputs. NEITHER PROBE WAS RE-FIRED and neither may be:
+#                          both bodies are valid, balanced, postable journal
+#                          entries whose only defect is an ORACLE-SIDE
+#                          precondition, and both preconditions have lapsed or
+#                          lapse imminently -- guard-probe-expiry.sh in the rig
+#                          exits 1 today.
 #   LEDGER_MONEYCELLS = 21 -- the count of MONEY cells compared in int64 minor
 #                          units. It is pinned SEPARATELY from the cell total
 #                          because DEC-2 §5.5 warns that "a ledger corpus whose
@@ -561,8 +574,20 @@ EXEMPTION_PIN_LEDGER_DECLARED=0
 #                          If this number ever rises on a refusal vector, the
 #                          comparator has started grading an amount nobody
 #                          observed and THAT is the defect, not this pin.
+#                          T295 ADDED TWO MORE REFUSAL VECTORS AND THIS FIGURE
+#                          STILL DID NOT MOVE, for the same reason, argued in
+#                          place rather than bumped for appearance: LDG-REFUSE-04
+#                          and -05 both have expect.legs [] and both totals "",
+#                          so grade.go routes them through diffRefusal and
+#                          cmpMoney is unreachable on that path. The brief for
+#                          T295 said to bump this pin if anything was promoted;
+#                          bumping it would have recorded money cells that no
+#                          comparison performs, which is the self-certifying
+#                          shape this whole census exists to refuse. The pin is
+#                          held at 21 and MEASURED at 21 on the run that promoted
+#                          them.
 EXEMPTION_PIN_LEDGER_PARITY=4
-EXEMPTION_PIN_LEDGER_REFUSAL=3
+EXEMPTION_PIN_LEDGER_REFUSAL=5
 EXEMPTION_PIN_LEDGER_MONEYCELLS=21
 
 # Scratch paths are script-global, not function-local: an EXIT trap fires after the
@@ -2151,7 +2176,27 @@ gate_exemption_census() {
 # ledger-wrong-manual-permission-ignored it passes all four parity vectors and
 # dies on an ORACLE-REFUSAL vector alone (LDG-REFUSE-03), which is why this gate
 # asserts the SUM of the two ledger FAIL counts and not the parity count.
-EXEMPTION_PIN_LEDGER_WRONGIMPLS=7
+#
+# [T295: 7 -> 9.] Two more join, and both are members of that same family —
+# they pass all four parity vectors and die on an ORACLE-REFUSAL vector alone:
+#
+#   ledger-wrong-future-date-ignored          dies on LDG-REFUSE-05 alone.
+#     Never compares the transaction date with the tenant's BUSINESS DATE (:629,
+#     DateUtils.isDateInTheFuture -> isAfterBusinessDate). The business date is
+#     tenant ambient state and appears nowhere in the request body, so a port can
+#     be complete against the API documentation and still have the rule missing.
+#
+#   ledger-wrong-closure-boundary-exclusive   dies on LDG-REFUSE-04 alone.
+#     THIS IS THE MONEY-PATH ONE. It implements the accounting-closure boundary
+#     the way the oracle's OWN ERROR MESSAGE describes it — strictly "prior to"
+#     the closing date — where :636 is !DateUtils.isBefore(closingDate,
+#     transactionDate) and refuses transactionDate <= closingDate, INCLUSIVE. The
+#     message and the code disagree about exactly one day, and that day is THE
+#     CLOSING DATE ITSELF, which is the day a period-end adjustment carries. It
+#     agrees with the correct port on every entry dated strictly before the
+#     closing date, so only a capture taken ON the boundary kills it — and
+#     LDG-REFUSE-04 is that capture.
+EXEMPTION_PIN_LEDGER_WRONGIMPLS=9
 
 gate_wrong_ledger_impls_die() {
   local bin="$1" probe="$2"

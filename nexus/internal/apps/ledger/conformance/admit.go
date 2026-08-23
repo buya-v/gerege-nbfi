@@ -8,7 +8,32 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 )
+
+// isoDateLayout is the ONE date spelling this schema accepts, and it is the
+// oracle's own `dateFormat` on every captured request body: "yyyy-MM-dd".
+//
+// It is used ONLY for validation, never for arithmetic. The comparator orders
+// dates byte-wise (see isoBefore/isoAfter in impl.go); this constant is what
+// makes that ordering sound, by refusing anything that is not zero-padded and
+// fixed-width. The round trip -- Parse then Format then compare to the input --
+// is deliberate: time.Parse alone accepts "2026-1-5" for this layout and would
+// admit a string that compares wrong.
+//
+// NO ZONE AND NO OFFSET APPEARS HERE. CLAUDE.md: two time zones, no DST, never
+// hard-code an offset. These are calendar dates.
+const isoDateLayout = "2006-01-02"
+
+// describeExpectation names, in one phrase, what a vector says the oracle
+// answered -- for an error message that has to contrast it with what the source
+// says the oracle would have answered instead.
+func describeExpectation(v *Vector) string {
+	if v.Expect.Kind == "refusal" {
+		return fmt.Sprintf("expect.refusal.code %q", v.Expect.Refusal.Code)
+	}
+	return fmt.Sprintf("expect.kind %q (a POSTED ENTRY)", v.Expect.Kind)
+}
 
 // Admit returns every reason this vector may not be graded. An empty slice
 // means admissible.
@@ -214,6 +239,118 @@ func Admit(v *Vector, opts Options) []string {
 				"request.command is %q. findNonContraTransactionIds is read only by "+
 				"validateJournalEntriesArePostedBefore, which only defineOpeningBalance reaches (:717)",
 				v.Request.Command)
+		}
+	}
+
+	// --- the date inputs, default-deny in both directions [T295] ------------
+	//
+	// T289 ruled T287's four closure/future-date captures NON-PROMOTABLE AS
+	// LITERAL-DATE VECTORS because the business date and the closing date lived
+	// in PROSE. Lifting them into request.{transaction_date, business_date,
+	// latest_closing_date} is the promotion; these rules are what stop the
+	// lifted fields becoming a hole of their own. They are the mirror of the
+	// opening-balance rules above and they close the same four failures:
+	//
+	//   * a MALFORMED date REFUSES, because isoBefore/isoAfter compare ISO
+	//     strings byte-wise and that is only chronological for strict
+	//     zero-padded `yyyy-MM-dd`;
+	//   * a PRECONDITION WITHOUT ITS SUBJECT refuses, and a subject without its
+	//     precondition refuses, so a boundary can never be recorded with nothing
+	//     on one side of it;
+	//   * a vector CLAIMING one of the two date refusals without carrying the
+	//     input that decides it refuses -- the rule cannot be asserted without
+	//     the state that produces it;
+	//   * a vector whose dates say the ORACLE WOULD HAVE REFUSED IT EARLIER than
+	//     the refusal it records refuses, because :629 runs before :636 and both
+	//     run before everything in saveAllDebitOrCreditEntries, so such a vector
+	//     describes an observation nobody took.
+	for _, d := range []struct{ field, val string }{
+		{"request.transaction_date", v.Request.TransactionDate},
+		{"request.business_date", v.Request.BusinessDate},
+		{"request.latest_closing_date", v.Request.LatestClosingDate},
+	} {
+		if d.val == "" {
+			continue
+		}
+		t, perr := time.Parse(isoDateLayout, d.val)
+		if perr != nil || t.Format(isoDateLayout) != d.val {
+			add("%s %q is not a strict `yyyy-MM-dd` calendar date. The comparator orders these dates "+
+				"BYTE-WISE, which is chronological order only for zero-padded fixed-width ISO-8601, so "+
+				"an unpadded month or a two-digit year would not merely look wrong -- it would COMPARE "+
+				"wrong and the vector would grade the opposite of what it claims", d.field, d.val)
+		}
+	}
+	switch {
+	case v.Request.TransactionDate != "" && v.Request.BusinessDate == "":
+		add("request.transaction_date is %q and request.business_date is empty. The future-date rule "+
+			"(:629 DateUtils.isDateInTheFuture -> isAfterBusinessDate) is decided by comparing the two, "+
+			"and the reference implementation READS NO CLOCK: with no business date it SKIPS the rule. "+
+			"A vector carrying a transaction date with no business date therefore records a subject "+
+			"with no boundary, and grades one rule fewer than it appears to", v.Request.TransactionDate)
+	case v.Request.BusinessDate != "" && v.Request.TransactionDate == "":
+		add("request.business_date is %q and request.transaction_date is empty. The business date is a "+
+			"PRECONDITION and nothing in this vector is subject to it", v.Request.BusinessDate)
+	}
+	if v.Request.LatestClosingDate != "" && v.Request.TransactionDate == "" {
+		add("request.latest_closing_date is set and request.transaction_date is empty. The closure " +
+			"boundary (:636) is compared against the transaction date and there is none")
+	}
+	switch v.Expect.Refusal.Code {
+	case codeFutureDate:
+		switch {
+		case v.Request.TransactionDate == "" || v.Request.BusinessDate == "":
+			add("this vector expects %q and does not carry both request.transaction_date and "+
+				"request.business_date. That refusal IS the comparison of those two dates; claiming it "+
+				"without them is claiming coverage nothing decides", codeFutureDate)
+		case !isoAfter(v.Request.TransactionDate, v.Request.BusinessDate):
+			add("this vector expects %q with request.transaction_date %q and request.business_date %q. "+
+				"isDateInTheFuture is isAfter(transactionDate, businessDate) and is STRICT "+
+				"[DateUtils.java:258-264], so on these two dates the oracle DOES NOT take that branch "+
+				"and the vector records a refusal nobody observed",
+				codeFutureDate, v.Request.TransactionDate, v.Request.BusinessDate)
+		}
+	case codeAccountingClosed:
+		switch {
+		case v.Request.TransactionDate == "" || v.Request.BusinessDate == "" ||
+			v.Request.LatestClosingDate == "":
+			add("this vector expects %q and does not carry all three of request.transaction_date, "+
+				"request.business_date and request.latest_closing_date. The closing date DECIDES the "+
+				"refusal (:636) and the business date is what shows the FUTURE-DATE guard at :629 -- "+
+				"which runs first -- did not fire instead", codeAccountingClosed)
+		case isoAfter(v.Request.TransactionDate, v.Request.BusinessDate):
+			add("this vector expects %q with request.transaction_date %q AFTER request.business_date "+
+				"%q. :629 runs BEFORE :634-639, so the oracle would have returned %q instead and this "+
+				"vector describes an observation nobody took",
+				codeAccountingClosed, v.Request.TransactionDate, v.Request.BusinessDate, codeFutureDate)
+		case isoAfter(v.Request.TransactionDate, v.Request.LatestClosingDate):
+			add("this vector expects %q with request.transaction_date %q AFTER "+
+				"request.latest_closing_date %q. :636 is !DateUtils.isBefore(closingDate, "+
+				"transactionDate), which refuses transactionDate <= closingDate; a date strictly after "+
+				"the closing date is ACCEPTED and WRITES",
+				codeAccountingClosed, v.Request.TransactionDate, v.Request.LatestClosingDate)
+		}
+	default:
+		// THE OTHER DIRECTION, and it is the one that would rot silently. A
+		// vector whose dates trip a guard the oracle checks FIRST cannot
+		// legitimately record any later outcome -- not a posting, and not one of
+		// the refusals raised further down. Gated on the plain create path
+		// because :717 (defineOpeningBalance) runs BEFORE :724 and legitimately
+		// pre-empts both date guards.
+		if v.Request.Command == "" && v.Request.TransactionDate != "" && v.Request.BusinessDate != "" {
+			if isoAfter(v.Request.TransactionDate, v.Request.BusinessDate) {
+				add("request.transaction_date %q is AFTER request.business_date %q, so :629 refuses "+
+					"this request with %q -- but this vector records %q. The first guard the oracle "+
+					"reaches is the one it answers with",
+					v.Request.TransactionDate, v.Request.BusinessDate, codeFutureDate,
+					describeExpectation(v))
+			} else if v.Request.LatestClosingDate != "" &&
+				!isoBefore(v.Request.LatestClosingDate, v.Request.TransactionDate) {
+				add("request.transaction_date %q is ON OR BEFORE request.latest_closing_date %q, so "+
+					"the INCLUSIVE guard at :636 refuses this request with %q -- but this vector "+
+					"records %q",
+					v.Request.TransactionDate, v.Request.LatestClosingDate, codeAccountingClosed,
+					describeExpectation(v))
+			}
 		}
 	}
 
