@@ -1,0 +1,710 @@
+{
+ "pre_blob": "86f4285",
+ "pre_sha": "86f42859a1492409de9c052caf9ecbde15791212",
+ "new_sha": "3aedf7c7675bf3508be1fe039747b1fd337057d8",
+ "docs": 100,
+ "lost_refusals": [],
+ "widenings": [
+  [
+   "A10-CONTROL-genuine-unacknowledged-disagreement",
+   "1",
+   "edad19ab407b3e7f"
+  ],
+  [
+   "A10-CONTROL-genuine-unacknowledged-disagreement#0 via wrap-in-object,wrap-3-deep-lists,wrap-in-list-of-lists",
+   "1",
+   "edad19ab407b3e7f"
+  ],
+  [
+   "A10-CONTROL-genuine-unacknowledged-disagreement#1 via objectify-a-list,beside-a-decoy-string,wrap-in-object,wrap-in-list,wrap-in-object",
+   "1",
+   "edad19ab407b3e7f"
+  ],
+  [
+   "A10-CONTROL-genuine-unacknowledged-disagreement#2 via wrap-object-then-list,wrap-in-list-of-lists,wrap-in-list,beside-a-decoy-object",
+   "1",
+   "edad19ab407b3e7f"
+  ],
+  [
+   "A11-FLOOR-header-buys-coverage-by-asserting-a-predicate",
+   "1",
+   "40863cdb9def3ac5"
+  ],
+  [
+   "A11-FLOOR-header-buys-coverage-by-asserting-a-predicate#0 via beside-a-decoy-object,beside-a-decoy-object,beside-a-decoy-object,wrap-in-list,beside-a-decoy-string",
+   "1",
+   "40863cdb9def3ac5"
+  ],
+  [
+   "A11-FLOOR-header-buys-coverage-by-asserting-a-predicate#1 via wrap-object-then-list,wrap-in-list-of-lists,wrap-in-list-of-lists",
+   "1",
+   "40863cdb9def3ac5"
+  ],
+  [
+   "A11-FLOOR-header-buys-coverage-by-asserting-a-predicate#2 via beside-a-decoy-string,beside-a-decoy-object,wrap-3-deep-lists,beside-a-decoy-string,wrap-list-then-object,beside-a-decoy-object",
+   "1",
+   "40863cdb9def3ac5"
+  ],
+  [
+   "A6-cyrillic-mongolian-name-fields#0 via objectify-a-list,wrap-list-then-object,wrap-in-list-of-lists",
+   "1",
+   "2cc7b8009f2dabf1"
+  ],
+  [
+   "A6-cyrillic-mongolian-name-fields#1 via wrap-object-then-list,wrap-list-then-object,wrap-in-object,wrap-in-object",
+   "1",
+   "2cc7b8009f2dabf1"
+  ],
+  [
+   "A7-affirmation-as-a-mapping-key#0 via wrap-in-list,beside-a-decoy-string,wrap-3-deep-lists,beside-a-decoy-object,wrap-in-object",
+   "1",
+   "edad19ab407b3e7f"
+  ],
+  [
+   "A7-affirmation-as-a-mapping-key#1 via wrap-in-object,wrap-list-then-object,wrap-object-then-list",
+   "1",
+   "edad19ab407b3e7f"
+  ],
+  [
+   "A9-CONTROL-genuine-green#0 via wrap-in-object,beside-a-decoy-object,wrap-in-object,wrap-in-object",
+   "1",
+   "2cc7b8009f2dabf1"
+  ],
+  [
+   "A9-CONTROL-genuine-green#2 via wrap-object-then-list,wrap-object-then-list,beside-a-decoy-object,wrap-in-object,objectify-a-list",
+   "1",
+   "2cc7b8009f2dabf1"
+  ],
+  [
+   "REAL/classify-t219",
+   "27",
+   "5aac4a972cbc0a4b"
+  ],
+  [
+   "REAL/classify-t219#1 via ",
+   "27",
+   "5aac4a972cbc0a4b"
+  ],
+  [
+   "REAL/classify-t219#2 via wrap-list-then-object,beside-a-decoy-object,beside-a-decoy-string",
+   "27",
+   "5aac4a972cbc0a4b"
+  ],
+  [
+   "REAL/classify-t229",
+   "24",
+   "e2539db29cd16116"
+  ],
+  [
+   "REAL/classify-t229#1 via wrap-3-deep-lists,wrap-3-deep-lists,wrap-in-list",
+   "24",
+   "e2539db29cd16116"
+  ],
+  [
+   "REAL/classify-t229#2 via ",
+   "24",
+   "e2539db29cd16116"
+  ],
+  [
+   "T291/X5-affirmation-in-list-over-refuted-record#1 via beside-a-decoy-string,wrap-3-deep-lists,wrap-in-list-of-lists,wrap-in-list",
+   "1",
+   "132e0f399f6a3155"
+  ],
+  [
+   "T291/X5-affirmation-in-list-over-refuted-record#2 via objectify-a-list,wrap-in-object,wrap-3-deep-lists,objectify-a-list,wrap-in-object",
+   "1",
+   "132e0f399f6a3155"
+  ],
+  [
+   "T291/X5b-affirmation-as-mapping-key-over-refuted-record#0 via wrap-object-then-list,objectify-a-list,wrap-3-deep-lists",
+   "1",
+   "132e0f399f6a3155"
+  ],
+  [
+   "T291/X5b-affirmation-as-mapping-key-over-refuted-record#1 via wrap-in-list-of-lists",
+   "1",
+   "132e0f399f6a3155"
+  ],
+  [
+   "T291/X5b-affirmation-as-mapping-key-over-refuted-record#2 via wrap-in-list,wrap-in-object,wrap-in-object,wrap-3-deep-lists,wrap-object-then-list,wrap-list-then-object",
+   "1",
+   "132e0f399f6a3155"
+  ]
+ ],
+ "legs": [
+  {
+   "prop": "PROP-B",
+   "name": "base A1-predicate-as-a-string",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A1-predicate-as-a-string",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base A10-CONTROL-genuine-unacknowledged-disagreement",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 witness=1"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A10-CONTROL-genuine-unacknowledged-disagreement",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=0 witness=1 digest=edad19ab407b3e7f"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base A11-FLOOR-header-buys-coverage-by-asserting-a-predicate",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 witness=1"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A11-FLOOR-header-buys-coverage-by-asserting-a-predicate",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=0 witness=1 digest=40863cdb9def3ac5"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base A12-header-tries-to-buy-coverage-without-asserting-a-predicate",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A12-header-tries-to-buy-coverage-without-asserting-a-predicate",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base A13-verdict-VALUE-wrapped-in-a-list-over-a-false-predicate",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=1"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A13-verdict-VALUE-wrapped-in-a-list-over-a-false-predicate",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=1 digest=b6e72319a5c7448b"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base A2-coverage-laundered-through-a-DESCRIPTIVE-key",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A2-coverage-laundered-through-a-DESCRIPTIVE-key",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base A3-refutation-with-the-verdict-key-renamed",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=1"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A3-refutation-with-the-verdict-key-renamed",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=1 digest=edad19ab407b3e7f"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base A4-auto-pattern-lookalike-key",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A4-auto-pattern-lookalike-key",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base A5-real-predicate-buried-under-eight-containers",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 witness=1"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A5-real-predicate-buried-under-eight-containers",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=0 witness=1 digest=edad19ab407b3e7f"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base A6-cyrillic-mongolian-name-fields",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 witness=1"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A6-cyrillic-mongolian-name-fields",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=0 witness=1 digest=2cc7b8009f2dabf1"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base A7-affirmation-as-a-mapping-key",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 witness=1"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A7-affirmation-as-a-mapping-key",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=0 witness=1 digest=edad19ab407b3e7f"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base A8-affirmation-only-at-depth",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A8-affirmation-only-at-depth",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base A9-CONTROL-genuine-green",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 witness=1"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "A9-CONTROL-genuine-green",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=0 witness=1 digest=2cc7b8009f2dabf1"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base REAL/classify-t219",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 witness=27"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "REAL/classify-t219",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=0 witness=27 digest=5aac4a972cbc0a4b"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base REAL/classify-t229",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 witness=24"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "REAL/classify-t229",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=0 witness=24 digest=e2539db29cd16116"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base T291/H1-nested-header-empty",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "T291/H1-nested-header-empty",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base T291/N6-root-verdict-empty",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "T291/N6-root-verdict-empty",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base T291/X1-header-in-toplevel-list",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "T291/X1-header-in-toplevel-list",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base T291/X2-header-in-nested-list",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "T291/X2-header-in-nested-list",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base T291/X3-header-in-list-of-lists",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "T291/X3-header-in-list-of-lists",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base T291/X4-toplevel-array-header-only",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "T291/X4-toplevel-array-header-only",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base T291/X5-affirmation-in-list-over-refuted-record",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 witness=1"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "T291/X5-affirmation-in-list-over-refuted-record",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=0 witness=1 digest=132e0f399f6a3155"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base T291/X5b-affirmation-as-mapping-key-over-refuted-record",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 witness=1"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "T291/X5b-affirmation-as-mapping-key-over-refuted-record",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=0 witness=1 digest=132e0f399f6a3155"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base T291/X7-header-in-deep-nested-list",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "T291/X7-header-in-deep-nested-list",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-B",
+   "name": "base T291/X8-noninspectable-dict-in-list",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 witness=0"
+  },
+  {
+   "prop": "PROP-A",
+   "name": "T291/X8-noninspectable-dict-in-list",
+   "ok": true,
+   "skipped": false,
+   "detail": "INVARIANT over 3 container rewritings  rc=1 witness=0 digest=e3b0c44298fc1c14"
+  },
+  {
+   "prop": "PROP-C",
+   "name": "no lost refusal vs PRE (pinned 86f4285)",
+   "ok": true,
+   "skipped": false,
+   "detail": "lost=0 []"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "DUP  duplicate predicate keys (last-wins drops a false)",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2 probe=False (want rc=2 probe=False) ERROR: duplicate key 'P9_x' in a JSON object. json.loads keeps the LAST value, which silently drops a recorded predicate. A repeated key is unreadable, not last"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "DUP  ... and the PRE arm greens it (the defect, driven)",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 probe=True (want rc=0 probe=True) "
+  },
+  {
+   "prop": "PROP-D",
+   "name": "NaN  NaN/Infinity JSON constants",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2 probe=False (want rc=2 probe=False) ERROR: JSON constant 'NaN'. NaN/Infinity are FLOATS and money is integer minor units; no floating point may enter any code path here, including intermediate cal"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "NaN  ... and the PRE arm greens them AS FLOATS (the defect, driven)",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 probe=True (want rc=0 probe=True) "
+  },
+  {
+   "prop": "PROP-D",
+   "name": "NaN  1e400 overflows float; Decimal keeps it exact",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 probe=True (want rc=0 probe=True) "
+  },
+  {
+   "prop": "PROP-D",
+   "name": "CYR  Cyrillic ovog/patronymic/given name under LC_ALL=C",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0 probe=True (want rc=0 probe=True) "
+  },
+  {
+   "prop": "PROP-D",
+   "name": "CYR  ... and the PRE arm exits 2 on it (the defect, driven)",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2 probe=False (want rc=2 probe=False) ERROR: UnicodeDecodeError: 'ascii' codec can't decode byte 0xd0 in position 45: ordinal not in range(128)"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "FIFO read-once does not hang",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=0"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "argv --help -> 2, no probe",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "argv -h -> 2, no probe",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "argv --not-a-flag -> 2, no probe",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "argv --register -> 2, no probe",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "no targets -> 2 (no built-in default target)",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "ERR  missing file",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2 probe=False (want rc=2 probe=False) ERROR: no such file: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t292-adv-lu1juavi/raw/nope.json"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "ERR  a directory as target",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2 probe=False (want rc=2 probe=False) ERROR: cannot read /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t292-adv-lu1juavi/raw: IsADirectoryError: [Errno 21] Is a directory: '/var/folders/yq/v_3qz_"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "ERR  zero bytes",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2 probe=False (want rc=2 probe=False) ERROR: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t292-adv-lu1juavi/raw/empty.json is not parseable JSON: Expecting value: line 1 column 1 (char 0)"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "ERR  malformed json",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2 probe=False (want rc=2 probe=False) ERROR: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t292-adv-lu1juavi/raw/bad.json is not parseable JSON: Expecting property name enclosed in double quotes:"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "ERR  trailing garbage",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2 probe=False (want rc=2 probe=False) ERROR: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t292-adv-lu1juavi/raw/tail.json is not parseable JSON: Extra data: line 1 column 9 (char 8)"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "ERR  invalid utf-8 bytes",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2 probe=False (want rc=2 probe=False) ERROR: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t292-adv-lu1juavi/raw/badenc.json is not UTF-8: 'utf-8' codec can't decode byte 0xff in position 6: inva"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "ERR  recursion bomb (3000 brackets)",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=2 probe=False (want rc=2 probe=False) ERROR: RecursionError: maximum recursion depth exceeded while decoding a JSON array from a unicode string"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "NEG  degenerate null               -> 1, probe PRESENT",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 probe=True (want rc=1 probe=True) "
+  },
+  {
+   "prop": "PROP-D",
+   "name": "NEG  degenerate empty-array        -> 1, probe PRESENT",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 probe=True (want rc=1 probe=True) "
+  },
+  {
+   "prop": "PROP-D",
+   "name": "NEG  degenerate empty-object       -> 1, probe PRESENT",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 probe=True (want rc=1 probe=True) "
+  },
+  {
+   "prop": "PROP-D",
+   "name": "NEG  degenerate bare-int           -> 1, probe PRESENT",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 probe=True (want rc=1 probe=True) "
+  },
+  {
+   "prop": "PROP-D",
+   "name": "NEG  degenerate bare-string        -> 1, probe PRESENT",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 probe=True (want rc=1 probe=True) "
+  },
+  {
+   "prop": "PROP-D",
+   "name": "NEG  degenerate bare-true          -> 1, probe PRESENT",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 probe=True (want rc=1 probe=True) "
+  },
+  {
+   "prop": "PROP-D",
+   "name": "NEG  degenerate list-of-scalars    -> 1, probe PRESENT",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 probe=True (want rc=1 probe=True) "
+  },
+  {
+   "prop": "PROP-D",
+   "name": "NEG  degenerate list-of-nulls      -> 1, probe PRESENT",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 probe=True (want rc=1 probe=True) "
+  },
+  {
+   "prop": "PROP-D",
+   "name": "PYTHONOPTIMIZE=2 still refuses X2",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "BATCH header-first refuses (T268 F-1)",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 nilFiles=1"
+  },
+  {
+   "prop": "PROP-D",
+   "name": "BATCH evidence-first refuses (T268 F-1)",
+   "ok": true,
+   "skipped": false,
+   "detail": "rc=1 nilFiles=1"
+  }
+ ]
+}
