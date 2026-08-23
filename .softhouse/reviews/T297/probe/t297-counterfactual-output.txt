@@ -1,0 +1,31 @@
+=== RUN   TestT297ReviewerCounterfactuals
+=== RUN   TestT297ReviewerCounterfactuals/strict_prior_to_MUST_DIE
+    t297_strictport_test.go:152: PORT t297-strict-prior-to                       parityPASS=4 parityFAIL=0 refusalPASS=4 refusalFAIL=1 inadmissible=0 errored=0 invViol=0 exitworthy=true
+    t297_strictport_test.go:152: PORT t297-strict-prior-to                       NON-PASSING VECTORS (1): [LDG-REFUSE-04-preclosure-entry-on-closing-date[FAIL]]
+=== RUN   TestT297ReviewerCounterfactuals/inclusive_control_MUST_SURVIVE
+    t297_strictport_test.go:159: PORT t297-inclusive-control                     parityPASS=4 parityFAIL=0 refusalPASS=5 refusalFAIL=0 inadmissible=0 errored=0 invViol=0 exitworthy=false
+    t297_strictport_test.go:159: PORT t297-inclusive-control                     NON-PASSING VECTORS (0): []
+=== RUN   TestT297ReviewerCounterfactuals/future_nonstrict_survives_as_T295_disclosed
+    t297_strictport_test.go:166: PORT t297-future-nonstrict-ge                   parityPASS=4 parityFAIL=0 refusalPASS=5 refusalFAIL=0 inadmissible=0 errored=0 invViol=0 exitworthy=false
+    t297_strictport_test.go:166: PORT t297-future-nonstrict-ge                   NON-PASSING VECTORS (0): []
+    t297_strictport_test.go:167: exitworthy=false (T295 handoff section 8 item 2 predicts SURVIVES)
+=== RUN   TestT297ReviewerCounterfactuals/ambient_clock_today_is_capture_date
+    t297_strictport_test.go:170: PORT t297-ambient-clock-2026-08-23              parityPASS=4 parityFAIL=0 refusalPASS=5 refusalFAIL=0 inadmissible=0 errored=0 invViol=0 exitworthy=false
+    t297_strictport_test.go:170: PORT t297-ambient-clock-2026-08-23              NON-PASSING VECTORS (0): []
+    t297_strictport_test.go:171: exitworthy=false
+=== RUN   TestT297ReviewerCounterfactuals/ambient_clock_today_is_a_year_later
+    t297_strictport_test.go:174: PORT t297-ambient-clock-2027-08-23              parityPASS=4 parityFAIL=0 refusalPASS=4 refusalFAIL=1 inadmissible=0 errored=0 invViol=0 exitworthy=true
+    t297_strictport_test.go:174: PORT t297-ambient-clock-2027-08-23              NON-PASSING VECTORS (1): [LDG-REFUSE-05-future-dated-entry-one-day-after-business-date[FAIL]]
+    t297_strictport_test.go:175: exitworthy=true
+=== RUN   TestT297ReviewerCounterfactuals/reference_impl_is_green
+    t297_strictport_test.go:178: PORT t297-reference                             parityPASS=4 parityFAIL=0 refusalPASS=5 refusalFAIL=0 inadmissible=0 errored=0 invViol=0 exitworthy=false
+    t297_strictport_test.go:178: PORT t297-reference                             NON-PASSING VECTORS (0): []
+--- PASS: TestT297ReviewerCounterfactuals (2.01s)
+    --- PASS: TestT297ReviewerCounterfactuals/strict_prior_to_MUST_DIE (0.28s)
+    --- PASS: TestT297ReviewerCounterfactuals/inclusive_control_MUST_SURVIVE (0.39s)
+    --- PASS: TestT297ReviewerCounterfactuals/future_nonstrict_survives_as_T295_disclosed (0.39s)
+    --- PASS: TestT297ReviewerCounterfactuals/ambient_clock_today_is_capture_date (0.27s)
+    --- PASS: TestT297ReviewerCounterfactuals/ambient_clock_today_is_a_year_later (0.41s)
+    --- PASS: TestT297ReviewerCounterfactuals/reference_impl_is_green (0.27s)
+PASS
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	2.319s

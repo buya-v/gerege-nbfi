@@ -1,0 +1,183 @@
+// T297 REVIEWER'S OWN COUNTERFACTUAL PORTS.
+//
+// THIS FILE IS NOT COMMITTED INTO THE PACKAGE. It is stored here as evidence and
+// copied into nexus/internal/apps/ledger/conformance/ for the duration of one
+// `go test` run, then removed. It registers nothing, so it cannot perturb the
+// wrong-implementation census that conformance.sh pins.
+//
+// WHY IT EXISTS: T295's brief for this review says "take whatever T295 promoted
+// and WRITE THE STRICT-`<` PORT. Does it die?" T295 shipped
+// closureBoundaryExclusivePoster, which expresses the exclusive reading by
+// CLEARING LatestClosingDate and delegating to GoPoster. That is one encoding of
+// the defect. A reviewer who runs only the author's encoding has graded the
+// author's imagination. These four ports are written from the Fineract source
+// and the wire message directly, WITHOUT looking at how T295 chose to express
+// them.
+package conformance
+
+import (
+	"fmt"
+	"sort"
+	"testing"
+)
+
+// ---------------------------------------------------------------------------
+// PORT 1 — the strict-`<` closure boundary, written from the WIRE MESSAGE.
+//
+// The message is "Journal entry cannot be made prior to last account closing
+// date for the branch". "Prior to" in plain English is STRICT. So this port
+// refuses exactly `transactionDate < closingDate` and accepts everything else,
+// INCLUDING an entry dated ON the closing date.
+//
+// It does NOT delegate its closure decision by clearing an input, which is how
+// T295 expressed it — it owns the whole decision and raises the refusal itself,
+// so the refusal bytes it returns are indistinguishable from the reference
+// implementation's on every request where the two readings agree. That is the
+// stronger form of the counterfactual: if the corpus only killed the
+// clear-the-input encoding it would be grading an artefact of the encoding.
+// ---------------------------------------------------------------------------
+type t297StrictPriorToPoster struct{}
+
+func (t297StrictPriorToPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	r := req
+	closing := r.LatestClosingDate
+	// Take the closure rule away from GoPoster entirely; this port owns it.
+	r.LatestClosingDate = ""
+	if closing != "" && r.TransactionDate != "" && r.TransactionDate < closing {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       "error.msg.glJournalEntry.invalid.accounting.closed",
+			Message:    "Journal entry cannot be made prior to last account closing date for the branch",
+		}, nil
+	}
+	return GoPoster{}.PostEntry(r)
+}
+
+// ---------------------------------------------------------------------------
+// PORT 2 — CONTROL. The INCLUSIVE boundary, re-derived by the reviewer from
+// :636 and DateUtils.java:296-298 and written in the same own-the-decision
+// shape as PORT 1. It must SURVIVE the whole corpus.
+//
+// Without this control, PORT 1 dying proves nothing: a port that dies because
+// the "own the decision" shape itself is broken would look identical.
+// ---------------------------------------------------------------------------
+type t297InclusiveControlPoster struct{}
+
+func (t297InclusiveControlPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	r := req
+	closing := r.LatestClosingDate
+	r.LatestClosingDate = ""
+	// !DateUtils.isBefore(closingDate, transactionDate)
+	//   == !(closingDate < transactionDate)
+	//   == transactionDate <= closingDate
+	if closing != "" && r.TransactionDate != "" && r.TransactionDate <= closing {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       "error.msg.glJournalEntry.invalid.accounting.closed",
+			Message:    "Journal entry cannot be made prior to last account closing date for the branch",
+		}, nil
+	}
+	return GoPoster{}.PostEntry(r)
+}
+
+// ---------------------------------------------------------------------------
+// PORT 3 — the NON-STRICT future-date comparison. T295's own handoff §8 item 2
+// says `>=` SURVIVES LDG-REFUSE-05 and calls that [UNVERIFIED]. This port tests
+// that admission: if it DIED, T295 understated its corpus; if it survives,
+// T295's disclosure is accurate and B-2 is a real gap.
+// ---------------------------------------------------------------------------
+type t297FutureNonStrictPoster struct{}
+
+func (t297FutureNonStrictPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	r := req
+	bd := r.BusinessDate
+	r.BusinessDate = ""
+	if bd != "" && r.TransactionDate != "" && r.TransactionDate >= bd {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       "error.msg.glJournalEntry.invalid.future.date",
+			Message:    "The journal entry cannot be made for a future date",
+		}, nil
+	}
+	return GoPoster{}.PostEntry(r)
+}
+
+// ---------------------------------------------------------------------------
+// PORT 4 — THE AMBIENT-CLOCK PORT. T295 claims the reference implementation
+// "reads NO clock" and that a port defaulting the business date to today would
+// be caught. This port does exactly that: it ignores request.business_date and
+// uses a FIXED "today". Two instantiations are run — one where today is the
+// capture date and one where today is a year later — to demonstrate that the
+// corpus's verdict on such a port is NOT stable over the calendar, which is the
+// property T289 demanded and the reason this review's brief item 4 exists.
+// ---------------------------------------------------------------------------
+type t297AmbientClockPoster struct{ today string }
+
+func (p t297AmbientClockPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	r := req
+	r.BusinessDate = ""
+	if r.TransactionDate != "" && r.TransactionDate > p.today {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       "error.msg.glJournalEntry.invalid.future.date",
+			Message:    "The journal entry cannot be made for a future date",
+		}, nil
+	}
+	return GoPoster{}.PostEntry(r)
+}
+
+func t297run(t *testing.T, name string, impl EntryPoster) *Summary {
+	t.Helper()
+	_, base := loadCommitted(t)
+	opts := base
+	opts.Implementation = impl
+	opts.ImplementationName = name
+	s := Run(opts)
+	fails := []string{}
+	for _, r := range s.Results {
+		if r.Outcome != OutcomePass {
+			fails = append(fails, fmt.Sprintf("%s[%s]", r.CaseID, r.Outcome))
+		}
+	}
+	sort.Strings(fails)
+	t.Logf("PORT %-42s parityPASS=%d parityFAIL=%d refusalPASS=%d refusalFAIL=%d inadmissible=%d errored=%d invViol=%d exitworthy=%v",
+		name, s.ParityPass, s.ParityFail, s.RefusalPass, s.RefusalFail,
+		s.Inadmissible, s.Errored, s.InvariantViolations, s.ExitWorthy())
+	t.Logf("PORT %-42s NON-PASSING VECTORS (%d): %v", name, len(fails), fails)
+	return s
+}
+
+func TestT297ReviewerCounterfactuals(t *testing.T) {
+	t.Run("strict_prior_to_MUST_DIE", func(t *testing.T) {
+		s := t297run(t, "t297-strict-prior-to", t297StrictPriorToPoster{})
+		if !s.ExitWorthy() {
+			t.Fatal("BLOCKING: the reviewer's independently written strict-`<` closure port SURVIVES " +
+				"the committed corpus. LDG-REFUSE-04 does not grade the finding it was promoted to grade.")
+		}
+	})
+	t.Run("inclusive_control_MUST_SURVIVE", func(t *testing.T) {
+		s := t297run(t, "t297-inclusive-control", t297InclusiveControlPoster{})
+		if s.ExitWorthy() {
+			t.Fatal("the reviewer's INCLUSIVE control port dies too, so port 1's death is an artefact " +
+				"of the shape and not of the boundary")
+		}
+	})
+	t.Run("future_nonstrict_survives_as_T295_disclosed", func(t *testing.T) {
+		s := t297run(t, "t297-future-nonstrict-ge", t297FutureNonStrictPoster{})
+		t.Logf("exitworthy=%v (T295 handoff section 8 item 2 predicts SURVIVES)", s.ExitWorthy())
+	})
+	t.Run("ambient_clock_today_is_capture_date", func(t *testing.T) {
+		s := t297run(t, "t297-ambient-clock-2026-08-23", t297AmbientClockPoster{today: "2026-08-23"})
+		t.Logf("exitworthy=%v", s.ExitWorthy())
+	})
+	t.Run("ambient_clock_today_is_a_year_later", func(t *testing.T) {
+		s := t297run(t, "t297-ambient-clock-2027-08-23", t297AmbientClockPoster{today: "2027-08-23"})
+		t.Logf("exitworthy=%v", s.ExitWorthy())
+	})
+	t.Run("reference_impl_is_green", func(t *testing.T) {
+		s := t297run(t, "t297-reference", GoPoster{})
+		if s.ExitWorthy() {
+			t.Fatal("the reference implementation itself is not green on the committed corpus")
+		}
+	})
+}
