@@ -22,9 +22,14 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.a
 EXT = {".sh", ".py", ".bash", ".zsh", ".pl", ".rb"}
 
 # Each pattern is (id, regex, what it destroys).
+# `rm` must be in COMMAND POSITION. Without this, `docker run --rm --network none`
+# matches `rm ` and the census reports a deletion in a container-launch line
+# (measured: two hits in .softhouse/handoff/.../T113-evidence/*.sh).
+CMDPOS = r"(?:^|[;&|(]|\|\||&&|\bthen\b|\bdo\b|\belse\b|\{)\s*(?:sudo\s+|command\s+|/bin/)?"
+
 PATTERNS = [
-    ("rm-rf",      r"\brm\s+(-[A-Za-z]*\s+)*-[A-Za-z]*[rR][A-Za-z]*\b", "recursive delete"),
-    ("rm-plain",   r"\brm\s+(?!-[A-Za-z]*[rR])", "file delete"),
+    ("rm-rf",      CMDPOS + r"rm\s+(-[A-Za-z]*\s+)*-[A-Za-z]*[rR][A-Za-z]*\b", "recursive delete"),
+    ("rm-plain",   CMDPOS + r"rm\s+(?!-[A-Za-z]*[rR])", "file delete"),
     ("rmtree",     r"shutil\.rmtree\s*\(", "python recursive delete"),
     ("os-remove",  r"\bos\.(remove|unlink|rmdir)\s*\(", "python file delete"),
     ("path-unlink",r"\.unlink\s*\(", "pathlib delete"),

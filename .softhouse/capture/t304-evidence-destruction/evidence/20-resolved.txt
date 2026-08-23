@@ -1,18 +1,19 @@
-DESTRUCTIVE: 838 operations
-   SCRATCH          439
+DESTRUCTIVE: 821 operations
+   SCRATCH          386
    TRACKED           39
    UNKNOWN          171
-   UNTRACKED        189
+   UNTRACKED        225
 
-OVERWRITE: 4475 operations
+OVERWRITE: 4483 operations
    SCRATCH         1025
-   TRACKED          138
-   UNKNOWN         2609
-   UNTRACKED        697
+   TRACKED          137
+   UNKNOWN         2619
+   UNTRACKED        696
    WHOLE_REPO         6
 
 === DESTRUCTIVE ops whose target CONTAINS TRACKED FILES ===
 rm-rf       145  .softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh:34  -> .softhouse/capture/t274-attestation-failopen/evidence/wrap
+rm-rf       113  .softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh:71  -> .softhouse/capture/t274-attestation-failopen/evidence/green
 rm-rf       110  .softhouse/reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh:23  -> .softhouse/reviews/t261-tenant-attestation/evidence/redC
 rm-rf       107  .softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh:25  -> .softhouse/reviews/t261-tenant-attestation/evidence/redB
 rm-rf        91  .softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh:50  -> .softhouse/capture/t274-attestation-failopen/evidence/t250arms
@@ -33,7 +34,6 @@ mv            1  .softhouse/bin/fire-program.sh:1075  -> .softhouse/RESUME.md
 mv            1  .softhouse/capture/pathb/t149/prove-redgreen.sh:103  -> .softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json
 mv            1  .softhouse/capture/pathb/t149/prove-redgreen.sh:127  -> .softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json
 mv            1  .softhouse/capture/pathb/t149/prove-redgreen.sh:186  -> .softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json
-git-checkout-dd     1  .softhouse/capture/pathb/t80/prove-f1.sh:117  -> .softhouse/capture/pathb/t36/attest.py
 mv            1  .softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh:210  -> .softhouse/capture/t250-tenant-attestation/evidence/redC/out/inject.req.NOT-JSON-BY-DESIGN.txt
 mv            1  .softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh:216  -> .softhouse/capture/t250-tenant-attestation/evidence/redC/out/inject.req.sha256.txt
 git-checkout-dd     1  .softhouse/capture/t273-residue/instruments/50-red-drive.sh:41  -> .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
@@ -54,7 +54,6 @@ sed-i         1  .softhouse/reviews/t285-review-t273/instruments/80-regression-t
 TOTAL: 39
 
 === UNKNOWN destructive operands (blind spot; listed, not dropped) ===
-rm-plain  .softhouse/bin/build-oracle-image.sh:38  raw='${HOST_UID}:${HOST_GID}'
 rm-plain  .softhouse/bin/fire-program.sh:604  raw='$DRIVER_RC_FILE'
 sed-i     .softhouse/capture/charges/bin/t51-capture.sh:137  raw='$CH/req/calc-T51-$4.json'
 sed-i     .softhouse/capture/charges/bin/t51-capture3.sh:67  raw='$R/calc-T51-FL-INTEREST-REJECT.json'
@@ -63,13 +62,15 @@ mv        .softhouse/capture/lib/oracle_send.sh:186  raw='$os_out'
 rm-plain  .softhouse/capture/lib/oracle_send.sh:205  raw='$os_http'
 rmtree    .softhouse/capture/pathb/t149/prove-exit-trap.py:224  raw='sb0, ignore_errors=True'
 mv        .softhouse/capture/pathb/t149/prove-exit-trap.py:255  raw='defect'
-sed-i     .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py:17  raw='`open(p,"w"'
+rm-plain  .softhouse/capture/pathb/t149/prove-redgreen.sh:152  raw='$_ta'
+sed-i     .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py:17  raw='`open(p,w'
 git-checkout-dd .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py:148  raw='path`")'
 rmtree    .softhouse/capture/pathb/t80/prove-f1-noswap.py:249  raw='self.dir, ignore_errors=True'
 os-remove .softhouse/capture/pathb/t80/prove-f1-noswap.py:523  raw='tgt'
 os-remove .softhouse/capture/pathb/t80/prove-f1-noswap.py:525  raw='sb.p(REL_STAMP)'
 rmtree    .softhouse/capture/pathb/t80/prove-f1-noswap.py:526  raw='sb.p(".softhouse/capture/pathb/t80/out/out"), ignore_errors=True'
 rmtree    .softhouse/capture/pathb/t80/prove-f1-recovery.py:264  raw='self.dir, ignore_errors=True'
+rm-plain  .softhouse/capture/pathb/t80/prove-f1.sh:291  raw='$_ta'
 rm-rf     .softhouse/capture/pathb/t99/prove-f1.sh:40  raw='$TREE/$ATTACK'
 rm-rf     .softhouse/capture/pathb/t99/prove-f1.sh:86  raw='$P/$ATTACK'
 rm-rf     .softhouse/capture/pathb/t99/prove-f1.sh:102  raw='$F/$ATTACK'
@@ -85,7 +86,7 @@ os-remove .softhouse/capture/src/t169-red/build_harness_t169.py:147  raw='b'
 rmtree    .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py:182  raw='store, ignore_errors=True'
 rmtree    .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py:188  raw='store, ignore_errors=True'
 rm-plain  .softhouse/capture/t154-nofloat/drive-leg1-e2e.sh:79  raw='$1/.softhouse/vectors/T154-POISON-store-root.json'
-rm-plain  .softhouse/capture/t154-nofloat/drive-leg2.sh:56  raw='$(probe_path '
+rm-plain  .softhouse/capture/t154-nofloat/drive-leg2.sh:56  raw='$(probe_path $1'
 mv        .softhouse/capture/t154-nofloat/drive-leg3.sh:178  raw='$1/loanschedule-real'
 rmtree    .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py:130  raw='PROBE_DIR, ignore_errors=True'
 rmtree    .softhouse/capture/t248-failopen-widen/instruments/40-red-drive.py:128  raw='PLANT_DIR, ignore_errors=True'
@@ -94,19 +95,18 @@ rm-plain  .softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatc
 rm-plain  .softhouse/capture/t253-portability/instruments/10-mktemp-matrix.sh:68  raw='$BSD_OUT'
 rm-plain  .softhouse/capture/t253-portability/instruments/10-mktemp-matrix.sh:89  raw='$BSD_OUT'
 path-unlink .softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py:140  raw=''
-sed-i     .softhouse/capture/t273-residue/instruments/50-red-drive.sh:119  raw='${TMPDIR:-/tmp}/t158-clone.XXXXXXXXXX'
 mv        .softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh:158  raw='$os_req'
 rm-plain  .softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh:178  raw='$os_http'
 mv        .softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh:184  raw='$os_out'
 rmtree    .softhouse/capture/t286-t268-retry/probe/adversary_t292.py:617  raw='prehome, ignore_errors=True'
 rmtree    .softhouse/capture/t290-review-t271/red/drive-red-t290.py:226  raw='backup, ignore_errors=True'
+git-checkout-dd .softhouse/capture/t304-evidence-destruction/10-census.py:40  raw='(discard'
 rmtree    .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:223  raw='store, ignore_errors=True'
 rmtree    .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:229  raw='store, ignore_errors=True'
 rm-plain  .softhouse/capture/t91/run-attacks.sh:73  raw='$O/link-to-canon.json'
 rm-rf     .softhouse/capture/t91/t115-rerun-attacks.sh:88  raw='$dst'
 rm-rf     .softhouse/capture/t91/t151-drive-g4.sh:59  raw='$1'
 rm-rf     .softhouse/capture/t91/t151-drive-g67.sh:45  raw='$1'
-rm-plain  .softhouse/capture/tierA-a2/prove-cap-transport-red.py:7  raw='$OUT'
 rmtree    .softhouse/capture/tierA-a2/prove-cap-transport-red.py:146  raw='sb, ignore_errors=True'
 rmtree    .softhouse/capture/tierA-a2/prove-cap-transport-red.py:241  raw='sb, ignore_errors=True'
 rm-plain  .softhouse/capture/tierA-a2/prove-cap8-wire-bytes.py:230  raw='='
@@ -196,7 +196,6 @@ rmtree    .softhouse/reviews/T158-drive-t156-refusals.py:225  raw='sb, ignore_er
 rmtree    .softhouse/reviews/T158-drive-t156-refusals.py:237  raw='sb, ignore_errors=True'
 rmtree    .softhouse/reviews/T158-drive-t156-refusals.py:249  raw='sb, ignore_errors=True'
 rmtree    .softhouse/reviews/T158-drive-untrapped-signals.py:61  raw='sb, ignore_errors=True'
-mv        .softhouse/reviews/T184-evidence/t184-vacuity2.sh:20  raw='$d"'
 rmtree    .softhouse/reviews/T84-evidence/src/exemption-demo.py:146  raw='store, ignore_errors=True'
 rmtree    .softhouse/reviews/T84-evidence/src/exemption-demo.py:152  raw='store, ignore_errors=True'
 shutil-move .softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py:22  raw='STORE + ".bak", STORE'
@@ -211,7 +210,8 @@ os-remove .softhouse/reviews/t263-analyze7-float-guard/attack-exempt.py:123  raw
 os-remove .softhouse/reviews/t263-analyze7-float-guard/attack-exempt.py:127  raw='os.path.join(r, "MANIFEST.sha256")'
 os-remove .softhouse/reviews/t263-analyze7-float-guard/attack-exempt.py:218  raw='os.path.join(r, REG)'
 rmtree    .softhouse/reviews/t276-review-t275-capture/evidence/40-uncovered-get-captures.py:20  raw='os.path.join(copy, "out")'
-sed-i     .softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh:71  raw='${TMPDIR:-/tmp}/t158-clone.XXXXXXXXXX'
+git-checkout-dd .softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh:34  raw='.'
+git-checkout-dd .softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh:34  raw='.'
 rmtree    .softhouse/reviews/t291-review-t286/probe/enumerate-exit0-t291.py:206  raw='outside, ignore_errors=True'
 os-remove .softhouse/reviews/t41-probe/t187-redgreen.py:160  raw='p'
 path-unlink .softhouse/reviews/t41-probe/t187-redgreen.py:160  raw='p'

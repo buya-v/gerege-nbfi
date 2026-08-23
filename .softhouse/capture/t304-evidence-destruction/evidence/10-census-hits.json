@@ -1,6 +1,6 @@
 {
- "tracked": 6848,
- "scripts": 1146,
+ "tracked": 6853,
+ "scripts": 1148,
  "hits": [
   {
    "file": ".softhouse/bin/build-oracle-image.sh",
@@ -8,20 +8,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "docker volume create \"${CACHE_VOL}\" >/dev/null"
-  },
-  {
-   "file": ".softhouse/bin/build-oracle-image.sh",
-   "line": 22,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm -v \"${CACHE_VOL}:/gradle-home\" alpine:3   chown -R \"${HOST_UID}:${HOST_GID}\" /gradle-home"
-  },
-  {
-   "file": ".softhouse/bin/build-oracle-image.sh",
-   "line": 38,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "if docker run --rm       -u \"${HOST_UID}:${HOST_GID}\"       -v \"${FINERACT_SRC}:/src\"       -v \"${CACHE_VOL}:/gradle-home\"       -w /src       -e GRADLE_USER_HOME=/gradle-home       -e GRADLE_OPTS=\"${GRADLE_OPTS_HTTP}\"       \"${JDK_IMAGE}\"       ./gradlew :fineract-provider:bootJar -x test         --no-daemon --console=plain --max-workers=2; then"
   },
   {
    "file": ".softhouse/bin/build-oracle-image.sh",
@@ -480,13 +466,6 @@
   },
   {
    "file": ".softhouse/capture/actualactual/src/run-actualactual.sh",
-   "line": 81,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/actualactual/src/run-actualactual.sh",
    "line": 94,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -498,13 +477,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "sed -n '/== classpath entries/,$p' \"$IDENT\" | tail -n +2 > \"$CPLIST\""
-  },
-  {
-   "file": ".softhouse/capture/actualactual/src/run-actualactual.sh",
-   "line": 109,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e \"T48_JAVA_PROPS=$JAVA_PROPS\" -e \"T48_SET=$SET\"   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
   },
   {
    "file": ".softhouse/capture/actualactual/src/run-actualactual.sh",
@@ -540,13 +512,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "python3 -m json.tool \"$JSON\" > /dev/null || fail \"JSON payload does not parse ($JSON)\""
-  },
-  {
-   "file": ".softhouse/capture/audit-t44/analysis/T175-red/drive-red.sh",
-   "line": 37,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$SCRATCH\"' EXIT"
   },
   {
    "file": ".softhouse/capture/audit-t44/analysis/T175-red/drive-red.sh",
@@ -645,13 +610,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "python3 \"$SUCC\" \"${REAL_GLOBS[@]}\" --expect-skips 17 > \"$SCRATCH/succ-wrong.txt\" 2>&1"
-  },
-  {
-   "file": ".softhouse/capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh",
-   "line": 60,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$SCRATCH\"' EXIT"
   },
   {
    "file": ".softhouse/capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh",
@@ -1236,13 +1194,6 @@
   },
   {
    "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh",
-   "line": 85,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh",
    "line": 98,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -1254,13 +1205,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "sed -n '/== classpath entries/,$p' \"$IDENT\" | tail -n +2 > \"$CPLIST\""
-  },
-  {
-   "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh",
-   "line": 113,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
   },
   {
    "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh",
@@ -1296,13 +1240,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "python3 -m json.tool \"$JSON\" > /dev/null || fail \"JSON payload does not parse ($JSON)\""
-  },
-  {
-   "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh",
-   "line": 63,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e \"T42_JAVA_PROPS=${T42_JAVA_PROPS:-}\"   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
   },
   {
    "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh",
@@ -1866,13 +1803,6 @@
   },
   {
    "file": ".softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh",
-   "line": 92,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh",
    "line": 105,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -1884,13 +1814,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "sed -n '/== classpath entries/,$p' \"$IDENT\" | tail -n +2 > \"$CPLIST\""
-  },
-  {
-   "file": ".softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh",
-   "line": 120,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e \"T39_JAVA_PROPS=$JAVA_PROPS\"   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
   },
   {
    "file": ".softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh",
@@ -3973,13 +3896,6 @@
   },
   {
    "file": ".softhouse/capture/lib/oracle_send.sh",
-   "line": 114,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$os_tmpd\"' EXIT HUP INT TERM QUIT"
-  },
-  {
-   "file": ".softhouse/capture/lib/oracle_send.sh",
    "line": 120,
    "pattern": "rm-rf",
    "what": "recursive delete",
@@ -4631,13 +4547,6 @@
   },
   {
    "file": ".softhouse/capture/mathcontext/src/run-mathcontext.sh",
-   "line": 85,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/mathcontext/src/run-mathcontext.sh",
    "line": 98,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -4649,13 +4558,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "sed -n '/== classpath entries/,$p' \"$IDENT\" | tail -n +2 > \"$CPLIST\""
-  },
-  {
-   "file": ".softhouse/capture/mathcontext/src/run-mathcontext.sh",
-   "line": 113,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
   },
   {
    "file": ".softhouse/capture/mathcontext/src/run-mathcontext.sh",
@@ -4691,13 +4593,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "python3 -m json.tool \"$JSON\" > /dev/null || fail \"JSON payload does not parse ($JSON)\""
-  },
-  {
-   "file": ".softhouse/capture/mathcontext/src/run-mathcontext2.sh",
-   "line": 63,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e \"T42_JAVA_PROPS=${T42_JAVA_PROPS:-}\"   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
   },
   {
    "file": ".softhouse/capture/mathcontext/src/run-mathcontext2.sh",
@@ -4757,13 +4652,6 @@
   },
   {
    "file": ".softhouse/capture/mathcontext/src/run-mathcontext3.sh",
-   "line": 81,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/mathcontext/src/run-mathcontext3.sh",
    "line": 94,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -4775,13 +4663,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "sed -n '/== classpath entries/,$p' \"$IDENT\" | tail -n +2 > \"$CPLIST\""
-  },
-  {
-   "file": ".softhouse/capture/mathcontext/src/run-mathcontext3.sh",
-   "line": 105,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
   },
   {
    "file": ".softhouse/capture/mathcontext/src/run-mathcontext3.sh",
@@ -4862,13 +4743,6 @@
   },
   {
    "file": ".softhouse/capture/mathcontext/src/run-t50-tier1.sh",
-   "line": 59,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/mathcontext/src/run-t50-tier1.sh",
    "line": 85,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -4901,13 +4775,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "sed -n '/== classpath entries/,$p' \"$IDENT\" | tail -n +2 > \"$CPLIST\""
-  },
-  {
-   "file": ".softhouse/capture/mathcontext/src/run-t50-tier1.sh",
-   "line": 113,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
   },
   {
    "file": ".softhouse/capture/mathcontext/src/run-t50-tier1.sh",
@@ -4953,13 +4820,6 @@
   },
   {
    "file": ".softhouse/capture/mathcontext/src/run-t50-tier2.sh",
-   "line": 59,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/mathcontext/src/run-t50-tier2.sh",
    "line": 85,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -4992,13 +4852,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "sed -n '/== classpath entries/,$p' \"$IDENT\" | tail -n +2 > \"$CPLIST\""
-  },
-  {
-   "file": ".softhouse/capture/mathcontext/src/run-t50-tier2.sh",
-   "line": 113,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
   },
   {
    "file": ".softhouse/capture/mathcontext/src/run-t50-tier2.sh",
@@ -5090,13 +4943,6 @@
    "pattern": "tee",
    "what": "tee (truncating)",
    "text": "} 2>&1 | tee \"$TRANSCRIPT\""
-  },
-  {
-   "file": ".softhouse/capture/mathcontext/src/t46-negative-vacuity.sh",
-   "line": 41,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "trap 'rm -f \"$BLOCK\"' EXIT"
   },
   {
    "file": ".softhouse/capture/mathcontext/src/t46-negative-vacuity.sh",
@@ -6297,13 +6143,6 @@
   },
   {
    "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
-   "line": 125,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "if rm -f \"$SIB\"; then echo \"guard: removed the scratch sibling attester $REL_SIB\" >&2"
-  },
-  {
-   "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
    "line": 142,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -7333,13 +7172,6 @@
   },
   {
    "file": ".softhouse/capture/periodratio/analysis/run-t46-monthdiff.sh",
-   "line": 24,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/periodratio/analysis/run-t46-monthdiff.sh",
    "line": 31,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -7725,13 +7557,6 @@
   },
   {
    "file": ".softhouse/capture/periodratio/src/run-periodratio.sh",
-   "line": 92,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/periodratio/src/run-periodratio.sh",
    "line": 105,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -7743,13 +7568,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "sed -n '/== classpath entries/,$p' \"$IDENT\" | tail -n +2 > \"$CPLIST\""
-  },
-  {
-   "file": ".softhouse/capture/periodratio/src/run-periodratio.sh",
-   "line": 120,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e \"T39_JAVA_PROPS=$JAVA_PROPS\"   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
   },
   {
    "file": ".softhouse/capture/periodratio/src/run-periodratio.sh",
@@ -7788,13 +7606,6 @@
   },
   {
    "file": ".softhouse/capture/periodratio/src/run-t46-periodratio.sh",
-   "line": 94,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/periodratio/src/run-t46-periodratio.sh",
    "line": 107,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -7806,13 +7617,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "sed -n '/== classpath entries/,$p' \"$IDENT\" | tail -n +2 > \"$CPLIST\""
-  },
-  {
-   "file": ".softhouse/capture/periodratio/src/run-t46-periodratio.sh",
-   "line": 122,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e \"T46_JAVA_PROPS=$JAVA_PROPS\" -e \"T46_SET=$SET\"   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '"
   },
   {
    "file": ".softhouse/capture/periodratio/src/run-t46-periodratio.sh",
@@ -7855,13 +7659,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "command -v docker >/dev/null 2>&1 || fail \"docker not on PATH\""
-  },
-  {
-   "file": ".softhouse/capture/src/run-pass3b.sh",
-   "line": 88,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3b.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3b-classp"
   },
   {
    "file": ".softhouse/capture/src/run-pass3b.sh",
@@ -7914,13 +7711,6 @@
   },
   {
    "file": ".softhouse/capture/src/run-pass3c.sh",
-   "line": 114,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3c.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3c-classp"
-  },
-  {
-   "file": ".softhouse/capture/src/run-pass3c.sh",
    "line": 130,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -7967,13 +7757,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "command -v docker >/dev/null 2>&1 || fail \"docker not on PATH\""
-  },
-  {
-   "file": ".softhouse/capture/src/run-pass3d.sh",
-   "line": 140,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3d.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3d-classp"
   },
   {
    "file": ".softhouse/capture/src/run-pass3d.sh",
@@ -8026,13 +7809,6 @@
   },
   {
    "file": ".softhouse/capture/src/run-pass3e.sh",
-   "line": 144,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3e.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3e-classp"
-  },
-  {
-   "file": ".softhouse/capture/src/run-pass3e.sh",
    "line": 160,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -8079,13 +7855,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "command -v docker >/dev/null 2>&1 || fail \"docker not on PATH\""
-  },
-  {
-   "file": ".softhouse/capture/src/run-pass3f.sh",
-   "line": 153,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3f.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3f-classp"
   },
   {
    "file": ".softhouse/capture/src/run-pass3f.sh",
@@ -8138,13 +7907,6 @@
   },
   {
    "file": ".softhouse/capture/src/run-pass3g.sh",
-   "line": 153,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3g.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3g-classp"
-  },
-  {
-   "file": ".softhouse/capture/src/run-pass3g.sh",
    "line": 169,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -8194,13 +7956,6 @@
   },
   {
    "file": ".softhouse/capture/src/run-pass3h.sh",
-   "line": 186,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3h.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3h-classp"
-  },
-  {
-   "file": ".softhouse/capture/src/run-pass3h.sh",
    "line": 202,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -8247,13 +8002,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "command -v docker >/dev/null 2>&1 || fail \"docker not on PATH\""
-  },
-  {
-   "file": ".softhouse/capture/src/run-pass3i.sh",
-   "line": 224,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3i.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3i-classp"
   },
   {
    "file": ".softhouse/capture/src/run-pass3i.sh",
@@ -8310,13 +8058,6 @@
    "pattern": "rm-plain",
    "what": "file delete",
    "text": "rm = next((r for r in rows if r.get('name') == 'rounding-mode'), None)"
-  },
-  {
-   "file": ".softhouse/capture/src/run-rc6-rounddown-attestation.sh",
-   "line": 68,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "if rm is None:"
   },
   {
    "file": ".softhouse/capture/src/run-rc6-rounddown-attestation.sh",
@@ -8411,13 +8152,6 @@
   },
   {
    "file": ".softhouse/capture/src/t169-red/mutate-guards.sh",
-   "line": 16,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh -v \"$W\":/cap fineract:latest -c   'mkdir -p /tmp/c1 && javac -nowarn -d /tmp/c1 /cap/ThrewOutcome.java /cap/ThrewOutcomeSelfTest.java && java -cp /tmp/c1 ThrewOutcomeSelfTest' 2>&1 | grep -E \"^FAIL|failures\""
-  },
-  {
-   "file": ".softhouse/capture/src/t169-red/mutate-guards.sh",
    "line": 20,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -8436,13 +8170,6 @@
    "pattern": "py-write",
    "what": "python open for write",
    "text": "open(p, 'w').write(s)"
-  },
-  {
-   "file": ".softhouse/capture/src/t169-red/mutate-guards.sh",
-   "line": 34,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh -v \"$W\":/cap fineract:latest -c   'mkdir -p /tmp/c2 && javac -nowarn -d /tmp/c2 /cap/ThrewOutcome.java /cap/ThrewOutcomeSelfTest.java && java -cp /tmp/c2 ThrewOutcomeSelfTest' 2>&1 | grep -E \"^FAIL|failures|Exception in thread\""
   },
   {
    "file": ".softhouse/capture/src/t169-red/mutate-guards.sh",
@@ -8499,13 +8226,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "bash \"$REPO/.softhouse/capture/src/t169-red/run-t169.sh\" \"$REPO\" \"$VARIANT\" > \"/tmp/t169probe/console-$VARIANT.txt\" 2>&1"
-  },
-  {
-   "file": ".softhouse/capture/src/t169-red/run-t169.sh",
-   "line": 68,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"$SOURCES\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out-$VARIANT/classpath-sha256.txt\"   -e HARNESS=\"$HARNESS\" -e JAVAC_SRC=\"$JAVAC_SRC\"   -v \"$CAP:/cap\""
   },
   {
    "file": ".softhouse/capture/src/t169-red/run-t169.sh",
@@ -8632,13 +8352,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "above = [c for c in v['clean'] if c > lf]"
-  },
-  {
-   "file": ".softhouse/capture/t100-g8-rescope/src/run-t100.sh",
-   "line": 43,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT100.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/classpath-sha256.txt\"  "
   },
   {
    "file": ".softhouse/capture/t100-g8-rescope/src/run-t100.sh",
@@ -9013,13 +8726,6 @@
   },
   {
    "file": ".softhouse/capture/t116-familyb-promotion/src/run-t116.sh",
-   "line": 51,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT116.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/"
-  },
-  {
-   "file": ".softhouse/capture/t116-familyb-promotion/src/run-t116.sh",
    "line": 65,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -9132,13 +8838,6 @@
   },
   {
    "file": ".softhouse/capture/t117-familyb/src/run-t117-pass2.sh",
-   "line": 44,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT117P2.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/classpath-sha256.txt\""
-  },
-  {
-   "file": ".softhouse/capture/t117-familyb/src/run-t117-pass2.sh",
    "line": 58,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -9157,13 +8856,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "tail -n +\"$START\" \"$RAW\" > \"$JSON\""
-  },
-  {
-   "file": ".softhouse/capture/t117-familyb/src/run-t117.sh",
-   "line": 44,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT117.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/classpath-sha256.txt\"  "
   },
   {
    "file": ".softhouse/capture/t117-familyb/src/run-t117.sh",
@@ -9314,13 +9006,6 @@
   },
   {
    "file": ".softhouse/capture/t154-nofloat/drive-leg1-e2e.sh",
-   "line": 30,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\"' EXIT"
-  },
-  {
-   "file": ".softhouse/capture/t154-nofloat/drive-leg1-e2e.sh",
    "line": 70,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -9360,13 +9045,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "( cd \"$1\" && bash .softhouse/conformance.sh ) > \"$TMP/$2.txt\" 2>&1"
-  },
-  {
-   "file": ".softhouse/capture/t154-nofloat/drive-leg1.sh",
-   "line": 32,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t154-nofloat/drive-leg1.sh",
@@ -9447,13 +9125,6 @@
   },
   {
    "file": ".softhouse/capture/t154-nofloat/drive-leg2.sh",
-   "line": 32,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\"' EXIT"
-  },
-  {
-   "file": ".softhouse/capture/t154-nofloat/drive-leg2.sh",
    "line": 55,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -9479,13 +9150,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "( cd \"$1\" && bash .softhouse/conformance.sh ) > \"$TMP/$2.txt\" 2>&1"
-  },
-  {
-   "file": ".softhouse/capture/t154-nofloat/drive-leg3.sh",
-   "line": 37,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t154-nofloat/drive-leg3.sh",
@@ -9591,13 +9255,6 @@
    "pattern": "rm-rf",
    "what": "recursive delete",
    "text": "rm -rf \"$TMP/scratch-store\""
-  },
-  {
-   "file": ".softhouse/capture/t154-nofloat/regen-leg1-red.sh",
-   "line": 12,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "TMP=\"$(mktemp -d -t t154-regen)\"; trap 'rm -rf \"$TMP\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t154-nofloat/regen-leg1-red.sh",
@@ -9720,13 +9377,6 @@
   },
   {
    "file": ".softhouse/capture/t159-review-t117/src/run-t159.sh",
-   "line": 44,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT159.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/classpath-sha256.txt\"  "
-  },
-  {
-   "file": ".softhouse/capture/t159-review-t117/src/run-t159.sh",
    "line": 58,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -9832,13 +9482,6 @@
   },
   {
    "file": ".softhouse/capture/t177-so-nondeterminism/jvmdefaults-t177.sh",
-   "line": 14,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --entrypoint sh \"$EXPECTED_IMAGE_REF\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/t177-so-nondeterminism/jvmdefaults-t177.sh",
    "line": 22,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -9909,13 +9552,6 @@
   },
   {
    "file": ".softhouse/capture/t177-so-nondeterminism/run-t177.sh",
-   "line": 63,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\" -e ATTEST_HARNESS_SHA=\"$HARNESS_SHA\"   -e ATTEST_SEAM_SHA=\"$SEAM_SHA\" -e ATTEST_LIB_SHA=\"$LIB_SHA\"   -e OUTSUB=\"$OUTSUB\"   -v \"$CAP:/cap\" \"$EXPECTED_IMAGE_REF\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/t177-so-nondeterminism/run-t177.sh",
    "line": 79,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -9941,13 +9577,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "printf '{\"runId\": \"%s\", \"dockerExit\": %s, \"wallSeconds\": %s, \"imageId\": \"%s\", \"pinnedCommit\": \"%s\", \"seamSha256\": \"%s\", \"libSha256\": \"%s\", \"harnessSha256\": \"%s\", \"matrixSha256\": \"%s\"}\\n'   \"$RUN_ID\" \"$DOCKER_RC\" \"$((END_EPOCH - START_EPOCH))\" \"$ACTUAL_IMAGE_ID\" \"$ACTUAL_COMMIT\"   \"$SEAM_SHA\" \"$LIB_SHA\" \"$HARNESS_SHA\" \"$MATRIX_SHA\" > \"$CAP/out/$OUTSUB/attestation.json\""
-  },
-  {
-   "file": ".softhouse/capture/t177-so-nondeterminism/run-t177b.sh",
-   "line": 61,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\" -e ATTEST_HARNESS_SHA=\"$HARNESS_SHA\" -e ATTEST_HARNESS_B_SHA=\"$HARNESS_B_SHA\"   -e ATTEST_SEAM_SHA=\"$SEAM_SHA\" -e ATTEST_LIB_SHA=\"$LIB_SHA\"   -e OUTSUB=\"$OUTSUB\"   "
   },
   {
    "file": ".softhouse/capture/t177-so-nondeterminism/run-t177b.sh",
@@ -10063,13 +9692,6 @@
   },
   {
    "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run2.sh",
-   "line": 45,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT219W.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap"
-  },
-  {
-   "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run2.sh",
    "line": 59,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -10091,13 +9713,6 @@
   },
   {
    "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run3.sh",
-   "line": 45,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT219X.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap"
-  },
-  {
-   "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run3.sh",
    "line": 59,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -10116,13 +9731,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "tail -n +\"$START\" \"$RAW\" > \"$JSON\""
-  },
-  {
-   "file": ".softhouse/capture/t219-g8-residual/src/run-t219.sh",
-   "line": 45,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT219.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/"
   },
   {
    "file": ".softhouse/capture/t219-g8-residual/src/run-t219.sh",
@@ -10434,13 +10042,6 @@
   },
   {
    "file": ".softhouse/capture/t223-g8-region-predicate/src/run-t223.sh",
-   "line": 45,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT223.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/"
-  },
-  {
-   "file": ".softhouse/capture/t223-g8-region-predicate/src/run-t223.sh",
    "line": 59,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -10613,13 +10214,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "print(\"  I1 = B*r exact = %(I1_exact)s  -> I1q(HALF_UP) = %(I1q)d, delta = %(delta)d,\""
-  },
-  {
-   "file": ".softhouse/capture/t229-g8-site3/src/run-t229.sh",
-   "line": 45,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT229.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/"
   },
   {
    "file": ".softhouse/capture/t229-g8-site3/src/run-t229.sh",
@@ -10861,13 +10455,6 @@
   },
   {
    "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh",
-   "line": 25,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$D\"' EXIT"
-  },
-  {
-   "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh",
    "line": 27,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -11096,13 +10683,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "( \"$interp\" \"$path\" \"$@\" ) >\"$log\" 2>&1"
-  },
-  {
-   "file": ".softhouse/capture/t238-failopen/instruments/30-pr4-nondead-mechanisms.sh",
-   "line": 10,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$S\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t238-failopen/instruments/30-pr4-nondead-mechanisms.sh",
@@ -11337,13 +10917,6 @@
   },
   {
    "file": ".softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh",
-   "line": 20,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$T\"' EXIT"
-  },
-  {
-   "file": ".softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh",
    "line": 28,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -11369,13 +10942,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": ": > \"$out\""
-  },
-  {
-   "file": ".softhouse/capture/t238-failopen/instruments/71-l1b-gitgrep-leg.sh",
-   "line": 22,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$T\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t238-failopen/instruments/71-l1b-gitgrep-leg.sh",
@@ -11698,13 +11264,6 @@
    "pattern": "py-write",
    "what": "python open for write",
    "text": "open(p, 'w', encoding='utf-8').write(s.replace(old, new))"
-  },
-  {
-   "file": ".softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh",
-   "line": 40,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "git rm -q --cached --ignore-unmatch -- \"$PLANT\" >/dev/null 2>&1 || true"
   },
   {
    "file": ".softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh",
@@ -12415,20 +11974,6 @@
   },
   {
    "file": ".softhouse/capture/t253-portability/instruments/10-mktemp-matrix.sh",
-   "line": 41,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "out=\"$(docker run --rm --entrypoint sh \"$IMAGE\" -c \"$snippet\" 2>&1)\" || rc=$?"
-  },
-  {
-   "file": ".softhouse/capture/t253-portability/instruments/10-mktemp-matrix.sh",
-   "line": 61,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "printf 'image  : %s -> %s\\n' \"$IMAGE\"   \"$(docker run --rm --entrypoint mktemp \"$IMAGE\" --version | head -1)\""
-  },
-  {
-   "file": ".softhouse/capture/t253-portability/instruments/10-mktemp-matrix.sh",
    "line": 68,
    "pattern": "rm-plain",
    "what": "file delete",
@@ -12468,13 +12013,6 @@
    "pattern": "py-write",
    "what": "python open for write",
    "text": "open(PATH, \"w\", encoding=\"utf-8\").write(out)"
-  },
-  {
-   "file": ".softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh",
-   "line": 42,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$SCRATCH\"' EXIT HUP INT TERM QUIT"
   },
   {
    "file": ".softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh",
@@ -12559,13 +12097,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "def main() -> int:"
-  },
-  {
-   "file": ".softhouse/capture/t253-portability/instruments/70-cross-impl-compare.sh",
-   "line": 25,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$SCRATCH\"' EXIT HUP INT TERM QUIT"
   },
   {
    "file": ".softhouse/capture/t253-portability/instruments/70-cross-impl-compare.sh",
@@ -14158,13 +13689,6 @@
   },
   {
    "file": ".softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh",
-   "line": 35,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$WORK\"' EXIT HUP INT TERM QUIT"
-  },
-  {
-   "file": ".softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh",
    "line": 74,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -14197,13 +13721,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "echo \"  selector : grep -rl -F <basename> over [$LIVE_SURFACE]\""
-  },
-  {
-   "file": ".softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh",
-   "line": 63,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$SCRATCH\"' EXIT HUP INT TERM QUIT"
   },
   {
    "file": ".softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh",
@@ -14358,13 +13875,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "def main() -> int:"
-  },
-  {
-   "file": ".softhouse/capture/t256-verdict-predicate/red/drive-red.sh",
-   "line": 21,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t256-verdict-predicate/red/drive-red.sh",
@@ -15026,13 +14536,6 @@
   },
   {
    "file": ".softhouse/capture/t273-residue/instruments/70-citation-rot-check.sh",
-   "line": 26,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$W\"' EXIT"
-  },
-  {
-   "file": ".softhouse/capture/t273-residue/instruments/70-citation-rot-check.sh",
    "line": 28,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -15072,13 +14575,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "LC_ALL=C sort -n -u \"$W/nums\" >\"$W/nums.uniq\""
-  },
-  {
-   "file": ".softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh",
-   "line": 101,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$os_tmpd\"' EXIT HUP INT TERM QUIT"
   },
   {
    "file": ".softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh",
@@ -15502,13 +14998,6 @@
   },
   {
    "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-   "line": 59,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$SCRATCH\"' EXIT HUP INT TERM QUIT"
-  },
-  {
-   "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
    "line": 61,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -15593,13 +15082,6 @@
   },
   {
    "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-   "line": 95,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "git -C \"$SCRATCH/repo\" rm -q -f caps/old2.http"
-  },
-  {
-   "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
    "line": 96,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -15618,41 +15100,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "printf 'declared\\n' > \"$SCRATCH/repo/sneaky/ATTEST-TAMPERED-EVIDENCE\""
-  },
-  {
-   "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-   "line": 108,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "git -C \"$SCRATCH/repo\" rm -q -r -f tampered"
-  },
-  {
-   "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-   "line": 108,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "git -C \"$SCRATCH/repo\" rm -q -r -f tampered"
-  },
-  {
-   "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-   "line": 113,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "git -C \"$SCRATCH/repo\" rm -q -f caps/old1.http caps/old2.http caps/new1.http"
-  },
-  {
-   "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-   "line": 114,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "git -C \"$SCRATCH/repo\" rm -q -r -f tampered"
-  },
-  {
-   "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-   "line": 114,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "git -C \"$SCRATCH/repo\" rm -q -r -f tampered"
   },
   {
    "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
@@ -15688,13 +15135,6 @@
    "pattern": "py-write",
    "what": "python open for write",
    "text": "with open(body, \"wb\") as fh:"
-  },
-  {
-   "file": ".softhouse/capture/t284-schema2-callsites/instruments/20-site1-schema1-replay.sh",
-   "line": 104,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$SCRATCH\" \"$SELF\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t284-schema2-callsites/instruments/20-site1-schema1-replay.sh",
@@ -16503,13 +15943,6 @@
   },
   {
    "file": ".softhouse/capture/t287-closure-refusals/cap.sh",
-   "line": 45,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT"
-  },
-  {
-   "file": ".softhouse/capture/t287-closure-refusals/cap.sh",
    "line": 87,
    "pattern": "mv",
    "what": "move/overwrite",
@@ -16549,13 +15982,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "echo \"$code\" > \"$STATUS\""
-  },
-  {
-   "file": ".softhouse/capture/t287-closure-refusals/capsql.sh",
-   "line": 39,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT"
   },
   {
    "file": ".softhouse/capture/t287-closure-refusals/capsql.sh",
@@ -17217,13 +16643,6 @@
   },
   {
    "file": ".softhouse/capture/t294-openingbalance-refusal/cap.sh",
-   "line": 48,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT"
-  },
-  {
-   "file": ".softhouse/capture/t294-openingbalance-refusal/cap.sh",
    "line": 90,
    "pattern": "mv",
    "what": "move/overwrite",
@@ -17263,13 +16682,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "echo \"$code\" > \"$STATUS\""
-  },
-  {
-   "file": ".softhouse/capture/t294-openingbalance-refusal/capsql.sh",
-   "line": 41,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT"
   },
   {
    "file": ".softhouse/capture/t294-openingbalance-refusal/capsql.sh",
@@ -17427,13 +16839,6 @@
   },
   {
    "file": ".softhouse/capture/t300-census-cardinal/instruments/30-cannotcatch-derivation.sh",
-   "line": 26,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$D\"' EXIT INT TERM HUP"
-  },
-  {
-   "file": ".softhouse/capture/t300-census-cardinal/instruments/30-cannotcatch-derivation.sh",
    "line": 27,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -17508,6 +16913,97 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "LC_ALL=C grep -v -x -F \"$FOVICTIM\" \"$BACKUP\" >\"$SUBJ\""
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+   "line": 7,
+   "pattern": "redirect",
+   "what": "output redirection (truncating)",
+   "text": "git ls-files -z                       -> every TRACKED file in the repo"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+   "line": 9,
+   "pattern": "redirect",
+   "what": "output redirection (truncating)",
+   "text": "OR the first two bytes are \"#!\"    -> catches shebang scripts with no extension"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+   "line": 38,
+   "pattern": "git-clean",
+   "what": "git clean",
+   "text": "(\"git-clean\",  r\"\\bgit\\s+clean\\b\", \"git clean\"),"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+   "line": 39,
+   "pattern": "git-reset-hard",
+   "what": "git reset --hard",
+   "text": "(\"git-reset-hard\", r\"\\bgit\\s+reset\\s+--hard\\b\", \"git reset --hard\"),"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+   "line": 40,
+   "pattern": "git-checkout-dd",
+   "what": "git checkout -- (discard worktree edits)",
+   "text": "(\"git-checkout-dd\", r\"\\bgit\\s+checkout\\s+--\\s\", \"git checkout -- (discard worktree edits)\"),"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+   "line": 41,
+   "pattern": "git-restore",
+   "what": "git restore",
+   "text": "(\"git-restore\", r\"\\bgit\\s+restore\\b\", \"git restore\"),"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+   "line": 47,
+   "pattern": "tee",
+   "what": "tee (truncating)",
+   "text": "(\"tee\",        r\"\\btee\\b(?!\\s+-a)\", \"tee (truncating)\"),"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+   "line": 48,
+   "pattern": "dd-of",
+   "what": "dd of=",
+   "text": "(\"dd-of\",      r\"\\bdd\\s+[^\\n]*\\bof=\", \"dd of=\"),"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+   "line": 110,
+   "pattern": "py-write",
+   "what": "python open for write",
+   "text": "with open(out, \"w\") as fh:"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/20-resolve-targets.py",
+   "line": 48,
+   "pattern": "tee",
+   "what": "tee (truncating)",
+   "text": "OVERWRITE = {\"redirect\", \"py-write\", \"write-text\", \"tee\"}"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/20-resolve-targets.py",
+   "line": 315,
+   "pattern": "tee",
+   "what": "tee (truncating)",
+   "text": "elif fam == \"tee\":"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/20-resolve-targets.py",
+   "line": 316,
+   "pattern": "tee",
+   "what": "tee (truncating)",
+   "text": "raw_targets = shell_operands(text, \"tee\")[:1]"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/20-resolve-targets.py",
+   "line": 364,
+   "pattern": "redirect",
+   "what": "output redirection (truncating)",
+   "text": "status = \"TRACKED\" if n > 0 else \"UNTRACKED\""
   },
   {
    "file": ".softhouse/capture/t58-counterfactuals/src/apply-mutations-1.py",
@@ -18211,13 +17707,6 @@
   },
   {
    "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/run-precondition-block.sh",
-   "line": 39,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "trap 'rm -f \"$PYFILE\"' EXIT"
-  },
-  {
-   "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/run-precondition-block.sh",
    "line": 42,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -18449,13 +17938,6 @@
   },
   {
    "file": ".softhouse/capture/t83-nonamortizing/src/run-orderdep.sh",
-   "line": 43,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$PWD/$CAP_DIR:/cap\" \"$EXPECTED_IMAGE_REF\" -c '"
-  },
-  {
-   "file": ".softhouse/capture/t83-nonamortizing/src/run-orderdep.sh",
    "line": 52,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -18519,13 +18001,6 @@
   },
   {
    "file": ".softhouse/capture/t83-nonamortizing/src/run-t83.sh",
-   "line": 122,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT83.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-t83-classpat"
-  },
-  {
-   "file": ".softhouse/capture/t83-nonamortizing/src/run-t83.sh",
    "line": 138,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -18558,13 +18033,6 @@
    "pattern": "py-write",
    "what": "python open for write",
    "text": "with open(attp, 'w', encoding='utf-8') as f:"
-  },
-  {
-   "file": ".softhouse/capture/t91/prove-guards.sh",
-   "line": 32,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$S\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t91/prove-guards.sh",
@@ -18778,13 +18246,6 @@
   },
   {
    "file": ".softhouse/capture/t91/shell-invariance.sh",
-   "line": 64,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$INVDIR\"' EXIT"
-  },
-  {
-   "file": ".softhouse/capture/t91/shell-invariance.sh",
    "line": 74,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -18796,13 +18257,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "if diff -q \"$INVDIR/.inv-a\" \"$INVDIR/.inv-b\" >/dev/null; then"
-  },
-  {
-   "file": ".softhouse/capture/t91/t115-drive-mf1.sh",
-   "line": 26,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$S\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t91/t115-drive-mf1.sh",
@@ -18887,13 +18341,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "sh \"$HERE/verdict.sh\" \"$S/w\" > \"$S/o\" 2>&1; bx=$?"
-  },
-  {
-   "file": ".softhouse/capture/t91/t115-drive-mf2.sh",
-   "line": 34,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$S\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t91/t115-drive-mf2.sh",
@@ -19002,13 +18449,6 @@
   },
   {
    "file": ".softhouse/capture/t91/t115-drive-mf3-mf4.sh",
-   "line": 33,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$S\"' EXIT"
-  },
-  {
-   "file": ".softhouse/capture/t91/t115-drive-mf3-mf4.sh",
    "line": 39,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -19034,13 +18474,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "LC_ALL=C grep -rn --exclude-dir=.git --include='*.sh' --include='*.py' 'run-preconditions\\.sh' \"$C\"   | LC_ALL=C grep -av \"^$C/t91/\"   | LC_ALL=C grep -av \"^$C/charges/bin/run-preconditions.sh:\"   | LC_ALL=C grep -av ':[0-9]*:#'   | sed \"s#^$ROOT/##\" | sort > \"$S/wrap.txt\""
-  },
-  {
-   "file": ".softhouse/capture/t91/t115-rerun-attacks.sh",
-   "line": 26,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$S\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t91/t115-rerun-attacks.sh",
@@ -19076,13 +18509,6 @@
    "pattern": "rm-rf",
    "what": "recursive delete",
    "text": "rm -rf \"$dst\"; mkdir -p \"$dst\""
-  },
-  {
-   "file": ".softhouse/capture/t91/t151-drive-g4.sh",
-   "line": 34,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$S\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t91/t151-drive-g4.sh",
@@ -19135,13 +18561,6 @@
   },
   {
    "file": ".softhouse/capture/t91/t151-drive-g67.sh",
-   "line": 37,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$S\"' EXIT"
-  },
-  {
-   "file": ".softhouse/capture/t91/t151-drive-g67.sh",
    "line": 45,
    "pattern": "rm-rf",
    "what": "recursive delete",
@@ -19181,13 +18600,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "(cd \"$1\" && sh .softhouse/capture/t91/prove-guards.sh) > \"$1.txt\" 2>&1"
-  },
-  {
-   "file": ".softhouse/capture/t91/t151-drive-vb.sh",
-   "line": 36,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$S\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t91/t151-drive-vb.sh",
@@ -19296,13 +18708,6 @@
   },
   {
    "file": ".softhouse/capture/t91/t151-merge-check.sh",
-   "line": 24,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$W\"' EXIT"
-  },
-  {
-   "file": ".softhouse/capture/t91/t151-merge-check.sh",
    "line": 33,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -19314,13 +18719,6 @@
    "pattern": "rm-rf",
    "what": "recursive delete",
    "text": "rm -rf \"$W-main\""
-  },
-  {
-   "file": ".softhouse/capture/t91/t151-merge-check.sh",
-   "line": 76,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$W\" \"$W-main\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t91/t151-merge-check.sh",
@@ -19342,13 +18740,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "echo \"=== LC_ALL=C / grep -a hardening must be monotonically up or flat, main -> merged\""
-  },
-  {
-   "file": ".softhouse/capture/t91/verdict.sh",
-   "line": 97,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$FAILDIR\"' EXIT"
   },
   {
    "file": ".softhouse/capture/t91/verdict.sh",
@@ -19436,13 +18827,6 @@
   },
   {
    "file": ".softhouse/capture/tierA-a2/cap.sh",
-   "line": 65,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT"
-  },
-  {
-   "file": ".softhouse/capture/tierA-a2/cap.sh",
    "line": 94,
    "pattern": "mv",
    "what": "move/overwrite",
@@ -19461,13 +18845,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "echo \"$code\" > \"$STATUS\""
-  },
-  {
-   "file": ".softhouse/capture/tierA-a2/cap10.sh",
-   "line": 67,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT"
   },
   {
    "file": ".softhouse/capture/tierA-a2/cap10.sh",
@@ -19513,13 +18890,6 @@
   },
   {
    "file": ".softhouse/capture/tierA-a2/cap8.sh",
-   "line": 67,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT"
-  },
-  {
-   "file": ".softhouse/capture/tierA-a2/cap8.sh",
    "line": 104,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -19562,13 +18932,6 @@
   },
   {
    "file": ".softhouse/capture/tierA-a2/cap9.sh",
-   "line": 49,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM"
-  },
-  {
-   "file": ".softhouse/capture/tierA-a2/cap9.sh",
    "line": 83,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -19608,13 +18971,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "echo \"$code\" > \"$STATUS\""
-  },
-  {
-   "file": ".softhouse/capture/tierA-a2/capsql.sh",
-   "line": 62,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT"
   },
   {
    "file": ".softhouse/capture/tierA-a2/capsql.sh",
@@ -19891,13 +19247,6 @@
   },
   {
    "file": ".softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh",
-   "line": 25,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\"' EXIT HUP INT TERM QUIT"
-  },
-  {
-   "file": ".softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh",
    "line": 33,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -19979,13 +19328,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "if python3 \"$TMP/rig/census-a2-26.py\" > \"$TMP/census.red2\" 2>&1; then"
-  },
-  {
-   "file": ".softhouse/capture/tierA-a2/prove-cap-transport-red.py",
-   "line": 7,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "diagnostic and the `rm -f \"$OUT\"` never ran.  Against an unreachable endpoint a STALE"
   },
   {
    "file": ".softhouse/capture/tierA-a2/prove-cap-transport-red.py",
@@ -20556,20 +19898,6 @@
   },
   {
    "file": ".softhouse/capture/tierA-a2/prove-quit-trap-a226.py",
-   "line": 5,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "bash-signal background): pre-fix, `trap 'rm -rf \"$TMP\"' EXIT HUP INT TERM` (line 23)"
-  },
-  {
-   "file": ".softhouse/capture/tierA-a2/prove-quit-trap-a226.py",
-   "line": 39,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "PRE_TRAP_LINE_NO = 23   # pre-fix blob: `trap 'rm -rf \"$TMP\"' EXIT HUP INT TERM` -- verified by `nl -ba`"
-  },
-  {
-   "file": ".softhouse/capture/tierA-a2/prove-quit-trap-a226.py",
    "line": 52,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -20598,13 +19926,6 @@
   },
   {
    "file": ".softhouse/capture/tierA-a2/prove-quit-trap-cap.py",
-   "line": 7,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM"
-  },
-  {
-   "file": ".softhouse/capture/tierA-a2/prove-quit-trap-cap.py",
    "line": 75,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -20623,13 +19944,6 @@
    "pattern": "rmtree",
    "what": "python recursive delete",
    "text": "shutil.rmtree(tmproot, ignore_errors=True)"
-  },
-  {
-   "file": ".softhouse/capture/tierA-a2/prove-quit-trap-cap9.py",
-   "line": 10,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM"
   },
   {
    "file": ".softhouse/capture/tierA-a2/prove-quit-trap-cap9.py",
@@ -21207,13 +20521,6 @@
   },
   {
    "file": ".softhouse/conformance.sh",
-   "line": 1981,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "warn \"conformance: name.XXXXXXXXXX\\\")\\` with a \\`trap 'rm -rf \\\"\\$D\\\"' EXIT\\` is the adoptable shape, and\""
-  },
-  {
-   "file": ".softhouse/conformance.sh",
    "line": 1988,
    "pattern": "rm-plain",
    "what": "file delete",
@@ -21438,13 +20745,6 @@
   },
   {
    "file": ".softhouse/guards/drive-red-ledger-invariants.sh",
-   "line": 42,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$WORK\"' EXIT"
-  },
-  {
-   "file": ".softhouse/guards/drive-red-ledger-invariants.sh",
    "line": 54,
    "pattern": "rm-rf",
    "what": "recursive delete",
@@ -21491,13 +20791,6 @@
    "pattern": "rm-rf",
    "what": "recursive delete",
    "text": "rm -rf \"$CTRL\""
-  },
-  {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T106-evidence/prove-token-forgeable.sh",
-   "line": 52,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "trap 'rm -f \"$ORIG\" \"$FIXED\"' EXIT"
   },
   {
    "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T106-evidence/prove-token-forgeable.sh",
@@ -21561,13 +20854,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "row \"_conformance_psub_line pre-seeded -> REFUSED\"       3 \"_conformance_psub_line=$TOKEN\"  \"$FIXED\""
-  },
-  {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh",
-   "line": 42,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "trap 'rm -f \"$PREFIX\" \"$INNER\"' EXIT"
   },
   {
    "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh",
@@ -21647,13 +20933,6 @@
    "text": "printf '  %-42s %s -> exit=%s\\n' \"$label\" \"$( [ \"$h\" = \"$PRE\" ] && echo PRE-FIX || echo POST-FIX )\" \"$c\""
   },
   {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh",
-   "line": 197,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "out=\"$(docker run --rm --network none -v \"$REPO_ROOT\":/repo:ro \"$IMAGE\" bash /repo/.softhouse/.T113-b5-inner.sh 2>&1)\""
-  },
-  {
    "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/hostile-env-matrix.sh",
    "line": 22,
    "pattern": "rm-plain",
@@ -21711,13 +20990,6 @@
   },
   {
    "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh",
-   "line": 208,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "trap 'rm -f \"$NOIFS\" \"$BENV\" \"$SEEIFS\"' EXIT"
-  },
-  {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh",
    "line": 209,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -21757,13 +21029,6 @@
    "pattern": "rm-plain",
    "what": "file delete",
    "text": "rm -f \"$NOIFS\" \"$BENV\" \"$SEEIFS\""
-  },
-  {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh",
-   "line": 52,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "trap 'rm -f \"$ORIG\" \"$FIXED\"' EXIT"
   },
   {
    "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh",
@@ -21830,13 +21095,6 @@
   },
   {
    "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh",
-   "line": 52,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "trap 'rm -f \"$PREFIX\" \"$INNER\"' EXIT"
-  },
-  {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh",
    "line": 54,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -21871,13 +21129,6 @@
    "text": "env _conformance_psub_line=\"$TOKEN\" bash \"$h\" --help >/dev/null 2>&1; forged=$?"
   },
   {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh",
-   "line": 120,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "out=\"$(docker run --rm --network none -v \"$REPO_ROOT\":/repo:ro \"$IMAGE\" bash /repo/.softhouse/.T113-inner.sh 2>&1)\""
-  },
-  {
    "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/readonly-sourced-edge.sh",
    "line": 60,
    "pattern": "redirect",
@@ -21904,13 +21155,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "ok \"[3] sourced WITH _conformance_psub_line readonly -> REFUSED (exit 3)\""
-  },
-  {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/ifs-routes.sh",
-   "line": 29,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\"' EXIT"
   },
   {
    "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/ifs-routes.sh",
@@ -21946,13 +21190,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "predict() { # predict <line> <ifs> -> what the candidate rule says `read` returns"
-  },
-  {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh",
-   "line": 67,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$W\"' EXIT"
   },
   {
    "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh",
@@ -22033,20 +21270,6 @@
   },
   {
    "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
-   "line": 76,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\"' EXIT"
-  },
-  {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
-   "line": 90,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\" \"$PREFIX\"' EXIT"
-  },
-  {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
    "line": 91,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -22075,13 +21298,6 @@
   },
   {
    "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
-   "line": 170,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\" \"$PREFIX\" \"$BROKEN\"' EXIT"
-  },
-  {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
    "line": 171,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -22093,13 +21309,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "sed '/^#=END-OF-HELP=$/d' \"$HARNESS\" > \"$NOSENT\""
-  },
-  {
-   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
-   "line": 237,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\" \"$PREFIX\" \"$BROKEN\" \"$FORGE\" \"$UNFIXED\"' EXIT"
   },
   {
    "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
@@ -22754,13 +21963,6 @@
   },
   {
    "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241-evidence/census_two_engines_t241.sh",
-   "line": 29,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\"' EXIT"
-  },
-  {
-   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241-evidence/census_two_engines_t241.sh",
    "line": 98,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -23321,13 +22523,6 @@
   },
   {
    "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh",
-   "line": 20,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "echo \"--- brief-literal variant (reachable handler done right + rm -f kept) ---\""
-  },
-  {
-   "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh",
    "line": 27,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -23363,13 +22558,6 @@
   },
   {
    "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh",
-   "line": 42,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "echo \"  out/POISON.json: *** DELETED by rm -f -- an EARLIER FIRE'S EVIDENCE, covered by MANIFEST.sha256 ***\""
-  },
-  {
-   "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh",
    "line": 45,
    "pattern": "rm-rf",
    "what": "recursive delete",
@@ -23381,13 +22569,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "sed -e 's/^set -e$/set -e/'     -e \"s/^              -d @\\\"\\$DIR\\/\\$BODY\\\" -o \\\"\\$OUT\\\" -w '%{http_code}')$/              -d @\\\"\\$DIR\\/\\$BODY\\\" -o \\\"\\$OUT\\\" -w '%{http_code}') || rc=\\$?/\"     -e \"s/^  code=\\$(curl -sk -X \\\"\\$METHOD\\\" \\\"\\$B\\$RPATH\\\" -H \\\"\\$A\\\" -H \\\"\\$T\\\" -o \\\"\\$OUT\\\" -w '%{http_code}')$/  code=\\$(curl -sk -X \\\"\\$METHOD\\\" \\\"\\$B\\$RPATH\\\" -H \\\"\\$A\\\" -H \\\"\\$T\\\" -o \\\"\\$OUT\\\" -w '%{http_"
-  },
-  {
-   "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh",
-   "line": 17,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "echo \"--- counterfactual: the brief's fix (reachable handler + rm -f retained) ---\""
   },
   {
    "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh",
@@ -26205,13 +25386,6 @@
   },
   {
    "file": ".softhouse/reviews/T155-probe/prove-xii-perl-true-absence.sh",
-   "line": 15,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "for t in bash sh find sort grep wc sed awk cat rm mkdir; do"
-  },
-  {
-   "file": ".softhouse/reviews/T155-probe/prove-xii-perl-true-absence.sh",
    "line": 20,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -26538,13 +25712,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "print('\\n  disputed-cell JVMs (C2 on) with >4 attempts: flip exactly at attempt 5 = %d, other = %d'"
-  },
-  {
-   "file": ".softhouse/reviews/T183-evidence/drive-probes.sh",
-   "line": 17,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$SCRATCH\"' EXIT"
   },
   {
    "file": ".softhouse/reviews/T183-evidence/drive-probes.sh",
@@ -27269,13 +26436,6 @@
   },
   {
    "file": ".softhouse/reviews/T191-probe/drive-t191.sh",
-   "line": 29,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\"' EXIT"
-  },
-  {
-   "file": ".softhouse/reviews/T191-probe/drive-t191.sh",
    "line": 31,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -27360,13 +26520,6 @@
   },
   {
    "file": ".softhouse/reviews/T191-probe/mutate-exclusion.sh",
-   "line": 11,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "TMP=\"$(mktemp -d)\"; trap 'rm -rf \"$TMP\"' EXIT"
-  },
-  {
-   "file": ".softhouse/reviews/T191-probe/mutate-exclusion.sh",
    "line": 31,
    "pattern": "py-write",
    "what": "python open for write",
@@ -27392,13 +26545,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "bash \"$REPO/.softhouse/conformance.sh\" > \"$OUT\" 2>&1"
-  },
-  {
-   "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
-   "line": 16,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$D\"' EXIT"
   },
   {
    "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
@@ -27794,13 +26940,6 @@
   },
   {
    "file": ".softhouse/reviews/T84-evidence/src/run-orderdep2.sh",
-   "line": 43,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAP_DIR:/cap\" \"$EXPECTED_IMAGE_REF\" -c '"
-  },
-  {
-   "file": ".softhouse/reviews/T84-evidence/src/run-orderdep2.sh",
    "line": 52,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -27840,13 +26979,6 @@
    "pattern": "py-write",
    "what": "python open for write",
    "text": "open('/tmp/t84-port-report.json', 'w'), indent=1)"
-  },
-  {
-   "file": ".softhouse/reviews/T84-evidence/src/run-t84.sh",
-   "line": 42,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT84.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/classpath-sha256.txt\"   "
   },
   {
    "file": ".softhouse/reviews/T84-evidence/src/run-t84.sh",
@@ -28540,13 +27672,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "print(\"=> the published figure IS over a silently shrunken denominator.\")"
-  },
-  {
-   "file": ".softhouse/reviews/t185-probe/probe-t44-successor.sh",
-   "line": 5,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "S=$(mktemp -d); trap 'rm -rf \"$S\"' EXIT"
   },
   {
    "file": ".softhouse/reviews/t185-probe/probe-t44-successor.sh",
@@ -29516,13 +28641,6 @@
   },
   {
    "file": ".softhouse/reviews/t21v2/run-probe2-attested.sh",
-   "line": 43,
-   "pattern": "rm-plain",
-   "what": "file delete",
-   "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$IMG\"   -e ATTEST_PINNED_COMMIT=\"$COMMIT\"   -e ATTEST_SOURCES=\"/cap/src/T21v2Probe2.java:/cap/src/T21v2Probe2Attested.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -v \"$WORK:/cap\" \"$EXPECTED_IMAGE_REF\" -c '"
-  },
-  {
-   "file": ".softhouse/reviews/t21v2/run-probe2-attested.sh",
    "line": 56,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -30195,13 +29313,6 @@
   },
   {
    "file": ".softhouse/reviews/t254-harness-portability/instruments/30-goroot-stale-repro.sh",
-   "line": 27,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$STAGE\"' EXIT"
-  },
-  {
-   "file": ".softhouse/reviews/t254-harness-portability/instruments/30-goroot-stale-repro.sh",
    "line": 39,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -30612,13 +29723,6 @@
    "pattern": "redirect",
    "what": "output redirection (truncating)",
    "text": "bash \"$ROOT/.softhouse/conformance.sh\" > \"$LOG\" 2>&1"
-  },
-  {
-   "file": ".softhouse/reviews/t261-tenant-attestation/instruments/t261-caller-and-trap.sh",
-   "line": 22,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$SCRATCH\"' EXIT"
   },
   {
    "file": ".softhouse/reviews/t261-tenant-attestation/instruments/t261-caller-and-trap.sh",
@@ -31168,13 +30272,6 @@
   },
   {
    "file": ".softhouse/reviews/t263-analyze7-float-guard/attack-nilcoverage.sh",
-   "line": 14,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$TMP\"' EXIT"
-  },
-  {
-   "file": ".softhouse/reviews/t263-analyze7-float-guard/attack-nilcoverage.sh",
    "line": 54,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -31490,13 +30587,6 @@
   },
   {
    "file": ".softhouse/reviews/t283-review-t274/instruments/10-forgery-arms.sh",
-   "line": 77,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$WORK\"' EXIT HUP INT TERM QUIT"
-  },
-  {
-   "file": ".softhouse/reviews/t283-review-t274/instruments/10-forgery-arms.sh",
    "line": 98,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -31714,13 +30804,6 @@
   },
   {
    "file": ".softhouse/reviews/t283-review-t274/instruments/30-selfcheck-residue.sh",
-   "line": 36,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$WORK\"' EXIT HUP INT TERM QUIT"
-  },
-  {
-   "file": ".softhouse/reviews/t283-review-t274/instruments/30-selfcheck-residue.sh",
    "line": 42,
    "pattern": "redirect",
    "what": "output redirection (truncating)",
@@ -31911,13 +30994,6 @@
   {
    "file": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
    "line": 81,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "/usr/bin/sed -i '' \"s%^trap 'rm -rf \\\"\\\\\\$D\\\"' EXIT\\$%%\" \"$ESCAPE\""
-  },
-  {
-   "file": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
-   "line": 81,
    "pattern": "sed-i",
    "what": "in-place edit",
    "text": "/usr/bin/sed -i '' \"s%^trap 'rm -rf \\\"\\\\\\$D\\\"' EXIT\\$%%\" \"$ESCAPE\""
@@ -31963,13 +31039,6 @@
    "pattern": "sed-i",
    "what": "in-place edit",
    "text": "/usr/bin/sed -i '' 's%^D=\"\\$(mktemp -d .*$%C=/tmp/t234_matrix2.txt%' \"$F\""
-  },
-  {
-   "file": ".softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh",
-   "line": 39,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "/usr/bin/sed -i '' \"s%^trap 'rm -rf \\\"\\\\\\$D\\\"' EXIT\\$%%\" \"$F\""
   },
   {
    "file": ".softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh",
@@ -34574,13 +33643,6 @@
    "pattern": "py-write",
    "what": "python open for write",
    "text": "io.open(cgo, \"wb\").write(git_show(\"%s:%s\" % (SEED_GO_REV, GO_REL)))"
-  },
-  {
-   "file": ".softhouse/reviews/t41-probe/t196-drive.sh",
-   "line": 51,
-   "pattern": "rm-rf",
-   "what": "recursive delete",
-   "text": "trap 'rm -rf \"$SB\"' EXIT"
   },
   {
    "file": ".softhouse/reviews/t41-probe/t196-drive.sh",

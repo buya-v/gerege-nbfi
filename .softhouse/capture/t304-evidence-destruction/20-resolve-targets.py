@@ -191,7 +191,15 @@ def has_cd_to_scratch(text_lines, kinds):
     return False
 
 
-ARGSPLIT = re.compile(r"""'([^']*)'|"([^"]*)"|(\S+)""")
+# A shell WORD is a run of quoted and unquoted chunks with no whitespace between them.
+# `"$O"/.f1-before` is ONE word. The first draft tokenised it as `"$O"` and then counted
+# the 68 tracked files under that DIRECTORY, when the operand is a single untracked
+# dotfile inside it -- a false positive of 68.
+WORD = re.compile(r"""(?:'[^']*'|"[^"]*"|[^\s'"]+)+""")
+
+
+def unquote(word):
+    return re.sub(r"""['"]""", "", word)
 
 
 def shell_operands(text, verb):
@@ -201,8 +209,8 @@ def shell_operands(text, verb):
     seg = text[m.end():]
     seg = re.split(r"(?:&&|\|\||[;|)]|\bthen\b|\bdo\b|\bfi\b)", seg)[0]
     ops = []
-    for g in ARGSPLIT.finditer(seg):
-        tok = g.group(1) or g.group(2) or g.group(3) or ""
+    for g in WORD.finditer(seg):
+        tok = unquote(g.group(0))
         if not tok or tok.startswith("-") or tok.startswith(("2>", ">", "<")):
             continue
         ops.append(tok)
@@ -290,8 +298,9 @@ def main():
         kinds, cd_scratch = cache[rel]
 
         if fam in ("rm-rf", "rm-plain"):
-            ops = shell_operands(text, "rm")
-            raw_targets = ops[:1]
+            # `rm -rf "$EV/red" "$EV/green"` is TWO destructions. Taking only ops[0]
+            # under-counted t274 instrument 10 by one whole evidence tree.
+            raw_targets = shell_operands(text, "rm")
         elif fam == "mv":
             ops = shell_operands(text, "mv")
             raw_targets = ops[-1:] if len(ops) >= 2 else []
@@ -311,13 +320,33 @@ def main():
         else:
             raw_targets = [py_operand(text)]
 
-        raw = raw_targets[0] if raw_targets else None
+        # A destructive verb inside an `echo`/`printf` STRING is prose, not an operation.
+        # Measured: `A2-10-probe/adjudicate-rmf-brief-literal.sh:42` prints the words
+        # "DELETED by rm -f" and the first draft scored it as a deletion of 6853 files.
+        if not rel.endswith(".py") and fam in DESTRUCTIVE:
+            if re.match(r"^\s*(echo|printf|say|log|cat|:)\b", text):
+                continue
 
+        seen_targets = set()
+        for raw in (raw_targets or [None]):
+            row = resolve_one(h, fam, rel, raw, kinds, cd_scratch)
+            key = (row["target"], row["status"])
+            if key in seen_targets:
+                continue
+            seen_targets.add(key)
+            rows.append(row)
+
+    with open(os.path.join(HERE, "evidence", "20-resolved.json"), "w") as fh:
+        json.dump(rows, fh, indent=1)
+    report(rows)
+
+
+def resolve_one(h, fam, rel, raw, kinds, cd_scratch):
         if rel.endswith(".py"):
             # python: only literal-headed expressions are resolvable here
-            if raw and re.match(r"^[\"']", raw.strip()):
-                lit = re.match(r"^[\"']([^\"']+)[\"']", raw.strip()).group(1)
-                kind, path = resolve_shell(lit, {}, rel, False)
+            m_lit = re.match(r"^[\"']([^\"']+)[\"']", raw.strip()) if raw else None
+            if m_lit:
+                kind, path = resolve_shell(m_lit.group(1), {}, rel, False)
             elif raw and re.search(r"(tmp|TMP|mkdtemp|TemporaryDirectory|sandbox|scratch|SCRATCH|work|WORK)", raw):
                 kind, path = ("SCRATCH", None)
             else:
@@ -325,6 +354,11 @@ def main():
         else:
             kind, path = resolve_shell(raw, kinds, rel, cd_scratch)
 
+        if kind == "PATH" and path and re.fullmatch(r"[*?/.]+", path):
+            # every component became a wildcard -> this is not a resolved path.
+            # `***` as a pathspec matches the whole repo; scoring it TRACKED would be
+            # the single largest false positive available.
+            kind, path = "UNKNOWN", None
         if kind == "PATH":
             n = tracked_count(path)
             status = "TRACKED" if n > 0 else "UNTRACKED"
@@ -336,13 +370,12 @@ def main():
             status, n = "SCRATCH", 0
         else:
             status, n = "UNKNOWN", None
-        rows.append({**h, "raw_target": raw, "target": path, "status": status,
-                     "tracked_files": n,
-                     "family": "destructive" if fam in DESTRUCTIVE else "overwrite"})
+        return {**h, "raw_target": raw, "target": path, "status": status,
+                "tracked_files": n,
+                "family": "destructive" if fam in DESTRUCTIVE else "overwrite"}
 
-    with open(os.path.join(HERE, "evidence", "20-resolved.json"), "w") as fh:
-        json.dump(rows, fh, indent=1)
 
+def report(rows):
     for fam in ("destructive", "overwrite"):
         sub = [r for r in rows if r["family"] == fam]
         agg = {}

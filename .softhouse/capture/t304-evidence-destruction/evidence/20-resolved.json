@@ -13,30 +13,6 @@
  },
  {
   "file": ".softhouse/bin/build-oracle-image.sh",
-  "line": 22,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm -v \"${CACHE_VOL}:/gradle-home\" alpine:3   chown -R \"${HOST_UID}:${HOST_GID}\" /gradle-home",
-  "raw_target": "${CACHE_VOL}:/gradle-home",
-  "target": "fineract-gradle-cache:/gradle-home",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/bin/build-oracle-image.sh",
-  "line": 38,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "if docker run --rm       -u \"${HOST_UID}:${HOST_GID}\"       -v \"${FINERACT_SRC}:/src\"       -v \"${CACHE_VOL}:/gradle-home\"       -w /src       -e GRADLE_USER_HOME=/gradle-home       -e GRADLE_OPTS=\"${GRADLE_OPTS_HTTP}\"       \"${JDK_IMAGE}\"       ./gradlew :fineract-provider:bootJar -x test         --no-daemon --console=plain --max-workers=2; then",
-  "raw_target": "${HOST_UID}:${HOST_GID}",
-  "target": null,
-  "status": "UNKNOWN",
-  "tracked_files": null,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/bin/build-oracle-image.sh",
   "line": 65,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -817,18 +793,6 @@
  },
  {
   "file": ".softhouse/capture/actualactual/src/run-actualactual.sh",
-  "line": 81,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/actualactual/src/run-actualactual.sh",
   "line": 94,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -850,18 +814,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/actualactual/src/run-actualactual.sh",
-  "line": 109,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e \"T48_JAVA_PROPS=$JAVA_PROPS\" -e \"T48_SET=$SET\"   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/actualactual/src/run-actualactual.sh",
@@ -922,18 +874,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/audit-t44/analysis/T175-red/drive-red.sh",
-  "line": 37,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$SCRATCH\"' EXIT",
-  "raw_target": "$SCRATCH",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/audit-t44/analysis/T175-red/drive-red.sh",
@@ -1102,18 +1042,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh",
-  "line": 60,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$SCRATCH\"' EXIT",
-  "raw_target": "$SCRATCH",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh",
@@ -2113,18 +2041,6 @@
  },
  {
   "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh",
-  "line": 85,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh",
   "line": 98,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -2146,18 +2062,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh",
-  "line": 113,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh",
@@ -2218,18 +2122,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh",
-  "line": 63,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e \"T42_JAVA_PROPS=${T42_JAVA_PROPS:-}\"   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh",
@@ -3193,18 +3085,6 @@
  },
  {
   "file": ".softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh",
-  "line": 92,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh",
   "line": 105,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -3226,18 +3106,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh",
-  "line": 120,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e \"T39_JAVA_PROPS=$JAVA_PROPS\"   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh",
@@ -6805,18 +6673,6 @@
  },
  {
   "file": ".softhouse/capture/lib/oracle_send.sh",
-  "line": 114,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$os_tmpd\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$os_tmpd",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/lib/oracle_send.sh",
   "line": 120,
   "pattern": "rm-rf",
   "what": "recursive delete",
@@ -7933,18 +7789,6 @@
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-mathcontext.sh",
-  "line": 85,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/mathcontext/src/run-mathcontext.sh",
   "line": 98,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -7966,18 +7810,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/mathcontext/src/run-mathcontext.sh",
-  "line": 113,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-mathcontext.sh",
@@ -8038,18 +7870,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/mathcontext/src/run-mathcontext2.sh",
-  "line": 63,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e \"T42_JAVA_PROPS=${T42_JAVA_PROPS:-}\"   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-mathcontext2.sh",
@@ -8149,18 +7969,6 @@
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-mathcontext3.sh",
-  "line": 81,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/mathcontext/src/run-mathcontext3.sh",
   "line": 94,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -8182,18 +7990,6 @@
   "status": "TRACKED",
   "tracked_files": 1,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/mathcontext/src/run-mathcontext3.sh",
-  "line": 105,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-mathcontext3.sh",
@@ -8329,18 +8125,6 @@
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-t50-tier1.sh",
-  "line": 59,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/mathcontext/src/run-t50-tier1.sh",
   "line": 85,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -8398,18 +8182,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/mathcontext/src/run-t50-tier1.sh",
-  "line": 113,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-t50-tier1.sh",
@@ -8485,18 +8257,6 @@
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-t50-tier2.sh",
-  "line": 59,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/mathcontext/src/run-t50-tier2.sh",
   "line": 85,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -8554,18 +8314,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/mathcontext/src/run-t50-tier2.sh",
-  "line": 113,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-t50-tier2.sh",
@@ -8722,18 +8470,6 @@
   "status": "TRACKED",
   "tracked_files": 1,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/mathcontext/src/t46-negative-vacuity.sh",
-  "line": 41,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "trap 'rm -f \"$BLOCK\"' EXIT",
-  "raw_target": "$BLOCK",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/mathcontext/src/t46-negative-vacuity.sh",
@@ -9192,6 +8928,150 @@
   "family": "destructive"
  },
  {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "line": 62,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$CHBIN/out\"          # this fork's OUT is charges/bin/out/, created by the runs above",
+  "raw_target": "#",
+  "target": "#",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "line": 62,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$CHBIN/out\"          # this fork's OUT is charges/bin/out/, created by the runs above",
+  "raw_target": "this",
+  "target": "this",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "line": 62,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$CHBIN/out\"          # this fork's OUT is charges/bin/out/, created by the runs above",
+  "raw_target": "fork",
+  "target": "fork",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "line": 62,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$CHBIN/out\"          # this fork's OUT is charges/bin/out/, created by the runs above",
+  "raw_target": "s",
+  "target": "s",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "line": 62,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$CHBIN/out\"          # this fork's OUT is charges/bin/out/, created by the runs above",
+  "raw_target": "OUT",
+  "target": "OUT",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "line": 62,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$CHBIN/out\"          # this fork's OUT is charges/bin/out/, created by the runs above",
+  "raw_target": "is",
+  "target": "is",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "line": 62,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$CHBIN/out\"          # this fork's OUT is charges/bin/out/, created by the runs above",
+  "raw_target": "charges/bin/out/,",
+  "target": "charges/bin/out/,",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "line": 62,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$CHBIN/out\"          # this fork's OUT is charges/bin/out/, created by the runs above",
+  "raw_target": "created",
+  "target": "created",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "line": 62,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$CHBIN/out\"          # this fork's OUT is charges/bin/out/, created by the runs above",
+  "raw_target": "by",
+  "target": "by",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "line": 62,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$CHBIN/out\"          # this fork's OUT is charges/bin/out/, created by the runs above",
+  "raw_target": "the",
+  "target": "the",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "line": 62,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$CHBIN/out\"          # this fork's OUT is charges/bin/out/, created by the runs above",
+  "raw_target": "runs",
+  "target": "runs",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t125/drive-stale-fork.sh",
+  "line": 62,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$CHBIN/out\"          # this fork's OUT is charges/bin/out/, created by the runs above",
+  "raw_target": "above",
+  "target": "above",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
   "file": ".softhouse/capture/pathb/t147/mutate-blast-radius-provenance.py",
   "line": 52,
   "pattern": "py-write",
@@ -9505,6 +9385,18 @@
  },
  {
   "file": ".softhouse/capture/pathb/t149/prove-redgreen.sh",
+  "line": 152,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$_tb\" \"$_ta\"",
+  "raw_target": "$_ta",
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t149/prove-redgreen.sh",
   "line": 156,
   "pattern": "rm-plain",
   "what": "file delete",
@@ -9617,7 +9509,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "by `sed -i`, by a Python `open(p,\"w\")`, or by a helper the file calls in another",
-  "raw_target": "`open(p,\"w\"",
+  "raw_target": "`open(p,w",
   "target": null,
   "status": "UNKNOWN",
   "tracked_files": null,
@@ -10350,9 +10242,9 @@
   "what": "output redirection (truncating)",
   "text": "[ $# -gt 0 ] || { echo \"usage: sh sha256.sh <file>...\" >&2; exit 2; }",
   "raw_target": "...\"",
-  "target": "...",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
   "family": "overwrite"
  },
  {
@@ -10777,30 +10669,6 @@
  },
  {
   "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
-  "line": 117,
-  "pattern": "git-checkout-dd",
-  "what": "git checkout -- (discard worktree edits)",
-  "text": "echo \"guard: refusing to guess whose bytes those are. Inspect, then: git checkout -- $REL_A\" >&2",
-  "raw_target": "$REL_A\"",
-  "target": ".softhouse/capture/pathb/t36/attest.py",
-  "status": "TRACKED",
-  "tracked_files": 1,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
-  "line": 125,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "if rm -f \"$SIB\"; then echo \"guard: removed the scratch sibling attester $REL_SIB\" >&2",
-  "raw_target": "$SIB",
-  "target": ".softhouse/capture/pathb/t36/.f1-prefix-attest.py",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
   "line": 142,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -10933,6 +10801,114 @@
  },
  {
   "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 213,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$A.t161-restore",
+  "target": ".softhouse/capture/pathb/t36/attest.py                        # the LIVE rig file \u2014 WATCHED, never written.t161-restore",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 213,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$T80/.f1-blobcheck",
+  "target": ".softhouse/capture/pathb/t80/.f1-blobcheck",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 213,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-before",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-before",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 213,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-after-prefix",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-after-prefix",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 213,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-restored",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-restored",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 213,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-after-fixed",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-after-fixed",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 213,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-fixed",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-fixed",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 213,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-out1",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-out1",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 213,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-out2",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-out2",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
   "line": 231,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -10993,12 +10969,132 @@
  },
  {
   "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 291,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$_tb\" \"$_ta\"",
+  "raw_target": "$_ta",
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
   "line": 294,
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
   "raw_target": "$GUARD",
   "target": ".softhouse/capture/pathb/t80/.f1-swap-in-progress           # in-flight marker.  It lives OUTSIDE `out/` so a",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 294,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$A.t161-restore",
+  "target": ".softhouse/capture/pathb/t36/attest.py                        # the LIVE rig file \u2014 WATCHED, never written.t161-restore",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 294,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$T80/.f1-blobcheck",
+  "target": ".softhouse/capture/pathb/t80/.f1-blobcheck",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 294,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-before",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-before",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 294,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-after-prefix",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-after-prefix",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 294,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-restored",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-restored",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 294,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-after-fixed",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-after-fixed",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 294,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-fixed",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-fixed",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 294,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-out1",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-out1",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+  "line": 294,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$GUARD\" \"$A.t161-restore\" \"$T80/.f1-blobcheck\"         \"$O\"/.f1-before \"$O\"/.f1-after-prefix \"$O\"/.f1-restored         \"$O\"/.f1-after-fixed \"$O\"/.f1-fixed \"$O\"/.f1-out1 \"$O\"/.f1-out2",
+  "raw_target": "$O/.f1-out2",
+  "target": ".softhouse/capture/pathb/t80/out/.f1-out2",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
@@ -11172,6 +11268,42 @@
   "family": "destructive"
  },
  {
+  "file": ".softhouse/capture/pathb/t80/prove-f2.sh",
+  "line": 97,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$O/.f2-prefix.sh\" \"$O/.f2-prefix.txt\" \"$O/.f2-fixed.txt\" \"$O/.f2-attest.txt\"",
+  "raw_target": "$O/.f2-prefix.txt",
+  "target": ".softhouse/capture/pathb/t80/out/.f2-prefix.txt",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f2.sh",
+  "line": 97,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$O/.f2-prefix.sh\" \"$O/.f2-prefix.txt\" \"$O/.f2-fixed.txt\" \"$O/.f2-attest.txt\"",
+  "raw_target": "$O/.f2-fixed.txt",
+  "target": ".softhouse/capture/pathb/t80/out/.f2-fixed.txt",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/pathb/t80/prove-f2.sh",
+  "line": 97,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$O/.f2-prefix.sh\" \"$O/.f2-prefix.txt\" \"$O/.f2-fixed.txt\" \"$O/.f2-attest.txt\"",
+  "raw_target": "$O/.f2-attest.txt",
+  "target": ".softhouse/capture/pathb/t80/out/.f2-attest.txt",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
   "file": ".softhouse/capture/pathb/t80/run-attacks.sh",
   "line": 24,
   "pattern": "redirect",
@@ -11268,6 +11400,18 @@
   "family": "destructive"
  },
  {
+  "file": ".softhouse/capture/pathb/t80/shell-invariance.sh",
+  "line": 34,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$O/.norm-sh.$$\" \"$O/.norm-bash.$$\"",
+  "raw_target": "$O/.norm-bash.$$",
+  "target": ".softhouse/capture/pathb/t80/out/.norm-bash.$$",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
   "file": ".softhouse/capture/pathb/t99/lib.sh",
   "line": 94,
   "pattern": "rm-rf",
@@ -11298,9 +11442,9 @@
   "what": "output redirection (truncating)",
   "text": "echo \"THE ATTACK:  TENANT=gerege RECAPTURE_OUT=<tree>/$ATTACK  sh t36/recapture.sh\"",
   "raw_target": "/$ATTACK",
-  "target": "*",
-  "status": "TRACKED",
-  "tracked_files": 6853,
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
   "family": "overwrite"
  },
  {
@@ -12565,18 +12709,6 @@
  },
  {
   "file": ".softhouse/capture/periodratio/analysis/run-t46-monthdiff.sh",
-  "line": 24,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/periodratio/analysis/run-t46-monthdiff.sh",
   "line": 31,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -13237,18 +13369,6 @@
  },
  {
   "file": ".softhouse/capture/periodratio/src/run-periodratio.sh",
-  "line": 92,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/periodratio/src/run-periodratio.sh",
   "line": 105,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -13270,18 +13390,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/periodratio/src/run-periodratio.sh",
-  "line": 120,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e \"T39_JAVA_PROPS=$JAVA_PROPS\"   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/periodratio/src/run-periodratio.sh",
@@ -13345,18 +13453,6 @@
  },
  {
   "file": ".softhouse/capture/periodratio/src/run-t46-periodratio.sh",
-  "line": 94,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/periodratio/src/run-t46-periodratio.sh",
   "line": 107,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -13378,18 +13474,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/periodratio/src/run-t46-periodratio.sh",
-  "line": 122,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e \"T46_JAVA_PROPS=$JAVA_PROPS\" -e \"T46_SET=$SET\"   -v \"$CAPDIR:/cap\" \"$EXPECT_IMAGE\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/periodratio/src/run-t46-periodratio.sh",
@@ -13462,18 +13546,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/src/run-pass3b.sh",
-  "line": 88,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3b.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3b-classp",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/src/run-pass3b.sh",
@@ -13561,18 +13633,6 @@
  },
  {
   "file": ".softhouse/capture/src/run-pass3c.sh",
-  "line": 114,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3c.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3c-classp",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/src/run-pass3c.sh",
   "line": 130,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -13654,18 +13714,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/src/run-pass3d.sh",
-  "line": 140,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3d.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3d-classp",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/src/run-pass3d.sh",
@@ -13753,18 +13801,6 @@
  },
  {
   "file": ".softhouse/capture/src/run-pass3e.sh",
-  "line": 144,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3e.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3e-classp",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/src/run-pass3e.sh",
   "line": 160,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -13846,18 +13882,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/src/run-pass3f.sh",
-  "line": 153,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3f.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3f-classp",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/src/run-pass3f.sh",
@@ -13945,18 +13969,6 @@
  },
  {
   "file": ".softhouse/capture/src/run-pass3g.sh",
-  "line": 153,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3g.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3g-classp",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/src/run-pass3g.sh",
   "line": 169,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -14041,18 +14053,6 @@
  },
  {
   "file": ".softhouse/capture/src/run-pass3h.sh",
-  "line": 186,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3h.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3h-classp",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/src/run-pass3h.sh",
   "line": 202,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -14134,18 +14134,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/src/run-pass3i.sh",
-  "line": 224,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/Capture3i.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-prod3i-classp",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/src/run-pass3i.sh",
@@ -14245,12 +14233,84 @@
  },
  {
   "file": ".softhouse/capture/src/run-rc6-rounddown-attestation.sh",
-  "line": 68,
+  "line": 67,
   "pattern": "rm-plain",
   "what": "file delete",
-  "text": "if rm is None:",
-  "raw_target": "is",
-  "target": "is",
+  "text": "rm = next((r for r in rows if r.get('name') == 'rounding-mode'), None)",
+  "raw_target": "next((r",
+  "target": "next((r",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/src/run-rc6-rounddown-attestation.sh",
+  "line": 67,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm = next((r for r in rows if r.get('name') == 'rounding-mode'), None)",
+  "raw_target": "for",
+  "target": "for",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/src/run-rc6-rounddown-attestation.sh",
+  "line": 67,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm = next((r for r in rows if r.get('name') == 'rounding-mode'), None)",
+  "raw_target": "r",
+  "target": "r",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/src/run-rc6-rounddown-attestation.sh",
+  "line": 67,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm = next((r for r in rows if r.get('name') == 'rounding-mode'), None)",
+  "raw_target": "in",
+  "target": "in",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/src/run-rc6-rounddown-attestation.sh",
+  "line": 67,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm = next((r for r in rows if r.get('name') == 'rounding-mode'), None)",
+  "raw_target": "rows",
+  "target": "rows",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/src/run-rc6-rounddown-attestation.sh",
+  "line": 67,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm = next((r for r in rows if r.get('name') == 'rounding-mode'), None)",
+  "raw_target": "if",
+  "target": "if",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/src/run-rc6-rounddown-attestation.sh",
+  "line": 67,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm = next((r for r in rows if r.get('name') == 'rounding-mode'), None)",
+  "raw_target": "r.get(name",
+  "target": "r.get(name",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
@@ -14413,18 +14473,6 @@
  },
  {
   "file": ".softhouse/capture/src/t169-red/mutate-guards.sh",
-  "line": 16,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh -v \"$W\":/cap fineract:latest -c   'mkdir -p /tmp/c1 && javac -nowarn -d /tmp/c1 /cap/ThrewOutcome.java /cap/ThrewOutcomeSelfTest.java && java -cp /tmp/c1 ThrewOutcomeSelfTest' 2>&1 | grep -E \"^FAIL|failures\"",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/src/t169-red/mutate-guards.sh",
   "line": 20,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -14458,18 +14506,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/src/t169-red/mutate-guards.sh",
-  "line": 34,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh -v \"$W\":/cap fineract:latest -c   'mkdir -p /tmp/c2 && javac -nowarn -d /tmp/c2 /cap/ThrewOutcome.java /cap/ThrewOutcomeSelfTest.java && java -cp /tmp/c2 ThrewOutcomeSelfTest' 2>&1 | grep -E \"^FAIL|failures|Exception in thread\"",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/src/t169-red/mutate-guards.sh",
@@ -14566,18 +14602,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/src/t169-red/run-t169.sh",
-  "line": 68,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"$SOURCES\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out-$VARIANT/classpath-sha256.txt\"   -e HARNESS=\"$HARNESS\" -e JAVAC_SRC=\"$JAVAC_SRC\"   -v \"$CAP:/cap\"",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/src/t169-red/run-t169.sh",
@@ -14794,18 +14818,6 @@
   "status": "UNKNOWN",
   "tracked_files": null,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t100-g8-rescope/src/run-t100.sh",
-  "line": 43,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT100.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/classpath-sha256.txt\"  ",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t100-g8-rescope/src/run-t100.sh",
@@ -15445,18 +15457,6 @@
  },
  {
   "file": ".softhouse/capture/t116-familyb-promotion/src/run-t116.sh",
-  "line": 51,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT116.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t116-familyb-promotion/src/run-t116.sh",
   "line": 65,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -15649,18 +15649,6 @@
  },
  {
   "file": ".softhouse/capture/t117-familyb/src/run-t117-pass2.sh",
-  "line": 44,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT117P2.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/classpath-sha256.txt\"",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t117-familyb/src/run-t117-pass2.sh",
   "line": 58,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -15694,18 +15682,6 @@
   "status": "UNKNOWN",
   "tracked_files": null,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t117-familyb/src/run-t117.sh",
-  "line": 44,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT117.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/classpath-sha256.txt\"  ",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t117-familyb/src/run-t117.sh",
@@ -15961,18 +15937,6 @@
  },
  {
   "file": ".softhouse/capture/t154-nofloat/drive-leg1-e2e.sh",
-  "line": 30,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t154-nofloat/drive-leg1-e2e.sh",
   "line": 70,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -16042,18 +16006,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t154-nofloat/drive-leg1.sh",
-  "line": 32,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t154-nofloat/drive-leg1.sh",
@@ -16189,18 +16141,6 @@
  },
  {
   "file": ".softhouse/capture/t154-nofloat/drive-leg2.sh",
-  "line": 32,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t154-nofloat/drive-leg2.sh",
   "line": 55,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -16217,7 +16157,7 @@
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "uninject() { rm -f \"$(probe_path \"$1\")\"; }",
-  "raw_target": "$(probe_path ",
+  "raw_target": "$(probe_path $1",
   "target": null,
   "status": "UNKNOWN",
   "tracked_files": null,
@@ -16246,18 +16186,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t154-nofloat/drive-leg3.sh",
-  "line": 37,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t154-nofloat/drive-leg3.sh",
@@ -16434,18 +16362,6 @@
   "what": "recursive delete",
   "text": "rm -rf \"$TMP/scratch-store\"",
   "raw_target": "$TMP/scratch-store",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t154-nofloat/regen-leg1-red.sh",
-  "line": 12,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "TMP=\"$(mktemp -d -t t154-regen)\"; trap 'rm -rf \"$TMP\"' EXIT",
-  "raw_target": "$TMP",
   "target": null,
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -16657,18 +16573,6 @@
  },
  {
   "file": ".softhouse/capture/t159-review-t117/src/run-t159.sh",
-  "line": 44,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT159.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/classpath-sha256.txt\"  ",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t159-review-t117/src/run-t159.sh",
   "line": 58,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -16849,18 +16753,6 @@
  },
  {
   "file": ".softhouse/capture/t177-so-nondeterminism/jvmdefaults-t177.sh",
-  "line": 14,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --entrypoint sh \"$EXPECTED_IMAGE_REF\" -c '",
-  "raw_target": "sh",
-  "target": "sh",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t177-so-nondeterminism/jvmdefaults-t177.sh",
   "line": 22,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -16981,18 +16873,6 @@
  },
  {
   "file": ".softhouse/capture/t177-so-nondeterminism/run-t177.sh",
-  "line": 63,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\" -e ATTEST_HARNESS_SHA=\"$HARNESS_SHA\"   -e ATTEST_SEAM_SHA=\"$SEAM_SHA\" -e ATTEST_LIB_SHA=\"$LIB_SHA\"   -e OUTSUB=\"$OUTSUB\"   -v \"$CAP:/cap\" \"$EXPECTED_IMAGE_REF\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t177-so-nondeterminism/run-t177.sh",
   "line": 79,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -17038,18 +16918,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t177-so-nondeterminism/run-t177b.sh",
-  "line": 61,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\" -e ATTEST_HARNESS_SHA=\"$HARNESS_SHA\" -e ATTEST_HARNESS_B_SHA=\"$HARNESS_B_SHA\"   -e ATTEST_SEAM_SHA=\"$SEAM_SHA\" -e ATTEST_LIB_SHA=\"$LIB_SHA\"   -e OUTSUB=\"$OUTSUB\"   ",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t177-so-nondeterminism/run-t177b.sh",
@@ -17245,18 +17113,6 @@
  },
  {
   "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run2.sh",
-  "line": 45,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT219W.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run2.sh",
   "line": 59,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -17293,18 +17149,6 @@
  },
  {
   "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run3.sh",
-  "line": 45,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT219X.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run3.sh",
   "line": 59,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -17338,18 +17182,6 @@
   "status": "UNKNOWN",
   "tracked_files": null,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t219-g8-residual/src/run-t219.sh",
-  "line": 45,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT219.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t219-g8-residual/src/run-t219.sh",
@@ -17881,18 +17713,6 @@
  },
  {
   "file": ".softhouse/capture/t223-g8-region-predicate/src/run-t223.sh",
-  "line": 45,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT223.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t223-g8-region-predicate/src/run-t223.sh",
   "line": 59,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -18190,18 +18010,6 @@
   "status": "UNKNOWN",
   "tracked_files": null,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t229-g8-site3/src/run-t229.sh",
-  "line": 45,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT229.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t229-g8-site3/src/run-t229.sh",
@@ -18613,18 +18421,6 @@
  },
  {
   "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh",
-  "line": 25,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$D\"' EXIT",
-  "raw_target": "$D",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh",
   "line": 27,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -19018,18 +18814,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t238-failopen/instruments/30-pr4-nondead-mechanisms.sh",
-  "line": 10,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$S\"' EXIT",
-  "raw_target": "$S",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t238-failopen/instruments/30-pr4-nondead-mechanisms.sh",
@@ -19429,18 +19213,6 @@
  },
  {
   "file": ".softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh",
-  "line": 20,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$T\"' EXIT",
-  "raw_target": "$T",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh",
   "line": 28,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -19486,18 +19258,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t238-failopen/instruments/71-l1b-gitgrep-leg.sh",
-  "line": 22,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$T\"' EXIT",
-  "raw_target": "$T",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t238-failopen/instruments/71-l1b-gitgrep-leg.sh",
@@ -19981,6 +19741,102 @@
  },
  {
   "file": ".softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh",
+  "line": 42,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "trap 'restore; rm -rf \"$BACKUP\"' EXIT   # P-54: guarded on EVERY exit path",
+  "raw_target": "EXIT",
+  "target": "EXIT",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh",
+  "line": 42,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "trap 'restore; rm -rf \"$BACKUP\"' EXIT   # P-54: guarded on EVERY exit path",
+  "raw_target": "#",
+  "target": "#",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh",
+  "line": 42,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "trap 'restore; rm -rf \"$BACKUP\"' EXIT   # P-54: guarded on EVERY exit path",
+  "raw_target": "P-54:",
+  "target": "P-54:",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh",
+  "line": 42,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "trap 'restore; rm -rf \"$BACKUP\"' EXIT   # P-54: guarded on EVERY exit path",
+  "raw_target": "guarded",
+  "target": "guarded",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh",
+  "line": 42,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "trap 'restore; rm -rf \"$BACKUP\"' EXIT   # P-54: guarded on EVERY exit path",
+  "raw_target": "on",
+  "target": "on",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh",
+  "line": 42,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "trap 'restore; rm -rf \"$BACKUP\"' EXIT   # P-54: guarded on EVERY exit path",
+  "raw_target": "EVERY",
+  "target": "EVERY",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh",
+  "line": 42,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "trap 'restore; rm -rf \"$BACKUP\"' EXIT   # P-54: guarded on EVERY exit path",
+  "raw_target": "exit",
+  "target": "exit",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh",
+  "line": 42,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "trap 'restore; rm -rf \"$BACKUP\"' EXIT   # P-54: guarded on EVERY exit path",
+  "raw_target": "path",
+  "target": "path",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh",
   "line": 47,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -20050,18 +19906,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh",
-  "line": 40,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "git rm -q --cached --ignore-unmatch -- \"$PLANT\" >/dev/null 2>&1 || true",
-  "raw_target": "$PLANT",
-  "target": ".softhouse/capture/t243-wiring/evidence/planted-failopen-sweep.sh",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh",
@@ -20156,6 +20000,18 @@
   "raw_target": "$BACKUP",
   "target": null,
   "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t243-wiring/instruments/30-citation-red-drive.sh",
+  "line": 60,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "trap 'restore; rm -rf \"$BACKUP\"' EXIT",
+  "raw_target": "EXIT",
+  "target": "EXIT",
+  "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
  },
@@ -21277,30 +21133,6 @@
  },
  {
   "file": ".softhouse/capture/t253-portability/instruments/10-mktemp-matrix.sh",
-  "line": 41,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "out=\"$(docker run --rm --entrypoint sh \"$IMAGE\" -c \"$snippet\" 2>&1)\" || rc=$?",
-  "raw_target": "sh",
-  "target": "sh",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t253-portability/instruments/10-mktemp-matrix.sh",
-  "line": 61,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "printf 'image  : %s -> %s\\n' \"$IMAGE\"   \"$(docker run --rm --entrypoint mktemp \"$IMAGE\" --version | head -1)\"",
-  "raw_target": "mktemp",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t253-portability/instruments/10-mktemp-matrix.sh",
   "line": 68,
   "pattern": "rm-plain",
   "what": "file delete",
@@ -21370,18 +21202,6 @@
   "status": "UNKNOWN",
   "tracked_files": null,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh",
-  "line": 42,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$SCRATCH\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$SCRATCH",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh",
@@ -21526,18 +21346,6 @@
   "status": "UNKNOWN",
   "tracked_files": null,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t253-portability/instruments/70-cross-impl-compare.sh",
-  "line": 25,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$SCRATCH\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$SCRATCH",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t253-portability/instruments/70-cross-impl-compare.sh",
@@ -24265,18 +24073,6 @@
  },
  {
   "file": ".softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh",
-  "line": 35,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$WORK\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$WORK",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh",
   "line": 74,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -24334,18 +24130,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh",
-  "line": 63,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$SCRATCH\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$SCRATCH",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh",
@@ -24610,18 +24394,6 @@
   "status": "UNKNOWN",
   "tracked_files": null,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t256-verdict-predicate/red/drive-red.sh",
-  "line": 21,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t256-verdict-predicate/red/drive-red.sh",
@@ -25697,10 +25469,10 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.t273bak 's%^C=/tmp/t158-clone$%C=\"$(mktemp -d \"${TMPDIR:-/tmp}/t158-clone.XXXXXXXXXX\")\"%' \"$M3\"",
-  "raw_target": "${TMPDIR:-/tmp}/t158-clone.XXXXXXXXXX",
+  "raw_target": "s%^C=/tmp/t158-clone$%C=$(mktemp -d ${TMPDIR:-/tmp}/t158-clone.XXXXXXXXXX",
   "target": null,
-  "status": "UNKNOWN",
-  "tracked_files": null,
+  "status": "SCRATCH",
+  "tracked_files": 0,
   "family": "destructive"
  },
  {
@@ -25750,18 +25522,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t273-residue/instruments/70-citation-rot-check.sh",
-  "line": 26,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$W\"' EXIT",
-  "raw_target": "$W",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t273-residue/instruments/70-citation-rot-check.sh",
@@ -25834,18 +25594,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh",
-  "line": 101,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$os_tmpd\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$os_tmpd",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh",
@@ -26157,6 +25905,18 @@
   "target": ".softhouse/capture/t274-attestation-failopen/evidence/red",
   "status": "TRACKED",
   "tracked_files": 68,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh",
+  "line": 71,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$EV/red\" \"$EV/green\"",
+  "raw_target": "$EV/green",
+  "target": ".softhouse/capture/t274-attestation-failopen/evidence/green",
+  "status": "TRACKED",
+  "tracked_files": 113,
   "family": "destructive"
  },
  {
@@ -26569,18 +26329,6 @@
  },
  {
   "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-  "line": 59,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$SCRATCH\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$SCRATCH",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
   "line": 61,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -26725,18 +26473,6 @@
  },
  {
   "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-  "line": 95,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "git -C \"$SCRATCH/repo\" rm -q -f caps/old2.http",
-  "raw_target": "caps/old2.http",
-  "target": "caps/old2.http",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
   "line": 96,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -26770,66 +26506,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-  "line": 108,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "git -C \"$SCRATCH/repo\" rm -q -r -f tampered",
-  "raw_target": "tampered",
-  "target": "tampered",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-  "line": 108,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "git -C \"$SCRATCH/repo\" rm -q -r -f tampered",
-  "raw_target": "tampered",
-  "target": "tampered",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-  "line": 113,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "git -C \"$SCRATCH/repo\" rm -q -f caps/old1.http caps/old2.http caps/new1.http",
-  "raw_target": "caps/old1.http",
-  "target": "caps/old1.http",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-  "line": 114,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "git -C \"$SCRATCH/repo\" rm -q -r -f tampered",
-  "raw_target": "tampered",
-  "target": "tampered",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
-  "line": 114,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "git -C \"$SCRATCH/repo\" rm -q -r -f tampered",
-  "raw_target": "tampered",
-  "target": "tampered",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t274-attestation-failopen/instruments/40-population-ratchet-red.sh",
@@ -26890,18 +26566,6 @@
   "status": "UNKNOWN",
   "tracked_files": null,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t284-schema2-callsites/instruments/20-site1-schema1-replay.sh",
-  "line": 104,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$SCRATCH\" \"$SELF\"' EXIT",
-  "raw_target": "$SCRATCH",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t284-schema2-callsites/instruments/20-site1-schema1-replay.sh",
@@ -28285,18 +27949,6 @@
  },
  {
   "file": ".softhouse/capture/t287-closure-refusals/cap.sh",
-  "line": 45,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$TMPD",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t287-closure-refusals/cap.sh",
   "line": 87,
   "pattern": "mv",
   "what": "move/overwrite",
@@ -28366,18 +28018,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t287-closure-refusals/capsql.sh",
-  "line": 39,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$TMPD",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t287-closure-refusals/capsql.sh",
@@ -28640,6 +28280,18 @@
   "raw_target": "$BAK",
   "target": null,
   "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t290-review-t271/break_battery_g1_t290.sh",
+  "line": 32,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "trap 'restore; rm -f \"$BAK\"' EXIT",
+  "raw_target": "EXIT",
+  "target": "EXIT",
+  "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
  },
@@ -29509,18 +29161,6 @@
  },
  {
   "file": ".softhouse/capture/t294-openingbalance-refusal/cap.sh",
-  "line": 48,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$TMPD",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t294-openingbalance-refusal/cap.sh",
   "line": 90,
   "pattern": "mv",
   "what": "move/overwrite",
@@ -29590,18 +29230,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t294-openingbalance-refusal/capsql.sh",
-  "line": 41,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$TMPD",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t294-openingbalance-refusal/capsql.sh",
@@ -29845,12 +29473,84 @@
  },
  {
   "file": ".softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh",
+  "line": 185,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$rest\" \"$rest.2\" \"$rest.3\" \"$rest.4\"",
+  "raw_target": "$rest.2",
+  "target": ".softhouse/capture/t300-census-cardinal/evidence/10-sweep-hits.txt.rest.2",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh",
+  "line": 185,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$rest\" \"$rest.2\" \"$rest.3\" \"$rest.4\"",
+  "raw_target": "$rest.3",
+  "target": ".softhouse/capture/t300-census-cardinal/evidence/10-sweep-hits.txt.rest.3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh",
+  "line": 185,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$rest\" \"$rest.2\" \"$rest.3\" \"$rest.4\"",
+  "raw_target": "$rest.4",
+  "target": ".softhouse/capture/t300-census-cardinal/evidence/10-sweep-hits.txt.rest.4",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh",
   "line": 188,
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "rm -f \"$rest\" \"$rest.2\" \"$rest.3\" \"$rest.4\"",
   "raw_target": "$rest",
   "target": ".softhouse/capture/t300-census-cardinal/evidence/10-sweep-hits.txt.rest",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh",
+  "line": 188,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$rest\" \"$rest.2\" \"$rest.3\" \"$rest.4\"",
+  "raw_target": "$rest.2",
+  "target": ".softhouse/capture/t300-census-cardinal/evidence/10-sweep-hits.txt.rest.2",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh",
+  "line": 188,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$rest\" \"$rest.2\" \"$rest.3\" \"$rest.4\"",
+  "raw_target": "$rest.3",
+  "target": ".softhouse/capture/t300-census-cardinal/evidence/10-sweep-hits.txt.rest.3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh",
+  "line": 188,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$rest\" \"$rest.2\" \"$rest.3\" \"$rest.4\"",
+  "raw_target": "$rest.4",
+  "target": ".softhouse/capture/t300-census-cardinal/evidence/10-sweep-hits.txt.rest.4",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
@@ -29868,14 +29568,14 @@
   "family": "destructive"
  },
  {
-  "file": ".softhouse/capture/t300-census-cardinal/instruments/30-cannotcatch-derivation.sh",
-  "line": 26,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$D\"' EXIT INT TERM HUP",
-  "raw_target": "$D",
-  "target": null,
-  "status": "SCRATCH",
+  "file": ".softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh",
+  "line": 191,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$hits.stage1\" \"$hits.stage2\"",
+  "raw_target": "$hits.stage2",
+  "target": ".softhouse/capture/t300-census-cardinal/evidence/10-sweep-hits.txt.stage2",
+  "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
  },
@@ -30009,6 +29709,114 @@
   "target": ".softhouse/conformance.sh",
   "status": "TRACKED",
   "tracked_files": 1,
+  "family": "overwrite"
+ },
+ {
+  "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+  "line": 7,
+  "pattern": "redirect",
+  "what": "output redirection (truncating)",
+  "text": "git ls-files -z                       -> every TRACKED file in the repo",
+  "raw_target": "every",
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
+  "family": "overwrite"
+ },
+ {
+  "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+  "line": 9,
+  "pattern": "redirect",
+  "what": "output redirection (truncating)",
+  "text": "OR the first two bytes are \"#!\"    -> catches shebang scripts with no extension",
+  "raw_target": "catches",
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
+  "family": "overwrite"
+ },
+ {
+  "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+  "line": 40,
+  "pattern": "git-checkout-dd",
+  "what": "git checkout -- (discard worktree edits)",
+  "text": "(\"git-checkout-dd\", r\"\\bgit\\s+checkout\\s+--\\s\", \"git checkout -- (discard worktree edits)\"),",
+  "raw_target": "(discard",
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+  "line": 47,
+  "pattern": "tee",
+  "what": "tee (truncating)",
+  "text": "(\"tee\",        r\"\\btee\\b(?!\\s+-a)\", \"tee (truncating)\"),",
+  "raw_target": ",        r\\btee\\b(?!\\s+-a",
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
+  "family": "overwrite"
+ },
+ {
+  "file": ".softhouse/capture/t304-evidence-destruction/10-census.py",
+  "line": 110,
+  "pattern": "py-write",
+  "what": "python open for write",
+  "text": "with open(out, \"w\") as fh:",
+  "raw_target": "out, \"w\"",
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
+  "family": "overwrite"
+ },
+ {
+  "file": ".softhouse/capture/t304-evidence-destruction/20-resolve-targets.py",
+  "line": 48,
+  "pattern": "tee",
+  "what": "tee (truncating)",
+  "text": "OVERWRITE = {\"redirect\", \"py-write\", \"write-text\", \"tee\"}",
+  "raw_target": "}",
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
+  "family": "overwrite"
+ },
+ {
+  "file": ".softhouse/capture/t304-evidence-destruction/20-resolve-targets.py",
+  "line": 315,
+  "pattern": "tee",
+  "what": "tee (truncating)",
+  "text": "elif fam == \"tee\":",
+  "raw_target": ":",
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
+  "family": "overwrite"
+ },
+ {
+  "file": ".softhouse/capture/t304-evidence-destruction/20-resolve-targets.py",
+  "line": 316,
+  "pattern": "tee",
+  "what": "tee (truncating)",
+  "text": "raw_targets = shell_operands(text, \"tee\")[:1]",
+  "raw_target": null,
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
+  "family": "overwrite"
+ },
+ {
+  "file": ".softhouse/capture/t304-evidence-destruction/20-resolve-targets.py",
+  "line": 364,
+  "pattern": "redirect",
+  "what": "output redirection (truncating)",
+  "text": "status = \"TRACKED\" if n > 0 else \"UNTRACKED\"",
+  "raw_target": "0",
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
   "family": "overwrite"
  },
  {
@@ -31213,18 +31021,6 @@
  },
  {
   "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/run-precondition-block.sh",
-  "line": 39,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "trap 'rm -f \"$PYFILE\"' EXIT",
-  "raw_target": "$PYFILE",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/run-precondition-block.sh",
   "line": 42,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -31621,18 +31417,6 @@
  },
  {
   "file": ".softhouse/capture/t83-nonamortizing/src/run-orderdep.sh",
-  "line": 43,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$PWD/$CAP_DIR:/cap\" \"$EXPECTED_IMAGE_REF\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t83-nonamortizing/src/run-orderdep.sh",
   "line": 52,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -31741,18 +31525,6 @@
  },
  {
   "file": ".softhouse/capture/t83-nonamortizing/src/run-t83.sh",
-  "line": 122,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\"   -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT83.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/capture-t83-classpat",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t83-nonamortizing/src/run-t83.sh",
   "line": 138,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -31810,18 +31582,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t91/prove-guards.sh",
-  "line": 32,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$S\"' EXIT",
-  "raw_target": "$S",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t91/prove-guards.sh",
@@ -32185,18 +31945,6 @@
  },
  {
   "file": ".softhouse/capture/t91/shell-invariance.sh",
-  "line": 64,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$INVDIR\"' EXIT",
-  "raw_target": "$INVDIR",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t91/shell-invariance.sh",
   "line": 74,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -32218,18 +31966,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t91/t115-drive-mf1.sh",
-  "line": 26,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$S\"' EXIT",
-  "raw_target": "$S",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t91/t115-drive-mf1.sh",
@@ -32374,18 +32110,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t91/t115-drive-mf2.sh",
-  "line": 34,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$S\"' EXIT",
-  "raw_target": "$S",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t91/t115-drive-mf2.sh",
@@ -32569,18 +32293,6 @@
  },
  {
   "file": ".softhouse/capture/t91/t115-drive-mf3-mf4.sh",
-  "line": 33,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$S\"' EXIT",
-  "raw_target": "$S",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t91/t115-drive-mf3-mf4.sh",
   "line": 39,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -32626,18 +32338,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t91/t115-rerun-attacks.sh",
-  "line": 26,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$S\"' EXIT",
-  "raw_target": "$S",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t91/t115-rerun-attacks.sh",
@@ -32697,18 +32397,6 @@
   "target": null,
   "status": "UNKNOWN",
   "tracked_files": null,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t91/t151-drive-g4.sh",
-  "line": 34,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$S\"' EXIT",
-  "raw_target": "$S",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
   "family": "destructive"
  },
  {
@@ -32797,18 +32485,6 @@
  },
  {
   "file": ".softhouse/capture/t91/t151-drive-g67.sh",
-  "line": 37,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$S\"' EXIT",
-  "raw_target": "$S",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t91/t151-drive-g67.sh",
   "line": 45,
   "pattern": "rm-rf",
   "what": "recursive delete",
@@ -32878,18 +32554,6 @@
   "status": "UNKNOWN",
   "tracked_files": null,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/t91/t151-drive-vb.sh",
-  "line": 36,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$S\"' EXIT",
-  "raw_target": "$S",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/t91/t151-drive-vb.sh",
@@ -33073,18 +32737,6 @@
  },
  {
   "file": ".softhouse/capture/t91/t151-merge-check.sh",
-  "line": 24,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$W\"' EXIT",
-  "raw_target": "$W",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t91/t151-merge-check.sh",
   "line": 33,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -33102,18 +32754,6 @@
   "what": "recursive delete",
   "text": "rm -rf \"$W-main\"",
   "raw_target": "$W-main",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/t91/t151-merge-check.sh",
-  "line": 76,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$W\" \"$W-main\"' EXIT",
-  "raw_target": "$W",
   "target": null,
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -33157,13 +32797,13 @@
  },
  {
   "file": ".softhouse/capture/t91/verdict.sh",
-  "line": 97,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$FAILDIR\"' EXIT",
-  "raw_target": "$FAILDIR",
-  "target": null,
-  "status": "SCRATCH",
+  "line": 103,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
+  "raw_target": "$D/.score-fail",
+  "target": "${1:?usage: sh verdict.sh <transcript dir>}/.score-fail",
+  "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
  },
@@ -33173,8 +32813,140 @@
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
-  "raw_target": "$D/.score-fail",
-  "target": "${1:?usage: sh verdict.sh <transcript dir>}/.score-fail",
+  "raw_target": "#",
+  "target": "#",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t91/verdict.sh",
+  "line": 103,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
+  "raw_target": "tidy",
+  "target": "tidy",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t91/verdict.sh",
+  "line": 103,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
+  "raw_target": "up",
+  "target": "up",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t91/verdict.sh",
+  "line": 103,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
+  "raw_target": "the",
+  "target": "the",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t91/verdict.sh",
+  "line": 103,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
+  "raw_target": "pre-T115",
+  "target": "pre-T115",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t91/verdict.sh",
+  "line": 103,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
+  "raw_target": "location",
+  "target": "location",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t91/verdict.sh",
+  "line": 103,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
+  "raw_target": "if",
+  "target": "if",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t91/verdict.sh",
+  "line": 103,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
+  "raw_target": "an",
+  "target": "an",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t91/verdict.sh",
+  "line": 103,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
+  "raw_target": "old",
+  "target": "old",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t91/verdict.sh",
+  "line": 103,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
+  "raw_target": "run",
+  "target": "run",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t91/verdict.sh",
+  "line": 103,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
+  "raw_target": "left",
+  "target": "left",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/capture/t91/verdict.sh",
+  "line": 103,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$D/.score-fail\"          # tidy up the pre-T115 location if an old run left one",
+  "raw_target": "one",
+  "target": "one",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
@@ -33313,18 +33085,6 @@
  },
  {
   "file": ".softhouse/capture/tierA-a2/cap.sh",
-  "line": 65,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$TMPD",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/tierA-a2/cap.sh",
   "line": 94,
   "pattern": "mv",
   "what": "move/overwrite",
@@ -33358,18 +33118,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/tierA-a2/cap10.sh",
-  "line": 67,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$TMPD",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/tierA-a2/cap10.sh",
@@ -33445,18 +33193,6 @@
  },
  {
   "file": ".softhouse/capture/tierA-a2/cap8.sh",
-  "line": 67,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$TMPD",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/tierA-a2/cap8.sh",
   "line": 104,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -33529,18 +33265,6 @@
  },
  {
   "file": ".softhouse/capture/tierA-a2/cap9.sh",
-  "line": 49,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM",
-  "raw_target": "$TMPD",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/tierA-a2/cap9.sh",
   "line": 83,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -33610,18 +33334,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/tierA-a2/capsql.sh",
-  "line": 62,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$TMPD",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/tierA-a2/capsql.sh",
@@ -34093,18 +33805,6 @@
  },
  {
   "file": ".softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh",
-  "line": 25,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh",
   "line": 33,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -34246,18 +33946,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/capture/tierA-a2/prove-cap-transport-red.py",
-  "line": 7,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "diagnostic and the `rm -f \"$OUT\"` never ran.  Against an unreachable endpoint a STALE",
-  "raw_target": "$OUT",
-  "target": null,
-  "status": "UNKNOWN",
-  "tracked_files": null,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/capture/tierA-a2/prove-cap-transport-red.py",
@@ -35233,30 +34921,6 @@
  },
  {
   "file": ".softhouse/capture/tierA-a2/prove-quit-trap-a226.py",
-  "line": 5,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "bash-signal background): pre-fix, `trap 'rm -rf \"$TMP\"' EXIT HUP INT TERM` (line 23)",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/tierA-a2/prove-quit-trap-a226.py",
-  "line": 39,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "PRE_TRAP_LINE_NO = 23   # pre-fix blob: `trap 'rm -rf \"$TMP\"' EXIT HUP INT TERM` -- verified by `nl -ba`",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/tierA-a2/prove-quit-trap-a226.py",
   "line": 52,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -35305,18 +34969,6 @@
  },
  {
   "file": ".softhouse/capture/tierA-a2/prove-quit-trap-cap.py",
-  "line": 7,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM",
-  "raw_target": "$TMPD",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/tierA-a2/prove-quit-trap-cap.py",
   "line": 75,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -35346,18 +34998,6 @@
   "what": "python recursive delete",
   "text": "shutil.rmtree(tmproot, ignore_errors=True)",
   "raw_target": "tmproot, ignore_errors=True",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/capture/tierA-a2/prove-quit-trap-cap9.py",
-  "line": 10,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMPD\"' EXIT HUP INT TERM",
-  "raw_target": "$TMPD",
   "target": null,
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -36037,7 +35677,67 @@
  },
  {
   "file": ".softhouse/conformance.sh",
+  "line": 1571,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$json\" \"$want\" \"$got\"",
+  "raw_target": "$json",
+  "target": null,
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1571,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$json\" \"$want\" \"$got\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
   "line": 1578,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$json\" \"$want\" \"$got\"",
+  "raw_target": "$out",
+  "target": "\"; rc=$?",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1578,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$json\" \"$want\" \"$got\"",
+  "raw_target": "$json",
+  "target": null,
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1578,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$json\" \"$want\" \"$got\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1586,
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "rm -f \"$out\" \"$json\" \"$want\" \"$got\"",
@@ -36053,8 +35753,20 @@
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "rm -f \"$out\" \"$json\" \"$want\" \"$got\"",
-  "raw_target": "$out",
-  "target": "\"; rc=$?",
+  "raw_target": "$json",
+  "target": null,
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1586,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$json\" \"$want\" \"$got\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
@@ -36121,6 +35833,42 @@
  },
  {
   "file": ".softhouse/conformance.sh",
+  "line": 1612,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$json\" \"$want\" \"$want.raw\" \"$got\" \"$got.raw\"",
+  "raw_target": "$json",
+  "target": null,
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1612,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$json\" \"$want\" \"$want.raw\" \"$got\" \"$got.raw\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1612,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$json\" \"$want\" \"$want.raw\" \"$got\" \"$got.raw\"",
+  "raw_target": "$want.raw",
+  "target": "$1\" label=\"$2\"; shift 3.raw",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
   "line": 1621,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -36145,12 +35893,108 @@
  },
  {
   "file": ".softhouse/conformance.sh",
+  "line": 1633,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$out.diff\" \"$json\" \"$want\" \"$want.raw\" \"$got\" \"$got.raw\"",
+  "raw_target": "$out.diff",
+  "target": "\"; rc=$?.diff",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1633,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$out.diff\" \"$json\" \"$want\" \"$want.raw\" \"$got\" \"$got.raw\"",
+  "raw_target": "$json",
+  "target": null,
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1633,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$out.diff\" \"$json\" \"$want\" \"$want.raw\" \"$got\" \"$got.raw\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1633,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$out.diff\" \"$json\" \"$want\" \"$want.raw\" \"$got\" \"$got.raw\"",
+  "raw_target": "$want.raw",
+  "target": "$1\" label=\"$2\"; shift 3.raw",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
   "line": 1637,
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "rm -f \"$out\" \"$out.diff\" \"$json\" \"$want\" \"$want.raw\" \"$got\" \"$got.raw\"",
   "raw_target": "$out",
   "target": "\"; rc=$?",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1637,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$out.diff\" \"$json\" \"$want\" \"$want.raw\" \"$got\" \"$got.raw\"",
+  "raw_target": "$out.diff",
+  "target": "\"; rc=$?.diff",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1637,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$out.diff\" \"$json\" \"$want\" \"$want.raw\" \"$got\" \"$got.raw\"",
+  "raw_target": "$json",
+  "target": null,
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1637,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$out.diff\" \"$json\" \"$want\" \"$want.raw\" \"$got\" \"$got.raw\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1637,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$out\" \"$out.diff\" \"$json\" \"$want\" \"$want.raw\" \"$got\" \"$got.raw\"",
+  "raw_target": "$want.raw",
+  "target": "$1\" label=\"$2\"; shift 3.raw",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
@@ -36193,6 +36037,30 @@
  },
  {
   "file": ".softhouse/conformance.sh",
+  "line": 1881,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$got\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1881,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$got\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want.raw",
+  "target": "$1\" label=\"$2\"; shift 3.raw",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
   "line": 1886,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -36212,6 +36080,30 @@
   "raw_target": "$list",
   "target": null,
   "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1892,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$got\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1892,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$got\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want.raw",
+  "target": "$1\" label=\"$2\"; shift 3.raw",
+  "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
  },
@@ -36253,6 +36145,30 @@
  },
  {
   "file": ".softhouse/conformance.sh",
+  "line": 1907,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$got\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1907,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$got\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want.raw",
+  "target": "$1\" label=\"$2\"; shift 3.raw",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
   "line": 1916,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -36272,6 +36188,30 @@
   "raw_target": "$list",
   "target": null,
   "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1926,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$got\" \"$got.raw\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1926,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$got\" \"$got.raw\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want.raw",
+  "target": "$1\" label=\"$2\"; shift 3.raw",
+  "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
  },
@@ -36337,6 +36277,30 @@
  },
  {
   "file": ".softhouse/conformance.sh",
+  "line": 1965,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$got\" \"$got.raw\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1965,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$got\" \"$got.raw\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want.raw",
+  "target": "$1\" label=\"$2\"; shift 3.raw",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
   "line": 1974,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -36346,18 +36310,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/conformance.sh",
-  "line": 1981,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "warn \"conformance: name.XXXXXXXXXX\\\")\\` with a \\`trap 'rm -rf \\\"\\$D\\\"' EXIT\\` is the adoptable shape, and\"",
-  "raw_target": "\\\"\\$D\\\"'",
-  "target": "\\\"\\*",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/conformance.sh",
@@ -36373,6 +36325,30 @@
  },
  {
   "file": ".softhouse/conformance.sh",
+  "line": 1988,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$raw.diff\" \"$got\" \"$got.raw\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1988,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$raw.diff\" \"$got\" \"$got.raw\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want.raw",
+  "target": "$1\" label=\"$2\"; shift 3.raw",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
   "line": 1992,
   "pattern": "rm-plain",
   "what": "file delete",
@@ -36380,6 +36356,30 @@
   "raw_target": "$list",
   "target": null,
   "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1992,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$raw.diff\" \"$got\" \"$got.raw\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want",
+  "target": "$1\" label=\"$2\"; shift 3",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 1992,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$list.raw\" \"$raw\" \"$raw.diff\" \"$got\" \"$got.raw\" \"$want\" \"$want.raw\"",
+  "raw_target": "$want.raw",
+  "target": "$1\" label=\"$2\"; shift 3.raw",
+  "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
  },
@@ -36428,6 +36428,18 @@
   "raw_target": "$list",
   "target": null,
   "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "line": 2352,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$list\" \"$out\"",
+  "raw_target": "$out",
+  "target": "\"; rc=$?",
+  "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
  },
@@ -36745,18 +36757,6 @@
  },
  {
   "file": ".softhouse/guards/drive-red-ledger-invariants.sh",
-  "line": 42,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$WORK\"' EXIT",
-  "raw_target": "$WORK",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/guards/drive-red-ledger-invariants.sh",
   "line": 54,
   "pattern": "rm-rf",
   "what": "recursive delete",
@@ -36837,18 +36837,6 @@
   "target": null,
   "status": "UNKNOWN",
   "tracked_files": null,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T106-evidence/prove-token-forgeable.sh",
-  "line": 52,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "trap 'rm -f \"$ORIG\" \"$FIXED\"' EXIT",
-  "raw_target": "$ORIG",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
   "family": "destructive"
  },
  {
@@ -36958,18 +36946,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh",
-  "line": 42,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "trap 'rm -f \"$PREFIX\" \"$INNER\"' EXIT",
-  "raw_target": "$PREFIX",
-  "target": ".softhouse/.T113-b5-prefix.sh",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh",
@@ -37104,18 +37080,6 @@
   "family": "overwrite"
  },
  {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh",
-  "line": 197,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "out=\"$(docker run --rm --network none -v \"$REPO_ROOT\":/repo:ro \"$IMAGE\" bash /repo/.softhouse/.T113-b5-inner.sh 2>&1)\"",
-  "raw_target": "none",
-  "target": "none",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/hostile-env-matrix.sh",
   "line": 22,
   "pattern": "rm-plain",
@@ -37213,18 +37177,6 @@
  },
  {
   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh",
-  "line": 208,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "trap 'rm -f \"$NOIFS\" \"$BENV\" \"$SEEIFS\"' EXIT",
-  "raw_target": "$NOIFS",
-  "target": ".softhouse/.T113-matrix-noifs.sh",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh",
   "line": 209,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -37296,14 +37248,26 @@
   "family": "destructive"
  },
  {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh",
-  "line": 52,
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh",
+  "line": 334,
   "pattern": "rm-plain",
   "what": "file delete",
-  "text": "trap 'rm -f \"$ORIG\" \"$FIXED\"' EXIT",
-  "raw_target": "$ORIG",
-  "target": null,
-  "status": "SCRATCH",
+  "text": "rm -f \"$NOIFS\" \"$BENV\" \"$SEEIFS\"",
+  "raw_target": "$BENV",
+  "target": ".softhouse/.T113-matrix-benv.sh",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh",
+  "line": 334,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$NOIFS\" \"$BENV\" \"$SEEIFS\"",
+  "raw_target": "$SEEIFS",
+  "target": ".softhouse/.T113-matrix-seeifs.sh",
+  "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
  },
@@ -37417,18 +37381,6 @@
  },
  {
   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh",
-  "line": 52,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "trap 'rm -f \"$PREFIX\" \"$INNER\"' EXIT",
-  "raw_target": "$PREFIX",
-  "target": ".softhouse/.T113-prefix-conformance.sh",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh",
   "line": 54,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -37488,18 +37440,6 @@
   "family": "overwrite"
  },
  {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh",
-  "line": 120,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "out=\"$(docker run --rm --network none -v \"$REPO_ROOT\":/repo:ro \"$IMAGE\" bash /repo/.softhouse/.T113-inner.sh 2>&1)\"",
-  "raw_target": "none",
-  "target": "none",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/readonly-sourced-edge.sh",
   "line": 60,
   "pattern": "redirect",
@@ -37546,18 +37486,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/ifs-routes.sh",
-  "line": 29,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/ifs-routes.sh",
@@ -37618,18 +37546,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh",
-  "line": 67,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$W\"' EXIT",
-  "raw_target": "$W",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh",
@@ -37765,30 +37681,6 @@
  },
  {
   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
-  "line": 76,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
-  "line": 90,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\" \"$PREFIX\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
   "line": 91,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -37837,18 +37729,6 @@
  },
  {
   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
-  "line": 170,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\" \"$PREFIX\" \"$BROKEN\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
   "line": 171,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -37870,18 +37750,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
-  "line": 237,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\" \"$PREFIX\" \"$BROKEN\" \"$FORGE\" \"$UNFIXED\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
@@ -37997,8 +37865,8 @@
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "cleanup() { rm -f \"$H\"/T203-PREFIX-*.py; }",
-  "raw_target": "$H",
-  "target": "Users/buv/gerege-nbfi/.claude/worktrees/agent-a4762772d2f0d5192/.softhouse/handoff",
+  "raw_target": "$H/T203-PREFIX-*.py",
+  "target": "Users/buv/gerege-nbfi/.claude/worktrees/agent-a4762772d2f0d5192/.softhouse/handoff/T203-PREFIX-*.py",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
@@ -39001,18 +38869,6 @@
  },
  {
   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241-evidence/census_two_engines_t241.sh",
-  "line": 29,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\"' EXIT",
-  "raw_target": "$TMP",
-  "target": ".t241-calibration-scratch",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241-evidence/census_two_engines_t241.sh",
   "line": 98,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -39973,18 +39829,6 @@
  },
  {
   "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh",
-  "line": 20,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "echo \"--- brief-literal variant (reachable handler done right + rm -f kept) ---\"",
-  "raw_target": "kept",
-  "target": "kept",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh",
   "line": 27,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -40045,18 +39889,6 @@
  },
  {
   "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh",
-  "line": 42,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "echo \"  out/POISON.json: *** DELETED by rm -f -- an EARLIER FIRE'S EVIDENCE, covered by MANIFEST.sha256 ***\"",
-  "raw_target": "an",
-  "target": "an",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh",
   "line": 45,
   "pattern": "rm-rf",
   "what": "recursive delete",
@@ -40078,18 +39910,6 @@
   "status": "UNKNOWN",
   "tracked_files": null,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh",
-  "line": 17,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "echo \"--- counterfactual: the brief's fix (reachable handler + rm -f retained) ---\"",
-  "raw_target": "retained",
-  "target": "retained",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh",
@@ -40181,7 +40001,7 @@
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "d=$(seed /tmp/poison/cap-counterfactual.sh); rm -f \"$d\"/out/*",
-  "raw_target": "$d",
+  "raw_target": "$d/out/*",
   "target": null,
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -41414,18 +41234,6 @@
  {
   "file": ".softhouse/reviews/T135-evidence/f4-check.sh",
   "line": 30,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "printf 'gerege\\n' > \"$s2\"; run \"stamp forged onto t36/out/recapture-gerege\"; rm -f \"$s2\"",
-  "raw_target": "$s2",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/T135-evidence/f4-check.sh",
-  "line": 30,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
   "text": "printf 'gerege\\n' > \"$s2\"; run \"stamp forged onto t36/out/recapture-gerege\"; rm -f \"$s2\"",
@@ -41897,7 +41705,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak 's|^A7-symlinked-canary.txt|BREACH|A7-symlinked-canary.txt|BREACH|' \"$D/verdict-A7-breach.sh\" 2>/dev/null",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "UNTRACKED",
   "tracked_files": 0,
@@ -41909,7 +41717,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak2 's|^A7-symlinked-canary.txt\\|CLEAN\\|PINNED|A7-symlinked-canary.txt\\|BREACH\\|PINNED|' \"$D/verdict-A7-breach.sh\"",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "UNTRACKED",
   "tracked_files": 0,
@@ -41921,7 +41729,7 @@
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "rm -f \"$D\"/verdict-A7-breach.sh.bak*",
-  "raw_target": "$D",
+  "raw_target": "$D/verdict-A7-breach.sh.bak*",
   "target": null,
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -41957,7 +41765,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak \"s|^$r.txt|CLEAN|$r.txt|BREACH|\" \"$D/verdict-all-breach.sh\" 2>/dev/null",
-  "raw_target": "\"s",
+  "raw_target": "s",
   "target": "s",
   "status": "UNTRACKED",
   "tracked_files": 0,
@@ -41969,7 +41777,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak2 \"s|^$r.txt\\\\|CLEAN\\\\||$r.txt\\\\|BREACH\\\\||\" \"$D/verdict-all-breach.sh\"",
-  "raw_target": "\"s",
+  "raw_target": "s",
   "target": "s",
   "status": "UNTRACKED",
   "tracked_files": 0,
@@ -41981,7 +41789,7 @@
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "rm -f \"$D\"/verdict-all-breach.sh.bak*",
-  "raw_target": "$D",
+  "raw_target": "$D/verdict-all-breach.sh.bak*",
   "target": null,
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -42005,7 +41813,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak     -e \"s|^j = b.find(b'..n', i)\\$|# T138: poison BEFORE the match, same line \u2014 T108 shape s01/s06|\"     -e \"s|^open(p, 'wb').write(b\\[:j\\] + b'..xff..xfe' + b\\[j:\\])\\$|open(p, 'wb').write(b[:i] + b'\\\\\\\\xff\\\\\\\\xfe' + b[i:])|\" \"$P\"",
-  "raw_target": "\"s",
+  "raw_target": "s",
   "target": "s",
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -42029,7 +41837,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak2     's|^if LC_ALL=C /usr/bin/grep -aq \"\\^A2a.\\*ADMITS\" \"\\$S/g4.txt\"; then$|if LC_ALL=C /usr/bin/grep -aq \"^A2a.*ADMITS (printed the HALF_UP certification)\" \"$S/g4.txt\"; then|' \"$P\"",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -42041,8 +41849,8 @@
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "rm -f \"$P\".bak*",
-  "raw_target": "$P",
-  "target": "$1/.softhouse/capture/t91/prove-guards.sh",
+  "raw_target": "$P.bak*",
+  "target": "$1/.softhouse/capture/t91/prove-guards.sh.bak*",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
@@ -42065,7 +41873,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak 's|if LC_ALL=C grep -aqF \"\\$S\" \"\\$f\"; then c=YES; else c=no; fi|c=no  # T138 mutation: scanner blinded|' \"$V\"",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -42101,7 +41909,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak 's|if LC_ALL=C grep -aqF \"\\$S\" \"\\$f\"; then c=YES; else c=no; fi|if LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 /usr/bin/grep -aqF \"$S\" \"$f\"; then c=YES; else c=no; fi  # T138: LC_ALL=C removed|' \"$V\"",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -42149,7 +41957,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak 's|if LC_ALL=C grep -aqF \"\\$S\" \"\\$f\"; then c=YES; else c=no; fi|if LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 /usr/bin/grep -aqF \"$S\" \"$f\"; then c=YES; else c=no; fi  # T138: LC_ALL=C removed|' \"$V\"",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -42929,7 +42737,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak 's|if LC_ALL=C grep -aqF \"\\$S\" \"\\$f\"; then c=YES; else c=no; fi|c=no  # T138 mutation: scanner blinded|' \"$V\"",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -42977,7 +42785,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak 's|^assert_mutated \"\\$O/req-mutated-55.json\" 1162502.55$|# T138 mutation: assert_mutated REMOVED|' \"$K/.softhouse/capture/t91/run-attacks.sh\"",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -42989,7 +42797,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak2 's|^assert_mutated \"\\$O/req-crafted-04.json\" 1162502.4$|# T138 mutation: assert_mutated REMOVED|' \"$K/.softhouse/capture/t91/run-attacks.sh\"",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -43001,7 +42809,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak3 's|^CANON=\\$CAP/pathb/t22-audit/req/calc-pmode2-gerege.json$|CANON=$CAP/pathb/t22-audit/req/calc-pmode2-gerege.json\\nRECIPE_CHECK_FAIL=1|' \"$K/.softhouse/capture/t91/run-attacks.sh\"",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -43013,7 +42821,7 @@
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "rm -f \"$K/.softhouse/capture/t91/run-attacks.sh\".bak*",
-  "raw_target": "$K/.softhouse/capture/t91/run-attacks.sh",
+  "raw_target": "$K/.softhouse/capture/t91/run-attacks.sh.bak*",
   "target": null,
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -43025,7 +42833,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i.bak 's|^ln -s \"\\$CANON\" \"\\$O/link-to-canon.json\" .*$|ln -s /nonexistent/nope.json \"$O/link-to-canon.json\"  # T138 mutation|' \"$K/.softhouse/capture/t91/run-attacks.sh\"",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -43037,7 +42845,7 @@
   "pattern": "rm-plain",
   "what": "file delete",
   "text": "rm -f \"$K/.softhouse/capture/t91/run-attacks.sh\".bak",
-  "raw_target": "$K/.softhouse/capture/t91/run-attacks.sh",
+  "raw_target": "$K/.softhouse/capture/t91/run-attacks.sh.bak",
   "target": null,
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -44462,18 +44270,6 @@
  {
   "file": ".softhouse/reviews/T155-probe/prove-vii-residual-attacks.sh",
   "line": 27,
-  "pattern": "mv",
-  "what": "move/overwrite",
-  "text": "printf 'this is not json at all\\n' > \"$V/T155-V1.json.tmp\"; mv \"$V/T155-V1.json.tmp\" \"$V/loanschedule/T155-V1.json\"",
-  "raw_target": "$V/loanschedule/T155-V1.json",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/T155-probe/prove-vii-residual-attacks.sh",
-  "line": 27,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
   "text": "printf 'this is not json at all\\n' > \"$V/T155-V1.json.tmp\"; mv \"$V/T155-V1.json.tmp\" \"$V/loanschedule/T155-V1.json\"",
@@ -44917,18 +44713,6 @@
  },
  {
   "file": ".softhouse/reviews/T155-probe/prove-xii-perl-true-absence.sh",
-  "line": 15,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "for t in bash sh find sort grep wc sed awk cat rm mkdir; do",
-  "raw_target": "mkdir",
-  "target": "mkdir",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/T155-probe/prove-xii-perl-true-absence.sh",
   "line": 20,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -44993,7 +44777,7 @@
   "pattern": "mv",
   "what": "move/overwrite",
   "text": "mv /tmp/t155/victims/*.json \"$V\"/",
-  "raw_target": "/",
+  "raw_target": "$V/",
   "target": null,
   "status": "SCRATCH",
   "tracked_files": 0,
@@ -45490,18 +45274,6 @@
   "status": "UNKNOWN",
   "tracked_files": null,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/reviews/T183-evidence/drive-probes.sh",
-  "line": 17,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$SCRATCH\"' EXIT",
-  "raw_target": "$SCRATCH",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/reviews/T183-evidence/drive-probes.sh",
@@ -46061,10 +45833,10 @@
   "pattern": "mv",
   "what": "move/overwrite",
   "text": "for d in \"$STASH\"/*; do mv \"$d\" \"$CAP/$(basename \"$d\")\"; done",
-  "raw_target": "$d\"",
-  "target": null,
-  "status": "UNKNOWN",
-  "tracked_files": null,
+  "raw_target": "$CAP/$(basename $d",
+  "target": "Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/capture/$(basename *",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
   "family": "destructive"
  },
  {
@@ -46087,6 +45859,18 @@
   "text": "rm -rf \"$W/.softhouse/capture/t188-probe\" \"$W/.claude/worktrees/agent-t188-fake\"",
   "raw_target": "$W/.softhouse/capture/t188-probe",
   "target": ".softhouse/capture/t188-probe",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/T188-probe/drive-t188.sh",
+  "line": 24,
+  "pattern": "rm-rf",
+  "what": "recursive delete",
+  "text": "rm -rf \"$W/.softhouse/capture/t188-probe\" \"$W/.claude/worktrees/agent-t188-fake\"",
+  "raw_target": "$W/.claude/worktrees/agent-t188-fake",
+  "target": ".claude/worktrees/agent-t188-fake",
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
@@ -46368,6 +46152,18 @@
   "family": "destructive"
  },
  {
+  "file": ".softhouse/reviews/T189-probe/matrix.sh",
+  "line": 90,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$PROBE_DIR/.out\" \"$PROBE_DIR/.err\"",
+  "raw_target": "$PROBE_DIR/.err",
+  "target": ".softhouse/reviews/T189-probe/.err",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
   "file": ".softhouse/reviews/T189-probe/mkfixtures.sh",
   "line": 9,
   "pattern": "redirect",
@@ -46620,6 +46416,18 @@
   "family": "destructive"
  },
  {
+  "file": ".softhouse/reviews/T189-probe/provenance.sh",
+  "line": 62,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$PROBE_DIR/.o\" \"$PROBE_DIR/.e\"",
+  "raw_target": "$PROBE_DIR/.e",
+  "target": ".softhouse/reviews/T189-probe/.e",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
   "file": ".softhouse/reviews/T189-probe/reachability.sh",
   "line": 12,
   "pattern": "redirect",
@@ -46738,18 +46546,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/reviews/T191-probe/drive-t191.sh",
-  "line": 29,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/reviews/T191-probe/drive-t191.sh",
@@ -46897,18 +46693,6 @@
  },
  {
   "file": ".softhouse/reviews/T191-probe/mutate-exclusion.sh",
-  "line": 11,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "TMP=\"$(mktemp -d)\"; trap 'rm -rf \"$TMP\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/T191-probe/mutate-exclusion.sh",
   "line": 31,
   "pattern": "py-write",
   "what": "python open for write",
@@ -46954,18 +46738,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
-  "line": 16,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$D\"' EXIT",
-  "raw_target": "$D",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
@@ -47024,6 +46796,126 @@
   "raw_target": "$T",
   "target": null,
   "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
+  "line": 56,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$T\"                       # found ABSENT, so an unrestored exit shows as PRESENT",
+  "raw_target": "#",
+  "target": "#",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
+  "line": 56,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$T\"                       # found ABSENT, so an unrestored exit shows as PRESENT",
+  "raw_target": "found",
+  "target": "found",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
+  "line": 56,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$T\"                       # found ABSENT, so an unrestored exit shows as PRESENT",
+  "raw_target": "ABSENT,",
+  "target": "ABSENT,",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
+  "line": 56,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$T\"                       # found ABSENT, so an unrestored exit shows as PRESENT",
+  "raw_target": "so",
+  "target": "so",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
+  "line": 56,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$T\"                       # found ABSENT, so an unrestored exit shows as PRESENT",
+  "raw_target": "an",
+  "target": "an",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
+  "line": 56,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$T\"                       # found ABSENT, so an unrestored exit shows as PRESENT",
+  "raw_target": "unrestored",
+  "target": "unrestored",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
+  "line": 56,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$T\"                       # found ABSENT, so an unrestored exit shows as PRESENT",
+  "raw_target": "exit",
+  "target": "exit",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
+  "line": 56,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$T\"                       # found ABSENT, so an unrestored exit shows as PRESENT",
+  "raw_target": "shows",
+  "target": "shows",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
+  "line": 56,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$T\"                       # found ABSENT, so an unrestored exit shows as PRESENT",
+  "raw_target": "as",
+  "target": "as",
+  "status": "UNTRACKED",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/T293/instruments/50-restoration-by-observation.sh",
+  "line": 56,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "rm -f \"$T\"                       # found ABSENT, so an unrestored exit shows as PRESENT",
+  "raw_target": "PRESENT",
+  "target": "PRESENT",
+  "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
  },
@@ -47261,7 +47153,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i ''   's|if req.Command == \"defineOpeningBalance\" \\&\\& len(req.PostedNonContraTransactionIDs) > 0 {|if req.Command == \"defineOpeningBalance\" {|'   \"$IMPL\"",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "UNTRACKED",
   "tracked_files": 0,
@@ -47297,7 +47189,7 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "LC_ALL=C sed -i ''   's|if req.Command == \"defineOpeningBalance\" \\&\\& len(req.PostedNonContraTransactionIDs) > 0 {|if len(req.PostedNonContraTransactionIDs) > 0 {|'   \"$IMPL\"",
-  "raw_target": "'s",
+  "raw_target": "s",
   "target": "s",
   "status": "UNTRACKED",
   "tracked_files": 0,
@@ -47641,18 +47533,6 @@
  },
  {
   "file": ".softhouse/reviews/T84-evidence/src/run-orderdep2.sh",
-  "line": 43,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -v \"$CAP_DIR:/cap\" \"$EXPECTED_IMAGE_REF\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/T84-evidence/src/run-orderdep2.sh",
   "line": 52,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -47722,18 +47602,6 @@
   "status": "SCRATCH",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/reviews/T84-evidence/src/run-t84.sh",
-  "line": 42,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\" -e ATTEST_IMAGE_ID=\"$ACTUAL_IMAGE_ID\"   -e ATTEST_PINNED_COMMIT=\"$ACTUAL_COMMIT\" -e ATTEST_PINNED_PATH=\"$PINNED_FINERACT\"   -e ATTEST_RUN_ID=\"$RUN_ID\"   -e ATTEST_SOURCES=\"/cap/src/CaptureT84.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -e ATTEST_CLASSPATH_OUT=\"/cap/out/classpath-sha256.txt\"   ",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/reviews/T84-evidence/src/run-t84.sh",
@@ -48922,18 +48790,6 @@
   "status": "UNKNOWN",
   "tracked_files": null,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/reviews/t185-probe/probe-t44-successor.sh",
-  "line": 5,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "S=$(mktemp -d); trap 'rm -rf \"$S\"' EXIT",
-  "raw_target": "$S",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/reviews/t185-probe/probe-t44-successor.sh",
@@ -50544,6 +50400,150 @@
   "family": "destructive"
  },
  {
+  "file": ".softhouse/reviews/t217-probe/run-push-case.zsh",
+  "line": 66,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "print -r -- \"LOCAL LOCK FILE = released (rm -f runs before any git call, so this should be true in EVERY case)\"",
+  "raw_target": "before",
+  "target": "before",
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/t217-probe/run-push-case.zsh",
+  "line": 66,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "print -r -- \"LOCAL LOCK FILE = released (rm -f runs before any git call, so this should be true in EVERY case)\"",
+  "raw_target": "any",
+  "target": "any",
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/t217-probe/run-push-case.zsh",
+  "line": 66,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "print -r -- \"LOCAL LOCK FILE = released (rm -f runs before any git call, so this should be true in EVERY case)\"",
+  "raw_target": "git",
+  "target": "git",
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/t217-probe/run-push-case.zsh",
+  "line": 66,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "print -r -- \"LOCAL LOCK FILE = released (rm -f runs before any git call, so this should be true in EVERY case)\"",
+  "raw_target": "call,",
+  "target": "call,",
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/t217-probe/run-push-case.zsh",
+  "line": 66,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "print -r -- \"LOCAL LOCK FILE = released (rm -f runs before any git call, so this should be true in EVERY case)\"",
+  "raw_target": "so",
+  "target": "so",
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/t217-probe/run-push-case.zsh",
+  "line": 66,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "print -r -- \"LOCAL LOCK FILE = released (rm -f runs before any git call, so this should be true in EVERY case)\"",
+  "raw_target": "this",
+  "target": "this",
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/t217-probe/run-push-case.zsh",
+  "line": 66,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "print -r -- \"LOCAL LOCK FILE = released (rm -f runs before any git call, so this should be true in EVERY case)\"",
+  "raw_target": "should",
+  "target": "should",
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/t217-probe/run-push-case.zsh",
+  "line": 66,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "print -r -- \"LOCAL LOCK FILE = released (rm -f runs before any git call, so this should be true in EVERY case)\"",
+  "raw_target": "be",
+  "target": "be",
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/t217-probe/run-push-case.zsh",
+  "line": 66,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "print -r -- \"LOCAL LOCK FILE = released (rm -f runs before any git call, so this should be true in EVERY case)\"",
+  "raw_target": "true",
+  "target": "true",
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/t217-probe/run-push-case.zsh",
+  "line": 66,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "print -r -- \"LOCAL LOCK FILE = released (rm -f runs before any git call, so this should be true in EVERY case)\"",
+  "raw_target": "in",
+  "target": "in",
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/t217-probe/run-push-case.zsh",
+  "line": 66,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "print -r -- \"LOCAL LOCK FILE = released (rm -f runs before any git call, so this should be true in EVERY case)\"",
+  "raw_target": "EVERY",
+  "target": "EVERY",
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
+  "file": ".softhouse/reviews/t217-probe/run-push-case.zsh",
+  "line": 66,
+  "pattern": "rm-plain",
+  "what": "file delete",
+  "text": "print -r -- \"LOCAL LOCK FILE = released (rm -f runs before any git call, so this should be true in EVERY case)\"",
+  "raw_target": "case",
+  "target": "case",
+  "status": "SCRATCH",
+  "tracked_files": 0,
+  "family": "destructive"
+ },
+ {
   "file": ".softhouse/reviews/t217-probe/spawn-push.py",
   "line": 25,
   "pattern": "py-write",
@@ -50588,18 +50588,6 @@
   "raw_target": "$WORK",
   "target": null,
   "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/t21v2/run-probe2-attested.sh",
-  "line": 43,
-  "pattern": "rm-plain",
-  "what": "file delete",
-  "text": "docker run --rm --user 0 --entrypoint sh   -e ATTEST_IMAGE_REF=\"$EXPECTED_IMAGE_REF\"   -e ATTEST_IMAGE_ID=\"$IMG\"   -e ATTEST_PINNED_COMMIT=\"$COMMIT\"   -e ATTEST_SOURCES=\"/cap/src/T21v2Probe2.java:/cap/src/T21v2Probe2Attested.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java\"   -v \"$WORK:/cap\" \"$EXPECTED_IMAGE_REF\" -c '",
-  "raw_target": "0",
-  "target": "0",
-  "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "destructive"
  },
@@ -51757,18 +51745,6 @@
  },
  {
   "file": ".softhouse/reviews/t254-harness-portability/instruments/30-goroot-stale-repro.sh",
-  "line": 27,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$STAGE\"' EXIT",
-  "raw_target": "$STAGE",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/t254-harness-portability/instruments/30-goroot-stale-repro.sh",
   "line": 39,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -52474,18 +52450,6 @@
   "status": "UNTRACKED",
   "tracked_files": 0,
   "family": "overwrite"
- },
- {
-  "file": ".softhouse/reviews/t261-tenant-attestation/instruments/t261-caller-and-trap.sh",
-  "line": 22,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$SCRATCH\"' EXIT",
-  "raw_target": "$SCRATCH",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
  },
  {
   "file": ".softhouse/reviews/t261-tenant-attestation/instruments/t261-caller-and-trap.sh",
@@ -53425,18 +53389,6 @@
  },
  {
   "file": ".softhouse/reviews/t263-analyze7-float-guard/attack-nilcoverage.sh",
-  "line": 14,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$TMP\"' EXIT",
-  "raw_target": "$TMP",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/t263-analyze7-float-guard/attack-nilcoverage.sh",
   "line": 54,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -53977,18 +53929,6 @@
  },
  {
   "file": ".softhouse/reviews/t283-review-t274/instruments/10-forgery-arms.sh",
-  "line": 77,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$WORK\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$WORK",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/t283-review-t274/instruments/10-forgery-arms.sh",
   "line": 98,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -54361,18 +54301,6 @@
  },
  {
   "file": ".softhouse/reviews/t283-review-t274/instruments/30-selfcheck-residue.sh",
-  "line": 36,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$WORK\"' EXIT HUP INT TERM QUIT",
-  "raw_target": "$WORK",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/t283-review-t274/instruments/30-selfcheck-residue.sh",
   "line": 42,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -54654,9 +54582,9 @@
   "what": "git checkout -- (discard worktree edits)",
   "text": "restore() { git checkout -- . 2>/dev/null; }",
   "raw_target": ".",
-  "target": ".",
-  "status": "UNTRACKED",
-  "tracked_files": -1,
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
   "family": "destructive"
  },
  {
@@ -54677,10 +54605,10 @@
   "pattern": "sed-i",
   "what": "in-place edit",
   "text": "/usr/bin/sed -i '' 's%^C=/tmp/t158-clone$%C=\"$(mktemp -d \"${TMPDIR:-/tmp}/t158-clone.XXXXXXXXXX\")\"%' \"$PINNED\"",
-  "raw_target": "${TMPDIR:-/tmp}/t158-clone.XXXXXXXXXX",
+  "raw_target": "s%^C=/tmp/t158-clone$%C=$(mktemp -d ${TMPDIR:-/tmp}/t158-clone.XXXXXXXXXX",
   "target": null,
-  "status": "UNKNOWN",
-  "tracked_files": null,
+  "status": "SCRATCH",
+  "tracked_files": 0,
   "family": "destructive"
  },
  {
@@ -54693,18 +54621,6 @@
   "target": ".softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh",
   "status": "TRACKED",
   "tracked_files": 1,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
-  "line": 81,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "/usr/bin/sed -i '' \"s%^trap 'rm -rf \\\"\\\\\\$D\\\"' EXIT\\$%%\" \"$ESCAPE\"",
-  "raw_target": "\\\"\\\\\\$D\\\"'",
-  "target": "\\\"\\\\\\*",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
   "family": "destructive"
  },
  {
@@ -54774,9 +54690,9 @@
   "what": "git checkout -- (discard worktree edits)",
   "text": "restore() { git checkout -- . 2>/dev/null; }",
   "raw_target": ".",
-  "target": ".",
-  "status": "UNTRACKED",
-  "tracked_files": -1,
+  "target": null,
+  "status": "UNKNOWN",
+  "tracked_files": null,
   "family": "destructive"
  },
  {
@@ -54789,18 +54705,6 @@
   "target": ".softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh",
   "status": "TRACKED",
   "tracked_files": 1,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh",
-  "line": 39,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "/usr/bin/sed -i '' \"s%^trap 'rm -rf \\\"\\\\\\$D\\\"' EXIT\\$%%\" \"$F\"",
-  "raw_target": "\\\"\\\\\\$D\\\"'",
-  "target": "\\\"\\\\\\*",
-  "status": "UNTRACKED",
-  "tracked_files": 0,
   "family": "destructive"
  },
  {
@@ -59269,18 +59173,6 @@
  },
  {
   "file": ".softhouse/reviews/t41-probe/t196-drive.sh",
-  "line": 51,
-  "pattern": "rm-rf",
-  "what": "recursive delete",
-  "text": "trap 'rm -rf \"$SB\"' EXIT",
-  "raw_target": "$SB",
-  "target": null,
-  "status": "SCRATCH",
-  "tracked_files": 0,
-  "family": "destructive"
- },
- {
-  "file": ".softhouse/reviews/t41-probe/t196-drive.sh",
   "line": 69,
   "pattern": "redirect",
   "what": "output redirection (truncating)",
@@ -61097,7 +60989,7 @@
   "pattern": "tee",
   "what": "tee (truncating)",
   "text": "SH_MUTATORS = (\"mv\", \"cp\", \"rm\", \"sed\", \"git\", \"tee\", \"truncate\", \"install\",",
-  "raw_target": ", ",
+  "raw_target": ", truncate, install",
   "target": null,
   "status": "UNKNOWN",
   "tracked_files": null,
