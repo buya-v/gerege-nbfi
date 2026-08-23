@@ -56,17 +56,47 @@ does not answer the call is REFUSED rather than allowed. It does NOT judge worke
 liveness itself -- that is the wrapper's job (`foreign_live_session_in_repo()` in
 fire-program.sh), because the wrapper is the thing that owns the process facts.
 
+T309 -- TWO AUTHORITIES, NOT ONE, AND THEY FAIL IN OPPOSITE DIRECTIONS.
+`caller_is_lock_holder()` used to answer a BOOLEAN, and its `claude`-in-ancestry leg
+refused everything on the ground that "a driver or worker must not reconcile its own
+siblings". True of LIVE siblings; FALSE of corpses -- and the guard had no notion of fire
+identity, so it could not tell the two apart. On 2026-08-23 fire `20260823-140001` opened
+on eight `in_progress` tasks belonging to the SIGTERMed `20260823-080004`, could not use
+this tool (a driver is always inside a `claude`), and open-coded the demotion by hand.
+
+So the predicate is SPLIT into a caller MODE and a per-task OWNERSHIP test:
+  * `wrapper` mode (fire-program.sh, driver already dead, liveness established out of
+    band by `foreign_live_session_in_repo()`): demotes EVERY `in_progress` task. It fails
+    towards DEMOTING, which is right there -- the caller has positively established there
+    is nothing live to destroy, and the cost of not demoting is the `in_progress` lie.
+  * `in_session` mode (a driver or worker, a fire IS live): demotes ONLY tasks whose
+    recorded `fire` differs from the fire id on `.softhouse/LOCK`. It fails towards
+    REFUSING, which is right there -- the destructive error is demoting live work and it
+    cannot be undone, while the non-destructive error leaves a lie that `wrapper` mode
+    clears on the way out.
+These are the SAME repair with OPPOSITE polarity, deliberately, because the two call
+sites have opposite worst cases. Widening one predicate to serve both is the shape
+`P-91`/`T292` names, and it is not done here.
+
 Usage:  python3 .softhouse/bin/ready-tasks.py [--json] [--repo <dir>]
         python3 .softhouse/bin/ready-tasks.py --reconcile --fire <fire-id>
                 [--rescue <task-branch>=<rescue-branch>]... [--dry-run] [--repo <dir>]
+                [--deadline-secs <n>]
 Run it from the repo root (or pass --repo).
+
+`--deadline-secs <n>` installs ONE monotonic wall-clock budget for the whole process and
+clamps every subprocess timeout to what is left of it. It exists because T309 wires
+`--reconcile` into fire-program.sh's SIGNAL handler, which is racing launchd's ~20s
+SIGTERM->SIGKILL grace; without it, two `git` calls per in_progress task at `timeout=20`
+is an unbounded budget in aggregate.
 
 Exit codes:
   0   report printed / reconcile completed -- zero demotions is a completion too
   3   --reconcile could not READ or WRITE tasks.json. NOTHING was changed and the
       caller must not treat the state as truthful.
-  4   --reconcile REFUSED: the caller is not the lock holder, or that could not be
-      established. Fail-closed; nothing was changed.
+  4   --reconcile REFUSED and NOTHING was changed. Either the caller could not be
+      established as the lock holder at all, or it is `in_session` and no `in_progress`
+      task could be proven to belong to a dead fire. Fail-closed in both cases.
   64  usage error
 """
 import json
@@ -75,6 +105,7 @@ import os
 import shutil
 import subprocess
 import textwrap
+import time
 import sys
 
 TERMINAL = {"done", "approved", "merged"}
@@ -138,21 +169,69 @@ def resolve(dep, cur, arch):
 GIT = shutil.which("git")
 
 
+# T309 -- A WALL-CLOCK BUDGET, BECAUSE THIS NOW RUNS INSIDE A SIGNAL HANDLER.
+# `--reconcile` used to be reachable only from the wrapper's NORMAL tail, where nothing
+# was waiting on it. T309 wires it into fire-program.sh's on_signal() as well, and that
+# handler is racing launchd's SIGTERM->SIGKILL grace (~20s, and the wrapper's own T211/
+# T217 comments already spend most of it). The per-call `timeout=20` below was therefore
+# an UNBOUNDED budget in aggregate: this program makes two `git` calls per in_progress
+# task, so the eight corpses of fire 20260823-080004 would have been 16 x 20s = 320s of
+# worst case inside a 20s window.
+#
+# `--deadline-secs N` installs ONE monotonic deadline for the whole process. Every
+# subprocess timeout is clamped to what is left of it, and once it is gone `_run`
+# answers rc=None WITHOUT spawning anything.
+#
+# POLARITY, and it differs by caller on purpose:
+#   * for WIP EVIDENCE (branch_wip) an exhausted budget degrades the note to UNVERIFIED
+#     and the demotion still happens -- the demotion is the repair, the branch sha is
+#     colour. Failing closed on the EVIDENCE while still telling the truth about the
+#     STATUS is the useful direction here.
+#   * for AUTHORITY (caller_is_lock_holder) an exhausted budget is a REFUSAL, because a
+#     rewrite authorised by a check that never ran is exactly the accident this whole
+#     file exists to prevent.
+DEADLINE = None          # monotonic instant, or None for "no budget"
+BUDGET_NOTE = ""         # set when the budget was actually exhausted, for the report
+
+
+def set_deadline(secs):
+    global DEADLINE
+    DEADLINE = time.monotonic() + secs
+
+
+def _remaining():
+    """Seconds left, or None when no budget was installed."""
+    if DEADLINE is None:
+        return None
+    return DEADLINE - time.monotonic()
+
+
 def _run(argv, timeout=20):
     """Run argv. Return (rc, stdout, note). rc is None when the program did not answer.
 
-    POLARITY: fail-CLOSED. A missing binary, a timeout or an OSError all come back as
-    rc=None with the reason in `note`, and every caller renders that as UNVERIFIED --
-    never as the reassuring answer. This is the shape that `wc -l` printing `0` on
-    failure got wrong in the wrapper's worktree sweep (T202) and it is not repeated here.
+    POLARITY: fail-CLOSED. A missing binary, a timeout, an exhausted wall-clock budget
+    or an OSError all come back as rc=None with the reason in `note`, and every caller
+    renders that as UNVERIFIED -- never as the reassuring answer. This is the shape that
+    `wc -l` printing `0` on failure got wrong in the wrapper's worktree sweep (T202) and
+    it is not repeated here.
     """
+    global BUDGET_NOTE
     if not argv[0]:
         return None, "", "program not found on PATH"
+    left = _remaining()
+    if left is not None:
+        if left <= 0.05:
+            BUDGET_NOTE = "the --deadline-secs budget was exhausted"
+            return None, "", ("wall-clock budget exhausted before %s could be run"
+                              % os.path.basename(argv[0]))
+        timeout = min(timeout, left)
     try:
         p = subprocess.run(argv, cwd=repo, capture_output=True, text=True,
                            timeout=timeout)
     except subprocess.TimeoutExpired:
-        return None, "", "timed out after %ds" % timeout
+        if left is not None:
+            BUDGET_NOTE = "the --deadline-secs budget was exhausted"
+        return None, "", "timed out after %.2fs" % timeout
     except OSError as exc:
         return None, "", "OSError: %s" % exc
     return p.returncode, p.stdout.strip(), (p.stderr.strip().splitlines() or [""])[0]
@@ -195,53 +274,148 @@ def ps_ancestors(pid=None):
 
 
 def caller_is_lock_holder():
-    """(allowed, reason). Fail-CLOSED: anything unestablished returns False.
+    """(mode, reason, lock_fire). Fail-CLOSED: anything unestablished is "refused".
 
     `--reconcile` rewrites tasks.json, so the one thing that must never happen is a
-    hand-run rewriting state out from under a LIVE fire. The lock already records the
-    holder's `host` and `pid`; this asks whether that pid is an ANCESTOR of this
-    process. It is unfakeable by the caller (walked from /bin/ps, not passed in as an
-    argument) and it needs nobody to remember anything -- the wrapper is the parent of
-    the python it invokes, by construction, whenever it is the wrapper doing the call.
+    rewrite that destroys LIVE work. The lock already records the holder's `host` and
+    `pid`; this asks whether that pid is an ANCESTOR of this process. It is unfakeable by
+    the caller (walked from /bin/ps, not passed in as an argument) and it needs nobody to
+    remember anything -- the wrapper is the parent of the python it invokes, by
+    construction, whenever it is the wrapper doing the call.
+
+    T309 -- WHY THIS RETURNS A MODE AND NOT A BOOLEAN.
+    Until T309 the `claude`-in-ancestry leg below was a flat REFUSAL, on the stated
+    ground that "a driver or worker must not reconcile its own siblings". That ground is
+    SOUND FOR LIVE SIBLINGS AND WRONG FOR CORPSES, and the difference cost a fire: on
+    2026-08-23 the `20260823-140001` driver opened on eight `in_progress` tasks left by
+    `20260823-080004` -- four branches at the dispatch commit with zero commits ahead of
+    main, four never created at all -- and could not use this tool to clear them, because
+    a driver is by definition running inside a `claude`. It open-coded the demotion by
+    hand, which is precisely the hand-repair this tool exists to replace.
+
+    The boolean was ONE PREDICATE SERVING TWO PURPOSES, which is the shape `P-91` /
+    `T292` names: "a guard phrased as a STRUCTURAL PATTERN over the shape of its input
+    can always be re-nested one level out ... The escape is not a better pattern: it is
+    INVERTING THE BURDEN -- require the document to POSITIVELY DEMONSTRATE coverage in a
+    form the rule CONSTRUCTS rather than RECOGNISES" [VERIFIED: .softhouse/patterns.md
+    P-91, this checkout]. So the predicate is SPLIT, and the second half moves onto the
+    TASK rather than onto the caller: see `task_is_demotable_in_session`. The caller no
+    longer asks "am I allowed to rewrite this file", it asks, once per task, "can I
+    POSITIVELY show this dispatch belongs to a fire that is not the one holding the lock".
+
+    Modes:
+      "wrapper"     the lock holder is an ancestor and NO `claude` is in the chain. This
+                    is fire-program.sh itself, after its driver has been waited on or
+                    killed. It may demote every `in_progress` task.
+      "in_session"  the lock holder is an ancestor but a `claude` IS in the chain: a
+                    driver or a worker, i.e. code running WHILE a fire is live. It may
+                    demote ONLY tasks positively attributed to a DIFFERENT fire.
+      "refused"     nothing may be rewritten.
     """
     lock = os.path.join(root, "LOCK")
     if not os.path.exists(lock):
-        return True, "no .softhouse/LOCK on disk -- nobody holds this repo"
+        # No lock => no live fire owns this repo => nobody's siblings are at risk. The
+        # `claude` leg below is about protecting a LIVE fire's workers; with no lock
+        # there is no live fire to protect, so this is "wrapper", not "in_session".
+        return "wrapper", "no .softhouse/LOCK on disk -- nobody holds this repo", None
     try:
         with open(lock, encoding="utf-8") as fh:
             body = json.load(fh)
     except (IOError, ValueError) as exc:
-        return False, "LOCK exists but could not be read as JSON (%s) -- REFUSING" % exc
+        return "refused", "LOCK exists but could not be read as JSON (%s) -- REFUSING" % exc, None
     pid, host = body.get("pid"), body.get("host")
+    lock_fire = body.get("fire")
+    lock_fire = lock_fire.strip() if isinstance(lock_fire, str) else None
     if not isinstance(pid, int):
-        return False, "LOCK records no integer pid (%r) -- REFUSING" % (pid,)
+        return "refused", "LOCK records no integer pid (%r) -- REFUSING" % (pid,), lock_fire
     rc, myhost, _ = _run(["/bin/hostname", "-s"], timeout=10)
     if rc != 0:
-        return False, "could not read this host's name -- REFUSING to judge a lock"
+        return "refused", "could not read this host's name -- REFUSING to judge a lock", lock_fire
     if host != myhost:
-        return False, ("LOCK is held on host %r, this is %r -- REFUSING to touch "
-                       "another machine's state" % (host, myhost))
+        return "refused", ("LOCK is held on host %r, this is %r -- REFUSING to touch "
+                           "another machine's state" % (host, myhost)), lock_fire
     anc = ps_ancestors()
     if anc is None:
-        return False, "/bin/ps did not answer -- ancestry UNESTABLISHED, REFUSING"
+        return "refused", "/bin/ps did not answer -- ancestry UNESTABLISHED, REFUSING", lock_fire
     if pid != os.getpid() and pid not in [p for p, _ in anc]:
-        return False, ("LOCK is held by pid %d, which is NOT an ancestor of this "
-                       "process (pid %d) -- a live fire may own these tasks. REFUSING."
-                       % (pid, os.getpid()))
+        return "refused", ("LOCK is held by pid %d, which is NOT an ancestor of this "
+                           "process (pid %d) -- a live fire may own these tasks. REFUSING."
+                           % (pid, os.getpid())), lock_fire
     # ANCESTRY IS NOT ENOUGH, and this was MEASURED rather than reasoned: run from a
     # worker agent inside a live fire, the check above PASSED -- because a worker is a
     # descendant of the very wrapper that holds the lock. So being inside the holder's
     # tree does not make you the holder. The wrapper reaches this script through
     # zsh only; anything routed through a `claude` is a driver or a worker, i.e. code
-    # running WHILE the fire is live, which is exactly who must not demote in_progress.
+    # running WHILE the fire is live. Until T309 that ended the call; now it selects the
+    # NARROW authority instead of ending it.
     for apid, acmd in anc:
         if os.path.basename((acmd.split() or [""])[0]) == "claude":
-            return False, ("invoked from INSIDE a live session -- ancestor pid %d is "
-                           "`claude`. A driver or worker must not reconcile its own "
-                           "siblings; only the wrapper, after the driver is dead, may. "
-                           "REFUSING." % apid)
-    return True, ("lock holder pid %d is an ancestor of this process and no `claude` "
-                  "is in the chain" % pid)
+            return "in_session", ("invoked from INSIDE a live session -- ancestor pid %d "
+                                  "is `claude`. NARROW authority: this caller may demote "
+                                  "only dispatches positively attributed to a fire other "
+                                  "than the lock holder's (%s)."
+                                  % (apid, lock_fire or "NONE RECORDED ON THE LOCK")), lock_fire
+    return "wrapper", ("lock holder pid %d is an ancestor of this process and no `claude` "
+                       "is in the chain" % pid), lock_fire
+
+
+def task_is_demotable_in_session(t, lock_fire):
+    """(ok, reason) -- may an IN-SESSION caller demote this `in_progress` task?
+
+    T309. THE DISCRIMINATOR IS THE OWNING FIRE ID, AND THE ARGUMENT FOR IT IS THE LOCK'S
+    EXCLUSIVITY, NOT A REMEMBERED FIELD.
+
+    What the caller actually needs to know is not "who am I" but "is the session that
+    dispatched this task still alive". A fire id answers that WITHOUT any liveness probe,
+    because at most one fire holds `.softhouse/LOCK` at a time: if a task records fire
+    `A` and the lock is held by fire `B`, then `A` is not holding the lock, so `A` is
+    over. That is a read, not an inference.
+
+    REJECTED ALTERNATIVES, and why:
+      * process liveness per task -- there IS no process per task. Measured on this host
+        during a live fire with six workers dispatched: a subagent is in-process inside
+        ONE `claude` [VERIFIED: fire-program.sh's own foreign_live_session_in_repo()
+        comment, which records the /bin/ps and lsof evidence]. Any design looking for a
+        process per task finds nothing and demotes everything.
+      * branch WIP as the discriminator ("no commits => dead") -- INVERTED for exactly
+        the case that matters. A live worker in its first minutes has no commits and
+        would be demoted; a genuinely dead worker that committed once would be spared.
+        The 2026-08-23 corpses had zero commits AND were dead; that correlation is an
+        accident of the incident, not a rule.
+      * a `--force`/`--foreign-only` flag -- a remembered obligation, which is `P-45`:
+        "a guard that only works when someone remembers to run it enforces nothing"
+        [VERIFIED: .softhouse/patterns.md P-45, this checkout]. The mode is DERIVED from
+        /bin/ps ancestry instead, which the caller cannot assert.
+
+    FAIL-CLOSED DIRECTION AT THIS CALL SITE: a task whose owner cannot be established is
+    REFUSED, never demoted. In-session, the destructive error is demoting live work,
+    which cannot be undone; the non-destructive error is leaving an `in_progress` lie
+    that the wrapper's own exit path (which runs in "wrapper" mode, with liveness already
+    established out of band) will clear on the way out. So this direction leaves a lie
+    standing rather than destroying work, and the OTHER call site is where the lie dies.
+
+    RESIDUAL RISK, STATED: this trusts that only one fire holds the lock. `P-85` records
+    a day when two orchestrators held it at once -- "TWO ORCHESTRATORS HELD THE LOCK AT
+    ONCE, AND THE CAUSE WAS AN UNPUSHED IN-FLIGHT STATE" [VERIFIED: .softhouse/patterns.md
+    P-85]. Under that failure this check can demote a live foreign fire's task. It is the
+    same assumption every other user of the lock already makes, and it is not made worse
+    here; it is not eliminated either, and no claim is made that it is.
+    """
+    if not lock_fire:
+        return False, ("the LOCK records no `fire` id, so 'is this dispatch mine?' "
+                       "cannot be decided -- REFUSING (fail-closed)")
+    owner = t.get("fire")
+    owner = owner.strip() if isinstance(owner, str) else ""
+    if not owner:
+        return False, ("no `fire` recorded on this task, so it cannot be shown to belong "
+                       "to a DEAD fire -- REFUSING. Whoever dispatched it did not stamp "
+                       "an owner; the wrapper's exit-path reconcile will clear it.")
+    if owner == lock_fire:
+        return False, ("dispatched by fire %s, which is the fire holding the lock RIGHT "
+                       "NOW -- this is a LIVE sibling. REFUSING." % owner)
+    return True, ("dispatched by fire %s; the lock is held by fire %s, and only one fire "
+                  "holds it at a time, so %s is over."
+                  % (owner, lock_fire, owner))
 
 
 def branch_wip(branch):
@@ -276,12 +450,13 @@ def branch_wip(branch):
 
 
 def reconcile(fire, rescue_map, dry_run=False):
-    """Rewrite every `in_progress` task to `needs_retry`, with the evidence in a note.
+    """Rewrite `in_progress` tasks to `needs_retry`, with the evidence in a note.
 
-    THE CONTRACT WITH THE CALLER: the caller has already established that no live
-    session owns these tasks. fire-program.sh does that with
+    THE CONTRACT WITH THE CALLER: in "wrapper" mode the caller has already established
+    that no live session owns these tasks. fire-program.sh does that with
     `foreign_live_session_in_repo()` and does not call this otherwise. This function
-    re-checks only what it can check by itself -- lock ancestry, above.
+    re-checks only what it can check by itself -- lock ancestry, above -- and, in
+    "in_session" mode, per-task fire ownership.
 
     WHY REPAIR AND NOT REFUSE: see the wrapper's own comment at the call site. Briefly,
     a refusal has nowhere to be heard. The wrapper's only reader is a log file, the next
@@ -291,9 +466,14 @@ def reconcile(fire, rescue_map, dry_run=False):
     print("RECONCILE -- fire %s" % fire)
     print("  git:  %s" % (GIT or "NOT FOUND ON PATH -- WIP evidence will be UNVERIFIED"))
     print("  repo: %s" % repo)
-    allowed, why = caller_is_lock_holder()
+    left = _remaining()
+    if left is not None:
+        print("  budget: %.1fs of wall clock for this whole run (--deadline-secs); every "
+              "subprocess timeout is clamped to what is left of it" % left)
+    mode, why, lock_fire = caller_is_lock_holder()
     print("  lock: %s" % why)
-    if not allowed:
+    print("  mode: %s   (lock fire id: %s)" % (mode, lock_fire or "NONE RECORDED"))
+    if mode == "refused":
         print("  RESULT: REFUSED -- tasks.json was NOT modified.")
         return 4
 
@@ -315,7 +495,31 @@ def reconcile(fire, rescue_map, dry_run=False):
         print("  RESULT: nothing to repair. tasks.json claims no dispatched work.")
         return 0
 
+    # T309 -- THE AUTHORITY SPLIT, PER TASK. "wrapper" mode keeps the pre-T309 behaviour
+    # exactly: every in_progress task is a corpse, because the caller established that
+    # out of band before calling. "in_session" mode must show its work per task.
+    demote, withheld = [], []
     for t in live:
+        if mode == "wrapper":
+            demote.append(t)
+            continue
+        ok, reason = task_is_demotable_in_session(t, lock_fire)
+        (demote if ok else withheld).append((t, reason))
+
+    if mode == "in_session":
+        print("  IN-SESSION authority: %d demotable, %d WITHHELD (a live fire is running; "
+              "only dispatches proven to belong to another fire may be touched)"
+              % (len(demote), len(withheld)))
+        for t, reason in withheld:
+            print("  %-8s WITHHELD  %s" % (t.get("id", "?"), reason))
+        demote = [t for t, _ in demote]
+        if not demote:
+            print("  RESULT: REFUSED -- nothing this caller is authorised to repair; "
+                  "tasks.json was NOT modified. The wrapper's exit-path reconcile runs "
+                  "in `wrapper` mode and clears what is left.")
+            return 4
+
+    for t in demote:
         branch = t.get("branch") or ""
         kind, text = branch_wip(branch)
         rescued = rescue_map.get(branch)
@@ -323,13 +527,26 @@ def reconcile(fire, rescue_map, dry_run=False):
         if rescued:
             clauses.append("Uncommitted WIP left in its worktree was swept onto %s by "
                            "this fire's worktree sweep." % rescued)
-        note = ("worker killed mid-flight by fire %s -- the fire ended while this task "
+        # T309: name the fire that ACTUALLY dispatched it when the task records one. The
+        # pre-T309 note always named `--fire`, i.e. the RECONCILING fire -- which was
+        # right only when the corpse belonged to the fire doing the reconciling, and was
+        # a false attribution in exactly the 2026-08-23 case (fire 20260823-140001
+        # clearing fire 20260823-080004's dispatches).
+        owner = t.get("fire")
+        owner = owner.strip() if isinstance(owner, str) else ""
+        if owner:
+            killer = ("fire %s (the owning fire recorded on the task at dispatch)"
+                      % owner)
+        else:
+            killer = ("fire %s -- INFERRED, not observed: this task recorded no owning "
+                      "fire, so this is the RECONCILING fire's id and may not be the "
+                      "fire that actually dispatched it" % fire)
+        note = ("worker killed mid-flight by %s -- the fire ended while this task "
                 "was still in_progress, and a killed worker is dead, not paused "
                 "(softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). "
                 "%s Completeness UNVERIFIED: no handoff "
-                "was signed off and no reviewer saw this. Reconciled by the "
-                "fire-program.sh exit guard, NOT by a driver -- the driver was already "
-                "gone." % (fire, " ".join(clauses)))
+                "was signed off and no reviewer saw this. Reconciled by fire %s in `%s` "
+                "mode." % (killer, " ".join(clauses), fire, mode))
         prior = t.get("note")
         if prior:
             note += "  [prior note: %s]" % prior
@@ -341,9 +558,15 @@ def reconcile(fire, rescue_map, dry_run=False):
             t["status"] = "needs_retry"
             t["note"] = note
 
+    if BUDGET_NOTE:
+        print("  NOTE: %s -- some WIP evidence above is UNVERIFIED for that reason, not "
+              "because the branches were inspected and found empty. The DEMOTIONS are "
+              "unaffected: a dead dispatch is dead whether or not git answered."
+              % BUDGET_NOTE)
+
     if dry_run:
         print("  RESULT: DRY RUN -- %d task(s) WOULD be demoted; tasks.json untouched."
-              % len(live))
+              % len(demote))
         return 0
 
     # Preserve the file's own serialisation so the diff is the demotions and nothing
@@ -369,8 +592,9 @@ def reconcile(fire, rescue_map, dry_run=False):
             pass
         print("  RESULT: REFUSED -- nothing was changed, and this state is NOT truthful.")
         return 3
-    print("  RESULT: WROTE %s -- %d task(s) demoted in_progress -> needs_retry."
-          % (path, len(live)))
+    print("  RESULT: WROTE %s -- %d task(s) demoted in_progress -> needs_retry%s."
+          % (path, len(demote),
+             ", %d WITHHELD" % len(withheld) if withheld else ""))
     return 0
 
 
@@ -412,6 +636,20 @@ def main():
         kind, text = branch_wip(branch)
         print("  %-8s %s" % (tid, branch or "NO BRANCH RECORDED -- suspect an isolation violation"))
         print("           WIP: %s  %s" % (kind.upper(), text))
+        # T309: the owning fire is the discriminator `--reconcile` needs in `in_session`
+        # mode, and a task that carries none is UNCLEARABLE from inside a live fire. That
+        # is a defect in whoever dispatched it, so it is PRINTED rather than left to be
+        # discovered at reconcile time -- an omission that announces itself is not a
+        # remembered obligation (P-45: "a guard that only works when someone remembers to
+        # run it enforces nothing").
+        owner = t.get("fire")
+        owner = owner.strip() if isinstance(owner, str) else ""
+        if owner:
+            print("           owning fire: %s" % owner)
+        else:
+            print("           owning fire: NONE RECORDED -- whoever dispatched this did "
+                  "not stamp a fire id, so a LIVE driver cannot prove it is a corpse and "
+                  "`--reconcile` will WITHHOLD it. Only the wrapper's exit path clears it.")
     if live:
         print("  ^ If no fire is running right now, every line above is a DEAD dispatch")
         print("    and this section is lying to you. The wrapper repairs it on the way")
@@ -527,7 +765,7 @@ def cli(argv):
             dry = True
         elif a == "--json":
             pass                                    # handled inside main()
-        elif a in ("--fire", "--repo", "--rescue"):
+        elif a in ("--fire", "--repo", "--rescue", "--deadline-secs"):
             if i + 1 >= len(args):
                 print("usage error: %s needs a value" % a, file=sys.stderr)
                 return 64
@@ -536,6 +774,21 @@ def cli(argv):
                 fire = args[i]
             elif a == "--repo":
                 set_repo(args[i])
+            elif a == "--deadline-secs":
+                # T309. Rejected rather than clamped: a budget this program cannot parse
+                # is a caller bug, and silently substituting a default would give a
+                # signal handler a bound nobody chose.
+                try:
+                    secs = float(args[i])
+                except ValueError:
+                    print("usage error: --deadline-secs wants a number of seconds, got "
+                          "%r" % args[i], file=sys.stderr)
+                    return 64
+                if secs <= 0:
+                    print("usage error: --deadline-secs must be > 0, got %r" % args[i],
+                          file=sys.stderr)
+                    return 64
+                set_deadline(secs)
             else:
                 # <task-branch>=<rescue-branch>, produced by the wrapper's worktree
                 # sweep, which knows both and used to throw the pairing away.
