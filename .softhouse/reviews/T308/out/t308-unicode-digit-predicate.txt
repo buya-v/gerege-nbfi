@@ -1,0 +1,32 @@
+T308 -- UNICODE DIGITS PASS `isdigit()` AND FAIL `^P[0-9]+_`
+================================================================================================
+  register declares autoPredicatePattern = '^P[0-9]+_'
+    P2_x      re.match(^P[0-9]+_) = True    head[1:].isdigit() = True
+    P²_x      re.match(^P[0-9]+_) = False   head[1:].isdigit() = True
+    P٢_x      re.match(^P[0-9]+_) = False   head[1:].isdigit() = True
+
+  document                                             rc   state    witness   unclassifiedKeys
+  --------------------------------------------------------------------------------------------
+  ascii P2_x (the declared pattern)                    0    GREEN    1         0
+  SUPERSCRIPT P²_x                                     0    GREEN    1         0
+  ARABIC-INDIC P٢_x                                    0    GREEN    1         0
+  plainly unregistered key zz_x (control)              1    REFUSED  0         1
+  SUPERSCRIPT P²_x = FALSE under an affirmative verdict 1    REFUSED  1         0
+
+READ THE CONTROL ROW FIRST: `zz_x` must REFUSE with unclassifiedKeys=1. If it does
+  not, this probe is measuring nothing and the rows above mean nothing.
+
+THE FINDING: a Unicode-digit key is admitted as an AUTO PREDICATE even though the
+  register's own declared pattern `^P[0-9]+_` does not match it. The declared
+  contract and the implemented contract are different sets. Direction: the
+  implementation is WIDER, so G2 -- the guard T259 exists for -- does not fire on a
+  key nobody classified, and the document buys coverage from it.
+
+  Severity is LOW because buying coverage still requires ASSERTING A BOOLEAN FACT,
+  which is the forgery floor T292 declares and prints. It is a finding because the
+  RULE VERIFIES THE PATTERN STRING AT STARTUP (`load_registers` refuses an
+  unexpected `autoPredicatePattern`) and then does not implement it.
+
+  FIX, mechanical: replace `head[1:].isdigit()` with
+      re.match(reg['autoPredicatePattern'], key)
+  so the one declared pattern is the one enforced.

@@ -334,6 +334,37 @@ task.
 
 ---
 
+## 5b. FINDING F-T308-5 — THE AUTO-CLASSIFIER IS WIDER THAN THE PATTERN THE RULE REFUSES TO GUESS AT
+
+**Severity: LOW. Inherited from T259, not introduced by T292 — reported because T292 is the file
+that will be installed.**
+**Reproduction: `python3 .softhouse/reviews/T308/probe/t308_unicode_digit_predicate.py`.**
+**Transcript: `out/t308-unicode-digit-predicate.txt`.**
+
+`load_registers` refuses to run unless the register declares exactly
+`"autoPredicatePattern": "^P[0-9]+_"` — *"refusing to guess"*. `key_class` then implements that
+pattern as `head[1:].isdigit()`. **`str.isdigit()` is true for Unicode digits `[0-9]` does not
+match.** Measured:
+
+| key | `re.match("^P[0-9]+_")` | `head[1:].isdigit()` | rule's verdict |
+|---|---|---|---|
+| `P2_x` | True | True | GREEN, witness=1 |
+| `P²_x` (superscript two) | **False** | **True** | **GREEN, witness=1, unclassifiedKeys=0** |
+| `P٢_x` (Arabic-Indic two) | **False** | **True** | **GREEN, witness=1, unclassifiedKeys=0** |
+| `zz_x` (control) | False | False | REFUSED, **unclassifiedKeys=1** |
+
+The control fires, so the probe is not vacuous. **G2 — the guard T259 exists for, whose register
+says *"Everything else is UNCLASSIFIED until written down here, and UNCLASSIFIED is a REFUSAL, not
+a pass"* — does not fire on a key nobody classified**, and the document buys coverage from it.
+The rule *verifies the pattern string at startup and then does not implement it*.
+
+Severity is LOW because the smuggled key still has to assert a boolean fact, which is the declared
+forgery floor, and the witness path is printed. It is inherited: the pinned T259 blob `86f4285`
+carries the identical `head[1:].isdigit()` at its line 151 [VERIFIED: `git cat-file blob 86f4285`].
+**Fix is one line:** `re.match(reg["autoPredicatePattern"], key)`.
+
+---
+
 ## 6. THE PARTITION QUESTION — IS THE SEPARATION STRUCTURAL, OR TWO NAMES IN ONE FUNCTION?
 
 **Verdict: STRUCTURAL, for the quantity that gates. Verified by reading and by measurement.**
