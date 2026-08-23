@@ -73,7 +73,7 @@
       "id": "A6", "family": "A", "verdict": "DEFECT",
       "file": ".softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh",
       "line": 71, "op": "rm -rf \"$EV/red\" \"$EV/green\"",
-      "target": ".softhouse/capture/t274-attestation-failopen/evidence/red + .../evidence/green",
+      "target": ".softhouse/capture/t274-attestation-failopen/evidence/red + .softhouse/capture/t274-attestation-failopen/evidence/green",
       "tracked_files": 181,
       "reason": "TWO evidence trees in one statement, 68 + 113 tracked files, and the single largest destruction in the tree. Not in T284's count of four. It matters more than the others because this instrument HOLDS T274's P1 control -- the control F-T283-6 is about -- so the instrument that reads the fragile input also deletes 181 files of its own committed output.",
       "fails": "OPEN toward destruction.",

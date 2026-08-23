@@ -4,8 +4,88 @@
   "_derivation": "25-derive-protected-roots.py, from evidence/20-resolved.json, which comes from 10-census.py over `git ls-files`.",
   "roots": [
     {
-      "path": ".softhouse",
-      "min_tracked_files": 6777
+      "path": ".softhouse/capture/t131-grep/ignoretest",
+      "min_tracked_files": 2,
+      "why": [
+        "C3"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t250-tenant-attestation/evidence/redA",
+      "min_tracked_files": 14,
+      "why": [
+        "A1"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t250-tenant-attestation/evidence/redB",
+      "min_tracked_files": 70,
+      "why": [
+        "A2"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t250-tenant-attestation/evidence/redC",
+      "min_tracked_files": 24,
+      "why": [
+        "A3"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t274-attestation-failopen/evidence/green",
+      "min_tracked_files": 113,
+      "why": [
+        "A6"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t274-attestation-failopen/evidence/red",
+      "min_tracked_files": 68,
+      "why": [
+        "A6"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t274-attestation-failopen/evidence/t250arms",
+      "min_tracked_files": 91,
+      "why": [
+        "A8"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t274-attestation-failopen/evidence/wrap",
+      "min_tracked_files": 145,
+      "why": [
+        "A7"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/obs",
+      "min_tracked_files": 31,
+      "why": [
+        "C2"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/t261-tenant-attestation/evidence/redB",
+      "min_tracked_files": 107,
+      "why": [
+        "A4"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/t261-tenant-attestation/evidence/redC",
+      "min_tracked_files": 110,
+      "why": [
+        "A5"
+      ]
+    },
+    {
+      "path": ".softhouse/vectors",
+      "min_tracked_files": 65,
+      "why": [
+        "B3/B4 residual kill window"
+      ]
     }
   ]
 }

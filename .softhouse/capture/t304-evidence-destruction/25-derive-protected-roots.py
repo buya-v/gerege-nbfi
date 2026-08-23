@@ -29,27 +29,37 @@ def tracked(path):
 
 
 def main():
-    rows = json.load(open(os.path.join(HERE, "evidence", "20-resolved.json")))
-    cand = set()
-    for r in rows:
-        if r["family"] != "destructive":
+    adj = json.load(open(os.path.join(HERE, "adjudication.json")))
+    cand = {}
+    for s in adj["sites"]:
+        # ONLY adjudicated defects contribute a protected root. Deriving the set from the
+        # raw census instead produced exactly one root -- `.softhouse`, 6777 tracked files
+        # -- because site C1 (fire-program.sh's atomic RESUME.md replace, correct by
+        # design) contributes the parent `.softhouse`, which is a prefix of every other
+        # root. A guard over that root blocks every future fire. The adjudication is what
+        # keeps the guard narrow; a census alone cannot.
+        if s["verdict"] not in ("DEFECT", "UNDECLARED"):
             continue
-        if r["status"] not in ("TRACKED", "WHOLE_REPO"):
-            continue
-        t = r["target"]
+        t = s.get("target")
         if not t:
             continue
-        t = t.replace("/*.json", "").replace("/*", "")
-        if os.path.isdir(os.path.join(ROOT, t)):
-            cand.add(t)
-        else:
-            cand.add(os.path.dirname(t))
-    # the parity vector store is protected whether or not a destructive op names it today
-    cand.add(".softhouse/vectors")
-    cand = {c for c in cand if c and c != "." and tracked(c)}
+        # A6's operand is `rm -rf "$EV/red" "$EV/green"` -- TWO roots in one site.
+        for part in t.split(" + "):
+            part = part.strip().replace("/*.json", "").replace("/*", "")
+            if not part:
+                continue
+            if not os.path.isdir(os.path.join(ROOT, part)):
+                part = os.path.dirname(part)
+            cand.setdefault(part, []).append(s["id"])
+    # The parity vector store carries no adjudicated DEFECT, and is protected anyway:
+    # B3/B4 mutate real ledger vectors in place with NO `trap`, so a kill between plant
+    # and restore leaves a poisoned vector in the working tree. Stated, not assumed.
+    cand.setdefault(".softhouse/vectors", []).append("B3/B4 residual kill window")
+    cand = {c: v for c, v in cand.items() if c and c != "." and tracked(c)}
     # antichain: drop any root that lives under another root
     roots = sorted(c for c in cand
                    if not any(c != d and c.startswith(d.rstrip("/") + "/") for d in cand))
+    assert ".softhouse" not in roots, "the root set collapsed to the whole tree"
 
     pin = {
         "_what": "T304 -- roots holding COMMITTED EVIDENCE that a tracked instrument is "
@@ -61,7 +71,8 @@ def main():
                       "sanctioned tierA-a2 captures.",
         "_derivation": "25-derive-protected-roots.py, from evidence/20-resolved.json, "
                        "which comes from 10-census.py over `git ls-files`.",
-        "roots": [{"path": p, "min_tracked_files": len(tracked(p))} for p in roots],
+        "roots": [{"path": p, "min_tracked_files": len(tracked(p)), "why": cand[p]}
+                  for p in roots],
     }
     out = os.path.join(HERE, "evidence_roots.json")
     with open(out, "w") as fh:
