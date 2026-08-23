@@ -33,6 +33,7 @@ set -uo pipefail
 REV=HEAD
 FOREIGN=0
 NORECON=0
+WEDGE=0
 KEEP=0
 NTASKS=8
 for a in "$@"; do
@@ -40,6 +41,7 @@ for a in "$@"; do
     --rev) ;;                       # value consumed below
     --foreign-claude) FOREIGN=1 ;;
     --no-reconcile) NORECON=1 ;;
+    --wedge) WEDGE=1 ;;
     --keep) KEEP=1 ;;
     *) ;;
   esac
@@ -65,6 +67,7 @@ print "  source repo: $SRC"
 print "  scratch:     $WORK"
 print "  foreign live claude in repo: $FOREIGN"
 print "  reconcile disabled (A/B control): $NORECON"
+print "  resolver WEDGED (fault injection): $WEDGE"
 print "  in_progress tasks planted:   $NTASKS"
 print "=============================================================================="
 
@@ -82,6 +85,18 @@ mkdir -p .softhouse/bin
 git -C "$SRC" show "$REV:.softhouse/bin/fire-program.sh"      > .softhouse/bin/fire-program.sh || exit 1
 git -C "$SRC" show "$REV:.softhouse/bin/ready-tasks.py"       > .softhouse/bin/ready-tasks.py  || exit 1
 git -C "$SRC" show "$REV:.softhouse/bin/lib-worktree-prune.zsh" > .softhouse/bin/lib-worktree-prune.zsh || exit 1
+# FAULT INJECTION. `--wedge` replaces the resolver with one that never returns, so the
+# OUTER wall-clock bound in reconcile_bounded() is the only thing that can end the
+# handler. Without this leg that bound is an untested guard, which is the defect class
+# this whole task is about.
+if (( WEDGE )); then
+  cat > .softhouse/bin/ready-tasks.py <<'WEDGEEOF'
+import sys, time
+sys.stdout.write("WEDGED RESOLVER — this process never returns\n")
+sys.stdout.flush()
+time.sleep(3600)
+WEDGEEOF
+fi
 chmod +x .softhouse/bin/fire-program.sh
 print "wrapper sha256: $(/usr/bin/shasum -a 256 .softhouse/bin/fire-program.sh | cut -c1-16)"
 print "resolver sha256: $(/usr/bin/shasum -a 256 .softhouse/bin/ready-tasks.py | cut -c1-16)"
@@ -233,6 +248,10 @@ print ""
 print -r -- "--- git log in the scratch repo (did the repair get COMMITTED?) ---"
 git -C "$WORK/repo" log --oneline -6 | sed 's/^/    /'
 print ""
+print -r -- "--- orphaned temp files? (reconcile_bounded must clean tasks.json.t288.tmp) ---"
+print -l -- "$WORK"/repo/.softhouse/*.tmp(N) | sed 's/^/    LEFTOVER: /'
+print -r -- "    (no LEFTOVER line above means none)"
+print -r -- ""
 print -r -- "--- did the lock get released? ---"
 [[ -e "$WORK/repo/.softhouse/LOCK" ]] && print "    LOCK STILL ON DISK — the fire stranded it" || print "    LOCK is gone"
 
