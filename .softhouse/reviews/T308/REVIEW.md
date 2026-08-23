@@ -369,6 +369,11 @@ ARM T292  f6ee6d2dca179992c53ecf8b2c76a194a34678ef   (shipped)
 
 `vs T259 +8 / +2 / +1 · vs T268 +44 / +1 / 0 · vs T286 +19 / +1 / 0`.
 
+*Population caveat, stated rather than hidden:* the strictness population is 10 T291 fixtures +
+4 seeds × 3 nesting modes × 4 depths = 58, and the three modes coincide at depth 0, so 8 of the 58
+are duplicates of another entry. That inflates the denominator by 8 and changes no comparison —
+**all four arms are graded on the byte-identical population**, so the deltas stand.
+
 **T292 is at or above every predecessor on both axes and on the control. The trade is not visible
 on these populations.** The table also reproduces the lineage's history independently: T268 traded
 44 points of strictness for 1 point of generosity, and T286 bought 25 of them back — which is
