@@ -248,8 +248,10 @@ func Admit(v *Vector, opts Options) []string {
 	// description — defining opening balances after journal entries have been
 	// posted, an entry dated on or before the latest GLClosure, and a
 	// future-dated entry — and T294 flipped the row to in_graded_domain TRUE on
-	// the strength of the FIRST one only. The other two are captured raw in
-	// .softhouse/capture/t287-closure-refusals and nothing promotes them.
+	// the strength of the FIRST one only. [HISTORY, TRUE WHEN T296 WROTE IT AND
+	// NO LONGER TRUE: at that moment the other two were captured raw in
+	// .softhouse/capture/t287-closure-refusals and nothing promoted them. T295
+	// promoted both. See the widening and its narrowing below.]
 	//
 	// THE FLIP IS MEASURED TO WIDEN THE GATE, and this rule is what puts the
 	// width back. T296 built a closure-family refusal vector from T287's real
@@ -288,27 +290,86 @@ func Admit(v *Vector, opts Options) []string {
 		//   LDG-REFUSE-05  entry dated one day after the business date (:629)  [T295]
 		//
 		// That is all three shapes the row names, so the row's evidence prose and the
-		// gate now agree by MEASUREMENT rather than by assertion. The gate is still
-		// default-deny: a vector claiming this capability for a FOURTH shape -- most
-		// obviously an ACCEPTANCE, which no capture in this store observes and which
-		// T305 records as costing a permanent journal entry -- is still refused, as
-		// DATA and not as prose (P-89).
+		// gate now agree by MEASUREMENT rather than by assertion.
 		//
-		// THIS RESOLUTION WAS MADE BY THE DRIVER AT A MERGE CONFLICT AND WAS NOT
-		// INDEPENDENTLY REVIEWED. It is filed as T306. A reviewer that disagrees should
-		// narrow it back and say which vector it means to refuse.
-		observedShape := v.Request.Command == "defineOpeningBalance" ||
-			v.Expect.Refusal.Code == codeAccountingClosed ||
-			v.Expect.Refusal.Code == codeFutureDate
+		// THE DRIVER'S RESOLUTION WAS MADE AT A MERGE CONFLICT WITH NO REVIEWER. T306
+		// reviewed it and NARROWED IT, because the driver's version was keyed on the
+		// wrong thing and its own comment was measurably false. Both findings are
+		// measured, not argued [.softhouse/reviews/T306/out/widened-gate-probe.txt]:
+		//
+		//   T306-F-1  THE ACCEPTANCE HOLE. The driver's comment claimed "a vector
+		//     claiming this capability for a FOURTH shape -- most obviously an
+		//     ACCEPTANCE -- is still refused, as DATA and not as prose (P-89)". IT WAS
+		//     NOT. Probe P2 -- LDG-01's real, ACCEPTED, 3-leg manual journal entry with
+		//     this row added to capabilities_required and request.command set to
+		//     "defineOpeningBalance" -- was ADMITTED AND GRADED, 15 cells, 5 of them
+		//     money. Probe P1, the same acceptance on the plain create path, WAS
+		//     refused. So the gate never refused ACCEPTANCES; it refused plain-create
+		//     acceptances, and one request field bought the claim. That hole is older
+		//     than the widening -- T296's single arm had it too -- but the driver's
+		//     comment newly ASSERTED it was closed, which is the P-89 failure one level
+		//     up: prose said DATA was firing and the data was not.
+		//
+		//   T306-F-2  KEYED ON AN OUTPUT. Two of the driver's three arms read
+		//     expect.refusal.code, which is the answer the vector CLAIMS, not a fact
+		//     about the request the oracle was given. Probe P5 -- LDG-REFUSE-04 with
+		//     request.latest_closing_date removed -- measured that the gate itself
+		//     contributes NO reason at all in that case: the only refusal came from the
+		//     date-rule block ~80 lines below. The gate's entire request-side check was
+		//     delegated to a rule a later edit could relax without ever reading this
+		//     one.
+		//
+		// THE NARROWING, and it is what admits the three promoted vectors and nothing
+		// else. All three observed shapes are REFUSALS, so a refusal expectation is a
+		// precondition of the claim; and each shape is keyed on THE REQUEST, in the
+		// same comparison the oracle makes:
+		//
+		//   LDG-REFUSE-03  request.command == "defineOpeningBalance"          (:717)
+		//   LDG-REFUSE-04  !isBefore(latest_closing_date, transaction_date)   (:636)
+		//   LDG-REFUSE-05  isAfter(transaction_date, business_date)           (:629)
+		//
+		// :636 is `!DateUtils.isBefore(latestGLClosure.getClosingDate(), transactionDate)`
+		// and :629 is `DateUtils.isDateInTheFuture(transactionDate)` ->
+		// isAfter(transactionDate, businessDate), both inside
+		// validateBusinessRulesForJournalEntries at :626 [VERIFIED:
+		// JournalEntryWritePlatformServiceJpaRepositoryImpl.java:626-640, pinned
+		// 426a23544]. The two date arms are therefore the SAME PREDICATE the oracle
+		// evaluates, read off the vector's inputs, so a vector cannot claim the shape
+		// without carrying the state that produces it.
+		//
+		// WHAT THIS STILL DOES NOT DO, stated rather than left to be discovered: it
+		// cannot bind a TRANSCRIPTION to its capture. Probe P3 -- A2-346's
+		// manual-adjustments provenance with only the refusal code and the three dates
+		// edited to the closure shape -- is admitted by this rule and by the driver's,
+		// because its INPUTS really are the pre-closure shape. No capability gate can
+		// catch that; only re-reading the cited artefact can, and that is the
+		// citation rules' job, not this one's.
+		//
+		// WHEN THE ACCEPTANCE SIDE IS CAPTURED -- backlog B-1/B-2 in
+		// .softhouse/capture/t287-closure-refusals/T295-ADJUDICATION.md, and T305 is
+		// measuring whether it can be captured at all -- THIS is the line that widens,
+		// with the capture in hand. Dropping the refusal precondition is that widening;
+		// it must not arrive as a side effect of anything else.
+		observedShape := v.Expect.Kind == "refusal" &&
+			(v.Request.Command == "defineOpeningBalance" ||
+				(v.Request.LatestClosingDate != "" && v.Request.TransactionDate != "" &&
+					!isoBefore(v.Request.LatestClosingDate, v.Request.TransactionDate)) ||
+				(v.Request.TransactionDate != "" && v.Request.BusinessDate != "" &&
+					isoAfter(v.Request.TransactionDate, v.Request.BusinessDate)))
 		if !observedShape {
-			add("capabilities_required names %q on a vector whose request.command is %q. "+
-				"EXACTLY ONE of the three shapes that row names is observed by this store — the "+
-				"defineOpeningBalance-after-posted-entries refusal at "+
-				"JournalEntryWritePlatformServiceJpaRepositoryImpl.java:717 — and the PRE-CLOSURE "+
-				"and FUTURE-DATED shapes at :626-640 are promoted as LDG-REFUSE-04 and LDG-REFUSE-05. A vector "+
-				"claiming this capability for a shape OUTSIDE those three -- an ACCEPTANCE, most obviously -- would read as "+
-				"covered when it is not. PROMOTE THE CAPTURE FIRST, then widen this rule",
-				name, v.Request.Command)
+			add("capabilities_required names %q on a vector whose expect.kind is %q and whose "+
+				"request.command is %q. THE THREE SHAPES THAT ROW NAMES ARE ALL REFUSALS, and this "+
+				"store observes each of them exactly once: the defineOpeningBalance-after-posted-"+
+				"entries refusal at JournalEntryWritePlatformServiceJpaRepositoryImpl.java:717 "+
+				"(LDG-REFUSE-03), the entry dated ON OR BEFORE the latest closing date at :636 "+
+				"(LDG-REFUSE-04), and the future-dated entry at :629 (LDG-REFUSE-05). The claim is "+
+				"decided by THIS VECTOR'S REQUEST -- the command, and the same two date comparisons "+
+				"the oracle makes -- never by the refusal code it declares, because that is the "+
+				"answer it is asking to be believed about. A vector outside those three -- an "+
+				"ACCEPTANCE, most obviously, which NO capture in this store observes on either "+
+				"boundary (backlog B-1/B-2) -- would read as covered when it is not. PROMOTE THE "+
+				"CAPTURE FIRST, then widen this rule",
+				name, v.Expect.Kind, v.Request.Command)
 		}
 	}
 

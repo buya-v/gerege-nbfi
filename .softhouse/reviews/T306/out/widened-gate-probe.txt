@@ -4,7 +4,7 @@
                     resolved from flag -repo-root — an EXPLICIT OVERRIDE of the build anchor
                     build anchor would have graded: /Users/buv/gerege-nbfi/.claude/worktrees/agent-acee94120db93ffce
                     cwd cross-check: SAME — cwd /Users/buv/gerege-nbfi/.claude/worktrees/agent-acee94120db93ffce/nexus resolves to the graded root
-    store           /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t306-widen.sc6DwKv0/vectors
+    store           /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t306-widen.QkZb61XY/vectors
     context filter  ledger
     implementation  loanschedule-go
     oracle probe    UP
@@ -183,10 +183,12 @@
     ZZZ-T306-P4-openingbalance-declaring-future... oracle-refusal ledger_rest_posting    FAIL              3 cells (0 money)
         refusal.code: want "error.msg.glJournalEntry.invalid.future.date", got "error.msg.journalentry.defining.openingbalance.not.allowed"
         refusal.message: want "The journal entry cannot be made for a future date", got "Defining Opening balances not allowed after journal entries posted"
+    ZZZ-T306-P5-closure-code-without-the-closin... oracle-refusal ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+        this vector expects "error.msg.glJournalEntry.invalid.accounting.closed" and does not carry all three of request.transaction_date, request.business_date and request.latest_closing_date. The closing date DECIDES the refusal (:636) and the business date is what shows the FUTURE-DATE guard at :629 -- which runs first -- did not fire instead
     ledger parity           PASS 5    FAIL 0
     ledger oracle-refusal   PASS 6    FAIL 1   (an HTTP status and error code the ORACLE returned
                                               and a capture recorded — NOT a contract sentinel)
-    ledger inadmissible     1
+    ledger inadmissible     2
     ledger harness errors   0
     ledger cells compared   100 graded, of which 26 are MONEY cells in int64 minor units
     ledger kills named      7 money, 17 structural
@@ -196,8 +198,8 @@
     ledger exemptions       0 DECLARED (this schema ADMITS NONE; a declared exemption is
                                         INADMISSIBLE, so this figure is pinned at 0 by
                                         conformance.sh and both directions of drift are gated)
-    ledger citations        26 PART-TWO resolutions over the loaded corpus: 2 ARTEFACT-BYTES,
-                            20 HTTP-SIDECAR, 4 FILE-NAME-ONLY (pinned 3), 0 UNRESOLVED.
+    ledger citations        28 PART-TWO resolutions over the loaded corpus: 2 ARTEFACT-BYTES,
+                            22 HTTP-SIDECAR, 4 FILE-NAME-ONLY (pinned 3), 0 UNRESOLVED.
                             FILE-NAME-ONLY reads NO byte of the artefact: it checks that the ref
                             this vector wrote contains the case id this vector wrote. It is not
                             evidence about the artefact, it is pinned by (case_id, field) in
@@ -332,7 +334,7 @@
                             census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-acee94120db93ffce/nexus
 
 --- WHY THIS RUN CANNOT BE TRUSTED ---
-    * ZERO VECTORS FOUND under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t306-widen.sc6DwKv0/vectors/ledger: an empty vector set is exit 2. A harness that reported PASS over zero vectors would be the single worst outcome available to it.
+    * ZERO VECTORS FOUND under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t306-widen.QkZb61XY/vectors/ledger: an empty vector set is exit 2. A harness that reported PASS over zero vectors would be the single worst outcome available to it.
     * THESE CAPABILITIES ARE MARKED in_graded_domain BUT NO PARITY VECTOR KILLS A NAMED WRONG IMPLEMENTATION FOR THEM: monthend.reanchor, schedule.core. "In the graded domain" means a vector exists that can tell a correct implementation from an incorrect one, and pair difference is NOT that test — LB-DEC31 reports zero cells differing across the day-count setting and still kills a no-arm port by 6,015 minor units (T55-N1). Either promote a vector with a graded_against entry, or set in_graded_domain false in capabilities.json.
 
 VERDICT: FAIL (exit 1) — 0 mismatched vector(s), 0 invariant violation(s).

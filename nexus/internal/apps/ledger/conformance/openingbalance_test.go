@@ -91,17 +91,26 @@ func TestOpeningBalanceInputsAreDefaultDeny(t *testing.T) {
 	})
 }
 
-// TestOpeningBalanceCapabilityIsScopedToTheObservedShape drives the T296 rule RED.
+// TestOpeningBalanceCapabilityIsScopedToTheObservedShape drives the T296 rule,
+// as widened by the driver and NARROWED BY T306, RED.
 //
-// `ledger.opening.balance.and.closure` names three shapes and this store has
-// observed one. T294 flipped the row into the graded domain on the strength of
-// that one, and T296 MEASURED the consequence: a closure-family refusal vector
-// built from T287's raw A1-01 artefacts is INADMISSIBLE against the pre-flip
-// registry and ADMITTED AND GRADED against the merged one
+// `ledger.opening.balance.and.closure` names three shapes. All three are now
+// promoted — LDG-REFUSE-03 (:717), LDG-REFUSE-04 (:636), LDG-REFUSE-05 (:629) —
+// and ALL THREE ARE REFUSALS. T294 flipped the row into the graded domain and
+// T296 MEASURED the consequence: a closure-family refusal vector built from
+// T287's raw A1-01 artefacts is INADMISSIBLE against the pre-flip registry and
+// ADMITTED AND GRADED against the merged one
 // [.softhouse/reviews/T296/out/capgate-arm{A,B}-*.txt]. The rule in admit.go puts
 // the width back without renaming or splitting the row, which T289 F-T289-4
-// forbids. This is the arm that proves it can refuse — a control that cannot fail
-// is worse than none (P-22).
+// forbids. These are the arms that prove it can refuse — a control that cannot
+// fail is worse than none (P-22).
+//
+// THE SECOND ARM IS T306's, and it is the one the driver's merge left open:
+// an ACCEPTANCE claiming this row was ADMITTED AND GRADED (15 cells, 5 money)
+// whenever request.command was "defineOpeningBalance", while the identical
+// acceptance on the plain create path was refused
+// [.softhouse/reviews/T306/out/widened-gate-probe.txt, probes P1 and P2]. No
+// capture in this store observes an acceptance on either boundary.
 //
 // THE ANTI-VACUITY CONTROL IS THE COMMITTED VECTOR ITSELF, which names this same
 // capability and must stay ADMITTED; TestOpeningBalanceInputsAreDefaultDeny's
@@ -130,20 +139,102 @@ func TestOpeningBalanceCapabilityIsScopedToTheObservedShape(t *testing.T) {
 			"ledger.opening.balance.and.closure, so the rule under test has nothing to scope")
 	}
 
-	// A CLOSURE-FAMILY shape: a plain create, carrying none of the
-	// opening-balance inputs, so nothing else in Admit can account for the
-	// refusal this arm demands.
-	v := *base
-	v.Request.Command = ""
-	v.Request.ContraGLAccountID = 0
-	v.Request.PostedNonContraTransactionIDs = nil
-	reasons := Admit(&v, opts)
-	if !containsSubstring(reasons, "EXACTLY ONE of the three shapes that row names is observed") {
-		t.Fatalf("a vector claiming ledger.opening.balance.and.closure for a NON-opening-balance "+
-			"shape was ADMITTED, or refused for another reason. The pre-closure and future-dated "+
-			"refusals are raw artefacts nothing promotes, and a vector claiming this row for one "+
-			"of them reads as covered when it is not: %v", reasons)
-	}
+	const scoped = "THE THREE SHAPES THAT ROW NAMES ARE ALL REFUSALS"
+
+	t.Run("a FOURTH shape with none of the three request-side facts REFUSES", func(t *testing.T) {
+		// A plain create carrying none of the opening-balance inputs and none of
+		// the date inputs, so nothing else in Admit can account for the refusal
+		// this arm demands: not the command, not either date comparison.
+		v := *base
+		v.Request.Command = ""
+		v.Request.ContraGLAccountID = 0
+		v.Request.PostedNonContraTransactionIDs = nil
+		v.Request.TransactionDate = ""
+		v.Request.BusinessDate = ""
+		v.Request.LatestClosingDate = ""
+		if reasons := Admit(&v, opts); !containsSubstring(reasons, scoped) {
+			t.Fatalf("a vector claiming ledger.opening.balance.and.closure for a shape outside the "+
+				"three this store observed was ADMITTED, or refused for another reason: %v", reasons)
+		}
+	})
+
+	t.Run("an ACCEPTANCE claiming this row REFUSES, command notwithstanding", func(t *testing.T) {
+		// T306-F-1. The driver's merged gate admitted this whenever the command
+		// was "defineOpeningBalance", because its first arm read the command and
+		// nothing read the expectation. Every one of the three observed shapes is
+		// a REFUSAL; the acceptance side of both boundaries is backlog B-1/B-2 and
+		// no capture in this store has it.
+		for _, command := range []string{"", "defineOpeningBalance"} {
+			v := *base
+			v.Request.Command = command
+			if command == "" {
+				v.Request.ContraGLAccountID = 0
+				v.Request.PostedNonContraTransactionIDs = nil
+			}
+			v.Class = ClassParity
+			v.Expect.Kind = "journal-entry"
+			v.Expect.HTTPStatus = 200
+			v.Expect.Refusal = Refusal{}
+			if reasons := Admit(&v, opts); !containsSubstring(reasons, scoped) {
+				t.Fatalf("an ACCEPTANCE claiming ledger.opening.balance.and.closure with "+
+					"request.command %q was ADMITTED by the capability gate. No capture in this "+
+					"store observes an accepted opening balance or an accepted entry on either "+
+					"date boundary: %v", command, reasons)
+			}
+		}
+	})
+
+	t.Run("the claim is NOT bought by declaring a refusal CODE", func(t *testing.T) {
+		// T306-F-2. Two of the driver's three arms read expect.refusal.code, which
+		// is the answer the vector asks to be believed about. Here the code is
+		// declared and the request-side facts that decide it are absent, so a
+		// code-keyed gate stays silent and a request-keyed gate speaks.
+		for _, code := range []string{codeAccountingClosed, codeFutureDate} {
+			v := *base
+			v.Request.Command = ""
+			v.Request.ContraGLAccountID = 0
+			v.Request.PostedNonContraTransactionIDs = nil
+			v.Request.TransactionDate = ""
+			v.Request.BusinessDate = ""
+			v.Request.LatestClosingDate = ""
+			v.Expect.Refusal.Code = code
+			if reasons := Admit(&v, opts); !containsSubstring(reasons, scoped) {
+				t.Fatalf("declaring expect.refusal.code %q bought the capability claim with no "+
+					"request-side fact behind it: %v", code, reasons)
+			}
+		}
+	})
+
+	t.Run("each of the three OBSERVED shapes is still ADMITTED", func(t *testing.T) {
+		// THE ANTI-VACUITY CONTROL FOR THE ARMS ABOVE, and it is the reason this
+		// narrowing is not simply a stricter rule that refuses everything: the
+		// three committed vectors that claim this row must contribute NO
+		// capability-gate reason.
+		var claimants int
+		for _, c := range vs {
+			var names bool
+			for _, n := range c.CapabilitiesRequired {
+				if n == "ledger.opening.balance.and.closure" {
+					names = true
+				}
+			}
+			if !names {
+				continue
+			}
+			claimants++
+			if reasons := Admit(c, opts); containsSubstring(reasons, scoped) {
+				t.Fatalf("committed vector %s claims this row and the capability gate REFUSES it. "+
+					"The narrowing may only refuse shapes this store has not observed: %v",
+					c.CaseID, reasons)
+			}
+		}
+		if claimants != 3 {
+			t.Fatalf("%d committed vectors claim ledger.opening.balance.and.closure; the three "+
+				"observed shapes are LDG-REFUSE-03 (:717), LDG-REFUSE-04 (:636) and LDG-REFUSE-05 "+
+				"(:629). A different number means the store moved and this control no longer "+
+				"covers what it names", claimants)
+		}
+	})
 }
 
 // TestOpeningBalanceRefusalPrecedesTheBalanceRule locks the ONE precedence this

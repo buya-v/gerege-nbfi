@@ -115,3 +115,16 @@ p4["title"] = ("PROBE P4 -- a defineOpeningBalance request declaring the FUTURE-
                "answers the opening-balance code, not this one.")
 # graded_against LEFT AS OB-01's, same reason.
 write(p4, "ZZZ-T306-P4-openingbalance-declaring-future-date")
+
+# ---------------------------------------------------------------------- P5
+# DOES THE GATE ITSELF CHECK ANY REQUEST-SIDE FACT for arms 2 and 3?
+# LDG-REFUSE-04 with request.latest_closing_date REMOVED. The closure shape is
+# then not present in the request at all. If the capability gate stays SILENT
+# and only the date rules speak, the gate delegates its entire request-side
+# check to a rule block 80 lines away -- which is the coupling under review.
+p5 = load("LDG-REFUSE-04-preclosure-entry-on-closing-date")
+p5["request"]["latest_closing_date"] = ""
+p5["title"] = ("PROBE P5 -- LDG-REFUSE-04 with the closing date REMOVED. Read WHICH "
+               "rule refuses it. If no capability-gate reason appears, the gate reads "
+               "only expect.refusal.code.")
+write(p5, "ZZZ-T306-P5-closure-code-without-the-closing-date")
