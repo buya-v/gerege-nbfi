@@ -1,0 +1,26 @@
+T293/50 -- restoration by observation.  host state at start: ABSENT
+subject path: /tmp/t234_matrix2.txt
+probe       : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a05619873f54c8f39/.softhouse/capture/t271-b1-t219/probe_tmp_dependency_t271.sh
+
+ARM 1 found=ABSENT  probe exit=1  after=ABSENT
+  ARM 1 OK: restored
+T271-TMPDEP: REFUTED contingent=0 foundPresent=0 restore=see-T271-RESTORE-line
+T271-RESTORE: foundPresent=0 nowPresent=0 restored=1
+
+ARM 2 found=PRESENT  probe exit=1  after=PRESENT
+  ARM 2 OK: restored
+T271-TMPDEP: REFUTED contingent=0 foundPresent=1 restore=see-T271-RESTORE-line
+T271-RESTORE: foundPresent=1 nowPresent=1 restored=1
+
+ARM TERM  found=ABSENT  state when signalled=PRESENT  exit=143  after=ABSENT
+  ARM TERM OK: restored, and the signal DID land while the state was inverted
+
+ARM INT  found=ABSENT  state when signalled=PRESENT  exit=1  after=ABSENT
+  ARM INT OK: restored, and the signal DID land while the state was inverted
+
+ARM KILL  found=ABSENT  state when signalled=PRESENT  exit=137  after=PRESENT
+  ARM KILL FAIL: the probe left the host DIFFERENT from how it found it
+
+host state restored to: ABSENT (found ABSENT)
+
+T293-RESTORE: arms=5 failures=1

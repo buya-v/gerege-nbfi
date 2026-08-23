@@ -2,13 +2,8 @@
 # T271 -- DECISIVE TEST of an OUT-OF-SCOPE defect this task tripped over: is `.softhouse/
 # conformance.sh`'s GREEN contingent on a transient file in /tmp?
 #
-# READ THE NEXT PARAGRAPH IN THE PAST TENSE. [T293] It described the tree as it stood when T271
-# was written; T273 landed in the same fire and REPAIRED it. `02-escape-matrix-fix.sh` line 6 is
-# now a comment and its fixture is a `mktemp -d` scratch dir. The correction is at "WHAT EXIT 1
-# MEANS NOW" below, and it is stated here too because this is the paragraph people skim (P-46).
-#
-# `.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh` SET
-# `C=/tmp/t234_matrix2.txt` at line 6 and CREATED it at line 7. The fail-open linter's C1 check
+# `.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh` sets
+# `C=/tmp/t234_matrix2.txt` at line 6 and CREATES it at line 7. The fail-open linter's C1 check
 # asks whether that absolute path EXISTS ON DISK NOW:
 #
 #     path PRESENT -> C2 only            -> TIER 2 -> matches FAILOPEN_PIN_FILE_LIST -> bar GREEN
@@ -29,26 +24,6 @@
 # file was present when it started and puts that back before it exits. It is a MEASUREMENT, not a
 # repair and not a side effect.
 #
-# T293 CORRECTED TWO OVER-CLAIMS IN THE PARAGRAPH ABOVE, BOTH BY OBSERVATION.
-#
-#   (1) "restored by the trap on EVERY exit path including an error" was FALSE for one path.
-#       SIGKILL cannot be trapped by any shell. T293 signalled this probe at t=9s -- inside
-#       READING B, when it holds the file CREATED while it had found it ABSENT -- and measured:
-#       SIGTERM restored, SIGINT restored, SIGKILL LEFT THE FILE PRESENT. The honest statement
-#       is "every exit path bash can trap", and it is now written that way. INT/TERM/HUP are
-#       trapped EXPLICITLY below rather than left to the EXIT trap's signal behaviour, so the
-#       intent is inspectable; SIGKILL is disclosed, not covered.
-#       [.softhouse/reviews/T293/evidence/50-restoration-by-observation.txt]
-#
-#   (2) `restoredAsFound=1` USED TO BE A HARD-CODED LITERAL in the two summary lines below --
-#       printed BEFORE the EXIT trap that does the restoring had run, so it was structurally
-#       incapable of being a measurement. T293 red-drove it: with `trap restore_found_state
-#       EXIT` deleted, this probe found the file PRESENT, left it ABSENT, and STILL PRINTED
-#       `restoredAsFound=1`. That is a fail-open in the evidence line of a probe written to
-#       expose fail-opens. The claim is now emitted by the trap itself, AFTER restoring, from
-#       a RE-READ of the path -- see `T271-RESTORE:` below, which is the measured line. The
-#       summary lines no longer assert it. [../../reviews/T293/red/t293-neutered-probe.sh.txt]
-#
 # THIS FILE'S FIRST DRAFT WAS ITSELF FAIL-OPEN, AND T259's LINT CAUGHT IT ON THE RUN THAT
 # INTRODUCED IT. It read `python3 "$LINT" | grep "$ROW" || echo "(row not on the frontier)"`,
 # which prints the same reassuring absence whether grep found nothing (exit 1) or grep BROKE
@@ -58,31 +33,9 @@
 # linter's status and grep's status are each captured and CLASSIFIED, and >1 is a hard ERROR.
 #
 # EXIT 0 = the contingency was DEMONSTRATED (the defect is real and reproduced)
-#      1 = REFUTED: the classification did not move with the file
+#      1 = REFUTED: the classification did not move with the file, so T271's explanation of the
+#          red bar is WRONG and must not be quoted
 #      2 = ERROR: an instrument could not be run or a search broke. NEVER an absence.
-#
-# T293 -- WHAT EXIT 1 MEANS NOW, BECAUSE IT INVERTED AND NOTHING NOTICED FOR A WHOLE FIRE.
-# The legend above was written when the defect was live, so exit 1 read as "T271's explanation
-# is WRONG and must not be quoted". THAT READING IS NOW FALSE and it repudiates the evidence
-# P-88 rests on. This probe cannot tell "never true" from "true, then REPAIRED" -- both give
-# A == B == C. As of T273 (commit 7e85a3e) the second is the case: `02-escape-matrix-fix.sh`
-# line 6 no longer hard-codes the path at all, it is a `mktemp -d` scratch dir, so the
-# classification correctly stops moving with the file. T293 ran this probe and measured
-# `T271-TMPDEP: REFUTED contingent=0` in both the found-ABSENT and found-PRESENT arms.
-#
-#   READ IT THIS WAY:  exit 1 = T273'S REPAIR STILL HOLDS. This is the healthy result.
-#                      exit 0 = THE REPAIR HAS REGRESSED -- a literal path is back in the
-#                               linter's corpus and the bar's colour is host-decided again.
-#
-# So the probe is now a REGRESSION TEST, and its subject path must stay a literal for exactly
-# the reason it always did: naming the path IS the measurement.
-#
-# NOTHING CALLS THIS FILE, AND T293 DECIDED THAT IS CORRECT RATHER THAN LEAVING IT UNSAID (P-45,
-# P-89). `guard_no_host_state_in_lint_corpus` in .softhouse/conformance.sh ALREADY covers the
-# regression: 02-escape-matrix-fix.sh is in that census's population, so putting the literal back
-# adds a census row and the bar goes EXIT 2 — measured by T293, restore verified. Wiring this
-# probe too would cost ~19s per bar for a duplicate signal. What it still gives a human is the
-# EXPLANATION behind that row, which is why it is kept and repaired rather than deleted.
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -97,9 +50,8 @@ SEARCH=/usr/bin/grep
 [ -f "$LINT" ] || { echo "ERROR: the fail-open linter is absent: $LINT" >&2; exit 2; }
 
 # The state as FOUND, captured before anything is touched, and restored by the trap on every exit
-# path BASH CAN TRAP -- normal, `set -e`, INT, TERM, HUP. NOT SIGKILL, which no shell can trap and
-# which T293 measured leaving this file PRESENT after it was found ABSENT. A probe that leaves the
-# host different from how it found it is not a probe; it is an edit nobody reviewed.
+# path including an error. A probe that leaves the host different from how it found it is not a
+# probe; it is an edit nobody reviewed.
 WAS_PRESENT=0
 if [ -e "$TARGET" ]; then WAS_PRESENT=1; fi   # `[ ] && x=1` would abort under `set -e`
 restore_found_state() {
@@ -108,24 +60,8 @@ restore_found_state() {
   else
     rm -f "$TARGET"
   fi
-  # THE RESTORATION CLAIM IS RE-READ FROM THE PATH, NEVER ASSERTED. [T293]
-  # This line is emitted by the trap, AFTER the restore, from a fresh `[ -e ]` -- so deleting
-  # the restore above makes it print `restored=0`, where the old hard-coded `restoredAsFound=1`
-  # in the summary lines printed `1` regardless and was measured doing exactly that.
-  local now=0
-  if [ -e "$TARGET" ]; then now=1; fi
-  local ok=0
-  if [ "$now" -eq "$WAS_PRESENT" ]; then ok=1; fi
-  echo "T271-RESTORE: foundPresent=$WAS_PRESENT nowPresent=$now restored=$ok"
 }
-# EXIT covers normal and `set -e` exits. INT/TERM/HUP are named EXPLICITLY so the intent is
-# readable rather than inferred from the shell's signal semantics; each re-raises after the
-# EXIT trap runs. SIGKILL IS NOT TRAPPABLE BY ANY SHELL and is disclosed in the header, not
-# covered -- T293 measured it leaving the file PRESENT after finding it ABSENT.
-trap restore_found_state EXIT
-trap 'exit 130' INT
-trap 'exit 143' TERM
-trap 'exit 129' HUP
+: # TRAP REMOVED BY T293 RED DRIVE
 
 # One reading of the frontier row. NO PIPELINE, and every exit status classified.
 reading() {
@@ -203,14 +139,10 @@ if [ "$A" != "$B" ] && [ "$A" = "$C" ]; then
   echo "HOST STATE: $TARGET was $FOUND when this probe started and is put back that way by the"
   echo "EXIT trap. T271 neither manufactures the green nor forces the red on a host it shares"
   echo "with other workers."
-  echo "T271-TMPDEP: DEMONSTRATED contingent=1 foundPresent=$WAS_PRESENT restore=see-T271-RESTORE-line"
+  echo "T271-TMPDEP: DEMONSTRATED contingent=1 foundPresent=$WAS_PRESENT restoredAsFound=1"
   exit 0
 fi
-echo "CONCLUSION: the classification did NOT move with the file."
-echo "TWO READINGS, AND THIS PROBE CANNOT TELL THEM APART -- decide it from the tree, not here:"
-echo "  (a) T273'S REPAIR HOLDS. 02-escape-matrix-fix.sh no longer hard-codes the path, so the"
-echo "      classification is a property of the tree. THIS IS THE EXPECTED RESULT since 7e85a3e."
-echo "  (b) the hypothesis was never true, and T271's account of the red bar is wrong."
-echo "Check which by reading 02-escape-matrix-fix.sh line 6. Do NOT quote this exit as (b) alone."
-echo "T271-TMPDEP: REFUTED contingent=0 foundPresent=$WAS_PRESENT restore=see-T271-RESTORE-line"
+echo "CONCLUSION: the classification did NOT move with the file. The hypothesis is REFUTED and"
+echo "the bar's exit 2 has some other cause -- do not quote this script as explaining it."
+echo "T271-TMPDEP: REFUTED contingent=0 foundPresent=$WAS_PRESENT restoredAsFound=1"
 exit 1

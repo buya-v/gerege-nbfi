@@ -1637,7 +1637,14 @@ guard_no_fail_open_instruments() {
 # pinning it. A '-' row is a site that was REPAIRED or DELETED, which is good news, and
 # the pin must lose that row IN THE SAME COMMIT or it starts excusing a weakness that
 # is no longer there. T273 REMOVED EXACTLY ONE ROW IN THE COMMIT THAT EARNED IT: this
-# census is EIGHTEEN at the parent commit and SEVENTEEN here, and the row that left is
+# census is EIGHTEEN at the parent commit and SEVENTEEN here [T293 CORRECTION: "SEVENTEEN here"
+# was true of T273's commit and is NOT true of this one. The driver added T271's probe back at
+# fire close, so the pin is EIGHTEEN rows at this commit. T273's sentence stands because it is
+# the record of what T273 did; this bracket is the correction. The `say` line in the guard body
+# below still prints the LITERAL "pinned at 17" and is therefore wrong on every run — REQUIRED
+# FOLLOW-UP, T293 F5; not repaired here because that line is outside T293's declared file
+# partition, and a reviewer that reaches outside its partition costs two tasks a clean merge],
+# and the row that left is
 # `…/02-escape-matrix-fix.sh | C=/tmp/t234_matrix2.txt` [VERIFIED: the census expression
 # run against HEAD prints that file's line 6 and exits 0; the same expression against
 # the working tree exits 1, and `git grep` exits 1 on NO MATCH and >1 on ERROR, so the
@@ -1674,8 +1681,72 @@ guard_no_fail_open_instruments() {
 # its justification is what the guard ASKS FOR; the failure mode it guards against is a site
 # arriving unseen.
 #
-# NOT INDEPENDENTLY REVIEWED. Filed as T293 for adjudication next fire, and a reviewer that
-# disagrees should revert this row and repair the probe instead.
+# ADJUDICATED BY T293: UPHELD-WITH-REPAIR. The row STAYS. The paragraphs above are the driver's
+# and are left standing as the record; everything from here down is the reviewer's, and it does
+# NOT defer to them — two of their load-bearing claims were measured FALSE.
+#
+# WHAT T293 CONFIRMED, BY DRIVING IT RATHER THAN READING IT:
+#   * THE PIN MANUFACTURES NO GREEN. The bar is `PASS exit 0` with /tmp/t234_matrix2.txt PRESENT
+#     and with it ABSENT — both arms measured this fire, same tree, changing only the file. That
+#     is the decisive difference from P-88, where the bar was green IF AND ONLY IF the residue
+#     existed. The driver argued this distinction; T293 MEASURED it, which is what makes it hold.
+#   * THE ROW BELONGS IN A CENSUS OF THE SHAPE. The probe IS in the fail-open linter's corpus and
+#     its classification IS decided by this host's /tmp: residue ABSENT it is TIER 3 (C1 :44 dead
+#     absolute path), residue PRESENT it is unclassified — TIER 3 count 7 files/14 findings vs
+#     6/13. TIER 3 is not on the frontier, so the row moves no GRADED figure today; but "a shape
+#     CAPABLE of moving a tier" is the property this guard refuses, and the probe has it.
+#   * `mktemp` REMAINS INAPPLICABLE, and the "parameterise it instead" repair is COSMETIC EVASION,
+#     measured: a file carrying `TARGET="${1:-/tmp/t234_matrix2.txt}"` and `TMPROOT=/tmp` +
+#     `"$TMPROOT/t234_matrix2.txt"` depends on the identical path and is INVISIBLE to this census
+#     (18, unchanged) AND to C1 (frontier 11, unchanged) AND leaves the bar `exit 0`. Pinning
+#     keeps the site visible; parameterising blinds both instruments. Pinning is strictly better.
+#   * THE CENSUS STILL FIRES. A genuinely new accidental site was added and tracked; the bar went
+#     EXIT 2 with a '+' row naming it and ZERO probe lines (P-84 — read the line's PRESENCE
+#     first). Removing it returned exit 0. A census that no longer fires is not a census; this
+#     one fires. [.softhouse/reviews/T293/evidence/40-red-drive.txt]
+#
+# WHAT T293 FOUND FALSE IN THE REASONING ABOVE, AND THIS IS WHY THE VERDICT CARRIES "WITH-REPAIR":
+#   * THE CITED PREMISE NO LONGER EXISTS. The paragraph above says the probe measures "ONE
+#     SPECIFIC ABSOLUTE PATH that another instrument hard-codes (t234's 02-escape-matrix-fix.sh:6)"
+#     — present tense. T273 DELETED that hard-coding in commit 7e85a3e, in the same fire. Line 6
+#     of that file is now the comment "# T273 — THE FIXTURE IS NOW SELF-OWNED SCRATCH, NOT A
+#     LITERAL PATH IN /tmp." The justification was already false when it was written.
+#   * "RESTORES THE STATE IT FOUND" WAS AN ASSERTION, NOT A MEASUREMENT — and it is the exact
+#     claim the pin was rested on. The probe printed `restoredAsFound=1` as a HARD-CODED LITERAL,
+#     before the EXIT trap that restores had run. Red-driven: trap deleted, probe found the file
+#     PRESENT, left it ABSENT, still printed `restoredAsFound=1`. Also, restoration is not
+#     universal — SIGKILL mid-run leaves the file PRESENT after finding it ABSENT (SIGTERM and
+#     SIGINT restore). Both repaired in the probe by T293: the claim is now emitted by the trap
+#     from a re-read (`T271-RESTORE: foundPresent=N nowPresent=M restored=0|1`) and SIGKILL is
+#     disclosed rather than covered.
+#
+# THE ROW SURVIVES ANYWAY, AND ON A BETTER GROUND THAN THE ONE OFFERED. The probe's subject path
+# must stay a literal not because another instrument still hard-codes it, but because the probe
+# is now a REGRESSION TEST that T273's repair HOLDS: exit 1 = repair holds, exit 0 = a literal
+# path is back in the linter's corpus. Naming the path is still the measurement — of the opposite
+# proposition. A `mktemp` path would measure nothing, then as now.
+#
+# STATED SCOPE, so "18 sites" is not read as "every literal temp assignment in the repo" (P-66/
+# P-70 — "not found" is a statement about the search). The population is the fail-open linter's
+# corpus: files matching a repo-wide-search idiom. Measured consequences, both real:
+#   - `.softhouse/capture/t253-portability/instruments/50-t234-residue-probe.sh:22` carries
+#     `RESIDUE=/tmp/t234_matrix2.txt` — the same literal, the same shape — and is NOT censused,
+#     because that file contains no repo-wide-search idiom (selector exits 1 on it).
+#   - the T271 probe enters this census ONLY through line 30, a COMMENT quoting P-81's text
+#     "`git grep`/`grep` exits 1 on NO MATCH". The probe performs no repo-wide search at all.
+#     Rewording that comment would drop it out of both this census and the linter's corpus.
+# Neither is a new hole — both follow from the population the guard already declares — but a
+# census is only as wide as its selector, and the selector is a search instrument selector.
+#
+# DELIBERATELY LEFT UNWIRED, AND THE REASON IS A MEASUREMENT, NOT A COST ESTIMATE. The probe is
+# a regression test that nothing calls (P-45) — but THIS CENSUS ALREADY IS THAT REGRESSION TEST.
+# `02-escape-matrix-fix.sh` IS in this guard's population [`git grep -l -E <selector> -- <it>`
+# exits 0], so putting `C=/tmp/t234_matrix2.txt` back into it makes the census ERE match, which is
+# a '+' row, which is EXIT 2 — driven by T293, then restored and the restore verified by an empty
+# `git diff --stat`. Reintroducing T273's exact defect therefore turns this bar red EVERY RUN
+# through a guard that already runs. Wiring the probe on top would buy a redundant check for ~19s
+# per bar. Its remaining value is diagnostic: it explains WHY a row is red, which a census row
+# does not. A DECLARED orphan, with the reason, is what P-89 asks for; a silent one is not.
 HOSTSTATE_PIN_TEMP_ASSIGN_LIST='.softhouse/capture/t116-familyb-promotion/src/run-harness-mutations-t116.sh | SCRATCH=/tmp/t116-harness
 .softhouse/capture/t234-sweep-instrument-audit/instruments/01-escape-matrix.sh | C=/tmp/t234_matrix.txt
 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh | GIT_INDEX_FILE=/tmp/t239-red-index

@@ -1,0 +1,25 @@
+T271 -- is the conformance bar's GREEN contingent on a file in /tmp? (P-88's shape)
+================================================================================
+  repo   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a05619873f54c8f39
+  linter : .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py
+  probe  : /tmp/t234_matrix2.txt
+
+--- READING A: /tmp/t234_matrix2.txt ABSENT (the state this worktree is in) ---
+    (not present)
+    FAILOPEN-FRONTIER TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+
+--- READING B: the SAME tree, byte for byte, with the /tmp file PRESENT ---
+-rw-r--r--  1 buv  wheel  24 Aug 23 10:07 /tmp/t234_matrix2.txt
+    FAILOPEN-FRONTIER TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+
+--- READING C: the file removed again, to show the flip is not one-way ---
+    (not present)
+    FAILOPEN-FRONTIER TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+
+NOT CAUSED BY T271 -- the three files involved are untouched on this branch:
+    merge base: f02d84935c91f996894b260a43ae46a9a7eda352
+    (no diff lines above means T271 changed none of them)
+
+CONCLUSION: the classification did NOT move with the file. The hypothesis is REFUTED and
+the bar's exit 2 has some other cause -- do not quote this script as explaining it.
+T271-TMPDEP: REFUTED contingent=0 foundPresent=1 restoredAsFound=1
