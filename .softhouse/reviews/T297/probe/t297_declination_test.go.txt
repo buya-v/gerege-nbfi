@@ -1,0 +1,133 @@
+// T297 PROBE 2 — ATTACKING THE 'NOT PROMOTABLE' VERDICTS BY CONSTRUCTION.
+//
+// Not committed into the package; copied in for one `go test` run and removed.
+// Registers nothing, so the wrong-implementation census is untouched.
+//
+// T295 declined to promote A2-02 (transactionDate 2026-01-15, STRICTLY BEFORE a
+// closing date of 2026-01-31) on this stated ground:
+//
+//     "Two DIFFERENT requests, one IDENTICAL response. It cannot diverge on any
+//      graded cell A2-01 does not already cover, so a vector from it would raise
+//      the corpus count by one and the kill count by zero."
+//
+// The first sentence is TRUE and this reviewer verified it independently
+// (sha256 c12e977f… on both out/A2-01-preclosure-on-date.json and
+// out/A2-02-preclosure-before.json). The inference is what is under test here.
+// Cell IDENTITY is not the same property as DISCRIMINATION POWER: a vector is a
+// (request, response) PAIR, the two requests differ, and an implementation can
+// answer one correctly and the other wrongly while the diverging CELL NAMES are
+// the same three on both.
+//
+// So: construct the port that A2-02 would kill and A2-01 does not, and run it.
+package conformance
+
+import (
+	"fmt"
+	"sort"
+	"testing"
+)
+
+// ---------------------------------------------------------------------------
+// PORT 5 — THE EQUALITY-ONLY CLOSURE PORT. It refuses an entry dated EXACTLY on
+// the closing date and accepts everything else, including an entry dated BEFORE
+// it.
+//
+// THIS IS NOT A STRAWMAN. It is the port a developer writes after being handed
+// LDG-REFUSE-04 as the specification: the single committed vector pins exactly
+// one relation (transaction_date == latest_closing_date -> 403), an
+// implementation written to satisfy the corpus satisfies it with
+// `if txn.Equals(closing) { refuse }`, and nothing in the corpus objects. It is
+// the "grades its author's imagination" failure the T296 brief named, one level
+// out: a corpus that grades the vector it has rather than the rule.
+//
+// Against the ORACLE it is catastrophically wrong in the FAIL-OPEN direction —
+// it accepts every entry into every already-closed period except one single day.
+// ---------------------------------------------------------------------------
+type t297EqualityOnlyClosurePoster struct{}
+
+func (t297EqualityOnlyClosurePoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	r := req
+	closing := r.LatestClosingDate
+	r.LatestClosingDate = ""
+	if closing != "" && r.TransactionDate != "" && r.TransactionDate == closing {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       "error.msg.glJournalEntry.invalid.accounting.closed",
+			Message:    "Journal entry cannot be made prior to last account closing date for the branch",
+		}, nil
+	}
+	return GoPoster{}.PostEntry(r)
+}
+
+// ---------------------------------------------------------------------------
+// PORT 6 — THE NON-MONOTONE FUTURE PORT. Refuses transaction dates in a WINDOW
+// just after the business date and accepts anything far enough out. T295's §4
+// argues A1-01 is redundant because "A1-01's relation (businessDate + 130) is
+// implied by A1-02's (+1) under any MONOTONE date predicate", and explicitly
+// names this exception. This runs it, so the exception is measured rather than
+// asserted.
+// ---------------------------------------------------------------------------
+type t297NonMonotoneFuturePoster struct{}
+
+func (t297NonMonotoneFuturePoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	r := req
+	bd := r.BusinessDate
+	r.BusinessDate = ""
+	// Refuse only dates strictly after the business date but within the same
+	// calendar year-month-ish window: string compare on ISO dates, refusing
+	// only when the transaction date exceeds the business date by a small
+	// lexical margin. Concretely: refuse if txn > bd AND txn <= bd's month end
+	// approximated by same yyyy-MM prefix, else accept.
+	if bd != "" && r.TransactionDate != "" && r.TransactionDate > bd &&
+		len(bd) >= 7 && len(r.TransactionDate) >= 7 && r.TransactionDate[:7] == bd[:7] {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       "error.msg.glJournalEntry.invalid.future.date",
+			Message:    "The journal entry cannot be made for a future date",
+		}, nil
+	}
+	return GoPoster{}.PostEntry(r)
+}
+
+func t297run2(t *testing.T, name string, impl EntryPoster) *Summary {
+	t.Helper()
+	_, base := loadCommitted(t)
+	opts := base
+	opts.Implementation = impl
+	opts.ImplementationName = name
+	s := Run(opts)
+	fails := []string{}
+	for _, r := range s.Results {
+		if r.Outcome != OutcomePass {
+			fails = append(fails, fmt.Sprintf("%s[%s]", r.CaseID, r.Outcome))
+		}
+	}
+	sort.Strings(fails)
+	t.Logf("PORT %-38s parityPASS=%d parityFAIL=%d refusalPASS=%d refusalFAIL=%d exitworthy=%v",
+		name, s.ParityPass, s.ParityFail, s.RefusalPass, s.RefusalFail, s.ExitWorthy())
+	t.Logf("PORT %-38s NON-PASSING (%d): %v", name, len(fails), fails)
+	return s
+}
+
+func TestT297DeclinationsAttacked(t *testing.T) {
+	t.Run("equality_only_closure_port", func(t *testing.T) {
+		s := t297run2(t, "t297-equality-only-closure", t297EqualityOnlyClosurePoster{})
+		if s.ExitWorthy() {
+			t.Logf("RESULT: the equality-only port DIES on the committed corpus. " +
+				"T295's declination of A2-02 stands on discrimination grounds.")
+		} else {
+			t.Logf("RESULT: the equality-only port SURVIVES the committed corpus. " +
+				"A2-02 (txn STRICTLY BEFORE the closing date) would kill it, so A2-02 " +
+				"DOES add discrimination and T295's 'kill count by zero' is FALSE.")
+		}
+	})
+	t.Run("non_monotone_future_port", func(t *testing.T) {
+		s := t297run2(t, "t297-non-monotone-future", t297NonMonotoneFuturePoster{})
+		if s.ExitWorthy() {
+			t.Logf("RESULT: the non-monotone future port DIES on the committed corpus.")
+		} else {
+			t.Logf("RESULT: the non-monotone future port SURVIVES. A1-01 (businessDate+130) " +
+				"would kill it. T295 NAMED this exception in §4 and it is confirmed by measurement.")
+		}
+	})
+}

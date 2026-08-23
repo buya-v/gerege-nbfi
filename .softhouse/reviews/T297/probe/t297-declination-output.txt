@@ -1,0 +1,14 @@
+=== RUN   TestT297DeclinationsAttacked
+=== RUN   TestT297DeclinationsAttacked/equality_only_closure_port
+    t297_declination_test.go:114: PORT t297-equality-only-closure             parityPASS=4 parityFAIL=0 refusalPASS=5 refusalFAIL=0 exitworthy=false
+    t297_declination_test.go:114: PORT t297-equality-only-closure             NON-PASSING (0): []
+    t297_declination_test.go:119: RESULT: the equality-only port SURVIVES the committed corpus. A2-02 (txn STRICTLY BEFORE the closing date) would kill it, so A2-02 DOES add discrimination and T295's 'kill count by zero' is FALSE.
+=== RUN   TestT297DeclinationsAttacked/non_monotone_future_port
+    t297_declination_test.go:125: PORT t297-non-monotone-future               parityPASS=4 parityFAIL=0 refusalPASS=5 refusalFAIL=0 exitworthy=false
+    t297_declination_test.go:125: PORT t297-non-monotone-future               NON-PASSING (0): []
+    t297_declination_test.go:129: RESULT: the non-monotone future port SURVIVES. A1-01 (businessDate+130) would kill it. T295 NAMED this exception in §4 and it is confirmed by measurement.
+--- PASS: TestT297DeclinationsAttacked (0.44s)
+    --- PASS: TestT297DeclinationsAttacked/equality_only_closure_port (0.11s)
+    --- PASS: TestT297DeclinationsAttacked/non_monotone_future_port (0.33s)
+PASS
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	0.932s
