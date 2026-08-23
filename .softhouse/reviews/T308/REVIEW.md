@@ -423,7 +423,21 @@ So that silence is distinguishable from not looking:
   constructed; G3 (nil coverage) is per-file and I confirmed the per-file gating is real
   (`witness_at_entry`, not a global `if not rep.witness`); G7 read-integrity refuses duplicate
   keys, NaN/Infinity and non-UTF-8 with **exit 2 and no probe line**, which is the correct
-  separation under **P-81** (*"an error is not a measured negative"*).
+  separation.
+* **The P-numbers T292 cites are the right ones, checked against `patterns.md` and not inherited**
+  — which matters, because **P-86** is *"THE PATTERN IDS THEMSELVES ROTTED, IN THE FILE THAT NAMES
+  THE ROT"*, and its lesson is that *"every prompt wrote out the **full rule text** beside the id
+  rather than the id alone… The number was decoration; the sentence carried the instruction."*
+  - **P-84** — T292 writes *"P-84: test the line's PRESENCE first, then its VALUE"*; `patterns.md`
+    P-84 is *"'EXIT 2 WITH NO PROBE LINE' IS THE GUARD WORKING. READ THE ABSENCE, NOT THE VALUE."*
+    Correct id, faithful text.
+  - **P-91** — T292 quotes it verbatim in its opening docstring. Correct.
+  - **P-81** — T292 writes *"(P-81: an error is not a measured negative)"*. That sentence is
+    **T292's gloss, not P-81's headline**; `patterns.md` P-81 is *"THE FAIL-OPEN GUARD CAUGHT
+    THREE WORKERS' OWN INSTRUMENTS IN ONE FIRE…"*, whose worked example is *"**`git grep` exits 1
+    on NO MATCH and >1 on ERROR**, so a bad pathspec printed the same reassuring absence as a
+    genuine no-match"* — i.e. the gloss is a faithful restatement of the rule even though it is
+    not the sentence. No misdirection; noted only because P-86 exists.
 * **The exit protocol is right.** `--help` returns 2 with no probe line; `add_help=False` plus the
   `SystemExit` catch covers both argparse exits. `PYTHONOPTIMIZE=2` still refuses, because the
   post-condition is an `if`, not an `assert`.
