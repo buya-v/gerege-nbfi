@@ -1,0 +1,11 @@
+{
+  "holder": "local-launchd",
+  "host": "Buyanmunkhs-Mac-mini",
+  "pid": 54512,
+  "started_at": "2026-08-25T00:00:11Z",
+  "heartbeat": "2026-08-25T00:00:11Z",
+  "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
+  "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260825-080004.log",
+  "oracle": "UNREACHABLE at https://localhost:8443/fineract-provider/actuator/health",
+  "postgres": "NOT reachable at localhost:5432"
+}
