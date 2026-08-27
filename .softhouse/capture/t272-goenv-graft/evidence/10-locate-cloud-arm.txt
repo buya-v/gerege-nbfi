@@ -1,14 +1,25 @@
 ========================================================================
 WHERE I LOOKED (1) — the working tree of THIS worktree, executable seams only
 $ grep -rn GEREGE_GO_STRICT .softhouse/bin .softhouse/guards .softhouse/conformance.sh
-  NO MATCH in .softhouse/bin, .softhouse/guards, .softhouse/conformance.sh
+    .softhouse/bin/go-env.sh:12:#     GEREGE_GO_STRICT=1          refuse rather than substitute an unpinned `go`.
+    .softhouse/bin/go-env.sh:85:#   THE ONE NON-ZERO ARM — `GEREGE_GO_STRICT` (grafted by T272 from the cloud's T253
+    .softhouse/bin/go-env.sh:89:#     WHAT IT MEANS. `GEREGE_GO_STRICT` set to any NON-EMPTY value makes the REJECTED
+    .softhouse/bin/go-env.sh:111:#     WHICH FIRE SETS IT: NEITHER, TODAY. MEASURED by T272 — `GEREGE_GO_STRICT` does
+    .softhouse/bin/go-env.sh:245:    # GEREGE_GO_STRICT IS NOT CONSULTED HERE, ON PURPOSE. Strict asks "refuse rather than
+    .softhouse/bin/go-env.sh:280:    # --- 4b-i. GEREGE_GO_STRICT — the REJECTED hard refusal, reachable as CONFIG. ---
+    .softhouse/bin/go-env.sh:287:    if [ -n "${GEREGE_GO_STRICT:-}" ]; then
+    .softhouse/bin/go-env.sh:291:        printf '%s\n' "go-env.sh: GEREGE_GO_STRICT is set, so this is a REFUSAL and not a substitution." >&2
+    .softhouse/bin/go-env.sh:299:        printf '%s\n' "go-env.sh: or unset GEREGE_GO_STRICT to allow a STATED fallback to the go on PATH." >&2
+    .softhouse/bin/go-env.sh:331:        printf '%s\n' "go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2)." >&2
+    .softhouse/bin/go-env.sh:346:# exactly one arm (GEREGE_GO_STRICT + toolchain absent) and 0 in every other. Without
+    .softhouse/bin/go-env.sh:368:# it did before the graft, and with GEREGE_GO_STRICT unset that is every arm there is.
 ========================================================================
 WHERE I LOOKED (2) — EVERY ref in this repository, local and remote
-  total refs: 596
+  total refs: 597
   refs whose NAME mentions T253 / T254 / T272 / rescue:
     refs/heads/softhouse/T21-pass3-audit-rescued f4fb9a40
     refs/heads/softhouse/T22-pathb-audit-rescued 70ade651
-    refs/heads/softhouse/T272-goenv-graft e6d0fcc4
+    refs/heads/softhouse/T272-goenv-graft a939342c
     refs/heads/softhouse/T4-dec1-retry-rescued ef96003d
     refs/heads/softhouse/rescued-agent-a0a52fc48d1087796-20260820-230001 b9f9ab36
     refs/heads/softhouse/rescued-agent-a157842e280d9a835-20260822-140002 b574245f
@@ -65,6 +76,7 @@ WHERE I LOOKED (2) — EVERY ref in this repository, local and remote
     refs/rescue/20260827-230001/t323-wiring-branch b515a6e3
 ========================================================================
 WHERE I LOOKED (3) — refs/rescue/ specifically (the brief names it)
+  refs under refs/rescue: 21
     refs/rescue/20260827-230001/packedref-t297-review-t295 c1a3888a
     refs/rescue/20260827-230001/packedref-t298-review-t256 60c54d19
     refs/rescue/20260827-230001/packedref-t302-review-t288 ab9b3b68
@@ -89,15 +101,23 @@ WHERE I LOOKED (3) — refs/rescue/ specifically (the brief names it)
   Any emptiness above is a statement about what THAT command printed HERE. It is NOT
   a claim that no rescue ref was ever created anywhere, and it is NOT a claim about
   origin's refs beyond the remote-tracking refs this clone has already fetched.
+  CROSS-CHECK: section (2) enumerates every ref with no pattern at all. If it lists a
+  refs/rescue row that this section does not, THIS SELECTOR is wrong, not the world.
 ========================================================================
 WHERE I LOOKED (4) — git grep for the needle IN go-env.sh across ALL refs
+  (rc 0 = hit, rc 1 = no match, rc >1 = ERROR and this loop aborts rather than skipping)
+  HIT  refs/heads/softhouse/T272-goenv-graft
   HIT  refs/remotes/origin/softhouse/T253-harness-portability
   HIT  refs/remotes/origin/softhouse/T254-review-portability
+  refs searched: 597   refs carrying the needle in go-env.sh: 3
 ========================================================================
 WHERE I LOOKED (5) — the capture / review / handoff directories
 $ grep -rln GEREGE_GO_STRICT .softhouse/capture .softhouse/reviews .softhouse/handoff
     .softhouse/capture/t272-goenv-graft/evidence/10-locate-cloud-arm.txt
+    .softhouse/capture/t272-goenv-graft/evidence/20-strict-drive.txt
     .softhouse/capture/t272-goenv-graft/instruments/10-locate-cloud-arm.sh
+    .softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh
+    .softhouse/capture/t272-goenv-graft/GOENV-STRICT-WIRING.md
     .softhouse/capture/t253-portability/evidence/70-cross-impl-compare.txt
     .softhouse/capture/t253-portability/instruments/70-cross-impl-compare.sh
     .softhouse/reviews/t254-harness-portability/evidence/10-mktemp-census.txt
@@ -108,8 +128,34 @@ $ grep -rln GEREGE_GO_STRICT .softhouse/capture .softhouse/reviews .softhouse/ha
     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md
 ========================================================================
 WHERE I LOOKED (6) — does ANY fire script or launchd plist SET GEREGE_GO_STRICT?
-$ grep -rn GEREGE_GO_STRICT .softhouse/bin .softhouse/launchd .claude 2>/dev/null
-    NO MATCH. Neither fire sets it. See T272 decision D-2.
+$ grep -rn GEREGE_GO_STRICT .softhouse/bin .softhouse/launchd .claude
+  THIS IS THE MEASUREMENT BEHIND T272 DECISION D-2, so it is the one that most needed
+  the rc classified: an ERROR reported as 'no match' here would have manufactured the
+  claim 'neither fire sets it' out of a broken selector.
+  corpus .softhouse/bin : PRESENT (tested with -d)
+  corpus .softhouse/launchd : PRESENT (tested with -d)
+  corpus .claude : PRESENT (tested with -d)
+    .softhouse/bin/go-env.sh:12:#     GEREGE_GO_STRICT=1          refuse rather than substitute an unpinned `go`.
+    .softhouse/bin/go-env.sh:85:#   THE ONE NON-ZERO ARM — `GEREGE_GO_STRICT` (grafted by T272 from the cloud's T253
+    .softhouse/bin/go-env.sh:89:#     WHAT IT MEANS. `GEREGE_GO_STRICT` set to any NON-EMPTY value makes the REJECTED
+    .softhouse/bin/go-env.sh:111:#     WHICH FIRE SETS IT: NEITHER, TODAY. MEASURED by T272 — `GEREGE_GO_STRICT` does
+    .softhouse/bin/go-env.sh:245:    # GEREGE_GO_STRICT IS NOT CONSULTED HERE, ON PURPOSE. Strict asks "refuse rather than
+    .softhouse/bin/go-env.sh:280:    # --- 4b-i. GEREGE_GO_STRICT — the REJECTED hard refusal, reachable as CONFIG. ---
+    .softhouse/bin/go-env.sh:287:    if [ -n "${GEREGE_GO_STRICT:-}" ]; then
+    .softhouse/bin/go-env.sh:291:        printf '%s\n' "go-env.sh: GEREGE_GO_STRICT is set, so this is a REFUSAL and not a substitution." >&2
+    .softhouse/bin/go-env.sh:299:        printf '%s\n' "go-env.sh: or unset GEREGE_GO_STRICT to allow a STATED fallback to the go on PATH." >&2
+    .softhouse/bin/go-env.sh:331:        printf '%s\n' "go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2)." >&2
+    .softhouse/bin/go-env.sh:346:# exactly one arm (GEREGE_GO_STRICT + toolchain absent) and 0 in every other. Without
+    .softhouse/bin/go-env.sh:368:# it did before the graft, and with GEREGE_GO_STRICT unset that is every arm there is.
+
+  MENTIONING IT IS NOT SETTING IT, and after the graft go-env.sh mentions it a dozen
+  times while only ever READING it. So the D-2 claim is tested by a SHARPER selector:
+  an ASSIGNMENT (`GEREGE_GO_STRICT=` or `export GEREGE_GO_STRICT`) in any file that
+  is NOT go-env.sh itself. That is what 'which fire sets it' actually asks.
+$ grep -rn -E '(export[[:space:]]+)?GEREGE_GO_STRICT=' <same corpus>  | grep -v go-env.sh
+    assignment sites OUTSIDE go-env.sh: 0
+    (A count of 0 here, reached with rc<=1 on a selector that has just been shown to
+     match inside go-env.sh, is the evidence for D-2: NEITHER FIRE SETS IT.)
 ========================================================================
 WHAT WAS FOUND — the cloud arm, verbatim, out of the object store
 $ git cat-file -t d7a7ea3 -> commit
@@ -170,3 +216,5 @@ THE GRAFT SET, per T254b (.softhouse/reviews/t254-harness-portability/REVIEW.md:
                                                               reviewer explicitly gave)
   mac   go-env.sh:153-156  the stale-GOROOT drop          -> KEPT; graft goes AFTER it
 ========================================================================
+INSTRUMENT COMPLETE — every section above ran to completion. No section printed a
+negative it did not measure: rc 1 is labelled rc 1, and rc >1 aborts at exit 3.
