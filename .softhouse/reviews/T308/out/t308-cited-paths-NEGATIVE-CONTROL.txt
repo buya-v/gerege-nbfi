@@ -1,0 +1,36 @@
+OK       (T292) out/adversary-t292.txt
+OK       (T308) out/bar-t308-final-committed-tree.txt
+OK       (T308) out/bar-t308-fork-point.txt
+OK       (T308) out/bar-t308-session2-final.txt
+OK       (T292) out/mutants-t292.txt
+OK       (T292) out/t292-adversary-legs.json
+OK       (T308) out/t308-adversary-rerun.txt
+OK       (T308) out/t308-both-axes-DRAFT1-instrument-defect.txt
+OK       (T308) out/t308-both-axes.txt
+OK       (T308) out/t308-f290-1b-independent.txt
+OK       (T308) out/t308-survivor-mutants-pass1.txt
+OK       (T308) out/t308-survivor-mutants-pass2-stale-label.txt
+ABSENT   (declared) out/t308-survivor-mutants.txt
+         reason: pass 3 of t308_survivor_mutants.py was killed mid-run when the host
+         went to load 24. The file was DELETED rather than committed at zero bytes;
+         a zero-byte transcript in an evidence directory reads as a measurement that
+         was taken. Passes 1 and 2 are the evidence of record and both are present.
+OK       (T308) out/t308-theorem-a.txt
+OK       (T308) out/t308-theorem-b.txt
+OK       (T308) out/t308-theorem1-novel-shapes.txt
+OK       (T308) out/t308-unicode-digit-predicate.txt
+OK       (T308) out/t308-witness-path-forgery.txt
+*** UNRESOLVED OR EMPTY: out/this-file-does-not-exist.txt
+OK       (T292) probe/adversary_t292.py
+OK       (T292) probe/census_real_corpus.py
+OK       (T308) probe/t308_both_axes.py
+OK       (T308) probe/t308_f290_1b_independent.py
+OK       (T308) probe/t308_survivor_mutants.py
+OK       (T308) probe/t308_theorem1_novel_shapes.py
+OK       (T308) probe/t308_theorem_a.py
+OK       (T308) probe/t308_theorem_b_counterrule.py
+OK       (T308) probe/t308_unicode_digit_predicate.py
+OK       (T308) probe/t308_witness_path_forgery.py
+
+29 cited paths checked.
+SOME CITED PATHS DO NOT RESOLVE.

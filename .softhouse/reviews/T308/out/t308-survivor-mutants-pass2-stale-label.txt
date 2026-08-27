@@ -1,0 +1,71 @@
+T308 -- MUTANTS T292 DID NOT PLANT, GRADED BY T292'S OWN UNMODIFIED ADVERSARY
+================================================================================================
+  rule     check_verdict_predicate_agreement_t292.py
+  adversary adversary_t292.py (unmodified), --seeds 3
+
+  BASELINE shipped rule on A10 (genuine unacknowledged disagreement):
+     rc=1 body-prints-REFUSED=True
+     T259-VPA: REFUSED files=1 rows=2 predicates=1 disagreements=1 acknowledged=0 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 witness=1 nilFiles=0 muteRefutations=0 voidAcks=0 headerAffirmations=0 coverageDigest=edad19ab407b3e7f
+
+  SURVIVED  N1-unacknowledged-disagreement-printed-but-not-COUNTED     adversary exit 0
+            LOST REFUSALS: 0   ADJUDICATED WIDENINGS: 25   failing legs: 0
+            A10 driven through the mutant: rc=0  body prints REFUSED=False
+            T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=1 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 witness=1 nilFiles=0 muteRefutations=0 voidAcks=0 headerAffirmations=0 coverageDigest=edad19ab407b3e7f
+            why it matters: T259's FOUNDING defect, one guard over: the body prints 'NO ACKNOWLEDGEMENT ... do not summarise past it' and the process exits 0 GREEN. The witness is non-empty, so the post-condition cannot see it and PROP-C reclassifies it as an adjudicated WIDENING.
+
+  SURVIVED  N2-mute-refutation-G6-printed-but-not-COUNTED              adversary exit 0
+            LOST REFUSALS: 0   ADJUDICATED WIDENINGS: 20   failing legs: 0
+            A10 driven through the mutant: rc=0  body prints REFUSED=True
+            T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 witness=1 nilFiles=0 muteRefutations=0 voidAcks=0 headerAffirmations=0 coverageDigest=edad19ab407b3e7f
+            why it matters: Same shape at G6: a refuted record with no readable disposition prints REFUSED and the run exits GREEN.
+
+  SURVIVED  N3-void-acknowledgement-printed-but-not-COUNTED            adversary exit 0
+            LOST REFUSALS: 0   ADJUDICATED WIDENINGS: 15   failing legs: 0
+            A10 driven through the mutant: rc=-  body prints REFUSED=-
+            T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 witness=1 nilFiles=0 muteRefutations=0 voidAcks=0 headerAffirmations=0 coverageDigest=edad19ab407b3e7f
+            why it matters: Same shape at G4: the acknowledgement block is void (evidence edited after it was written), the body says so, the exit code says GREEN. T114/T176.
+
+  SURVIVED  N4-unclassified-verdict-word-printed-but-not-COUNTED       adversary exit 0
+            LOST REFUSALS: 0   ADJUDICATED WIDENINGS: 15   failing legs: 0
+            A10 driven through the mutant: rc=0  body prints REFUSED=True
+            T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 witness=1 nilFiles=0 muteRefutations=0 voidAcks=0 headerAffirmations=0 coverageDigest=2cc7b8009f2dabf1
+            why it matters: Same shape at G1.
+
+  SURVIVED  N5-unclassified-boolean-key-printed-but-not-COUNTED        adversary exit 0
+            LOST REFUSALS: 0   ADJUDICATED WIDENINGS: 15   failing legs: 0
+            A10 driven through the mutant: rc=0  body prints REFUSED=True
+            T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 witness=1 nilFiles=0 muteRefutations=0 voidAcks=0 headerAffirmations=0 coverageDigest=2cc7b8009f2dabf1
+            why it matters: Same shape at G2 -- the guard T259 exists for.
+
+  KILLED    N6-CONTROL-gate-drops-nil-coverage--EXPECTED-KILLED        adversary exit 1
+            LOST REFUSALS: 0   ADJUDICATED WIDENINGS: 15   failing legs: 11
+            A10 driven through the mutant: rc=2  body prints REFUSED=False
+              FAILED [PROP-D] NEG  degenerate null               -> 1, probe PRESENT -- rc=2 probe=False (want rc=1 probe=True) ERROR: post-condition violated -- GREEN with an empty witness set. Thi
+              FAILED [PROP-D] NEG  degenerate empty-array        -> 1, probe PRESENT -- rc=2 probe=False (want rc=1 probe=True) ERROR: post-condition violated -- GREEN with an empty witness set. Thi
+              FAILED [PROP-D] NEG  degenerate empty-object       -> 1, probe PRESENT -- rc=2 probe=False (want rc=1 probe=True) ERROR: post-condition violated -- GREEN with an empty witness set. Thi
+              FAILED [PROP-D] NEG  degenerate bare-int           -> 1, probe PRESENT -- rc=2 probe=False (want rc=1 probe=True) ERROR: post-condition violated -- GREEN with an empty witness set. Thi
+            why it matters: POSITIVE CONTROL. Dropping `nil` from the same disjunction IS covered, because the post-condition independently re-checks nil_files. If this survives the harness is broken.
+
+================================================================================================
+SUMMARY: 6 mutants, 1 KILLED, 5 SURVIVED, 0 NON-VIABLE
+  SURVIVED  N1-unacknowledged-disagreement-printed-but-not-COUNTED
+  SURVIVED  N2-mute-refutation-G6-printed-but-not-COUNTED
+  SURVIVED  N3-void-acknowledgement-printed-but-not-COUNTED
+  SURVIVED  N4-unclassified-verdict-word-printed-but-not-COUNTED
+  SURVIVED  N5-unclassified-boolean-key-printed-but-not-COUNTED
+  KILLED    N6-CONTROL-gate-drops-nil-coverage--EXPECTED-KILLED
+
+SURVIVORS -- each is a defect T292's adversary CANNOT SEE:
+  N1-unacknowledged-disagreement-printed-but-not-COUNTED
+     lost=0 widenings=25 failing-legs=0 | SHIPPED rc=1 body-prints-REFUSED=True vs MUTANT  rc=0 body-prints-REFUSED=False
+  N2-mute-refutation-G6-printed-but-not-COUNTED
+     lost=0 widenings=20 failing-legs=0 | SHIPPED rc=1 body-prints-REFUSED=True vs MUTANT  rc=0 body-prints-REFUSED=True
+  N3-void-acknowledgement-printed-but-not-COUNTED
+     lost=0 widenings=15 failing-legs=0 | (no reproduction document for this guard) vs (no reproduction document for this guard)
+  N4-unclassified-verdict-word-printed-but-not-COUNTED
+     lost=0 widenings=15 failing-legs=0 | SHIPPED rc=1 body-prints-REFUSED=True vs MUTANT  rc=0 body-prints-REFUSED=True
+  N5-unclassified-boolean-key-printed-but-not-COUNTED
+     lost=0 widenings=15 failing-legs=0 | SHIPPED rc=1 body-prints-REFUSED=True vs MUTANT  rc=0 body-prints-REFUSED=True
+
+EXIT 1   (non-zero if ANY kill target survived -- a survivor is a hole)
+EXIT=1

@@ -1,0 +1,89 @@
+T308 -- BOTH AXES, FOUR ARMS, PINNED BLOBS
+====================================================================================================
+  ARM T259  86f42859a1492409de9c052caf9ecbde15791212
+  ARM T268  0607ecdb943e84c0ad2ae9f16cd79fc702847c3d
+  ARM T286  4f844ed2409bbcde3add574a1160601f4e55b06d
+  ARM T292  f6ee6d2dca179992c53ecf8b2c76a194a34678ef
+
+  AXIS 1  COVERAGE STRICTNESS   population 58  (grade nothing -> must REFUSE)
+  AXIS 2  DETECTION GENEROSITY  population 17  (real disagreement -> must REFUSE)
+  AXIS 3  CONTROL               population 4  (real evidence -> must GREEN)
+
+  arm        STRICTNESS     GENEROSITY        CONTROL
+  ----------------------------------------------------
+  T259          48/58          15/17           1/4   
+  T268          12/58          16/17           2/4   
+  T286          37/58          16/17           2/4   
+  T292          56/58          17/17           2/4   
+
+  T259 misses:
+     STRICTNESS  10
+        T291/X1-header-in-toplevel-list                      rc=0        probe=True
+        T291/X5-affirmation-in-list-over-refuted-record      rc=0        probe=True
+        T291/X5b-affirmation-as-mapping-key-over-refuted-record rc=0        probe=True
+        T291/X8-noninspectable-dict-in-list                  rc=0        probe=True
+        header-descriptive-bool-only/list/d0                 rc=0        probe=True
+        header-descriptive-bool-only/mixed/d0                rc=0        probe=True
+        header-descriptive-bool-only/object/d0               rc=0        probe=True
+        header-predicate-as-a-string/list/d0                 rc=0        probe=True
+        ... and 2 more
+     GENEROSITY  2
+        disagreement/verdict-key-renamed                     rc=0        probe=True
+        disagreement/verdict-value-in-a-list                 rc=0        probe=True
+     CONTROL     3
+        REAL/classify-t219                                   rc=1        probe=True
+        REAL/classify-t229                                   rc=1        probe=True
+        genuine-green/nested-d3                              rc=1        probe=True
+
+  T268 misses:
+     STRICTNESS  46
+        T291/H1-nested-header-empty                          rc=0        probe=True
+        T291/N6-root-verdict-empty                           rc=0        probe=True
+        T291/X1-header-in-toplevel-list                      rc=0        probe=True
+        T291/X2-header-in-nested-list                        rc=0        probe=True
+        T291/X3-header-in-list-of-lists                      rc=0        probe=True
+        T291/X4-toplevel-array-header-only                   rc=0        probe=True
+        T291/X5-affirmation-in-list-over-refuted-record      rc=0        probe=True
+        T291/X5b-affirmation-as-mapping-key-over-refuted-record rc=0        probe=True
+        ... and 38 more
+     GENEROSITY  1
+        disagreement/verdict-key-renamed                     rc=0        probe=True
+     CONTROL     2
+        REAL/classify-t219                                   rc=1        probe=True
+        REAL/classify-t229                                   rc=1        probe=True
+
+  T286 misses:
+     STRICTNESS  21
+        T291/X1-header-in-toplevel-list                      rc=0        probe=True
+        T291/X2-header-in-nested-list                        rc=0        probe=True
+        T291/X3-header-in-list-of-lists                      rc=0        probe=True
+        T291/X4-toplevel-array-header-only                   rc=0        probe=True
+        T291/X5-affirmation-in-list-over-refuted-record      rc=0        probe=True
+        T291/X7-header-in-deep-nested-list                   rc=0        probe=True
+        header-descriptive-bool-only/list/d0                 rc=0        probe=True
+        header-descriptive-bool-only/list/d1                 rc=0        probe=True
+        ... and 13 more
+     GENEROSITY  1
+        disagreement/verdict-key-renamed                     rc=0        probe=True
+     CONTROL     2
+        REAL/classify-t219                                   rc=1        probe=True
+        REAL/classify-t229                                   rc=1        probe=True
+
+  T292 misses:
+     STRICTNESS  2
+        T291/X5-affirmation-in-list-over-refuted-record      rc=0        probe=True
+        T291/X5b-affirmation-as-mapping-key-over-refuted-record rc=0        probe=True
+     GENEROSITY  none
+     CONTROL     2
+        REAL/classify-t219                                   rc=1        probe=True
+        REAL/classify-t229                                   rc=1        probe=True
+
+====================================================================================================
+THE STREAK TEST -- T292 must not be BELOW an earlier arm on EITHER axis.
+  vs T259   strictness +8   generosity +2   control +1
+  vs T268   strictness +44   generosity +1   control +0
+  vs T286   strictness +19   generosity +1   control +0
+
+  T292 is >= every earlier arm on BOTH axes and on the control.
+  THE TRADE IS NOT VISIBLE ON THESE POPULATIONS.
+EXIT 0

@@ -1,0 +1,59 @@
+T308 -- IS GUARD #10 IMPOSSIBLE, OR MERELY UNACHIEVED?
+====================================================================================================
+  document                                                   CENSUS  SIBLING
+                                                             (T292)   (T308)
+  --------------------------------------------------------------------------
+  A10-CONTROL-unacknowledged-disagreement                         0        0
+  A7-affirmation-as-a-mapping-key                                 1        1
+        SIBLING REFUSES: key $.<key>AS PREDICTED 'AS PREDICTED'  (owner $, container None)
+  A9-CONTROL-genuine-green                                        0        0
+  EVASION-header-moved-INSIDE-the-records-list                    1        0
+  REAL/classify-t219                                              0        0
+  REAL/classify-t229                                              3        0
+  T291/H1-nested-header-empty                                     1        1
+        SIBLING REFUSES: value $.meta.verdict 'AS PREDICTED'  (owner $.meta, container $)
+  T291/N6-root-verdict-empty                                      1        1
+        SIBLING REFUSES: value $.verdict 'AS PREDICTED'  (owner $, container None)
+  T291/X1-header-in-toplevel-list                                 1        1
+        SIBLING REFUSES: value $.meta[0].verdict 'AS PREDICTED'  (owner $.meta[0], container $.meta)
+  T291/X2-header-in-nested-list                                   1        1
+        SIBLING REFUSES: value $.meta.summary[0].verdict 'AS PREDICTED'  (owner $.meta.summary[0], container $.meta.summary)
+  T291/X3-header-in-list-of-lists                                 1        1
+        SIBLING REFUSES: value $.meta[0][0].verdict 'AS PREDICTED'  (owner $.meta[0][0], container $.meta[0])
+  T291/X4-toplevel-array-header-only                              1        1
+        SIBLING REFUSES: value $[0].verdict 'AS PREDICTED'  (owner $[0], container $)
+  T291/X5-affirmation-in-list-over-refuted-record                 1        1
+        SIBLING REFUSES: value $.summary[0].verdict 'AS PREDICTED'  (owner $.summary[0], container $.summary)
+  T291/X5b-affirmation-as-mapping-key-over-refuted-record         1        1
+        SIBLING REFUSES: value $.summary.verdict 'AS PREDICTED'  (owner $.summary, container $)
+  T291/X7-header-in-deep-nested-list                              1        1
+        SIBLING REFUSES: value $.a.b.c.d[0].verdict 'AS PREDICTED'  (owner $.a.b.c.d[0], container $.a.b.c.d)
+  T291/X8-noninspectable-dict-in-list                             1        1
+        SIBLING REFUSES: value $.verdict 'AS PREDICTED'  (owner $, container None)
+
+====================================================================================================
+GRADED AGAINST GUARD #10's STATED AMBITION
+  requirement REFUSE : A7-affirmation-as-a-mapping-key, T291/X5-affirmation-in-list-over-refuted-record, T291/X5b-affirmation-as-mapping-key-over-refuted-record
+  requirement PERMIT : A10-CONTROL-unacknowledged-disagreement, A9-CONTROL-genuine-green, REAL/classify-t219, REAL/classify-t229
+
+  T292's SHIPPED CENSUS, promoted to a refusal : 1 violations
+      REAL/classify-t229                                       should PERMIT, census sees 3
+  T308's SIBLING COUNTER-RULE                  : 0 violations
+
+RESULT: a separator EXISTS. It needs NO register change, NO external
+  declaration and NO new input -- only the SIBLING RELATION, which is
+  container structure. T292's 'unachievable by any container-blind rule' is
+  therefore TRUE AS LITERALLY SCOPED and MISLEADING AS APPLIED: guard #10 is
+  a DETECTION guard, and T292's own thesis grants detection the right to read
+  containers. The impossibility was proved about the wrong rule class.
+
+HONEST LIMIT OF THE COUNTER-RULE, MEASURED, NOT ASSUMED: see the row
+  EVASION-header-moved-INSIDE-the-records-list above. Moving the header into the
+  records container defeats the sibling rule, exactly as P-91 predicts of any
+  shape rule ('a guard phrased as a STRUCTURAL PATTERN over the shape of its
+  input can always be re-nested one level out'). The finding is NOT that the
+  sibling rule should ship. The finding is that 'IMPOSSIBLE' is the wrong word
+  for something a 20-line predicate does on this corpus, and that the correct
+  phrasing -- 'no CONTAINER-BLIND rule can, and we chose not to make guard #10
+  container-aware' -- is a decision T292 did not record as one.
+EXIT 0

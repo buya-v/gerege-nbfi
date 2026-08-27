@@ -1,0 +1,4 @@
+# Scratch dirs created INSIDE the repo by T308 probes. They must be inside the repo
+# because the PRE arm and the rule walk up for a .git ancestor and exit non-zero without
+# one. They are removed in a finally: block; this line is the fence for a killed run.
+.t308-*

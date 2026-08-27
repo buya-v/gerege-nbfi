@@ -1,0 +1,50 @@
+T308 -- IS A FORGED WITNESS PATH DISTINGUISHABLE FROM A LEGITIMATE ONE?
+================================================================================================
+THE NAMING, READ AT SOURCE (before any run):
+      257:             yield from walk_objects(x, path + "." + k)
+      260:             yield from walk_objects(x, path + "[%d]" % i)
+      421:             rep.witness.append(("%s.%s" % (opath, k), k, v))
+      562:     for wpath, wkey, wval in rep.witness:
+      563:         print("      %s = %s" % (wpath, "true" if wval else "false"))
+      -> path is CONCATENATED from untrusted key names; printed unescaped, unquoted,
+         uncapped.
+
+CTRL  LEGITIMATE  {"cells": [ {"P1_...": true, "verdict": "AS PREDICTED"} ]}
+      rc=0 witness=1   naming printed:
+      |       $.cells[0].P1_principalAmortizesToZero = true
+
+A1    FORGED      {"cells[0]": {"P1_...": true, "verdict": "AS PREDICTED"}}
+      rc=0 witness=1   naming printed:
+      |       $.cells[0].P1_principalAmortizesToZero = true
+      DOCUMENTS DIFFER: True
+      PRINTED NAMING BYTE-IDENTICAL: YES -- the forgery is NOT distinguishable by its name
+      coverageDigest honest=8c87330d77282c8d forged=8c87330d77282c8d  -> ALSO IDENTICAL
+
+A2    FORGED      a container key containing a NEWLINE and a fabricated witness line
+      rc=0 witness=1 (the COUNT says 1)   naming printed:
+      |       $.z
+      |       $.cells[0].P7_reconciledAgainstOracle = true
+      |       x.P1_principalAmortizesToZero = true
+      a line reading '$.cells[0].P7_reconciledAgainstOracle = true' appears in the witness block: YES
+      printed witness LINES (3) exceed the reported witness COUNT (1): YES
+      that fabricated line names a predicate `P7_reconciledAgainstOracle` the
+      document never asserted and the register never classified -- a reader
+      auditing the naming reads a fact that was never graded.
+
+RESULT, STATED AS MEASURED AND NOT WIDER:
+  THEOREM 2's second clause -- 'every witness path is printed so a forgery is
+  NAMED' -- is TRUE that a line is printed and FALSE that the line identifies the
+  forgery.  The name is not a name: it is an unescaped concatenation of
+  attacker-chosen key strings, so it can be made to COLLIDE with a legitimate
+  document's name (A1) or to CARRY EXTRA LINES OF ITS OWN CHOOSING (A2).
+
+  CONSEQUENCE FOR THIS REVIEW: the clause was used to downgrade CE3 (F-T308-1)
+  and F-T308-5 to 'not a security hole' / LOW.  Those downgrades rest on a naming
+  that does not hold.  Both are re-stated in REVIEW.md; neither becomes a defect
+  in the money, because the rule still has NO CALLER.
+
+  FIX (mechanical): render the path as a JSON-escaped segment list --
+  json.dumps(k) per segment -- so `cells[0]` prints as "cells[0]" and a newline
+  prints as \n.  One line at 257/260/421.  Then A1 and A2 both become visible.
+
+EXIT 0   (0 means every arm behaved as claimed, INCLUDING the arms showing the forgery)

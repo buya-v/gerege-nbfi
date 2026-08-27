@@ -1,0 +1,44 @@
+T308 -- THEOREM 1 (container-blindness) DRIVEN AGAINST THE OPERATIONS IT NAMES
+================================================================================================
+  rule: /Users/buv/gerege-nbfi/.claude/worktrees/agent-af9f82a58b9ee7eb4/.softhouse/capture/t286-t268-retry/check_verdict_predicate_agreement_t292.py
+
+  CE1  wrap a BOOL LEAF in a list  ('wrap a value in a list')
+      D    : rc=0 GREEN    witness=1   digest=2cc7b8009f2dabf1
+      T(D) : rc=1 REFUSED  witness=0   digest=e3b0c44298fc1c14
+      -> *** NOT INVARIANT -- the theorem is FALSE on an operation it names ***
+
+  CE2  wrap a BOOL LEAF in an object under a fresh NON-predicate key
+      D    : rc=0 GREEN    witness=1   digest=2cc7b8009f2dabf1
+      T(D) : rc=1 REFUSED  witness=0   digest=e3b0c44298fc1c14
+      -> *** NOT INVARIANT -- the theorem is FALSE on an operation it names ***
+
+  CE3  wrap a DESCRIPTIVE bool leaf in an object under a fresh key matching the auto
+      predicate pattern -- 'wrap it in an object under a fresh key', verbatim
+      D    : rc=1 REFUSED  witness=0   digest=e3b0c44298fc1c14
+      T(D) : rc=0 GREEN    witness=1   digest=e285691f05e95ef6
+      -> *** NOT INVARIANT -- the theorem is FALSE on an operation it names ***
+
+  CTRL  promote the root into a list (a rewriting the theorem DOES cover)
+      D    : rc=0 GREEN    witness=1   digest=2cc7b8009f2dabf1
+      T(D) : rc=0 GREEN    witness=1   digest=2cc7b8009f2dabf1
+      -> INVARIANT (theorem holds on this operation)
+
+================================================================================================
+NON-INVARIANT OPERATIONS FOUND: 3 of 4
+
+READ THE DIRECTION, NOT ONLY THE COUNT:
+  CE1/CE2 lose a witness -> GREEN becomes REFUSED. FAIL-CLOSED; harmless to
+          safety, fatal to the theorem AS WRITTEN.
+  CE3     GAINS a witness -> REFUSED becomes GREEN. This is the direction the
+          corollary 'THE BRACKET IS POWERLESS' denies. It is rescued only by the
+          theorem's SECOND hypothesis ('adds or removes no registered predicate
+          key'), which the theorem's OWN operation list ('wrap it in an object
+          under a fresh key') is able to violate. The operation set is not a
+          subset of the hypothesis class.
+
+SCOPE OF WHAT T292 ACTUALLY MEASURED: the adversary states that its generator
+  inserts wrappers ONLY at positions already holding a dict or a list, and its
+  object wrappers use keys _w<n> / _h<n>. So CE1, CE2 and CE3 are all OUTSIDE
+  the generated family. The adversary is honest about that restriction; the
+  RULE's docstring theorem is not scoped to match it.
+EXIT 1
