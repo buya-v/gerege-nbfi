@@ -1,0 +1,34 @@
+T308 -- THEOREM 1 AGAINST THE SHAPES THE BRIEF NAMED
+============================================================================================================
+BASE  {"cells": [{"P1_principalAmortizesToZero": true, "verdict": "AS PREDICTED"}]}
+      rc=0 witness=1 coverageDigest=8c87330d77282c8d
+
+shape operation                                                     exit    coverage    verdict                 
+------------------------------------------------------------------------------------------------------------
+S1    a key that is itself a container                              N/A     N/A         NOT EXPRESSIBLE         
+S2    a bool leaf under a non-string key                            N/A     N/A         NOT EXPRESSIBLE         
+S2b   the string "true" used as an object KEY                       rc=1    witness=1   INVARIANT               
+S3    the whole document is the bare literal `true`                 rc=1    witness=0   *** NOT INVARIANT ***   
+S4    12 levels of nesting, each adding an empty {} and an empty [  rc=0    witness=1   INVARIANT               
+S5    the same key name reused at three DIFFERENT depths            rc=0    witness=1   INVARIANT               
+S5b   the same PREDICATE key at two different depths (both true)    rc=0    witness=2   *** NOT INVARIANT ***   
+S6    YAML anchors / aliases                                        N/A     N/A         NOT EXPRESSIBLE         
+S7    the whole document promoted into a top-level ARRAY            rc=0    witness=1   INVARIANT               
+S8    list-of-lists, depth 4                                        rc=0    witness=1   INVARIANT               
+
+NOTES, so that 'not found' is a statement about the search:
+  S1    RFC 8259: a JSON member name MUST be a string. json.dumps refuses a dict key; json.loads cannot produce one. The shape does not exist in this loader's input language, so it cannot move anything. Checked, not assumed.
+  S2    Same reason as S1. The nearest expressible thing is the STRING "true" as a key, which is S2b.
+  S2b   `true` as a key is an affirmative WORD in key position -- T286's guard #10 territory -- but it is not a PREDICATE key, so it must not buy coverage.
+  S3    Must REFUSE through nil coverage; it grades nothing.
+  S4    Pure container insertion. The theorem's own operation class.
+  S5    Legal JSON. G7 refuses duplicates at the SAME level only; different depths are not duplicates.
+  S5b   NOT a container-only rewriting -- it ADDS an assertion. Included as the CONTROL that proves the witness counter can move at all on this population.
+  S6    The loader is `json.loads(..., parse_float=Decimal, object_pairs_hook=<dupe-refusing>)` [read at source]. There is no YAML path and no `yaml` import in the file. Anchors are not admitted, so they cannot move coverage. Checked by reading the loader, not by assuming.
+  S7    T291 attack, re-run.
+  S8    T291 attack, re-run.
+
+SUMMARY: 7 shapes driven, 3 not expressible in this loader's input language (S1, S2, S6),
+         2 moved coverage: S3, S5b
+
+EXIT 0   (the VERDICT COLUMN carries the finding, not the exit code)
