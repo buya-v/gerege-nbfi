@@ -187,7 +187,16 @@ runs. That is deliberate: the vector these bytes should feed asserts a **relatio
 transaction date, closing date and business date (T289's date strategy (c)), which no calendar can
 falsify.
 
-`throwaway/MANIFEST.sha256` covers every artefact; `shasum -a 256 -c MANIFEST.sha256` verifies.
+`throwaway/MANIFEST.sha256` covers every **oracle byte** — everything under `throwaway/req/` and
+`throwaway/out/`, 99 entries; `shasum -a 256 -c MANIFEST.sha256` verifies (exit 0).
+
+The capture-directory-level `out/` is **supporting evidence about the rig, not oracle output**, and is
+deliberately outside that manifest:
+
+| file | what it is |
+|---|---|
+| `out/T327-STANDING-COUNTERS-BEFORE.txt` / `-AFTER.txt` | the standing oracle's seven counters, read directly, before and after; `diff` is empty |
+| `out/T327-RIG-PROVENANCE-rename-proof.txt` | seds each inherited rig file **back** to `t305` and `cmp`s it against T305's committed original, so "this is T305's rig renamed" is a **measurement**. It also **refutes** an overstatement in an earlier draft of `docker-compose.t327.yml`'s own header — see §8 of the handoff. |
 
 ---
 

@@ -1,10 +1,18 @@
 # T327 -- THROWAWAY REFERENCE-ORACLE INSTANCE for the CLOSURE-BOUNDARY and BUSINESS-DATE
 # accepting-side capture (T295 backlog B-1 and B-2).
 #
-# THIS FILE IS T305's docker-compose.t305.yml WITH THE IDENTIFIERS CHANGED AND NOTHING ELSE.
-# `diff` it against
-#   ../../t305-openingbalance-accepting-side/throwaway/docker-compose.t305.yml
-# and every hunk is `t305` -> `t327` plus the description string. WHY A COPY RATHER THAN A RE-RUN
+# THIS FILE IS T305's docker-compose.t305.yml, RENAMED. THE CLAIM IS MEASURED, NOT ASSERTED, and
+# an earlier draft of this very comment OVERSTATED IT ("with the identifiers changed and nothing
+# else") until the measurement was actually taken -- which is P-11 in the file that teaches P-11, so
+# it is corrected here rather than quietly. What `out/T327-RIG-PROVENANCE-rename-proof.txt` shows,
+# by sed-ing this file BACK to `t305` and diffing against T305's committed original:
+#   * strip comments and blank lines -- i.e. compare only what DOCKER reads -- and EXACTLY ONE line
+#     differs, `FINERACT_DEFAULT_TENANTDB_DESCRIPTION`, which is free text naming this capture.
+#     Every other executable line is T305's byte for byte.
+#   * the COMMENT HEADER, by contrast, IS rewritten: T305's compose-value audit is compressed and a
+#     new paragraph on the timezone (below) is added, because the timezone is load-bearing here in a
+#     way it was not for T305.
+# WHY A COPY RATHER THAN A RE-RUN
 # OF T305's RIG IN PLACE: T305's `run-all.sh` opens with
 #     rm -rf "$OUT" "$DIR/req"
 # so running it in the merged tree would DELETE T305's committed out/ and req/ -- the irreplaceable

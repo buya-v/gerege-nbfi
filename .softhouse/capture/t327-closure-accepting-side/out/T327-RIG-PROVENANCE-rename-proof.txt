@@ -1,0 +1,141 @@
+T327 -- PROOF THAT THE INHERITED RIG FILES ARE T305's, RENAMED, AND NOT REWRITTEN.
+Method: sed the t327 copy BACK to t305 identifiers and cmp against T305's committed original.
+A 'PURE RENAME' line means every byte outside the identifier is T305's.
+generated 2026-08-27T17:41:01Z
+
+DIFFERS FROM T305's  : guard-throwaway-isolation.sh
+    --- /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3cb97ad28e05db9e/.softhouse/capture/t305-openingbalance-accepting-side/throwaway/guard-throwaway-isolation.sh	2026-08-28 01:23:27
+    +++ /tmp/rt2-guard-throwaway-isolation.sh	2026-08-28 01:41:01
+    @@ -117,7 +117,9 @@
+       "acc_gl_journal_entry|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_journal_entry" \
+       "acc_gl_closure|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_closure" \
+       "distinct_transaction_id|SELECT count(DISTINCT transaction_id)::text FROM acc_gl_journal_entry" \
+    -  "m_portfolio_command_source|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM m_portfolio_command_source" ; do
+    +  "m_portfolio_command_source|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM m_portfolio_command_source" \
+    +  "m_loan|SELECT count(*)::text FROM m_loan" \
+    +  "m_office|SELECT count(*)::text FROM m_office" ; do
+       label=$(printf '%s' "$q" | cut -d'|' -f1)
+       sql=$(printf '%s' "$q" | cut -d'|' -f2-)
+       v=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+PURE RENAME OF T305's : env.sh
+DIFFERS FROM T305's  : down.sh
+    --- /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3cb97ad28e05db9e/.softhouse/capture/t305-openingbalance-accepting-side/throwaway/down.sh	2026-08-28 01:23:27
+    +++ /tmp/rt2-down.sh	2026-08-28 01:41:01
+    @@ -41,7 +41,9 @@
+       "acc_gl_journal_entry|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_journal_entry" \
+       "acc_gl_closure|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_closure" \
+       "distinct_transaction_id|SELECT count(DISTINCT transaction_id)::text FROM acc_gl_journal_entry" \
+    -  "m_portfolio_command_source|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM m_portfolio_command_source" ; do
+    +  "m_portfolio_command_source|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM m_portfolio_command_source" \
+    +  "m_loan|SELECT count(*)::text FROM m_loan" \
+    +  "m_office|SELECT count(*)::text FROM m_office" ; do
+       label=$(printf '%s' "$q" | cut -d'|' -f1)
+       sql=$(printf '%s' "$q" | cut -d'|' -f2-)
+       now=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+PURE RENAME OF T305's : manifest.sh
+
+NOTE: guard-throwaway-isolation.sh and down.sh were ALSO edited after the rename, to add the
+m_loan and m_office standing counters this task's brief requires. Those hunks appear above and
+are the ONLY non-identifier changes. Every other line is T305's.
+
+docker-compose differs beyond the rename -- diff (T305 original vs T327 renamed back):
+    --- /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3cb97ad28e05db9e/.softhouse/capture/t305-openingbalance-accepting-side/throwaway/docker-compose.t305.yml	2026-08-28 01:23:27
+    +++ /tmp/rt2-compose.yml	2026-08-28 01:41:02
+    @@ -1,20 +1,26 @@
+    -# T305 -- THROWAWAY REFERENCE-ORACLE INSTANCE for the opening-balance ACCEPTING-side capture.
+    +# T305 -- THROWAWAY REFERENCE-ORACLE INSTANCE for the CLOSURE-BOUNDARY and BUSINESS-DATE
+    +# accepting-side capture (T295 backlog B-1 and B-2).
+     #
+    -# WHY THIS FILE EXISTS, in one sentence: the accepting-side observation is IRREVERSIBLE on any
+    -# tenant this program keeps (an accepted opening balance is a POSTED journal entry and Fineract
+    -# has NO delete path for one), so it is taken on an instance that is DESTROYED afterwards --
+    -# teardown by destruction, which is the only perfect teardown available.
+    +# THIS FILE IS T305's docker-compose.t305.yml WITH THE IDENTIFIERS CHANGED AND NOTHING ELSE.
+    +# `diff` it against
+    +#   ../../t305-openingbalance-accepting-side/throwaway/docker-compose.t305.yml
+    +# and every hunk is `t305` -> `t305` plus the description string. WHY A COPY RATHER THAN A RE-RUN
+    +# OF T305's RIG IN PLACE: T305's `run-all.sh` opens with
+    +#     rm -rf "$OUT" "$DIR/req"
+    +# so running it in the merged tree would DELETE T305's committed out/ and req/ -- the irreplaceable
+    +# bytes of an accepting capture taken on an instance that no longer exists. The brief said "use
+    +# T305's rig, do not build a second one"; the rig is reused verbatim in structure and content, and
+    +# the ONE thing not reused is the destructive in-place invocation. Recorded here and in the handoff.
+     #
+    +# WHY THE TENANT IS NAMED `t305` AND NOT `gerege` OR `t305`: T305's rule, kept. "A capture whose
+    +# provenance said tenant `gerege` while it was taken on a throwaway would be indistinguishable from
+    +# one taken on the graded tenant. The identifier is the disclosure." Naming it `t305` would be the
+    +# same defect one level down -- it would make a T305 observation look like a T305 one.
+    +#
+     # IT IS SELF-CONTAINED ON PURPOSE. It does NOT `extends:` the pinned checkout's
+     # docker-compose-postgresql.yml, because that file publishes 5432 and 8443 -- the ports the
+    -# STANDING reference oracle is already serving on -- and compose MERGES `ports` lists by
+    -# appending, so an override could not unpublish them. Every value below is copied from the
+    -# pinned checkout's own compose/env files and the copy is auditable line by line:
+    -#   image postgres:18.3         config/docker/compose/postgresql.yml
+    -#   image fineract:latest       config/docker/compose/fineract.yml   (sha256:e596339626bf..., the
+    -#                               EXACT image id the standing fineract-fineract-1 runs -- verified
+    -#                               `docker inspect -f '{{.Image}}' fineract-fineract-1`)
+    -#   env files                   config/docker/env/{postgresql,fineract,fineract-common,fineract-postgresql}.env
+    +# STANDING reference oracle is already serving on -- and compose MERGES `ports` lists by appending,
+    +# so an override could not unpublish them.
+     #
+     # WHAT DIFFERS FROM THE STANDING STACK, and nothing else does:
+     #   1. NO published database port (the standing db owns 5432; this one is reached by `docker exec`)
+    @@ -22,22 +28,19 @@
+     #   3. the tenant-seed environment variables below
+     #   4. the log volume points at /tmp, never into the pinned checkout
+     #
+    -# THE SEED VARIABLES ARE THE WHOLE POINT AND THEY ARE SOURCE-VERIFIED:
+    +# THE SEED VARIABLES ARE THE WHOLE POINT AND THEY ARE SOURCE-VERIFIED (T305's audit, re-read):
+     #   FINERACT_DEFAULT_TENANTDB_IDENTIFIER -> application.properties:61 -> spring.liquibase.parameters
+    -#     .fineract.tenant.identifier (:499) -> db/changelog/tenant-store/parts/0002_initial_data.xml
+    -#   FINERACT_DEFAULT_TENANTDB_TIMEZONE   -> application.properties:60 -> :501 -> the same seed,
+    -#     column timezone_id (0002_initial_data.xml:41)
+    -#   FINERACT_CONFIG_ROUNDING_MODE        -> application.properties:77 (`fineract.tenant.config
+    -#     .rounding-mode`, DEFAULT 6) -> :514 -> db/changelog/tenant/parts/0002_initial_data.xml:219-220
+    -#     `<column name="name" value="rounding-mode"/><column name="value" valueNumeric="${fineract
+    -#     .tenant.rounding-mode}"/>` -- so the tenant is SEEDED at HALF_UP=4, the CLAUDE.md-ratified
+    -#     mode, rather than patched to it afterwards.
+    -#   FINERACT_TENANT_DEFAULT_DB_NAME / FINERACT_DEFAULT_TENANTDB_NAME -> the database the postgres
+    -#     init script creates and the one the app registers; they must agree.
+    +#     .fineract.tenant.identifier -> db/changelog/tenant-store/parts/0002_initial_data.xml
+    +#   FINERACT_DEFAULT_TENANTDB_TIMEZONE   -> the same seed, column timezone_id
+    +#   FINERACT_CONFIG_ROUNDING_MODE        -> db/changelog/tenant/parts/0002_initial_data.xml:219-220
+    +#     so the tenant is SEEDED at HALF_UP=4, the CLAUDE.md-ratified mode, not patched to it after.
+     #
+    -# THE TENANT IS NAMED `t305`, NOT `gerege`, DELIBERATELY. A capture whose provenance said tenant
+    -# `gerege` while it was taken on a throwaway would be indistinguishable from one taken on the
+    -# graded tenant. The identifier is the disclosure.
+    +# THE TIMEZONE IS LOAD-BEARING FOR THIS CAPTURE IN A WAY IT WAS NOT FOR T305's.
+    +# BusinessDateReadPlatformServiceImpl:74 seeds BUSINESS_DATE with `DateUtils.getLocalDateOfTenant()`
+    +# = `LocalDate.now(getDateTimeZoneOfTenant())` [DateUtils.java:70-72] when `enable-business-date` is
+    +# off, which it is on a fresh tenant. So the business date this capture is graded against is TODAY
+    +# IN Asia/Ulaanbaatar (+08, no DST, zone named, offset never hard-coded) -- and arm B2-ACCEPT-01
+    +# fires on exactly that date.
+     #
+     # FOR CAPTURE PURPOSES ONLY. Destroyed by `down.sh` with `-v`.
+     services:
+    @@ -76,7 +79,7 @@
+         environment:
+           FINERACT_DEFAULT_TENANTDB_IDENTIFIER: t305
+           FINERACT_DEFAULT_TENANTDB_NAME: fineract_t305
+    -      FINERACT_DEFAULT_TENANTDB_DESCRIPTION: T305 throwaway accepting-side capture tenant
+    +      FINERACT_DEFAULT_TENANTDB_DESCRIPTION: T305 throwaway closure/business-date accepting-side capture tenant
+           FINERACT_DEFAULT_TENANTDB_TIMEZONE: Asia/Ulaanbaatar
+           FINERACT_CONFIG_ROUNDING_MODE: "4"
+         healthcheck:
+
+SHARPER TEST ON THE COMPOSE FILE: strip COMMENT and BLANK lines from both, then compare.
+This isolates what DOCKER actually reads from what a human reads.
+EXECUTABLE lines differ -- diff:
+    --- /tmp/rt2-c305.txt	2026-08-28 01:41:02
+    +++ /tmp/rt2-c327.txt	2026-08-28 01:41:02
+    @@ -33,7 +33,7 @@
+         environment:
+           FINERACT_DEFAULT_TENANTDB_IDENTIFIER: t305
+           FINERACT_DEFAULT_TENANTDB_NAME: fineract_t305
+    -      FINERACT_DEFAULT_TENANTDB_DESCRIPTION: T305 throwaway accepting-side capture tenant
+    +      FINERACT_DEFAULT_TENANTDB_DESCRIPTION: T305 throwaway closure/business-date accepting-side capture tenant
+           FINERACT_DEFAULT_TENANTDB_TIMEZONE: Asia/Ulaanbaatar
+           FINERACT_CONFIG_ROUNDING_MODE: "4"
+         healthcheck:
