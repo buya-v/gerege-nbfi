@@ -1,0 +1,8 @@
+WIRE     .softhouse/capture/t250-tenant-attestation/instruments/20-redA-sidecar-tracks-the-send.sh         protects   14 tracked files
+WIRE     .softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh               protects   70 tracked files
+WIRE     .softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh      protects   24 tracked files
+WIRE     .softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh              protects  426 tracked files
+WIRE     .softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh  protects  145 tracked files
+WIRE     .softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh               protects   91 tracked files
+WIRE     .softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh                        protects  107 tracked files
+WIRE     .softhouse/reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh                          protects  110 tracked files
