@@ -1,0 +1,85 @@
+T299 RENAME-COST DRIVE  (in a throwaway clone -- the real checkout is NOT touched)
+engine    : git version 2.50.1 (Apple Git-155) | Python 3.9.6
+HEAD      : 5c6f3bc05c02e769cb5c9e62c51b4d0c882ecdd5
+old name  : .softhouse/capture/t256-verdict-predicate
+hypothetical new name : .softhouse/capture/t259-verdict-predicate
+
+clone     : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t299-rename.p3klfdVr/clone
+
+=== BEFORE THE RENAME (calibration) ===
+  probes:
+    exit=0  .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py
+    exit=0  .softhouse/capture/t290-review-t271/prove_repair_inert.py
+    exit=0  .softhouse/reviews/t262-verdict-predicate/pin_test_t262.py
+  path resolution:
+      referencing instruments in this selector : 16 file(s)
+        of which at least one reference is dead : 2 file(s)
+      path references that RESOLVE   : 24
+      path references that DO NOT    : 2
+        .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py             -> .softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py
+        .softhouse/capture/t290-review-t271/red/drive-red-t290.py                -> .softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py
+
+  CALIBRATED: all 3 probe(s) exited 0 at HEAD.
+
+=== THE RENAME ===
+  git mv .softhouse/capture/t256-verdict-predicate -> .softhouse/capture/t259-verdict-predicate
+  files moved : 21
+  tree is now dirty on 21 path(s)
+
+=== AFTER THE RENAME ===
+  probes:
+    exit=2  .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py
+    exit=2  .softhouse/capture/t290-review-t271/prove_repair_inert.py
+    exit=1  .softhouse/reviews/t262-verdict-predicate/pin_test_t262.py
+  path resolution:
+      referencing instruments in this selector : 18 file(s)
+        of which at least one reference is dead : 18 file(s)
+      path references that RESOLVE   : 0
+      path references that DO NOT    : 29
+        .softhouse/capture/t219-g8-residual/src/classify_t219.py                 -> .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+        .softhouse/capture/t259-verdict-predicate/census_verdict_shape.py        -> .softhouse/capture/t256-verdict-predicate
+        .softhouse/capture/t259-verdict-predicate/census_verdict_shape.py        -> .softhouse/capture/t256-verdict-predicate
+        .softhouse/capture/t259-verdict-predicate/lint_failopen_t259.py          -> .softhouse/capture/t256-verdict-predicate
+        .softhouse/capture/t271-b1-t219/run.sh                                   -> .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+        .softhouse/capture/t271-b1-t219/run.sh                                   -> .softhouse/capture/t256-verdict-predicate/lint_failopen_t259.py
+        .softhouse/capture/t271-b1-t219/run.sh                                   -> .softhouse/capture/t256-verdict-predicate/census_verdict_shape.py
+        .softhouse/capture/t286-t268-retry/check_verdict_predicate_agreement_t292.py -> .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+        .softhouse/capture/t290-review-t271/attack_acknowledgement_t290.py       -> .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+        .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py             -> .softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py
+        .softhouse/capture/t290-review-t271/probe_t286_rule_t290.py              -> .softhouse/capture/t256-verdict-predicate
+        .softhouse/capture/t290-review-t271/prove_repair_inert.py                -> .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+        .softhouse/capture/t290-review-t271/red/drive-red-t290.py                -> .softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py
+        .softhouse/capture/t290-review-t271/run.sh                               -> .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+        .softhouse/capture/t290-review-t271/run.sh                               -> .softhouse/capture/t256-verdict-predicate/lint_failopen_t259.py
+        .softhouse/capture/t290-review-t271/run.sh                               -> .softhouse/capture/t256-verdict-predicate
+        .softhouse/reviews/t262-verdict-predicate/attack2_compound_t262.py       -> .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+        .softhouse/reviews/t262-verdict-predicate/attack2_compound_t262.py       -> .softhouse/capture/t256-verdict-predicate/boolean-key-register.json
+        .softhouse/reviews/t262-verdict-predicate/attack2_compound_t262.py       -> .softhouse/capture/t256-verdict-predicate/acknowledged.json
+        .softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py            -> .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+        .softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py            -> .softhouse/capture/t256-verdict-predicate/boolean-key-register.json
+        .softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py            -> .softhouse/capture/t256-verdict-predicate/acknowledged.json
+        .softhouse/reviews/t262-verdict-predicate/pin_test2_t262.py              -> .softhouse/capture/t256-verdict-predicate
+        .softhouse/reviews/t262-verdict-predicate/pin_test2_t262.py              -> .softhouse/capture/t256-verdict-predicate
+        .softhouse/reviews/t262-verdict-predicate/pin_test_t262.py               -> .softhouse/capture/t256-verdict-predicate
+        .softhouse/reviews/t291-review-t286/probe/drive-t291.py                  -> .softhouse/capture/t256-verdict-predicate
+        .softhouse/reviews/t291-review-t286/probe/enumerate-exit0-t291.py        -> .softhouse/capture/t256-verdict-predicate
+        .softhouse/reviews/t291-review-t286/probe/wrapper-probe-t291.sh          -> .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+        .softhouse/reviews/t291-review-t286/probe/wrapper-probe-t291.sh          -> .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+
+=== WHAT REPAIRING IT WOULD COST -- the files a rename can only be COMPLETED by editing ===
+      files still naming the OLD path AFTER the rename : 49
+      occurrences inside them                          : 182
+      owning tasks whose COMMITTED evidence would have to be edited:
+        (no task rig)    5 file(s)
+        T219             1 file(s)
+        T259             4 file(s)
+        T262             5 file(s)
+        T271             7 file(s)
+        T284             1 file(s)
+        T286             2 file(s)
+        T290             11 file(s)
+        T291             11 file(s)
+        T293             2 file(s)
+
+  (The clone is discarded on exit. The real checkout was never renamed.)
+RENAME-COST DRIVE COMPLETE.
