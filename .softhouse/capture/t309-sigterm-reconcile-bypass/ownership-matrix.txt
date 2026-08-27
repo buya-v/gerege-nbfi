@@ -1,0 +1,91 @@
+PRE  (attempt 1, df28ced): sha256 8ecc62341c6251ce
+POST (attempt 2, working tree): sha256 cdc0729107b71696
+source repo (READ-ONLY): /Users/buv/gerege-nbfi
+
+############################################################
+# CELL A: LIVE FIRE 20260827-230001 -- its own dispatches must NOT be demoted
+#   lock commit: 558ef32   state under test: HEAD   LOCK fire: 20260827-230001
+#   expect PRE demotes=6   POST demotes=0
+############################################################
+  --- PRE ---
+      mode: in_session   (lock fire id: 20260827-230001)
+      in_progress tasks found: 7  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
+      IN-SESSION authority: 6 demotable, 1 WITHHELD (a live fire is running; only dispatches proven to belong to another fire may be touched)
+      RESULT: DRY RUN -- 6 task(s) WOULD be demoted; tasks.json untouched.
+    demotions: 6
+    >>> PRE OK (demotions=6, expected 6)
+  --- POST ---
+      mode: in_session   (lock fire id: 20260827-230001)
+      in_progress tasks found: 7  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
+      in-session evidence: at this fire's lock commit 5822b3fa5 ('softhouse: local fire lock (20260827-230001)') 0 task(s) already claimed in_progress: none. Anything in_progress NOW but not in that set was dispatched by THIS fire and is live.
+      IN-SESSION authority: 0 demotable, 7 WITHHELD (a live fire is running; only dispatches that PREDATE this fire's lock commit may be touched)
+      RESULT: REFUSED -- nothing this caller is authorised to repair; tasks.json was NOT modified. The wrapper's exit-path reconcile runs in `wrapper` mode and clears what is left.
+    demotions: 0
+    >>> POST OK (demotions=0, expected 0)
+
+############################################################
+# CELL B: CORPSES OF 20260823-080004 -- 20260823-140001 must clear all 8
+#   lock commit: 5428c0a4   state under test: 5428c0a4   LOCK fire: 20260823-140001
+#   expect PRE demotes=0   POST demotes=8
+############################################################
+  --- PRE ---
+      mode: in_session   (lock fire id: 20260823-140001)
+      in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
+      IN-SESSION authority: 0 demotable, 8 WITHHELD (a live fire is running; only dispatches proven to belong to another fire may be touched)
+      RESULT: REFUSED -- nothing this caller is authorised to repair; tasks.json was NOT modified. The wrapper's exit-path reconcile runs in `wrapper` mode and clears what is left.
+    demotions: 0
+    >>> PRE OK (demotions=0, expected 0)
+  --- POST ---
+      mode: in_session   (lock fire id: 20260823-140001)
+      in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
+      in-session evidence: at this fire's lock commit 4fbaedaa3 ('softhouse: local fire lock (20260823-140001)') 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308. Anything in_progress NOW but not in that set was dispatched by THIS fire and is live.
+      IN-SESSION authority: 8 demotable, 0 WITHHELD (a live fire is running; only dispatches that PREDATE this fire's lock commit may be touched)
+      RESULT: DRY RUN -- 8 task(s) WOULD be demoted; tasks.json untouched.
+    demotions: 8
+    >>> POST OK (demotions=8, expected 8)
+
+############################################################
+# CELL C: FAIL-CLOSED -- no reachable lock commit
+#   lock commit: NONE   state under test: 5428c0a4   LOCK fire: 20260823-140001
+#   expect PRE demotes=0   POST demotes=0
+############################################################
+  --- PRE ---
+      mode: in_session   (lock fire id: 20260823-140001)
+      in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
+      IN-SESSION authority: 0 demotable, 8 WITHHELD (a live fire is running; only dispatches proven to belong to another fire may be touched)
+      RESULT: REFUSED -- nothing this caller is authorised to repair; tasks.json was NOT modified. The wrapper's exit-path reconcile runs in `wrapper` mode and clears what is left.
+    demotions: 0
+    >>> PRE OK (demotions=0, expected 0)
+  --- POST ---
+      mode: in_session   (lock fire id: 20260823-140001)
+      in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
+      in-session evidence: no commit reachable from HEAD has the subject 'softhouse: local fire lock (20260823-140001)', so the instant this fire took the lock is UNKNOWN -- REFUSING. (A fire whose lock commit was never made, or was made on another branch, cannot prove which dispatches predate it.)
+      IN-SESSION authority: 0 demotable, 8 WITHHELD (a live fire is running; only dispatches that PREDATE this fire's lock commit may be touched)
+      RESULT: REFUSED -- nothing this caller is authorised to repair; tasks.json was NOT modified. The wrapper's exit-path reconcile runs in `wrapper` mode and clears what is left.
+    demotions: 0
+    >>> POST OK (demotions=0, expected 0)
+
+############################################################
+# CELL D: FAIL-CLOSED -- LOCK records no fire id
+#   lock commit: 5428c0a4   state under test: 5428c0a4   LOCK fire: NONE
+#   expect PRE demotes=0   POST demotes=0
+############################################################
+  --- PRE ---
+      mode: in_session   (lock fire id: NONE RECORDED)
+      in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
+      IN-SESSION authority: 0 demotable, 8 WITHHELD (a live fire is running; only dispatches proven to belong to another fire may be touched)
+      RESULT: REFUSED -- nothing this caller is authorised to repair; tasks.json was NOT modified. The wrapper's exit-path reconcile runs in `wrapper` mode and clears what is left.
+    demotions: 0
+    >>> PRE OK (demotions=0, expected 0)
+  --- POST ---
+      mode: in_session   (lock fire id: NONE RECORDED)
+      in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
+      in-session evidence: the LOCK records no `fire` id, so this fire's lock commit cannot be found -- REFUSING (fail-closed)
+      IN-SESSION authority: 0 demotable, 8 WITHHELD (a live fire is running; only dispatches that PREDATE this fire's lock commit may be touched)
+      RESULT: REFUSED -- nothing this caller is authorised to repair; tasks.json was NOT modified. The wrapper's exit-path reconcile runs in `wrapper` mode and clears what is left.
+    demotions: 0
+    >>> POST OK (demotions=0, expected 0)
+
+==============================================================
+OWNERSHIP MATRIX: 8 passed, 0 failed
+==============================================================

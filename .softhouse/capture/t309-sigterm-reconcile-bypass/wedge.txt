@@ -1,0 +1,55 @@
+==============================================================================
+T309 DRIVE — wrapper bytes from revision: HEAD
+  source repo: /Users/buv/gerege-nbfi/.claude/worktrees/agent-af8f23cb68de0effa
+  scratch:     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t309-drive.47307
+  foreign live claude in repo: 0
+  reconcile disabled (A/B control): 0
+  resolver WEDGED (fault injection): 1
+  in_progress tasks planted:   8
+==============================================================================
+wrapper sha256: 8e398295a1970d26
+resolver sha256: cd2b72f7fc360d66
+wrapper pid=47361  log=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t309-drive.47307/logs/fire-20260823-143753.log
+wrapper ancestry (should contain NO 'claude'):
+    47361     1 /bin/zsh /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t309-drive.47307/repo/.softhouse/bin/fire-program.sh
+    parent pid: 1  (/sbin/launchd)
+
+--- tasks.json BEFORE the signal ---
+    {'in_progress': 8, 'todo': 1}
+
+--- sending SIGTERM to wrapper 47361 ---
+SIGTERM -> wrapper exit: 9.55s   (launchd's grace is ~20s)
+
+--- handler transcript ---
+    [14:37:55] driver job pid=47454 — backgrounded; the wrapper now sits in `wait`, so a SIGTERM is handled in a fraction of a second instead of waiting out the driver
+    [14:37:57] SIGTERM received — stopping the driver, reconciling tasks.json, releasing the lock and TERMINATING (rc=143). A fire must never keep working after its lock is gone, and it must never leave in_progress behind for workers it just killed.
+    [14:37:57] stopping the driver: 7 process(es) — 47454 47455 47457 47458 47459 47460 47463
+    [14:37:58] driver stopped on SIGTERM; no survivors
+    [14:37:58] signal-path reconcile: 7s of budget (grace 20s - 1s spent - 10s push reserve - 2s teardown/commit)
+    [14:37:58] reconcile: no live session owns this repo — claude processes examined=1 in-repo=0 unreadable=0 -- [pid 4692 cwd /Users/buv/gerege-nbfi elsewhere]
+    [14:38:05] ERROR: the signal-path reconcile exceeded its 7s budget — killing it so this handler can still release the lock and exit inside launchd's grace. tasks.json was NOT repaired and any in_progress task in it is UNVERIFIED.
+    [14:38:06] signal-path reconcile: no change to commit
+    [14:38:06] lock released
+    [14:38:06] SIGTERM handler complete after 9s (launchd grace is ~20s) — exiting rc=143
+
+--- tasks.json AFTER the signal ---
+     {'in_progress': 8, 'todo': 1}
+     still in_progress: 8      demoted to needs_retry: 0
+
+VERDICT: **NOT RECONCILED** — 8 task(s) still claim in_progress after the fire
+         was SIGTERMed. The next orchestrator will be told work is happening.
+
+--- git log in the scratch repo (did the repair get COMMITTED?) ---
+    91a76b6 softhouse: release local fire lock (20260823-143753)
+    4b50410 softhouse: local fire lock (20260823-143753)
+    d18d2f1 scratch base
+
+--- orphaned temp files? (reconcile_bounded must clean tasks.json.t288.tmp) ---
+    LEFTOVER: 
+    (no LEFTOVER line above means none)
+
+--- did the lock get released? ---
+    LOCK is gone
+
+ELAPSED_SECONDS=9.55
+VERDICT_RC=10

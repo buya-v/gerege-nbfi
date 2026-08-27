@@ -1,0 +1,32 @@
+zsh: 5.9
+work: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t309-zshreread.11808
+
+  small: original 380 bytes / replacement 433 bytes
+  big: original 90080 bytes / replacement 105681 bytes
+  rn: original 90080 bytes / replacement 105681 bytes
+=== LEG A — in-place rewrite, SAME inode, small file (cat > file) ===
+  inode before: 10237248
+A: start (pid 11817)
+TAIL: ORIGINAL
+  LEG A subject rc=0
+  inode after:  10237248
+
+=== LEG B — in-place rewrite, SAME inode, ~90 KB file (cat > file) ===
+  inode before: 10237251
+A: start (pid 11826)
+TAIL: REWRITTEN
+  LEG B subject rc=0
+  inode after:  10237251
+
+=== LEG C — rename-into-place, NEW inode (what git checkout/merge does) ===
+  inode before: 10237254
+A: start (pid 11866)
+TAIL: ORIGINAL
+  LEG C subject rc=0
+  inode after:  10237376
+
+READ THE MARKERS, NOT THE rc:
+  TAIL: ORIGINAL  = the running script was NOT affected by the rewrite
+  TAIL: REWRITTEN = the running script executed lines it was never started with
+  a parse error / rc!=0 = the saved offset landed mid-token — corruption, not a swap
+DONE

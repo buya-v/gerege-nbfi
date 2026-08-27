@@ -1,0 +1,18 @@
+T309 — SIGTERM to wrapper exit, 5 trials each, 8 in_progress tasks planted
+launchd's SIGTERM->SIGKILL grace is ~20s (plist sets no ExitTimeOut)
+==============================================================================
+A. POST-FIX bytes, reconcile SKIPPED (SIGNAL_RECONCILE_MIN_SECS=999) — control
+  samples: 1.67 1.74 1.74 1.60 1.47
+  n=5  min=1.47  median=1.67  max=1.74  mean=1.64
+
+B. POST-FIX bytes, reconcile RUNS                                   — subject
+  samples: 4.40 4.46 4.10 4.22 3.90
+  n=5  min=3.90  median=4.22  max=4.46  mean=4.22
+
+C. PRE-T309 bytes (main)                                            — baseline
+  samples: 7.12 7.07 7.29 6.95 7.34
+  n=5  min=6.95  median=7.12  max=7.34  mean=7.15
+
+READ: B minus A is the cost of the reconcile itself, on identical bytes.
+      B minus C is what a fire's stop actually got longer or shorter by.
+DONE
