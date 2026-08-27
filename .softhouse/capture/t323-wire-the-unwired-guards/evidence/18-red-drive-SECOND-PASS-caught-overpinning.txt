@@ -1,0 +1,46 @@
+============================================================================================
+T323 RED DRIVE -- every arm runs the WHOLE BAR, never a guard standalone.
+scratch clone: /tmp/t323-scratch2
+============================================================================================
+00-GREEN-CONTROL-clean-tree                    exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T299-01-undocumented-collision                 exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T299-02-same-collision-DOCUMENTED              exit=2  (want 0 )  probe=ABSENT   (want PRESENT )  marker=NO   >>> FAIL
+    --- transcript tail ---
+    < .softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t319-a-second-rig/NOTE.md
+    < .softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t319-a-second-rig/OWNER-IS-T323-NOT-T319.md
+    conformance: CENSUS dead repo-path references among tracked .softhouse/ instruments
+    conformance:   selector and per-bucket counts are printed by the census itself:
+    T316-DEADPATH-CENSUS: corpus=1178 deadFiles=72 deadOccurrences=104 resolving=1034 indeterminate=68 prose=274
+    conformance:   frontier 104 row(s), pinned at 98
+    conformance:   (both cardinals DERIVED by counting the files compared, never typed)
+    conformance: !! THE DEAD-PATH FRONTIER MOVED.
+    conformance: !! 6 NEW dead path reference(s). A '+' row is a NEW site: REPAIR it
+    conformance: !! rather than pinning it. Either make the path resolve, or -- if the
+    conformance: !! reference is a deliberate fallback candidate -- make the instrument
+    conformance: !! REFUSE when no candidate resolves, and record why in the pin.
+    > .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest
+    > .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest/gerege.disposable
+    > .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/ACCEPT.json
+    > .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/REFUSE.json
+    > .softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t323-a-path-that-does-not-exist/x.json
+    > .softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t323-wire-the-unwired-guards/PLANTED-dead-path.sh
+    conformance:   The pin is /tmp/t323-scratch2/.softhouse/guards/dead-path-frontier.pin
+    T316-DEADPATH-FRONTIER: REFUSED rows=104 pinned=98 added=6 removed=0
+    conformance: guard_dead_path_frontier FAILED. Full guard transcript above.
+    conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
+    conformance:   (the planted T309 single-term predicate drives cell B-prime RED; the shipped
+    conformance:   tool keeps it GREEN. Both legs ran here — --selftest is not optional.)
+    conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+T299-03-decalibrated-corpus                    exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T299-04-no-root-line-readback                  exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T316-05-frontier-grew-unrecorded               exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T316-06-census-removed-SELFREF                 exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T316-07-pin-removed-SELFREF                    exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+appended 9 row(s) to the pin, list left populated
+T316-08-stale-reconcile-list                   exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T319-09-shipped-tool-demotes                   exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T319-10-matrix-blind-to-redispatch             exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T319-11-rig-removed                            exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+============================================================================================
+T323 RED DRIVE: 11 passed, 1 failed.
+============================================================================================
