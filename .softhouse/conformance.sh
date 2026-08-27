@@ -2129,6 +2129,553 @@ guard_accepting_side_gap_declared() {
   return "$rc"
 }
 
+# ===========================================================================================
+# T323 — THE WIRING OF THREE GUARDS THAT SHIPPED ENFORCING NOTHING.
+# ===========================================================================================
+# Three tasks in ONE fire (T299, T316, T319) each built a guard, drove it red AND green, and
+# each then wrote — independently, none having read the others — that until it was wired its
+# work enforced nothing. That is P-45 restated three times in a single fire:
+#
+#   P-45 — "A test-only guard is not a guard. T154's float-literal census is called from `Run`,
+#   not only from the Go test, because `conformance.sh` never invokes `go test` — a test-only
+#   fix would have left the third silent green standing while looking fixed. Rule: when
+#   hardening a check, verify the path that ACTUALLY EXECUTES in CI/conformance calls it, not
+#   merely that a test does."   [VERIFIED: .softhouse/patterns.md:1472]
+#
+# The root was measured by T302, re-run by T319, and re-run again by T323 on this branch:
+#     grep -c 'fire-program\|ready-tasks\|reconcile\|in_progress' .softhouse/conformance.sh
+# returned 0 over 3,101 lines (T319's checkout) and 0 over 3,253 lines (T323's, immediately
+# before this block) — in a file whose own line 909 requires the selftest to run on every
+# conformance run, "not on the day someone remembers".
+#
+# ALL THREE ARE HARD. None is advisory. A SOFT wiring prints a line that nothing depends on,
+# which is P-22 — "a guard, a canary, or a control that cannot fail is worse than none, because
+# it is believed" — and that is the sentence the three authors already wrote, with extra steps.
+#
+# EACH GUARD DECLARES ITS OWN FAIL-CLOSED DIRECTION, BELOW, AND NOT ONE PREDICATE IS WIDENED
+# TO SERVE TWO PURPOSES. That widening is the shape T292 identified as the root of a five-fix
+# losing streak, and three guards landing in one commit is exactly when it would happen.
+#
+# P-84 SURVIVES ALL THREE BY CONSTRUCTION, AND IT WAS VERIFIED RATHER THAN ASSUMED. run_guards
+# is called on main_grade's second line; probe_oracle is not reached for ~25 lines after it. So
+# a refusal from any guard here exits 2 with the `reference oracle (…) probe = up|down` line
+# ABSENT — not `down`. "P-84 — 'EXIT 2 WITH NO PROBE LINE' IS THE GUARD WORKING. READ THE
+# ABSENCE, NOT THE VALUE." [VERIFIED: .softhouse/patterns.md:2782]. The driver's park condition
+# is `exit 2` AND a probe line PRESENT AND reading `down`; test the line's PRESENCE first, or a
+# guard refusal gets parked as somebody else's server being down.
+#
+# COST, WALL CLOCK, MEASURED ON THIS HOST BY T323 (not estimated, not copied forward):
+#     conformance.sh, this tree, BEFORE this block          15.9 s
+#       guard_capture_namespace                              0.4 s
+#       guard_dead_path_frontier                             1.3 s
+#       guard_reconciler_ownership                          30.3 s   (26 cells, both legs)
+#     conformance.sh, this tree, AFTER this block           see the figure recorded in T323's
+#       handoff; it is re-measured there rather than predicted here.
+# The reconciler guard is twice the cost of everything else in this file combined, and it is
+# kept anyway. The argument is T319's and it is not a preference: it is the only automated
+# thing standing between a broken ownership predicate and DESTROYED LIVE WORK, and the version
+# before it shipped 8/8 green while carrying a discriminator that would have demoted seven live
+# workers of the fire then holding the lock. Fifty seconds is a bar a person will wait for; a
+# destroyed worktree is not recoverable at any price.
+# ===========================================================================================
+
+# -------------------------------------------------------------------------------------------
+# guard_capture_namespace — T299's capture/review namespace guard, wired HARD.   [T323]
+# -------------------------------------------------------------------------------------------
+# WHAT IT ENFORCES: a task id that prefixes MORE THAN ONE evidence directory under
+# .softhouse/{capture,reviews} must carry an `OWNER*.md` in at least N-1 of them. Documented
+# collisions PASS — the rule is "say who owns it", never "never collide", because renaming a
+# committed evidence directory breaks every transcript and instrument that cites it by path
+# (T299 measured 49 files / 182 occurrences for ONE directory, and two guards went red).
+#
+# HARD, AND HERE IS THE ARGUMENT, because a threshold guard deserves one. The objection is
+# real: a HARD guard on a heuristic threshold blocks every graded run the first time somebody
+# names a directory reasonably. It is ANSWERED BY MEASUREMENT rather than by assertion. T323
+# counted the whole HISTORY, not merely today's tree:
+#
+#     git log --format= --name-only --diff-filter=A -- .softhouse/capture .softhouse/reviews
+#       -> 128 distinct evidence directories EVER created in this repository
+#       -> 107 of them carry a t<n> id prefix
+#       -> ids prefixing MORE THAN ONE directory, over the entire history:   exactly ONE
+#       -> and that one is T256/T259 — the real defect the guard was written for, already
+#          declared by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+#
+# The false-positive count of this predicate, over every evidence directory this program has
+# ever created, is ZERO; its true-positive count on the only event in class is ONE. The
+# remaining risk is prospective, not historical: a future task that legitimately wants two
+# directories of its own. For that case the threshold is ALREADY N-1 rather than N — T299
+# lowered it because its own first draft went red against a correctly-named directory — and the
+# remedy the guard PRINTS is to add one file, inside a directory the worker already owns, whose
+# entire content is the sentence the rule is asking for. A guard whose remedy is "write the
+# sentence the rule wants" is not a blocker; it is the rule. SOFT was rejected because SOFT is
+# precisely the defect this task exists to remove.
+#
+# RESIDUAL RISK, STATED HERE SO IT IS NOT REDISCOVERED AS A SURPRISE: the id space is folded
+# across capture/ AND reviews/, so a future `reviews/T<n>/` directory beside a `capture/t<n>-…/`
+# directory WOULD collide. That shape does not exist today — reviews are overwhelmingly FLAT
+# .md files, and no tracked review DIRECTORY shares an id with a capture directory (measured:
+# collidingIds=1, and it is T256). Should reviews become directories by convention, this guard
+# needs its two namespaces separated, the way T299 already separated the a2-<n> id space after
+# folding it produced FOUR false collisions.
+#
+# THE CWD DEFECT THIS WIRING REPAIRS, WHICH IS NOT COSMETIC AND IS NOT A REDESIGN OF T299'S
+# GUARD. The guard resolves its own root with `git rev-parse --show-toplevel`, which answers a
+# question about the CALLER'S WORKING DIRECTORY and not about $REPO_ROOT. T323 MEASURED the
+# divergence rather than reasoning about it: invoked from /Users/buv/gerege-nbfi with the
+# guard's own path pointing into a worktree, it printed
+#     namespace:   root    /Users/buv/gerege-nbfi
+# i.e. it graded a different tree from the one conformance.sh was grading. Wired naively that
+# reintroduces the exact divergence guard_graded_root_is_this_tree exists to refuse (T165/T201:
+# "this run would certify a tree that none of the guards in this file inspected"). So this
+# wiring (a) runs the guard in a SUBSHELL pinned to $REPO_ROOT — the harness's own working
+# directory is never moved — and (b) DOES NOT TAKE ITS WORD FOR IT: it reads back the
+# `namespace:   root` line the guard prints and REFUSES unless it names $REPO_ROOT. Physical
+# paths (`pwd -P`) on both sides, so a symlinked spelling of one tree is not called a divergence.
+#
+# FAIL-CLOSED DIRECTION, FOR THIS GUARD ALONE: it fails closed towards "an UNDOCUMENTED ID
+# COLLISION, or a corpus this guard could not verify it was reading, is a refusal". It asserts
+# nothing about a directory's CONTENT, nothing about dead paths, and nothing about ownership
+# predicates — those belong to the two guards below and they have their own directions.
+#
+# EXIT SEMANTICS, never conflated: 0 = every collision is documented; 1 = an undocumented
+# collision exists; 2 = the guard could not reach or CALIBRATE its corpus. The calibration is
+# P-72 and it runs BEFORE any verdict: the guard must re-find the known T256/T259 collision or
+# it aborts, because a guard that cannot re-find the defect it was written for is not measuring
+# the tree. run_guards folds ANY non-zero into failed=1 and exits EXIT_UNUSABLE — the correct
+# reading is "no verdict is available", never "FAIL".
+#
+# COST: 0.4 s wall, measured on this host by T323.
+guard_capture_namespace() {
+  local g="$REPO_ROOT/.softhouse/guards/check-capture-namespace.sh"
+  if [ ! -f "$g" ]; then
+    warn "conformance: guard_capture_namespace: MISSING $g"
+    warn "conformance: the capture/review namespace rule is UNGRADED. That is a HARD failure and"
+    warn "conformance: never a pass: a guard that cannot reach what it grades has not graded it,"
+    warn "conformance: and must not report PASS for lack of anything to check."
+    return 1
+  fi
+  local here
+  here="$(cd "$REPO_ROOT" 2>/dev/null && pwd -P)" || here=""
+  if [ -z "$here" ]; then
+    warn "conformance: guard_capture_namespace: cannot resolve \$REPO_ROOT ('$REPO_ROOT') to a"
+    warn "conformance: physical path, so it cannot be compared with the tree the guard reports"
+    warn "conformance: grading. An unanswerable question is not a clean answer. REFUSED."
+    return 1
+  fi
+  # A FILE, not a pipe. `set -o pipefail` is in force at line 396 and every reader below is a
+  # `sed`/`grep` over this file, so there is no early-exiting consumer for pipefail to invert
+  # (P-57). The subshell is the cwd repair described above.
+  local tf rc
+  tf="$(mktemp "${TMPDIR:-/tmp}/conf-namespace.XXXXXXXXXX")" || {
+    warn "conformance: guard_capture_namespace: could not create a scratch file. REFUSED."
+    return 1
+  }
+  ( cd "$REPO_ROOT" && bash "$g" ) >"$tf" 2>&1
+  rc=$?
+
+  # WHICH TREE DID IT ACTUALLY GRADE? Read back, never assumed. An ABSENT root line is an
+  # instrument failure and not a pass (P-81: an error is never an empty result).
+  local claimed claimed_p
+  claimed="$(LC_ALL=C sed -n 's/^namespace:   root    //p' "$tf")"
+  if [ -z "$claimed" ]; then
+    warn "conformance: guard_capture_namespace: the guard printed NO 'namespace:   root' line, so"
+    warn "conformance: this harness cannot tell which tree it inspected. That is an INSTRUMENT"
+    warn "conformance: FAILURE, not an absence of findings. REFUSED — full transcript follows."
+    cat "$tf" >&2
+    rm -f "$tf"
+    return 1
+  fi
+  claimed_p="$(cd "$claimed" 2>/dev/null && pwd -P)" || claimed_p=""
+  if [ "$claimed_p" != "$here" ]; then
+    warn "conformance: guard_capture_namespace: THE NAMESPACE GUARD GRADED A DIFFERENT TREE."
+    warn "conformance:   this harness grades: $here"
+    warn "conformance:   the guard inspected: ${claimed_p:-<unresolvable: '$claimed'>}"
+    warn "conformance: The guard resolves its root from 'git rev-parse --show-toplevel', which"
+    warn "conformance: answers about the CALLER's working directory. This is T165/T201's defect"
+    warn "conformance: and its result would describe a tree this run was not going to grade."
+    cat "$tf" >&2
+    rm -f "$tf"
+    return 1
+  fi
+
+  if [ "$rc" -ne 0 ]; then
+    cat "$tf" >&2
+    warn "conformance: guard_capture_namespace FAILED (rc=$rc). Full transcript above."
+    warn "conformance: rc=1 is an UNDOCUMENTED id collision; rc=2 is a corpus the guard could not"
+    warn "conformance: reach or CALIBRATE. Neither is a FAIL verdict and neither is an oracle"
+    warn "conformance: outage: run_guards exits 2 BEFORE the probe line is printed (P-84)."
+    rm -f "$tf"
+    return 1
+  fi
+  # The census line is echoed on the green path too. A guard that speaks only when it fires
+  # cannot be told apart from one that never ran (P-22, P-35).
+  LC_ALL=C sed -n 's/^/conformance:   /p' "$tf"
+  rm -f "$tf"
+  return 0
+}
+
+# -------------------------------------------------------------------------------------------
+# guard_dead_path_frontier — T316's dead-path frontier guard, wired HARD.        [T323]
+# -------------------------------------------------------------------------------------------
+# WHAT IT ENFORCES: the set of tracked `.softhouse/` instruments naming a repo-relative path
+# WHICH DOES NOT EXIST is PINNED, and it may not grow. Not zero — zero would be red on its
+# first run and pinned away within a fire — but NO GROWTH, the same terms as
+# FAILOPEN_PIN_FILE_LIST (line 1546) and HOSTSTATE_PIN_TEMP_ASSIGN_LIST (line 1852).
+#
+# THE SELF-REFERENTIAL PROPERTY IS THE WHOLE POINT AND IT WAS RE-VERIFIED THROUGH THE WIRING,
+# NOT INHERITED. T316's guard checks EVERY path it itself depends on — the census instrument,
+# the pin file, the scratch destination — and exits 2 if one does not resolve; it never passes
+# for lack of anything to check. T323 did not take that on faith after wiring: it removed the
+# census, and separately the pin, in a scratch clone and ran the WHOLE BAR, confirming exit 2
+# with the oracle probe line ABSENT in each case. Evidence:
+#   .softhouse/capture/t323-wire-the-unwired-guards/evidence/
+#
+# THE PIN AND THIS TREE DISAGREE, AND THE DISAGREEMENT IS P-83 EXACTLY — MEASURED, NOT COMPUTED.
+#   P-83 — "TWO INDEPENDENT MOVEMENTS OF ONE PINNED NUMBER RECONCILE BY RUNNING, NEVER BY
+#   ARITHMETIC."   [VERIFIED: .softhouse/patterns.md:2775]
+# T316 re-derived its pin at 98 rows in commit 5b4f6702. T305's red drive
+# `.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh` landed
+# separately in bb72b57b and names FOUR paths that do not resolve. T323 verified the two could
+# not see each other: `git cat-file -e 5b4f6702:<that path>` reports the file ABSENT from the
+# commit that set the pin at 98. On the merged tree the guard therefore reports
+#     T316-DEADPATH-FRONTIER: REFUSED rows=102 pinned=98 added=4 removed=0
+# and 102 is a MEASUREMENT taken by running the guard on the merge result — it is not 98 + 4.
+#
+# WHAT THE FOUR ROWS ARE, INSPECTED AND NOT INFERRED. All four belong to one file, T305's RED
+# DRIVE, and all four are paths that drive CREATES at run time inside a throwaway clone:
+#     :58  writes an ACCEPT ledger vector into  "$1/.softhouse/vectors/…/ACCEPT.json"
+#     :59  writes a REFUSE ledger vector into   "$1/.softhouse/vectors/…/REFUSE.json"
+#     :101 mkdir -p                             "$T6/.softhouse/capture/…/attest"
+#     :102 echo "authorised" >                  "$T6/.softhouse/capture/…/attest/gerege.disposable"
+#
+# THOSE FOUR QUOTATIONS CARRY AN ELLIPSIS ON PURPOSE, AND THE REASON IS THIS GUARD CATCHING THIS
+# COMMIT. T323's first draft quoted T305's lines VERBATIM, and the very first graded run after
+# wiring went red with `added=7` rather than 4 — three of the new rows attributed to
+# THIS FILE, because the census's selector matches any quoted string containing a
+# `.softhouse/` path and this comment had become an instrument naming dead paths. The rule the
+# guard prints was applied as written — "a '+' row is a NEW site: REPAIR it rather than pinning
+# it" — so the quotations were repaired rather than the list widened to excuse them. The census
+# treats `…` (ELLIPSIS_RE, census_dead_paths.py:66) as "not a literal path", which is exactly
+# what a shape-illustrating quotation is. This is the guard doing its job on its own wiring
+# commit, recorded here rather than quietly fixed.
+# A red drive plants a file that MUST NOT exist in a clean tree — that is what makes it a red
+# drive — and `t999-rig` is a deliberately fictional task id. These are dead-by-design literals,
+# the class T316's own header says must be "inspected once, by a human, and then either repaired
+# or pinned with its reason". They are pinned here, with the reason, and the inspection above is
+# the human one.
+#
+# WHY THE RECONCILIATION LIVES IN THIS FILE AND NOT IN THE PIN, STATED PLAINLY. The correct home
+# for these four rows is `.softhouse/guards/dead-path-frontier.pin`. That file is OUTSIDE T323's
+# edit grant (.softhouse/conformance.sh and .softhouse/capture/t323-wire-the-unwired-guards/),
+# and wandering outside a grant is the scope violation this program treats as a rejection — the
+# same constraint that left these three guards unwired in the first place. So the delta is
+# carried HERE, in the file T323 does hold, in the shape of the two pins already in this file.
+# WHOEVER NEXT HOLDS THE PIN SHOULD FOLD THESE FOUR ROWS INTO IT AND EMPTY THE LIST BELOW; the
+# guard below FAILS if that is done without emptying the list, so it cannot rot into a double
+# amnesty.
+#
+# IT IS A FRONTIER, NOT AN AMNESTY, AND THE LIST BELOW IS HELD TO THE SAME RULE (line 1715,
+# quoted because the rule is that pin's and not this one's): "A '+' row is a NEW site: repair it
+# … rather than pinning it. A '-' row is a site that was REPAIRED or DELETED, which is good
+# news, and the pin must lose that row IN THE SAME COMMIT or it starts excusing a weakness that
+# is no longer there." Concretely, this wiring REFUSES on every one of:
+#   * the guard goes GREEN while the list below is non-empty  — the list has gone stale and is
+#     now excusing rows that no longer exist. This is the anti-amnesty arm and it is why the
+#     list cannot quietly outlive its subject;
+#   * ANY row is REMOVED from the frontier (removed>0) — good news the pin must absorb;
+#   * ANY added row is not, byte for byte, a member of the list below;
+#   * the list below has a member that is not among the added rows;
+#   * the guard's own `added=` cardinal disagrees with the number of '+' rows it printed — the
+#     guard truncates its listing at 40 rows, and comparing against a TRUNCATED set would let
+#     row 41 through. An unreadable listing is an ERROR, never a smaller set.
+#
+# FAIL-CLOSED DIRECTION, FOR THIS GUARD ALONE: it fails closed towards "any movement of the
+# dead-path frontier that is not the one recorded and reasoned about here is a refusal". It does
+# NOT judge whether a dead literal is a fail-open — T316 measured that it usually is not — and
+# this wiring inherits that restraint rather than widening the predicate. P-95: "a dead literal
+# is equally consistent with a fail-open and with an announced fallback, so it can never be
+# classified by reading — only by removing every candidate and observing the exit."
+# [VERIFIED: .softhouse/patterns.md:3084]. This guard COUNTS; it does not classify.
+#
+# WHY THIS GUARD GETS NO ROOT READBACK AND guard_capture_namespace DOES. A fair reviewer question,
+# because the asymmetry looks like an oversight and is not. T299's guard resolves its root from
+# `git rev-parse --show-toplevel`, i.e. from the CALLER'S WORKING DIRECTORY, which is a runtime
+# fact this harness cannot constrain by construction — hence the subshell AND the readback. THIS
+# guard derives its root from `$0`: dirname(dirname(dirname(script))). This wiring hands it
+# "$REPO_ROOT/.softhouse/guards/check-dead-path-frontier.sh", so its root is $REPO_ROOT
+# STRUCTURALLY, for every cwd, and a readback would be asserting a property of this line rather
+# than measuring anything. Verified rather than assumed: run from a foreign cwd with the guard's
+# path pointing into a worktree, it reported that WORKTREE's pin, where T299's guard reported the
+# caller's tree [VERIFIED: T323 ran both].
+#
+# EXIT SEMANTICS: 0 frontier == pin; 1 a real measured movement; 2 a path this guard depends on
+# did not resolve, or the census refused. T316's probe line `T316-DEADPATH-FRONTIER:` is printed
+# on every path that REACHES A VERDICT and never on exit 2, so PRESENCE-BEFORE-VALUE applies to
+# it exactly as P-84 requires, and this wiring tests presence first.
+#
+# COST: 1.3 s wall, measured on this host by T323.
+
+# FOUR ROWS, ALL T305's, DERIVED by running the guard on the merged tree (P-83) and never typed
+# from arithmetic. Empty this list in the same commit that folds the rows into
+# .softhouse/guards/dead-path-frontier.pin.
+#
+# THE TEST FOR ANY ROW SOMEBODY WANTS TO ADD HERE, and T323 had to apply it to itself twice:
+#
+#     CAN THE INSTRUMENT STILL DO ITS JOB IF THE LITERAL GOES AWAY?
+#       YES -> it is INCIDENTAL.  REPAIR it. Do not add a row.
+#       NO  -> it is FUNCTIONAL.  Pin it, and write down which operation needs it.
+#
+# BOTH OF T323'S OWN CANDIDATES TURNED OUT TO BE INCIDENTAL, and finding that out cost two red
+# runs, which is the reason the test is written here rather than assumed.
+#
+#   (a) This file's own PROSE. The frontier went red at added=7 because T323's comment quoted
+#       T305's lines verbatim, making conformance.sh an instrument naming dead paths. The comment
+#       illustrated a SHAPE and lost nothing by carrying an ellipsis. Repaired.
+#
+#   (b) T323's RED DRIVE, `.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh`. It
+#       is a tracked instrument, and it must name paths that do not resolve — planting them is its
+#       function — so it looked FUNCTIONAL and was pinned at five rows. That was wrong, and the
+#       drive itself proved it: arm `T299-02` CREATES the collision directory, so those literals
+#       suddenly RESOLVED, the frontier LOST three rows, and this guard correctly refused with
+#       "row(s) GONE from the frontier". The drive was perturbing the frontier its own sibling arm
+#       was measuring. The DRIVE needs *a* directory and *a* non-resolving path; it never needed
+#       those spellings. They are assembled at run time now, and the five rows are gone.
+#
+# The distinction that survives: (b) would have been genuinely functional if the literal had been
+# the thing under test rather than a name chosen for it. Rewriting a literal into a runtime string
+# to make a census go quiet, when the census is right, is defeating the instrument to flatter its
+# own number — that is the pinning-away this frontier exists to prevent, and it is NOT what
+# happened here. The check on that claim is arm `T316-05`, which still drives this guard red on a
+# planted dead path; if the repair had blinded the census, that arm would have gone green.
+DEADPATH_T323_RECONCILE_LIST='.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest
+.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest/gerege.disposable
+.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/ACCEPT.json
+.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/REFUSE.json'
+
+guard_dead_path_frontier() {
+  local g="$REPO_ROOT/.softhouse/guards/check-dead-path-frontier.sh"
+  if [ ! -f "$g" ]; then
+    warn "conformance: guard_dead_path_frontier: MISSING $g"
+    warn "conformance: the dead-path frontier is UNGRADED. HARD failure, never a pass."
+    return 1
+  fi
+  local d rc
+  d="$(mktemp -d "${TMPDIR:-/tmp}/conf-deadpath.XXXXXXXXXX")" || {
+    warn "conformance: guard_dead_path_frontier: could not create a scratch directory. REFUSED."
+    return 1
+  }
+  bash "$g" >"$d/out" 2>&1
+  rc=$?
+
+  # PRESENCE BEFORE VALUE (P-84). The probe line is printed on 0 and on 1 and never on 2, so its
+  # absence together with rc!=2 is an instrument failure, not a finding.
+  local probe
+  probe="$(LC_ALL=C sed -n 's/^T316-DEADPATH-FRONTIER: //p' "$d/out")"
+  if [ "$rc" -ge 2 ]; then
+    cat "$d/out" >&2
+    warn "conformance: guard_dead_path_frontier REFUSED (rc=$rc): a path this guard DEPENDS ON did"
+    warn "conformance: not resolve, or the census refused. This is the guard's self-referential"
+    warn "conformance: arm working — it never reports PASS for lack of anything to check. It is"
+    warn "conformance: NOT an oracle outage: this exits 2 before the probe line (P-84)."
+    rm -rf "$d"
+    return 1
+  fi
+  if [ -z "$probe" ]; then
+    cat "$d/out" >&2
+    warn "conformance: guard_dead_path_frontier: the guard exited $rc but printed NO probe line, so"
+    warn "conformance: it did not reach a verdict. INSTRUMENT FAILURE, not an absence of findings."
+    rm -rf "$d"
+    return 1
+  fi
+
+  # The reconciliation list, normalised to one row per line, blank lines dropped.
+  printf '%s\n' "$DEADPATH_T323_RECONCILE_LIST" >"$d/rec.raw"
+  LC_ALL=C grep -v '^[[:space:]]*$' "$d/rec.raw" >"$d/rec.unsorted" 2>/dev/null || :
+  [ -f "$d/rec.unsorted" ] || : >"$d/rec.unsorted"
+  LC_ALL=C sort "$d/rec.unsorted" >"$d/rec"
+  local rec_n
+  rec_n="$(LC_ALL=C grep -ac '' "$d/rec" || true)"; [ -n "$rec_n" ] || rec_n=0
+
+  if [ "$rc" -eq 0 ]; then
+    if [ "$rec_n" -ne 0 ]; then
+      cat "$d/out" >&2
+      warn "conformance: guard_dead_path_frontier: THE T323 RECONCILIATION LIST HAS GONE STALE."
+      warn "conformance: The guard is GREEN — frontier == pin — yet DEADPATH_T323_RECONCILE_LIST"
+      warn "conformance: still carries $rec_n row(s) it is excusing. A pin is a frontier, not an"
+      warn "conformance: amnesty (line 1715): a row that is no longer there must be dropped IN THE"
+      warn "conformance: SAME COMMIT, or it starts excusing a weakness that no longer exists."
+      warn "conformance: THE FIX: set DEADPATH_T323_RECONCILE_LIST='' in .softhouse/conformance.sh."
+      rm -rf "$d"
+      return 1
+    fi
+    say "conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty."
+    LC_ALL=C sed -n 's/^T316-DEADPATH-CENSUS:/conformance:   T316-DEADPATH-CENSUS:/p' "$d/out"
+    rm -rf "$d"
+    return 0
+  fi
+
+  # rc == 1: the frontier moved. It is admissible ONLY if the movement is exactly the recorded
+  # one — nothing removed, and the added set equal to the reconciliation list, byte for byte.
+  local added_n removed_n
+  LC_ALL=C sed -n 's/.*added=\([0-9][0-9]*\).*/\1/p' "$d/out" >"$d/added_n"
+  LC_ALL=C sed -n 's/.*removed=\([0-9][0-9]*\).*/\1/p' "$d/out" >"$d/removed_n"
+  added_n="$(LC_ALL=C tail -1 "$d/added_n")"
+  removed_n="$(LC_ALL=C tail -1 "$d/removed_n")"
+  [ -n "$added_n" ]   || added_n=-1
+  [ -n "$removed_n" ] || removed_n=-1
+  LC_ALL=C sed -n 's/^> //p' "$d/out" >"$d/added.unsorted"
+  LC_ALL=C sort -u "$d/added.unsorted" >"$d/added"
+  local printed_n
+  printed_n="$(LC_ALL=C grep -ac '' "$d/added" || true)"; [ -n "$printed_n" ] || printed_n=0
+
+  local bad=0
+  if [ "$added_n" -lt 0 ] || [ "$removed_n" -lt 0 ]; then
+    warn "conformance: guard_dead_path_frontier: could not read the added=/removed= cardinals from"
+    warn "conformance: the probe line. An unreadable measurement is an ERROR, never a zero (P-81)."
+    bad=1
+  elif [ "$printed_n" -ne "$added_n" ]; then
+    warn "conformance: guard_dead_path_frontier: the guard reports added=$added_n but printed"
+    warn "conformance: $printed_n '+' row(s). Its listing truncates at 40 rows, so the set this"
+    warn "conformance: harness can see is INCOMPLETE and comparing against it would let row 41"
+    warn "conformance: through. A truncated listing is an ERROR, never a smaller set. REFUSED."
+    bad=1
+  elif [ "$removed_n" -ne 0 ]; then
+    warn "conformance: guard_dead_path_frontier: $removed_n row(s) GONE from the frontier. That is"
+    warn "conformance: GOOD NEWS and the PIN must absorb it — a frontier, not an amnesty. This"
+    warn "conformance: harness cannot absorb it for you: the pin is outside T323's edit grant."
+    bad=1
+  elif ! LC_ALL=C diff "$d/rec" "$d/added" >"$d/diff" 2>&1; then
+    warn "conformance: guard_dead_path_frontier: THE FRONTIER MOVED IN A WAY NOBODY RECORDED."
+    warn "conformance: The added rows are not the $rec_n row(s) DEADPATH_T323_RECONCILE_LIST"
+    warn "conformance: reconciles. '>' below is a NEW dead path nobody has inspected — REPAIR it"
+    warn "conformance: rather than pinning it; '<' is a recorded row that is no longer added and"
+    warn "conformance: must be dropped from the list in the same commit."
+    LC_ALL=C sed -n '1,40p' "$d/diff" >&2
+    bad=1
+  fi
+
+  if [ "$bad" -ne 0 ]; then
+    cat "$d/out" >&2
+    warn "conformance: guard_dead_path_frontier FAILED. Full guard transcript above."
+    rm -rf "$d"
+    return 1
+  fi
+
+  say "conformance:   dead-path frontier: moved by exactly the $rec_n row(s) T323 recorded and"
+  say "conformance:   inspected (T305's red drive, which CREATES those paths at run time), and by"
+  say "conformance:   nothing else. removed=0. Fold them into the pin and empty the list."
+  LC_ALL=C sed -n 's/^T316-DEADPATH-FRONTIER:/conformance:   T316-DEADPATH-FRONTIER:/p' "$d/out"
+  rm -rf "$d"
+  return 0
+}
+
+# -------------------------------------------------------------------------------------------
+# guard_reconciler_ownership — T319's reconciler selftest, wired HARD.           [T323]
+# -------------------------------------------------------------------------------------------
+# This is T319's own patch, from .softhouse/capture/t319-reconciler-f5/CONFORMANCE-WIRING.md,
+# applied as written. T319 specified the guard body, the registration line, the measured cost
+# and the argument for why `--selftest` cannot be optional. T323 did not redesign it.
+#
+# WHY IT IS HERE AT ALL. `.softhouse/bin/ready-tasks.py --reconcile` decides whether to rewrite
+# `in_progress` tasks to `needs_retry`. Getting that wrong in the DEMOTING direction DESTROYS
+# LIVE WORK AND CANNOT BE UNDONE. Until this commit not one line of conformance.sh mentioned
+# `fire-program`, `ready-tasks`, `reconcile` or `in_progress` — measured, `grep -c` => 0, over
+# 3,253 lines — so three consecutive attempts at that predicate shipped with NO automated
+# coverage, and the third would have demoted seven live workers of the fire holding the lock.
+#
+# THE GUARD IS THE MATRIX, AND THE MATRIX CARRIES ITS OWN RED/GREEN. `--selftest` plants T309's
+# shipped single-term predicate into a COPY of ready-tasks.py and REQUIRES cell B' — the cell
+# whose clock advances across a re-dispatch — to go RED against it and GREEN against the shipped
+# tool. It also refuses to run at all if no cell in its table advances the clock across a
+# re-dispatch (`_assert_matrix_can_see_a_redispatch`, run-ownership-matrix.py:390, called at
+# :434), so DELETING the cell that catches this class is a RED run rather than a smaller green
+# one. T323 verified that assertion still fires THROUGH this wiring by neutering the redispatch
+# cells in a scratch clone and running the whole bar; evidence in
+# .softhouse/capture/t323-wire-the-unwired-guards/evidence/.
+#
+# `--selftest` IS NOT OPTIONAL, AND MAKING IT OPTIONAL WOULD REBUILD THE DEFECT. T319's argument,
+# which T323 read before deciding and accepts: the RED leg is the ONLY thing distinguishing this
+# guard from one that cannot fail (P-22), and a flag somebody sets on good days is P-45 by
+# another name — "a guard that only works when someone remembers to run it enforces nothing".
+# The whole reason this task exists is three guards that were correct and unreached.
+#
+# IT NEEDS A C COMPILER, AND FAILS RATHER THAN DEGRADING WITHOUT ONE. The matrix compiles a
+# four-line exec shim so each cell can CONSTRUCT the `claude` / non-`claude` ancestry that
+# selects `in_session` vs `wrapper` mode. Without it every cell would silently run in whatever
+# mode the ambient process tree happened to give — green in one hand, meaningless in the other.
+# /usr/bin/cc and /usr/bin/python3 are present on this host [VERIFIED: T323, `ls -la`].
+#
+# FAIL-CLOSED DIRECTION, FOR THIS GUARD ALONE: it fails closed towards "the ownership predicate
+# that can demote live work is UNGRADED, or grades wrongly, is a refusal". It says nothing about
+# namespaces and nothing about dead paths.
+#
+# A NON-ZERO EXIT MEANS THE PREDICATE IS UNGRADED. That is not a FAIL verdict and it is not an
+# oracle outage: it exits 2 through run_guards BEFORE the `reference oracle (…) probe = …` line
+# is printed, so the driver's park condition (exit 2 AND a probe line PRESENT reading `down`) is
+# not met. P-84 — read the ABSENCE, not the value.
+#
+# COST, MEASURED [T319 in .softhouse/capture/t319-reconciler-f5/, re-measured by T323 here]:
+#   green leg only          14.7 s  (13 cells)         [T319]
+#   with --selftest         29.9 s  (26 cells)         [T319]
+#   with --selftest         30.3 s  (26 cells)         [T323, this host, this tree]
+# It is by a wide margin the most expensive guard in this file and it is the only one standing
+# between a broken predicate and destroyed work.
+guard_reconciler_ownership() {
+  local rig="$REPO_ROOT/.softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py"
+  local tool="$REPO_ROOT/.softhouse/bin/ready-tasks.py"
+  if [ ! -f "$rig" ]; then
+    warn "conformance: guard_reconciler_ownership: $rig is MISSING. The reconciler's ownership"
+    warn "conformance: predicate is UNGRADED. This is a HARD failure, not a pass: the last three"
+    warn "conformance: versions of that predicate each shipped able to demote live workers, and"
+    warn "conformance: the rig is what catches it."
+    return 1
+  fi
+  if [ ! -f "$tool" ]; then
+    warn "conformance: guard_reconciler_ownership: $tool is MISSING. There is nothing to grade,"
+    warn "conformance: which is a REFUSAL and never a pass."
+    return 1
+  fi
+  if [ ! -x /usr/bin/python3 ]; then
+    warn "conformance: guard_reconciler_ownership: /usr/bin/python3 is absent. The matrix cannot"
+    warn "conformance: run. It REFUSES rather than degrading to a smaller green."
+    return 1
+  fi
+  local tf rc
+  tf="$(mktemp "${TMPDIR:-/tmp}/conf-reconciler.XXXXXXXXXX")" || {
+    warn "conformance: guard_reconciler_ownership: could not create a scratch file. REFUSED."
+    return 1
+  }
+  /usr/bin/python3 "$rig" --repo "$REPO_ROOT" --tool "$tool" --selftest >"$tf" 2>&1
+  rc=$?
+  if [ "$rc" -ne 0 ]; then
+    cat "$tf" >&2
+    warn "conformance: guard_reconciler_ownership FAILED (rc=$rc). Full transcript above."
+    warn "conformance: Either a cell of the ownership matrix disagreed with the shipped tool, or"
+    warn "conformance: the planted T309 defect FAILED TO DRIVE THE MATRIX RED — a guard that"
+    warn "conformance: cannot fail is worse than none (P-22) — or the matrix refused because no"
+    warn "conformance: cell in its table can see a re-dispatch."
+    rm -f "$tf"
+    return 1
+  fi
+  # PRESENCE BEFORE VALUE. The rig's terminal attestation must be there; a zero exit with no
+  # attestation is an instrument failure, not a pass.
+  if ! LC_ALL=C grep -q '^SELFTEST OK:' "$tf"; then
+    cat "$tf" >&2
+    warn "conformance: guard_reconciler_ownership: the matrix exited 0 but printed NO 'SELFTEST OK'"
+    warn "conformance: attestation, so both legs did not run. INSTRUMENT FAILURE, not a pass."
+    rm -f "$tf"
+    return 1
+  fi
+  local green red
+  green="$(LC_ALL=C sed -n 's/^GREEN LEG (shipped tool): //p' "$tf")"
+  red="$(LC_ALL=C sed -n 's/^RED LEG (planted T309 defect): //p' "$tf")"
+  say "conformance:   reconciler ownership: GREEN ${green:-<unreported>} / RED ${red:-<unreported>}"
+  say "conformance:   (the planted T309 single-term predicate drives cell B-prime RED; the shipped"
+  say "conformance:   tool keeps it GREEN. Both legs ran here — --selftest is not optional.)"
+  rm -f "$tf"
+  return 0
+}
+
 run_guards() {
   local failed=0
   # FIRST, and it SHORT-CIRCUITS rather than joining the `failed=1` tally the others use.
@@ -2153,6 +2700,14 @@ run_guards() {
   guard_no_fail_open_instruments      || failed=1
   guard_no_host_state_in_lint_corpus  || failed=1
   guard_accepting_side_gap_declared   || failed=1
+  # T323 — the three guards T299, T316 and T319 each built, drove red AND green, and could not
+  # wire because this file was assigned to somebody else. Each joins the `failed=1` tally rather
+  # than short-circuiting: unlike guard_graded_root_is_this_tree none of them invalidates the
+  # other guards' answers, and one bad guard must not hide another. Registered CHEAPEST FIRST so
+  # a fast refusal prints before the 30-second one is paid for.
+  guard_capture_namespace             || failed=1        # T299, wired by T323 —  0.4 s
+  guard_dead_path_frontier            || failed=1        # T316, wired by T323 —  1.3 s
+  guard_reconciler_ownership          || failed=1        # T319, wired by T323 — 30.3 s
   if [ "$failed" -ne 0 ]; then
     warn "conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass."
     exit "$EXIT_UNUSABLE"
