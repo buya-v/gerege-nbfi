@@ -14,17 +14,28 @@ be believed rather than checked (P-66/P-70: `not found` is a statement about the
     literals   : single- or double-quoted string literals containing the substring `.softhouse/`,
                  taken verbatim. A path assembled at runtime from variables is NOT seen.
     resolution : the literal is joined to the repo root and tested with os.path.exists(), which
-                 follows symlinks and accepts directories.
+                 follows symlinks and accepts directories -- AND, if that fails, tested again
+                 with trailing sentence punctuation `)}],;:.` and `…` stripped.
 
-THREE BUCKETS, and the third is why this instrument is not a wolf-crier:
+FOUR BUCKETS, and the last three are why this instrument is not a wolf-crier:
 
-    RESOLVES       the literal names something that is on disk.
-    DEAD           the literal is a concrete path, contains no placeholder and no glob, and
-                   nothing is there.
-    INDETERMINATE  the literal carries a format placeholder (%s, {}, $VAR, f-string brace) or a
-                   glob metacharacter. It is a TEMPLATE, not a path. Calling a template dead
-                   would manufacture findings; these are counted and reported SEPARATELY and are
-                   never added to the DEAD figure.
+    RESOLVES       the literal names something that is on disk, verbatim or after trailing
+                   sentence punctuation is stripped.
+    DEAD           the literal is a concrete path, contains no placeholder, glob, ellipsis or
+                   whitespace, and nothing is there under either form.
+    INDETERMINATE  the literal carries a format placeholder (%s, {}, $VAR, <x>), a glob
+                   metacharacter, or an ellipsis. It is a TEMPLATE or a truncation, not a path.
+    PROSE          the literal contains whitespace: an English sentence that quotes a path.
+
+WHY THE PUNCTUATION ARM EXISTS, and it is a measurement rather than a preference. The first
+version of this census resolved literals VERBATIM only. It reported 154 dead rows. **56 of those
+154 -- 36% -- were `.softhouse/vectors)`, `.softhouse/conformance.sh}`,
+`.softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md.` and friends: references to
+paths that EXIST, wearing a closing paren, brace or full stop glued on by the surrounding text.**
+A census with a 36% false-positive rate is a census that gets pinned away in one fire, and it
+would have slandered nine other tasks' committed evidence on the way. Recorded in
+`evidence/50-selector-artefacts.txt`. The stripped form is only ever consulted to say YES, so it
+can never turn a live reference into a dead one.
 
 CALIBRATION IS ENFORCED, and the run ABORTS if it fails. The two references T299 named are known
 positives; if the selector cannot see them it is broken, and a broken selector reporting `0 dead`
@@ -51,6 +62,16 @@ LITERAL_RE = re.compile(r"""(['"])((?:[^'"\\\n]|\\.)*?\.softhouse/(?:[^'"\\\n]|\
 
 PLACEHOLDER_RE = re.compile(r"%[sdrf]|\{[^}]*\}|\$\{?\w+|<[a-zA-Z_]+>")
 GLOB_RE = re.compile(r"[*?\[\]]")
+# A truncation mark is a statement that the author elided the rest of the path. It is not a path.
+ELLIPSIS_RE = re.compile(r"\.\.\.|…")
+
+# Sentence punctuation that can trail a path inside prose or inside an f-string/format brace.
+# `".softhouse/vectors)"`, `"...conformance.sh}"`, `"...OWNER-IS-T259-NOT-T256.md."` are all
+# REFERENCES TO PATHS THAT EXIST, with a closing paren, brace or full stop glued on by the
+# surrounding text. Calling them dead is a FALSE POSITIVE, and it was 56 of this census's first
+# 154 rows -- 36% -- which would have made the whole figure worthless. Measured, not guessed:
+# `evidence/50-selector-artefacts.txt`.
+TRAILING_PUNCT = ")}],;:.…"
 
 # The two references FU-T299-2 names. The selector must see both, or the census aborts.
 CALIBRATION = [
@@ -95,9 +116,24 @@ def classify(literal: str):
     # census that cries wolf on its first run is a census that gets pinned away (T299).
     if re.search(r"\s", literal):
         return "PROSE"
+    if ELLIPSIS_RE.search(literal):
+        return "INDETERMINATE"
     if PLACEHOLDER_RE.search(literal) or GLOB_RE.search(literal):
         return "INDETERMINATE"
     return "CONCRETE"
+
+
+def resolves(root: Path, path: str) -> bool:
+    """A literal RESOLVES if it names something on disk EITHER verbatim OR after trailing
+    sentence punctuation is stripped. The second arm is not laxity: `".softhouse/vectors)"` is a
+    reference to a directory that EXISTS, wearing a closing paren from the sentence around it.
+    Reporting it dead is a false positive, and false positives are how a census gets pinned away.
+    The stripped form is only ever used to say YES; it can never turn a live path into a dead one.
+    """
+    if (root / path).exists():
+        return True
+    stripped = path.rstrip(TRAILING_PUNCT)
+    return bool(stripped) and stripped != path and (root / stripped).exists()
 
 
 def scan(root: Path, rel: str):
@@ -107,7 +143,7 @@ def scan(root: Path, rel: str):
     except OSError as exc:
         print("ERROR: unreadable corpus member %s: %s" % (rel, exc), file=sys.stderr)
         raise SystemExit(2)
-    resolves, dead, indet, prose = [], [], [], []
+    resolves_, dead, indet, prose = [], [], [], []
     for m in LITERAL_RE.finditer(text):
         lit = m.group(2)
         # Trim to the `.softhouse/`-rooted tail: a literal may carry a prefix like `$REPO_ROOT/`.
@@ -118,11 +154,11 @@ def scan(root: Path, rel: str):
             prose.append(path)
         elif kind == "INDETERMINATE":
             indet.append(path)
-        elif (root / path).exists():
-            resolves.append(path)
+        elif resolves(root, path):
+            resolves_.append(path)
         else:
             dead.append(path)
-    return resolves, dead, indet, prose
+    return resolves_, dead, indet, prose
 
 
 def main(argv=None) -> int:
