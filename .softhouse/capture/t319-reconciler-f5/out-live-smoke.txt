@@ -1,0 +1,15 @@
+RECONCILE -- fire smoke-t319
+  git:  /usr/bin/git
+  repo: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6e1f1cf817ead480
+  lock: invoked from INSIDE a live session -- ancestor pid 68308 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (NONE RECORDED ON THE LOCK).
+  mode: in_session   (lock fire id: NONE RECORDED)
+  in_progress tasks found: 4  (out of 208 in tasks.json -- every task was read to get this count, it is not a default)
+  in-session anchor: this fire's lock commit is 558ef3204, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260827-230001; the LOCK on disk records no `fire` field, so the id is taken from the commit subject alone -- which is why this no longer depends on that field
+  in-session evidence: at that commit 0 task(s) already claimed in_progress: none
+  in-session `--corpse`: NONE PASSED. Term 3 will fail for every task; an in-session caller must NAME each dispatch it claims is dead.
+  IN-SESSION authority: 0 demotable, 4 WITHHELD (a live fire is running; a task may be touched only if it was inherited at the lock commit, has NOT been rewritten by this fire since, AND was named with `--corpse`)
+  T305     WITHHELD  TERM 1 FAILS: it was NOT claiming in_progress when fire 20260827-230001 took the lock, so THIS fire dispatched it: it is a LIVE sibling. REFUSING.
+  T316     WITHHELD  TERM 1 FAILS: it was NOT claiming in_progress when fire 20260827-230001 took the lock, so THIS fire dispatched it: it is a LIVE sibling. REFUSING.
+  T318     WITHHELD  TERM 1 FAILS: it was NOT claiming in_progress when fire 20260827-230001 took the lock, so THIS fire dispatched it: it is a LIVE sibling. REFUSING.
+  T319     WITHHELD  TERM 1 FAILS: it was NOT claiming in_progress when fire 20260827-230001 took the lock, so THIS fire dispatched it: it is a LIVE sibling. REFUSING.
+  RESULT: REFUSED -- nothing this caller is authorised to repair; tasks.json was NOT modified. The wrapper's exit-path reconcile runs in `wrapper` mode and clears what is left -- but only when `foreign_live_session_in_repo()` returns 1, which it does not while any `claude` sits in the repo root (T302 F11). If that is the case here, the `in_progress` lines are still a lie and somebody must say so by hand.
