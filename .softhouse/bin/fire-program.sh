@@ -123,6 +123,17 @@ else
 fi
 log "reference oracle (Fineract): $ORACLE_STATUS"
 
+# T312 — BRANCH CASE-SHADOW GUARD. Two lines, deliberately: `install-hook` is idempotent
+# and installs a git reference-transaction hook that REFUSES creation of a
+# refs/heads/softhouse/* ref differing from an existing one only by case; `sweep --quiet`
+# prints any shadow already present. It is here rather than in the skill because the
+# skill's corpse check is a glob the driver retypes each fire, and P-45 — "a guard that
+# only works when someone remembers to run it enforces nothing" — is exactly how fire
+# 20260827-230001 recorded eight branches as "gone or empty" over 73 committed commits.
+# Never fatal: both are `|| true`, and a broken guard must not stop a fire.
+/usr/bin/python3 "$SCRIPT_DIR/branch_sweep.py" install-hook --repo "$REPO" 2>&1 | while IFS= read -r l; do log "refguard| $l"; done || true
+/usr/bin/python3 "$SCRIPT_DIR/branch_sweep.py" sweep --repo "$REPO" --pattern 'softhouse/*' --quiet 2>&1 | while IFS= read -r l; do log "sweep| $l"; done || true
+
 if (( PROBE_ONLY )); then
   log "probe only — exiting without taking the lock or invoking the driver"
   exit 0

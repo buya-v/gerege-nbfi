@@ -1,0 +1,56 @@
+=== the scratch repo, before the wrapper runs
+6a5e79b912011a7af60fac33aa32460ca913b1cf
+6a5e79b912011a7af60fac33aa32460ca913b1cf
+ls: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-probe.bSgJmA/repo/.git/hooks/reference-transaction: No such file or directory
+
+=== fire-program.sh --probe  (GEREGE_NBFI_REPO=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-probe.bSgJmA/repo, CLAUDE_BIN stubbed)
+[23:46:19] fire start — repo=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-probe.bSgJmA/repo probe=1 force=0 log=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-probe.bSgJmA/logs/fire-20260827-234619.log
+[23:46:20] refguard| ref guard INSTALLED at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-probe.bSgJmA/repo/.git/hooks/reference-transaction -> /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /Users/buv/gerege-nbfi/.claude/worktrees/agent-accc228249b9e2e89/.softhouse/bin/branch_sweep.py hook
+[23:46:20] refguard|   it now refuses any ref CREATION under refs/heads/softhouse/ whose name differs from an existing ref only by case, for every git command.
+[23:46:20] sweep| BRANCH SWEEP -- T312 instrument (/Users/buv/gerege-nbfi/.claude/worktrees/agent-accc228249b9e2e89/.softhouse/bin/branch_sweep.py)
+[23:46:20] sweep| SELECTOR, stated because 'not found' is a statement about the search:
+[23:46:20] sweep|   repo          /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-probe.bSgJmA/repo  (read .git/ directly)
+[23:46:20] sweep|   patterns      'softhouse/*'
+[23:46:20] sweep|   matching      fnmatch on the CASE-FOLDED short name -- 'softhouse/t3*' and 'softhouse/T3*' select identically here.  `git branch --list` does NOT; that is the defect this replaces.
+[23:46:20] sweep|   storage       walked /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-probe.bSgJmA/repo/.git/refs/heads -- 1 loose head(s), names as stored on disk
+[23:46:20] sweep|   storage       parsed /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-probe.bSgJmA/repo/.git/packed-refs -- 2 packed head(s), matched CASE-SENSITIVELY as git does
+[23:46:20] sweep|   matched       2 ref name(s) in 1 case-folded group(s), out of 3 head(s) present
+[23:46:20] sweep| 
+[23:46:20] sweep|   [CASE-SHADOW]          softhouse/t400-has-work
+[23:46:20] sweep|     softhouse/T400-has-work                              loose=-         packed=6a5e79b91 resolves-to=6a5e79b91  ahead-of-main=0
+[23:46:20] sweep|     softhouse/t400-has-work                              loose=6a5e79b91 packed=-         resolves-to=6a5e79b91  ahead-of-main=0
+[23:46:20] sweep| 
+[23:46:20] sweep|   (--quiet: 0 unflagged group(s) inspected and not printed; they were LOOKED AT, not skipped)
+[23:46:20] sweep| FINDINGS: case-shadow groups=1  unreachable values=0  diverged pairs=0
+[23:46:20] sweep|   (informational, NOT a finding: 0 name(s) hold different loose and packed values under the same spelling -- the ordinary stale packed entry)
+[23:46:20] sweep|   DO NOT repair these by deleting or rewriting a branch: that destroys the evidence.  Pin each distinct value under refs/rescue/<fire>/ first.
+[23:46:20] sweep| 
+[23:46:20] sweep| REF GUARD: INSTALLED -- hook at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-probe.bSgJmA/repo/.git/hooks/reference-transaction carries the softhouse-t312-ref-guard marker and is executable
+[23:46:20] probe only — exiting without taking the lock or invoking the driver
+[wrapper exit 0]
+
+=== after: is the guard installed, and does it now refuse a NEW shadow?
+-rwxr-xr-x  1 buv  staff  591 Aug 27 23:46 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-probe.bSgJmA/repo/.git/hooks/reference-transaction
+-- first, the case git ALREADY refuses on its own: a LOOSE ref against a LOOSE ref.
+fatal: a branch named 'softhouse/t401-new-shadow' already exists
+   ^ 'already exists' came from git, not from the guard: on a case-insensitive
+     filesystem the two loose refs are one path, so git's own existence check hits.
+-- now the case git does NOT refuse: a loose ref against a PACKED ref.
+ls: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-probe.bSgJmA/repo/.git/refs/heads/softhouse/: No such file or directory
+
+*** softhouse ref guard (T312): TRANSACTION REFUSED ***
+  creating   refs/heads/softhouse/t401-new-shadow
+  would SHADOW an existing ref that differs only by case:
+             refs/heads/softhouse/T401-new-shadow  loose=- packed=6a5e79b91
+
+  On a case-insensitive filesystem the loose ref hides the packed one, git
+  resolves loose first, and the packed value becomes unreachable by name while
+  staying a live object.  That silently hid 4 commits on T297 and 8 on T305.
+  Use the EXISTING spelling verbatim, or a name differing by more than case.
+  Deliberate rescue work only: SOFTHOUSE_ALLOW_CASE_SHADOW=1
+
+fatal: ref updates aborted by hook
+   ^ THAT refusal is the guard.  Without it this is the silent success that hid
+     T297's and T305's work.
+
+scratch = /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-probe.bSgJmA
