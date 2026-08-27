@@ -41,7 +41,7 @@ import sys
 from pathlib import Path
 
 PROBE = "T316-EXITSCREEN:"
-PER_INSTRUMENT_TIMEOUT_S = 45
+PER_INSTRUMENT_TIMEOUT_S = 20
 
 
 def repo_root() -> Path:
@@ -78,7 +78,8 @@ def main(argv=None) -> int:
         return 2
 
     results = []
-    for rel in targets:
+    for i, rel in enumerate(targets, 1):
+        print("  [%d/%d] %s" % (i, len(targets), rel), flush=True)
         p = root / rel
         if not p.exists():
             results.append({"file": rel, "status": "MISSING", "exit": None})
