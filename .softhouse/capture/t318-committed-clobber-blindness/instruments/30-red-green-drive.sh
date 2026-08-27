@@ -277,7 +277,7 @@ m_G2() {
 }
 
 # G3 — `git -c user.name=... commit`, the PER-INVOCATION idiom that
-#      fire-program.sh:1213 actually uses for its rescue commit. It must not
+#      fire-program.sh:1218 actually uses for its rescue commit. It must not
 #      trip T6, because it does not write config. If T6 flagged this, the
 #      driver's own rescue path would report damage on every rescue.
 m_G3() {
@@ -343,7 +343,7 @@ hdr "GREEN ARMS — legitimate work that must NOT be flagged (adoptability)"
 arm G1 "an ordinary commit on the writ branch"                                          CLEAN 0 m_G1 --writ-branch t318-work
 arm G2 "three ordinary commits, one legitimately editing tasks.json (declared)"          CLEAN 0 m_G2 --writ-branch t318-work \
     --writ-artefact .softhouse/tasks.json --writ-artefact CLAUDE.md
-arm G3 "git -c user.name=... commit (fire-program.sh:1213's own rescue idiom)"          CLEAN 0 m_G3 --writ-branch t318-work \
+arm G3 "git -c user.name=... commit (fire-program.sh:1218's own rescue idiom)"          CLEAN 0 m_G3 --writ-branch t318-work \
     --writ-artefact CLAUDE.md
 arm G4 "nothing happens at all (null control)"                                          CLEAN 0 m_G4 --writ-branch t318-work
 arm G5 "worker creates its own declared task branch and commits"                        CLEAN 0 m_G5 \
