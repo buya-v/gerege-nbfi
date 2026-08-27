@@ -1,0 +1,72 @@
+T299 NAMESPACE-GUARD RED/GREEN DRIVE
+engine    : GNU bash, version 3.2.57(1)-release (arm64-apple-darwin25) | git version 2.50.1 (Apple Git-155)
+HEAD      : eff88c72eb7fd7f23d40d1d4f4a61aee4ee33c34
+guard     : .softhouse/guards/check-capture-namespace.sh
+
+carried   : staged-but-uncommitted state applied to the clone
+
+=== G1 -- CALIBRATION: the guard is GREEN on an untouched clone ===
+  probe line printed : 1 time(s)   [expected 1]
+  exit               : 0              [expected 0]
+  census             : dirs=115 prefixed=94 unprefixed=21 collidingIds=1 declared=1 unclaimed=1 shortfallIds=0
+  ARM RESULT         : PASS
+
+=== R1 -- a THIRD directory under an id that already owns one, with no OWNER record ===
+  probe line printed : 1 time(s)   [expected 1]
+  exit               : 1              [expected 1]
+  census             : dirs=116 prefixed=95 unprefixed=21 collidingIds=1 declared=1 unclaimed=2 shortfallIds=1
+  ARM RESULT         : PASS
+
+=== R2 -- a FRESH collision on an id that has never collided (T290) ===
+  probe line printed : 1 time(s)   [expected 1]
+  exit               : 1              [expected 1]
+  census             : dirs=116 prefixed=95 unprefixed=21 collidingIds=2 declared=1 unclaimed=3 shortfallIds=1
+  ARM RESULT         : PASS
+
+=== R3 -- the existing OWNER record REMOVED (the fix reverted) ===
+  probe line printed : 1 time(s)   [expected 1]
+  exit               : 1              [expected 1]
+  census             : dirs=115 prefixed=94 unprefixed=21 collidingIds=1 declared=0 unclaimed=2 shortfallIds=1
+  ARM RESULT         : PASS
+
+=== R4 -- an OWNER record that is PRESENT but names no task id (a control that measures
+===       nothing must not be accepted as one) ===
+  probe line printed : 1 time(s)   [expected 1]
+  exit               : 1              [expected 1]
+  census             : dirs=115 prefixed=94 unprefixed=21 collidingIds=1 declared=0 unclaimed=2 shortfallIds=1
+  ARM RESULT         : PASS
+
+=== V1 -- VACUITY: the CALIBRATION cannot lapse into a pass. Both known-positive
+===       directories removed -> the guard must REFUSE (exit 2), not report zero ===
+  probe line printed : 0 time(s)   [expected 0]
+  exit               : 2              [expected 2]
+  census             : NOT PRINTED -- read this as the guard refusing, never as zero
+  refusal reason     :
+      namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
+      namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
+      namespace:   root    /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t299-guard.clnHeMp9/clone
+      namespace:   corpus  6827 tracked paths -> 113 evidence directories
+      namespace:           92 carry a t<n> id prefix; 21 do not and CANNOT collide this way
+      namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 0/2 times
+      namespace: ABORT(2) -- CALIBRATION FAILED. The selector cannot re-find the collision this
+      namespace:   guard was written for. If both directories were legitimately removed, this
+  ARM RESULT         : PASS
+
+=== V2 -- VACUITY: the SELECTOR matching nothing must REFUSE, not report zero ===
+===       (this is the BSD-sed defect this guard shipped with for one run, reproduced
+===        deliberately by breaking the same line) ===
+  probe line printed : 0 time(s)   [expected 0]
+  exit               : 2              [expected 2]
+  census             : NOT PRINTED -- read this as the guard refusing, never as zero
+  refusal reason     :
+      namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
+      namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
+      namespace:   root    /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t299-guard.clnHeMp9/clone
+      namespace: ABORT(2) -- 0 directories under .softhouse/{capture,reviews}. The
+      namespace:   selector reached the corpus but matched nothing in it, which is a selector
+      namespace:   failure, not a tree without evidence directories.
+  ARM RESULT         : PASS
+
+============================================================================
+ALL ARMS PASSED: 1 green (calibration), 4 red, 2 vacuity refusals.
+(The clone is discarded on exit. The real checkout was never modified.)

@@ -1,0 +1,96 @@
+T299 COLLISION CENSUS
+engine    : git version 2.50.1 (Apple Git-155) | CPython 3.9.6 re
+repo      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8182250b99afe338
+HEAD      : 5c6f3bc05c02e769cb5c9e62c51b4d0c882ecdd5
+
+corpus    : 6849 tracked paths
+
+### CALIBRATION (P-72) -- a known positive proven findable BEFORE any count is trusted
+  T259's directory exists as a tracked prefix          : FOUND
+  T256's own directory exists as a tracked prefix      : FOUND
+  the hand-read reference site is in the hit set       : FOUND
+
+### EVERY TRACKED FILE THAT NAMES `.softhouse/capture/t256-verdict-predicate`
+### files: 49   occurrences: 182   (BOTH TERMS -- P-67)
+
+  EXEC-INSIDE   :  2 file(s) /   3 occurrence(s)
+      .softhouse/capture/t256-verdict-predicate/census_verdict_shape.py                        x2
+      .softhouse/capture/t256-verdict-predicate/lint_failopen_t259.py                          x1
+
+  EXEC-OUTSIDE  : 16 file(s) /  26 occurrence(s)
+      .softhouse/capture/t219-g8-residual/src/classify_t219.py                                 x1
+      .softhouse/capture/t271-b1-t219/run.sh                                                   x3
+      .softhouse/capture/t286-t268-retry/check_verdict_predicate_agreement_t292.py             x1
+      .softhouse/capture/t290-review-t271/attack_acknowledgement_t290.py                       x1
+      .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py                             x1
+      .softhouse/capture/t290-review-t271/probe_t286_rule_t290.py                              x1
+      .softhouse/capture/t290-review-t271/prove_repair_inert.py                                x1
+      .softhouse/capture/t290-review-t271/red/drive-red-t290.py                                x1
+      .softhouse/capture/t290-review-t271/run.sh                                               x3
+      .softhouse/reviews/t262-verdict-predicate/attack2_compound_t262.py                       x3
+      .softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py                            x3
+      .softhouse/reviews/t262-verdict-predicate/pin_test2_t262.py                              x2
+      .softhouse/reviews/t262-verdict-predicate/pin_test_t262.py                               x1
+      .softhouse/reviews/t291-review-t286/probe/drive-t291.py                                  x1
+      .softhouse/reviews/t291-review-t286/probe/enumerate-exit0-t291.py                        x1
+      .softhouse/reviews/t291-review-t286/probe/wrapper-probe-t291.sh                          x2
+
+  TRANSCRIPT    : 26 file(s) / 138 occurrence(s)
+      .softhouse/capture/t256-verdict-predicate/red/drive-red-output.txt                       x25
+      .softhouse/capture/t256-verdict-predicate/run-output.txt                                 x32
+      .softhouse/capture/t271-b1-t219/acknowledged-t219.json                                   x1
+      .softhouse/capture/t271-b1-t219/out/census-rerun-at-t271.txt                             x6
+      .softhouse/capture/t271-b1-t219/out/redgreen-battery.txt                                 x1
+      .softhouse/capture/t271-b1-t219/out/run-output.txt                                       x9
+      .softhouse/capture/t271-b1-t219/out/targets-runner.txt                                   x2
+      .softhouse/capture/t271-b1-t219/targets-proposed-for-T269.json                           x3
+      .softhouse/capture/t284-schema2-callsites/evidence/60-failopen-lint.txt                  x2
+      .softhouse/capture/t286-t268-retry/out/rvpa-callers-search.txt                           x11
+      .softhouse/capture/t290-review-t271/out/attack-acknowledgement.txt                       x1
+      .softhouse/capture/t290-review-t271/out/battery-g1-broken.txt                            x1
+      .softhouse/capture/t290-review-t271/out/guard-green.txt                                  x2
+      .softhouse/capture/t290-review-t271/out/run-output.txt                                   x3
+      .softhouse/capture/t290-review-t271/out/t286-currency.txt                                x2
+      .softhouse/reviews/T293/evidence/10-lint-residue-ABSENT.txt                              x2
+      .softhouse/reviews/T293/evidence/11-lint-residue-PRESENT.txt                             x2
+      .softhouse/reviews/t262-verdict-predicate/attack-t262-output.txt                         x1
+      .softhouse/reviews/t291-review-t286/out/rerun-error-matrix.txt                           x1
+      .softhouse/reviews/t291-review-t286/out/rerun-gate-selftest.txt                          x1
+      .softhouse/reviews/t291-review-t286/out/rerun-t259-battery.txt                           x25
+      .softhouse/reviews/t291-review-t286/out/rerun-t268-battery.txt                           x1
+      .softhouse/reviews/t291-review-t286/out/rerun-t286-battery.txt                           x1
+      .softhouse/reviews/t291-review-t286/out/t286-battery-guard10-reverted.txt                x1
+      .softhouse/reviews/t291-review-t286/out/t286-battery-with-one-arm-absent.txt             x1
+      .softhouse/reviews/t291-review-t286/out/t286-own-sweep-with-t291-fixtures.txt            x1
+
+  PROSE         :  5 file(s) /  15 occurrence(s)
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T256.md                        x1
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T271.md                        x4
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T292.md                        x1
+      .softhouse/handoff/T259-verdict-predicate.md                                             x4
+      .softhouse/tasks.json                                                                    x5
+
+### OTHER TASKS' COMMITTED ARTEFACTS THAT NAME THE PATH
+### -- a rename repairs these only by EDITING THEM, which is another task's evidence
+  T219                   : 1 file(s)
+  T262                   : 5 file(s)
+  T271                   : 7 file(s)
+  T284                   : 1 file(s)
+  T286                   : 2 file(s)
+  T290                   : 11 file(s)
+  T291                   : 11 file(s)
+  T293                   : 2 file(s)
+  (not under a task rig) : 5 file(s)
+
+### PIN / CALL-SITE SEARCH -- where I looked, exhaustively
+  .softhouse/conformance.sh                            : `t256` x0   `verdict-predicate` x0
+  .softhouse/guards/check-ledger-invariants.sh         : `t256` x0   `verdict-predicate` x0
+  .softhouse/guards/drive-red-ledger-invariants.sh     : `t256` x0   `verdict-predicate` x0
+  .softhouse/bin/rehydrate-check.sh                    : `t256` x0   `verdict-predicate` x0
+  .softhouse/bin/fire-program.sh                       : `t256` x0   `verdict-predicate` x0
+  .softhouse/bin/go-env.sh                             : `t256` x0   `verdict-predicate` x0
+  HOSTSTATE_PIN_TEMP_ASSIGN_LIST occurs in         : .softhouse/capture/t256-toolchain-population/evidence/10-population-census.txt, .softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh, .softhouse/capture/t273-residue/evidence/30-newguard-RED-empty-pin.log, .softhouse/capture/t273-residue/evidence/31-newguard-RED-normalised.log, .softhouse/capture/t273-residue/evidence/33-after-adding-instruments.log, .softhouse/capture/t273-residue/evidence/50-reddrive-r2-new-host-state-site.log, .softhouse/capture/t273-residue/evidence/50-reddrive-r3-stale-pin-minus-row.log, .softhouse/capture/t300-census-cardinal/evidence/20-green-bar.txt, .softhouse/capture/t300-census-cardinal/evidence/50-red-drive.txt, .softhouse/capture/t300-census-cardinal/evidence/70-final-bar.txt, .softhouse/capture/t300-census-cardinal/evidence/80-bar-at-exit.txt, .softhouse/capture/t300-census-cardinal/instruments/50-red-drive.sh, .softhouse/capture/t300-census-cardinal/red/A-pin-minus-one.txt, .softhouse/capture/t300-census-cardinal/red/B-pin-plus-one.txt, .softhouse/capture/t300-census-cardinal/red/C1-prefix-minus-one.txt, .softhouse/capture/t300-census-cardinal/red/C2-prefix-plus-one.txt, .softhouse/capture/t300-census-cardinal/red/D-failopen-minus-one.txt, .softhouse/conformance.sh, .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T256.md, .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T285.md, .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T293.md, .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T294.md, .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T295.md, .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T300.md, .softhouse/reviews/T293/REVIEW.md, .softhouse/reviews/T293/evidence/40-red-drive.txt, .softhouse/reviews/t285-review-t273/evidence/70-reddrive-M1-plus.log, .softhouse/reviews/t285-review-t273/evidence/70-reddrive-M2-minus.log, .softhouse/reviews/t285-review-t273/evidence/70-reddrive-M3-regress.log, .softhouse/tasks.json
+  the pin has 18 rows; rows naming `t256`         : 0
+  FAILOPEN_PIN_FILE_LIST rows naming `t256`        : 0
+
+CENSUS COMPLETE.

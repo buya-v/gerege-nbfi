@@ -1,0 +1,44 @@
+T299 FINAL STATE
+engine    : GNU bash, version 3.2.57(1)-release (arm64-apple-darwin25)
+          : git version 2.50.1 (Apple Git-155) | Python 3.9.6
+HEAD      : c7736be37f7409838765a02a52646922dd023389
+branch    : softhouse/t299-t256-namespace-collision
+
+=== CALIBRATION: the tree is committed-clean before anything is run ===
+  dirty paths at start : 0
+
+=== 1. THE COLLISION-SAFE STATE ===
+  directories carrying the t256 prefix, and who actually owns each:
+    .softhouse/capture/t256-toolchain-population
+        ownership record : <none: this is the id OWN rig>
+    .softhouse/capture/t256-verdict-predicate
+        ownership record : .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+
+  the guard:
+    namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
+    namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
+    namespace:   root    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8182250b99afe338
+    namespace:   corpus  6858 tracked paths -> 115 evidence directories
+    namespace:           94 carry a t<n> id prefix; 21 do not and CANNOT collide this way
+    namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
+    namespace:   T256 -> 2 directories; ownership records required 1, present 1
+    namespace:       DECLARED   capture/t256-verdict-predicate               by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+    namespace:       UNCLAIMED  capture/t256-toolchain-population            (record: <absent>)
+    NAMESPACE-CENSUS: dirs=115 prefixed=94 unprefixed=21 collidingIds=1 declared=1 unclaimed=1 shortfallIds=0
+    namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
+  guard exit : 0
+
+=== 2. A BARE 50-failopen-lint.py RUN DOES NOT DIRTY THE TREE ===
+  command  : python3 .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py
+             (FAILOPEN_LINT_JSON deliberately UNSET)
+  exit     : 1  (0 clean / 1 violations / 2 corpus refusal -- unchanged contract)
+    JSON-DESTINATION DIVERTED [T299]
+      requested : .softhouse/capture/t238-failopen/evidence/lint.json
+      it is a GIT-TRACKED path, and this instrument does not write over committed
+      evidence. Set FAILOPEN_LINT_JSON to a scratch path to choose your own.
+      written to: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/failopen-lint-uc42wv90.json
+  git status --porcelain AFTER:
+    byte-identical to before the run. The listing is:
+      (the porcelain listing has zero lines)
+
+BOTH STATES SHOWN.
