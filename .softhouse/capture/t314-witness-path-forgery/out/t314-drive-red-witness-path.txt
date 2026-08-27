@@ -1,0 +1,81 @@
+T314 -- F-T308-6 DRIVEN RED (PRE=T292) AND SHOWN DEAD (POST=T314)
+====================================================================================================
+PRE   .softhouse/capture/t286-t268-retry/check_verdict_predicate_agreement_t292.py
+POST  .softhouse/capture/t314-witness-path-forgery/check_verdict_predicate_agreement_t314.py
+
+CTRL  the legitimate document -- must be untouched by the fix
+-------------------------------------------------------------
+  PRE   rc=0  probe line PRESENT: True
+        |      $.cells[0].P1_principalAmortizesToZero = true
+  POST  rc=0  probe line PRESENT: True
+        |      $["cells"][0]["P1_principalAmortizesToZero"] = true
+  => a legitimate document still passes on BOTH rules, witness=1: YES
+
+A1  T308's COLLISION -- a top-level key literally named `cells[0]`
+------------------------------------------------------------------
+  PRE   rc=0  line: $.cells[0].P1_principalAmortizesToZero = true
+        CTRL line: $.cells[0].P1_principalAmortizesToZero = true
+        BYTE-IDENTICAL TO CTRL: YES   <- the attack LANDS
+  POST  rc=0  line: $["cells[0]"]["P1_principalAmortizesToZero"] = true
+        CTRL line: $["cells"][0]["P1_principalAmortizesToZero"] = true
+        BYTE-IDENTICAL TO CTRL: NO   <- the attack is DEAD
+  NOTE ON THE DIGEST, deliberately NOT 'fixed': PRE=8c87330d77282c8d POST-ctrl=1beed2cc35a26fc7 POST-a1=1beed2cc35a26fc7.
+        A1's two documents grade the SAME (key, value) multiset, so an identical
+        digest is container-blindness working AS DESIGNED -- the digest excludes
+        the path on purpose. Adding the path back would break the property the
+        digest exists to have. The real digest defect is A3, below.
+
+A2  T308's INJECTION -- a container key carrying a NEWLINE and a fabricated line
+--------------------------------------------------------------------------------
+  PRE   rc=0  reported witness COUNT=1, printed LINES=3
+        |      $.z
+        |      $.cells[0].P7_reconciledAgainstOracle = true
+        |      x.P1_principalAmortizesToZero = true
+        A FABRICATED LINE NAMING AN UNGRADED PREDICATE IS PRESENT: YES   <- LANDS
+  POST  rc=0  reported witness COUNT=1, printed LINES=1
+        |      $["z\n      $.cells[0].P7_reconciledAgainstOracle = true\n      x"]["P1_principalAmortizesToZero"] = true
+        fabricated line present: NO ; printed LINES == reported COUNT: YES   <- DEAD
+
+A3  MINE -- THE DIGEST. Different graded FACTS, one `coverageDigest`.
+---------------------------------------------------------------------
+  T292's canon: ";".join(sorted("%s=%s" %% (k, "1" if v else "0") ...)) --
+  `;` and `=` are the separators AND are legal inside a JSON member name.
+  PRE  two facts rc=0 witness=2 coverageDigest=d99d1f0859310868
+  PRE  one fact  rc=0 witness=1 coverageDigest=d99d1f0859310868
+       witness counts DIFFER (2 vs 1) but digests COLLIDE  <- the attack LANDS
+  POST two facts rc=0 witness=2 coverageDigest=841d203ad62a6a0b
+  POST one fact  rc=0 witness=1 coverageDigest=fde6ff02936dcbb0
+       witness counts DIFFER (2 vs 1) but digests DIFFER  <- the attack is DEAD
+
+A4  MINE -- THE PATH IS NOT COSMETIC: it steers a SET MEMBERSHIP TEST
+---------------------------------------------------------------------
+  T292: `owner = spath.rsplit('.', 1)[0]` then `if owner not in witnessed_objects`.
+  A top-level key containing a `.` is therefore read as a NESTED path whose owner
+  is a DIFFERENT object -- one that IS witnessed -- so the census line is lost.
+  PRE  control key `note`   headerAffirmations=1   census   HEADER AFFIRMATION value $.note 'AS PREDICTED' -- affirmative word in an object that graded nothing
+  PRE  attack  key `a.note` headerAffirmations=0   <none>
+       census SUPPRESSED by the key's content: YES  <- the attack LANDS
+  POST control key `note`   headerAffirmations=1   census   HEADER AFFIRMATION value $["note"] 'AS PREDICTED' -- affirmative word in an object that graded nothing
+  POST attack  key `a.note` headerAffirmations=1   census   HEADER AFFIRMATION value $["a.note"] 'AS PREDICTED' -- affirmative word in an object that graded nothing
+       census SUPPRESSED by the key's content: NO  <- the attack is DEAD
+  This one gates NOTHING today (headerAffirmations is a census counter, by
+  T292's own design). It is here to refute 'the path is only printed' -- it is
+  also an IDENTITY, and an ambiguous identity is a bug wherever it is read.
+
+CORP  the committed real corpus -- the fix must move NOTHING but the digest
+---------------------------------------------------------------------------
+  .softhouse/capture/t229-g8-site3/out/classify-t229.json
+     PRE  rc=0 T259-VPA: GREEN files=1 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 witness=24 nilFiles=0 muteRefutations=0 voidAcks=0 headerAffirmations=3 coverageDigest=e2539db29cd16116
+     POST rc=0 T259-VPA: GREEN files=1 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 witness=24 nilFiles=0 muteRefutations=0 voidAcks=0 headerAffirmations=3 coverageDigest=44a14d2038098044
+     gating counters identical: 14/14   moved: none
+     coverageDigest PRE=e2539db29cd16116 POST=44a14d2038098044  (MUST differ -- the canon changed)
+  .softhouse/capture/t219-g8-residual/out/classify-t219.json
+     PRE  rc=1 T259-VPA: REFUSED files=1 rows=14 predicates=27 disagreements=4 acknowledged=0 unacknowledged=4 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 witness=27 nilFiles=0 muteRefutations=0 voidAcks=0 headerAffirmations=0 coverageDigest=5aac4a972cbc0a4b
+     POST rc=1 T259-VPA: REFUSED files=1 rows=14 predicates=27 disagreements=4 acknowledged=0 unacknowledged=4 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 witness=27 nilFiles=0 muteRefutations=0 voidAcks=0 headerAffirmations=0 coverageDigest=e871a2f6f853e88b
+     gating counters identical: 14/14   moved: none
+     coverageDigest PRE=5aac4a972cbc0a4b POST=e871a2f6f853e88b  (MUST differ -- the canon changed)
+
+====================================================================================================
+PASS -- every PRE row LANDED (the arms are not vacuous), every POST row is DEAD,
+        the legitimate document and the committed corpus are unchanged except for
+        the coverageDigest, which had to move because its canon was the defect.
