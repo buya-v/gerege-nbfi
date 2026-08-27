@@ -1,0 +1,101 @@
+T324 INSTRUMENT 30 — LIVE WORKTREE CENSUS (READ-ONLY)
+date    : 2026-08-27T17:40:53Z
+git     : git version 2.50.1 (Apple Git-155)
+repo    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6bea6f184d5a6545
+common  : /Users/buv/gerege-nbfi/.git
+
+worktrees enumerated (INCLUDING the main checkout): 55
+
+TAGS   UNTR   IGN     PATH
+-----  -----  -----   ----
+0      0      3       /Users/buv/gerege-nbfi
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02fbff9391fc1420
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0aed3828d5f8f61a
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a157842e280d9a835
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a1be0f4db12e4b8b8
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a1d6d1027939daa35
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a1dabef0a78792389
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2027f85cea4effc9
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a223f68f4c6d4fa11
+0      0      1       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a266e9c0ed65d4219
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a26856b7cbf4ce967
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a27d19378919db7ce
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2dfa8274443adb39
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a31f5a02b9f6a59b0
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a353b03c0dea4dd41
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a37ede77a94989d14
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3afd18baf89b21fe
+0      2      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3cb97ad28e05db9e
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3e635faba72121c8
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3f751d711f6261f9
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a43f1c46c0e637fed
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4668dbfbf66ea6a6
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4bdc82a96c0a241c
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a533818f28c9c0299
+0      9      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5b22a94bf4172083
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a63ea9db5e05da1cd
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a69970ae1feee7231
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6aebb11acf360806
+0      8      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6bea6f184d5a6545
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7366eddb92a92551
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a76f2ba43853c8af3
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7a1b4142600dc53f
+0      0      1       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7b052ea3e92337d3
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8581c69bafc13152
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8a7245a580869366
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9c310565babf95f7
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9dc03a754bd32556
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513
+0      1      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab3fa605dac9fef35
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab4f6ef3da612f053
+0      4      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab61c54c7e7251fba
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1dedb629a52a489
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1fa12c69146149b
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-ace495b14b24377f1
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-acee94120db93ffce
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad4264728c497493b
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-ada96e5f185108346
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-aded5a27da9fffe91
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae1cb93efc023c229
+0      6      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee525215e9f9d410
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-af13c240170c61019
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-af8f23cb68de0effa
+0      0      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-af9f82a58b9ee7eb4
+0      7      0       /Users/buv/gerege-nbfi/.claude/worktrees/agent-afe7439954986245b
+
+=== totals (every cardinal below is counted from the rows above, never typed) ===
+worktrees measured                                   : 55
+  with a NON-'H' index tag   (TERM 1 would REFUSE)   : 0
+  with untracked content     (TERM 2 would REFUSE)   : 7
+  with IGNORED content       (a term NOT shipped)    : 3
+  where ls-files could not be read                   : 0
+
+=== the IGNORED paths themselves (distinct, sorted) — what an ignored-file
+    term would actually be refusing on ===
+  .claude/worktrees/
+  .softhouse/capture/t131-grep/ignoretest/ignored.txt
+  .softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/
+  .softhouse/toolchain/
+  distinct ignored paths: 4   (total occurrences: 5)
+
+READING THIS.
+TERM 1's cost is the TAGS column. TERM 2's cost is the UNTR column, and it is
+NOT a new cost — `wt_prune_check` rule 2 already refuses on untracked content,
+so every worktree in that column was ALREADY being kept; TERM 2 changes the
+answer only where config has hidden the untracked files from rule 2.
+The IGN column is a DIFFERENT question and must not be read as this fix's cost:
+it is what a term this fix DOES NOT SHIP would refuse on, and it is reported
+here because the honest reason for not shipping it is in the LISTING, not in
+the count. THE COUNT DOES NOT SUPPORT AN INERTNESS ARGUMENT and this file will
+not pretend it does: on this measurement an ignored-file term would refuse a
+small minority of worktrees, not nearly all of them. The reason is the CONTENT:
+the ignored paths this repo actually accumulates are ones the repo itself
+declares disposable — `.softhouse/toolchain/` is documented in .gitignore as
+"NOT committed — reversible with rm -rf .softhouse/toolchain", and
+`.claude/worktrees/` is the directory every worktree lives in, so it is an
+artefact of the layout rather than anybody's work. A gate whose refusals are
+driven by content that is by declaration reproducible refuses for a reason
+uncorrelated with whether work exists — and that ratio is not stable, it grows
+with whatever build output future tasks add to .gitignore. That is a REASON TO
+DECIDE THE TERM DELIBERATELY (FU-T324-1), not a reason to call the shape closed.

@@ -1,0 +1,27 @@
+T318 INSTRUMENT 50 — DRIVING THE lib-worktree-prune MITIGATION
+lib   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6bea6f184d5a6545/.softhouse/bin/lib-worktree-prune.zsh
+root  : /private/tmp/t324-inst50-final
+date  : 2026-08-27T17:42:32Z
+cwd   : /private/tmp/t324-inst50-final/main   (wt_prune_check's MERGED check is cwd-relative — see comment)
+\n=== P1 — mitigation WORKING: committed clobber on the worktree branch
+    LEGACY (git status --porcelain) : CLEAN
+    wt_prune_check                  : rc=1  KEEP: branch softhouse/T318-fixture-a is not merged into main
+    repo-state-attest               : rc=1
+  PASS  P1  prune check answered KEEP — the merge-base rule DID cover this shape
+  PASS  P1  repo-state-attest also flagged it (rc=1)
+\n=== P2 — mitigation FAILING: merged worktree, tree only LOOKS clean
+    on-disk tasks.json              : 61 bytes of unrecoverable content
+    LEGACY (git status --porcelain) : CLEAN
+    wt_prune_check                  : rc=0  PRUNE
+    repo-state-attest               : rc=1
+    repo-state-attest findings:
+      |   DAMAGE    T5 index SKIP BITS went 0 -> 1. `git update-index --assume-unchanged` / `--skip-worktree` silences `git status --porcelain` WITHOUT moving HEAD, touching a ref, or changing config -- T1, T2 and T6 all miss it.
+  PASS  P2 (RED ARM) prune check answered PRUNE on a worktree hiding live content — the merge-base mitigation does NOT cover this shape
+  PASS  P2  repo-state-attest caught what the prune check could not (rc=1)
+\n=== P3 — the THIRD mitigation: does `git worktree remove` catch it?
+    content before                  : 61 bytes
+    git worktree remove             : rc=0  <no output>
+    content after                   : WORKTREE DIRECTORY DESTROYED
+  PASS  P3 (RED ARM REPRODUCED) `git worktree remove` SUCCEEDED and the content is GONE — the 'third independent clean check' (fire-program.sh:1364) does NOT see an assume-unchanged modification. All THREE mitigations fail together.
+\nPASS=5  FAIL=0
+scratch kept at: /private/tmp/t324-inst50-final
