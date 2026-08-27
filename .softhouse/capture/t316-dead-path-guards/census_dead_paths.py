@@ -13,16 +13,23 @@ be believed rather than checked (P-66/P-70: `not found` is a statement about the
                  census, not a fact about the world.
     literals   : single- or double-quoted string literals containing the substring `.softhouse/`,
                  taken verbatim. A path assembled at runtime from variables is NOT seen.
-    resolution : the literal is joined to the repo root and tested with os.path.exists(), which
-                 follows symlinks and accepts directories -- AND, if that fails, tested again
-                 with trailing sentence punctuation `)}],;:.` and `…` stripped.
+    resolution : **TRACKED CONTENT ONLY [T326]**. The literal is looked up in `git ls-files -z`
+                 and in the set of directory prefixes of those paths -- AND, if that fails,
+                 looked up again with trailing sentence punctuation `)}],;:.` and `…` stripped.
+                 `.` and `..` segments are collapsed LEXICALLY. **THE DISK IS NEVER CONSULTED.**
+                 T316 used `os.path.exists()` here, and that made the frontier -- and, once the
+                 guard was wired HARD, the colour of the entire conformance bar -- a function of
+                 what happened to be on the running machine's disk. See `tracked_universe()` for
+                 the measurement that retired it and the two-host figures.
 
 FOUR BUCKETS, and the last three are why this instrument is not a wolf-crier:
 
-    RESOLVES       the literal names something that is on disk, verbatim or after trailing
-                   sentence punctuation is stripped.
+    RESOLVES       the literal names a TRACKED file, or a directory containing at least one
+                   tracked file, verbatim or after trailing sentence punctuation is stripped.
     DEAD           the literal is a concrete path, contains no placeholder, glob, ellipsis or
-                   whitespace, and nothing is there under either form.
+                   whitespace, and is not in the tracked universe under either form. **An
+                   untracked path is DEAD whether or not it exists on this machine** -- see the
+                   argument recorded at `.softhouse/guards/dead-path-frontier.pin`.
     INDETERMINATE  the literal carries a format placeholder (%s, {}, $VAR, <x>), a glob
                    metacharacter, or an ellipsis. It is a TEMPLATE or a truncation, not a path.
     PROSE          the literal contains whitespace: an English sentence that quotes a path.
@@ -123,20 +130,109 @@ def classify(literal: str):
     return "CONCRETE"
 
 
-def resolves(root: Path, path: str) -> bool:
-    """A literal RESOLVES if it names something on disk EITHER verbatim OR after trailing
-    sentence punctuation is stripped. The second arm is not laxity: `".softhouse/vectors)"` is a
-    reference to a directory that EXISTS, wearing a closing paren from the sentence around it.
-    Reporting it dead is a false positive, and false positives are how a census gets pinned away.
-    The stripped form is only ever used to say YES; it can never turn a live path into a dead one.
+def tracked_universe(root: Path):
+    """T326 -- THE RESOLUTION UNIVERSE IS `git ls-files`, NEVER THE DISK.
+
+    Returns `(files, dirs)`: the set of tracked repo-relative paths, and the set of every
+    directory prefix of a tracked path. A literal resolves iff it is in one of those two sets.
+
+    WHY THIS REPLACED `os.path.exists`. The first version of this census resolved literals with
+    `os.path.exists(root / literal)`. That makes the census -- and therefore T316's frontier pin,
+    and therefore the colour of the whole conformance bar once the guard is wired HARD -- a
+    function of WHAT HAPPENS TO BE ON SOMEBODY'S DISK. Measured, not argued, on ONE commit:
+
+        `.softhouse/toolchain`   exists in Buyan's main checkout, is `.gitignore`d
+                                 (`.gitignore:6`), has ZERO tracked files, and does not exist in
+                                 a fresh worktree.  23 pin rows name it.
+        `.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch`
+                                 is untracked RUN RESIDUE left on the main checkout by an earlier
+                                 run.  1 more pin row names it.
+
+        => the SAME COMMIT yields frontier rows=102 in a fresh worktree and rows=78 in the main
+           checkout.  [VERIFIED: .softhouse/capture/t326-frontier-host-state/evidence/]
+
+    That is fatal here and not merely untidy, because this program is driven by TWO fires -- a
+    launchd fire on Buyan's Mac and a cloud fire that never runs on that host -- and the failure
+    presents as `exit 2, no probe line`, which a driver is trained by P-84 to read as a MONEY
+    NON-NEGOTIABLE VIOLATION. A host-state defect wearing the costume of a float violation is the
+    worst available failure mode. T256/T298 already spent themselves on this class and the repo
+    carries `guard_no_host_state_in_lint_corpus` for it.
+
+    THE RULE THIS ENCODES: if regenerating a pin in a worktree, on a fresh clone, or on another
+    host yields a different set, IT IS NOT A PIN -- it is a snapshot of somebody's disk.
+
+    WHY THE INDEX (`git ls-files`) AND NOT `git ls-tree -r HEAD`. The index is what a commit is
+    about to be. On any clean checkout, clone or worktree the two are identical, so the
+    host-independence property is unaffected; but a worker who adds a new instrument AND the file
+    it references in one change should be green before committing, not after. Using HEAD would
+    grade the previous commit. Either way, and this is the load-bearing half, NEITHER reads
+    untracked or ignored paths.
+
+    WHAT THIS DELIBERATELY GIVES UP. A tracked directory whose files are all deleted from the
+    working tree still resolves, and a legitimately generated-at-runtime output never resolves.
+    Both are accepted: see the DEAD bucket's documented meaning -- a row is a SMELL to be
+    inspected once and then repaired or pinned WITH ITS REASON, never an accusation.
     """
-    if (root / path).exists():
+    proc = subprocess.run(["git", "ls-files", "-z"],
+                          cwd=str(root), capture_output=True, text=True)
+    if proc.returncode != 0:
+        print("ERROR: git ls-files -z exited %d: %s" % (proc.returncode, proc.stderr.strip()),
+              file=sys.stderr)
+        raise SystemExit(2)
+    files = {f for f in proc.stdout.split("\0") if f}
+    if not files:
+        # An empty tracked universe is a failed READ, never a repository with no files. Refusing
+        # here matters more than anywhere else in this instrument: an empty universe would make
+        # EVERY literal dead and the census would report a spectacular, entirely false finding.
+        print("ERROR: the tracked universe is EMPTY. That is a selector failure, not a repo with",
+              file=sys.stderr)
+        print("ERROR: no tracked files. REFUSING (exit 2) rather than calling every path dead.",
+              file=sys.stderr)
+        raise SystemExit(2)
+    dirs = set()
+    for f in files:
+        p = f
+        while "/" in p:
+            p = p.rsplit("/", 1)[0]
+            dirs.add(p)
+    return files, dirs
+
+
+def _lexical_norm(path: str) -> str:
+    """Collapse `.`/`..`/`//` LEXICALLY -- os.path.normpath touches no filesystem. A literal such
+    as `.softhouse/capture/t274-attestation-failopen/instruments/../evidence/wrap` is a real
+    reference to `.softhouse/capture/t274-attestation-failopen/evidence/wrap`; without this it
+    would be reported dead purely because the tracked universe is a set of strings while
+    `os.path.exists` walked directories. Returns "" if the path escapes the repo root, which
+    makes it unresolvable -- correct, since the universe only contains paths inside the root.
+    """
+    n = os.path.normpath(path)
+    if n == "." or n.startswith("..") or n.startswith("/"):
+        return ""
+    return n
+
+
+def resolves(files, dirs, path: str) -> bool:
+    """A literal RESOLVES if it names a TRACKED file, or a directory containing at least one
+    tracked file, EITHER verbatim OR after trailing sentence punctuation is stripped.
+
+    The punctuation arm is unchanged from T316 and is not laxity: `".softhouse/vectors)"` is a
+    reference to a directory that exists, wearing a closing paren from the sentence around it.
+    Reporting it dead is a false positive, and false positives are how a census gets pinned away
+    (it was 56 of the first 154 rows). The stripped form is only ever consulted to say YES, so it
+    can never turn a live reference into a dead one.
+    """
+    n = _lexical_norm(path)
+    if n and (n in files or n in dirs):
         return True
     stripped = path.rstrip(TRAILING_PUNCT)
-    return bool(stripped) and stripped != path and (root / stripped).exists()
+    if not stripped or stripped == path:
+        return False
+    s = _lexical_norm(stripped)
+    return bool(s) and (s in files or s in dirs)
 
 
-def scan(root: Path, rel: str):
+def scan(root: Path, rel: str, files, dirs):
     """Return (resolves, dead, indeterminate) lists of literals named by this file."""
     try:
         text = (root / rel).read_text(errors="replace")
@@ -154,7 +250,7 @@ def scan(root: Path, rel: str):
             prose.append(path)
         elif kind == "INDETERMINATE":
             indet.append(path)
-        elif resolves(root, path):
+        elif resolves(files, dirs, path):
             resolves_.append(path)
         else:
             dead.append(path)
@@ -170,10 +266,12 @@ def main(argv=None) -> int:
 
     root = repo_root()
     files = corpus(root)
+    # T326: the resolution universe. TRACKED CONTENT ONLY -- see tracked_universe.__doc__.
+    tracked_files, tracked_dirs = tracked_universe(root)
 
     per_file = {}
     for rel in files:
-        r, d, i, pr = scan(root, rel)
+        r, d, i, pr = scan(root, rel, tracked_files, tracked_dirs)
         if r or d or i or pr:
             per_file[rel] = {"resolves": sorted(set(r)),
                              "dead": sorted(set(d)),
@@ -211,11 +309,19 @@ def main(argv=None) -> int:
           % len(files))
     print("  literals   : quoted strings containing `.softhouse/`, trimmed to that root")
     print("  regex      : %s" % LITERAL_RE.pattern.replace("\n", ""))
-    print("  resolution : os.path.exists(repo_root / literal)")
+    print("  resolution : TRACKED CONTENT ONLY [T326] -- membership in `git ls-files -z`")
+    print("               (%d path(s)) or in the set of their directory prefixes (%d)."
+          % (len(tracked_files), len(tracked_dirs)))
+    print("               NOT os.path.exists. THE DISK IS NEVER CONSULTED, so this census is a")
+    print("               property of the COMMIT and not of the machine, the checkout, or what a")
+    print("               previous run left lying about. `.` / `..` are collapsed LEXICALLY.")
     print("  EXCLUDED   : templates (placeholder %s/{}/$VAR/<x>) and globs -> INDETERMINATE;")
     print("               literals containing WHITESPACE -> PROSE (a message that quotes a path).")
     print("               Both counted separately, NEVER added to the DEAD figure.")
-    print("  BLIND TO   : untracked files; paths assembled from variables at runtime")
+    print("  BLIND TO   : untracked files as CORPUS; paths assembled from variables at runtime.")
+    print("  DELIBERATE : an UNTRACKED path -- `.gitignore`d build output, a runtime-materialised")
+    print("               toolchain, another run's scratch -- is DEAD, present on disk or not.")
+    print("               Same answer on every host: that is the whole point [T326].")
     print()
     print("CALIBRATION: both FU-T299-2 known positives were seen as DEAD by this selector.")
     print()
