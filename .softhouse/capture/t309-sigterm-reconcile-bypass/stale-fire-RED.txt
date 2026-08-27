@@ -1,0 +1,31 @@
+T309 attempt 2 -- RED: the attempt-1 in_session discriminator DEMOTES LIVE WORK.
+Captured 2026-08-27T15:14:46Z against the real repo state of fire 20260827-230001, the fire that
+was running while this was written. PRE = df28ced:.softhouse/bin/ready-tasks.py
+(attempt 1's bytes, taken from git, not a stand-in). Full matrix in
+ownership-matrix.txt; the harness is run-ownership-matrix.zsh.
+
+The six tasks PRE would demote are fire 20260827-230001's OWN live workers,
+T309 included. They read as corpses only because `task["fire"]` still says
+20260823-140001 -- a fire that ended four days earlier -- because that field is
+stamped at FIRST dispatch and is not refreshed on re-dispatch.
+
+# CELL A: LIVE FIRE 20260827-230001 -- its own dispatches must NOT be demoted
+#   lock commit: 558ef32   state under test: HEAD   LOCK fire: 20260827-230001
+#   expect PRE demotes=6   POST demotes=0
+############################################################
+  --- PRE ---
+      mode: in_session   (lock fire id: 20260827-230001)
+      in_progress tasks found: 7  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
+      IN-SESSION authority: 6 demotable, 1 WITHHELD (a live fire is running; only dispatches proven to belong to another fire may be touched)
+      RESULT: DRY RUN -- 6 task(s) WOULD be demoted; tasks.json untouched.
+    demotions: 6
+    >>> PRE OK (demotions=6, expected 6)
+  --- POST ---
+      mode: in_session   (lock fire id: 20260827-230001)
+      in_progress tasks found: 7  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
+      in-session evidence: at this fire's lock commit 5822b3fa5 ('softhouse: local fire lock (20260827-230001)') 0 task(s) already claimed in_progress: none. Anything in_progress NOW but not in that set was dispatched by THIS fire and is live.
+      IN-SESSION authority: 0 demotable, 7 WITHHELD (a live fire is running; only dispatches that PREDATE this fire's lock commit may be touched)
+      RESULT: REFUSED -- nothing this caller is authorised to repair; tasks.json was NOT modified. The wrapper's exit-path reconcile runs in `wrapper` mode and clears what is left.
+    demotions: 0
+    >>> POST OK (demotions=0, expected 0)
+
