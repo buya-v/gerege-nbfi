@@ -1,0 +1,103 @@
+T298 oracle-fact diff — 2026-08-27T15:12:42Z
+range under review: 47b9b5c (pre-T256) .. e6fca83 (T256 tip).  HEAD = 0ab5fbeb
+
+1. EXACTLY WHICH LINES DID T256 TOUCH IN THIS FILE?
+   changed lines: 48
+   hunk headers:
+     @@ -150,7 +150,12 @@ docker compose -f docker-compose-postgresql.yml up -d      # never the mysql/mar
+     @@ -610,10 +615,54 @@ that the previous fire (correctly) declined to make unattended.
+
+2. THE FACT ROWS — extracted from BOTH revisions and diffed
+   fact-bearing lines PRE  = 149
+   fact-bearing lines POST = 149
+   diff of the fact-bearing TEXT (line numbers stripped, so a pure shift is not noise):
+     IDENTICAL — every fact-bearing line survives T256 byte-for-byte.
+
+3. NAMED FACTS, asserted one at a time in BOTH revisions (P-70: presence measured, not assumed)
+   *** LOST tenant identifier                          pre=19   post=18  
+   ok       database name                              pre=7    post=7   
+   ok       PostgreSQL named                           pre=13   post=13  
+   ok       postgres compose profile                   pre=4    post=4   
+   ok       pinned Fineract commit                     pre=7    post=7   
+   ok       timezone Asia/Ulaanbaatar                  pre=8    post=8   
+   ok       oracle health endpoint                     pre=5    post=5   
+   ok       https port 8443                            pre=3    post=3   
+   ok       postgres port 5432                         pre=8    post=8   
+   ok       rounding mode HALF_UP                      pre=9    post=9   
+   ok       MoneyHelper precision 19                   pre=33   post=33  
+   ok       db container fineract-db-1                 pre=3    post=3   
+
+4. THE PROHIBITED PRODUCT — Oracle Database must appear NOWHERE in either revision
+   ojdbc            pre=3 post=3  *** PRESENT — REJECTION
+   oracle.jdbc      pre=2 post=2  *** PRESENT — REJECTION
+   1521             pre=3 post=3  *** PRESENT — REJECTION
+   OracleDialect    pre=0 post=0  ok (measured zero)
+   jdbc:oracle      pre=0 post=0  ok (measured zero)
+   and the forbidden compose profiles:
+   docker-compose-mysql       post=0
+
+   docker-compose-mariadb     post=0
+
+
+5. THE build-oracle-image.sh INVOCATION CHANGE — the one T256 made on purpose
+   PRE:
+     130:cannot run natively. `.softhouse/bin/build-oracle-image.sh` builds it reproducibly instead:
+     153:Rebuild the image after moving the pin: `/Users/buv/gerege-nbfi/.softhouse/bin/build-oracle-image.sh`
+   POST:
+     130:cannot run natively. `.softhouse/bin/build-oracle-image.sh` builds it reproducibly instead:
+     157:"$(git rev-parse --show-toplevel)/.softhouse/bin/build-oracle-image.sh"
+   does the referenced script still exist at HEAD, and is it executable?
+     -rwxr-xr-x  1 buv  staff  3279 Aug 27 23:05 .softhouse/bin/build-oracle-image.sh
+   does the NEW invocation form resolve to it from this worktree?
+     resolved: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a55bfc2e4dfb7aa31/.softhouse/bin/build-oracle-image.sh  -> EXISTS and is executable
+
+6. DID T256 TOUCH ANY OTHER FILE OF RECORD?
+     .softhouse/capture/t256-toolchain-population/evidence/10-population-census.txt
+     .softhouse/capture/t256-toolchain-population/evidence/30-portability-drive-GREEN.txt
+     .softhouse/capture/t256-toolchain-population/evidence/31-vacuity-hardcode-present.txt
+     .softhouse/capture/t256-toolchain-population/evidence/32-vacuity-hardcode-absent.txt
+     .softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh
+     .softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T256.md
+     .softhouse/reference-oracle.md
+     .softhouse/tasks.json
+END
+
+=====================================================================
+7. ADJUDICATION OF THE TWO ALARMS THIS SCRIPT RAISED (P-70: a selector's
+   output is a statement about the selector, and both alarms are the
+   selector's fault, not the document's)
+=====================================================================
+
+ALARM 1 — "*** LOST tenant identifier  pre=19 post=18".
+  My check counted LINES CONTAINING the substring "gerege". The repo DIRECTORY is
+  named gerege-nbfi, so host paths matched it too. The three removed lines are:
+    - Rebuild the image after moving the pin: `/Users/buv/gerege-nbfi/.softhouse/bin/build-oracle-image.sh`
+    - | `GOROOT` | `/Users/buv/gerege-nbfi/.softhouse/toolchain/go` |
+    - | Activation | `. /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh` (committed) |
+  ALL THREE ARE HOST PATHS, NOT TENANT FACTS. Every tenant fact row is byte-identical
+  across the change (line numbers shift only):
+    :68  | Databases | fineract_tenants ... **fineract_gerege (281)** |
+    :92  | 2 | `gerege` | Gerege T22 Audit Tenant (Asia/Ulaanbaatar) | Asia/Ulaanbaatar | fineract_gerege |
+    :161->:166 | Tenant | **gerege** - tenant 2, Asia/Ulaanbaatar, HALF_UP ... |
+    :335->:340 ### The `gerege` tenant is the production-representative one
+    :834->:883 | Tenant | **gerege** (tenant 2, Asia/Ulaanbaatar), database fineract_gerege |
+  VERDICT: NOT LOST. No tenant fact was damaged.
+
+ALARM 2 — "ojdbc / oracle.jdbc / 1521  *** PRESENT - REJECTION" (pre=3 post=3).
+  Unchanged by T256 in both directions, and every occurrence is the NAME OF THE
+  PROHIBITED PRODUCT INSIDE A NEGATIVE ASSERTION ABOUT IT:
+    :117 | `ojdbc` / `oracle.jdbc` entries in /app/fineract-provider.jar | **0** |
+    :119 | Listener on port `1521` | none |
+    :121 | ojdbc/oracle.jdbc/:1521/com.mysql.cj/mariadb/mysql in the compose path | none |
+    :981 | prohibited-engine grep (ojdbc, oracle.jdbc, :1521, ...) ... | **0 hits** |
+  A document that PROVES Oracle Database is absent has to be allowed to say the word.
+  VERDICT: NO VIOLATION. Reporting this as a rejection would have been a false positive
+  manufactured by a substring selector.
+
+ALARM 3 (self-correction) — section 6 above listed `.softhouse/tasks.json` as touched.
+  That is an artefact of using a TWO-DOT range (47b9b5c..e6fca83), which also shows
+  main's own commits in reverse. The correct range is the merge base:
+    git merge-base 47b9b5c e6fca83 = f02d84935c91f996894b260a43ae46a9a7eda352
+    git diff f02d849...e6fca83 --name-only  ->  EXACTLY 8 FILES, NO tasks.json.
+  VERDICT: T256 did NOT touch tasks.json. Corrected here rather than silently rerun.

@@ -1,0 +1,96 @@
+T298 wider-live-surface attack — 2026-08-27T15:08:15Z
+HEAD = 0ba3554b8b897a94bce91351576f541674c05189
+
+-------------------------------------------------------------------
+A. SURFACES THE BRIEF NAMES — present or measured absent (P-70: say where I looked)
+  ABSENT  : Makefile
+  ABSENT  : makefile
+  ABSENT  : GNUmakefile
+  ABSENT  : .github
+  ABSENT  : .gitlab-ci.yml
+  ABSENT  : Justfile
+  ABSENT  : justfile
+  ABSENT  : Taskfile.yml
+  ABSENT  : package.json
+  ABSENT  : .pre-commit-config.yaml
+  launchd plists:
+    .softhouse/launchd/mn.gerege.nbfi.softhouse-program.plist
+  git hooks dir (worktree resolves hooks through the COMMON dir):
+    --git-common-dir = /Users/buv/gerege-nbfi/.git
+    core.hooksPath   = (unset -> default)
+    executable hooks actually installed (non-.sample):
+    count = 0   (0 = MEASURED zero installed hooks, not an unread directory)
+
+-------------------------------------------------------------------
+B. THE LIVE EXECUTABLE SET, comment-stripped, searched for ANY host path
+  members (8):
+    .softhouse/conformance.sh
+    .softhouse/bin/build-oracle-image.sh
+    .softhouse/bin/fire-program.sh
+    .softhouse/bin/go-env.sh
+    .softhouse/bin/rehydrate-check.sh
+    .softhouse/guards/check-ledger-invariants.sh
+    .softhouse/guards/drive-red-ledger-invariants.sh
+    .softhouse/launchd/mn.gerege.nbfi.softhouse-program.plist
+
+  strip full-line '#' comments, then grep for host-path shapes:
+  *** .softhouse/bin/build-oracle-image.sh
+        9:FINERACT_SRC="${FINERACT_SRC:-/Users/buv/fineract}"
+  *** .softhouse/bin/fire-program.sh
+        19:REPO="${GEREGE_NBFI_REPO:-/Users/buv/gerege-nbfi}"
+        20:FINERACT_SRC="${FINERACT_SRC:-/Users/buv/fineract}"
+  *** .softhouse/launchd/mn.gerege.nbfi.softhouse-program.plist
+        14:    <string>/Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh</string>
+        53:    <string>/Users/buv/.local/bin:/opt/homebrew/bin:/usr/local/bin:/Applications/Docker.app/Contents/Resources/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        55:    <string>/Users/buv</string>
+        59:  <string>/Users/buv/gerege-nbfi</string>
+        62:  <string>/Users/buv/Library/Logs/gerege-nbfi/launchd.out.log</string>
+        64:  <string>/Users/buv/Library/Logs/gerege-nbfi/launchd.err.log</string>
+  (any *** block above is a LIVE HOST PATH SURVIVING COMMENT-STRIPPING)
+
+-------------------------------------------------------------------
+C. PATHS A FIXED-STRING GREP WOULD MISS — assembly, indirection, here-docs
+  C1. concatenation of a host prefix with a repo suffix:
+    MEASURED ZERO
+  C2. $HOME-rooted repo path (portable-looking, still host-shaped):
+    .softhouse/bin/fire-program.sh:21:LOG_DIR="${LOG_DIR:-$HOME/Library/Logs/gerege-nbfi}"
+  C3. variable-INDIRECT execution (eval / ${!var} / $( $var ) / bash $var):
+    .softhouse/conformance.sh:128:#   `/dev/fd/63: No such file or directory` — the eval string still PARSES,
+    .softhouse/conformance.sh:324:    builtin eval '
+    .softhouse/conformance.sh:642:    . "$env_script"
+    .softhouse/conformance.sh:1258:  # PHYSICAL paths on BOTH sides. $REPO_ROOT is built by `cd … && pwd`, so a raw string
+    .softhouse/conformance.sh:1340:  bash "$REPO_ROOT/.softhouse/guards/check-ledger-invariants.sh" || rc=$?
+    .softhouse/conformance.sh:2985:    out="$(CONFORMANCE_REPO_ROOT="$other" bash "$script" --self-test 2>&1)"; rc=$?
+    .softhouse/conformance.sh:2994:    out="$(CONFORMANCE_REPO_ROOT="$REPO_ROOT" bash "$script" --self-test 2>&1)"; rc=$?
+    .softhouse/bin/go-env.sh:94:        _g_anchor=$(eval 'printf %s "${BASH_SOURCE[0]}"' 2>/dev/null) || _g_anchor=''
+    .softhouse/bin/go-env.sh:96:        _g_anchor=$(eval 'printf %s "${(%):-%x}"' 2>/dev/null) || _g_anchor=''
+    .softhouse/guards/check-ledger-invariants.sh:58:    . "$env_script"
+    .softhouse/guards/drive-red-ledger-invariants.sh:30:  . "$env_script"
+  C4. here-doc bodies in the live set that mention the toolchain (a here-doc is not a comment):
+    .softhouse/bin/fire-program.sh:165:cat > "$LOCK" <<EOF
+    .softhouse/bin/fire-program.sh:1134:  if /usr/bin/python3 - <<'PY'
+    .softhouse/bin/rehydrate-check.sh:6:python3 - <<'PY'
+  C5. GOROOT/GOPATH/GOMODCACHE assignments OUTSIDE go-env.sh (the paste this all exists to stop):
+    (empty = MEASURED ZERO)
+
+-------------------------------------------------------------------
+D. CAN ANY GRADED PATH REACH ONE OF THE 60 ARCHIVED INSTRUMENTS?
+  D1. any 'bash|sh|python <path under capture/reviews/handoff>' in the live set:
+    .softhouse/conformance.sh:732:    # post-strip output; 64775 B still fires. `.softhouse/reviews/T191-probe/`.
+    .softhouse/conformance.sh:1797:#     one fires. [.softhouse/reviews/T293/evidence/40-red-drive.txt]
+  D2. any find/glob-and-execute over those trees:
+    MEASURED ZERO
+  D3. launchd plist ProgramArguments — what the unattended fire ACTUALLY runs:
+    .softhouse/launchd/mn.gerege.nbfi.softhouse-program.plist:
+        <key>ProgramArguments</key>
+        <array>
+          <string>/bin/zsh</string>
+          <string>-lc</string>
+          <string>/Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh</string>
+        </array>
+
+  D4. .claude/skills — does any skill instruct a human/agent to run one of the 60?
+    MEASURED ZERO
+
+-------------------------------------------------------------------
+END

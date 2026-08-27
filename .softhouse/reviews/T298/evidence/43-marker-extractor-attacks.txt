@@ -1,0 +1,12 @@
+== M0 CONTROL: the document as committed
+  extracted -> [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"~]  lines=1
+== M1 both markers DELETED (someone 'tidies up' the HTML comments)
+  extracted -> []  lines=0
+== M2 END marker deleted only
+  extracted -> [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"~$ . .softhouse/bin/go-env.sh && cd nexus~$ go build ./...    → exit 0     (no output)~$ go vet  ./...     → exit 0     (no output)~$ go test ./...     → exit 0     ("no test files" — there are none yet)~83:        return LoanSchedulePlan.from(generate(mc, loanApplicationTerms, null, null));~61:            if (repaymentPeriodNumber == numberOfRepayments) { // last period~if (parsedNumber instanceof BigDecimal) { number = (BigDecimal) parsedNumber; }~else { number = BigDecimal.valueOf(parsedNumber.doubleValue()); }   // line 737~]  lines=9
+== M3 a SECOND fenced block added between the markers
+  extracted -> [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"~. /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh~]  lines=2
+== M4 the host-pinned line moved OUTSIDE the fence but INSIDE the markers (prose position)
+  extracted -> [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"~]  lines=1
+== M5 a SECOND, host-pinned activation block added ELSEWHERE in the document (outside the markers)
+  extracted -> [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"~]  lines=1

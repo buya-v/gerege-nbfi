@@ -1,0 +1,101 @@
+T298 worktree-composition drive — 2026-08-27T15:09:31Z
+HEAD = 0ba3554b8b897a94bce91351576f541674c05189
+
+FIXTURE
+  git rev-parse --show-toplevel  = /Users/buv/gerege-nbfi/.claude/worktrees/agent-a55bfc2e4dfb7aa31
+  git rev-parse --git-common-dir = /Users/buv/gerege-nbfi/.git
+  main checkout                  = /Users/buv/gerege-nbfi
+  CONFIRMED: worktree != main checkout, so the two git queries DISAGREE here.
+  => this is the exact condition under which a naive composition would break.
+
+PRE-STATE (before sourcing anything)
+  worktree-local toolchain dir exists?  no  <- must stay no
+  main   toolchain dir exists?          YES
+  inherited GOROOT     = '(unset)'
+  inherited GOMODCACHE = '(unset)'
+
+STEP X — the line under test, EXTRACTED from .softhouse/reference-oracle.md
+  extracted [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"]
+  ok   exactly one line between the markers                       = 1
+  ok   the line this drive runs is BYTE-IDENTICAL to the document's
+
+STEP — activation line run VERBATIM from repo root (worktree) (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a55bfc2e4dfb7aa31)
+    SRC=pinned
+    GOROOT=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+    GOPATH=/Users/buv/gerege-nbfi/.softhouse/toolchain/gopath
+    GOCACHE=/Users/buv/gerege-nbfi/.softhouse/toolchain/gocache
+    GOMODCACHE=/Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+    TOOLCHAIN=/Users/buv/gerege-nbfi/.softhouse/toolchain
+    WHICHGO=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+    GOVER=go version go1.26.6 darwin/arm64
+    ENVGOMODCACHE=/Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+    ENVGOROOT=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ok   [repo root (worktree)] GEREGE_GO_SOURCE                    = pinned
+  ok   [repo root (worktree)] GOROOT is the MAIN checkout         = /Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ok   [repo root (worktree)] GOMODCACHE is the MAIN one          = /Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+  ok   [repo root (worktree)] go itself agrees on GOMODCACHE      = /Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+  ok   [repo root (worktree)] go itself agrees on GOROOT          = /Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ok   [repo root (worktree)] GOROOT does not point inside the worktree
+
+STEP — activation line run VERBATIM from nexus/ (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a55bfc2e4dfb7aa31/nexus)
+    SRC=pinned
+    GOROOT=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+    GOPATH=/Users/buv/gerege-nbfi/.softhouse/toolchain/gopath
+    GOCACHE=/Users/buv/gerege-nbfi/.softhouse/toolchain/gocache
+    GOMODCACHE=/Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+    TOOLCHAIN=/Users/buv/gerege-nbfi/.softhouse/toolchain
+    WHICHGO=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+    GOVER=go version go1.26.6 darwin/arm64
+    ENVGOMODCACHE=/Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+    ENVGOROOT=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ok   [nexus/] GEREGE_GO_SOURCE                                  = pinned
+  ok   [nexus/] GOROOT is the MAIN checkout                       = /Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ok   [nexus/] GOMODCACHE is the MAIN one                        = /Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+  ok   [nexus/] go itself agrees on GOMODCACHE                    = /Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+  ok   [nexus/] go itself agrees on GOROOT                        = /Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ok   [nexus/] GOROOT does not point inside the worktree
+
+STEP — activation line run VERBATIM from .softhouse/guards/ (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a55bfc2e4dfb7aa31/.softhouse/guards)
+    SRC=pinned
+    GOROOT=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+    GOPATH=/Users/buv/gerege-nbfi/.softhouse/toolchain/gopath
+    GOCACHE=/Users/buv/gerege-nbfi/.softhouse/toolchain/gocache
+    GOMODCACHE=/Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+    TOOLCHAIN=/Users/buv/gerege-nbfi/.softhouse/toolchain
+    WHICHGO=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+    GOVER=go version go1.26.6 darwin/arm64
+    ENVGOMODCACHE=/Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+    ENVGOROOT=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ok   [.softhouse/guards/] GEREGE_GO_SOURCE                      = pinned
+  ok   [.softhouse/guards/] GOROOT is the MAIN checkout           = /Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ok   [.softhouse/guards/] GOMODCACHE is the MAIN one            = /Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+  ok   [.softhouse/guards/] go itself agrees on GOMODCACHE        = /Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+  ok   [.softhouse/guards/] go itself agrees on GOROOT            = /Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ok   [.softhouse/guards/] GOROOT does not point inside the worktree
+
+STEP — did anything CREATE a worktree-local toolchain or cache?
+  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a55bfc2e4dfb7aa31/.softhouse/toolchain absent
+  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a55bfc2e4dfb7aa31/.softhouse/toolchain/go absent
+  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a55bfc2e4dfb7aa31/.softhouse/toolchain/gomodcache absent
+  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a55bfc2e4dfb7aa31/.softhouse/toolchain/gocache absent
+  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a55bfc2e4dfb7aa31/.softhouse/toolchain/gopath absent
+  ok   no worktree-local toolchain dir was created
+
+STEP — does it ACTUALLY COMPILE from the worktree, against the shared cache?
+    BUILDRC=0
+  ok   go build ./... from the worktree                           = 0
+
+STEP — module cache identity: is there exactly ONE, shared?
+  main-checkout gomodcache inode/dev:
+    16777232:3946527  /Users/buv/gerege-nbfi/.softhouse/toolchain/gomodcache
+  count of *.softhouse/toolchain dirs under the whole worktree root (should be 0):
+0
+
+STEP — NEGATIVE CONTROL: the OLD hardcoded line, run from this worktree.
+  (On THIS Mac the old absolute path still resolves — so it appears to work while
+   silently binding a worktree to a path that exists only on one host.)
+    OLD-LINE SRC=pinned GOROOT=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  => it resolves HERE and only here. That is the invisibility T256 named, reproduced.
+
+asserts: 21   failures: 0
+DRIVE: GREEN

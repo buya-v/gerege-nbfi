@@ -1,0 +1,89 @@
+T298 marker attack matrix — 2026-08-27T15:11:24Z
+HEAD = 60c54d19df9ac74f29c2005a9e4d1cf6292276d0
+drive = .softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh   doc = .softhouse/reference-oracle.md
+
+== A0  CONTROL — document exactly as committed
+   extracted : [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"]
+   lines     : 1
+   drive rc  : 0   DRIVE: GREEN
+   SHOULD    : GREEN (rc=0)
+   RESULT    : *** SATISFIED ***  (guard says nothing is wrong)
+
+== A1  fenced line replaced with a TILDE host path (no literal /Users/ or /home/ to grep)
+   extracted : [. ~/gerege-nbfi/.softhouse/bin/go-env.sh]
+   lines     : 1
+   drive rc  : 1   DRIVE: RED — 11 assertion(s) failed
+   SHOULD    : RED — it is a host path
+   RESULT    : caught (rc=1)
+       ASSERT FAIL : GEREGE_GO_SOURCE is not fallback-path: src=pinned|goroot=/Users/buv/gerege-nbfi/.softhouse/toolchain/go|go=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+       ASSERT FAIL : a GOROOT was exported off-host: src=pinned|goroot=/Users/buv/gerege-nbfi/.softhouse/toolchain/go|go=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+       ASSERT FAIL : stderr never says the toolchain is unpinned — that is the silence this fix exists to end
+       ASSERT FAIL : stderr asserts an absence without printing the search that produced it
+
+== A2  fenced line replaced with a $HOME host path (also evades both substring checks)
+   extracted : [. "$HOME/gerege-nbfi/.softhouse/bin/go-env.sh"]
+   lines     : 1
+   drive rc  : 1   DRIVE: RED — 11 assertion(s) failed
+   SHOULD    : RED — it is a host path
+   RESULT    : caught (rc=1)
+       ASSERT FAIL : GEREGE_GO_SOURCE is not fallback-path: src=pinned|goroot=/Users/buv/gerege-nbfi/.softhouse/toolchain/go|go=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+       ASSERT FAIL : a GOROOT was exported off-host: src=pinned|goroot=/Users/buv/gerege-nbfi/.softhouse/toolchain/go|go=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+       ASSERT FAIL : stderr never says the toolchain is unpinned — that is the silence this fix exists to end
+       ASSERT FAIL : stderr asserts an absence without printing the search that produced it
+
+== A3  markers PRESENT, fence PRESENT, body EMPTY (the document prescribes nothing)
+   extracted : []
+   lines     : 0
+   drive rc  : 2   REFUSING: no activation line between the markers. The document no longer prescribes
+   SHOULD    : refuse loudly (rc=2)
+   RESULT    : caught (rc=2)
+
+== A4  MULTI-LINE body inside ONE fence, though the comment says 'Keep it to one line'
+   extracted : [cd "$(git rev-parse --show-toplevel)"
+   lines     : 2
+   drive rc  : 1   DRIVE: RED — 1 assertion(s) failed
+   SHOULD    : RED — prescription is 2 lines
+   RESULT    : caught (rc=1)
+       ASSERT FAIL : the prescription is 2 lines, not 1
+
+== A5  a HOST PATH added INSIDE the marker region but OUTSIDE the fence (prose position)
+   extracted : [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"]
+   lines     : 1
+   drive rc  : 0   DRIVE: GREEN
+   SHOULD    : RED — the region a reader reads now prescribes a host path
+   RESULT    : *** SATISFIED ***  (guard says nothing is wrong)
+
+== A6  a SECOND, host-pinned activation block appended ELSEWHERE in the same document
+   extracted : [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"]
+   lines     : 1
+   drive rc  : 0   DRIVE: GREEN
+   SHOULD    : RED — the document now manufactures the old paste again
+   RESULT    : *** SATISFIED ***  (guard says nothing is wrong)
+
+== A7  BOTH markers deleted ('tidying up the HTML comments'); the fenced line still there
+   extracted : []
+   lines     : 0
+   drive rc  : 2   REFUSING: no activation line between the markers. The document no longer prescribes
+   SHOULD    : refuse loudly (rc=2) — and NOTHING ELSE must notice either
+   RESULT    : caught (rc=2)
+
+== A8  BEGIN marker renamed by one character (a rename, not a deletion)
+   extracted : []
+   lines     : 0
+   drive rc  : 2   REFUSING: no activation line between the markers. The document no longer prescribes
+   SHOULD    : refuse loudly (rc=2)
+   RESULT    : caught (rc=2)
+
+== A9  portable line that ACTIVATES fine but SILENCES go-env.sh's fallback banner
+   extracted : [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh" 2>/dev/null]
+   lines     : 1
+   drive rc  : 1   DRIVE: RED — 4 assertion(s) failed
+   SHOULD    : RED — the loud announcement is the whole safety property
+   RESULT    : caught (rc=1)
+       ASSERT FAIL : stderr never says the toolchain is unpinned — that is the silence this fix exists to end
+       ASSERT FAIL : stderr asserts an absence without printing the search that produced it
+       ASSERT FAIL : SILENT FAILURE — nothing on stderr. This is the exact defect the fix targets
+       ASSERT FAIL : the stale GOROOT was handled silently
+
+TREE STATE after the matrix:
+  CLEAN — .softhouse/reference-oracle.md restored to HEAD

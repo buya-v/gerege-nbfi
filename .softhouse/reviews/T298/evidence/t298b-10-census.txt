@@ -1,0 +1,58 @@
+T298 census — run at 2026-08-27T15:07:11Z
+reviewer HEAD = b9187bbb05b8838b579347383c0a563ab0a71742
+selector: git grep -F -l -- <literal> <rev>   (tracked files only; .softhouse/toolchain/ is gitignored and therefore outside the universe)
+
+===== rev f02d849 (f02d849) =====
+  L1 [/Users/buv/gerege-nbfi/.softhouse/toolchain]        rc=0  files=58
+  L2 [/Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh]  rc=0  files=39
+  UNION deduplicated                                   files=92
+  bucket LIVE     = 1
+  bucket ARCHIVED = 60
+  bucket PROSE    = 31
+  --- LIVE members (every one must be an OBSERVATION, not an INSTRUCTION) ---
+    .softhouse/bin/go-env.sh
+  --- extension census of the union (P-40: nothing may be silently dropped) ---
+       2 json
+      22 md
+      10 py
+      51 sh
+       7 txt
+
+===== rev HEAD (b9187bb) =====
+  L1 [/Users/buv/gerege-nbfi/.softhouse/toolchain]        rc=0  files=71
+  L2 [/Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh]  rc=0  files=47
+  UNION deduplicated                                   files=108
+  bucket LIVE     = 1
+  bucket ARCHIVED = 62
+  bucket PROSE    = 45
+  --- LIVE members (every one must be an OBSERVATION, not an INSTRUCTION) ---
+    .softhouse/bin/go-env.sh
+  --- extension census of the union (P-40: nothing may be silently dropped) ---
+       2 json
+      24 md
+      10 py
+      53 sh
+      19 txt
+
+===== drift: union at f02d849 vs union at HEAD =====
+  added since f02d849:
+    + .softhouse/capture/t256-toolchain-population/evidence/10-population-census.txt
+    + .softhouse/capture/t256-toolchain-population/evidence/30-portability-drive-GREEN.txt
+    + .softhouse/capture/t256-toolchain-population/evidence/31-vacuity-hardcode-present.txt
+    + .softhouse/capture/t256-toolchain-population/evidence/32-vacuity-hardcode-absent.txt
+    + .softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh
+    + .softhouse/capture/t284-schema2-callsites/evidence/60-failopen-lint.txt
+    + .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T256.md
+    + .softhouse/reviews/T293/evidence/10-lint-residue-ABSENT.txt
+    + .softhouse/reviews/T293/evidence/11-lint-residue-PRESENT.txt
+    + .softhouse/reviews/T298/REVIEW.md
+    + .softhouse/reviews/T298/attack-marker-extractor.sh
+    + .softhouse/reviews/T298/evidence/10-population-rederivation.txt
+    + .softhouse/reviews/T298/evidence/30-selflocating-line-attacks.txt
+    + .softhouse/reviews/T298/evidence/40-marker-drive-GREEN-while-doc-prescribes-host-path.txt
+    + .softhouse/reviews/T298/evidence/41-marker-drive-RED-when-the-fenced-line-is-mutated.txt
+    + .softhouse/reviews/T298/evidence/43-marker-extractor-attacks.txt
+  removed since f02d849:
+
+  archived-bucket members at f02d849 (the 60 left alone), for the cross-reference attack:
+60
