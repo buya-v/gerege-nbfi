@@ -1,3 +1,13 @@
+> **THIS IS ATTEMPT 1, AND IT GRADES T288's PRE-T309 BYTES.** It was written from a
+> worktree forked at `5964ab5`, before T309 (`2dfbe422`) landed, and the attempt was
+> killed before it could be reviewed. **Read
+> [`REVIEW-A2.md`](REVIEW-A2.md) first** — attempt 2 grades T288 *as it stands on `main`
+> after T309*, says which of F1-F4 below T309 closed (defect 1 only; F1, F2, F3 are all
+> still open and F1 is now confirmed on real corpse data), and adds F5-F11. Everything
+> below still stands on its own bytes.
+
+---
+
 # T302 — INDEPENDENT review of T288
 
 **Subject** T288, "the wrapper repairs the exit-protocol lie instead of warning about it".
