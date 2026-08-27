@@ -4,8 +4,8 @@
 # WHAT IT ENFORCES, in one sentence: the set of tracked `.softhouse/` instruments that name a
 # repo-relative path WHICH DOES NOT EXIST is PINNED, and it may not grow.
 #
-# WHY A FRONTIER AND NOT ZERO. The population at the commit that installs this guard is 108
-# instruments naming 150 dead literals, measured (not estimated) by
+# WHY A FRONTIER AND NOT ZERO. The population at the commit that installs this guard is 70
+# instruments naming 98 dead literals, measured (not estimated) by
 # `.softhouse/capture/t316-dead-path-guards/census_dead_paths.py`, whose selector is printed on
 # every run. Demanding zero would be red on its first run and would be pinned away within a fire.
 # Demanding NO GROWTH costs nothing today and stops the next one silently arriving. This is the
