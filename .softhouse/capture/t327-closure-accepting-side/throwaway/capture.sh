@@ -366,9 +366,18 @@ docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -c \
   | tee "$OUT/FINAL-ledger.txt"
 
 say ""
-say "DOUBLE-ENTRY INVARIANT, per transaction, in MNT MINOR UNITS (integer arithmetic only):"
-# type_enum 1 = CREDIT, 2 = DEBIT in Fineract's JournalEntryType. Rather than assume, both are
-# printed and the sums are compared per transaction id.
+# ***** LABEL CORRECTED AFTER THE RUN, AND THE ARTEFACT IT PRODUCED IS LEFT UNTOUCHED. *****
+# This header used to read "DOUBLE-ENTRY INVARIANT, per transaction, in MNT MINOR UNITS (integer
+# arithmetic only)". IT IS NOT. `sum(amount)` is a PostgreSQL NUMERIC sum in MAJOR units at the
+# stored scale -- the run printed `350000.620000`, not `35000062`. The arithmetic was right and the
+# LABEL was wrong, which is P-11 exactly: "the code can be RIGHT and its stated reason WRONG, and
+# the reason is what the next contributor checks." out/FINAL-invariant.txt is left EXACTLY as the
+# run produced it, because it records what was observed; the genuine integer minor-unit computation
+# is invariant-minor-units.py, run from the committed bytes AFTER the instance was destroyed, and
+# its residue rule is calibrated on known positives by red-drive-residue-rule.py (P-72).
+say "PER-TRANSACTION SUMS, as PostgreSQL NUMERIC in MAJOR units at the stored scale (NOT minor units):"
+# type_enum 1 = CREDIT, 2 = DEBIT [VERIFIED: fineract-core/.../journalentry/domain/JournalEntryType.java:23-24].
+# Rather than assume, both are printed and the sums are compared per transaction id.
 docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
   "SELECT transaction_id||' | type_enum '||type_enum||' | sum '||sum(amount)::text||' | legs '||count(*) FROM acc_gl_journal_entry GROUP BY transaction_id, type_enum ORDER BY transaction_id, type_enum" \
   | tee "$OUT/FINAL-invariant.txt"

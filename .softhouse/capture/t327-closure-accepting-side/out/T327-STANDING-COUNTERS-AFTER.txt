@@ -1,0 +1,7 @@
+acc_gl_journal_entry=60/64
+acc_gl_closure=0/null
+distinct_transaction_id=26
+m_portfolio_command_source=352/352
+m_loan=7
+m_office=1
+acc_gl_account=23
