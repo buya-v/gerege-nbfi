@@ -222,7 +222,13 @@ arm "T316-07-pin-removed-SELFREF"          2 ABSENT  'guard_dead_path_frontier R
 arm "T316-08-stale-reconcile-list"         2 ABSENT  'RECONCILIATION LIST HAS GONE STALE'                            m_t316_stale_list
 arm "T319-09-shipped-tool-demotes"         2 ABSENT  'guard_reconciler_ownership FAILED'                             m_t319_break_tool
 arm "T319-10-matrix-blind-to-redispatch"   2 ABSENT  'guard_reconciler_ownership FAILED'                             m_t319_blind_matrix
-arm "T319-11-rig-removed"                  2 ABSENT  'ownership predicate is UNGRADED'                               m_t319_no_rig
+# The marker here is 'predicate is UNGRADED' and NOT 'ownership predicate is UNGRADED', which is
+# how this arm read on its first run. It FAILED -- on the marker only, with exit=2 and
+# probe=ABSENT both correct -- because the guard emits that sentence as two `warn` calls and the
+# phrase straddles the line break. The arm was wrong, not the guard. Recorded rather than quietly
+# corrected: a marker regex is an assertion about the transcript's SHAPE, and this one had never
+# been run before it was believed.
+arm "T319-11-rig-removed"                  2 ABSENT  'predicate is UNGRADED'                                         m_t319_no_rig
 
 reset_tree
 echo "============================================================================================"
