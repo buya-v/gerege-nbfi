@@ -853,38 +853,41 @@ def _branch_wip_core(branch):
     # THE EIGHT real corpses -- T297, T298, T308 -- are MERGED into main and got that
     # sentence [VERIFIED: .softhouse/reviews/T302/a2/out-f9-realcorpses.txt].
     # The discriminator was always available one command away.
-    rcm, _, errm = _run([GIT, "merge-base", "--is-ancestor", sha, "main"])
-    merged = None
-    if rcm == 0:
-        merged = True
-    elif rcm == 1:
-        merged = False
     rc2, count, err2 = _run([GIT, "rev-list", "--count", "main.." + branch])
     if rc2 != 0 or not count.isdigit():
         return "unverified", ("Branch %s exists at %s but its commit count vs main "
                               "could not be read (git rc=%s) -- UNVERIFIED."
                               % (branch, sha[:9], rc2))
     n = int(count)
-    if merged and n == 0:
+    if n > 0:
+        # n > 0 means at least one commit is NOT reachable from main, so the branch cannot
+        # be an ancestor of main and the merged question does not arise. The extra git
+        # call below is therefore spent ONLY on the ambiguous zero -- which keeps this
+        # function at two git calls in the healthy case, the figure T302's budget
+        # measurement was taken against (0.0679 s per task, crossover with the ~7 s signal
+        # budget at N ~ 100) [VERIFIED: .softhouse/reviews/T302/a2/out-f8b-realgit.txt].
+        return "commits", ("Its branch %s has %d commit(s) ahead of main, head %s."
+                           % (branch, n, sha[:9]))
+    # n == 0. THIS IS THE AMBIGUOUS ZERO AND IT IS THE WHOLE OF F1: "merged" and "nothing
+    # was ever committed" produce the SAME zero, and this function used to print the
+    # second one. Ask the question that separates them.
+    rcm, _, errm = _run([GIT, "merge-base", "--is-ancestor", sha, "main"])
+    if rcm == 0:
         return "merged", ("!! Its branch %s exists at %s and IS MERGED INTO main -- every "
                           "commit on it is reachable from main. The work LANDED. Do NOT "
                           "read this as an unstarted task and do NOT re-dispatch it "
                           "without reading that history first; `needs_retry` here means "
                           "'somebody must adjudicate', not 'do it again'." % (branch, sha[:9]))
-    if n == 0 and merged is None:
+    if rcm != 1:
         return "unverified", ("Its branch %s exists at %s and has no commit ahead of main, "
-                              "but `git merge-base --is-ancestor` could not answer (%s) -- "
-                              "so MERGED and NEVER-COMMITTED cannot be told apart here. "
-                              "UNVERIFIED, not empty." % (branch, sha[:9], errm))
-    if n == 0:
-        return "absent", ("Its branch %s exists at %s, has NO commit ahead of main, and "
-                          "is NOT an ancestor of main -- so nothing was ever committed to "
-                          "it. (The merged case was checked for and excluded; this is a "
-                          "measurement, not the default reading of a zero.)"
-                          % (branch, sha[:9]))
-    # n > 0 implies NOT an ancestor of main, so no merged clause is possible here.
-    return "commits", ("Its branch %s has %d commit(s) ahead of main, head %s."
-                       % (branch, n, sha[:9]))
+                              "but `git merge-base --is-ancestor` could not answer (rc=%s, "
+                              "%s) -- so MERGED and NEVER-COMMITTED cannot be told apart "
+                              "here. UNVERIFIED, not empty."
+                              % (branch, sha[:9], rcm, errm))
+    return "absent", ("Its branch %s exists at %s, has NO commit ahead of main, and is NOT "
+                      "an ancestor of main -- so nothing was ever committed to it. (The "
+                      "merged case was checked for and excluded; this is a measurement, "
+                      "not the default reading of a zero.)" % (branch, sha[:9]))
 
 
 def reconcile(fire, rescue_map, named_corpses, dry_run=False):

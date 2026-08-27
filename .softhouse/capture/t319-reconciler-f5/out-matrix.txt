@@ -1,7 +1,7 @@
 ==============================================================================
 OWNERSHIP MATRIX -- GREEN LEG (shipped tool)
   tool under test : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6e1f1cf817ead480/.softhouse/bin/ready-tasks.py
-  sha256          : 16740c70d8b35715
+  sha256          : 8e7b390bf489dac2
   source repo     : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6e1f1cf817ead480 (READ ONLY)
   real ids in_progress at BOTH 5428c0a4 and 5964ab54: T297 T298 T302 T304 T305 T306 T308
 ==============================================================================
@@ -92,8 +92,8 @@ GREEN LEG (shipped tool): 13/13 cells correct
 ### The matrix MUST go red, and cell B' MUST be one of the failures.
 ==============================================================================
 OWNERSHIP MATRIX -- RED LEG (planted T309 defect)
-  tool under test : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319plant.bt1hb1gj/ready-tasks.py
-  sha256          : 28527246e73c542a
+  tool under test : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319plant.4igtt1j9/ready-tasks.py
+  sha256          : 01fcd30021734511
   source repo     : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6e1f1cf817ead480 (READ ONLY)
   real ids in_progress at BOTH 5428c0a4 and 5964ab54: T297 T298 T302 T304 T305 T306 T308
 ==============================================================================
@@ -108,14 +108,14 @@ CELL B'  SAME FIRE, clock ADVANCED across its own RE-DISPATCH  <<< F5
     why          : Seven of the ids in_progress at the lock commit were RE-DISPATCHED by this same fire five minutes later and are LIVE WORKERS. T309's single term reports 7 demotable here. Correct answer: 0.
     expected     : mode=in_session demotions=0
     observed     : mode=in_session demotions=7
-        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.7qy71tkr/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.7qy71tkr/repo --dry-run --corpse T297 --corpse T298 --corpse T299 --corpse T302 --corpse T304 --corpse T305 --corpse T306 --corpse T308
+        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.6p39707j/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.6p39707j/repo --dry-run --corpse T297 --corpse T298 --corpse T299 --corpse T302 --corpse T304 --corpse T305 --corpse T306 --corpse T308
         | RECONCILE -- fire 20260823-140001
         |   git:  /usr/bin/git
-        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.7qy71tkr/repo
-        |   lock: invoked from INSIDE a live session -- ancestor pid 52339 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.6p39707j/repo
+        |   lock: invoked from INSIDE a live session -- ancestor pid 70914 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
         |   mode: in_session   (lock fire id: 20260823-140001)
         |   in_progress tasks found: 8  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
-        |   in-session anchor: this fire's lock commit is ef557ff9e, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
+        |   in-session anchor: this fire's lock commit is d30efa2f3, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
         |   in-session evidence: at that commit 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308
         |   in-session `--corpse`: T297, T298, T299, T302, T304, T305, T306, T308
         |   IN-SESSION authority: 7 demotable, 1 WITHHELD (a live fire is running; a task may be touched only if it was inherited at the lock commit, has NOT been rewritten by this fire since, AND was named with `--corpse`)
@@ -149,14 +149,14 @@ CELL C   term 3: NO --corpse passed, on the same 8 real corpses
     why          : An in-session caller that enumerates nothing may touch nothing.
     expected     : mode=in_session demotions=0
     observed     : mode=in_session demotions=8
-        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.u7oeoxjz/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.u7oeoxjz/repo --dry-run
+        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.jcqulcze/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.jcqulcze/repo --dry-run
         | RECONCILE -- fire 20260823-140001
         |   git:  /usr/bin/git
-        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.u7oeoxjz/repo
-        |   lock: invoked from INSIDE a live session -- ancestor pid 52645 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.jcqulcze/repo
+        |   lock: invoked from INSIDE a live session -- ancestor pid 71145 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
         |   mode: in_session   (lock fire id: 20260823-140001)
         |   in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
-        |   in-session anchor: this fire's lock commit is a3065147c, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
+        |   in-session anchor: this fire's lock commit is 6a80a63db, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
         |   in-session evidence: at that commit 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308
         |   in-session `--corpse`: NONE PASSED. Term 3 will fail for every task; an in-session caller must NAME each dispatch it claims is dead.
         |   IN-SESSION authority: 8 demotable, 0 WITHHELD (a live fire is running; a task may be touched only if it was inherited at the lock commit, has NOT been rewritten by this fire since, AND was named with `--corpse`)
@@ -185,14 +185,14 @@ CELL C2  term 3: only 3 of the 8 named
     why          : Exactly the named subset, never the swept set.
     expected     : mode=in_session demotions=3
     observed     : mode=in_session demotions=8
-        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.nxowzwi7/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.nxowzwi7/repo --dry-run --corpse T297 --corpse T298 --corpse T299
+        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.gvxtvcvg/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.gvxtvcvg/repo --dry-run --corpse T297 --corpse T298 --corpse T299
         | RECONCILE -- fire 20260823-140001
         |   git:  /usr/bin/git
-        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.nxowzwi7/repo
-        |   lock: invoked from INSIDE a live session -- ancestor pid 52797 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.gvxtvcvg/repo
+        |   lock: invoked from INSIDE a live session -- ancestor pid 71169 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
         |   mode: in_session   (lock fire id: 20260823-140001)
         |   in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
-        |   in-session anchor: this fire's lock commit is 19a9d0b6f, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
+        |   in-session anchor: this fire's lock commit is 8d701860e, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
         |   in-session evidence: at that commit 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308
         |   in-session `--corpse`: T297, T298, T299
         |   IN-SESSION authority: 8 demotable, 0 WITHHELD (a live fire is running; a task may be touched only if it was inherited at the lock commit, has NOT been rewritten by this fire since, AND was named with `--corpse`)
@@ -221,14 +221,14 @@ CELL D   F6: a later REVIEW commit whose BODY quotes the lock subject
     why          : T309's `--grep -1` moved its anchor to this review commit and the count went 7 -> 8 [T302 F6]. The anchor must not move: a review commit does not TOUCH .softhouse/LOCK.
     expected     : mode=in_session demotions=0
     observed     : mode=in_session demotions=7
-        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.amkn3pf4/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.amkn3pf4/repo --dry-run --corpse T297 --corpse T298 --corpse T299 --corpse T302 --corpse T304 --corpse T305 --corpse T306 --corpse T308
+        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.95gixdte/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.95gixdte/repo --dry-run --corpse T297 --corpse T298 --corpse T299 --corpse T302 --corpse T304 --corpse T305 --corpse T306 --corpse T308
         | RECONCILE -- fire 20260823-140001
         |   git:  /usr/bin/git
-        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.amkn3pf4/repo
-        |   lock: invoked from INSIDE a live session -- ancestor pid 53027 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.95gixdte/repo
+        |   lock: invoked from INSIDE a live session -- ancestor pid 71201 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
         |   mode: in_session   (lock fire id: 20260823-140001)
         |   in_progress tasks found: 8  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
-        |   in-session anchor: this fire's lock commit is 04557c0e2, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
+        |   in-session anchor: this fire's lock commit is 00834b397, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
         |   in-session evidence: at that commit 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308
         |   in-session `--corpse`: T297, T298, T299, T302, T304, T305, T306, T308
         |   IN-SESSION authority: 7 demotable, 1 WITHHELD (a live fire is running; a task may be touched only if it was inherited at the lock commit, has NOT been rewritten by this fire since, AND was named with `--corpse`)
@@ -256,14 +256,14 @@ CELL E   F6: a later commit with the IDENTICAL lock subject, LOCK untouched
     why          : Subject equality alone is forgeable; touching .softhouse/LOCK is not.
     expected     : mode=in_session demotions=0
     observed     : mode=in_session demotions=7
-        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.aj5g458a/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.aj5g458a/repo --dry-run --corpse T297 --corpse T298 --corpse T299 --corpse T302 --corpse T304 --corpse T305 --corpse T306 --corpse T308
+        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.drgji6nx/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.drgji6nx/repo --dry-run --corpse T297 --corpse T298 --corpse T299 --corpse T302 --corpse T304 --corpse T305 --corpse T306 --corpse T308
         | RECONCILE -- fire 20260823-140001
         |   git:  /usr/bin/git
-        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.aj5g458a/repo
-        |   lock: invoked from INSIDE a live session -- ancestor pid 53207 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.drgji6nx/repo
+        |   lock: invoked from INSIDE a live session -- ancestor pid 71232 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
         |   mode: in_session   (lock fire id: 20260823-140001)
         |   in_progress tasks found: 8  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
-        |   in-session anchor: this fire's lock commit is 0ff562222, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
+        |   in-session anchor: this fire's lock commit is bc8d9f9f9, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
         |   in-session evidence: at that commit 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308
         |   in-session `--corpse`: T297, T298, T299, T302, T304, T305, T306, T308
         |   IN-SESSION authority: 7 demotable, 1 WITHHELD (a live fire is running; a task may be touched only if it was inherited at the lock commit, has NOT been rewritten by this fire since, AND was named with `--corpse`)
