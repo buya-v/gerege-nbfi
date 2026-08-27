@@ -3037,3 +3037,44 @@ review rather than letting an unreviewed judgement stand as precedent.** Disting
 `P-88` rejects: `T271` refused to create the file or move `FAILOPEN_PIN_FILE_LIST`, because those manufacture
 a green out of host state. A **census** whose stated purpose is that no new site enters unseen is a different
 instrument — adding a genuine site **with its justification** is what it asks for.
+
+---
+
+**P-94 — A SEVERITY DOWNGRADE THAT CITES A MITIGATION MUST DRIVE THAT MITIGATION RED IN THE SAME PASS.**
+
+*Local fire `20260827-230001`. `T308` reviewing `T292`; `T314` closing what `T308` opened.*
+
+`T292`'s Theorem 2 has two clauses: (1) raising coverage requires **asserting a fact**, which no rule reading
+only *(document, register)* can distinguish from a true one, and (2) **every witness path is printed, so a
+forgery is NAMED**. A review pass used **clause 2 twice to downgrade its own severities** — and never tested
+it. `T308` tested it and it was false: the witness path is `path + "." + k`, an unescaped concatenation of
+**attacker-chosen key strings**, printed unquoted and uncapped. A top-level key literally named `cells[0]`
+prints a witness line **byte-identical** to a legitimately nested document's.
+
+**The mitigation was load-bearing for two findings and had never been driven at all.** That is the pattern:
+a downgrade converts a finding into a non-finding, so the evidence bar for the *mitigation* is the same bar
+as for the *finding* — and it is routinely waived, because a mitigation feels like a reason rather than a
+claim.
+
+**The corollary `T314` added, which is where this stops being about one file.** `T308` also reported *"no
+scratch leaked"* while its own merged diff carried a scratch file into another task's committed capture
+directory. Cause: the `.gitignore` fence in that directory names **one prefix**, and `T308`'s scratch used a
+different one. **A scratch fence is scoped to the directory and prefix it names, so "no scratch leaked" is
+never an inference from having written a fence — it is a claim about `git status` over the WHOLE TREE**, and
+it must be measured that way.
+
+**And the reversal that makes this worth writing down.** `T314` set out to fix what `T308` named, and found
+`T308` **right that the digest was the worse half and wrong about why**: `coverage_digest` *discards* the
+path, so the digest collision is container-blindness **working as designed**, and restoring the path would
+destroy the property the digest exists to have. `T308`'s own §6 says this and its §5c contradicts it. The
+real defect was elsewhere and nobody had named it — the canon `";".join(sorted("%s=%s" % …))` is *itself* an
+unescaped concatenation, and `;` and `=` are legal in a JSON member name, so a document that graded **one**
+proposition produces the fingerprint of one that graded **two**.
+
+**THE RULE: a mitigation cited to lower a severity is a CLAIM, not a reason. Drive it red in the same pass or
+do not lower the severity.** Two further obligations follow. **When a fix lands, RE-SCORE every severity
+whose justification the fix withdrew** — `T314` had to do this retroactively for two findings and one moved.
+And **when you are handed a diagnosis, verify the mechanism before you repair it**: the repair the brief
+implied (escape the printer) was measured to leave the attack **fully alive** at 47 collisions, identical to
+no fix at all, because the path was not only displayed — it was an **identity**, a member of a set of path
+strings that a `rsplit` steers.
