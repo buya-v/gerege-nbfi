@@ -398,3 +398,8 @@ So that silence is distinguishable from not looking:
 | F-8 | MINOR | say in the document that scripts should anchor `BASH_SOURCE`-relative and that the prescribed line is for an interactive shell | `.softhouse/reference-oracle.md` |
 | F-9 | MINOR | refuse `ACT_N != 1` **before** the first `eval`, not after | `30-portability-red-drive.sh` |
 | — | note | T299's rename is **pin-safe**; only `tasks.json` `files_hint` rows reference `t256-verdict-predicate` | T299 |
+
+---
+---
+
+**PART B of this review is in `PART-B.md` beside this file.** It was written by a resumed T298 session at a later commit and RE-DERIVES every load-bearing claim above with its own instruments. Read the FINAL VERDICT at the end of `PART-B.md`; it supersedes the verdict block at the top of this file, which it confirms rather than contradicts.
