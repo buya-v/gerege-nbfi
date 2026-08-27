@@ -1,0 +1,29 @@
+== A. the type-300 contra mapping (:708). Absent => a DIFFERENT refusal, not an accept.
+ id | financial_activity_type | gl_account_id | gl_code | name | classification_enum | account_usage | manual_journal_entries_allowed | disabled 
+----+-------------------------+---------------+---------+------+---------------------+---------------+--------------------------------+----------
+(0 rows)
+
+== B. findNonContraTransactionIds -- EMPTY is the accepting side of :812.
+ non_contra_transaction_id_count 
+---------------------------------
+                               0
+(1 row)
+
+== C. the raw ledger census: what is here at all.
+ journal_entries | distinct_transaction_ids | gl_accounts | gl_closures | offices 
+-----------------+--------------------------+-------------+-------------+---------
+               0 |                        0 |           0 |           0 |       2
+(1 row)
+
+== D. the setup surface a capture would need: EQUITY DETAIL accounts and currencies.
+ equity_detail_postable | any_detail_postable | all_gl_accounts 
+------------------------+---------------------+-----------------
+                      0 |                   0 |               0
+(1 row)
+
+ code | decimal_places |       name       
+------+----------------+------------------
+ MNT  |              2 | Mongolian Tugrik
+ USD  |              2 | US Dollar
+(2 rows)
+

@@ -1,0 +1,13 @@
+POST /journalentries?command=defineOpeningBalance
+case-id: OB-ACCEPT-01-openingbalance-empty-ledger
+instance: THROWAWAY t305-oracle-app, image fineract:latest (same image id as the standing fineract-fineract-1), port 8444
+Fineract-Platform-TenantId: t305
+Authorization: Basic <mifos:password>
+Idempotency-Key: t305-ob-accept-01
+Content-Type: application/json
+body-file: req/ob-accept-01.json
+body-wire-bytes-artefact: OB-ACCEPT-01-openingbalance-empty-ledger.req
+body-sha256: 9ec6eaa257aa4493cc675b1771430971dcd5f169617399bbd44443c5e2d7cf63
+body-bytes: 544
+response-status: 200
+captured-at-utc: 2026-08-27T15:40:58Z

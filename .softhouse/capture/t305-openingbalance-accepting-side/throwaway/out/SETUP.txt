@@ -1,0 +1,23 @@
+S-01-currencies              PUT  /currencies                                    -> 200
+{"currencies":["MNT"],"changes":{"currencies":["MNT"]}}
+S-02a-gl-contra              POST /glaccounts                                    -> 200
+{"resourceId":1}
+S-02b-gl-asset               POST /glaccounts                                    -> 200
+{"resourceId":2}
+S-02c-gl-asset2              POST /glaccounts                                    -> 200
+{"resourceId":3}
+S-02d-gl-liability           POST /glaccounts                                    -> 200
+{"resourceId":4}
+
+GL accounts created (id | code | classification_enum | account_usage | manual_journal_entries_allowed | disabled):
+1 | T305-3000 | 3 | 1 | true | false
+2 | T305-1000 | 1 | 1 | true | false
+3 | T305-1100 | 1 | 1 | true | false
+4 | T305-2000 | 2 | 1 | true | false
+S-03-financialactivity       POST /financialactivityaccounts                     -> 200
+{"resourceId":1}
+
+financial activity 300 ->
+gl 1 code T305-3000 classification_enum 3
+journal entries before the capture:
+0

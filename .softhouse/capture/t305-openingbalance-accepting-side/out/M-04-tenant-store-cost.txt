@@ -1,0 +1,40 @@
+== A. the registry rows a new tenant would have to be hand-written into.
+ id | identifier |                    name                    |   timezone_id    | oltp_id | report_id 
+----+------------+--------------------------------------------+------------------+---------+-----------
+  1 | default    | Default Demo Tenant                        | Asia/Kolkata     |       1 |         1
+  2 | gerege     | Gerege T22 Audit Tenant (Asia/Ulaanbaatar) | Asia/Ulaanbaatar |       2 |         2
+(2 rows)
+
+ id |   schema_name    | schema_server | schema_server_port | schema_username 
+----+------------------+---------------+--------------------+-----------------
+  1 | fineract_default | db            | 5432               | postgres
+  2 | fineract_gerege  | db            | 5432               | postgres
+(2 rows)
+
+== B. every table in the shared registry -- the blast radius of a hand-written row.
+        table_name         
+---------------------------
+ databasechangelog
+ databasechangeloglock
+ m_tenant_oidc_config
+ tenant_server_connections
+ tenants
+ timezones
+(6 rows)
+
+== C. the liquibase state a restart would re-enter, and how big a tenant schema is.
+ tenant_store_changelog_rows |       last_executed        | last_order 
+-----------------------------+----------------------------+------------
+                          22 | 2026-08-17 11:31:10.891034 |         22
+(1 row)
+
+== D. the databases on this server -- a new tenant adds one, permanently or not.
+     datname      |  size   
+------------------+---------
+ fineract_default | 42 MB
+ fineract_gerege  | 40 MB
+ fineract_tenants | 8158 kB
+ postgres         | 7678 kB
+ root             | 7678 kB
+(5 rows)
+

@@ -315,6 +315,52 @@ func (GoPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 	// transaction_ids, transcribed from errors[0].args), so this port reads a
 	// length rather than a boolean somebody derived for it.
 	//
+	// ⚠ THE SENTENCE ABOVE OVERCLAIMS, AND IS CORRECTED HERE RATHER THAN
+	// DELETED, because it was quoted in T294's handoff §6 and in the vector's
+	// own `_note` as the reason this vector is non-vacuous, and a reader who
+	// meets it there must be able to find the correction. [T296 F-T296-2,
+	// discharged by T305.] T296 mutated THIS FUNCTION in four arms and
+	// re-graded the whole ledger corpus:
+	//
+	//	arm E  the rule moved BELOW the balance check   -> DIES
+	//	arm A  match on req.Command alone, id list never read  -> SURVIVES
+	//	arm B  match on the id list alone, command never read  -> SURVIVES
+	//
+	// So THIS PORT READS A LENGTH; NOTHING IN THIS STORE REQUIRES IT TO. Arm E
+	// is the part of T294's claim that measured true — the ORDERING of this
+	// rule against the balance rule really is graded, and it is the only
+	// observed refusal precedence in the corpus. But the id list is INERT FOR
+	// GRADING: a port that ignores it scores identically.
+	//
+	// WHAT THAT LET THROUGH — AND IT IS NOW CLOSED. Arm A refuses EVERY
+	// defineOpeningBalance, including on an EMPTY ledger where the oracle
+	// ACCEPTS (:812's CollectionUtils.isEmpty fall-through into the writes at
+	// :742/:745). That is the headerRefusingPoster class — the reasonable thing
+	// to do, which the oracle does not do. Only an ACCEPTING-side capture could
+	// kill it, because every refusal capture in this corpus agrees with it.
+	// T305 TOOK ONE: HTTP 200 and six journal entries on an empty ledger,
+	// promoted as LDG-05-openingbalance-accepted-empty-ledger, and arm A is
+	// registered here as `ledger-wrong-openingbalance-always-refusing` and dies
+	// to it on leg_count while passing every other ledger vector.
+	//
+	// ⚠ AND THE SENTENCE THIS COMMENT OPENS WITH IS WRONG IN THE SAME WAY THE
+	// ORACLE'S OWN MESSAGE IS. "Opening balances may not be defined once journal
+	// entries have been posted" is :814's text and this corpus repeated it.
+	// MEASURED [T305]: findNonContraTransactionIds EXCLUDES every transaction
+	// that touches the contra account, and every entry an opening balance writes
+	// touches it (:796) — so OPENING BALANCES DO NOT BLOCK EACH OTHER. Re-sending
+	// byte-identical opening-balance bytes returned HTTP 200 again, having
+	// REVERSED the previous opening balance first (:726-735). Only after a PLAIN
+	// manual entry existed did the same bytes draw 403, with errors[0].args
+	// carrying exactly that one transaction id. THE RULE IS "AFTER A NON-CONTRA
+	// JOURNAL ENTRY".
+	//
+	// THE PREDICATE BELOW IS LEFT EXACTLY AS IT IS, AND IT WAS RIGHT ALL ALONG —
+	// it reads `posted_non_contra_transaction_ids`, whose name carries the
+	// distinction the prose lost. This is P-11 in one function: the code can be
+	// RIGHT and its stated reason WRONG, and the reason is what the next
+	// contributor checks.
+	//
 	// ITS POSITION IN THIS FUNCTION IS OBSERVED AND NOT CHOSEN, and that is the
 	// one thing about it worth reading twice. OB-01's request body is UNBALANCED
 	// BY EXACTLY ONE MINOR UNIT (debit 250000.25, credit 250000.24) — so the
@@ -444,7 +490,100 @@ func (GoPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 			Message:    "Sum of All Debits must equal the sum of all Credits for a Journal Entry",
 		}, nil
 	}
+
+	// STEP 4 — AN ACCEPTED OPENING BALANCE POSTS TWO ENTRIES PER LEG, NOT ONE.
+	// [T305, and it is OBSERVED — the first accepting-side observation this
+	// program has ever taken.]
+	//
+	// saveAllDebitOrCreditOpeningBalanceEntries (:759-797) calls
+	// helper.persistJournalEntry TWICE INSIDE THE PER-LEG LOOP: the leg's own
+	// entry at :791, and its CONTRA entry on the financial-activity-300 account
+	// with the opposite side at :796. defineOpeningBalance calls it twice, once
+	// for the debits (:742) and once for the credits (:745).
+	//
+	// MEASURED, not read off the source: OB-ACCEPT-01 sent three legs — DEBIT
+	// 250000.25 on GL 2, DEBIT 100000.37 on GL 3, CREDIT 350000.62 on GL 4 —
+	// and the oracle wrote SIX journal entries on ONE transaction (the id is
+	// server-assigned and differs on every re-run of the recipe; it is not a
+	// graded cell and is not quoted here for that reason):
+	//
+	//	id 1  GL 2 T305-1000  DEBIT   250000.250000
+	//	id 2  GL 1 T305-3000  CREDIT  250000.250000   <- contra, per leg
+	//	id 3  GL 3 T305-1100  DEBIT   100000.370000
+	//	id 4  GL 1 T305-3000  CREDIT  100000.370000   <- contra, per leg
+	//	id 5  GL 4 T305-2000  CREDIT  350000.620000
+	//	id 6  GL 1 T305-3000  DEBIT   350000.620000   <- contra, per leg
+	//
+	// [.softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/
+	//  OB-ACCEPT-01-readback-db.json, sha256 1911e2cf…0737db2]
+	//
+	// THE CONTRA IS PER LEG AND NOT SUMMED, and that is the whole reason the
+	// capture carried THREE legs of DIFFERENT amounts rather than a tidy
+	// one-debit-one-credit pair: a two-leg body cannot tell a per-leg contra
+	// from a single netted one, because with one debit and one credit the two
+	// answers are identical.
+	//
+	// WHY DEBITS BEFORE CREDITS, AND WHAT IS [UNVERIFIED] ABOUT IT. The oracle
+	// runs the debit array (:742) before the credit array (:745), so this port
+	// emits every debit leg with its contra and then every credit leg with its
+	// contra, irrespective of the order the vector listed them in. OB-ACCEPT-01's
+	// request happened to list its legs debits-first, so THE CAPTURE CANNOT
+	// SEPARATE "source order" from "request order" — it is consistent with both.
+	// The source can and does, so this follows the source and says so rather than
+	// claiming the capture settled it.
+	//
+	// NOTHING ELSE IN THIS CORPUS REACHES THIS BRANCH: it runs only on
+	// `command == defineOpeningBalance`, and the only other vector carrying that
+	// command is LDG-REFUSE-03, which returns at STEP 1.5 above.
+	if req.Command == "defineOpeningBalance" {
+		contra, ok := chart[req.ContraGLAccountID]
+		if !ok {
+			// A HARNESS ERROR, never a refusal. The oracle resolves the contra
+			// account at :708 BEFORE any of the rules above, so a vector that
+			// reaches here without carrying the contra account in its chart has
+			// described an observation nobody could have taken — and an error is
+			// the outcome that can never be mistaken for a pass.
+			return PostedEntry{}, nil, fmt.Errorf(
+				"command is defineOpeningBalance and request.contra_gl_account_id %d is not in request.accounts: "+
+					"the contra account is resolved at :708 and written on every leg at :796, so it cannot be absent",
+				req.ContraGLAccountID)
+		}
+		expanded := make([]PostedLeg, 0, len(out.Legs)*2)
+		var debits, credits ledger.MinorUnits
+		for _, side := range []EntrySide{SideDebit, SideCredit} {
+			for _, l := range out.Legs {
+				if l.Side != side {
+					continue
+				}
+				expanded = append(expanded, l)
+				expanded = append(expanded, PostedLeg{
+					AccountID:   contra.ID,
+					AccountCode: contra.Code,
+					Side:        oppositeSide(l.Side),
+					AmountMinor: l.AmountMinor,
+				})
+				// Each pair is one debit and one credit of the same amount,
+				// whichever way round the leg itself points, so both totals grow
+				// by the leg amount. Integer minor units throughout; no
+				// intermediate is anything but an int64.
+				debits += l.AmountMinor
+				credits += l.AmountMinor
+			}
+		}
+		out.Legs = expanded
+		out.TotalDebitsMinor = debits
+		out.TotalCreditsMinor = credits
+	}
+
 	return out, nil, nil
+}
+
+// oppositeSide is the contra side :796 writes (getContraType, :799-805).
+func oppositeSide(s EntrySide) EntrySide {
+	if s == SideDebit {
+		return SideCredit
+	}
+	return SideDebit
 }
 
 // ---------------------------------------------------------------------------
@@ -563,6 +702,81 @@ type openingBalanceUncheckedPoster struct{}
 func (openingBalanceUncheckedPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 	r := req
 	r.PostedNonContraTransactionIDs = nil
+	return GoPoster{}.PostEntry(r)
+}
+
+// openingBalanceAlwaysRefusingPoster refuses EVERY defineOpeningBalance command
+// — including on an empty ledger, where the reference oracle ACCEPTS.
+//
+// THIS IS T296'S ARM A, LIFTED OUT OF A REVIEW PROBE AND MADE EXECUTABLE. T296
+// mutated GoPoster's STEP 1.5 predicate to `req.Command ==
+// "defineOpeningBalance"` alone — never reading the posted-id list — and
+// measured that it SURVIVED THE ENTIRE LEDGER CORPUS. Every refusal capture in
+// this store AGREES with it, so no number of refusal vectors could ever kill it;
+// only an ACCEPTING-side observation can, and until T305 took one there was
+// none.
+//
+// THE DEFECT, AND IT IS THE MOST TEMPTING ONE ON THIS ENDPOINT. The guard at
+// :717 consults a repository query, not the request body, so a port that has
+// read the endpoint's documentation knows only that "opening balances are not
+// allowed after journal entries have been posted" — the oracle's own message at
+// :814 — and the safe-looking implementation of a rule you cannot evaluate is to
+// refuse. It is `ledger-wrong-header-refusing` wearing different clothes: THE
+// REASONABLE THING TO DO, WHICH THE ORACLE DOES NOT DO. Diverging from the
+// oracle BY REFUSING is still diverging.
+//
+// AND THE MESSAGE IT COPIES IS ITSELF MISLEADING, WHICH IS WHY THE DEFECT IS SO
+// EASY TO SHIP: T305 measured that opening balances do NOT block each other at
+// all. Every entry an opening balance writes touches the contra account (:796),
+// and findNonContraTransactionIds EXCLUDES contra transactions, so re-defining
+// an opening balance REVERSES the previous one and posts a new one
+// (OB-ACCEPT-02, HTTP 200 on byte-identical bytes). The rule is "after a
+// NON-CONTRA journal entry", never "after any journal entry".
+//
+// KILLED BY: LDG-05-openingbalance-accepted-empty-ledger, on every cell of the
+// entry it never produces. It passes every other ledger vector untouched,
+// including LDG-REFUSE-03, whose refusal it reproduces exactly.
+type openingBalanceAlwaysRefusingPoster struct{}
+
+func (openingBalanceAlwaysRefusingPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	if req.Command == "defineOpeningBalance" {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       "error.msg.journalentry.defining.openingbalance.not.allowed",
+			Message:    "Defining Opening balances not allowed after journal entries posted",
+		}, nil
+	}
+	return GoPoster{}.PostEntry(req)
+}
+
+// openingBalanceNoContraPoster accepts an opening balance and writes ONLY the
+// legs the caller sent — no contra entry at all.
+//
+// THE DEFECT: the request body carries three legs and the endpoint is called
+// "journalentries", so a port writes three journal entries. The contra entries
+// are not in the payload, are not in the API documentation for this endpoint,
+// and exist only because :796 writes one per leg against whatever account
+// financial-activity type 300 happens to map to. A port that misses them
+// produces a chart in which the opening balance's own equity side never appears
+// — the trial balance is short by the whole opening position — while every leg
+// the caller can see is byte-perfect.
+//
+// KILLED BY: LDG-05, on the leg count and on every cell of legs[1], legs[3] and
+// legs[5]. It is the second half of the same capture: arm A gets the ACCEPT
+// wrong, this one gets the ACCEPT'S CONTENT wrong.
+type openingBalanceNoContraPoster struct{}
+
+func (openingBalanceNoContraPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	// THE REFUSAL PATH IS LEFT INTACT ON PURPOSE. Blanking the command outright
+	// would also skip STEP 1.5 and make this implementation die on
+	// LDG-REFUSE-03 as well — which would make its kill indistinguishable from
+	// `ledger-wrong-openingbalance-posted-entries-ignored`'s and turn two
+	// registered defects into one. This one gets exactly ONE thing wrong.
+	if req.Command == "defineOpeningBalance" && len(req.PostedNonContraTransactionIDs) > 0 {
+		return GoPoster{}.PostEntry(req)
+	}
+	r := req
+	r.Command = ""
 	return GoPoster{}.PostEntry(r)
 }
 
@@ -744,6 +958,19 @@ func init() {
 			"answers a defineOpeningBalance command the oracle refused with HTTP 403 "+
 			"error.msg.journalentry.defining.openingbalance.not.allowed (T294, OB-01)",
 		openingBalanceUncheckedPoster{})
+	RegisterWrong("ledger-wrong-openingbalance-always-refusing",
+		"refuses EVERY defineOpeningBalance command, including on an EMPTY ledger where the reference "+
+			"oracle ACCEPTS (:812's CollectionUtils.isEmpty fall-through into the writes at :742/:745). "+
+			"This is T296's arm A, which SURVIVED the whole ledger corpus until an accepting-side "+
+			"observation existed: every refusal capture in this store agrees with it. Diverging from "+
+			"the oracle BY REFUSING is still diverging (T305, OB-ACCEPT-01)",
+		openingBalanceAlwaysRefusingPoster{})
+	RegisterWrong("ledger-wrong-openingbalance-no-contra",
+		"accepts an opening balance and writes ONLY the caller's legs, missing the CONTRA entry :796 "+
+			"writes for each of them on the financial-activity-300 account -- so its trial balance is "+
+			"short by the entire opening position while every leg the caller can see is byte-perfect "+
+			"(T305, OB-ACCEPT-01: three legs in, SIX journal entries out)",
+		openingBalanceNoContraPoster{})
 	RegisterWrong("ledger-wrong-future-date-ignored",
 		"never compares the entry's transaction date with the tenant's BUSINESS DATE, so it posts a "+
 			"future-dated entry the oracle refused with HTTP 403 "+

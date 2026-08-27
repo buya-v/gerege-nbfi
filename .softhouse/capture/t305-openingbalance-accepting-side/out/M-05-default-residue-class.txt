@@ -1,0 +1,25 @@
+== A. the ledger sequences -- is_called t is the permanent half of the T287 residue.
+                seq                | last_value | is_called 
+-----------------------------------+------------+-----------
+ acc_gl_journal_entry_id_seq       |          1 | f
+ acc_gl_closure_id_seq             |          1 | f
+ m_portfolio_command_source_id_seq |        356 | t
+(3 rows)
+
+== B. the audit rows this program own probes have left, ACCOUNTING entities only.
+ id | action_name | entity_name | resource_id | status | office_id | api_get_url | made_on_date_utc 
+----+-------------+-------------+-------------+--------+-----------+-------------+------------------
+(0 rows)
+
+== C. the audit table as a whole -- how much of it is ours.
+ all_audit_rows | max_audit_id | accounting_audit_rows 
+----------------+--------------+-----------------------
+            356 |          356 |                     0
+(1 row)
+
+== D. the ledger itself, for the before/after comparison this task does NOT need to make.
+ journal_entries | max_journal_entry_id | distinct_transaction_ids 
+-----------------+----------------------+--------------------------
+               0 |                      |                        0
+(1 row)
+

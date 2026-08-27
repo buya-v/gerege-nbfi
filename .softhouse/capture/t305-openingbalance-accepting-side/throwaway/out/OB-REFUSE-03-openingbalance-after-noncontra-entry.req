@@ -1,0 +1,24 @@
+{
+  "officeId": 1,
+  "transactionDate": "2026-01-01",
+  "dateFormat": "yyyy-MM-dd",
+  "locale": "en",
+  "currencyCode": "MNT",
+  "comments": "T305 accepting-side opening balance, captured on the THROWAWAY instance (tenant t305, HALF_UP, Asia/Ulaanbaatar, empty ledger). Balanced: 250000.25 + 100000.37 = 350000.62.",
+  "debits": [
+    {
+      "glAccountId": 2,
+      "amount": 250000.25
+    },
+    {
+      "glAccountId": 3,
+      "amount": 100000.37
+    }
+  ],
+  "credits": [
+    {
+      "glAccountId": 4,
+      "amount": 350000.62
+    }
+  ]
+}

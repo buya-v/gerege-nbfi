@@ -1,0 +1,25 @@
+T305 throwaway teardown -- 2026-08-27T15:41:01Z
+   Container t305-oracle-app Stopping 
+   Container t305-oracle-app Stopped 
+   Container t305-oracle-app Removing 
+   Container t305-oracle-app Removed 
+   Container t305-oracle-db Stopping 
+   Container t305-oracle-db Stopped 
+   Container t305-oracle-db Removing 
+   Container t305-oracle-db Removed 
+   Network t305-oracle_default Removing 
+   Network t305-oracle_default Removed 
+
+containers matching t305 after teardown:
+  (none)
+networks matching t305 after teardown:
+  (none)
+volumes matching t305 after teardown:
+  (none)
+
+STANDING reference oracle after teardown (must equal the baseline this capture opened with):
+  standing health = 200
+  ok  acc_gl_journal_entry = 60/64 (== baseline)
+  ok  acc_gl_closure = 0/null (== baseline)
+  ok  distinct_transaction_id = 26 (== baseline)
+  ok  m_portfolio_command_source = 352/352 (== baseline)

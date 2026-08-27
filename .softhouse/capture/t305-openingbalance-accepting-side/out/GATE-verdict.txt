@@ -1,0 +1,35 @@
+T305 accepting-side capture gate -- 2026-08-23T06:16:12Z
+
+tenant 'default'  timezone=Asia/Kolkata  database=fineract_default
+  REFUSE C1 rounding-mode = 6 (HALF_EVEN). CLAUDE.md ratifies HALF_UP=4 for MNT; a
+         capture here is a DISCRIMINATION PROBE, not a parity vector.
+  REFUSE C2 timezone Asia/Kolkata is NOT one of Asia/Ulaanbaatar or Asia/Hovd.
+  ok    C3 findNonContraTransactionIds is EMPTY -- :812 falls through and the oracle ACCEPTS.
+  REFUSE C4 financial-activity type 300 is UNMAPPED. :708
+         findByFinancialActivityTypeWithNotFoundDetection(300) throws FIRST, so the answer
+         would be a DIFFERENT refusal, not an accept.
+  REFUSE C5 NO disposability attestation at attest/default.disposable.
+         An accepted opening balance is a POSTED JOURNAL ENTRY and there is NO delete path
+         for one. On any tenant this program intends to KEEP, this capture is IRREVERSIBLE.
+  --> tenant 'default' REFUSED.
+
+tenant 'gerege'  timezone=Asia/Ulaanbaatar  database=fineract_gerege
+  ok    C1 rounding-mode = 4 (HALF_UP), the ratified production mode.
+  ok    C2 timezone Asia/Ulaanbaatar is one of the two CLAUDE.md permits.
+  REFUSE C3 findNonContraTransactionIds has 26 id(s) -- :812 THROWS. Only the refusal
+         T294 already captured (LDG-REFUSE-03) is available on this tenant.
+  ok    C4 type 300 -> GL 15, classification_enum 3 (EQUITY).
+  REFUSE C5 NO disposability attestation at attest/gerege.disposable.
+         An accepted opening balance is a POSTED JOURNAL ENTRY and there is NO delete path
+         for one. On any tenant this program intends to KEEP, this capture is IRREVERSIBLE.
+  --> tenant 'gerege' REFUSED.
+
+measured 2 tenant(s); 0 qualify.
+
+REFUSED: no registered tenant can carry an accepting-side opening-balance capture.
+  The accepting side of :812 remains UNOBSERVED and T296 arm A remains UNKILLED.
+  Recorded in .softhouse/vectors/capabilities-ledger.json under
+  ledger.opening.balance.and.closure, which is where the next reader hits it.
+  DO NOT close this hole by promoting a weaker refusal vector: every refusal capture
+  in this corpus AGREES with arm A, so no number of them can kill it (T296 §4).
+gate exit 1

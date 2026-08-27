@@ -1,0 +1,20 @@
+{
+  "officeId": 1,
+  "transactionDate": "2026-01-02",
+  "dateFormat": "yyyy-MM-dd",
+  "locale": "en",
+  "currencyCode": "MNT",
+  "comments": "T305 companion capture: a PLAIN manual journal entry posted while opening-balance transactions already exist. Balanced: debit 500000.11 = credit 500000.11.",
+  "debits": [
+    {
+      "glAccountId": 2,
+      "amount": 500000.11
+    }
+  ],
+  "credits": [
+    {
+      "glAccountId": 4,
+      "amount": 500000.11
+    }
+  ]
+}

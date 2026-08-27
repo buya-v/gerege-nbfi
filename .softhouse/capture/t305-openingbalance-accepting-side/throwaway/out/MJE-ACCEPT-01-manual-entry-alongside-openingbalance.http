@@ -1,0 +1,12 @@
+POST /journalentries
+case-id: MJE-ACCEPT-01-manual-entry-alongside-openingbalance
+instance: THROWAWAY t305-oracle-app, port 8444, destroyed by down.sh in the same run
+Fineract-Platform-TenantId: t305
+Authorization: Basic <mifos:password>
+Idempotency-Key: t305-mje-accept-01
+Content-Type: application/json
+body-wire-bytes-artefact: MJE-ACCEPT-01-manual-entry-alongside-openingbalance.req
+body-sha256: 74cf8c8811ace77d4131cf5f242562d72280e3c41d810ae6088cbbd469cc1dd6
+body-bytes: 464
+response-status: 200
+captured-at-utc: 2026-08-27T15:41:00Z

@@ -1,0 +1,57 @@
+T305 state-transition captures -- 2026-08-27T15:40:59Z
+ok  F1/F2/F3 target is the throwaway; F4' ledger carries 6 entries.
+ok  F5 (before) standing acc_gl_journal_entry = 60/64 (== baseline)
+ok  F5 (before) standing m_portfolio_command_source = 352/352 (== baseline)
+
+OB-ACCEPT-02-openingbalance-after-own-openingbalance
+  POST /journalentries?command=defineOpeningBalance -> HTTP 200
+{"officeId":1,"transactionId":"a29a842a0763"}
+  cmp silent: byte-identical request to OB-ACCEPT-01.
+
+MJE-ACCEPT-01-manual-entry-alongside-openingbalance
+  POST /journalentries -> HTTP 200
+{"officeId":1,"transactionId":"a29a842a9f57"}
+
+findNonContraTransactionIds on the target NOW (this is what A4 is fired against):
+a29a842a9f57
+
+OB-REFUSE-03-openingbalance-after-noncontra-entry
+  POST /journalentries?command=defineOpeningBalance -> HTTP 403
+{"developerMessage":"Request was understood but caused a domain rule violation.","httpStatusCode":"403","defaultUserMessage":"Errors contain reason for domain rule violation.","userMessageGlobalisationCode":"validation.msg.domain.rule.violation","errors":[{"developerMessage":"Defining Opening balances not allowed after journal entries posted","defaultUserMessage":"Defining Opening balances not allowed after journal entries posted","userMessageGlobalisationCode":"error.msg.journalentry.defining.openingbalance.not.allowed","parameterName":"id","args":[{"value":["a29a842a9f57"]}]}]}
+  cmp silent: byte-identical request to OB-ACCEPT-01 AND to OB-ACCEPT-02 -- three answers, one body.
+
+audit rows this instance wrote (id | action | entity | resource_id | status):
+1|CREATE|GLACCOUNT|1|1
+2|CREATE|GLACCOUNT|2|1
+3|CREATE|GLACCOUNT|3|1
+4|CREATE|GLACCOUNT|4|1
+5|CREATE|FINANCIALACTIVITYACCOUNT|1|1
+6|DEFINEOPENINGBALANCE|JOURNALENTRY|NULL|1
+7|DEFINEOPENINGBALANCE|JOURNALENTRY|NULL|1
+8|CREATE|JOURNALENTRY|NULL|1
+9|DEFINEOPENINGBALANCE|JOURNALENTRY|NULL|5
+
+final ledger (id | transaction | account | type_enum | amount | reversed | reversal_id):
+1|a29a84279217|2|2|250000.250000|t|7
+2|a29a84279217|1|1|250000.250000|t|8
+3|a29a84279217|3|2|100000.370000|t|9
+4|a29a84279217|1|1|100000.370000|t|10
+5|a29a84279217|4|1|350000.620000|t|11
+6|a29a84279217|1|2|350000.620000|t|12
+7|a29a842a03df|2|1|250000.250000|f|NULL
+8|a29a842a03df|1|2|250000.250000|f|NULL
+9|a29a842a03df|3|1|100000.370000|f|NULL
+10|a29a842a03df|1|2|100000.370000|f|NULL
+11|a29a842a03df|4|2|350000.620000|f|NULL
+12|a29a842a03df|1|1|350000.620000|f|NULL
+13|a29a842a0763|2|2|250000.250000|f|NULL
+14|a29a842a0763|1|1|250000.250000|f|NULL
+15|a29a842a0763|3|2|100000.370000|f|NULL
+16|a29a842a0763|1|1|100000.370000|f|NULL
+17|a29a842a0763|4|1|350000.620000|f|NULL
+18|a29a842a0763|1|2|350000.620000|f|NULL
+19|a29a842a9f57|2|2|500000.110000|f|NULL
+20|a29a842a9f57|4|1|500000.110000|f|NULL
+
+ok  F5 (after) standing acc_gl_journal_entry = 60/64 (== baseline)
+ok  F5 (after) standing m_portfolio_command_source = 352/352 (== baseline)
