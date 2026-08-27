@@ -33,10 +33,22 @@ Quantization is HALF_UP implemented on integers.
 The self-test at the bottom (`--selftest`) proves the parser and the HALF_UP
 quantizer on hand-checked cases before any census is reported.
 
+TWO SCOPES, AND WHY THERE ARE TWO
+---------------------------------
+`t229corpus` -- the 296-cell population T229 actually measured and T241 actually
+    re-bucketed. It is NOT "the corpus"; it is the four raw captures that existed
+    under `.softhouse/capture/` when T229 ran (T117, T117-p2, T159, T223).
+    Reproducing 296 / 220 / 176 requires pinning that scope, and NOTHING in
+    `gates.md` or in either T241 says so. This instrument says so.
+`all`        -- every committed raw `.json.gz` in the repository today. That is a
+    strictly larger population (it adds T219, T229's own probes, and T84, which
+    lives under `.softhouse/reviews/` and so was never in reach of a glob rooted
+    at `.softhouse/capture/`). The law-(ii) exception set is checked on BOTH.
+
 USAGE
 -----
     python3 shapelaw_census_t277.py --selftest
-    python3 shapelaw_census_t277.py <repo-root>            # full census -> stdout JSON
+    python3 shapelaw_census_t277.py <repo-root>            # both scopes -> stdout JSON
     python3 shapelaw_census_t277.py <repo-root> --report    # human-readable summary
 """
 
@@ -149,6 +161,17 @@ def terminates_within_scale(num, den, scale):
 # --------------------------------------------------------------------------
 # census
 # --------------------------------------------------------------------------
+# The four raw captures that made up the population T229's validate_corpus.py
+# measured and the cloud's T241 re-bucketed. Pinned by BASENAME so the scope is
+# a stated fact rather than an accident of where a glob was rooted.
+SCOPE_T229_CORPUS = (
+    "capture-t117-raw.json.gz",
+    "capture-t117p2-raw.json.gz",
+    "capture-t159-raw.json.gz",
+    "capture-t223-raw.json.gz",
+)
+
+
 def gz_paths(root):
     pat = os.path.join(root, ".softhouse", "**", "*.json.gz")
     return sorted(glob.glob(pat, recursive=True))
@@ -222,6 +245,15 @@ def census(root):
 
             r_num, r_den = monthly_rate_factor(str(inputs["annualNominalInterestRate"]))
             rate_exact = terminates_within_scale(r_num, r_den, 19)
+            if not rate_exact:
+                # The oracle computes the rate factor at (19, HALF_UP) and setScale(19).
+                # Where the exact rational does not terminate inside 19 fractional
+                # digits, this instrument cannot reproduce the oracle's I1q, so delta
+                # is not derivable and every delta-dependent law is UNVERIFIABLE here.
+                # Excluded and COUNTED, never silently admitted.
+                skipped["rate-factor-inexact-at-19"] = \
+                    skipped.get("rate-factor-inexact-at-19", 0) + 1
+                continue
             i1q = half_up_ratio(b_minor * r_num, r_den)
             delta = i1q - e_minor
 
@@ -260,6 +292,30 @@ def census(root):
 
                 # ---- T241's sharper diagnosis: n*E+B is the REPAYMENT ----
                 "repaymentLaw_holds": row_total == n * e_minor + b_minor,
+
+                # ---- the CORRECTED total-interest form gates.md already carries:
+                #      "the total interest, which is n*E + B - principal"         ----
+                "interestMinusPrincipalLaw_holds":
+                    row_interest == n * e_minor + b_minor - row_principal,
+
+                # ---- WHERE the principal actually lands, and the DESCRIPTIVE form
+                #      that has no exception. `I_last` is the last repayment row's
+                #      interest, READ FROM THE OBSERVED SCHEDULE -- so this form
+                #      DESCRIBES the shape, it does not PREDICT it before the oracle
+                #      is asked. It is not a drop-in replacement for law (ii).      ----
+                "principalRowsNonZero": sum(1 for x in [to_minor(p["principal"])
+                                                        for p in reps] if x != 0),
+                "lastRowInterestMinor": to_minor(reps[-1]["interest"]),
+                "lastRowLaw_holds":
+                    row_principal == max(0, e_minor + b_minor
+                                         - to_minor(reps[-1]["interest"])),
+
+                # ---- antecedents of the two family-B biconditionals in the block ----
+                "antecedent_FULL": delta >= 1 and b_minor <= n * delta,
+                # PARTIAL:  delta >= 1  and  n*delta < B  and  B < (delta + 1/2)*n
+                #           the half is cleared by doubling -- 2B < (2*delta+1)*n
+                "antecedent_PARTIAL": (delta >= 1 and n * delta < b_minor
+                                       and 2 * b_minor < (2 * delta + 1) * n),
             })
     return files, rows, skipped
 
@@ -291,7 +347,27 @@ def summarize(rows):
             if not (r["headerEqualsRows_principal"]
                     and r["headerEqualsRows_interest"]
                     and r["headerEqualsRows_repayment"])),
-        "rateFactorInexactAt19": sum(1 for r in rows if not r["rateFactorExactAt19"]),
+        "interestMinusPrincipalLaw_holds_on_factA":
+            sum(1 for r in fact_a if r["interestMinusPrincipalLaw_holds"]),
+        "interestMinusPrincipalLaw_holds_on_notFactA":
+            sum(1 for r in not_fact_a if r["interestMinusPrincipalLaw_holds"]),
+        "principalConfinedToLastRow_on_factA":
+            sum(1 for r in fact_a if r["principalRowsNonZero"] <= 1),
+        "lastRowLaw_holds_on_factA": sum(1 for r in fact_a if r["lastRowLaw_holds"]),
+        "lastRowLaw_holds_on_notFactA": sum(1 for r in not_fact_a if r["lastRowLaw_holds"]),
+        "antecedent_FULL_count": sum(1 for r in rows if r["antecedent_FULL"]),
+        "antecedent_FULL_lawII_fails":
+            sum(1 for r in rows if r["antecedent_FULL"] and not r["lawII_holds"]),
+        "antecedent_PARTIAL_count": sum(1 for r in rows if r["antecedent_PARTIAL"]),
+        "antecedent_PARTIAL_lawII_fails":
+            sum(1 for r in rows if r["antecedent_PARTIAL"] and not r["lawII_holds"]),
+        # DISJOINTNESS -- the two claims T264 made about the exception set
+        "exceptions_intersect_delta0":
+            sum(1 for r in rows if not r["lawII_holds"] and r["delta"] == 0),
+        "exceptions_intersect_notFactA":
+            sum(1 for r in rows
+                if not r["lawII_holds"] and not r["lawI_lastRowEmiEqualsEplusB"]),
+        "notFactA_all_delta0": all(r["delta"] == 0 for r in not_fact_a),
     }
 
 
@@ -299,21 +375,77 @@ def summarize(rows):
 # EXPECTATIONS -- what this instrument asserts about main, so it RE-RUNS as a guard
 # --------------------------------------------------------------------------
 EXPECTED = {
-    "stuckCellsExamined": 296,
-    "deltaHistogram": {"0": 113, "1": 183},
-    "lawI_factA_holds": 220,
-    "lawII_holds_all": 289,
-    "lawII_holds_on_factA": 213,
-    "lawII_factA_domain": 220,
-    "interestLaw_holds_all": 176,
-    "interestLaw_fails_all": 120,
-    "interestLaw_holds_on_delta0": 0,
-    "delta0_count": 113,
-    "repaymentLaw_holds_on_factA": 220,
-    "repaymentLaw_holds_on_notFactA": 0,
-    "notFactA_count": 76,
-    "headerRowMismatches": 0,
-    "rateFactorInexactAt19": 0,
+    # ---- scope `t229corpus`: the 296 cells T229 measured and T241 re-bucketed ----
+    "t229corpus": {
+        "stuckCellsExamined": 296,
+        "deltaHistogram": {"0": 113, "1": 183},
+        "lawI_factA_holds": 220,
+        "lawII_holds_all": 289,
+        "lawII_holds_on_factA": 213,          # <-- NOT 220. This is the defect.
+        "lawII_factA_domain": 220,
+        "interestLaw_holds_all": 176,
+        "interestLaw_fails_all": 120,
+        "interestLaw_holds_on_delta0": 0,
+        "delta0_count": 113,
+        "repaymentLaw_holds_on_factA": 220,
+        "repaymentLaw_holds_on_notFactA": 0,
+        "notFactA_count": 76,
+        "headerRowMismatches": 0,
+        "interestMinusPrincipalLaw_holds_on_factA": 220,
+        "interestMinusPrincipalLaw_holds_on_notFactA": 0,
+        # On EVERY FACT-A cell the whole principal lands in ONE row -- the last --
+        # and equals max(0, E + B - I_last), with NO exception. That is where the
+        # seven exceptions of law (ii) go, and it is DESCRIPTIVE, not predictive.
+        "principalConfinedToLastRow_on_factA": 220,
+        "lastRowLaw_holds_on_factA": 220,
+        "lastRowLaw_holds_on_notFactA": 0,
+        "antecedent_FULL_count": 183,
+        "antecedent_FULL_lawII_fails": 7,
+        # <-- the PARTIAL biconditional has NO witness at all inside T229's 296.
+        #     T229 measured it on three LIVE probe cells (B201/B251/B299), not here.
+        "antecedent_PARTIAL_count": 0,
+        "antecedent_PARTIAL_lawII_fails": 0,
+        "exceptions_intersect_delta0": 0,
+        "exceptions_intersect_notFactA": 0,
+        "notFactA_all_delta0": True,
+    },
+    # ---- scope `all`: every committed raw capture in the repo today ----
+    # PROVENANCE, STATED SO IT IS NOT MISREAD: the `t229corpus` pins above were
+    # taken from figures T229 and T241 PUBLISHED BEFORE this instrument existed,
+    # and reproducing them is therefore independent confirmation. The `all` pins
+    # below were taken from THIS instrument's own first run -- no prior document
+    # states them. They are REGRESSION PINS (they trip if the corpus, the parser
+    # or the admission rule moves), NOT independent confirmation of anything.
+    "all": {
+        "stuckCellsExamined": 578,
+        "deltaHistogram": {"0": 363, "1": 215},
+        "lawI_factA_holds": 441,
+        "lawII_holds_all": 571,
+        "lawII_holds_on_factA": 434,
+        "lawII_factA_domain": 441,
+        "interestLaw_holds_all": 203,
+        "interestLaw_fails_all": 375,
+        "interestLaw_holds_on_delta0": 0,
+        "delta0_count": 363,
+        "repaymentLaw_holds_on_factA": 441,
+        "repaymentLaw_holds_on_notFactA": 0,
+        "notFactA_count": 137,
+        "headerRowMismatches": 0,
+        "interestMinusPrincipalLaw_holds_on_factA": 441,
+        "interestMinusPrincipalLaw_holds_on_notFactA": 0,
+        "principalConfinedToLastRow_on_factA": 441,
+        "lastRowLaw_holds_on_factA": 441,
+        "lastRowLaw_holds_on_notFactA": 0,
+        "antecedent_FULL_count": 210,
+        "antecedent_FULL_lawII_fails": 7,
+        # PARTIAL family B DOES have corpus witnesses -- 5 of them, every one
+        # outside T229's 296, and law (ii) holds on all 5.
+        "antecedent_PARTIAL_count": 5,
+        "antecedent_PARTIAL_lawII_fails": 0,
+        "exceptions_intersect_delta0": 0,
+        "exceptions_intersect_notFactA": 0,
+        "notFactA_all_delta0": True,
+    },
 }
 
 # The EXCEPTION SET of law (ii): the cells on the FACT-A domain where
@@ -339,20 +471,23 @@ def exceptions(rows):
     return out
 
 
-def check(rows):
+def check(rows, scope):
     """Returns (ok, failures[]). This is what makes the file a GUARD and not a table."""
     got = summarize(rows)
     fails = []
-    for k, want in EXPECTED.items():
+    for k, want in EXPECTED[scope].items():
         if got.get(k) != want:
-            fails.append("summary[%s]: expected %r, measured %r" % (k, want, got.get(k)))
+            fails.append("[%s] summary[%s]: expected %r, measured %r"
+                         % (scope, k, want, got.get(k)))
 
+    # The exception set is expected to be THE SAME SEVEN in both scopes: widening
+    # the population from 296 to 578 adds no eighth exception.
     exc = exceptions(rows)
     if exc != EXPECTED_LAW_II_EXCEPTIONS:
         for k in sorted(set(exc) | set(EXPECTED_LAW_II_EXCEPTIONS)):
             if exc.get(k) != EXPECTED_LAW_II_EXCEPTIONS.get(k):
-                fails.append("lawII exception %s: expected %r, measured %r"
-                             % (k, EXPECTED_LAW_II_EXCEPTIONS.get(k), exc.get(k)))
+                fails.append("[%s] lawII exception %s: expected %r, measured %r"
+                             % (scope, k, EXPECTED_LAW_II_EXCEPTIONS.get(k), exc.get(k)))
 
     # Structural claims the gates.md wording depends on:
     #  (a) every law-(ii) exception is on the FACT-A domain
@@ -465,53 +600,78 @@ def main(argv):
         return 0
 
     root = argv[1] if len(argv) > 1 else "."
-    files, rows, skipped = census(root)
-    ok, fails, got, exc = check(rows)
+    files, all_rows, skipped = census(root)
+    scoped = {
+        "t229corpus": [r for r in all_rows if r["file"] in SCOPE_T229_CORPUS],
+        "all": all_rows,
+    }
+
+    results = {}
+    overall_ok = True
+    for scope in ("t229corpus", "all"):
+        ok, fails, got, exc = check(scoped[scope], scope)
+        overall_ok = overall_ok and ok
+        results[scope] = (ok, fails, got, exc)
 
     if "--report" in argv:
-        print("T277 shape-law census -- source: %d raw .json.gz captures under %s/.softhouse"
+        print("T277 shape-law census -- %d raw .json.gz captures under %s/.softhouse"
               % (len(files), root))
         for f in files:
             print("    %s" % os.path.relpath(f, root))
         print()
-        print("ADMITTED STUCK CELLS: %d   (skipped: %s)" % (len(rows), skipped))
+        print("CAPTURES REJECTED BEFORE THE CENSUS: %s" % (skipped,))
+        for scope in ("t229corpus", "all"):
+            ok, fails, got, exc = results[scope]
+            rows = scoped[scope]
+            print()
+            print("=" * 78)
+            print("SCOPE %-12s  %d admitted stuck cells   %s"
+                  % (scope, len(rows), "PASS" if ok else "FAIL"))
+            print("=" * 78)
+            for k in sorted(got):
+                want = EXPECTED[scope].get(k)
+                print("%s %-46s %-22s (expected %s)"
+                      % ("  " if got[k] == want else "!!", k, got[k], want))
+            print()
+            print("  LAW (ii) EXCEPTION SET -- observed principal vs a law-predicted 0:")
+            for (cid, cfile) in sorted(exc):
+                r = [x for x in rows if x["id"] == cid and x["file"] == cfile][0]
+                print("    %-24s %-28s n=%-5d B=%-5d E=%-5d I1q=%-5d d=%d "
+                      "B<=n*d=%-5s predicted=%d OBSERVED=%d"
+                      % (cid, cfile, r["n"], r["bMinor"], r["eMinor"], r["i1qMinor"],
+                         r["delta"], r["bMinor"] <= r["n"] * r["delta"],
+                         r["lawII_predictedPrincipalMinor"], r["rowPrincipalMinor"]))
+            if not ok:
+                for f in fails:
+                    print("    " + f)
         print()
-        for k in sorted(got):
-            mark = "  " if got[k] == EXPECTED.get(k) else "!!"
-            print("%s %-34s %s   (expected %s)" % (mark, k, got[k], EXPECTED.get(k)))
-        print()
-        print("LAW (ii) EXCEPTION SET -- observed principal against a law-predicted 0:")
-        for (cid, cfile) in sorted(exc):
-            r = [x for x in rows if x["id"] == cid and x["file"] == cfile][0]
-            print("    %-26s %-28s n=%-5d B=%-5d E=%-5d I1q=%-5d delta=%d "
-                  "B<=n*delta=%s  predicted=%d  OBSERVED=%d"
-                  % (cid, cfile, r["n"], r["bMinor"], r["eMinor"], r["i1qMinor"],
-                     r["delta"], r["bMinor"] <= r["n"] * r["delta"],
-                     r["lawII_predictedPrincipalMinor"], r["rowPrincipalMinor"]))
-        print()
-        if ok:
-            print("RESULT: PASS -- every expectation reproduced, exception set exact.")
-        else:
-            print("RESULT: FAIL")
-            for f in fails:
-                print("    " + f)
-        return 0 if ok else 1
+        print("RESULT: %s" % ("PASS -- every expectation reproduced in both scopes, "
+                              "exception set exact and identical." if overall_ok else "FAIL"))
+        return 0 if overall_ok else 1
 
     json.dump({
         "instrument": "T277 shapelaw_census_t277.py",
         "sourceFiles": [os.path.relpath(f, root) for f in files],
-        "skipped": skipped,
-        "summary": got,
-        "expected": EXPECTED,
-        "lawII_exceptions": {"%s|%s" % k: v for k, v in sorted(exc.items())},
+        "t229corpusScope": list(SCOPE_T229_CORPUS),
+        "rejectedBeforeCensus": skipped,
+        "scopes": {
+            scope: {
+                "admitted": len(scoped[scope]),
+                "summary": results[scope][2],
+                "expected": EXPECTED[scope],
+                "pass": results[scope][0],
+                "failures": results[scope][1],
+                "lawII_exceptions": {"%s|%s" % k: v
+                                     for k, v in sorted(results[scope][3].items())},
+            } for scope in ("t229corpus", "all")
+        },
         "lawII_exceptions_expected": {"%s|%s" % k: v
                                       for k, v in sorted(EXPECTED_LAW_II_EXCEPTIONS.items())},
-        "pass": ok,
-        "failures": fails,
-        "rows": rows,
+        "pass": overall_ok,
+        "rows": all_rows,
     }, sys.stdout, indent=1, sort_keys=True)
     print()
-    return 0 if ok else 1
+    return 0 if overall_ok else 1
 
 
 if __name__ == "__main__":

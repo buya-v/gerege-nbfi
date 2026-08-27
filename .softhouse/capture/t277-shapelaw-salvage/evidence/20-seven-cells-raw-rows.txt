@@ -1,0 +1,105 @@
+T277 -- THE SEVEN CELLS ON WHICH LAW (ii) IS FALSE, FROM THE RAW SCHEDULES
+Law (ii), as stated in .softhouse/gates.md under `### THE LAW`:
+    TOTAL PRINCIPAL = max(0, B_minor - n*delta)
+Every cell below satisfies the block's own `FULL family B` antecedent
+(delta >= 1 AND B_minor <= n*delta), so the law predicts EXACTLY ZERO principal.
+Every one of them repays a POSITIVE amount of principal.
+
+============================================================================================
+T117P2-R600p0-N108-B11   [capture-t117p2-raw.json.gz]
+  rate 600.0% p.a.  n=108  rows=108  B=11 minor  E(row1 total)=5  I1q=6  delta=1
+  FULL family B antecedent  (delta>=1 and B <= n*delta):  1>=1 and 11<=108  -> True
+  LAW (ii) PREDICTS TOTAL PRINCIPAL = max(0, 11 - 108*1) = 0
+  SUM OF THE PRINCIPAL COLUMN OVER ALL 108 REPAYMENT ROWS = 5   <-- OBSERVED
+  header totalPrincipalAmount = 5  (equals row sum: True)
+  LAW (i) / FACT A: last row total 16 == E+B = 16  -> True
+  TOTAL REPAYMENT 551 == n*E+B = 551  -> True
+  every row with a NON-ZERO principal (row#: principal / interest / total / balance):
+      row 108    principal 5      interest 11     total 16     balance 6
+  first row : principal 0  interest 5  total 5  balance 11
+  last row  : principal 5  interest 11  total 16  balance 6
+
+============================================================================================
+T117P2-R600p0-N121-B11   [capture-t117p2-raw.json.gz]
+  rate 600.0% p.a.  n=121  rows=121  B=11 minor  E(row1 total)=5  I1q=6  delta=1
+  FULL family B antecedent  (delta>=1 and B <= n*delta):  1>=1 and 11<=121  -> True
+  LAW (ii) PREDICTS TOTAL PRINCIPAL = max(0, 11 - 121*1) = 0
+  SUM OF THE PRINCIPAL COLUMN OVER ALL 121 REPAYMENT ROWS = 4   <-- OBSERVED
+  header totalPrincipalAmount = 4  (equals row sum: True)
+  LAW (i) / FACT A: last row total 16 == E+B = 16  -> True
+  TOTAL REPAYMENT 616 == n*E+B = 616  -> True
+  every row with a NON-ZERO principal (row#: principal / interest / total / balance):
+      row 121    principal 4      interest 12     total 16     balance 7
+  first row : principal 0  interest 5  total 5  balance 11
+  last row  : principal 4  interest 12  total 16  balance 7
+
+============================================================================================
+T117P2-R600p0-N150-B11   [capture-t117p2-raw.json.gz]
+  rate 600.0% p.a.  n=150  rows=150  B=11 minor  E(row1 total)=5  I1q=6  delta=1
+  FULL family B antecedent  (delta>=1 and B <= n*delta):  1>=1 and 11<=150  -> True
+  LAW (ii) PREDICTS TOTAL PRINCIPAL = max(0, 11 - 150*1) = 0
+  SUM OF THE PRINCIPAL COLUMN OVER ALL 150 REPAYMENT ROWS = 2   <-- OBSERVED
+  header totalPrincipalAmount = 2  (equals row sum: True)
+  LAW (i) / FACT A: last row total 16 == E+B = 16  -> True
+  TOTAL REPAYMENT 761 == n*E+B = 761  -> True
+  every row with a NON-ZERO principal (row#: principal / interest / total / balance):
+      row 150    principal 2      interest 14     total 16     balance 9
+  first row : principal 0  interest 5  total 5  balance 11
+  last row  : principal 2  interest 14  total 16  balance 9
+
+============================================================================================
+T159-R600p0-N108-B11   [capture-t159-raw.json.gz]
+  rate 600.0% p.a.  n=108  rows=108  B=11 minor  E(row1 total)=5  I1q=6  delta=1
+  FULL family B antecedent  (delta>=1 and B <= n*delta):  1>=1 and 11<=108  -> True
+  LAW (ii) PREDICTS TOTAL PRINCIPAL = max(0, 11 - 108*1) = 0
+  SUM OF THE PRINCIPAL COLUMN OVER ALL 108 REPAYMENT ROWS = 5   <-- OBSERVED
+  header totalPrincipalAmount = 5  (equals row sum: True)
+  LAW (i) / FACT A: last row total 16 == E+B = 16  -> True
+  TOTAL REPAYMENT 551 == n*E+B = 551  -> True
+  every row with a NON-ZERO principal (row#: principal / interest / total / balance):
+      row 108    principal 5      interest 11     total 16     balance 6
+  first row : principal 0  interest 5  total 5  balance 11
+  last row  : principal 5  interest 11  total 16  balance 6
+
+============================================================================================
+T159-R600p0-N121-B11   [capture-t159-raw.json.gz]
+  rate 600.0% p.a.  n=121  rows=121  B=11 minor  E(row1 total)=5  I1q=6  delta=1
+  FULL family B antecedent  (delta>=1 and B <= n*delta):  1>=1 and 11<=121  -> True
+  LAW (ii) PREDICTS TOTAL PRINCIPAL = max(0, 11 - 121*1) = 0
+  SUM OF THE PRINCIPAL COLUMN OVER ALL 121 REPAYMENT ROWS = 4   <-- OBSERVED
+  header totalPrincipalAmount = 4  (equals row sum: True)
+  LAW (i) / FACT A: last row total 16 == E+B = 16  -> True
+  TOTAL REPAYMENT 616 == n*E+B = 616  -> True
+  every row with a NON-ZERO principal (row#: principal / interest / total / balance):
+      row 121    principal 4      interest 12     total 16     balance 7
+  first row : principal 0  interest 5  total 5  balance 11
+  last row  : principal 4  interest 12  total 16  balance 7
+
+============================================================================================
+T159-R600p0-N150-B11   [capture-t159-raw.json.gz]
+  rate 600.0% p.a.  n=150  rows=150  B=11 minor  E(row1 total)=5  I1q=6  delta=1
+  FULL family B antecedent  (delta>=1 and B <= n*delta):  1>=1 and 11<=150  -> True
+  LAW (ii) PREDICTS TOTAL PRINCIPAL = max(0, 11 - 150*1) = 0
+  SUM OF THE PRINCIPAL COLUMN OVER ALL 150 REPAYMENT ROWS = 2   <-- OBSERVED
+  header totalPrincipalAmount = 2  (equals row sum: True)
+  LAW (i) / FACT A: last row total 16 == E+B = 16  -> True
+  TOTAL REPAYMENT 761 == n*E+B = 761  -> True
+  every row with a NON-ZERO principal (row#: principal / interest / total / balance):
+      row 150    principal 2      interest 14     total 16     balance 9
+  first row : principal 0  interest 5  total 5  balance 11
+  last row  : principal 2  interest 14  total 16  balance 9
+
+============================================================================================
+T159-R600p0-N2000-B999   [capture-t159-raw.json.gz]
+  rate 600.0% p.a.  n=2000  rows=2000  B=999 minor  E(row1 total)=499  I1q=500  delta=1
+  FULL family B antecedent  (delta>=1 and B <= n*delta):  1>=1 and 999<=2000  -> True
+  LAW (ii) PREDICTS TOTAL PRINCIPAL = max(0, 999 - 2000*1) = 0
+  SUM OF THE PRINCIPAL COLUMN OVER ALL 2000 REPAYMENT ROWS = 166   <-- OBSERVED
+  header totalPrincipalAmount = 166  (equals row sum: True)
+  LAW (i) / FACT A: last row total 1498 == E+B = 1498  -> True
+  TOTAL REPAYMENT 998999 == n*E+B = 998999  -> True
+  every row with a NON-ZERO principal (row#: principal / interest / total / balance):
+      row 2000   principal 166    interest 1332   total 1498   balance 833
+  first row : principal 0  interest 499  total 499  balance 999
+  last row  : principal 166  interest 1332  total 1498  balance 833
+
