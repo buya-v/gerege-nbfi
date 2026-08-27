@@ -1,0 +1,105 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-REFUSE-06-preclosure-entry-strictly-before-closing-date",
+  "context": "ledger",
+  "class": "oracle-refusal",
+  "title": "T297 REVIEWER CONSTRUCTION from A2-02 bytes: an entry dated 2026-01-15, STRICTLY BEFORE a closure closing 2026-01-31, is refused HTTP 403 error.msg.glJournalEntry.invalid.accounting.closed.",
+  "dec2_revision": 5,
+  "_note": "T297 CONSTRUCTION PROOF ONLY, not a store submission. It pins the STRICTLY-BEFORE half of :636, which LDG-REFUSE-04 (the equal case) does not.",
+  "capabilities_required": [
+    "ledger.refusal.parity",
+    "ledger.opening.balance.and.closure"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/t287-closure-refusals/out/A2-02-preclosure-before.json",
+    "capture_sha256": "c12e977f1c633356e9679f9f2e691a35e1647bc4c19eefd2d6f55bb5c12805d2",
+    "capture_case_id": "A2-02-preclosure-before",
+    "request_capture_ref": ".softhouse/capture/t287-closure-refusals/out/A2-02-preclosure-before.req",
+    "request_capture_sha256": "6d1ca1e11a48154212bfac97df9b5c697142337644735a471f5894a5dd9ce3ea",
+    "request_capture_case_id": "A2-02-preclosure-before",
+    "rerun_invariant": "THIS VECTOR IS GRADED BY REPLAY AGAINST A PORT AND MUST NEVER BE RE-FIRED AT THE ORACLE. READ THAT SENTENCE BEFORE THE REST. A2-01's body is a VALID, BALANCED, POSTABLE manual journal entry: GL 4 and GL 2 are both manual_journal_entries_allowed = t, disabled = f, account_usage = 1 (DETAIL), debits equal credits, and 2026-01-31 is in the past. THE ONLY THING THAT REFUSED IT WAS A GLClosure THAT NO LONGER EXISTS -- T287 created it (id 1) to take this capture and DELETED it in the same fire, so acc_gl_closure is empty and re-sending this body TODAY POSTS TWO JOURNAL ENTRIES INTO THE REFERENCE ORACLE. Unlike the GLClosure T287 created and removed, A POSTED JOURNAL ENTRY CANNOT BE DELETED: GLClosure has no @SQLDelete and deleteGLClosure is a hard delete (:135), while the only 'undo' for a journal entry is posting more entries. .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh measures the precondition and fails closed; it exits 1 today. THE RELATION THIS VECTOR ASSERTS, which is what a port is graded on and what no calendar can falsify: given office_id 1, a latest GLClosure closing on request.latest_closing_date, and a transaction dated request.transaction_date with transaction_date <= latest_closing_date AND transaction_date <= business_date, the answer is HTTP 403 error.msg.glJournalEntry.invalid.accounting.closed. WHAT WOULD MAKE THIS VECTOR FALSE: a change to :636 that made the comparison strict, or a change to the message/globalisation code at GlJournalEntryInvalidReason.ACCOUNTING_CLOSED. Both are oracle-source changes and both are found by re-reading the pinned commit, NOT by re-posting. THE ANSWER IN THAT CASE IS RE-CAPTURE, NOT EXEMPTION: this schema admits no invariant_exemptions at all. AND NOTE WHAT THIS BODY DOES NOT HAVE, because LDG-REFUSE-03 has it and this one does not: OB-01 was unbalanced by one minor unit and was therefore unpostable ON ITS OWN CONTENT, permanently. A2-01 is balanced. Its safety comes ENTIRELY from an external precondition that has already lapsed, which is P-92's loaded weapon exactly -- 'a probe whose safety comes from an EXTERNAL PRECONDITION rather than from its own content is a loaded weapon, and the danger is highest immediately after the capture SUCCEEDS'. That is why the bytes were promoted and the probe was not re-run.",
+    "citation": "T295, promoting T287's capture under T289's rule. HTTP status 403 read from out/A2-01-preclosure-on-date.status; code and message read from errors[0] of the captured response body (userMessageGlobalisationCode and defaultUserMessage, byte-identical to developerMessage on this error). THE WIRE MESSAGE AND THE SOURCE STRING AGREE, AND BOTH DISAGREE WITH THE CODE THAT RUNS -- the message says \"prior to\" and :636 is inclusive; the WIRE is transcribed here and the CODE is what the port must implement, and the vector's job is to make the second beat the first. request.legs' amount tokens, office_id and transaction_date read from the committed .req wire-bytes artefact. request.latest_closing_date read from req/a2-00-create-closure.json's closingDate, the closure T287 created for this capture, confirmed by out/M-09-state-during-closure.txt (acc_gl_closure id 1, office 1, closing_date 2026-01-31) and by out/M-12-state-after-delete.txt / M-13-glclosures-after-delete.json showing it gone afterwards. request.business_date 2026-08-23 is DERIVED, not read from an endpoint, and that is recorded because a derived value MOVES: `enable-business-date` is `f` and `m_business_date` is empty (out/M-07-businessdate-list.json is `[]`, out/M-06-businessdate-BUSINESS_DATE.json is 404 error.msg.businessdate.not.found), so BusinessDateReadPlatformServiceImpl seeds BUSINESS_DATE with DateUtils.getLocalDateOfTenant() -- today in Asia/Ulaanbaatar (+08, no DST, zone named never offset hard-coded). The DB's own now() read 2026-08-23 00:09:58+00 = 08:09 on 2026-08-23 in Ulaanbaatar. The chart rows in request.accounts are DATA (DEC-2 \u00a74.5), recorded twice independently: T287's handoff \u00a72 (\"Debit GL 4 (10201 Loan Portfolio), credit GL 2 (10100 Fund Source) -- both manual-allowed, enabled, detail accounts\") and T289-CORRECTIONS.md \u00a71 (\"GL 4 and GL 2 on tenant gerege are both manual_journal_entries_allowed = t, disabled = f, account_usage = 1 (DETAIL)\"). MANIFEST.sha256 over the rig verifies 87/87 unchanged, re-checked by T295 before transcription."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_rest_posting",
+    "captured_at": "2026-08-23T00:17:56Z"
+  },
+  "request": {
+    "product_id": 0,
+    "product_type": "",
+    "accounting_rule": "",
+    "slot_family": "",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_rest_posting",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "",
+    "manual_entry": true,
+    "transaction_date": "2026-01-15",
+    "business_date": "2026-08-23",
+    "latest_closing_date": "2026-01-31",
+    "transaction_amount_major_text": "",
+    "accounts": [
+      {
+        "id": 4,
+        "gl_code": "10201",
+        "name": "Loan Portfolio",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 2,
+        "gl_code": "10100",
+        "name": "Fund Source",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 4,
+        "entry_side": "DEBIT",
+        "amount_major_text": "1000000"
+      },
+      {
+        "gl_account_id": 2,
+        "entry_side": "CREDIT",
+        "amount_major_text": "1000000"
+      }
+    ]
+  },
+  "expect": {
+    "kind": "refusal",
+    "http_status": 403,
+    "legs": [],
+    "total_debits_minor": "",
+    "total_credits_minor": "",
+    "refusal": {
+      "http_status": 403,
+      "code": "error.msg.glJournalEntry.invalid.accounting.closed",
+      "message": "Journal entry cannot be made prior to last account closing date for the branch"
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "t297-equality-only",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "refusal.http_status",
+        "refusal.code",
+        "refusal.message"
+      ],
+      "note": "A port that refuses ONLY the equal date accepts and POSTS this entry."
+    }
+  ],
+  "invariant_exemptions": []
+}

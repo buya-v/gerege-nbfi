@@ -1,0 +1,24 @@
+business date: 2026-08-27  (DERIVED -- enable-business-date='f', m_business_date rows: 0; today in Asia/Ulaanbaatar)
+latest GLClosure at office 1: NONE (acc_gl_closure has no row for office 1)
+
+ok      a1-01-future-far.json  FUTURE_DATE probe, transactionDate 2026-12-31 > business date 2026-08-27 -- still refuses.
+REFUSE  a1-02-future-boundary-plus1.json  *** transactionDate 2026-08-24 is NOT after business date 2026-08-27 ***
+        DateUtils.isDateInTheFuture() = isAfterBusinessDate() is STRICT, so this
+        request NO LONGER TRIPS THE GUARD. Firing it POSTS 2 JOURNAL ENTRIES into
+        the reference oracle, PERMANENTLY. Journal entries cannot be deleted.
+NOTE    a2-00-create-closure.json  MUTATION recipe, not a probe. Firing it CREATES a GLClosure in the
+        reference oracle. T287 created and deleted one; the sequence is now
+        is_called=t, so the next one is id=2. Delete it in the same fire.
+REFUSE  a2-01-preclosure-on-date.json  *** NO GLClosure EXISTS at office 1 ***
+        transactionDate 2026-01-31 is in the past, so the FUTURE_DATE guard does not fire
+        either. Firing this POSTS 2 JOURNAL ENTRIES into the reference oracle,
+        PERMANENTLY. Create the closure first (req/a2-00-create-closure.json),
+        and remember the next closure gets id=2, not 1.
+REFUSE  a2-02-preclosure-before.json  *** NO GLClosure EXISTS at office 1 ***
+        transactionDate 2026-01-15 is in the past, so the FUTURE_DATE guard does not fire
+        either. Firing this POSTS 2 JOURNAL ENTRIES into the reference oracle,
+        PERMANENTLY. Create the closure first (req/a2-00-create-closure.json),
+        and remember the next closure gets id=2, not 1.
+
+REFUSED: at least one probe would WRITE to the reference oracle if fired now.
+exit=1

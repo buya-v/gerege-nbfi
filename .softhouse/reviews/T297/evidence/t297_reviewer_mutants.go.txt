@@ -1,0 +1,90 @@
+package conformance
+
+// T297 INDEPENDENT REVIEW — reviewer-authored mutants.
+//
+// These are written from the pinned Fineract source by the REVIEWER, not copied
+// from T295's impl.go, so that "the strict-< port dies" is a measurement the
+// reviewer made rather than a claim the author made.
+//
+// Source re-derived at 426a23544:
+//   JournalEntryWritePlatformServiceJpaRepositoryImpl.java:636
+//     if (!DateUtils.isBefore(latestGLClosure.getClosingDate(), transactionDate))
+//   DateUtils.java:296-298
+//     isBefore(first, second) => second != null && (first == null || first.isBefore(second))
+//   => refuse when NOT (closingDate < transactionDate) => transactionDate <= closingDate.
+
+// t297StrictLT is the MESSAGE-TEXT reading: "prior to" => strictly before.
+// Refuses only transactionDate < closingDate. It must die on a vector taken ON
+// the closing date.
+type t297StrictLT struct{}
+
+func (t297StrictLT) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	if req.LatestClosingDate != "" && req.TransactionDate != "" &&
+		req.TransactionDate < req.LatestClosingDate {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       "error.msg.glJournalEntry.invalid.accounting.closed",
+			Message:    "Journal entry cannot be made prior to last account closing date for the branch",
+		}, nil
+	}
+	r := req
+	r.LatestClosingDate = "" // this port has already made the closure decision
+	return GoPoster{}.PostEntry(r)
+}
+
+// t297EqualityOnly refuses ONLY when transactionDate == closingDate.
+//
+// WHY THIS MUTANT EXISTS. It is the defect the corpus's own documentation
+// invites: LDG-REFUSE-04's title and note both say "the equal case is the ONLY
+// case that separates the two readings", and a porter who implements exactly the
+// case the vector emphasises writes an equality test and loses the strictly-
+// before half of the rule. It FAILS OPEN on every entry dated strictly before a
+// closure — i.e. on every ordinary backdated entry into a sealed period, which
+// is the larger population, not the smaller one.
+//
+// A2-02 (transactionDate 2026-01-15, closingDate 2026-01-31) is exactly the
+// captured request that kills it. T295 declined to promote A2-02 on the ground
+// that it "cannot diverge on any graded cell A2-01 does not already cover" and
+// would "raise the kill count by zero". This type is the counterexample.
+type t297EqualityOnly struct{}
+
+func (t297EqualityOnly) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	if req.LatestClosingDate != "" && req.TransactionDate != "" &&
+		req.TransactionDate == req.LatestClosingDate {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       "error.msg.glJournalEntry.invalid.accounting.closed",
+			Message:    "Journal entry cannot be made prior to last account closing date for the branch",
+		}, nil
+	}
+	r := req
+	r.LatestClosingDate = ""
+	return GoPoster{}.PostEntry(r)
+}
+
+// t297FutureGTE reads the future-date guard as >= instead of >.
+// :629 -> isDateInTheFuture -> isAfterBusinessDate -> isAfter(txnDate, businessDate),
+// which is STRICT. A >= port refuses an entry dated ON the business date, which
+// the oracle accepts. T295 states this survives LDG-REFUSE-05 and calls it
+// [UNVERIFIED] (backlog B-2). This mutant MEASURES that statement.
+type t297FutureGTE struct{}
+
+func (t297FutureGTE) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	if req.BusinessDate != "" && req.TransactionDate != "" &&
+		req.TransactionDate >= req.BusinessDate {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       "error.msg.glJournalEntry.invalid.future.date",
+			Message:    "The journal entry cannot be made for a future date",
+		}, nil
+	}
+	r := req
+	r.BusinessDate = ""
+	return GoPoster{}.PostEntry(r)
+}
+
+func init() {
+	RegisterWrong("t297-strict-lt", "REVIEWER MUTANT: closure boundary strictly `prior to`", t297StrictLT{})
+	RegisterWrong("t297-equality-only", "REVIEWER MUTANT: closure boundary refuses ONLY the equal date", t297EqualityOnly{})
+	RegisterWrong("t297-future-gte", "REVIEWER MUTANT: future-date guard uses >= instead of >", t297FutureGTE{})
+}
