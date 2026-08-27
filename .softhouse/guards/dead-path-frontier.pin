@@ -98,6 +98,9 @@
 .softhouse/capture/t309-sigterm-reconcile-bypass/patch5.py | .softhouse/tasks.json.t288.tmp
 .softhouse/capture/t309-sigterm-reconcile-bypass/probe-git-inode.sh | .softhouse/bin/w.sh
 .softhouse/capture/t316-dead-path-guards/census_dead_paths.py | .softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py
+.softhouse/capture/t316-dead-path-guards/drive-red-t316.py | .softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py
+.softhouse/capture/t316-dead-path-guards/drive-red-t316.py | .softhouse/capture/t316-dead-path-guards/no-such-file-planted-by-G2.json
+.softhouse/capture/t316-dead-path-guards/drive-red-t316.py | .softhouse/capture/t316-dead-path-guards/planted_regression.py
 .softhouse/capture/t61-halfeven/src/run-counterfactuals.py | .softhouse/toolchain
 .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py | .softhouse/toolchain
 .softhouse/capture/t66-unrecognized-interest/gotest.sh | .softhouse/toolchain/go
