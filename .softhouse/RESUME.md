@@ -1,74 +1,131 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260827-230001` — IN FLIGHT — 6 WORKERS DISPATCHED, RECORD PUSHED BEFORE THE FIRST SPAWN
+## FIRE `20260827-230001` — CLOSED CLEAN. 15 dispatched, 14 merged, 1 merge ABORTED, **0 live at exit**.
 
-> **P-85 compliance:** this manifest, the lock, and the six `in_progress` rows in `tasks.json` were
-> committed and **pushed before any worker was spawned**. If you are reading this and no fire is
-> running, these six are **corpses, not workers**. Check each branch
-> (`git log --oneline main..<branch>`) and demote anything empty to `needs_retry`.
+`main` is **GREEN** and every worker was awaited. Verified at exit, not asserted:
+
+```
+git status --porcelain   → empty
+bash .softhouse/conformance.sh → EXIT 0
+  probe line count = 1   ← presence read BEFORE value (P-84)
+  probe = up
+  parity vectors PASS 46 / FAIL 0, 7884 cells
+  all 11 wrong ledger implementations DIED through this harness
+tasks.json in_progress   → []   (zero — no dispatch is left claiming to be alive)
+```
 
 ---
 
-## WHAT THIS FIRE FOUND AT PRE-FLIGHT
+## THE HEADLINE: the corpus moved, for the first time in several fires
 
-### The previous fire never got a turn — nothing advanced, and nothing was lost
+**`T305` captured `LDG-05-openingbalance-accepted-empty-ledger`** — the accepting side of
+`defineOpeningBalance`, HTTP 200, six journal entries — and it **kills `T296` arm A**, the port that
+refused *every* opening balance while staying green on the whole corpus. `posted_non_contra_transaction_ids`
+is no longer inert for grading.
 
-Fire `20260827-200001` exited `rc=1` with **0 model turns**: the `seven_day` rate limit rejected it
-outright (`resetsAt=1787835600`). The wrapper banner it left on the old manifest is accurate — the
-window was spent on nothing. **This is not a crash and there is no WIP to rescue from it.**
+| | before | after |
+|---|---|---|
+| ledger parity vectors | 4 | **5** |
+| LEDGER money cells compared | 21 | **29** |
+| registered wrong implementations | 9 | **11**, all killed |
 
-`ready-tasks.py` at this fire's pre-flight: **0 in progress, 29 READY, 4 blocked, 0 open contract
-gates, 0 dependency edges resolving nowhere.** The eight branches dispatched by fire
-`20260823-140001` are gone or empty; this fire re-dispatches six of them as **fresh attempts, not
-resumes**, and does not claim their earlier work exists.
+**The standing oracle was never written to.** Driver-verified independently, before and after:
+`acc_gl_journal_entry` **60 / maxid 64**, `acc_gl_closure` **0**, 26 distinct transaction ids,
+`m_portfolio_command_source` **352**, `m_loan` 7, `m_office` 1 — identical to the fire-start baseline. No
+container remains on 8444. The capture was taken on a **throwaway instance** built from the same image, and
+the unlock was that tenant identifier, timezone and rounding mode are bound into Fineract's tenant liquibase
+seed — so a fresh instance boots at `Asia/Ulaanbaatar` with **rounding mode 4 (HALF_UP)** and an empty ledger.
 
-### THE REFERENCE ORACLE WAS DOWN AT FIRE START, AND THIS FIRE BROUGHT IT UP
+**It also corrected this store in three places.** An arm predicted 403 and got **200**:
+`findNonContraTransactionIds` **excludes** contra-touching transactions, and every opening-balance entry
+touches contra — so **opening balances do not block each other**; the oracle reverses the previous one and
+posts a new one. Byte-identical bytes, one tenant, three answers in sequence: ACCEPT → ACCEPT-with-reversal →
+REFUSE. `T320` found a **fourth** unannotated site, filed as `T322`.
 
-The fire opened with the oracle **UNREACHABLE** at
-`https://localhost:8443/fineract-provider/actuator/health`, Docker running, Postgres healthy. Per the
-fire contract that is **T1's job, not a park reason**. Measured before starting anything:
+---
 
-| fact | value |
+## WHAT THE ORACLE DID, AND WHY NOTHING WAS PARKED
+
+The fire opened with the oracle **UNREACHABLE** and Docker running — which the fire contract makes **T1's
+job, not a park reason**. The fault was narrow: `fineract-db-1` had been healthy for five hours; only the app
+container was missing. Brought up with `docker-compose-postgresql.yml` **alone**; the mariadb/mysql files were
+never invoked. Asserted *before* starting: `org.postgresql.Driver`,
+`jdbc:postgresql://db:5432/fineract_tenants`, and a prohibited-engine grep over all three env files and all
+three compose files → **0 hits**. Healthy in **80 s**. Recorded in `reference-oracle.md`, with two facts that
+will bite a script author: tenant id `gerege` maps to database **`fineract_gerege`**, and
+`fineract_tenants.tenants` has **no `schema_name` column** in this build.
+
+---
+
+## FIVE WORKERS REFUTED THE DRIVER OR A PREDECESSOR. ALL FIVE WERE RIGHT.
+
+1. **`T308` caught the driver's pre-flight.** It declared eight previously-dispatched branches *"gone or
+   empty"* in a **pushed** commit. **All eight had commits** — 32, 11, 10, 7, 5, 4, and T297's "empty" branch
+   had 4 including one named *"first commit before analysis (SIGTERM insurance)"*. Cause: a **lowercase glob
+   against an uppercase convention**. Worse, dispatching lowercase names **created** case-shadowing refs —
+   `packed-refs` is case-sensitive, the filesystem is not — and two lines had genuinely **diverged**. Closed
+   by **`T312`**, which reproduced the numbers from a different instrument and made the refusal a git
+   **`reference-transaction` hook** that aborts the ref creation itself.
+2. **`T302` rejected `T309`.** Its *replacement* reconciler predicate reproduces the exact near-miss `T309`
+   caught: **7 demotable, every one a live worker**. `T309`'s 8/8 matrix missed it because one cell passes a
+   single commit as both lock and state-under-test, **freezing the clock**. Fixed by **`T319`**, whose new
+   matrix **fails the whole run if no cell can see a re-dispatch**.
+3. **`T316` refuted a task the driver filed with the conclusion in its title.** The "fail-open" is an
+   **announced two-candidate fallback with a docstring saying so**. It fixed **nothing** — correctly, since
+   repointing a forward-reference inside committed evidence is the in-place edit those guards forbid. Title
+   corrected in `tasks.json`, original kept beside the refutation. → **P-95**.
+4. **`T314` refuted its own brief.** `coverage_digest` *discards* the path, so the collision is
+   container-blindness **by design**; the real defect is the canon's unescaped `;`/`=` join. → **P-94**.
+5. **`T320` caught `T306` before it could land.** `T306` is **already written** and its narrowing would make
+   LDG-05 **inadmissible and revive the mutant `T305` just killed**.
+
+---
+
+## THE DRIVER'S OWN ERRORS — ALL FILED, NONE BURIED
+
+- The lowercase branch glob, and the case-shadowing it created. → `T312` (closed), observation note.
+- **Reproduced the recorded backtick-injection defect** in the `T309` merge message; `` `fire` `` was
+  command-substituted away. Corrected **forward**, not by force-pushing published history while workers held
+  forks of it.
+- Re-stamped the `fire` field; `T302` correctly called it **cosmetic and half-done**, and `T319` **deleted**
+  the field.
+
+---
+
+## WHAT WAS ABORTED, AND WHY `main` IS STILL GREEN
+
+**`T323`'s guard wiring was NOT merged.** The driver merged it **locally without committing** and ran the bar
+itself: **EXIT 2 with ZERO probe lines** — under P-84 a failed HARD guard, *not* an oracle outage —
+`guard_dead_path_frontier REFUSED rows=78 pinned=98 added=4 removed=24`.
+
+Measured cause: **`.softhouse/toolchain` exists in the main checkout, has ZERO tracked files, and was ABSENT
+in `T323`'s worktree**; **23 of the 24** vanished rows name it. So `T316`'s pin derives from **untracked host
+state**, and wiring it HARD makes the bar's verdict depend on the machine — fatal in a program driven by
+**two fires on different hosts**, and it presents as `exit 2, no probe line`, *the costume of a float
+violation*.
+
+The guard is **not** wrong to refuse; it caught a defect in its own pin on first contact with a second
+machine. **The pin is the defect.** Branch intact and pinned at
+`refs/rescue/20260827-230001/t323-wiring-branch`; retry is **`T326`**, told to start from that branch.
+
+---
+
+## NEXT FIRE PICKS UP, in this order
+
+| Task | Why it is first |
 |---|---|
-| running before | `fineract-db-1` (`postgres:18.3`) **up 5 h, healthy**, `0.0.0.0:5432` |
-| missing | `fineract-fineract-1` — the app container was simply not running |
-| compose used | `/Users/buv/fineract/docker-compose-postgresql.yml` (**postgresql profile only**) |
-| `FINERACT_HIKARI_DRIVER_SOURCE_CLASS_NAME` | `org.postgresql.Driver` — asserted, not assumed |
-| `FINERACT_HIKARI_JDBC_URL` | `jdbc:postgresql://db:5432/fineract_tenants` |
-| prohibited-engine grep over the whole postgresql compose path | **clean** — no `ojdbc`, `oracle.jdbc`, `:1521`, `com.mysql.cj`, `mariadb` |
-| pinned Fineract commit | `426a23544` (verified in `/Users/buv/fineract`) |
+| **`T324`** | **HIGH, live in committed code.** A worktree with live content is **destroyed** — three "independent" clean checks share one blind spot (an index skip bit) and fail together. |
+| **`T326`** | Restart `T323` from its branch. One defect: make the frontier derive from **tracked content only**, and prove it with the toolchain present **and** absent. |
+| **`T306`** | **BLOCKED.** Unblock condition is exact and recorded in its note: drop the refusal-kind precondition, and conformance must still show 11/11 dying with LDG-05 admissible. |
+| `T310`, `T311` | Reverse the A2-02 declination (zero oracle contact — the bytes are on disk); wire the expiry guard. |
+| `T313`, `T315`, `T317`, `T322`, `T325`, `T321` | Non-wiring content of the guard tasks, `T320`'s medium findings, the attestation adoption. |
 
-The mariadb/mysql compose files were never invoked. See `.softhouse/reference-oracle.md` for the
-connection facts recorded this fire.
-
----
-
-## DISPATCHED THIS FIRE
-
-| Task | Model | Branch | What it is |
-|---|---|---|---|
-| T309 | opus | `softhouse/t309-sigterm-reconcile-bypass` | The SIGTERM path bypasses T288's reconciler — the one case it was built for |
-| T297 | opus | `softhouse/t297-review-t295` | INDEPENDENT review of T295 — attack the relational reframing |
-| T298 | opus | `softhouse/t298-review-t256` | INDEPENDENT review of T256 — attack the self-locating activation line |
-| T308 | opus | `softhouse/t308-review-t292` | INDEPENDENT review of T292 — attack the two theorems |
-| T304 | opus | `softhouse/t304-evidence-destruction` | FU-T284-3: `rm -rf` over committed evidence is a four-instrument property |
-| T299 | opus | `softhouse/t299-t256-namespace-collision` | `t256-*` capture namespace collision + a lint run that dirties tracked evidence |
-
-**Held back deliberately, for file-overlap serialisation** (not blocked, not parked):
-`T301` and `T302` both edit `.softhouse/bin/fire-program.sh`, which **T309 is rewriting** this fire.
-`T303` and `T305` both edit `.softhouse/conformance.sh`. `T306` overlaps `T305` on
-`nexus/internal/apps/ledger/`. These go out in a later batch this fire or the next one.
-
-| T305 | opus | `softhouse/t305-openingbalance-accepting-side` | F-T296-2: the accepting-side opening-balance capture — **the oracle-dependent task** |
-
-**T305 was held back until the health probe actually returned 200**, not dispatched on the assumption
-that the bring-up would work. It went out at +80 s once `{"status":"UP"}` was observed. Its brief's date
-claims are **stale and dangerous** — it says *"a1-02 arms 2026-08-24, TOMORROW"* and **today is
-2026-08-27** — so the worker was told explicitly to re-measure the arming state with the expiry guard
-rather than reason from any date in its own brief. `acc_gl_closure` is **0**, so a2-01/a2-02 would POST
-two journal entries each if fired; the worker is told not to fire them.
+**Standing hazard for whoever reads this:** three of `T287`'s four probes are **armed** (a1-02 armed
+2026-08-24), and `acc_gl_closure` is **0**, so a2-01/a2-02 would POST two journal entries each. A posted
+journal entry **cannot be deleted**. Read `.softhouse/capture/t287-closure-refusals/req/` — never POST it.
 
 ## Pause reason
 
-None yet — fire in flight. If this section still says this and no fire is running, the fire died
-without reaching STEP 5.5 and every row above is a corpse.
+**None — the fire finished its work.** Every dispatched worker was awaited and its output merged or pinned;
+no worker was killed. Ended because the batch was complete with `main` green, not because of a token limit,
+a quota error, or a gate. **No `user` gate was reached or crossed.**
