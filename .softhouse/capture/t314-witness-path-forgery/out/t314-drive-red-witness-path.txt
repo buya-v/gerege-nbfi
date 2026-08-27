@@ -62,6 +62,26 @@ A4  MINE -- THE PATH IS NOT COSMETIC: it steers a SET MEMBERSHIP TEST
   T292's own design). It is here to refute 'the path is only printed' -- it is
   also an IDENTITY, and an ambiguous identity is a bug wherever it is read.
 
+A5  MINE -- THE RE-SCORING ARM. Does the naming survive a HOMOGLYPH?
+--------------------------------------------------------------------
+  This is not a new defect; it MEASURES what F-T308-5's withdrawn downgrade was
+  resting on. F-T308-5: `head[1:].isdigit()` is true for Unicode digits that
+  `^P[0-9]+_` does not match, so `P\u00b2_x` auto-classifies without being in the
+  register and G2 -- 'UNCLASSIFIED is a REFUSAL, not a pass' -- never fires. T308
+  scored that LOW partly because 'the witness path is printed'. So: printed HOW?
+  PRE  registered `P2_x`   rc=0 unclassifiedKeys=0  line: $.cells[0].P2_x = true
+  PRE  homoglyph  `P²_x`  rc=0 unclassifiedKeys=0  line: $.cells[0].P²_x = true
+       the smuggled key is rendered in PRINTABLE ASCII (so a reader cannot
+       mistake it for the registered key): NO  <- the naming is a HOMOGLYPH
+  POST registered `P2_x`   rc=0 unclassifiedKeys=0  line: $["cells"][0]["P2_x"] = true
+  POST homoglyph  `P²_x`  rc=0 unclassifiedKeys=0  line: $["cells"][0]["P\u00b2_x"] = true
+       the smuggled key is rendered in PRINTABLE ASCII (so a reader cannot
+       mistake it for the registered key): YES  <- visible
+  RE-SCORE: F-T308-5's defect is UNTOUCHED here and stays OPEN -- `P\u00b2_x` still
+  buys coverage with unclassifiedKeys=0 under BOTH rules. What T314 changes is the
+  half F-T308-5's LOW was resting on: `ensure_ascii=True` makes the smuggled key
+  UNMISTAKABLE in the transcript instead of visually identical to `P2_x`.
+
 CORP  the committed real corpus -- the fix must move NOTHING but the digest
 ---------------------------------------------------------------------------
   .softhouse/capture/t229-g8-site3/out/classify-t229.json

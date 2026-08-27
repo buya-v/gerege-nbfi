@@ -64,7 +64,18 @@ recognise" that could be silently skipped.
 and `|W| >= 1` is a POST-CONDITION CHECKED IN CODE immediately before the exit code is computed --
 not an emergent property of a walk, and not an `assert` (which `PYTHONOPTIMIZE=2` would delete).
 
-**THEOREM (container-blindness).**  Let T be any CONTAINER-ONLY rewriting of D: wrap a value in a
+**THEOREM (container-blindness).**  [!! F-T308-1 OPEN AGAINST THIS PARAGRAPH -- NOT FIXED BY T314,
+AND NOT SILENTLY CARRIED EITHER.  T308 measured that three of the four operations this theorem
+NAMES are not in its own hypothesis class: CE3 wraps a DESCRIPTIVE bool in an object under a fresh
+`^P[0-9]+_` key, which is verbatim "wrap it in an object under a fresh key", and flips REFUSED ->
+GREEN.  The correction T308 specified, which a later worker should apply, is (a) restate the
+operation set as "inserted only at positions already holding a dict or a list, with wrapper keys
+that are neither registered nor `^P[0-9]+_`-shaped" and (b) change "Neither consults container
+structure" to "...above the leaf's own key binding."  T314 is scoped to F-T308-6 and does not
+re-litigate another worker's finding inside its own diff; the paragraph below therefore stands AS
+T292 WROTE IT, marked false, so that the sixth link reads the warning and not the proof.]
+
+Let T be any CONTAINER-ONLY rewriting of D: wrap a value in a
 list; wrap it in an object under a fresh key; re-nest to any depth; promote the root into a list;
 turn `{k: v}` into `[{k: v}]`; any composition of these.  T changes no leaf and adds or removes no
 registered predicate key.  Then W(T(D),R) and W(D,R) have the same cardinality and the same
@@ -139,6 +150,14 @@ GUARDS
  G1  UNCLASSIFIED VERDICT WORD under a verdict-named key -- REFUSAL.  (T259, unchanged.)
  G2  UNCLASSIFIED BOOLEAN KEY -- REFUSAL.  `^P[0-9]+_` auto-classifies; everything else must be in
      the register.  (T259, unchanged.)
+     [!! F-T308-5 OPEN AGAINST THIS GUARD -- NOT FIXED BY T314.  `key_class` implements the
+     declared pattern as `head[1:].isdigit()`, which is TRUE for Unicode digits `[0-9]` does not
+     match, so `P²_x` / `P٢_x` auto-classify without being in the register and G2 never fires.
+     Inherited from T259 (blob 86f4285, line 151).  Fix is one line:
+     `re.match(reg["autoPredicatePattern"], key)`.  T314 leaves the defect and REMOVES ONE OF THE
+     TWO THINGS ITS `LOW` RESTED ON: `render_path` uses `ensure_ascii=True`, so the smuggled key
+     now prints as `"P\\u00b2_x"` and cannot be mistaken for `"P2_x"` by a reader.  Driven:
+     `probe/t314_drive_red_witness_path.py` arm A5.]
  G3  NIL COVERAGE -- REFUSAL, REDEFINED: the witness set W is empty.  This is the inversion.
  G4  ACKNOWLEDGEMENTS PINNED TO sha256 -- a void block is a REFUSAL.  (T259 + T286's R3.)
  G5  UNACKNOWLEDGED DISAGREEMENT -- REFUSAL.  A false predicate and an affirmative verdict in the

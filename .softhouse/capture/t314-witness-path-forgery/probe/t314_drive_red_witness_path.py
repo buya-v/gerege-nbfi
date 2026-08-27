@@ -272,6 +272,44 @@ def main():
         print("  T292's own design). It is here to refute 'the path is only printed' -- it is")
         print("  also an IDENTITY, and an ambiguous identity is a bug wherever it is read.")
 
+        # ------------------------------------------------------------------ A5
+        hdr("A5  MINE -- THE RE-SCORING ARM. Does the naming survive a HOMOGLYPH?")
+        print("  This is not a new defect; it MEASURES what F-T308-5's withdrawn downgrade was")
+        print("  resting on. F-T308-5: `head[1:].isdigit()` is true for Unicode digits that")
+        print("  `^P[0-9]+_` does not match, so `P\\u00b2_x` auto-classifies without being in the")
+        print("  register and G2 -- 'UNCLASSIFIED is a REFUSAL, not a pass' -- never fires. T308")
+        print("  scored that LOW partly because 'the witness path is printed'. So: printed HOW?")
+        a5_honest = {"cells": [{"P2_x": True, "verdict": "AS PREDICTED"}]}
+        a5_glyph = {"cells": [{"P²_x": True, "verdict": "AS PREDICTED"}]}
+        p5h = write(tmp, "a5-honest.json", a5_honest)
+        p5g = write(tmp, "a5-homoglyph.json", a5_glyph)
+        res5 = {}
+        for tag, rule in (("PRE", PRE), ("POST", POST)):
+            rc_h, pb_h, so_h = run(rule, p5h)
+            rc_g, pb_g, so_g = run(rule, p5g)
+            check(pb_h is not None and pb_g is not None, "A5/%s: probe line ABSENT (P-84)" % tag)
+            lh = (witness_block(so_h) or ["<none>"])[0].strip()
+            lg = (witness_block(so_g) or ["<none>"])[0].strip()
+            # `repr` would hide the point; print the bytes the transcript actually carries.
+            print("  %-4s registered `P2_x`   rc=%s unclassifiedKeys=%s  line: %s"
+                  % (tag, rc_h, f(pb_h, "unclassifiedKeys"), lh))
+            print("  %-4s homoglyph  `P²_x`  rc=%s unclassifiedKeys=%s  line: %s"
+                  % (tag, rc_g, f(pb_g, "unclassifiedKeys"), lg))
+            ascii_only = all(ord(c) < 128 for c in lg)
+            res5[tag] = ascii_only
+            print("       the smuggled key is rendered in PRINTABLE ASCII (so a reader cannot")
+            print("       mistake it for the registered key): %s"
+                  % ("YES  <- visible" if ascii_only else "NO  <- the naming is a HOMOGLYPH"))
+            check(rc_g == 0 and f(pb_g, "unclassifiedKeys") == "0",
+                  "A5/%s: F-T308-5 no longer reproduces -- somebody fixed isdigit(); re-score it"
+                  % tag)
+        check(not res5["PRE"], "A5: PRE already rendered ASCII-only -- the arm is vacuous")
+        check(res5["POST"], "A5: POST still renders the smuggled key as a homoglyph")
+        print("  RE-SCORE: F-T308-5's defect is UNTOUCHED here and stays OPEN -- `P\\u00b2_x` still")
+        print("  buys coverage with unclassifiedKeys=0 under BOTH rules. What T314 changes is the")
+        print("  half F-T308-5's LOW was resting on: `ensure_ascii=True` makes the smuggled key")
+        print("  UNMISTAKABLE in the transcript instead of visually identical to `P2_x`.")
+
         # ------------------------------------------------------------------ CORP
         hdr("CORP  the committed real corpus -- the fix must move NOTHING but the digest")
         gating = ["files", "rows", "predicates", "disagreements", "acknowledged", "unacknowledged",
