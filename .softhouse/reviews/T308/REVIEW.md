@@ -146,6 +146,50 @@ structure"* to *"Neither consults container structure above the leaf's own key b
 
 ---
 
+### 2b. THE SIX SHAPES NOBODY HAD TRIED — DRIVEN, AND THEY DO **NOT** BREAK IT
+
+**Reproduction: `python3 .softhouse/reviews/T308/probe/t308_theorem1_novel_shapes.py` → EXIT 0.**
+**Transcript: `out/t308-theorem1-novel-shapes.txt`.** The verdict column carries the finding, not
+the exit code.
+
+Pass 1 attacked Theorem 1 with four operations. The brief named six more, plus two T291 attacks to
+re-run. All ten driven against `BASE = {"cells":[{"P1_principalAmortizesToZero":true,
+"verdict":"AS PREDICTED"}]}` (rc=0, witness=1, digest `8c87330d77282c8d`):
+
+| shape | operation | rc | witness | verdict |
+|---|---|---|---|---|
+| S1 | a key that is itself a container | — | — | **NOT EXPRESSIBLE** |
+| S2 | a bool leaf under a non-string key | — | — | **NOT EXPRESSIBLE** |
+| S2b | the string `"true"` used as an object KEY | 1 | 1 | INVARIANT |
+| S3 | the whole document is the bare literal `true` | 1 | 0 | not invariant — **and fail-closed** |
+| S4 | 12 levels of nesting, each adding an empty `{}` and `[]` | 0 | 1 | **INVARIANT** |
+| S5 | the same key name reused at three DIFFERENT depths | 0 | 1 | **INVARIANT** |
+| S5b | CONTROL — the same PREDICATE key at two depths | 0 | **2** | not invariant (it *adds an assertion*; proves the counter is live) |
+| S6 | anchors / aliases | — | — | **NOT EXPRESSIBLE** |
+| S7 | whole document promoted into a top-level ARRAY | 0 | 1 | **INVARIANT** |
+| S8 | list-of-lists, depth 4 | 0 | 1 | **INVARIANT** |
+
+**"Not expressible" is a statement about the search, not a shrug.**
+* **S1/S2** — RFC 8259: a JSON member name **must** be a string. `json.loads` cannot produce a
+  non-string key, so the shape does not exist in this loader's input language. The nearest
+  expressible thing is S2b, driven.
+* **S6** — the loader is `json.loads(text, parse_float=Decimal, parse_constant=_refuse_constant,
+  object_pairs_hook=_no_duplicate_keys)` [VERIFIED: `check_verdict_predicate_agreement_t292.py:220-222`,
+  read by me] and there is **no `yaml` import in the file** [VERIFIED: grep]. Anchors are not
+  admitted, so they cannot move coverage.
+
+**This is a result FOR T292, and I record it as one.** Of the five genuinely container-only shapes
+(S2b, S4, S5, S7, S8), **all five are invariant** — including 12 levels of empty-container nesting
+and the top-level array that killed earlier links. The two that moved are not container-only
+rewritings: S3 destroys the document (and **refuses**, the safe direction), and S5b is my own
+positive control, which *adds an assertion* and must move.
+
+**So F-T308-1 does not widen.** After ten shapes, the *only* counterexample class remains the one
+§2 names: **the leaf's immediate key binding**. Theorem 1 with that one correction applied appears
+to be true, and I attacked it harder than its author did.
+
+---
+
 ## 3. FINDING F-T308-2 — "MEASURED IMPOSSIBILITY" IS PROVED ABOUT THE WRONG RULE CLASS; A SEPARATOR EXISTS
 
 **Severity: MEDIUM (claim overreach — the strongest word in the branch is the least supported).**
@@ -658,10 +702,78 @@ So that silence is distinguishable from not looking:
 3. Theorem 1's operation list must be narrowed to what the adversary actually generates. (§2)
 4. **The adversary needs an expected-verdict oracle.** Four properties that are all satisfied by a
    rule that refuses nothing is how five guards' worth of founding defect walked through. (§5)
-5. **F-T290-1b remains open under this rule** — T292 says so plainly and drives it rather than
-   assuming it, and `T269` must still not wire any R-VPA rule until T290's floor on
-   `disagreements` exists. I confirmed the statement is present and is driven
-   (`out/f-t290-1b-driven.txt`); I did **not** independently re-derive T290's floor, and say so.
+5. **F-T290-1b remains open under this rule — and it is WIDER than T290 stated.** See §9.5,
+   which replaces pass 1's admission that it had not re-derived the floor. It has now been
+   re-derived from scratch.
+6. **The witness path does not name a forgery.** Do not reuse "the path is printed" as a
+   mitigation for anything until it is escaped. (§5c)
+
+---
+
+## 9.5. F-T290-1b RE-DERIVED FROM SCRATCH — OPEN, WIDER THAN T290 SAID, AND `T269` STAYS BLOCKED
+
+**Reproduction: `python3 .softhouse/reviews/T308/probe/t308_f290_1b_independent.py` → EXIT 0.**
+**Transcript: `out/t308-f290-1b-independent.txt`.**
+
+Pass 1 accepted T292's own driver and wrote *"I did not independently re-derive T290's floor."*
+That admission is now discharged. I did not re-run T292's script as evidence; I **read the gate**
+and then **built my own fixtures**, because T292's driver attacks the *pinned* corpus
+`classify-t229.json` and therefore inherits T290's framing that this is necessarily a **two-file**
+edit.
+
+**Step 1 — read the gate before driving it** [VERIFIED, quoted by the probe from source]:
+
+```python
+541  refused = bool(rep.unacknowledged or rep.unclassified_keys or rep.unclassified_verdicts
+542                 or rep.void_acks or rep.mute_refutations or nil)
+```
+
+**`rep.disagreements` is not a term.** It is counted (`:445`), printed (`:564`, `:590`) and
+**never gates**. So no document can be refused for having *lost* a disagreement — this is settled
+by reading, before any run.
+
+**Step 2 — drive it on fixtures I built:**
+
+| arm | document | rc | disagreements | unack | witness | `coverageDigest` |
+|---|---|---|---|---|---|---|
+| **CONTROL** | `{"cells":[{"P1_principalAmortizesToZero": false, "verdict":"AS PREDICTED"}]}` | **1 REFUSED** | 1 | 1 | 1 | `714a61bc28e9d46b` |
+| **ERASED** | the same, `"verdict"` rewritten to `"REFUTED"` | **0 GREEN** | **0** | 0 | 1 | **`714a61bc28e9d46b`** |
+
+The control fires, so the probe is not vacuous.
+
+**Three things follow, and the second is new.**
+
+1. **F-T290-1b is open under T292's rule.** Confirmed, agreeing with T292's own honest finding.
+2. **It is WIDER than T290 stated.** T290 framed it as the *consistent two-file edit* — retro-edit
+   the evidence **and** re-pin the register. That two-file requirement is an **artefact of
+   attacking evidence that happens to be pinned.** For a document **not** in the acknowledgement
+   register, erasing a disagreement is a **ONE-FILE edit**: nothing is re-pinned, no register is
+   touched, `voidAcks=0`, and the run is GREEN. The register is not a precondition of the attack;
+   it is only a precondition of the attack *on pinned evidence*.
+3. **T292's own contribution does not reach it.** `witness` is unchanged **and `coverageDigest` is
+   byte-identical** across the erasure — so "pin the digest", which does catch the *predicate*
+   half (T292's ARM 3), is blind to the *verdict-word* half. T292 reports this correctly; I
+   confirm it on fixtures of my own.
+
+**WHAT THE FLOOR MUST LOOK LIKE** (the brief asked, so I answer rather than defer). Nothing inside
+a rule reading only `(document, register)` can supply it — the rule cannot know how many
+disagreements a corpus *ought* to contain. So the floor belongs to the **wiring**, not the rule:
+
+> For each graded corpus, the caller pins an **expected minimum `disagreements`** — and, separately,
+> an expected `acknowledged` — and **REFUSES when the run reports fewer**. A corpus known to carry
+> three acknowledged disagreements must go red the moment it reports two. Pin it beside the
+> existing `coverageDigest` pin, which already covers the predicate half; the two together close
+> both halves of the consistent edit.
+
+Note the asymmetry that makes this safe to specify now: a floor on `disagreements` can only ever
+**add** refusals, so it cannot re-open any fail-open — which is the property every previous fix in
+this lineage failed to have.
+
+**VERDICT ON THE PRECONDITION: `T269` REMAINS BLOCKED.** T292 is right, it drove the claim rather
+than assuming it, and I have now driven it a second way. **No R-VPA rule may be wired — including
+this one — until that floor exists.** I am not able to report the unblocking the brief asked me to
+report loudly if I found it; I did not find it, and the hole is one file wider than the lineage
+believed.
 
 ---
 
@@ -687,5 +799,11 @@ Follow-ups this review does not perform and files instead:
   mutant other than `nil`.
 * **T308-F5** — enforce `autoPredicatePattern` with `re.match`, not `str.isdigit()` (one line;
   also applies to the pinned T259 file, which must NOT be edited — fix it in the successor only).
+* **T308-F6** — escape the witness path (`json.dumps` per segment, lines 257 / 260 / 421) so that
+  a forged path cannot collide with a legitimate one or inject lines. Until then, **"the witness
+  path is printed" is not a mitigation and must not be cited as one.** (§5c)
+* **T308-F7** — the floor on `disagreements` that `T269` is blocked on: pin an **expected minimum
+  `disagreements` and `acknowledged` per graded corpus in the WIRING**, and refuse when the run
+  reports fewer. Specified in §9.5. It can only add refusals, so it cannot re-open a fail-open.
 * **Observation** — `classify-t219.json` carries **4 unacknowledged disagreements** under both the
   T259 and T292 rules. Pre-existing, outside T292's scope, unreviewed by anyone.
