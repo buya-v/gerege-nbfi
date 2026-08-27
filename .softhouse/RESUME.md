@@ -59,8 +59,14 @@ connection facts recorded this fire.
 `T303` and `T305` both edit `.softhouse/conformance.sh`. `T306` overlaps `T305` on
 `nexus/internal/apps/ledger/`. These go out in a later batch this fire or the next one.
 
-**T305 is the oracle-dependent task** (`F-T296-2`, the accepting-side opening-balance capture) and is
-held until the health probe actually returns 200 — not dispatched on the assumption that it will.
+| T305 | opus | `softhouse/t305-openingbalance-accepting-side` | F-T296-2: the accepting-side opening-balance capture — **the oracle-dependent task** |
+
+**T305 was held back until the health probe actually returned 200**, not dispatched on the assumption
+that the bring-up would work. It went out at +80 s once `{"status":"UP"}` was observed. Its brief's date
+claims are **stale and dangerous** — it says *"a1-02 arms 2026-08-24, TOMORROW"* and **today is
+2026-08-27** — so the worker was told explicitly to re-measure the arming state with the expiry guard
+rather than reason from any date in its own brief. `acc_gl_closure` is **0**, so a2-01/a2-02 would POST
+two journal entries each if fired; the worker is told not to fire them.
 
 ## Pause reason
 
