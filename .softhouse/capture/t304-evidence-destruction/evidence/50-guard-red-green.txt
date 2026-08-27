@@ -1,16 +1,24 @@
 === T304 GUARD RED/GREEN ===
 tracked target   : .softhouse/capture/t274-attestation-failopen/evidence/wrap  (145 tracked files)
-untracked target : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.yytpgYoPIb/looks-like-evidence
+untracked target : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.FVUqBrSlj9/looks-like-evidence
 
 --- G1  0 tracked -> pass through
-  OK   rc=0, echoed unchanged: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.yytpgYoPIb/looks-like-evidence
+  OK   rc=0, echoed unchanged: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.FVUqBrSlj9/looks-like-evidence
 --- G2  >0 tracked + scratch root -> redirected, never the committed path
-  OK   rc=0, redirected to /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.W6SHgVK9mN/wrap
+  OK   rc=0, redirected to /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.FhNKgJgyFn/wrap
 --- R1  >0 tracked, no scratch root -> REFUSE 2
   OK   rc=2 and the refusal names the count 145
+--- R1b THE SPELLING THE REAL CALLERS USE: absolute, with '..', through a SYMLINK
+        REGRESSION ARM. This is the arm that failed on the first drive and let all
+        eight wired instruments run to completion (evidence/70-drive-FAILED-FIRST-RUN.txt).
+        Cause: the caller's $HERE said /tmp/... and git rev-parse said /private/tmp/...,
+        so a lexical 'is it under the root?' answered NO and the guard returned a
+        MEASURED ZERO for a directory holding 145 tracked files.
+  OK   absolute + '..' spelling: rc=2, still measures 145
+  OK   reached through a symlink: rc=2, still measures 145
 --- R2  no target -> REFUSE 2
   OK   rc=2: T304 GUARD REFUSED: t304_evidence_root called with no target.
 --- R3  outside any git work tree -> REFUSE 2 (cannot measure => refuse)
   OK   rc=2: refused rather than assuming untracked
 
-PASS=5 FAIL=0
+PASS=7 FAIL=0

@@ -58,11 +58,42 @@ t304_evidence_root() {
   esac
   # Normalise "." and ".." without requiring the path to exist (realpath -m is not portable).
   t304__abs="$(printf '%s' "$t304__abs" | awk -F/ '{n=0;for(i=1;i<=NF;i++){if($i==""||$i==".")continue;if($i==".."){if(n>0)n--;continue}n++;a[n]=$i}s="";for(i=1;i<=n;i++)s=s"/"a[i];if(s=="")s="/";print s}')"
-  t304__rootn="${t304__root%/}"
+  # SYMLINKS. MEASURED THE HARD WAY (transcript 70, first drive, recorded at
+  # evidence/70-drive-FAILED-FIRST-RUN.txt): the scratch clone lived at /tmp/t304-scratch,
+  # the instruments computed $HERE as /tmp/t304-scratch/..., and `git rev-parse
+  # --show-toplevel` answered /private/tmp/t304-scratch, because /tmp is a symlink on
+  # macOS. A LEXICAL comparison of those two strings says "outside the repo", the
+  # outside-the-repo branch returned a MEASURED ZERO, and all eight wired instruments ran
+  # to completion and destroyed the evidence anyway -- the exact fail-OPEN this guard
+  # exists to close, committed inside the guard itself. P-81: "Writing the rule does not
+  # immunise you against it; only the guard does."
+  #
+  # So both sides are resolved with `pwd -P` before they are compared. The target may not
+  # exist yet, so resolution walks up to its nearest existing ancestor and re-attaches the
+  # remainder. If even that cannot be resolved, the guard REFUSES rather than assuming.
+  t304__rootn="$(cd "$t304__root" 2>/dev/null && pwd -P)" || {
+    echo "T304 GUARD REFUSED: could not resolve the repo root $t304__root" >&2
+    return 2
+  }
+  t304__probe="$t304__abs"
+  while [ ! -d "$t304__probe" ] && [ "$t304__probe" != "/" ] && [ -n "$t304__probe" ]; do
+    t304__probe="$(dirname "$t304__probe")"
+  done
+  t304__probereal="$(cd "$t304__probe" 2>/dev/null && pwd -P)" || {
+    echo "T304 GUARD REFUSED: could not resolve any existing ancestor of" >&2
+    echo "  $t304__abs" >&2
+    echo "  A guard that cannot measure must refuse, not assume." >&2
+    return 2
+  }
+  t304__abs="$t304__probereal${t304__abs#"$t304__probe"}"
   case "$t304__abs" in
     "$t304__rootn"|"$t304__rootn"/*) : ;;
     *) printf '%s\n' "$t304__target"; return 0 ;;
   esac
+  # The pathspec handed to git is the NORMALISED, repo-RELATIVE path, never the caller's
+  # spelling, so that the count cannot depend on how the caller happened to write it.
+  t304__rel="${t304__abs#"$t304__rootn"/}"
+  [ "$t304__rel" = "$t304__abs" ] && t304__rel="."
 
   # Count tracked files under the target. `git ls-files` is run from the repo root so the
   # answer does not depend on the caller's cwd.
@@ -73,7 +104,7 @@ t304_evidence_root() {
   # shape, and `| wc -l` is exactly that collapse: a git ERROR yields an empty stream and
   # `wc -l` prints 0, which would read as "nothing tracked" and let the rm through.
   # So git's own exit status is captured BEFORE the pipe, and a non-zero status refuses.
-  t304__list="$(cd "$t304__root" && git ls-files -- "$t304__target" 2>/dev/null)"
+  t304__list="$(cd "$t304__root" && git ls-files -- "$t304__rel" 2>/dev/null)"
   t304__rc=$?
   if [ "$t304__rc" -ne 0 ]; then
     echo "T304 GUARD REFUSED: git ls-files exited $t304__rc for" >&2

@@ -50,6 +50,30 @@ else
   bad "rc=$rc; stderr was: $err"
 fi
 
+echo "--- R1b THE SPELLING THE REAL CALLERS USE: absolute, with '..', through a SYMLINK"
+echo "        REGRESSION ARM. This is the arm that failed on the first drive and let all"
+echo "        eight wired instruments run to completion (evidence/70-drive-FAILED-FIRST-RUN.txt)."
+echo "        Cause: the caller's \$HERE said /tmp/... and git rev-parse said /private/tmp/...,"
+echo "        so a lexical 'is it under the root?' answered NO and the guard returned a"
+echo "        MEASURED ZERO for a directory holding $N_TRACKED tracked files."
+DOTDOT="$PWD/.softhouse/capture/t274-attestation-failopen/instruments/../evidence/wrap"
+err="$(T304_EVIDENCE_SCRATCH= t304_evidence_root "$DOTDOT" 2>&1 >/dev/null)"; rc=$?
+if [ "$rc" -eq 2 ] && printf '%s' "$err" | grep -q "holds  : $N_TRACKED TRACKED files"; then
+  ok "absolute + '..' spelling: rc=2, still measures $N_TRACKED"
+else
+  bad "absolute + '..': rc=$rc; stderr was: $err"
+fi
+# Now the symlink half, built explicitly rather than relied on.
+LINKDIR="$(mktemp -d)"
+ln -s "$PWD" "$LINKDIR/repo"
+VIA_LINK="$LINKDIR/repo/.softhouse/capture/t274-attestation-failopen/evidence/wrap"
+err="$(T304_EVIDENCE_SCRATCH= t304_evidence_root "$VIA_LINK" 2>&1 >/dev/null)"; rc=$?
+if [ "$rc" -eq 2 ] && printf '%s' "$err" | grep -q "holds  : $N_TRACKED TRACKED files"; then
+  ok "reached through a symlink: rc=2, still measures $N_TRACKED"
+else
+  bad "through a symlink: rc=$rc; stderr was: $err"
+fi
+
 echo "--- R2  no target -> REFUSE 2"
 err="$(t304_evidence_root "" 2>&1 >/dev/null)"; rc=$?
 [ "$rc" -eq 2 ] && ok "rc=2: $err" || bad "rc=$rc"
