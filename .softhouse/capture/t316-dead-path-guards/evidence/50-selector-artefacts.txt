@@ -1,0 +1,57 @@
+T316 -- THE FIRST VERSION OF MY OWN CENSUS HAD A 36% FALSE-POSITIVE RATE.
+=========================================================================
+
+Recorded because the catch is the evidence. A census that cries wolf on its first run is a
+census that gets pinned away within a fire (T299's own lesson, learned on its namespace guard).
+
+VERSION 1 resolved each literal VERBATIM: `os.path.exists(repo_root / literal)`.
+It reported:
+
+    T316-DEADPATH-CENSUS: corpus=1147 deadFiles=110 deadOccurrences=154 resolving=949 ...
+
+Screening those 154 rows for a literal ending in `)`, `}`, `]`, `,`, `;`, `:`, `.` or an
+ellipsis, and re-testing the STRIPPED form:
+
+    total rows                                                     154
+    rows ending in trailing punctuation                             56
+    of those, rows whose STRIPPED form NAMES AN EXISTING PATH       56   <-- ALL OF THEM
+
+Every single punctuation-trailing row was a FALSE POSITIVE. Not one was a real dead path.
+
+The shapes, all of them references to paths that EXIST:
+
+    .softhouse/vectors)                                       x11  (prose: "...(see .softhouse/vectors)")
+    .softhouse/conformance.sh}                                 x4  (inside an f-string/format brace)
+    .softhouse/capture/out/capture-prod3b-raw.json}            x7
+    .softhouse/capture/out/capture-prod3c-raw.json}            x7
+    .softhouse/capture/out/capture-prod3e-raw.json}            x5
+    .softhouse/capture/out/capture-prod3g-raw.json}            x4
+    .softhouse/capture)                                        x1
+    .softhouse/gates.md)                                       x1
+    .softhouse/capture/src/run-pass3i.sh}                      x1
+    .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md.   x1
+    .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py)  x1
+    .softhouse/handoff/T8-promote-parity-vectors.md.           x1
+    .softhouse/conformance.sh.                                 x1
+    ... and the remainder in the same shapes.
+
+HAD THIS SHIPPED, it would have accused `check-capture-namespace.sh` -- T299's guard, landed two
+commits before this task -- of naming a dead path, when the path it names is the OWNER record
+T299 created and which is present. It would have accused `conformance.sh` references of being
+dead. It would have put 56 rows of slander against nine other tasks' committed evidence into a
+pinned file that every future fire reads.
+
+THE FIX, in `census_dead_paths.py`: a literal RESOLVES if it exists verbatim OR after trailing
+sentence punctuation is stripped. The stripped form is consulted ONLY to say YES, so it can never
+turn a live reference into a dead one -- the fix cannot hide a real defect. An ellipsis (`...`
+or `…`) is now INDETERMINATE, because a truncation mark is the author saying they elided the
+rest of the path.
+
+VERSION 2 reports:
+
+    T316-DEADPATH-CENSUS: corpus=1147 deadFiles=70 deadOccurrences=98 resolving=1003 indeterminate=63 prose=260
+
+CALIBRATION HELD ACROSS THE CHANGE. Both FU-T299-2 known positives are still seen as DEAD, which
+is what makes this a narrowing of the selector rather than a blunting of it. Had the fix silenced
+the known positives, the census would have ABORTED at exit 2 with no probe line rather than
+reporting a smaller number -- which is the whole point of enforcing calibration.
