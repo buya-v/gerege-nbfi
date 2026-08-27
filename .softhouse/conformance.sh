@@ -2177,6 +2177,29 @@ guard_accepting_side_gap_declared() {
 # before it shipped 8/8 green while carrying a discriminator that would have demoted seven live
 # workers of the fire then holding the lock. Fifty seconds is a bar a person will wait for; a
 # destroyed worktree is not recoverable at any price.
+#
+# ===========================================================================================
+# T326 — AND THE SENTENCE THIS BLOCK COST TO LEARN.
+# ===========================================================================================
+# T323's first merge of this block was ABORTED. The bar came back EXIT 2 with ZERO probe lines
+# and `T316-DEADPATH-FRONTIER: REFUSED rows=78 pinned=98 added=4 removed=24` — a FAILED HARD
+# GUARD under P-84, which is what a driver is trained to read as A MONEY NON-NEGOTIABLE
+# VIOLATION. The cause was not in the wiring. It was that T316's pin had been derived with
+# `os.path.exists()`, so 23 of its rows named an untracked, `.gitignore`d directory that exists
+# on Buyan's Mac and in no worktree, and a 24th named scratch a previous run had left behind.
+#
+# SO: **WIRING A GUARD HARD IS THE FIRST TIME ANYONE FINDS OUT WHETHER ITS PIN IS A MEASUREMENT
+# OR A SNAPSHOT OF SOMEBODY'S DISK.** T316, T299 and T319 each drove their guard red AND green
+# and each was honest; not one of them could have found this, because a GREEN BAR IS A CLAIM
+# ABOUT THE TREE **AND** THE HOST IT RAN ON, and only a second condition separates the two. The
+# three authors' shared finding — P-45 restated three times in one fire — has a fourth term:
+# a guard nobody has run in a second condition has not been driven, only exercised.
+#
+# T326 rebuilt the census to resolve against `git ls-files` and NEVER the disk, regenerated the
+# pin from it, and proved the property BY CONSTRUCTION rather than by waiting for the other
+# fire: four disk conditions including a real clone, plus the WHOLE BAR run twice, whose two
+# transcripts came out BYTE IDENTICAL. The drives live under the T326 capture directory and the
+# argument for calling an untracked path DEAD is in the pin's own header.
 # ===========================================================================================
 
 # -------------------------------------------------------------------------------------------
