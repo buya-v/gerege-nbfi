@@ -1,6 +1,6 @@
 T316 RED DRIVE
 ============================================================================================
-clone: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t316-red-7bk3oh8w/clone
+clone: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t316-red-s70w0ryw/clone
 
 ARM  WHAT                                                     EXPECTED       OBSERVED       VERDICT
 --------------------------------------------------------------------------------------------
