@@ -3979,7 +3979,7 @@
     {
       "id": "T306",
       "title": "ADJUDICATE the driver's unreviewed merge-conflict resolution in admit.go \u2014 it WIDENED T296's capability gate from one observed shape to three, at a merge, with no reviewer",
-      "status": "needs_retry",
+      "status": "blocked",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -3997,8 +3997,9 @@
       "description": "THE DRIVER MADE A JUDGEMENT CALL AT A MERGE CONFLICT WITH NO REVIEWER AND IS FILING IT TO BE SECOND-GUESSED, exactly as it filed T293 last fire. The reasoning is written into admit.go BESIDE THE RULE, not only into the commit message, because that is the file a reviewer reads.\n\nWHAT HAPPENED. T296 scoped the claim a vector may make on the `ledger.opening.balance.and.closure` capability row to request.command == 'defineOpeningBalance', because at that moment exactly ONE of the three shapes that row names was observed. T296's own comment said that when a closure refusal IS promoted, that rule is what the promoting task must widen 'DELIBERATELY AND WITH THE CAPTURE IN HAND, instead of finding the door already open'. T295 then promoted BOTH remaining shapes IN THE SAME FIRE, from T287's real artefacts, without re-firing either probe -- so both of its new vectors (LDG-REFUSE-04, LDG-REFUSE-05) carry an EMPTY request.command and would have been refused INADMISSIBLE. The two branches conflicted in admit.go. The driver kept BOTH rule sets and widened the gate to the three shapes now observed: :717 (defineOpeningBalance after posted entries), :636 (entry on or before the latest closing date), :629 (future-dated entry).\n\nTEST IT PROPERLY AND DO NOT DEFER TO IT:\n 1. IS THE WIDENING KEYED ON THE RIGHT THING? The driver keyed two of the three arms on expect.refusal.code, not on a request-side fact. A refusal CODE is an OUTPUT. Keying admissibility on the output a vector claims is close to letting the vector authorise itself -- ask whether a wrong-but-well-formed vector can now walk through by simply declaring one of those two codes, and construct one.\n 2. IS IT STILL DEFAULT-DENY? The claim is that a FOURTH shape -- most obviously an ACCEPTANCE, which no capture in this store observes -- is still refused as DATA rather than as prose (P-89). Verify by building an acceptance-shaped vector for that row and checking it is refused. If it is admitted, the widening reopened exactly the hole T296 measured shut.\n 3. DID IT PRESERVE T296's MEASUREMENT? T296 proved the gate is load-bearing by flipping one boolean: in_graded_domain FALSE -> INADMISSIBLE, TRUE -> ADMITTED AND GRADED with no complaint. Re-run that arm against the merged code. If the gate is now inert, the merge silently undid the review that preceded it.\n 4. IS THE COMMENT TRUE? The driver rewrote parts of T296's refusal message to say the other two shapes ARE now promoted. Check every clause against the store.\n 5. SHOULD THE THREE ARMS HAVE BEEN THREE SEPARATE CAPABILITY ROWS INSTEAD? T289 F-T289-4 forbids renaming or splitting the ROW. It does not obviously forbid a finer-grained CLAIM mechanism. Say whether a better structure existed and was missed.\n\nIf you disagree, NARROW IT BACK and say which vector you mean to refuse -- do not leave the bar red for someone else. Re-run `bash .softhouse/conformance.sh` yourself (bash, never sh; stage before running, ledgerguard reads via git ls-files). P-84: read the probe line's PRESENCE before its value. Write to .softhouse/reviews/T306/. P-86: cite the rule TEXT beside any P-number.",
       "branch": "softhouse/T306-adjudicate-admit-widening",
       "dispatched_at": "2026-08-23T03:57:24Z",
-      "note": "worker killed mid-flight by fire 20260823-140001 -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). Its branch softhouse/T306-adjudicate-admit-widening has 5 commit(s) ahead of main, head f7a70b8f2. Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by the fire-program.sh exit guard, NOT by a driver -- the driver was already gone.  [prior note: dispatched by fire 20260823-140001 batch 1; record PUSHED BEFORE SPAWN (P-85)]",
-      "fire": "20260823-140001"
+      "note": "BLOCKED AT MERGE BY T320 (HIGH), and the branch is ALREADY WRITTEN \u2014 5 commits at f7a70b8f, unmerged, pinned at refs/rescue/20260827-230001/t306-line. DO NOT MERGE AS IT STANDS. T320 measured that T306 narrowing adds a `v.Expect.Kind == \"refusal\" &&` precondition which would make LDG-05 INADMISSIBLE and BRING T296 ARM A BACK TO LIFE \u2014 the mutant T305 just killed, a port that refuses EVERY opening balance while staying green on the whole corpus. UNBLOCK CONDITION, exactly: that arm drops the refusal-kind precondition, and conformance still shows 11/11 wrong impls dying with LDG-05 admissible. T306 must ALSO now adjudicate two things it did not have when it ran: (1) T305 edited admit.go while T306 owned it \u2014 T305 claims the capability predicate is byte-identical and only the message changed, and T320 asks T306 to verify that on the diff; (2) T320 MEDIUM finding of an UNDECLARED widening \u2014 the positional and multiset gates are not complements, so for defineOpeningBalance with kind refusal and legs > 0 the amount cross-check is now ABSENT ENTIRELY, plus map-iteration non-determinism in the reason list, a negative count in a \"more than\" message, and NO red-drive for either new rule.",
+      "fire": "20260823-140001",
+      "blocked_reason": "t320_high_would_revive_arm_a"
     },
     {
       "id": "T307",
@@ -4280,7 +4281,7 @@
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "status": "in_progress",
+      "status": "done",
       "dependencies": [
         "T305"
       ],
@@ -4290,7 +4291,7 @@
         ".softhouse/reviews/T320/",
         ".softhouse/capture/t305-openingbalance-accepting-side/"
       ],
-      "note": "DISPATCHED by fire 20260827-230001 immediately on merging T305. Money-path code does not land unreviewed; T305 asked for this review itself."
+      "note": "DONE, MERGED 8332a0e9. SPLIT. LDG-05 APPROVED, retirement DECLINED with reasons. Half-refuted section 4b.6 - leg (a) \"same image id was measured\" is FALSE (no script measures it; the compose pins the MUTABLE TAG fineract:latest, not a digest), leg (b) is INERT (LDG-05 does no rounding; residue zero) - then supplied the argument that actually decides it and which T305 never made: every graded cell is a function of the vector OWN INPUTS, so the tenant-seed difference is a closed loop inside the vector. Re-derived the keystone read-only: findNonContraTransactionIds(15) on gerege returns 26, so the graded tenant is STRUCTURALLY INCAPABLE of this observation. Wrote its own SUMMED-CONTRA mutant - untested by any registered impl - which dies on LDG-05 while double_entry_balances HOLDS with both totals correct. Rebuild audited: nothing lost, but two handoff claims wrong (two commits not one; the RESUME.md claim is false, the tasks.json half true and UNDERSTATED at 10 records / 7 done statuses)."
     },
     {
       "id": "T321",
@@ -4308,6 +4309,26 @@
       ],
       "description": "TWO FINDINGS T316 (merged 344d0ac3) DECLARED OUT OF ITS GRANT. Read its handoff and .softhouse/capture/t316-dead-path-guards/ first. They are independent; decide each on its own.\n\n1. THE CENSUS SEES LITERALS ONLY. T316's dead-path census matches string literals, so A PATH BUILT FROM VARIABLES AT RUNTIME IS INVISIBLE TO IT \u2014 and T316 says plainly that this is THE LIKELIER HIDING PLACE FOR A GENUINE FAIL-OPEN, because the literal cases it could see turned out to be dominated by announced fallbacks. Extend the detection to variable-assembled paths, or establish that you cannot and say exactly why. P-95 binds here and you must not repeat the mistake it records: a dead path reached by a variable is STILL not classifiable by reading \u2014 the only test is to remove every candidate and observe the exit.\n\n2. THE DECORATIVE RESET. T316's own red drive used `git checkout -- .` plus `git clean -fd` as its inter-arm reset, WHICH DOES NOT CLEAR A STAGED ADDITION. Its own porcelain assertion caught this and ABORTED rather than reporting contaminated arms \u2014 so the failure is recorded, not hypothetical. T316 observes that this repo is FULL of mutate-and-restore drives and that this wants a sweep. Do the sweep: derive the population with your selector printed beside the figure, classify each reset as sufficient or decorative, and DRIVE the insufficient ones to show contamination is possible. A drive whose arms can contaminate each other reports results that are not what they say they are \u2014 and this program grades money on drives.\nNOTE THE CONNECTION TO T318, in flight this fire: T318 is establishing that `git status --porcelain` cannot see a COMMITTED clobber. A reset assertion built on porcelain has the same blind spot. Read T318's handoff if it has landed and do not duplicate it; your subject is the RESET, its subject is the DETECTION.\n\n3. MINOR, ALSO FROM T316: go-env.sh:4 calls .softhouse/toolchain gitignored when `git check-ignore` says it is not. Verify and correct the comment or the ignore, whichever is wrong.\n\nDo destructive driving in scratch clones. Verify with `bash .softhouse/conformance.sh` (bash, never sh \u2014 exit 3 is the wrong-interpreter refusal). P-84: exit 2 with NO probe line PRINTED is a failed HARD guard, not an oracle outage. P-86: cite the rule TEXT beside any P-number.",
       "note": "Filed by fire 20260827-230001 from FU-T316-3 and T316's decorative-reset observation."
+    },
+    {
+      "id": "T322",
+      "title": "T320's MEDIUM and MICRO findings on T305: the undeclared admit.go widening with no red-drive, and the FOURTH prose site still carrying the refuted rule",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "status": "pending",
+      "dependencies": [
+        "T306"
+      ],
+      "fire": "20260827-230001",
+      "files_hint": [
+        "nexus/internal/apps/ledger/conformance/admit.go",
+        ".softhouse/vectors/capabilities-ledger.json",
+        ".softhouse/capture/t322-admit-widening/"
+      ],
+      "description": "RAISED BY T320 (merged 8332a0e9). Read .softhouse/reviews/T320/REVIEW.md and its probe/ transcripts FIRST. SERIALISED BEHIND T306 because T306 owns admit.go and is currently BLOCKED \u2014 read T306's note before starting; if T306 has not landed, say so and do not force it.\n\n1. THE UNDECLARED WIDENING (MEDIUM). In admit.go the positional and multiset gates ARE NOT COMPLEMENTS, so for `defineOpeningBalance` with `kind == refusal` and legs > 0, THE AMOUNT CROSS-CHECK IS ABSENT ENTIRELY. That is a hole in a money gate, reached by a real command shape. Close it and state the fail direction.\n 2. NO RED-DRIVE EXISTS FOR EITHER NEW RULE. T305 added them and drove the port, not the rules. A rule with no red arm is a rule nobody has seen fail \u2014 this program's whole grading posture says that is not evidence. Build the arms.\n 3. MAP-ITERATION NON-DETERMINISM in the reason list: Go map iteration order is randomised, so the refusal reason text can differ between runs. A non-deterministic message in a graded refusal is a flaky vector waiting to happen. Sort it.\n 4. A NEGATIVE COUNT in a 'more than' message. Cosmetic, but it is a message a human reads while deciding whether a refusal is correct.\n 5. THE FOURTH PROSE SITE (micro-fix). T305 corrected the refuted 'after journal entries have been posted' rule in three places. T320 found a fourth: `capabilities-ledger.json` \u2192 `capabilities[11].description`, UNANNOTATED, three lines above the `evidence` block T305 rewrote. The true rule is 'after a NON-CONTRA journal entry' \u2014 contra-touching transactions are excluded by findNonContraTransactionIds, which is why opening balances do not block each other. Fix it, and SWEEP for a fifth: a store wrong in four places may be wrong in five, and 'not found' is a statement about the search \u2014 say where you looked.\n\nMONEY IS INTEGER MINOR UNITS, no float anywhere including intermediate calculation. Do not weaken LDG-05 to make anything pass. Verify with `bash .softhouse/conformance.sh` (bash, never sh); conformance must still show 46 parity vectors, LDG-05 PASS, and 11/11 wrong implementations DYING. P-84: exit 2 with NO probe line PRINTED is a failed HARD guard, not an oracle outage. P-86: cite the rule TEXT beside any P-number.",
+      "note": "Filed by fire 20260827-230001 from T320's MEDIUM/micro findings. Behind T306 on admit.go ownership."
     }
   ],
   "cross_corroboration": {
