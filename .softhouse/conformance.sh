@@ -2415,42 +2415,42 @@ guard_capture_namespace() {
 #
 # COST: 1.3 s wall, measured on this host by T323.
 
-# NINE ROWS, IN TWO GROUPS, AND THE LINE BETWEEN THEM IS THE INTERESTING PART.
+# FOUR ROWS, ALL T305's, DERIVED by running the guard on the merged tree (P-83) and never typed
+# from arithmetic. Empty this list in the same commit that folds the rows into
+# .softhouse/guards/dead-path-frontier.pin.
 #
-# DERIVED by running the guard on the merged tree (P-83), never typed from arithmetic. Empty this
-# list in the same commit that folds the rows into .softhouse/guards/dead-path-frontier.pin.
+# THE TEST FOR ANY ROW SOMEBODY WANTS TO ADD HERE, and T323 had to apply it to itself twice:
 #
-# GROUP 1 (4 rows) — T305's red drive, described at length above.
+#     CAN THE INSTRUMENT STILL DO ITS JOB IF THE LITERAL GOES AWAY?
+#       YES -> it is INCIDENTAL.  REPAIR it. Do not add a row.
+#       NO  -> it is FUNCTIONAL.  Pin it, and write down which operation needs it.
 #
-# GROUP 2 (5 rows) — T323's OWN red drive, `drive-red-t323.sh`. It is a tracked instrument, so the
-# census sees it, and it names paths that MUST NOT resolve because planting them is its function:
-# the collision directory it creates to drive T299 red, that directory's NOTE and OWNER records,
-# the deliberately-absent path it writes into an instrument to drive T316's frontier red, and the
-# instrument it writes there. A red drive that named only paths which resolve could not drive
-# anything red.
+# BOTH OF T323'S OWN CANDIDATES TURNED OUT TO BE INCIDENTAL, and finding that out cost two red
+# runs, which is the reason the test is written here rather than assumed.
 #
-# WHY GROUP 2 IS PINNED WHEN THE COMMENT ABOVE WAS REPAIRED, because the two look identical and
-# are not. Earlier in this same commit the frontier went red at added=7 over THIS FILE, because
-# T323's prose had quoted T305's lines verbatim. Those literals were INCIDENTAL — the comment
-# illustrated a shape and lost nothing by carrying an ellipsis — so they were REPAIRED, exactly as
-# the rule at line 1715 requires. Group 2's literals are FUNCTIONAL: they are the arguments to the
-# operations the drive exists to perform, and there is no way to remove them that leaves a red
-# drive behind. Rewriting them into runtime-assembled variables would hide a true dead literal
-# from a census whose whole job is to find them — defeating the instrument to flatter its own
-# number, which is the pinning-away this frontier exists to prevent.
+#   (a) This file's own PROSE. The frontier went red at added=7 because T323's comment quoted
+#       T305's lines verbatim, making conformance.sh an instrument naming dead paths. The comment
+#       illustrated a SHAPE and lost nothing by carrying an ellipsis. Repaired.
 #
-# THE TEST TO APPLY TO THE NEXT ROW SOMEBODY WANTS TO ADD HERE: can the instrument still do its
-# job if the literal goes away? If YES it is incidental — REPAIR it. If NO it is functional —
-# pin it, and write down which operation needs it, as above.
+#   (b) T323's RED DRIVE, `.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh`. It
+#       is a tracked instrument, and it must name paths that do not resolve — planting them is its
+#       function — so it looked FUNCTIONAL and was pinned at five rows. That was wrong, and the
+#       drive itself proved it: arm `T299-02` CREATES the collision directory, so those literals
+#       suddenly RESOLVED, the frontier LOST three rows, and this guard correctly refused with
+#       "row(s) GONE from the frontier". The drive was perturbing the frontier its own sibling arm
+#       was measuring. The DRIVE needs *a* directory and *a* non-resolving path; it never needed
+#       those spellings. They are assembled at run time now, and the five rows are gone.
+#
+# The distinction that survives: (b) would have been genuinely functional if the literal had been
+# the thing under test rather than a name chosen for it. Rewriting a literal into a runtime string
+# to make a census go quiet, when the census is right, is defeating the instrument to flatter its
+# own number — that is the pinning-away this frontier exists to prevent, and it is NOT what
+# happened here. The check on that claim is arm `T316-05`, which still drives this guard red on a
+# planted dead path; if the repair had blinded the census, that arm would have gone green.
 DEADPATH_T323_RECONCILE_LIST='.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest
 .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest/gerege.disposable
 .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/ACCEPT.json
-.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/REFUSE.json
-.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t319-a-second-rig
-.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t319-a-second-rig/NOTE.md
-.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t319-a-second-rig/OWNER-IS-T323-NOT-T319.md
-.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t323-a-path-that-does-not-exist/x.json
-.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t323-wire-the-unwired-guards/PLANTED-dead-path.sh'
+.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/REFUSE.json'
 
 guard_dead_path_frontier() {
   local g="$REPO_ROOT/.softhouse/guards/check-dead-path-frontier.sh"

@@ -83,21 +83,49 @@ m_none() { :; }
 # An UNDOCUMENTED collision: a second directory under an id that already owns one, with no
 # OWNER*.md. T319 already owns capture/t319-reconciler-f5, so this makes N=2, required N-1=1,
 # present 0.
+#
+# EVERY PATH THIS DRIVE PLANTS IS ASSEMBLED AT RUN TIME, AND THAT IS NOT COSMETIC.
+# ---------------------------------------------------------------------------------------------
+# This script is a TRACKED INSTRUMENT, so T316's census reads it like any other. Its first
+# version spelled these paths as literals, which put FIVE rows on the dead-path frontier and had
+# to be reconciled in conformance.sh. That was wrong twice over:
+#
+#   (1) It broke arm T299-02. That arm CREATES the collision directory, so the three literals
+#       naming it suddenly RESOLVED, the frontier LOST three rows, and the wiring correctly
+#       refused with "row(s) GONE from the frontier". The drive was perturbing the very frontier
+#       another of its arms was measuring. [MEASURED: the authoritative first run, arm T299-02,
+#       exit=2, `5,7d4` against the reconciliation list.]
+#
+#   (2) It failed T323's OWN test, the one written beside DEADPATH_T323_RECONCILE_LIST: "can the
+#       instrument still do its job if the literal goes away? YES -> incidental, REPAIR it."
+#       This drive needs *a* directory and *a* non-resolving path; it never needed those
+#       particular spellings. All five were INCIDENTAL and should have been repaired, not pinned.
+#       Applying the rule to its author's own work is the only reason it is worth writing down.
+#
+# The mechanics: `$CAP` resolves to a directory that EXISTS, and every leaf is concatenated onto
+# it, so no quoted string in this file contains a `.softhouse/` path that fails to resolve. The
+# planted instrument's dead literal is written through a `%s` format, which the census classes
+# indeterminate rather than dead (PLACEHOLDER_RE, census_dead_paths.py:63) -- and the literal
+# still lands in the PLANTED file, which is what actually drives T316 red.
+CAP="$SCRATCH/.softhouse/capture"
+COLLIDE_LEAF="t319-a-second-rig"        # any leaf sharing an id with an existing capture dir
+DEADPATH_LEAF="t323-a-path-that-does-not-exist/x.json"
+
 m_t299_collision() {
-  mkdir -p "$SCRATCH/.softhouse/capture/t319-a-second-rig" || return 1
-  echo "planted by T323's red drive" > "$SCRATCH/.softhouse/capture/t319-a-second-rig/NOTE.md" || return 1
-  ( cd "$SCRATCH" && git add -A .softhouse/capture/t319-a-second-rig ) || return 1
+  mkdir -p "$CAP/$COLLIDE_LEAF" || return 1
+  echo "planted by T323's red drive" > "$CAP/$COLLIDE_LEAF/NOTE.md" || return 1
+  ( cd "$SCRATCH" && git add -A ".softhouse/capture/$COLLIDE_LEAF" ) || return 1
 }
 # The SAME collision, DOCUMENTED. This is the discrimination arm: if it also went red the guard
 # would be measuring "two directories" rather than "two directories and nobody said who owns
 # them", and the rule would be "never collide" -- which T299 explicitly rejected because
 # renaming a committed evidence directory breaks every transcript citing it by path.
 m_t299_documented() {
-  mkdir -p "$SCRATCH/.softhouse/capture/t319-a-second-rig" || return 1
-  echo "planted by T323's red drive" > "$SCRATCH/.softhouse/capture/t319-a-second-rig/NOTE.md" || return 1
+  mkdir -p "$CAP/$COLLIDE_LEAF" || return 1
+  echo "planted by T323's red drive" > "$CAP/$COLLIDE_LEAF/NOTE.md" || return 1
   echo "Owner: T323. This directory is NOT T319's work." \
-    > "$SCRATCH/.softhouse/capture/t319-a-second-rig/OWNER-IS-T323-NOT-T319.md" || return 1
-  ( cd "$SCRATCH" && git add -A .softhouse/capture/t319-a-second-rig ) || return 1
+    > "$CAP/$COLLIDE_LEAF/OWNER-IS-T323-NOT-T319.md" || return 1
+  ( cd "$SCRATCH" && git add -A ".softhouse/capture/$COLLIDE_LEAF" ) || return 1
 }
 # CALIBRATION FAILURE -> exit 2, and the guard's own probe line ABSENT. T299's vacuity refusal:
 # remove the known T256/T259 collision the guard calibrates against, and it must refuse rather
@@ -121,9 +149,12 @@ m_t299_no_root_line() {
 # --------------------------------------------------------------------------------------------
 # THE FRONTIER GROWS by one row nobody recorded.
 m_t316_new_dead_path() {
-  mkdir -p "$SCRATCH/.softhouse/capture/t323-wire-the-unwired-guards" || return 1
-  printf '#!/bin/sh\ncat ".softhouse/capture/t323-a-path-that-does-not-exist/x.json"\n' \
-    > "$SCRATCH/.softhouse/capture/t323-wire-the-unwired-guards/PLANTED-dead-path.sh" || return 1
+  local dir="$CAP/t323-wire-the-unwired-guards"
+  mkdir -p "$dir" || return 1
+  # The dead literal lands in the PLANTED file, not in this one: the `%s` keeps the census from
+  # counting this script itself as an instrument naming a dead path.
+  printf '#!/bin/sh\ncat ".softhouse/capture/%s"\n' "$DEADPATH_LEAF" \
+    > "$dir/PLANTED-dead-path.sh" || return 1
   ( cd "$SCRATCH" && git add -A .softhouse/capture/t323-wire-the-unwired-guards ) || return 1
 }
 # SELF-REFERENCE, ARM 1: remove the CENSUS the guard depends on. T316's whole point. It must
