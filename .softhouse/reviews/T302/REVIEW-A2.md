@@ -98,6 +98,9 @@ is false, **and the counter-example is the incident T309 was written about.**
 | 14:05:01 | `5964ab54` | *"DISPATCH fire 20260823-140001 batch 1 — 8 workers, PUSHED BEFORE SPAWN (P-85)"* — and **7 of the 8 ids it dispatches are the same 7 ids.** |
 | 14:24:27 | `ab9b3b68` | `softhouse/T302-review-t288` head — a commit by a **live worker of that fire**, on an id inside the lock blob. |
 | 14:23:21 | — | same for `softhouse/T306-adjudicate-admit-widening`. |
+| 14:31:35 – 14:40:14 | `149d5a0e`…`f8d450c2` | three commits on `softhouse/T304-evidence-destruction`, also inside the lock blob. |
+
+So **three of the seven are proven live by commit timestamp alone** (T302, T304, T306); the other four are named by that fire's own dispatch commit message.
 
 **Driven, on `main`'s bytes** (`ready-tasks.py` sha256 `cdc0729107b71696`) —
 `.softhouse/reviews/T302/a2/drive-f5-cell.zsh`, transcript `a2/out-f5-cell.txt`. It
