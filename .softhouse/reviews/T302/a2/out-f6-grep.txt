@@ -1,0 +1,32 @@
+POST (main, post-T309): sha256 cdc0729107b71696
+
+############################################################
+# CELL 1 BASELINE -- only the real lock commit carries that string
+#   correct answer: demote 0  (all 8 in_progress are this fire's LIVE workers)
+############################################################
+    anchor commit the resolver will pick: 2ec5d9f softhouse: local fire lock (20260823-140001)
+      in-session evidence: at this fire's lock commit 2ec5d9f75 ('softhouse: local fire lock (20260823-140001)') 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308. Anything in_progress NOW but not in that set was dispatched by THIS fire and is live.
+      IN-SESSION authority: 7 demotable, 1 WITHHELD (a live fire is running; only dispatches that PREDATE this fire's lock commit may be touched)
+      RESULT: DRY RUN -- 7 task(s) WOULD be demoted; tasks.json untouched.
+    >>> **WRONG** (demotions=7, correct 0)
+
+############################################################
+# CELL 2 BODY QUOTE -- a later REVIEW commit quotes the subject in its BODY
+#   correct answer: demote 0  (all 8 in_progress are this fire's LIVE workers)
+############################################################
+    anchor commit the resolver will pick: b76ee94 T302: review of the lock-commit discriminator
+      in-session evidence: at this fire's lock commit b76ee9425 ('softhouse: local fire lock (20260823-140001)') 8 task(s) already claimed in_progress: T297, T298, T302, T304, T305, T306, T308, T309. Anything in_progress NOW but not in that set was dispatched by THIS fire and is live.
+      IN-SESSION authority: 8 demotable, 0 WITHHELD (a live fire is running; only dispatches that PREDATE this fire's lock commit may be touched)
+      RESULT: DRY RUN -- 8 task(s) WOULD be demoted; tasks.json untouched.
+    >>> **WRONG** (demotions=8, correct 0)
+
+############################################################
+# CELL 3 SUBJECT REUSE -- a second lock commit for the same fire id (re-acquire)
+#   correct answer: demote 0  (all 8 in_progress are this fire's LIVE workers)
+############################################################
+    anchor commit the resolver will pick: 564188d softhouse: local fire lock (20260823-140001)
+      in-session evidence: at this fire's lock commit 564188db3 ('softhouse: local fire lock (20260823-140001)') 8 task(s) already claimed in_progress: T297, T298, T302, T304, T305, T306, T308, T309. Anything in_progress NOW but not in that set was dispatched by THIS fire and is live.
+      IN-SESSION authority: 8 demotable, 0 WITHHELD (a live fire is running; only dispatches that PREDATE this fire's lock commit may be touched)
+      RESULT: DRY RUN -- 8 task(s) WOULD be demoted; tasks.json untouched.
+    >>> **WRONG** (demotions=8, correct 0)
+

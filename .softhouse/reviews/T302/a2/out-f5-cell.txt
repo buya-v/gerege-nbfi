@@ -1,0 +1,49 @@
+POST (main, post-T309): sha256 cdc0729107b71696
+source repo (READ-ONLY): /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3e635faba72121c8
+
+############################################################
+# CELL B  (T309's cell, clock FROZEN at the lock instant)
+#   lock commit: 5428c0a4   state under test: 5428c0a4   LOCK fire: 20260823-140001
+#   correct answer: demote 8
+############################################################
+      mode: in_session   (lock fire id: 20260823-140001)
+      in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
+      in-session evidence: at this fire's lock commit dd71c0a27 ('softhouse: local fire lock (20260823-140001)') 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308. Anything in_progress NOW but not in that set was dispatched by THIS fire and is live.
+      IN-SESSION authority: 8 demotable, 0 WITHHELD (a live fire is running; only dispatches that PREDATE this fire's lock commit may be touched)
+      RESULT: DRY RUN -- 8 task(s) WOULD be demoted; tasks.json untouched.
+    demotions: 8
+    --- the tasks it named ---
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+    >>> OK (demotions=8, correct 8)
+
+############################################################
+# CELL B' (SAME FIRE, clock ADVANCED to its own dispatch commit 5964ab54)
+#   lock commit: 5428c0a4   state under test: 5964ab54   LOCK fire: 20260823-140001
+#   correct answer: demote 0
+############################################################
+      mode: in_session   (lock fire id: 20260823-140001)
+      in_progress tasks found: 8  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
+      in-session evidence: at this fire's lock commit 55620ae41 ('softhouse: local fire lock (20260823-140001)') 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308. Anything in_progress NOW but not in that set was dispatched by THIS fire and is live.
+      IN-SESSION authority: 7 demotable, 1 WITHHELD (a live fire is running; only dispatches that PREDATE this fire's lock commit may be touched)
+      RESULT: DRY RUN -- 7 task(s) WOULD be demoted; tasks.json untouched.
+    demotions: 7
+    --- the tasks it named ---
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+               in_progress -> needs_retry
+    >>> **WRONG** (demotions=7, correct 0) -- these are LIVE workers
+
+==============================================================
+F5: 1 correct, 1 wrong
+==============================================================

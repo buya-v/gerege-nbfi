@@ -1,0 +1,38 @@
+$ /bin/zsh .softhouse/reviews/T302/drive-phantom-rescue.sh
+(captured 2026-08-23 during fire 20260823-140001)
+
+planted stale lock: /tmp/t302-ph-KZNzUb/.git/worktrees/agent-deadbeef/index.lock
+
+git status --porcelain rc=0  output=[?? deliverable.md]
+
+--- the sweep's three commands, VERBATIM, with the rcs it discards ---
+  checkout -b rc=128  <- DISCARDED by fire-program.sh:891
+  add -A      rc=128  <- DISCARDED by fire-program.sh:892
+  commit      rc=128  <- DISCARDED by fire-program.sh:893-896
+
+--- what the sweep LOGS at this point, unconditionally (fire-program.sh:901) ---
+  rescued agent-deadbeef -> softhouse/rescued-agent-deadbeef-20260823-140001
+
+--- GROUND TRUTH ---
+  branch softhouse/rescued-agent-deadbeef-20260823-140001 DOES NOT EXIST — the fire log and the tasks.json note both name a branch that is not there
+  worktree still dirty? [?? deliverable.md]
+  worktree HEAD branch: softhouse/T-victim
+
+--- and the RESCUE_PAIR T288 hands to the reconciler ---
+  RESCUE_PAIRS += "softhouse/T-victim=softhouse/rescued-agent-deadbeef-20260823-140001"
+  -> ready-tasks.py note clause: "Uncommitted WIP left in its worktree was swept onto softhouse/rescued-agent-deadbeef-20260823-140001 by this fire's worktree sweep."
+
+scratch: /tmp/t302-ph-KZNzUb
+
+--------------------------------------------------------------------------------
+The stale `index.lock` is not a contrived fault. It is what a `git add` interrupted by
+SIGKILL leaves behind, and a SIGKILLed worker is precisely the population this sweep
+exists to serve. Any other cause with the same signature (read-only FS, disk full,
+corrupt ref, a `WB` that already exists) produces the identical outcome, because the
+outcome does not depend on WHY git failed — none of the three rcs is read.
+
+Contrast fire-program.sh:783-797, the MAIN-TREE rescue in the same function, which reads
+ADD_RC and COMMIT_RC and logs "NOTHING was rescued" on either failure. T202's own comment
+there says why, in the past tense, about this exact failure mode: "the guard still logged
+`rescued: committed the leftovers`". The fix was applied to one branch of the function and
+not to the other.

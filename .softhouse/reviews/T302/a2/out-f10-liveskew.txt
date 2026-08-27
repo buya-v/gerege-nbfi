@@ -1,0 +1,47 @@
+=== 1. the LOCK the live fire wrote, as committed at HEAD ===
+{
+  "holder": "local-launchd",
+  "host": "Buyanmunkhs-Mac-mini",
+  "pid": 68244,
+  "started_at": "2026-08-27T15:00:08Z",
+  "heartbeat": "2026-08-27T15:00:08Z",
+  "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
+  "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260827-230001.log",
+  "oracle": "UNREACHABLE at https://localhost:8443/fineract-provider/actuator/health",
+  "postgres": "reachable at localhost:5432"
+}
+
+    fire field present?
+0
+    (0 = ABSENT. caller_is_lock_holder() sets lock_fire=None, and
+     dispatches_predating_this_fire() then returns None with
+     'the LOCK records no `fire` id ... REFUSING (fail-closed)'.)
+
+=== 2. but fire-program.sh at HEAD DOES write it ===
+209:  "fire": "$STAMP",
+
+=== 3. why: version skew. the wrapper predates the code that writes the field ===
+--- the running wrapper:
+68244 Thu Aug 27 23:00:01 2026     /bin/zsh /Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh
+--- when the field was introduced (T309 attempt 1) and merged to main:
+    introduced: 825c8e8f 2026-08-23 14:22:28 +0800 T309: wire the reconciler into on_signal, bounded; move its definition to top level
+    merged    : 2dfbe422 2026-08-27 23:24:36 +0800 Merge T309: the SIGTERM path bypassed the reconciler - and attempt 1's own fix would have demoted SIX LIVE WORKERS of this very fire
+
+=== 4. and the running wrapper is executing its ORIGINAL bytes ===
+    T309's own probe: git merge RENAMES into place (new inode), and zsh keeps
+    reading the inode it started with -- LEG C printed 'TAIL: ORIGINAL'.
+=== LEG C — rename-into-place, NEW inode (what git checkout/merge does) ===
+  inode before: 10237254
+A: start (pid 11866)
+TAIL: ORIGINAL
+  LEG C subject rc=0
+  inode after:  10237376
+
+READ THE MARKERS, NOT THE rc:
+
+=== CONSEQUENCE ===
+  * in_session mode is 100% INERT for this fire: no `fire` on the LOCK -> refuse.
+  * wrapper mode is unaffected: it never calls dispatches_predating_this_fire,
+    and --fire comes from $STAMP on the command line, not from the LOCK.
+  * if THIS fire is SIGTERMed it runs the PRE-T309 on_signal (stop_driver;
+    release_lock; exit) -- T288 defect 1 is still live for it.

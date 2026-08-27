@@ -1,0 +1,34 @@
+=== 1. fire 20260823-140001's lock commit and the blob the discriminator reads ===
+5428c0a4b54ab1ec131ff0c5c228028af97e2ecf 2026-08-23 14:00:08 +0800
+    softhouse: local fire lock (20260823-140001)
+
+in_progress AT LOCK COMMIT 5428c0a4 (8): ['T297', 'T298', 'T299', 'T302', 'T304', 'T305', 'T306', 'T308']
+in_progress AT 5964ab54 (8): ['T297', 'T298', 'T302', 'T304', 'T305', 'T306', 'T308', 'T309']
+
+INTERSECTION -> discriminator says CORPSE, DEMOTABLE: ['T297', 'T298', 'T302', 'T304', 'T305', 'T306', 'T308']
+NOW-only     -> discriminator says LIVE, refuse     : ['T309']
+   T297   branch='softhouse/T297-review-t295' fire='20260823-140001' dispatched_at='2026-08-23T03:57:24Z' status_at_lock='in_progress'
+   T298   branch='softhouse/T298-review-t256' fire='20260823-140001' dispatched_at='2026-08-23T03:57:24Z' status_at_lock='in_progress'
+   T302   branch='softhouse/T302-review-t288' fire='20260823-140001' dispatched_at='2026-08-23T03:57:24Z' status_at_lock='in_progress'
+   T304   branch='softhouse/T304-evidence-destruction' fire='20260823-140001' dispatched_at='2026-08-23T03:57:24Z' status_at_lock='in_progress'
+   T305   branch='softhouse/T305-openingbalance-accepting-side' fire='20260823-140001' dispatched_at='2026-08-23T03:57:24Z' status_at_lock='in_progress'
+   T306   branch='softhouse/T306-adjudicate-admit-widening' fire='20260823-140001' dispatched_at='2026-08-23T03:57:24Z' status_at_lock='in_progress'
+   T308   branch='softhouse/T308-review-t292' fire='20260823-140001' dispatched_at='2026-08-23T03:57:24Z' status_at_lock='in_progress'
+
+=== 2. the NEXT tasks.json commit of that same fire ===
+5964ab5438a49c4ff2639055c23f0dd2f21f4fab 2026-08-23 14:05:01 +0800
+    DISPATCH fire 20260823-140001 batch 1 — 8 workers, PUSHED BEFORE SPAWN (P-85)
+
+=== 3. GROUND TRUTH: did fire 20260823-140001 put LIVE workers on those ids? ===
+--- commits authored during fire 20260823-140001 on the branches of tasks
+--- that were ALREADY in_progress at that fire's own lock commit:
+  softhouse/T302-review-t288  commits-ahead=4  head-date=2026-08-23 14:24:27 +0800
+  softhouse/T298-review-t256  commits-ahead=0  head-date=2026-08-27 23:21:57 +0800
+  softhouse/T297-review-t295  commits-ahead=0  head-date=2026-08-27 23:16:41 +0800
+  softhouse/T306-adjudicate-admit-widening  commits-ahead=5  head-date=2026-08-23 14:23:21 +0800
+  softhouse/T308-review-t292  commits-ahead=0  head-date=2026-08-27 23:18:06 +0800
+
+=== 4. VERDICT ===
+If (3) shows commits dated 2026-08-23 AFTER the lock commit's timestamp on
+branches whose task ids appear in (1)'s 'DEMOTABLE' list, then the
+discriminator classifies LIVE workers of the lock-holding fire as corpses.

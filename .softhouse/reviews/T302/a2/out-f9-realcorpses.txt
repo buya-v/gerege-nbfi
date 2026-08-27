@@ -1,0 +1,75 @@
+clone + fetch: 0.79s   heads: 528
+    anchor: 5428c0a4 softhouse: local fire lock (20260823-140001)
+
+############################################################
+# CELL 1 -- in_session, LOCK carries fire 20260823-140001 (ancestor pid = this zsh)
+############################################################
+    RECONCILE -- fire 20260823-140001
+      git:  /usr/bin/git
+      repo: /tmp/t302f9.MrdPK9/repo
+      lock: invoked from INSIDE a live session -- ancestor pid 68308 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+      mode: in_session   (lock fire id: 20260823-140001)
+      in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
+      in-session evidence: at this fire's lock commit 5428c0a4b ('softhouse: local fire lock (20260823-140001)') 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308. Anything in_progress NOW but not in that set was dispatched by THIS fire and is live.
+      IN-SESSION authority: 8 demotable, 0 WITHHELD (a live fire is running; only dispatches that PREDATE this fire's lock commit may be touched)
+      T297     softhouse/T297-review-t295                 WIP=absent
+               in_progress -> needs_retry
+      T298     softhouse/T298-review-t256                 WIP=absent
+               in_progress -> needs_retry
+      T299     softhouse/T299-t256-flagged-defects        WIP=absent
+               in_progress -> needs_retry
+      T302     softhouse/T302-review-t288                 WIP=commits
+               in_progress -> needs_retry
+      T304     softhouse/T304-evidence-destruction        WIP=commits
+               in_progress -> needs_retry
+      T305     softhouse/T305-openingbalance-accepting-side WIP=commits
+               in_progress -> needs_retry
+      T306     softhouse/T306-adjudicate-admit-widening   WIP=commits
+               in_progress -> needs_retry
+      T308     softhouse/T308-review-t292                 WIP=absent
+               in_progress -> needs_retry
+      RESULT: DRY RUN -- 8 task(s) WOULD be demoted; tasks.json untouched.
+
+    wall clock: 0.910s for 8 REAL corpses against 528 REAL refs
+
+############################################################
+# CELL 2 -- wrapper mode (the SIGNAL path's mode): NO LOCK on disk (F7)
+############################################################
+    RECONCILE -- fire 20260823-140001
+      git:  /usr/bin/git
+      repo: /tmp/t302f9.MrdPK9/repo
+      lock: no .softhouse/LOCK on disk -- nobody holds this repo
+      mode: wrapper   (lock fire id: NONE RECORDED)
+      in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
+      T297     softhouse/T297-review-t295                 WIP=absent
+               in_progress -> needs_retry
+      T298     softhouse/T298-review-t256                 WIP=absent
+               in_progress -> needs_retry
+      T299     softhouse/T299-t256-flagged-defects        WIP=absent
+               in_progress -> needs_retry
+      T302     softhouse/T302-review-t288                 WIP=commits
+               in_progress -> needs_retry
+      T304     softhouse/T304-evidence-destruction        WIP=commits
+               in_progress -> needs_retry
+      T305     softhouse/T305-openingbalance-accepting-side WIP=commits
+               in_progress -> needs_retry
+      T306     softhouse/T306-adjudicate-admit-widening   WIP=commits
+               in_progress -> needs_retry
+      T308     softhouse/T308-review-t292                 WIP=absent
+               in_progress -> needs_retry
+      RESULT: DRY RUN -- 8 task(s) WOULD be demoted; tasks.json untouched.
+
+    wall clock: 0.749s for 8 REAL corpses against 528 REAL refs
+
+############################################################
+# CELL 3 -- GROUND TRUTH for the WIP evidence printed above
+############################################################
+    BRANCH                                           ahead    merged     verdict
+    softhouse/T297-review-t295                       0        MERGED     F1 CASE: note will say 'nothing was ever committed'
+    softhouse/T298-review-t256                       0        MERGED     F1 CASE: note will say 'nothing was ever committed'
+    softhouse/T299-t256-flagged-defects              -        -          REF ABSENT
+    softhouse/T302-review-t288                       7        unmerged   has WIP
+    softhouse/T304-evidence-destruction              7        unmerged   has WIP
+    softhouse/T305-openingbalance-accepting-side     5        unmerged   has WIP
+    softhouse/T306-adjudicate-admit-widening         5        unmerged   has WIP
+    softhouse/T308-review-t292                       0        MERGED     F1 CASE: note will say 'nothing was ever committed'

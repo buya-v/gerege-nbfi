@@ -1,0 +1,43 @@
+POST (main, post-T309): sha256 cdc0729107b71696
+
+=== 0. does ready-tasks.py contain ANY liveness check of its own? ===
+    grep -c 'lsof' ready-tasks.py -> 1
+    grep -c '/bin/ps' ready-tasks.py -> 6
+    grep -c 'foreign_live' ready-tasks.py -> 5
+    grep -c 'kill' ready-tasks.py -> 12
+    (ps_ancestors uses /bin/ps for ANCESTRY only -- who am I -- never for
+     'is some other session alive in this repo'. There is no lsof, no cwd read.)
+
+############################################################
+# CELL 1 -- NO LOCK ON DISK, 8 live workers in tasks.json
+#   LOCK on disk: NO
+#   correct answer: REFUSE (liveness is unestablished; nothing here can establish it)
+############################################################
+      lock: no .softhouse/LOCK on disk -- nobody holds this repo
+      mode: wrapper   (lock fire id: NONE RECORDED)
+      in_progress tasks found: 8  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
+      RESULT: DRY RUN -- 8 task(s) WOULD be demoted; tasks.json untouched.
+    demotions: 8
+
+############################################################
+# CELL 2 -- CONTROL: LOCK present, holder pid 1 is NOT an ancestor
+#   LOCK on disk: YES
+#   correct answer: REFUSE (and it does)
+############################################################
+      lock: invoked from INSIDE a live session -- ancestor pid 68308 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+      mode: in_session   (lock fire id: 20260823-140001)
+      in_progress tasks found: 8  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
+      RESULT: REFUSED -- nothing this caller is authorised to repair; tasks.json was NOT modified. The wrapper's exit-path reconcile runs in `wrapper` mode and clears what is left.
+    demotions: 0
+
+############################################################
+# CELL 3 -- CONTROL: LOCK present, holder pid IS an ancestor (this zsh)
+#   LOCK on disk: YES
+#   correct answer: in_session narrow authority
+############################################################
+      lock: invoked from INSIDE a live session -- ancestor pid 68308 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+      mode: in_session   (lock fire id: 20260823-140001)
+      in_progress tasks found: 8  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
+      RESULT: REFUSED -- nothing this caller is authorised to repair; tasks.json was NOT modified. The wrapper's exit-path reconcile runs in `wrapper` mode and clears what is left.
+    demotions: 0
+

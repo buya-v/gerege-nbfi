@@ -1,0 +1,13 @@
+repo (physical): /Users/buv/gerege-nbfi
+lsof: /usr/sbin/lsof
+
+PID      STAT   IN-REPO   CWD
+68308    SN     YES       /Users/buv/gerege-nbfi
+
+claude processes examined=1 in-repo=1
+VERDICT: foreign_live_session_in_repo() would return 0 -> the wrapper REFUSES to
+         reconcile. The 'second reader' T309's fail-direction table relies on
+         does not fire while any of the above is alive.
+
+NOTE ON THE SKIP LIST: STOPPED_TREE holds only the pids stop_driver signalled
+(this fire's DRIVER_TREE). Any OTHER in-repo claude above is still counted.
