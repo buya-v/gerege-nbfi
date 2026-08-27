@@ -64,7 +64,11 @@ def run(cmd, cwd, timeout=300):
 
 
 def reset(clone: Path):
-    rc1, o1 = run(["git", "checkout", "--", "."], clone)
+    # `git checkout -- .` leaves STAGED additions in the index, and `git clean -fd` will not
+    # remove a path git already knows about. G2 stages its plant, so the pair silently carried it
+    # into the next arm -- caught by this function's own porcelain check on the first real run,
+    # which is the strongest evidence here that the reset is not decorative. `reset --hard` first.
+    rc1, o1 = run(["git", "reset", "--hard", "--quiet"], clone)
     rc2, o2 = run(["git", "clean", "-fdq"], clone)
     rc3, o3 = run(["git", "status", "--porcelain"], clone)
     if rc1 != 0 or rc2 != 0 or rc3 != 0:

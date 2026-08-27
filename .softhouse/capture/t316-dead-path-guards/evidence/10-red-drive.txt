@@ -1,0 +1,35 @@
+T316 RED DRIVE
+============================================================================================
+clone: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t316-red-7bk3oh8w/clone
+
+ARM  WHAT                                                     EXPECTED       OBSERVED       VERDICT
+--------------------------------------------------------------------------------------------
+F1   T290 guard, untouched tree                               exit 0/probe   exit 0/probe   PASS
+     note: runner it says it used: .softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py
+F2   T290 guard, BOTH runner candidates removed               exit 2/NO probe exit 2/NO probe PASS
+     note: THE ARM THAT DECIDES FU-T299-2
+F3   T290 red drive, BOTH runner candidates removed           exit 2/NO probe exit 2/NO probe PASS
+G1   frontier guard, untouched tree (CALIBRATION)             exit 0/probe   exit 0/probe   PASS
+G2   a NEW instrument naming a dead path is planted           exit 1/probe   exit 1/probe   PASS
+     note: the new row is named in the output: True
+G3   a pinned dead path is MADE TO RESOLVE, pin not updated   exit 1/probe   exit 1/probe   PASS
+     note: row made to resolve: .softhouse/bin/fire-program.sh | .softhouse/tasks.json.t288.tmp
+V1   the census instrument DELETED                            exit 2/NO probe exit 2/NO probe PASS
+     note: THE FAIL-DIRECTION ARM
+V2   the pin file DELETED                                     exit 2/NO probe exit 2/NO probe PASS
+V3   the pin file EMPTIED (comments only)                     exit 2/NO probe exit 2/NO probe PASS
+     note: an empty pin is a FAILED READ, never an empty frontier
+V4   the census SELECTOR broken (calibration must fail)       exit 2/NO probe exit 2/NO probe PASS
+     note: selector break took effect: True
+V5   the census exits 0 but prints NO probe line              exit 2/NO probe exit 2/NO probe PASS
+     note: presence before value (P-84)
+
+FU-T299-2 ADJUDICATION
+--------------------------------------------------------------------------------------------
+  REFUTED. With BOTH candidates absent the T290 guard exits 2 and prints NO probe
+  line -- it REFUSES. It is not fail-open. On the untouched tree it exits 0
+  because it RESOLVED a real runner and ran it, and it PRINTS which one:
+      runner it says it used: .softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py
+  The dead literal is candidate #1 of an ordered two-candidate list.
+
+T316-REDGREEN: arms=11 pass=11 fail=0
