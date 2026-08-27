@@ -1,0 +1,27 @@
+T327 throwaway teardown -- 2026-08-27T17:33:43Z
+   Container t327-oracle-app Stopping 
+   Container t327-oracle-app Stopped 
+   Container t327-oracle-app Removing 
+   Container t327-oracle-app Removed 
+   Container t327-oracle-db Stopping 
+   Container t327-oracle-db Stopped 
+   Container t327-oracle-db Removing 
+   Container t327-oracle-db Removed 
+   Network t327-oracle_default Removing 
+   Network t327-oracle_default Removed 
+
+containers matching t327 after teardown:
+  (none)
+networks matching t327 after teardown:
+  (none)
+volumes matching t327 after teardown:
+  (none)
+
+STANDING reference oracle after teardown (must equal the baseline this capture opened with):
+  standing health = 200
+  ok  acc_gl_journal_entry = 60/64 (== baseline)
+  ok  acc_gl_closure = 0/null (== baseline)
+  ok  distinct_transaction_id = 26 (== baseline)
+  ok  m_portfolio_command_source = 352/352 (== baseline)
+  ok  m_loan = 7 (== baseline)
+  ok  m_office = 1 (== baseline)

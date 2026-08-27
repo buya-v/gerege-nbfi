@@ -1,0 +1,16 @@
+POST /journalentries
+case-id: B1-ACCEPT-06-entry-one-day-after-closing-date
+instance: THROWAWAY t327-oracle-app, image fineract:latest (same image id as the standing fineract-fineract-1), port 8444
+Fineract-Platform-TenantId: t327
+Authorization: Basic <mifos:password>
+Idempotency-Key: t327-b1-accept-06
+Content-Type: application/json
+body-wire-bytes-artefact: B1-ACCEPT-06-entry-one-day-after-closing-date.req
+body-sha256: d162b13898f6b2d8060402b83410ff32bc6bf3cf54c7a6315cbb363dd1eb3455
+body-bytes: 576
+response-status: 200
+response-sha256: dafc5c03edf3a0d4e9a4199c64e4027e167a3eb92d4bf97c1bd9b67d06ddfbd8
+business-date-candidate: 2026-08-28 (DERIVED today in Asia/Ulaanbaatar; MEASURED by B2-ACCEPT-01 + B2-CTRL-02)
+latest-closing-date-at-fire-time: 2026-08-26
+captured-at-utc: 2026-08-27T17:33:42Z
+note: B-1: transactionDate 2026-08-27 == closingDate + 1 and <= business date 2026-08-28; BOTH date rules must fall through
