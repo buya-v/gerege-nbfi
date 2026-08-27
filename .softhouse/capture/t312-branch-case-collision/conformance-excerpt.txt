@@ -1,0 +1,24 @@
+T312 -- `bash .softhouse/conformance.sh` on this branch.  bash, never sh (exit 3 is the
+wrong-interpreter refusal).  Full run exit code: 0.
+
+P-84 -- "'EXIT 2 WITH NO PROBE LINE' IS THE GUARD WORKING.  READ THE ABSENCE, NOT THE
+VALUE."  So the probe line's PRESENCE is checked first, and it is present:
+103:conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+                            covered: nexus/internal/apps/ledger/conformance
+                            covered: nexus/internal/apps/loanschedule
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-accc228249b9e2e89/nexus
+
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+         This means "matches the reference oracle on captured vectors, within the graded domain".
+         IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
+
+
+--- SUMMARY ---
+    parity vectors          PASS 46   FAIL 0
+    contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+    refused                 0   (no discriminating vector / seam blind — not a pass, not a failure)
+    inadmissible            0

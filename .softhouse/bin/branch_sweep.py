@@ -238,11 +238,13 @@ def full(name):
 def canonical_case_problem(name):
     """None, or the reason `name` is not canonical-case for this repo.
 
-    The convention, MEASURED not assumed: of 222 `softhouse/*` heads in the gerege-nbfi
-    repo, the task-id prefix is UPPERCASE (`T297-`, `A2-7-`) everywhere except seven
-    lowercase strays created by the very defect this file exists for, plus 21
-    machine-generated `rescued-agent-*`.  So the rule is: the leading alphabetic run of
-    the branch name must be uppercase.
+    The convention, MEASURED not assumed, by `git for-each-ref --format='%(refname:short)'
+    refs/heads/` on 2026-08-27 (the count moves under a live fire -- it was 222 an hour
+    earlier, so read the ratio, not the cardinal): of **227** `softhouse/*` heads, 21 are
+    machine-generated `rescued-agent-*` and, of the remaining 206, the task-id prefix is
+    UPPERCASE (`T297-`, `A2-7-`) in all but **9** lowercase strays -- t264 t265 t268 t273
+    t281 t286 t297 t299 t305, several of them created by the very defect this file exists
+    for.  So the rule is: the leading alphabetic run of the branch name must be uppercase.
     """
     s = short(name)
     if not s.startswith("softhouse/"):
