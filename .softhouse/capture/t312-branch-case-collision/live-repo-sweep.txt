@@ -1,0 +1,46 @@
+BRANCH SWEEP -- T312 instrument (/Users/buv/gerege-nbfi/.claude/worktrees/agent-accc228249b9e2e89/.softhouse/bin/branch_sweep.py)
+SELECTOR, stated because 'not found' is a statement about the search:
+  repo          /Users/buv/gerege-nbfi/.claude/worktrees/agent-accc228249b9e2e89  (followed the .git file (linked worktree); followed commondir to the main gitdir)
+  patterns      'softhouse/t29*' 'softhouse/t30*'
+  matching      fnmatch on the CASE-FOLDED short name -- 'softhouse/t3*' and 'softhouse/T3*' select identically here.  `git branch --list` does NOT; that is the defect this replaces.
+  storage       walked /Users/buv/gerege-nbfi/.git/refs/heads -- 16 loose head(s), names as stored on disk
+  storage       parsed /Users/buv/gerege-nbfi/.git/packed-refs -- 521 packed head(s), matched CASE-SENSITIVELY as git does
+  matched       12 ref name(s) in 10 case-folded group(s), out of 530 head(s) present
+
+  [CASE-SHADOW,DIVERGED,UNREACHABLE-VALUE] softhouse/t297-review-t295
+    softhouse/T297-review-t295                           loose=-         packed=c1a3888aa resolves-to=d189230be  ahead-of-main=0
+    softhouse/t297-review-t295                           loose=d189230be packed=-         resolves-to=d189230be  ahead-of-main=0
+    !! c1a3888aa is STORED (softhouse/T297-review-t295(packed)) but NO spelling in this group resolves to it, AND it is not an ancestor of anything that resolves -- a live object holding work no name reaches.  It is NOT empty and it is NOT gone.  It holds 4 commit(s) ahead of main.
+    !! c1a3888aa and d189230be have DIVERGED (neither is an ancestor of the other) -- these are two different lines of work, not a stale duplicate.
+  [ok]                   softhouse/t298-review-t256
+    softhouse/T298-review-t256                           loose=9485803a5 packed=60c54d19d resolves-to=9485803a5  ahead-of-main=0
+    -- 60c54d19d (softhouse/T298-review-t256(packed)) is shadowed but is an ANCESTOR of the resolved value: an ordinary stale packed entry, no work is hidden by it.
+  [ok]                   softhouse/t299-t256-namespace-collision
+    softhouse/t299-t256-namespace-collision              loose=7b6644743 packed=-         resolves-to=7b6644743  ahead-of-main=0
+  [ok]                   softhouse/t302-review-t288
+    softhouse/T302-review-t288                           loose=1800c8145 packed=ab9b3b681 resolves-to=1800c8145  ahead-of-main=8
+    -- ab9b3b681 (softhouse/T302-review-t288(packed)) is shadowed but is an ANCESTOR of the resolved value: an ordinary stale packed entry, no work is hidden by it.
+  [ok]                   softhouse/t304-evidence-destruction
+    softhouse/T304-evidence-destruction                  loose=-         packed=f8d450c27 resolves-to=f8d450c27  ahead-of-main=7
+  [ok]                   softhouse/t304b-evidence-destruction
+    softhouse/T304b-evidence-destruction                 loose=efa721a51 packed=-         resolves-to=efa721a51  ahead-of-main=0
+  [CASE-SHADOW,DIVERGED,UNREACHABLE-VALUE] softhouse/t305-openingbalance-accepting-side
+    softhouse/T305-openingbalance-accepting-side         loose=-         packed=060f00330 resolves-to=102eaba6c  ahead-of-main=5
+    softhouse/t305-openingbalance-accepting-side         loose=102eaba6c packed=-         resolves-to=102eaba6c  ahead-of-main=5
+    !! 060f00330 is STORED (softhouse/T305-openingbalance-accepting-side(packed)) but NO spelling in this group resolves to it, AND it is not an ancestor of anything that resolves -- a live object holding work no name reaches.  It is NOT empty and it is NOT gone.  It holds 8 commit(s) ahead of main.
+    !! 060f00330 and 102eaba6c have DIVERGED (neither is an ancestor of the other) -- these are two different lines of work, not a stale duplicate.
+  [ok]                   softhouse/t306-adjudicate-admit-widening
+    softhouse/T306-adjudicate-admit-widening             loose=-         packed=f7a70b8f2 resolves-to=f7a70b8f2  ahead-of-main=5
+  [ok]                   softhouse/t308-review-t292
+    softhouse/T308-review-t292                           loose=40a70681f packed=a8c772531 resolves-to=40a70681f  ahead-of-main=0
+    -- a8c772531 (softhouse/T308-review-t292(packed)) is shadowed but is an ANCESTOR of the resolved value: an ordinary stale packed entry, no work is hidden by it.
+  [ok]                   softhouse/t309-sigterm-reconcile-bypass
+    softhouse/T309-sigterm-reconcile-bypass              loose=0e5eb2abb packed=df28ced07 resolves-to=0e5eb2abb  ahead-of-main=0
+    -- df28ced07 (softhouse/T309-sigterm-reconcile-bypass(packed)) is shadowed but is an ANCESTOR of the resolved value: an ordinary stale packed entry, no work is hidden by it.
+
+FINDINGS: case-shadow groups=2  unreachable values=2  diverged pairs=2
+  (informational, NOT a finding: 4 name(s) hold different loose and packed values under the same spelling -- the ordinary stale packed entry)
+  DO NOT repair these by deleting or rewriting a branch: that destroys the evidence.  Pin each distinct value under refs/rescue/<fire>/ first.
+
+REF GUARD: NOT INSTALLED -- no hook at /Users/buv/gerege-nbfi/.git/hooks/reference-transaction
+  Without it, nothing PREVENTS the next shadow; this sweep only finds shadows after the fact.  Install: python3 /Users/buv/gerege-nbfi/.claude/worktrees/agent-accc228249b9e2e89/.softhouse/bin/branch_sweep.py install-hook

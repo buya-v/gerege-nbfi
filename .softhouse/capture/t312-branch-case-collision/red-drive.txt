@@ -1,0 +1,372 @@
+
+=== SETUP -- scratch repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo (the real checkout is never touched)
+filesystem: CASE-INSENSITIVE (CaseProbe is reachable as caseprobe) -- the
+            loose-shadows-packed mechanism CAN form here.
+packed T297 line = 41c56ada88bd0656b5da328b753d6475c165b002
+loose  t297 line = d407aa376c3bf0ab8edf7509caf891635e74ceec
+
+=== RED 1 -- THE DRIVER'S INSTRUMENT.  The exact command from fire 20260827-230001.
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' branch -a --list 'softhouse/t2*' --list 'softhouse/t3*'
+  softhouse/t297-review-t295
+[exit 0]
+^ softhouse/T298-review-t256 has THREE commits and does not appear.  This is the
+  output the driver read as 'gone or empty' and wrote into a pushed commit message.
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' branch -a --list 'softhouse/T2*'
+  softhouse/T297-review-t295
+  softhouse/T298-review-t256
+[exit 0]
+^ one line per NAME, one value per line: even the uppercase glob shows T297 at the
+  LOOSE value only.  The packed line 41c56ada88bd0656b5da328b753d6475c165b002 is nowhere in this output.
+
+=== RED 2 -- what git answers for the two spellings
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' rev-parse softhouse/T297-review-t295 softhouse/t297-review-t295
+d407aa376c3bf0ab8edf7509caf891635e74ceec
+d407aa376c3bf0ab8edf7509caf891635e74ceec
+[exit 0]
+
+$ grep 'softhouse/T297-review-t295' '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.git/packed-refs'
+41c56ada88bd0656b5da328b753d6475c165b002 refs/heads/softhouse/T297-review-t295
+[exit 0]
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' merge-base --is-ancestor 41c56ada88bd0656b5da328b753d6475c165b002 d407aa376c3bf0ab8edf7509caf891635e74ceec
+[exit 1]
+^ exit 1 = NOT an ancestor.  Two diverged lines, one reachable name.
+
+=== GREEN 1 -- the instrument, driven with the SAME lowercase selector that failed
+
+$ /usr/bin/python3 '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py' sweep --repo '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' --pattern 'softhouse/t2*' --pattern 'softhouse/t3*' --counts
+BRANCH SWEEP -- T312 instrument (/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py)
+SELECTOR, stated because 'not found' is a statement about the search:
+  repo          /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo  (read .git/ directly)
+  patterns      'softhouse/t2*' 'softhouse/t3*'
+  matching      fnmatch on the CASE-FOLDED short name -- 'softhouse/t3*' and 'softhouse/T3*' select identically here.  `git branch --list` does NOT; that is the defect this replaces.
+  storage       walked /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/refs/heads -- 1 loose head(s), names as stored on disk
+  storage       parsed /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/packed-refs -- 3 packed head(s), matched CASE-SENSITIVELY as git does
+  matched       3 ref name(s) in 2 case-folded group(s), out of 4 head(s) present
+
+  [CASE-SHADOW,DIVERGED,UNREACHABLE-VALUE] softhouse/t297-review-t295
+    softhouse/T297-review-t295                           loose=-         packed=41c56ada8 resolves-to=d407aa376  ahead-of-main=1
+    softhouse/t297-review-t295                           loose=d407aa376 packed=-         resolves-to=d407aa376  ahead-of-main=1
+    !! 41c56ada8 is STORED (softhouse/T297-review-t295(packed)) but NO spelling in this group resolves to it, AND it is not an ancestor of anything that resolves -- a live object holding work no name reaches.  It is NOT empty and it is NOT gone.  It holds 4 commit(s) ahead of main.
+    !! 41c56ada8 and d407aa376 have DIVERGED (neither is an ancestor of the other) -- these are two different lines of work, not a stale duplicate.
+  [ok]                   softhouse/t298-review-t256
+    softhouse/T298-review-t256                           loose=-         packed=e667debde resolves-to=e667debde  ahead-of-main=3
+
+FINDINGS: case-shadow groups=1  unreachable values=1  diverged pairs=1
+  (informational, NOT a finding: 0 name(s) hold different loose and packed values under the same spelling -- the ordinary stale packed entry)
+  DO NOT repair these by deleting or rewriting a branch: that destroys the evidence.  Pin each distinct value under refs/rescue/<fire>/ first.
+
+REF GUARD: NOT INSTALLED -- no hook at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/hooks/reference-transaction
+  Without it, nothing PREVENTS the next shadow; this sweep only finds shadows after the fact.  Install: python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py install-hook
+[exit 3]
+
+=== GREEN 2 -- the dispatch refusal (check-dispatch)
+2a: a name that case-collides with an existing branch
+
+$ /usr/bin/python3 '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py' check-dispatch --repo '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' softhouse/t298-review-t256
+SELECTOR: exact + case-folded lookup against loose refs under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/refs/heads and every refs/heads entry in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/packed-refs
+          walked /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/refs/heads -- 1 loose head(s), names as stored on disk
+          parsed /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/packed-refs -- 3 packed head(s), matched CASE-SENSITIVELY as git does
+
+  branch: softhouse/t298-review-t256
+  VERDICT: REFUSED -- a case-variant already exists and dispatching this name would SHADOW it.
+    existing: softhouse/T298-review-t256                               loose=- packed=e667debde
+    DO: reuse the existing spelling above VERBATIM (continue that branch, as T308's worker did), or pick a name that differs by more than case.  Do NOT delete or rewrite the existing branch.
+[exit 3]
+2b: a NEW lowercase task branch -- non-canonical case, the root cause
+
+$ /usr/bin/python3 '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py' check-dispatch --repo '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' softhouse/t400-brand-new
+SELECTOR: exact + case-folded lookup against loose refs under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/refs/heads and every refs/heads entry in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/packed-refs
+          walked /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/refs/heads -- 1 loose head(s), names as stored on disk
+          parsed /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/packed-refs -- 3 packed head(s), matched CASE-SENSITIVELY as git does
+
+  branch: softhouse/t400-brand-new
+  VERDICT: REFUSED -- non-canonical case: its task-id prefix 't' is lowercase; this repo's convention is UPPERCASE ('T').  A lowercase dispatch is what created the T297/T305 shadows
+    DO: dispatch the uppercase form instead.
+[exit 3]
+2c: the same task, canonical case -- allowed
+
+$ /usr/bin/python3 '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py' check-dispatch --repo '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' softhouse/T400-brand-new
+SELECTOR: exact + case-folded lookup against loose refs under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/refs/heads and every refs/heads entry in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/packed-refs
+          walked /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/refs/heads -- 1 loose head(s), names as stored on disk
+          parsed /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/packed-refs -- 3 packed head(s), matched CASE-SENSITIVELY as git does
+
+  branch: softhouse/T400-brand-new
+  VERDICT: OK -- no ref, and no case-variant of one, exists under that name.
+[exit 0]
+2d: an EXISTING name, exact spelling -- allowed, and told to continue it
+
+$ /usr/bin/python3 '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py' check-dispatch --repo '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' softhouse/T298-review-t256
+SELECTOR: exact + case-folded lookup against loose refs under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/refs/heads and every refs/heads entry in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/packed-refs
+          walked /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/refs/heads -- 1 loose head(s), names as stored on disk
+          parsed /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/packed-refs -- 3 packed head(s), matched CASE-SENSITIVELY as git does
+
+  branch: softhouse/T298-review-t256
+  VERDICT: OK -- this exact name already exists (loose=- packed=e667debde). Continue it; do not fork a variant.
+[exit 0]
+
+=== RED 3 -- WITHOUT the hook, plain git happily creates the shadow
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' branch softhouse/t298-review-t256 main
+[exit 0]
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' rev-parse softhouse/T298-review-t256 softhouse/t298-review-t256
+ef60ac2de22b81c8aef809d583ccc78d7b7eeebf
+ef60ac2de22b81c8aef809d583ccc78d7b7eeebf
+[exit 0]
+^ git created a lowercase loose ref over a PACKED uppercase one and said nothing.
+  Both names now answer with main; the three committed commits are unreachable by
+  either spelling.
+
+$ /usr/bin/python3 '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py' sweep --repo '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' --pattern 'softhouse/t298*' --counts
+BRANCH SWEEP -- T312 instrument (/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py)
+SELECTOR, stated because 'not found' is a statement about the search:
+  repo          /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo  (read .git/ directly)
+  patterns      'softhouse/t298*'
+  matching      fnmatch on the CASE-FOLDED short name -- 'softhouse/t3*' and 'softhouse/T3*' select identically here.  `git branch --list` does NOT; that is the defect this replaces.
+  storage       walked /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/refs/heads -- 2 loose head(s), names as stored on disk
+  storage       parsed /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/packed-refs -- 3 packed head(s), matched CASE-SENSITIVELY as git does
+  matched       2 ref name(s) in 1 case-folded group(s), out of 5 head(s) present
+
+  [CASE-SHADOW,UNREACHABLE-VALUE] softhouse/t298-review-t256
+    softhouse/T298-review-t256                           loose=-         packed=e667debde resolves-to=ef60ac2de  ahead-of-main=0
+    softhouse/t298-review-t256                           loose=ef60ac2de packed=-         resolves-to=ef60ac2de  ahead-of-main=0
+    !! e667debde is STORED (softhouse/T298-review-t256(packed)) but NO spelling in this group resolves to it, AND it is not an ancestor of anything that resolves -- a live object holding work no name reaches.  It is NOT empty and it is NOT gone.  It holds 3 commit(s) ahead of main.
+
+FINDINGS: case-shadow groups=1  unreachable values=1  diverged pairs=0
+  (informational, NOT a finding: 0 name(s) hold different loose and packed values under the same spelling -- the ordinary stale packed entry)
+  DO NOT repair these by deleting or rewriting a branch: that destroys the evidence.  Pin each distinct value under refs/rescue/<fire>/ first.
+
+REF GUARD: NOT INSTALLED -- no hook at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/hooks/reference-transaction
+  Without it, nothing PREVENTS the next shadow; this sweep only finds shadows after the fact.  Install: python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py install-hook
+[exit 3]
+-- undoing the scratch shadow so the hook demo starts from the pre-shadow state
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' update-ref -d refs/heads/softhouse/t298-review-t256
+[exit 0]
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' rev-parse softhouse/T298-review-t256
+e667debdeaa81d5d1a71e456e180efa7f215181f
+[exit 0]
+
+=== GREEN 3 -- install the ref guard and repeat every creation path
+
+$ /usr/bin/python3 '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py' install-hook --repo '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo'
+ref guard INSTALLED at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/hooks/reference-transaction -> /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py hook
+  it now refuses any ref CREATION under refs/heads/softhouse/ whose name differs from an existing ref only by case, for every git command.
+[exit 0]
+
+$ /usr/bin/python3 '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py' install-hook --repo '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo'
+ref guard already installed: hook at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/hooks/reference-transaction carries the softhouse-t312-ref-guard marker and is executable
+[exit 0]
+3a: git branch
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' branch softhouse/t298-review-t256 main
+
+*** softhouse ref guard (T312): TRANSACTION REFUSED ***
+  creating   refs/heads/softhouse/t298-review-t256
+  would SHADOW an existing ref that differs only by case:
+             refs/heads/softhouse/T298-review-t256  loose=- packed=e667debde
+
+  On a case-insensitive filesystem the loose ref hides the packed one, git
+  resolves loose first, and the packed value becomes unreachable by name while
+  staying a live object.  That silently hid 4 commits on T297 and 8 on T305.
+  Use the EXISTING spelling verbatim, or a name differing by more than case.
+  Deliberate rescue work only: SOFTHOUSE_ALLOW_CASE_SHADOW=1
+
+fatal: ref updates aborted by hook
+[exit 128]
+3b: git update-ref
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' update-ref refs/heads/softhouse/t298-review-t256 main
+
+*** softhouse ref guard (T312): TRANSACTION REFUSED ***
+  creating   refs/heads/softhouse/t298-review-t256
+  would SHADOW an existing ref that differs only by case:
+             refs/heads/softhouse/T298-review-t256  loose=- packed=e667debde
+
+  On a case-insensitive filesystem the loose ref hides the packed one, git
+  resolves loose first, and the packed value becomes unreachable by name while
+  staying a live object.  That silently hid 4 commits on T297 and 8 on T305.
+  Use the EXISTING spelling verbatim, or a name differing by more than case.
+  Deliberate rescue work only: SOFTHOUSE_ALLOW_CASE_SHADOW=1
+
+fatal: ref updates aborted by hook
+[exit 128]
+3c: git worktree add -b
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' worktree add -q -b softhouse/t298-review-t256 '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/wt' main
+
+*** softhouse ref guard (T312): TRANSACTION REFUSED ***
+  creating   refs/heads/softhouse/t298-review-t256
+  would SHADOW an existing ref that differs only by case:
+             refs/heads/softhouse/T298-review-t256  loose=- packed=e667debde
+
+  On a case-insensitive filesystem the loose ref hides the packed one, git
+  resolves loose first, and the packed value becomes unreachable by name while
+  staying a live object.  That silently hid 4 commits on T297 and 8 on T305.
+  Use the EXISTING spelling verbatim, or a name differing by more than case.
+  Deliberate rescue work only: SOFTHOUSE_ALLOW_CASE_SHADOW=1
+
+fatal: ref updates aborted by hook
+[exit 255]
+3d: git push into a bare clone that already holds the uppercase name
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' push -q '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/bare.git' 'main:refs/heads/softhouse/t298-review-t256'
+
+*** softhouse ref guard (T312): TRANSACTION REFUSED ***
+  creating   refs/heads/softhouse/t298-review-t256
+  would SHADOW an existing ref that differs only by case:
+             refs/heads/softhouse/T298-review-t256  loose=- packed=e667debde
+
+  On a case-insensitive filesystem the loose ref hides the packed one, git
+  resolves loose first, and the packed value becomes unreachable by name while
+  staying a live object.  That silently hid 4 commits on T297 and 8 on T305.
+  Use the EXISTING spelling verbatim, or a name differing by more than case.
+  Deliberate rescue work only: SOFTHOUSE_ALLOW_CASE_SHADOW=1
+
+fatal: ref updates aborted by hook
+send-pack: unexpected disconnect while reading sideband packet
+fatal: the remote end hung up unexpectedly
+[exit 128]
+3e: DID ANY OF THEM LAND?  (the refusal must be an abort, not a warning)
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' rev-parse softhouse/T298-review-t256 softhouse/t298-review-t256
+fatal: ambiguous argument 'softhouse/t298-review-t256': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+e667debdeaa81d5d1a71e456e180efa7f215181f
+softhouse/t298-review-t256
+[exit 128]
+
+$ ls '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.git/refs/heads/softhouse/' 2>&1
+t297-review-t295
+[exit 0]
+3f: the operations that MUST still work
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' branch softhouse/T401-legitimate main
+[exit 0]
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' branch feature/unrelated-lowercase main
+[exit 0]
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' commit -q --allow-empty -m 'update on an existing branch' && git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' branch -f softhouse/T401-legitimate HEAD && git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' rev-parse softhouse/T401-legitimate
+09b6a8272a86e7ac31ddfa86b781fac29fa52dec
+[exit 0]
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' branch -D softhouse/T401-legitimate
+Deleted branch softhouse/T401-legitimate (was 09b6a82).
+[exit 0]
+3g: the documented escape hatch, for deliberate rescue work only
+
+$ SOFTHOUSE_ALLOW_CASE_SHADOW=1 git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' branch softhouse/t298-review-t256 main
+[exit 0]
+3h: DELETING the shadow again must NOT be refused.  Attempt 1 of the guard DID
+    refuse this: the packed-refs backend presents a deletion as '0000 0000 <ref>'
+    and the guard read the zero OLD value as a creation.
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' update-ref -d refs/heads/softhouse/t298-review-t256
+[exit 0]
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' rev-parse softhouse/T298-review-t256
+e667debdeaa81d5d1a71e456e180efa7f215181f
+[exit 0]
+3i: repacking a repo that ALREADY carries a shadow must not be refused either --
+    git pack-refs presents every loose ref as a creation in the packed store.
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' pack-refs --all
+[exit 0]
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' gc --quiet --prune=now
+[exit 0]
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' rev-parse softhouse/t297-review-t295
+d407aa376c3bf0ab8edf7509caf891635e74ceec
+[exit 0]
+
+=== GREEN 4 -- a clean repo sweeps clean, and says over what
+
+$ /usr/bin/python3 '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py' sweep --repo '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' --pattern 'softhouse/T4*' --counts
+BRANCH SWEEP -- T312 instrument (/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py)
+SELECTOR, stated because 'not found' is a statement about the search:
+  repo          /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo  (read .git/ directly)
+  patterns      'softhouse/T4*'
+  matching      fnmatch on the CASE-FOLDED short name -- 'softhouse/t3*' and 'softhouse/T3*' select identically here.  `git branch --list` does NOT; that is the defect this replaces.
+  storage       walked /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/refs/heads -- 0 loose head(s), names as stored on disk
+  storage       parsed /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/packed-refs -- 5 packed head(s), matched CASE-SENSITIVELY as git does
+  matched       0 ref name(s) in 0 case-folded group(s), out of 5 head(s) present
+
+
+FINDINGS: case-shadow groups=0  unreachable values=0  diverged pairs=0
+  (informational, NOT a finding: 0 name(s) hold different loose and packed values under the same spelling -- the ordinary stale packed entry)
+  none -- and that is a measurement over the selector printed above, not a default.
+
+REF GUARD: INSTALLED -- hook at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/hooks/reference-transaction carries the softhouse-t312-ref-guard marker and is executable
+[exit 0]
+
+=== EXPERIMENT 5 -- should refs/heads/softhouse/* be UN-PACKED to remove the surface?
+The repo has just been fully packed (step 3i), so BOTH T297 and t297 now live in
+packed-refs, which is case-SENSITIVE.  Ask git what each name is worth now:
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' rev-parse softhouse/T297-review-t295 softhouse/t297-review-t295
+41c56ada88bd0656b5da328b753d6475c165b002
+d407aa376c3bf0ab8edf7509caf891635e74ceec
+[exit 0]
+
+$ grep -i 't297-review-t295' '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.git/packed-refs'
+41c56ada88bd0656b5da328b753d6475c165b002 refs/heads/softhouse/T297-review-t295
+d407aa376c3bf0ab8edf7509caf891635e74ceec refs/heads/softhouse/t297-review-t295
+[exit 0]
+^ if those two shas differ, the shadow DISSOLVED when the loose ref was packed:
+  two case-distinct entries in one case-sensitive text file are both addressable.
+Now force ONE of them back out to a LOOSE ref -- which is what 'keep softhouse/*
+unpacked' means, and what any ordinary commit on the branch does anyway:
+
+$ SOFTHOUSE_ALLOW_CASE_SHADOW=1 git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' update-ref refs/heads/softhouse/T297-review-t295 main
+[exit 0]
+
+$ ls '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.git/refs/heads/softhouse/'
+T297-review-t295
+[exit 0]
+
+$ git -C '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' rev-parse softhouse/T297-review-t295 softhouse/t297-review-t295
+09b6a8272a86e7ac31ddfa86b781fac29fa52dec
+09b6a8272a86e7ac31ddfa86b781fac29fa52dec
+[exit 0]
+^ ONE loose file, and now BOTH names answer with it: t297's own packed value has
+  become unreachable in turn.  Unpacking is the direction that CREATES the shadow
+  on a case-insensitive filesystem, not the one that removes it.  Recorded because
+  the T312 brief asked whether to un-pack refs/heads/softhouse/*.
+
+$ /usr/bin/python3 '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py' sweep --repo '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS/repo' --pattern 'softhouse/t29*' --counts
+BRANCH SWEEP -- T312 instrument (/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.softhouse/bin/branch_sweep.py)
+SELECTOR, stated because 'not found' is a statement about the search:
+  repo          /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo  (read .git/ directly)
+  patterns      'softhouse/t29*'
+  matching      fnmatch on the CASE-FOLDED short name -- 'softhouse/t3*' and 'softhouse/T3*' select identically here.  `git branch --list` does NOT; that is the defect this replaces.
+  storage       walked /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/refs/heads -- 1 loose head(s), names as stored on disk
+  storage       parsed /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/packed-refs -- 5 packed head(s), matched CASE-SENSITIVELY as git does
+  matched       3 ref name(s) in 2 case-folded group(s), out of 5 head(s) present
+
+  [CASE-SHADOW,DIVERGED,UNREACHABLE-VALUE] softhouse/t297-review-t295
+    softhouse/T297-review-t295                           loose=09b6a8272 packed=41c56ada8 resolves-to=09b6a8272  ahead-of-main=0
+    softhouse/t297-review-t295                           loose=-         packed=d407aa376 resolves-to=09b6a8272  ahead-of-main=0
+    !! 41c56ada8 is STORED (softhouse/T297-review-t295(packed)) but NO spelling in this group resolves to it, AND it is not an ancestor of anything that resolves -- a live object holding work no name reaches.  It is NOT empty and it is NOT gone.  It holds 4 commit(s) ahead of main.
+    !! d407aa376 is STORED (softhouse/t297-review-t295(packed)) but NO spelling in this group resolves to it, AND it is not an ancestor of anything that resolves -- a live object holding work no name reaches.  It is NOT empty and it is NOT gone.  It holds 1 commit(s) ahead of main.
+    !! 09b6a8272 and 41c56ada8 have DIVERGED (neither is an ancestor of the other) -- these are two different lines of work, not a stale duplicate.
+    !! 09b6a8272 and d407aa376 have DIVERGED (neither is an ancestor of the other) -- these are two different lines of work, not a stale duplicate.
+    !! 41c56ada8 and d407aa376 have DIVERGED (neither is an ancestor of the other) -- these are two different lines of work, not a stale duplicate.
+  [ok]                   softhouse/t298-review-t256
+    softhouse/T298-review-t256                           loose=-         packed=e667debde resolves-to=e667debde  ahead-of-main=3
+
+FINDINGS: case-shadow groups=1  unreachable values=1  diverged pairs=3
+  (informational, NOT a finding: 1 name(s) hold different loose and packed values under the same spelling -- the ordinary stale packed entry)
+  DO NOT repair these by deleting or rewriting a branch: that destroys the evidence.  Pin each distinct value under refs/rescue/<fire>/ first.
+
+REF GUARD: INSTALLED -- hook at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t312-scratch.EuPAwS/repo/.git/hooks/reference-transaction carries the softhouse-t312-ref-guard marker and is executable
+[exit 3]
+
+=== DONE.  scratch = /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t312-scratch.EuPAwS  (delete it by hand; nothing under it is referenced)
