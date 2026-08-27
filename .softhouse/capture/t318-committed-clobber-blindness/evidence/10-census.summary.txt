@@ -1,0 +1,149 @@
+==========================================================================
+T318 INSTRUMENT 10 — CLEANLINESS-ASSERTION CENSUS
+==========================================================================
+HEAD              dfe34de09e2f32f1c6c6c4a07e4c97c238ad159d
+SCOPE             git ls-files = 6996 tracked files; 6962 read as UTF-8, 34 undecodable/skipped
+EXCLUDED          .softhouse/capture/t318-committed-clobber-blindness/ (own instruments)
+SELECTOR (printed beside the figure, per P-66):
+    status-porcelain     git\s+(?:-C\s+\S+\s+)?status[^\n|;&]*--porcelain
+    status-short         git\s+(?:-C\s+\S+\s+)?status\s+(?:-s\b|--short\b)
+    status-bare          git\s+(?:-C\s+\S+\s+)?status(?!\s*(?:--porcelain|-s\b|--short\b))
+    diff-quiet           git\s+(?:-C\s+\S+\s+)?diff[^\n|;&]*--quiet
+    diff-exit-code       git\s+(?:-C\s+\S+\s+)?diff[^\n|;&]*--exit-code
+    diff-index           git\s+(?:-C\s+\S+\s+)?diff-index\b
+    diff-files           git\s+(?:-C\s+\S+\s+)?diff-files\b
+    ls-files-others      git\s+(?:-C\s+\S+\s+)?ls-files[^\n|;&]*(?:--others|-m\b|--modified)
+    clean-dry-run        git\s+(?:-C\s+\S+\s+)?clean\s+[^\n|;&]*-n
+    prose-clean-tree     (?:tree|working tree|worktree)\s+(?:is\s+|comes?\s+back\s+|came\s+back\s+)?(?:clean|EMPTY|empty)
+--------------------------------------------------------------------------
+CLASS              HITS  FILES
+PROSE-REPORT        498    223
+EXEC-GATE           107     72
+EXEC-DISPLAY         57     35
+PROSE-PROTOCOL       54     43
+EXEC-COMMENT         25     19
+TOTAL               741    334
+--------------------------------------------------------------------------
+  pattern status-porcelain        489
+  pattern status-bare             160
+  pattern prose-clean-tree         62
+  pattern status-short             19
+  pattern diff-quiet                9
+  pattern ls-files-others           2
+--------------------------------------------------------------------------
+LOAD-BEARING (EXEC-GATE + PROSE-PROTOCOL): 161 hits in 115 files
+      1  .claude/skills/softhouse-plan/SKILL.md
+      1  .claude/skills/softhouse-program/SKILL.md
+      1  .claude/skills/softhouse/SKILL.md
+      6  .softhouse/bin/fire-program.sh
+      1  .softhouse/bin/lib-worktree-prune.zsh
+      1  .softhouse/capture/actualactual/REPRODUCE.md
+      1  .softhouse/capture/actualactual/src/run-actualactual.sh
+      1  .softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh
+      1  .softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh
+      1  .softhouse/capture/audit-t44/rerun-periodratio/REPRODUCE.md
+      1  .softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh
+      1  .softhouse/capture/dec1-binding/REPRODUCE.md
+      1  .softhouse/capture/leapboundary/REPRODUCE.md
+      1  .softhouse/capture/leapboundary/bin/t55-capture.sh
+      1  .softhouse/capture/mathcontext/REPRODUCE.md
+      1  .softhouse/capture/mathcontext/analysis/t46_mathcontext_inventory.sh
+      1  .softhouse/capture/mathcontext/src/run-mathcontext.sh
+      1  .softhouse/capture/mathcontext/src/run-mathcontext2.sh
+      1  .softhouse/capture/mathcontext/src/run-mathcontext3.sh
+      1  .softhouse/capture/mathcontext/src/run-t50-tier1.sh
+      1  .softhouse/capture/mathcontext/src/run-t50-tier2.sh
+      2  .softhouse/capture/pathb/t149/t156-p24-scratch-merge.sh
+      1  .softhouse/capture/pathb/t80/prove-f1-sandbox-run.sh
+      1  .softhouse/capture/pathb/t80/prove-f1.sh
+      1  .softhouse/capture/periodratio/REPRODUCE.md
+      1  .softhouse/capture/periodratio/src/run-periodratio.sh
+      1  .softhouse/capture/periodratio/src/run-t46-periodratio.sh
+      1  .softhouse/capture/src/run-pass3b.sh
+      1  .softhouse/capture/src/run-pass3c.sh
+      1  .softhouse/capture/src/run-pass3d.sh
+      1  .softhouse/capture/src/run-pass3e.sh
+      1  .softhouse/capture/src/run-pass3f.sh
+      1  .softhouse/capture/src/run-pass3g.sh
+      1  .softhouse/capture/src/run-pass3h.sh
+      1  .softhouse/capture/src/run-pass3i.sh
+      1  .softhouse/capture/src/t169-red/run-t169.sh
+      1  .softhouse/capture/t100-g8-rescope/src/run-t100.sh
+      1  .softhouse/capture/t116-familyb-promotion/src/run-t116.sh
+      1  .softhouse/capture/t117-familyb/src/run-t117-pass2.sh
+      1  .softhouse/capture/t117-familyb/src/run-t117.sh
+      2  .softhouse/capture/t154-nofloat/drive-leg1-e2e.sh
+      1  .softhouse/capture/t154-nofloat/drive-leg2.sh
+      2  .softhouse/capture/t154-nofloat/drive-leg3.sh
+      1  .softhouse/capture/t159-review-t117/src/run-t159.sh
+      1  .softhouse/capture/t177-so-nondeterminism/run-t177.sh
+      1  .softhouse/capture/t177-so-nondeterminism/run-t177b.sh
+      1  .softhouse/capture/t219-g8-residual/src/run-t219-run2.sh
+      1  .softhouse/capture/t219-g8-residual/src/run-t219-run3.sh
+      1  .softhouse/capture/t219-g8-residual/src/run-t219.sh
+      1  .softhouse/capture/t223-g8-region-predicate/src/run-t223.sh
+      1  .softhouse/capture/t229-g8-site3/src/run-t229.sh
+      3  .softhouse/capture/t273-residue/instruments/50-red-drive.sh
+      3  .softhouse/capture/t299-namespace-and-default-safety/instruments/20-drive-destination-safety.sh
+      2  .softhouse/capture/t299-namespace-and-default-safety/instruments/50-final-state.sh
+      1  .softhouse/capture/t304-evidence-destruction/instruments/70-drive-in-scratch-clone.sh
+      1  .softhouse/capture/t309-sigterm-reconcile-bypass/patch5.py
+      1  .softhouse/capture/t83-nonamortizing/src/run-orderdep.sh
+      1  .softhouse/capture/t83-nonamortizing/src/run-t83.sh
+      1  .softhouse/conformance.sh
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-21.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-7.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T161.md
+      2  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T162.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T171.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T175.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T184.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T189.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T202.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T204.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T209.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T210.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T215.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T248.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T256.md
+      1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T304.md
+      1  .softhouse/handoff/T38-dec1-v7.md
+      1  .softhouse/handoff/T46-mathcontext-corrections.md
+      1  .softhouse/handoff/T53-dec1-v11-diffcheck.md
+      1  .softhouse/handoff/T54-dec1-v12.md
+      1  .softhouse/nonnegotiable-guard-audit.md
+      1  .softhouse/reviews/T127-review-of-T109.md
+      1  .softhouse/reviews/T155-probe/rerun-t154-provers-postmerge.sh
+      1  .softhouse/reviews/T155-review-of-T154.md
+      1  .softhouse/reviews/T188-probe/transcript.txt
+      1  .softhouse/reviews/T189-grep-adjudication.md
+      4  .softhouse/reviews/T189-probe/hardening.sh
+      1  .softhouse/reviews/T189-probe/reachability.sh
+      1  .softhouse/reviews/T298/PART-B.md
+      3  .softhouse/reviews/T298/t298b-marker-attack-matrix.sh
+      1  .softhouse/reviews/T53-DEC-1-v11-diffcheck.md
+      1  .softhouse/reviews/T84-evidence/src/run-orderdep2.sh
+      1  .softhouse/reviews/T84-evidence/src/run-t84.sh
+      1  .softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh
+      1  .softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh
+      3  .softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh
+      2  .softhouse/reviews/t172-probe/run-move-demo.sh
+      1  .softhouse/reviews/t172-probe/run-post-fix.sh
+      1  .softhouse/reviews/t172-probe/run-pre-fix.sh
+      3  .softhouse/reviews/t172-probe/run-red-demo-site1.sh
+      1  .softhouse/reviews/t172-probe/run-red-demo-site2.sh
+      1  .softhouse/reviews/t172-probe/run-red-demo.sh
+      1  .softhouse/reviews/t202-probe/green-Tb.zsh
+      3  .softhouse/reviews/t202-probe/make-mutants.py
+      3  .softhouse/reviews/t202-probe/patch.py
+      1  .softhouse/reviews/t202-probe/red-Tb.zsh
+      1  .softhouse/reviews/t246-dec2-rev6/REVIEW.md
+      1  .softhouse/reviews/t246-dec2-rev6/bar-output.txt
+      1  .softhouse/reviews/t246-dec2-rev6/bar.sh
+      6  .softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh
+      4  .softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh
+      1  .softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json
+     11  .softhouse/tasks.json
+      1  docs/adr/DEC-1-schedule-generator-adapter.md

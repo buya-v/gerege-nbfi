@@ -1,0 +1,1616 @@
+{
+ "window_lines": 40,
+ "ref_companion_selector": "rev-parse\\b|show-ref\\b|for-each-ref\\b|branch\\s+--contains\\b|branch\\s+--format\\b|\\breflog\\b|cat-file\\b|merge-base\\b|rev-list\\b|\\bgit\\s+log\\b|[0-9a-f]{40}",
+ "rows": [
+  {
+   "file": ".claude/skills/softhouse-plan/SKILL.md",
+   "line": 14,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "1. `git status` \u2014 abort if dirty.",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".claude/skills/softhouse-program/SKILL.md",
+   "line": 226,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "1. **Commit every deliverable a worker produced.** An uncommitted file is invisible to the next fire and to the cloud fire. `git status --porcelain` must come back empty.",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".claude/skills/softhouse/SKILL.md",
+   "line": 25,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "1. `git status` \u2014 abort if the tree is dirty. **Exception:** on `resume`, a tree dirty *only* under `.softhouse/` is expected and does not abort.",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/bin/fire-program.sh",
+   "line": 701,
+   "pattern": "diff-quiet",
+   "class": "EXEC-GATE",
+   "text": "git diff --cached --quiet -- ':(top).softhouse/tasks.json' 2>/dev/null && {",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/bin/fire-program.sh",
+   "line": 1192,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRTY=$(git status --porcelain -- ':(top)' ':(top,exclude).softhouse/LOCK')",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/bin/fire-program.sh",
+   "line": 1195,
+   "pattern": "status-bare",
+   "class": "EXEC-GATE",
+   "text": "log \"ERROR: exit-protocol guard could not read git status (rc=$GS_RC) \u2014 REFUSING to conclude the tree is clean. No rescue attempted (git is not answering); treat this fire's deliverables as UNVERIFIED and inspect the tre",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/bin/fire-program.sh",
+   "line": 1307,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "WS=$(git -C \"$W\" status --porcelain)",
+   "target": "WORKTREE",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/bin/fire-program.sh",
+   "line": 1310,
+   "pattern": "status-bare",
+   "class": "EXEC-GATE",
+   "text": "log \"ERROR: worktree sweep could not read git status for $W (rc=$WS_RC) \u2014 REFUSING to treat it as clean. NOT rescued, because git is not answering there; treat anything inside it as UNVERIFIED and inspect it by hand.\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/bin/fire-program.sh",
+   "line": 1463,
+   "pattern": "diff-quiet",
+   "class": "EXEC-GATE",
+   "text": "if ! git diff --cached --quiet -- ':(top).softhouse/tasks.json' ':(top).softhouse/RESUME.md' 2>/dev/null; then",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/bin/lib-worktree-prune.zsh",
+   "line": 121,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "CS=$(git -C \"$W\" status --porcelain -- ':(top)' 2>/dev/null)",
+   "target": "WORKTREE",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/actualactual/REPRODUCE.md",
+   "line": 97,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "git -C /Users/buv/fineract status --porcelain      # must be empty",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/actualactual/src/run-actualactual.sh",
+   "line": 63,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRT=\"$(git -C \"$FINERACT\" status --porcelain)\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh",
+   "line": 67,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRT=\"$(git -C \"$FINERACT\" status --porcelain)\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh",
+   "line": 48,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRT=\"$(git -C \"$FINERACT\" status --porcelain)\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/rerun-periodratio/REPRODUCE.md",
+   "line": 41,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "git -C /Users/buv/fineract status --porcelain      # must be empty",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh",
+   "line": 74,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRT=\"$(git -C \"$FINERACT\" status --porcelain)\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/dec1-binding/REPRODUCE.md",
+   "line": 12,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "git -C /Users/buv/fineract status --porcelain      # must be empty",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/REPRODUCE.md",
+   "line": 14,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "git -C /Users/buv/fineract status --porcelain      # must print nothing",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/bin/t55-capture.sh",
+   "line": 51,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "pc=$(git -C \"$ORACLE_SRC\" status --porcelain | wc -l | tr -d ' ')",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/REPRODUCE.md",
+   "line": 44,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "git -C /Users/buv/fineract status --porcelain      # must be empty",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/analysis/t46_mathcontext_inventory.sh",
+   "line": 30,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "echo \"dirty   : $( [ -n \"$(git status --porcelain 2>/dev/null)\" ] && echo YES || echo no )\"",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/run-mathcontext.sh",
+   "line": 67,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRT=\"$(git -C \"$FINERACT\" status --porcelain)\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/run-mathcontext2.sh",
+   "line": 48,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRT=\"$(git -C \"$FINERACT\" status --porcelain)\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/run-mathcontext3.sh",
+   "line": 53,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRT=\"$(git -C \"$FINERACT\" status --porcelain)\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/run-t50-tier1.sh",
+   "line": 40,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRT=\"$(git -C \"$FINERACT\" status --porcelain)\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/run-t50-tier2.sh",
+   "line": 40,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRT=\"$(git -C \"$FINERACT\" status --porcelain)\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t149/t156-p24-scratch-merge.sh",
+   "line": 67,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git -C \"$C\" status --porcelain -- .softhouse/vectors nexus | sed 's/^/    /'",
+   "target": "SCRATCH-SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t149/t156-p24-scratch-merge.sh",
+   "line": 69,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ \"$(git -C \"$C\" status --porcelain -- .softhouse/vectors | wc -l | tr -d ' ')\" = 0 ] || rc=1",
+   "target": "SCRATCH-SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t80/prove-f1-sandbox-run.sh",
+   "line": 67,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git -C \"$SB/repo\" status --porcelain -- .softhouse/capture/pathb | sed 's/^/    /'",
+   "target": "SCRATCH-SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t80/prove-f1.sh",
+   "line": 156,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "if [ -n \"$(git status --porcelain -- \"$E\" 2>/dev/null)\" ]; then",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/periodratio/REPRODUCE.md",
+   "line": 41,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "git -C /Users/buv/fineract status --porcelain      # must be empty",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/periodratio/src/run-periodratio.sh",
+   "line": 74,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRT=\"$(git -C \"$FINERACT\" status --porcelain)\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/periodratio/src/run-t46-periodratio.sh",
+   "line": 76,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRT=\"$(git -C \"$FINERACT\" status --porcelain)\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/src/run-pass3b.sh",
+   "line": 70,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRTY=$(git -C \"$PINNED_FINERACT\" status --porcelain)",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/src/run-pass3c.sh",
+   "line": 90,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRTY=$(git -C \"$PINNED_FINERACT\" status --porcelain)",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/src/run-pass3d.sh",
+   "line": 110,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRTY=$(git -C \"$PINNED_FINERACT\" status --porcelain)",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/src/run-pass3e.sh",
+   "line": 114,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRTY=$(git -C \"$PINNED_FINERACT\" status --porcelain)",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/src/run-pass3f.sh",
+   "line": 118,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRTY=$(git -C \"$PINNED_FINERACT\" status --porcelain)",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/src/run-pass3g.sh",
+   "line": 118,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRTY=$(git -C \"$PINNED_FINERACT\" status --porcelain)",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/src/run-pass3h.sh",
+   "line": 144,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRTY=$(git -C \"$PINNED_FINERACT\" status --porcelain)",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/src/run-pass3i.sh",
+   "line": 173,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRTY=$(git -C \"$PINNED_FINERACT\" status --porcelain)",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/src/t169-red/run-t169.sh",
+   "line": 47,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/run-t100.sh",
+   "line": 32,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t116-familyb-promotion/src/run-t116.sh",
+   "line": 34,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/run-t117-pass2.sh",
+   "line": 33,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/run-t117.sh",
+   "line": 33,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t154-nofloat/drive-leg1-e2e.sh",
+   "line": 127,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "dirty=\"$( cd \"$REPO_ROOT\" && git status --porcelain -- .softhouse/vectors )\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/capture/t154-nofloat/drive-leg1-e2e.sh",
+   "line": 128,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$dirty\" ] && ok \"git status --porcelain -- .softhouse/vectors is EMPTY\" \\",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/capture/t154-nofloat/drive-leg2.sh",
+   "line": 150,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "if ( cd \"$REPO_ROOT\" && git status --porcelain -- nexus ) | LC_ALL=C grep -aq 't154probe'; then",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/capture/t154-nofloat/drive-leg3.sh",
+   "line": 302,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "dirty=\"$( cd \"$REPO_ROOT\" && git status --porcelain -- .softhouse/vectors )\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/capture/t154-nofloat/drive-leg3.sh",
+   "line": 303,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$dirty\" ] && ok \"git status --porcelain -- .softhouse/vectors is EMPTY\" || bad \"the committed store is dirty:",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/capture/t159-review-t117/src/run-t159.sh",
+   "line": 33,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t177-so-nondeterminism/run-t177.sh",
+   "line": 42,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t177-so-nondeterminism/run-t177b.sh",
+   "line": 38,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run2.sh",
+   "line": 32,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run3.sh",
+   "line": 32,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t219-g8-residual/src/run-t219.sh",
+   "line": 32,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t223-g8-region-predicate/src/run-t223.sh",
+   "line": 32,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t229-g8-site3/src/run-t229.sh",
+   "line": 32,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t273-residue/instruments/50-red-drive.sh",
+   "line": 51,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "pre_dirty=\"$(git status --porcelain -- \"$M1\" \"$M3\" | LC_ALL=C /usr/bin/grep -c '' || true)\"",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t273-residue/instruments/50-red-drive.sh",
+   "line": 54,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain -- \"$M1\" \"$M3\"",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t273-residue/instruments/50-red-drive.sh",
+   "line": 131,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "post_dirty=\"$(git status --porcelain -- \"$M1\" \"$M3\" | LC_ALL=C /usr/bin/grep -c '' || true)\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/capture/t299-namespace-and-default-safety/instruments/20-drive-destination-safety.sh",
+   "line": 76,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain >\"$SCRATCH/a1-after.txt\"",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t299-namespace-and-default-safety/instruments/20-drive-destination-safety.sh",
+   "line": 109,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "vb=\"$(git status --porcelain -- \"$victim\" | wc -l | tr -d ' ')\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/capture/t299-namespace-and-default-safety/instruments/20-drive-destination-safety.sh",
+   "line": 112,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "va=\"$(git status --porcelain -- \"$victim\" | wc -l | tr -d ' ')\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/capture/t299-namespace-and-default-safety/instruments/50-final-state.sh",
+   "line": 28,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain >\"${TMPDIR:-/tmp}/t299-final-before.$$\"",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t299-namespace-and-default-safety/instruments/50-final-state.sh",
+   "line": 65,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain >\"${TMPDIR:-/tmp}/t299-final-after.$$\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/capture/t304-evidence-destruction/instruments/70-drive-in-scratch-clone.sh",
+   "line": 35,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "dirty() { git -C \"$SCRATCH\" status --porcelain; }",
+   "target": "SCRATCH-SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t309-sigterm-reconcile-bypass/patch5.py",
+   "line": 119,
+   "pattern": "diff-quiet",
+   "class": "EXEC-GATE",
+   "text": "git diff --cached --quiet -- \\':(top).softhouse/tasks.json\\' 2>/dev/null && {",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/run-orderdep.sh",
+   "line": 35,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout is DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/run-t83.sh",
+   "line": 95,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRTY=$(git -C \"$PINNED_FINERACT\" status --porcelain)",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/conformance.sh",
+   "line": 1891,
+   "pattern": "prose-clean-tree",
+   "class": "EXEC-GATE",
+   "text": "warn \"conformance: that has hundreds. The selector is broken, not the tree clean (P-35). REFUSED.\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-21.md",
+   "line": 13,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "`git status --porcelain` before commit showed exactly one modified file. No Go, no harness, no",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+   "line": 609,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "`git status --porcelain` before commit: `?? .softhouse/reviews/a2-31-dec2-rev4/` and nothing else.",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-7.md",
+   "line": 431,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "Independent corroboration from a different mechanism: `git status --porcelain` before my",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T161.md",
+   "line": 259,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "under `t80/out/` and the two source files. [VERIFIED: `git status --porcelain` before each",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T162.md",
+   "line": 128,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "scenario, and its own `git status --porcelain` was empty before each one started.",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T162.md",
+   "line": 311,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "start-up recovery, so it should never sit in a `git status` in practice \u2014 but if a",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T171.md",
+   "line": 147,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "from a pipe to a seekable read (e.g. capturing `git status --porcelain` to a temp file before grepping,",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T175.md",
+   "line": 20,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "[VERIFIED: `shasum -a 256` before any edit and again after the final commit; `git status --porcelain`",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T184.md",
+   "line": 553,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "properties.** Any handoff quoting \"57 `.java` files\" should state that `git status` was clean",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T189.md",
+   "line": 195,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "| S5 `git status` fails | `DIRTY=[]` \u2192 **silent \"clean\"** | same | `rc=128` **visible \u2192 guard refuses** |",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T202.md",
+   "line": 6,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "`git status --porcelain` was empty at start \u2014 P-60, established before asserting anything].",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T204.md",
+   "line": 132,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "drift from `main` at start. `git status` was clean before I began.",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T209.md",
+   "line": 91,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "`[VERIFIED]`, captured before any edit (`git status` clean at `cc33f7f`):",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T210.md",
+   "line": 26,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "- `check-lock-exclusion-anchor.sh` \u2014 the live regression gate. Extracts the current `DIRTY=$(git status",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T215.md",
+   "line": 58,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "**Before (T210, inherited):** `ANCHOR_PATTERN='DIRTY=\\$\\(git status --porcelain'` \u2014 a single hard-coded",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+   "line": 138,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "and `git status --porcelain` before I touched it showed it untracked-by-any-other-diff, so I corrected",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T248.md",
+   "line": 256,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "| vector-store digest, read LIVE | unchanged | `git rev-parse HEAD:.softhouse/vectors` = **`13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d`**, byte-identical before and after; no path under `.softhouse/vectors/` appears in `gi",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T256.md",
+   "line": 274,
+   "pattern": "prose-clean-tree",
+   "class": "PROSE-PROTOCOL",
+   "text": "the tree is clean; **anyone debugging that guard by hand should set `FAILOPEN_LINT_JSON` first.**",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T304.md",
+   "line": 341,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "`git status --porcelain` gate in the repo.",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/handoff/T38-dec1-v7.md",
+   "line": 5,
+   "pattern": "prose-clean-tree",
+   "class": "PROSE-PROTOCOL",
+   "text": "`git -C /Users/buv/fineract log -1 --format=%H` before any citation, treated read-only, working tree clean.",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/handoff/T46-mathcontext-corrections.md",
+   "line": 437,
+   "pattern": "prose-clean-tree",
+   "class": "PROSE-PROTOCOL",
+   "text": "(working tree clean) before writing it down. **All four of T44's corrections are confirmed.**",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/handoff/T53-dec1-v11-diffcheck.md",
+   "line": 8,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "`git status --porcelain` **empty before and after** (re-checked at the end). No Gradle run.",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/handoff/T54-dec1-v12.md",
+   "line": 389,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "`git status --porcelain` **empty before and after**; HEAD still `426a23544e8426a38ae43ae404670a0a7e85b9eb`.",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/nonnegotiable-guard-audit.md",
+   "line": 425,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "`git status --porcelain` to a temp file before grepping it) \u2014 a plausible refactor, and one that would",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/T127-review-of-T109.md",
+   "line": 47,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "`gofmt -w` was **not** run (G-3). `git status --porcelain` clean before and after.",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/T155-probe/rerun-t154-provers-postmerge.sh",
+   "line": 39,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "( cd \"$WT\" && git status --porcelain -- .softhouse/vectors nexus .softhouse/conformance.sh ) | sed 's/^/  DIRTY /'",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/T155-review-of-T154.md",
+   "line": 168,
+   "pattern": "prose-clean-tree",
+   "class": "PROSE-PROTOCOL",
+   "text": "| Go tree empty only | passes / passes | passes / **refuses** |",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/T188-probe/transcript.txt",
+   "line": 63,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "=== A6  git status must be untouched by all of the above ===",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/T189-grep-adjudication.md",
+   "line": 233,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "| S5 `git status` fails | `DIRTY=[]` \u2192 **silent \"clean\"** | same | `rc=128` **visible \u2192 guard refuses** |",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/T189-probe/hardening.sh",
+   "line": 19,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "live()     { git status --porcelain | LC_ALL=C /usr/bin/grep -av '^?? \\.softhouse/LOCK$' || true ; }",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/T189-probe/hardening.sh",
+   "line": 20,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "wrapped()  { git status --porcelain | ( exec -a ugrep \"$CB\" -G --ignore-files --hidden -I -av '^?? \\.softhouse/LOCK$' ) || true ; }",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/T189-probe/hardening.sh",
+   "line": 22,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "o=$(git status --porcelain -- . ':(exclude).softhouse/LOCK'); rc=$?",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/T189-probe/hardening.sh",
+   "line": 53,
+   "pattern": "status-bare",
+   "class": "EXEC-GATE",
+   "text": "echo \"=== S5  git status FAILS (run outside any repo): who reports it? ===\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/T189-probe/reachability.sh",
+   "line": 47,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain | od -c | sed -n '1,8p' | sed -e 's/^/    /'",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/T298/PART-B.md",
+   "line": 126,
+   "pattern": "prose-clean-tree",
+   "class": "PROSE-PROTOCOL",
+   "text": "verdict, restores the file, and verifies the tree is clean before it exits. Every row below is an execution",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/T298/t298b-marker-attack-matrix.sh",
+   "line": 11,
+   "pattern": "diff-quiet",
+   "class": "EXEC-GATE",
+   "text": "git diff --quiet -- \"$DOC\" || { echo \"REFUSING: $DOC already dirty\"; exit 2; }",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/T298/t298b-marker-attack-matrix.sh",
+   "line": 82,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain -- \"$DOC\" | sed 's/^/  /'",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/T298/t298b-marker-attack-matrix.sh",
+   "line": 83,
+   "pattern": "diff-quiet",
+   "class": "EXEC-GATE",
+   "text": "git diff --quiet -- \"$DOC\" && echo \"  CLEAN \u2014 $DOC restored to HEAD\" || { echo \"  *** DIRTY \u2014 restore failed\"; exit 3; }",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/T53-DEC-1-v11-diffcheck.md",
+   "line": 8,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "`git status --porcelain` **empty before and after** (re-checked at the end). No Gradle run.",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/run-orderdep2.sh",
+   "line": 35,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout is DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/run-t84.sh",
+   "line": 31,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "[ -z \"$(git -C \"$PINNED_FINERACT\" status --porcelain)\" ] || fail \"pinned checkout DIRTY\"",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh",
+   "line": 217,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain .softhouse/vectors/ | head",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh",
+   "line": 78,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain .softhouse/vectors/ | head",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh",
+   "line": 167,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "if print -r -- \"$LINE_TEXT\" | \"$GREP\" -Fq -- \"git status --porcelain\"; then",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh",
+   "line": 172,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "print -u2 -- \"  FAIL: site $SITE_INDEX (line $SITE_LINENO) carries the LOCK-exclusion fragment on a git subcommand this probe does not recognise ('git status --porcelain' or 'git add -A' expected). Refusing to guess how ",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh",
+   "line": 285,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "print -u2 -- \"FAIL: zero DETECT-classified sites found -- the 'git status --porcelain' LOCK-exclusion guard appears to have been removed entirely, not merely mutated.\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t172-probe/run-move-demo.sh",
+   "line": 28,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "ORIG_DETECT_LINE=$(LC_ALL=C /usr/bin/grep -n 'git status --porcelain' \"$LIVE\" | /usr/bin/grep -F ':(top,exclude).softhouse/LOCK' | /usr/bin/cut -d: -f1)",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t172-probe/run-move-demo.sh",
+   "line": 60,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "NEW_DETECT_LINE=$(LC_ALL=C /usr/bin/grep -n 'git status --porcelain' \"$MUTANT\" | /usr/bin/grep -F ':(top,exclude).softhouse/LOCK' | /usr/bin/cut -d: -f1)",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t172-probe/run-post-fix.sh",
+   "line": 34,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \\.softhouse/LOCK$' || true)",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t172-probe/run-pre-fix.sh",
+   "line": 39,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \\.softhouse/LOCK' || true)",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t172-probe/run-red-demo-site1.sh",
+   "line": 41,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "if \"git status --porcelain\" in line and needle in line:",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t172-probe/run-red-demo-site1.sh",
+   "line": 46,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "sys.stderr.write(\"ERROR: no DETECT-site line ('git status --porcelain' + needle) found -- cannot construct a faithful site-1 mutant\\n\")",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t172-probe/run-red-demo-site1.sh",
+   "line": 57,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "LC_ALL=C /usr/bin/grep -n 'git status --porcelain' \"$MUTANT\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t172-probe/run-red-demo-site2.sh",
+   "line": 59,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "LC_ALL=C /usr/bin/grep -n 'git status --porcelain' \"$MUTANT\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t172-probe/run-red-demo.sh",
+   "line": 60,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "LC_ALL=C /usr/bin/grep -n 'DIRTY=\\$(git status --porcelain' \"$MUTANT\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t202-probe/green-Tb.zsh",
+   "line": 59,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "stilldirty() { local o; o=$(git -C \"$S\" status --porcelain -- ':(top)'); [[ \"$o\" == *\"$1\"* ]] && print yes || print no }",
+   "target": "SCRATCH-SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t202-probe/make-mutants.py",
+   "line": 14,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "\"B\": [(\"  WS=$(git -C \\\"$W\\\" status --porcelain)\\n  WS_RC=$?\\n\",",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t202-probe/make-mutants.py",
+   "line": 15,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "\"  WS=$(git -C \\\"$W\\\" status --porcelain)\\n  [[ -n \\\"$W\\\" ]]\\n  WS_RC=$?\\n\")],",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t202-probe/make-mutants.py",
+   "line": 18,
+   "pattern": "status-bare",
+   "class": "EXEC-GATE",
+   "text": "\"C\": [(\"    log \\\"ERROR: worktree sweep could not read git status for $W (rc=$WS_RC)\",",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t202-probe/patch.py",
+   "line": 172,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "WD=$(git -C \"$W\" status --porcelain | wc -l | tr -d ' ')",
+   "target": "WORKTREE",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t202-probe/patch.py",
+   "line": 214,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "WS=$(git -C \"$W\" status --porcelain)",
+   "target": "WORKTREE",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t202-probe/patch.py",
+   "line": 217,
+   "pattern": "status-bare",
+   "class": "EXEC-GATE",
+   "text": "log \"ERROR: worktree sweep could not read git status for $W (rc=$WS_RC) \u2014 REFUSING to treat it as clean. NOT rescued, because git is not answering there; treat anything inside it as UNVERIFIED and inspect it by hand.\"",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t202-probe/red-Tb.zsh",
+   "line": 40,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git -C \"$S\" status --porcelain -- ':(top)' | sed 's/^/      /'",
+   "target": "SCRATCH-SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/t246-dec2-rev6/REVIEW.md",
+   "line": 514,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "git status --porcelain -- .softhouse/vectors docs/adr .softhouse/gates.md nexus  ->  (empty)",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/t246-dec2-rev6/bar-output.txt",
+   "line": 108,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "git status of protected paths (MUST be empty):",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/t246-dec2-rev6/bar.sh",
+   "line": 72,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain -- .softhouse/vectors docs/adr .softhouse/gates.md nexus | sed 's/^/  /'",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
+   "line": 27,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "if [ -n \"$(git status --porcelain --untracked-files=no)\" ]; then",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
+   "line": 30,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain --untracked-files=no",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
+   "line": 72,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "if [ -z \"$(git status --porcelain -- \"$PINNED\")\" ]; then",
+   "target": "PINNED",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
+   "line": 83,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "if [ -z \"$(git status --porcelain -- \"$ESCAPE\")\" ]; then",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
+   "line": 100,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "if [ -n \"$(git status --porcelain --untracked-files=no)\" ]; then",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
+   "line": 102,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain --untracked-files=no",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh",
+   "line": 29,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "if [ -n \"$(git status --porcelain --untracked-files=no)\" ]; then",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh",
+   "line": 31,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain --untracked-files=no",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh",
+   "line": 81,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "if [ -n \"$(git status --porcelain --untracked-files=no)\" ]; then",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh",
+   "line": 83,
+   "pattern": "status-porcelain",
+   "class": "EXEC-GATE",
+   "text": "git status --porcelain --untracked-files=no",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "line": 1828,
+   "pattern": "prose-clean-tree",
+   "class": "PROSE-PROTOCOL",
+   "text": "\"note\": \"Paired reviewer for T80. Raised by the driver, local fire 20260820-200002. NEEDS THE ORACLE. Both of T80's P0s were found by ATTACKING the recipe, so attacking it is the review. || local fire 20260820-200002: DO",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/tasks.json",
+   "line": 1039,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "\"note\": \"local fire 20260822-000013: DONE on softhouse/T193-request-body-guard (5627f7d), merged. STATUS CORRECTED AT EXIT -- the driver merged it and left it in_progress, caught by STEP 5.5's own truthfulness check. CEN",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/tasks.json",
+   "line": 1186,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "\"note\": \"MERGED, fire 20260821-134344. VERDICT APPROVED. Every load-bearing claim reproduced under /bin/zsh 5.9. Q1 CONFIRMED EXACTLY, and it is the claim the whole fix rests on: clean -> pipestatus=(0 1) rc=1; corrupt i",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/tasks.json",
+   "line": 1214,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "\"description\": \"T200's new finding, and it is the same defect class T190 just closed, in the same function. `WD=$(git -C \\\"$W\\\" status --porcelain | wc -l | tr -d ' ')` -- when git fails, `wc -l` prints 0, the guard read",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/tasks.json",
+   "line": 1450,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "\"description\": \"Measured by the driver at the close of fire 20260822-080001: `git worktree list` shows 84 .claude/worktrees/agent-* entries accumulated across many fires. The driver swept all 84 for uncommitted work and ",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/tasks.json",
+   "line": 1452,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "\"note\": \"MERGED local fire 20260822-000013. *** IT CORRECTED THE DRIVER ON A DELETION PATH. *** The brief specified TWO conditions (branch merged into main; `git status --porcelain -- :(top)` SUCCEEDS and is empty). T213",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/tasks.json",
+   "line": 1489,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "\"description\": \"RAISED AND MEASURED BY THE DRIVER while verifying T210, in a throwaway worktree, before T210 was merged. T210 is GOOD work and was approved -- it did exactly what its brief named, and its zero-match guard",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/tasks.json",
+   "line": 1845,
+   "pattern": "status-bare",
+   "class": "PROSE-PROTOCOL",
+   "text": "\"note\": \"local fire 20260822-140002: DONE + MERGED (7255267). T222's F-4 IS CLOSED AND ENFORCED, NOT DOCUMENTED. The harness now MINTS a three-part citation per exemption and REFUSES the vector unless all three RESOLVE: ",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/tasks.json",
+   "line": 3830,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "\"description\": \"RAISED BY T256, correctly declared out of its scope rather than fixed quietly. Two independent defects; decide each on its own.\\n\\n 1. NAMESPACE COLLISION. `.softhouse/capture/t256-verdict-predicate/` was",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/tasks.json",
+   "line": 3944,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "\"description\": \"RAISED BY T284, correctly declared out of its scope rather than fixed quietly. F-T283-6 recorded that certain instruments `rm -rf` committed evidence. T284 measured that T274's instruments 20 and 30 DO IT",
+   "target": "SELF",
+   "ref_companion": false,
+   "verdict": "BLIND"
+  },
+  {
+   "file": ".softhouse/tasks.json",
+   "line": 4239,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "\"title\": \"FU-T304-2: EVERY DIRTY-TREE GATE IN THIS PROGRAM IS BLIND TO A COMMITTED CLOBBER \\u2014 git status --porcelain cannot see the damage T304 found\",",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": ".softhouse/tasks.json",
+   "line": 4251,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "\"description\": \"RAISED BY T304 (merged 5993d8e2) AS FU-T304-2, AFTER ITS OWN VERDICT PREDICATE FELL FOR IT. This is the most general finding of that task and it is not about T304's instruments \\u2014 it is about how this",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  },
+  {
+   "file": "docs/adr/DEC-1-schedule-generator-adapter.md",
+   "line": 92,
+   "pattern": "status-porcelain",
+   "class": "PROSE-PROTOCOL",
+   "text": "- **Revision 11 (task T52) is an ERRATUM PASS ON REVISION 10, and it is bounded on purpose.** It applies the six items of independent re-review T49 (`.softhouse/reviews/T49-DEC-1-v10-rereview.md`) and the findings of cap",
+   "target": "SELF",
+   "ref_companion": true,
+   "verdict": "COVERED"
+  }
+ ]
+}
