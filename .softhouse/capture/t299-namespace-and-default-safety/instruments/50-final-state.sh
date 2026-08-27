@@ -45,7 +45,7 @@ sed -n -E 's#^(\.softhouse/capture/t256[^/]*)/.*#\1#p' "${TMPDIR:-/tmp}/t299-fin
   | LC_ALL=C sort -u | while IFS= read -r d; do
       rec="$(sed -n -E "s#^(${d}/OWNER[^/]*\.md)\$#\1#p" "${TMPDIR:-/tmp}/t299-final-tracked.$$" | head -1)"
       echo "    $d"
-      echo "        ownership record : ${rec:-<none -- this is the id's OWN rig>}"
+      echo "        ownership record : ${rec:-<none: this is the id OWN rig>}"
     done
 echo
 echo "  the guard:"
