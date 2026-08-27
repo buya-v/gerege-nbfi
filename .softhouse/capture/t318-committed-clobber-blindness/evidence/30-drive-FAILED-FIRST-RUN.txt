@@ -1,0 +1,30 @@
+T318 instrument 30 — FIRST RUN, ALL 15 ARMS FAILED. Committed deliberately.
+
+Cause: `local name="$1" d="$ROOT/$name"` in mk(). Bash expands EVERY argument
+to the `local` builtin before assigning any of them, so `$name` was still
+unset when `$ROOT/$name` was expanded, and `set -u` aborted the function.
+Every arm therefore reported "could not build scratch clone" and the drive
+printed PASS=0 FAIL=15.
+
+This is recorded because the drive's whole subject is instruments that report
+a reassuring answer without having looked. An instrument that had counted
+"could not build scratch clone" as anything other than FAIL would have been
+the same defect one level up. It counted them as FAIL, which is why this
+transcript exists rather than a green one.
+
+Verbatim (abridged to the repeating unit + the summary):
+
+  T318 INSTRUMENT 30 — RED/GREEN DRIVE
+  root  : /private/tmp/t318-drive-run1
+  date  : 2026-08-27T15:55:50Z
+
+  === RED ARMS — damage that `git status --porcelain` reports as CLEAN
+  .../30-red-green-drive.sh: line 52: name: unbound variable
+    FAIL  A1  could not build scratch clone
+  [... identical for A2 A3 A4 A5 A6 A7 A9 A8 G1 G2 G3 G4 G5 X1 ...]
+
+  === SUMMARY
+  ARM  DESCRIPTION                                        LEGACY  GUARD
+  (empty -- no arm ever reached the comparison)
+
+  PASS=0  FAIL=15

@@ -1,0 +1,152 @@
+==============================================================================
+T318 INSTRUMENT 20 — BLINDNESS TRIAGE OF LOAD-BEARING CLEANLINESS GATES
+==============================================================================
+WINDOW for a ref companion: +/- 40 lines (printed, per P-66)
+REF-COMPANION SELECTOR: rev-parse\b|show-ref\b|for-each-ref\b|branch\s+--contains\b|branch\s+--format\b|\breflog\b|cat-file\b|merge-base\b|rev-list\b|\bgit\s+log\b|[0-9a-f]{40}
+------------------------------------------------------------------------------
+TARGET REPO        BLIND   COVERED    files
+SELF                  63        43       65
+WORKTREE               3         1        3
+SCRATCH-SELF           1         5        5
+PINNED                 0        45       45
+TOTAL                 67        94      115
+------------------------------------------------------------------------------
+THE HEADLINE CONTRAST:
+  gates over the PINNED reference-oracle checkout : 45/45 carry a REF check
+  gates over THIS repo (SELF)                     : 43/106 carry a REF check
+------------------------------------------------------------------------------
+EVERY *BLIND* SELF/WORKTREE SITE, NAMED:
+  [PROSE-PROTOCOL] .claude/skills/softhouse-plan/SKILL.md:14
+       1. `git status` — abort if dirty.
+  [PROSE-PROTOCOL] .claude/skills/softhouse-program/SKILL.md:226
+       1. **Commit every deliverable a worker produced.** An uncommitted file is invisible to the next fire and to the cloud fire. `git status --porcelain` m
+  [PROSE-PROTOCOL] .claude/skills/softhouse/SKILL.md:25
+       1. `git status` — abort if the tree is dirty. **Exception:** on `resume`, a tree dirty *only* under `.softhouse/` is expected and does not abort.
+  [EXEC-GATE     ] .softhouse/bin/fire-program.sh:701
+       git diff --cached --quiet -- ':(top).softhouse/tasks.json' 2>/dev/null && {
+  [EXEC-GATE     ] .softhouse/bin/fire-program.sh:1192
+       DIRTY=$(git status --porcelain -- ':(top)' ':(top,exclude).softhouse/LOCK')
+  [EXEC-GATE     ] .softhouse/bin/fire-program.sh:1195
+       log "ERROR: exit-protocol guard could not read git status (rc=$GS_RC) — REFUSING to conclude the tree is clean. No rescue attempted (git is not answer
+  [EXEC-GATE     ] .softhouse/bin/fire-program.sh:1307
+       WS=$(git -C "$W" status --porcelain)
+  [EXEC-GATE     ] .softhouse/bin/fire-program.sh:1310
+       log "ERROR: worktree sweep could not read git status for $W (rc=$WS_RC) — REFUSING to treat it as clean. NOT rescued, because git is not answering the
+  [EXEC-GATE     ] .softhouse/capture/t154-nofloat/drive-leg1-e2e.sh:127
+       dirty="$( cd "$REPO_ROOT" && git status --porcelain -- .softhouse/vectors )"
+  [EXEC-GATE     ] .softhouse/capture/t154-nofloat/drive-leg1-e2e.sh:128
+       [ -z "$dirty" ] && ok "git status --porcelain -- .softhouse/vectors is EMPTY" \
+  [EXEC-GATE     ] .softhouse/capture/t154-nofloat/drive-leg2.sh:150
+       if ( cd "$REPO_ROOT" && git status --porcelain -- nexus ) | LC_ALL=C grep -aq 't154probe'; then
+  [EXEC-GATE     ] .softhouse/capture/t154-nofloat/drive-leg3.sh:302
+       dirty="$( cd "$REPO_ROOT" && git status --porcelain -- .softhouse/vectors )"
+  [EXEC-GATE     ] .softhouse/capture/t154-nofloat/drive-leg3.sh:303
+       [ -z "$dirty" ] && ok "git status --porcelain -- .softhouse/vectors is EMPTY" || bad "the committed store is dirty:
+  [EXEC-GATE     ] .softhouse/capture/t273-residue/instruments/50-red-drive.sh:131
+       post_dirty="$(git status --porcelain -- "$M1" "$M3" | LC_ALL=C /usr/bin/grep -c '' || true)"
+  [EXEC-GATE     ] .softhouse/capture/t299-namespace-and-default-safety/instruments/20-drive-destination-safety.sh:109
+       vb="$(git status --porcelain -- "$victim" | wc -l | tr -d ' ')"
+  [EXEC-GATE     ] .softhouse/capture/t299-namespace-and-default-safety/instruments/20-drive-destination-safety.sh:112
+       va="$(git status --porcelain -- "$victim" | wc -l | tr -d ' ')"
+  [EXEC-GATE     ] .softhouse/capture/t299-namespace-and-default-safety/instruments/50-final-state.sh:65
+       git status --porcelain >"${TMPDIR:-/tmp}/t299-final-after.$$"
+  [EXEC-GATE     ] .softhouse/capture/t309-sigterm-reconcile-bypass/patch5.py:119
+       git diff --cached --quiet -- \':(top).softhouse/tasks.json\' 2>/dev/null && {
+  [EXEC-GATE     ] .softhouse/conformance.sh:1891
+       warn "conformance: that has hundreds. The selector is broken, not the tree clean (P-35). REFUSED."
+  [PROSE-PROTOCOL] .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-21.md:13
+       `git status --porcelain` before commit showed exactly one modified file. No Go, no harness, no
+  [PROSE-PROTOCOL] .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T162.md:128
+       scenario, and its own `git status --porcelain` was empty before each one started.
+  [PROSE-PROTOCOL] .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T162.md:311
+       start-up recovery, so it should never sit in a `git status` in practice — but if a
+  [PROSE-PROTOCOL] .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T171.md:147
+       from a pipe to a seekable read (e.g. capturing `git status --porcelain` to a temp file before grepping,
+  [PROSE-PROTOCOL] .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T184.md:553
+       properties.** Any handoff quoting "57 `.java` files" should state that `git status` was clean
+  [PROSE-PROTOCOL] .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T189.md:195
+       | S5 `git status` fails | `DIRTY=[]` → **silent "clean"** | same | `rc=128` **visible → guard refuses** |
+  [PROSE-PROTOCOL] .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T209.md:91
+       `[VERIFIED]`, captured before any edit (`git status` clean at `cc33f7f`):
+  [PROSE-PROTOCOL] .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T215.md:58
+       **Before (T210, inherited):** `ANCHOR_PATTERN='DIRTY=\$\(git status --porcelain'` — a single hard-coded
+  [PROSE-PROTOCOL] .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md:138
+       and `git status --porcelain` before I touched it showed it untracked-by-any-other-diff, so I corrected
+  [PROSE-PROTOCOL] .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T256.md:274
+       the tree is clean; **anyone debugging that guard by hand should set `FAILOPEN_LINT_JSON` first.**
+  [PROSE-PROTOCOL] .softhouse/nonnegotiable-guard-audit.md:425
+       `git status --porcelain` to a temp file before grepping it) — a plausible refactor, and one that would
+  [PROSE-PROTOCOL] .softhouse/reviews/T155-review-of-T154.md:168
+       | Go tree empty only | passes / passes | passes / **refuses** |
+  [PROSE-PROTOCOL] .softhouse/reviews/T188-probe/transcript.txt:63
+       === A6  git status must be untouched by all of the above ===
+  [PROSE-PROTOCOL] .softhouse/reviews/T189-grep-adjudication.md:233
+       | S5 `git status` fails | `DIRTY=[]` → **silent "clean"** | same | `rc=128` **visible → guard refuses** |
+  [EXEC-GATE     ] .softhouse/reviews/T189-probe/hardening.sh:19
+       live()     { git status --porcelain | LC_ALL=C /usr/bin/grep -av '^?? \.softhouse/LOCK$' || true ; }
+  [EXEC-GATE     ] .softhouse/reviews/T189-probe/hardening.sh:20
+       wrapped()  { git status --porcelain | ( exec -a ugrep "$CB" -G --ignore-files --hidden -I -av '^?? \.softhouse/LOCK$' ) || true ; }
+  [EXEC-GATE     ] .softhouse/reviews/T189-probe/hardening.sh:22
+       o=$(git status --porcelain -- . ':(exclude).softhouse/LOCK'); rc=$?
+  [EXEC-GATE     ] .softhouse/reviews/T189-probe/hardening.sh:53
+       echo "=== S5  git status FAILS (run outside any repo): who reports it? ==="
+  [EXEC-GATE     ] .softhouse/reviews/T189-probe/reachability.sh:47
+       git status --porcelain | od -c | sed -n '1,8p' | sed -e 's/^/    /'
+  [PROSE-PROTOCOL] .softhouse/reviews/T298/PART-B.md:126
+       verdict, restores the file, and verifies the tree is clean before it exits. Every row below is an execution
+  [EXEC-GATE     ] .softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh:217
+       git status --porcelain .softhouse/vectors/ | head
+  [EXEC-GATE     ] .softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh:78
+       git status --porcelain .softhouse/vectors/ | head
+  [EXEC-GATE     ] .softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh:167
+       if print -r -- "$LINE_TEXT" | "$GREP" -Fq -- "git status --porcelain"; then
+  [EXEC-GATE     ] .softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh:172
+       print -u2 -- "  FAIL: site $SITE_INDEX (line $SITE_LINENO) carries the LOCK-exclusion fragment on a git subcommand this probe does not recognise ('git
+  [EXEC-GATE     ] .softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh:285
+       print -u2 -- "FAIL: zero DETECT-classified sites found -- the 'git status --porcelain' LOCK-exclusion guard appears to have been removed entirely, not
+  [EXEC-GATE     ] .softhouse/reviews/t172-probe/run-move-demo.sh:28
+       ORIG_DETECT_LINE=$(LC_ALL=C /usr/bin/grep -n 'git status --porcelain' "$LIVE" | /usr/bin/grep -F ':(top,exclude).softhouse/LOCK' | /usr/bin/cut -d: -f
+  [EXEC-GATE     ] .softhouse/reviews/t172-probe/run-move-demo.sh:60
+       NEW_DETECT_LINE=$(LC_ALL=C /usr/bin/grep -n 'git status --porcelain' "$MUTANT" | /usr/bin/grep -F ':(top,exclude).softhouse/LOCK' | /usr/bin/cut -d: -
+  [EXEC-GATE     ] .softhouse/reviews/t172-probe/run-post-fix.sh:34
+       DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \.softhouse/LOCK$' || true)
+  [EXEC-GATE     ] .softhouse/reviews/t172-probe/run-pre-fix.sh:39
+       DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \.softhouse/LOCK' || true)
+  [EXEC-GATE     ] .softhouse/reviews/t172-probe/run-red-demo-site1.sh:41
+       if "git status --porcelain" in line and needle in line:
+  [EXEC-GATE     ] .softhouse/reviews/t172-probe/run-red-demo-site1.sh:46
+       sys.stderr.write("ERROR: no DETECT-site line ('git status --porcelain' + needle) found -- cannot construct a faithful site-1 mutant\n")
+  [EXEC-GATE     ] .softhouse/reviews/t172-probe/run-red-demo-site1.sh:57
+       LC_ALL=C /usr/bin/grep -n 'git status --porcelain' "$MUTANT"
+  [EXEC-GATE     ] .softhouse/reviews/t172-probe/run-red-demo-site2.sh:59
+       LC_ALL=C /usr/bin/grep -n 'git status --porcelain' "$MUTANT"
+  [EXEC-GATE     ] .softhouse/reviews/t172-probe/run-red-demo.sh:60
+       LC_ALL=C /usr/bin/grep -n 'DIRTY=\$(git status --porcelain' "$MUTANT"
+  [EXEC-GATE     ] .softhouse/reviews/t202-probe/green-Tb.zsh:59
+       stilldirty() { local o; o=$(git -C "$S" status --porcelain -- ':(top)'); [[ "$o" == *"$1"* ]] && print yes || print no }
+  [EXEC-GATE     ] .softhouse/reviews/t202-probe/make-mutants.py:14
+       "B": [("  WS=$(git -C \"$W\" status --porcelain)\n  WS_RC=$?\n",
+  [EXEC-GATE     ] .softhouse/reviews/t202-probe/make-mutants.py:15
+       "  WS=$(git -C \"$W\" status --porcelain)\n  [[ -n \"$W\" ]]\n  WS_RC=$?\n")],
+  [EXEC-GATE     ] .softhouse/reviews/t202-probe/make-mutants.py:18
+       "C": [("    log \"ERROR: worktree sweep could not read git status for $W (rc=$WS_RC)",
+  [EXEC-GATE     ] .softhouse/reviews/t202-probe/patch.py:172
+       WD=$(git -C "$W" status --porcelain | wc -l | tr -d ' ')
+  [EXEC-GATE     ] .softhouse/reviews/t202-probe/patch.py:214
+       WS=$(git -C "$W" status --porcelain)
+  [EXEC-GATE     ] .softhouse/reviews/t202-probe/patch.py:217
+       log "ERROR: worktree sweep could not read git status for $W (rc=$WS_RC) — REFUSING to treat it as clean. NOT rescued, because git is not answering the
+  [EXEC-GATE     ] .softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh:100
+       if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+  [EXEC-GATE     ] .softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh:102
+       git status --porcelain --untracked-files=no
+  [PROSE-PROTOCOL] .softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:1828
+       "note": "Paired reviewer for T80. Raised by the driver, local fire 20260820-200002. NEEDS THE ORACLE. Both of T80's P0s were found by ATTACKING the re
+  [PROSE-PROTOCOL] .softhouse/tasks.json:1039
+       "note": "local fire 20260822-000013: DONE on softhouse/T193-request-body-guard (5627f7d), merged. STATUS CORRECTED AT EXIT -- the driver merged it and
+  [PROSE-PROTOCOL] .softhouse/tasks.json:1186
+       "note": "MERGED, fire 20260821-134344. VERDICT APPROVED. Every load-bearing claim reproduced under /bin/zsh 5.9. Q1 CONFIRMED EXACTLY, and it is the c
+  [PROSE-PROTOCOL] .softhouse/tasks.json:1214
+       "description": "T200's new finding, and it is the same defect class T190 just closed, in the same function. `WD=$(git -C \"$W\" status --porcelain | w
+  [PROSE-PROTOCOL] .softhouse/tasks.json:3944
+       "description": "RAISED BY T284, correctly declared out of its scope rather than fixed quietly. F-T283-6 recorded that certain instruments `rm -rf` com
