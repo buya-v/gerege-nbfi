@@ -1,0 +1,212 @@
+{
+ "schema": "gerege.ledger.vector/v1",
+ "case_id": "LDG-05-openingbalance-accepted-empty-ledger",
+ "context": "ledger",
+ "class": "parity",
+ "title": "THE ORACLE ACCEPTS defineOpeningBalance ON AN EMPTY LEDGER, AND WRITES TWO JOURNAL ENTRIES PER LEG. OB-ACCEPT-01 sent POST /journalentries?command=defineOpeningBalance with three legs -- DEBIT 250000.25 on GL 2, DEBIT 100000.37 on GL 3, CREDIT 350000.62 on GL 4 -- to a tenant whose findNonContraTransactionIds is EMPTY, and the oracle returned HTTP 200 and SIX entries on one transaction: each leg, and a CONTRA entry of the opposite side on the financial-activity-300 account (GL 1). The transaction id itself is server-assigned, is carried in request.transaction_id for the record, and is NOT a graded cell -- a re-run of the recipe produces a different one and every graded cell unchanged. A port that refuses every opening balance -- the reasonable-looking thing to do, since the rule at :717 reads a repository query and not the request body -- is what this vector exists to catch, and until this capture existed nothing in this corpus could.",
+ "dec2_revision": 5,
+ "_note": "THE FIRST ACCEPTING-SIDE OPENING-BALANCE OBSERVATION THIS PROGRAM HAS EVER TAKEN, AND IT WAS NOT TAKEN ON TENANT `gerege`. It could not be: :812's fall-through requires findNonContraTransactionIds to be EMPTY and `gerege` carries 26 non-contra transaction ids, so the one tenant this corpus grades against is structurally incapable of producing this observation and always will be. T305 measured both registered tenants of the standing reference oracle and NEITHER qualifies -- `gerege` has the ledger; `default` has an empty ledger but runs rounding-mode 6 (HALF_EVEN) at Asia/Kolkata, which CLAUDE.md's own rule makes a DISCRIMINATION PROBE rather than a parity vector, and it has no financial-activity-300 mapping and no GL accounts at all, so :708 would throw first and the answer would be a different refusal. ***** WHERE IT WAS TAKEN, AND WHY THAT IS ADMISSIBLE. ***** On a THROWAWAY Fineract instance stood up from the SAME DOCKER IMAGE the standing reference oracle runs -- sha256:e596339626bf..., verified with `docker inspect -f '{{.Image}}' fineract-fineract-1` -- with tenant `t305` SEEDED at Asia/Ulaanbaatar and rounding-mode 4 (HALF_UP) from the environment variables the pinned source binds into the tenant liquibase seed (application.properties:60-61, 77, 499-501, 514 -> db/changelog/tenant-store/parts/0002_initial_data.xml:41 and db/changelog/tenant/parts/0002_initial_data.xml:219-220). Four things make a capture admissible in this store and the throwaway satisfies all four: (a) THE CODE IS THE SAME BYTES, not merely the same version; (b) THE TENANT ARITHMETIC IS THE RATIFIED ONE -- HALF_UP, and MoneyHelper.PRECISION is a compile-time 19 so the mode is the only tenant-scoped term; (c) THE BYTE PROVENANCE IS THE USUAL ONE -- request bytes, response bytes, status, sha256 of each, captured-at-utc, all committed; (d) THE RECIPE IS COMMITTED AND DETERMINISTIC -- `bash run-all.sh` rebuilds the instance, replays the setup campaign and re-fires the same body. The instance was DESTROYED in the same run (`docker compose down -v`, no named volume declared) and the standing oracle's four ledger counters were re-read BEFORE the POST, AFTER the POST and AFTER the teardown, all three equal to the baseline: 60/64 journal entries, 0 closures, 26 distinct transaction ids, 352 command-source rows. THE TENANT IS CALLED `t305` AND NOT `gerege` ON PURPOSE: a capture whose provenance said `gerege` while it was taken elsewhere would be indistinguishable from one taken on the graded tenant. WHAT IS NOT CLAIMED: this vector says nothing about `gerege`'s accumulated state -- its chart, its products, its 60 entries -- and no capture taken this way could. That is not a workaround here, because THE ACCEPTING SIDE IS ONLY OBSERVABLE ON A TENANT WITH NO ACCUMULATED STATE; for this one observation a disposable instance is not a second-best surface, it is the only possible one. ***** WHAT IT GRADES THAT NOTHING ELSE DID. ***** T296 mutated the port in four arms and measured that ARM A -- refuse whenever req.Command == 'defineOpeningBalance', never reading the posted-id list -- SURVIVED THE ENTIRE CORPUS, because every refusal capture in this store AGREES with it. It is registered as `ledger-wrong-openingbalance-always-refusing` and this vector kills it: it returns a refusal where the oracle returned HTTP 200 and six journal entries. That is the headerRefusingPoster class -- THE REASONABLE THING TO DO, WHICH THE ORACLE DOES NOT DO -- and LDG-04 exists for exactly the same reason. ***** THE SIX LEGS, AND WHY THE BODY CARRIES THREE. ***** saveAllDebitOrCreditOpeningBalanceEntries (:759-797) calls helper.persistJournalEntry TWICE INSIDE THE PER-LEG LOOP: the leg's own entry at :791 and its CONTRA on the financial-activity-300 account at :796, with the opposite side. THE CONTRA IS PER LEG AND NOT SUMMED, and a one-debit-one-credit body cannot tell those two answers apart -- so this request carries THREE legs of THREE DIFFERENT amounts and the readback carries six entries. `ledger-wrong-openingbalance-no-contra` is the port that writes only what the caller sent, and this vector kills that too. ***** A CORRECTION THIS CAPTURE FORCES ON THE REST OF THE STORE. ***** LDG-REFUSE-03's title, this port's STEP 1.5 comment and the oracle's own message at :814 all say that opening balances are refused 'after journal entries posted'. THAT IS FALSE AS STATED. findNonContraTransactionIds EXCLUDES every transaction that touches the contra account, and every entry an opening balance writes touches it -- so OPENING BALANCES DO NOT BLOCK EACH OTHER. OB-ACCEPT-02 re-sent THE BYTE-IDENTICAL REQUEST while six opening-balance entries existed and got HTTP 200 again, with the previous opening balance REVERSED first (:726-735: six reversal entries on their own transaction id, the originals flagged reversed=t with reversal_id set). Only after a PLAIN manual entry (MJE-ACCEPT-01, HTTP 200 -- itself the shape T296's arm B refuses) did the SAME bytes finally draw HTTP 403, with errors[0].args carrying exactly that one transaction id. Three answers, one request body, one tenant, in sequence: ACCEPT, ACCEPT-with-reversal, REFUSE. The predicate is the LEDGER'S CONTENT, not the command and not the tenant. ***** WHAT THIS VECTOR DOES NOT GRADE, stated rather than left to be assumed. ***** (1) glAccountType is EXCLUDED on every leg (expect.legs[].excluded_fields carries gl_account_type), for the reason LDG-04 records at length: glAccountType in a /journalentries response projects the ACCOUNT'S CURRENT classification and not the entry's, so A2-26 observed the identical row rendering ASSET in A2-088 and INCOME in A2-320 with every other cell byte-identical and NO entry edited. Grading it would make this vector go red on a GL-account retype that touched no journal entry. The classification the capture rendered is recorded here and graded by nothing: GL 2 and GL 3 ASSET, GL 4 LIABILITY, GL 1 EQUITY. (2) The REVERSAL behaviour OB-ACCEPT-02 observed is committed but is graded by NOTHING -- no port in this store reverses anything, and promoting it needs a schema that can express 'this POST also modified earlier entries'. It is named in the capability row as the next thing to promote, not left here. (3) The transaction id is server-assigned and is not a graded cell; the rerun invariant is over the LEGS. (4) NO BALANCE IS GRADED: acc_gl_journal_entry's office_running_balance and organization_running_balance are GATE G-12 and this schema has no field for either. (5) The ORDER of the six legs follows the source (:742 debits before :745 credits); OB-ACCEPT-01's request happened to list its legs debits-first, so THE CAPTURE CANNOT SEPARATE 'source order' from 'request order' and this vector does not claim it does.",
+ "capabilities_required": [
+  "ledger.journal.entry.readback",
+  "ledger.money.minor.unit.conversion",
+  "ledger.manual.entry.posting",
+  "ledger.opening.balance.and.closure"
+ ],
+ "provenance": {
+  "kind": "capture",
+  "capture_ref": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/OB-ACCEPT-01-readback-db.json",
+  "capture_sha256": "aad8f3ed33ef50de87d9ee41d77ffbfdc74131561e955c5a4cf1ba05529abeff",
+  "capture_case_id": "OB-ACCEPT-01-readback-db",
+  "request_capture_ref": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/OB-ACCEPT-01-openingbalance-empty-ledger.req",
+  "request_capture_sha256": "9ec6eaa257aa4493cc675b1771430971dcd5f169617399bbd44443c5e2d7cf63",
+  "request_capture_case_id": "OB-ACCEPT-01-openingbalance-empty-ledger",
+  "rerun_invariant": "Re-running .softhouse/capture/t305-openingbalance-accepting-side/throwaway/run-all.sh must reproduce every graded cell of this vector: HTTP 200, and SIX journal entries in this order -- DEBIT 250000.250000 on T305-1000, CREDIT 250000.250000 on T305-3000, DEBIT 100000.370000 on T305-1100, CREDIT 100000.370000 on T305-3000, CREDIT 350000.620000 on T305-2000, DEBIT 350000.620000 on T305-3000. THE TRANSACTION ID WILL DIFFER -- it is server-assigned -- and is not a graded cell. If a future Fineract REFUSES this POST, or writes three entries instead of six, or nets the three contra entries into one, THIS VECTOR IS FALSE AND MUST BE RETIRED, NOT EXEMPTED. The instance it was taken on no longer exists BY DESIGN: an accepted opening balance is a posted journal entry, Fineract has no delete path for one, and the only reversible place to take this observation is a place that can be destroyed. Re-derivation therefore runs the recipe rather than re-reading a tenant, and the recipe is committed beside the bytes.",
+  "citation": "T305, discharging T296 F-T296-2. Every leg is read from the RAW BYTES of OB-ACCEPT-01-readback-db.json -- a row_to_json dump of acc_gl_journal_entry joined to acc_gl_account, amounts at the oracle's scale of 6 exactly as PostgreSQL rendered them -- by build-vector.py, which recomputes the sha256 recorded above and converts each amount to minor units by integer/string arithmetic with the residue rule enforced, so no graded cell in this file was typed by a human. The request bytes are the committed .req wire-bytes artefact, byte-identical (cmp silent) to the body OB-ACCEPT-02 and OB-REFUSE-03 re-sent. The whole rig -- the throwaway compose file, the fail-closed isolation guard, the target-fenced capture script and the standing-oracle before/after proof -- is in .softhouse/capture/t305-openingbalance-accepting-side/throwaway/, and the refusal it supersedes (the per-tenant measurement showing neither registered tenant can carry this capture) is one directory up."
+ },
+ "oracle": {
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+  "seam": "ledger_db_readback",
+  "captured_at": "2026-08-27T15:40:58Z"
+ },
+ "request": {
+  "product_id": 0,
+  "product_type": "",
+  "accounting_rule": "",
+  "slot_family": "",
+  "slot_code": 0,
+  "payment_type_id": null,
+  "seam": "ledger_db_readback",
+  "office_id": 1,
+  "currency": {
+   "code": "MNT",
+   "minor_unit_digits": 2
+  },
+  "transaction_id": "a29a84279217",
+  "manual_entry": true,
+  "command": "defineOpeningBalance",
+  "contra_gl_account_id": 1,
+  "transaction_amount_major_text": "",
+  "accounts": [
+   {
+    "id": 1,
+    "gl_code": "T305-3000",
+    "name": "T305 Opening Balances Contra",
+    "usage": "DETAIL",
+    "manual_entries_allowed": true,
+    "disabled": false
+   },
+   {
+    "id": 2,
+    "gl_code": "T305-1000",
+    "name": "T305 Cash On Hand",
+    "usage": "DETAIL",
+    "manual_entries_allowed": true,
+    "disabled": false
+   },
+   {
+    "id": 3,
+    "gl_code": "T305-1100",
+    "name": "T305 Loans Receivable",
+    "usage": "DETAIL",
+    "manual_entries_allowed": true,
+    "disabled": false
+   },
+   {
+    "id": 4,
+    "gl_code": "T305-2000",
+    "name": "T305 Borrowings",
+    "usage": "DETAIL",
+    "manual_entries_allowed": true,
+    "disabled": false
+   }
+  ],
+  "legs": [
+   {
+    "gl_account_id": 2,
+    "entry_side": "DEBIT",
+    "amount_major_text": "250000.250000"
+   },
+   {
+    "gl_account_id": 3,
+    "entry_side": "DEBIT",
+    "amount_major_text": "100000.370000"
+   },
+   {
+    "gl_account_id": 4,
+    "entry_side": "CREDIT",
+    "amount_major_text": "350000.620000"
+   }
+  ]
+ },
+ "expect": {
+  "kind": "journal-entry",
+  "http_status": 200,
+  "legs": [
+   {
+    "gl_account_id": 2,
+    "gl_account_code": "T305-1000",
+    "entry_side": "DEBIT",
+    "amount_minor": "25000025",
+    "amount_major_text": "250000.250000",
+    "excluded_fields": [
+     "gl_account_type"
+    ]
+   },
+   {
+    "gl_account_id": 1,
+    "gl_account_code": "T305-3000",
+    "entry_side": "CREDIT",
+    "amount_minor": "25000025",
+    "amount_major_text": "250000.250000",
+    "excluded_fields": [
+     "gl_account_type"
+    ]
+   },
+   {
+    "gl_account_id": 3,
+    "gl_account_code": "T305-1100",
+    "entry_side": "DEBIT",
+    "amount_minor": "10000037",
+    "amount_major_text": "100000.370000",
+    "excluded_fields": [
+     "gl_account_type"
+    ]
+   },
+   {
+    "gl_account_id": 1,
+    "gl_account_code": "T305-3000",
+    "entry_side": "CREDIT",
+    "amount_minor": "10000037",
+    "amount_major_text": "100000.370000",
+    "excluded_fields": [
+     "gl_account_type"
+    ]
+   },
+   {
+    "gl_account_id": 4,
+    "gl_account_code": "T305-2000",
+    "entry_side": "CREDIT",
+    "amount_minor": "35000062",
+    "amount_major_text": "350000.620000",
+    "excluded_fields": [
+     "gl_account_type"
+    ]
+   },
+   {
+    "gl_account_id": 1,
+    "gl_account_code": "T305-3000",
+    "entry_side": "DEBIT",
+    "amount_minor": "35000062",
+    "amount_major_text": "350000.620000",
+    "excluded_fields": [
+     "gl_account_type"
+    ]
+   }
+  ],
+  "total_debits_minor": "70000124",
+  "total_credits_minor": "70000124",
+  "refusal": {
+   "http_status": 0,
+   "code": "",
+   "message": ""
+  }
+ },
+ "graded_against": [
+  {
+   "impl": "ledger-wrong-openingbalance-always-refusing",
+   "kind": "structural",
+   "margin_minor": "0",
+   "divergent_cells": [
+    "leg_count"
+   ],
+   "note": "T296's ARM A, lifted out of a review probe and made executable: refuse whenever req.Command == 'defineOpeningBalance', never reading the posted-id list. MEASURED against this vector: it REFUSES with HTTP 403 error.msg.journalentry.defining.openingbalance.not.allowed where the oracle returned 200 and six entries, and the comparator reports exactly one cell, leg_count want 6 got 0 -- the same shape LDG-04 records for ledger-wrong-header-refusing, and for the same reason: diverging from the oracle BY REFUSING is still diverging. IT PASSES EVERY OTHER LEDGER VECTOR, INCLUDING LDG-REFUSE-03, whose refusal it reproduces exactly. That is the whole point: T296 measured this arm surviving the entire corpus, and until an ACCEPTING-side observation existed nothing could kill it, because every refusal capture in this store AGREES with it."
+  },
+  {
+   "impl": "ledger-wrong-openingbalance-no-contra",
+   "kind": "money",
+   "margin_minor": "-35000062",
+   "divergent_cells": [
+    "leg_count",
+    "legs[].gl_account_id",
+    "legs[].gl_account_code",
+    "legs[].entry_side",
+    "legs[].amount_minor",
+    "total_debits_minor",
+    "total_credits_minor"
+   ],
+   "note": "Accepts the opening balance and writes ONLY the caller's three legs, missing the CONTRA entry :796 writes for each of them. MEASURED: leg_count want 6 got 3, then every positional cell from legs[1] onward compares against the wrong entry, and BOTH TOTALS ARE SHORT BY THE WHOLE OPENING POSITION -- want 70000124, got 35000062, margin -35000062 minor units on each. NOTE WHAT SURVIVES: double_entry_balances still HOLDS on its output (35000062 == 35000062 over 3 legs), so the invariant cannot see this defect at all and only the captured cells can. The three legs the caller can see are byte-perfect; it is the equity side of the opening position that is missing."
+  },
+  {
+   "impl": "ledger-wrong-truncating",
+   "kind": "money",
+   "margin_minor": "-124",
+   "divergent_cells": [
+    "legs[].amount_minor",
+    "total_debits_minor",
+    "total_credits_minor"
+   ],
+   "note": "Reads the major-unit text as a whole number. MEASURED on all SIX legs -- -25, -25, -37, -37, -62, -62 -- and -124 on each total, because the contra entries carry the same amounts as their legs and the defect lands on both. This vector doubles the number of money cells that kill it relative to a three-leg entry, which is worth stating: the contra expansion is not just structure, it is six money cells where a naive accepting vector would have had three."
+  }
+ ],
+ "invariant_exemptions": []
+}

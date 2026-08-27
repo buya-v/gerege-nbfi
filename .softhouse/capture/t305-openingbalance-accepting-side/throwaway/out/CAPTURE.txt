@@ -1,0 +1,25 @@
+T305 accepting-side capture -- 2026-08-27T15:40:57Z
+
+ok  F1 target is https://localhost:8444/fineract-provider/api/v1, tenant header 'Fineract-Platform-TenantId: t305'.
+ok  F2 t305-oracle-app running, t305-oracle-db/fineract_t305 reachable.
+ok  F3 registry 't305|Asia/Ulaanbaatar|fineract_t305', rounding-mode 4 (HALF_UP) -- read from the target.
+ok  F4 target ledger is EMPTY -- findNonContraTransactionIds returns [] and :812 falls through.
+ok  F5 standing reference oracle, BEFORE the POST:
+    standing acc_gl_journal_entry = 60/64 (== baseline)
+    standing acc_gl_closure = 0/null (== baseline)
+    standing distinct_transaction_id = 26 (== baseline)
+    standing m_portfolio_command_source = 352/352 (== baseline)
+
+FIRING: POST /journalentries?command=defineOpeningBalance  (an IRREVERSIBLE write, on a DISPOSABLE instance)
+HTTP 200
+{"officeId":1,"transactionId":"a29a84279217"}
+readback REST: HTTP 200  transactionId=a29a84279217
+readback DB written to out/OB-ACCEPT-01-readback-db.json
+
+ok  F5 standing reference oracle, AFTER the POST:
+    standing acc_gl_journal_entry = 60/64 (== baseline)
+    standing acc_gl_closure = 0/null (== baseline)
+    standing distinct_transaction_id = 26 (== baseline)
+    standing m_portfolio_command_source = 352/352 (== baseline)
+
+CAPTURED. The instance that produced this is DISPOSABLE; run down.sh to destroy it.

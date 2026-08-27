@@ -1,0 +1,26 @@
+T305 throwaway-isolation guard -- 2026-08-27T15:38:48Z
+
+I1 published host ports declared by the compose file:
+   8444:8443
+   ok  I1 no standing port is claimed.
+
+I2 container names:
+   ok    t305-oracle-db does not exist yet.
+   ok    t305-oracle-app does not exist yet.
+
+I3/I4 bind mounts declared:
+   ok    /Users/buv/fineract/config/docker/postgresql/docker-entrypoint-initdb.d/01-init.sh  (read-only)
+   ok    /Users/buv/fineract/config/docker/logback/logback-override.xml  (read-only)
+   ok    /Users/buv/fineract/config/docker/aws/etc/credentials  (read-only)
+   ok    /tmp/t305-oracle-logs  (read-write, under /tmp -- outside every repository)
+   ok    I3 no named volume declared -- 'docker compose down -v' therefore destroys all state.
+
+I5 STANDING reference oracle baseline (read-only):
+   standing health = 200
+   gerege acc_gl_journal_entry = 60/64
+   gerege acc_gl_closure = 0/null
+   gerege distinct_transaction_id = 26
+   gerege m_portfolio_command_source = 352/352
+
+ISOLATED: the throwaway claims no standing port, no standing container name, no named volume
+and no read-write mount outside /tmp; the standing oracle is UP and its baseline is above.

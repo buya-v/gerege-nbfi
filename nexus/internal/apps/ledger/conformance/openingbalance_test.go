@@ -20,17 +20,9 @@ import (
 // inadmissible, and this file would report that as success.
 func TestOpeningBalanceInputsAreDefaultDeny(t *testing.T) {
 	vs, opts := loadCommitted(t)
-	var base *Vector
-	for _, v := range vs {
-		if v.Request.Command == "defineOpeningBalance" {
-			base = v
-			break
-		}
-	}
-	if base == nil {
-		t.Fatal("no committed ledger vector carries request.command == \"defineOpeningBalance\". " +
-			"Every arm below perturbs one, so their absence would make this test pass over nothing")
-	}
+	// THE REFUSAL SHAPE, explicitly: these arms perturb the vector that carries
+	// posted_non_contra_transaction_ids, and only the refusal has any.
+	base := pickOpeningBalance(t, vs, true)
 
 	t.Run("the committed opening-balance vector is ADMITTED", func(t *testing.T) {
 		if reasons := Admit(base, opts); len(reasons) != 0 {
@@ -109,16 +101,11 @@ func TestOpeningBalanceInputsAreDefaultDeny(t *testing.T) {
 // red there rather than pass silently here.
 func TestOpeningBalanceCapabilityIsScopedToTheObservedShape(t *testing.T) {
 	vs, opts := loadCommitted(t)
-	var base *Vector
-	for _, c := range vs {
-		if c.Request.Command == "defineOpeningBalance" {
-			base = c
-			break
-		}
-	}
-	if base == nil {
-		t.Fatal("no committed opening-balance vector; this test would assert nothing")
-	}
+	// EITHER SHAPE WOULD DO — the arm blanks the command and asserts the capability
+	// claim is then refused — and the REFUSAL is chosen so that the mutation this arm
+	// makes (command "", contra 0, ids nil) leaves a vector the OTHER rules also accept,
+	// which is what makes the measured refusal attributable to this rule alone.
+	base := pickOpeningBalance(t, vs, true)
 	var claims bool
 	for _, name := range base.CapabilitiesRequired {
 		if name == "ledger.opening.balance.and.closure" {
@@ -138,11 +125,18 @@ func TestOpeningBalanceCapabilityIsScopedToTheObservedShape(t *testing.T) {
 	v.Request.ContraGLAccountID = 0
 	v.Request.PostedNonContraTransactionIDs = nil
 	reasons := Admit(&v, opts)
-	if !containsSubstring(reasons, "EXACTLY ONE of the three shapes that row names is observed") {
+	// THE ANCHOR IS STRUCTURAL, NOT EDITORIAL [T305]. It used to be the sentence
+	// "EXACTLY ONE of the three shapes that row names is observed", which stopped
+	// matching the moment the message was corrected to say that the accepting side is
+	// now observed too — a green rule reported as a red test, for a reason that had
+	// nothing to do with the rule. Matching the field name and the offending value
+	// instead means this arm goes red only when the RULE stops refusing.
+	if !containsSubstring(reasons,
+		`capabilities_required names "ledger.opening.balance.and.closure" on a vector whose request.command is ""`) {
 		t.Fatalf("a vector claiming ledger.opening.balance.and.closure for a NON-opening-balance "+
-			"shape was ADMITTED, or refused for another reason. The pre-closure and future-dated "+
-			"refusals are raw artefacts nothing promotes, and a vector claiming this row for one "+
-			"of them reads as covered when it is not: %v", reasons)
+			"shape was ADMITTED, or refused for another reason. The ACCEPTING sides of the "+
+			"pre-closure and future-dated boundaries are still uncaptured, and a vector claiming "+
+			"this row for one of them reads as covered when it is not: %v", reasons)
 	}
 }
 
@@ -157,16 +151,12 @@ func TestOpeningBalanceCapabilityIsScopedToTheObservedShape(t *testing.T) {
 // that reorders these two passes every other vector in this store.
 func TestOpeningBalanceRefusalPrecedesTheBalanceRule(t *testing.T) {
 	vs, _ := loadCommitted(t)
-	var v *Vector
-	for _, c := range vs {
-		if c.Request.Command == "defineOpeningBalance" {
-			v = c
-			break
-		}
-	}
-	if v == nil {
-		t.Fatal("no committed opening-balance vector; this test would assert nothing")
-	}
+	// THE REFUSAL SHAPE, AND ONLY IT. The accepting vector's request is BALANCED by
+	// construction (:724 refuses an unbalanced opening balance before any write), so
+	// asserting this premise over it would fail for a reason that has nothing to do
+	// with precedence. That is exactly what happened when this selector was "the first
+	// defineOpeningBalance vector" and LDG-05 sorted ahead of LDG-REFUSE-03.
+	v := pickOpeningBalance(t, vs, true)
 	// THE PREMISE, CHECKED RATHER THAN ASSUMED: the request really is unbalanced.
 	// If a later edit balanced it, the oracle would have had only one ground to
 	// refuse, and this test would still go green while proving nothing about
@@ -224,4 +214,33 @@ func parseMajorTextForTest(text string, digits int) (int64, error) {
 		return 0, fmt.Errorf("%q is not a decimal amount: %w", text, err)
 	}
 	return n, nil
+}
+
+// pickOpeningBalance returns the committed opening-balance vector of the wanted
+// SHAPE — refusal or acceptance.
+//
+// WHY IT EXISTS [T305]. Every selector in this file used to be "the first vector
+// whose command is defineOpeningBalance", written when there was exactly one. There
+// are now TWO: LDG-REFUSE-03 (the refusal T294 captured) and LDG-05 (the accepting
+// side). Load order made the accept the first match, and three arms written about the
+// refusal silently began asserting over the accept — which is the P-7 shape, a test
+// that asserts a FACT ABOUT TODAY'S CORPUS and goes stale on the next promotion. The
+// fix is to say which shape each arm needs, and to FAIL LOUDLY when it is missing
+// rather than pass over nothing.
+func pickOpeningBalance(t *testing.T, vs []*Vector, wantRefusal bool) *Vector {
+	t.Helper()
+	for _, v := range vs {
+		if v.Request.Command != "defineOpeningBalance" {
+			continue
+		}
+		if (v.Expect.Kind == "refusal") == wantRefusal {
+			return v
+		}
+	}
+	shape := "ACCEPTING"
+	if wantRefusal {
+		shape = "REFUSAL"
+	}
+	t.Fatalf("no committed opening-balance vector of the %s shape; this arm would assert nothing", shape)
+	return nil
 }

@@ -1,0 +1,12 @@
+POST /journalentries?command=defineOpeningBalance
+case-id: OB-ACCEPT-02-openingbalance-after-own-openingbalance
+instance: THROWAWAY t305-oracle-app, port 8444, destroyed by down.sh in the same run
+Fineract-Platform-TenantId: t305
+Authorization: Basic <mifos:password>
+Idempotency-Key: t305-ob-accept-02
+Content-Type: application/json
+body-wire-bytes-artefact: OB-ACCEPT-02-openingbalance-after-own-openingbalance.req
+body-sha256: 9ec6eaa257aa4493cc675b1771430971dcd5f169617399bbd44443c5e2d7cf63
+body-bytes: 544
+response-status: 200
+captured-at-utc: 2026-08-27T15:41:00Z

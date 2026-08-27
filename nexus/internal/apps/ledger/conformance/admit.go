@@ -289,25 +289,36 @@ func Admit(v *Vector, opts Options) []string {
 		//
 		// That is all three shapes the row names, so the row's evidence prose and the
 		// gate now agree by MEASUREMENT rather than by assertion. The gate is still
-		// default-deny: a vector claiming this capability for a FOURTH shape -- most
-		// obviously an ACCEPTANCE, which no capture in this store observes and which
-		// T305 records as costing a permanent journal entry -- is still refused, as
-		// DATA and not as prose (P-89).
+		// default-deny.
 		//
 		// THIS RESOLUTION WAS MADE BY THE DRIVER AT A MERGE CONFLICT AND WAS NOT
 		// INDEPENDENTLY REVIEWED. It is filed as T306. A reviewer that disagrees should
 		// narrow it back and say which vector it means to refuse.
+		//
+		// ⚠ THE PARAGRAPH ABOVE USED TO END: "a vector claiming this capability for a
+		// FOURTH shape -- most obviously an ACCEPTANCE, which no capture in this store
+		// observes and which T305 records as costing a permanent journal entry -- is
+		// still refused." BOTH HALVES OF THAT ARE NOW FALSE, and only the message text
+		// changes here — THE PREDICATE IS UNTOUCHED, because it already admitted any
+		// `defineOpeningBalance` vector and T306 owns this block. [T305]
+		//   * the ACCEPTANCE IS OBSERVED: LDG-05-openingbalance-accepted-empty-ledger,
+		//     HTTP 200 and six journal entries on an empty ledger;
+		//   * it cost NO permanent journal entry anywhere this program keeps: it was
+		//     taken on a throwaway instance built from the same image and destroyed in
+		//     the same run, with the standing oracle's counters unmoved before, after
+		//     and after teardown.
 		observedShape := v.Request.Command == "defineOpeningBalance" ||
 			v.Expect.Refusal.Code == codeAccountingClosed ||
 			v.Expect.Refusal.Code == codeFutureDate
 		if !observedShape {
 			add("capabilities_required names %q on a vector whose request.command is %q. "+
-				"EXACTLY ONE of the three shapes that row names is observed by this store — the "+
-				"defineOpeningBalance-after-posted-entries refusal at "+
-				"JournalEntryWritePlatformServiceJpaRepositoryImpl.java:717 — and the PRE-CLOSURE "+
-				"and FUTURE-DATED shapes at :626-640 are promoted as LDG-REFUSE-04 and LDG-REFUSE-05. A vector "+
-				"claiming this capability for a shape OUTSIDE those three -- an ACCEPTANCE, most obviously -- would read as "+
-				"covered when it is not. PROMOTE THE CAPTURE FIRST, then widen this rule",
+				"THE SHAPES THIS STORE HAS OBSERVED ARE: the defineOpeningBalance-after-a-NON-CONTRA-entry "+
+				"refusal at JournalEntryWritePlatformServiceJpaRepositoryImpl.java:717 (LDG-REFUSE-03), its "+
+				"ACCEPTING side at :812 (LDG-05, HTTP 200 and six entries on an empty ledger), and the "+
+				"PRE-CLOSURE and FUTURE-DATED refusals at :626-640 (LDG-REFUSE-04, LDG-REFUSE-05). A vector "+
+				"claiming this capability for a shape OUTSIDE those -- the ACCEPTING side of either DATE "+
+				"boundary, most obviously, which remains uncaptured -- would read as covered when it is not. "+
+				"PROMOTE THE CAPTURE FIRST, then widen this rule",
 				name, v.Request.Command)
 		}
 	}
@@ -516,10 +527,42 @@ func Admit(v *Vector, opts Options) []string {
 	}
 
 	// --- legs: the money pairing, and the request/expect correspondence ----
-	if len(v.Expect.Legs) > 0 && len(v.Expect.Legs) != len(v.Request.Legs) {
-		add("expect.legs has %d entries and request.legs has %d; the comparator diffs them positionally "+
-			"and a length mismatch is a transcription defect, not a divergence to grade",
-			len(v.Expect.Legs), len(v.Request.Legs))
+	//
+	// THE ONE-LEG-IN-ONE-LEG-OUT ASSUMPTION IS TRUE OF THE PLAIN CREATE PATH AND
+	// FALSE OF defineOpeningBalance, AND THAT WAS MEASURED, NOT ARGUED. [T305]
+	//
+	// saveAllDebitOrCreditOpeningBalanceEntries (:759-797) calls
+	// helper.persistJournalEntry TWICE inside the per-leg loop — the leg at :791
+	// and its CONTRA on the financial-activity-300 account at :796 — so an
+	// accepted opening balance stores exactly 2*len(legs) journal entries.
+	// OB-ACCEPT-01 sent three legs and the oracle wrote SIX entries
+	// [.softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/
+	//  OB-ACCEPT-01-readback-db.json].
+	//
+	// SO THE RULE IS SCOPED RATHER THAN DROPPED, and the scoped form is STRICTER
+	// than the general one, not weaker: on this command the expectation must
+	// carry EXACTLY twice the request's legs. A vector that carried, say, four
+	// expect legs for three request legs is refused here and would not have been
+	// refused by a rule that merely stopped applying.
+	//
+	// WHY NOT INSTEAD PUT SIX LEGS IN request.legs. Because request.legs is the
+	// INPUT the implementation converts, and the caller did not send six. Writing
+	// the contra legs into the request would hand the port the answer it is
+	// supposed to derive — the circularity DEC-2 forbids in as many words — and
+	// would also make the request bytes and the vector's request disagree, which
+	// is the one thing provenance exists to prevent.
+	if len(v.Expect.Legs) > 0 {
+		want := len(v.Request.Legs)
+		if v.Request.Command == "defineOpeningBalance" && v.Expect.Kind != "refusal" {
+			want = 2 * len(v.Request.Legs)
+		}
+		if len(v.Expect.Legs) != want {
+			add("expect.legs has %d entries and request.legs has %d; on request.command %q an accepted "+
+				"entry stores %d (saveAllDebitOrCreditOpeningBalanceEntries persists the leg at :791 AND "+
+				"its contra at :796, inside the per-leg loop), and a length mismatch is a transcription "+
+				"defect, not a divergence to grade",
+				len(v.Expect.Legs), len(v.Request.Legs), v.Request.Command, want)
+		}
 	}
 	chart := map[int64]bool{}
 	for _, a := range v.Request.Accounts {
@@ -551,10 +594,42 @@ func Admit(v *Vector, opts Options) []string {
 			add("expect.legs[%d].amount_major_text is empty. The pairing is mandatory: the graded value "+
 				"is the minor-unit integer and the major-unit text is the transcription cross-check", i)
 		}
-		if i < len(v.Request.Legs) && v.Request.Legs[i].AmountMajorText != l.AmountMajorText {
+		if v.Request.Command != "defineOpeningBalance" &&
+			i < len(v.Request.Legs) && v.Request.Legs[i].AmountMajorText != l.AmountMajorText {
 			add("expect.legs[%d].amount_major_text %q and request.legs[%d].amount_major_text %q "+
 				"disagree; both transcribe the same oracle characters",
 				i, l.AmountMajorText, i, v.Request.Legs[i].AmountMajorText)
+		}
+	}
+	// THE OPENING-BALANCE PAIRING IS BY MULTISET, NOT BY POSITION. [T305]
+	//
+	// :796 writes the contra entry with the SAME amount as its leg, so each
+	// request amount must occur EXACTLY TWICE among the expect legs. It is
+	// checked as a multiset rather than positionally because the oracle emits
+	// all DEBIT legs (:742) before all CREDIT legs (:745) irrespective of the
+	// order the request listed them in — OB-ACCEPT-01's request happened to be
+	// debits-first, so the capture is consistent with both orderings and this
+	// rule declines to assert the one it cannot see.
+	if v.Request.Command == "defineOpeningBalance" && v.Expect.Kind != "refusal" && len(v.Expect.Legs) > 0 {
+		count := map[string]int{}
+		for _, l := range v.Expect.Legs {
+			count[l.AmountMajorText]++
+		}
+		for i, l := range v.Request.Legs {
+			count[l.AmountMajorText] -= 2
+			if count[l.AmountMajorText] < 0 {
+				add("request.legs[%d].amount_major_text %q occurs fewer than twice among the expect "+
+					"legs. An accepted opening balance writes the leg at :791 and its contra at :796 "+
+					"with the SAME amount, so every request amount must appear exactly twice",
+					i, l.AmountMajorText)
+			}
+		}
+		for text, left := range count {
+			if left != 0 {
+				add("expect.legs carry amount %q %d time(s) more than twice-per-request-leg allows; the "+
+					"only entries an accepted opening balance writes are the caller's legs and their "+
+					"contras", text, left)
+			}
 		}
 	}
 	if v.Expect.Kind == "journal-entry" {

@@ -1,0 +1,37 @@
+
+=== ARM 1  BASELINE -- the committed tree
+ok  	github.com/gerege/nexus/internal/apps/ledger	(cached)
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	(cached)
+    LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     PASS             27 cells (8 money)
+    ledger parity           PASS 5    FAIL 0
+
+=== ARM 2  NO CONTRA -- STEP 4 deleted from GoPoster
+STEP 4 removed
+ok  	github.com/gerege/nexus/internal/apps/ledger	(cached)
+--- FAIL: TestCommittedCorpusPassesTheReferenceImplementation (0.08s)
+--- FAIL: TestAcceptedOpeningBalancePostsTwoEntriesPerLeg (0.04s)
+--- FAIL: TestAcceptingVectorKillsBothOpeningBalancePorts (0.04s)
+    openingbalance_accept_test.go:90: the correct port does NOT pass the accepting vector (FAIL): [leg_count: want 6, got 3 legs[1].gl_account_id: want 1, got 3 legs[1].gl_account_code: want "T305-3000", got "T305-1100" legs[1].entry_side: want "CREDIT", got "DEBIT" legs[1].amount_minor: MONEY want 25000025, got 10000037 (margin -14999988 minor units) legs[2].gl_account_id: want 3, got 4 legs[2].gl_account_code: want "T305-1100", got "T305-2000" legs[2].entry_side: want "DEBIT", got "CREDIT" legs[2].amount_minor: MONEY want 10000037, got 35000062 (margin 25000025 minor units) total_debits_minor: MONEY want 70000124, got 35000062 (margin -35000062 minor units) total_credits_minor: MONEY want 70000124, got 35000062 (margin -35000062 minor units)]
+FAIL
+    LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     FAIL             15 cells (5 money)
+    ledger parity           PASS 4    FAIL 1
+RESTORED: impl.go sha256 25d315b722d065ca35677da93789dfbd2e1bb7adea842409fbc25fb410cf71d7 == before
+
+=== ARM 3  ledger-wrong-openingbalance-always-refusing (T296 arm A)
+    LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     FAIL              1 cells (0 money)
+    LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+    ledger parity           PASS 4    FAIL 1
+    ledger oracle-refusal   PASS 5    FAIL 0   (an HTTP status and error code the ORACLE returned
+
+=== ARM 4  ledger-wrong-openingbalance-no-contra
+                     SILENT on: period_number, from_date, interest, fee, penalty, total_due, outstanding_balance, total_outstanding_balance
+        REPAYMENT    attests 6 of 10: period_number, due_date, outstanding_balance, principal, interest, total_due
+                     SILENT on: from_date, fee, penalty, total_outstanding_balance
+        caveat: SIX of the ten period columns on a REPAYMENT row, TWO on the disbursement row. A capture matching this block is NOT a whole-row match: from_date, fee, penalty and total_outstanding_balance are not printed at all.
+    LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     FAIL             15 cells (5 money)
+        leg_count: want 6, got 3
+        total_debits_minor: MONEY want 70000124, got 35000062 (margin -35000062 minor units)
+        total_credits_minor: MONEY want 70000124, got 35000062 (margin -35000062 minor units)
+    ledger parity           PASS 4    FAIL 1
+
+=== impl.go final sha256: 25d315b722d065ca35677da93789dfbd2e1bb7adea842409fbc25fb410cf71d7 (before: 25d315b722d065ca35677da93789dfbd2e1bb7adea842409fbc25fb410cf71d7)

@@ -1,0 +1,37 @@
+[
+ {
+  "impl": "ledger-wrong-openingbalance-always-refusing",
+  "kind": "structural",
+  "margin_minor": "0",
+  "divergent_cells": [
+   "leg_count"
+  ],
+  "note": "T296's ARM A, lifted out of a review probe and made executable: refuse whenever req.Command == 'defineOpeningBalance', never reading the posted-id list. MEASURED against this vector: it REFUSES with HTTP 403 error.msg.journalentry.defining.openingbalance.not.allowed where the oracle returned 200 and six entries, and the comparator reports exactly one cell, leg_count want 6 got 0 -- the same shape LDG-04 records for ledger-wrong-header-refusing, and for the same reason: diverging from the oracle BY REFUSING is still diverging. IT PASSES EVERY OTHER LEDGER VECTOR, INCLUDING LDG-REFUSE-03, whose refusal it reproduces exactly. That is the whole point: T296 measured this arm surviving the entire corpus, and until an ACCEPTING-side observation existed nothing could kill it, because every refusal capture in this store AGREES with it."
+ },
+ {
+  "impl": "ledger-wrong-openingbalance-no-contra",
+  "kind": "money",
+  "margin_minor": "-35000062",
+  "divergent_cells": [
+   "leg_count",
+   "legs[].gl_account_id",
+   "legs[].gl_account_code",
+   "legs[].entry_side",
+   "legs[].amount_minor",
+   "total_debits_minor",
+   "total_credits_minor"
+  ],
+  "note": "Accepts the opening balance and writes ONLY the caller's three legs, missing the CONTRA entry :796 writes for each of them. MEASURED: leg_count want 6 got 3, then every positional cell from legs[1] onward compares against the wrong entry, and BOTH TOTALS ARE SHORT BY THE WHOLE OPENING POSITION -- want 70000124, got 35000062, margin -35000062 minor units on each. NOTE WHAT SURVIVES: double_entry_balances still HOLDS on its output (35000062 == 35000062 over 3 legs), so the invariant cannot see this defect at all and only the captured cells can. The three legs the caller can see are byte-perfect; it is the equity side of the opening position that is missing."
+ },
+ {
+  "impl": "ledger-wrong-truncating",
+  "kind": "money",
+  "margin_minor": "-124",
+  "divergent_cells": [
+   "legs[].amount_minor",
+   "total_debits_minor",
+   "total_credits_minor"
+  ],
+  "note": "Reads the major-unit text as a whole number. MEASURED on all SIX legs -- -25, -25, -37, -37, -62, -62 -- and -124 on each total, because the contra entries carry the same amounts as their legs and the defect lands on both. This vector doubles the number of money cells that kill it relative to a three-leg entry, which is worth stating: the contra expansion is not just structure, it is six money cells where a naive accepting vector would have had three."
+ }
+]

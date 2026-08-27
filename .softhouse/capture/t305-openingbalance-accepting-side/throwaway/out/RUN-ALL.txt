@@ -1,0 +1,186 @@
+
+=== 0 isolation guard (also records out/STANDING-baseline.txt)
+T305 throwaway-isolation guard -- 2026-08-27T15:38:48Z
+
+I1 published host ports declared by the compose file:
+   8444:8443
+   ok  I1 no standing port is claimed.
+
+I2 container names:
+   ok    t305-oracle-db does not exist yet.
+   ok    t305-oracle-app does not exist yet.
+
+I3/I4 bind mounts declared:
+   ok    /Users/buv/fineract/config/docker/postgresql/docker-entrypoint-initdb.d/01-init.sh  (read-only)
+   ok    /Users/buv/fineract/config/docker/logback/logback-override.xml  (read-only)
+   ok    /Users/buv/fineract/config/docker/aws/etc/credentials  (read-only)
+   ok    /tmp/t305-oracle-logs  (read-write, under /tmp -- outside every repository)
+   ok    I3 no named volume declared -- 'docker compose down -v' therefore destroys all state.
+
+I5 STANDING reference oracle baseline (read-only):
+   standing health = 200
+   gerege acc_gl_journal_entry = 60/64
+   gerege acc_gl_closure = 0/null
+   gerege distinct_transaction_id = 26
+   gerege m_portfolio_command_source = 352/352
+
+ISOLATED: the throwaway claims no standing port, no standing container name, no named volume
+and no read-write mount outside /tmp; the standing oracle is UP and its baseline is above.
+
+=== 1 docker compose up
+   Network t305-oracle_default Creating 
+   Network t305-oracle_default Created 
+   Container t305-oracle-db Creating 
+   Container t305-oracle-db Created 
+   Container t305-oracle-app Creating 
+   Container t305-oracle-app Created 
+   Container t305-oracle-db Starting 
+   Container t305-oracle-db Started 
+   Container t305-oracle-db Waiting 
+   Container t305-oracle-db Healthy 
+   Container t305-oracle-app Starting 
+   Container t305-oracle-app Started 
+
+=== 2 waiting for https://localhost:8444/fineract-provider/actuator/health
+{"status":"UP","groups":["liveness","readiness"]}
+
+=== 3 setup.sh
+S-01-currencies              PUT  /currencies                                    -> 200
+{"currencies":["MNT"],"changes":{"currencies":["MNT"]}}
+S-02a-gl-contra              POST /glaccounts                                    -> 200
+{"resourceId":1}
+S-02b-gl-asset               POST /glaccounts                                    -> 200
+{"resourceId":2}
+S-02c-gl-asset2              POST /glaccounts                                    -> 200
+{"resourceId":3}
+S-02d-gl-liability           POST /glaccounts                                    -> 200
+{"resourceId":4}
+
+GL accounts created (id | code | classification_enum | account_usage | manual_journal_entries_allowed | disabled):
+1 | T305-3000 | 3 | 1 | true | false
+2 | T305-1000 | 1 | 1 | true | false
+3 | T305-1100 | 1 | 1 | true | false
+4 | T305-2000 | 2 | 1 | true | false
+S-03-financialactivity       POST /financialactivityaccounts                     -> 200
+{"resourceId":1}
+
+financial activity 300 ->
+gl 1 code T305-3000 classification_enum 3
+journal entries before the capture:
+0
+
+=== 4 capture.sh -- THE ACCEPTING CAPTURE
+T305 accepting-side capture -- 2026-08-27T15:40:57Z
+
+ok  F1 target is https://localhost:8444/fineract-provider/api/v1, tenant header 'Fineract-Platform-TenantId: t305'.
+ok  F2 t305-oracle-app running, t305-oracle-db/fineract_t305 reachable.
+ok  F3 registry 't305|Asia/Ulaanbaatar|fineract_t305', rounding-mode 4 (HALF_UP) -- read from the target.
+ok  F4 target ledger is EMPTY -- findNonContraTransactionIds returns [] and :812 falls through.
+ok  F5 standing reference oracle, BEFORE the POST:
+    standing acc_gl_journal_entry = 60/64 (== baseline)
+    standing acc_gl_closure = 0/null (== baseline)
+    standing distinct_transaction_id = 26 (== baseline)
+    standing m_portfolio_command_source = 352/352 (== baseline)
+
+FIRING: POST /journalentries?command=defineOpeningBalance  (an IRREVERSIBLE write, on a DISPOSABLE instance)
+HTTP 200
+{"officeId":1,"transactionId":"a29a84279217"}
+readback REST: HTTP 200  transactionId=a29a84279217
+readback DB written to out/OB-ACCEPT-01-readback-db.json
+
+ok  F5 standing reference oracle, AFTER the POST:
+    standing acc_gl_journal_entry = 60/64 (== baseline)
+    standing acc_gl_closure = 0/null (== baseline)
+    standing distinct_transaction_id = 26 (== baseline)
+    standing m_portfolio_command_source = 352/352 (== baseline)
+
+CAPTURED. The instance that produced this is DISPOSABLE; run down.sh to destroy it.
+
+=== 5 capture2.sh -- the state-transition sequence
+T305 state-transition captures -- 2026-08-27T15:40:59Z
+ok  F1/F2/F3 target is the throwaway; F4' ledger carries 6 entries.
+ok  F5 (before) standing acc_gl_journal_entry = 60/64 (== baseline)
+ok  F5 (before) standing m_portfolio_command_source = 352/352 (== baseline)
+
+OB-ACCEPT-02-openingbalance-after-own-openingbalance
+  POST /journalentries?command=defineOpeningBalance -> HTTP 200
+{"officeId":1,"transactionId":"a29a842a0763"}
+  cmp silent: byte-identical request to OB-ACCEPT-01.
+
+MJE-ACCEPT-01-manual-entry-alongside-openingbalance
+  POST /journalentries -> HTTP 200
+{"officeId":1,"transactionId":"a29a842a9f57"}
+
+findNonContraTransactionIds on the target NOW (this is what A4 is fired against):
+a29a842a9f57
+
+OB-REFUSE-03-openingbalance-after-noncontra-entry
+  POST /journalentries?command=defineOpeningBalance -> HTTP 403
+{"developerMessage":"Request was understood but caused a domain rule violation.","httpStatusCode":"403","defaultUserMessage":"Errors contain reason for domain rule violation.","userMessageGlobalisationCode":"validation.msg.domain.rule.violation","errors":[{"developerMessage":"Defining Opening balances not allowed after journal entries posted","defaultUserMessage":"Defining Opening balances not allowed after journal entries posted","userMessageGlobalisationCode":"error.msg.journalentry.defining.openingbalance.not.allowed","parameterName":"id","args":[{"value":["a29a842a9f57"]}]}]}
+  cmp silent: byte-identical request to OB-ACCEPT-01 AND to OB-ACCEPT-02 -- three answers, one body.
+
+audit rows this instance wrote (id | action | entity | resource_id | status):
+1|CREATE|GLACCOUNT|1|1
+2|CREATE|GLACCOUNT|2|1
+3|CREATE|GLACCOUNT|3|1
+4|CREATE|GLACCOUNT|4|1
+5|CREATE|FINANCIALACTIVITYACCOUNT|1|1
+6|DEFINEOPENINGBALANCE|JOURNALENTRY|NULL|1
+7|DEFINEOPENINGBALANCE|JOURNALENTRY|NULL|1
+8|CREATE|JOURNALENTRY|NULL|1
+9|DEFINEOPENINGBALANCE|JOURNALENTRY|NULL|5
+
+final ledger (id | transaction | account | type_enum | amount | reversed | reversal_id):
+1|a29a84279217|2|2|250000.250000|t|7
+2|a29a84279217|1|1|250000.250000|t|8
+3|a29a84279217|3|2|100000.370000|t|9
+4|a29a84279217|1|1|100000.370000|t|10
+5|a29a84279217|4|1|350000.620000|t|11
+6|a29a84279217|1|2|350000.620000|t|12
+7|a29a842a03df|2|1|250000.250000|f|NULL
+8|a29a842a03df|1|2|250000.250000|f|NULL
+9|a29a842a03df|3|1|100000.370000|f|NULL
+10|a29a842a03df|1|2|100000.370000|f|NULL
+11|a29a842a03df|4|2|350000.620000|f|NULL
+12|a29a842a03df|1|1|350000.620000|f|NULL
+13|a29a842a0763|2|2|250000.250000|f|NULL
+14|a29a842a0763|1|1|250000.250000|f|NULL
+15|a29a842a0763|3|2|100000.370000|f|NULL
+16|a29a842a0763|1|1|100000.370000|f|NULL
+17|a29a842a0763|4|1|350000.620000|f|NULL
+18|a29a842a0763|1|2|350000.620000|f|NULL
+19|a29a842a9f57|2|2|500000.110000|f|NULL
+20|a29a842a9f57|4|1|500000.110000|f|NULL
+
+ok  F5 (after) standing acc_gl_journal_entry = 60/64 (== baseline)
+ok  F5 (after) standing m_portfolio_command_source = 352/352 (== baseline)
+
+=== 6 down.sh -- destroy and prove the standing oracle did not move
+T305 throwaway teardown -- 2026-08-27T15:41:01Z
+   Container t305-oracle-app Stopping 
+   Container t305-oracle-app Stopped 
+   Container t305-oracle-app Removing 
+   Container t305-oracle-app Removed 
+   Container t305-oracle-db Stopping 
+   Container t305-oracle-db Stopped 
+   Container t305-oracle-db Removing 
+   Container t305-oracle-db Removed 
+   Network t305-oracle_default Removing 
+   Network t305-oracle_default Removed 
+
+containers matching t305 after teardown:
+  (none)
+networks matching t305 after teardown:
+  (none)
+volumes matching t305 after teardown:
+  (none)
+
+STANDING reference oracle after teardown (must equal the baseline this capture opened with):
+  standing health = 200
+  ok  acc_gl_journal_entry = 60/64 (== baseline)
+  ok  acc_gl_closure = 0/null (== baseline)
+  ok  distinct_transaction_id = 26 (== baseline)
+  ok  m_portfolio_command_source = 352/352 (== baseline)
+
+=== manifest
+MANIFEST.sha256: 72 entries
