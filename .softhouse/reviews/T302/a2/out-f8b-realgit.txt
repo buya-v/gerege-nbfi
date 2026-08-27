@@ -1,0 +1,17 @@
+repo: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3e635faba72121c8
+refs in this repo: 583
+packed-refs size:     47763 bytes
+
+sampling 40 real softhouse/* branches
+
+git rev-parse --verify  : 0.0312s per call
+git rev-list --count    : 0.0368s per call
+branch_wip() per task   : 0.0679s  (both calls)
+
+extrapolated N=8         : 0.54s of git + ~0.11s startup/parse
+extrapolated N=40        : 2.72s of git + ~0.11s startup/parse
+extrapolated N=64        : 4.35s of git + ~0.11s startup/parse
+extrapolated N=100       : 6.79s of git + ~0.11s startup/parse
+
+signal-path budget with shipped defaults:
+  SIGNAL_GRACE_SECS(20) - elapsed(~1) - GIT_PUSH_TIMEOUT_SECS(10) - 2 = ~7s

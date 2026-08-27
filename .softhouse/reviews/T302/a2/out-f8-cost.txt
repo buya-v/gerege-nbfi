@@ -1,0 +1,15 @@
+POST (main, post-T309): sha256 cdc0729107b71696
+python3: Python 3.9.6   git: git version 2.50.1 (Apple Git-155)
+trials per N: 3   (median reported)
+
+N   median_s   min_s   max_s   git_calls(=2N)   verdict_vs_7s_signal_budget
+4   0.449      0.438   0.455   8                fits
+8   0.715      0.691   0.717   16               fits
+16  1.300      1.279   1.332   32               fits
+32  2.457      2.421   2.460   64               fits
+40  3.037      2.990   3.057   80               fits
+64  3.876      3.739   3.923   128              fits
+
+=== control: the same N=8 run with the WIP evidence suppressed (no branches) ===
+    (isolates the per-task git cost from the 792 KB JSON parse)
+    N=0 (parse + startup only): 0.106s
