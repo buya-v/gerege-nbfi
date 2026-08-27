@@ -23,6 +23,18 @@ set -euo pipefail
 
 HERE=$(cd "$(dirname "$0")" && pwd)
 EV="$HERE/../evidence/redA"
+# --- T304 FAIL-CLOSED GUARD (FU-T284-3) ---------------------------------------------
+# This instrument rebuilds its evidence directory from scratch on every run, and that
+# directory holds 14 TRACKED files. T114 binds: committed evidence is named and
+# SUPERSEDED by a scratch copy, never rewritten in place. Documenting the hazard in a
+# handoff enforces nothing (P-45: "A test-only guard is not a guard ... verify the path
+# that actually executes ... calls it, not merely that a test does") -- so the refusal
+# is here, on the executing path, ahead of the destruction.
+#   run for a NEW answer:  T304_EVIDENCE_SCRATCH="$(mktemp -d)" bash "$0"
+#   read the OLD answer :  do not run it; the corpus is at the path above.
+. "$(git rev-parse --show-toplevel)/.softhouse/capture/t304-evidence-destruction/instruments/refuse-if-tracked.sh"
+EV="$(t304_evidence_root "$EV")" || exit 2
+# --- end T304 guard -----------------------------------------------------------------
 LIB=$(cd "$HERE/../../lib" && pwd)
 rm -rf "$EV"
 mkdir -p "$EV/legacy" "$EV/derived"

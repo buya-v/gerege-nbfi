@@ -1,0 +1,547 @@
+scratch clone : /tmp/t304-scratch
+cloned from   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6aebb11acf360806
+HEAD          : 8fa6246b
+
+==============================================================================
+ARM (a) — WIRED INSTRUMENTS MUST REFUSE, AND LEAVE THE TREE CLEAN
+==============================================================================
+
+--- .softhouse/capture/t250-tenant-attestation/instruments/20-redA-sidecar-tracks-the-send.sh
+    ***  FAIL: exit 0, expected 2
+    ***  FAIL: no refusal text. first 6 lines:
+         == ARM 1 (RED expected): legacy literal writer ==
+         --- legacy sidecar, tenant SENT = gerege ---
+         GET /offices
+         Fineract-Platform-TenantId: gerege
+         Authorization: Basic <mifos:password>
+         body: <none>
+    ***  FAIL: 20-redA-sidecar-tracks-the-send.sh left the tree DIRTY:
+          M .softhouse/capture/t250-tenant-attestation/evidence/redA/derived/t-default.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redA/derived/t-default.json
+          M .softhouse/capture/t250-tenant-attestation/evidence/redA/derived/t-gerege.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redA/legacy/t-default.json
+         ?? .softhouse/capture/t250-tenant-attestation/evidence/redA/derived/t-default.resphdr
+         ?? .softhouse/capture/t250-tenant-attestation/evidence/redA/derived/t-gerege.resphdr
+
+--- .softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh
+    ***  FAIL: exit 1, expected 2
+    ***  FAIL: no refusal text. first 6 lines:
+         == capturing a REAL exchange from the live oracle (tenant SENT = default) ==
+         derived /tmp/t304-scratch/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/out/probe.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.Zi5Qx2/trace (schema 2; 1 send-header block(s), 16 recv-header block(s))
+         probe                                        HTTP 400
+         oracle status: 400
+         
+         --- the sidecar as derived ---
+    ***  FAIL: 30-redB-mismatch-detected.sh left the tree DIRTY:
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-0/probe.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-0/verify.err
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-0/verify.out
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-1/probe.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-1/verify.err
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-2/probe.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-2/verify.err
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-3/probe.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-3/verify.err
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-4/verify.err
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-5/probe.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-5/verify.err
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-6/probe.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-6/verify.err
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-7/probe.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-7/verify.err
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-7/verify.out
+          M .softhouse/capture/t250-tenant-attestation/evidence/redB/out/probe.http
+         ?? .softhouse/capture/t250-tenant-attestation/evidence/redB/out/probe.resphdr
+
+--- .softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh
+    ***  FAIL: exit 0, expected 2
+    ***  FAIL: no refusal text. first 6 lines:
+         == SHAPE 1: the same header twice; $T holds only the FIRST ==
+         derived /tmp/t304-scratch/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redC/out/dup.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.QEgZEL/trace (schema 2; 1 send-header block(s), 15 recv-header block(s))
+         dup                                          HTTP 200
+           $T (what T245's `echo "$T"` would attest) : gerege
+           what the derived sidecar attests            : gerege AND default
+           oracle status                               : 200
+    ***  FAIL: 40-redC-shapes-not-designed-around.sh left the tree DIRTY:
+          M .softhouse/capture/t250-tenant-attestation/evidence/redC/out/dup.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redC/out/dup.independent-trace
+          M .softhouse/capture/t250-tenant-attestation/evidence/redC/out/inject.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redC/out/longhdr.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redC/out/notremoved.http
+          M .softhouse/capture/t250-tenant-attestation/evidence/redC/out/removed.http
+         ?? .softhouse/capture/t250-tenant-attestation/evidence/redC/out/dup.resphdr
+         ?? .softhouse/capture/t250-tenant-attestation/evidence/redC/out/inject.resphdr
+         ?? .softhouse/capture/t250-tenant-attestation/evidence/redC/out/longhdr.resphdr
+         ?? .softhouse/capture/t250-tenant-attestation/evidence/redC/out/notremoved.resphdr
+         ?? .softhouse/capture/t250-tenant-attestation/evidence/redC/out/removed.resphdr
+
+--- .softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh
+    ***  FAIL: exit 0, expected 2
+    ***  FAIL: no refusal text. first 6 lines:
+         T274 -- four fail-open routes, RED (T250 rig as shipped) vs GREEN (T274 rig)
+         curl: curl 8.7.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+         oracle: https://localhost:8443/fineract-provider/api/v1
+         baseline rig sha256:
+           2c442e28e5c3a2fb7326129fdbb9d76511c0c12ff928baf129e72e6bd62f5e4d  /tmp/t304-scratch/.softhouse/capture/t274-attestation-failopen/baseline/wire_attestation.py
+           8521e034a3880a34adf8684c43d3de8c8f3407f4bcbdca838df6fab381a4514f  /tmp/t304-scratch/.softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh
+    ***  FAIL: 10-four-routes-red-green.sh left the tree DIRTY:
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P0/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P0/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P0/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P0/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P1/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P2/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P2/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P2/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P2/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P3/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P3/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P3/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P3/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P4/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P4/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/P4/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R1/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R1/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R1/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R1/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R2a/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R2a/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R2a/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R2a/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R2b/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R2b/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R2b/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R2b/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R3a/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R3a/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R3a/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R3a/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R3b/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R3b/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R3b/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R3b/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R4/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R4/other.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R4/other.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R4/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R4/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/green/R4/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/P0/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/P0/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/P0/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R1/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R1/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R1/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R2a/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R2a/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R2a/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R2b/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R2b/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R2b/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R3a/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R3a/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R3a/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R3b/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R3b/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R3b/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R4/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R4/other.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R4/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/red/R4/verify.out
+
+--- .softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh
+    ***  FAIL: exit 0, expected 2
+    ***  FAIL: no refusal text. first 6 lines:
+         T274 (A) -- trace-ascii wrap reassembly across the 64-byte boundary
+         curl: curl 8.7.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+         verifier under test: /tmp/t304-scratch/.softhouse/capture/lib/wire_attestation.py
+           6daf0c2c4c7e85a479ea1cf669becea207bae72b5d5785779aa91ce6fd7990a8  /tmp/t304-scratch/.softhouse/capture/lib/wire_attestation.py
+         
+           L1       sent=1     attested=1     EXACT
+    ***  FAIL: 20-wrap-boundary-and-derivation-unchanged.sh left the tree DIRTY:
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1/L1.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1/L1.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L10/L10.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L10/L10.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L10/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L10/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1000/L1000.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1000/L1000.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1000/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1000/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L127/L127.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L127/L127.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L127/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L127/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L128/L128.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L128/L128.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L128/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L128/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L129/L129.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L129/L129.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L129/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L129/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L200/L200.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L200/L200.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L200/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L200/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L300/L300.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L300/L300.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L300/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L300/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L4000/L4000.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L4000/L4000.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L4000/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L4000/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L60/L60.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L60/L60.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L60/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L60/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L61/L61.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L61/L61.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L61/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L61/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L62/L62.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L62/L62.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L62/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L62/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L63/L63.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L63/L63.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L63/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L63/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L64/L64.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L64/L64.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L64/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L64/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L65/L65.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L65/L65.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L65/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L65/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L66/L66.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L66/L66.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L66/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L66/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/Lmix/Lmix.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/Lmix/Lmix.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/Lmix/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/cmp-green/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/cmp-green/cmp.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/cmp-green/cmp.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/cmp-red/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/cmp-red/cmp.http
+
+--- .softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh
+    ***  FAIL: exit 0, expected 2
+    ***  FAIL: no refusal text. first 6 lines:
+         T274 -- T250's seven redB arms, re-run against the T274 verifier
+           6daf0c2c4c7e85a479ea1cf669becea207bae72b5d5785779aa91ce6fd7990a8  /tmp/t304-scratch/.softhouse/capture/lib/wire_attestation.py
+         
+           ARM 0   expected rc=0  got rc=0  ok                   POSITIVE CONTROL, untouched
+           ARM 1   expected rc=1  got rc=1  ok                   sidecar claims a tenant that was not sent
+           ARM 2   expected rc=1  got rc=1  ok                   record edited, sidecar left alone
+    ***  FAIL: 30-t250-arms-still-hold.sh left the tree DIRTY:
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-0/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-0/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-0/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-0/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-1/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-1/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-1/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-1/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-2/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-2/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-2/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-2/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-3/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-3/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-3/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-3/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-4/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-4/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-4/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-5/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-5/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-5/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-5/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-6/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-6/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-6/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-6/verify.err
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-7a/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-7a/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-7a/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-7a/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-7b/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-7b/probe.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-7b/probe.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-7b/verify.out
+
+--- .softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh
+    ***  FAIL: exit 4, expected 2
+    ***  FAIL: no refusal text. first 6 lines:
+         T261 RED-DRIVE B -- attacking the detector
+         oracle: https://localhost:8443/fineract-provider/api/v1   curl: curl 8.7.1
+         
+         capturing base artefacts from the LIVE oracle ...
+         derived /tmp/t304-scratch/.softhouse/reviews/t261-tenant-attestation/evidence/redB/src/post/post.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.mZJqXI/trace (schema 2; 1 send-header block(s), 15 recv-header block(s))
+         post                                         HTTP 403
+    ***  FAIL: t261-redB-attack.sh left the tree DIRTY:
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a1/dup.http
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a1/dup.json
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a1/dup.reqhdr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a1/dup.status
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a1/dup.verr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a1/dup.vout
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a10/post.http
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a10/post.json
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a10/post.req
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a10/post.req.sha256
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a10/post.reqhdr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a10/post.status
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a10/post.verr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a10/post.vout
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a11/post.http
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a11/post.json
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a11/post.req
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a11/post.req.sha256
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a11/post.reqhdr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a11/post.status
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a11/post.verr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a11/post.vout
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a2/post.http
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a2/post.json
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a2/post.req
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a2/post.req.sha256
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a2/post.reqhdr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a2/post.status
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a2/post.verr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a2/post.vout
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a3/post.http
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a3/post.json
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a3/post.req
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a3/post.req.sha256
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a3/post.reqhdr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a3/post.status
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a3/post.verr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a3/post.vout
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a4/post.http
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a4/post.json
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a4/post.req
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a4/post.req.sha256
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a4/post.reqhdr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a4/post.status
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a4/post.verr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a4/post.vout
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a5/kcoll.http
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a5/kcoll.json
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a5/kcoll.reqhdr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a5/kcoll.status
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a5/kcoll.verr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a5/kcoll.vout
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a6/post.http
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a6/post.json
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a6/post.req
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a6/post.req.sha256
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a6/post.reqhdr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a6/post.status
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a6/post.verr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a6/post.vout
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a7/colon.http
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a7/colon.json
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a7/colon.reqhdr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a7/colon.status
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a7/colon.verr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a7/colon.vout
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a8/post.http
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a8/post.json
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a8/post.req
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a8/post.req.sha256
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a8/post.reqhdr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a8/post.status
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a8/post.verr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a8/post.vout
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a9/post.http
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a9/post.json
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a9/post.req
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a9/post.req.sha256
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a9/post.reqhdr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a9/post.status
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a9/post.verr
+          D .softhouse/reviews/t261-tenant-attestation/evidence/redB/a9/post.vout
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redB/src/colon/colon.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redB/src/dup/dup.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redB/src/empty/empty.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redB/src/kcoll/kcoll.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redB/src/post/post.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redB/src/post/post.verr
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redB/src/post/post.vout
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redB/src/colon/colon.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redB/src/dup/dup.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redB/src/empty/empty.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redB/src/kcoll/kcoll.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redB/src/post/post.resphdr
+
+--- .softhouse/reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh
+    ***  FAIL: exit 0, expected 2
+    ***  FAIL: no refusal text. first 6 lines:
+         T261 RED-DRIVE C -- trace-ascii wrap reassembly
+         curl: curl 8.7.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+         
+         Header value lengths swept across the 64-byte wrap boundary and well beyond.
+         'attested' is the length of the value recovered from the derived sidecar.
+         
+    ***  FAIL: t261-redC-wrap.sh left the tree DIRTY:
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L1/L1.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L10/L10.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L1000/L1000.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L127/L127.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L128/L128.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L129/L129.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L200/L200.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L300/L300.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L4000/L4000.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L60/L60.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L61/L61.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L62/L62.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L63/L63.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L64/L64.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L65/L65.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/L66/L66.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/Lmix/Lmix.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/crlf/crlf.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/dupid/dupid.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/dupid/verr
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/mb/mb.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/mbtrunc/mb.http
+          M .softhouse/reviews/t261-tenant-attestation/evidence/redC/mbtrunc/verr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L1/L1.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L10/L10.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L1000/L1000.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L127/L127.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L128/L128.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L129/L129.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L200/L200.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L300/L300.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L4000/L4000.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L60/L60.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L61/L61.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L62/L62.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L63/L63.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L64/L64.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L65/L65.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/L66/L66.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/Lmix/Lmix.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/crlf/crlf.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/dupid/dupid.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/mb/mb.resphdr
+         ?? .softhouse/reviews/t261-tenant-attestation/evidence/redC/mbtrunc/mb.resphdr
+
+==============================================================================
+ARM (a-scratch) — THE SANCTIONED ROUTE STILL WORKS: redirected, never in place
+==============================================================================
+--- .softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh  with T304_EVIDENCE_SCRATCH=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.edtSlkUSj3
+    exit=0
+    ***  FAIL: no redirect line; first 8 lines:
+         T274 (A) -- trace-ascii wrap reassembly across the 64-byte boundary
+         curl: curl 8.7.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+         verifier under test: /tmp/t304-scratch/.softhouse/capture/lib/wire_attestation.py
+           6daf0c2c4c7e85a479ea1cf669becea207bae72b5d5785779aa91ce6fd7990a8  /tmp/t304-scratch/.softhouse/capture/lib/wire_attestation.py
+         
+           L1       sent=1     attested=1     EXACT
+           L10      sent=10    attested=10    EXACT
+           L60      sent=60    attested=60    EXACT
+    ***  FAIL: the redirected run of 20-wrap-boundary-and-derivation-unchanged.sh left the tree DIRTY:
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1/L1.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1/L1.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L10/L10.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L10/L10.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L10/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L10/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1000/L1000.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1000/L1000.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1000/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L1000/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L127/L127.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L127/L127.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L127/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L127/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L128/L128.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L128/L128.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L128/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L128/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L129/L129.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L129/L129.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L129/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L129/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L200/L200.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L200/L200.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L200/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L200/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L300/L300.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L300/L300.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L300/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L300/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L4000/L4000.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L4000/L4000.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L4000/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L4000/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L60/L60.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L60/L60.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L60/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L60/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L61/L61.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L61/L61.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L61/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L61/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L62/L62.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L62/L62.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L62/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L62/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L63/L63.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L63/L63.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L63/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L63/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L64/L64.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L64/L64.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L64/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L64/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L65/L65.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L65/L65.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L65/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L65/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L66/L66.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L66/L66.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L66/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/L66/verify.out
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/Lmix/Lmix.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/Lmix/Lmix.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/Lmix/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/cmp-green/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/cmp-green/cmp.http
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/cmp-green/cmp.resphdr
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/cmp-red/capture.log
+          M .softhouse/capture/t274-attestation-failopen/evidence/wrap/cmp-red/cmp.http
+
+==============================================================================
+ARM (b/c) — DESTRUCTION THAT IS CORRECT BY DESIGN. UNTOUCHED. MUST STILL BE CLEAN.
+==============================================================================
+
+--- .softhouse/capture/t131-grep/probe-ignorefiles.sh
+    exit=0  (exit code is not the verdict here; the tree is)
+    OK   git status --porcelain is EMPTY after probe-ignorefiles.sh
+
+--- .softhouse/capture/t238-failopen/instruments/30-pr4-nondead-mechanisms.sh
+    exit=0  (exit code is not the verdict here; the tree is)
+    OK   git status --porcelain is EMPTY after 30-pr4-nondead-mechanisms.sh
+
+--- .softhouse/capture/t253-portability/instruments/50-t234-residue-probe.sh
+    exit=2  (exit code is not the verdict here; the tree is)
+    OK   git status --porcelain is EMPTY after 50-t234-residue-probe.sh
+
+==============================================================================
+PASS=3 FAIL=26

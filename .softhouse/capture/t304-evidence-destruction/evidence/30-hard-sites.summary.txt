@@ -1,0 +1,37 @@
+HARD sites over a tracked path: 223
+  ... of which destroy >=1 TRACKED FILE: 62, in 35 instruments
+    .softhouse/bin/fire-program.sh
+    .softhouse/capture/charges/bin/t51-capture.sh
+    .softhouse/capture/charges/bin/t51-capture3.sh
+    .softhouse/capture/pathb/t80/prove-f1.sh
+    .softhouse/capture/t131-grep/probe-ignorefiles.sh
+    .softhouse/capture/t238-failopen/instruments/30-pr4-nondead-mechanisms.sh
+    .softhouse/capture/t243-wiring/instruments/30-citation-red-drive.sh
+    .softhouse/capture/t250-tenant-attestation/instruments/20-redA-sidecar-tracks-the-send.sh
+    .softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh
+    .softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh
+    .softhouse/capture/t253-portability/instruments/50-t234-residue-probe.sh
+    .softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh
+    .softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh
+    .softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh
+    .softhouse/capture/t287-closure-refusals/cap.sh
+    .softhouse/capture/t287-closure-refusals/capsql.sh
+    .softhouse/capture/t294-openingbalance-refusal/cap.sh
+    .softhouse/capture/t294-openingbalance-refusal/capsql.sh
+    .softhouse/capture/t91/prove-guards.sh
+    .softhouse/capture/t91/run-attacks.sh
+    .softhouse/capture/tierA-a2/cap.sh
+    .softhouse/capture/tierA-a2/cap10.sh
+    .softhouse/capture/tierA-a2/cap8.sh
+    .softhouse/capture/tierA-a2/cap9.sh
+    .softhouse/capture/tierA-a2/capsql.sh
+    .softhouse/capture/tierA-a2/red-green-a2-15.sh
+    .softhouse/conformance.sh
+    .softhouse/reviews/T155-probe/prove-xiii-deflation.sh
+    .softhouse/reviews/T158-drive-t156-refusals.py
+    .softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh
+    .softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh
+    .softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh
+    .softhouse/reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh
+    .softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh
+    .softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh

@@ -1,0 +1,52 @@
+# T304 - POST-FIX re-run of instrument 100 against the FIXED build-fixture.sh.
+# The arm labelled RED is the PRE-FIX arm; "RED DID NOT REPRODUCE" is therefore the
+# DESIRED result here: the guard committed at 4263c8e2 fires first, nothing is damaged.
+
+scratch clone : /tmp/t304-deadcd
+HEAD          : 4263c8e2
+
+==============================================================================
+RED — build-fixture.sh AS COMMITTED, with an uncreatable scratch root
+==============================================================================
+  $ zsh .softhouse/reviews/t288-drive/build-fixture.sh /dev/null/t304-cannot-exist      (run from the repo root)
+    exit=2
+    last 3 lines of output:
+      mkdir: /dev/null: Not a directory
+      .softhouse/reviews/t288-drive/build-fixture.sh:cd:35: not a directory: /dev/null/t304-cannot-exist/repo
+      build-fixture: cannot cd to /dev/null/t304-cannot-exist/repo -- refusing rather than writing .softhouse/ in $PWD
+    STATE OF THE REAL CONTROL FILES AFTERWARDS:
+    HEAD          : 4263c8e2917729900513fb6e32c02070d750fef4  (unchanged)
+    branches      : worktree-agent-a6aebb11acf360806 
+    git user.name : SoftFactory  (unchanged)
+    tasks.json is the fixture? : no
+    dirty tree    : ''   <-- note: CLEAN even when clobbered
+    >>> RED DID NOT REPRODUCE — the claim is wrong, say so.
+
+==============================================================================
+GREEN — the same run with the one-line guard  cd "$REPO" || exit 2
+==============================================================================
+    patched: 35:cd "$REPO" || { echo "build-fixture: cannot cd to $REPO -- refusing rather than writing .softhouse/ in \$PWD" >&2; exit 2; }
+    exit=2
+    STATE OF THE REAL CONTROL FILES AFTERWARDS:
+    HEAD          : 4263c8e2917729900513fb6e32c02070d750fef4  (unchanged)
+    branches      : worktree-agent-a6aebb11acf360806 
+    git user.name : SoftFactory  (unchanged)
+    tasks.json is the fixture? : no
+    dirty tree    : ''   <-- note: CLEAN even when clobbered
+
+    >>> GREEN. Non-zero exit; HEAD, branches, identity and tasks.json all untouched.
+
+==============================================================================
+CONTROL — the guarded build still works on a GOOD scratch root
+==============================================================================
+    exit=0  base=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.eBJgeRggnT/t288
+      fixture built at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.eBJgeRggnT/t288
+      bb12e07 fixture: repo with three dead dispatches still marked in_progress
+      /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.eBJgeRggnT/t288/repo              bb12e07 [main]
+      /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.eBJgeRggnT/t288/agent-fixture900  bb12e07 [softhouse/t900-uncommitted]
+    fixture tasks.json present: YES
+    HEAD          : 4263c8e2917729900513fb6e32c02070d750fef4  (unchanged)
+    branches      : worktree-agent-a6aebb11acf360806 
+    git user.name : SoftFactory  (unchanged)
+    tasks.json is the fixture? : no
+    dirty tree    : ''   <-- note: CLEAN even when clobbered

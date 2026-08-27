@@ -1,0 +1,74 @@
+scratch clone : /tmp/t304-scratch
+cloned from   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6aebb11acf360806
+HEAD          : c69f0f37
+
+==============================================================================
+ARM (a) — WIRED INSTRUMENTS MUST REFUSE, AND LEAVE THE TREE CLEAN
+==============================================================================
+
+--- .softhouse/capture/t250-tenant-attestation/instruments/20-redA-sidecar-tracks-the-send.sh
+    OK   exit 2
+    OK   refusal fired: holds  : 14 TRACKED files
+    OK   git status --porcelain is EMPTY after 20-redA-sidecar-tracks-the-send.sh
+
+--- .softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh
+    OK   exit 2
+    OK   refusal fired: holds  : 70 TRACKED files
+    OK   git status --porcelain is EMPTY after 30-redB-mismatch-detected.sh
+
+--- .softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh
+    OK   exit 2
+    OK   refusal fired: holds  : 24 TRACKED files
+    OK   git status --porcelain is EMPTY after 40-redC-shapes-not-designed-around.sh
+
+--- .softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh
+    OK   exit 2
+    OK   refusal fired: holds  : 426 TRACKED files
+    OK   git status --porcelain is EMPTY after 10-four-routes-red-green.sh
+
+--- .softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh
+    OK   exit 2
+    OK   refusal fired: holds  : 145 TRACKED files
+    OK   git status --porcelain is EMPTY after 20-wrap-boundary-and-derivation-unchanged.sh
+
+--- .softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh
+    OK   exit 2
+    OK   refusal fired: holds  : 91 TRACKED files
+    OK   git status --porcelain is EMPTY after 30-t250-arms-still-hold.sh
+
+--- .softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh
+    OK   exit 2
+    OK   refusal fired: holds  : 107 TRACKED files
+    OK   git status --porcelain is EMPTY after t261-redB-attack.sh
+
+--- .softhouse/reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh
+    OK   exit 2
+    OK   refusal fired: holds  : 110 TRACKED files
+    OK   git status --porcelain is EMPTY after t261-redC-wrap.sh
+
+==============================================================================
+ARM (a-scratch) — THE SANCTIONED ROUTE STILL WORKS: redirected, never in place
+==============================================================================
+--- .softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh  with T304_EVIDENCE_SCRATCH=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ESgRWvIgoq
+    exit=0
+    OK   guard redirected to the scratch root
+    OK   git status --porcelain is EMPTY after the redirected run of 20-wrap-boundary-and-derivation-unchanged.sh
+
+==============================================================================
+ARM (b/c) — DESTRUCTION THAT IS CORRECT BY DESIGN. UNTOUCHED. MUST STILL BE CLEAN.
+==============================================================================
+
+--- .softhouse/capture/t131-grep/probe-ignorefiles.sh
+    exit=0  (exit code is not the verdict here; the tree is)
+    OK   git status --porcelain is EMPTY after probe-ignorefiles.sh
+
+--- .softhouse/capture/t238-failopen/instruments/30-pr4-nondead-mechanisms.sh
+    exit=0  (exit code is not the verdict here; the tree is)
+    OK   git status --porcelain is EMPTY after 30-pr4-nondead-mechanisms.sh
+
+--- .softhouse/capture/t253-portability/instruments/50-t234-residue-probe.sh
+    exit=2  (exit code is not the verdict here; the tree is)
+    OK   git status --porcelain is EMPTY after 50-t234-residue-probe.sh
+
+==============================================================================
+PASS=29 FAIL=0

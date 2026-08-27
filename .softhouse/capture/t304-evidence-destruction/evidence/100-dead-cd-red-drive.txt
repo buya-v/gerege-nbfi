@@ -1,0 +1,73 @@
+scratch clone : /tmp/t304-deadcd
+HEAD          : 000b6ffd
+
+==============================================================================
+RED — build-fixture.sh AS COMMITTED, with an uncreatable scratch root
+==============================================================================
+  $ zsh .softhouse/reviews/t288-drive/build-fixture.sh /dev/null/t304-cannot-exist      (run from the repo root)
+    exit=128
+    last 3 lines of output:
+      fixture built at /dev/null/t304-cannot-exist
+      fatal: cannot change to '/dev/null/t304-cannot-exist/repo': Not a directory
+      fatal: cannot change to '/dev/null/t304-cannot-exist/repo': Not a directory
+    STATE OF THE REAL CONTROL FILES AFTERWARDS:
+    HEAD          : 6490ab90253986135d28e59dc4b7a4fdb4d49854  <== MOVED
+    branches      : main softhouse/t900-uncommitted softhouse/t901-committed worktree-agent-a6aebb11acf360806 
+                    <== CHANGED (was: worktree-agent-a6aebb11acf360806 )
+    git user.name : Fixture  <== REWRITTEN
+    tasks.json is the fixture? : no
+    dirty tree    : ''   <-- note: CLEAN even when clobbered
+
+    >>> RED CONFIRMED. The dead cd let the fixture builder overwrite the LIVE
+        orchestrator control files AND COMMIT THE OVERWRITE. First 3 lines of
+        the clobbered tasks.json:
+          {
+            "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
+            "status": "active",
+        WHERE THE DAMAGE ACTUALLY WENT. The builder overwrote the three control
+        files, COMMITTED them, and then ran 'git checkout -b', so the working tree
+        shows a pristine file while the clobber sits in history on another ref.
+        Every ref carrying the fixture commit:
+          4b929765 fixture: repo with three dead dispatches still marked in_progress
+        ...and which refs contain it:
+              softhouse/t901-committed
+              worktree-agent-a6aebb11acf360806
+            tasks.json AT that commit:
+              {
+                "run_id": "t288-fixture",
+                "status": "active",
+        reflog (the only place the move is recorded):
+          6490ab90 HEAD@{0}: checkout: moving from softhouse/t901-committed to main
+          6ae201c3 HEAD@{1}: commit: T901 WIP
+          4b929765 HEAD@{2}: checkout: moving from worktree-agent-a6aebb11acf360806 to softhouse/t901-committed
+          4b929765 HEAD@{3}: commit: fixture: repo with three dead dispatches still marked in_progress
+          000b6ffd HEAD@{4}: clone: from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6aebb11acf360806
+
+==============================================================================
+GREEN — the same run with the one-line guard  cd "$REPO" || exit 2
+==============================================================================
+    patched: 27:cd "$REPO" || exit 2
+    exit=2
+    STATE OF THE REAL CONTROL FILES AFTERWARDS:
+    HEAD          : 000b6ffdc7706aea179db8d6256a276a8d6818f3  (unchanged)
+    branches      : worktree-agent-a6aebb11acf360806 
+    git user.name : SoftFactory  (unchanged)
+    tasks.json is the fixture? : no
+    dirty tree    : ' M .softhouse/reviews/t288-drive/build-fixture.sh'   <-- note: CLEAN even when clobbered
+
+    >>> GREEN. Non-zero exit; HEAD, branches, identity and tasks.json all untouched.
+
+==============================================================================
+CONTROL — the guarded build still works on a GOOD scratch root
+==============================================================================
+    exit=0  base=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.EFqSeAKbRT/t288
+      fixture built at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.EFqSeAKbRT/t288
+      7a4ff56 fixture: repo with three dead dispatches still marked in_progress
+      /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.EFqSeAKbRT/t288/repo              7a4ff56 [main]
+      /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.EFqSeAKbRT/t288/agent-fixture900  7a4ff56 [softhouse/t900-uncommitted]
+    fixture tasks.json present: YES
+    HEAD          : 000b6ffdc7706aea179db8d6256a276a8d6818f3  (unchanged)
+    branches      : worktree-agent-a6aebb11acf360806 
+    git user.name : SoftFactory  (unchanged)
+    tasks.json is the fixture? : no
+    dirty tree    : ' M .softhouse/reviews/t288-drive/build-fixture.sh'   <-- note: CLEAN even when clobbered
