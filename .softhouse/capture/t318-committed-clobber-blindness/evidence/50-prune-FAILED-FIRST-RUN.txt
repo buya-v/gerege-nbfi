@@ -1,0 +1,21 @@
+T318 INSTRUMENT 50 — DRIVING THE lib-worktree-prune MITIGATION
+lib   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae160b0ab4ef8b862/.softhouse/bin/lib-worktree-prune.zsh
+root  : /private/tmp/t318-prune-runfail
+date  : 2026-08-27T16:24:35Z
+\n=== P1 — mitigation WORKING: committed clobber on the worktree branch
+    LEGACY (git status --porcelain) : CLEAN
+    wt_prune_check                  : rc=1  KEEP: could not determine merge status of softhouse/T318-fixture-a into main (git merge-base --is-ancestor rc=128) — treated as NOT merged
+    repo-state-attest               : rc=1
+  PASS  P1  prune check answered KEEP — the merge-base rule DID cover this shape
+  PASS  P1  repo-state-attest also flagged it (rc=1)
+\n=== P2 — mitigation FAILING: merged worktree, tree only LOOKS clean
+    on-disk tasks.json              : 61 bytes of unrecoverable content
+    LEGACY (git status --porcelain) : CLEAN
+    wt_prune_check                  : rc=1  KEEP: could not determine merge status of softhouse/T318-fixture-b into main (git merge-base --is-ancestor rc=128) — treated as NOT merged
+    repo-state-attest               : rc=1
+    repo-state-attest findings:
+      |   DAMAGE    T5 index SKIP BITS went 0 -> 1. `git update-index --assume-unchanged` / `--skip-worktree` silences `git status --porcelain` WITHOUT moving HEAD, touching a ref, or changing config -- T1, T2 and T6 all miss it.
+  FAIL  P2 (RED ARM) DID NOT REPRODUCE: prune check answered rc=1 (KEEP: could not determine merge status of softhouse/T318-fixture-b into main (git merge-base --is-ancestor rc=128) — treated as NOT merged). The mitigation is broader than claimed; re-read the handoff.
+  PASS  P2  repo-state-attest caught what the prune check could not (rc=1)
+\nPASS=3  FAIL=1
+scratch kept at: /private/tmp/t318-prune-runfail
