@@ -1,0 +1,307 @@
+T318 INSTRUMENT 30 — RED/GREEN DRIVE
+guard : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae160b0ab4ef8b862/.softhouse/guards/repo-state-attest.sh
+repo  : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae160b0ab4ef8b862
+root  : /private/tmp/t318-drive-run4
+date  : 2026-08-27T16:06:38Z
+
+=== RED ARMS — damage that `git status --porcelain` reports as CLEAN
+
+--- A1 : build-fixture dead-cd shape: reinit + config + 3 files + COMMIT + branch away
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=1 (expected 1)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/A1.before  after=/private/tmp/t318-drive-run4/A1.after
+      |   repo: /private/tmp/t318-drive-run4/A1
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   info      T1 HEAD fast-forwarded on the WRIT branch refs/heads/t318-work: 3498b334b0822e6b5c8e5735164e1b12129bc17e -> 3b0217e4f3194193990e905ff81651eb9923181f  (authorized)
+      |   info      T2 writ branch refs/heads/t318-work fast-forwarded 3498b334b0822e6b5c8e5735164e1b12129bc17e -> 3b0217e4f3194193990e905ff81651eb9923181f (authorized)
+      |   DAMAGE    T2 NEW REF created outside the writ: refs/heads/softhouse/t901-committed -> 3b0217e4f3194193990e905ff81651eb9923181f
+      |   DAMAGE    T6 config user.email REWRITTEN: 'buya.vol@gmail.com' -> 'fixture@example.invalid'  (no legitimate operation in this program writes committer identity; `git -c k=v commit` is per-invocation and does NOT change it)
+      |   DAMAGE    T6 config user.name REWRITTEN: 'SoftFactory' -> 'Fixture'  (no legitimate operation in this program writes committer identity; `git -c k=v commit` is per-invocation and does NOT change it)
+      |   DAMAGE    T7 INVARIANT ARTEFACT CHANGED IN HEAD WITHOUT BEING DECLARED: .softhouse/tasks.json  d4a820795c69f94d01301c80252c9418e1a7da6d -> 18885b7f33a50f4fa05867d32aa8ad6f00a64a22  (pass --writ-artefact '.softhouse/tasks.json' if the operation was supposed to change it)
+      |   DAMAGE    T7 INVARIANT ARTEFACT CHANGED IN HEAD WITHOUT BEING DECLARED: .softhouse/RESUME.md  3a103c186cd276cb33941d3a9528481faf7d83d3 -> cd9075049f7eca9b5520db341fb524855f03409f  (pass --writ-artefact '.softhouse/RESUME.md' if the operation was supposed to change it)
+      |   DAMAGE    T7 INVARIANT ARTEFACT CHANGED IN HEAD WITHOUT BEING DECLARED: .softhouse/program.json  e9dbb21add2dc3eb602ea195e38faad7c462ca35 -> 730f13e2ffa082d2b1c44f86a9e5e300331b3630  (pass --writ-artefact '.softhouse/program.json' if the operation was supposed to change it)
+      | ----------------------------------------------------------------
+      | VERDICT: DAMAGE (6 finding(s)) -- legacy predicate said: CLEAN (0 entries)
+  PASS  A1  build-fixture dead-cd shape: reinit + config + 3 files + COMMIT + branch away
+
+--- A1b : MINIMAL committed clobber: commit over tasks.json, no branch-away, no config
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=1 (expected 1)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/A1b.before  after=/private/tmp/t318-drive-run4/A1b.after
+      |   repo: /private/tmp/t318-drive-run4/A1b
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   info      T1 HEAD fast-forwarded on the WRIT branch refs/heads/t318-work: 3498b334b0822e6b5c8e5735164e1b12129bc17e -> 4681ffbc28fd8d4d8899d86520e132a264314893  (authorized)
+      |   info      T2 writ branch refs/heads/t318-work fast-forwarded 3498b334b0822e6b5c8e5735164e1b12129bc17e -> 4681ffbc28fd8d4d8899d86520e132a264314893 (authorized)
+      |   DAMAGE    T7 INVARIANT ARTEFACT CHANGED IN HEAD WITHOUT BEING DECLARED: .softhouse/tasks.json  d4a820795c69f94d01301c80252c9418e1a7da6d -> 18885b7f33a50f4fa05867d32aa8ad6f00a64a22  (pass --writ-artefact '.softhouse/tasks.json' if the operation was supposed to change it)
+      |   DAMAGE    T7 INVARIANT ARTEFACT CHANGED IN HEAD WITHOUT BEING DECLARED: .softhouse/RESUME.md  3a103c186cd276cb33941d3a9528481faf7d83d3 -> cd9075049f7eca9b5520db341fb524855f03409f  (pass --writ-artefact '.softhouse/RESUME.md' if the operation was supposed to change it)
+      |   DAMAGE    T7 INVARIANT ARTEFACT CHANGED IN HEAD WITHOUT BEING DECLARED: .softhouse/program.json  e9dbb21add2dc3eb602ea195e38faad7c462ca35 -> 730f13e2ffa082d2b1c44f86a9e5e300331b3630  (pass --writ-artefact '.softhouse/program.json' if the operation was supposed to change it)
+      | ----------------------------------------------------------------
+      | VERDICT: DAMAGE (3 finding(s)) -- legacy predicate said: CLEAN (0 entries)
+  PASS  A1b  MINIMAL committed clobber: commit over tasks.json, no branch-away, no config
+
+--- A2 : git stash — empties the tree into refs/stash
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=1 (expected 1)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/A2.before  after=/private/tmp/t318-drive-run4/A2.after
+      |   repo: /private/tmp/t318-drive-run4/A2
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   DAMAGE    T2 refs/stash CREATED -- `git stash` empties the working tree into a ref, so `git status` reports CLEAN. SKILL.md:76 forbids stashing worker WIP outright.
+      | ----------------------------------------------------------------
+      | VERDICT: DAMAGE (1 finding(s)) -- legacy predicate said: CLEAN (0 entries)
+  PASS  A2  git stash — empties the tree into refs/stash
+
+--- A3 : update-index --assume-unchanged then clobber the file
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=1 (expected 1)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/A3.before  after=/private/tmp/t318-drive-run4/A3.after
+      |   repo: /private/tmp/t318-drive-run4/A3
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   DAMAGE    T5 index SKIP BITS went 0 -> 1. `git update-index --assume-unchanged` / `--skip-worktree` silences `git status --porcelain` WITHOUT moving HEAD, touching a ref, or changing config -- T1, T2 and T6 all miss it.
+      | ----------------------------------------------------------------
+      | VERDICT: DAMAGE (1 finding(s)) -- legacy predicate said: CLEAN (0 entries)
+  PASS  A3  update-index --assume-unchanged then clobber the file
+
+--- A4 : commit then reset --hard to a non-descendant
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=1 (expected 1)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/A4.before  after=/private/tmp/t318-drive-run4/A4.after
+      |   repo: /private/tmp/t318-drive-run4/A4
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   DAMAGE    T1 HEAD moved NON-FAST-FORWARD: 3498b334b0822e6b5c8e5735164e1b12129bc17e -> dfe34de09e2f32f1c6c6c4a07e4c97c238ad159d  (old HEAD is NOT an ancestor of new HEAD: amend / reset / rebase / clobber)
+      |   DAMAGE    T2 ref refs/heads/t318-work moved NON-FAST-FORWARD 3498b334b0822e6b5c8e5735164e1b12129bc17e -> dfe34de09e2f32f1c6c6c4a07e4c97c238ad159d (work that was on it is now unreachable)
+      | ----------------------------------------------------------------
+      | VERDICT: DAMAGE (2 finding(s)) -- legacy predicate said: CLEAN (0 entries)
+  PASS  A4  commit then reset --hard to a non-descendant
+
+--- A5 : checkout -b from the SAME commit (HEAD sha identical, wrong branch)
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=1 (expected 1)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/A5.before  after=/private/tmp/t318-drive-run4/A5.after
+      |   repo: /private/tmp/t318-drive-run4/A5
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   DAMAGE    T1 HEAD ref CHANGED to a ref the writ does NOT name: refs/heads/t318-work -> refs/heads/worktree-agent-shadow  (a `git checkout -b` from the same commit leaves the SHA BYTE-IDENTICAL -- only this term sees it)
+      |   DAMAGE    T2 NEW REF created outside the writ: refs/heads/worktree-agent-shadow -> 3498b334b0822e6b5c8e5735164e1b12129bc17e
+      | ----------------------------------------------------------------
+      | VERDICT: DAMAGE (2 finding(s)) -- legacy predicate said: CLEAN (0 entries)
+  PASS  A5  checkout -b from the SAME commit (HEAD sha identical, wrong branch)
+
+--- A6 : refs outside refs/heads: tag + notes + refs/hidden/*
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=1 (expected 1)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/A6.before  after=/private/tmp/t318-drive-run4/A6.after
+      |   repo: /private/tmp/t318-drive-run4/A6
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   DAMAGE    T2 NEW REF created outside the writ: refs/hidden/t318 -> 3498b334b0822e6b5c8e5735164e1b12129bc17e
+      |   DAMAGE    T2 NEW REF created outside the writ: refs/notes/commits -> 4e56adb7239c596b3c45e72f80acf9f64befcd1b
+      |   DAMAGE    T2 NEW REF created outside the writ: refs/tags/t318-stray-tag -> 3498b334b0822e6b5c8e5735164e1b12129bc17e
+      | ----------------------------------------------------------------
+      | VERDICT: DAMAGE (3 finding(s)) -- legacy predicate said: CLEAN (0 entries)
+  PASS  A6  refs outside refs/heads: tag + notes + refs/hidden/*
+
+--- A7 : git config user.name/user.email rewritten, nothing else
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=1 (expected 1)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/A7.before  after=/private/tmp/t318-drive-run4/A7.after
+      |   repo: /private/tmp/t318-drive-run4/A7
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   DAMAGE    T6 config user.email REWRITTEN: 'buya.vol@gmail.com' -> 'fixture@example.invalid'  (no legitimate operation in this program writes committer identity; `git -c k=v commit` is per-invocation and does NOT change it)
+      |   DAMAGE    T6 config user.name REWRITTEN: 'SoftFactory' -> 'Fixture'  (no legitimate operation in this program writes committer identity; `git -c k=v commit` is per-invocation and does NOT change it)
+      | ----------------------------------------------------------------
+      | VERDICT: DAMAGE (2 finding(s)) -- legacy predicate said: CLEAN (0 entries)
+  PASS  A7  git config user.name/user.email rewritten, nothing else
+
+--- A9 : a ref DELETED (unmerged work destroyed, tree untouched)
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=1 (expected 1)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/A9.before  after=/private/tmp/t318-drive-run4/A9.after
+      |   repo: /private/tmp/t318-drive-run4/A9
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   DAMAGE    T2 REF DELETED: refs/remotes/origin/main  (a deleted branch destroys unmerged work and leaves `git status` clean)
+      | ----------------------------------------------------------------
+      | VERDICT: DAMAGE (1 finding(s)) -- legacy predicate said: CLEAN (0 entries)
+  PASS  A9  a ref DELETED (unmerged work destroyed, tree untouched)
+
+=== ADVISORY ARM — real, but deliberately NOT blocking (boundary argued)
+
+--- A8 : scratch leak behind a .gitignore fence (T314's corollary)
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=0 (expected 0)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/A8.before  after=/private/tmp/t318-drive-run4/A8.after
+      |   repo: /private/tmp/t318-drive-run4/A8
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   info      T1 HEAD fast-forwarded on the WRIT branch refs/heads/t318-work: 3498b334b0822e6b5c8e5735164e1b12129bc17e -> 9eb6023fe394964f5fafd94b5c90e5e37859c029  (authorized)
+      |   info      T2 writ branch refs/heads/t318-work fast-forwarded 3498b334b0822e6b5c8e5735164e1b12129bc17e -> 9eb6023fe394964f5fafd94b5c90e5e37859c029 (authorized)
+      |   ADVISORY  T4 NEW IGNORED FILE, invisible to `git status` forever: .softhouse/capture/t318-scratchtest/scratch-leak.json  (T314's corollary to P-94: a scratch fence is scoped to the prefix it names)
+      | ----------------------------------------------------------------
+      | VERDICT: NO DAMAGE -- every delta is inside the declared writ
+  PASS  A8  scratch leak behind a .gitignore fence (T314's corollary)
+
+=== GREEN ARMS — legitimate work that must NOT be flagged (adoptability)
+
+--- G1 : an ordinary commit on the writ branch
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=0 (expected 0)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/G1.before  after=/private/tmp/t318-drive-run4/G1.after
+      |   repo: /private/tmp/t318-drive-run4/G1
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   info      T1 HEAD fast-forwarded on the WRIT branch refs/heads/t318-work: 3498b334b0822e6b5c8e5735164e1b12129bc17e -> f49dd81fa8ca299c3bb33813da603692021c61f3  (authorized)
+      |   info      T2 writ branch refs/heads/t318-work fast-forwarded 3498b334b0822e6b5c8e5735164e1b12129bc17e -> f49dd81fa8ca299c3bb33813da603692021c61f3 (authorized)
+      | ----------------------------------------------------------------
+      | VERDICT: NO DAMAGE -- every delta is inside the declared writ
+  PASS  G1  an ordinary commit on the writ branch
+
+--- G2 : three ordinary commits, one legitimately editing tasks.json (declared)
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=0 (expected 0)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/G2.before  after=/private/tmp/t318-drive-run4/G2.after
+      |   repo: /private/tmp/t318-drive-run4/G2
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   info      T1 HEAD fast-forwarded on the WRIT branch refs/heads/t318-work: 3498b334b0822e6b5c8e5735164e1b12129bc17e -> f204bf0c141dfc5303dd394c98377f4828794d91  (authorized)
+      |   info      T2 writ branch refs/heads/t318-work fast-forwarded 3498b334b0822e6b5c8e5735164e1b12129bc17e -> f204bf0c141dfc5303dd394c98377f4828794d91 (authorized)
+      |   info      T7 invariant artefact changed in HEAD, and the writ names it: .softhouse/tasks.json  d4a820795c69f94d01301c80252c9418e1a7da6d -> 38b5c971516125f4c33401ff7f9ad391116f2ca1
+      |   info      T7 invariant artefact changed in HEAD, and the writ names it: CLAUDE.md  e072e3b1df8b07ee7b8659e0e1f982af6213383c -> 36422a60bd7835c0ffd7c5df93063698df6af1f6
+      | ----------------------------------------------------------------
+      | VERDICT: NO DAMAGE -- every delta is inside the declared writ
+  PASS  G2  three ordinary commits, one legitimately editing tasks.json (declared)
+
+--- G3 : git -c user.name=... commit (fire-program.sh:1213's own rescue idiom)
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=0 (expected 0)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/G3.before  after=/private/tmp/t318-drive-run4/G3.after
+      |   repo: /private/tmp/t318-drive-run4/G3
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   info      T1 HEAD fast-forwarded on the WRIT branch refs/heads/t318-work: 3498b334b0822e6b5c8e5735164e1b12129bc17e -> 372bfe20a8ec527bcf56e8db92eff732bcd2747a  (authorized)
+      |   info      T2 writ branch refs/heads/t318-work fast-forwarded 3498b334b0822e6b5c8e5735164e1b12129bc17e -> 372bfe20a8ec527bcf56e8db92eff732bcd2747a (authorized)
+      |   info      T7 invariant artefact changed in HEAD, and the writ names it: CLAUDE.md  e072e3b1df8b07ee7b8659e0e1f982af6213383c -> 2971081dc77b8f3fc207c72b115d9ed36e245130
+      | ----------------------------------------------------------------
+      | VERDICT: NO DAMAGE -- every delta is inside the declared writ
+  PASS  G3  git -c user.name=... commit (fire-program.sh:1213's own rescue idiom)
+
+--- G4 : nothing happens at all (null control)
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=0 (expected 0)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/G4.before  after=/private/tmp/t318-drive-run4/G4.after
+      |   repo: /private/tmp/t318-drive-run4/G4
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      | ----------------------------------------------------------------
+      | VERDICT: NO DAMAGE -- every delta is inside the declared writ
+  PASS  G4  nothing happens at all (null control)
+
+--- G5 : worker creates its own declared task branch and commits
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=0 (expected 0)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/G5.before  after=/private/tmp/t318-drive-run4/G5.after
+      |   repo: /private/tmp/t318-drive-run4/G5
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   info      T1 HEAD ref moved refs/heads/t318-work -> refs/heads/softhouse/T999-legit, which the writ names (authorized)
+      |   info      T1 HEAD fast-forwarded on the WRIT branch refs/heads/softhouse/T999-legit: 3498b334b0822e6b5c8e5735164e1b12129bc17e -> 76dffd952bb833811c19b0aca568f34869464415  (authorized)
+      |   info      T2 new ref refs/heads/softhouse/T999-legit (authorized by --allow-new-ref)
+      |   info      T7 invariant artefact changed in HEAD, and the writ names it: CLAUDE.md  e072e3b1df8b07ee7b8659e0e1f982af6213383c -> b097e9e7af4aa9e0ed05ddb8e715c81dbbfb3aad
+      | ----------------------------------------------------------------
+      | VERDICT: NO DAMAGE -- every delta is inside the declared writ
+  PASS  G5  worker creates its own declared task branch and commits
+
+--- G6 : A1b's mutation, but the writ DECLARES the three artefacts
+    mutator rc=0
+    LEGACY (git status --porcelain) : CLEAN   (expected CLEAN)
+    GUARD  (repo-state-attest)      : rc=0 (expected 0)
+      | ================================================================
+      | repo-state-attest.sh: ATTESTATION  before=/private/tmp/t318-drive-run4/G6.before  after=/private/tmp/t318-drive-run4/G6.after
+      |   repo: /private/tmp/t318-drive-run4/G6
+      | ----------------------------------------------------------------
+      |   LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      | ----------------------------------------------------------------
+      |   info      T1 HEAD fast-forwarded on the WRIT branch refs/heads/t318-work: 3498b334b0822e6b5c8e5735164e1b12129bc17e -> a4414778e5bb3ae387d4985595509191b89e06cd  (authorized)
+      |   info      T2 writ branch refs/heads/t318-work fast-forwarded 3498b334b0822e6b5c8e5735164e1b12129bc17e -> a4414778e5bb3ae387d4985595509191b89e06cd (authorized)
+      |   info      T7 invariant artefact changed in HEAD, and the writ names it: .softhouse/tasks.json  d4a820795c69f94d01301c80252c9418e1a7da6d -> 18885b7f33a50f4fa05867d32aa8ad6f00a64a22
+      |   info      T7 invariant artefact changed in HEAD, and the writ names it: .softhouse/RESUME.md  3a103c186cd276cb33941d3a9528481faf7d83d3 -> cd9075049f7eca9b5520db341fb524855f03409f
+      |   info      T7 invariant artefact changed in HEAD, and the writ names it: .softhouse/program.json  e9dbb21add2dc3eb602ea195e38faad7c462ca35 -> 730f13e2ffa082d2b1c44f86a9e5e300331b3630
+      | ----------------------------------------------------------------
+      | VERDICT: NO DAMAGE -- every delta is inside the declared writ
+  PASS  G6  A1b's mutation, but the writ DECLARES the three artefacts
+
+=== FAIL-CLOSED ARM
+  PASS  X1  repo destroyed between snapshots — must REFUSE, never report clean  [snapshot REFUSED rc=2, as required]
+
+=== SUMMARY
+ARM  DESCRIPTION                                                              LEGACY  GUARD
+A1   build-fixture dead-cd shape: reinit + config + 3 files + COMMIT + branch away CLEAN   1
+A1b  MINIMAL committed clobber: commit over tasks.json, no branch-away, no config CLEAN   1
+A2   git stash — empties the tree into refs/stash                           CLEAN   1
+A3   update-index --assume-unchanged then clobber the file                    CLEAN   1
+A4   commit then reset --hard to a non-descendant                             CLEAN   1
+A5   checkout -b from the SAME commit (HEAD sha identical, wrong branch)      CLEAN   1
+A6   refs outside refs/heads: tag + notes + refs/hidden/*                     CLEAN   1
+A7   git config user.name/user.email rewritten, nothing else                  CLEAN   1
+A9   a ref DELETED (unmerged work destroyed, tree untouched)                  CLEAN   1
+A8   scratch leak behind a .gitignore fence (T314's corollary)                CLEAN   0
+G1   an ordinary commit on the writ branch                                    CLEAN   0
+G2   three ordinary commits, one legitimately editing tasks.json (declared)   CLEAN   0
+G3   git -c user.name=... commit (fire-program.sh:1213's own rescue idiom)    CLEAN   0
+G4   nothing happens at all (null control)                                    CLEAN   0
+G5   worker creates its own declared task branch and commits                  CLEAN   0
+G6   A1b's mutation, but the writ DECLARES the three artefacts                CLEAN   0
+X1   repo destroyed between snapshots — must REFUSE, never report clean     CLEAN   SNAPSHOT-REFUSED(2)
+
+PASS=17  FAIL=0
+scratch kept at: /private/tmp/t318-drive-run4
