@@ -1,0 +1,43 @@
+==============================================================
+PART A -- F3a: the candidate filter, on foreign_live_session_in_repo's bytes
+==============================================================
+cut lines 1063-1190 of /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6e1f1cf817ead480/.softhouse/capture/t319-reconciler-f5/../../bin/fire-program.sh
+live subject: pid 34411 (a /bin/sleep this script started, and only that)
+
+CASE 1  live session, command '/Applications/Claude Code/claude --resume', cwd IN-REPO
+        (pre-T319 this matched NOTHING: examined=0 -> return 1 = MAY RECONCILE)
+    evidence: claude processes examined=1 (of which 1 matched only by MENTIONING claude, not by executable name) in-repo=1 unreadable=0 -- [pid 34411 cwd /Users/buv/gerege-nbfi IN-REPO]
+    rc=0
+    >>> OK   rc (0 = a live foreign session was found, caller must NOT reconcile) (= 0)
+
+CASE 2  live 'node /opt/claude/cli.js', cwd ELSEWHERE
+    evidence: claude processes examined=1 (of which 1 matched only by MENTIONING claude, not by executable name) in-repo=0 unreadable=0 -- [pid 34411 cwd /Users/buv elsewhere]
+    rc=1
+    >>> OK   rc (1 = examined and dismissed on CWD, not skipped unseen) (= 1)
+
+CASE 3  live '/usr/sbin/notaclaude', which merely CONTAINS the letters
+        (a bare *claude* substring test matches this; a PATH-SEGMENT test does not)
+    evidence: claude processes examined=0 (of which 0 matched only by MENTIONING claude, not by executable name) in-repo=0 unreadable=0 --
+    rc=1
+.softhouse/capture/t319-reconciler-f5/drive-wrapper-fixes.zsh:107: command not found: notaclaude
+    >>> OK   rc (1 = substring-only match must NOT count;  is not claude) (= 1)
+
+CASE 4  control: '/Users/buv/.local/bin/claude -p ...', cwd IN-REPO
+    evidence: claude processes examined=1 (of which 0 matched only by MENTIONING claude, not by executable name) in-repo=1 unreadable=0 -- [pid 34411 cwd /Users/buv/gerege-nbfi IN-REPO]
+    rc=0
+    >>> OK   rc (0 = unchanged from before T319) (= 0)
+
+==============================================================
+PART B -- F2: the rescue's three return codes, against a stale index.lock
+==============================================================
+planted stale index.lock at /private/tmp/t319resc.llLFd8/main/.git/worktrees/wt/index.lock
+    checkout rc=128   add rc=128   commit rc=128
+    T319 logs: NOTHING was rescued
+    pre-T319 logged UNCONDITIONALLY: rescued agent-t319 -> softhouse/rescued-agent-t319-20260828-t319
+    GROUND TRUTH: branch 'softhouse/rescued-agent-t319-20260828-t319' exists? 0   worktree still dirty? 1 path(s)
+    >>> OK   verdict matches ground truth (branch absent => NOTHING was rescued) (= NOTHING was rescued)
+    >>> OK   no RESCUE_PAIRS entry would be appended (T319 'continue's before it) (= 0)
+
+==============================================================
+T319 wrapper drives: 6 correct, 0 wrong
+==============================================================

@@ -1,0 +1,62 @@
+repo: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6e1f1cf817ead480
+lock commit 5428c0a4 -- in_progress (8): T297 T298 T299 T302 T304 T305 T306 T308
+disp commit 5964ab54 -- in_progress (8): T297 T298 T302 T304 T305 T306 T308 T309
+
+T309's PREDICATE (term 1 alone): 7 demotable  -- T297 T298 T302 T304 T305 T306 T308
+CORRECT ANSWER at the dispatch commit: 0 -- every one is a live worker.
+
+T319 TERM 2 -- has this fire written to the task's record since the lock?
+id        UNTOUCHED  keys this fire rewrote
+T297      False      attempts, fire, note
+            attempts       0
+                           1
+            fire           None
+                           '20260823-140001'
+            note           'dispatched fire 20260823-080004 session 2 (driver pid 93922
+                           'dispatched by fire 20260823-140001 batch 1; record PUSHED B
+T298      False      attempts, fire, note
+            attempts       0
+                           1
+            fire           None
+                           '20260823-140001'
+            note           'dispatched fire 20260823-080004 session 2 (driver pid 93922
+                           'dispatched by fire 20260823-140001 batch 1; record PUSHED B
+T302      False      attempts, fire, note
+            attempts       0
+                           1
+            fire           None
+                           '20260823-140001'
+            note           'dispatched fire 20260823-080004 session 2 (driver pid 93922
+                           'dispatched by fire 20260823-140001 batch 1; record PUSHED B
+T304      False      attempts, fire, note
+            attempts       0
+                           1
+            fire           None
+                           '20260823-140001'
+            note           'dispatched fire 20260823-080004 session 2 (driver pid 93922
+                           'dispatched by fire 20260823-140001 batch 1; record PUSHED B
+T305      False      attempts, fire, note
+            attempts       0
+                           1
+            fire           None
+                           '20260823-140001'
+            note           'dispatched fire 20260823-080004 session 2 (driver pid 93922
+                           'dispatched by fire 20260823-140001 batch 1; record PUSHED B
+T306      False      attempts, fire, note
+            attempts       0
+                           1
+            fire           None
+                           '20260823-140001'
+            note           'dispatched fire 20260823-080004 session 2 (driver pid 93922
+                           'dispatched by fire 20260823-140001 batch 1; record PUSHED B
+T308      False      attempts, fire, note
+            attempts       0
+                           1
+            fire           None
+                           '20260823-140001'
+            note           'dispatched fire 20260823-080004 session 2 (driver pid 93922
+                           'dispatched by fire 20260823-140001 batch 1; record PUSHED B
+
+T319 PREDICATE (term 1 AND term 2): 0 demotable -- none
+
+RESULT: TERM 2 HOLDS on the real incident -- every re-dispatched id was rewritten by the dispatch, so all 7 are withheld.

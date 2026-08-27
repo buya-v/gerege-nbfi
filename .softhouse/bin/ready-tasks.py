@@ -69,21 +69,37 @@ So the predicate is SPLIT into a caller MODE and a per-task OWNERSHIP test:
     band by `foreign_live_session_in_repo()`): demotes EVERY `in_progress` task. It fails
     towards DEMOTING, which is right there -- the caller has positively established there
     is nothing live to destroy, and the cost of not demoting is the `in_progress` lie.
-  * `in_session` mode (a driver or worker, a fire IS live): demotes ONLY tasks that were
-    ALREADY claiming `in_progress` in the tasks.json committed when THIS fire took the
-    lock -- i.e. dispatches it inherited, not ones it made. It fails towards REFUSING,
-    which is right there -- the destructive error is demoting live work and it cannot be
-    undone, while the non-destructive error leaves a lie that `wrapper` mode clears on
-    the way out.
-    ATTEMPT 1 OF T309 USED `task["fire"] != LOCK["fire"]` HERE AND IT WAS MEASURED WRONG:
-    `fire` is stamped at first dispatch and never refreshed on re-dispatch, so on
-    2026-08-27 all six live workers of fire `20260827-230001` still carried
-    `"fire": "20260823-140001"` and that predicate would have demoted every one of them
-    [.softhouse/capture/t309-sigterm-reconcile-bypass/stale-fire-RED.txt]. The field is
-    still READ, but only as corroboration that is REPORTED when it disagrees.
+  * `in_session` mode (a driver or worker, a fire IS live): demotes ONLY tasks that pass
+    THREE conjunctive terms (see `task_is_demotable_in_session`). It fails towards
+    REFUSING, which is right there -- the destructive error is demoting live work and it
+    cannot be undone, while the non-destructive error leaves a lie that `wrapper` mode
+    clears on the way out.
 These are the SAME repair with OPPOSITE polarity, deliberately, because the two call
 sites have opposite worst cases. Widening one predicate to serve both is the shape
 `P-91`/`T292` names, and it is not done here.
+
+T319 -- THE IN-SESSION DISCRIMINATOR AGAIN, BECAUSE T309's REPLACEMENT HAD THE SAME
+SHAPE AS THE THING IT REPLACED. T309 attempt 1 keyed demotion on `task["fire"] !=
+LOCK["fire"]` and would have demoted six live workers. T309 attempt 2 replaced it with
+"was this id `in_progress` at the lock commit?" -- and T302 drove THAT against the real
+history of fire `20260823-140001`, which took its lock at 14:00:08 with eight inherited
+`in_progress` claims and at 14:05:01 DISPATCHED EIGHT WORKERS ONTO SEVEN OF THE SAME
+IDS. Same direction, same magnitude: 7 demotable, every one a live worker
+[VERIFIED: .softhouse/reviews/T302/a2/out-f5-cell.txt, cell B'].
+The broken inference in both is "state at instant t0 settles ownership for all t > t0".
+A fire that RE-DISPATCHES is the normal case here, not an exotic one. So the predicate
+now asks three questions, all of which must hold, and the second is the one that closes
+this: `inherited at the lock commit` AND `record NOT rewritten by this fire since` AND
+`named by the caller with --corpse`. The matrix that graded T309 could not have caught
+it -- its only advancing-clock cell was a fire that dispatched fresh ids, and its other
+cells pass ONE commit as both the lock and the state under test, freezing the clock.
+`.softhouse/capture/t319-reconciler-f5/run-ownership-matrix.zsh` fixes the matrix as
+well as the code, and CELL B' is permanent.
+
+T319 also: `--corpse` is REQUIRED in-session (P-91 burden inversion), the lock-commit
+anchor is no longer a commit-MESSAGE search (F6), a missing `.softhouse/LOCK` REFUSES
+rather than granting `wrapper` authority (F7), `merged` is distinguished from
+`never-committed` (F1), and NOTHING reads `task["fire"]` or `task["dispatched_at"]`.
 
 T312 -- THE BRANCH CASE-VARIANT FLAG, AND WHY THE EXISTING CHECK PASSED CLEANLY.
 This resolver flags "`in_progress` with no `branch`" as a suspected isolation violation.
@@ -99,11 +115,26 @@ So `branch_wip` now also asks "does a case-variant of this name exist", via
 `/CASE-VARIANT`. When the check could not run it says `/CASE-UNCHECKED` instead, because
 a silent absence of warning is what this file exists to stop being possible.
 
+WHO MAY CALL `--reconcile`, RESTATED AFTER T319. It rewrites tasks.json, so it refuses
+unless it can POSITIVELY establish authority. `.softhouse/LOCK` must be on disk and name
+a `pid` (> 1) that is an ANCESTOR of this process on this host. A MISSING lock file is
+now a REFUSAL, not a licence: absence of the lock FILE is not absence of a fire, this
+module has no liveness check of its own, and the caller that HAS run one must say so with
+`--no-live-session-established-out-of-band`. (Before T319 the missing-lock leg returned
+`wrapper` -- the demote-everything authority -- to anybody at all.)
+
 Usage:  python3 .softhouse/bin/ready-tasks.py [--json] [--repo <dir>]
         python3 .softhouse/bin/ready-tasks.py --reconcile --fire <fire-id>
-                [--rescue <task-branch>=<rescue-branch>]... [--dry-run] [--repo <dir>]
-                [--deadline-secs <n>]
+                [--rescue <task-branch>=<rescue-branch>]... [--corpse <task-id>]...
+                [--no-live-session-established-out-of-band]
+                [--dry-run] [--repo <dir>] [--deadline-secs <n>]
 Run it from the repo root (or pass --repo).
+
+`--corpse <task-id>` is REQUIRED, once per task, for anything an `in_session` caller
+wants demoted. It is the third term of the in-session predicate and it is a NARROWING:
+an id nobody named is never touched, whatever the git evidence says. `wrapper` mode does
+not use it (the wrapper's authority is established out of band, and it demotes the whole
+set by design).
 
 `--deadline-secs <n>` installs ONE monotonic wall-clock budget for the whole process and
 clamps every subprocess timeout to what is left of it. It exists because T309 wires
@@ -116,8 +147,9 @@ Exit codes:
   3   --reconcile could not READ or WRITE tasks.json. NOTHING was changed and the
       caller must not treat the state as truthful.
   4   --reconcile REFUSED and NOTHING was changed. Either the caller could not be
-      established as the lock holder at all, or it is `in_session` and no `in_progress`
-      task could be proven to belong to a dead fire. Fail-closed in both cases.
+      established as the lock holder at all (including: no LOCK on disk and no
+      `--no-live-session-established-out-of-band`), or it is `in_session` and no
+      `in_progress` task passed all three ownership terms. Fail-closed in every case.
   64  usage error
 """
 import json
@@ -188,6 +220,30 @@ def resolve(dep, cur, arch):
 # through shutil.which and the resolved path is PRINTED in the reconcile report, so the
 # evidence says which binary answered rather than leaving it to $PATH at read time.
 GIT = shutil.which("git")
+
+# T319 -- the wrapper's lock-take subject, as one constant used by BOTH the parser and
+# every message that quotes it, so the two cannot drift. The RELEASE subject
+# ("softhouse: release local fire lock (...)") deliberately does not start with this.
+LOCK_SUBJECT_OPEN = "softhouse: local fire lock ("
+
+# T319 -- F7. `wrapper` mode demotes EVERY in_progress task, so it is the destructive
+# authority, and it must never be handed out by DEFAULT. `caller_is_lock_holder()` used
+# to grant it to any caller the instant `.softhouse/LOCK` was not on disk, justified by a
+# liveness check that lives in a DIFFERENT FILE (fire-program.sh's
+# `foreign_live_session_in_repo()`) and is enforced by exactly ONE of the callers this
+# module's own usage string publishes. T302 drove it: no LOCK, eight live workers in
+# tasks.json, `mode: wrapper`, "8 task(s) WOULD be demoted"
+# [VERIFIED: .softhouse/reviews/T302/a2/out-f7-nolock.txt, cell 1]. This module contains
+# no liveness check of its own -- its /bin/ps use is all `ps_ancestors()`, which answers
+# "who am I", never "is anyone else alive in this checkout".
+# So the precondition is now something the caller must STATE, in a form only a caller
+# that has actually run the probe would think to state, and the absent-lock leg REFUSES
+# without it. This is P-91's escape applied to an authority instead of a document:
+# "INVERTING THE BURDEN -- require the document to POSITIVELY DEMONSTRATE coverage in a
+# form the rule CONSTRUCTS rather than RECOGNISES" [VERIFIED: .softhouse/patterns.md,
+# P-91].
+NO_LOCK_FLAG = "--no-live-session-established-out-of-band"
+LIVENESS_ESTABLISHED_OUT_OF_BAND = False
 
 
 # T309 -- A WALL-CLOCK BUDGET, BECAUSE THIS NOW RUNS INSIDE A SIGNAL HANDLER.
@@ -391,10 +447,27 @@ def caller_is_lock_holder():
     """
     lock = os.path.join(root, "LOCK")
     if not os.path.exists(lock):
-        # No lock => no live fire owns this repo => nobody's siblings are at risk. The
-        # `claude` leg below is about protecting a LIVE fire's workers; with no lock
-        # there is no live fire to protect, so this is "wrapper", not "in_session".
-        return "wrapper", "no .softhouse/LOCK on disk -- nobody holds this repo", None
+        # T319 -- F7. THIS LEG USED TO RETURN "wrapper" AND THAT WAS A DESTRUCTIVE
+        # AUTHORITY GRANTED FOR FREE. The reasoning was "no lock => no live fire => nobody
+        # to protect". Absence of a lock FILE is not absence of a fire, and the windows
+        # are recorded, not hypothetical: P-85's two-orchestrator day ("TWO ORCHESTRATORS
+        # HELD THE LOCK AT ONCE, AND THE CAUSE WAS AN UNPUSHED IN-FLIGHT STATE"
+        # [VERIFIED: .softhouse/patterns.md, P-85]); any hand invocation between fires
+        # while a session is working; and the wrapper's own `cat > "$LOCK"` whose rc is
+        # not read. The one caller that HAS established liveness must say so.
+        if LIVENESS_ESTABLISHED_OUT_OF_BAND:
+            return "wrapper", ("no .softhouse/LOCK on disk, AND the caller passed %s, "
+                               "asserting it ran a liveness probe of this checkout "
+                               "itself. This module has no liveness check of its own, so "
+                               "that assertion is the whole basis for the authority and "
+                               "it is the CALLER's to justify." % NO_LOCK_FLAG), None
+        return "refused", ("no .softhouse/LOCK on disk. Absence of the lock FILE is not "
+                           "absence of a live fire, and this module cannot tell them "
+                           "apart -- it has no liveness check, only ancestry. REFUSING. "
+                           "A caller that has independently established no live session "
+                           "owns this checkout (fire-program.sh does, with "
+                           "`foreign_live_session_in_repo()`) must pass %s."
+                           % NO_LOCK_FLAG), None
     try:
         with open(lock, encoding="utf-8") as fh:
             body = json.load(fh)
@@ -414,7 +487,20 @@ def caller_is_lock_holder():
     anc = ps_ancestors()
     if anc is None:
         return "refused", "/bin/ps did not answer -- ancestry UNESTABLISHED, REFUSING", lock_fire
-    if pid != os.getpid() and pid not in [p for p, _ in anc]:
+    # T319 -- T302's minor finding on this line, closed. `ps_ancestors` walks up to and
+    # INCLUDING pid 1, so a LOCK naming pid 1 passed the ancestry test for every process
+    # on the machine [VERIFIED: .softhouse/reviews/T302/a2/out-f7-nolock.txt, cell 2
+    # reached `in_session` rather than `refused`]. pid 1 is launchd; it is nobody's fire.
+    # Low severity today because the wrapper writes `"pid": $$`, but the check read
+    # stronger than it behaved, and a check believed to be stronger than it is is P-22:
+    # "A guard, a canary, or a control that cannot fail is worse than none -- because it
+    # is believed" [VERIFIED: .softhouse/patterns.md, P-22].
+    if pid <= 1:
+        return "refused", ("LOCK records pid %d, which is not a fire -- pid 1 is the init "
+                           "process and is an ancestor of everything on this host. "
+                           "REFUSING." % pid), lock_fire
+    ancestor_pids = [p for p, _ in anc if p > 1]
+    if pid != os.getpid() and pid not in ancestor_pids:
         return "refused", ("LOCK is held by pid %d, which is NOT an ancestor of this "
                            "process (pid %d) -- a live fire may own these tasks. REFUSING."
                            % (pid, os.getpid())), lock_fire
@@ -436,161 +522,265 @@ def caller_is_lock_holder():
                        "is in the chain" % pid), lock_fire
 
 
-def dispatches_predating_this_fire(lock_fire):
-    """(ids, reason) -- the set of task ids ALREADY claiming `in_progress` at the instant
-    this fire took the lock. `ids` is None when that could not be established.
+def _parse_lock_subject(subject):
+    """The fire id inside a wrapper lock-take subject, or None if this is not one.
 
-    T309 ATTEMPT 2 -- THE `task["fire"]` DISCRIMINATOR WAS ARMED AND WRONG, AND THIS IS
-    WHAT REPLACES IT.
-
-    Attempt 1 of this task made in-session demotion turn on `task["fire"] != LOCK["fire"]`,
-    arguing from the lock's exclusivity: at most one fire holds `.softhouse/LOCK`, so a
-    task stamped with a different fire id belongs to a fire that is over. THE PREMISE IS
-    SOUND. THE DATA IS NOT. `fire` is written onto a task by the DRIVER at dispatch, and
-    it is NOT refreshed when a task is re-dispatched -- so a task retried by a later fire
-    keeps the ORIGINAL fire's id and reads, to that test, as a corpse.
-
-    MEASURED, not reasoned [VERIFIED: this checkout, 2026-08-27]:
-      * fire `20260827-230001` took its lock in commit `558ef32` at 23:00:08 and marked
-        six workers `in_progress` in `39d2156` (23:03:45) and a seventh in `5d2164e`
-        (23:07:24, T305 `needs_retry -> in_progress`);
-      * every one of those tasks still carries `"fire": "20260823-140001"` -- a fire that
-        ended four days earlier -- and `"dispatched_at": "2026-08-23T03:57:24Z"`;
-      * driven against that real state, attempt 1's predicate reported
-        `IN-SESSION authority: 6 demotable` and would have demoted six LIVE workers of
-        the fire holding the lock, T309 among them
-        [.softhouse/capture/t309-sigterm-reconcile-bypass/stale-fire-RED.txt].
-    That is the DESTRUCTIVE direction: an in-session reconcile that runs too eagerly
-    destroys live work, and unlike the `in_progress` lie it cannot be undone.
-
-    THE REPLACEMENT IS DERIVED FROM DOING THE WORK, NOT MAINTAINED BESIDE IT. The wrapper
-    commits `.softhouse/tasks.json` as it stood the moment it took the lock, under the
-    subject `softhouse: local fire lock (<fire id>)`. At that instant this fire has
-    dispatched NOTHING -- so every task claiming `in_progress` in THAT blob is a claim
-    inherited from an earlier fire, and every task claiming `in_progress` NOW but not
-    THEN was dispatched by this fire and is live. The question "is this dispatch mine?"
-    becomes a read of two committed blobs.
-
-    This is the same property `.softhouse/LOCK`'s own comment already prefers for
-    liveness: push-recency over a `heartbeat` field, "because push recency is DERIVED
-    from doing the work rather than maintained beside it, and so cannot silently fall
-    behind the truth the way a remembered field can (P-45, five recorded times)"
-    [VERIFIED: fire-program.sh, the P-85/STEP 0 comment above the LOCK heredoc]. P-45 is
-    "a guard that only works when someone remembers to run it enforces nothing"
-    [VERIFIED: .softhouse/patterns.md, P-45]; `task["fire"]` is its field-shaped twin --
-    a guard that only works when someone remembers to REFRESH it -- and the measurement
-    above is that nobody did.
-
-    REJECTED ALTERNATIVES, and why:
-      * `task["fire"]` (attempt 1) -- measured wrong, above. It is still READ here, but
-        only as corroboration to be REPORTED when it disagrees, never as the authority.
-      * fixing the staleness at the source, i.e. having the driver re-stamp `fire` on
-        every dispatch -- that lives in the softhouse-program SKILL, outside this task's
-        files_hint, and it would still be a remembered obligation. Raised as a follow-up.
-      * process liveness per task -- there IS no process per task. Measured on this host
-        during a live fire with six workers dispatched: a subagent is in-process inside
-        ONE `claude` [VERIFIED: fire-program.sh's own foreign_live_session_in_repo()
-        comment, which records the /bin/ps and lsof evidence]. Any design looking for a
-        process per task finds nothing and demotes everything.
-      * branch WIP ("no commits => dead") -- INVERTED for exactly the case that matters.
-        A live worker in its first minutes has no commits and would be demoted; a dead
-        worker that committed once would be spared. The 2026-08-23 corpses had zero
-        commits AND were dead; that correlation is an accident of the incident.
-      * a `--force`/`--foreign-only` flag -- a remembered obligation, P-45 again.
-
-    FAIL-CLOSED DIRECTION HERE: every leg that does not answer returns None, and the
-    caller renders None as "demote nothing". A missing lock commit, an unreadable blob,
-    unparseable JSON and an exhausted wall-clock budget are all None. "I could not tell"
-    is never spelled like "nobody owns these".
-
-    RESIDUAL RISK, STATED: this trusts that the wrapper's lock commit is reachable from
-    HEAD and that its subject is the one the wrapper writes. If the wrapper's commit
-    subject is ever changed, this stops finding the commit and REFUSES -- which is the
-    safe direction, and it is why the subject is quoted rather than pattern-matched. It
-    also inherits the assumption that one fire holds the lock at a time; P-85 records a
-    day when two did [VERIFIED: .softhouse/patterns.md, P-85]. That assumption is not
-    made worse here and it is not eliminated; no claim is made that it is.
+    The wrapper writes exactly `softhouse: local fire lock (<STAMP>)`
+    [VERIFIED: fire-program.sh, the `git commit -q -m` beside the LOCK heredoc].
+    Its RELEASE commit says `softhouse: release local fire lock (<STAMP>)`, which does
+    not match this shape -- and that difference is load-bearing below.
     """
-    if not lock_fire:
-        return None, ("the LOCK records no `fire` id, so this fire's lock commit cannot "
-                      "be found -- REFUSING (fail-closed)")
-    subject = "softhouse: local fire lock (%s)" % lock_fire
-    rc, sha, err = _run([GIT, "log", "-1", "--format=%H", "--fixed-strings",
-                         "--grep", subject])
+    s = (subject or "").strip()
+    if not s.startswith(LOCK_SUBJECT_OPEN) or not s.endswith(")"):
+        return None
+    fid = s[len(LOCK_SUBJECT_OPEN):-1].strip()
+    return fid or None
+
+
+def this_fires_lock_commit(lock_fire):
+    """(sha, fire_id, reason) -- the commit in which the fire now holding the lock took
+    it. sha is None when that could not be established, and then NOTHING may be demoted.
+
+    T319 -- F6, AND WHY THE ANCHOR IS NO LONGER A MESSAGE SEARCH.
+
+    T309 anchored with `git log -1 --fixed-strings --grep "softhouse: local fire lock
+    (<id>)"`. `--grep` matches the WHOLE commit message, subject AND body, and `-1`
+    returns the NEWEST match -- so the anchor was not "the wrapper's lock commit", it was
+    "the most recent commit that mentions that string anywhere". T302 drove it: a later
+    review commit whose BODY quotes the subject with a real fire id moves the anchor past
+    this fire's dispatch and raises the demotion count from 7 to 8
+    [VERIFIED: .softhouse/reviews/T302/a2/out-f6-grep.txt, cells 2 and 3]. The docstring
+    it replaces reasoned only about ABSENCE ("this stops finding the commit and REFUSES")
+    and said nothing about MULTIPLICITY, which fails the other way -- toward demoting.
+
+    THE REPLACEMENT ASKS FOR SOMETHING A COMMIT MESSAGE CANNOT IMITATE: the anchor must
+    be the newest commit that actually TOUCHED `.softhouse/LOCK`, and its SUBJECT (`%s`,
+    not the message) must be the lock-take form. Taking the lock is writing that file;
+    a reviewer quoting the subject does not write it, and a worker is forbidden to. So
+    the evidence is again DERIVED FROM DOING THE WORK rather than asserted in prose --
+    the same property the LOCK's own comment prefers for liveness, "because push recency
+    is DERIVED from doing the work rather than maintained beside it, and so cannot
+    silently fall behind the truth the way a remembered field can (P-45, five recorded
+    times)" [VERIFIED: fire-program.sh, the P-85/STEP 0 comment above the LOCK heredoc].
+
+    AND IT REMOVES A SECOND DEPENDENCE. T309's anchor needed `LOCK["fire"]` to build the
+    search string, so when that field is missing the whole capability is inert: T302
+    measured the LIVE lock of fire 20260827-230001 carrying no `fire` key at all, which
+    made in_session mode 100% dead on the machine it shipped to [VERIFIED:
+    .softhouse/reviews/T302/a2/out-f10-liveskew.txt]. Here the fire id is READ OFF the
+    anchor commit's own subject, so it works with or without the field, and the field --
+    when present -- is only a cross-check that REFUSES on disagreement.
+
+    FAIL-CLOSED AT EVERY LEG. git not answering, no commit ever touching the path, a
+    newest-touch that is a RELEASE rather than a take, an unparseable subject, or a LOCK
+    whose `fire` disagrees with the subject: all return sha=None, and the caller demotes
+    nothing. "I could not tell" is never spelled like "these are corpses".
+    """
+    rc, out, err = _run([GIT, "log", "-1", "--format=%H%x09%s", "--",
+                         ".softhouse/LOCK"])
     if rc is None:
-        return None, ("could not run git to find this fire's lock commit (%s) -- "
-                      "REFUSING" % err)
+        return None, None, ("could not run git to find the newest commit touching "
+                            ".softhouse/LOCK (%s) -- REFUSING" % err)
     if rc != 0:
-        return None, ("git log exited %d looking for the lock commit %r (%s) -- REFUSING"
-                      % (rc, subject, err))
-    if not sha:
-        return None, ("no commit reachable from HEAD has the subject %r, so the instant "
-                      "this fire took the lock is UNKNOWN -- REFUSING. (A fire whose "
-                      "lock commit was never made, or was made on another branch, cannot "
-                      "prove which dispatches predate it.)" % subject)
-    sha = sha.splitlines()[0].strip()
-    rc2, blob, err2 = _run([GIT, "show", "%s:.softhouse/tasks.json" % sha])
-    if rc2 is None:
-        return None, ("could not run git to read tasks.json at the lock commit %s (%s) "
-                      "-- REFUSING" % (sha[:9], err2))
-    if rc2 != 0 or not blob:
-        return None, ("tasks.json is not readable at the lock commit %s (git rc=%s, %s) "
-                      "-- REFUSING" % (sha[:9], rc2, err2))
+        return None, None, ("git log exited %d looking for the newest commit touching "
+                            ".softhouse/LOCK (%s) -- REFUSING" % (rc, err))
+    if not out:
+        return None, None, ("no commit reachable from HEAD has ever touched "
+                            ".softhouse/LOCK, so the instant this fire took the lock is "
+                            "UNKNOWN -- REFUSING (fail-closed)")
+    sha, _, subject = out.splitlines()[0].partition("\t")
+    sha = sha.strip()
+    fire_id = _parse_lock_subject(subject)
+    if not fire_id:
+        return None, None, ("the newest commit touching .softhouse/LOCK is %s %r, which "
+                            "is NOT a lock-take (`%s<id>)`). A LOCK is on disk but the "
+                            "committed history does not show it being taken -- the two "
+                            "disagree, and this refuses rather than choosing one."
+                            % (sha[:9], subject.strip(), LOCK_SUBJECT_OPEN))
+    if lock_fire and lock_fire != fire_id:
+        return None, None, ("the LOCK on disk records fire %r but the newest lock-take "
+                            "commit %s is fire %r -- the on-disk lock and the committed "
+                            "history disagree about who holds this repo. REFUSING."
+                            % (lock_fire, sha[:9], fire_id))
+    corrob = ("; the LOCK's own `fire` field agrees" if lock_fire else
+              "; the LOCK on disk records no `fire` field, so the id is taken from the "
+              "commit subject alone -- which is why this no longer depends on that field")
+    return sha, fire_id, ("this fire's lock commit is %s, the newest commit that TOUCHED "
+                          ".softhouse/LOCK, and its SUBJECT is the lock-take form for "
+                          "fire %s%s" % (sha[:9], fire_id, corrob))
+
+
+def lock_commit_records(sha):
+    """(records, in_progress_ids, reason) -- every task's record as committed at `sha`.
+
+    `records` maps task id -> the task object exactly as it stood at that commit;
+    `in_progress_ids` is the subset claiming `in_progress` there. Both are None when the
+    blob could not be read, and then NOTHING may be demoted.
+    """
+    rc, blob, err = _run([GIT, "show", "%s:.softhouse/tasks.json" % sha])
+    if rc is None:
+        return None, None, ("could not run git to read tasks.json at the lock commit %s "
+                            "(%s) -- REFUSING" % (sha[:9], err))
+    if rc != 0 or not blob:
+        return None, None, ("tasks.json is not readable at the lock commit %s (git rc=%s,"
+                            " %s) -- REFUSING" % (sha[:9], rc, err))
     try:
         prior = json.loads(blob)["tasks"]
     except (ValueError, KeyError, TypeError) as exc:
-        return None, ("tasks.json at the lock commit %s did not parse (%s) -- REFUSING"
-                      % (sha[:9], exc))
-    ids = set()
+        return None, None, ("tasks.json at the lock commit %s did not parse (%s) -- "
+                            "REFUSING" % (sha[:9], exc))
+    records, ids = {}, set()
     for t in prior:
-        if t.get("status") == "in_progress" and t.get("id"):
-            ids.add(t["id"])
-    return ids, ("at this fire's lock commit %s (%r) %d task(s) already claimed "
-                 "in_progress: %s. Anything in_progress NOW but not in that set was "
-                 "dispatched by THIS fire and is live."
-                 % (sha[:9], subject, len(ids),
-                    ", ".join(sorted(ids)) if ids else "none"))
+        tid = t.get("id")
+        if not tid:
+            continue
+        records[tid] = t
+        if t.get("status") == "in_progress":
+            ids.add(tid)
+    return records, ids, ("at that commit %d task(s) already claimed in_progress: %s"
+                          % (len(ids), ", ".join(sorted(ids)) if ids else "none"))
 
 
-def task_is_demotable_in_session(t, lock_fire, predating):
+def _canon(obj):
+    """A task record reduced to comparable bytes. Key order is normalised so a rewrite
+    that only reorders keys is not read as a change; nothing else is normalised, and no
+    field is INTERPRETED -- see term 2 below for why that is the point."""
+    return json.dumps(obj, sort_keys=True, ensure_ascii=False)
+
+
+def _changed_keys(then, now):
+    return sorted(k for k in set(then) | set(now) if then.get(k) != now.get(k))
+
+
+def task_is_demotable_in_session(t, fire_id, prior, named_corpses):
     """(ok, reason) -- may an IN-SESSION caller demote this `in_progress` task?
 
-    `predating` is the set from dispatches_predating_this_fire(), or None when that
-    could not be established.
+    `prior` is (records, in_progress_ids) from the lock commit, or None when that could
+    not be established. `named_corpses` is the set given by `--corpse`.
+
+    ===================================================================================
+    T319 -- F5. WHY T309's SINGLE TERM WAS WRONG, AND WHAT REPLACES IT.
+    ===================================================================================
+
+    T309 asked ONE question: "was this id `in_progress` in the tasks.json committed when
+    this fire took the lock?" Its argument was that at that instant the fire has
+    dispatched nothing, so everything `in_progress` there is inherited. The FIRST half is
+    true. The second does not follow, and the counter-example is the very incident T309
+    was written about:
+
+        14:00:08  5428c0a4  fire 20260823-140001 takes its lock; 8 tasks already
+                            in_progress -- the corpses 20260823-080004 left.
+        14:05:01  5964ab54  "DISPATCH fire 20260823-140001 batch 1 -- 8 workers,
+                            PUSHED BEFORE SPAWN (P-85)" -- and SEVEN of the ids it
+                            dispatches are ids from that same set.
+        14:24:27  ab9b3b68  a commit by a LIVE worker of that fire, on one of them.
+
+    Run T309's own cell shape with the clock advanced five minutes and it reports
+    "7 demotable", every one a live worker of the lock-holding fire
+    [VERIFIED: .softhouse/reviews/T302/a2/out-f5-cell.txt, cell B'].
+
+    "State at instant t0 determines ownership for all t > t0" is the broken inference,
+    and RE-DISPATCH is not exotic here: it is the documented reason the driver opens on
+    inherited `in_progress` tasks at all. This program re-dispatches parked and
+    needs_retry tasks constantly.
+
+    THREE TERMS NOW, ALL REQUIRED, EACH FAIL-CLOSED ON ITS OWN.
+
+    TERM 1 -- INHERITED. The id was `in_progress` at this fire's lock commit. T309's
+      term, kept: it is necessary. It is no longer sufficient and is no longer asked
+      alone.
+
+    TERM 2 -- UNTOUCHED SINCE. The task's record is byte-identical to its record at the
+      lock commit. This is the term F5 is about, and it is MEASURED rather than reasoned
+      [VERIFIED: .softhouse/capture/t319-reconciler-f5/out-objdiff.txt]. At 5964ab54 all
+      seven re-dispatched ids differ from their lock-commit records in `attempts` (0->1),
+      `fire` and `note`; ZERO survive term 2, which is the correct answer.
+
+      WHY A WHOLE-RECORD COMPARISON AND NOT A FIELD. Reading a named field is the shape
+      that has now failed three times in a row -- `task["fire"]` (T309 attempt 1, six
+      live workers), `dispatched_at` (stale by four days, absent on batch-2 tasks), and
+      `task["branch"]` (stale after a rename, T302 F9). Each is a value someone must
+      REMEMBER to refresh, which is P-45 -- "a guard that only works when someone
+      remembers to run it enforces nothing" [VERIFIED: .softhouse/patterns.md, P-45] --
+      with the verb changed. Term 2 interprets NO field. It asks only whether the fire
+      holding the lock has written to this task's record since it took it, and DISPATCH
+      IS A WRITE: the driver's own dispatch commit message is "record PUSHED BEFORE
+      SPAWN (P-85)". So the deletion of `fire` and `dispatched_at` recommended by T302
+      does not weaken this at all -- `attempts` and `note` still move, and even a bulk
+      deletion of those keys from every record would make every record DIFFER from the
+      lock blob, withholding everything, which is the safe direction.
+
+      RESIDUAL RISK, STATED AND NOT PAPERED OVER: term 2 detects a re-dispatch because a
+      re-dispatch writes the record. A fire that spawned a worker onto an already-
+      `in_progress` task while writing NOTHING would be invisible to it. That would
+      violate P-85 ("record PUSHED BEFORE SPAWN"), it is not a shape this repo has
+      recorded, and it is exactly what term 3 exists to backstop.
+
+    TERM 3 -- POSITIVELY NAMED. The caller passed `--corpse <id>` for this id. This is
+      the burden inversion, not another pattern: P-91 -- "a guard phrased as a STRUCTURAL
+      PATTERN over the shape of its input can always be re-nested one level out ... The
+      escape is not a better pattern: it is INVERTING THE BURDEN -- require the document
+      to POSITIVELY DEMONSTRATE coverage in a form the rule CONSTRUCTS rather than
+      RECOGNISES" [VERIFIED: .softhouse/patterns.md, P-91]. Terms 1 and 2 are both
+      derivations over history: if a future edit gets a derivation wrong, term 3 still
+      caps the blast radius at the ids the caller enumerated by hand. An in-session
+      caller that names nothing demotes nothing, whatever the git evidence says.
+
+      This is NOT the "remembered obligation" P-45 forbids, and the difference is the
+      direction: forgetting to pass `--corpse` leaves an `in_progress` lie, which the
+      wrapper's exit-path clears; there is no way to forget it INTO destroying work.
 
     FAIL-CLOSED DIRECTION AT THIS CALL SITE, AND IT IS THE OPPOSITE OF THE WRAPPER'S ON
-    PURPOSE. In-session, a live fire IS running, so the destructive error is demoting
-    live work -- irreversible. The non-destructive error is leaving an `in_progress` lie
-    standing, and that lie has a second reader: the wrapper's own exit path, which runs
-    in `wrapper` mode with liveness established out of band by
-    `foreign_live_session_in_repo()` and clears whatever is left. So this site refuses on
-    every doubt and the OTHER site is where the lie dies. Widening one predicate to serve
-    both is the shape T292/P-91 names, and it is deliberately not done.
+    PURPOSE. In-session a live fire IS running, so the destructive error is demoting live
+    work and it is irreversible. The non-destructive error leaves an `in_progress` lie
+    standing, which is recoverable. Widening one predicate to serve both call sites is
+    the shape T292/P-91 names and it is deliberately not done.
+
+    ONE HONEST QUALIFICATION TO THAT ARGUMENT, WHICH T309 STATED UNCONDITIONALLY: the
+    lie's second reader is the wrapper's own exit path in `wrapper` mode, and that path
+    only runs when `foreign_live_session_in_repo()` returns 1. T302 F11 showed it returns
+    0 -- REFUSE -- while any `claude` sits in the repo root, which is the documented
+    interactive entry point. So the lie is recoverable in the normal case and can persist
+    across a fire in the interactive case. It is still the cheaper error by a wide margin.
     """
-    if predating is None:
-        return False, ("which dispatches predate this fire could not be established -- "
-                       "REFUSING (fail-closed; demoting a live worker cannot be undone)")
     tid = t.get("id")
-    owner = t.get("fire")
-    owner = owner.strip() if isinstance(owner, str) else ""
+    if prior is None:
+        return False, ("the state at this fire's lock commit could not be established -- "
+                       "REFUSING (fail-closed; demoting a live worker cannot be undone)")
+    records, predating = prior
+
+    # TERM 1 -- inherited?
     if tid not in predating:
-        extra = ""
-        if owner and owner != lock_fire:
-            extra = (" (its `fire` field says %s, which is STALE -- `fire` is stamped at "
-                     "first dispatch and not refreshed on re-dispatch, so it is reported "
-                     "here and NOT used as the authority)" % owner)
-        return False, ("it was NOT claiming in_progress when fire %s took the lock, so "
-                       "THIS fire dispatched it: it is a LIVE sibling. REFUSING.%s"
-                       % (lock_fire, extra))
-    corroboration = ""
-    if owner:
-        corroboration = (" Its `fire` field says %s%s." %
-                         (owner, "" if owner != lock_fire else
-                          " -- which is THIS fire, disagreeing with the git evidence; "
-                          "the field is stale-prone and the git evidence is authoritative"))
-    return True, ("it was ALREADY claiming in_progress at fire %s's lock commit, before "
-                  "this fire had dispatched anything, so the dispatch belongs to an "
-                  "earlier fire that is over.%s" % (lock_fire, corroboration))
+        return False, ("TERM 1 FAILS: it was NOT claiming in_progress when fire %s took "
+                       "the lock, so THIS fire dispatched it: it is a LIVE sibling. "
+                       "REFUSING." % fire_id)
+
+    # TERM 2 -- untouched since? THIS IS THE F5 FIX.
+    then = records.get(tid)
+    if then is None:
+        return False, ("TERM 2 FAILS: no record for this id exists at the lock commit, so "
+                       "its history since cannot be compared. REFUSING.")
+    if _canon(then) != _canon(t):
+        keys = _changed_keys(then, t)
+        return False, ("TERM 2 FAILS: it WAS in_progress at the lock commit, but fire %s "
+                       "has REWRITTEN its record since -- %s changed. A dispatch is a "
+                       "write (the driver's own commits say 'record PUSHED BEFORE SPAWN "
+                       "(P-85)'), so this reads as a RE-DISPATCH by the fire holding the "
+                       "lock: a LIVE worker. REFUSING. [This is the case that made T309's "
+                       "single term demote seven live workers on 2026-08-23.]"
+                       % (fire_id, ", ".join("`%s`" % k for k in keys) or "some key"))
+
+    # TERM 3 -- positively named by the caller?
+    if tid not in named_corpses:
+        return False, ("TERM 3 FAILS: no `--corpse %s` was passed. An in-session caller "
+                       "must NAME each dispatch it claims is dead; this tool will not "
+                       "sweep a set nobody enumerated. REFUSING." % (tid or "<id>"))
+
+    return True, ("ALL THREE TERMS HOLD: it was already claiming in_progress at fire %s's "
+                  "lock commit (inherited), its record has NOT been rewritten since (so "
+                  "this fire has not re-dispatched it), and the caller named it with "
+                  "`--corpse`. The dispatch belongs to an earlier fire that is over; "
+                  "WHICH earlier fire is not established here." % fire_id)
 
 
 def _case_clause(branch):
@@ -641,25 +831,66 @@ def _branch_wip_core(branch):
         return "unverified", ("Could not run git to inspect branch %s (%s) -- WIP "
                               "state UNVERIFIED." % (branch, err))
     if rc == 1 and not sha:
-        return "absent", ("Its recorded branch %s does not exist in this repo -- no "
-                          "WIP was found under that name." % branch)
+        # T319 -- F1, the pruned half. A merged-and-then-pruned branch is byte-identical
+        # to a branch that never existed, and this used to assert the flattering one.
+        return "absent", ("Its recorded branch %s does not exist in this repo. THIS IS "
+                          "NOT EVIDENCE THAT NOTHING WAS DONE: a branch that was MERGED "
+                          "INTO main AND THEN PRUNED -- this repo's stated habit -- looks "
+                          "exactly the same from here, and so does a branch that was "
+                          "RENAMED (T302 measured one: T299's recorded name was stale "
+                          "after a rename and the live branch was elsewhere). Provenance "
+                          "UNVERIFIED; check `git log --all --grep` for the task id before "
+                          "treating this as unstarted." % branch)
     if rc != 0:
         return "unverified", ("git rev-parse on %s exited %d (%s) -- WIP state "
                               "UNVERIFIED, NOT assumed empty." % (branch, rc, err))
+    # T319 -- F1, THE HALF THAT LANDED ON REAL DATA. `rev-list --count main..B` is B
+    # minus everything reachable from main, so a branch that was MERGED gives ZERO --
+    # BECAUSE THE WORK LANDED. This function read that zero as "nothing was ever
+    # committed to it", demoted the task to `needs_retry` (the status that OFFERS a task
+    # for re-dispatch) and invited the next fire to redo work already on main. T302 drove
+    # it against a clone carrying all 528 real heads and the real corpse blob: THREE OF
+    # THE EIGHT real corpses -- T297, T298, T308 -- are MERGED into main and got that
+    # sentence [VERIFIED: .softhouse/reviews/T302/a2/out-f9-realcorpses.txt].
+    # The discriminator was always available one command away.
     rc2, count, err2 = _run([GIT, "rev-list", "--count", "main.." + branch])
     if rc2 != 0 or not count.isdigit():
         return "unverified", ("Branch %s exists at %s but its commit count vs main "
                               "could not be read (git rc=%s) -- UNVERIFIED."
                               % (branch, sha[:9], rc2))
     n = int(count)
-    if n == 0:
-        return "absent", ("Its branch %s exists at %s but has NO commit ahead of main "
-                          "-- nothing was ever committed to it." % (branch, sha[:9]))
-    return "commits", ("Its branch %s has %d commit(s) ahead of main, head %s."
-                       % (branch, n, sha[:9]))
+    if n > 0:
+        # n > 0 means at least one commit is NOT reachable from main, so the branch cannot
+        # be an ancestor of main and the merged question does not arise. The extra git
+        # call below is therefore spent ONLY on the ambiguous zero -- which keeps this
+        # function at two git calls in the healthy case, the figure T302's budget
+        # measurement was taken against (0.0679 s per task, crossover with the ~7 s signal
+        # budget at N ~ 100) [VERIFIED: .softhouse/reviews/T302/a2/out-f8b-realgit.txt].
+        return "commits", ("Its branch %s has %d commit(s) ahead of main, head %s."
+                           % (branch, n, sha[:9]))
+    # n == 0. THIS IS THE AMBIGUOUS ZERO AND IT IS THE WHOLE OF F1: "merged" and "nothing
+    # was ever committed" produce the SAME zero, and this function used to print the
+    # second one. Ask the question that separates them.
+    rcm, _, errm = _run([GIT, "merge-base", "--is-ancestor", sha, "main"])
+    if rcm == 0:
+        return "merged", ("!! Its branch %s exists at %s and IS MERGED INTO main -- every "
+                          "commit on it is reachable from main. The work LANDED. Do NOT "
+                          "read this as an unstarted task and do NOT re-dispatch it "
+                          "without reading that history first; `needs_retry` here means "
+                          "'somebody must adjudicate', not 'do it again'." % (branch, sha[:9]))
+    if rcm != 1:
+        return "unverified", ("Its branch %s exists at %s and has no commit ahead of main, "
+                              "but `git merge-base --is-ancestor` could not answer (rc=%s, "
+                              "%s) -- so MERGED and NEVER-COMMITTED cannot be told apart "
+                              "here. UNVERIFIED, not empty."
+                              % (branch, sha[:9], rcm, errm))
+    return "absent", ("Its branch %s exists at %s, has NO commit ahead of main, and is NOT "
+                      "an ancestor of main -- so nothing was ever committed to it. (The "
+                      "merged case was checked for and excluded; this is a measurement, "
+                      "not the default reading of a zero.)" % (branch, sha[:9]))
 
 
-def reconcile(fire, rescue_map, dry_run=False):
+def reconcile(fire, rescue_map, named_corpses, dry_run=False):
     """Rewrite `in_progress` tasks to `needs_retry`, with the evidence in a note.
 
     THE CONTRACT WITH THE CALLER: in "wrapper" mode the caller has already established
@@ -709,23 +940,34 @@ def reconcile(fire, rescue_map, dry_run=False):
     # exactly: every in_progress task is a corpse, because the caller established that
     # out of band before calling. "in_session" mode must show its work per task.
     demote, withheld = [], []
-    predating = None
+    prior, fire_id = None, lock_fire
     if mode == "in_session":
-        # T309 attempt 2: ONE git derivation for the whole run, not one per task -- two
-        # `git` calls total, so the wall-clock budget cannot be spent proportionally to
-        # the number of corpses.
-        predating, predating_why = dispatches_predating_this_fire(lock_fire)
-        print("  in-session evidence: %s" % predating_why)
+        # T319: still ONE git derivation for the whole run -- three `git` calls total
+        # (the anchor, the blob, and nothing per task) -- so the wall-clock budget cannot
+        # be spent proportionally to the number of corpses.
+        sha, fire_id, anchor_why = this_fires_lock_commit(lock_fire)
+        print("  in-session anchor: %s" % anchor_why)
+        if sha:
+            records, predating, blob_why = lock_commit_records(sha)
+            print("  in-session evidence: %s" % blob_why)
+            if records is not None:
+                prior = (records, predating)
+        if not named_corpses:
+            print("  in-session `--corpse`: NONE PASSED. Term 3 will fail for every task; "
+                  "an in-session caller must NAME each dispatch it claims is dead.")
+        else:
+            print("  in-session `--corpse`: %s" % ", ".join(sorted(named_corpses)))
     for t in live:
         if mode == "wrapper":
             demote.append(t)
             continue
-        ok, reason = task_is_demotable_in_session(t, lock_fire, predating)
+        ok, reason = task_is_demotable_in_session(t, fire_id, prior, named_corpses)
         (demote if ok else withheld).append((t, reason))
 
     if mode == "in_session":
         print("  IN-SESSION authority: %d demotable, %d WITHHELD (a live fire is running; "
-              "only dispatches that PREDATE this fire's lock commit may be touched)"
+              "a task may be touched only if it was inherited at the lock commit, has NOT "
+              "been rewritten by this fire since, AND was named with `--corpse`)"
               % (len(demote), len(withheld)))
         for t, reason in withheld:
             print("  %-8s WITHHELD  %s" % (t.get("id", "?"), reason))
@@ -733,7 +975,11 @@ def reconcile(fire, rescue_map, dry_run=False):
         if not demote:
             print("  RESULT: REFUSED -- nothing this caller is authorised to repair; "
                   "tasks.json was NOT modified. The wrapper's exit-path reconcile runs "
-                  "in `wrapper` mode and clears what is left.")
+                  "in `wrapper` mode and clears what is left -- but only when "
+                  "`foreign_live_session_in_repo()` returns 1, which it does not while "
+                  "any `claude` sits in the repo root (T302 F11). If that is the case "
+                  "here, the `in_progress` lines are still a lie and somebody must say "
+                  "so by hand.")
             return 4
 
     for t in demote:
@@ -745,45 +991,47 @@ def reconcile(fire, rescue_map, dry_run=False):
             clauses.append("Uncommitted WIP left in its worktree was swept onto %s by "
                            "this fire's worktree sweep." % rescued)
         # WHICH FIRE KILLED IT -- SAY ONLY WHAT THE EVIDENCE SUPPORTS.
-        # Attempt 1 of T309 wrote `t["fire"]` into this note as the killing fire, on the
-        # ground that the pre-T309 note always named the RECONCILING fire and that was a
-        # false attribution when one fire cleared another's corpses. The diagnosis was
-        # right; the substitute is a field that is measurably stale (see
-        # dispatches_predating_this_fire), so it swapped one false attribution for
-        # another -- and a confident invention in the record this program reads back is
-        # exactly what the honesty rule forbids. So the note now states the mode's
-        # evidence and marks the field as corroboration:
+        # T309 attempt 1 wrote `t["fire"]` in here as the killing fire; T309 attempt 2
+        # demoted it to "corroboration" and printed it anyway. T319 DELETES IT. T302
+        # adjudicated the field: `dispatched_at` is four days stale on the tasks that
+        # carry it and absent entirely on the ones dispatched in batch 2, the writer that
+        # produces the staleness is unchanged, and only 12 of 203 tasks carry `fire` at
+        # all [VERIFIED: .softhouse/reviews/T302/REVIEW-A2.md, "adjudicating T309's own
+        # follow-ups (a)"]. A field printed beside real evidence is read as evidence.
+        # P-22: "A guard, a canary, or a control that cannot fail is worse than none --
+        # because it is believed" [VERIFIED: .softhouse/patterns.md, P-22]; a FACT that
+        # cannot be right is the same trade. So neither field is read anywhere in this
+        # module now, and the note says what each mode actually established:
         #   wrapper mode    -- the driver that just died IS this fire's; naming `--fire`
         #                      is an observation, not a guess.
-        #   in_session mode -- the demotion was authorised by "already in_progress at
-        #                      this fire's lock commit", which establishes the dispatch
-        #                      is INHERITED but not WHICH earlier fire made it. Say that.
-        owner = t.get("fire")
-        owner = owner.strip() if isinstance(owner, str) else ""
-        if owner:
-            field = (" The task's own `fire` field says %s; that field is stamped at "
-                     "first dispatch and is NOT refreshed on re-dispatch, so treat it as "
-                     "corroboration, not as the identity of the killing fire." % owner)
-        else:
-            field = (" The task carries no `fire` field at all, so nothing corroborates "
-                     "the attribution.")
+        #   in_session mode -- three terms held (inherited at the lock commit, not
+        #                      rewritten since, named by the caller). That establishes the
+        #                      dispatch is INHERITED, never WHICH earlier fire made it.
         if mode == "wrapper":
             killer = ("fire %s -- OBSERVED: this wrapper stopped its own driver and is "
-                      "reconciling its own dispatches.%s" % (fire, field))
+                      "reconciling its own dispatches." % fire)
         else:
             killer = ("an EARLIER fire -- established, not guessed: this task was already "
                       "claiming in_progress in the tasks.json committed when fire %s took "
-                      "the lock, so the dispatch predates %s. WHICH earlier fire is NOT "
-                      "established.%s" % (fire, fire, field))
+                      "the lock, its record has NOT been rewritten since, and the caller "
+                      "named it as a corpse. So the dispatch predates %s. WHICH earlier "
+                      "fire is NOT established, and no field on this task is trusted to "
+                      "say." % (fire_id or fire, fire_id or fire))
+        merged_clause = ""
+        if kind.startswith("merged"):
+            merged_clause = (" !! READ THIS BEFORE RE-DISPATCHING: its branch is MERGED "
+                             "INTO main. `needs_retry` here means SOMEBODY MUST "
+                             "ADJUDICATE, not 'do it again' -- re-running merged work is "
+                             "the concrete cost T302 measured on 3 of 8 real corpses.")
         note = ("worker killed mid-flight by %s -- the fire ended while this task "
                 "was still in_progress, and a killed worker is dead, not paused "
                 "(softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). "
-                "%s Completeness UNVERIFIED: no handoff "
+                "%s%s Completeness UNVERIFIED: no handoff "
                 "was signed off and no reviewer saw this. Reconciled by fire %s in `%s` "
-                "mode." % (killer, " ".join(clauses), fire, mode))
-        prior = t.get("note")
-        if prior:
-            note += "  [prior note: %s]" % prior
+                "mode." % (killer, " ".join(clauses), merged_clause, fire, mode))
+        prior_note = t.get("note")
+        if prior_note:
+            note += "  [prior note: %s]" % prior_note
         print("  %-8s %-42s %s" % (t.get("id", "?"),
                                    branch or "(NO BRANCH RECORDED)",
                                    "WIP=%s%s" % (kind, "+rescued" if rescued else "")))
@@ -870,29 +1118,44 @@ def main():
         kind, text = branch_wip(branch)
         print("  %-8s %s" % (tid, branch or "NO BRANCH RECORDED -- suspect an isolation violation"))
         print("           WIP: %s  %s" % (kind.upper(), text))
-        # T309 attempt 2: PRINT the `fire` field and its dispatch stamp, and say plainly
-        # that neither is authoritative. This is not decoration -- the staleness only
-        # became visible because somebody printed the field beside the truth, and an
-        # omission that announces itself is not a remembered obligation (P-45: "a guard
-        # that only works when someone remembers to run it enforces nothing"
-        # [VERIFIED: .softhouse/patterns.md, P-45]).
-        owner = t.get("fire")
-        owner = owner.strip() if isinstance(owner, str) else ""
-        when = t.get("dispatched_at") or "none"
-        if owner:
-            print("           `fire` field: %s   `dispatched_at`: %s   -- BOTH are "
-                  "stamped at FIRST dispatch and are not refreshed on re-dispatch, so a "
-                  "retried task carries the ORIGINAL fire's id. NOT authoritative; "
-                  "`--reconcile` decides ownership from the tasks.json committed at this "
-                  "fire's lock commit." % (owner, when))
-        else:
-            print("           `fire` field: NONE RECORDED   `dispatched_at`: %s   -- "
-                  "harmless: `--reconcile` does not depend on this field." % when)
+    # T319 -- `fire` AND `dispatched_at` ARE NO LONGER PRINTED, AND NOTHING READS THEM.
+    # T309 attempt 2 printed both with a disclaimer attached. T302 then measured what the
+    # disclaimer was disclaiming: `dispatched_at` four days stale where present and
+    # ABSENT on the tasks dispatched in batch 2, `fire` on 12 of 203 tasks, and the WRITER
+    # unchanged, so the next re-dispatch reproduces the staleness exactly [VERIFIED:
+    # .softhouse/reviews/T302/REVIEW-A2.md, "adjudicating T309's own follow-ups (a)"].
+    # A wrong field printed at STEP 0, under a caveat, is still read as a fact by the
+    # third reader -- P-22, "A guard, a canary, or a control that cannot fail is worse
+    # than none -- because it is believed" [VERIFIED: .softhouse/patterns.md, P-22].
+    # DECISION (T319, agent-decidable per CLAUDE.md "Answering gates": ENGINEERING):
+    # DELETE THEM. This file no longer reads either field for any purpose. The orchestrator
+    # must (a) stop WRITING them at dispatch and (b) strip them from tasks.json, which is
+    # owned by the live fire and which this worker must not edit -- see the handoff.
+    # `--reconcile` term 2 is unaffected: it compares WHOLE RECORDS and interprets no
+    # field, so removing these keys leaves `attempts` and `note` moving on every
+    # dispatch, and a one-off bulk strip would make every record differ from its
+    # lock-commit form -- withholding everything, which is the safe direction.
     if live:
+        # T319 -- F4. THIS PARAGRAPH USED TO PROMISE A REPAIR ON PATHS WHERE IT DOES NOT
+        # HAPPEN, printed UNCONDITIONALLY, in the tool a driver reads at STEP 0 to decide
+        # what to dispatch. That is P-45 -- "a guard that only works when someone
+        # remembers to run it enforces nothing" [VERIFIED: .softhouse/patterns.md, P-45]
+        # -- in the fix for P-45: a guard ASSERTED to run, in prose, to the only reader
+        # that matters. The three false paths T302 named are all still real: a REFUSE
+        # from `foreign_live_session_in_repo()` (which returns 0 = REFUSE while ANY
+        # `claude` sits in the repo root, the documented interactive entry point), a
+        # REFUSE from `caller_is_lock_holder()`, and a signal-path budget too small to
+        # run the reconcile at all. So the promise is now a CONDITIONAL, and it names
+        # what it cannot promise.
         print("  ^ If no fire is running right now, every line above is a DEAD dispatch")
-        print("    and this section is lying to you. The wrapper repairs it on the way")
-        print("    out: fire-program.sh runs `ready-tasks.py --reconcile` at fire exit,")
-        print("    which rewrites these to needs_retry with the evidence in a note.")
+        print("    and this section is lying to you. fire-program.sh runs")
+        print("    `ready-tasks.py --reconcile` on its way out and rewrites these to")
+        print("    needs_retry with the evidence in a note -- BUT ONLY IF: it exits")
+        print("    normally or with enough signal budget left; no live `claude` is")
+        print("    working in this checkout (an idle interactive session in the repo")
+        print("    root also counts, and REFUSES); and the lock-holder check passes.")
+        print("    On any of those the lines above STAND, unrepaired. Do not read their")
+        print("    survival as proof a fire is running.")
     print()
     print("READY (%d)" % len(ready))
     for tid, t, _, edges in sorted(ready):
@@ -992,8 +1255,10 @@ def cli(argv):
     """Hand-rolled, because the whole surface is five flags and argparse would print a
     usage string on an unknown one and exit 2 -- a code this program already spends on
     'the reference oracle is down'. An unknown flag exits 64 and SAYS which flag."""
+    global LIVENESS_ESTABLISHED_OUT_OF_BAND
     args = list(argv)
     fire, rescue_map, do_reconcile, dry = None, {}, False, False
+    named_corpses = set()
     i = 0
     while i < len(args):
         a = args[i]
@@ -1001,15 +1266,29 @@ def cli(argv):
             do_reconcile = True
         elif a == "--dry-run":
             dry = True
+        elif a == NO_LOCK_FLAG:
+            # T319 -- F7. Deliberately long, deliberately ugly, and deliberately NOT
+            # spelled `--force`. It is not a permission to override a check; it is the
+            # caller SUPPLYING a fact this module cannot measure, and the spelling is the
+            # documentation. Only fire-program.sh has run the probe that makes it true.
+            LIVENESS_ESTABLISHED_OUT_OF_BAND = True
         elif a == "--json":
             pass                                    # handled inside main()
-        elif a in ("--fire", "--repo", "--rescue", "--deadline-secs"):
+        elif a in ("--fire", "--repo", "--rescue", "--deadline-secs", "--corpse"):
             if i + 1 >= len(args):
                 print("usage error: %s needs a value" % a, file=sys.stderr)
                 return 64
             i += 1
             if a == "--fire":
                 fire = args[i]
+            elif a == "--corpse":
+                # T319 -- term 3. Repeatable; one task id per occurrence.
+                tid = args[i].strip()
+                if not tid:
+                    print("usage error: --corpse wants a task id, got %r" % args[i],
+                          file=sys.stderr)
+                    return 64
+                named_corpses.add(tid)
             elif a == "--repo":
                 set_repo(args[i])
             elif a == "--deadline-secs":
@@ -1046,7 +1325,11 @@ def cli(argv):
             print("usage error: --reconcile requires --fire <fire-id>; the note it "
                   "writes must name the fire that killed the worker", file=sys.stderr)
             return 64
-        return reconcile(fire, rescue_map, dry_run=dry)
+        return reconcile(fire, rescue_map, named_corpses, dry_run=dry)
+    if named_corpses or LIVENESS_ESTABLISHED_OUT_OF_BAND:
+        print("usage error: --corpse and %s are only meaningful with --reconcile"
+              % NO_LOCK_FLAG, file=sys.stderr)
+        return 64
     return main()
 
 

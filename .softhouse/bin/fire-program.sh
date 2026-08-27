@@ -205,13 +205,26 @@ fi
 # behind the truth the way a remembered field can (P-45, five recorded times).
 # If heartbeat and push-recency ever disagree, believe push-recency.
 #
-# T309 -- `fire` IS RECORDED HERE, AND IT IS LOAD-BEARING, NOT DECORATION. It is the
-# only unfakeable answer to "which fire dispatched this task?" available to a process
-# running INSIDE a live fire. `ready-tasks.py --reconcile`, in `in_session` mode, demotes
-# an `in_progress` task only when the task's own `fire` differs from THIS value -- the
-# argument being the lock's exclusivity: at most one fire holds this file, so a task
-# stamped with a different fire id belongs to a fire that is over. The id was previously
-# recoverable only by parsing `"log"` for the stamp, which is a derivation, not a field.
+# T319 -- `fire` IS RECORDED HERE AS A CROSS-CHECK, AND THIS COMMENT IS THE THIRD VERSION
+# OF ITSELF. T309 attempt 1 wrote here that `fire` "IS LOAD-BEARING, NOT DECORATION" and
+# that `ready-tasks.py --reconcile` "demotes an `in_progress` task only when the task's own
+# `fire` differs from THIS value". That rule was discarded by T309's own attempt 2 (it
+# would have demoted six live workers) and this comment was not updated -- so for four days
+# the wrapper DOCUMENTED A RULE THE RESOLVER EXPLICITLY REFUSES TO FOLLOW, which is how the
+# next author gets it wrong twice. [Found by T302, REVIEW-A2 "what I checked and found
+# clean"; fixed here.]
+#
+# WHAT IT IS NOW. `ready-tasks.py` finds this fire's lock commit as "the newest commit that
+# TOUCHED .softhouse/LOCK, whose SUBJECT is `softhouse: local fire lock (<id>)`", and reads
+# the fire id off THAT SUBJECT. So the anchor is the act of taking the lock, not a field and
+# not a commit-message search -- a reviewer who quotes the subject in a commit body cannot
+# move it, and a lock written without this field still works. The field below is only a
+# cross-check: when it is present and disagrees with the anchor's id, the resolver REFUSES
+# rather than choosing one. Keeping it is cheap and its failure direction is safe.
+#
+# NOTE FOR THE NEXT AUTHOR: this is the LOCK's `fire`. The TASK-level `fire` and
+# `dispatched_at` fields in tasks.json are a different thing, they were measured stale and
+# half-populated (12 of 203 tasks), and T319 removed every read of them.
 cat > "$LOCK" <<EOF
 {
   "holder": "local-launchd",
@@ -647,6 +660,10 @@ stop_driver() {
 # being made.
 SIGNAL_GRACE_SECS="${SIGNAL_GRACE_SECS:-20}"
 SIGNAL_RECONCILE_MIN_SECS="${SIGNAL_RECONCILE_MIN_SECS:-2}"
+# T319 — F8b. How much of the outer budget the INNER (graceful) deadline gives back, so
+# the degraded tail can actually write before the outer bound kills the subtree. See the
+# use site in on_signal for the measurement this is derived from.
+RECONCILE_TAIL_RESERVE_SECS="${RECONCILE_TAIL_RESERVE_SECS:-1}"
 
 # Run reconcile_tasks_json under a hard wall-clock bound. Same shape as
 # git_push_bounded: background it, poll, and kill the whole subtree at the deadline
@@ -761,7 +778,24 @@ on_signal() {
     # Plain assignment, not a `VAR=x func` prefix: zsh's scoping for a prefixed
     # assignment on a SHELL FUNCTION is not the same as on an external command, and a
     # signal handler is not the place to depend on which one this shell implements.
-    RECONCILE_DEADLINE_SECS=$budget
+    # T319 — F8b. THESE TWO NUMBERS USED TO BE THE SAME NUMBER, WHICH COLLAPSED THE
+    # TWO-LAYER DESIGN INTO ONE LAYER IN EXACTLY THE CASE IT WAS BUILT FOR. The stated
+    # polarity (see the budget comment above) is that the INNER bound degrades gracefully
+    # — WIP evidence becomes UNVERIFIED, the demotions still land and still get written —
+    # while the OUTER bound is brutal: the subtree is killed and NOTHING is written. With
+    # inner == outer the inner path only BEGINS degrading at the instant the outer kill is
+    # due, so the graceful layer can never finish before the brutal one fires.
+    # The inner deadline is therefore the outer budget MINUS the time the degraded tail
+    # needs to parse, decide and write. T302 measured that tail end-to-end on the real
+    # 792 KB tasks.json at N=0 (startup + parse + report, no git): 0.106 s
+    # [VERIFIED: .softhouse/reviews/T302/a2/out-f8-cost.txt]. RECONCILE_TAIL_RESERVE_SECS
+    # is 1 s — an order of magnitude of margin over the measurement, and still small
+    # against the ~7 s budget the defaults produce. It is a variable, not a literal, so
+    # the next person to re-measure changes one thing.
+    local inner=$(( budget - RECONCILE_TAIL_RESERVE_SECS ))
+    (( inner < 1 )) && inner=1
+    log "signal-path reconcile layers: inner (--deadline-secs, graceful) ${inner}s, outer (reconcile_bounded, kills the subtree) ${budget}s — the inner MUST be smaller, or the graceful layer never completes"
+    RECONCILE_DEADLINE_SECS=$inner
     reconcile_bounded "$budget"
     RECONCILE_DEADLINE_SECS=""
     commit_reconcile_result
@@ -1040,7 +1074,9 @@ foreign_live_session_in_repo() {
   # emits `a=x` / `a=y`). The first draft of this function declared `local l` inside the
   # lsof loop and leaked a line of raw lsof output into the fire log. Caught by driving
   # it, not by reading it.
-  local line pid st first cwd lsofout l checked=0 unknown=0 found=0
+  # T319 adds `named` and `mentions` to this one declaration site, for the reason the
+  # paragraph above gives.
+  local line pid st first cwd lsofout l seg checked=0 unknown=0 found=0 named=0 mentions=0 unnamed=0
   local -a f
   for line in $lines; do
     f=(${=line})
@@ -1048,8 +1084,60 @@ foreign_live_session_in_repo() {
     pid=$f[1]; st=$f[2]; first=$f[3]
     [[ "$pid" == <1-> ]] || continue
     (( pid == $$ )) && continue
-    [[ "${first:t}" == claude ]] || continue      # the CLI, not /Applications/Claude.app
+    # T319 — F3a. `[[ "${first:t}" == claude ]] || continue` WAS A ONE-WAY FILTER AND IT
+    # FAILED IN THE DESTRUCTIVE DIRECTION. A process this line did not recognise
+    # incremented NEITHER `checked` NOR `unknown`, so it could never reach the
+    # `(( unknown )) && return 2` leg; with nothing recognised at all the function fell
+    # through to `return 1` — the value that AUTHORISES rewriting tasks.json — while a
+    # session genuinely working in this checkout ran on. The evidence string printed
+    # `examined=0` honestly; the return code did not, and `reconcile_tasks_json` reads
+    # only the return code. That is precisely the sentence this function's own header
+    # forbids: "'I could not tell' is never spelled like 'nobody'".
+    # T302 drove it: the SAME live pid, with `command` reading `/Applications/Claude ...`
+    # (a spaced install path; a `node .../cli.js` wrapper launch has the identical
+    # signature) gave `examined=0 in-repo=0 -> 1 MAY RECONCILE`
+    # [VERIFIED: .softhouse/reviews/T302/out/3-liveness-probe.txt, CASE 1].
+    # THE FIX WIDENS RECOGNITION, AND DELIBERATELY NOT THE RETURN. Two other repairs were
+    # considered and REJECTED, because the direction matters more than the tidiness:
+    #   * "examined=0 => return 2" — the obvious one-liner, and WRONG. Zero claude
+    #     processes on the host is a perfectly establishable "nobody", and it is the
+    #     NORMAL state on the wrapper's exit path after its own driver has been waited on
+    #     (T302 F11 measured exactly ONE in-repo `claude` during a live fire: the driver).
+    #     Returning 2 there would refuse every normal-tail reconcile and make T288's whole
+    #     repair inert — replacing a fail-OPEN with a permanent fail-CLOSED, which is the
+    #     failure T288 was written to remove.
+    #   * "lsof every live process, decide on cwd alone" — correct in principle and
+    #     unaffordable: /bin/ps lists hundreds of processes here and this runs inside a
+    #     ~7s signal budget. It would also REFUSE on any shell or editor sitting in the
+    #     repo, which is F3b made worse.
+    # So the candidate test is widened from "basename is exactly claude" to "basename is
+    # claude, OR the command line mentions claude anywhere". That is cheap (a string
+    # test, no extra process), it is bounded (the lsof cost follows the number of MATCHES,
+    # not the size of the table), and every widening of it can only add REFUSALS.
     [[ "$st" == Z* ]] && continue                 # a zombie is dead, merely unreaped
+    # NOTE ON THE `local` PLACEMENT: `named` and `mentions` are declared with the other
+    # locals at the top of this function, NOT here. Under zsh 5.9 a bare `local x` inside
+    # a loop body, when x already exists at this scope, PRINTS `x=<value>` to stdout — the
+    # leak that put a raw lsof line into the fire log the first time this function was
+    # driven. Declaring in the loop would reintroduce it.
+    named=0; mentions=0
+    [[ "${first:t}" == claude ]] && named=1       # the CLI, not /Applications/Claude.app
+    # TWO STAGES, and the second one exists because the FIRST DRAFT OF THIS WIDENING WAS
+    # A SUBSTRING TEST AND ITS OWN HARNESS CAUGHT IT: `*claude*` matches `notaclaude`,
+    # `claudette`, and any path that merely contains the letters. Over-matching here only
+    # ever adds REFUSALS, so it is the safe direction -- but a probe that refuses on
+    # unrelated processes drifts into the permanent inertness of F3b, which is the other
+    # failure this function has. So: a cheap substring pre-filter to skip the ~600 rows of
+    # a real process table, then an exact PATH-SEGMENT test on the few that survive it.
+    # A segment equal to `claude` matches `/Applications/Claude Code/claude`,
+    # `node /opt/claude/cli.js` and `~/.local/bin/claude`; it does not match `notaclaude`.
+    if (( ! named )) && [[ "${line:l}" == *claude* ]]; then
+      for seg in ${=${${line:l}//\// }}; do
+        [[ "$seg" == claude || "$seg" == claude.* ]] && { mentions=1; break }
+      done
+    fi
+    (( named || mentions )) || continue
+    (( named )) || (( unnamed++ ))
     kill -0 "$pid" 2>/dev/null || continue        # exited between the snapshot and now
     # T309 — OUR OWN driver is not a FOREIGN session, and this function's whole subject
     # is "somebody ELSE working in this checkout". Before T309 the distinction never
@@ -1091,9 +1179,13 @@ foreign_live_session_in_repo() {
       FOREIGN_SESSIONS="${FOREIGN_SESSIONS} [pid ${pid} cwd ${cwd} elsewhere]"
     fi
   done
-  FOREIGN_SESSIONS="claude processes examined=$checked in-repo=$found unreadable=$unknown --$FOREIGN_SESSIONS"
+  FOREIGN_SESSIONS="claude processes examined=$checked (of which ${unnamed} matched only by MENTIONING claude, not by executable name) in-repo=$found unreadable=$unknown --$FOREIGN_SESSIONS"
   (( found ))   && return 0
   (( unknown )) && return 2
+  # examined=0 STILL returns 1, and T319 says so out loud rather than leaving it to be
+  # rediscovered: with the widened candidate test above, "no process on this table so
+  # much as mentions claude" IS an establishable absence, and it is the normal state on
+  # the wrapper's exit path. The unestablishable case is now `unknown`, one line up.
   return 1
 }
 
@@ -1156,7 +1248,19 @@ reconcile_tasks_json() {
       return 1 ;;
   esac
   log "reconcile: no live session owns this repo — $FOREIGN_SESSIONS"
-  local -a args; args=(--reconcile --fire "$STAMP" --repo "$REPO")
+  # T319 — F7. THIS LINE IS THE ONLY PLACE IN THE PROGRAM ENTITLED TO PASS THAT FLAG, and
+  # it is passed HERE rather than at the top of the function on purpose: it is reachable
+  # only after `foreign_live_session_in_repo` returned 1, which is the probe that makes
+  # the assertion true. Before T319 `ready-tasks.py` granted `wrapper` mode -- demote
+  # everything -- to ANY caller the moment `.softhouse/LOCK` was not on disk, and the
+  # justification for that authority was this probe, which lives in THIS file and is run
+  # by exactly one caller. The precondition is now supplied by the caller that satisfies
+  # it instead of assumed by the callee about everybody.
+  # Normally the LOCK IS on disk here (on_signal deliberately reconciles before
+  # release_lock), so this flag changes nothing; it matters in the window where the
+  # lock file is missing anyway -- e.g. the `cat > "$LOCK"` whose rc is not read.
+  local -a args; args=(--reconcile --fire "$STAMP" --repo "$REPO"
+                       --no-live-session-established-out-of-band)
   # T309: the NORMAL tail leaves this empty (nothing is waiting on the wrapper there, and
   # a budget imposed for no reason is a way to lose evidence). The SIGNAL path sets it,
   # because it is racing launchd's SIGTERM->SIGKILL grace. Two call sites, two budgets,
@@ -1170,7 +1274,7 @@ reconcile_tasks_json() {
   case $rc in
     0) RECON_VERDICT="ran clean (see the reconcile| lines in $LOG)" ;;
     3) RECON_VERDICT="FAILED — tasks.json could not be read or written; state is NOT truthful" ;;
-    4) RECON_VERDICT="REFUSED by ready-tasks.py and NOTHING was changed — either the caller could not be established as the lock holder, or it ran in \`in_session\` mode and no in_progress task could be proven to belong to a dead fire (T309). Read the reconcile| lines." ;;
+    4) RECON_VERDICT="REFUSED by ready-tasks.py and NOTHING was changed — either the caller could not be established as the lock holder, or it ran in \`in_session\` mode and no in_progress task passed all three ownership terms (inherited at the lock commit, not rewritten by this fire since, named with --corpse) (T309/T319). Read the reconcile| lines: they name which term failed, per task." ;;
     *) RECON_VERDICT="ready-tasks.py exited $rc (unexpected)" ;;
   esac
   (( rc == 0 )) || log "ERROR: reconcile did not complete — $RECON_VERDICT"
@@ -1333,12 +1437,36 @@ for (( WI = 1; WI <= ${#WT_PATHS}; WI++ )); do
   WN="${WN//[^A-Za-z0-9._-]/-}"
   WB="softhouse/rescued-$WN-$STAMP"
   log "WARN: worktree $WN left $WD uncommitted path(s) — rescuing to $WB"
-  git -C "$W" checkout -q -b "$WB" 2>/dev/null
-  git -C "$W" add -A >/dev/null 2>&1
+  # T319 — F2. THE TWIN'S TWIN, AND ALL THREE RETURN CODES WERE THROWN AWAY.
+  # These three commands used to run with `2>/dev/null` / `>/dev/null 2>&1` and NO rc
+  # read, followed by an UNCONDITIONAL `log "rescued $WN -> $WB"`. T202 fixed exactly this
+  # shape 100 lines above, in the MAIN-TREE rescue at the top of this same function, where
+  # ADD_RC and COMMIT_RC are read and a failure logs "NOTHING was rescued"; the fix was
+  # applied to one branch of the function and not the other.
+  # T302 drove the unfixed branch against the population it serves — a SIGKILLed worker,
+  # which leaves the stale `.git/worktrees/<name>/index.lock` that a `git add` interrupted
+  # by a signal leaves behind: checkout rc=128, add rc=128, commit rc=128, and the wrapper
+  # logged `rescued agent-deadbeef -> softhouse/rescued-agent-deadbeef-...` for a branch
+  # that DOES NOT EXIST, over a worktree that was still dirty
+  # [VERIFIED: .softhouse/reviews/T302/out/2-phantom-rescue.txt].
+  # T288 made that worse than a wrong log line: it appended the pair to RESCUE_PAIRS, and
+  # `ready-tasks.py --rescue` writes it into the task's PERMANENT note as evidence — "swept
+  # onto <branch> by this fire's worktree sweep". The blast radius went up and the
+  # verification did not. An unverified rescue must never become evidence.
+  # POLARITY: fail-CLOSED. Any non-zero rc means NOTHING was rescued, it is logged as
+  # such naming the rc, and NO pair is appended. A genuinely successful rescue is
+  # unchanged.
+  local CO_RC ADD_RC CM_RC
+  git -C "$W" checkout -q -b "$WB" 2>/dev/null; CO_RC=$?
+  git -C "$W" add -A >/dev/null 2>&1; ADD_RC=$?
   git -C "$W" -c user.name="Buyan" -c user.email="buya.vol@gmail.com" \
       commit -q -m "RESCUED: WIP from a worker that never signalled done (fire $STAMP)
 
-Committed by the orchestrator's worktree sweep. Completeness UNVERIFIED — no handoff was written. Treat as partial until re-reviewed." >/dev/null 2>&1
+Committed by the orchestrator's worktree sweep. Completeness UNVERIFIED — no handoff was written. Treat as partial until re-reviewed." >/dev/null 2>&1; CM_RC=$?
+  if (( CO_RC != 0 || ADD_RC != 0 || CM_RC != 0 )); then
+    log "ERROR: NOTHING was rescued from $WN — git failed (checkout rc=$CO_RC, add rc=$ADD_RC, commit rc=$CM_RC). The branch $WB may not exist and the worktree is still dirty with $WD uncommitted path(s). This is NOT paired into any task note, because an unverified rescue must not become evidence. Inspect $W by hand."
+    continue
+  fi
   log "rescued $WN -> $WB"
   # The worktree's PRIOR branch is what a task records in tasks.json .branch. A
   # worktree still on its harness default (`worktree-agent-<hex>`) or detached has no

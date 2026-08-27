@@ -1,0 +1,62 @@
+repo: .
+
+=== fire 20260827-230001 ===
+--- A: T309's anchor  (--fixed-strings --grep, WHOLE MESSAGE, newest wins) ---
+    558ef3204d8dafac8eaa200dd7506cad4b077d12 1787842808 softhouse: local fire lock (20260827-230001)
+    matches: 1
+--- B: T319's anchor  (candidates narrowed by --grep, then EXACT %s equality) ---
+    558ef3204d8dafac8eaa200dd7506cad4b077d12  EXACT-SUBJECT
+    exact-subject matches: 1  (T319 REFUSES unless this is exactly 1)
+--- C: corroboration  (commit that ADDED .softhouse/LOCK, newest first, 3) ---
+    558ef3204d8dafac8eaa200dd7506cad4b077d12 softhouse: local fire lock (20260827-230001)
+    8ca0b85b05ebecc761358c0a0e53625b4c7a91fe softhouse: local fire lock (20260827-200001)
+    1dedb5e51e8bf5c95d2833fb4e24e1a7971a86b6 softhouse: local fire lock (20260827-170004)
+
+=== fire 20260823-140001 ===
+--- A: T309's anchor  (--fixed-strings --grep, WHOLE MESSAGE, newest wins) ---
+    5428c0a4b54ab1ec131ff0c5c228028af97e2ecf 1787464808 softhouse: local fire lock (20260823-140001)
+    matches: 1
+--- B: T319's anchor  (candidates narrowed by --grep, then EXACT %s equality) ---
+    5428c0a4b54ab1ec131ff0c5c228028af97e2ecf  EXACT-SUBJECT
+    exact-subject matches: 1  (T319 REFUSES unless this is exactly 1)
+--- C: corroboration  (commit that ADDED .softhouse/LOCK, newest first, 3) ---
+    558ef3204d8dafac8eaa200dd7506cad4b077d12 softhouse: local fire lock (20260827-230001)
+    8ca0b85b05ebecc761358c0a0e53625b4c7a91fe softhouse: local fire lock (20260827-200001)
+    1dedb5e51e8bf5c95d2833fb4e24e1a7971a86b6 softhouse: local fire lock (20260827-170004)
+
+=== fire 20260823-080004 ===
+--- A: T309's anchor  (--fixed-strings --grep, WHOLE MESSAGE, newest wins) ---
+    3198b657b2f2fedc98fae451cc02129910febc71 1787443211 softhouse: local fire lock (20260823-080004)
+    matches: 1
+--- B: T319's anchor  (candidates narrowed by --grep, then EXACT %s equality) ---
+    3198b657b2f2fedc98fae451cc02129910febc71  EXACT-SUBJECT
+    exact-subject matches: 1  (T319 REFUSES unless this is exactly 1)
+--- C: corroboration  (commit that ADDED .softhouse/LOCK, newest first, 3) ---
+    558ef3204d8dafac8eaa200dd7506cad4b077d12 softhouse: local fire lock (20260827-230001)
+    8ca0b85b05ebecc761358c0a0e53625b4c7a91fe softhouse: local fire lock (20260827-200001)
+    1dedb5e51e8bf5c95d2833fb4e24e1a7971a86b6 softhouse: local fire lock (20260827-170004)
+
+=== fire 20260822-140002 ===
+--- A: T309's anchor  (--fixed-strings --grep, WHOLE MESSAGE, newest wins) ---
+    8f0edeb1f1ab64c833d04c562180a5e067049675 1787378408 softhouse: local fire lock (20260822-140002)
+    matches: 1
+--- B: T319's anchor  (candidates narrowed by --grep, then EXACT %s equality) ---
+    8f0edeb1f1ab64c833d04c562180a5e067049675  EXACT-SUBJECT
+    exact-subject matches: 1  (T319 REFUSES unless this is exactly 1)
+--- C: corroboration  (commit that ADDED .softhouse/LOCK, newest first, 3) ---
+    558ef3204d8dafac8eaa200dd7506cad4b077d12 softhouse: local fire lock (20260827-230001)
+    8ca0b85b05ebecc761358c0a0e53625b4c7a91fe softhouse: local fire lock (20260827-200001)
+    1dedb5e51e8bf5c95d2833fb4e24e1a7971a86b6 softhouse: local fire lock (20260827-170004)
+
+=== fire 20260821-080001 ===
+--- A: T309's anchor  (--fixed-strings --grep, WHOLE MESSAGE, newest wins) ---
+    8faee447e12a66900b653ec1279e176f6dbdec4c 1787270408 softhouse: local fire lock (20260821-080001)
+    matches: 1
+--- B: T319's anchor  (candidates narrowed by --grep, then EXACT %s equality) ---
+    8faee447e12a66900b653ec1279e176f6dbdec4c  EXACT-SUBJECT
+    exact-subject matches: 1  (T319 REFUSES unless this is exactly 1)
+--- C: corroboration  (commit that ADDED .softhouse/LOCK, newest first, 3) ---
+    558ef3204d8dafac8eaa200dd7506cad4b077d12 softhouse: local fire lock (20260827-230001)
+    8ca0b85b05ebecc761358c0a0e53625b4c7a91fe softhouse: local fire lock (20260827-200001)
+    1dedb5e51e8bf5c95d2833fb4e24e1a7971a86b6 softhouse: local fire lock (20260827-170004)
+
