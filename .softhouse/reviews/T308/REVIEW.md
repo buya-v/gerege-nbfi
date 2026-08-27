@@ -76,6 +76,42 @@ VERDICT: PASS (exit 0)
 Still `46 / 7884`. **P-84 applied in the stated order each time:** the probe line's PRESENCE was
 established (`grep -c` → 1) before its value was read.
 
+**A check on THIS REPORT, not on T292.** This lineage's subject is the vacuous green, and a review
+that cites a transcript which does not exist is that same defect one level up — at the level of the
+report rather than the rule. Pass 1 fixed its dangling references **by hand**, in a commit titled
+*"point every transcript reference at a file that exists and is non-empty"*, which is therefore not
+re-checkable. It is now a program: `probe/t308_check_refs.sh` extracts every `out/` and `probe/`
+path cited in this file and requires each to resolve **non-empty** under either this review's
+directory or T292's committed capture directory.
+
+```
+31 cited paths checked.
+ALL CITED PATHS RESOLVE NON-EMPTY, OR ARE ABSENT BY DECLARATION.        EXIT 0
+```
+
+**Two paths are absent BY DECLARATION, each named in the script with its reason**, and the script
+fails if either ever *appears*, so a declaration cannot rot into a lie:
+* `out/t308-survivor-mutants.txt` — cited in §5 precisely in order to say it was deleted rather
+  than committed at zero bytes.
+* `out/this-file-does-not-exist.txt` — not a transcript at all; it is the bogus citation quoted
+  just below, and it must never resolve.
+
+**The checker caught my own text while I was writing this paragraph.** Quoting the negative
+control introduced a literal dangling citation into `REVIEW.md`, and the run went **exit 1** until
+it was declared. That is the fourth instrument defect this review has recorded against itself, and
+the first one found by an instrument rather than by a reader.
+
+**And the checker has a NEGATIVE CONTROL, because a checker I wrote that passes is exactly the
+thing this review exists to distrust** [VERIFIED: `out/t308-cited-paths-NEGATIVE-CONTROL.txt`]. A
+bogus citation appended to this file produces:
+
+```
+*** UNRESOLVED OR EMPTY: out/this-file-does-not-exist.txt
+SOME CITED PATHS DO NOT RESOLVE.                                        EXIT 1
+```
+
+The control fires; the green above is a measurement.
+
 ---
 
 ## 1. SCOPE AND THE NON-NEGOTIABLES — what I checked, so silence is distinguishable from not looking
