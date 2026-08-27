@@ -1,0 +1,513 @@
+{
+  "results": [
+    {
+      "exit": 127,
+      "file": ".softhouse/bin/fire-program.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 167
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/bin/go-env.sh",
+      "status": "RAN",
+      "stderrBytes": 677,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/capture/lib/check_no_narrow_catch.py",
+      "status": "RAN",
+      "stderrBytes": 221,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+      "status": "RAN",
+      "stderrBytes": 209,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/pathb/t36/attest.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 602
+    },
+    {
+      "exit": null,
+      "file": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+      "status": "TIMEOUT"
+    },
+    {
+      "exit": null,
+      "file": ".softhouse/capture/pathb/t80/prove-f1-recovery.py",
+      "status": "TIMEOUT"
+    },
+    {
+      "exit": null,
+      "file": ".softhouse/capture/pathb/t80/prove-f1-sandbox-run.sh",
+      "status": "TIMEOUT"
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "status": "RAN",
+      "stderrBytes": 399,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 2184
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/capture/t154-nofloat/drive-leg1-e2e.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 3402
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/32-triage-live.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 12064
+    },
+    {
+      "exit": null,
+      "file": ".softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh",
+      "status": "TIMEOUT"
+    },
+    {
+      "exit": 2,
+      "file": ".softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py",
+      "status": "RAN",
+      "stderrBytes": 155,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t252-tier3/instruments/40-c6-red-drive.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 4443
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 2179
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 6652
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 17257
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 13889
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 8858
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t256-verdict-predicate/census_verdict_shape.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 6103
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t271-b1-t219/red/drive-red-t271.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 2754
+    },
+    {
+      "exit": null,
+      "file": ".softhouse/capture/t284-schema2-callsites/instruments/30-red-drive.sh",
+      "status": "TIMEOUT"
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 14248
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t290-review-t271/red/drive-red-t290.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 2555
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t299-namespace-and-default-safety/instruments/30-drive-the-rename.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 9310
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t299-namespace-and-default-safety/instruments/40-drive-namespace-guard.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 4232
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/capture/t309-sigterm-reconcile-bypass/patch5.py",
+      "status": "RAN",
+      "stderrBytes": 189,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/capture/t309-sigterm-reconcile-bypass/probe-git-inode.sh",
+      "status": "RAN",
+      "stderrBytes": 251,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 10807
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t316-dead-path-guards/drive-red-t316.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 2472
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 310
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 2063
+    },
+    {
+      "exit": 2,
+      "file": ".softhouse/capture/t66-unrecognized-interest/gotest.sh",
+      "status": "RAN",
+      "stderrBytes": 1869,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/verify-on-scratch-merge.sh",
+      "status": "RAN",
+      "stderrBytes": 143,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+      "status": "RAN",
+      "stderrBytes": 278,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 2144
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 331
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 4134
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 5101
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 478
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 2050
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/handoff/T61-mutations.py",
+      "status": "RAN",
+      "stderrBytes": 68,
+      "stdoutBytes": 100
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "status": "RAN",
+      "stderrBytes": 120,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+      "status": "RAN",
+      "stderrBytes": 389,
+      "stdoutBytes": 82
+    },
+    {
+      "exit": 9,
+      "file": ".softhouse/reviews/T155-probe/prove-xiii-deflation.sh",
+      "status": "RAN",
+      "stderrBytes": 398,
+      "stdoutBytes": 177
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/reviews/T184-evidence/t184-probe-green-catch.sh",
+      "status": "RAN",
+      "stderrBytes": 658,
+      "stdoutBytes": 483
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/reviews/T184-evidence/t184-probe-green-float.sh",
+      "status": "RAN",
+      "stderrBytes": 414,
+      "stdoutBytes": 7791
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/reviews/T184-evidence/t184-probe-red-catch.sh",
+      "status": "RAN",
+      "stderrBytes": 182,
+      "stdoutBytes": 7792
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/reviews/T184-evidence/t184-probe-red-float.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 56
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/reviews/T184-evidence/t184-vacuity.sh",
+      "status": "RAN",
+      "stderrBytes": 2072,
+      "stdoutBytes": 548
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/reviews/T188-probe/drive-t188.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 12066
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/reviews/T298/attack-marker-extractor.sh",
+      "status": "RAN",
+      "stderrBytes": 101,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/reviews/T298/t298b-census.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 3268
+    },
+    {
+      "exit": null,
+      "file": ".softhouse/reviews/T298/t298b-marker-attack-matrix.sh",
+      "status": "TIMEOUT"
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/reviews/T298/t298b-worktree-composition-drive.sh",
+      "status": "RAN",
+      "stderrBytes": 102,
+      "stdoutBytes": 5577
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "status": "RAN",
+      "stderrBytes": 306,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "status": "RAN",
+      "stderrBytes": 526,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": null,
+      "file": ".softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh",
+      "status": "TIMEOUT"
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/reviews/t179-guard-classifier/fixtures/green_atexit.py",
+      "status": "RAN",
+      "stderrBytes": 32,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py",
+      "status": "RAN",
+      "stderrBytes": 32,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/reviews/t179-guard-classifier/fixtures/green_real_trap.sh",
+      "status": "RAN",
+      "stderrBytes": 83,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py",
+      "status": "RAN",
+      "stderrBytes": 32,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/reviews/t179-guard-classifier/fixtures/red_guard_elsewhere.py",
+      "status": "RAN",
+      "stderrBytes": 32,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 1,
+      "file": ".softhouse/reviews/t179-guard-classifier/fixtures/red_prose_guard.py",
+      "status": "RAN",
+      "stderrBytes": 32,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/reviews/t262-verdict-predicate/pin_test_t262.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 2181
+    },
+    {
+      "exit": 2,
+      "file": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 1180
+    },
+    {
+      "exit": 2,
+      "file": ".softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 563
+    },
+    {
+      "exit": 2,
+      "file": ".softhouse/reviews/t291-review-t286/probe/reproduce-in-t286s-own-sweep.sh",
+      "status": "RAN",
+      "stderrBytes": 229,
+      "stdoutBytes": 0
+    },
+    {
+      "exit": 0,
+      "file": ".softhouse/reviews/t47-probe/t178-redprobe.py",
+      "status": "RAN",
+      "stderrBytes": 0,
+      "stdoutBytes": 15880
+    }
+  ],
+  "shortlist": [
+    ".softhouse/bin/go-env.sh",
+    ".softhouse/capture/pathb/t36/attest.py",
+    ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+    ".softhouse/capture/t234-sweep-instrument-audit/instruments/32-triage-live.py",
+    ".softhouse/capture/t252-tier3/instruments/40-c6-red-drive.py",
+    ".softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py",
+    ".softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh",
+    ".softhouse/capture/t256-verdict-predicate/census_verdict_shape.py",
+    ".softhouse/capture/t271-b1-t219/red/drive-red-t271.py",
+    ".softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py",
+    ".softhouse/capture/t290-review-t271/red/drive-red-t290.py",
+    ".softhouse/capture/t299-namespace-and-default-safety/instruments/30-drive-the-rename.sh",
+    ".softhouse/capture/t299-namespace-and-default-safety/instruments/40-drive-namespace-guard.sh",
+    ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+    ".softhouse/capture/t316-dead-path-guards/drive-red-t316.py",
+    ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+    ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+    ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+    ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh",
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh",
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh",
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
+    ".softhouse/reviews/T184-evidence/t184-probe-green-catch.sh",
+    ".softhouse/reviews/T184-evidence/t184-probe-green-float.sh",
+    ".softhouse/reviews/T184-evidence/t184-probe-red-catch.sh",
+    ".softhouse/reviews/T184-evidence/t184-vacuity.sh",
+    ".softhouse/reviews/T188-probe/drive-t188.sh",
+    ".softhouse/reviews/T298/t298b-census.sh",
+    ".softhouse/reviews/t262-verdict-predicate/pin_test_t262.py",
+    ".softhouse/reviews/t47-probe/t178-redprobe.py"
+  ]
+}
