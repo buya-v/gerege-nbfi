@@ -105,7 +105,8 @@ m_none() { :; }
 # The mechanics: `$CAP` resolves to a directory that EXISTS, and every leaf is concatenated onto
 # it, so no quoted string in this file contains a `.softhouse/` path that fails to resolve. The
 # planted instrument's dead literal is written through a `%s` format, which the census classes
-# indeterminate rather than dead (PLACEHOLDER_RE, census_dead_paths.py:63) -- and the literal
+# indeterminate rather than dead (PLACEHOLDER_RE, census_dead_paths.py:70 -- grep the SYMBOL,
+# the line moves; this citation was stale at :63 one fire after it was written) -- and the literal
 # still lands in the PLANTED file, which is what actually drives T316 red.
 CAP="$SCRATCH/.softhouse/capture"
 COLLIDE_LEAF="t319-a-second-rig"        # any leaf sharing an id with an existing capture dir

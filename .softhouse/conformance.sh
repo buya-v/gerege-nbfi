@@ -2355,7 +2355,9 @@ guard_capture_namespace() {
 # `.softhouse/` path and this comment had become an instrument naming dead paths. The rule the
 # guard prints was applied as written — "a '+' row is a NEW site: REPAIR it rather than pinning
 # it" — so the quotations were repaired rather than the list widened to excuse them. The census
-# treats `…` (ELLIPSIS_RE, census_dead_paths.py:66) as "not a literal path", which is exactly
+# treats `…` (ELLIPSIS_RE, census_dead_paths.py:73 — grep the SYMBOL, the line moves; T326
+# rebuilt the resolver above it and this citation was stale at :66 within one fire) as "not a
+# literal path", which is exactly
 # what a shape-illustrating quotation is. This is the guard doing its job on its own wiring
 # commit, recorded here rather than quietly fixed.
 # A red drive plants a file that MUST NOT exist in a clean tree — that is what makes it a red
