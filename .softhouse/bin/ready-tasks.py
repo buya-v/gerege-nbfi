@@ -85,6 +85,20 @@ These are the SAME repair with OPPOSITE polarity, deliberately, because the two 
 sites have opposite worst cases. Widening one predicate to serve both is the shape
 `P-91`/`T292` names, and it is not done here.
 
+T312 -- THE BRANCH CASE-VARIANT FLAG, AND WHY THE EXISTING CHECK PASSED CLEANLY.
+This resolver flags "`in_progress` with no `branch`" as a suspected isolation violation.
+On 2026-08-27 six tasks passed that check while their branches were case-shadowing each
+other: a branch WAS recorded, it DID resolve, and it had commits, while a differently
+cased sibling held a diverged line no name reached. `git branch --list` globbing is
+case-SENSITIVE and `packed-refs` is a case-SENSITIVE text file, but this filesystem is
+not -- so a loose ref of one case hides a packed ref of another and the hidden value stays
+a live object. The driver's hand-typed lowercase glob read that as "gone or empty" and
+six tasks were re-dispatched as fresh attempts over 73 surviving commits.
+So `branch_wip` now also asks "does a case-variant of this name exist", via
+`branch_sweep.py` (imported, NOT reimplemented -- T213's rule) and suffixes its verdict
+`/CASE-VARIANT`. When the check could not run it says `/CASE-UNCHECKED` instead, because
+a silent absence of warning is what this file exists to stop being possible.
+
 Usage:  python3 .softhouse/bin/ready-tasks.py [--json] [--repo <dir>]
         python3 .softhouse/bin/ready-tasks.py --reconcile --fire <fire-id>
                 [--rescue <task-branch>=<rescue-branch>]... [--dry-run] [--repo <dir>]
@@ -199,6 +213,62 @@ GIT = shutil.which("git")
 #     file exists to prevent.
 DEADLINE = None          # monotonic instant, or None for "no budget"
 BUDGET_NOTE = ""         # set when the budget was actually exhausted, for the report
+
+
+# ------------------------------------------------------------ T312: case variants ---
+# This file already flags "`in_progress` with no `branch`" as a suspected isolation
+# violation.  On 2026-08-27 that check passed CLEANLY on six tasks whose branches were
+# case-shadowing each other, which is why nothing caught it: a branch WAS recorded, it
+# DID resolve, and it had commits -- while a differently-cased sibling held a diverged
+# line that no name reached.  So `branch_wip` now asks the second question too.
+#
+# The index comes from branch_sweep.py rather than being reimplemented here.  T213's
+# rule: the fixture and the fire must run the SAME bytes, not a copy that drifts.  It is
+# pure filesystem (os.walk over refs/heads + a parse of packed-refs), so it costs NO
+# subprocess and cannot eat the --deadline-secs budget.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    import branch_sweep
+    BRANCH_SWEEP_ERR = None
+except Exception as _exc:                                       # noqa: BLE001
+    branch_sweep = None
+    BRANCH_SWEEP_ERR = "%s: %s" % (type(_exc).__name__, _exc)
+
+_REF_INDEX = ("uncached", None)
+
+
+def ref_index():
+    """(index_or_None, note).  Cached for the process; a run lasts seconds and the
+    refs it reads are not rewritten by this program."""
+    global _REF_INDEX
+    if _REF_INDEX[0] != "uncached":
+        return _REF_INDEX
+    if branch_sweep is None:
+        _REF_INDEX = (None, "branch_sweep.py could not be imported (%s), so NO case-"
+                            "variant check ran -- absence of a warning below means "
+                            "NOTHING was looked at" % BRANCH_SWEEP_ERR)
+        return _REF_INDEX
+    common, note = branch_sweep.common_dir_of(repo)
+    if common is None:
+        _REF_INDEX = (None, "could not locate the git common dir (%s), so NO case-"
+                            "variant check ran" % note)
+        return _REF_INDEX
+    idx = branch_sweep.RefIndex(common)
+    _REF_INDEX = (idx, "loose refs walked from %s/refs/heads and packed entries parsed "
+                       "from %s/packed-refs%s"
+                       % (common, common,
+                          ("; UNREAD: " + "; ".join(idx.errors)) if idx.errors else ""))
+    return _REF_INDEX
+
+
+def case_variants(branch):
+    """(variants, note).  `variants` is every EXISTING ref name that case-folds to the
+    same string as `branch` but is spelled differently.  `note` always states how the
+    question was answered, including when it was not."""
+    idx, note = ref_index()
+    if idx is None:
+        return None, note
+    return branch_sweep.shadow_conflicts(branch, idx), note
 
 
 def set_deadline(secs):
@@ -523,11 +593,46 @@ def task_is_demotable_in_session(t, lock_fire, predating):
                   "earlier fire that is over.%s" % (lock_fire, corroboration))
 
 
+def _case_clause(branch):
+    """The T312 flag, appended to every verdict below.
+
+    It is appended rather than branched on deliberately: a case-variant is orthogonal to
+    whether the named branch has commits.  The 2026-08-27 shadows sat on branches that
+    reported `commits` -- the healthiest verdict this function has -- so hiding the
+    warning behind an unhealthy one would have printed nothing on exactly those six.
+    Returns ("", "") when there is nothing to say.
+    """
+    variants, note = case_variants(branch)
+    if variants is None:
+        return "/CASE-UNCHECKED", ("  CASE-VARIANT CHECK DID NOT RUN: %s." % note)
+    if not variants:
+        return "", ""
+    return "/CASE-VARIANT", (
+        "  !! CASE-VARIANT: %d other spelling(s) of this branch exist -- %s.  On a "
+        "case-insensitive filesystem a loose ref shadows a packed one of different "
+        "case, git resolves loose first, and the shadowed value stays a live object "
+        "that no name reaches: that hid 4 committed commits on T297 and 8 on T305 at "
+        "fire 20260827-230001.  Run `python3 .softhouse/bin/branch_sweep.py sweep "
+        "--pattern '%s' --counts` BEFORE treating this task's branch as authoritative, "
+        "and do NOT delete either spelling."
+        % (len(variants), ", ".join(branch_sweep.short(v) for v in variants), branch))
+
+
 def branch_wip(branch):
     """What WIP exists for a task branch. Returns (kind, human_text).
 
-    kind is one of: none / absent / commits / unverified.
+    kind is one of: none / absent / commits / unverified -- each optionally suffixed
+    `/CASE-VARIANT` or `/CASE-UNCHECKED` by T312.  Nothing in this program COMPARES
+    kind; it is printed, so the suffix is safe to carry.
     """
+    kind, text = _branch_wip_core(branch)
+    if not branch:
+        return kind, text
+    case_kind, case_text = _case_clause(branch)
+    return kind + case_kind, text + case_text
+
+
+def _branch_wip_core(branch):
     if not branch:
         return "none", ("No branch was recorded for this task -- suspect an isolation "
                         "violation; no WIP could be looked for.")

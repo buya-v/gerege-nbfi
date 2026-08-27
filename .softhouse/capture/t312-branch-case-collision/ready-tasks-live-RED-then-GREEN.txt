@@ -1,0 +1,65 @@
+T312 -- `ready-tasks.py` on the LIVE gerege-nbfi checkout, BEFORE and AFTER the
+case-variant flag.  Read-only: no --reconcile, nothing written, the fire's LOCK untouched.
+
+The BEFORE run is `git show main:.softhouse/bin/ready-tasks.py` executed against the same
+checkout at the same minute, so the two transcripts differ only by this task's diff.
+
+WHAT TO LOOK AT.  Two tasks that were `in_progress` at this moment carry a branch name in
+tasks.json that is a CASE-VARIANT of an existing branch:
+
+  T304  recorded `softhouse/t304-evidence-destruction`   -- does NOT resolve
+        existing  `softhouse/T304-evidence-destruction`  -- f8d450c27, 7 commits ahead
+                  of main (`git rev-list --count main..softhouse/T304-evidence-destruction`)
+  T305  recorded `softhouse/t305-openingbalance-accepting-side`  -- resolves, 4 commits
+        existing  `softhouse/T305-openingbalance-accepting-side` -- 060f00330, a packed
+                  line that has DIVERGED from the resolving one
+
+BEFORE, the T304 line said "no WIP was found under that name" about a branch holding seven
+commits -- and `--reconcile` writes that sentence into the task's note as the evidence of
+record.  That is the false negative T312 closes, and it was live in this checkout while
+T312 was being written.  It is the same defect as fire 20260827-230001's "gone or empty",
+in a different instrument.
+
+================================ RED -- main's bytes ================================
+IN PROGRESS -- ALREADY DISPATCHED, do not dispatch again (6)
+  T299     softhouse/t299-t256-namespace-collision
+           WIP: ABSENT  Its branch softhouse/t299-t256-namespace-collision exists at 7b6644743 but has NO commit ahead of main -- nothing was ever committed to it.
+           `fire` field: 20260827-230001   `dispatched_at`: 2026-08-23T03:57:24Z   -- BOTH are stamped at FIRST dispatch and are not refreshed on re-dispatch, so a retried task carries the ORIGINAL fire's id. NOT authoritative; `--reconcile` decides ownership from the tasks.json committed at this fire's lock commit.
+  T302     softhouse/T302-review-t288
+           WIP: COMMITS  Its branch softhouse/T302-review-t288 has 7 commit(s) ahead of main, head c5f3aaf87.
+           `fire` field: 20260827-230001   `dispatched_at`: 2026-08-23T03:57:24Z   -- BOTH are stamped at FIRST dispatch and are not refreshed on re-dispatch, so a retried task carries the ORIGINAL fire's id. NOT authoritative; `--reconcile` decides ownership from the tasks.json committed at this fire's lock commit.
+  T304     softhouse/t304-evidence-destruction
+           WIP: ABSENT  Its recorded branch softhouse/t304-evidence-destruction does not exist in this repo -- no WIP was found under that name.
+           `fire` field: 20260827-230001   `dispatched_at`: 2026-08-23T03:57:24Z   -- BOTH are stamped at FIRST dispatch and are not refreshed on re-dispatch, so a retried task carries the ORIGINAL fire's id. NOT authoritative; `--reconcile` decides ownership from the tasks.json committed at this fire's lock commit.
+  T305     softhouse/t305-openingbalance-accepting-side
+           WIP: COMMITS  Its branch softhouse/t305-openingbalance-accepting-side has 4 commit(s) ahead of main, head 2ec3ddc38.
+           `fire` field: 20260827-230001   `dispatched_at`: 2026-08-23T03:57:24Z   -- BOTH are stamped at FIRST dispatch and are not refreshed on re-dispatch, so a retried task carries the ORIGINAL fire's id. NOT authoritative; `--reconcile` decides ownership from the tasks.json committed at this fire's lock commit.
+  T312     softhouse/T312-branch-case-collision
+           WIP: COMMITS  Its branch softhouse/T312-branch-case-collision has 2 commit(s) ahead of main, head 88f0633de.
+           `fire` field: 20260827-230001   `dispatched_at`: none   -- BOTH are stamped at FIRST dispatch and are not refreshed on re-dispatch, so a retried task carries the ORIGINAL fire's id. NOT authoritative; `--reconcile` decides ownership from the tasks.json committed at this fire's lock commit.
+  T314     softhouse/T314-witness-path-forgery
+           WIP: COMMITS  Its branch softhouse/T314-witness-path-forgery has 3 commit(s) ahead of main, head 800f5e058.
+           `fire` field: 20260827-230001   `dispatched_at`: none   -- BOTH are stamped at FIRST dispatch and are not refreshed on re-dispatch, so a retried task carries the ORIGINAL fire's id. NOT authoritative; `--reconcile` decides ownership from the tasks.json committed at this fire's lock commit.
+  ^ If no fire is running right now, every line above is a DEAD dispatch
+
+=========================== GREEN -- this branch bytes ============================
+IN PROGRESS -- ALREADY DISPATCHED, do not dispatch again (6)
+  T299     softhouse/t299-t256-namespace-collision
+           WIP: ABSENT  Its branch softhouse/t299-t256-namespace-collision exists at 7b6644743 but has NO commit ahead of main -- nothing was ever committed to it.
+           `fire` field: 20260827-230001   `dispatched_at`: 2026-08-23T03:57:24Z   -- BOTH are stamped at FIRST dispatch and are not refreshed on re-dispatch, so a retried task carries the ORIGINAL fire's id. NOT authoritative; `--reconcile` decides ownership from the tasks.json committed at this fire's lock commit.
+  T302     softhouse/T302-review-t288
+           WIP: COMMITS  Its branch softhouse/T302-review-t288 has 7 commit(s) ahead of main, head c5f3aaf87.
+           `fire` field: 20260827-230001   `dispatched_at`: 2026-08-23T03:57:24Z   -- BOTH are stamped at FIRST dispatch and are not refreshed on re-dispatch, so a retried task carries the ORIGINAL fire's id. NOT authoritative; `--reconcile` decides ownership from the tasks.json committed at this fire's lock commit.
+  T304     softhouse/t304-evidence-destruction
+           WIP: ABSENT/CASE-VARIANT  Its recorded branch softhouse/t304-evidence-destruction does not exist in this repo -- no WIP was found under that name.  !! CASE-VARIANT: 1 other spelling(s) of this branch exist -- softhouse/T304-evidence-destruction.  On a case-insensitive filesystem a loose ref shadows a packed one of different case, git resolves loose first, and the shadowed value stays a live object that no name reaches: that hid 4 committed commits on T297 and 8 on T305 at fire 20260827-230001.  Run `python3 .softhouse/bin/branch_sweep.py sweep --pattern 'softhouse/t304-evidence-destruction' --counts` BEFORE treating this task's branch as authoritative, and do NOT delete either spelling.
+           `fire` field: 20260827-230001   `dispatched_at`: 2026-08-23T03:57:24Z   -- BOTH are stamped at FIRST dispatch and are not refreshed on re-dispatch, so a retried task carries the ORIGINAL fire's id. NOT authoritative; `--reconcile` decides ownership from the tasks.json committed at this fire's lock commit.
+  T305     softhouse/t305-openingbalance-accepting-side
+           WIP: COMMITS/CASE-VARIANT  Its branch softhouse/t305-openingbalance-accepting-side has 4 commit(s) ahead of main, head 2ec3ddc38.  !! CASE-VARIANT: 1 other spelling(s) of this branch exist -- softhouse/T305-openingbalance-accepting-side.  On a case-insensitive filesystem a loose ref shadows a packed one of different case, git resolves loose first, and the shadowed value stays a live object that no name reaches: that hid 4 committed commits on T297 and 8 on T305 at fire 20260827-230001.  Run `python3 .softhouse/bin/branch_sweep.py sweep --pattern 'softhouse/t305-openingbalance-accepting-side' --counts` BEFORE treating this task's branch as authoritative, and do NOT delete either spelling.
+           `fire` field: 20260827-230001   `dispatched_at`: 2026-08-23T03:57:24Z   -- BOTH are stamped at FIRST dispatch and are not refreshed on re-dispatch, so a retried task carries the ORIGINAL fire's id. NOT authoritative; `--reconcile` decides ownership from the tasks.json committed at this fire's lock commit.
+  T312     softhouse/T312-branch-case-collision
+           WIP: COMMITS  Its branch softhouse/T312-branch-case-collision has 2 commit(s) ahead of main, head 88f0633de.
+           `fire` field: 20260827-230001   `dispatched_at`: none   -- BOTH are stamped at FIRST dispatch and are not refreshed on re-dispatch, so a retried task carries the ORIGINAL fire's id. NOT authoritative; `--reconcile` decides ownership from the tasks.json committed at this fire's lock commit.
+  T314     softhouse/T314-witness-path-forgery
+           WIP: COMMITS  Its branch softhouse/T314-witness-path-forgery has 2 commit(s) ahead of main, head 465ec1515.
+           `fire` field: 20260827-230001   `dispatched_at`: none   -- BOTH are stamped at FIRST dispatch and are not refreshed on re-dispatch, so a retried task carries the ORIGINAL fire's id. NOT authoritative; `--reconcile` decides ownership from the tasks.json committed at this fire's lock commit.
+  ^ If no fire is running right now, every line above is a DEAD dispatch
