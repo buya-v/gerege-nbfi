@@ -2,7 +2,39 @@
 # T316 -- THE DEAD-PATH FRONTIER GUARD.
 #
 # WHAT IT ENFORCES, in one sentence: the set of tracked `.softhouse/` instruments that name a
-# repo-relative path WHICH DOES NOT EXIST is PINNED, and it may not grow.
+# repo-relative path WHICH THE REPOSITORY DOES NOT CONTAIN is PINNED, and it may not grow.
+#
+# ===========================================================================================
+# T326 -- "WHICH THE REPOSITORY DOES NOT CONTAIN", NOT "WHICH IS NOT ON THIS DISK".
+# ===========================================================================================
+# T316 wrote "WHICH DOES NOT EXIST" and the census implemented it with `os.path.exists()`. On
+# first contact with a second machine that made the guard refuse, correctly:
+#
+#     T316-DEADPATH-FRONTIER: REFUSED rows=78 pinned=98 added=4 removed=24
+#
+# with the oracle probe line ABSENT, i.e. a FAILED HARD GUARD under P-84 ("'EXIT 2 WITH NO PROBE
+# LINE' IS THE GUARD WORKING. READ THE ABSENCE, NOT THE VALUE"), which is what a driver is
+# trained to read as a MONEY NON-NEGOTIABLE VIOLATION. THE GUARD WAS RIGHT; THE PIN WAS THE
+# DEFECT. 23 of the 24 vanished rows named `.softhouse/toolchain` -- `.gitignore`d, zero tracked
+# files, present in Buyan's main checkout and absent in every worktree -- and the 24th named
+# untracked scratch left behind by an earlier run ON THE SAME MACHINE.
+#
+# The census now resolves against `git ls-files`. The frontier is a property of the COMMIT, so
+# the launchd fire on Buyan's Mac and the cloud fire that never runs on that host cannot disagree
+# about the colour of the bar. An untracked path is DEAD whether or not it happens to be there;
+# the argument for that choice, and the two alternatives rejected, are in the pin's header.
+#
+# TWO PREDICATES, TWO FAIL-CLOSED DIRECTIONS, DELIBERATELY NOT MERGED (the shape T292 identified
+# as the root of a five-fix losing streak):
+#
+#   * THIS GUARD'S OWN DEPENDENCIES -- the census script, the pin file, python3, the scratch dir
+#     -- are checked ON DISK, with `[ -f ]`, and a miss is exit 2. That must stay a disk check:
+#     you cannot execute a file that is not there, and the fail-closed direction is "if I cannot
+#     REACH what I grade, I have not graded it."
+#   * THE FRONTIER'S CLASSIFICATION is tracked-set membership, and never touches the disk. Its
+#     fail-closed direction is "the verdict must be a property of the commit, on any host."
+#
+# Widening either predicate to serve the other would reintroduce exactly one of the two defects.
 #
 # WHY A FRONTIER AND NOT ZERO. The population at the commit that installs this guard is 70
 # instruments naming 98 dead literals, measured (not estimated) by

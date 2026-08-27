@@ -2447,10 +2447,14 @@ guard_capture_namespace() {
 # own number — that is the pinning-away this frontier exists to prevent, and it is NOT what
 # happened here. The check on that claim is arm `T316-05`, which still drives this guard red on a
 # planted dead path; if the repair had blinded the census, that arm would have gone green.
-DEADPATH_T323_RECONCILE_LIST='.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest
-.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest/gerege.disposable
-.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/ACCEPT.json
-.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/REFUSE.json'
+# EMPTIED BY T326, IN THE SAME COMMIT THAT FOLDED THE FOUR ROWS INTO THE PIN. The pin was
+# outside T323's edit grant and is inside T326's, so the handover T323 asked for above is done:
+# the pin moved 98 -> 104 (T305's 4, plus 2 for T326's own cross-host drive), and the anti-amnesty
+# arm below — which REFUSES if the guard is GREEN while this list is non-empty — is what makes
+# "fold it in and empty the list" a single indivisible commit rather than a note somebody honours.
+# THE LIST IS NOT DELETED, only emptied, so the arm keeps running and the next person who needs
+# to carry a delta out of grant has the shape and the rules already written above.
+DEADPATH_T323_RECONCILE_LIST=''
 
 guard_dead_path_frontier() {
   local g="$REPO_ROOT/.softhouse/guards/check-dead-path-frontier.sh"
