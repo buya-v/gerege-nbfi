@@ -2397,6 +2397,17 @@ guard_capture_namespace() {
 # classified by reading — only by removing every candidate and observing the exit."
 # [VERIFIED: .softhouse/patterns.md:3084]. This guard COUNTS; it does not classify.
 #
+# WHY THIS GUARD GETS NO ROOT READBACK AND guard_capture_namespace DOES. A fair reviewer question,
+# because the asymmetry looks like an oversight and is not. T299's guard resolves its root from
+# `git rev-parse --show-toplevel`, i.e. from the CALLER'S WORKING DIRECTORY, which is a runtime
+# fact this harness cannot constrain by construction — hence the subshell AND the readback. THIS
+# guard derives its root from `$0`: dirname(dirname(dirname(script))). This wiring hands it
+# "$REPO_ROOT/.softhouse/guards/check-dead-path-frontier.sh", so its root is $REPO_ROOT
+# STRUCTURALLY, for every cwd, and a readback would be asserting a property of this line rather
+# than measuring anything. Verified rather than assumed: run from a foreign cwd with the guard's
+# path pointing into a worktree, it reported that WORKTREE's pin, where T299's guard reported the
+# caller's tree [VERIFIED: T323 ran both].
+#
 # EXIT SEMANTICS: 0 frontier == pin; 1 a real measured movement; 2 a path this guard depends on
 # did not resolve, or the census refused. T316's probe line `T316-DEADPATH-FRONTIER:` is printed
 # on every path that REACHES A VERDICT and never on exit 2, so PRESENCE-BEFORE-VALUE applies to
@@ -2404,13 +2415,42 @@ guard_capture_namespace() {
 #
 # COST: 1.3 s wall, measured on this host by T323.
 
-# The four rows T305 added after T316 pinned. DERIVED by running the guard on the merged tree
-# (P-83), never typed from arithmetic. Empty this list in the same commit that folds them into
-# .softhouse/guards/dead-path-frontier.pin.
+# NINE ROWS, IN TWO GROUPS, AND THE LINE BETWEEN THEM IS THE INTERESTING PART.
+#
+# DERIVED by running the guard on the merged tree (P-83), never typed from arithmetic. Empty this
+# list in the same commit that folds the rows into .softhouse/guards/dead-path-frontier.pin.
+#
+# GROUP 1 (4 rows) — T305's red drive, described at length above.
+#
+# GROUP 2 (5 rows) — T323's OWN red drive, `drive-red-t323.sh`. It is a tracked instrument, so the
+# census sees it, and it names paths that MUST NOT resolve because planting them is its function:
+# the collision directory it creates to drive T299 red, that directory's NOTE and OWNER records,
+# the deliberately-absent path it writes into an instrument to drive T316's frontier red, and the
+# instrument it writes there. A red drive that named only paths which resolve could not drive
+# anything red.
+#
+# WHY GROUP 2 IS PINNED WHEN THE COMMENT ABOVE WAS REPAIRED, because the two look identical and
+# are not. Earlier in this same commit the frontier went red at added=7 over THIS FILE, because
+# T323's prose had quoted T305's lines verbatim. Those literals were INCIDENTAL — the comment
+# illustrated a shape and lost nothing by carrying an ellipsis — so they were REPAIRED, exactly as
+# the rule at line 1715 requires. Group 2's literals are FUNCTIONAL: they are the arguments to the
+# operations the drive exists to perform, and there is no way to remove them that leaves a red
+# drive behind. Rewriting them into runtime-assembled variables would hide a true dead literal
+# from a census whose whole job is to find them — defeating the instrument to flatter its own
+# number, which is the pinning-away this frontier exists to prevent.
+#
+# THE TEST TO APPLY TO THE NEXT ROW SOMEBODY WANTS TO ADD HERE: can the instrument still do its
+# job if the literal goes away? If YES it is incidental — REPAIR it. If NO it is functional —
+# pin it, and write down which operation needs it, as above.
 DEADPATH_T323_RECONCILE_LIST='.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest
 .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest/gerege.disposable
 .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/ACCEPT.json
-.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/REFUSE.json'
+.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/REFUSE.json
+.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t319-a-second-rig
+.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t319-a-second-rig/NOTE.md
+.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t319-a-second-rig/OWNER-IS-T323-NOT-T319.md
+.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t323-a-path-that-does-not-exist/x.json
+.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh | .softhouse/capture/t323-wire-the-unwired-guards/PLANTED-dead-path.sh'
 
 guard_dead_path_frontier() {
   local g="$REPO_ROOT/.softhouse/guards/check-dead-path-frontier.sh"
