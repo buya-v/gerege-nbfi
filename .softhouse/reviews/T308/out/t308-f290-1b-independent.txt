@@ -1,0 +1,38 @@
+T308 -- F-T290-1b RE-DERIVED FROM SCRATCH (independent of T292's driver)
+================================================================================================
+Q1  THE GATE, READ AT SOURCE (before any run):
+      541:     refused = bool(rep.unacknowledged or rep.unclassified_keys or rep.unclassified_verdicts
+      542:                    or rep.void_acks or rep.mute_refutations or nil)
+      'rep.disagreements' appears in the gate disjunction: NO  <- there is NO FLOOR on disagreements
+
+Q4  CONTROL -- honest fixture, one false predicate under an affirmative verdict:
+      rc=1 state=REFUSED disagreements=1 unacknowledged=1 witness=1
+      control FIRES -- the probe is not vacuous
+
+Q2  THE ERASURE -- ONE FILE EDITED, nothing re-pinned, no register touched:
+      rc=0 state=GREEN disagreements=0 unacknowledged=0 voidAcks=0 witness=1
+      one-file erasure lands GREEN: YES
+
+Q3  DID THE ERASURE COST ANY COVERAGE? (if not, no coverage guard can see it)
+      honest  witness=1 coverageDigest=714a61bc28e9d46b
+      erased  witness=1 coverageDigest=714a61bc28e9d46b
+      witness AND coverageDigest both unchanged: YES -- the erasure is INVISIBLE to every coverage quantity the rule prints
+
+RESULT, STATED AS MEASURED AND NOT WIDER:
+  F-T290-1b is STILL OPEN under the T292 rule -- confirmed independently, and
+  confirmed at SOURCE: `rep.disagreements` is not a term in the gate, so no
+  document can be refused for having lost a disagreement.
+  WIDER THAN T290 STATED: for a document NOT pinned in the acknowledgement
+  register, the erasure needs ONE file edit, not two. T290's two-file framing is
+  an artefact of attacking a PINNED corpus. The register is not a precondition of
+  the attack; it is only a precondition of the attack ON PINNED EVIDENCE.
+  The verdict-word rewrite is invisible to `witness` AND to `coverageDigest`,
+  so T292's contribution (pin the digest) does not reach this half either --
+  which is exactly what T292's own ARM 2 reports.
+
+  THE FLOOR T290 REQUIRES, restated from this measurement: the wiring must pin an
+  EXPECTED MINIMUM `disagreements` (and `acknowledged`) per graded corpus, so that
+  a corpus known to carry N acknowledged disagreements REFUSES when it reports
+  fewer. Nothing inside a rule reading only (document, register) can supply N.
+
+EXIT 0   (0 means every arm behaved as claimed, INCLUDING the arms showing the hole)
