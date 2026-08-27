@@ -62,6 +62,20 @@ line 512  VERDICT: PASS (exit 0) — 46 parity vectors match the pinned referenc
 **Unmoved by this branch**: `46 / 7884`, identical to the fork point. This review adds only files
 under `.softhouse/reviews/T308/`.
 
+**And a THIRD time, in the second session of this review**, after §2b, §5c and §9.5 were added
+[VERIFIED: `out/bar-t308-session2-final.txt`]:
+
+```
+EXIT 0
+reference oracle (https://localhost:8443/…/actuator/health) probe = up   (PRESENCE read first)
+parity vectors          PASS 46   FAIL 0
+cells compared          7884 graded, 93 ungraded
+VERDICT: PASS (exit 0)
+```
+
+Still `46 / 7884`. **P-84 applied in the stated order each time:** the probe line's PRESENCE was
+established (`grep -c` → 1) before its value was read.
+
 ---
 
 ## 1. SCOPE AND THE NON-NEGOTIABLES — what I checked, so silence is distinguishable from not looking
@@ -784,10 +798,17 @@ discipline, and — measured independently, on both axes, against three pinned p
 **the claim that this link broke the streak.** That claim is the one I most expected to fail and it
 held.
 
-**REJECTED:** Theorem 1 as written (§2), Theorem 2 as scoped (§3), and the calibrated-zero claim
-(§4, §5). None of the three is a defect in the rule's behaviour; all three are defects in what the
-branch **says about** its behaviour, and this lineage's own history is that the next link inherits
-the words.
+**REJECTED:** Theorem 1 as written (§2), **Theorem 2's naming clause (§5c)**, the "measured
+impossibility" as scoped (§3), and the calibrated-zero claim (§4, §5). None of the four is a
+defect in the rule's behaviour; all four are defects in what the branch **says about** its
+behaviour, and this lineage's own history is that the next link inherits the words.
+
+**CONFIRMED AND WIDENED:** F-T290-1b (§9.5). **`T269` remains blocked** and the hole is one file
+wider than the lineage believed.
+
+**STRENGTHENED FOR T292:** ten shapes — including every one the brief named that this loader can
+express — leave coverage unmoved (§2b). Theorem 1 *with §2's one-line correction applied* survived
+a harder attack than its author mounted.
 
 Follow-ups this review does not perform and files instead:
 * **T308-F1** — narrow Theorem 1's operation set to the adversary's (≤10 lines, mechanical).
