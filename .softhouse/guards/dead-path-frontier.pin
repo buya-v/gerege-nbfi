@@ -70,7 +70,7 @@
 # generated at runtime and will never be tracked.
 #
 # -------------------------------------------------------------------------------------------
-# THE ROWS FOLDED IN BY T326, EACH INSPECTED. The pin moved from 98 rows to 104.
+# THE ROWS FOLDED IN BY T326, EACH INSPECTED. The pin moved from 98 rows to 106.
 # -------------------------------------------------------------------------------------------
 # +4  T305's red drive `red-drive-conformance-guard.sh`. Carried since T323 in
 #     `DEADPATH_T323_RECONCILE_LIST` in conformance.sh because the pin was outside T323's edit
@@ -80,15 +80,19 @@
 #     deliberately fictional task id `t999-rig`. A red drive plants files that MUST NOT exist in
 #     a clean tree; that is what makes it a red drive.
 #
-# +2  T326's own cross-host drive `20-cross-host-drive.sh`, which names the toolchain path and
-#     the T82 residue path. FUNCTIONAL by T323's test -- "CAN THE INSTRUMENT STILL DO ITS JOB IF
-#     THE LITERAL GOES AWAY?" -- and the answer is no, unusually clearly: the drive's entire job
-#     is to materialise THOSE TWO EXACT PATHS, because they are the 24 rows the driver measured.
-#     Assembling them at run time from fragments would make the drive stop testing the thing it
-#     exists to test, which is the "defeating the instrument to flatter its own number" that
-#     T323 warned about. Note that under the OLD resolver this drive would have perturbed the
-#     frontier it was measuring -- exactly T323's case (b) -- and under the tracked resolver it
-#     provably cannot, because creating an untracked directory changes nothing.
+# +4  T326's own two drives -- `20-cross-host-drive.sh` and `30-bar-in-both-conditions.sh`, two
+#     rows each -- which name the toolchain path and the T82 residue path. FUNCTIONAL by T323's
+#     test -- "CAN THE INSTRUMENT STILL DO ITS JOB IF THE LITERAL GOES AWAY?" -- and the answer
+#     is no, unusually clearly: each drive's entire job is to MATERIALISE THOSE TWO EXACT PATHS,
+#     because they are the 24 rows the driver measured. Assembling them at run time from
+#     fragments would make the drives stop testing the thing they exist to test, which is the
+#     "defeating the instrument to flatter its own number" that T323 warned about.
+#
+#     NOTE THE PROPERTY THIS DEPENDS ON. Under the OLD resolver these drives would have perturbed
+#     the frontier they were measuring -- exactly T323's case (b), where its own red drive's
+#     sibling arm created a directory and three rows vanished mid-run. Under the tracked resolver
+#     they provably cannot: creating an untracked directory changes nothing the census reads.
+#     `20-cross-host-drive.sh` measures that fact and would fail if it stopped holding.
 #
 # -0  Nothing was removed. The 24 host-dependent rows STAY, by the decision above, and they now
 #     stay in every condition rather than in some of them.
@@ -158,6 +162,8 @@
 .softhouse/capture/t316-dead-path-guards/drive-red-t316.py | .softhouse/capture/t316-dead-path-guards/planted_regression.py
 .softhouse/capture/t326-frontier-host-state/instruments/20-cross-host-drive.sh | .softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch
 .softhouse/capture/t326-frontier-host-state/instruments/20-cross-host-drive.sh | .softhouse/toolchain
+.softhouse/capture/t326-frontier-host-state/instruments/30-bar-in-both-conditions.sh | .softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch
+.softhouse/capture/t326-frontier-host-state/instruments/30-bar-in-both-conditions.sh | .softhouse/toolchain
 .softhouse/capture/t61-halfeven/src/run-counterfactuals.py | .softhouse/toolchain
 .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py | .softhouse/toolchain
 .softhouse/capture/t66-unrecognized-interest/gotest.sh | .softhouse/toolchain/go

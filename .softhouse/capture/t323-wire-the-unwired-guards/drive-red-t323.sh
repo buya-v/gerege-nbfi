@@ -178,20 +178,51 @@ m_t316_no_pin() {
 # corrected cardinal rotted in the place it was RESTATED" -- and this arm would then be driving
 # something other than the guard it claims to drive. It went red exactly that way once: the arm
 # was written against a 4-row list and the list grew to 9.
+#
+# T326 REPAIRED THIS ARM, and the reason is the arm's own subject. T323 wrote above that the next
+# holder of the pin must "fold these four rows INTO it and empty the list"; T326 held the pin and
+# did exactly that. The mutation as written then aborted with "the reconciliation list is EMPTY --
+# this arm has nothing to make stale", i.e. THE ARM STOPPED DRIVING THE MOMENT ITS INSTRUCTION WAS
+# FOLLOWED. A drive arm that dies when the thing it recommends is done is a guard that only works
+# when someone remembers to run it (P-45) with a longer fuse, so it is repaired rather than
+# deleted: the anti-amnesty check in guard_dead_path_frontier is still live and still needs
+# driving. BOTH DIRECTIONS ARE HANDLED, and both produce the SAME condition -- guard GREEN and
+# the list NON-EMPTY -- which is the only condition the arm was ever about.
 m_t316_stale_list() {
   ( cd "$SCRATCH" && LC_ALL=C python3 - <<'PY'
 import io, re, sys
-conf = io.open(".softhouse/conformance.sh", encoding="utf-8").read()
+CONF = ".softhouse/conformance.sh"
+PIN = ".softhouse/guards/dead-path-frontier.pin"
+conf = io.open(CONF, encoding="utf-8").read()
 m = re.search(r"^DEADPATH_T323_RECONCILE_LIST='(.*?)'$", conf, re.S | re.M)
 if not m:
     sys.exit("could not read DEADPATH_T323_RECONCILE_LIST out of conformance.sh")
 rows = [r for r in m.group(1).splitlines() if r.strip()]
-if not rows:
-    sys.exit("the reconciliation list is EMPTY -- this arm has nothing to make stale")
-with io.open(".softhouse/guards/dead-path-frontier.pin", "a", encoding="utf-8") as f:
-    for r in rows:
-        f.write(r + "\n")
-print("appended %d row(s) to the pin, list left populated" % len(rows))
+if rows:
+    # The list still carries rows the pin does NOT. Do the fold, and only the fold: the guard
+    # goes GREEN and the list is left populated, so it is now excusing rows that are pinned.
+    with io.open(PIN, "a", encoding="utf-8") as f:
+        for r in rows:
+            f.write(r + "\n")
+    print("appended %d row(s) to the pin, list left populated" % len(rows))
+    raise SystemExit(0)
+# The list is empty and the pin already carries every row, so the guard is ALREADY green. Make
+# the list stale from the other side: populate it with a row that is already pinned. THE ROW IS
+# READ OUT OF THE PIN, NEVER RETYPED -- a second hand-maintained copy rots against the first the
+# moment either moves, which is P-86's shape and is why this arm went red once already.
+pinned = [l.rstrip("\n") for l in io.open(PIN, encoding="utf-8")
+          if l.strip() and not l.lstrip().startswith("#")]
+if not pinned:
+    sys.exit("the pin has no rows -- this arm cannot construct a stale list")
+row = pinned[0]
+if "'" in row:
+    sys.exit("pinned row %r contains a single quote; it cannot be embedded in the shell"
+             " assignment this arm rewrites" % row)
+new = conf[:m.start(1)] + row + conf[m.end(1):]
+if new == conf:
+    sys.exit("rewriting DEADPATH_T323_RECONCILE_LIST changed nothing")
+io.open(CONF, "w", encoding="utf-8").write(new)
+print("populated the list with 1 ALREADY-PINNED row, pin untouched: %s" % row)
 PY
   ) || return 1
 }
