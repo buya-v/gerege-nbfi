@@ -1,0 +1,20 @@
+{
+  "officeId": 1,
+  "transactionDate": "2026-08-24",
+  "dateFormat": "yyyy-MM-dd",
+  "locale": "en",
+  "currencyCode": "MNT",
+  "comments": "T287 arm 1 minimal-future refusal probe: business date + 1 day. Expected REFUSED, writes nothing",
+  "debits": [
+    {
+      "glAccountId": 4,
+      "amount": 1000000
+    }
+  ],
+  "credits": [
+    {
+      "glAccountId": 2,
+      "amount": 1000000
+    }
+  ]
+}

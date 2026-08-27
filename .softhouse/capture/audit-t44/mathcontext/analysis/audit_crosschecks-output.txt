@@ -1,0 +1,32 @@
+=== 1. Is E2's Path A column a fresh experiment or a re-run of E1's ambient rows? ===
+  T42-MX-00-A    vs T42B-PA-ord4     identical inputs: True  ; observations differ in 0 cells
+  T42-MX-00-B    vs T42B-PA-ord1     identical inputs: True  ; observations differ in 0 cells
+  T42-MX-00-E    vs T42B-PA-ord0     identical inputs: True  ; observations differ in 0 cells
+  => if inputs are identical and 0 cells differ, E2's Path A column REPRODUCES E1's
+     ambient rows on the same shape; it is a replication, not a second experiment.
+
+=== 2. Does installmentAmountInMultiplesOf do anything on the Path A seam? ===
+  T42-MX-00-A (plain) vs T42-MX-06-A (multiples1000) inputs differing: ['installmentAmountInMultiplesOf']
+  cells differing in the observations: 0
+  period-1 total on both: 212787.28 / 212787.28 -- not a multiple of 1000
+  => installmentAmountInMultiplesOf is INERT on this seam.
+
+=== 3. Are the two throwers the only 0-dp shapes? ===
+  0-dp shapes : ['zeroDpMultiples100', 'zeroDpMultiples100DownPayment']
+  shapes whose ABSENT case threw: ['zeroDpMultiples100', 'zeroDpMultiples100DownPayment']
+  identical sets: True
+
+=== 4. Did the 11 'generated fine' shapes actually run graded arithmetic? ===
+  plain                            rows=6   totalInterest=76723.70       threaded-flip moved 23 cells
+  drift                            rows=6   totalInterest=76984.00       threaded-flip moved 22 cells
+  monthEnd                         rows=6   totalInterest=76723.70       threaded-flip moved 23 cells
+  downPayment25                    rows=6   totalInterest=57542.77       threaded-flip moved 20 cells
+  downPaymentAwkward               rows=6   totalInterest=42624.53       threaded-flip moved 24 cells
+  downPaymentMultiples1000         rows=6   totalInterest=51149.38       threaded-flip moved 24 cells
+  multiples1000                    rows=6   totalInterest=76723.70       threaded-flip moved 23 cells
+  fixedLength6                     rows=6   totalInterest=76723.70       threaded-flip moved 23 cells
+  daysInYearActual                 rows=6   totalInterest=75447.98       threaded-flip moved 18 cells
+  actualActual                     rows=6   totalInterest=76298.62       threaded-flip moved 23 cells
+  interestRecognitionOnDisb        rows=6   totalInterest=76723.70       threaded-flip moved 23 cells
+  => every one produced a full schedule with non-zero interest AND responded to the
+     threaded rounding mode, so none short-circuited before the graded arithmetic.

@@ -1,0 +1,854 @@
+[
+ {
+  "case": "T116-CLEAN-R600p0-N103-B1",
+  "captureRef": ".softhouse/capture/t116-familyb-promotion/out/capture-t116-raw.json",
+  "cells": 311,
+  "rows": 104,
+  "baselineMismatches": 0,
+  "baselineMismatchDetail": [],
+  "mutationNames": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": "EMI smoothing guard multiplies the installment by floor(n/2) instead of comparing against floor(n/2) whole currency units",
+   "ZP-GUARD-NONSTRICT": "EMI smoothing guard fires on equality (>=) where the oracle requires strict inequality (>)",
+   "ZP-RESIDUAL-NO-RECURSION": "the final-period residual clamps a negative installment to zero but does not re-apply itself, so the residual it could not place is silently dropped",
+   "ZP-PRINCIPAL-NOT-CLAMPED": "a repayment row's principal is installment minus interest without the negative clamp",
+   "ZP-ADOPTION-TEST-NONSTRICT": "the smoothing loop adopts a trial whose EMI difference merely TIES the previous one",
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": "the smoothing loop spreads the gap over floor(n/2) periods instead of n",
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": "the final repayment row's principal is the whole remaining balance, instead of the balancing non-negative remainder of its own installment after interest"
+  },
+  "nDivergentCells": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": 0,
+   "ZP-GUARD-NONSTRICT": 0,
+   "ZP-RESIDUAL-NO-RECURSION": 88,
+   "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+   "ZP-ADOPTION-TEST-NONSTRICT": 0,
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0,
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": 0
+  },
+  "maxMargin": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": 0,
+   "ZP-GUARD-NONSTRICT": 0,
+   "ZP-RESIDUAL-NO-RECURSION": 1,
+   "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+   "ZP-ADOPTION-TEST-NONSTRICT": 0,
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0,
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": 0
+  },
+  "widestCell": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": null,
+   "ZP-GUARD-NONSTRICT": null,
+   "ZP-RESIDUAL-NO-RECURSION": {
+    "row": 15,
+    "field": "principal_minor",
+    "observed": 0,
+    "value": 1,
+    "delta": 1
+   },
+   "ZP-PRINCIPAL-NOT-CLAMPED": null,
+   "ZP-ADOPTION-TEST-NONSTRICT": null,
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": null,
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": null
+  },
+  "divergent": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": [],
+   "ZP-GUARD-NONSTRICT": [],
+   "ZP-RESIDUAL-NO-RECURSION": [
+    {
+     "row": 15,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 16,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 17,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 18,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 19,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 20,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 21,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 22,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 23,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 24,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 25,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 26,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 27,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 28,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 29,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 30,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 31,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 32,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 33,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 34,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 35,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 36,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 37,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 38,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 39,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 40,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 41,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 42,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 43,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 44,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 45,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 46,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 47,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 48,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 49,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 50,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 51,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 52,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 53,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 54,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 55,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 56,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 57,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 58,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 59,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 60,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 61,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 62,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 63,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 64,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 65,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 66,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 67,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 68,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 69,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 70,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 71,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 72,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 73,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 74,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 75,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 76,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 77,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 78,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 79,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 80,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 81,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 82,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 83,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 84,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 85,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 86,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 87,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 88,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 89,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 90,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 91,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 92,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 93,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 94,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 95,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 96,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 97,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 98,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 99,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 100,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 101,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 102,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    }
+   ],
+   "ZP-PRINCIPAL-NOT-CLAMPED": [],
+   "ZP-ADOPTION-TEST-NONSTRICT": [],
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": [],
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": []
+  }
+ },
+ {
+  "case": "T116-FAMB-R600p0-N104-B1",
+  "captureRef": ".softhouse/capture/t116-familyb-promotion/out/capture-t116-raw.json",
+  "cells": 314,
+  "rows": 105,
+  "baselineMismatches": 0,
+  "baselineMismatchDetail": [],
+  "mutationNames": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": "EMI smoothing guard multiplies the installment by floor(n/2) instead of comparing against floor(n/2) whole currency units",
+   "ZP-GUARD-NONSTRICT": "EMI smoothing guard fires on equality (>=) where the oracle requires strict inequality (>)",
+   "ZP-RESIDUAL-NO-RECURSION": "the final-period residual clamps a negative installment to zero but does not re-apply itself, so the residual it could not place is silently dropped",
+   "ZP-PRINCIPAL-NOT-CLAMPED": "a repayment row's principal is installment minus interest without the negative clamp",
+   "ZP-ADOPTION-TEST-NONSTRICT": "the smoothing loop adopts a trial whose EMI difference merely TIES the previous one",
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": "the smoothing loop spreads the gap over floor(n/2) periods instead of n",
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": "the final repayment row's principal is the whole remaining balance, instead of the balancing non-negative remainder of its own installment after interest"
+  },
+  "nDivergentCells": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": 0,
+   "ZP-GUARD-NONSTRICT": 0,
+   "ZP-RESIDUAL-NO-RECURSION": 0,
+   "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+   "ZP-ADOPTION-TEST-NONSTRICT": 0,
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0,
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": 4
+  },
+  "maxMargin": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": 0,
+   "ZP-GUARD-NONSTRICT": 0,
+   "ZP-RESIDUAL-NO-RECURSION": 0,
+   "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+   "ZP-ADOPTION-TEST-NONSTRICT": 0,
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0,
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": 1
+  },
+  "widestCell": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": null,
+   "ZP-GUARD-NONSTRICT": null,
+   "ZP-RESIDUAL-NO-RECURSION": null,
+   "ZP-PRINCIPAL-NOT-CLAMPED": null,
+   "ZP-ADOPTION-TEST-NONSTRICT": null,
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": null,
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": {
+    "row": 103,
+    "field": "interest_minor",
+    "observed": 0,
+    "value": 1,
+    "delta": 1
+   }
+  },
+  "divergent": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": [],
+   "ZP-GUARD-NONSTRICT": [],
+   "ZP-RESIDUAL-NO-RECURSION": [],
+   "ZP-PRINCIPAL-NOT-CLAMPED": [],
+   "ZP-ADOPTION-TEST-NONSTRICT": [],
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": [],
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": [
+    {
+     "row": 103,
+     "field": "interest_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 104,
+     "field": "interest_minor",
+     "observed": 1,
+     "value": 0,
+     "delta": 1
+    },
+    {
+     "row": 104,
+     "field": "outstanding_principal_minor",
+     "observed": 1,
+     "value": 0,
+     "delta": 1
+    },
+    {
+     "row": 104,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    }
+   ]
+  }
+ },
+ {
+  "case": "T116-FAMB-R600p0-N108-B1",
+  "captureRef": ".softhouse/capture/t116-familyb-promotion/out/capture-t116-raw.json",
+  "cells": 326,
+  "rows": 109,
+  "baselineMismatches": 0,
+  "baselineMismatchDetail": [],
+  "mutationNames": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": "EMI smoothing guard multiplies the installment by floor(n/2) instead of comparing against floor(n/2) whole currency units",
+   "ZP-GUARD-NONSTRICT": "EMI smoothing guard fires on equality (>=) where the oracle requires strict inequality (>)",
+   "ZP-RESIDUAL-NO-RECURSION": "the final-period residual clamps a negative installment to zero but does not re-apply itself, so the residual it could not place is silently dropped",
+   "ZP-PRINCIPAL-NOT-CLAMPED": "a repayment row's principal is installment minus interest without the negative clamp",
+   "ZP-ADOPTION-TEST-NONSTRICT": "the smoothing loop adopts a trial whose EMI difference merely TIES the previous one",
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": "the smoothing loop spreads the gap over floor(n/2) periods instead of n",
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": "the final repayment row's principal is the whole remaining balance, instead of the balancing non-negative remainder of its own installment after interest"
+  },
+  "nDivergentCells": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": 0,
+   "ZP-GUARD-NONSTRICT": 0,
+   "ZP-RESIDUAL-NO-RECURSION": 0,
+   "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+   "ZP-ADOPTION-TEST-NONSTRICT": 0,
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0,
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": 4
+  },
+  "maxMargin": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": 0,
+   "ZP-GUARD-NONSTRICT": 0,
+   "ZP-RESIDUAL-NO-RECURSION": 0,
+   "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+   "ZP-ADOPTION-TEST-NONSTRICT": 0,
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0,
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": 1
+  },
+  "widestCell": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": null,
+   "ZP-GUARD-NONSTRICT": null,
+   "ZP-RESIDUAL-NO-RECURSION": null,
+   "ZP-PRINCIPAL-NOT-CLAMPED": null,
+   "ZP-ADOPTION-TEST-NONSTRICT": null,
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": null,
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": {
+    "row": 107,
+    "field": "interest_minor",
+    "observed": 0,
+    "value": 1,
+    "delta": 1
+   }
+  },
+  "divergent": {
+   "ZP-GUARD-SCALES-THE-INSTALLMENT": [],
+   "ZP-GUARD-NONSTRICT": [],
+   "ZP-RESIDUAL-NO-RECURSION": [],
+   "ZP-PRINCIPAL-NOT-CLAMPED": [],
+   "ZP-ADOPTION-TEST-NONSTRICT": [],
+   "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": [],
+   "G8-FINAL-ROW-SETTLES-THE-BALANCE": [
+    {
+     "row": 107,
+     "field": "interest_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    },
+    {
+     "row": 108,
+     "field": "interest_minor",
+     "observed": 1,
+     "value": 0,
+     "delta": 1
+    },
+    {
+     "row": 108,
+     "field": "outstanding_principal_minor",
+     "observed": 1,
+     "value": 0,
+     "delta": 1
+    },
+    {
+     "row": 108,
+     "field": "principal_minor",
+     "observed": 0,
+     "value": 1,
+     "delta": 1
+    }
+   ]
+  }
+ }
+]

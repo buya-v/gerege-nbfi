@@ -1,0 +1,76 @@
+############ the SHIPPED G-4 (baseline)
+On branch g4
+nothing to commit, working tree clean
+--- healthy tree
+   BSD  -qF  rc=0
+   BSD -aqF  rc=0
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+   A2a named as an admission on the poisoned set   OK      [G-4]
+    SCRIPT_EXIT=0
+
+On branch g4
+nothing to commit, working tree clean
+   verdict.sh mutated: nolc
+--- LC_ALL=C REMOVED from verdict.sh's scanner  <-- the regression G-4 exists to catch
+   BSD  -qF  rc=0
+   BSD -aqF  rc=0
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+   A2a named as an admission on the poisoned set   OK      [G-4]
+    SCRIPT_EXIT=0
+
+############ with BOTH T138 edits
+   poison-position edit APPLIED (asserted, not assumed)
+   assertion edit APPLIED (asserted, not assumed)
+--- healthy tree (must stay GREEN)
+   BSD  -qF  rc=0
+   BSD -aqF  rc=0
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+   A2a named as an admission on the poisoned set   OK      [G-4]
+    SCRIPT_EXIT=0
+
+   poison-position edit APPLIED (asserted, not assumed)
+   assertion edit APPLIED (asserted, not assumed)
+   verdict.sh mutated: nolc
+--- LC_ALL=C REMOVED  <-- must now go RED
+   BSD  -qF  rc=0
+   BSD -aqF  rc=0
+A2a-mutated-canary-gerege.txt                  0      no        no         ADMITS (exited 0, expected a breach)
+A2a-mutated-canary-gerege.txt ADMITS (exited 0, expected a breach)
+   A2a NOT named as an admission   *** NOT AS EXPECTED ***   [G-4]
+    SCRIPT_EXIT=1
+
+   poison-position edit APPLIED (asserted, not assumed)
+   assertion edit APPLIED (asserted, not assumed)
+   verdict.sh mutated: scanner
+--- scanner fully blinded  <-- must go RED
+   BSD  -qF  rc=0
+   BSD -aqF  rc=0
+A2a-mutated-canary-gerege.txt                  0      no        no         ADMITS (exited 0, expected a breach)
+A2a-mutated-canary-gerege.txt ADMITS (exited 0, expected a breach)
+   A2a NOT named as an admission   *** NOT AS EXPECTED ***   [G-4]
+    SCRIPT_EXIT=1
+
+############ each edit alone, to show BOTH are needed
+   poison-position edit APPLIED (asserted, not assumed)
+   verdict.sh mutated: nolc
+--- poison-position edit ONLY, LC_ALL=C removed
+   BSD  -qF  rc=0
+   BSD -aqF  rc=0
+A2a-mutated-canary-gerege.txt                  0      no        no         ADMITS (exited 0, expected a breach)
+A2a-mutated-canary-gerege.txt ADMITS (exited 0, expected a breach)
+   A2a named as an admission on the poisoned set   OK      [G-4]
+    SCRIPT_EXIT=0
+
+   assertion edit APPLIED (asserted, not assumed)
+   verdict.sh mutated: nolc
+--- assertion edit ONLY, LC_ALL=C removed
+   BSD  -qF  rc=0
+   BSD -aqF  rc=0
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+   A2a named as an admission on the poisoned set   OK      [G-4]
+    SCRIPT_EXIT=0
+

@@ -1,0 +1,17 @@
+### n4-canary-assertion-inverted
+$ run1 T42_EXPECT_CANARY_THROWS=0 T42_OUT_PREFIX=t42-neg4
+== T42 MathContext-in-force capture ==
+  ok  pinned commit 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  ok  pinned checkout clean
+  ok  image sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  ok  seam class byte-identical to the pin, sha256 bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714
+  ok  oracle identity captured into t42-neg4-oracle-identity.txt
+  ok  classpath: 348 entries, digest 68e681486ae5890f7cded85b4a3e2588672d66dd5e1380dd897ef72213b5f95f
+  ok  classpath has ZERO Oracle Database / MySQL / MariaDB entries
+  ok  container exit 0
+  ok  stderr empty
+  ok  JSON payload parses; 201 oracle log lines split into t42-neg4-log.txt
+BREACH: negative run: the canary DID throw when the run asserted it would not: 'THREW java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_canary_never_initialised'
+BREACH: payload assertions failed
+RUN INVALID -- capture is not admissible.
+exit=1

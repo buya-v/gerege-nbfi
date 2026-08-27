@@ -1,0 +1,167 @@
+=== ALL FILES with any hit, classified ===
+distinct files with >=1 hit:      832
+
+--- HISTORICAL-RECORD classes (a record of what a past run/task said; rewriting one is falsifying evidence) ---
+730
+--- VECTOR/JSON store ---
+53
+--- LIVE candidates (everything else) ---
+.softhouse/RESUME.md
+.softhouse/bin/fire-program.sh
+.softhouse/conformance.sh
+.softhouse/gates.md
+.softhouse/guards/check-ledger-invariants.sh
+.softhouse/guards/drive-red-ledger-invariants.sh
+.softhouse/guards/ledgerguard/main.go
+.softhouse/nonnegotiable-guard-audit.md
+.softhouse/patterns.md
+.softhouse/program.json
+.softhouse/reference-oracle.md
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json
+.softhouse/state/DRIVER.STATE.json
+.softhouse/tasks.json
+docs/adr/DEC-1-schedule-generator-adapter.md
+docs/adr/DEC-2-gl-accounting-adapter.md
+docs/analysis/progressive-schedule-behavior.md
+docs/analysis/tier0-vector-capture-plan.md
+docs/analysis/tierA-a2-behaviour.md
+docs/softhouse-migration-pipeline.md
+nexus/internal/apps/ledger/apishape.go
+nexus/internal/apps/ledger/capture_test.go
+nexus/internal/apps/ledger/doc.go
+nexus/internal/apps/ledger/glaccount.go
+nexus/internal/apps/ledger/producttype_test.go
+nexus/internal/apps/ledger/resolve.go
+nexus/internal/apps/ledger/resolve_test.go
+nexus/internal/apps/loanschedule/conformance/admit.go
+nexus/internal/apps/loanschedule/conformance/census.go
+nexus/internal/apps/loanschedule/conformance/cmd/conformance/impl_hook.go
+nexus/internal/apps/loanschedule/conformance/conformance_test.go
+nexus/internal/apps/loanschedule/conformance/coverage_refusal_test.go
+nexus/internal/apps/loanschedule/conformance/exemption.go
+nexus/internal/apps/loanschedule/conformance/exemption_test.go
+nexus/internal/apps/loanschedule/conformance/grade.go
+nexus/internal/apps/loanschedule/conformance/money.go
+nexus/internal/apps/loanschedule/conformance/registry.go
+nexus/internal/apps/loanschedule/conformance/reporoot.go
+nexus/internal/apps/loanschedule/conformance/report.go
+nexus/internal/apps/loanschedule/conformance/store_integrity_test.go
+nexus/internal/apps/loanschedule/conformance/structural.go
+nexus/internal/apps/loanschedule/conformance/structural_test.go
+nexus/internal/apps/loanschedule/conformance/vector.go
+nexus/internal/apps/loanschedule/contract/contract.go
+nexus/internal/apps/loanschedule/emi.go
+nexus/internal/apps/loanschedule/generator.go
+nexus/internal/apps/loanschedule/liveness_test.go
+nexus/internal/apps/loanschedule/loanschedule_test.go
+nexus/internal/apps/loanschedule/rounding.go
+
+############################################################
+## THE DISCRIMINATING TEST: in the LIVE files only, does any
+## line assert the empty-class count as THREE, or name the
+## empty set WITHOUT I4-BUILDER, as a CURRENT fact?
+############################################################
+
+--- (a) 'three of ... seven|four' in live files ---
+.softhouse/RESUME.md:67:- **F-2 — "three of its SEVEN detection classes" is FOUR**, measured, driven both polarities. `I4-BUILDER`'s
+.softhouse/gates.md:62:**F-2 — "three of its SEVEN detection classes inspected an empty population" is FOUR, measured.**
+.softhouse/gates.md:1711:**How to read the exit codes of those four runs — three of the four ARE this finding, and must not
+.softhouse/gates.md:1730:was false for three of the four and taught the reader to discount an honest signal — T101 F-3. The
+.softhouse/gates.md:1732:is that three of the four exit codes now agree with them instead of being waved away.
+.softhouse/patterns.md:1767:understating sounds like rigour: "three of four" says the guard is 25% live; "three of seven" says 43%.
+.softhouse/patterns.md:1776:> *"three* of seven" as its worked example, concluding that "three of four" and "three of seven" *"share
+.softhouse/patterns.md:1906:- **What worked**: two waves against non-overlapping `files_hint`, merging as each returned. **Attacking the GATE rather than the task it blocked** — `RESUME.md` said `A2-15` was unblocked; the driver h
+.softhouse/program.json:709:      "review_history": "A2-14 REJECTED rev 1 (three shape findings). A2-17 returned MICRO-FIX on rev 2 and applied its OWN 7-line fix, leaving the document reviewed by nobody; A2-19 then REJECTED rev 2
+.softhouse/program.json:1631:        "P-67: certified 'three of its FOUR detection classes' as EXACT and propagated it to four files; the guard declares SEVEN",
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2126:      "note": "Paired reviewer for T100. Raised by the driver, local fire 20260820-200002. || local fire 20260820-230001: DISPATCHED, isolated worktree, opus. Re
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2332:      "description": "RETRY at opus. T101 REJECTED T100 narrowly, on three sentences, none of them a measurement; T101 reproduced T100's numbers over a WIDER cel
+.softhouse/tasks.json:435:      "description": "Paired reviewer for T156 (plan gate rule 1). T156 fixes an unguarded mv-out/mv-back in prove-redgreen.sh arm 1 whose interruption leaves the store one vector short and the NEXT confo
+.softhouse/tasks.json:1843:      "note": "local fire 20260822-000013: DONE on softhouse/A2-25-dec2-rev3-review (88af349), merged. VERDICT REJECTED -- G-11 STAYS OPEN, NOT RATIFIABLE. IT REFUSED THE CLEAN VERDICT THE DRIVER WANTED,
+.softhouse/tasks.json:1914:      "description": "A2-25 REJECTED revision 3 and listed EXHAUSTIVELY what would make it clean, explicitly so this is ONE revision and not two. Apply all seven. 1. Delete or correct 8.3's 'They are not
+.softhouse/tasks.json:2072:      "note": "MERGED local fire 20260822-000013. VERDICT: REJECTED. G-11 unblocking condition -- \"a further independent review passing CLEAN\" -- is NOT MET. Fourth revision, fourth rejection. Neither 
+.softhouse/tasks.json:2117:      "description": "G-11 is OPEN and NOT RATIFIABLE. A2-31 REJECTED rev 4. This is rev 5 and it must fix EXACTLY TWO things. F-1: DEC-2:953-957 carries a [VERIFIED by A2-28 at commit 2e97162] claim tha
+.softhouse/tasks.json:2131:      "note": "local fire 20260822-140002: DONE + MERGED on softhouse/A2-32-dec2-rev5 (cab9e82). DEC-2 REVISION 5. Fixed EXACTLY A2-31's F-1 and F-2 and authored nothing else -- it even DISCLOSED TWO OVE
+docs/adr/DEC-2-gl-accounting-adapter.md:100:> **Three of the four claims that got revision 3 rejected were TRUE WHEN WRITTEN and went stale
+docs/adr/DEC-2-gl-accounting-adapter.md:968:> **Why this was reject-grade and not a quibble.** *"Three of seven"* reads as 57 % of the guard
+docs/adr/DEC-2-gl-accounting-adapter.md:995:> *"states **four things it cannot see**, including that **three of its four detection classes** …"*.
+docs/adr/DEC-2-gl-accounting-adapter.md:2379:   **⚠ RETRACTION, revision 4: revisions 1–3 said "three of its FOUR detection classes" here and at
+docs/adr/DEC-2-gl-accounting-adapter.md:2658:     | 8 | **§8.1, fact 3** (and its heading) | *"THREE OF ITS SEVEN DECLARED DETECTION CLASSES"*, under a heading promising each fact was re-measured | yes |
+docs/adr/DEC-2-gl-accounting-adapter.md:2843:  > TEXT.** Four of its statements are corrected above: its *"three of its four detection classes"*
+docs/adr/DEC-2-gl-accounting-adapter.md:2915:       and states **four things it cannot see**, including that **three of its four detection classes
+docs/analysis/progressive-schedule-behavior.md:876:**The code around this snippet is not "guard clauses"** (revision 1's description). Three of the four surrounding
+docs/analysis/tier0-vector-capture-plan.md:520:An earlier draft of this document said "all set `FEB_29_PERIOD_ONLY`" while citing only three of the seven
+docs/analysis/tierA-a2-behaviour.md:718:Note the width inconsistency: three of the four `m_code_value` references are `INT` while
+docs/analysis/tierA-a2-behaviour.md:769:**Three of the seven write paths do no GL-account-type validation at all**, and two of those fail
+
+--- (b) 'empty population' in live files ---
+.softhouse/RESUME.md:109:2. **`A2-31`** — `program.json` still read *"3 of 4 detection classes inspect an empty population"*. **The
+.softhouse/RESUME.md:173:and G-11 is OPEN and NOT RATIFIABLE at revision 4.** The `I4-BUILDER` class inspects an empty population and
+.softhouse/gates.md:62:**F-2 — "three of its SEVEN detection classes inspected an empty population" is FOUR, measured.**
+.softhouse/guards/ledgerguard/main.go:73:// inspects a non-empty population of STRING LITERALS and finds zero SQL statements in it. That
+.softhouse/guards/ledgerguard/main.go:820:			fmt.Println("acc_gl_journal_entry). An absence is vacuously true over an empty population, so a")
+.softhouse/guards/ledgerguard/main.go:860:			"Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. " +
+.softhouse/guards/ledgerguard/main.go:865:			"I6-HOLD-BALANCE inspected an empty population. I-6 is UNPROVEN on this tree.\n")
+.softhouse/guards/ledgerguard/main.go:893:// ballast gives every scratch tree a non-empty population for all five P-35 gates, so that a
+.softhouse/patterns.md:1744:> *"three of its **four** detection classes inspect an empty population"*
+.softhouse/patterns.md:1780:> fourth class inspecting an empty population — and unlike the other three, **its emptiness is not
+.softhouse/patterns.md:1941:  - **A2-21 → the record**: *"I-3/I-4 went from ZERO enforcement to HARNESS-ENFORCED"* is an **overstatement**. Driver-verified from the guard's own green-run output: three of its **seven declared** det
+.softhouse/program.json:709:      "review_history": "A2-14 REJECTED rev 1 (three shape findings). A2-17 returned MICRO-FIX on rev 2 and applied its OWN 7-line fix, leaving the document reviewed by nobody; A2-19 then REJECTED rev 2
+.softhouse/program.json:1598:        "A2-21 on the record: 'I-3/I-4 harness-enforced' overstates -- [CORRECTED TWICE, and this entry is where BOTH corrections failed to land. As written it said '3 of 4'. DENOMINATOR: the guard dec
+.softhouse/tasks.json:1483:      "note": "fire 20260822-080001: DONE+MERGED on softhouse/A2-21-dec2-rev3 (ead328a). Scope clean (docs/adr/ + handoff only). All four brief items delivered; G-11 correctly left OPEN and NOT ratified.
+.softhouse/tasks.json:2020:      "description": "T220's single finding against T116, raised while APPROVING it. The kill counts have corpus-wide tripwires; THE EXEMPTION COUNT DOES NOT. admit.go checks only 'known invariant, non-e
+.softhouse/tasks.json:2072:      "note": "MERGED local fire 20260822-000013. VERDICT: REJECTED. G-11 unblocking condition -- \"a further independent review passing CLEAN\" -- is NOT MET. Fourth revision, fourth rejection. Neither 
+.softhouse/tasks.json:2117:      "description": "G-11 is OPEN and NOT RATIFIABLE. A2-31 REJECTED rev 4. This is rev 5 and it must fix EXACTLY TWO things. F-1: DEC-2:953-957 carries a [VERIFIED by A2-28 at commit 2e97162] claim tha
+docs/adr/DEC-2-gl-accounting-adapter.md:49:>    `I4-BUILDER`, `I4-DML` and `OPAQUE-SQL` — inspected an EMPTY population** and are proven by the
+docs/adr/DEC-2-gl-accounting-adapter.md:822:| **I-4** | The ledger is append-only | No `UPDATE`/`DELETE` against `acc_gl_journal_entry` from application code | **NO — STRUCTURAL ONLY.** "No update ever happened" is not observable 
+docs/adr/DEC-2-gl-accounting-adapter.md:905:**FOUR OF THE GUARD'S DECLARED DETECTION CLASSES INSPECTED AN EMPTY POPULATION IN THIS TREE —
+docs/adr/DEC-2-gl-accounting-adapter.md:911:run, in which the first two fire and the third does not. `I4-BUILDER`'s empty population is MEASURED
+docs/adr/DEC-2-gl-accounting-adapter.md:925:denominator is not.** The four that inspected an empty population are **`I3-SQL-BALANCE`**,
+docs/adr/DEC-2-gl-accounting-adapter.md:936:  Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module
+docs/adr/DEC-2-gl-accounting-adapter.md:986:  So `I3-FIELD-WRITE` and `I3-PKG-STATE` are the only classes with a genuinely non-empty population
+docs/adr/DEC-2-gl-accounting-adapter.md:1020:4. **The `I-4` SQL classes inspected an empty population in THIS tree** — the `NIL-COVERAGE` lines
+docs/adr/DEC-2-gl-accounting-adapter.md:2042:| **—** | **P-8** | **LANDED.** The **`I-3`/`I-4` source guard** §4.4.1 requires | **Built by `A2-18`, wired by `T208`**; it runs on every invocation and `A2-28` measured `invariant vio
+docs/adr/DEC-2-gl-accounting-adapter.md:2373:   — `I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML` and `OPAQUE-SQL` — inspected an EMPTY population in
+docs/adr/DEC-2-gl-accounting-adapter.md:2444:  `I4-BUILDER`, `I4-DML`, `OPAQUE-SQL` — inspected an empty population here** (revision 4 said
+docs/adr/DEC-2-gl-accounting-adapter.md:2573:14. ~~**NEW — whether `I4-BUILDER` inspects a non-empty population in this Go tree.**~~
+docs/adr/DEC-2-gl-accounting-adapter.md:2662:     with labelled notes:** **§9 item 14** (*"whether `I4-BUILDER` inspects a non-empty population"*)
+docs/adr/DEC-2-gl-accounting-adapter.md:2703:     `2e97162`; the three that inspected an **empty population** are **`I4-DML`**,
+docs/adr/DEC-2-gl-accounting-adapter.md:2916:       inspected an EMPTY population in this tree** — no SQL, no database driver, two `NIL-COVERAGE`
+nexus/internal/apps/loanschedule/conformance/exemption.go:366:// inspects an empty population.
+nexus/internal/apps/loanschedule/conformance/exemption_test.go:596:	// THE EMPTY POPULATION. Strip both family-B vectors' exemptions and the check
+nexus/internal/apps/loanschedule/conformance/exemption_test.go:621:			t.Errorf("an empty population did not produce the NIL-COVERAGE notice:\n%s",
+nexus/internal/apps/loanschedule/conformance/report.go:326:	// than letting an empty population read as a clean bill of health.
+nexus/internal/apps/loanschedule/conformance/report.go:344:		p("    check inspected an empty population. It inspected %d loaded vector(s) to find that out.",
+
+--- (c) percentage restatements in live files ---
+.softhouse/patterns.md:1767:understating sounds like rigour: "three of four" says the guard is 25% live; "three of seven" says 43%.
+.softhouse/patterns.md:1786:> figure is **four of seven = 43 %**, corrected in the sentence above.
+.softhouse/tasks.json:1483:      "note": "fire 20260822-080001: DONE+MERGED on softhouse/A2-21-dec2-rev3 (ead328a). Scope clean (docs/adr/ + handoff only). All four brief items delivered; G-11 correctly left OPEN and NOT ratified.
+docs/adr/DEC-1-schedule-generator-adapter.md:1579:- **Not basis points.** An integer basis-point field cannot express a rate finer than 0.01 % (0.125 % p.a. is 12.5 bp), and a rate is not required to be a whole number of basis poi
+docs/adr/DEC-2-gl-accounting-adapter.md:968:> **Why this was reject-grade and not a quibble.** *"Three of seven"* reads as 57 % of the guard
+docs/adr/DEC-2-gl-accounting-adapter.md:969:> live; the measured figure is 43 %. **The arithmetic had flipped to flattering the result** — the
+nexus/internal/apps/loanschedule/contract/contract.go:200:// Rate{7, 1}. A 0.125% per annum rate is Rate{1, 800}. A zero rate is
+nexus/internal/apps/loanschedule/contract/contract.go:214:// express a rate finer than 0.01% (0.125% per annum is 12.5 basis points), and
+
+--- (d) F-1 class in live files ---
+.softhouse/conformance.sh:1177:  # either, so wiring was not what dropped it. T208 raised that as FU-T208-1 rather than fixing
+.softhouse/conformance.sh:1181:  # ⚠ CORRECTION (T227, 22 August 2026). FU-T208-1 IS CLOSED — T209 (commit 03e9094) widened
+.softhouse/conformance.sh:1186:  # below still named FU-T208-1 as an available fix and still said the head "DROPS" the block
+.softhouse/gates.md:59:`FU-T208-1` and **is an ancestor of** `2e97162` (10:34). So this is **not staleness**: it is `A2-25`'s F-4
+.softhouse/gates.md:88:2. **`conformance.sh:1180`** prints the **closed** `FU-T208-1` on every run. → **`T227`**.
+.softhouse/guards/check-ledger-invariants.sh:190:  # T209 (FU-T208-1). This head's own PASS text, three lines below, says "Read the CANNOT-CATCH
+.softhouse/guards/check-ledger-invariants.sh:196:  # meanwhile (FU-T208-1's own recommendation, endorsed) — that would be a second copy of the
+.softhouse/program.json:709:      "review_history": "A2-14 REJECTED rev 1 (three shape findings). A2-17 returned MICRO-FIX on rev 2 and applied its OWN 7-line fix, leaving the document reviewed by nob
+.softhouse/tasks.json:1604:      "note": "DONE + MERGED, fire 20260822-080001. run_guards NOW INVOKES SIX GUARDS and the sixth is neither float, gofmt nor exception scope. A2-18's statement against it
+.softhouse/tasks.json:1641:      "description": "T208's FU-T208-1, found while wiring A2-18's guard and correctly raised rather than fixed (out of T208's scope). check-ledger-invariants.sh:185 filters
+.softhouse/tasks.json:2072:      "note": "MERGED local fire 20260822-000013. VERDICT: REJECTED. G-11 unblocking condition -- \"a further independent review passing CLEAN\" -- is NOT MET. Fourth revisi
+.softhouse/tasks.json:2117:      "description": "G-11 is OPEN and NOT RATIFIABLE. A2-31 REJECTED rev 4. This is rev 5 and it must fix EXACTLY TWO things. F-1: DEC-2:953-957 carries a [VERIFIED by A2-2
+.softhouse/tasks.json:2137:      "description": "FOUND BY A2-31, and it is a correction to T224 IN THE SAME FIRE T224 landed. T224 swept for the retracted 'DEC-2 records this guard as NOT EXISTING' cl
+docs/adr/DEC-2-gl-accounting-adapter.md:90:**Revision 5 changes exactly two things and nothing else** — `A2-31`'s F-1 (§4.4.1's `FU-T208-1`
+docs/adr/DEC-2-gl-accounting-adapter.md:1026:> **⚠ RETRACTION, revision 5 — revision 4 said the guard's own head DROPPED this block on the pass
+docs/adr/DEC-2-gl-accounting-adapter.md:1027:> path, cited `FU-T208-1` as an OPEN follow-up, and stamped the whole parenthetical `[VERIFIED by
+docs/adr/DEC-2-gl-accounting-adapter.md:1031:> CANNOT-CATCH reaches green (FU-T208-1)"* — **closed** `FU-T208-1`, and `03e9094` is an **ANCESTOR**
+docs/adr/DEC-2-gl-accounting-adapter.md:1044:> **`FU-T208-1` is CLOSED and this document no longer cites it as open anywhere.** The retracted
+docs/adr/DEC-2-gl-accounting-adapter.md:1049:> citing a line that has itself moved), `:1172`, `:1176`, `:1177` (*"RAISED as FU-T208-1, not fixed
+docs/adr/DEC-2-gl-accounting-adapter.md:1050:> here"*) and `:1182` (*"the fix is FU-T208-1"*). `A2-31` named the printed line only; `T209`'s own
+docs/adr/DEC-2-gl-accounting-adapter.md:2622:  1. **`A2-31` F-1 — §4.4.1's `FU-T208-1` parenthetical CORRECTED, and the caveat that outlived its
+docs/adr/DEC-2-gl-accounting-adapter.md:2625:     not at that commit**: `T209` (`03e9094`) closed `FU-T208-1` and is an **ANCESTOR** of `2e97162`

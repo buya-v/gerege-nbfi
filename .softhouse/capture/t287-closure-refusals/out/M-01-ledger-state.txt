@@ -1,0 +1,47 @@
+Pager usage is off.
+=== 1. offices (id, name, hierarchy, opening date) ===
+ id |    name     | hierarchy | parent_id | opening_date 
+----+-------------+-----------+-----------+--------------
+  1 | Head Office | .         |           | 2009-01-01
+(1 row)
+
+
+=== 2. acc_gl_closure -- ALL ROWS (registry claims this is empty) ===
+ id | office_id | closing_date | is_deleted | created_date | comments 
+----+-----------+--------------+------------+--------------+----------
+(0 rows)
+
+
+=== 2b. acc_gl_closure row count ===
+ closure_rows 
+--------------
+            0
+(1 row)
+
+
+=== 3. journal entries PER OFFICE: count, earliest and latest entry_date ===
+psql:<stdin>:38: ERROR:  column je.is_manual_entry does not exist
+LINE 6:        count(*) FILTER (WHERE je.is_manual_entry) AS manual_...
+                                      ^
+HINT:  Perhaps you meant to reference the column "je.manual_entry".
+
+=== 3b. journal entries: whole-tenant totals ===
+ entries |  earliest  |   latest   
+---------+------------+------------
+      60 | 2026-02-01 | 2026-08-01
+(1 row)
+
+
+=== 4. tenant business date rows (m_business_date) ===
+ id | type | date 
+----+------+------
+(0 rows)
+
+
+=== 5. currencies enabled on this tenant ===
+ code | decimal_places | currency_multiplesof 
+------+----------------+----------------------
+ MNT  |              2 |                     
+ USD  |              2 |                     
+(2 rows)
+

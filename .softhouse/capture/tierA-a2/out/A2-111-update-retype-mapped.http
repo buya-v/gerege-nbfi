@@ -1,0 +1,6 @@
+PUT /glaccounts/2
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/upd-111-retype-mapped-account.json
+captured-at-utc: 2026-08-21T06:05:33Z

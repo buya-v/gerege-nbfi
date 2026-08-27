@@ -1,0 +1,6 @@
+=== capture 1 : 212 observations checked ===
+  CLEAN: I1-principal-amortizes, I1b-plan-disbursed, I1c-final-balance, I2-interest-sums, I3-row-splits, I4-negative, I5-float, I5-scale, I7-balance-monotone, I6-REPORTED-ONLY-plan-total
+
+=== capture 2 : 140 observations checked ===
+  CLEAN: I1-principal-amortizes, I1b-plan-disbursed, I1c-final-balance, I2-interest-sums, I3-row-splits, I4-negative, I5-float, I5-scale, I7-balance-monotone, I6-REPORTED-ONLY-plan-total
+

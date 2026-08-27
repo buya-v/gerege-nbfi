@@ -1,0 +1,397 @@
+T82 guard proofs
+run-pass3i.sh          sha256 3ca0d3f6380a74d32c8bca000f8587724927b4b55eb0c51b8e64be7cefe2a519
+build-counterfactuals  sha256 b1e9f6087f93c2b0b1606d4631d5d97e96dd72fbbebf96baaea1dd89190ed9f1
+promote-vectors        sha256 efcfcfa59305d5da67a2149cace4a9fffb991daff5ad92fe7fe5c8e0595a94e4
+capture under test     sha256 e0ea0bcfa1e37914fd5eec68040d90319d2d343dc50d2ad30d90f4cd9acde430
+fork-point (BASE)      8da4b831b96a146c2b46ad34d85ed098395de160
+BASE run-pass3i.sh     sha256 d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3
+BASE promote-vectors   sha256 27bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1
+
+==============================================================================
+CONTROL — committed pass-3i capture through the corrected precondition block
+  expecting exit 0
+------------------------------------------------------------------------------
+  | # precondition block: lines 267..707 of run-pass3i.sh, 441 lines, sha256 ada3a43988d544dc620c18b9e1b8aa4e2b04e2170f2f8dad3fd32d4255d57269
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3i-raw.json
+  | validation OK — 36 captures, attestation present, effective MathContext (19, HALF_UP ordinal 4)
+  | calibration OK — P-CAL reproduced committed P-CAL (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3b-raw.json) at precision 12, inputs and observed both identical
+  | calibration OK — P-CAL-DRIFTF reproduced committed P-DRIFT-F (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3e-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-EMI6 reproduced committed P-EMI-6-1M014632 (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3c-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-LATQ0a reproduced committed P-LAT-Q0a (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3e-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-MNT50M reproduced committed P-MNT-50M (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-MNT5M reproduced committed P-MNT-5M (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-P00 reproduced committed P-00 (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-ZPA reproduced committed T64-ZP-A (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3g-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-ZPB reproduced committed T64-ZP-B (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3g-raw.json) at precision 19, inputs and observed both identical
+  | captures canonical sha256: 41bcf7306f691b730d17ed7fa08131b16052d737773c80d12f5abacf6b7d581f
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+  MUTATION: script:  EXPECTED_IDS += 'T82-PROOF-UNREGISTERED-CASE'  (CASE_PRECISION deliberately NOT updated)
+  MUTATION: capture: appended a clone of T74-E-P4 under id 'T82-PROOF-UNREGISTERED-CASE', money untouched
+
+==============================================================================
+E-1 GUARD 17a — unregistered id must FAIL THE RUN (the claim that was unreachable)
+  expecting exit 1
+------------------------------------------------------------------------------
+  | # precondition block: lines 267..708 of run-pass3i.sh, 442 lines, sha256 eba8acc1b68c230eabfe2a61109ea0d1ecaca8f0c491c5fda149f3d101c779cd
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/17a-capture.json
+  | RUN FAILED: no expected MathContext precision registered for ['T82-PROOF-UNREGISTERED-CASE']. Add the case to CASE_PRECISION by hand — there is deliberately no default, because a defaulted precision is how a discrimination probe gets validated as a parity candidate.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+  MUTATION: script:  EXPECTED_IDS += 'T82-PROOF-UNREGISTERED-CASE'  (CASE_PRECISION deliberately NOT updated)
+  MUTATION: capture: appended a clone of T74-E-P4 under id 'T82-PROOF-UNREGISTERED-CASE', money untouched
+
+==============================================================================
+E-1 COUNTERPROOF — the SAME unregistered id through the FORK POINT'S REAL pre-T82 bytes
+  expecting exit 0
+------------------------------------------------------------------------------
+  | # precondition block: lines 259..628 of run-pass3i.sh, 370 lines, sha256 f7c1a376444c7b4ebb711f02b7495f4909f6c16ced0641aec871208bcdc70ff8
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/17a-main-capture.json
+  | validation OK — 37 captures, attestation present, effective MathContext (19, HALF_UP ordinal 4)
+  | calibration OK — P-CAL reproduced committed P-CAL (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3b-raw.json) at precision 12, inputs and observed both identical
+  | calibration OK — P-CAL-DRIFTF reproduced committed P-DRIFT-F (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3e-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-EMI6 reproduced committed P-EMI-6-1M014632 (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3c-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-LATQ0a reproduced committed P-LAT-Q0a (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3e-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-MNT50M reproduced committed P-MNT-50M (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-MNT5M reproduced committed P-MNT-5M (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-P00 reproduced committed P-00 (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-ZPA reproduced committed T64-ZP-A (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3g-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-ZPB reproduced committed T64-ZP-B (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3g-raw.json) at precision 19, inputs and observed both identical
+  | captures canonical sha256: 3d6fb273b2bc95b68e9e601c58477c5f40196243a084fd4349b26075265a761c
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+  MUTATION: script:  CASE_PRECISION += 'T82-PROOF-STALE-ENTRY', an id this run does not capture
+
+==============================================================================
+E-1 GUARD 17b — stale CASE_PRECISION entry must FAIL THE RUN
+  expecting exit 1
+------------------------------------------------------------------------------
+  | # precondition block: lines 267..708 of run-pass3i.sh, 442 lines, sha256 da80199d21f20e447609443704d842070500a55f9c62090c08899da1bc94eea7
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/out/capture-prod3i-raw.json
+  | RUN FAILED: CASE_PRECISION registers ['T82-PROOF-STALE-ENTRY'], which this run does not capture. A table that outlives the cases it describes stops being a check.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+  MUTATION: capture: T74-E-P4 mathContextPrecision 19 -> 12 (CASE_PRECISION registers it at 19); money untouched
+
+==============================================================================
+E-1 GUARD 17c — a case at a precision its table entry forbids must FAIL THE RUN
+  expecting exit 1
+------------------------------------------------------------------------------
+  | # precondition block: lines 267..707 of run-pass3i.sh, 441 lines, sha256 ada3a43988d544dc620c18b9e1b8aa4e2b04e2170f2f8dad3fd32d4255d57269
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/17c-capture.json
+  | RUN FAILED: capture validation:
+  |   T74-E-P4: must run at precision 19, got 12
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+  MUTATION: script:  CASE_PRECISION['T74-A0-DP0-NONE'] 19 -> 12
+  MUTATION: capture: T74-A0-DP0-NONE mathContextPrecision 19 -> 12, money untouched
+  MUTATION:          so guard 17 is SATISFIED and guard 18 is the one that must catch it
+
+==============================================================================
+E-2 GUARD 18(a) — a probe that is not named `-p12` must FAIL THE RUN
+  expecting exit 1
+------------------------------------------------------------------------------
+  | # precondition block: lines 267..707 of run-pass3i.sh, 441 lines, sha256 b640746421d90062f98e289531208af6102cf9b3e66214d3860d2331e17a4768
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/18a-capture.json
+  | RUN FAILED: the cases named `-p12` are ['T74-E-P340-p12', 'T74-E-P4-p12', 'T74-E-P426-p12', 'T74-E-P59-p12', 'T74-E-P6940-p12', 'T74-E-P72-p12'] but the cases actually running below precision 19 are ['T74-A0-DP0-NONE', 'T74-E-P340-p12', 'T74-E-P4-p12', 'T74-E-P426-p12', 'T74-E-P59-p12', 'T74-E-P6940-p12', 'T74-E-P72-p12']. An id that promises a precision it does not run is worse than no id at all.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+  MUTATION: script:  CASE_PRECISION['T74-E-P59-p12'] 12 -> 19
+  MUTATION: capture: T74-E-P59-p12 mathContextPrecision 12 -> 19, money untouched
+  MUTATION:          guard 17 is SATISFIED; the id promises 12 and runs 19, which only 18 sees
+
+==============================================================================
+E-2 GUARD 18(b) — a `-p12` id that does NOT run below 19 must FAIL THE RUN
+  expecting exit 1
+------------------------------------------------------------------------------
+  | # precondition block: lines 267..707 of run-pass3i.sh, 441 lines, sha256 1cc284d708815279687fc779e09164a4f4577799f5a76566684293ace47897f5
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/18b-capture.json
+  | RUN FAILED: the cases named `-p12` are ['T74-E-P340-p12', 'T74-E-P4-p12', 'T74-E-P426-p12', 'T74-E-P59-p12', 'T74-E-P6940-p12', 'T74-E-P72-p12'] but the cases actually running below precision 19 are ['T74-E-P340-p12', 'T74-E-P4-p12', 'T74-E-P426-p12', 'T74-E-P6940-p12', 'T74-E-P72-p12']. An id that promises a precision it does not run is worse than no id at all.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+E-3 CONTROL — the committed capture, both arms HALF_UP, must still PASS
+  expecting exit 0
+------------------------------------------------------------------------------
+  | T74-E-P4     23/146 graded cells diverge; widest 1 minor at period[17].principal_minor (observed 10 vs 11); total interest 1.14 vs 1.13
+  | T74-E-P59    27/146 graded cells diverge; widest 1 minor at period[13].principal_minor (observed 151 vs 150); total interest 16.51 vs 16.52
+  | T74-E-P72     2/146 graded cells diverge; widest 1 minor at period[36].interest_minor (observed 4 vs 3); total interest 20.14 vs 20.13
+  | T74-E-P340   25/146 graded cells diverge; widest 1 minor at period[15].principal_minor (observed 891 vs 890); total interest 95.15 vs 95.16
+  | T74-E-P426   39/146 graded cells diverge; widest 2 minor at period[8].outstanding_principal_minor (observed 34879 vs 34881); total interest 119.18 vs 119.20
+  | T74-E-P6940  18/146 graded cells diverge; widest 1 minor at period[22].principal_minor (observed 20030 vs 20029); total interest 1942.65 vs 1942.66
+  | 
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/cf-legit.json
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+  MUTATION: capture: rounding mode HALF_UP -> HALF_DOWN on ['T74-E-P4', 'T74-E-P4-p12']; money untouched
+
+==============================================================================
+E-3 GUARD — BOTH arms at the non-ratified HALF_DOWN must now FAIL
+  expecting exit 1
+------------------------------------------------------------------------------
+  | T74-E-P4/T74-E-P4-p12: {'T74-E-P4': 'HALF_DOWN', 'T74-E-P4-p12': 'HALF_DOWN'} is not the ratified HALF_UP rounding mode. A counterfactual measured at a mode production never runs describes a port defect nobody has, and this pair's whole claim is that the ONLY difference between its arms is precision 19 against 12.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+E-3 COUNTERPROOF — the SAME both-arms capture through the FORK POINT'S chained comparison
+  expecting exit 0
+------------------------------------------------------------------------------
+  | T74-E-P4     23/146 graded cells diverge; widest 1 minor at period[17].principal_minor (observed 10 vs 11); total interest 1.14 vs 1.13
+  | T74-E-P59    27/146 graded cells diverge; widest 1 minor at period[13].principal_minor (observed 151 vs 150); total interest 16.51 vs 16.52
+  | T74-E-P72     2/146 graded cells diverge; widest 1 minor at period[36].interest_minor (observed 4 vs 3); total interest 20.14 vs 20.13
+  | T74-E-P340   25/146 graded cells diverge; widest 1 minor at period[15].principal_minor (observed 891 vs 890); total interest 95.15 vs 95.16
+  | T74-E-P426   39/146 graded cells diverge; widest 2 minor at period[8].outstanding_principal_minor (observed 34879 vs 34881); total interest 119.18 vs 119.20
+  | T74-E-P6940  18/146 graded cells diverge; widest 1 minor at period[22].principal_minor (observed 20030 vs 20029); total interest 1942.65 vs 1942.66
+  | 
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/cf-both-main.json
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+  MUTATION: capture: rounding mode HALF_UP -> HALF_DOWN on ['T74-E-P4-p12']; money untouched
+
+==============================================================================
+E-3 GUARD — ONE arm at HALF_DOWN must keep FAILING (no regression)
+  expecting exit 1
+------------------------------------------------------------------------------
+  | T74-E-P4 vs T74-E-P4-p12 differ in more than the precision: ['mathContextRoundingMode', 'mathContextRoundingModeOrdinal']
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-1 GUARD — a capture whose daysInMonth/daysInYear are not 30/360 must be REFUSED
+  expecting exit 1
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: daysInMonth/daysInYear -> (ACTUAL, DAYS_365), a pair the contract does not name. The OLD code wrote the constant "FIXED_30_360" regardless.
+  | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: observed (daysInMonth, daysInYear) = ('ACTUAL', 'DAYS_365'), which is not a day-count convention the frozen contract names (contract.go:359-360 maps only [('ACTUAL', 'ACTUAL'), ('DAYS_30', 'DAYS_360')]). Refusing to write a day_count this capture does not support.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-1 COUNTERPROOF — the FORK POINT accepts it and writes the hard-coded FIXED_30_360
+  expecting exit 0
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: daysInMonth/daysInYear -> (ACTUAL, DAYS_365), a pair the contract does not name. The OLD code wrote the constant "FIXED_30_360" regardless.
+  | PROMOTER: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py
+  |           vectors written to a SCRATCH dir, never to the store
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-day-count/vectors-under-test/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json  (margin 1 minor at period[17].principal_minor, 23/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-day-count/vectors-under-test/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json  (margin 1 minor at period[13].principal_minor, 27/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-day-count/vectors-under-test/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json  (margin 1 minor at period[36].interest_minor, 2/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-day-count/vectors-under-test/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json  (margin 1 minor at period[15].principal_minor, 25/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-day-count/vectors-under-test/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json  (margin 2 minor at period[8].outstanding_principal_minor, 39/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-day-count/vectors-under-test/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json  (margin 1 minor at period[22].principal_minor, 18/146 graded cells move)
+  | 
+  | 6 vectors promoted from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-day-count/capture-under-test.json (sha256 758fecfae75a045864943f59c692bce7179f1bc5d5c26657dc4c1361fe534d58)
+  | NOTHING was promoted from capture groups A, B, C or D — see this script's docstring.
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+
+==============================================================================
+D-1 GUARD — a capture with a NON-ZERO downPaymentPercentage must be REFUSED
+  expecting exit 1
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: downPaymentPercentage -> "25". The OLD code wrote {0, 1} regardless, so the vector would have graded a schedule the request did not describe.
+  | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: downPaymentEnabled=False downPaymentPercentage='25'. This script promotes only the no-down-payment shape; a down payment moves the first period's principal and must be captured and promoted as a shape of its own.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-1 COUNTERPROOF — the FORK POINT accepts it and writes the hard-coded {0, 1}
+  expecting exit 0
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: downPaymentPercentage -> "25". The OLD code wrote {0, 1} regardless, so the vector would have graded a schedule the request did not describe.
+  | PROMOTER: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py
+  |           vectors written to a SCRATCH dir, never to the store
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-down-payment/vectors-under-test/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json  (margin 1 minor at period[17].principal_minor, 23/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-down-payment/vectors-under-test/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json  (margin 1 minor at period[13].principal_minor, 27/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-down-payment/vectors-under-test/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json  (margin 1 minor at period[36].interest_minor, 2/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-down-payment/vectors-under-test/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json  (margin 1 minor at period[15].principal_minor, 25/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-down-payment/vectors-under-test/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json  (margin 2 minor at period[8].outstanding_principal_minor, 39/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-down-payment/vectors-under-test/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json  (margin 1 minor at period[22].principal_minor, 18/146 graded cells move)
+  | 
+  | 6 vectors promoted from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-down-payment/capture-under-test.json (sha256 1e5d5b23eb9df4acb24a6cf54ff7e20d17ca87bb816056f9b8f7fe44203abb9a)
+  | NOTHING was promoted from capture groups A, B, C or D — see this script's docstring.
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+
+==============================================================================
+D-1 GUARD — a capture with downPaymentEnabled true must be REFUSED
+  expecting exit 1
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: downPaymentEnabled -> true, percentage still "0".
+  | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: downPaymentEnabled=True downPaymentPercentage='0'. This script promotes only the no-down-payment shape; a down payment moves the first period's principal and must be captured and promoted as a shape of its own.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-2 GUARD — a capture with NO repayment-every key at all must be REFUSED
+  expecting exit 1
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: both `repaymentEvery` and `repaymentFrequency` removed. The OLD `i.get("repaymentEvery", i.get("repaymentFrequency"))` returned None and wrote a null interval into the vector. (Note: `repaymentEvery` is absent from ALL 36 committed cases, so that fallback was load-bearing on every single one.)
+  | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: the capture records neither `repaymentEvery` nor `repaymentFrequency`. The repayment interval is not defaultable — a vector with the wrong interval grades a different loan and passes.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-2 COUNTERPROOF — the FORK POINT accepts it and writes a NULL repayment interval
+  expecting exit 0
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: both `repaymentEvery` and `repaymentFrequency` removed. The OLD `i.get("repaymentEvery", i.get("repaymentFrequency"))` returned None and wrote a null interval into the vector. (Note: `repaymentEvery` is absent from ALL 36 committed cases, so that fallback was load-bearing on every single one.)
+  | PROMOTER: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py
+  |           vectors written to a SCRATCH dir, never to the store
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-repayment-every-absent/vectors-under-test/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json  (margin 1 minor at period[17].principal_minor, 23/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-repayment-every-absent/vectors-under-test/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json  (margin 1 minor at period[13].principal_minor, 27/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-repayment-every-absent/vectors-under-test/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json  (margin 1 minor at period[36].interest_minor, 2/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-repayment-every-absent/vectors-under-test/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json  (margin 1 minor at period[15].principal_minor, 25/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-repayment-every-absent/vectors-under-test/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json  (margin 2 minor at period[8].outstanding_principal_minor, 39/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-repayment-every-absent/vectors-under-test/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json  (margin 1 minor at period[22].principal_minor, 18/146 graded cells move)
+  | 
+  | 6 vectors promoted from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-repayment-every-absent/capture-under-test.json (sha256 a46042a1e39ebd0040ffb8e5bee0549976616ff8e6b2e37fa7974932ad4b756b)
+  | NOTHING was promoted from capture groups A, B, C or D — see this script's docstring.
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+
+==============================================================================
+D-2 GUARD — a capture whose two repayment-every keys DISAGREE must be REFUSED
+  expecting exit 1
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: `repaymentEvery` = 3 against the recorded `repaymentFrequency` = 1. The OLD code silently preferred `repaymentEvery`.
+  | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: `repaymentEvery` and `repaymentFrequency` disagree ({'repaymentEvery': 3, 'repaymentFrequency': 1}). The capture cannot say which interval the oracle actually ran.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-2 GUARD — a PAYABLE row with an ABSENT periodNumber must be REFUSED (the `or 0` defect)
+  expecting exit 1
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: period 1's `periodNumber` KEY DELETED on a PAYABLE row. THIS IS THE DEFECT `or 0` ACTUALLY CAUSED: the old code evaluated `None or 0`, wrote installment_number 0, filed it under unrecorded_fields and promoted the vector without a word. An absent installment number on a payable row is a broken capture, not a value.
+  | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: period[1] is a payable REPAYMENT row with NO periodNumber. The old form wrote 0 here via `p.get("periodNumber") or 0` and moved on, which is a missing input wearing a legitimate value's clothes.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-2 COUNTERPROOF — the FORK POINT accepts it, writes installment_number 0 and promotes six vectors
+  expecting exit 0
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: period 1's `periodNumber` KEY DELETED on a PAYABLE row. THIS IS THE DEFECT `or 0` ACTUALLY CAUSED: the old code evaluated `None or 0`, wrote installment_number 0, filed it under unrecorded_fields and promoted the vector without a word. An absent installment number on a payable row is a broken capture, not a value.
+  | PROMOTER: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py
+  |           vectors written to a SCRATCH dir, never to the store
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-absent-payable/vectors-under-test/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json  (margin 1 minor at period[17].principal_minor, 23/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-absent-payable/vectors-under-test/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json  (margin 1 minor at period[13].principal_minor, 27/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-absent-payable/vectors-under-test/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json  (margin 1 minor at period[36].interest_minor, 2/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-absent-payable/vectors-under-test/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json  (margin 1 minor at period[15].principal_minor, 25/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-absent-payable/vectors-under-test/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json  (margin 2 minor at period[8].outstanding_principal_minor, 39/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-absent-payable/vectors-under-test/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json  (margin 1 minor at period[22].principal_minor, 18/146 graded cells move)
+  | 
+  | 6 vectors promoted from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-absent-payable/capture-under-test.json (sha256 b0fbc453bec697463ac2f909af0a5e00516d6e98d30b35860bc741e6d3e6b20e)
+  | NOTHING was promoted from capture groups A, B, C or D — see this script's docstring.
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+
+==============================================================================
+D-2 GUARD — a NON-PAYABLE row that CARRIES a periodNumber must be REFUSED
+  expecting exit 1
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: every DISBURSEMENT row given `periodNumber: 0`. The withdrawal of that cell is justified by the oracle emitting no periodNumber for a non-payable row; if one appears, the rig has changed and withdrawing the cell would be wrong.
+  | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: period[0] is a DISBURSEMENT row but carries periodNumber 0. A non-payable row's installment number is fixed at 0 by the contract (contract.go:1509-1510); an observed one means the rig changed and the withdrawal below would be wrong.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-2 COUNTERPROOF — the FORK POINT accepts that too
+  expecting exit 0
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: every DISBURSEMENT row given `periodNumber: 0`. The withdrawal of that cell is justified by the oracle emitting no periodNumber for a non-payable row; if one appears, the rig has changed and withdrawing the cell would be wrong.
+  | PROMOTER: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py
+  |           vectors written to a SCRATCH dir, never to the store
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-on-nonpayable/vectors-under-test/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json  (margin 1 minor at period[17].principal_minor, 23/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-on-nonpayable/vectors-under-test/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json  (margin 1 minor at period[13].principal_minor, 27/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-on-nonpayable/vectors-under-test/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json  (margin 1 minor at period[36].interest_minor, 2/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-on-nonpayable/vectors-under-test/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json  (margin 1 minor at period[15].principal_minor, 25/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-on-nonpayable/vectors-under-test/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json  (margin 2 minor at period[8].outstanding_principal_minor, 39/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-on-nonpayable/vectors-under-test/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json  (margin 1 minor at period[22].principal_minor, 18/146 graded cells move)
+  | 
+  | 6 vectors promoted from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-on-nonpayable/capture-under-test.json (sha256 33387cab05d98f54d79a70029af6cb09d2986bae40147a263ac980a9c8273a20)
+  | NOTHING was promoted from capture groups A, B, C or D — see this script's docstring.
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+
+==============================================================================
+D-2 GUARD — a non-integer periodNumber must be REFUSED, not coerced
+  expecting exit 1
+------------------------------------------------------------------------------
+  | KIND:     GUARD
+  | MUTATION: period 1's periodNumber -> the string "1". Must be refused, not coerced.
+  | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: period[1] periodNumber is '1'; expected a non-negative integer. This script will not coerce it.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-2 REGRESSION — a legitimate periodNumber 0 stays green, and the FORK POINT emits the SAME cells
+  expecting exit 0
+------------------------------------------------------------------------------
+  | KIND:     REGRESSION
+  | MUTATION: period 1's periodNumber -> 0, a LEGITIMATE zero. REGRESSION CONTROL, NOT A GUARD PROOF: the PRE-FIX code decided the VALUE with `or 0` (:255) but the WITHDRAWAL with a SEPARATE `is None` test (:260-261), so a recorded 0 already survived un-withdrawn there. This must stay green on BOTH codebases and is proved identical between them below. It demonstrates that the rewrite BROKE NOTHING; it demonstrates NOTHING about the `or 0` defect, and the guard that does is `period-number-absent-payable`.
+  | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  |           vectors written to a SCRATCH dir, never to the store
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-under-test/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json  (margin 1 minor at period[17].principal_minor, 23/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-under-test/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json  (margin 1 minor at period[13].principal_minor, 27/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-under-test/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json  (margin 1 minor at period[36].interest_minor, 2/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-under-test/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json  (margin 1 minor at period[15].principal_minor, 25/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-under-test/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json  (margin 2 minor at period[8].outstanding_principal_minor, 39/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-under-test/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json  (margin 1 minor at period[22].principal_minor, 18/146 graded cells move)
+  | 
+  | 6 vectors promoted from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/capture-under-test.json (sha256 7efe8970731782b795682f6fa05dee1d72ab56151cd6fda1a1a088eeb668077a)
+  | NOTHING was promoted from capture groups A, B, C or D — see this script's docstring.
+  | 
+  | ASSERTIONS on the regenerated T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json:
+  |   payable row 1 installment_number = 0  unrecorded_fields = []
+  |   DISBURSEMENT  installment_number = 0  unrecorded_fields = ['installment_number', 'interest_minor']
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-base/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json  (margin 1 minor at period[17].principal_minor, 23/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-base/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json  (margin 1 minor at period[13].principal_minor, 27/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-base/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json  (margin 1 minor at period[36].interest_minor, 2/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-base/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json  (margin 1 minor at period[15].principal_minor, 25/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-base/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json  (margin 2 minor at period[8].outstanding_principal_minor, 39/146 graded cells move)
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-base/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json  (margin 1 minor at period[22].principal_minor, 18/146 graded cells move)
+  | 
+  | 6 vectors promoted from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97675ac4b705fb5f/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/capture-base.json (sha256 7efe8970731782b795682f6fa05dee1d72ab56151cd6fda1a1a088eeb668077a)
+  | NOTHING was promoted from capture groups A, B, C or D — see this script's docstring.
+  |   expect.periods identical between this branch and the FORK POINT: 6, differing: 0
+  |   -> CONFIRMED A REGRESSION CONTROL, NOT A GUARD PROOF. Both codebases emit the
+  |      same cells, because the pre-fix code decided the VALUE with `or 0` (:255) and
+  |      the WITHDRAWAL with a separate `is None` test (:260-261). NO discriminating power
+  |      over the `or 0` defect, and it no longer claims any. See period-number-absent-payable.
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+
+==============================================================================
+T82 guard proofs: 25 as expected, 0 not as expected
+==============================================================================

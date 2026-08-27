@@ -1,0 +1,9 @@
+POST /journalentries
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+request-source-file: req/a1-02-future-boundary-plus1.json
+request-bytes-artefact: A1-02-future-boundary-plus1.req
+request-sha256: 7f92fefc2deb96b4de85ce8738d2422be562e809872d45ef768c2a1f1e63f928
+request-bytes: 401
+captured-at-utc: 2026-08-23T00:11:57Z

@@ -1,0 +1,5 @@
+07:45:22.937 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `attest_probe`: HALF_UP
+07:45:23.070 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_t64_zp_a`: HALF_UP
+07:45:23.141 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_t64_zp_b`: HALF_UP
+07:45:23.188 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t219_run3_r600p0_n3000_b4501`: HALF_UP
+07:46:50.572 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t219_run3_r600p0_n3000_b1999`: HALF_UP

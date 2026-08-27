@@ -1,0 +1,3 @@
+ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/a7/colon.http
+  sidecar OMITS a line that was sent: 'X-T261-Note: alpha: beta; gamma'
+  sidecar ASSERTS a line that was NOT sent: 'X-T261-Note: alpha: DELTA; gamma'

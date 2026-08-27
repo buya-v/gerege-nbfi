@@ -1,0 +1,50 @@
+scratch main = bcf2c55b57a244e2eb773094c1aa7109ca1b58a1
+
+--- merging origin/softhouse/T91-preconditions-copy (ccf3c14)
+     create mode 100644 .softhouse/capture/t91/shell-invariance.sh
+     create mode 100644 .softhouse/capture/t91/verdict.sh
+     create mode 100644 .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T91.md
+    merge rc=0
+--- merging origin/softhouse/T107-review-t91 (b70b295)
+     2 files changed, 1145 insertions(+)
+     create mode 100644 .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T107.md
+     create mode 100644 .softhouse/reviews/T107-review-of-T91.md
+    merge rc=0
+--- merging origin/softhouse/T115-t91-microfixes (bd59187)
+     create mode 100644 .softhouse/capture/t91/t115-drive-mf3-mf4.sh
+     create mode 100644 .softhouse/capture/t91/t115-rerun-attacks.sh
+     create mode 100644 .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T115.md
+    merge rc=0
+
+merged head = 9050783e96be8046587610768028271d25998f67
+
+=== BLOB IDENTITY: main vs merged, for the surfaces this branch must not touch
+   .softhouse/PIN.json                                            bcf2c55b57a2
+ABSENT  DIFFERS
+   .softhouse/capabilities.json                                   bcf2c55b57a2
+ABSENT  DIFFERS
+   nexus/internal/apps/loanschedule/contract/contract.go          4bcbafaddd60  IDENTICAL
+   .softhouse/conformance.sh                                      a91079467b16  IDENTICAL
+   .softhouse/gates.md                                            57a8aa380722  IDENTICAL
+   .softhouse/tasks.json                                          73378228be78  IDENTICAL
+
+=== files the merge changed relative to main:
+ .../audit-t44/charges/bin/preconditions-COPY.sh    | 242 ++----
+ .softhouse/capture/charges/bin/preconditions.sh    | 262 +++----
+ .softhouse/capture/t91/PREDICTION.md               |  79 ++
+ .softhouse/capture/t91/prove-guards.sh             | 251 ++++++
+ .softhouse/capture/t91/run-attacks.sh              | 157 ++++
+ .softhouse/capture/t91/shell-invariance.sh         |  68 ++
+ .softhouse/capture/t91/t115-drive-mf1.sh           | 121 +++
+ .softhouse/capture/t91/t115-drive-mf2.sh           | 192 +++++
+ .softhouse/capture/t91/t115-drive-mf3-mf4.sh       | 117 +++
+ .softhouse/capture/t91/t115-rerun-attacks.sh       | 100 +++
+ .softhouse/capture/t91/verdict.sh                  | 169 ++++
+ .../2026-08-17-run1-harness-schedule-poc/T107.md   | 292 +++++++
+ .../2026-08-17-run1-harness-schedule-poc/T115.md   | 352 +++++++++
+ .../2026-08-17-run1-harness-schedule-poc/T91.md    | 345 +++++++++
+ .softhouse/reviews/T107-review-of-T91.md           | 853 +++++++++++++++++++++
+ 15 files changed, 3248 insertions(+), 352 deletions(-)
+
+=== sibling capture trees and vectors must be untouched:
+   (empty above = nothing touched)

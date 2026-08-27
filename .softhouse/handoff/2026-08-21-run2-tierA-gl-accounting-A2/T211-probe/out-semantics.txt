@@ -1,0 +1,42 @@
+zsh: zsh 5.9 (arm64-apple-darwin25.0)
+options: MONITOR=off  INTERACTIVE=off
+stdout is a tty? no   (launchd: no)
+
+=== S4/S5  $! and $pipestatus for a background pipeline ===
+/Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/./semantics.zsh:27: no such file or directory: /usr/bin/cat
+shell pid          = 17385
+$! for 'a | b | c &' = 17466
+   -> children of this shell right now:
+      17462 17385 17385 /bin/sleep 3
+wait $! rc          = 0
+$pipestatus AFTER wait = (0)   <-- if this is not the 3 members, RC=${pipestatus[1]} is DEAD after the rewrite
+
+$! for '( a | b ) &'  = 17497
+/Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/./semantics.zsh:44: no such file or directory: /usr/bin/cat
+   which process that is: 17497 17385 17385 /bin/zsh /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/./semantics.zsh
+   pgid of that job vs shell pgid 17385
+
+=== S6  dispositions of a BACKGROUND child in a non-monitor shell ===
+(this is P-55's actual mechanism: POSIX says an async child of a
+ shell without job control gets SIGINT/SIGQUIT set to SIG_IGN)
+background child pid = 17746
+ps stat: 17746 SN
+-- empirical test instead of reading a mask: send SIGINT to it and see if it dies
+   SIGINT did NOT kill the background child -> INT is SIG_IGN in it (POSIX async rule CONFIRMED)
+   => a handler that merely forwards SIGINT to `claude` would be a NO-OP
+   SIGTERM DID kill it -> TERM is the signal the handler must forward
+
+=== S5b  same child, but with MONITOR (job control) turned on ===
+setopt monitor        = REFUSED: /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/./semantics.zsh:setopt:94: can't change option: monitor
+
+=== S7  /usr/bin/caffeinate: does the pid zsh hands back BECOME the utility? ===
+$! from 'caffeinate ... sleep 30 &' = 17787
+   17787 17385 17385 /bin/sleep
+   its children:
+      17790 17787 /usr/bin/caffeinate
+-- now TERM that one pid and see whether the UTILITY dies with it
+   pid 17787 is gone
+   child 17790 is gone too
+   no stray caffeinate remains
+
+SEMANTICS DONE

@@ -1,0 +1,23 @@
+attestation-derivation: curl --trace-ascii; request headers AS SENT
+attestation-schema: 2
+send-header-block 1 of 1
+GET /fineract-provider/api/v1/offices HTTP/1.1
+Host: localhost:8443
+User-Agent: curl/8.7.1
+Accept: */*
+Authorization: Basic <redacted sha256:2614d66f727c25bb>
+Fineract-Platform-TenantId: default
+X-T274-Long: x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; x: y; 
+request-headers-artefact: Lmix.reqhdr
+request-headers-sha256: 6f1c952d607891d362b10c0817542d701f13740c01998f93442ae84d0e2093fb
+body: <none>
+response-headers-artefact: Lmix.resphdr
+response-headers-sha256: ef9dcf7d47ad21d1113d777f09239d6855f92b19bdd19493be2999802db16cf5
+response-status-line: HTTP/1.1 200
+response-artefact: Lmix.json
+response-sha256: ab2f53e6ca5572da6bcdeb71cdf026d571afa3311780040d642ce3b94696d0f4
+response-bytes: 264
+response-content-length-crosscheck: MATCH (264 bytes)
+response-status-crosscheck: MATCH (200)
+response-status-artefact: Lmix.status
+captured-at-utc: 2026-08-22T14:27:23Z

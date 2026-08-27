@@ -1,0 +1,1 @@
+{"id":6,"name":"Overpayment Liability","glCode":"20100","disabled":false,"manualEntriesAllowed":true,"type":{"id":2,"code":"accountType.liability","value":"LIABILITY"},"usage":{"id":1,"code":"accountUsage.detail","value":"DETAIL"},"description":"","nameDecorated":"Overpayment Liability","tagId":{"id":0}}

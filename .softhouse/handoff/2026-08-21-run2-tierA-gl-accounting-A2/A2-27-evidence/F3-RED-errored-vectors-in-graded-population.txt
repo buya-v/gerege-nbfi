@@ -1,0 +1,9 @@
+=== RUN   TestErroredVectorCannotBackACapability
+    coverage_refusal_test.go:645: a run that compared ZERO cells credited 113 kills (106 money, 7 structural). A vector the harness could not complete graded nothing, so it kills nothing — the strongest case of the rule A2-22 applied to refusals.
+    coverage_refusal_test.go:651: a run that compared ZERO cells credited 51 corroboration claims, want 0
+    coverage_refusal_test.go:676: a run that compared nothing reports NO unbacked in_graded_domain capability, which means the coverage report went QUIET on the case with the least evidence
+    coverage_refusal_test.go:680: no unbacked fatal reason on a run that graded nothing: [NO IMPLEMENTATION REGISTERED: there is nothing to grade. This is exit 2, not a pass over zero work. Register the Go port in cmd/conformance/impl_hook.go once it exists. NO PARITY VECTOR WAS GRADED. Self-test fixtures and contract-refusal vectors do not make a parity claim: the first is hand-authored, the second is derived from the ratified contract rather than observed from the oracle. Until a capture is promoted, this harness cannot say the port matches Fineract, and it will not pretend to.]
+--- FAIL: TestErroredVectorCannotBackACapability (0.58s)
+FAIL
+FAIL	github.com/gerege/nexus/internal/apps/loanschedule/conformance	0.984s
+FAIL

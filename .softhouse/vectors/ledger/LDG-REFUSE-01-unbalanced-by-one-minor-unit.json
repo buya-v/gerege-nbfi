@@ -1,0 +1,103 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-REFUSE-01-unbalanced-by-one-minor-unit",
+  "context": "ledger",
+  "class": "oracle-refusal",
+  "title": "THE ORACLE REFUSES A JOURNAL ENTRY THAT IS OUT BY EXACTLY ONE MINOR UNIT. A2-344 posted a debit of 100000.25 against a credit of 100000.24 and the oracle returned HTTP 403 with error.msg.glJournalEntry.invalid.mismatch.debits.credits. One minor unit is the smallest imbalance expressible in MNT, so this is the tightest available observation of I-1 at the contract boundary.",
+  "dec2_revision": 5,
+  "_note": "THIS IS AN ORACLE-OBSERVED REFUSAL, NOT A CONTRACT-DERIVED ONE, and the class name says so. It carries a capture citation, an HTTP status and the oracle's own globalisation code, none of which a contract sentinel has. It is graded on THREE cells -- status, code and message -- because a port that returns 403 while inventing a code is not matching the oracle, and the code is the cell that tells one 403 from another. WHY ONE MINOR UNIT AND NOT A LARGER GAP: an imbalance of 1 is the smallest the currency can express, so a port with ANY tolerance, epsilon or float comparison on the double-entry check accepts this request and diverges here. A larger gap would be killed by a sloppier implementation too and would grade less. NO LEGS ARE ASSERTED: the request was refused, so no entry exists, and recording legs here would be recording amounts nobody observed. NO INVARIANT IS ASSERTED EITHER -- there is no entry for I-1 or I-2 to read -- and the report says so by name rather than omitting the line. NO BALANCE IS GRADED. acc_gl_journal_entry carries office_running_balance and organization_running_balance, and GATE G-12 IS OPEN on exactly them: A2-29 MEASURED them to be a SECOND SOURCE OF TRUTH rather than a cache -- made to disagree with the derived sum by MNT 2,000,000.00 on the live oracle, surviving four organisation-wide recomputes, propagating into a freshly computed row because the recompute seeds from its own prior output, and served at the contract boundary flagged runningBalanceComputed: true. This vector's schema has NO FIELD for either column, the capture it cites was taken without runningBalance=true, and /glaccounts?fetchRunningBalance=true is HTTP 500 on PostgreSQL anyway (GLAccountReadPlatformServiceImpl.java:127-131 emits MySQL-only 'group by ... desc'). Balances are DERIVED, never written, and never read back.",
+  "capabilities_required": [
+    "ledger.refusal.parity",
+    "ledger.money.minor.unit.conversion",
+    "ledger.manual.entry.posting"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/tierA-a2/out/A2-344-manual-je-unbalanced.json",
+    "capture_sha256": "a2162fcf5ff5c4e82e05cc91595fdd70e199755d33898e9896ab2abb128082bb",
+    "capture_case_id": "A2-344-manual-je-unbalanced",
+    "request_capture_ref": ".softhouse/capture/tierA-a2/out/A2-344-manual-je-unbalanced.req",
+    "request_capture_sha256": "15b82c1c363e03e4e4b9f2a84e4743e313302de5f9b2a968ccfcc3a118fc9860",
+    "request_capture_case_id": "A2-344-manual-je-unbalanced",
+    "rerun_invariant": "Re-posting A2-344's body must return HTTP 403 carrying error.msg.glJournalEntry.invalid.mismatch.debits.credits. A 200, or a different code, falsifies this vector.",
+    "citation": "A2-15. Status read from A2-344-manual-je-unbalanced.status (403); code and message read from the errors[0] object of the captured response body. Request legs read from the committed .req wire-bytes artefact, whose amount tokens are 100000.25 and 100000.24 exactly."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_rest_posting",
+    "captured_at": "2026-08-22T02:21:18Z"
+  },
+  "request": {
+    "product_id": 0,
+    "product_type": "",
+    "accounting_rule": "",
+    "slot_family": "",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_rest_posting",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "",
+    "manual_entry": true,
+    "transaction_amount_major_text": "",
+    "accounts": [
+      {
+        "id": 16,
+        "gl_code": "10300",
+        "name": "Fund Source Alternate",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 21,
+        "gl_code": "99008",
+        "name": "Liability Under Asset",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 16,
+        "entry_side": "DEBIT",
+        "amount_major_text": "100000.25"
+      },
+      {
+        "gl_account_id": 21,
+        "entry_side": "CREDIT",
+        "amount_major_text": "100000.24"
+      }
+    ]
+  },
+  "expect": {
+    "kind": "refusal",
+    "http_status": 403,
+    "legs": [],
+    "total_debits_minor": "",
+    "total_credits_minor": "",
+    "refusal": {
+      "http_status": 403,
+      "code": "error.msg.glJournalEntry.invalid.mismatch.debits.credits",
+      "message": "Sum of All Debits must equal the sum of all Credits for a Journal Entry"
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "ledger-wrong-netting-totals",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "refusal.http_status",
+        "refusal.code",
+        "refusal.message"
+      ],
+      "note": "A port that nets both sides into one accumulator cannot detect an imbalance at all, so it ACCEPTS this request and returns an entry where the oracle returned 403. The comparator reports the shape mismatch and all three refusal cells."
+    }
+  ],
+  "invariant_exemptions": []
+}

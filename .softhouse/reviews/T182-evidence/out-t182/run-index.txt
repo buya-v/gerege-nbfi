@@ -1,0 +1,10 @@
+RUN series=t182-headline-cold idx=0 plan=cell:1001:3000:1 flags=[] harness=CaptureT177b exit=0 wall_s=8 stdout_bytes=1960 stderr_bytes=0
+RUN series=t182-headline-cold idx=1 plan=cell:1001:3000:1 flags=[] harness=CaptureT177b exit=0 wall_s=8 stdout_bytes=1960 stderr_bytes=0
+RUN series=t182-headline-cold idx=2 plan=cell:1001:3000:1 flags=[] harness=CaptureT177b exit=0 wall_s=10 stdout_bytes=1961 stderr_bytes=0
+RUN series=t182-headline-cold idx=3 plan=cell:1001:3000:1 flags=[] harness=CaptureT177b exit=0 wall_s=11 stdout_bytes=1961 stderr_bytes=0
+RUN series=t182-fresh-single idx=0 plan=single flags=[] harness=CaptureT177 exit=0 wall_s=12 stdout_bytes=2578 stderr_bytes=0
+RUN series=t182-fresh-single idx=1 plan=single flags=[] harness=CaptureT177 exit=0 wall_s=15 stdout_bytes=2405 stderr_bytes=0
+RUN series=t182-repeat idx=0 plan=repeat:6 flags=[] harness=CaptureT177 exit=0 wall_s=212 stdout_bytes=8652 stderr_bytes=0
+RUN series=t182-c1only idx=0 plan=repeat:8 flags=[-XX:TieredStopAtLevel=1] harness=CaptureT177 exit=0 wall_s=49 stdout_bytes=11630 stderr_bytes=0
+RUN series=t182-c1only idx=1 plan=repeat:8 flags=[-XX:TieredStopAtLevel=1] harness=CaptureT177 exit=0 wall_s=49 stdout_bytes=11630 stderr_bytes=0
+MATRIX COMPLETE

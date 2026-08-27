@@ -1,0 +1,14 @@
+extracted guard_accepting_side_gap_declared: 65 lines, from the LIVE conformance.sh
+
+ok      ARM 1 gap OPEN, declaration REMOVED -> refuses           rc 1
+ok      ARM 2 gap OPEN and DECLARED -> passes                    rc 0
+ok      ARM 3 gap CLOSED but declaration STALE -> refuses        rc 1
+ok      ARM 4 gap CLOSED and declaration removed -> passes       rc 0
+ok      ARM 5 a REFUSAL vector does not count as an acceptance   rc 0
+ok      ARM 6 a TRACKED disposability attestation refuses        rc 1
+ok      ARM 7 an UNTRACKED attestation does NOT refuse           rc 0
+ok      ARM 8 missing corpus fails CLOSED                        rc 1
+
+RED-DRIVE PASS: all four cells of the two-way rule were driven, the refusal-vector
+false-positive was excluded, and tracked/untracked attestations were separated.
+exit 0

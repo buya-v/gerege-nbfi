@@ -1,0 +1,41 @@
+Pager usage is off.
+ office_rows | office_max_id 
+-------------+---------------
+           1 |             1
+(1 row)
+
+ je_rows | je_max_id |  earliest  |   latest   
+---------+-----------+------------+------------
+      60 |        64 | 2026-02-01 | 2026-08-01
+(1 row)
+
+ closure_rows | closure_max_id 
+--------------+----------------
+            1 |              1
+(1 row)
+
+ id | office_id | closing_date | is_deleted |                                                                                                             comments                                                                                                             
+----+-----------+--------------+------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  1 |         1 | 2026-01-31   | f          | T287 TEMPORARY closure to capture the ACCOUNTING_CLOSED refusal. Date 2026-01-31 is strictly before the earliest existing journal entry (2026-02-01) so it forbids nothing that exists. TO BE DELETED IMMEDIATELY after capture.
+(1 row)
+
+ closure_seq_last_value | is_called 
+------------------------+-----------
+                      1 | t
+(1 row)
+
+ je_seq_last_value | is_called 
+-------------------+-----------
+                64 | t
+(1 row)
+
+ command_source_rows | command_source_max_id 
+---------------------+-----------------------
+                 350 |                   350
+(1 row)
+
+ loan_rows 
+-----------
+         7
+(1 row)
+

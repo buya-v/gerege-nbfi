@@ -1,0 +1,19 @@
+### T285 — INDEPENDENT RED DRIVE of guard_no_host_state_in_lint_corpus and
+###        guard_frontier_host_sensitivity
+  tree : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab453599828f16264
+  HEAD : 83c9fbea8d0fd0111b856b60a333561d4d7ccaf7
+  residue /tmp/t234_matrix2.txt present at start: YES
+
+CONTROL  exit=0 probe=1  census-fired=0  delta-fired=0  bracket-absent=0  frontier-fired=0
+M1-plus  exit=2 probe=0  census-fired=1  delta-fired=1  bracket-absent=0  frontier-fired=1
+M2-minus exit=2 probe=0  census-fired=1  delta-fired=0  bracket-absent=0  frontier-fired=0
+  M3 planted; the file now reads:
+      set -u
+      # T273 — THE FIXTURE IS NOW SELF-OWNED SCRATCH, NOT A LITERAL PATH IN /tmp.
+      #
+      # It used to be `C=/tmp/t234_matrix2.txt`, created by the very next line. That one
+      # literal made THE HARNESS'S VERDICT a property of the LINTING HOST'S FILESYSTEM
+M3-regress exit=2 probe=0  census-fired=1  delta-fired=0  bracket-absent=0  frontier-fired=0
+M4-nobracket exit=2 probe=0  census-fired=0  delta-fired=0  bracket-absent=1  frontier-fired=0
+
+### tree restored clean (git status --porcelain empty, checked not assumed).

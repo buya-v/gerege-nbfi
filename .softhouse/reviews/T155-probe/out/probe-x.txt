@@ -1,0 +1,23 @@
+=== (a) can the no-float census simply be DELETED? ===
+  the Run call site is gone from grade.go
+  go build exit=0
+  conformance.sh exit=0
+    conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+    no-float census         0 Go files / 0 tokens inspected under nexus/internal/apps/loanschedule
+    VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+  -> if that says PASS, F-6 is real: the guard is deletable and nothing in the harness says so.
+go: cannot find main module, but found .git/config in /Users/buv/gerege-nbfi
+	to create a module there, run:
+	cd ../../.. && go mod init
+  and does  catch the deletion?
+     go test -run TestNoFloat exit=1  FAIL	github.com/gerege/nexus/internal/apps/loanschedule/conformance	0.427s
+
+=== (b) fire-program.sh:224 — which way does a BLIND grep -v fall? ===
+  simulated `git status --porcelain` (one line carries an invalid byte):
+     M nexus/x.go
+    ?? �.softhouse/LOCK
+    ?? .softhouse/LOCK
+  unhardened DIRTY lines: 2
+  hardened   DIRTY lines: 2
+  DIRTY non-empty either way => the rescue path runs => FAIL-CLOSED, as T154 argued.
+  (the only cost of the blind grep here is a spurious DIRTY, never a skipped rescue.)

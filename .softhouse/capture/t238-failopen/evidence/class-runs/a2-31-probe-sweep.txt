@@ -1,0 +1,1 @@
+.softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh: line 15: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee: No such file or directory

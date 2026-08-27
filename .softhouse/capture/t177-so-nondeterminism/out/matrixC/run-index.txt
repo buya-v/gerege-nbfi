@@ -1,0 +1,6 @@
+RUN series=t159prefix idx=0 plan=t159prefix:1 flags=[] harness=CaptureT177 exit=0 wall_s=256 stdout_bytes=26147 stderr_bytes=0
+RUN series=headline-warm idx=0 plan=cell:1001:3000:8 flags=[] harness=CaptureT177b exit=0 wall_s=85 stdout_bytes=8830 stderr_bytes=0
+RUN series=red-warm idx=0 plan=cell:10001:2000:8 flags=[] harness=CaptureT177b exit=0 wall_s=261 stdout_bytes=10883 stderr_bytes=0
+RUN series=depth-uncapped idx=0 plan=repeat:6 flags=[-XX:MaxJavaStackTraceDepth=0] harness=CaptureT177 exit=0 wall_s=266 stdout_bytes=8689 stderr_bytes=0
+RUN series=c1only idx=0 plan=repeat:8 flags=[-XX:TieredStopAtLevel=1] harness=CaptureT177 exit=0 wall_s=50 stdout_bytes=11583 stderr_bytes=0
+MATRIX COMPLETE

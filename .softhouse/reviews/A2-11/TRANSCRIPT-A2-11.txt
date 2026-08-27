@@ -1,0 +1,376 @@
+############ A2-11 independent review of A2-7 — full transcript
+generated 2026-08-21T08:11:39Z
+
+READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
+exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-8 assert things
+that should hold, and all of them exit 0. Every failing assertion is printed by name.
+
+############ 1. contract shape, from A2-11's OWN live re-observation  [ORACLE]
+=== (a) write/read field-name asymmetry on GET /loanproducts/46 ===
+  accountingMappings keys: ['fundSourceAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
+  PASS  all nine WRITE names present in the POST body and NONE of them in the read
+  PASS  all nine READ names present in accountingMappings and NONE of them in the POST body
+  PASS      fundSourceAccountId (write, id 16) -> fundSourceAccount (read)  -- read id=16
+  PASS      incomeFromFeeAccountId (write, id 9) -> incomeFromFeeAccount (read)  -- read id=9
+  PASS      incomeFromPenaltyAccountId (write, id 10) -> incomeFromPenaltyAccount (read)  -- read id=10
+  PASS      incomeFromRecoveryAccountId (write, id 11) -> incomeFromRecoveryAccount (read)  -- read id=11
+  PASS      interestOnLoanAccountId (write, id 8) -> interestOnLoanAccount (read)  -- read id=8
+  PASS      loanPortfolioAccountId (write, id 4) -> loanPortfolioAccount (read)  -- read id=4
+  PASS      overpaymentLiabilityAccountId (write, id 6) -> overpaymentLiabilityAccount (read)  -- read id=6
+  PASS      transfersInSuspenseAccountId (write, id 17) -> transfersInSuspenseAccount (read)  -- read id=17
+  PASS      writeOffAccountId (write, id 13) -> writeOffAccount (read)  -- read id=13
+
+=== the read value is an OBJECT with exactly {id,name,glCode} ===
+  PASS    fundSourceAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    incomeFromFeeAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    incomeFromPenaltyAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    incomeFromRecoveryAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    interestOnLoanAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    loanPortfolioAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    overpaymentLiabilityAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    transfersInSuspenseAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    writeOffAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS  no 'type' key anywhere in accountingMappings
+  PASS  no 'usage' key anywhere in accountingMappings
+  PASS  no 'disabled' / 'manualEntriesAllowed' key anywhere in accountingMappings
+
+=== unmapped optional slots are ABSENT, not null ===
+  PASS    goodwillCreditAccount absent from accountingMappings
+  PASS    goodwillCreditAccount does not occur in the raw bytes at all
+  PASS    chargeOffExpenseAccount absent from accountingMappings
+  PASS    chargeOffExpenseAccount does not occur in the raw bytes at all
+  ... while the COLLECTION-valued mapping fields are PRESENT with value null:
+  FAIL    paymentChannelToFundSourceMappings present and null  -- '<absent>'
+  FAIL    feeToIncomeAccountMappings present and null  -- '<absent>'
+  FAIL    penaltyToIncomeAccountMappings present and null  -- '<absent>'
+
+=== product 22: sparse/slot-keyed, one extra key vs 46 ===
+  22 keys: ['fundSourceAccount', 'goodwillCreditAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
+  PASS    22 == 46's keys plus exactly {goodwillCreditAccount}
+  PASS    22 goodwillCreditAccount is gl 14 / glCode 50200  -- {'id': 14, 'name': 'Goodwill Credit', 'glCode': '50200'}
+  PASS    22 paymentChannelToFundSourceMappings is a non-empty LIST of {paymentType,fundSourceAccount}  -- [{"paymentType": {"id": 1, "name": "Money Transfer"}, "fundSourceAccount": {"id": 16, "name": "Fund Source Alternate", "glCode": "10300"}}]
+  PASS    22 DEFAULT fundSourceAccount is gl 2 (the retyped one), override is gl 16  -- default={'id': 2, 'name': 'Fund Source', 'glCode': '10100'}, override={'id': 16, 'name': 'Fund Source Alternate', 'glCode': '10300'}
+
+=== product 28: accrual shape, thirteen keys, three receivables ===
+  28 keys (13): ['fundSourceAccount', 'goodwillCreditAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'receivableFeeAccount', 'receivableInterestAccount', 'receivablePenaltyAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
+  PASS    28 accountingRule is accrual periodic  -- {'id': 3, 'code': 'accountingRuleType.accrual.periodic', 'value': 'ACCRUAL PERIODIC'}
+  PASS    28 has exactly thirteen keys  -- 13
+  PASS    28 carries the three receivables
+
+=== gl 2 is INCOME at the contract boundary, but products serve it silently ===
+  PASS    GET /glaccounts/2 glCode 10100, name 'Fund Source', type INCOME  -- 10100 / Fund Source / {'id': 4, 'code': 'accountType.income', 'value': 'INCOME'}
+  PASS    nameDecorated is '....Fund Source' (four dots per level)  -- '....Fund Source'
+  PASS    the GL read DOES expose type and usage as {id,code,value} objects
+  PASS    'hierarchy' is NOT returned by the GL REST read  -- ['description', 'disabled', 'glCode', 'id', 'manualEntriesAllowed', 'name', 'nameDecorated', 'parentId', 'tagId', 'type', 'usage']
+
+=== how many of the 26 products carry gl 2 in the DEFAULT FUND_SOURCE slot? ===
+  product ids: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 46]
+  PASS    the list holds 26 products, ids 1-24, 27, 28, 46  -- 27 products
+
+FAILURES: 3
+  -   paymentChannelToFundSourceMappings present and null
+  -   feeToIncomeAccountMappings present and null
+  -   penaltyToIncomeAccountMappings present and null
+exit=1
+
+############ 2. corpus enumeration at A2-7's fork point (offline, counts its skips)
+=== corpus at the fork sha 12a7f8d9a3af ===
+  327 files under out/, by extension: {'http': 108, 'json': 108, 'status': 108, 'txt': 3}
+
+=== every HTTP request recorded in the corpus, by method + endpoint family ===
+  .http files enumerated : 108
+  undecodable (NAMED)    : 0 []
+  no request line (NAMED): 0 []
+  parsed                 : 108
+  PASS  every .http file parsed — nothing was silently skipped
+          parsed=108 of 108
+    DELETE /glaccounts/{id}                               7
+    GET    /financialactivityaccounts                     1
+    GET    /financialactivityaccounts/template            1
+    GET    /glaccounts                                    1
+    GET    /glaccounts/template                           1
+    GET    /glaccounts/{id}                               6
+    GET    /journalentries                                3
+    POST   /financialactivityaccounts                     7
+    POST   /glaccounts                                    37
+    POST   /loanproducts                                  21
+    POST   /loans                                         4
+    POST   /loans/{id}                                    8
+    POST   /loans/{id}/transactions                       1
+    PUT    /financialactivityaccounts/{id}                1
+    PUT    /glaccounts/{id}                               9
+
+  POST .../loanproducts : 21
+  GET  .../loanproducts*: 0  []
+  FAIL  CLAIM 1a — the corpus held ELEVEN POST /loanproducts
+          count=21: ['A2-prod-060-cash-with-channel-override.http', 'A2-prod-061-cash-no-override.http', 'A2-prod-062-map-header-account.http', 'A2-prod-063-map-wrong-type.http', 'A2-prod-064-cash-no-mappings.http', 'A2-prod-065-map-missing-account.http', 'A2-prod-065b-map-missing-account.http', 'A2-prod-066-bad-paymenttype.http', 'A2-prod-067-duplicate-channel.http', 'A2-prod-068-accrual-missing-receivables.http', 'A2-prod-069-accrual-complete.http', 'attempt1-A2-prod-060-cash-with-channel-override.http', 'attempt1-A2-prod-061-cash-no-override.http', 'attempt1-A2-prod-062-map-header-account.http', 'attempt1-A2-prod-063-map-wrong-type.http', 'attempt1-A2-prod-064-cash-no-mappings.http', 'attempt1-A2-prod-065-map-missing-account.http', 'attempt1-A2-prod-066-bad-paymenttype.http', 'attempt1-A2-prod-067-duplicate-channel.http', 'attempt1-A2-prod-068-accrual-missing-receivables.http', 'attempt1-A2-prod-069-accrual-complete.http']
+  PASS  CLAIM 1b — the corpus held ZERO GET on /loanproducts of any form
+          found 0
+
+  GET /glaccounts/{id}  : 6  ['A2-012-read-header-asset', 'A2-013-read-child-asset-detail', 'A2-015-read-grandchild', 'A2-018-read-level3-detail', 'A2-133-read-after-updates', 'A2-135-read-after-delete']
+  FAIL  CLAIM 2a — exactly four GET /glaccounts/{id} existed
+          count=6
+      A2-012-read-header-asset.http            glCode=10000 type=ASSET
+      A2-013-read-child-asset-detail.http      glCode=10100 type=ASSET
+      A2-015-read-grandchild.http              glCode=None type=None
+      A2-018-read-level3-detail.http           glCode=10201 type=ASSET
+      A2-133-read-after-updates.http           glCode=19999 type=ASSET
+      A2-135-read-after-delete.http            glCode=None type=None
+      bodies that would not parse (NAMED): 0 []
+  FAIL  CLAIM 2b — all four are ASSET
+          {'A2-012-read-header-asset.http': ('10000', 'ASSET'), 'A2-013-read-child-asset-detail.http': ('10100', 'ASSET'), 'A2-015-read-grandchild.http': (None, None), 'A2-018-read-level3-detail.http': ('10201', 'ASSET'), 'A2-133-read-after-updates.http': ('19999', 'ASSET'), 'A2-135-read-after-delete.http': (None, None)}
+
+=== CLAIM 3 — distinct GL-code-shaped tokens across ALL out/ bytes at the fork sha ===
+  files read: 327   undecodable (NAMED): 0 []
+  distinct 5-digit tokens: 24 -> ['10000', '10100', '10200', '10201', '10300', '10400', '10500', '19998', '19999', '20000', '20100', '30000', '40000', '40100', '40200', '40300', '40400', '50000', '50100', '50200', '99003', '99008', '99010', '99999']
+  A2-150's acc_gl_account gl_code column: 21 -> ['10000', '10100', '10200', '10201', '10300', '10400', '10500', '19998', '20000', '20100', '30000', '40000', '40100', '40200', '40300', '40400', '50000', '50100', '50200', '99008', '99010']
+  PASS  A2-150 holds exactly 21 gl_code values
+          21
+  tokens present in out/ but NOT live accounts: ['19999', '99003', '99999']
+  live accounts never mentioned in out/ text  : []
+  PASS  CLAIM 3 — 24 distinct tokens, 3 of them non-accounts, 21 == the dump's 21 rows
+          tokens=24 extra=['19999', '99003', '99999'] missing=[]
+
+FAILURES: 3
+  - CLAIM 1a — the corpus held ELEVEN POST /loanproducts
+  - CLAIM 2a — exactly four GET /glaccounts/{id} existed
+  - CLAIM 2b — all four are ASSET
+exit=1
+
+############ 3. double-entry in INTEGER MINOR UNITS (offline)
+=== A2-7's committed A2-235 (A2-235-je-after-recovery.json) ===
+    je#11   DEBIT  1200000.000000 ->    120000000 minor units  gl 10201
+    je#12   CREDIT 1200000.000000 ->    120000000 minor units  gl 10300
+    je#14   CREDIT  200000.000000 ->     20000000 minor units  gl 10201
+    je#15   DEBIT   200000.000000 ->     20000000 minor units  gl 10300
+    je#16   DEBIT  1000000.000000 ->    100000000 minor units  gl 50100
+    je#17   CREDIT 1000000.000000 ->    100000000 minor units  gl 10201
+    je#18   DEBIT    50000.000000 ->      5000000 minor units  gl 10300
+    je#19   CREDIT   50000.000000 ->      5000000 minor units  gl 40400
+    entries: 8   DEBIT total = 245000000 minor units   CREDIT total = 245000000 minor units
+  PASS  A2-7's committed A2-235 — every amount is a WHOLE number of minor units (no sub-minor residue)
+          []
+  PASS  A2-7's committed A2-235 — DEBIT == CREDIT in INTEGER minor units
+          debit=245000000 credit=245000000 delta=0
+  PASS  A2-7's committed A2-235 — both sides are exactly 245,000,000 minor units == MNT 2,450,000
+          debit=245000000 credit=245000000
+  PASS  A2-7's committed A2-235 — the totals are Python ints, not floats or Decimals
+          int / int
+
+=== A2-11's live re-observation (a2-11-get-je-loan5.json) ===
+    je#11   DEBIT  1200000.000000 ->    120000000 minor units  gl 10201
+    je#12   CREDIT 1200000.000000 ->    120000000 minor units  gl 10300
+    je#14   CREDIT  200000.000000 ->     20000000 minor units  gl 10201
+    je#15   DEBIT   200000.000000 ->     20000000 minor units  gl 10300
+    je#16   DEBIT  1000000.000000 ->    100000000 minor units  gl 50100
+    je#17   CREDIT 1000000.000000 ->    100000000 minor units  gl 10201
+    je#18   DEBIT    50000.000000 ->      5000000 minor units  gl 10300
+    je#19   CREDIT   50000.000000 ->      5000000 minor units  gl 40400
+    entries: 8   DEBIT total = 245000000 minor units   CREDIT total = 245000000 minor units
+  PASS  A2-11's live re-observation — every amount is a WHOLE number of minor units (no sub-minor residue)
+          []
+  PASS  A2-11's live re-observation — DEBIT == CREDIT in INTEGER minor units
+          debit=245000000 credit=245000000 delta=0
+  PASS  A2-11's live re-observation — both sides are exactly 245,000,000 minor units == MNT 2,450,000
+          debit=245000000 credit=245000000
+  PASS  A2-11's live re-observation — the totals are Python ints, not floats or Decimals
+          int / int
+
+=== A2-7's capture and my live re-observation must agree entry for entry ===
+  PASS  same entry ids, sides, amounts and GL codes
+          A2-7=[(11, 'DEBIT', '1200000.000000', '10201'), (12, 'CREDIT', '1200000.000000', '10300'), (14, 'CREDIT', '200000.000000', '10201'), (15, 'DEBIT', '200000.000000', '10300'), (16, 'DEBIT', '1000000.000000', '50100'), (17, 'CREDIT', '1000000.000000', '10201'), (18, 'DEBIT', '50000.000000', '10300'), (19, 'CREDIT', '50000.000000', '40400')]
+          A2-11=[(11, 'DEBIT', '1200000.000000', '10201'), (12, 'CREDIT', '1200000.000000', '10300'), (14, 'CREDIT', '200000.000000', '10201'), (15, 'DEBIT', '200000.000000', '10300'), (16, 'DEBIT', '1000000.000000', '50100'), (17, 'CREDIT', '1000000.000000', '10201'), (18, 'DEBIT', '50000.000000', '10300'), (19, 'CREDIT', '50000.000000', '40400')]
+
+FAILURES: 0
+exit=0
+
+############ 4. manifest, hashes RECOMPUTED not trusted (offline)
+=== 0. the baseline is a LITERAL sha, and it is A2-7's real fork point (P-24) ===
+  PASS  prove-a2-7-additive.py hard-codes the literal sha
+  PASS  prove-a2-7-additive.py contains NO `git merge-base` anywhere
+          the only occurrence is the comment explaining why it is NOT used
+  PASS  the literal sha is a genuine ancestor of A2-7's branch
+  PASS  A2-7's branch carries exactly 2 commits past that sha
+          count=2
+
+=== 1. entry counts, from the manifest BLOBS themselves ===
+  PASS  manifest at the fork sha holds 430 entries
+          len=430
+  PASS  manifest on disk today holds 571 entries
+          len=571
+  PASS  571 - 430 = 141 added
+          delta=141
+
+=== 2. nothing pre-existing was DROPPED or RENAMED ===
+  PASS  0 pre-existing entries dropped
+          dropped: []
+
+=== 3. RECOMPUTED: every pre-existing file's bytes today == its bytes at the fork sha ===
+      (recomputed from the git blob and from disk; the manifest's recorded hash is
+       used only as a THIRD cross-check, never as the source of truth)
+      enumerated 430 pre-existing entries
+      byte-identical fork-vs-today       : 430
+      DIFFER                             : 0
+      missing on disk (named, not skipped): 0 []
+      not in the fork tree (named)        : 0 []
+      current manifest hash agrees w/ disk: 430
+  PASS  all 430 pre-existing files are byte-identical to the fork sha
+          identical=430 differ=0 missing=0 unreadable=0
+  PASS  and the CURRENT manifest records those same recomputed hashes (no laundering)
+          agrees=430
+
+=== 4. the git diff agrees: exactly one pre-existing path modified ===
+  PASS  the ONLY non-Added path in the whole branch is MANIFEST.sha256
+          non-added: ['M\t.softhouse/capture/tierA-a2/MANIFEST.sha256']
+
+FAILURES: 0
+exit=0
+
+############ 5. P-25 float audit of A2-7's scripts (offline)
+=== files A2-7 ADDED that are Python (from the literal fork sha, three dots) ===
+   .softhouse/capture/tierA-a2/analyze7.py
+   .softhouse/capture/tierA-a2/mkreq7.py
+   .softhouse/capture/tierA-a2/prove-a2-7-additive.py
+   .softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py
+   .softhouse/capture/tierA-a2/resolve7.py
+
+=== (d) the Python A2-7 ADDED — this is the task's question ===
+  CLEAN analyze7.py                                                loads=1 decimal_imported=True 
+            line 39    json.load(parse_float=decimal.Decimal)
+  CLEAN mkreq7.py                                                  loads=0 decimal_imported=False 
+  CLEAN prove-a2-7-additive.py                                     loads=0 decimal_imported=False 
+  FLAG  prove-mkreq7-guard-red.py                                  loads=4 decimal_imported=True json.load WITHOUT parse_float at lines 70,119,126
+            line 148   json.loads(parse_float=decimal.Decimal)
+  FLAG  resolve7.py                                                loads=2 decimal_imported=False json.load WITHOUT parse_float at lines 24,25
+  --- enumerated 5 files, 7 json.load call sites, 2 FLAGGED, 0 UNPARSEABLE
+
+=== context: EVERY .py in the A2 capture rig (A2-7's and everyone else's) ===
+  CLEAN analyze7.py                                                loads=1 decimal_imported=True 
+            line 39    json.load(parse_float=decimal.Decimal)
+  CLEAN manifest.py                                                loads=0 decimal_imported=False 
+  CLEAN mkreq.py                                                   loads=0 decimal_imported=False 
+  CLEAN mkreq2.py                                                  loads=0 decimal_imported=False 
+  CLEAN mkreq3.py                                                  loads=0 decimal_imported=False 
+  CLEAN mkreq4.py                                                  loads=0 decimal_imported=False 
+  CLEAN mkreq5.py                                                  loads=0 decimal_imported=False 
+  CLEAN mkreq6.py                                                  loads=0 decimal_imported=False 
+  CLEAN mkreq7.py                                                  loads=0 decimal_imported=False 
+  CLEAN prove-a2-7-additive.py                                     loads=0 decimal_imported=False 
+  CLEAN prove-cap-transport-red.py                                 loads=0 decimal_imported=False 
+  CLEAN prove-manifest-blind-red.py                                loads=0 decimal_imported=False 
+  CLEAN prove-manifest-red.py                                      loads=0 decimal_imported=False 
+  FLAG  prove-mkreq7-guard-red.py                                  loads=4 decimal_imported=True json.load WITHOUT parse_float at lines 70,119,126
+            line 148   json.loads(parse_float=decimal.Decimal)
+  CLEAN rename1.py                                                 loads=0 decimal_imported=False 
+  FLAG  resolve7.py                                                loads=2 decimal_imported=False json.load WITHOUT parse_float at lines 24,25
+  CLEAN show.py                                                    loads=1 decimal_imported=True 
+            line 14    json.load(parse_float=decimal.Decimal)
+  --- enumerated 17 files, 8 json.load call sites, 2 FLAGGED, 0 UNPARSEABLE
+
+SUMMARY
+  A2-7-added Python with a float defect: 2 ['.softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py', '.softhouse/capture/tierA-a2/resolve7.py']
+  whole-rig Python with a float defect : 2 ['.softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py', '.softhouse/capture/tierA-a2/resolve7.py']
+exit=0
+
+############ 6. resolve7.py P-25 defect, driven RED (offline)
+=== CONTROL: A2-7's ACTUAL template has an INTEGER principal, so THIS run was unharmed ===
+  PASS  a2-7-loan-220.json principal is an int, not a decimal literal
+          principal=1200000 (int)
+  PASS  the RESOLVED body A2-7 actually POSTed carries principal 1200000 exactly
+          principal=1200000
+  PASS  no money value was corrupted by A2-7's own use of resolve7.py
+          the only resolved body in the corpus is a2-7-loan-220-resolved.json, integer principal
+
+=== RETRACTED HYPOTHESIS: 4057599.35 is NOT corrupted in the emitted bytes ===
+  template 4057599.35 -> emitted 4057599.35  (rc=0)
+  PASS  repr() round-trips this one byte-identically — my first RED was wrong
+          recorded, not deleted
+  but the double actually held in memory is 4057599.3500000000931322574615478515625
+  residue (double - exact) = 9.31322574615478515625E-11
+  PASS  the in-memory value IS a lossy double, even where the bytes survive
+
+=== RED, on the literal forms this program actually uses ===
+  template literal           bytes resolve7.py writes   identical  note
+  1200000.00                 1200000.0                  NO         MNT stored to 2 decimals (CLAUDE.md non-negotiable)
+  1200000.000000             1200000.0                  NO         exactly what Fineract's own numeric(19,6) emits
+  0.10                       0.1                        NO         ten mongo
+  12345678901234567890.12    1.2345678901234567e+19     NO         past double precision; MathContext(19,HALF_UP) permits 19 sig digits
+
+  PASS  RED: at least one realistic money literal is NOT byte-preserved
+          1200000.00 -> 1200000.0; 1200000.000000 -> 1200000.0; 0.10 -> 0.1; 12345678901234567890.12 -> 1.2345678901234567e+19
+  PASS  RED: resolve7.py accepts every one of them, exit 0 — it cannot refuse a float
+          there is no guard on the value type at all
+
+FAILURES: 0
+exit=0
+
+############ 7. are A2-7's 16 assertions falsifiable? (offline, sabotage)
+=== BASELINE: the unmutated prover on an unmutated copy ===
+  exit=0  ok=16  FAIL=0   last line: 16 assertions, 0 failed
+  PASS  baseline: exit 0 and exactly 16 assertions, none failed
+
+=== SABOTAGE 1 — remove mkreq7.py's D-1 abort (the guard the prover exists for) ===
+  mkreq7.py's abort line: return 1
+  exit=1  FAIL=2
+     FAIL RED  a differing body makes it exit 1  rc=0
+     FAIL RED  it aborts before writing: a deleted sibling is NOT recreated  rc=0
+     FAILED: RED  a differing body makes it exit 1
+     FAILED: RED  it aborts before writing: a deleted sibling is NOT recreated
+  PASS  RED: removing the abort makes A2-7's prover FAIL (assertion is falsifiable)
+          exit=1 fails=2
+
+=== SABOTAGE 2 — make resolve7.py INVENT a value instead of refusing ===
+  exit=1  FAIL=4
+     FAIL RED  a response with no resourceId is refused, not guessed  rc=0
+     FAIL RED  the refusal says there is no observation to resolve from
+     FAIL GREEN an observed resourceId is substituted verbatim  rc=1 body={'clientId': 1, 'productId': 999999}
+     FAIL RED  it refuses to rewrite an existing resolved body with a different id  rc=1 body={'clientId': 1, 'productId': 999999}
+     FAILED: RED  a response with no resourceId is refused, not guessed
+     FAILED: RED  the refusal says there is no observation to resolve from
+     FAILED: GREEN an observed resourceId is substituted verbatim
+     FAILED: RED  it refuses to rewrite an existing resolved body with a different id
+  PASS  RED: an inventing resolve7.py makes the prover FAIL
+          exit=1 fails=4
+
+=== SABOTAGE 3 — drop parse_float from analyze7.py's CODE, leaving its docstring ===
+  NOTE: `parse_float=decimal.Decimal` appears TWICE in analyze7.py — once in the
+  module docstring (line 6) and once in the code (line 39). A2-7's assertion is a
+  substring search over the WHOLE FILE, so mutating only the code leaves it green.
+  exit=0  FAIL=0
+  PASS  KNOWN LIMIT: removing parse_float from the CODE leaves A2-7's assertion GREEN, because it greps the whole file including the docstring
+          exit=0 fails=0 — the assertion is real but is a source grep, not a behaviour test
+
+=== SABOTAGE 4 — the KNOWN-WEAK arm: analyze7.py's float guard is a SOURCE GREP ===
+  A2-7 asserts "it never calls bare float()" by string search on its own source:
+      check("it never calls bare float()", "float(" not in src.replace("parse_float=", ""))
+  So a float introduced by any OTHER spelling is invisible to it. Demonstrating:
+  exit=0  FAIL=0  <- a binary-float expression was inserted into the money script
+  PASS  KNOWN LIMIT (not a defect A2-7 hid — it is stated as a source check): a float reached by an alias is NOT caught
+          the prover still reports 0 failures; recorded as a stated blind spot
+
+FAILURES: 0
+exit=0
+
+############ 8. A2-7's own guard prover, re-run unmodified (offline)
+mkreq7.py — the request-body generator
+  ok   GREEN empty req/ writes and exits 0  rc=0 files=12
+  ok   GREEN rerun is byte-identical and exits 0  rc=0
+  ok   RED  a differing body makes it exit 1  rc=1
+  ok   RED  the refusal NAMES the offending file
+  ok   RED  the refusal cites D-1
+  ok   RED  it leaves every byte on disk alone
+  ok   RED  it aborts before writing: a deleted sibling is NOT recreated  rc=1
+  ok   GREEN restoring the byte lets it complete, and rebuilds only the missing file  rc=0
+resolve7.py — the observed-value resolver
+  ok   RED  a response with no resourceId is refused, not guessed  rc=1
+  ok   RED  the refusal says there is no observation to resolve from
+  ok   GREEN an observed resourceId is substituted verbatim  rc=0 body={'clientId': 1, 'productId': 46}
+  ok   RED  it refuses to rewrite an existing resolved body with a different id  rc=1 body={'clientId': 1, 'productId': 46}
+  ok   RED  a template with no __PLACEHOLDER__ is refused  rc=1
+analyze7.py — no binary floating point on any amount
+  ok   it parses JSON numbers as Decimal
+  ok   it never calls bare float()
+  ok   an oracle amount literal loads as Decimal, not float  Decimal 1200000.000000
+
+16 assertions, 0 failed
+exit=0

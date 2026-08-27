@@ -1,0 +1,219 @@
+RED-GREEN transcript for T164's replacement of analyze7.py's float guard.
+
+Produced by:  python3 guard-parse-float-ast.py      (LEG 1, the live green run)
+              python3 prove-parse-float-guard-red.py (LEG 2, the 17-arm red/green drive)
+Exit codes:   0 and 0
+Host:         darwin/arm64, Python 3.9.6
+Branch point: a71c1408d3315493bca763472598680c85b9ad0b
+Vector store: git rev-parse HEAD:.softhouse/vectors = 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d  (UNCHANGED by this task)
+Oracle:       NOT contacted. Every red arm runs against a scratch copy of the rig in a
+              throwaway temp directory. prove-mkreq7-guard-red.py, analyze7.py,
+              resolve7.py and verify-provenance-a2-15.py are byte-identical on disk;
+              T114 forbids editing a script that produced committed evidence, and all
+              four did.
+
+WHY THIS FILE EXISTS
+--------------------
+prove-mkreq7-guard-red.py:143 asserted "money is never a binary double in analyze7.py"
+with a WHOLE-FILE SOURCE GREP:
+
+    src = open(os.path.join(DIR, "analyze7.py")).read()
+    check("it parses JSON numbers as Decimal", "parse_float=decimal.Decimal" in src)
+
+and `parse_float=decimal.Decimal` occurs TWICE in analyze7.py: at :39 in the code, and at
+:6 IN THE FILE'S OWN DOCSTRING. A2-11 measured that deleting the CODE occurrence leaves
+the guard green. LEG 2 / ARM 0 below reproduces exactly that, and shows the same sabotage
+now makes the AST guard exit 1 and name analyze7.py:39.
+
+P-22: a guard you have not personally driven red is worse than no guard, because it is
+believed. Seventeen arms, all driven, including the fail-open half (ARM 3: ZERO CALL
+SITES INSPECTED is an ERROR, not a pass) and the self-test's own failability (ARM 16).
+
+============================================================ LEG 1 -- live green run, stdout
+==============================================================================
+T164 -- json.load/loads call-site guard (AST, not source grep)
+==============================================================================
+ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ab0be4544b8a0a8/.softhouse/capture/tierA-a2
+
+SELECTOR SELF-TEST: 4 synthetic call sites found across 4 alias shapes; 3 decoy line(s)
+  (`parse_float` in a docstring, a comment and a string literal -- all three invisible to the selector)
+
+DECLARATION REGISTER (PARSE-FLOAT-EXEMPT.txt) -- 6 record(s), every one printed, default-deny
+  ALLOW   prove-mkreq7-guard-red.py:70   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced RED-GREEN-A2-7-guards.txt
+          reason: sandbox-only; reads mkreq7.py's own generated bodies inside tempfile.mkdtemp. MEASURED: 12 generated bodies, 0 JSON-float leaves, so the omission is non-material today.
+  ALLOW   prove-mkreq7-guard-red.py:119  FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced RED-GREEN-A2-7-guards.txt
+          reason: sandbox-only; reads the resolver sandbox output {"clientId": 1, "productId": 46}. MEASURED: 0 JSON-float leaves; no float leaf is constructible from that document.
+  ALLOW   prove-mkreq7-guard-red.py:126  FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced RED-GREEN-A2-7-guards.txt
+          reason: sandbox-only; same document as line 119. MEASURED: 0 JSON-float leaves.
+  ALLOW   resolve7.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced req/a2-7-loan-220-resolved.json
+          reason: MATERIAL: 117 req/*.json templates carry 11 JSON-float leaves (e.g. /debits/0/amount 100000.25). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+  ALLOW   resolve7.py:25   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced req/a2-7-loan-220-resolved.json
+          reason: MATERIAL: the 5 out/A2-21*.json observation files carry 12 JSON-float leaves (e.g. /principal 1200000.0). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+  ALLOW   verify-provenance-a2-15.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced PROVENANCE-A2-15.txt
+          reason: reads .softhouse/vectors/ledger/*.json. MEASURED: 6 vectors, 0 JSON-float leaves — every promoted money cell is a STRING (amount_major_text, amount_minor), so no money value passes through a binary double here.
+
+POPULATION -- both terms (P-67)
+  Python files inspected .................. 32
+  json.load/loads CALL SITES inspected .... 20
+  ... carrying parse_float= ............... 14
+  ... carrying parse_float=float (a dodge)  0
+  ... declared in the register ............ 6
+  ... VIOLATIONS .......................... 0
+
+parse_float= VALUE EXPRESSIONS ACTUALLY PASSED (5 distinct) -- listed so a reader can audit them, not allowlisted
+  D                  1 site(s): census-a2-26.py:49
+  JsonNumber         2 site(s): resolve8.py:101, resolve8.py:265
+  _Raw               1 site(s): prove-resolve8-float-red.py:107
+  decimal.Decimal    9 site(s): a2-29-retype-path.py:25, analyze7.py:39, audit-req-float-roundtrip.py:226, audit-req-float-roundtrip.py:236, mkje-a2-29.py:42, mkje-a2-29.py:151, prove-mkreq7-guard-red.py:148, prove-resolve8-float-red.py:152, show.py:14
+  hook('float')      1 site(s): audit-req-float-roundtrip.py:65
+
+EVERY CALL SITE, GRADED
+  ok          a2-29-retype-path.py            :25   json.loads  parse_float=decimal.Decimal
+  ok          analyze7.py                     :39   json.load   parse_float=decimal.Decimal
+  ok          audit-req-float-roundtrip.py    :65   json.loads  parse_float=hook('float')
+  ok          audit-req-float-roundtrip.py    :226  json.loads  parse_float=decimal.Decimal
+  ok          audit-req-float-roundtrip.py    :236  json.loads  parse_float=decimal.Decimal
+  ok          census-a2-26.py                 :49   json.loads  parse_float=D
+  ok          mkje-a2-29.py                   :42   json.loads  parse_float=decimal.Decimal
+  ok          mkje-a2-29.py                   :151  json.loads  parse_float=decimal.Decimal
+  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :70   json.loads  parse_float=MISSING
+  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :119  json.load   parse_float=MISSING
+  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :126  json.load   parse_float=MISSING
+  ok          prove-mkreq7-guard-red.py       :148  json.loads  parse_float=decimal.Decimal
+  ok          prove-resolve8-float-red.py     :107  json.loads  parse_float=_Raw
+  ok          prove-resolve8-float-red.py     :152  json.loads  parse_float=decimal.Decimal
+  DECLARED FROZEN-T114 resolve7.py                     :24   json.load   parse_float=MISSING
+  DECLARED FROZEN-T114 resolve7.py                     :25   json.load   parse_float=MISSING
+  ok          resolve8.py                     :101  json.loads  parse_float=JsonNumber
+  ok          resolve8.py                     :265  json.loads  parse_float=JsonNumber
+  ok          show.py                         :14   json.load   parse_float=decimal.Decimal
+  DECLARED FROZEN-T114 verify-provenance-a2-15.py      :24   json.load   parse_float=MISSING
+
+PASS -- 20 call site(s) across 32 file(s): 14 carry parse_float=, 6 are declared and their preconditions hold, 0 violations.
+
+(stderr was empty; exit 0)
+
+============================================== LEG 2 -- prove-parse-float-guard-red.py, stdout
+==============================================================================
+T164 -- RED/GREEN drive of guard-parse-float-ast.py
+==============================================================================
+
+ARM 0 -- REPRODUCE: the OLD grep guard stays GREEN with parse_float deleted from analyze7.py's CODE
+         analyze7.py:39 is now: 'return json.load(f)'
+         `parse_float` now occurs on line(s) [6] -- the DOCSTRING only:
+           6: money). Every amount is parsed with `parse_float=decimal.Decimal`, so the JSON literal
+  ok   OLD guard assertion 1 `"parse_float=decimal.Decimal" in src` still TRUE -> it still reports ok
+         value=True
+  ok   OLD guard assertion 2 `"float(" not in src...` still TRUE
+         value=True
+  ok   OLD guard verdict on the SABOTAGED rig: PASS (this is the defect)
+         0 failures -> exit 0
+  ok   meanwhile the sabotaged loader really does build a binary double
+         an oracle amount now loads as type 'float'
+
+ARM 1 -- the SAME sabotage makes the AST guard FAIL, and it names the line
+  ok   AST guard exits 1 (FAIL) where the old guard exited 0
+         rc=1
+  ok   it names analyze7.py:39 as the violation
+         ['  analyze7.py:39  json.load(...)  keywords=[]  ->  no parse_float']
+  ok   it reports exactly 1 violation
+         ['  ... VIOLATIONS .......................... 1', '  VIOLATION   analyze7.py                     :39   json.load   parse_float=MISSING']
+  ok   the docstring occurrence did NOT rescue it
+
+ARM 2 -- the LEGITIMATE rig, untouched, still PASSES
+  ok   AST guard exits 0 on the real rig
+         rc=0 stderr=''
+  ok   and it says how much it inspected, positively (P-35)
+         ['Python files inspected .................. 32', 'json.load/loads CALL SITES inspected .... 20']
+  ok   the population it inspected is non-zero and stated
+         json.load/loads CALL SITES inspected .... 20
+
+ARM 3 -- ZERO CALL SITES INSPECTED is an ERROR, not a pass (the fail-open half)
+  ok   a root with Python files but NO json.load call sites exits 2, not 0
+         rc=2
+  ok   and it says so in the NIL COVERAGE / INSPECTED NOTHING shape
+         REFUSING: NIL COVERAGE -- 1 Python file(s) inspected, 0 json.load/loads call sites found. INSPECTED NOTHING, so there is nothing to certify. This is an ERROR, n
+  ok   it did NOT report a pass
+
+ARM 4 -- ZERO PYTHON FILES is an ERROR, not a pass
+  ok   an empty root exits 2, not 0
+         rc=2
+  ok   and it says 0 Python files, INSPECTED NOTHING
+         REFUSING: NIL COVERAGE -- 0 Python files under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t164-empty.hsq24hrc. INSPECTED NOTHING. A guard that finds nothi
+
+ARM 5 -- a file the guard cannot PARSE is an ERROR, not a silent skip
+  ok   an unparseable file exits 2
+         rc=2
+  ok   and it names the file rather than dropping it
+         REFUSING: broken.py will not parse: invalid syntax (broken.py, line 1) -- a file the guard cannot read is not a file the guard may skip
+
+ARM 6 -- an ALIASED loader cannot hide a site (`import json as J`)
+  ok   the aliased call site is FOUND and fails the guard
+         rc=1
+  ok   it names aliased.py:3
+         ['aliased.py:3  J.load(...)  keywords=[]  ->  no parse_float']
+
+ARM 7 -- `from json import loads as L` cannot hide a site either
+  ok   the bare-name call site is FOUND and fails the guard
+         rc=1
+  ok   it names fromimp.py:2
+         ['fromimp.py:2  L(...)  keywords=[]  ->  no parse_float']
+
+ARM 8 -- `parse_float=float` satisfies a grep and changes NOTHING; it FAILS
+  ok   parse_float=float is a violation, not a pass
+         rc=1
+  ok   and it is named as a no-op
+         ["dodge.py:2  json.load(...)  keywords=['parse_float']  ->  parse_float=float (a no-op)"]
+  ok   the dodge is counted separately in the population
+         ['... carrying parse_float=float (a dodge)  1']
+
+ARM 9 -- a register record naming a site that DOES NOT EXIST is a REFUSAL
+  ok   a stale record exits 2 (REFUSE), not 0 and not 1
+         rc=2
+  ok   and it is named STALE
+         ['* analyze7.py:9999 is declared FROZEN-T114 but is NOT a json.load/loads call site in this rig -- a stale record is an ERROR (P-22): remove it.']
+
+ARM 10 -- a register record for a site that NOW CARRIES parse_float is a REFUSAL
+  ok   an unnecessary exemption exits 2, so the register cannot silently rot
+         rc=2
+  ok   and it says the site is already compliant
+         ['* analyze7.py:39 is declared FROZEN-T114 but ALREADY carries parse_float=decimal.Decimal -- the record is stale: remove it.']
+
+ARM 11 -- a record whose PINNED SOURCE has drifted is a REFUSAL
+  ok   changing the exempted line's text exits 2
+         rc=2
+  ok   and the drift is named
+         ['DRIFT   resolve7.py:24   FROZEN-T114        pinned source no longer matches']
+
+ARM 12 -- an UNKNOWN register category is a REFUSAL, never a silent skip
+  ok   an unrecognised category exits 2
+         rc=2
+  ok   and it says a category it does not recognise is a refusal
+         REFUSING: PARSE-FLOAT-EXEMPT.txt:66 declares category 'LOOKS-FINE-TO-ME', which is not one of ['FROZEN-T114', 'REPRODUCTION-T207']. An unrecognised category is 
+
+ARM 13 -- FROZEN-T114 dies the moment the file is EDITED (T114 is the whole point: a file being edited is not frozen)
+  ok   editing an exempted frozen file exits 2
+         rc=2
+  ok   and the refusal says the file has been edited
+         ['* verify-provenance-a2-15.py:24 declared FROZEN-T114 but its precondition FAILED: verify-provenance-a2-15.py HAS BEEN EDITED (sha256 5a51bf4ecd78, manifest pins 9751bc6006c4) -- a file that is being edited is not frozen, so add parse_float instead']
+
+ARM 14 -- REPRODUCTION-T207 is GREEN while the target still lacks parse_float (T207: 'add parse_float' is sometimes the WRONG repair)
+  ok   a declared faithful reproduction does NOT fail the guard
+         rc=0 stderr=''
+  ok   and it is printed with its precondition outcome, not hidden
+         ['ALLOW   measurer.py:2    REPRODUCTION-T207  faithful: under-measurement/target.py:4 is still a json.load with no parse_float']
+ARM 15 -- ... and it DIES the moment the target is FIXED
+  ok   fixing the target makes the exemption stale -> exit 2
+         rc=2
+  ok   and the refusal says the target was fixed so this is no longer faithful
+         ['* measurer.py:2 declared REPRODUCTION-T207 but its precondition FAILED: under-measurement/target.py:4 NOW CARRIES parse_float -- the target was fixed, so this is no longer a faithful reproduction. Fix this site too.']
+
+ARM 16 -- the SELECTOR SELF-TEST is itself failable (a self-test that cannot fail is the same defect one level up)
+  ok   a selector that has stopped selecting REFUSES rather than reporting an absence
+         rc=2
+  ok   and it says the self-test failed
+         REFUSING: SELECTOR SELF-TEST FAILED: expected call sites on lines [8, 9, 10, 11], found [8, 10]. The selector is not selecting; a negative result from it would 
+
+41 assertions, 0 failed
+
+(stderr was empty; exit 0)

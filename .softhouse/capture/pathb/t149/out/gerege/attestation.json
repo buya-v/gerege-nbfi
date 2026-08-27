@@ -1,0 +1,214 @@
+{
+ "_schema": "gerege-nbfi/pathb-attestation/v1",
+ "_status": "RAW OBSERVED \u2014 admissibility attestation only. NOTHING PROMOTED to the parity vector store. DEC-1 is at revision 12 and RATIFIED (gate G-1 CLOSED).",
+ "_dec1": {
+  "revision": 12,
+  "revision_source": ".softhouse/vectors/PIN.json:dec1_revision",
+  "ratified": true,
+  "ratified_source": ".softhouse/gates.md \u2014 the G-1 heading"
+ },
+ "_closed_by": {
+  "T22 P0-3 (attestation sidecar)": "T36, commit 78c5bda",
+  "T22 P0-4 (fail-the-run preconditions)": "T36, commit c3bbf26 \u2014 the SCRIPT; its CALLER recapture.sh was still unable to abort until T80 (T77 P0-T77-2)",
+  "T22 P0-6 (production-settings tenant re-capture)": "T36, commits fab040a and 60c08ad"
+ },
+ "capture_set": "pathb-t149-halfup-halfeven-exact-tie",
+ "capture_path": "Path B \u2014 running Fineract server (REST + PostgreSQL)",
+ "produced_by": {
+  "task": "T149",
+  "branch": "softhouse/T149-halfup-tie-vector",
+  "generated_at_utc": "2026-08-21T06:16:11Z",
+  "generator": "t36/attest.py",
+  "preconditions_script": "t36/preconditions.sh",
+  "preconditions_result": "ALL PASS (transcript: t149/out/gerege/preconditions.txt)"
+ },
+ "oracle": {
+  "image_tag": "fineract:latest",
+  "image_id": "sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a",
+  "image_created": "2026-08-17T11:29:56.52027346Z",
+  "image_repo_digests": [
+   "fineract@sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a"
+  ],
+  "container": "fineract-fineract-1",
+  "container_started_at": "2026-08-18T09:51:53.088984338Z",
+  "jar_git_commit_id": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+  "jar_git_dirty": "false",
+  "jar_build_version": "1.16.0-SNAPSHOT",
+  "jar_branch": "develop",
+  "jvm": "openjdk version \"21.0.11\" 2026-04-21 LTS / OpenJDK Runtime Environment Zulu21.50+19-CA (build 21.0.11+10-LTS) / OpenJDK 64-Bit Server VM Zulu21.50+19-CA (build 21.0.11+10-LTS, mixed mode, sharing)",
+  "health": "UP (asserted by preconditions P4)"
+ },
+ "database": {
+  "engine": "PostgreSQL",
+  "prohibited_engines_asserted_absent": [
+   "Oracle Database",
+   "MySQL",
+   "MariaDB"
+  ],
+  "version": "PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
+  "server_version_num": "180003",
+  "container": "fineract-db-1",
+  "image": "postgres:18.3",
+  "image_id": "sha256:7e32e9833a6fb1c92c32552794cb6ed569d51b445a54907d35fc112ef39684db",
+  "driver_class": "org.postgresql.Driver",
+  "jdbc_url": "jdbc:postgresql://db:5432/fineract_tenants",
+  "prohibited_engine_hits_container_env": 0,
+  "prohibited_driver_jars_in_boot_jar": 0
+ },
+ "tenant": {
+  "identifier": "gerege",
+  "name": "Gerege T22 Audit Tenant (Asia/Ulaanbaatar)",
+  "timezone_id": "Asia/Ulaanbaatar",
+  "timezone_note": "zone id asserted, offset never hard-coded; Asia/Ulaanbaatar is +08 with no DST",
+  "schema_name": "fineract_gerege",
+  "schema_server_port": "5432",
+  "schema_connection_parameters": "",
+  "schema_connection_parameters_empty": true,
+  "rounding_mode_ordinal": 4,
+  "rounding_mode_name": "HALF_UP",
+  "rounding_mode_row_enabled": true,
+  "rounding_mode_source_row": "c_configuration.rounding-mode in fineract_gerege",
+  "rounding_mode_in_force_logline": "2026-08-18 09:53:01.711 - INFO 1  [         gerege] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `gerege`: HALF_UP",
+  "rounding_mode_in_force": "HALF_UP",
+  "currency_MNT_decimal_places": 2,
+  "currency_MNT_enabled": true
+ },
+ "effective_math_context": {
+  "precision": 19,
+  "precision_source": "MoneyHelper.PRECISION read by javap from the DEPLOYED fineract-core jar inside the running container",
+  "rounding_mode": "HALF_UP",
+  "rounding_mode_source": "MoneyHelper init line emitted by THIS JVM run for THIS tenant",
+  "notation": "MathContext(19, HALF_UP)",
+  "matches_ratified_production_setting": true,
+  "ratified_production_setting": "MathContext(19, HALF_UP)  [CLAUDE.md \u2014 ratified tenant parameters]"
+ },
+ "effective_mode_canary": {
+  "purpose": "behavioural proof of the rounding mode actually in force: period-1 interest is an exact half-cent tie (1,162,502.50 x 0.018 = 20,925.045)",
+  "request_file": "t22-audit/req/calc-pmode2-gerege.json",
+  "request_sha256": "2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154",
+  "response_file": "t149/out/gerege/canary-halfcent-raw.json",
+  "http_status": 200,
+  "observed_period1_interest": "20925.05",
+  "expected_under_HALF_UP": "20925.05",
+  "expected_under_HALF_EVEN": "20925.04",
+  "verdict": "HALF_UP confirmed behaviourally"
+ },
+ "products_as_persisted": [
+  {
+   "id": 1,
+   "name": "PathB Progressive MNT",
+   "short_name": "PBM1",
+   "currency_code": "MNT",
+   "currency_digits": 2,
+   "principal_amount": "1200000.000000",
+   "nominal_interest_rate_per_period": "21.600000",
+   "number_of_repayments": 12,
+   "installment_amount_in_multiples_of": null,
+   "days_in_year_custom_strategy": null,
+   "days_in_year_enum": 1,
+   "days_in_month_enum": 1,
+   "loan_schedule_type": "PROGRESSIVE",
+   "persisted_row_sha256": "c7bac6500ccedc3655717086ea9cfcfbf4b04a38a16166e3f8e2cc5fd6b42a7e"
+  },
+  {
+   "id": 9,
+   "name": "T22 probe p09-sarp-360-30",
+   "short_name": "TP9",
+   "currency_code": "MNT",
+   "currency_digits": 2,
+   "principal_amount": "1200000.000000",
+   "nominal_interest_rate_per_period": "21.600000",
+   "number_of_repayments": 12,
+   "installment_amount_in_multiples_of": null,
+   "days_in_year_custom_strategy": null,
+   "days_in_year_enum": 360,
+   "days_in_month_enum": 30,
+   "loan_schedule_type": "PROGRESSIVE",
+   "persisted_row_sha256": "b7332a8b8f2f58a00eccad7a4ef2702ef1bfb47f687f9c00b9f06c1599bb294b"
+  },
+  {
+   "id": 11,
+   "name": "T22 mode probe halfcent",
+   "short_name": "TM2",
+   "currency_code": "MNT",
+   "currency_digits": 2,
+   "principal_amount": "1162502.500000",
+   "nominal_interest_rate_per_period": "21.600000",
+   "number_of_repayments": 12,
+   "installment_amount_in_multiples_of": null,
+   "days_in_year_custom_strategy": null,
+   "days_in_year_enum": 1,
+   "days_in_month_enum": 1,
+   "loan_schedule_type": "PROGRESSIVE",
+   "persisted_row_sha256": "96d35370b5de6453777ec8d3f4dbf29265fabb90f2b67c144094cb80061c9d9a"
+  }
+ ],
+ "captures": [
+  {
+   "id": "T149-TIE-P9",
+   "label": "exact tie, product 9 (SARP + fixed 30/360)",
+   "endpoint": "POST /loans?command=calculateLoanSchedule",
+   "http_status": 200,
+   "request_file": "t149/req/calc-t149-tie-p9.json",
+   "request_sha256": "67abfa6b92c85ee5f54bf09a72dbaec40558512dcdc1afddd63a732e53139442",
+   "request_bytes": 580,
+   "response_file": "t149/out/gerege/T149-TIE-P9-raw.json",
+   "response_sha256": "39f56dc2c94a6da59235af7d0ecb7d51548bcf3f4d52730a94c864d7f65a3d25",
+   "response_bytes": 8335,
+   "captured_at_utc": "2026-08-21T06:16:10Z",
+   "committed_corpus_sha256": null,
+   "matches_committed_corpus_bytes": null
+  },
+  {
+   "id": "T149-TIE-P1",
+   "label": "exact tie, product 1 (SARP + actual/actual)",
+   "endpoint": "POST /loans?command=calculateLoanSchedule",
+   "http_status": 200,
+   "request_file": "t149/req/calc-t149-tie-p1.json",
+   "request_sha256": "f64bc0ec328ccf4dcd510cf96d9774686bb886a21f58556ae5f0497c07af8439",
+   "request_bytes": 580,
+   "response_file": "t149/out/gerege/T149-TIE-P1-raw.json",
+   "response_sha256": "39f56dc2c94a6da59235af7d0ecb7d51548bcf3f4d52730a94c864d7f65a3d25",
+   "response_bytes": 8335,
+   "captured_at_utc": "2026-08-21T06:16:10Z",
+   "committed_corpus_sha256": null,
+   "matches_committed_corpus_bytes": null
+  },
+  {
+   "id": "T149-CTRL-P9-1M2",
+   "label": "control MNT 1,200,000, product 9 (SARP + fixed 30/360)",
+   "endpoint": "POST /loans?command=calculateLoanSchedule",
+   "http_status": 200,
+   "request_file": "t149/req/calc-t149-ctrl-p9-1m2.json",
+   "request_sha256": "558fc28992e08baf501e66fa5e027224e33dafaafd228d2f21ccb15e5799cedf",
+   "request_bytes": 578,
+   "response_file": "t149/out/gerege/T149-CTRL-P9-1M2-raw.json",
+   "response_sha256": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+   "response_bytes": 8342,
+   "captured_at_utc": "2026-08-21T06:16:11Z",
+   "committed_corpus_sha256": null,
+   "matches_committed_corpus_bytes": null
+  },
+  {
+   "id": "T149-CTRL-P1-1M2",
+   "label": "control MNT 1,200,000, product 1 (SARP + actual/actual)",
+   "endpoint": "POST /loans?command=calculateLoanSchedule",
+   "http_status": 200,
+   "request_file": "t149/req/calc-t149-ctrl-p1-1m2.json",
+   "request_sha256": "e958d0d813ed409fa362b2895f9f10441c06e25c571044fcef309119c605a729",
+   "request_bytes": 578,
+   "response_file": "t149/out/gerege/T149-CTRL-P1-1M2-raw.json",
+   "response_sha256": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+   "response_bytes": 8342,
+   "captured_at_utc": "2026-08-21T06:16:11Z",
+   "committed_corpus_sha256": null,
+   "matches_committed_corpus_bytes": null
+  }
+ ],
+ "does_not_license": [
+  "promotion to the parity vector store \u2014 an admissibility attestation is not a promotion decision. Promotion of these four is refused on graded-domain grounds recorded in t76/PROMOTION-DECISION.md (gate G-7), not on DEC-1 ratification: DEC-1 is at revision 12 and RATIFIED (gate G-1 CLOSED)",
+  "any claim about cutover, which is a hard user gate",
+  "any claim about behaviour not exercised here: multi-disbursement, charges, down payments, repayments, delinquency, COB or anything clock-sensitive"
+ ],
+ "notes": []
+}

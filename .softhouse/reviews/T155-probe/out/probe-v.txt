@@ -1,0 +1,38 @@
+---- PRE  = fork point 187e972 (what T154 censused) (/tmp/t155/pre/.softhouse/vectors) ----
+  .json under the store root (find -type f)   : 49
+  at the store root itself                    : 2   -> PIN.json capabilities.json 
+  loanschedule/                               : 46
+  _selftest/                                  : 1
+  vector files (= all - root)                 : 47
+  arithmetic closes?                          : yes
+  class counts from the files themselves:
+    parity             42
+    contract-refusal   4
+    self-test          0
+  non-ASCII case_id?                          : 0 files
+
+---- POST = scratch merge of T154 into CURRENT main (/tmp/t155/post/.softhouse/vectors) ----
+  .json under the store root (find -type f)   : 50
+  at the store root itself                    : 2   -> PIN.json capabilities.json 
+  loanschedule/                               : 47
+  _selftest/                                  : 1
+  vector files (= all - root)                 : 48
+  arithmetic closes?                          : yes
+  class counts from the files themselves:
+    parity             43
+    contract-refusal   4
+    self-test          0
+  non-ASCII case_id?                          : 0 files
+
+================================================================
+M-5 corollary: is the two-name allowlist itself float-checked?
+T154 corrected M-5 to 'true only OFF the allowlist, since LoadPin and
+LoadCapabilityRegistry already call RejectFloatTokens'. Driven here.
+================================================================
+  float injected into PIN.json -> PRE binary exit=2
+          * store pin: FLOAT TOKEN "3.6" in vector JSON: every number in a vector file must be an integer, and every monetary value must be an integer STRING in minor units
+  float injected into capabilities.json -> PRE binary exit=2
+          * capability registry: FLOAT TOKEN "3.6" in vector JSON: every number in a vector file must be an integer, and every monetary value must be an integer STRING in minor units
+
+  control: allowlist restored ->
+      exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference 

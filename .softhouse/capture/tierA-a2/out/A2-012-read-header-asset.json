@@ -1,0 +1,1 @@
+{"id":1,"name":"Assets","glCode":"10000","disabled":false,"manualEntriesAllowed":true,"type":{"id":1,"code":"accountType.asset","value":"ASSET"},"usage":{"id":2,"code":"accountUsage.header","value":"HEADER"},"description":"A2 capture: top-level ASSET header","nameDecorated":"Assets","tagId":{"id":0}}

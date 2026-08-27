@@ -1,0 +1,61 @@
+=== T158 — driving T156's refusals red
+script under test: /tmp/t158-clone/.softhouse/capture/pathb/t149/prove-redgreen.sh (11847 bytes, 4 `trap ` statements)
+
+--- A  start-up: park present AND store copy present, and they DIFFER
+     exit=1  census 50 -> 50
+     | PROOF FAILED: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t158-sandbox.zq0kq063/.softhouse/capture/pathb/t149/.parked-vector.json and /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t158-sandbox.zq0kq063/.softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json both exist and DIFFER — an earlier run left an ambiguous state; resolve it by hand
+  => PASS  exit=1, park left in place=True
+
+--- B  start-up: park present AND store copy present, BYTE-IDENTICAL
+     exit=1  census 50 -> 50  park-left=False
+  => PASS  note printed=True
+
+--- C  start-up: the vector was DELIBERATELY REMOVED; no park exists
+     exit=1  census 49 -> 49  vector resurrected=False
+     | PROOF FAILED: the vector is not in the store: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t158-sandbox.xk0dj9ue/.softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json
+  => PASS  exit=1
+
+--- D  start-up: vector removed, no park, but a stale .parked-vector.backup.json exists
+     exit=1  census 49 -> 49  vector resurrected from backup=False
+  => PASS  exit=1
+
+--- E  start-up: EMPTY census — T156 headlines this refusal; is it REACHABLE?
+     E1 wiped store : exit=1  PROOF FAILED: the vector is not in the store: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t158-sandbox.9vsmslzo/.softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json
+     E2 symlinked   : exit=1  PROOF FAILED: the store census over /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t158-sandbox.icupp41n/.softhouse/vectors is EMPTY — refusing, because 'restored' over nothing is not a fact
+  => **FAIL**  E1 hit the census refusal=False (it hit 'PROOF FAILED: the vector is not in the store: /var/folders/yq/v_3qz_8j' instead); E2 hit it=True
+
+--- F  trap time: something plants a DIFFERING $VEC while the vector is parked
+     exit=1  census 50 -> 50
+     | RESTORE REFUSED: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t158-sandbox.7bui8a37/.softhouse/capture/pathb/t149/.parked-vector.json and /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t158-sandbox.7bui8a37/.softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json both exist and DIFFER — resolve by hand
+     | RESTORE FAILED: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t158-sandbox.7bui8a37/.softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json is missing or not byte-identical to the pre-park backup /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t158-sandbox.7bui8a37/.softhouse/capture/pathb/t149/.parked-vector.backup.json
+     | STORE NOT RESTORED — the census changed across this run. THE NEXT CONFORMANCE RUN WOULD
+  => PASS  exit=1
+
+--- G  trap time: an EXTRA .json appears in the store (census must notice)
+     exit=1  census 50 -> 51
+     | STORE NOT RESTORED — the census changed across this run. THE NEXT CONFORMANCE RUN WOULD
+     | > 3 .softhouse/vectors/loanschedule/T158-INTRUDER.json
+  => PASS  exit=1
+
+--- H  trap time: a DIFFERENT vector is deleted from the store
+     exit=1  census 50 -> 49
+     | STORE NOT RESTORED — the census changed across this run. THE NEXT CONFORMANCE RUN WOULD
+     | < 10582 .softhouse/vectors/loanschedule/P-00-baseline-6x7pct.json
+  => PASS  exit=1
+
+--- I  idempotence: two clean runs back to back over the same sandbox
+     run1 exit=1   run2 exit=1   census 50 -> 50
+  => PASS  run2 mentions RECOVERED=False stale-park=False
+
+=== SUMMARY
+  PASS     A refuses an ambiguous park
+  PASS     B discards a byte-identical stale park
+  PASS     C refuses and does NOT resurrect a deliberately removed vector
+  PASS     D does NOT resurrect from the stale backup
+  **FAIL** E the empty-census refusal is reachable on a REALISTIC state
+  PASS     F refuses rather than picking between two differing copies
+  PASS     G census catches an INFLATED store
+  PASS     H census catches a DEFLATED store (a vector other than the parked one)
+  PASS     I the second run sees no leftover state
+
+RESULT: NOT ALL REFUSALS BEHAVED AS CLAIMED: E the empty-census refusal is reachable on a REALISTIC state

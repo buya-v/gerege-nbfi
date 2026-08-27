@@ -1,0 +1,50 @@
+conformance.sh variant                lines   mktemp mktemp-t
+---------------------------------- -------- -------- --------
+main                                   2617       10       10
+a6bec72                                2573       10       10
+merged-cloud                           2669       23        2
+merged-mac                             2617       10        0
+
+--- residual 'mktemp -t' lines in the MERGED CLOUD result ---
+573:# THE DEFECT THIS REPLACES. Ten sites in this file called `mktemp -t NAME`. The
+585:# So `mktemp -t conformance-failopen` SUCCEEDS on BSD and DIES on GNU with
+
+--- residual 'mktemp -t' lines in the MERGED MAC result ---
+  (none — measured negative, grep exit 1)
+
+--- every mktemp line in the MERGED MAC result (wide selector) ---
+1481:  out="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen.XXXXXXXXXX")"      || return 1
+1482:  json="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen-json.XXXXXXXXXX")" || return 1
+1483:  want="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen-want.XXXXXXXXXX")" || return 1
+1484:  got="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen-got.XXXXXXXXXX")"   || return 1
+1831:  list="$(mktemp "${TMPDIR:-/tmp}/conformance-implist.XXXXXXXXXX")" || return 1
+1855:  out="$(mktemp "${TMPDIR:-/tmp}/conformance-wrongimpl.XXXXXXXXXX")" || return 1
+1930:  CONF_BIN="$(mktemp "${TMPDIR:-/tmp}/conformance.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
+1945:  report="$(mktemp "${TMPDIR:-/tmp}/conformance-report.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
+2003:  CONF_BIN="$(mktemp "${TMPDIR:-/tmp}/conformance.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
+2004:  CONF_TMP="$(mktemp -d "${TMPDIR:-/tmp}/conformance-prove.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
+
+--- every mktemp line in the MERGED CLOUD result (wide selector) ---
+573:# THE DEFECT THIS REPLACES. Ten sites in this file called `mktemp -t NAME`. The
+574:# two mktemp implementations this program runs on parse that argument list
+577:#   BSD / macOS   `mktemp [-d] [-p tmpdir] [-q] [-t prefix] [-u] template ...`
+580:#   GNU coreutils `mktemp [OPTION]... [TEMPLATE]`
+585:# So `mktemp -t conformance-failopen` SUCCEEDS on BSD and DIES on GNU with
+586:# `mktemp: too few X's in template 'conformance-failopen'`. The first such site
+593:# the directory and ten X's. BSD mktemp(1) gives this shape as its own worked
+600:# NOT EXECUTED ON BSD: there is no BSD host and no BSD mktemp binary in the CI
+615:# conf_mktemp   NAME  -> prints a fresh scratch FILE path
+616:# conf_mktemp_d NAME  -> prints a fresh scratch DIRECTORY path
+617:# Both fail (non-zero, nothing on stdout) exactly where `mktemp` itself would,
+619:conf_mktemp()   { mktemp    "$(conf_tmpdir)/$1.XXXXXXXXXX"; }
+620:conf_mktemp_d() { mktemp -d "$(conf_tmpdir)/$1.XXXXXXXXXX"; }
+1533:  out="$(conf_mktemp conformance-failopen)"      || return 1
+1534:  json="$(conf_mktemp conformance-failopen-json)" || return 1
+1535:  want="$(conf_mktemp conformance-failopen-want)" || return 1
+1536:  got="$(conf_mktemp conformance-failopen-got)"   || return 1
+1883:  list="$(conf_mktemp conformance-implist)" || return 1
+1907:  out="$(conf_mktemp conformance-wrongimpl)" || return 1
+1982:  CONF_BIN="$(conf_mktemp conformance)" || exit "$EXIT_UNUSABLE"
+1997:  report="$(conf_mktemp conformance-report)" || exit "$EXIT_UNUSABLE"
+2055:  CONF_BIN="$(conf_mktemp conformance)" || exit "$EXIT_UNUSABLE"
+2056:  CONF_TMP="$(conf_mktemp_d conformance-prove)" || exit "$EXIT_UNUSABLE"

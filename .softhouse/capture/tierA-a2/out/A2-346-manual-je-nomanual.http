@@ -1,0 +1,9 @@
+POST /journalentries
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-26-manual-je-manual-disallowed.json
+body-wire-bytes-artefact: A2-346-manual-je-nomanual.req
+body-sha256: 26d581ea3feeac7f3cc05d5c17fcab8e85eb9071f653d5394f1b2e749db39d6b
+body-bytes: 372
+captured-at-utc: 2026-08-22T02:21:18Z

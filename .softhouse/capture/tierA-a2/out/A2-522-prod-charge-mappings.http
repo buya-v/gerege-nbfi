@@ -1,0 +1,9 @@
+POST /loanproducts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/t275-080-charge-mappings.json
+body-wire-bytes-artefact: A2-522-prod-charge-mappings.req
+body-sha256: d77b67222eed5d4ae4aff34054eb11b1529e85c677b8ab7b1e3efa28d0941032
+body-bytes: 1160
+captured-at-utc: 2026-08-22T14:10:49Z

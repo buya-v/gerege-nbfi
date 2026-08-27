@@ -1,0 +1,31 @@
+== T46 negative leg N7 -- the vacuity guard, exercised for the first time
+runner under test : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1c54e4da86fd3e6/.softhouse/capture/mathcontext/src/run-mathcontext.sh
+source payload    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1c54e4da86fd3e6/.softhouse/capture/mathcontext/out/t42-mathcontext.json
+corrupted payload : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1c54e4da86fd3e6/.softhouse/capture/mathcontext/out/negative/t46-corrupted-canary-payload.json
+
+assertion block extracted from the runner: 74 lines
+the guard under test, as extracted:
+    8-must_throw = os.environ["EXPECT_CANARY_THROWS"] == "1"
+    9-if must_throw and not canary.startswith("THREW java.lang.IllegalStateException"):
+    10:    bad.append("the ambient-absence probe is VACUOUS: MoneyHelper.getMathContext() on an "
+    11-               "uninitialised tenant returned " + repr(canary)
+    12-               + " instead of throwing IllegalStateException.  Every ABSENCE case is meaningless.")
+
+  ambientCanary BEFORE: THREW java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_canary_never_initialised
+  ambientCanary AFTER : precision=19 roundingMode=HALF_UP
+
+  observed cells in source payload   : 140978
+  observed cells in corrupted payload: 140978
+  observed cells that MOVED          : 0
+
+-- running the shipped assertion block, T42_EXPECT_CANARY_THROWS unset (default 1) --
+BREACH: the ambient-absence probe is VACUOUS: MoneyHelper.getMathContext() on an uninitialised tenant returned 'precision=19 roundingMode=HALF_UP' instead of throwing IllegalStateException.  Every ABSENCE case is meaningless.
+-- exit code: 1 --
+
+N7 PASS: the vacuity guard FIRED (exit 1).  The absence experiment is falsifiable.
+
+control leg (sanity): the SAME guard against the UNCORRUPTED payload must exit 0
+  ok  214 captures, 13 of them ambient-ABSENT; every case's threaded and ambient context matches what its id declares
+-- exit code on the uncorrupted payload: 0 --
+
+verdict: PASS

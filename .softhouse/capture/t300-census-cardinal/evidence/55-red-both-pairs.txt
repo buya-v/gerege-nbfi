@@ -1,0 +1,6 @@
+ARTEFACT                           EXIT   FAIL-OPEN                  HOST-STATE                 PROBE 
+A-pin-minus-one.txt                2      frontier=11 pinned=11      census=18 pinned=17        0     
+B-pin-plus-one.txt                 2      frontier=11 pinned=11      census=18 pinned=19        0     
+C1-prefix-minus-one.txt            2      frontier=11 pinned=11      census=18 pinned=17        0     
+C2-prefix-plus-one.txt             2      frontier=11 pinned=11      census=18 pinned=17        0     
+D-failopen-minus-one.txt           2      frontier=11 pinned=10      census=18 pinned=18        0     

@@ -1,0 +1,100 @@
+15:17:51.037 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t35_rc5_probe`: HALF_UP
+# ===================== PROVENANCE (T35, 2026-08-18) =====================
+# Artefact : t21v2-probe2-oracle-out.txt — p12-vs-p19 divergence sweep, Path A seam.
+# Re-emitted to close T27 review item RC-5 (the transcript carried no provenance header).
+# Rows are produced by T21v2Probe2.main, unmodified; this class only prints this header.
+# Values below marked (measured) are read inside this container during this run.
+# Values marked (echoed) come from the runner's environment and are NOT measurements.
+#
+# reference oracle (Fineract)
+#   git.commit.id from the jar's BOOT-INF/classes/git.properties (measured) : 426a23544e8426a38ae43ae404670a0a7e85b9eb
+#   git.commit.id.describe (measured)                                      : 1.15.0-273-g426a235
+#   git.dirty (measured)                                                   : false
+#   /app/fineract-provider.jar sha256 (measured)                           : 60fb6dbd631dad8ea133d03fdd24761626f407c6d7dc4b1b41a4402eaf66f4c9
+#   docker image ref (echoed)                                              : fineract:latest
+#   docker image id  (echoed)                                              : sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+#   pinned checkout commit (echoed)                                        : 426a23544e8426a38ae43ae404670a0a7e85b9eb
+#
+# JVM (measured)
+#   OpenJDK 64-Bit Server VM 21.0.11+10-LTS / runtime 21.0.11+10-LTS / vendor Azul Systems, Inc.
+#   os Linux aarch64, file.encoding UTF-8, user.timezone null
+#
+# rounding seam (measured)
+#   MoneyHelper.PRECISION                        : 19
+#   effective MathContext for a tenant set to 4  : precision=19 roundingMode=HALF_UP ordinal=4
+#   ratified production setting                  : (19, HALF_UP), RoundingMode ordinal 4
+#   matches ratified production setting          : true
+#   per-run tenant rounding mode inside the probe: value 4 (HALF_UP) is passed for EVERY run
+#     [T21v2Probe2.java:29 initializeTenantRoundingMode(id, 4)] — and the oracle's own INFO
+#     lines interleaved below independently corroborate it, one per run.
+#   NOTE: the p12/p19 SWEEP ITSELF deliberately passes an explicit MathContext of precision
+#     12 or 19 to generate() [T21v2Probe2.java:48-49]; that is the variable under test.
+#     The rounding MODE is HALF_UP on both arms. Precision 12 is a DISCRIMINATION PROBE
+#     setting, never a parity setting.
+#
+# fixed inputs for every row, from the probe source
+#   currency MNT, decimalPlaces 2, inMultiplesOf null [T21v2Probe2.java:30]
+#   start/disbursement 2024-01-01, MONTHS/1, DAYS_30, DAYS_360, DECLINING_BALANCE,
+#   downPayment 0, daysInYearCustomStrategy null, allowPartialPeriodInterestCalculation true,
+#   allowFullTermForTranche false [T21v2Probe2.java:31-33]
+#   verdict IDENTICAL/DIFFERENT is a FULL-SCHEDULE comparison, not a totals comparison
+#   [T21v2Probe2.java:36-44, :64]
+#
+# sources compiled for this run (measured)
+#   6756ebfbd5ab6606a138ca1088bfbd2761da2b625d625fc69ecbda155145ce96  /cap/src/T21v2Probe2.java
+#   ff316614cc64642c389be77d5720834d8b68690ad7d43797310e5f7d87e40365  /cap/src/T21v2Probe2Attested.java
+#   bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714  /cap/src/EmbeddableProgressiveLoanScheduleGenerator.java
+#
+# emitted at (measured, UTC): 2026-08-18T15:17:51.040377626Z
+# ================== END PROVENANCE — rows follow ==================
+15:17:51.044 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_0`: HALF_UP
+15:17:51.087 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_1`: HALF_UP
+ 36 x 16.8   principal 4           p12 int=1.13         rep=5.13          | p19 int=1.14         rep=5.14          | DIFFERENT
+15:17:51.101 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_2`: HALF_UP
+15:17:51.109 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_3`: HALF_UP
+ 36 x 16.8   principal 59          p12 int=16.52        rep=75.52         | p19 int=16.51        rep=75.51         | DIFFERENT
+15:17:51.116 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_4`: HALF_UP
+15:17:51.120 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_5`: HALF_UP
+ 36 x 16.8   principal 72          p12 int=20.13        rep=92.13         | p19 int=20.14        rep=92.14         | DIFFERENT
+15:17:51.126 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_6`: HALF_UP
+15:17:51.130 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_7`: HALF_UP
+ 36 x 16.8   principal 340         p12 int=95.16        rep=435.16        | p19 int=95.15        rep=435.15        | DIFFERENT
+15:17:51.135 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_8`: HALF_UP
+15:17:51.140 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_9`: HALF_UP
+ 36 x 16.8   principal 426         p12 int=119.20       rep=545.20        | p19 int=119.18       rep=545.18        | DIFFERENT
+15:17:51.147 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_10`: HALF_UP
+15:17:51.150 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_11`: HALF_UP
+ 36 x 16.8   principal 6940        p12 int=1942.66      rep=8882.66       | p19 int=1942.65      rep=8882.65       | DIFFERENT
+15:17:51.157 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_12`: HALF_UP
+15:17:51.161 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_13`: HALF_UP
+ 36 x 16.8   principal 50000000    p12 int=13995886.40  rep=63995886.40   | p19 int=13995886.40  rep=63995886.40   | IDENTICAL
+15:17:51.166 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_14`: HALF_UP
+15:17:51.168 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_15`: HALF_UP
+  6 x 7.0    principal 43811       p12 int=898.82       rep=44709.82      | p19 int=898.82       rep=44709.82      | IDENTICAL
+15:17:51.169 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_16`: HALF_UP
+15:17:51.169 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_17`: HALF_UP
+  6 x 7.0    principal 131432      p12 int=2696.42      rep=134128.42     | p19 int=2696.42      rep=134128.42     | IDENTICAL
+15:17:51.170 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_18`: HALF_UP
+15:17:51.170 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_19`: HALF_UP
+  6 x 7.0    principal 131433      p12 int=2696.43      rep=134129.43     | p19 int=2696.43      rep=134129.43     | DIFFERENT
+15:17:51.171 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_20`: HALF_UP
+15:17:51.171 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_21`: HALF_UP
+  6 x 7.0    principal 100         p12 int=2.05         rep=102.05        | p19 int=2.05         rep=102.05        | IDENTICAL
+15:17:51.172 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_22`: HALF_UP
+15:17:51.172 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_23`: HALF_UP
+  6 x 7.0    principal 87654321    p12 int=1798283.07   rep=89452604.07   | p19 int=1798283.07   rep=89452604.07   | IDENTICAL
+15:17:51.172 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_24`: HALF_UP
+15:17:51.173 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_25`: HALF_UP
+ 18 x 18.5   principal 5000000     p12 int=763994.33    rep=5763994.33    | p19 int=763994.33    rep=5763994.33    | IDENTICAL
+15:17:51.175 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_26`: HALF_UP
+15:17:51.176 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_27`: HALF_UP
+ 18 x 18.5   principal 4999999     p12 int=763994.20    rep=5763993.20    | p19 int=763994.20    rep=5763993.20    | IDENTICAL
+15:17:51.177 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_28`: HALF_UP
+15:17:51.179 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_29`: HALF_UP
+ 18 x 18.5   principal 87654321    p12 int=13393481.05  rep=101047802.05  | p19 int=13393481.04  rep=101047802.04  | DIFFERENT
+15:17:51.181 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_30`: HALF_UP
+15:17:51.182 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_31`: HALF_UP
+ 12 x 21.6   principal 1200000     p12 int=144988.47    rep=1344988.47    | p19 int=144988.47    rep=1344988.47    | IDENTICAL
+15:17:51.182 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_32`: HALF_UP
+15:17:51.183 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2b_33`: HALF_UP
+ 18 x 18.5   principal 199999      p12 int=30559.63     rep=230558.63     | p19 int=30559.63     rep=230558.63     | IDENTICAL

@@ -1,0 +1,34 @@
+# T152 — THE T99 PROOF BASELINE, AS A LITERAL IMMUTABLE SHA.
+#
+# This is the fork point of `softhouse/T99-pathb-lower-findings` from `main`: the last commit that
+# contains the PRE-FIX bytes of t36/recapture.sh, t36/preconditions.sh, t80/forbidden-sentence.sh
+# and t36/attest.py.  Every prove-f*.sh materialises its "before" tree from THIS commit
+# (`git archive <sha>`), and the four PIN_PREFIX_* digests in lib.sh are the second operand: if the
+# exported bytes are ever not the bytes the defect was found in, the proof aborts (exit 3).
+#
+# MEASURED, not asserted: `git merge-base main softhouse/T99-pathb-lower-findings` at T99 head
+# 8474bf0cc613e577cfa344428eb4b79c24a004c9, main at 0d39a5b50e46adbbc96157b98123511c32aa6369,
+# 2026-08-21.  Corroborated by `git diff --stat ab2de89 main -- .softhouse/capture/pathb` being
+# EMPTY at that moment, so the pinned commit really does carry main's live pre-fix bytes.
+# Re-derivable while both refs still exist; the sha below is authoritative once they do not.
+#
+# WHY A LITERAL AND NOT A COMPUTED REF — this defect has now shipped THREE times.
+#   v1        used `main:`.                       On merge, `main` contains the fix.
+#   v2 (T98)  used `git merge-base main HEAD`, and reported it as "the immutable fork point".  That
+#             is true ON THE BRANCH and false ON MERGED MAIN: after the merge HEAD == main, so the
+#             merge base of the two is THE MERGE COMMIT ITSELF, which contains the fix.  Measured by
+#             the driver on merged main: "18 as expected, 7 not as expected".
+#   v3 (T99)  wrote `${T99_PREFIX_REF:-$(git merge-base main HEAD)}` at lib.sh:25, in a tree that
+#             already carried T102's fix and its 20-line explanation, and verified it ON THE BRANCH
+#             — the one state in which the bug is invisible.  MEASURED by T135 on a scratch merge
+#             into current `main`: prove-f1/f2/f3 abort exit 3 on their digest pins (the pins doing
+#             their job) and **prove-f4 exits 1 reporting "F-4 NOT CLOSED"** — a false negative on
+#             the finding this branch closed, because prove-f4 had no pin to protect it.  With this
+#             literal sha supplied, all four returned exit 0 post-merge.
+#
+# THE RIG MUST NEVER FALL BACK TO A COMPUTED REF.  If this file is missing or unparseable the proof
+# run ABORTS LOUDLY (exit 3), because a proof silently taken against the wrong baseline prints
+# "red before, green after" for a comparison that never happened, and that is worse than no proof.
+#
+# Format: comments and blank lines ignored; the last remaining line is a full 40-hex commit sha.
+ab2de89356986c8ed85a9d2e26c2bc86b0fb8720

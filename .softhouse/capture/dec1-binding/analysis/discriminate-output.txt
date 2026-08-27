@@ -1,0 +1,179 @@
+T37 DISCRIMINATION -- observation vs the two readings
+capture file : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ae63738b4af2668/.softhouse/capture/dec1-binding/out/t37-binding.json
+oracle commit: 426a23544e8426a38ae43ae404670a0a7e85b9eb   JVM 21.0.11+10-LTS
+MoneyHelper.PRECISION constant as the oracle reports it: 19
+
+--- T37-CAL  (DEC-1 8/-)  MNT 100 / 6 x 7.0%  start=2024-01-01
+    ambient MathContext the oracle reported: precision=19 roundingMode=HALF_UP
+    threaded MathContext: (12, HALF_UP)
+    OBSERVED  total interest            2.05   final installment           17.00
+    FIDELITY -- DEC-1 rev 6 reading reproduces the observation on EVERY cell: YES
+    (control case -- no wrong reading attached)
+
+--- T37-CTL-Q0a  (DEC-1 8/-)  MNT 1,200,000 / 6 x 21.6%  start=2024-01-01
+    ambient MathContext the oracle reported: precision=19 roundingMode=HALF_UP
+    threaded MathContext: (19, HALF_UP)
+    OBSERVED  total interest        76723.70   final installment       212787.30
+    FIDELITY -- DEC-1 rev 6 reading reproduces the observation on EVERY cell: YES
+    (control case -- no wrong reading attached)
+
+--- T37-3-A  (DEC-1 8/3)  MNT 1,014,632 / 6 x 7.0%  start=2024-01-01
+    ambient MathContext the oracle reported: precision=19 roundingMode=HALF_UP
+    threaded MathContext: (19, HALF_UP)
+    OBSERVED  total interest        20815.82   final installment       172574.62
+    FIDELITY -- DEC-1 rev 6 reading reproduces the observation on EVERY cell: YES
+    WRONG reading (EMI re-adjust loop never implemented)
+        total interest        20815.82   final installment       172574.67
+        reproduces the observation on every cell: NO
+    DISCRIMINATION -- cells on which the two readings DISAGREE: 17
+        observation agrees with DEC-1 rev 6 on 17/17   with the wrong reading on 0/17   with neither on 0/17
+        p1.principal: observed 166655.95 | rev 6 166655.95 | wrong 166655.94
+        p1.total: observed 172574.64 | rev 6 172574.64 | wrong 172574.63
+        p1.balance: observed 847976.05 | rev 6 847976.05 | wrong 847976.06
+        p2.principal: observed 167628.11 | rev 6 167628.11 | wrong 167628.10
+    => THE OBSERVATION SEPARATES THE READINGS
+
+--- T37-3-B  (DEC-1 8/3)  MNT 127,704 / 36 x 16.8%  start=2024-01-01
+    ambient MathContext the oracle reported: precision=19 roundingMode=HALF_UP
+    threaded MathContext: (19, HALF_UP)
+    OBSERVED  total interest        35746.56   final installment         4540.06
+    FIDELITY -- DEC-1 rev 6 reading reproduces the observation on EVERY cell: YES
+    WRONG reading (EMI re-adjust loop never implemented)
+        total interest        35746.69   final installment         4540.54
+        reproduces the observation on every cell: NO
+    DISCRIMINATION -- cells on which the two readings DISAGREE: 122
+        observation agrees with DEC-1 rev 6 on 122/122   with the wrong reading on 0/122   with neither on 0/122
+        totalInterestAmount: observed 35746.56 | rev 6 35746.56 | wrong 35746.69
+        totalRepaymentAmount: observed 163450.56 | rev 6 163450.56 | wrong 163450.69
+        p1.principal: observed 2752.44 | rev 6 2752.44 | wrong 2752.43
+        p1.total: observed 4540.30 | rev 6 4540.30 | wrong 4540.29
+    => THE OBSERVATION SEPARATES THE READINGS
+
+--- T37-3a  (DEC-1 8/3a)  MNT 100,025 / 12 x 16.8%  start=2024-01-01
+    ambient MathContext the oracle reported: precision=19 roundingMode=HALF_UP
+    threaded MathContext: (19, HALF_UP)
+    OBSERVED  total interest         9334.19   final installment         9113.33
+    FIDELITY -- DEC-1 rev 6 reading reproduces the observation on EVERY cell: YES
+    WRONG reading (loop implemented WITHOUT the strict adoption test)
+        total interest         9334.17   final installment         9113.20
+        reproduces the observation on every cell: NO
+    DISCRIMINATION -- cells on which the two readings DISAGREE: 39
+        observation agrees with DEC-1 rev 6 on 39/39   with the wrong reading on 0/39   with neither on 0/39
+        totalInterestAmount: observed 9334.19 | rev 6 9334.19 | wrong 9334.17
+        totalRepaymentAmount: observed 109359.19 | rev 6 109359.19 | wrong 109359.17
+        p1.principal: observed 7712.91 | rev 6 7712.91 | wrong 7712.92
+        p1.total: observed 9113.26 | rev 6 9113.26 | wrong 9113.27
+    => THE OBSERVATION SEPARATES THE READINGS
+
+--- T37-3b  (DEC-1 8/3b)  MNT 13,202 / 6 x 16.8%  start=2024-01-01
+    ambient MathContext the oracle reported: precision=19 roundingMode=HALF_UP
+    threaded MathContext: (19, HALF_UP)
+    OBSERVED  total interest          654.38   final installment         2309.38
+    FIDELITY -- DEC-1 rev 6 reading reproduces the observation on EVERY cell: YES
+    WRONG reading (textbook `balance x rateFactor` interest)
+        total interest          654.39   final installment         2309.39
+        reproduces the observation on every cell: NO
+    DISCRIMINATION -- cells on which the two readings DISAGREE: 4
+        observation agrees with DEC-1 rev 6 on 4/4   with the wrong reading on 0/4   with neither on 0/4
+        totalInterestAmount: observed 654.38 | rev 6 654.38 | wrong 654.39
+        totalRepaymentAmount: observed 13856.38 | rev 6 13856.38 | wrong 13856.39
+        p6.interest: observed 31.88 | rev 6 31.88 | wrong 31.89
+        p6.total: observed 2309.38 | rev 6 2309.38 | wrong 2309.39
+    => THE OBSERVATION SEPARATES THE READINGS
+
+--- T37-3b-2  (DEC-1 8/3b)  MNT 3,924,149 / 6 x 16.8%  start=2024-01-31
+    ambient MathContext the oracle reported: precision=19 roundingMode=HALF_UP
+    threaded MathContext: (19, HALF_UP)
+    OBSERVED  total interest       194510.78   final installment       686443.28
+    FIDELITY -- DEC-1 rev 6 reading reproduces the observation on EVERY cell: YES
+    WRONG reading (textbook `balance x rateFactor` interest)
+        total interest       194510.79   final installment       686443.29
+        reproduces the observation on every cell: NO
+    DISCRIMINATION -- cells on which the two readings DISAGREE: 9
+        observation agrees with DEC-1 rev 6 on 9/9   with the wrong reading on 0/9   with neither on 0/9
+        totalInterestAmount: observed 194510.78 | rev 6 194510.78 | wrong 194510.79
+        totalRepaymentAmount: observed 4118659.78 | rev 6 4118659.78 | wrong 4118659.79
+        p3.principal: observed 649311.14 | rev 6 649311.14 | wrong 649311.13
+        p3.interest: observed 37132.16 | rev 6 37132.16 | wrong 37132.17
+    => THE OBSERVATION SEPARATES THE READINGS
+
+--- T37-3c  (DEC-1 8/3c)  MNT 10,548,069 / 6 x 16.8%  start=2024-01-01 disb=2024-02-01
+    ambient MathContext the oracle reported: precision=19 roundingMode=HALF_UP
+    threaded MathContext: (19, HALF_UP)
+    OBSERVED  total interest       447124.73   final installment      2199038.73
+    FIDELITY -- DEC-1 rev 6 reading reproduces the observation on EVERY cell: NO
+        MISMATCH p1.balance: observed 0.00 vs reading 10548069.00
+    WRONG reading (n = NumberOfRepayments instead of |relatedRepaymentPeriods|)
+        total interest       447124.73   final installment      2199038.77
+        reproduces the observation on every cell: NO
+    DISCRIMINATION -- cells on which the two readings DISAGREE: 14
+        observation agrees with DEC-1 rev 6 on 14/14   with the wrong reading on 0/14   with neither on 0/14
+        p2.principal: observed 2051365.78 | rev 6 2051365.78 | wrong 2051365.77
+        p2.total: observed 2199038.75 | rev 6 2199038.75 | wrong 2199038.74
+        p2.balance: observed 8496703.22 | rev 6 8496703.22 | wrong 8496703.23
+        p3.principal: observed 2080084.90 | rev 6 2080084.90 | wrong 2080084.89
+    => THE OBSERVATION SEPARATES THE READINGS
+
+--- T37-3c-2  (DEC-1 8/3c)  MNT 13,549,647 / 6 x 21.6%  start=2024-01-01 disb=2024-02-01
+    ambient MathContext the oracle reported: precision=19 roundingMode=HALF_UP
+    threaded MathContext: (19, HALF_UP)
+    OBSERVED  total interest       740381.83   final installment      2858005.75
+    FIDELITY -- DEC-1 rev 6 reading reproduces the observation on EVERY cell: NO
+        MISMATCH p1.balance: observed 0.00 vs reading 13549647.00
+    WRONG reading (n = NumberOfRepayments instead of |relatedRepaymentPeriods|)
+        total interest       740381.83   final installment      2858005.79
+        reproduces the observation on every cell: NO
+    DISCRIMINATION -- cells on which the two readings DISAGREE: 14
+        observation agrees with DEC-1 rev 6 on 14/14   with the wrong reading on 0/14   with neither on 0/14
+        p2.principal: observed 2614112.12 | rev 6 2614112.12 | wrong 2614112.11
+        p2.total: observed 2858005.77 | rev 6 2858005.77 | wrong 2858005.76
+        p2.balance: observed 10935534.88 | rev 6 10935534.88 | wrong 10935534.89
+        p3.principal: observed 2661166.14 | rev 6 2661166.14 | wrong 2661166.13
+    => THE OBSERVATION SEPARATES THE READINGS
+
+--- T37-3d  (DEC-1 8/3d)  MNT 1,200,000 / 6 x 21.6%  start=2024-01-01 disb=2024-01-15
+    ambient MathContext the oracle reported: precision=19 roundingMode=HALF_UP
+    threaded MathContext: (19, HALF_UP)
+    OBSERVED  total interest        66528.72   final installment       211088.97
+    FIDELITY -- DEC-1 rev 6 reading reproduces the observation on EVERY cell: YES
+    WRONG reading (day-count ratio hard-coded to 1)
+        total interest        76723.81   final installment       212789.26
+        reproduces the observation on every cell: NO
+    DISCRIMINATION -- cells on which the two readings DISAGREE: 25
+        observation agrees with DEC-1 rev 6 on 25/25   with the wrong reading on 0/25   with neither on 0/25
+        totalInterestAmount: observed 66528.72 | rev 6 66528.72 | wrong 76723.81
+        totalRepaymentAmount: observed 1266528.72 | rev 6 1266528.72 | wrong 1276723.81
+        p1.principal: observed 199242.79 | rev 6 199242.79 | wrong 191186.91
+        p1.interest: observed 11845.16 | rev 6 11845.16 | wrong 21600.00
+    => THE OBSERVATION SEPARATES THE READINGS
+
+--- T37-3d-2  (DEC-1 8/3d)  MNT 127,704 / 36 x 16.8%  start=2024-01-01 disb=2024-01-20
+    ambient MathContext the oracle reported: precision=19 roundingMode=HALF_UP
+    threaded MathContext: (19, HALF_UP)
+    OBSERVED  total interest        34373.07   final installment         4543.82
+    FIDELITY -- DEC-1 rev 6 reading reproduces the observation on EVERY cell: YES
+    WRONG reading (day-count ratio hard-coded to 1)
+        total interest        35762.25   final installment         4608.60
+        reproduces the observation on every cell: NO
+    DISCRIMINATION -- cells on which the two readings DISAGREE: 145
+        observation agrees with DEC-1 rev 6 on 145/145   with the wrong reading on 0/145   with neither on 0/145
+        totalInterestAmount: observed 34373.07 | rev 6 34373.07 | wrong 35762.25
+        totalRepaymentAmount: observed 162077.07 | rev 6 162077.07 | wrong 163466.25
+        p1.principal: observed 3808.88 | rev 6 3808.88 | wrong 2750.93
+        p1.interest: observed 692.07 | rev 6 692.07 | wrong 1787.86
+    => THE OBSERVATION SEPARATES THE READINGS
+
+============================================================================================
+capture       item  rev6 all cells  wrong all cells  disc cells  separates?
+T37-CAL       -     reproduces      -                0           -
+T37-CTL-Q0a   -     reproduces      -                0           -
+T37-3-A       3     reproduces      FAILS            17          YES
+T37-3-B       3     reproduces      FAILS            122         YES
+T37-3a        3a    reproduces      FAILS            39          YES
+T37-3b        3b    reproduces      FAILS            4           YES
+T37-3b-2      3b    reproduces      FAILS            9           YES
+T37-3c        3c    FAILS           FAILS            14          YES
+T37-3c-2      3c    FAILS           FAILS            14          YES
+T37-3d        3d    reproduces      FAILS            25          YES
+T37-3d-2      3d    reproduces      FAILS            145         YES
+============================================================================================

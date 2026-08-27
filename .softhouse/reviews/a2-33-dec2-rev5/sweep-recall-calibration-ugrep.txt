@@ -1,0 +1,22 @@
+unique rev4 lines hit by A2-33 sweep:       86
+=== RECALL CHECK against the ground truth A2-32 holds ===
+  rev4 line 48  HIT
+  rev4 line 811  HIT
+  rev4 line 894  HIT
+  rev4 line 905  HIT
+  rev4 line 910  HIT
+  rev4 line 932  HIT
+  rev4 line 935  HIT
+  rev4 line 974  HIT
+  rev4 line 1956  HIT
+  rev4 line 2283  HIT
+  rev4 line 2284  HIT
+  rev4 line 2345  HIT
+  rev4 line 2474  HIT
+  rev4 line 2531  HIT
+  rev4 line 2544  HIT
+MISSES=0
+
+=== F-1 ground truth (the FU-T208-1 parenthetical) ===
+956:in `.softhouse/guards/ledgerguard/main.go`, which the guard's own head DROPS on the pass path —
+957:`FU-T208-1`]. **These are BLIND SPOTS, not detection classes; the two counts are unrelated and

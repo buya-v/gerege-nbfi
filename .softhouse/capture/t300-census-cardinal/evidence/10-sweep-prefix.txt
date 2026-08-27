@@ -1,0 +1,71 @@
+T300 CARDINAL SWEEP — subject: .softhouse/conformance.sh
+  subject lines            : 2953
+  SELECTOR 1 (print stmts) : ^[[:space:]]*(say|warn|echo|printf)[[:space:]]
+  print statements         : 253
+  SELECTOR 2 (int literal) : [^A-Za-z0-9_$]([0-9]+)([^A-Za-z0-9_]|$)
+  ... carrying an integer  : 52
+  SELECTOR 3 (id exclusion): -v ([PTIC]-[0-9]|A2-[0-9]|DEC-[0-9]|FU-T[0-9]|\bT[0-9]{2,3}\b|P-[0-9]{2})
+  ... after id exclusion   : 44
+
+THE POPULATION (line:text) ------------------------------------------------
+621:    warn "conformance: EXIT 2 — the harness is unusable. This is NOT a pass."
+631:    warn "conformance: enumerate files and inspect none. EXIT 2 — the harness is unusable. NOT a pass."
+641:    warn "conformance: would read as a pass. EXIT 2 — the harness is unusable. NOT a pass."
+856:  say "conformance: gofmt guard — inspected $seen .go files under $NEXUS_DIR (recursive, whole module; contract.go exempt, gate G-3)"
+1059:    warn "conformance: the $label guard's POPULATION FLOOR did not derive (caller passed '${3:-<nothing>}')."
+1343:  say "conformance: ledger-invariants LIMITS (CANNOT-CATCH, condensed; the full 33-line block is"
+1514:    warn "conformance: the fail-open linter exited $rc, which is neither its clean (0) nor its"
+1515:    warn "conformance: violations (1) code. 2 is its own corpus refusal; anything else is a crash."
+1537:  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at 11."
+1552:    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+1787:    warn "conformance: the host-state selector exited $rc. \`git grep\` exits 1 on NO MATCH and >1 on"
+1788:    warn "conformance: ERROR — 9 is this guard's own code for 'could not enter $REPO_ROOT'. An error is"
+1814:    warn "conformance: the host-state census exited $rc from \`git grep\`. >1 is an ERROR, and this"
+1850:  say "conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: $m, pinned at 17."
+1866:    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+1886:    warn "conformance: EXIT 2 — no verdict is available, and NO other guard was run: their"
+1899:    warn "conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass."
+1946:    warn "conformance: the exemption census gate matched $n lines for the $3 figure; it requires exactly 1."
+1991:    warn "conformance: EXIT 2. A figure this gate cannot read is not a figure it may pass."
+2089:    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+2182:    warn "conformance: THE REPORT ABOVE MAY CARRY THE BINARY'S OWN 'VERDICT: PASS (exit 0)' LINE. IT IS"
+2185:    warn "conformance: worse. The verdict of the RUN is this one, and it is EXIT 2."
+2186:    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+2203:      say "conformance:   KILLED  $impl — exit 1, ledger parity FAIL $pfail + oracle-refusal FAIL $rfail"
+2206:      warn "conformance:   SURVIVED $impl — exit $rc (wanted 1), wrong-implementation banner $banner"
+2207:      warn "conformance:            (wanted 1), ledger FAILs $kills (wanted >= 1)."
+2221:    warn "conformance: THE REPORT ABOVE MAY CARRY THE BINARY'S OWN 'VERDICT: PASS (exit 0)' LINE. IT IS"
+2224:    warn "conformance: worse. The verdict of the RUN is this one, and it is EXIT 2."
+2225:    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+2255:    warn "conformance: the harness does not build. EXIT 2. This is NOT a pass."
+2292:      warn "conformance: conformance reports EXIT 2, not a false PASS, and 2 never becomes 0."
+2363:    say "--- last 6 lines of that run -------------------------------------------"
+2364:    printf '%s\n' "$out" | tail -6
+2392:    say "--- last 6 lines of that run -------------------------------------------"
+2393:    printf '%s\n' "$out" | tail -6
+2468:    say "PROOF OK   exit $rc8               the fixture PASSES and parity stays 0, stamped NOT a conformance PASS"
+2661:  printf '%s' "$out19a" | LC_ALL=C grep -aq 'WITHDRAWS from grading' || ok19=0
+2669:  printf '%s' "$out19b" | LC_ALL=C grep -aq 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' || ok19=0
+2673:  printf '%s' "$out19b" | LC_ALL=C grep -aqE 'parity vectors +PASS [0-9]+ +FAIL 0' || ok19=0
+2678:    say "PROOF FAIL exit $rc19a/$rc19b       T9-F1b coverage is not as claimed (want 2 then 0)"
+2775:    printf '%s' "$out20" | LC_ALL=C grep -aqE 'invariant assertions +[1-9][0-9]* NOT RUN' || note20 \
+2780:    printf '%s' "$out20c" | LC_ALL=C grep -aqE 'principal_amortizes_to_zero +hold [1-9][0-9]* +violated 0' || note20 \
+2815:    printf 'module stand-in\n\ngo 1.22\n' > "$other/nexus/go.mod"
+2897:    printf '%s\n' 'CENSUS ascending — inspected 7 rigs / inspected 320 tokens' \
+---------------------------------------------------------------------------
+
+SELECTOR 4 (literal beside a pin) : pinned at [0-9]
+  matches                         : 3
+1537:  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at 11."
+1644:# below still prints the LITERAL "pinned at 17" and is therefore wrong on every run — REQUIRED
+1850:  say "conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: $m, pinned at 17."
+
+CALIBRATION on the two PRE-FIX spellings (P-72):
+  selector 1 sees          : 2 / 2
+  selector 4 sees          : 2 / 2
+
+WHERE THIS LOOKED, AND WHERE IT DID NOT:
+  looked : every print statement in .softhouse/conformance.sh, whole file, all 2.9k lines.
+  did NOT: the guards' own binaries (ledgerguard, the fail-open linter), the capture rigs,
+           and every other tracked .sh/.py. A cardinal printed by a SUBPROCESS of this bar
+           is out of this sweep's population, and 'not found' here says nothing about them.

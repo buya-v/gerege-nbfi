@@ -1,0 +1,348 @@
+{
+ "legs": [
+  {
+   "leg": "BASE-N6-root-verdict-empty",
+   "want": {
+    "PRE": 1,
+    "T268": 0,
+    "WIP": 1,
+    "NEW": 1
+   },
+   "got": {
+    "PRE": {
+     "exit": 1,
+     "probe": "T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1"
+    },
+    "T268": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0"
+    },
+    "WIP": {
+     "exit": 1,
+     "probe": "T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=1 voidAcks=0"
+    },
+    "NEW": {
+     "exit": 1,
+     "probe": "T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=1 voidAcks=0 containerRows=1 containerAffirmations=1"
+    }
+   },
+   "pass": true,
+   "skipped": false,
+   "why": "T281's R1. T268 greens an affirmative verdict over nothing; NEW refuses it."
+  },
+  {
+   "leg": "BASE-H1-nested-header-empty",
+   "want": {
+    "PRE": 1,
+    "T268": 0,
+    "WIP": 0,
+    "NEW": 1
+   },
+   "got": {
+    "PRE": {
+     "exit": 1,
+     "probe": "T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1"
+    },
+    "T268": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0"
+    },
+    "WIP": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0"
+    },
+    "NEW": {
+     "exit": 1,
+     "probe": "T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=1 containerAffirmations=1"
+    }
+   },
+   "pass": true,
+   "skipped": false,
+   "why": "T286's R1b. The WIP repair, phrased about the ROOT, still greens it; NEW refuses."
+  },
+  {
+   "leg": "FO5-X2-header-in-nested-list",
+   "want": {
+    "PRE": 1,
+    "T268": 0,
+    "WIP": 0,
+    "NEW": 1
+   },
+   "got": {
+    "PRE": {
+     "exit": 1,
+     "probe": "T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1"
+    },
+    "T268": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0"
+    },
+    "WIP": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0"
+    },
+    "NEW": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0"
+    }
+   },
+   "pass": false,
+   "skipped": false,
+   "why": "H1 + two characters: the header dict is now an element of a list one level down, so it is a RECORD, so it answers the coverage guard."
+  },
+  {
+   "leg": "FO5-X3-header-in-list-of-lists",
+   "want": {
+    "PRE": 1,
+    "T268": 0,
+    "WIP": 0,
+    "NEW": 1
+   },
+   "got": {
+    "PRE": {
+     "exit": 1,
+     "probe": "T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1"
+    },
+    "T268": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0"
+    },
+    "WIP": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0"
+    },
+    "NEW": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0"
+    }
+   },
+   "pass": false,
+   "skipped": false,
+   "why": "The same, reached through two nested lists."
+  },
+  {
+   "leg": "FO5-X4-toplevel-array-header-only",
+   "want": {
+    "PRE": 1,
+    "T268": 0,
+    "WIP": 0,
+    "NEW": 1
+   },
+   "got": {
+    "PRE": {
+     "exit": 1,
+     "probe": "T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1"
+    },
+    "T268": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0"
+    },
+    "WIP": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0"
+    },
+    "NEW": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0"
+    }
+   },
+   "pass": false,
+   "skipped": false,
+   "why": "A top-level JSON ARRAY holding only the header -- which is the shape this program's own battery evidence files (t286-legs.json, red-green-legs.json) use."
+  },
+  {
+   "leg": "FO5-X7-header-in-deep-nested-list",
+   "want": {
+    "PRE": 1,
+    "T268": 0,
+    "WIP": 0,
+    "NEW": 1
+   },
+   "got": {
+    "PRE": {
+     "exit": 1,
+     "probe": "T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1"
+    },
+    "T268": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0"
+    },
+    "WIP": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0"
+    },
+    "NEW": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0"
+    }
+   },
+   "pass": false,
+   "skipped": false,
+   "why": "The same, four levels down."
+  },
+  {
+   "leg": "FO5-X2-BATCHED-with-real-evidence",
+   "want": {
+    "PRE": 0,
+    "T268": 0,
+    "WIP": 0,
+    "NEW": 1
+   },
+   "got": {
+    "PRE": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0"
+    },
+    "T268": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0"
+    },
+    "WIP": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0"
+    },
+    "NEW": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0"
+    }
+   },
+   "pass": false,
+   "skipped": false,
+   "why": "F-1's own batching shape: the empty file hides inside a batch with real evidence. PRE greens the BATCH because F-1's global nil gate is the defect T268 fixed; NEW must refuse it on the per-file counter and does not."
+  },
+  {
+   "leg": "FO5-X5-affirmation-in-list-over-refuted-record",
+   "want": {
+    "PRE": 0,
+    "T268": 0,
+    "WIP": 0,
+    "NEW": 1
+   },
+   "got": {
+    "PRE": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0"
+    },
+    "T268": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0"
+    },
+    "WIP": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0"
+    },
+    "NEW": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0"
+    }
+   },
+   "pass": false,
+   "skipped": false,
+   "why": "A document-level 'AS PREDICTED' sitting beside a record that recorded its own predicate FALSE. Guard #10 is written for exactly this and does not fire, because the header is in a list and is therefore not a CONTAINER row."
+  },
+  {
+   "leg": "CONTROL-X5b-affirmation-as-mapping-key",
+   "want": {
+    "PRE": 0,
+    "T268": 0,
+    "WIP": 0,
+    "NEW": 1
+   },
+   "got": {
+    "PRE": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0"
+    },
+    "T268": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0"
+    },
+    "WIP": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0"
+    },
+    "NEW": {
+     "exit": 1,
+     "probe": "T259-VPA: REFUSED files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=1 containerAffirmations=1"
+    }
+   },
+   "pass": true,
+   "skipped": false,
+   "why": "The SAME document with the header as a mapping key. Guard #10 fires here, which is what shows the guard is real and its scope is one bracket wide."
+  },
+  {
+   "leg": "HELD-X8-noninspectable-dict-in-list",
+   "want": {
+    "PRE": 0,
+    "T268": 0,
+    "WIP": 1,
+    "NEW": 1
+   },
+   "got": {
+    "PRE": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0"
+    },
+    "T268": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0"
+    },
+    "WIP": {
+     "exit": 1,
+     "probe": "T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=1 voidAcks=0"
+    },
+    "NEW": {
+     "exit": 1,
+     "probe": "T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=1 voidAcks=0 containerRows=1 containerAffirmations=1"
+    }
+   },
+   "pass": true,
+   "skipped": false,
+   "why": "A dict in the list that carries no evidence is not a row at all, so the root header cannot borrow coverage from it. NEW refuses. PRE greens it."
+  },
+  {
+   "leg": "HELD-X1-header-in-toplevel-list",
+   "want": {
+    "PRE": 0,
+    "T268": 0,
+    "WIP": 0,
+    "NEW": 0
+   },
+   "got": {
+    "PRE": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0"
+    },
+    "T268": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0"
+    },
+    "WIP": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0"
+    },
+    "NEW": {
+     "exit": 0,
+     "probe": "T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0"
+    }
+   },
+   "pass": true,
+   "skipped": false,
+   "why": "NOT a lost refusal -- PRE greens this too (its coverage rule is 'a dict in a TOP-LEVEL list'). Recorded so the finding above is not overstated: X1 is the pre-existing decoy class T286 discloses as item a2; X2/X3/X4/X7 are NOT."
+  }
+ ],
+ "corpusShape": [
+  {
+   "file": "classify-t229.json",
+   "records": 11,
+   "containers": 0,
+   "recordsWithPredicate": 8
+  },
+  {
+   "file": "classify-t219.json",
+   "records": 11,
+   "containers": 0,
+   "recordsWithPredicate": 9
+  }
+ ]
+}

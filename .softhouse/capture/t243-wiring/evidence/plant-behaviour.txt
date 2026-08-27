@@ -1,0 +1,6 @@
+--- pattern: MinorUnits
+/Users/buv/gerege-nbfi/.claude/worktrees/agent-ab2488891c1ff496e/.softhouse/capture/t243-wiring/evidence/planted-failopen-sweep.sh: line 7: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab2488891c1ff496e/.claude/worktrees/agent-T243-DELETED-LONG-AGO: No such file or directory
+   (no hits)
+--- pattern: DoubleEntryBalances
+/Users/buv/gerege-nbfi/.claude/worktrees/agent-ab2488891c1ff496e/.softhouse/capture/t243-wiring/evidence/planted-failopen-sweep.sh: line 7: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab2488891c1ff496e/.claude/worktrees/agent-T243-DELETED-LONG-AGO: No such file or directory
+   (no hits)

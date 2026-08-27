@@ -1,0 +1,16 @@
+go version: go version go1.26.6 darwin/arm64
+GOROOT: /Users/buv/gerege-nbfi/.softhouse/toolchain/go
+
+=== go build ./...
+BUILD_EXIT=0
+
+=== go test ./...
+   ok  	github.com/gerege/nexus/internal/apps/loanschedule	9.477s
+   ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	26.467s
+   ?   	github.com/gerege/nexus/internal/apps/loanschedule/conformance/cmd/conformance	[no test files]
+   ?   	github.com/gerege/nexus/internal/apps/loanschedule/contract	[no test files]
+
+=== gofmt -l .
+   internal/apps/loanschedule/contract/contract.go
+   (count: 1)
+   NOTE: gofmt -w was NOT run (G-3).

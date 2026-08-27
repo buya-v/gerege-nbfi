@@ -1,0 +1,33 @@
+=== A2a — one character changed in the canary principal (1162502.5 -> 1162502.55), tenant gerege
+recipe under test: .softhouse/capture/charges/bin/preconditions.sh
+recipe sha256:     9256b881153d3deab2013cb9d95fae95258b68b398cdf22e5da9a8a416a46b54
+interpreter:       sh    cwd: /tmp/t115-attacks.7438/pre
+
+$ CANARY_REQ=/tmp/t115-attacks.7438/pre/.softhouse/capture/t91/out/t115-pre-sh/req-mutated-55.json "sh" "/tmp/t115-attacks.7438/pre/.softhouse/capture/charges/bin/preconditions.sh" gerege
+
+== T36 Path B preconditions, tenant 'gerege' ==
+  PASS  image digest sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  PASS  jar git.commit.id 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  PASS  jar git.dirty=false
+  PASS  MoneyHelper.PRECISION = 19 (deployed bytecode)
+  PASS  actuator/health UP
+  PASS  driverClassName org.postgresql.Driver
+  PASS  JDBC URL is jdbc:postgresql://…
+  PASS  0 prohibited-engine hits in container env
+  PASS  0 prohibited driver jars in fineract-provider.jar
+  PASS  PostgreSQL JDBC driver present in the jar
+  PASS  PostgreSQL version: PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+  PASS  tenant 'gerege' exists
+  PASS  tenant timezone_id = Asia/Ulaanbaatar
+  PASS  c_configuration.rounding-mode = 4 (HALF_UP)
+  PASS  rounding-mode row enabled
+  PASS  schema_connection_parameters is empty
+  PASS  tenant schema_server_port = 5432
+  PASS  running JVM initialized tenant 'gerege' at HALF_UP
+  PASS  effective rounding mode canary: period-1 interest 20925.05 (= HALF_UP)
+  PASS  MNT seeded with decimal_places=2 (ISO 4217 496, minor unit 2)
+  PASS  MNT enabled for the tenant
+
+ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+
+EXIT=0

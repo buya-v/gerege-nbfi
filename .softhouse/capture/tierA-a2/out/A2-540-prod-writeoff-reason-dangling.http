@@ -1,0 +1,9 @@
+POST /loanproducts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/t275-090-writeoff-reason-dangling.json
+body-wire-bytes-artefact: A2-540-prod-writeoff-reason-dangling.req
+body-sha256: 5aaa908264da31ade85adfcc23981656bdc1f7d720a7e346ae54716d59dcbdf7
+body-bytes: 1071
+captured-at-utc: 2026-08-22T14:11:41Z

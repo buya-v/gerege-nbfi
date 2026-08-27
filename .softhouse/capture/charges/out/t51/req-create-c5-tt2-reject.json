@@ -1,0 +1,13 @@
+{
+ "name": "T51 calc5 at SPECIFIED_DUE_DATE (expected reject)",
+ "chargeAppliesTo": 1,
+ "chargeTimeType": 2,
+ "chargeCalculationType": 5,
+ "chargePaymentMode": 0,
+ "currencyCode": "MNT",
+ "amount": 1.2345,
+ "active": true,
+ "penalty": false,
+ "locale": "en",
+ "monthDayFormat": "dd MMM"
+}

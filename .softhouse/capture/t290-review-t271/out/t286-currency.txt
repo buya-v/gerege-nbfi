@@ -1,0 +1,34 @@
+T290 -- is the invisible route to green still live against T286's rewritten rule?
+====================================================================================================
+  live rule  : .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+  T286 rule  : softhouse/t286-t268-retry:.softhouse/capture/t256-verdict-predicate/… (extracted read-only into a temp dir inside the repo)
+  evidence   : .softhouse/capture/t219-g8-residual/out/classify-t219.json  sha 5226eacea7ff004e
+
+  CASE 0 -- clean tree (the positive control)
+  case0  live  exit 0  GREEN    disagreements=4
+  case0  t286  exit 0  GREEN    disagreements=4
+
+  CASE A -- the evidence retro-edited ALONE; the register still pins the old bytes
+         (4 false P2_* flipped to true)
+  caseA  live  exit 0  GREEN    disagreements=0
+  caseA  t286  exit 1  REFUSED  disagreements=0
+
+  CASE B -- the CONSISTENT TWO-FILE EDIT: evidence retro-edited AND the register
+         re-pinned to the NEW bytes with its rows removed. Nothing is VOID.
+  caseB  live  exit 0  GREEN    disagreements=0
+  caseB  t286  exit 0  GREEN    disagreements=0
+
+  committed evidence restored and VERIFIED by sha256: 5226eacea7ff004e
+
+  CASE A: GREEN on the live rule, REFUSED on T286's. **T286 ALREADY CLOSES THE
+  void_acks HALF**, independently and before this review. F-T290-1a is live
+  only against the rule on main today, and T269 must state WHICH rule it
+  installs.
+
+  CASE B: GREEN ON BOTH. The consistent two-file edit leaves nothing to void,
+  so `voidAcks` cannot see it and `unacknowledged=0` is satisfied. **ONLY A
+  FLOOR ON `disagreements` CATCHES THIS**, and no rule on any branch has one.
+  This is the half of F-T290-1 that survives everything, and it is the shape a
+  well-meaning worker reaches for: regenerate the evidence, update the
+  register. It looks like maintenance.
+T290-T286: GREEN caseA_live=GREEN caseA_t286=REFUSED caseB_live=GREEN caseB_t286=GREEN

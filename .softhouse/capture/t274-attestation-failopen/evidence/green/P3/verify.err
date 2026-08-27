@@ -1,0 +1,1 @@
+REFUSING: sidecar /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/green/P3/probe.http is SCHEMA 2 and attests a response, but --resp/--resphdr/--status was not supplied. An attested artefact that is not presented cannot be checked, and an unchecked assertion is not a passed one.

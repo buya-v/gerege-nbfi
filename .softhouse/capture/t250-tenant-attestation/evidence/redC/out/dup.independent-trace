@@ -1,0 +1,105 @@
+== Info: Host localhost:8443 was resolved.
+== Info: IPv6: ::1
+== Info: IPv4: 127.0.0.1
+== Info:   Trying [::1]:8443...
+== Info: Connected to localhost (::1) port 8443
+== Info: ALPN: curl offers h2,http/1.1
+== Info: (304) (OUT), TLS handshake, Client hello (1):
+=> Send SSL data, 314 bytes (0x13a)
+0000: ...6..g..gAT=q.P}.1\..........r.....@. .,.t..c?-NW.v..oy.x^.....
+0040: .7......b.............0.,.(.$.......k.9...........=.5...../.+.'.
+0080: #.......g.3...E...<./...A.......................+............3.&
+00c0: .$... .#.....!..ck.R..8[....[QI....`O..........localhost........
+0100: ...............................................h2.http/1.1
+== Info: (304) (IN), TLS handshake, Server hello (2):
+<= Recv SSL data, 122 bytes (0x7a)
+0000: ...v.......b....ynV...)5$..dy.r..x.... .,.t..c?-NW.v..oy.x^.....
+0040: .7...........+.....3.$... :.. l......F!%....d.J4..D..@...2
+== Info: (304) (IN), TLS handshake, Unknown (8):
+<= Recv SSL data, 20 bytes (0x14)
+0000: ....................
+== Info: (304) (IN), TLS handshake, Certificate (11):
+<= Recv SSL data, 912 bytes (0x390)
+0000: ...........0...0..g.......Q=.60...*.H........0p1.0...U....Unknow
+0040: n1.0...U....Unknown1.0...U....Unknown1.0...U....Mifos.org1.0...U
+0080: ....Unknown1.0...U....localhost0...140509221244Z..240506221244Z0
+00c0: p1.0...U....Unknown1.0...U....Unknown1.0...U....Unknown1.0...U..
+0100: ..Mifos.org1.0...U....Unknown1.0...U....localhost0.."0...*.H....
+0140: .........0...........R..G ......Z....*b..R..[/...g....c`..R,D&..
+0180: {.g...o.......LJ.B.B....Y.&M......%...*....5.......m....!...n.oV
+01c0: .R.4.(:(..GG.q.A.!he..S...O..w.c.........nPm...&yF...HE..k-.Ul.0
+0200: x..T....:.......!.Q.....(v...$.._L:.~..,..... ..u..'D..1......w.
+0240: .e..EG.?..Q..Ny.t.......!0.0...U.......M.f.).\;...t.g...`.0...*.
+0280: H.............8.......B@.)B./&...s.....m....o.V.%U.F......E.....
+02c0: A...I..S+....=P..=X..I...D.....&8.')y.:........SB...G.~..l..tHI.
+0300: ..>9.F.8....8..;.....L,.r(.........8Z..|..#V...k+.n.X..5........
+0340: fQ.bR..J....x.?...aoOGUM....M..d.%.....9-_.\".....G..J>f5...1..S
+0380: .N..2W...K!..)..
+== Info: (304) (IN), TLS handshake, CERT verify (15):
+<= Recv SSL data, 264 bytes (0x108)
+0000: .........;4>..}...]5..A=........jiK..X.3+lH.....W9...f...Y...T9.
+0040: .:..(.-.....-"m<T..........o.#.s...........c..*..:.;7....*p.@.l.
+0080: df. PDP...*.0>:dA.~.0.h....%j.1?.u ..K9.GI...._..q3..Pl....b..%.
+00c0: ..m51.....k.f.......n....6...b...[....N.}:kz.`I..[N..NVQ...gN...
+0100: S.......
+== Info: (304) (IN), TLS handshake, Finished (20):
+<= Recv SSL data, 36 bytes (0x24)
+0000: ... 6?.[..$......l.....C....u3......
+== Info: (304) (OUT), TLS handshake, Finished (20):
+=> Send SSL data, 36 bytes (0x24)
+0000: ... d..F. <......x..}..4..P. J..7..d
+== Info: SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256 / [blank] / UNDEF
+== Info: ALPN: server did not agree on a protocol. Uses default.
+== Info: Server certificate:
+== Info:  subject: C=Unknown; ST=Unknown; L=Unknown; O=Mifos.org; OU=Unknown; CN=localhost
+== Info:  start date: May  9 22:12:44 2014 GMT
+== Info:  expire date: May  6 22:12:44 2024 GMT
+== Info:  issuer: C=Unknown; ST=Unknown; L=Unknown; O=Mifos.org; OU=Unknown; CN=localhost
+== Info:  SSL certificate verify result: self signed certificate (18), continuing anyway.
+== Info: using HTTP/1.x
+=> Send header, 225 bytes (0xe1)
+0000: GET /fineract-provider/api/v1/offices HTTP/1.1
+0030: Host: localhost:8443
+0046: User-Agent: curl/8.7.1
+005e: Accept: */*
+006b: Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+0096: Fineract-Platform-TenantId: gerege
+00ba: Fineract-Platform-TenantId: default
+00df: 
+== Info: Request completely sent off
+<= Recv header, 15 bytes (0xf)
+0000: HTTP/1.1 200 
+<= Recv header, 31 bytes (0x1f)
+0000: X-Notification-Refresh: false
+<= Recv header, 14 bytes (0xe)
+0000: Vary: Origin
+<= Recv header, 37 bytes (0x25)
+0000: Vary: Access-Control-Request-Method
+<= Recv header, 38 bytes (0x26)
+0000: Vary: Access-Control-Request-Headers
+<= Recv header, 33 bytes (0x21)
+0000: X-Content-Type-Options: nosniff
+<= Recv header, 21 bytes (0x15)
+0000: X-XSS-Protection: 0
+<= Recv header, 63 bytes (0x3f)
+0000: Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+<= Recv header, 18 bytes (0x12)
+0000: Pragma: no-cache
+<= Recv header, 12 bytes (0xc)
+0000: Expires: 0
+<= Recv header, 65 bytes (0x41)
+0000: Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+<= Recv header, 23 bytes (0x17)
+0000: X-Frame-Options: DENY
+<= Recv header, 32 bytes (0x20)
+0000: Content-Type: application/json
+<= Recv header, 21 bytes (0x15)
+0000: Content-Length: 119
+<= Recv header, 37 bytes (0x25)
+0000: Date: Sat, 22 Aug 2026 12:59:53 GMT
+<= Recv header, 2 bytes (0x2)
+0000: 
+<= Recv data, 119 bytes (0x77)
+0000: [{"id":1,"name":"Head Office","nameDecorated":"Head Office","ext
+0040: ernalId":"1","openingDate":[2009,1,1],"hierarchy":"."}]
+== Info: Connection #0 to host localhost left intact

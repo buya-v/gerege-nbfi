@@ -1,0 +1,14 @@
+=== GREEN ARM: go test ./internal/apps/ledger/... ===
+ok  	github.com/gerege/nexus/internal/apps/ledger	0.881s
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	4.297s
+
+=== RED DRIVE: T296's rule deleted, the test must FAIL ===
+rule deleted from the working copy
+--- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape (0.14s)
+    openingbalance_test.go:142: a vector claiming ledger.opening.balance.and.closure for a NON-opening-balance shape was ADMITTED, or refused for another reason. The pre-closure and future-dated refusals are raw artefacts nothing promotes, and a vector claiming this row for one of them reads as covered when it is not: []
+FAIL
+FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.542s
+FAIL
+
+=== rule restored; re-running the same test ===
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	0.353s

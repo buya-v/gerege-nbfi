@@ -1,0 +1,10 @@
+{
+ "_shape": "DELIBERATELY UNLIKE the row R-VPA was designed around (P-76): the container key is not 'cells', the id key is not 'id', the predicate is P7 not P2, the verdict key is not 'verdict', and the affirmative word is not 'AS PREDICTED'. If R-VPA only catches T229's three known rows it is not a rule.",
+ "observations": [
+  {"probe": "SCRATCH-R120p0-N7-B77",
+   "rate": "120.0", "n": 7, "bMinor": 77,
+   "P7_lastRowExcessEqualsB": false,
+   "P7_rowCountEqualsN": true,
+   "outcomeVerdict": "CONFIRMED"}
+ ]
+}

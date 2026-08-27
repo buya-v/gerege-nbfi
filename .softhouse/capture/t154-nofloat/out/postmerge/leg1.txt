@@ -1,0 +1,52 @@
+=== [0] APPARATUS — binary, version, locale, invocation, input shape (P-33) ===
+grep resolves to  : grep is /usr/bin/grep|
+/usr/bin/grep     : grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+locale            : LANG=C.UTF-8 LC_ALL=unset LC_CTYPE=unset
+invocation        : inside a bash SCRIPT — shell functions are NOT inherited by a child
+pinned pre-fix sha: 187e9726dfad5076f4b68877f411d7d218280889
+pre-fix subject   : RESUME + state: A2 analysis and capture merged, T149 held for its missing review, G-9 raised
+
+PRE  vectors  perl -0pe 's/"(\\.|[^"\\])*"//g' "$f" | grep -Eq '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]' 
+PRE  harness  perl -0pe 's{//[^\n]*}{}g; s{/\*.*?\*/}{}gs' "$f"        | grep -Eq '\bfloat(32|64)\b|\bbig\.Float\b|\bcomplex(64|128)\b|\b(Parse|Format|Append)Float\b' 
+POST vectors  perl -0pe 's/"(\\.|[^"\\])*"//g' "$f" | LC_ALL=C grep -aEq '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]' 
+POST harness  perl -0pe 's{//[^\n]*}{}g; s{/\*.*?\*/}{}gs' "$f"        | LC_ALL=C grep -aEq '\bfloat(32|64)\b|\bbig\.Float\b|\bcomplex(64|128)\b|\b(Parse|Format|Append)Float\b' 
+
+=== [1] CORPUS BYTES (od -c) ===
+g1-clean-float64.go                   p a c k a g e p \n \n f u n c   f ( ) { v a r x f l o a  t 6 4 = 1 ; _ = x   } \n   
+g2-poison-before-same-line.go         p a c k a g e p \n \n f u n c   f ( ) { v a r 342 x f l  o a t 6 4 = 1 ; _ =   x } \n   
+g3-clean-int.go                       p a c k a g e p \n \n f u n c   f ( ) { v a r x i n t 6  4 = 1 ; _ = x } \n  
+v1-clean-float.json                   { \n " c a s e _ i d " : "  V 1 " , \n " r a t e _ p c t  " : 3 . 6 \n } \n   
+v2-poison-before-same-line.json       { \n " c a s e _ i d " : "  V 2 " , \n 342 " r a t e _ p  c t " : 3 . 6 \n } \n   
+v3-poison-after-same-line.json        { \n " c a s e _ i d " : "  V 3 " , \n " r a t e _ p c t  " : 3 . 6 342 \n } \n   
+v4-poison-before-exponent.json        { \n " c a s e _ i d " : "  V 4 " , \n 342 " n " : 3 6  e 2 \n } \n   
+v5-clean-integers.json                { \n " c a s e _ i d " : "  V 5 " , \n " p r i n c i p a  l _ m i n o r " : " 1 2 0 0 0  0 0 0 0 " \n } \n   
+
+=== [2] THE MATRIX — guard verdict per (guard, file) ===
+FILE                                 PRE      POST     want-PRE want-POST
+v1-clean-float.json                  FIRES    FIRES    FIRES    FIRES     POSITIVE CONTROL: without this cell the whole matrix is a null control
+v2-poison-before-same-line.json      SILENT   FIRES    SILENT   FIRES     THE DEFEAT
+v3-poison-after-same-line.json       FIRES    FIRES    FIRES    FIRES     byte AFTER the match — BSD grep survives; the shape T91 used
+v4-poison-before-exponent.json       SILENT   FIRES    SILENT   FIRES     THE DEFEAT, exponent form
+v5-clean-integers.json               SILENT   SILENT   SILENT   SILENT    NEGATIVE CONTROL: no false positive on a legitimate vector
+g1-clean-float64.go                  FIRES    FIRES    FIRES    FIRES     POSITIVE CONTROL
+g2-poison-before-same-line.go        SILENT   FIRES    SILENT   FIRES     THE DEFEAT
+g3-clean-int.go                      SILENT   SILENT   SILENT   SILENT    NEGATIVE CONTROL
+
+=== [3] ZERO FILES INSPECTED IS AN ERROR, NOT A PASS (P-35) ===
+  vectors  PRE  exit 0   POST exit 1
+  vectors  POST says: conformance: guard_no_float_in_vectors INSPECTED ZERO FILES under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg1.7n6DGdzLna/empty-vectors. conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass.
+OK    PRE  vectors over an EMPTY directory returned 0 — the vacuous pass
+OK    POST vectors over an EMPTY directory returned 1 — an ERROR
+  harness  PRE  exit 0   POST exit 1
+  harness  POST says: conformance: guard_no_float_in_harness INSPECTED ZERO FILES under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg1.7n6DGdzLna/empty-harness/internal/apps/loanschedule. conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass.
+OK    PRE  harness over an EMPTY directory returned 0 — the vacuous pass
+OK    POST harness over an EMPTY directory returned 1 — an ERROR
+
+=== [4] THE SENTENCE THIS LEG EXISTS TO MAKE FALSE ===
+  BEFORE: a vector file carrying a float AND one invalid byte earlier on the
+          same line takes guard_no_float_in_vectors to a SILENT PASS.
+  AFTER : it FIRES.
+
+=======================================================================
+LEG 1 ROWS: 12 as wanted, 0 not as wanted
+=======================================================================

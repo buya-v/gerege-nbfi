@@ -1,0 +1,2 @@
+T44 audit controls: 105 cells re-transcribed by the auditor and compared exact-string.
+PASS -- both re-transcribed controls reproduce digit for digit.

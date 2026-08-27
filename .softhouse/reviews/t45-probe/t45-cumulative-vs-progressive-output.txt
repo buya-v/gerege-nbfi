@@ -1,0 +1,97 @@
+T45 PROBE - P1-T43-1: is AbstractCumulativeLoanScheduleGenerator.java:504 a DIFFERENCE, or the line the two generators SHARE?
+pinned checkout HEAD: 426a23544e8426a38ae43ae404670a0a7e85b9eb
+
+== progressive :486
+                scheduleParams.addTotalRepaymentExpected(feeChargesForInstallment.plus(penaltyChargesForInstallment));
+== cumulative  :504
+                scheduleParams.addTotalRepaymentExpected(feeChargesForInstallment.plus(penaltyChargesForInstallment));
+== md5 of each line
+  progressive:486  364d5bfb99ae0249e5392a89164d033a
+  cumulative :504  364d5bfb99ae0249e5392a89164d033a
+
+== whole-method diff: cumulative updatePeriodsWithCharges (488-508) vs progressive (470-490)
+1,2c1,2
+<     private void updatePeriodsWithCharges(final MonetaryCurrency currency, LoanScheduleParams scheduleParams,
+<             final Collection<LoanScheduleModelPeriod> periods, final Set<LoanCharge> nonCompoundingCharges, final MathContext mc) {
+---
+>     private void updatePeriodsWithCharges(final CurrencyData currency, LoanScheduleParams scheduleParams,
+>             final Collection<LoanScheduleModelPeriod> periods, final Set<LoanCharge> nonCompoundingCharges, MathContext mc) {
+5,6c5,6
+<                 PrincipalInterest principalInterest = new PrincipalInterest(Money.of(currency, loanScheduleModelPeriod.principalDue()),
+<                         Money.of(currency, loanScheduleModelPeriod.interestDue()), null);
+---
+>                 PrincipalInterest principalInterest = new PrincipalInterest(Money.of(currency, loanScheduleModelPeriod.principalDue(), mc),
+>                         Money.of(currency, loanScheduleModelPeriod.interestDue(), mc), null);
+  (differences above are parameter TYPES only - MonetaryCurrency vs CurrencyData, and the mc-carrying Money.of; the addTotalRepaymentExpected line is identical)
+
+== THE REAL DIFFERENCE - cumulative main loop folds the period's charges into the period total first
+  AbstractCumulativeLoanScheduleGenerator.java:349              applyChargesForCurrentPeriod(loanCharges, monetaryCurrency, scheduleParams, scheduledDueDate, currentPeriodParams, mc);
+  AbstractCumulativeLoanScheduleGenerator.java:352              final Money totalInstallmentDue = currentPeriodParams.fetchTotalAmountForPeriod();
+  AbstractCumulativeLoanScheduleGenerator.java:392              scheduleParams.addTotalRepaymentExpected(totalInstallmentDue);
+  ScheduleCurrentPeriodParams.java:144      public Money fetchTotalAmountForPeriod() {
+  ScheduleCurrentPeriodParams.java:145          return this.principalForThisPeriod.plus(interestForThisPeriod).plus(feeChargesForInstallment).plus(penaltyChargesForInstallment);
+  ScheduleCurrentPeriodParams.java:146      }
+
+== progressive counterpart - :137 has no charge term, :367-382 never calls addTotalRepaymentExpected
+  ProgressiveLoanScheduleGenerator.java:137                          scheduleParams.addTotalRepaymentExpected(principalDue.plus(interestDue, mc));
+  ProgressiveLoanScheduleGenerator.java:140              applyChargesForCurrentPeriod(repaymentPeriod, loanCharges, scheduleParams, currency, mc);
+  ProgressiveLoanScheduleGenerator.java:367      private void applyChargesForCurrentPeriod(final LoanScheduleModelRepaymentPeriod repaymentPeriod, final Set<LoanCharge> loanCharges,
+  ProgressiveLoanScheduleGenerator.java:368              final LoanScheduleParams scheduleParams, final CurrencyData currency, final MathContext mc) {
+  ProgressiveLoanScheduleGenerator.java:369          final PrincipalInterest principalInterest = new PrincipalInterest(repaymentPeriod.getPrincipalDue(),
+  ProgressiveLoanScheduleGenerator.java:370                  repaymentPeriod.getInterestDue(), null);
+  ProgressiveLoanScheduleGenerator.java:371  
+  ProgressiveLoanScheduleGenerator.java:372          final Money fees = cumulativeFeeChargesDueWithin(repaymentPeriod.getFromDate(), repaymentPeriod.getDueDate(), loanCharges, currency,
+  ProgressiveLoanScheduleGenerator.java:373                  principalInterest, scheduleParams.getPrincipalToBeScheduled(), scheduleParams.getTotalCumulativeInterest(), true,
+  ProgressiveLoanScheduleGenerator.java:374                  scheduleParams.isFirstPeriod(), mc);
+  ProgressiveLoanScheduleGenerator.java:375          final Money penalties = cumulativePenaltyChargesDueWithin(repaymentPeriod.getFromDate(), repaymentPeriod.getDueDate(), loanCharges,
+  ProgressiveLoanScheduleGenerator.java:376                  currency, principalInterest, scheduleParams.getPrincipalToBeScheduled(), scheduleParams.getTotalCumulativeInterest(), true,
+  ProgressiveLoanScheduleGenerator.java:377                  scheduleParams.isFirstPeriod(), mc);
+  ProgressiveLoanScheduleGenerator.java:378  
+  ProgressiveLoanScheduleGenerator.java:379          repaymentPeriod.addLoanCharges(fees.getAmount(), penalties.getAmount());
+  ProgressiveLoanScheduleGenerator.java:380          scheduleParams.addTotalFeeChargesCharged(fees);
+  ProgressiveLoanScheduleGenerator.java:381          scheduleParams.addTotalPenaltyChargesCharged(penalties);
+  ProgressiveLoanScheduleGenerator.java:382      }
+
+== P2-T43-1: the down-payment term revision 8's C-1 semantics omitted
+  ProgressiveLoanScheduleGenerator.java:332              if (loanApplicationTerms.isDownPaymentEnabled()) {
+  ProgressiveLoanScheduleGenerator.java:333                  downPaymentAmount = Money.of(loanApplicationTerms.getCurrency(), MathUtil.percentageOf(disbursedAmount.getAmount(),
+  ProgressiveLoanScheduleGenerator.java:334                          loanApplicationTerms.getDisbursedAmountPercentageForDownPayment(), mc), mc);
+  ProgressiveLoanScheduleGenerator.java:335                  if (loanApplicationTerms.getInstallmentAmountInMultiplesOf() != null) {
+  ProgressiveLoanScheduleGenerator.java:336                      downPaymentAmount = Money.roundToMultiplesOf(downPaymentAmount,
+  ProgressiveLoanScheduleGenerator.java:337                              loanApplicationTerms.getInstallmentAmountInMultiplesOf(), mc);
+  ProgressiveLoanScheduleGenerator.java:338                  }
+  ProgressiveLoanScheduleGenerator.java:339  
+  ProgressiveLoanScheduleGenerator.java:340                  LoanScheduleModelDownPaymentPeriod downPaymentPeriod = LoanScheduleModelDownPaymentPeriod.downPayment(
+  ProgressiveLoanScheduleGenerator.java:341                          scheduleParams.getInstalmentNumber(), disbursementDate, downPaymentAmount,
+  ProgressiveLoanScheduleGenerator.java:342                          outstandingBalance.plus(disbursedAmount, mc).minus(downPaymentAmount, mc));
+  ProgressiveLoanScheduleGenerator.java:343                  periods.add(downPaymentPeriod);
+  ProgressiveLoanScheduleGenerator.java:344  
+  ProgressiveLoanScheduleGenerator.java:345                  scheduleParams.addTotalRepaymentExpected(downPaymentAmount);
+  ProgressiveLoanScheduleGenerator.java:346                  scheduleParams.incrementInstalmentNumber();
+  ProgressiveLoanScheduleGenerator.java:347              }
+
+== P1-T43-3: getCumulativeAmountOfCharge - isDue is computed at :403 and the isInstalmentFee arm at :404-405 does not read it
+  ProgressiveLoanScheduleGenerator.java:400      private Money getCumulativeAmountOfCharge(LocalDate periodStart, LocalDate periodEnd, PrincipalInterest principalInterestForThisPeriod,
+  ProgressiveLoanScheduleGenerator.java:401              Money principalDisbursed, Money totalInterestChargedForFullLoanTerm, boolean isInstallmentChargeApplicable,
+  ProgressiveLoanScheduleGenerator.java:402              boolean isFirstPeriod, LoanCharge loanCharge, Money cumulative, MathContext mc) {
+  ProgressiveLoanScheduleGenerator.java:403          boolean isDue = loanCharge.isDueInPeriod(periodStart, periodEnd, isFirstPeriod);
+  ProgressiveLoanScheduleGenerator.java:404          if (loanCharge.isInstalmentFee() && isInstallmentChargeApplicable) {
+  ProgressiveLoanScheduleGenerator.java:405              cumulative = calculateInstallmentCharge(principalInterestForThisPeriod, cumulative, loanCharge, mc);
+  ProgressiveLoanScheduleGenerator.java:406          } else if (loanCharge.isOverdueInstallmentCharge() && isDue && loanCharge.getChargeCalculation().isPercentageBased()) {
+  ProgressiveLoanScheduleGenerator.java:407              cumulative = cumulative.plus(loanCharge.chargeAmount());
+  ProgressiveLoanScheduleGenerator.java:408          } else if (isDue && loanCharge.getChargeCalculation().isPercentageBased()) {
+  ProgressiveLoanScheduleGenerator.java:409              cumulative = calculateSpecificDueDateChargeWithPercentage(principalDisbursed, totalInterestChargedForFullLoanTerm, cumulative,
+  ProgressiveLoanScheduleGenerator.java:410                      loanCharge, mc);
+  ProgressiveLoanScheduleGenerator.java:411          } else if (isDue) {
+  ProgressiveLoanScheduleGenerator.java:412              cumulative = cumulative.plus(loanCharge.amount());
+  ProgressiveLoanScheduleGenerator.java:413          }
+  ProgressiveLoanScheduleGenerator.java:414          return cumulative;
+  ProgressiveLoanScheduleGenerator.java:415      }
+
+== P1-T43-3, the two isInstallmentChargeApplicable sources
+  ProgressiveLoanScheduleGenerator.java:373                  principalInterest, scheduleParams.getPrincipalToBeScheduled(), scheduleParams.getTotalCumulativeInterest(), true,   <- main loop: hard-coded true
+  ProgressiveLoanScheduleGenerator.java:376                  currency, principalInterest, scheduleParams.getPrincipalToBeScheduled(), scheduleParams.getTotalCumulativeInterest(), true,   <- main loop: hard-coded true
+  ProgressiveLoanScheduleGenerator.java:479                          !loanScheduleModelPeriod.isRecalculatedInterestComponent(), scheduleParams.isFirstPeriod(), mc);   <- separated path
+  ProgressiveLoanScheduleGenerator.java:483                          !loanScheduleModelPeriod.isRecalculatedInterestComponent(), scheduleParams.isFirstPeriod(), mc);   <- separated path
+
+CONCLUSION: :504 == :486 byte for byte. C-1's conclusion stands; its revision-8 citation did not.

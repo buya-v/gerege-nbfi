@@ -1,0 +1,46 @@
+T300 RED DRIVE — subject: .softhouse/conformance.sh (swapped in place, restored on EXIT)
+pin lengths at rest:
+  HOSTSTATE_PIN_TEMP_ASSIGN_LIST rows : 18
+  FAILOPEN_PIN_FILE_LIST rows         : 11
+
+ARM A — pin loses one row (17 pinned, 18 in the tree)
+  exit                    : 2
+  printed cardinal(s)     : census=18 pinned=17
+  probe lines PRESENT     : 0  (0 = the guard refused before the probe, NOT an outage)
+  diff rows named         : 1
+  artefact                : .softhouse/capture/t300-census-cardinal/red/A-pin-minus-one.txt
+  '+' row for the deleted pin row:
++.softhouse/reviews/T158-compare-enumerators.sh | C=/tmp/t158-clone
+
+ARM B — pin gains one bogus row (19 pinned, 18 in the tree)
+  exit                    : 2
+  printed cardinal(s)     : census=18 pinned=19
+  probe lines PRESENT     : 0  (0 = the guard refused before the probe, NOT an outage)
+  diff rows named         : 1
+  artefact                : .softhouse/capture/t300-census-cardinal/red/B-pin-plus-one.txt
+
+ARM C1 — PRE-FIX bytes, pin loses one row (list 17, literal should NOT follow)
+  exit                    : 2
+  printed cardinal(s)     : census=18 pinned=17
+  probe lines PRESENT     : 0  (0 = the guard refused before the probe, NOT an outage)
+  diff rows named         : 1
+  artefact                : .softhouse/capture/t300-census-cardinal/red/C1-prefix-minus-one.txt
+ARM C2 — PRE-FIX bytes, pin gains one row (list 19, literal should NOT follow)
+  exit                    : 2
+  printed cardinal(s)     : census=18 pinned=17
+  probe lines PRESENT     : 0  (0 = the guard refused before the probe, NOT an outage)
+  diff rows named         : 1
+  artefact                : .softhouse/capture/t300-census-cardinal/red/C2-prefix-plus-one.txt
+
+ARM D — fail-open pin loses one row (10 pinned, 11 measured)
+  exit                    : 2
+  printed cardinal(s)     : census=18 pinned=18
+  probe lines PRESENT     : 0  (0 = the guard refused before the probe, NOT an outage)
+  diff rows named         : 1
+  artefact                : .softhouse/capture/t300-census-cardinal/red/D-failopen-minus-one.txt
+
+RESTORE:
+  subject vs index (git diff --stat, empty means restored):
+  subject vs the byte copy taken before arm A: (no output means identical)
+  [backup consumed by restore; identity is what git diff --stat above reports]
+DRIVER EXIT=0

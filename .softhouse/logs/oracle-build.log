@@ -1,0 +1,365 @@
+=== reference-oracle image build ===
+src        : /Users/buv/fineract
+pinned     : 426a23544e8426a38ae43ae404670a0a7e85b9eb
+jdk image  : eclipse-temurin:21-jdk
+=== step 1/2: gradle :fineract-provider:bootJar (tests skipped) ===
+--- bootJar attempt 1/3 ---
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :buildSrc:extractPluginRequests UP-TO-DATE
+> Task :buildSrc:generatePluginAdapters UP-TO-DATE
+> Task :buildSrc:compileJava UP-TO-DATE
+> Task :buildSrc:compileGroovy UP-TO-DATE
+> Task :buildSrc:compileGroovyPlugins UP-TO-DATE
+> Task :buildSrc:pluginDescriptors UP-TO-DATE
+> Task :buildSrc:processResources UP-TO-DATE
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+Creating lock file /.config/jgit/config.lock failed
+Thread[#63,ForkJoinPool.commonPool-worker-1,5,main]: got smaller file timestamp on /src (/run/host_mark/Users), /src/.git: 2026-08-17T11:27:59Z < 2026-08-17T11:27:59.786797774Z. Aborting measurement at resolution PT0.213202226S.
+java.io.IOException: Creating directories for /.config/jgit failed
+	at org.eclipse.jgit.util.FileUtils.mkdirs(FileUtils.java:421)
+	at org.eclipse.jgit.internal.storage.file.LockFile.createLockFile(LockFile.java:172)
+	at org.eclipse.jgit.internal.storage.file.LockFile.createLockFileWithRetry(LockFile.java:165)
+	at org.eclipse.jgit.internal.storage.file.LockFile.lock(LockFile.java:146)
+	at org.eclipse.jgit.storage.file.FileBasedConfig.save(FileBasedConfig.java:201)
+	at org.eclipse.jgit.util.FS$FileStoreAttributes.saveToConfig(FS.java:761)
+	at org.eclipse.jgit.util.FS$FileStoreAttributes.lambda$4(FS.java:433)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Cannot save config file 'FileBasedConfig[/.config/jgit/config]'
+java.io.IOException: Creating directories for /.config/jgit failed
+	at org.eclipse.jgit.util.FileUtils.mkdirs(FileUtils.java:421)
+	at org.eclipse.jgit.internal.storage.file.LockFile.createLockFile(LockFile.java:172)
+	at org.eclipse.jgit.internal.storage.file.LockFile.createLockFileWithRetry(LockFile.java:165)
+	at org.eclipse.jgit.internal.storage.file.LockFile.lock(LockFile.java:146)
+	at org.eclipse.jgit.storage.file.FileBasedConfig.save(FileBasedConfig.java:201)
+	at org.eclipse.jgit.util.FS$FileStoreAttributes.saveToConfig(FS.java:761)
+	at org.eclipse.jgit.util.FS$FileStoreAttributes.lambda$4(FS.java:433)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+> Configure project :
+matching ref: COMMIT - 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  ref configuration: COMMIT - pattern: null
+    version: ${describe.tag.version.major}.${describe.tag.version.minor.next}.0-SNAPSHOT
+    describeTagPattern: .*(\d+\.\d+\.\d+).*
+    describeTagFirstParent: false
+
+project version: 1.16.0-SNAPSHOT
+
+> Task :fineract-avro-schemas:preprocessAvroSchemas UP-TO-DATE
+> Task :spotlessInternalRegisterDependencies UP-TO-DATE
+> Task :fineract-avro-schemas:spotlessJson UP-TO-DATE
+> Task :fineract-avro-schemas:spotlessJsonApply UP-TO-DATE
+> Task :fineract-avro-schemas:buildJavaSdk UP-TO-DATE
+> Task :fineract-avro-schemas:compileJava UP-TO-DATE
+> Task :fineract-avro-schemas:processResources UP-TO-DATE
+> Task :fineract-avro-schemas:classes UP-TO-DATE
+> Task :fineract-avro-schemas:jar UP-TO-DATE
+
+> Task :fineract-charge:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-charge with 47 managed classes from 3 modules
+
+> Task :fineract-accounting:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-accounting with 55 managed classes from 4 modules
+
+> Task :fineract-command:compileJava UP-TO-DATE
+> Task :fineract-command:processResources UP-TO-DATE
+> Task :fineract-command:classes UP-TO-DATE
+> Task :fineract-command:jar UP-TO-DATE
+> Task :fineract-validation:compileJava UP-TO-DATE
+> Task :fineract-validation:processResources UP-TO-DATE
+> Task :fineract-validation:classes UP-TO-DATE
+> Task :fineract-validation:jar UP-TO-DATE
+
+> Task :fineract-core:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-core with 40 managed classes from 1 modules
+
+> Task :fineract-tax:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-tax with 44 managed classes from 2 modules
+
+> Task :fineract-tax:processResources NO-SOURCE
+> Task :fineract-charge:processResources UP-TO-DATE
+> Task :fineract-accounting:processResources UP-TO-DATE
+
+> Task :fineract-branch:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-branch with 59 managed classes from 5 modules
+
+> Task :fineract-branch:processResources UP-TO-DATE
+
+> Task :fineract-cob:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-cob with 42 managed classes from 2 modules
+
+> Task :fineract-cob:processResources NO-SOURCE
+> Task :fineract-command-audit:compileJava UP-TO-DATE
+> Task :fineract-command-audit:processResources UP-TO-DATE
+> Task :fineract-command-audit:classes UP-TO-DATE
+> Task :fineract-command-audit:jar UP-TO-DATE
+> Task :fineract-command-jdbc:compileJava
+> Task :fineract-command-jdbc:processResources UP-TO-DATE
+> Task :fineract-command-jdbc:classes
+> Task :fineract-command-jdbc:jar
+> Task :fineract-document:processResources NO-SOURCE
+
+> Task :fineract-investor:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-investor with 122 managed classes from 8 modules
+
+> Task :fineract-loan:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-loan with 114 managed classes from 7 modules
+
+> Task :fineract-core:compileJava
+/src/fineract-core/src/main/java/org/apache/fineract/infrastructure/core/service/database/JavaType.java:364: warning: [deprecation] Date(String) in Date has been deprecated
+            case DATE -> new Date(s);
+                         ^
+
+> Task :fineract-rates:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-rates with 42 managed classes from 2 modules
+
+> Task :fineract-rates:processResources UP-TO-DATE
+> Task :fineract-loan:processResources UP-TO-DATE
+> Task :fineract-investor:processResources UP-TO-DATE
+
+> Task :fineract-loan-origination:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-loan-origination with 142 managed classes from 9 modules
+
+> Task :fineract-core:compileJava
+1 warning
+
+> Task :fineract-working-capital-loan:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-working-capital-loan with 139 managed classes from 8 modules
+
+> Task :fineract-working-capital-loan:processResources UP-TO-DATE
+> Task :fineract-loan-origination:processResources UP-TO-DATE
+
+> Task :fineract-progressive-loan:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-progressive-loan with 117 managed classes from 8 modules
+
+> Task :fineract-progressive-loan:processResources UP-TO-DATE
+
+> Task :fineract-provider:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-provider with 273 managed classes from 15 modules
+
+> Task :fineract-report:processResources NO-SOURCE
+
+> Task :fineract-savings:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-savings with 82 managed classes from 7 modules
+
+> Task :fineract-savings:processResources UP-TO-DATE
+
+> Task :fineract-security:generateStaticWeavingPersistenceXml
+Generated EclipseLink static weaving persistence.xml for :fineract-security with 42 managed classes from 2 modules
+
+> Task :fineract-security:processResources NO-SOURCE
+Thread[#147,JGit-FileStoreAttributeReader-1,5,main]: got smaller file timestamp on /src (/run/host_mark/Users), /src/.git: 2026-08-17T11:28:29Z < 2026-08-17T11:28:29.599574659Z. Aborting measurement at resolution PT0.400425341S.
+Cannot save config file 'FileBasedConfig[/.config/jgit/config]'
+java.io.IOException: Creating directories for /.config/jgit failed
+	at gradlegitproperties.org.eclipse.jgit.util.FileUtils.mkdirs(FileUtils.java:412)
+	at gradlegitproperties.org.eclipse.jgit.internal.storage.file.LockFile.lock(LockFile.java:138)
+	at gradlegitproperties.org.eclipse.jgit.storage.file.FileBasedConfig.save(FileBasedConfig.java:219)
+	at gradlegitproperties.org.eclipse.jgit.util.FS$FileStoreAttributes.saveToConfig(FS.java:740)
+	at gradlegitproperties.org.eclipse.jgit.util.FS$FileStoreAttributes.lambda$4(FS.java:426)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+> Task :fineract-provider:generateGitProperties
+> Task :fineract-provider:generateRebelMain UP-TO-DATE
+> Task :fineract-provider:processResources
+> Task :fineract-provider:prepareInputYaml UP-TO-DATE
+> Task :fineract-core:processResources NO-SOURCE
+> Task :fineract-core:classes
+> Task :fineract-core:jar
+> Task :fineract-tax:compileJava
+> Task :fineract-tax:classes
+> Task :fineract-cob:compileJava
+> Task :fineract-cob:classes
+> Task :fineract-tax:jar
+> Task :fineract-cob:jar
+> Task :fineract-charge:compileJava
+> Task :fineract-charge:classes
+> Task :fineract-charge:jar
+
+> Task :fineract-document:compileJava
+warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageWritePlatformServiceImpl.java:46: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageWritePlatformServiceImpl.java:46: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageWritePlatformServiceImpl.java:46: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageWritePlatformServiceImpl.java:46: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageWritePlatformServiceImpl.java:46: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageWritePlatformServiceImpl.java:46: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageWritePlatformServiceImpl.java:46: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageReadPlatformServiceImpl.java:35: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageReadPlatformServiceImpl.java:35: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageReadPlatformServiceImpl.java:35: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageReadPlatformServiceImpl.java:35: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageReadPlatformServiceImpl.java:35: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageReadPlatformServiceImpl.java:35: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+/src/fineract-document/src/main/java/org/apache/fineract/infrastructure/documentmanagement/service/ImageReadPlatformServiceImpl.java:35: warning: [deprecation] EntityImageIdAdapter in org.apache.fineract.infrastructure.documentmanagement.adapter has been deprecated
+@RequiredArgsConstructor
+^
+25 warnings
+
+> Task :fineract-document:classes
+> Task :fineract-document:jar
+> Task :fineract-accounting:compileJava
+> Task :fineract-accounting:classes
+> Task :fineract-rates:compileJava
+> Task :fineract-rates:classes
+> Task :fineract-rates:jar
+> Task :fineract-accounting:jar
+> Task :fineract-report:compileJava
+> Task :fineract-branch:compileJava
+> Task :fineract-branch:classes
+> Task :fineract-branch:jar
+> Task :fineract-report:classes
+> Task :fineract-report:jar
+> Task :fineract-savings:compileJava
+> Task :fineract-savings:classes
+> Task :fineract-savings:jar
+> Task :fineract-loan:compileJava
+> Task :fineract-loan:classes
+> Task :fineract-security:compileJava
+> Task :fineract-security:classes
+> Task :fineract-security:jar
+> Task :fineract-loan:jar
+> Task :fineract-investor:compileJava
+> Task :fineract-investor:classes
+> Task :fineract-investor:jar
+> Task :fineract-progressive-loan:compileJava
+> Task :fineract-progressive-loan:classes
+> Task :fineract-working-capital-loan:compileJava
+> Task :fineract-working-capital-loan:classes
+> Task :fineract-progressive-loan:jar
+> Task :fineract-working-capital-loan:jar
+> Task :fineract-loan-origination:compileJava
+> Task :fineract-loan-origination:classes
+> Task :fineract-loan-origination:jar
+
+> Task :fineract-provider:compileJava/src/fineract-provider/src/main/java/org/apache/fineract/infrastructure/core/service/migration/TenantDatabaseUpgradeService.java:91: warning: [deprecation] ThreadLocalScopeManager in liquibase has been deprecated
+            Scope.setScopeManager(new ThreadLocalScopeManager());
+                                      ^
+
+/src/fineract-provider/src/main/java/org/apache/fineract/infrastructure/hooks/service/HookReadPlatformServiceImpl.java:104: warning: [removal] HookEventResultSetExtractor in org.apache.fineract.infrastructure.hooks.domain has been deprecated and marked for removal
+        final HookEventResultSetExtractor extractor = new HookEventResultSetExtractor();
+              ^
+/src/fineract-provider/src/main/java/org/apache/fineract/infrastructure/hooks/service/HookReadPlatformServiceImpl.java:104: warning: [removal] HookEventResultSetExtractor in org.apache.fineract.infrastructure.hooks.domain has been deprecated and marked for removal
+        final HookEventResultSetExtractor extractor = new HookEventResultSetExtractor();
+                                                          ^
+3 warnings
+
+> Task :fineract-provider:classes
+> Task :fineract-provider:resolve
+> Task :fineract-provider:resolveMainClassName
+> Task :fineract-provider:bootJar
+
+[Incubating] Problems report is available at: file:///src/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1m 55s
+93 actionable tasks: 55 executed, 38 up-to-date
+bootJar    : /Users/buv/fineract/fineract-provider/build/libs/fineract-provider-1.16.0-SNAPSHOT.jar
+=== step 2/2: docker build fineract:latest ===
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 475B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/azul/zulu-openjdk-alpine:21
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/5] FROM docker.io/azul/zulu-openjdk-alpine:21@sha256:52178b750346c140118ddb17a81d8449ce625a4eadcd2cd55bcbd3b4c184d803
+#4 resolve docker.io/azul/zulu-openjdk-alpine:21@sha256:52178b750346c140118ddb17a81d8449ce625a4eadcd2cd55bcbd3b4c184d803 done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 230.53MB 1.3s done
+#5 DONE 1.3s
+
+#6 [2/5] RUN apk add --no-cache busybox-extras curl || true
+#6 1.623 ( 1/10) Installing busybox-extras (1.37.0-r31)
+#6 1.689   Executing busybox-extras-1.37.0-r31.post-install
+#6 1.691 ( 2/10) Installing brotli-libs (1.2.0-r1)
+#6 1.814 ( 3/10) Installing c-ares (1.34.8-r0)
+#6 1.908 ( 4/10) Installing libunistring (1.4.2-r0)
+#6 2.092 ( 5/10) Installing libidn2 (2.3.8-r0)
+#6 2.158 ( 6/10) Installing nghttp2-libs (1.69.0-r0)
+#6 2.219 ( 7/10) Installing libpsl (0.21.5-r3)
+#6 2.276 ( 8/10) Installing zstd-libs (1.5.7-r2)
+#6 2.378 ( 9/10) Installing libcurl (8.21.0-r0)
+#6 2.498 (10/10) Installing curl (8.21.0-r0)
+#6 2.579 Executing busybox-1.37.0-r31.trigger
+#6 2.591 OK: 309.5 MiB in 47 packages
+#6 DONE 2.7s
+
+#7 [3/5] WORKDIR /app
+#7 DONE 0.0s
+
+#8 [4/5] COPY fineract-provider.jar /app/fineract-provider.jar
+#8 DONE 0.1s
+
+#9 [5/5] RUN mkdir -p /app/plugins /var/logs/fineract && chmod -R 777 /var/logs/fineract
+#9 DONE 0.1s
+
+#10 exporting to image
+#10 exporting layers
+#10 exporting layers 3.2s done
+#10 exporting manifest sha256:317f8d84dc0e4acd23e291fb6d3f42f403cfe2fcef31e47258477aaef8b8c7bf done
+#10 exporting config sha256:5b5c1a3b84b1a8a0ba88ef398c08164b81ace4adb3b2a78a5751e6de0417c0cb done
+#10 exporting attestation manifest sha256:ff6b0774aac5943c32bde7679f03da490ac0d56ac73f6f320b72575a5462c8e7 done
+#10 exporting manifest list sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a done
+#10 naming to docker.io/library/fineract:latest done
+#10 unpacking to docker.io/library/fineract:latest
+#10 unpacking to docker.io/library/fineract:latest 0.7s done
+#10 DONE 3.9s
+=== done: fineract:latest built ===
+IMAGE             ID             DISK USAGE   CONTENT SIZE   EXTRA
+fineract:latest   e596339626bf        937MB          374MB        
+REAL_EXIT=0

@@ -1,0 +1,47 @@
+R-VPA -- verdict/predicate agreement (T259)
+==============================================================================
+FILE .softhouse/capture/t219-g8-residual/out/classify-t219.json
+     sha256 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+
+  *** DISAGREEMENT [UNACKNOWLEDGED] cells[3]:T219-R600p0-N103-B1
+      recorded predicate : P2_emiDifferenceEqualsB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+      one of its own predicates did not. Decide which is wrong and write it down;
+      do not summarise past it.
+
+  *** DISAGREEMENT [UNACKNOWLEDGED] cells[3]:T219-R600p0-N103-B1
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+      one of its own predicates did not. Decide which is wrong and write it down;
+      do not summarise past it.
+
+  *** DISAGREEMENT [UNACKNOWLEDGED] cells[5]:T219-R600p0-N3000-B4499
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+      one of its own predicates did not. Decide which is wrong and write it down;
+      do not summarise past it.
+
+  *** DISAGREEMENT [UNACKNOWLEDGED] cells[7]:T219-R600p0-N3000-B3001
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+      one of its own predicates did not. Decide which is wrong and write it down;
+      do not summarise past it.
+
+------------------------------------------------------------------------------
+  files inspected           : 1
+  rows inspected            : 11
+  predicate booleans read   : 27
+  disagreements found       : 4   (acknowledged 0, unacknowledged 4)
+  void acknowledgement blocks: 0
+  unclassified boolean keys : 0
+  unclassified verdict words: 0
+
+  THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+  stated, or that a row with no recorded predicate was checked at all. It establishes
+  only that no row printed an affirmative verdict over its own false predicate unremarked.
+T259-VPA: REFUSED files=1 rows=11 predicates=27 disagreements=4 acknowledged=0 unacknowledged=4 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+RVPA_EXIT=1

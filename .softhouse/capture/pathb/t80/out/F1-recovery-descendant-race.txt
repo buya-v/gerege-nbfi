@@ -1,0 +1,58 @@
+=== T161 — a STATED LIMIT of the fix, kept as evidence rather than hidden
+=========================================================================
+This transcript is NOT one of the graded red/green cases.  It is the artefact of an
+earlier version of the "signal arrives while the attester is still running" probe, which
+delivered the signal from a `python3` PATH SHIM.  The shim inserted an extra shell layer,
+so the real attester became a GRANDCHILD of prove-f1.sh instead of the direct child it is
+in production.  The fixed script's EXIT handler `kill`s and `wait`s its DIRECT child only,
+so the orphaned grandchild kept running and re-wrote `preconditions.txt` and the
+`CAPTURED-FROM-TENANT` stamp AFTER the handler had cleaned them.
+
+What the run below shows, and why it is kept:
+
+  * the trap fired AT ONCE on SIGTERM (the backgrounding works — it was not deferred);
+  * `t36/attest.py` was restored from the immutable git blob and the restore was VERIFIED;
+  * the hardened sha256 instrument REFUSED rather than returning a digest, because its two
+    independent implementations disagreed on `preconditions.txt` — the file was being
+    rewritten underneath them by the orphan.  A weaker instrument would have returned one
+    of the two digests and said nothing;
+  * the guard then printed `EVIDENCE SET NOT RESTORED`, named the differing files, and the
+    script exited **1**.
+
+So the limit is: a writer the handler did not spawn can re-dirty the evidence set after
+the cleanup, and no handler can prevent that.  What is guaranteed is that it is DETECTED,
+NAMED and exits non-zero — never silent.  The graded probe was then rewritten to deliver
+the signal from outside to the script's own pid, which is the faithful shape: in the real
+invocation the attester is a DIRECT child, it writes the stamp and the transcript itself
+in process, and preconditions.sh writes nothing under out/emiloop.
+
+Command:  T161_REAL_PY=$(command -v python3) PATH=<shim>:$PATH \
+          sh .softhouse/capture/pathb/t80/prove-f1.sh        (in a throwaway git clone)
+Exit:     1
+-------------------------------------------------------------------------
+=== T85 F-1 — a breached attest.py run must write NOTHING
+run at 2026-08-21T09:40:09Z
+victim set: t36/out/emiloop  (11 EL-* captures taken on tenant gerege, plus attestation and transcripts)
+
+--- BEFORE: 14 files
+4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  t36/out/emiloop/preconditions.txt
+  stamp present: no
+
+guard: pinned .softhouse/capture/pathb/t36/attest.py at sha256 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2 as immutable blob 9e38fe5e273c959a004423faa7e612f0240f51bc; marker /tmp/t161-scratch/.softhouse/capture/pathb/t80/.f1-swap-in-progress
+--- 1. PRE-FIX attest.py (813acb1, blob 8e9f865ba6e9f8841c9be81962770e3c818fe53f, sha256 c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92)
+    invocation: python3 t36/attest.py default emiloop
+INTERRUPTED (SIGTERM) — restoring the rig
+guard: .softhouse/capture/pathb/t36/attest.py is NOT at its pre-run bytes (found c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92) — restoring from blob 9e38fe5e273c959a004423faa7e612f0240f51bc
+guard: RESTORED .softhouse/capture/pathb/t36/attest.py from blob 9e38fe5e273c959a004423faa7e612f0240f51bc; sha256 re-read and VERIFIED as 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+REFUSED: sha256 IMPLEMENTATIONS DISAGREE on '/tmp/t161-scratch/.softhouse/capture/pathb/t36/out/emiloop/preconditions.txt': shasum says '4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768', python3 says '6601f670bdfe4943d1b1e982182dc11adae1e26594518622acdc8f05a8af2841'. At least one of them is not computing sha256 — the instrument is compromised and no digest is returned.
+guard: EVIDENCE SET NOT RESTORED — t36/out/emiloop differs from the pre-run census.
+13,14d12
+< 4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  t36/out/emiloop/preconditions.txt
+< 37a3481edbe11a998541c3f41c595acf334979bf0558763055659963a9e420dc  t36/out/emiloop/verdict.txt
+-------------------------------------------------------------------------
+`git status --porcelain` of the throwaway clone afterwards.  `prove-f1.sh` is shown as
+modified because it is the planted copy of the fixed script; the other two lines are the
+corruption the orphan re-created after the cleanup:
+ M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+ M .softhouse/capture/pathb/t80/prove-f1.sh
+?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT

@@ -1,0 +1,47 @@
+### corpus (each line discriminates class-reading from literal-reading)
+     1	x1y
+     2	xdy
+     3	x y
+     4	xsy
+     5	x_y
+     6	xwy
+
+  x1y : matches x\dy ONLY if \d = digit class
+  xdy : matches x\dy ONLY if \d = literal 'd'
+  x y : matches x\sy ONLY if \s = whitespace class
+  xsy : matches x\sy ONLY if \s = literal 's'
+  x_y : matches x\wy ONLY if \w = word class
+  xwy : matches x\wy ONLY if \w = literal 'w'
+
+### BSD grep -E (/usr/bin/grep) -- reading per escape
+  pattern x\dy ->
+      1:x1y
+  pattern x\sy ->
+      3:x y
+  pattern x\wy ->
+      1:x1y
+      2:xdy
+      4:xsy
+      5:x_y
+      6:xwy
+
+### git grep -E vs -P on the same three escapes, repo-wide, tracked files
+    git grep -E 'a\db'     hitlines=755
+    git grep -P 'a\db'     hitlines=2893
+    git grep -E 'a\sb'     hitlines=0
+    git grep -P 'a\sb'     hitlines=2632
+    git grep -E 'a\wb'     hitlines=0
+    git grep -P 'a\wb'     hitlines=53097
+
+### python3 re reference
+    python re 'x\dy'   -> ['x1y']
+    python re 'x\sy'   -> ['x y']
+    python re 'x\wy'   -> ['x1y', 'xdy', 'xsy', 'x_y', 'xwy']
+
+### RECONCILING T232's '= 14'  (T232 reported git grep -c -E 'balance column' = 14)
+  NOTE: 'git grep -c' prints ONE LINE PER FILE ('path:count'), so a bare -c piped to
+  wc -l counts FILES, and read as a single number it is neither files nor lines.
+    rev HEAD       files=196   hitlines=524
+    rev 90c21d6    files=81    hitlines=162
+  scoped to .softhouse only, HEAD:
+    files=191 hitlines=517

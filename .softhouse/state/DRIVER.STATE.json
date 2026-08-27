@@ -1,0 +1,118 @@
+{
+ "squad": "DRIVER",
+ "fire": "local-20260822-060013",
+ "step": "EXIT — clean. 5 dispatched, 5 completed, 5 merged, ZERO live at exit.",
+ "main_at_exit": "91c43bb",
+ "oracle": "REACHABLE throughout. Probe line PRESENT and reading up on every driver bar run.",
+ "final_bar_on_merged_main": {
+  "verdict": "PASS (exit 0)",
+  "probe": "PRESENT, up",
+  "loanschedule": "46 parity / 7884 graded cells",
+  "ledger": "4 parity / 2 oracle-refusal / 21 money cells",
+  "refused": 0,
+  "inadmissible": 0,
+  "harness_errors": 0,
+  "invariant_violations": 0,
+  "not_run": 0,
+  "census_pins": "all 9 == pinned",
+  "failopen_frontier": "11 == pinned 11 (9 -> 10 by T248; 10 -> 11 by T252's C6, which reads CONTROL FLOW not vocabulary. The driver separately repaired p5-probe.sh, removing a row, so the two movements were independent and were reconciled by RUNNING the merge result, never by arithmetic. NEWLY VISIBLE, not newly introduced. THE PIN IS A FRONTIER, NOT AN AMNESTY — TIER1B rederive-provenance.sh is pinned and still BROKEN; T255 carries it.)",
+  "vector_store_digest": "13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d — UNMOVED all fire",
+  "caveat": "PASS means 'matches the reference oracle on captured vectors, within the graded domain'. IT DOES NOT MEAN SAFE TO CUT OVER."
+ },
+ "live_workers": {
+  "T254b": "softhouse/T254-review-portability-mac",
+  "T260": "softhouse/T260-review-dec2-rev8",
+  "T261": "softhouse/T261-review-tenant-attestation"
+ },
+ "next_fire_starts_here": [
+  "T251 — INDEPENDENT review of DEC-2 revision 7 (PREPARED by T247, merged fc36f0c, landed nothing). THE HIGHEST-VALUE ITEM: it is the last thing between G-14 and closure, and the driver has committed not to ratify without it.",
+  "T252 — T248's two unfixed findings: a probable third live fail-open site whose false claims are COUNTS not sentences, and TIER 3's label asserting 'fails closed' while nothing verifies it.",
+  "T250 — T245's F-2: capture-script tenant attestation is a hard-coded literal, so the sidecar cannot disagree with the run it documents.",
+  "T226, T235, T252, T250 — SERIALISE: all hold conformance.sh or the capture lib.",
+  "T241 (gates.md), T236, then T145 / T160 / T164 / T174 / T192 / T195 / A2-23."
+ ],
+ "open_questions": [
+  "G-14 scope decision: DECIDED by the driver and CONFIRMED by T249's independent re-derivation. The gate itself is still OPEN pending rev-7 review (T251) and ratification.",
+  "P-77 is filed and amended with T249's fail-open finding, but P-77 itself has had no independent review beyond T249's pass over the patch."
+ ],
+ "gate_pending": "G-4, G-5 (hard user gates — each amends a ratified DEC-n), G-8, G-10, G-12, G-14. G-8/G-10/G-12/G-14 block no porting work today.",
+ "blocked_on": null,
+ "lock_pushed_at_commit": "c0e88c6",
+ "dispatch_record_commit": "a71c140",
+ "baseline_bar": {
+  "commit": "c0e88c6",
+  "verdict": "PASS exit 0",
+  "probe_line": "PRESENT, reads up",
+  "parity_vectors": 46,
+  "cells": 7884,
+  "failopen_frontier": 11,
+  "failopen_pinned": 11,
+  "store_digest": "13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d",
+  "wrong_ledger_impls_killed": "6/6"
+ },
+ "failopen_frontier": 11,
+ "reviewers_registered": {
+  "T253": "T254",
+  "T255": "T260",
+  "T250": "T261",
+  "T259": "T262",
+  "T164": "T263"
+ },
+ "merge_order_note": "T253 merges FIRST (it edits conformance.sh and shifts line numbers), then T255 is re-verified against the post-merge commit. If revision 8 citations rot across that merge, the citation-rot MECHANISM fix failed and T260 rejects on that ground. BAR is re-run by the driver on each merge RESULT, never quoted from a worker.",
+ "held_back_for_contention": {
+  "conformance.sh": [
+   "T257",
+   "T258",
+   "T226",
+   "T235",
+   "T160",
+   "T192",
+   "T195"
+  ],
+  ".softhouse/capture (whole)": [
+   "T145"
+  ],
+  "capture/tierA-a2": [
+   "T174"
+  ]
+ },
+ "merges": [
+  {
+   "task": "T164",
+   "review": "T263 MICRO-FIX",
+   "conditions_filed": [
+    "T269",
+    "T270"
+   ]
+  },
+  {
+   "task": "T259",
+   "review": "T262 MICRO-FIX",
+   "conditions_filed": [
+    "T268",
+    "T271"
+   ]
+  },
+  {
+   "task": "T263",
+   "kind": "review artefact"
+  },
+  {
+   "task": "T262",
+   "kind": "review artefact"
+  }
+ ],
+ "bar_on_merge_result": {
+  "commit": "2bec865",
+  "verdict": "PASS exit 0",
+  "probe_line": "PRESENT, reads up",
+  "parity_vectors": 46,
+  "cells": 7884,
+  "failopen_frontier": "11 == pinned 11",
+  "failopen_census_population": "918 -> 943 tracked .sh/.py; NONE joined the frontier",
+  "census_pins": "9/9 matched",
+  "wrong_ledger_impls_killed": "6/6",
+  "store_digest": "13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d (unmoved)",
+  "note": "Run by the DRIVER on the MERGE RESULT, never quoted from a worker."
+ }
+}

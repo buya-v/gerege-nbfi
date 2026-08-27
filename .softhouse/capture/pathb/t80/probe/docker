@@ -1,0 +1,17 @@
+#!/bin/sh
+# T80 F-2 probe shim.  Forwards EVERY docker invocation to the real binary EXCEPT the P7
+# PostgreSQL-version query, which it answers with a deliberately wrong version so that P7 —
+# and ONLY P7 — fails.  That isolates the question T85 F-2 asks: when a precondition in the
+# middle of the suite fails, does the rest of the suite still run?
+#
+# It reads and mutates nothing.  It is a test double for one read-only query, on PATH only for
+# the duration of prove-f2.sh.
+for a in "$@"; do
+  case "$a" in
+    *'select version()'*)
+      echo " PostgreSQL 9.9.9 (WRONG-ON-PURPOSE, T80 F-2 probe shim)"
+      exit 0
+      ;;
+  esac
+done
+exec /usr/local/bin/docker "$@"

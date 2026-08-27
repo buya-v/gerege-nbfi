@@ -1,0 +1,21 @@
+blob shas verified: PRE 11d3729eedee3ee70d4d95a0f0f93d4a9850412244e621c7cfab67610d198853 / POST a55d7f5270a3933bcf3e0c6986a217971e621f65f0de723fca9f803d3aed27a7
+grep this script gets: /usr/bin/grep — grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+PRE  json : perl -0pe 's/"(\\.|[^"\\])*"//g' "$f" | grep -Eq '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]'
+PRE  go   : perl -0pe 's{//[^\n]*}{}g; s{/\*.*?\*/}{}gs' "$f"         | grep -Eq '\bfloat(32|64)\b|\bbig\.Float\b|\bcomplex(64|128)\b|\b(Parse|Format|Append)Float\b'
+POST json : perl -0pe 's/"(\\.|[^"\\])*"//g' "$f" | LC_ALL=C grep -aEq '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]'
+POST go   : perl -0pe 's{//[^\n]*}{}g; s{/\*.*?\*/}{}gs' "$f"         | LC_ALL=C grep -aEq '\bfloat(32|64)\b|\bbig\.Float\b|\bcomplex(64|128)\b|\b(Parse|Format|Append)Float\b'
+
+FIXTURE                        PRE     POST    MEANING
+-------                        ---     ----    -------
+p1 clean float                 FIRES   FIRES   POSITIVE CONTROL
+p2 0xE2 BEFORE the float       SILENT  FIRES   *** THE BYPASS ***
+p3 NUL BEFORE the float        FIRES   FIRES   NOT a bypass vector
+p4 0xE2 AFTER the float        FIRES   FIRES   byte after match
+p5 clean integers              SILENT  SILENT  NEGATIVE CONTROL
+p6 0xE2 + exponent 1e3         SILENT  FIRES   *** THE BYPASS (exp) ***
+g1 clean float64               FIRES   FIRES   POSITIVE CONTROL
+g2 0xE2 before float64         SILENT  FIRES   *** THE BYPASS (go) ***
+g3 clean int64                 SILENT  SILENT  NEGATIVE CONTROL
+
+rows disagreeing with T155's own expectation: 0

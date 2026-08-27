@@ -1,0 +1,3 @@
+CENSUS narrow-catch — inspected 57 .java files across 20 directories under /Users/buv/gerege-nbfi (recursive, whole repository; EXCLUDED 1 other checkout root(s): .claude/worktrees)
+narrow load-bearing catch sites: 67 total, 67 in FROZEN files (34 files), 0 NEW
+clean: no capture rig outside the frozen set narrows its seam handler.

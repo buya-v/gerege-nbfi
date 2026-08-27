@@ -1,0 +1,32 @@
+T86 — the central property, reproduced independently.
+
+PERTURBATION (mine, matching T81's): .softhouse/vectors/loanschedule/P-03-disbursement-on-repayment-due-date.json
+  line 257  "interest_minor":      "12" -> "13"
+  line 260  "interest_major_text": "0.12" -> "0.13"
+(both moved consistently, so the transcription cross-check is not what catches it)
+
+  bash <MAIN's conformance.sh>  over the perturbed store  -> exit 1
+      VERDICT: FAIL (exit 1) — 1 mismatched vector(s), 0 invariant violation(s).
+  bash <T81's conformance.sh>   over the perturbed store  -> exit 1
+      VERDICT: FAIL (exit 1) — 1 mismatched vector(s), 0 invariant violation(s).
+      cells compared 5576 graded, 84 ungraded  (unchanged — a value mismatch, not a coverage change)
+      grep -cE 'WRONG INTERPRETER|EXIT 3|conformance_shell'  ->  0
+  sh   <T81's conformance.sh>   over the SAME perturbed store -> exit 3
+      grep -cE 'VERDICT|PASS|FAIL'  ->  0        (no verdict of any kind; cannot read green)
+
+  diff of the two exit-1 outputs: ONE hunk, a pure transposition of the
+  'monthend.reanchor  killed by …' line between positions 73 and 74.
+  sort(main) vs sort(T81): EMPTY, exit 0 — identical multisets.
+  That transposition is T90 / report.go:102, not T81 (see E4).
+
+REVERT
+  cp of the pristine file restored; `git status --short -- .softhouse/vectors/` -> EMPTY.
+  `git diff main...softhouse/T81-conformance-shell-guard -- nexus/` -> EMPTY.
+  `git diff --name-only main...softhouse/T81-conformance-shell-guard -- '.softhouse/vectors/**/*.json'
+   '.softhouse/vectors/*.json'` -> EMPTY (no vector, no PIN.json, no capabilities.json).
+  Only .softhouse/vectors/README.md changes, +33 lines, prose.
+
+GREEN, UNNORMALISED BYTE IDENTITY (stronger than the sorted check)
+  bash main-script  -> sha256 3b7c96fd4c060dbd3e9190b9db02d86020cdff911f814f5a719b59e9d630a0ce  19790 bytes  exit 0
+  bash T81-script   -> sha256 3b7c96fd4c060dbd3e9190b9db02d86020cdff911f814f5a719b59e9d630a0ce  19790 bytes  exit 0
+  diff -> empty.  VERDICT: PASS (exit 0) — 42 parity vectors, 5576 cells compared.

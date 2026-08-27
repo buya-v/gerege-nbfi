@@ -1,0 +1,308 @@
+T292 -- R-VPA fail-closed by construction. Reproducing all stages.
+  rule    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6b9a42195eeac6e9/.softhouse/capture/t286-t268-retry/check_verdict_predicate_agreement_t292.py
+  blob    : f6ee6d2dca179992c53ecf8b2c76a194a34678ef
+  python  : 3.9.6
+
+== 1. real-corpus census ==
+FILE /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6b9a42195eeac6e9/.softhouse/capture/t286-t268-retry/../t229-g8-site3/out/classify-t229.json
+  Q2 predicate booleans (auto ^P[0-9]+_) : 18
+     distinct owning objects             : 6
+  Q1 affirmative strings anywhere        : 9
+     of which under a verdict-named key  : 9
+     EXTRA seen by vocabulary scan       : 0
+       FREE-FLOATING: value $.cells[0].verdict 'AS PREDICTED'
+       FREE-FLOATING: value $.cells[4].verdict 'AS PREDICTED'
+       FREE-FLOATING: value $.cells[5].verdict 'AS PREDICTED'
+       FREE-FLOATING: value $.calibration[0].status 'REPRODUCED'
+       FREE-FLOATING: value $.calibration[1].status 'REPRODUCED'
+  Q3 free-floating affirmations          : 5
+  non-auto boolean keys                  : ['inputsIdentical', 'observedIdentical', 't223RulePredictedRescue', 'threwIdentical']
+
+FILE /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6b9a42195eeac6e9/.softhouse/capture/t286-t268-retry/../t219-g8-residual/out/classify-t219.json
+  Q2 predicate booleans (auto ^P[0-9]+_) : 21
+     distinct owning objects             : 7
+  Q1 affirmative strings anywhere        : 7
+     of which under a verdict-named key  : 7
+     EXTRA seen by vocabulary scan       : 0
+  Q3 free-floating affirmations          : 0
+  non-auto boolean keys                  : ['inputsIdentical', 'observedIdentical', 't223RulePredictedRescue', 'threwIdentical']
+
+   census OK
+
+== 2. adversary: PROP-A container invariance, PROP-B no vacuous green,
+      PROP-C lost-refusal ledger vs the pinned PRE blob, PROP-D error/verdict separation ==
+ARMS
+  PRE  pinned blob 86f4285 -> git hash-object 86f42859a1492409de9c052caf9ecbde15791212
+  NEW  check_verdict_predicate_agreement_t292.py -> git hash-object f6ee6d2dca179992c53ecf8b2c76a194a34678ef
+  python 3.9.6
+  rng seed 292, 12 container mutations per seed doc, up to depth 6
+
+================================================================================================
+PROP-A  CONTAINER INVARIANCE  +  PROP-B NO VACUOUS GREEN  +  PROP-C LOST-REFUSAL LEDGER vs PRE
+================================================================================================
+  ok  PROP-A A1-predicate-as-a-string                                   rc=1    witness=0    digest=e3b0c44298fc1c14
+  ok  PROP-A A10-CONTROL-genuine-unacknowledged-disagreement            rc=1    witness=1    digest=edad19ab407b3e7f
+  ok  PROP-A A11-FLOOR-header-buys-coverage-by-asserting-a-predicate    rc=0    witness=1    digest=40863cdb9def3ac5
+  ok  PROP-A A12-header-tries-to-buy-coverage-without-asserting-a-predicate rc=1    witness=0    digest=e3b0c44298fc1c14
+  ok  PROP-A A13-verdict-VALUE-wrapped-in-a-list-over-a-false-predicate rc=1    witness=1    digest=b6e72319a5c7448b
+  ok  PROP-A A2-coverage-laundered-through-a-DESCRIPTIVE-key            rc=1    witness=0    digest=e3b0c44298fc1c14
+  ok  PROP-A A3-refutation-with-the-verdict-key-renamed                 rc=1    witness=1    digest=edad19ab407b3e7f
+  ok  PROP-A A4-auto-pattern-lookalike-key                              rc=1    witness=0    digest=e3b0c44298fc1c14
+  ok  PROP-A A5-real-predicate-buried-under-eight-containers            rc=1    witness=1    digest=edad19ab407b3e7f
+  ok  PROP-A A6-cyrillic-mongolian-name-fields                          rc=0    witness=1    digest=2cc7b8009f2dabf1
+  ok  PROP-A A7-affirmation-as-a-mapping-key                            rc=0    witness=1    digest=edad19ab407b3e7f
+  ok  PROP-A A8-affirmation-only-at-depth                               rc=1    witness=0    digest=e3b0c44298fc1c14
+  ok  PROP-A A9-CONTROL-genuine-green                                   rc=0    witness=1    digest=2cc7b8009f2dabf1
+  ok  PROP-A REAL/classify-t219                                         rc=1    witness=27   digest=5aac4a972cbc0a4b
+  ok  PROP-A REAL/classify-t229                                         rc=1    witness=24   digest=e2539db29cd16116
+  ok  PROP-A T291/H1-nested-header-empty                                rc=1    witness=0    digest=e3b0c44298fc1c14
+  ok  PROP-A T291/N6-root-verdict-empty                                 rc=1    witness=0    digest=e3b0c44298fc1c14
+  ok  PROP-A T291/X1-header-in-toplevel-list                            rc=1    witness=0    digest=e3b0c44298fc1c14
+  ok  PROP-A T291/X2-header-in-nested-list                              rc=1    witness=0    digest=e3b0c44298fc1c14
+  ok  PROP-A T291/X3-header-in-list-of-lists                            rc=1    witness=0    digest=e3b0c44298fc1c14
+  ok  PROP-A T291/X4-toplevel-array-header-only                         rc=1    witness=0    digest=e3b0c44298fc1c14
+  ok  PROP-A T291/X5-affirmation-in-list-over-refuted-record            rc=0    witness=1    digest=132e0f399f6a3155
+  ok  PROP-A T291/X5b-affirmation-as-mapping-key-over-refuted-record    rc=0    witness=1    digest=132e0f399f6a3155
+  ok  PROP-A T291/X7-header-in-deep-nested-list                         rc=1    witness=0    digest=e3b0c44298fc1c14
+  ok  PROP-A T291/X8-noninspectable-dict-in-list                        rc=1    witness=0    digest=e3b0c44298fc1c14
+
+  documents driven through BOTH arms: 325
+  PROP-C  LOST REFUSALS (PRE refuses, NEW greens, witness EMPTY): 0 
+  PROP-C  ADJUDICATED WIDENINGS (PRE refuses, NEW greens, witness NAMED): 48
+          A WIDENING IS NOT A LOST REFUSAL: PRE refused for want of a SHAPE it recognised,
+          NEW greens because it GRADED named facts, and it prints them. Adjudicate by reading
+          the witness, not by trusting the count.
+            A11-FLOOR-header-buys-coverage-by-asserting-a-predicate    witness=1 digest=40863cdb9def3ac5
+            A11-FLOOR-header-buys-coverage-by-asserting-a-predicate#2 via wrap-object-then-list witness=1 digest=40863cdb9def3ac5
+            A11-FLOOR-header-buys-coverage-by-asserting-a-predicate#3 via beside-a-decoy-object,wrap-in-list,wrap-list-then-object witness=1 digest=40863cdb9def3ac5
+            A11-FLOOR-header-buys-coverage-by-asserting-a-predicate#4 via wrap-list-then-object,wrap-in-list-of-lists witness=1 digest=40863cdb9def3ac5
+            A11-FLOOR-header-buys-coverage-by-asserting-a-predicate#5 via wrap-object-then-list,wrap-list-then-object,wrap-in-object,wrap-in-object witness=1 digest=40863cdb9def3ac5
+            A11-FLOOR-header-buys-coverage-by-asserting-a-predicate#6 via wrap-in-object,wrap-in-object witness=1 digest=40863cdb9def3ac5
+            A11-FLOOR-header-buys-coverage-by-asserting-a-predicate#7 via wrap-in-list,beside-a-decoy-string,wrap-3-deep-lists,beside-a-decoy-object,wrap-object-then-list witness=1 digest=40863cdb9def3ac5
+            A11-FLOOR-header-buys-coverage-by-asserting-a-predicate#8 via  witness=1 digest=40863cdb9def3ac5
+            A11-FLOOR-header-buys-coverage-by-asserting-a-predicate#10 via wrap-in-object witness=1 digest=40863cdb9def3ac5
+            A11-FLOOR-header-buys-coverage-by-asserting-a-predicate#11 via beside-a-decoy-object,wrap-in-list-of-lists,objectify-a-list,wrap-3-deep-lists witness=1 digest=40863cdb9def3ac5
+            A6-cyrillic-mongolian-name-fields#0 via wrap-in-list       witness=1 digest=2cc7b8009f2dabf1
+            A6-cyrillic-mongolian-name-fields#1 via wrap-list-then-object,objectify-a-list,wrap-object-then-list,beside-a-decoy-string,listify-a-key,beside-a-decoy-string witness=1 digest=2cc7b8009f2dabf1
+            ... and 36 more, all in out/t292-adversary-legs.json
+
+================================================================================================
+PROP-D  ERROR vs MEASURED NEGATIVE, and the six repairs T291 measured
+================================================================================================
+  ok  DUP  duplicate predicate keys (last-wins drops a false)        rc=2        probe=ABSENT
+  ok  DUP  ... and the PRE arm greens it (the defect, driven)        rc=0        probe=PRESENT
+  ok  NaN  NaN/Infinity JSON constants                               rc=2        probe=ABSENT
+  ok  NaN  ... and the PRE arm greens them AS FLOATS (the defect, driven) rc=0        probe=PRESENT
+  ok  NaN  1e400 overflows float; Decimal keeps it exact             rc=0        probe=PRESENT
+  ok  CYR  Cyrillic ovog/patronymic/given name under LC_ALL=C        rc=0        probe=PRESENT
+  ok  CYR  ... and the PRE arm exits 2 on it (the defect, driven)    rc=2        probe=ABSENT
+  ok  FIFO read-once does not hang (F-T291-7)                        rc=0
+  ok  argv --help                                                   rc=2 probe=ABSENT
+  ok  argv -h                                                       rc=2 probe=ABSENT
+  ok  argv --not-a-flag                                             rc=2 probe=ABSENT
+  ok  argv --register                                               rc=2 probe=ABSENT
+  ok  no targets -> 2 (no built-in default)                          rc=2
+  ok  ERR  missing file                                              rc=2        probe=ABSENT
+  ok  ERR  a directory as target                                     rc=2        probe=ABSENT
+  ok  ERR  zero bytes                                                rc=2        probe=ABSENT
+  ok  ERR  malformed json                                            rc=2        probe=ABSENT
+  ok  ERR  trailing garbage                                          rc=2        probe=ABSENT
+  ok  ERR  invalid utf-8 bytes                                       rc=2        probe=ABSENT
+  ok  ERR  recursion bomb (3000 brackets)                            rc=2        probe=ABSENT
+  ok  NEG  degenerate null               -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate empty-array        -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate empty-object       -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate bare-int           -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate bare-string        -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate bare-true          -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate list-of-scalars    -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  NEG  degenerate list-of-nulls      -> 1, probe PRESENT         rc=1        probe=PRESENT
+  ok  PYTHONOPTIMIZE=2 still refuses X2                              rc=1
+  ok  BATCH header-first                                             rc=1 nilFiles=1
+  ok  BATCH evidence-first                                           rc=1 nilFiles=1
+
+================================================================================================
+T292 ADVERSARY: 82 passed, 0 failed, 0 SKIPPED   over 325 documents
+LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+EXIT 0   (non-zero on ANY failure, ANY skip, or ANY lost refusal)
+   ADVERSARY PASS
+
+== 3. mutant kill: break the rule on purpose, watch the adversary go RED ==
+MUTANT KILL -- each mutant re-introduces ONE defect from the R-VPA lineage.
+A mutant the adversary PASSES is a hole in the adversary, reported as SURVIVED.
+================================================================================================
+  CONTROL  unmutated rule -> adversary exit 0   T292 ADVERSARY: 82 passed, 0 failed, 0 SKIPPED   over 75 documents
+
+  KILLED   M1-coverage-is-the-object-census                     adversary exit 1, 4 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-D] NEG  degenerate empty-object       -> 1, probe PRESENT -- rc=2 probe=False (want rc=1 probe=True) ERROR: post-condition violated -- G
+             FAILED  [PROP-D] PYTHONOPTIMIZE=2 still refuses X2 -- rc=2
+             FAILED  [PROP-D] BATCH header-first refuses (T268 F-1) -- rc=2 nilFiles=None
+             FAILED  [PROP-D] BATCH evidence-first refuses (T268 F-1) -- rc=2 nilFiles=None
+           why it matters: T259/T268's metric: coverage = 'did I recognise any row'. Re-nesting manufactures it. This is the bracket, restored.
+  KILLED   M2-coverage-is-a-row-reached-through-a-list          adversary exit 1, 7 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-A] A11-FLOOR-header-buys-coverage-by-asserting-a-predicate -- NOT INVARIANT: base rc=1 w=1 d=40863cdb9def3ac5 ; 2 divergences, first: (0
+             FAILED  [PROP-A] A12-header-tries-to-buy-coverage-without-asserting-a-predicate -- NOT INVARIANT: base rc=1 w=0 d=e3b0c44298fc1c14 ; 2 divergences, fi
+             FAILED  [PROP-A] T291/H1-nested-header-empty -- NOT INVARIANT: base rc=1 w=0 d=e3b0c44298fc1c14 ; 2 divergences, first: (0, ['wrap-in-object', 'wrap-i
+             FAILED  [PROP-A] T291/N6-root-verdict-empty -- NOT INVARIANT: base rc=1 w=0 d=e3b0c44298fc1c14 ; 1 divergences, first: (0, ['wrap-3-deep-lists', 'wrap
+           why it matters: T286's exact phrasing -- 'a record is a row reached through a list' -- which T291 beat with two characters. Restored verbatim as a coverage metric.
+  KILLED   M3-nil-coverage-gated-globally-not-per-file          adversary exit 1, 1 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-D] BATCH evidence-first refuses (T268 F-1) -- rc=0 nilFiles=0
+           why it matters: T268's F-1, the SECOND fail-open in the lineage: measure per file, gate across the batch, and one populated file switches the refusal off for every other.
+  KILLED   M4-duplicate-keys-last-wins                          adversary exit 1, 1 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-D] DUP  duplicate predicate keys (last-wins drops a false) -- rc=0 probe=True (want rc=2 probe=False)
+           why it matters: F-T291-4. json.loads keeps the LAST duplicate, so a recorded `false` predicate is dropped without a word and the affirmative verdict stands.
+  SURVIVED M5-parse_constant-removed--EXPECTED-TO-SURVIVE       adversary exit 0 -- AS REQUIRED (negative control)
+           why it matters: Belt-and-braces only. `_assert_no_float` still refuses NaN/Infinity by TYPE ABSENCE, so no verdict changes. Kept as a negative control and as the record of which guard is load-bearing. The REAL defect is M10.
+  KILLED   M10-BOTH-float-guards-removed-NaN-enters-a-GREEN-run adversary exit 1, 1 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-D] NaN  NaN/Infinity JSON constants -- rc=0 probe=True (want rc=2 probe=False)
+           why it matters: F-T291-5 for real, and a MONEY NON-NEGOTIABLE in CLAUDE.md -- 'no floating-point in any monetary code path… including intermediate calculation'. With both guards gone, NaN and Infinity reach the graded document AS FLOATS and the run exits 0 GREEN.
+  KILLED   M6-read_text-with-no-encoding                        adversary exit 1, 1 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-D] CYR  Cyrillic ovog/patronymic/given name under LC_ALL=C -- rc=2 probe=False (want rc=0 probe=True) ERROR: UnicodeDecodeError: 'ascii'
+           why it matters: F-T291-6. Mongolian names are Cyrillic and are three fields -- ovog, patronymic, given name. Under LC_ALL=C the guard exits 2 on a name.
+  KILLED   M7-help-exits-0-with-no-probe-line                   adversary exit 1, 2 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-D] argv --help -> 2, no probe -- rc=0
+             FAILED  [PROP-D] argv -h -> 2, no probe -- rc=0
+           why it matters: T286's FOURTH fail-open: the one exit code a caller reads as 'measured, GREEN', printed with no probe line at all.
+  SURVIVED M8-post-condition-deleted--EXPECTED-TO-SURVIVE       adversary exit 0 -- AS REQUIRED (negative control)
+           why it matters: The belt-and-braces check that GREEN cannot be printed over an empty witness. Deleting it must NOT change any verdict; the primary gate already covers it. This mutant is the suite's negative control -- it proves the adversary does not simply red out on any edit.
+  KILLED   M9-affirmation-detection-narrowed-back-to-top-level-lists adversary exit 1, 9 failing legs   [viable: GREEN]
+           LOST REFUSALS: 0   (the criterion T281 used to reject T268)
+             FAILED  [PROP-A] A10-CONTROL-genuine-unacknowledged-disagreement -- NOT INVARIANT: base rc=1 w=1 d=edad19ab407b3e7f ; 1 divergences, first: (1, ['wrap
+             FAILED  [PROP-A] A13-verdict-VALUE-wrapped-in-a-list-over-a-false-predicate -- NOT INVARIANT: base rc=1 w=1 d=b6e72319a5c7448b ; 1 divergences, first:
+             FAILED  [PROP-A] A6-cyrillic-mongolian-name-fields -- NOT INVARIANT: base rc=0 w=1 d=2cc7b8009f2dabf1 ; 2 divergences, first: (0, ['wrap-object-then-l
+             FAILED  [PROP-A] A7-affirmation-as-a-mapping-key -- NOT INVARIANT: base rc=0 w=1 d=edad19ab407b3e7f ; 2 divergences, first: (0, ['wrap-3-deep-lists', 
+           why it matters: T259's partial walk. Detection must be TOTAL; narrowing it hides an affirmative verdict one container down.
+
+================================================================================================
+MUTANTS (10 total = 8 kill targets + 2 negative controls):
+  KILLED as required            : 8 of 8
+  NEGATIVE CONTROLS that SURVIVED as required : 2 of 2
+  SURVIVED but should NOT have  : 0   <-- each is a hole in the adversary
+  NON-VIABLE                    : 0
+  BROKEN                        : 0
+EXIT 0   (non-zero unless EVERY kill target died, EVERY negative control survived, no mutant was NON-VIABLE or broken, and the unmutated control passed)
+   ALL MUTANTS KILLED
+
+== 3b. calibrate LOST REFUSALS: plant the lineage's defect and watch the counter FIRE ==
+T292 -- CALIBRATING `LOST REFUSALS`
+================================================================================================
+  mutant: coverage reverted to the OBJECT CENSUS **and** the post-condition deleted
+          -- i.e. the lineage's defect, restored end to end, with nothing to catch it
+
+    PROP-C  LOST REFUSALS (PRE refuses, NEW greens, witness EMPTY): 28 [('A1-predicate-as-a-string#0', 'wrap-in-list-of-lists,wrap-3-deep-lists'), ('A1-predicate-as-a-string#1', 'wrap-list-then-object,wrap-3-deep-lists,wrap-in-list,wrap-in-list'), ('A12-header-tries-to-buy-coverage-without-asserting-a-predicate', 'base'), ('A12-header-tries-to-buy-coverage-without-asserting-a-predicate#0', 'beside-a-decoy-object,beside-a-decoy-object,beside-a-decoy-object,wrap-in-list,beside-a-decoy-string'), ('A12-header-tries-to-buy-coverage-without-asserting-a-predicate#1', 'wrap-object-then-list,wrap-in-list-of-lists,wrap-in-list-of-lists')]
+    PROP-C  ADJUDICATED WIDENINGS (PRE refuses, NEW greens, witness NAMED): 10
+            A WIDENING IS NOT A LOST REFUSAL: PRE refused for want of a SHAPE it recognised,
+  T292 ADVERSARY: 65 passed, 41 failed, 0 SKIPPED   over 75 documents
+  LOST REFUSALS: 28   (the criterion T281 used to reject T268)
+  EXIT 1   (non-zero on ANY failure, ANY skip, or ANY lost refusal)
+
+  LOST REFUSALS RECORDED: 28
+     A1-predicate-as-a-string#0                                     via wrap-in-list-of-lists,wrap-3-deep-lists
+     A1-predicate-as-a-string#1                                     via wrap-list-then-object,wrap-3-deep-lists,wrap-in-list,wrap-in-list
+     A12-header-tries-to-buy-coverage-without-asserting-a-predicate via base
+     A12-header-tries-to-buy-coverage-without-asserting-a-predicate#0 via beside-a-decoy-object,beside-a-decoy-object,beside-a-decoy-object,wrap-in-list,beside-a-decoy-string
+     A12-header-tries-to-buy-coverage-without-asserting-a-predicate#1 via wrap-object-then-list,wrap-in-list-of-lists,wrap-in-list-of-lists
+     A2-coverage-laundered-through-a-DESCRIPTIVE-key#0              via wrap-3-deep-lists,wrap-in-list-of-lists
+     A2-coverage-laundered-through-a-DESCRIPTIVE-key#1              via wrap-list-then-object,beside-a-decoy-object,beside-a-decoy-object,objectify-a-list
+     A8-affirmation-only-at-depth                                   via base
+     A8-affirmation-only-at-depth#0                                 via beside-a-decoy-object,wrap-in-list-of-lists,wrap-object-then-list,wrap-in-object
+     A8-affirmation-only-at-depth#1                                 via beside-a-decoy-object
+     T291/H1-nested-header-empty                                    via base
+     T291/H1-nested-header-empty#0                                  via wrap-in-object,wrap-in-object,wrap-list-then-object,objectify-a-list
+     ... and 16 more
+
+  DISTINCT FIXTURES THAT LOST A REFUSAL: 12
+     A1-predicate-as-a-string
+     A12-header-tries-to-buy-coverage-without-asserting-a-predicate
+     A2-coverage-laundered-through-a-DESCRIPTIVE-key
+     A8-affirmation-only-at-depth
+     T291/H1-nested-header-empty
+     T291/N6-root-verdict-empty
+     T291/X1-header-in-toplevel-list
+     T291/X2-header-in-nested-list
+     T291/X3-header-in-list-of-lists
+     T291/X4-toplevel-array-header-only
+     T291/X7-header-in-deep-nested-list
+     T291/X8-noninspectable-dict-in-list
+
+  CALIBRATION PASSED -- the counter FIRES on a planted defect, so `LOST REFUSALS: 0`
+  on the shipped rule is a MEASUREMENT and not an unexercised zero.
+EXIT 0
+   COUNTER FIRES -- 'LOST REFUSALS: 0' on the shipped rule is a measurement
+
+== 4. negative result: what gating headerAffirmations would cost ==
+T292 NEGATIVE RESULT -- what gating `headerAffirmations` costs, MEASURED
+================================================================================================
+ARM A: the shipped rule (headerAffirmations is CENSUS ONLY)
+ARM B: the same rule with ONE token added to the gate expression -- `or rep.header_affirmations`
+
+  document                                                   ARM A (shipped)        ARM B (gated)         
+  ----------------------------------------------------------------------------------------------
+  T291 X5   (affirmation in a LIST over a refuted record)    exit 0 GREEN           exit 1 REFUSED        
+  T291 X5b  (the same as a MAPPING KEY)                      exit 0 GREEN           exit 1 REFUSED        
+  REAL      classify-t229.json  -- COMMITTED EVIDENCE        exit 0 GREEN           exit 1 REFUSED        
+
+READ THE TABLE, NOT THE PROSE:
+  ARM B refuses X5 -- which is what T286's guard #10 CLAIMED to do and, as T291
+  measured, did not. It buys that by ALSO refusing `classify-t229.json`, whose
+  three RESCUED_BY_SITE3 rows carry `verdict: AS PREDICTED` and no P-key BY DESIGN.
+  There is no container-blind predicate that separates them: they are the same
+  shape. Guard #10's ambition is UNREACHABLE without an EXTERNAL declaration of
+  which containers hold graded records.
+
+DEMONSTRATED: YES   (ARM B refuses X5 -> 1, and refuses committed evidence -> 1)
+EXIT 0
+   NEGATIVE RESULT DEMONSTRATED
+
+== 5. F-T290-1b, driven against THIS rule (expected: STILL OPEN) ==
+T292 -- F-T290-1b DRIVEN AGAINST THE T292 RULE
+================================================================================================
+  BASELINE committed evidence, committed register
+     rc=0 disagreements=3 unacknowledged=0 voidAcks=0 coverageDigest=e2539db29cd16116
+  ARM 1  evidence retro-edited, register NOT re-pinned  (the ordinary tamper)
+     rc=1 state=REFUSED voidAcks=1   <- the sha pin fires
+  ARM 2  evidence retro-edited AND register re-pinned   (F-T290-1b)
+     rc=0 state=GREEN disagreements=0 unacknowledged=0 voidAcks=0 coverageDigest=e2539db29cd16116
+  ARM 3  the same consistent edit aimed at the PREDICATE, not the verdict word
+     rc=0 coverageDigest=f9c39dac95d5371f   (baseline was e2539db29cd16116)
+
+RESULT, STATED AS MEASURED AND NOT WIDER:
+  F-T290-1b is STILL OPEN under the T292 rule. rc=0.
+  It is a different defect from the one T292 closes: it does not manufacture
+  coverage, it REMOVES a disagreement by consistently rewriting both files. T290's
+  FLOOR on `disagreements` remains the correct closure and T292 does not replace it.
+  T269 MUST NOT WIRE ANY R-VPA RULE, INCLUDING THIS ONE, UNTIL THAT FLOOR EXISTS.
+
+  WHAT T292 DOES CONTRIBUTE: `coverageDigest` is a pinnable fingerprint of the
+  GRADED FACTS, so half of the two-file edit becomes detectable by pinning one
+  probe-line field -- no change to the contended rule and no new instrument:
+     verdict-word half  (ARM 2): digest UNCHANGED  -> NOT caught by the digest; needs T290's floor
+     predicate half     (ARM 3): digest moved  -> CAUGHT by pinning coverageDigest
+
+EXIT 0   (0 means every arm behaved as this file claims, INCLUDING the arm that shows the hole is open)
+   every arm behaved as claimed, INCLUDING the arm that shows the hole is open
+
+== 6. T259 fail-open lint, pointed at T292's own instruments ==
+T259 fail-open lint
+  root            : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6b9a42195eeac6e9/.softhouse/capture/t286-t268-retry
+  files seen      : 22
+  files SCANNED   : 8  (.sh and .py, this file included)
+  files SKIPPED   : 14  (not .sh/.py -- json, md, txt; counted, P-40)
+  findings        : 0
+   LINT CLEAN
+
+== 7. scope: conformance.sh must be untouched BY THIS BRANCH ==
+   merge-base (this branch's fork point): f02d84935c91f996894b260a43ae46a9a7eda352
+   conformance.sh: 0 changed paths vs the fork point. SCOPE GUARD HELD.
+   (census, not gating: main has 6 commits touching conformance.sh since the
+    fork -- other tasks' work, not this branch's)
+
+ALL STAGES PASSED.
+RUNSH_RC=0

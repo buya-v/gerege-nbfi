@@ -1,0 +1,48 @@
+==============================================================================
+B  Which committed harness records the DISBURSEMENT row's outstanding
+   balance?  (P1-T34-2)
+==============================================================================
+
+Path A pass 3  (Capture3.java)
+    captures                        : 12
+    DISBURSEMENT rows WITH balance  : 0
+    DISBURSEMENT rows WITHOUT it    : 12
+    emitted keys                    : ['dueDate', 'principal', 'type']
+
+Path A pass 3b (Capture3b.java)
+    captures                        : 12
+    DISBURSEMENT rows WITH balance  : 12
+    DISBURSEMENT rows WITHOUT it    : 0
+    emitted keys                    : ['balance', 'dueDate', 'periodFromDate', 'principal', 'type']
+    balance == principal on all?    : YES
+
+Path A T37 binding (T37 harness)
+    captures                        : 11
+    DISBURSEMENT rows WITH balance  : 0
+    DISBURSEMENT rows WITHOUT it    : 11
+    emitted keys                    : ['dueDate', 'fromDate', 'principal', 'type']
+
+==============================================================================
+   Path B server-path captures (DEC-1 5 calls these 'not yet admissible';
+   T36 closed the four T22 admissibility P0s against the live oracle).
+==============================================================================
+  B-01-baseline-raw.json           first period keys: ['downPaymentPeriod', 'dueDate', 'feeChargesDue', 'feeChargesOutstanding', 'principalDisbursed', 'principalLoanBalanceOutstanding', 'totalActualCostOfLoanForPeriod', 'totalDueForPeriod'] ...
+                                   principalDisbursed=1200000.00 principalLoanBalanceOutstanding=1200000.00
+  B-02-multiplesof100-raw.json     first period keys: ['downPaymentPeriod', 'dueDate', 'feeChargesDue', 'feeChargesOutstanding', 'principalDisbursed', 'principalLoanBalanceOutstanding', 'totalActualCostOfLoanForPeriod', 'totalDueForPeriod'] ...
+                                   principalDisbursed=1200000.00 principalLoanBalanceOutstanding=1200000.00
+  B-03-diycs-fullleapyear-raw.json first period keys: ['downPaymentPeriod', 'dueDate', 'feeChargesDue', 'feeChargesOutstanding', 'principalDisbursed', 'principalLoanBalanceOutstanding', 'totalActualCostOfLoanForPeriod', 'totalDueForPeriod'] ...
+                                   principalDisbursed=1200000.00 principalLoanBalanceOutstanding=1200000.00
+  B-04-diycs-feb29only-raw.json    first period keys: ['downPaymentPeriod', 'dueDate', 'feeChargesDue', 'feeChargesOutstanding', 'principalDisbursed', 'principalLoanBalanceOutstanding', 'totalActualCostOfLoanForPeriod', 'totalDueForPeriod'] ...
+                                   principalDisbursed=1200000.00 principalLoanBalanceOutstanding=1200000.00
+
+==============================================================================
+C  T35's totalOutstandingAmount finding, read out of the committed file
+==============================================================================
+    totalOutstandingAmount = '0'  on 12 captures: P-CAL, P-00, P-01, P-02, P-02b, P-03, P-04f, P-04t, P-MNT-5M, P-MNT-1M2, P-MNT-50M, P-MNT-4M999
+    totalDisbursedAmount     decimal places observed: [2]
+    totalPrincipalAmount     decimal places observed: [2]
+    totalInterestAmount      decimal places observed: [2]
+    totalFeeAmount           decimal places observed: [2]
+    totalPenaltyAmount       decimal places observed: [2]
+    totalRepaymentAmount     decimal places observed: [2]
+    every per-row fee/penalty value observed: ['0.00']

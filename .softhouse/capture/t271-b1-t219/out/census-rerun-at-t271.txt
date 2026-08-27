@@ -1,0 +1,64 @@
+  SKIPPED (unparseable, counted): .softhouse/capture/actualactual/out/t48-calc-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/actualactual/out/t48-exact-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/actualactual/out/t48-seam-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/actualactual/out/t48det-calc-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/actualactual/out/t48det-exact-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/actualactual/out/t48det-seam-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/audit-t44/rerun-periodratio/out/t39-periodratio-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/audit-t44/rerun-periodratio/out/t44neg-mode-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/audit-t44/rerun-periodratio/out/t44neg-n7-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/dec1-binding/out/t37-binding-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/mathcontext/out/t42-determinism-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/mathcontext/out/t42-determinism2-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/mathcontext/out/t42-mathcontext-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/mathcontext/out/t42-mathcontext2-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/mathcontext/out/t42-neg4-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/mathcontext/out/t42-neg5-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/mathcontext/out/t46-mathcontext3-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/mathcontext/out/t50-tier1-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/mathcontext/out/t50-tier2-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/out/t21-probe-repro-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/periodratio/out/t39-determinism-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/periodratio/out/t39-neg5-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/periodratio/out/t39-neg6-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/periodratio/out/t39-neg7-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/periodratio/out/t39-periodratio-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/periodratio/out/t46-neg-threaded-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/periodratio/out/t46-periodratio-arms-determinism-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/periodratio/out/t46-periodratio-arms-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/periodratio/out/t46-periodratio-reemit-raw.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/t131-grep/corpus/selftest-poisoned.json  UnicodeDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/t131-grep/corpus/vec-float-clean.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/t131-grep/corpus/vec-float-poisoned.json  UnicodeDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/t131-grep/corpus/x1-float-both-sides.json  UnicodeDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/t131-grep/corpus/x2-valid-emdash.json  JSONDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/t131-grep/corpus/x3-poison-in-string.json  UnicodeDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/t131-grep/corpus/x4-truncated-emdash.json  UnicodeDecodeError
+T259 census -- classification-shaped JSON under .softhouse/capture/
+  json files seen           : 1557
+  ... with the verdict shape: 15
+  ... without it            : 1506
+  ... SKIPPED, too large    : 0
+  ... SKIPPED, unparseable  : 36
+
+  files carrying the shape, and their disagreement count:
+      4  rows=9    .softhouse/capture/t219-g8-residual/out/classify-t219.json  <-- DISAGREEMENTS
+      4  rows=3    .softhouse/capture/t271-b1-t219/red/fixtures/X1-unacknowledged-elsewhere.json  <-- DISAGREEMENTS
+      3  rows=11   .softhouse/capture/t229-g8-site3/out/classify-t229.json  <-- DISAGREEMENTS
+      1  rows=1    .softhouse/capture/t256-verdict-predicate/red/fixtures/R1-fresh-predicate-fresh-verdict-word.json  <-- DISAGREEMENTS
+      1  rows=1    .softhouse/capture/t271-b1-t219/red/fixtures/X2-novel-container-and-predicate.json  <-- DISAGREEMENTS
+      0  rows=23   .softhouse/capture/charges/out/attested/attestation-exact.json
+      0  rows=2    .softhouse/capture/t117-familyb/out/ctrl-reproduction.json
+      0  rows=2    .softhouse/capture/t117-familyb/out/rp-reproduction-pass2.json
+      0  rows=3    .softhouse/capture/t219-g8-residual/out/check-promoted-t219.json
+      0  rows=7    .softhouse/capture/t223-g8-region-predicate/out/classify-t223.json
+      0  rows=1    .softhouse/capture/t256-verdict-predicate/red/fixtures/G1-false-predicate-negative-verdict.json
+      0  rows=1    .softhouse/capture/t256-verdict-predicate/red/fixtures/G2-all-true-affirmative-verdict.json
+      0  rows=1    .softhouse/capture/t256-verdict-predicate/red/fixtures/R2-unclassified-verdict-word.json
+      0  rows=1    .softhouse/capture/t256-verdict-predicate/red/fixtures/R3-unclassified-boolean-key.json
+      0  rows=2    .softhouse/capture/t271-b1-t219/red/fixtures/X3-clean-populated.json
+  TOTAL disagreements across the whole capture tree: 13
+
+  NOTE: only `.softhouse/capture/t229-g8-site3/` and `.softhouse/capture/t256-verdict-predicate/`
+  are in T259's write scope. Everything else above is REPORTED and left alone, and is
+  recorded as backlog in the handoff. Counting it is the point (P-40).

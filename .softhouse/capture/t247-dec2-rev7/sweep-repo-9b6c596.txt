@@ -1,0 +1,119 @@
+CALIBRATION OK  (known positive found; known negative absent; no word-boundary
+                fabrication; every concept matches its own probe and rejects a negative)
+population = 5129 tracked file(s), from `git ls-files -z`, read ONCE each
+root = /Users/buv/gerege-nbfi/.claude/worktrees/agent-adeb52f58b5b6e91f
+skipped: 12 binary, 0 unreadable
+
+========== C1 nothing-grades-the-ledger
+  -- LIVE (in scope for a correction) 13
+     .softhouse/RESUME.md:69: CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL."** The harness grades **LEDGER 4 parity / 2
+     .softhouse/reviews/t246-dec2-rev6/REVIEW.md:82: document orders the reader to read before any other, says *"NOTHING GRADES THIS CONTEXT'S MONEY.
+     .softhouse/reviews/t246-dec2-rev6/REVIEW.md:83: NOTHING GRADES THIS CONTEXT AT ALL."* **That is FALSE at `f13bf4a`, measured by my own green BAR: 4
+     .softhouse/reviews/t246-dec2-rev6/REVIEW.md:115: | **L3** | *"⚠ **NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL.**"* | **FALSE** — 21 money cells graded every run |
+     .softhouse/reviews/t246-dec2-rev6/REVIEW.md:116: | **L7** | *"**Not one of them is currently checked by anything.**"* | **FALSE** |
+     .softhouse/reviews/t246-dec2-rev6/REVIEW.md:452: | the rule paragraph, L828 | *"DEC-2 **obliges** I-1 through I-5 … and **grades none of them today**"* | not in either hunk | **UNTOUCHED** |
+     .softhouse/reviews/t246-dec2-rev6/sweep-adjacent-staleness.txt:29:    L828   …GL/accounting context, and **grades none of them today.** **I-3 and I-4 must be enforced by a…
+     docs/adr/DEC-2-gl-accounting-adapter.md:3: > # ⚠ NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL.
+     docs/adr/DEC-2-gl-accounting-adapter.md:7: > *must* do. **Not one of them is currently checked by anything.** Four separate facts, each
+     docs/adr/DEC-2-gl-accounting-adapter.md:76: > admissibility standard. It would buy **no grading whatsoever** until the machinery in §5.3
+     docs/adr/DEC-2-gl-accounting-adapter.md:828: GL/accounting context, and **grades none of them today.** **I-3 and I-4 must be enforced by a
+     docs/adr/DEC-2-gl-accounting-adapter.md:2345: ### 8.1 NOTHING GRADES THE LEDGER — say it here, not only in the banner
+     docs/adr/DEC-2-gl-accounting-adapter.md:3017:   6. **"Nothing grades the ledger" made structurally unmissable** — the banner at the head of the
+  -- HISTORY / INDEPENDENT REGISTER (report only, NOT T247's to edit) 15
+     .softhouse/gates.md:36: | **G-14** | CONTRACT | **OPEN — RAISED by `T246` (F-1, HIGH), local fire `20260822-060013`.** DEC-2's **OPENING BANNER** — under an instruction to *read this before any other sentence* 
+     .softhouse/gates.md:98: any change to DEC-2 from here is a fresh `user` gate. **Nothing grades the ledger's money yet**: all 46
+     .softhouse/gates.md:3824: > **⚠ NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL.**
+     .softhouse/gates.md:3826: > … **Not one of them is currently checked by anything.** Four separate facts, each measured by this task, not reasoned:
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md:593: - **F-8 — DEC-2 §8 should state in one unmissable sentence that NOTHING grades the ledger's money
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-16.md:44: | **banner** | DO-NOT-RATIFY banner replaced by **"⚠ NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL."** — four measured facts, plus an advance contradiction of �
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-16.md:57: | **§8** | split into **§8.1 (nothing grades the ledger)**, §8.2, §8.3; revision 1's guard sentence kept, scoped to float/gofmt, and explicitly contradicted where it would mislead |
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-17.md:198: ## Q6 — Is "nothing grades the ledger's money" UNMISSABLE? **YES. Judged as a builder, not an auditor.**
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-17.md:203:    CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL.`, opening *"Read this before any other
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:179: - **the rule paragraph** *"DEC-2 obliges I-1 through I-5 … and grades none of them today"* — untouched;
+     .softhouse/program.json:751:    "why": "DEC-2 opens with 'NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL', under an instruction to read it before any other sentence. FALSE: the harness grades LE
+     .softhouse/program.json:1805:     "T246 F-1 HIGH: DEC-2's opening banner asserts NOTHING GRADES THIS CONTEXT AT ALL and NAMES THE INSTRUMENT THAT REFUTES IT (ls .softhouse/vectors/). Seven sites. Raised as G-14.",
+     .softhouse/tasks.json:1233:    "note": "DONE + MERGED fa35fe5, fire 20260821-134344. DEC-2 revision 2 drafted, DRAFT not ratified. R-1 DECIDED: EXTEND, as a SECOND schema + comparator -- option (b) 'grade what the sche
+     .softhouse/tasks.json:1239:    "description": "A2-16 drafted DEC-2 revision 2 after A2-14 REJECTED revision 1 on shape. Re-derive; do not read A2-16's conclusions and agree. The load-bearing claim to attack is R-1's de
+     .softhouse/tasks.json:2573:    "description": "G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later — and BIGGER, because this defect sits where every reader of DEC-2 is inst
+
+========== C2 zero-ledger-vectors
+  -- LIVE (in scope for a correction) 16
+     .softhouse/RESUME.md:71: that no ledger vector exists; the driver re-ran that exact command and it lists `ledger/` holding **six**
+     .softhouse/reviews/A2-14-DEC2-gl-accounting-contract-review.md:27: ## R-1 (REJECTION) — §5's central argument is false. No `ledger` vector is expressible against the frozen schema, and Disposition 3 needs substantial new harness machinery
+     .softhouse/reviews/a2-33-dec2-rev5/sweep-output-live-population.txt:4218: .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md:35:| **R-1** | **No `ledger` vector is expressible against the frozen schema.** §5's bolded *"Disposition 3 needs no new m
+     .softhouse/reviews/t246-dec2-rev6/REVIEW.md:109: says the ledger context is ungraded, or that no `ledger` vector exists, went false in that instant.
+     .softhouse/reviews/t246-dec2-rev6/REVIEW.md:117: | **L10** | *"**No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and nothing else [VERIFIED by this task: `ls .softhouse/vectors/`]"* | **FALSE — a
+     .softhouse/reviews/t246-dec2-rev6/sweep-adjacent-staleness.py:7: # sentence in it that says "no ledger vector exists / is expressible / there is no ledger PASS"
+     .softhouse/reviews/t246-dec2-rev6/sweep-adjacent-staleness.txt:5:    L10    …> 1. **No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and…
+     .softhouse/reviews/t246-dec2-rev6/sweep-adjacent-staleness.txt:6:    L12    …> 2. **No `ledger` vector is EXPRESSIBLE.** The store's only accepted schema is…
+     .softhouse/reviews/t246-dec2-rev6/sweep-adjacent-staleness.txt:10:    L1504  …### 5.1 No `ledger` vector is expressible against the frozen vector schema — MEASURED…
+     .softhouse/reviews/t246-dec2-rev6/sweep-adjacent-staleness.txt:13:    L1626  …**What is true.** §5.1's heading: **no `ledger` vector is EXPRESSIBLE** against the frozen vector…
+     docs/adr/DEC-2-gl-accounting-adapter.md:10: > 1. **No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and
+     docs/adr/DEC-2-gl-accounting-adapter.md:12: > 2. **No `ledger` vector is EXPRESSIBLE.** The store's only accepted schema is
+     docs/adr/DEC-2-gl-accounting-adapter.md:1504: ### 5.1 No `ledger` vector is expressible against the frozen vector schema — MEASURED
+     docs/adr/DEC-2-gl-accounting-adapter.md:1626: **What is true.** §5.1's heading: **no `ledger` vector is EXPRESSIBLE** against the frozen vector
+     docs/adr/DEC-2-gl-accounting-adapter.md:2359: 1. **Zero `ledger` vectors exist.** The store's only context directories are `loanschedule/` and
+     docs/adr/DEC-2-gl-accounting-adapter.md:2361: 2. **Zero `ledger` vectors are EXPRESSIBLE** — §5.1, established in code in five legs, all five
+  -- HISTORY / INDEPENDENT REGISTER (report only, NOT T247's to edit) 10
+     .softhouse/gates.md:3561: **Blocks nothing today.** No `ledger` vector exists yet (G-11 is open), so no vector grades the column. The
+     .softhouse/gates.md:3827: > 1. **No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and nothing else [VERIFIED by this task: `ls .softhouse/vectors/`].
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md:35: | **R-1** | **No `ledger` vector is expressible against the frozen schema.** §5's bolded *"Disposition 3 needs no new machinery, and that is the argument for it"* is false. | `Expect.Kind �
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-16.md:296: 1. **No `ledger` vectors exist.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/`.
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-21.md:29: | **Banner, item 2** | Restated as *"No `ledger` vector is EXPRESSIBLE"*, with a `⚠ RETRACTION, revision 3` block naming all three original sites, the 44/5711 figures, both reproducers, an
+     .softhouse/program.json:720:    "blocks": "Nothing today. No ledger vector exists yet (G-11), so no vector grades the column.",
+     .softhouse/tasks.json:1217:    "title": "DEC-2 revision 2 — resolve A2-14's three rejection-grade findings, chiefly that NO ledger vector is expressible against the frozen vector schema",
+     .softhouse/tasks.json:1218:    "description": "A2-14 REJECTED DEC-2 revision 1 ON SHAPE, not on honesty: it opened over thirty citations and every [VERIFIED] claim traced to real source at the exact cited line, G-9 was
+     .softhouse/tasks.json:1482:    "description": "A2-19's F1 and F2. (1) Banner fact 2, section 8.1 fact 2, and A2-17's section 4.10 text all assert 'No ledger vector CAN exist'. That is FALSE and driver-confirmed false. 
+     .softhouse/tasks.json:2573:    "description": "G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later — and BIGGER, because this defect sits where every reader of DEC-2 is inst
+
+========== C3 only-two-context-dirs
+  -- LIVE (in scope for a correction) 6
+     .softhouse/reviews/t246-dec2-rev6/REVIEW.md:117: | **L10** | *"**No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and nothing else [VERIFIED by this task: `ls .softhouse/vectors/`]"* | **FALSE — a
+     .softhouse/reviews/t246-dec2-rev6/sweep-adjacent-staleness.txt:5:    L10    …> 1. **No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and…
+     docs/adr/DEC-2-gl-accounting-adapter.md:10: > 1. **No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and
+     docs/adr/DEC-2-gl-accounting-adapter.md:247: `.softhouse/vectors/` contains exactly two context directories, `loanschedule/` and `_selftest/`
+     docs/adr/DEC-2-gl-accounting-adapter.md:1450: store's only context directories are `loanschedule/` and `_selftest/`]. **The `ledger` context has
+     docs/adr/DEC-2-gl-accounting-adapter.md:2359: 1. **Zero `ledger` vectors exist.** The store's only context directories are `loanschedule/` and
+  -- HISTORY / INDEPENDENT REGISTER (report only, NOT T247's to edit) 4
+     .softhouse/gates.md:3827: > 1. **No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and nothing else [VERIFIED by this task: `ls .softhouse/vectors/`].
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md:130: 1. **No vectors.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` only. Zero `ledger`
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-16.md:296: 1. **No `ledger` vectors exist.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/`.
+     .softhouse/tasks.json:2573:    "description": "G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later — and BIGGER, because this defect sits where every reader of DEC-2 is inst
+
+========== C4 no-ledger-PASS
+  -- LIVE (in scope for a correction) 6
+     .softhouse/reviews/t246-dec2-rev6/REVIEW.md:120: | **L825** (I-7 col 5) | *"today there is no `ledger` conformance PASS to say nothing with"* | **FALSE** |
+     .softhouse/reviews/t246-dec2-rev6/REVIEW.md:121: | **L2437** (§8.3) | *"**Today there is no such PASS to misread.**"* | **FALSE** |
+     .softhouse/reviews/t246-dec2-rev6/sweep-adjacent-staleness.txt:25:    L825   …1** (the posting engine) and on the adapter's HTTP layer. A `ledger` conformance PASS says nothing whatever about it. | **N/A** — and note that today there is no `ledger` conf
+     .softhouse/reviews/t246-dec2-rev6/sweep-adjacent-staleness.txt:26:    L2437  …  twenty-three cash placeholder slots. **Today there is no such PASS to misread.**…
+     docs/adr/DEC-2-gl-accounting-adapter.md:825: | **I-7** | `Idempotency-Key` on every money-movement POST | — | **NOT APPLICABLE TO THIS CONTRACT, and that must be said rather than assumed.** DEC-2's surface exposes no HTTP endpoint an
+     docs/adr/DEC-2-gl-accounting-adapter.md:2437:   twenty-three cash placeholder slots. **Today there is no such PASS to misread.**
+  -- HISTORY / INDEPENDENT REGISTER (report only, NOT T247's to edit) 0
+
+========== C5 A2-15-blocked
+  -- LIVE (in scope for a correction) 7
+     .softhouse/RESUME.md:73: (*"until then A2-15 stays blocked"* — `A2-15` is `done`).
+     .softhouse/reviews/t246-dec2-rev6/REVIEW.md:259: | L87 *"until then `A2-15` (promote GL vectors) stays blocked"* | `tasks.json` | **transcription repair — and it is a THIRD live falsehood nobody has named.** `A2-15` is `status: done`, me
+     docs/adr/DEC-2-gl-accounting-adapter.md:87: revision 5** under standing policy **P-2**; until then `A2-15` (promote GL vectors) stays blocked,
+     docs/adr/DEC-2-gl-accounting-adapter.md:1983:    > decision, the guard and the context binding — **yet §8.2 tells `A2-15` it "cannot start without
+     docs/adr/DEC-2-gl-accounting-adapter.md:2023: `A2-15` cannot promote a `ledger` vector until **all** of the following exist. They are
+     docs/adr/DEC-2-gl-accounting-adapter.md:2041: | **5th** | **P-10** | **NEW in revision 4.** A **mechanism that actually RUNS a named wrong implementation and shows it going red** — either a `ledger` implementation registered under a n
+     docs/adr/DEC-2-gl-accounting-adapter.md:2422:   P-8 has landed — and `A2-15` cannot start without them.**
+  -- HISTORY / INDEPENDENT REGISTER (report only, NOT T247's to edit) 10
+     .softhouse/gates.md:36: | **G-14** | CONTRACT | **OPEN — RAISED by `T246` (F-1, HIGH), local fire `20260822-060013`.** DEC-2's **OPENING BANNER** — under an instruction to *read this before any other sentence* 
+     .softhouse/gates.md:3850: outside the banner at **L87** — *"until then `A2-15` (promote GL vectors) stays blocked"* — when `A2-15` is
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-17.md:376: 1. **`A2-15` is blocked on eight preconditions in §5.3, none of which exists — ENDORSED, and it is
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:338: and the context binding. Yet §8.2 tells `A2-15` it *"cannot start without them"*. The precondition
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:264: either** — while §8.2 tells `A2-15` it *"cannot start without them"*. **New precondition P-10** is
+     .softhouse/tasks.json:1239:    "description": "A2-16 drafted DEC-2 revision 2 after A2-14 REJECTED revision 1 on shape. Re-derive; do not read A2-16's conclusions and agree. The load-bearing claim to attack is R-1's de
+     .softhouse/tasks.json:1254:    "note": "MERGED, fire 20260821-134344. VERDICT MICRO-FIX (applied, 7 lines, a cross-reference block quote; no number, no money logic -- driver inspected the diff and confirms it is mechan
+     .softhouse/tasks.json:1444:    "note": "MERGED, fire 20260822-080001. VERDICT REJECTED on DEC-2 rev 2. IT APPLIED NO MICRO-FIX, DELIBERATELY, so the document the driver holds is exactly what it reviewed -- no 'now unre
+     .softhouse/tasks.json:1953:    "description": "DRIVER TASK, not an agent task. When A2-15 is finally dispatched (it is blocked on G-11 today), its brief MUST carry, and be graded on: (1) glAccountType from /journalentr
+     .softhouse/tasks.json:2573:    "description": "G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later — and BIGGER, because this defect sits where every reader of DEC-2 is inst
+
+========== C6 nine-open-one-landed
+  -- LIVE (in scope for a correction) 3
+     docs/adr/DEC-2-gl-accounting-adapter.md:2044: **Nine open, one landed.** P-6, P-1, P-7, P-2, P-3, P-4, P-5, P-9 and **P-10** remain; **P-8 is
+     docs/adr/DEC-2-gl-accounting-adapter.md:2421:   specification. **Nine of the ten §5.3 preconditions remain — P-1…P-7, P-9 and the new P-10; only
+     docs/analysis/tier0-vector-capture-plan.md:1271: asks the capture to match the README stdout, but `README.md` reports nine of the ten period columns, with no
+  -- HISTORY / INDEPENDENT REGISTER (report only, NOT T247's to edit) 0

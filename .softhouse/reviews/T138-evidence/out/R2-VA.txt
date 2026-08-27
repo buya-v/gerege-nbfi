@@ -1,0 +1,74 @@
+id: 501 (buv)   — not root, so a mode-555 directory really is read-only
+
+==================================================================
+verdict.sh (pre-fix) over a READ-ONLY transcript dir  [mode 555]
+==================================================================
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+/tmp/T138/pre/.softhouse/capture/t91/verdict.sh: line 86: /tmp/T138/va-PRE/.score-fail: Permission denied
+A2b-mutated-canary-default.txt                 1      no        no         OK
+A2c-crafted-canary-and-expectation-gerege.txt  0      YES       no         ADMITS (printed the HALF_UP certification)
+/tmp/T138/pre/.softhouse/capture/t91/verdict.sh: line 86: /tmp/T138/va-PRE/.score-fail: Permission denied
+A3a-swapped-canary-gerege.txt                  1      no        no         OK
+A3b-missing-canary.txt                         1      no        no         OK
+A3c-no-canary.txt                              1      no        no         OK
+A4a-expect-override-default.txt                1      no        no         OK
+A4b-expect-override-gerege.txt                 1      no        no         OK
+A4c-decoy-variable.txt                         0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+/tmp/T138/pre/.softhouse/capture/t91/verdict.sh: line 86: /tmp/T138/va-PRE/.score-fail: Permission denied
+A5-helpful-correct-override.txt                0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+/tmp/T138/pre/.softhouse/capture/t91/verdict.sh: line 86: /tmp/T138/va-PRE/.score-fail: Permission denied
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+/tmp/T138/pre/.softhouse/capture/t91/verdict.sh: line 86: /tmp/T138/va-PRE/.score-fail: Permission denied
+A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+/tmp/T138/pre/.softhouse/capture/t91/verdict.sh: line 86: /tmp/T138/va-PRE/.score-fail: Permission denied
+
+ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+EXIT=0
+visible ADMITS rows on screen: 6
+
+==================================================================
+verdict.sh (post-fix) over a READ-ONLY transcript dir  [mode 555]
+==================================================================
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+A2b-mutated-canary-default.txt                 1      no        no         OK
+A2c-crafted-canary-and-expectation-gerege.txt  0      YES       no         ADMITS (printed the HALF_UP certification)
+A3a-swapped-canary-gerege.txt                  1      no        no         OK
+A3b-missing-canary.txt                         1      no        no         OK
+A3c-no-canary.txt                              1      no        no         OK
+A4a-expect-override-default.txt                1      no        no         OK
+A4b-expect-override-gerege.txt                 1      no        no         OK
+A4c-decoy-variable.txt                         0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt                0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+
+EXPECTATIONS NOT MET (6):
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+A2c-crafted-canary-and-expectation-gerege.txt ADMITS (printed the HALF_UP certification)
+A4c-decoy-variable.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A7-symlinked-canary.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+EXIT=1
+visible ADMITS rows on screen: 6
+
+==================================================================
+CONTROL: same transcripts, WRITABLE dir, pre-fix scorer
+==================================================================
+A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+
+EXPECTATIONS NOT MET (6):
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+A2c-crafted-canary-and-expectation-gerege.txt ADMITS (printed the HALF_UP certification)
+A4c-decoy-variable.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A7-symlinked-canary.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+EXIT=1

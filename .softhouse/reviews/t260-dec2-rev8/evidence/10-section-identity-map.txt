@@ -1,0 +1,48 @@
+SECTION   STATUS          A      B  sha(A)            heading (rev8 text)
+----------------------------------------------------------------------------------------------------------------------
+# DEC-2 — GL / accounting adapter contract CHANGED       244    443  58418822e2756d08  # DEC-2 — GL / accounting adapter contract
+0         CHANGED        22     33  ec0750735a4183b6  ## 0. Why this document exists
+1         IDENTICAL      29     29  31e9da6525a33fce  ## 1. What ratification would mean, and what changing it lat
+1.1       IDENTICAL      30     30  631ec8c149365b8f  ### 1.1 This ADR does not create or freeze a Go file, and co
+2         IDENTICAL       2      2  a04144863a446544  ## 2. Context
+2.1       IDENTICAL      66     66  1b7c58a05ca483ca  ### 2.1 What this context is, in the oracle
+2.2       CHANGED        69     76  cef7b03d24dc77f7  ### 2.2 The fact that shapes this contract: the resolver's s
+2.3       IDENTICAL      32     32  9e707d409a1faeb2  ### 2.3 What the REST read-back cannot see
+3         IDENTICAL       6      6  86bcbc4e2bcf1485  ## 3. Decision
+3.1       IDENTICAL      13     13  ff03353f2398c99b  ### 3.1 Two domains, and why the distinction is the decision
+3.2       IDENTICAL      32     32  1dffe56d4c307d88  ### 3.2 The structural result — and it is WEAKER than DEC-1'
+3.3       IDENTICAL      28     28  38a63ba81769ea19  ### 3.3 Design rules applied
+4         IDENTICAL       2      2  822785279afdabde  ## 4. The load-bearing decisions
+4.1       IDENTICAL      25     25  d21f81155a09e35f  ### 4.1 The seams, and the capability method applied to them
+4.2       CHANGED       127    131  12831b58a0dddc3c  ### 4.2 The graded domain, predicate by predicate
+4.3       IDENTICAL      74     74  2bf10690eda71c72  ### 4.3 Money representation, and where the conversion bound
+4.4       CHANGED        30     53  ae1c06105166ffa6  ### 4.4 The double-entry invariants: which are GRADEABLE, an
+4.4.1     CHANGED       251    276  6761019864cd33f6  ### 4.4.1 THE GUARD I-3 AND I-4 REQUIRE — IT DID NOT EXIST, 
+4.5       IDENTICAL      35     35  f808badc45d9bfcb  ### 4.5 The chart of accounts is DATA, not code — G-9, CLOSE
+4.6       IDENTICAL      64     64  5aa9bf04621372f5  ### 4.6 G-10 as a stated hazard, and the constraint it puts 
+4.7       IDENTICAL      54     54  69d24af79c2d60dc  ### 4.7 The creation-set / posting-set divergence, and which
+4.8       IDENTICAL      27     27  f5fc4a6c83a915ec  ### 4.8 Enum encoding: the stored value, never the ordinal, 
+4.9       CHANGED        75     90  3cff871d0e932f34  ### 4.9 The refusal taxonomy — and the distinction a naive p
+4.10      IDENTICAL      88     88  c5c0dc9cca51fe3a  ### 4.10 The capability registry for this context, and the d
+5         CHANGED        56     74  8ac5bdcbfbaab0cb  ## 5. What DEC-2 is frozen against — and (revisions 1–7) "to
+5.0.1     IDENTICAL      22     22  5a944bcbfe7c8e80  #### 5.0.1 Three capture facts `A2-26` established in this f
+5.1       CHANGED        78     89  9a19ac3a9bf3b7cc  ### 5.1 No `ledger` vector is expressible against the frozen
+#### The three positive controls, RUN CHANGED        30     32  76b46e37c11c00b2  #### The three positive controls, RUN
+5.1.1     IDENTICAL     114    114  d4e75bee390e5d56  ### 5.1.1 RETRACTION — "no `ledger` vector CAN exist" was FA
+5.2       CHANGED       295    304  f5a8706b916895e6  ### 5.2 The decision: EXTEND the machinery — and (revisions 
+5.3       CHANGED        71    107  1f546fda2e6513a6  ### 5.3 Preconditions on `A2-15` — RE-ORDERED in revision 3,
+5.4       CHANGED       135    138  92641d05314160db  ### 5.4 What actually enforces Disposition 3 in the DEFAULT 
+5.5       IDENTICAL      24     24  15cf2f5ccf3a5806  ### 5.5 The `graded_against` requirement, restated with its 
+6         IDENTICAL      49     49  887d217ad7537ea0  ## 6. Forward-compatibility analysis
+7         IDENTICAL      43     43  3e9bb4a93d51e843  ## 7. Deliberately out of scope for DEC-2
+8         IDENTICAL       2      2  91fedc1fded3242a  ## 8. Consequences
+8.1       CHANGED        66    105  8f90eca7fb8b33ad  ### 8.1 WHAT GRADES THE LEDGER, AND WHAT DOES NOT — say it h
+8.2       CHANGED        21     33  7df569e4e08404bb  ### 8.2 Now that it is ratified
+8.3       CHANGED        68     84  2a4e8d5c3551e6ac  ### 8.3 These remain true and must not be misread
+9         IDENTICAL     111    111  819b67d9bb0b4098  ## 9. Every `[UNVERIFIED]` in this document, and why it coul
+10        CHANGED       429    502  fe29237b18f7849f  ## 10. Revision history
+
+rev7 lines total                        : 3039
+rev7 lines in CHANGED/REMOVED sections  : 2067 (68.0%)
+rev7 lines in IDENTICAL sections        : 972 (32.0%)
+P-67 check: the two terms sum to the document. OK

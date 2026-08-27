@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>mn.gerege.nbfi.softhouse-program</string>
+
+  <!-- Fires the local migration driver. Local (not cloud) so the Fineract
+       reference oracle and PostgreSQL on localhost are reachable. -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>/Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh</string>
+  </array>
+
+  <!-- 08:00 primary, 14:00 second attempt (Asia/Ulaanbaatar = machine local
+       time). The repo lock makes a second fire a no-op while one is running. -->
+  <key>StartCalendarInterval</key>
+  <array>
+    <dict>
+      <key>Hour</key><integer>8</integer>
+      <key>Minute</key><integer>0</integer>
+    </dict>
+    <dict>
+      <key>Hour</key><integer>11</integer>
+      <key>Minute</key><integer>0</integer>
+    </dict>
+    <dict>
+      <key>Hour</key><integer>14</integer>
+      <key>Minute</key><integer>0</integer>
+    </dict>
+    <dict>
+      <key>Hour</key><integer>17</integer>
+      <key>Minute</key><integer>0</integer>
+    </dict>
+    <dict>
+      <key>Hour</key><integer>20</integer>
+      <key>Minute</key><integer>0</integer>
+    </dict>
+    <dict>
+      <key>Hour</key><integer>23</integer>
+      <key>Minute</key><integer>0</integer>
+    </dict>
+  </array>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/Users/buv/.local/bin:/opt/homebrew/bin:/usr/local/bin:/Applications/Docker.app/Contents/Resources/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>HOME</key>
+    <string>/Users/buv</string>
+  </dict>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/buv/gerege-nbfi</string>
+
+  <key>StandardOutPath</key>
+  <string>/Users/buv/Library/Logs/gerege-nbfi/launchd.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/buv/Library/Logs/gerege-nbfi/launchd.err.log</string>
+
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>LowPriorityIO</key>
+  <false/>
+</dict>
+</plist>

@@ -1,0 +1,8 @@
+[1787364780.370695000] READY
+[1787364780.384980000] LOCK present before release = YES
+[1787364780.404706000] git resolves to: /tmp/t217-scratch/bin-green-push-POST/git
+[1787364792.643868000] WARN: git push (release lock) still running after 10s — killing it so the caller can return; the LOCAL lock file is already gone, only the remote's view of the release may lag
+[1787364793.807462000] lock released
+[1787364793.828799000] release_lock RETURNED after 13.405488967895508s
+[1787364793.840181000] LOCK present after release = NO
+[1787364793.847501000] BODY COMPLETED NORMALLY

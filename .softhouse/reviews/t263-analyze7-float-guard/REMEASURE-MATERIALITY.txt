@@ -1,0 +1,72 @@
+==========================================================================================
+T263 -- RE-MEASURED MATERIALITY of the six declared sites
+RIG: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8b0f7b84e947d39c/.softhouse/reviews/t263-analyze7-float-guard/scratch/t164/.softhouse/capture/tierA-a2
+==========================================================================================
+
+[A] resolve7.py:24 -- loads req/*.json templates.  T164 claims MATERIAL, 11 leaves
+  req/*.json                                 files=117  float leaves=11   unreadable=0
+        a2-26-manual-je-balanced-3leg.json  /debits/0/amount = 100000.25
+        a2-26-manual-je-balanced-3leg.json  /debits/1/amount = 25000.37
+        a2-26-manual-je-balanced-3leg.json  /credits/0/amount = 125000.62
+        a2-26-manual-je-header-account.json  /debits/0/amount = 100000.25
+        a2-26-manual-je-header-account.json  /credits/0/amount = 100000.25
+        a2-26-manual-je-idem.json  /debits/0/amount = 33333.33
+        ... and 5 more
+
+[B] resolve7.py:25 -- loads out/A2-21*.json.        T164 claims MATERIAL, 12 leaves
+  out/A2-21*.json                            files=5    float leaves=12   unreadable=0
+        A2-211-read-product-nine-mandatory.json  /principal = 1200000.0
+        A2-211-read-product-nine-mandatory.json  /interestRatePerPeriod = 0.0
+        A2-211-read-product-nine-mandatory.json  /annualInterestRate = 0.0
+        A2-211-read-product-nine-mandatory.json  /principalThresholdForLastInstallment = 0.0
+        A2-212-read-product22-channel-override.json  /principal = 1200000.0
+        A2-212-read-product22-channel-override.json  /interestRatePerPeriod = 0.0
+        ... and 6 more
+
+[C] verify-provenance-a2-15.py:24 -- loads .softhouse/vectors/ledger/*.json. T164 claims 0
+  vectors/ledger/*.json                      files=6    float leaves=0   
+
+[D] prove-mkreq7-guard-red.py:70/119/126 -- T164 claims 0, sandbox-only
+  These load documents created inside tempfile.mkdtemp at run time, so there is no
+  on-disk corpus to re-scan. RE-DERIVED DIFFERENTLY: the guard-red script is run and
+  the documents it actually builds are inspected -- see the round-trip arm below for
+  why this class matters less than [A].
+
+==========================================================================================
+THE QUESTION THE COUNT DOES NOT ANSWER: does the float CARRY a value?
+==========================================================================================
+
+resolve7.py:24  body = json.load(open(tmpl))          <- template read WITHOUT parse_float
+resolve7.py:34  text = json.dumps(body, indent=2)      <- the SAME body written back out
+resolve7.py:39  f.write(text)                          <- to a COMMITTED REQUEST BODY
+
+So every float leaf in a template makes a round trip through a binary double and is
+re-serialised into a money request. resolve7.py:25's `resp` is different: only resp[key]
+is read out of it, so its float leaves are OBSERVED and DISCARDED.
+
+ROUND-TRIP ARM -- the template resolve7.py was actually run on
+  req/a2-7-loan-220.json                         exists=True
+  req/a2-7-loan-220-resolved.json                exists=True
+  float leaves in a2-7-loan-220.json: 0 []
+  -> the committed run of resolve7.py carried 0 float(s) into a request body.
+
+TEMPLATES THAT WOULD BE DAMAGED IF resolve7.py WERE RUN ON THEM
+  a2-26-manual-je-balanced-3leg.json         /debits/0/amount             100000.25
+  a2-26-manual-je-balanced-3leg.json         /debits/1/amount             25000.37
+  a2-26-manual-je-balanced-3leg.json         /credits/0/amount            125000.62
+  a2-26-manual-je-header-account.json        /debits/0/amount             100000.25
+  a2-26-manual-je-header-account.json        /credits/0/amount            100000.25
+  a2-26-manual-je-idem.json                  /debits/0/amount             33333.33
+  a2-26-manual-je-idem.json                  /credits/0/amount            33333.33
+  a2-26-manual-je-manual-disallowed.json     /debits/0/amount             100000.25
+  a2-26-manual-je-manual-disallowed.json     /credits/0/amount            100000.25
+  a2-26-manual-je-unbalanced-one-minor-unit.json /debits/0/amount             100000.25
+  a2-26-manual-je-unbalanced-one-minor-unit.json /credits/0/amount            100000.24
+  TOTAL: 11 money-shaped float leaves live in req/ templates that resolve7.py's
+  loader would turn into binary doubles on the way to a request body.
+
+P-40 -- WHAT THIS SCRIPT DID NOT MEASURE
+  * the three sandbox sites (no on-disk corpus)
+  * whether any of the 117 req/ templates is actually PASSED to resolve7.py by a
+    run-*.sh driver -- measured separately, see REVIEW.md
+  * float values reaching a request body by routes other than json.load

@@ -1,0 +1,12 @@
+.softhouse/bin/go-env.sh
+.softhouse/capture/t253-portability/src/10-mktemp-red.sh
+.softhouse/capture/t253-portability/src/20-goenv-red.sh
+.softhouse/capture/t253-portability/src/30-proposed-linter-fix.py
+.softhouse/capture/t253-portability/transcripts/00-primary-sources.txt
+.softhouse/capture/t253-portability/transcripts/10-mktemp-red.txt
+.softhouse/capture/t253-portability/transcripts/20-goenv-red.txt
+.softhouse/capture/t253-portability/transcripts/30-bar-conformance.txt
+.softhouse/capture/t253-portability/transcripts/40-diagnostic-probe.txt
+.softhouse/capture/t253-portability/transcripts/50-proposed-linter-fix.txt
+.softhouse/conformance.sh
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T253.md

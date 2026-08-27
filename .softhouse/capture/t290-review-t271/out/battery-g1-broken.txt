@@ -1,0 +1,69 @@
+T290 -- breaking T271 battery leg G1 on purpose
+================================================================================
+  evidence            : .softhouse/capture/t219-g8-residual/out/classify-t219.json
+  sha256 as committed : 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+
+  RETRO-EDITED: 4 false P2_* booleans flipped to true. The disagreement count must now
+  fall from 4 to 0, and G1 must FAIL if T271's claim about it is true.
+
+T271 -- RED/GREEN battery for B-1
+====================================================================================================
+  rule (live)      : .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+  rule (fwd-compat): blob 0607ecdb943e84c0ad2ae9f16cd79fc702847c3d -- RAN
+  NOTE: that blob is T268's REJECTED version (T281 at b4272ff; retry is T286).
+        fwdFailed=0 means T271's register behaves the SAME under both rules. It is
+        NOT a statement that T268 is sound, and T269 must re-run this battery
+        against whichever rule it actually wires.
+  evidence         : .softhouse/capture/t219-g8-residual/out/classify-t219.json
+  evidence sha256  : 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+
+  FAIL  R1-red-baseline-as-on-main             exit 0   fwd-compat: same (exit 0)
+          -- exit 0, wanted 1
+          -- state='GREEN', wanted 'REFUSED'
+          -- unacknowledged='0', wanted '4'
+          -- disagreements='0', wanted '4'
+  FAIL  G1-green-with-T271-register            exit 0   fwd-compat: same (exit 0)
+          -- disagreements='0', wanted '4'
+          -- acknowledged='0', wanted '4'
+  PASS  N1-same-pairs-at-an-unnamed-path       exit 1   fwd-compat: same (exit 1)
+  FAIL  N2-batched-acknowledged-plus-not       exit 1   fwd-compat: same (exit 1)
+          -- acknowledged='0', wanted '4'
+          -- disagreements='4', wanted '8'
+  PASS  N3-P76-shape-not-built-from            exit 1   fwd-compat: same (exit 1)
+  FAIL  N4-sha-pin-void-register               exit 0   fwd-compat: same (exit 0)
+          -- exit 0, wanted 1
+          -- state='GREEN', wanted 'REFUSED'
+          -- unacknowledged='0', wanted '4'
+  PASS  N5-nil-coverage-refuses                exit 1   fwd-compat: same (exit 1)
+  PASS  G2-populated-clean-green               exit 0   fwd-compat: same (exit 0)
+
+  THE FOUR, AS THE RED LEG NAMES THEM:
+
+  PASS  T1-targets-green-both-files            exit 0
+  PASS  T2-target-file-not-on-disk-is-ERROR    exit 2
+  FAIL  T3-target-with-no-register-REFUSES     exit 0
+          -- exit 0, wanted 1
+          -- probe 'T271-TARGETS: GREEN targets=1 inspected=1 ruleExit=0', wanted T271-TARGETS: REFUSED targets=1 inspected=1...
+  PASS  T4-empty-target-list-REFUSES           exit 1
+
+  legs                 : 12  (8 rule, 4 target-list runner)
+  passed               : 7
+  failed               : 5
+  fwd-compat divergent : 0  (RAN)
+
+  THIS DOES NOT ESTABLISH: that the four acknowledgements are correct in substance
+  -- only that the disagreement is registered, still printed in full, and that the
+  rule still refuses an unacknowledged one. The substance is re-derived separately
+  by rederive_t219_carriers.py, from the raw capture, in integer minor units.
+
+T271-REDGREEN: REFUSED legs=12 passed=7 failed=5 fwdCompat=RAN fwdFailed=0
+  battery exit: 1
+
+  sha256 after restore: 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+  committed evidence restored and VERIFIED.
+
+  CONCLUSION: G1 DOES fail when the count drops. T271's claim survives this attack, and
+  "the bar went green by acknowledgement, not by lowering" is TRUE OF T271's BATTERY.
+  IT IS NOT TRUE OF THE GUARD T271 SPECIFIES FOR T269, which pins only unacknowledged=0
+  and passes this same retro-edited tree. See red/drive-red-t290.py leg R2.
+T290-BREAK-G1: DEMONSTRATED batteryWentRed=1 restored=1

@@ -1,0 +1,7 @@
+T46 re-emission identity proof
+  old payload : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1c54e4da86fd3e6/.softhouse/capture/periodratio/out/t39-periodratio.json
+  new payload : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1c54e4da86fd3e6/.softhouse/capture/periodratio/out/t46-periodratio-reemit.json
+  captures compared            : 16
+  leaves + top-level compared  : 2072
+  new leaves added per capture : ['threadedMathContext', 'threadedMathContextPrecision', 'threadedMathContextRoundingMode', 'wiring']
+  RESULT: 2072 of 2072 published values IDENTICAL. Re-emission is identity-clean; the added columns may be trusted.

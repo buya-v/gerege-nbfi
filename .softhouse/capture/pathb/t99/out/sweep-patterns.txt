@@ -1,0 +1,67 @@
+=== LEG 1 — every spelling in the corpus PASSES ON EMPTY INPUT
+  PASS lines printed with nothing to scan: 10 of 10
+    PASS1
+    PASS2
+    PASS3
+    PASS4
+    PASS5
+    PASS6
+    PASS7
+    PASS8
+    PASS9
+    PASS10
+  (this is the corpus validating itself — a spelling that did not fire would not be an
+   instance of the defect, and including it would inflate the miss count below)
+
+=== LEG 2a — the PRE-T152 patterns (8474bf0cc613e577cfa344428eb4b79c24a004c9), over that corpus
+  patterns extracted from sweep.sh section 3: 2
+  pattern 1:
+      missprobe.sh:7:BANNED=$(printf '%s' "" | grep -icE 'oracle')          # 3  UPPERCASE variable name
+  pattern 2:
+      missprobe.sh:4:[ "$hits" = "0" ] && echo PASS1
+  distinct corpus lines matched: 2
+
+=== LEG 2b — the SHIPPED patterns, over the same corpus
+  patterns extracted from sweep.sh section 3: 4
+  pattern 1:
+      missprobe.sh:3:hits=$(printf '%s' "" | grep -i -c 'mariadb')          # 1  split flag cluster
+      missprobe.sh:5:n=$(printf '%s' "" | grep --count 'ojdbc')             # 2  long flag
+      missprobe.sh:7:BANNED=$(printf '%s' "" | grep -icE 'oracle')          # 3  UPPERCASE variable name
+  pattern 2:
+      missprobe.sh:4:[ "$hits" = "0" ] && echo PASS1
+      missprobe.sh:6:[ "$n" -eq 0 ] && echo PASS2                           #    -eq instead of =
+      missprobe.sh:8:[ "$BANNED" = "0" ] && echo PASS3
+      missprobe.sh:11:[ "x$out" = "x" ] && echo PASS5                        # 5  x-prefix idiom
+      missprobe.sh:12:[ ${#out} -eq 0 ] && echo PASS6                        # 6  string-length idiom
+      missprobe.sh:17:test -z "$out" && echo PASS10                          # 10 bracketless `test -z`
+  pattern 3:
+      missprobe.sh:9:if ! printf '%s' "" | grep -q 'mysql-connector'; then echo PASS4; fi   # 4  no count at all
+      missprobe.sh:14:[ -s scan.txt ] || echo PASS7                          # 7  a file test, not a variable test
+      missprobe.sh:15:awk 'END{if(NR==0) print "PASS8"}' scan.txt            # 8  verdict inside another language
+      missprobe.sh:16:case "$out" in "") echo PASS9 ;; esac                  # 9  a case arm, not a test
+  pattern 4:
+  distinct corpus lines matched: 13
+
+=== COVERAGE — one row per spelling (line numbers derived from the corpus, not transcribed)
+  spelling 1   line(s) 3 4     pre-T152: yes  shipped: yes
+  spelling 2   line(s) 5 6     pre-T152: no   shipped: yes
+  spelling 3   line(s) 7 8     pre-T152: yes  shipped: yes
+  spelling 4   line(s) 9       pre-T152: no   shipped: yes
+  spelling 5   line(s) 11      pre-T152: no   shipped: yes
+  spelling 6   line(s) 12      pre-T152: no   shipped: yes
+  spelling 7   line(s) 14      pre-T152: no   shipped: yes
+  spelling 8   line(s) 15      pre-T152: no   shipped: yes
+  spelling 9   line(s) 16      pre-T152: no   shipped: yes
+  spelling 10  line(s) 17      pre-T152: no   shipped: yes
+  spellings reachable, pre-T152: 2 of 10   shipped: 10 of 10
+
+=== VERDICT
+  10 of 10 spellings pass vacuously on empty input.
+  Pre-T152: 2 patterns, 2 corpus line(s) matched, 2 of 10 spellings reachable.
+  Shipped:  4 patterns, 13 corpus line(s) matched, 10 of 10 spellings reachable.
+
+RESULT: sweep patterns WIDENED — measured against the corpus that defeated them, both
+        before and after.  THIS IS NOT A CLAIM THAT THE SWEEP IS A DETECTOR: it is a list
+        of eleven idioms where it was two, and spelling number twelve is still invisible.
+        That residual limit is stated in sweep.sh's WHAT THIS SWEEP CANNOT FIND, and the
+        only thing that actually closes the class is a POSITIVE assertion (P-35).

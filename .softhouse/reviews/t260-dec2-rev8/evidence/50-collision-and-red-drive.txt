@@ -1,0 +1,71 @@
+================================================================================
+PART 1 — THE REAL T253 COLLISION, reproduced under BOTH implementations
+================================================================================
+--- conformance.sh variant: base.sh ---
+  anchors under base.sh -> exit 0 :: ALL ANCHORS AND DERIVED FACTS HOLD: 0 failing row(s)
+  line-numbers under base.sh -> exit 1 :: STALE — RE-MEASURE BEFORE APPLYING: 3 row(s) MOVED out of 46 checked
+    SH_ROWS verdict lines:
+        ok     L1300  guard_ledger_invariants() {
+        MOVED  L1474  expected 'run_guards() {'
+               got      '  local lint="$REPO_ROOT/.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py"'
+        MOVED  L1494  expected 'guard_ledger_invariants             || failed=1'
+               got      '    warn "conformance: finish. An empty frontier from a linter that never ran reads exactly like a"'
+        MOVED  L1495  expected 'guard_no_fail_open_instruments      || failed=1'
+               got      '    warn "conformance: clean tree, which is the defect this guard exists to refuse."'
+      STALE — RE-MEASURE BEFORE APPLYING: 3 row(s) MOVED out of 46 checked
+--- conformance.sh variant: cloud.sh ---
+  anchors under cloud.sh -> exit 0 :: ALL ANCHORS AND DERIVED FACTS HOLD: 0 failing row(s)
+  line-numbers under cloud.sh -> exit 1 :: STALE — RE-MEASURE BEFORE APPLYING: 4 row(s) MOVED out of 46 checked
+    SH_ROWS verdict lines:
+        MOVED  L1300  expected 'guard_ledger_invariants() {'
+               got      '}'
+        MOVED  L1474  expected 'run_guards() {'
+               got      'TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh'
+        MOVED  L1494  expected 'guard_ledger_invariants             || failed=1'
+               got      ''
+        MOVED  L1495  expected 'guard_no_fail_open_instruments      || failed=1'
+               got      "  # The JSON is diverted to scratch. The linter's default destination is a"
+      STALE — RE-MEASURE BEFORE APPLYING: 4 row(s) MOVED out of 46 checked
+--- conformance.sh variant: mac.sh ---
+  anchors under mac.sh -> exit 0 :: ALL ANCHORS AND DERIVED FACTS HOLD: 0 failing row(s)
+  line-numbers under mac.sh -> exit 1 :: STALE — RE-MEASURE BEFORE APPLYING: 3 row(s) MOVED out of 46 checked
+    SH_ROWS verdict lines:
+        ok     L1300  guard_ledger_invariants() {
+        MOVED  L1474  expected 'run_guards() {'
+               got      '  local lint="$REPO_ROOT/.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py"'
+        MOVED  L1494  expected 'guard_ledger_invariants             || failed=1'
+               got      '    warn "conformance: finish. An empty frontier from a linter that never ran reads exactly like a"'
+        MOVED  L1495  expected 'guard_no_fail_open_instruments      || failed=1'
+               got      '    warn "conformance: clean tree, which is the defect this guard exists to refuse."'
+      STALE — RE-MEASURE BEFORE APPLYING: 3 row(s) MOVED out of 46 checked
+
+================================================================================
+PART 2 — DRIVE THE ANCHOR MECHANISM RED (the question the brief asks)
+================================================================================
+--- DELETED -> checker exit 1
+        ROT     .softhouse/conformance.sh :: NOT PRESENT -- 'guard_ledger_invariants() {'
+        ROT     .softhouse/conformance.sh :: NOT PRESENT -- 'guard_ledger_invariants() {'
+        ROT     .softhouse/conformance.sh :: NOT PRESENT -- 'guard_ledger_invariants() {'
+      ROT DETECTED: 3 failing row(s)
+    what a HUMAN following the recipe sees (git grep -n -F, status classified):
+      resolver: 0 matches -> EXIT 1 (a real measured negative). Reader gets NOTHING.
+--- EDITED -> checker exit 1
+        ROT     .softhouse/conformance.sh :: NOT PRESENT -- 'guard_ledger_invariants() {'
+        ROT     .softhouse/conformance.sh :: NOT PRESENT -- 'guard_ledger_invariants() {'
+        ROT     .softhouse/conformance.sh :: NOT PRESENT -- 'guard_ledger_invariants() {'
+      ROT DETECTED: 3 failing row(s)
+    what a HUMAN following the recipe sees (git grep -n -F, status classified):
+      resolver: 0 matches -> EXIT 1 (a real measured negative). Reader gets NOTHING.
+--- NONUNIQUE -> checker exit 1
+        AMBIG   .softhouse/conformance.sh :: 2 occurrences (an anchor must be unique) -- 'guard_ledger_invariants() {'
+        AMBIG   .softhouse/conformance.sh :: 2 occurrences (an anchor must be unique) -- 'guard_ledger_invariants() {'
+        AMBIG   .softhouse/conformance.sh :: 2 occurrences (an anchor must be unique) -- 'guard_ledger_invariants() {'
+      ROT DETECTED: 3 failing row(s)
+    what a HUMAN following the recipe sees (git grep -n -F, status classified):
+      resolver: 2 matches -> EXIT 0 (SUCCESS), lines 1301, 1302.
+      *** git grep does NOT fail on a non-unique anchor. It prints both and exits 0. ***
+
+--- CONTROL: unmutated base -> the checker must be GREEN, or the three RED runs prove nothing
+    control exit 0 :: ALL ANCHORS AND DERIVED FACTS HOLD: 0 failing row(s)
+
+DONE.

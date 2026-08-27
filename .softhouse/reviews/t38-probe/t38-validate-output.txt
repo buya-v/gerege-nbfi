@@ -1,0 +1,61 @@
+==============================================================================
+A1  the thirteen COMMITTED observation triples (level, final, total
+    interest).  This is the WEAK standard; see A2/A3.
+==============================================================================
+   principal   n  rate        disb          level          final        tot int  ok
+         100   6   7.0                      17.01          17.00           2.05  OK
+     1014632   6   7.0                  172574.64      172574.62       20815.82  OK
+      127704  36  16.8                    4540.30        4540.06       35746.56  OK
+      135623   6   7.0                   23067.56       23067.59        2782.39  OK
+     2345024   6   7.0                  398855.60      398855.63       48109.63  OK
+      167299   6  21.6                   29665.91       29665.94       10696.49  OK
+       64352  12  21.6                    6010.61        6010.55        7775.26  OK
+        1000  18  18.5                      64.04          64.14         152.82  OK
+      246489  18  18.5                   15786.24       15786.14       37663.22  OK
+       16838  36  16.8                     598.65         598.46        4713.21  OK
+       40595  36  16.8                    1443.28        1443.47       11363.27  OK
+     1200000   6  21.6                  212787.28      212787.30       76723.70  OK
+     1200000   6  21.6  2024-02-01      253114.12      253114.10       65570.58  OK
+
+A1: reproduced 13 of 13
+
+==============================================================================
+A2  ROW-BY-ROW against every committed capture in
+    .softhouse/capture/out/capture-prod-raw.json
+==============================================================================
+P-CAL          SKIPPED (threaded precision 12, not the production setting)
+P-00           rows=5   cells=32   OK
+P-01           rows=15  cells=92   OK
+P-02           rows=5   cells=32   OK
+P-02b          rows=5   cells=32   OK
+P-03           rows=5   cells=32   OK
+P-04f          rows=5   cells=32   OK
+P-04t          rows=5   cells=32   OK
+P-MNT-5M       rows=15  cells=92   OK
+P-MNT-1M2      rows=10  cells=62   OK
+P-MNT-50M      rows=30  cells=182  OK
+P-MNT-4M999    rows=15  cells=92   OK
+
+A2: 11 of 11 captures reproduce; 712 cells compared
+
+==============================================================================
+A3  ROW-BY-ROW against every committed capture in
+    .softhouse/capture/dec1-binding/out/t37-binding.json
+==============================================================================
+T37-CAL        SKIPPED (threaded precision 12, not the production setting)
+T37-CTL-Q0a    rows=6   cells=38   OK
+T37-3-A        rows=6   cells=38   OK
+T37-3-B        rows=36  cells=218  OK
+T37-3a         rows=12  cells=74   OK
+T37-3b         rows=6   cells=38   OK
+T37-3b-2       rows=6   cells=38   OK
+T37-3c         rows=6   cells=38   OK
+T37-3c-2       rows=6   cells=38   OK
+T37-3d         rows=6   cells=38   OK
+T37-3d-2       rows=36  cells=218  OK
+
+A3: 10 of 10 captures reproduce; 776 cells compared
+
+==============================================================================
+OVERALL: PASS
+==============================================================================

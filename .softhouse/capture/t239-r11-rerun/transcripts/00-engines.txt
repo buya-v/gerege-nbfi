@@ -1,0 +1,48 @@
+PWD=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a63a7abf43fa9b0dc
+HEAD=f747a46aa5bc85f02fe24bba78fe195548d3e82a
+date=2026-08-22T09:25:45Z
+
+=== versions / presence ===
+git version 2.50.1 (Apple Git-155)
+grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+ugrep: ABSENT from PATH
+ripgrep: ABSENT from PATH
+python3 3.9.6, re module present
+shell running this script: bash 3.2.57(1)-release
+PATH=/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Users/buv/.local/bin:/opt/homebrew/bin:/Applications/Docker.app/Contents/Resources/bin
+'grep' resolves in THIS (script) context to: grep is /usr/bin/grep
+BASH_FUNC_grep exported into env? -> NO
+
+=== CALIBRATION FIXTURE (tracked in the index: YES) ===
+     1	alpha main omega
+     2	alpha bmainb omega
+     3	alpha domain omega
+     4	alpha maintain omega
+
+=== POSITIVE CONTROL FIRST (P-72) — plain substring 'main' MUST hit all 4 lines ===
+  git grep -E 'main'             rc=0   |.softhouse/capture/t239-r11-rerun/evidence/calibration-fixture.txt:1:alpha main omega~.softhouse/capture/t239-r11-rerun/evidence/calibration-fixture.txt:2:alpha bmainb omega~.softhouse/capture/t239-r11-rerun/evidence/calibration-fixture.txt:3:alpha domain omega~.softhouse/capture/t239-r11-rerun/evidence/calibration-fixture.txt:4:alpha maintain omega~|
+  /usr/bin/grep -E 'main'        rc=0   |1:alpha main omega~2:alpha bmainb omega~3:alpha domain omega~4:alpha maintain omega~|
+  ^ if either of these is empty, EVERY negative below is void and must not be reported.
+
+=== ENGINE MATRIX — pattern \bmain\b, -n so we see WHICH line matched ===
+  git grep -E                    rc=0   |.softhouse/capture/t239-r11-rerun/evidence/calibration-fixture.txt:2:alpha bmainb omega~|
+  git grep -P                    rc=0   |.softhouse/capture/t239-r11-rerun/evidence/calibration-fixture.txt:1:alpha main omega~|
+  /usr/bin/grep -E (BSD)         rc=0   |1:alpha main omega~|
+  /usr/bin/grep -P               rc=2   |grep: invalid option -- P~usage: grep [-abcdDEFGHhIiJLlMmnOopqRSsUVvwXxZz] [-A num] [-B num] [-C[num]]~	[-e pattern] [-f file] [--binary-files=value] [--color=when]~	[--context[=num]] [--directories=action] [--label] [--line-buffered]~	[--null] [pattern] [file ...]~|
+  ugrep -E                       ABSENT — cannot be used, cannot be cited
+  rg                             ABSENT — cannot be used, cannot be cited
+  python3 re                     rc=0   |1:alpha main omega~|
+
+=== NEGATIVE CONTROL — literal 'bmainb' (what \b degrades to) ===
+  git grep -E 'bmainb'           rc=0   |.softhouse/capture/t239-r11-rerun/evidence/calibration-fixture.txt:2:alpha bmainb omega~|
+  /usr/bin/grep -E bmainb        rc=0   |2:alpha bmainb omega~|
+
+=== MECHANISM-1 TRAP (T224's killer): right-anchored inflected stem ===
+  \bmaintain\b vs \bmaint\b on line 4 'maintain' — a sound engine finds the first, NOT the second.
+  git grep -P '\bmaintain\b'     rc=0   |.softhouse/capture/t239-r11-rerun/evidence/calibration-fixture.txt:4:alpha maintain omega~|
+  git grep -P '\bmaint\b'        rc=1   |~|
+
+READ THE MATRIX:
+  hit on LINE 1 only            -> engine honours \b            (SOUND)
+  hit on LINE 2                 -> engine read \b as literal b  (THE DEFECT)
+  rc=2                          -> option not supported at all  (silent in a pipeline)

@@ -1,0 +1,17 @@
+attestation-derivation: curl --trace-ascii; request headers AS SENT
+send-header-block 1 of 1
+POST /fineract-provider/api/v1/offices HTTP/1.1
+Host: localhost:8443
+User-Agent: curl/8.7.1
+Accept: */*
+Authorization: Basic <redacted sha256:2614d66f727c25bb>
+Fineract-Platform-TenantId: gerege
+Content-Type: application/json
+Content-Length: 130
+request-headers-artefact: inject.reqhdr
+request-headers-sha256: 938d91b9ab3f94c8a0644de3a5f1081c9f4c40aa05c965a8b032abbb95ae52a1
+body-wire-bytes-artefact: inject.req
+body-sha256: b91387cb0462e9d75112cdcf743e682d118c073ea4ac1f31c7e6412f1d725047
+body-bytes: 130
+content-length-crosscheck: MATCH (130 bytes)
+captured-at-utc: 2026-08-22T12:59:56Z

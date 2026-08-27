@@ -1,0 +1,110 @@
+T207 v3 of t44_float_roundtrip -- float round-trip hazard on captured ORACLE
+RESPONSES, with every skipped file NAMED and COUNTED, and with VALUE CORRUPTION
+WIRED TO THE VERDICT (T185 F-1; ruling in T207/RULING-float-derived-predicate.md).
+
+  glob patterns given : 4
+      .softhouse/capture/periodratio/out/*.json   -> 18 file(s)
+      .softhouse/capture/mathcontext/out/*.json   -> 18 file(s)
+      .softhouse/capture/charges/out/fc/*.json   -> 42 file(s)
+      .softhouse/capture/charges/out/attested/*.json   -> 50 file(s)
+  files REQUESTED     : 128
+  files PARSED        : 110
+  files SKIPPED       : 18      <-- t44_float_roundtrip.py:29 discarded these silently
+
+================================================================================================
+SKIP REGISTER -- 18 file(s) could not be parsed and were NOT scanned.
+Printed on EVERY run, including a clean one, so a reader never has to infer a zero
+from a silence.
+================================================================================================
+  UNSCANNED  .softhouse/capture/periodratio/out/t39-determinism-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/periodratio/out/t39-neg5-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/periodratio/out/t39-neg6-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/periodratio/out/t39-neg7-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/periodratio/out/t39-periodratio-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/periodratio/out/t46-neg-threaded-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/periodratio/out/t46-periodratio-arms-determinism-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/periodratio/out/t46-periodratio-arms-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/periodratio/out/t46-periodratio-reemit-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/mathcontext/out/t42-determinism-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/mathcontext/out/t42-determinism2-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/mathcontext/out/t42-mathcontext-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/mathcontext/out/t42-mathcontext2-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/mathcontext/out/t42-neg4-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/mathcontext/out/t42-neg5-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/mathcontext/out/t46-mathcontext3-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/mathcontext/out/t50-tier1-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+  UNSCANNED  .softhouse/capture/mathcontext/out/t50-tier2-raw.json
+             JSONDecodeError: Extra data: line 1 column 2 (char 1)
+
+  ACKNOWLEDGED: --expect-skips 18 matches. The 18 file(s) above were NOT scanned;
+  every figure below is over 110 of 128 requested files.
+
+================================================================================================
+FLOAT ROUND-TRIP HAZARD -- over 110 of 128 requested file(s)
+================================================================================================
+  POPULATION INSPECTED : 110 file(s) parsed of 128 requested; 18 unscanned; 9122 numeric token(s) seen.
+  distinct bare non-integer literals : 245
+  total occurrences                  : 9122
+  files carrying at least one        : 44 of 110 parsed
+
+  max decimal scale seen                    : 6
+  literals whose float repr() != the text   : 41 of 245   [REPORTED, NOT GATED -- see below]
+  literals whose float VALUE != the decimal : 0 of 245   [*** THIS IS THE GATE ***]
+
+  text-lossy examples:
+          '1200000.00'  ->  1200000.0
+            '15000.00'  ->  15000.0
+                '0.00'  ->  0.0
+            '21600.00'  ->  21600.0
+            '13158.10'  ->  13158.1
+           '102517.60'  ->  102517.6
+           '112082.40'  ->  112082.4
+            '30000.00'  ->  30000.0
+             '2500.00'  ->  2500.0
+            '24100.00'  ->  24100.0
+            '15658.10'  ->  15658.1
+           '114582.40'  ->  114582.4
+
+  WHY TEXT-LOSS DOES NOT FAIL THIS RUN, stated every time so nobody 'tightens' it:
+    these are scale witnesses on the RESPONSE leg. T186 rule A4 -- a response is an
+    OBSERVATION: never rewrite it, never normalise its scale; `1200000.000000` is
+    not a typo for `1200000.0`, it witnesses DECIMAL(19,6). Gating on text-loss here
+    would refuse the oracle's own correct output. Byte-fidelity IS the gate for
+    REQUEST BODIES, enforced by .softhouse/capture/lib/check_wire_float_roundtrip.py
+    from conformance.sh -- and is NOT duplicated here.
+
+  => over the 245 distinct literals actually inspected, in 110 of 128 requested
+     files, NO literal changes VALUE on a float round-trip at these magnitudes
+     and scales. The hazard is structural: the wire format is float-shaped, so a
+     consumer that does not force exact decimal parsing violates the money rule
+     by construction, and would corrupt a value as soon as a magnitude or a
+     scale grows. THIS SENTENCE IS SCOPED TO THE DENOMINATORS ABOVE and says
+     nothing whatever about the 18 file(s) in the SKIP REGISTER.
+     T186 §6.4: this margin is enormous, not marginal -- which is exactly why a
+     zero here is weak evidence, and why it is nevertheless WIRED: it costs
+     nothing while green and is the only alarm available on the response leg.
+
+T207 v3: NO VALUE CORRUPTION DETECTED -- 110 of 128 files scanned, 18 skipped, 245 distinct literals inspected.
+  ESTABLISHES: none of those literals changes VALUE under a binary-double round
+               trip, and no requested file went unscanned unacknowledged.
+  DOES NOT ESTABLISH: that the corpus is float-safe (it is not -- the wire is
+               float-shaped by design, T186 Zone A); that any Go code is correct;
+               that any vector is admissible; or anything at all about a file
+               outside the globs above.

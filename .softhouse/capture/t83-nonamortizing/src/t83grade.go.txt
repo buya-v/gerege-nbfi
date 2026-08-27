@@ -1,0 +1,87 @@
+// t83grade runs the REAL conformance harness (conformance.Run) over a scratch
+// vector store containing exactly one PROPOSED vector, with the REAL Go port
+// registered as the implementation, and prints the outcome, every cell diff and
+// every invariant status.
+//
+// It exists to answer STEP 5 of T83 by OBSERVATION rather than by reading the
+// grading code: does `invariant_exemptions` actually reach the G-8 divergence?
+//
+// It changes no port logic and no harness logic. It is compiled into a scratch
+// copy of the tree; the committed store under .softhouse/vectors is never read
+// or written by it — the store root is passed in on the command line.
+//
+// Stored as .txt and copied to nexus/cmd/t83grade/main.go inside the scratch copy
+// by run-exemption-demo.py.
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"os"
+
+	"github.com/gerege/nexus/internal/apps/loanschedule"
+	"github.com/gerege/nexus/internal/apps/loanschedule/conformance"
+)
+
+type inv struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	Detail string `json:"detail"`
+}
+
+type res struct {
+	CaseID     string   `json:"case_id"`
+	Outcome    string   `json:"outcome"`
+	Detail     []string `json:"detail"`
+	Graded     int      `json:"graded_cells"`
+	Ungraded   int      `json:"ungraded_cells"`
+	Invariants []inv    `json:"invariants"`
+}
+
+func main() {
+	if len(os.Args) != 3 {
+		fmt.Fprintln(os.Stderr, "usage: t83grade <repoRoot> <storeRoot>")
+		os.Exit(2)
+	}
+	s, err := conformance.Run(context.Background(), conformance.Options{
+		RepoRoot:           os.Args[1],
+		StoreRoot:          os.Args[2],
+		Implementation:     loanschedule.New(),
+		ImplementationName: "loanschedule-go",
+		// The oracle IS up for this run (the same pinned container the capture came
+		// from); saying so here only removes the harness's unprobed-run fatal, it
+		// does not make anything pass.
+		OracleProbe: "up",
+	})
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(3)
+	}
+	out := map[string]any{
+		"exitCode":     s.ExitCode(),
+		"fatalReasons": s.FatalReasons,
+		"loadErrors":   s.LoadErrors,
+		"parityPass":   s.ParityPass,
+		"parityFail":   s.ParityFail,
+		"inadmissible": s.Inadmissible,
+		"refused":      s.Refused,
+		"invariantViolations": s.InvariantViolations,
+	}
+	var rs []res
+	for _, r := range s.Results {
+		e := res{CaseID: r.CaseID, Outcome: string(r.Outcome), Detail: r.Detail,
+			Graded: r.GradedCells, Ungraded: r.UngradedCells}
+		for _, i := range r.Invariants {
+			e.Invariants = append(e.Invariants, inv{i.Name, string(i.Status), i.Detail})
+		}
+		rs = append(rs, e)
+	}
+	out["results"] = rs
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", " ")
+	if err := enc.Encode(out); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(3)
+	}
+}

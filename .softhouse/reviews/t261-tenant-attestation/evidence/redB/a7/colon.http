@@ -1,0 +1,14 @@
+attestation-derivation: curl --trace-ascii; request headers AS SENT
+send-header-block 1 of 1
+GET /fineract-provider/api/v1/offices HTTP/1.1
+Host: localhost:8443
+User-Agent: curl/8.7.1
+Accept: */*
+Authorization: Basic <redacted sha256:2614d66f727c25bb>
+Fineract-Platform-TenantId: default
+Content-Type: application/json
+X-T261-Note: alpha: DELTA; gamma
+request-headers-artefact: colon.reqhdr
+request-headers-sha256: c464b8e881ad7962a6c378df17d11306c467261ca15b5e714f715dd830779577
+body: <none>
+captured-at-utc: 2026-08-22T13:38:27Z

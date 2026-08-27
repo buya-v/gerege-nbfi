@@ -1,0 +1,28 @@
+preconditions OK
+  image sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  fineract 426a23544e8426a38ae43ae404670a0a7e85b9eb (clean)
+  seam bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714
+  harness CaptureT169Post 5ac6ef076282cd3899eb8c88a122154aa77f86a4feeeef08e870304ff22b7c59
+  run t169-Post-20260821T092256Z
+container exit 0, stdout 104538 bytes, stderr 0 bytes
+RUN RECORD
+  harness              : CaptureT169Post
+  container exit code  : 0
+  stderr bytes         : 0
+  capture JSON present : yes, 103589 bytes
+
+T169 INTEGRITY LINE (four outcomes, mutually exclusive and exhaustive)
+  asked 5 / observed 3 / threw 2 / skipped 0
+    THREW T169-RED-R600p0-N2000-B10001 -> java.lang.StackOverflowError message=null | top frame org.apache.fineract.portfolio.loanproduct.calc.ProgressiveEMICalculator.lambda$calculateLastUnpaidRepaymentPeriodEMI$66(ProgressiveEMICalculator.java:1185)
+    THREW T169-TWIN-R600p0-N3000-B10001 -> java.lang.StackOverflowError message=null | top frame org.apache.fineract.portfolio.util.Memo.get(Memo.java:44)
+
+PRE-T169 COUNTER over the same run (what every published sweep line in this program said)
+  5 asked / 3 observed / 2 errored / 0 skipped
+  (it enumerates the cells the rig EMITTED. An id that produced no cell has no term in it.)
+
+GRADEABILITY: 3 cell(s) are gradeable; 2 threw and 0 are absent, and neither is gradeable.
+
+CALIBRATIONS P-CAL-ZPA/ZPB reproduce pass 3g T64-ZP-A/B cell-for-cell, 0 input diffs
+  -> the handler change moved NO number.
+ATTESTATION pinned: fineract 426a23544e84 clean, MathContext (19, HALF_UP), harness sha matches.
+capture: 5 cells, 314 emitted period rows, canonical sha256 6f6519061ef10a3af298fca855f72134a26f3feb91215f9550b5c3226335e670

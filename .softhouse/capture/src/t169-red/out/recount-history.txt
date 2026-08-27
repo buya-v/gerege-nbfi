@@ -1,0 +1,35 @@
+T169 RE-COUNT OF THE COMMITTED SWEEPS
+==============================================================================
+
+T83  family-B principal sweep
+  file: t83-nonamortizing/out/capture-t83-raw.json
+  harness: CaptureT83.java
+  asked 332 / observed 332 / threw 0 / skipped 0        [asked := emitted; skipped is structurally 0 here]
+
+T100 G-8 rescope sweep
+  file: t100-g8-rescope/out/capture-t100-raw.json
+  harness: CaptureT100.java
+  asked 17 / observed 17 / threw 0 / skipped 0        [asked := emitted; skipped is structurally 0 here]
+
+T117 family-B extent probe (pass 1)
+  file: t117-familyb/out/capture-t117-raw.json.gz
+  harness: CaptureT117.java
+  asked 202 / observed 202 / threw 0 / skipped 0        [asked := emitted; skipped is structurally 0 here]
+
+T117 family-B extent probe (pass 2)
+  file: t117-familyb/out/capture-t117p2-raw.json.gz
+  harness: CaptureT117P2.java
+  asked 89 / observed 89 / threw 0 / skipped 0        [asked := emitted; skipped is structurally 0 here]
+
+T159 independent review (catch Throwable — POSITIVE CONTROL)
+  file: t159-review-t117/out/capture-t159-raw.json.gz
+  harness: CaptureT159.java
+  asked 49 / observed 47 / threw 2 / skipped 0        [asked := emitted; skipped is structurally 0 here]
+    THREW T159-R600p0-N2000-B10001 -> java.lang.StackOverflowError message='null' | top frame java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+    THREW T159-R600p0-N3000-B100001 -> java.lang.StackOverflowError message='null' | top frame java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+==============================================================================
+T83 / T100 / T117 all shipped `catch (RuntimeException e)`; a java.lang.Error thrown by
+the seam would have killed those runs before any JSON existed, so no committed capture
+of theirs could carry one. T159 shipped `catch (Throwable)` and its capture DOES carry
+two — which is the only reason the re-count above can show a non-zero threw column at all.

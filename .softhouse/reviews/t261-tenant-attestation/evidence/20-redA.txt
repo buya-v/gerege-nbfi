@@ -1,0 +1,11 @@
+T261 RED-DRIVE A -- live oracle https://localhost:8443/fineract-provider/api/v1
+curl: curl 8.7.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+
+  legacy   arm: SENT gerege    HTTP 200   SIDECAR SAYS gerege    -> TRUE
+  legacy   arm: SENT default   HTTP 200   SIDECAR SAYS gerege    -> FALSE
+  derived  arm: SENT gerege    HTTP 200   SIDECAR SAYS gerege    -> TRUE
+  derived  arm: SENT default   HTTP 200   SIDECAR SAYS default   -> TRUE
+
+DEFECT REPRODUCED: legacy sidecar says 'gerege' for a request
+  genuinely sent with Fineract-Platform-TenantId: default.
+DERIVED WRITER TRACKS THE SEND on both arms.

@@ -1,0 +1,23 @@
+=== cwd = /tmp/t202/tb  (repo root? YES) ===
+  [log] WARN: exit-protocol violation — driver left uncommitted work:
+?? .softhouse/vector.json
+?? docs/T999-handoff.md
+  [log] rescued: committed the leftovers so the next fire can see them
+  still-uncommitted after the rescue:
+       M .softhouse/LOCK
+  rescue commit contents:
+      .softhouse/vector.json
+      docs/T999-handoff.md
+
+=== cwd = /tmp/t202/tb/tools/deep  (repo root? NO) ===
+  [log] WARN: exit-protocol violation — driver left uncommitted work:
+?? .softhouse/vector.json
+?? docs/T999-handoff.md
+  [log] rescued: committed the leftovers so the next fire can see them
+  still-uncommitted after the rescue:
+       M .softhouse/LOCK
+      ?? .softhouse/vector.json
+      ?? docs/T999-handoff.md
+  HEAD UNCHANGED - the rescue commit never happened
+  *** the log said 'rescued:' but NOTHING was committed - FAIL-OPEN ***
+

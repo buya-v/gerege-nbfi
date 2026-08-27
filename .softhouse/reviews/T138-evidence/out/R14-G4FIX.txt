@@ -1,0 +1,49 @@
+=== the two edits, as applied:
+   python3 - "$S/poison/A2a-mutated-canary-gerege.txt" <<'PY'
+   import sys
+   p = sys.argv[1]
+   b = open(p, 'rb').read()
+   i = b.find(b'PASS  effective rounding mode canary')
+   j = b.find(b'\n', i)
+   open(p, 'wb').write(b[:j] + b'\xff\xfe' + b[j:])
+   print('   poisoned the certification line itself with an invalid multibyte sequence')
+   PY
+   167:if LC_ALL=C /usr/bin/grep -aq "^A2a.*ADMITS (printed the HALF_UP certification)" "$S/g4.txt"; then
+
+=== GREEN: healthy tree, fixed G-4
+=================================================================== G-4
+   BSD  -qF  rc=0
+   BSD -aqF  rc=0
+   MEASURED: on this machine BSD grep matched EITHER WAY, and T107b independently reproduced
+   that (18 of 18 combinations).  T80 reported that BSD grep in a UTF-8 locale matches
+-- verdict.sh (with -a) on the poisoned set: must still name A2a as an admission
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+   A2a named as an admission on the poisoned set   OK      [G-4]
+SCRIPT_EXIT=0
+
+=== RED: same tree, sentence scanner BLINDED (c=no always)
+=================================================================== G-4
+-- verdict.sh (with -a) on the poisoned set: must still name A2a as an admission
+A2a-mutated-canary-gerege.txt                  0      no        no         ADMITS (exited 0, expected a breach)
+A2a-mutated-canary-gerege.txt ADMITS (exited 0, expected a breach)
+   A2a NOT named as an admission   *** NOT AS EXPECTED ***   [G-4]
+SCRIPT_EXIT=1
+
+=== RED 2: LC_ALL=C removed from verdict.sh's sentence grep (the real regression)
+   135:  if LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 /usr/bin/grep -aqF "$S" "$f"; then c=YES; else c=no; fi  # T138: LC_ALL=C removed
+=================================================================== G-4
+-- verdict.sh (with -a) on the poisoned set: must still name A2a as an admission
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+   A2a named as an admission on the poisoned set   OK      [G-4]
+SCRIPT_EXIT=0
+
+=== CONTROL: the SHIPPED G-4 against that same LC_ALL=C-removed verdict.sh
+=================================================================== G-4
+-- verdict.sh (with -a) on the poisoned set: must still name A2a as an admission
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+   A2a named as an admission on the poisoned set   OK      [G-4]
+SCRIPT_EXIT=0
+   ^ if this is 0, the SHIPPED G-4 is green on a tree whose hardening has been removed.

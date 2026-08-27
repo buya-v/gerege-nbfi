@@ -1,0 +1,93 @@
+T243 RED DRIVE 1 — six wrong ledger implementations, through conformance.sh
+commit : 693c768d752df7a475938df3e4fa3cd72b138e18
+vectors: 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+
+==================================================================
+BASELINE — A2-34's F-7, re-derived. conformance.sh has no
+--ledger-impl option, and it never runs go test.
+==================================================================
+  exit=2 for: bash .softhouse/conformance.sh --ledger-impl ledger-wrong-truncating
+conformance: unknown option --ledger-impl
+  occurrences of the string 'go test' in .softhouse/conformance.sh : 4
+  (the flag is still not an option of this SCRIPT, and it should not be:
+   the six are now run BY the script on every graded run, which is the fix.)
+
+==================================================================
+CONTROL 0 — the wired harness over the pristine tree must be GREEN,
+and must SAY it executed all six. Anti-no-op for every arm below.
+==================================================================
+  exit=0
+  OK   [control0] found (1): VERDICT: PASS (exit 0)
+  OK   [control0] found (1): all 6 wrong ledger implementations DIED through this harness, not by hand.
+  OK   [control0] found (1): KILLED  ledger-wrong-truncating
+  OK   [control0] found (1): KILLED  ledger-wrong-netting-totals
+  OK   [control0] found (1): KILLED  ledger-wrong-split-drift
+  OK   [control0] found (1): KILLED  ledger-wrong-code-ignored
+  OK   [control0] found (1): KILLED  ledger-wrong-header-refusing
+  OK   [control0] found (1): KILLED  ledger-wrong-manual-permission-ignored
+  OK   [control0] absent as required: SURVIVED
+  OK   [control0] exit 0
+
+==================================================================
+RED 1 — A WRONG IMPLEMENTATION THAT STOPS BEING WRONG. truncating is
+        made to return the CORRECT port's answer verbatim. Its
+        registration, its name, its declared defect and every vector
+        are untouched, so the only thing that changed is whether the
+        corpus can still tell it apart. This is the shape a green
+        conformance.sh run could not see before today.
+==================================================================
+  perturbation PROVEN APPLIED in nexus/internal/apps/ledger/conformance/impl.go
+  exit=2
+  OK   [RED-1] found (1): SURVIVED ledger-wrong-truncating
+  OK   [RED-1] found (1): A DELIBERATELY WRONG LEDGER IMPLEMENTATION SURVIVED THE CORPUS.
+  OK   [RED-1] found (1): EXIT 2 — no verdict is available. This is NOT a pass.
+  OK   [RED-1] found (1): IT IS
+  OK   [RED-1] found (1): WITHDRAWN BY THIS GATE.
+  OK   [RED-1] exit 2
+
+==================================================================
+RED 2 — INFLATION. Register a SEVENTH wrong implementation. It dies
+        like the other six, so EVERY per-implementation arm stays
+        green and only the POPULATION PIN can notice. This is the
+        direction a count-free loop misses completely: a registered
+        wrong implementation that nobody ever decided to execute.
+==================================================================
+  perturbation PROVEN APPLIED in nexus/internal/apps/ledger/conformance/impl.go
+  exit=2
+  OK   [RED-2] found (1): WRONG-IMPLEMENTATION POPULATION 7, PINNED 6.
+  OK   [RED-2] found (1): An added one must be executed here in the same commit that registers it
+  OK   [RED-2] found (1): WITHDRAWN BY THIS GATE.
+  OK   [RED-2] exit 2
+
+==================================================================
+RED 3 — DEFLATION, and it is caught by a DIFFERENT mechanism, which
+        is worth recording rather than assuming. Withdraw one wrong
+        implementation from the registry entirely. The population
+        pin is NOT what fires first: admit.go refuses every vector
+        whose graded_against names an implementation nobody can run,
+        so the run dies further upstream. Both are exit 2 and the
+        diagnostic is asserted, never the code alone (P-62).
+==================================================================
+  perturbation PROVEN APPLIED in nexus/internal/apps/ledger/conformance/impl.go
+  exit=2
+  OK   [RED-3] found (2): ledger-wrong-split-drift
+  OK   [RED-3] absent as required: VERDICT: PASS (exit 0)
+  OK   [RED-3] exit 2
+  --- what actually refused, verbatim: ---
+        graded_against[1] names implementation "ledger-wrong-split-drift", which is NOT REGISTERED. DEC-2 precondition P-10: graded_against is a declarative record and does not execute anything, so a name nobody can run makes the claim unfalsifiable. Register it in impl.go and it becomes selectable with -ledger-impl
+        graded_against[1] names implementation "ledger-wrong-split-drift", which is NOT REGISTERED. DEC-2 precondition P-10: graded_against is a declarative record and does not execute anything, so a name nobody can run makes the claim unfalsifiable. Register it in impl.go and it becomes selectable with -ledger-impl
+
+==================================================================
+GREEN AGAIN — the anti-no-op close. If this arm ever fails, the gate
+        has stopped being a gate and become an unconditional refusal.
+==================================================================
+  exit=0
+  OK   [GREEN] found (1): VERDICT: PASS (exit 0)
+  OK   [GREEN] found (1): all 6 wrong ledger implementations DIED through this harness, not by hand.
+  OK   [GREEN] exit 0
+
+  impl.go differs from its pre-mutation copy (0 = byte-identical): 0
+
+==================================================================
+RED DRIVE 1: 26 passed, 0 failed
+==================================================================

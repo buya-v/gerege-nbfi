@@ -1,0 +1,11 @@
+REQUIRED ASSERTIONS (7), DERIVED FROM THE WIRE RECORD -- not read off the sidecar, which is the artefact under suspicion:
+  request-headers-artefact
+  request-headers-sha256
+  body-wire-bytes-artefact
+  body-sha256
+  body-bytes
+  content-length-crosscheck
+  captured-at-utc
+VERBATIM WIRE LINES REQUIRED, IN ORDER AND WITH MULTIPLICITY: 9
+RESPONSE LEG: NOT ATTESTED. This is a SCHEMA 1 sidecar, written before T274: it says NOTHING about the response body or status, and neither can this verifier. Do not read a pass here as 'the capture is attested' -- only the request is.
+VERIFIED /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/green/P1/probe.http against /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/green/P1/probe.reqhdr

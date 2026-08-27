@@ -1,0 +1,73 @@
+merged head 9050783e96be8046587610768028271d25998f67   over main bcf2c55b57a244e2eb773094c1aa7109ca1b58a1
+
+=== blob identity for the frozen surfaces (correct paths)
+   .softhouse/vectors/PIN.json                                  b51595bbca0d  IDENTICAL
+   .softhouse/vectors/capabilities.json                         882e97bc4853  IDENTICAL
+   nexus/internal/apps/loanschedule/contract/contract.go        4bcbafaddd60  IDENTICAL
+   .softhouse/conformance.sh                                    a91079467b16  IDENTICAL
+   .softhouse/gates.md                                          57a8aa380722  IDENTICAL
+   .softhouse/tasks.json                                        73378228be78  IDENTICAL
+
+=== ARTEFACT 1/5: prove-guards.sh on the MERGED tree
+   exit=0
+   done — every leg behaved as expected.
+   legs OK: 13
+
+=== ARTEFACT 2/5: t115-drive-mf1.sh on the MERGED tree
+   exit=0
+       A2a-mutated-canary-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+       EXIT=1  (expected 1)
+   
+   RESULT: MF-1 driven RED and GREEN, every leg as specified.
+
+=== ARTEFACT 3/5: t115-drive-mf2.sh on the MERGED tree
+   exit=0
+   --- N10: the shim reached through a SYMLINK placed in a foreign tree
+       exit=0
+       ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+       => N10 STILL ADMITS: the attacker's stub rig ran.  F-2 is NOT discharged.  FU-1 closes this.
+   
+   RESULT: MF-2 driven RED and GREEN; five callers identical cell for cell; N9/N10 measured OPEN.
+   =================================================================== N9 / N10 — STILL OPEN
+   --- N9: the rig at its path REPLACED by main's pre-hardening bytes
+       => N9 STILL ADMITS through the MF-2 shim.  F-2 is NOT discharged.  FU-1 closes this.
+   --- N10: the shim reached through a SYMLINK placed in a foreign tree
+       => N10 STILL ADMITS: the attacker's stub rig ran.  F-2 is NOT discharged.  FU-1 closes this.
+   RESULT: MF-2 driven RED and GREEN; five callers identical cell for cell; N9/N10 measured OPEN.
+
+=== ARTEFACT 4/5: t115-drive-mf3-mf4.sh on the MERGED tree
+   exit=0
+              breach delta: 0   (the header claims +1)
+              breach delta: 0   (the header claims +1)
+       pre     FAIL  running JVM initialized tenant 'default' at a mode other than HALF_UP: 2026-08-18 09:53:01.504 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN
+       post    FAIL  running JVM initialized tenant 'default' at a mode other than HALF_UP: 2026-08-18 09:53:01.504 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN
+      .softhouse/capture/charges/bin/t51-capture2.sh:234:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass
+      .softhouse/capture/charges/bin/t51-capture3.sh:20:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass3
+      .softhouse/capture/charges/bin/t51-capture5.sh:120:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass
+      .softhouse/capture/charges/bin/t51-capture6.sh:20:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass6
+   -- TOTAL
+      distinct files: 20
+      executable call sites: 23
+
+=== ARTEFACT 5/5: t115-rerun-attacks.sh on the MERGED tree
+   exit=0
+   identical  A2a-mutated-canary-gerege.txt
+   identical  A2b-mutated-canary-default.txt
+   identical  A2c-crafted-canary-and-expectation-gerege.txt
+   identical  A3a-swapped-canary-gerege.txt
+   identical  A3b-missing-canary.txt
+   identical  A3c-no-canary.txt
+   identical  A4a-expect-override-default.txt
+   identical  A4b-expect-override-gerege.txt
+   identical  A4c-decoy-variable.txt
+   identical  A5-helpful-correct-override.txt
+   identical  A6-canary-is-a-directory.txt
+   identical  A7-symlinked-canary.txt
+   identical  A8-foreign-cwd.txt
+   
+   pairs compared: 13   differing: 0
+   RESULT: sh and bash agree on all 13 transcripts for label 't115-post'.
+   INVARIANCE EXIT=0
+   
+   transcripts written under /tmp/T138-merge/.softhouse/capture/t91/out/t115-*  (T91's own out/ dirs untouched)
+   RESULT: pre-fix 6 of 13 ADMIT (exit 1), post-fix 0 of 13 (exit 0), sh/bash 13 of 13 identical.

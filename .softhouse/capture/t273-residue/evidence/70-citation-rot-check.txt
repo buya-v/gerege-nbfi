@@ -1,0 +1,8 @@
+### T273 citation-rot check
+  base rev     : fe24419  (2617 lines)
+  head rev     : 82949001d6d9770f37c8947abb0bac1ae5b15164  (2839 lines)
+  distinct cited line numbers : 142
+
+
+### RESULT  unmoved=141  ROTTED=0  blank-or-out-of-range=1  (of 142 cited lines)
+### NO CITATION ROT. Every cited line in conformance.sh still holds the text its author read.

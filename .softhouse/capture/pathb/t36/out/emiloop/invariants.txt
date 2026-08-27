@@ -1,0 +1,245 @@
+========================================================================================
+EMI-loop probe principal 1200000 MNT (gerege, 19/HALF_UP)  (emiloop-1200000-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=365
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2026-1-1    2026-2-1      31     9048237     2160000    11208237    110951763
+    2 2026-2-1    2026-3-1      28     9211105     1997132    11208237    101740658
+    3 2026-3-1    2026-4-1      31     9376905     1831332    11208237     92363753
+    4 2026-4-1    2026-5-1      30     9545689     1662548    11208237     82818064
+    5 2026-5-1    2026-6-1      31     9717512     1490725    11208237     73100552
+    6 2026-6-1    2026-7-1      30     9892427     1315810    11208237     63208125
+    7 2026-7-1    2026-8-1      31    10070491     1137746    11208237     53137634
+    8 2026-8-1    2026-9-1      31    10251760      956477    11208237     42885874
+    9 2026-9-1    2026-10-1     30    10436291      771946    11208237     32449583
+   10 2026-10-1   2026-11-1     31    10624145      584092    11208237     21825438
+   11 2026-11-1   2026-12-1     30    10815379      392858    11208237     11010059
+   12 2026-12-1   2027-1-1      31    11010059      198181    11208240            0
+  I1   sum(principal)=120000000 disbursed=120000000                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14498847 totalInterestCharged=14498847             PASS
+  I4   sum(totalDue)=134498847 totalRepaymentExpected=134498847         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134498847 totalRepayment=134498847                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=365 span=365 sum(daysInPeriod)=365                PASS
+  RESULT: ALL PASS
+========================================================================================
+EMI-loop probe principal 1200001 MNT (gerege, 19/HALF_UP)  (emiloop-1200001-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=365
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2026-1-1    2026-2-1      31     9048244     2160002    11208246    110951856
+    2 2026-2-1    2026-3-1      28     9211113     1997133    11208246    101740743
+    3 2026-3-1    2026-4-1      31     9376913     1831333    11208246     92363830
+    4 2026-4-1    2026-5-1      30     9545697     1662549    11208246     82818133
+    5 2026-5-1    2026-6-1      31     9717520     1490726    11208246     73100613
+    6 2026-6-1    2026-7-1      30     9892435     1315811    11208246     63208178
+    7 2026-7-1    2026-8-1      31    10070499     1137747    11208246     53137679
+    8 2026-8-1    2026-9-1      31    10251768      956478    11208246     42885911
+    9 2026-9-1    2026-10-1     30    10436300      771946    11208246     32449611
+   10 2026-10-1   2026-11-1     31    10624153      584093    11208246     21825458
+   11 2026-11-1   2026-12-1     30    10815388      392858    11208246     11010070
+   12 2026-12-1   2027-1-1      31    11010070      198181    11208251            0
+  I1   sum(principal)=120000100 disbursed=120000100                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14498857 totalInterestCharged=14498857             PASS
+  I4   sum(totalDue)=134498957 totalRepaymentExpected=134498957         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134498957 totalRepayment=134498957                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=365 span=365 sum(daysInPeriod)=365                PASS
+  RESULT: ALL PASS
+========================================================================================
+EMI-loop probe principal 1200004 MNT (gerege, 19/HALF_UP)  (emiloop-1200004-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=365
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2026-1-1    2026-2-1      31     9048267     2160007    11208274    110952133
+    2 2026-2-1    2026-3-1      28     9211136     1997138    11208274    101740997
+    3 2026-3-1    2026-4-1      31     9376936     1831338    11208274     92364061
+    4 2026-4-1    2026-5-1      30     9545721     1662553    11208274     82818340
+    5 2026-5-1    2026-6-1      31     9717544     1490730    11208274     73100796
+    6 2026-6-1    2026-7-1      30     9892460     1315814    11208274     63208336
+    7 2026-7-1    2026-8-1      31    10070524     1137750    11208274     53137812
+    8 2026-8-1    2026-9-1      31    10251793      956481    11208274     42886019
+    9 2026-9-1    2026-10-1     30    10436326      771948    11208274     32449693
+   10 2026-10-1   2026-11-1     31    10624180      584094    11208274     21825513
+   11 2026-11-1   2026-12-1     30    10815415      392859    11208274     11010098
+   12 2026-12-1   2027-1-1      31    11010098      198182    11208280            0
+  I1   sum(principal)=120000400 disbursed=120000400                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14498894 totalInterestCharged=14498894             PASS
+  I4   sum(totalDue)=134499294 totalRepaymentExpected=134499294         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134499294 totalRepayment=134499294                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=365 span=365 sum(daysInPeriod)=365                PASS
+  RESULT: ALL PASS
+========================================================================================
+EMI-loop probe principal 1200027 MNT (gerege, 19/HALF_UP)  (emiloop-1200027-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=365
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2026-1-1    2026-2-1      31     9048441     2160049    11208490    110954259
+    2 2026-2-1    2026-3-1      28     9211313     1997177    11208490    101742946
+    3 2026-3-1    2026-4-1      31     9377117     1831373    11208490     92365829
+    4 2026-4-1    2026-5-1      30     9545905     1662585    11208490     82819924
+    5 2026-5-1    2026-6-1      31     9717731     1490759    11208490     73102193
+    6 2026-6-1    2026-7-1      30     9892651     1315839    11208490     63209542
+    7 2026-7-1    2026-8-1      31    10070718     1137772    11208490     53138824
+    8 2026-8-1    2026-9-1      31    10251991      956499    11208490     42886833
+    9 2026-9-1    2026-10-1     30    10436527      771963    11208490     32450306
+   10 2026-10-1   2026-11-1     31    10624384      584106    11208490     21825922
+   11 2026-11-1   2026-12-1     30    10815623      392867    11208490     11010299
+   12 2026-12-1   2027-1-1      31    11010299      198185    11208484            0
+  I1   sum(principal)=120002700 disbursed=120002700                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14499174 totalInterestCharged=14499174             PASS
+  I4   sum(totalDue)=134501874 totalRepaymentExpected=134501874         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134501874 totalRepayment=134501874                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=365 span=365 sum(daysInPeriod)=365                PASS
+  RESULT: ALL PASS
+========================================================================================
+EMI-loop probe principal 1200033 MNT (gerege, 19/HALF_UP)  (emiloop-1200033-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=365
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2026-1-1    2026-2-1      31     9048486     2160059    11208545    110954814
+    2 2026-2-1    2026-3-1      28     9211358     1997187    11208545    101743456
+    3 2026-3-1    2026-4-1      31     9377163     1831382    11208545     92366293
+    4 2026-4-1    2026-5-1      30     9545952     1662593    11208545     82820341
+    5 2026-5-1    2026-6-1      31     9717779     1490766    11208545     73102562
+    6 2026-6-1    2026-7-1      30     9892699     1315846    11208545     63209863
+    7 2026-7-1    2026-8-1      31    10070767     1137778    11208545     53139096
+    8 2026-8-1    2026-9-1      31    10252041      956504    11208545     42887055
+    9 2026-9-1    2026-10-1     30    10436578      771967    11208545     32450477
+   10 2026-10-1   2026-11-1     31    10624436      584109    11208545     21826041
+   11 2026-11-1   2026-12-1     30    10815676      392869    11208545     11010365
+   12 2026-12-1   2027-1-1      31    11010365      198187    11208552            0
+  I1   sum(principal)=120003300 disbursed=120003300                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14499247 totalInterestCharged=14499247             PASS
+  I4   sum(totalDue)=134502547 totalRepaymentExpected=134502547         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134502547 totalRepayment=134502547                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=365 span=365 sum(daysInPeriod)=365                PASS
+  RESULT: ALL PASS
+========================================================================================
+EMI-loop probe principal 1200039 MNT (gerege, 19/HALF_UP)  (emiloop-1200039-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=365
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2026-1-1    2026-2-1      31     9048532     2160070    11208602    110955368
+    2 2026-2-1    2026-3-1      28     9211405     1997197    11208602    101743963
+    3 2026-3-1    2026-4-1      31     9377211     1831391    11208602     92366752
+    4 2026-4-1    2026-5-1      30     9546000     1662602    11208602     82820752
+    5 2026-5-1    2026-6-1      31     9717828     1490774    11208602     73102924
+    6 2026-6-1    2026-7-1      30     9892749     1315853    11208602     63210175
+    7 2026-7-1    2026-8-1      31    10070819     1137783    11208602     53139356
+    8 2026-8-1    2026-9-1      31    10252094      956508    11208602     42887262
+    9 2026-9-1    2026-10-1     30    10436631      771971    11208602     32450631
+   10 2026-10-1   2026-11-1     31    10624491      584111    11208602     21826140
+   11 2026-11-1   2026-12-1     30    10815731      392871    11208602     11010409
+   12 2026-12-1   2027-1-1      31    11010409      198187    11208596            0
+  I1   sum(principal)=120003900 disbursed=120003900                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14499318 totalInterestCharged=14499318             PASS
+  I4   sum(totalDue)=134503218 totalRepaymentExpected=134503218         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134503218 totalRepayment=134503218                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=365 span=365 sum(daysInPeriod)=365                PASS
+  RESULT: ALL PASS
+========================================================================================
+EMI-loop probe principal 1200045 MNT (gerege, 19/HALF_UP)  (emiloop-1200045-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=365
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2026-1-1    2026-2-1      31     9048577     2160081    11208658    110955923
+    2 2026-2-1    2026-3-1      28     9211451     1997207    11208658    101744472
+    3 2026-3-1    2026-4-1      31     9377258     1831400    11208658     92367214
+    4 2026-4-1    2026-5-1      30     9546048     1662610    11208658     82821166
+    5 2026-5-1    2026-6-1      31     9717877     1490781    11208658     73103289
+    6 2026-6-1    2026-7-1      30     9892799     1315859    11208658     63210490
+    7 2026-7-1    2026-8-1      31    10070869     1137789    11208658     53139621
+    8 2026-8-1    2026-9-1      31    10252145      956513    11208658     42887476
+    9 2026-9-1    2026-10-1     30    10436683      771975    11208658     32450793
+   10 2026-10-1   2026-11-1     31    10624544      584114    11208658     21826249
+   11 2026-11-1   2026-12-1     30    10815786      392872    11208658     11010463
+   12 2026-12-1   2027-1-1      31    11010463      198188    11208651            0
+  I1   sum(principal)=120004500 disbursed=120004500                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14499389 totalInterestCharged=14499389             PASS
+  I4   sum(totalDue)=134503889 totalRepaymentExpected=134503889         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134503889 totalRepayment=134503889                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=365 span=365 sum(daysInPeriod)=365                PASS
+  RESULT: ALL PASS
+========================================================================================
+EMI-loop probe principal 1200054 MNT (gerege, 19/HALF_UP)  (emiloop-1200054-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=365
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2026-1-1    2026-2-1      31     9048644     2160097    11208741    110956756
+    2 2026-2-1    2026-3-1      28     9211519     1997222    11208741    101745237
+    3 2026-3-1    2026-4-1      31     9377327     1831414    11208741     92367910
+    4 2026-4-1    2026-5-1      30     9546119     1662622    11208741     82821791
+    5 2026-5-1    2026-6-1      31     9717949     1490792    11208741     73103842
+    6 2026-6-1    2026-7-1      30     9892872     1315869    11208741     63210970
+    7 2026-7-1    2026-8-1      31    10070944     1137797    11208741     53140026
+    8 2026-8-1    2026-9-1      31    10252221      956520    11208741     42887805
+    9 2026-9-1    2026-10-1     30    10436761      771980    11208741     32451044
+   10 2026-10-1   2026-11-1     31    10624622      584119    11208741     21826422
+   11 2026-11-1   2026-12-1     30    10815865      392876    11208741     11010557
+   12 2026-12-1   2027-1-1      31    11010557      198190    11208747            0
+  I1   sum(principal)=120005400 disbursed=120005400                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14499498 totalInterestCharged=14499498             PASS
+  I4   sum(totalDue)=134504898 totalRepaymentExpected=134504898         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134504898 totalRepayment=134504898                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=365 span=365 sum(daysInPeriod)=365                PASS
+  RESULT: ALL PASS
+========================================================================================
+EMI-loop probe principal 1200189 MNT (gerege, 19/HALF_UP)  (emiloop-1200189-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=365
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2026-1-1    2026-2-1      31     9049662     2160340    11210002    110969238
+    2 2026-2-1    2026-3-1      28     9212556     1997446    11210002    101756682
+    3 2026-3-1    2026-4-1      31     9378382     1831620    11210002     92378300
+    4 2026-4-1    2026-5-1      30     9547193     1662809    11210002     82831107
+    5 2026-5-1    2026-6-1      31     9719042     1490960    11210002     73112065
+    6 2026-6-1    2026-7-1      30     9893985     1316017    11210002     63218080
+    7 2026-7-1    2026-8-1      31    10072077     1137925    11210002     53146003
+    8 2026-8-1    2026-9-1      31    10253374      956628    11210002     42892629
+    9 2026-9-1    2026-10-1     30    10437935      772067    11210002     32454694
+   10 2026-10-1   2026-11-1     31    10625818      584184    11210002     21828876
+   11 2026-11-1   2026-12-1     30    10817082      392920    11210002     11011794
+   12 2026-12-1   2027-1-1      31    11011794      198212    11210006            0
+  I1   sum(principal)=120018900 disbursed=120018900                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14501128 totalInterestCharged=14501128             PASS
+  I4   sum(totalDue)=134520028 totalRepaymentExpected=134520028         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134520028 totalRepayment=134520028                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=365 span=365 sum(daysInPeriod)=365                PASS
+  RESULT: ALL PASS
+========================================================================================
+OVERALL: PASS

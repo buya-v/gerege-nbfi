@@ -1,0 +1,59 @@
+BASELINE REF: HEAD~1   (pass a ref as argv[1]; after revision 8 is committed, use HEAD~1)
+BEFORE (HEAD blob) sha256 f02f7ff038afbf389bbd21a3fd40c55cc38cd88004e1833bded0f077f7957f44  3039 lines
+AFTER  (worktree)  sha256 09e456b887506288c642a595c8b4f39bdb7d34205a7cf5c8995b02057fab8164  3542 lines
+
+=== LEG 1 — BLOCK IDENTITY (byte-for-byte, not 'looks the same') ===
+  IDENTICAL  §4.2 the graded domain, predicate by predicate             sha256 46c34263214b0ff8  (10069 chars)
+  IDENTICAL  §4.6 G-10 and the admissibility constraint (A-1..A-4)      sha256 43a2c718c6380814  (4863 chars)
+  IDENTICAL  §4.10 the capability registry and default-deny discipline  sha256 9b45c2dccc0063ac  (8054 chars)
+  IDENTICAL  §5.2 requirements 1-7 (NORMATIVE — the standard A2-15 is judged against) sha256 e6c3663f6eecfa75  (20811 chars)
+  IDENTICAL  §5.3 the TEN-ROW precondition table                        sha256 47065d5ee6867bba  (4240 chars)
+  IDENTICAL  §5.5 the graded_against requirement                        sha256 797426addfd1dfaf  (1677 chars)
+
+=== LEG 1b — §4.4 INVARIANT TABLE, CELL BY CELL ===
+Revision 8 edits column 5 ('Graded today?') of three rows and the supporting
+citation inside I-3's column 5. EVERY OTHER CELL OF EVERY ROW, and in particular
+column 4 where the obligations live, must be byte-identical.
+  ok      I-1  7 cells, changed: [5]  (obligation column 4 IDENTICAL, sha 8a456bb34dd4)
+  ok      I-2  7 cells, changed: [5]  (obligation column 4 IDENTICAL, sha 0a14b9a6c94c)
+  ok      I-3  7 cells, changed: [5]  (obligation column 4 IDENTICAL, sha ff811cc89e26)
+  ok      I-4  7 cells, changed: NONE  (obligation column 4 IDENTICAL, sha e5027c824fe0)
+  ok      I-5  7 cells, changed: NONE  (obligation column 4 IDENTICAL, sha 132911fa4887)
+  ok      I-6  7 cells, changed: NONE  (obligation column 4 IDENTICAL, sha b854732d4ca9)
+  ok      I-7  7 cells, changed: [5]  (obligation column 4 IDENTICAL, sha 6d1ca4cb9827)
+
+=== LEG 2 — MODAL-SENTENCE SET DIFFERENCE ===
+  modal lines BEFORE: 87 distinct   AFTER: 95 distinct   (both terms, P-67)
+  LOST (present before, absent after): 8
+    [accounted: H-15b — heading only: 'If ratified,' dropped because it IS ratified. 'these remain true and must not be misread' is carried forward verbatim.] ### 8.3 If ratified, these remain true and must not be misread
+    [accounted: H-1a — LINE SPLIT. The framing clause 'what a conforming port *must* do' is carried forward verbatim on its own line (see GAINED). What was removed is the FACT 'Not one of them is currently checked by anything', which is false and is restated in the retraction.] > *must* do. **Not one of them is currently checked by anything.** Four separate facts, each
+    [accounted: H-2 — the caution is CARRIED AND STRENGTHENED: the new text reads 'Ratification is not coverage, and neither is a green ledger section' and 'this document must never be cited as evidence that the GL/accounting context is correct'. Nothing an implementation must DO.] > exists. Ratification is not coverage, and this document must never be cited as though it were.
+    [accounted: H-10 — LINE-WRAP ONLY for the obligation half. LEG 3 proves both obligations appear verbatim on both sides. The clause DELETED is the FACT 'and grades none of them today', which was false.] GL/accounting context, and **grades none of them today.** **I-3 and I-4 must be enforced by a
+    [accounted: H-3 — a FACT about §5.3's status, false at a71c140 (A2-15 is done and has promoted six vectors). §5.3's ten-row table is proved byte-identical in LEG 1.] and §5.3 names work that must land before `A2-15` could succeed even against a ratified contract.
+    [accounted: H-14d — carried forward and widened: 'a citation of this document, OR OF A GREEN LEDGER SECTION, as evidence of ledger coverage is a misreading of both.'] must never be confused, and a citation of this document as evidence of ledger coverage is a
+    [accounted: C-2 — LEG 1b proves cell 5 is the only cell that changed; column 4 sha is identical.] | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a 
+    [accounted: H-9 — LEG 1b proves cell 5 is the only cell that changed; column 4 sha is identical.] | **I-7** | `Idempotency-Key` on every money-movement POST | — | **NOT APPLICABLE TO THIS CONTRACT, and that must be said rather than assumed.** DEC-2
+  GAINED (new modal lines): 16 — these are ADDITIONS; an addition cannot
+  relax an obligation, but each is listed so a reviewer can check none INVENTS one:
+    + ### 8.3 These remain true and must not be misread
+    + **⚠ A ratified DEC-n may not be amended by an agent without a gate**, and that has not changed.
+    + >    **The `ledger` corpus is counted SEPARATELY and must be quoted separately**: the harness prints
+    + > (`P-75`); and `git grep` exits 1 on NO MATCH and >1 on ERROR, so a resolver must classify the
+    + > **So: this document must never be cited as evidence that the GL/accounting context is correct, and
+    + > *must* do. **That framing is UNCHANGED by revision 8, and so is every obligation it introduces.**
+    + > Debits must equal the sum of all Credits for a Journal Entry"*) and `LDG-REFUSE-02` (`403`,
+    + > a PASS on its six vectors must never be cited as a cutover argument. CUTOVER IS A HARD `user`
+    + > control that must be remembered is `P-45`, which this program has hit five times.
+    + > re-derivation. **A ratifier must read this note as "the preconditions were addressed and the corpus
+    + Not one normative `must`, not a contract sentinel, not a graded-domain predicate, not a §4.2
+    + `must`, not a contract sentinel, not a graded-domain predicate, not a §5.3 precondition, not a §4.2
+    + arrived 2 h 13 m later.** That ordering is not a defect — a contract must precede the vectors it
+    + is not a second piece of evidence — see the `I-2` row above]. **I-3 and I-4 must be enforced by a
+    + | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a 
+    + | **I-7** | `Idempotency-Key` on every money-movement POST | — | **NOT APPLICABLE TO THIS CONTRACT, and that must be said rather than assumed.** DEC-2
+
+=== LEG 3 — the two obligations welded into §4.4's rule paragraph, VERBATIM ===
+  ok             before 1 / after 1 :: DEC-2 **obliges** I-1 through I-5 on any implementation of the GL/accounting context
+  ok             before 1 / after 1 :: **I-3 and I-4 must be enforced by a harness-level source guard, not by a vector**
+
+NO OBLIGATION MOVED: 0 finding(s)

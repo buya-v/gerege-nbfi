@@ -1,0 +1,73 @@
+=== the clone's own main, BEFORE the merge ===
+f7e3d59 softhouse: T107 attested, T114 MICRO-FIX — and the driver's family A/B error caught a THIRD time
+
+=== merge softhouse/T109-fork-point-digest-compare into the clone's main ===
+ create mode 100644 .softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/scratch-clone-merged.txt
+ create mode 100644 .softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/verify-on-scratch-merge.sh
+ create mode 100644 .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T109.md
+  clone main is now: 12fe521c17f7026514b5f491fd47694ffb21929f
+  main == HEAD ?     YES
+  merge-base main HEAD = 12fe521c17f7026514b5f491fd47694ffb21929f   <- what the T98 form would have resolved to
+
+=== the pin, post-merge ===
+  | commit 8da4b831b96a146c2b46ad34d85ed098395de160
+  | sha256 d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3  .softhouse/capture/src/run-pass3i.sh
+  | sha256 27bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1  .softhouse/handoff/T74-promote-vectors.py
+  | sha256 e7aee91733596e12e48b8abf0070c0c3e2f9574cdf70189a273c491dfaceac3f  .softhouse/capture/t74-multiplesof/build-counterfactuals.py
+
+=== A. prove-guards-go-red.sh ON THE MERGE ===
+  exit 0
+  | T82 guard proofs
+  | run-pass3i.sh          sha256 3ca0d3f6380a74d32c8bca000f8587724927b4b55eb0c51b8e64be7cefe2a519  [provenance — code under test, unpinned on purpose]
+  | build-counterfactuals  sha256 b1e9f6087f93c2b0b1606d4631d5d97e96dd72fbbebf96baaea1dd89190ed9f1  [provenance — code under test, unpinned on purpose]
+  | promote-vectors        sha256 efcfcfa59305d5da67a2149cace4a9fffb991daff5ad92fe7fe5c8e0595a94e4  [provenance — code under test, unpinned on purpose]
+  | capture under test     sha256 e0ea0bcfa1e37914fd5eec68040d90319d2d343dc50d2ad30d90f4cd9acde430  [MATCHES PIN]
+  | fork-point (BASE)      8da4b831b96a146c2b46ad34d85ed098395de160  [LITERAL, from FORK-POINT-SHA — never a computed ref]
+  | BASE run-pass3i.sh     sha256 d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3  [MATCHES PIN]
+  | BASE promote-vectors   sha256 27bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1  [MATCHES PIN]
+  | BASE build-counterfact sha256 e7aee91733596e12e48b8abf0070c0c3e2f9574cdf70189a273c491dfaceac3f  [MATCHES PIN]
+  | T82 guard proofs: 25 as expected, 0 not as expected
+  | ==============================================================================
+
+=== B. the RED leg on the merge: pin the clone's own main (== the merge commit) ===
+  exit 2   stdout bytes 0
+  2| FATAL: THE PINNED BASELINE IS NOT THE FORK POINT — a digest moved.
+  2|        file:      .softhouse/capture/src/run-pass3i.sh
+  2|        expected:  d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3   (pinned in /tmp/t109-clone/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA)
+  2|        observed:  3ca0d3f6380a74d32c8bca000f8587724927b4b55eb0c51b8e64be7cefe2a519   (extracted from commit 12fe521c17f7026514b5f491fd47694ffb21929f)
+  2| 
+  2|        The commit pinned as `commit` exists and is reachable, so the four T102 refusals
+
+=== C. drive the NEW capture pin red — mutate the CLONE's capture (never the real one) ===
+  exit 2   stdout bytes 0
+  2| FATAL: THE CAPTURE UNDER TEST IS NOT THE PINNED ARTEFACT.
+  2|        file:      /tmp/t109-clone/.softhouse/capture/out/capture-prod3i-raw.json
+  2|        expected:  e0ea0bcfa1e37914fd5eec68040d90319d2d343dc50d2ad30d90f4cd9acde430   (literal pin, this script)
+  2|        observed:  bdb50f31a1455a742e2a78d9b0765db39efafac0fee4868da1e91fc92478c539
+  2| 
+  2|        The CONTROL row and every capture-side mutation are built from this file. Against a
+  2|        different capture all 25 rows can stay green while proving something about a
+  2|        different artefact. This capture is a frozen oracle observation and is not
+
+=== D. drive the NEW sliced-block pin red — edit the CLONE's precondition block ===
+  inserted one comment line into the sliced heredoc
+  exit 1
+  | 15:  | FATAL: THE SLICED PRECONDITION BLOCK IS NOT THE PINNED BLOCK.
+  | 18:  |        expected:  ada3a43988d544dc620c18b9e1b8aa4e2b04e2170f2f8dad3fd32d4255d57269   (literal pin, this driver)
+  | 19:  |        observed:  e867bbea8a52da445b7aa40611d52f7d4831957eef08d82ac9e3de253073ce3a
+  | 25:  RESULT: exit 2 — *** NOT WHAT WAS EXPECTED (0) ***
+  | 77:  | FATAL: THE SLICED PRECONDITION BLOCK IS NOT THE PINNED BLOCK.
+  | 80:  |        expected:  ada3a43988d544dc620c18b9e1b8aa4e2b04e2170f2f8dad3fd32d4255d57269   (literal pin, this driver)
+  | 81:  |        observed:  e867bbea8a52da445b7aa40611d52f7d4831957eef08d82ac9e3de253073ce3a
+  | 87:  RESULT: exit 2 — *** NOT WHAT WAS EXPECTED (1) ***
+
+=== E. back to the committed state on the merge: 25/25 again ===
+  exit 0
+  | T82 guard proofs: 25 as expected, 0 not as expected
+  | ==============================================================================
+
+=== F. is the post-merge transcript identical to the branch transcript (root-normalised)? ===
+  BYTE-IDENTICAL after root normalisation — the score does not depend on merge state
+
+=== G. clone hygiene ===
+  (empty above == clone restored; the real repo was never written)

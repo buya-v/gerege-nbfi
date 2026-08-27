@@ -1,0 +1,6 @@
+.DS_Store
+.claude/worktrees/
+
+# Repo-local Go toolchain (fire 20260819-170001). NOT committed — reversible with
+# `rm -rf .softhouse/toolchain`. Buyan's machine PATH and /usr/local are untouched.
+.softhouse/toolchain/

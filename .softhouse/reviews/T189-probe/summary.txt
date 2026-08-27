@@ -1,0 +1,255 @@
+4:################ ARM 1 — /usr/bin/grep (BSD), live flags -av, LC_ALL=C (== the live line) ############
+6:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=e-clean.txt
+7:  exit=0  stdout_bytes=40  stdout_lines=2
+13:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=e-clean.txt
+14:  exit=0  stdout_bytes=40  stdout_lines=2
+20:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=e-clean.txt
+21:  exit=0  stdout_bytes=40  stdout_lines=2
+27:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=a-utf8-e2.txt
+28:  exit=0  stdout_bytes=63  stdout_lines=3
+35:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=a-utf8-e2.txt
+36:  exit=0  stdout_bytes=63  stdout_lines=3
+43:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=a-utf8-e2.txt
+44:  exit=0  stdout_bytes=63  stdout_lines=3
+51:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=c-fffe.txt
+52:  exit=0  stdout_bytes=40  stdout_lines=3
+58:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=c-fffe.txt
+59:  exit=0  stdout_bytes=40  stdout_lines=3
+65:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=c-fffe.txt
+66:  exit=0  stdout_bytes=40  stdout_lines=3
+72:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=f-ff.txt
+73:  exit=0  stdout_bytes=31  stdout_lines=3
+80:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=f-ff.txt
+81:  exit=0  stdout_bytes=31  stdout_lines=3
+88:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=f-ff.txt
+89:  exit=0  stdout_bytes=31  stdout_lines=3
+96:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=g-80.txt
+97:  exit=0  stdout_bytes=31  stdout_lines=3
+104:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=g-80.txt
+105:  exit=0  stdout_bytes=31  stdout_lines=3
+112:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=g-80.txt
+113:  exit=0  stdout_bytes=31  stdout_lines=3
+120:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=h-c0.txt
+121:  exit=0  stdout_bytes=31  stdout_lines=3
+128:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=h-c0.txt
+129:  exit=0  stdout_bytes=31  stdout_lines=3
+136:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=h-c0.txt
+137:  exit=0  stdout_bytes=31  stdout_lines=3
+144:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=d-lockline.txt
+145:  exit=0  stdout_bytes=38  stdout_lines=2
+151:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=d-lockline.txt
+152:  exit=0  stdout_bytes=38  stdout_lines=2
+158:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=d-lockline.txt
+159:  exit=0  stdout_bytes=38  stdout_lines=2
+165:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=b-nul.txt
+166:  exit=0  stdout_bytes=26  stdout_lines=3
+172:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=b-nul.txt
+173:  exit=0  stdout_bytes=26  stdout_lines=3
+179:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=b-nul.txt
+180:  exit=0  stdout_bytes=26  stdout_lines=3
+186:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=i-blob.txt
+187:  exit=0  stdout_bytes=31  stdout_lines=3
+193:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=i-blob.txt
+194:  exit=0  stdout_bytes=31  stdout_lines=3
+200:IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=i-blob.txt
+201:  exit=0  stdout_bytes=31  stdout_lines=3
+206:################ ARM 2 — /usr/bin/grep (BSD), UNhardened flags -v, LC_ALL=C.UTF-8 (== pre-T157 line) ############
+208:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=e-clean.txt
+209:  exit=0  stdout_bytes=40  stdout_lines=2
+215:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=e-clean.txt
+216:  exit=0  stdout_bytes=40  stdout_lines=2
+222:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=e-clean.txt
+223:  exit=0  stdout_bytes=40  stdout_lines=2
+229:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=a-utf8-e2.txt
+230:  exit=0  stdout_bytes=63  stdout_lines=3
+237:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=a-utf8-e2.txt
+238:  exit=0  stdout_bytes=63  stdout_lines=3
+245:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=a-utf8-e2.txt
+246:  exit=0  stdout_bytes=63  stdout_lines=3
+253:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=c-fffe.txt
+254:  exit=0  stdout_bytes=40  stdout_lines=3
+260:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=c-fffe.txt
+261:  exit=0  stdout_bytes=40  stdout_lines=3
+267:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=c-fffe.txt
+268:  exit=0  stdout_bytes=40  stdout_lines=3
+274:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=f-ff.txt
+275:  exit=0  stdout_bytes=31  stdout_lines=3
+282:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=f-ff.txt
+283:  exit=0  stdout_bytes=31  stdout_lines=3
+290:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=f-ff.txt
+291:  exit=0  stdout_bytes=31  stdout_lines=3
+298:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=g-80.txt
+299:  exit=0  stdout_bytes=31  stdout_lines=3
+306:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=g-80.txt
+307:  exit=0  stdout_bytes=31  stdout_lines=3
+314:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=g-80.txt
+315:  exit=0  stdout_bytes=31  stdout_lines=3
+322:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=h-c0.txt
+323:  exit=0  stdout_bytes=31  stdout_lines=3
+330:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=h-c0.txt
+331:  exit=0  stdout_bytes=31  stdout_lines=3
+338:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=h-c0.txt
+339:  exit=0  stdout_bytes=31  stdout_lines=3
+346:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=d-lockline.txt
+347:  exit=0  stdout_bytes=38  stdout_lines=2
+353:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=d-lockline.txt
+354:  exit=0  stdout_bytes=38  stdout_lines=2
+360:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=d-lockline.txt
+361:  exit=0  stdout_bytes=38  stdout_lines=2
+367:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=b-nul.txt
+368:  exit=0  stdout_bytes=134  stdout_lines=1
+373:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=b-nul.txt
+374:  exit=0  stdout_bytes=37  stdout_lines=1
+379:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=b-nul.txt
+380:  exit=0  stdout_bytes=37  stdout_lines=1
+385:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=i-blob.txt
+386:  exit=0  stdout_bytes=135  stdout_lines=1
+391:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=i-blob.txt
+392:  exit=0  stdout_bytes=37  stdout_lines=1
+397:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=i-blob.txt
+398:  exit=0  stdout_bytes=37  stdout_lines=1
+402:################ ARM 3 — claude-as-ugrep wrapper (-I hard-coded), UNhardened flags -v ############
+404:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=e-clean.txt
+405:  exit=0  stdout_bytes=40  stdout_lines=2
+411:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=e-clean.txt
+412:  exit=0  stdout_bytes=40  stdout_lines=2
+418:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=e-clean.txt
+419:  exit=0  stdout_bytes=40  stdout_lines=2
+425:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=a-utf8-e2.txt
+426:  exit=1  stdout_bytes=0  stdout_lines=0
+430:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=a-utf8-e2.txt
+431:  exit=1  stdout_bytes=0  stdout_lines=0
+435:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=a-utf8-e2.txt
+436:  exit=0  stdout_bytes=63  stdout_lines=3
+443:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=c-fffe.txt
+444:  exit=1  stdout_bytes=0  stdout_lines=0
+448:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=c-fffe.txt
+449:  exit=1  stdout_bytes=0  stdout_lines=0
+453:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=c-fffe.txt
+454:  exit=0  stdout_bytes=40  stdout_lines=3
+460:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=f-ff.txt
+461:  exit=1  stdout_bytes=0  stdout_lines=0
+465:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=f-ff.txt
+466:  exit=1  stdout_bytes=0  stdout_lines=0
+470:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=f-ff.txt
+471:  exit=0  stdout_bytes=31  stdout_lines=3
+478:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=g-80.txt
+479:  exit=1  stdout_bytes=0  stdout_lines=0
+483:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=g-80.txt
+484:  exit=1  stdout_bytes=0  stdout_lines=0
+488:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=g-80.txt
+489:  exit=0  stdout_bytes=31  stdout_lines=3
+496:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=h-c0.txt
+497:  exit=1  stdout_bytes=0  stdout_lines=0
+501:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=h-c0.txt
+502:  exit=1  stdout_bytes=0  stdout_lines=0
+506:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=h-c0.txt
+507:  exit=0  stdout_bytes=31  stdout_lines=3
+514:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=d-lockline.txt
+515:  exit=1  stdout_bytes=0  stdout_lines=0
+519:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=d-lockline.txt
+520:  exit=1  stdout_bytes=0  stdout_lines=0
+524:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=d-lockline.txt
+525:  exit=0  stdout_bytes=38  stdout_lines=2
+531:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=b-nul.txt
+532:  exit=1  stdout_bytes=0  stdout_lines=0
+536:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=b-nul.txt
+537:  exit=1  stdout_bytes=0  stdout_lines=0
+541:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=b-nul.txt
+542:  exit=1  stdout_bytes=0  stdout_lines=0
+546:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=i-blob.txt
+547:  exit=1  stdout_bytes=0  stdout_lines=0
+551:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=i-blob.txt
+552:  exit=1  stdout_bytes=0  stdout_lines=0
+556:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=i-blob.txt
+557:  exit=1  stdout_bytes=0  stdout_lines=0
+560:################ ARM 4 — claude-as-ugrep wrapper, LIVE flags -av, LC_ALL=C ############
+562:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=e-clean.txt
+563:  exit=0  stdout_bytes=40  stdout_lines=2
+569:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=e-clean.txt
+570:  exit=0  stdout_bytes=40  stdout_lines=2
+576:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=e-clean.txt
+577:  exit=0  stdout_bytes=40  stdout_lines=2
+583:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=a-utf8-e2.txt
+584:  exit=0  stdout_bytes=63  stdout_lines=3
+591:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=a-utf8-e2.txt
+592:  exit=0  stdout_bytes=63  stdout_lines=3
+599:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=a-utf8-e2.txt
+600:  exit=0  stdout_bytes=63  stdout_lines=3
+607:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=c-fffe.txt
+608:  exit=0  stdout_bytes=40  stdout_lines=3
+614:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=c-fffe.txt
+615:  exit=0  stdout_bytes=40  stdout_lines=3
+621:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=c-fffe.txt
+622:  exit=0  stdout_bytes=40  stdout_lines=3
+628:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=f-ff.txt
+629:  exit=0  stdout_bytes=31  stdout_lines=3
+636:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=f-ff.txt
+637:  exit=0  stdout_bytes=31  stdout_lines=3
+644:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=f-ff.txt
+645:  exit=0  stdout_bytes=31  stdout_lines=3
+652:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=g-80.txt
+653:  exit=0  stdout_bytes=31  stdout_lines=3
+660:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=g-80.txt
+661:  exit=0  stdout_bytes=31  stdout_lines=3
+668:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=g-80.txt
+669:  exit=0  stdout_bytes=31  stdout_lines=3
+676:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=h-c0.txt
+677:  exit=0  stdout_bytes=31  stdout_lines=3
+684:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=h-c0.txt
+685:  exit=0  stdout_bytes=31  stdout_lines=3
+692:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=h-c0.txt
+693:  exit=0  stdout_bytes=31  stdout_lines=3
+700:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=d-lockline.txt
+701:  exit=0  stdout_bytes=38  stdout_lines=2
+707:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=d-lockline.txt
+708:  exit=0  stdout_bytes=38  stdout_lines=2
+714:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=d-lockline.txt
+715:  exit=0  stdout_bytes=38  stdout_lines=2
+721:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=b-nul.txt
+722:  exit=0  stdout_bytes=26  stdout_lines=3
+728:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=b-nul.txt
+729:  exit=0  stdout_bytes=26  stdout_lines=3
+735:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=b-nul.txt
+736:  exit=0  stdout_bytes=26  stdout_lines=3
+742:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=i-blob.txt
+743:  exit=0  stdout_bytes=31  stdout_lines=3
+749:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=i-blob.txt
+750:  exit=0  stdout_bytes=31  stdout_lines=3
+756:IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=i-blob.txt
+757:  exit=0  stdout_bytes=31  stdout_lines=3
+762:################ ARM 5 — locale sweep, BSD, -v, file shape only ############
+764:IMPL=bsd FLAGS='-v' LC_ALL=C SHAPE=file FIXTURE=a-utf8-e2.txt
+765:  exit=0  stdout_bytes=63  stdout_lines=3
+772:IMPL=bsd FLAGS='-v' LC_ALL=C SHAPE=file FIXTURE=b-nul.txt
+773:  exit=0  stdout_bytes=134  stdout_lines=1
+778:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=a-utf8-e2.txt
+779:  exit=0  stdout_bytes=63  stdout_lines=3
+786:IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=b-nul.txt
+787:  exit=0  stdout_bytes=134  stdout_lines=1
+792:IMPL=bsd FLAGS='-v' LC_ALL=en_US.UTF-8 SHAPE=file FIXTURE=a-utf8-e2.txt
+793:  exit=0  stdout_bytes=63  stdout_lines=3
+800:IMPL=bsd FLAGS='-v' LC_ALL=en_US.UTF-8 SHAPE=file FIXTURE=b-nul.txt
+801:  exit=0  stdout_bytes=134  stdout_lines=1
+806:IMPL=bsd FLAGS='-v' LC_ALL=POSIX SHAPE=file FIXTURE=a-utf8-e2.txt
+807:  exit=0  stdout_bytes=63  stdout_lines=3
+814:IMPL=bsd FLAGS='-v' LC_ALL=POSIX SHAPE=file FIXTURE=b-nul.txt
+815:  exit=0  stdout_bytes=134  stdout_lines=1
+819:################ ARM 6 — locale sweep, ugrep wrapper, -v, file shape only ############
+821:IMPL=ugrep FLAGS='-v' LC_ALL=C SHAPE=file FIXTURE=a-utf8-e2.txt
+822:  exit=1  stdout_bytes=0  stdout_lines=0
+826:IMPL=ugrep FLAGS='-v' LC_ALL=C SHAPE=file FIXTURE=b-nul.txt
+827:  exit=1  stdout_bytes=0  stdout_lines=0
+831:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=a-utf8-e2.txt
+832:  exit=1  stdout_bytes=0  stdout_lines=0
+836:IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=b-nul.txt
+837:  exit=1  stdout_bytes=0  stdout_lines=0
+841:IMPL=ugrep FLAGS='-v' LC_ALL=en_US.UTF-8 SHAPE=file FIXTURE=a-utf8-e2.txt
+842:  exit=1  stdout_bytes=0  stdout_lines=0
+846:IMPL=ugrep FLAGS='-v' LC_ALL=en_US.UTF-8 SHAPE=file FIXTURE=b-nul.txt
+847:  exit=1  stdout_bytes=0  stdout_lines=0
+851:IMPL=ugrep FLAGS='-v' LC_ALL=POSIX SHAPE=file FIXTURE=a-utf8-e2.txt
+852:  exit=1  stdout_bytes=0  stdout_lines=0
+856:IMPL=ugrep FLAGS='-v' LC_ALL=POSIX SHAPE=file FIXTURE=b-nul.txt
+857:  exit=1  stdout_bytes=0  stdout_lines=0
+860:################ DONE ############

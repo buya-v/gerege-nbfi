@@ -1,0 +1,78 @@
+############ SHAPE=fg  HANDLER=exit ############
+# spawner  : /bin/zsh -lc /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/waittrap.zsh   (the launchd ProgramArguments shape)
+# session  : start_new_session=True (setsid)
+# disposit.: restore_signals=True -- INT/QUIT/PIPE reset to SIG_DFL in the child
+#            (this is the P-55 control: without it the probe measures itself)
+--- t=0.000  sending SIGTERM to pid 26907 (sid=26907, own session, default dispositions) ---
+!!! t= 20.092  subject STILL ALIVE 20s after the signal -- the harness SIGKILLs it now
+EXIT LATENCY (signal -> wrapper exit) = 20.094s   <-- DEFERRED/HUNG, harness had to SIGKILL
+subject rc = -9   (python reports -N for death by signal N -> signal 9)
+transcript = /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/out-waittrap-fg-exit.txt
+--- subject transcript --------------------------------------------------
+[1787361786.535886000] pid=26907 pgid=26907 shape=fg hmode=exit
+[1787361786.550272000] READY
+[1787361786.564020000] starting FOREGROUND child (/bin/sleep 300) -- today's shape
+--- end transcript -----------------------------------------------------
+POST-MORTEM: child 26940 ORPHANED (still running after the wrapper was reaped)
+   26940     1 26907 /bin/sleep
+
+############ SHAPE=fg  HANDLER=return ############
+# spawner  : /bin/zsh -lc /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/waittrap.zsh   (the launchd ProgramArguments shape)
+# session  : start_new_session=True (setsid)
+# disposit.: restore_signals=True -- INT/QUIT/PIPE reset to SIG_DFL in the child
+#            (this is the P-55 control: without it the probe measures itself)
+--- t=0.000  sending SIGTERM to pid 28619 (sid=28619, own session, default dispositions) ---
+!!! t= 20.188  subject STILL ALIVE 20s after the signal -- the harness SIGKILLs it now
+EXIT LATENCY (signal -> wrapper exit) = 20.189s   <-- DEFERRED/HUNG, harness had to SIGKILL
+subject rc = -9   (python reports -N for death by signal N -> signal 9)
+transcript = /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/out-waittrap-fg-return.txt
+--- subject transcript --------------------------------------------------
+[1787361808.378081000] pid=28619 pgid=28619 shape=fg hmode=return
+[1787361808.390266000] READY
+[1787361808.403792000] starting FOREGROUND child (/bin/sleep 300) -- today's shape
+--- end transcript -----------------------------------------------------
+POST-MORTEM: child 28630 ORPHANED (still running after the wrapper was reaped)
+   28630     1 28619 /bin/sleep
+
+############ SHAPE=bg  HANDLER=exit ############
+# spawner  : /bin/zsh -lc /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/waittrap.zsh   (the launchd ProgramArguments shape)
+# session  : start_new_session=True (setsid)
+# disposit.: restore_signals=True -- INT/QUIT/PIPE reset to SIG_DFL in the child
+#            (this is the P-55 control: without it the probe measures itself)
+--- t=0.000  sending SIGTERM to pid 29550 (sid=29550, own session, default dispositions) ---
+EXIT LATENCY (signal -> wrapper exit) = 0.130s
+subject rc = 143   (128+15)
+transcript = /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/out-waittrap-bg-exit.txt
+--- subject transcript --------------------------------------------------
+[1787361830.194633000] pid=29550 pgid=29550 shape=bg hmode=exit
+[1787361830.205255000] READY
+[1787361830.216774000] starting BACKGROUND child + wait -- the fix's shape
+[1787361830.230134000] background child pid=$!=29561
+[1787361831.589927000] HANDLER ENTERED (SIGTERM) -- shape=bg hmode=exit
+[1787361831.604002000] HANDLER EXITING rc=143
+--- end transcript -----------------------------------------------------
+POST-MORTEM: child 29561 ORPHANED (still running after the wrapper was reaped)
+   29561     1 29550 /bin/sleep
+
+############ SHAPE=bg  HANDLER=return ############
+# spawner  : /bin/zsh -lc /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/waittrap.zsh   (the launchd ProgramArguments shape)
+# session  : start_new_session=True (setsid)
+# disposit.: restore_signals=True -- INT/QUIT/PIPE reset to SIG_DFL in the child
+#            (this is the P-55 control: without it the probe measures itself)
+--- t=0.000  sending SIGTERM to pid 29603 (sid=29603, own session, default dispositions) ---
+!!! t= 20.193  subject STILL ALIVE 20s after the signal -- the harness SIGKILLs it now
+EXIT LATENCY (signal -> wrapper exit) = 20.194s   <-- DEFERRED/HUNG, harness had to SIGKILL
+subject rc = -9   (python reports -N for death by signal N -> signal 9)
+transcript = /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/out-waittrap-bg-return.txt
+--- subject transcript --------------------------------------------------
+[1787361832.057493000] pid=29603 pgid=29603 shape=bg hmode=return
+[1787361832.070482000] READY
+[1787361832.083240000] starting BACKGROUND child + wait -- the fix's shape
+[1787361832.103944000] background child pid=$!=29614
+[1787361833.454218000] HANDLER ENTERED (SIGTERM) -- shape=bg hmode=return
+[1787361833.468196000] HANDLER RETURNING (not exiting) -- watch whether `wait` resumes or returns
+--- end transcript -----------------------------------------------------
+POST-MORTEM: child 29614 ORPHANED (still running after the wrapper was reaped)
+   29614     1 29603 /bin/sleep
+
+MATRIX DONE

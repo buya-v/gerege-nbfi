@@ -1,0 +1,30 @@
+{
+  "fire": "local 20260820-080002",
+  "squad": "loan-schedule",
+  "run_id": "2026-08-17-run1-harness-schedule-poc",
+  "context": "tier0-harness-schedule-poc",
+  "exit": "clean - no live workers, no uncommitted work, lock released by wrapper",
+  "oracle": "REACHABLE all fire; fineract:latest + postgres:18.3 both healthy, uptime ~39h, NEVER restarted (capture comparability rests on this)",
+  "conformance_at_exit": {
+    "verdict": "PASS (exit 0)",
+    "parity_vectors": 32,
+    "cells_graded": 2495,
+    "prove": "20/20",
+    "invariants": "6/6 hold, 0 violated, 0 not-asserted",
+    "inadmissible": 0,
+    "note": "PASS means 'matches the reference oracle on captured vectors within the graded domain'. It does NOT mean safe to cut over. Cutover is a user gate."
+  },
+  "workers_dispatched": 4,
+  "workers_completed": 4,
+  "workers_lost": 0,
+  "isolation_violations": 0,
+  "scope_breaches": 0,
+  "next_action": "Dispatch T65 (T63's two P1s; no oracle) and T62 (--prove gap; no oracle). If the fire reaches the oracle, ALSO dispatch T64 and T66 - but NOT both alongside another capture task, because two capture workers collide in .softhouse/capture/. Then T12's remaining half, T13 UAT, T14 user gate, T15.",
+  "blocked_on": null,
+  "gate_pending": ["G-3", "G-4", "G-5"],
+  "open_questions": [
+    "B-1: CLOSED-FORM-POW-EMI cannot be closed by capture in the current graded domain (gap ~1e-11 minor units under equal r_i). Needs the ACT/ACT arm ported first; 91 ACT/ACT captures already exist unpromoted, so the bottleneck is the port, not the oracle.",
+    "M11 mutation remains genuinely open (0 separating shapes in 72,003); needs a targeted solve rather than a sweep.",
+    "T63's TestT63B stride-boundary differential did not finish in budget and was reported INCOMPLETE, not passing."
+  ]
+}

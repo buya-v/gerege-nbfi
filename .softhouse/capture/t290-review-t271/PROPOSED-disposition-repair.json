@@ -1,0 +1,39 @@
+{
+  "_about": [
+    "T290 finding F-T290-2, as an APPLICABLE REPAIR rather than a paragraph.",
+    "",
+    "It replaces the `disposition` and `reason` of the TWO `T219-R600p0-N103-B1` rows in",
+    "`.softhouse/capture/t271-b1-t219/acknowledged-t219.json`. Nothing else changes: not the",
+    "`file`, not the `sha256`, not `correctedBy`, not `correctionRecordedAt`, and not the other two",
+    "rows, whose dispositions T290 re-derived and found correct.",
+    "",
+    "WHY IT IS SAFE TO APPLY. The rule reads these two fields only to PRINT them",
+    "(`check_verdict_predicate_agreement.py`, the `disposition` / `reason` lines inside the",
+    "DISAGREEMENT block). No probe-line number is derived from either. T290 applied this repair to",
+    "a copy of the register and re-ran the rule and T271's own 12-leg battery: every probe line is",
+    "byte-identical to the unrepaired run. Transcript `out/disposition-repair-is-inert.txt`.",
+    "",
+    "WHY IT IS NEEDED. `OUT OF ITS DOMAIN` is not what the predicate's registration says. P2 is",
+    "registered `on every unrescued cell` (.softhouse/capture/t229-g8-site3/PREDICTION.md:184-186),",
+    "this cell is unrescued, and t229's PREDICTION.md section 3 -- `WHERE THIS PREDICATE IS KNOWN",
+    "TO BE WRONG OR SILENT - written down BEFORE the probe` -- pre-registers three silences, none",
+    "of which is this. A failing predicate can always be re-described as inapplicable; this one",
+    "cannot, because P2's first two conjuncts ARE the assertion of the EMI-plus-balloon shape, so",
+    "conditioning P2 on that shape makes P2 unfalsifiable."
+  ],
+  "appliesTo": ".softhouse/capture/t271-b1-t219/acknowledged-t219.json",
+  "replaceRows": [
+    {
+      "id": "T219-R600p0-N103-B1",
+      "predicate": "P2_emiDifferenceEqualsB",
+      "disposition": "PREDICATE REFUTED INSIDE ITS REGISTERED DOMAIN; VERDICT STANDS; T259's EXPECTATION FOR THIS ROW IS FALSIFIED; T241's 'first two conjuncts STAND' NEEDS RE-ADJUDICATION",
+      "reason": "REGISTERED DOMAIN, QUOTED RATHER THAN INFERRED: 'P2 -- on every unrescued cell, `total` of REPAYMENT row 1 = E, `total` of the last REPAYMENT row = E + B, and totalInterestAmount = n*E + B' (.softhouse/capture/t229-g8-site3/PREDICTION.md:184-186). THIS CELL IS UNRESCUED -- prediction.json records site3Rescues=false and predictedOutcome=LAST_ROW_CARRIES_ALL_PRINCIPAL, and classify_t219.py:139 computes the P2_* keys only for non-rescued cells, so the classifier's own domain gate passed on this row. t229's PREDICTION.md section 3, 'WHERE THIS PREDICATE IS KNOWN TO BE WRONG OR SILENT -- written down BEFORE the probe', pre-registers exactly three silences (E on rescued cells, the rescued branch, GUARD 3's over-amortization edge); a cell that amortises early and then emits zero rows is not among them. SO THIS IS A REFUTATION, NOT AN INAPPLICABILITY, and the distinction is not cosmetic: narrowing P2's domain to 'cells with the EMI-plus-balloon shape' would be CIRCULAR, because P2's first two conjuncts ARE that shape's assertion, and a predicate conditioned on what it asserts cannot fail. THE MECHANISM, unchanged from T271 and re-derived independently at T290 from the raw gz in integer minor units: 103 repayment rows, rows 1-13 carry 1 minor unit of interest each, ROW 14 carries the whole 1 minor unit of principal, ROWS 15-103 ARE ALL ZERO. The last row totals 0, so emiDifference is -1 against a registered B of 1. The cell-table proposition the verdict grades did hold: registered 'clean -- amortizes' and observed AMORTIZES_FULLY, predicted principal 1 == observed 1. CONSEQUENCE NOT TO BE LEFT UNREAD: `P2_emiDifferenceEqualsB` IS P2's second conjunct, and t229/PREDICTION.md:192-193 records 'The first two conjuncts STAND on every unrescued cell checked, so FACT A is unharmed'. That sentence is hedged by the word 'checked' -- T241 checked t229 only -- but a later reader will take it as universal. It is now false of the corpus: an unrescued cell refutes conjunct two. FACT A survives in substance only because this cell is not family B and has no balloon at all, and that qualification belongs next to the sentence, not only here (P-80: a corrected claim rots in every place it was restated)."
+    },
+    {
+      "id": "T219-R600p0-N103-B1",
+      "predicate": "P2_totalInterestEqualsNEplusB",
+      "disposition": "PREDICATE REFUTED INSIDE ITS REGISTERED DOMAIN; T259's CORRECTED FORM ALSO FAILS; VERDICT STANDS; T259's EXPECTATION FOR THIS ROW IS FALSIFIED",
+      "reason": "THE ROW T259 DID NOT FLAG, AND THE ONLY ONE IN THE CORPUS WHERE T259's CORRECTED PREDICATE IS ALSO FALSE UNDER AN AFFIRMATIVE VERDICT. Registered domain as quoted on the sibling row above: 'on every unrescued cell' (t229/PREDICTION.md:184-186); this cell is unrescued, so the third conjunct is REFUTED here, not inapplicable. Re-derived independently at T290 in integer minor units: n=103, E=1, B=1, principalRepaid=1, so n*E + B = 104 and n*E + B - principalRepaid = 103, against an OBSERVED interest of 13 and an OBSERVED total repayment of 14. The MECHANISM of the refutation is structural, and it is what makes the row different from -B4499 and -B3001 rather than what puts it outside the claim: the identity totalRepayment == n*E + B holds only where every row totals E and the last totals E + B, which is P2's own first two conjuncts, and this cell has neither -- it amortises at row 14 of 103 and rows 15-103 are all zero, so only 13 of 103 rows ever charge interest and n*E prices 90 rows that charge nothing. THE HONEST STATEMENT OF WHAT SURVIVES: no corrected form of P2's third conjunct holds on this cell. The unconditional identity interest == totalRepayment - principalRepaid holds on all 7 carriers including this one (14 - 1 == 13), but it requires a MEASURED totalRepayment and therefore states nothing predictive. P2's third conjunct is WITHDRAWN on this row, and 'withdrawn' means the registered prediction was wrong here, not that it was never about here."
+    }
+  ]
+}

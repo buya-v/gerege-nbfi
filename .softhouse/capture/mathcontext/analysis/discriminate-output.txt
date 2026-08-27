@@ -1,0 +1,647 @@
+====================================================================================================
+T42 -- WHICH MathContext IS ACTUALLY IN FORCE ON THE PATH A SEAM
+====================================================================================================
+
+payload            : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3afd18baf89b21fe/.softhouse/capture/mathcontext/out/t42-mathcontext.json
+fineract commit    : 426a23544e8426a38ae43ae404670a0a7e85b9eb
+MoneyHelper.PRECISION read from the running oracle: 19
+ambient-absence probe canary: THREW java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_canary_never_initialised
+
+The canary is the proof that the ABSENCE probe is not vacuous: MoneyHelper.getMathContext()
+on a tenant it was never initialised for MUST throw, or a case that 'did not throw' proves
+nothing.  It threw.
+
+====================================================================================================
+(a) THE MATRIX.  Baseline A = ambient HALF_UP(4), threaded (19, HALF_UP) -- the ratified pair.
+====================================================================================================
+
+shape                              B amb=DOWN     E amb=UP   C thr=DOWN   D amb=ABSENT
+--------------------------------------------------------------------------------------
+plain                               identical    identical     23 cells      identical
+drift                               identical    identical     22 cells      identical
+monthEnd                            identical    identical     23 cells      identical
+downPayment25                       identical    identical     20 cells      identical
+downPaymentAwkward                  identical    identical     24 cells      identical
+downPaymentMultiples1000            identical    identical     24 cells      identical
+multiples1000                       identical    identical     23 cells      identical
+zeroDpMultiples100                   23 cells    identical    identical          THREW
+zeroDpMultiples100DownPayment        27 cells     17 cells    identical          THREW
+fixedLength6                        identical    identical     23 cells      identical
+daysInYearActual                    identical    identical     18 cells      identical
+actualActual                        identical    identical     23 cells      identical
+interestRecognitionOnDisb           identical    identical     23 cells      identical
+
+total cells compared per shape: see per-shape detail below
+
+----------------------------------------------------------------------------------------------------
+DETAIL -- every shape on which the AMBIENT context is observably load-bearing
+----------------------------------------------------------------------------------------------------
+
+  shape zeroDpMultiples100  (T42-MX-07)
+    amb=DOWN: 23 cells move
+        totalInterestAmount: 76900 -> 76400
+        totalRepaymentAmount: 1276900 -> 1276400
+        period[1].balance: 1008800 -> 1008900
+        period[1].principal: 191200 -> 191100
+        period[1].total: 212800 -> 212700
+        period[1].totalOutstandingBalance: 1064100 -> 1063700
+        period[2].balance: 814200 -> 814300
+        period[2].interest: 18200 -> 18100
+        period[2].total: 212800 -> 212700
+        period[2].totalOutstandingBalance: 851300 -> 851000
+        period[3].balance: 616100 -> 616200
+        period[3].interest: 14700 -> 14600
+        ... and 11 more
+    amb=ABSENT: java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_t42_mx_07_d
+        java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_t42_mx_07_d
+        at org.apache.fineract.organisation.monetary.domain.MoneyHelper.getRoundingMode(MoneyHelper.java:79)
+        at org.apache.fineract.organisation.monetary.domain.Money.roundToMultiplesOf(Money.java:154)
+        at org.apache.fineract.organisation.monetary.domain.Money.<init>(Money.java:50)
+        at org.apache.fineract.organisation.monetary.domain.Money.of(Money.java:107)
+        at org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanApplicationTerms.assembleFrom(LoanApplicationTerms.java:580)
+        at org.apache.fineract.portfolio.loanaccount.loanschedule.domain.ProgressiveLoanScheduleGenerator.generate(ProgressiveLoanScheduleGenerator.java:82)
+        at org.apache.fineract.portfolio.loanaccount.loanschedule.domain.EmbeddableProgressiveLoanScheduleGenerator.generate(EmbeddableProgressiveLoanScheduleGenerator.java:46)
+
+  shape zeroDpMultiples100DownPayment  (T42-MX-08)
+    amb=DOWN: 27 cells move
+        totalInterestAmount: 51200 -> 50900
+        totalRepaymentAmount: 1251200 -> 1250900
+        period[1].balance: 800000 -> 800100
+        period[1].principal: 400000 -> 399900
+        period[1].total: 400000 -> 399900
+        period[1].totalOutstandingBalance: 851200 -> 851000
+        period[2].balance: 672500 -> 672700
+        period[2].principal: 127500 -> 127400
+        period[2].total: 141900 -> 141800
+        period[2].totalOutstandingBalance: 709300 -> 709200
+        period[3].balance: 542700 -> 543000
+        period[3].principal: 129800 -> 129700
+        ... and 15 more
+    amb=UP: 17 cells move
+        totalInterestAmount: 51200 -> 51400
+        totalRepaymentAmount: 1251200 -> 1251400
+        period[1].totalOutstandingBalance: 851200 -> 851400
+        period[2].totalOutstandingBalance: 709300 -> 709500
+        period[3].balance: 542700 -> 542800
+        period[3].interest: 12100 -> 12200
+        period[3].principal: 129800 -> 129700
+        period[3].totalOutstandingBalance: 567400 -> 567600
+        period[4].balance: 410600 -> 410700
+        period[4].totalOutstandingBalance: 425500 -> 425700
+        period[5].balance: 276100 -> 276200
+        period[5].totalOutstandingBalance: 283600 -> 283800
+        ... and 5 more
+    amb=ABSENT: java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_t42_mx_08_d
+        java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_t42_mx_08_d
+        at org.apache.fineract.organisation.monetary.domain.MoneyHelper.getRoundingMode(MoneyHelper.java:79)
+        at org.apache.fineract.organisation.monetary.domain.Money.roundToMultiplesOf(Money.java:154)
+        at org.apache.fineract.organisation.monetary.domain.Money.<init>(Money.java:50)
+        at org.apache.fineract.organisation.monetary.domain.Money.of(Money.java:107)
+        at org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanApplicationTerms.assembleFrom(LoanApplicationTerms.java:580)
+        at org.apache.fineract.portfolio.loanaccount.loanschedule.domain.ProgressiveLoanScheduleGenerator.generate(ProgressiveLoanScheduleGenerator.java:82)
+        at org.apache.fineract.portfolio.loanaccount.loanschedule.domain.EmbeddableProgressiveLoanScheduleGenerator.generate(EmbeddableProgressiveLoanScheduleGenerator.java:46)
+
+----------------------------------------------------------------------------------------------------
+DETAIL -- the THREADED rounding-mode flip (HALF_UP -> DOWN), same shapes
+----------------------------------------------------------------------------------------------------
+  plain                              23 cells move, e.g. totalInterestAmount: 76723.70 -> 76723.65; totalRepaymentAmount: 1276723.70 -> 1276723.65
+  drift                              22 cells move, e.g. totalInterestAmount: 76984.00 -> 76983.97; totalRepaymentAmount: 1276984.00 -> 1276983.97
+  monthEnd                           23 cells move, e.g. totalInterestAmount: 76723.70 -> 76723.65; totalRepaymentAmount: 1276723.70 -> 1276723.65
+  downPayment25                      20 cells move, e.g. totalInterestAmount: 57542.77 -> 57542.74; totalRepaymentAmount: 1257542.77 -> 1257542.74
+  downPaymentAwkward                 24 cells move, e.g. totalInterestAmount: 42624.53 -> 42624.50; totalRepaymentAmount: 1042625.53 -> 1042625.50
+  downPaymentMultiples1000           24 cells move, e.g. totalInterestAmount: 51149.38 -> 51149.37; totalRepaymentAmount: 1251149.38 -> 1251149.37
+  multiples1000                      23 cells move, e.g. totalInterestAmount: 76723.70 -> 76723.65; totalRepaymentAmount: 1276723.70 -> 1276723.65
+  zeroDpMultiples100                  0 cells move (identical)
+  zeroDpMultiples100DownPayment       0 cells move (identical)
+  fixedLength6                       23 cells move, e.g. totalInterestAmount: 76723.70 -> 76723.65; totalRepaymentAmount: 1276723.70 -> 1276723.65
+  daysInYearActual                   18 cells move, e.g. totalInterestAmount: 75447.98 -> 75447.95; totalRepaymentAmount: 1275447.98 -> 1275447.95
+  actualActual                       23 cells move, e.g. totalInterestAmount: 76298.62 -> 76298.58; totalRepaymentAmount: 1276298.62 -> 1276298.58
+  interestRecognitionOnDisb          23 cells move, e.g. totalInterestAmount: 76723.70 -> 76723.65; totalRepaymentAmount: 1276723.70 -> 1276723.65
+
+  THREADED rounding mode moved money on 11 of 13 shapes.
+
+====================================================================================================
+(b) T39 N-4 -- DOES THREADED PRECISION 19 SEPARATE FROM 12?
+====================================================================================================
+
+shape                                       principal    n     19 vs 12      19 vs 8
+------------------------------------------------------------------------------------
+p7_n6_r21.6                                   1200000    6    identical    identical
+p7_n36_r21.6                                  1200000   36    identical     74 cells
+p7_n360_r7.7                                  1200000  360    identical   1672 cells
+p7_n36_r13                                    1200000   36    identical     80 cells
+p7_drift_n36_r21.6                            1200000   36    identical    152 cells
+p7_actualActual_n36_r13                       1200000   36    identical     92 cells
+p8_n6_r21.6                                  50000000    6    identical     24 cells
+p8_n36_r21.6                                 50000000   36    identical    172 cells
+p8_n360_r7.7                                 50000000  360    identical   1776 cells
+p8_n36_r13                                   50000000   36    identical    177 cells
+p8_drift_n36_r21.6                           50000000   36    identical    170 cells
+p8_actualActual_n36_r13                      50000000   36    identical    177 cells
+p10_n6_r21.6                               1000000000    6    identical     28 cells
+p10_n36_r21.6                              1000000000   36    identical    177 cells
+p10_n360_r7.7                              1000000000  360    853 cells   1798 cells
+p10_n36_r13                                1000000000   36    identical    180 cells
+p10_drift_n36_r21.6                        1000000000   36     63 cells    179 cells
+p10_actualActual_n36_r13                   1000000000   36     61 cells    180 cells
+p11_n6_r21.6                              10000000000    6    identical     29 cells
+p11_n36_r21.6                             10000000000   36    identical    179 cells
+p11_n360_r7.7                             10000000000  360   1682 cells   1799 cells
+p11_n36_r13                               10000000000   36     84 cells    180 cells
+p11_drift_n36_r21.6                       10000000000   36     71 cells    179 cells
+p11_actualActual_n36_r13                  10000000000   36     84 cells    180 cells
+p12_n6_r21.6                             100000000000    6    identical     29 cells
+p12_n36_r21.6                            100000000000   36     54 cells    179 cells
+p12_n360_r7.7                            100000000000  360   1760 cells   1800 cells
+p12_n36_r13                              100000000000   36    160 cells    180 cells
+p12_drift_n36_r21.6                      100000000000   36    102 cells    179 cells
+p12_actualActual_n36_r13                 100000000000   36    136 cells    180 cells
+p13_n6_r21.6                            1000000000000    6     19 cells     29 cells
+p13_n36_r21.6                           1000000000000   36    171 cells    179 cells
+p13_n360_r7.7                           1000000000000  360   1786 cells   1800 cells
+p13_n36_r13                             1000000000000   36    179 cells    180 cells
+p13_drift_n36_r21.6                     1000000000000   36    174 cells    179 cells
+p13_actualActual_n36_r13                1000000000000   36    179 cells    180 cells
+p14_n6_r21.6                           10000000000000    6     29 cells     29 cells
+p14_n36_r21.6                          10000000000000   36    179 cells    179 cells
+p14_n360_r7.7                          10000000000000  360   1799 cells   1800 cells
+p14_n36_r13                            10000000000000   36    180 cells    180 cells
+p14_drift_n36_r21.6                    10000000000000   36    179 cells    179 cells
+p14_actualActual_n36_r13               10000000000000   36    180 cells    180 cells
+p15_n6_r21.6                          100000000000000    6     29 cells     29 cells
+p15_n36_r21.6                         100000000000000   36    179 cells    179 cells
+p15_n360_r7.7                         100000000000000  360   1800 cells   1800 cells
+p15_n36_r13                           100000000000000   36    180 cells    180 cells
+p15_drift_n36_r21.6                   100000000000000   36    179 cells    179 cells
+p15_actualActual_n36_r13              100000000000000   36    180 cells    180 cells
+
+  shapes swept                     : 48
+  shapes separating 19 from 12     : 30
+  shapes separating 19 from 8      : 47
+
+----------------------------------------------------------------------------------------------------
+THE SEPARATING SHAPES, 19 vs 12 -- smallest principal first
+----------------------------------------------------------------------------------------------------
+
+  T42-PREC-14  shape p10_n360_r7.7
+    principal 1000000000  n=360  rate 7.7  daysInMonth DAYS_30 daysInYear DAYS_360
+    853 cells differ.  totalInterestAmount: 1566656623.93 (p19) vs 1566656624.63 (p12)
+        totalInterestAmount: 1566656623.93 -> 1566656624.63
+        totalRepaymentAmount: 2566656623.93 -> 2566656624.63
+        period[1].totalOutstandingBalance: 2559527022.19 -> 2559527022.89
+        period[2].totalOutstandingBalance: 2552397420.45 -> 2552397421.15
+        period[3].totalOutstandingBalance: 2545267818.71 -> 2545267819.41
+        period[4].totalOutstandingBalance: 2538138216.97 -> 2538138217.67
+        period[5].totalOutstandingBalance: 2531008615.23 -> 2531008615.93
+        period[6].totalOutstandingBalance: 2523879013.49 -> 2523879014.19
+        period[7].totalOutstandingBalance: 2516749411.75 -> 2516749412.45
+        period[8].totalOutstandingBalance: 2509619810.01 -> 2509619810.71
+        ... and 843 more
+
+  T42-PREC-16  shape p10_drift_n36_r21.6
+    principal 1000000000  n=36  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    63 cells differ.  totalInterestAmount: 373183030.06 (p19) vs 373183030.07 (p12)
+        totalInterestAmount: 373183030.06 -> 373183030.07
+        totalRepaymentAmount: 1373183030.06 -> 1373183030.07
+        period[1].totalOutstandingBalance: 1335024536.16 -> 1335024536.17
+        period[2].totalOutstandingBalance: 1296866042.26 -> 1296866042.27
+        period[3].totalOutstandingBalance: 1258707548.36 -> 1258707548.37
+        period[4].totalOutstandingBalance: 1220549054.46 -> 1220549054.47
+        period[5].totalOutstandingBalance: 1182390560.56 -> 1182390560.57
+        period[6].totalOutstandingBalance: 1144232066.66 -> 1144232066.67
+        period[7].totalOutstandingBalance: 1106073572.76 -> 1106073572.77
+        period[8].totalOutstandingBalance: 1067915078.86 -> 1067915078.87
+        ... and 53 more
+
+  T42-PREC-17  shape p10_actualActual_n36_r13
+    principal 1000000000  n=36  rate 13  daysInMonth ACTUAL daysInYear ACTUAL
+    61 cells differ.  totalInterestAmount: 212701685.56 (p19) vs 212701685.53 (p12)
+        totalInterestAmount: 212701685.56 -> 212701685.53
+        totalRepaymentAmount: 1212701685.56 -> 1212701685.53
+        period[1].totalOutstandingBalance: 1179015527.63 -> 1179015527.60
+        period[2].totalOutstandingBalance: 1145329369.70 -> 1145329369.67
+        period[3].totalOutstandingBalance: 1111643211.77 -> 1111643211.74
+        period[4].totalOutstandingBalance: 1077957053.84 -> 1077957053.81
+        period[5].totalOutstandingBalance: 1044270895.91 -> 1044270895.88
+        period[6].totalOutstandingBalance: 1010584737.98 -> 1010584737.95
+        period[7].totalOutstandingBalance: 976898580.05 -> 976898580.02
+        period[8].totalOutstandingBalance: 943212422.12 -> 943212422.09
+        ... and 51 more
+
+  T42-PREC-20  shape p11_n360_r7.7
+    principal 10000000000  n=360  rate 7.7  daysInMonth DAYS_30 daysInYear DAYS_360
+    1682 cells differ.  totalInterestAmount: 15666566262.68 (p19) vs 15666566255.88 (p12)
+        totalInterestAmount: 15666566262.68 -> 15666566255.88
+        totalRepaymentAmount: 25666566262.68 -> 25666566255.88
+        period[1].balance: 9992870649.29 -> 9992870649.28
+        period[1].principal: 7129350.71 -> 7129350.72
+        period[1].total: 71296017.38 -> 71296017.39
+        period[1].totalOutstandingBalance: 25595270245.30 -> 25595270238.49
+        period[2].balance: 9985695551.91 -> 9985695551.89
+        period[2].principal: 7175097.38 -> 7175097.39
+        period[2].total: 71296017.38 -> 71296017.39
+        period[2].totalOutstandingBalance: 25523974227.92 -> 25523974221.10
+        ... and 1672 more
+
+  T42-PREC-21  shape p11_n36_r13
+    principal 10000000000  n=36  rate 13  daysInMonth DAYS_30 daysInYear DAYS_360
+    84 cells differ.  totalInterestAmount: 2129822721.23 (p19) vs 2129822721.16 (p12)
+        totalInterestAmount: 2129822721.23 -> 2129822721.16
+        totalRepaymentAmount: 12129822721.23 -> 12129822721.16
+        period[1].totalOutstandingBalance: 11792883201.20 -> 11792883201.13
+        period[2].totalOutstandingBalance: 11455943681.17 -> 11455943681.10
+        period[3].totalOutstandingBalance: 11119004161.14 -> 11119004161.07
+        period[4].totalOutstandingBalance: 10782064641.11 -> 10782064641.04
+        period[5].balance: 8831933645.11 -> 8831933645.10
+        period[5].interest: 98264922.63 -> 98264922.62
+        period[5].principal: 238674597.40 -> 238674597.41
+        period[5].totalOutstandingBalance: 10445125121.08 -> 10445125121.01
+        ... and 74 more
+
+  T42-PREC-22  shape p11_drift_n36_r21.6
+    principal 10000000000  n=36  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    71 cells differ.  totalInterestAmount: 3731830300.38 (p19) vs 3731830300.37 (p12)
+        totalInterestAmount: 3731830300.38 -> 3731830300.37
+        totalRepaymentAmount: 13731830300.38 -> 13731830300.37
+        period[1].totalOutstandingBalance: 13350245361.36 -> 13350245361.35
+        period[2].totalOutstandingBalance: 12968660422.34 -> 12968660422.33
+        period[3].totalOutstandingBalance: 12587075483.32 -> 12587075483.31
+        period[4].totalOutstandingBalance: 12205490544.30 -> 12205490544.29
+        period[5].totalOutstandingBalance: 11823905605.28 -> 11823905605.27
+        period[6].balance: 8745494963.16 -> 8745494963.15
+        period[6].interest: 166493476.81 -> 166493476.80
+        period[6].principal: 215091462.21 -> 215091462.22
+        ... and 61 more
+
+  T42-PREC-23  shape p11_actualActual_n36_r13
+    principal 10000000000  n=36  rate 13  daysInMonth ACTUAL daysInYear ACTUAL
+    84 cells differ.  totalInterestAmount: 2127016855.30 (p19) vs 2127016855.27 (p12)
+        totalInterestAmount: 2127016855.30 -> 2127016855.27
+        totalRepaymentAmount: 12127016855.30 -> 12127016855.27
+        period[1].totalOutstandingBalance: 11790155275.99 -> 11790155275.96
+        period[2].totalOutstandingBalance: 11453293696.68 -> 11453293696.65
+        period[3].balance: 9305206188.95 -> 9305206188.96
+        period[3].interest: 105011845.27 -> 105011845.28
+        period[3].principal: 231849734.04 -> 231849734.03
+        period[3].totalOutstandingBalance: 11116432117.37 -> 11116432117.34
+        period[4].balance: 9067498446.08 -> 9067498446.09
+        period[4].totalOutstandingBalance: 10779570538.06 -> 10779570538.03
+        ... and 74 more
+
+  T42-PREC-25  shape p12_n36_r21.6
+    principal 100000000000  n=36  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    54 cells differ.  totalInterestAmount: 36741794632.22 (p19) vs 36741794632.21 (p12)
+        totalInterestAmount: 36741794632.22 -> 36741794632.21
+        totalRepaymentAmount: 136741794632.22 -> 136741794632.21
+        period[1].totalOutstandingBalance: 132943411447.99 -> 132943411447.98
+        period[2].totalOutstandingBalance: 129145028263.76 -> 129145028263.75
+        period[3].totalOutstandingBalance: 125346645079.53 -> 125346645079.52
+        period[4].totalOutstandingBalance: 121548261895.30 -> 121548261895.29
+        period[5].totalOutstandingBalance: 117749878711.07 -> 117749878711.06
+        period[6].totalOutstandingBalance: 113951495526.84 -> 113951495526.83
+        period[7].totalOutstandingBalance: 110153112342.61 -> 110153112342.60
+        period[8].totalOutstandingBalance: 106354729158.38 -> 106354729158.37
+        ... and 44 more
+
+  T42-PREC-26  shape p12_n360_r7.7
+    principal 100000000000  n=360  rate 7.7  daysInMonth DAYS_30 daysInYear DAYS_360
+    1760 cells differ.  totalInterestAmount: 156665662583.85 (p19) vs 156665662582.27 (p12)
+        totalInterestAmount: 156665662583.85 -> 156665662582.27
+        totalRepaymentAmount: 256665662583.85 -> 256665662582.27
+        period[1].balance: 99928706492.83 -> 99928706492.82
+        period[1].interest: 641666666.67 -> 641666666.70
+        period[1].principal: 71293507.17 -> 71293507.18
+        period[1].total: 712960173.84 -> 712960173.88
+        period[1].totalOutstandingBalance: 255952702410.01 -> 255952702408.39
+        period[2].balance: 99856955518.99 -> 99856955518.97
+        period[2].interest: 641209200.00 -> 641209200.03
+        period[2].principal: 71750973.84 -> 71750973.85
+        ... and 1750 more
+
+  T42-PREC-27  shape p12_n36_r13
+    principal 100000000000  n=36  rate 13  daysInMonth DAYS_30 daysInYear DAYS_360
+    160 cells differ.  totalInterestAmount: 21298227211.79 (p19) vs 21298227211.18 (p12)
+        totalInterestAmount: 21298227211.79 -> 21298227211.18
+        totalRepaymentAmount: 121298227211.79 -> 121298227211.18
+        period[1].balance: 97713938133.00 -> 97713938132.99
+        period[1].interest: 1083333333.33 -> 1083333333.30
+        period[1].principal: 2286061867.00 -> 2286061867.01
+        period[1].total: 3369395200.33 -> 3369395200.31
+        period[1].totalOutstandingBalance: 117928832011.46 -> 117928832010.87
+        period[2].balance: 95403110595.78 -> 95403110595.75
+        period[2].interest: 1058567663.11 -> 1058567663.07
+        period[2].principal: 2310827537.22 -> 2310827537.24
+        ... and 150 more
+
+  T42-PREC-28  shape p12_drift_n36_r21.6
+    principal 100000000000  n=36  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    102 cells differ.  totalInterestAmount: 37318303003.56 (p19) vs 37318303003.39 (p12)
+        totalInterestAmount: 37318303003.56 -> 37318303003.39
+        totalRepaymentAmount: 137318303003.56 -> 137318303003.39
+        period[1].totalOutstandingBalance: 133502453613.33 -> 133502453613.16
+        period[2].balance: 95931148331.22 -> 95931148331.27
+        period[2].interest: 1875347111.68 -> 1875347111.73
+        period[2].principal: 1940502278.55 -> 1940502278.50
+        period[2].totalOutstandingBalance: 129686604223.10 -> 129686604222.93
+        period[3].balance: 93842059610.95 -> 93842059611.00
+        period[3].totalOutstandingBalance: 125870754832.87 -> 125870754832.70
+        period[4].balance: 91769856231.56 -> 91769856231.58
+        ... and 92 more
+
+  T42-PREC-29  shape p12_actualActual_n36_r13
+    principal 100000000000  n=36  rate 13  daysInMonth ACTUAL daysInYear ACTUAL
+    136 cells differ.  totalInterestAmount: 21270168552.40 (p19) vs 21270168552.53 (p12)
+        totalInterestAmount: 21270168552.40 -> 21270168552.53
+        totalRepaymentAmount: 121270168552.40 -> 121270168552.53
+        period[1].balance: 97732477103.05 -> 97732477103.08
+        period[1].interest: 1101092896.17 -> 1101092896.20
+        period[1].principal: 2267522896.95 -> 2267522896.92
+        period[1].totalOutstandingBalance: 117901552759.28 -> 117901552759.41
+        period[2].balance: 95370559229.82 -> 95370559229.84
+        period[2].interest: 1006697919.89 -> 1006697919.88
+        period[2].principal: 2361917873.23 -> 2361917873.24
+        period[2].totalOutstandingBalance: 114532936966.16 -> 114532936966.29
+        ... and 126 more
+
+  T42-PREC-30  shape p13_n6_r21.6
+    principal 1000000000000  n=6  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    19 cells differ.  totalInterestAmount: 63936411933.77 (p19) vs 63936411933.83 (p12)
+        totalInterestAmount: 63936411933.77 -> 63936411933.83
+        totalRepaymentAmount: 1063936411933.77 -> 1063936411933.83
+        period[1].totalOutstandingBalance: 886613676611.47 -> 886613676611.53
+        period[2].totalOutstandingBalance: 709290941289.17 -> 709290941289.23
+        period[3].balance: 513376745759.45 -> 513376745759.50
+        period[3].interest: 12212760962.15 -> 12212760962.20
+        period[3].principal: 165109974360.15 -> 165109974360.10
+        period[3].totalOutstandingBalance: 531968205966.87 -> 531968205966.93
+        period[4].balance: 345294791860.82 -> 345294791860.88
+        period[4].interest: 9240781423.67 -> 9240781423.68
+        ... and 9 more
+
+  T42-PREC-31  shape p13_n36_r21.6
+    principal 1000000000000  n=36  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    171 cells differ.  totalInterestAmount: 367417946322.42 (p19) vs 367417946322.94 (p12)
+        totalInterestAmount: 367417946322.42 -> 367417946322.94
+        totalRepaymentAmount: 1367417946322.42 -> 1367417946322.94
+        period[1].balance: 980016168157.71 -> 980016168157.73
+        period[1].principal: 19983831842.29 -> 19983831842.27
+        period[1].total: 37983831842.29 -> 37983831842.27
+        period[1].totalOutstandingBalance: 1329434114480.13 -> 1329434114480.67
+        period[2].interest: 17640291026.84 -> 17640291026.80
+        period[2].principal: 20343540815.45 -> 20343540815.47
+        period[2].total: 37983831842.29 -> 37983831842.27
+        period[2].totalOutstandingBalance: 1291450282637.84 -> 1291450282638.40
+        ... and 161 more
+
+  T42-PREC-32  shape p13_n360_r7.7
+    principal 1000000000000  n=360  rate 7.7  daysInMonth DAYS_30 daysInYear DAYS_360
+    1786 cells differ.  totalInterestAmount: 1566656625831.22 (p19) vs 1566656625863.57 (p12)
+        totalInterestAmount: 1566656625831.22 -> 1566656625863.57
+        totalRepaymentAmount: 2566656625831.22 -> 2566656625863.57
+        period[1].interest: 6416666666.67 -> 6416666667.01
+        period[1].total: 7129601738.41 -> 7129601738.75
+        period[1].totalOutstandingBalance: 2559527024092.81 -> 2559527024124.82
+        period[2].interest: 6412091999.96 -> 6412092000.30
+        period[2].total: 7129601738.41 -> 7129601738.75
+        period[2].totalOutstandingBalance: 2552397422354.40 -> 2552397422386.07
+        period[3].interest: 6407487979.13 -> 6407487979.47
+        period[3].total: 7129601738.41 -> 7129601738.75
+        ... and 1776 more
+
+  T42-PREC-33  shape p13_n36_r13
+    principal 1000000000000  n=36  rate 13  daysInMonth DAYS_30 daysInYear DAYS_360
+    179 cells differ.  totalInterestAmount: 212982272118.53 (p19) vs 212982272111.58 (p12)
+        totalInterestAmount: 212982272118.53 -> 212982272111.58
+        totalRepaymentAmount: 1212982272118.53 -> 1212982272111.58
+        period[1].balance: 977139381330.04 -> 977139381329.90
+        period[1].interest: 10833333333.33 -> 10833333333.00
+        period[1].principal: 22860618669.96 -> 22860618670.10
+        period[1].total: 33693952003.29 -> 33693952003.10
+        period[1].totalOutstandingBalance: 1179288320115.24 -> 1179288320108.48
+        period[2].balance: 954031105957.83 -> 954031105957.50
+        period[2].interest: 10585676631.08 -> 10585676630.70
+        period[2].principal: 23108275372.21 -> 23108275372.40
+        ... and 169 more
+
+  T42-PREC-34  shape p13_drift_n36_r21.6
+    principal 1000000000000  n=36  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    174 cells differ.  totalInterestAmount: 373183030034.89 (p19) vs 373183030034.13 (p12)
+        totalInterestAmount: 373183030034.89 -> 373183030034.13
+        totalRepaymentAmount: 1373183030034.89 -> 1373183030034.13
+        period[1].balance: 978716506097.65 -> 978716506097.71
+        period[1].principal: 21283493902.35 -> 21283493902.29
+        period[1].total: 38158493902.35 -> 38158493902.29
+        period[1].totalOutstandingBalance: 1335024536132.54 -> 1335024536131.84
+        period[2].balance: 959311483312.14 -> 959311483312.72
+        period[2].interest: 18753471116.84 -> 18753471117.30
+        period[2].principal: 19405022785.51 -> 19405022784.99
+        period[2].total: 38158493902.35 -> 38158493902.29
+        ... and 164 more
+
+  T42-PREC-35  shape p13_actualActual_n36_r13
+    principal 1000000000000  n=36  rate 13  daysInMonth ACTUAL daysInYear ACTUAL
+    179 cells differ.  totalInterestAmount: 212701685523.70 (p19) vs 212701685524.57 (p12)
+        totalInterestAmount: 212701685523.70 -> 212701685524.57
+        totalRepaymentAmount: 1212701685523.70 -> 1212701685524.57
+        period[1].balance: 977324771030.53 -> 977324771030.76
+        period[1].interest: 11010928961.75 -> 11010928962.00
+        period[1].principal: 22675228969.47 -> 22675228969.24
+        period[1].total: 33686157931.22 -> 33686157931.24
+        period[1].totalOutstandingBalance: 1179015527592.48 -> 1179015527593.33
+        period[2].balance: 953705592298.18 -> 953705592298.32
+        period[2].interest: 10066979198.87 -> 10066979198.80
+        period[2].principal: 23619178732.35 -> 23619178732.44
+        ... and 169 more
+
+  T42-PREC-36  shape p14_n6_r21.6
+    principal 10000000000000  n=6  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    29 cells differ.  totalInterestAmount: 639364119337.74 (p19) vs 639364119338.30 (p12)
+        totalInterestAmount: 639364119337.74 -> 639364119338.30
+        totalRepaymentAmount: 10639364119337.74 -> 10639364119338.30
+        period[1].balance: 8406772646777.04 -> 8406772646776.95
+        period[1].principal: 1593227353222.96 -> 1593227353223.05
+        period[1].total: 1773227353222.96 -> 1773227353223.05
+        period[1].totalOutstandingBalance: 8866136766114.78 -> 8866136766115.25
+        period[2].balance: 6784867201196.07 -> 6784867201195.90
+        period[2].interest: 151321907641.99 -> 151321907642.00
+        period[2].principal: 1621905445580.97 -> 1621905445581.05
+        period[2].total: 1773227353222.96 -> 1773227353223.05
+        ... and 19 more
+
+  T42-PREC-37  shape p14_n36_r21.6
+    principal 10000000000000  n=36  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    179 cells differ.  totalInterestAmount: 3674179463224.29 (p19) vs 3674179463229.36 (p12)
+        totalInterestAmount: 3674179463224.29 -> 3674179463229.36
+        totalRepaymentAmount: 13674179463224.29 -> 13674179463229.36
+        period[1].balance: 9800161681577.10 -> 9800161681577.29
+        period[1].principal: 199838318422.90 -> 199838318422.71
+        period[1].total: 379838318422.90 -> 379838318422.71
+        period[1].totalOutstandingBalance: 13294341144801.39 -> 13294341144806.65
+        period[2].balance: 9596726273422.59 -> 9596726273422.58
+        period[2].interest: 176402910268.39 -> 176402910268.00
+        period[2].principal: 203435408154.51 -> 203435408154.71
+        period[2].total: 379838318422.90 -> 379838318422.71
+        ... and 169 more
+
+  T42-PREC-38  shape p14_n360_r7.7
+    principal 10000000000000  n=360  rate 7.7  daysInMonth DAYS_30 daysInYear DAYS_360
+    1799 cells differ.  totalInterestAmount: 15666566258288.02 (p19) vs 15666566258635.59 (p12)
+        totalInterestAmount: 15666566258288.02 -> 15666566258635.59
+        totalRepaymentAmount: 25666566258288.02 -> 25666566258635.59
+        period[1].balance: 9992870649282.55 -> 9992870649282.60
+        period[1].interest: 64166666666.67 -> 64166666670.10
+        period[1].principal: 7129350717.45 -> 7129350717.40
+        period[1].total: 71296017384.12 -> 71296017387.50
+        period[1].totalOutstandingBalance: 25595270240903.90 -> 25595270241248.09
+        period[2].balance: 9985695551897.99 -> 9985695551898.10
+        period[2].interest: 64120919999.56 -> 64120920003.00
+        period[2].principal: 7175097384.56 -> 7175097384.50
+        ... and 1789 more
+
+  T42-PREC-39  shape p14_n36_r13
+    principal 10000000000000  n=36  rate 13  daysInMonth DAYS_30 daysInYear DAYS_360
+    180 cells differ.  totalInterestAmount: 2129822721185.02 (p19) vs 2129822721115.85 (p12)
+        totalInterestAmount: 2129822721185.02 -> 2129822721115.85
+        totalRepaymentAmount: 12129822721185.02 -> 12129822721115.85
+        period[1].balance: 9771393813300.41 -> 9771393813299.00
+        period[1].interest: 108333333333.33 -> 108333333330.00
+        period[1].principal: 228606186699.59 -> 228606186701.00
+        period[1].total: 336939520032.92 -> 336939520031.00
+        period[1].totalOutstandingBalance: 11792883201152.10 -> 11792883201084.85
+        period[2].balance: 9540311059578.24 -> 9540311059575.00
+        period[2].interest: 105856766310.75 -> 105856766307.00
+        period[2].principal: 231082753722.17 -> 231082753724.00
+        ... and 170 more
+
+  T42-PREC-40  shape p14_drift_n36_r21.6
+    principal 10000000000000  n=36  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    179 cells differ.  totalInterestAmount: 3731830300348.85 (p19) vs 3731830300341.29 (p12)
+        totalInterestAmount: 3731830300348.85 -> 3731830300341.29
+        totalRepaymentAmount: 13731830300348.85 -> 13731830300341.29
+        period[1].balance: 9787165060976.50 -> 9787165060977.12
+        period[1].principal: 212834939023.50 -> 212834939022.88
+        period[1].total: 381584939023.50 -> 381584939022.88
+        period[1].totalOutstandingBalance: 13350245361325.35 -> 13350245361318.41
+        period[2].balance: 9593114833121.39 -> 9593114833127.24
+        period[2].interest: 187534711168.39 -> 187534711173.00
+        period[2].principal: 194050227855.11 -> 194050227849.88
+        period[2].total: 381584939023.50 -> 381584939022.88
+        ... and 169 more
+
+  T42-PREC-41  shape p14_actualActual_n36_r13
+    principal 10000000000000  n=36  rate 13  daysInMonth ACTUAL daysInYear ACTUAL
+    180 cells differ.  totalInterestAmount: 2127016855237.51 (p19) vs 2127016855245.75 (p12)
+        totalInterestAmount: 2127016855237.51 -> 2127016855245.75
+        totalRepaymentAmount: 12127016855237.51 -> 12127016855245.75
+        period[1].balance: 9773247710305.34 -> 9773247710307.61
+        period[1].interest: 110109289617.49 -> 110109289620.00
+        period[1].principal: 226752289694.66 -> 226752289692.39
+        period[1].total: 336861579312.15 -> 336861579312.39
+        period[1].totalOutstandingBalance: 11790155275925.36 -> 11790155275933.36
+        period[2].balance: 9537055922981.85 -> 9537055922983.22
+        period[2].interest: 100669791988.66 -> 100669791988.00
+        period[2].principal: 236191787323.49 -> 236191787324.39
+        ... and 170 more
+
+  T42-PREC-42  shape p15_n6_r21.6
+    principal 100000000000000  n=6  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    29 cells differ.  totalInterestAmount: 6393641193377.38 (p19) vs 6393641193383.00 (p12)
+        totalInterestAmount: 6393641193377.38 -> 6393641193383.00
+        totalRepaymentAmount: 106393641193377.38 -> 106393641193383.00
+        period[1].balance: 84067726467770.44 -> 84067726467769.50
+        period[1].principal: 15932273532229.56 -> 15932273532230.50
+        period[1].total: 17732273532229.56 -> 17732273532230.50
+        period[1].totalOutstandingBalance: 88661367661147.82 -> 88661367661152.50
+        period[2].balance: 67848672011960.75 -> 67848672011959.00
+        period[2].interest: 1513219076419.87 -> 1513219076420.00
+        period[2].principal: 16219054455809.69 -> 16219054455810.50
+        period[2].total: 17732273532229.56 -> 17732273532230.50
+        ... and 19 more
+
+  T42-PREC-43  shape p15_n36_r21.6
+    principal 100000000000000  n=36  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    179 cells differ.  totalInterestAmount: 36741794632243.06 (p19) vs 36741794632293.60 (p12)
+        totalInterestAmount: 36741794632243.06 -> 36741794632293.60
+        totalRepaymentAmount: 136741794632243.06 -> 136741794632293.60
+        period[1].balance: 98001616815771.02 -> 98001616815772.88
+        period[1].principal: 1998383184228.98 -> 1998383184227.12
+        period[1].total: 3798383184228.98 -> 3798383184227.12
+        period[1].totalOutstandingBalance: 132943411448014.08 -> 132943411448066.48
+        period[2].balance: 95967262734225.92 -> 95967262734225.76
+        period[2].interest: 1764029102683.88 -> 1764029102680.00
+        period[2].principal: 2034354081545.10 -> 2034354081547.12
+        period[2].total: 3798383184228.98 -> 3798383184227.12
+        ... and 169 more
+
+  T42-PREC-44  shape p15_n360_r7.7
+    principal 100000000000000  n=360  rate 7.7  daysInMonth DAYS_30 daysInYear DAYS_360
+    1800 cells differ.  totalInterestAmount: 156665662582848.17 (p19) vs 156665662586355.82 (p12)
+        totalInterestAmount: 156665662582848.17 -> 156665662586355.82
+        totalRepaymentAmount: 256665662582848.17 -> 256665662586355.82
+        period[1].balance: 99928706492825.44 -> 99928706492826.00
+        period[1].interest: 641666666666.67 -> 641666666701.00
+        period[1].principal: 71293507174.56 -> 71293507174.00
+        period[1].total: 712960173841.23 -> 712960173875.00
+        period[1].totalOutstandingBalance: 255952702409006.94 -> 255952702412480.82
+        period[2].balance: 99856955518979.84 -> 99856955518981.00
+        period[2].interest: 641209199995.63 -> 641209200030.00
+        period[2].principal: 71750973845.60 -> 71750973845.00
+        ... and 1790 more
+
+  T42-PREC-45  shape p15_n36_r13
+    principal 100000000000000  n=36  rate 13  daysInMonth DAYS_30 daysInYear DAYS_360
+    180 cells differ.  totalInterestAmount: 21298227211850.35 (p19) vs 21298227211158.50 (p12)
+        totalInterestAmount: 21298227211850.35 -> 21298227211158.50
+        totalRepaymentAmount: 121298227211850.35 -> 121298227211158.50
+        period[1].balance: 97713938133004.15 -> 97713938132990.04
+        period[1].interest: 1083333333333.33 -> 1083333333300.00
+        period[1].principal: 2286061866995.85 -> 2286061867009.96
+        period[1].total: 3369395200329.18 -> 3369395200309.96
+        period[1].totalOutstandingBalance: 117928832011521.17 -> 117928832010848.54
+        period[2].balance: 95403110595782.51 -> 95403110595750.08
+        period[2].interest: 1058567663107.54 -> 1058567663070.00
+        period[2].principal: 2310827537221.64 -> 2310827537239.96
+        ... and 170 more
+
+  T42-PREC-46  shape p15_drift_n36_r21.6
+    principal 100000000000000  n=36  rate 21.6  daysInMonth DAYS_30 daysInYear DAYS_360
+    179 cells differ.  totalInterestAmount: 37318303003487.55 (p19) vs 37318303003412.90 (p12)
+        totalInterestAmount: 37318303003487.55 -> 37318303003412.90
+        totalRepaymentAmount: 137318303003487.55 -> 137318303003412.90
+        period[1].balance: 97871650609764.96 -> 97871650609771.20
+        period[1].principal: 2128349390235.04 -> 2128349390228.80
+        period[1].total: 3815849390235.04 -> 3815849390228.80
+        period[1].totalOutstandingBalance: 133502453613252.51 -> 133502453613184.10
+        period[2].balance: 95931148331213.80 -> 95931148331272.40
+        period[2].interest: 1875347111683.88 -> 1875347111730.00
+        period[2].principal: 1940502278551.16 -> 1940502278498.80
+        period[2].total: 3815849390235.04 -> 3815849390228.80
+        ... and 169 more
+
+  T42-PREC-47  shape p15_actualActual_n36_r13
+    principal 100000000000000  n=36  rate 13  daysInMonth ACTUAL daysInYear ACTUAL
+    180 cells differ.  totalInterestAmount: 21270168552374.81 (p19) vs 21270168552457.50 (p12)
+        totalInterestAmount: 21270168552374.81 -> 21270168552457.50
+        totalRepaymentAmount: 121270168552374.81 -> 121270168552457.50
+        period[1].balance: 97732477103053.34 -> 97732477103076.05
+        period[1].interest: 1101092896174.86 -> 1101092896200.00
+        period[1].principal: 2267522896946.66 -> 2267522896923.95
+        period[1].total: 3368615793121.52 -> 3368615793123.95
+        period[1].totalOutstandingBalance: 117901552759253.29 -> 117901552759333.55
+        period[2].balance: 95370559229818.46 -> 95370559229832.10
+        period[2].interest: 1006697919886.64 -> 1006697919880.00
+        period[2].principal: 2361917873234.88 -> 2361917873243.95
+        ... and 170 more
+
+====================================================================================================
+CONTROLS -- these reproduce committed observations taken by OTHER harnesses
+====================================================================================================
+
+  T42-CAL        term  182 d   disbursed             100.00   interest               2.05   repayment             102.05
+  T42-CTL-Q0a    term  182 d   disbursed         1200000.00   interest           76723.70   repayment         1276723.70
+  T42-CTL-1      term  182 d   disbursed         1014632.00   interest           20815.82   repayment         1035447.82
+  T42-CTL-P0A    term  185 d   disbursed         1200000.00   interest           76984.00   repayment         1276984.00
+  T42-CTL-MEB    term  182 d   disbursed         1200000.00   interest           76723.70   repayment         1276723.70
+
+  (controls.py checks these against the committed literals and exits 1 on any mismatch)
+

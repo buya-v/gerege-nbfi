@@ -1,0 +1,4 @@
+ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-2/probe.http
+  header-record digest MISMATCH: sidecar claims f799d89dc358fc8ec16b3ebb8907e563e23e29072902e7b41bcc390e846584de, file is 0ba40c45b450f152f5747cf1dcdefb160be333581d3a2cee4684e6969a80cf63
+  sidecar OMITS a line that was sent: 'Fineract-Platform-TenantId: gerege'
+  sidecar ASSERTS a line that was NOT sent: 'Fineract-Platform-TenantId: default'

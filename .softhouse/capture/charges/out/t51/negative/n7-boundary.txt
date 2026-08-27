@@ -1,0 +1,2 @@
+31-Dec reading 22014.25  1-Jan reading 22012.31
+fabricated observation 22013.00 -> matches 31-Dec: False  matches 1-Jan: False

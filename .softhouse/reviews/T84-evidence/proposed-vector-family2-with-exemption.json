@@ -1,0 +1,2507 @@
+{
+ "schema": "gerege.loanschedule.vector/v1",
+ "case_id": "T84-NONAMORT-B",
+ "context": "loanschedule",
+ "class": "parity",
+ "title": "PROPOSED BY T84, NOT PROMOTED. Gate G-8, SECOND FAMILY: MNT 0.01 over 108 monthly repayments at 600.0% p.a., strictly inside the graded domain, where the reference oracle emits a schedule whose principal column NEVER repays the disbursement (principal column sums to 0.00 against a 0.01 disbursement) and whose balance column is 0.01 on every row -- and the Go port reproduces it cell for cell.",
+ "dec1_revision": 12,
+ "_note": "PREPARED BY T84 to test whether `invariant_exemptions` is inert on the G-8 family, as T83 concluded from a single shape. NOT PROMOTED. Every expect cell is transcribed from capture case T84B-NSW-R600p0-N108-B1; the only transformation is exact textual major->minor scaling.",
+ "capabilities_required": [
+  "schedule.core"
+ ],
+ "graded_against": [
+  {
+   "id": "G8-NONAMORTIZING-PRINCIPAL-COLUMN",
+   "capability": "schedule.core",
+   "description": "An implementation that amortizes the principal on this shape returns a principal column summing to the disbursement; the reference oracle returns one summing to zero. Measured over 22 graded-domain cells at 600.0% p.a. / MNT 0.01 / n >= 104.",
+   "margin_minor": "1",
+   "evidence": "T84 Path A capture /tmp/t84probe2/out/capture-t84b-raw.json, calibrated against pass 3g's committed T64-ZP-A / T64-ZP-B cell for cell."
+  }
+ ],
+ "retires_when_capability_graded": "",
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from T84's independent Path A capture.",
+  "capture_ref": ".softhouse/reviews/T84-evidence/out/capture-t84b-raw.json",
+  "capture_sha256": "3877bbcf32ec8de29c91ad44a372c256dd18a3d3d9692dfbc78136f8be40d9d4",
+  "capture_case_id": "T84B-NSW-R600p0-N108-B1",
+  "citation": ""
+ },
+ "oracle": {
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+  "seam": "path_a_embeddable",
+  "captured_at": "2026-08-20T12:51:55.287988805Z",
+  "threaded_mathcontext": {
+   "precision": 19,
+   "rounding_mode": "HALF_UP"
+  },
+  "ambient_mathcontext": {
+   "precision": 19,
+   "rounding_mode": "HALF_UP"
+  }
+ },
+ "request": {
+  "time_zone": "Asia/Ulaanbaatar",
+  "currency": {
+   "code": "MNT",
+   "minor_unit_digits": 2
+  },
+  "rounding": {
+   "significant_digits": 19,
+   "rate_factor_scale": 19,
+   "mode": "HALF_UP"
+  },
+  "schedule_start_date": {
+   "year": 2024,
+   "month": 1,
+   "day": 1
+  },
+  "disbursements": [
+   {
+    "date": {
+     "year": 2024,
+     "month": 1,
+     "day": 1
+    },
+    "amount_minor": "1"
+   }
+  ],
+  "number_of_repayments": 108,
+  "repayment_every": 1,
+  "repayment_frequency_unit": "MONTHS",
+  "annual_nominal_interest_rate": {
+   "numerator": 6,
+   "denominator": 1
+  },
+  "interest_method": "DECLINING_BALANCE",
+  "day_count": "FIXED_30_360",
+  "down_payment_percentage": {
+   "numerator": 0,
+   "denominator": 1
+  },
+  "installment_rounding_multiple_minor": "0"
+ },
+ "expect": {
+  "kind": "schedule",
+  "sentinel": "",
+  "last_repayment_due_date": null,
+  "observed_total_interest_minor": "1",
+  "periods": [
+   {
+    "kind": "DISBURSEMENT",
+    "installment_number": 0,
+    "from_date": {
+     "year": 2024,
+     "month": 1,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 1,
+     "day": 1
+    },
+    "principal_minor": "1",
+    "principal_major_text": "0.01",
+    "interest_minor": "",
+    "interest_major_text": "",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [
+     "installment_number",
+     "interest_minor"
+    ],
+    "observed_total_due_minor": null
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 1,
+    "from_date": {
+     "year": 2024,
+     "month": 1,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 2,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 2,
+    "from_date": {
+     "year": 2024,
+     "month": 2,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 3,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 3,
+    "from_date": {
+     "year": 2024,
+     "month": 3,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 4,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 4,
+    "from_date": {
+     "year": 2024,
+     "month": 4,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 5,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 5,
+    "from_date": {
+     "year": 2024,
+     "month": 5,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 6,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 6,
+    "from_date": {
+     "year": 2024,
+     "month": 6,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 7,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 7,
+    "from_date": {
+     "year": 2024,
+     "month": 7,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 8,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 8,
+    "from_date": {
+     "year": 2024,
+     "month": 8,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 9,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 9,
+    "from_date": {
+     "year": 2024,
+     "month": 9,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 10,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 10,
+    "from_date": {
+     "year": 2024,
+     "month": 10,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 11,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 11,
+    "from_date": {
+     "year": 2024,
+     "month": 11,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 12,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 12,
+    "from_date": {
+     "year": 2024,
+     "month": 12,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2025,
+     "month": 1,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 13,
+    "from_date": {
+     "year": 2025,
+     "month": 1,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2025,
+     "month": 2,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 14,
+    "from_date": {
+     "year": 2025,
+     "month": 2,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2025,
+     "month": 3,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 15,
+    "from_date": {
+     "year": 2025,
+     "month": 3,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2025,
+     "month": 4,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 16,
+    "from_date": {
+     "year": 2025,
+     "month": 4,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2025,
+     "month": 5,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 17,
+    "from_date": {
+     "year": 2025,
+     "month": 5,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2025,
+     "month": 6,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 18,
+    "from_date": {
+     "year": 2025,
+     "month": 6,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2025,
+     "month": 7,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 19,
+    "from_date": {
+     "year": 2025,
+     "month": 7,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2025,
+     "month": 8,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 20,
+    "from_date": {
+     "year": 2025,
+     "month": 8,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2025,
+     "month": 9,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 21,
+    "from_date": {
+     "year": 2025,
+     "month": 9,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2025,
+     "month": 10,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 22,
+    "from_date": {
+     "year": 2025,
+     "month": 10,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2025,
+     "month": 11,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 23,
+    "from_date": {
+     "year": 2025,
+     "month": 11,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2025,
+     "month": 12,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 24,
+    "from_date": {
+     "year": 2025,
+     "month": 12,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2026,
+     "month": 1,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 25,
+    "from_date": {
+     "year": 2026,
+     "month": 1,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2026,
+     "month": 2,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 26,
+    "from_date": {
+     "year": 2026,
+     "month": 2,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2026,
+     "month": 3,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 27,
+    "from_date": {
+     "year": 2026,
+     "month": 3,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2026,
+     "month": 4,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 28,
+    "from_date": {
+     "year": 2026,
+     "month": 4,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2026,
+     "month": 5,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 29,
+    "from_date": {
+     "year": 2026,
+     "month": 5,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2026,
+     "month": 6,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 30,
+    "from_date": {
+     "year": 2026,
+     "month": 6,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2026,
+     "month": 7,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 31,
+    "from_date": {
+     "year": 2026,
+     "month": 7,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2026,
+     "month": 8,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 32,
+    "from_date": {
+     "year": 2026,
+     "month": 8,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2026,
+     "month": 9,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 33,
+    "from_date": {
+     "year": 2026,
+     "month": 9,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2026,
+     "month": 10,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 34,
+    "from_date": {
+     "year": 2026,
+     "month": 10,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2026,
+     "month": 11,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 35,
+    "from_date": {
+     "year": 2026,
+     "month": 11,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2026,
+     "month": 12,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 36,
+    "from_date": {
+     "year": 2026,
+     "month": 12,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2027,
+     "month": 1,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 37,
+    "from_date": {
+     "year": 2027,
+     "month": 1,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2027,
+     "month": 2,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 38,
+    "from_date": {
+     "year": 2027,
+     "month": 2,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2027,
+     "month": 3,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 39,
+    "from_date": {
+     "year": 2027,
+     "month": 3,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2027,
+     "month": 4,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 40,
+    "from_date": {
+     "year": 2027,
+     "month": 4,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2027,
+     "month": 5,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 41,
+    "from_date": {
+     "year": 2027,
+     "month": 5,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2027,
+     "month": 6,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 42,
+    "from_date": {
+     "year": 2027,
+     "month": 6,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2027,
+     "month": 7,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 43,
+    "from_date": {
+     "year": 2027,
+     "month": 7,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2027,
+     "month": 8,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 44,
+    "from_date": {
+     "year": 2027,
+     "month": 8,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2027,
+     "month": 9,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 45,
+    "from_date": {
+     "year": 2027,
+     "month": 9,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2027,
+     "month": 10,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 46,
+    "from_date": {
+     "year": 2027,
+     "month": 10,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2027,
+     "month": 11,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 47,
+    "from_date": {
+     "year": 2027,
+     "month": 11,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2027,
+     "month": 12,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 48,
+    "from_date": {
+     "year": 2027,
+     "month": 12,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2028,
+     "month": 1,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 49,
+    "from_date": {
+     "year": 2028,
+     "month": 1,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2028,
+     "month": 2,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 50,
+    "from_date": {
+     "year": 2028,
+     "month": 2,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2028,
+     "month": 3,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 51,
+    "from_date": {
+     "year": 2028,
+     "month": 3,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2028,
+     "month": 4,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 52,
+    "from_date": {
+     "year": 2028,
+     "month": 4,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2028,
+     "month": 5,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 53,
+    "from_date": {
+     "year": 2028,
+     "month": 5,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2028,
+     "month": 6,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 54,
+    "from_date": {
+     "year": 2028,
+     "month": 6,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2028,
+     "month": 7,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 55,
+    "from_date": {
+     "year": 2028,
+     "month": 7,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2028,
+     "month": 8,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 56,
+    "from_date": {
+     "year": 2028,
+     "month": 8,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2028,
+     "month": 9,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 57,
+    "from_date": {
+     "year": 2028,
+     "month": 9,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2028,
+     "month": 10,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 58,
+    "from_date": {
+     "year": 2028,
+     "month": 10,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2028,
+     "month": 11,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 59,
+    "from_date": {
+     "year": 2028,
+     "month": 11,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2028,
+     "month": 12,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 60,
+    "from_date": {
+     "year": 2028,
+     "month": 12,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2029,
+     "month": 1,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 61,
+    "from_date": {
+     "year": 2029,
+     "month": 1,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2029,
+     "month": 2,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 62,
+    "from_date": {
+     "year": 2029,
+     "month": 2,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2029,
+     "month": 3,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 63,
+    "from_date": {
+     "year": 2029,
+     "month": 3,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2029,
+     "month": 4,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 64,
+    "from_date": {
+     "year": 2029,
+     "month": 4,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2029,
+     "month": 5,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 65,
+    "from_date": {
+     "year": 2029,
+     "month": 5,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2029,
+     "month": 6,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 66,
+    "from_date": {
+     "year": 2029,
+     "month": 6,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2029,
+     "month": 7,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 67,
+    "from_date": {
+     "year": 2029,
+     "month": 7,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2029,
+     "month": 8,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 68,
+    "from_date": {
+     "year": 2029,
+     "month": 8,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2029,
+     "month": 9,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 69,
+    "from_date": {
+     "year": 2029,
+     "month": 9,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2029,
+     "month": 10,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 70,
+    "from_date": {
+     "year": 2029,
+     "month": 10,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2029,
+     "month": 11,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 71,
+    "from_date": {
+     "year": 2029,
+     "month": 11,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2029,
+     "month": 12,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 72,
+    "from_date": {
+     "year": 2029,
+     "month": 12,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2030,
+     "month": 1,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 73,
+    "from_date": {
+     "year": 2030,
+     "month": 1,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2030,
+     "month": 2,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 74,
+    "from_date": {
+     "year": 2030,
+     "month": 2,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2030,
+     "month": 3,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 75,
+    "from_date": {
+     "year": 2030,
+     "month": 3,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2030,
+     "month": 4,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 76,
+    "from_date": {
+     "year": 2030,
+     "month": 4,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2030,
+     "month": 5,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 77,
+    "from_date": {
+     "year": 2030,
+     "month": 5,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2030,
+     "month": 6,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 78,
+    "from_date": {
+     "year": 2030,
+     "month": 6,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2030,
+     "month": 7,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 79,
+    "from_date": {
+     "year": 2030,
+     "month": 7,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2030,
+     "month": 8,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 80,
+    "from_date": {
+     "year": 2030,
+     "month": 8,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2030,
+     "month": 9,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 81,
+    "from_date": {
+     "year": 2030,
+     "month": 9,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2030,
+     "month": 10,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 82,
+    "from_date": {
+     "year": 2030,
+     "month": 10,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2030,
+     "month": 11,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 83,
+    "from_date": {
+     "year": 2030,
+     "month": 11,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2030,
+     "month": 12,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 84,
+    "from_date": {
+     "year": 2030,
+     "month": 12,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2031,
+     "month": 1,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 85,
+    "from_date": {
+     "year": 2031,
+     "month": 1,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2031,
+     "month": 2,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 86,
+    "from_date": {
+     "year": 2031,
+     "month": 2,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2031,
+     "month": 3,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 87,
+    "from_date": {
+     "year": 2031,
+     "month": 3,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2031,
+     "month": 4,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 88,
+    "from_date": {
+     "year": 2031,
+     "month": 4,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2031,
+     "month": 5,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 89,
+    "from_date": {
+     "year": 2031,
+     "month": 5,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2031,
+     "month": 6,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 90,
+    "from_date": {
+     "year": 2031,
+     "month": 6,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2031,
+     "month": 7,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 91,
+    "from_date": {
+     "year": 2031,
+     "month": 7,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2031,
+     "month": 8,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 92,
+    "from_date": {
+     "year": 2031,
+     "month": 8,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2031,
+     "month": 9,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 93,
+    "from_date": {
+     "year": 2031,
+     "month": 9,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2031,
+     "month": 10,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 94,
+    "from_date": {
+     "year": 2031,
+     "month": 10,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2031,
+     "month": 11,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 95,
+    "from_date": {
+     "year": 2031,
+     "month": 11,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2031,
+     "month": 12,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 96,
+    "from_date": {
+     "year": 2031,
+     "month": 12,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2032,
+     "month": 1,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 97,
+    "from_date": {
+     "year": 2032,
+     "month": 1,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2032,
+     "month": 2,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 98,
+    "from_date": {
+     "year": 2032,
+     "month": 2,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2032,
+     "month": 3,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 99,
+    "from_date": {
+     "year": 2032,
+     "month": 3,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2032,
+     "month": 4,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 100,
+    "from_date": {
+     "year": 2032,
+     "month": 4,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2032,
+     "month": 5,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 101,
+    "from_date": {
+     "year": 2032,
+     "month": 5,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2032,
+     "month": 6,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 102,
+    "from_date": {
+     "year": 2032,
+     "month": 6,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2032,
+     "month": 7,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 103,
+    "from_date": {
+     "year": 2032,
+     "month": 7,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2032,
+     "month": 8,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 104,
+    "from_date": {
+     "year": 2032,
+     "month": 8,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2032,
+     "month": 9,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 105,
+    "from_date": {
+     "year": 2032,
+     "month": 9,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2032,
+     "month": 10,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 106,
+    "from_date": {
+     "year": 2032,
+     "month": 10,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2032,
+     "month": 11,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 107,
+    "from_date": {
+     "year": 2032,
+     "month": 11,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2032,
+     "month": 12,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 108,
+    "from_date": {
+     "year": 2032,
+     "month": 12,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2033,
+     "month": 1,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "1",
+    "interest_major_text": "0.01",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "1"
+   }
+  ]
+ },
+ "invariant_exemptions": [
+  {
+   "invariant": "principal_amortizes_to_zero",
+   "reason": "GATE G-8, second family. The reference oracle emits a schedule for this graded-domain shape whose principal column never repays the disbursement; the Go port reproduces it cell for cell, so the divergence is not port-vs-oracle."
+  },
+  {
+   "invariant": "principal_portions_sum_to_disbursed",
+   "reason": "GATE G-8, second family. Same shape: the oracle's own principal column sums to 0.00 against a 0.01 disbursement, and the port agrees."
+  },
+  {
+   "invariant": "balance_roll_forward",
+   "reason": "GATE G-8, second family. The balance column is constant at the disbursed amount on every row."
+  }
+ ]
+}

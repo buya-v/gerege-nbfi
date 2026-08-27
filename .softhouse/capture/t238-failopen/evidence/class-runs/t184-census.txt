@@ -1,0 +1,20 @@
+.softhouse/reviews/T184-evidence/t184-census.sh: line 4: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8: No such file or directory
+=== RULE (mine): a request body is (a) *.json whose PARENT DIRECTORY is named 'req',
+===              at any depth under .softhouse/capture, or (b) any *.req at any depth.
+
+-- (a) *.json under a dir named req:
+   req directories: 10
+   .json bodies:    348
+-- (b) *.req anywhere under capture:
+   .req files:      35
+-- rigs (first path component under .softhouse/capture that contributes >=1 body):
+   rigs:            6
+actualactual audit-t44 charges leapboundary pathb tierA-a2 
+
+=== .java census, my rule: every *.java under the repo root, pruning
+===   .git node_modules build .gradle AND .claude/worktrees
+   .java files:     63
+   directories:     24
+
+=== independent numeric-token count with jq (a different JSON parser entirely)
+jq present: jq-1.7.1-apple

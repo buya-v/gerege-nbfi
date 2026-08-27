@@ -1,0 +1,64 @@
+T206 item (c) -- T57-promote-emi-vectors.py's bare `assert` invariants vanish under
+`python3 -O`; converted to `require(cond, msg)` = `if not cond: sys.exit(msg)`.
+
+SETUP (real depth, per P-36): scratch mirror <scratch>/.softhouse/{handoff,capture/emiloop,
+capture/out,vectors}, all read-only inputs staged from `git show HEAD:...` (immutable):
+  .softhouse/handoff/T57-prefix.py    <- git show HEAD:.softhouse/handoff/T57-promote-emi-vectors.py
+  .softhouse/handoff/T57-postfix.py   <- working tree copy (this task's fix)
+  .softhouse/handoff/t203_store_guard.py <- copied verbatim (needed: T57 imports it)
+  .softhouse/capture/emiloop/noloop_model.py <- git show HEAD:...
+  .softhouse/capture/out/capture-prod3c-raw.json <- git show HEAD:...
+  .softhouse/vectors/PIN.json <- git show HEAD:...
+Runner (t206-c-runner.py) imports the named module via importlib (module-level code runs;
+`main()` is NEVER called, so no write path -- guarded or not -- is ever reached), corrupts
+one precondition field on the already-loaded in-memory capture (mathContextPrecision:
+19 -> 12, i.e. "this capture was not taken at the ratified production MathContext"), and
+calls `build(case_id)` directly.
+
+=== PRE-FIX, no -O ===
+RESULT: BUILD REFUSED via AssertionError('P-EMI-6-1M014632')
+exit=0 (the runner process itself exits 0 having CAUGHT the exception and printed it)
+
+=== PRE-FIX, with -O ===
+RESULT: BUILD SUCCEEDED -- precondition on 'mathContextPrecision' did NOT fire
+exit=0
+
+    ^ THE DEFECT, MEASURED: under `-O` the bare `assert` compiles to a no-op, so a
+    capture whose MathContext does NOT match the ratified production setting
+    (19, HALF_UP) -- CLAUDE.md's own pinned setting -- would build INTO a vector
+    silently, with no signal at all that any precondition was skipped.
+
+=== POST-FIX, no -O ===
+RESULT: BUILD REFUSED via SystemExit('P-EMI-6-1M014632')
+
+=== POST-FIX, with -O ===
+RESULT: BUILD REFUSED via SystemExit('P-EMI-6-1M014632')
+
+    ^ THE FIX HOLDS UNDER -O: `require()` is `if not cond: sys.exit(msg)`, and neither
+    `if` nor `sys.exit` is touched by `-O` (`-O` strips only `assert` statements and
+    `__debug__`-gated code; see CPython docs). Identical refusal with or without the
+    flag.
+
+=== NON-VACUITY: same field set back to its correct value (19), post-fix ===
+no -O : RESULT: BUILD SUCCEEDED -- precondition on 'mathContextPrecision' did NOT fire
+with -O: RESULT: BUILD SUCCEEDED -- precondition on 'mathContextPrecision' did NOT fire
+
+    (message wording is generic across both runner modes; "did NOT fire" here means
+    "did not need to fire", i.e. build succeeded because the value WAS correct -- the
+    fix does not over-refuse.)
+
+=== CONTENT-PRESERVING REFACTOR, PROVED NOT JUST ASSERTED ===
+build_compare.py: for both PROMOTE case ids, build(case_id) from the pre-fix module and
+the post-fix module, json.dumps(..., indent=2, ensure_ascii=False) each, and diff:
+  P-EMI-6-1M014632 IDENTICAL
+  P-EMI-36-127704 IDENTICAL
+So converting `assert` -> `require` changed no emitted vector byte.
+
+CLASSIFIER (read-only invocation of .softhouse/reviews/t179-guard-classifier/guard_classify.py,
+no edits made there): T57-promote-emi-vectors.py + t203_store_guard.py -> 0 unguarded sites,
+exit 0, unchanged from before this fix (the assert->require conversion is invisible to this
+classifier either way, since it classifies MUTATION call sites, not invariant checks).
+
+The REAL repo script (.softhouse/handoff/T57-promote-emi-vectors.py) still refuses cleanly
+with no --authorise flag when run for real (guard's live-store default-deny fires, "NOTHING
+was written"); `.softhouse/vectors` untouched (git status --porcelain clean).

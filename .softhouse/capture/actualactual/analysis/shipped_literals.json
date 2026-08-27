@@ -1,0 +1,73 @@
+{
+  "what": "Literals TRANSCRIBED from Fineract's own shipped unit tests at the pinned commit 426a23544e8426a38ae43ae404670a0a7e85b9eb. Every number below is copied character for character from the cited file:line. NOTHING here is computed, extrapolated or interpolated -- transcription is not derivation.",
+  "source_file": "fineract-progressive-loan/src/test/java/org/apache/fineract/portfolio/loanproduct/calc/ProgressiveEMICalculatorTest.java",
+  "shipped_test_settings": {
+    "threadedMathContext": "new MathContext(12, RoundingMode.HALF_EVEN) [ProgressiveEMICalculatorTest.java:76]",
+    "ambientMoneyHelper": "mocked to RoundingMode.HALF_EVEN and MathContext(12, HALF_EVEN) [:97-98]",
+    "currency": "new CurrencyData(\"USD\", \"USD\", 2, 1, \"$\", \"USD\") [:79]",
+    "note": "These are NOT the ratified production settings (19, HALF_UP). Reproducing them is a RIG CALIBRATION and nothing else; none of these numbers is a parity vector."
+  },
+  "checkPeriod_signature": "checkPeriod(model, repaymentPeriodIndex, emi, dueInterest, duePrincipal, outstandingBalance, fullyRepaid)",
+  "cases": {
+    "T48-CAL-S1": {
+      "source": "ProgressiveEMICalculatorTest.java:3012-3017 (test_leap_year_only_actual_for_loan_S1)",
+      "checkPeriod_emi_dueInterest_duePrincipal_outstandingBalance": [
+        [1713.21, 80.53, 1632.68, 8367.32],
+        [1713.21, 67.38, 1645.83, 6721.49],
+        [1713.21, 50.50, 1662.71, 5058.78],
+        [1713.21, 40.74, 1672.47, 3386.31],
+        [1713.21, 26.39, 1686.82, 1699.49],
+        [1713.18, 13.69, 1699.49, 0.00]
+      ]
+    },
+    "T48-CAL-S2": {
+      "source": "ProgressiveEMICalculatorTest.java:3052-3055 (test_leap_year_only_actual_for_loan_S2)",
+      "checkPeriod_emi_dueInterest_duePrincipal_outstandingBalance": [
+        [3845.41, 152.88, 3692.53, 11307.47],
+        [3845.41, 115.24, 3730.17, 7577.30],
+        [3845.41, 74.74, 3770.67, 3806.63],
+        [3845.43, 38.80, 3806.63, 0.00]
+      ]
+    },
+    "T48-CAL-S3": {
+      "source": "ProgressiveEMICalculatorTest.java:3090-3095 (test_leap_year_only_actual_for_loan_S3)",
+      "checkPeriod_emi_dueInterest_duePrincipal_outstandingBalance": [
+        [46348.39, 9061.64, 37286.75, 207713.25],
+        [46348.39, 7938.63, 38409.76, 169303.49],
+        [46348.39, 6470.64, 39877.75, 129425.74],
+        [46348.39, 4614.77, 41733.62, 87692.12],
+        [46348.39, 3351.52, 42996.87, 44695.25],
+        [46348.36, 1653.11, 44695.25, 0.00]
+      ]
+    },
+    "T48-CAL-S4": {
+      "source": "ProgressiveEMICalculatorTest.java:3131-3136 (test_leap_year_only_actual_for_loan_S4)",
+      "checkPeriod_emi_dueInterest_duePrincipal_outstandingBalance": [
+        [420.24, 20.12, 400.12, 2049.88],
+        [420.24, 17.39, 402.85, 1647.03],
+        [420.24, 13.97, 406.27, 1240.76],
+        [420.24, 9.51, 410.73, 830.03],
+        [420.24, 7.04, 413.20, 416.83],
+        [420.25, 3.42, 416.83, 0.00]
+      ]
+    },
+    "T48-CAL-S5": {
+      "source": "ProgressiveEMICalculatorTest.java:3172-3177 (test_leap_year_only_actual_for_loan_S5)",
+      "checkPeriod_emi_dueInterest_duePrincipal_outstandingBalance": [
+        [867.68, 58.49, 809.19, 4190.81],
+        [867.68, 49.03, 818.65, 3372.16],
+        [867.68, 38.80, 828.88, 2543.28],
+        [867.68, 29.75, 837.93, 1705.35],
+        [867.68, 19.95, 847.73, 857.62],
+        [867.65, 10.03, 857.62, 0.00]
+      ]
+    }
+  },
+  "embeddable_seam_literal": {
+    "source": "fineract-progressive-loan-embeddable-schedule-generator/src/test/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/EmbeddableProgressiveLoanScheduleGeneratorTest.java:74-77",
+    "loanTermInDays": 182,
+    "totalDisbursedAmount": 100.00,
+    "totalInterestAmount": 2.05,
+    "totalRepaymentAmount": 102.05
+  }
+}

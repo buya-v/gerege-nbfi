@@ -1,0 +1,13 @@
+{
+ "name": "T48 flat OVERDUE_INSTALLMENT (chargeTimeType 9)",
+ "chargeAppliesTo": 1,
+ "chargeTimeType": 9,
+ "chargeCalculationType": 1,
+ "chargePaymentMode": 0,
+ "currencyCode": "MNT",
+ "amount": 1200,
+ "active": true,
+ "penalty": false,
+ "locale": "en",
+ "monthDayFormat": "dd MMM"
+}

@@ -1,0 +1,73 @@
+T108 supplementary probes
+run at 2026-08-21T00:55:15Z
+host   Darwin 25.5.0 arm64
+bsd    grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+ccfn   ugrep 7.5.0 aarch64-apple-macosx +neon/AArch64; -P:pcre2jit; -z:zlib,bzip2,zstd,brotli,7z,tar/pax/cpio/zip
+CC_BIN /Users/buv/.local/share/claude/versions/2.1.233
+------------------------------------------------------------
+== A. verbatim stdout + exit status, decisive shapes ==
+
+FILE t80-exact-repro.txt
+PATTERN [unbound variable]   true count on this file: 1
+  bsd        -c   utf8    -> stdout=[0] exit=1
+  bsd        -c   posixC  -> stdout=[1] exit=0
+  bsd        -ac  utf8    -> stdout=[0] exit=1
+  bsd        -ac  posixC  -> stdout=[1] exit=0
+  ccfn       -c   utf8    -> stdout=[] exit=1
+  ccfn       -c   posixC  -> stdout=[] exit=1
+  ccfn       -ac  utf8    -> stdout=[1] exit=0
+  ccfn       -ac  posixC  -> stdout=[1] exit=0
+
+FILE s06-e2-same-line-before.txt
+PATTERN [TARGET]   true count on this file: 1
+  bsd        -c   utf8    -> stdout=[0] exit=1
+  bsd        -c   posixC  -> stdout=[1] exit=0
+  bsd        -ac  utf8    -> stdout=[0] exit=1
+  bsd        -ac  posixC  -> stdout=[1] exit=0
+  ccfn       -c   utf8    -> stdout=[] exit=1
+  ccfn       -c   posixC  -> stdout=[] exit=1
+  ccfn       -ac  utf8    -> stdout=[1] exit=0
+  ccfn       -ac  posixC  -> stdout=[1] exit=0
+------------------------------------------------------------
+== B. the -q / -qF / -l forms the rigs actually use ==
+FILE t80-exact-repro.txt  PATTERN [unbound variable]  (PRESENT: true answer is 'found')
+  bsd    -q    utf8    -> exit=1 ABSENT(WRONG)  stdout=[]
+  bsd    -q    posixC  -> exit=0 FOUND(correct) stdout=[]
+  bsd    -qa   utf8    -> exit=1 ABSENT(WRONG)  stdout=[]
+  bsd    -qa   posixC  -> exit=0 FOUND(correct) stdout=[]
+  bsd    -qF   utf8    -> exit=1 ABSENT(WRONG)  stdout=[]
+  bsd    -qF   posixC  -> exit=0 FOUND(correct) stdout=[]
+  bsd    -qaF  utf8    -> exit=1 ABSENT(WRONG)  stdout=[]
+  bsd    -qaF  posixC  -> exit=0 FOUND(correct) stdout=[]
+  ccfn   -q    utf8    -> exit=1 ABSENT(WRONG)  stdout=[]
+  ccfn   -q    posixC  -> exit=1 ABSENT(WRONG)  stdout=[]
+  ccfn   -qa   utf8    -> exit=0 FOUND(correct) stdout=[]
+  ccfn   -qa   posixC  -> exit=0 FOUND(correct) stdout=[]
+  ccfn   -qF   utf8    -> exit=1 ABSENT(WRONG)  stdout=[]
+  ccfn   -qF   posixC  -> exit=1 ABSENT(WRONG)  stdout=[]
+  ccfn   -qaF  utf8    -> exit=0 FOUND(correct) stdout=[]
+  ccfn   -qaF  posixC  -> exit=0 FOUND(correct) stdout=[]
+  bsd    -l    utf8    -> exit=1 ABSENT(WRONG)  stdout=[]
+  bsd    -l    posixC  -> exit=0 FOUND(correct) stdout=[/Users/buv/gerege-nbfi/.claude/worktrees/agent-a27d19378919db7ce/.softhouse/capture/t108-grep/corpus/t80-exact-repro.txt]
+  bsd    -al   utf8    -> exit=1 ABSENT(WRONG)  stdout=[]
+  bsd    -al   posixC  -> exit=0 FOUND(correct) stdout=[/Users/buv/gerege-nbfi/.claude/worktrees/agent-a27d19378919db7ce/.softhouse/capture/t108-grep/corpus/t80-exact-repro.txt]
+  ccfn   -l    utf8    -> exit=1 ABSENT(WRONG)  stdout=[]
+  ccfn   -l    posixC  -> exit=1 ABSENT(WRONG)  stdout=[]
+  ccfn   -al   utf8    -> exit=0 FOUND(correct) stdout=[/Users/buv/gerege-nbfi/.claude/worktrees/agent-a27d19378919db7ce/.softhouse/capture/t108-grep/corpus/t80-exact-repro.txt]
+  ccfn   -al   posixC  -> exit=0 FOUND(correct) stdout=[/Users/buv/gerege-nbfi/.claude/worktrees/agent-a27d19378919db7ce/.softhouse/capture/t108-grep/corpus/t80-exact-repro.txt]
+------------------------------------------------------------
+== C. does the Claude Code `grep` shell function reach inside a script? ==
+The function is defined in the Bash-tool's OWN interactive shell, from the
+session snapshot.  Shell functions are not exported to child processes, so a
+script invoked as `sh x.sh` / `bash x.sh` gets /usr/bin/grep instead.
+
+-- bash /tmp/t108-inner.sh
+  inside script: type -a grep ->
+    grep is /usr/bin/grep
+  inside script: grep --version -> grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+-- sh /tmp/t108-inner.sh
+  inside script: type -a grep ->
+    grep is /usr/bin/grep
+  inside script: grep --version -> grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+------------------------------------------------------------
+done

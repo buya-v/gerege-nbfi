@@ -1,0 +1,20 @@
+ journal_entries | max_journal_entry_id 
+-----------------+----------------------
+              60 |                   64
+(1 row)
+
+ closures | max_closure_id 
+----------+----------------
+        0 |               
+(1 row)
+
+ commands | max_command_id 
+----------+----------------
+      351 |            351
+(1 row)
+
+ journal_entry_transaction_ids 
+-------------------------------
+                            26
+(1 row)
+

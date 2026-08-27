@@ -1,0 +1,25 @@
+"""A REAL restoring guard, living in its own module."""
+import contextlib
+import os
+import shutil
+import tempfile
+import atexit
+
+
+@contextlib.contextmanager
+def preserved(path):
+    """Genuinely restores `path` on any exit — try/finally + byte-for-byte restore."""
+    backup = tempfile.mkstemp()[1]
+    shutil.copyfile(path, backup)
+    try:
+        yield
+    finally:
+        shutil.copyfile(backup, path)
+        os.unlink(backup)
+
+
+def install_restore(path):
+    """Registers a real atexit restore for `path`."""
+    backup = tempfile.mkstemp()[1]
+    shutil.copyfile(path, backup)
+    atexit.register(shutil.copyfile, backup, path)

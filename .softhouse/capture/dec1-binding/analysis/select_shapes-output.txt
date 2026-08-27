@@ -1,0 +1,61 @@
+T37 SHAPE SELECTION -- re-derivation only, NO ORACLE CONTACTED.
+Every figure below is a prediction used to choose what to capture.
+
+=== DEC-1 section 8 item 3 -- wrong reading: EMI re-adjust loop ABSENT (a port that never implements it)
+  SEPARATES  MNT  1,014,632 / 6   x   7.0%  start=2024-01-01   differing cells=17
+             revision 6 total interest =        20815.82   final installment =      172574.62
+             wrong reading            =        20815.82                       =      172574.67
+  SEPARATES  MNT    127,704 / 36  x  16.8%  start=2024-01-01   differing cells=122
+             revision 6 total interest =        35746.56   final installment =        4540.06
+             wrong reading            =        35746.69                       =        4540.54
+  identical   MNT    100,025 / 12  x  16.8%  start=2024-01-01   differing cells=0
+             revision 6 total interest =         9334.19   final installment =        9113.33
+             wrong reading            =         9334.19                       =        9113.33
+  identical   MNT  1,200,000 / 6   x  21.6%  start=2024-01-01   differing cells=0
+             revision 6 total interest =        76723.70   final installment =      212787.30
+             wrong reading            =        76723.70                       =      212787.30
+
+=== DEC-1 section 8 item 3a -- wrong reading: loop present but WITHOUT the strict adoption test (step 7 omitted)
+  SEPARATES  MNT    100,025 / 12  x  16.8%  start=2024-01-01   differing cells=39
+             revision 6 total interest =         9334.19   final installment =        9113.33
+             wrong reading            =         9334.17                       =        9113.20
+  identical   MNT  1,014,632 / 6   x   7.0%  start=2024-01-01   differing cells=0
+             revision 6 total interest =        20815.82   final installment =      172574.62
+             wrong reading            =        20815.82                       =      172574.62
+  identical   MNT    127,704 / 36  x  16.8%  start=2024-01-01   differing cells=0
+             revision 6 total interest =        35746.56   final installment =        4540.06
+             wrong reading            =        35746.56                       =        4540.06
+
+=== DEC-1 section 8 item 3b -- wrong reading: textbook `balance x rateFactor` interest (round-trip collapsed)
+  SEPARATES  MNT     13,202 / 6   x  16.8%  start=2024-01-01   differing cells=4
+             revision 6 total interest =          654.38   final installment =        2309.38
+             wrong reading            =          654.39                       =        2309.39
+  SEPARATES  MNT  3,924,149 / 6   x  16.8%  start=2024-01-31   differing cells=9
+             revision 6 total interest =       194510.78   final installment =      686443.28
+             wrong reading            =       194510.79                       =      686443.29
+  SEPARATES  MNT  1,814,727 / 6   x  21.6%  start=2024-01-31   differing cells=4
+             revision 6 total interest =       116027.14   final installment =      321792.34
+             wrong reading            =       116027.15                       =      321792.35
+
+=== DEC-1 section 8 item 3c -- wrong reading: n = NumberOfRepayments instead of |relatedRepaymentPeriods|
+  SEPARATES  MNT 10,548,069 / 6   x  16.8%  start=2024-01-01 disb=2024-02-01   differing cells=14
+             revision 6 total interest =       447124.73   final installment =     2199038.73
+             wrong reading            =       447124.73                       =     2199038.77
+  SEPARATES  MNT  1,222,552 / 6   x  18.5%  start=2024-01-01 disb=2024-02-01   differing cells=14
+             revision 6 total interest =        57119.68   final installment =      255934.32
+             wrong reading            =        57119.68                       =      255934.36
+  SEPARATES  MNT 13,549,647 / 6   x  21.6%  start=2024-01-01 disb=2024-02-01   differing cells=14
+             revision 6 total interest =       740381.83   final installment =     2858005.75
+             wrong reading            =       740381.83                       =     2858005.79
+
+=== DEC-1 section 8 item 3d -- wrong reading: day-count ratio hard-coded to 1 (no actual/calculated proration)
+  SEPARATES  MNT  1,200,000 / 6   x  21.6%  start=2024-01-01 disb=2024-01-15   differing cells=25
+             revision 6 total interest =        66528.72   final installment =      211088.97
+             wrong reading            =        76723.81                       =      212789.26
+  SEPARATES  MNT    127,704 / 36  x  16.8%  start=2024-01-01 disb=2024-01-20   differing cells=145
+             revision 6 total interest =        34373.07   final installment =        4543.82
+             wrong reading            =        35762.25                       =        4608.60
+  SEPARATES  MNT 50,000,000 / 12  x  18.5%  start=2024-01-01 disb=2024-01-02   differing cells=49
+             revision 6 total interest =      5123861.53   final installment =     4593674.35
+             wrong reading            =      5150923.81                       =     4596505.72
+

@@ -1,0 +1,51 @@
+=== [0] APPARATUS ===
+pinned pre-fix sha : 187e9726dfad5076f4b68877f411d7d218280889
+PRE  has nofloat.go : no
+POST has nofloat.go : no
+the injected probe  :
+    package loanschedule
+    
+    func t154InterestProbe(p int64) int64 { rate := 0.036 / 12.0; amt := rate * 1.0; return p + int64(amt) }
+    -- forbidden identifiers in it: 0
+
+=== [1] CONTROL — both trees clean, no probe ===
+  pre  build=0  no-float test=0  conformance=0
+OK    pre clean: go build 0
+OK    pre clean: no-float test 0
+OK    pre clean: conformance 0
+  post build=0  no-float test=0  conformance=0
+OK    post clean: go build 0
+OK    post clean: no-float test 0
+OK    post clean: conformance 0
+
+=== [2] WITH THE FLOAT LITERAL INJECTED ===
+  pre  build=0  no-float test=0  conformance=0   (wanted 0 / 0 / 0 — all three green on a float)
+  post build=0  no-float test=0  conformance=0   (wanted 0 / 1 / 2 — build still fine, guard RED, verdict RED)
+
+  --- what the PRE-fix guard said about the injected float ---
+      ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	0.276s
+      VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+  --- what the POST-fix guard says ---
+      VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+
+OK    PRE  probe: go build exit 0 — a float literal compiles, of course
+OK    PRE  probe: the no-float GUARD passed on a float — the finding
+OK    PRE  probe: conformance exit 0 on a float — the finding
+OK    POST probe: go build exit 0 — the fix does not break the build
+FAIL  POST probe: the no-float guard still passed
+FAIL  POST probe: conformance 0, wanted 2
+FAIL  POST probe: the guard did not name 0.036
+FAIL  POST probe: conformance did not name it
+
+=== [3] THE GUARD SPEAKS WHEN IT IS HAPPY, TOO (P-35) ===
+  A guard that reports only failures cannot be told apart from one that never ran.
+FAIL  POST clean conformance prints no census
+OK    PRE clean conformance printed NO census — the guard was silent whether or not it ran
+
+=== [4] THE REAL TREE WAS NEVER POISONED ===
+OK    no t154probe.go in the real tree — both arms ran in scratch trees
+OK    git status --porcelain -- nexus names no t154probe
+
+=======================================================================
+LEG 2 ROWS: 13 as wanted, 5 not as wanted
+=======================================================================

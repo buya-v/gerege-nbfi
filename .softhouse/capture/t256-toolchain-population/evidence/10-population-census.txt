@@ -1,0 +1,176 @@
+T256 TOOLCHAIN-PATH POPULATION CENSUS
+commit   : f3714851addbe20d94b4aa65aa42fba8b6a70cb3
+repo     : (path deliberately not printed — it is the very thing under audit)
+date     : 2026-08-23T02:10:56Z
+
+universe : 6690 tracked files at HEAD (selector: git ls-files)
+
+LITERAL 1  /Users/buv/gerege-nbfi/.softhouse/toolchain
+  matched : 63 tracked files
+LITERAL 2  /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh
+  matched : 41 tracked files
+UNION (deduplicated)
+  matched : 97 tracked files
+
+=== BUCKET 1 — LIVE harness (a future fire executes these): 1 ===
+.softhouse/bin/go-env.sh
+
+=== BUCKET 2 — ARCHIVED evidence instruments (no live instrument EXECUTES these): 61 ===
+  A TEXT SEARCH CANNOT TELL A SPECIMEN FROM A DEFECT; ONLY A READER CAN. T253's census
+  said this first and it still holds. Some members below hold the Mac path ON PURPOSE,
+  as the fixture they drive red — the hardcode is the thing under test, not a mistake:
+    .softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh    (T253's OLD_ENV_BODY)
+    .softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh
+                                                                         (this task's two vacuity arms)
+  and .softhouse/bin/go-env.sh, in BUCKET 1, carries it only inside the comment that
+  records the defect T253b removed. So this count RISES when someone writes a new red
+  drive, and a rise is not by itself evidence of a regression. The invariant that is
+  actually graded is the LIVE-HARNESS check further down, which must read zero.
+.softhouse/capture/pathb/t149/grade-scratch-store.sh
+.softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py
+.softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py
+.softhouse/capture/t154-nofloat/drive-leg2.sh
+.softhouse/capture/t154-nofloat/drive-leg3.sh
+.softhouse/capture/t219-g8-residual/src/bar-t219.sh
+.softhouse/capture/t239-r11-rerun/instruments/90-bar.sh
+.softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh
+.softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh
+.softhouse/capture/t243-wiring/instruments/30-citation-red-drive.sh
+.softhouse/capture/t243-wiring/instruments/90-bar.sh
+.softhouse/capture/t244-dec2-rev6/bar.sh
+.softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh
+.softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh
+.softhouse/capture/t61-halfeven/src/run-counterfactuals.py
+.softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py
+.softhouse/capture/t66-unrecognized-interest/gotest.sh
+.softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py
+.softhouse/capture/t83-nonamortizing/src/run-port.py
+.softhouse/capture/tierA-a2/red-green-a2-15.sh
+.softhouse/handoff/T61-mutations.py
+.softhouse/handoff/T61-sweep/run-sweep.py
+.softhouse/handoff/T8-run-conformance.sh
+.softhouse/reviews/T135-evidence/f2-canary-digests.sh
+.softhouse/reviews/T135-evidence/f2-prefix-pins.sh
+.softhouse/reviews/T155-probe/prove-ii-literals.sh
+.softhouse/reviews/T155-probe/prove-iii-census.sh
+.softhouse/reviews/T155-probe/prove-iiib-binary-direct.sh
+.softhouse/reviews/T155-probe/prove-ix-sweep-and-help.sh
+.softhouse/reviews/T155-probe/prove-v-census-counts.sh
+.softhouse/reviews/T155-probe/prove-vi-build-test-prove.sh
+.softhouse/reviews/T155-probe/prove-vii-residual-attacks.sh
+.softhouse/reviews/T155-probe/prove-viii-compiles-on-main.sh
+.softhouse/reviews/T155-probe/prove-x-removal-and-failclosed.sh
+.softhouse/reviews/T155-probe/prove-xi-microfix.sh
+.softhouse/reviews/T155-probe/prove-xii-perl-microfix.sh
+.softhouse/reviews/T155-probe/prove-xiii-deflation.sh
+.softhouse/reviews/T155-probe/rerun-t154-provers-postmerge.sh
+.softhouse/reviews/T155-probe/run-conformance.sh
+.softhouse/reviews/T184-evidence/t184-final.sh
+.softhouse/reviews/T184-evidence/t184-probe-green-catch.sh
+.softhouse/reviews/T184-evidence/t184-probe-green-float.sh
+.softhouse/reviews/T184-evidence/t184-probe-red-catch.sh
+.softhouse/reviews/T184-evidence/t184-probe-red-float.sh
+.softhouse/reviews/T184-evidence/t184-run.sh
+.softhouse/reviews/T184-evidence/t184-vacuity.sh
+.softhouse/reviews/T184-evidence/t184-vacuity2.sh
+.softhouse/reviews/T84-evidence/src/exemption-demo.py
+.softhouse/reviews/T84-evidence/src/run-port.py
+.softhouse/reviews/a2-31-dec2-rev4/probe-i4builder-redgreen.sh
+.softhouse/reviews/a2-34-review-a2-15/bar-and-oracle.sh
+.softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh
+.softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh
+.softhouse/reviews/a2-34-review-a2-15/red-drive-c-a2-34.sh
+.softhouse/reviews/a2-34-review-a2-15/run-bar.sh
+.softhouse/reviews/t246-dec2-rev6/bar.sh
+.softhouse/reviews/t246-dec2-rev6/drive-pin-red.sh
+.softhouse/reviews/t249-g14-scope/run-bar.sh
+.softhouse/reviews/t251-dec2-rev7/run-conformance.sh
+.softhouse/reviews/t254-harness-portability/instruments/30-goroot-stale-repro.sh
+.softhouse/reviews/t261-tenant-attestation/instruments/t261-bar.sh
+
+=== BUCKET 3 — PROSE / transcript records (must stay byte-identical): 35 ===
+  (with ONE exception, listed here and treated oppositely: .softhouse/reference-oracle.md
+   is not a record of what was run, it is an INSTRUCTION for what to run. See the
+   PRESCRIPTIVE SITES section at the end.)
+.softhouse/capture/t238-failopen/evidence/failopen-census.json
+.softhouse/capture/t238-failopen/transcripts/10-failopen-census.txt
+.softhouse/capture/t253-portability/evidence/30-d2-red-drive.txt
+.softhouse/capture/t253-portability/evidence/60-hardcoded-toolchain-census.txt
+.softhouse/capture/t256-toolchain-population/evidence/10-population-census.txt
+.softhouse/capture/t256-toolchain-population/evidence/30-portability-drive-GREEN.txt
+.softhouse/capture/t256-toolchain-population/evidence/31-vacuity-hardcode-present.txt
+.softhouse/capture/t256-toolchain-population/evidence/32-vacuity-hardcode-absent.txt
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T112.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T128.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T129.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T13.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T140.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T146.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T151.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T7.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T213.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T216-handoff.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T228-handoff.md
+.softhouse/handoff/T253-harness-portability.md
+.softhouse/handoff/T57-emi-smoothing-loop-vectors.md
+.softhouse/handoff/T8-promote-parity-vectors.md
+.softhouse/reference-oracle.md
+.softhouse/reviews/T107-review-of-T91.md
+.softhouse/reviews/T127-review-of-T109.md
+.softhouse/reviews/T129-review-of-T122.md
+.softhouse/reviews/T138-evidence/out/R10-GO.txt
+.softhouse/reviews/T150-review-of-T130.md
+.softhouse/reviews/T71-fui-marker-review.md
+.softhouse/reviews/T77-pathb-recapture-review.md
+.softhouse/reviews/t245-oracle-pin/measure-output.txt
+.softhouse/reviews/t254-harness-portability/evidence/10-mktemp-census.txt
+.softhouse/reviews/t254-harness-portability/evidence/30-goroot-stale-repro.txt
+.softhouse/tasks.json
+
+=== IS ANY ARCHIVED INSTRUMENT ACTUALLY INVOKED? (the claim that licenses leaving them alone) ===
+  INVOKED?  20-failopen-red-drive.sh  referenced by:
+            .softhouse/conformance.sh
+  INVOKED?  prove-ix-sweep-and-help.sh  referenced by:
+            .softhouse/conformance.sh
+  INVOKED?  drive-pin-red.sh  referenced by:
+            .softhouse/conformance.sh
+  archived instruments referenced anywhere in the live surface: 3
+  selector : grep -rl -F <basename> over [.softhouse/conformance.sh .softhouse/bin .softhouse/guards .softhouse/launchd]
+
+  READ THE HITS, DO NOT COUNT THEM. None of these is EXECUTED by the harness. They are
+  CITED by it — and one form of citation is load-bearing: conformance.sh's
+  HOSTSTATE_PIN_TEMP_ASSIGN_LIST pins archived instruments BY PATH AND BY THE EXACT
+  ASSIGNMENT LINE they contain, and guard_no_host_state_in_lint_corpus fails when the
+  repo census disagrees with the pin. So an archived instrument is graded INPUT to a
+  live guard. Editing one to look portable could turn the bar red with nothing wrong.
+  That is a SECOND, independent reason not to touch bucket 2, and it was found by
+  measuring a claim rather than asserting it.
+
+  A zero here would have been a statement about THAT search over THAT surface — never a
+  proof that no human will ever run one of these by hand (P-70).
+
+=== SKIPPED — matched the literal, fits no bucket above (P-40: counted, not dropped): 0 ===
+  (none — and that is a statement about the two extension lists above, not about the world)
+
+=== LIVE-HARNESS EXECUTABLE HARDCODE CHECK ===
+  clean    .softhouse/conformance.sh
+  clean    .softhouse/bin/go-env.sh
+  clean    .softhouse/bin/fire-program.sh
+  clean    .softhouse/bin/build-oracle-image.sh
+  clean    .softhouse/bin/rehydrate-check.sh
+  clean    .softhouse/guards/check-ledger-invariants.sh
+  clean    .softhouse/guards/drive-red-ledger-invariants.sh
+  live executable hardcodes: 0
+
+=== HOST-PATH SITES in .softhouse/reference-oracle.md ===
+  Each surviving site must be an OBSERVATION (what one host was measured to have) and
+  never an INSTRUCTION (what a reader should type). Deleting the observations would
+  destroy a recorded fact; leaving an instruction manufactures the next hardcode.
+  The instruction itself now lives between the T256-ACTIVATION-LINE markers and is
+  EXECUTED by 30-portability-red-drive.sh, which asserts it names no host at all —
+  so that one is graded by a drive, not by this grep.
+618:| `GOROOT` | **derived, never written down**: `$GEREGE_TOOLCHAIN/go`, where `GEREGE_TOOLCHAIN` = `<main checkout>/.softhouse/toolchain`. On the local fire's host that *resolved to* `/Users/buv/gerege-nbfi/.softhouse/toolchain/go`; that is an observation of one host, **not a value to paste**. |
+639:This row used to read `. /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh`. That was a defect of the
+
+census: done.

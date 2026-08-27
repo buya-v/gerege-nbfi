@@ -1,0 +1,2 @@
+P-46 QUOTE CHECK: 5 fenced line(s) checked, 0 not found in any committed transcript
+quote check exit 0

@@ -1,0 +1,6 @@
+POST /loans/5?command=writeoff
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-7-writeoff-228.json
+captured-at-utc: 2026-08-21T07:27:42Z

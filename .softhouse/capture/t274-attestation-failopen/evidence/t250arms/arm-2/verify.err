@@ -1,0 +1,19 @@
+ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-2/probe.http
+  the VERBATIM WIRE BLOCK itself disagrees with the record (see the line-level findings below); assertion-level diagnostics are WITHHELD because their position is defined relative to that block
+  sidecar OMITS a line the wire record and the committed artefacts derive (expected at line 9): 'Fineract-Platform-TenantId: gerege'
+  sidecar ASSERTS a line nothing derives (sidecar line 9): 'Fineract-Platform-TenantId: default'
+  sidecar OMITS a line the wire record and the committed artefacts derive (expected at line 13): 'request-headers-sha256: 0ba40c45b450f152f5747cf1dcdefb160be333581d3a2cee4684e6969a80cf63'
+  sidecar ASSERTS a line nothing derives (sidecar line 13): 'request-headers-sha256: f799d89dc358fc8ec16b3ebb8907e563e23e29072902e7b41bcc390e846584de'
+--- re-derived (expected) vs sidecar (actual) ---
+  --- re-derived
+  +++ probe.http
+  @@ -8,3 +8,3 @@
+   Authorization: Basic <redacted sha256:2614d66f727c25bb>
+  -Fineract-Platform-TenantId: gerege
+  +Fineract-Platform-TenantId: default
+   Content-Type: application/json
+  @@ -12,3 +12,3 @@
+   request-headers-artefact: probe.reqhdr
+  -request-headers-sha256: 0ba40c45b450f152f5747cf1dcdefb160be333581d3a2cee4684e6969a80cf63
+  +request-headers-sha256: f799d89dc358fc8ec16b3ebb8907e563e23e29072902e7b41bcc390e846584de
+   body-wire-bytes-artefact: probe.req

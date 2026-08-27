@@ -1,0 +1,5 @@
+KIND:     GUARD
+MUTATION: period 1's `periodNumber` KEY DELETED on a PAYABLE row. THIS IS THE DEFECT `or 0` ACTUALLY CAUSED: the old code evaluated `None or 0`, wrote installment_number 0, filed it under unrecorded_fields and promoted the vector without a word. An absent installment number on a payable row is a broken capture, not a value.
+PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+          vectors written to a SCRATCH dir, never to the store
+T74-E-P4: period[1] is a payable REPAYMENT row with NO periodNumber. The old form wrote 0 here via `p.get("periodNumber") or 0` and moved on, which is a missing input wearing a legitimate value's clothes.

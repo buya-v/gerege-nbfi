@@ -1,0 +1,53 @@
+go: go version go1.26.6 darwin/arm64
+conformance.sh EXIT = 0   (3 would mean wrong interpreter; not seen if not 3)
+
+=== STEP 1 (P-83): probe line PRESENCE, before any value is read ===
+  lines containing 'probe = ' : 1
+  PRESENT.
+
+=== STEP 2: the probe VALUE ===
+  conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+=== STEP 3: verdict, counts, pins ===
+<stdin>:15: DeprecationWarning: Flags not at the start of the expression '(?m)^.*invariant vio' (truncated)
+--- VERDICT (1 line(s))
+      VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+--- parity/cells (21 line(s))
+      cells
+      cells compared
+      cells
+      cells
+      cells
+      cells
+      cells
+      cells
+      cells
+      cells
+      cells
+      cells
+      cells
+      cells
+--- census pins (0 line(s))
+--- fail-open frontier (2 line(s))
+      conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a (git ls-files, whole repository); frontier 11, pinned at 11.
+      conformance:   frontier == pinned (all 11 rows, by path).
+--- refused (5 line(s))
+      schedule the CAPTURE recorded and must come back VIOLATED there, or the vector is refused.
+      refused — a port that satisfies an invariant the oracle violates has DIVERGED, and a
+      a grading-time question and nothing here asserts it. Three verdicts are INADMISSIBLE, refused
+      refused in Admit unless all three components resolve: the committed capture ARTEFACT exists
+      refused                 0   (no discriminating vector / seam blind — not a pass, not a failure)
+--- inadmissible (4 line(s))
+      is inadmissible, because a rig that silently rounded it would grade the port against a
+      ledger inadmissible     0
+      inadmissible today (A2-314, 403). An accrual vector needs a NEW accrual product on
+      inadmissible            0
+--- harness errors (2 line(s))
+      ledger harness errors   0
+      harness errors          0
+--- invariant (3 line(s))
+      --- INVARIANT ASSERTIONS THAT COULD NOT RUN (a cell the capture never recorded) ---
+      invariant violations    0
+      invariant assertions    0 NOT RUN (a cell nobody observed; listed above, never inferred)
+
+exit code: 0

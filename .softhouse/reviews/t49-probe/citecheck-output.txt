@@ -1,0 +1,3 @@
+distinct citations: 155 in-range checks passed: 329
+AMBIGUOUS basenames (multiple main files):
+BAD:

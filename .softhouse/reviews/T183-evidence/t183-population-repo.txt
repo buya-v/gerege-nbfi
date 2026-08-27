@@ -1,0 +1,107 @@
+=== R-T183 population
+python files parsed        : 386
+truncating write sites seen: 280
+
+./.softhouse/reviews/t41-probe/edit.py               :170   io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit10.py             :249   io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit11.py             :90    io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit12.py             :105   io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit13.py             :131   io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit14.py             :94    io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit16.py             :81    io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit17.py             :49    io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit18.py             :17    io.open(w)     ADR       via=backstep  ['nexus/internal/apps/loanschedule/contract/contract.go', 'docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit18.py             :17    io.open(w)     CONTRACT  via=backstep  ['nexus/internal/apps/loanschedule/contract/contract.go', 'docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit19.py             :66    io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit2.py              :116   io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit20.py             :21    io.open(w)     ADR       via=backstep  ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit21.py             :17    io.open(w)     ADR       via=backstep  ['docs/adr/DEC-1-schedule-generator-adapter.md', 'nexus/internal/apps/loanschedule/contract/contract.go']
+./.softhouse/reviews/t41-probe/edit21.py             :17    io.open(w)     CONTRACT  via=backstep  ['docs/adr/DEC-1-schedule-generator-adapter.md', 'nexus/internal/apps/loanschedule/contract/contract.go']
+./.softhouse/reviews/t41-probe/edit22.py             :65    io.open(w)     CONTRACT  via=const     ['nexus/internal/apps/loanschedule/contract/contract.go']
+./.softhouse/reviews/t41-probe/edit3.py              :82    io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit4.py              :50    io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit5.py              :113   io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit6.py              :123   io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit7.py              :81    io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit8.py              :169   io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit9.py              :99    io.open(w)     ADR       via=const     ['docs/adr/DEC-1-schedule-generator-adapter.md']
+./.softhouse/reviews/t41-probe/edit_go1.py           :196   io.open(w)     CONTRACT  via=const     ['nexus/internal/apps/loanschedule/contract/contract.go']
+./.softhouse/reviews/t41-probe/edit_go2.py           :92    io.open(w)     CONTRACT  via=const     ['nexus/internal/apps/loanschedule/contract/contract.go']
+./.softhouse/reviews/t41-probe/edit_go3.py           :118   io.open(w)     CONTRACT  via=const     ['nexus/internal/apps/loanschedule/contract/contract.go']
+./.softhouse/reviews/t41-probe/edit_go4.py           :32    io.open(w)     CONTRACT  via=const     ['nexus/internal/apps/loanschedule/contract/contract.go']
+
+PAIRS (my unit): 27   = ADR 20 + CONTRACT 7
+distinct FILES : 25
+distinct SITES : 27
+
+--- ADR pair files
+    ./.softhouse/reviews/t41-probe/edit.py
+    ./.softhouse/reviews/t41-probe/edit10.py
+    ./.softhouse/reviews/t41-probe/edit11.py
+    ./.softhouse/reviews/t41-probe/edit12.py
+    ./.softhouse/reviews/t41-probe/edit13.py
+    ./.softhouse/reviews/t41-probe/edit14.py
+    ./.softhouse/reviews/t41-probe/edit16.py
+    ./.softhouse/reviews/t41-probe/edit17.py
+    ./.softhouse/reviews/t41-probe/edit18.py
+    ./.softhouse/reviews/t41-probe/edit19.py
+    ./.softhouse/reviews/t41-probe/edit2.py
+    ./.softhouse/reviews/t41-probe/edit20.py
+    ./.softhouse/reviews/t41-probe/edit21.py
+    ./.softhouse/reviews/t41-probe/edit3.py
+    ./.softhouse/reviews/t41-probe/edit4.py
+    ./.softhouse/reviews/t41-probe/edit5.py
+    ./.softhouse/reviews/t41-probe/edit6.py
+    ./.softhouse/reviews/t41-probe/edit7.py
+    ./.softhouse/reviews/t41-probe/edit8.py
+    ./.softhouse/reviews/t41-probe/edit9.py
+--- CONTRACT pair files
+    ./.softhouse/reviews/t41-probe/edit18.py
+    ./.softhouse/reviews/t41-probe/edit21.py
+    ./.softhouse/reviews/t41-probe/edit22.py
+    ./.softhouse/reviews/t41-probe/edit_go1.py
+    ./.softhouse/reviews/t41-probe/edit_go2.py
+    ./.softhouse/reviews/t41-probe/edit_go3.py
+    ./.softhouse/reviews/t41-probe/edit_go4.py
+
+--- UNRESOLVED truncating writes still UNKNOWN under R-T183: 214
+    ./.softhouse/capture/actualactual/analysis/pathb-crosscheck.py:48 Path.write_text target=side
+    ./.softhouse/capture/audit-t44/charges/bin/analyse_probes.py:101 open(w) target=<expr>
+    ./.softhouse/capture/audit-t44/charges/bin/audit_recompute.py:325 open(w) target=out
+    ./.softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants.py:131 open(w) target=<expr>
+    ./.softhouse/capture/audit-t44/mathcontext/analysis/audit_recompute.py:224 open(w) target=<expr>
+    ./.softhouse/capture/charges/bin/attest-t40.py:134 open(w) target=<expr>
+    ./.softhouse/capture/charges/bin/attest-t40.py:465 open(w) target=path
+    ./.softhouse/capture/charges/bin/attest.py:113 open(w) target=<expr>
+    ./.softhouse/capture/charges/bin/attest.py:389 open(w) target=path
+    ./.softhouse/capture/charges/bin/t46-exacttext.py:117 Path.write_text target=sidecar
+    ./.softhouse/capture/charges/bin/t46-fix-paths.py:64 Path.write_text target=p
+    ./.softhouse/capture/charges/bin/t46-mark-superseded.py:76 Path.write_text target=p
+    ./.softhouse/capture/charges/bin/t46-mkcalcs.py:99 Path.write_text target=path
+    ./.softhouse/capture/charges/bin/t48-analyse.py:59 Path.write_text target=side
+    ./.softhouse/capture/charges/bin/t48-mkreq.py:73 Path.write_text target=<expr>
+    ./.softhouse/capture/charges/bin/t51-analyse.py:87 Path.write_text target=side
+    ./.softhouse/capture/leapboundary/analysis/T175-red/plant.py:77 open(w) target=p
+    ./.softhouse/capture/leapboundary/analysis/t55-analyse.py:81 open(w) target=<expr>
+    ./.softhouse/capture/lib/check_no_narrow_catch.py:173 open(w) target=<expr>
+    ./.softhouse/capture/lib/check_no_narrow_catch.py:189 open(w) target=<expr>
+    ./.softhouse/capture/lib/check_no_narrow_catch.py:206 open(w) target=<expr>
+    ./.softhouse/capture/lib/check_wire_float_roundtrip.py:202 open(w) target=<expr>
+    ./.softhouse/capture/mathcontext/analysis/t46_make_capture3.py:83 Path.write_text target=DST
+    ./.softhouse/capture/pathb/provenance.py:295 open(w) target=<expr>
+    ./.softhouse/capture/pathb/t147/mutate-blast-radius-provenance.py:52 open(w) target=path
+    ./.softhouse/capture/pathb/t149/promote-vector.py:254 open(w) target=out_path
+    ./.softhouse/capture/pathb/t149/prove-exit-trap.py:121 open(w) target=dst
+    ./.softhouse/capture/pathb/t149/prove-exit-trap.py:123 open(w) target=<expr>
+    ./.softhouse/capture/pathb/t149/prove-exit-trap.py:125 open(w) target=<expr>
+    ./.softhouse/capture/pathb/t22-audit/mkmode.py:23 open(w) target=<expr>
+    ./.softhouse/capture/pathb/t22-audit/mkmode.py:31 open(w) target=<expr>
+    ./.softhouse/capture/pathb/t22-audit/mkmode2.py:27 open(w) target=<expr>
+    ./.softhouse/capture/pathb/t22-audit/mkmode2.py:35 open(w) target=<expr>
+    ./.softhouse/capture/pathb/t22-audit/mkprobe.py:27 open(w) target=<expr>
+    ./.softhouse/capture/pathb/t22-probe/mkcalc.py:20 open(w) target=<expr>
+    ./.softhouse/capture/pathb/t22-probe/mkreq.py:24 open(w) target=<expr>
+    ./.softhouse/capture/pathb/t36/attest.py:255 open(w) target=_stamp
+    ./.softhouse/capture/pathb/t36/attest.py:257 open(w) target=<expr>
+    ./.softhouse/capture/pathb/t36/attest.py:559 open(w) target=path
+    ./.softhouse/capture/pathb/t80/prove-f1-recovery.py:176 open(w) target=<expr>

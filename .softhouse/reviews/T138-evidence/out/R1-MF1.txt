@@ -1,0 +1,184 @@
+PRE  verdict.sh sha256: 05cafe320078b958
+POST verdict.sh sha256: 62d30172523b3aa8
+baseline commits: PRE=ccf3c14171dea52bd044d81d5ca67aba8054b74c POST=bd59187cf83c7c7161db23668e91d45bd46be2a8
+
+==============================================================
+LEG 1 (RED, pre-MF-1): 10 of 13 transcripts are one content-free line
+==============================================================
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  truncated, nothing was ever run no        no         OK
+A2b-mutated-canary-default.txt                 truncated, nothing was ever run no        no         OK
+A2c-crafted-canary-and-expectation-gerege.txt  truncated, nothing was ever run no        no         OK
+A3a-swapped-canary-gerege.txt                  truncated, nothing was ever run no        no         OK
+A3b-missing-canary.txt                         truncated, nothing was ever run no        no         OK
+A3c-no-canary.txt                              truncated, nothing was ever run no        no         OK
+A4a-expect-override-default.txt                truncated, nothing was ever run no        no         OK
+A4b-expect-override-gerege.txt                 truncated, nothing was ever run no        no         OK
+A4c-decoy-variable.txt                         0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt                truncated, nothing was ever run no        no         OK
+A6-canary-is-a-directory.txt                   truncated, nothing was ever run no        no         OK
+A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+
+EXPECTATIONS NOT MET (3):
+A4c-decoy-variable.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A7-symlinked-canary.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+PRE_MF1_EXIT=1
+
+==============================================================
+LEG 2 (RED, post-MF-1): the SAME input
+==============================================================
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A2b-mutated-canary-default.txt                 -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A2c-crafted-canary-and-expectation-gerege.txt  -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A3a-swapped-canary-gerege.txt                  -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A3b-missing-canary.txt                         -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A3c-no-canary.txt                              -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A4a-expect-override-default.txt                -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A4b-expect-override-gerege.txt                 -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A4c-decoy-variable.txt                         0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt                -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A6-canary-is-a-directory.txt                   -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+
+EXPECTATIONS NOT MET (13):
+A2a-mutated-canary-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A2b-mutated-canary-default.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A2c-crafted-canary-and-expectation-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A3a-swapped-canary-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A3b-missing-canary.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A3c-no-canary.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A4a-expect-override-default.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A4b-expect-override-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A4c-decoy-variable.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A6-canary-is-a-directory.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A7-symlinked-canary.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+POST_MF1_EXIT=1
+ERROR rows: 20
+
+==============================================================
+LEG 3 (GREEN): the real PRE-fix transcripts, post-MF-1 scorer
+==============================================================
+--- prefix-livetwin-sh
+A5-helpful-correct-override.txt                0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+
+EXPECTATIONS NOT MET (6):
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+A2c-crafted-canary-and-expectation-gerege.txt ADMITS (printed the HALF_UP certification)
+A4c-decoy-variable.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A7-symlinked-canary.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+EXIT=1
+ADMITS count: 12
+--- prefix-livetwin-bash
+A5-helpful-correct-override.txt                0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+
+EXPECTATIONS NOT MET (6):
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+A2c-crafted-canary-and-expectation-gerege.txt ADMITS (printed the HALF_UP certification)
+A4c-decoy-variable.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A7-symlinked-canary.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+EXIT=1
+ADMITS count: 12
+--- prefix-copy-sh
+A5-helpful-correct-override.txt                0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+
+EXPECTATIONS NOT MET (6):
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+A2c-crafted-canary-and-expectation-gerege.txt ADMITS (printed the HALF_UP certification)
+A4c-decoy-variable.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A7-symlinked-canary.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+EXIT=1
+ADMITS count: 12
+--- prefix-copy-bash
+A5-helpful-correct-override.txt                0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+
+EXPECTATIONS NOT MET (6):
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+A2c-crafted-canary-and-expectation-gerege.txt ADMITS (printed the HALF_UP certification)
+A4c-decoy-variable.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A7-symlinked-canary.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+EXIT=1
+ADMITS count: 12
+
+==============================================================
+LEG 4 (GREEN): the real POST-fix transcripts, post-MF-1 scorer
+==============================================================
+postfix-livetwin-sh EXIT=0  last: ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+postfix-livetwin-bash EXIT=0  last: ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+postfix-copy-sh EXIT=0  last: ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+postfix-copy-bash EXIT=0  last: ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+t115-post-sh EXIT=0  last: ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+t115-post-bash EXIT=0  last: ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+
+==============================================================
+LEG 5: does the SHAPE test create a FALSE error on any legitimate
+       transcript?  Every committed transcript dir, both scorers.
+==============================================================
+pre/postfix-copy-bash   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+pre/postfix-copy-sh   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+pre/postfix-livetwin-bash   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+pre/postfix-livetwin-sh   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+pre/prefix-copy-bash   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+pre/prefix-copy-sh   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+pre/prefix-livetwin-bash   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+pre/prefix-livetwin-sh   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+post/postfix-copy-bash   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+post/postfix-copy-sh   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+post/postfix-livetwin-bash   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+post/postfix-livetwin-sh   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+post/prefix-copy-bash   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+post/prefix-copy-sh   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+post/prefix-livetwin-bash   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+post/prefix-livetwin-sh   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+post/t115-post-bash   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+post/t115-post-sh   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+post/t115-pre-bash   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+post/t115-pre-sh   false-ERROR rows: 0   (last lines all EXIT=?: 0 non-conforming)
+
+LEG 5b: the happy/ transcripts too (different shape, not scored by verdict.sh)
+T44-control-reproduced-POSTFIX.txt                   last=treat it as a vector, and do not 'normalise' it. Fix the environment and re-run.
+default-nocanary-POSTFIX.txt                         last=treat it as a vector, and do not 'normalise' it. Fix the environment and re-run.
+default-nocanary-PREFIX.txt                          last=treat it as a vector, and do not 'normalise' it. Fix the environment and re-run.
+gerege-POSTFIX.txt                                   last=ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+gerege-PREFIX.txt                                    last=ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+
+==============================================================
+LEG 6: T107b's residual — a transcript whose last line is a BARE NUMERAL
+==============================================================
+--- value test only (T107's specified rule), emulated:
+   value test: shape=OK, st=5 -> BREACH row scores OK (vacuous pass)
+--- shipped rule (shape + value):
+A2a-mutated-canary-gerege.txt                  -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A2a-mutated-canary-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+EXIT=1
+
+--- and the PRE-fix scorer on the same input:
+A2a-mutated-canary-gerege.txt                  5      no        no         OK
+PRE_EXIT=0

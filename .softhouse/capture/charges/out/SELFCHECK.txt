@@ -1,0 +1,12 @@
+  PASS  no prohibited-engine token outside the detection patterns
+  PASS  no float construction in T40 analysis code
+  PASS  fullcell.py parses money to Decimal
+  PASS  feecols.py parses money to Decimal
+  PASS  invariants.py parses money to Decimal
+  PASS  attest-t40.py serialises money as exact text
+  PASS  no first_name/last_name anywhere
+  PASS  no insured/protected/guaranteed savings language
+  PASS  no hard-coded offset (zone ids only)
+  PASS  no error body filed as a capture in out/fc
+
+SELF-CHECK: all pass (0 failures).

@@ -1,0 +1,86 @@
+==================================================================
+RED 1 — prove-guards.sh run from a NON-GIT export (T107's F-6 repro)
+==================================================================
+export at /tmp/T138-nongit is NOT a git repo (no .git)
+--- POST-fix (T115) prove-guards.sh from there:
+ABORT: git archive failed — there is nothing to prove anything against.
+fatal: not a git repository (or any of the parent directories): .git
+POST_EXIT=2
+
+--- PRE-fix (T91) prove-guards.sh from the SAME non-git export:
+   exit=3   (expect 3)
+ERROR: compared ZERO transcript pairs — proves nothing.
+
+=================================================================== G-4
+GUARD: verdict.sh's greps are 'LC_ALL=C grep -a'.
+       A transcript with one stray non-UTF-8 byte must not be able to make the scanner say
+       the HALF_UP certification is ABSENT when it is present.
+
+   poisoned the certification line itself with an invalid multibyte sequence
+
+-- what /usr/bin/grep (BSD) does with and without -a:
+   BSD  -qF  rc=0
+   BSD -aqF  rc=0
+   MEASURED: on this machine BSD grep matched EITHER WAY.  T80 reported that BSD grep in a
+   UTF-8 locale matches nothing here; that did NOT reproduce for me and I do not repeat it
+   as fact.  What DID reproduce is below.
+
+   ugrep is not on PATH here; the ugrep limb was measured interactively and is reported
+   in the handoff.  Without -a it returned 1 ('absent') on this exact poisoned file.
+
+-- verdict.sh (with -a) on the poisoned set: must still name A2a as an admission
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+
+=================================================================== done
+PRE_EXIT=0
+
+==================================================================
+RED 2 — a guard it grades is NEUTERED (verdict.sh replaced by 'exit 0')
+==================================================================
+--- POST-fix prove-guards.sh with verdict.sh neutered:
+   exit=0   EXPECTED 3   *** NOT AS EXPECTED ***   [G-2 verdict.sh over an empty set]
+   A2a NOT named as an admission   *** NOT AS EXPECTED ***   [G-4]
+   exit=0   EXPECTED 1   *** NOT AS EXPECTED ***   [G-5 GREEN discriminates]
+   exit=0   EXPECTED 1   *** NOT AS EXPECTED ***   [G-5 RED read-only transcript dir still reports the 6 admissions]
+done — 4 leg(s) did NOT behave as expected.  This script now EXITS NON-ZERO for that,
+POST_EXIT=1
+
+--- PRE-fix prove-guards.sh with verdict.sh neutered (same tree, T91's script):
+   ugrep is not on PATH here; the ugrep limb was measured interactively and is reported
+   in the handoff.  Without -a it returned 1 ('absent') on this exact poisoned file.
+
+-- verdict.sh (with -a) on the poisoned set: must still name A2a as an admission
+
+=================================================================== done
+PRE_EXIT=0
+
+==================================================================
+MUTATION TEST — G-4: can it detect a BLIND scanner?
+==================================================================
+G-4 asserts only that verdict.sh names A2a as an ADMISSION on the poisoned set.
+In the PRE-FIX transcript set A2a exits 0 and expects BREACH, so the exit-code
+rule alone already yields ADMITS.  Simulate a scanner that reports the HALF_UP
+sentence ABSENT (c=no always) — i.e. the exact failure LC_ALL=C grep -a defends
+against — and see whether G-4 goes red.
+--- the mutated line:
+   135:  c=no  # T138 mutation: scanner blinded
+--- G-4 leg output with the scanner blinded:
+-- verdict.sh (with -a) on the poisoned set: must still name A2a as an admission
+A2a-mutated-canary-gerege.txt                  0      no        no         ADMITS (exited 0, expected a breach)
+A2a-mutated-canary-gerege.txt ADMITS (exited 0, expected a breach)
+   A2a named as an admission on the poisoned set   OK      [G-4]
+WHOLE_SCRIPT_EXIT=0
+
+==================================================================
+MUTATION TEST — G-6: does it pin WHICH exit-2 it got?
+==================================================================
+G-6 compares only the exit status (2).  run-attacks.sh exits 2 from six
+different places.  Make it exit 2 for an unrelated reason and see if G-6
+still reports OK.
+   69:# T138 mutation: assert_mutated REMOVED
+   70:# T138 mutation: assert_mutated REMOVED
+--- G-6 leg with assert_mutated REMOVED and A7's symlink broken:
+   exit=2   EXPECTED 2   OK      [G-6 RED reformatted canary -> harness error, not an 'attack']
+   HARNESS ERROR: A7's symlink does not read back as the canonical request
+WHOLE_SCRIPT_EXIT=0

@@ -1,0 +1,156 @@
+T238 -- EMPIRICAL CLASSIFICATION OF THE FAIL-OPEN CLASS
+commit : 000e16d07281907d73e2dedfd459bd6f1cc9c084
+cwd    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5701d0a384315ff8
+engines: /usr/bin/grep BSD 2.6.0-FreeBSD | git 2.50.1 | perl 5.034001 | ugrep ABSENT | rg not visible to a script
+Each instrument is run VERBATIM, UNMODIFIED, from the repo root -- exactly as a later
+auditor re-running the committed evidence would run it.
+
+########## GROUP 1 -- THE THREE T234 ACTUALLY TESTED ##########
+
+==================================================================
+INSTRUMENT : .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh
+  exit status .............. 1
+  output lines ............. 1
+  "(no hits)"-shaped lines . 0
+  visible failure evidence . 1 line(s)
+  VERDICT .................. FAIL-CLOSED  (non-zero exit -- CORRECT)
+  --- first 14 lines of output ---
+  | .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh: line 15: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee: No such file or directory
+  log: .softhouse/capture/t238-failopen/evidence/class-runs/a2-31-probe-sweep.txt
+
+==================================================================
+INSTRUMENT : .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+  exit status .............. 9
+  output lines ............. 1
+  "(no hits)"-shaped lines . 0
+  visible failure evidence . 1 line(s)
+  VERDICT .................. FAIL-CLOSED  (non-zero exit -- CORRECT)
+  --- first 14 lines of output ---
+  | .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh: line 8: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e: No such file or directory
+  log: .softhouse/capture/t238-failopen/evidence/class-runs/a2-32-sweep.txt
+
+==================================================================
+INSTRUMENT : .softhouse/reviews/a2-33-dec2-rev5/sweep.sh
+  exit status .............. 0
+  output lines ............. 136
+  "(no hits)"-shaped lines . 34
+  visible failure evidence . 34 line(s)
+  VERDICT .................. FAIL-OPEN / OPEN-SILENT  <<< prints a negative it never measured
+  --- first 14 lines of output ---
+  | ########## PATTERN F2-01 :: three of (its |the |them|these )?(seven|7|four|4)
+  | .softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+  |    (no hits)
+  | 
+  | ########## PATTERN F2-02 :: (^|[^0-9])3 of (7|4|seven|four)
+  | .softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+  |    (no hits)
+  | 
+  | ########## PATTERN F2-03 :: three of them
+  | .softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+  |    (no hits)
+  | 
+  | ########## PATTERN F2-04 :: empty population
+  | .softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+  log: .softhouse/capture/t238-failopen/evidence/class-runs/a2-33-sweep.txt
+
+########## GROUP 2 -- THE THREE T234 LEFT [UNVERIFIED].  THIS IS THE TASK. ##########
+
+==================================================================
+INSTRUMENT : .softhouse/reviews/A2-11/enumerate-corpus.py
+  exit status .............. 1
+  output lines ............. 8
+  "(no hits)"-shaped lines . 0
+  visible failure evidence . 1 line(s)
+  VERDICT .................. FAIL-CLOSED  (non-zero exit -- CORRECT)
+  --- first 14 lines of output ---
+  | Traceback (most recent call last):
+  |   File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5701d0a384315ff8/.softhouse/reviews/A2-11/enumerate-corpus.py", line 38, in <module>
+  |     paths = [p for p in git("ls-tree", "-r", "--name-only", FORK, "--", CAP + "/out").decode().split("\n") if p]
+  |   File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5701d0a384315ff8/.softhouse/reviews/A2-11/enumerate-corpus.py", line 35, in git
+  |     return subprocess.run(["git", "-C", ROOT, *a], capture_output=True, check=True).stdout
+  |   File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+  |     raise CalledProcessError(retcode, process.args,
+  | subprocess.CalledProcessError: Command '['git', '-C', '/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da', 'ls-tree', '-r', '--name-only', '12a7f8d9a3af4665fd5281a9f9c001d4f1276a53', '--', '.softhouse/capture/tierA-a2/out']' returned non-zero exit status 128.
+  log: .softhouse/capture/t238-failopen/evidence/class-runs/a2-11-enumerate.txt
+
+==================================================================
+INSTRUMENT : .softhouse/reviews/T184-evidence/t184-census.sh
+  exit status .............. 0
+  output lines ............. 20
+  "(no hits)"-shaped lines . 0
+  visible failure evidence . 1 line(s)
+  VERDICT .................. FAIL-OPEN / exit 0 but failure text is visible in output
+  --- first 14 lines of output ---
+  | .softhouse/reviews/T184-evidence/t184-census.sh: line 4: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8: No such file or directory
+  | === RULE (mine): a request body is (a) *.json whose PARENT DIRECTORY is named 'req',
+  | ===              at any depth under .softhouse/capture, or (b) any *.req at any depth.
+  | 
+  | -- (a) *.json under a dir named req:
+  |    req directories: 10
+  |    .json bodies:    348
+  | -- (b) *.req anywhere under capture:
+  |    .req files:      35
+  | -- rigs (first path component under .softhouse/capture that contributes >=1 body):
+  |    rigs:            6
+  | actualactual audit-t44 charges leapboundary pathb tierA-a2 
+  | 
+  | === .java census, my rule: every *.java under the repo root, pruning
+  log: .softhouse/capture/t238-failopen/evidence/class-runs/t184-census.txt
+
+==================================================================
+INSTRUMENT : .softhouse/reviews/T184-evidence/t184-sweep.sh
+  exit status .............. 0
+  output lines ............. 50
+  "(no hits)"-shaped lines . 0
+  visible failure evidence . 1 line(s)
+  VERDICT .................. FAIL-OPEN / exit 0 but failure text is visible in output
+  --- first 14 lines of output ---
+  | .softhouse/reviews/T184-evidence/t184-sweep.sh: line 4: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8: No such file or directory
+  | === A. grep -q inside a pipeline (the P-57 EPIPE shape) in the T173 block (conformance.sh 670-815)
+  | 13:    # `grep -c`, NOT `grep -q` — AND THE REASON IS THE MONEY NON-NEGOTIABLE ITSELF.
+  | 14:    # `grep -q` exits 0 the instant it MATCHES. The upstream `perl` is then writing
+  | 23:    # reproduce it, because `grep -q` on one line cannot stop before EOF.)
+  | 96:    # `grep -c`, NOT `grep -q`, for exactly the reason spelled out in
+  | 97:    # guard_no_float_in_vectors above: `grep -q` stops at the first match, `perl` dies of
+  | 
+  | === B. fail-open shapes in the T173 block
+  | 33:            | LC_ALL=C grep -acE '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]')" || true
+  | 110:            | LC_ALL=C grep -acE '\bfloat(32|64)\b|\bbig\.Float\b|\bcomplex(64|128)\b|\b(Parse|Format|Append)Float\b')" || true
+  | 119:  pkgs="$(find "$NEXUS_DIR" -name '*.go' -type f | sed 's|/[^/]*$||' | sort -u | LC_ALL=C grep -ac '' || true)"
+  | 
+  | === C. every '|| true' in the T173 block, with what it masks
+  log: .softhouse/capture/t238-failopen/evidence/class-runs/t184-sweep.txt
+
+########## GROUP 3 -- T234'S OWN RE-RUNNER ##########
+########## It hard-codes T234's own worktree agent-a71e695cfa5bea70b, now deleted. ##########
+
+==================================================================
+INSTRUMENT : .softhouse/capture/t234-sweep-instrument-audit/instruments/20-rerun-dec2-sweeps.sh
+  exit status .............. 0
+  output lines ............. 24
+  "(no hits)"-shaped lines . 1
+  visible failure evidence . 4 line(s)
+  VERDICT .................. FAIL-OPEN / OPEN-SILENT  <<< prints a negative it never measured
+  --- first 14 lines of output ---
+  | ### worktrees each sweep depends on
+  |   GONE    agent-a3fcb4c7f1ea451ee
+  |   GONE    agent-a356a016636abdd7e
+  |   GONE    agent-a5244bad2b6814a39
+  |   (owner: a3fc=A2-31 probe-sweep.sh, a356=A2-32 sweep.sh, a524=A2-33 sweep.sh)
+  | 
+  | ### A2-31 probe-sweep.sh, run verbatim TODAY
+  |   exit=127  output lines=1
+  |   --- first 6 lines ---
+  |       bash: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a71e695cfa5bea70b/.softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh: No such file or directory
+  | 
+  | ### A2-32 sweep.sh, run verbatim TODAY
+  |   exit=127  output lines=1
+  |   --- first 6 lines ---
+  log: .softhouse/capture/t238-failopen/evidence/class-runs/t234-rerun.txt
+
+==================================================================
+NOT EXECUTED (mutating; classified statically -- see handoff):
+  .softhouse/reviews/T184-evidence/t184-vacuity.sh   rewrites .softhouse/conformance.sh
+  .softhouse/reviews/T184-evidence/t184-vacuity2.sh  rewrites .softhouse/conformance.sh
+  .softhouse/capture/t223-g8-region-predicate/src/verify_merge_t223.sh  adds a remote and merges
+DONE.

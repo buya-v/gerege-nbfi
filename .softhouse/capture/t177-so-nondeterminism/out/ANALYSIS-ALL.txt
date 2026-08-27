@@ -1,0 +1,255 @@
+T159 committed cells EXTRACTED from .softhouse/capture/t159-review-t117/out/capture-t159-raw.json.gz: 49
+  T159-R600p0-N3000-B10001 -> ('observed', '846.70')
+
+====================================================================================================
+PER-SERIES TALLY — PROBE TRIALS ONLY (the disputed cell: B = 10001 minor units, n = 3000, rate 600.0)
+====================================================================================================
+series             plan             cell (B minor units, n)       JVMs  asked  observed  threwSOE  other  flags
+fresh-single       single           B=10001 minor, n=3000           20     20         0        20      0  (none)
+repeat-warm        repeat:8         B=10001 minor, n=3000            4     32        16        16      0  (none)
+warm-ctrl-1        warm:1:1         B=10001 minor, n=3000            3      3         0         3      0  (none)
+warm-ctrl-10       warm:10:1        B=10001 minor, n=3000            3      3         0         3      0  (none)
+warm-ctrl-50       warm:50:1        B=10001 minor, n=3000            3      3         3         0      0  (none)
+headline-cold      cell:1001:3000:1 B=1001 minor, n=3000             8      8         8         0      0  (none)
+red-cold           cell:10001:2000:1 B=10001 minor, n=2000            8      8         0         8      0  (none)
+thread-repeat      thread:0:8       B=10001 minor, n=3000            1      8         4         4      0  (none)
+thread-single      thread:0:1       B=10001 minor, n=3000            3      3         0         3      0  (none)
+xss-16m            single           B=10001 minor, n=3000            2      2         2         0      0  -Xss16m
+xss-1m             single           B=10001 minor, n=3000            2      2         0         2      0  -Xss1m
+xss-2m             single           B=10001 minor, n=3000            2      2         0         2      0  -Xss2m
+xss-4m             single           B=10001 minor, n=3000            2      2         0         2      0  -Xss4m
+xss-512k           single           B=10001 minor, n=3000            2      2         0         2      0  -Xss512k
+xss-8m             single           B=10001 minor, n=3000            2      2         2         0      0  -Xss8m
+c1only             repeat:8         B=10001 minor, n=3000            1      8         0         8      0  -XX:TieredStopAtLevel=1
+depth-uncapped     repeat:6         B=10001 minor, n=3000            1      6         2         4      0  -XX:MaxJavaStackTraceDepth=0
+headline-warm      cell:1001:3000:8 B=1001 minor, n=3000             1      8         8         0      0  (none)
+red-warm           cell:10001:2000:8 B=10001 minor, n=2000            1      8         4         4      0  (none)
+t159prefix         t159prefix:1     B=10001 minor, n=3000            1      1         1         0      0  (none)
+pilot-repeat       repeat:5         B=10001 minor, n=3000            1      5         1         4      0  (none)
+pilot-single       single           B=10001 minor, n=3000            3      3         0         3      0  (none)
+
+ALL PROBE TRIALS: 139 asked / 51 observed / 88 threw StackOverflowError / 0 other
+
+NON-PROBE TRIALS (warm / prefix / calib cells — reported so no seam call is unaccounted for)
+  phase=calib   observed                                 2
+  phase=prefix  observed                                 22
+  phase=prefix  threw-StackOverflowError                 2
+  phase=warm    observed                                 183
+
+====================================================================================================
+OUTCOME BY PROBE INDEX WITHIN THE JVM  (o = observed, X = threw StackOverflowError)
+====================================================================================================
+  matrixA   fresh-single       run 0   seq0=0   X             elapsedMs: 14864
+  matrixA   fresh-single       run 1   seq0=0   X             elapsedMs: 15063
+  matrixA   fresh-single       run 10  seq0=0   X             elapsedMs: 16227
+  matrixA   fresh-single       run 11  seq0=0   X             elapsedMs: 15759
+  matrixA   fresh-single       run 12  seq0=0   X             elapsedMs: 13212
+  matrixA   fresh-single       run 13  seq0=0   X             elapsedMs: 12174
+  matrixA   fresh-single       run 14  seq0=0   X             elapsedMs: 14924
+  matrixA   fresh-single       run 15  seq0=0   X             elapsedMs: 15254
+  matrixA   fresh-single       run 16  seq0=0   X             elapsedMs: 15219
+  matrixA   fresh-single       run 17  seq0=0   X             elapsedMs: 12033
+  matrixA   fresh-single       run 18  seq0=0   X             elapsedMs: 15209
+  matrixA   fresh-single       run 19  seq0=0   X             elapsedMs: 12023
+  matrixA   fresh-single       run 2   seq0=0   X             elapsedMs: 15216
+  matrixA   fresh-single       run 3   seq0=0   X             elapsedMs: 15161
+  matrixA   fresh-single       run 4   seq0=0   X             elapsedMs: 15310
+  matrixA   fresh-single       run 5   seq0=0   X             elapsedMs: 12003
+  matrixA   fresh-single       run 6   seq0=0   X             elapsedMs: 12270
+  matrixA   fresh-single       run 7   seq0=0   X             elapsedMs: 11937
+  matrixA   fresh-single       run 8   seq0=0   X             elapsedMs: 14470
+  matrixA   fresh-single       run 9   seq0=0   X             elapsedMs: 12056
+  matrixA   repeat-warm        run 0   seq0=0   XXXXoooo      elapsedMs: 14443,13848,13900,15975,91618,91745,91814,91779
+  matrixA   repeat-warm        run 1   seq0=0   XXXXoooo      elapsedMs: 14366,13638,13623,15701,98934,98768,99187,98634
+  matrixA   repeat-warm        run 2   seq0=0   XXXXoooo      elapsedMs: 11610,11151,11120,12911,90124,90026,89967,89543
+  matrixA   repeat-warm        run 3   seq0=0   XXXXoooo      elapsedMs: 13682,13357,13421,15658,96991,96821,97199,96807
+  matrixA   warm-ctrl-1        run 0   seq0=1   X             elapsedMs: 15968
+  matrixA   warm-ctrl-1        run 1   seq0=1   X             elapsedMs: 16208
+  matrixA   warm-ctrl-1        run 2   seq0=1   X             elapsedMs: 16077
+  matrixA   warm-ctrl-10       run 0   seq0=10  X             elapsedMs: 15883
+  matrixA   warm-ctrl-10       run 1   seq0=10  X             elapsedMs: 13417
+  matrixA   warm-ctrl-10       run 2   seq0=10  X             elapsedMs: 13785
+  matrixA   warm-ctrl-50       run 0   seq0=50  o             elapsedMs: 97480
+  matrixA   warm-ctrl-50       run 1   seq0=50  o             elapsedMs: 97822
+  matrixA   warm-ctrl-50       run 2   seq0=50  o             elapsedMs: 95957
+  matrixB   headline-cold      run 0   seq0=0   o             elapsedMs: 10537
+  matrixB   headline-cold      run 1   seq0=0   o             elapsedMs: 10200
+  matrixB   headline-cold      run 2   seq0=0   o             elapsedMs: 10075
+  matrixB   headline-cold      run 3   seq0=0   o             elapsedMs: 8987
+  matrixB   headline-cold      run 4   seq0=0   o             elapsedMs: 10607
+  matrixB   headline-cold      run 5   seq0=0   o             elapsedMs: 10621
+  matrixB   headline-cold      run 6   seq0=0   o             elapsedMs: 10877
+  matrixB   headline-cold      run 7   seq0=0   o             elapsedMs: 10780
+  matrixB   red-cold           run 0   seq0=0   X             elapsedMs: 7694
+  matrixB   red-cold           run 1   seq0=0   X             elapsedMs: 6191
+  matrixB   red-cold           run 2   seq0=0   X             elapsedMs: 5875
+  matrixB   red-cold           run 3   seq0=0   X             elapsedMs: 6463
+  matrixB   red-cold           run 4   seq0=0   X             elapsedMs: 6195
+  matrixB   red-cold           run 5   seq0=0   X             elapsedMs: 5900
+  matrixB   red-cold           run 6   seq0=0   X             elapsedMs: 6858
+  matrixB   red-cold           run 7   seq0=0   X             elapsedMs: 5849
+  matrixB   thread-repeat      run 0   seq0=0   XXXXoooo      elapsedMs: 13647,13242,13198,15343,88726,88985,88878,89023
+  matrixB   thread-single      run 0   seq0=0   X             elapsedMs: 14566
+  matrixB   thread-single      run 1   seq0=0   X             elapsedMs: 11513
+  matrixB   thread-single      run 2   seq0=0   X             elapsedMs: 13231
+  matrixB   xss-16m            run 0   seq0=0   o             elapsedMs: 100728
+  matrixB   xss-16m            run 1   seq0=0   o             elapsedMs: 91977
+  matrixB   xss-1m             run 0   seq0=0   X             elapsedMs: 10281
+  matrixB   xss-1m             run 1   seq0=0   X             elapsedMs: 9889
+  matrixB   xss-2m             run 0   seq0=0   X             elapsedMs: 14799
+  matrixB   xss-2m             run 1   seq0=0   X             elapsedMs: 11856
+  matrixB   xss-4m             run 0   seq0=0   X             elapsedMs: 14620
+  matrixB   xss-4m             run 1   seq0=0   X             elapsedMs: 17790
+  matrixB   xss-512k           run 0   seq0=0   X             elapsedMs: 2150
+  matrixB   xss-512k           run 1   seq0=0   X             elapsedMs: 2067
+  matrixB   xss-8m             run 0   seq0=0   o             elapsedMs: 101071
+  matrixB   xss-8m             run 1   seq0=0   o             elapsedMs: 101573
+  matrixC   c1only             run 0   seq0=0   XXXXXXXX      elapsedMs: 6157,6123,6115,6116,6129,6105,6117,6116
+  matrixC   depth-uncapped     run 0   seq0=0   XXXXoo        elapsedMs: 15237,14655,14654,17864,101856,101840
+  matrixC   headline-warm      run 0   seq0=0   oooooooo      elapsedMs: 10825,10609,10597,10636,10674,10627,10631,10644
+  matrixC   red-warm           run 0   seq0=0   XXXXoooo      elapsedMs: 6046,5695,5687,6332,59182,59246,59227,59268
+  matrixC   t159prefix         run 0   seq0=24  o             elapsedMs: 95050
+  pilot     pilot-repeat       run 0   seq0=0   XXXXo         elapsedMs: 15647,14194,13914,16049,91568
+  pilot     pilot-single       run 0   seq0=0   X             elapsedMs: 11896
+  pilot     pilot-single       run 1   seq0=0   X             elapsedMs: 11380
+  pilot     pilot-single       run 2   seq0=0   X             elapsedMs: 14779
+
+====================================================================================================
+COLD START — probe trials that are the JVM's VERY FIRST seam call (seq == 0)
+====================================================================================================
+  T177-CELL-R600p0-N2000-B10001      default -Xss (measured 2040k)    C2 on    JVMs 9   observed 0   threwSOE 9  
+  T177-CELL-R600p0-N3000-B1001       default -Xss (measured 2040k)    C2 on    JVMs 9   observed 9   threwSOE 0  
+  T177-PROBE-R600p0-N3000-B10001     -Xss16m                          C2 on    JVMs 2   observed 2   threwSOE 0  
+  T177-PROBE-R600p0-N3000-B10001     -Xss1m                           C2 on    JVMs 2   observed 0   threwSOE 2  
+  T177-PROBE-R600p0-N3000-B10001     -Xss2m                           C2 on    JVMs 2   observed 0   threwSOE 2  
+  T177-PROBE-R600p0-N3000-B10001     -Xss4m                           C2 on    JVMs 2   observed 0   threwSOE 2  
+  T177-PROBE-R600p0-N3000-B10001     -Xss512k                         C2 on    JVMs 2   observed 0   threwSOE 2  
+  T177-PROBE-R600p0-N3000-B10001     -Xss8m                           C2 on    JVMs 2   observed 2   threwSOE 0  
+  T177-PROBE-R600p0-N3000-B10001     default -Xss (measured 2040k)    C2 off   JVMs 1   observed 0   threwSOE 1  
+  T177-PROBE-R600p0-N3000-B10001     default -Xss (measured 2040k)    C2 on    JVMs 33  observed 0   threwSOE 33 
+
+====================================================================================================
+ATTEMPT-INDEX TALLY — probe trials at the JVM DEFAULT stack size, by attempt number
+within the JVM (attempt 1 = the cell's first seam call in that process)
+====================================================================================================
+  C2 OFF (TieredStopAtLevel=1)   T177-PROBE-R600p0-N3000-B10001     attempt 1   JVMs 1   observed 0   threwSOE 1  
+  C2 OFF (TieredStopAtLevel=1)   T177-PROBE-R600p0-N3000-B10001     attempt 2   JVMs 1   observed 0   threwSOE 1  
+  C2 OFF (TieredStopAtLevel=1)   T177-PROBE-R600p0-N3000-B10001     attempt 3   JVMs 1   observed 0   threwSOE 1  
+  C2 OFF (TieredStopAtLevel=1)   T177-PROBE-R600p0-N3000-B10001     attempt 4   JVMs 1   observed 0   threwSOE 1  
+  C2 OFF (TieredStopAtLevel=1)   T177-PROBE-R600p0-N3000-B10001     attempt 5   JVMs 1   observed 0   threwSOE 1  
+  C2 OFF (TieredStopAtLevel=1)   T177-PROBE-R600p0-N3000-B10001     attempt 6   JVMs 1   observed 0   threwSOE 1  
+  C2 OFF (TieredStopAtLevel=1)   T177-PROBE-R600p0-N3000-B10001     attempt 7   JVMs 1   observed 0   threwSOE 1  
+  C2 OFF (TieredStopAtLevel=1)   T177-PROBE-R600p0-N3000-B10001     attempt 8   JVMs 1   observed 0   threwSOE 1  
+  default JIT                    T177-CELL-R600p0-N2000-B10001      attempt 1   JVMs 9   observed 0   threwSOE 9  
+  default JIT                    T177-CELL-R600p0-N2000-B10001      attempt 2   JVMs 1   observed 0   threwSOE 1  
+  default JIT                    T177-CELL-R600p0-N2000-B10001      attempt 3   JVMs 1   observed 0   threwSOE 1  
+  default JIT                    T177-CELL-R600p0-N2000-B10001      attempt 4   JVMs 1   observed 0   threwSOE 1  
+  default JIT                    T177-CELL-R600p0-N2000-B10001      attempt 5   JVMs 1   observed 1   threwSOE 0  
+  default JIT                    T177-CELL-R600p0-N2000-B10001      attempt 6   JVMs 1   observed 1   threwSOE 0  
+  default JIT                    T177-CELL-R600p0-N2000-B10001      attempt 7   JVMs 1   observed 1   threwSOE 0  
+  default JIT                    T177-CELL-R600p0-N2000-B10001      attempt 8   JVMs 1   observed 1   threwSOE 0  
+  default JIT                    T177-CELL-R600p0-N3000-B1001       attempt 1   JVMs 9   observed 9   threwSOE 0  
+  default JIT                    T177-CELL-R600p0-N3000-B1001       attempt 2   JVMs 1   observed 1   threwSOE 0  
+  default JIT                    T177-CELL-R600p0-N3000-B1001       attempt 3   JVMs 1   observed 1   threwSOE 0  
+  default JIT                    T177-CELL-R600p0-N3000-B1001       attempt 4   JVMs 1   observed 1   threwSOE 0  
+  default JIT                    T177-CELL-R600p0-N3000-B1001       attempt 5   JVMs 1   observed 1   threwSOE 0  
+  default JIT                    T177-CELL-R600p0-N3000-B1001       attempt 6   JVMs 1   observed 1   threwSOE 0  
+  default JIT                    T177-CELL-R600p0-N3000-B1001       attempt 7   JVMs 1   observed 1   threwSOE 0  
+  default JIT                    T177-CELL-R600p0-N3000-B1001       attempt 8   JVMs 1   observed 1   threwSOE 0  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 1   JVMs 43  observed 4   threwSOE 39 
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 2   JVMs 7   observed 0   threwSOE 7  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 3   JVMs 7   observed 0   threwSOE 7  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 4   JVMs 7   observed 0   threwSOE 7  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 5   JVMs 7   observed 7   threwSOE 0  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 6   JVMs 6   observed 6   threwSOE 0  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 7   JVMs 5   observed 5   threwSOE 0  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 8   JVMs 5   observed 5   threwSOE 0  
+
+RECORDED STACK DEPTH AT OVERFLOW (errorStackDepthTotal; HotSpot caps recorded frames at
+MaxJavaStackTraceDepth, default 1024, so a flat 1024 is the CAP, not the depth)
+  c1only             flags=-XX:TieredStopAtLevel=1            n=8   min=1024 max=1024 distinct=[1024]
+  depth-uncapped     flags=-XX:MaxJavaStackTraceDepth=0       n=4   min=4683 max=8400 distinct=[4683, 5119, 8400]
+  fresh-single       flags=(none)                             n=20  min=1024 max=1024 distinct=[1024]
+  pilot-repeat       flags=(none)                             n=4   min=1024 max=1024 distinct=[1024]
+  pilot-single       flags=(none)                             n=3   min=1024 max=1024 distinct=[1024]
+  red-cold           flags=(none)                             n=8   min=1024 max=1024 distinct=[1024]
+  red-warm           flags=(none)                             n=4   min=1024 max=1024 distinct=[1024]
+  repeat-warm        flags=(none)                             n=16  min=1024 max=1024 distinct=[1024]
+  thread-repeat      flags=(none)                             n=4   min=1024 max=1024 distinct=[1024]
+  thread-single      flags=(none)                             n=3   min=1024 max=1024 distinct=[1024]
+  warm-ctrl-1        flags=(none)                             n=3   min=1024 max=1024 distinct=[1024]
+  warm-ctrl-10       flags=(none)                             n=3   min=1024 max=1024 distinct=[1024]
+  xss-1m             flags=-Xss1m                             n=2   min=1024 max=1024 distinct=[1024]
+  xss-2m             flags=-Xss2m                             n=2   min=1024 max=1024 distinct=[1024]
+  xss-4m             flags=-Xss4m                             n=2   min=1024 max=1024 distinct=[1024]
+  xss-512k           flags=-Xss512k                           n=2   min=1024 max=1024 distinct=[1024]
+
+====================================================================================================
+MONEY CHECK — every OBSERVED disputed-cell probe against T159's committed value
+====================================================================================================
+  T177-CELL-R600p0-N2000-B10001      observed   4 time(s); distinct totalInterestAmount: {'776.46': 4}
+      T159 counterpart T159-R600p0-N2000-B10001 THREW in T159, so it carries no value to compare
+  T177-CELL-R600p0-N3000-B1001       observed  16 time(s); distinct totalInterestAmount: {'15010.01': 16}
+      matches committed T159-R600p0-N3000-B1001 = 15010.01
+  T177-PREFIX-R600p0-N1000-B503      observed   1 time(s); distinct totalInterestAmount: {'2515.03': 1}
+      matches committed T159-R600p0-N1000-B503 = 2515.03
+  T177-PREFIX-R600p0-N1000-B901      observed   1 time(s); distinct totalInterestAmount: {'64.85': 1}
+      matches committed T159-R600p0-N1000-B901 = 64.85
+  T177-PREFIX-R600p0-N108-B11        observed   1 time(s); distinct totalInterestAmount: {'5.46': 1}
+      matches committed T159-R600p0-N108-B11 = 5.46
+  T177-PREFIX-R600p0-N1200-B1        observed   1 time(s); distinct totalInterestAmount: {'0.01': 1}
+      matches committed T159-R600p0-N1200-B1 = 0.01
+  T177-PREFIX-R600p0-N1200-B10001    observed   1 time(s); distinct totalInterestAmount: {'846.70': 1}
+      matches committed T159-R600p0-N1200-B10001 = 846.70
+  T177-PREFIX-R600p0-N1200-B1001     observed   1 time(s); distinct totalInterestAmount: {'78.85': 1}
+      matches committed T159-R600p0-N1200-B1001 = 78.85
+  T177-PREFIX-R600p0-N150-B11        observed   1 time(s); distinct totalInterestAmount: {'7.59': 1}
+      matches committed T159-R600p0-N150-B11 = 7.59
+  T177-PREFIX-R600p0-N1500-B10001    observed   1 time(s); distinct totalInterestAmount: {'846.70': 1}
+      matches committed T159-R600p0-N1500-B10001 = 846.70
+  T177-PREFIX-R600p0-N1500-B1001     observed   1 time(s); distinct totalInterestAmount: {'78.85': 1}
+      matches committed T159-R600p0-N1500-B1001 = 78.85
+  T177-PREFIX-R600p0-N2000-B1        observed   1 time(s); distinct totalInterestAmount: {'0.01': 1}
+      matches committed T159-R600p0-N2000-B1 = 0.01
+  T177-PREFIX-R600p0-N2000-B501      observed   1 time(s); distinct totalInterestAmount: {'5005.01': 1}
+      matches committed T159-R600p0-N2000-B501 = 5005.01
+  T177-PREFIX-R600p0-N2000-B999      observed   1 time(s); distinct totalInterestAmount: {'9988.33': 1}
+      matches committed T159-R600p0-N2000-B999 = 9988.33
+  T177-PREFIX-R600p0-N3000-B1        observed   1 time(s); distinct totalInterestAmount: {'0.01': 1}
+      matches committed T159-R600p0-N3000-B1 = 0.01
+  T177-PREFIX-R600p0-N3000-B1001     observed   1 time(s); distinct totalInterestAmount: {'15010.01': 1}
+      matches committed T159-R600p0-N3000-B1001 = 15010.01
+  T177-PREFIX-R600p0-N360-B1         observed   1 time(s); distinct totalInterestAmount: {'0.01': 1}
+      matches committed T159-R600p0-N360-B1 = 0.01
+  T177-PREFIX-R600p0-N361-B1         observed   1 time(s); distinct totalInterestAmount: {'0.01': 1}
+      matches committed T159-R600p0-N361-B1 = 0.01
+  T177-PREFIX-R600p0-N364-B1         observed   1 time(s); distinct totalInterestAmount: {'0.01': 1}
+      matches committed T159-R600p0-N364-B1 = 0.01
+  T177-PREFIX-R600p0-N389-B1         observed   1 time(s); distinct totalInterestAmount: {'0.01': 1}
+      matches committed T159-R600p0-N389-B1 = 0.01
+  T177-PREFIX-R600p0-N391-B1         observed   1 time(s); distinct totalInterestAmount: {'0.13': 1}
+      matches committed T159-R600p0-N391-B1 = 0.13
+  T177-PREFIX-R600p0-N392-B1         observed   1 time(s); distinct totalInterestAmount: {'0.13': 1}
+      matches committed T159-R600p0-N392-B1 = 0.13
+  T177-PREFIX-R600p0-N400-B1         observed   1 time(s); distinct totalInterestAmount: {'0.13': 1}
+      matches committed T159-R600p0-N400-B1 = 0.13
+  T177-PREFIX-R600p0-N401-B1         observed   1 time(s); distinct totalInterestAmount: {'0.13': 1}
+      matches committed T159-R600p0-N401-B1 = 0.13
+  T177-PROBE-R600p0-N3000-B10001     observed  31 time(s); distinct totalInterestAmount: {'846.70': 31}
+      matches committed T159-R600p0-N3000-B10001 = 846.70
+  money comparisons made: 24; observed probes with no committed counterpart: 0
+  When the oracle answers at all it answers with the SAME NUMBER as the committed capture.
+  The nondeterminism is in WHETHER it answers, not in WHAT it answers.
+
+====================================================================================================
+P-40 ACCOUNTING — every java process, what it was asked for and what it delivered
+====================================================================================================
+  TOTAL: 75 java processes, 348 seam calls asked, 348 emitted, 0 NEVER REACHED, 0 plans with an unknown count
+
+====================================================================================================
+RUN-LEVEL ANOMALIES (classified SEPARATELY — never folded into observed or threw)
+====================================================================================================
+  none: every java process exited 0, wrote empty stderr, and printed its footer.
+
+ANALYZER VERDICT: clean
+analyzer exit 0 for the union of all four matrices

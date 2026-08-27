@@ -1,0 +1,26 @@
+{
+ "clientId": 2,
+ "productId": 18,
+ "loanType": "individual",
+ "principal": 1200000,
+ "loanTermFrequency": 6,
+ "loanTermFrequencyType": 2,
+ "numberOfRepayments": 6,
+ "repaymentEvery": 1,
+ "repaymentFrequencyType": 2,
+ "interestRatePerPeriod": 21.6,
+ "interestRateFrequencyType": 3,
+ "amortizationType": 1,
+ "interestType": 0,
+ "interestCalculationPeriodType": 0,
+ "allowFullTermForTranche": true,
+ "transactionProcessingStrategyCode": "advanced-payment-allocation-strategy",
+ "expectedDisbursementDate": "01 November 2024",
+ "submittedOnDate": "01 November 2024",
+ "maxOutstandingLoanBalance": 5000000,
+ "disbursementData": [
+  { "expectedDisbursementDate": "01 November 2024", "principal": 700000 },
+  { "expectedDisbursementDate": "01 January 2025", "principal": 500000 } ],
+ "locale": "en",
+ "dateFormat": "dd MMMM yyyy"
+}

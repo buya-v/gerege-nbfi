@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5701d0a384315ff8/.softhouse/reviews/A2-11/enumerate-corpus.py", line 38, in <module>
+    paths = [p for p in git("ls-tree", "-r", "--name-only", FORK, "--", CAP + "/out").decode().split("\n") if p]
+  File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5701d0a384315ff8/.softhouse/reviews/A2-11/enumerate-corpus.py", line 35, in git
+    return subprocess.run(["git", "-C", ROOT, *a], capture_output=True, check=True).stdout
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', '-C', '/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da', 'ls-tree', '-r', '--name-only', '12a7f8d9a3af4665fd5281a9f9c001d4f1276a53', '--', '.softhouse/capture/tierA-a2/out']' returned non-zero exit status 128.

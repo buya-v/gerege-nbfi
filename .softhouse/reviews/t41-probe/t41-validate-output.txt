@@ -1,0 +1,128 @@
+==============================================================================
+A1  the thirteen committed observation TRIPLES.
+    CELLS COMPARED: level installment, final installment, total
+    interest -- 3 per shape, 39 in all.  This is the WEAK standard.
+==============================================================================
+   principal   n  rate        disb          level          final        tot int  ok
+         100   6   7.0                      17.01          17.00           2.05  OK
+     1014632   6   7.0                  172574.64      172574.62       20815.82  OK
+      127704  36  16.8                    4540.30        4540.06       35746.56  OK
+      135623   6   7.0                   23067.56       23067.59        2782.39  OK
+     2345024   6   7.0                  398855.60      398855.63       48109.63  OK
+      167299   6  21.6                   29665.91       29665.94       10696.49  OK
+       64352  12  21.6                    6010.61        6010.55        7775.26  OK
+        1000  18  18.5                      64.04          64.14         152.82  OK
+      246489  18  18.5                   15786.24       15786.14       37663.22  OK
+       16838  36  16.8                     598.65         598.46        4713.21  OK
+       40595  36  16.8                    1443.28        1443.47       11363.27  OK
+     1200000   6  21.6                  212787.28      212787.30       76723.70  OK
+     1200000   6  21.6  2024-02-01      253114.12      253114.10       65570.58  OK
+
+A1: reproduced 13 of 13; 39 cells compared
+
+==============================================================================
+A2  FULL-CELL against every committed capture in
+    .softhouse/capture/out/capture-prod-raw.json
+    CELLS COMPARED per repayment row: fromDate, dueDate, principal, interest, balance, total
+    plus loanTermInDays and totalInterestAmount
+==============================================================================
+P-CAL            SKIPPED (threaded precision 12, not 19)
+P-00             rows=6   cells=32   OK
+P-01             rows=18  cells=92   OK
+P-02             rows=6   cells=32   OK
+P-02b            rows=6   cells=32   OK
+P-03             rows=6   cells=32   OK
+P-04f            rows=6   cells=32   OK
+P-04t            rows=6   cells=32   OK
+P-MNT-5M         rows=18  cells=92   OK
+P-MNT-1M2        rows=12  cells=62   OK
+P-MNT-50M        rows=36  cells=182  OK
+P-MNT-4M999      rows=18  cells=92   OK
+
+A2: 11 of 11 captures reproduce; 712 cells compared
+
+==============================================================================
+A3  FULL-CELL against every committed capture in
+    .softhouse/capture/dec1-binding/out/t37-binding.json
+    CELLS COMPARED per repayment row: fromDate, dueDate, principal, interest, balance, total
+    plus loanTermInDays and totalInterestAmount
+==============================================================================
+T37-CAL          SKIPPED (threaded precision 12, not 19)
+T37-CTL-Q0a      rows=6   cells=38   OK
+T37-3-A          rows=6   cells=38   OK
+T37-3-B          rows=36  cells=218  OK
+T37-3a           rows=12  cells=74   OK
+T37-3b           rows=6   cells=38   OK
+T37-3b-2         rows=6   cells=38   OK
+T37-3c           rows=6   cells=38   OK
+T37-3c-2         rows=6   cells=38   OK
+T37-3d           rows=6   cells=38   OK
+T37-3d-2         rows=36  cells=218  OK
+
+A3: 10 of 10 captures reproduce; 776 cells compared
+
+==============================================================================
+A4  FULL-CELL against every committed capture in
+    .softhouse/capture/periodratio/out/t39-periodratio.json
+    CELLS COMPARED per repayment row: fromDate, dueDate, principal, interest, fee, penalty, balance, total, totalOutstandingBalance
+    plus loanTermInDays and totalInterestAmount, totalDisbursedAmount, totalRepaymentAmount
+==============================================================================
+T39-CAL          SKIPPED (threaded precision 12, not 19)
+T39-CTL-Q0a      rows=6   cells=60   OK
+T39-CTL-1        rows=6   cells=60   OK
+T39-CTL-2        rows=6   cells=60   OK
+T39-P0-A         rows=6   cells=60   OK
+T39-P0-B         rows=6   cells=60   OK
+T39-P0-C         rows=12  cells=114  OK
+T39-P0-D         rows=36  cells=330  OK
+T39-P0-E         rows=6   cells=60   OK
+T39-P0-F         rows=6   cells=60   OK
+T39-P0-G         rows=6   cells=60   OK
+T39-P0-H         rows=6   cells=60   OK
+T39-ME-A         rows=6   cells=60   OK
+T39-ME-B         rows=6   cells=60   OK
+T39-ME-C         rows=6   cells=60   OK
+T39-ME-D         rows=6   cells=60   OK
+
+A4: 15 of 15 captures reproduce; 1224 cells compared
+
+==============================================================================
+A5  the SCHEDULE CORE of the twenty-one T40 charge captures in
+    .softhouse/capture/charges/out/fc
+    CELLS COMPARED per repayment row: fromDate, dueDate,
+    principalOriginalDue, principalDue, interestDue,
+    principalLoanBalanceOutstanding, totalInstallmentAmountForPeriod;
+    plus loanTermInDays, totalPrincipalExpected, totalInterestCharged.
+    Request = the committed B-01 baseline (schedule start = 
+    disbursement 2026-01-01, MNT 1,200,000, 12 x 21.6%), which every
+    FC-nn shares -- only a `charges` array was injected.
+    THE CONTRACT CARRIES NO CHARGE, so the model computes none; if a
+    charge moved a cell the contract DOES carry, revision 8 fails here.
+==============================================================================
+FC-01-flat-disbursement                          cells=87   OK
+FC-02-flat-instalment                            cells=87   OK
+FC-03-pctamount-disbursement                     cells=87   OK
+FC-04-pctinterest-instalment                     cells=87   OK
+FC-05-pctamountinterest-instalment               cells=87   OK
+FC-06-penalty-inside-p3                          cells=87   OK
+FC-07-fee-on-p3-duedate                          cells=87   OK
+FC-08-penalty-instalment                         cells=87   OK
+FC-09-pctamount-instalment                       cells=87   OK
+FC-10-pctamount-inside-p6                        cells=87   OK
+FC-11-fee-on-disbursement-date                   cells=87   OK
+FC-12-fee-on-final-duedate                       cells=87   OK
+FC-13-fee-inside-p12                             cells=87   OK
+FC-14-fee-inside-p1                              cells=87   OK
+FC-15-combined-fee-and-penalty                   cells=87   OK
+FC-16-fee-on-p1-duedate                          cells=87   OK
+FC-17-fee-after-final-duedate                    cells=87   OK
+FC-19-pctinterest-sdd-inside-p6                  cells=87   OK
+FC-20-pctinterest-sdd-on-disb                    cells=87   OK
+FC-21-pctamtint-sdd-inside-p6                    cells=87   OK
+FC-22-penalty-instalment-plus-sdd-on-p3-duedate  cells=87   OK
+
+A5: 21 of 21 captures reproduce; 1827 cells compared
+
+==============================================================================
+OVERALL: PASS   -- 4578 cells compared in all
+==============================================================================

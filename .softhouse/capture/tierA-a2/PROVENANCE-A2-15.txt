@@ -1,0 +1,21 @@
+
+case_id                                          class           seam                 legs  DR  CR  minor
+LDG-01-manual-je-3leg-minor-units                parity          ledger_rest_posting     3   2   1      3
+LDG-02-repayment-split-4leg-minor-units          parity          ledger_rest_posting     4   1   3      2
+LDG-03-overpayment-4leg-minor-units              parity          ledger_rest_posting     4   1   3      3
+LDG-04-header-account-accepted                   parity          ledger_db_readback      2   1   1      2
+LDG-REFUSE-01-unbalanced-by-one-minor-unit       oracle-refusal  ledger_rest_posting     0   0   0      0
+LDG-REFUSE-02-manual-adjustments-not-permitted   oracle-refusal  ledger_rest_posting     0   0   0      0
+
+CENSUS: 6 vectors, 13 legs total, 10 promoted money cells carry NON-ZERO MINOR UNITS
+LEG-COUNT DISTRIBUTION of the promoted set: 0 legs x2, 2 legs x1, 3 legs x1, 4 legs x2
+
+case_id                                          response artefact                          request artefact
+LDG-01-manual-je-3leg-minor-units                A2-347-je-manual-readback.json             A2-343-manual-je-3leg.req
+LDG-02-repayment-split-4leg-minor-units          A2-338-je-after-repayment-coverage.json    A2-337-repayment-split.req
+LDG-03-overpayment-4leg-minor-units              A2-383-je-after-overpay.json               A2-382-repayment-overpay.req
+LDG-04-header-account-accepted                   A2-390-db-ledger-state-a2-15.json          A2-345-manual-je-header.req
+LDG-REFUSE-01-unbalanced-by-one-minor-unit       A2-344-manual-je-unbalanced.json           A2-344-manual-je-unbalanced.req
+LDG-REFUSE-02-manual-adjustments-not-permitted   A2-346-manual-je-nomanual.json             A2-346-manual-je-nomanual.req
+
+BYTE-PROVENANCE FAILURES: 0

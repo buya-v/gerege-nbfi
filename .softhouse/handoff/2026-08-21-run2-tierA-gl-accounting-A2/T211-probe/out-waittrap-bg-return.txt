@@ -1,0 +1,6 @@
+[1787361832.057493000] pid=29603 pgid=29603 shape=bg hmode=return
+[1787361832.070482000] READY
+[1787361832.083240000] starting BACKGROUND child + wait -- the fix's shape
+[1787361832.103944000] background child pid=$!=29614
+[1787361833.454218000] HANDLER ENTERED (SIGTERM) -- shape=bg hmode=return
+[1787361833.468196000] HANDLER RETURNING (not exiting) -- watch whether `wait` resumes or returns

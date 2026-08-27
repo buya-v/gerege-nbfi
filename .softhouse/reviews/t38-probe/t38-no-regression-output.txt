@@ -1,0 +1,49 @@
+==============================================================================
+F  NO-REGRESSION: revision 6 (main) vs the working copy
+==============================================================================
+
+4.3.1 EMI re-adjust loop, steps 1-8 (T28/T29)
+    revision 6 sha256 : 2ccf0f040428570c16d824c32d2a0c6268318b373c6645066db7d007fe98312f
+    working   sha256 : 2ccf0f040428570c16d824c32d2a0c6268318b373c6645066db7d007fe98312f
+    verdict          : IDENTICAL
+
+4.3.2 three-operation per-period interest block (T31)
+    revision 6 sha256 : f45eac5891685e4f81b2b6118aa68590974d40c57a5f38fa41c3197ec5f792cc
+    working   sha256 : f45eac5891685e4f81b2b6118aa68590974d40c57a5f38fa41c3197ec5f792cc
+    verdict          : IDENTICAL
+
+4.1.1 day-count definition table (T33)
+    revision 6 sha256 : 760b96643ab8eb33c18bd128bd5e0ec635ba1897fdb12e76d9ee6ec632b55bcb
+    working   sha256 : 760b96643ab8eb33c18bd128bd5e0ec635ba1897fdb12e76d9ee6ec632b55bcb
+    verdict          : IDENTICAL
+
+------------------------------------------------------------------------------
+Phrases that must survive verbatim:
+    [OK ] (rev6: yes) 'This is a UAT/cutover precondition, **not a ratification precondition**'
+    [OK ] (rev6: yes) '`relatedRepaymentPeriods.size()`'
+    [OK ] (rev6: yes) '**not `NumberOfRepayments`**'
+    [OK ] (rev6: yes) 'diff        = '
+    [OK ] (rev6: yes) "`1 +` the SUM of its interest periods' rate factors"
+
+------------------------------------------------------------------------------
+`n` claims -- every occurrence of a sentence tying n to a count:
+  rev6: 7 distinct
+      n` is **not** `NumberOfRepayments`
+      n` is **one** field, not the oracle's (days-in-month, days-in-year) pair plus a leap-d
+      n` is `relatedRepaymentPeriods
+      n` is strictly smaller
+      n` is the **related**-period count, **not** `NumberOfRepayments`; the two coincide only fo
+      n` is the number of **related repayment periods** as defined immediately above — `relatedR
+      n` is the related-period count, and a port that reads `NumberOfRepayments` returns differe
+  working: 7 distinct
+      n` is **not** `NumberOfRepayments`
+      n` is **one** field, not the oracle's (days-in-month, days-in-year) pair plus a leap-d
+      n` is `relatedRepaymentPeriods
+      n` is strictly smaller
+      n` is the **related**-period count, **not** `NumberOfRepayments`; the two coincide only fo
+      n` is the number of **related repayment periods** as defined immediately above — `relatedR
+      n` is the related-period count, and a port that reads `NumberOfRepayments` returns differe
+
+==============================================================================
+VERDICT: NO REGRESSION
+==============================================================================

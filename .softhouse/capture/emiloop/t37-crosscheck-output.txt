@@ -1,0 +1,5 @@
+P-EMI-6-1M014632 vs T37-3-A
+  columns both harnesses emit: compared through row 6
+P-EMI-36-127704 vs T37-3-B
+  columns both harnesses emit: compared through row 36
+T37 cross-check: 478 cells compared, 0 mismatches

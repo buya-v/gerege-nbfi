@@ -1,0 +1,44 @@
+# FLAGGED — real oracle bytes whose RECIPES are provably false. DO NOT CITE.
+#
+# A2-4 review finding D-1 (see DEFECTS-FOUND-BY-REVIEW.md): mkreq2.py overwrote the
+# request bodies these responses were captured against, so each attempt1-*.http carries
+# a body-file: pointer to a req/…json that no longer holds the body that produced the
+# recorded response. The bytes ARE real oracle refusals; the recipes DO NOT regenerate
+# them, and they are NOT evidence about slice A2.
+#
+# They are retained, not deleted — deleting evidence to make a rig look clean is worse
+# than carrying it flagged. MANIFEST.sha256 covers them so they cannot be silently
+# altered, and `manifest.py verify` cross-checks this list: a flagged file that vanishes
+# from disk, or that loses its manifest line, is a FAILURE, not a quiet pass.
+#
+# Format: one manifest-relative path per line; blank lines and # comments ignored.
+out/attempt1-A2-prod-060-cash-with-channel-override.http
+out/attempt1-A2-prod-060-cash-with-channel-override.json
+out/attempt1-A2-prod-060-cash-with-channel-override.status
+out/attempt1-A2-prod-061-cash-no-override.http
+out/attempt1-A2-prod-061-cash-no-override.json
+out/attempt1-A2-prod-061-cash-no-override.status
+out/attempt1-A2-prod-062-map-header-account.http
+out/attempt1-A2-prod-062-map-header-account.json
+out/attempt1-A2-prod-062-map-header-account.status
+out/attempt1-A2-prod-063-map-wrong-type.http
+out/attempt1-A2-prod-063-map-wrong-type.json
+out/attempt1-A2-prod-063-map-wrong-type.status
+out/attempt1-A2-prod-064-cash-no-mappings.http
+out/attempt1-A2-prod-064-cash-no-mappings.json
+out/attempt1-A2-prod-064-cash-no-mappings.status
+out/attempt1-A2-prod-065-map-missing-account.http
+out/attempt1-A2-prod-065-map-missing-account.json
+out/attempt1-A2-prod-065-map-missing-account.status
+out/attempt1-A2-prod-066-bad-paymenttype.http
+out/attempt1-A2-prod-066-bad-paymenttype.json
+out/attempt1-A2-prod-066-bad-paymenttype.status
+out/attempt1-A2-prod-067-duplicate-channel.http
+out/attempt1-A2-prod-067-duplicate-channel.json
+out/attempt1-A2-prod-067-duplicate-channel.status
+out/attempt1-A2-prod-068-accrual-missing-receivables.http
+out/attempt1-A2-prod-068-accrual-missing-receivables.json
+out/attempt1-A2-prod-068-accrual-missing-receivables.status
+out/attempt1-A2-prod-069-accrual-complete.http
+out/attempt1-A2-prod-069-accrual-complete.json
+out/attempt1-A2-prod-069-accrual-complete.status

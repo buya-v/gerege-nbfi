@@ -1,0 +1,13 @@
+=== fg.sh : SIGINT to the script pid only, 1.0 s in
+    exit=130  elapsed=10.24s
+    | START 1787301136 pid=80019
+    | TRAP-INT at 1787301146
+
+=== bg.sh : SIGINT to the script pid only, 1.0 s in
+    exit=130  elapsed=10.21s
+    | START 1787301146 pid=80032
+    | TRAP-INT at 1787301147
+
+=== `wait` status fidelity control (no signal)
+    fg.sh   rc=3
+    bg.sh   rc=3

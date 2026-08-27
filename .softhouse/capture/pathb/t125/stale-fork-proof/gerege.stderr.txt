@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-aff8ecc0611ecc867/.softhouse/capture/pathb/t125/../../charges/bin/.t125-scratch-attest.py", line 259, in <module>
+    with open(reqpath, 'rb') as fh:
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/buv/gerege-nbfi/.claude/worktrees/agent-aff8ecc0611ecc867/.softhouse/capture/charges/req/calc-B-01-baseline.json'

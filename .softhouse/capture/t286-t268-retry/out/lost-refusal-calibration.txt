@@ -1,0 +1,44 @@
+T292 -- CALIBRATING `LOST REFUSALS`
+================================================================================================
+  mutant: coverage reverted to the OBJECT CENSUS **and** the post-condition deleted
+          -- i.e. the lineage's defect, restored end to end, with nothing to catch it
+
+    PROP-C  LOST REFUSALS (PRE refuses, NEW greens, witness EMPTY): 28 [('A1-predicate-as-a-string#0', 'wrap-in-list-of-lists,wrap-3-deep-lists'), ('A1-predicate-as-a-string#1', 'wrap-list-then-object,wrap-3-deep-lists,wrap-in-list,wrap-in-list'), ('A12-header-tries-to-buy-coverage-without-asserting-a-predicate', 'base'), ('A12-header-tries-to-buy-coverage-without-asserting-a-predicate#0', 'beside-a-decoy-object,beside-a-decoy-object,beside-a-decoy-object,wrap-in-list,beside-a-decoy-string'), ('A12-header-tries-to-buy-coverage-without-asserting-a-predicate#1', 'wrap-object-then-list,wrap-in-list-of-lists,wrap-in-list-of-lists')]
+    PROP-C  ADJUDICATED WIDENINGS (PRE refuses, NEW greens, witness NAMED): 10
+            A WIDENING IS NOT A LOST REFUSAL: PRE refused for want of a SHAPE it recognised,
+  T292 ADVERSARY: 65 passed, 41 failed, 0 SKIPPED   over 75 documents
+  LOST REFUSALS: 28   (the criterion T281 used to reject T268)
+  EXIT 1   (non-zero on ANY failure, ANY skip, or ANY lost refusal)
+
+  LOST REFUSALS RECORDED: 28
+     A1-predicate-as-a-string#0                                     via wrap-in-list-of-lists,wrap-3-deep-lists
+     A1-predicate-as-a-string#1                                     via wrap-list-then-object,wrap-3-deep-lists,wrap-in-list,wrap-in-list
+     A12-header-tries-to-buy-coverage-without-asserting-a-predicate via base
+     A12-header-tries-to-buy-coverage-without-asserting-a-predicate#0 via beside-a-decoy-object,beside-a-decoy-object,beside-a-decoy-object,wrap-in-list,beside-a-decoy-string
+     A12-header-tries-to-buy-coverage-without-asserting-a-predicate#1 via wrap-object-then-list,wrap-in-list-of-lists,wrap-in-list-of-lists
+     A2-coverage-laundered-through-a-DESCRIPTIVE-key#0              via wrap-3-deep-lists,wrap-in-list-of-lists
+     A2-coverage-laundered-through-a-DESCRIPTIVE-key#1              via wrap-list-then-object,beside-a-decoy-object,beside-a-decoy-object,objectify-a-list
+     A8-affirmation-only-at-depth                                   via base
+     A8-affirmation-only-at-depth#0                                 via beside-a-decoy-object,wrap-in-list-of-lists,wrap-object-then-list,wrap-in-object
+     A8-affirmation-only-at-depth#1                                 via beside-a-decoy-object
+     T291/H1-nested-header-empty                                    via base
+     T291/H1-nested-header-empty#0                                  via wrap-in-object,wrap-in-object,wrap-list-then-object,objectify-a-list
+     ... and 16 more
+
+  DISTINCT FIXTURES THAT LOST A REFUSAL: 12
+     A1-predicate-as-a-string
+     A12-header-tries-to-buy-coverage-without-asserting-a-predicate
+     A2-coverage-laundered-through-a-DESCRIPTIVE-key
+     A8-affirmation-only-at-depth
+     T291/H1-nested-header-empty
+     T291/N6-root-verdict-empty
+     T291/X1-header-in-toplevel-list
+     T291/X2-header-in-nested-list
+     T291/X3-header-in-list-of-lists
+     T291/X4-toplevel-array-header-only
+     T291/X7-header-in-deep-nested-list
+     T291/X8-noninspectable-dict-in-list
+
+  CALIBRATION PASSED -- the counter FIRES on a planted defect, so `LOST REFUSALS: 0`
+  on the shipped rule is a MEASUREMENT and not an unexercised zero.
+EXIT 0

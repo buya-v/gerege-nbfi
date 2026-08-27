@@ -1,0 +1,19 @@
+EMI (HALF_UP of the exact rational annuity) = 10858003 minor units
+  period 1   ok
+  period 2   ok
+  period 3   ok
+  period 4   ok
+  period 5   ok
+  period 6   ok
+  period 7   ok
+  period 8   ok
+  period 9   ok
+  period 10  ok
+  period 11  ok
+  period 12  ok
+  total interest  14045789   ok
+
+THE TIE, in exact integers: 116250250 x 27/1500 = 4185009/2   -> HALF_UP 2092505, HALF_EVEN 2092504
+
+RE-DERIVATION AGREES with the vector in every money cell, from the four
+declared inputs alone, in exact rational arithmetic.

@@ -1,0 +1,9 @@
+# T168 — SIGQUIT POST-FIX, extracted from t168/prove-exit-trap-with-sigquit.txt.
+# The fixed .softhouse/capture/pathb/t149/prove-redgreen.sh worktree bytes, which
+# now include a trap on QUIT that prints the interrupted message and exits 131,
+# which fires the EXIT trap that restores the store.
+
+--- POST-FIX  parent-quit       SIGQUIT to the script (Ctrl-\) — T168: bash skips the EXIT trap for this one unless it is trapped explicitly
+    script exit=131  elapsed=1.6s  vector-in-store=True  park-left=False
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+    => RESTORED — store back to 43, byte census verified

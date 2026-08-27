@@ -1,0 +1,36 @@
+T271 -- INDEPENDENT re-check of the t219 carriers, from the RAW capture only
+======================================================================================================================
+  raw       : capture-t219-raw.json.gz
+  precision recorded in the capture : 19
+
+id                             n  E_row1 E_modal     B      P    sumTot    hdrTot  interest  REG   CORR  UNCOND STRUCT emiD=B 
+------------------------------------------------------------------------------------------------------------------------------
+T219-R600p0-N104-B1          104       0       0     1      0         1         1         1  True  True  True   True   True   
+T219-R600p0-N3000-B2999     3000    1499    1499  2999      0   4499999   4499999   4499999  True  True  True   True   True   
+T219-R600p0-N103-B1          103       1       0     1      1        14        14        13  False False True   False  False  
+T219-R600p0-N3000-B1001     3000     500     500  1001      0   1501001   1501001   1501001  True  True  True   True   True   
+T219-R600p0-N3000-B4499     3000    2249    2249  4499   1499   6751499   6751499   6750000  False True  True   True   True   
+T219-R600p0-N108-B1          108       0       0     1      0         1         1         1  True  True  True   True   True   
+T219-R600p0-N3000-B3001     3000    1500    1500  3001      1   4503001   4503001   4503000  False True  True   True   True   
+
+  carriers (non-throwing registered cells)  : 7
+  REGISTERED    interest == n*E + B         : 4 of 7
+  CORRECTED     interest == n*E + B - P     : 6 of 7        <<< T259's ruling
+  UNCONDITIONAL interest == sumTotal - P    : 7 of 7        <<< sumTotal MEASURED, not modelled
+  EMI-plus-balloon STRUCTURE holds          : 6 of 7
+
+  THE ROW WHERE THE CORRECTED FORM ALSO FAILS: T219-R600p0-N103-B1
+    rows with nonzero INTEREST  : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    rows with nonzero PRINCIPAL : [14]
+    rows with nonzero TOTAL     : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    row-1 total E 1, last row total 0, emiDifference -1 vs B 1
+    n*E+B = 104; n*E+B-P = 103; MEASURED total repayment = 14; interest = 13
+    only 13 of 103 rows ever charge interest, so n*E prices 90 rows that charge nothing.
+
+  committed classify-t219.json reproduced   : 7 of 7 carriers
+
+  THIS DOES NOT ESTABLISH: that any verdict is correct; that G-8's region is right or
+  wrong; that any Go port reproduces any of it. Only what the oracle's captured
+  schedules sum to, in integer minor units.
+T271-INDEP: GREEN carriers=7 agreeREG=4 agreeCORR=6 agreeUNCOND=7 structureHolds=6 contradictions=0
+EXIT=0

@@ -1,0 +1,22 @@
+{
+  "fire": "20260818-230002",
+  "host": "Buyanmunkhs-Mac-mini",
+  "started_at": "2026-08-18T15:00:17Z",
+  "oracle": "REACHABLE — Fineract UP at https://localhost:8443, PostgreSQL 18.3 at localhost:5432, pinned commit 426a23544",
+  "step": "workers dispatched, orchestrator awaiting",
+  "dispatched": [
+    {"task": "T34", "branch": "softhouse/T34-dec1-v6-rereview", "model": "opus", "needs_oracle": false,
+     "what": "Independent re-review of DEC-1 v6 — the last step before ratification; a CLEAN verdict closes gate G-1 under standing policy P-2"},
+    {"task": "T35", "branch": "softhouse/T35-patha-admissibility", "model": "opus", "needs_oracle": true,
+     "what": "Path A embeddable-seam admissibility P0s: T21 P0-2 attestation, P0-3 missing columns re-run, P0-4 executable run recipe, T27 RC-5/RC-6"},
+    {"task": "T36", "branch": "softhouse/T36-pathb-admissibility", "model": "opus", "needs_oracle": true,
+     "what": "Path B running-server admissibility P0s: T22 P0-3 attestation sidecar, P0-4 fail-the-run preconditions, P0-6 re-point at an Asia/Ulaanbaatar HALF_UP tenant and re-capture"},
+    {"task": "T37", "branch": "softhouse/T37-dec1-binding-captures", "model": "opus", "needs_oracle": true,
+     "what": "Capture DEC-1 §8's five BINDING shapes (3, 3a, 3b, 3c, 3d) in RAW OBSERVED form — the vectors that gate any loanschedule conformance PASS"}
+  ],
+  "server_ownership": "T36 alone may touch the live Fineract server / PostgreSQL. T35 and T37 run throwaway Path A containers against mounts of their own worktrees.",
+  "next_action": "Await all four workers, adjudicate each handoff, merge in dependency-free order, fold oracle facts into .softhouse/reference-oracle.md, update program.json, rewrite RESUME.md, push.",
+  "blocked_on": null,
+  "gate_pending": "G-1 (DEC-1 ratification) — T34 decides whether it closes this fire",
+  "open_questions": []
+}

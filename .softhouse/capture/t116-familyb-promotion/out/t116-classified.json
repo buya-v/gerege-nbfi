@@ -1,0 +1,94 @@
+{
+ "cases": {
+  "T116-CLEAN-R600p0-N103-B1": {
+   "B_minor": 1,
+   "annualRate": "600.0",
+   "balanceConstantOnEveryRow": false,
+   "distinctBalanceValuesMinor": [
+    0,
+    1
+   ],
+   "family": null,
+   "finalRowBalanceMinor": 0,
+   "n": 103,
+   "principalAdvancedMinor": 1,
+   "principalRepaidMinor": 1,
+   "repaymentRowCount": 103,
+   "repaymentRowsWithNonZeroPrincipal": [
+    14
+   ],
+   "repaymentRowsWithNonZeroPrincipalCount": 1,
+   "rowCount": 104,
+   "scheduledInterestMinor_sumOfRows": 13,
+   "totalInterestAmountMinor": 13,
+   "totalPrincipalAmountMinor": 1,
+   "unamortizedResidualMinor": 0
+  },
+  "T116-FAMB-R600p0-N104-B1": {
+   "B_minor": 1,
+   "annualRate": "600.0",
+   "balanceConstantOnEveryRow": true,
+   "distinctBalanceValuesMinor": [
+    1
+   ],
+   "family": "B",
+   "finalRowBalanceMinor": 1,
+   "n": 104,
+   "principalAdvancedMinor": 1,
+   "principalRepaidMinor": 0,
+   "repaymentRowCount": 104,
+   "repaymentRowsWithNonZeroPrincipal": [],
+   "repaymentRowsWithNonZeroPrincipalCount": 0,
+   "rowCount": 105,
+   "scheduledInterestMinor_sumOfRows": 1,
+   "totalInterestAmountMinor": 1,
+   "totalPrincipalAmountMinor": 0,
+   "unamortizedResidualMinor": 1
+  },
+  "T116-FAMB-R600p0-N108-B1": {
+   "B_minor": 1,
+   "annualRate": "600.0",
+   "balanceConstantOnEveryRow": true,
+   "distinctBalanceValuesMinor": [
+    1
+   ],
+   "family": "B",
+   "finalRowBalanceMinor": 1,
+   "n": 108,
+   "principalAdvancedMinor": 1,
+   "principalRepaidMinor": 0,
+   "repaymentRowCount": 108,
+   "repaymentRowsWithNonZeroPrincipal": [],
+   "repaymentRowsWithNonZeroPrincipalCount": 0,
+   "rowCount": 109,
+   "scheduledInterestMinor_sumOfRows": 1,
+   "totalInterestAmountMinor": 1,
+   "totalPrincipalAmountMinor": 0,
+   "unamortizedResidualMinor": 1
+  }
+ },
+ "gate": "G-8",
+ "predictionScore": {
+  "held": 15,
+  "heldDetail": [
+   "T116-FAMB-R600p0-N104-B1 P1-rowcount: 104 REPAYMENT rows, predicted 104",
+   "T116-FAMB-R600p0-N104-B1 P2/P3-repaid: principal repaid 0 minor, predicted 0",
+   "T116-FAMB-R600p0-N104-B1 P2/P3-balance: final balance 1 minor, predicted 1",
+   "T116-FAMB-R600p0-N104-B1 family: observed family 'B', predicted family B = True",
+   "T116-FAMB-R600p0-N104-B1 P4-interest-on-unrepaid-principal: totalPrincipalAmount 0 minor, totalInterestAmount 1 minor",
+   "T116-CLEAN-R600p0-N103-B1 P1-rowcount: 103 REPAYMENT rows, predicted 103",
+   "T116-CLEAN-R600p0-N103-B1 P2/P3-repaid: principal repaid 1 minor, predicted 1",
+   "T116-CLEAN-R600p0-N103-B1 P2/P3-balance: final balance 0 minor, predicted 0",
+   "T116-CLEAN-R600p0-N103-B1 family: observed family None, predicted family B = False",
+   "T116-FAMB-R600p0-N108-B1 P1-rowcount: 108 REPAYMENT rows, predicted 108",
+   "T116-FAMB-R600p0-N108-B1 P2/P3-repaid: principal repaid 0 minor, predicted 0",
+   "T116-FAMB-R600p0-N108-B1 P2/P3-balance: final balance 1 minor, predicted 1",
+   "T116-FAMB-R600p0-N108-B1 family: observed family 'B', predicted family B = True",
+   "T116-FAMB-R600p0-N108-B1 P4-interest-on-unrepaid-principal: totalPrincipalAmount 0 minor, totalInterestAmount 1 minor",
+   "POPULATION P5-existence: at least one family-B cell AND at least one clean cell \u2014 families observed ['B', None, 'B'] over 3 cases"
+  ],
+  "refuted": 0,
+  "refutedDetail": []
+ },
+ "task": "T116"
+}

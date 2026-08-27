@@ -1,0 +1,31 @@
+============================================================================================
+T263 -- IS THE `FROZEN-T114` DEATH CONDITION REVIVABLE?
+============================================================================================
+
+ARM R1 -- edit a frozen file, then re-run `manifest.py write`
+    1. pristine rig                                            exit=0  (expect 0)
+    2. after editing the frozen file                           exit=2  (expect 2 -- the exemption died)
+    3. `manifest.py write`                                     exit=0  wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t263-revive-30mci6_c/rig/MANIFEST.sha256 with 969 entries
+    4. re-grade after manifest write                           exit=0  (0 here = the exemption CAME BACK TO LIFE over an edited file)
+    R1 RESULT: exemption died=True, revived by `manifest.py write`=True
+    -> `resolve7.py` now carries a T263 edit AND is still exempt. The guard says:
+       ALLOW   resolve7.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced req/a2-7-loan-220-resolved.json
+
+ARM R2 -- mint a NEW exemption for a NEW money-shaped loader
+    1. new unguarded loader, no register record                exit=1  (expect 1 -- default-deny)
+    2. + a FROZEN-T114 record, before manifest write           exit=2  (expect 2 -- MANIFEST does not pin it yet)
+    3. `manifest.py write`                                     exit=0  wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t263-revive-eqqs2f8p/rig/MANIFEST.sha256 with 970 entries
+    4. re-grade                                                exit=0  (0 here = a NEW exemption was minted with two commands)
+       ALLOW   t263_newmoney.py:5    FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced RED-GREEN-A2-7-guards.txt
+       DECLARED FROZEN-T114 t263_newmoney.py                :5    json.load   parse_float=MISSING
+    R2 RESULT: new exemption minted for a file that produced no evidence = True
+
+ARM R3 -- does any OTHER rig instrument notice the R2 state?
+    `manifest.py verify` after R2                              exit=0  FLAGGED, covered, NOT citable: 30 attempt1-* files — recipes provably 
+    R3 RESULT: manifest.py verify also passes -- nothing in the rig notices
+
+============================================================================================
+Both R1 and R2 require a COMMITTED change to MANIFEST.sha256 and (R2) to the
+register, so a human reviewing the diff can see them. Neither is a silent widening
+at rest. What they show is that the mechanism's strength is CODE REVIEW OF THE
+MANIFEST DIFF, not the cryptographic self-invalidation the register advertises.

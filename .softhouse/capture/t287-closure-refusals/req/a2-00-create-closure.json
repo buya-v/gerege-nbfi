@@ -1,0 +1,7 @@
+{
+  "officeId": 1,
+  "closingDate": "2026-01-31",
+  "dateFormat": "yyyy-MM-dd",
+  "locale": "en",
+  "comments": "T287 TEMPORARY closure to capture the ACCOUNTING_CLOSED refusal. Date 2026-01-31 is strictly before the earliest existing journal entry (2026-02-01) so it forbids nothing that exists. TO BE DELETED IMMEDIATELY after capture."
+}

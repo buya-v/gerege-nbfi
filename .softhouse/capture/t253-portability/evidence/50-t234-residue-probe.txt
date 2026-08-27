@@ -1,0 +1,51 @@
+=== CALIBRATION: does the residue exist on this host right now? ===
+  PRESENT: -rw-r--r--  1 buv  wheel  24 Aug 22 15:36 /tmp/t234_matrix2.txt
+  and line 6-7 of the instrument, which NAME and CREATE it:
+    | C=/tmp/t234_matrix2.txt
+    | { printf 'x1y\n'; printf 'xdy\n'; printf 'x y\n'; printf 'xsy\n'; printf 'x_y\n'; printf 'xwy\n'; } > "$C"
+
+=== ARM A: residue PRESENT (the Mac's normal state) ===
+  linter rc=1, frontier rows=11
+    TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+    TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+    TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+    TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+    TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+    TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+
+=== ARM B: residue MOVED ASIDE (what any host without the leftover sees) ===
+  moved /tmp/t234_matrix2.txt aside; it is now absent
+  linter rc=1, frontier rows=11
+    TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+    TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+    TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+    TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+    TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+    TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+    TIER2 .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+
+=== VERDICT ===
+  FRONTIER DIFFERS — the claim IS reproduced. Residue-dependent classification:
+    --- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t253-lintA.FEAXiQtxJ6.rows	2026-08-22 20:54:31
+    +++ /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t253-lintB.9lQG9QCwmc.rows	2026-08-22 20:54:35
+    @@ -1,9 +1,9 @@
+    +TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+     TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+     TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+     TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+     TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+     TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+    -TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+     TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+     TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+     TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+RESTORED: /tmp/t234_matrix2.txt put back

@@ -1,0 +1,10 @@
+t47_edit_2   pre-fix pairs 7  post-fix pairs 7  IDENTICAL
+t47_edit_3   pre-fix pairs 4  post-fix pairs 4  IDENTICAL
+t47_edit_4   pre-fix pairs 2  post-fix pairs 2  IDENTICAL
+t47_edit_4c  pre-fix pairs 1  post-fix pairs 1  IDENTICAL
+t47_edit_5   pre-fix pairs 2  post-fix pairs 2  IDENTICAL
+t47_edit_6   pre-fix pairs 3  post-fix pairs 3  IDENTICAL
+t47_edit_7   pre-fix pairs 5  post-fix pairs 5  IDENTICAL
+t47_edit_8   pre-fix pairs 5  post-fix pairs 5  IDENTICAL
+
+scripts whose edit text changed: 0 (expected 0)

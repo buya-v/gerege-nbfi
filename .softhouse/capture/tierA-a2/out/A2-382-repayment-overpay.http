@@ -1,0 +1,9 @@
+POST /loans/7/transactions?command=repayment
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-26-repayment-overpay.json
+body-wire-bytes-artefact: A2-382-repayment-overpay.req
+body-sha256: b93a498a4efb499f19d12e102f13f55bfbef36235fa14aceae64042e4cc5f1d8
+body-bytes: 121
+captured-at-utc: 2026-08-22T02:23:27Z

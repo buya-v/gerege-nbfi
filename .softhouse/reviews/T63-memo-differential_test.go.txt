@@ -1,0 +1,477 @@
+package loanschedule
+
+// T63 REVIEW HARNESS — NOT PART OF THE PORT. Deleted before commit; the source
+// is preserved verbatim in .softhouse/reviews/T63-memo-differential_test.go.txt
+// so any coder can drop it back in and re-run every number in the review.
+
+import (
+	"context"
+	"fmt"
+	"testing"
+	"time"
+
+	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
+)
+
+// t63Request is baseRequest with the two axes T59's sweep pinned made free:
+// the disbursement DATE (T59 only ever used the schedule start or due[0]) and
+// arbitrary terms.
+func t63Request(start civilDate, disb civilDate, principal int64, term int32, rate contract.Rate) contract.GenerateRequest {
+	r := baseRequest(principal, term, rate)
+	r.ScheduleStartDate = start
+	r.Disbursements = []contract.Disbursement{{Date: disb, AmountMinor: principal}}
+	return r
+}
+
+func t63Compare(t *testing.T, v contract.GenerateRequest) (compared bool) {
+	t.Helper()
+	memoiseInterestChain = true
+	a, errA := Generator{}.Generate(context.Background(), v)
+	memoiseInterestChain = false
+	b, errB := Generator{}.Generate(context.Background(), v)
+	memoiseInterestChain = true
+
+	if (errA == nil) != (errB == nil) {
+		t.Fatalf("%s: memo on err=%v, memo off err=%v", describe(v), errA, errB)
+	}
+	if errA != nil {
+		if errA.Error() != errB.Error() {
+			t.Fatalf("%s: memo on %v, memo off %v", describe(v), errA, errB)
+		}
+		return false
+	}
+	if len(a.Periods) != len(b.Periods) {
+		t.Fatalf("%s: memo on %d rows, memo off %d rows", describe(v), len(a.Periods), len(b.Periods))
+	}
+	for i := range b.Periods {
+		if a.Periods[i] != b.Periods[i] {
+			t.Fatalf("MEMO CHANGED AN ANSWER\n  %s\n  row %d memo-on  %+v\n  row %d memo-off %+v",
+				describe(v), i, a.Periods[i], i, b.Periods[i])
+		}
+	}
+	return true
+}
+
+// T63A — the shape T59's 192-shape sweep has NO coverage of: a disbursement
+// landing on an arbitrary day of the term rather than on the schedule start or
+// on due[0]. Every such date that is not a period boundary drives
+// registerBalanceChange down insertSegment INSIDE a period other than the
+// first, producing a repayment period with two segments carrying DIFFERENT
+// rateFactorTillDue values and a moved segment due date -- three chain
+// dependencies at once, written under a single invalidateFrom(owner.idx).
+func TestT63A_DisbursementOnEveryDayOfTheTerm(t *testing.T) {
+	defer func() { memoiseInterestChain = true }()
+	starts := []civilDate{date(2024, 1, 1), date(2024, 1, 31), date(2023, 2, 28), date(2024, 11, 30)}
+	rates := []contract.Rate{{Numerator: 0, Denominator: 1}, {Numerator: 7, Denominator: 100}, {Numerator: 5, Denominator: 1}}
+	principals := []int64{1, 100, 999999, 5000000000}
+	terms := []int32{3, 7, 13}
+
+	shapes, graded, refused := 0, 0, 0
+	for _, start := range starts {
+		for _, rate := range rates {
+			for _, principal := range principals {
+				for _, term := range terms {
+					for off := int64(0); off < int64(term)*31+2; off++ {
+						v := t63Request(start, plusDays(start, off), principal, term, rate)
+						shapes++
+						if t63Compare(t, v) {
+							graded++
+						} else {
+							refused++
+						}
+					}
+				}
+			}
+		}
+	}
+	t.Logf("T63A: %d shapes (%d answered, %d refused) compared memo-on vs memo-off cell for cell", shapes, graded, refused)
+}
+
+// T63B — terms T59's sweep never reached. Its maximum was 18; the memo's
+// resume path, the ctxCheckStride mask inside interestChainUpTo and the
+// applyFinalPeriodResidual recursion all behave differently past 255.
+func TestT63B_TermsAcrossTheStrideBoundary(t *testing.T) {
+	defer func() { memoiseInterestChain = true }()
+	// Memo-off is quadratic BY CONSTRUCTION, so the differential cannot be run
+	// to n=512 in finite time. Terms are capped where the un-memoised reference
+	// still terminates; the stride boundary at 256 is inside that cap.
+	terms := []int32{1, 2, 3, 4, 5, 8, 17, 35, 36, 37, 60, 120, 254, 255, 256, 257, 258, 300}
+	rates := []contract.Rate{{Numerator: 0, Denominator: 1}, {Numerator: 27, Denominator: 125}}
+	shapes := 0
+	for _, term := range terms {
+		for _, rate := range rates {
+			for _, principal := range []int64{100, 5000000000} {
+				for _, start := range []civilDate{date(2024, 1, 1), date(2024, 1, 31)} {
+					disbs := []civilDate{start, plusDays(start, 45)}
+					for _, d := range disbs {
+						shapes++
+						t63Compare(t, t63Request(start, d, principal, term, rate))
+					}
+				}
+			}
+		}
+	}
+	t.Logf("T63B: %d shapes compared", shapes)
+}
+
+// T63B2 — the same stride-boundary terms at the HIGH rates that were observed
+// to drive applyFinalPeriodResidual into deep recursion. Memo-off cannot finish
+// here, so this run is memo-ON only and grades the port's own invariants
+// (principal amortizes to zero) plus wall clock.
+func TestT63B2_HighRateLongTermMemoOnOnly(t *testing.T) {
+	for _, term := range []int32{60, 120, 254, 256, 258} {
+		for _, rate := range []contract.Rate{{Numerator: 2, Denominator: 1}, {Numerator: 5, Denominator: 1}} {
+			v := t63Request(date(2024, 1, 1), date(2024, 1, 1), 5000000000, term, rate)
+			st := time.Now()
+			s, err := Generator{}.Generate(context.Background(), v)
+			elapsed := time.Since(st)
+			if err != nil {
+				t.Logf("n=%-4d rate %d/%d refused: %v", term, rate.Numerator, rate.Denominator, err)
+				continue
+			}
+			var principal int64
+			for _, p := range s.Periods {
+				if p.Kind == contract.PeriodKindRepayment {
+					principal += p.PrincipalMinor
+				}
+			}
+			last := s.Periods[len(s.Periods)-1]
+			t.Logf("n=%-4d rate %d/%d  %-12v  principal sum %d (disbursed 5000000000)  final balance %d",
+				term, rate.Numerator, rate.Denominator, elapsed, principal, last.OutstandingPrincipalMinor)
+		}
+	}
+}
+
+// T63I — how deep does applyFinalPeriodResidual recurse inside the graded
+// domain, and what does that cost? Its bound is len(periods)+2 and each level
+// runs three O(n) passes that read the chain, so a shape that recurses d times
+// pays O(d*n) chain work on top of everything else. T59's cost test samples ONE
+// rate (21.6%) and would not see this.
+func TestT63I_FinalPeriodResidualRecursionCost(t *testing.T) {
+	ctx := context.Background()
+	for _, rate := range []contract.Rate{{Numerator: 27, Denominator: 125}, {Numerator: 2, Denominator: 1}, {Numerator: 5, Denominator: 1}} {
+		var prev time.Duration
+		for _, term := range []int32{32, 64, 128, 256} {
+			v := t63Request(date(2024, 1, 1), date(2024, 1, 1), 5000000000, term, rate)
+			best := time.Hour
+			for r := 0; r < 3; r++ {
+				st := time.Now()
+				if _, err := (Generator{}).Generate(ctx, v); err != nil {
+					t.Fatal(err)
+				}
+				if e := time.Since(st); e < best {
+					best = e
+				}
+			}
+			ratio := "-"
+			if prev > 0 {
+				h := int64(best) * 100 / int64(prev)
+				ratio = fmt.Sprintf("%d.%02dx over a 2x term", h/100, h%100)
+			}
+			t.Logf("rate %d/%d  n=%-4d  %-12v %s", rate.Numerator, rate.Denominator, term, best, ratio)
+			prev = best
+		}
+	}
+}
+
+// T63C — reachability instrumentation. It answers, for the whole T63A/T63B
+// space, whether the two cross-period mechanisms the review was told to attack
+// are REACHED AT ALL inside the graded domain:
+//
+//	carried != 0   the only inter-period state in chainStep, and the value the
+//	               memo's resume path reads out of chain[chainValid-1]
+//	smoothing      shouldBeAdjusted true on the final model
+//	multi-segment  a period carrying more than one interest period
+func TestT63C_ReachabilityOfTheAttackedMechanisms(t *testing.T) {
+	ctx := context.Background()
+	var shapes, withCarry, withSmoothing, withMultiSeg, withZeroEmiThenBalance int
+
+	probe := func(v contract.GenerateRequest) {
+		dueDates, err := repaymentDueDates(ctx, v.ScheduleStartDate, v.NumberOfRepayments,
+			int64(v.RepaymentEvery), v.RepaymentFrequencyUnit, v.Disbursements[0].Date)
+		if err != nil {
+			return
+		}
+		if validateWellFormed(v) != nil || validateSupported(v) != nil ||
+			validateGradedDomain(v, dueDates[len(dueDates)-1]) != nil {
+			return
+		}
+		m := newScheduleModel(ctx, v, dueDates)
+		m.addDisbursement(v.Disbursements[0].Date, v.Disbursements[0].AmountMinor)
+		shapes++
+
+		// Force the whole chain over the FINAL model state.
+		m.invalidateFrom(0)
+		m.interestChainUpTo(len(m.periods) - 1)
+		for i := range m.periods {
+			if m.chain[i].carried != 0 {
+				withCarry++
+				break
+			}
+		}
+		for _, p := range m.periods {
+			if len(p.segments) > 1 {
+				withMultiSeg++
+				break
+			}
+		}
+		rel := m.relatedPeriods(m.effectiveRepaymentDueDate(
+			m.findPeriodForBalanceChange(v.Disbursements[0].Date), v.Disbursements[0].Date))
+		orig, diff := emiAdjustment(rel)
+		if shouldBeAdjusted(len(rel), orig, diff, m.minorDigits) {
+			withSmoothing++
+		}
+		for i, p := range m.periods {
+			if p.emiMinor == 0 && m.calculatedDueInterestMinor(p) > 0 {
+				_ = i
+				withZeroEmiThenBalance++
+				break
+			}
+		}
+	}
+
+	for _, start := range []civilDate{date(2024, 1, 1), date(2024, 1, 31), date(2023, 2, 28)} {
+		for _, rate := range []contract.Rate{{Numerator: 0, Denominator: 1}, {Numerator: 7, Denominator: 100},
+			{Numerator: 27, Denominator: 125}, {Numerator: 5, Denominator: 1}, {Numerator: 20, Denominator: 1}} {
+			for _, principal := range []int64{1, 3, 100, 999999, 5000000000, 900000000000} {
+				for _, term := range []int32{1, 2, 3, 6, 12, 18, 36} {
+					for off := int64(0); off < int64(term)*31+2; off += 7 {
+						probe(t63Request(start, plusDays(start, off), principal, term, rate))
+					}
+				}
+			}
+		}
+	}
+	t.Logf("T63C reachability over %d admitted shapes: carried!=0 in %d, smoothing-guard-true in %d, "+
+		"multi-segment period in %d, zero-EMI-with-positive-interest in %d",
+		shapes, withCarry, withSmoothing, withMultiSeg, withZeroEmiThenBalance)
+}
+
+// T63J — the differential run on EXACTLY the shapes that exercise the two
+// mechanisms the memo's soundness argument turns on, rather than on a sweep
+// that merely happens to contain some of them:
+//
+//	carried != 0    the only inter-period state in chainStep, and the value
+//	                interestChainUpTo reads out of chain[chainValid-1] when it
+//	                RESUMES rather than restarts. A memo bug in the resume path
+//	                is invisible on any shape where this is identically zero.
+//	smoothing       shouldBeAdjusted true, i.e. adjustEMIIfNeeded actually runs
+//	                its trial-rebuild-and-adopt loop, which is the only code in
+//	                the file that writes installments from a deep copy.
+func TestT63J_DifferentialOnCarryAndSmoothingShapesOnly(t *testing.T) {
+	defer func() { memoiseInterestChain = true }()
+	ctx := context.Background()
+	var carryShapes, smoothShapes, both, total int
+
+	for _, start := range []civilDate{date(2024, 1, 1), date(2024, 1, 31), date(2023, 2, 28)} {
+		for _, rate := range []contract.Rate{{Numerator: 0, Denominator: 1}, {Numerator: 7, Denominator: 100},
+			{Numerator: 27, Denominator: 125}, {Numerator: 5, Denominator: 1}, {Numerator: 20, Denominator: 1}} {
+			// Terms are capped at 18 because the memo-OFF reference this compares
+			// against is quadratic by construction; the selection predicate below
+			// is what makes the run interesting, not the term.
+			for _, principal := range []int64{1, 3, 100, 999999, 5000000000, 900000000000} {
+				for _, term := range []int32{1, 2, 3, 6, 12, 18} {
+					for off := int64(0); off < int64(term)*31+2; off += 7 {
+						v := t63Request(start, plusDays(start, off), principal, term, rate)
+						dueDates, err := repaymentDueDates(ctx, v.ScheduleStartDate, v.NumberOfRepayments,
+							int64(v.RepaymentEvery), v.RepaymentFrequencyUnit, v.Disbursements[0].Date)
+						if err != nil || validateWellFormed(v) != nil || validateSupported(v) != nil ||
+							validateGradedDomain(v, dueDates[len(dueDates)-1]) != nil {
+							continue
+						}
+						m := newScheduleModel(ctx, v, dueDates)
+						m.addDisbursement(v.Disbursements[0].Date, v.Disbursements[0].AmountMinor)
+						m.invalidateFrom(0)
+						m.interestChainUpTo(len(m.periods) - 1)
+						carry := false
+						for i := range m.periods {
+							if m.chain[i].carried != 0 {
+								carry = true
+								break
+							}
+						}
+						rel := m.relatedPeriods(m.effectiveRepaymentDueDate(
+							m.findPeriodForBalanceChange(v.Disbursements[0].Date), v.Disbursements[0].Date))
+						orig, diff := emiAdjustment(rel)
+						smooth := shouldBeAdjusted(len(rel), orig, diff, m.minorDigits)
+						if !carry && !smooth {
+							continue
+						}
+						if carry {
+							carryShapes++
+						}
+						if smooth {
+							smoothShapes++
+						}
+						if carry && smooth {
+							both++
+						}
+						total++
+						t63Compare(t, v)
+					}
+				}
+			}
+		}
+	}
+	t.Logf("T63J: %d shapes compared memo-on vs memo-off — %d with a non-zero inter-period carry, "+
+		"%d tripping the EMI smoothing guard, %d both", total, carryShapes, smoothShapes, both)
+}
+
+// T63D — the memo's FINAL-STATE truthfulness. Independent of the output
+// comparison: after a full generation, every entry the memo still claims valid
+// must equal a from-scratch recomputation over the model's final stored state.
+// A disagreement is a proven stale cell even where the output happened to agree.
+func TestT63D_MemoAgreesWithScratchOnTheFinalState(t *testing.T) {
+	ctx := context.Background()
+	checked, entries := 0, 0
+	for _, start := range []civilDate{date(2024, 1, 1), date(2024, 1, 31)} {
+		for _, rate := range []contract.Rate{{Numerator: 0, Denominator: 1}, {Numerator: 27, Denominator: 125}, {Numerator: 5, Denominator: 1}} {
+			for _, principal := range []int64{1, 100, 5000000000} {
+				for _, term := range []int32{1, 2, 6, 18, 40} {
+					for off := int64(0); off < int64(term)*31; off += 5 {
+						v := t63Request(start, plusDays(start, off), principal, term, rate)
+						dueDates, err := repaymentDueDates(ctx, v.ScheduleStartDate, v.NumberOfRepayments,
+							int64(v.RepaymentEvery), v.RepaymentFrequencyUnit, v.Disbursements[0].Date)
+						if err != nil || validateGradedDomain(v, dueDates[len(dueDates)-1]) != nil {
+							continue
+						}
+						m := newScheduleModel(ctx, v, dueDates)
+						m.addDisbursement(v.Disbursements[0].Date, v.Disbursements[0].AmountMinor)
+						// Drive the reads generate() performs, in generate()'s order.
+						for _, p := range m.periods {
+							_ = m.duePrincipalMinor(p)
+							_ = m.dueInterestMinor(p)
+							_ = m.outstandingLoanBalanceMinor(p)
+						}
+						claimed := make([]chainStep, m.chainValid)
+						copy(claimed, m.chain[:m.chainValid])
+						validAt := m.chainValid
+						m.invalidateFrom(0)
+						m.interestChainUpTo(len(m.periods) - 1)
+						for i := 0; i < validAt; i++ {
+							entries++
+							if claimed[i] != m.chain[i] {
+								t.Fatalf("STALE MEMO CELL: %s period %d claimed %+v, from scratch %+v",
+									describe(v), i, claimed[i], m.chain[i])
+							}
+						}
+						checked++
+					}
+				}
+			}
+		}
+	}
+	t.Logf("T63D: %d generations, %d memo entries audited against a from-scratch recomputation", checked, entries)
+}
+
+// T63E — is generation cost actually linear in the term?
+//
+// T59 pinned cost by the RATIO OF HEAP ALLOCATION COUNTS. That measurement is
+// structurally blind to a quadratic that allocates nothing. This one measures
+// wall clock across four terms and reports the growth exponent.
+func TestT63E_WallClockGrowthAcrossFourTerms(t *testing.T) {
+	terms := []int32{500, 1000, 2000, 4000, 8000}
+	var prev time.Duration
+	for _, n := range terms {
+		best := time.Hour
+		for r := 0; r < 3; r++ {
+			start := time.Now()
+			if _, err := (Generator{}).Generate(context.Background(), livenessRequest(n)); err != nil {
+				t.Fatal(err)
+			}
+			if e := time.Since(start); e < best {
+				best = e
+			}
+		}
+		ratio := "-"
+		if prev > 0 {
+			ratio = fmt.Sprintf("%d.%02dx over a 2x term", int64(best)*100/int64(prev)/100, int64(best)*100/int64(prev)%100)
+		}
+		t.Logf("n=%-5d %v   %s", n, best, ratio)
+		prev = best
+	}
+}
+
+// T63F — where does that time go? Isolate installmentNumberOf, which generate()
+// calls once per emitted row and which itself scans every row already emitted.
+func TestT63F_InstallmentNumberOfIsQuadratic(t *testing.T) {
+	for _, n := range []int{1000, 2000, 4000, 8000} {
+		rows := make([]contract.Period, 0, n)
+		start := time.Now()
+		for i := 0; i < n; i++ {
+			rows = append(rows, contract.Period{Kind: contract.PeriodKindRepayment,
+				InstallmentNumber: installmentNumberOf(rows)})
+		}
+		t.Logf("installmentNumberOf alone, %d rows: %v", n, time.Since(start))
+	}
+}
+
+// T63G — cancellation latency at a large term, measured rather than asserted.
+// The claim under test is emi.go:135-139: "the 256-period stride bounds the tail
+// latency of a cancelled call to a few milliseconds".
+func TestT63G_CancellationTailLatency(t *testing.T) {
+	// The first row of deadlines fires during repaymentDueDates / model
+	// construction. The LATE ones are the interesting ones: at n=1500-5000 the
+	// generation runs for seconds inside recalculate, so a deadline in the
+	// hundreds of ms to seconds lands inside adjustEMIIfNeeded -- which is where
+	// the UNCANCELLABLE O(n) stretches are (deepCopy, the trial write loop, the
+	// trialRelated build and adopt loops). If the tail is O(n) rather than
+	// O(stride), this is where it shows.
+	for _, n := range []int32{1500, 3000, 5000, 20000, 50000} {
+		for _, fire := range []time.Duration{0, 5 * time.Millisecond, 50 * time.Millisecond,
+			200 * time.Millisecond, 900 * time.Millisecond, 2500 * time.Millisecond} {
+			ctx, cancel := context.WithTimeout(context.Background(), fire)
+			start := time.Now()
+			s, err := Generator{}.Generate(ctx, livenessRequest(n))
+			elapsed := time.Since(start)
+			cancel()
+			t.Logf("n=%-6d deadline %-6v -> returned in %-12v tail %-12v err=%v rows=%d",
+				n, fire, elapsed, elapsed-fire, err, len(s.Periods))
+			if s.Periods != nil && err != nil {
+				t.Errorf("n=%d: cancelled generation returned %d rows AND err=%v", n, len(s.Periods), err)
+			}
+		}
+	}
+}
+
+// T63H — can a cancelled generation ever return a nil error with a truncated
+// row list? Fire the cancel at every microsecond offset across the window in
+// which generation is running, and assert the pairing (err==nil) <=> (rows complete).
+func TestT63H_NoPartialScheduleEverEscapes(t *testing.T) {
+	// The term is chosen so that BOTH directions of the biconditional are
+	// sampled: a full generation here takes a few ms, so deadlines swept from 0
+	// past that figure produce cancellations early and completions late. At
+	// n=3000 (tried first) every one of 292 runs cancelled and the "completed"
+	// arm was never exercised, which is a weaker test than it looks.
+	const n = 200
+	full, err := Generator{}.Generate(context.Background(), livenessRequest(n))
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := len(full.Periods)
+	var cancelled, completed int
+	for us := 0; us <= 40000; us += 137 {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(us)*time.Microsecond)
+		s, err := Generator{}.Generate(ctx, livenessRequest(n))
+		cancel()
+		switch {
+		case err != nil:
+			cancelled++
+			if s.Periods != nil {
+				t.Fatalf("offset %dus: err=%v AND %d rows returned", us, err, len(s.Periods))
+			}
+		default:
+			completed++
+			if len(s.Periods) != want {
+				t.Fatalf("offset %dus: nil error but %d rows, want %d — A PARTIAL SCHEDULE ESCAPED",
+					us, len(s.Periods), want)
+			}
+			for i := range s.Periods {
+				if s.Periods[i] != full.Periods[i] {
+					t.Fatalf("offset %dus row %d: %+v want %+v", us, i, s.Periods[i], full.Periods[i])
+				}
+			}
+		}
+	}
+	t.Logf("T63H: %d cancelled, %d completed; no partial schedule and no divergent complete one", cancelled, completed)
+}

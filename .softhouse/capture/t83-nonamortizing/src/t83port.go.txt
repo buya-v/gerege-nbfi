@@ -1,0 +1,132 @@
+// t83port emits, as JSON, the schedule the Go port produces for every cell of the
+// T83 sweep, plus the two rig-calibration shapes.
+//
+// It contains NO observed value and NO expectation and it CHANGES NO PORT LOGIC.
+// The comparison against what the reference oracle emitted is done afterwards, in
+// Python, against the committed capture artefact
+// .softhouse/capture/t83-nonamortizing/out/capture-t83-raw.json.
+//
+// The case table below is the SAME rate/term/range table the Java harness carries,
+// written out again here rather than shared, so that a divergence in the case list
+// itself shows up as a missing id rather than as a quietly smaller sweep.
+//
+// Money is int64 minor units. No floating point.
+//
+// Stored as .txt in the capture directory and copied to nexus/cmd/t83port/main.go
+// inside a scratch copy of the tree by run-port.py. The committed port is never
+// modified.
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"os"
+	"strings"
+
+	"github.com/gerege/nexus/internal/apps/loanschedule"
+	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
+)
+
+type row struct {
+	Kind        string `json:"kind"`
+	Number      int32  `json:"installment_number"`
+	FromDate    string `json:"from_date"`
+	DueDate     string `json:"due_date"`
+	Principal   int64  `json:"principal_minor"`
+	Interest    int64  `json:"interest_minor"`
+	Outstanding int64  `json:"outstanding_principal_minor"`
+}
+
+type out struct {
+	Case  string `json:"case"`
+	Error string `json:"error,omitempty"`
+	Rows  []row  `json:"rows"`
+}
+
+type rate struct {
+	tag      string
+	num, den int64
+}
+
+func main() {
+	// EXACT rational rates. 21.6% = 27/125, 7.0% = 7/100, 16.8% = 21/125, 36% = 9/25.
+	rates := []rate{{"21.6", 27, 125}, {"7.0", 7, 100}, {"16.8", 21, 125}, {"36.0", 9, 25}}
+	terms := []int32{2, 3, 4, 6, 12, 24, 36, 56}
+	sweepTo := [][]int{
+		{5, 5, 5, 6, 9, 13, 17, 21},
+		{5, 5, 5, 6, 9, 15, 20, 27},
+		{5, 5, 5, 6, 9, 14, 18, 23},
+		{5, 5, 5, 6, 8, 12, 14, 17},
+	}
+
+	type cs struct {
+		id        string
+		principal int64
+		n         int32
+		num, den  int64
+	}
+	var cases []cs
+	// the two rig calibrations, same shapes the Java side calibrated on
+	cases = append(cases, cs{"P-CAL-ZPA", 28, 56, 27, 125}, cs{"P-CAL-ZPB", 28, 55, 27, 125})
+	for ri, r := range rates {
+		for ti, n := range terms {
+			for minor := 1; minor <= sweepTo[ri][ti]; minor++ {
+				id := fmt.Sprintf("T83-SW-R%s-N%d-B%d", strings.ReplaceAll(r.tag, ".", "p"), n, minor)
+				cases = append(cases, cs{id, int64(minor), n, r.num, r.den})
+			}
+		}
+	}
+
+	start := contract.CivilDate{Year: 2024, Month: 1, Day: 1}
+	gen := loanschedule.New()
+	var all []out
+	for _, c := range cases {
+		req := contract.GenerateRequest{
+			TimeZone:                  "Asia/Ulaanbaatar",
+			Currency:                  contract.Currency{Code: "MNT", MinorUnitDigits: 2},
+			Rounding:                  contract.Rounding{SignificantDigits: 19, RateFactorScale: 19, Mode: contract.RoundingHalfUp},
+			ScheduleStartDate:         start,
+			Disbursements:             []contract.Disbursement{{Date: start, AmountMinor: c.principal}},
+			NumberOfRepayments:        c.n,
+			RepaymentEvery:            1,
+			RepaymentFrequencyUnit:    contract.FrequencyMonths,
+			AnnualNominalInterestRate: contract.Rate{Numerator: c.num, Denominator: c.den},
+			InterestMethod:            contract.InterestMethodDecliningBalance,
+			DayCount:                  contract.DayCountFixed30Over360,
+			DownPaymentPercentage:     contract.Rate{Numerator: 0, Denominator: 1},
+		}
+		s, err := gen.Generate(context.Background(), req)
+		if err != nil {
+			// A refusal is DATA, not a crash: the port refusing a shape the oracle
+			// answers is exactly as interesting as a different number.
+			all = append(all, out{Case: c.id, Error: err.Error()})
+			continue
+		}
+		o := out{Case: c.id}
+		for _, p := range s.Periods {
+			k := "REPAYMENT"
+			if p.Kind == contract.PeriodKindDisbursement {
+				k = "DISBURSEMENT"
+			} else if p.Kind == contract.PeriodKindDownPayment {
+				k = "DOWN_PAYMENT"
+			}
+			o.Rows = append(o.Rows, row{
+				Kind:        k,
+				Number:      p.InstallmentNumber,
+				FromDate:    fmt.Sprintf("%04d-%02d-%02d", p.FromDate.Year, p.FromDate.Month, p.FromDate.Day),
+				DueDate:     fmt.Sprintf("%04d-%02d-%02d", p.DueDate.Year, p.DueDate.Month, p.DueDate.Day),
+				Principal:   p.PrincipalMinor,
+				Interest:    p.InterestMinor,
+				Outstanding: p.OutstandingPrincipalMinor,
+			})
+		}
+		all = append(all, o)
+	}
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", " ")
+	if err := enc.Encode(all); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}

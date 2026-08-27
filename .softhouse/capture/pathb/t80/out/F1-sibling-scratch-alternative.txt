@@ -1,0 +1,49 @@
+=== T161 follow-up evidence — the OVERWRITE ITSELF is unnecessary
+=================================================================
+T158 recommended fixing F-1 by running the pre-fix bytes "from a scratch path, the way the
+sibling prove-f2.sh:24 already does", rather than bolting a trap onto a rig that should not
+be writing to the live file at all.  That recommendation is CORRECT IN SPIRIT but wrong in
+the naive form: `attest.py` derives everything from its OWN location —
+
+    HERE = os.path.dirname(os.path.abspath(__file__))
+    PATHB = HERE/..
+    OUT  = HERE/out/<capture-set>
+
+and then GATES on the shape of OUT ("a capture directory is exactly <task>/out/<name>").
+Copying it to `t80/out/.f1-prefix.py`, as prove-f2.sh does for preconditions.sh, moves HERE
+and changes the very guard under test.
+
+What DOES work — measured below — is a sibling file IN THE SAME DIRECTORY.  HERE, PATHB and
+OUT are then identical, the filename itself is never read, and the defect reproduces
+exactly, while the live `t36/attest.py` is not touched at all.
+
+MEASURED (throwaway clone of main + this branch, 2026-08-21):
+
+  sibling `t36/.f1-prefix-attest.py`   sha256 c56825ad… (the pre-fix attester, 813acb1)
+  live    `t36/attest.py`  BEFORE      sha256 567e4cf0…
+  live    `t36/attest.py`  AFTER       sha256 567e4cf0…   <-- UNCHANGED
+  the defect still reproduces          stamp CAPTURED-FROM-TENANT written, contents `default`
+                                       preconditions.txt replaced with the breached one
+                                       same ABORT text, same exit 1
+
+So the write to the live attester can be REMOVED, not merely made recoverable.  Note this
+does NOT make the trap redundant: the pre-fix attester still mutates the committed
+evidence set `t36/out/emiloop` whichever file it is run from, so the stamp/evidence half of
+T161's guard is needed either way.  Raised as a follow-up rather than done here: it would
+change what the committed red/green transcript is a transcript OF, and the trap fix is what
+T161 was dispatched to build and drive.
+
+Transcript:
+-----------------------------------------------------------------
+sibling: .softhouse/capture/pathb/t36/.f1-prefix-attest.py  sha256 c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92
+live t36/attest.py sha256 (must NOT change): 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+exit=1
+
+ABORT: preconditions breached — no capture attempted, no attestation written.
+stamp present: YES, contents: default
+live t36/attest.py sha256 after: 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+git status:
+ M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+?? .softhouse/capture/pathb/t36/.f1-prefix-attest.py
+?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+(cleaned)

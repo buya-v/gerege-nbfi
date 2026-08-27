@@ -1,0 +1,105 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-REFUSE-04-preclosure-entry-on-closing-date",
+  "context": "ledger",
+  "class": "oracle-refusal",
+  "title": "THE CLOSURE BOUNDARY IS INCLUSIVE AND THE ORACLE'S OWN MESSAGE SAYS IT IS NOT. A2-01 posted a balanced manual journal entry dated 2026-01-31 to office 1 while that office's latest GLClosure closed 2026-01-31 -- THE TWO EQUAL -- and the oracle returned HTTP 403 with error.msg.glJournalEntry.invalid.accounting.closed. The guard is JournalEntryWritePlatformServiceJpaRepositoryImpl.java:636, `!DateUtils.isBefore(latestGLClosure.getClosingDate(), transactionDate)`, which refuses transactionDate <= closingDate; the message it returns is \"Journal entry cannot be made PRIOR TO last account closing date for the branch\". A port written from the message text gets a strict `<`, ACCEPTS an entry dated ON the closing date, and fails open on exactly the day a period-end adjustment carries. The equal case is the ONLY case that separates the two readings, and it is the one that was captured.",
+  "dec2_revision": 5,
+  "_note": "WHAT THIS VECTOR GRADES: that the port's closure comparison is INCLUSIVE. `ledger-wrong-closure-boundary-exclusive` is the strict-`<` port, registered and executable, and it dies here and nowhere else -- it agrees with the reference implementation on every entry dated strictly before the closing date, which is every pre-closure request a naive corpus would think to capture. THE PRECONDITION IS AN INPUT, NOT AMBIENT STATE, and that is T289's date strategy (c) discharged for the case it was written for. T289 ruled all four of T287's closure/future-date captures NON-PROMOTABLE AS LITERAL-DATE VECTORS because the business date and the closing date lived in PROSE, so the vector's truth depended on the morning it was read. request.latest_closing_date now carries getLatestGLClosureByBranch(1).getClosingDate() and request.business_date carries the business date, so this vector asserts a RELATION (transaction date vs. the two boundaries) and no calendar can make it false. WHY THE BUSINESS DATE IS HERE AT ALL ON A CLOSURE VECTOR: :629 runs BEFORE :634-639, so a vector recording the closure refusal must also record that the future-date guard did not fire instead; 2026-01-31 is before 2026-08-23, so it did not, and admit.go refuses this vector if that relation is ever edited to say otherwise. THE ORDERING OF THIS RULE AGAINST THE BALANCE RULE IS SOURCE-DERIVED, NOT OBSERVED, and it is stated rather than left to be assumed: A2-01's body is BALANCED and both legs are on manual-permitted DETAIL accounts, so no captured request violates the closure rule AND another rule, and nothing in this corpus orders them by measurement. The source is unambiguous -- :636 sits inside validateBusinessRulesForJournalEntries at :626 alongside :629, both before checkDebitAndCreditAmounts at :650, and all of them before saveAllDebitOrCreditEntries -- but that is source, not wire. Contrast LDG-REFUSE-03, whose ordering IS observed. WHAT THIS VECTOR DOES NOT SETTLE: it pins the REFUSAL side of the boundary only. That an entry dated closingDate + 1 day is ACCEPTED is [UNVERIFIED] -- capturing it requires the oracle to POST a journal entry, and a posted journal entry CANNOT BE DELETED, so this task did not fire it and filed it as backlog instead (T295-ADJUDICATION.md, backlog item B-1). errors[0].args is NOT graded: it carries \"2026-01-31\", which is the CLOSING date and not this request's transaction date (:637 constructs the exception with latestGLClosure.getClosingDate()), and the Refusal shape has three cells and no fourth. On THIS request the two dates coincide, so nothing is lost here; the capture that shows the asymmetry is A2-02, adjudicated NOT PROMOTABLE for exactly that reason. NO LEGS AND NO TOTALS ARE ASSERTED -- the request was refused, so no entry exists and no amount was observed; the two amount_major_text tokens are the CALLER'S OWN characters from the committed .req wire bytes (the integer token `1000000`, no decimal point, denoting MNT 1,000,000.00 = 100000000 minor units) and are graded by nothing. NO BALANCE IS GRADED. acc_gl_journal_entry carries office_running_balance and organization_running_balance and GATE G-12 IS OPEN on exactly them: A2-29 MEASURED them to be a SECOND SOURCE OF TRUTH rather than a cache -- made to disagree with the derived sum by MNT 2,000,000.00 on the live oracle, surviving four organisation-wide recomputes, propagating into a freshly computed row because the recompute seeds from its own prior output, and served at the contract boundary flagged runningBalanceComputed: true. This vector's schema has NO FIELD for either column. Balances are DERIVED, never written, and never read back.",
+  "capabilities_required": [
+    "ledger.refusal.parity",
+    "ledger.opening.balance.and.closure"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/t287-closure-refusals/out/A2-01-preclosure-on-date.json",
+    "capture_sha256": "c12e977f1c633356e9679f9f2e691a35e1647bc4c19eefd2d6f55bb5c12805d2",
+    "capture_case_id": "A2-01-preclosure-on-date",
+    "request_capture_ref": ".softhouse/capture/t287-closure-refusals/out/A2-01-preclosure-on-date.req",
+    "request_capture_sha256": "61c9b228b517e92ffc1c29430f5515e7fe681f4527ad7d9bca2c34284dcf9351",
+    "request_capture_case_id": "A2-01-preclosure-on-date",
+    "rerun_invariant": "THIS VECTOR IS GRADED BY REPLAY AGAINST A PORT AND MUST NEVER BE RE-FIRED AT THE ORACLE. READ THAT SENTENCE BEFORE THE REST. A2-01's body is a VALID, BALANCED, POSTABLE manual journal entry: GL 4 and GL 2 are both manual_journal_entries_allowed = t, disabled = f, account_usage = 1 (DETAIL), debits equal credits, and 2026-01-31 is in the past. THE ONLY THING THAT REFUSED IT WAS A GLClosure THAT NO LONGER EXISTS -- T287 created it (id 1) to take this capture and DELETED it in the same fire, so acc_gl_closure is empty and re-sending this body TODAY POSTS TWO JOURNAL ENTRIES INTO THE REFERENCE ORACLE. Unlike the GLClosure T287 created and removed, A POSTED JOURNAL ENTRY CANNOT BE DELETED: GLClosure has no @SQLDelete and deleteGLClosure is a hard delete (:135), while the only 'undo' for a journal entry is posting more entries. .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh measures the precondition and fails closed; it exits 1 today. THE RELATION THIS VECTOR ASSERTS, which is what a port is graded on and what no calendar can falsify: given office_id 1, a latest GLClosure closing on request.latest_closing_date, and a transaction dated request.transaction_date with transaction_date <= latest_closing_date AND transaction_date <= business_date, the answer is HTTP 403 error.msg.glJournalEntry.invalid.accounting.closed. WHAT WOULD MAKE THIS VECTOR FALSE: a change to :636 that made the comparison strict, or a change to the message/globalisation code at GlJournalEntryInvalidReason.ACCOUNTING_CLOSED. Both are oracle-source changes and both are found by re-reading the pinned commit, NOT by re-posting. THE ANSWER IN THAT CASE IS RE-CAPTURE, NOT EXEMPTION: this schema admits no invariant_exemptions at all. AND NOTE WHAT THIS BODY DOES NOT HAVE, because LDG-REFUSE-03 has it and this one does not: OB-01 was unbalanced by one minor unit and was therefore unpostable ON ITS OWN CONTENT, permanently. A2-01 is balanced. Its safety comes ENTIRELY from an external precondition that has already lapsed, which is P-92's loaded weapon exactly -- 'a probe whose safety comes from an EXTERNAL PRECONDITION rather than from its own content is a loaded weapon, and the danger is highest immediately after the capture SUCCEEDS'. That is why the bytes were promoted and the probe was not re-run.",
+    "citation": "T295, promoting T287's capture under T289's rule. HTTP status 403 read from out/A2-01-preclosure-on-date.status; code and message read from errors[0] of the captured response body (userMessageGlobalisationCode and defaultUserMessage, byte-identical to developerMessage on this error). THE WIRE MESSAGE AND THE SOURCE STRING AGREE, AND BOTH DISAGREE WITH THE CODE THAT RUNS -- the message says \"prior to\" and :636 is inclusive; the WIRE is transcribed here and the CODE is what the port must implement, and the vector's job is to make the second beat the first. request.legs' amount tokens, office_id and transaction_date read from the committed .req wire-bytes artefact. request.latest_closing_date read from req/a2-00-create-closure.json's closingDate, the closure T287 created for this capture, confirmed by out/M-09-state-during-closure.txt (acc_gl_closure id 1, office 1, closing_date 2026-01-31) and by out/M-12-state-after-delete.txt / M-13-glclosures-after-delete.json showing it gone afterwards. request.business_date 2026-08-23 is DERIVED, not read from an endpoint, and that is recorded because a derived value MOVES: `enable-business-date` is `f` and `m_business_date` is empty (out/M-07-businessdate-list.json is `[]`, out/M-06-businessdate-BUSINESS_DATE.json is 404 error.msg.businessdate.not.found), so BusinessDateReadPlatformServiceImpl seeds BUSINESS_DATE with DateUtils.getLocalDateOfTenant() -- today in Asia/Ulaanbaatar (+08, no DST, zone named never offset hard-coded). The DB's own now() read 2026-08-23 00:09:58+00 = 08:09 on 2026-08-23 in Ulaanbaatar. The chart rows in request.accounts are DATA (DEC-2 §4.5), recorded twice independently: T287's handoff §2 (\"Debit GL 4 (10201 Loan Portfolio), credit GL 2 (10100 Fund Source) -- both manual-allowed, enabled, detail accounts\") and T289-CORRECTIONS.md §1 (\"GL 4 and GL 2 on tenant gerege are both manual_journal_entries_allowed = t, disabled = f, account_usage = 1 (DETAIL)\"). MANIFEST.sha256 over the rig verifies 87/87 unchanged, re-checked by T295 before transcription."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_rest_posting",
+    "captured_at": "2026-08-23T00:17:56Z"
+  },
+  "request": {
+    "product_id": 0,
+    "product_type": "",
+    "accounting_rule": "",
+    "slot_family": "",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_rest_posting",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "",
+    "manual_entry": true,
+    "transaction_date": "2026-01-31",
+    "business_date": "2026-08-23",
+    "latest_closing_date": "2026-01-31",
+    "transaction_amount_major_text": "",
+    "accounts": [
+      {
+        "id": 4,
+        "gl_code": "10201",
+        "name": "Loan Portfolio",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 2,
+        "gl_code": "10100",
+        "name": "Fund Source",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 4,
+        "entry_side": "DEBIT",
+        "amount_major_text": "1000000"
+      },
+      {
+        "gl_account_id": 2,
+        "entry_side": "CREDIT",
+        "amount_major_text": "1000000"
+      }
+    ]
+  },
+  "expect": {
+    "kind": "refusal",
+    "http_status": 403,
+    "legs": [],
+    "total_debits_minor": "",
+    "total_credits_minor": "",
+    "refusal": {
+      "http_status": 403,
+      "code": "error.msg.glJournalEntry.invalid.accounting.closed",
+      "message": "Journal entry cannot be made prior to last account closing date for the branch"
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "ledger-wrong-closure-boundary-exclusive",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "refusal.http_status",
+        "refusal.code",
+        "refusal.message"
+      ],
+      "note": "A port that implements the boundary as its own error message describes it -- STRICTLY 'prior to' the closing date -- accepts this entry and POSTS it. All three refusal cells diverge, because the implementation returned a posted entry where an oracle refusal was expected, and that is the maximal kill available: A2-01's body is balanced and both legs are on manual-permitted accounts, so nothing else in the port refuses it either. The one day the two readings disagree about is THE CLOSING DATE ITSELF, which is the day a period-end adjustment carries."
+    }
+  ],
+  "invariant_exemptions": []
+}

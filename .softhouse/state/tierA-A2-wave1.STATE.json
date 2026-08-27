@@ -1,0 +1,16 @@
+{
+  "squad": "tierA-A2-wave1",
+  "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
+  "fire": "20260821-134344",
+  "exit": "CLEAN — 5 workers dispatched, 5 completed, 0 live at exit, nothing uncommitted, nothing stranded",
+  "merged": ["A2-1", "A2-2", "A2-3", "A2-4"],
+  "held_unmerged": [
+    {"task": "T149", "branch": "softhouse/T149-halfup-tie-vector", "why": "promoted a vector into the graded corpus but the driver dispatched it with NO paired reviewer (plan-gate rule 1). Not a defect in the work — conformance PASS 43 on its branch. T153 is the review.", "next_action": "run T153, then merge"}
+  ],
+  "next_tasks": ["T153 (needs oracle)", "A2-5 (rig fixes, needs oracle)", "G-9 decision (no oracle)", "A2-6 (no oracle, cloud-fire suitable)"],
+  "gate_pending": "G-9 — chart of accounts, PRODUCT class, blocks the A2 coder",
+  "open_questions": [
+    "G-9: which chart of accounts does Gerege launch with? Driver decides next fire unless Buyan overrules.",
+    "Whether slice A1 needs splitting again at plan time (11,535 LOC across 63 files)."
+  ]
+}

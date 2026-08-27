@@ -1,0 +1,29 @@
+built clean.json / poisoned.json / earlier-line.json
+
+The guard as it is written in conformance.sh:184 —
+  perl -0pe 's/"(\\.|[^"\\])*"//g' $f | grep -Eq '<float regex>'
+  exit 0 = 'FLOAT FOUND, reject'   exit 1 = 'clean, pass'
+
+FILE               LOCALE     GUARD SAYS               VERDICT
+clean.json         utf8       FLOAT FOUND (rejects)    correct
+clean.json         posixC     FLOAT FOUND (rejects)    correct
+poisoned.json      utf8       clean (PASSES)           *** SILENT PASS ON A FLOAT ***
+poisoned.json      posixC     FLOAT FOUND (rejects)    correct
+earlier-line.json  utf8       FLOAT FOUND (rejects)    correct
+earlier-line.json  posixC     FLOAT FOUND (rejects)    correct
+
+and with the two tokens added (this is the proposed fix, NOT applied here —
+.softhouse/conformance.sh belongs to another worker this fire):
+FILE               LOCALE     GUARD SAYS               VERDICT
+clean.json         utf8       FLOAT FOUND (rejects)    correct
+clean.json         posixC     FLOAT FOUND (rejects)    correct
+poisoned.json      utf8       FLOAT FOUND (rejects)    correct
+poisoned.json      posixC     FLOAT FOUND (rejects)    correct
+earlier-line.json  utf8       FLOAT FOUND (rejects)    correct
+earlier-line.json  posixC     FLOAT FOUND (rejects)    correct
+
+hexdump of poisoned.json:
+00000000: 7b0a 2020 226e 756d 6265 725f 6f66 5f72  {.  "number_of_r
+00000010: 6570 6179 6d65 6e74 7322 3a20 e220 322e  epayments": . 2.
+00000020: 302c 0a20 2022 6e6f 7465 223a 2022 6f6b  0,.  "note": "ok
+00000030: 220a 7d0a                                ".}.

@@ -1,0 +1,24 @@
+tree under test = 914cf552fac9ba3fc68ad6cbde92ebba025ab285 (HEAD)
+
+=== GREEN: the shipped tree — both comparisons must pass, or the RED legs prove nothing
+  shipped tree                                   G-6 reason=OK  (want OK )  G-7 reason=OK  (want OK )  exit=0 (want 0)   OK
+          HARNESS ERROR: '/tmp/t91-guards.74668/export/.softhouse/capture/t91/out/g6-mutation-check-sh/req-mutated-55.json' is byte-identical to the canonical request — the sed substitution
+          G-6 refused for the RIGHT reason (the sed mutation did not take)   OK      [G-6]
+          MISSING  /tmp/t91-guards.74668/inv7/y-sh/A2.txt  (present under y-bash only)
+          G-7 named the SH-side absence, which is what the union domain buys   OK      [G-7]
+
+=== RED 1: run-attacks.sh exits 2 for the WRONG reason (A7's symlink, not the sed mutation)
+  assert_mutated removed + A7 symlink redirected G-6 reason=RED (want RED)  G-7 reason=OK  (want OK )  exit=1 (want 1)   OK
+          HARNESS ERROR: A7's symlink does not read back as the canonical request
+          *** G-6 exited 2 for the WRONG reason — the message is not the mutation-did-not-take one
+          MISSING  /tmp/t91-guards.75410/inv7/y-sh/A2.txt  (present under y-bash only)
+          G-7 named the SH-side absence, which is what the union domain buys   OK      [G-7]
+
+=== RED 2: shell-invariance.sh exits 1 without naming the SH-side absence
+  one-sided branch relabelled DIFFERS            G-6 reason=OK  (want OK )  G-7 reason=RED (want RED)  exit=1 (want 1)   OK
+          HARNESS ERROR: '/tmp/t91-guards.76163/export/.softhouse/capture/t91/out/g6-mutation-check-sh/req-mutated-55.json' is byte-identical to the canonical request — the sed substitution
+          G-6 refused for the RIGHT reason (the sed mutation did not take)   OK      [G-6]
+          *** G-7 exited 1 without naming /tmp/t91-guards.76163/inv7/y-sh/A2.txt as MISSING
+
+done — every leg behaved as specified.
+F-T138-7 CLOSED: G-6 and G-7 now compare their diagnostic, and both comparisons are red-driven.

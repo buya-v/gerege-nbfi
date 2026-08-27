@@ -1,0 +1,9 @@
+PUT /glaccounts/33
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-29-retype-asset-to-income.json
+body-wire-bytes-artefact: A2-435-retype-asset-to-income.req
+body-sha256: b476388e5dc58cf02a1c11bbeecda0397a9b7f9e973287571e3fb60f3edb4ed4
+body-bytes: 12
+captured-at-utc: 2026-08-22T02:46:49Z

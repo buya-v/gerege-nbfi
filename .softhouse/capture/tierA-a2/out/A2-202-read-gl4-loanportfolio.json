@@ -1,0 +1,1 @@
+{"id":4,"name":"Loan Portfolio","parentId":3,"glCode":"10201","disabled":false,"manualEntriesAllowed":true,"type":{"id":1,"code":"accountType.asset","value":"ASSET"},"usage":{"id":1,"code":"accountUsage.detail","value":"DETAIL"},"description":"A2 capture: third-level DETAIL under header id 3 (glCode 10200)","nameDecorated":"........Loan Portfolio","tagId":{"id":0}}

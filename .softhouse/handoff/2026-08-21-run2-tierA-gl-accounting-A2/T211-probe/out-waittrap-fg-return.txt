@@ -1,0 +1,3 @@
+[1787361808.378081000] pid=28619 pgid=28619 shape=fg hmode=return
+[1787361808.390266000] READY
+[1787361808.403792000] starting FOREGROUND child (/bin/sleep 300) -- today's shape

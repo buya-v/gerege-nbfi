@@ -1,0 +1,135 @@
+baseline: ccf3c14171dea52bd044d81d5ca67aba8054b74c:verdict.sh  sha256=05cafe320078b958  (MF-1 absent, asserted)
+current : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a24fd9c7c2f938fb4/.softhouse/capture/t91/verdict.sh     sha256=802dcb170ae92e0f
+
+red input: 10 of 13 committed transcripts replaced by the single line 'truncated, nothing was ever run'
+           (no attack body, no PASS/FAIL line, no EXIT= line)
+
+############ RED — the content-free transcript set
+=== PRE-MF-1  over the truncated set  (the DEFECT)
+    TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+    ---                                            ---    ---       ---        ---
+    A2a-mutated-canary-gerege.txt                  truncated, nothing was ever run no        no         OK
+    A2b-mutated-canary-default.txt                 truncated, nothing was ever run no        no         OK
+    A2c-crafted-canary-and-expectation-gerege.txt  truncated, nothing was ever run no        no         OK
+    A3a-swapped-canary-gerege.txt                  truncated, nothing was ever run no        no         OK
+    A3b-missing-canary.txt                         truncated, nothing was ever run no        no         OK
+    A3c-no-canary.txt                              truncated, nothing was ever run no        no         OK
+    A4a-expect-override-default.txt                truncated, nothing was ever run no        no         OK
+    A4b-expect-override-gerege.txt                 truncated, nothing was ever run no        no         OK
+    A4c-decoy-variable.txt                         0      YES       YES        OK
+    A5-helpful-correct-override.txt                truncated, nothing was ever run no        no         OK
+    A6-canary-is-a-directory.txt                   truncated, nothing was ever run no        no         OK
+    A7-symlinked-canary.txt                        0      YES       YES        OK
+    A8-foreign-cwd.txt                             0      YES       YES        OK
+    
+    ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+    EXIT=0   (expected 0)
+
+=== POST-MF-1 over the truncated set  (the FIX)
+    TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+    ---                                            ---    ---       ---        ---
+    A2a-mutated-canary-gerege.txt                  -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+    A2b-mutated-canary-default.txt                 -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+    A2c-crafted-canary-and-expectation-gerege.txt  -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+    A3a-swapped-canary-gerege.txt                  -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+    A3b-missing-canary.txt                         -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+    A3c-no-canary.txt                              -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+    A4a-expect-override-default.txt                -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+    A4b-expect-override-gerege.txt                 -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+    A4c-decoy-variable.txt                         0      YES       YES        OK
+    A5-helpful-correct-override.txt                -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+    A6-canary-is-a-directory.txt                   -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+    A7-symlinked-canary.txt                        0      YES       YES        OK
+    A8-foreign-cwd.txt                             0      YES       YES        OK
+    
+    EXPECTATIONS NOT MET (10):
+    A2a-mutated-canary-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+    A2b-mutated-canary-default.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+    A2c-crafted-canary-and-expectation-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+    A3a-swapped-canary-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+    A3b-missing-canary.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+    A3c-no-canary.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+    A4a-expect-override-default.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+    A4b-expect-override-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+    A5-helpful-correct-override.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+    A6-canary-is-a-directory.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+    EXIT=1   (expected 1)
+
+ERROR rows named by post-MF-1 on the truncated set: 20   (expected 20 = 10 table rows + 10 .score-fail lines)
+
+############ GREEN — MF-1 must not blunt the scorer
+=== POST-MF-1 over the REAL post-fix transcripts
+    TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+    ---                                            ---    ---       ---        ---
+    A2a-mutated-canary-gerege.txt                  1      no        no         OK
+    A2b-mutated-canary-default.txt                 1      no        no         OK
+    A2c-crafted-canary-and-expectation-gerege.txt  1      no        no         OK
+    A3a-swapped-canary-gerege.txt                  1      no        no         OK
+    A3b-missing-canary.txt                         1      no        no         OK
+    A3c-no-canary.txt                              1      no        no         OK
+    A4a-expect-override-default.txt                1      no        YES        OK
+    A4b-expect-override-gerege.txt                 1      YES       YES        OK
+    A4c-decoy-variable.txt                         0      YES       YES        OK
+    A5-helpful-correct-override.txt                1      YES       YES        OK
+    A6-canary-is-a-directory.txt                   1      no        no         OK
+    A7-symlinked-canary.txt                        0      YES       YES        OK
+    A8-foreign-cwd.txt                             0      YES       YES        OK
+    
+    ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+    EXIT=0   (expected 0)
+
+=== POST-MF-1 over the REAL pre-fix  transcripts
+    TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+    ---                                            ---    ---       ---        ---
+    A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+    A2b-mutated-canary-default.txt                 1      no        no         OK
+    A2c-crafted-canary-and-expectation-gerege.txt  0      YES       no         ADMITS (printed the HALF_UP certification)
+    A3a-swapped-canary-gerege.txt                  1      no        no         OK
+    A3b-missing-canary.txt                         1      no        no         OK
+    A3c-no-canary.txt                              1      no        no         OK
+    A4a-expect-override-default.txt                1      no        no         OK
+    A4b-expect-override-gerege.txt                 1      no        no         OK
+    A4c-decoy-variable.txt                         0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A5-helpful-correct-override.txt                0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A6-canary-is-a-directory.txt                   1      no        no         OK
+    A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    
+    EXPECTATIONS NOT MET (6):
+    A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+    A2c-crafted-canary-and-expectation-gerege.txt ADMITS (printed the HALF_UP certification)
+    A4c-decoy-variable.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A5-helpful-correct-override.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A7-symlinked-canary.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A8-foreign-cwd.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    EXIT=1   (expected 1)
+
+the six pre-fix admissions post-MF-1, named:
+    A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+    A2c-crafted-canary-and-expectation-gerege.txt  0      YES       no         ADMITS (printed the HALF_UP certification)
+    A4c-decoy-variable.txt                         0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A5-helpful-correct-override.txt                0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+    A2c-crafted-canary-and-expectation-gerege.txt ADMITS (printed the HALF_UP certification)
+    A4c-decoy-variable.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A5-helpful-correct-override.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A7-symlinked-canary.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+    A8-foreign-cwd.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+
+############ the residual T107b recorded, driven RED rather than recorded and left
+MF-1 AS SPECIFIED validates the VALUE $st, not the SHAPE of the last line, so a transcript
+whose final line is a bare numeral would still be accepted as a status.  T107b measured it,
+declined to block, and left the decision to the next worker.  T115 closes it (test (a) in
+verdict.sh).  Both directions are driven here:
+
+-- PRE-MF-1 (T107's value-only rule, as the spec was written): a bare '5' scores OK
+    A2a-mutated-canary-gerege.txt                  5      no        no         OK
+
+-- POST-MF-1 (T115, shape test added): a bare '5' is an ERROR
+    A2a-mutated-canary-gerege.txt                  -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+    A2a-mutated-canary-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+    EXIT=1  (expected 1)
+
+RESULT: MF-1 driven RED and GREEN, every leg as specified.

@@ -1,0 +1,15 @@
+ id | financial_activity_type | gl_account_id 
+----+-------------------------+---------------
+  4 |                     300 |            15
+(1 row)
+
+ non_contra_transaction_id_count 
+---------------------------------
+                              26
+(1 row)
+
+ contra_account_entry_count 
+----------------------------
+                          0
+(1 row)
+

@@ -1,0 +1,19 @@
+ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/t250arms/arm-6/probe.http
+  sidecar OMITS a line the wire record and the committed artefacts derive (expected at line 15): 'body-sha256: bb157861a164e35cdde9d726b0af9ce2765a8f530c35d9e45732b94ee65e9557'
+  sidecar OMITS a line the wire record and the committed artefacts derive (expected at line 16): 'body-bytes: 8'
+  sidecar OMITS a line the wire record and the committed artefacts derive (expected at line 17): 'content-length-crosscheck: MISMATCH (Content-Length 46, artefact 8 bytes)'
+  sidecar ASSERTS a line nothing derives (sidecar line 15): 'body-sha256: a4e0d3eeb2768121d86bc1b224f6a0b0fa721a035e3798f4ef7f3141eb9a1e2c'
+  sidecar ASSERTS a line nothing derives (sidecar line 16): 'body-bytes: 46'
+  sidecar ASSERTS a line nothing derives (sidecar line 17): 'content-length-crosscheck: MATCH (46 bytes)'
+--- re-derived (expected) vs sidecar (actual) ---
+  --- re-derived
+  +++ probe.http
+  @@ -14,5 +14,5 @@
+   body-wire-bytes-artefact: probe.req
+  -body-sha256: bb157861a164e35cdde9d726b0af9ce2765a8f530c35d9e45732b94ee65e9557
+  -body-bytes: 8
+  -content-length-crosscheck: MISMATCH (Content-Length 46, artefact 8 bytes)
+  +body-sha256: a4e0d3eeb2768121d86bc1b224f6a0b0fa721a035e3798f4ef7f3141eb9a1e2c
+  +body-bytes: 46
+  +content-length-crosscheck: MATCH (46 bytes)
+   response-headers-artefact: probe.resphdr

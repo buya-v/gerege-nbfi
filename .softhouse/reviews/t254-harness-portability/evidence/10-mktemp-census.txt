@@ -1,0 +1,270 @@
+=== mktemp census ===
+root:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab127f52f3e194646
+commit: 607252a8660101cab01ac0dc68d1ecc61b14c43d
+grep:   /usr/bin/grep (grep (BSD grep, GNU compatible) 2.6.0-FreeBSD)
+
+TERM-A  tracked files in repo ............... 5216
+TERM-B  tracked files mentioning 'mktemp' ... 97
+
+--- files mentioning mktemp ---
+.claude/skills/softhouse-program/SKILL.md
+.softhouse/bin/build-oracle-image.sh
+.softhouse/capture/audit-t44/analysis/T175-red/drive-red.sh
+.softhouse/capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh
+.softhouse/capture/mathcontext/src/t46-negative-vacuity.sh
+.softhouse/capture/pathb/t149/prove-redgreen.sh
+.softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py
+.softhouse/capture/pathb/t149/t156/sweep-unguarded-mutators.txt
+.softhouse/capture/pathb/t36/sha256.sh
+.softhouse/capture/pathb/t80/prove-f1-sandbox-run.sh
+.softhouse/capture/pathb/t80/prove-f1.sh
+.softhouse/capture/t108-grep/capture-env.sh
+.softhouse/capture/t108-grep/probe-conformance-guards.sh
+.softhouse/capture/t108-grep/replicate-t91-g4.sh
+.softhouse/capture/t108-grep/run-matrix.sh
+.softhouse/capture/t154-nofloat/drive-leg1-e2e.sh
+.softhouse/capture/t154-nofloat/drive-leg1.sh
+.softhouse/capture/t154-nofloat/drive-leg2.sh
+.softhouse/capture/t154-nofloat/drive-leg3.sh
+.softhouse/capture/t154-nofloat/regen-leg1-red.sh
+.softhouse/capture/t223-g8-region-predicate/src/verify_merge_t223.sh
+.softhouse/capture/t234-sweep-instrument-audit/evidence/census.json
+.softhouse/capture/t234-sweep-instrument-audit/evidence/multiline-only-hits.json
+.softhouse/capture/t234-sweep-instrument-audit/evidence/sound-sweep-HEAD.json
+.softhouse/capture/t238-failopen/instruments/30-pr4-nondead-mechanisms.sh
+.softhouse/capture/t238-failopen/instruments/40-red-drive.sh
+.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py
+.softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh
+.softhouse/capture/t238-failopen/instruments/71-l1b-gitgrep-leg.sh
+.softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh
+.softhouse/capture/t243-wiring/instruments/30-citation-red-drive.sh
+.softhouse/capture/t248-failopen-widen/instruments/30-additivity.sh
+.softhouse/capture/t252-tier3/instruments/10-verify-third-site.sh
+.softhouse/capture/t74-multiplesof/T82-guard-proofs/run-precondition-block.sh
+.softhouse/capture/t91/shell-invariance.sh
+.softhouse/capture/t91/verdict.sh
+.softhouse/capture/tierA-a2/SUPERSEDED.txt
+.softhouse/capture/tierA-a2/cap.sh
+.softhouse/capture/tierA-a2/cap10.sh
+.softhouse/capture/tierA-a2/cap8.sh
+.softhouse/capture/tierA-a2/cap9.sh
+.softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh
+.softhouse/capture/tierA-a2/prove-quit-trap-a226.py
+.softhouse/capture/tierA-a2/prove-quit-trap-cap.py
+.softhouse/capture/tierA-a2/prove-quit-trap-cap9.py
+.softhouse/capture/tierA-a2/red-green-a2-15.sh
+.softhouse/conformance.sh
+.softhouse/guards/check-ledger-invariants.sh
+.softhouse/guards/drive-red-ledger-invariants.sh
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T106-evidence/prove-token-forgeable.sh
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T115.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/ifs-routes.sh
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T138.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T150.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T62.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T99.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-5.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T167.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T168.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T175.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T185.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T208.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T216-handoff.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T233.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T236.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241-evidence/SCOPE-TABLE-T241.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T245.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T248.md
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T252.md
+.softhouse/handoff/CLOUD-FIRE-20260822-2000.md
+.softhouse/handoff/T20-harness-structural-rules.md
+.softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh
+.softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh
+.softhouse/reviews/A2-10-probe/poison-d2-shell-matrix.sh
+.softhouse/reviews/A2-10-review-of-A2-5.md
+.softhouse/reviews/T135-evidence/f2-tooldir-writability.sh
+.softhouse/reviews/T135-review-of-T99.md
+.softhouse/reviews/T138-review-of-T115.md
+.softhouse/reviews/T150-review-of-T130.md
+.softhouse/reviews/T158-evidence/02-t156-sweep-rerun-branch-tip.txt
+.softhouse/reviews/T183-evidence/drive-probes.sh
+.softhouse/reviews/T185-review-t175.md
+.softhouse/reviews/T191-probe/drive-t191.sh
+.softhouse/reviews/T191-probe/mutate-exclusion.sh
+.softhouse/reviews/T87-review-t82.md
+.softhouse/reviews/a2-33-dec2-rev5/sweep-output-live-population.txt
+.softhouse/reviews/t185-probe/probe-t44-successor.sh
+.softhouse/reviews/t185-probe/probe-t55-successor.py
+.softhouse/reviews/t41-probe/t196-drive.sh
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json
+.softhouse/tasks.json
+
+TERM-C  S1: every line mentioning mktemp ............ 155
+TERM-D  S2: every 'mktemp -t' call site ............. 34
+
+--- S2: the 'mktemp -t' population (the NARROW selector) ---
+.softhouse/capture/mathcontext/src/t46-negative-vacuity.sh:40:BLOCK="$(mktemp -t t46-vacuity-block)"
+.softhouse/capture/t108-grep/capture-env.sh:73:  tmp="$(mktemp -t t108unb)"
+.softhouse/capture/t108-grep/probe-conformance-guards.sh:27:S="$(mktemp -d -t t108guard)"
+.softhouse/capture/t108-grep/replicate-t91-g4.sh:27:S="$(mktemp -d -t t108t91)"
+.softhouse/capture/t108-grep/run-matrix.sh:97:          errf="$(mktemp -t t108err)"
+.softhouse/capture/t154-nofloat/drive-leg1-e2e.sh:29:TMP="$(mktemp -d -t t154-leg1e2e)"
+.softhouse/capture/t154-nofloat/drive-leg1.sh:31:TMP="$(mktemp -d -t t154-leg1)"
+.softhouse/capture/t154-nofloat/drive-leg2.sh:31:TMP="$(mktemp -d -t t154-leg2)"
+.softhouse/capture/t154-nofloat/drive-leg3.sh:36:TMP="$(mktemp -d -t t154-leg3)"
+.softhouse/capture/t154-nofloat/regen-leg1-red.sh:12:TMP="$(mktemp -d -t t154-regen)"; trap 'rm -rf "$TMP"' EXIT
+.softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh:39:BACKUP="$(mktemp -d -t t243-rd1)"
+.softhouse/capture/t243-wiring/instruments/30-citation-red-drive.sh:52:BACKUP="$(mktemp -d -t t243-rd3)"
+.softhouse/capture/t248-failopen-widen/instruments/30-additivity.sh:26:CAL="$(mktemp -t t248-cal)"
+.softhouse/capture/t248-failopen-widen/instruments/30-additivity.sh:37:OLD="$(mktemp -t t248-oldlint)"
+.softhouse/capture/t248-failopen-widen/instruments/30-additivity.sh:38:OUT_OLD="$(mktemp -t t248-out-old)"
+.softhouse/capture/t248-failopen-widen/instruments/30-additivity.sh:39:OUT_NEW="$(mktemp -t t248-out-new)"
+.softhouse/capture/t248-failopen-widen/instruments/30-additivity.sh:40:J="$(mktemp -t t248-json)"
+.softhouse/capture/t252-tier3/instruments/10-verify-third-site.sh:37:OUT="$(mktemp -t t252-site-out)"
+.softhouse/capture/t252-tier3/instruments/10-verify-third-site.sh:38:ERR="$(mktemp -t t252-site-err)"
+.softhouse/capture/t74-multiplesof/T82-guard-proofs/run-precondition-block.sh:38:PYFILE="$(mktemp -t t82precond)"
+.softhouse/capture/tierA-a2/red-green-a2-15.sh:27:TMP="$(mktemp -d -t a2-15-redgreen)"
+.softhouse/conformance.sh:1481:  out="$(mktemp -t conformance-failopen)"      || return 1
+.softhouse/conformance.sh:1482:  json="$(mktemp -t conformance-failopen-json)" || return 1
+.softhouse/conformance.sh:1483:  want="$(mktemp -t conformance-failopen-want)" || return 1
+.softhouse/conformance.sh:1484:  got="$(mktemp -t conformance-failopen-got)"   || return 1
+.softhouse/conformance.sh:1831:  list="$(mktemp -t conformance-implist)" || return 1
+.softhouse/conformance.sh:1855:  out="$(mktemp -t conformance-wrongimpl)" || return 1
+.softhouse/conformance.sh:1930:  CONF_BIN="$(mktemp -t conformance)" || exit "$EXIT_UNUSABLE"
+.softhouse/conformance.sh:1945:  report="$(mktemp -t conformance-report)" || exit "$EXIT_UNUSABLE"
+.softhouse/conformance.sh:2003:  CONF_BIN="$(mktemp -t conformance)" || exit "$EXIT_UNUSABLE"
+.softhouse/conformance.sh:2004:  CONF_TMP="$(mktemp -d -t conformance-prove)" || exit "$EXIT_UNUSABLE"
+.softhouse/handoff/CLOUD-FIRE-20260822-2000.md:55:- **D1** — ten `mktemp -t NAME` sites. GNU coreutils needs ≥3 trailing X's; BSD/macOS takes the argument as a
+.softhouse/tasks.json:2219:   "description": "MEASURED THIS FIRE on Linux (cloud catch-up fire 2026-08-22T12:00Z), on clean main at 2b1e2e7: `bash .softhouse/conformance.sh` EXITS 2 WITH NO PROBE LINE PRINTED. Per the softhouse-program decision table that is NOT an oracle outage and NOTHING may be parked for it — it is a harness failure to be fixed. Two independent host-portability defects, both invisible on Buyan's Mac where the BAR reads PASS:\n\nD1 — `mktemp -t NAME` (10 sites: conformance.sh:1438,1439,1440,1441,1787,1811,1886,1901,1959,1960). BSD/macOS mktemp treats -t's argument as a PREFIX and appends its own suffix; GNU coreutils requires the template to end in >=3 X's and refuses otherwise. On Linux the first site reached (1438, inside the FAIL-OPEN guard) dies with `mktemp: too few X's in template 'conformance-failopen'` and takes the whole run down. Sites 1787+ were never reached and are equally latent. NOTE THE IRONY AND STATE IT: the guard that cannot run is the fail-open detector.\n\nD2 — `.softhouse/bin/go-env.sh:12` hardcodes GEREGE_TOOLCHAIN=/Users/buv/gerege-nbfi/.softhouse/toolchain, so on any other host it exports a GOROOT that does not exist. Result: `ledger-invariants: the guard DID NOT COMPILE ... EXIT 2 — NOT a pass` with `go: cannot find GOROOT directory`. The guard's REFUSAL is correct and fail-closed — do not touch that. The defect is that go-env.sh SILENTLY exports a broken GOROOT instead of either resolving the toolchain relative to itself or refusing loudly, converting 'toolchain not installed on this host' into the far more confusing 'a HARD money guard did not compile'.\n\nTHE JOB:\n(1) Fix D1 at ALL TEN sites so the template is portable on BOTH GNU coreutils and BSD/macOS mktemp. Do not fix only the one that fired. State how you verified the BSD arm without a BSD host — if you cannot verify it, say so and pick the form that is specified by POSIX/both man pages rather than the one that merely works here (P-66: state where you looked).\n(2) Fix D2 by deriving the toolchain location from the script's own path (a worktree must still resolve the MAIN checkout — `git rev-parse --git-common-dir` is the honest route), and decide, as an ENGINEERING call under CLAUDE.md's Answering gates, what happens when the pinned toolchain is absent: refuse loudly, or fall back to a `go` on PATH. If you choose fallback it MUST print which toolchain it used and why, so the BAR output states the substitution rather than hiding it. Record the alternative you rejected.\n(3) RED-DRIVE both fixes on shapes you did not design the rule around (P-76), and CHECK YOUR SELECTOR before your conditions (P-76 addendum) — enumerate all mktemp sites, do not sweep for the one string you already know.\n\nBAR FOR THIS TASK, and it is NOT the usual one — READ IT. The reference oracle is UNREACHABLE from this host (curl rc=7, no docker daemon, pg 5432 refused), so a parity VERDICT is unavailable and MUST NOT be claimed. Your bar is exactly this and you must show the output: `bash .softhouse/conformance.sh` must now REACH AND PRINT the probe line. It will read `probe = down` and the run will exit 2 — THAT IS THE CORRECT AND EXPECTED RESULT HERE and it is what proves every guard ahead of the probe ran to completion. Printing the probe line is the deliverable; a PASS verdict is not available on this host and claiming one is a rejection. Also report the guard-by-guard lines that now appear between the last one seen today and the probe.\n\nSCOPE: `.softhouse/conformance.sh`, `.softhouse/bin/go-env.sh`, and evidence under `.softhouse/capture/t253-portability/`. Do NOT touch `.softhouse/vectors/` (the store digest must not move — read it live with `git rev-parse HEAD:.softhouse/vectors`), `nexus/`, `docs/adr/`, `.softhouse/gates.md`, `.softhouse/program.json`, or `PIN-ledger.json`. Never `gofmt -w` contract.go (G-3). Never bare `grep`/`rg` in a committed instrument (P-75) — use /usr/bin/grep, `git grep -P`, or python3 re. `set -euo pipefail`. Never `git commit -m` with a backtick — heredoc + `git commit -F` (P-74).",
+.softhouse/tasks.json:2220:   "note": "RAISED BY THE DRIVER on cloud catch-up fire 2026-08-22T12:00Z from a first-hand measurement no Mac fire could have made. DRIVER CORRECTION, same fire: the note first read 'any Linux CI running this harness dies identically'. THAT WAS AN OVERCLAIM and is retracted — there is NO CI in this repo: no .github directory exists and no file under .github/ or ci/ invokes conformance.sh [MEASURED at a6bec72; both paths searched, neither exists]. What IS measured: the harness runs on exactly ONE host today, Buyan's Mac. The present, non-hypothetical consequence is that the CLOUD catch-up fire can never run the BAR at all — not even the guard half that needs no oracle — which is a live limitation of the two-fire design. The CI consequence is CONDITIONAL on a CI that does not yet exist, and CLAUDE.md's PostgreSQL non-negotiable contemplates one ('Every environment — ... CI — runs on PostgreSQL'). | WORKER KILLED WITH THE CLOUD SANDBOX. Branch softhouse/T253-harness-portability exists NEITHER on origin NOR locally [VERIFIED by the local driver: git ls-remote --heads origin and git branch --list, both empty], so its WIP is GONE, not merely unpushed. NOT in_progress — nothing is happening. Re-dispatch from scratch. Its FINDING stands and is first-hand: the harness cannot run on Linux. | DISPATCHED local fire 20260822-060013 at c0e88c6, worktree-isolated, opus. || CLOUD-FIRE CORRECTION 2026-08-22T12:40Z: THE BRANCH IS NOT GONE — softhouse/T253-harness-portability IS PUSHED TO ORIGIN at d7a7ea3. The local driver's reading was CORRECT WHEN MADE (branches were unpushed; P-69). WORK IS COMPLETE, ~211k worker tokens: all 10 mktemp -t sites fixed via conf_mktemp/conf_mktemp_d; go-env.sh derives the toolchain via git rev-parse --git-common-dir, falls back to PATH go and PRINTS the substitution (GEREGE_GO_STRICT=1 restores refusal). Red/green 14/0 and 24/0. DO NOT RE-DISPATCH FROM SCRATCH — review and merge the branch. It did NOT reach the probe and SAID SO: fixing D1 unmasked a THIRD defect, the t234 escape-matrix instrument's fail-open TIER depending on leftover /tmp state on the LINTING host, and it REFUSED to move the pin to make its own bar green. T254 reviewing on softhouse/T254-review-portability (pushed). Full handoff: .softhouse/handoff/CLOUD-FIRE-20260822-2000.md | LOCAL FIRE 20260822-060013: the driver read RESUME.md's \"branch GONE, re-dispatch from scratch\" and dispatched a SECOND worker before fetching. The GONE measurement was TRUE when made and STALE when acted on -- P-69 in its purest form, and the driver's error, not any worker's. Rather than kill the live worker (which destroys work), it was redirected to branch softhouse/T253b-harness-portability-mac and told to finish INDEPENDENTLY before reading the cloud's. The duplication is now deliberate and its value is specific: the cloud fire CANNOT RUN THE BAR AT ALL, so only the Mac arm can prove the fix does not break the one host that captures vectors. Reconcile the two; where they agree that is corroboration, where they differ that is the finding.",
+
+--- S1 minus S2: mktemp lines that are NOT 'mktemp -t' ---
+.claude/skills/softhouse-program/SKILL.md:176:| **Exit 2 and NO probe line at all** | **NOT an oracle outage either — and this is the dangerous one.** Four exit-2 paths run *before* the probe is ever printed: no Go toolchain, `mktemp` failure, build failure, and **a failed HARD guard** (`run_guards` is called at `conformance.sh:281`; the probe prints at `:296`). So a `guard_no_float_in_vectors` failure — a **money non-negotiable** — exits 2 in silence, and "`probe != up`" is *trivially true when nothing printed*. Read the absence of the line, not the value. **Fix the harness or the violation; park nothing.** |
+.softhouse/bin/build-oracle-image.sh:63:BUILD_CTX="$(mktemp -d)"
+.softhouse/capture/audit-t44/analysis/T175-red/drive-red.sh:36:SCRATCH="$(mktemp -d)"
+.softhouse/capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh:59:SCRATCH="$(mktemp -d)"
+.softhouse/capture/pathb/t149/prove-redgreen.sh:148:        _tb="$(mktemp)"; _ta="$(mktemp)"
+.softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py:127:    print("  of those, writing only into a throwaway dir (mktemp/tmp): %d"
+.softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py:61:SANDBOXY = re.compile(r"mkdtemp|mktemp|TMPDIR|/tmp/|tempfile\.")
+.softhouse/capture/pathb/t149/t156/sweep-unguarded-mutators.txt:12:  of those, writing only into a throwaway dir (mktemp/tmp): 46
+.softhouse/capture/pathb/t36/sha256.sh:20:#     consulted — not for the digest tools, and not for the `awk`/`mktemp`/`rm` this file uses to
+.softhouse/capture/pathb/t36/sha256.sh:33:#     /usr/bin/env, /usr/bin/mktemp, /bin/rm) is root-owned -rwxr-xr-x and unwritable by this user
+.softhouse/capture/pathb/t36/sha256.sh:73:SHA256_MKTEMP=/usr/bin/mktemp
+.softhouse/capture/pathb/t80/prove-f1-sandbox-run.sh:32:SB=$(mktemp -d "${TMPDIR:-/tmp}/t180-green.XXXXXXXX") || exit 1
+.softhouse/capture/pathb/t80/prove-f1.sh:287:    _tb=$(mktemp); _ta=$(mktemp)
+.softhouse/capture/t223-g8-region-predicate/src/verify_merge_t223.sh:7:TMP=$(mktemp -d /tmp/t223-mergecheck.XXXXXX)
+.softhouse/capture/t234-sweep-instrument-audit/evidence/census.json:27523:   "src": "output to a `mktemp` file and `cat`s it; every read in the gate is a `sed`/`grep`"
+.softhouse/capture/t234-sweep-instrument-audit/evidence/census.json:3642:   "pattern": "mkdtemp|mktemp|TMPDIR|/tmp/|tempfile\\.",
+.softhouse/capture/t234-sweep-instrument-audit/evidence/census.json:3644:   "src": "SANDBOXY = re.compile(r\"mkdtemp|mktemp|TMPDIR|/tmp/|tempfile\\.\")"
+.softhouse/capture/t234-sweep-instrument-audit/evidence/multiline-only-hits.json:18:  "text": "guarded))\\n    print(\"  of those, writing only into a throwaway dir (mktemp/tmp): %d\"\\n          % len([h for h in unguarded"
+.softhouse/capture/t234-sweep-instrument-audit/evidence/multiline-only-hits.json:2106:  "text": "unguarded))\\n    print(\"  of those, writing only into a throwaway dir (mktemp/tmp): %d\"\\n          % len([h for h in unguard"
+.softhouse/capture/t234-sweep-instrument-audit/evidence/sound-sweep-HEAD.json:16:   "guarded))\\n    print(\"  of those, writing only into a throwaway dir (mktemp/tmp): %d\"\\n          % len([h for h in unguarded"
+.softhouse/capture/t234-sweep-instrument-audit/evidence/sound-sweep-HEAD.json:2688:   "unguarded))\\n    print(\"  of those, writing only into a throwaway dir (mktemp/tmp): %d\"\\n          % len([h for h in unguard"
+.softhouse/capture/t238-failopen/instruments/30-pr4-nondead-mechanisms.sh:9:S=$(mktemp -d /tmp/t238-pr4-XXXXXX)
+.softhouse/capture/t238-failopen/instruments/40-red-drive.sh:69:D=$(mktemp -d /tmp/t238-notarepo-XXXXXX)
+.softhouse/capture/t238-failopen/instruments/40-red-drive.sh:79:D=$(mktemp -d /tmp/t238-emptyrepo-XXXXXX)
+.softhouse/capture/t238-failopen/instruments/40-red-drive.sh:90:D=$(mktemp -d /tmp/t238-otherrepo-XXXXXX)
+.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py:155:  Everything else is non-fatal and is flagged. The `XXX`-is-a-mktemp-template and the
+.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py:233:RE_OWNED_HEAD = r'(?:>>?|\brm\b|\bmkdir\b|\btouch\b|\btee\b|\bmktemp\b)\s*(?:-\S+\s+)*["\']?'
+.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py:341:    `mktemp` templates are not paths; a path the file itself creates or deletes is scratch
+.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py:364:        if "XXX" in p:                       # a mktemp TEMPLATE is not a path
+.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py:428:    Inherits C1's two measured filters unchanged: an `XXX` literal is a mktemp TEMPLATE, and a
+.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py:88:       * a literal containing `XXX` is a `mktemp` TEMPLATE, not a path (5 false hits removed);
+.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py:90:         touch/tee/mktemp -- is scratch, not corpus (removed the unearned TIER2->TIER1
+.softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh:19:T=$(mktemp -d /tmp/t238-l1b-XXXXXX)
+.softhouse/capture/t238-failopen/instruments/71-l1b-gitgrep-leg.sh:21:T=$(mktemp -d /tmp/t238-l1b2-XXXXXX)
+.softhouse/capture/t91/shell-invariance.sh:62:INVDIR=$(mktemp -d "${TMPDIR:-/tmp}/shell-invariance.XXXXXX") || {
+.softhouse/capture/t91/verdict.sh:93:FAILDIR=$(mktemp -d "${TMPDIR:-/tmp}/verdict-score.XXXXXX") || {
+.softhouse/capture/tierA-a2/SUPERSEDED.txt:47:# mktemp scratch dir under /tmp.  LOW materiality: the trap only governs an ABORTED
+.softhouse/capture/tierA-a2/cap.sh:60:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/cap.XXXXXX")
+.softhouse/capture/tierA-a2/cap10.sh:66:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/cap10.XXXXXX")
+.softhouse/capture/tierA-a2/cap10.sh:6:# capture leaks its mktemp dir under /tmp -- LOW materiality, see T236's handoff: no
+.softhouse/capture/tierA-a2/cap8.sh:62:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/cap8.XXXXXX")
+.softhouse/capture/tierA-a2/cap9.sh:48:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/cap9.XXXXXX")
+.softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh:22:TMP=$(mktemp -d "${TMPDIR:-/tmp}/a226prove.XXXXXX")
+.softhouse/capture/tierA-a2/prove-quit-trap-a226.py:6:had no QUIT, so an untrapped SIGQUIT mid-run leaked the `mktemp -d a226prove.XXXXXX`
+.softhouse/capture/tierA-a2/prove-quit-trap-cap.py:128:        time.sleep(0.4)  # past mktemp + trap install, into the fake curl's sleep
+.softhouse/capture/tierA-a2/prove-quit-trap-cap.py:12:Here that means the `mktemp -d` scratch dir ($TMPD) is never removed: a leaked /tmp
+.softhouse/capture/tierA-a2/prove-quit-trap-cap.py:26:    mktemp dir survive" is read by listing that root after the process is confirmed
+.softhouse/capture/tierA-a2/prove-quit-trap-cap9.py:136:        time.sleep(0.4)  # past mktemp + trap install, into the fake curl's sleep
+.softhouse/capture/tierA-a2/prove-quit-trap-cap9.py:13:the mktemp -d scratch dir ($TMPD) is never removed on Ctrl-\\: a leaked /tmp directory,
+.softhouse/capture/tierA-a2/prove-quit-trap-cap9.py:32:    mktemp dir survive" is read by listing that root after the process is confirmed
+.softhouse/guards/check-ledger-invariants.sh:72:  BIN="$(mktemp -d)/ledgerguard"
+.softhouse/guards/drive-red-ledger-invariants.sh:41:WORK="$(mktemp -d)"
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T106-evidence/prove-token-forgeable.sh:13:# .softhouse/ under a mktemp name, and removes what it wrote.
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T106-evidence/prove-token-forgeable.sh:49:TMPTAG="$(mktemp -u "T106proof.XXXXXX" | tr -dc 'A-Za-z0-9.')"
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh:13:# .softhouse/ under a mktemp name, and removes what it wrote.
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh:49:TMPTAG="$(mktemp -u "T106proof.XXXXXX" | tr -dc 'A-Za-z0-9.')"
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T115.md:185:| **V-F** *(new, P3)* | `shell-invariance.sh:39` (pre-fix) | scratch `.inv-a`/`.inv-b` were written into `$O`, **the directory under audit**. ~~a read-only `$O` would leave the previous run's files and grade **stale bytes**~~ — <ins>**STATED CONDITION CORRECTED BY T151 (F-T138-4). A read-only `$O` alone is FAIL-CLOSED, not vacuous**: the redirect cannot create the scratch file, `diff` reports `No such file`, and the script exits 1. What produces the vacuous pass is **read-only SCRATCH FILES** — `.inv-a`/`.inv-b` already present and unwritable — and then `$O` need not be read-only at all. T138 drove all five cases: writable `$O` + 444 scratch gives `pairs compared: 1  differing: 0` … `RESULT: sh and bash agree`, exit 0. The fix is right; only its reason was wrong.</ins> Same class as V-A. | fixed — scratch in a `mktemp -d` the script owns. <ins>**No committed guard drives this red** — see the corrected header sentence above.</ins> |
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/ifs-routes.sh:28:TMP="$(mktemp -d "${TMPDIR:-/tmp}/T130routes.XXXXXX")" || exit 1
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh:35:# mktemp directory and removes it. Integer counters only; no floating point (P-25).
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh:66:W="$(mktemp -d "${TMPDIR:-/tmp}/T130xp.XXXXXX")" || exit 1
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T138.md:41:verdict. T115's fix (`mktemp -d` + writability asserted before scoring + refuse with exit 3) is
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T150.md:178:— **a failed HARD guard** (`:545`), `mktemp` (`:583`), `build_binary` (`:573`).
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T150.md:221:`mktemp -u`. Cosmetic.
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T62.md:312:`mktemp -d` copy and discarded by the script's existing `EXIT` trap. **No oracle
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T62.md:63:In a `mktemp -d` copy of the store (the live store is never written), on the
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh:12:# never writes outside its own mktemp directory. The rows that need the oracle are
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh:75:TMP="$(mktemp -d "$REPO_ROOT/.softhouse/.T97-proof.XXXXXX")"
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T99.md:140:root-owned system directories, for the digest tools *and* the `awk`/`env`/`mktemp`/`rm` that drive
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-5.md:21:   unreachable oracle into fake evidence. The body now lands in a `mktemp -d` sandbox and is moved into
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T167.md:399:   `mktemp -d` and drop the env hook entirely. Outside my `files_hint`; measurement attached
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T168.md:249:  `mktemp` scratch dir, not a committed artifact) but the same shape. A follow-up task
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T168.md:84:| 4 | `.softhouse/capture/tierA-a2/cap.sh:61` | **no** (`EXIT HUP INT TERM`) | **SKIPPED — scope guard** (`.softhouse/capture/tierA-a2/` explicitly excluded, "other workers own it this fire"). **Still has the gap** — flagged below as a genuine unfixed instance for a follow-up task. Lower materiality than the store case: the trap only cleans a `mktemp` scratch dir (`$TMPD`), not a committed vector, so an untrapped `SIGQUIT` leaks a `/tmp` directory rather than stranding evidence. |
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T175.md:29:red probes copy the corpus into `mktemp -d` and plant there.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md:257:the reviewed population. `edit18/20/21` were only ever *copied* into `$(mktemp -d)` and
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T185.md:116:No promote/rewriter run; all probes used `/tmp` or `mktemp -d`. `conformance.sh`,
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T185.md:35:  committed one; the t55 transcript differs only in worktree/mktemp path strings.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md:338:reviewed population were executed. `edit18/20/21` were extracted from git into `$(mktemp -d)`
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T208.md:180:`--prove` is **unchanged at 23/0** and its transcript differs only in two `mktemp` directory
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T216-handoff.md:12:two more this sweep turned up, see below) leak a `mktemp -d` scratch directory in
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T216-handoff.md:47:Both scripts' trap only guards a `mktemp -d` scratch dir used to hold the response body
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T233.md:165:output to a `mktemp` file and `cat`s it; every read in the gate is a `sed`/`grep`
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T236.md:15:(`trap 'rm -rf "$TMPD"' EXIT HUP INT TERM`, no QUIT) governs cleanup of a `mktemp -d`
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T236.md:29:   `trap 'rm -rf "$TMPD"' EXIT HUP INT TERM QUIT`), the `mktemp` prefix changed
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241-evidence/SCOPE-TABLE-T241.md:70:`git grep -c -P … --no-index -- "$TMP/pos.txt"` with the scratch dir under `mktemp -d`. Every net
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241.md:211:`git grep -c -P … --no-index -- "$TMP/pos.txt"` with the scratch under `mktemp -d`. Every net
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T245.md:371:`mktemp` failure, build failure, and the HARD money guard at `conformance.sh:281`, while the probe
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T248.md:259:toolchain, `mktemp` failure, build failure, and a failed HARD guard at `conformance.sh:281`) and
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T248.md:87:  - a literal containing `XXX` is a `mktemp` TEMPLATE (removed 5 false hits in t238's own rigs);
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T248.md:88:  - a path the file itself creates or deletes (`>`/`>>`/`rm`/`mkdir`/`touch`/`tee`/`mktemp`) is
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T252.md:101:`|| return`, `|| die`, `|| _sw_die`, `|| {`). C1's two measured filters — `XXX` is a `mktemp`
+.softhouse/handoff/T20-harness-structural-rules.md:388:   vector builds it in `t.TempDir()` or as a Go value; every shell proof perturbs a copy under `mktemp -d`.
+.softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh:23:d=$(mktemp -d /tmp/poison/bl.XXXXXX); mkdir -p "$d/out" "$d/req"
+.softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh:21:  d=$(mktemp -d /tmp/poison/cf.XXXXXX)
+.softhouse/reviews/A2-10-probe/poison-d2-shell-matrix.sh:11:  d=$(mktemp -d /tmp/poison/sb.XXXXXX)
+.softhouse/reviews/A2-10-review-of-A2-5.md:368:`cap.sh` `mktemp -d` failure path (exits under `set -e`, writes nothing); the `EXIT/HUP/INT/TERM` trap;
+.softhouse/reviews/T135-evidence/f2-tooldir-writability.sh:11:for p in /usr/bin/shasum /sbin/sha256sum /usr/bin/openssl /usr/bin/python3 /usr/bin/awk /usr/bin/env /usr/bin/mktemp /bin/rm; do
+.softhouse/reviews/T135-review-of-T99.md:591:  /usr/bin/awk /usr/bin/env /usr/bin/mktemp /bin/rm — all -rwxr-xr-x root wheel
+.softhouse/reviews/T138-review-of-T115.md:252:moves to a `mktemp -d` the script owns, and **writability is asserted before any scoring** with a
+.softhouse/reviews/T150-review-of-T130.md:325:| `:583` | `mktemp` failure | **no** |
+.softhouse/reviews/T150-review-of-T130.md:360:> HARD guard, `mktemp` failure, and a build failure. **Exit 2 with NO probe line is a
+.softhouse/reviews/T150-review-of-T130.md:594:  dotfiles in `.softhouse/`. T106's own rig avoids this with `mktemp -u`. T130 added two of
+.softhouse/reviews/T150-review-of-T130.md:595:  the three. Cosmetic today; worth one `mktemp -d` when convenient.
+.softhouse/reviews/T150-review-of-T130.md:743:### N-T150-2 — advisory. The matrix's three scratch files use fixed names in the live `.softhouse/` and are not gitignored; concurrent runs collide. Use `mktemp -d`.
+.softhouse/reviews/T158-evidence/02-t156-sweep-rerun-branch-tip.txt:12:  of those, writing only into a throwaway dir (mktemp/tmp): 46
+.softhouse/reviews/T183-evidence/drive-probes.sh:16:SCRATCH="$(mktemp -d "${TMPDIR:-/tmp}/t183.XXXXXX")"
+.softhouse/reviews/T185-review-t175.md:323:  into `mktemp -d`.
+.softhouse/reviews/T185-review-t175.md:52:| `capture/leapboundary/analysis/T175-red/drive-red.sh` | **0** | 0 `NOT AS PREDICTED`; transcript differs from the committed one **only in worktree and mktemp path strings** (24 diff lines, all paths); `t55-analyse.py` sha256 identical before and after |
+.softhouse/reviews/T185-review-t175.md:56:`.softhouse/reviews/t185-probe/probe-t55-successor.py`. Scratch corpora via `mktemp`; the committed
+.softhouse/reviews/T191-probe/drive-t191.sh:28:TMP="$(mktemp -d)"
+.softhouse/reviews/T191-probe/mutate-exclusion.sh:11:TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
+.softhouse/reviews/T87-review-t82.md:117:  transcript is identical to the committed `TRANSCRIPT.txt` modulo absolute paths and `mktemp`
+.softhouse/reviews/a2-33-dec2-rev5/sweep-output-live-population.txt:4752:.softhouse/reviews/T150-review-of-T130.md:595:  the three. Cosmetic today; worth one `mktemp -d` when convenient.
+.softhouse/reviews/t185-probe/probe-t44-successor.sh:5:S=$(mktemp -d); trap 'rm -rf "$S"' EXIT
+.softhouse/reviews/t185-probe/probe-t55-successor.py:8:Scratch corpora only (mktemp). The committed corpus is COPIED, never written.
+.softhouse/reviews/t41-probe/t196-drive.sh:12:#     They are only ever COPIED into $(mktemp -d) and PARSED by the classifier.
+.softhouse/reviews/t41-probe/t196-drive.sh:50:SB="$(mktemp -d "${TMPDIR:-/tmp}/t196.XXXXXX")"
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2951:      "note": "Raised and dispatched by the driver, local fire 20260821-080001. || local fire 20260821-080001: DONE and MERGED (7ae7f85). VERDICT MICRO-FIX; THE INTERPRETER-GUARD STREAM IS MERGEABLE and it said MERGE NOW, because holding the branch preserves WORSE sentences on main. Sixth worker on the chain, and T130's two central claims are TRUE - re-derived rather than re-run. (1) THE INHERITED-IFS NULL-CONTROL FINDING HOLDS: its own probe on bash 3.2.57 + 5.3.9 + 4.4.0 (built from the GNU tarball, sha256 asserted) shows an exported IFS reset to the 3-char default in plain mode, --posix, argv[0]=sh and POSIXLY_CORRECT=1 alike, with BASH_ENV and sourcing delivering - so every IFS= row in T97/T106/T113/T121 WAS a null control. Two completeness notes that weaken nothing: BASH_ENV does NOT deliver to a POSIX-mode non-interactive bash, and --rcfile -i is an 8th route. (2) THE FOURTH STRIPPING RULE IS RIGHT WHERE IT IS USED AND WRONG WHERE IT IS STATED: correct inside the swept domain (its own implementation 960/960; T130's 3,282 reproduce at 0 disagreements on all three majors) and T130's sharpening of T121 is a real correction, BUT conformance.sh:208-215 drops the 'IFS containing no whitespace' scope that T130's own rig header keeps, and is FALSE without it - IFS=' a', line 'bb a' -> 'bb', 81/960 disagreements once IFS may hold a space (F-T150-2, P3). The [6b] implication is unaffected, proved separately over 9,799 IFS values INCLUDING whitespace - 0 truncations, control truncated by 71 - plus a 270/270 property test with all 93 violating tokens truncatable. (3) ASSERT-VS-RESTRUCTURE SOUND, and it converted both of T130's reasons FROM ARGUMENT TO MEASUREMENT: doubling the probe makes T106's unmodified rig print 'INERT, so exit 1'; renaming the token's value makes that rig report 7/1, NUMERICALLY IDENTICAL to the correct post-fix result, so [1]b's redness stops discriminating 'the fix worked' from 'the seed mismatched'. ONE NEW P2 NEITHER T121 NOR T130 CAUGHT - F-T150-1, AND IT IS AGAINST THE DRIVER'S OWN SKILL FILE: T130's new exit-2 paragraph asserts the probe line is printed 'UNCONDITIONALLY' before the graded binary, and it is not - four exit-2 paths precede it (no toolchain :466, FAILED HARD GUARD :545, mktemp :583, build failure :573) printing NO probe line at all, driven red on the scratch merge with a gofmt-guard failure (EXIT=2, probe lines 0). Since 'probe != up' is TRIVIALLY TRUE when nothing printed, the driver would park vector work on an outage that did not happen - THE EXACT DEFECT THE PARAGRAPH WAS WRITTEN TO CLOSE, SURVIVING INSIDE IT. DRIVER-CONFIRMED (run_guards :281 precedes the probe at :296) and SKILL.md rewritten to three cases the same fire. FIRST BRANCH IN THE CHAIN WHOSE OWN ADDITIONS PASS THE P-35 ATTACKS CLEANLY - every starved input is an error, not a pass."
+.softhouse/tasks.json:1504:   "description": "T168's P-40 accounting, honoured. T168 swept every multi-signal trap under .softhouse/ for the SIGQUIT omission, fixed its own site, found 4 already covered, and SKIPPED 3 that still carry the live gap because another worker held those paths during fire 20260822-080001. It named all three rather than letting the sweep silently narrow -- which is the behaviour P-40 exists to produce. Close the tail.\n\nTHE THREE SITES, each `trap ... EXIT HUP INT TERM` with no QUIT:\n  .softhouse/capture/tierA-a2/cap.sh   -- leaks a mktemp scratch dir on SIGQUIT\n  .softhouse/capture/tierA-a2/cap8.sh  -- same\n  .softhouse/reviews/t179-guard-classifier/fixtures/green_real_trap.sh -- a fixture on a *-never-run* path\n\nMATERIALITY IS LOW AND YOU SHOULD SAY SO. None of these strands a VECTOR the way prove-redgreen.sh did; they leak a temp directory, and the third is a fixture. Do not write this up as though a money path were at risk -- T168 did not, and inflating it would be its own defect. The reason to do it anyway is that a signal-list omission is a CONCEPT (P-26), and a family fixed at 5 of 8 sites is a family that grows back.\n\nTHINK ABOUT THE FIXTURE BEFORE YOU EDIT IT. green_real_trap.sh is a FIXTURE for the guard classifier -- its trap list may be part of what the classifier is being tested against, in which case changing it changes the test's meaning. Check what reads it. If adding QUIT would alter a classification, DO NOT add it; report that instead. This is the more interesting half of the task.\n\nDRIVE RED and GREEN per site, or state why a site cannot be driven and what you did instead. Re-run T168's sweep afterwards and report the new census (it should be 8 of 8, or say why not). Two independent grep programs, named (P-58) -- the interactive `grep` here is a shell function re-execing as ugrep -I, /usr/bin/grep is BSD 2.6.0-FreeBSD. AND BEWARE THE DRIVER'S OWN MISTAKE ON THIS EXACT SWEEP: its one-line regex matched a COMMENT QUOTING OLD CODE and it briefly concluded fire-program.sh lacked QUIT when lines 202-206 set it. Make your census distinguish live code from commentary, and say how.\n\nDo NOT modify .softhouse/bin/fire-program.sh. Bar: probe present and up, PASS exit 0, 43 parity vectors, 5664 cells.",
+.softhouse/tasks.json:1886:   "description": "T216 closed T168's three named QUIT-trap sites and found a fourth (prove-a2-26-guards-red.sh) that did not exist at T168's fire. It left ONE site standing AND NAMED IT rather than letting the sweep narrow silently, which is exactly what P-40 exists to produce: `.softhouse/capture/tierA-a2/cap9.sh:49` still has `trap ... EXIT HUP INT TERM` with no QUIT, so Ctrl-\\\\ during a capture leaks its mktemp scratch dir.\n\nT216 declined to fix it in place, and its REASON is the actual content of this task: cap9.sh HAS ALREADY PRODUCED COMMITTED EVIDENCE (the A2-300 series, git-tracked), and that rig's own convention -- visible in its own header and in SUPERSEDED.txt -- is to mint a SUCCESSOR FILE rather than edit a script whose output is already in the record. T216 was right not to mint a cap10.sh unilaterally on a site it was not asked to close. SO DECIDE THE CONVENTION, DO NOT ASSUME IT. Three candidates, and you must ARGUE the choice:\n  (a) mint cap10.sh with QUIT, add a SUPERSEDES pointer, leave cap9.sh untouched as evidence;\n  (b) edit cap9.sh in place, on the argument that a SIGNAL LIST is not a value that any committed       observation depends on -- no captured byte changes -- and that T114/T176's prohibition is about not       rewriting evidence to make it AGREE, not about never touching a rig;\n  (c) something else you can defend.\nThe interesting question is whether (b) is genuinely safe: does ANY committed artefact pin cap9.sh's bytes or hash? FIND OUT AND SAY WHERE YOU LOOKED (P-66/P-70) before asserting either way. If something pins it, (b) is off the table and you have learned the real constraint.\n\nMATERIALITY IS LOW AND MUST BE STATED AS SUCH. This leaks a temp directory. No vector, no money path, no committed observation is at risk. T216 refused to inflate it and so must you -- overstating a janitorial fix is its own defect in this program.\n\nDRIVE RED AND GREEN through whatever you choose (P-22), re-run T216's census with TWO NAMED grep engines (P-58) and report the new figure against T216's measured 10 sites, distinguishing live code from commentary and SAYING HOW -- the driver itself once concluded fire-program.sh lacked QUIT because its regex matched a comment quoting old code. Note T232's trap: `git grep -E` reads \\\\b as a LITERAL 'b' here and returns zero SILENTLY; calibrate on a known positive first (P-72) and state engine and flags.\n\nDo NOT modify .softhouse/bin/fire-program.sh. BAR: probe line PRESENT (test presence first) and reading up; VERDICT PASS exit 0; 0 inadmissible; 0 harness errors; 0 invariant violations; go build/vet/test green; gofmt -l exactly contract.go and NEVER gofmt -w it (G-3); invoke the harness with bash, never sh (exit 3 = wrong-interpreter refusal). *** THE PARITY-VECTOR COUNT AND THE STORE DIGEST IN OLDER BARs ARE STALE IF A2-15 LANDED: re-read the CURRENT figures from .softhouse/RESUME.md rather than copying a number out of an older task. *** The store digest must be UNCHANGED BY YOU whatever its value is when you start.",
+.softhouse/tasks.json:2202:   "title": "THE HARNESS CANNOT RUN ON LINUX — 10 non-portable `mktemp -t` sites kill it before the probe, and go-env.sh hardcodes a macOS GOROOT so the ledger-invariants HARD guard DID NOT COMPILE",
+.softhouse/tasks.json:2242:   "description": "You are an INDEPENDENT reviewer. You did not write T253. ASSUME DEFECTS EXIST. T253 claims two host-portability defects in the BAR harness and fixes them. Re-derive, do not read: (1) ENUMERATE every mktemp site yourself and confirm T253 fixed ALL of them, not just the ones that fired — check its SELECTOR, not only its conditions (P-76 addendum). (2) The BSD/macOS arm is the one that CANNOT be executed on this host: judge whether T253's justification for it is evidence or assertion, and say which. A fix that repairs Linux and breaks Buyan's Mac is a HIGH rejection — the Mac is the ONLY host that can capture vectors. (3) Re-run the bar yourself and confirm the probe line is PRESENT; confirm it reads `down` and that NO PASS verdict is claimed anywhere in the handoff (claiming parity without a reachable oracle is a rejection). (4) Confirm the vector-store digest did not move: `git rev-parse HEAD:.softhouse/vectors` against the value in RESUME.md, read live. (5) Judge T253's absent-toolchain decision on its merits and on whether the substitution is STATED in the harness output rather than hidden. WRITE ONLY under `.softhouse/reviews/t254-harness-portability/` and your handoff. You may NOT edit conformance.sh, go-env.sh, or anything T253 touched — a reviewer that edits the artefact it reviews leaves it reviewed by nobody (A2-17).",
+
+=== end census (commit 607252a8660101cab01ac0dc68d1ecc61b14c43d) ===

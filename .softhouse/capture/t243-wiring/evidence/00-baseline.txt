@@ -1,0 +1,46 @@
+conformance: unknown option --ledger-impl
+Golden-vector conformance harness — Fineract reference oracle vs the Go module.
+
+  .softhouse/conformance.sh [CONTEXT]      grade the store (optionally one context)
+  .softhouse/conformance.sh --prove        run the harness's own mutation proofs
+  .softhouse/conformance.sh --self-test    grade the HARNESS via the replay implementation
+  .softhouse/conformance.sh --help
+
+EXIT CODES
+  0  every graded vector passed AND at least one PARITY vector was graded AND the
+     reference oracle was confirmed reachable. Means "matches the reference oracle
+     on captured vectors, within the graded domain". NEVER means safe to cut over.
+  1  a mismatch or a violated property invariant. A definite, reproducible defect.
+  2  the harness, the corpus or the oracle is unusable: no Go toolchain, no
+     implementation to grade, an unreachable oracle, zero parity vectors, an
+     inadmissible vector, a refused vector, a failed HARD guard.
+  3  WRONG INTERPRETER — the harness never started. This file was handed to a
+     shell that could not be OBSERVED to run the one construct the harness is
+     built on, `< <(...)`. That covers a shell that is not bash at all (dash,
+     zsh, ksh, busybox ash), a bash with process substitution switched off
+     (bash 3.2 in POSIX mode — which is what BOTH `sh conformance.sh` and
+     `bash --posix conformance.sh` give you on macOS), and a bash that stops
+     the probe from running at all (`bash -r`). Nothing was graded, no vector
+     was read, and the reference oracle was never contacted — so 3 says
+     NOTHING about the corpus and NOTHING about the oracle. The fix is always
+     the same: re-run it under bash, `bash .softhouse/conformance.sh` or
+     `./.softhouse/conformance.sh`.
+     The test is a CAPABILITY test, never a test of the shell's name: where
+     /bin/sh IS a bash 5.x (Fedora, RHEL, and any distro that links sh to
+     bash), `sh conformance.sh` is ADMITTED [VERIFIED: T97 — bash 5.2.37 and
+     5.3.9, argv[0]=sh; T113 re-measured on 5.3.9, argv[0]=sh, `--posix`,
+     argv[0]=sh + `--posix` and POSIXLY_CORRECT=1, all admitted]. Whether the
+     graded run then SUCCEEDS under a bash 5.x is [UNVERIFIED]: no complete
+     graded run under bash 5.x has ever been recorded — every green run on
+     record is macOS bash 3.2.57. ADMISSION is a claim about this guard only,
+     not about the 800 lines after it.
+
+0, 1 and 2 are the verdict codes and there are still only three of them; 3 is not
+a verdict, it is a refusal to start, and it is deliberately NOT 2 so that a
+shell-selection mistake can never be mistaken for an oracle outage. There is no
+silent success: an empty vector set is 2, not 0, because a harness that reported
+PASS over zero vectors would be worse than no harness at all.
+
+"The oracle" here means the FINERACT REFERENCE IMPLEMENTATION we grade Go output
+against. Oracle Database is a prohibited product in this program and appears
+nowhere in this stack. PostgreSQL is the only permitted database.

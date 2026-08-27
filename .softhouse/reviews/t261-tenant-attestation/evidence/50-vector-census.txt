@@ -1,0 +1,13 @@
+CALIBRATION: positive fixture 1 hit, negative fixture 0 hits -- discriminates
+
+SCOPE  tree=d2b5772 path=.softhouse/vectors
+  files in the pinned tree          : 62
+  of which PIN files                : 2  ['.softhouse/vectors/PIN-ledger.json', '.softhouse/vectors/PIN.json']
+  of which non-json                 : 1  ['.softhouse/vectors/README.md']
+  VECTOR files (json, non-PIN)      : 59
+  unparseable                       : 0
+
+  vectors carrying a `tenant` field : 0
+
+  .softhouse/vectors/PIN-ledger.json tenant field(s): NONE
+  .softhouse/vectors/PIN.json tenant field(s): NONE

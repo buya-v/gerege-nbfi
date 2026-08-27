@@ -1,0 +1,26 @@
+T207 -- candidate populations for T185's '193 -> 201' and the brief's '240 scripts'
+root   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4aaeba76a779881c
+commit : 90c21d635d702a59d612dfc17349274f42431aad
+
+SCRIPT-COUNT candidates (the '240 scripts' term):
+  git-tracked *.py, whole repo                       : 438
+  git-tracked *.sh, whole repo                       : 334
+  git-tracked *.py + *.sh, whole repo                : 772
+  git-tracked *.py under .softhouse/capture/     : 229
+  git-tracked *.py under .softhouse/reviews/     : 181
+  git-tracked *.py under .softhouse/handoff/     : 27
+  git-tracked *.py under .softhouse/bin/         : 1
+  git-tracked *.py that CONTAIN the text 'json.load' : 204
+
+SITE-COUNT candidates (the '193 -> 201' term):
+  AST  json.load AND json.loads   whole repo                 total 344   no parse_float 224 
+  AST  json.load AND json.loads   .softhouse/capture/ only   total 238   no parse_float 144 
+  AST  json.load ONLY             whole repo                 total 248   no parse_float 182 
+  AST  json.load ONLY             .softhouse/capture/ only   total 157   no parse_float 108 
+  AST  json.loads ONLY            whole repo                 total 96    no parse_float 42  
+  AST  json.loads ONLY            .softhouse/capture/ only   total 81    no parse_float 36  
+  GREP line-based 'json.load' with no parse_float on the SAME line, whole repo : 248
+  GREP line-based 'json.load(' with no parse_float on the SAME line, whole repo: 181
+
+NOTE: no reading is asserted to be T185's. The handoff records which of these
+      reproduces 201 and which does not, and marks the rest UNVERIFIED.

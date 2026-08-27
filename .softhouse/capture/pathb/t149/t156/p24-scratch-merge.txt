@@ -1,0 +1,173 @@
+=== T156 / P-24 — artefacts re-run on a scratch merge into CURRENT main
+run at 2026-08-21T08:08:22Z
+branch:      softhouse/T156-redgreen-exit-trap = 574c52567b49411dae18422b09b53361ab0cca78
+fork point:  82a954491f9e87b70a426c6327d60236d762a9db
+main NOW:    9e42bbc57cf918a0ab0a1924c011a0bf1b2f8420
+main is 2 commit(s) ahead of this branch's fork point
+
+clone main:  9e42bbc57cf918a0ab0a1924c011a0bf1b2f8420
+merged:      126269294538c48f8be5d156816fae8f8deadc6e
+conflicts:   0
+
+vector files on merged main: 50
+
+=== 1. the interruption prover, on the MERGED tree ===============================
+=== T156 — prove-redgreen.sh arm 1 must restore the store on EVERY exit path
+run at 2026-08-21T08:09:16Z
+repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t156-p24-scratch/clone
+
+pre-fix  blob 9b973301a6eaa9dff61559f7d1f8a8de05752880  sha256 549eac70bb67b8c4303f4c24af7304a420a2cc72cca6e172e8a9da2809045ce0  (4077 bytes) — VERIFIED
+post-fix worktree .softhouse/capture/pathb/t149/prove-redgreen.sh  sha256 3ec962118d5db26028016d0c6b7f16107a161b3eadf4bfb27e6a08ef5bcf3cd6  (11847 bytes)
+`trap ` statements: pre-fix 0, post-fix 4
+
+--- baseline: the pristine scratch store, graded
+    VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+    derived N = 43 parity vectors, 5664 cells
+
+--- PRE-FIX   pgrp-int          SIGINT to the process group (a terminal Ctrl-C)
+    script exit=-2  elapsed=0.3s  vector-in-store=False  park-left=True
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+    ^^ SHORT BY 1, AND STILL A GREEN PASS — 88 cells fewer than the pristine store
+    => DEFECT REPRODUCED — store stranded and the next run is GREEN
+
+--- POST-FIX  pgrp-int          SIGINT to the process group (a terminal Ctrl-C)
+    script exit=130  elapsed=1.8s  vector-in-store=True  park-left=False
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+    => RESTORED — store back to 43, byte census verified
+
+--- PRE-FIX   parent-term       SIGTERM to the script (`kill <pid>`)
+    script exit=-15  elapsed=0.2s  vector-in-store=False  park-left=True
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+    ^^ SHORT BY 1, AND STILL A GREEN PASS — 88 cells fewer than the pristine store
+    => DEFECT REPRODUCED — store stranded and the next run is GREEN
+
+--- POST-FIX  parent-term       SIGTERM to the script (`kill <pid>`)
+    script exit=143  elapsed=1.7s  vector-in-store=True  park-left=False
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+    => RESTORED — store back to 43, byte census verified
+
+--- PRE-FIX   parent-hup        SIGHUP to the script (terminal closed)
+    script exit=-1  elapsed=0.2s  vector-in-store=False  park-left=True
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+    ^^ SHORT BY 1, AND STILL A GREEN PASS — 88 cells fewer than the pristine store
+    => DEFECT REPRODUCED — store stranded and the next run is GREEN
+
+--- POST-FIX  parent-hup        SIGHUP to the script (terminal closed)
+    script exit=129  elapsed=1.7s  vector-in-store=True  park-left=False
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+    => RESTORED — store back to 43, byte census verified
+
+--- PRE-FIX   parent-int-hang   SIGINT while the driver is STILL RUNNING
+    script exit=None (STILL RUNNING at timeout)  elapsed=25.0s  vector-in-store=False  park-left=True
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+    ^^ SHORT BY 1, AND STILL A GREEN PASS — 88 cells fewer than the pristine store
+    => DEFECT REPRODUCED — store stranded and the next run is GREEN
+
+--- POST-FIX  parent-int-hang   SIGINT while the driver is STILL RUNNING
+    script exit=130  elapsed=1.6s  vector-in-store=True  park-left=False
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+    => RESTORED — store back to 43, byte census verified
+
+--- PRE-FIX   exit3             driver exits 3 — an ordinary error, no signal
+    script exit=1  elapsed=0.3s  vector-in-store=True  park-left=False
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+    => restored by the explicit mv (this path was never the defect)
+
+--- POST-FIX  exit3             driver exits 3 — an ordinary error, no signal
+    script exit=1  elapsed=1.6s  vector-in-store=True  park-left=False
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+    => RESTORED — store back to 43, byte census verified
+
+--- PRE-FIX   kill9             SIGKILL to the script — no trap can catch this
+    script exit=-9  elapsed=0.3s  vector-in-store=False  park-left=True
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+    ^^ SHORT BY 1, AND STILL A GREEN PASS — 88 cells fewer than the pristine store
+    => DEFECT REPRODUCED — store stranded and the next run is GREEN
+
+--- POST-FIX  kill9             SIGKILL to the script — no trap can catch this
+    script exit=-9  elapsed=0.9s  vector-in-store=False  park-left=True
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+    ^^ SHORT BY 1, AND STILL A GREEN PASS — 88 cells fewer than the pristine store
+    => stranded, as SIGKILL must be — start-up recovery is tested below
+
+--- POST-FIX  start-up recovery from the state a SIGKILLed run leaves behind
+    sandbox started with the vector OUT of the store and a park file present
+    script exit=1  vector-in-store=True  park-left=False
+    | RECOVERED: an earlier run left the store SHORT — /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t156-sandbox.5gy97hei/.softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json restored from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t156-sandbox.5gy97hei/.softhouse/capture/pathb/t149/.parked-vector.json before starting
+    | store restored: 50 vector files, census identical to the pre-run census
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+    => RECOVERED at start-up — store back to 43
+
+--- PRE-FIX   the same start-up state: nothing recovers it
+    script exit=1  vector-in-store=False
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+    => NO RECOVERY — still short by 1 and still a GREEN PASS
+
+=== SUMMARY  (N derived at runtime = 43 parity vectors, 5664 cells)
+| case | bytes | script exit | vector in store | next run |
+|---|---|---|---|---|
+| pgrp-int | PRE-FIX | -2 | **NO** | exit 0, 42 parity |
+| pgrp-int | POST-FIX | 130 | yes | exit 0, 43 parity |
+| parent-term | PRE-FIX | -15 | **NO** | exit 0, 42 parity |
+| parent-term | POST-FIX | 143 | yes | exit 0, 43 parity |
+| parent-hup | PRE-FIX | -1 | **NO** | exit 0, 42 parity |
+| parent-hup | POST-FIX | 129 | yes | exit 0, 43 parity |
+| parent-int-hang | PRE-FIX | None (hung) | **NO** | exit 0, 42 parity |
+| parent-int-hang | POST-FIX | 130 | yes | exit 0, 43 parity |
+| exit3 | PRE-FIX | 1 | yes | exit 0, 43 parity |
+| exit3 | POST-FIX | 1 | yes | exit 0, 43 parity |
+| kill9 | PRE-FIX | -9 | **NO** | exit 0, 42 parity |
+| kill9 | POST-FIX | -9 | **NO** | exit 0, 42 parity |
+
+RESULT: PROOF HOLDS — every pre-fix interruption stranded the store behind a green PASS, and every post-fix path restored it.
+prove-exit-trap.py exit=0
+
+=== 2. the P-26 sweep, on the MERGED tree =======================================
+  .softhouse/reviews/t41-probe/edit13.py                                 targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit14.py                                 targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit16.py                                 targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit18.py                                 targets=PORT,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit2.py                                  targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit20.py                                 targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit21.py                                 targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit22.py                                 targets=PORT,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit5.py                                  targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit6.py                                  targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit8.py                                  targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit_go1.py                               targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit_go2.py                               targets=PORT,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit_go3.py                               targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit_go4.py                               targets=PORT,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_2.py                             targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_3.py                             targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_4.py                             targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_4c.py                            targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_5.py                             targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_6.py                             targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_7.py                             targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_8.py                             targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+
+counts: enumerated=502  hits=130  unguarded=111  unreadable=0
+sweep exit=0
+
+=== 3. prove-redgreen.sh ITSELF, on the MERGED tree =============================
+    (T154's lesson: re-run the ARTEFACT after merging, not only conformance)
+=== arm 1 — store with this vector parked, + M7 (the premise) ===
+| `MONEY-QUANTIZATION-HALF-EVEN` (M7) | **KILLED** | 39 | 3 | T61-HE-A, T61-HE-B, T61-HE-C |
+=== arm 2 — full store + M7 (RED) ===
+| `MONEY-QUANTIZATION-HALF-EVEN` (M7) | **KILLED** | 39 | 4 | T149-PATHB-TIE, T61-HE-A, T61-HE-B, T61-HE-C |
+=== arm 3 — full store, unmutated (GREEN) ===
+    parity vectors          PASS 43   FAIL 0
+VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+conformance exit=0
+
+arm sizes read back from the run: parked 42, full 43 (derived, not asserted)
+PROOF HOLDS: RED under HALF_EVEN, GREEN under HALF_UP, and the store WITHOUT this
+             vector was ALREADY red under HALF_EVEN — so this vector deepens that
+             coverage, it does not create it.
+store restored: 50 vector files, census identical to the pre-run census
+prove-redgreen.sh exit=0
+
+merged-tree vector store still intact: 0 modified path(s) under .softhouse/vectors (expect 0)
+
+RESULT: ALL THREE ARTEFACTS HOLD ON THE MERGED TREE

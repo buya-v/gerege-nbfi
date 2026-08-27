@@ -1,0 +1,16 @@
+# T177 matrix A — the disputed cell (B = 10001 minor units, n = 3000, rate 600.0), repeated.
+# SERIES|RUNS|PLAN|JVM_FLAGS.  RUNS>1 means that many SEPARATE, FRESH JVMs.
+#
+# fresh-single   the disputed cell as the FIRST and ONLY seam call of a cold JVM, 20 fresh JVMs.
+#                This is requirement 2: re-run the exact disputed cell many times, with a denominator.
+# repeat-warm    the disputed cell 8 times inside ONE JVM, 4 fresh JVMs. Separates per-request
+#                nondeterminism (outcome independent of trial index) from within-JVM warm-up
+#                (outcome a step function of trial index).
+# warm-ctrl-M    M seam calls on a DIFFERENT, non-throwing cell (same principal, n = 200) and then
+#                ONE disputed probe. Separates "the code path has been exercised" from "the disputed
+#                cell itself has been attempted".
+fresh-single|20|single|
+repeat-warm|4|repeat:8|
+warm-ctrl-1|3|warm:1:1|
+warm-ctrl-10|3|warm:10:1|
+warm-ctrl-50|3|warm:50:1|

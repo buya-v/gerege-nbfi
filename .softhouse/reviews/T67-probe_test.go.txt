@@ -1,0 +1,179 @@
+// T67 review probe. Run as nexus/internal/apps/loanschedule/zz_t67_probe_test.go
+// on softhouse/T65-t63-p1s @ 401472a, then DELETED before commit — the reviewed
+// tree is left byte-identical. Drop this file back into the package and every
+// T67 figure re-runs.
+//
+// TestT67_ReproduceTheGradedCostCeilingTable additionally needs a five-line
+// instrument in emi.go, which was likewise reverted:
+//
+//	var t67MaxDepth int
+//
+//	func (m *scheduleModel) applyFinalPeriodResidual(depth int) {
+//		if depth > t67MaxDepth {
+//			t67MaxDepth = depth
+//		}
+//		if m.cancelled || depth > len(m.periods)+2 {
+//	...
+//
+// Observed at T67 (see .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T67.md):
+//
+//	TestT67_CarriedCounterEqualsTheDeletedScan
+//	  3840 shapes (3720 answered, 120 refused), 70080 rows, 0 divergences
+//	  non-payable row positions: map[0:1080 1:1080 2:120 4:120 5:240 6:120 10:120
+//	                                 11:240 12:120 34:120 35:120 58:120 59:120]
+//	TestT67_CostTestIsNotFlaky
+//	  n=90/180/360/720/1000 over 7 runs each: spread 0 at every term
+//	TestT67_ReproduceTheGradedCostCeilingTable
+//	  n=360   depth 0     994 allocs/period
+//	  n=1000  depth 11    993
+//	  n=1050  depth 19    995
+//	  n=1100  depth 929   19024
+//	  n=1500  depth 1313  27402
+//	  n=2000  depth 1797  38096
+
+package loanschedule
+
+import (
+	"context"
+	"fmt"
+	"runtime"
+	"testing"
+
+	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
+)
+
+// t67ScanNumber is the DELETED helper installmentNumberOf, restored verbatim as
+// an oracle for the carried counter. It is the pure function T65 replaced.
+func t67ScanNumber(emitted []contract.Period) int32 {
+	var n int32
+	for _, p := range emitted {
+		if p.Kind == contract.PeriodKindDownPayment || p.Kind == contract.PeriodKindRepayment {
+			n++
+		}
+	}
+	return n + 1
+}
+
+// TestT67_CarriedCounterEqualsTheDeletedScan sweeps the graded domain and asserts,
+// for EVERY emitted row, that the shipped InstallmentNumber equals what the
+// deleted rescan would have returned at that point in the emission. This is the
+// evidence T65's own sweep produced but deleted before commit, re-derived here.
+func TestT67_CarriedCounterEqualsTheDeletedScan(t *testing.T) {
+	starts := []civilDate{
+		date(2024, 1, 1), date(2024, 1, 31), date(2024, 2, 29),
+		date(2023, 11, 30), date(2024, 3, 15), date(2025, 12, 31),
+	}
+	rates := []contract.Rate{
+		{Numerator: 0, Denominator: 1},
+		{Numerator: 7, Denominator: 100},
+		{Numerator: 27, Denominator: 125},
+		{Numerator: 2, Denominator: 1},
+		{Numerator: 5, Denominator: 1},
+	}
+	principals := []int64{1, 10000, 120000000, 5000000000}
+	terms := []int32{1, 2, 3, 6, 7, 12, 13, 36, 60}
+
+	shapes, answered, refused, rows := 0, 0, 0, 0
+	disbAt := map[int]int{}
+	for _, st := range starts {
+		for _, r := range rates {
+			for _, pr := range principals {
+				for _, n := range terms {
+					due, err := repaymentDueDates(context.Background(), st, n, 1, contract.FrequencyMonths, st)
+					if err != nil {
+						continue
+					}
+					offsets := []civilDate{st, due[0]}
+					if len(due) >= 3 {
+						offsets = append(offsets, due[len(due)-2], due[len(due)-3])
+					}
+					for _, on := range offsets {
+						shapes++
+						req := baseRequest(pr, n, r)
+						req.ScheduleStartDate = st
+						req.Disbursements = []contract.Disbursement{{Date: on, AmountMinor: pr}}
+						s, err := Generator{}.Generate(context.Background(), req)
+						if err != nil {
+							refused++
+							continue
+						}
+						answered++
+						var seen []contract.Period
+						for i, p := range s.Periods {
+							rows++
+							want := int32(0)
+							if p.Kind == contract.PeriodKindDownPayment || p.Kind == contract.PeriodKindRepayment {
+								want = t67ScanNumber(seen)
+							} else {
+								disbAt[i]++
+							}
+							if p.InstallmentNumber != want {
+								t.Fatalf("start %s rate %d/%d principal %d n=%d disb %s: row %d kind %d "+
+									"InstallmentNumber %d, the deleted scan says %d",
+									formatDate(st), r.Numerator, r.Denominator, pr, n, formatDate(on),
+									i, p.Kind, p.InstallmentNumber, want)
+							}
+							seen = append(seen, p)
+						}
+					}
+				}
+			}
+		}
+	}
+	t.Logf("T67: %d shapes (%d answered, %d refused), %d rows compared against the deleted scan; "+
+		"non-payable row positions seen: %v", shapes, answered, refused, rows, fmt.Sprint(disbAt))
+	if answered == 0 {
+		t.Fatal("nothing generated; the sweep proves nothing")
+	}
+}
+
+// TestT67_CostTestIsNotFlaky runs the cost test's own measurement repeatedly and
+// reports the spread, so that "deterministic, machine-independent" is measured
+// rather than asserted (P-7).
+func TestT67_CostTestIsNotFlaky(t *testing.T) {
+	terms := []int32{90, 180, 360, 720, 1000}
+	const reps = 7
+	for _, term := range terms {
+		var lo, hi uint64
+		for r := 0; r < reps; r++ {
+			got := t67PerPeriod(t, term)
+			if r == 0 || got < lo {
+				lo = got
+			}
+			if got > hi {
+				hi = got
+			}
+		}
+		t.Logf("n=%-5d allocations per period over %d runs: min %d max %d (spread %d)",
+			term, reps, lo, hi, hi-lo)
+	}
+}
+
+func t67PerPeriod(t *testing.T, term int32) uint64 {
+	t.Helper()
+	var before, after runtime.MemStats
+	runtime.ReadMemStats(&before)
+	if _, err := (Generator{}).Generate(context.Background(), livenessRequest(term)); err != nil {
+		t.Fatalf("term %d: %v", term, err)
+	}
+	runtime.ReadMemStats(&after)
+	return (after.Mallocs - before.Mallocs) / uint64(term)
+}
+
+// TestT67_ReproduceTheGradedCostCeilingTable re-derives the table committed in the
+// doc comment on gradedCostCeiling: max recursion depth of applyFinalPeriodResidual
+// and allocations per period, on the livenessRequest shape. Needs the t67MaxDepth
+// instrument described at the top of this file.
+func TestT67_ReproduceTheGradedCostCeilingTable(t *testing.T) {
+	for _, n := range []int32{360, 1000, 1050, 1100, 1500, 2000} {
+		t67MaxDepth = 0
+		var before, after runtime.MemStats
+		runtime.ReadMemStats(&before)
+		if _, err := (Generator{}).Generate(context.Background(), livenessRequest(n)); err != nil {
+			t.Fatalf("n=%d: %v", n, err)
+		}
+		runtime.ReadMemStats(&after)
+		t.Logf("n=%-5d max recursion depth %-6d allocations per period %d",
+			n, t67MaxDepth, (after.Mallocs-before.Mallocs)/uint64(n))
+	}
+}

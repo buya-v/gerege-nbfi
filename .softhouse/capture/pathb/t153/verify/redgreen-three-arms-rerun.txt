@@ -1,0 +1,12 @@
+=== arm 1 — 42-vector store + M7 (the premise) ===
+| `MONEY-QUANTIZATION-HALF-EVEN` (M7) | **KILLED** | 39 | 3 | T61-HE-A, T61-HE-B, T61-HE-C |
+=== arm 2 — 43-vector store + M7 (RED) ===
+| `MONEY-QUANTIZATION-HALF-EVEN` (M7) | **KILLED** | 39 | 4 | T149-PATHB-TIE, T61-HE-A, T61-HE-B, T61-HE-C |
+=== arm 3 — 43-vector store, unmutated (GREEN) ===
+    parity vectors          PASS 43   FAIL 0
+VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+conformance exit=0
+
+PROOF HOLDS: RED under HALF_EVEN, GREEN under HALF_UP, and the 42-vector store was
+             ALREADY red under HALF_EVEN — so this vector deepens that coverage, it
+             does not create it.

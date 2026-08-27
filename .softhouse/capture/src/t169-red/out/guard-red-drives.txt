@@ -1,0 +1,33 @@
+
+================ M1  isFatal() always false  -> a fatal throwable would be SWALLOWED ================
+FAIL  OutOfMemoryError is FATAL
+FAIL  InternalError is FATAL
+FAIL  UnknownError is FATAL
+FAIL  NoClassDefFoundError (LinkageError) is FATAL
+FAIL  IncompatibleClassChangeError (LinkageError) is FATAL
+FAIL  ThreadDeath is FATAL
+FAIL  OutOfMemoryError is announced and RE-THROWN, not swallowed
+FAIL  NoClassDefFoundError is announced and RE-THROWN, not swallowed
+ThrewOutcomeSelfTest: 22 checks, 8 failures
+self-test exit: 1
+
+================ M2  isFatal() always true  -> a StackOverflowError would KILL the run instead of being recorded ================
+FAIL  StackOverflowError is NOT fatal — it is the finding
+Exception in thread "main" java.lang.StackOverflowError
+self-test exit: 1
+
+================ M3  tally() counts a threw cell as an observation ================
+FAIL  one throw -> asked 3 / observed 2 / threw 1 / skipped 0
+Traceback (most recent call last):
+selftest exit: 0
+
+================ M4  tally() drops a missing cell instead of counting it skipped ================
+FAIL  a missing cell -> asked 3 / observed 2 / threw 0 / skipped 1
+sweep_integrity selftest: 1 failure(s)
+
+================ M5  assert_not_graded_as_observed() never refuses ================
+FAIL  GRADING a threw cell is refused  -> did NOT raise
+FAIL  GRADING an absent cell is refused  -> did NOT raise
+sweep_integrity selftest: 2 failure(s)
+
+ALL MUTATION DRIVES COMPLETE

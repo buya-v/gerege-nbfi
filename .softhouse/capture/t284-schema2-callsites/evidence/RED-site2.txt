@@ -1,0 +1,19 @@
+T261 RED-DRIVE B -- attacking the detector
+oracle: https://localhost:8443/fineract-provider/api/v1   curl: curl 8.7.1
+
+capturing base artefacts from the LIVE oracle ...
+derived /tmp/t284red/.softhouse/reviews/t261-tenant-attestation/evidence/redB/src/post/post.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.rEvU9u/trace (schema 2; 1 send-header block(s), 15 recv-header block(s))
+post                                         HTTP 403
+derived /tmp/t284red/.softhouse/reviews/t261-tenant-attestation/evidence/redB/src/dup/dup.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.ZN36W9/trace (schema 2; 1 send-header block(s), 15 recv-header block(s))
+dup                                          HTTP 200
+derived /tmp/t284red/.softhouse/reviews/t261-tenant-attestation/evidence/redB/src/colon/colon.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.gke1Mf/trace (schema 2; 1 send-header block(s), 15 recv-header block(s))
+colon                                        HTTP 200
+derived /tmp/t284red/.softhouse/reviews/t261-tenant-attestation/evidence/redB/src/kcoll/kcoll.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.tp5X1T/trace (schema 2; 1 send-header block(s), 15 recv-header block(s))
+kcoll                                        HTTP 200
+derived /tmp/t284red/.softhouse/reviews/t261-tenant-attestation/evidence/redB/src/empty/empty.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.gheShO/trace (schema 2; 1 send-header block(s), 15 recv-header block(s))
+empty                                        HTTP 200
+
+--- CALIBRATION: untouched positive control must VERIFY ---
+ABORT: positive control did not verify (rc=2); nothing may be scored.
+REFUSING: sidecar /tmp/t284red/.softhouse/reviews/t261-tenant-attestation/evidence/redB/src/post/post.http is SCHEMA 2 and attests a response, but --resp/--resphdr/--status was not supplied. An attested artefact that is not presented cannot be checked, and an unchecked assertion is not a passed one.
+EXIT=4

@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/q1-ledger-state.sql
+query-bytes-artefact: M-01-ledger-state.sql
+query-sha256: 178179bb3da2da3a88b815f54efe832cf33c1aa94d64472b4f88b0a9777b3e5f
+query-bytes: 1991
+psql-exit-status: 0
+captured-at-utc: 2026-08-23T00:09:33Z

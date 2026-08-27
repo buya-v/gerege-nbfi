@@ -1,0 +1,5 @@
+PAIR: 22 added line(s), 1 removed line(s)
+PAIR VERIFIED: every differing line is inside the new `cell:` branch, the class name, or
+the header note. The seam call and every input field are byte-identical.
+wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a99d6618fc583cf3d/.softhouse/capture/t177-so-nondeterminism/src/CaptureT177b.java
+builder exit 0

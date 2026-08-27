@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_tenants -f -
+database: fineract_tenants
+query-file: sql/m2-tenant-store-cost.sql
+query-bytes-artefact: M-04-tenant-store-cost.sql
+query-sha256: 704a8f64e26755e82008b66a455b229270822c234087e13576cba258aecff3a0
+query-bytes: 2310
+psql-exit-status: 0
+captured-at-utc: 2026-08-23T06:11:54Z

@@ -1,0 +1,69 @@
+CORPUS  git-tracked files under .softhouse/ : 4800
+PROGRAM A  candidate files (git grep -l prefilter): 649
+PROGRAM A  invocation sites : 4508 across 649 files
+PROGRAM B  self-declaring files : 151
+  A-only: 566   B-only: 68   both: 83
+
+=== ENGINE CLASS across all 4508 invocation sites ===
+  BRE              3081
+  SOUND            1292
+  ESCAPES-VOID     134
+  NONEXISTENT      1
+
+=== ENGINE across all invocation sites ===
+  BSD grep BRE (script) / ugrep BRE (interactive)            3081
+  ugrep (explicit)                                           592
+  BSD grep -E (script) / ugrep -E (interactive)              513
+  python re                                                  166
+  git grep (git BRE, default)                                75
+  git grep -E (git ERE)                                      59
+  git grep -P (PCRE2)                                        21
+  grep -P via /usr/bin/grep => NONEXISTENT OPTION            1
+
+=== SITES CARRYING AN ENGINE-DEPENDENT ESCAPE: 166 ===
+  python re                                                  99
+  BSD grep -E (script) / ugrep -E (interactive)              41
+  git grep -E (git ERE)                                      10
+  git grep -P (PCRE2)                                        9
+  BSD grep BRE (script) / ugrep BRE (interactive)            7
+
+=== *** VOID *** : engine-dependent escape UNDER git grep -E/BRE : 10 ===
+  .softhouse/RESUME.md:86
+      engine=git grep -E (git ERE)  escapes=['b']
+      pattern='\\balance column'
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-33.md:66
+      engine=git grep -E (git ERE)  escapes=['b']
+      pattern='\\balance column'
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T232.md:89
+      engine=git grep -E (git ERE)  escapes=['b']
+      pattern='\\balance column'
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T232.md:92
+      engine=git grep -E (git ERE)  escapes=['b']
+      pattern='\\bCommand'
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T232.md:184
+      engine=git grep -E (git ERE)  escapes=['b']
+      pattern='\\b…'
+  .softhouse/patterns.md:1307
+      engine=git grep -E (git ERE)  escapes=['b']
+      pattern='\\bP-5\\b'
+  .softhouse/patterns.md:2100
+      engine=git grep -E (git ERE)  escapes=['b']
+      pattern='\\balance column'
+  .softhouse/patterns.md:2103
+      engine=git grep -E (git ERE)  escapes=['b']
+      pattern='\\bCommand'
+  .softhouse/reviews/T138-evidence/r11-hygiene.sh:35
+      engine=git grep -E (git ERE)  escapes=['b']
+      pattern='merge-base|main:|origin/main|rev-parse main|\\bmain\\b'
+  .softhouse/reviews/a2-33-dec2-rev5/REVIEW.md:168
+      engine=git grep -E (git ERE)  escapes=['b']
+      pattern='\\balance column'
+
+=== *** VOID BY NONEXISTENT OPTION *** : grep -P in a script : 1 ===
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T232.md:144  - `grep` on `PATH` is **`ugrep 7.5.0 aarch64-apple-macosx +neon/AArch64; -P:pcre2jit`** — *not* GNU grep.
+
+=== PROGRAM B files that PROGRAM A found NO invocation in (PROSE-ONLY sweep candidates) ===
+  count: 68
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T127.md                                  claimlines=1
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T181.md                                claimlines=1
+  .softhouse/reviews/t202-probe/patch.py                                                           claimlines=1

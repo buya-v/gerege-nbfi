@@ -1,0 +1,36 @@
+T290 -- mechanical verification of three T271 claims
+================================================================================================
+C1 -- does independent_recheck_t271.py read classify-t219.json while deriving?
+   (a) open ORDER inside the t219 capture, as recorded by an audit hook:
+       0  .softhouse/capture/t219-g8-residual/out/capture-t219-raw.json.gz
+       1  .softhouse/capture/t219-g8-residual/prediction.json
+       2  .softhouse/capture/t219-g8-residual/prediction.json
+       3  .softhouse/capture/t219-g8-residual/out/classify-t219.json
+       4  .softhouse/capture/t219-g8-residual/out/classify-t219.json
+   (b) ADVERSARIAL SWAP -- classify-t219.json corrupted in a copy of the tree:
+       clean : T271-INDEP: GREEN carriers=7 agreeREG=4 agreeCORR=6 agreeUNCOND=7 structureHolds=6 contradictions=0
+       dirty : T271-INDEP: REFUSED carriers=7 agreeREG=4 agreeCORR=6 agreeUNCOND=7 structureHolds=6 contradictions=21
+       DERIVED figures identical; reproduction assertion RED (contradictions=21, exit 1). INDEPENDENCE HOLDS.
+
+C2 -- conformance.sh anchors (READ ONLY; the file is contended by T273/T285)
+   line 1548 : 'run_guards() {'                                     MATCHES T271
+   line 1569 : 'guard_no_fail_open_instruments      || failed=1'    MATCHES T271
+   tally block by CONTENT (every `guard_* || failed=1`) : lines [1563, 1564, 1565, 1566, 1567, 1568, 1569]
+   NOTE FOR T269: bind the insertion point to the CONTENT of the last tally line, not
+   to 1569. T273/T285 are editing this file in the same fire and P-87 measured that a
+   line-number anchor was already 3-of-4 MOVED at an untouched merge base.
+
+C3 -- 'grep of conformance.sh returned exit 1, a true no-match' (P-81 / P-72 / P-75)
+   grep : /usr/bin/grep -- grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+   'guard_no_fail_open_instruments'   exit 0  MATCH                    CALIBRATION on a known positive
+   'R-VPA'                            exit 1  NO MATCH (true absence)  
+   't256-verdict-predicate'           exit 1  NO MATCH (true absence)  
+   'check_verdict_predicate'          exit 1  NO MATCH (true absence)  
+   't271'                             exit 1  NO MATCH (true absence)  
+   'run_rvpa_over_targets'            exit 1  NO MATCH (true absence)  
+   't290'                             exit 1  NO MATCH (true absence)  
+   deliberately broken search             exit 2  <- so >1 is distinguishable on this host
+   CONCLUSION: nothing in conformance.sh reads R-VPA, T271's runner, or T290's guard.
+   Every artefact in both directories is WIRED TO NOTHING (P-89/P-45).
+
+T290-CLAIMS: GREEN claims=3 held=3 problems=0

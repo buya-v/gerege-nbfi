@@ -1,0 +1,14 @@
+{
+ "name": "T51 pct of amount DISB minCap8000",
+ "chargeAppliesTo": 1,
+ "chargeTimeType": 1,
+ "chargeCalculationType": 2,
+ "chargePaymentMode": 0,
+ "currencyCode": "MNT",
+ "amount": 0.1,
+ "minCap": 8000,
+ "active": true,
+ "penalty": false,
+ "locale": "en",
+ "monthDayFormat": "dd MMM"
+}

@@ -1,0 +1,2 @@
+T42 controls: 172 cells compared against TRANSCRIBED literals (shipped test + four committed captures taken by other harnesses).
+PASS -- every control cell reproduces digit for digit.

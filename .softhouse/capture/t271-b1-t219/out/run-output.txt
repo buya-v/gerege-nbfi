@@ -1,0 +1,462 @@
+================================================================================
+T271 -- B-1: the verdict/predicate defect in t219-g8-residual
+HEAD         : f5072713dad511bfffa5c87708b7e29942c80edf
+vector store : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+================================================================================
+
+### 1. REPRODUCE THE RED FIRST -- the rule as it stands on main, before anything of mine
+R-VPA -- verdict/predicate agreement (T259)
+==============================================================================
+FILE .softhouse/capture/t219-g8-residual/out/classify-t219.json
+     sha256 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+
+  *** DISAGREEMENT [UNACKNOWLEDGED] cells[3]:T219-R600p0-N103-B1
+      recorded predicate : P2_emiDifferenceEqualsB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+      one of its own predicates did not. Decide which is wrong and write it down;
+      do not summarise past it.
+
+  *** DISAGREEMENT [UNACKNOWLEDGED] cells[3]:T219-R600p0-N103-B1
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+      one of its own predicates did not. Decide which is wrong and write it down;
+      do not summarise past it.
+
+  *** DISAGREEMENT [UNACKNOWLEDGED] cells[5]:T219-R600p0-N3000-B4499
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+      one of its own predicates did not. Decide which is wrong and write it down;
+      do not summarise past it.
+
+  *** DISAGREEMENT [UNACKNOWLEDGED] cells[7]:T219-R600p0-N3000-B3001
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+      one of its own predicates did not. Decide which is wrong and write it down;
+      do not summarise past it.
+
+------------------------------------------------------------------------------
+  files inspected           : 1
+  rows inspected            : 11
+  predicate booleans read   : 27
+  disagreements found       : 4   (acknowledged 0, unacknowledged 4)
+  void acknowledgement blocks: 0
+  unclassified boolean keys : 0
+  unclassified verdict words: 0
+
+  THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+  stated, or that a row with no recorded predicate was checked at all. It establishes
+  only that no row printed an affirmative verdict over its own false predicate unremarked.
+T259-VPA: REFUSED files=1 rows=11 predicates=27 disagreements=4 acknowledged=0 unacknowledged=4 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+>>> check_verdict_predicate_agreement.py (main register) EXPECTED 1 exit 1
+
+### 2. Re-derive all seven P2 carriers from the RAW capture, integer minor units
+T271 -- re-derivation of every P2 carrier in t219-g8-residual, from the RAW capture
+====================================================================================================
+  raw      : capture-t219-raw.json.gz
+  moneyHelperPrecision recorded in the capture : 19
+  classify : classify-t219.json  (read SECOND, only to check reproduction)
+
+id                             n      E      B      P    totRep      nE+B    nE+B-P  interest  REG   CORR  UNCND STRUCT emiD=B  verdict       
+----------------------------------------------------------------------------------------------------------------------------------------------
+T219-R600p0-N104-B1          104      0      1      0         1         1         1         1  True  True  True  True   True    AS PREDICTED  
+T219-R600p0-N3000-B2999     3000   1499   2999      0   4499999   4499999   4499999   4499999  True  True  True  True   True    AS PREDICTED  
+T219-R600p0-N103-B1          103      1      1      1        14       104       103        13  False False True  False  False   AS PREDICTED  
+T219-R600p0-N3000-B1001     3000    500   1001      0   1501001   1501001   1501001   1501001  True  True  True  True   True    AS PREDICTED  
+T219-R600p0-N3000-B4499     3000   2249   4499   1499   6751499   6751499   6750000   6750000  False True  True  True   True    AS PREDICTED  
+T219-R600p0-N108-B1          108      0      1      0         1         1         1         1  True  True  True  True   True    AS PREDICTED  
+T219-R600p0-N3000-B3001     3000   1500   3001      1   4503001   4503001   4503000   4503000  False True  True  True   True    AS PREDICTED  
+
+  carriers                                  : 7
+  re-derived == committed record            : 7 of 7
+  REGISTERED   interest == n*E + B          : 4 of 7
+  CORRECTED    interest == n*E + B - P      : 6 of 7        <<< T259's ruling
+  UNCONDITIONAL interest == totalRep - P    : 7 of 7        <<< totalRep MEASURED, not modelled
+  EMI-plus-balloon STRUCTURE holds          : 6 of 7
+
+  THE ROW THAT FALSIFIES T259's EXPECTATION
+  ------------------------------------------------------------------------------------------------
+  T219-R600p0-N103-B1
+    registered outcome  : LAST_ROW_CARRIES_ALL_PRINCIPAL     observed: AMORTIZES_FULLY(last-row-only)
+    registered total interest (prediction.json) : 104      OBSERVED: 13
+    repayment rows 103, but principal is repaid on row 14 (rows carrying principal: 1)
+    distinct row totals except the last : [0, 1]   last row total 0
+    emiDifference -1 vs B 1  -> P2_emiDifferenceEqualsB false
+    n*E + B = 104, n*E + B - P = 103, MEASURED totalRepayment = 14
+    => the EMI-plus-balloon structure the registered form presumes DOES NOT HOLD:
+       the loan amortises early and the remaining rows are all zero, so neither
+       the registered nor the CORRECTED form is applicable. Only the
+       unconditional identity holds: 14 - 1 == 13  -> True
+
+  THIS DOES NOT ESTABLISH: that any verdict is correct; that G-8's region is right or
+  wrong; that delta <= 1; that any Go port reproduces any of this. It establishes only
+  what the oracle's captured schedules sum to, in integer minor units.
+T271-REDERIVE: GREEN carriers=7 reproduced=7 agreeREG=4 agreeCORR=6 agreeUNCOND=7 structureHolds=6 contradictions=0
+>>> rederive_t219_carriers.py exit 0
+
+### 2b. The SAME seven carriers, re-derived by a SECOND instrument written independently
+T271 -- INDEPENDENT re-check of the t219 carriers, from the RAW capture only
+======================================================================================================================
+  raw       : capture-t219-raw.json.gz
+  precision recorded in the capture : 19
+
+id                             n  E_row1 E_modal     B      P    sumTot    hdrTot  interest  REG   CORR  UNCOND STRUCT emiD=B 
+------------------------------------------------------------------------------------------------------------------------------
+T219-R600p0-N104-B1          104       0       0     1      0         1         1         1  True  True  True   True   True   
+T219-R600p0-N3000-B2999     3000    1499    1499  2999      0   4499999   4499999   4499999  True  True  True   True   True   
+T219-R600p0-N103-B1          103       1       0     1      1        14        14        13  False False True   False  False  
+T219-R600p0-N3000-B1001     3000     500     500  1001      0   1501001   1501001   1501001  True  True  True   True   True   
+T219-R600p0-N3000-B4499     3000    2249    2249  4499   1499   6751499   6751499   6750000  False True  True   True   True   
+T219-R600p0-N108-B1          108       0       0     1      0         1         1         1  True  True  True   True   True   
+T219-R600p0-N3000-B3001     3000    1500    1500  3001      1   4503001   4503001   4503000  False True  True   True   True   
+
+  carriers (non-throwing registered cells)  : 7
+  REGISTERED    interest == n*E + B         : 4 of 7
+  CORRECTED     interest == n*E + B - P     : 6 of 7        <<< T259's ruling
+  UNCONDITIONAL interest == sumTotal - P    : 7 of 7        <<< sumTotal MEASURED, not modelled
+  EMI-plus-balloon STRUCTURE holds          : 6 of 7
+
+  THE ROW WHERE THE CORRECTED FORM ALSO FAILS: T219-R600p0-N103-B1
+    rows with nonzero INTEREST  : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    rows with nonzero PRINCIPAL : [14]
+    rows with nonzero TOTAL     : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    row-1 total E 1, last row total 0, emiDifference -1 vs B 1
+    n*E+B = 104; n*E+B-P = 103; MEASURED total repayment = 14; interest = 13
+    only 13 of 103 rows ever charge interest, so n*E prices 90 rows that charge nothing.
+
+  committed classify-t219.json reproduced   : 7 of 7 carriers
+
+  THIS DOES NOT ESTABLISH: that any verdict is correct; that G-8's region is right or
+  wrong; that any Go port reproduces any of it. Only what the oracle's captured
+  schedules sum to, in integer minor units.
+T271-INDEP: GREEN carriers=7 agreeREG=4 agreeCORR=6 agreeUNCOND=7 structureHolds=6 contradictions=0
+>>> independent_recheck_t271.py exit 0
+
+### 2c. Reconcile the two BY RUNNING THEM, never by arithmetic (P-83)
+T271 -- reconcile the two independent re-derivations BY RUNNING THEM (P-83)
+================================================================================================
+  rederive_t219_carriers.py        exit 0   probe PRESENT
+      {'carriers': '7', 'agreeREG': '4', 'agreeCORR': '6', 'agreeUNCOND': '7', 'structureHolds': '6'}
+  independent_recheck_t271.py      exit 0   probe PRESENT
+      {'carriers': '7', 'agreeREG': '4', 'agreeCORR': '6', 'agreeUNCOND': '7', 'structureHolds': '6'}
+
+  OK agreeCORR        rederive_t219_carriers.py='6'  independent_recheck_t271.py='6'  pinned='6'
+  OK agreeREG         rederive_t219_carriers.py='4'  independent_recheck_t271.py='4'  pinned='4'
+  OK agreeUNCOND      rederive_t219_carriers.py='7'  independent_recheck_t271.py='7'  pinned='7'
+  OK carriers         rederive_t219_carriers.py='7'  independent_recheck_t271.py='7'  pinned='7'
+  OK structureHolds   rederive_t219_carriers.py='6'  independent_recheck_t271.py='6'  pinned='6'
+
+  THIS DOES NOT ESTABLISH that either instrument is right -- two instruments can agree
+  and both be wrong. Only that the 6-of-7 this task reports is not one file's opinion.
+T271-RECONCILE: GREEN instruments=2 reconciled=2 disagreements=0
+>>> reconcile_probes_t271.py exit 0
+
+### 3. Prove the two edits in t219-g8-residual are labelled corrections, not retro-edits
+T271-COMMENTONLY: inputs
+  repo root        : /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa110146c91f8c304
+  HEAD             : f5072713dad511bfffa5c87708b7e29942c80edf
+  pre-edit blob    : 5b2247fc697a8ef1b3e1a1b39f61a7d9d6055e5e   (classify_t219.py as committed at 6eacc06 with its output)
+  live classify sha: 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+  pinned in ack    : 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+
+  [1] classify-t219.json UNCHANGED and matches the sha the acknowledgement pins   OK
+  [2] pre-edit and post-edit classifier outputs are BYTE-IDENTICAL                  OK
+    cells: identical (9 entries)
+  [3] re-run cells[] == committed cells[]                                           OK
+
+  PRE-EXISTING AND NOT CAUSED BY T271, stated because a reader of [3] will ask: the two
+  calibration[] rows are NOT reproducible from the committed inputs. The committed file
+  records threwIdentical=false / status=DIFFERS; re-running the committed classifier
+  against the committed raw captures and the calibration reference at its pinned sha
+  (unchanged since T64) yields threwIdentical=true / status=REPRODUCED. cells[] reproduces
+  exactly; only calibration[] does not. T271 did not touch it and does not rule on it --
+  see the handoff Follow-ups. It does not touch the four B-1 pairs, which live in cells[].
+    calibration: DIFFER
+      A (out_post.json) : [{"cal": "P-CAL-ZPA", "target": "T64-ZP-A", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": true, "status": "REPRODUCED"}, {"cal": "P-CAL-ZPB", "target": "T64-ZP-B", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": true, "status": "REPRODUCED"}]
+      B (classify-t219.json) : [{"cal": "P-CAL-ZPA", "target": "T64-ZP-A", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": false, "status": "DIFFERS"}, {"cal": "P-CAL-ZPB", "target": "T64-ZP-B", "inputsIdentical": true, "observedIdentical": true, "threwIdentical": false, "status": "DIFFERS"}]
+
+T271-COMMENTONLY: GREEN unchanged=1 commentOnly=1 cellsReproduce=1 calibrationReproduces=0
+>>> prove_comment_only.sh exit 0
+
+### 4. GREEN -- the same evidence under T271's acknowledgement register
+R-VPA -- verdict/predicate agreement (T259)
+==============================================================================
+FILE .softhouse/capture/t219-g8-residual/out/classify-t219.json
+     sha256 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+
+  *** DISAGREEMENT [ACKNOWLEDGED] cells[3]:T219-R600p0-N103-B1
+      recorded predicate : P2_emiDifferenceEqualsB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      disposition        : PREDICATE OUT OF ITS DOMAIN ON THIS ROW; VERDICT STANDS; T259's EXPECTATION FOR THIS ROW IS FALSIFIED
+      reason             : P2's first conjunct 'lastRowTotal - row1Total == B' is a claim about the FAMILY-B non-amortising shape: n instalments of E with the balloon B riding on the last row. This is the one cell in the set REGISTERED AS CLEAN (predictedOutcome LAST_ROW_CARRIES_ALL_PRINCIPAL, delta 0), and it amortises. Measured from the raw gz: 103 repayment rows, rows 1-13 total 0.01 of pure interest, ROW 14 carries the whole 0.01 of principal, and ROWS 15-103 ARE ALL ZERO. So the last row totals 0, emiDifference is -1, and the conjunct is FALSE because the shape it describes is absent -- not because a family-B cell misbehaved. The measurement is correct; the claim is out of domain. The cell-table proposition the verdict grades did hold: registered 'clean -- amortizes' and observed AMORTIZES_FULLY, predicted principal 1 == observed 1.
+      corrected form     : NOT CORRECTED -- WITHDRAWN ON THIS ROW. There is no corrected form of 'emiDifference == B' for a schedule with no balloon row. The only statement that survives here is the unconditional identity interest == totalRepayment - principalRepaid: 14 - 1 == 13. HOLDS (measured totalRepayment, not modelled).
+      verdict scope      : classify_t219.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD (lines 97-104): the observed OUTCOME FAMILY versus `predictedOutcome` (equality when the registered outcome is FAMILY_B_*, otherwise `observedOutcome.startswith("AMORTIZES_FULLY")`), and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD IN OUTCOME FAMILY AND IN PRINCIPAL REPAID' and NOTHING MORE. It structurally CANNOT consult any `P2_*` key: the verdict is assigned at lines 99 and 104, every `P2_*` key at lines 107-109, strictly after. The field's name does not say this, and nothing in `t219-g8-residual/` said it before T271.
+
+  *** DISAGREEMENT [ACKNOWLEDGED] cells[3]:T219-R600p0-N103-B1
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      disposition        : PREDICATE OUT OF ITS DOMAIN ON THIS ROW; CORRECTED FORM ALSO FAILS; VERDICT STANDS; T259's EXPECTATION FOR THIS ROW IS FALSIFIED
+      reason             : THE ROW T259 DID NOT FLAG, AND THE ONLY ONE IN THE CORPUS WHERE T259's CORRECTED PREDICATE IS ALSO FALSE UNDER AN AFFIRMATIVE VERDICT. Re-derived in integer minor units: n=103, E=1, B=1, principalRepaid=1, so n*E + B = 104 and n*E + B - principalRepaid = 103, against an OBSERVED interest of 13 and an OBSERVED total repayment of 14. Both the registered and the corrected form fail, and they fail for the same reason as the sibling conjunct above: the identity totalRepayment == n*E + B presumes the EMI-plus-balloon structure, and this cell has no such structure. It amortises at row 14 of 103 and rows 15-103 are all zero, so only 13 rows ever charge interest and n*E overcounts by a factor of about eight.
+      corrected form     : NOT CORRECTED -- WITHDRAWN ON THIS ROW. The corrected form n*E + B - principalRepaid is CONDITIONAL on the EMI-plus-balloon structure and is inapplicable here. The unconditional identity interest == totalRepayment - principalRepaid holds on all 7 carriers including this one (14 - 1 == 13), but it requires a MEASURED totalRepayment and therefore states nothing predictive about this cell.
+      verdict scope      : classify_t219.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD (lines 97-104): the observed OUTCOME FAMILY versus `predictedOutcome` (equality when the registered outcome is FAMILY_B_*, otherwise `observedOutcome.startswith("AMORTIZES_FULLY")`), and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD IN OUTCOME FAMILY AND IN PRINCIPAL REPAID' and NOTHING MORE. It structurally CANNOT consult any `P2_*` key: the verdict is assigned at lines 99 and 104, every `P2_*` key at lines 107-109, strictly after. The field's name does not say this, and nothing in `t219-g8-residual/` said it before T271.
+
+  *** DISAGREEMENT [ACKNOWLEDGED] cells[5]:T219-R600p0-N3000-B4499
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      disposition        : PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS
+      reason             : The registered third conjunct 'totalInterestAmount == n*E + B' names the total REPAYMENT column, not the interest column. The recorded false is a correct measurement of an incorrect claim. This is T259's ruling applying exactly as T259 expected for this row. The cell-table proposition the verdict grades did hold: registered FAMILY_B_PARTIAL == observed FAMILY_B_PARTIAL, and predicted principal 1499 == observed 1499.
+      corrected form     : interest == n*E + B - principalRepaid. Re-derived from the RAW gz in integer minor units by rederive_t219_carriers.py: 3000*2249 + 4499 - 1499 == 6750000 == observed interest. HOLDS. The EMI-plus-balloon row structure the identity presumes also holds here: every row except the last totals 2249, the last totals 6748 == 2249 + 4499, so measured totalRepayment 6751499 == n*E + B exactly.
+      verdict scope      : classify_t219.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD (lines 97-104): the observed OUTCOME FAMILY versus `predictedOutcome` (equality when the registered outcome is FAMILY_B_*, otherwise `observedOutcome.startswith("AMORTIZES_FULLY")`), and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD IN OUTCOME FAMILY AND IN PRINCIPAL REPAID' and NOTHING MORE. It structurally CANNOT consult any `P2_*` key: the verdict is assigned at lines 99 and 104, every `P2_*` key at lines 107-109, strictly after. The field's name does not say this, and nothing in `t219-g8-residual/` said it before T271.
+
+  *** DISAGREEMENT [ACKNOWLEDGED] cells[7]:T219-R600p0-N3000-B3001
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      disposition        : PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS
+      reason             : As B4499. Cell-table proposition held: registered FAMILY_B_PARTIAL == observed FAMILY_B_PARTIAL, predicted principal 1 == observed 1.
+      corrected form     : interest == n*E + B - principalRepaid: 3000*1500 + 3001 - 1 == 4503000 == observed interest. HOLDS. Structure holds: rows ex-last all 1500, last 4501 == 1500 + 3001, measured totalRepayment 4503001 == n*E + B.
+      verdict scope      : classify_t219.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD (lines 97-104): the observed OUTCOME FAMILY versus `predictedOutcome` (equality when the registered outcome is FAMILY_B_*, otherwise `observedOutcome.startswith("AMORTIZES_FULLY")`), and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD IN OUTCOME FAMILY AND IN PRINCIPAL REPAID' and NOTHING MORE. It structurally CANNOT consult any `P2_*` key: the verdict is assigned at lines 99 and 104, every `P2_*` key at lines 107-109, strictly after. The field's name does not say this, and nothing in `t219-g8-residual/` said it before T271.
+
+------------------------------------------------------------------------------
+  files inspected           : 1
+  rows inspected            : 11
+  predicate booleans read   : 27
+  disagreements found       : 4   (acknowledged 4, unacknowledged 0)
+  void acknowledgement blocks: 0
+  unclassified boolean keys : 0
+  unclassified verdict words: 0
+
+  THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+  stated, or that a row with no recorded predicate was checked at all. It establishes
+  only that no row printed an affirmative verdict over its own false predicate unremarked.
+T259-VPA: GREEN files=1 rows=11 predicates=27 disagreements=4 acknowledged=4 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+>>> check_verdict_predicate_agreement.py (T271 register) EXPECTED 0 exit 0
+
+### 5. The RED/GREEN battery, including the negative controls and T268 forward-compat
+T271 -- RED/GREEN battery for B-1
+====================================================================================================
+  rule (live)      : .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+  rule (fwd-compat): blob 0607ecdb943e84c0ad2ae9f16cd79fc702847c3d -- RAN
+  NOTE: that blob is T268's REJECTED version (T281 at b4272ff; retry is T286).
+        fwdFailed=0 means T271's register behaves the SAME under both rules. It is
+        NOT a statement that T268 is sound, and T269 must re-run this battery
+        against whichever rule it actually wires.
+  evidence         : .softhouse/capture/t219-g8-residual/out/classify-t219.json
+  evidence sha256  : 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+
+  PASS  R1-red-baseline-as-on-main             exit 1   fwd-compat: same (exit 1)
+  PASS  G1-green-with-T271-register            exit 0   fwd-compat: same (exit 0)
+  PASS  N1-same-pairs-at-an-unnamed-path       exit 1   fwd-compat: same (exit 1)
+  PASS  N2-batched-acknowledged-plus-not       exit 1   fwd-compat: same (exit 1)
+  PASS  N3-P76-shape-not-built-from            exit 1   fwd-compat: same (exit 1)
+  PASS  N4-sha-pin-void-register               exit 1   fwd-compat: same (exit 1)
+  PASS  N5-nil-coverage-refuses                exit 1   fwd-compat: same (exit 1)
+  PASS  G2-populated-clean-green               exit 0   fwd-compat: same (exit 0)
+
+  THE FOUR, AS THE RED LEG NAMES THEM:
+    *** DISAGREEMENT [UNACKNOWLEDGED] cells[3]:T219-R600p0-N103-B1
+    recorded predicate : P2_emiDifferenceEqualsB = false
+    *** DISAGREEMENT [UNACKNOWLEDGED] cells[3]:T219-R600p0-N103-B1
+    recorded predicate : P2_totalInterestEqualsNEplusB = false
+    *** DISAGREEMENT [UNACKNOWLEDGED] cells[5]:T219-R600p0-N3000-B4499
+    recorded predicate : P2_totalInterestEqualsNEplusB = false
+    *** DISAGREEMENT [UNACKNOWLEDGED] cells[7]:T219-R600p0-N3000-B3001
+    recorded predicate : P2_totalInterestEqualsNEplusB = false
+
+  PASS  T1-targets-green-both-files            exit 0
+  PASS  T2-target-file-not-on-disk-is-ERROR    exit 2
+  PASS  T3-target-with-no-register-REFUSES     exit 1
+  PASS  T4-empty-target-list-REFUSES           exit 1
+
+  legs                 : 12  (8 rule, 4 target-list runner)
+  passed               : 12
+  failed               : 0
+  fwd-compat divergent : 0  (RAN)
+
+  THIS DOES NOT ESTABLISH: that the four acknowledgements are correct in substance
+  -- only that the disagreement is registered, still printed in full, and that the
+  rule still refuses an unacknowledged one. The substance is re-derived separately
+  by rederive_t219_carriers.py, from the raw capture, in integer minor units.
+
+T271-REDGREEN: GREEN legs=12 passed=12 failed=0 fwdCompat=RAN fwdFailed=0
+>>> drive-red-t271.py exit 0
+
+### 6. The target-list runner T269 is meant to install -- both files in one invocation
+T271 -- R-VPA over the committed target list
+==============================================================================
+  target list : /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa110146c91f8c304/.softhouse/capture/t271-b1-t219/targets-proposed-for-T269.json
+  rule        : /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa110146c91f8c304/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+  target      : .softhouse/capture/t229-g8-site3/out/classify-t229.json   (added by T259)
+  target      : .softhouse/capture/t219-g8-residual/out/classify-t219.json   (added by T271)
+  register    : .softhouse/capture/t256-verdict-predicate/acknowledged.json
+  register    : .softhouse/capture/t271-b1-t219/acknowledged-t219.json
+
+R-VPA -- verdict/predicate agreement (T259)
+==============================================================================
+FILE .softhouse/capture/t229-g8-site3/out/classify-t229.json
+     sha256 f831736f07f1a6fecd4ee69b5a1de8dac0abcae89210f997e72526070f62821a
+
+  *** DISAGREEMENT [ACKNOWLEDGED] cells[3]:T229-R600p0-N200-B251
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      disposition        : PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS
+      reason             : As B201. Cell-table proposition held: FAMILY_B_PARTIAL == observed, predicted principal 51 == observed 51.
+      corrected form     : observed 25200 == 200*125 + 251 - 51. HOLDS.
+      verdict scope      : classify_t229.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD a71c140 (lines beginning `pp = p["predictedTotalPrincipalMinor"]`): the observed OUTCOME family versus `predictedOutcome`, and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are precisely the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD' and NOTHING MORE. It does not cover P1..P6, which are computed after it (P2) or not computed at all (P1, P3, P4, P5). The field's name does not say this; nothing in the directory said it before T259.
+
+  *** DISAGREEMENT [ACKNOWLEDGED] cells[6]:T229-R600p0-N200-B201
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      disposition        : PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS
+      reason             : P2's third conjunct as registered ('totalInterestAmount = n*E + B') is arithmetically wrong: n*E + B is the total REPAYMENT column, not the interest column. The recorded false is a correct measurement of an incorrect claim. The cell-table proposition the verdict grades did hold: predictedOutcome FAMILY_B_PARTIAL == observed, and predicted principal 1 == observed 1.
+      corrected form     : totalInterest == n*E + B - principalRepaid. Re-derived independently in rederive_counts_t259.py: observed 20200 == 200*100 + 201 - 1. HOLDS.
+      verdict scope      : classify_t229.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD a71c140 (lines beginning `pp = p["predictedTotalPrincipalMinor"]`): the observed OUTCOME family versus `predictedOutcome`, and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are precisely the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD' and NOTHING MORE. It does not cover P1..P6, which are computed after it (P2) or not computed at all (P1, P3, P4, P5). The field's name does not say this; nothing in the directory said it before T259.
+
+  *** DISAGREEMENT [ACKNOWLEDGED] cells[8]:T229-R600p0-N200-B299
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      disposition        : PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS
+      reason             : As B201. Cell-table proposition held: FAMILY_B_PARTIAL == observed, predicted principal 99 == observed 99.
+      corrected form     : observed 30000 == 200*149 + 299 - 99. HOLDS.
+      verdict scope      : classify_t229.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD a71c140 (lines beginning `pp = p["predictedTotalPrincipalMinor"]`): the observed OUTCOME family versus `predictedOutcome`, and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are precisely the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD' and NOTHING MORE. It does not cover P1..P6, which are computed after it (P2) or not computed at all (P1, P3, P4, P5). The field's name does not say this; nothing in the directory said it before T259.
+
+FILE .softhouse/capture/t219-g8-residual/out/classify-t219.json
+     sha256 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+
+  *** DISAGREEMENT [ACKNOWLEDGED] cells[3]:T219-R600p0-N103-B1
+      recorded predicate : P2_emiDifferenceEqualsB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      disposition        : PREDICATE OUT OF ITS DOMAIN ON THIS ROW; VERDICT STANDS; T259's EXPECTATION FOR THIS ROW IS FALSIFIED
+      reason             : P2's first conjunct 'lastRowTotal - row1Total == B' is a claim about the FAMILY-B non-amortising shape: n instalments of E with the balloon B riding on the last row. This is the one cell in the set REGISTERED AS CLEAN (predictedOutcome LAST_ROW_CARRIES_ALL_PRINCIPAL, delta 0), and it amortises. Measured from the raw gz: 103 repayment rows, rows 1-13 total 0.01 of pure interest, ROW 14 carries the whole 0.01 of principal, and ROWS 15-103 ARE ALL ZERO. So the last row totals 0, emiDifference is -1, and the conjunct is FALSE because the shape it describes is absent -- not because a family-B cell misbehaved. The measurement is correct; the claim is out of domain. The cell-table proposition the verdict grades did hold: registered 'clean -- amortizes' and observed AMORTIZES_FULLY, predicted principal 1 == observed 1.
+      corrected form     : NOT CORRECTED -- WITHDRAWN ON THIS ROW. There is no corrected form of 'emiDifference == B' for a schedule with no balloon row. The only statement that survives here is the unconditional identity interest == totalRepayment - principalRepaid: 14 - 1 == 13. HOLDS (measured totalRepayment, not modelled).
+      verdict scope      : classify_t219.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD (lines 97-104): the observed OUTCOME FAMILY versus `predictedOutcome` (equality when the registered outcome is FAMILY_B_*, otherwise `observedOutcome.startswith("AMORTIZES_FULLY")`), and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD IN OUTCOME FAMILY AND IN PRINCIPAL REPAID' and NOTHING MORE. It structurally CANNOT consult any `P2_*` key: the verdict is assigned at lines 99 and 104, every `P2_*` key at lines 107-109, strictly after. The field's name does not say this, and nothing in `t219-g8-residual/` said it before T271.
+
+  *** DISAGREEMENT [ACKNOWLEDGED] cells[3]:T219-R600p0-N103-B1
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      disposition        : PREDICATE OUT OF ITS DOMAIN ON THIS ROW; CORRECTED FORM ALSO FAILS; VERDICT STANDS; T259's EXPECTATION FOR THIS ROW IS FALSIFIED
+      reason             : THE ROW T259 DID NOT FLAG, AND THE ONLY ONE IN THE CORPUS WHERE T259's CORRECTED PREDICATE IS ALSO FALSE UNDER AN AFFIRMATIVE VERDICT. Re-derived in integer minor units: n=103, E=1, B=1, principalRepaid=1, so n*E + B = 104 and n*E + B - principalRepaid = 103, against an OBSERVED interest of 13 and an OBSERVED total repayment of 14. Both the registered and the corrected form fail, and they fail for the same reason as the sibling conjunct above: the identity totalRepayment == n*E + B presumes the EMI-plus-balloon structure, and this cell has no such structure. It amortises at row 14 of 103 and rows 15-103 are all zero, so only 13 rows ever charge interest and n*E overcounts by a factor of about eight.
+      corrected form     : NOT CORRECTED -- WITHDRAWN ON THIS ROW. The corrected form n*E + B - principalRepaid is CONDITIONAL on the EMI-plus-balloon structure and is inapplicable here. The unconditional identity interest == totalRepayment - principalRepaid holds on all 7 carriers including this one (14 - 1 == 13), but it requires a MEASURED totalRepayment and therefore states nothing predictive about this cell.
+      verdict scope      : classify_t219.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD (lines 97-104): the observed OUTCOME FAMILY versus `predictedOutcome` (equality when the registered outcome is FAMILY_B_*, otherwise `observedOutcome.startswith("AMORTIZES_FULLY")`), and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD IN OUTCOME FAMILY AND IN PRINCIPAL REPAID' and NOTHING MORE. It structurally CANNOT consult any `P2_*` key: the verdict is assigned at lines 99 and 104, every `P2_*` key at lines 107-109, strictly after. The field's name does not say this, and nothing in `t219-g8-residual/` said it before T271.
+
+  *** DISAGREEMENT [ACKNOWLEDGED] cells[5]:T219-R600p0-N3000-B4499
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      disposition        : PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS
+      reason             : The registered third conjunct 'totalInterestAmount == n*E + B' names the total REPAYMENT column, not the interest column. The recorded false is a correct measurement of an incorrect claim. This is T259's ruling applying exactly as T259 expected for this row. The cell-table proposition the verdict grades did hold: registered FAMILY_B_PARTIAL == observed FAMILY_B_PARTIAL, and predicted principal 1499 == observed 1499.
+      corrected form     : interest == n*E + B - principalRepaid. Re-derived from the RAW gz in integer minor units by rederive_t219_carriers.py: 3000*2249 + 4499 - 1499 == 6750000 == observed interest. HOLDS. The EMI-plus-balloon row structure the identity presumes also holds here: every row except the last totals 2249, the last totals 6748 == 2249 + 4499, so measured totalRepayment 6751499 == n*E + B exactly.
+      verdict scope      : classify_t219.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD (lines 97-104): the observed OUTCOME FAMILY versus `predictedOutcome` (equality when the registered outcome is FAMILY_B_*, otherwise `observedOutcome.startswith("AMORTIZES_FULLY")`), and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD IN OUTCOME FAMILY AND IN PRINCIPAL REPAID' and NOTHING MORE. It structurally CANNOT consult any `P2_*` key: the verdict is assigned at lines 99 and 104, every `P2_*` key at lines 107-109, strictly after. The field's name does not say this, and nothing in `t219-g8-residual/` said it before T271.
+
+  *** DISAGREEMENT [ACKNOWLEDGED] cells[7]:T219-R600p0-N3000-B3001
+      recorded predicate : P2_totalInterestEqualsNEplusB = false
+      recorded verdict   : verdict='AS PREDICTED'
+      disposition        : PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS
+      reason             : As B4499. Cell-table proposition held: registered FAMILY_B_PARTIAL == observed FAMILY_B_PARTIAL, predicted principal 1 == observed 1.
+      corrected form     : interest == n*E + B - principalRepaid: 3000*1500 + 3001 - 1 == 4503000 == observed interest. HOLDS. Structure holds: rows ex-last all 1500, last 4501 == 1500 + 3001, measured totalRepayment 4503001 == n*E + B.
+      verdict scope      : classify_t219.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD (lines 97-104): the observed OUTCOME FAMILY versus `predictedOutcome` (equality when the registered outcome is FAMILY_B_*, otherwise `observedOutcome.startswith("AMORTIZES_FULLY")`), and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD IN OUTCOME FAMILY AND IN PRINCIPAL REPAID' and NOTHING MORE. It structurally CANNOT consult any `P2_*` key: the verdict is assigned at lines 99 and 104, every `P2_*` key at lines 107-109, strictly after. The field's name does not say this, and nothing in `t219-g8-residual/` said it before T271.
+
+------------------------------------------------------------------------------
+  files inspected           : 2
+  rows inspected            : 22
+  predicate booleans read   : 51
+  disagreements found       : 7   (acknowledged 7, unacknowledged 0)
+  void acknowledgement blocks: 0
+  unclassified boolean keys : 0
+  unclassified verdict words: 0
+
+  THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+  stated, or that a row with no recorded predicate was checked at all. It establishes
+  only that no row printed an affirmative verdict over its own false predicate unremarked.
+T259-VPA: GREEN files=2 rows=22 predicates=51 disagreements=7 acknowledged=7 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+
+T271-TARGETS: GREEN targets=2 inspected=2 ruleExit=0
+>>> run_rvpa_over_targets.py EXPECTED 0 exit 0
+
+### 7. Fail-open lint, pointed at T271's OWN instruments first (P-80)
+T259 fail-open lint
+  root            : /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa110146c91f8c304/.softhouse/capture/t271-b1-t219
+  files seen      : 28
+  files SCANNED   : 9  (.sh and .py, this file included)
+  files SKIPPED   : 19  (not .sh/.py -- json, md, txt; counted, P-40)
+  findings        : 0
+>>> lint_failopen_t259.py exit 0
+
+### 8. RE-MEASURE the target list's completeness -- is t219 still the only new carrier?
+    T259's census figures are NOT restated here; they are re-taken (P-83).
+  SKIPPED (unparseable, counted): .softhouse/capture/t131-grep/corpus/x3-poison-in-string.json  UnicodeDecodeError
+  SKIPPED (unparseable, counted): .softhouse/capture/t131-grep/corpus/x4-truncated-emdash.json  UnicodeDecodeError
+T259 census -- classification-shaped JSON under .softhouse/capture/
+  json files seen           : 1557
+  ... with the verdict shape: 15
+  ... without it            : 1506
+  ... SKIPPED, too large    : 0
+  ... SKIPPED, unparseable  : 36
+
+  files carrying the shape, and their disagreement count:
+      4  rows=9    .softhouse/capture/t219-g8-residual/out/classify-t219.json  <-- DISAGREEMENTS
+      4  rows=3    .softhouse/capture/t271-b1-t219/red/fixtures/X1-unacknowledged-elsewhere.json  <-- DISAGREEMENTS
+      3  rows=11   .softhouse/capture/t229-g8-site3/out/classify-t229.json  <-- DISAGREEMENTS
+      1  rows=1    .softhouse/capture/t256-verdict-predicate/red/fixtures/R1-fresh-predicate-fresh-verdict-word.json  <-- DISAGREEMENTS
+      1  rows=1    .softhouse/capture/t271-b1-t219/red/fixtures/X2-novel-container-and-predicate.json  <-- DISAGREEMENTS
+      0  rows=23   .softhouse/capture/charges/out/attested/attestation-exact.json
+      0  rows=2    .softhouse/capture/t117-familyb/out/ctrl-reproduction.json
+      0  rows=2    .softhouse/capture/t117-familyb/out/rp-reproduction-pass2.json
+      0  rows=3    .softhouse/capture/t219-g8-residual/out/check-promoted-t219.json
+      0  rows=7    .softhouse/capture/t223-g8-region-predicate/out/classify-t223.json
+      0  rows=1    .softhouse/capture/t256-verdict-predicate/red/fixtures/G1-false-predicate-negative-verdict.json
+      0  rows=1    .softhouse/capture/t256-verdict-predicate/red/fixtures/G2-all-true-affirmative-verdict.json
+      0  rows=1    .softhouse/capture/t256-verdict-predicate/red/fixtures/R2-unclassified-verdict-word.json
+      0  rows=1    .softhouse/capture/t256-verdict-predicate/red/fixtures/R3-unclassified-boolean-key.json
+      0  rows=2    .softhouse/capture/t271-b1-t219/red/fixtures/X3-clean-populated.json
+  TOTAL disagreements across the whole capture tree: 13
+
+  NOTE: only `.softhouse/capture/t229-g8-site3/` and `.softhouse/capture/t256-verdict-predicate/`
+  are in T259's write scope. Everything else above is REPORTED and left alone, and is
+  recorded as backlog in the handoff. Counting it is the point (P-40).
+>>> census_verdict_shape.py (read-only, re-measured) exit 0
+
+### 9. AN OUT-OF-SCOPE DEFECT THIS TASK TRIPPED OVER: P-88, still live at this HEAD.
+    The conformance bar is GREEN if and only if /tmp/t234_matrix2.txt happens to exist.
+    Measured, not fixed -- t234's instrument and conformance.sh's pin are both outside
+    T271's scope and both contended this fire. The probe RESTORES THE HOST STATE IT FOUND
+    (/tmp is shared with concurrent workers), so it neither manufactures the green nor
+    forces the red on anybody else. Measured live: the file REAPPEARED seconds after an
+    earlier draft deleted it, so the bar's colour depends on inter-agent timing too.
+T271 -- is the conformance bar's GREEN contingent on a file in /tmp? (P-88's shape)
+================================================================================
+  repo   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa110146c91f8c304
+  linter : .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py
+  probe  : /tmp/t234_matrix2.txt
+
+--- READING A: /tmp/t234_matrix2.txt ABSENT (the state this worktree is in) ---
+    (not present)
+    FAILOPEN-FRONTIER TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+
+--- READING B: the SAME tree, byte for byte, with the /tmp file PRESENT ---
+-rw-r--r--  1 buv  wheel  24 Aug 23 08:37 /tmp/t234_matrix2.txt
+    FAILOPEN-FRONTIER TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+
+--- READING C: the file removed again, to show the flip is not one-way ---
+    (not present)
+    FAILOPEN-FRONTIER TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+
+NOT CAUSED BY T271 -- the three files involved are untouched on this branch:
+    merge base: f5072713dad511bfffa5c87708b7e29942c80edf
+    (no diff lines above means T271 changed none of them)
+
+CONCLUSION: the tree is IDENTICAL across all three readings and the classification MOVED.
+The conformance bar's exit code is decided by whether a file exists in /tmp. That is
+P-88's shape in a different guard: a green that depends on scratch state outside the repo.
+
+HOST STATE: /tmp/t234_matrix2.txt was PRESENT when this probe started and is put back that way by the
+EXIT trap. T271 neither manufactures the green nor forces the red on a host it shares
+with other workers.
+T271-TMPDEP: DEMONSTRATED contingent=1 foundPresent=1 restoredAsFound=1
+>>> probe_tmp_dependency_t271.sh (diagnostic; 0 = contingency DEMONSTRATED) exit 0
+
+================================================================================
+T271 RUN: worst exit 0
+vector store at end: 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+================================================================================

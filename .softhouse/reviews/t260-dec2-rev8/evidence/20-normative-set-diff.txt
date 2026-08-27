@@ -1,0 +1,85 @@
+T260 LEG B — BROAD normative set difference (sentence granularity, citation-normalised)
+====================================================================================================
+rev7 normative sentences : 219  (MODAL 78, NON-MODAL 141)
+rev8 normative sentences : 248  (MODAL 86, NON-MODAL 162)
+LOST   : 14  (MODAL 8, NON-MODAL 6)
+GAINED : 43  (MODAL 16, NON-MODAL 27)
+
+### LOST — MODAL  (T255's LEG 2 would also see these)
+[L-M01] tags=['MODAL', 'never', 'subject-of-duty']
+        # ⚠ NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL.  **Read this before any other sentence in this document, and before quoting any number out of it.** Every claim below is a claim about what the reference oracle *does* and what a conforming port *must* do. **Not one of them is currently checked by anything.** Four separate facts, each measured by this task, not reasoned: 
+[L-M02] tags=['MODAL']
+        **Ratification requires a FURTHER independent review passing clean AFTER revision 5** under standing policy **P-2**; until then `A2-15` (promote GL vectors) stays blocked, and §5.3 names work that must land before `A2-15` could succeed even against a ratified contract.
+[L-M03] tags=['MODAL']
+        ### ⚠ MEASUREMENT FRESHNESS — the rule revision 4 adopts, and the reason it exists  **Three of the four claims that got revision 3 rejected were TRUE WHEN WRITTEN and went stale because the harness moved underneath them** (`A2-25` findings F-4, F-5, F-7; the fourth, F-1, was a sweep failure). Revision 3 was drafted against a 43-vector store and reviewed against a 47-file directory; by the time rev
+[L-M04] tags=['MODAL', 'never', 'obligation-noun', 'subject-of-duty']
+        | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a snapshot of oracle output; it cannot observe the *absence* of a write path. Gradeable only by a source-level guard over the Go tree. And the oracle is **not** a positive example: `m_trial_balance.closing_balance` is a written, stored, **unsigned** su
+[L-M05] tags=['MODAL', 'obligation-noun', 'subject-of-duty']
+        | **I-7** | `Idempotency-Key` on every money-movement POST | — | **NOT APPLICABLE TO THIS CONTRACT, and that must be said rather than assumed.** DEC-2's surface exposes no HTTP endpoint and moves no money; it is a value computation. The obligation is real and lands on **A1** (the posting engine) and on the adapter's HTTP layer. A `ledger` conformance PASS says nothing whatever about it. | **N/A** 
+[L-M06] tags=['MODAL', 'requirement-noun']
+        **The rule this table encodes:** DEC-2 **obliges** I-1 through I-5 on any implementation of the GL/accounting context, and **grades none of them today.** **I-3 and I-4 must be enforced by a harness-level source guard, not by a vector**, and DEC-2 states that as a normative requirement rather than a hope.
+[L-M07] tags=['MODAL', 'never']
+        The two must never be confused, and a citation of this document as evidence of ledger coverage is a misreading of it.
+[L-M08] tags=['MODAL']
+        ### 8.3 If ratified, these remain true and must not be misread
+
+### LOST — NON-MODAL  (T255's LEG 2 is BLIND to these; this is the class it flagged)
+[L-N01] tags=['subject-of-duty']
+        Task **A2-8** merged the port of the GL account model, product-to-account mapping resolution and financial activity accounts to `main`, and **not one parity vector grades it**.
+[L-N02] tags=['requirement-noun']
+        Establishing this is §5.1; a representation for it is precondition **P-2** in §5.3.
+[L-N03] tags=['never']
+        **These are not harness guards.** `conformance.sh` never runs `go test`, so a regression in them does not turn the harness red [RE-VERIFIED by `A2-16`: the script contains **no** `go test` invocation — both occurrences of the string are comments, at `conformance.sh:718` and `:721`; its only Go command is a `go build` of the conformance `cmd` package — and it says so itself at `conformance.sh:721`,
+[L-N04] tags=['never']
+        **Nine open, one landed.** P-6, P-1, P-7, P-2, P-3, P-4, P-5, P-9 and **P-10** remain; **P-8 is done** and is kept in the table with its residue rather than deleted, so that a later reader can tell "discharged, with limits" from "never required".
+[L-N05] tags=['requirement-noun']
+        It **stays unusable until the §5.3 machinery lands**, at which point `conformance.sh ledger` becomes a meaningful command. - `A2-15` has an admissibility standard: §4.2's predicates, §4.6's A-1…A-4, §4.10's registry, §5.5's `graded_against` requirement, and **§5.2's requirements 1–7** — the last two of which are a positive control (now **6a** on the same bytes and **6b** on the admission layer's o
+[L-N06] tags=['requirement-noun']
+        **Nine of the ten §5.3 preconditions remain — P-1…P-7, P-9 and the new P-10; only P-8 has landed — and `A2-15` cannot start without them.** - The GL/accounting context acquires a boundary a regulator can be shown.
+
+### GAINED — MODAL
+[G-M01] # ⚠ THE LEDGER IS GRADED NOW — BY SIX VECTORS, OVER 6 OF THE 14 CAPABILITIES IT DECLARES. # THAT IS NOT COVERAGE, AND A GREEN LEDGER SECTION IS NOT A CUTOVER ARGUMENT.  **Read this before any other sentence in this document, and before quoting any number out of it.** Every claim below is a claim abo
+[G-M02] **⚠ A ratified DEC-n may not be amended by an agent without a gate**, and that has not changed.
+[G-M03] **Revision 8 changes EVIDENTIAL STATEMENTS ONLY, and it changes NO OBLIGATION.** Not one normative `must`, not a contract sentinel, not a graded-domain predicate, not a §5.3 precondition, not a §4.2 predicate, not `PIN-ledger.json` — which stays at `dec2_revision: 5`, because admission compares the 
+[G-M04] ### ⚠ MEASUREMENT FRESHNESS — the rule revision 4 adopts, and the reason it exists  **Three of the four claims that got revision 3 rejected were TRUE WHEN WRITTEN and went stale because the harness moved underneath them** (`A2-25` findings F-4, F-5, F-7; the fourth, F-1, was a sweep failure). Revisi
+[G-M05] **`-F`, never a bare `grep` and never `rg` (`P-75`); and `git grep` exits 1 on NO MATCH and >1 on ERROR, so a resolver must classify the status and never print an error as an absence (`P-80`).** An anchor cannot rot from an edit above it, because it contains no "above".
+[G-M06] **An anchored document is correct with nothing running at all.** A checker is a second line, never the line: a control that must be remembered is `P-45`, which this program has hit five times.
+[G-M07] | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a snapshot of oracle output; it cannot observe the *absence* of a write path. Gradeable only by a source-level guard over the Go tree. And the oracle is
+[G-M08] | **I-7** | `Idempotency-Key` on every money-movement POST | — | **NOT APPLICABLE TO THIS CONTRACT, and that must be said rather than assumed.** DEC-2's surface exposes no HTTP endpoint and moves no money; it is a value computation. The obligation is real and lands on **A1** (the posting engine) and
+[G-M09] **The rule this table encodes:** DEC-2 **obliges** I-1 through I-5 on any implementation of the GL/accounting context.
+[G-M10] **I-3 and I-4 must be enforced by a harness-level source guard, not by a vector**, and DEC-2 states that as a normative requirement rather than a hope — **unchanged by revision 7, unchanged by revision 8, and unchanged BY the six vectors**: a vector is a snapshot of oracle output and cannot observe 
+[G-M11] It CAN, and it is.** An oracle-faithful refusal is now expressible and graded: the second schema carries `class: oracle-refusal` and an `expect.refusal` of **HTTP status + error code + message text**, explicitly not a contract sentinel, and two such vectors pass on every run — `LDG-REFUSE-01` (`403`
+[G-M12] **Both were true when written and both are false at this commit.** DEC-1 was frozen against a twelve-capture corpus re-derived from source to the minor unit; **DEC-2 was ratified at revision 5 against a corpus that did not then exist, and the corpus arrived 2 h 13 m later.** That ordering is not a d
+[G-M13] **REQUIREMENTS 1–7 BELOW ARE NORMATIVE AND ARE UNCHANGED BY REVISION 7 AND BY REVISION 8** — not one word of them moves.
+[G-M14] **A ratifier must read this note as "the preconditions were addressed and the corpus is green", never as "P-1…P-10 are discharged".**
+[G-M15] ### 8.3 These remain true and must not be misread
+[G-M16] NO OBLIGATION MOVES.** Not one normative `must`, not a contract sentinel, not a graded-domain predicate, not a §4.2 predicate, not a §5.2 requirement, not a §5.3 precondition row, not `PIN-ledger.json`, not the vector store (`git rev-parse HEAD:.softhouse/vectors` = `13b8342e4e8e6633fb3088818f8cff7f
+
+### GAINED — NON-MODAL
+[G-N01] **Revision 7 was PREPARED and REJECTED** by `T251` — not because any obligation moved (none did) but because its freshly re-measured `conformance.sh` citations had gone stale before it could land.
+[G-N02] **It was never applied to this file.
+[G-N03] `G-14` is that gate, and its recorded scope is **NOTHING BUT THIS DOCUMENT**: evidence, citations and false statements of fact may be corrected; **no normative obligation may move**.
+[G-N04] Its subject is two classes of defect and no others: **(i)** claims this document published as CURRENTLY-TRUE MEASURED FACT that had gone false underneath it — every one of them true when written; and **(ii)** the MECHANISM that let (i) happen three revisions running, which is the line-number citatio
+[G-N05] and it is resolved by the reader with a recipe that is always fresh: `git grep -n -F '<the substring>' -- <path>`.
+[G-N06] DERIVED — a fact that is a PROPERTY OF THE SOURCE is written down ONCE and re-derived, never restated.** How many guards `run_guards` invokes, in what order, and which one is tallied Nth, are properties of `run_guards`' body. §4.4.1 carries them in a fenced block marked `DERIVED-FROM-SOURCE: run_gua
+[G-N07] **Every other site in this document points AT §4.4.1 by section number and restates no number** — `P-79`: never fix a rotted number, make the second site READ the first.
+[G-N08] Task **A2-8** had merged the port of the GL account model, product-to-account mapping resolution and financial activity accounts to `main`, and **not one parity vector graded it** — `A2-8`'s own handoff said so plainly: *"the harness does not grade this package at all"*.
+[G-N09] **Being statable was not being graded; now it is both, for these two invariants and for nothing else in §4.4's table.** `I-3` and `I-4` remain gradeable only by a source-level guard, because a vector is a snapshot of oracle output and a snapshot cannot observe the absence of a write; `I-5`'s never-m
+[G-N10] | **I-2** | Splits sum to whole | `whole == Σ splits`, `int64` minor units | **YES.** `120,000,000 = 20,000,000 + 100,000,000` — disbursed principal against repayment plus write-off [re-derived by this task from the same legs]. | **YES, ON TWO OF THE FOUR — AND THE HARNESS REFUSES TO COUNT THE OTHER
+[G-N11] **These are not harness guards.** `conformance.sh` never runs `go test`, so a regression in them does not turn the harness red [RE-MEASURED by `T255` at `a71c140`: the script contains **no** `go test` invocation — every occurrence of the string is a comment; its only Go command is a `go build` of th
+[G-N12] The heading is CORRECT and is NOT changed.** *"Against the frozen vector schema"* means against **`gerege.loanschedule.vector/v1`**, and within that scope every one of §5.1's five legs is still true and was never falsified — a `loanschedule`-schema file placed in `ledger/` is INADMISSIBLE by name.
+[G-N13] **The table below is UNCHANGED — no row, no identifier, no order, no DEPENDS-ON cell, and no `why` — because these are OBLIGATIONS and revisions 7 and 8 change no obligation.** What is corrected is the *factual* summary that used to follow the table, which said **"Nine open, one landed"**; that is f
+[G-N14] **What is NOT measured, stated plainly rather than smoothed over:** **(i)** `P-5` is the one precondition the ledger package **names nowhere** — `git grep -P '\bP-5\b' -- nexus/internal/apps/ledger` returns nothing (exit 1, a REAL measured negative, not an error swallowed — `P-80`), across the track
+[G-N15] Its substance is present and measurable (21 money cells, `int64` minor-unit strings paired with the oracle's own emitted characters as a transcription cross-check), but the marker every other precondition carries is absent.
+[G-N16] At `a71c140` `A2-15` is done, six vectors are promoted and green, and all ten preconditions are addressed — with the two caveats the note above states and does not soften.
+[G-N17] **Rows are kept, never deleted, so a later reader can tell "discharged, with limits" from "never required"** — the rule `P-8` established, now applied to all ten.
+[G-N18] **⚠ THIS SECTION'S HEADING READ "NOTHING GRADES THE LEDGER" IN REVISIONS 1–6, AND IT WAS FALSE.** It is repeated at the end of the document, as it always has been, because §8 is what a ratifier reads last and because revision 1's §8 said something adjacent that a reader will merge with it.
+[G-N19] **A `ledger` vector IS expressible, against a SECOND schema — and §5.1's five legs are untouched.** `gerege.ledger.vector/v1` [ANCHOR nexus/internal/apps/ledger/conformance/vector.go :: `// SchemaV1 is the only schema string this package accepts.`], with its own request/expectation shapes, class set
+[G-N20] **⚠ RETRACTION, revision 7: revisions 1–6 wrote *"Zero `ledger` vectors are EXPRESSIBLE … Preconditions P-1…P-5 (§5.3) do not exist."*** The preconditions are addressed; §5.3's revision-7 note records exactly what that is measured to mean and — expressly — what it does **not** certify.
+[G-N21] **§4.4.1 carries the ONE DERIVED-FROM-SOURCE enumeration of `run_guards`' invocations and this fact restates no count from it (`P-79`)** — which is the whole point: revisions 3–7 restated *"seven … the seventh"* here as well as in the banner and in the `I-3` row, so one correction had to land in fou
+[G-N22] The machinery landed and the command is meaningful**: it grades 4 parity and 2 oracle-refusal vectors over 70 cells, 21 of them money [MEASURED by `T255` at `a71c140`]. - **`A2-15` had an admissibility standard and used it**: §4.2's predicates, §4.6's A-1…A-4, §4.10's registry, §5.5's `graded_agains
+[G-N23] **⚠ Revisions 1–6 closed this bullet with *"Nine of the ten §5.3 preconditions remain … and `A2-15` cannot start without them"*; `A2-15` is `done`.
+[G-N24] Read §5.3's revision-7 note for what that is measured to mean and what it does not certify.** - The GL/accounting context has a boundary a regulator can be shown, **and now a small number a regulator can be shown too**.
+[G-N25] `T255`'s handoff carries a per-hunk no-obligation-moved proof that an independent reviewer can re-derive.
+[G-N26] **What revision 8 does NOT claim.** It does not certify that any §5.3 precondition is adequately discharged (`FU-T247-3` stands).
+[G-N27] IT WAS NEVER APPLIED TO THIS FILE.** Independent review `T251` returned MICRO-FIX/REJECT: the load-bearing check PASSED — **no obligation moved**, re-derived character by character on the rule paragraph and applied to all 17 hunks, and the caution survived and was strengthened with both terms counte

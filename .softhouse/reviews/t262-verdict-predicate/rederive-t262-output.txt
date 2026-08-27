@@ -1,0 +1,44 @@
+classify sha256 f831736f07f1a6fecd4ee69b5a1de8dac0abcae89210f997e72526070f62821a
+raw      sha256 ed5feab749755c41b0780d3b43ed6b57133ab761e40e1d4fbfe6b196bd314821
+
+PART 1 — the counts (P-67, both terms)
+  rows in file            : 9
+  carriers of the key     : 6
+  lacking the key         : 3
+  lacking, by predictedOutcome: ['RESCUED_BY_SITE3']
+  lacking ids             : ['T229-R600p0-N200-B301', 'T229-R36p0-N1400-B2150', 'T229-R600p0-N200-B303']
+  carriers false / true   : 5 / 1  (sums to 6 )
+  false & AFFIRMATIVE     : ['T229-R600p0-N200-B251', 'T229-R600p0-N200-B201', 'T229-R600p0-N200-B299']
+  false & NEGATIVE        : ['T229-R600p0-N200-B199', 'T229-R36p0-N1400-B1450']
+
+PART 2 — is n*E+B the total REPAYMENT? checked against the raw emitted rows
+  id                          sumTotal  sumPrin   sumInt     n*E+B  tot==nE+B  lastTot    I==T-P
+  T229-R600p0-N200-B199           2553      199     2354     20199      False        0      True
+  T229-R36p0-N1400-B1450          6469     1450     5019     63050      False        0      True
+  T229-R600p0-N200-B251          25251       51    25200     25251       True      376      True
+  T229-R600p0-N200-B201          20201        1    20200     20201       True      301      True
+  T229-R36p0-N1400-B150           5750        0     5750      5750       True      154      True
+  T229-R600p0-N200-B299          30099       99    30000     30099       True      448      True
+
+PART 3 — agreement: registered vs corrected predicate, per row, integer only
+  id                             n  E_obs      B  P_rep     nE+B   nE+B-P  int_obs    REG   CORR   verd  agrREG  agrCORR
+  T229-R600p0-N200-B199        200    100    199    199    20199    20000     2354  False  False  False    True     True
+  T229-R36p0-N1400-B1450      1400     44   1450   1450    63050    61600     5019  False  False  False    True     True
+  T229-R600p0-N200-B251        200    125    251     51    25251    25200    25200  False   True   True   False     True
+  T229-R600p0-N200-B201        200    100    201      1    20201    20200    20200  False   True   True   False     True
+  T229-R36p0-N1400-B150       1400      4    150      0     5750     5750     5750   True   True   True    True     True
+  T229-R600p0-N200-B299        200    149    299     99    30099    30000    30000  False   True   True   False     True
+
+  AGREEMENT under REGISTERED predicate : 3 of 6
+  AGREEMENT under CORRECTED  predicate : 6 of 6
+  corrected agreements, TRUE  direction: 4
+  corrected agreements, FALSE direction: 2
+
+PART 4 — robustness: same test with E = predictedEmiMinor instead of observed row-1 total
+  AGREEMENT under CORRECTED predicate, predicted E : 6 of 6
+
+PART 5 — the losing side: what ANDing P2 into verdict would print
+  T229-R600p0-N200-B251      familyHit=True principalHit=True (obs=51 pred=51) correctedPredicate=True
+  T229-R600p0-N200-B201      familyHit=True principalHit=True (obs=1 pred=1) correctedPredicate=True
+  T229-R600p0-N200-B299      familyHit=True principalHit=True (obs=99 pred=99) correctedPredicate=True
+  cells that would flip to REFUTED despite hitting family AND principal exactly: 3

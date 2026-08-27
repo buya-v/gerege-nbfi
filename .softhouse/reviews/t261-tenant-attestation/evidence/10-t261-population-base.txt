@@ -1,0 +1,75 @@
+CALIBRATION positive/echo          expected 1 flagged, got 1
+CALIBRATION negative/echo-var      expected 0 flagged, got 0
+CALIBRATION positive/heredoc       expected 1 flagged, got 1
+CALIBRATION positive/py-write      expected 1 flagged, got 1
+CALIBRATION negative/py-write-var  expected 0 flagged, got 0
+CALIBRATION OK: arms differ by exactly the defect; instrument discriminates.
+
+SCOPE  tree=a71c1408d3315493bca763472598680c85b9ad0b root=/Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/scratch/base
+tracked                 : 5215
+  .sh/.py               : 918
+  absent on disk (skip) : 0
+
+TERM 1  oracle-talking scripts emitting >=1 `Key: value` attestation : 45
+    .softhouse/bin/build-oracle-image.sh
+    .softhouse/capture/actualactual/src/pathb-capture.sh
+    .softhouse/capture/charges/bin/attest-t40.py
+    .softhouse/capture/charges/bin/attest.py
+    .softhouse/capture/charges/bin/create-charges.sh
+    .softhouse/capture/charges/bin/create-charges2.sh
+    .softhouse/capture/charges/bin/t48-capture.sh
+    .softhouse/capture/charges/bin/t48-determinism.sh
+    .softhouse/capture/charges/bin/t51-capture.sh
+    .softhouse/capture/charges/bin/t51-capture2.sh
+    .softhouse/capture/charges/bin/t51-capture3.sh
+    .softhouse/capture/charges/bin/t51-capture4.sh
+    .softhouse/capture/charges/bin/t51-capture5.sh
+    .softhouse/capture/charges/bin/t51-capture6.sh
+    .softhouse/capture/charges/bin/t51-determinism.sh
+    .softhouse/capture/leapboundary/bin/t55-capture.sh
+    .softhouse/capture/leapboundary/bin/t55-determinism.sh
+    .softhouse/capture/mathcontext/src/run-t50-tier1.sh
+    .softhouse/capture/mathcontext/src/run-t50-tier2.sh
+    .softhouse/capture/pathb/t149/capture-halfeven-arm.sh
+    .softhouse/capture/pathb/t36/attest.py
+    .softhouse/capture/pathb/t36/emiloop-probe.sh
+    .softhouse/capture/pathb/t36/recapture.sh
+    .softhouse/capture/pathb/t36/recreate-products.sh
+    .softhouse/capture/pathb/t99/lib.sh
+    .softhouse/capture/pathb/t99/prove-f5-legs.sh
+    .softhouse/capture/src/run-rc6-rounddown-attestation.sh
+    .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh
+    .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh
+    .softhouse/capture/t91/run-attacks.sh
+    .softhouse/capture/t91/t115-rerun-attacks.sh
+    .softhouse/capture/tierA-a2/audit-req-float-roundtrip.py
+    .softhouse/capture/tierA-a2/cap.sh
+    .softhouse/capture/tierA-a2/cap10.sh
+    .softhouse/capture/tierA-a2/cap8.sh
+    .softhouse/capture/tierA-a2/cap9.sh
+    .softhouse/capture/tierA-a2/census-a2-26.py
+    .softhouse/capture/tierA-a2/prove-cap-transport-red.py
+    .softhouse/capture/tierA-a2/prove-cap8-wire-bytes.py
+    .softhouse/capture/tierA-a2/prove-manifest-blind-red.py
+    .softhouse/capture/tierA-a2/prove-quit-trap-cap.py
+    .softhouse/capture/tierA-a2/prove-quit-trap-cap9.py
+    .softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh
+    .softhouse/reviews/T135-evidence/f1-attack.sh
+    .softhouse/reviews/T138-evidence/r6-mf2.sh
+
+TERM 2  of those, >=1 LITERAL attestation shadowed by an in-scope var: 4
+    .softhouse/capture/tierA-a2/cap.sh
+        line 97    Fineract-Platform-TenantId         = gerege                             <- $T (full-header) [quoted-emitter:echo]
+        line 100   Content-Type                       = application/json                   <- $CT (full-header) [quoted-emitter:echo]
+    .softhouse/capture/tierA-a2/cap10.sh
+        line 113   Fineract-Platform-TenantId         = gerege                             <- $T (full-header) [quoted-emitter:echo]
+        line 117   Content-Type                       = application/json                   <- $CT (full-header) [quoted-emitter:echo]
+    .softhouse/capture/tierA-a2/cap8.sh
+        line 116   Fineract-Platform-TenantId         = gerege                             <- $T (full-header) [quoted-emitter:echo]
+        line 119   Content-Type                       = application/json                   <- $CT (full-header) [quoted-emitter:echo]
+    .softhouse/capture/tierA-a2/cap9.sh
+        line 95    Fineract-Platform-TenantId         = gerege                             <- $T (full-header) [quoted-emitter:echo]
+        line 99    Content-Type                       = application/json                   <- $CT (full-header) [quoted-emitter:echo]
+
+emitter breakdown of flagged lines: {'quoted-emitter': 8}
+RATE: 4 / 45

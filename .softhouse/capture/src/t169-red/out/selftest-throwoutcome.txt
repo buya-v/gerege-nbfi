@@ -1,0 +1,27 @@
+ok    OutOfMemoryError is FATAL
+ok    InternalError is FATAL
+ok    UnknownError is FATAL
+ok    NoClassDefFoundError (LinkageError) is FATAL
+ok    IncompatibleClassChangeError (LinkageError) is FATAL
+ok    ThreadDeath is FATAL
+ok    StackOverflowError is NOT fatal — it is the finding
+ok    ArithmeticException is NOT fatal
+ok    NullPointerException is NOT fatal
+ok    AssertionError is NOT fatal
+ok    a checked Exception is NOT fatal
+FATAL-THROW cell=T169-SELFTEST-OOM class=java.lang.OutOfMemoryError
+FATAL-THROW cell=T169-SELFTEST-LINKAGE class=java.lang.NoClassDefFoundError
+ok    OutOfMemoryError is announced and RE-THROWN, not swallowed
+ok    NoClassDefFoundError is announced and RE-THROWN, not swallowed
+ok    StackOverflowError is RECORDED, not re-thrown
+ok    the recorded cell carries observed: null
+ok    the recorded cell names the CLASS
+ok    the recorded cell names the MESSAGE slot even when the message is null
+ok    the recorded cell keeps the FRAMES
+ok    the recorded cell reports how many frames it kept and how many there were
+ok    a message with a quote and a newline does not break the JSON
+ok    no threw fragment ever emits an observed object
+ok    frames are capped at 25 and the TOTAL depth is still reported
+
+ThrewOutcomeSelfTest: 22 checks, 0 failures
+exit 0

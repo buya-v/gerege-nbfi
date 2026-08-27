@@ -1,0 +1,4 @@
+181c181
+< if pre.returncode != 0:
+---
+> if False:  # T125 RED DEMO: OUTER precondition gate DISABLED

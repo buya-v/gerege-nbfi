@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+"""T196 RED FIXTURE — the fail-open D-3's fix must NOT open.
+
+The file IMPORTS a module that defines a real restoring context manager, and then
+truncates the ratified DEC-1 with that context manager NOWHERE ON THE PATH.  If
+following an import degenerates into "this file imports a guard module, therefore
+it is guarded", `--enforce` exits 0 here and the check is worthless: any careless
+worker closes any finding by adding one import line.
+
+REQUIRED: UNGUARDED / TRUSTED, `--enforce` exit 1 — both before and after T196-3.
+
+INERT.  Held as `.py.txt`; the write below is inside a function that is never
+called, and the module-scope guard aborts before it on any attempt to run it.
+"""
+import io
+import mylib_guard
+
+P = "docs/adr/DEC-1-schedule-generator-adapter.md"
+
+if __name__ == "__main__":
+    raise SystemExit("t196 fixture: parsed, never run")
+
+
+def never_called():
+    with mylib_guard.preserved(P):
+        pass                       # the CM is used — but NOT around the write
+    s = io.open(P, encoding="utf-8").read()
+    io.open(P, "w", encoding="utf-8").write(s.replace("a", "b"))   # T196-SITE

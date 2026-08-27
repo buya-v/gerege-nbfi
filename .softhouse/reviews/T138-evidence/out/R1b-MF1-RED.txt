@@ -1,0 +1,83 @@
+=== base=postfix-livetwin-sh scorer=PRE
+EXIT=0
+last line: ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+ERROR rows in table: 0
+ADMITS rows in table: 0
+
+=== base=postfix-livetwin-sh scorer=POST
+EXIT=1
+last line: A6-canary-is-a-directory.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+ERROR rows in table: 10
+ADMITS rows in table: 0
+
+=== base=postfix-livetwin-bash scorer=PRE
+EXIT=0
+last line: ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+ERROR rows in table: 0
+ADMITS rows in table: 0
+
+=== base=postfix-livetwin-bash scorer=POST
+EXIT=1
+last line: A6-canary-is-a-directory.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+ERROR rows in table: 10
+ADMITS rows in table: 0
+
+=== base=postfix-copy-sh scorer=PRE
+EXIT=0
+last line: ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+ERROR rows in table: 0
+ADMITS rows in table: 0
+
+=== base=postfix-copy-sh scorer=POST
+EXIT=1
+last line: A6-canary-is-a-directory.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+ERROR rows in table: 10
+ADMITS rows in table: 0
+
+=== FULL TABLE, base=postfix-livetwin-sh, scorer=PRE (the defect):
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  truncated, nothing was ever run no        no         OK
+A2b-mutated-canary-default.txt                 truncated, nothing was ever run no        no         OK
+A2c-crafted-canary-and-expectation-gerege.txt  truncated, nothing was ever run no        no         OK
+A3a-swapped-canary-gerege.txt                  truncated, nothing was ever run no        no         OK
+A3b-missing-canary.txt                         truncated, nothing was ever run no        no         OK
+A3c-no-canary.txt                              truncated, nothing was ever run no        no         OK
+A4a-expect-override-default.txt                truncated, nothing was ever run no        no         OK
+A4b-expect-override-gerege.txt                 truncated, nothing was ever run no        no         OK
+A4c-decoy-variable.txt                         0      YES       YES        OK
+A5-helpful-correct-override.txt                truncated, nothing was ever run no        no         OK
+A6-canary-is-a-directory.txt                   truncated, nothing was ever run no        no         OK
+A7-symlinked-canary.txt                        0      YES       YES        OK
+A8-foreign-cwd.txt                             0      YES       YES        OK
+
+ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+
+=== FULL TABLE, base=postfix-livetwin-sh, scorer=POST (the fix):
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A2b-mutated-canary-default.txt                 -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A2c-crafted-canary-and-expectation-gerege.txt  -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A3a-swapped-canary-gerege.txt                  -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A3b-missing-canary.txt                         -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A3c-no-canary.txt                              -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A4a-expect-override-default.txt                -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A4b-expect-override-gerege.txt                 -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A4c-decoy-variable.txt                         0      YES       YES        OK
+A5-helpful-correct-override.txt                -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A6-canary-is-a-directory.txt                   -      -         -          ERROR (no EXIT= line — the transcript has no attack body)
+A7-symlinked-canary.txt                        0      YES       YES        OK
+A8-foreign-cwd.txt                             0      YES       YES        OK
+
+EXPECTATIONS NOT MET (10):
+A2a-mutated-canary-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A2b-mutated-canary-default.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A2c-crafted-canary-and-expectation-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A3a-swapped-canary-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A3b-missing-canary.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A3c-no-canary.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A4a-expect-override-default.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A4b-expect-override-gerege.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A5-helpful-correct-override.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)
+A6-canary-is-a-directory.txt NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)

@@ -1,0 +1,9 @@
+  BYTE-IDENTICAL  T46-CH-01-defvsreq-pctinterest-raw.json  42e422cdb923f619a8074139876f89a780d96f5bff66c063fda531dab5b3b926
+  BYTE-IDENTICAL  T46-CH-02-defvsreq-flat-disb-raw.json  aa2797687a4a3acfac3c9431aa3754acf65a329b5e45aabcfbfa01ea86a54235
+  BYTE-IDENTICAL  T46-CH-03-tie-pctinterest-4725-raw.json  bc84d1b128b91331834bbf60123b5bfe2e6c0331e6b28ccb03360eb7a17f05c0
+  BYTE-IDENTICAL  T46-CH-04-tie-pctinterest-2025-raw.json  cc75057185bd648e1e77b97978795ad9a737873a45a1b794858efa298fb00b4b
+  BYTE-IDENTICAL  T46-CH-05-defvsreq-pctamtint-raw.json  ac8146e887569b33f256e34b6e1371cc4536c827bc5729697f807be084a8abcd
+  BYTE-IDENTICAL  T46-CH-06-defvsreq-pctamount-disb-raw.json  f2c0d2e17b052fbdbba10438cd6df776d44ad04466d796807daea4e62e19b645
+  BYTE-IDENTICAL  T46-CH-07-defvsreq-penalty-instalment-raw.json  1942652f630afc48ab60735c18d3545fa0c1e1886be92fc33688bf4dab9ceb9a
+
+T46 DETERMINISM: 7 of 7 new captures reproduced byte-for-byte on a second issue.

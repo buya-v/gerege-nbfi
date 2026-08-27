@@ -1,0 +1,39 @@
+T86 independent shell matrix — measured 2026-08-20 on the local Mac fire.
+Machine: /bin/sh and /bin/bash are BOTH GNU bash 3.2.57(1)-release (arm64-apple-darwin25).
+/bin/sh is a SEPARATE BINARY (101232 bytes), not a symlink to /bin/bash (1293840 bytes).
+
+--- process-substitution capability probe (/tmp/t86/psub.sh) ---
+  /bin/bash            BASH_VERSION=3.2.57(1)-release   GOT:hello           exit 0
+  /bin/sh              BASH_VERSION=3.2.57(1)-release   syntax error near unexpected token `<'   exit 2
+  /bin/bash --posix    BASH_VERSION=3.2.57(1)-release   syntax error near unexpected token `<'   exit 2
+  /bin/ksh             BASH_VERSION=UNSET               GOT:hello           exit 0   (ksh93 HAS process substitution)
+
+--- MAIN's conformance.sh (sha256 4d9b5b63…) ---
+  bash .softhouse/conformance.sh            exit 0   VERDICT: PASS — 42 parity vectors, 5576 cells
+  zsh  .softhouse/conformance.sh            exit 2   BASH_SOURCE[0]: parameter not set
+                                                     "conformance: no Go toolchain. Expected
+                                                      /Users/buv/gerege-nbfi/.claude/worktrees/.softhouse/bin/go-env.sh …"
+                                                     "conformance: EXIT 2 — the harness is unusable. This is NOT a pass."
+                                                     ^^ the FABRICATED diagnosis, reproduced exactly
+  ksh  <main script>                        exit 3   (ksh93's OWN syntax-error status is 3; see finding 3)
+
+--- T81's conformance.sh (sha256 225181ba…) run from the same worktree path ---
+  bash  .softhouse/conformance.sh           exit 0   byte-identical to main (sha256 3b7c96fd…, 19790 bytes)
+  sh    .softhouse/conformance.sh           exit 3   guard message; grep 'VERDICT|PASS|FAIL|line 104|syntax error' -> NO MATCH
+  bash --posix .softhouse/conformance.sh    exit 3   guard message
+  dash  .softhouse/conformance.sh           exit 3   "BASH_VERSION is unset, so this shell is not bash at all."
+  zsh   .softhouse/conformance.sh           exit 3   same
+  ksh   .softhouse/conformance.sh           exit 3   same
+  bash -r (restricted) .softhouse/…         exit 2   GUARD ADMITTED IT — see finding 1
+  --help                                    exit 0   ends exactly at the header block, no raw shell
+  --prove                                   exit 0   PROOFS: 21 passed, 0 failed
+  CONFORMANCE_ORACLE_HEALTH_URL=https://127.0.0.1:1/health
+                                            exit 2   VERDICT: UNUSABLE (exit 2); 0 guard traces
+
+--- bash >= 5.1 in POSIX mode (T81 marked this UNVERIFIED; T86 VERIFIED it) ---
+throwaway containers, --network none, from images already present locally; the shared
+fineract containers were NOT touched.
+  postgres:18.3        GNU bash 5.2.37   guard ADMITS under --posix, under argv[0]=sh, and plain;
+                                         real `< <(…)` works in all three
+  eclipse-temurin:21   GNU bash 5.3.9    same; and `bash --posix -n t81-conformance.sh` -> exit 0,
+                                         i.e. POSIX-mode bash 5.3 parses the WHOLE harness

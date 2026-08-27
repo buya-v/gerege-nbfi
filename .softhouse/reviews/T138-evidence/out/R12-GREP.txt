@@ -1,0 +1,38 @@
+wrote three shapes
+
+which program is 'grep' from inside a script? (P-33: type -a, not command -v)
+   $(command -v grep) = /usr/bin/grep
+   /usr/bin/grep --version: grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+SHAPE          INVOCATION               rc (0=found, 1=NOT found)
+before         utf8 -qF                 1
+before         utf8 -aqF                1
+before         LC_ALL=C -qF             0
+before         LC_ALL=C -aqF            0
+after          utf8 -qF                 0
+after          utf8 -aqF                0
+after          LC_ALL=C -qF             0
+after          LC_ALL=C -aqF            0
+other          utf8 -qF                 0
+other          utf8 -aqF                0
+other          LC_ALL=C -qF             0
+other          LC_ALL=C -aqF            0
+
+==================================================================
+Now: which shape does prove-guards.sh's G-4 actually build?
+==================================================================
+   python3 - "$S/poison/A2a-mutated-canary-gerege.txt" <<'PY'
+   import sys
+   p = sys.argv[1]
+   b = open(p, 'rb').read()
+   i = b.find(b'PASS  effective rounding mode canary')
+   j = b.find(b'\n', i)
+   open(p, 'wb').write(b[:j] + b'\xff\xfe' + b[j:])
+   print('   poisoned the certification line itself with an invalid multibyte sequence')
+   PY
+
+   i = index of the certification text; j = index of the NEWLINE after it;
+   the poison is inserted at b[:j] + FFFE + b[j:]  ->  AFTER the match, same line.
+   That is T108 shape s02, the one BSD grep matches CORRECTLY in every locale.
+   => G-4's probe cannot produce the BSD silent miss at all (P-33's rule:
+      'N-of-N green cells refute nothing unless the failing shape is among the N').

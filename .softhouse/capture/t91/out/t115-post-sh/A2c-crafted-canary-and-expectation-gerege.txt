@@ -1,0 +1,36 @@
+=== A2c — crafted canary (1162502.4 -> 20925.04 under either mode) AND CANARY_EXPECT=20925.04, tenant gerege
+recipe under test: .softhouse/capture/charges/bin/preconditions.sh
+recipe sha256:     829fe1181fe2641b46a43699a90fefd3a38c744e3396c4558e42b50232b93ad1
+interpreter:       sh    cwd: /tmp/t115-attacks.7438/post
+
+$ CANARY_EXPECT=20925.04 CANARY_REQ=/tmp/t115-attacks.7438/post/.softhouse/capture/t91/out/t115-post-sh/req-crafted-04.json "sh" "/tmp/t115-attacks.7438/post/.softhouse/capture/charges/bin/preconditions.sh" gerege
+
+== T36 Path B preconditions, tenant 'gerege' ==
+  PASS  image digest sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  PASS  jar git.commit.id 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  PASS  jar git.dirty=false
+  PASS  MoneyHelper.PRECISION = 19 (deployed bytecode)
+  PASS  actuator/health UP
+  PASS  driverClassName org.postgresql.Driver
+  PASS  JDBC URL is jdbc:postgresql://…
+  PASS  0 prohibited-engine hits in container env
+  PASS  0 prohibited driver jars in fineract-provider.jar
+  PASS  PostgreSQL JDBC driver present in the jar
+  PASS  PostgreSQL version: PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+  PASS  tenant 'gerege' exists
+  PASS  tenant timezone_id = Asia/Ulaanbaatar
+  PASS  c_configuration.rounding-mode = 4 (HALF_UP)
+  PASS  rounding-mode row enabled
+  PASS  schema_connection_parameters is empty
+  PASS  tenant schema_server_port = 5432
+  PASS  running JVM initialized tenant 'gerege' at HALF_UP
+  FAIL  CANARY_EXPECT was set in the environment ('20925.04') — the canary expectation is a CONSTANT (20925.05). Refusing to grade the arithmetic against a value supplied by the runner.
+  FAIL  canary request DIGEST MISMATCH — computed sha256 '91aa8a410dc4f30399a05538975a53b4f1b1f7ae21b829b609df56c6ffa64a50' for '/tmp/t115-attacks.7438/post/.softhouse/capture/t91/out/t115-post-sh/req-crafted-04.json', pinned sha256 is '2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154'. That file is NOT the pinned half-cent tie (principal 1,162,502.50 x 0.018 = 20,925.045 exactly). A request that is not an exact half-minor-unit tie answers the same under HALF_UP and HALF_EVEN, so grading it would certify nothing. THE CANARY WAS NOT SENT and the effective rounding mode is UNPROVEN.
+  PASS  MNT seeded with decimal_places=2 (ISO 4217 496, minor unit 2)
+  PASS  MNT enabled for the tenant
+
+PRECONDITIONS BREACHED: 2. DO NOT CAPTURE. Any file produced now is NOT an observation
+of the pinned reference oracle at the ratified (19, HALF_UP) settings — do not commit it, do not
+treat it as a vector, and do not 'normalise' it. Fix the environment and re-run.
+
+EXIT=1

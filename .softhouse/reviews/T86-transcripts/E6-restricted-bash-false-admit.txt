@@ -1,0 +1,44 @@
+T86 finding 1 — the guard's capability probe cannot tell "process substitution works"
+from "the probe never ran".
+
+  $ /bin/bash -r /tmp/t86/rb.sh          # rb.sh == T81's conformance.sh
+  rb.sh: line 79: /dev/null: restricted: cannot redirect output
+  rb.sh: line 106: cd: restricted
+  rb.sh: line 107: cd: restricted
+  rb.sh: line 164: /dev/null: restricted: cannot redirect output
+  conformance: no Go toolchain. Expected /.softhouse/bin/go-env.sh to put one on PATH.
+  exit=2
+
+The guard ADMITTED a shell that then produced the fabricated "no Go toolchain" diagnosis
+and EXIT 2 — the exact defect class T81 was dispatched to close.
+
+Mechanism, isolated:
+  $ cat rprobe.sh
+    if ! ( eval "…< <(printf %s \"\")" ) >/dev/null 2>&1; then echo GUARD-WOULD-FIRE; else echo GUARD-ADMITS; fi
+  $ /bin/bash -r rprobe.sh
+    rprobe.sh: line 1: /dev/null: restricted: cannot redirect output
+    GUARD-ADMITS
+The `>/dev/null` redirection is refused, so the inner command NEVER RUNS, yet the
+compound's status is 0 and `! 0` is false. The probe is a negative test ("no error
+occurred"), so an environment that prevents the probe from executing reads as success.
+
+A POSITIVE-EVIDENCE probe closes it, but it is NOT a one-liner to get right — my first
+attempt falsely refused plain bash because `printf %s ok` emits no trailing newline and
+`while read` therefore never runs the loop body. The corrected form, measured:
+
+  elif [ "$( ( eval 'while read -r _p; do printf %s "$_p"; done < <(printf "conformance-psub-ok\n")' ) 2>/dev/null )" \
+         != "conformance-psub-ok" ]; then
+
+  /bin/bash 3.2         ADMITS      <- correct
+  /bin/sh   (bash 3.2)  FIRES       <- correct
+  bash --posix (3.2)    FIRES       <- correct
+  /bin/dash             FIRES       <- correct
+  /bin/zsh              FIRES       <- correct
+  /bin/ksh              FIRES       <- correct
+  /bin/bash -r          FIRES       <- CLOSES THE HOLE
+  bash 5.3 plain        ADMITS      <- correct (container)
+  bash 5.3 --posix      ADMITS      <- correct (container)
+  bash 5.3 as argv[0]=sh ADMITS     <- correct (container)
+
+Recorded as a follow-up, NOT prescribed as a micro-fix: my own first draft of it was
+wrong, which is the argument for giving the change its own task and its own review.

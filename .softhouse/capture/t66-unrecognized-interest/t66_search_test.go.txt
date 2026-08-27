@@ -1,0 +1,395 @@
+package loanschedule
+
+// T66 SEARCH HARNESS -- NOT PART OF THE PORT. Deleted before commit.
+//
+// It evaluates the ORACLE's getPeriodWithUnrecognizedInterest precondition
+// (ProgressiveEMICalculator.java:1805-1814) on the schedule-model COPY that
+// calculateUnrecognizedInterestTillDateOnScheduleModelCopyAndDefer builds
+// (:1226-1237), using the port's own arithmetic for the quantities it reads.
+//
+// Reduction (derived in the T66 handoff):
+//
+//	on the copy every interest period dated strictly after tillDate has
+//	rateFactorTillPeriodDueDate zeroed (:1791-1803), so with f the index of the
+//	period whose dueDate == tillDate:
+//	    for k > f:  cdi_k = u_{k-1}  and  u_k = max(0, u_{k-1} - emi_k)
+//	The chain is non-increasing. getPeriodWithUnrecognizedInterest needs a
+//	period strictly after the last-unpaid L with u > 0, so it fires iff
+//	L < n-1 and u_L > 0.
+
+import (
+	"context"
+	"fmt"
+	"testing"
+
+	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
+)
+
+type t66Probe struct {
+	admitted    bool
+	n, f, l     int
+	carriedAtF  int64
+	uAtL        int64
+	zeroEMITail bool
+	fires       bool
+}
+
+func t66Evaluate(req contract.GenerateRequest) t66Probe {
+	var out t66Probe
+	ctx := context.Background()
+	if validateWellFormed(req) != nil || validateSupported(req) != nil {
+		return out
+	}
+	dueDates, err := repaymentDueDates(ctx, req.ScheduleStartDate, req.NumberOfRepayments,
+		int64(req.RepaymentEvery), req.RepaymentFrequencyUnit, req.Disbursements[0].Date)
+	if err != nil || len(dueDates) == 0 {
+		return out
+	}
+	if validateGradedDomain(req, dueDates[len(dueDates)-1]) != nil {
+		return out
+	}
+	m := newScheduleModel(ctx, req, dueDates)
+	d := req.Disbursements[0]
+	owner := m.findPeriodForBalanceChange(d.Date)
+	if owner == nil {
+		return out
+	}
+	m.registerBalanceChange(owner, d.Date, d.AmountMinor)
+	effDue := m.effectiveRepaymentDueDate(owner, d.Date)
+	m.recalculate(effDue)
+
+	out.admitted = true
+	out.n = len(m.periods)
+	out.f = -1
+	for i, p := range m.periods {
+		if compareDates(p.due, effDue) == 0 {
+			out.f = i
+			break
+		}
+	}
+	out.l = m.findLastUnpaidPeriod()
+	if out.f < 0 || out.l < 0 {
+		return out
+	}
+	out.zeroEMITail = out.l < out.n-1
+
+	c, du := m.interestChainUpTo(out.f)
+	out.carriedAtF = c - du
+	if out.carriedAtF < 0 {
+		out.carriedAtF = 0
+	}
+	u := out.carriedAtF
+	for k := out.f + 1; k <= out.l && k < out.n; k++ {
+		u -= m.periods[k].emiMinor
+		if u < 0 {
+			u = 0
+			break
+		}
+	}
+	out.uAtL = u
+	out.fires = out.zeroEMITail && u > 0
+	return out
+}
+
+func t66Req(start, disb civilDate, principal int64, term int32, rate contract.Rate) contract.GenerateRequest {
+	r := baseRequest(principal, term, rate)
+	r.ScheduleStartDate = start
+	r.Disbursements = []contract.Disbursement{{Date: disb, AmountMinor: principal}}
+	return r
+}
+
+func TestT66Search(t *testing.T) {
+	rates := []contract.Rate{
+		{Numerator: 27, Denominator: 125},
+		{Numerator: 7, Denominator: 100},
+		{Numerator: 21, Denominator: 125},
+		{Numerator: 37, Denominator: 200},
+		{Numerator: 9, Denominator: 25},
+		{Numerator: 1, Denominator: 1},
+		{Numerator: 2, Denominator: 1},
+		{Numerator: 5, Denominator: 1},
+		{Numerator: 12, Denominator: 1},
+		{Numerator: 24, Denominator: 1},
+		{Numerator: 120, Denominator: 1},
+		{Numerator: 1200, Denominator: 1},
+	}
+	principals := []int64{1, 2, 3, 5, 7, 11, 17, 28, 36, 50, 100, 137, 500, 1000, 10000,
+		100000, 1000000, 120000000, 5000000000}
+	terms := []int32{1, 2, 3, 5, 6, 11, 12, 13, 34, 35, 36, 55, 56, 71, 72, 120, 240}
+	starts := []civilDate{
+		date(2024, 1, 1), date(2024, 1, 28), date(2024, 1, 29), date(2024, 1, 30),
+		date(2024, 1, 31), date(2023, 2, 28), date(2024, 2, 29), date(2024, 3, 15),
+		date(2025, 1, 31), date(2024, 4, 30),
+	}
+	disbOffsets := []int32{0, 1, 5, 15}
+
+	var admitted, tails, positiveU0, fires int
+	var worstU int64
+	var worstDesc string
+	var tailExamples []string
+
+	for _, st := range starts {
+		for _, off := range disbOffsets {
+			db := st
+			for i := int32(0); i < off; i++ {
+				db = plusDays(db, 1)
+			}
+			for _, pr := range principals {
+				for _, tm := range terms {
+					for _, rt := range rates {
+						p := t66Evaluate(t66Req(st, db, pr, tm, rt))
+						if !p.admitted {
+							continue
+						}
+						admitted++
+						if p.zeroEMITail {
+							tails++
+							if len(tailExamples) < 8 {
+								tailExamples = append(tailExamples, fmt.Sprintf(
+									"start=%v disb=%v P=%d n=%d rate=%d/%d  f=%d L=%d n=%d carried_f=%d u_L=%d",
+									st, db, pr, tm, rt.Numerator, rt.Denominator, p.f, p.l, p.n, p.carriedAtF, p.uAtL))
+							}
+						}
+						if p.carriedAtF > 0 {
+							positiveU0++
+							if p.carriedAtF > worstU {
+								worstU = p.carriedAtF
+								worstDesc = fmt.Sprintf("start=%v disb=%v P=%d n=%d rate=%d/%d f=%d L=%d n=%d carried_f=%d tail=%v",
+									st, db, pr, tm, rt.Numerator, rt.Denominator, p.f, p.l, p.n, p.carriedAtF, p.zeroEMITail)
+							}
+						}
+						if p.fires {
+							fires++
+							t.Errorf("MECHANISM FIRES: start=%v disb=%v P=%d n=%d rate=%d/%d f=%d L=%d n=%d carried_f=%d u_L=%d",
+								st, db, pr, tm, rt.Numerator, rt.Denominator, p.f, p.l, p.n, p.carriedAtF, p.uAtL)
+							if fires > 20 {
+								t.Fatal("too many; stopping")
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	t.Logf("admitted=%d  zero-EMI-tail=%d  carried_f>0=%d  FIRES=%d", admitted, tails, positiveU0, fires)
+	t.Logf("worst carried_f=%d at %s", worstU, worstDesc)
+	for _, e := range tailExamples {
+		t.Logf("tail example: %s", e)
+	}
+}
+
+// TestT66SearchFast asks the same question over a grid pruned of the shapes
+// whose cost is quadratic in the term (very high rate AND long term), so it
+// returns a count quickly.
+func TestT66SearchFast(t *testing.T) {
+	rates := []contract.Rate{
+		{Numerator: 27, Denominator: 125},
+		{Numerator: 7, Denominator: 100},
+		{Numerator: 9, Denominator: 25},
+		{Numerator: 1, Denominator: 1},
+		{Numerator: 2, Denominator: 1},
+		{Numerator: 5, Denominator: 1},
+		{Numerator: 12, Denominator: 1},
+		{Numerator: 24, Denominator: 1},
+		{Numerator: 120, Denominator: 1},
+	}
+	principals := []int64{1, 2, 3, 5, 7, 11, 17, 28, 36, 100, 1000, 100000, 120000000}
+	terms := []int32{1, 2, 3, 5, 6, 12, 34, 36, 55, 56, 72}
+	starts := []civilDate{
+		date(2024, 1, 1), date(2024, 1, 28), date(2024, 1, 31), date(2023, 2, 28),
+		date(2024, 2, 29), date(2024, 4, 30),
+	}
+	disbOffsets := []int32{0, 1, 15}
+
+	var admitted, tails, positiveU0, fires int
+	var worstU int64
+	var worstDesc string
+	var tailEx []string
+	for _, st := range starts {
+		for _, off := range disbOffsets {
+			db := st
+			for i := int32(0); i < off; i++ {
+				db = plusDays(db, 1)
+			}
+			for _, pr := range principals {
+				for _, tm := range terms {
+					for _, rt := range rates {
+						if rt.Numerator/rt.Denominator >= 12 && tm > 36 {
+							continue // quadratic-cost corner; the full sweep covers it
+						}
+						p := t66Evaluate(t66Req(st, db, pr, tm, rt))
+						if !p.admitted {
+							continue
+						}
+						admitted++
+						if p.zeroEMITail {
+							tails++
+							if len(tailEx) < 6 {
+								tailEx = append(tailEx, fmt.Sprintf("start=%v disb=%v P=%d n=%d rate=%d/%d f=%d L=%d n=%d carried_f=%d u_L=%d",
+									st, db, pr, tm, rt.Numerator, rt.Denominator, p.f, p.l, p.n, p.carriedAtF, p.uAtL))
+							}
+						}
+						if p.carriedAtF > 0 {
+							positiveU0++
+							if p.carriedAtF > worstU {
+								worstU = p.carriedAtF
+								worstDesc = fmt.Sprintf("start=%v disb=%v P=%d n=%d rate=%d/%d f=%d L=%d n=%d tail=%v",
+									st, db, pr, tm, rt.Numerator, rt.Denominator, p.f, p.l, p.n, p.zeroEMITail)
+							}
+						}
+						if p.fires {
+							fires++
+							t.Errorf("MECHANISM FIRES: start=%v disb=%v P=%d n=%d rate=%d/%d f=%d L=%d n=%d carried_f=%d u_L=%d",
+								st, db, pr, tm, rt.Numerator, rt.Denominator, p.f, p.l, p.n, p.carriedAtF, p.uAtL)
+						}
+					}
+				}
+			}
+		}
+	}
+	t.Logf("FAST: admitted=%d zero-EMI-tail=%d carried_f>0=%d FIRES=%d", admitted, tails, positiveU0, fires)
+	t.Logf("FAST: worst carried_f=%d at %s", worstU, worstDesc)
+	for _, e := range tailEx {
+		t.Logf("FAST tail: %s", e)
+	}
+}
+
+// TestT66ZeroEMICensus answers the question T63's TestT63C left half-open: WHERE do
+// zero-EMI periods carrying POSITIVE calculated interest sit? T63 reported 101 admitted
+// shapes with such a period and explicitly did not test whether any lies strictly after
+// the last not-fully-paid period, which is the other half of
+// getPeriodWithUnrecognizedInterest's precondition (:1806-1808).
+func TestT66ZeroEMICensus(t *testing.T) {
+	rates := []contract.Rate{
+		{Numerator: 27, Denominator: 125}, {Numerator: 7, Denominator: 100},
+		{Numerator: 9, Denominator: 25}, {Numerator: 1, Denominator: 1},
+		{Numerator: 2, Denominator: 1}, {Numerator: 5, Denominator: 1},
+		{Numerator: 12, Denominator: 1}, {Numerator: 24, Denominator: 1},
+		{Numerator: 120, Denominator: 1},
+	}
+	principals := []int64{1, 2, 3, 5, 7, 11, 17, 28, 36, 100, 1000, 100000, 120000000}
+	terms := []int32{1, 2, 3, 5, 6, 12, 34, 36, 55, 56, 72}
+	starts := []civilDate{
+		date(2024, 1, 1), date(2024, 1, 28), date(2024, 1, 31), date(2023, 2, 28),
+		date(2024, 2, 29), date(2024, 4, 30),
+	}
+	disbOffsets := []int32{0, 1, 15}
+
+	ctx := context.Background()
+	var admitted, withZeroEMI, withZeroEMIAndPositiveCDI, positiveCDIAfterL int
+	var examples []string
+
+	for _, st := range starts {
+		for _, off := range disbOffsets {
+			db := st
+			for i := int32(0); i < off; i++ {
+				db = plusDays(db, 1)
+			}
+			for _, pr := range principals {
+				for _, tm := range terms {
+					for _, rt := range rates {
+						if rt.Numerator/rt.Denominator >= 12 && tm > 36 {
+							continue
+						}
+						req := t66Req(st, db, pr, tm, rt)
+						if validateWellFormed(req) != nil || validateSupported(req) != nil {
+							continue
+						}
+						dd, err := repaymentDueDates(ctx, req.ScheduleStartDate, req.NumberOfRepayments,
+							int64(req.RepaymentEvery), req.RepaymentFrequencyUnit, req.Disbursements[0].Date)
+						if err != nil || len(dd) == 0 || validateGradedDomain(req, dd[len(dd)-1]) != nil {
+							continue
+						}
+						m := newScheduleModel(ctx, req, dd)
+						d := req.Disbursements[0]
+						owner := m.findPeriodForBalanceChange(d.Date)
+						if owner == nil {
+							continue
+						}
+						m.registerBalanceChange(owner, d.Date, d.AmountMinor)
+						m.recalculate(m.effectiveRepaymentDueDate(owner, d.Date))
+						admitted++
+						L := m.findLastUnpaidPeriod()
+						sawZero, sawZeroPos, sawAfterL := false, false, false
+						for _, p := range m.periods {
+							if p.emiMinor != 0 {
+								continue
+							}
+							sawZero = true
+							if m.calculatedDueInterestMinor(p) > 0 {
+								sawZeroPos = true
+								if len(examples) < 10 {
+									examples = append(examples, fmt.Sprintf(
+										"start=%v disb=%v P=%d n=%d rate=%d/%d  idx=%d L=%d n=%d cdi=%d bal=%d  position=%s",
+										st, db, pr, tm, rt.Numerator, rt.Denominator, p.idx, L, len(m.periods),
+										m.calculatedDueInterestMinor(p), m.outstandingLoanBalanceMinor(p),
+										map[bool]string{true: "AFTER L", false: "at or before L"}[p.idx > L]))
+								}
+								if p.idx > L {
+									sawAfterL = true
+								}
+							}
+						}
+						if sawZero {
+							withZeroEMI++
+						}
+						if sawZeroPos {
+							withZeroEMIAndPositiveCDI++
+						}
+						if sawAfterL {
+							positiveCDIAfterL++
+						}
+					}
+				}
+			}
+		}
+	}
+	t.Logf("CENSUS: admitted=%d  shapes with a zero-EMI period=%d  "+
+		"of which the zero-EMI period carries POSITIVE calculatedDueInterest=%d  "+
+		"of which such a period lies STRICTLY AFTER the last not-fully-paid period=%d",
+		admitted, withZeroEMI, withZeroEMIAndPositiveCDI, positiveCDIAfterL)
+	for _, e := range examples {
+		t.Logf("CENSUS example: %s", e)
+	}
+}
+
+// TestT66B_TermsAcrossTheStrideBoundary is T63's TestT63B re-shaped to finish in budget:
+// it SAMPLES terms around the 256 context-check stride instead of sweeping 1..300, and
+// pins the principal and rate so the memo-off reference (quadratic by construction) is
+// only paid on the sampled points.
+func TestT66B_TermsAcrossTheStrideBoundary(t *testing.T) {
+	// Terms are SAMPLED, not swept, and capped at 300: the memo-off reference is
+	// quadratic by construction and n>=511 alone exceeded a 1800 s budget in a first
+	// attempt. 300 is already past the 256 stride boundary this test exists to cross.
+	terms := []int32{1, 2, 3, 4, 5, 8, 16, 31, 32, 33, 63, 64, 65, 127, 128, 129,
+		254, 255, 256, 257, 258, 259, 300}
+	rate := contract.Rate{Numerator: 27, Denominator: 125}
+	var compared int
+	for _, n := range terms {
+		v := t66Req(date(2024, 1, 1), date(2024, 1, 1), 120000000, n, rate)
+		memoiseInterestChain = true
+		a, errA := Generator{}.Generate(context.Background(), v)
+		memoiseInterestChain = false
+		b, errB := Generator{}.Generate(context.Background(), v)
+		memoiseInterestChain = true
+		if (errA == nil) != (errB == nil) {
+			t.Fatalf("n=%d: memo on err=%v, memo off err=%v", n, errA, errB)
+		}
+		if errA != nil {
+			t.Logf("n=%d REFUSED: %v", n, errA)
+			continue
+		}
+		if len(a.Periods) != len(b.Periods) {
+			t.Fatalf("n=%d: memo on %d rows, memo off %d rows", n, len(a.Periods), len(b.Periods))
+		}
+		for i := range b.Periods {
+			if a.Periods[i] != b.Periods[i] {
+				t.Fatalf("MEMO CHANGED AN ANSWER at n=%d row %d\n  memo-on  %+v\n  memo-off %+v",
+					n, i, a.Periods[i], b.Periods[i])
+			}
+		}
+		compared++
+	}
+	t.Logf("T66B: %d of %d sampled terms compared full-schedule, 0 divergences "+
+		"(terms sampled at and around the 256 stride boundary)", compared, len(terms))
+}

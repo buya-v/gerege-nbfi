@@ -1,0 +1,6 @@
+POST /loans/1/transactions?command=charge-off
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/chargeoff-092.json
+captured-at-utc: 2026-08-21T06:04:49Z

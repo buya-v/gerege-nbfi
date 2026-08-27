@@ -1,0 +1,83 @@
+CASE                                                     EXIT PROBE             
+----------------------------------------------------------------------------------
+target/missing                                              2 ABSENT            
+register/missing                                            2 ABSENT            
+target/chmod-000                                            2 ABSENT            
+target/is-a-directory                                       2 ABSENT            
+target/zero-bytes                                           2 ABSENT            
+target/whitespace-only                                      2 ABSENT            
+target/json-null                                            1 PRESENT/REFUSED   
+target/json-empty-array                                     1 PRESENT/REFUSED   
+target/json-empty-object                                    1 PRESENT/REFUSED   
+target/json-bare-int                                        1 PRESENT/REFUSED   
+target/json-bare-string                                     1 PRESENT/REFUSED   
+target/json-bare-true                                       1 PRESENT/REFUSED   
+target/malformed-json                                       2 ABSENT            
+target/trailing-garbage                                     2 ABSENT            
+target/list-of-scalars                                      1 PRESENT/REFUSED   
+target/list-of-lists-of-scalars                             1 PRESENT/REFUSED   
+target/list-of-nulls                                        1 PRESENT/REFUSED   
+target/affirmative-STRING-in-list-no-dict                   1 PRESENT/REFUSED   
+target/verdict-40-deep-via-MAPPING                          1 PRESENT/REFUSED   
+target/verdict-40-deep-via-LISTS                            0 PRESENT/GREEN     
+target/duplicate-VERDICT-keys                               1 PRESENT/REFUSED   
+target/duplicate-PREDICATE-keys-false-then-true             0 PRESENT/GREEN     
+target/invalid-utf8-bytes                                   2 ABSENT            
+target/utf8-BOM                                             2 ABSENT            
+target/real-evidence-under-LC_ALL=C                         0 PRESENT/GREEN     
+target/CYRILLIC-payload-under-LC_ALL=C                      2 ABSENT            
+target/JSON-NaN-and-Infinity-literals-in-a-GREEN-run        0 PRESENT/GREEN     
+target/JSON-1e400                                           0 PRESENT/GREEN     
+target/symlink-to-null                                      2 ABSENT            
+target/symlink-to-e                                         2 ABSENT            
+target/symlink-to-does-not-exist                            2 ABSENT            
+target/symlink-loop                                         2 ABSENT            
+target/recursion-bomb-3000                                  2 ABSENT            
+target/deep-dict-bomb-2000                                  2 ABSENT            
+argv/no-targets-uses-built-in-default                       2 ABSENT            
+argv/same-file-twice                                        0 PRESENT/GREEN     
+argv/--help                                                 2 ABSENT            
+argv/-h                                                     2 ABSENT            
+argv/unknown-flag                                           2 ABSENT            
+argv/register-without-value                                 2 ABSENT            
+argv/empty-string-target                                    2 ABSENT            
+argv/dash-dash-only                                         2 ABSENT            
+argv/target-named-dash                                      2 ABSENT            
+register/json-array                                         2 ABSENT            
+register/json-string                                        2 ABSENT            
+register/json-null                                          2 ABSENT            
+register/no-autoPredicatePattern                            2 ABSENT            
+ack/json-array                                              2 ABSENT            
+ack/json-null                                               2 ABSENT            
+ack/json-string                                             2 ABSENT            
+ack/block-without-file-key                                  2 ABSENT            
+ack/block-file-mismatch                                     1 PRESENT/REFUSED   
+env/rule-copied-OUTSIDE-any-git-repo                        2 ABSENT            
+----------------------------------------------------------------------------------
+cases: 53
+EXIT-0 CASES (6) -- every one is a claim to have MEASURED a non-empty population:
+    target/verdict-40-deep-via-LISTS                 PRESENT/GREEN
+    target/duplicate-PREDICATE-keys-false-then-true  PRESENT/GREEN
+    target/real-evidence-under-LC_ALL=C              PRESENT/GREEN
+    target/JSON-NaN-and-Infinity-literals-in-a-GREEN-run PRESENT/GREEN
+    target/JSON-1e400                                PRESENT/GREEN
+    argv/same-file-twice                             PRESENT/GREEN
+
+INVARIANT VIOLATIONS: 0
+
+==================================================================================
+PART 2 -- routes plain argv cannot drive. These are the WRAPPER's problem: a
+caller that tests `rc -eq 1` rather than `rc -ne 0` misreads every row here.
+==================================================================================
+    signal/SIGTERM mid-run                         exit=-15
+    signal/SIGKILL mid-run                         exit=-9
+    signal/SIGINT mid-run                          exit=-2
+    stdout/closed-before-the-probe-line            exit=120
+    target/FIFO-named-pipe                         HUNG -- no exit code in 20s. The rule opens the target TWICE
+                                                   (sha256_of then load_json), so the second read blocks forever.
+    env/PYTHONOPTIMIZE=2                           exit=0
+
+    DECLARED, NOT MEASURED: `sha256_of(path)` and `load_json(path)` are TWO reads
+    of the same path, so the sha an acknowledgement is pinned against is not
+    provably the bytes that were graded. The FIFO row above is what makes that
+    two-ness visible; a TOCTOU swap is not drivable deterministically from here.

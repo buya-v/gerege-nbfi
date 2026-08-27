@@ -1,0 +1,1 @@
+{"id":10,"name":"Income From Penalties","glCode":"40300","disabled":false,"manualEntriesAllowed":true,"type":{"id":4,"code":"accountType.income","value":"INCOME"},"usage":{"id":1,"code":"accountUsage.detail","value":"DETAIL"},"description":"","nameDecorated":"Income From Penalties","tagId":{"id":0}}

@@ -1,0 +1,363 @@
+!! ARM WIP UNAVAILABLE: blob dead00000000000000000000000000000000beef is not in this object store. Legs needing it are SKIPPED, not passed.
+============================================================================================
+T286 R-VPA RED/GREEN -- three arms of the same rule on the same inputs
+============================================================================================
+HEAD              : 41406c6639304b6606f8de5b204df0fc29b6f564
+vector store      : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+arm PRE           : blob 86f42859a1492409de9c052caf9ecbde15791212  (unpacked)
+arm T268          : blob 0607ecdb943e84c0ad2ae9f16cd79fc702847c3d  (unpacked)
+arm WIP           : blob dead00000000000000000000000000000000beef  (UNAVAILABLE)
+NEW rule          : .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+real evidence     : .softhouse/capture/t229-g8-site3/out/classify-t229.json
+sha256(real)      : f831736f07f1a6fecd4ee69b5a1de8dac0abcae89210f997e72526070f62821a
+============================================================================================
+
+### FAIL-OPEN 1 (T268/F-1) -- nil coverage measured PER FILE, gated GLOBALLY.
+###   RED is on the PRE arm. It must still be closed on NEW: the whole reason
+###   this task exists is that repairing one fail-open re-opened another.
+
+--- LEG FO1-nil-batched-with-REAL-evidence
+    why           : THE ORIGINAL DEFECT. PRE prints 'REFUSED NIL COVERAGE' in its body and exits 0. T268 closed it; T286 must not re-open it.
+    argv          : N1-nil-coverage.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T268  exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG FO1-nil-batched-with-REAL-evidence: PASS
+
+--- LEG FO1-nil-in-SECOND-position
+    why           : Argument order must not decide the verdict.
+    argv          : P1-populated-clean.json N1-nil-coverage.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T268  exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG FO1-nil-in-SECOND-position: PASS
+
+--- LEG FO1-plain-empty-batched
+    why           : T286's own plain-empty fixture through the batched route.
+    argv          : N5-empty-plain.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T268  exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG FO1-plain-empty-batched: PASS
+
+### FAIL-OPEN 2 (T281/R1) -- T268's F-3 widening made the DOCUMENT ROOT a row,
+###   so a zero-record file answered guard #3 and exited 0 GREEN. RED is on the
+###   T268 arm, and the DIRECTION is what condemns it: PRE got these RIGHT.
+
+--- LEG FO2-R1-root-verdict-empty-alone
+    why           : T281's headline: an affirmative verdict over nothing at all, GREEN under T268.
+    argv          : R1-root-verdict-empty.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1
+    T268  exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=1 voidAcks=0 containerRows=1 containerAffirmations=1
+    LEG FO2-R1-root-verdict-empty-alone: PASS
+
+--- LEG FO2-R1-root-verdict-empty-batched
+    why           : T281's headline: an affirmative verdict over nothing at all, GREEN under T268. Batched: BOTH old arms report GREEN and only NEW refuses.
+    argv          : R1-root-verdict-empty.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T268  exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=1 voidAcks=0 containerRows=1 containerAffirmations=1
+    LEG FO2-R1-root-verdict-empty-batched: PASS
+
+--- LEG FO2-R1-root-status-empty-alone
+    why           : The same collapse without the word 'verdict' appearing anywhere.
+    argv          : R1-root-status-empty.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1
+    T268  exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=1 voidAcks=0 containerRows=1 containerAffirmations=1
+    LEG FO2-R1-root-status-empty-alone: PASS
+
+--- LEG FO2-R1-root-status-empty-batched
+    why           : The same collapse without the word 'verdict' appearing anywhere. Batched: BOTH old arms report GREEN and only NEW refuses.
+    argv          : R1-root-status-empty.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T268  exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=1 voidAcks=0 containerRows=1 containerAffirmations=1
+    LEG FO2-R1-root-status-empty-batched: PASS
+
+--- LEG FO2-R1-root-registered-bool-empty-alone
+    why           : An ordinary REGISTERED DESCRIPTIVE header boolean does it too -- so this is a shape, not one unlucky string.
+    argv          : R1-root-registered-bool-empty.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1
+    T268  exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=1 voidAcks=0 containerRows=1 containerAffirmations=0
+    LEG FO2-R1-root-registered-bool-empty-alone: PASS
+
+--- LEG FO2-R1-root-registered-bool-empty-batched
+    why           : An ordinary REGISTERED DESCRIPTIVE header boolean does it too -- so this is a shape, not one unlucky string. Batched: BOTH old arms report GREEN and only NEW refuses.
+    argv          : R1-root-registered-bool-empty.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T268  exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=2 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1 nilCoverageFiles=1 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=1 voidAcks=0 containerRows=1 containerAffirmations=0
+    LEG FO2-R1-root-registered-bool-empty-batched: PASS
+
+### FAIL-OPEN 3 (T286/R1b) -- THE SAME HOLE ONE LEVEL DOWN, and the reason the
+###   repair is phrased about STRUCTURE and not about the root. The in-flight
+###   repair that was in flight for R1 fixed the ROOT and left this open: the
+###   WIP arm is driven here to show that, measured rather than asserted.
+
+--- LEG FO3-R1b-nested-header-verdict-empty-alone
+    *** SKIPPED, NOT PASSED: arm(s) ['WIP'] unavailable (blob not in this object store).
+    why           : The root is NOT inspectable -- `meta` is an ordinary nested row -- so 'the root does not count' does not close it.
+
+--- LEG FO3-R1b-nested-header-verdict-empty-batched
+    *** SKIPPED, NOT PASSED: arm(s) ['WIP'] unavailable (blob not in this object store).
+    why           : The root is NOT inspectable -- `meta` is an ordinary nested row -- so 'the root does not count' does not close it. Batched.
+
+--- LEG FO3-R1b-nested-header-bool-empty-alone
+    *** SKIPPED, NOT PASSED: arm(s) ['WIP'] unavailable (blob not in this object store).
+    why           : A metadata block with one registered boolean over an empty container.
+
+--- LEG FO3-R1b-nested-header-bool-empty-batched
+    *** SKIPPED, NOT PASSED: arm(s) ['WIP'] unavailable (blob not in this object store).
+    why           : A metadata block with one registered boolean over an empty container. Batched.
+
+--- LEG FO3-R1b-nested-header-status-empty-alone
+    *** SKIPPED, NOT PASSED: arm(s) ['WIP'] unavailable (blob not in this object store).
+    why           : Neither the key `meta` nor the key `cells`: the shape depends on no name.
+
+--- LEG FO3-R1b-nested-header-status-empty-batched
+    *** SKIPPED, NOT PASSED: arm(s) ['WIP'] unavailable (blob not in this object store).
+    why           : Neither the key `meta` nor the key `cells`: the shape depends on no name. Batched.
+
+--- LEG FO3-R1b-deep-header-empty-alone
+    *** SKIPPED, NOT PASSED: arm(s) ['WIP'] unavailable (blob not in this object store).
+    why           : The header sits three levels down. Nothing may depend on depth.
+
+--- LEG FO3-R1b-deep-header-empty-batched
+    *** SKIPPED, NOT PASSED: arm(s) ['WIP'] unavailable (blob not in this object store).
+    why           : The header sits three levels down. Nothing may depend on depth. Batched.
+
+--- LEG FO3-CONTROL-WIP-does-close-the-root-case
+    *** SKIPPED, NOT PASSED: arm(s) ['WIP'] unavailable (blob not in this object store).
+    why           : CONTROL for the arm above: the rescued in-flight repair DOES close T281's R1. It is not being reported as broken in general -- it is reported as incomplete, and this leg is what makes that claim non-vacuous.
+
+### GUARD #10 -- the affirmative word moved OUT of the records into a header.
+###   Not a regression: every pre-T286 arm exits 0. Found while enumerating the
+###   ways this gate can still return green.
+
+--- LEG G10-container-affirmation-over-refuted-record
+    why           : A document-level 'AS PREDICTED' beside a record that recorded its own predicate false. No disagreement fires on any older arm.
+    argv          : C10-container-affirmation-over-refuted-record.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T268  exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=1 containerAffirmations=1
+    LEG G10-container-affirmation-over-refuted-record: PASS
+
+### R3 -- a VOID acknowledgement block: printed loudly, summarised, never gated.
+
+--- LEG R3-void-ack-block
+    why           : The T114/T176 byte-pin tamper signal. '!! ACKNOWLEDGEMENT BLOCK VOID' in the body, `void acknowledgement blocks: 1` in the footer, exit 0 on both old arms.
+    argv          : V1-clean-record-for-void-ack.json --register boolean-key-register.json --acknowledgements void-ack.json
+    PRE   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T268  exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 1   (expected 1)   probe PRESENT
+      T259-VPA: REFUSED files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=1 containerRows=0 containerAffirmations=0
+    LEG R3-void-ack-block: PASS
+
+### R2 -- error paths. THREE exit 1 with no probe line (T281, uncaught
+###   AttributeError); a FOURTH exits 0 with no probe line, which neither T268
+###   nor T281 looked for because it is the only one pointing the other way.
+
+--- LEG R2-E7-register-as-array
+    why           : T281's leg. `reg.get` on a list.
+    argv          : classify-t229.json --register E7-register-as-array.json --acknowledgements acknowledged.json
+    PRE   exit    : 1   (expected 1)   probe ABSENT
+      stderr: AttributeError: 'list' object has no attribute 'get'
+    T268  exit    : 1   (expected 1)   probe ABSENT
+      stderr: AttributeError: 'list' object has no attribute 'get'
+    NEW   exit    : 2   (expected 2)   probe ABSENT
+      stderr: ERROR: unhandled AttributeError: 'list' object has no attribute 'get'
+    LEG R2-E7-register-as-array: PASS
+
+--- LEG R2-E7b-register-as-string
+    why           : T281's leg. `reg.get` on a str.
+    argv          : classify-t229.json --register E7b-register-as-string.json --acknowledgements acknowledged.json
+    PRE   exit    : 1   (expected 1)   probe ABSENT
+      stderr: AttributeError: 'str' object has no attribute 'get'
+    T268  exit    : 1   (expected 1)   probe ABSENT
+      stderr: AttributeError: 'str' object has no attribute 'get'
+    NEW   exit    : 2   (expected 2)   probe ABSENT
+      stderr: ERROR: unhandled AttributeError: 'str' object has no attribute 'get'
+    LEG R2-E7b-register-as-string: PASS
+
+--- LEG R2-E8-acknowledgements-as-array
+    why           : T281's leg. `ack.get` on a list, raised deeper in the call tree.
+    argv          : classify-t229.json --register boolean-key-register.json --acknowledgements E8-acknowledgements-as-array.json
+    PRE   exit    : 1   (expected 1)   probe ABSENT
+      stderr: AttributeError: 'list' object has no attribute 'get'
+    T268  exit    : 1   (expected 1)   probe ABSENT
+      stderr: AttributeError: 'list' object has no attribute 'get'
+    NEW   exit    : 2   (expected 2)   probe ABSENT
+      stderr: ERROR: unhandled AttributeError: 'list' object has no attribute 'get'
+    LEG R2-E8-acknowledgements-as-array: PASS
+
+--- LEG R2-E11-acknowledgements-as-null
+    why           : T286's: the same class with `null`, which a human writes by deleting a block.
+    argv          : classify-t229.json --register boolean-key-register.json --acknowledgements E11-acknowledgements-as-null.json
+    PRE   exit    : 1   (expected 1)   probe ABSENT
+      stderr: AttributeError: 'NoneType' object has no attribute 'get'
+    T268  exit    : 1   (expected 1)   probe ABSENT
+      stderr: AttributeError: 'NoneType' object has no attribute 'get'
+    NEW   exit    : 2   (expected 2)   probe ABSENT
+      stderr: ERROR: unhandled AttributeError: 'NoneType' object has no attribute 'get'
+    LEG R2-E11-acknowledgements-as-null: PASS
+
+--- LEG R2-E12-recursion-bomb
+    why           : T286's: a RecursionError is a RuntimeError, in NO handler's tuple. An error path nobody wrote, which is exactly what a grep for `return 2` cannot find.
+    argv          : E12-recursion-bomb.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 1   (expected 1)   probe ABSENT
+      stderr: RecursionError: maximum recursion depth exceeded while decoding a JSON array from a unicode string
+    T268  exit    : 1   (expected 1)   probe ABSENT
+      stderr: RecursionError: maximum recursion depth exceeded while decoding a JSON array from a unicode string
+    NEW   exit    : 2   (expected 2)   probe ABSENT
+      stderr: ERROR: unhandled RecursionError: maximum recursion depth exceeded while decoding a JSON array from a unicode s
+    LEG R2-E12-recursion-bomb: PASS
+
+--- LEG R2-E9-help-exits-0-with-no-probe
+    why           : THE ONE THAT POINTS THE OTHER WAY. argparse raises SystemExit(0), so this module exited 0 -- the code a caller reads as 'measured, GREEN' -- having measured nothing and printed no probe line. Now 2.
+    argv          : --help
+    PRE   exit    : 0   (expected 0)   probe ABSENT
+    T268  exit    : 0   (expected 0)   probe ABSENT
+    NEW   exit    : 2   (expected 2)   probe ABSENT
+      stderr: ERROR: this module measures; it does not exit 0 without a probe line. `--help` and any other SystemExit(0) are
+    LEG R2-E9-help-exits-0-with-no-probe: PASS
+
+### GREEN -- a rule that refuses everything is strictly worse than the defect.
+
+--- LEG GREEN-real-evidence-alone
+    why           : The committed evidence: still GREEN, and still loud.
+    argv          : classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T268  exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG GREEN-real-evidence-alone: PASS
+
+--- LEG GREEN-record-in-list
+    why           : One genuine record in a list.
+    argv          : G1-record-in-list-clean.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T268  exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG GREEN-record-in-list: PASS
+
+--- LEG GREEN-record-PLUS-header
+    why           : THE OVER-REFUSAL CONTROL. A header dict AND real records: the header is a container row (graded, no coverage) and the records supply coverage. If T286 turned this red it would refuse every document that carries metadata.
+    argv          : G2-record-plus-header.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T268  exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=2 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=1 containerAffirmations=0
+    LEG GREEN-record-PLUS-header: PASS
+
+--- LEG GREEN-batched-genuinely-covered
+    why           : T268's own green control, unchanged.
+    argv          : P1-populated-clean.json classify-t229.json --register boolean-key-register.json --acknowledgements acknowledged.json
+    PRE   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=25 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    T268  exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=25 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0
+    NEW   exit    : 0   (expected 0)   probe PRESENT
+      T259-VPA: GREEN files=2 rows=12 predicates=25 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    LEG GREEN-batched-genuinely-covered: PASS
+
+### COUNT PARITY on the real corpus -- the widening must be INERT where it is
+###   not repairing anything, and that is a measurement, not a claim.
+
+    PRE   {'files': '1', 'rows': '11', 'predicates': '24', 'disagreements': '3', 'acknowledged': '3', 'unacknowledged': '0', 'unclassifiedKeys': '0', 'unclassifiedVerdicts': '0', 'nilCoverage': '0'}
+    T268  {'files': '1', 'rows': '11', 'predicates': '24', 'disagreements': '3', 'acknowledged': '3', 'unacknowledged': '0', 'unclassifiedKeys': '0', 'unclassifiedVerdicts': '0', 'nilCoverage': '0'}
+    NEW   {'files': '1', 'rows': '11', 'predicates': '24', 'disagreements': '3', 'acknowledged': '3', 'unacknowledged': '0', 'unclassifiedKeys': '0', 'unclassifiedVerdicts': '0', 'nilCoverage': '0'}
+    COUNT PARITY: PASS
+
+============================================================================================
+### NO-LOST-REFUSAL SWEEP -- PRE==1 => NEW==1, and T268==1 => NEW==1, per fixture
+============================================================================================
+
+    38 fixtures swept, from 3 corpora
+
+    T286  C10-container-affirmation-over-refuted-record.json   PRE=GREEN    T268=GREEN    NEW=REFUSED 
+    T286  E11-acknowledgements-as-null.json                    PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T286  E12-recursion-bomb.json                              PRE=CRASH-1  T268=CRASH-1  NEW=ERROR-2   <-- exit-code REPAIR (R2), not a loss
+    T286  E7-register-as-array.json                            PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T286  E7b-register-as-string.json                          PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T286  E8-acknowledgements-as-array.json                    PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T286  G1-record-in-list-clean.json                         PRE=GREEN    T268=GREEN    NEW=GREEN   
+    T286  G2-record-plus-header.json                           PRE=GREEN    T268=GREEN    NEW=GREEN   
+    T286  N5-empty-plain.json                                  PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T286  R1-root-registered-bool-empty.json                   PRE=REFUSED  T268=GREEN    NEW=REFUSED 
+    T286  R1-root-status-empty.json                            PRE=REFUSED  T268=GREEN    NEW=REFUSED 
+    T286  R1-root-verdict-empty.json                           PRE=REFUSED  T268=GREEN    NEW=REFUSED 
+    T286  R1b-deep-header-empty.json                           PRE=REFUSED  T268=GREEN    NEW=REFUSED 
+    T286  R1b-nested-header-bool-empty.json                    PRE=REFUSED  T268=GREEN    NEW=REFUSED 
+    T286  R1b-nested-header-status-empty.json                  PRE=REFUSED  T268=GREEN    NEW=REFUSED 
+    T286  R1b-nested-header-verdict-empty.json                 PRE=REFUSED  T268=GREEN    NEW=REFUSED 
+    T286  V1-clean-record-for-void-ack.json                    PRE=GREEN    T268=GREEN    NEW=GREEN   
+    T268  A1-nested-one-level-deeper.json                      PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T268  A2-toplevel-array.json                               PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T268  A3-verdict-as-int-enum-with-sibling.json             PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T268  A3b-verdict-as-object.json                           PRE=GREEN    T268=REFUSED  NEW=REFUSED 
+    T268  A3c-verdict-as-bare-int.json                         PRE=GREEN    T268=REFUSED  NEW=REFUSED 
+    T268  A4-verdict-key-named-result.json                     PRE=GREEN    T268=REFUSED  NEW=REFUSED 
+    T268  A4b-verdict-key-named-conclusion.json                PRE=GREEN    T268=REFUSED  NEW=REFUSED 
+    T268  A5-predicate-null.json                               PRE=GREEN    T268=REFUSED  NEW=REFUSED 
+    T268  A6-predicate-string-false.json                       PRE=GREEN    T268=REFUSED  NEW=REFUSED 
+    T268  A7-predicate-zero.json                               PRE=GREEN    T268=REFUSED  NEW=REFUSED 
+    T268  A8-predicate-in-nested-list.json                     PRE=GREEN    T268=REFUSED  NEW=REFUSED 
+    T268  C0-control-flat-shape.json                           PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T268  N1-nil-coverage.json                                 PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T268  N2-nil-coverage-second.json                          PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T268  P1-populated-clean.json                              PRE=GREEN    T268=GREEN    NEW=GREEN   
+    T259  G1-false-predicate-negative-verdict.json             PRE=GREEN    T268=GREEN    NEW=GREEN   
+    T259  G2-all-true-affirmative-verdict.json                 PRE=GREEN    T268=GREEN    NEW=GREEN   
+    T259  N1-nil-coverage.json                                 PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T259  R1-fresh-predicate-fresh-verdict-word.json           PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T259  R2-unclassified-verdict-word.json                    PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+    T259  R3-unclassified-boolean-key.json                     PRE=REFUSED  T268=REFUSED  NEW=REFUSED 
+
+    SWEEP: 38 fixtures, 0 lost refusals, 1 exit-code repairs (crash-1 -> error-2) -- PASS
+
+============================================================================================
+T286 BATTERY: 23 passed, 0 failed, 9 SKIPPED
+              A SKIPPED LEG IS NOT A PASSED LEG. See the arm notice above.
+============================================================================================

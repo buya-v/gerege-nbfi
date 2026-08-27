@@ -1,0 +1,615 @@
+{
+ "_schema": "gerege.pathb.provenance-index/1",
+ "_written_by": "T99 (.softhouse/capture/pathb/provenance.py emit)",
+ "_what_this_is": "An external, committed, content-addressed provenance record for every capture directory in this tree. Look a capture up by the sha256 of its own bytes: python3 provenance.py whence <file>.",
+ "_scope_rule": "every directory under this tree holding at least one *-raw.json, plus every directory carrying a CAPTURED-FROM-TENANT stamp",
+ "_evidence_tiers": {
+  "A": "written INTO the directory by the capture run itself (stamp, preconditions transcript, attestation sidecar). Only tier A fills the `tenant` field.",
+  "B": "a committed capture script naming the directory. Says what the recipe targets, not what a run read.",
+  "C": "a filename or directory-name label. Not evidence: see t22-probe/PROVENANCE-NOTE.md for a label in this tree that meant something else."
+ },
+ "_stamp_introduced_commit": "813acb1",
+ "_directory_count": 17,
+ "_file_count": 111,
+ "directories": [
+  {
+   "path": "out",
+   "tenant": null,
+   "tenant_basis": "NOT ESTABLISHED IN-BAND \u2014 no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the directory is called; neither is a record of what a given run read.",
+   "tier_a_disagreement": null,
+   "in_band_stamp": null,
+   "stamp_expected": false,
+   "why_no_stamp": "predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4b64950 2026-08-18",
+   "first_commit": "4b64950 2026-08-18",
+   "file_count": 6,
+   "files": {
+    "B-01-baseline-raw.json": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+    "B-02-multiplesof100-raw.json": "9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8",
+    "B-03-diycs-fullleapyear-raw.json": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
+    "B-04-diycs-feb29only-raw.json": "c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80",
+    "product-1-asstored.json": "5fe1051e1e3a93cd361f253fabe4c43a52e3466ea5c6041a0e1ba0f8558f954f",
+    "product-2-asstored.json": "348cbead05f6e02ffc01330939075aac673abe37b28ebab8439a06dd6aa2b947"
+   },
+   "evidence": [],
+   "note": "The ORIGINAL Path B corpus (B-01..B-04 plus two product read-backs). No tier-A record exists inside it. Two committed files say what tenant it was taken on, and both are tier-B prose rather than a run-written record: REPRODUCE.md:62-63 marks the recipe as 'CHANGED by T36 (T22 P0-6): captures are taken on the production-settings tenant, never `default`', and t22-audit/modeprobe2.sh:4 describes tenant `default` as 'what Path B was captured at'. On that basis this set is believed to be a `default`-tenant capture, which is why T36 re-captured on `gerege` at all \u2014 but believed is not established, so `tenant` stays null here rather than being filled in from prose."
+  },
+  {
+   "path": "t22-audit/out-fresh-tenant",
+   "tenant": null,
+   "tenant_basis": "NOT ESTABLISHED IN-BAND \u2014 no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the directory is called; neither is a record of what a given run read.",
+   "tier_a_disagreement": null,
+   "in_band_stamp": null,
+   "stamp_expected": false,
+   "why_no_stamp": "predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4ebb5ec 2026-08-18",
+   "first_commit": "4ebb5ec 2026-08-18",
+   "file_count": 11,
+   "files": {
+    "B-01-raw.json": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+    "B-02-raw.json": "9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8",
+    "B-03-raw.json": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
+    "B-04-raw.json": "c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80",
+    "client-1.json": "b589b75f25fb31f778c66880499f85854bf3c11ce1704167e231600c5141ec9e",
+    "client-2.json": "0e8c6260d361c8189efdddf11230becc2213a6a71dcfef1a178421f8f44702f4",
+    "currencies.json": "0367e9a0461792c8071d351e8fd7c2706bd3825dff2d84baa1fbdd829209c3f0",
+    "product-1-baseline-create.json": "a4ea621ccf3599dc5b02bdee0e5861a508000db39ea0bd37c3a83fd650ee633b",
+    "product-2-multiplesof100-create.json": "8e3a4340a17feac3f3bf50920b7f8f6886c13c668cbf3c8c6eea46a147f725ea",
+    "product-3-diycs-fullleapyear-create.json": "06008f3606703dd2bbca358dc314be8a124ef45765482978b641ba7a5e159f75",
+    "product-4-diycs-feb29only-create.json": "a9b649dcf500d527d609103493f0b8fe45727feca5cc54ba9c26c74571b5c71a"
+   },
+   "evidence": [
+    {
+     "tier": "B",
+     "kind": "capture script that names this directory",
+     "file": "t22-audit/fresh-tenant.sh",
+     "says": [
+      "gerege"
+     ]
+    },
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t22-audit/out-fresh-tenant",
+     "says": "tenant"
+    }
+   ]
+  },
+  {
+   "path": "t22-audit/out-modeprobe",
+   "tenant": null,
+   "tenant_basis": "NOT ESTABLISHED IN-BAND \u2014 no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the directory is called; neither is a record of what a given run read.",
+   "tier_a_disagreement": null,
+   "in_band_stamp": null,
+   "stamp_expected": false,
+   "why_no_stamp": "predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4ebb5ec 2026-08-18",
+   "first_commit": "4ebb5ec 2026-08-18",
+   "file_count": 4,
+   "files": {
+    "pmode-default-raw.json": "f0fde47e3fe93af0561470107d7a60992f6c57f32001e5a1ecf245a06d55f338",
+    "pmode-gerege-raw.json": "f0fde47e3fe93af0561470107d7a60992f6c57f32001e5a1ecf245a06d55f338",
+    "product-default-create.json": "ac78f73a072c279129ad6638870fe10b136c5d8ebedc8c216508eeeef67d48bf",
+    "product-gerege-create.json": "cad291fdc4b4481475ecd73ece06ca4c90f83708e879944a5fd0e4c9b3c2e362"
+   },
+   "evidence": [
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t22-audit/out-modeprobe",
+     "says": "modeprobe"
+    }
+   ],
+   "note": "TWO TENANTS IN ONE DIRECTORY. modeprobe.sh loops over `gerege` and `default` and writes pmode-gerege-raw.json beside pmode-default-raw.json. A single per-directory CAPTURED-FROM-TENANT stamp cannot describe this set, so the stamp mechanism is not merely missing here, it is the wrong shape; the tenant is per FILE and is carried only by the filename (tier C)."
+  },
+  {
+   "path": "t22-audit/out-modeprobe2",
+   "tenant": null,
+   "tenant_basis": "NOT ESTABLISHED IN-BAND \u2014 no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the directory is called; neither is a record of what a given run read.",
+   "tier_a_disagreement": null,
+   "in_band_stamp": null,
+   "stamp_expected": false,
+   "why_no_stamp": "predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4ebb5ec 2026-08-18",
+   "first_commit": "4ebb5ec 2026-08-18",
+   "file_count": 4,
+   "files": {
+    "pmode2-default-raw.json": "140ce792ef4855a5d6c6616b98ff1202f2e39476c6ec4b2f42407ab2ea83d64e",
+    "pmode2-gerege-raw.json": "39f56dc2c94a6da59235af7d0ecb7d51548bcf3f4d52730a94c864d7f65a3d25",
+    "product-default-create.json": "cad291fdc4b4481475ecd73ece06ca4c90f83708e879944a5fd0e4c9b3c2e362",
+    "product-gerege-create.json": "bddde5db60d152e046b95902c9dcbeffdf9569270e97236d69f9db9edd9afa6f"
+   },
+   "evidence": [
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t22-audit/out-modeprobe2",
+     "says": "modeprobe2"
+    }
+   ],
+   "note": "TWO TENANTS IN ONE DIRECTORY, same shape as out-modeprobe: modeprobe2.sh:16-27 loops `for t in gerege default`. This is the set that produced the half-cent tie observed one per tenant (20925.05 on gerege, 20925.04 on default) which the P14 canary now pins."
+  },
+  {
+   "path": "t22-audit/out-probe",
+   "tenant": null,
+   "tenant_basis": "NOT ESTABLISHED IN-BAND \u2014 no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the directory is called; neither is a record of what a given run read.",
+   "tier_a_disagreement": null,
+   "in_band_stamp": null,
+   "stamp_expected": false,
+   "why_no_stamp": "predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4ebb5ec 2026-08-18",
+   "first_commit": "4ebb5ec 2026-08-18",
+   "file_count": 10,
+   "files": {
+    "p05-diycs-sarp-full-create.json": "0b36757ed2316bbad5678398d0a8a2c8bcb91368dd407404a40542bfe9bd6b51",
+    "p05-raw.json": "ff92fc5dfb8e38db7e0019125777f0d967ebc027d62026c956d5c6d6dc05e543",
+    "p06-diycs-sarp-feb29-create.json": "c5b0e0a560207bea1b1ac93e1e0508184be661838551b4fd1a26e2688bfe9e1e",
+    "p06-raw.json": "ff92fc5dfb8e38db7e0019125777f0d967ebc027d62026c956d5c6d6dc05e543",
+    "p07-daily-actact-create.json": "a5da1fcf0e195a7c1bf465d07e6ac7a7461431e876d6c37e41158f3787b31880",
+    "p07-raw.json": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
+    "p08-daily-360-30-create.json": "3f85c5c22df18eaf99f0b3bb140b224e2e54f6c5017dd6cfc1c01df0d834f01b",
+    "p08-raw.json": "ff92fc5dfb8e38db7e0019125777f0d967ebc027d62026c956d5c6d6dc05e543",
+    "p09-raw.json": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+    "p09-sarp-360-30-create.json": "ac78f73a072c279129ad6638870fe10b136c5d8ebedc8c216508eeeef67d48bf"
+   },
+   "evidence": [
+    {
+     "tier": "B",
+     "kind": "capture script that names this directory",
+     "file": "t22-audit/probe.sh",
+     "says": [
+      "gerege"
+     ]
+    },
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t22-audit/out-probe",
+     "says": "probe"
+    }
+   ]
+  },
+  {
+   "path": "t22-audit/out-rerun-default",
+   "tenant": null,
+   "tenant_basis": "NOT ESTABLISHED IN-BAND \u2014 no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the directory is called; neither is a record of what a given run read.",
+   "tier_a_disagreement": null,
+   "in_band_stamp": null,
+   "stamp_expected": false,
+   "why_no_stamp": "predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 2fe6c10 2026-08-18",
+   "first_commit": "2fe6c10 2026-08-18",
+   "file_count": 4,
+   "files": {
+    "B-01-raw.json": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+    "B-02-raw.json": "9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8",
+    "B-03-raw.json": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
+    "B-04-raw.json": "c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80"
+   },
+   "evidence": [
+    {
+     "tier": "B",
+     "kind": "capture script that names this directory",
+     "file": "t22-audit/rerun-default.sh",
+     "says": [
+      "default"
+     ]
+    },
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t22-audit/out-rerun-default",
+     "says": "default"
+    }
+   ]
+  },
+  {
+   "path": "t22-audit/out-rounddown",
+   "tenant": null,
+   "tenant_basis": "NOT ESTABLISHED IN-BAND \u2014 no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the directory is called; neither is a record of what a given run read.",
+   "tier_a_disagreement": null,
+   "in_band_stamp": null,
+   "stamp_expected": false,
+   "why_no_stamp": "predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 7a732d2 2026-08-18",
+   "first_commit": "7a732d2 2026-08-18",
+   "file_count": 1,
+   "files": {
+    "rounddown-gerege-raw.json": "a9e2900c1e5914e57e37bb7d29d1f0a0c9d2170ca0957d13c136bdda62f20834"
+   },
+   "evidence": [
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t22-audit/out-rounddown",
+     "says": "rounddown"
+    }
+   ],
+   "note": "The limit on this set is already stated in the committed report and is recorded here rather than re-litigated: PATHB-REPORT.md says of it that 'the attestation that this probe ran at (19, HALF_UP) rests on the filename and T22's prose - there is no attestation sidecar yet, which is T22 P0-3.' No tier-A evidence, and no committed capture script names this directory, so nothing mechanical can be attributed either."
+  },
+  {
+   "path": "t22-probe/out",
+   "tenant": null,
+   "tenant_basis": "NOT ESTABLISHED IN-BAND \u2014 no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the directory is called; neither is a record of what a given run read.",
+   "tier_a_disagreement": null,
+   "in_band_stamp": null,
+   "stamp_expected": false,
+   "why_no_stamp": "predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 9133213 2026-08-18",
+   "first_commit": "9133213 2026-08-18",
+   "file_count": 8,
+   "files": {
+    "calc-B-01-baseline-halfeven-raw.json": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+    "calc-B-02-multiplesof100-halfeven-raw.json": "9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8",
+    "calc-B-03-diycs-fullleapyear-halfeven-raw.json": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
+    "calc-B-04-diycs-feb29only-halfeven-raw.json": "c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80",
+    "product-1-baseline-halfeven-create.json": "0b36757ed2316bbad5678398d0a8a2c8bcb91368dd407404a40542bfe9bd6b51",
+    "product-2-multiplesof100-halfeven-create.json": "c5b0e0a560207bea1b1ac93e1e0508184be661838551b4fd1a26e2688bfe9e1e",
+    "product-3-diycs-fullleapyear-halfeven-create.json": "a5da1fcf0e195a7c1bf465d07e6ac7a7461431e876d6c37e41158f3787b31880",
+    "product-4-diycs-feb29only-halfeven-create.json": "3f85c5c22df18eaf99f0b3bb140b224e2e54f6c5017dd6cfc1c01df0d834f01b"
+   },
+   "evidence": [],
+   "note": "Rescued WIP from the T22 probe. Read it together with t22-probe/PROVENANCE-NOTE.md, which records that the `halfeven` in these filenames is a DISCOVERY LABEL for what the `default` tenant's mode was found to be, NOT a HALF_EVEN variant that was run \u2014 the canonical example in this tree of a filename label meaning something other than it looks like, and the reason tier C is not evidence. t22-probe/capture.sh:10 and repro.sh:14 carry the literal header 'Fineract-Platform-TenantId: default' (tier B)."
+  },
+  {
+   "path": "t36/out/emiloop",
+   "tenant": "gerege",
+   "tenant_basis": "tier-A in-band evidence written by the capture run",
+   "tier_a_disagreement": null,
+   "in_band_stamp": null,
+   "stamp_expected": false,
+   "why_no_stamp": "predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in b92f74c 2026-08-18",
+   "first_commit": "b92f74c 2026-08-18",
+   "file_count": 14,
+   "files": {
+    "attestation.json": "6885738026fc2acd299090df0fcf78a742d9cdb331450b33165ff8ab6430ab48",
+    "canary-halfcent-raw.json": "39f56dc2c94a6da59235af7d0ecb7d51548bcf3f4d52730a94c864d7f65a3d25",
+    "emiloop-1200000-raw.json": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+    "emiloop-1200001-raw.json": "1cdb7a8c011b39d5138640c2ff6455bf23dfeae74bf87e176e694c2d25a9fda1",
+    "emiloop-1200004-raw.json": "45dc33ab3cc63309ff677767eac6969635ba47776081c348ac4b21fb01c8630b",
+    "emiloop-1200027-raw.json": "bcfd383878f8da9ebf18943933eb11109ce34bd5b7b9db8573b2279905be8c05",
+    "emiloop-1200033-raw.json": "63ed06a3390cfac20860d469a2b55c3975e953581be99e189d40cf12b32d9b98",
+    "emiloop-1200039-raw.json": "8481a686cd1ec063abaa844487e19d593afdf828e4559cbf2a22854b9b4230d2",
+    "emiloop-1200045-raw.json": "8b1b2bdc5bf0dbde341092e07b10958c7a0d4c424ef2cb4faea9fbf4b4f96ba8",
+    "emiloop-1200054-raw.json": "963d57feb7b00d68e8852f1ce5153807189e25ad20c2107eba80498b6afad5a5",
+    "emiloop-1200189-raw.json": "f916effc0309641b596fc9533259553003a9bf164c29110b3c4ed2c366634332",
+    "invariants.txt": "783cd03edcb04e75ab0f2dc09825a5145d89010f5e4b5262de49fe5f4f7cf902",
+    "preconditions.txt": "4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768",
+    "verdict.txt": "37a3481edbe11a998541c3f41c595acf334979bf0558763055659963a9e420dc"
+   },
+   "evidence": [
+    {
+     "tier": "A",
+     "kind": "in-band precondition transcript header",
+     "file": "preconditions.txt",
+     "says": "gerege"
+    },
+    {
+     "tier": "A",
+     "kind": "in-band attestation sidecar",
+     "file": "attestation.json",
+     "says": "gerege"
+    },
+    {
+     "tier": "B",
+     "kind": "capture script that names this directory",
+     "file": "t36/emiloop-probe.sh",
+     "says": [
+      "gerege"
+     ]
+    }
+   ],
+   "note": "Keeps its historical directory name (`out/emiloop`), so attest.py exempts it from the LEAF-name rule while still applying containment, shape and the no-nesting rule (T99). Tenant is established in-band by preconditions.txt and attestation.json."
+  },
+  {
+   "path": "t36/out/recapture-default",
+   "tenant": "default",
+   "tenant_basis": "tier-A in-band evidence written by the capture run",
+   "tier_a_disagreement": null,
+   "in_band_stamp": "default",
+   "stamp_expected": true,
+   "why_no_stamp": null,
+   "first_commit": "813acb1 2026-08-20",
+   "file_count": 2,
+   "files": {
+    "CAPTURED-FROM-TENANT": "01666ec060466c14b9fa06c613fbac449163f2a2017558fe16526209ab78c6b0",
+    "preconditions.txt": "9ad8a1c56aa85d6cfcd032bef71a93e3c64d0771f8af4f33b705e877b32b7541"
+   },
+   "evidence": [
+    {
+     "tier": "A",
+     "kind": "in-band stamp",
+     "file": "CAPTURED-FROM-TENANT",
+     "says": "default"
+    },
+    {
+     "tier": "A",
+     "kind": "in-band precondition transcript header",
+     "file": "preconditions.txt",
+     "says": "default"
+    },
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t36/out/recapture-default",
+     "says": "default"
+    }
+   ],
+   "note": "NOT A CAPTURE SET - a NEGATIVE run, and evidence that the abort works. preconditions.txt line 1 says tenant 'default', it carries 5 FAIL lines and 'PRECONDITIONS BREACHED: 5. DO NOT CAPTURE', and there is no B-0x-raw.json in the directory because nothing was captured. Produced by T80's ATTACK 1a (`TENANT=default sh t36/recapture.sh`), which is why it is stamped: it was written after the stamp mechanism landed, in the same commit."
+  },
+  {
+   "path": "t36/out/recapture-gerege",
+   "tenant": "gerege",
+   "tenant_basis": "tier-A in-band evidence written by the capture run",
+   "tier_a_disagreement": null,
+   "in_band_stamp": null,
+   "stamp_expected": false,
+   "why_no_stamp": "predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in fab040a 2026-08-18",
+   "first_commit": "fab040a 2026-08-18",
+   "file_count": 8,
+   "files": {
+    "B-01-baseline-raw.json": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+    "B-02-multiplesof100-raw.json": "9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8",
+    "B-03-diycs-fullleapyear-raw.json": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
+    "B-04-diycs-feb29only-raw.json": "c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80",
+    "attestation.json": "b4587e5d64ddfdddec29c4b1e137ef41073a3a598ee1a805dfc41d56459cf24f",
+    "canary-halfcent-raw.json": "39f56dc2c94a6da59235af7d0ecb7d51548bcf3f4d52730a94c864d7f65a3d25",
+    "preconditions.txt": "4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768",
+    "products-asrow.jsonl": "e27c26046144c48b19c29d721b892e01422dd28f0a4a5d4ab30aee4272a775bb"
+   },
+   "evidence": [
+    {
+     "tier": "A",
+     "kind": "in-band precondition transcript header",
+     "file": "preconditions.txt",
+     "says": "gerege"
+    },
+    {
+     "tier": "A",
+     "kind": "in-band attestation sidecar",
+     "file": "attestation.json",
+     "says": "gerege"
+    },
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t36/out/recapture-gerege",
+     "says": "gerege"
+    }
+   ],
+   "note": "THE DIRECTORY THIS INDEX WAS WRITTEN FOR (T85's fourth finding, closed by T99). It has no CAPTURED-FROM-TENANT stamp because it PREDATES the mechanism: these files were first committed in fab040a (2026-08-18) and the stamp was introduced in 813acb1 (2026-08-20) - both checkable with `git log`. Its tenant is nevertheless established in-band by two artefacts the capture run itself wrote into the directory: preconditions.txt line 1 (\"== T36 Path B preconditions, tenant 'gerege' ==\", followed by P13's JVM 'Initialized rounding mode for tenant `gerege`: HALF_UP' line and P14's behavioural half-cent canary) and attestation.json's tenant.identifier. T99 declined to re-capture it: a stamp written today would attest to today's run, not to this one, and would replace the very bytes six other sets are proved byte-identical to. See this file's header."
+  },
+  {
+   "path": "t36/out/recreate-gerege",
+   "tenant": "gerege",
+   "tenant_basis": "tier-A in-band evidence written by the capture run",
+   "tier_a_disagreement": null,
+   "in_band_stamp": null,
+   "stamp_expected": false,
+   "why_no_stamp": "predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 60c08ad 2026-08-18",
+   "first_commit": "60c08ad 2026-08-18",
+   "file_count": 9,
+   "files": {
+    "B-01-baseline-raw.json": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+    "B-02-multiplesof100-raw.json": "9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8",
+    "B-03-diycs-fullleapyear-raw.json": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
+    "B-04-diycs-feb29only-raw.json": "c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80",
+    "preconditions.txt": "4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768",
+    "product-1-baseline-create.json": "4cc8e5dd627c85ec6e1e7bc0fe72ee2bacdd3e4504cd7850165a40c932bcef23",
+    "product-2-multiplesof100-create.json": "ec0e0c378c504fc4e06770ff09e41444f2e9ed102d10c8a90476402c4046d353",
+    "product-3-diycs-fullleapyear-create.json": "0a2c0dd7b6d910ee649c739379848992ba709022db48a1be762fe48d0c9775c4",
+    "product-4-diycs-feb29only-create.json": "7ee00d7f86efe2df705d0f26be697d00869c9e437b9d4f7617615ab47518464c"
+   },
+   "evidence": [
+    {
+     "tier": "A",
+     "kind": "in-band precondition transcript header",
+     "file": "preconditions.txt",
+     "says": "gerege"
+    },
+    {
+     "tier": "B",
+     "kind": "capture script that names this directory",
+     "file": "t36/recreate-products.sh",
+     "says": [
+      "gerege"
+     ]
+    },
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t36/out/recreate-gerege",
+     "says": "gerege"
+    }
+   ]
+  },
+  {
+   "path": "t76/out/recapture-gerege",
+   "tenant": "gerege",
+   "tenant_basis": "tier-A in-band evidence written by the capture run",
+   "tier_a_disagreement": null,
+   "in_band_stamp": null,
+   "stamp_expected": false,
+   "why_no_stamp": "predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 3d70a86 2026-08-20",
+   "first_commit": "3d70a86 2026-08-20",
+   "file_count": 7,
+   "files": {
+    "B-01-baseline-raw.json": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+    "B-02-multiplesof100-raw.json": "9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8",
+    "B-03-diycs-fullleapyear-raw.json": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
+    "B-04-diycs-feb29only-raw.json": "c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80",
+    "attestation.json": "6dbf3a983598348d8d180c2c1cd337d9b1c5d782ddb1abd134a45c105547ad17",
+    "canary-halfcent-raw.json": "39f56dc2c94a6da59235af7d0ecb7d51548bcf3f4d52730a94c864d7f65a3d25",
+    "preconditions.txt": "ee7b835d2e24fca6ffc94f8895da2edca612658db2f9cd276af83b97c833d1f2"
+   },
+   "evidence": [
+    {
+     "tier": "A",
+     "kind": "in-band precondition transcript header",
+     "file": "preconditions.txt",
+     "says": "gerege"
+    },
+    {
+     "tier": "A",
+     "kind": "in-band attestation sidecar",
+     "file": "attestation.json",
+     "says": "gerege"
+    },
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t76/out/recapture-gerege",
+     "says": "gerege"
+    }
+   ]
+  },
+  {
+   "path": "t80/out/attest-gerege",
+   "tenant": "gerege",
+   "tenant_basis": "tier-A in-band evidence written by the capture run",
+   "tier_a_disagreement": null,
+   "in_band_stamp": "gerege",
+   "stamp_expected": true,
+   "why_no_stamp": null,
+   "first_commit": "813acb1 2026-08-20",
+   "file_count": 8,
+   "files": {
+    "B-01-baseline-raw.json": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+    "B-02-multiplesof100-raw.json": "9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8",
+    "B-03-diycs-fullleapyear-raw.json": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
+    "B-04-diycs-feb29only-raw.json": "c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80",
+    "CAPTURED-FROM-TENANT": "168ad543704b9fc13db2c69bc340f4d322114cab359d9d0a83d700d84728811e",
+    "attestation.json": "8920b773b9279c97425c7849b37e9422c986b6c01cf527d86245bae1b255ed2c",
+    "canary-halfcent-raw.json": "39f56dc2c94a6da59235af7d0ecb7d51548bcf3f4d52730a94c864d7f65a3d25",
+    "preconditions.txt": "970bfc07e377cd5240d04fed1099a6974d6e24afd46800a9af37072dca7cfb07"
+   },
+   "evidence": [
+    {
+     "tier": "A",
+     "kind": "in-band stamp",
+     "file": "CAPTURED-FROM-TENANT",
+     "says": "gerege"
+    },
+    {
+     "tier": "A",
+     "kind": "in-band precondition transcript header",
+     "file": "preconditions.txt",
+     "says": "gerege"
+    },
+    {
+     "tier": "A",
+     "kind": "in-band attestation sidecar",
+     "file": "attestation.json",
+     "says": "gerege"
+    },
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t80/out/attest-gerege",
+     "says": "gerege"
+    }
+   ]
+  },
+  {
+   "path": "t80/out/bash-recapture-gerege",
+   "tenant": "gerege",
+   "tenant_basis": "tier-A in-band evidence written by the capture run",
+   "tier_a_disagreement": null,
+   "in_band_stamp": "gerege",
+   "stamp_expected": true,
+   "why_no_stamp": null,
+   "first_commit": "813acb1 2026-08-20",
+   "file_count": 7,
+   "files": {
+    "B-01-baseline-raw.json": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+    "B-02-multiplesof100-raw.json": "9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8",
+    "B-03-diycs-fullleapyear-raw.json": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
+    "B-04-diycs-feb29only-raw.json": "c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80",
+    "CAPTURED-FROM-TENANT": "168ad543704b9fc13db2c69bc340f4d322114cab359d9d0a83d700d84728811e",
+    "preconditions.txt": "970bfc07e377cd5240d04fed1099a6974d6e24afd46800a9af37072dca7cfb07",
+    "products-asrow.jsonl": "e27c26046144c48b19c29d721b892e01422dd28f0a4a5d4ab30aee4272a775bb"
+   },
+   "evidence": [
+    {
+     "tier": "A",
+     "kind": "in-band stamp",
+     "file": "CAPTURED-FROM-TENANT",
+     "says": "gerege"
+    },
+    {
+     "tier": "A",
+     "kind": "in-band precondition transcript header",
+     "file": "preconditions.txt",
+     "says": "gerege"
+    },
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t80/out/bash-recapture-gerege",
+     "says": "gerege"
+    }
+   ]
+  },
+  {
+   "path": "t80/out/recapture-gerege",
+   "tenant": "gerege",
+   "tenant_basis": "tier-A in-band evidence written by the capture run",
+   "tier_a_disagreement": null,
+   "in_band_stamp": "gerege",
+   "stamp_expected": true,
+   "why_no_stamp": null,
+   "first_commit": "813acb1 2026-08-20",
+   "file_count": 7,
+   "files": {
+    "B-01-baseline-raw.json": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
+    "B-02-multiplesof100-raw.json": "9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8",
+    "B-03-diycs-fullleapyear-raw.json": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
+    "B-04-diycs-feb29only-raw.json": "c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80",
+    "CAPTURED-FROM-TENANT": "168ad543704b9fc13db2c69bc340f4d322114cab359d9d0a83d700d84728811e",
+    "preconditions.txt": "970bfc07e377cd5240d04fed1099a6974d6e24afd46800a9af37072dca7cfb07",
+    "products-asrow.jsonl": "e27c26046144c48b19c29d721b892e01422dd28f0a4a5d4ab30aee4272a775bb"
+   },
+   "evidence": [
+    {
+     "tier": "A",
+     "kind": "in-band stamp",
+     "file": "CAPTURED-FROM-TENANT",
+     "says": "gerege"
+    },
+    {
+     "tier": "A",
+     "kind": "in-band precondition transcript header",
+     "file": "preconditions.txt",
+     "says": "gerege"
+    },
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t80/out/recapture-gerege",
+     "says": "gerege"
+    }
+   ]
+  },
+  {
+   "path": "t80/out/stamp-probe-default",
+   "tenant": "gerege",
+   "tenant_basis": "tier-A in-band evidence written by the capture run",
+   "tier_a_disagreement": null,
+   "in_band_stamp": "gerege",
+   "stamp_expected": true,
+   "why_no_stamp": null,
+   "first_commit": "813acb1 2026-08-20",
+   "file_count": 1,
+   "files": {
+    "CAPTURED-FROM-TENANT": "168ad543704b9fc13db2c69bc340f4d322114cab359d9d0a83d700d84728811e"
+   },
+   "evidence": [
+    {
+     "tier": "A",
+     "kind": "in-band stamp",
+     "file": "CAPTURED-FROM-TENANT",
+     "says": "gerege"
+    },
+    {
+     "tier": "C",
+     "kind": "directory-name label (NOT evidence \u2014 see t22-probe/PROVENANCE-NOTE.md)",
+     "file": "t80/out/stamp-probe-default",
+     "says": "default"
+    }
+   ],
+   "note": "NOT A CAPTURE SET, and its stamp was NOT written by a capture run. run-attacks.sh:59-60 seeds it by hand (`mkdir -p`, then `printf 'gerege\\n' > CAPTURED-FROM-TENANT`) so that ATTACK 1c can prove the stamp is an operand independent of the directory NAME - a directory called `-default` holding a `gerege` stamp. It is in scope for this index only because it carries a stamp; `tenant: gerege` here means no more than 'the stamp file says gerege'."
+  }
+ ]
+}

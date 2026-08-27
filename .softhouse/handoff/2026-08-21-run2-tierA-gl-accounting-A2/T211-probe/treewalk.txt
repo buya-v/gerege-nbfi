@@ -1,0 +1,27 @@
+# spawner  : /bin/zsh -lc /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/./treewalk.zsh   (the launchd ProgramArguments shape)
+# session  : start_new_session=True (setsid)
+# disposit.: restore_signals=True -- INT/QUIT/PIPE reset to SIG_DFL in the child
+#            (this is the P-55 control: without it the probe measures itself)
+--- no signal sent (control run) ---
+EXIT LATENCY (signal -> wrapper exit) = 0.000s
+subject rc = 0
+transcript = /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/out-treewalk.txt
+--- subject transcript --------------------------------------------------
+[1787361953.489192000] shell pid=31772 pgid=31772
+[1787361954.673513000] $! (the driver job) = 31780
+[1787361954.749454000] driver_tree returned 6 pid(s): 31780 31781 31783 31784 31785 31786
+   31780 31772 31772 /bin/zsh
+   31781 31780 31772 /bin/zsh
+   31783 31781 31772 /bin/sleep
+   31784 31780 31772 /usr/bin/tee
+   31785 31780 31772 /bin/cat
+   31786 31783 31772 /usr/bin/caffeinate
+[1787361954.928492000] the long child (/bin/sleep 120) is pid 31783
+[1787361954.942097000]   -> IN the tree at index 3  (a single kill on $! would have MISSED it)
+[1787361954.955684000] TERMing the whole tree
+[1787361956.670031000] still present after SIGTERM + 1.5s: 0 -> none
+[1787361956.695843000] rc file contents = <missing - the child was killed before it could write one>
+[1787361956.761203000] no stray caffeinate
+[1787361956.851578000] no stray sleep -- the tree kill reached the long child
+[1787361956.864840000] TREEWALK DONE
+--- end transcript -----------------------------------------------------

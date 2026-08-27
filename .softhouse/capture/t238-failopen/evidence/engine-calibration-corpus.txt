@@ -1,0 +1,4 @@
+the main branch was measured
+the bmainb literal is a decoy for engines that read backslash-b as a letter
+the population is closed and no other
+site exists anywhere in this repository

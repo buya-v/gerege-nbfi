@@ -1,0 +1,11 @@
+# T168 — SIGQUIT PRE-FIX, extracted from t168/prove-exit-trap-with-sigquit.txt
+# (the full run of prove-exit-trap.py after T168 added the parent-quit case).
+# Pre-fix bytes are the pinned immutable git blob
+# 9b973301a6eaa9dff61559f7d1f8a8de05752880 -- the same blob T156 pinned:
+# prove-redgreen.sh with NO trap statements at all.
+
+--- PRE-FIX   parent-quit       SIGQUIT to the script (Ctrl-\) — T168: bash skips the EXIT trap for this one unless it is trapped explicitly
+    script exit=-3  elapsed=0.3s  vector-in-store=False  park-left=True
+    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+    ^^ SHORT BY 1, AND STILL A GREEN PASS — 88 cells fewer than the pristine store
+    => DEFECT REPRODUCED — store stranded and the next run is GREEN

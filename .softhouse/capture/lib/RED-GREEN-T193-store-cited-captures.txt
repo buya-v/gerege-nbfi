@@ -1,0 +1,191 @@
+T193 — RED/GREEN for the store-cited capture-record arm of check_wire_float_roundtrip.py
+========================================================================================
+
+Filed here, not in .softhouse/capture/tierA-a2/, because another worker held that directory
+for the duration of this fire. The shape follows RED-GREEN-T173-wired-guards.txt.
+
+WHAT IS BEING PROVEN (P-22, both halves per P-50)
+
+  1. PRE-extension, with the defect sitting in the tree at the exact location the parity
+     corpus descends from, the guard AS COMMITTED ON MAIN PASSES and never mentions it.
+     That is the gap T186 FU-2 / §8 item 6 recorded.
+  2. POST-extension, on the SAME tree, the guard REFUSES and names the file, the line, the
+     JSON path, the token and what a double round trip does to it.
+  3. POST-extension, wired, `bash .softhouse/conformance.sh` exits 2 on that tree — so the
+     refusal is not confined to the script nobody runs.
+  4. POST-extension, with the defect removed, the harness returns the same clean PASS it
+     returned before, on an unchanged vector store.
+  5. The planted evidence is RESTORED BIT-IDENTICALLY. Repairing evidence to fit a check is
+     prohibited (T114 standing ruling, T176); planting a defect and restoring is its inverse,
+     and the restore is verified by digest, not asserted.
+
+THE CENTRAL NUMBER, RE-DERIVED RATHER THAN QUOTED (P-63)
+
+  Of the 43 stored PARITY vectors, 42 name a `.softhouse/capture/out/capture-prod3*-raw.json`
+  in `provenance.capture_ref` and 1 names `.softhouse/capture/pathb/t149/out/gerege/
+  T149-TIE-P9-raw.json`. Measured by reading `provenance.capture_ref` as a FIELD off each
+  parsed vector, never by grepping prose:
+
+      11  .softhouse/capture/out/capture-prod3b-raw.json
+       2  .softhouse/capture/out/capture-prod3c-raw.json
+       2  .softhouse/capture/out/capture-prod3d-raw.json
+      14  .softhouse/capture/out/capture-prod3e-raw.json
+       3  .softhouse/capture/out/capture-prod3f-raw.json
+       4  .softhouse/capture/out/capture-prod3g-raw.json
+       6  .softhouse/capture/out/capture-prod3i-raw.json
+       1  .softhouse/capture/pathb/t149/out/gerege/T149-TIE-P9-raw.json
+      --  ---------------------------------------------------------------
+      43  total parity, of which 42 descend from capture-prod3* -> 42 of 43 CONFIRMED.
+
+  8 distinct capture records. Every one of them resolves to a file that exists.
+
+THE INSPECTED-ITEM COUNT, BEFORE AND AFTER
+
+  BEFORE (guard as committed on main, ee2c532), measured on the clean tree:
+      320 request bodies / 3976 numeric tokens / 6 capture rigs / 10 req directories
+      capture records cited by the vector store inspected:  ZERO
+  The zero is stated plainly because a guard inspecting zero items of a class is an ERROR for
+  that class, not a pass (P-35). No guard in .softhouse/conformance.sh opened any of the 8.
+  The only program in the repository that opens them at all is `admit.go`, which re-hashes
+  each against `provenance.capture_sha256` — it pins the BYTES and inspects none of them.
+
+  AFTER (this task), same clean tree:
+      328 documents / 7605 numeric tokens
+        = 320 request bodies (*.json under a req/ dir, plus *.req)
+        +   8 capture records DERIVED from provenance.capture_ref across 50 store files
+      recorded-request blocks: 91 (key `inputs` or `request`, ANY depth, parser walk)
+      numeric tokens GRADED inside those blocks: 743; float-shaped PRESENT 0, ALTERED 0
+      records carrying a recorded-request block: 7 of 8; carrying none: 1, NAMED every run
+
+THE PLANTED DEFECT — one token, in the file 11 parity vectors descend from, at the exact
+location T186 §8 item 6 flagged. Planted and restored inside one script; nothing committed
+carries it.
+
+  .softhouse/capture/out/capture-prod3b-raw.json:596   (capture case P-MNT-1M2)
+      "disbursementAmount": "1200000",     <- as committed: BigDecimal.toPlainString() in a
+                                              JSON STRING, which cannot be mangled
+      "disbursementAmount": 1200000.00,    <- planted: a JSON NUMBER whose text is not the
+                                              shortest round-trip repr of its double, so a
+                                              json.load -> json.dumps re-emits 1200000.0.
+                                              This is T163's resolve7.py defect reintroduced
+                                              in the one place no guard was looking.
+
+  sha256 of the target BEFORE: 8d23c48fa13c04677b51bacdf07d101d6a061c79815d76b4983eccdbac945c79
+
+--------------------------------------------------------------------------------------
+LEG 1 — PRE-EXTENSION. The guard as committed on main, extracted with
+        `git show ee2c532:.softhouse/capture/lib/check_wire_float_roundtrip.py`, run
+        against the PLANTED tree.
+--------------------------------------------------------------------------------------
+EXIT CODE: 0
+occurrences of the string "1200000.00" anywhere in its output: 0
+
+full output, 3 lines:
+
+CENSUS wire-float round-trip — inspected 320 request bodies / 3976 numeric tokens across 6 capture rigs / 10 req directories under <worktree>/.softhouse/capture (recursive, whole capture tree)
+CENSUS float-shaped tokens PRESENT 278 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+clean: every numeric token in every capture request body is byte-preserved.
+
+READ THE THIRD LINE AGAINST THE FIRST. It says "every numeric token in every capture request
+body", and the request body carrying the defect was not one of the 320. The census figure did
+not move, because the file is not under a `req/` dir and is not a `*.req` — a Path A capture
+drives its request in-process from Capture3*.java and never commits one.
+
+--------------------------------------------------------------------------------------
+LEG 2 — POST-EXTENSION. The SAME planted tree, the T193 guard.
+--------------------------------------------------------------------------------------
+EXIT CODE: 1
+
+CENSUS wire-float round-trip — inspected 328 documents / 7606 numeric tokens: 320 request bodies (*.json under a req/ dir, plus *.req) across 6 capture rigs / 10 req directories under <worktree>/.softhouse/capture, and 8 capture records cited by the vector store (recursive, whole capture tree)
+CENSUS float-shaped tokens PRESENT 278 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+CENSUS recorded-request blocks — 8 capture records DERIVED from provenance.capture_ref across 50 *.json in <worktree>/.softhouse/vectors; 7 of those records carry a recorded-request block and 1 carry none; 91 blocks (key `inputs` or `request`, any depth, located by parser walk) / 744 numeric tokens GRADED, float-shaped PRESENT 1, ALTERED 1
+CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/pathb/t149/out/gerege/T149-TIE-P9-raw.json — cited by 1 vector(s), carries no `inputs`/`request` block. …
+CENSUS   READ BUT NOT GRADED: 2886 numeric tokens in cited capture records sit OUTSIDE any recorded-request block; 59 of them are NOT byte-preserved (…T149-TIE-P9-raw.json x59). …
+REFUSED — a numeric token in a RECORDED REQUEST inside a cited capture record is NOT byte-preserved under a binary-double round trip. This is the request that produced a promoted parity vector: the money the reference oracle was asked about is not the money the record says it was asked about.
+  .softhouse/capture/out/capture-prod3b-raw.json:596  $.captures[9].inputs.disbursementAmount  1200000.00  ->  1200000.0
+Fix: emit the value as a JSON string of the BigDecimal's own toPlainString() (every Capture3*.java already does — see Capture3b.java:339-340, `pl()`), or write the token so its text is already the shortest round-trip repr of its double.
+
+The token count moved 7605 -> 7606 and float-shaped PRESENT inside request blocks moved 0 -> 1,
+because a quoted token is not a numeric token and an unquoted one is. Both figures move with
+the plant, so the census is reading the tree and not reciting a constant.
+
+--------------------------------------------------------------------------------------
+LEG 3 — POST-EXTENSION, WIRED. The SAME planted tree, `bash .softhouse/conformance.sh`.
+--------------------------------------------------------------------------------------
+EXIT CODE: 2
+occurrences of the "reference oracle (…) probe = " line: 0
+
+THAT ZERO IS THE EXIT-CODE DISCIPLINE, NOT AN OUTAGE. A HARD-guard failure exits 2 BEFORE the
+oracle is probed, so there is no probe line at all. Test for the line's PRESENCE first, then
+its value. Absent line = corpus/guard defect, to be fixed in this fire; it is NOT the oracle
+being down. The refusal text reached the harness output verbatim, naming file, line and JSON
+path, and `census figure READ: inspected 328 >= 328 tracked by git` printed above it — the
+derived floor moved with the population, from 320 to 328, without anyone editing a number.
+
+--------------------------------------------------------------------------------------
+LEG 4 — RESTORE, VERIFIED BY DIGEST.
+--------------------------------------------------------------------------------------
+RESTORE: sha256 before=8d23c48fa13c04677b51bacdf07d101d6a061c79815d76b4983eccdbac945c79
+                 after=8d23c48fa13c04677b51bacdf07d101d6a061c79815d76b4983eccdbac945c79
+RESTORE: IDENTICAL — the evidence is unchanged
+`git status --porcelain -- .softhouse/capture/out/capture-prod3b-raw.json` printed NOTHING.
+`git rev-parse HEAD:.softhouse/vectors` = ce821c638724237652b6b29627148d34b72fab3b, the bar's
+value, unchanged by this task.
+
+--------------------------------------------------------------------------------------
+LEG 5 — GREEN. The restored tree, `bash .softhouse/conformance.sh`.
+--------------------------------------------------------------------------------------
+EXIT CODE: 0
+probe line PRESENT and reads: probe = up
+VERDICT: PASS (exit 0) — 43 parity vectors, 5664 cells compared
+contract-refusal 4 · self-test 1 · refused 0 · inadmissible 0 · harness errors 0
+invariant violations 0 · invariant assertions 0 NOT RUN
+kills named 103 money, 7 structural
+vector store  ce821c638724237652b6b29627148d34b72fab3b
+
+`diff` of the whole harness output before and after this task: 11 lines, ALL of them inside
+the wire-float guard's own block (the selftest case count 5 -> 13, and the census lines).
+Not one line of the verdict, the counts, the kills or the probe moved.
+
+--------------------------------------------------------------------------------------
+LEG 6 — THE SELFTEST, so the arm stays falsifiable without touching the tree again.
+        `python3 .softhouse/capture/lib/check_wire_float_roundtrip.py --selftest`
+--------------------------------------------------------------------------------------
+13 cases, 10 RED, 3 GREEN, 0 failures. Eight are new; the counts conformance.sh prints are
+derived from the run, not pinned, so they moved 5/4/1 -> 13/10/3 on their own.
+
+  (f) RED    the defect above, in a cited capture record's `inputs` — the T193 case itself
+  (g) GREEN  clean recorded request + a NON-preserved cell in `observed`. Asserts the arm
+             does NOT grade an oracle observation (T186 §7 A4). If a later change widens the
+             arm to whole-document byte-fidelity, this case goes red and says why.
+  (h) RED    the same defect in a record under neither `out/` nor a `capture-prod3*` name,
+             three unnamed directories deep — reached because a VECTOR CITES IT. Proves the
+             derivation is the citation and not a glob.
+  (i) RED    a vector citing a capture record that is not there — named and refused, never
+             skipped. An unfollowable citation is a record nothing inspects.
+  (j) RED    a vector store present and citing nothing — ERROR, not a pass (P-35).
+  (k) RED    every cited record renamed its `inputs` key — ZERO blocks graded. This is what
+             the arm silently going vacuous looks like, and it is a refusal.
+  (l) RED    a `request` block two objects deep, beside a STRING whose value is the word
+             "inputs" — reached by the parser walk, and the string does not create a block.
+  (m) GREEN  the shape the committed corpus is actually written in (money and rate as
+             toPlainString() strings, integers as integers), with two vectors citing one
+             record. A guard that refuses the real corpus is not a guard (T186 §7 A2).
+
+WHAT THIS ARM DOES NOT CLAIM, PRINTED ON EVERY RUN
+
+  * Cells OUTSIDE a recorded-request block are READ AND COUNTED but do not decide the verdict.
+    Measured on the clean tree: 2886 such tokens, of which 59 are not byte-preserved — all 59
+    in .softhouse/capture/pathb/t149/out/gerege/T149-TIE-P9-raw.json (`1162502.50` ->
+    `1162502.5`, `0.00` -> `0.0`). They are ORACLE OBSERVATIONS. T186 §7 A4 forbids rewriting,
+    re-emitting or scale-normalising one — the scale is itself an observation — so byte
+    fidelity is the wrong VERDICT property for them. The count is printed so the blind spot is
+    stated rather than implied.
+  * One cited record carries no recorded-request block at all
+    (T149-TIE-P9-raw.json, a Path B response record). It is NAMED on every run. Its request
+    body is a separate file, .softhouse/capture/pathb/t149/req/calc-t149-tie-p9.json, which is
+    in the 320-body population above — so that vector's request IS graded, by the other arm.
+  * The arm grades the RECORD of the request, not the Java that generated it. A
+    `Capture3*.java` that computed a wrong number and then faithfully recorded it is invisible
+    here. See the T193 handoff for what a source-level lint on that path would and would not
+    be able to decide.

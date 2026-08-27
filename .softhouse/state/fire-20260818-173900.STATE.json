@@ -1,0 +1,25 @@
+{
+  "fire": "20260818-173900",
+  "host": "Buyanmunkhs-Mac-mini",
+  "oracle": "REACHABLE throughout (health 200, image sha256:e596339626bf..., PostgreSQL 18.3, commit build-attested 426a23544)",
+  "workers_dispatched": 4,
+  "workers_completed": 4,
+  "workers_killed": 0,
+  "dispatched": [
+    {"task": "T21", "branch": "softhouse/T21-capture-pass3-audit-v2", "model": "opus", "isolation": "worktree", "verdict": "ACCEPTED WITH REQUIRED CHANGES", "merged": true},
+    {"task": "T22", "branch": "softhouse/T22-pathb-capture-audit-v2", "model": "opus", "isolation": "worktree", "verdict": "ACCEPTED WITH REQUIRED CHANGES", "merged": true},
+    {"task": "T4",  "branch": "softhouse/T4-dec1-contract-v3",        "model": "opus", "isolation": "worktree", "verdict": "delivered DEC-1 v2", "merged": true},
+    {"task": "T23", "branch": "softhouse/T23-dec1-v2-rereview",       "model": "opus", "isolation": "worktree", "verdict": "ACCEPTED WITH REQUIRED CHANGES - NOT ratifiable", "merged": true}
+  ],
+  "orchestrator_work_completed": [
+    "Pushed the previous fire's three rescued branches, which existed ONLY locally - neither the cloud fire nor a fresh clone could see 4,482 insertions",
+    "Salvaged the killed workers' additive probe artifacts onto main so the re-dispatched auditors reused them instead of re-running the oracle",
+    "Merged all four worker branches and pushed after each",
+    "Declined to ratify DEC-1 under P-2 because the re-review was not clean"
+  ],
+  "next_action": "T24 - apply T23's three P0 corrections to DEC-1 v2, then raise a re-review, then ratify under P-2 and close G-1. T25 (apply the T21/T22 capture P0 lists) is contract-independent and may run alongside. Both need the reference oracle, so both are local-fire work.",
+  "blocked_on": null,
+  "gate_pending": "G-1 (ratification - now scoped to three named P0 corrections, no human decision outstanding), G-2 (reshaped T2 attempt, already approved by Buyan)",
+  "vectors_promoted": 0,
+  "notes": "No capture promoted to the vector store. Nothing contract-shaped stored while G-1 is open. No bar lowered, no gate crossed, no worker left live at exit."
+}

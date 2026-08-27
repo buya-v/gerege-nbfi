@@ -1,0 +1,48 @@
+=== CONTROL: the merged tree, store intact ===
+  exit=0   parity=43   cells=5664   VERDICT: PASS (exit 0) — 43 parity vectors match the pinned 
+
+=== DEFLATION: remove exactly ONE parity vector file ===
+  exit=0   parity=42   cells=5533   VERDICT: PASS (exit 0) — 42 parity vectors match the pinned 
+
+=== DEFLATION, larger: remove FIVE parity vectors ===
+  moved 5 files out
+  exit=0   parity=38   cells=5345   VERDICT: PASS (exit 0) — 38 parity vectors match the pinned 
+
+=== DEFLATION, total: remove the WHOLE loanschedule context ===
+  exit=2   parity=0    cells=21     VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is avail
+
+=== INFLATION, for contrast: one extra unloaded .json (what T154 DID close) ===
+  exit=2   parity=0    cells=0      VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is avail
+        * STORE FILE CENSUS — 51 .json files were found under /tmp/t155/post/.softhouse/vectors and 1 of them are unac
+
+=== does ANY committed artefact name an expected corpus size? ===
+  PIN.json keys:
+    "contract_file": "fineract_commit": "mode": "never_promotable_capture_case_ids": "note": "production_rounding": "rate_factor_scale": "schema": "significant_digits": 
+  any 'expected'/'manifest'/'corpus size' notion in conformance.sh:
+    (end)
+
+  the refusal T156 cites, vector.go:988 region:
+    // cells" — are both computed by summing over the loaded vectors, so a store that
+    // accidentally contains the same case twice reports MORE coverage than it has,
+    // and every other check stays green. Measured on main's bytes with one file
+    // copied under a second name: 43 parity vectors / 5623 graded cells / VERDICT
+    // PASS / exit 0, with no warning anywhere in the report (T110; T104's F-T104-3,
+    // raised against T90).
+    //
+    // A warning would not do, because the inflated numbers would still be printed
+    // and quoted. A silent de-duplication would be worse: the two files are not
+    // known to be identical — the second may carry a different expectation, a
+    // different provenance or a different capture reference — so dropping one is a
+    // choice about WHICH claim is true, made by the harness, invisibly. Refusing is
+    // the only outcome that cannot be mistaken for either a larger corpus or a
+    // smaller one.
+    //
+    // The key is the case_id ALONE, not (context, case_id). Two files in different
+    // context directories with one case_id are the same lie: the report prints CASE
+    // without CONTEXT, so a reader cannot tell the two rows apart, and both still add
+    // to the same headline totals. Scoping the check per-context would let that pass.
+    // This also catches a symlinked or hard-linked copy of a vector file, which
+    // arrives as two distinct paths carrying one case_id.
+
+  restored store still clean?
+  exit=0   parity=43   cells=5664   VERDICT: PASS (exit 0) — 43 parity vectors match the pinned 

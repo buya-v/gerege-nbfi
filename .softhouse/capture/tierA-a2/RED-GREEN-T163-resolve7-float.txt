@@ -1,0 +1,81 @@
+==============================================================================
+BATTERY vs resolve7.py      (expected: RED)
+==============================================================================
+A2-11's retracted hypothesis: template 4057599.35 -> emitted 4057599.35 (rc=0). repr() round-trips it byte-identically, so A2-11's first RED was wrong and A2-11 recorded that rather than deleting it.
+  the double actually held in memory is 4057599.3500000000931322574615478515625; residue (double - exact) = 9.31322574615478515625E-11
+
+  template literal           bytes the script writes    identical  note
+  1200000.00                 1200000.0                  NO         MNT stored to 2 decimals (CLAUDE.md non-negotiable)
+  1200000.000000             1200000.0                  NO         exactly what Fineract's numeric(19,6) emits
+  0.10                       0.1                        NO         ten mongo
+  12345678901234567890.12    1.2345678901234567e+19     NO         past double precision; MathContext(19,HALF_UP) permits 19
+
+  W5 observed-response path: resp resourceId 1200000.000000 -> emitted '1200000.0' (rc=0)
+  W6 nested literals: emitted '{   "productId": 46,   "charges": [     {       "amount": 1200000.0     }   ],   "terms": {     "rate": 0.1   } } '
+  W8 NaN ingress: rc=0, wrote a body: True
+
+  PASS  CONTROL: a2-7-loan-220.json principal is an int, not a decimal literal
+          principal=1200000 (int)
+  PASS  W4: re-running THIS script on the two committed inputs reproduces the committed req/a2-7-loan-220-resolved.json BYTE-FOR-BYTE (measured, not asserted)
+          rc=0  emitted sha256=487d168d32f44601c541d67f29b289021ef7d54348116c2831879f41b02bfcfb  committed sha256=487d168d32f44601c541d67f29b289021ef7d54348116c2831879f41b02bfcfb
+  FAIL  W3 (POSITIVE): every realistic money literal is emitted BYTE-IDENTICALLY
+          1200000.00 -> 1200000.0; 1200000.000000 -> 1200000.0; 0.10 -> 0.1; 12345678901234567890.12 -> 1.2345678901234567e+19
+  PASS  W3: the battery inspected a NON-ZERO number of literals — a battery that inspected none would be an ERROR, not a pass
+          4 of 4
+  FAIL  W7: the >17-significant-digit literal survives with ZERO residue — this separates a changed WIRE FORM from a changed NUMBER
+          emitted 1.2345678901234567e+19 ; residue = -890.12
+  FAIL  W5: a MONEY-VALUED key read OUT OF A COMMITTED CAPTURE is spliced into the request body byte-for-byte (1200000.000000, which occurs in 21 captures)
+          emitted '1200000.0'
+  FAIL  W6: literals NESTED in an array and an object are preserved too — the script re-serialises the whole document, so top-level is not the boundary
+          emitted contains 1200000.00 and 0.10: False
+  FAIL  W8: a non-standard NaN/Infinity token is REFUSED (rc!=0) and NO body is written — these are binary floats in every parser that accepts them
+          rc=0, body written=True
+  FAIL  W9: the output is the template with ONLY the placeholder span changed — whitespace, key order and every other literal byte-identical
+          emitted sha256=db885dcc9f4efc771cbff5f4ce36dafd5a6a23f8f4403f6853ac62372b5c0971 expected sha256=f64d9a342d17f2a722f497a56e85597ced96ad269ec16dfd82c7e280fd63cdc9
+
+  -> 9 assertion(s), 6 FAILED  => RED
+
+==============================================================================
+BATTERY vs resolve8.py      (expected: GREEN)
+==============================================================================
+A2-11's retracted hypothesis: template 4057599.35 -> emitted 4057599.35 (rc=0). repr() round-trips it byte-identically, so A2-11's first RED was wrong and A2-11 recorded that rather than deleting it.
+  the double actually held in memory is 4057599.3500000000931322574615478515625; residue (double - exact) = 9.31322574615478515625E-11
+
+  template literal           bytes the script writes    identical  note
+  1200000.00                 1200000.00                 yes        MNT stored to 2 decimals (CLAUDE.md non-negotiable)
+  1200000.000000             1200000.000000             yes        exactly what Fineract's numeric(19,6) emits
+  0.10                       0.10                       yes        ten mongo
+  12345678901234567890.12    12345678901234567890.12    yes        past double precision; MathContext(19,HALF_UP) permits 19
+
+  W5 observed-response path: resp resourceId 1200000.000000 -> emitted '1200000.000000' (rc=0)
+  W6 nested literals: emitted '{"productId":46,"charges":[{"amount":1200000.00}],"terms":{"rate":0.10}} '
+  W8 NaN ingress: rc=1, wrote a body: False
+
+  PASS  CONTROL: a2-7-loan-220.json principal is an int, not a decimal literal
+          principal=1200000 (int)
+  PASS  W4: re-running THIS script on the two committed inputs reproduces the committed req/a2-7-loan-220-resolved.json BYTE-FOR-BYTE (measured, not asserted)
+          rc=0  emitted sha256=487d168d32f44601c541d67f29b289021ef7d54348116c2831879f41b02bfcfb  committed sha256=487d168d32f44601c541d67f29b289021ef7d54348116c2831879f41b02bfcfb
+  PASS  W3 (POSITIVE): every realistic money literal is emitted BYTE-IDENTICALLY
+          all 4 preserved
+  PASS  W3: the battery inspected a NON-ZERO number of literals — a battery that inspected none would be an ERROR, not a pass
+          4 of 4
+  PASS  W7: the >17-significant-digit literal survives with ZERO residue — this separates a changed WIRE FORM from a changed NUMBER
+          emitted 12345678901234567890.12 ; residue = 0.00
+  PASS  W5: a MONEY-VALUED key read OUT OF A COMMITTED CAPTURE is spliced into the request body byte-for-byte (1200000.000000, which occurs in 21 captures)
+          emitted '1200000.000000'
+  PASS  W6: literals NESTED in an array and an object are preserved too — the script re-serialises the whole document, so top-level is not the boundary
+          emitted contains 1200000.00 and 0.10: True
+  PASS  W8: a non-standard NaN/Infinity token is REFUSED (rc!=0) and NO body is written — these are binary floats in every parser that accepts them
+          rc=1, body written=False
+  PASS  W9: the output is the template with ONLY the placeholder span changed — whitespace, key order and every other literal byte-identical
+          emitted sha256=f64d9a342d17f2a722f497a56e85597ced96ad269ec16dfd82c7e280fd63cdc9 expected sha256=f64d9a342d17f2a722f497a56e85597ced96ad269ec16dfd82c7e280fd63cdc9
+
+  -> 9 assertion(s), 0 FAILED  => GREEN
+
+==============================================================================
+P-22 VERDICT — the prover must be FALSIFIABLE, so it must go RED on the pre-fix bytes
+==============================================================================
+  PASS  resolve7.py (PRE-FIX, unchanged by T163) drives the battery RED
+  PASS  resolve8.py (POST-FIX) drives the same battery GREEN
+
+FAILURES: 0

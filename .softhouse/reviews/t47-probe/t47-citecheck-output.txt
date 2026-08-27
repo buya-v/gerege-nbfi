@@ -1,0 +1,45 @@
+T47 CITATION CHECK - every file:line in DEC-1 revision 10 and contract.go
+pinned checkout: /Users/buv/fineract @ 426a23544e8426a38ae43ae404670a0a7e85b9eb
+
+Java files indexed: 6049 (6020 distinct basenames)
+
+QUALIFIED citations checked : 491
+  in range                  : 491
+  OUT OF RANGE              : 0
+  unresolvable basename     : 0
+  ambiguous basenames       : 0
+
+BARE `:n` / `:n-m` citations present (context-resolved, NOT machine-checked): 794
+
+
+Citations per file, most-cited first:
+     93  Money.java
+     85  ProgressiveEMICalculator.java
+     59  ProgressiveLoanScheduleGenerator.java
+     35  RepaymentPeriod.java
+     34  EmiAdjustment.java
+     26  ProgressiveLoanInterestScheduleModel.java
+     22  LoanApplicationTerms.java
+     18  MoneyHelper.java
+     18  InterestPeriod.java
+     16  AbstractCumulativeLoanScheduleGenerator.java
+     11  LoanScheduleParams.java
+     11  LoanRepaymentScheduleProcessingWrapper.java
+     10  LoanSchedulePlan.java
+      8  LoanScheduleAssembler.java
+      6  ScheduleCurrentPeriodParams.java
+      5  DateUtils.java
+      5  DefaultScheduledDateGenerator.java
+      4  LoanCharge.java
+      4  EmbeddableProgressiveLoanScheduleGeneratorTest.java
+      3  MathUtil.java
+      2  LoanChargeValidator.java
+      2  LoanRepaymentScheduleModelData.java
+      2  DaysInMonthType.java
+      2  LoanDownPaymentHandlerServiceImpl.java
+      2  LoanWritePlatformServiceJpaRepositoryImpl.java
+      2  LoanProduct.java
+      2  LoanSchedulePlanDisbursementPeriod.java
+      2  LoanSchedulePlanDownPaymentPeriod.java
+      1  LoanScheduleGeneratorServiceImpl.java
+      1  DaysInYearType.java

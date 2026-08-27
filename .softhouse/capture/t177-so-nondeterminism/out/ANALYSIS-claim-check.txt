@@ -1,0 +1,11 @@
+  total trials of every kind emitted                                          got 348                    want 348                    OK
+  total probe trials                                                          got 139                    want 139                    OK
+  probe trials of the DISPUTED cell                                           got 107                    want 107                    OK
+  java processes that emitted at least one trial                              got 75                     want 75                     OK
+  observed probes of the DISPUTED cell                                        got 31                     want 31                     OK
+  distinct totalInterestAmount over observed disputed probes                  got ['846.70']             want ['846.70']             OK
+  processes where an observed probe was later followed by a throw (same cell) got 0                      want 0                      OK
+  trials NOT at MathContext (19, HALF_UP) ambient and explicit                got 0                      want 0                      OK
+  emitted money fields that are JSON floats rather than strings               got 0                      want 0                      OK
+CLAIM CHECK: 9 claim(s) checked, 0 FAILED
+claim check exit 0

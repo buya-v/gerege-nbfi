@@ -1,0 +1,101 @@
+T159 committed cells EXTRACTED from .softhouse/capture/t159-review-t117/out/capture-t159-raw.json.gz: 49
+  T159-R600p0-N3000-B10001 -> ('observed', '846.70')
+
+====================================================================================================
+PER-SERIES TALLY — PROBE TRIALS ONLY (the disputed cell: B = 10001 minor units, n = 3000, rate 600.0)
+====================================================================================================
+series             plan             cell (B minor units, n)       JVMs  asked  observed  threwSOE  other  flags
+fresh-single       single           B=10001 minor, n=3000           20     20         0        20      0  (none)
+repeat-warm        repeat:8         B=10001 minor, n=3000            4     32        16        16      0  (none)
+warm-ctrl-1        warm:1:1         B=10001 minor, n=3000            3      3         0         3      0  (none)
+warm-ctrl-10       warm:10:1        B=10001 minor, n=3000            3      3         0         3      0  (none)
+warm-ctrl-50       warm:50:1        B=10001 minor, n=3000            3      3         3         0      0  (none)
+
+ALL PROBE TRIALS: 61 asked / 19 observed / 42 threw StackOverflowError / 0 other
+
+NON-PROBE TRIALS (warm / prefix / calib cells — reported so no seam call is unaccounted for)
+  phase=warm    observed                                 183
+
+====================================================================================================
+OUTCOME BY PROBE INDEX WITHIN THE JVM  (o = observed, X = threw StackOverflowError)
+====================================================================================================
+  matrixA   fresh-single       run 0   seq0=0   X             elapsedMs: 14864
+  matrixA   fresh-single       run 1   seq0=0   X             elapsedMs: 15063
+  matrixA   fresh-single       run 10  seq0=0   X             elapsedMs: 16227
+  matrixA   fresh-single       run 11  seq0=0   X             elapsedMs: 15759
+  matrixA   fresh-single       run 12  seq0=0   X             elapsedMs: 13212
+  matrixA   fresh-single       run 13  seq0=0   X             elapsedMs: 12174
+  matrixA   fresh-single       run 14  seq0=0   X             elapsedMs: 14924
+  matrixA   fresh-single       run 15  seq0=0   X             elapsedMs: 15254
+  matrixA   fresh-single       run 16  seq0=0   X             elapsedMs: 15219
+  matrixA   fresh-single       run 17  seq0=0   X             elapsedMs: 12033
+  matrixA   fresh-single       run 18  seq0=0   X             elapsedMs: 15209
+  matrixA   fresh-single       run 19  seq0=0   X             elapsedMs: 12023
+  matrixA   fresh-single       run 2   seq0=0   X             elapsedMs: 15216
+  matrixA   fresh-single       run 3   seq0=0   X             elapsedMs: 15161
+  matrixA   fresh-single       run 4   seq0=0   X             elapsedMs: 15310
+  matrixA   fresh-single       run 5   seq0=0   X             elapsedMs: 12003
+  matrixA   fresh-single       run 6   seq0=0   X             elapsedMs: 12270
+  matrixA   fresh-single       run 7   seq0=0   X             elapsedMs: 11937
+  matrixA   fresh-single       run 8   seq0=0   X             elapsedMs: 14470
+  matrixA   fresh-single       run 9   seq0=0   X             elapsedMs: 12056
+  matrixA   repeat-warm        run 0   seq0=0   XXXXoooo      elapsedMs: 14443,13848,13900,15975,91618,91745,91814,91779
+  matrixA   repeat-warm        run 1   seq0=0   XXXXoooo      elapsedMs: 14366,13638,13623,15701,98934,98768,99187,98634
+  matrixA   repeat-warm        run 2   seq0=0   XXXXoooo      elapsedMs: 11610,11151,11120,12911,90124,90026,89967,89543
+  matrixA   repeat-warm        run 3   seq0=0   XXXXoooo      elapsedMs: 13682,13357,13421,15658,96991,96821,97199,96807
+  matrixA   warm-ctrl-1        run 0   seq0=1   X             elapsedMs: 15968
+  matrixA   warm-ctrl-1        run 1   seq0=1   X             elapsedMs: 16208
+  matrixA   warm-ctrl-1        run 2   seq0=1   X             elapsedMs: 16077
+  matrixA   warm-ctrl-10       run 0   seq0=10  X             elapsedMs: 15883
+  matrixA   warm-ctrl-10       run 1   seq0=10  X             elapsedMs: 13417
+  matrixA   warm-ctrl-10       run 2   seq0=10  X             elapsedMs: 13785
+  matrixA   warm-ctrl-50       run 0   seq0=50  o             elapsedMs: 97480
+  matrixA   warm-ctrl-50       run 1   seq0=50  o             elapsedMs: 97822
+  matrixA   warm-ctrl-50       run 2   seq0=50  o             elapsedMs: 95957
+
+====================================================================================================
+COLD START — probe trials that are the JVM's VERY FIRST seam call (seq == 0)
+====================================================================================================
+  T177-PROBE-R600p0-N3000-B10001     default -Xss (measured 2040k)    C2 on    JVMs 24  observed 0   threwSOE 24 
+
+====================================================================================================
+ATTEMPT-INDEX TALLY — probe trials at the JVM DEFAULT stack size, by attempt number
+within the JVM (attempt 1 = the cell's first seam call in that process)
+====================================================================================================
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 1   JVMs 33  observed 3   threwSOE 30 
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 2   JVMs 4   observed 0   threwSOE 4  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 3   JVMs 4   observed 0   threwSOE 4  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 4   JVMs 4   observed 0   threwSOE 4  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 5   JVMs 4   observed 4   threwSOE 0  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 6   JVMs 4   observed 4   threwSOE 0  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 7   JVMs 4   observed 4   threwSOE 0  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 8   JVMs 4   observed 4   threwSOE 0  
+
+RECORDED STACK DEPTH AT OVERFLOW (errorStackDepthTotal; HotSpot caps recorded frames at
+MaxJavaStackTraceDepth, default 1024, so a flat 1024 is the CAP, not the depth)
+  fresh-single       flags=(none)                             n=20  min=1024 max=1024 distinct=[1024]
+  repeat-warm        flags=(none)                             n=16  min=1024 max=1024 distinct=[1024]
+  warm-ctrl-1        flags=(none)                             n=3   min=1024 max=1024 distinct=[1024]
+  warm-ctrl-10       flags=(none)                             n=3   min=1024 max=1024 distinct=[1024]
+
+====================================================================================================
+MONEY CHECK — every OBSERVED disputed-cell probe against T159's committed value
+====================================================================================================
+  T177-PROBE-R600p0-N3000-B10001     observed  19 time(s); distinct totalInterestAmount: {'846.70': 19}
+      matches committed T159-R600p0-N3000-B10001 = 846.70
+  money comparisons made: 1; observed probes with no committed counterpart: 0
+  When the oracle answers at all it answers with the SAME NUMBER as the committed capture.
+  The nondeterminism is in WHETHER it answers, not in WHAT it answers.
+
+====================================================================================================
+P-40 ACCOUNTING — every java process, what it was asked for and what it delivered
+====================================================================================================
+  TOTAL: 33 java processes, 244 seam calls asked, 244 emitted, 0 NEVER REACHED, 0 plans with an unknown count
+
+====================================================================================================
+RUN-LEVEL ANOMALIES (classified SEPARATELY — never folded into observed or threw)
+====================================================================================================
+  none: every java process exited 0, wrote empty stderr, and printed its footer.
+
+ANALYZER VERDICT: clean
+analyzer exit 0 for matrixA

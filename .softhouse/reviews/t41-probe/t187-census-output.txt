@@ -1,0 +1,55 @@
+LIVE DEC-1        49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab  docs/adr/DEC-1-schedule-generator-adapter.md
+LIVE contract.go  0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139  nexus/internal/apps/loanschedule/contract/contract.go
+
+SHARED GUARD (followed by import): .softhouse/reviews/t47-probe/t178_guard.py  sha256 0448e5081dfc1a0f1c3199832fd7323ffd48e29da2a7aef847c3efda2f65c7f3
+  atomic os.replace                              yes
+  mkstemp in the target's own dir                yes
+  fsync                                          yes
+  st_dev compared                                yes
+  content gate on the TARGET                     yes
+  content gate on the CANDIDATE                  yes
+  refuses the protected artefact itself          yes
+  refuses targets inside the repo working tree   yes
+  no bare assert                                 yes
+
+SCAN ROOT      /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8ccca5eb00efdfa4/.softhouse/reviews/t41-probe (one directory, NOT recursive)
+EXCLUSIONS     nothing under it is walked recursively; .claude/worktrees/ is unreachable by construction
+
+FILE                   WRITES       GUARDED     TARGET(S)
+------------------------------------------------------------------------------
+edit.py                delegated    yes (shared) DEC-1
+edit10.py              delegated    yes (shared) DEC-1
+edit11.py              delegated    yes (shared) DEC-1
+edit12.py              delegated    yes (shared) DEC-1
+edit13.py              delegated    yes (shared) DEC-1
+edit14.py              delegated    yes (shared) DEC-1
+edit16.py              delegated    yes (shared) DEC-1
+edit17.py              delegated    yes (shared) DEC-1
+edit18.py              delegated    yes (shared) DEC-1, contract.go
+edit19.py              delegated    yes (shared) DEC-1
+edit2.py               delegated    yes (shared) DEC-1
+edit20.py              delegated    yes (shared) DEC-1
+edit21.py              delegated    yes (shared) DEC-1, contract.go
+edit22.py              delegated    yes (shared) contract.go
+edit3.py               delegated    yes (shared) DEC-1
+edit4.py               delegated    yes (shared) DEC-1
+edit5.py               delegated    yes (shared) DEC-1
+edit6.py               delegated    yes (shared) DEC-1
+edit7.py               delegated    yes (shared) DEC-1
+edit8.py               delegated    yes (shared) DEC-1
+edit9.py               delegated    yes (shared) DEC-1
+edit_go1.py            delegated    yes (shared) contract.go
+edit_go2.py            delegated    yes (shared) contract.go
+edit_go3.py            delegated    yes (shared) contract.go
+edit_go4.py            delegated    yes (shared) contract.go
+t187-redgreen.py       scratch      n/a         EXEMPT - the T187 prover: every write it makes goes into a tempfile.mkdtemp() scratch tree, and the two protected paths appear in it only as READ sources and as expected-digest constants
+------------------------------------------------------------------------------
+POPULATION under the rule above: 25 file(s)
+  write the RATIFIED DEC-1        : 20  edit.py, edit10.py, edit11.py, edit12.py, edit13.py, edit14.py, edit16.py, edit17.py, edit18.py, edit19.py, edit2.py, edit20.py, edit21.py, edit3.py, edit4.py, edit5.py, edit6.py, edit7.py, edit8.py, edit9.py
+  write the FROZEN contract.go    :  7  edit18.py, edit21.py, edit22.py, edit_go1.py, edit_go2.py, edit_go3.py, edit_go4.py
+  write BOTH (counted once above) :  2  edit18.py, edit21.py
+NOT MEMBERS (6, named per P-40): leakgrep.py, t187-census.py, t187-redgreen.py, t41_discriminate.py, t41_model.py, t41_validate.py
+UNRESOLVED TARGETS: 0
+FILES INSPECTED: 31
+
+No file in this family can reach a ratified or frozen artefact.

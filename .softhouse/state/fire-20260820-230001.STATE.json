@@ -1,0 +1,31 @@
+{
+  "fire": "20260820-230001",
+  "host": "Buyanmunkhs-Mac-mini",
+  "started_at": "2026-08-20T15:00:15Z",
+  "run_id": "2026-08-17-run1-harness-schedule-poc",
+  "context": "tier0-harness-schedule-poc",
+  "oracle": "REACHABLE — https://localhost:8443/fineract-provider/actuator/health UP; fineract-fineract-1 + fineract-db-1 Up (healthy); PostgreSQL localhost:5432; pinned checkout /Users/buv/fineract 426a23544 CLEAN",
+  "main_at_dispatch": "ab2de89",
+  "step": "wave 1 dispatched, awaiting all six workers",
+  "wave1": [
+    {"task": "T102", "branch": "softhouse/T102-literal-fork-sha", "based_on": "softhouse/T82-pass3i-defects (55409cf)", "model": "opus", "needs_oracle": "confirm conformance only", "next_action": "await; then driver must re-verify on a scratch merge into main before merging T82+T87"},
+    {"task": "T100", "branch": "softhouse/T100-g8-two-families", "based_on": "softhouse/T83-nonamortizing-boundary", "model": "opus", "needs_oracle": "only if it re-measures", "next_action": "await; then dispatch T101 as its independent reviewer"},
+    {"task": "T90", "branch": "softhouse/T90-report-determinism", "based_on": "main", "model": "opus", "needs_oracle": "to run the harness", "next_action": "await; then pair an independent reviewer"},
+    {"task": "T97", "branch": "softhouse/T97-guard-positive-probe", "based_on": "main", "model": "opus", "needs_oracle": "to run the harness", "next_action": "await; then pair an independent reviewer whose job is to find an interpreter the new probe wrongly refuses"},
+    {"task": "T91", "branch": "softhouse/T91-preconditions-copy", "based_on": "main", "model": "opus", "needs_oracle": "to run the attack suite", "next_action": "await; then pair an independent reviewer"},
+    {"task": "T99", "branch": "softhouse/T99-pathb-lower-findings", "based_on": "main", "model": "opus", "needs_oracle": "yes", "next_action": "await; then pair an independent reviewer"}
+  ],
+  "not_dispatched_this_wave": [
+    {"task": "T101", "why": "reviewer of T100; dispatch in wave 2 once T100 has committed"},
+    {"task": "T96", "why": "no oracle needed; wave 2 or cloud fire"},
+    {"task": "T93", "why": "no oracle needed; wave 2 or cloud fire"},
+    {"task": "T94", "why": "no oracle needed; wave 2 or cloud fire"},
+    {"task": "T92", "why": "depends on T82 merging, which depends on T102"},
+    {"task": "T98", "why": "needs_retry; SUPERSEDED in substance by T102 — driver must reconcile its status once T102 lands"},
+    {"task": "T15", "why": "archive; still blocked on T100/T101 and the wave-2 reviewers"}
+  ],
+  "blocked_on": null,
+  "open_questions": [],
+  "gate_pending": ["G-4 (OPEN, ENGINEERING, wording-only DEC-1 amendment)", "G-5 (OPEN, ENGINEERING, wording-only DEC-1 amendment)", "G-8 (OPEN — T100 reworks its write-up this fire; (b)/(c) remain hard user gates)"],
+  "invariants_at_dispatch": "main green: VERDICT PASS exit 0, 42 parity vectors, 5576 cells, 0 invariant violations, 0 assertions NOT RUN; sh conformance.sh -> exit 3 with zero verdict tokens; gofmt -l names exactly contract.go"
+}

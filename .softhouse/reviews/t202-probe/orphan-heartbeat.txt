@@ -1,0 +1,3 @@
+mode=plain  wrapper rc=143  wrapper transcript='READY\nHANDLER'
+  heartbeats at wrapper-exit: 100   3s later: 100
+  VERDICT: driver died with the wrapper

@@ -1,0 +1,14 @@
+#!/bin/bash
+# SHAPE R2 -- NOT DESIGNED AROUND, and it CHANGED THE RULE.
+# Everything differs from R1: the root is /srv (a root nothing in this program has ever used),
+# the swallow is `|| true` rather than 2>/dev/null, the search sits on its OWN LINE rather than
+# on a backslash continuation, a blank line and a comment separate it from the claim, the print
+# is printf rather than echo, and the wording is "0 violations" rather than "(no hits)".
+# The first draft of C2b broke its window at the first non-print code line and MISSED this.
+# Driving it is what produced the "the search itself may sit between" clause in the rule.
+set -u
+cd /srv/t248-vendor-audit || true
+git grep -n -E 'vendor' -- .
+
+# report
+printf '   %s\n' "0 violations across the vendor tree"

@@ -1,0 +1,107 @@
+DEC-2: 3039 lines
+CALIBRATION arm A
+  known POSITIVE L820  'the same legs]. | **NO.** Same reason. |' -> FLAGGED (correct)
+  known NEGATIVE L817  '| id | Invariant | Statement, checkable ' -> not flagged (correct)
+
+=== ARM A — bare-verdict table cells (inherit their ground) ===
+  L588   cell[2]  n/a
+  L634   cell[2]  No other currency is captured.
+  L820   cell[4]  **NO.** Same reason.
+  L821   cell[2]  No write path to any balance column exists in the Go tree
+  L824   cell[4]  **N/A.**
+  L2659  cell[3]  **no**
+  L2661  cell[3]  **no**
+  L2662  cell[3]  **no**
+  L2663  cell[3]  **no**
+
+=== ARM B — concept sweep (secondary) ===
+
+-- no-vector-exists (7) --
+  L10    > 1. **No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and
+  L12    > 2. **No `ledger` vector is EXPRESSIBLE.** The store's only accepted schema is
+  L1504  ### 5.1 No `ledger` vector is expressible against the frozen vector schema — MEASURED
+  L1626  **What is true.** §5.1's heading: **no `ledger` vector is EXPRESSIBLE** against the frozen vector
+  L2359  1. **Zero `ledger` vectors exist.** The store's only context directories are `loanschedule/` and
+  L2361  2. **Zero `ledger` vectors are EXPRESSIBLE** — §5.1, established in code in five legs, all five
+  L2987  **three positive controls that were run**, not reasoned — that no `ledger` vector is
+
+-- not-expressible (0) --
+
+-- grades-nothing (19) --
+  L3     > # ⚠ NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL.
+  L823   | **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **PARTLY — AND REVISION 6 CORRECTS THE REASON REV
+  L828   GL/accounting context, and **grades none of them today.** **I-3 and I-4 must be enforced by a
+  L1309  > for it is precondition **P-2** in §5.3. **Every row of the (b) table is therefore ungraded today**,
+  L1398  string — the named reason — only on the `blind` and `ungraded` paths; a capability that is *defined*
+  L1401  read; `capDef.Evidence` appears in the `blind` and `ungraded` messages and in neither `unknown`
+  L1440  cells compared          7884 graded, 93 ungraded
+  L1640  cells compared          5711 graded, 89 ungraded (never recorded by the capture)
+  L1726  ### 5.2 The decision: EXTEND the machinery — and DEC-2 grades nothing until it exists
+  L1795  for orientation only and expected to be stale:** `46 / 4 / 1 / 7884 graded, 93 ungraded`, store
+  L1838  >     cells compared   7884 graded, 93 ungraded
+  L1900  relabelled-vector shape and it grades nothing about the ledger. Its purpose is narrow and
+  L2238  corpus of nothing but structural kills would grade no amount at all, and the harness prints exactly
+  L2260  admitted and left ungraded — an admitted-but-ungraded charge entry point would be exactly the
+  L2268  make the savings resolver correct — it makes it ungraded. DEC-2 refuses it either way.
+  L2345  ### 8.1 NOTHING GRADES THE LEDGER — say it here, not only in the banner
+  L2407  **Ratifying DEC-2 changes none of the four.** It writes down a boundary; it grades nothing. The two
+  L3017  6. **"Nothing grades the ledger" made structurally unmissable** — the banner at the head of the
+  L3024  interpolates the named reason only on the `blind`/`ungraded` paths — an ABSENT row refuses with
+
+-- guard-ordinal (5) --
+  L39    >    guards, not five; the seventh is `guard_ledger_invariants`, built by `A2-18` and **wired** by
+  L821   | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a 
+  L847   **`run_guards` invokes SEVEN guards** [VERIFIED by `A2-28` at commit `2e97162`,
+  L2375  `run_guards` invokes **seven** guards, not five; the seventh is `guard_ledger_invariants`
+  L2441  seventh guard exists now (§4.4.1). **It does not make the ledger covered** — its own transcript
+
+-- pass46-only (6) --
+  L54    > 4. **The "PASS 46" everybody quotes is `loanschedule`'s.** All **46** promoted parity vectors are
+  L250   and **not one parity vector grades it**. The conformance run reports `PASS 46`; all 46 are
+  L1436  parity vectors          PASS 46   FAIL 0
+  L1836  >     parity vectors   PASS 46   FAIL 0
+  L2423  - The GL/accounting context acquires a boundary a regulator can be shown. **"PASS 46" remains the
+  L2424  only thing anyone can say about the ledger, and what it says is "this is about a different
+
+-- not-ratified (38) --
+  L65    >    revision 3 was drafted; `T116` promoted three vectors in the same fire and it is 46 now. Any
+  L75    > **What ratifying DEC-2 would and would not buy.** It would buy a written boundary and an
+  L76    > admissibility standard. It would buy **no grading whatsoever** until the machinery in §5.3
+  L80    **Status: DRAFT (revision 5), 22 August 2026, drafted by task `A2-32`. NOT RATIFIED. `A2-32` is NOT
+  L102   > a sweep failure). Revision 3 was drafted against a 43-vector store and reviewed against a
+  L103   > 47-file directory; by the time revision 4 was drafted the same fire had taken it to **46 parity
+  L124   a ratifier would be ratifying it against**: (F-1) §8.3 still carried *"They are not checked. No
+  L309   **Therefore, and this is a decision this draft records rather than a gap it leaves:**
+  L519   **DEC-2 cannot say that, and this draft refuses to imply it.**
+  L681   would be admitting a value to the graded domain on a source reading rather than on an observation —
+  L703   carry no money" would be false.
+  L788   standard. A `ledger` vector storing `1200000.000000` as a bare JSON number would be rejected by the
+  L1064  **One inherited claim this draft CORRECTS rather than repeats.** A2-8's follow-up **F-1** records
+  L1120  **G-10 is OPEN. This draft records it and does not decide it.**
+  L1172  carry the fixture state, not merely the request. Under a clean chart `A2-214` would be an HTTP
+  L1426  ## 5. What DEC-2 would be frozen against — and today that is ZERO vectors
+  L1452  the minor unit; **DEC-2 would be frozen against a corpus that does not yet exist in the store.**
+  L1455  > revision 3 was drafted, `43 / 5664 / 47 files` when `A2-25` reviewed it, and is `46 / 7884 /
+  L1992  implementation would be killed; it is not that killing. **A submission that presents the
+  L2146  > finding **F-4**, and it was reject-grade **as merged** rather than as drafted: `A2-21` raised the
+  L2193  clear it.** The run would be permanently red, and the only legal way out is to withdraw the row to
+  L2260  admitted and left ungraded — an admitted-but-ungraded charge entry point would be exactly the
+  L2613  - **Revision 5 (this document)** — DRAFT, task `A2-32`, 22 August 2026, worktree at **`33d19a6`**.
+  L2614  **NOT RATIFIED; `A2-32` is NOT AUTHORISED to ratify it and does not, and says so in the status
+  L2616  independent review passes clean AFTER revision 5**. Drafted in response to `A2-31`'s **REJECTION**
+  L2680  - **Revision 4** — DRAFT, task `A2-28`, 22 August 2026, forked from `main` at
+  L2681  **`2e97162`**. **NOT RATIFIED; `A2-28` is NOT AUTHORISED to ratify it and does not, and says so
+  L2683  **further independent review passes clean AFTER revision 4**. Drafted in response to `A2-25`'s
+  L2807  moment of drafting."* **Three of revision 3's four false claims were true when written**, and
+  L2828  written before that measurement would be the guess this program keeps catching.
+  L2845  - **Revision 3** — DRAFT, task `A2-21`, 22 August 2026. **REJECTED** by independent review `A2-25`
+  L2847  `A2-25`'s handoff. **NOT RATIFIED; `A2-21` was NOT AUTHORISED to ratify it and did not.**
+  L2856  - **Revision 3 (as drafted)** — DRAFT, task `A2-21`, 22 August 2026. **NOT RATIFIED; `A2-21` is
+  L2857  NOT AUTHORISED to ratify it and does not.** Drafted in response to `A2-19`'s **REJECTION** of
+  L2967  - **Revision 2** — DRAFT, task `A2-16`, 21 August 2026. **REJECTED** by independent review `A2-19`;
+  L2977  - **Revision 2 (as drafted)** — DRAFT, task `A2-16`, 21 August 2026. **NOT RATIFIED; `A2-16` does
+  L2979  driver's under standing policy **P-2**. Drafted in response to `A2-14`'s **REJECTION** of revision
+  L3034  - **Revision 1** — DRAFT, task `A2-13`, 21 August 2026. First draft. **Not ratified, no PIN digest,
+
+-- no-such-pass (1) --
+  L825   | **I-7** | `Idempotency-Key` on every money-movement POST | — | **NOT APPLICABLE TO THIS CONTRACT, and that must be said rather than assumed.** DEC-2

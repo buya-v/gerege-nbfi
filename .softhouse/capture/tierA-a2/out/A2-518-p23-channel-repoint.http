@@ -1,0 +1,9 @@
+PUT /loanproducts/23
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/t275-075-p23-channel-repoint.json
+body-wire-bytes-artefact: A2-518-p23-channel-repoint.req
+body-sha256: ab05932771cc71e4cc3eb930c83be641ddba6efee2fb5ee4c875487a8f8196ad
+body-bytes: 106
+captured-at-utc: 2026-08-22T14:10:02Z

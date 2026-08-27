@@ -1,0 +1,526 @@
+=== T179 parser-based guard classifier
+root                : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac99bdae2efad7d81
+python parser       : ast (stdlib, authoritative for Python)
+shell parser        : NONE — every .sh file is REFUSED, and counted
+
+--- POPULATION, with denominators
+  script files enumerated (.py/.sh/.bash)   : 710
+    of which Python, parsed                 : 416
+    of which REFUSED                        : 294
+      REFUSED-SHELL-NO-PARSER               : 294
+  non-script files under the same root      : 3446 (never inspected)
+    largest uninspected groups              : .json 1445, .txt 985, .md 351, .status 160, .http 147, .stderr 84
+  mutation call sites found in Python       : 488
+
+--- MUTATION SITES: scope x verdict (every site appears exactly once)
+  scope      UNGUARDED                 GUARDED-PROCESS-IMPORTED  GUARDED-PROCESS           GUARDED-FINALLY-INDIRECT  GUARDED-CONTEXTMANAGER    GUARDED-FINALLY           ATOMIC                    SANDBOX                   
+  TRUSTED    35                        0                         2                         1                         1                         3                         2                         0                            (total 44)
+  UNKNOWN    78                        0                         0                         1                         0                         4                         4                         0                            (total 87)
+  SCRATCH    0                         0                         0                         0                         0                         0                         1                         356                          (total 357)
+  ALL        113                       0                         2                         2                         1                         7                         7                         356                          (total 488)
+
+--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (35 sites in 28 files)
+  .softhouse/capture/audit-t44/charges/bin/analyse_probes.py:101  open(mode='w')  tags=CAPTURE
+      target: os.path.join(AUD, 'out', 'PROBES.md')
+  .softhouse/capture/audit-t44/charges/bin/audit_recompute.py:325  open(mode='w')  tags=CAPTURE
+      target: out
+  .softhouse/capture/audit-t44/charges/bin/spotcheck.py:65  open(mode='w')  tags=CAPTURE
+      target: OUT
+  .softhouse/capture/charges/bin/attest-t40.py:134  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, 'preconditions.txt')
+  .softhouse/capture/charges/bin/attest-t40.py:465  open(mode='w')  tags=CAPTURE
+      target: path
+  .softhouse/capture/pathb/t22-audit/mkmode.py:23  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, 'pmode-mult1.json')
+  .softhouse/capture/pathb/t22-audit/mkmode.py:31  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, 'calc-pmode-%s.json' % tenant)
+  .softhouse/capture/pathb/t22-audit/mkmode2.py:27  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, 'pmode2-halfcent.json')
+  .softhouse/capture/pathb/t22-audit/mkmode2.py:35  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, 'calc-pmode2-%s.json' % tenant)
+  .softhouse/capture/pathb/t22-audit/mkprobe.py:27  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, name + '.json')
+  .softhouse/capture/pathb/t36/attest.py:255  open(mode='w')  tags=CAPTURE
+      target: _stamp
+  .softhouse/capture/pathb/t36/attest.py:257  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, 'preconditions.txt')
+  .softhouse/capture/pathb/t36/attest.py:559  open(mode='w')  tags=CAPTURE
+      target: path
+  .softhouse/capture/t100-g8-rescope/src/closed_form_check.py:85  open(mode='w')  tags=CAPTURE
+      target: sys.argv[0].replace('/src/', '/out/').replace('closed_form_check.py', 'closed-form-check.json')
+  .softhouse/capture/t100-g8-rescope/src/column_shape.py:30  open(mode='w')  tags=CAPTURE
+      target: __file__.replace('/src/', '/out/').replace('column_shape.py', 'column-shape.json')
+  .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py:205  open(mode='w')  tags=CAPTURE
+      target: os.path.join(ROOT, '.softhouse/capture/t100-g8-rescope/out/exemption-demo-t100.json')
+  .softhouse/capture/t100-g8-rescope/src/largest_failing.py:50  open(mode='w')  tags=CAPTURE
+      target: __file__.replace('/src/', '/out/').replace('largest_failing.py', 'largest-failing.json')
+  .softhouse/capture/t170-g8-rebuild/src/aggregate_t170.py:118  open(mode='w')  tags=CAPTURE
+      target: dest
+  .softhouse/capture/t170-g8-rebuild/src/diff_units_t170.py:65  open(mode='w')  tags=CAPTURE
+      target: dest
+  .softhouse/capture/t170-g8-rebuild/src/extract_t170.py:229  open(mode='w')  tags=CAPTURE
+      target: dest
+  .softhouse/capture/t170-g8-rebuild/src/paragraphs_t170.py:86  open(mode='w')  tags=CAPTURE
+      target: dest
+  .softhouse/capture/t170-g8-rebuild/src/split_claims_t170.py:102  open(mode='w')  tags=CAPTURE
+      target: dest
+  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:145  open(mode='w')  tags=CAPTURE
+      target: path
+  .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py:143  open(mode='w')  tags=CAPTURE
+      target: path
+  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:232  open(mode='w')  tags=CAPTURE
+      target: out
+  .softhouse/capture/t83-nonamortizing/src/run-port.py:155  open(mode='w')  tags=CAPTURE
+      target: outp
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-green.py:182  os.remove  tags=STORE
+      target: never
+  .softhouse/reviews/t179-guard-classifier/fixtures/green_contextmanager.py:20  os.replace  tags=PORT,RIG
+      target: path
+  .softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py:18  shutil.copyfile  tags=STORE
+      target: STORE + '.bak'
+  .softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py:22  shutil.move  tags=STORE
+      target: STORE
+  .softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py:21  shutil.copyfile  tags=STORE
+      target: backup
+  .softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py:27  shutil.move  tags=STORE
+      target: STORE
+  .softhouse/reviews/t179-guard-classifier/fixtures/red_guard_elsewhere.py:32  open(mode='w')  tags=CAPTURE
+      target: CAPTURE
+  .softhouse/reviews/t179-guard-classifier/fixtures/red_prose_guard.py:28  open(mode='w')  tags=STORE
+      target: STORE
+  .softhouse/reviews/t179-guard-classifier/fixtures/red_runtime_root.py:30  open(mode='w')  tags=STORE
+      target: path
+
+--- UNGUARDED MUTATIONS WHOSE TARGET COULD NOT BE RESOLVED (78 sites in 59 files)
+    These are NOT clean and NOT dirty. They are unresolved, and they are
+    printed so nothing is silently dropped (P-40).
+  .softhouse/capture/actualactual/analysis/pathb-crosscheck.py:48  Path.write_text   target: side
+  .softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants.py:131  open(mode='w')   target: os.path.join(HERE, 'audit_invariants-output.txt')
+  .softhouse/capture/audit-t44/mathcontext/analysis/audit_recompute.py:224  open(mode='w')   target: os.path.join(HERE, 'audit_recompute-output.txt')
+  .softhouse/capture/charges/bin/attest.py:113  open(mode='w')   target: os.path.join(OUT, 'preconditions.txt')
+  .softhouse/capture/charges/bin/attest.py:389  open(mode='w')   target: path
+  .softhouse/capture/charges/bin/t46-exacttext.py:117  Path.write_text   target: sidecar
+  .softhouse/capture/charges/bin/t46-fix-paths.py:64  Path.write_text   target: p
+  .softhouse/capture/charges/bin/t46-mark-superseded.py:76  Path.write_text   target: p
+  .softhouse/capture/charges/bin/t46-mkcalcs.py:99  Path.write_text   target: path
+  .softhouse/capture/charges/bin/t48-analyse.py:59  Path.write_text   target: side
+  .softhouse/capture/charges/bin/t48-mkreq.py:73  Path.write_text   target: D / name
+  .softhouse/capture/charges/bin/t51-analyse.py:87  Path.write_text   target: side
+  .softhouse/capture/leapboundary/analysis/T175-red/plant.py:77  open(mode='w')   target: p
+  .softhouse/capture/leapboundary/analysis/t55-analyse.py:81  open(mode='w')   target: os.path.join(OUT, side)
+  .softhouse/capture/lib/check_no_narrow_catch.py:274  open(mode='w')   target: path
+  .softhouse/capture/mathcontext/analysis/t46_make_capture3.py:83  Path.write_text   target: DST
+  .softhouse/capture/pathb/provenance.py:295  open(mode='w')   target: os.path.join(root, INDEX_NAME)
+  .softhouse/capture/pathb/t149/prove-exit-trap.py:220  shutil.rmtree   target: sb0
+  .softhouse/capture/pathb/t149/prove-exit-trap.py:290  shutil.rmtree   target: r['sandbox']
+  .softhouse/capture/pathb/t149/prove-exit-trap.py:304  shutil.rmtree   target: r['sandbox']
+  .softhouse/capture/pathb/t149/prove-exit-trap.py:274  shutil.rmtree   target: r['sandbox']
+  .softhouse/capture/pathb/t22-probe/mkcalc.py:20  open(mode='w')   target: os.path.join(P, 'req', f + '-repro.json')
+  .softhouse/capture/pathb/t22-probe/mkreq.py:24  open(mode='w')   target: os.path.join(P, 'req', f + '-repro.json')
+  .softhouse/capture/src/t169-red/build_harness_t169.py:146  os.remove   target: a
+  .softhouse/capture/src/t169-red/build_harness_t169.py:147  os.remove   target: b
+  .softhouse/capture/src/t169-red/build_harness_t169.py:131  open(mode='w')   target: os.path.join(HERE, 'CaptureT169Pre.java')
+  .softhouse/capture/src/t169-red/build_harness_t169.py:132  open(mode='w')   target: os.path.join(HERE, 'CaptureT169Post.java')
+  .softhouse/capture/src/t169-red/build_harness_t169.py:143  open(mode='w')   target: a
+  .softhouse/capture/src/t169-red/build_harness_t169.py:144  open(mode='w')   target: b
+  .softhouse/capture/src/t169-red/census_catch_narrowing.py:140  open(mode='w')   target: dest
+  .softhouse/capture/src/t169-red/gencases_t169.py:52  open(mode='w')   target: cases_out
+  .softhouse/capture/src/t169-red/gencases_t169.py:55  open(mode='w')   target: ids_out
+  .softhouse/capture/t100-g8-rescope/src/build_harness.py:54  open(mode='w')   target: OUT
+  .softhouse/capture/t100-g8-rescope/src/gencases.py:47  open(mode='w')   target: os.path.join(ROOT, 'prediction.json')
+  .softhouse/capture/t117-familyb/src/build_harness.py:64  open(mode='w')   target: OUT
+  .softhouse/capture/t117-familyb/src/build_harness_pass2.py:55  open(mode='w')   target: OUT
+  .softhouse/capture/t117-familyb/src/gencases.py:130  open(mode='w')   target: os.path.join(ROOT, 'prediction.json')
+  .softhouse/capture/t117-familyb/src/gencases_pass2.py:118  open(mode='w')   target: os.path.join(ROOT, 'prediction-pass2.json')
+  .softhouse/capture/t159-review-t117/src/build_harness_t159.py:60  open(mode='w')   target: OUT
+  .softhouse/capture/t159-review-t117/src/gencases_t159.py:165  open(mode='w')   target: os.path.join(ROOT, 'prediction-t159.json')
+  .softhouse/capture/t177-so-nondeterminism/build_harness_t177b.py:104  open(mode='w')   target: out_path
+  .softhouse/capture/t74-multiplesof/T82-guard-proofs/mutate.py:40  open(mode='w')   target: p
+  .softhouse/capture/t74-multiplesof/T82-guard-proofs/mutate.py:116  shutil.copyfile   target: out_script
+  .softhouse/capture/t74-multiplesof/T82-guard-proofs/mutate.py:118  open(mode='w')   target: out_script
+  .softhouse/capture/t74-multiplesof/build-counterfactuals.py:140  open(mode='w')   target: out_path
+  .softhouse/capture/t74-multiplesof/build-prediction.py:229  open(mode='w')   target: out_path
+  .softhouse/capture/t74-multiplesof/extract-t21v2-AB.py:73  open(mode='w')   target: outpath
+  .softhouse/capture/t83-nonamortizing/src/classify-boundary.py:153  open(mode='w')   target: outpath
+  .softhouse/capture/tierA-a2/manifest.py:113  open(mode='w')   target: MAN
+  .softhouse/capture/tierA-a2/mkreq.py:19  open(mode='w')   target: p
+  .softhouse/capture/tierA-a2/mkreq2.py:33  open(mode='w')   target: os.path.join(REQ, name + '.json')
+  .softhouse/capture/tierA-a2/mkreq3.py:20  open(mode='w')   target: os.path.join(REQ, name + '.json')
+  .softhouse/capture/tierA-a2/mkreq4.py:12  open(mode='w')   target: os.path.join(REQ, n + '.json')
+  .softhouse/capture/tierA-a2/mkreq5.py:22  open(mode='w')   target: os.path.join(REQ, n + '.json')
+  .softhouse/capture/tierA-a2/mkreq6.py:24  open(mode='w')   target: os.path.join(REQ, n + '.json')
+  .softhouse/capture/tierA-a2/mkreq7.py:215  open(mode='w')   target: p
+  .softhouse/capture/tierA-a2/prove-cap-transport-red.py:93  Path.mkdir   target: os
+  .softhouse/capture/tierA-a2/prove-cap-transport-red.py:94  Path.mkdir   target: os
+  .softhouse/capture/tierA-a2/prove-manifest-blind-red.py:64  Path.mkdir   target: os
+  .softhouse/capture/tierA-a2/prove-manifest-blind-red.py:104  Path.mkdir   target: os
+  .softhouse/capture/tierA-a2/prove-manifest-red.py:68  os.remove   target: EXTRA
+  .softhouse/capture/tierA-a2/prove-manifest-red.py:48  open(mode='wb')   target: VICTIM
+  .softhouse/capture/tierA-a2/prove-manifest-red.py:58  open(mode='wb')   target: VICTIM
+  .softhouse/capture/tierA-a2/rename1.py:17  os.rename   target: os.path.join(OUT, 'attempt1-' + b)
+  .softhouse/capture/tierA-a2/resolve7.py:40  open(mode='w')   target: out
+  .softhouse/capture/tierA-a2/resolve8.py:258  os.replace   target: out
+  .softhouse/capture/tierA-a2/resolve8.py:256  open(mode='wb')   target: tmp
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-guard-arms.py:100  shutil.rmtree   target: tmproot
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-redgreen.py:131  shutil.rmtree   target: out
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-redgreen.py:208  shutil.rmtree   target: tmproot
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-redgreen.py:141  io.open(mode='wb')   target: p
+  .softhouse/handoff/T61-mutations.py:291  open(mode='w')   target: path
+  .softhouse/reviews/A2-10-probe/poison-d3-manifest.py:80  os.remove   target: os.path.join(root, n)
+  .softhouse/reviews/t179-guard-classifier/fixtures/chain_scratch_discard.py:31  open(mode='w')   target: dest
+  .softhouse/reviews/t179-guard-classifier/fixtures/green_contextmanager.py:16  shutil.copyfile   target: bak
+  .softhouse/reviews/t179-guard-classifier/fixtures/unknown_target.py:10  open(mode='w')   target: path_from_caller
+  .softhouse/reviews/t202-probe/patch.py:227  io.open(mode='w')   target: path
+  .softhouse/reviews/t202-probe/patch2.py:19  io.open(mode='w')   target: p
+    ^ DEFAULT `--enforce` DOES NOT TRIP ON THESE. That is a FAIL-OPEN, and it
+      is the one T203's F-2 measured: two live-vector-store truncators sat in
+      this section and `--enforce` exited 0. Use `--enforce-unknown` to make
+      them fatal; see the polarity note in main().
+
+--- T205: SITES SCOPED ONLY BY THE TRANSITIVE FRAGMENT CLOSURE (9 sites in 8 files)
+    Target is `os.path.join(RUNTIME_ROOT, …)`: no module constant resolves it,
+    so the ordinary probe said UNKNOWN and the chain said TRUSTED. This step
+    can ONLY move a site UNKNOWN -> TRUSTED; a chain probe returning SCRATCH is
+    discarded, so it can never excuse a write.
+  .softhouse/capture/charges/bin/attest-t40.py:465  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED
+      target: path
+  .softhouse/capture/pathb/t36/attest.py:255  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED
+      target: _stamp
+  .softhouse/capture/pathb/t36/attest.py:559  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED
+      target: path
+  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:145  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED
+      target: path
+  .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py:143  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED
+      target: path
+  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:232  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED
+      target: out
+  .softhouse/capture/t83-nonamortizing/src/run-port.py:155  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED
+      target: outp
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-green.py:182  os.remove  tags=STORE  verdict=UNGUARDED
+      target: never
+  .softhouse/reviews/t179-guard-classifier/fixtures/red_runtime_root.py:30  open(mode='w')  tags=STORE  verdict=UNGUARDED
+      target: path
+
+--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone
+    (guard words present ONLY inside string literals; zero try/finally nodes)
+  .softhouse/capture/pathb/t149/prove-exit-trap.py                 guard-words-in-literals=8  sites=9
+  .softhouse/capture/t100-g8-rescope/src/gencases.py               guard-words-in-literals=2  sites=3
+  .softhouse/reviews/T158-drive-followups.py                       guard-words-in-literals=10  sites=3
+  .softhouse/reviews/T158-drive-t156-refusals.py                   guard-words-in-literals=9  sites=22
+  .softhouse/reviews/t179-guard-classifier/fixtures/red_prose_guard.py guard-words-in-literals=5  sites=1
+  .softhouse/reviews/t179-guard-classifier/guard_classify.py       guard-words-in-literals=44  sites=1
+  .softhouse/reviews/t202-probe/defer.py                           guard-words-in-literals=1  sites=1
+  .softhouse/reviews/t202-probe/orphan-heartbeat.py                guard-words-in-literals=2  sites=3
+  .softhouse/reviews/t202-probe/patch.py                           guard-words-in-literals=17  sites=1
+  .softhouse/reviews/t47-probe/t167-redprobe.py                    guard-words-in-literals=22  sites=23
+
+--- T196-3: ONE IMPORT HOP, FOR GUARDS (D-3)
+  files importing a module that defines a restoring CM : 0
+  files importing a module with a module-scope handler  : 0
+  SITES EXCUSED ONLY BY AN IMPORTED CM                  : 0
+  SITES EXCUSED ONLY BY AN IMPORTED HANDLER             : 0
+  imports NOT followed — module not found under the repo root: 35 distinct
+      __future__, argparse, ast, atexit, bashlex, calendar, collections, contextlib, copy, dataclasses, datetime, decimal, difflib, fractions, glob, gzip, hashlib, io, …
+  imports NOT followed — AMBIGUOUS basename (refused, never guessed): 0
+  NOTE: exactly ONE hop is taken. A guard reached through two imports is
+        invisible, and every line above is a REFUSAL, not a clean bill.
+
+--- REFUSED FILES, NAMED (a refusal is an outcome, not a skip)
+  .softhouse/bin/build-oracle-image.sh                             REFUSED-SHELL-NO-PARSER
+  .softhouse/bin/fire-program.sh                                   REFUSED-SHELL-NO-PARSER
+  .softhouse/bin/go-env.sh                                         REFUSED-SHELL-NO-PARSER
+  .softhouse/bin/rehydrate-check.sh                                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/actualactual/src/negative-tests.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/actualactual/src/pathb-capture.sh             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/actualactual/src/run-actualactual.sh          REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/audit-t44/analysis/T175-red/drive-red.sh      REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/audit-t44/charges/bin/mkprobes.sh             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh   REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/audit-t44/charges/bin/rerun.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/audit-t44/charges/bin/runprobes.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/audit-t44/mathcontext/src/read-pathb-wiring.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh  REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/audit-t44/mathcontext/src/run-negative-tests.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/capture.sh                        REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/control.sh                        REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/create-charges.sh                 REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/create-charges2.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/determinism.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/lib.sh                            REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/mkcalcs.sh                        REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/mkcalcs2.sh                       REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/mkcharges.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/mkcharges2.sh                     REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/preconditions.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/run-preconditions.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/selfcheck.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t46-capture.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t46-determinism.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t46-reissue-identity.sh           REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t48-capture.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t48-determinism.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t51-capture.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t51-capture2.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t51-capture3.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t51-capture4.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t51-capture5.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t51-capture6.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t51-determinism.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t51-mkfixtures.sh                 REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/charges/bin/t51-negative.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/leapboundary/analysis/T175-red/drive-red.sh   REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/leapboundary/bin/t55-capture.sh               REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/leapboundary/bin/t55-determinism.sh           REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/leapboundary/bin/t55-negative-tests.sh        REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/mathcontext/analysis/t46_mathcontext_inventory.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/mathcontext/src/read-pathb-wiring.sh          REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/mathcontext/src/run-mathcontext.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/mathcontext/src/run-mathcontext2.sh           REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/mathcontext/src/run-mathcontext3.sh           REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/mathcontext/src/run-negative-tests.sh         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/mathcontext/src/run-t50-tier1.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/mathcontext/src/run-t50-tier2.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/mathcontext/src/t46-assert-pathb-slot.sh      REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/mathcontext/src/t46-negative-identity.sh      REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/mathcontext/src/t46-negative-vacuity.sh       REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/mathcontext/src/t50-negative-tests.sh         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t125/drive-canary-green.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t125/drive-canary-red.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t125/drive-stale-fork.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t149/capture-halfeven-arm.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t149/grade-scratch-store.sh             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t149/prove-redgreen.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t149/t156-p24-scratch-merge.sh          REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t22-audit/fresh-tenant.sh               REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t22-audit/modeprobe.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t22-audit/modeprobe2.sh                 REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t22-audit/probe.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t22-audit/rerun-default.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t22-probe/capture.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t22-probe/repro.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t36/emiloop-probe.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t36/mutation-test.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t36/preconditions.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t36/recapture.sh                        REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t36/recreate-products.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t36/run-invariants-emiloop.sh           REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t36/run-invariants.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t36/rundiff.sh                          REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t36/sha256.sh                           REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t80/forbidden-sentence.sh               REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t80/happy-path.sh                       REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t80/prove-f1.sh                         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t80/prove-f2.sh                         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t80/run-attacks.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t80/shell-invariance.sh                 REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t80/summarise.sh                        REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t99/lib.sh                              REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t99/prove-f1.sh                         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t99/prove-f2.sh                         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t99/prove-f3.sh                         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t99/prove-f4.sh                         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t99/prove-f5-legs.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t99/prove-p24-postmerge.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t99/prove-sweep-patterns.sh             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t99/run-all.sh                          REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/pathb/t99/sweep.sh                            REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/periodratio/analysis/run-t46-monthdiff.sh     REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/periodratio/src/run-periodratio.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/periodratio/src/run-t46-periodratio.sh        REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/run-pass3b.sh                             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/run-pass3c.sh                             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/run-pass3d.sh                             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/run-pass3e.sh                             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/run-pass3f.sh                             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/run-pass3g.sh                             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/run-pass3h.sh                             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/run-pass3i.sh                             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/run-rc6-rounddown-attestation.sh          REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/t169-red/mutate-guards.sh                 REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/t169-red/red-drive-stderr-refusal.sh      REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/t169-red/run-one-variant.sh               REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/src/t169-red/run-t169.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t100-g8-rescope/src/run-t100.sh               REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t117-familyb/src/run-t117-pass2.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t117-familyb/src/run-t117.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t154-nofloat/drive-leg1-e2e.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t154-nofloat/drive-leg1.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t154-nofloat/drive-leg2.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t154-nofloat/drive-leg3.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t154-nofloat/regen-leg1-red.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t154-nofloat/regen-leg2-red.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t154-nofloat/regen-leg3-red.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t159-review-t117/src/run-t159.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t177-so-nondeterminism/jvmdefaults-t177.sh    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t177-so-nondeterminism/manifest_t177.sh       REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t177-so-nondeterminism/report_t177.sh         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t177-so-nondeterminism/run-t177.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t177-so-nondeterminism/run-t177b.sh           REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t64-zeroprincipal/src/run-harness-mutations.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t66-unrecognized-interest/gotest.sh           REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-guards-go-red.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t74-multiplesof/T82-guard-proofs/run-precondition-block.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t83-nonamortizing/src/run-orderdep.sh         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t83-nonamortizing/src/run-t83.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t91/prove-guards.sh                           REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t91/run-attacks.sh                            REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t91/shell-invariance.sh                       REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t91/t115-drive-mf1.sh                         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t91/t115-drive-mf2.sh                         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t91/t115-drive-mf3-mf4.sh                     REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t91/t115-rerun-attacks.sh                     REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t91/t151-drive-g4.sh                          REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t91/t151-drive-g67.sh                         REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t91/t151-drive-vb.sh                          REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t91/t151-merge-check.sh                       REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/t91/verdict.sh                                REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/cap.sh                               REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/cap8.sh                              REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/env.sh                               REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/prove-census-red.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/run-020-accounts.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/run-040-refusals.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/run-060-mappings.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/run-100-finactivity.sh               REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/run-120-delete-update.sh             REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/run-210-a2-7-mapping.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/run-220-a2-7-runtime-v8.sh           REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh    REFUSED-SHELL-NO-PARSER
+  .softhouse/capture/tierA-a2/run-240-a2-7-update-path.sh          REFUSED-SHELL-NO-PARSER
+  .softhouse/conformance.sh                                        REFUSED-SHELL-NO-PARSER
+  .softhouse/guards/check-ledger-invariants.sh                     REFUSED-SHELL-NO-PARSER
+  .softhouse/guards/drive-red-ledger-invariants.sh                 REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T106-evidence/prove-token-forgeable.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/hostile-env-matrix.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/readonly-sourced-edge.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/ifs-routes.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/read-ifs-predicate.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/drive-red.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/run-conformance.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t82-parity.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/handoff/T8-run-conformance.sh                         REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh   REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh  REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/A2-10-probe/poison-d2-shell-matrix.sh         REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/A2-11/re-derive-runtime.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/A2-11/re-observe.sh                           REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/A2-11/run-all.sh                              REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/blast-discriminate.sh           REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/blast-measure.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/charges-attack-expect-override.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/charges-attack-live.sh          REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f1-attack.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f1-attest-attack.sh             REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f2-canary-digests.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f2-clever-liar.sh               REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f2-prefix-pins.sh               REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f2-tooldir-writability.sh       REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f3-check.sh                     REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f4-check.sh                     REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f5-container-gone.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f5-deadtool.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f5-live.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f5-positive-control.sh          REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f6-prove-f1-predicate.sh        REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f6-prove-f4-abort.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/f6-runall-red.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/p24-microfix-check.sh           REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/p24-scratch-merge.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/sweep-broad.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/sweep-misscheck.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/sweep-missprobe.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T135-evidence/sweep-pattern-check.sh          REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r1-mf1.sh                       REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r10-go.sh                       REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r11-hygiene.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r12-grep.sh                     REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r13-vb.sh                       REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r14-g4fix.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r14b-g4fix.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r15-vbfix.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r1b-mf1-red.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r2-va.sh                        REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r3-vcef.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r3b-vf.sh                       REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r4-guards-red.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r5-mutate-g5-g7.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r6-mf2.sh                       REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r6b-mf2-green.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r7-mf3-mf4.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r7b-census.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r8-merge.sh                     REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T138-evidence/r9-post-merge.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/make-poison.sh                     REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-i-invalid-byte.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-ii-literals.sh               REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-iii-census.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-iiib-binary-direct.sh        REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-iv-zero-input.sh             REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-ix-sweep-and-help.sh         REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-v-census-counts.sh           REFUSED-SHELL-NO-PARSER
+ENFORCE-DISCLOSURE: 78 unguarded site(s) with an UNRESOLVED target — FATAL (--enforce-unknown)
+ENFORCE: 35 unguarded mutation(s) of a trusted artefact
+ENFORCE-UNKNOWN: 78 unguarded mutation(s) whose target could not be resolved
+  .softhouse/reviews/T155-probe/prove-vi-build-test-prove.sh       REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-vii-residual-attacks.sh      REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-viii-compiles-on-main.sh     REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-x-removal-and-failclosed.sh  REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-xi-microfix.sh               REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-xii-perl-microfix.sh         REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-xii-perl-true-absence.sh     REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-xiii-deflation.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh        REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/rerun-t154-provers-postmerge.sh    REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/run-conformance.sh                 REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T155-probe/show-refusals.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T158-compare-enumerators.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T183-evidence/drive-probes.sh                 REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T184-evidence/t184-census.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T184-evidence/t184-final.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T184-evidence/t184-jq.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T184-evidence/t184-probe-green-catch.sh       REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T184-evidence/t184-probe-green-float.sh       REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T184-evidence/t184-probe-red-catch.sh         REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T184-evidence/t184-probe-red-float.sh         REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T184-evidence/t184-property.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T184-evidence/t184-run.sh                     REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T184-evidence/t184-sweep.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T184-evidence/t184-vacuity.sh                 REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T184-evidence/t184-vacuity2.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T188-probe/drive-t188.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T189-probe/hardening.sh                       REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T189-probe/matrix.sh                          REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T189-probe/mkfixtures.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T189-probe/provenance.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T189-probe/reachability.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T189-probe/tally.sh                           REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T191-probe/drive-t191.sh                      REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T191-probe/measure-margin.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T191-probe/measure-pipe-buffer.sh             REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T191-probe/mutate-exclusion.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T191-probe/run-harness.sh                     REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T84-evidence/src/run-orderdep2.sh             REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/T84-evidence/src/run-t84.sh                   REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/t172-probe/run-post-fix.sh                    REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/t172-probe/run-pre-fix.sh                     REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/t172-probe/setup-scratch-repo.sh              REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/t179-guard-classifier/fixtures/green_real_trap.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/t179-guard-classifier/fixtures/red_prose_guard.sh REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/t185-probe/probe-t44-successor.sh             REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/t21v2/run-probe2-attested.sh                  REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/t41-probe/t196-drive.sh                       REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/t43-probe/t43_ambient_sites.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/t43-probe/t43_charge_membership.sh            REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/t45-probe/gen-ambient-sites.sh                REFUSED-SHELL-NO-PARSER
+  .softhouse/reviews/t45-probe/gen-cumulative-vs-progressive.sh    REFUSED-SHELL-NO-PARSER
+  refused total: 294

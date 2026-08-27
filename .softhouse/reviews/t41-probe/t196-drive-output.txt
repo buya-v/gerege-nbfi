@@ -1,0 +1,214 @@
+==============================================================================
+T196 drive — frozen digests BEFORE
+  DEC-1       49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+  contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139
+  scratch: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t196.Qxg68q
+==============================================================================
+
+classifier builds: BASE=a2c3c781ccdc8e7ce2eef5ff7fdc39cbf92fa41a  T183=BASE+PROPOSED-backstep.patch  T196=working tree
+python: Python 3.9.6
+grep measured with: /usr/bin/grep -> grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+=== PROBE A (D-1) — three rewriters whose write target is a PARAMETER
+  fixtures: pre-T187 bytes of edit18/20/21 at 16d5252 (COPIED, never run)
+  BASE --enforce exit = 0   <-- 0 is the FAIL-OPEN
+  T183 --enforce exit = 1
+  T196 --enforce exit = 1
+  --- BASE saw:
+--- UNGUARDED MUTATIONS WHOSE TARGET COULD NOT BE RESOLVED (3 sites in 3 files)
+    These are NOT clean and NOT dirty. They are unresolved, and they are
+    printed so nothing is silently dropped (P-40).
+  edit18.py:17  io.open(mode='w')   target: path
+  edit20.py:21  io.open(mode='w')   target: path
+  edit21.py:17  io.open(mode='w')   target: path
+
+  --- T196 sees:
+--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (3 sites in 3 files)
+  edit18.py:17  io.open(mode='w')  tags=PORT,RIG,ADR
+      target: path
+  edit20.py:21  io.open(mode='w')  tags=ADR
+      target: path
+  edit21.py:17  io.open(mode='w')  tags=PORT,RIG,ADR
+      target: path
+
+
+=== PROBE B — one harmless call site must not launder a gate bypass
+  BASE --enforce exit = 0   (UNKNOWN: printed, not excused)
+  T183 --enforce exit = 0   <-- 0, and SILENTLY excused
+  T196 --enforce exit = 1
+  --- T183 verdict matrix (the site is SCRATCH/SANDBOX, in neither finding list):
+--- MUTATION SITES: scope x verdict (every site appears exactly once)
+  scope      UNGUARDED                 GUARDED-PROCESS           GUARDED-FINALLY-INDIRECT  GUARDED-CONTEXTMANAGER    GUARDED-FINALLY           ATOMIC                    SANDBOX                   
+  TRUSTED    0                         0                         0                         0                         0                         0                         0                            (total 0)
+  UNKNOWN    0                         0                         0                         0                         0                         0                         0                            (total 0)
+  SCRATCH    0                         0                         0                         0                         0                         0                         1                            (total 1)
+  ALL        0                         0                         0                         0                         0                         0                         1                            (total 1)
+  --- T196 sees:
+--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (1 sites in 1 files)
+  red_union_scratch_mask.py:27  io.open(mode='w')  tags=ADR
+      target: path
+
+
+=== PROBE C (D-3 GREEN) — mutation local, guard IMPORTED
+  BASE --enforce exit = 1   <-- 1: punishes the hardening idiom
+  T196 --enforce exit = 0
+  --- BASE called these UNGUARDED:
+--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (2 sites in 2 files)
+  green_imported_atexit.py:10  io.open(mode='w')  tags=ADR
+      target: P
+  green_imported_cm.py:14  io.open(mode='w')  tags=ADR
+      target: P
+
+  --- T196 import-hop disclosure:
+--- T196-3: ONE IMPORT HOP, FOR GUARDS (D-3)
+  files importing a module that defines a restoring CM : 2
+  files importing a module with a module-scope handler  : 1
+  SITES EXCUSED ONLY BY AN IMPORTED CM                  : 1
+      green_imported_cm.py:14  enclosed by `with mylib_guard.preserved [imported]` at line 12 (restoring CM)
+  SITES EXCUSED ONLY BY AN IMPORTED HANDLER             : 1
+      green_imported_atexit.py:10  handler registered at module scope in an IMPORTED module: install_restore() registers a handler (imp
+  imports NOT followed — module not found under the repo root: 6 distinct
+      atexit, contextlib, io, os, shutil, tempfile
+  imports NOT followed — AMBIGUOUS basename (refused, never guessed): 0
+  NOTE: exactly ONE hop is taken. A guard reached through two imports is
+        invisible, and every line above is a REFUSAL, not a clean bill.
+
+
+=== PROBE D (D-3 RED) — an import that does NOT protect the site
+  BASE --enforce exit = 1
+  T196 --enforce exit = 1   <-- MUST be 1
+--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (2 sites in 2 files)
+  red_dead_registrar.py:33  io.open(mode='w')  tags=ADR
+      target: P
+  red_import_not_covered.py:28  io.open(mode='w')  tags=ADR
+      target: P
+
+
+=== PROBE E — the contested population, re-derived at 16d5252
+  BASE exit=0
+  T196 exit=0
+  --- BASE (T179 as merged; its published F-2 figure was 22 = 17 ADR + 5 go):
+    truncating write sites on a TRUSTED target : 22
+    files -> RATIFIED DEC-1                    : 17
+    files -> FROZEN contract.go                : 5
+    files -> BOTH                              : 0  []
+    distinct member FILES                      : 22
+    file-artefact PAIRS                        : 22
+  --- T196 (settled answer is 25 files, 20 ADR + 7 go, 2 both):
+    truncating write sites on a TRUSTED target : 25
+    files -> RATIFIED DEC-1                    : 20
+    files -> FROZEN contract.go                : 7
+    files -> BOTH                              : 2  ['edit18.py', 'edit21.py']
+    distinct member FILES                      : 25
+    file-artefact PAIRS                        : 27
+
+=== PROBE F — t41-probe at today's main, under the STRENGTHENED classifier
+  T196 --enforce exit = 0
+  mutation call sites found in Python       : 16
+
+--- MUTATION SITES: scope x verdict (every site appears exactly once)
+  scope      UNGUARDED                 GUARDED-PROCESS-IMPORTED  GUARDED-PROCESS           GUARDED-FINALLY-INDIRECT  GUARDED-CONTEXTMANAGER    GUARDED-FINALLY           ATOMIC                    SANDBOX                   
+  TRUSTED    0                         0                         0                         0                         0                         0                         0                         0                            (total 0)
+  UNKNOWN    0                         0                         0                         0                         0                         0                         0                         0                            (total 0)
+  SCRATCH    0                         0                         0                         0                         0                         0                         0                         16                           (total 16)
+  ALL        0                         0                         0                         0                         0                         0                         0                         16                           (total 16)
+  files present in t41-probe then vs now (rewriters added/removed since 16d5252):
+    REMOVED since 16d5252: none
+    ADDED since 16d5252 (T187's own instruments and transcripts):
+> .softhouse/reviews/t41-probe/t187-census-output.txt
+> .softhouse/reviews/t41-probe/t187-census-prefix-output.txt
+> .softhouse/reviews/t41-probe/t187-census.py
+> .softhouse/reviews/t41-probe/t187-reconcile-counts-output.txt
+> .softhouse/reviews/t41-probe/t187-reconcile-counts.py
+> .softhouse/reviews/t41-probe/t187-redgreen-output.txt
+> .softhouse/reviews/t41-probe/t187-redgreen.py
+
+=== PROBE G — T179's selftest against the MODIFIED classifier (P-56)
+  selftest exit          = 0
+  selftest exit under -O = 0
+SELFTEST PASSED — 8 python cases, 2 shell refusals, both directions asserted
+  classifier on ITSELF (must stay ATOMIC, must self-flag in its own P-48 detector):
+--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone
+    (guard words present ONLY inside string literals; zero try/finally nodes)
+  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a522ddb8440dbbf92/.softhouse/reviews/t179-guard-classifier/guard_classify.py guard-words-in-literals=44  sites=1
+
+
+=== PROBE H — repo-wide delta over .softhouse, site by site
+  BASE sweep exit=0
+  T183 sweep exit=0
+  T196 sweep exit=0
+  --- BASE -> T183 (the patch exactly as T183 wrote it):
+  sites: 446 -> 449   (+3 new, -0 lost)
+    NEW  capture/charges/bin/attest-t40.py:86 subprocess.run(shell) -> SCRATCH/SANDBOX tags=[]
+    NEW  capture/charges/bin/attest.py:80 subprocess.run(shell) -> SCRATCH/SANDBOX tags=[]
+    NEW  capture/pathb/t36/attest.py:208 subprocess.run(shell) -> SCRATCH/SANDBOX tags=[]
+    MOVED capture/t64-zeroprincipal/src/T64-promote-vectors.py:401 open(mode='w')
+          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['CAPTURE']
+          target: path
+    MOVED handoff/T58-promote-vectors.py:708 open(mode='w')
+          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['CAPTURE']
+          target: path
+    MOVED handoff/T61-promote-vectors.py:329 open(mode='w')
+          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['CAPTURE']
+          target: path
+    MOVED handoff/T74-promote-vectors.py:528 open(mode='w')
+          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['CAPTURE']
+          target: path
+    MOVED reviews/t179-guard-classifier/fixtures/green_contextmanager.py:20 os.replace
+          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['PORT', 'RIG']
+          target: path
+  reclassified: 5
+  --- BASE -> T196 (what this branch actually merges):
+  sites: 446 -> 449   (+3 new, -0 lost)
+    NEW  capture/charges/bin/attest-t40.py:86 subprocess.run(shell) -> SCRATCH/SANDBOX tags=[]
+    NEW  capture/charges/bin/attest.py:80 subprocess.run(shell) -> SCRATCH/SANDBOX tags=[]
+    NEW  capture/pathb/t36/attest.py:208 subprocess.run(shell) -> SCRATCH/SANDBOX tags=[]
+    MOVED capture/t64-zeroprincipal/src/T64-promote-vectors.py:401 open(mode='w')
+          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['STORE']
+          target: path
+    MOVED handoff/T58-promote-vectors.py:708 open(mode='w')
+          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['STORE']
+          target: path
+    MOVED handoff/T61-promote-vectors.py:329 open(mode='w')
+          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['STORE']
+          target: path
+    MOVED handoff/T74-promote-vectors.py:528 open(mode='w')
+          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['STORE']
+          target: path
+    MOVED reviews/t179-guard-classifier/fixtures/green_contextmanager.py:20 os.replace
+          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['PORT', 'RIG']
+          target: path
+  reclassified: 5
+  --- T183 -> T196 (what T196 changed about T183's patch):
+  sites: 449 -> 449   (+0 new, -0 lost)
+    MOVED capture/t64-zeroprincipal/src/T64-promote-vectors.py:401 open(mode='w')
+          TRUSTED/UNGUARDED tags=['CAPTURE']   ->   TRUSTED/UNGUARDED tags=['STORE']
+          target: path
+    MOVED handoff/T58-promote-vectors.py:708 open(mode='w')
+          TRUSTED/UNGUARDED tags=['CAPTURE']   ->   TRUSTED/UNGUARDED tags=['STORE']
+          target: path
+    MOVED handoff/T61-promote-vectors.py:329 open(mode='w')
+          TRUSTED/UNGUARDED tags=['CAPTURE']   ->   TRUSTED/UNGUARDED tags=['STORE']
+          target: path
+    MOVED handoff/T74-promote-vectors.py:528 open(mode='w')
+          TRUSTED/UNGUARDED tags=['CAPTURE']   ->   TRUSTED/UNGUARDED tags=['STORE']
+          target: path
+  reclassified: 4
+  --- T196 import-hop disclosure over the whole of .softhouse:
+--- T196-3: ONE IMPORT HOP, FOR GUARDS (D-3)
+  files importing a module that defines a restoring CM : 0
+  files importing a module with a module-scope handler  : 0
+  SITES EXCUSED ONLY BY AN IMPORTED CM                  : 0
+  SITES EXCUSED ONLY BY AN IMPORTED HANDLER             : 0
+  imports NOT followed — module not found under the repo root: 35 distinct
+      __future__, argparse, ast, atexit, bashlex, calendar, collections, contextlib, copy, dataclasses, datetime, decimal, difflib, fractions, glob, gzip, hashlib, io, …
+  imports NOT followed — AMBIGUOUS basename (refused, never guessed): 0
+  NOTE: exactly ONE hop is taken. A guard reached through two imports is
+        invisible, and every line above is a REFUSAL, not a clean bill.
+
+
+==============================================================================
+T196 drive — frozen digests AFTER
+  DEC-1       49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+  contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139
+==============================================================================

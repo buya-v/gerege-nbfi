@@ -1,0 +1,12 @@
+#!/bin/bash
+# CONTROL C0 -- THE SHAPE THE RULE WAS BUILT FROM, and the shape T243 planted for its own red
+# drive. This is `A2-33 sweep.sh:7,14` structurally: a dead worktree under /Users assigned to a
+# variable, and the reassurance as a `|| echo` ARM of the failing subshell.
+#
+# It is here as the CONTROL for the re-derivation. Run the battery against the linter as it
+# shipped and this one is TIER 1 while R1 -- the same defect, same exit 0, same false sentence,
+# reassurance moved to the next line -- is not on the frontier at all. That side-by-side IS the
+# gap the driver measured, re-derived rather than quoted.
+set -u
+WT=/Users/buv/gerege-nbfi/.claude/worktrees/agent-adeadbeefdeadbeef
+( cd "$WT" && git grep -n -I -i -E 'pattern' -- . ) || echo "   (no hits)"

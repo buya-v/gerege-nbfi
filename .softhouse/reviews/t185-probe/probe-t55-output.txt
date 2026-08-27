@@ -1,0 +1,151 @@
+======== LEG 0 -- CLEAN copy of the committed corpus (33 sidecars)
+  successor exit = 0   (predicted 0)
+    captures loaded            : 33 of 33 requested
+    T175 SUCCESSOR: PASS -- 33 captures, 1236 money cells inspected, 212 money deltas considered, 0 swallowed.
+
+======== PLANT: CONTROL parseable 3dp (T175 leg B)   value='1200000.000'
+  ORIGINAL   : I6 VIOLATED  detail=plan.totalRepaymentExpected=1200000.000
+  SUCCESSOR  : exit=1  -> CAUGHT
+      LB-LEAPIN-p7     VIOLATED       47         0        0  plan.totalRepaymentExpected=1200000.000 has 3 dp
+      FAIL  LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected=1200000.000 has 3 dp
+      money cells I6 SWALLOWED   : 0      <-- t55-analyse.py:352 discarded these silently
+      shape        pair         cells  differ   considrd swallowed    max minor u  cell
+      money deltas SWALLOWED     : 0      <-- t55-analyse.py:167 discarded these silently
+      SKIP REGISTER -- 0 swallowed item(s).  Printed on EVERY run, including a clean one,
+      0 items swallowed.  Every money cell handed to I6 parsed as an exact Decimal,
+      T175 SUCCESSOR: FAILED -- 1 breach(es):
+      LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected=1200000.000 has 3 dp
+
+======== PLANT: T175's own unparseable plant   value='1,200,000.000'
+  ORIGINAL   : I6 ok  detail=all cells
+  SUCCESSOR  : exit=1  -> CAUGHT
+      LB-LEAPIN-p7     VIOLATED       46         1        0  plan.totalRepaymentExpected='1,200,000.000' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      FAIL  LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected='1,200,000.000' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      money cells I6 SWALLOWED   : 1      <-- t55-analyse.py:352 discarded these silently
+      shape        pair         cells  differ   considrd swallowed    max minor u  cell
+      money deltas SWALLOWED     : 2      <-- t55-analyse.py:167 discarded these silently
+      SKIP REGISTER -- 3 swallowed item(s).  Printed on EVERY run, including a clean one,
+      FAIL  3 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+      T175 SUCCESSOR: FAILED -- 2 breach(es):
+      LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected='1,200,000.000' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      3 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+
+======== PLANT: EMPTY STRING   value=''
+  ORIGINAL   : I6 ok  detail=all cells
+  SUCCESSOR  : exit=1  -> CAUGHT
+      LB-LEAPIN-p7     VIOLATED       46         1        0  plan.totalRepaymentExpected='' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      FAIL  LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected='' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      money cells I6 SWALLOWED   : 1      <-- t55-analyse.py:352 discarded these silently
+      shape        pair         cells  differ   considrd swallowed    max minor u  cell
+      money deltas SWALLOWED     : 2      <-- t55-analyse.py:167 discarded these silently
+      SKIP REGISTER -- 3 swallowed item(s).  Printed on EVERY run, including a clean one,
+      FAIL  3 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+      T175 SUCCESSOR: FAILED -- 2 breach(es):
+      LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected='' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      3 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+
+======== PLANT: the STRING 'null'   value='null'
+  ORIGINAL   : I6 ok  detail=all cells
+  SUCCESSOR  : exit=1  -> CAUGHT
+      LB-LEAPIN-p7     VIOLATED       46         1        0  plan.totalRepaymentExpected='null' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      FAIL  LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected='null' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      money cells I6 SWALLOWED   : 1      <-- t55-analyse.py:352 discarded these silently
+      shape        pair         cells  differ   considrd swallowed    max minor u  cell
+      money deltas SWALLOWED     : 2      <-- t55-analyse.py:167 discarded these silently
+      SKIP REGISTER -- 3 swallowed item(s).  Printed on EVERY run, including a clean one,
+      FAIL  3 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+      T175 SUCCESSOR: FAILED -- 2 breach(es):
+      LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected='null' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      3 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+
+======== PLANT: UNICODE MINUS U+2212   value='−1200000.00'
+  ORIGINAL   : I6 ok  detail=all cells
+  SUCCESSOR  : exit=1  -> CAUGHT
+      LB-LEAPIN-p7     VIOLATED       46         1        0  plan.totalRepaymentExpected='−1200000.00' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      FAIL  LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected='−1200000.00' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      money cells I6 SWALLOWED   : 1      <-- t55-analyse.py:352 discarded these silently
+      shape        pair         cells  differ   considrd swallowed    max minor u  cell
+      money deltas SWALLOWED     : 2      <-- t55-analyse.py:167 discarded these silently
+      SKIP REGISTER -- 3 swallowed item(s).  Printed on EVERY run, including a clean one,
+      FAIL  3 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+      T175 SUCCESSOR: FAILED -- 2 breach(es):
+      LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected='−1200000.00' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      3 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+
+======== PLANT: NBSP thousands sep   value='1\xa0200\xa0000.000'
+  ORIGINAL   : I6 ok  detail=all cells
+  SUCCESSOR  : exit=1  -> CAUGHT
+      LB-LEAPIN-p7     VIOLATED       46         1        0  plan.totalRepaymentExpected='1\xa0200\xa0000.000' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      FAIL  LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected='1\xa0200\xa0000.000' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      money cells I6 SWALLOWED   : 1      <-- t55-analyse.py:352 discarded these silently
+      shape        pair         cells  differ   considrd swallowed    max minor u  cell
+      money deltas SWALLOWED     : 2      <-- t55-analyse.py:167 discarded these silently
+      SKIP REGISTER -- 3 swallowed item(s).  Printed on EVERY run, including a clean one,
+      FAIL  3 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+      T175 SUCCESSOR: FAILED -- 2 breach(es):
+      LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected='1\xa0200\xa0000.000' UNPARSEABLE AS DECIMAL (InvalidOperation)
+      3 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+
+======== PLANT: full-width digits   value='１２０００００.０００'
+  ORIGINAL   : I6 VIOLATED  detail=plan.totalRepaymentExpected=１２０００００.０００
+  SUCCESSOR  : exit=1  -> CAUGHT
+      LB-LEAPIN-p7     VIOLATED       47         0        0  plan.totalRepaymentExpected=１２０００００.０００ has 3 dp
+      FAIL  LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected=１２０００００.０００ has 3 dp
+      money cells I6 SWALLOWED   : 0      <-- t55-analyse.py:352 discarded these silently
+      shape        pair         cells  differ   considrd swallowed    max minor u  cell
+      money deltas SWALLOWED     : 0      <-- t55-analyse.py:167 discarded these silently
+      SKIP REGISTER -- 0 swallowed item(s).  Printed on EVERY run, including a clean one,
+      0 items swallowed.  Every money cell handed to I6 parsed as an exact Decimal,
+      T175 SUCCESSOR: FAILED -- 1 breach(es):
+      LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected=１２０００００.０００ has 3 dp
+
+======== PLANT: BARE JSON NUMBER 3dp (cells() class)   value=1200000.0
+  ORIGINAL   : I6 ok  detail=all cells
+  SUCCESSOR  : exit=1  -> CAUGHT
+      FAIL  LB-LEAPIN-p7: 1 MONEYISH leaf/leaves dropped by cells() before I6 could see them (not a str/bool leaf) -- the denominator shrank invisibly
+      money cells I6 SWALLOWED   : 0      <-- t55-analyse.py:352 discarded these silently
+      shape        pair         cells  differ   considrd swallowed    max minor u  cell
+      money deltas SWALLOWED     : 2      <-- t55-analyse.py:167 discarded these silently
+      SKIP REGISTER -- 2 swallowed item(s).  Printed on EVERY run, including a clean one,
+      FAIL  2 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+      T175 SUCCESSOR: FAILED -- 2 breach(es):
+      2 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+
+======== PLANT: JSON null (cells() class)   value=None
+  ORIGINAL   : I6 ok  detail=all cells
+  SUCCESSOR  : exit=1  -> CAUGHT
+      FAIL  LB-LEAPIN-p7: 1 MONEYISH leaf/leaves dropped by cells() before I6 could see them (not a str/bool leaf) -- the denominator shrank invisibly
+      money cells I6 SWALLOWED   : 0      <-- t55-analyse.py:352 discarded these silently
+      shape        pair         cells  differ   considrd swallowed    max minor u  cell
+      money deltas SWALLOWED     : 2      <-- t55-analyse.py:167 discarded these silently
+      SKIP REGISTER -- 2 swallowed item(s).  Printed on EVERY run, including a clean one,
+      FAIL  2 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+      T175 SUCCESSOR: FAILED -- 2 breach(es):
+      2 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+
+======== PLANT: NESTED OBJECT (cells() class)   value={'v': '1200000.000'}
+  ORIGINAL   : I6 ok  detail=all cells
+  SUCCESSOR  : exit=1  -> CAUGHT
+      FAIL  LB-LEAPIN-p7: 1 MONEYISH leaf/leaves dropped by cells() before I6 could see them (not a str/bool leaf) -- the denominator shrank invisibly
+      money cells I6 SWALLOWED   : 0      <-- t55-analyse.py:352 discarded these silently
+      shape        pair         cells  differ   considrd swallowed    max minor u  cell
+      money deltas SWALLOWED     : 2      <-- t55-analyse.py:167 discarded these silently
+      SKIP REGISTER -- 2 swallowed item(s).  Printed on EVERY run, including a clean one,
+      FAIL  2 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+      T175 SUCCESSOR: FAILED -- 2 breach(es):
+      2 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+
+======== PLANT: Decimal-legal exponent form 3dp   value='1.200000000E+6'
+  ORIGINAL   : I6 VIOLATED  detail=plan.totalRepaymentExpected=1.200000000E+6
+  SUCCESSOR  : exit=1  -> CAUGHT
+      LB-LEAPIN-p7     VIOLATED       47         0        0  plan.totalRepaymentExpected=1.200000000E+6 has 3 dp
+      FAIL  LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected=1.200000000E+6 has 3 dp
+      money cells I6 SWALLOWED   : 0      <-- t55-analyse.py:352 discarded these silently
+      shape        pair         cells  differ   considrd swallowed    max minor u  cell
+      money deltas SWALLOWED     : 0      <-- t55-analyse.py:167 discarded these silently
+      SKIP REGISTER -- 0 swallowed item(s).  Printed on EVERY run, including a clean one,
+      0 items swallowed.  Every money cell handed to I6 parsed as an exact Decimal,
+      T175 SUCCESSOR: FAILED -- 1 breach(es):
+      LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected=1.200000000E+6 has 3 dp
+
+######## T185 RESULT: 0 plant(s) silently accepted by the successor

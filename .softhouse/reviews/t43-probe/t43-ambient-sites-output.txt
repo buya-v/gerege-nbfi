@@ -1,0 +1,14 @@
+--- direct MoneyHelper reads in Money.java ---
+103:        return of(currency, newAmount, MoneyHelper.getMathContext());
+115:        return of(currency, newAmount, MoneyHelper.getMathContext());
+119:        return zero(currency, MoneyHelper.getMathContext());
+131:        return zero(currency, MoneyHelper.getMathContext());
+154:            amountScaled = existingVal.divide(inMultiplesOfValue, 0, MoneyHelper.getRoundingMode()).multiply(inMultiplesOfValue);
+160:        return roundToMultiplesOf(existingVal, inMultiplesOf, MoneyHelper.getMathContext());
+495:        return mc != null ? mc : MoneyHelper.getMathContext();
+
+--- instance methods routing through the TWO-ARG Money.of (=> ambient) ---
+233:        return Money.of(getCurrencyData(), total);
+
+--- callers of the one-arg Money.zero(CurrencyData) on the progressive path ---
+/Users/buv/fineract/fineract-progressive-loan/src/main/java/org/apache/fineract/portfolio/loanproduct/calc/ProgressiveEMICalculator.java:182:                .seedDate(firstDisbursedPeriodStartDate).inArrearsTolerance(Money.zero(loanProductRelatedDetail.getCurrencyData()))

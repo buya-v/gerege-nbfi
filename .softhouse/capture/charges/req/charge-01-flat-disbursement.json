@@ -1,0 +1,13 @@
+{
+ "name": "T40 flat fee at disbursement",
+ "chargeAppliesTo": 1,
+ "chargeTimeType": 1,
+ "chargeCalculationType": 1,
+ "chargePaymentMode": 0,
+ "currencyCode": "MNT",
+ "amount": 15000,
+ "penalty": false,
+ "active": true,
+ "locale": "en",
+ "monthDayFormat": "dd MMM"
+}

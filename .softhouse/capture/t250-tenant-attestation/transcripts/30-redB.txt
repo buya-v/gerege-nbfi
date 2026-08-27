@@ -1,0 +1,59 @@
+== capturing a REAL exchange from the live oracle (tenant SENT = default) ==
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/out/probe.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.6R0DNl/trace (1 send-header block(s))
+probe                                        HTTP 400
+oracle status: 400
+
+--- the sidecar as derived ---
+attestation-derivation: curl --trace-ascii; request headers AS SENT
+send-header-block 1 of 1
+POST /fineract-provider/api/v1/offices HTTP/1.1
+Host: localhost:8443
+User-Agent: curl/8.7.1
+Accept: */*
+Authorization: Basic <redacted sha256:2614d66f727c25bb>
+Fineract-Platform-TenantId: default
+Content-Type: application/json
+Content-Length: 46
+request-headers-artefact: probe.reqhdr
+request-headers-sha256: f799d89dc358fc8ec16b3ebb8907e563e23e29072902e7b41bcc390e846584de
+body-wire-bytes-artefact: probe.req
+body-sha256: a4e0d3eeb2768121d86bc1b224f6a0b0fa721a035e3798f4ef7f3141eb9a1e2c
+body-bytes: 46
+content-length-crosscheck: MATCH (46 bytes)
+captured-at-utc: 2026-08-22T12:58:05Z
+
+== arms ==
+ARM 0  expected rc=0  got rc=0  [ok]  POSITIVE CONTROL: nothing touched
+        VERIFIED /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-0/probe.http against /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-0/probe.reqhdr
+ARM 1  expected rc=1  got rc=1  [ok]  sidecar edited to claim tenant 'gerege' when 'default' was sent
+        ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-1/probe.http
+          sidecar OMITS a line that was sent: 'Fineract-Platform-TenantId: default'
+          sidecar ASSERTS a line that was NOT sent: 'Fineract-Platform-TenantId: gerege'
+ARM 2  expected rc=1  got rc=1  [ok]  header record edited, sidecar untouched
+        ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-2/probe.http
+          header-record digest MISMATCH: sidecar claims f799d89dc358fc8ec16b3ebb8907e563e23e29072902e7b41bcc390e846584de, file is 0ba40c45b450f152f5747cf1dcdefb160be333581d3a2cee4684e6969a80cf63
+          sidecar OMITS a line that was sent: 'Fineract-Platform-TenantId: gerege'
+          sidecar ASSERTS a line that was NOT sent: 'Fineract-Platform-TenantId: default'
+ARM 3  expected rc=2  got rc=2  [ok]  header record DELETED -- must refuse, not pass
+        REFUSING: header record does not exist: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-3/probe.reqhdr
+ARM 4  expected rc=2  got rc=2  [ok]  legacy literal sidecar, no derivation provenance
+        REFUSING: sidecar /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-4/probe.http carries no `attestation-derivation: curl --trace-ascii; request headers AS SENT` line. It was not derived from a wire record, so it is UNVERIFIABLE -- it may be true, but nothing here can tell you. REFUSED (this is the T245 F-2 shape).
+ARM 5  expected rc=1  got rc=1  [ok]  body artefact swapped under a sidecar that hashed the original
+        ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-5/probe.http
+          body-sha256 MISMATCH against the artefact
+          body-bytes MISMATCH: sidecar says 46, artefact is 49
+          Content-Length SENT (46) != committed body artefact (49 bytes)
+ARM 6  expected rc=1  got rc=1  [ok]  Content-Length sent != committed body artefact byte count
+        ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-6/probe.http
+          Content-Length SENT (9999) != committed body artefact (46 bytes)
+ARM 7  expected rc=0  got rc=0  [ok]  HONEST NEGATIVE: whole artefact set forged consistently -- NOT caught here
+        VERIFIED /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-7/probe.http against /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-7/probe.reqhdr
+
+arms as expected: 8    arms NOT as expected: 0
+RED-DRIVE B: PASS
+  A disagreement between what was SENT and what is RECORDED is DETECTED in every
+  single-artefact tampering shape tested (arms 1, 2, 5, 6), and a missing or
+  underived record is REFUSED rather than passed (arms 3, 4).
+  WHAT IS NOT CLAIMED (arm 7): a consistent forgery of the entire artefact set
+  is NOT caught by this module. It is caught, if at all, by MANIFEST.sha256 and
+  the vectors' capture_sha256 pins. Stated, not hidden.

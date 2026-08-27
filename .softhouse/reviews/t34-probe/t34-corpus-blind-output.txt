@@ -1,0 +1,25 @@
+T34 (E) -- can any committed capture see the periodRatio question?
+RE-DERIVATION ONLY.  NO ORACLE WAS CONTACTED.
+
+  P-CAL          start 2024-01-01 disb 2024-01-01  all periodRatio == 1: yes
+  P-00           start 2024-01-01 disb 2024-01-01  all periodRatio == 1: yes
+  P-01           start 2024-01-01 disb 2024-01-01  all periodRatio == 1: yes
+  P-02           start 2024-01-31 disb 2024-01-31  all periodRatio == 1: yes
+  P-02b          start 2024-01-30 disb 2024-01-30  all periodRatio == 1: yes
+  P-03           start 2024-01-01 disb 2024-02-01  all periodRatio == 1: yes
+  P-04f          start 2024-01-01 disb 2024-01-01  all periodRatio == 1: yes
+  P-04t          start 2024-01-01 disb 2024-01-01  all periodRatio == 1: yes
+  P-MNT-5M       start 2024-01-01 disb 2024-01-01  all periodRatio == 1: yes
+  P-MNT-1M2      start 2024-01-01 disb 2024-01-01  all periodRatio == 1: yes
+  P-MNT-50M      start 2024-01-01 disb 2024-01-01  all periodRatio == 1: yes
+  P-MNT-4M999    start 2024-01-01 disb 2024-01-01  all periodRatio == 1: yes
+
+  the 13 observations of DEC-1 4.3.1's Provenance paragraph (schedule start 2024-01-01):
+    13 of 13 have periodRatio == 1 on every period
+
+  Path-A captures with any non-unit periodRatio: 0 of 12
+
+  CONCLUSION: the committed corpus is entirely blind to the difference
+  between DEC-1 revision 6's normative `RepaymentEvery` multiplier and
+  the pinned source's `periodRatio`.  Every capture, and every one of
+  the thirteen observations, sits on the sub-manifold where they coincide.

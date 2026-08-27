@@ -1,0 +1,16 @@
+T39 controls -- expectations TRANSCRIBED from committed records / source literals.
+
+C1 CALIBRATION  T39-CAL vs the shipped test literal at (12, HALF_UP)  [EmbeddableProgressiveLoanScheduleGeneratorTest.java:44,74-95]
+   -> compared 4 totals + 3 disbursement columns + 6 rows x 9 columns = 61 cells
+
+C2 REPRODUCTION  T39-CTL-Q0a vs committed observation Q0a  [.softhouse/reviews/t23-probe/t23-probe-output.txt:5-16]
+   -> compared 4 totals + 2 disbursement columns + 6 rows x 6 columns = 42 cells
+      (that record carries no fee / penalty / totalOutstandingBalance column)
+
+C3 REPRODUCTION  T39-CTL-1 vs committed capture T37-3-A  [.softhouse/handoff/T37-dec1-binding-captures.md, item 3]
+   -> compared 4 totals + 6 rows x 6 columns = 40 cells
+
+C4 REPRODUCTION  T39-ME-A vs committed capture T37-3b-2  [.softhouse/handoff/T37-dec1-binding-captures.md, item 3b]
+   -> compared the 3 scalars the handoff publishes for this shape
+
+ALL FOUR CONTROLS PASS -- every transcribed expectation reproduced digit for digit.

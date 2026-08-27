@@ -1,0 +1,3 @@
+â poison
+: unbound variable
+line3 ok

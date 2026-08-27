@@ -1,0 +1,14 @@
+IDENTICAL  attack-1a-wrong-tenant-sh.txt  vs  attack-1a-wrong-tenant-bash.txt
+IDENTICAL  attack-1b-wrong-tenant-into-gerege-dir-sh.txt  vs  attack-1b-wrong-tenant-into-gerege-dir-bash.txt
+IDENTICAL  attack-1c-stamp-mismatch-sh.txt  vs  attack-1c-stamp-mismatch-bash.txt
+IDENTICAL  attack-2a-mutated-canary-gerege-sh.txt  vs  attack-2a-mutated-canary-gerege-bash.txt
+IDENTICAL  attack-2b-mutated-canary-default-sh.txt  vs  attack-2b-mutated-canary-default-bash.txt
+IDENTICAL  attack-3a-swapped-canary-gerege-sh.txt  vs  attack-3a-swapped-canary-gerege-bash.txt
+IDENTICAL  attack-3b-missing-canary-sh.txt  vs  attack-3b-missing-canary-bash.txt
+IDENTICAL  attack-3c-no-canary-sh.txt  vs  attack-3c-no-canary-bash.txt
+IDENTICAL  attack-4a-expect-override-default-sh.txt  vs  attack-4a-expect-override-default-bash.txt
+IDENTICAL  attack-4b-expect-override-gerege-sh.txt  vs  attack-4b-expect-override-gerege-bash.txt
+IDENTICAL  attack-4c-decoy-variable-sh.txt  vs  attack-4c-decoy-variable-bash.txt
+
+pairs compared: 11   differing: 0
+RESULT: the recipe behaves IDENTICALLY under sh and bash across every attack.

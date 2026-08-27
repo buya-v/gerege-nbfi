@@ -1,0 +1,14 @@
+distinctness of each -A observation vs plain (T42-MX-00-A):
+  plain                            0 cells differ from plain
+  drift                            45 cells differ from plain
+  monthEnd                         14 cells differ from plain
+  downPayment25                    57 cells differ from plain
+  downPaymentAwkward               59 cells differ from plain
+  downPaymentMultiples1000         57 cells differ from plain
+  multiples1000                    0 cells differ from plain
+  zeroDpMultiples100               46 cells differ from plain
+  zeroDpMultiples100DownPayment    69 cells differ from plain
+  fixedLength6                     0 cells differ from plain
+  daysInYearActual                 30 cells differ from plain
+  actualActual                     30 cells differ from plain
+  interestRecognitionOnDisb        0 cells differ from plain

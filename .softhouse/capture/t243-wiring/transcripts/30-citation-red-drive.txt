@@ -1,0 +1,95 @@
+T243 RED DRIVE 3 — part two of the capture citation, through conformance.sh
+commit        : 693c768d752df7a475938df3e4fa3cd72b138e18
+vector digest : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d   (must be identical at the end)
+
+==================================================================
+MEASUREMENT — where part two ACTUALLY resolves, all twelve
+citations, re-derived independently of the Go code.
+==================================================================
+  CALIBRATE+ known positive resolves ARTEFACT-BYTES; CALIBRATE- known negative resolves UNRESOLVED. Matcher trusted.
+  LDG-01-manual-je-3leg-minor-units              capture_ref          FILE-NAME-ONLY  sha OK
+  LDG-01-manual-je-3leg-minor-units              request_capture_ref  HTTP-SIDECAR    sha OK
+  LDG-02-repayment-split-4leg-minor-units        capture_ref          FILE-NAME-ONLY  sha OK
+  LDG-02-repayment-split-4leg-minor-units        request_capture_ref  HTTP-SIDECAR    sha OK
+  LDG-03-overpayment-4leg-minor-units            capture_ref          FILE-NAME-ONLY  sha OK
+  LDG-03-overpayment-4leg-minor-units            request_capture_ref  HTTP-SIDECAR    sha OK
+  LDG-04-header-account-accepted                 capture_ref          ARTEFACT-BYTES  sha OK
+  LDG-04-header-account-accepted                 request_capture_ref  HTTP-SIDECAR    sha OK
+  LDG-REFUSE-01-unbalanced-by-one-minor-unit     capture_ref          HTTP-SIDECAR    sha OK
+  LDG-REFUSE-01-unbalanced-by-one-minor-unit     request_capture_ref  HTTP-SIDECAR    sha OK
+  LDG-REFUSE-02-manual-adjustments-not-permitted capture_ref          HTTP-SIDECAR    sha OK
+  LDG-REFUSE-02-manual-adjustments-not-permitted request_capture_ref  HTTP-SIDECAR    sha OK
+  ---
+  12 citations over 6 vectors: ARTEFACT-BYTES 1, FILE-NAME-ONLY 3, HTTP-SIDECAR 8
+
+==================================================================
+CONTROL 0 — pristine tree. The census is printed by the harness on
+every run, and the population equals the pin.
+==================================================================
+  exit=0
+  OK   [control0] found (1): ledger citations        12 PART-TWO resolutions over the loaded corpus: 1 ARTEFACT-BYTES,
+  OK   [control0] found (1): 8 HTTP-SIDECAR, 3 FILE-NAME-ONLY (pinned 3), 0 UNRESOLVED.
+  OK   [control0] found (1): FILE-NAME-ONLY: LDG-01-manual-je-3leg-minor-units provenance.capture_ref
+  OK   [control0] found (1): VERDICT: PASS (exit 0)
+  OK   [control0] exit 0
+
+==================================================================
+RED A — INFLATION. Repoint LDG-REFUSE-01's capture_ref at a readback
+        artefact whose sidecar does NOT carry the id, with the id and
+        the CORRECT sha256 moved with it. Every other check passes:
+        the artefact exists, is non-empty, and digests exactly. Only
+        part two's WEAKEST branch would admit it, and it is not pinned.
+==================================================================
+  perturbation PROVEN APPLIED in .softhouse/vectors/ledger/LDG-REFUSE-01-unbalanced-by-one-minor-unit.json
+  exit=2
+  OK   [RED-A] found (1): resolves PART TWO of its citation BY FILE NAME ONLY
+  OK   [RED-A] found (1): reads ZERO bytes of the
+  OK   [RED-A] found (2): LDG-REFUSE-01-unbalanced-by-one-minor-unit
+  OK   [RED-A] absent as required: has changed since the vector
+  OK   [RED-A] exit 2 (non-zero)
+
+==================================================================
+RED B — THE ARGUMENT. LDG-REFUSE-02's capture_ref is pointed at a
+        DIFFERENT capture's artefact, and given THAT artefact's
+        CORRECT sha256. The digest check is fully satisfied and stays
+        silent. If part two were retired as 'redundant given the
+        sha256', this run would be GREEN over a vector citing the
+        wrong capture case.
+==================================================================
+  perturbation PROVEN APPLIED in .softhouse/vectors/ledger/LDG-REFUSE-02-manual-adjustments-not-permitted.json
+  exit=2
+  OK   [RED-B] found (1): occurs neither in the bytes of
+  OK   [RED-B] found (1): does not answer to the
+  OK   [RED-B] found (1): LDG-REFUSE-02-manual-adjustments-not-permitted
+  OK   [RED-B] absent as required: has changed since the vector
+  OK   [RED-B] exit 2 (non-zero) — part two caught a mis-citation the sha256 could not
+
+==================================================================
+RED C — DEFLATION. Add a FOURTH pin row for a citation that resolves
+        the STRONGEST way (LDG-04's response carries the id in its own
+        bytes). The pin now excuses a weakness that is not there, and
+        the harness must say so instead of agreeing with itself.
+==================================================================
+  perturbation PROVEN APPLIED in nexus/internal/apps/ledger/conformance/admit.go
+  exit=2
+  OK   [RED-C] found (2): citationNameOnlyPin carries
+  OK   [RED-C] found (1): resolved ARTEFACT-BYTES on this
+  OK   [RED-C] found (1): A pin nothing needs is a sentence nothing checks
+  OK   [RED-C] exit 2 (non-zero)
+
+==================================================================
+GREEN AGAIN — anti-no-op close.
+==================================================================
+  exit=0
+  OK   [GREEN] found (1): 8 HTTP-SIDECAR, 3 FILE-NAME-ONLY (pinned 3), 0 UNRESOLVED.
+  OK   [GREEN] found (1): VERDICT: PASS (exit 0)
+  OK   [GREEN] exit 0
+
+  vector digest at start : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+  vector digest at end   : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+  OK   [digest] the vector store is byte-identical to where it started
+  vectors + admit.go differ from their pre-mutation copies (0 = clean): 0
+
+==================================================================
+RED DRIVE 3: 23 passed, 0 failed
+==================================================================

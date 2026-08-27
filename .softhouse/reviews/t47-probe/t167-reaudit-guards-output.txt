@@ -1,0 +1,68 @@
+
+==============================================================================
+== .softhouse/capture/pathb/t149/prove-exit-trap.py
+==============================================================================
+  bytes               : 15727
+  parser              : ast (authoritative for Python)
+  try blocks          : 2   (with a finally: 0, except clauses: 2)
+  with statements     : 4
+  atexit.register     : 0 
+  signal.signal       : 0 
+  guard words inside STRING LITERALS: {'trap': 8}
+  mutating call sites (11):
+    :116  os.makedirs(t149)
+    :117  os.makedirs(os.path.join(sb, '.softhouse', 'handoff'))
+    :118  shutil.copytree(os.path.join(REPO, '.softhouse', 'vectors'), os.path.join(sb, '.softhouse', 'vectors'))
+    :121  open(dst, 'wb')
+    :123  open(os.path.join(sb, '.softhouse', 'handoff', 'T61-mutations.py'), 'w')
+    :125  open(os.path.join(sb, '.softhouse', 'conformance.sh'), 'w')
+    :129  os.replace(os.path.join(sb, VEC_REL), os.path.join(t149, '.parked-vector.json'))
+    :220  shutil.rmtree(sb0, ignore_errors=True)
+    :274  shutil.rmtree(r['sandbox'], ignore_errors=True)
+    :290  shutil.rmtree(r['sandbox'], ignore_errors=True)
+    :304  shutil.rmtree(r['sandbox'], ignore_errors=True)
+
+==============================================================================
+== .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py
+==============================================================================
+  bytes               : 8711
+  parser              : ast (authoritative for Python)
+  try blocks          : 2   (with a finally: 0, except clauses: 2)
+  with statements     : 1
+  atexit.register     : 0 
+  signal.signal       : 0 
+  guard words inside STRING LITERALS: {'trap': 6, 'finally': 3, 'atexit': 3, '__exit__': 1, 'contextmanager': 1}
+  mutating call sites (0):
+
+==============================================================================
+== .softhouse/capture/pathb/t99/prove-p24-postmerge.sh
+==============================================================================
+  bytes               : 8353
+  parser              : shlex POSIX tokeniser - NOT a shell parser.
+                        It strips `#` comments and quoted strings, which is what
+                        the regex failed to do, but it does not understand
+                        redirections or compound commands.  Stated, not hidden.
+  guard words as unquoted TOKENS: {}
+  guard words anywhere in the raw text (what the regex saw): 2
+  candidate mutating command lines (hand-adjudicate each):
+    :44   rm -rf "$SCRATCH" || die "cannot clear $SCRATCH"
+    :46   git clone --no-local --quiet "$REPO" "$SCRATCH/clone" || die "clone failed"
+    :51   git -C "$C" checkout --quiet -B main origin/main || die "cannot check out origin/main"
+    :56   git -C "$C" merge --quiet --no-edit "origin/$BRANCH" > "$SCRATCH/merge.txt" 2>&1
+    :61   sed 's/^/    /' "$SCRATCH/merge.txt"
+    :86   sh "$C/$PB/t99/prove-$f.sh" > "$SCRATCH/$1-$f.txt" 2>&1
+    :133  git -C "$C" show "$T99_HEAD:$PB/t99/$fl" > "$C/$PB/t99/$fl" || die "cannot restore $fl from $T99_HEAD"
+
+==============================================================================
+== .softhouse/reviews/t47-probe/t47_edit_1.py
+==============================================================================
+  bytes               : 22276
+  parser              : ast (authoritative for Python)
+  try blocks          : 2   (with a finally: 2, except clauses: 0)
+  with statements     : 1
+  atexit.register     : 0 
+  signal.signal       : 0 
+  guard words inside STRING LITERALS: {'trap': 5, 'finally': 2, 'atexit': 1}
+  mutating call sites (2):
+    :169  os.replace(tmp, path)
+    :173  os.unlink(tmp)

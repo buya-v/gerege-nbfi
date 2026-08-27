@@ -1,0 +1,11 @@
+{
+  "schema": "gerege.ledger.pin/v1",
+
+  "_note": "THE LEDGER CORPUS'S STORE-LEVEL PIN. It is a SEPARATE FILE from PIN.json and that is DEC-2 precondition P-7, decided. P-7 asks what contract revision a NON-loanschedule vector declares, given that `dec1_revision` is checked per-vector against the single store pin (admit.go:149). A ledger vector asserting `dec1_revision: 12` would be asserting a LOANSCHEDULE contract revision, which is semantically wrong. THE DECISION: a ledger vector declares `dec2_revision` and is checked against THIS file. REJECTED ALTERNATIVE, recorded: reuse `dec1_revision` with a note explaining that it does not mean what it says. That is precisely the semantic error P-7 names, and it would couple re-stamping this corpus to an amendment of the OTHER context's contract. THERE IS NO CONTRACT DIGEST HERE AND THERE IS NO SLOT FOR ONE, because DEC-2 §1.1 states that the ADR 'does not create or freeze a Go file, and could not', that 'there is no counterpart file for this context', and that no PIN digest appears in that document at all. A field for a digest that does not exist is a slot inviting somebody to fill it with the wrong file. When a ledger CONTRACT is eventually frozen -- a separate, later gate -- a digest field is added here and every vector is re-stamped in one commit.",
+
+  "dec2_revision": 5,
+
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+
+  "inadmissible_product_ids": [22, 23, 24, 27, 28]
+}

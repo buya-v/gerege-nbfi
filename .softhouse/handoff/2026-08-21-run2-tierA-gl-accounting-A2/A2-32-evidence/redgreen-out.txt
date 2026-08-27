@@ -1,0 +1,33 @@
+=== A2-32 I4-BUILDER population, both polarities ===
+worktree HEAD: 33d19a6
+
+--- GREEN: A2-32's own probe over the real tree ---
+root                            /Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e/nexus
+CONTROL files (.go)             47
+CONTROL packages                5
+CONTROL calls (*ast.CallExpr)   5045
+POPULATION OPAQUE-SQL  (mutatingExecRe)  0
+POPULATION I4-BUILDER  (mutatingCallRe)  0
+
+--- GREEN: the REAL ledgerguard binary over the same tree (control) ---
+CENSUS ledger-invariants — inspected 47 Go files / 5 packages / 525 funcs (1 hold-named) / 694 assignment or inc-dec statements / 333 write targets / 4411 string literals in 3901 concatenation groups / 5045 calls under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e/nexus (recursive, whole Go tree)
+clean: no balance write path, no UPDATE/DELETE against a journal-entry table, and no hold touching a posted balance, across 47 Go files in 5 packages.
+
+--- RED: A2-32's own probe over the scratch tree with three builder verbs planted ---
+root                            /tmp/a2-32/red-tree
+CONTROL files (.go)             48
+CONTROL packages                6
+CONTROL calls (*ast.CallExpr)   5048
+POPULATION OPAQUE-SQL  (mutatingExecRe)  0
+POPULATION I4-BUILDER  (mutatingCallRe)  3
+  I4-BUILDER population member: internal/apps/probe/planted.go:13:2  Update
+  I4-BUILDER population member: internal/apps/probe/planted.go:14:2  Delete
+  I4-BUILDER population member: internal/apps/probe/planted.go:15:2  Save
+
+--- RED: the REAL ledgerguard binary over the scratch tree (control) ---
+REFUSED — the double-entry invariants DEC-2 §4.4 obliges are violated in the Go tree:
+  [I4-BUILDER] internal/apps/probe/planted.go:13:2
+  [I4-BUILDER] internal/apps/probe/planted.go:14:2
+  [I4-BUILDER] internal/apps/probe/planted.go:15:2
+
+=== end ===

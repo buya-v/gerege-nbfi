@@ -1,0 +1,13 @@
+{
+ "name": "T40 percent of amount per instalment",
+ "chargeAppliesTo": 1,
+ "chargeTimeType": 8,
+ "chargeCalculationType": 2,
+ "chargePaymentMode": 0,
+ "currencyCode": "MNT",
+ "amount": 0.5,
+ "penalty": false,
+ "active": true,
+ "locale": "en",
+ "monthDayFormat": "dd MMM"
+}

@@ -1,0 +1,10 @@
+preconditions OK
+  image sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  fineract 426a23544e8426a38ae43ae404670a0a7e85b9eb (clean)
+  seam bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714
+  harness 6f218e58af87fb0d4ab2ea4ae18097938dc4fddfbfc32f5f6d16d4ee221fe504
+  run t117-20260821T080240Z
+capture OK: 202 cases, 93433 emitted period rows, canonical sha256 1568885c6acfba7e39f9eec85d0ada907c7281d80cd6e0687af7a31a06c4bb31
+  id list matches the registered list exactly and IN ORDER: 202 ids
+  calibrations P-CAL-ZPA/ZPB reproduce T64-ZP-A/B cell-for-cell, 0 input diffs
+RUNNER EXIT 0

@@ -1,0 +1,33 @@
+=== ATTACK 2b — the same mutated canary on the HALF_EVEN 'default' tenant (T77's exact exploit)
+runner shell: sh   recipe interpreter: sh   cwd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb
+
+$ CANARY_REQ=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-2-req-mutated.json "$SH" t36/preconditions.sh default
+
+== T36 Path B preconditions, tenant 'default' ==
+  PASS  image digest sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  PASS  jar git.commit.id 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  PASS  jar git.dirty=false
+  PASS  MoneyHelper.PRECISION = 19 (deployed bytecode)
+  PASS  actuator/health UP
+  PASS  driverClassName org.postgresql.Driver
+  PASS  JDBC URL is jdbc:postgresql://…
+  PASS  0 prohibited-engine hits in container env
+  PASS  0 prohibited driver jars in fineract-provider.jar
+  PASS  PostgreSQL JDBC driver present in the jar
+  PASS  PostgreSQL version: PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+  PASS  tenant 'default' exists
+  FAIL  tenant timezone_id = 'Asia/Kolkata' — must be Asia/Ulaanbaatar or Asia/Hovd (CLAUDE.md)
+  FAIL  c_configuration.rounding-mode = '6' in fineract_default — ratified value is 4 (HALF_UP); 6 is HALF_EVEN and is NOT production-representative
+  PASS  rounding-mode row enabled
+  FAIL  schema_connection_parameters = 'serverTimezone=UTC&useLegacyDatetimeCode=false&sessionVariables=time_zone='-00:00'' — must be empty on a capture tenant
+  PASS  tenant schema_server_port = 5432
+  FAIL  running JVM initialized tenant 'default' at a mode other than HALF_UP: 2026-08-18 09:53:01.504 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN
+  FAIL  canary request DIGEST MISMATCH — computed sha256 '13ce2f4f21a1ad568b080b859682b9e995aac97712e00fcf44c6fc177d6b9ca5' for '/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-2-req-mutated.json', pinned sha256 is '2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154'. That file is NOT the pinned half-cent tie (principal 1,162,502.50 x 0.018 = 20,925.045 exactly). A request that is not an exact half-minor-unit tie answers the same under HALF_UP and HALF_EVEN, so grading it would certify nothing. THE CANARY WAS NOT SENT and the effective rounding mode is UNPROVEN.
+  PASS  MNT seeded with decimal_places=2 (ISO 4217 496, minor unit 2)
+  PASS  MNT enabled for the tenant
+
+PRECONDITIONS BREACHED: 5. DO NOT CAPTURE. Any file produced now is NOT an observation
+of the pinned reference oracle at the ratified (19, HALF_UP) settings — do not commit it, do not
+treat it as a vector, and do not 'normalise' it. Fix the environment and re-run.
+
+EXIT=1

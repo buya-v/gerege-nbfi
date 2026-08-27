@@ -1,0 +1,91 @@
+T248 -- RED DRIVE ON SHAPES THE RULE WAS NOT BUILT FROM
+repo   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9c36a94f97f3eb82
+HEAD   : 9b6c596c2b66769e7b7e7b5c2ca012b7f3df122a
+linter : .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py (WORKING TREE)
+engine : python3 re + subprocess list-argv; no grep, no rg, no verdict-carrying pipe
+
+=== 0. BASELINE (nothing planted): frontier 10 row(s), linter exit 1
+      TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+
+=== 1. LINTER BATTERY -- all six shapes planted at once
+    linter exit 1, frontier 16 row(s)
+
+    SHAPE                                EXPECT   TIER     FRONTIER  VERDICT
+    ------------------------------------------------------------------------------------------------
+    C0-a2-33-covered-shape.txt           TIER1    TIER1    YES       OK
+    N1-negative-fatal-cd.txt             TIER3    TIER3    no        OK
+    N2-negative-live-corpus.txt          clean    clean    no        OK
+    R1-r11-real-shape.txt                TIER1    TIER1    YES       OK
+    R2-swallow-search-then-claim.txt     TIER1    TIER1    YES       OK
+    R3-dead-root-via-variable.txt        TIER1    TIER1    YES       OK
+    R4-git-C-nonexistent-root.txt        TIER1    TIER1    YES       OK
+    R5-arm-on-continuation.txt           TIER1    TIER1    YES       OK
+
+    Conditions fired, verbatim:
+      C0-a2-33-covered-shape.txt
+          C1 :11  dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-adeadbeefdeadbeef
+          C2 :12  failure arm PRINTS instead of exiting: ( cd "$WT" && git grep -n -I -i -E 'pattern' -- . ) || echo "   (no hits)"
+      N1-negative-fatal-cd.txt
+          C1 :9   dead absolute path: /srv/t248-vendor-audit
+      N2-negative-live-corpus.txt
+          (no condition fired)
+      R1-r11-real-shape.txt
+          C1 :9   dead absolute path: /tmp/T248-merge-does-not-exist
+          C2 :11  UNCONDITIONAL print CLAIMS A MEASUREMENT after a `cd` at line 9 whose failure is swallowed -- it runs whether or not that directory was entered: echo 
+      R2-swallow-search-then-claim.txt
+          C1 :10  dead absolute path: /srv/t248-vendor-audit
+          C2 :14  UNCONDITIONAL print CLAIMS A MEASUREMENT after a `cd` at line 10 whose failure is swallowed -- it runs whether or not that directory was entered: prin
+      R3-dead-root-via-variable.txt
+          C1 :7   dead absolute path: /scratch/t248-absent-corpus
+          C2 :10  UNCONDITIONAL print CLAIMS A MEASUREMENT after a `cd` at line 8 whose failure is swallowed -- it runs whether or not that directory was entered: echo 
+      R4-git-C-nonexistent-root.txt
+          C1 :7   dead absolute path: /nonexistent/worktree/agent-adeadbeefdeadbeef
+          C2 :7   failure arm PRINTS instead of exiting: git -C /nonexistent/worktree/agent-adeadbeefdeadbeef grep -n -E 'pattern' -- . || echo "   (no hits)"
+      R5-arm-on-continuation.txt
+          C1 :9   dead absolute path: /mnt/t248-continued-arm
+          C2 :11  failure arm PRINTS instead of exiting -- the arm is on a CONTINUATION of the construct that begins at line 10: || echo "   (no hits)"
+
+=== 2. HARNESS DRIVE -- `bash .softhouse/conformance.sh`, one shape at a time
+    P-45 is re-checked here rather than inherited: a rule that classifies
+    correctly but is never reached closes nothing.
+
+    R1-r11-real-shape.txt                harness exit 2    frontier-diff warning YES   names the plant YES   OK
+        | +TIER1 .softhouse/capture/t248-failopen-widen/.redplant/R1-r11-real-shape.sh
+        | conformance: The pin is FAILOPEN_PIN_FILE_LIST in .softhouse/conformance.sh.
+        | conformance: EXIT 2 — no verdict is available. This is NOT a pass.
+        | conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+    R2-swallow-search-then-claim.txt     harness exit 2    frontier-diff warning YES   names the plant YES   OK
+        | +TIER1 .softhouse/capture/t248-failopen-widen/.redplant/R2-swallow-search-then-claim.sh
+        | conformance: The pin is FAILOPEN_PIN_FILE_LIST in .softhouse/conformance.sh.
+        | conformance: EXIT 2 — no verdict is available. This is NOT a pass.
+        | conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+    R4-git-C-nonexistent-root.txt        harness exit 2    frontier-diff warning YES   names the plant YES   OK
+        | +TIER1 .softhouse/capture/t248-failopen-widen/.redplant/R4-git-C-nonexistent-root.sh
+        | conformance: The pin is FAILOPEN_PIN_FILE_LIST in .softhouse/conformance.sh.
+        | conformance: EXIT 2 — no verdict is available. This is NOT a pass.
+        | conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+    R5-arm-on-continuation.txt           harness exit 2    frontier-diff warning YES   names the plant YES   OK
+        | +TIER1 .softhouse/capture/t248-failopen-widen/.redplant/R5-arm-on-continuation.sh
+        | conformance: The pin is FAILOPEN_PIN_FILE_LIST in .softhouse/conformance.sh.
+        | conformance: EXIT 2 — no verdict is available. This is NOT a pass.
+        | conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+
+=== 3. GREEN AGAIN -- nothing planted, the same harness
+    harness exit 0   OK
+        | conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9c36a94f97f3eb82 (git ls-files, whole repository); frontier 10, pinned at 10.
+        | conformance:   frontier == pinned (all 10 rows, by path).
+        | VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+=== VERDICT
+  Every stated expectation held: the mandatory site's shape and three shapes the rule
+  was not designed around all reach the frontier at TIER 1; both negative controls stay
+  off it; and the guard is reached on the automatic path.

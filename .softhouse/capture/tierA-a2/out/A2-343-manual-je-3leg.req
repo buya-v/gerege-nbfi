@@ -1,0 +1,15 @@
+{
+  "officeId": 1,
+  "transactionDate": "01 June 2026",
+  "currencyCode": "MNT",
+  "comments": "A2-26 manual journal entry: three legs, non-round minor units",
+  "debits": [
+    {"glAccountId": 16, "amount": 100000.25},
+    {"glAccountId": 17, "amount": 25000.37}
+  ],
+  "credits": [
+    {"glAccountId": 21, "amount": 125000.62}
+  ],
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}

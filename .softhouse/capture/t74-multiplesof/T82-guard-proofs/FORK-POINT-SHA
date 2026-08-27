@@ -1,0 +1,26 @@
+# T102 — THE COUNTERPROOF BASELINE, AS A LITERAL IMMUTABLE SHA.
+#
+# This is the fork point of `softhouse/T82-pass3i-defects` from `main`: the last commit that
+# contains the PRE-T82 bytes of run-pass3i.sh, T74-promote-vectors.py and
+# build-counterfactuals.py. Every COUNTERPROOF row in `prove-guards-go-red.sh` extracts its "old
+# code" from THIS commit.
+#
+# MEASURED, not asserted: `git merge-base main softhouse/T82-pass3i-defects` at T82 head
+# 55409cfda225518d014a0d203dc4b36191a045a8, main at ab2de89356986c8ed85a9d2e26c2bc86b0fb8720,
+# 2026-08-20. Re-derivable while both refs still exist; the sha below is authoritative once they
+# do not.
+#
+# WHY A LITERAL AND NOT A COMPUTED REF — this defect has already shipped twice.
+#   v1 used `main:`.                    On merge, `main` contains the fix.
+#   v2 (T98) used `git merge-base main HEAD`, believing it named this sha. It does — ON THE
+#   BRANCH ONLY. After the branch merges, HEAD == main, so the merge base of `main` and `HEAD` is
+#   the MERGE COMMIT itself, and every COUNTERPROOF compares the fixed code against ITSELF.
+#   Measured: merging this branch into main in a throwaway clone made the rig report
+#   "18 as expected, 7 not as expected" — exactly the seven COUNTERPROOF rows.
+#
+# THE RIG MUST NEVER FALL BACK TO A COMPUTED REF. If this file is missing or unparseable the
+# proof run must ABORT LOUDLY (exit 2), because a counterproof against a silently-wrong baseline
+# is worse than no counterproof: it prints a green row for a comparison that never happened.
+#
+# Format: comments and blank lines ignored; the last remaining line is a full 40-hex commit sha.
+8da4b831b96a146c2b46ad34d85ed098395de160

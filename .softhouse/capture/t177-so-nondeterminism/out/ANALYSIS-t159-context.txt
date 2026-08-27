@@ -1,0 +1,22 @@
+T159-R600p0-N2000-B10001
+   NOT OBSERVED — errorStackTop[0]=java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+T159-R600p0-N3000-B100001
+   NOT OBSERVED — errorStackTop[0]=java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+T159-R600p0-N3000-B1001
+   loanTermInDays           91311
+   totalDisbursedAmount     10.01
+   totalPrincipalAmount     0.00
+   totalInterestAmount      15010.01
+   totalRepaymentAmount     15010.01
+   totalOutstandingAmount   0
+   periodCount              3001
+T159-R600p0-N3000-B10001
+   loanTermInDays           91311
+   totalDisbursedAmount     100.01
+   totalPrincipalAmount     100.01
+   totalInterestAmount      846.70
+   totalRepaymentAmount     946.71
+   totalOutstandingAmount   0
+   periodCount              3001
+inspected 4 of 4 requested cells
+t159_context exit 0

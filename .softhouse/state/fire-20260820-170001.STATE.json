@@ -1,0 +1,41 @@
+{
+  "squad": "fire-20260820-170001",
+  "driver": "/softhouse-program",
+  "host": "Buyanmunkhs-Mac-mini",
+  "started_at": "2026-08-20T09:00:12Z",
+  "run_id": "2026-08-17-run1-harness-schedule-poc",
+  "context": "tier0-harness-schedule-poc",
+  "oracle": "REACHABLE all fire; never restarted; container StartedAt unchanged; pinned checkout 426a23544 clean at entry and exit",
+  "step": "COMPLETE AND CHECKPOINTED — seven workers dispatched, seven completed, zero live at exit",
+  "live_workers": [],
+  "merged_this_fire": ["T74", "T75", "T73", "T77"],
+  "unmerged_branches_carrying_work": [
+    {"branch": "softhouse/T78-fui-marker-d5", "task": "T78", "why": "awaiting independent review T79 — NOT a failure"},
+    {"branch": "softhouse/T72-fui-marker-retry", "task": "T72", "why": "REJECTED by T73; kept so T78 could branch from it"},
+    {"branch": "softhouse/T76-pathb-gerege-recapture", "task": "T76", "why": "REJECTED by T77; kept so T80 can branch from it"},
+    {"branch": "softhouse/T70-fui-marker", "task": "T70", "why": "REJECTED last fire; ancestor of T72 and T78"}
+  ],
+  "verification_on_merged_main": {
+    "go_build": 0, "go_vet": 0, "go_test_count1": 0,
+    "conformance": "VERDICT PASS exit 0",
+    "parity_vectors": 42, "contract_refusal": 4, "self_test": 1,
+    "cells_graded": 5576, "invariant_violations": 0, "invariant_assertions_not_run": 0,
+    "inadmissible": 0, "harness_errors": 0,
+    "gofmt_l": "nexus/internal/apps/loanschedule/contract/contract.go only (expected G-3 Option A)",
+    "note": "Re-run by the driver on merged main, NOT inherited from a worker report. Invoked as `bash`, never `sh` — see T81."
+  },
+  "next_action": "T79 (review T78, no oracle) first; then T83 and T80 on an oracle fire; T81 and T82 need no oracle; T15 archive once T79 lands; then plan tierA-gl-accounting slice A2",
+  "blocked_on": null,
+  "open_questions": [
+    "G-8: the oracle emits a NON-AMORTIZING schedule at MNT 0.01 inside the graded domain where the port returns 0. Live, unvectored, invisible to a green conformance run. T83 measures it.",
+    "F-2 carried forward for a second fire: whether emi_L can go negative is UNESTABLISHED. Five workers and the driver have declined to settle it by reading. It needs a capture.",
+    "T12's mid-flight checkpoint drill unexercised for a FIFTH consecutive fire."
+  ],
+  "gate_pending": ["G-4 (wording)", "G-5 (wording)", "G-8 (new, blocks nothing, measure first)"],
+  "driver_self_correction": "Dispatched T76 from a STALE park list; T22 P0-3/4/5/6 and P1-14 had been closed by T30/T36 on 18 Aug. The false sentence was in RESUME.md and in T25's own note. Corrected at source this fire.",
+  "standing_instructions": [
+    "Invoke the harness as `bash .softhouse/conformance.sh`, NEVER `sh` — under `sh` it exits 2, which is indistinguishable from the real oracle-unusable code (T81).",
+    "contract.go is never gofmt'd; `gofmt -l` naming exactly that one file is the EXPECTED state (G-3 Option A).",
+    "A parked list in a task note is evidence of what was true when written, NOT a work queue — check for a later closing commit before dispatching from it."
+  ]
+}

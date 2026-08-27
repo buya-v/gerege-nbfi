@@ -1,0 +1,580 @@
+#!/usr/bin/env python3
+"""T36 — machine-readable ATTESTATION SIDECAR for a Path B capture set.  Closes T22 P0-3.
+
+Writes `attestation.json` next to the raw captures.  Every field is READ FROM THE
+RUNNING SERVER, its container, its deployed bytecode, or its PostgreSQL rows.  Nothing
+is copied from a plan, a report, or an earlier attestation, and nothing is defaulted:
+a fact that cannot be read is recorded as null with a `_unread` note, never guessed.
+
+It also DRIVES the capture, so the request/response digests and the UTC timestamps
+describe one single run rather than being attached to files after the fact.  The
+fail-the-run preconditions (T22 P0-4) execute first; a breach aborts before any capture.
+
+RAW OBSERVED.  This sidecar makes a capture set ADMISSIBLE for review; it does not
+promote anything to the parity vector store.  Promotion is a separate decision taken
+against the frozen contract's graded domain, and it is refused for these four captures
+for reasons recorded in t76/PROMOTION-DECISION.md (gate G-7).
+
+Program state that used to be HARD-CODED here is now READ, because it went stale and was
+quoted downstream while stale (T77 P1-T77-4): the sidecar said "DEC-1 is at revision 6 and
+UNRATIFIED (gate G-1)" for two fires after DEC-1 reached revision 12 and G-1 closed.  The
+revision comes from .softhouse/vectors/PIN.json and the ratification state from the G-1
+heading in .softhouse/gates.md; if either cannot be read it is recorded as unread, never
+guessed.
+
+Usage: python3 attest.py [tenant]     (default: gerege)
+"""
+import datetime
+import hashlib
+import json
+import os
+import subprocess
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+PATHB = os.path.normpath(os.path.join(HERE, '..'))
+# T125: the effective-rounding-mode GATE lives in ONE module shared by all three attestation
+# sidecars.  It is not inlined here because the defect it closes was caused by exactly that:
+# T80 hardened this file while `charges/bin/attest.py` and `charges/bin/attest-t40.py`, forked
+# from it at T36, were never swept (P-21/P-26).  A failed import is a hard failure by design.
+sys.path.insert(0, os.path.normpath(os.path.join(PATHB, '..', 'lib')))
+import attest_gate                                                   # noqa: E402
+
+TENANT = sys.argv[1] if len(sys.argv) > 1 else 'gerege'
+# Which capture set to attest.  'pathb' = the four committed B-0x sets (T22 P0-6 re-capture);
+# 'emiloop' = the T36 EMI re-adjust-loop probes (T22 P1-11, second clause);
+# 't149' = the HALF_UP/HALF_EVEN exact-tie set (task T149).
+CAPTURE_SET = sys.argv[2] if len(sys.argv) > 2 else 'pathb'
+# ATTEST_OUT (added by T76) lets an INDEPENDENT re-run write its own evidence directory
+# instead of overwriting T36's committed capture set.  Re-running a generator over the
+# artefacts it produced last fire destroys the very record a reviewer diffs against.
+OUT = os.environ.get('ATTEST_OUT') or os.path.join(
+    HERE, 'out', 'recapture-%s' % TENANT if CAPTURE_SET == 'pathb' else CAPTURE_SET)
+# T80, converging with recapture.sh: a capture set is filed under the TENANT IT WAS TAKEN
+# FROM, structurally.  For the pathb set the directory name must end in the tenant id, so
+# ATTEST_OUT cannot file a `default` capture under a `gerege` name.  (The emiloop set keeps
+# its historical directory name `out/emiloop`; it is stamped but not name-checked, and that
+# exception is recorded rather than papered over.)
+# T99: the name check used to run on os.path.basename(OUT) — the LEAF only — which is the same
+# defect recapture.sh carried: ATTEST_OUT=<...>/t36/out/recapture-default/sub-gerege has leaf
+# `sub-gerege`, matches `*-gerege`, and files a gerege attestation inside the default tenant's
+# capture directory.  The path is now RESOLVED (symlinks and `..` collapsed) and checked for
+# containment and SHAPE as well as leaf name, exactly as recapture.sh does.  The emiloop set keeps
+# its historical exemption from the LEAF rule only — containment, shape and the no-nesting rule
+# apply to every capture set, because none of them is about the directory's name.
+_PATHB_ROOT = os.path.realpath(PATHB)
+_out_r = os.path.realpath(OUT)
+
+
+def _abort(msg):
+    sys.stderr.write('ABORT: ' + msg + '\n')
+    sys.exit(1)
+
+
+if _out_r == _PATHB_ROOT or not _out_r.startswith(_PATHB_ROOT + os.sep):
+    _abort("output directory %r resolves to %r, which is not a capture directory inside the Path B "
+           "evidence tree %r." % (OUT, _out_r, _PATHB_ROOT))
+_parts = os.path.relpath(_out_r, _PATHB_ROOT).split(os.sep)
+if len(_parts) != 3 or _parts[1] != 'out' or not (
+        _parts[0].startswith('t') and _parts[0][1:2].isdigit()):
+    _abort("output directory %r resolves to %r, i.e. %r below the evidence tree. A capture "
+           "directory is exactly <task>/out/<name> — three components, <task> matching t<NN>. "
+           "Nesting a capture inside another tenant's capture directory is the mis-filing hazard "
+           "the leaf check was written to stop, and a fixed depth is what makes it impossible."
+           % (OUT, _out_r, os.path.join(*_parts)))
+if CAPTURE_SET == 'pathb':
+    _base = _parts[2]
+    if not (_base == TENANT or _base.endswith('-' + TENANT)):
+        _abort("output directory %r is not named for tenant %r. A capture must be filed "
+               "under the tenant it was taken from; refusing to write %r bytes into a directory "
+               "called %r." % (OUT, TENANT, TENANT, _base))
+_anc = os.path.dirname(_out_r)
+while _anc != _PATHB_ROOT and _anc != os.sep:
+    _anc_stamp = os.path.join(_anc, 'CAPTURED-FROM-TENANT')
+    if os.path.isfile(_anc_stamp):
+        with open(_anc_stamp) as _fh:
+            _anc_tenant = _fh.readline().strip()
+        _abort("output directory %r is nested inside %r, which is itself a capture set taken from "
+               "tenant %r (see %s). A capture set is never written inside another capture set."
+               % (_out_r, _anc, _anc_tenant, _anc_stamp))
+    _anc = os.path.dirname(_anc)
+OUT = _out_r
+_stamp = os.path.join(OUT, 'CAPTURED-FROM-TENANT')
+if os.path.exists(_stamp):
+    with open(_stamp) as _fh:
+        _prev = _fh.readline().strip()
+    if _prev != TENANT:
+        sys.stderr.write(
+            "ABORT: %r already holds a capture set taken from tenant %r (see %s); refusing to "
+            "overwrite it with a %r capture.\n" % (OUT, _prev, _stamp, TENANT))
+        sys.exit(1)
+FIN, DB = 'fineract-fineract-1', 'fineract-db-1'
+BASE = 'https://localhost:8443/fineract-provider'
+
+# Ratified tenant parameters (CLAUDE.md).  Asserted, never assumed.
+WANT_ROUNDING_ORDINAL = 4          # RoundingMode.valueOf(4) == HALF_UP
+WANT_PRECISION = 19                # MoneyHelper.PRECISION
+# java.math.RoundingMode ordinals, as consumed by MoneyHelper.validateAndConvertRoundingMode
+# (MoneyHelper.java:182-190 -> RoundingMode.valueOf(int), legacy BigDecimal constants).
+ROUNDING_ORDINALS = {0: 'UP', 1: 'DOWN', 2: 'CEILING', 3: 'FLOOR',
+                     4: 'HALF_UP', 5: 'HALF_DOWN', 6: 'HALF_EVEN'}
+
+PATHB_CAPTURES = [
+    ('B-01', 'baseline',            'req', 'calc-B-01-baseline.json',           'B-01-baseline-raw.json'),
+    ('B-02', 'multiplesOf 100',     'req', 'calc-B-02-multiplesof100.json',     'B-02-multiplesof100-raw.json'),
+    ('B-03', 'DIYCS FULL_LEAP_YEAR','req', 'calc-B-03-diycs-fullleapyear.json', 'B-03-diycs-fullleapyear-raw.json'),
+    ('B-04', 'DIYCS FEB_29_PERIOD_ONLY', 'req', 'calc-B-04-diycs-feb29only.json','B-04-diycs-feb29only-raw.json'),
+]
+# T22 P1-11 second clause: principals selected so the EMI re-adjust loop's entry condition
+# |emiDifference| * 100 > Money(floor(n/2)) is crossed (n = 12 -> 6.00).
+EMILOOP_PRINCIPALS = [1200000, 1200001, 1200004, 1200027, 1200033, 1200039, 1200045, 1200054, 1200189]
+EMILOOP_CAPTURES = [('EL-%d' % p, 'EMI re-adjust-loop probe, principal %d MNT' % p,
+                     't36/req-emiloop', 'calc-emiloop-%d.json' % p, 'emiloop-%d-raw.json' % p)
+                    for p in EMILOOP_PRINCIPALS]
+# T149: the HALF_UP/HALF_EVEN exact-tie set. The same principal as the PINNED CANARY
+# (1,162,502.50 x 0.018 = 20,925.045 -- an exact half-minor-unit tie) posted against loan
+# products whose day-count settings differ, plus MNT 1,200,000 controls against the
+# already-promoted Path A vector P-MNT-1M2. Product 9 is SAME_AS_REPAYMENT_PERIOD +
+# fixed 30/360; product 1 is SAME_AS_REPAYMENT_PERIOD + actual/actual, which is what the
+# pinned canary's product 11 also is.
+T149_CAPTURES = [
+    ('T149-TIE-P9', 'exact tie, product 9 (SARP + fixed 30/360)',
+     't149/req', 'calc-t149-tie-p9.json', 'T149-TIE-P9-raw.json'),
+    ('T149-TIE-P1', 'exact tie, product 1 (SARP + actual/actual)',
+     't149/req', 'calc-t149-tie-p1.json', 'T149-TIE-P1-raw.json'),
+    ('T149-CTRL-P9-1M2', 'control MNT 1,200,000, product 9 (SARP + fixed 30/360)',
+     't149/req', 'calc-t149-ctrl-p9-1m2.json', 'T149-CTRL-P9-1M2-raw.json'),
+    ('T149-CTRL-P1-1M2', 'control MNT 1,200,000, product 1 (SARP + actual/actual)',
+     't149/req', 'calc-t149-ctrl-p1-1m2.json', 'T149-CTRL-P1-1M2-raw.json'),
+]
+CAPTURE_SETS = {'pathb': PATHB_CAPTURES, 'emiloop': EMILOOP_CAPTURES, 't149': T149_CAPTURES}
+if CAPTURE_SET not in CAPTURE_SETS:
+    _abort('unknown capture set %r. Known: %s' % (CAPTURE_SET, ', '.join(sorted(CAPTURE_SETS))))
+CAPTURES = CAPTURE_SETS[CAPTURE_SET]
+# Which product rows to persist into the attestation, per set. A set that probes products
+# 1 and 9 must record THOSE rows; recording 1-4 for every set would attest products the run
+# never used and stay silent about the ones it did.
+PRODUCT_IDS = {'pathb': (1, 2, 3, 4), 'emiloop': (1, 2, 3, 4), 't149': (1, 9, 11)}[CAPTURE_SET]
+
+notes = []
+SOFTHOUSE = os.path.normpath(os.path.join(HERE, '..', '..', '..'))   # .softhouse/
+
+
+def _read_dec1_state():
+    """Read DEC-1's revision and ratification state from the files that carry them.
+
+    Two independent sources, neither of them this script's own memory:
+      revision  <- .softhouse/vectors/PIN.json  ("dec1_revision")
+      ratified  <- .softhouse/gates.md          (the G-1 CLOSED/RATIFIED heading)
+    An unreadable source yields None and a note, never a guess.
+    """
+    rev = None
+    pin = os.path.join(SOFTHOUSE, 'vectors', 'PIN.json')
+    try:
+        with open(pin) as fh:
+            # parse_float=str throughout (T147, P-25): the rule binds every load in a file
+            # that reasons about money, not only the loads that happen to touch a money cell
+            # today. A field promoted to a JSON number later must not silently acquire a
+            # binary float on the way in.
+            rev = json.load(fh, parse_float=str).get('dec1_revision')
+    except Exception as exc:                                         # noqa: BLE001
+        notes.append('UNREAD dec1_revision — %s (%s)' % (exc, pin))
+    ratified = None
+    gates = os.path.join(SOFTHOUSE, 'gates.md')
+    try:
+        with open(gates) as fh:
+            txt = fh.read()
+        if 'G-1 · **CLOSED — RATIFIED**' in txt:
+            ratified = True
+        elif 'G-1 ·' in txt:
+            ratified = False
+    except Exception as exc:                                         # noqa: BLE001
+        notes.append('UNREAD dec1 ratification state — %s (%s)' % (exc, gates))
+    if ratified is None:
+        notes.append('UNREAD dec1 ratification state — no G-1 heading matched in %s' % gates)
+    return rev, ratified
+
+
+DEC1_REVISION, DEC1_RATIFIED = _read_dec1_state()
+DEC1_PHRASE = 'DEC-1 is at revision %s and %s (gate G-1 %s)' % (
+    DEC1_REVISION if DEC1_REVISION is not None else 'UNREAD',
+    {True: 'RATIFIED', False: 'UNRATIFIED', None: 'of UNREAD ratification state'}[DEC1_RATIFIED],
+    {True: 'CLOSED', False: 'open', None: 'state unread'}[DEC1_RATIFIED])
+
+
+def sh(cmd):
+    """Run a command, return stdout stripped, or None if it fails."""
+    try:
+        p = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=180)
+    except Exception as exc:                                     # noqa: BLE001
+        notes.append('command failed (%s): %s' % (exc, cmd))
+        return None
+    if p.returncode != 0:
+        notes.append('command exit %d: %s :: %s' % (p.returncode, cmd, p.stderr.strip()[:200]))
+        return None
+    return p.stdout.strip()
+
+
+def unread(field, why):
+    notes.append('UNREAD %s — %s' % (field, why))
+    return None
+
+
+def sha256(b):
+    return hashlib.sha256(b).hexdigest()
+
+
+def now():
+    return datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+
+# --------------------------------------------------------------- preconditions
+# T125: the canary request is chosen BY TENANT from a pinned table of solved exact ties and
+# carries its own pinned digest.  It used to be the `gerege` request hard-coded for every
+# tenant, which for any other tenant could only ever produce an ungraded HTTP error.
+canary, canary_pin_sha = attest_gate.canary_request_for(
+    TENANT, os.path.join(PATHB, 't22-audit', 'req'))
+pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(HERE, 'preconditions.sh'), TENANT),
+                     shell=True, capture_output=True, text=True)
+# THE GATE COMES FIRST, AND NOTHING IS WRITTEN BEFORE IT (T85 F-1).  T80 put the makedirs/stamp/
+# transcript writes ABOVE this test, so a breached run printed "no capture attempted, no attestation
+# written" while having ALREADY stamped a committed capture set with the wrong tenant and replaced
+# its precondition transcript.  `python3 attest.py default emiloop` did exactly that to eleven
+# `gerege` captures: the message was true about captures and false about writes.  A breached run must
+# leave the filesystem exactly as it found it, because the directory it would touch may be evidence.
+if pre.returncode != 0:
+    sys.stderr.write(pre.stdout + pre.stderr)
+    sys.stderr.write('\nABORT: preconditions breached — no capture attempted, no attestation written, '
+                     'and nothing at all written into %r.\n' % OUT)
+    sys.exit(1)
+
+os.makedirs(OUT, exist_ok=True)
+# Provenance stamp: the directory records the tenant it was captured from, so a later run for a
+# different tenant is refused above rather than silently overwriting (the four response bodies
+# are byte-identical across rounding modes, so no digest downstream could tell them apart).
+with open(_stamp, 'w') as fh:
+    fh.write(TENANT + '\n')
+with open(os.path.join(OUT, 'preconditions.txt'), 'w') as fh:
+    fh.write(pre.stdout + pre.stderr)
+
+# ------------------------------------------------------------------ the oracle
+image_id = sh("docker image inspect fineract:latest --format '{{.Id}}'")
+image_created = sh("docker image inspect fineract:latest --format '{{.Created}}'")
+image_repodigests = sh("docker image inspect fineract:latest --format '{{json .RepoDigests}}'")
+container_started = sh("docker inspect %s --format '{{.State.StartedAt}}'" % FIN)
+gitprops = sh("docker exec %s sh -c 'unzip -p /app/fineract-provider.jar "
+              "BOOT-INF/classes/git.properties'" % FIN) or ''
+gp = {}
+for line in gitprops.splitlines():
+    if '=' in line and not line.startswith('#'):
+        k, _, v = line.partition('=')
+        gp[k.strip()] = v.strip()
+jvm = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'java -version' 2>&1" % FIN)
+if jvm:
+    jvm = ' / '.join(l.strip() for l in jvm.splitlines() if 'Picked up' not in l)
+
+# MoneyHelper.PRECISION, read from the DEPLOYED bytecode inside the running container.
+sh("docker exec %s sh -c 'mkdir -p /tmp/t36at && cd /tmp/t36at && unzip -o -q "
+   "/app/fineract-provider.jar \"BOOT-INF/lib/fineract-core-*.jar\"'" % FIN)
+javap = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'cd /tmp/t36at && javap -p -constants -cp "
+           "BOOT-INF/lib/fineract-core-*.jar "
+           "org.apache.fineract.organisation.monetary.domain.MoneyHelper'" % FIN) or ''
+precision = None
+for line in javap.splitlines():
+    if 'PRECISION' in line:
+        precision = int(line.split('=')[1].strip().rstrip(';'))
+if precision is None:
+    unread('MoneyHelper.PRECISION', 'javap over the deployed fineract-core jar produced no constant')
+
+# ---------------------------------------------------------------- the database
+pg_version = sh("docker exec %s psql -U root -t -c 'select version();'" % DB)
+pg_version_num = sh("docker exec %s psql -U root -At -c 'show server_version_num;'" % DB)
+pg_image = sh("docker inspect %s --format '{{.Config.Image}}'" % DB)
+pg_image_id = sh("docker inspect %s --format '{{.Image}}'" % DB)
+env = sh("docker inspect %s --format '{{range .Config.Env}}{{println .}}{{end}}'" % FIN) or ''
+driver_class = next((l.split('=', 1)[1] for l in env.splitlines()
+                     if 'DRIVER_SOURCE_CLASS_NAME' in l), None)
+jdbc_url = next((l.split('=', 1)[1] for l in env.splitlines()
+                 if l.startswith('FINERACT_HIKARI_JDBC_URL=')), None)
+# grep exits 1 on zero matches, which here is the GOOD outcome — `|| true` keeps the
+# count readable instead of turning a clean result into an unread field.
+banned_env = sh("docker inspect %s --format '{{range .Config.Env}}{{println .}}{{end}}' "
+                "| grep -icE 'ojdbc|oracle\\.jdbc|:1521|com\\.mysql\\.cj|mariadb|go-sql-driver' "
+                "|| true" % FIN)
+banned_jar = sh("docker exec %s sh -c 'unzip -l /app/fineract-provider.jar' "
+                "| grep -icE 'ojdbc|oracle-jdbc|mysql-connector|mariadb-java' || true" % FIN)
+
+# ------------------------------------------------------------------ the tenant
+def q(db, sql):
+    return sh('docker exec %s psql -U root -d %s -At -c "%s"' % (DB, db, sql.replace('"', '\\"')))
+
+
+schema = q('fineract_tenants',
+           "select c.schema_name from tenants t join tenant_server_connections c on c.id=t.oltp_id "
+           "where t.identifier='%s';" % TENANT)
+tz = q('fineract_tenants', "select timezone_id from tenants where identifier='%s';" % TENANT)
+tname = q('fineract_tenants', "select name from tenants where identifier='%s';" % TENANT)
+scp = q('fineract_tenants',
+        "select coalesce(c.schema_connection_parameters,'') from tenants t "
+        "join tenant_server_connections c on c.id=t.oltp_id where t.identifier='%s';" % TENANT)
+sport = q('fineract_tenants',
+          "select c.schema_server_port from tenants t join tenant_server_connections c on c.id=t.oltp_id "
+          "where t.identifier='%s';" % TENANT)
+rm_row = q(schema, "select value from c_configuration where name='rounding-mode';")
+rm_enabled = q(schema, "select enabled from c_configuration where name='rounding-mode';")
+rounding_ordinal = int(rm_row) if rm_row and rm_row.isdigit() else None
+
+# What the RUNNING process actually initialized — MoneyHelper caches per tenant at startup,
+# so a row edited after boot is inert.  Read back from the container's own log.
+logline = sh("docker logs --since %s %s 2>&1 | grep -F 'Initialized rounding mode for tenant "
+             "`%s`' | tail -1" % (container_started, FIN, TENANT))
+mode_in_force = logline.strip().split(':')[-1].strip() if logline else \
+    unread('mode_in_force', 'no MoneyHelper init line for this tenant since container start')
+
+mnt_dp = q(schema, "select decimal_places from m_currency where code='MNT';")
+mnt_enabled = q(schema, "select count(*) from m_organisation_currency where code='MNT';")
+
+# ------------------------------------------------- effective-mode canary (behavioural)
+with open(canary, 'rb') as fh:
+    canary_bytes = fh.read()
+canary_out = os.path.join(OUT, 'canary-halfcent-raw.json')
+canary_code = sh("curl -sk -X POST '%s/api/v1/loans?command=calculateLoanSchedule' "
+                 "-H 'Authorization: Basic bWlmb3M6cGFzc3dvcmQ=' "
+                 "-H 'Fineract-Platform-TenantId: %s' -H 'Content-Type: application/json' "
+                 "-d @%s -o %s -w '%%{http_code}'" % (BASE, TENANT, canary, canary_out))
+canary_p1 = None
+if canary_code == '200':
+    with open(canary_out, 'rb') as fh:
+        # T125: parse_float=str.  This value is MONEY and it is about to be compared as exact
+        # text; routing it through a binary float — even only to re-serialise it — is the
+        # no-floating-point rule broken inside the very check that guards the rounding mode.
+        cj = json.loads(fh.read().decode(), parse_float=str)
+    canary_p1 = str(cj['periods'][1]['interestOriginalDue'])
+
+# ------------------------------------------------------------------------- T125: THE GATE
+# Everything above is an OBSERVATION; this is the first line in this file that REFUSES on
+# one.  Until T125 the canary's verdict was computed, written into attestation.json and
+# compared against nothing: a HALF_EVEN JVM produced a complete attestation and exit 0
+# (measured — see capture/pathb/t125/red-pre-fix-default/).  It is placed HERE, before any
+# capture is taken, so a run that cannot establish the mode spends no requests on the oracle
+# and leaves no bodies of unknown provenance behind.
+attest_gate.assert_effective_rounding_mode(
+    tenant=TENANT, canary_path=canary, canary_bytes=canary_bytes,
+    canary_pinned_sha=canary_pin_sha, canary_http_code=canary_code, canary_p1=canary_p1,
+    precision=precision, rounding_ordinal=rounding_ordinal, mode_in_force=mode_in_force)
+
+# --------------------------------------------------------- products, from the rows
+products = []
+for pid in PRODUCT_IDS:
+    row = q(schema, "select to_jsonb(t) from m_product_loan t where id=%d;" % pid)
+    if not row:
+        products.append({'id': pid, '_unread': 'no m_product_loan row'})
+        continue
+    # parse_float=str keeps every decimal literal as its EXACT TEXT. Parsing a money
+    # column to a binary float — even only to re-serialise it — would put a float in a
+    # monetary artefact, which CLAUDE.md forbids outright.
+    r = json.loads(row, parse_float=str)
+    products.append({
+        'id': r['id'], 'name': r['name'], 'short_name': r['short_name'],
+        'currency_code': r['currency_code'], 'currency_digits': r['currency_digits'],
+        'principal_amount': r['principal_amount'],
+        'nominal_interest_rate_per_period': r['nominal_interest_rate_per_period'],
+        'number_of_repayments': r['number_of_repayments'],
+        'installment_amount_in_multiples_of': r.get('installment_amount_in_multiples_of'),
+        'days_in_year_custom_strategy': r.get('days_in_year_custom_strategy'),
+        'days_in_year_enum': r.get('days_in_year_enum'),
+        'days_in_month_enum': r.get('days_in_month_enum'),
+        'loan_schedule_type': r.get('loan_schedule_type'),
+        'persisted_row_sha256': sha256(row.encode('utf-8')),
+    })
+
+# ------------------------------------------------------------------- the captures
+committed_digests = {}
+for cid, _l, _rd, _rq, resp in CAPTURES:
+    p = os.path.join(PATHB, 'out', resp)
+    if os.path.exists(p):
+        with open(p, 'rb') as fh:
+            committed_digests[cid] = sha256(fh.read())
+
+captures = []
+for cid, label, reqdir, reqname, respname in CAPTURES:
+    reqpath = os.path.join(PATHB, reqdir, reqname)
+    with open(reqpath, 'rb') as fh:
+        reqbytes = fh.read()
+    resppath = os.path.join(OUT, respname)
+    started = now()
+    code = sh("curl -sk -X POST '%s/api/v1/loans?command=calculateLoanSchedule' "
+              "-H 'Authorization: Basic bWlmb3M6cGFzc3dvcmQ=' "
+              "-H 'Fineract-Platform-TenantId: %s' -H 'Content-Type: application/json' "
+              "-d @%s -o %s -w '%%{http_code}'" % (BASE, TENANT, reqpath, resppath))
+    with open(resppath, 'rb') as fh:
+        respbytes = fh.read()
+    if code != '200':
+        sys.stderr.write('CAPTURE FAILED: %s returned HTTP %s — that file is an ERROR BODY, '
+                         'not a capture. Aborting; no attestation written.\n' % (cid, code))
+        sys.exit(1)
+    rsha = sha256(respbytes)
+    captures.append({
+        'id': cid, 'label': label,
+        'endpoint': 'POST /loans?command=calculateLoanSchedule',
+        'http_status': int(code),
+        'request_file': '%s/%s' % (reqdir, reqname), 'request_sha256': sha256(reqbytes),
+        'request_bytes': len(reqbytes),
+        'response_file': os.path.relpath(resppath, PATHB), 'response_sha256': rsha,
+        'response_bytes': len(respbytes),
+        'captured_at_utc': started,
+        'committed_corpus_sha256': committed_digests.get(cid),
+        # None, not False, when there is no committed counterpart — absence of a prior
+        # capture is not a mismatch, and must not read as one.
+        'matches_committed_corpus_bytes': (None if committed_digests.get(cid) is None
+                                           else committed_digests[cid] == rsha),
+    })
+
+att = {
+    '_schema': 'gerege-nbfi/pathb-attestation/v1',
+    '_status': 'RAW OBSERVED — admissibility attestation only. NOTHING PROMOTED to the parity '
+               'vector store. ' + DEC1_PHRASE + '.',
+    '_dec1': {'revision': DEC1_REVISION,
+              'revision_source': '.softhouse/vectors/PIN.json:dec1_revision',
+              'ratified': DEC1_RATIFIED,
+              'ratified_source': '.softhouse/gates.md — the G-1 heading'},
+    # Not "_closes": a RE-RUN of this generator closes nothing.  The items below were closed
+    # by T36 on fire 20260818-230002 and independently re-verified by T76/T77; recording them
+    # as closed-by-whom is true whoever runs this script, which "_closes" was not.
+    '_closed_by': {'T22 P0-3 (attestation sidecar)': 'T36, commit 78c5bda',
+                   'T22 P0-4 (fail-the-run preconditions)':
+                       'T36, commit c3bbf26 — the SCRIPT; its CALLER recapture.sh was still '
+                       'unable to abort until T80 (T77 P0-T77-2)',
+                   'T22 P0-6 (production-settings tenant re-capture)':
+                       'T36, commits fab040a and 60c08ad'},
+    'capture_set': {'pathb': 'pathb-B01..B04', 'emiloop': 'pathb-emiloop-probes',
+                    't149': 'pathb-t149-halfup-halfeven-exact-tie'}[CAPTURE_SET],
+    'capture_path': 'Path B — running Fineract server (REST + PostgreSQL)',
+    # ATTEST_TASK / ATTEST_BRANCH (added by T76): a sidecar produced by a LATER task must
+    # not claim T36 produced it.  Provenance that names the wrong author is a false record,
+    # even when every number in it is right.
+    'produced_by': {'task': os.environ.get('ATTEST_TASK', 'T36'),
+                    'branch': os.environ.get('ATTEST_BRANCH', 'softhouse/T36-pathb-admissibility'),
+                    'generated_at_utc': now(),
+                    'generator': 't36/attest.py',
+                    'preconditions_script': 't36/preconditions.sh',
+                    'preconditions_result': 'ALL PASS (transcript: %s)'
+                                            % os.path.relpath(os.path.join(OUT, 'preconditions.txt'), PATHB)},
+    'oracle': {
+        'image_tag': 'fineract:latest',
+        'image_id': image_id,
+        'image_created': image_created,
+        'image_repo_digests': (json.loads(image_repodigests, parse_float=str)
+                               if image_repodigests else None),
+        'container': FIN,
+        'container_started_at': container_started,
+        'jar_git_commit_id': gp.get('git.commit.id'),
+        'jar_git_dirty': gp.get('git.dirty'),
+        'jar_build_version': gp.get('git.build.version'),
+        'jar_branch': gp.get('git.branch'),
+        'jvm': jvm,
+        'health': 'UP (asserted by preconditions P4)',
+    },
+    'database': {
+        'engine': 'PostgreSQL',
+        'prohibited_engines_asserted_absent': ['Oracle Database', 'MySQL', 'MariaDB'],
+        'version': pg_version,
+        'server_version_num': pg_version_num,
+        'container': DB, 'image': pg_image, 'image_id': pg_image_id,
+        'driver_class': driver_class,
+        'jdbc_url': jdbc_url,
+        'prohibited_engine_hits_container_env': int(banned_env) if banned_env is not None else None,
+        'prohibited_driver_jars_in_boot_jar': int(banned_jar) if banned_jar is not None else None,
+    },
+    'tenant': {
+        'identifier': TENANT,
+        'name': tname,
+        'timezone_id': tz,
+        'timezone_note': 'zone id asserted, offset never hard-coded; Asia/Ulaanbaatar is +08 with no DST',
+        'schema_name': schema,
+        'schema_server_port': sport,
+        'schema_connection_parameters': scp,
+        'schema_connection_parameters_empty': scp == '',
+        'rounding_mode_ordinal': rounding_ordinal,
+        'rounding_mode_name': ROUNDING_ORDINALS.get(rounding_ordinal),
+        'rounding_mode_row_enabled': rm_enabled == 't',
+        'rounding_mode_source_row': 'c_configuration.rounding-mode in %s' % schema,
+        'rounding_mode_in_force_logline': logline,
+        'rounding_mode_in_force': mode_in_force,
+        'currency_MNT_decimal_places': int(mnt_dp) if mnt_dp and mnt_dp.isdigit() else None,
+        'currency_MNT_enabled': mnt_enabled == '1',
+    },
+    'effective_math_context': {
+        'precision': precision,
+        'precision_source': 'MoneyHelper.PRECISION read by javap from the DEPLOYED '
+                            'fineract-core jar inside the running container',
+        'rounding_mode': mode_in_force,
+        'rounding_mode_source': 'MoneyHelper init line emitted by THIS JVM run for THIS tenant',
+        'notation': 'MathContext(%s, %s)' % (precision, mode_in_force),
+        'matches_ratified_production_setting': (precision == WANT_PRECISION
+                                                and rounding_ordinal == WANT_ROUNDING_ORDINAL
+                                                and mode_in_force == 'HALF_UP'),
+        'ratified_production_setting': 'MathContext(19, HALF_UP)  [CLAUDE.md — ratified tenant parameters]',
+    },
+    'effective_mode_canary': {
+        'purpose': 'behavioural proof of the rounding mode actually in force: period-1 interest is an '
+                   'exact half-cent tie (1,162,502.50 x 0.018 = 20,925.045)',
+        # T147: DERIVED from the request actually sent, not a hard-coded literal. Until now
+        # this line named `calc-pmode2-gerege.json` on EVERY tenant while `request_sha256`
+        # beside it was computed from the bytes really posted — so a `default` run wrote a
+        # document naming one file and recording another file's digest. Visible today in the
+        # committed `capture/pathb/t125/red-pre-fix-default/attestation.json`, which names
+        # calc-pmode2-gerege.json and carries 1461810087… (that is calc-pmode2-default.json).
+        # Same shape as everything else this task closes: a value written and never compared.
+        'request_file': os.path.relpath(canary, PATHB),
+        'request_sha256': sha256(canary_bytes),
+        'response_file': os.path.relpath(canary_out, PATHB),
+        'http_status': int(canary_code) if canary_code else None,
+        'observed_period1_interest': canary_p1,
+        'expected_under_HALF_UP': '20925.05',
+        'expected_under_HALF_EVEN': '20925.04',
+        'verdict': 'HALF_UP confirmed behaviourally' if canary_p1 == '20925.05' else
+                   'MODE NOT CONFIRMED — see observed value',
+    },
+    'products_as_persisted': products,
+    'captures': captures,
+    'does_not_license': [
+        'promotion to the parity vector store — an admissibility attestation is not a promotion '
+        'decision. Promotion of these four is refused on graded-domain grounds recorded in '
+        't76/PROMOTION-DECISION.md (gate G-7), not on DEC-1 ratification: ' + DEC1_PHRASE,
+        'any claim about cutover, which is a hard user gate',
+        'any claim about behaviour not exercised here: multi-disbursement, charges, down payments, '
+        'repayments, delinquency, COB or anything clock-sensitive',
+    ],
+    'notes': notes,
+}
+
+# T125, last line of defence: the DOCUMENT is graded against the same constants before it is
+# written, by reading back the very fields that are about to be serialised — the canary
+# verdict, `matches_ratified_production_setting`, and the per-capture byte-identity claim.
+# All three were of one shape: computed, written, never compared.
+_no_prior = attest_gate.assert_attestation_is_verified(att, 'matches_committed_corpus_bytes')
+
+path = os.path.join(OUT, 'attestation.json')
+with open(path, 'w') as fh:
+    json.dump(att, fh, indent=1, sort_keys=False)
+    fh.write('\n')
+print('wrote %s' % path)
+print('GATE: effective rounding mode PROVEN %s — pinned exact tie %s answered %s '
+      '(HALF_EVEN would answer %s)'
+      % (attest_gate.WANT_ROUNDING_NAME, os.path.basename(canary), canary_p1,
+         attest_gate.EXPECTED_UNDER_HALF_EVEN))
+if _no_prior:
+    print('GATE: %d capture(s) had no committed counterpart to compare against (%s) — an '
+          'absence, not a mismatch, and NOT a reproducibility claim.'
+          % (len(_no_prior), ', '.join(str(x) for x in _no_prior)))
+print('effective MathContext: %s   matches ratified: %s'
+      % (att['effective_math_context']['notation'],
+         att['effective_math_context']['matches_ratified_production_setting']))
+for c in captures:
+    print('  %s  HTTP %s  sha256 %s  matches committed corpus: %s'
+          % (c['id'], c['http_status'], c['response_sha256'][:16], c['matches_committed_corpus_bytes']))
+if notes:
+    print('NOTES / UNREAD FIELDS:')
+    for n in notes:
+        print('  - %s' % n)

@@ -1,0 +1,43 @@
+=== T147 — T125's RED proof, re-run live on the HALF_EVEN tenant ============
+== the ONLY changes made to attest.py for this run ==
+181c181
+< if pre.returncode != 0:
+---
+> if False:  # T125 RED DEMO: OUTER precondition gate DISABLED
+ASSERTED: changed lines = 2, and that is exactly what these substitutions account for (labelled bypass 2 + canary literal 0 — the literal occurs 0 times in attest.py).
+
+== running: ATTEST_OUT=t147-red-default python3 attest.py default pathb ==
+--- stdout ---
+--- stderr ---
+
+==============================================================================
+ATTESTATION REFUSED — the effective rounding mode is NOT the ratified MathContext(19, HALF_UP)
+==============================================================================
+  * EFFECTIVE ROUNDING MODE IS NOT HALF_UP: on the pinned exact tie the oracle answered period-1 interest '20925.04'; HALF_UP gives 20925.05 and HALF_EVEN gives 20925.04. That is exactly the HALF_EVEN answer. The process is running Fineract's STOCK DEFAULT, not the ratified tenant pin.
+  * c_configuration.rounding-mode for tenant 'default' is 6, ratified ordinal is 4 (HALF_UP). Ordinal 6 is HALF_EVEN and is not production-representative.
+  * the running JVM initialized tenant 'default' at 'HALF_EVEN', not HALF_UP. MoneyHelper caches the mode per tenant at startup, so this — not the DB row — is what the arithmetic used.
+
+No attestation.json was written. An attestation asserts the reference oracle was
+observed at the RATIFIED tenant setting MathContext(19, HALF_UP); a run that cannot
+establish that has nothing to attest, and a file claiming a verdict it did not
+verify is worse than no file at all.
+--- EXIT CODE: 4 ---
+--- attestation.json was NOT written ---
+T125 RED DEMO exit code was 4
+
+--- exit code from the driver: 4  (4 = the gate refused) ---
+--- contents of the output directory ---
+CAPTURED-FROM-TENANT
+canary-halfcent-raw.json
+preconditions.txt
+scratch.diff
+stderr.txt
+stdout.txt
+
+--- CAPTURE BODIES PRESENT (B-0x): must be ZERO ---
+0
+--- attestation.json present? ---
+NO
+
+--- committed evidence trees untouched? (empty = yes) ---
+(end)

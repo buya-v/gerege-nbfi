@@ -1,0 +1,29 @@
+== variant PRE (/tmp/t202/prefix-acq.zsh) ==
+    FAIL [PRE/K1-deadholder] verdict: expected TAKEOVER, got EXIT0
+    ok   [PRE/K2-liveholder] verdict = EXIT0
+    ok   [PRE/K3-otherhost] verdict = EXIT0
+    ok   [PRE/K4-junkpid] verdict = EXIT0
+    ok   [PRE/K5-pidzero] verdict = EXIT0
+
+== variant POST (/tmp/t202/postfix-acq.zsh) ==
+    ok   [POST/K1-deadholder] verdict = TAKEOVER
+    ok   [POST/K2-liveholder] verdict = EXIT0
+    ok   [POST/K3-otherhost] verdict = EXIT0
+    ok   [POST/K4-junkpid] verdict = EXIT0
+    ok   [POST/K5-pidzero] verdict = EXIT0
+
+== variant KA (/tmp/t202/acq-mut-KA.zsh) ==
+    ok   [KA/K1-deadholder] verdict = TAKEOVER
+    ok   [KA/K2-liveholder] verdict = EXIT0
+    FAIL [KA/K3-otherhost] verdict: expected EXIT0, got TAKEOVER
+    ok   [KA/K4-junkpid] verdict = EXIT0
+    ok   [KA/K5-pidzero] verdict = EXIT0
+
+== variant KB (/tmp/t202/acq-mut-KB.zsh) ==
+    FAIL [KB/K1-deadholder] verdict: expected TAKEOVER, got EXIT0
+    FAIL [KB/K2-liveholder] verdict: expected EXIT0, got TAKEOVER
+    ok   [KB/K3-otherhost] verdict = EXIT0
+    ok   [KB/K4-junkpid] verdict = EXIT0
+    ok   [KB/K5-pidzero] verdict = EXIT0
+
+CHECKS INSPECTED=20  PASS=16  FAIL=4

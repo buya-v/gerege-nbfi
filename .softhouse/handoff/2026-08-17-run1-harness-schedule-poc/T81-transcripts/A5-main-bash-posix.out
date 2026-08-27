@@ -1,0 +1,2 @@
+.softhouse/conformance.sh: line 104: syntax error near unexpected token `<'
+.softhouse/conformance.sh: line 104: `  done < <(find "$STORE_ROOT" -name '*.json' -type f | sort)'

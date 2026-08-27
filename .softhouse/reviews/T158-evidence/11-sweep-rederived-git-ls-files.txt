@@ -1,0 +1,23 @@
+enumerator: git ls-files -> 503 .sh/.py files
+hits=130  guarded=19  unguarded=111
+
+THE GUARDED HITS, NAMED (T156's transcript names only the 4 that touch STORE):
+  .softhouse/capture/mathcontext/src/t46-negative-vacuity.sh         targets=CAPTURE                trap=1 finally=0 atexit=0
+  .softhouse/capture/pathb/t149/prove-exit-trap.py                   targets=STORE,CAPTURE,RIG      trap=0 finally=0 atexit=0
+  .softhouse/capture/pathb/t149/prove-redgreen.sh                    targets=STORE,PORT,CAPTURE,RIG trap=5 finally=0 atexit=0
+  .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py     targets=STORE,PORT,CAPTURE     trap=0 finally=0 atexit=0
+  .softhouse/capture/pathb/t99/prove-p24-postmerge.sh                targets=CAPTURE                trap=0 finally=0 atexit=0
+  .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py targets=CAPTURE                trap=0 finally=1 atexit=0
+  .softhouse/capture/t91/prove-guards.sh                             targets=CAPTURE                trap=1 finally=0 atexit=0
+  .softhouse/capture/t91/t115-drive-mf1.sh                           targets=CAPTURE                trap=1 finally=0 atexit=0
+  .softhouse/capture/t91/t115-drive-mf2.sh                           targets=CAPTURE,RIG            trap=1 finally=0 atexit=0
+  .softhouse/capture/t91/t115-rerun-attacks.sh                       targets=CAPTURE                trap=1 finally=0 atexit=0
+  .softhouse/capture/t91/t151-drive-g4.sh                            targets=CAPTURE                trap=1 finally=0 atexit=0
+  .softhouse/capture/t91/t151-drive-g67.sh                           targets=CAPTURE                trap=1 finally=0 atexit=0
+  .softhouse/capture/t91/t151-drive-vb.sh                            targets=CAPTURE                trap=1 finally=0 atexit=0
+  .softhouse/capture/tierA-a2/cap.sh                                 targets=CAPTURE                trap=1 finally=0 atexit=0
+  .softhouse/capture/tierA-a2/prove-cap-transport-red.py             targets=CAPTURE                trap=0 finally=2 atexit=0
+  .softhouse/conformance.sh                                          targets=STORE,PORT,RIG         trap=1 finally=0 atexit=0
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh targets=RIG                    trap=1 finally=0 atexit=0
+  .softhouse/handoff/T61-mutations.py                                targets=PORT,RIG               trap=0 finally=1 atexit=0
+  .softhouse/reviews/t47-probe/t47_edit_1.py                         targets=CAPTURE                trap=0 finally=0 atexit=0

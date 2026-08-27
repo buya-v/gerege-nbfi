@@ -1,0 +1,48 @@
+== T48 negative tests -- proving run-actualactual.sh failable ==
+
+### N1 -- wrong pinned commit
+  ok  exit 1; breach named:
+      BREACH: pinned checkout is at 426a23544e8426a38ae43ae404670a0a7e85b9eb, expected 0000000000000000000000000000000000000000
+
+### N2 -- wrong image id
+  ok  exit 1; breach named:
+      BREACH: image id is sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a, expected sha256:0000000000000000000000000000000000000000000000000000000000000000
+
+### N3 -- wrong seam-class digest
+  ok  exit 1; breach named:
+      BREACH: seam class sha256 is bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714, expected 0000000000000000000000000000000000000000000000000000000000000000
+
+### N4 -- seam class byte-drift (temporary, reverted)
+  ok  exit 1; breach named:
+      BREACH: seam class under src/ has DRIFTED from the pinned original
+  ok  seam class restored byte-identical to the pin
+
+### N5 -- threaded rounding mode forced to HALF_EVEN
+  ok  exit 1; breach named:
+      BREACH: negative-test threaded rounding-mode override was LEFT SET: HALF_EVEN
+      BREACH: T48-CAL: AMBIENT context is 'precision=19 roundingMode=HALF_UP', expected precision=19 roundingMode=HALF_EVEN
+      BREACH: T48-CTL-Q0a: THREADED rounding mode HALF_EVEN, expected HALF_UP
+      BREACH: T48-CTL-B03: THREADED rounding mode HALF_EVEN, expected HALF_UP
+
+### N6 -- threaded precision forced to 12
+  ok  exit 1; breach named:
+      BREACH: negative-test precision override was LEFT SET: 12
+      BREACH: T48-CTL-Q0a: THREADED precision 12, expected 19
+      BREACH: T48-CTL-B03: THREADED precision 12, expected 19
+      BREACH: T48-AA-1: THREADED precision 12, expected 19
+
+### N7 -- tenant rounding ordinal forced to 1 (DOWN)
+  ok  exit 1; breach named:
+      BREACH: negative-test tenant rounding override was LEFT SET: 1
+      BREACH: T48-CAL: CALIBRATION tenant rounding ordinal 1; the shipped tests use HALF_UP (4) or HALF_EVEN (6)
+      BREACH: T48-CAL: AMBIENT context is 'precision=19 roundingMode=DOWN', expected precision=19 roundingMode=HALF_UP
+      BREACH: T48-CTL-Q0a: AMBIENT MoneyHelper MathContext is 'precision=19 roundingMode=DOWN', expected 'precision=19 roundingMode=HALF_UP'
+
+### N8 -- expected ambient context set to a value the oracle does not hold
+  ok  exit 1; breach named:
+      BREACH: T48-CTL-Q0a: AMBIENT MoneyHelper MathContext is 'precision=19 roundingMode=HALF_UP', expected 'precision=19 roundingMode=HALF_DOWN'
+      BREACH: T48-CTL-B03: AMBIENT MoneyHelper MathContext is 'precision=19 roundingMode=HALF_UP', expected 'precision=19 roundingMode=HALF_DOWN'
+      BREACH: T48-AA-1: AMBIENT MoneyHelper MathContext is 'precision=19 roundingMode=HALF_UP', expected 'precision=19 roundingMode=HALF_DOWN'
+      BREACH: T48-AA-2: AMBIENT MoneyHelper MathContext is 'precision=19 roundingMode=HALF_UP', expected 'precision=19 roundingMode=HALF_DOWN'
+
+== ALL NEGATIVE LEGS BREACHED AS REQUIRED -- the recipe is proved failable on 8 axes

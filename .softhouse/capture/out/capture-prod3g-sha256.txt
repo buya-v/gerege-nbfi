@@ -1,0 +1,6 @@
+6e0c37019095cf8664b18b643bafb8e59014b47f2d4a8a82ce43463e41827d91  .softhouse/capture/out/capture-prod3g-raw.json
+1496dc940dcc16a5efc8031612139486e7d01a66e4e65e600c1939618dad50c0  .softhouse/capture/out/capture-prod3g-log.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  .softhouse/capture/out/capture-prod3g-stderr.txt
+142ec626d3b98a66e09c6128939c5fba0634a31e0780733261085407d7405fe3  .softhouse/capture/out/capture-prod3g-attestation.json
+8738dbaec1c242f10f28be685706b40bd46c16ff3afff696335f7e0653efa011  .softhouse/capture/out/capture-prod3g-classpath-sha256.txt
+8d2b1abfe53a96afb69d7e55aeb20c1c40276e8c07ddd03d04aca61688ac20ec  .softhouse/capture/out/capture-prod3g-raw.txt

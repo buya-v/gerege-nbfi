@@ -1,0 +1,23 @@
+instrument                                     calib  pos+neg exit4   exit5  
+------------------------------------------------------------------------------------
+10-population.py                               True   True    True    True   
+11-selector-check.py                           False  False   False   True   
+12-tenant-term.py                              False  False   False   True   
+20-redA-sidecar-tracks-the-send.sh             False  False   False   False  
+30-redB-mismatch-detected.sh                   True   True    False   False  
+40-redC-shapes-not-designed-around.sh          False  False   False   False  
+50-oraclestamp-tenant-gate.py                  False  False   False   True   
+
+ENGINE HITS (grep / rg / git grep):
+  10-population.py                             bare grep L20    *** LIVE ***    ENGINE (P-75): pure `python3` `re` over bytes read from disk.  No `grep`, no
+  10-population.py                             bare grep L21    *** LIVE ***    `rg`, no `git grep`.  Calibrated on a known POSITIVE and a known NEGATIVE that
+  10-population.py                             ripgrep   L21    *** LIVE ***    `rg`, no `git grep`.  Calibrated on a known POSITIVE and a known NEGATIVE that
+  10-population.py                             git grep  L21    *** LIVE ***    `rg`, no `git grep`.  Calibrated on a known POSITIVE and a known NEGATIVE that
+
+INSTRUMENTS WITHOUT BOTH A CALIBRATION AND AN ABORT: 6
+    11-selector-check.py
+    12-tenant-term.py
+    20-redA-sidecar-tracks-the-send.sh
+    30-redB-mismatch-detected.sh
+    40-redC-shapes-not-designed-around.sh
+    50-oraclestamp-tenant-gate.py

@@ -1,0 +1,24 @@
+T57  .softhouse/handoff/T57-promote-emi-vectors.py
+    OUT resolves to      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4762772d2f0d5192/.softhouse/vectors/loanschedule
+    OUT IS THE LIVE STORE: True
+    targets              : 2 ; LIVE in store: 2
+        LIVE  P-EMI-6-1M014632-emi-smoothing-loop.json
+        LIVE  P-EMI-36-127704-emi-smoothing-loop.json
+
+T8  .softhouse/handoff/T8-promote-vectors.py
+    OUT resolves to      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4762772d2f0d5192/.softhouse/vectors/loanschedule
+    OUT IS THE LIVE STORE: True
+    targets              : 11 ; LIVE in store: 11
+        LIVE  P-00-baseline-6x7pct.json
+        LIVE  P-01-18x18pt5pct-principal-87654321.json
+        LIVE  P-02-monthend-seed-day-31.json
+        LIVE  P-02b-monthend-seed-day-30.json
+        LIVE  P-03-disbursement-on-repayment-due-date.json
+        LIVE  P-04f-fulltermfortranche-false.json
+        LIVE  P-04t-fulltermfortranche-true.json
+        LIVE  P-MNT-5M-18x18pt5pct.json
+        LIVE  P-MNT-1M2-12x21pt6pct.json
+        LIVE  P-MNT-50M-36x16pt8pct.json
+        LIVE  P-MNT-4M999-18x18pt5pct.json
+
+LIVE parity vectors reachable by T57 + T8: 13

@@ -1,0 +1,1074 @@
+MoneyHelper.PRECISION = 19
+10:02:13.117 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_0`: HALF_UP
+ambient MoneyHelper MathContext = precision=19 roundingMode=HALF_UP
+
+======== A. precision 12 vs 19, small principals, 36 x 16.8% ========
+10:02:13.120 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_1`: HALF_UP
+10:02:13.167 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_2`: HALF_UP
+### 36 x 16.8%  principal 1   p12 vs p19
+  A: term=1096 disb=1.00 int=0.22 rep=1.22
+        DISB 2024-01-01 1.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.97 totOut=1.18
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.94 totOut=1.14
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.91 totOut=1.10
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.88 totOut=1.06
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.85 totOut=1.02
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.82 totOut=0.98
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.79 totOut=0.94
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.76 totOut=0.90
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.73 totOut=0.86
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.70 totOut=0.82
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.67 totOut=0.78
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.64 totOut=0.74
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.61 totOut=0.70
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.58 totOut=0.66
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.55 totOut=0.62
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.52 totOut=0.58
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.49 totOut=0.54
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.46 totOut=0.50
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.43 totOut=0.46
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.40 totOut=0.42
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.37 totOut=0.38
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.34 totOut=0.34
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.30 totOut=0.30
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.26 totOut=0.26
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.22 totOut=0.22
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.18 totOut=0.18
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.14 totOut=0.14
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.10 totOut=0.10
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.06 totOut=0.06
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.02 totOut=0.02
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=0.02 int=0.00 fee=0.00 pen=0.00 tot=0.02 bal=0.00 totOut=0.00
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=0.00 int=0.00 fee=0.00 pen=0.00 tot=0.00 bal=0.00 totOut=0.00
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=0.00 int=0.00 fee=0.00 pen=0.00 tot=0.00 bal=0.00 totOut=0.00
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=0.00 int=0.00 fee=0.00 pen=0.00 tot=0.00 bal=0.00 totOut=0.00
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=0.00 int=0.00 fee=0.00 pen=0.00 tot=0.00 bal=0.00 totOut=0.00
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=0.00 int=0.00 fee=0.00 pen=0.00 tot=0.00 bal=0.00 totOut=0.00
+  
+  B: term=1096 disb=1.00 int=0.22 rep=1.22
+        DISB 2024-01-01 1.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.97 totOut=1.18
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.94 totOut=1.14
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.91 totOut=1.10
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.88 totOut=1.06
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.85 totOut=1.02
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.82 totOut=0.98
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.79 totOut=0.94
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.76 totOut=0.90
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.73 totOut=0.86
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.70 totOut=0.82
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.67 totOut=0.78
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.64 totOut=0.74
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.61 totOut=0.70
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.58 totOut=0.66
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.55 totOut=0.62
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.52 totOut=0.58
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.49 totOut=0.54
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.46 totOut=0.50
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.43 totOut=0.46
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.40 totOut=0.42
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.37 totOut=0.38
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=0.03 int=0.01 fee=0.00 pen=0.00 tot=0.04 bal=0.34 totOut=0.34
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.30 totOut=0.30
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.26 totOut=0.26
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.22 totOut=0.22
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.18 totOut=0.18
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.14 totOut=0.14
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.10 totOut=0.10
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.06 totOut=0.06
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=0.04 int=0.00 fee=0.00 pen=0.00 tot=0.04 bal=0.02 totOut=0.02
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=0.02 int=0.00 fee=0.00 pen=0.00 tot=0.02 bal=0.00 totOut=0.00
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=0.00 int=0.00 fee=0.00 pen=0.00 tot=0.00 bal=0.00 totOut=0.00
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=0.00 int=0.00 fee=0.00 pen=0.00 tot=0.00 bal=0.00 totOut=0.00
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=0.00 int=0.00 fee=0.00 pen=0.00 tot=0.00 bal=0.00 totOut=0.00
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=0.00 int=0.00 fee=0.00 pen=0.00 tot=0.00 bal=0.00 totOut=0.00
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=0.00 int=0.00 fee=0.00 pen=0.00 tot=0.00 bal=0.00 totOut=0.00
+  
+  ==> IDENTICAL
+
+10:02:13.190 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_3`: HALF_UP
+10:02:13.195 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_4`: HALF_UP
+### 36 x 16.8%  principal 2   p12 vs p19
+  A: term=1096 disb=2.00 int=0.58 rep=2.58
+        DISB 2024-01-01 2.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=0.04 int=0.03 fee=0.00 pen=0.00 tot=0.07 bal=1.96 totOut=2.51
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=0.04 int=0.03 fee=0.00 pen=0.00 tot=0.07 bal=1.92 totOut=2.44
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=0.04 int=0.03 fee=0.00 pen=0.00 tot=0.07 bal=1.88 totOut=2.37
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=0.04 int=0.03 fee=0.00 pen=0.00 tot=0.07 bal=1.84 totOut=2.30
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=0.04 int=0.03 fee=0.00 pen=0.00 tot=0.07 bal=1.80 totOut=2.23
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=0.04 int=0.03 fee=0.00 pen=0.00 tot=0.07 bal=1.76 totOut=2.16
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.71 totOut=2.09
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.66 totOut=2.02
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.61 totOut=1.95
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.56 totOut=1.88
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.51 totOut=1.81
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.46 totOut=1.74
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.41 totOut=1.67
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.36 totOut=1.60
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.31 totOut=1.53
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.26 totOut=1.46
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.21 totOut=1.39
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.16 totOut=1.32
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.11 totOut=1.25
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.06 totOut=1.18
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=1.00 totOut=1.11
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.94 totOut=1.04
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.88 totOut=0.97
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.82 totOut=0.90
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.76 totOut=0.83
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.70 totOut=0.76
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.64 totOut=0.69
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.58 totOut=0.62
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.52 totOut=0.55
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.46 totOut=0.48
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.40 totOut=0.41
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.34 totOut=0.34
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=0.07 int=0.00 fee=0.00 pen=0.00 tot=0.07 bal=0.27 totOut=0.27
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=0.07 int=0.00 fee=0.00 pen=0.00 tot=0.07 bal=0.20 totOut=0.20
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=0.07 int=0.00 fee=0.00 pen=0.00 tot=0.07 bal=0.13 totOut=0.13
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=0.13 int=0.00 fee=0.00 pen=0.00 tot=0.13 bal=0.00 totOut=0.00
+  
+  B: term=1096 disb=2.00 int=0.58 rep=2.58
+        DISB 2024-01-01 2.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=0.04 int=0.03 fee=0.00 pen=0.00 tot=0.07 bal=1.96 totOut=2.51
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=0.04 int=0.03 fee=0.00 pen=0.00 tot=0.07 bal=1.92 totOut=2.44
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=0.04 int=0.03 fee=0.00 pen=0.00 tot=0.07 bal=1.88 totOut=2.37
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=0.04 int=0.03 fee=0.00 pen=0.00 tot=0.07 bal=1.84 totOut=2.30
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=0.04 int=0.03 fee=0.00 pen=0.00 tot=0.07 bal=1.80 totOut=2.23
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=0.04 int=0.03 fee=0.00 pen=0.00 tot=0.07 bal=1.76 totOut=2.16
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.71 totOut=2.09
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.66 totOut=2.02
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.61 totOut=1.95
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.56 totOut=1.88
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.51 totOut=1.81
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.46 totOut=1.74
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.41 totOut=1.67
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.36 totOut=1.60
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.31 totOut=1.53
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.26 totOut=1.46
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.21 totOut=1.39
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.16 totOut=1.32
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.11 totOut=1.25
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=0.05 int=0.02 fee=0.00 pen=0.00 tot=0.07 bal=1.06 totOut=1.18
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=1.00 totOut=1.11
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.94 totOut=1.04
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.88 totOut=0.97
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.82 totOut=0.90
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.76 totOut=0.83
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.70 totOut=0.76
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.64 totOut=0.69
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.58 totOut=0.62
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.52 totOut=0.55
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.46 totOut=0.48
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.40 totOut=0.41
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=0.06 int=0.01 fee=0.00 pen=0.00 tot=0.07 bal=0.34 totOut=0.34
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=0.07 int=0.00 fee=0.00 pen=0.00 tot=0.07 bal=0.27 totOut=0.27
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=0.07 int=0.00 fee=0.00 pen=0.00 tot=0.07 bal=0.20 totOut=0.20
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=0.07 int=0.00 fee=0.00 pen=0.00 tot=0.07 bal=0.13 totOut=0.13
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=0.13 int=0.00 fee=0.00 pen=0.00 tot=0.13 bal=0.00 totOut=0.00
+  
+  ==> IDENTICAL
+
+10:02:13.202 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_5`: HALF_UP
+10:02:13.207 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_6`: HALF_UP
+### 36 x 16.8%  principal 3   p12 vs p19
+  A: term=1096 disb=3.00 int=0.82 rep=3.82
+        DISB 2024-01-01 3.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.93 totOut=3.71
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.86 totOut=3.60
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.79 totOut=3.49
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.72 totOut=3.38
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.65 totOut=3.27
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.58 totOut=3.16
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.51 totOut=3.05
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.44 totOut=2.94
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=2.36 totOut=2.83
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=2.28 totOut=2.72
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=2.20 totOut=2.61
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=2.12 totOut=2.50
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=2.04 totOut=2.39
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=1.96 totOut=2.28
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=1.88 totOut=2.17
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=1.80 totOut=2.06
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=1.72 totOut=1.95
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.63 totOut=1.84
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.54 totOut=1.73
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.45 totOut=1.62
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.36 totOut=1.51
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.27 totOut=1.40
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.18 totOut=1.29
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.09 totOut=1.18
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.00 totOut=1.07
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.90 totOut=0.96
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.80 totOut=0.85
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.70 totOut=0.74
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.60 totOut=0.63
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.50 totOut=0.52
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.40 totOut=0.41
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.30 totOut=0.30
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=0.11 int=0.00 fee=0.00 pen=0.00 tot=0.11 bal=0.19 totOut=0.19
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=0.11 int=0.00 fee=0.00 pen=0.00 tot=0.11 bal=0.08 totOut=0.08
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=0.08 int=0.00 fee=0.00 pen=0.00 tot=0.08 bal=0.00 totOut=0.00
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=0.00 int=0.00 fee=0.00 pen=0.00 tot=0.00 bal=0.00 totOut=0.00
+  
+  B: term=1096 disb=3.00 int=0.82 rep=3.82
+        DISB 2024-01-01 3.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.93 totOut=3.71
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.86 totOut=3.60
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.79 totOut=3.49
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.72 totOut=3.38
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.65 totOut=3.27
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.58 totOut=3.16
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.51 totOut=3.05
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=0.07 int=0.04 fee=0.00 pen=0.00 tot=0.11 bal=2.44 totOut=2.94
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=2.36 totOut=2.83
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=2.28 totOut=2.72
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=2.20 totOut=2.61
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=2.12 totOut=2.50
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=2.04 totOut=2.39
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=1.96 totOut=2.28
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=1.88 totOut=2.17
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=1.80 totOut=2.06
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=0.08 int=0.03 fee=0.00 pen=0.00 tot=0.11 bal=1.72 totOut=1.95
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.63 totOut=1.84
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.54 totOut=1.73
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.45 totOut=1.62
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.36 totOut=1.51
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.27 totOut=1.40
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.18 totOut=1.29
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.09 totOut=1.18
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=0.09 int=0.02 fee=0.00 pen=0.00 tot=0.11 bal=1.00 totOut=1.07
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.90 totOut=0.96
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.80 totOut=0.85
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.70 totOut=0.74
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.60 totOut=0.63
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.50 totOut=0.52
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.40 totOut=0.41
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=0.10 int=0.01 fee=0.00 pen=0.00 tot=0.11 bal=0.30 totOut=0.30
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=0.11 int=0.00 fee=0.00 pen=0.00 tot=0.11 bal=0.19 totOut=0.19
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=0.11 int=0.00 fee=0.00 pen=0.00 tot=0.11 bal=0.08 totOut=0.08
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=0.08 int=0.00 fee=0.00 pen=0.00 tot=0.08 bal=0.00 totOut=0.00
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=0.00 int=0.00 fee=0.00 pen=0.00 tot=0.00 bal=0.00 totOut=0.00
+  
+  ==> IDENTICAL
+
+10:02:13.214 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_7`: HALF_UP
+10:02:13.219 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_8`: HALF_UP
+### 36 x 16.8%  principal 4   p12 vs p19
+  A: term=1096 disb=4.00 int=1.13 rep=5.13
+        DISB 2024-01-01 4.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=0.08 int=0.06 fee=0.00 pen=0.00 tot=0.14 bal=3.92 totOut=4.99
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.83 totOut=4.85
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.74 totOut=4.71
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.65 totOut=4.57
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.56 totOut=4.43
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.47 totOut=4.29
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.38 totOut=4.15
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.29 totOut=4.01
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.20 totOut=3.87
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=3.10 totOut=3.73
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=3.00 totOut=3.59
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=2.90 totOut=3.45
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=2.80 totOut=3.31
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=2.70 totOut=3.17
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=2.60 totOut=3.03
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=2.50 totOut=2.89
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=2.39 totOut=2.75
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=2.28 totOut=2.61
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=2.17 totOut=2.47
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=2.06 totOut=2.33
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=1.95 totOut=2.19
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=1.84 totOut=2.05
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=1.73 totOut=1.91
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=0.12 int=0.02 fee=0.00 pen=0.00 tot=0.14 bal=1.61 totOut=1.77
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=0.12 int=0.02 fee=0.00 pen=0.00 tot=0.14 bal=1.49 totOut=1.63
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=0.12 int=0.02 fee=0.00 pen=0.00 tot=0.14 bal=1.37 totOut=1.49
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=0.12 int=0.02 fee=0.00 pen=0.00 tot=0.14 bal=1.25 totOut=1.35
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=0.12 int=0.02 fee=0.00 pen=0.00 tot=0.14 bal=1.13 totOut=1.21
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=0.12 int=0.02 fee=0.00 pen=0.00 tot=0.14 bal=1.01 totOut=1.07
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=0.13 int=0.01 fee=0.00 pen=0.00 tot=0.14 bal=0.88 totOut=0.93
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=0.13 int=0.01 fee=0.00 pen=0.00 tot=0.14 bal=0.75 totOut=0.79
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=0.13 int=0.01 fee=0.00 pen=0.00 tot=0.14 bal=0.62 totOut=0.65
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=0.13 int=0.01 fee=0.00 pen=0.00 tot=0.14 bal=0.49 totOut=0.51
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=0.13 int=0.01 fee=0.00 pen=0.00 tot=0.14 bal=0.36 totOut=0.37
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=0.13 int=0.01 fee=0.00 pen=0.00 tot=0.14 bal=0.23 totOut=0.23
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=0.23 int=0.00 fee=0.00 pen=0.00 tot=0.23 bal=0.00 totOut=0.00
+  
+  B: term=1096 disb=4.00 int=1.14 rep=5.14
+        DISB 2024-01-01 4.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=0.08 int=0.06 fee=0.00 pen=0.00 tot=0.14 bal=3.92 totOut=5.00
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.83 totOut=4.86
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.74 totOut=4.72
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.65 totOut=4.58
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.56 totOut=4.44
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.47 totOut=4.30
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.38 totOut=4.16
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.29 totOut=4.02
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=0.09 int=0.05 fee=0.00 pen=0.00 tot=0.14 bal=3.20 totOut=3.88
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=3.10 totOut=3.74
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=3.00 totOut=3.60
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=2.90 totOut=3.46
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=2.80 totOut=3.32
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=2.70 totOut=3.18
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=2.60 totOut=3.04
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=2.50 totOut=2.90
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=0.10 int=0.04 fee=0.00 pen=0.00 tot=0.14 bal=2.40 totOut=2.76
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=2.29 totOut=2.62
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=2.18 totOut=2.48
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=2.07 totOut=2.34
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=1.96 totOut=2.20
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=1.85 totOut=2.06
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=0.11 int=0.03 fee=0.00 pen=0.00 tot=0.14 bal=1.74 totOut=1.92
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=0.12 int=0.02 fee=0.00 pen=0.00 tot=0.14 bal=1.62 totOut=1.78
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=0.12 int=0.02 fee=0.00 pen=0.00 tot=0.14 bal=1.50 totOut=1.64
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=0.12 int=0.02 fee=0.00 pen=0.00 tot=0.14 bal=1.38 totOut=1.50
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=0.12 int=0.02 fee=0.00 pen=0.00 tot=0.14 bal=1.26 totOut=1.36
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=0.12 int=0.02 fee=0.00 pen=0.00 tot=0.14 bal=1.14 totOut=1.22
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=0.12 int=0.02 fee=0.00 pen=0.00 tot=0.14 bal=1.02 totOut=1.08
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=0.13 int=0.01 fee=0.00 pen=0.00 tot=0.14 bal=0.89 totOut=0.94
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=0.13 int=0.01 fee=0.00 pen=0.00 tot=0.14 bal=0.76 totOut=0.80
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=0.13 int=0.01 fee=0.00 pen=0.00 tot=0.14 bal=0.63 totOut=0.66
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=0.13 int=0.01 fee=0.00 pen=0.00 tot=0.14 bal=0.50 totOut=0.52
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=0.13 int=0.01 fee=0.00 pen=0.00 tot=0.14 bal=0.37 totOut=0.38
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=0.13 int=0.01 fee=0.00 pen=0.00 tot=0.14 bal=0.24 totOut=0.24
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=0.24 int=0.00 fee=0.00 pen=0.00 tot=0.24 bal=0.00 totOut=0.00
+  
+  ==> DIFFERENT
+
+10:02:13.224 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_9`: HALF_UP
+10:02:13.229 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_10`: HALF_UP
+### 36 x 16.8%  principal 5   p12 vs p19
+  A: term=1096 disb=5.00 int=1.38 rep=6.38
+        DISB 2024-01-01 5.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=0.11 int=0.07 fee=0.00 pen=0.00 tot=0.18 bal=4.89 totOut=6.20
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=0.11 int=0.07 fee=0.00 pen=0.00 tot=0.18 bal=4.78 totOut=6.02
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=0.11 int=0.07 fee=0.00 pen=0.00 tot=0.18 bal=4.67 totOut=5.84
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=0.11 int=0.07 fee=0.00 pen=0.00 tot=0.18 bal=4.56 totOut=5.66
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=0.12 int=0.06 fee=0.00 pen=0.00 tot=0.18 bal=4.44 totOut=5.48
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=0.12 int=0.06 fee=0.00 pen=0.00 tot=0.18 bal=4.32 totOut=5.30
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=0.12 int=0.06 fee=0.00 pen=0.00 tot=0.18 bal=4.20 totOut=5.12
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=0.12 int=0.06 fee=0.00 pen=0.00 tot=0.18 bal=4.08 totOut=4.94
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=0.12 int=0.06 fee=0.00 pen=0.00 tot=0.18 bal=3.96 totOut=4.76
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=0.12 int=0.06 fee=0.00 pen=0.00 tot=0.18 bal=3.84 totOut=4.58
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=0.13 int=0.05 fee=0.00 pen=0.00 tot=0.18 bal=3.71 totOut=4.40
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=0.13 int=0.05 fee=0.00 pen=0.00 tot=0.18 bal=3.58 totOut=4.22
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=0.13 int=0.05 fee=0.00 pen=0.00 tot=0.18 bal=3.45 totOut=4.04
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=0.13 int=0.05 fee=0.00 pen=0.00 tot=0.18 bal=3.32 totOut=3.86
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=0.13 int=0.05 fee=0.00 pen=0.00 tot=0.18 bal=3.19 totOut=3.68
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=0.14 int=0.04 fee=0.00 pen=0.00 tot=0.18 bal=3.05 totOut=3.50
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=0.14 int=0.04 fee=0.00 pen=0.00 tot=0.18 bal=2.91 totOut=3.32
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=0.14 int=0.04 fee=0.00 pen=0.00 tot=0.18 bal=2.77 totOut=3.14
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=0.14 int=0.04 fee=0.00 pen=0.00 tot=0.18 bal=2.63 totOut=2.96
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=0.14 int=0.04 fee=0.00 pen=0.00 tot=0.18 bal=2.49 totOut=2.78
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=0.15 int=0.03 fee=0.00 pen=0.00 tot=0.18 bal=2.34 totOut=2.60
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=0.15 int=0.03 fee=0.00 pen=0.00 tot=0.18 bal=2.19 totOut=2.42
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=0.15 int=0.03 fee=0.00 pen=0.00 tot=0.18 bal=2.04 totOut=2.24
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=0.15 int=0.03 fee=0.00 pen=0.00 tot=0.18 bal=1.89 totOut=2.06
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=0.15 int=0.03 fee=0.00 pen=0.00 tot=0.18 bal=1.74 totOut=1.88
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=0.16 int=0.02 fee=0.00 pen=0.00 tot=0.18 bal=1.58 totOut=1.70
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=0.16 int=0.02 fee=0.00 pen=0.00 tot=0.18 bal=1.42 totOut=1.52
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=0.16 int=0.02 fee=0.00 pen=0.00 tot=0.18 bal=1.26 totOut=1.34
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=0.16 int=0.02 fee=0.00 pen=0.00 tot=0.18 bal=1.10 totOut=1.16
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=0.16 int=0.02 fee=0.00 pen=0.00 tot=0.18 bal=0.94 totOut=0.98
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=0.17 int=0.01 fee=0.00 pen=0.00 tot=0.18 bal=0.77 totOut=0.80
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=0.17 int=0.01 fee=0.00 pen=0.00 tot=0.18 bal=0.60 totOut=0.62
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=0.17 int=0.01 fee=0.00 pen=0.00 tot=0.18 bal=0.43 totOut=0.44
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=0.17 int=0.01 fee=0.00 pen=0.00 tot=0.18 bal=0.26 totOut=0.26
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=0.18 int=0.00 fee=0.00 pen=0.00 tot=0.18 bal=0.08 totOut=0.08
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=0.08 int=0.00 fee=0.00 pen=0.00 tot=0.08 bal=0.00 totOut=0.00
+  
+  B: term=1096 disb=5.00 int=1.38 rep=6.38
+        DISB 2024-01-01 5.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=0.11 int=0.07 fee=0.00 pen=0.00 tot=0.18 bal=4.89 totOut=6.20
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=0.11 int=0.07 fee=0.00 pen=0.00 tot=0.18 bal=4.78 totOut=6.02
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=0.11 int=0.07 fee=0.00 pen=0.00 tot=0.18 bal=4.67 totOut=5.84
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=0.11 int=0.07 fee=0.00 pen=0.00 tot=0.18 bal=4.56 totOut=5.66
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=0.12 int=0.06 fee=0.00 pen=0.00 tot=0.18 bal=4.44 totOut=5.48
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=0.12 int=0.06 fee=0.00 pen=0.00 tot=0.18 bal=4.32 totOut=5.30
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=0.12 int=0.06 fee=0.00 pen=0.00 tot=0.18 bal=4.20 totOut=5.12
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=0.12 int=0.06 fee=0.00 pen=0.00 tot=0.18 bal=4.08 totOut=4.94
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=0.12 int=0.06 fee=0.00 pen=0.00 tot=0.18 bal=3.96 totOut=4.76
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=0.12 int=0.06 fee=0.00 pen=0.00 tot=0.18 bal=3.84 totOut=4.58
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=0.13 int=0.05 fee=0.00 pen=0.00 tot=0.18 bal=3.71 totOut=4.40
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=0.13 int=0.05 fee=0.00 pen=0.00 tot=0.18 bal=3.58 totOut=4.22
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=0.13 int=0.05 fee=0.00 pen=0.00 tot=0.18 bal=3.45 totOut=4.04
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=0.13 int=0.05 fee=0.00 pen=0.00 tot=0.18 bal=3.32 totOut=3.86
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=0.13 int=0.05 fee=0.00 pen=0.00 tot=0.18 bal=3.19 totOut=3.68
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=0.14 int=0.04 fee=0.00 pen=0.00 tot=0.18 bal=3.05 totOut=3.50
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=0.14 int=0.04 fee=0.00 pen=0.00 tot=0.18 bal=2.91 totOut=3.32
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=0.14 int=0.04 fee=0.00 pen=0.00 tot=0.18 bal=2.77 totOut=3.14
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=0.14 int=0.04 fee=0.00 pen=0.00 tot=0.18 bal=2.63 totOut=2.96
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=0.14 int=0.04 fee=0.00 pen=0.00 tot=0.18 bal=2.49 totOut=2.78
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=0.15 int=0.03 fee=0.00 pen=0.00 tot=0.18 bal=2.34 totOut=2.60
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=0.15 int=0.03 fee=0.00 pen=0.00 tot=0.18 bal=2.19 totOut=2.42
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=0.15 int=0.03 fee=0.00 pen=0.00 tot=0.18 bal=2.04 totOut=2.24
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=0.15 int=0.03 fee=0.00 pen=0.00 tot=0.18 bal=1.89 totOut=2.06
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=0.15 int=0.03 fee=0.00 pen=0.00 tot=0.18 bal=1.74 totOut=1.88
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=0.16 int=0.02 fee=0.00 pen=0.00 tot=0.18 bal=1.58 totOut=1.70
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=0.16 int=0.02 fee=0.00 pen=0.00 tot=0.18 bal=1.42 totOut=1.52
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=0.16 int=0.02 fee=0.00 pen=0.00 tot=0.18 bal=1.26 totOut=1.34
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=0.16 int=0.02 fee=0.00 pen=0.00 tot=0.18 bal=1.10 totOut=1.16
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=0.16 int=0.02 fee=0.00 pen=0.00 tot=0.18 bal=0.94 totOut=0.98
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=0.17 int=0.01 fee=0.00 pen=0.00 tot=0.18 bal=0.77 totOut=0.80
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=0.17 int=0.01 fee=0.00 pen=0.00 tot=0.18 bal=0.60 totOut=0.62
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=0.17 int=0.01 fee=0.00 pen=0.00 tot=0.18 bal=0.43 totOut=0.44
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=0.17 int=0.01 fee=0.00 pen=0.00 tot=0.18 bal=0.26 totOut=0.26
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=0.18 int=0.00 fee=0.00 pen=0.00 tot=0.18 bal=0.08 totOut=0.08
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=0.08 int=0.00 fee=0.00 pen=0.00 tot=0.08 bal=0.00 totOut=0.00
+  
+  ==> IDENTICAL
+
+10:02:13.234 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_11`: HALF_UP
+10:02:13.238 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_12`: HALF_UP
+### 36 x 16.8%  principal 59   p12 vs p19
+  A: term=1096 disb=59.00 int=16.52 rep=75.52
+        DISB 2024-01-01 59.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=1.27 int=0.83 fee=0.00 pen=0.00 tot=2.10 bal=57.73 totOut=73.42
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=1.29 int=0.81 fee=0.00 pen=0.00 tot=2.10 bal=56.44 totOut=71.32
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=1.31 int=0.79 fee=0.00 pen=0.00 tot=2.10 bal=55.13 totOut=69.22
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=1.33 int=0.77 fee=0.00 pen=0.00 tot=2.10 bal=53.80 totOut=67.12
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=1.35 int=0.75 fee=0.00 pen=0.00 tot=2.10 bal=52.45 totOut=65.02
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=1.37 int=0.73 fee=0.00 pen=0.00 tot=2.10 bal=51.08 totOut=62.92
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=1.38 int=0.72 fee=0.00 pen=0.00 tot=2.10 bal=49.70 totOut=60.82
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=1.40 int=0.70 fee=0.00 pen=0.00 tot=2.10 bal=48.30 totOut=58.72
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=1.42 int=0.68 fee=0.00 pen=0.00 tot=2.10 bal=46.88 totOut=56.62
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=1.44 int=0.66 fee=0.00 pen=0.00 tot=2.10 bal=45.44 totOut=54.52
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=1.46 int=0.64 fee=0.00 pen=0.00 tot=2.10 bal=43.98 totOut=52.42
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=1.48 int=0.62 fee=0.00 pen=0.00 tot=2.10 bal=42.50 totOut=50.32
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=1.50 int=0.60 fee=0.00 pen=0.00 tot=2.10 bal=41.00 totOut=48.22
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=1.53 int=0.57 fee=0.00 pen=0.00 tot=2.10 bal=39.47 totOut=46.12
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=1.55 int=0.55 fee=0.00 pen=0.00 tot=2.10 bal=37.92 totOut=44.02
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=1.57 int=0.53 fee=0.00 pen=0.00 tot=2.10 bal=36.35 totOut=41.92
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=1.59 int=0.51 fee=0.00 pen=0.00 tot=2.10 bal=34.76 totOut=39.82
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=1.61 int=0.49 fee=0.00 pen=0.00 tot=2.10 bal=33.15 totOut=37.72
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=1.64 int=0.46 fee=0.00 pen=0.00 tot=2.10 bal=31.51 totOut=35.62
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=1.66 int=0.44 fee=0.00 pen=0.00 tot=2.10 bal=29.85 totOut=33.52
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=1.68 int=0.42 fee=0.00 pen=0.00 tot=2.10 bal=28.17 totOut=31.42
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=1.71 int=0.39 fee=0.00 pen=0.00 tot=2.10 bal=26.46 totOut=29.32
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=1.73 int=0.37 fee=0.00 pen=0.00 tot=2.10 bal=24.73 totOut=27.22
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=1.75 int=0.35 fee=0.00 pen=0.00 tot=2.10 bal=22.98 totOut=25.12
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=1.78 int=0.32 fee=0.00 pen=0.00 tot=2.10 bal=21.20 totOut=23.02
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=1.80 int=0.30 fee=0.00 pen=0.00 tot=2.10 bal=19.40 totOut=20.92
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=1.83 int=0.27 fee=0.00 pen=0.00 tot=2.10 bal=17.57 totOut=18.82
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=1.85 int=0.25 fee=0.00 pen=0.00 tot=2.10 bal=15.72 totOut=16.72
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=1.88 int=0.22 fee=0.00 pen=0.00 tot=2.10 bal=13.84 totOut=14.62
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=1.91 int=0.19 fee=0.00 pen=0.00 tot=2.10 bal=11.93 totOut=12.52
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=1.93 int=0.17 fee=0.00 pen=0.00 tot=2.10 bal=10.00 totOut=10.42
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=1.96 int=0.14 fee=0.00 pen=0.00 tot=2.10 bal=8.04 totOut=8.32
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=1.99 int=0.11 fee=0.00 pen=0.00 tot=2.10 bal=6.05 totOut=6.22
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=2.02 int=0.08 fee=0.00 pen=0.00 tot=2.10 bal=4.03 totOut=4.12
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=2.04 int=0.06 fee=0.00 pen=0.00 tot=2.10 bal=1.99 totOut=2.02
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=1.99 int=0.03 fee=0.00 pen=0.00 tot=2.02 bal=0.00 totOut=0.00
+  
+  B: term=1096 disb=59.00 int=16.51 rep=75.51
+        DISB 2024-01-01 59.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=1.27 int=0.83 fee=0.00 pen=0.00 tot=2.10 bal=57.73 totOut=73.41
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=1.29 int=0.81 fee=0.00 pen=0.00 tot=2.10 bal=56.44 totOut=71.31
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=1.31 int=0.79 fee=0.00 pen=0.00 tot=2.10 bal=55.13 totOut=69.21
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=1.33 int=0.77 fee=0.00 pen=0.00 tot=2.10 bal=53.80 totOut=67.11
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=1.35 int=0.75 fee=0.00 pen=0.00 tot=2.10 bal=52.45 totOut=65.01
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=1.37 int=0.73 fee=0.00 pen=0.00 tot=2.10 bal=51.08 totOut=62.91
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=1.38 int=0.72 fee=0.00 pen=0.00 tot=2.10 bal=49.70 totOut=60.81
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=1.40 int=0.70 fee=0.00 pen=0.00 tot=2.10 bal=48.30 totOut=58.71
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=1.42 int=0.68 fee=0.00 pen=0.00 tot=2.10 bal=46.88 totOut=56.61
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=1.44 int=0.66 fee=0.00 pen=0.00 tot=2.10 bal=45.44 totOut=54.51
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=1.46 int=0.64 fee=0.00 pen=0.00 tot=2.10 bal=43.98 totOut=52.41
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=1.48 int=0.62 fee=0.00 pen=0.00 tot=2.10 bal=42.50 totOut=50.31
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=1.51 int=0.59 fee=0.00 pen=0.00 tot=2.10 bal=40.99 totOut=48.21
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=1.53 int=0.57 fee=0.00 pen=0.00 tot=2.10 bal=39.46 totOut=46.11
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=1.55 int=0.55 fee=0.00 pen=0.00 tot=2.10 bal=37.91 totOut=44.01
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=1.57 int=0.53 fee=0.00 pen=0.00 tot=2.10 bal=36.34 totOut=41.91
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=1.59 int=0.51 fee=0.00 pen=0.00 tot=2.10 bal=34.75 totOut=39.81
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=1.61 int=0.49 fee=0.00 pen=0.00 tot=2.10 bal=33.14 totOut=37.71
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=1.64 int=0.46 fee=0.00 pen=0.00 tot=2.10 bal=31.50 totOut=35.61
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=1.66 int=0.44 fee=0.00 pen=0.00 tot=2.10 bal=29.84 totOut=33.51
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=1.68 int=0.42 fee=0.00 pen=0.00 tot=2.10 bal=28.16 totOut=31.41
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=1.71 int=0.39 fee=0.00 pen=0.00 tot=2.10 bal=26.45 totOut=29.31
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=1.73 int=0.37 fee=0.00 pen=0.00 tot=2.10 bal=24.72 totOut=27.21
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=1.75 int=0.35 fee=0.00 pen=0.00 tot=2.10 bal=22.97 totOut=25.11
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=1.78 int=0.32 fee=0.00 pen=0.00 tot=2.10 bal=21.19 totOut=23.01
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=1.80 int=0.30 fee=0.00 pen=0.00 tot=2.10 bal=19.39 totOut=20.91
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=1.83 int=0.27 fee=0.00 pen=0.00 tot=2.10 bal=17.56 totOut=18.81
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=1.85 int=0.25 fee=0.00 pen=0.00 tot=2.10 bal=15.71 totOut=16.71
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=1.88 int=0.22 fee=0.00 pen=0.00 tot=2.10 bal=13.83 totOut=14.61
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=1.91 int=0.19 fee=0.00 pen=0.00 tot=2.10 bal=11.92 totOut=12.51
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=1.93 int=0.17 fee=0.00 pen=0.00 tot=2.10 bal=9.99 totOut=10.41
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=1.96 int=0.14 fee=0.00 pen=0.00 tot=2.10 bal=8.03 totOut=8.31
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=1.99 int=0.11 fee=0.00 pen=0.00 tot=2.10 bal=6.04 totOut=6.21
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=2.02 int=0.08 fee=0.00 pen=0.00 tot=2.10 bal=4.02 totOut=4.11
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=2.04 int=0.06 fee=0.00 pen=0.00 tot=2.10 bal=1.98 totOut=2.01
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=1.98 int=0.03 fee=0.00 pen=0.00 tot=2.01 bal=0.00 totOut=0.00
+  
+  ==> DIFFERENT
+
+10:02:13.243 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_13`: HALF_UP
+10:02:13.248 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_14`: HALF_UP
+### 36 x 16.8%  principal 100   p12 vs p19
+  A: term=1096 disb=100.00 int=27.96 rep=127.96
+        DISB 2024-01-01 100.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=2.16 int=1.40 fee=0.00 pen=0.00 tot=3.56 bal=97.84 totOut=124.40
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=2.19 int=1.37 fee=0.00 pen=0.00 tot=3.56 bal=95.65 totOut=120.84
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=2.22 int=1.34 fee=0.00 pen=0.00 tot=3.56 bal=93.43 totOut=117.28
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=2.25 int=1.31 fee=0.00 pen=0.00 tot=3.56 bal=91.18 totOut=113.72
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=2.28 int=1.28 fee=0.00 pen=0.00 tot=3.56 bal=88.90 totOut=110.16
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=2.32 int=1.24 fee=0.00 pen=0.00 tot=3.56 bal=86.58 totOut=106.60
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=2.35 int=1.21 fee=0.00 pen=0.00 tot=3.56 bal=84.23 totOut=103.04
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=2.38 int=1.18 fee=0.00 pen=0.00 tot=3.56 bal=81.85 totOut=99.48
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=2.41 int=1.15 fee=0.00 pen=0.00 tot=3.56 bal=79.44 totOut=95.92
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=2.45 int=1.11 fee=0.00 pen=0.00 tot=3.56 bal=76.99 totOut=92.36
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=2.48 int=1.08 fee=0.00 pen=0.00 tot=3.56 bal=74.51 totOut=88.80
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=2.52 int=1.04 fee=0.00 pen=0.00 tot=3.56 bal=71.99 totOut=85.24
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=2.55 int=1.01 fee=0.00 pen=0.00 tot=3.56 bal=69.44 totOut=81.68
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=2.59 int=0.97 fee=0.00 pen=0.00 tot=3.56 bal=66.85 totOut=78.12
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=2.62 int=0.94 fee=0.00 pen=0.00 tot=3.56 bal=64.23 totOut=74.56
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=2.66 int=0.90 fee=0.00 pen=0.00 tot=3.56 bal=61.57 totOut=71.00
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=2.70 int=0.86 fee=0.00 pen=0.00 tot=3.56 bal=58.87 totOut=67.44
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=2.74 int=0.82 fee=0.00 pen=0.00 tot=3.56 bal=56.13 totOut=63.88
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=2.77 int=0.79 fee=0.00 pen=0.00 tot=3.56 bal=53.36 totOut=60.32
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=2.81 int=0.75 fee=0.00 pen=0.00 tot=3.56 bal=50.55 totOut=56.76
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=2.85 int=0.71 fee=0.00 pen=0.00 tot=3.56 bal=47.70 totOut=53.20
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=2.89 int=0.67 fee=0.00 pen=0.00 tot=3.56 bal=44.81 totOut=49.64
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=2.93 int=0.63 fee=0.00 pen=0.00 tot=3.56 bal=41.88 totOut=46.08
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=2.97 int=0.59 fee=0.00 pen=0.00 tot=3.56 bal=38.91 totOut=42.52
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=3.02 int=0.54 fee=0.00 pen=0.00 tot=3.56 bal=35.89 totOut=38.96
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=3.06 int=0.50 fee=0.00 pen=0.00 tot=3.56 bal=32.83 totOut=35.40
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=3.10 int=0.46 fee=0.00 pen=0.00 tot=3.56 bal=29.73 totOut=31.84
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=3.14 int=0.42 fee=0.00 pen=0.00 tot=3.56 bal=26.59 totOut=28.28
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=3.19 int=0.37 fee=0.00 pen=0.00 tot=3.56 bal=23.40 totOut=24.72
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=3.23 int=0.33 fee=0.00 pen=0.00 tot=3.56 bal=20.17 totOut=21.16
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=3.28 int=0.28 fee=0.00 pen=0.00 tot=3.56 bal=16.89 totOut=17.60
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=3.32 int=0.24 fee=0.00 pen=0.00 tot=3.56 bal=13.57 totOut=14.04
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=3.37 int=0.19 fee=0.00 pen=0.00 tot=3.56 bal=10.20 totOut=10.48
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=3.42 int=0.14 fee=0.00 pen=0.00 tot=3.56 bal=6.78 totOut=6.92
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=3.47 int=0.09 fee=0.00 pen=0.00 tot=3.56 bal=3.31 totOut=3.36
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=3.31 int=0.05 fee=0.00 pen=0.00 tot=3.36 bal=0.00 totOut=0.00
+  
+  B: term=1096 disb=100.00 int=27.96 rep=127.96
+        DISB 2024-01-01 100.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=2.16 int=1.40 fee=0.00 pen=0.00 tot=3.56 bal=97.84 totOut=124.40
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=2.19 int=1.37 fee=0.00 pen=0.00 tot=3.56 bal=95.65 totOut=120.84
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=2.22 int=1.34 fee=0.00 pen=0.00 tot=3.56 bal=93.43 totOut=117.28
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=2.25 int=1.31 fee=0.00 pen=0.00 tot=3.56 bal=91.18 totOut=113.72
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=2.28 int=1.28 fee=0.00 pen=0.00 tot=3.56 bal=88.90 totOut=110.16
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=2.32 int=1.24 fee=0.00 pen=0.00 tot=3.56 bal=86.58 totOut=106.60
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=2.35 int=1.21 fee=0.00 pen=0.00 tot=3.56 bal=84.23 totOut=103.04
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=2.38 int=1.18 fee=0.00 pen=0.00 tot=3.56 bal=81.85 totOut=99.48
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=2.41 int=1.15 fee=0.00 pen=0.00 tot=3.56 bal=79.44 totOut=95.92
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=2.45 int=1.11 fee=0.00 pen=0.00 tot=3.56 bal=76.99 totOut=92.36
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=2.48 int=1.08 fee=0.00 pen=0.00 tot=3.56 bal=74.51 totOut=88.80
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=2.52 int=1.04 fee=0.00 pen=0.00 tot=3.56 bal=71.99 totOut=85.24
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=2.55 int=1.01 fee=0.00 pen=0.00 tot=3.56 bal=69.44 totOut=81.68
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=2.59 int=0.97 fee=0.00 pen=0.00 tot=3.56 bal=66.85 totOut=78.12
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=2.62 int=0.94 fee=0.00 pen=0.00 tot=3.56 bal=64.23 totOut=74.56
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=2.66 int=0.90 fee=0.00 pen=0.00 tot=3.56 bal=61.57 totOut=71.00
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=2.70 int=0.86 fee=0.00 pen=0.00 tot=3.56 bal=58.87 totOut=67.44
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=2.74 int=0.82 fee=0.00 pen=0.00 tot=3.56 bal=56.13 totOut=63.88
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=2.77 int=0.79 fee=0.00 pen=0.00 tot=3.56 bal=53.36 totOut=60.32
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=2.81 int=0.75 fee=0.00 pen=0.00 tot=3.56 bal=50.55 totOut=56.76
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=2.85 int=0.71 fee=0.00 pen=0.00 tot=3.56 bal=47.70 totOut=53.20
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=2.89 int=0.67 fee=0.00 pen=0.00 tot=3.56 bal=44.81 totOut=49.64
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=2.93 int=0.63 fee=0.00 pen=0.00 tot=3.56 bal=41.88 totOut=46.08
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=2.97 int=0.59 fee=0.00 pen=0.00 tot=3.56 bal=38.91 totOut=42.52
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=3.02 int=0.54 fee=0.00 pen=0.00 tot=3.56 bal=35.89 totOut=38.96
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=3.06 int=0.50 fee=0.00 pen=0.00 tot=3.56 bal=32.83 totOut=35.40
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=3.10 int=0.46 fee=0.00 pen=0.00 tot=3.56 bal=29.73 totOut=31.84
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=3.14 int=0.42 fee=0.00 pen=0.00 tot=3.56 bal=26.59 totOut=28.28
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=3.19 int=0.37 fee=0.00 pen=0.00 tot=3.56 bal=23.40 totOut=24.72
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=3.23 int=0.33 fee=0.00 pen=0.00 tot=3.56 bal=20.17 totOut=21.16
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=3.28 int=0.28 fee=0.00 pen=0.00 tot=3.56 bal=16.89 totOut=17.60
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=3.32 int=0.24 fee=0.00 pen=0.00 tot=3.56 bal=13.57 totOut=14.04
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=3.37 int=0.19 fee=0.00 pen=0.00 tot=3.56 bal=10.20 totOut=10.48
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=3.42 int=0.14 fee=0.00 pen=0.00 tot=3.56 bal=6.78 totOut=6.92
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=3.47 int=0.09 fee=0.00 pen=0.00 tot=3.56 bal=3.31 totOut=3.36
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=3.31 int=0.05 fee=0.00 pen=0.00 tot=3.36 bal=0.00 totOut=0.00
+  
+  ==> IDENTICAL
+
+10:02:13.253 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_15`: HALF_UP
+10:02:13.258 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_16`: HALF_UP
+### 36 x 16.8%  principal 6940   p12 vs p19
+  A: term=1096 disb=6940.00 int=1942.66 rep=8882.66
+        DISB 2024-01-01 6940.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=149.58 int=97.16 fee=0.00 pen=0.00 tot=246.74 bal=6790.42 totOut=8635.92
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=151.67 int=95.07 fee=0.00 pen=0.00 tot=246.74 bal=6638.75 totOut=8389.18
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=153.80 int=92.94 fee=0.00 pen=0.00 tot=246.74 bal=6484.95 totOut=8142.44
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=155.95 int=90.79 fee=0.00 pen=0.00 tot=246.74 bal=6329.00 totOut=7895.70
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=158.13 int=88.61 fee=0.00 pen=0.00 tot=246.74 bal=6170.87 totOut=7648.96
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=160.35 int=86.39 fee=0.00 pen=0.00 tot=246.74 bal=6010.52 totOut=7402.22
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=162.59 int=84.15 fee=0.00 pen=0.00 tot=246.74 bal=5847.93 totOut=7155.48
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=164.87 int=81.87 fee=0.00 pen=0.00 tot=246.74 bal=5683.06 totOut=6908.74
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=167.18 int=79.56 fee=0.00 pen=0.00 tot=246.74 bal=5515.88 totOut=6662.00
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=169.52 int=77.22 fee=0.00 pen=0.00 tot=246.74 bal=5346.36 totOut=6415.26
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=171.89 int=74.85 fee=0.00 pen=0.00 tot=246.74 bal=5174.47 totOut=6168.52
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=174.30 int=72.44 fee=0.00 pen=0.00 tot=246.74 bal=5000.17 totOut=5921.78
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=176.74 int=70.00 fee=0.00 pen=0.00 tot=246.74 bal=4823.43 totOut=5675.04
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=179.21 int=67.53 fee=0.00 pen=0.00 tot=246.74 bal=4644.22 totOut=5428.30
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=181.72 int=65.02 fee=0.00 pen=0.00 tot=246.74 bal=4462.50 totOut=5181.56
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=184.26 int=62.48 fee=0.00 pen=0.00 tot=246.74 bal=4278.24 totOut=4934.82
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=186.84 int=59.90 fee=0.00 pen=0.00 tot=246.74 bal=4091.40 totOut=4688.08
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=189.46 int=57.28 fee=0.00 pen=0.00 tot=246.74 bal=3901.94 totOut=4441.34
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=192.11 int=54.63 fee=0.00 pen=0.00 tot=246.74 bal=3709.83 totOut=4194.60
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=194.80 int=51.94 fee=0.00 pen=0.00 tot=246.74 bal=3515.03 totOut=3947.86
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=197.53 int=49.21 fee=0.00 pen=0.00 tot=246.74 bal=3317.50 totOut=3701.12
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=200.29 int=46.45 fee=0.00 pen=0.00 tot=246.74 bal=3117.21 totOut=3454.38
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=203.10 int=43.64 fee=0.00 pen=0.00 tot=246.74 bal=2914.11 totOut=3207.64
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=205.94 int=40.80 fee=0.00 pen=0.00 tot=246.74 bal=2708.17 totOut=2960.90
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=208.83 int=37.91 fee=0.00 pen=0.00 tot=246.74 bal=2499.34 totOut=2714.16
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=211.75 int=34.99 fee=0.00 pen=0.00 tot=246.74 bal=2287.59 totOut=2467.42
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=214.71 int=32.03 fee=0.00 pen=0.00 tot=246.74 bal=2072.88 totOut=2220.68
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=217.72 int=29.02 fee=0.00 pen=0.00 tot=246.74 bal=1855.16 totOut=1973.94
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=220.77 int=25.97 fee=0.00 pen=0.00 tot=246.74 bal=1634.39 totOut=1727.20
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=223.86 int=22.88 fee=0.00 pen=0.00 tot=246.74 bal=1410.53 totOut=1480.46
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=226.99 int=19.75 fee=0.00 pen=0.00 tot=246.74 bal=1183.54 totOut=1233.72
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=230.17 int=16.57 fee=0.00 pen=0.00 tot=246.74 bal=953.37 totOut=986.98
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=233.39 int=13.35 fee=0.00 pen=0.00 tot=246.74 bal=719.98 totOut=740.24
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=236.66 int=10.08 fee=0.00 pen=0.00 tot=246.74 bal=483.32 totOut=493.50
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=239.97 int=6.77 fee=0.00 pen=0.00 tot=246.74 bal=243.35 totOut=246.76
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=243.35 int=3.41 fee=0.00 pen=0.00 tot=246.76 bal=0.00 totOut=0.00
+  
+  B: term=1096 disb=6940.00 int=1942.65 rep=8882.65
+        DISB 2024-01-01 6940.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=149.58 int=97.16 fee=0.00 pen=0.00 tot=246.74 bal=6790.42 totOut=8635.91
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=151.67 int=95.07 fee=0.00 pen=0.00 tot=246.74 bal=6638.75 totOut=8389.17
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=153.80 int=92.94 fee=0.00 pen=0.00 tot=246.74 bal=6484.95 totOut=8142.43
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=155.95 int=90.79 fee=0.00 pen=0.00 tot=246.74 bal=6329.00 totOut=7895.69
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=158.13 int=88.61 fee=0.00 pen=0.00 tot=246.74 bal=6170.87 totOut=7648.95
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=160.35 int=86.39 fee=0.00 pen=0.00 tot=246.74 bal=6010.52 totOut=7402.21
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=162.59 int=84.15 fee=0.00 pen=0.00 tot=246.74 bal=5847.93 totOut=7155.47
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=164.87 int=81.87 fee=0.00 pen=0.00 tot=246.74 bal=5683.06 totOut=6908.73
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=167.18 int=79.56 fee=0.00 pen=0.00 tot=246.74 bal=5515.88 totOut=6661.99
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=169.52 int=77.22 fee=0.00 pen=0.00 tot=246.74 bal=5346.36 totOut=6415.25
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=171.89 int=74.85 fee=0.00 pen=0.00 tot=246.74 bal=5174.47 totOut=6168.51
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=174.30 int=72.44 fee=0.00 pen=0.00 tot=246.74 bal=5000.17 totOut=5921.77
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=176.74 int=70.00 fee=0.00 pen=0.00 tot=246.74 bal=4823.43 totOut=5675.03
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=179.21 int=67.53 fee=0.00 pen=0.00 tot=246.74 bal=4644.22 totOut=5428.29
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=181.72 int=65.02 fee=0.00 pen=0.00 tot=246.74 bal=4462.50 totOut=5181.55
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=184.26 int=62.48 fee=0.00 pen=0.00 tot=246.74 bal=4278.24 totOut=4934.81
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=186.84 int=59.90 fee=0.00 pen=0.00 tot=246.74 bal=4091.40 totOut=4688.07
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=189.46 int=57.28 fee=0.00 pen=0.00 tot=246.74 bal=3901.94 totOut=4441.33
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=192.11 int=54.63 fee=0.00 pen=0.00 tot=246.74 bal=3709.83 totOut=4194.59
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=194.80 int=51.94 fee=0.00 pen=0.00 tot=246.74 bal=3515.03 totOut=3947.85
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=197.53 int=49.21 fee=0.00 pen=0.00 tot=246.74 bal=3317.50 totOut=3701.11
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=200.30 int=46.44 fee=0.00 pen=0.00 tot=246.74 bal=3117.20 totOut=3454.37
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=203.10 int=43.64 fee=0.00 pen=0.00 tot=246.74 bal=2914.10 totOut=3207.63
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=205.94 int=40.80 fee=0.00 pen=0.00 tot=246.74 bal=2708.16 totOut=2960.89
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=208.83 int=37.91 fee=0.00 pen=0.00 tot=246.74 bal=2499.33 totOut=2714.15
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=211.75 int=34.99 fee=0.00 pen=0.00 tot=246.74 bal=2287.58 totOut=2467.41
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=214.71 int=32.03 fee=0.00 pen=0.00 tot=246.74 bal=2072.87 totOut=2220.67
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=217.72 int=29.02 fee=0.00 pen=0.00 tot=246.74 bal=1855.15 totOut=1973.93
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=220.77 int=25.97 fee=0.00 pen=0.00 tot=246.74 bal=1634.38 totOut=1727.19
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=223.86 int=22.88 fee=0.00 pen=0.00 tot=246.74 bal=1410.52 totOut=1480.45
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=226.99 int=19.75 fee=0.00 pen=0.00 tot=246.74 bal=1183.53 totOut=1233.71
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=230.17 int=16.57 fee=0.00 pen=0.00 tot=246.74 bal=953.36 totOut=986.97
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=233.39 int=13.35 fee=0.00 pen=0.00 tot=246.74 bal=719.97 totOut=740.23
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=236.66 int=10.08 fee=0.00 pen=0.00 tot=246.74 bal=483.31 totOut=493.49
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=239.97 int=6.77 fee=0.00 pen=0.00 tot=246.74 bal=243.34 totOut=246.75
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=243.34 int=3.41 fee=0.00 pen=0.00 tot=246.75 bal=0.00 totOut=0.00
+  
+  ==> DIFFERENT
+
+======== A2. the same probe on the C-00 shape, 6 x 7.0% ========
+10:02:13.266 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_17`: HALF_UP
+10:02:13.266 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_18`: HALF_UP
+### 6 x 7.0%  principal 4   p12 vs p19
+  A: term=182 disb=4.00 int=0.08 rep=4.08
+        DISB 2024-01-01 4.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=0.66 int=0.02 fee=0.00 pen=0.00 tot=0.68 bal=3.34 totOut=3.40
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=0.66 int=0.02 fee=0.00 pen=0.00 tot=0.68 bal=2.68 totOut=2.72
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=0.66 int=0.02 fee=0.00 pen=0.00 tot=0.68 bal=2.02 totOut=2.04
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=0.67 int=0.01 fee=0.00 pen=0.00 tot=0.68 bal=1.35 totOut=1.36
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=0.67 int=0.01 fee=0.00 pen=0.00 tot=0.68 bal=0.68 totOut=0.68
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=0.68 int=0.00 fee=0.00 pen=0.00 tot=0.68 bal=0.00 totOut=0.00
+  
+  B: term=182 disb=4.00 int=0.08 rep=4.08
+        DISB 2024-01-01 4.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=0.66 int=0.02 fee=0.00 pen=0.00 tot=0.68 bal=3.34 totOut=3.40
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=0.66 int=0.02 fee=0.00 pen=0.00 tot=0.68 bal=2.68 totOut=2.72
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=0.66 int=0.02 fee=0.00 pen=0.00 tot=0.68 bal=2.02 totOut=2.04
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=0.67 int=0.01 fee=0.00 pen=0.00 tot=0.68 bal=1.35 totOut=1.36
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=0.67 int=0.01 fee=0.00 pen=0.00 tot=0.68 bal=0.68 totOut=0.68
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=0.68 int=0.00 fee=0.00 pen=0.00 tot=0.68 bal=0.00 totOut=0.00
+  
+  ==> IDENTICAL
+
+10:02:13.267 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_19`: HALF_UP
+10:02:13.268 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_20`: HALF_UP
+### 6 x 7.0%  principal 100   p12 vs p19
+  A: term=182 disb=100.00 int=2.05 rep=102.05
+        DISB 2024-01-01 100.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=16.43 int=0.58 fee=0.00 pen=0.00 tot=17.01 bal=83.57 totOut=85.04
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=16.52 int=0.49 fee=0.00 pen=0.00 tot=17.01 bal=67.05 totOut=68.03
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=16.62 int=0.39 fee=0.00 pen=0.00 tot=17.01 bal=50.43 totOut=51.02
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=16.72 int=0.29 fee=0.00 pen=0.00 tot=17.01 bal=33.71 totOut=34.01
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=16.81 int=0.20 fee=0.00 pen=0.00 tot=17.01 bal=16.90 totOut=17.00
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=16.90 int=0.10 fee=0.00 pen=0.00 tot=17.00 bal=0.00 totOut=0.00
+  
+  B: term=182 disb=100.00 int=2.05 rep=102.05
+        DISB 2024-01-01 100.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=16.43 int=0.58 fee=0.00 pen=0.00 tot=17.01 bal=83.57 totOut=85.04
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=16.52 int=0.49 fee=0.00 pen=0.00 tot=17.01 bal=67.05 totOut=68.03
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=16.62 int=0.39 fee=0.00 pen=0.00 tot=17.01 bal=50.43 totOut=51.02
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=16.72 int=0.29 fee=0.00 pen=0.00 tot=17.01 bal=33.71 totOut=34.01
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=16.81 int=0.20 fee=0.00 pen=0.00 tot=17.01 bal=16.90 totOut=17.00
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=16.90 int=0.10 fee=0.00 pen=0.00 tot=17.00 bal=0.00 totOut=0.00
+  
+  ==> IDENTICAL
+
+10:02:13.269 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_21`: HALF_UP
+10:02:13.271 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_22`: HALF_UP
+### 6 x 7.0%  principal 43811   p12 vs p19
+  A: term=182 disb=43811.00 int=898.82 rep=44709.82
+        DISB 2024-01-01 43811.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=7196.08 int=255.56 fee=0.00 pen=0.00 tot=7451.64 bal=36614.92 totOut=37258.18
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=7238.05 int=213.59 fee=0.00 pen=0.00 tot=7451.64 bal=29376.87 totOut=29806.54
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=7280.27 int=171.37 fee=0.00 pen=0.00 tot=7451.64 bal=22096.60 totOut=22354.90
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=7322.74 int=128.90 fee=0.00 pen=0.00 tot=7451.64 bal=14773.86 totOut=14903.26
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=7365.46 int=86.18 fee=0.00 pen=0.00 tot=7451.64 bal=7408.40 totOut=7451.62
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=7408.40 int=43.22 fee=0.00 pen=0.00 tot=7451.62 bal=0.00 totOut=0.00
+  
+  B: term=182 disb=43811.00 int=898.82 rep=44709.82
+        DISB 2024-01-01 43811.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=7196.08 int=255.56 fee=0.00 pen=0.00 tot=7451.64 bal=36614.92 totOut=37258.18
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=7238.05 int=213.59 fee=0.00 pen=0.00 tot=7451.64 bal=29376.87 totOut=29806.54
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=7280.27 int=171.37 fee=0.00 pen=0.00 tot=7451.64 bal=22096.60 totOut=22354.90
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=7322.74 int=128.90 fee=0.00 pen=0.00 tot=7451.64 bal=14773.86 totOut=14903.26
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=7365.46 int=86.18 fee=0.00 pen=0.00 tot=7451.64 bal=7408.40 totOut=7451.62
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=7408.40 int=43.22 fee=0.00 pen=0.00 tot=7451.62 bal=0.00 totOut=0.00
+  
+  ==> IDENTICAL
+
+======== B. installmentAmountInMultiplesOf at PRODUCTION (19, HALF_UP) ========
+10:02:13.272 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_23`: HALF_UP
+10:02:13.279 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_24`: HALF_UP
+### MNT 50,000,000 / 36 x 16.8%   installmentMultiplesOf null vs 100
+  A: term=1096 disb=50000000.00 int=13995886.40 rep=63995886.40
+        DISB 2024-01-01 50000000.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=1077663.51 int=700000.00 fee=0.00 pen=0.00 tot=1777663.51 bal=48922336.49 totOut=62218222.89
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=1092750.80 int=684912.71 fee=0.00 pen=0.00 tot=1777663.51 bal=47829585.69 totOut=60440559.38
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=1108049.31 int=669614.20 fee=0.00 pen=0.00 tot=1777663.51 bal=46721536.38 totOut=58662895.87
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=1123562.00 int=654101.51 fee=0.00 pen=0.00 tot=1777663.51 bal=45597974.38 totOut=56885232.36
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=1139291.87 int=638371.64 fee=0.00 pen=0.00 tot=1777663.51 bal=44458682.51 totOut=55107568.85
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=1155241.95 int=622421.56 fee=0.00 pen=0.00 tot=1777663.51 bal=43303440.56 totOut=53329905.34
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=1171415.34 int=606248.17 fee=0.00 pen=0.00 tot=1777663.51 bal=42132025.22 totOut=51552241.83
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=1187815.16 int=589848.35 fee=0.00 pen=0.00 tot=1777663.51 bal=40944210.06 totOut=49774578.32
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=1204444.57 int=573218.94 fee=0.00 pen=0.00 tot=1777663.51 bal=39739765.49 totOut=47996914.81
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=1221306.79 int=556356.72 fee=0.00 pen=0.00 tot=1777663.51 bal=38518458.70 totOut=46219251.30
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=1238405.09 int=539258.42 fee=0.00 pen=0.00 tot=1777663.51 bal=37280053.61 totOut=44441587.79
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=1255742.76 int=521920.75 fee=0.00 pen=0.00 tot=1777663.51 bal=36024310.85 totOut=42663924.28
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=1273323.16 int=504340.35 fee=0.00 pen=0.00 tot=1777663.51 bal=34750987.69 totOut=40886260.77
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=1291149.68 int=486513.83 fee=0.00 pen=0.00 tot=1777663.51 bal=33459838.01 totOut=39108597.26
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=1309225.78 int=468437.73 fee=0.00 pen=0.00 tot=1777663.51 bal=32150612.23 totOut=37330933.75
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=1327554.94 int=450108.57 fee=0.00 pen=0.00 tot=1777663.51 bal=30823057.29 totOut=35553270.24
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=1346140.71 int=431522.80 fee=0.00 pen=0.00 tot=1777663.51 bal=29476916.58 totOut=33775606.73
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=1364986.68 int=412676.83 fee=0.00 pen=0.00 tot=1777663.51 bal=28111929.90 totOut=31997943.22
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=1384096.49 int=393567.02 fee=0.00 pen=0.00 tot=1777663.51 bal=26727833.41 totOut=30220279.71
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=1403473.84 int=374189.67 fee=0.00 pen=0.00 tot=1777663.51 bal=25324359.57 totOut=28442616.20
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=1423122.48 int=354541.03 fee=0.00 pen=0.00 tot=1777663.51 bal=23901237.09 totOut=26664952.69
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=1443046.19 int=334617.32 fee=0.00 pen=0.00 tot=1777663.51 bal=22458190.90 totOut=24887289.18
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=1463248.84 int=314414.67 fee=0.00 pen=0.00 tot=1777663.51 bal=20994942.06 totOut=23109625.67
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=1483734.32 int=293929.19 fee=0.00 pen=0.00 tot=1777663.51 bal=19511207.74 totOut=21331962.16
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=1504506.60 int=273156.91 fee=0.00 pen=0.00 tot=1777663.51 bal=18006701.14 totOut=19554298.65
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=1525569.69 int=252093.82 fee=0.00 pen=0.00 tot=1777663.51 bal=16481131.45 totOut=17776635.14
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=1546927.67 int=230735.84 fee=0.00 pen=0.00 tot=1777663.51 bal=14934203.78 totOut=15998971.63
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=1568584.66 int=209078.85 fee=0.00 pen=0.00 tot=1777663.51 bal=13365619.12 totOut=14221308.12
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=1590544.84 int=187118.67 fee=0.00 pen=0.00 tot=1777663.51 bal=11775074.28 totOut=12443644.61
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=1612812.47 int=164851.04 fee=0.00 pen=0.00 tot=1777663.51 bal=10162261.81 totOut=10665981.10
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=1635391.84 int=142271.67 fee=0.00 pen=0.00 tot=1777663.51 bal=8526869.97 totOut=8888317.59
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=1658287.33 int=119376.18 fee=0.00 pen=0.00 tot=1777663.51 bal=6868582.64 totOut=7110654.08
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=1681503.35 int=96160.16 fee=0.00 pen=0.00 tot=1777663.51 bal=5187079.29 totOut=5332990.57
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=1705044.40 int=72619.11 fee=0.00 pen=0.00 tot=1777663.51 bal=3482034.89 totOut=3555327.06
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=1728915.02 int=48748.49 fee=0.00 pen=0.00 tot=1777663.51 bal=1753119.87 totOut=1777663.55
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=1753119.87 int=24543.68 fee=0.00 pen=0.00 tot=1777663.55 bal=0.00 totOut=0.00
+  
+  B: term=1096 disb=50000000.00 int=13995886.40 rep=63995886.40
+        DISB 2024-01-01 50000000.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=1077663.51 int=700000.00 fee=0.00 pen=0.00 tot=1777663.51 bal=48922336.49 totOut=62218222.89
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=1092750.80 int=684912.71 fee=0.00 pen=0.00 tot=1777663.51 bal=47829585.69 totOut=60440559.38
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=1108049.31 int=669614.20 fee=0.00 pen=0.00 tot=1777663.51 bal=46721536.38 totOut=58662895.87
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=1123562.00 int=654101.51 fee=0.00 pen=0.00 tot=1777663.51 bal=45597974.38 totOut=56885232.36
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=1139291.87 int=638371.64 fee=0.00 pen=0.00 tot=1777663.51 bal=44458682.51 totOut=55107568.85
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=1155241.95 int=622421.56 fee=0.00 pen=0.00 tot=1777663.51 bal=43303440.56 totOut=53329905.34
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=1171415.34 int=606248.17 fee=0.00 pen=0.00 tot=1777663.51 bal=42132025.22 totOut=51552241.83
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=1187815.16 int=589848.35 fee=0.00 pen=0.00 tot=1777663.51 bal=40944210.06 totOut=49774578.32
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=1204444.57 int=573218.94 fee=0.00 pen=0.00 tot=1777663.51 bal=39739765.49 totOut=47996914.81
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=1221306.79 int=556356.72 fee=0.00 pen=0.00 tot=1777663.51 bal=38518458.70 totOut=46219251.30
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=1238405.09 int=539258.42 fee=0.00 pen=0.00 tot=1777663.51 bal=37280053.61 totOut=44441587.79
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=1255742.76 int=521920.75 fee=0.00 pen=0.00 tot=1777663.51 bal=36024310.85 totOut=42663924.28
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=1273323.16 int=504340.35 fee=0.00 pen=0.00 tot=1777663.51 bal=34750987.69 totOut=40886260.77
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=1291149.68 int=486513.83 fee=0.00 pen=0.00 tot=1777663.51 bal=33459838.01 totOut=39108597.26
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=1309225.78 int=468437.73 fee=0.00 pen=0.00 tot=1777663.51 bal=32150612.23 totOut=37330933.75
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=1327554.94 int=450108.57 fee=0.00 pen=0.00 tot=1777663.51 bal=30823057.29 totOut=35553270.24
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=1346140.71 int=431522.80 fee=0.00 pen=0.00 tot=1777663.51 bal=29476916.58 totOut=33775606.73
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=1364986.68 int=412676.83 fee=0.00 pen=0.00 tot=1777663.51 bal=28111929.90 totOut=31997943.22
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=1384096.49 int=393567.02 fee=0.00 pen=0.00 tot=1777663.51 bal=26727833.41 totOut=30220279.71
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=1403473.84 int=374189.67 fee=0.00 pen=0.00 tot=1777663.51 bal=25324359.57 totOut=28442616.20
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=1423122.48 int=354541.03 fee=0.00 pen=0.00 tot=1777663.51 bal=23901237.09 totOut=26664952.69
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=1443046.19 int=334617.32 fee=0.00 pen=0.00 tot=1777663.51 bal=22458190.90 totOut=24887289.18
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=1463248.84 int=314414.67 fee=0.00 pen=0.00 tot=1777663.51 bal=20994942.06 totOut=23109625.67
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=1483734.32 int=293929.19 fee=0.00 pen=0.00 tot=1777663.51 bal=19511207.74 totOut=21331962.16
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=1504506.60 int=273156.91 fee=0.00 pen=0.00 tot=1777663.51 bal=18006701.14 totOut=19554298.65
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=1525569.69 int=252093.82 fee=0.00 pen=0.00 tot=1777663.51 bal=16481131.45 totOut=17776635.14
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=1546927.67 int=230735.84 fee=0.00 pen=0.00 tot=1777663.51 bal=14934203.78 totOut=15998971.63
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=1568584.66 int=209078.85 fee=0.00 pen=0.00 tot=1777663.51 bal=13365619.12 totOut=14221308.12
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=1590544.84 int=187118.67 fee=0.00 pen=0.00 tot=1777663.51 bal=11775074.28 totOut=12443644.61
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=1612812.47 int=164851.04 fee=0.00 pen=0.00 tot=1777663.51 bal=10162261.81 totOut=10665981.10
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=1635391.84 int=142271.67 fee=0.00 pen=0.00 tot=1777663.51 bal=8526869.97 totOut=8888317.59
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=1658287.33 int=119376.18 fee=0.00 pen=0.00 tot=1777663.51 bal=6868582.64 totOut=7110654.08
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=1681503.35 int=96160.16 fee=0.00 pen=0.00 tot=1777663.51 bal=5187079.29 totOut=5332990.57
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=1705044.40 int=72619.11 fee=0.00 pen=0.00 tot=1777663.51 bal=3482034.89 totOut=3555327.06
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=1728915.02 int=48748.49 fee=0.00 pen=0.00 tot=1777663.51 bal=1753119.87 totOut=1777663.55
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=1753119.87 int=24543.68 fee=0.00 pen=0.00 tot=1777663.55 bal=0.00 totOut=0.00
+  
+  ==> IDENTICAL
+
+10:02:13.285 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_25`: HALF_UP
+10:02:13.291 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_26`: HALF_UP
+### MNT 50,000,000 / 36 x 16.8%   installmentMultiplesOf null vs 100000
+  A: term=1096 disb=50000000.00 int=13995886.40 rep=63995886.40
+        DISB 2024-01-01 50000000.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=1077663.51 int=700000.00 fee=0.00 pen=0.00 tot=1777663.51 bal=48922336.49 totOut=62218222.89
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=1092750.80 int=684912.71 fee=0.00 pen=0.00 tot=1777663.51 bal=47829585.69 totOut=60440559.38
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=1108049.31 int=669614.20 fee=0.00 pen=0.00 tot=1777663.51 bal=46721536.38 totOut=58662895.87
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=1123562.00 int=654101.51 fee=0.00 pen=0.00 tot=1777663.51 bal=45597974.38 totOut=56885232.36
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=1139291.87 int=638371.64 fee=0.00 pen=0.00 tot=1777663.51 bal=44458682.51 totOut=55107568.85
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=1155241.95 int=622421.56 fee=0.00 pen=0.00 tot=1777663.51 bal=43303440.56 totOut=53329905.34
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=1171415.34 int=606248.17 fee=0.00 pen=0.00 tot=1777663.51 bal=42132025.22 totOut=51552241.83
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=1187815.16 int=589848.35 fee=0.00 pen=0.00 tot=1777663.51 bal=40944210.06 totOut=49774578.32
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=1204444.57 int=573218.94 fee=0.00 pen=0.00 tot=1777663.51 bal=39739765.49 totOut=47996914.81
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=1221306.79 int=556356.72 fee=0.00 pen=0.00 tot=1777663.51 bal=38518458.70 totOut=46219251.30
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=1238405.09 int=539258.42 fee=0.00 pen=0.00 tot=1777663.51 bal=37280053.61 totOut=44441587.79
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=1255742.76 int=521920.75 fee=0.00 pen=0.00 tot=1777663.51 bal=36024310.85 totOut=42663924.28
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=1273323.16 int=504340.35 fee=0.00 pen=0.00 tot=1777663.51 bal=34750987.69 totOut=40886260.77
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=1291149.68 int=486513.83 fee=0.00 pen=0.00 tot=1777663.51 bal=33459838.01 totOut=39108597.26
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=1309225.78 int=468437.73 fee=0.00 pen=0.00 tot=1777663.51 bal=32150612.23 totOut=37330933.75
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=1327554.94 int=450108.57 fee=0.00 pen=0.00 tot=1777663.51 bal=30823057.29 totOut=35553270.24
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=1346140.71 int=431522.80 fee=0.00 pen=0.00 tot=1777663.51 bal=29476916.58 totOut=33775606.73
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=1364986.68 int=412676.83 fee=0.00 pen=0.00 tot=1777663.51 bal=28111929.90 totOut=31997943.22
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=1384096.49 int=393567.02 fee=0.00 pen=0.00 tot=1777663.51 bal=26727833.41 totOut=30220279.71
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=1403473.84 int=374189.67 fee=0.00 pen=0.00 tot=1777663.51 bal=25324359.57 totOut=28442616.20
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=1423122.48 int=354541.03 fee=0.00 pen=0.00 tot=1777663.51 bal=23901237.09 totOut=26664952.69
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=1443046.19 int=334617.32 fee=0.00 pen=0.00 tot=1777663.51 bal=22458190.90 totOut=24887289.18
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=1463248.84 int=314414.67 fee=0.00 pen=0.00 tot=1777663.51 bal=20994942.06 totOut=23109625.67
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=1483734.32 int=293929.19 fee=0.00 pen=0.00 tot=1777663.51 bal=19511207.74 totOut=21331962.16
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=1504506.60 int=273156.91 fee=0.00 pen=0.00 tot=1777663.51 bal=18006701.14 totOut=19554298.65
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=1525569.69 int=252093.82 fee=0.00 pen=0.00 tot=1777663.51 bal=16481131.45 totOut=17776635.14
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=1546927.67 int=230735.84 fee=0.00 pen=0.00 tot=1777663.51 bal=14934203.78 totOut=15998971.63
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=1568584.66 int=209078.85 fee=0.00 pen=0.00 tot=1777663.51 bal=13365619.12 totOut=14221308.12
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=1590544.84 int=187118.67 fee=0.00 pen=0.00 tot=1777663.51 bal=11775074.28 totOut=12443644.61
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=1612812.47 int=164851.04 fee=0.00 pen=0.00 tot=1777663.51 bal=10162261.81 totOut=10665981.10
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=1635391.84 int=142271.67 fee=0.00 pen=0.00 tot=1777663.51 bal=8526869.97 totOut=8888317.59
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=1658287.33 int=119376.18 fee=0.00 pen=0.00 tot=1777663.51 bal=6868582.64 totOut=7110654.08
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=1681503.35 int=96160.16 fee=0.00 pen=0.00 tot=1777663.51 bal=5187079.29 totOut=5332990.57
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=1705044.40 int=72619.11 fee=0.00 pen=0.00 tot=1777663.51 bal=3482034.89 totOut=3555327.06
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=1728915.02 int=48748.49 fee=0.00 pen=0.00 tot=1777663.51 bal=1753119.87 totOut=1777663.55
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=1753119.87 int=24543.68 fee=0.00 pen=0.00 tot=1777663.55 bal=0.00 totOut=0.00
+  
+  B: term=1096 disb=50000000.00 int=13995886.40 rep=63995886.40
+        DISB 2024-01-01 50000000.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=1077663.51 int=700000.00 fee=0.00 pen=0.00 tot=1777663.51 bal=48922336.49 totOut=62218222.89
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=1092750.80 int=684912.71 fee=0.00 pen=0.00 tot=1777663.51 bal=47829585.69 totOut=60440559.38
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=1108049.31 int=669614.20 fee=0.00 pen=0.00 tot=1777663.51 bal=46721536.38 totOut=58662895.87
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=1123562.00 int=654101.51 fee=0.00 pen=0.00 tot=1777663.51 bal=45597974.38 totOut=56885232.36
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=1139291.87 int=638371.64 fee=0.00 pen=0.00 tot=1777663.51 bal=44458682.51 totOut=55107568.85
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=1155241.95 int=622421.56 fee=0.00 pen=0.00 tot=1777663.51 bal=43303440.56 totOut=53329905.34
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=1171415.34 int=606248.17 fee=0.00 pen=0.00 tot=1777663.51 bal=42132025.22 totOut=51552241.83
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=1187815.16 int=589848.35 fee=0.00 pen=0.00 tot=1777663.51 bal=40944210.06 totOut=49774578.32
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=1204444.57 int=573218.94 fee=0.00 pen=0.00 tot=1777663.51 bal=39739765.49 totOut=47996914.81
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=1221306.79 int=556356.72 fee=0.00 pen=0.00 tot=1777663.51 bal=38518458.70 totOut=46219251.30
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=1238405.09 int=539258.42 fee=0.00 pen=0.00 tot=1777663.51 bal=37280053.61 totOut=44441587.79
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=1255742.76 int=521920.75 fee=0.00 pen=0.00 tot=1777663.51 bal=36024310.85 totOut=42663924.28
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=1273323.16 int=504340.35 fee=0.00 pen=0.00 tot=1777663.51 bal=34750987.69 totOut=40886260.77
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=1291149.68 int=486513.83 fee=0.00 pen=0.00 tot=1777663.51 bal=33459838.01 totOut=39108597.26
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=1309225.78 int=468437.73 fee=0.00 pen=0.00 tot=1777663.51 bal=32150612.23 totOut=37330933.75
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=1327554.94 int=450108.57 fee=0.00 pen=0.00 tot=1777663.51 bal=30823057.29 totOut=35553270.24
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=1346140.71 int=431522.80 fee=0.00 pen=0.00 tot=1777663.51 bal=29476916.58 totOut=33775606.73
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=1364986.68 int=412676.83 fee=0.00 pen=0.00 tot=1777663.51 bal=28111929.90 totOut=31997943.22
+        REP  #19 from=2025-07-01 due=2025-08-01 prin=1384096.49 int=393567.02 fee=0.00 pen=0.00 tot=1777663.51 bal=26727833.41 totOut=30220279.71
+        REP  #20 from=2025-08-01 due=2025-09-01 prin=1403473.84 int=374189.67 fee=0.00 pen=0.00 tot=1777663.51 bal=25324359.57 totOut=28442616.20
+        REP  #21 from=2025-09-01 due=2025-10-01 prin=1423122.48 int=354541.03 fee=0.00 pen=0.00 tot=1777663.51 bal=23901237.09 totOut=26664952.69
+        REP  #22 from=2025-10-01 due=2025-11-01 prin=1443046.19 int=334617.32 fee=0.00 pen=0.00 tot=1777663.51 bal=22458190.90 totOut=24887289.18
+        REP  #23 from=2025-11-01 due=2025-12-01 prin=1463248.84 int=314414.67 fee=0.00 pen=0.00 tot=1777663.51 bal=20994942.06 totOut=23109625.67
+        REP  #24 from=2025-12-01 due=2026-01-01 prin=1483734.32 int=293929.19 fee=0.00 pen=0.00 tot=1777663.51 bal=19511207.74 totOut=21331962.16
+        REP  #25 from=2026-01-01 due=2026-02-01 prin=1504506.60 int=273156.91 fee=0.00 pen=0.00 tot=1777663.51 bal=18006701.14 totOut=19554298.65
+        REP  #26 from=2026-02-01 due=2026-03-01 prin=1525569.69 int=252093.82 fee=0.00 pen=0.00 tot=1777663.51 bal=16481131.45 totOut=17776635.14
+        REP  #27 from=2026-03-01 due=2026-04-01 prin=1546927.67 int=230735.84 fee=0.00 pen=0.00 tot=1777663.51 bal=14934203.78 totOut=15998971.63
+        REP  #28 from=2026-04-01 due=2026-05-01 prin=1568584.66 int=209078.85 fee=0.00 pen=0.00 tot=1777663.51 bal=13365619.12 totOut=14221308.12
+        REP  #29 from=2026-05-01 due=2026-06-01 prin=1590544.84 int=187118.67 fee=0.00 pen=0.00 tot=1777663.51 bal=11775074.28 totOut=12443644.61
+        REP  #30 from=2026-06-01 due=2026-07-01 prin=1612812.47 int=164851.04 fee=0.00 pen=0.00 tot=1777663.51 bal=10162261.81 totOut=10665981.10
+        REP  #31 from=2026-07-01 due=2026-08-01 prin=1635391.84 int=142271.67 fee=0.00 pen=0.00 tot=1777663.51 bal=8526869.97 totOut=8888317.59
+        REP  #32 from=2026-08-01 due=2026-09-01 prin=1658287.33 int=119376.18 fee=0.00 pen=0.00 tot=1777663.51 bal=6868582.64 totOut=7110654.08
+        REP  #33 from=2026-09-01 due=2026-10-01 prin=1681503.35 int=96160.16 fee=0.00 pen=0.00 tot=1777663.51 bal=5187079.29 totOut=5332990.57
+        REP  #34 from=2026-10-01 due=2026-11-01 prin=1705044.40 int=72619.11 fee=0.00 pen=0.00 tot=1777663.51 bal=3482034.89 totOut=3555327.06
+        REP  #35 from=2026-11-01 due=2026-12-01 prin=1728915.02 int=48748.49 fee=0.00 pen=0.00 tot=1777663.51 bal=1753119.87 totOut=1777663.55
+        REP  #36 from=2026-12-01 due=2027-01-01 prin=1753119.87 int=24543.68 fee=0.00 pen=0.00 tot=1777663.55 bal=0.00 totOut=0.00
+  
+  ==> IDENTICAL
+
+10:02:13.296 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_27`: HALF_UP
+10:02:13.299 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_28`: HALF_UP
+### MNT 5,000,000 / 18 x 18.5%   currency inMultiplesOf null vs 100 at decimalPlaces 0
+  A: term=547 disb=5000000 int=763994 rep=5763994
+        DISB 2024-01-01 5000000
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=243139 int=77083 fee=0 pen=0 tot=320222 bal=4756861 totOut=5443772
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=246887 int=73335 fee=0 pen=0 tot=320222 bal=4509974 totOut=5123550
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=250693 int=69529 fee=0 pen=0 tot=320222 bal=4259281 totOut=4803328
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=254558 int=65664 fee=0 pen=0 tot=320222 bal=4004723 totOut=4483106
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=258483 int=61739 fee=0 pen=0 tot=320222 bal=3746240 totOut=4162884
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=262467 int=57755 fee=0 pen=0 tot=320222 bal=3483773 totOut=3842662
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=266514 int=53708 fee=0 pen=0 tot=320222 bal=3217259 totOut=3522440
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=270623 int=49599 fee=0 pen=0 tot=320222 bal=2946636 totOut=3202218
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=274795 int=45427 fee=0 pen=0 tot=320222 bal=2671841 totOut=2881996
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=279031 int=41191 fee=0 pen=0 tot=320222 bal=2392810 totOut=2561774
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=283333 int=36889 fee=0 pen=0 tot=320222 bal=2109477 totOut=2241552
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=287701 int=32521 fee=0 pen=0 tot=320222 bal=1821776 totOut=1921330
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=292136 int=28086 fee=0 pen=0 tot=320222 bal=1529640 totOut=1601108
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=296640 int=23582 fee=0 pen=0 tot=320222 bal=1233000 totOut=1280886
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=301213 int=19009 fee=0 pen=0 tot=320222 bal=931787 totOut=960664
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=305857 int=14365 fee=0 pen=0 tot=320222 bal=625930 totOut=640442
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=310572 int=9650 fee=0 pen=0 tot=320222 bal=315358 totOut=320220
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=315358 int=4862 fee=0 pen=0 tot=320220 bal=0 totOut=0
+  
+  B: term=547 disb=5000000 int=764100 rep=5764100
+        DISB 2024-01-01 5000000
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=243100 int=77100 fee=0 pen=0 tot=320200 bal=4756900 totOut=5443900
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=246900 int=73300 fee=0 pen=0 tot=320200 bal=4510000 totOut=5123700
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=250700 int=69500 fee=0 pen=0 tot=320200 bal=4259300 totOut=4803500
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=254500 int=65700 fee=0 pen=0 tot=320200 bal=4004800 totOut=4483300
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=258500 int=61700 fee=0 pen=0 tot=320200 bal=3746300 totOut=4163100
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=262400 int=57800 fee=0 pen=0 tot=320200 bal=3483900 totOut=3842900
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=266500 int=53700 fee=0 pen=0 tot=320200 bal=3217400 totOut=3522700
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=270600 int=49600 fee=0 pen=0 tot=320200 bal=2946800 totOut=3202500
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=274800 int=45400 fee=0 pen=0 tot=320200 bal=2672000 totOut=2882300
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=279000 int=41200 fee=0 pen=0 tot=320200 bal=2393000 totOut=2562100
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=283300 int=36900 fee=0 pen=0 tot=320200 bal=2109700 totOut=2241900
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=287700 int=32500 fee=0 pen=0 tot=320200 bal=1822000 totOut=1921700
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=292100 int=28100 fee=0 pen=0 tot=320200 bal=1529900 totOut=1601500
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=296600 int=23600 fee=0 pen=0 tot=320200 bal=1233300 totOut=1281300
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=301200 int=19000 fee=0 pen=0 tot=320200 bal=932100 totOut=961100
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=305800 int=14400 fee=0 pen=0 tot=320200 bal=626300 totOut=640900
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=310500 int=9700 fee=0 pen=0 tot=320200 bal=315800 totOut=320700
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=315800 int=4900 fee=0 pen=0 tot=320700 bal=0 totOut=0
+  
+  ==> DIFFERENT
+
+======== C. daysInYearCustomStrategy at PRODUCTION (19, HALF_UP), ACTUAL/ACTUAL over leap 2024 ========
+10:02:13.307 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_29`: HALF_UP
+10:02:13.311 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_30`: HALF_UP
+### ACTUAL/ACTUAL 2024   custom null vs FULL_LEAP_YEAR
+  A: term=547 disb=50000000.00 int=6895341.46 rep=56895341.46
+        DISB 2024-01-01 50000000.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=2449376.89 int=711475.41 fee=0.00 pen=0.00 tot=3160852.30 bal=47550623.11 totOut=53734489.16
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=2527883.35 int=632968.95 fee=0.00 pen=0.00 tot=3160852.30 bal=45022739.76 totOut=50573636.86
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=2520200.86 int=640651.44 fee=0.00 pen=0.00 tot=3160852.30 bal=42502538.90 totOut=47412784.56
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=2575571.44 int=585280.86 fee=0.00 pen=0.00 tot=3160852.30 bal=39926967.46 totOut=44251932.26
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=2592711.19 int=568141.11 fee=0.00 pen=0.00 tot=3160852.30 bal=37334256.27 totOut=41091079.96
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=2646741.23 int=514111.07 fee=0.00 pen=0.00 tot=3160852.30 bal=34687515.04 totOut=37930227.66
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=2667266.02 int=493586.28 fee=0.00 pen=0.00 tot=3160852.30 bal=32020249.02 totOut=34769375.36
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=2705219.90 int=455632.40 fee=0.00 pen=0.00 tot=3160852.30 bal=29315029.12 totOut=31608523.06
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=2757169.93 int=403682.37 fee=0.00 pen=0.00 tot=3160852.30 bal=26557859.19 totOut=28447670.76
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=2782947.02 int=377905.28 fee=0.00 pen=0.00 tot=3160852.30 bal=23774912.17 totOut=25286818.46
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=2833460.07 int=327392.23 fee=0.00 pen=0.00 tot=3160852.30 bal=20941452.10 totOut=22125966.16
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=2862839.40 int=298012.90 fee=0.00 pen=0.00 tot=3160852.30 bal=18078612.70 totOut=18965113.86
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=2902897.74 int=257954.56 fee=0.00 pen=0.00 tot=3160852.30 bal=15175714.96 totOut=15804261.56
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=2965272.67 int=195579.63 fee=0.00 pen=0.00 tot=3160852.30 bal=12210442.29 totOut=12643409.26
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=2986627.69 int=174224.61 fee=0.00 pen=0.00 tot=3160852.30 bal=9223814.60 totOut=9482556.96
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=3033487.85 int=127364.45 fee=0.00 pen=0.00 tot=3160852.30 bal=6190326.75 totOut=6321704.66
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=3072525.67 int=88326.63 fee=0.00 pen=0.00 tot=3160852.30 bal=3117801.08 totOut=3160852.36
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=3117801.08 int=43051.28 fee=0.00 pen=0.00 tot=3160852.36 bal=0.00 totOut=0.00
+  
+  B: term=547 disb=50000000.00 int=6895341.46 rep=56895341.46
+        DISB 2024-01-01 50000000.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=2449376.89 int=711475.41 fee=0.00 pen=0.00 tot=3160852.30 bal=47550623.11 totOut=53734489.16
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=2527883.35 int=632968.95 fee=0.00 pen=0.00 tot=3160852.30 bal=45022739.76 totOut=50573636.86
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=2520200.86 int=640651.44 fee=0.00 pen=0.00 tot=3160852.30 bal=42502538.90 totOut=47412784.56
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=2575571.44 int=585280.86 fee=0.00 pen=0.00 tot=3160852.30 bal=39926967.46 totOut=44251932.26
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=2592711.19 int=568141.11 fee=0.00 pen=0.00 tot=3160852.30 bal=37334256.27 totOut=41091079.96
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=2646741.23 int=514111.07 fee=0.00 pen=0.00 tot=3160852.30 bal=34687515.04 totOut=37930227.66
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=2667266.02 int=493586.28 fee=0.00 pen=0.00 tot=3160852.30 bal=32020249.02 totOut=34769375.36
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=2705219.90 int=455632.40 fee=0.00 pen=0.00 tot=3160852.30 bal=29315029.12 totOut=31608523.06
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=2757169.93 int=403682.37 fee=0.00 pen=0.00 tot=3160852.30 bal=26557859.19 totOut=28447670.76
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=2782947.02 int=377905.28 fee=0.00 pen=0.00 tot=3160852.30 bal=23774912.17 totOut=25286818.46
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=2833460.07 int=327392.23 fee=0.00 pen=0.00 tot=3160852.30 bal=20941452.10 totOut=22125966.16
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=2862839.40 int=298012.90 fee=0.00 pen=0.00 tot=3160852.30 bal=18078612.70 totOut=18965113.86
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=2902897.74 int=257954.56 fee=0.00 pen=0.00 tot=3160852.30 bal=15175714.96 totOut=15804261.56
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=2965272.67 int=195579.63 fee=0.00 pen=0.00 tot=3160852.30 bal=12210442.29 totOut=12643409.26
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=2986627.69 int=174224.61 fee=0.00 pen=0.00 tot=3160852.30 bal=9223814.60 totOut=9482556.96
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=3033487.85 int=127364.45 fee=0.00 pen=0.00 tot=3160852.30 bal=6190326.75 totOut=6321704.66
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=3072525.67 int=88326.63 fee=0.00 pen=0.00 tot=3160852.30 bal=3117801.08 totOut=3160852.36
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=3117801.08 int=43051.28 fee=0.00 pen=0.00 tot=3160852.36 bal=0.00 totOut=0.00
+  
+  ==> IDENTICAL
+
+10:02:13.313 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_31`: HALF_UP
+10:02:13.315 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_32`: HALF_UP
+### ACTUAL/ACTUAL 2024   custom null vs FEB_29_PERIOD_ONLY
+  A: term=547 disb=50000000.00 int=6895341.46 rep=56895341.46
+        DISB 2024-01-01 50000000.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=2449376.89 int=711475.41 fee=0.00 pen=0.00 tot=3160852.30 bal=47550623.11 totOut=53734489.16
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=2527883.35 int=632968.95 fee=0.00 pen=0.00 tot=3160852.30 bal=45022739.76 totOut=50573636.86
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=2520200.86 int=640651.44 fee=0.00 pen=0.00 tot=3160852.30 bal=42502538.90 totOut=47412784.56
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=2575571.44 int=585280.86 fee=0.00 pen=0.00 tot=3160852.30 bal=39926967.46 totOut=44251932.26
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=2592711.19 int=568141.11 fee=0.00 pen=0.00 tot=3160852.30 bal=37334256.27 totOut=41091079.96
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=2646741.23 int=514111.07 fee=0.00 pen=0.00 tot=3160852.30 bal=34687515.04 totOut=37930227.66
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=2667266.02 int=493586.28 fee=0.00 pen=0.00 tot=3160852.30 bal=32020249.02 totOut=34769375.36
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=2705219.90 int=455632.40 fee=0.00 pen=0.00 tot=3160852.30 bal=29315029.12 totOut=31608523.06
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=2757169.93 int=403682.37 fee=0.00 pen=0.00 tot=3160852.30 bal=26557859.19 totOut=28447670.76
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=2782947.02 int=377905.28 fee=0.00 pen=0.00 tot=3160852.30 bal=23774912.17 totOut=25286818.46
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=2833460.07 int=327392.23 fee=0.00 pen=0.00 tot=3160852.30 bal=20941452.10 totOut=22125966.16
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=2862839.40 int=298012.90 fee=0.00 pen=0.00 tot=3160852.30 bal=18078612.70 totOut=18965113.86
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=2902897.74 int=257954.56 fee=0.00 pen=0.00 tot=3160852.30 bal=15175714.96 totOut=15804261.56
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=2965272.67 int=195579.63 fee=0.00 pen=0.00 tot=3160852.30 bal=12210442.29 totOut=12643409.26
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=2986627.69 int=174224.61 fee=0.00 pen=0.00 tot=3160852.30 bal=9223814.60 totOut=9482556.96
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=3033487.85 int=127364.45 fee=0.00 pen=0.00 tot=3160852.30 bal=6190326.75 totOut=6321704.66
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=3072525.67 int=88326.63 fee=0.00 pen=0.00 tot=3160852.30 bal=3117801.08 totOut=3160852.36
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=3117801.08 int=43051.28 fee=0.00 pen=0.00 tot=3160852.36 bal=0.00 totOut=0.00
+  
+  B: term=547 disb=50000000.00 int=6895341.46 rep=56895341.46
+        DISB 2024-01-01 50000000.00
+        REP  #1 from=2024-01-01 due=2024-02-01 prin=2449376.89 int=711475.41 fee=0.00 pen=0.00 tot=3160852.30 bal=47550623.11 totOut=53734489.16
+        REP  #2 from=2024-02-01 due=2024-03-01 prin=2527883.35 int=632968.95 fee=0.00 pen=0.00 tot=3160852.30 bal=45022739.76 totOut=50573636.86
+        REP  #3 from=2024-03-01 due=2024-04-01 prin=2520200.86 int=640651.44 fee=0.00 pen=0.00 tot=3160852.30 bal=42502538.90 totOut=47412784.56
+        REP  #4 from=2024-04-01 due=2024-05-01 prin=2575571.44 int=585280.86 fee=0.00 pen=0.00 tot=3160852.30 bal=39926967.46 totOut=44251932.26
+        REP  #5 from=2024-05-01 due=2024-06-01 prin=2592711.19 int=568141.11 fee=0.00 pen=0.00 tot=3160852.30 bal=37334256.27 totOut=41091079.96
+        REP  #6 from=2024-06-01 due=2024-07-01 prin=2646741.23 int=514111.07 fee=0.00 pen=0.00 tot=3160852.30 bal=34687515.04 totOut=37930227.66
+        REP  #7 from=2024-07-01 due=2024-08-01 prin=2667266.02 int=493586.28 fee=0.00 pen=0.00 tot=3160852.30 bal=32020249.02 totOut=34769375.36
+        REP  #8 from=2024-08-01 due=2024-09-01 prin=2705219.90 int=455632.40 fee=0.00 pen=0.00 tot=3160852.30 bal=29315029.12 totOut=31608523.06
+        REP  #9 from=2024-09-01 due=2024-10-01 prin=2757169.93 int=403682.37 fee=0.00 pen=0.00 tot=3160852.30 bal=26557859.19 totOut=28447670.76
+        REP  #10 from=2024-10-01 due=2024-11-01 prin=2782947.02 int=377905.28 fee=0.00 pen=0.00 tot=3160852.30 bal=23774912.17 totOut=25286818.46
+        REP  #11 from=2024-11-01 due=2024-12-01 prin=2833460.07 int=327392.23 fee=0.00 pen=0.00 tot=3160852.30 bal=20941452.10 totOut=22125966.16
+        REP  #12 from=2024-12-01 due=2025-01-01 prin=2862839.40 int=298012.90 fee=0.00 pen=0.00 tot=3160852.30 bal=18078612.70 totOut=18965113.86
+        REP  #13 from=2025-01-01 due=2025-02-01 prin=2902897.74 int=257954.56 fee=0.00 pen=0.00 tot=3160852.30 bal=15175714.96 totOut=15804261.56
+        REP  #14 from=2025-02-01 due=2025-03-01 prin=2965272.67 int=195579.63 fee=0.00 pen=0.00 tot=3160852.30 bal=12210442.29 totOut=12643409.26
+        REP  #15 from=2025-03-01 due=2025-04-01 prin=2986627.69 int=174224.61 fee=0.00 pen=0.00 tot=3160852.30 bal=9223814.60 totOut=9482556.96
+        REP  #16 from=2025-04-01 due=2025-05-01 prin=3033487.85 int=127364.45 fee=0.00 pen=0.00 tot=3160852.30 bal=6190326.75 totOut=6321704.66
+        REP  #17 from=2025-05-01 due=2025-06-01 prin=3072525.67 int=88326.63 fee=0.00 pen=0.00 tot=3160852.30 bal=3117801.08 totOut=3160852.36
+        REP  #18 from=2025-06-01 due=2025-07-01 prin=3117801.08 int=43051.28 fee=0.00 pen=0.00 tot=3160852.36 bal=0.00 totOut=0.00
+  
+  ==> IDENTICAL
+
+======== D. what the seam's own assembly path actually stores ========
+10:02:13.318 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_33`: HALF_UP
+  modelData.installmentAmountInMultiplesOf() = 999
+  modelData.daysInYearCustomStrategy()       = FULL_LEAP_YEAR
+  modelData.currency().getInMultiplesOf()    = 777
+  terms.installmentAmountInMultiplesOf (reflected) = null
+  terms.daysInYearCustomStrategy       (reflected) = null
+  terms.getInstallmentAmountInMultiplesOf()        = null
+  terms.toLoanConfigurationDetails().getDaysInYearCustomStrategy() = null
+  terms.getSeedDate()                              = 2024-01-01
+
+======== E. per-period columns available but never emitted by Capture3 ========
+10:02:13.324 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t21v2_34`: HALF_UP
+  plan.totalPrincipalAmount = 100.00
+  plan.totalFeeAmount       = 0.00
+  plan.totalPenaltyAmount   = 0.00
+  plan.totalOutstandingAmount = 0
+term=182 disb=100.00 int=2.05 rep=102.05
+      DISB 2024-01-01 100.00
+      REP  #1 from=2024-01-01 due=2024-02-01 prin=16.43 int=0.58 fee=0.00 pen=0.00 tot=17.01 bal=83.57 totOut=85.04
+      REP  #2 from=2024-02-01 due=2024-03-01 prin=16.52 int=0.49 fee=0.00 pen=0.00 tot=17.01 bal=67.05 totOut=68.03
+      REP  #3 from=2024-03-01 due=2024-04-01 prin=16.62 int=0.39 fee=0.00 pen=0.00 tot=17.01 bal=50.43 totOut=51.02
+      REP  #4 from=2024-04-01 due=2024-05-01 prin=16.72 int=0.29 fee=0.00 pen=0.00 tot=17.01 bal=33.71 totOut=34.01
+      REP  #5 from=2024-05-01 due=2024-06-01 prin=16.81 int=0.20 fee=0.00 pen=0.00 tot=17.01 bal=16.90 totOut=17.00
+      REP  #6 from=2024-06-01 due=2024-07-01 prin=16.90 int=0.10 fee=0.00 pen=0.00 tot=17.00 bal=0.00 totOut=0.00
+

@@ -1,0 +1,2 @@
+    parity vectors          PASS 42   FAIL 0
+VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.

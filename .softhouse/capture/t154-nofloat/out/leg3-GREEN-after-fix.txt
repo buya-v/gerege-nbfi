@@ -1,0 +1,191 @@
+=== [0] APPARATUS ===
+pinned pre-fix sha : 187e9726dfad5076f4b68877f411d7d218280889
+PRE  has census    : no
+POST has census    : yes
+
+=== [1] THE COMMITTED STORE, COUNTED BOTH WAYS ===
+  find -name '*.json' -type f (what the shell float guard inspects):
+    PIN.json
+    _selftest/SELFTEST-01-two-period-zero-rate.json
+    capabilities.json
+    loanschedule/P-00-baseline-6x7pct.json
+    loanschedule/P-01-18x18pt5pct-principal-87654321.json
+    loanschedule/P-02-monthend-seed-day-31.json
+    loanschedule/P-02b-monthend-seed-day-30.json
+    loanschedule/P-03-disbursement-on-repayment-due-date.json
+    loanschedule/P-04f-fulltermfortranche-false.json
+    loanschedule/P-04t-fulltermfortranche-true.json
+    loanschedule/P-DRIFT-A-drift-start28-disb31-6x21pt6pct.json
+    loanschedule/P-DRIFT-B-drift-start28-disb29-6x21pt6pct.json
+    loanschedule/P-DRIFT-C-drift-12x16pt8pct-5M.json
+    loanschedule/P-DRIFT-D-drift-36x21pt6pct-50M.json
+    loanschedule/P-DRIFT-E-drift-common-year-2025.json
+    loanschedule/P-DRIFT-F-drift-smallest-principal-mnt100.json
+    loanschedule/P-DRIFT-G-drift-seeded-in-march.json
+    loanschedule/P-DRIFT-H-drift-seeded-in-30-day-month.json
+    loanschedule/P-EMI-36-127704-emi-smoothing-loop.json
+    loanschedule/P-EMI-6-1M014632-emi-smoothing-loop.json
+    loanschedule/P-LAT-MID-6x21pt6pct-mid-month-start.json
+    loanschedule/P-LAT-Q0a-6x21pt6pct-1M2.json
+    loanschedule/P-ME-A-monthend-3M924149-6x16pt8pct.json
+    loanschedule/P-ME-B-monthend-1M2-6x21pt6pct.json
+    loanschedule/P-ME-C-monthend-common-year-2023.json
+    loanschedule/P-ME-D-monthend-seed-day-30.json
+    loanschedule/P-MNT-1M2-12x21pt6pct.json
+    loanschedule/P-MNT-4M999-18x18pt5pct.json
+    loanschedule/P-MNT-50M-36x16pt8pct.json
+    loanschedule/P-MNT-5M-18x18pt5pct.json
+    loanschedule/P-RND-S1-21021587pt50-6x21pt6pct-textbook-ratefactor.json
+    loanschedule/P-RND-S2-3139845pt86-6x7pct-ratefactor-setscale.json
+    loanschedule/REFUSE-01-actual-actual-ungraded.json
+    loanschedule/REFUSE-02-half-even-ungraded.json
+    loanschedule/REFUSE-03-annual-fixed30360-precedence.json
+    loanschedule/REFUSE-04-disbursement-after-maturity.json
+    loanschedule/T61-HE-A-tie-quantization-1M000541pt50-6x21pt6pct.json
+    loanschedule/T61-HE-B-tie-quantization-1M000052pt50-6x21pt6pct.json
+    loanschedule/T61-HE-C-tie-quantization-1M000089pt50-6x21pt6pct.json
+    loanschedule/T64-ZP-A-zero-principal-mnt0pt28-56x21pt6pct.json
+    loanschedule/T64-ZP-B-early-payoff-dead-rows-mnt0pt28-55x21pt6pct.json
+    loanschedule/T64-ZP-C-zero-principal-mnt0pt17-34x36pct.json
+    loanschedule/T64-ZP-D-zero-principal-mnt0pt36-72x16pt8pct.json
+    loanschedule/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json
+    loanschedule/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json
+    loanschedule/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json
+    loanschedule/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json
+    loanschedule/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json
+    loanschedule/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json
+  TOTAL: 49
+
+  by directory:
+    store root      : 2
+    loanschedule/   : 46
+    _selftest/      : 1
+  case_id charset  : ids matching ^[A-Za-z0-9._-]+$ / total
+    47 / 47
+
+=== [2] CONTROL — an unmutated copy of the committed store ===
+  This row MEASURES the baseline every other row is stated against, and it is also the
+  anti-no-op: without it, every 'the poison changed nothing' row could be a null control.
+--- control : the baseline: whatever the committed store grades today, on both arms
+    PRE  exit=0 parity=42 cells=5576   (wanted 0:*:*)
+    POST exit=0 parity=42 cells=5576   (wanted 0:*:*)
+OK    control PRE = 0|42|5576
+OK    control POST = 0|42|5576
+
+  BASELINE: 42 parity vectors, 5576 graded cells.
+
+=== [3] THE SIX FAILURE MODES ===
+--- F1-symlinked-context : the whole loanschedule/ context reached through a symlink
+    PRE  exit=2 parity=0 cells=21   (wanted *:*:*)
+    POST exit=2 parity=0 cells=0   (wanted 2:*:*)
+OK    F1-symlinked-context PRE = 2|0|21
+OK    F1-symlinked-context POST = 2|0|0
+
+--- F1-symlinked-extra : an EXTRA context directory that is a symlink, holding a float — invisible to find AND to LoadStore
+    PRE  exit=0 parity=42 cells=5576   (wanted 0:BASE:BASE_CELLS)
+    POST exit=2 parity=0 cells=0   (wanted 2:*:*)
+OK    F1-symlinked-extra PRE = 0|42|5576
+OK    F1-symlinked-extra POST = 2|0|0
+
+--- F2-nested-vector : a vector one level too deep: silently NOT graded, and the count does not move
+    PRE  exit=0 parity=42 cells=5576   (wanted 0:BASE:BASE_CELLS)
+    POST exit=2 parity=0 cells=0   (wanted 2:*:*)
+OK    F2-nested-vector PRE = 0|42|5576
+OK    F2-nested-vector POST = 2|0|0
+
+--- F2-nested-float : a float in a nested subdirectory: find DOES see this one, so the shell guard catches it
+    PRE  exit=2 parity=- cells=-   (wanted 2:*:*)
+    POST exit=2 parity=- cells=-   (wanted 2:*:*)
+OK    F2-nested-float PRE = 2|-|-
+OK    F2-nested-float POST = 2|-|-
+
+--- F3-upper-json : UPPER.JSON is a vector to NEITHER enumerator, so a float in it is unchecked and ungraded
+    PRE  exit=0 parity=42 cells=5576   (wanted 0:BASE:BASE_CELLS)
+    POST exit=2 parity=0 cells=0   (wanted 2:*:*)
+OK    F3-upper-json PRE = 0|42|5576
+OK    F3-upper-json POST = 2|0|0
+
+--- F4-case-only-caseid : P-00 and p-00 both grade — the corpus reports MORE coverage than it has
+    PRE  exit=0 parity=43 cells=5623   (wanted 0:BASE+1:>BASE_CELLS)
+    POST exit=2 parity=0 cells=0   (wanted 2:*:*)
+OK    F4-case-only-caseid PRE = 0|43|5623
+OK    F4-case-only-caseid POST = 2|0|0
+
+--- F5-nfc-vs-nfd : two case_ids that RENDER IDENTICALLY both grade
+    PRE  exit=0 parity=44 cells=5670   (wanted 0:BASE+2:>BASE_CELLS)
+    POST exit=2 parity=0 cells=0   (wanted 2:*:*)
+OK    F5-nfc-vs-nfd PRE = 0|44|5670
+OK    F5-nfc-vs-nfd POST = 2|0|0
+
+--- M5-store-root-float : a store-root .json with a CLEAN float: the shell guard sees it even pre-fix, so this row is NOT the hole
+    PRE  exit=2 parity=- cells=-   (wanted 2:*:*)
+    POST exit=2 parity=- cells=-   (wanted 2:*:*)
+OK    M5-store-root-float PRE = 2|-|-
+OK    M5-store-root-float POST = 2|-|-
+
+--- M5-store-root-poison : the same file with one invalid byte: pre-fix NOTHING checks it — Go never decodes a store-root .json
+    PRE  exit=0 parity=42 cells=5576   (wanted 0:BASE:BASE_CELLS)
+    POST exit=2 parity=- cells=-   (wanted 2:*:*)
+OK    M5-store-root-poison PRE = 0|42|5576
+OK    M5-store-root-poison POST = 2|-|-
+
+--- M5-store-root-clean : a store-root .json with NO float: nothing for the float guard to find, so a refusal here is STRUCTURAL
+    PRE  exit=0 parity=42 cells=5576   (wanted 0:BASE:BASE_CELLS)
+    POST exit=2 parity=0 cells=0   (wanted 2:*:*)
+OK    M5-store-root-clean PRE = 0|42|5576
+OK    M5-store-root-clean POST = 2|0|0
+
+=== [3b] M-5 CLOSED BY THE CENSUS, WITH THE SHELL GUARD TAKEN OUT OF THE CIRCUIT ===
+  The brief said the census SHOULD close M-5 and told me to confirm it rather than assume it.
+  Every row above runs through conformance.sh, where run_guards fires BEFORE the binary — so a
+  refusal there could be the shell guard's and the census would never have been consulted.
+  These rows run the harness BINARY directly, which never calls the shell guard at all.
+    m_m5_clean    PRE binary exit=0 (wanted 0)   POST binary exit=2 (wanted 2)  -- a store-root .json with no float: the PRE binary must not even notice it
+        PRE  says: 
+        POST says: STORE FILE CENSUS — 50 
+    m_m5_poison   PRE binary exit=0 (wanted 0)   POST binary exit=2 (wanted 2)  -- the same with a float behind an invalid byte: the PRE binary must not notice it either
+        PRE  says: 
+        POST says: STORE FILE CENSUS — 50 
+    m_pin_float   PRE binary exit=2 (wanted 2)   POST binary exit=2 (wanted 2)  -- PIN.json with 19.0 — MEASURED, NOT PREDICTED: see the note below
+        PRE  says: FLOAT TOKEN "19.0"
+        POST says: FLOAT TOKEN "19.0"
+OK    binary-direct row
+OK    binary-direct row
+OK    binary-direct row
+
+  NOTE on m_pin_float — MEASURED, AND IT REFUTED MY OWN FIRST DRAFT.
+  I wrote 'wanted PRE 0' on the reasoning that no store-root .json was decoded by Go, so a float
+  in PIN.json could only be caught by the shell guard. The PRE binary refuses it at exit 2 saying
+  FLOAT TOKEN "19.0" — because LoadPin (admit.go:58) and LoadCapabilityRegistry
+  (capability.go:110) ALREADY call RejectFloatTokens on their own bytes. So M-5's sentence is true
+  only for a store-root .json that is NEITHER of those two, which is exactly what the rows above
+  it demonstrate and exactly what the census now refuses. The expectation was corrected to the
+  measurement and the census comment was corrected too; the code was not adjusted to fit a guess.
+  What the census adds for PIN.json and capabilities.json is therefore belt and braces: the check
+  now also runs under LoadStore alone (how every test reaches the store), and it binds any file
+  later added to the allowlist rather than depending on its loader remembering to check.
+
+=== [4] WHAT THE POST-FIX HARNESS SAYS, VERBATIM ===
+--- F1-symlinked-context
+          * STORE FILE CENSUS — 49 .json files were found under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg3.cPD328TnjT/post/.softhouse/vectors and 1 of them are unaccounted for: "loanschedule" is a SYMLINK. The vector store must be plain files and plain directories: `find` (without -L) and os.ReadDir both skip a symlink, and they skip different things when one appears, so the store's contents stop being a function of the store. The shell float guard enumerates this store with `find -name '*.json' -type f` (recursive, case-sensitive, no symlink following) and LoadStore reads one level down matching the suffix bytewise; where the two disagree, a file is graded by neither, checked by neither, or counted twice. This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+--- F1-symlinked-extra
+          * STORE FILE CENSUS — 49 .json files were found under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg3.cPD328TnjT/post/.softhouse/vectors and 1 of them are unaccounted for: "extra" is a SYMLINK. The vector store must be plain files and plain directories: `find` (without -L) and os.ReadDir both skip a symlink, and they skip different things when one appears, so the store's contents stop being a function of the store. The shell float guard enumerates this store with `find -name '*.json' -type f` (recursive, case-sensitive, no symlink following) and LoadStore reads one level down matching the suffix bytewise; where the two disagree, a file is graded by neither, checked by neither, or counted twice. This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+--- F2-nested-vector
+          * STORE FILE CENSUS — 49 .json files were found under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg3.cPD328TnjT/post/.softhouse/vectors and 1 of them are unaccounted for: "loanschedule/sub" is a directory INSIDE a context directory. The store is exactly two levels — <root>/<context>/<vector>.json — and LoadStore reads one level down, so nothing below here is ever loaded or graded. The shell float guard enumerates this store with `find -name '*.json' -type f` (recursive, case-sensitive, no symlink following) and LoadStore reads one level down matching the suffix bytewise; where the two disagree, a file is graded by neither, checked by neither, or counted twice. This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+--- F3-upper-json
+          * STORE FILE CENSUS — 50 .json files were found under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg3.cPD328TnjT/post/.softhouse/vectors and 1 of them are unaccounted for: "loanschedule/T154-UPPER.JSON" is a .json under the store root that the harness DID NOT LOAD. Every vector file must be loaded and graded, or the corpus counts describe a different set of files than the one on disk. The shell float guard enumerates this store with `find -name '*.json' -type f` (recursive, case-sensitive, no symlink following) and LoadStore reads one level down matching the suffix bytewise; where the two disagree, a file is graded by neither, checked by neither, or counted twice. This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+--- F4-case-only-caseid
+          * CASE_ID INTEGRITY — case_ids differing only in letter case: "P-00" (loanschedule/P-00-baseline-6x7pct.json) AND "p-00" (loanschedule/T154-lowercase-p00.json). Both grade, and both add to the parity-vector and graded-cell totals. This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+--- F5-nfc-vs-nfd
+          * CASE_ID INTEGRITY — loanschedule/T154-nfc.json declares case_id "P-NFC-é", which contains "é" — a case_id must match [A-Za-z0-9._-]+ so that two ids cannot render identically in the report (a Unicode NFC/NFD pair does exactly that); loanschedule/T154-nfd.json declares case_id "P-NFC-é", which contains "́" — a case_id must match [A-Za-z0-9._-]+ so that two ids cannot render identically in the report (a Unicode NFC/NFD pair does exactly that). This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+--- M5-store-root-poison
+      conformance: FLOAT-SHAPED NUMBER in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg3.cPD328TnjT/post/.softhouse/vectors/T154-ROOT-POISON.json
+--- M5-store-root-clean
+          * STORE FILE CENSUS — 50 .json files were found under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg3.cPD328TnjT/post/.softhouse/vectors and 1 of them are unaccounted for: "T154-ROOT-CLEAN.json" sits at the STORE ROOT and is not one of PIN.json, capabilities.json. LoadStore reads only files INSIDE a context directory, so a .json here is never decoded, never graded, and never float-checked by Go. The shell float guard enumerates this store with `find -name '*.json' -type f` (recursive, case-sensitive, no symlink following) and LoadStore reads one level down matching the suffix bytewise; where the two disagree, a file is graded by neither, checked by neither, or counted twice. This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+
+=== [Z] THE COMMITTED STORE WAS NEVER MUTATED ===
+OK    git status --porcelain -- .softhouse/vectors is EMPTY
+
+=======================================================================
+LEG 3 ROWS: 26 as wanted, 0 not as wanted
+=======================================================================

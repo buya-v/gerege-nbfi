@@ -1,0 +1,10 @@
+POST /journalentries
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: a2-29-je-1-0001
+Content-Type: application/json
+body-file: req/a2-29-je-1-while-asset.json
+body-wire-bytes-artefact: A2-432-je-while-asset.req
+body-sha256: 194ed0e00876c31b0a263a015abd60f8baed9ccda921b8cbe235999290195020
+body-bytes: 337
+captured-at-utc: 2026-08-22T02:46:49Z

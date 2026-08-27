@@ -1,0 +1,121 @@
+DEC-2 lines: 3542
+citations matched by the pattern: 108
+
+  DEC-2:96    .softhouse/conformance.sh:1152  -> # Measured in this worktree: guard 57, floor 57 (and 57 on the filesystem).
+  DEC-2:783   nexus/internal/apps/ledger/glaccount.go:324   -> type PostedAccountSnapshot struct {
+  DEC-2:1059  .softhouse/conformance.sh:1152  -> # Measured in this worktree: guard 57, floor 57 (and 57 on the filesystem).
+  DEC-2:1116  .softhouse/conformance.sh:1189  -> # $REPO_ROOT on every run this file performs [MEASURED: the clean baseline report reads
+  DEC-2:1250  nexus/internal/apps/ledger/slots_test.go:187   -> func TestPlaceholderDisjointnessHolds(t *testing.T) {
+  DEC-2:1773  .softhouse/conformance.sh:718   -> # guard_no_float_in_harness: no floating-point identifier ANYWHERE in the Go
+  DEC-2:1831  nexus/internal/apps/loanschedule/conformance/vector.go:16    -> 
+  DEC-2:1980  nexus/internal/apps/loanschedule/conformance/admit.go:115   -> if v.Context == "" {
+  DEC-2:2470  .softhouse/conformance.sh:1254  -> # I4-DML, I6-HOLD-BALANCE, OPAQUE-SQL]. Its own PASS text, printed by this function below, state
+  DEC-2:2769  .softhouse/conformance.sh:1152  -> # Measured in this worktree: guard 57, floor 57 (and 57 on the filesystem).
+  DEC-2:2903  .softhouse/conformance.sh:1115  -> # P-57: every stage here consumes all of its input — `git grep`, `sed`, `grep`, `sort`,
+  DEC-2:3207  .softhouse/conformance.sh:1115  -> # P-57: every stage here consumes all of its input — `git grep`, `sed`, `grep`, `sort`,
+  DEC-2:3423  .softhouse/conformance.sh:1189  -> # $REPO_ROOT on every run this file performs [MEASURED: the clean baseline report reads
+
+RESOLVED   : 13 of 108 citations (both terms counted, P-67)
+PINNED     : 25 (Fineract checkout, do not drift)
+    DEC-2:551   AccountingProcessorHelper.java:1187
+    DEC-2:553   AccountingConstants.java:439
+    DEC-2:560   AccountingProcessorHelper.java:1199
+    DEC-2:561   AccountingConstants.java:39
+    DEC-2:566   AccountingProcessorHelper.java:1218
+    DEC-2:577   AccountingConstants.java:37
+    DEC-2:584   PortfolioProductType.java:26
+    DEC-2:615   AccountingProcessorHelper.java:1185
+    DEC-2:624   ProgressiveLoanScheduleGenerator.java:83
+    DEC-2:850   AccountingProcessorHelper.java:1199
+    DEC-2:870   fineract-provider/src/main/java/org/apache/fineract/accounting/productaccountmapping/service/ProductToGLAccountMappingWritePlatformServiceImpl.java:149
+    DEC-2:961   JournalEntry.java:91
+    DEC-2:1059  UpdateTrialBalanceDetailsTasklet.java:81
+    DEC-2:1059  JournalEntryRepository.java:61
+    DEC-2:1060  JournalEntry.java:79
+    DEC-2:1383  GLAccountReadPlatformServiceImpl.java:214
+    DEC-2:1417  GLAccountWritePlatformServiceJpaRepositoryImpl.java:151
+    DEC-2:1426  AccountingConstants.java:439
+    DEC-2:1438  AccountingProcessorHelper.java:1213
+    DEC-2:1465  LoanProductDataValidator.java:744
+    DEC-2:1473  AccountingConstants.java:48
+    DEC-2:1492  ProductToGLAccountMappingWritePlatformServiceImpl.java:410
+    DEC-2:1528  AccountingConstants.java:37
+    DEC-2:2982  ProductToGLAccountMappingWritePlatformServiceImpl.java:149
+    DEC-2:2984  SavingsProductToGLAccountMappingHelper.java:192
+UNRESOLVED : 70 (searched: BASENAME_MAP, then <name>, then nexus/<name>, under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae89b66052d604a02)
+    DEC-2:135   vector.go:77-81
+    DEC-2:135   admit.go:139-147
+    DEC-2:1061  invariants.go:36-47
+    DEC-2:1220  guards/ledgerguard/main.go:151
+    DEC-2:1248  main.go:852
+    DEC-2:1279  guards/check-ledger-invariants.sh:210-219
+    DEC-2:1515  producttype.go:162
+    DEC-2:1655  grade.go:473-474
+    DEC-2:1684  capability.go:351-392
+    DEC-2:1832  admit.go:109-110
+    DEC-2:1839  vector.go:345-419
+    DEC-2:1846  vector.go:484-511
+    DEC-2:1847  admit.go:208-222
+    DEC-2:1848  enums.go:92-104
+    DEC-2:1861  admit.go:159-206
+    DEC-2:1865  admit.go:545
+    DEC-2:1866  admit.go:180-201
+    DEC-2:1866  enums.go:93-103
+    DEC-2:1867  admit.go:160-170
+    DEC-2:1877  vector.go:647-649
+    DEC-2:1879  admit.go:384-388
+    DEC-2:1883  admit.go:417-435
+    DEC-2:1890  vector.go:647-649
+    DEC-2:2006  vector.go:31-81
+    DEC-2:2006  admit.go:139-147
+    DEC-2:2007  vector.go:83-91
+    DEC-2:2075  enums.go:93-103
+    DEC-2:2075  registry.go:11
+    DEC-2:2079  registry.go:26-28
+    DEC-2:2079  grade.go:561
+    DEC-2:2079  registry.go:173
+    DEC-2:2165  admit.go:109-110
+    DEC-2:2166  admit.go:139-147
+    DEC-2:2219  admit.go:109-110
+    DEC-2:2221  admit.go:139-147
+    DEC-2:2229  admit.go:109-110
+    DEC-2:2234  admit.go:160-170
+    DEC-2:2301  vector.go:542
+    DEC-2:2304  registry.go:34
+    DEC-2:2390  capabilities.json:2-3
+    DEC-2:2392  admit.go:149
+    DEC-2:2397  vector.go:31-81
+    DEC-2:2397  admit.go:139-147
+    DEC-2:2398  registry.go:34
+    DEC-2:2398  vector.go:542
+    DEC-2:2464  grade.go:373-379
+    DEC-2:2466  vector.go:1016-1018
+    DEC-2:2475  grade.go:478-480
+    DEC-2:2492  capability.go:262-300
+    DEC-2:2516  capability.go:262-278
+    DEC-2:2525  capability.go:245-247
+    DEC-2:2531  coverage_refusal_test.go:50
+    DEC-2:2546  capability.go:262-278
+    DEC-2:2557  grade.go:473-474
+    DEC-2:2586  vector.go:1006-1009
+    DEC-2:2687  enums.go:93-103
+    DEC-2:2687  registry.go:11
+    DEC-2:2917  vector.go:77-81
+    DEC-2:2917  admit.go:139-147
+    DEC-2:3031  capability.go:262-278
+    DEC-2:3033  coverage_refusal_test.go:50
+    DEC-2:3249  admit.go:109-110
+    DEC-2:3250  admit.go:139-147
+    DEC-2:3265  capability.go:262-278
+    DEC-2:3270  coverage_refusal_test.go:50
+    DEC-2:3378  admit.go:115-117
+    DEC-2:3384  vector.go:31-81
+    DEC-2:3384  admit.go:139-147
+    DEC-2:3407  admit.go:149
+    DEC-2:3444  grade.go:473-474
+BEYOND-EOF : 0
+
+NOTE: this instrument PRINTS what each line number resolves to. It cannot
+decide whether that text is what the citing sentence meant -- that is a
+human reading, and it is exactly the reading that has failed three times.
+Revision 8 removes the need for it by citing CONTENT; see 20-verify-anchors.py.

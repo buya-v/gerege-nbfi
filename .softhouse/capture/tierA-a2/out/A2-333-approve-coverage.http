@@ -1,0 +1,9 @@
+POST /loans/7?command=approve
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-26-approve.json
+body-wire-bytes-artefact: A2-333-approve-coverage.req
+body-sha256: 8d9e2aae49791c5a1427c93a93b14a673a0615a07c006cbf9e3506561897e1d6
+body-bytes: 93
+captured-at-utc: 2026-08-22T02:12:58Z

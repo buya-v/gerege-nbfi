@@ -1,0 +1,38 @@
+================================================================================================
+T263 -- DEATH CONDITIONS OF PARSE-FLOAT-EXEMPT.txt, caused not read
+================================================================================================
+  ok     CONTROL: rig as committed                            want=0 got=0  PASS printed: yes
+        register records printed in guard output: 12
+
+-- DEATH CONDITIONS (a REFUSE, exit 2, is the pass mark) --------------------------------------
+  ok     D1 unknown category FROZEN-T999                      want=2 got=2  
+  ok     D2 stale: no such call site (line 9999)              want=2 got=2  
+  ok     D3 target FIXED -> record now unnecessary            want=2 got=2  
+  ok     D4 pinned source text drifted                        want=2 got=2  
+  ok     D5 FROZEN file EDITED (sha256 moves)                 want=2 got=2  
+        guard says: DENIED  resolve7.py:24   FROZEN-T114        resolve7.py HAS BEEN EDITED (sha256 0d219a962063, manifest pins 61b80dabbfac) -- a file that is being edited is not frozen, so add parse_float instead
+  ok     D6 named committed evidence deleted                  want=2 got=2  
+  ok     D7 MANIFEST.sha256 removed                           want=2 got=2  
+  ok     D8 malformed record (4 fields not 6)                 want=2 got=2  
+  ok     D9a REPRODUCTION-T207 green while target unfixed     want=1 got=1  exit 1 expected: t263_target.py:3 is itself an undeclared violation
+        repro site graded DECLARED REPRODUCTION-T207: True
+  ok     D9b target FIXED -> T207 exemption must die          want=2 got=2  
+        guard says: DENIED  t263_repro.py:3    REPRODUCTION-T207  t263_target.py:3 NOW CARRIES parse_float -- the target was fixed, so this is no longer a faithful reproduction. Fix this site too.
+
+-- WIDENING ATTACKS (exit 0 is the finding) ---------------------------------------------------
+  ok     W1 exempt a BRAND-NEW file as FROZEN-T114            want=2 got=2  denied only because MANIFEST does not pin it
+  ok     W2 swap `produced:` for an unrelated existing file   want=0 got=0  guard only checks the path EXISTS, not that the file produced it
+  MISS   W3 `reproduces:` an ABSOLUTE path outside the repo   want=1 got=0  exit 0 would mean an out-of-tree file can license an in-tree float
+        repro2 graded DECLARED: True
+  ok     W4 register DELETED entirely                         want=1 got=1  fail-closed: the 6 declared sites become violations
+  ok     W5 register EMPTIED                                  want=1 got=1  fail-closed expected
+  MISS   W6 REGISTER ITSELF edited (its manifest digest now stale) want=2 got=0  the guard does not verify its own register's digest
+
+================================================================================================
+ARMS RUN: 17   ARMS WHERE THE GUARD DID NOT DO WHAT T263 EXPECTED: 2
+  widen  W3 `reproduces:` an ABSOLUTE path outside the repo   want=1 got=0  exit 0 would mean an out-of-tree file can license an in-tree float
+  widen  W6 REGISTER ITSELF edited (its manifest digest now stale) want=2 got=0  the guard does not verify its own register's digest
+
+Note on the pass mark: for `death` arms exit 2 is correct. For `widen` arms the
+`want` column records what a CORRECT guard should do; a mismatch there is a
+finding against the guard, not against this script.

@@ -1,0 +1,27 @@
+keys only in one run (line numbers moved -- the classifier's own file): [('.softhouse/reviews/t179-guard-classifier/guard_classify.py', 1277, 'os.replace'), ('.softhouse/reviews/t179-guard-classifier/guard_classify.py', 1383, 'os.replace')]
+sites inspected (both runs, identical key set): 465
+sites whose (scope,verdict) MOVED: 7
+  .softhouse/capture/charges/bin/attest-t40.py:465 open(mode='w')
+      UNKNOWN/UNGUARDED -> TRUSTED/UNGUARDED   tags=CAPTURE  chain=True
+      target: path
+  .softhouse/capture/pathb/t36/attest.py:255 open(mode='w')
+      UNKNOWN/UNGUARDED -> TRUSTED/UNGUARDED   tags=CAPTURE  chain=True
+      target: _stamp
+  .softhouse/capture/pathb/t36/attest.py:559 open(mode='w')
+      UNKNOWN/UNGUARDED -> TRUSTED/UNGUARDED   tags=CAPTURE  chain=True
+      target: path
+  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:145 open(mode='w')
+      UNKNOWN/UNGUARDED -> TRUSTED/UNGUARDED   tags=CAPTURE  chain=True
+      target: path
+  .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py:143 open(mode='w')
+      UNKNOWN/UNGUARDED -> TRUSTED/UNGUARDED   tags=CAPTURE  chain=True
+      target: path
+  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:232 open(mode='w')
+      UNKNOWN/UNGUARDED -> TRUSTED/UNGUARDED   tags=CAPTURE  chain=True
+      target: out
+  .softhouse/capture/t83-nonamortizing/src/run-port.py:155 open(mode='w')
+      UNKNOWN/UNGUARDED -> TRUSTED/UNGUARDED   tags=CAPTURE  chain=True
+      target: outp
+
+BEFORE UNKNOWN+UNGUARDED=83  TRUSTED+UNGUARDED=29  SCRATCH(any)=337  scope_via_chain=0
+AFTER  UNKNOWN+UNGUARDED=76  TRUSTED+UNGUARDED=36  SCRATCH(any)=337  scope_via_chain=7

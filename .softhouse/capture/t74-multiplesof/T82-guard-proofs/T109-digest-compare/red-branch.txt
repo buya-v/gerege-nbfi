@@ -1,0 +1,619 @@
+main tip     : 6d2a1e90f534a6b0252e8f4d2c0f27fd3fb65e18
+root commit  : 2355730cad23c92e51854329fb49822d1d80262e
+
+==============================================================================
+CASE: R1 — pin main's tip, correct digests (T103 case 5i: was a green 25/25)
+--- FORK-POINT-SHA directives fed to the rig -----------------------------------
+  | commit 6d2a1e90f534a6b0252e8f4d2c0f27fd3fb65e18
+  | sha256 d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3  .softhouse/capture/src/run-pass3i.sh
+  | sha256 27bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1  .softhouse/handoff/T74-promote-vectors.py
+  | sha256 e7aee91733596e12e48b8abf0070c0c3e2f9574cdf70189a273c491dfaceac3f  .softhouse/capture/t74-multiplesof/build-counterfactuals.py
+--- rig stdout -----------------------------------------------------------------
+--- rig stderr -----------------------------------------------------------------
+  2| FATAL: THE PINNED BASELINE IS NOT THE FORK POINT — a digest moved.
+  2|        file:      .softhouse/capture/src/run-pass3i.sh
+  2|        expected:  d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3   (pinned in /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA)
+  2|        observed:  3ca0d3f6380a74d32c8bca000f8587724927b4b55eb0c51b8e64be7cefe2a519   (extracted from commit 6d2a1e90f534a6b0252e8f4d2c0f27fd3fb65e18)
+  2| 
+  2|        The commit pinned as `commit` exists and is reachable, so the four T102 refusals
+  2|        pass it — but the bytes it holds for this file are NOT the pre-T82 bytes every
+  2|        COUNTERPROOF row is supposed to run against. The overwhelmingly likely cause is a
+  2|        pin naming a commit that CONTAINS THE FIX (`main`'s tip, a merge commit, or any
+  2|        descendant of T82), in which case every COUNTERPROOF would compare the fixed code
+  2|        against ITSELF and still print a green row. T103 measured exactly that: pinning
+  2|        main's tip scored a green 25/25 before this check existed.
+  2| 
+  2|        ZERO proof rows have run. Re-derive the pin; do not adjust the digests to match it:
+  2|          git merge-base main softhouse/T82-pass3i-defects
+  2|          git show <that-sha>:.softhouse/capture/src/run-pass3i.sh | shasum -a 256
+  2|        See T109 (this check), T103 F-3 (the hole), T102 (the literal pin), P-22.
+--------------------------------------------------------------------------------
+  exit                 : 2
+  stdout bytes         : 0
+  proof-row artefacts  : 0 (att-*/cf-* written by an expect row)
+  scratch entries      : 4
+
+==============================================================================
+CASE: R1b — main's tip WITH digests recomputed from it (the residual hole, stated not hidden)
+--- FORK-POINT-SHA directives fed to the rig -----------------------------------
+  | commit 6d2a1e90f534a6b0252e8f4d2c0f27fd3fb65e18
+  | sha256 3ca0d3f6380a74d32c8bca000f8587724927b4b55eb0c51b8e64be7cefe2a519  .softhouse/capture/src/run-pass3i.sh
+  | sha256 efcfcfa59305d5da67a2149cace4a9fffb991daff5ad92fe7fe5c8e0595a94e4  .softhouse/handoff/T74-promote-vectors.py
+  | sha256 b1e9f6087f93c2b0b1606d4631d5d97e96dd72fbbebf96baaea1dd89190ed9f1  .softhouse/capture/t74-multiplesof/build-counterfactuals.py
+--- rig stdout -----------------------------------------------------------------
+  1| T82 guard proofs
+  1| run-pass3i.sh          sha256 3ca0d3f6380a74d32c8bca000f8587724927b4b55eb0c51b8e64be7cefe2a519  [provenance — code under test, unpinned on purpose]
+  1| build-counterfactuals  sha256 b1e9f6087f93c2b0b1606d4631d5d97e96dd72fbbebf96baaea1dd89190ed9f1  [provenance — code under test, unpinned on purpose]
+  1| promote-vectors        sha256 efcfcfa59305d5da67a2149cace4a9fffb991daff5ad92fe7fe5c8e0595a94e4  [provenance — code under test, unpinned on purpose]
+  1| capture under test     sha256 e0ea0bcfa1e37914fd5eec68040d90319d2d343dc50d2ad30d90f4cd9acde430  [MATCHES PIN]
+  1| fork-point (BASE)      6d2a1e90f534a6b0252e8f4d2c0f27fd3fb65e18  [LITERAL, from FORK-POINT-SHA — never a computed ref]
+  1| BASE run-pass3i.sh     sha256 3ca0d3f6380a74d32c8bca000f8587724927b4b55eb0c51b8e64be7cefe2a519  [MATCHES PIN]
+  1| BASE promote-vectors   sha256 efcfcfa59305d5da67a2149cace4a9fffb991daff5ad92fe7fe5c8e0595a94e4  [MATCHES PIN]
+  1| BASE build-counterfact sha256 b1e9f6087f93c2b0b1606d4631d5d97e96dd72fbbebf96baaea1dd89190ed9f1  [MATCHES PIN]
+  1| 
+  1| ==============================================================================
+  1| CONTROL — committed pass-3i capture through the corrected precondition block
+  1|   expecting exit 0
+  1| ------------------------------------------------------------------------------
+  1|   | # precondition block: lines 267..707 of run-pass3i.sh, 441 lines, sha256 ada3a43988d544dc620c18b9e1b8aa4e2b04e2170f2f8dad3fd32d4255d57269  [MATCHES PIN]
+  1|   | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/out/capture-prod3i-raw.json
+  1|   | validation OK — 36 captures, attestation present, effective MathContext (19, HALF_UP ordinal 4)
+  1|   | calibration OK — P-CAL reproduced committed P-CAL (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/out/capture-prod3b-raw.json) at precision 12, inputs and observed both identical
+  1|   | calibration OK — P-CAL-DRIFTF reproduced committed P-DRIFT-F (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/out/capture-prod3e-raw.json) at precision 19, inputs and observed both identical
+  1|   | calibration OK — P-CAL-EMI6 reproduced committed P-EMI-6-1M014632 (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/out/capture-prod3c-raw.json) at precision 19, inputs and observed both identical
+  1|   | calibration OK — P-CAL-LATQ0a reproduced committed P-LAT-Q0a (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/out/capture-prod3e-raw.json) at precision 19, inputs and observed both identical
+  1|   | calibration OK — P-CAL-MNT50M reproduced committed P-MNT-50M (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  1|   | calibration OK — P-CAL-MNT5M reproduced committed P-MNT-5M (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  1|   | calibration OK — P-CAL-P00 reproduced committed P-00 (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  1|   | calibration OK — P-CAL-ZPA reproduced committed T64-ZP-A (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/out/capture-prod3g-raw.json) at precision 19, inputs and observed both identical
+  1|   | calibration OK — P-CAL-ZPB reproduced committed T64-ZP-B (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/out/capture-prod3g-raw.json) at precision 19, inputs and observed both identical
+  1|   | captures canonical sha256: 41bcf7306f691b730d17ed7fa08131b16052d737773c80d12f5abacf6b7d581f
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 0 — AS EXPECTED
+  1|   MUTATION: script:  EXPECTED_IDS += 'T82-PROOF-UNREGISTERED-CASE'  (CASE_PRECISION deliberately NOT updated)
+  1|   MUTATION: capture: appended a clone of T74-E-P4 under id 'T82-PROOF-UNREGISTERED-CASE', money untouched
+  1| 
+  1| ==============================================================================
+  1| E-1 GUARD 17a — unregistered id must FAIL THE RUN (the claim that was unreachable)
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | # precondition block: lines 267..708 of run-pass3i.sh, 442 lines, sha256 eba8acc1b68c230eabfe2a61109ea0d1ecaca8f0c491c5fda149f3d101c779cd  [unpinned — a MUTATED script is deliberately under test]
+  1|   | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/17a-capture.json
+  1|   | RUN FAILED: no expected MathContext precision registered for ['T82-PROOF-UNREGISTERED-CASE']. Add the case to CASE_PRECISION by hand — there is deliberately no default, because a defaulted precision is how a discrimination probe gets validated as a parity candidate.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1|   MUTATION: script:  EXPECTED_IDS += 'T82-PROOF-UNREGISTERED-CASE'  (CASE_PRECISION deliberately NOT updated)
+  1|   MUTATION: capture: appended a clone of T74-E-P4 under id 'T82-PROOF-UNREGISTERED-CASE', money untouched
+  1| 
+  1| ==============================================================================
+  1| E-1 COUNTERPROOF — the SAME unregistered id through the FORK POINT'S REAL pre-T82 bytes
+  1|   expecting exit 0
+  1| ------------------------------------------------------------------------------
+  1|   | # precondition block: lines 267..708 of run-pass3i.sh, 442 lines, sha256 eba8acc1b68c230eabfe2a61109ea0d1ecaca8f0c491c5fda149f3d101c779cd  [unpinned — a MUTATED script is deliberately under test]
+  1|   | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/17a-main-capture.json
+  1|   | RUN FAILED: no expected MathContext precision registered for ['T82-PROOF-UNREGISTERED-CASE']. Add the case to CASE_PRECISION by hand — there is deliberately no default, because a defaulted precision is how a discrimination probe gets validated as a parity candidate.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — *** NOT WHAT WAS EXPECTED (0) ***
+  1|   MUTATION: script:  CASE_PRECISION += 'T82-PROOF-STALE-ENTRY', an id this run does not capture
+  1| 
+  1| ==============================================================================
+  1| E-1 GUARD 17b — stale CASE_PRECISION entry must FAIL THE RUN
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | # precondition block: lines 267..708 of run-pass3i.sh, 442 lines, sha256 da80199d21f20e447609443704d842070500a55f9c62090c08899da1bc94eea7  [unpinned — a MUTATED script is deliberately under test]
+  1|   | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/out/capture-prod3i-raw.json
+  1|   | RUN FAILED: CASE_PRECISION registers ['T82-PROOF-STALE-ENTRY'], which this run does not capture. A table that outlives the cases it describes stops being a check.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1|   MUTATION: capture: T74-E-P4 mathContextPrecision 19 -> 12 (CASE_PRECISION registers it at 19); money untouched
+  1| 
+  1| ==============================================================================
+  1| E-1 GUARD 17c — a case at a precision its table entry forbids must FAIL THE RUN
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | # precondition block: lines 267..707 of run-pass3i.sh, 441 lines, sha256 ada3a43988d544dc620c18b9e1b8aa4e2b04e2170f2f8dad3fd32d4255d57269  [MATCHES PIN]
+  1|   | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/17c-capture.json
+  1|   | RUN FAILED: capture validation:
+  1|   |   T74-E-P4: must run at precision 19, got 12
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1|   MUTATION: script:  CASE_PRECISION['T74-A0-DP0-NONE'] 19 -> 12
+  1|   MUTATION: capture: T74-A0-DP0-NONE mathContextPrecision 19 -> 12, money untouched
+  1|   MUTATION:          so guard 17 is SATISFIED and guard 18 is the one that must catch it
+  1| 
+  1| ==============================================================================
+  1| E-2 GUARD 18(a) — a probe that is not named `-p12` must FAIL THE RUN
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | # precondition block: lines 267..707 of run-pass3i.sh, 441 lines, sha256 b640746421d90062f98e289531208af6102cf9b3e66214d3860d2331e17a4768  [unpinned — a MUTATED script is deliberately under test]
+  1|   | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/18a-capture.json
+  1|   | RUN FAILED: the cases named `-p12` are ['T74-E-P340-p12', 'T74-E-P4-p12', 'T74-E-P426-p12', 'T74-E-P59-p12', 'T74-E-P6940-p12', 'T74-E-P72-p12'] but the cases actually running below precision 19 are ['T74-A0-DP0-NONE', 'T74-E-P340-p12', 'T74-E-P4-p12', 'T74-E-P426-p12', 'T74-E-P59-p12', 'T74-E-P6940-p12', 'T74-E-P72-p12']. An id that promises a precision it does not run is worse than no id at all.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1|   MUTATION: script:  CASE_PRECISION['T74-E-P59-p12'] 12 -> 19
+  1|   MUTATION: capture: T74-E-P59-p12 mathContextPrecision 12 -> 19, money untouched
+  1|   MUTATION:          guard 17 is SATISFIED; the id promises 12 and runs 19, which only 18 sees
+  1| 
+  1| ==============================================================================
+  1| E-2 GUARD 18(b) — a `-p12` id that does NOT run below 19 must FAIL THE RUN
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | # precondition block: lines 267..707 of run-pass3i.sh, 441 lines, sha256 1cc284d708815279687fc779e09164a4f4577799f5a76566684293ace47897f5  [unpinned — a MUTATED script is deliberately under test]
+  1|   | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/18b-capture.json
+  1|   | RUN FAILED: the cases named `-p12` are ['T74-E-P340-p12', 'T74-E-P4-p12', 'T74-E-P426-p12', 'T74-E-P59-p12', 'T74-E-P6940-p12', 'T74-E-P72-p12'] but the cases actually running below precision 19 are ['T74-E-P340-p12', 'T74-E-P4-p12', 'T74-E-P426-p12', 'T74-E-P6940-p12', 'T74-E-P72-p12']. An id that promises a precision it does not run is worse than no id at all.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1| 
+  1| ==============================================================================
+  1| E-3 CONTROL — the committed capture, both arms HALF_UP, must still PASS
+  1|   expecting exit 0
+  1| ------------------------------------------------------------------------------
+  1|   | T74-E-P4     23/146 graded cells diverge; widest 1 minor at period[17].principal_minor (observed 10 vs 11); total interest 1.14 vs 1.13
+  1|   | T74-E-P59    27/146 graded cells diverge; widest 1 minor at period[13].principal_minor (observed 151 vs 150); total interest 16.51 vs 16.52
+  1|   | T74-E-P72     2/146 graded cells diverge; widest 1 minor at period[36].interest_minor (observed 4 vs 3); total interest 20.14 vs 20.13
+  1|   | T74-E-P340   25/146 graded cells diverge; widest 1 minor at period[15].principal_minor (observed 891 vs 890); total interest 95.15 vs 95.16
+  1|   | T74-E-P426   39/146 graded cells diverge; widest 2 minor at period[8].outstanding_principal_minor (observed 34879 vs 34881); total interest 119.18 vs 119.20
+  1|   | T74-E-P6940  18/146 graded cells diverge; widest 1 minor at period[22].principal_minor (observed 20030 vs 20029); total interest 1942.65 vs 1942.66
+  1|   | 
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/cf-legit.json
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 0 — AS EXPECTED
+  1|   MUTATION: capture: rounding mode HALF_UP -> HALF_DOWN on ['T74-E-P4', 'T74-E-P4-p12']; money untouched
+  1| 
+  1| ==============================================================================
+  1| E-3 GUARD — BOTH arms at the non-ratified HALF_DOWN must now FAIL
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | T74-E-P4/T74-E-P4-p12: {'T74-E-P4': 'HALF_DOWN', 'T74-E-P4-p12': 'HALF_DOWN'} is not the ratified HALF_UP rounding mode. A counterfactual measured at a mode production never runs describes a port defect nobody has, and this pair's whole claim is that the ONLY difference between its arms is precision 19 against 12.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1| 
+  1| ==============================================================================
+  1| E-3 COUNTERPROOF — the SAME both-arms capture through the FORK POINT'S chained comparison
+  1|   expecting exit 0
+  1| ------------------------------------------------------------------------------
+  1|   | T74-E-P4/T74-E-P4-p12: {'T74-E-P4': 'HALF_DOWN', 'T74-E-P4-p12': 'HALF_DOWN'} is not the ratified HALF_UP rounding mode. A counterfactual measured at a mode production never runs describes a port defect nobody has, and this pair's whole claim is that the ONLY difference between its arms is precision 19 against 12.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — *** NOT WHAT WAS EXPECTED (0) ***
+  1|   MUTATION: capture: rounding mode HALF_UP -> HALF_DOWN on ['T74-E-P4-p12']; money untouched
+  1| 
+  1| ==============================================================================
+  1| E-3 GUARD — ONE arm at HALF_DOWN must keep FAILING (no regression)
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | T74-E-P4 vs T74-E-P4-p12 differ in more than the precision: ['mathContextRoundingMode', 'mathContextRoundingModeOrdinal']
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1| 
+  1| ==============================================================================
+  1| D-1 GUARD — a capture whose daysInMonth/daysInYear are not 30/360 must be REFUSED
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: daysInMonth/daysInYear -> (ACTUAL, DAYS_365), a pair the contract does not name. The OLD code wrote the constant "FIXED_30_360" regardless.
+  1|   | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: observed (daysInMonth, daysInYear) = ('ACTUAL', 'DAYS_365'), which is not a day-count convention the frozen contract names (contract.go:359-360 maps only [('ACTUAL', 'ACTUAL'), ('DAYS_30', 'DAYS_360')]). Refusing to write a day_count this capture does not support.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1| 
+  1| ==============================================================================
+  1| D-1 COUNTERPROOF — the FORK POINT accepts it and writes the hard-coded FIXED_30_360
+  1|   expecting exit 0
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: daysInMonth/daysInYear -> (ACTUAL, DAYS_365), a pair the contract does not name. The OLD code wrote the constant "FIXED_30_360" regardless.
+  1|   | PROMOTER: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: observed (daysInMonth, daysInYear) = ('ACTUAL', 'DAYS_365'), which is not a day-count convention the frozen contract names (contract.go:359-360 maps only [('ACTUAL', 'ACTUAL'), ('DAYS_30', 'DAYS_360')]). Refusing to write a day_count this capture does not support.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — *** NOT WHAT WAS EXPECTED (0) ***
+  1| 
+  1| ==============================================================================
+  1| D-1 GUARD — a capture with a NON-ZERO downPaymentPercentage must be REFUSED
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: downPaymentPercentage -> "25". The OLD code wrote {0, 1} regardless, so the vector would have graded a schedule the request did not describe.
+  1|   | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: downPaymentEnabled=False downPaymentPercentage='25'. This script promotes only the no-down-payment shape; a down payment moves the first period's principal and must be captured and promoted as a shape of its own.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1| 
+  1| ==============================================================================
+  1| D-1 COUNTERPROOF — the FORK POINT accepts it and writes the hard-coded {0, 1}
+  1|   expecting exit 0
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: downPaymentPercentage -> "25". The OLD code wrote {0, 1} regardless, so the vector would have graded a schedule the request did not describe.
+  1|   | PROMOTER: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: downPaymentEnabled=False downPaymentPercentage='25'. This script promotes only the no-down-payment shape; a down payment moves the first period's principal and must be captured and promoted as a shape of its own.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — *** NOT WHAT WAS EXPECTED (0) ***
+  1| 
+  1| ==============================================================================
+  1| D-1 GUARD — a capture with downPaymentEnabled true must be REFUSED
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: downPaymentEnabled -> true, percentage still "0".
+  1|   | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: downPaymentEnabled=True downPaymentPercentage='0'. This script promotes only the no-down-payment shape; a down payment moves the first period's principal and must be captured and promoted as a shape of its own.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1| 
+  1| ==============================================================================
+  1| D-2 GUARD — a capture with NO repayment-every key at all must be REFUSED
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: both `repaymentEvery` and `repaymentFrequency` removed. The OLD `i.get("repaymentEvery", i.get("repaymentFrequency"))` returned None and wrote a null interval into the vector. (Note: `repaymentEvery` is absent from ALL 36 committed cases, so that fallback was load-bearing on every single one.)
+  1|   | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: the capture records neither `repaymentEvery` nor `repaymentFrequency`. The repayment interval is not defaultable — a vector with the wrong interval grades a different loan and passes.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1| 
+  1| ==============================================================================
+  1| D-2 COUNTERPROOF — the FORK POINT accepts it and writes a NULL repayment interval
+  1|   expecting exit 0
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: both `repaymentEvery` and `repaymentFrequency` removed. The OLD `i.get("repaymentEvery", i.get("repaymentFrequency"))` returned None and wrote a null interval into the vector. (Note: `repaymentEvery` is absent from ALL 36 committed cases, so that fallback was load-bearing on every single one.)
+  1|   | PROMOTER: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: the capture records neither `repaymentEvery` nor `repaymentFrequency`. The repayment interval is not defaultable — a vector with the wrong interval grades a different loan and passes.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — *** NOT WHAT WAS EXPECTED (0) ***
+  1| 
+  1| ==============================================================================
+  1| D-2 GUARD — a capture whose two repayment-every keys DISAGREE must be REFUSED
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: `repaymentEvery` = 3 against the recorded `repaymentFrequency` = 1. The OLD code silently preferred `repaymentEvery`.
+  1|   | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: `repaymentEvery` and `repaymentFrequency` disagree ({'repaymentEvery': 3, 'repaymentFrequency': 1}). The capture cannot say which interval the oracle actually ran.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1| 
+  1| ==============================================================================
+  1| D-2 GUARD — a PAYABLE row with an ABSENT periodNumber must be REFUSED (the `or 0` defect)
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: period 1's `periodNumber` KEY DELETED on a PAYABLE row. THIS IS THE DEFECT `or 0` ACTUALLY CAUSED: the old code evaluated `None or 0`, wrote installment_number 0, filed it under unrecorded_fields and promoted the vector without a word. An absent installment number on a payable row is a broken capture, not a value.
+  1|   | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: period[1] is a payable REPAYMENT row with NO periodNumber. The old form wrote 0 here via `p.get("periodNumber") or 0` and moved on, which is a missing input wearing a legitimate value's clothes.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1| 
+  1| ==============================================================================
+  1| D-2 COUNTERPROOF — the FORK POINT accepts it, writes installment_number 0 and promotes six vectors
+  1|   expecting exit 0
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: period 1's `periodNumber` KEY DELETED on a PAYABLE row. THIS IS THE DEFECT `or 0` ACTUALLY CAUSED: the old code evaluated `None or 0`, wrote installment_number 0, filed it under unrecorded_fields and promoted the vector without a word. An absent installment number on a payable row is a broken capture, not a value.
+  1|   | PROMOTER: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: period[1] is a payable REPAYMENT row with NO periodNumber. The old form wrote 0 here via `p.get("periodNumber") or 0` and moved on, which is a missing input wearing a legitimate value's clothes.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — *** NOT WHAT WAS EXPECTED (0) ***
+  1| 
+  1| ==============================================================================
+  1| D-2 GUARD — a NON-PAYABLE row that CARRIES a periodNumber must be REFUSED
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: every DISBURSEMENT row given `periodNumber: 0`. The withdrawal of that cell is justified by the oracle emitting no periodNumber for a non-payable row; if one appears, the rig has changed and withdrawing the cell would be wrong.
+  1|   | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: period[0] is a DISBURSEMENT row but carries periodNumber 0. A non-payable row's installment number is fixed at 0 by the contract (contract.go:1509-1510); an observed one means the rig changed and the withdrawal below would be wrong.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1| 
+  1| ==============================================================================
+  1| D-2 COUNTERPROOF — the FORK POINT accepts that too
+  1|   expecting exit 0
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: every DISBURSEMENT row given `periodNumber: 0`. The withdrawal of that cell is justified by the oracle emitting no periodNumber for a non-payable row; if one appears, the rig has changed and withdrawing the cell would be wrong.
+  1|   | PROMOTER: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: period[0] is a DISBURSEMENT row but carries periodNumber 0. A non-payable row's installment number is fixed at 0 by the contract (contract.go:1509-1510); an observed one means the rig changed and the withdrawal below would be wrong.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — *** NOT WHAT WAS EXPECTED (0) ***
+  1| 
+  1| ==============================================================================
+  1| D-2 GUARD — a non-integer periodNumber must be REFUSED, not coerced
+  1|   expecting exit 1
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     GUARD
+  1|   | MUTATION: period 1's periodNumber -> the string "1". Must be refused, not coerced.
+  1|   | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | T74-E-P4: period[1] periodNumber is '1'; expected a non-negative integer. This script will not coerce it.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 1 — AS EXPECTED
+  1| 
+  1| ==============================================================================
+  1| D-2 REGRESSION — a legitimate periodNumber 0 stays green, and the FORK POINT emits the SAME cells
+  1|   expecting exit 0
+  1| ------------------------------------------------------------------------------
+  1|   | KIND:     REGRESSION
+  1|   | MUTATION: period 1's periodNumber -> 0, a LEGITIMATE zero. REGRESSION CONTROL, NOT A GUARD PROOF: the PRE-FIX code decided the VALUE with `or 0` (:255) but the WITHDRAWAL with a SEPARATE `is None` test (:260-261), so a recorded 0 already survived un-withdrawn there. This must stay green on BOTH codebases and is proved identical between them below. It demonstrates that the rewrite BROKE NOTHING; it demonstrates NOTHING about the `or 0` defect, and the guard that does is `period-number-absent-payable`.
+  1|   | PROMOTER: .softhouse/handoff/T74-promote-vectors.py (this branch)
+  1|   |           vectors written to a SCRATCH dir, never to the store
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-under-test/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json  (margin 1 minor at period[17].principal_minor, 23/146 graded cells move)
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-under-test/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json  (margin 1 minor at period[13].principal_minor, 27/146 graded cells move)
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-under-test/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json  (margin 1 minor at period[36].interest_minor, 2/146 graded cells move)
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-under-test/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json  (margin 1 minor at period[15].principal_minor, 25/146 graded cells move)
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-under-test/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json  (margin 2 minor at period[8].outstanding_principal_minor, 39/146 graded cells move)
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-under-test/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json  (margin 1 minor at period[22].principal_minor, 18/146 graded cells move)
+  1|   | 
+  1|   | 6 vectors promoted from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/capture-under-test.json (sha256 7efe8970731782b795682f6fa05dee1d72ab56151cd6fda1a1a088eeb668077a)
+  1|   | NOTHING was promoted from capture groups A, B, C or D — see this script's docstring.
+  1|   | 
+  1|   | ASSERTIONS on the regenerated T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json:
+  1|   |   payable row 1 installment_number = 0  unrecorded_fields = []
+  1|   |   DISBURSEMENT  installment_number = 0  unrecorded_fields = ['installment_number', 'interest_minor']
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-base/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json  (margin 1 minor at period[17].principal_minor, 23/146 graded cells move)
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-base/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json  (margin 1 minor at period[13].principal_minor, 27/146 graded cells move)
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-base/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json  (margin 1 minor at period[36].interest_minor, 2/146 graded cells move)
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-base/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json  (margin 1 minor at period[15].principal_minor, 25/146 graded cells move)
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-base/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json  (margin 2 minor at period[8].outstanding_principal_minor, 39/146 graded cells move)
+  1|   | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/vectors-base/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json  (margin 1 minor at period[22].principal_minor, 18/146 graded cells move)
+  1|   | 
+  1|   | 6 vectors promoted from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-period-number-zero/capture-base.json (sha256 7efe8970731782b795682f6fa05dee1d72ab56151cd6fda1a1a088eeb668077a)
+  1|   | NOTHING was promoted from capture groups A, B, C or D — see this script's docstring.
+  1|   |   expect.periods identical between this branch and the FORK POINT: 6, differing: 0
+  1|   |   -> CONFIRMED A REGRESSION CONTROL, NOT A GUARD PROOF. Both codebases emit the
+  1|   |      same cells, because the pre-fix code decided the VALUE with `or 0` (:255) and
+  1|   |      the WITHDRAWAL with a separate `is None` test (:260-261). NO discriminating power
+  1|   |      over the `or 0` defect, and it no longer claims any. See period-number-absent-payable.
+  1| ------------------------------------------------------------------------------
+  1|   RESULT: exit 0 — AS EXPECTED
+  1| 
+  1| ==============================================================================
+  1| T82 guard proofs: 18 as expected, 7 not as expected
+  1| ==============================================================================
+--- rig stderr -----------------------------------------------------------------
+--------------------------------------------------------------------------------
+  exit                 : 1
+  stdout bytes         : 33843
+  proof-row artefacts  : 2 (att-*/cf-* written by an expect row)
+  scratch entries      : 31
+
+==============================================================================
+CASE: R2 — T102-era bare sha (correct commit, NO digest pins) must be refused
+--- FORK-POINT-SHA directives fed to the rig -----------------------------------
+  | 8da4b831b96a146c2b46ad34d85ed098395de160
+--- rig stdout -----------------------------------------------------------------
+--- rig stderr -----------------------------------------------------------------
+  2| FATAL: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA — unknown directive '8da4b831b96a146c2b46ad34d85ed098395de160'. A BARE SHA on its own line is the T102-era format and is REFUSED deliberately: it carries no digest pins, which is exactly the hole T109 closed
+  2|        Refusing to guess a baseline; this rig has NO fallback. A counterproof taken
+  2|        against a silently-wrong baseline prints a green row for a comparison that never
+  2|        happened. See T102 (the literal pin) and T109 (the digest pins).
+  2|        Required format, each directive EXACTLY ONCE:
+  2|          commit <40 lowercase hex>
+  2|          sha256 <64 lowercase hex>  <repo-relative path>   x3, one per extracted file
+--------------------------------------------------------------------------------
+  exit                 : 2
+  stdout bytes         : 0
+  proof-row artefacts  : 0 (att-*/cf-* written by an expect row)
+  scratch entries      : 0
+
+==============================================================================
+CASE: R3 — correct commit, promote-vectors digest altered by ONE nibble
+--- FORK-POINT-SHA directives fed to the rig -----------------------------------
+  | commit 8da4b831b96a146c2b46ad34d85ed098395de160
+  | sha256 d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3  .softhouse/capture/src/run-pass3i.sh
+  | sha256 00bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1  .softhouse/handoff/T74-promote-vectors.py
+  | sha256 e7aee91733596e12e48b8abf0070c0c3e2f9574cdf70189a273c491dfaceac3f  .softhouse/capture/t74-multiplesof/build-counterfactuals.py
+--- rig stdout -----------------------------------------------------------------
+--- rig stderr -----------------------------------------------------------------
+  2| FATAL: THE PINNED BASELINE IS NOT THE FORK POINT — a digest moved.
+  2|        file:      .softhouse/handoff/T74-promote-vectors.py
+  2|        expected:  00bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1   (pinned in /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA)
+  2|        observed:  27bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1   (extracted from commit 8da4b831b96a146c2b46ad34d85ed098395de160)
+  2| 
+  2|        The commit pinned as `commit` exists and is reachable, so the four T102 refusals
+  2|        pass it — but the bytes it holds for this file are NOT the pre-T82 bytes every
+  2|        COUNTERPROOF row is supposed to run against. The overwhelmingly likely cause is a
+  2|        pin naming a commit that CONTAINS THE FIX (`main`'s tip, a merge commit, or any
+  2|        descendant of T82), in which case every COUNTERPROOF would compare the fixed code
+  2|        against ITSELF and still print a green row. T103 measured exactly that: pinning
+  2|        main's tip scored a green 25/25 before this check existed.
+  2| 
+  2|        ZERO proof rows have run. Re-derive the pin; do not adjust the digests to match it:
+  2|          git merge-base main softhouse/T82-pass3i-defects
+  2|          git show <that-sha>:.softhouse/handoff/T74-promote-vectors.py | shasum -a 256
+  2|        See T109 (this check), T103 F-3 (the hole), T102 (the literal pin), P-22.
+--------------------------------------------------------------------------------
+  exit                 : 2
+  stdout bytes         : 0
+  proof-row artefacts  : 0 (att-*/cf-* written by an expect row)
+  scratch entries      : 4
+
+==============================================================================
+CASE: R3b — correct commit, build-counterfactuals digest altered (the third file, never printed before T109)
+--- FORK-POINT-SHA directives fed to the rig -----------------------------------
+  | commit 8da4b831b96a146c2b46ad34d85ed098395de160
+  | sha256 d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3  .softhouse/capture/src/run-pass3i.sh
+  | sha256 27bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1  .softhouse/handoff/T74-promote-vectors.py
+  | sha256 f7aee91733596e12e48b8abf0070c0c3e2f9574cdf70189a273c491dfaceac3f  .softhouse/capture/t74-multiplesof/build-counterfactuals.py
+--- rig stdout -----------------------------------------------------------------
+--- rig stderr -----------------------------------------------------------------
+  2| FATAL: THE PINNED BASELINE IS NOT THE FORK POINT — a digest moved.
+  2|        file:      .softhouse/capture/t74-multiplesof/build-counterfactuals.py
+  2|        expected:  f7aee91733596e12e48b8abf0070c0c3e2f9574cdf70189a273c491dfaceac3f   (pinned in /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA)
+  2|        observed:  e7aee91733596e12e48b8abf0070c0c3e2f9574cdf70189a273c491dfaceac3f   (extracted from commit 8da4b831b96a146c2b46ad34d85ed098395de160)
+  2| 
+  2|        The commit pinned as `commit` exists and is reachable, so the four T102 refusals
+  2|        pass it — but the bytes it holds for this file are NOT the pre-T82 bytes every
+  2|        COUNTERPROOF row is supposed to run against. The overwhelmingly likely cause is a
+  2|        pin naming a commit that CONTAINS THE FIX (`main`'s tip, a merge commit, or any
+  2|        descendant of T82), in which case every COUNTERPROOF would compare the fixed code
+  2|        against ITSELF and still print a green row. T103 measured exactly that: pinning
+  2|        main's tip scored a green 25/25 before this check existed.
+  2| 
+  2|        ZERO proof rows have run. Re-derive the pin; do not adjust the digests to match it:
+  2|          git merge-base main softhouse/T82-pass3i-defects
+  2|          git show <that-sha>:.softhouse/capture/t74-multiplesof/build-counterfactuals.py | shasum -a 256
+  2|        See T109 (this check), T103 F-3 (the hole), T102 (the literal pin), P-22.
+--------------------------------------------------------------------------------
+  exit                 : 2
+  stdout bytes         : 0
+  proof-row artefacts  : 0 (att-*/cf-* written by an expect row)
+  scratch entries      : 4
+
+==============================================================================
+CASE: R4 — no `commit` directive
+--- FORK-POINT-SHA directives fed to the rig -----------------------------------
+  | sha256 d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3  .softhouse/capture/src/run-pass3i.sh
+  | sha256 27bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1  .softhouse/handoff/T74-promote-vectors.py
+  | sha256 e7aee91733596e12e48b8abf0070c0c3e2f9574cdf70189a273c491dfaceac3f  .softhouse/capture/t74-multiplesof/build-counterfactuals.py
+--- rig stdout -----------------------------------------------------------------
+--- rig stderr -----------------------------------------------------------------
+  2| FATAL: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA — no `commit` directive found
+  2|        Refusing to guess a baseline; this rig has NO fallback. A counterproof taken
+  2|        against a silently-wrong baseline prints a green row for a comparison that never
+  2|        happened. See T102 (the literal pin) and T109 (the digest pins).
+  2|        Required format, each directive EXACTLY ONCE:
+  2|          commit <40 lowercase hex>
+  2|          sha256 <64 lowercase hex>  <repo-relative path>   x3, one per extracted file
+--------------------------------------------------------------------------------
+  exit                 : 2
+  stdout bytes         : 0
+  proof-row artefacts  : 0 (att-*/cf-* written by an expect row)
+  scratch entries      : 0
+
+==============================================================================
+CASE: R5 — two `commit` directives (F-6: a prepend/append must not silently re-baseline)
+--- FORK-POINT-SHA directives fed to the rig -----------------------------------
+  | commit 8da4b831b96a146c2b46ad34d85ed098395de160
+  | commit 6d2a1e90f534a6b0252e8f4d2c0f27fd3fb65e18
+  | sha256 d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3  .softhouse/capture/src/run-pass3i.sh
+  | sha256 27bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1  .softhouse/handoff/T74-promote-vectors.py
+  | sha256 e7aee91733596e12e48b8abf0070c0c3e2f9574cdf70189a273c491dfaceac3f  .softhouse/capture/t74-multiplesof/build-counterfactuals.py
+--- rig stdout -----------------------------------------------------------------
+--- rig stderr -----------------------------------------------------------------
+  2| FATAL: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA — more than one `commit` directive (T103's F-6: an edit that PREPENDS or APPENDS a second sha must not silently re-baseline this rig)
+  2|        Refusing to guess a baseline; this rig has NO fallback. A counterproof taken
+  2|        against a silently-wrong baseline prints a green row for a comparison that never
+  2|        happened. See T102 (the literal pin) and T109 (the digest pins).
+  2|        Required format, each directive EXACTLY ONCE:
+  2|          commit <40 lowercase hex>
+  2|          sha256 <64 lowercase hex>  <repo-relative path>   x3, one per extracted file
+--------------------------------------------------------------------------------
+  exit                 : 2
+  stdout bytes         : 0
+  proof-row artefacts  : 0 (att-*/cf-* written by an expect row)
+  scratch entries      : 0
+
+==============================================================================
+CASE: R6 — repo ROOT commit: valid, but lacks the baseline paths (F-4: was a misdiagnosable 18/7)
+--- FORK-POINT-SHA directives fed to the rig -----------------------------------
+  | commit 2355730cad23c92e51854329fb49822d1d80262e
+  | sha256 d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3  .softhouse/capture/src/run-pass3i.sh
+  | sha256 27bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1  .softhouse/handoff/T74-promote-vectors.py
+  | sha256 e7aee91733596e12e48b8abf0070c0c3e2f9574cdf70189a273c491dfaceac3f  .softhouse/capture/t74-multiplesof/build-counterfactuals.py
+--- rig stdout -----------------------------------------------------------------
+--- rig stderr -----------------------------------------------------------------
+  2| FATAL: could not extract '.softhouse/capture/src/run-pass3i.sh' from the pinned baseline 2355730cad23c92e51854329fb49822d1d80262e.
+  2|        git: fatal: path '.softhouse/capture/src/run-pass3i.sh' exists on disk, but not in '2355730cad23c92e51854329fb49822d1d80262e'
+  2|        The pinned commit must CONTAIN every file the counterproofs run against. A commit
+  2|        that predates these paths would otherwise leave three EMPTY baseline files and
+  2|        score 18/7 — indistinguishable from the merge-state defect. See T103 F-4.
+--------------------------------------------------------------------------------
+  exit                 : 2
+  stdout bytes         : 0
+  proof-row artefacts  : 0 (att-*/cf-* written by an expect row)
+  scratch entries      : 2
+
+==============================================================================
+CASE: T102-1 — FORK-POINT-SHA missing
+--- FORK-POINT-SHA directives fed to the rig -----------------------------------
+grep: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA: No such file or directory
+--- rig stdout -----------------------------------------------------------------
+--- rig stderr -----------------------------------------------------------------
+  2| FATAL: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA is missing.
+  2|        The counterproof baseline is a LITERAL sha and this rig has NO computed fallback:
+  2|        `main:`, `merge-base main HEAD` and every other moving ref resolve to code that
+  2|        CONTAINS THE FIX once this branch is merged. Restore the file; do not substitute a
+  2|        computed ref. See T102.
+--------------------------------------------------------------------------------
+  exit                 : 2
+  stdout bytes         : 0
+  proof-row artefacts  : 0 (att-*/cf-* written by an expect row)
+  scratch entries      : 0
+
+==============================================================================
+CASE: T102-2 — non-hex commit value
+--- FORK-POINT-SHA directives fed to the rig -----------------------------------
+  | commit not-a-sha
+--- rig stdout -----------------------------------------------------------------
+--- rig stderr -----------------------------------------------------------------
+  2| FATAL: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA — `commit` value is not lowercase 40-hex (read: 'not-a-sha')
+  2|        Refusing to guess a baseline; this rig has NO fallback. A counterproof taken
+  2|        against a silently-wrong baseline prints a green row for a comparison that never
+  2|        happened. See T102 (the literal pin) and T109 (the digest pins).
+  2|        Required format, each directive EXACTLY ONCE:
+  2|          commit <40 lowercase hex>
+  2|          sha256 <64 lowercase hex>  <repo-relative path>   x3, one per extracted file
+--------------------------------------------------------------------------------
+  exit                 : 2
+  stdout bytes         : 0
+  proof-row artefacts  : 0 (att-*/cf-* written by an expect row)
+  scratch entries      : 0
+
+==============================================================================
+CASE: T102-3 — abbreviated commit sha
+--- FORK-POINT-SHA directives fed to the rig -----------------------------------
+  | commit 8da4b83
+  | sha256 d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3  .softhouse/capture/src/run-pass3i.sh
+  | sha256 27bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1  .softhouse/handoff/T74-promote-vectors.py
+  | sha256 e7aee91733596e12e48b8abf0070c0c3e2f9574cdf70189a273c491dfaceac3f  .softhouse/capture/t74-multiplesof/build-counterfactuals.py
+--- rig stdout -----------------------------------------------------------------
+--- rig stderr -----------------------------------------------------------------
+  2| FATAL: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA — `commit` must be a FULL 40-hex sha; got 7 chars ('8da4b83'). An abbreviated sha can become ambiguous as the repo grows
+  2|        Refusing to guess a baseline; this rig has NO fallback. A counterproof taken
+  2|        against a silently-wrong baseline prints a green row for a comparison that never
+  2|        happened. See T102 (the literal pin) and T109 (the digest pins).
+  2|        Required format, each directive EXACTLY ONCE:
+  2|          commit <40 lowercase hex>
+  2|          sha256 <64 lowercase hex>  <repo-relative path>   x3, one per extracted file
+--------------------------------------------------------------------------------
+  exit                 : 2
+  stdout bytes         : 0
+  proof-row artefacts  : 0 (att-*/cf-* written by an expect row)
+  scratch entries      : 0
+
+==============================================================================
+CASE: T102-4 — 40 hex, not a commit in this repository
+--- FORK-POINT-SHA directives fed to the rig -----------------------------------
+  | commit deadbeefdeadbeefdeadbeefdeadbeefdeadbeef
+  | sha256 d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3  .softhouse/capture/src/run-pass3i.sh
+  | sha256 27bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1  .softhouse/handoff/T74-promote-vectors.py
+  | sha256 e7aee91733596e12e48b8abf0070c0c3e2f9574cdf70189a273c491dfaceac3f  .softhouse/capture/t74-multiplesof/build-counterfactuals.py
+--- rig stdout -----------------------------------------------------------------
+--- rig stderr -----------------------------------------------------------------
+  2| FATAL: deadbeefdeadbeefdeadbeefdeadbeefdeadbeef is not a commit in this repository.
+  2|        The pinned fork point must be reachable to extract the pre-fix bytes. See T102.
+--------------------------------------------------------------------------------
+  exit                 : 2
+  stdout bytes         : 0
+  proof-row artefacts  : 0 (att-*/cf-* written by an expect row)
+  scratch entries      : 0
+
+==============================================================================
+FORK-POINT-SHA restored?  git diff --stat on the pin:
+ .../T82-guard-proofs/FORK-POINT-SHA                | 45 ++++++++++++++++++----
+ 1 file changed, 37 insertions(+), 8 deletions(-)
+  (empty above == restored to the committed/working bytes)
+  byte-identical to the backup taken before this run

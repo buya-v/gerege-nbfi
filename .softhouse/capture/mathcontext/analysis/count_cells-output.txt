@@ -1,0 +1,8 @@
+(a) MATRIX
+  cells per shape: {'plain': 74, 'drift': 74, 'monthEnd': 74, 'downPayment25': 82, 'downPaymentAwkward': 82, 'downPaymentMultiples1000': 82, 'multiples1000': 74, 'zeroDpMultiples100': 74, 'zeroDpMultiples100DownPayment': 82, 'fixedLength6': 74, 'daysInYearActual': 74, 'actualActual': 74, 'interestRecognitionOnDisb': 74}
+  total cells compared: 3820   (plus 2 cases that THREW, which is the absence-probe result rather than a comparison)
+(b) PRECISION SWEEP, capture 1 (48 shapes x {19v12, 19v8}): 90528 cells
+(b) PRECISION SWEEP, capture 2 (62 shapes x 19v12): 147676 cells
+(a) WIRING comparison, capture 2: 1284 cells
+
+TOTAL cells compared by T42: 243308

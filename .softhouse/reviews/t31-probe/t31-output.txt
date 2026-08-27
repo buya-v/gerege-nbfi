@@ -1,0 +1,67 @@
+T31 spec check -- DEC-1 REVISION 5 transcribed from its own text
+NO LIVE ORACLE WAS CONTACTED. Expectations are quoted from committed
+captures; every figure printed for an UNCAPTURED shape is a
+RE-DERIVATION and must never be promoted to the vector store.
+
+(A) reproduction of the 13 already-committed observations
+------------------------------------------------------------------------
+  PASS  P=100       n=6     7.0%                    level/final/interest = ('17.01', '17.00', '2.05')
+  PASS  P=1014632   n=6     7.0%                    level/final/interest = ('172574.64', '172574.62', '20815.82')
+  PASS  P=127704    n=36   16.8%                    level/final/interest = ('4540.30', '4540.06', '35746.56')
+  PASS  P=135623    n=6     7.0%                    level/final/interest = ('23067.56', '23067.59', '2782.39')
+  PASS  P=2345024   n=6     7.0%                    level/final/interest = ('398855.60', '398855.63', '48109.63')
+  PASS  P=167299    n=6    21.6%                    level/final/interest = ('29665.91', '29665.94', '10696.49')
+  PASS  P=64352     n=12   21.6%                    level/final/interest = ('6010.61', '6010.55', '7775.26')
+  PASS  P=1000      n=18   18.5%                    level/final/interest = ('64.04', '64.14', '152.82')
+  PASS  P=246489    n=18   18.5%                    level/final/interest = ('15786.24', '15786.14', '37663.22')
+  PASS  P=16838     n=36   16.8%                    level/final/interest = ('598.65', '598.46', '4713.21')
+  PASS  P=40595     n=36   16.8%                    level/final/interest = ('1443.28', '1443.47', '11363.27')
+  PASS  P=1200000   n=6    21.6%                    level/final/interest = ('212787.28', '212787.30', '76723.70')
+  PASS  P=1200000   n=6    21.6%  disb=2024-02-01   level/final/interest = ('253114.12', '253114.10', '65570.58')
+
+  13 pass, 0 fail, out of 13
+
+(B1) DISCRIMINATION -- does revision 5's text EXCLUDE `n == NumberOfRepayments`?
+     (P0-T29-1; shapes are T29's re-derived candidates, not observations)
+------------------------------------------------------------------------
+  EXCLUDED  P=10548069  n=6  16.8%  disb=2024-02-01
+        revision 5              : ('2199038.75', '2199038.73', '447124.73')
+        rev 4 in full           : ('1840999.46', '1841028.61', '497956.91')
+        `n` alone (T29 expt A)  : ('2199038.74', '2199038.77', '447124.73')
+  EXCLUDED  P=1222552   n=6  18.5%  disb=2024-02-01
+        revision 5              : ('255934.34', '255934.32', '57119.68')
+        rev 4 in full           : ('214362.61', '214367.17', '63628.22')
+        `n` alone (T29 expt A)  : ('255934.33', '255934.36', '57119.68')
+  EXCLUDED  P=13549647  n=6  21.6%  disb=2024-02-01
+        revision 5              : ('2858005.77', '2858005.75', '740381.83')
+        rev 4 in full           : ('2395776.63', '2395858.07', '825094.22')
+        `n` alone (T29 expt A)  : ('2858005.76', '2858005.79', '740381.83')
+
+  BOTH wrong-`n` readings FAIL the revision-5 spec on 3/3 shapes
+
+(B2) DISCRIMINATION -- does revision 5's text EXCLUDE `balance * rateFactor`?
+     (P0-T29-2; shapes are T29's re-derived candidates, not observations)
+------------------------------------------------------------------------
+  EXCLUDED  P=13202     n=6  16.8%  start=2024-01-01
+        revision 5 (3 ops) : ('2309.40', '2309.38', '654.38')
+        textbook (1 op)    : ('2309.40', '2309.39', '654.39')
+  EXCLUDED  P=3924149   n=6  16.8%  start=2024-01-31
+        revision 5 (3 ops) : ('686443.30', '686443.28', '194510.78')
+        textbook (1 op)    : ('686443.30', '686443.29', '194510.79')
+  EXCLUDED  P=1814727   n=6  21.6%  start=2024-01-31
+        revision 5 (3 ops) : ('321792.36', '321792.34', '116027.14')
+        textbook (1 op)    : ('321792.36', '321792.35', '116027.15')
+
+  the textbook reading FAILS the revision-5 spec on 3/3 shapes
+
+(C) CONTROL -- how much of each wrong reading the CORPUS can see.
+    `n` alone and the textbook reading both reproduce all 13, which is
+    exactly why the corpus cannot grade either P0 (T29 sections 2.3, 3.3).
+    Revision 4's reading IN FULL is caught at 12/13 -- by Q0b -- because
+    its step-6 'ALL n periods' also overwrites the pre-disbursement row.
+------------------------------------------------------------------------
+  rev4 full : reproduces 12/13 committed observations
+  `n` alone : reproduces 13/13 committed observations
+  textbook  : reproduces 13/13 committed observations
+
+VERDICT: SPEC CHECK PASSES

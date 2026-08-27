@@ -1,0 +1,27 @@
+{
+  "squad": "run1-tier0",
+  "run_id": "2026-08-17-run1-harness-schedule-poc",
+  "fire": "20260820-200002",
+  "written_at": "2026-08-20T end of local fire 20260820-200002",
+  "current_item": "tier0-harness-schedule-poc",
+  "step": "Tier-0 hardening; corpus stable at 42 parity vectors / 5576 graded cells",
+  "workers_live_at_exit": 0,
+  "next_action": "T102 first (literal-sha baseline pin, verified on a SCRATCH MERGE into main, not on the branch) -> then merge softhouse/T82-pass3i-defects + softhouse/T87-review-t82. Then T100/T101 (G-8 write-up as two families). Then T90, T97, and the no-oracle set T93/T94/T96.",
+  "unmerged_branches_holding_work": {
+    "softhouse/T82-pass3i-defects": "55409cf \u2014 all of T87's findings applied and confirmed; blocked only by the merge-base baseline (T102)",
+    "softhouse/T87-review-t82": "007b992 \u2014 MICRO-FIX verdict, merges with T82",
+    "softhouse/T83-nonamortizing-boundary": "db1f34b \u2014 G-8 measurement, REPRODUCED byte-identically by T84; write-up rejected, T100 reworks"
+  },
+  "blocked_on": null,
+  "open_questions": [
+    "G-8 family B: the port already matches the oracle, so 'match the oracle' and 'the balance amortizes' cannot both hold there by any amount of porting. Needs its own answer from Buyan.",
+    "T97: bash -r passes the interpreter guard and then exits 2 with a fabricated 'no Go toolchain' message.",
+    "T90: the harness report is not byte-reproducible, which silently weakens every byte-identity proof this pipeline relies on."
+  ],
+  "gate_pending": [
+    "G-4 (OPEN, wording-only amendment to a RATIFIED DEC-1 \u2014 driver does not cross)",
+    "G-5 (OPEN, same class)",
+    "G-8 (OPEN, measured and reproduced; (b)/(c) are hard user gates)"
+  ],
+  "verification_at_exit": "conformance PASS exit 0, 42 parity vectors, 5576 cells, 0 invariant violations, 0 NOT RUN; build/vet/test 0/0/0; gofmt -l = contract.go only; sh -> exit 3 with zero verdict tokens"
+}

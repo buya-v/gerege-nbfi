@@ -1,0 +1,136 @@
+########## PATTERN F2-01 :: three of (its |the |them|these )?(seven|7|four|4)
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-02 :: (^|[^0-9])3 of (7|4|seven|four)
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-03 :: three of them
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-04 :: empty population
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-05 :: inspect.{0,40}empty
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-06 :: numerator
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-07 :: denominator
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-08 :: i4.?builder
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-09 :: nil.?coverage
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-10 :: detection class
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-11 :: not established
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-12 :: i.?4 arm
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-13 :: three .{0,80}(class|detect)
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-14 :: (57|43|25) ?%|57 per ?cent|43 per ?cent
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-15 :: (three|3|four|4) declared
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-16 :: declared detection
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-17 :: the (three|four)( that| classes| of them)?
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-18 :: i3.?sql.?balance
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-19 :: i4.?dml
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-20 :: opaque.?sql
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-21 :: selftest only|--selftest. only|self-test and .{0,20}nothing
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F2-22 :: guard is (25|43|57)|% live|per ?cent live
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F1-01 :: fu.?t208.?1|t208.?1
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F1-02 :: cannot.?catch.{0,100}(drop|swallow|filter|omit|strip|suppress|absent|not present|never|does not|doesn.t)
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F1-03 :: (drop|swallow|filter|omit|strip|suppress|absent|never|does not arrive|doesn.t arrive).{0,100}cannot.?catch
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F1-04 :: head drop
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F1-05 :: pass.?path|pass path
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F1-06 :: not present anywhere
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F1-07 :: absent from every
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F1-08 :: never reach
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F1-09 :: does not arrive|do not arrive|doesn.t arrive
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F1-10 :: only .{0,12}\^?census
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F1-11 :: condensed copy|redundant restatement|8.line condensation|eight.line condensation
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+
+########## PATTERN F1-12 :: green run
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh: line 14: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39: No such file or directory
+   (no hits)
+

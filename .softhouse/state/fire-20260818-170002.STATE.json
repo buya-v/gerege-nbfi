@@ -1,0 +1,22 @@
+{
+  "fire": "20260818-170002",
+  "host": "Buyanmunkhs-Mac-mini",
+  "oracle": "REACHABLE (health 200, image sha256:e596339626bf..., PostgreSQL 18.3)",
+  "dispatched": [
+    {"task": "T21", "branch": "softhouse/T21-capture-pass3-audit", "model": "opus", "isolation": "worktree", "subject": "audit capture pass 3 (production-settings parity candidates)"},
+    {"task": "T4",  "branch": "softhouse/T4-dec1-contract-v2",    "model": "opus", "isolation": "worktree", "subject": "DEC-1 v2, attempt 2 of 2; briefed mid-flight with the Path B findings"},
+    {"task": "T22", "branch": "softhouse/T22-pathb-capture-audit", "model": "opus", "isolation": "worktree", "subject": "audit the Path B captures this fire produced"}
+  ],
+  "orchestrator_work_completed": [
+    "Built the Path B rig (running server + PostgreSQL 18.3) that RESUME named a prerequisite for the parity corpus",
+    "4 raw Path B captures committed under .softhouse/capture/pathb/ with REPRODUCE.md and PATHB-REPORT.md",
+    "Proved installmentAmountInMultiplesOf and daysInYearCustomStrategy are BOTH honoured by the server, closing Path A's blind spot",
+    "Cross-path corroboration: B-01 == pass-3 P-MNT-1M2 to the minor unit",
+    "reference-oracle.md updated with Path B connection facts and the capability gap table",
+    "Raised T22 and gated T13 on it"
+  ],
+  "next_action": "Collect T21/T4/T22. On a clean T4, dispatch its independent re-review; a clean re-review lets the driver ratify DEC-1 under standing policy P-2 and close G-1.",
+  "blocked_on": null,
+  "gate_pending": "G-1 (ratification signature), G-2 (reshaped T2 attempt, approved by Buyan)",
+  "notes": "Nothing promoted to the vector store. Contract-shaped storage stays forbidden while G-1 is open. No bar lowered, no gate crossed."
+}

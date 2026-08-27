@@ -1,0 +1,23 @@
+{
+ "squad": "tierA-gl-accounting-A2 + tier0-harness",
+ "fire": "local 20260822-060013",
+ "exit": "CLEAN — zero live workers, zero uncommitted files, tree verified clean",
+ "current_item": "none in flight",
+ "step": "wave 2 closed; all six tasks merged and driver-verified",
+ "branches_merged": [
+  "softhouse/T239-r11-hygiene-rerun -> d74e43f",
+  "softhouse/T242-ledger-coverage-derived -> 841c260",
+  "softhouse/T244-dec2-rev6-prepared -> e44d954",
+  "softhouse/T238-failopen-dead-cd -> 04312b3",
+  "softhouse/T246-review-dec2-rev6 -> 60a64f9",
+  "softhouse/T243-wire-the-guards -> 9cb49a3"
+ ],
+ "next_action": "Run python3 .softhouse/bin/ready-tasks.py. Then T247 (prepare DEC-2 rev 7 for G-14, do not land), T248 (the P-76 coverage gap — characterise C1 BEFORE widening C2), T245 (independent check of the driver's own reference-oracle.md fix). Serialise T226, T235 and T248: all three hold conformance.sh.",
+ "blocked_on": "nothing",
+ "open_questions": [
+  "ready-tasks.py classifies G-14 as an OPEN CONTRACT gate and infers that no task may write Go under nexus/ for tierA-gl-accounting until it closes. THE DRIVER BELIEVES THIS IS OVER-BROAD AND DID NOT ACT ON IT: that rule was written for G-11, where the contract was UNRATIFIED. DEC-2 is ratified (rev 5, then rev 6); G-14 is a stale-evidence correction to a ratified document and changes no obligation. The next fire must DECIDE THIS EXPLICITLY and record the reasoning — it is ENGINEERING and agent-decidable — rather than let the resolver's default quietly park Tier A over a false banner."
+ ],
+ "gate_pending": "G-4, G-5 (hard user gates), G-8, G-10, G-12, G-14. None blocks work today.",
+ "vector_store_digest": "13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d",
+ "pin_ledger_dec2_revision": 5
+}

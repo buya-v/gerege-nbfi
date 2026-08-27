@@ -1,0 +1,91 @@
+==================================================================
+A. the SHIPPED expectation table, over 13 dead-oracle transcripts
+==================================================================
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  1      no        no         OK
+A2b-mutated-canary-default.txt                 1      no        no         OK
+A2c-crafted-canary-and-expectation-gerege.txt  1      no        no         OK
+A3a-swapped-canary-gerege.txt                  1      no        no         OK
+A3b-missing-canary.txt                         1      no        no         OK
+A3c-no-canary.txt                              1      no        no         OK
+A4a-expect-override-default.txt                1      no        no         OK
+A4b-expect-override-gerege.txt                 1      no        no         OK
+A4c-decoy-variable.txt                         1      no        no         REGRESSION (breached, expected clean)
+A5-helpful-correct-override.txt                1      no        no         OK
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        1      no        no         REGRESSION (breached, expected clean)
+A8-foreign-cwd.txt                             1      no        no         REGRESSION (breached, expected clean)
+
+EXPECTATIONS NOT MET (3):
+A4c-decoy-variable.txt REGRESSION (breached, expected clean)
+A7-symlinked-canary.txt REGRESSION (breached, expected clean)
+A8-foreign-cwd.txt REGRESSION (breached, expected clean)
+EXIT=1
+
+==================================================================
+B. the counterfactual: retype ONE CLEAN row (A7) to BREACH
+==================================================================
+   71:A7-symlinked-canary.txt|BREACH|PINNED|invariance: a digest pin grades BYTES, so a symlink to the pinned tie must be accepted
+A7-symlinked-canary.txt                        1      no        no         OK
+A8-foreign-cwd.txt                             1      no        no         REGRESSION (breached, expected clean)
+
+EXPECTATIONS NOT MET (2):
+A4c-decoy-variable.txt REGRESSION (breached, expected clean)
+A8-foreign-cwd.txt REGRESSION (breached, expected clean)
+EXIT=1
+
+==================================================================
+C. the counterfactual that matters: ALL THREE CLEAN rows -> BREACH
+==================================================================
+   68:A4c-decoy-variable.txt|BREACH|PINNED|CANARY_EXPECT_OVERRIDE is T76 decoy, correctly INERT: setting an unused variable must change nothing
+   71:A7-symlinked-canary.txt|BREACH|PINNED|invariance: a digest pin grades BYTES, so a symlink to the pinned tie must be accepted
+   72:A8-foreign-cwd.txt|BREACH|PINNED|invariance: resolution must not depend on the working directory
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  1      no        no         OK
+A2b-mutated-canary-default.txt                 1      no        no         OK
+A2c-crafted-canary-and-expectation-gerege.txt  1      no        no         OK
+A3a-swapped-canary-gerege.txt                  1      no        no         OK
+A3b-missing-canary.txt                         1      no        no         OK
+A3c-no-canary.txt                              1      no        no         OK
+A4a-expect-override-default.txt                1      no        no         OK
+A4b-expect-override-gerege.txt                 1      no        no         OK
+A4c-decoy-variable.txt                         1      no        no         OK
+A5-helpful-correct-override.txt                1      no        no         OK
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        1      no        no         OK
+A8-foreign-cwd.txt                             1      no        no         OK
+
+ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+EXIT=0
+
+   <- a CLEAN SWEEP reported over an oracle that never answered.
+
+==================================================================
+D. does anything ELSE in the rig notice a dead oracle?
+==================================================================
+-- does any row REQUIRE the certification sentence to be PRESENT?
+   57:# sentence-permitted: NEVER = the HALF_UP certification must not appear at all
+   58:#                     PINNED = it may appear, but only alongside a passing digest pin on gerege
+   60:A2a-mutated-canary-gerege.txt|BREACH|NEVER|T77 exploit: 1162502.55 is not a tie, so the answer is mode-independent
+   61:A2b-mutated-canary-default.txt|BREACH|NEVER|the same mutated canary on the HALF_EVEN tenant
+   62:A2c-crafted-canary-and-expectation-gerege.txt|BREACH|NEVER|both operands supplied by the caller
+   63:A3a-swapped-canary-gerege.txt|BREACH|NEVER|a valid but non-tie committed request
+   64:A3b-missing-canary.txt|BREACH|NEVER|canary path points at nothing
+   65:A3c-no-canary.txt|BREACH|NEVER|canary omitted entirely
+   66:A4a-expect-override-default.txt|BREACH|NEVER|expectation override on tenant default
+   67:A4b-expect-override-gerege.txt|BREACH|PINNED|expectation override is a breach; the pinned canary may still be graded against the CONSTANT afterwards
+   68:A4c-decoy-variable.txt|CLEAN|PINNED|CANARY_EXPECT_OVERRIDE is T76 decoy, correctly INERT: setting an unused variable must change nothing
+   69:A5-helpful-correct-override.txt|BREACH|PINNED|a runner-supplied operand is a breach even when it agrees with the constant
+   70:A6-canary-is-a-directory.txt|BREACH|NEVER|CANARY_REQ is a directory
+   71:A7-symlinked-canary.txt|CLEAN|PINNED|invariance: a digest pin grades BYTES, so a symlink to the pinned tie must be accepted
+   72:A8-foreign-cwd.txt|CLEAN|PINNED|invariance: resolution must not depend on the working directory
+   146:      NEVER)  v='ADMITS (printed the HALF_UP certification)' ;;
+   147:      PINNED) [ "$d" = YES ] && [ "$g" = YES ] || v='ADMITS (HALF_UP certification without a passing digest pin on gerege)' ;;
+
+   NEVER  = the sentence must not appear.
+   PINNED = it MAY appear, but only with a passing pin.
+   There is no value meaning 'it MUST appear', so no row asserts the
+   oracle answered.  The only thing standing between a dead oracle and a
+   clean sweep is that three rows expect exit 0.

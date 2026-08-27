@@ -1,0 +1,17 @@
+== T51 negative tests ==
+  PASS  N1 preconditions gate on tenant 'default': exit 1 with 5 breach(es) -- the gate can fail
+          FAIL  tenant timezone_id = 'Asia/Kolkata' — must be Asia/Ulaanbaatar or Asia/Hovd (CLAUDE.md)
+          FAIL  c_configuration.rounding-mode = '6' in fineract_default — ratified value is 4 (HALF_UP); 6 is HALF_EVEN and is NOT production-representative
+          FAIL  schema_connection_parameters = 'serverTimezone=UTC&useLegacyDatetimeCode=false&sessionVariables=time_zone='-00:00'' — must be empty on a capture tenant
+          FAIL  running JVM initialized tenant 'default' at a mode other than HALF_UP: 2026-08-18 09:53:01.504 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN
+          FAIL  rounding-mode canary NOT run (set CANARY_REQ to the committed half-cent request). A DB row is not proof of the mode in force.
+  PASS  N2 the placeholder guard's own predicate fires on a payload carrying "productId": 0
+  PASS  N3 a corrupted charge amount (1.2345 -> 9.9999) produces a DIFFERENT response (HTTP 200); the comparison is not vacuous
+        corrupted totalFeeChargesCharged: "totalFeeChargesCharged":119998.80
+  PASS  N4 a malformed payload is refused with HTTP 400, and lib.sh's post() aborts on any non-200
+  PASS  N5 the matched-pair assertion returns 0 for products 17 vs 8 -- it is not a tautology
+  PASS  N6 corrupting one sidecar leaf in memory is detected by the identity check (corrupted leaves detected: ['totalFeeChargesCharged'])
+  PASS  N7 the boundary discriminator rejects a fabricated middle value (31-Dec reading 22014.25  1-Jan reading 22012.31 fabricated observation 22013.00 -> matches 31-Dec: False  matches 1-Jan: False )
+  PASS  N8 the same comparator that reports 0 on the identical pair reports 23 cells on the separating pair
+
+negative tests: 8 passed, 0 failed

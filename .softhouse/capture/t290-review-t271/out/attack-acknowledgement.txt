@@ -1,0 +1,31 @@
+T290 -- attacks on the sha-pinned acknowledgement
+================================================================================================
+  rule     : .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+  register : .softhouse/capture/t271-b1-t219/acknowledged-t219.json
+  evidence : .softhouse/capture/t219-g8-residual/out/classify-t219.json
+  evidence sha256 as committed: 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+
+  attack                                               expected           exit    measured
+  --------------------------------------------------------------------------------------------
+  A1 same pairs at an unnamed path                     REFUSES            1       state=REFUSED dis=4 ack=0 unack=4
+  A2 one byte appended in place                        VOID + REFUSES     1       state=REFUSED dis=4 ack=0 unack=4
+  A3 a NEW fifth disagreement                          REFUSES, unack=5   1       state=REFUSED dis=5 ack=0 unack=5
+  A4 RETRO-EDIT erases the disagreement (4 flipped)    **MEASURED: GREEN** 0       state=GREEN dis=0 ack=0 unack=0
+  A5 register aimed at a different file with the same ids REFUSES            1       state=REFUSED dis=4 ack=0 unack=4
+
+  A1, A2, A3 and A5 FAILED TO BREAK THE PIN, and that is the point of printing
+  them: the register cannot be made to cover a file it does not name, cannot
+  survive one byte moving under it, and cannot absorb a disagreement that appears
+  later. Those are exactly the three evasions an acknowledgement is usually worth
+  rejecting for, and T271's register closes all three.
+
+  A4 SUCCEEDED. The pin is one-sided. It catches evidence edited WHILE the
+  disagreement stands, and does not catch evidence edited SO THAT THE
+  DISAGREEMENT NO LONGER EXISTS -- the block goes VOID, the rule prints the
+  VOID line, and then `refused = (unacknowledged or unclassifiedKeys or
+  unclassifiedVerdicts or nil)` never consults it. Exit 0.
+  The repair needs no edit to the contended rule: read the number the rule
+  already prints. See guard_rvpa_floor_t290.py and red/drive-red-t290.py.
+
+  committed evidence restored and VERIFIED by sha256: 5226eacea7ff004e
+T290-ATTACK: GREEN attacks=5 asPredicted=5 brokeThePin=1

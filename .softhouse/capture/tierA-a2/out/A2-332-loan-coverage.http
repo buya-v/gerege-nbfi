@@ -1,0 +1,9 @@
+POST /loans
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-26-loan-coverage-resolved.json
+body-wire-bytes-artefact: A2-332-loan-coverage.req
+body-sha256: 015c6c1124afd2628ec5b7002f5c63edc06bc74f6cdd22a529cbdb06a3a26fb7
+body-bytes: 706
+captured-at-utc: 2026-08-22T02:12:57Z

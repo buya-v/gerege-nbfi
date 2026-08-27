@@ -1,0 +1,5 @@
+GET /journalentries/60?runningBalance=true
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+body: <none>
+captured-at-utc: 2026-08-22T02:48:26Z

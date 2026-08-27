@@ -1,0 +1,10 @@
+{
+ "_about": "T271 NEGATIVE CONTROL, P-76. A shape neither T259 nor T271 built the rule around: container key `observations` (not `cells`/`calibration`), predicate `P9_` (not `P2_`), verdict word `HELD` (not `AS PREDICTED`), row keyed by `name` (not `id`). It must still REFUSE.",
+ "observations": [
+  {
+   "name": "T271-NEGCTRL-shape-the-rule-was-not-built-from",
+   "verdict": "HELD",
+   "P9_someUnrelatedClaim": false
+  }
+ ]
+}

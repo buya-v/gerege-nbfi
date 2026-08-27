@@ -1,0 +1,120 @@
+==============================================================================
+C1  Path-A PASS 3B, .softhouse/capture/out/capture-prod3b-raw.json
+    The twelve re-emissions that added the disbursement row's `balance`.
+    CELLS COMPARED per repayment row: periodFromDate, dueDate, principal,
+    interest, balance, total; plus loanTermInDays, totalInterestAmount, and
+    the DISBURSEMENT row's principal AND balance -- the column pass 3 lacked.
+==============================================================================
+P-CAL            SKIPPED (threaded precision 12, not 19)
+P-00             rows=6   cells=40   OK
+P-01             rows=18  cells=112  OK
+P-02             rows=6   cells=40   OK
+P-02b            rows=6   cells=40   OK
+P-03             rows=6   cells=40   OK
+P-04f            rows=6   cells=40   OK
+P-04t            rows=6   cells=40   OK
+P-MNT-5M         rows=18  cells=112  OK
+P-MNT-1M2        rows=12  cells=76   OK
+P-MNT-50M        rows=36  cells=220  OK
+P-MNT-4M999      rows=18  cells=112  OK
+
+C1: 11 of 11 captures reproduce; 872 cells compared
+
+==============================================================================
+C2  PATH B, .softhouse/capture/pathb/t36/out/recapture-gerege/B-0n-*.json
+    The four production-tenant server-path captures.
+    CELLS COMPARED per repayment row: fromDate, dueDate, principalDue,
+    interestDue, principalLoanBalanceOutstanding, totalDueForPeriod;
+    plus loanTermInDays and totalInterestCharged.
+    B-02 has installmentAmountInMultiplesOf = 100 and B-03/B-04 carry a
+    daysInYearCustomStrategy -- ALL THREE ARE OUTSIDE THE GRADED DOMAIN
+    (sections 4.4, 4.7), so the contract REFUSES them and this model is not
+    expected to reproduce them. They are replayed anyway, and a mismatch on
+    them is the refusal being CORRECT, not the model being wrong.
+==============================================================================
+B-01     rows=12  cells=48   OK
+B-02     rows=12  cells=48   MISMATCH  (OUTSIDE the graded domain -- the contract REFUSES it)
+B-03     rows=12  cells=48   MISMATCH  (OUTSIDE the graded domain -- the contract REFUSES it)
+B-04     rows=12  cells=48   MISMATCH  (OUTSIDE the graded domain -- the contract REFUSES it)
+
+C2: 192 cells compared; in-graded-domain mismatches: 0
+
+==============================================================================
+C3  T44's F39-1, re-derived inside DEC-1's OWN model.
+    R2 = packed whole-months AND the month-end special case  (the pinned source)
+    R3 = packed whole-months, special case OMITTED           (T39 refuted this)
+    R4 = clamped-step whole-months, special case OMITTED     (the porter's reading)
+    Revision 9 asserts R2 == R4 as functions. This tests it.
+==============================================================================
+  (ScheduleStartDate, repayment period) pairs swept : 59130
+  periods on which the MONTH-END SPECIAL CASE FIRES : 701
+  periods where periodRatio(R2) != periodRatio(R3)  : 701   <- the reading T39's captures refute
+  periods where periodRatio(R2) != periodRatio(R4)  : 0   <- the reading NOTHING refutes
+
+  T44 F39-1 CONFIRMED INDEPENDENTLY: True
+  R2 and R4 are the same function on this whole domain, and the periods where
+  R3 diverges are exactly the periods where the special case fires. So the four
+  T39-ME captures grade the PAIR and neither clause alone -- which is what
+  revision 9 says and revision 8 did not.
+
+==============================================================================
+C4  M4 and M5, the ONLY new normative content in revision 9, transcribed
+    from revision 9's text alone and replayed against T40's 21 charge
+    captures.  CELLS COMPARED: the SET OF REPAYMENT ROWS carrying a
+    non-zero feeChargesDue or penaltyChargesDue, per capture -- exactly the
+    question M4 and M5 answer, and nothing that needs a charge AMOUNT.
+    Revision 8's M4, applied to an INSTALMENT_FEE, predicts ONE row or none.
+    Revision 9's M5 predicts EVERY row.  Both readings are scored below.
+    NOTE (T44's A-3): chargeTimeType comes from the persisted DEFINITION and
+    the AMOUNT from the REQUEST. This leg reads only the type, which is the
+    half the definition really governs.
+==============================================================================
+    charge definitions in force (id -> chargeTimeType):
+        1  DISBURSEMENT         FLAT
+        2  INSTALMENT_FEE       FLAT
+        3  DISBURSEMENT         PERCENT_OF_AMOUNT
+        4  INSTALMENT_FEE       PERCENT_OF_INTEREST
+        5  INSTALMENT_FEE       PERCENT_OF_AMOUNT_AND_INTEREST
+        6  SPECIFIED_DUE_DATE   FLAT
+        7  SPECIFIED_DUE_DATE   FLAT
+        8  INSTALMENT_FEE       FLAT
+        9  INSTALMENT_FEE       PERCENT_OF_AMOUNT
+       10  SPECIFIED_DUE_DATE   PERCENT_OF_AMOUNT
+       11  SPECIFIED_DUE_DATE   PERCENT_OF_INTEREST
+       12  SPECIFIED_DUE_DATE   PERCENT_OF_AMOUNT_AND_INTEREST
+
+FC-01-flat-disbursement                          observed=[]                             rev9 OK    rev8 OK   
+FC-02-flat-instalment                            observed=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] rev9 OK    rev8 WRONG
+      rev8 predicted []
+FC-03-pctamount-disbursement                     observed=[]                             rev9 OK    rev8 OK   
+FC-04-pctinterest-instalment                     observed=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] rev9 OK    rev8 WRONG
+      rev8 predicted []
+FC-05-pctamountinterest-instalment               observed=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] rev9 OK    rev8 WRONG
+      rev8 predicted []
+FC-06-penalty-inside-p3                          observed=[3]                            rev9 OK    rev8 OK   
+FC-07-fee-on-p3-duedate                          observed=[3]                            rev9 OK    rev8 OK   
+FC-08-penalty-instalment                         observed=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] rev9 OK    rev8 WRONG
+      rev8 predicted []
+FC-09-pctamount-instalment                       observed=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] rev9 OK    rev8 WRONG
+      rev8 predicted []
+FC-10-pctamount-inside-p6                        observed=[6]                            rev9 OK    rev8 OK   
+FC-11-fee-on-disbursement-date                   observed=[1]                            rev9 OK    rev8 OK   
+FC-12-fee-on-final-duedate                       observed=[12]                           rev9 OK    rev8 OK   
+FC-13-fee-inside-p12                             observed=[12]                           rev9 OK    rev8 OK   
+FC-14-fee-inside-p1                              observed=[1]                            rev9 OK    rev8 OK   
+FC-15-combined-fee-and-penalty                   observed=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] rev9 OK    rev8 WRONG
+      rev8 predicted [3]
+FC-16-fee-on-p1-duedate                          observed=[1]                            rev9 OK    rev8 OK   
+FC-17-fee-after-final-duedate                    observed=[]                             rev9 OK    rev8 OK   
+FC-19-pctinterest-sdd-inside-p6                  observed=[6]                            rev9 OK    rev8 OK   
+FC-20-pctinterest-sdd-on-disb                    observed=[]                             rev9 OK    rev8 WRONG
+      rev8 predicted [1]
+FC-21-pctamtint-sdd-inside-p6                    observed=[6]                            rev9 OK    rev8 OK   
+FC-22-penalty-instalment-plus-sdd-on-p3-duedate  observed=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] rev9 OK    rev8 WRONG
+      rev8 predicted [3]
+
+C4: 21 charge captures replayed.
+    revision 9's M4 + M5            reproduce the row set on 21 of 21
+    revision 8's M4-for-every-type  reproduces it on         13 of 21
+    A reading that scores fewer than n is REFUTED by the corpus.
+

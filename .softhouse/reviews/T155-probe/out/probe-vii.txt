@@ -1,0 +1,35 @@
+control (unmutated, binary only):
+  exit=0   <no refusal line>
+           VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference or
+
+V1  malformed .json INSIDE a context dir, NO float
+  exit=2   <no refusal line>
+           VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS I
+
+V2  HARD LINK of a committed vector, new name, inside the context dir
+  exit=2   * DUPLICATE case_id IN THE VECTOR STORE — "P-00" is declared by 2 files: loanschedule/P-00-baseline-6x7pct.json AND loanschedule/T
+           VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS I
+
+V3  HARD LINK of a committed vector, placed at the STORE ROOT
+  exit=2   * STORE FILE CENSUS — 51 .json files were found under /tmp/t155/post/.softhouse/vectors and 1 of them are unaccounted for: "T155-V
+           VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS I
+
+V4  a HIDDEN top-level context directory holding a clean vector
+  exit=2   <no refusal line>
+           VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS I
+
+V5  the same store-root plant, but under a CONTEXT FILTER (-context=_selftest)
+    (T123's rule: the filter narrows what is GRADED, never what is CHECKED)
+  exit=2   * STORE FILE CENSUS — 51 .json files were found under /tmp/t155/post/.softhouse/vectors and 1 of them are unaccounted for: "T155-V
+           VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS I
+
+V6  a DIRECTORY named like a vector: loanschedule/T155-V6.json/
+  exit=2   * STORE FILE CENSUS — 50 .json files were found under /tmp/t155/post/.softhouse/vectors and 1 of them are unaccounted for: "loansc
+           VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS I
+
+V7  a second copy of a vector with a DIFFERENT case_id (legitimate shape — must still PASS)
+  exit=0   <no refusal line>
+           VERDICT: PASS (exit 0) — 44 parity vectors match the pinned reference or
+    ^ ANTI-VACUITY ROW: if this one refuses too, the census refuses everything and proves nothing.
+
+leftovers?

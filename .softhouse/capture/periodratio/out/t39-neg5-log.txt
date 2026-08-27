@@ -1,0 +1,16 @@
+00:18:01.234 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_cal`: DOWN
+00:18:01.268 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_ctl_q0a`: DOWN
+00:18:01.273 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_ctl_1`: DOWN
+00:18:01.276 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_ctl_2`: DOWN
+00:18:01.278 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_a`: DOWN
+00:18:01.282 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_b`: DOWN
+00:18:01.285 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_c`: DOWN
+00:18:01.291 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_d`: DOWN
+00:18:01.312 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_e`: DOWN
+00:18:01.314 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_f`: DOWN
+00:18:01.314 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_g`: DOWN
+00:18:01.316 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_h`: DOWN
+00:18:01.317 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_me_a`: DOWN
+00:18:01.318 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_me_b`: DOWN
+00:18:01.319 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_me_c`: DOWN
+00:18:01.320 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_me_d`: DOWN

@@ -1,0 +1,197 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-02-repayment-split-4leg-minor-units",
+  "context": "ledger",
+  "class": "parity",
+  "title": "The ACCOUNTING-PATH journal entry for a split repayment on loan 7 (product 55, CASH BASED): FOUR legs, one debit of 300000.000000 to the fund source against credits of 270450.580000 principal, 22049.420000 interest and 7500.000000 penalty. It is the entry that makes \"splits sum to the whole\" a real assertion for the first time in this program.",
+  "dec2_revision": 5,
+  "_note": "GL_ACCOUNT_TYPE IS EXCLUDED FROM EVERY LEG OF THIS VECTOR, AND HERE IS THE OBSERVATION THAT FORCED IT. glAccountType in a /journalentries response is a projection of the ACCOUNT'S CURRENT classification, not of the entry. A2-26 observed the identical row rendering ASSET in A2-088 (2026-08-21) and INCOME in A2-320 (2026-08-22) -- every other cell BYTE-IDENTICAL, six diff lines all inside glAccountType -- with NO ENTRY EDITED, because GL account 2 was retyped ASSET->INCOME underneath five live product mappings and acc_gl_journal_entry carries no classification column (G-10). A vector grading that cell WILL GO RED on a GL-account edit that touched no journal entry. DEC-2's brief offered two ways out: (a) exclude the cell, or (b) grade it against a separately captured GET /glaccounts/{id} taken IN THE SAME WINDOW. THIS VECTOR TAKES (a). Reason (b) was rejected: the same-window pairing makes the vector's truth depend on two captures having been taken close enough together, which is a property of the capture session and not of the oracle, and nothing in the store could check that the window was actually shared. Excluding the cell states plainly that this corpus does not grade classification -- which is TRUE -- instead of grading it against evidence whose validity nobody can re-derive. THE CONSEQUENCE, STATED AND NOT HIDDEN: no vector in this store grades a GL account's classification at all, so a port that resolves the entry's classification WRONGLY is not caught here. The classification rendered at capture time is recorded in this note for the record and is graded by nothing: leg 0 (GL 4, 10201) rendered ASSET; leg 1 (GL 8, 40100) rendered INCOME; leg 2 (GL 10, 40300) rendered INCOME; leg 3 (GL 16, 10300) rendered ASSET. NO BALANCE IS GRADED. acc_gl_journal_entry carries office_running_balance and organization_running_balance, and GATE G-12 IS OPEN on exactly them: A2-29 MEASURED them to be a SECOND SOURCE OF TRUTH rather than a cache -- made to disagree with the derived sum by MNT 2,000,000.00 on the live oracle, surviving four organisation-wide recomputes, propagating into a freshly computed row because the recompute seeds from its own prior output, and served at the contract boundary flagged runningBalanceComputed: true. This vector's schema has NO FIELD for either column, the capture it cites was taken without runningBalance=true, and /glaccounts?fetchRunningBalance=true is HTTP 500 on PostgreSQL anyway (GLAccountReadPlatformServiceImpl.java:127-131 emits MySQL-only 'group by ... desc'). Balances are DERIVED, never written, and never read back. PRODUCT 55 AND NOT 22/23/24/27/28: those five are INADMISSIBLE TODAY. A2-26 re-sent each of their mappings (A2-300..A2-315) and the oracle returned 403 on every one, because GL account 2 was retyped ASSET->INCOME underneath their live mappings and the oracle will not re-create the state it holds. That is G-10 option (c) and the store enforces it as a denylist in PIN-ledger.json, not as a comment. SLOT_CODE IS 0 AND THAT IS DELIBERATE: this entry spans FOUR slots (loan portfolio, interest income, penalty income and fund source), so no single slot code describes it, and writing one would assert a resolution this vector does not grade. DEC-2 P-1 requires the field to exist; 0 means \"not a single-slot entry\".",
+  "capabilities_required": [
+    "ledger.journal.entry.readback",
+    "ledger.money.minor.unit.conversion",
+    "ledger.accounting.path.loan.repayment"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/tierA-a2/out/A2-338-je-after-repayment-coverage.json",
+    "capture_sha256": "cc2437b4b939bfb1a508f4ff83edc7b6510e3e0b86160af4a1f2042e42731e40",
+    "capture_case_id": "A2-338-je-after-repayment-coverage",
+    "request_capture_ref": ".softhouse/capture/tierA-a2/out/A2-337-repayment-split.req",
+    "request_capture_sha256": "dd56f6371aa5abac1488614ee0f7568c512e32a2c0381168b4e7c91ac1fdd49a",
+    "request_capture_case_id": "A2-337-repayment-split",
+    "rerun_invariant": "Re-running A2-337 against a loan in the same state must produce a FOUR-leg entry whose credits are 270450.580000 principal / 22049.420000 interest / 7500.000000 penalty against a single 300000.000000 debit, and those three credits must sum EXACTLY to the debit in integer minor units (27045058 + 2204942 + 750000 = 30000000). A three-leg result, or any leg at a whole tugrik where a fraction is expected, falsifies it.",
+    "citation": "A2-15. Legs read from the RAW BYTES of A2-338 by entry id (29, 30, 31, 32). The transaction id L25 and the leg amounts were independently re-confirmed against the live oracle by re-running sql/q4-a2-26-ledger-state.sql, whose per-transaction double-entry projection reports L25 at 4 legs, debit_minor 30000000, credit_minor 30000000, difference 0."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_rest_posting",
+    "captured_at": "2026-08-22T02:12:59Z"
+  },
+  "request": {
+    "product_id": 55,
+    "product_type": "LOAN",
+    "accounting_rule": "CASH_BASED",
+    "slot_family": "CashLoanSlot",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_rest_posting",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "L25",
+    "manual_entry": false,
+    "transaction_amount_major_text": "300000",
+    "accounts": [
+      {
+        "id": 4,
+        "gl_code": "10201",
+        "name": "Loan Portfolio",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 8,
+        "gl_code": "40100",
+        "name": "Interest On Loans",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 10,
+        "gl_code": "40300",
+        "name": "Income From Penalties",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 16,
+        "gl_code": "10300",
+        "name": "Fund Source Alternate",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 4,
+        "entry_side": "CREDIT",
+        "amount_major_text": "270450.580000"
+      },
+      {
+        "gl_account_id": 8,
+        "entry_side": "CREDIT",
+        "amount_major_text": "22049.420000"
+      },
+      {
+        "gl_account_id": 10,
+        "entry_side": "CREDIT",
+        "amount_major_text": "7500.000000"
+      },
+      {
+        "gl_account_id": 16,
+        "entry_side": "DEBIT",
+        "amount_major_text": "300000.000000"
+      }
+    ]
+  },
+  "expect": {
+    "kind": "journal-entry",
+    "http_status": 200,
+    "legs": [
+      {
+        "gl_account_id": 4,
+        "gl_account_code": "10201",
+        "entry_side": "CREDIT",
+        "amount_minor": "27045058",
+        "amount_major_text": "270450.580000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 8,
+        "gl_account_code": "40100",
+        "entry_side": "CREDIT",
+        "amount_minor": "2204942",
+        "amount_major_text": "22049.420000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 10,
+        "gl_account_code": "40300",
+        "entry_side": "CREDIT",
+        "amount_minor": "750000",
+        "amount_major_text": "7500.000000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 16,
+        "gl_account_code": "10300",
+        "entry_side": "DEBIT",
+        "amount_minor": "30000000",
+        "amount_major_text": "300000.000000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      }
+    ],
+    "total_debits_minor": "30000000",
+    "total_credits_minor": "30000000",
+    "refusal": {
+      "http_status": 0,
+      "code": "",
+      "message": ""
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "ledger-wrong-truncating",
+      "kind": "money",
+      "margin_minor": "-58",
+      "divergent_cells": [
+        "legs[].amount_minor",
+        "total_credits_minor"
+      ],
+      "note": "The 58 on the principal leg and the 42 on the interest leg are exactly the minor units a truncating port loses. The debit leg is a whole tugrik and is unaffected, which is why a corpus of whole tugriks could not kill this."
+    },
+    {
+      "impl": "ledger-wrong-split-drift",
+      "kind": "money",
+      "margin_minor": "1",
+      "divergent_cells": [
+        "legs[].amount_minor"
+      ],
+      "note": "THE I-2 INDEPENDENCE PROOF. This implementation keeps the entry internally balanced -- double_entry_balances still HOLDS on it -- and moves the REQUESTED transaction total by one minor unit, so splits_sum_to_whole goes RED on its own. Without a vector that kills it, I-2 would be a second green line no implementation could turn red independently of I-1."
+    },
+    {
+      "impl": "ledger-wrong-netting-totals",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "total_debits_minor",
+        "total_credits_minor"
+      ],
+      "note": "Netting reports both totals as 0 while every leg still matches."
+    },
+    {
+      "impl": "ledger-wrong-code-ignored",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "legs[].gl_account_code"
+      ],
+      "note": "Four distinct gl codes (10201, 40100, 40300, 10300) all become empty."
+    }
+  ],
+  "invariant_exemptions": []
+}

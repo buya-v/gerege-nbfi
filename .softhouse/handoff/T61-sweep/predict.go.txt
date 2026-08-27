@@ -1,0 +1,79 @@
+// t61predict prints the FULL schedule the Go port produces for the shapes T61
+// is about to put to the reference oracle, and the schedule a named wrong
+// implementation produces for the same shape.
+//
+// It is run BEFORE the capture and its output is committed BEFORE the capture,
+// so that "the oracle confirmed the prediction" is a checkable claim rather than
+// a story told afterwards (T11's precedent).
+//
+// Money is int64 minor units. No floating point.
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/gerege/nexus/internal/apps/loanschedule"
+	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
+)
+
+type shape struct {
+	id        string
+	start     contract.CivilDate
+	principal int64
+	n         int32
+	rate      contract.Rate
+}
+
+func main() {
+	shapes := []shape{
+		{"T61-HE-A", contract.CivilDate{Year: 2024, Month: 1, Day: 1}, 100054150, 6, contract.Rate{Numerator: 27, Denominator: 125}},
+		{"T61-HE-B", contract.CivilDate{Year: 2024, Month: 1, Day: 1}, 100005250, 6, contract.Rate{Numerator: 27, Denominator: 125}},
+		{"T61-HE-C", contract.CivilDate{Year: 2024, Month: 1, Day: 1}, 100008950, 6, contract.Rate{Numerator: 27, Denominator: 125}},
+	}
+	gen := loanschedule.New()
+	for _, s := range shapes {
+		req := contract.GenerateRequest{
+			TimeZone:                  "Asia/Ulaanbaatar",
+			Currency:                  contract.Currency{Code: "MNT", MinorUnitDigits: 2},
+			Rounding:                  contract.Rounding{SignificantDigits: 19, RateFactorScale: 19, Mode: contract.RoundingHalfUp},
+			ScheduleStartDate:         s.start,
+			Disbursements:             []contract.Disbursement{{Date: s.start, AmountMinor: s.principal}},
+			NumberOfRepayments:        s.n,
+			RepaymentEvery:            1,
+			RepaymentFrequencyUnit:    contract.FrequencyMonths,
+			AnnualNominalInterestRate: s.rate,
+			InterestMethod:            contract.InterestMethodDecliningBalance,
+			DayCount:                  contract.DayCountFixed30Over360,
+			DownPaymentPercentage:     contract.Rate{Numerator: 0, Denominator: 1},
+		}
+		sched, err := gen.Generate(context.Background(), req)
+		if err != nil {
+			fmt.Printf("%s ERROR %v\n", s.id, err)
+			continue
+		}
+		fmt.Printf("\n%s  principal_minor=%d  n=%d  rate=%d/%d  start=%04d-%02d-%02d\n",
+			s.id, s.principal, s.n, s.rate.Numerator, s.rate.Denominator, s.start.Year, s.start.Month, s.start.Day)
+		fmt.Printf("  %-14s %-4s %-12s %-12s %14s %14s %16s\n",
+			"kind", "no", "from", "due", "principal", "interest", "outstanding")
+		for _, p := range sched.Periods {
+			fmt.Printf("  %-14s %-4d %04d-%02d-%02d   %04d-%02d-%02d   %14d %14d %16d\n",
+				kindName(p.Kind), p.InstallmentNumber,
+				p.FromDate.Year, p.FromDate.Month, p.FromDate.Day,
+				p.DueDate.Year, p.DueDate.Month, p.DueDate.Day,
+				p.PrincipalMinor, p.InterestMinor, p.OutstandingPrincipalMinor)
+		}
+	}
+}
+
+func kindName(k contract.PeriodKind) string {
+	switch k {
+	case contract.PeriodKindDisbursement:
+		return "DISBURSEMENT"
+	case contract.PeriodKindDownPayment:
+		return "DOWN_PAYMENT"
+	case contract.PeriodKindRepayment:
+		return "REPAYMENT"
+	}
+	return "?"
+}

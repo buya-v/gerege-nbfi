@@ -1,0 +1,66 @@
+T274 -- A PREDICTION OF MINE, AND THE MEASUREMENT THAT KILLED IT
+================================================================
+
+THE PREDICTION (mine, written into instrument 30 before it was first run):
+  "T274 EXTENDS arm 7 rather than weakening it: the response leg is now
+   attested, so a forger must forge FIVE artefacts consistently instead of
+   three.  Arm 7a forges the request leg only and is now CAUGHT (rc=1) because
+   the sidecar's response assertions no longer match nothing."
+
+Arm 7a forges the REQUEST leg consistently -- it rewrites the tenant in
+`probe.reqhdr`, rewrites the same tenant in `probe.http`, and recomputes
+`request-headers-sha256:` so the two agree -- and leaves the response leg
+untouched and truthful.
+
+THE FIRST RUN OF INSTRUMENT 30, verbatim:
+
+  ARM 7a  expected rc=1  got rc=0  *** UNEXPECTED ***   REQUEST leg forged consistently, response untouched
+  SCORE: 8 as expected, 1 unexpected
+  INSTRUMENT VERDICT: FAIL
+
+THE MEASUREMENT, reproducible from the committed evidence at
+`evidence/t250arms/arm-7a/` (run from that directory):
+
+  $ python3 ../../../../lib/wire_attestation.py verify \
+        --sidecar probe.http --headers probe.reqhdr --req probe.req \
+        --resp probe.json --resphdr probe.resphdr --status probe.status
+  REQUIRED ASSERTIONS (16), DERIVED FROM THE WIRE RECORD -- not read off the sidecar, which is the artefact under suspicion:
+    request-headers-artefact
+    request-headers-sha256
+    body-wire-bytes-artefact
+    body-sha256
+    body-bytes
+    content-length-crosscheck
+    response-headers-artefact
+    response-headers-sha256
+    response-status-line
+    response-artefact
+    response-sha256
+    response-bytes
+    response-content-length-crosscheck
+    response-status-crosscheck
+    response-status-artefact
+    captured-at-utc
+  VERBATIM WIRE LINES REQUIRED, IN ORDER AND WITH MULTIPLICITY: 9
+  RESPONSE LEG: ATTESTED (schema 2) -- headers record digest, final status line, status file, body digest and byte count
+  VERIFIED probe.http against probe.reqhdr and probe.resphdr
+  rc=0
+
+WHY I WAS WRONG
+  The untouched response assertions re-derive correctly from the untouched
+  response artefacts.  They are true, they are checked, and they say NOTHING
+  about the request.  Attesting a second leg does not make a self-consistent
+  forgery of the FIRST leg detectable; it only means that a forger who wants to
+  change the RESPONSE must now forge five artefacts (sidecar, `.reqhdr`,
+  `.resphdr`, `.json`, `.status`) instead of three.  That is a cost increase,
+  not a narrowing of the unforgeability limit.
+
+WHAT WAS CHANGED AS A RESULT
+  * Arm 7a's expected status in instrument 30 is now 0 -- the measurement, not
+    the prediction -- and the arm is KEPT so the transcript shows the limit
+    rather than hiding it.
+  * The module docstring states the limit in exactly these terms: consistent
+    whole-set forgery is what `MANIFEST.sha256` and the vectors'
+    `capture_sha256` pins exist to catch, not this module.
+  * No claim of the form "T274 makes forgery detectable" appears anywhere in
+    the handoff or the module.  It does not.

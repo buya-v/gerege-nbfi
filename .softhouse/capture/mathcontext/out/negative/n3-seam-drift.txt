@@ -1,0 +1,12 @@
+### n3-seam-drift
+$ run1 T42_OUT_PREFIX=t42-neg3
+== T42 MathContext-in-force capture ==
+  ok  pinned commit 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  ok  pinned checkout clean
+  ok  image sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+93d92
+< // T42 deliberate drift -- must be removed
+BREACH: seam class under src/ has DRIFTED from the pinned original -- the run would not have executed the oracle's code
+RUN INVALID -- capture is not admissible.
+exit=1
+seam sha256 before=bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714 after=bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714

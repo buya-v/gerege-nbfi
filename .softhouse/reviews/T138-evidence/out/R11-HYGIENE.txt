@@ -1,0 +1,141 @@
+==================================================================
+1. ADDITIVITY — did T115 modify any of T91's own out/ transcripts?
+==================================================================
+files T115 changed under .softhouse/capture/t91/out/ that are NOT t115-*:
+   A	.softhouse/capture/t91/out/CONFORMANCE-T115.txt
+   A	.softhouse/capture/t91/out/GUARDS-RED-META-nongit.txt
+   M	.softhouse/capture/t91/out/GUARDS-RED.txt
+   A	.softhouse/capture/t91/out/T115-ATTACK-RERUN.txt
+   A	.softhouse/capture/t91/out/T115-MF1-RED-GREEN.txt
+   A	.softhouse/capture/t91/out/T115-MF2-RED-GREEN.txt
+   A	.softhouse/capture/t91/out/T115-MF3-MF4-MEASURED.txt
+   (only GUARDS-RED.txt / new files expected above)
+
+modified (M) files in the whole T115-vs-T91 diff:
+   M	.softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh
+   M	.softhouse/capture/charges/bin/preconditions.sh
+   M	.softhouse/capture/t91/PREDICTION.md
+   M	.softhouse/capture/t91/out/GUARDS-RED.txt
+   M	.softhouse/capture/t91/prove-guards.sh
+   M	.softhouse/capture/t91/run-attacks.sh
+   M	.softhouse/capture/t91/shell-invariance.sh
+   M	.softhouse/capture/t91/verdict.sh
+
+T91's four transcript dirs — blob identity T91 vs T115:
+   prefix-copy-sh             84cde2f14c93  IDENTICAL
+   prefix-copy-bash           8d9128b6bdbc  IDENTICAL
+   prefix-livetwin-sh         97dd355c8b4d  IDENTICAL
+   prefix-livetwin-bash       a4f4472bc7ed  IDENTICAL
+   postfix-copy-sh            e88d5c294e64  IDENTICAL
+   postfix-copy-bash          f5958159675f  IDENTICAL
+   postfix-livetwin-sh        90dbc9a89c44  IDENTICAL
+   postfix-livetwin-bash      34337c9a53b0  IDENTICAL
+   happy                      c040f5399900  IDENTICAL
+
+==================================================================
+2. BASELINES — every baseline in T115's scripts must be a LITERAL sha
+==================================================================
+--- any use of a ref computed from main (P-24's exact trap):
+   (nothing above, or only prose, = clean)
+
+--- literal 40-hex shas and blob ids used as baselines:
+   bd59187cf83c7c7161db23668e91d45bd46be2a8:.softhouse/capture/t91/run-attacks.sh:34:PIN=2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154
+   bd59187cf83c7c7161db23668e91d45bd46be2a8:.softhouse/capture/t91/t115-drive-mf1.sh:23:PRE_SHA=ccf3c14171dea52bd044d81d5ca67aba8054b74c   # T91's tip, the bytes T107 reviewed
+   bd59187cf83c7c7161db23668e91d45bd46be2a8:.softhouse/capture/t91/t115-drive-mf2.sh:31:PRE_SHA=ccf3c14171dea52bd044d81d5ca67aba8054b74c   # T91's tip, the bytes T107 reviewed
+   bd59187cf83c7c7161db23668e91d45bd46be2a8:.softhouse/capture/t91/t115-drive-mf2.sh:154:PRE_RIG_BLOB=e6c1795a172168105d788321a71ee4ca62b73e36
+   bd59187cf83c7c7161db23668e91d45bd46be2a8:.softhouse/capture/t91/t115-drive-mf3-mf4.sh:29:PRE_SHIM_BLOB=e6c1795a172168105d788321a71ee4ca62b73e36   # the pre-T91 copied bytes, per the header
+   bd59187cf83c7c7161db23668e91d45bd46be2a8:.softhouse/capture/t91/t115-rerun-attacks.sh:22:PRE_SHIM_BLOB=e6c1795a172168105d788321a71ee4ca62b73e36   # main's pre-hardening charges/bin twin
+
+--- git revisions each T115 script actually resolves:
+   -- t115-drive-mf1.sh
+      29:( cd "$ROOT" && git show "$PRE_SHA:.softhouse/capture/t91/verdict.sh" ) > "$S/verdict-PRE.sh" 2>"$S/err" || {
+   -- t115-drive-mf2.sh
+      22:# Everything destructive happens inside a `git archive` export under /tmp.  The oracle is read only.
+      39:( cd "$ROOT" && git archive "$PRE_SHA"  ) | tar -x -C "$S/pre"  || abort "git archive $PRE_SHA failed"
+      40:( cd "$ROOT" && git archive HEAD        ) | tar -x -C "$S/post" || abort "git archive HEAD failed"
+      41:# An unchecked `git archive` producing an empty export is T107's F-6; do not repeat it here.
+      54:echo "post export: $(cd "$ROOT" && git rev-parse HEAD) (MF-2 present, asserted)"
+      155:if ( cd "$ROOT" && git cat-file -e "$PRE_RIG_BLOB" ) 2>/dev/null; then
+      156:  ( cd "$ROOT" && git cat-file blob "$PRE_RIG_BLOB" ) > "$S/n9/$RIGREL"
+   -- t115-drive-mf3-mf4.sh
+      20:#     throwaway `git archive` export and is not a caller in the capture pipeline — it is reported
+      39:( cd "$ROOT" && git cat-file blob "$PRE_SHIM_BLOB" ) > "$S/pre-shim.sh" 2>/dev/null \
+   -- t115-rerun-attacks.sh
+      15:# tenant write.  Destructive work is confined to `git archive` exports under /tmp.
+      30:( cd "$ROOT" && git archive HEAD ) | tar -x -C "$S/pre"  || abort "git archive failed"
+      31:( cd "$ROOT" && git archive HEAD ) | tar -x -C "$S/post" || abort "git archive failed"
+      35:( cd "$ROOT" && git cat-file blob "$PRE_SHIM_BLOB" ) > "$S/pre/$SHIMREL" || abort "cannot resolve $PRE_SHIM_BLOB"
+      47:echo "post shim: HEAD $(cd "$ROOT" && git rev-parse --short HEAD)          sha256 $(shasum -a 256 < "$S/post/$SHIMREL" | cut -c1-16)"
+   -- prove-guards.sh
+      7:# It is destructive, so it works ONLY inside a `git archive` export under /tmp that it creates
+      12:# `git archive` failed, the export was EMPTY, all three G-1 legs died with "No such file or
+      15:#   1. `git archive | tar` was never checked.  Now asserted non-empty; an empty export ABORTS.
+      45:(cd "$ROOT" && git archive HEAD) > "$S/export.tar" 2>"$S/archive.err" || {
+      46:  echo "ABORT: git archive failed — there is nothing to prove anything against." >&2
+      48:[ -s "$S/export.tar" ] || { echo "ABORT: git archive produced an EMPTY tar." >&2; exit 2; }
+      58:echo "export: $(cd "$ROOT" && git rev-parse HEAD), $(find "$E" -type f | wc -l | tr -d ' ') files (asserted non-empty)"
+
+==================================================================
+3. LC_ALL=C grep -a INTEGRITY (P-33) — T115 must not have weakened it
+==================================================================
+   verdict.sh             LC_ALL=C:  5 ->  7     grep -a:  4 ->  4
+   run-attacks.sh         LC_ALL=C:  1 ->  2     grep -a:  0 ->  1
+   shell-invariance.sh    LC_ALL=C:  1 ->  1     grep -a:  0 ->  0
+   prove-guards.sh        LC_ALL=C:  6 -> 13     grep -a:  5 -> 11
+
+--- any BARE grep (no LC_ALL=C, no -a) on a transcript, in the T115 rig:
+   verdict.sh:17:#   * A grep that silently reports NO MATCH on a transcript containing a stray non-UTF-8 byte turns
+   verdict.sh:27:#     /usr/bin/grep — BSD grep 2.6.0-FreeBSD — a silent miss does NOT reproduce, with an invalid
+   verdict.sh:32:#     What is [UNVERIFIED] and is T108's question: T91 reported that `ugrep 7.5.0 -I` (which is what
+   verdict.sh:33:#     a `grep` on an interactive PATH can be) returns 1 — "absent" — on a poisoned transcript that
+   verdict.sh:35:#     no `ugrep` on this host at all, and `prove-guards.sh:87-95` takes its `else` branch, so the
+   verdict.sh:36:#     committed `out/GUARDS-RED.txt` records the fallback text rather than a ugrep measurement.
+   verdict.sh:154:n=$(echo "$TABLE" | grep -c '|')
+   run-attacks.sh:46:# `sed` is not `grep`: a substitution whose pattern does not match is not an error, it is a COPY.
+   prove-guards.sh:22:# poison, and the `command -v ugrep` else-branch, which printed an interactive measurement nobody
+   prove-guards.sh:138:echo "-- what /usr/bin/grep (BSD) does with and without -a:"
+   prove-guards.sh:143:echo "   MEASURED: on this machine BSD grep matched EITHER WAY, and T107b independently reproduced"
+   prove-guards.sh:144:echo "   that (18 of 18 combinations).  T80 reported that BSD grep in a UTF-8 locale matches"
+   prove-guards.sh:149:if command -v ugrep >/dev/null 2>&1; then
+   prove-guards.sh:151:  echo "   ugrep  -qF  rc=$?   (1 = 'absent' — WRONG, the sentence is there)"
+   prove-guards.sh:153:  echo "   ugrep -aqF  rc=$?   (0 = present — correct)"
+   prove-guards.sh:155:  echo "   ugrep is NOT on PATH here, so the ugrep limb WAS NOT MEASURED BY THIS RUN."
+   prove-guards.sh:156:  echo "   [UNVERIFIED] T91 reported interactively that ugrep 7.5.0 -I returns 1 ('absent') on this"
+   prove-guards.sh:158:  echo "   ugrep on this host at all — and downgraded the claim from [VERIFIED].  It rests on"
+   prove-guards.sh:203:echo "       sed is not grep: a substitution whose pattern does not match is a COPY, so a"
+
+--- the two comments T115 marked 'under adjudication by T108':
+   verdict.sh:21:#     *** THE HARDENING STANDS.  ITS STATED REASON IS UNDER ADJUDICATION BY T108. ***
+   prove-guards.sh:147:echo "   adjudication by T108; fail-closed is right whichever way T108 rules. ***"
+
+==================================================================
+4. THE KNOWN LEFTOVER — T91.md:8
+==================================================================
+        1	# T91 — the pre-hardening copy of the Path B precondition script
+        2	
+        3	Branch `softhouse/T91-preconditions-copy`. Nothing promoted. No vector touched. Oracle read only.
+        4	
+        5	**Headline.** The brief's description of the defect is **wrong in its specifics and wrong about
+        6	which file matters.** The named copy is older than the version the brief describes and carries
+        7	*different* holes; and the file nobody named — `.softhouse/capture/charges/bin/preconditions.sh`,
+        8	byte-identical to the named copy — is the one that **17 capture scripts and `attest.py` actually
+        9	invoke**. The named copy is invoked by nothing. Both are now call-throughs to the one hardened rig.
+       10	Measured: 6 of 13 attack classes ADMITTED before, 0 after, under both `sh` and `bash`.
+       11	
+       12	---
+
+--- every other restatement of '17 capture scripts' anywhere in the merged tree:
+   .softhouse/capture/charges/bin/preconditions.sh:13:# MF-4 (T115): the sentence above used to read "17 capture scripts and `attest.py`", which was
+   .softhouse/capture/t91/PREDICTION.md:14:| `.softhouse/capture/charges/bin/preconditions.sh` | **live** twin, ~~invoked by 17 capture scripts~~ — **CORRECTED by T115 (MF-4): 20 distinct files, 23 executable call sites**, re-measured by `t115-drive-mf3-mf4.sh`. "17 capture scripts" omitted `leapboundary/bin/t55-negative-tests.sh:52`, a *direct* invoker in another subtree. |
+   .softhouse/capture/t91/t115-drive-mf3-mf4.sh:11:# MF-4 (added by T107b).  `charges/bin/preconditions.sh:8` says "17 capture scripts and attest.py".
+   .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T107.md:191:`charges/bin/preconditions.sh:8` ships the sentence "this file — which **17 capture scripts and
+   .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T115.md:110:Was: *"which **17 capture scripts and `attest.py`** actually invoke"*. **Census re-measured by me
+   .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T115.md:138:* `.softhouse/capture/t91/PREDICTION.md:14` — *"invoked by 17 capture scripts"*. Annotated with the
+   .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T115.md:308:| **FU-2** | P2 | Census restated outside T91's diff. **`.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T91.md:8`** still says "17 capture scripts and `attest.py`" — one line, and I left it because it is another worker's handoff and outside my named scope. `tasks.json` repeats it too. |
+   .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T91.md:8:byte-identical to the named copy — is the one that **17 capture scripts and `attest.py` actually
+   .softhouse/reviews/T107-review-of-T91.md:200:T91 said "17 capture scripts and `attest.py`". The driver's narrower grep found 6. Neither is right.
+   .softhouse/reviews/T107-review-of-T91.md:579:"this file — which **17 capture scripts and `attest.py`** actually invoke". The measured census is
+   .softhouse/tasks.json:1946:      "note": "Raised by the driver, local fire 20260820-200002, from T77 F-1 as re-raised by T80. NEEDS THE ORACLE to run the attack suite. Pair with an independent reviewer. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-230001: DONE on softhouse/T91-preconditions-copy (5 commits). THE DRIVER'S BRIEF WAS WRONG TWICE AND THE SECOND ERROR IS THE FINDING OF THE FIRE. (1) WRONG ON THE HOLES: the brief asserted the copy carries grep -qF PREFIX matches and a sha256 computed-and-printed-but-never-compared. NEITHER IS IN IT. The copy PREDATES T76 entirely; its only sha256 is PIN_IMAGE, which IS compared at P1. Both named holes were INTRODUCED BY T76 (3d70a86, lines 166/170) and lived only in pathb/t36/preconditions.sh. The copy's actual holes are a DIFFERENT SUPERSET: the canary request is not pinned at all (any readable file accepted), CANARY_EXPECT is env-overridable with no tripwire, and PIN_PG_MAJOR_MINOR is unbraced. (2) WRONG ON WHICH FILE MATTERS: preconditions-COPY.sh is invoked by NOTHING (10 grep hits, all prose) - but it is BYTE-IDENTICAL to .softhouse/capture/charges/bin/preconditions.sh, which capture scripts and attest.py DO invoke, including t55-capture.sh and pathb-capture.sh. DRIVER INDEPENDENTLY CONFIRMED THE BLOB IDENTITY: git rev-parse main:.softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh and main:.softhouse/capture/charges/bin/preconditions.sh BOTH give e6c1795a172168105d788321a71ee4ca62b73e36. So everything under charges/, leapboundary/ and actualactual/ was gated by the UNHARDENED script while readers see 'the rig is hardened'. The task was framed as a dead copy; it was a LIVE TWIN. P-12, precisely. REMEDY: both twins are now CALL-THROUGHS that dot-source pathb/t36/preconditions.sh - dot-source, not exec, to preserve sh/bash invariance. Three copies -> one rig. No third patched copy, no caller changed, old bytes retained at git show e6c1795a. PROOF BY ATTACK, 13 classes x sh/bash x 4 labels, all against git archive exports in /tmp: PRE-FIX 6 OF 13 ADMIT. The sharpest is its own A2c - on the HALF_UP tenant the rig printed 'PASS effective rounding mode canary: period-1 interest 20925.04 (= HALF_UP)', certifying HALF_UP over the value its own comment calls HALF_EVEN, with BOTH operands attacker-supplied. POST-FIX 0 admit, all 13 meet declared expectations across all four labels, 13/13 sh-vs-bash identical. Happy path additive only: 21 -> 22 PASS, 0 FAIL, exit 0; T44's `default` control reproduces with the same 5 breaches. GUARDS DRIVEN RED (P-22): missing-rig -> exit 2 with a message TRUE AT THE MOMENT IT PRINTS; zero-file scans -> error not pass, in both scorers. G-4 FOUND A DEFECT IN ITS OWN WORK: ugrep -qF returns 'absent' on a poisoned transcript that DOES contain the certification sentence - driven RED, fixed with LC_ALL=C grep -a. CONTRADICTS T80/T85 AND SAYS SO RATHER THAN REPEATING THE CLAIM: T80's asserted BSD-grep-in-UTF-8 behaviour DID NOT REPRODUCE here; it reports the non-reproduction. It also disclosed that its own scorer's first rule was wrong (it flagged a fired guard as an admission) and that the corrected expectation table was written AFTER the first post-fix run. TWO REGISTERED PREDICTIONS (PR-9 count, PR-10 breach count) WERE WRONG AND ARE SCORED AS WRONG in the handoff. DRIVER-VERIFIED SCOPE: vectors + nexus/ + pathb/ diffs ALL EMPTY. Worker reports bash conformance.sh PASS exit 0 42 parity 5576 cells 0 invariant violations; oracle read-only throughout. UNVERIFIED AND FLAGGED: the HALF_EVEN limb still cannot be shown (productId 11 absent on `default` -> HTTP 404; proving it needs an oracle WRITE); no Go toolchain in its environment so no go build / gofmt; the 17 capture scripts were not run end-to-end because they POST loans. FOLLOW-UP RAISED: pathb/t80/forbidden-sentence.sh passes vacuously on an empty glob - CONVERGES with T99 item (3), which owns it this fire.",
+   .softhouse/tasks.json:2249:      "note": "Raised by the driver, local fire 20260820-230001. NEEDS THE ORACLE. || local fire 20260821-080001: PREVIOUS FIRE'S WORKER WAS KILLED before signalling done. Its review document was rescued to softhouse/rescued-agent-a73334f89c8eb3d16-20260820-230001 and is SUBSTANTIALLY COMPLETE: 575 lines, VERDICT MICRO-FIX, all nine rulings the brief asked for answered, incl. 'zero of 42 promoted parity vectors depend on the unhardened gate'. Branch softhouse/T107-review-t91 re-pointed at the rescue. RE-DISPATCHED as T107b (opus, isolated worktree) to independently re-run the review's falsifiable claims and write the missing handoff - NOT to read it back and agree. || local fire 20260821-080001: DONE and ATTESTED on softhouse/T107-review-t91 (b70b295). VERDICT MICRO-FIX reaffirmed. THE RESCUE WAS VINDICATED AND ALSO AUDITED: 6 of 6 headline claims REPRODUCED from main's bytes - 'zero of 42' re-derived per vector (42/42 path_a_embeddable, 42/42 (19,HALF_UP), 7 capture_refs summing to 42, 7/7 declared digests equal bytes on disk), plus a STRONGER structural form T107 never ran (grep for curl|psql|8443|5432 over all seven producing recipes returns ZERO hits, so the Path B tenant gate is INAPPLICABLE to Path A, not merely absent); census 20 files / 23 call sites exact incl. T91's missed t55-negative-tests.sh:52; attack suite 6/13 -> 0/13 both interpreters, A2c verbatim; three of T107's four new attacks admit; verdict.sh vacuous pass driven red. ONE [VERIFIED] BADGE DOWNGRADED (C-7): T107's ugrep 7.5.0 -I silent-miss was tagged [VERIFIED: my own runs] but THERE IS NO ugrep ON THIS HOST and /pkg/env/global/bin (on PATH) does not exist; T91's own committed GUARDS-RED.txt records the 'ugrep is not on PATH here' fallback. Moved to [UNVERIFIED]. SIX further factual corrections (46 files not 47, eight printf lines not nine, :108-143/:165-216 not :97-207, the 25th transcript is T51's control not T44's, attest.py :95/:269 not :96/:270, only the three G-1 legs failed from a non-git export) - every conclusion survives all seven. ADDED MF-4: charges/bin/preconditions.sh:8 ships '17 capture scripts and attest.py' against a measured 20/23, a false sentence in a SHIPPED file 41 lines above the one MF-3 corrects. MF-1 and MF-2 driven RED AND GREEN in /tmp; explicitly established that MF-2 does NOT close N9 - only FU-1 does. IT ALSO CORRECTED THE DRIVER: this fire's state file proposed de-scoping T108 as overlapping its section 7; T107b refused, because section 7's BSD half is settled but the UGREP half is now OPEN, not closed."
+   .softhouse/tasks.json:2398:      "note": "Raised by the driver, local fire 20260821-080001, from T107's §10. Blocked until T107b attests the review. Needs the oracle. || local fire 20260821-080001: DISPATCHED. Scope now FOUR micro-fixes - T107b added MF-4 (charges/bin/preconditions.sh:8 ships a false 17-vs-20/23 census in a SHIPPED file). MF-1/MF-2 already driven red+green by T107b in /tmp; T115 must drive them itself, not inherit. MUST NOT believe MF-2 closes N9 - only FU-1 does. || local fire 20260821-080001: DONE on softhouse/T115-t91-microfixes (5 commits, 2 files modified). ALL FOUR MICRO-FIXES APPLIED AND DRIVEN BY T115 ITSELF. MF-1 RED: ten committed transcripts replaced by one content-free line scored 'ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION' at EXIT 0 pre-fix; post-fix exit 1 with ten ERROR rows - and it CLOSED T107b's recorded residual (explicitly left 'to the next worker') by adding a SHAPE test beside T107's value test. MF-2 RED: emptied rig, pre-fix PRECONDITIONS_EXIT=0 exit 0 ZERO-BYTE transcript; post-fix exit 2, 162 bytes. GREEN: five callers identical cell for cell (22/0/0, 16/5/1, 12/9/1, 17/5/1, 22/0/0) against the live oracle. MF-2 DOES NOT CLOSE N9 OR N10, measured THROUGH the post-MF-2 shim: N9 exits 0 printing 'ALL PRECONDITIONS HOLD', N10 exits 0 running the attacker's stub - only FU-1 closes them, and T115 said so in both shims, in prove-guards.sh, four times in the handoff and on every driver run. MF-3 measured 5 FAIL before / 5 after, delta 0. MF-4 census re-measured from the tree: 20 distinct files, 23 executable call sites, independently equal to T107b. THE UNASSIGNED HALF - a vacuous-pass sweep finding EIGHT instances, FIVE NEW. V-A is the sharpest thing found this fire in this class: verdict.sh over a READ-ONLY transcript directory printed 'ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION' at EXIT 0 *WHILE ITS OWN TABLE SHOWED SIX ADMITS ROWS ON SCREEN*, because the pipeline-subshell failure channel lived in the directory under audit. Also V-C (a sed that does not match is a COPY, so a reformatted canary silently fires the pinned tie), V-E/V-F (shell-invariance.sh compared one side's file list and used the audited dir as scratch), V-G (two skip-branches returning success). All 8 fixed, each new one driven red by a committed guard. prove-guards.sh itself (T107's F-6) now ASSERTS, driven red two ways. IT CAUGHT THE SAME CLASS IN ITS OWN SCRIPT: the self-check discriminated on a string the post-fix shim contains IN A COMMENT, so it fired on the healthy tree. REPORTED NOT FIXED (V-B), and T138 must rule: verdict.sh's resistance to a dead oracle rests ENTIRELY AND ACCIDENTALLY on A4c/A7/A8 being CLEAN rows - retyping any one to BREACH creates a scorer that reports clean over an oracle that never answered. An accident-of-data hazard exactly like the accident-of-spelling T121 judged worth REMOVING rather than documenting. P-24 scratch merge run TWICE (main moved mid-run, 9cf1f90 then e35ea7b), both clean, all four artefacts re-run ON THE MERGED TREE. Every baseline a LITERAL IMMUTABLE SHA. LC_ALL=C grep -a untouched; the two comments stating its reason marked 'under adjudication by T108' asserting neither version - T108 has since ruled, so T138 supplies updated text. LEFTOVER: T91.md:8 still says '17 capture scripts and attest.py' vs the measured 20/23 - another worker's handoff, driver applies at merge. AWAITING REVIEW T138."
+   (searched the MERGED tree)

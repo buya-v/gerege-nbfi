@@ -1,0 +1,86 @@
+T217 follow-up 2 -- DRIVER_STOP_GRACE_SECS calibration against a REAL `claude`
+================================================================================
+
+Binary: /Users/buv/.local/bin/claude -> /Users/buv/.local/share/claude/versions/2.1.233
+        (claude --version: 2.1.233 (Claude Code))
+Invocation shape: calibrate-grace.py spawns
+    [CLAUDE_BIN, "-p", <prompt>, "--model", "haiku", "--output-format", "text"]
+  in cwd /tmp/t217-scratch/claude-cwd (a scratch directory, never the live
+  repo), own session (start_new_session=True), default signal dispositions
+  (restore_signals=True) -- the same P-55 control T211's spawn.py used.
+Every trial makes ONE real API call. Trial count kept deliberately small.
+
+Sanity run first (no signal, natural completion), to confirm the invocation
+actually reaches the model before spending trials on signal timing:
+
+  $ time claude -p "Reply with exactly one word: pong" --model haiku --output-format text
+  pong
+  2.38s user 0.72s system 31% cpu 9.749 total
+
+--------------------------------------------------------------------------------
+CLUSTER A -- SIGTERM delivered EARLY (0.2-0.5s in, still in startup/auth,
+before the model call has returned anything), prompt "Reply with exactly one
+word: pong":
+
+  $ python3 calibrate-grace.py early1 0.2 "Reply with exactly one word: pong"
+  early1 delay=0.2s SIGTERM-to-exit=0.202s hung_past_30s=False rc=-15
+
+  $ python3 calibrate-grace.py early2 0.2 "Reply with exactly one word: pong"
+  early2 delay=0.2s SIGTERM-to-exit=0.208s hung_past_30s=False rc=-15
+
+  $ python3 calibrate-grace.py early3 0.5 "Reply with exactly one word: pong"
+  early3 delay=0.5s SIGTERM-to-exit=0.162s hung_past_30s=False rc=-15
+
+  n=3: 0.162s, 0.202s, 0.208s. rc=-15 (killed directly by the raw signal --
+  no self-translation to 128+15 seen at this point).
+
+--------------------------------------------------------------------------------
+CLUSTER B -- SIGTERM delivered MID-TO-LATE (3-8s into a call that runs
+~9-10s end to end, i.e. while it is actively generating), prompt "Write a
+200 word paragraph about lighthouses.":
+
+  $ python3 calibrate-grace.py mid3 3.0 "Write a 200 word paragraph about lighthouses."
+  mid3 delay=3.0s SIGTERM-to-exit=1.055s hung_past_30s=False rc=143
+
+  $ python3 calibrate-grace.py mid1 4.0 "Write a 200 word paragraph about lighthouses."
+  mid1 delay=4.0s SIGTERM-to-exit=2.591s hung_past_30s=False rc=143
+
+  $ python3 calibrate-grace.py mid4 5.0 "Write a 200 word paragraph about lighthouses."
+  mid4 delay=5.0s SIGTERM-to-exit=1.141s hung_past_30s=False rc=143
+
+  $ python3 calibrate-grace.py mid2 6.0 "Write a 200 word paragraph about lighthouses."
+  mid2 delay=6.0s SIGTERM-to-exit=1.156s hung_past_30s=False rc=143
+
+  $ python3 calibrate-grace.py mid5 7.0 "Write a 200 word paragraph about lighthouses."
+  mid5 delay=7.0s SIGTERM-to-exit=0.826s hung_past_30s=False rc=143
+
+  $ python3 calibrate-grace.py late1 8.0 "Write a 200 word paragraph about lighthouses."
+  late1 delay=8.0s SIGTERM-to-exit=1.194s hung_past_30s=False rc=143
+
+  n=6: 0.826s, 1.055s, 1.141s, 1.156s, 1.194s, 2.591s.
+  mean ~1.16s, max 2.591s, min 0.826s.
+  rc=143 (128+15) on every trial in this cluster -- unlike cluster A, claude
+  appears to install its own SIGTERM handling once its main work loop is up,
+  and self-translates to exit(143) rather than dying by the raw signal. That
+  translation is consistent with the higher, more variable latency in this
+  cluster versus cluster A's near-instant raw kill.
+
+--------------------------------------------------------------------------------
+INTERPRETATION
+
+- No trial hung (hung_past_30s=False on all 9). Every SIGTERM was answered.
+- The relevant number for DRIVER_STOP_GRACE_SECS is cluster B, not cluster A:
+  a real fire's `claude` spends effectively its whole lifetime "mid-task"
+  (hours of agentic work), so a stop signal overwhelmingly lands there, not
+  in the ~0.2-0.5s startup window cluster A modelled.
+- Cluster B: max 2.591s, mean ~1.16s, n=6.
+- fire-program.sh sets DRIVER_STOP_GRACE_SECS=5 (was 3, chosen by T211
+  against an instantly-dying /bin/sleep stand-in) -- roughly 2x the observed
+  max, not merely clearing it, because of the gap this calibration does NOT
+  close: it used a single-turn, tool-free `-p` call. A real fire's `claude`
+  runs `/softhouse-program` with Bash/Edit tool calls and possibly MCP
+  connections, none of which this calibration exercised, and any of which
+  could plausibly add its own shutdown latency (child processes, open
+  sockets) on top of what a bare text completion shows. That gap is recorded
+  as UNVERIFIED in the T217 handoff, not papered over with a number this
+  calibration didn't actually produce.

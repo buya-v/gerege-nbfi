@@ -1,0 +1,10 @@
+=== RUN   TestRefusedVectorDoesNotSilenceUnbackedEndToEnd
+    coverage_refusal_test.go:344: perturbation refused 14 vectors of 51
+--- PASS: TestRefusedVectorDoesNotSilenceUnbackedEndToEnd (1.44s)
+=== RUN   TestCorroborationsAreScopedToTheGradedPopulation
+    coverage_refusal_test.go:533: store: 51 vectors, 51 injected claims, 14 refused -> expect 37 credited, 14 shed
+--- PASS: TestCorroborationsAreScopedToTheGradedPopulation (1.60s)
+=== RUN   TestErroredVectorCannotBackACapability
+--- PASS: TestErroredVectorCannotBackACapability (0.64s)
+PASS
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	3.940s

@@ -1,0 +1,82 @@
+conformance.sh blob under test: 029439ba6124ed10394554cf5ac9128cf3c42100
+expected (a71c140 / main / T255): 029439ba6124ed10394554cf5ac9128cf3c42100
+
+=== CALIBRATION (P-35/P-66): a needle that MUST be absent, and one that MUST be present ===
+  0 matches, exit 1  -> A REAL MEASURED NEGATIVE.  negative control — must report 0/exit 1
+      needle: ZZQQ-T260-THIS-MUST-NOT-MATCH
+  8 matching line(s), exit 0.  positive control — must report >0
+      needle: run_guards
+        .softhouse/conformance.sh:880:# BOTH ARE HARD GUARDS: a failure exits 2 through run_guards, BEFORE the oracle probe
+        .softhouse/conformance.sh:1204:#  (2) IT MIXES EVIDENCE FROM TWO TREES. run_guards inspects $REPO_ROOT's vectors, capture
+        .softhouse/conformance.sh:1211:# EXIT 2 THROUGH run_guards, and it cannot be misread as an oracle outage: this runs BEFORE
+        .softhouse/conformance.sh:1275:# did not compile). run_guards maps ANY non-zero to failed=1 and then exits EXIT_UNUSABLE — the
+        .softhouse/conformance.sh:1548:run_guards() {
+        .softhouse/conformance.sh:1927:  run_guards
+        .softhouse/conformance.sh:1997:  # --prove does NOT go through run_guards, but it does build_binary and then run that
+        .softhouse/conformance.sh:2471:  #     load_toolchain -> run_guards path a graded run takes, contacts NO oracle, and costs
+
+=== SPOT-CHECK 1: FU-A2-25-2's harness comment, which T255 records as GONE ===
+  0 matches, exit 1  -> A REAL MEASURED NEGATIVE.  T255 claims 0 matches / exit 1 / FU-A2-25-2 CLOSED
+      needle: records as not existing
+  1 matching line(s), exit 0.  the wider phrase, in case only the tail was reworded
+      needle: the I-3/I-4 SOURCE GUARD that DEC-2
+        .softhouse/conformance.sh:1250:# guard_ledger_invariants: the I-3/I-4 SOURCE GUARD that DEC-2 §4.4 requires — "balances are
+
+=== SPOT-CHECK 2: the `go test` count — DEC-2 rev8 says FOUR occurrences, all comments ===
+  occurrences of the string `go test`:        4
+    .softhouse/conformance.sh:465:# path `bash .softhouse/conformance.sh` actually executes — NOT from `go test`,
+    .softhouse/conformance.sh:853:# WHY THEY ARE HERE AND NOT IN A `go test` OR A README (P-45).
+    .softhouse/conformance.sh:856:# THAT RUNS. `conformance.sh` never runs `go test`, so a Go-test-only guard is not a
+    .softhouse/conformance.sh:1780:# script never runs `go test` either — so `TestEveryWrongImplementationIsKilled`
+  of those, how many are on a COMMENT line (first non-space char is '#'):
+    total 4, comment-lines 4, non-comment 0
+  1 matching line(s), exit 0.  the ANCHOR revision 8 uses in place of :718/:721
+      needle: so a Go-test-only guard is not a
+        .softhouse/conformance.sh:856:# THAT RUNS. `conformance.sh` never runs `go test`, so a Go-test-only guard is not a
+
+=== SPOT-CHECK 3: the :401 / :411 pair, which rev8 says were TRUE and converted anyway ===
+  1 matching line(s), exit 0.  anchor replacing :401
+      needle: NEXUS_DIR="$REPO_ROOT/nexus"
+        .softhouse/conformance.sh:401:NEXUS_DIR="$REPO_ROOT/nexus"
+  1 matching line(s), exit 0.  anchor replacing :411
+      needle: CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
+        .softhouse/conformance.sh:411:CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
+
+=== SPOT-CHECK 4: the -context pass-through, replacing :1254 ===
+  1 matching line(s), exit 0.  anchor replacing :1254
+      needle: [ -n "$context" ] && args+=("-context=$context")
+        .softhouse/conformance.sh:1934:  [ -n "$context" ] && args+=("-context=$context")
+
+=== SPOT-CHECK 5: what :718 / :721 / :1254 / :401 / :411 ACTUALLY point at now ===
+    :401   NEXUS_DIR="$REPO_ROOT/nexus"
+    :411   CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
+    :718   # guard_no_float_in_harness: no floating-point identifier ANYWHERE in the Go
+    :721   # binary) over the TOKEN stream, because the frozen contract's doc comments name
+    :1254  # I4-DML, I6-HOLD-BALANCE, OPAQUE-SQL]. Its own PASS text, printed by this function below, states
+    :1115  # P-57: every stage here consumes all of its input — `git grep`, `sed`, `grep`, `sort`,
+    :1116  # `wc` — so no member of the `| grep -q` / `| head` EPIPE family is introduced. P-58:
+
+=== EVERY ANCHOR in revision 8, resolved by the DOCUMENTED recipe, status classified ===
+  ok      1 match  — nexus/internal/apps/loanschedule/conformance/admit.go :: if v.Context != "" && !IsSchemaContext(v.Context) {
+  ok      1 match  — nexus/internal/apps/loanschedule/conformance/vector.go :: return []string{SelfTestDir, LoanScheduleContext}
+  ok      1 match  — nexus/internal/apps/ledger/conformance/vector.go :: const SchemaV1 = "gerege.ledger.vector/v1"
+  ok      1 match  — nexus/internal/apps/ledger/conformance/vector.go :: return []string{LedgerContext}
+  ok      1 match  — .softhouse/conformance.sh :: guard_ledger_invariants() {
+  ok      1 match  — .softhouse/conformance.sh :: guard_no_fail_open_instruments() {
+  ok      1 match  — nexus/internal/apps/loanschedule/conformance/vector.go :: func SchemaContexts() []string {
+  ok      1 match  — nexus/internal/apps/loanschedule/conformance/admit.go :: strings.Join(SchemaContexts(), ", "))
+  ok      1 match  — nexus/internal/apps/ledger/conformance/admit.go :: add("dec2_revision %d but the store pins %d", v.DEC2Revision, opts.Pin
+  ok      1 match  — .softhouse/conformance.sh :: THE PIN REMAINS A FRONTIER, NOT AN AMNESTY.
+  ok      1 match  — .softhouse/conformance.sh :: run_guards() {
+  ok      1 match  — .softhouse/conformance.sh :: guard_ledger_invariants() {
+  ok      1 match  — .softhouse/conformance.sh :: NEXUS_DIR="$REPO_ROOT/nexus"
+  ok      1 match  — .softhouse/conformance.sh :: so a Go-test-only guard is not a
+  ok      1 match  — nexus/internal/apps/ledger/conformance/vector.go :: // It is the string DEC-2 §5.2 names: "gerege.ledger.vector/v1".
+  ok      1 match  — .softhouse/conformance.sh :: CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
+  ok      1 match  — .softhouse/conformance.sh :: [ -n "$context" ] && args+=("-context=$context")
+  ok      1 match  — nexus/internal/apps/ledger/conformance/vector.go :: // SchemaV1 is the only schema string this package accepts.
+  ok      1 match  — .softhouse/conformance.sh :: guard_ledger_invariants() {
+  ok      1 match  — nexus/internal/apps/loanschedule/conformance/vector.go :: // IsSchemaContext reports whether ctx is one of SchemaContexts().
+  ok      1 match  — nexus/internal/apps/loanschedule/conformance/admit.go :: "declaring an unknown context is INADMISSIBLE and not merely unmatched
+  ok      1 match  — nexus/internal/apps/ledger/conformance/vector.go :: func SchemaContexts() []string {
+  --- ok 22 / ROT 0 / AMBIG 0 / ERROR 0  (P-67: all four terms) ---

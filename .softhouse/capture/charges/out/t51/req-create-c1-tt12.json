@@ -1,0 +1,13 @@
+{
+ "name": "T51 flat TRANCHE disbursement",
+ "chargeAppliesTo": 1,
+ "chargeTimeType": 12,
+ "chargeCalculationType": 1,
+ "chargePaymentMode": 0,
+ "currencyCode": "MNT",
+ "amount": 7000,
+ "active": true,
+ "penalty": false,
+ "locale": "en",
+ "monthDayFormat": "dd MMM"
+}

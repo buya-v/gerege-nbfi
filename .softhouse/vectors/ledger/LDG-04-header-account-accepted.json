@@ -1,0 +1,143 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-04-header-account-accepted",
+  "context": "ledger",
+  "class": "parity",
+  "title": "THE ORACLE ACCEPTS A POSTING TO A SUMMARY (HEADER) ACCOUNT. A2-345 posted a debit leg at GL 1 -- account_usage = 2, HEADER, the root \"Assets\" node -- and the oracle returned HTTP 200 and created transaction a28f573ffb9b. A port that refuses summary-account postings DIVERGES FROM THE ORACLE, and this vector is what catches that \"improvement\".",
+  "dec2_revision": 5,
+  "_note": "GL_ACCOUNT_TYPE IS EXCLUDED FROM EVERY LEG OF THIS VECTOR, AND HERE IS THE OBSERVATION THAT FORCED IT. glAccountType in a /journalentries response is a projection of the ACCOUNT'S CURRENT classification, not of the entry. A2-26 observed the identical row rendering ASSET in A2-088 (2026-08-21) and INCOME in A2-320 (2026-08-22) -- every other cell BYTE-IDENTICAL, six diff lines all inside glAccountType -- with NO ENTRY EDITED, because GL account 2 was retyped ASSET->INCOME underneath five live product mappings and acc_gl_journal_entry carries no classification column (G-10). A vector grading that cell WILL GO RED on a GL-account edit that touched no journal entry. DEC-2's brief offered two ways out: (a) exclude the cell, or (b) grade it against a separately captured GET /glaccounts/{id} taken IN THE SAME WINDOW. THIS VECTOR TAKES (a). Reason (b) was rejected: the same-window pairing makes the vector's truth depend on two captures having been taken close enough together, which is a property of the capture session and not of the oracle, and nothing in the store could check that the window was actually shared. Excluding the cell states plainly that this corpus does not grade classification -- which is TRUE -- instead of grading it against evidence whose validity nobody can re-derive. THE CONSEQUENCE, STATED AND NOT HIDDEN: no vector in this store grades a GL account's classification at all, so a port that resolves the entry's classification WRONGLY is not caught here. The classification rendered at capture time is recorded in this note for the record and is graded by nothing: leg 0 (GL 1, 10000) rendered ASSET; leg 1 (GL 21, 99008) rendered LIABILITY. NO BALANCE IS GRADED. acc_gl_journal_entry carries office_running_balance and organization_running_balance, and GATE G-12 IS OPEN on exactly them: A2-29 MEASURED them to be a SECOND SOURCE OF TRUTH rather than a cache -- made to disagree with the derived sum by MNT 2,000,000.00 on the live oracle, surviving four organisation-wide recomputes, propagating into a freshly computed row because the recompute seeds from its own prior output, and served at the contract boundary flagged runningBalanceComputed: true. This vector's schema has NO FIELD for either column, the capture it cites was taken without runningBalance=true, and /glaccounts?fetchRunningBalance=true is HTTP 500 on PostgreSQL anyway (GLAccountReadPlatformServiceImpl.java:127-131 emits MySQL-only 'group by ... desc'). Balances are DERIVED, never written, and never read back. WHY THE CITED ARTEFACT IS A DATABASE READ-BACK AND NOT A REST RESPONSE, stated because it is the one place this corpus reaches for a different seam: A2-345's HTTP response body is {\"officeId\":1,\"transactionId\":\"a28f573ffb9b\"} and carries NO LEGS, so the accept status is observable from it and the entry is not. The legs are observed instead from the ledger_db_readback seam, which is one of G-01's three, in a re-run of sql/q7-a2-15-ledger-state-json.sql taken by A2-15 against the live oracle and committed as A2-390. THIS IS ALSO THE P-69 RE-RUN: A2-370 is a SNAPSHOT and the oracle has moved since (A2-29 added 2 GL accounts, 3 manual entries, a reversal and a retype), so nothing here cites A2-370's numbers. WHAT THIS VECTOR DOES NOT SETTLE: whether a HEADER account would be refused at PRODUCT CREATE time -- A2-312 threw on GL 2 first and never reached the loanPortfolioAccountId: 1 case -- remains [UNVERIFIED] and is not asserted here.",
+  "capabilities_required": [
+    "ledger.journal.entry.readback",
+    "ledger.money.minor.unit.conversion",
+    "ledger.manual.entry.posting",
+    "ledger.header.account.posting"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/tierA-a2/out/A2-390-db-ledger-state-a2-15.json",
+    "capture_sha256": "d694d558fb5956cb1d462a12f8fd9b00d0082f501c98df061b0e43ff515930e8",
+    "capture_case_id": "A2-390-db-ledger-state-a2-15",
+    "request_capture_ref": ".softhouse/capture/tierA-a2/out/A2-345-manual-je-header.req",
+    "request_capture_sha256": "d2093f2a06fe216629269191a52381e27559fd95979757163ef7d9e73f410721",
+    "request_capture_case_id": "A2-345-manual-je-header",
+    "rerun_invariant": "Re-posting A2-345's body must return HTTP 200, not a refusal, and the resulting transaction must carry two legs of 100000.250000 -- a DEBIT on the HEADER account GL 1 and a CREDIT on GL 21. If a future Fineract refuses summary-account postings this vector is false and must be retired, not exempted.",
+    "citation": "A2-15. HTTP 200 observed in A2-345.status; the legs observed in the ledger_db_readback re-run committed as A2-390. Both artefacts are cited and both resolve."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_db_readback",
+    "captured_at": "2026-08-22T02:21:18Z"
+  },
+  "request": {
+    "product_id": 0,
+    "product_type": "",
+    "accounting_rule": "",
+    "slot_family": "",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_db_readback",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "a28f573ffb9b",
+    "manual_entry": true,
+    "transaction_amount_major_text": "",
+    "accounts": [
+      {
+        "id": 1,
+        "gl_code": "10000",
+        "name": "Assets",
+        "usage": "HEADER",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 21,
+        "gl_code": "99008",
+        "name": "Liability Under Asset",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 1,
+        "entry_side": "DEBIT",
+        "amount_major_text": "100000.250000"
+      },
+      {
+        "gl_account_id": 21,
+        "entry_side": "CREDIT",
+        "amount_major_text": "100000.250000"
+      }
+    ]
+  },
+  "expect": {
+    "kind": "journal-entry",
+    "http_status": 200,
+    "legs": [
+      {
+        "gl_account_id": 1,
+        "gl_account_code": "10000",
+        "entry_side": "DEBIT",
+        "amount_minor": "10000025",
+        "amount_major_text": "100000.250000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 21,
+        "gl_account_code": "99008",
+        "entry_side": "CREDIT",
+        "amount_minor": "10000025",
+        "amount_major_text": "100000.250000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      }
+    ],
+    "total_debits_minor": "10000025",
+    "total_credits_minor": "10000025",
+    "refusal": {
+      "http_status": 0,
+      "code": "",
+      "message": ""
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "ledger-wrong-header-refusing",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "leg_count"
+      ],
+      "note": "The reasonable-looking port refuses this posting and returns no entry at all. The oracle returned HTTP 200 and stored two legs. Do not improve on the oracle: a shadow-parity run would show the two systems disagreeing on a transaction the reference accepted."
+    },
+    {
+      "impl": "ledger-wrong-truncating",
+      "kind": "money",
+      "margin_minor": "-25",
+      "divergent_cells": [
+        "legs[].amount_minor",
+        "total_debits_minor",
+        "total_credits_minor"
+      ],
+      "note": "Both legs are 100000.25, so a truncating port loses 25 minor units on each."
+    },
+    {
+      "impl": "ledger-wrong-code-ignored",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "legs[].gl_account_code"
+      ],
+      "note": "The header account's own code 10000 vanishes with the rest."
+    }
+  ],
+  "invariant_exemptions": []
+}

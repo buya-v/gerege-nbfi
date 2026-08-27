@@ -1,0 +1,122 @@
+{
+ "T100-CTRL-R21p6-N12-B120000000": {
+  "B_minor": 120000000,
+  "basis": "ordinary MNT 1,200,000 loan",
+  "n": 12,
+  "predictedFails": false,
+  "predictedFamily": null,
+  "rate": "21.6"
+ },
+ "T100-FAMA-R0p12-N600-B291": {
+  "B_minor": 291,
+  "basis": "T84 measured; MNT 2.91",
+  "n": 600,
+  "predictedFails": true,
+  "predictedFamily": "A",
+  "rate": "0.12"
+ },
+ "T100-FAMA-R0p12-N600-B292": {
+  "B_minor": 292,
+  "basis": "T84 measured clean",
+  "n": 600,
+  "predictedFails": false,
+  "predictedFamily": null,
+  "rate": "0.12"
+ },
+ "T100-FAMA-R21p6-N6-B2": {
+  "B_minor": 2,
+  "basis": "T75/T83 measured",
+  "n": 6,
+  "predictedFails": true,
+  "predictedFamily": "A",
+  "rate": "21.6"
+ },
+ "T100-FAMA-R21p6-N6-B3": {
+  "B_minor": 3,
+  "basis": "T83 measured clean",
+  "n": 6,
+  "predictedFails": false,
+  "predictedFamily": null,
+  "rate": "21.6"
+ },
+ "T100-FAMA-R3p6-N360-B109": {
+  "B_minor": 109,
+  "basis": "T84 measured; MNT 1.09",
+  "n": 360,
+  "predictedFails": true,
+  "predictedFamily": "A",
+  "rate": "3.6"
+ },
+ "T100-FAMA-R3p6-N360-B110": {
+  "B_minor": 110,
+  "basis": "T84 measured clean",
+  "n": 360,
+  "predictedFails": false,
+  "predictedFamily": null,
+  "rate": "3.6"
+ },
+ "T100-FAMB-R600p0-N103-B1": {
+  "B_minor": 1,
+  "basis": "T84 measured clean",
+  "n": 103,
+  "predictedFails": false,
+  "predictedFamily": null,
+  "rate": "600.0"
+ },
+ "T100-FAMB-R600p0-N104-B1": {
+  "B_minor": 1,
+  "basis": "T84 measured",
+  "n": 104,
+  "predictedFails": true,
+  "predictedFamily": "B",
+  "rate": "600.0"
+ },
+ "T100-FAMB-R600p0-N108-B1": {
+  "B_minor": 1,
+  "basis": "T84 measured",
+  "n": 108,
+  "predictedFails": true,
+  "predictedFamily": "B",
+  "rate": "600.0"
+ },
+ "T100-FAMB-R600p0-N121-B1": {
+  "B_minor": 1,
+  "basis": "T84's top swept n",
+  "n": 121,
+  "predictedFails": true,
+  "predictedFamily": "B",
+  "rate": "600.0"
+ },
+ "T100-FAMB-R600p0-N122-B1": {
+  "B_minor": 1,
+  "basis": "EXTRAPOLATION above T84's top",
+  "n": 122,
+  "predictedFails": true,
+  "predictedFamily": "B",
+  "rate": "600.0"
+ },
+ "T100-FAMB-R600p0-N150-B1": {
+  "B_minor": 1,
+  "basis": "T84 measured",
+  "n": 150,
+  "predictedFails": true,
+  "predictedFamily": "B",
+  "rate": "600.0"
+ },
+ "T100-FAMB-R600p0-N200-B1": {
+  "B_minor": 1,
+  "basis": "T84 measured",
+  "n": 200,
+  "predictedFails": true,
+  "predictedFamily": "B",
+  "rate": "600.0"
+ },
+ "T100-FAMB-R600p0-N250-B1": {
+  "B_minor": 1,
+  "basis": "EXTRAPOLATION above T84's top",
+  "n": 250,
+  "predictedFails": true,
+  "predictedFamily": "B",
+  "rate": "600.0"
+ }
+}

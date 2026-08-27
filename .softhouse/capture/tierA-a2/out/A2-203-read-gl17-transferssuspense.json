@@ -1,0 +1,1 @@
+{"id":17,"name":"Disabled Asset","glCode":"10400","disabled":false,"manualEntriesAllowed":true,"type":{"id":1,"code":"accountType.asset","value":"ASSET"},"usage":{"id":1,"code":"accountUsage.detail","value":"DETAIL"},"description":"","nameDecorated":"Disabled Asset","tagId":{"id":0}}

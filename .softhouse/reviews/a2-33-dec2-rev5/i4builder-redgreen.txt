@@ -1,0 +1,31 @@
+############ GREEN ARM — the real nexus/ tree at this review's HEAD ############
+A2-33 PROBE root=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39/nexus
+A2-33 CALIBRATION  files=47 packages=5 calls=5210   (must equal the guard's CENSUS line)
+A2-33 I4-BUILDER population (mutatingCallRe matches) = 0
+A2-33 OPAQUE-SQL population (mutatingExecRe matches) = 0   (guard publishes this as the '(N mutating)' figure)
+
+---- the REAL ledgerguard binary on the same tree ----
+CENSUS ledger-invariants — inspected 47 Go files / 5 packages / 532 funcs (1 hold-named) / 713 assignment or inc-dec statements / 343 write targets / 4551 string literals in 4020 concatenation groups / 5210 calls under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39/nexus (recursive, whole Go tree)
+CENSUS ledger-invariants SQL surface — 104 SQL-shaped literals, of which 5 carry a DML verb (UPPER BOUND: English prose containing "update" satisfies it) and 0 name an actual table; 0 exec-family calls (0 mutating). Findings: 0
+NIL-COVERAGE — the SQL surface inspected 4551 string literals and found ZERO SQL DML statements of any kind under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
+NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module declares no database driver at all.
+clean: no balance write path, no UPDATE/DELETE against a journal-entry table, and no hold touching a posted balance, across 47 Go files in 5 packages.
+
+############ RED ARM — scratch copy with builder verbs planted ############
+A2-33 PROBE root=/tmp/a233red
+A2-33 CALIBRATION  files=48 packages=6 calls=5214   (must equal the guard's CENSUS line)
+A2-33 I4-BUILDER population (mutatingCallRe matches) = 4
+   BUILDER-CALL Delete  internal/apps/a233probe/planted.go:15:2
+   BUILDER-CALL Save  internal/apps/a233probe/planted.go:16:2
+   BUILDER-CALL Update  internal/apps/a233probe/planted.go:14:2
+   BUILDER-CALL Upsert  internal/apps/a233probe/planted.go:17:2
+A2-33 OPAQUE-SQL population (mutatingExecRe matches) = 0   (guard publishes this as the '(N mutating)' figure)
+
+---- the REAL ledgerguard binary on the RED tree ----
+CENSUS ledger-invariants — inspected 48 Go files / 6 packages / 537 funcs (1 hold-named) / 713 assignment or inc-dec statements / 343 write targets / 4552 string literals in 4021 concatenation groups / 5214 calls under /tmp/a233red (recursive, whole Go tree)
+REFUSED — the double-entry invariants DEC-2 §4.4 obliges are violated in the Go tree:
+  [I4-BUILDER] internal/apps/a233probe/planted.go:17:2
+NIL-COVERAGE — the SQL surface inspected 4552 string literals and found ZERO SQL DML statements of any kind under /tmp/a233red. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
+NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module declares no database driver at all.
+REAL-GUARD-RED-EXIT=1
+A2-33 I3-PKG-STATE population (package-level var names) = 59 across 47 files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39/nexus

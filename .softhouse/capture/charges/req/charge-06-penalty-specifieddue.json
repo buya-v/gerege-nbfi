@@ -1,0 +1,13 @@
+{
+ "name": "T40 PENALTY flat on specified due date",
+ "chargeAppliesTo": 1,
+ "chargeTimeType": 2,
+ "chargeCalculationType": 1,
+ "chargePaymentMode": 0,
+ "currencyCode": "MNT",
+ "amount": 7500,
+ "penalty": true,
+ "active": true,
+ "locale": "en",
+ "monthDayFormat": "dd MMM"
+}

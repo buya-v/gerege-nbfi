@@ -1,0 +1,14 @@
+== T50 negative tests: is the admissibility checker failable? ==
+  ok  tier1-clean -> exit 0 (wanted 0)
+  ok  tier2-clean -> exit 0 (wanted 0)
+  ok  N1-vacuous-canary -> exit 1 (wanted 1)
+  ok  N2-attestation-drift -> exit 1 (wanted 1)
+  ok  N3-threaded-precision-drift -> exit 1 (wanted 1)
+  ok  N4-null-control-moves -> exit 1 (wanted 1)
+  ok  N5-case-dropped -> exit 1 (wanted 1)
+  ok  N6-absent-case-succeeded -> exit 1 (wanted 1)
+  ok  N7-ordinal-map-drift -> exit 1 (wanted 1)
+  ok  N8-tier2-null-control-moves -> exit 1 (wanted 1)
+  ok  N9-tier2-vacuous-canary -> exit 1 (wanted 1)
+
+== PASS -- the checkers accept both clean payloads and reject all nine corruptions ==

@@ -1,0 +1,3 @@
+[1787364753.785397000] READY
+[1787364753.799922000] LOCK present before release = YES
+[1787364753.813823000] git resolves to: /tmp/t217-scratch/bin-red-push-PRE/git

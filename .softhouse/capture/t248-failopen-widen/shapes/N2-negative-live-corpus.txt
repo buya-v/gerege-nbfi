@@ -1,0 +1,12 @@
+#!/bin/bash
+# NEGATIVE CONTROL N2 -- MUST NOT BE FLAGGED AT ALL, on any condition.
+# A well-formed instrument: the corpus is RESOLVED rather than hard-coded, the `cd` is fatal,
+# the emptiness of the corpus is asserted before anything is reported (P-35), and the sentence
+# it prints is one it actually measured. If this trips the linter, the rule is flagging
+# correctness, and the widening would be buying its recall with false rejections.
+set -euo pipefail
+R="$(git rev-parse --show-toplevel)"
+cd "$R" || exit 2
+n="$(git ls-files | wc -l)"
+[ "$n" -gt 0 ] || { echo "SWEEP ABORT: empty corpus"; exit 2; }
+echo "corpus: $n files"

@@ -1,0 +1,76 @@
+=================================================================== MF-3
+CLAIM UNDER TEST: 'bin/t51-negative.sh passes none, so it NOW REPORTS ONE FURTHER BREACH.'
+
+pre-T91 shim: blob e6c1795a172168105d788321a71ee4ca62b73e36, 183 lines (unhardened copy, asserted)
+post-T91 shim: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a24fd9c7c2f938fb4/.softhouse/capture/charges/bin/preconditions.sh (call-through + MF-2)
+
+interp     variant                        PASS / FAIL / exit
+sh         pre-T91 (unhardened copy)      16 / 5 / 1
+sh         post-T91 (call-through)        16 / 5 / 1
+           breach delta: 0   (the header claims +1)
+
+bash       pre-T91 (unhardened copy)      16 / 5 / 1
+bash       post-T91 (call-through)        16 / 5 / 1
+           breach delta: 0   (the header claims +1)
+
+the FAIL lines, pre-T91 then post-T91 (bash), so the reader can see WHICH breaches:
+    pre     FAIL  tenant timezone_id = 'Asia/Kolkata' — must be Asia/Ulaanbaatar or Asia/Hovd (CLAUDE.md)
+    pre     FAIL  c_configuration.rounding-mode = '6' in fineract_default — ratified value is 4 (HALF_UP); 6 is HALF_EVEN and is NOT production-representative
+    pre     FAIL  schema_connection_parameters = 'serverTimezone=UTC&useLegacyDatetimeCode=false&sessionVariables=time_zone='-00:00'' — must be empty on a capture tenant
+    pre     FAIL  running JVM initialized tenant 'default' at a mode other than HALF_UP: 2026-08-18 09:53:01.504 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN
+    pre     FAIL  rounding-mode canary NOT run (set CANARY_REQ to the committed half-cent request). A DB row is not proof of the mode in force.
+    post    FAIL  tenant timezone_id = 'Asia/Kolkata' — must be Asia/Ulaanbaatar or Asia/Hovd (CLAUDE.md)
+    post    FAIL  c_configuration.rounding-mode = '6' in fineract_default — ratified value is 4 (HALF_UP); 6 is HALF_EVEN and is NOT production-representative
+    post    FAIL  schema_connection_parameters = 'serverTimezone=UTC&useLegacyDatetimeCode=false&sessionVariables=time_zone='-00:00'' — must be empty on a capture tenant
+    post    FAIL  running JVM initialized tenant 'default' at a mode other than HALF_UP: 2026-08-18 09:53:01.504 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN
+    post    FAIL  rounding-mode canary NOT run: CANARY_REQ is unset. Set it to the committed half-cent request (t22-audit/req/calc-pmode2-gerege.json, sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154). A DB row is not proof of the mode in force.
+
+=================================================================== MF-4 — the census
+
+-- A. DIRECT executable invocations of charges/bin/preconditions.sh
+   .softhouse/capture/charges/bin/run-preconditions.sh:9            sh "$W/.softhouse/capture/charges/bin/preconditions.sh" gerege > "$O
+   .softhouse/capture/charges/bin/attest.py:90                    pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(
+   .softhouse/capture/charges/bin/attest-t40.py:91                pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(
+   .softhouse/capture/charges/bin/t51-negative.sh:21              sh "$CH/bin/preconditions.sh" default > "$N/n1-preconditions-default.t
+   .softhouse/capture/leapboundary/bin/t55-negative-tests.sh:52       sh "$W/.softhouse/capture/charges/bin/preconditions.sh" t55-no-suc
+   direct sites: 5   direct files: 5
+
+-- B. executable invocations of the T40 wrapper charges/bin/run-preconditions.sh
+   .softhouse/capture/actualactual/src/pathb-capture.sh:37:sh "$CH/bin/run-preconditions.sh" "$O/preconditions
+   .softhouse/capture/charges/bin/capture.sh:10:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt" > /de
+   .softhouse/capture/charges/bin/control.sh:18:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt" > /de
+   .softhouse/capture/charges/bin/create-charges.sh:11:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt
+   .softhouse/capture/charges/bin/create-charges2.sh:8:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pas
+   .softhouse/capture/charges/bin/t46-capture.sh:18:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt" >
+   .softhouse/capture/charges/bin/t48-capture.sh:28:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt" >
+   .softhouse/capture/charges/bin/t48-determinism.sh:14:sh "$CH/bin/run-preconditions.sh" "$R/preconditions.tx
+   .softhouse/capture/charges/bin/t51-capture.sh:195:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-after
+   .softhouse/capture/charges/bin/t51-capture.sh:29:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt" >
+   .softhouse/capture/charges/bin/t51-capture2.sh:234:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass
+   .softhouse/capture/charges/bin/t51-capture2.sh:28:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass2
+   .softhouse/capture/charges/bin/t51-capture3.sh:20:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass3
+   .softhouse/capture/charges/bin/t51-capture4.sh:22:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass4
+   .softhouse/capture/charges/bin/t51-capture5.sh:120:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass
+   .softhouse/capture/charges/bin/t51-capture5.sh:21:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass5
+   .softhouse/capture/charges/bin/t51-capture6.sh:20:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass6
+   .softhouse/capture/leapboundary/bin/t55-capture.sh:56:sh "$W/.softhouse/capture/charges/bin/run-preconditio
+   wrapper sites: 18   wrapper files: 15
+
+-- TOTAL
+   distinct files: 20
+   executable call sites: 23
+
+-- deliberate exclusions, named so the census's rule is visible
+   charges/bin/selfcheck.sh:15            grep -v EXCLUSION, not an invocation (T91 F-4)
+   charges/bin/attest-t40.py:305          a provenance STRING, not a call
+   pathb/t36/{attest.py,recapture.sh,emiloop-probe.sh,recreate-products.sh}
+                                          these invoke the RIG directly, not this shim
+   t91/prove-guards.sh                    3 invocation(s), but only inside a throwaway
+                                          git-archive export; a red/green harness, not a caller
+
+-- what this census could NOT have found (P-26)
+   * an invocation built by string concatenation or held in a variable, in any language
+   * an invocation from outside .softhouse/capture/ (CI, a Makefile, a scheduled task)
+   * an invocation in a file extension other than .sh / .py
+   * a caller that reaches the shim through a symlink or a copied path (see N10)
+   * a HUMAN who runs it by hand, which is how the negative controls are usually driven

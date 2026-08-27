@@ -1,0 +1,61 @@
+============================================================
+SCENARIO: pinned toolchain ABSENT, a usable `go` on PATH,
+          and the shell ALREADY CARRIES A STALE GOROOT.
+          (the state of any shell that sourced the OLD go-env.sh once)
+============================================================
+--- mine ---
+    final GOROOT      : <unset>
+    GEREGE_GO_SOURCE  : fallback-path
+    does `go` work?   : YES — go version go0.0.0-FAKE test/arm64
+  stderr:
+    | go-env.sh: dropping inherited GOROOT=/nonexistent/stale/goroot — that directory does not exist.
+    | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+    | go-env.sh:   searched (needed <cand>/go/bin/go):
+    |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-cross.K99u3j1j2l/mine/.softhouse/toolchain
+    |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-cross.K99u3j1j2l/mine/.softhouse/bin/../../toolchain
+    | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-cross.K99u3j1j2l/mine/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+    | go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+    | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t253-cross.K99u3j1j2l/fakebin/go
+    | go-env.sh:   go version go0.0.0-FAKE test/arm64
+    | go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+    | go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+    | go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+--- theirs ---
+    final GOROOT      : /nonexistent/stale/goroot
+    GEREGE_GO_SOURCE  : substituted:/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t253-cross.K99u3j1j2l/fakebin/go
+    does `go` work?   : NO — go: cannot find GOROOT directory: /nonexistent/stale/goroot
+  stderr:
+    | gerege go-env: THE PINNED GO TOOLCHAIN IS NOT ON THIS HOST.
+    | gerege go-env:   looked for an executable go/bin/go under, in order:
+    | gerege go-env:     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-cross.K99u3j1j2l/theirs/.softhouse/toolchain   ABSENT
+    | gerege go-env: SUBSTITUTING the go already on PATH:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t253-cross.K99u3j1j2l/fakebin/go
+    | gerege go-env:   go: cannot find GOROOT directory: /nonexistent/stale/goroot
+    | gerege go-env:   WHY: the pinned toolchain is gitignored and host-local, so it is absent on
+    | gerege go-env:   every host but the one it was installed on. Refusing here would make the
+    | gerege go-env:   harness unrunnable rather than safer — the compiler-absent refusals in
+    | gerege go-env:   check-ledger-invariants.sh and conformance.sh:load_toolchain still stand.
+    | gerege go-env:   GOROOT/GOPATH/GOCACHE/GOMODCACHE are deliberately NOT exported on this path;
+    | gerege go-env:   this go uses its own built-in GOROOT.
+    | gerege go-env: THIS IS A TOOLCHAIN SUBSTITUTION AND IT IS STATED, NOT HIDDEN. It is fine for
+    | gerege go-env:   building and for the source-level guards. It is NOT a pinned-toolchain run,
+    | gerege go-env:   and any PARITY claim must name the toolchain above. GEREGE_GO_STRICT=1
+    | gerege go-env:   refuses instead of substituting.
+
+=== ASSESSMENT ===
+  OK   : T253b (mine) DROPPED the stale GOROOT
+  OK   : T253b: the fallback go actually RUNS
+  NOTE : d7a7ea3 LEAVES the stale GOROOT in place (it exports none, but does
+         not clear the inherited one).
+  FINDING: d7a7ea3 announces a fallback to a go that then CANNOT RUN, with the
+           very error its own header describes: "cannot find GOROOT directory".
+           The announcement is correct; the substitution it announces does not work.
+
+=== the OTHER direction: what theirs has that mine does not ===
+  GEREGE_GO_STRICT in theirs : True
+  GEREGE_GO_STRICT in mine   : False
+  d7a7ea3 offers GEREGE_GO_STRICT=1 — an opt-in HARD REFUSAL, so the rejected
+  alternative is reachable as CONFIG rather than as a patch. T253b has no such
+  switch. On the merits this is THEIRS BETTER and it should be adopted.
+
+CROSS-COMPARE: my own assertions held. Differences reported above are findings,
+not failures — the driver reconciles, not this instrument.

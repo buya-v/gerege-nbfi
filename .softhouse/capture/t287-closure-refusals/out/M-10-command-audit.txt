@@ -1,0 +1,37 @@
+Pager usage is off.
+=== command source rows from id 345 up (this task sits at the tail) ===
+psql:<stdin>:15: ERROR:  column "processing_result_enum" does not exist
+LINE 1: ...resource_id, office_id, made_on_date, checker_id, processing...
+                                                             ^
+
+=== the same rows, with the command json, so the refused ones are identifiable ===
+ id  | action_name | entity_name  |                                                    command_json_head                                                     
+-----+-------------+--------------+--------------------------------------------------------------------------------------------------------------------------
+ 345 | CREATE      | LOANPRODUCT  | {"shortName": "T7B3", "name": "T275 ChargeOff Reason Dangling NonExpense", "description": "T275 capture: product-to-acco
+ 346 | CREATE      | JOURNALENTRY | {                                                                                                                       +
+     |             |              |   "officeId": 1,                                                                                                        +
+     |             |              |   "transactionDate": "2026-12-31",                                                                                      +
+     |             |              |   "dateFormat": "yyyy-MM-dd",                                                                                           +
+     |             |              |   "locale": "en",                                                                                                       +
+     |             |              |   "currencyCode": 
+ 347 | CREATE      | JOURNALENTRY | {                                                                                                                       +
+     |             |              |   "officeId": 1,                                                                                                        +
+     |             |              |   "transactionDate": "2026-08-24",                                                                                      +
+     |             |              |   "dateFormat": "yyyy-MM-dd",                                                                                           +
+     |             |              |   "locale": "en",                                                                                                       +
+     |             |              |   "currencyCode": 
+ 348 | CREATE      | GLCLOSURE    | {"officeId":1,"closingDate":"2026-01-31","comments":"T287 TEMPORARY closure to capture the ACCOUNTING_CLOSED refusal. Da
+ 349 | CREATE      | JOURNALENTRY | {                                                                                                                       +
+     |             |              |   "officeId": 1,                                                                                                        +
+     |             |              |   "transactionDate": "2026-01-31",                                                                                      +
+     |             |              |   "dateFormat": "yyyy-MM-dd",                                                                                           +
+     |             |              |   "locale": "en",                                                                                                       +
+     |             |              |   "currencyCode": 
+ 350 | CREATE      | JOURNALENTRY | {                                                                                                                       +
+     |             |              |   "officeId": 1,                                                                                                        +
+     |             |              |   "transactionDate": "2026-01-15",                                                                                      +
+     |             |              |   "dateFormat": "yyyy-MM-dd",                                                                                           +
+     |             |              |   "locale": "en",                                                                                                       +
+     |             |              |   "currencyCode": 
+(6 rows)
+

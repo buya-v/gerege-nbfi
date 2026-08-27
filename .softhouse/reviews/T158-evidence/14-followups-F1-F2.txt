@@ -1,0 +1,26 @@
+=== F-1  prove-f1.sh overwrites a LIVE tracked rig with no trap
+  traps in .softhouse/capture/pathb/t80/prove-f1.sh: 0
+  live (fixed) attest.py sha256 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+  pre-fix  813acb1:.softhouse/capture/pathb/t36/attest.py sha256 c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92
+  interrupted INSIDE the window (SIGKILL to the process group)
+  attest.py in the tree afterwards: PRE-FIX BYTES
+  git status afterwards (4 path(s)):
+      M .softhouse/capture/pathb/t36/attest.py
+      ?? .softhouse/capture/pathb/t80/out/.f1-before
+      ?? .softhouse/capture/pathb/t80/out/.f1-fixed
+      ?? .softhouse/capture/pathb/t80/out/.f1-out1
+  => CONFIRMED  live rig left at pre-fix bytes=True, shown by git status=True
+
+=== F-2  a Python `finally` does not run on SIGTERM (and the damage is loud)
+  SIGINT   -> exit=-2   target left as ORIGINAL  finally ran: True
+  SIGTERM  -> exit=-15  target left as MUTATED   finally ran: False
+  SIGKILL  -> exit=-9   target left as MUTATED   finally ran: False
+
+  => CONFIRMED  driven above; the leftover is a MODIFIED TRACKED FILE, which git status shows and which turns the port red (M7 is a KILLED mutation) — loud, not silent
+
+=== SUMMARY
+  CONFIRMED      F-1 an interruption strands the PRE-FIX rig in the live tree
+  CONFIRMED      F-2 SIGINT
+  CONFIRMED      F-2 SIGTERM
+  CONFIRMED      F-2 SIGKILL
+  CONFIRMED      F-2 SIGINT unwinds, SIGTERM/SIGKILL do not — so the revert is skipped

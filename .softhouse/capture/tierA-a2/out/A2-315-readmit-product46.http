@@ -1,0 +1,9 @@
+POST /loanproducts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-26-admit-p46.json
+body-wire-bytes-artefact: A2-315-readmit-product46.req
+body-sha256: a76250859973160d9235846a56c8fed2d61aaebec8c7196b716c4d3a4997cba1
+body-bytes: 996
+captured-at-utc: 2026-08-22T02:09:24Z

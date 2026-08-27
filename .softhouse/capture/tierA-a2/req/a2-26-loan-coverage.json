@@ -1,0 +1,25 @@
+{
+  "clientId": 1,
+  "productId": "__PRODUCT_ID__",
+  "principal": 1200000,
+  "loanTermFrequency": 6,
+  "loanTermFrequencyType": 2,
+  "numberOfRepayments": 6,
+  "repaymentEvery": 1,
+  "repaymentFrequencyType": 2,
+  "interestRatePerPeriod": 12,
+  "interestRateFrequencyType": 3,
+  "interestType": 0,
+  "amortizationType": 1,
+  "interestCalculationPeriodType": 1,
+  "transactionProcessingStrategyCode": "mifos-standard-strategy",
+  "expectedDisbursementDate": "01 February 2026",
+  "submittedOnDate": "01 February 2026",
+  "loanType": "individual",
+  "charges": [
+    {"chargeId": 1, "amount": 15000},
+    {"chargeId": 6, "amount": 7500, "dueDate": "01 March 2026"}
+  ],
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}

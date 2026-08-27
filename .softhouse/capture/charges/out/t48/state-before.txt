@@ -1,0 +1,3 @@
+m_charge|12
+m_product_loan|16
+m_loan|0

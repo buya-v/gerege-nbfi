@@ -1,0 +1,21 @@
+T292 NEGATIVE RESULT -- what gating `headerAffirmations` costs, MEASURED
+================================================================================================
+ARM A: the shipped rule (headerAffirmations is CENSUS ONLY)
+ARM B: the same rule with ONE token added to the gate expression -- `or rep.header_affirmations`
+
+  document                                                   ARM A (shipped)        ARM B (gated)         
+  ----------------------------------------------------------------------------------------------
+  T291 X5   (affirmation in a LIST over a refuted record)    exit 0 GREEN           exit 1 REFUSED        
+  T291 X5b  (the same as a MAPPING KEY)                      exit 0 GREEN           exit 1 REFUSED        
+  REAL      classify-t229.json  -- COMMITTED EVIDENCE        exit 0 GREEN           exit 1 REFUSED        
+
+READ THE TABLE, NOT THE PROSE:
+  ARM B refuses X5 -- which is what T286's guard #10 CLAIMED to do and, as T291
+  measured, did not. It buys that by ALSO refusing `classify-t229.json`, whose
+  three RESCUED_BY_SITE3 rows carry `verdict: AS PREDICTED` and no P-key BY DESIGN.
+  There is no container-blind predicate that separates them: they are the same
+  shape. Guard #10's ambition is UNREACHABLE without an EXTERNAL declaration of
+  which containers hold graded records.
+
+DEMONSTRATED: YES   (ARM B refuses X5 -> 1, and refuses committed evidence -> 1)
+EXIT 0

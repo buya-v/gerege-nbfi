@@ -1,0 +1,55 @@
+=== T179 selftest — both failure shapes, plus the over-broadness check
+python parser: ast     shell parser: NONE (refusal path)
+
+  red_prose_guard.py         parser=UNGUARDED                  expected=UNGUARDED                  OK
+                             T156 regex says GUARDED=True  (expected True)  OK
+                             why: no try/finally, context manager or live handler encloses this call
+
+  red_guard_elsewhere.py     parser=UNGUARDED                  expected=UNGUARDED                  OK
+                             T156 regex says GUARDED=True  (expected True)  OK
+                             why: no try/finally, context manager or live handler encloses this call
+
+  green_try_finally.py       parser=GUARDED-FINALLY            expected=GUARDED-FINALLY            OK
+                             T156 regex says GUARDED=True  (expected True)  OK
+                             why: enclosed by try/finally at line 22
+
+  green_atexit.py            parser=GUARDED-PROCESS            expected=GUARDED-PROCESS            OK
+                             T156 regex says GUARDED=True  (expected True)  OK
+                             why: live process handler: atexit.register@22 (module-scope)
+
+  green_contextmanager.py    parser=GUARDED-CONTEXTMANAGER     expected=GUARDED-CONTEXTMANAGER     OK
+                             T156 regex says GUARDED=True  (expected True)  OK
+                             why: enclosed by `with preserved` at line 24 (restoring CM)
+
+  green_atomic.py            parser=ATOMIC                     expected=ATOMIC                     OK
+                             T156 regex says GUARDED=False (expected False)  OK
+                             why: os.replace() of a temp file — atomic on POSIX
+
+  green_indirect.py          parser=GUARDED-FINALLY-INDIRECT   expected=GUARDED-FINALLY-INDIRECT   OK
+                             T156 regex says GUARDED=True  (expected True)  OK
+                             why: every in-file call of _write() is inside a try/finally
+
+  unknown_target.py          parser=UNGUARDED                  expected=UNGUARDED                  OK
+                             T156 regex says GUARDED=False (expected False)  OK
+                             why: no try/finally, context manager or live handler encloses this call
+
+  red_runtime_root.py        parser=UNGUARDED                  expected=UNGUARDED                  OK
+                             T156 regex says GUARDED=False (expected False)  OK
+                             why: no try/finally, context manager or live handler encloses this call
+
+  chain_scratch_discard.py   parser=UNGUARDED                  expected=UNGUARDED                  OK
+                             T156 regex says GUARDED=False (expected False)  OK
+                             why: no try/finally, context manager or live handler encloses this call
+
+  red_prose_guard.sh         parser=REFUSED-SHELL-NO-PARSER    expected=REFUSED-SHELL-NO-PARSER    OK
+                             T156 regex says GUARDED=True
+
+  green_real_trap.sh         parser=REFUSED-SHELL-NO-PARSER    expected=REFUSED-SHELL-NO-PARSER    OK
+                             T156 regex says GUARDED=True
+
+  DISAGREEMENT CHECK on shape (a): T156=GUARDED, parser=UNGUARDED -> OK
+  OVER-BROADNESS CHECK: 5/5 green fixtures classified as guarded/atomic -> OK
+  T205 DIFFERENTIAL: runtime-ROOT store write=TRUSTED/UNGUARDED (chain=True, tags=STORE) vs unresolved param=UNKNOWN -> OK
+  T205 POLARITY (injected SCRATCH chain fragment must be DISCARDED): injection-live=True site=UNKNOWN/UNGUARDED -> OK
+
+SELFTEST PASSED — 10 python cases, 2 shell refusals, both directions asserted

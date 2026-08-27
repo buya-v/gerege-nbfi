@@ -1,0 +1,130 @@
+== exact-text sidecars ==
+  19 sidecars written; 218 raw numeric leaves checked in the last file
+
+
+######## GAP 1 + GAP 3 -- m_charge.amount vs the request's amount ########
+  1-defamount-omitted-tt2              chargeTimeType SPECIFIED_DUE_DATE (2)                 HTTP 400  The parameter `charges[1][amount]` is mandatory.
+  3-defamount-omitted-tt8              chargeTimeType INSTALMENT_FEE (8)                     HTTP 400  The parameter `charges[1][amount]` is mandatory.
+  5-defamount-omitted-tt1              chargeTimeType DISBURSEMENT (1)                       HTTP 400  The parameter `charges[1][amount]` is mandatory.
+  7-defamount-omitted-pct              chargeTimeType DISBURSEMENT (1), PERCENT_OF_AMOUNT    HTTP 400  The parameter `charges[1][amount]` is mandatory.
+  3-calc5-omitted                      chargeTimeType TRANCHE_DISBURSEMENT (12), calc type 5 HTTP 400  The parameter `charges[1][amount]` is mandatory.
+
+  the DISAGREEING legs (request amount != m_charge.amount):
+     2-defamount-disagree-tt2           m_charge.amount 9000.000000  request 4444   -> totalFeeChargesCharged 4444.00
+     4-defamount-disagree-tt8           m_charge.amount 2500.000000  request 3333   -> totalFeeChargesCharged 39996.00
+     6-defamount-disagree-tt1           m_charge.amount 15000.000000 request 5555   -> totalFeeChargesCharged 5555.00
+     8-defamount-disagree-pct           m_charge.amount 1.234500     request 2.5    -> totalFeeChargesCharged 30000.00
+
+
+######## GAP 2 -- chargeCalculationType 5 and 9 ########
+  create-c5-tt1            HTTP 400  The parameter `chargeCalculationType` must not be any of [ 5 ] .
+  create-c5-tt12           HTTP 200  created charge id 13
+  create-c5-tt2            HTTP 400  The parameter `chargeCalculationType` must not be any of [ 5 ] .
+  create-c5-tt8            HTTP 400  The parameter `chargeCalculationType` must not be any of [ 5 ] .
+  create-c9-invalid        HTTP 400  The parameter `chargeCalculationType` must be one of [ 1, 2, 3, 4, 5 ] .
+  create-tt9-overdue       HTTP 403  Errors contain reason for domain rule violation.
+
+== calc type 5 (id 13, TRANCHE) vs calc type 2 (id 3) at the same 1.2345 % -- T48-CH-10 vs T48-CH-14
+   0 of 280 cells differ  (expected observe)
+     -> EVERY CELL AGREES. This comparison DISCRIMINATES NOTHING: a port that conflated the two would pass it.
+
+== calc type 5 WITH a dueDate vs WITHOUT -- T48-CH-11 vs T48-CH-10
+   0 of 280 cells differ  (expected observe)
+     -> EVERY CELL AGREES. This comparison DISCRIMINATES NOTHING: a port that conflated the two would pass it.
+
+== calc type 5 landed at all? T48-CH-10 vs the zero-charge control
+   9 of 280 cells differ  (expected separate)
+     row0.feeChargesDue                 14814.000000     | 0
+     row0.feeChargesOutstanding         14814.000000     | 0
+     row0.totalActualCostOfLoanForPeriod 14814.000000     | 0
+     row0.totalDueForPeriod             14814.000000     | 0
+     row0.totalOriginalDueForPeriod     14814.000000     | 0
+     row0.totalOutstandingForPeriod     14814.000000     | 0
+     row0.totalOverdue                  14814.000000     | 0
+     totalFeeChargesCharged             14814.00         | 0.00
+     totalRepaymentExpected             1359802.47       | 1344988.47
+
+
+######## GAP 4 -- RepaymentEvery > 3 ########
+  0-repayevery4                      periods  6  loanTermInDays 730  totalInterest 319868.56    totalFee 0.00       totalRepayment 1519868.56
+      p1  ['2026', '1', '1'] -> ['2026', '5', '1']  days 120  principal 166911.43      interest 86400.00     fee 0.00       total 253311.43
+      p2  ['2026', '5', '1'] -> ['2026', '9', '1']  days 123  principal 178929.05      interest 74382.38     fee 0.00       total 253311.43
+      p3  ['2026', '9', '1'] -> ['2027', '1', '1']  days 122  principal 191811.94      interest 61499.49     fee 0.00       total 253311.43
+      p4  ['2027', '1', '1'] -> ['2027', '5', '1']  days 120  principal 205622.40      interest 47689.03     fee 0.00       total 253311.43
+      p5  ['2027', '5', '1'] -> ['2027', '9', '1']  days 123  principal 220427.22      interest 32884.21     fee 0.00       total 253311.43
+      p6  ['2027', '9', '1'] -> ['2028', '1', '1']  days 122  principal 236297.96      interest 17013.45     fee 0.00       total 253311.41
+  1-repayevery6                      periods  4  loanTermInDays 730  totalInterest 340564.86    totalFee 0.00       totalRepayment 1540564.86
+      p1  ['2026', '1', '1'] -> ['2026', '7', '1']  days 181  principal 255541.21      interest 129600.00    fee 0.00       total 385141.21
+      p2  ['2026', '7', '1'] -> ['2027', '1', '1']  days 184  principal 283139.66      interest 102001.55    fee 0.00       total 385141.21
+      p3  ['2027', '1', '1'] -> ['2027', '7', '1']  days 181  principal 313718.74      interest 71422.47     fee 0.00       total 385141.21
+      p4  ['2027', '7', '1'] -> ['2028', '1', '1']  days 184  principal 347600.39      interest 37540.84     fee 0.00       total 385141.23
+  2-repayevery12                     periods  2  loanTermInDays 730  totalInterest 401432.49    totalFee 0.00       totalRepayment 1601432.49
+      p1  ['2026', '1', '1'] -> ['2027', '1', '1']  days 365  principal 541516.25      interest 259200.00    fee 0.00       total 800716.25
+      p2  ['2027', '1', '1'] -> ['2028', '1', '1']  days 365  principal 658483.75      interest 142232.49    fee 0.00       total 800716.24
+  4-repayevery3-comparator           periods  8  loanTermInDays 730  totalInterest 309438.57    totalFee 0.00       totalRepayment 1509438.57
+      p1  ['2026', '1', '1'] -> ['2026', '4', '1']  days 90   principal 123879.82      interest 64800.00     fee 0.00       total 188679.82
+      p2  ['2026', '4', '1'] -> ['2026', '7', '1']  days 91   principal 130569.33      interest 58110.49     fee 0.00       total 188679.82
+      p3  ['2026', '7', '1'] -> ['2026', '10', '1']  days 92   principal 137620.07      interest 51059.75     fee 0.00       total 188679.82
+      p4  ['2026', '10', '1'] -> ['2027', '1', '1']  days 92   principal 145051.56      interest 43628.26     fee 0.00       total 188679.82
+      p5  ['2027', '1', '1'] -> ['2027', '4', '1']  days 90   principal 152884.34      interest 35795.48     fee 0.00       total 188679.82
+      p6  ['2027', '4', '1'] -> ['2027', '7', '1']  days 91   principal 161140.10      interest 27539.72     fee 0.00       total 188679.82
+      p7  ['2027', '7', '1'] -> ['2027', '10', '1']  days 92   principal 169841.66      interest 18838.16     fee 0.00       total 188679.82
+      p8  ['2027', '10', '1'] -> ['2028', '1', '1']  days 92   principal 179013.12      interest 9666.71      fee 0.00       total 188679.83
+  3-repayevery4-instalmentfee        periods  6  loanTermInDays 730  totalInterest 319868.56    totalFee 15000.00   totalRepayment 1519868.56
+      p1  ['2026', '1', '1'] -> ['2026', '5', '1']  days 120  principal 166911.43      interest 86400.00     fee 2500.00    total 255811.43
+      p2  ['2026', '5', '1'] -> ['2026', '9', '1']  days 123  principal 178929.05      interest 74382.38     fee 2500.00    total 255811.43
+      p3  ['2026', '9', '1'] -> ['2027', '1', '1']  days 122  principal 191811.94      interest 61499.49     fee 2500.00    total 255811.43
+      p4  ['2027', '1', '1'] -> ['2027', '5', '1']  days 120  principal 205622.40      interest 47689.03     fee 2500.00    total 255811.43
+      p5  ['2027', '5', '1'] -> ['2027', '9', '1']  days 123  principal 220427.22      interest 32884.21     fee 2500.00    total 255811.43
+      p6  ['2027', '9', '1'] -> ['2028', '1', '1']  days 122  principal 236297.96      interest 17013.45     fee 2500.00    total 255811.41
+
+== repaymentEvery 4 vs 3 -- T48-CH-20 vs T48-CH-24
+   135 of 191 cells differ  (expected separate)
+     row1.daysInPeriod                  120              | 90
+     row1.dueDate                       ['2026', '5', '1'] | ['2026', '4', '1']
+     row1.interestDue                   86400.00         | 64800.00
+     row1.interestOriginalDue           86400.00         | 64800.00
+     row1.interestOutstanding           86400.00         | 64800.00
+     row1.principalDue                  166911.43        | 123879.82
+     row1.principalLoanBalanceOutstanding 1033088.57       | 1076120.18
+     row1.principalOriginalDue          166911.43        | 123879.82
+     row1.principalOutstanding          166911.43        | 123879.82
+     row1.totalActualCostOfLoanForPeriod 86400.00         | 64800.00
+     row1.totalDueForPeriod             253311.43        | 188679.82
+     row1.totalInstallmentAmountForPeriod 253311.43        | 188679.82
+     row1.totalOriginalDueForPeriod     253311.43        | 188679.82
+     row1.totalOutstandingForPeriod     253311.43        | 188679.82
+     row1.totalOverdue                  253311.43        | 188679.82
+     row2.daysInPeriod                  123              | 91
+     ... 119 more
+
+== repaymentEvery 4 with an instalment fee vs without -- T48-CH-23 vs T48-CH-20
+   38 of 148 cells differ  (expected separate)
+     row1.feeChargesDue                 2500.00          | 0.00
+     row1.feeChargesOutstanding         2500.00          | 0.00
+     row1.totalActualCostOfLoanForPeriod 88900.00         | 86400.00
+     row1.totalDueForPeriod             255811.43        | 253311.43
+     row1.totalOriginalDueForPeriod     255811.43        | 253311.43
+     row1.totalOutstandingForPeriod     255811.43        | 253311.43
+     row1.totalOverdue                  255811.43        | 253311.43
+     row2.feeChargesDue                 2500.00          | 0.00
+     row2.feeChargesOutstanding         2500.00          | 0.00
+     row2.totalActualCostOfLoanForPeriod 76882.38         | 74382.38
+     row2.totalDueForPeriod             255811.43        | 253311.43
+     row2.totalOriginalDueForPeriod     255811.43        | 253311.43
+     row2.totalOutstandingForPeriod     255811.43        | 253311.43
+     row3.feeChargesDue                 2500.00          | 0.00
+     row3.feeChargesOutstanding         2500.00          | 0.00
+     row3.totalActualCostOfLoanForPeriod 63999.49         | 61499.49
+     ... 22 more
+
+  INVARIANT RE-CHECK -- does totalRepaymentExpected equal the sum of totalDueForPeriod?  (T40 finding 1)
+     4-repayevery3-comparator           sum(totalDueForPeriod) 1509438.57     totalRepaymentExpected 1509438.57     AGREE
+     0-repayevery4                      sum(totalDueForPeriod) 1519868.56     totalRepaymentExpected 1519868.56     AGREE
+     3-repayevery4-instalmentfee        sum(totalDueForPeriod) 1534868.56     totalRepaymentExpected 1519868.56     DISAGREE by 15000.00
+     2-defamount-disagree-tt2           sum(totalDueForPeriod) 1349432.47     totalRepaymentExpected 1344988.47     DISAGREE by 4444.00
+     4-defamount-disagree-tt8           sum(totalDueForPeriod) 1384984.47     totalRepaymentExpected 1344988.47     DISAGREE by 39996.00
+     6-defamount-disagree-tt1           sum(totalDueForPeriod) 1350543.47     totalRepaymentExpected 1350543.47     AGREE
+     0-calc5-disbursement               sum(totalDueForPeriod) 1359802.470000 totalRepaymentExpected 1359802.47     AGREE
+
+== T48 charge analysis PASS

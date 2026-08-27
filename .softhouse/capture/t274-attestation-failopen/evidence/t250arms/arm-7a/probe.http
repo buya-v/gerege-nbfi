@@ -1,0 +1,27 @@
+attestation-derivation: curl --trace-ascii; request headers AS SENT
+attestation-schema: 2
+send-header-block 1 of 1
+POST /fineract-provider/api/v1/offices HTTP/1.1
+Host: localhost:8443
+User-Agent: curl/8.7.1
+Accept: */*
+Authorization: Basic <redacted sha256:2614d66f727c25bb>
+Fineract-Platform-TenantId: gerege
+Content-Type: application/json
+Content-Length: 46
+request-headers-artefact: probe.reqhdr
+request-headers-sha256: 0ba40c45b450f152f5747cf1dcdefb160be333581d3a2cee4684e6969a80cf63
+body-wire-bytes-artefact: probe.req
+body-sha256: a4e0d3eeb2768121d86bc1b224f6a0b0fa721a035e3798f4ef7f3141eb9a1e2c
+body-bytes: 46
+content-length-crosscheck: MATCH (46 bytes)
+response-headers-artefact: probe.resphdr
+response-headers-sha256: 156287bde16c08a15051a6c09ff30d0277b655299f29cf46e95db07e6b386eba
+response-status-line: HTTP/1.1 400
+response-artefact: probe.json
+response-sha256: 1a73a90a39da05cd450d3fd2c6be5ca37183c4b60729a3ea20a003a70fc82050
+response-bytes: 468
+response-content-length-crosscheck: MATCH (468 bytes)
+response-status-crosscheck: MATCH (400)
+response-status-artefact: probe.status
+captured-at-utc: 2026-08-22T14:32:22Z

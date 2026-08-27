@@ -1,0 +1,28 @@
+T34 (D) -- DEC-1 4.3.2 step 4's roll-forward vs the committed corpus.
+NO ORACLE WAS CONTACTED.  The expectations are transcribed from
+.softhouse/capture/out/capture-prod-raw.json.
+
+  capture P-03: schedule start 2024-01-01, disbursement 2024-02-01,
+                100.00 / 6 x 7.0%, (19, HALF_UP)
+
+   period         due  principal   interest  reading A  reading B    CAPTURE
+        1  2024-02-01       0.00       0.00     100.00       0.00       0.00   <-- DIVERGES
+        2  2024-03-01      19.77       0.58      80.23      80.23      80.23   
+        3  2024-04-01      19.88       0.47      60.35      60.35      60.35   
+        4  2024-05-01      20.00       0.35      40.35      40.35      40.35   
+        5  2024-06-01      20.11       0.24      20.24      20.24      20.24   
+        6  2024-07-01      20.24       0.12       0.00       0.00       0.00   
+
+  reading A (DEC-1 4.3.2 step 4 read literally): 1 row(s) disagree with the capture
+  reading B (segmentation-table row 2 read literally): 0 row(s) disagree with the capture
+
+  The divergence class is EVERY graded-domain request whose single
+  disbursement falls on a repayment period's DueDate -- an entire row
+  of DEC-1 4.3.1's own related-periods table ('on period j's due date,
+  j < N').  The gap on that row is the WHOLE PRINCIPAL.
+
+  Note also: the 13-observation check in DEC-1 4.3.1's Provenance
+  paragraph compares three numbers per shape (level installment, final
+  installment, total interest).  It does not compare
+  OutstandingPrincipalMinor at all, so '13 of 13' could not have
+  detected this.  The row-level capture P-03 does.

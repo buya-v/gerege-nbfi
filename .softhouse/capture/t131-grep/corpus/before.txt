@@ -1,0 +1,3 @@
+line1 ok
+PIN_PG_MAJOR_MINORâ: unbound variable
+line3 ok

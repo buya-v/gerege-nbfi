@@ -1,0 +1,124 @@
+=== T180 — the live attester overwrite is REMOVED, not merely recoverable
+run at 2026-08-22T01:30:12Z
+repo: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae714ce0fae65b988
+
+OLD (overwrite-shaped, T161 as merged)  blob 10e8ff7889d318370c4fe316e5f01d5e8ce65d26
+                                        sha256 b7c206712147f550e0f3a191c5440ce76af1b87366efbbc827fd482285970c44  (18792 bytes) — VERIFIED
+NEW (worktree .softhouse/capture/pathb/t80/prove-f1.sh)
+                                        sha256 5d9283714aa11560ef01793963b89a9841684068fff51684e1387bf47a4100c3  (24116 bytes)
+
+--- input controls (each one can refuse this whole run)
+    OLD and NEW differ                                             yes
+    OLD writes the pre-fix bytes over the LIVE attester (> "$A")   yes
+    NEW does NOT                                                   yes
+    NEW writes them to the SIBLING (> "$SIB")                      yes
+    OLD does NOT                                                   yes
+    NEW still carries traps — the recovery is NOT retired          yes
+    NEW still cleans the evidence set                              yes
+    NEW `trap ` statements: 6
+
+sandbox: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t180-sandbox.tjo34ok7/repo  (clone at 60109a4c7014)
+live    t36/attest.py sha256 in the sandbox: 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2  (pin cross-checked)
+pre-fix t36/attest.py sha256 (813acb1)     : c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92
+
+--- ARM RED — the OLD, overwrite-shaped script, SIGKILLed at the window's
+              maximum-damage instant (stamp written, nothing cleaned yet)
+    BEFORE  live t36/attest.py = 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2  [567e4cf0… AS REQUIRED]
+    window observed at 13.8s (polled, not timed)
+    IN-WINDOW live t36/attest.py = c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92
+               [*** DOWNGRADED TO THE PRE-FIX ATTESTER ***]
+    script exit=-9  elapsed=35.1s
+    rig after: attest.py=PRE-FIX  sibling=absent  stamp=PRESENT  emiloop=MUTATED(2)  marker=left
+    AFTER   live t36/attest.py = c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92  [*** MOVED — this is the defect ***]
+       M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+       ?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+    => RED — the live attester was downgraded INSIDE the window and LEFT downgraded by SIGKILL, which no trap can catch. This is the write T180 removes.
+
+--- ARM LEGACY — hand that stranded tree to the NEW script
+    The NEW script never writes the attester, so nothing on its normal path can
+    restore one. It KEEPS `f1_restore_attester` for exactly this case: a tree
+    stranded by the OLD shape, carrying the OLD marker format. Delete that
+    branch and this arm strands forever — which is why it is not dead code.
+    on entry: attest.py=PRE-FIX  sibling=absent  stamp=PRESENT  emiloop=MUTATED(2)  marker=left
+    | RECOVERED: a LEGACY (pre-T180, overwrite-shaped) run died mid-swap and left .softhouse/capture/pathb/t36/attest.py at c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92; restored to 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2 from blob 9e38fe5e273c959a004423faa7e612f0240f51bc
+    script exit=0  elapsed=74.0s
+    after   : attest.py=live  sibling=absent  stamp=absent  emiloop=clean  marker=gone
+    AFTER   live t36/attest.py = 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2  [567e4cf0… AS REQUIRED]
+    => LEGACY RECOVERY HOLDS — attester back at 567e4cf0…, evidence clean, and the proof then ran to a clean exit 0
+
+--- ARM GREEN — the NEW script, SIGKILLed at the SAME instant by the SAME hook
+    The observable moves with the write: poll t36/.f1-prefix-attest.py instead
+    of t36/attest.py. Everything else about the arm is identical to ARM RED.
+    BEFORE  live t36/attest.py = 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2  [567e4cf0… AS REQUIRED]
+    window observed at 10.2s (polled, not timed)
+    IN-WINDOW sibling t36/.f1-prefix-attest.py = c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92
+               [the pre-fix attester, running, reproducing the defect]
+    IN-WINDOW live    t36/attest.py            = 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+               [567e4cf0… UNTOUCHED WHILE THE DEFECT RAN]
+    script exit=-9  elapsed=30.7s
+    rig after: attest.py=live  sibling=PRESENT  stamp=PRESENT  emiloop=MUTATED(2)  marker=left
+    AFTER   live t36/attest.py = 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2  [567e4cf0… AS REQUIRED]
+    => GREEN — SIGKILL at the same instant, and the live attester never moved off 567e4cf0…. The old shape needed the NEXT run to repair this; there is now nothing to repair.
+    HONEST REMAINDER — why the recovery machinery is NOT retired: the same
+    SIGKILL still left stamp=PRESENT, emiloop=MUTATED(2), sibling=PRESENT, marker=left.
+       M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+       ?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+    The blast radius shrank from {attester + evidence} to {evidence + scratch}.
+    It did not go to zero, and ARM RECOVERY below is what covers what is left.
+
+--- ARM RECOVERY — the NEW script over the tree its own SIGKILL just left
+    | RECOVERED: an earlier run died before it could clean up; .softhouse/capture/pathb/t36/attest.py is UNTOUCHED at 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2, as this shape guarantees — only the scratch sibling and the evidence set need clearing
+    script exit=0  elapsed=70.7s
+    after   : attest.py=live  sibling=absent  stamp=absent  emiloop=clean  marker=gone
+    AFTER   live t36/attest.py = 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2  [567e4cf0… AS REQUIRED]
+    => RECOVERED at start-up — scratch sibling and evidence set cleared, and the proof then ran to a clean exit 0
+
+--- ARM ABLATION — put the overwrite BACK into the NEW script (P-22)
+    `f1_assert_attester_untouched` must FIRE. A check that cannot fail is not a
+    check, and an invariant nobody has watched break is a claim, not a guard.
+    BEFORE  live t36/attest.py = 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2  [567e4cf0… AS REQUIRED]
+    | guard: INVARIANT VIOLATED at after the pre-fix run — .softhouse/capture/pathb/t36/attest.py is at c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92, not the 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2 it had at start-up.
+    | guard: THIS PROOF NEVER WRITES THAT FILE (T180): the pre-fix bytes go to .softhouse/capture/pathb/t36/.f1-prefix-attest.py.
+    | PROOF FAILED: the live attester moved while the pre-fix bytes ran — the overwrite T180 removed is back, or something else wrote it
+    | guard: INVARIANT VIOLATED at exit — .softhouse/capture/pathb/t36/attest.py is at c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92, not the 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2 it had at start-up.
+    | guard: THIS PROOF NEVER WRITES THAT FILE (T180): the pre-fix bytes go to .softhouse/capture/pathb/t36/.f1-prefix-attest.py.
+    script exit=1  elapsed=38.8s
+    rig after: attest.py=PRE-FIX  sibling=absent  stamp=absent  emiloop=clean  marker=gone
+    AFTER   live t36/attest.py = c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92  [*** MOVED — this is the defect ***]
+    => ABLATION FIRED — the check names the moved file, says so, and refuses; the evidence set is still cleaned on the way out. It deliberately does NOT restore the attester: bytes this proof did not write are not its to revert, and reverting them would erase the evidence of whoever did.
+
+--- ARM NULL (P-36) — T158's naive scratch path, actually run
+    The SAME pre-fix bytes, invoked the SAME way, differing only in WHERE the
+    file sits: under t80/out/ (where prove-f2.sh puts its scratch copy) versus
+    beside the live attester in t36/.
+    scratch  t80/out/.f1-prefix.py     exit=1
+        REAL t36/out/emiloop : stamp=absent  emiloop=clean
+        t80/out/out/emiloop  : stamp=PRESENT   <- a directory that should not exist
+        live t36/attest.py   : 567e4cf0… unchanged
+        says: sh: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t180-sandbox.tjo34ok7/repo/.softhouse/capture/pathb/t80/out/preconditions.sh: No such file or directory
+        says: 
+        says: ABORT: preconditions breached — no capture attempted, no attestation written.
+    sibling  t36/.f1-prefix-attest.py  exit=1
+        REAL t36/out/emiloop : stamp=PRESENT  emiloop=MUTATED
+        t80/out/out/emiloop  : stamp=absent   <- a directory that should not exist
+        live t36/attest.py   : 567e4cf0… unchanged
+        says: treat it as a vector, and do not 'normalise' it. Fix the environment and re-run.
+        says: 
+        says: ABORT: preconditions breached — no capture attempted, no attestation written.
+    => NULL CONTROL CONFIRMED — the scratch copy leaves the REAL victim set t36/out/emiloop untouched. It moved HERE, so it moved PATHB and OUT with it, and everything it did it did somewhere else. A proof built on it would print an ABORT, exit non-zero and have tested NOTHING (P-36) — which is exactly how a null control passes. The sibling, identical bytes and identical invocation, reproduces the defect in full. T161's measured claim is RE-VERIFIED here, not inherited.
+
+=== SUMMARY — live .softhouse/capture/pathb/t36/attest.py
+    required at every instant: 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+    | arm      | in-window live attest.py | after SIGKILL |
+    |---|---|---|
+    | RED  (old shape) | PRE-FIX c56825ad… | PRE-FIX c56825ad… (stranded) |
+    | GREEN(new shape) | live 567e4cf0…    | live 567e4cf0…               |
+
+RESULT: PROOF HOLDS — the overwrite is REMOVED. The live attester's digest does not
+        move at any instant in the new shape, including under SIGKILL; the old shape
+        moves it in-window and strands it there; the invariant check fires when the
+        overwrite is put back; the naive scratch path is a null control; and the
+        retained legacy branch still repairs a tree stranded by the old shape.
+        NOT RETIRED: traps, evidence cleanup, the census and start-up recovery. The
+        pre-fix attester still mutates the COMMITTED evidence set t36/out/emiloop
+        whichever file it is run from — measured in ARM GREEN above.

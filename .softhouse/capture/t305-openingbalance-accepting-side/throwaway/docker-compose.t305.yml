@@ -1,0 +1,88 @@
+# T305 -- THROWAWAY REFERENCE-ORACLE INSTANCE for the opening-balance ACCEPTING-side capture.
+#
+# WHY THIS FILE EXISTS, in one sentence: the accepting-side observation is IRREVERSIBLE on any
+# tenant this program keeps (an accepted opening balance is a POSTED journal entry and Fineract
+# has NO delete path for one), so it is taken on an instance that is DESTROYED afterwards --
+# teardown by destruction, which is the only perfect teardown available.
+#
+# IT IS SELF-CONTAINED ON PURPOSE. It does NOT `extends:` the pinned checkout's
+# docker-compose-postgresql.yml, because that file publishes 5432 and 8443 -- the ports the
+# STANDING reference oracle is already serving on -- and compose MERGES `ports` lists by
+# appending, so an override could not unpublish them. Every value below is copied from the
+# pinned checkout's own compose/env files and the copy is auditable line by line:
+#   image postgres:18.3         config/docker/compose/postgresql.yml
+#   image fineract:latest       config/docker/compose/fineract.yml   (sha256:e596339626bf..., the
+#                               EXACT image id the standing fineract-fineract-1 runs -- verified
+#                               `docker inspect -f '{{.Image}}' fineract-fineract-1`)
+#   env files                   config/docker/env/{postgresql,fineract,fineract-common,fineract-postgresql}.env
+#
+# WHAT DIFFERS FROM THE STANDING STACK, and nothing else does:
+#   1. NO published database port (the standing db owns 5432; this one is reached by `docker exec`)
+#   2. 8444:8443 instead of 8443:8443
+#   3. the tenant-seed environment variables below
+#   4. the log volume points at /tmp, never into the pinned checkout
+#
+# THE SEED VARIABLES ARE THE WHOLE POINT AND THEY ARE SOURCE-VERIFIED:
+#   FINERACT_DEFAULT_TENANTDB_IDENTIFIER -> application.properties:61 -> spring.liquibase.parameters
+#     .fineract.tenant.identifier (:499) -> db/changelog/tenant-store/parts/0002_initial_data.xml
+#   FINERACT_DEFAULT_TENANTDB_TIMEZONE   -> application.properties:60 -> :501 -> the same seed,
+#     column timezone_id (0002_initial_data.xml:41)
+#   FINERACT_CONFIG_ROUNDING_MODE        -> application.properties:77 (`fineract.tenant.config
+#     .rounding-mode`, DEFAULT 6) -> :514 -> db/changelog/tenant/parts/0002_initial_data.xml:219-220
+#     `<column name="name" value="rounding-mode"/><column name="value" valueNumeric="${fineract
+#     .tenant.rounding-mode}"/>` -- so the tenant is SEEDED at HALF_UP=4, the CLAUDE.md-ratified
+#     mode, rather than patched to it afterwards.
+#   FINERACT_TENANT_DEFAULT_DB_NAME / FINERACT_DEFAULT_TENANTDB_NAME -> the database the postgres
+#     init script creates and the one the app registers; they must agree.
+#
+# THE TENANT IS NAMED `t305`, NOT `gerege`, DELIBERATELY. A capture whose provenance said tenant
+# `gerege` while it was taken on a throwaway would be indistinguishable from one taken on the
+# graded tenant. The identifier is the disclosure.
+#
+# FOR CAPTURE PURPOSES ONLY. Destroyed by `down.sh` with `-v`.
+services:
+  db:
+    image: postgres:18.3
+    container_name: t305-oracle-db
+    volumes:
+      - /Users/buv/fineract/config/docker/postgresql/docker-entrypoint-initdb.d/01-init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
+    env_file:
+      - /Users/buv/fineract/config/docker/env/postgresql.env
+    environment:
+      FINERACT_TENANT_DEFAULT_DB_NAME: fineract_t305
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 10s
+      retries: 10
+
+  fineract:
+    image: fineract:latest
+    container_name: t305-oracle-app
+    user: "1000:1000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - /Users/buv/fineract/config/docker/logback/logback-override.xml:/app/logback-override.xml:ro
+      - /Users/buv/fineract/config/docker/aws/etc/credentials:/etc/aws/credentials:ro
+      - /tmp/t305-oracle-logs:/var/logs/fineract:rw
+    tmpfs:
+      - /tmp:rw,nosuid,size=256m
+    ports:
+      - "8444:8443"
+    env_file:
+      - /Users/buv/fineract/config/docker/env/fineract.env
+      - /Users/buv/fineract/config/docker/env/fineract-common.env
+      - /Users/buv/fineract/config/docker/env/fineract-postgresql.env
+    environment:
+      FINERACT_DEFAULT_TENANTDB_IDENTIFIER: t305
+      FINERACT_DEFAULT_TENANTDB_NAME: fineract_t305
+      FINERACT_DEFAULT_TENANTDB_DESCRIPTION: T305 throwaway accepting-side capture tenant
+      FINERACT_DEFAULT_TENANTDB_TIMEZONE: Asia/Ulaanbaatar
+      FINERACT_CONFIG_ROUNDING_MODE: "4"
+    healthcheck:
+      test: ["CMD", 'sh', '-c', 'echo -e "Checking for the availability of Fineract server deployment"; while ! nc -z "localhost" 8443; do sleep 1; printf "-"; done; echo -e " >> Fineract server has started";' ]
+      timeout: 1s
+      retries: 60
+    depends_on:
+      db:
+        condition: service_healthy

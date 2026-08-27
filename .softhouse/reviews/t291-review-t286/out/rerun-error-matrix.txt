@@ -1,0 +1,64 @@
+====================================================================================================
+T286/R2 -- ERROR-PATH MATRIX, ENUMERATED BY EXECUTION
+====================================================================================================
+rule : .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+cases: 37
+
+case                                      rc  probe    state    note
+----------------------------------------------------------------------------------------------------
+argv/--help                                2  ABSENT   None     argparse SystemExit(0). THE ONE THAT POI
+argv/unknown-flag                          2  ABSENT   None     argparse usage error.
+argv/no-targets-uses-default               0  PRESENT  GREEN    The built-in default target. If it is ev
+argv/same-file-twice                       0  PRESENT  GREEN    A caller that duplicates a target.
+target/missing                             2  ABSENT   None     Named a file that is not there.
+target/directory                           2  ABSENT   None     A directory `exists()`; it does not read
+target/no-read-permission                  2  ABSENT   None     chmod 000.
+target/empty-file                          2  ABSENT   None     Zero bytes.
+target/not-json                            2  ABSENT   None     Prose where JSON was expected.
+target/non-utf8                            2  ABSENT   None     Bytes that are not text.
+target/json-null                           1  PRESENT  REFUSED  Valid JSON, no structure.
+target/json-empty-array                    1  PRESENT  REFUSED  Valid JSON, no rows.
+target/json-bare-int                       1  PRESENT  REFUSED  Valid JSON, not a container.
+target/json-bare-string                    1  PRESENT  REFUSED  Valid JSON, not a container.
+target/recursion-bomb                      2  ABSENT   None     RecursionError -- a RuntimeError, in no 
+target/header-only-empty                   1  PRESENT  REFUSED  T286/R1b. THE FAIL-OPEN. Must be a measu
+target/root-inspectable-empty              1  PRESENT  REFUSED  T281/R1. Must be a measured REFUSAL.
+target/genuinely-covered                   0  PRESENT  GREEN    A real green. rc 0 with a probe.
+target/real-evidence                       0  PRESENT  GREEN    The committed corpus. A real green.
+target/one-good-one-empty                  1  PRESENT  REFUSED  The batched route -- the one that hid T2
+register/missing                           2  ABSENT   None     The register file is not there.
+register/not-json                          2  ABSENT   None     Malformed edit.
+register/as-array                          2  ABSENT   None     T281's R2 leg.
+register/as-string                         2  ABSENT   None     T281's R2 leg.
+register/as-null                           2  ABSENT   None     T286's.
+register/wrong-pattern                     2  ABSENT   None     The rule refuses to guess. Must be ERROR
+register/no-keys-map                       1  PRESENT  REFUSED  Every boolean becomes UNCLASSIFIED -- a 
+register/entry-without-class-UNREACHED     1  PRESENT  REFUSED  `ent['class']` KeyError NOT reached: the
+register/entry-without-class-REACHED       2  ABSENT   None     The same register against a document tha
+ack/missing                                2  ABSENT   None     The acknowledgements file is not there.
+ack/not-json                               2  ABSENT   None     Malformed edit.
+ack/as-array                               2  ABSENT   None     T281's R2 leg.
+ack/as-null                                2  ABSENT   None     T286's.
+ack/as-string                              2  ABSENT   None     T286's.
+ack/empty-object                           1  PRESENT  REFUSED  No acknowledgements at all: the three re
+ack/block-without-file-key                 2  ABSENT   None     `blk['file']` KeyError.
+target/symlink-to-devnull                  2  ABSENT   None     Exists, reads as zero bytes.
+----------------------------------------------------------------------------------------------------
+
+EXIT-0 CASES (4) -- every one of these is a claim that the rule MEASURED a non-empty
+population and found nothing wrong. Read them one at a time; this is the list that matters.
+    argv/no-targets-uses-default
+        T259-VPA: GREEN files=1 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    argv/same-file-twice
+        T259-VPA: GREEN files=2 rows=22 predicates=48 disagreements=6 acknowledged=6 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    target/genuinely-covered
+        T259-VPA: GREEN files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+    target/real-evidence
+        T259-VPA: GREEN files=1 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0 nilCoverageFiles=0 nonBoolPredicates=0 unreadableVerdicts=0 rootCollapse=0 voidAcks=0 containerRows=0 containerAffirmations=0
+
+INVARIANT VIOLATIONS: 0 -- across every case above, 0=>GREEN probe, 1=>REFUSED probe, 2=>no probe.
+
+WHAT THIS DOES NOT ESTABLISH: that the mutation corpus is complete. It is a corpus, not a proof.
+It contains what two reviews found plus what this task could invent, and the next reviewer should
+add to it rather than re-grep the source. What IS established is that the invariant holds on every
+row printed above, including the rows nobody had driven before (--help, recursion, null register).

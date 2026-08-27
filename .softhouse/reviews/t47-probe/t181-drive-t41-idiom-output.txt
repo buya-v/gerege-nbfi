@@ -1,0 +1,47 @@
+REPO INTEGRITY BEFORE  DEC-1       49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+REPO INTEGRITY BEFORE  contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139
+
+file           exit   import    refusal      first stderr line
+------------------------------------------------------------------------------------------------
+edit.py        2      1 hop     REFUSED      REFUSED.  edit.py rewrites a document in pla
+edit10.py      2      1 hop     REFUSED      REFUSED.  edit10.py rewrites a document in p
+edit11.py      2      1 hop     REFUSED      REFUSED.  edit11.py rewrites a document in p
+edit12.py      2      1 hop     REFUSED      REFUSED.  edit12.py rewrites a document in p
+edit13.py      2      1 hop     REFUSED      REFUSED.  edit13.py rewrites a document in p
+edit14.py      2      1 hop     REFUSED      REFUSED.  edit14.py rewrites a document in p
+edit16.py      2      1 hop     REFUSED      REFUSED.  edit16.py rewrites a document in p
+edit17.py      2      1 hop     REFUSED      REFUSED.  edit17.py rewrites a document in p
+edit18.py      2      1 hop     REFUSED      edit18:go: REFUSED (2): --authorise token do
+edit19.py      2      1 hop     REFUSED      REFUSED.  edit19.py rewrites a document in p
+edit2.py       2      1 hop     REFUSED      REFUSED.  edit2.py rewrites a document in pl
+edit20.py      2      1 hop     REFUSED      REFUSED.  edit20.py rewrites a document in p
+edit21.py      2      1 hop     REFUSED      edit21:adr: REFUSED (2): --authorise token d
+edit22.py      2      1 hop     REFUSED      REFUSED.  edit22.py rewrites a document in p
+edit3.py       2      1 hop     REFUSED      REFUSED.  edit3.py rewrites a document in pl
+edit4.py       2      1 hop     REFUSED      REFUSED.  edit4.py rewrites a document in pl
+edit5.py       2      1 hop     REFUSED      REFUSED.  edit5.py rewrites a document in pl
+edit6.py       2      1 hop     REFUSED      REFUSED.  edit6.py rewrites a document in pl
+edit7.py       2      1 hop     REFUSED      REFUSED.  edit7.py rewrites a document in pl
+edit8.py       2      1 hop     REFUSED      REFUSED.  edit8.py rewrites a document in pl
+edit9.py       2      1 hop     REFUSED      REFUSED.  edit9.py rewrites a document in pl
+edit_go1.py    2      1 hop     REFUSED      REFUSED.  edit_go1.py rewrites a document in
+edit_go2.py    2      1 hop     REFUSED      REFUSED.  edit_go2.py rewrites a document in
+edit_go3.py    2      1 hop     REFUSED      REFUSED.  edit_go3.py rewrites a document in
+edit_go4.py    2      1 hop     REFUSED      REFUSED.  edit_go4.py rewrites a document in
+------------------------------------------------------------------------------------------------
+
+REPO INTEGRITY AFTER   DEC-1       49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab  UNCHANGED
+REPO INTEGRITY AFTER   contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139  UNCHANGED
+
+files driven                        : 25
+refused with exit 2 (default-deny)  : 25
+did NOT refuse                      : 0  []
+reach guard by exactly ONE import hop: 25 of 25
+contain an INLINE copy of the guard : 0  []
+
+The two T178 FOUND live (closed later by T187):
+  edit2.py     REFUSED exit 2
+  edit10.py    REFUSED exit 2
+The two that write BOTH artefacts through one shared guard:
+  edit18.py    REFUSED exit 2
+  edit21.py    REFUSED exit 2

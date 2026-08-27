@@ -1,0 +1,71 @@
+== variant PRE (/tmp/t202/prefix-sweep.zsh) ==
+    ok   [PRE/S1-healthy] rescue branches = 2
+    ok   [PRE/S1-healthy] ERROR logged = no
+fatal: invalid gitfile format: /private/tmp/t202/scratch/wt-b/.git
+    ok   [PRE/S2-corrupt] rescue branches = 1
+    FAIL [PRE/S2-corrupt] REFUSING logged for wt-b: expected yes, got no
+fatal: /private/tmp/t202/scratch/main/.git/worktrees/wt-b/index: index file smaller than expected
+    FAIL [PRE/S3-badindex] REFUSING logged: expected yes, got no
+    ok   [PRE/S4-clean] rescue branches = 0
+    ok   [PRE/S4-clean] ERROR logged = no
+fatal: not a git repository (or any of the parent directories): .git
+    FAIL [PRE/S5-noenum] enumeration ERROR logged: expected yes, got no
+    FAIL [PRE/S6-space] rescue branches: expected 1, got 0
+
+== variant POST (/tmp/t202/postfix-sweep.zsh) ==
+    ok   [POST/S1-healthy] rescue branches = 2
+    ok   [POST/S1-healthy] ERROR logged = no
+fatal: invalid gitfile format: /private/tmp/t202/scratch/wt-b/.git
+    ok   [POST/S2-corrupt] rescue branches = 1
+    ok   [POST/S2-corrupt] REFUSING logged for wt-b = yes
+fatal: /private/tmp/t202/scratch/main/.git/worktrees/wt-b/index: index file smaller than expected
+    ok   [POST/S3-badindex] REFUSING logged = yes
+    ok   [POST/S4-clean] rescue branches = 0
+    ok   [POST/S4-clean] ERROR logged = no
+fatal: not a git repository (or any of the parent directories): .git
+    ok   [POST/S5-noenum] enumeration ERROR logged = yes
+    ok   [POST/S6-space] rescue branches = 1
+
+== variant MUT-A (/tmp/t202/mut-A.zsh) ==
+    FAIL [MUT-A/S1-healthy] rescue branches: expected 2, got 0
+    FAIL [MUT-A/S1-healthy] ERROR logged: expected no, got yes
+fatal: invalid gitfile format: /private/tmp/t202/scratch/wt-b/.git
+    FAIL [MUT-A/S2-corrupt] rescue branches: expected 1, got 0
+    ok   [MUT-A/S2-corrupt] REFUSING logged for wt-b = yes
+fatal: /private/tmp/t202/scratch/main/.git/worktrees/wt-b/index: index file smaller than expected
+    ok   [MUT-A/S3-badindex] REFUSING logged = yes
+    ok   [MUT-A/S4-clean] rescue branches = 0
+    FAIL [MUT-A/S4-clean] ERROR logged: expected no, got yes
+fatal: not a git repository (or any of the parent directories): .git
+    ok   [MUT-A/S5-noenum] enumeration ERROR logged = yes
+    FAIL [MUT-A/S6-space] rescue branches: expected 1, got 0
+
+== variant MUT-B (/tmp/t202/mut-B.zsh) ==
+    ok   [MUT-B/S1-healthy] rescue branches = 2
+    ok   [MUT-B/S1-healthy] ERROR logged = no
+fatal: invalid gitfile format: /private/tmp/t202/scratch/wt-b/.git
+    ok   [MUT-B/S2-corrupt] rescue branches = 1
+    FAIL [MUT-B/S2-corrupt] REFUSING logged for wt-b: expected yes, got no
+fatal: /private/tmp/t202/scratch/main/.git/worktrees/wt-b/index: index file smaller than expected
+    FAIL [MUT-B/S3-badindex] REFUSING logged: expected yes, got no
+    ok   [MUT-B/S4-clean] rescue branches = 0
+    ok   [MUT-B/S4-clean] ERROR logged = no
+fatal: not a git repository (or any of the parent directories): .git
+    ok   [MUT-B/S5-noenum] enumeration ERROR logged = yes
+    ok   [MUT-B/S6-space] rescue branches = 1
+
+== variant MUT-C (/tmp/t202/mut-C.zsh) ==
+    ok   [MUT-C/S1-healthy] rescue branches = 2
+    ok   [MUT-C/S1-healthy] ERROR logged = no
+fatal: invalid gitfile format: /private/tmp/t202/scratch/wt-b/.git
+    ok   [MUT-C/S2-corrupt] rescue branches = 1
+    FAIL [MUT-C/S2-corrupt] REFUSING logged for wt-b: expected yes, got no
+fatal: /private/tmp/t202/scratch/main/.git/worktrees/wt-b/index: index file smaller than expected
+    FAIL [MUT-C/S3-badindex] REFUSING logged: expected yes, got no
+    ok   [MUT-C/S4-clean] rescue branches = 0
+    ok   [MUT-C/S4-clean] ERROR logged = no
+fatal: not a git repository (or any of the parent directories): .git
+    FAIL [MUT-C/S5-noenum] enumeration ERROR logged: expected yes, got no
+    ok   [MUT-C/S6-space] rescue branches = 1
+
+CHECKS INSPECTED=45  PASS=31  FAIL=14

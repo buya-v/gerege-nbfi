@@ -1,0 +1,19 @@
+{
+ "squad": "2026-08-21-run2-tierA-gl-accounting-A2",
+ "fire": "20260822-080001-round2",
+ "exited_cleanly": true,
+ "live_workers_at_exit": 0,
+ "current_item": "run 2026-08-21-run2-tierA-gl-accounting-A2, slice A2 \u2014 10 dispatched, 10 merged",
+ "step": "batch complete, merged, UAT green, postmortem written",
+ "branch": "main",
+ "next_action": "A2-15 (now unblocked by A2-21) \u2014 the only READY task that adds a vector; then T214, A2-24, T215, T217",
+ "blocked_on": null,
+ "gate_pending": "G-11 OPEN and NOT RATIFIABLE \u2014 DEC-2 rev 3 delivered by A2-21, needs an independent review passing clean; G-4, G-5, G-8, G-10 OPEN, none blocking",
+ "open_questions": [
+  "T116 depends on T114, which has NO ENTRY in tasks.json and can never resolve \u2014 re-scope or re-point",
+  "A2-22 narrowed CorroborationsClaimed with no independent finding behind it (A2-24)",
+  "79 committed-but-unmerged evidence paths absent from main (T214)"
+ ],
+ "uat": "PASS \u2014 conformance exit 0, probe present and up, 43 parity / 5664 cells; --prove 23/23; ledger guard 0; go build/vet/test clean; gofmt -l exactly contract.go; vector store ce821c63 UNCHANGED",
+ "written_at": "2026-08-22"
+}

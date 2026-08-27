@@ -1,0 +1,25 @@
+==========================================================================
+T181 F-2 -- ZERO-INSPECTION GREEN in t178-guard-census.py
+==========================================================================
+
+fork point                       : dfa1bfa96084a2175f0d89d0a401a8c105d9a35f
+UNHARDENED t41 rewriters staged  : 25
+staged at                        : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t181-t41fork-k97_zoiw
+of these, LIVE at the fork point : 2  (edit2.py, edit10.py)
+   -- both hard-wired the RELATIVE path docs/adr/DEC-1-schedule-generator-adapter.md
+   -- so repo-root cwd reached the RATIFIED document
+
+Now run T178's census against exactly that directory, as F-1 says:
+--------------------------------------------------------------------------
+   files measured        0
+   files UNMEASURED      0
+   unguarded + all anchors live (LIVE BYPASS)   0
+   unguarded + no content gate, inert TODAY ONLY 0
+--------------------------------------------------------------------------
+census exit code                 : 3   <-- red
+
+VERDICT ON THE TOOL:
+  census refused the empty scan; F-2 does not hold
+
+REPO DEC-1       49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab  UNCHANGED
+REPO contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139  UNCHANGED

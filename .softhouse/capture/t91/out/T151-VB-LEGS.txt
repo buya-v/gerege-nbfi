@@ -1,0 +1,55 @@
+PRE  = 8c05f9a7190ee1e0f8be09b92bdccc02d62ea103  (literal immutable sha — the shipped scorer)
+POST = 9f287317bb1a1a68116f8cabf498c505d8c05898  (HEAD — the tree under test)
+T91  = ccf3c14171dea52bd044d81d5ca67aba8054b74c  (literal immutable sha — for the 8 older transcript dirs)
+
+asserted: PRE lacks the V-B assertion, POST carries it.
+
+asserted: not one of the 13 dead-oracle transcripts carries the certification sentence.
+
+=== L1  NO-OP on every committed transcript directory (shipped exit == patched exit)
+  POST/postfix-copy-bash shipped=0 patched=0  SAME             transcripts carrying the sentence: 5
+  POST/postfix-copy-sh   shipped=0 patched=0  SAME             transcripts carrying the sentence: 5
+  POST/postfix-livetwin-bash shipped=0 patched=0  SAME             transcripts carrying the sentence: 5
+  POST/postfix-livetwin-sh shipped=0 patched=0  SAME             transcripts carrying the sentence: 5
+  POST/prefix-copy-bash  shipped=1 patched=1  SAME             transcripts carrying the sentence: 6
+  POST/prefix-copy-sh    shipped=1 patched=1  SAME             transcripts carrying the sentence: 6
+  POST/prefix-livetwin-bash shipped=1 patched=1  SAME             transcripts carrying the sentence: 6
+  POST/prefix-livetwin-sh shipped=1 patched=1  SAME             transcripts carrying the sentence: 6
+  POST/t115-post-bash    shipped=0 patched=0  SAME             transcripts carrying the sentence: 5
+  POST/t115-post-sh      shipped=0 patched=0  SAME             transcripts carrying the sentence: 5
+  POST/t115-pre-bash     shipped=1 patched=1  SAME             transcripts carrying the sentence: 6
+  POST/t115-pre-sh       shipped=1 patched=1  SAME             transcripts carrying the sentence: 6
+  T91/postfix-copy-bash  shipped=0 patched=0  SAME             transcripts carrying the sentence: 5
+  T91/postfix-copy-sh    shipped=0 patched=0  SAME             transcripts carrying the sentence: 5
+  T91/postfix-livetwin-bash shipped=0 patched=0  SAME             transcripts carrying the sentence: 5
+  T91/postfix-livetwin-sh shipped=0 patched=0  SAME             transcripts carrying the sentence: 5
+  T91/prefix-copy-bash   shipped=1 patched=1  SAME             transcripts carrying the sentence: 6
+  T91/prefix-copy-sh     shipped=1 patched=1  SAME             transcripts carrying the sentence: 6
+  T91/prefix-livetwin-bash shipped=1 patched=1  SAME             transcripts carrying the sentence: 6
+  T91/prefix-livetwin-sh shipped=1 patched=1  SAME             transcripts carrying the sentence: 6
+  ---
+  L1  directories scoring identically                        20/20 (want 20/20)   OK
+
+=== L2  RED on a dead oracle
+  L2  shipped scorer over 13 dead-oracle transcripts         1 (want 1)   OK
+  L2  patched scorer over 13 dead-oracle transcripts         3 (want 3)   OK
+             never reached a live oracle.  Scoring it would grade an outage as a clean sweep.
+
+=== L3  CORRECTION: retyping ONE row is NOT enough (T115 said it was)
+  L3  shipped scorer, A7 alone retyped: exit                 1 (want 1)   OK
+  L3  shipped scorer, A7 alone retyped: REGRESSION rows      4 (want 4)   OK
+      (4 = 2 table rows + the 2 matching lines echoed into the failure list)
+      A4c-decoy-variable.txt                         1      no        no         REGRESSION (breached, expected clean)
+      A8-foreign-cwd.txt                             1      no        no         REGRESSION (breached, expected clean)
+      A4c-decoy-variable.txt REGRESSION (breached, expected clean)
+      A8-foreign-cwd.txt REGRESSION (breached, expected clean)
+
+=== L4  RED on the case that matters: dead oracle AND all three CLEAN rows retyped
+  L4  shipped scorer + all three retyped: exit               0 (want 0)   OK
+  L4  shipped scorer printed the clean sweep                 yes — a clean sweep over an oracle that never answered
+  L4  patched scorer + all three retyped: exit               3 (want 3)   OK
+             never reached a live oracle.  Scoring it would grade an outage as a clean sweep.
+
+done — every leg behaved as specified.
+V-B: no-op on 20 of 20 committed directories, exit 3 on a dead oracle, exit 3 on the
+retyped case that was exit 0.  T115's 'any one' is corrected to 'all three'.

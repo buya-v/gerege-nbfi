@@ -1,0 +1,42 @@
+=== T147 — ORDERING PROVED BY DIFFERENTIAL, not by reading (T136's method) ===
+
+Question: does assert_effective_rounding_mode really run BEFORE any capture is taken,
+or is the 'zero capture bodies' observation just the OUTER precondition gate?
+Method: neuter ONLY the pre-capture mode gate, leave the document grader live, and
+count the capture bodies that appear. Reading the file cannot answer this.
+
+--- the ONLY changes ---
+181c181
+< if pre.returncode != 0:
+---
+> if False:  # T147 ORDERING PROBE: OUTER precondition gate DISABLED
+297c297
+< attest_gate.assert_effective_rounding_mode(
+---
+> (lambda **kw: None)(  # T147 ORDERING PROBE: FIRST gate neutered
+ASSERTED: 4 changed lines = 2 labelled substitutions x (<old + >new).
+
+--- running against the live HALF_EVEN tenant ---
+
+==============================================================================
+ATTESTATION REFUSED — the attestation about to be written carries an unverified claim
+==============================================================================
+  * effective_mode_canary.verdict is 'MODE NOT CONFIRMED — see observed value', not 'HALF_UP confirmed behaviourally'.
+  * effective_mode_canary.observed_period1_interest is '20925.04', not '20925.05'.
+  * effective_math_context.matches_ratified_production_setting is False, not True. This field asserted the tenant's RATIFIED MathContext(19, HALF_UP) and, like the canary verdict, gated nothing until T125.
+
+No attestation.json was written. An attestation asserts the reference oracle was
+observed at the RATIFIED tenant setting MathContext(19, HALF_UP); a run that cannot
+establish that has nothing to attest, and a file claiming a verdict it did not
+verify is worse than no file at all.
+--- EXIT: 4 ---
+--- capture bodies present with the FIRST gate NEUTERED: 4 ---
+--- attestation.json present: NO ---
+
+Compare with the unmutated run above (capture/pathb/t147/green-post-fix/red-live-default.txt):
+  capture bodies with the gate IN PLACE: 0
+  capture bodies with the gate NEUTERED: 4
+
+RULING: the gate genuinely precedes capture (0 -> 4 on removing it alone), AND the
+        second layer refuses independently on live data — exit 4, no attestation.json
+        written even with the first gate gone. The two layers are independent.

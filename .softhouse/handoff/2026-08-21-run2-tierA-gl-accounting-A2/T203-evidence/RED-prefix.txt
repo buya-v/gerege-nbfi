@@ -1,0 +1,261 @@
+STAGED pre-fix bytes (sha256 of each, from the committed blob):
+db4347c14aad3dca535fc6729454f4a38fad2d800e7fd74673f58c19c83de3eb  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4762772d2f0d5192/.softhouse/handoff/T203-PREFIX-T57.py
+dff015dc2a7bfa9f5b4151bd3ab22b5bc6a473b8c35bf958e5e0c38ebd75efeb  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4762772d2f0d5192/.softhouse/handoff/T203-PREFIX-T58.py
+f46baddbbf82eb235649208c19344206eb6eedd6fe27599a15a2fec642daca65  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4762772d2f0d5192/.softhouse/handoff/T203-PREFIX-T61.py
+53bd8f0c77716fc622dc258c7ec567454e252d9fd3109c416e0722b9f5fb3429  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4762772d2f0d5192/.softhouse/handoff/T203-PREFIX-T64.py
+efcfcfa59305d5da67a2149cace4a9fffb991daff5ad92fe7fe5c8e0595a94e4  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4762772d2f0d5192/.softhouse/handoff/T203-PREFIX-T74.py
+a78ba1ab6a88d8a965652a66dce6100c9d2873002a36836e103b06e42f50e020  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4762772d2f0d5192/.softhouse/handoff/T203-PREFIX-T8.py
+MODE: RED
+live store baseline: 50 json files, digest 7b78b424a0f2e5ffea1e8e1530170550b239b1810adac70c0554d879986b05d3
+
+T74  .softhouse/handoff/T74-promote-vectors.py  (6 target names)
+      loaded from   : .softhouse/handoff/T203-PREFIX-T74.py
+  --- T74 / canary arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-canary
+      seeded        : 6 files
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-canary/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json  (margin 1 minor at period[17].principal_minor, 23/146 graded cells move)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-canary/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json  (margin 1 minor at period[13].principal_minor, 27/146 graded cells move)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-canary/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json  (margin 1 minor at period[36].interest_minor, 2/146 graded cells move)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-canary/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json  (margin 1 minor at period[15].principal_minor, 25/146 graded cells move)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-canary/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json  (margin 2 minor at period[8].outstanding_principal_minor, 39/146 graded cells move)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-canary/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json  (margin 1 minor at period[22].principal_minor, 18/146 graded cells move)
+
+6 vectors promoted from .softhouse/capture/out/capture-prod3i-raw.json (sha256 e0ea0bcfa1e37914fd5eec68040d90319d2d343dc50d2ad30d90f4cd9acde430)
+NOTHING was promoted from capture groups A, B, C or D — see this script's docstring.
+      promoter exit : 0
+      DESTROYED     : 6  ['T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json', 'T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json', 'T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json', 'T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json', 'T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json', 'T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json']
+      INTACT        : 0
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+      loaded from   : .softhouse/handoff/T203-PREFIX-T74.py
+  --- T74 / livebytes arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-livebytes
+      seeded        : 6 files
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-livebytes/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json  (margin 1 minor at period[17].principal_minor, 23/146 graded cells move)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-livebytes/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json  (margin 1 minor at period[13].principal_minor, 27/146 graded cells move)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-livebytes/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json  (margin 1 minor at period[36].interest_minor, 2/146 graded cells move)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-livebytes/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json  (margin 1 minor at period[15].principal_minor, 25/146 graded cells move)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-livebytes/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json  (margin 2 minor at period[8].outstanding_principal_minor, 39/146 graded cells move)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T74-livebytes/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json  (margin 1 minor at period[22].principal_minor, 18/146 graded cells move)
+
+6 vectors promoted from .softhouse/capture/out/capture-prod3i-raw.json (sha256 e0ea0bcfa1e37914fd5eec68040d90319d2d343dc50d2ad30d90f4cd9acde430)
+NOTHING was promoted from capture groups A, B, C or D — see this script's docstring.
+      promoter exit : 0
+      DESTROYED     : 0  []
+      INTACT        : 6
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+
+T61  .softhouse/handoff/T61-promote-vectors.py  (3 target names)
+      loaded from   : .softhouse/handoff/T203-PREFIX-T61.py
+  --- T61 / canary arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T61-canary
+      seeded        : 3 files
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T61-canary/T61-HE-A-tie-quantization-1M000541pt50-6x21pt6pct.json  (margin 6 minor at period[5].outstanding_principal_minor)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T61-canary/T61-HE-B-tie-quantization-1M000052pt50-6x21pt6pct.json  (margin 4 minor at period[5].outstanding_principal_minor)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T61-canary/T61-HE-C-tie-quantization-1M000089pt50-6x21pt6pct.json  (margin 5 minor at period[5].outstanding_principal_minor)
+
+3 vectors promoted from .softhouse/capture/out/capture-prod3f-raw.json (sha256 48b5377acc2d35e716c9972d73e363cc15c69b9d3bd606a4b9f1b70507479034)
+      promoter exit : 0
+      DESTROYED     : 3  ['T61-HE-A-tie-quantization-1M000541pt50-6x21pt6pct.json', 'T61-HE-B-tie-quantization-1M000052pt50-6x21pt6pct.json', 'T61-HE-C-tie-quantization-1M000089pt50-6x21pt6pct.json']
+      INTACT        : 0
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+      loaded from   : .softhouse/handoff/T203-PREFIX-T61.py
+  --- T61 / livebytes arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T61-livebytes
+      seeded        : 3 files
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T61-livebytes/T61-HE-A-tie-quantization-1M000541pt50-6x21pt6pct.json  (margin 6 minor at period[5].outstanding_principal_minor)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T61-livebytes/T61-HE-B-tie-quantization-1M000052pt50-6x21pt6pct.json  (margin 4 minor at period[5].outstanding_principal_minor)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T61-livebytes/T61-HE-C-tie-quantization-1M000089pt50-6x21pt6pct.json  (margin 5 minor at period[5].outstanding_principal_minor)
+
+3 vectors promoted from .softhouse/capture/out/capture-prod3f-raw.json (sha256 48b5377acc2d35e716c9972d73e363cc15c69b9d3bd606a4b9f1b70507479034)
+      promoter exit : 0
+      DESTROYED     : 0  []
+      INTACT        : 3
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+
+T64  .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py  (4 target names)
+      loaded from   : .softhouse/handoff/T203-PREFIX-T64.py
+  --- T64 / canary arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T64-canary
+      seeded        : 4 files
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T64-canary/T64-ZP-A-zero-principal-mnt0pt28-56x21pt6pct.json  (57 rows, 2 counterfactual(s): ZP-GUARD-NONSTRICT margin 28, ZP-GUARD-SCALES-THE-INSTALLMENT margin 28)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T64-canary/T64-ZP-B-early-payoff-dead-rows-mnt0pt28-55x21pt6pct.json  (56 rows, 1 counterfactual(s): ZP-RESIDUAL-NO-RECURSION margin 2)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T64-canary/T64-ZP-C-zero-principal-mnt0pt17-34x36pct.json  (35 rows, 2 counterfactual(s): ZP-GUARD-NONSTRICT margin 17, ZP-GUARD-SCALES-THE-INSTALLMENT margin 17)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T64-canary/T64-ZP-D-zero-principal-mnt0pt36-72x16pt8pct.json  (73 rows, 2 counterfactual(s): ZP-GUARD-NONSTRICT margin 36, ZP-GUARD-SCALES-THE-INSTALLMENT margin 36)
+
+4 vectors promoted from .softhouse/capture/out/capture-prod3g-raw.json (sha256 6e0c37019095cf8664b18b643bafb8e59014b47f2d4a8a82ce43463e41827d91)
+      promoter exit : 0
+      DESTROYED     : 4  ['T64-ZP-A-zero-principal-mnt0pt28-56x21pt6pct.json', 'T64-ZP-B-early-payoff-dead-rows-mnt0pt28-55x21pt6pct.json', 'T64-ZP-C-zero-principal-mnt0pt17-34x36pct.json', 'T64-ZP-D-zero-principal-mnt0pt36-72x16pt8pct.json']
+      INTACT        : 0
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+      loaded from   : .softhouse/handoff/T203-PREFIX-T64.py
+  --- T64 / livebytes arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T64-livebytes
+      seeded        : 4 files
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T64-livebytes/T64-ZP-A-zero-principal-mnt0pt28-56x21pt6pct.json  (57 rows, 2 counterfactual(s): ZP-GUARD-NONSTRICT margin 28, ZP-GUARD-SCALES-THE-INSTALLMENT margin 28)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T64-livebytes/T64-ZP-B-early-payoff-dead-rows-mnt0pt28-55x21pt6pct.json  (56 rows, 1 counterfactual(s): ZP-RESIDUAL-NO-RECURSION margin 2)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T64-livebytes/T64-ZP-C-zero-principal-mnt0pt17-34x36pct.json  (35 rows, 2 counterfactual(s): ZP-GUARD-NONSTRICT margin 17, ZP-GUARD-SCALES-THE-INSTALLMENT margin 17)
+wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T64-livebytes/T64-ZP-D-zero-principal-mnt0pt36-72x16pt8pct.json  (73 rows, 2 counterfactual(s): ZP-GUARD-NONSTRICT margin 36, ZP-GUARD-SCALES-THE-INSTALLMENT margin 36)
+
+4 vectors promoted from .softhouse/capture/out/capture-prod3g-raw.json (sha256 6e0c37019095cf8664b18b643bafb8e59014b47f2d4a8a82ce43463e41827d91)
+      promoter exit : 0
+      DESTROYED     : 0  []
+      INTACT        : 4
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+
+T58  .softhouse/handoff/T58-promote-vectors.py  (3 target names)
+      loaded from   : .softhouse/handoff/T203-PREFIX-T58.py
+  --- T58 / canary arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T58-canary
+      seeded        : 3 files
+wrote P-LAT-Q0a-6x21pt6pct-1M2.json                               7 rows, 1 counterfactuals
+wrote P-LAT-MID-6x21pt6pct-mid-month-start.json                   7 rows, 1 counterfactuals
+      promoter exit : 1 | refusing to overwrite an existing vector: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T58-canary/P-DRIFT-A-drift-start28-disb31-6x21pt6pct.json
+      DESTROYED     : 0  []
+      INTACT        : 3
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+      loaded from   : .softhouse/handoff/T203-PREFIX-T58.py
+  --- T58 / livebytes arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T58-livebytes
+      seeded        : 3 files
+wrote P-LAT-Q0a-6x21pt6pct-1M2.json                               7 rows, 1 counterfactuals
+wrote P-LAT-MID-6x21pt6pct-mid-month-start.json                   7 rows, 1 counterfactuals
+      promoter exit : 1 | refusing to overwrite an existing vector: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T58-livebytes/P-DRIFT-A-drift-start28-disb31-6x21pt6pct.json
+      DESTROYED     : 0  []
+      INTACT        : 3
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+
+T57  .softhouse/handoff/T57-promote-emi-vectors.py  (2 target names)
+      loaded from   : .softhouse/handoff/T203-PREFIX-T57.py
+  --- T57 / canary arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T57-canary
+      seeded        : 2 files
+P-EMI-6-1M014632   P-EMI-6-1M014632-emi-smoothing-loop.json             rows=7
+    money    EMI-SMOOTHING-LOOP-OMITTED                                 margin=5
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT margin=2
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                           margin=246844
+P-EMI-36-127704    P-EMI-36-127704-emi-smoothing-loop.json              rows=37
+    money    EMI-SMOOTHING-LOOP-OMITTED                                 margin=47
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT margin=24
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                           margin=93005
+      promoter exit : 0
+      DESTROYED     : 2  ['P-EMI-36-127704-emi-smoothing-loop.json', 'P-EMI-6-1M014632-emi-smoothing-loop.json']
+      INTACT        : 0
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+      loaded from   : .softhouse/handoff/T203-PREFIX-T57.py
+  --- T57 / livebytes arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T57-livebytes
+      seeded        : 2 files
+P-EMI-6-1M014632   P-EMI-6-1M014632-emi-smoothing-loop.json             rows=7
+    money    EMI-SMOOTHING-LOOP-OMITTED                                 margin=5
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT margin=2
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                           margin=246844
+P-EMI-36-127704    P-EMI-36-127704-emi-smoothing-loop.json              rows=37
+    money    EMI-SMOOTHING-LOOP-OMITTED                                 margin=47
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT margin=24
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                           margin=93005
+      promoter exit : 0
+      DESTROYED     : 0  []
+      INTACT        : 2
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+
+T8  .softhouse/handoff/T8-promote-vectors.py  (3 target names)
+      loaded from   : .softhouse/handoff/T203-PREFIX-T8.py
+  --- T8 / canary arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T8-canary
+      seeded        : 3 files
+P-00           P-00-baseline-6x7pct.json                                  rows=7
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=1
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=24
+P-01           P-01-18x18pt5pct-principal-87654321.json                   rows=19
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=65885070
+P-02           P-02-monthend-seed-day-31.json                             rows=7
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=1
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=24
+    structural MONTHEND-CONTINUE-FROM-CLAMPED-DAY                                     margin=0
+P-02b          P-02b-monthend-seed-day-30.json                            rows=7
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=1
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=24
+    structural MONTHEND-CONTINUE-FROM-CLAMPED-DAY                                     margin=0
+P-03           P-03-disbursement-on-repayment-due-date.json               rows=7
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=1
+    money    EMI-DENOMINATOR-USES-NUMBER-OF-REPAYMENTS-NOT-PERIODS-AFTER-DISBURSEMENT margin=334
+    structural ROW-ORDER-SORT-BY-DATE-DISBURSEMENT-FIRST                              margin=0
+P-04f          P-04f-fulltermfortranche-false.json                        rows=7
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=1
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=24
+P-04t          P-04t-fulltermfortranche-true.json                         rows=7
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=1
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=24
+P-MNT-5M       P-MNT-5M-18x18pt5pct.json                                  rows=19
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=5
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=3758228
+P-MNT-1M2      P-MNT-1M2-12x21pt6pct.json                                 rows=13
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=3
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=1010059
+P-MNT-50M      P-MNT-50M-36x16pt8pct.json                                 rows=37
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=4
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=36423098
+P-MNT-4M999    P-MNT-4M999-18x18pt5pct.json                               rows=19
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=8
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=3758240
+      promoter exit : 0
+      DESTROYED     : 3  ['P-00-baseline-6x7pct.json', 'P-01-18x18pt5pct-principal-87654321.json', 'P-MNT-5M-18x18pt5pct.json']
+      INTACT        : 0
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+      loaded from   : .softhouse/handoff/T203-PREFIX-T8.py
+  --- T8 / livebytes arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-red/T8-livebytes
+      seeded        : 3 files
+P-00           P-00-baseline-6x7pct.json                                  rows=7
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=1
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=24
+P-01           P-01-18x18pt5pct-principal-87654321.json                   rows=19
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=65885070
+P-02           P-02-monthend-seed-day-31.json                             rows=7
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=1
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=24
+    structural MONTHEND-CONTINUE-FROM-CLAMPED-DAY                                     margin=0
+P-02b          P-02b-monthend-seed-day-30.json                            rows=7
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=1
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=24
+    structural MONTHEND-CONTINUE-FROM-CLAMPED-DAY                                     margin=0
+P-03           P-03-disbursement-on-repayment-due-date.json               rows=7
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=1
+    money    EMI-DENOMINATOR-USES-NUMBER-OF-REPAYMENTS-NOT-PERIODS-AFTER-DISBURSEMENT margin=334
+    structural ROW-ORDER-SORT-BY-DATE-DISBURSEMENT-FIRST                              margin=0
+P-04f          P-04f-fulltermfortranche-false.json                        rows=7
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=1
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=24
+P-04t          P-04t-fulltermfortranche-true.json                         rows=7
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=1
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=24
+P-MNT-5M       P-MNT-5M-18x18pt5pct.json                                  rows=19
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=5
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=3758228
+P-MNT-1M2      P-MNT-1M2-12x21pt6pct.json                                 rows=13
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=3
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=1010059
+P-MNT-50M      P-MNT-50M-36x16pt8pct.json                                 rows=37
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=4
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=36423098
+P-MNT-4M999    P-MNT-4M999-18x18pt5pct.json                               rows=19
+    money    LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT            margin=8
+    money    STRAIGHT-LINE-PRINCIPAL-DIVISION                                       margin=3758240
+      promoter exit : 0
+      DESTROYED     : 0  []
+      INTACT        : 3
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+
+==============================================================================
+SCRIPT TARGETS  CANARY arm             LIVE-BYTES arm        
+T74    6        destroyed=6   intact=0    destroyed=0   intact=6   
+T61    3        destroyed=3   intact=0    destroyed=0   intact=3   
+T64    4        destroyed=4   intact=0    destroyed=0   intact=4   
+T58    3        destroyed=0   intact=3    destroyed=0   intact=3   
+T57    2        destroyed=2   intact=0    destroyed=0   intact=2   
+T8     3        destroyed=3   intact=0    destroyed=0   intact=3   
+==============================================================================
+CANARY-arm destructions across all scripts: 18
+live store AFTER all arms: 50 json files, digest 7b78b424a0f2e5ffea1e8e1530170550b239b1810adac70c0554d879986b05d3
+LIVE STORE UNMOVED.
+RED_DRIVER_EXIT=0

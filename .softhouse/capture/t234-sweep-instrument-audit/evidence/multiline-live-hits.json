@@ -1,0 +1,386 @@
+[
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/conformance.sh",
+  "line": 735,
+  "text": "guard_no_float_in_harness above: it named \"$HARNESS_PKG\" and one `cmd`\\n# directory, so every package outside those two \u2014 the whole ledger port included\\n# \u2014 was unchecked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/conformance.sh",
+  "line": 885,
+  "text": "guard RED on a planted defect AND GREEN on the clean equivalent\\n  # (P-22 with P-50's second half). Nothing checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/conformance.sh",
+  "line": 1173,
+  "text": "guard over the Go tree\" \u2014 NOT\\n# \"the ledger tree is covered\". DEC-2 \u00a74.4 once recorded this guard as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/conformance.sh",
+  "line": 1996,
+  "text": "guard ACCEPTED a valid root that is not this tree.\"\\n    fi\\n    # --- RED: a path that does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/conformance.sh",
+  "line": 1999,
+  "text": "guard_graded_root_is_this_tree ) >/dev/null 2>&1; then\\n      note21 \"RED(missing): the guard ACCEPTED a CONFORMANCE_REPO_ROOT that does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/gates.md",
+  "line": 1871,
+  "text": "invariant, because the port\\n  agrees with the oracle. This is the cheap option the gate's earlier text said did not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/guards/ledgerguard/main.go",
+  "line": 1,
+  "text": "guard that DEC-2 \u00a74.4 requires for I-3 and I-4.\\n//\\n// \u26a0 CORRECTION (T227, 22 August 2026). This line read \"...the source-level guard that DEC-2\\n// \u00a74.4.1 records as NOT EXISTING"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/guards/ledgerguard/main.go",
+  "line": 5,
+  "text": "guard into run_guards; DEC-2 \u00a78.3 retracted the claim; and \u00a74.4.1 is today\\n// titled \"THE GUARD I-3 AND I-4 REQUIRE \u2014 IT DID NOT EXIST"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/patterns.md",
+  "line": 904,
+  "text": "guard inspects:\\nwidening a guard's DOMAIN is a change to every file that domain newly contains, including files that do not\\nexist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/patterns.md",
+  "line": 965,
+  "text": "GUARDED** |\\n| `/usr/bin/grep -E`, shell `grep -E`, `/usr/bin/awk`, `/usr/bin/sed -nE` | **0, 0, 0, 0 \u2192 UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/patterns.md",
+  "line": 1021,
+  "text": "guard_classify.py`'s single write is atomic, so its own\\n   verdict on itself is ATOMIC and not UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/patterns.md",
+  "line": 1854,
+  "text": "enforced in the skill's STEP 1 and in `ready-tasks.py`:** before recording that a\\ndependency, a file, a vector, a guard or a citation **does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/patterns.md",
+  "line": 2053,
+  "text": "guard's own source**, and had been since `A2-18` wrote it:\\n\\n```go\\n// Command ledgerguard is the source-level guard that DEC-2 \u00a74.4.1 records as NOT EXISTING"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/tasks.json",
+  "line": 313,
+  "text": "ledger/\"\\n      ],\\n      \"description\": \"THE A2 PORT ITSELF. It did not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/tasks.json",
+  "line": 579,
+  "text": "guard-widening\"\\n    },\\n    {\\n      \"id\": \"T167\",\\n      \"title\": \"AN UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/tasks.json",
+  "line": 1696,
+  "text": "guard-classifier/\"\\n      ],\\n      \"description\": \"T205's honest negative, reported against its own deliverable rather than left for a reviewer. A non-existent"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 829,
+  "text": "guard, not by a vector**, and DEC-2 states that as a normative requirement\\nrather than a hope.\\n\\n### 4.4.1 THE GUARD I-3 AND I-4 REQUIRE \u2014 IT DID NOT EXIST"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2377,
+  "text": "invariant violations 0` at commit `2e97162`.\\n   **\u26a0 Revision 2 said no such guard"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2454,
+  "text": "guard must be able to\\n  > see the tree before it can check anything in it, and certain to be read as saying the invariants\\n  > are checked. **They are not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2459,
+  "text": "I-3`/`I-4` WALK OF THE GO TREE\".** It cited \u00a74.4.1, whose\\n  > heading is *\"IT DID NOT EXIST"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2468,
+  "text": "guard for either exists`, `no such\\n  > guard`, `does not exist`, `did not exist`, `nothing checks"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2471,
+  "text": "I-3 row (*\"Revision 2 said 'no such guard exists'; that was true when written\\n  > and is stale\"* \u2014 a labelled retraction), \u00a75's *\"a contract that does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2478,
+  "text": "I-3/I-4 SOURCE GUARD that DEC-2 \u00a74.4\\n  > requires and \u00a74.4.1 **records as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2692,
+  "text": "guard for either exists`,\\n     `no such guard`, `does not exist`, `did not exist`, `nothing checks"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 3010,
+  "text": "ledger\" made structurally unmissable** \u2014 the banner at the head of the\\n     document, **\u00a74.4.1** (the `I-3`/`I-4` guard did not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "nexus/internal/apps/ledger/resolve.go",
+  "line": 125,
+  "text": "ENFORCES THAT (see\\n// assertPlaceholderDisjointness). This port splits the two, so the ambiguity\\n// cannot exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "nexus/internal/apps/ledger/slots_test.go",
+  "line": 274,
+  "text": "guard that has never failed has\\n\t// not been tested, and an assertion that cannot fail converts \"not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "nexus/internal/apps/loanschedule/conformance/vector.go",
+  "line": 50,
+  "text": "ledger/` while grading a LOAN SCHEDULE, so the report read\\n// as GL/ledger coverage that does not exist"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/conformance.sh",
+  "line": 1174,
+  "text": "not existing \u2014 that was\\n# revision 2, true when written; DEC-2 \u00a78.3 has since retracted it, and \u00a74.4.1 and \u00a78.1 fact 3\\n# describe the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/conformance.sh",
+  "line": 1998,
+  "text": "not exist. Unresolvable is not clean. ---\\n    if ( CONFORMANCE_REPO_ROOT=\"$tmp/no-such-tree\" guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/gates.md",
+  "line": 131,
+  "text": "not exist.\\n- Baseline reproduces exactly; store and capture censuses exact at their stamps; **seven** guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/gates.md",
+  "line": 139,
+  "text": "NOT EXISTING\"*\\n   claim \u2014 a **third file**, on line 1 of the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/guards/ledgerguard/main.go",
+  "line": 4,
+  "text": "NOT EXISTING.\" That was TRUE THE DAY A2-18 WROTE IT and it is FALSE NOW.\\n// T208 wired this guard into run_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/guards/ledgerguard/main.go",
+  "line": 10,
+  "text": "not existING\", not \"not exist\"). A2-31 found it here,\\n// on LINE 1 of the guard whose existence refutes it. See T227's handoff for the method defect.\\n//\\n// WHAT IT ENFORCE"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 891,
+  "text": "not exist yet inherits none of that tree's collisions.\\nTest the MERGE, not the branches.**\\n\\nT166 widened the no-float root to the whole Go module while `internal/apps/ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 905,
+  "text": "not\\nexist on your branch.\\n\\nCorollary, and the reason this is a pattern rather than an anecdote: **a guard's blast radius is not visible\\nin the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 966,
+  "text": "UNGUARDED** |\\n\\nTwo independent incompatibilities in one pattern, each isolated by measurement rather than asserted\\n[VERIFIED: `.softhouse/reviews/t179-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 1396,
+  "text": "not check as not checked.*\\n\\n**P-43 \u2014 Consolidate colliding tasks; do not run three workers over one defect surface.** T120, T132 and\\nT143 were three views of the same guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 1476,
+  "text": "unguarded population is **115, not 111**.\\n\\nBoth are P-22 (a guard that cannot fail) reached by a specific route worth naming on its own, because the\\nguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 2043,
+  "text": "not\\nchecked. No guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 2056,
+  "text": "NOT EXISTING.\\n```\\n\\n[VERIFIED: `git show 90c21d6:.softhouse/guards/ledgerguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 2141,
+  "text": "not exist\\b` without `does`/`did` \u2026 9. Added: a combined-proximity\\n   search for `guard`/`invariant`/`ledger`/`I-3`/`I-4"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 2173,
+  "text": "not existing` on `:1116`), and T232 measured\\nthat `:1115` contains no inflection of `exist` and `:1116` contains no `guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/program.json",
+  "line": 1365,
+  "text": "unguarded population 115 not 111 -> P-48\",\\n        \"A2-9: F-E -- the in-package no-float scans skip subdirectories; a planted float64 in ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 124,
+  "text": "not checked. No\\nguard for either exists\"* **ten lines below** the same bullet's statement that the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 226,
+  "text": "not check. Revision 4 re-took all\\nof them at `2e97162` and records the running drift: `run_guards` 843 \u2192 938 \u2192 1154 \u2192 **1189**;\\n`guard_ledger_invariant"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 832,
+  "text": "NOT EXIST, IT DOES NOW, AND WHAT IT CANNOT SEE\\n\\nRevision 1 stated the requirement correctly and never claimed the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 839,
+  "text": "NOT EXIST\"*, and the banner and \u00a78.1 both\\n> asserted it as a measured fact. **It was true when revision 2 was written and it is false now.**\\n> `A2-18` built the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 1659,
+  "text": "not exist.** The 44th vector graded a **loan schedule**\\n   while sitting in `ledger/` and printing a `ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2362,
+  "text": "not exist.\\n   **\u26a0 RETRACTION, revision 3: revision 2 wrote *\"Zero `ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2468,
+  "text": "not checked`, `No guard for either exists`, `no such\\n  > guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2469,
+  "text": "nothing checks` \u2014 across the whole document, and\\n  > inspect **every** hit rather than the ones the reviewer named. The surviving hits are all\\n  > legitimate: \u00a74.4's I-3"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2692,
+  "text": "not checked`, `No guard for either exists`,\\n     `no such guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "nexus/internal/apps/ledger/capture_test.go",
+  "line": 31,
+  "text": "not checked\" into a green run, which is P-22's vacuous\\n//    guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "nexus/internal/apps/ledger/errors.go",
+  "line": 141,
+  "text": "not exist \"]\\n\tErrGLAccountNotFound = &Ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": "nexus/internal/apps/ledger/resolve.go",
+  "line": 86,
+  "text": "not exist\", code)\\n\t}\\n\tacct, ok := r.Accounts.AccountByID(row.GLAccountID)\\n\tif !ok {\\n\t\treturn nil, true, newErr(ErrGLAccountNotFound, \"\",\\n\t\t\t\"General Ledger"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/gates.md",
+  "line": 2939,
+  "text": "not\\n  exist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/patterns.md",
+  "line": 905,
+  "text": "not\\nexist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/patterns.md",
+  "line": 2089,
+  "text": "not\\nexist"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/guards/ledgerguard/main.go",
+  "line": 5,
+  "text": "4.4.1 is today\\n// titled \"THE GUARD I-3 AND I-4 REQUIRE \u2014 IT DID NOT EXIST"
+ },
+ {
+  "term": "S4-441",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2459,
+  "text": "4.4.1, whose\\n  > heading is *\"IT DID NOT EXIST"
+ },
+ {
+  "term": "S4-441",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2686,
+  "text": "4.4.1\\n     (whose heading is *\"IT DID NOT EXIST"
+ },
+ {
+  "term": "S5-records",
+  "file": ".softhouse/patterns.md",
+  "line": 2089,
+  "text": "records as not\\nexist"
+ },
+ {
+  "term": "S6-noguard",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 124,
+  "text": "No\\nguard for either"
+ }
+]

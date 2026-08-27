@@ -1,0 +1,3 @@
+# Mutated copies of the capture and the recipe, rebuilt from scratch by every proof run.
+# They are large, derived, and reproducible with `bash prove-guards-go-red.sh`.
+scratch/

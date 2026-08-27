@@ -1,0 +1,82 @@
+------------------------------------------------------------------------
+STEP 0 — extract the activation line prescribed by reference-oracle.md
+  markers  : T256-ACTIVATION-LINE:BEGIN … :END in /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2b70b8307b7c2b3a/.softhouse/reference-oracle.md
+  extracted: [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"]
+  lines    : 1
+  ASSERT OK   : the prescription is exactly ONE line (a line you must assemble is a line you will get wrong)
+  ASSERT OK   : the prescribed line names no /Users/... home directory
+  ASSERT OK   : the prescribed line names no /home/... home directory
+------------------------------------------------------------------------
+STEP 1 — GREEN: run the PRESCRIBED line verbatim from three working directories
+  cwd /
+    -> src=pinned|go=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go|root=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ASSERT OK   : cwd / : resolved the PINNED toolchain (GEREGE_GO_SOURCE=pinned)
+  ASSERT OK   : cwd / : a go binary is on PATH after activation
+  cwd /nexus
+    -> src=pinned|go=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go|root=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ASSERT OK   : cwd /nexus : resolved the PINNED toolchain (GEREGE_GO_SOURCE=pinned)
+  ASSERT OK   : cwd /nexus : a go binary is on PATH after activation
+  cwd /.softhouse/guards
+    -> src=pinned|go=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go|root=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ASSERT OK   : cwd /.softhouse/guards : resolved the PINNED toolchain (GEREGE_GO_SOURCE=pinned)
+  ASSERT OK   : cwd /.softhouse/guards : a go binary is on PATH after activation
+------------------------------------------------------------------------
+STEP 2 — build a scratch checkout that has NO toolchain (the cloud fire's real shape)
+  VACUITY-ABSENT MODE: the same hardcode with the path NOT EXISTING — i.e. every
+  host that is not Buyan's Mac, including the cloud fire. This is the D2 symptom.
+  Everything below should now FAIL. If it passes, the assertions are vacuous.
+  ASSERT OK   : scratch checkout has NO .softhouse/toolchain (decided by -d on the real directory)
+  scratch  : $SCRATCH/offhost   (real path withheld — it is a mktemp, and printing it
+             into a committed transcript would make the transcript un-reproducible)
+  ASSERT OK   : built a PATH-only `go` shim (a compiler that exists but is not the pinned one)
+------------------------------------------------------------------------
+STEP 3 — RED ARM A: no pinned toolchain, a `go` on PATH
+  summary  : src=UNSET|goroot=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/not-buyans-mac/.softhouse/toolchain/go|go=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/shim/go
+  --- stderr as a reader would see it ---
+  --- stdout ---
+  | (empty)
+  ASSERT FAIL : GEREGE_GO_SOURCE is not fallback-path: src=UNSET|goroot=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/not-buyans-mac/.softhouse/toolchain/go|go=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/shim/go
+  ASSERT FAIL : a GOROOT was exported off-host: src=UNSET|goroot=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/not-buyans-mac/.softhouse/toolchain/go|go=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/shim/go
+  ASSERT OK   : a usable go is on PATH after activation
+  ASSERT FAIL : stderr never says the toolchain is unpinned — that is the silence this fix exists to end
+  ASSERT FAIL : stderr asserts an absence without printing the search that produced it
+  --- proving the fallback compiles something real ---
+  go build ./... in the scratch nexus -> rc=2
+  | go: cannot find GOROOT directory: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/not-buyans-mac/.softhouse/toolchain/go
+  ASSERT FAIL : the fallback did not compile off-host (rc=2)
+------------------------------------------------------------------------
+STEP 4 — RED ARM B: no pinned toolchain and NO go on PATH at all
+  summary  : src=UNSET|goroot=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/not-buyans-mac/.softhouse/toolchain/go|go=NONE
+  --- stderr ---
+  ASSERT FAIL : GEREGE_GO_SOURCE is not absent: src=UNSET|goroot=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/not-buyans-mac/.softhouse/toolchain/go|go=NONE
+  ASSERT FAIL : something was exported with no compiler behind it: src=UNSET|goroot=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/not-buyans-mac/.softhouse/toolchain/go|go=NONE
+  ASSERT FAIL : SILENT FAILURE — nothing on stderr. This is the exact defect the fix targets
+  --- and now the REAL consumer, in the same condition ---
+  check-ledger-invariants.sh -> rc=2
+  | ledger-invariants: no Go toolchain. Expected /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.K31LMG98D9/offhost/.softhouse/bin/go-env.sh to put one on PATH.
+  | ledger-invariants: the guard is a Go program; without a compiler it inspects nothing
+  | ledger-invariants: and its absence would read as a pass. EXIT 2 — NOT a pass.
+  ASSERT OK   : the real guard EXITS 2 (unusable), which is a refusal and never a pass
+  ASSERT OK   : the guard says 'NOT a pass' in words a transcript reader cannot misread
+------------------------------------------------------------------------
+STEP 5 — a stale inherited GOROOT (points at a directory that is not there)
+  summary  : src=UNSET|goroot=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/not-buyans-mac/.softhouse/toolchain/go|go=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/shim/go
+  --- stderr ---
+  ASSERT FAIL : a stale GOROOT survived activation: src=UNSET|goroot=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/not-buyans-mac/.softhouse/toolchain/go|go=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.K31LMG98D9/shim/go
+  ASSERT FAIL : the stale GOROOT was handled silently
+------------------------------------------------------------------------
+STEP 6 — the prescribed line run from a directory that is not inside any git checkout
+  rc=1
+  --- stderr ---
+  | fatal: not a git repository (or any of the parent directories): .git
+  | .softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh: line 298: /.softhouse/bin/go-env.sh: No such file or directory
+  ASSERT OK   : non-zero rc outside a checkout — the caller can tell activation did not happen
+  ASSERT OK   : and it said so on stderr
+------------------------------------------------------------------------
+asserts: 26   failures: 10   skipped-without-a-failure: 0
+(a condition this drive could not exercise is recorded as an ASSERT FAIL above, never
+ dropped — P-40: an enumerator must count what it skipped and say so.)
+------------------------------------------------------------------------
+VACUITY RESULT (--vacuity-absent): the assertions went RED against the pre-T253b hardcoded
+go-env.sh. They discriminate. A guard nobody has watched fail enforces nothing
+(P-45) — this one has now been watched failing, transcript committed beside it.
