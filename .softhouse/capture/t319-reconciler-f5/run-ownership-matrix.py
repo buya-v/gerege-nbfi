@@ -173,6 +173,11 @@ def _stage2(spec_path):
         fh.write(p.stdout)
         fh.write(p.stderr)
         fh.write("\n[exit %d]\n" % p.returncode)
+    # A SENTINEL, not a sleep. Polling the output file itself and then waiting a fixed
+    # 0.15s "to let the writer finish" is a race dressed as a delay: it is both too long
+    # 26 times over and, on a loaded host, too short once. The sentinel is created only
+    # after the output file is closed, so its existence is the completion fact.
+    open(spec["out"] + ".done", "w").close()
     os._exit(0)
 
 
@@ -183,11 +188,10 @@ def run_cell_process(spec):
     _stage_boot(spec_path)
     deadline = time.time() + 60
     while time.time() < deadline:
-        if os.path.exists(spec["out"]):
-            time.sleep(0.15)           # let the writer finish
+        if os.path.exists(spec["out"] + ".done"):
             return open(spec["out"], encoding="utf-8").read()
-        time.sleep(0.05)
-    return "[TIMED OUT -- the cell runner produced no output file]\n[exit -1]\n"
+        time.sleep(0.01)
+    return "[TIMED OUT -- the cell runner produced no completion sentinel]\n[exit -1]\n"
 
 
 # ------------------------------------------------------------ repo construction ---
