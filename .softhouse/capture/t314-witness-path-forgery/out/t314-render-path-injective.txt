@@ -1,0 +1,47 @@
+T314 -- WITNESS PATH ENCODING: INJECTIVITY, MEASURED
+====================================================================================================
+segment alphabet: 23 (20 key strings + 3 indices);  tuples enumerated: 12735
+
+1. COLLISIONS, same tuple universe, three encodings
+   ------------------------------------------------------------------------------------------
+   T292  `path + "." + k`                       collisions: 47
+         ('cells[0]',)                      vs ('cells', 0)                        -> '$.cells[0]'
+         ('a', 'cells[0]')                  vs ('a', 'cells', 0)                   -> '$.a.cells[0]'
+         ('cells', 'cells[0]')              vs ('cells', 'cells', 0)               -> '$.cells.cells[0]'
+         ('cells[0]', 'a')                  vs ('cells', 0, 'a')                   -> '$.cells[0].a'
+   NAIVE `.replace("\\n", "\\\\n")` at the print site  collisions: 47
+         ('cells[0]',)                      vs ('cells', 0)                        -> '$.cells[0]'
+         ('a', 'cells[0]')                  vs ('a', 'cells', 0)                   -> '$.a.cells[0]'
+         ('cells', 'cells[0]')              vs ('cells', 'cells', 0)               -> '$.cells.cells[0]'
+         ('cells[0]', 'a')                  vs ('cells', 0, 'a')                   -> '$.cells[0].a'
+   T314  render_path                             collisions: 0
+
+1b. T308's A1 PAIR SPECIFICALLY -- ('cells', 0, 'P1_x')  vs  ('cells[0]', 'P1_x')
+    -----------------------------------------------------------------------------------------
+    T292  honest='$.cells[0].P1_x'                                    forged='$.cells[0].P1_x'                                     COLLIDE  <- A1 LANDS
+    NAIVE honest='$.cells[0].P1_x'                                    forged='$.cells[0].P1_x'                                     COLLIDE  <- A1 LANDS
+    T314  honest='$["cells"][0]["P1_x"]'                              forged='$["cells[0]"]["P1_x"]'                               differ   <- A1 DEAD
+    => escaping the NEWLINE is orthogonal to A1: `cells[0]` contains no character any
+       newline-escape touches. A1 is an AMBIGUOUS GRAMMAR, not an unescaped character,
+       and only DELIMITING each segment removes it.
+
+1c. T308's A2 -- does the rendering still contain a raw line break?
+    -----------------------------------------------------------------------------------------
+    T292  lines=3  INJECTS
+    NAIVE lines=1  one line
+    T314  lines=1  one line
+
+2. ROUND TRIP -- parse_path(render_path(t)) == t for every tuple in the universe
+   A left inverse EXISTS => the encoding is injective on this domain, constructively.
+   ------------------------------------------------------------------------------------------
+   tuples: 12735   round-trip failures: 0
+
+3. THE WITNESS LINE  `<path> = <true|false>`  split on the LAST ' = '
+   ------------------------------------------------------------------------------------------
+   12/12 nasty (path, value) lines parsed back exactly
+   example: $["a = true"][1]["b = false"] = true
+
+====================================================================================================
+PASS -- T292's encoding collides and injects, the NAIVE newline-only escape stops the
+        injection and NOT the collision, and T314's encoding has a left inverse over
+        the whole adversarial universe, so it collides nowhere in it.
