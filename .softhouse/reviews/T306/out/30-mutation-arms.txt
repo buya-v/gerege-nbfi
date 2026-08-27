@@ -5,17 +5,19 @@ MUTANT D — the DRIVER's predicate: two arms keyed on expect.refusal.code
   --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape (0.04s)
       --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/the_claim_is_NOT_bought_by_declaring_a_refusal_CODE (0.00s)
   FAIL
-  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.583s
+  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.566s
   FAIL
 
 ==============================================================
 MUTANT N — T306's FIRST-PASS narrowing: kind==refusal in front of ALL THREE arms
 ==============================================================
   applied
-  --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape (0.05s)
+  --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape (0.04s)
       --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/EVERY_committed_claimant_is_still_ADMITTED,_and_LDG-05_by_name (0.00s)
+  --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable (0.06s)
+      --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/the_COMMITTED_accepting_vector_is_admitted_with_NO_reason_at_all (0.00s)
   FAIL
-  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.553s
+  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.567s
   FAIL
 
 ==============================================================
@@ -25,25 +27,30 @@ MUTANT W — the OVER-WIDENING: drop the refusal precondition from the DATE arms
   --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape (0.04s)
       --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/an_ACCEPTANCE_at_either_DATE_boundary_REFUSES (0.00s)
   FAIL
-  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.571s
+  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.580s
   FAIL
 
 ==============================================================
 MUTANT L — the LENGTH rule relaxed: an accepted opening balance stores len(legs), not 2*len(legs)
 ==============================================================
   applied
-  ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	0.797s
+  --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable (0.08s)
+      --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/the_COMMITTED_accepting_vector_is_admitted_with_NO_reason_at_all (0.00s)
+      --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/a_leg_SHORT_of_2*request.legs_is_refused,_and_the_rule_NAMES_2*legs (0.00s)
+  FAIL
+  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.594s
+  FAIL
 
 ==============================================================
 MUTANT M — the MULTISET rule switched off entirely
 ==============================================================
   applied
-  --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable (0.08s)
+  --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable (0.07s)
       --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/an_amount_carried_a_THIRD_time_is_refused_as_a_SURPLUS (0.00s)
       --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/an_amount_occurring_ONCE_is_reported_as_a_shortfall,_not_as_a_negative_surplus (0.00s)
-      --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/the_SURPLUS_report_is_ORDER-STABLE_across_runs (0.04s)
+      --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/the_SURPLUS_report_is_ORDER-STABLE_across_runs (0.03s)
   FAIL
-  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.573s
+  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.575s
   FAIL
 
 .softhouse/reviews/T306/probe/mutation-arms.sh: line 108: left: command not found
@@ -51,16 +58,20 @@ MUTANT M — the MULTISET rule switched off entirely
 MUTANT S — the SURPLUS guard reverted to T305's  — a shortfall reported as a negative surplus
 ==============================================================
   applied
-  ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	0.616s
+  --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable (0.07s)
+      --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/an_amount_occurring_ONCE_is_reported_as_a_shortfall,_not_as_a_negative_surplus (0.00s)
+  FAIL
+  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.555s
+  FAIL
 
 ==============================================================
 MUTANT O — the SORT removed — T305's map-iteration order restored
 ==============================================================
   applied
-  --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable (0.04s)
-      --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/the_SURPLUS_report_is_ORDER-STABLE_across_runs (0.00s)
+  --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable (0.05s)
+      --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/the_SURPLUS_report_is_ORDER-STABLE_across_runs (0.01s)
   FAIL
-  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.570s
+  FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.542s
   FAIL
 
 
