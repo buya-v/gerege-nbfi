@@ -53,8 +53,10 @@ WHAT IT REPORTS THAT `git branch --list` CANNOT.
   A sweep that reports only the winning ref reproduces the defect it is named after.
 
 Commands
-  sweep [--pattern GLOB]... [--counts|--no-counts] [--ensure-hook] [--base REF] [--repo D]
-        Report every candidate ref, grouped by case-folded name.
+  sweep [--pattern GLOB]... [--counts|--no-counts] [--ensure-hook] [--quiet]
+        [--base REF] [--repo D]
+        Report every candidate ref, grouped by case-folded name.  `--quiet` prints only
+        the flagged groups and says how many unflagged ones it inspected.
   check-dispatch NAME... [--repo D]
         The dispatch-time refusal.  Exit 3 if a case-variant of NAME already exists
         under a different spelling, or if NAME is not canonical-case.
@@ -328,7 +330,7 @@ def _ancestor(a, b, repo):
     return None
 
 
-def sweep(repo, patterns, want_counts=None, base="main"):
+def sweep(repo, patterns, want_counts=None, base="main", quiet=False):
     """Returns (exit_code, lines)."""
     out = []
     common, note = common_dir_of(repo)
@@ -369,6 +371,7 @@ def sweep(repo, patterns, want_counts=None, base="main"):
                        "for one `git rev-list` per name.  Re-run with --counts to force. "
                        "Nothing below claims a branch is empty." % len(selected))
     findings = {"shadow": [], "unreachable": [], "diverged": [], "split": []}
+    flagged = 0
 
     out.append("")
     for key in sorted(selected):
@@ -426,6 +429,12 @@ def sweep(repo, patterns, want_counts=None, base="main"):
                     if _ancestor(a, b, repo) is False and _ancestor(b, a, repo) is False:
                         flag.append("DIVERGED")
                         findings["diverged"].append((key, a, b))
+        if flag:
+            flagged += 1
+        if quiet and not flag:
+            # `--quiet` prints only flagged groups.  The count of what it suppressed is
+            # printed in the summary, so this is a shorter report, not a narrower one.
+            continue
         out.append("  %-22s %s" % ("[" + ",".join(sorted(set(flag))) + "]" if flag
                                    else "[ok]", short(key)))
         out.extend(group_lines)
@@ -456,6 +465,9 @@ def sweep(repo, patterns, want_counts=None, base="main"):
 
     out.append("")
     hard = (findings["shadow"] or findings["unreachable"] or findings["diverged"])
+    if quiet:
+        out.append("  (--quiet: %d unflagged group(s) inspected and not printed; they "
+                   "were LOOKED AT, not skipped)" % (len(selected) - flagged))
     out.append("FINDINGS: case-shadow groups=%d  unreachable values=%d  diverged pairs=%d"
                % (len(findings["shadow"]), len(findings["unreachable"]),
                   len(findings["diverged"])))
@@ -645,7 +657,7 @@ def main(argv):
         return run_hook(rest)
     repo = os.getcwd()
     base = "main"
-    patterns, counts, ensure, names = [], None, False, []
+    patterns, counts, ensure, names, quiet = [], None, False, [], False
     i = 0
     while i < len(rest):
         a = rest[i]
@@ -673,6 +685,10 @@ def main(argv):
             ensure = True
             i += 1
             continue
+        if a == "--quiet":
+            quiet = True
+            i += 1
+            continue
         if a.startswith("--"):
             sys.stderr.write("unknown option %s\n" % a)
             return 64
@@ -696,7 +712,7 @@ def main(argv):
             print("")
         if not patterns:
             patterns = names or ["softhouse/*"]
-        rc, lines = sweep(repo, patterns, counts, base)
+        rc, lines = sweep(repo, patterns, counts, base, quiet)
         print("\n".join(lines))
         return rc
     sys.stderr.write(__doc__)
