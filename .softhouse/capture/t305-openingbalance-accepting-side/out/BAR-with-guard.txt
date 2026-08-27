@@ -87,14 +87,14 @@ conformance:   dynamic SQL is caught only through the call set it recognises; tr
 conformance:   migrations and stored procedures are not walked at all; I-5's semantic half
 conformance:   and non-Go callers are not covered. A PASS here means 'no violation is visible
 conformance:   to a source-level guard over the Go tree', NOT 'the ledger tree is covered'.
-conformance: CENSUS fail-open instruments — inspected 1111 tracked .sh/.py file(s) under
+conformance: CENSUS fail-open instruments — inspected 1170 tracked .sh/.py file(s) under
 conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-a29601788f093959f (git ls-files, whole repository); frontier 11, pinned at 11
 conformance:   (DERIVED from FAILOPEN_PIN_FILE_LIST by counting it, never typed).
 conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a
 conformance:   directory that is not there and carries on, whatever it prints afterwards. TIER2 =
 conformance:   printing arm only, corpus reachable today. All are pinned by PATH, not by count.
 conformance:   frontier == pinned (all 11 rows, by path).
-conformance: CENSUS host state in the lint corpus — 100 repo-wide search instrument(s)
+conformance: CENSUS host state in the lint corpus — 116 repo-wide search instrument(s)
 conformance:   read from git grep over tracked *.sh/*.py under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a29601788f093959f; sites that assign a
 conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
 conformance:   (DERIVED from HOSTSTATE_PIN_TEMP_ASSIGN_LIST by counting it, never typed).
