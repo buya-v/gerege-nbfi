@@ -1,0 +1,70 @@
+$ /bin/zsh .softhouse/reviews/T302/drive-branch-wip.sh
+(captured 2026-08-23 during fire 20260823-140001; scratch repo /tmp/t302-GMT3Jl)
+
+=== SUBJECT: git branch --merged main ===
+* main
+  softhouse/T-merged
+
+=== RECONCILE (no LOCK on disk — see finding F3 on the lock fail-open) ===
+RECONCILE -- fire T302-DRIVE
+  git:  /usr/bin/git
+  repo: /tmp/t302-GMT3Jl
+  lock: no .softhouse/LOCK on disk -- nobody holds this repo
+  in_progress tasks found: 4  (out of 5 in tasks.json -- every task was read to get this count, it is not a default)
+  T-merged softhouse/T-merged                         WIP=absent
+           in_progress -> needs_retry
+  T-pruned softhouse/T-pruned                         WIP=absent
+           in_progress -> needs_retry
+  T-real   softhouse/T-real                           WIP=commits
+           in_progress -> needs_retry
+  T-nobr   (NO BRANCH RECORDED)                       WIP=none
+           in_progress -> needs_retry
+  RESULT: WROTE /tmp/t302-GMT3Jl/.softhouse/tasks.json -- 4 task(s) demoted in_progress -> needs_retry.
+reconcile rc=0
+
+=== RESULTING NOTES ===
+T-merged  needs_retry  softhouse/T-merged
+           | worker killed mid-flight by fire T302-DRIVE -- the fire ended while this task was still
+           | in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit
+           | with live workers', item 4). Its branch softhouse/T-merged exists at d0572f40e but has NO commit
+           | ahead of main -- nothing was ever committed to it. Completeness UNVERIFIED: no handoff was
+           | signed off and no reviewer saw this. Reconciled by the fire-program.sh exit guard, NOT by a
+           | driver -- the driver was already gone.
+T-pruned  needs_retry  softhouse/T-pruned
+           | worker killed mid-flight by fire T302-DRIVE -- the fire ended while this task was still
+           | in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit
+           | with live workers', item 4). Its recorded branch softhouse/T-pruned does not exist in this repo
+           | -- no WIP was found under that name. Completeness UNVERIFIED: no handoff was signed off and no
+           | reviewer saw this. Reconciled by the fire-program.sh exit guard, NOT by a driver -- the driver
+           | was already gone.
+T-real    needs_retry  softhouse/T-real
+           | worker killed mid-flight by fire T302-DRIVE -- the fire ended while this task was still
+           | in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit
+           | with live workers', item 4). Its branch softhouse/T-real has 1 commit(s) ahead of main, head
+           | e3d2a5c14. Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this.
+           | Reconciled by the fire-program.sh exit guard, NOT by a driver -- the driver was already gone.
+T-nobr    needs_retry  -
+           | worker killed mid-flight by fire T302-DRIVE -- the fire ended while this task was still
+           | in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit
+           | with live workers', item 4). No branch was recorded for this task -- suspect an isolation
+           | violation; no WIP could be looked for. Completeness UNVERIFIED: no handoff was signed off and no
+           | reviewer saw this. Reconciled by the fire-program.sh exit guard, NOT by a driver -- the driver
+           | was already gone.
+T-ctl     pending      -
+
+scratch repo: /tmp/t302-GMT3Jl
+
+--------------------------------------------------------------------------------
+READ THE TWO LINES THAT MATTER:
+
+  T-merged: "has NO commit ahead of main -- nothing was ever committed to it"
+            GROUND TRUTH: one commit, MERGED into main by `git merge --no-ff`.
+            `main..softhouse/T-merged` is empty BECAUSE the work landed.
+
+  T-pruned: "does not exist in this repo -- no WIP was found under that name"
+            GROUND TRUTH: one commit, merged into main, branch then deleted —
+            which is this repo's documented habit ("T288's branch was merged and pruned").
+
+Both notes state the OPPOSITE of the truth, and both tasks are demoted to needs_retry,
+i.e. offered to the next fire for re-dispatch of work that is already on main.
+`git branch --merged main` — run three lines above in the same repo — separates them.
