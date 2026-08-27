@@ -1,0 +1,74 @@
+T324 INSTRUMENT 20 — RED/GREEN DRIVE OF THE PRUNE DECISION CHAIN
+target fire-program.sh : /private/tmp/t324-prefix-fire-program.sh
+  sha256               : b80d6cf6a6250f415b91f9df40b16c3b88dadc380140b639ca8ac65f2fc49feb
+  bytes                : 100040
+  blind-spot guard     : ABSENT — no T324 markers in these bytes; this is the PRE-FIX chain
+  guard source lines   : 0
+lib-worktree-prune.zsh : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6bea6f184d5a6545/.softhouse/bin/lib-worktree-prune.zsh
+  sha256               : 0780d703bb2c6f4b1c011b38972db5028c9509ccc3a9677ab653c58fe8fbf156
+root                   : /private/tmp/t324-red-1
+date                   : 2026-08-27T17:33:32Z
+git                    : git version 2.50.1 (Apple Git-155)
+
+cwd                    : /private/tmp/t324-red-1/host   (wt_prune_check's MERGED rule is cwd-relative — FU-T318-4)
+
+=== rows ===
+
+--- R1 --assume-unchanged hides a live modification
+    polarity   : PRESERVE
+    witness    : .softhouse/tasks.json (55 bytes before the decision)
+    decision   : rc=0  REMOVE
+    action     : REMOVED (git worktree remove rc=0)
+    outcome    : WORKTREE DESTROYED, WITNESS GONE
+  FAIL  R1 --assume-unchanged hides a live modification  CONTENT DESTROYED (55 bytes) — the chain pruned a worktree holding unrecoverable work
+
+--- R2 --skip-worktree hides a live modification
+    polarity   : PRESERVE
+    witness    : .softhouse/tasks.json (52 bytes before the decision)
+    decision   : rc=0  REMOVE
+    action     : REMOVED (git worktree remove rc=0)
+    outcome    : WORKTREE DESTROYED, WITNESS GONE
+  FAIL  R2 --skip-worktree hides a live modification  CONTENT DESTROYED (52 bytes) — the chain pruned a worktree holding unrecoverable work
+
+--- R3 both index bits at once
+    polarity   : PRESERVE
+    witness    : .softhouse/tasks.json (48 bytes before the decision)
+    decision   : rc=0  REMOVE
+    action     : REMOVED (git worktree remove rc=0)
+    outcome    : WORKTREE DESTROYED, WITNESS GONE
+  FAIL  R3 both index bits at once  CONTENT DESTROYED (48 bytes) — the chain pruned a worktree holding unrecoverable work
+
+--- R4 status.showUntrackedFiles=no hides untracked
+    polarity   : PRESERVE
+    witness    : .softhouse/handoff-draft.md (56 bytes before the decision)
+    decision   : rc=0  REMOVE
+    action     : REMOVED (git worktree remove rc=0)
+    outcome    : WORKTREE DESTROYED, WITNESS GONE
+  FAIL  R4 status.showUntrackedFiles=no hides untracked  CONTENT DESTROYED (56 bytes) — the chain pruned a worktree holding unrecoverable work
+
+--- R5 plain untracked file (no hiding)
+    polarity   : PRESERVE
+    witness    : .softhouse/handoff-draft.md (30 bytes before the decision)
+    decision   : rc=0  REMOVE
+    action     : REMOVED (git worktree remove rc=0)
+    outcome    : WORKTREE DESTROYED, WITNESS GONE
+  FAIL  R5 plain untracked file (no hiding)  CONTENT DESTROYED (30 bytes) — the chain pruned a worktree holding unrecoverable work
+
+--- R6 CONTROL: genuinely clean, disposable worktree
+    polarity   : PRUNE
+    witness    : .softhouse/tasks.json (14 bytes before the decision)
+    decision   : rc=0  REMOVE
+    action     : REMOVED (git worktree remove rc=0)
+    outcome    : WORKTREE DESTROYED, WITNESS GONE
+  PASS  R6 CONTROL: genuinely clean, disposable worktree  pruned, as it should be — the chain is NOT inert
+
+--- R7 KNOWN-UNCLOSED: gitignored content (FU-T324-1)
+    polarity   : PRUNE
+    witness    : ignored-scratch/notes.md (35 bytes before the decision)
+    decision   : rc=0  REMOVE
+    action     : REMOVED (git worktree remove rc=0)
+    outcome    : WORKTREE DESTROYED, WITNESS GONE
+  PASS  R7 KNOWN-UNCLOSED: gitignored content (FU-T324-1)  pruned, as it should be — the chain is NOT inert
+
+PASS=2  FAIL=5
+scratch kept at: /private/tmp/t324-red-1
