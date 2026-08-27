@@ -1,0 +1,16 @@
+POST /journalentries
+case-id: B2-ACCEPT-01-entry-on-business-date
+instance: THROWAWAY t327-oracle-app, image fineract:latest (same image id as the standing fineract-fineract-1), port 8444
+Fineract-Platform-TenantId: t327
+Authorization: Basic <mifos:password>
+Idempotency-Key: t327-b2-accept-01
+Content-Type: application/json
+body-wire-bytes-artefact: B2-ACCEPT-01-entry-on-business-date.req
+body-sha256: bd67ed4eae9255cea6c5cae32d43b42f4dcabd537a99c7db8820451d9248ab00
+body-bytes: 572
+response-status: 200
+response-sha256: 4bff3dec960e87f21c73bc7f1414e58bd40d27fe073ad59811d9c2735354017c
+business-date-candidate: 2026-08-28 (DERIVED today in Asia/Ulaanbaatar; MEASURED by B2-ACCEPT-01 + B2-CTRL-02)
+latest-closing-date-at-fire-time: (none)
+captured-at-utc: 2026-08-27T17:33:38Z
+note: B-2: transactionDate == the (derived) business date 2026-08-28; :630 must NOT fire if isAfter is strict

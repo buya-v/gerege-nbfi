@@ -1,0 +1,24 @@
+{
+  "officeId": 1,
+  "transactionDate": "2026-08-27",
+  "dateFormat": "yyyy-MM-dd",
+  "locale": "en",
+  "currencyCode": "MNT",
+  "comments": "T327 B-1: manual journal entry dated ONE DAY AFTER the closing date 2026-08-26, and still on or before the business date 2026-08-28, on the THROWAWAY instance. Balanced: 250000.25 + 100000.37 = 350000.62.",
+  "debits": [
+    {
+      "glAccountId": 1,
+      "amount": 250000.25
+    },
+    {
+      "glAccountId": 2,
+      "amount": 100000.37
+    }
+  ],
+  "credits": [
+    {
+      "glAccountId": 3,
+      "amount": 350000.62
+    }
+  ]
+}
