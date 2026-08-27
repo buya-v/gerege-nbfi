@@ -24,7 +24,15 @@ git init -q --bare "$BASE/origin.git"
 
 REPO="$BASE/repo"
 mkdir -p "$REPO/.softhouse"
-cd "$REPO"
+# T304 (FU-T284-3): FAIL CLOSED ON A DEAD `cd`. $BASE comes from $1, so $REPO may not
+# exist; there is no `set -e` here, and everything below this line writes with plain `>`
+# into `.softhouse/`. DRIVEN, not reasoned: with $1 uncreatable this script re-inited the
+# surrounding repo, rewrote `git config user.name/email`, replaced tasks.json, RESUME.md
+# and program.json, `git add -A && git commit`ed the replacement ONTO THE CHECKED-OUT
+# BRANCH, then `git checkout -b`'d away -- so `git status --porcelain` came back EMPTY and
+# the clobber survived only in the ref. Transcript:
+# .softhouse/capture/t304-evidence-destruction/evidence/100-dead-cd-red-drive.txt
+cd "$REPO" || { echo "build-fixture: cannot cd to $REPO -- refusing rather than writing .softhouse/ in \$PWD" >&2; exit 2; }
 git init -q -b main .
 git config user.name Fixture
 git config user.email fixture@example.invalid
