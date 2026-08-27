@@ -136,17 +136,33 @@ m_t316_no_census() {
 m_t316_no_pin() {
   ( cd "$SCRATCH" && git rm -q --ignore-unmatch .softhouse/guards/dead-path-frontier.pin ) || return 1
 }
-# THE ANTI-AMNESTY ARM, and it is the wiring's own. Fold T305's four rows into the pin -- which
-# makes T316's guard GREEN -- while leaving DEADPATH_T323_RECONCILE_LIST populated. The list is
-# now excusing rows that are no longer there. A pin is a frontier, not an amnesty, so a stale
+# THE ANTI-AMNESTY ARM, and it is the wiring's own. Do what the handoff asks the NEXT holder of
+# the pin to do -- fold every reconciled row INTO the pin, which makes T316's guard GREEN -- but
+# do only HALF of it, leaving DEADPATH_T323_RECONCILE_LIST populated. The list is now excusing
+# rows that are no longer on the frontier. A pin is a frontier, not an amnesty, so a stale
 # reconciliation list must FAIL the bar rather than sit there quietly forever.
+#
+# THE ROWS ARE READ OUT OF conformance.sh, NEVER RETYPED HERE. A second hand-maintained copy of
+# the list would rot against the first the moment either moved -- which is P-86's shape, "the
+# corrected cardinal rotted in the place it was RESTATED" -- and this arm would then be driving
+# something other than the guard it claims to drive. It went red exactly that way once: the arm
+# was written against a 4-row list and the list grew to 9.
 m_t316_stale_list() {
-  {
-    echo '.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest'
-    echo '.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest/gerege.disposable'
-    echo '.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/ACCEPT.json'
-    echo '.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/REFUSE.json'
-  } >> "$SCRATCH/.softhouse/guards/dead-path-frontier.pin" || return 1
+  ( cd "$SCRATCH" && LC_ALL=C python3 - <<'PY'
+import io, re, sys
+conf = io.open(".softhouse/conformance.sh", encoding="utf-8").read()
+m = re.search(r"^DEADPATH_T323_RECONCILE_LIST='(.*?)'$", conf, re.S | re.M)
+if not m:
+    sys.exit("could not read DEADPATH_T323_RECONCILE_LIST out of conformance.sh")
+rows = [r for r in m.group(1).splitlines() if r.strip()]
+if not rows:
+    sys.exit("the reconciliation list is EMPTY -- this arm has nothing to make stale")
+with io.open(".softhouse/guards/dead-path-frontier.pin", "a", encoding="utf-8") as f:
+    for r in rows:
+        f.write(r + "\n")
+print("appended %d row(s) to the pin, list left populated" % len(rows))
+PY
+  ) || return 1
 }
 
 # --------------------------------------------------------------------------------------------
