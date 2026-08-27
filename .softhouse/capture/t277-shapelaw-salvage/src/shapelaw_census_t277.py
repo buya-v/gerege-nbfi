@@ -204,11 +204,13 @@ def admit(inputs):
 def census(root):
     rows = []
     skipped = {}
+    seen = [0]          # EVERY capture read, so nothing can be dropped silently
     files = gz_paths(root)
     for path in files:
         with gzip.open(path) as fh:
             raw = json.load(fh)
         for cap in raw.get("captures", []):
+            seen[0] += 1
             inputs = cap.get("inputs") or {}
             observed = cap.get("observed")
             if cap.get("threw") or not observed:
@@ -317,7 +319,16 @@ def census(root):
                 "antecedent_PARTIAL": (delta >= 1 and n * delta < b_minor
                                        and 2 * b_minor < (2 * delta + 1) * n),
             })
-    return files, rows, skipped
+
+    # COMPLETENESS: admitted + every declared rejection reason must account for
+    # every capture read. A capture that fell out of a branch without being
+    # counted would silently shrink the population, which is exactly the failure
+    # that makes a census figure irreproducible.
+    if len(rows) + sum(skipped.values()) != seen[0]:
+        raise AssertionError(
+            "census leaked: %d admitted + %d rejected != %d captures read"
+            % (len(rows), sum(skipped.values()), seen[0]))
+    return files, rows, skipped, seen[0]
 
 
 def summarize(rows):
@@ -374,6 +385,10 @@ def summarize(rows):
 # --------------------------------------------------------------------------
 # EXPECTATIONS -- what this instrument asserts about main, so it RE-RUNS as a guard
 # --------------------------------------------------------------------------
+# Every capture in every committed raw `.json.gz`, admitted or rejected. Pinned so
+# that a corpus that grows or shrinks is NOTICED rather than quietly re-censused.
+EXPECTED_TOTAL_CAPTURES = 775
+
 EXPECTED = {
     # ---- scope `t229corpus`: the 296 cells T229 measured and T241 re-bucketed ----
     "t229corpus": {
@@ -600,7 +615,11 @@ def main(argv):
         return 0
 
     root = argv[1] if len(argv) > 1 else "."
-    files, all_rows, skipped = census(root)
+    files, all_rows, skipped, total_captures = census(root)
+    if total_captures != EXPECTED_TOTAL_CAPTURES:
+        print("NOTE: %d captures read; this instrument was pinned against %d. "
+              "The `all` scope pins below will trip if the corpus moved."
+              % (total_captures, EXPECTED_TOTAL_CAPTURES))
     scoped = {
         "t229corpus": [r for r in all_rows if r["file"] in SCOPE_T229_CORPUS],
         "all": all_rows,

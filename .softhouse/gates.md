@@ -2289,7 +2289,10 @@ edge — `2·B_minor = n` with `δ = 0`, where the conjunction refuses and the c
 lies outside the branch this law governs. [VERIFIED by T231 by integer arithmetic; it is T231's own
 observation, not T229's.])*
 
-The shape of an **unrescued** cell follows from FACT A plus the deficit carry:
+The shape of an **unrescued** cell follows from FACT A plus the deficit carry — **and the SECOND of
+the two laws in the block below is FALSE on a measured set of seven corpus cells. DO NOT QUOTE THE
+BLOCK WITHOUT THE `CORRECTION (T277)` THAT FOLLOWS IT.** The block is left byte-unchanged because it
+is quoted verbatim elsewhere; the correction scopes it, and no figure in it moves:
 
 ```
 last row EMI = E + B ;   TOTAL PRINCIPAL = max(0, B_minor − n·δ)
@@ -2301,6 +2304,157 @@ PARTIAL family B ⟺ δ ≥ 1 ∧ n·δ < B_minor < (δ + ½)·n , repaying exac
 interest, which is `n·E + B − principal`: `B201` 200·100 + 201 − 1 = 20200 · `B251`
 200·125 + 251 − 51 = 25200 · `B299` 200·149 + 299 − 99 = 30000 · `B150` 1400·4 + 150 − 0 = 5750. All
 four match the captured `totalInterestAmount` exactly.]
+
+#### CORRECTION (T277) — law (ii) of the block above is FALSE on SEVEN cells, and those seven are EXACTLY gap 2
+
+**Classification: ENGINEERING.** It is answerable from the committed raw captures, so `T277` decided
+it, recorded the derivation and acted (`CLAUDE.md` § Answering gates). **Nothing RESERVED is touched:
+no cutover, no regulatory sign-off, no licence fact, no money spent, no endpoint exposed.** No `DEC-n`
+is amended, `.softhouse/vectors/` is not touched, and **G-8's SUBSTANCE is unchanged** — the only
+stateable region is still the conservative superset `B_minor < 1.5·n`, it still rests entirely on the
+unproven conjecture `δ ≤ 1`, and **options (b) and (c) still MUST NOT be put to Buyan.** This
+correction narrows a law; it does not move a gate.
+
+**The block carries TWO laws and they do not have the same standing.** Law (i) — `last row EMI = E + B`
+— is the definition of the FACT-A domain and holds on every cell of it. Law (ii) —
+`TOTAL PRINCIPAL = max(0, B_minor − n·δ)` — **does not**.
+
+Re-derived by `T277` in **integer minor units** directly from the committed raw `.json.gz` schedules,
+with an instrument that imports **neither** `src/site3.py`, **nor** `src/validate_corpus.py`, **nor**
+the cloud's `rederive_total_interest_t241.py`, **nor** `T264`'s scripts, and that **RE-RUNS AND FAILS
+LOUDLY** rather than being a transcribed table:
+`.softhouse/capture/t277-shapelaw-salvage/src/shapelaw_census_t277.py` (`--selftest` proves the
+minor-unit parser and the HALF_UP quantizer on hand-checked cases, and asserts at AST level that the
+file contains no float literal, no `float()`/`round()` call, no true-division node and no
+`decimal`/`fractions`/`math` import).
+
+**AND IT WAS CALIBRATED ON A NEGATIVE, because a guard that cannot fail proves nothing.** Mutation 1
+— assert law (ii) holds **220/220**, which is *exactly* the claim `df0aed2c` made — **trips it, exit
+1**. Mutation 2 — drop `T159-R600p0-N2000-B999` from the expected exception set — **trips it in both
+scopes, exit 1**. Unmutated, same data, same invocation: **exit 0**.
+[`.softhouse/capture/t277-shapelaw-salvage/evidence/40-negative-calibration.txt`]
+
+| law | domain | holds |
+|---|---|---|
+| (i) `last row EMI = E + B` — **FACT A** | 296 stuck corpus cells | **220** *(this is what defines the FACT-A domain)* |
+| (ii) `TOTAL PRINCIPAL = max(0, B_minor − n·δ)` | all 296 | **289 of 296** |
+| (ii) | the **220** FACT-A cells | **213 of 220 — SEVEN FAILURES** |
+| (ii) | the 113 `δ = 0` cells | 113 of 113 |
+| (ii) | the 183 cells satisfying the `FULL family B` antecedent | **176 of 183** |
+
+**THE SEVEN, each read from its own principal COLUMN and not from a header** *(the header
+`totalPrincipalAmount` was independently checked to equal the row sum on all 296, and on all 578 —
+see below — so no cell in this file rests on a header)*:
+
+| cell | capture | n | `B` minor | `E` | `I₁q` | `δ` | `B ≤ n·δ`? | law (ii) predicts | **OBSERVED principal** |
+|---|---|---|---|---|---|---|---|---|---|
+| `T117P2-R600p0-N108-B11` | `capture-t117p2-raw.json.gz` | 108 | 11 | 5 | 6 | 1 | yes | **0** | **5** |
+| `T117P2-R600p0-N121-B11` | `capture-t117p2-raw.json.gz` | 121 | 11 | 5 | 6 | 1 | yes | **0** | **4** |
+| `T117P2-R600p0-N150-B11` | `capture-t117p2-raw.json.gz` | 150 | 11 | 5 | 6 | 1 | yes | **0** | **2** |
+| `T159-R600p0-N108-B11` | `capture-t159-raw.json.gz` | 108 | 11 | 5 | 6 | 1 | yes | **0** | **5** |
+| `T159-R600p0-N121-B11` | `capture-t159-raw.json.gz` | 121 | 11 | 5 | 6 | 1 | yes | **0** | **4** |
+| `T159-R600p0-N150-B11` | `capture-t159-raw.json.gz` | 150 | 11 | 5 | 6 | 1 | yes | **0** | **2** |
+| `T159-R600p0-N2000-B999` | `capture-t159-raw.json.gz` | 2000 | 999 | 499 | 500 | 1 | yes | **0** | **166** |
+
+**Every one of the seven satisfies the block's own `FULL family B` antecedent**, `δ ≥ 1 ∧ B_minor ≤ n·δ`,
+so the block predicts **exactly zero principal** on each, and **each repays a positive amount**. The
+`FULL family B ⟺` line is therefore refuted on **7 of the 183** corpus cells that satisfy its
+antecedent. `T117P2` and `T159` are re-observations of the same three input cells, so this is **four
+distinct cells observed seven times**, and the two independent observations of each agree to the unit.
+
+**THE EXCEPTION SET IS GAP 2, AND THE TWO RECORDS NEVER POINTED AT EACH OTHER.** Gap 2 of *The gaps,
+carried forward verbatim rather than smoothed* below already names these exact seven —
+*"Seven corpus cells reduce the balance by a path this model does not contain"* — and this block
+already stated the law they refute. **Both entries have been correct and adjacent since T231 and
+neither one mentions the other**, which is why the law reads as sound at the point a reader meets it.
+That is the whole of the defect: not a wrong measurement, an unlinked one.
+
+**MEASURED, NOT GUESSED — the exception set is DISJOINT from both sets it has been confused with:**
+
+- the **113 `δ = 0`** cells: **intersection = 0** *(all seven have `δ = 1`; law (ii) holds on 113 of 113 at `δ = 0`)*;
+- the **76** cells on which FACT A FAILS: **intersection = 0** *(all seven are FACT-A-TRUE)*.
+- And a fact that removes the ambiguity in the phrase "the 76 `δ = 0` cells": **all 76 FACT-A failures
+  are `δ = 0` cells, but only 76 of the 113 `δ = 0` cells fail FACT A** — the other 37 hold it.
+
+**WHERE THE SEVEN GO — measured, and it closes the arithmetic without supplying a mechanism.** On
+**every** FACT-A cell in the corpus (220 of 220, and 441 of 441 on the wider scope below) the entire
+principal lands in **exactly one row — the last** — and equals
+
+```
+TOTAL PRINCIPAL = max(0, E + B_minor − I_last)      [ I_last = the LAST repayment row's interest ]
+```
+
+with **no exception, including all seven**. Worked on the sharpest of them, `T159-R600p0-N2000-B999`:
+`E = 499`, `B = 999`, last row interest `1332`, last row total `1498 = E + B` ✓, and
+`499 + 999 − 1332 = 166` = the observed principal, to the unit. **This is DESCRIPTIVE, NOT PREDICTIVE,
+and must not be substituted for law (ii)**: `I_last` is read out of the observed schedule, whereas
+`max(0, B_minor − n·δ)` is computed from the inputs before the oracle is asked. What it does is
+**narrow gap 2 to a single quantity** — the unexplained balance reduction is entirely the last row's,
+and the only thing still underived is `I_last`. `[UNVERIFIED — the mechanism that sets I_last. T277
+did not chase it, did not guess, and asked the oracle nothing.]`
+
+**A SECOND SCOPE, because "the corpus" is not one number.** The **296** is not "the corpus"; it is the
+four raw captures that existed under `.softhouse/capture/` when T229 ran — `T117`, `T117-p2`, `T159`,
+`T223`. **Nothing in this file, in T229 or in either T241 says so**, and the figure cannot be
+reproduced without knowing it. `T277` pins that scope explicitly and **also** re-runs the whole census
+over **every committed raw capture in the repository** (10 files, adding `T219`, `T229`'s own probes,
+and `T84` — which lives under `.softhouse/reviews/` and so was never in reach of a glob rooted at
+`.softhouse/capture/`). That is **578** admitted stuck cells, and **the law-(ii) exception set is
+STILL exactly those seven**. Widening the population by 95 % adds no eighth exception.
+
+**Two further things the wider scope shows, recorded so they are not rediscovered at full cost:**
+
+- **The `PARTIAL family B ⟺` line has ZERO witnesses inside the 296.** Not one corpus cell satisfies
+  its antecedent. It was measured on three **live probe** cells (`B201`/`B251`/`B299`), and the corpus
+  never tested it. On the wider 578 there are **5** such cells and law (ii) holds on all 5.
+- **One cell is excluded and counted, never silently admitted**: `T84-RP-R7p0-N56-B23` at 7.0 % p.a.,
+  whose monthly rate factor `7/1200` has no finite decimal expansion inside 19 fractional digits. The
+  oracle computes that factor at `(19, HALF_UP)` and `setScale(19)`; `T277` cannot reproduce its `I₁q`
+  exactly, so `δ` is not derivable for it and **every `δ`-dependent claim above is silent about it.**
+  `[UNVERIFIED — that cell's δ.]`
+
+##### The rejected `T241` branch: what is salvaged, and what is recorded as FALSE
+
+The cloud's `T241` (`refs/remotes/origin/softhouse/T241-g8-evidence-hygiene`, **`df0aed2c`**) was
+REJECTED by `T264` (`refs/heads/softhouse/t264-review-cloud-t241`, **`406cfb06`**) and the driver
+upheld the rejection: the branch does not merge, and a **rival `T241` landed on main** at `e0ac8d09`
+(merged `d20836ee`) making the opposite ruling on two of three items. **`df0aed2c` is dead and is not
+being revived.** But a rejected verdict is not a rejected measurement, and the two are separated here.
+
+**SALVAGED — reproduced independently by `T277` and now landed as a re-runnable instrument:**
+
+- the corpus **re-bucketing**: 296 stuck cells, `δ` histogram `{0: 113, 1: 183}`, FACT A **220 vs 76**,
+  the interest law `n·E + B` holding on **176** and failing on **120**, and **0 of 113** at `δ = 0`;
+- the discriminator: `TOTAL REPAYMENT = n·E + B` separates the domain **220/220 versus 0/76**;
+- the sharper diagnosis that `n·E + B` is the **total REPAYMENT**, not the total interest — which
+  main's own `T241` (`e0ac8d09`) reached independently and landed. The live text in this section has
+  carried the correct interest form, `n·E + B − principal`, since T231, and `T277` confirms it holds
+  **220 of 220** on the FACT-A domain and **0 of 76** off it.
+
+**RECORDED AS FALSE, NOT DELETED** — so a later fire does not pay to rediscover and re-file it:
+
+1. **`df0aed2c` asserted, of the block it had just narrowed, that "No figure below it changes and none
+   is wrong."** **REFUTED.** It measured law (i) on its new FACT-A domain (220/220, which reproduces)
+   and asserted law (ii) was sound having checked it only at `δ = 0` (113/113, which also reproduces)
+   — never on the domain it had just written. On that domain law (ii) holds **213 of 220**. The seven
+   failures are the table above, reproduced by `T277` from the raw schedules.
+2. **`df0aed2c` §7 conjectured that the 76 `δ = 0` FACT-A-failing cells are "adjacent to — and may be
+   the same thing as" gap 2's seven.** **REFUTED by measurement: the two sets are DISJOINT**, and the
+   seven **ARE** gap 2 rather than being adjacent to it. In fairness to its author the conjecture was
+   published marked `[UNVERIFIED]` and offered as a raised question, not as a result.
+3. **`df0aed2c` asserted `src/site3.py` was "byte-identical to `29ed78c`" on landing, and that
+   "nothing in this block is altered."** Both were **false against main** by the time it was reviewed,
+   because the rival `T241` had already annotated `site3.py` in place and STRUCK an imperative in
+   `G-8-NOTICE`. This is a **fork-staleness** failure, not an arithmetic one, and it is the reason the
+   branch was unmergeable rather than merely wrong.
+
+**Not salvaged, and deliberately so:** the branch's scope-table rebuild, its `CORRECTION-T241.md`
+annotations and its `G-8-NOTICE` ruling are all superseded by the rival `T241` that landed on main.
+`T277` re-ran none of them and makes **no claim** about them. `[UNVERIFIED by T277.]`
+
+**Nothing above was rewritten in place.** Per the standing practice (`T114`/`T176`, and `T316` on
+repointing forward references inside committed evidence), `df0aed2c`'s handoff, `T264`'s review and
+both commit messages are committed evidence and were read, not edited. This entry corrects **forward**.
 
 ### What was measured — 7 of 9 as registered, and the boundary landed within one minor unit
 
@@ -2354,6 +2508,14 @@ These are **T229's own residuals**, and the conservative ceiling above depends o
    rows, first non-zero principal at row 14, last at row 26, final balance 0]. **`[UNVERIFIED — the
    mechanism. The model says the balance is frozen while `E ≤ I₁q`; these cells say it is not. T229
    did not chase it and did not guess; T231 did not either.]`**
+   > **THESE SEVEN ARE NOT MERELY A GAP IN THE MODEL — THEY ARE A COUNTEREXAMPLE TO THE LAW THIS
+   > SECTION STATES, AND THE TWO ENTRIES SAT ADJACENT WITHOUT REFERRING TO EACH OTHER (T277).** Each
+   > of the seven satisfies the `FULL family B` antecedent of `### THE LAW` above, which therefore
+   > predicts `TOTAL PRINCIPAL = 0` on every one of them. Law (ii) holds on **213 of the 220** FACT-A
+   > cells, not 220. See `#### CORRECTION (T277)` under `### THE LAW`, which also measures that the
+   > whole missing reduction is confined to the **last row** and equals `max(0, E + B_minor − I_last)`
+   > on 220 of 220 FACT-A cells. **The mechanism is still `[UNVERIFIED]`** — T277 narrowed the gap to
+   > `I_last` and did not close it, asked the oracle nothing, and guessed nothing.
 3. **`δ ≤ 1` is a CONJECTURE, not a result.** It holds on all **296** corpus stuck cells
    (histogram `{0: 113, 1: 183}`), all **9** of T229's probe cells and all **8** of T219's observed
    probe cells. **The conservative ceiling `1.5·n` depends on it entirely.** **`[UNVERIFIED — that
