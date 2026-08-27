@@ -1,0 +1,1418 @@
+{
+  "corpusFiles": 1143,
+  "deadFiles": [
+    ".softhouse/bin/fire-program.sh",
+    ".softhouse/bin/go-env.sh",
+    ".softhouse/capture/charges/bin/control.sh",
+    ".softhouse/capture/lib/check_no_narrow_catch.py",
+    ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+    ".softhouse/capture/pathb/t147/cp-digest-census.py",
+    ".softhouse/capture/pathb/t36/attest.py",
+    ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+    ".softhouse/capture/pathb/t80/prove-f1-recovery.py",
+    ".softhouse/capture/pathb/t80/prove-f1-sandbox-run.sh",
+    ".softhouse/capture/src/run-pass3c.sh",
+    ".softhouse/capture/src/run-pass3d.sh",
+    ".softhouse/capture/src/run-pass3e.sh",
+    ".softhouse/capture/src/run-pass3f.sh",
+    ".softhouse/capture/src/run-pass3g.sh",
+    ".softhouse/capture/src/run-pass3h.sh",
+    ".softhouse/capture/src/run-pass3i.sh",
+    ".softhouse/capture/src/run-rc6-rounddown-attestation.sh",
+    ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+    ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+    ".softhouse/capture/t154-nofloat/drive-leg1-e2e.sh",
+    ".softhouse/capture/t154-nofloat/drive-leg1.sh",
+    ".softhouse/capture/t223-g8-region-predicate/src/verify_merge_t223.sh",
+    ".softhouse/capture/t234-sweep-instrument-audit/instruments/10-census.py",
+    ".softhouse/capture/t234-sweep-instrument-audit/instruments/31-sound-sweep.py",
+    ".softhouse/capture/t234-sweep-instrument-audit/instruments/32-triage-live.py",
+    ".softhouse/capture/t238-failopen/instruments/90-bar.sh",
+    ".softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh",
+    ".softhouse/capture/t239-r11-rerun/instruments/90-bar.sh",
+    ".softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh",
+    ".softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh",
+    ".softhouse/capture/t243-wiring/instruments/30-citation-red-drive.sh",
+    ".softhouse/capture/t243-wiring/instruments/90-bar.sh",
+    ".softhouse/capture/t244-dec2-rev6/bar.sh",
+    ".softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py",
+    ".softhouse/capture/t252-tier3/instruments/40-c6-red-drive.py",
+    ".softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py",
+    ".softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh",
+    ".softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py",
+    ".softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh",
+    ".softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh",
+    ".softhouse/capture/t256-verdict-predicate/census_verdict_shape.py",
+    ".softhouse/capture/t256-verdict-predicate/red/drive-red.sh",
+    ".softhouse/capture/t256-verdict-predicate/run.sh",
+    ".softhouse/capture/t271-b1-t219/red/drive-red-t271.py",
+    ".softhouse/capture/t271-b1-t219/run.sh",
+    ".softhouse/capture/t273-residue/instruments/60-outside-repo-state-sweep.py",
+    ".softhouse/capture/t284-schema2-callsites/instruments/30-red-drive.sh",
+    ".softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py",
+    ".softhouse/capture/t290-review-t271/red/drive-red-t290.py",
+    ".softhouse/capture/t290-review-t271/run.sh",
+    ".softhouse/capture/t299-namespace-and-default-safety/instruments/30-drive-the-rename.sh",
+    ".softhouse/capture/t299-namespace-and-default-safety/instruments/40-drive-namespace-guard.sh",
+    ".softhouse/capture/t309-sigterm-reconcile-bypass/patch5.py",
+    ".softhouse/capture/t309-sigterm-reconcile-bypass/probe-git-inode.sh",
+    ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+    ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+    ".softhouse/capture/t66-unrecognized-interest/gotest.sh",
+    ".softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/verify-on-scratch-merge.sh",
+    ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+    ".softhouse/capture/t74-multiplesof/T82-guard-proofs/run-precondition-block.sh",
+    ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+    ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+    ".softhouse/capture/t83-nonamortizing/src/run-t83.sh",
+    ".softhouse/conformance.sh",
+    ".softhouse/guards/check-capture-namespace.sh",
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh",
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh",
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh",
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/readonly-sourced-edge.sh",
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh",
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh",
+    ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-redgreen.py",
+    ".softhouse/handoff/T57-promote-emi-vectors.py",
+    ".softhouse/handoff/T61-mutations.py",
+    ".softhouse/handoff/T61-sweep/build-pass3f.py",
+    ".softhouse/handoff/T61-sweep/run-sweep.py",
+    ".softhouse/handoff/T8-promote-vectors.py",
+    ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+    ".softhouse/reviews/T155-probe/prove-xiii-deflation.sh",
+    ".softhouse/reviews/T184-evidence/t184-probe-green-catch.sh",
+    ".softhouse/reviews/T184-evidence/t184-probe-green-float.sh",
+    ".softhouse/reviews/T184-evidence/t184-probe-red-catch.sh",
+    ".softhouse/reviews/T184-evidence/t184-probe-red-float.sh",
+    ".softhouse/reviews/T184-evidence/t184-vacuity.sh",
+    ".softhouse/reviews/T188-probe/drive-t188.sh",
+    ".softhouse/reviews/T298/attack-marker-extractor.sh",
+    ".softhouse/reviews/T298/t298b-census.sh",
+    ".softhouse/reviews/T298/t298b-marker-attack-matrix.sh",
+    ".softhouse/reviews/T298/t298b-worktree-composition-drive.sh",
+    ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+    ".softhouse/reviews/T84-evidence/src/run-port.py",
+    ".softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh",
+    ".softhouse/reviews/t179-guard-classifier/fixtures/green_atexit.py",
+    ".softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py",
+    ".softhouse/reviews/t179-guard-classifier/fixtures/green_real_trap.sh",
+    ".softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py",
+    ".softhouse/reviews/t179-guard-classifier/fixtures/red_guard_elsewhere.py",
+    ".softhouse/reviews/t179-guard-classifier/fixtures/red_prose_guard.py",
+    ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+    ".softhouse/reviews/t249-g14-scope/run-bar.sh",
+    ".softhouse/reviews/t262-verdict-predicate/pin_test_t262.py",
+    ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
+    ".softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh",
+    ".softhouse/reviews/t291-review-t286/probe/reproduce-in-t286s-own-sweep.sh",
+    ".softhouse/reviews/t291-review-t286/probe/wrapper-probe-t291.sh",
+    ".softhouse/reviews/t34-probe/t34_rollforward.py",
+    ".softhouse/reviews/t47-probe/t178-redprobe.py"
+  ],
+  "deadOccurrences": 150,
+  "indeterminateOccurrences": 56,
+  "perFile": {
+    ".softhouse/bin/fire-program.sh": {
+      "dead": [
+        ".softhouse/tasks.json.t288.tmp"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/RESUME.md was not rewritten by this fire. Stamping the file itself so the next fire reads the correction before the stale table.",
+        ".softhouse/RESUME.md with the staleness banner"
+      ],
+      "resolves": [
+        ".softhouse/LOCK",
+        ".softhouse/RESUME.md",
+        ".softhouse/program.json",
+        ".softhouse/tasks.json"
+      ]
+    },
+    ".softhouse/bin/go-env.sh": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/capture/charges/bin/control.sh": {
+      "dead": [
+        ".softhouse/capture/pathb/out/)"
+      ],
+      "indeterminate": [
+        ".softhouse/capture/pathb/out/$c-raw.json",
+        ".softhouse/capture/pathb/req/calc-$c.json"
+      ],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/capture/lib/check_no_narrow_catch.py": {
+      "dead": [
+        ".softhouse/capture/existing/src/CaptureAlreadyFixed.java",
+        ".softhouse/capture/newrig/src/CaptureBrandNew.java"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/actualactual/src/CaptureActualActual.java",
+        ".softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext.java",
+        ".softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext2.java",
+        ".softhouse/capture/audit-t44/rerun-periodratio/src/CapturePeriodRatio.java",
+        ".softhouse/capture/dec1-binding/src/CaptureBinding.java",
+        ".softhouse/capture/mathcontext/src/CaptureMathContext.java",
+        ".softhouse/capture/mathcontext/src/CaptureMathContext2.java",
+        ".softhouse/capture/mathcontext/src/CaptureMathContext3.java",
+        ".softhouse/capture/mathcontext/src/CaptureT50Ambient.java",
+        ".softhouse/capture/mathcontext/src/CaptureT50Tier2.java",
+        ".softhouse/capture/periodratio/src/CapturePeriodRatio.java",
+        ".softhouse/capture/periodratio/src/CapturePeriodRatio2.java",
+        ".softhouse/capture/src/Capture.java",
+        ".softhouse/capture/src/Capture2.java",
+        ".softhouse/capture/src/Capture3.java",
+        ".softhouse/capture/src/Capture3b.java",
+        ".softhouse/capture/src/Capture3c.java",
+        ".softhouse/capture/src/Capture3d.java",
+        ".softhouse/capture/src/Capture3e.java",
+        ".softhouse/capture/src/Capture3f.java",
+        ".softhouse/capture/src/Capture3g.java",
+        ".softhouse/capture/src/Capture3h.java",
+        ".softhouse/capture/src/Capture3i.java",
+        ".softhouse/capture/src/T21Probe.java",
+        ".softhouse/capture/src/t169-red/CaptureT169Post.java",
+        ".softhouse/capture/src/t169-red/CaptureT169Pre.java",
+        ".softhouse/capture/t100-g8-rescope/src/CaptureT100.java",
+        ".softhouse/capture/t117-familyb/src/CaptureT117.java",
+        ".softhouse/capture/t117-familyb/src/CaptureT117P2.java",
+        ".softhouse/capture/t159-review-t117/src/CaptureT159.java",
+        ".softhouse/capture/t83-nonamortizing/src/CaptureT83.java",
+        ".softhouse/reviews/T84-evidence/src/CaptureT84.java",
+        ".softhouse/reviews/T84-evidence/src/CaptureT84B.java",
+        ".softhouse/reviews/t21v2/T21v2Probe.java"
+      ]
+    },
+    ".softhouse/capture/lib/check_wire_float_roundtrip.py": {
+      "dead": [
+        ".softhouse/capture/out/capture-that-does-not-exist.json"
+      ],
+      "indeterminate": [
+        ".softhouse/capture/<relparts>."
+      ],
+      "prose": [
+        ".softhouse/capture/tierA-a2/resolve8.py is the worked example)."
+      ],
+      "resolves": []
+    },
+    ".softhouse/capture/pathb/t147/cp-digest-census.py": {
+      "dead": [
+        ".softhouse/capture)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/capture/pathb/t36/attest.py": {
+      "dead": [
+        ".softhouse/vectors/PIN.json:dec1_revision"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/gates.md \u2014 the G-1 heading"
+      ],
+      "resolves": []
+    },
+    ".softhouse/capture/pathb/t80/prove-f1-noswap.py": {
+      "dead": [
+        ".softhouse/capture/pathb/t36/.f1-prefix-attest.py",
+        ".softhouse/capture/pathb/t80/.f1-swap-in-progress",
+        ".softhouse/capture/pathb/t80/out/.f1-prefix.py",
+        ".softhouse/capture/pathb/t80/out/out",
+        ".softhouse/capture/pathb/t80/out/out/emiloop"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/pathb",
+        ".softhouse/capture/pathb/t36/attest.py",
+        ".softhouse/capture/pathb/t36/out/emiloop",
+        ".softhouse/capture/pathb/t36/sha256.sh",
+        ".softhouse/capture/pathb/t80/prove-f1.sh"
+      ]
+    },
+    ".softhouse/capture/pathb/t80/prove-f1-recovery.py": {
+      "dead": [
+        ".softhouse/capture/pathb/t36/.f1-prefix-attest.py",
+        ".softhouse/capture/pathb/t80/.f1-swap-in-progress"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/pathb/t36/attest.py",
+        ".softhouse/capture/pathb/t36/out/emiloop",
+        ".softhouse/capture/pathb/t36/sha256.sh",
+        ".softhouse/capture/pathb/t80/prove-f1.sh"
+      ]
+    },
+    ".softhouse/capture/pathb/t80/prove-f1-sandbox-run.sh": {
+      "dead": [
+        ".softhouse/capture/pathb/t36/.f1-prefix-attest.py",
+        ".softhouse/capture/pathb/t80/.f1-swap-in-progress"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/pathb/t36/sha256.sh"
+      ]
+    },
+    ".softhouse/capture/src/run-pass3c.sh": {
+      "dead": [
+        ".softhouse/capture/out/capture-prod3b-raw.json}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture",
+        ".softhouse/capture/src/run-pass3c.sh"
+      ]
+    },
+    ".softhouse/capture/src/run-pass3d.sh": {
+      "dead": [
+        ".softhouse/capture/out/capture-prod3b-raw.json}",
+        ".softhouse/capture/out/capture-prod3c-raw.json}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture",
+        ".softhouse/capture/src/run-pass3d.sh"
+      ]
+    },
+    ".softhouse/capture/src/run-pass3e.sh": {
+      "dead": [
+        ".softhouse/capture/out/capture-prod3b-raw.json}",
+        ".softhouse/capture/out/capture-prod3c-raw.json}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture",
+        ".softhouse/capture/src/run-pass3e.sh"
+      ]
+    },
+    ".softhouse/capture/src/run-pass3f.sh": {
+      "dead": [
+        ".softhouse/capture/out/capture-prod3b-raw.json}",
+        ".softhouse/capture/out/capture-prod3c-raw.json}",
+        ".softhouse/capture/out/capture-prod3e-raw.json}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture",
+        ".softhouse/capture/src/run-pass3f.sh"
+      ]
+    },
+    ".softhouse/capture/src/run-pass3g.sh": {
+      "dead": [
+        ".softhouse/capture/out/capture-prod3b-raw.json}",
+        ".softhouse/capture/out/capture-prod3c-raw.json}",
+        ".softhouse/capture/out/capture-prod3e-raw.json}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture",
+        ".softhouse/capture/src/run-pass3g.sh"
+      ]
+    },
+    ".softhouse/capture/src/run-pass3h.sh": {
+      "dead": [
+        ".softhouse/capture/out/capture-prod3b-raw.json}",
+        ".softhouse/capture/out/capture-prod3c-raw.json}",
+        ".softhouse/capture/out/capture-prod3e-raw.json}",
+        ".softhouse/capture/out/capture-prod3g-raw.json}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture",
+        ".softhouse/capture/src/run-pass3h.sh"
+      ]
+    },
+    ".softhouse/capture/src/run-pass3i.sh": {
+      "dead": [
+        ".softhouse/capture/out/capture-prod3b-raw.json}",
+        ".softhouse/capture/out/capture-prod3c-raw.json}",
+        ".softhouse/capture/out/capture-prod3e-raw.json}",
+        ".softhouse/capture/out/capture-prod3g-raw.json}"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/vectors/capabilities.json "
+      ],
+      "resolves": [
+        ".softhouse/capture",
+        ".softhouse/capture/src/run-pass3i.sh"
+      ]
+    },
+    ".softhouse/capture/src/run-rc6-rounddown-attestation.sh": {
+      "dead": [
+        ".softhouse/capture/out}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/pathb/t22-audit/out-rounddown/rounddown-gerege-raw.json",
+        ".softhouse/capture/pathb/t22-audit/req/calc-prounddown.json"
+      ]
+    },
+    ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t100-g8-rescope/out/capture-t100-raw.json",
+        ".softhouse/capture/t100-g8-rescope/out/exemption-demo-t100.json",
+        ".softhouse/capture/t83-nonamortizing/src",
+        ".softhouse/vectors",
+        ".softhouse/vectors/PIN.json"
+      ]
+    },
+    ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t116-familyb-promotion/out",
+        ".softhouse/capture/t116-familyb-promotion/out/capture-t116-raw.json",
+        ".softhouse/capture/t64-zeroprincipal/src"
+      ]
+    },
+    ".softhouse/capture/t154-nofloat/drive-leg1-e2e.sh": {
+      "dead": [
+        ".softhouse/vectors/T154-POISON-store-root.json"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/conformance.sh ) > ",
+        ".softhouse/vectors )",
+        ".softhouse/vectors is EMPTY"
+      ],
+      "resolves": [
+        ".softhouse/capture",
+        ".softhouse/conformance.sh",
+        ".softhouse/vectors/loanschedule"
+      ]
+    },
+    ".softhouse/capture/t154-nofloat/drive-leg1.sh": {
+      "dead": [
+        ".softhouse/conformance.sh}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/conformance.sh"
+      ]
+    },
+    ".softhouse/capture/t223-g8-region-predicate/src/verify_merge_t223.sh": {
+      "dead": [
+        ".softhouse/gates.md)",
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/capture/t234-sweep-instrument-audit/instruments/10-census.py": {
+      "dead": [
+        ".softhouse/):"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/",
+        ".softhouse/capture/t234-sweep-instrument-audit/",
+        ".softhouse/capture/t234-sweep-instrument-audit/evidence/census.json"
+      ]
+    },
+    ".softhouse/capture/t234-sweep-instrument-audit/instruments/31-sound-sweep.py": {
+      "dead": [
+        ".softhouse/)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t234-sweep-instrument-audit/",
+        ".softhouse/conformance.sh",
+        ".softhouse/guards/ledgerguard/main.go"
+      ]
+    },
+    ".softhouse/capture/t234-sweep-instrument-audit/instruments/32-triage-live.py": {
+      "dead": [
+        ".softhouse/uat.md"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/RESUME.md",
+        ".softhouse/bin/",
+        ".softhouse/capture/t234-sweep-instrument-audit/",
+        ".softhouse/conformance.sh",
+        ".softhouse/gates-proposed-answers.md",
+        ".softhouse/gates.md",
+        ".softhouse/guards/",
+        ".softhouse/patterns.md",
+        ".softhouse/program.json",
+        ".softhouse/reference-oracle.md",
+        ".softhouse/tasks.json",
+        ".softhouse/vectors/"
+      ]
+    },
+    ".softhouse/capture/t238-failopen/instruments/90-bar.sh": {
+      "dead": [
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh": {
+      "dead": [
+        ".softhouse/reviews/T138-evidence/r11-hygiene.sh)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/reviews/T138-evidence/r11-hygiene.sh"
+      ]
+    },
+    ".softhouse/capture/t239-r11-rerun/instruments/90-bar.sh": {
+      "dead": [
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh": {
+      "dead": [
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/conformance.sh --ledger-impl ledger-wrong-truncating"
+      ],
+      "resolves": [
+        ".softhouse/capture/t243-wiring/evidence"
+      ]
+    },
+    ".softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh": {
+      "dead": [
+        ".softhouse/capture/t243-wiring/evidence/planted-failopen-sweep.sh"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t243-wiring/evidence"
+      ]
+    },
+    ".softhouse/capture/t243-wiring/instruments/30-citation-red-drive.sh": {
+      "dead": [
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t243-wiring/evidence",
+        ".softhouse/capture/t243-wiring/instruments/31-citation-census.py",
+        ".softhouse/capture/tierA-a2/out/A2-344-manual-je-unbalanced.json",
+        ".softhouse/capture/tierA-a2/out/A2-346-manual-je-nomanual.json",
+        ".softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json"
+      ]
+    },
+    ".softhouse/capture/t243-wiring/instruments/90-bar.sh": {
+      "dead": [
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/capture/t244-dec2-rev6/bar.sh": {
+      "dead": [
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py": {
+      "dead": [
+        ".softhouse/capture/t248-failopen-widen/.probes-c1"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t238-failopen/instruments/50-failopen-lint.py",
+        ".softhouse/capture/t248-failopen-widen/evidence/c1-matrix.json"
+      ]
+    },
+    ".softhouse/capture/t252-tier3/instruments/40-c6-red-drive.py": {
+      "dead": [
+        ".softhouse/...",
+        ".softhouse/capture/t252-tier3/evidence/red-drive-scratch"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t238-failopen/instruments/50-failopen-lint.py"
+      ]
+    },
+    ".softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py": {
+      "dead": [
+        ".softhouse/capture/t252-tier3/evidence/conf-red-scratch"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/conformance.sh` with the plant in the tree"
+      ],
+      "resolves": [
+        ".softhouse/conformance.sh",
+        ".softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh"
+      ]
+    },
+    ".softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh": {
+      "dead": [
+        ".softhouse/toolchain",
+        ".softhouse/toolchain/go"
+      ],
+      "indeterminate": [
+        ".softhouse/toolchain/go]"
+      ],
+      "prose": [],
+      "resolves": [
+        ".softhouse/bin",
+        ".softhouse/bin/go-env.sh"
+      ]
+    },
+    ".softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/bin/go-env.sh                                 \u2014 the path survives",
+        ".softhouse/bin/go-env.sh is NO LONGER among them",
+        ".softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh \u2014 it"
+      ],
+      "resolves": [
+        ".softhouse/bin/go-env.sh"
+      ]
+    },
+    ".softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/bin/go-env.sh, in BUCKET 1, carries it only inside the comment that",
+        ".softhouse/conformance.sh .softhouse/bin .softhouse/guards .softhouse/launchd",
+        ".softhouse/reference-oracle.md ==="
+      ],
+      "resolves": [
+        ".softhouse/bin/go-env.sh",
+        ".softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh",
+        ".softhouse/reference-oracle.md"
+      ]
+    },
+    ".softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/toolchain (decided by -d on the real directory)"
+      ],
+      "resolves": [
+        ".softhouse/bin",
+        ".softhouse/bin/go-env.sh",
+        ".softhouse/guards",
+        ".softhouse/guards/check-ledger-invariants.sh",
+        ".softhouse/reference-oracle.md"
+      ]
+    },
+    ".softhouse/capture/t256-verdict-predicate/census_verdict_shape.py": {
+      "dead": [
+        ".softhouse/capture/t256-verdict-predicate/`"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/capture/t229-g8-site3/` and "
+      ],
+      "resolves": [
+        ".softhouse/capture/"
+      ]
+    },
+    ".softhouse/capture/t256-verdict-predicate/red/drive-red.sh": {
+      "dead": [
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t229-g8-site3/out/classify-t229.json"
+      ]
+    },
+    ".softhouse/capture/t256-verdict-predicate/run.sh": {
+      "dead": [
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/capture/t271-b1-t219/red/drive-red-t271.py": {
+      "dead": [
+        ".softhouse/capture/t219-g8-residual/out/NOT-THERE.json"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/capture/t271-b1-t219/run.sh": {
+      "dead": [
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t219-g8-residual/out/classify-t219.json",
+        ".softhouse/capture/t256-verdict-predicate/census_verdict_shape.py",
+        ".softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py",
+        ".softhouse/capture/t256-verdict-predicate/lint_failopen_t259.py"
+      ]
+    },
+    ".softhouse/capture/t273-residue/instruments/60-outside-repo-state-sweep.py": {
+      "dead": [
+        ".softhouse/\u2026"
+      ],
+      "indeterminate": [
+        ".softhouse/capture/lib/$1"
+      ],
+      "prose": [
+        ".softhouse/conformance.sh is not in the corpus. Nothing below is admissible."
+      ],
+      "resolves": [
+        ".softhouse/capture/lib/check_no_narrow_catch.py",
+        ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+        ".softhouse/conformance.sh"
+      ]
+    },
+    ".softhouse/capture/t284-schema2-callsites/instruments/30-red-drive.sh": {
+      "dead": [
+        ".softhouse/capture/t284-schema2-callsites/scratch",
+        ".softhouse/capture/t284-schema2-callsites/scratch/rogue.sh"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/lib/oracle_send.sh",
+        ".softhouse/capture/t250-tenant-attestation/evidence/redB",
+        ".softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh",
+        ".softhouse/capture/t250-tenant-attestation/instruments/SCHEMA2-STATUS.md",
+        ".softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh",
+        ".softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh",
+        ".softhouse/capture/t284-schema2-callsites/instruments/10-callsite-registry.py",
+        ".softhouse/capture/t284-schema2-callsites/instruments/20-site1-schema1-replay.sh",
+        ".softhouse/capture/t284-schema2-callsites/instruments/callsite_registry.json",
+        ".softhouse/capture/t284-schema2-callsites/successors/t284-redB-attack-v2.sh",
+        ".softhouse/capture/t284-schema2-callsites/successors/t284-redC-residual-v2.sh",
+        ".softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh"
+      ]
+    },
+    ".softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py": {
+      "dead": [
+        ".softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py"
+      ]
+    },
+    ".softhouse/capture/t290-review-t271/red/drive-red-t290.py": {
+      "dead": [
+        ".softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t219-g8-residual/out/classify-t219.json",
+        ".softhouse/capture/t229-g8-site3/out/classify-t229.json",
+        ".softhouse/capture/t271-b1-t219/acknowledged-t219.json",
+        ".softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py"
+      ]
+    },
+    ".softhouse/capture/t290-review-t271/run.sh": {
+      "dead": [
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t219-g8-residual/out/classify-t219.json",
+        ".softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py",
+        ".softhouse/capture/t256-verdict-predicate/lint_failopen_t259.py",
+        ".softhouse/capture/t271-b1-t219/acknowledged-t219.json"
+      ]
+    },
+    ".softhouse/capture/t299-namespace-and-default-safety/instruments/30-drive-the-rename.sh": {
+      "dead": [
+        ".softhouse/capture/t259-verdict-predicate"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t256-verdict-predicate"
+      ]
+    },
+    ".softhouse/capture/t299-namespace-and-default-safety/instruments/40-drive-namespace-guard.sh": {
+      "dead": [
+        ".softhouse/capture/t256-planted-by-t299",
+        ".softhouse/capture/t256-planted-by-t299/note.txt",
+        ".softhouse/capture/t290-second-rig",
+        ".softhouse/capture/t290-second-rig/note.txt"
+      ],
+      "indeterminate": [
+        ".softhouse/(capture|reviews)/([^/]+)/.*#\\\\1/\\\\2#p"
+      ],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md",
+        ".softhouse/guards/check-capture-namespace.sh"
+      ]
+    },
+    ".softhouse/capture/t309-sigterm-reconcile-bypass/patch5.py": {
+      "dead": [
+        ".softhouse/tasks.json.t288.tmp"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/bin/fire-program.sh"
+      ]
+    },
+    ".softhouse/capture/t309-sigterm-reconcile-bypass/probe-git-inode.sh": {
+      "dead": [
+        ".softhouse/bin/w.sh"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/bin"
+      ]
+    },
+    ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/out/capture-prod3f-raw.json",
+        ".softhouse/capture/t61-halfeven/out",
+        ".softhouse/handoff/T61-mutations.py"
+      ]
+    },
+    ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/out/capture-prod3g-raw.json",
+        ".softhouse/capture/t64-zeroprincipal/out"
+      ]
+    },
+    ".softhouse/capture/t66-unrecognized-interest/gotest.sh": {
+      "dead": [
+        ".softhouse/toolchain/go",
+        ".softhouse/toolchain/gocache",
+        ".softhouse/toolchain/gomodcache"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/verify-on-scratch-merge.sh": {
+      "dead": [
+        ".softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA.new"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/out/capture-prod3i-raw.json",
+        ".softhouse/capture/src/run-pass3i.sh",
+        ".softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA",
+        ".softhouse/capture/t74-multiplesof/T82-guard-proofs/TRANSCRIPT.txt",
+        ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-guards-go-red.sh"
+      ]
+    },
+    ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py": {
+      "dead": [
+        ".softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/handoff/T74-promote-vectors.py (this branch)",
+        ".softhouse/handoff/T74-promote-vectors.py` \u2014 a LITERAL sha, "
+      ],
+      "resolves": [
+        ".softhouse/handoff/T74-promote-vectors.py"
+      ]
+    },
+    ".softhouse/capture/t74-multiplesof/T82-guard-proofs/run-precondition-block.sh": {
+      "dead": [
+        ".softhouse/capture/src/run-pass3i.sh}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/out",
+        ".softhouse/capture/src/Capture3i.java"
+      ]
+    },
+    ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/capture/t83-nonamortizing/src/run-t83.sh, CaptureT83.java), whose "
+      ],
+      "resolves": [
+        ".softhouse/capture/t83-nonamortizing/out/capture-t83-raw.json",
+        ".softhouse/vectors",
+        ".softhouse/vectors/PIN.json"
+      ]
+    },
+    ".softhouse/capture/t83-nonamortizing/src/run-port.py": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t83-nonamortizing/out/capture-t83-raw.json",
+        ".softhouse/capture/t83-nonamortizing/src/t83port.go.txt"
+      ]
+    },
+    ".softhouse/capture/t83-nonamortizing/src/run-t83.sh": {
+      "dead": [
+        ".softhouse/capture/out/capture-prod3g-raw.json}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t83-nonamortizing",
+        ".softhouse/capture/t83-nonamortizing/src/run-t83.sh"
+      ]
+    },
+    ".softhouse/conformance.sh": {
+      "dead": [
+        ".softhouse/conformance.sh."
+      ],
+      "indeterminate": [
+        ".softhouse/capture/lib/$1"
+      ],
+      "prose": [
+        ".softhouse/capture (recursive, whole capture tree)",
+        ".softhouse/conformance.sh        (the shebang selects bash)",
+        ".softhouse/conformance.sh so that what is guarded is what is graded.",
+        ".softhouse/conformance.sh, deliberately.",
+        ".softhouse/guards/ledgerguard/main.go, which its"
+      ],
+      "resolves": [
+        ".softhouse/bin/go-env.sh",
+        ".softhouse/capture/t238-failopen/instruments/50-failopen-lint.py",
+        ".softhouse/conformance.sh",
+        ".softhouse/guards/check-ledger-invariants.sh",
+        ".softhouse/guards/ledgerguard/main.go",
+        ".softhouse/vectors"
+      ]
+    },
+    ".softhouse/guards/check-capture-namespace.sh": {
+      "dead": [
+        ".softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md."
+      ],
+      "indeterminate": [
+        ".softhouse/$d/"
+      ],
+      "prose": [
+        ".softhouse/{capture,reviews}. The"
+      ],
+      "resolves": [
+        ".softhouse/guards/check-capture-namespace.sh"
+      ]
+    },
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh": {
+      "dead": [
+        ".softhouse/.T113-b5-inner.sh",
+        ".softhouse/.T113-b5-prefix.sh"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/.T113-b5-inner.sh 2>&1)",
+        ".softhouse/conformance.sh \u2014 refusing to report anything."
+      ],
+      "resolves": [
+        ".softhouse/conformance.sh"
+      ]
+    },
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh": {
+      "dead": [
+        ".softhouse/.T113-matrix-benv.sh",
+        ".softhouse/.T113-matrix-noifs.sh",
+        ".softhouse/.T113-matrix-seeifs.sh",
+        ".softhouse/conformance.sh}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh": {
+      "dead": [
+        ".softhouse/.T113-inner.sh",
+        ".softhouse/.T113-prefix-conformance.sh"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/.T113-inner.sh 2>&1)",
+        ".softhouse/conformance.sh \u2014 refusing to report anything."
+      ],
+      "resolves": [
+        ".softhouse/conformance.sh"
+      ]
+    },
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/readonly-sourced-edge.sh": {
+      "dead": [
+        ".softhouse/conformance.sh}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh": {
+      "dead": [
+        ".softhouse/conformance.sh}"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh": {
+      "dead": [
+        ".softhouse/.T97-proof.XXXXXX"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/$(basename ",
+        ".softhouse/conformance.sh from this checkout"
+      ],
+      "resolves": [
+        ".softhouse/conformance.sh"
+      ]
+    },
+    ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-redgreen.py": {
+      "dead": [
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/vectors"
+      ]
+    },
+    ".softhouse/handoff/T57-promote-emi-vectors.py": {
+      "dead": [
+        ".softhouse/capture/emiloop/analyse-output.txt."
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/capture/emiloop/noloop_model.py, transcribed step for step from the pinned ",
+        ".softhouse/capture/src/run-pass3c.sh, Capture3c.java). Every expect cell is a ",
+        ".softhouse/handoff/T57-emi-smoothing-loop-vectors.md, finding N-1.",
+        ".softhouse/handoff/T57-promote-emi-vectors.py (task T57)."
+      ],
+      "resolves": [
+        ".softhouse/capture/dec1-binding/out/",
+        ".softhouse/capture/out/capture-prod3c-raw.json"
+      ]
+    },
+    ".softhouse/handoff/T61-mutations.py": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/conformance.sh"
+      ]
+    },
+    ".softhouse/handoff/T61-sweep/build-pass3f.py": {
+      "dead": [
+        ".softhouse/capture/out/capture-prod3c-raw.json}",
+        ".softhouse/capture/out/capture-prod3e-raw.json}"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/capture/src/Capture3f.java and run-pass3f.sh from pass 3e"
+      ],
+      "resolves": [
+        ".softhouse/capture/src"
+      ]
+    },
+    ".softhouse/handoff/T61-sweep/run-sweep.py": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/handoff/T61-mutations.py"
+      ]
+    },
+    ".softhouse/handoff/T8-promote-vectors.py": {
+      "dead": [
+        ".softhouse/handoff/T8-promote-parity-vectors.md."
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/handoff/T8-promote-vectors.py (task T8-promote).",
+        ".softhouse/handoff/T8-promote-vectors.py with no flags once D-4 "
+      ],
+      "resolves": [
+        ".softhouse/capture/out/capture-prod3b-raw.json"
+      ]
+    },
+    ".softhouse/reviews/A2-11/verify-manifest-independently.py": {
+      "dead": [
+        ".softhouse/A2-7-capture-mandatory-accounts"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/tierA-a2"
+      ]
+    },
+    ".softhouse/reviews/T155-probe/prove-xiii-deflation.sh": {
+      "dead": [
+        ".softhouse/vectors/T155-INFLATE.json"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/conformance.sh",
+        ".softhouse/vectors/PIN.json",
+        ".softhouse/vectors/loanschedule"
+      ]
+    },
+    ".softhouse/reviews/T184-evidence/t184-probe-green-catch.sh": {
+      "dead": [
+        ".softhouse/capture/t184-probe/src/CaptureT184Probe.java"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/T184-evidence/t184-probe-green-float.sh": {
+      "dead": [
+        ".softhouse/capture/t184-probe/req/probe-body.json"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/T184-evidence/t184-probe-red-catch.sh": {
+      "dead": [
+        ".softhouse/capture/t184-probe/src",
+        ".softhouse/capture/t184-probe/src/CaptureT184Probe.java"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/T184-evidence/t184-probe-red-float.sh": {
+      "dead": [
+        ".softhouse/capture/t184-probe/req",
+        ".softhouse/capture/t184-probe/req/probe-body.json"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/T184-evidence/t184-vacuity.sh": {
+      "dead": [
+        ".softhouse/capture-T184HIDDEN",
+        ".softhouse/capture/t184-probe"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture",
+        ".softhouse/capture/lib"
+      ]
+    },
+    ".softhouse/reviews/T188-probe/drive-t188.sh": {
+      "dead": [
+        ".softhouse/capture/t188-probe",
+        ".softhouse/capture/t188-probe/src"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/lib/check_no_narrow_catch.py",
+        ".softhouse/conformance.sh",
+        ".softhouse/vectors"
+      ]
+    },
+    ".softhouse/reviews/T298/attack-marker-extractor.sh": {
+      "dead": [
+        ".softhouse/bin/go-env.sh\\n```\\n"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/bin/go-env.sh",
+        ".softhouse/reference-oracle.md"
+      ]
+    },
+    ".softhouse/reviews/T298/t298b-census.sh": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/toolchain/ is gitignored and therefore outside the universe)"
+      ],
+      "resolves": [
+        ".softhouse/bin/go-env.sh"
+      ]
+    },
+    ".softhouse/reviews/T298/t298b-marker-attack-matrix.sh": {
+      "dead": [
+        ".softhouse/bin/go-env.sh\\n```\\n"
+      ],
+      "indeterminate": [],
+      "prose": [
+        ".softhouse/bin/go-env.sh`\\n\\n<!-- T256-ACTIVATION-LINE:END -->}m"
+      ],
+      "resolves": [
+        ".softhouse/bin/go-env.sh"
+      ]
+    },
+    ".softhouse/reviews/T298/t298b-worktree-composition-drive.sh": {
+      "dead": [
+        ".softhouse/toolchain",
+        ".softhouse/toolchain/go",
+        ".softhouse/toolchain/gomodcache"
+      ],
+      "indeterminate": [
+        ".softhouse/$d"
+      ],
+      "prose": [
+        ".softhouse/toolchain dirs under the whole worktree root (should be 0):"
+      ],
+      "resolves": [
+        ".softhouse/bin/go-env.sh",
+        ".softhouse/guards",
+        ".softhouse/guards/",
+        ".softhouse/reference-oracle.md"
+      ]
+    },
+    ".softhouse/reviews/T84-evidence/src/exemption-demo.py": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t83-nonamortizing/src",
+        ".softhouse/reviews/T84-evidence/out/capture-t84b-raw.json",
+        ".softhouse/vectors",
+        ".softhouse/vectors/PIN.json"
+      ]
+    },
+    ".softhouse/reviews/T84-evidence/src/run-port.py": {
+      "dead": [
+        ".softhouse/toolchain"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh": {
+      "dead": [
+        ".softhouse/vectors/ledger/A2-34-RD5-INFLATION-PROBE.json"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/vectors",
+        ".softhouse/vectors/ledger/LDG-01-manual-je-3leg-minor-units.json"
+      ]
+    },
+    ".softhouse/reviews/t179-guard-classifier/fixtures/green_atexit.py": {
+      "dead": [
+        ".softhouse/capture/t179-fixture-never-run/conformance.sh"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py": {
+      "dead": [
+        ".softhouse/vectors/t179-fixture-never-run/case.json"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/t179-guard-classifier/fixtures/green_real_trap.sh": {
+      "dead": [
+        ".softhouse/vectors/t179-fixture-never-run/case.json"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py": {
+      "dead": [
+        ".softhouse/vectors/t179-fixture-never-run/case.json"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/t179-guard-classifier/fixtures/red_guard_elsewhere.py": {
+      "dead": [
+        ".softhouse/capture/t179-fixture-never-run/out.txt"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/t179-guard-classifier/fixtures/red_prose_guard.py": {
+      "dead": [
+        ".softhouse/vectors/t179-fixture-never-run/case.json"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/t179-guard-classifier/guard_classify.py": {
+      "dead": [
+        ".softhouse/capture/\u2026"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/vectors/loanschedule"
+      ]
+    },
+    ".softhouse/reviews/t249-g14-scope/run-bar.sh": {
+      "dead": [
+        ".softhouse/vectors)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/t262-verdict-predicate/pin_test_t262.py": {
+      "dead": [
+        ".softhouse/capture/t229-g8-site3/out/classify-t229-copy.json"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t229-g8-site3/out/classify-t229.json",
+        ".softhouse/capture/t256-verdict-predicate"
+      ]
+    },
+    ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh": {
+      "dead": [
+        ".softhouse/capture/t273-residue/instruments/80-host-state-bracket.py"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh",
+        ".softhouse/capture/t239-r11-rerun/instruments/10-population.sh",
+        ".softhouse/reviews/T158-compare-enumerators.sh",
+        ".softhouse/reviews/t285-review-t273/evidence"
+      ]
+    },
+    ".softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh": {
+      "dead": [
+        ".softhouse/capture/t273-residue/instruments/80-host-state-bracket.py"
+      ],
+      "indeterminate": [
+        ".softhouse/reviews/t285-review-t273/scratch/80-$1.txt"
+      ],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh"
+      ]
+    },
+    ".softhouse/reviews/t291-review-t286/probe/reproduce-in-t286s-own-sweep.sh": {
+      "dead": [
+        ".softhouse/capture/t268-rvpa-failopen/out/red-green-legs.json",
+        ".softhouse/capture/t286-rvpa-retry/red/drive_red_t286.py",
+        ".softhouse/capture/t286-rvpa-retry/red/fixtures"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": []
+    },
+    ".softhouse/reviews/t291-review-t286/probe/wrapper-probe-t291.sh": {
+      "dead": [
+        ".softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py)"
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/t229-g8-site3/out/classify-t229.json",
+        ".softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py",
+        ".softhouse/conformance.sh"
+      ]
+    },
+    ".softhouse/reviews/t34-probe/t34_rollforward.py": {
+      "dead": [
+        ".softhouse/capture/out/capture-prod-raw.json."
+      ],
+      "indeterminate": [],
+      "prose": [],
+      "resolves": [
+        ".softhouse/capture/out/capture-prod-raw.json"
+      ]
+    },
+    ".softhouse/reviews/t47-probe/t178-redprobe.py": {
+      "dead": [
+        ".softhouse/reviews/t47-probe/t47_edit_N.py"
+      ],
+      "indeterminate": [
+        ".softhouse/reviews/t47-probe/t47_edit_%s.py"
+      ],
+      "prose": [],
+      "resolves": []
+    }
+  },
+  "proseOccurrences": 254,
+  "resolvingOccurrences": 938
+}
