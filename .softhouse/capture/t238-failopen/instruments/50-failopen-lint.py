@@ -178,6 +178,7 @@ import os
 import re
 import sys
 import json
+import tempfile
 import subprocess
 
 # SEVERITY, derived from MEASUREMENT (transcripts/20), not from taste.
@@ -705,6 +706,85 @@ print()
 # program keeps finding, one level up from the one this linter detects.
 JSON_OUT = os.environ.get("FAILOPEN_LINT_JSON") or \
     ".softhouse/capture/t238-failopen/evidence/lint.json"
+
+# AND THE DEFAULT NO LONGER DIRTIES THE TREE.  [T299 -- additive; exit codes unchanged]
+#
+# T243 made the destination overridable and diverted its OWN call site, and stopped there.
+# That left the trap armed for every other caller: a bare `python3 50-failopen-lint.py`
+# OVERWROTE the tracked file above -- measured at 39d2156 in a scratch clone as
+# `838 insertions(+), 37 deletions(-)` on a tree that was clean before the run. T256 hit it
+# by hand and reverted it by hand; its handoff's remedy was "anyone debugging that guard by
+# hand should set FAILOPEN_LINT_JSON first".
+#
+# A remedy that consists of asking the next author to remember an environment variable is
+# the shape this very file's docstring rules out sixty lines up, and it is P-45 -- "a
+# test-only guard is not a guard ... verify the path that ACTUALLY EXECUTES calls it, not
+# merely that a test does" -- read on the safety rather than on the check: a protection that
+# only operates when the caller remembers to invoke it protects nothing. The path that
+# actually executes for a human at a terminal is the BARE one, and the bare one was unsafe.
+#
+# So the file decides, not the caller: THIS INSTRUMENT NEVER WRITES OVER A GIT-TRACKED PATH,
+# whoever asks for it. Not the default, and not an override aimed at a tracked file by
+# mistake -- the class, not the instance. The request is honoured to a scratch file instead
+# and the diversion is ANNOUNCED on stdout, so it can never happen silently, which is the
+# half of the defect that mattered: evidence recording a run nobody meant to take.
+#
+# The default is deliberately LEFT POINTING AT THE TRACKED FILE. Repointing it at scratch
+# would silently falsify conformance.sh's own comment at its call site -- "The linter's
+# default destination is a TRACKED file, and a harness that rewrote a tracked file on every
+# graded run would dirty the tree it is grading" -- which is a sentence in a file this task
+# may not touch. The sentence stays true and its diversion stays necessary.
+#
+# FAIL-SAFE DIRECTION: if trackedness cannot be DETERMINED, the destination is treated as
+# tracked and diverted. MEASURED exit codes of `git ls-files --error-unmatch --  <p>`, from
+# this repository at 39d2156 with git 2.50.1:
+#     tracked path inside the work tree   -> 0
+#     untracked path inside the work tree -> 1
+#     ANY path outside the work tree      -> 128, `fatal: ... is outside repository at ...`
+# so 1 is the ONLY code that means "no", and every other code diverts (P-81's shape: a search
+# exits 1 on no-match and >1 on ERROR, and an error is never an empty result).
+#
+# BUT 128 IS NOT AN UNKNOWN, AND TREATING IT AS ONE IS A DEFECT THIS DRIVE CAUGHT IN THIS
+# FILE'S OWN FIRST DRAFT. The first version asked git about every destination, so the ordinary
+# scratch path that conformance.sh and nine archived rigs supply -- which lives under TMPDIR,
+# OUTSIDE the work tree -- came back 128 and was diverted, i.e. the caller's explicit choice
+# was silently overridden and the JSON went somewhere else. ARM 2 of
+# `.softhouse/capture/t299-namespace-and-default-safety/instruments/20-drive-destination-safety.sh`
+# is the arm that failed and is the reason this paragraph exists.
+#
+# A path outside the work tree is therefore settled WITHOUT asking git, by containment, which
+# is a POSITIVE determination rather than a guess: git cannot be tracking what is not in the
+# work tree. Only paths that really are inside it are put to `ls-files`.
+def _dest_is_tracked(p):
+    try:
+        root = os.path.realpath(ROOT)
+        dest = os.path.realpath(os.path.join(root, p))
+        inside = (dest != root and os.path.commonpath([root, dest]) == root)
+    except (ValueError, OSError):
+        return True
+    if not inside:
+        return False
+    try:
+        r = subprocess.run(["git", "ls-files", "--error-unmatch", "--", dest], cwd=root,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except OSError:
+        return True
+    if r.returncode == 1:
+        return False
+    return True
+
+
+if _dest_is_tracked(JSON_OUT):
+    _fd, _scratch = tempfile.mkstemp(prefix="failopen-lint-", suffix=".json")
+    os.close(_fd)
+    print("JSON-DESTINATION DIVERTED [T299]")
+    print("  requested : %s" % JSON_OUT)
+    print("  it is a GIT-TRACKED path, and this instrument does not write over committed")
+    print("  evidence. Set FAILOPEN_LINT_JSON to a scratch path to choose your own.")
+    print("  written to: %s" % _scratch)
+    print()
+    JSON_OUT = _scratch
+
 json.dump({"lethal": [f for f, _ in lethal], "dormant": [f for f, _ in dormant],
            "entering": [f for f, _ in entering],
            "unreproducible": [f for f, _ in unrepro],

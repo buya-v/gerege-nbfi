@@ -1,0 +1,51 @@
+T299 DESTINATION-SAFETY DRIVE
+engine    : git version 2.50.1 (Apple Git-155) | Python 3.9.6
+repo      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8182250b99afe338
+HEAD      : 39d2156159cad783ac9c17a6e036f086f21dd850
+linter    : .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py
+default   : .softhouse/capture/t238-failopen/evidence/lint.json  [tracked: yes, asserted above]
+
+=== ARM 0 -- CALIBRATION: the defect, on PRE-FIX bytes, in a scratch clone ===
+  pre-fix linter bytes from : 39d2156
+  dirty rows for the tracked default BEFORE run : 0
+  linter exit                                   : 1
+  dirty rows for the tracked default AFTER  run : 1
+  git diff --numstat                            : 838	37	.softhouse/capture/t238-failopen/evidence/lint.json
+  ARM 0 RESULT: CALIBRATED -- the defect reproduces on pre-fix bytes.
+
+=== ARM 1 -- POST-FIX bare run must add NO dirty path ===
+  linter exit : 1
+  dirty paths before : 2
+  dirty paths after  : 2
+  --- diff of the two porcelain listings ---
+  (the two listings are byte-identical)
+  divert banner printed : 1
+    JSON-DESTINATION DIVERTED [T299]
+      requested : .softhouse/capture/t238-failopen/evidence/lint.json
+      it is a GIT-TRACKED path, and this instrument does not write over committed
+      evidence. Set FAILOPEN_LINT_JSON to a scratch path to choose your own.
+      written to: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/failopen-lint-_k232h8e.json
+  ARM 1 RESULT: PASS
+
+=== ARM 2 -- explicit SCRATCH destination must NOT divert (no regression) ===
+  linter exit                : 1
+  divert banner printed      : 0  (must be 0)
+  bytes written to the asked-for path : 31589
+  parses as JSON             : yes
+  ARM 2 RESULT: PASS
+
+=== ARM 3 -- an override AIMED AT A TRACKED FILE also diverts (the CLASS) ===
+  victim=.softhouse/capture/t238-failopen/evidence/lint.json exit=1 banner=1 dirty_before=0 dirty_after=0
+    diverted to: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/failopen-lint-x4ewlkz0.json
+  victim=CLAUDE.md exit=1 banner=1 dirty_before=0 dirty_after=0
+    diverted to: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/failopen-lint-ezb4reyv.json
+  victim=.softhouse/patterns.md exit=1 banner=1 dirty_before=0 dirty_after=0
+    diverted to: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/failopen-lint-1orsnw1q.json
+  ARM 3 RESULT: PASS
+
+=== ARM 4 -- the GRADED output (the frontier lines) is byte-identical either way ===
+  frontier rows, bare     : 11
+  frontier rows, override : 11
+  ARM 4 RESULT: PASS -- the two frontiers are byte-identical
+
+ALL FIVE ARMS PASSED.
