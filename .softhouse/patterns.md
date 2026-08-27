@@ -3078,3 +3078,50 @@ And **when you are handed a diagnosis, verify the mechanism before you repair it
 implied (escape the printer) was measured to leave the attack **fully alive** at 47 collisions, identical to
 no fix at all, because the path was not only displayed — it was an **identity**, a member of a set of path
 strings that a `rsplit` steers.
+
+---
+
+**P-95 — A FALLBACK AND A FAIL-OPEN ARE INDISTINGUISHABLE BY READING, AND THEY HAVE OPPOSITE SEVERITIES.**
+
+*Local fire `20260827-230001`. `T299` observed it incidentally, the driver filed it as fact, `T316` refuted it.*
+
+`T299`, doing something else, noticed that `guard_rvpa_floor_t290.py` and `red/drive-red-t290.py` both name
+`t256-verdict-predicate/run_rvpa_over_targets.py` — **which does not exist** — and **both exit 0 anyway**. It
+declared this out of its grant rather than fixing it quietly, which was right. **The driver then filed the
+follow-up with the inference baked into the title**, as *"A GUARD RESOLVES A DEAD PATH AND EXITS 0"*, and
+called it a fail-open in the very guard that protects the `T114`/`T176` retro-edit ruling.
+
+**Half of that is true and the important half is false.** `T316` verified the dead reference — and sharpened
+it: the file exists at exactly one path, confirmed six ways including *every path it has ever occupied
+across all refs*. **It was never moved; it was never there.** The reference was born dead in `T290`'s own
+commit, the same day the real file landed. So `T299`'s `[UNVERIFIED]` about *when* it broke has no answer.
+
+But `:81-94` is a **two-candidate ordered fallback, with a docstring saying so** — *"the runner moves in
+`T269`; look in BOTH"*. Candidate #1 is an **anticipated future location** for a task that never landed. The
+guard exits 0 because it **resolved a live runner and ran it** (22 rows, 51 predicates, 7 disagreements) and
+it **prints which candidate it used**. Remove *both* candidates in a scratch clone and it exits **2 with the
+probe line absent**. The fail direction was already correct.
+
+**THE RULE: a dead literal is equally consistent with a fail-open and with an announced fallback, so it can
+never be classified by reading — only by removing every candidate and observing the exit.** The two-line
+experiment costs nothing and went unrun across three fires, because the obvious inference sat ten lines above
+the disconfirming docstring. When you meet one, run it.
+
+**Three corollaries `T316` paid for.**
+
+**(a) The right fix was to fix NOTHING.** Repointing a stale forward-reference inside another task's
+committed evidence is precisely the in-place edit `T114`/`T176` exist to forbid — and these are the guards
+enforcing it. *Refusing the assigned work, with the measurement, was the correct deliverable.*
+
+**(b) A brief's assertion is not evidence, even when the driver wrote it.** `T316` was told the conclusion
+and checked it anyway. Had it built on the premise it would have "fixed" a working guard and reported
+success. **Titles and briefs in this program state findings as fact; a worker owes them the same
+adversarial reading it owes the code.** The title was corrected in `tasks.json` at merge, with the original
+text kept beside the refutation so the correction is auditable rather than a quiet rewrite.
+
+**(c) An incidental count is a shortlist, not a population.** `T299`'s "two" became **70 instruments naming a
+non-resolving path, 31 of them exiting 0** — 35× and 15×. `T316` refused to call the 31 a defect count,
+because the top entry is a *deliberately built announced fallback*: the same shape again. And it **broke its
+own census first** — v1 reported 154 dead rows of which **56 (36%) were trailing-punctuation artefacts**, one
+of which would have accused `T299`'s own guard, landed two commits earlier, of the defect it was being used
+to investigate.
