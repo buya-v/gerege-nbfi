@@ -2343,10 +2343,21 @@ guard_capture_namespace() {
 #
 # WHAT THE FOUR ROWS ARE, INSPECTED AND NOT INFERRED. All four belong to one file, T305's RED
 # DRIVE, and all four are paths that drive CREATES at run time inside a throwaway clone:
-#     :58  > "$1/.softhouse/vectors/ledger/ACCEPT.json"
-#     :59  > "$1/.softhouse/vectors/ledger/REFUSE.json"
-#     :101 mkdir -p "$T6/.softhouse/capture/t999-rig/attest"
-#     :102 echo "authorised" > "$T6/…/attest/gerege.disposable"
+#     :58  writes an ACCEPT ledger vector into  "$1/.softhouse/vectors/…/ACCEPT.json"
+#     :59  writes a REFUSE ledger vector into   "$1/.softhouse/vectors/…/REFUSE.json"
+#     :101 mkdir -p                             "$T6/.softhouse/capture/…/attest"
+#     :102 echo "authorised" >                  "$T6/.softhouse/capture/…/attest/gerege.disposable"
+#
+# THOSE FOUR QUOTATIONS CARRY AN ELLIPSIS ON PURPOSE, AND THE REASON IS THIS GUARD CATCHING THIS
+# COMMIT. T323's first draft quoted T305's lines VERBATIM, and the very first graded run after
+# wiring went red with `added=7` rather than 4 — three of the new rows attributed to
+# THIS FILE, because the census's selector matches any quoted string containing a
+# `.softhouse/` path and this comment had become an instrument naming dead paths. The rule the
+# guard prints was applied as written — "a '+' row is a NEW site: REPAIR it rather than pinning
+# it" — so the quotations were repaired rather than the list widened to excuse them. The census
+# treats `…` (ELLIPSIS_RE, census_dead_paths.py:66) as "not a literal path", which is exactly
+# what a shape-illustrating quotation is. This is the guard doing its job on its own wiring
+# commit, recorded here rather than quietly fixed.
 # A red drive plants a file that MUST NOT exist in a clean tree — that is what makes it a red
 # drive — and `t999-rig` is a deliberately fictional task id. These are dead-by-design literals,
 # the class T316's own header says must be "inspected once, by a human, and then either repaired
