@@ -944,3 +944,72 @@ is in fact consuming command ids and idempotency keys.
 - **Do not reach for "use a dedicated office" as the safe route on this tenant.** Offices cannot be
   deleted — `OfficesApiResource` exposes GET/POST/PUT and **no `@DELETE`** — so creating one trades a
   reversible mutation for an irreversible one.
+
+---
+
+## Fire `20260827-230001` — THE ORACLE WAS DOWN AND THIS FIRE BROUGHT IT UP (PostgreSQL profile only)
+
+The fire opened with the reference oracle **UNREACHABLE** and Docker running. Per the fire contract
+that is T1's job, not a park reason. Bring-up succeeded; **nothing was parked for oracle reasons.**
+
+### What was actually running before
+
+| container | image | state |
+|---|---|---|
+| `fineract-db-1` | `postgres:18.3` | **up 5 h, healthy**, `0.0.0.0:5432->5432/tcp` |
+| `fineract-fineract-1` | — | **not running.** The app container was simply absent; the database was never down |
+
+So "the oracle is unreachable" meant *the Fineract app process was not up*, not that the stack was
+broken. Distinguishing those two is the difference between a 90-second fix and a parked fire.
+
+### Bring-up, and the assertions made BEFORE starting it
+
+```
+docker compose -f /Users/buv/fineract/docker-compose-postgresql.yml up -d fineract
+```
+
+`docker-compose-postgresql.yml` extends `config/docker/compose/postgresql.yml` (service `postgresql`)
+and `config/docker/compose/fineract.yml`. **The mariadb and mysql compose files were never invoked.**
+
+Asserted by reading `config/docker/env/fineract-postgresql.env`, not assumed:
+
+| assertion | observed |
+|---|---|
+| `FINERACT_HIKARI_DRIVER_SOURCE_CLASS_NAME` | `org.postgresql.Driver` ✅ |
+| `FINERACT_HIKARI_JDBC_URL` | `jdbc:postgresql://db:5432/fineract_tenants` ✅ |
+| `FINERACT_DEFAULT_TENANTDB_PORT` | `5432` ✅ |
+| prohibited-engine grep (`ojdbc`, `oracle.jdbc`, `:1521`, `com.mysql.cj`, `mariadb`) over all three env files and all three compose files on this path | **0 hits** ✅ |
+
+### Connection facts recorded this fire
+
+| fact | value |
+|---|---|
+| Health endpoint | `https://localhost:8443/fineract-provider/actuator/health` → `{"status":"UP","groups":["liveness","readiness"]}` |
+| **Time to healthy from `up -d`** | **80 seconds** (polled at 10 s; first 200 at the 8th poll) |
+| API base | `https://localhost:8443/fineract-provider/api/v1` |
+| Auth used for the probe | basic `mifos:password`, header `Fineract-Platform-TenantId: gerege` |
+| Tenant probe | `GET /offices` → `[{"id":1,"name":"Head Office",…,"openingDate":[2009,1,1],"hierarchy":"."}]` |
+| **PostgreSQL server version** | **`PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1) on aarch64-unknown-linux-gnu`**, gcc 14.2.0, 64-bit |
+| **Pinned Fineract commit** | **`426a23544`** ("Merge pull request #5946"), verified in `/Users/buv/fineract` |
+| Tenant database name | **`fineract_gerege`** — *not* `gerege`. `psql -d gerege` fails with `database "gerege" does not exist`; the API tenant id `gerege` maps to database `fineract_gerege`. Databases present: `fineract_default`, `fineract_gerege`, `fineract_tenants`, `postgres`, `root` |
+| `tenants` table shape | `schema_name` **does not exist** as a column in this build's `fineract_tenants.tenants` — a query written against that column name errors. Read the actual columns before scripting against it |
+
+### Tenant state at bring-up, against the T287 baseline recorded above
+
+| counter | T287 left it at | observed this fire | moved? |
+|---|---|---|---|
+| `acc_gl_journal_entry` | 60 | **60** | no — the ledger is untouched across the restart |
+| `acc_gl_closure` | 0 | **0** | no |
+| `m_office` | 1 | **1** | no |
+| `m_loan` | 7 | **7** | no |
+| `m_portfolio_command_source` | 351 | **352** | **+1** |
+
+**The ledger did not move across a container restart** — 60 rows before and after, which is the fact
+that matters for every vector already captured on this tenant.
+
+`m_portfolio_command_source` is **+1 (351 → 352)**, and this fire did **not** identify which command
+wrote it. This fire issued only `GET /offices`, and a GET does not write an audit row, so the extra row
+predates this fire's probes. `[UNVERIFIED]` which fire or command produced it. It is consistent with
+the append-only, never-restoring behaviour T287 recorded — command ids are consumed and never returned
+— and it is a reminder that **`m_portfolio_command_source` is not a reliable fixture** for any vector
+that pins an absolute id.
