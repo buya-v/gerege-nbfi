@@ -10,8 +10,17 @@
 |---|---|
 | the rule `check_verdict_predicate_agreement_t292.py` — the WITNESS-SET formulation, the guards, the exit protocol, the read-integrity layer | **APPROVED.** Independently measured better than all three predecessors on **both** axes and on the control. The streak is broken. |
 | **THEOREM 1** ("container-blindness", with `PROOF … []`) | **REJECTED as written.** False on **3 of the 4** container operations it itself names; one of them flips **REFUSED → GREEN**, the direction its own corollary denies. |
-| **THEOREM 2** ("guard #10's ambition is a MEASURED IMPOSSIBILITY") | **SPLIT.** The *scoped* half — no **container-blind** rule separates X5 from `classify-t229.json` — is **upheld**. The half that routes the work out of scope — *"separating them requires an EXTERNAL declaration … a change to `boolean-key-register.json`'s contract"* — is **REFUTED BY CONSTRUCTION**: a separator built here needs no external input at all and refuses **10/10** of T291's header fixtures while permitting **both** committed corpora. |
+| **THEOREM 2, clause 1** — the FORGERY FLOOR ("the only remaining way to raise coverage is to ASSERT A FACT, which no rule reading only (document, register) can distinguish from a true one") | **UPHELD.** I could not raise coverage without asserting a boolean fact under a predicate-classified key, and I agree no (document, register) rule can grade the fact's truth. |
+| **THEOREM 2, clause 2** — the NAMING ("…and every witness path is printed so a forgery is NAMED") | **REJECTED. Falsified by construction (§5c, F-T308-6).** A line is printed; it does not *name* the forgery. The path is an **unescaped concatenation of attacker-chosen key strings**, so a forged document can be made to print a witness line **byte-identical** to a legitimate document's (**and with an identical `coverageDigest`**), and a key containing a newline **injects extra witness lines the document never earned**. |
+| **THE "MEASURED IMPOSSIBILITY"** (guard #10) | **SPLIT.** The *scoped* half — no **container-blind** rule separates X5 from `classify-t229.json` — is **upheld**. The half that routes the work out of scope — *"separating them requires an EXTERNAL declaration … a change to `boolean-key-register.json`'s contract"* — is **REFUTED BY CONSTRUCTION**: a separator built here needs no external input at all and refuses **10/10** of T291's header fixtures while permitting **both** committed corpora. |
 | **"THE ZERO IS CALIBRATED"** (`LOST REFUSALS: 0` over 325 documents) | **REJECTED.** The zero is a **tautology of the shipped rule**, not a measurement, and the calibration measures a rule that is not the shipped rule. Five mutants of **T259's own founding defect** survive T292's unmodified adversary with **0 failing legs**. |
+| **F-T290-1b still open** (the precondition on `T269`) | **CONFIRMED, and WIDER than T290 stated** (§9.5, re-derived from scratch). `rep.disagreements` is **not a term in the gate** — read at source, then driven. For a document **not pinned in the acknowledgement register the erasure needs ONE file edit, not two**. **`T269` remains blocked.** |
+
+**A numbering correction, made rather than hidden.** My first pass labelled the guard-#10
+impossibility "THEOREM 2" and reviewed it twice (§3 and, by implication, the verdict row), while
+the brief's THEOREM 2 is the **forgery floor**, whose second clause went **untested**. The table
+above restores the brief's numbering. §3 is unchanged in substance and now reads under its own
+name; §5c is the clause that was missing.
 
 Nothing here blocks the merge that already happened: the rule **has no caller anywhere**
 [VERIFIED: `git grep -n check_verdict_predicate_agreement_t292` returns hits only inside
@@ -391,6 +400,86 @@ Severity is LOW because the smuggled key still has to assert a boolean fact, whi
 forgery floor, and the witness path is printed. It is inherited: the pinned T259 blob `86f4285`
 carries the identical `head[1:].isdigit()` at its line 151 [VERIFIED: `git cat-file blob 86f4285`].
 **Fix is one line:** `re.match(reg["autoPredicatePattern"], key)`.
+
+---
+
+## 5c. FINDING F-T308-6 — "EVERY WITNESS PATH IS PRINTED SO A FORGERY IS **NAMED**" IS FALSE. THE NAME IS NOT A NAME.
+
+**Severity: MEDIUM — and it is load-bearing on THIS REVIEW, because my own first pass used the
+naming clause twice to downgrade a severity without ever testing it.**
+**Reproduction: `python3 .softhouse/reviews/T308/probe/t308_witness_path_forgery.py` → EXIT 0.**
+**Transcript: `out/t308-witness-path-forgery.txt`.**
+
+T292's floor has two clauses. Clause 1 — *coverage can only be raised by ASSERTING A FACT, and no
+rule reading only (document, register) can tell a forged fact from a true one* — **I uphold it**;
+I could not raise the witness count any other way, and the truth of an asserted boolean is simply
+not in the rule's input. Clause 2 is the mitigation that makes clause 1 tolerable:
+
+> *…and every witness path is printed, so a forgery is **NAMED**.*
+
+**A floor that names forgeries is only as good as the naming.** The naming, read at source
+[VERIFIED, all five lines quoted from `check_verdict_predicate_agreement_t292.py`]:
+
+```python
+257          yield from walk_objects(x, path + "." + k)      # naive concatenation
+260          yield from walk_objects(x, path + "[%d]" % i)
+421      rep.witness.append(("%s.%s" % (opath, k), k, v))
+562  for wpath, wkey, wval in rep.witness:
+563      print("      %s = %s" % (wpath, "true" if wval else "false"))
+```
+
+The printed path is a **string concatenated from untrusted key names**, emitted with **no
+escaping, no quoting and no length cap**. Two attacks follow directly, and both land.
+
+**A1 — COLLISION. Two different documents, one byte-identical name.**
+
+| document | printed witness line | `coverageDigest` | rc |
+|---|---|---|---|
+| CTRL `{"cells": [{"P1_principalAmortizesToZero": true, "verdict": "AS PREDICTED"}]}` | `$.cells[0].P1_principalAmortizesToZero = true` | `8c87330d77282c8d` | 0 |
+| **A1** `{"cells[0]": {"P1_principalAmortizesToZero": true, "verdict": "AS PREDICTED"}}` | `$.cells[0].P1_principalAmortizesToZero = true` | **`8c87330d77282c8d`** | 0 |
+
+A top-level key **literally named `cells[0]`** renders as the path of an object at index 0 of a
+list named `cells`. The documents differ in bytes; **the naming does not differ at all — and
+neither does the digest T292 offers as the pinnable fingerprint of what was graded.** So the
+forgery is printed *under a legitimate document's name*, and the one field that could have
+separated them collides too.
+
+**A2 — INJECTION. The forger chooses what the extra lines say.**
+A container key containing a newline splits one witness line into several:
+
+```
+  WITNESS -- predicate reads : 1   (THE coverage metric)
+      $.z
+      $.cells[0].P7_reconciledAgainstOracle = true      <- FABRICATED. Never asserted, never graded.
+      x.P1_principalAmortizesToZero = true
+```
+
+**Three printed witness lines against a reported witness count of 1.** The middle line names a
+predicate `P7_reconciledAgainstOracle` the document never asserted and the register never
+classified. A reader auditing the naming — which is precisely the reader clause 2 promises to
+protect — reads a graded fact that does not exist.
+
+**What this does and does not mean.** It is **not** a defect in any money path and it is **not**
+exploitable today: the rule still **has no caller anywhere** [VERIFIED, git grep, §0]. What it
+does is remove the mitigation. Clause 1 says forged coverage is *unpreventable*; clause 2 said it
+is *at least visible*. It is not reliably visible.
+
+**Two of my own severities move because of it, and I restate them rather than leave them
+standing:**
+
+* **§2 CE3** — I wrote *"This is not a security hole … the witness path is printed, so the forgery
+  is NAMED."* The first half stands (no caller; fail-closed elsewhere); **the reason I gave for it
+  does not.** CE3's manufactured witness is nameable-over, like any other.
+* **§5b F-T308-5** — I wrote *"Severity is LOW because the smuggled key still has to assert a
+  boolean fact, which is the declared forgery floor, and the witness path is printed."* The
+  homoglyph key `P²_x` is **exactly** an attacker-chosen key string, so it reaches the printer
+  through the same unescaped path. **F-T308-5 stays LOW on impact (no caller) but its stated
+  justification is withdrawn.**
+
+**Fix (mechanical, ≤10 lines):** render each path segment through `json.dumps` rather than raw
+concatenation, so `cells[0]` prints as `"cells[0]"` and a newline prints as `\n`. Three lines
+(257, 260, 421). Both A1 and A2 become visible immediately. **I did not apply it** — the rule is
+T292's committed evidence and outside my edit scope.
 
 ---
 
