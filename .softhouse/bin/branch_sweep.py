@@ -430,10 +430,21 @@ def sweep(repo, patterns, want_counts=None, base="main"):
                                    else "[ok]", short(key)))
         out.extend(group_lines)
         for sha, srcs in lost:
+            # The count on the HIDDEN value, not on the winning name.  "Is this branch
+            # empty?" was answered about the wrong object once already; this line answers
+            # it about the object that was actually hidden.
+            held = ""
+            if GIT:
+                rc3, o3, _e3 = _run([GIT, "-C", repo, "rev-list", "--count",
+                                     "%s..%s" % (base, sha)])
+                held = ("  It holds %s commit(s) ahead of %s." % (o3, base)) \
+                    if rc3 == 0 and o3.isdigit() else \
+                    ("  Its commit count vs %s is UNVERIFIED (rc=%s) -- NOT zero."
+                     % (base, rc3))
             out.append("    !! %s is STORED (%s) but NO spelling in this group resolves "
                        "to it, AND it is not an ancestor of anything that resolves -- a "
                        "live object holding work no name reaches.  It is NOT empty and it "
-                       "is NOT gone." % (sha[:9], ", ".join(srcs)))
+                       "is NOT gone.%s" % (sha[:9], ", ".join(srcs), held))
         for sha, srcs in stale:
             out.append("    -- %s (%s) is shadowed but is an ANCESTOR of the resolved "
                        "value: an ordinary stale packed entry, no work is hidden by it."
@@ -585,10 +596,25 @@ def run_hook(argv):
         parts = line.split()
         if len(parts) < 3:
             continue
-        old, _new, ref = parts[0], parts[1], parts[2]
+        old, new, ref = parts[0], parts[1], parts[2]
         if set(old) != {"0"}:
             continue                       # an update or a delete, not a creation
+        # MEASURED, not assumed: the hook also fires for the packed-refs backend's own
+        # transaction, and there a deletion arrives as `0000... 0000... <ref>`.  Attempt
+        # 1 of this guard read that as a creation and REFUSED `git update-ref -d`
+        # [.softhouse/capture/t312-branch-case-collision/red-drive.txt, step 3g].  A
+        # creation has a non-zero NEW value; a zero-to-zero line is not one.
+        if set(new) == {"0"}:
+            continue
         if not ref.startswith("refs/heads/softhouse/"):
+            continue
+        # If this EXACT spelling already exists, the transaction is re-recording a ref
+        # that is already there -- `git pack-refs`/`git gc` moving a loose ref into
+        # packed-refs presents it as a creation.  Refusing that would break repacking in
+        # a repo that already carries a shadow, and would prevent nothing: the shadow
+        # predates this transaction.  This guard exists to stop a NEW precondition being
+        # created, not to punish an old one.
+        if ref in index.names():
             continue
         for other in fold.get(ref.casefold(), []):
             if other != ref:
