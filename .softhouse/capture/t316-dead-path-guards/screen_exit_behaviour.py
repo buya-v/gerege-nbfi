@@ -33,6 +33,7 @@ instead, and a timeout is recorded as TIMEOUT, never as an exit code.
 
 EXIT: 0 screen completed; 2 setup failure. Probe line `T316-EXITSCREEN:`; absent on exit 2.
 """
+import argparse
 import json
 import os
 import subprocess
@@ -53,11 +54,21 @@ def repo_root() -> Path:
     raise SystemExit(2)
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description="exit-behaviour screen over the dead-path census")
+    ap.add_argument("--census", required=True,
+                    help="the JSON written by `census_dead_paths.py --json`")
+    ap.add_argument("--json", default=None, help="write the screen result here (opt-in)")
+    args = ap.parse_args(argv)
+
     root = repo_root()
-    census = root / ".softhouse/capture/t316-dead-path-guards/evidence/dead-path-census.json"
+    # THE FAIL DIRECTION, in the instrument that measures fail direction: a dependency that does
+    # not resolve is a REFUSAL, never an empty screen.
+    census = Path(args.census)
     if not census.exists():
-        print("ERROR: run census_dead_paths.py first; %s is absent" % census, file=sys.stderr)
+        print("ERROR: the census JSON does not resolve: %s" % census, file=sys.stderr)
+        print("ERROR: REFUSING (exit 2). Run `census_dead_paths.py --json <path>` first.",
+              file=sys.stderr)
         return 2
     doc = json.loads(census.read_text())
     targets = doc["deadFiles"]
@@ -93,8 +104,7 @@ def main() -> int:
     print("T316 -- exit behaviour of the instruments that name a DEAD path")
     print("=" * 88)
     print("SCREEN DEFINITION (this is a shortlist, not a finding -- see the module docstring)")
-    print("  input      : deadFiles from evidence/dead-path-census.json  -> %d instrument(s)"
-          % len(targets))
+    print("  input      : deadFiles from %s  -> %d instrument(s)" % (census, len(targets)))
     print("  invocation : each run ONCE, NO ARGUMENTS, cwd = repo root")
     print("  timeout    : %ds, via subprocess (timeout(1) is ABSENT on this host)"
           % PER_INSTRUMENT_TIMEOUT_S)
@@ -116,10 +126,14 @@ def main() -> int:
         for d in doc["perFile"][r["file"]]["dead"]:
             print("      dead-> %s" % d)
 
-    out = root / ".softhouse/capture/t316-dead-path-guards/evidence/exit-screen.json"
-    out.write_text(json.dumps({"results": results,
-                               "shortlist": sorted(r["file"] for r in zero)},
-                              indent=2, sort_keys=True) + "\n")
+    if args.json:
+        out = Path(args.json)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps({"results": results,
+                                   "shortlist": sorted(r["file"] for r in zero)},
+                                  indent=2, sort_keys=True) + "\n")
+        print()
+        print("  JSON written to %s" % out)
     print()
     print("%s screened=%d ran=%d exit0=%d nonzero=%d timeout=%d launchFail=%d"
           % (PROBE, len(targets), len(ran), len(zero), len(nonzero), len(timeouts), len(oserr)))

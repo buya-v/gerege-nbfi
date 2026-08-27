@@ -36,6 +36,7 @@ NOTE: exit 0 is NOT a verdict that the tree is clean -- this instrument COUNTS, 
 The probe line is `T316-DEADPATH-CENSUS:` and it is printed on every path that reaches a count.
 Exit 2 prints NO probe line, so a refusal can never be read as a census of zero (P-84).
 """
+import argparse
 import json
 import os
 import re
@@ -124,7 +125,13 @@ def scan(root: Path, rel: str):
     return resolves, dead, indet, prose
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description="census of dead `.softhouse/` path references")
+    ap.add_argument("--json", default=None,
+                    help="write the machine-readable census here. OMIT IT AND NOTHING IS "
+                         "WRITTEN -- the bare run is read-only by construction.")
+    args = ap.parse_args(argv)
+
     root = repo_root()
     files = corpus(root)
 
@@ -192,13 +199,20 @@ def main() -> int:
         for d in per_file[f]["dead"]:
             print("      -> %s" % d)
 
-    out = root / ".softhouse/capture/t316-dead-path-guards/evidence/dead-path-census.json"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(
-        {"corpusFiles": len(files), "deadFiles": dead_files,
-         "deadOccurrences": dead_occ, "resolvingOccurrences": resolving_occ,
-         "indeterminateOccurrences": indet_occ, "proseOccurrences": prose_occ,
-         "perFile": {f: per_file[f] for f in dead_files}}, indent=2, sort_keys=True) + "\n")
+    # THE BARE RUN WRITES NOTHING. T299 fixed exactly this defect in the T238 linter -- an
+    # instrument whose DEFAULT destination is a tracked file dirties the tree of anyone who runs
+    # it to debug it, and the person who runs it bare is precisely the person debugging it. So the
+    # JSON is OPT-IN: no `--json`, no write, and a caller (the guard) passes a scratch path.
+    if args.json:
+        out = Path(args.json)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(
+            {"corpusFiles": len(files), "deadFiles": dead_files,
+             "deadOccurrences": dead_occ, "resolvingOccurrences": resolving_occ,
+             "indeterminateOccurrences": indet_occ, "proseOccurrences": prose_occ,
+             "perFile": {f: per_file[f] for f in dead_files}}, indent=2, sort_keys=True) + "\n")
+        print()
+        print("  JSON written to %s" % out)
 
     print()
     print("%s corpus=%d deadFiles=%d deadOccurrences=%d resolving=%d indeterminate=%d prose=%d"
