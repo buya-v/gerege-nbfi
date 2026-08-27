@@ -61,8 +61,12 @@ HEADER = """\
 # -------------------------------------------------------------------------------------------
 # THE DECISION, ARGUED: AN UNTRACKED-BUT-EXPECTED PATH IS **DEAD**.
 # -------------------------------------------------------------------------------------------
-# `.softhouse/toolchain` is real, is used by `.softhouse/bin/go-env.sh` and 20 other
-# instruments, and is DELIBERATELY untracked (`.gitignore:6`). Three answers were available:
+# `.softhouse/toolchain` is real, is used, and is DELIBERATELY untracked (`.gitignore:6`). It is
+# named by 20 distinct tracked instruments in 25 of the rows below, counted from this file:
+#     grep -v '^#' dead-path-frontier.pin | grep -c toolchain              -> 25
+#     grep -v '^#' dead-path-frontier.pin | grep toolchain | cut -d'|' -f1 | sort -u | wc -l -> 20
+# (23 of those rows are the ones the driver watched vanish; the other 2 are T326's own drives,
+# which name the path deliberately -- see the accounting below.) Three answers were available:
 #
 #   (a) RESOLVES, because it exists.        REJECTED -- that is the defect verbatim. It requires
 #       looking at the disk, so it answers differently in a worktree and in the main checkout.

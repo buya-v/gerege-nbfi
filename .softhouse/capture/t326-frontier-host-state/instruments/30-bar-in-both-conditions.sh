@@ -149,6 +149,25 @@ else
   fail=$((fail + 1))
 fi
 
+# (6) THE STRONGEST FORM OF THE CLAIM, and it holds today: the two transcripts are BYTE
+#     IDENTICAL. Not "the verdict agrees" -- nothing anywhere in ~68 KB of graded output changes
+#     when the untracked toolchain and the run residue are materialised.
+#
+#     IF THIS ARM EVER GOES RED FOR A BENIGN REASON -- a wall-clock figure, a temp path, a
+#     hostname printed by some future guard -- the correct response is to NARROW THE COMPARISON
+#     to the fields that carry the verdict and record what was excluded and why, RIGHT HERE. It
+#     is NOT to demote the arm to advisory: "a guard, a canary, or a control that cannot fail is
+#     worse than none, because it is believed" (P-22). At the commit that wrote this the diff was
+#     empty, so no exclusion list exists and none is invented in advance.
+if diff -q "$OUT/20-bar-A_bare.txt" "$OUT/20-bar-B_hoststate.txt" >/dev/null 2>&1; then
+  echo "  PASS  the two bar transcripts are BYTE IDENTICAL ($(wc -l <"$OUT/20-bar-A_bare.txt" | tr -d ' ') lines each)."
+else
+  echo "  FAIL  the two bar transcripts DIFFER. Something in the graded output still depends on"
+  echo "        untracked disk state. First 30 differing lines:"
+  diff "$OUT/20-bar-A_bare.txt" "$OUT/20-bar-B_hoststate.txt" | sed -n '1,30p'
+  fail=$((fail + 1))
+fi
+
 echo "--------------------------------------------------------------------------------------"
 if [ "$fail" -eq 0 ]; then
   echo "$PROBE GREEN fail=0"

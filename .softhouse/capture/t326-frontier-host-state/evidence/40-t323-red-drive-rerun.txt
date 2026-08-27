@@ -1,0 +1,9 @@
+============================================================================================
+T323 RED DRIVE -- every arm runs the WHOLE BAR, never a guard standalone.
+scratch clone: /tmp/t326-t323clone
+============================================================================================
+00-GREEN-CONTROL-clean-tree                    exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T299-01-undocumented-collision                 exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T299-02-same-collision-DOCUMENTED              exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T299-03-decalibrated-corpus                    exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T299-04-no-root-line-readback                  exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
