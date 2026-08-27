@@ -1,0 +1,74 @@
+package conformance
+
+import "github.com/gerege/nexus/internal/apps/ledger"
+
+// T320 REVIEWER'S OWN MUTANT — NOT part of the committed store. Scratch only.
+// Question it answers: does LDG-05's THREE-LEG body actually discriminate a
+// PER-LEG contra from a SUMMED one? That is the sole stated reason the body
+// carries three legs of three different amounts, and no registered mutant in
+// the committed store tests it (no-contra writes ZERO contra entries, not one
+// per side group).
+//
+// This mutant emits, per SIDE GROUP, the caller's legs then ONE contra entry
+// carrying that group's TOTAL: 2 debit legs + 1 credit contra(35000062) +
+// 1 credit leg + 1 debit contra(35000062) = FIVE entries vs the oracle's SIX.
+// A one-debit-one-credit body could not tell these two answers apart.
+type t320SummedContraPoster struct{}
+
+func (t320SummedContraPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	if req.Command != "defineOpeningBalance" || len(req.PostedNonContraTransactionIDs) > 0 {
+		return GoPoster{}.PostEntry(req)
+	}
+	r := req
+	r.Command = "" // plain accept path; we do the expansion ourselves
+	base, refusal, err := GoPoster{}.PostEntry(r)
+	if err != nil || refusal != nil {
+		return base, refusal, err
+	}
+	chart := map[int64]Account{}
+	for _, a := range req.Accounts {
+		chart[a.ID] = a
+	}
+	contra := chart[req.ContraGLAccountID]
+	expanded := make([]PostedLeg, 0, len(base.Legs)+2)
+	var debits, credits ledger.MinorUnits
+	for _, side := range []EntrySide{SideDebit, SideCredit} {
+		var group ledger.MinorUnits
+		n := 0
+		for _, l := range base.Legs {
+			if l.Side != side {
+				continue
+			}
+			expanded = append(expanded, l)
+			group += l.AmountMinor
+			n++
+		}
+		if n == 0 {
+			continue
+		}
+		expanded = append(expanded, PostedLeg{
+			AccountID:   contra.ID,
+			AccountCode: contra.Code,
+			Side:        oppositeSide(side),
+			AmountMinor: group,
+		})
+	}
+	for _, l := range expanded {
+		if l.Side == SideDebit {
+			debits += l.AmountMinor
+		} else {
+			credits += l.AmountMinor
+		}
+	}
+	base.Legs = expanded
+	base.TotalDebitsMinor = debits
+	base.TotalCreditsMinor = credits
+	return base, nil, nil
+}
+
+func init() {
+	RegisterWrong("t320-probe-openingbalance-summed-contra",
+		"T320 REVIEWER PROBE: writes ONE contra entry per SIDE GROUP carrying the group total, "+
+			"instead of one per leg. Five entries where the oracle wrote six.",
+		t320SummedContraPoster{})
+}
