@@ -313,6 +313,12 @@ m_X1() {
   rm -rf "$d/.git"
 }
 
+# Instrument 40 sources this file to reuse the mutator functions and mk().
+# Sourced with T318_DRIVE_LIB=1 we stop here rather than running the arms.
+if [ -n "${T318_DRIVE_LIB:-}" ]; then
+  return 0 2>/dev/null || exit 0
+fi
+
 echo "T318 INSTRUMENT 30 — RED/GREEN DRIVE"
 echo "guard : $GUARD"
 echo "repo  : $REPO"
