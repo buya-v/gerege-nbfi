@@ -86,7 +86,7 @@ conformance:   dynamic SQL is caught only through the call set it recognises; tr
 conformance:   migrations and stored procedures are not walked at all; I-5's semantic half
 conformance:   and non-Go callers are not covered. A PASS here means 'no violation is visible
 conformance:   to a source-level guard over the Go tree', NOT 'the ledger tree is covered'.
-conformance: CENSUS fail-open instruments — inspected 1102 tracked .sh/.py file(s) under
+conformance: CENSUS fail-open instruments — inspected 1103 tracked .sh/.py file(s) under
 conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac97071c41e7f0a33 (git ls-files, whole repository); frontier 11, pinned at 11
 conformance:   (DERIVED from FAILOPEN_PIN_FILE_LIST by counting it, never typed).
 conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a
