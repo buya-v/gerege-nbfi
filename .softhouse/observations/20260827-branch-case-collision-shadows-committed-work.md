@@ -126,3 +126,26 @@ the namespace is closed under the very defect it is rescuing.
 - `[UNVERIFIED]` whether any earlier fire lost work to this. The `140001` driver's record —
   *"4 branches at dispatch commit with zero commits ahead, 4 never created"* — is now **suspect for the
   same reason**, but re-deriving it needs the reflog state of that fire and this note does not claim it.
+
+---
+
+## Addendum, same fire: the driver reproduced the backtick-injection defect it already had on record
+
+While writing the T309 merge message the driver wrote a word in backticks inside a double-quoted
+`git commit -m` argument. zsh command-substituted it:
+
+```
+(eval):96: command not found: fire
+```
+
+and the committed message reads **`"But  is stamped at FIRST dispatch"`** — the word silently deleted.
+This is the identical defect recorded against fire `20260823-080016`, where backticks in a commit
+message executed and injected a 6,733-line file listing. That one was caught before push; **this one
+was not**, so `2dfbe422` on `main` carries the hole.
+
+**Not repaired by rewriting history.** Amending a pushed merge commit on `main` while workers hold
+forks of it trades a cosmetic defect for a hard-to-reverse published-history rewrite, which is a worse
+trade. The correction is recorded here and forward in the log instead.
+
+**The rule, since twice is a pattern:** *no backticks in a commit message, ever.* Use plain words or
+single quotes. The shell does not care that the backticks were "obviously" meant as markdown.
