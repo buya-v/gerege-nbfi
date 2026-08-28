@@ -1,0 +1,103 @@
+package conformance
+
+// T406 REVIEW PROBE — NOT FOR MERGE. Drives T391's nine new slot-admission
+// branches, which T391 shipped with no test of its own.
+import (
+	"strings"
+	"testing"
+)
+
+func t406Base(t *testing.T) (Vector, Options) {
+	t.Helper()
+	vs, opts := loadCommitted(t)
+	for _, v := range vs {
+		if v.CaseID == "LDG-ACC-01-accrual-six-slots-runaccruals-trigger" {
+			return *v, opts
+		}
+	}
+	t.Fatal("LDG-ACC-01 not in the committed store")
+	return Vector{}, opts
+}
+
+func t406Refuses(t *testing.T, name string, mut func(*Vector), want string) {
+	t.Helper()
+	v, opts := t406Base(t)
+	legs := append([]RequestLeg(nil), v.Request.Legs...)
+	v.Request.Legs = legs
+	maps := append([]ProductMapping(nil), v.Request.ProductMappings...)
+	v.Request.ProductMappings = maps
+	mut(&v)
+	rs := Admit(&v, opts)
+	hit := false
+	for _, r := range rs {
+		if strings.Contains(r, want) {
+			hit = true
+		}
+	}
+	if !hit {
+		t.Errorf("%s: NOT REFUSED for %q; reasons = %v", name, want, rs)
+	} else {
+		t.Logf("%s: REFUSED as designed", name)
+	}
+}
+
+func TestT406SlotAdmissionBranches(t *testing.T) {
+	t406Refuses(t, "both id and slot", func(v *Vector) {
+		v.Request.Legs[0].AccountID = 41
+	}, "carries BOTH gl_account_id")
+
+	t406Refuses(t, "neither id nor slot", func(v *Vector) {
+		v.Request.Legs[0].SlotCode = 0
+	}, "carries NEITHER a gl_account_id")
+
+	t406Refuses(t, "negative slot code", func(v *Vector) {
+		v.Request.Legs[0].SlotCode = -7
+	}, "A placeholder code is a positive")
+
+	t406Refuses(t, "slot legs, no mapping table", func(v *Vector) {
+		v.Request.ProductMappings = nil
+	}, "request.product_mappings is EMPTY")
+
+	t406Refuses(t, "entry-level slot_code set too", func(v *Vector) {
+		v.Request.SlotCode = 7
+	}, "AND request.legs carry per-leg slot codes")
+
+	t406Refuses(t, "slot legs, no product id", func(v *Vector) {
+		v.Request.ProductID = 0
+	}, "request.product_id is 0")
+
+	t406Refuses(t, "duplicate slot in mapping table", func(v *Vector) {
+		v.Request.ProductMappings[1].SlotCode = v.Request.ProductMappings[0].SlotCode
+	}, "twice")
+
+	t406Refuses(t, "mapping row off the chart", func(v *Vector) {
+		v.Request.ProductMappings[0].GLAccountID = 9999
+	}, "which is NOT in")
+
+	t406Refuses(t, "mapping row with slot_code 0", func(v *Vector) {
+		v.Request.ProductMappings[0].SlotCode = 0
+	}, "a placeholder code is positive")
+}
+
+func TestT406MappingTableOnAManualVectorIsRefused(t *testing.T) {
+	vs, opts := loadCommitted(t)
+	var manual *Vector
+	for _, v := range vs {
+		if v.CaseID == "LDG-01-manual-je-3leg-minor-units" {
+			manual = v
+		}
+	}
+	if manual == nil {
+		t.Fatal("LDG-01 not found")
+	}
+	v := *manual
+	v.Request.ProductMappings = []ProductMapping{{SlotCode: 7, GLAccountID: v.Request.Accounts[0].ID}}
+	rs := Admit(&v, opts)
+	for _, r := range rs {
+		if strings.Contains(r, "NO leg resolves through any of them") {
+			t.Logf("REFUSED as designed")
+			return
+		}
+	}
+	t.Errorf("a mapping table on a manual vector was NOT refused; reasons = %v", rs)
+}
