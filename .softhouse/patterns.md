@@ -3406,3 +3406,110 @@ files `T334` was forbidden to edit. Driven in a throwaway clone at `probe-p45-pr
 FIRST, then record the rule. Doing it in the other order reds the bar. Until then the erratum is the
 correction, and the gloss stays unrecorded on purpose.
 
+---
+
+**P-98 — A CONTROL THAT CANNOT FAIL AND A CONTROL THAT REFUSES EVERYTHING ARE THE SAME DEFECT WEARING
+OPPOSITE SIGNS, AND BOTH READ GREEN FROM OUTSIDE.**
+
+*Local fire `20260828-140005`. Four independent sites across three tasks and one review, collected from
+the record rather than taken on `T383`'s count — `T362`'s review of `T357`
+(`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T362.md:159-166`, F-2), `T377`'s handoff
+(`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T377.md:23-38,300-317`, F-T368-2 and its own
+recommendation), `T383`'s handoff (`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T383.md:1-96`,
+F-T380-1), and `T385`'s independent review of `T383`
+(`.softhouse/reviews/t385-review-t383/REVIEW.md:20-60,170-215`), merged at `e6cd307f`.*
+
+**The four sites, in the order they were laid down.**
+
+1. **`conformance.sh:guard_guards_dir_registration`** (`T323`, extended since). An empty population of
+   guard files is refused by name — *"the population is EMPTY. That is a SELECTOR"* failure, never a
+   clean tree (`.softhouse/conformance.sh:3271`). This is the founding instance of the *vacuous-pass*
+   half: a check that inspects nothing still prints PASS unless the census itself is guarded.
+2. **`T362` F-2, reviewing `T357`.** `adjudicate-section1.py` §4 built `vector_files` by `rglob` and
+   printed the population size without ever asserting it was non-zero. With `.softhouse/vectors/` moved
+   aside it reported `"population searched: 0"`, `"0 distinct capture_ref values inspected"` — and
+   **passed, rc 0**. `T357` had marketed the guard as *"executable and permanent, not a paragraph"*; it
+   was also permanently green over nothing. `T362` named it the same defect class `P-22` and `P-45` were
+   already carrying — evidence this rule was recognisable before it had its own number.
+3. **`T377` F-T368-2, `fire-program.sh`'s pre-fire self-test.** `T368` had measured the mechanism directly:
+   delete all 45 `_row`/`_arow` invocations from the self-test and it still prints
+   `ROWS=0 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0`, exits 0, **and the fire starts** — the fatal control that
+   gates every fire in this program, vacuously green on nothing. `T377` closed it with a derived floor
+   (population read from the executing bytes, not typed), an empty-population refusal borrowing
+   `guard_guards_dir_registration`'s own wording, and a reconciliation (`ROWS + SKIPPED` must equal the
+   census, so a silently-skipped row cannot hide). `T377`'s own follow-up (handoff §"Follow-ups" item 1)
+   named sites 1–3 as *"three independent instances… in one fire is the bar `patterns.md` normally uses"*
+   and recommended filing the rule — but declined to write it, because `patterns.md` was not that task's
+   grant.
+4. **`T383` F-T380-1, the SAME file, a DIFFERENT control in it.** `T380` had measured the mirror-image
+   fail-open in the summary-line reader: `tail -1` of the self-test's printed tally means a SECOND,
+   clean-looking summary line silences a real failing one, and the fire starts on a run that just failed
+   its own self-test. `T383` fixed it by refusing on multiplicity — zero summary lines refuses (`P-84`,
+   presence before value), exactly one behaves as before, two or more refuses regardless of order. That
+   closes the fail-open. **And in closing it, `T383`'s own first implementation became the mirror-image
+   defect inside the same task**, which is why this site is the one that generalises the rule rather than
+   just adding a fourth count to it.
+
+**The mirror-image, caught inside `T383` by its own control.** The first cut counted summary lines with
+`_ST_NSUM=${#${(f)_ST_SUMS}}`. In an assignment context that nested form is scalar, and `${#…}` on a
+scalar is a **string length**, not an array count: it read **41** — the character count of
+`ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0` — and refused the healthy control case `m00` with *"printed 41
+TALLY LINES"*. **The multiplicity fix had briefly become a control that refuses every fire.** It was caught
+only because `m00` — one well-formed, healthy summary, asserted GREEN — sat beside the thirteen RED
+mutation cases in the same driver run, rather than the suite consisting only of cases that are *supposed*
+to refuse. A suite built entirely from refusal cases cannot see this bug: it is wrong on exactly the one
+input every other case in it deliberately is not.
+
+**`T385`'s independent review answered the mirror-image question FIRST, and named the rule explicitly
+before checking anything else** (`REVIEW.md:42-46`): *"a control that refuses everything and a control
+that cannot fail are the same defect wearing opposite signs"* — and re-drove *"does a healthy fire still
+start"* three independent ways, none of them reusing `T383`'s own driver, before touching any of the
+three named fixes. All three came back `rc 0`, healthy fire starts.
+
+**A stated reason can be wrong even when the conclusion it defends is right — fold this in, it is not a
+footnote.** `T383` also deliberately kept substring containment green (a line that merely *contains*
+`ROWS=` must not join the summary population), and gave a reason: the wiring's own
+`lockselftest| ROWS=…` echo is itself a substring line, so a naive unanchored count would refuse every
+healthy fire. `T385` (F-T385-1) measured that reason **false**: the `lockselftest| ` prefix is added
+*downstream* of the capture, inside `log()`, so that echo is never in `$_ST_OUT` and cannot join the
+population whether the selector is anchored or not — and building the exact naive wrapper `T383`
+described, against the exact healthy input, returns `rc 0`, fire starts. **The anchoring design was right
+and independently reproducible; the example `T383` cited to justify it was not.** `T385` re-derived the
+real justification — a future narration line emitted by the self-test itself, not this one — and it holds.
+Verifying a conclusion is not the same act as verifying the reason given for it, and both were owed
+independent re-derivation here, not just the one that happened to be checkable by rerunning a script.
+
+**THE RULE.** A vacuous-pass control (exits 0 having checked nothing — an empty population, a dead
+reference, a floor with no population behind it) and a vacuous-refuse control (exits non-zero on
+everything, including the healthy case — a miscounted population, an unanchored selector, a threshold with
+no ceiling) are **the same defect**: a control that no longer distinguishes the case it exists to catch
+from the case it exists to pass. Both are invisible from the same vantage point, because both a check that
+always passes and a check that always fails **look identical to a suite built only from the polarity being
+tested** — a vacuous-pass guard looks fine to a suite of clean inputs, and a vacuous-refuse guard looks fine
+to a suite of bad inputs. Neither vantage point alone can see its own defect.
+
+**THE DUTY.** Hardening a fail-open control is incomplete without a driven, asserted **healthy CONTROL
+case** — not merely a clean-input case that happens to be included, but one whose expected grade is
+explicitly GREEN and that is run in the *same* pass as the refusal cases, on the *same* bytes. `m00` is
+what caught `T383`'s own regression before it left the worktree; without it the file would have shipped
+refusing every fire and passing every "does it refuse?" test written for it. And measure with a real
+population (an array, a count of matched rows, a reconciled census), never a proxy that degenerates
+silently — a string length standing in for a line count is exactly how a correct-looking predicate becomes
+wrong on precisely the one input it must get right.
+
+**Why this is not a restatement of `P-22` or `P-45`.** `P-22` says a control that cannot fail is worse than
+none, and prescribes driving every guard red. `P-45` says a test-only guard enforces nothing if the
+executing path never calls it. Both are about the vacuous-pass half alone, and neither says what to do
+about a *fix* for a vacuous-pass control, which is exactly the shape that produces the mirror image: the
+fix pulls the control from "always passes" toward "always refuses," and unless a healthy case rides along
+for the whole trip, the fix can overshoot without anyone noticing, because overshoot reads green to a
+red-only suite the same way undershoot read green to the original.
+
+**COLLISION HAZARD, declared rather than discovered**, following `T282`'s precedent: this entry
+claims **`P-98`** against a register whose high-water mark was measured as `P-97` at the moment of writing
+(`.softhouse/patterns.md:3261`), with `P-99` confirmed permanently reserved as a deliberate negative
+control and never a real id (`.softhouse/patterns.md:3253`, `.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py:61`).
+`T398`, filed after this task and depending on it for exactly this reason, takes the next free cardinal
+above this one — never `P-98` itself, and never `P-99`. If a rival `P-98` lands anyway, renumber this one
+and run `.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py` to find every restatement.
+
