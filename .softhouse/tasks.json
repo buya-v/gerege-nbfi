@@ -6146,11 +6146,11 @@
         "T397",
         "T405"
       ],
-      "status": "in_progress",
+      "status": "needs_review",
       "files_hint": [
         ".softhouse/capture/t416/"
       ],
-      "note": "dispatched iter4; record pushed BEFORE git worktree add. F-T405-5 is MAJOR and money-facing.",
+      "note": "COMPLETE, bar exit 0, conformance.sh diff 0 lines. Held for T422. Closed the MAJOR money-reporting defect: built the ledger-only FAIL fixture that did not exist (8 subtests RED before / 0 after) with four loanschedule-only control arms green in BOTH directions, so the fix ADDS rather than replaces. Chose the allowlist ON EVIDENCE: 43 distinct left neighbour bytes and 37 right across the 37 cited artefacts, against a blacklist naming 4 and 4 -- so 39/33 were admitting by default. Merged T391 mid-task and re-ran every drive; findings survive the re-baseline. admit.go lines touched: 1332-1334, 1342-1352, 1354-1364 -- disjoint from T391 hunks at 182-243, 243-300, 981.",
       "branch": "softhouse/T416-t405-conditions"
     },
     {
@@ -6233,6 +6233,23 @@
         ".softhouse/vectors/ledger/",
         "nexus/internal/apps/ledger/conformance/",
         ".softhouse/capture/t421-t406-conditions/"
+      ],
+      "note": "FILED AND DISPATCHED BY THE DRIVER, iter4; record pushed BEFORE git worktree add."
+    },
+    {
+      "id": "T422",
+      "title": "INDEPENDENT review of T416 -- a MONEY-REPORTING fix and an inverted admission classifier",
+      "description": "T416 closed all six of T405's conditions. Two of its changes are money-facing and must be re-derived, not read.\n\n**1. THE MONEY VERDICT SENTENCE (F-T405-5, MAJOR).** Before: a one-minor-unit mutation of `legs[0].amount_minor` produced `ledger parity PASS 6 FAIL 1` and the report announced `VERDICT: FAIL (exit 1) — 0 mismatched vector(s)`. **A money mismatch in the double-entry ledger reported to a human as zero.** T416 says the cause is that `report.go`'s exit-1 arm summed only loanschedule counters while `ExitCode()` reaches 1 for the ledger through a separate arm.\n**Re-derive the cause and re-run the drive.** T416 reports a corpus drive with two binaries differing only in `report.go`, correct `ledger-go` port, no `-ledger-impl`: all three mutation classes go `— 0 mismatched vector(s)` → `— 1 mismatched vector(s)`, unmutated control exit 0 in both. **Verify the count is now RIGHT, not merely non-zero** — a sentence that says 1 when the truth is 3 is the same class of defect.\nIt built `verdict_fail_ledger_test.go`, the ledger-only FAIL fixture that did not previously exist (**8 subtests RED before, 0 after**), keeping **four loanschedule-only control arms green in both directions** so the fix ADDS rather than REPLACES. **Check that claim hard**: a fix that silently moved loanschedule reporting onto the ledger path would show the same green.\n\n**2. THE ADMISSION CLASSIFIER INVERTED TO AN ALLOWLIST (F-T405-2/3).** T416 measured the real capture alphabet — across the 37 artefacts the store cites, a numeric run is neighboured by **43 distinct left bytes and 37 right**, while the blacklist named only **4 and 4**, so **39/33 bytes were admitting by default**. It replaced this with `namedDelimiter`, enumerating what TERMINATES a numeric token, with six bytes (`,` ` ` `_` `.` `-` `+` `e`) context-qualified by one further byte, and an unnamed byte REFUSES.\n**Re-measure the alphabet yourself.** Then attack the new classifier from BOTH sides, which is the whole of P-98: find a **legitimate** amount it now refuses (false refusal), and a **prefix or substring** it still admits (false admission). T416 claims all twelve T405 rows flipped, all six false refusals closed with none left open, EUR/MNT asserted as a pair, and **31 subtests RED on `main`'s `admit.go`, 67 PASS after**, including all of T397's own rows and both layers of its P-45 control.\n**The digit-COMMA-digit ambiguity was decided toward REFUSAL.** Judge that call: `1,250` in a capture could be one token or two. Refusing is fail-closed and therefore the safer default — but confirm nothing in today's corpus is refused by it, and that the decision is recorded where a porting task will meet it.\n\n**3. ABSOLUTE: NO FLOAT, NO PARSE.** Re-sweep the whole diff yourself with a regex wider than the author's. The captured amount must never become a number — no `strconv`, no `big.Float`, no exponent handling that evaluates, no division. **No `int64` holds `100.125`**; that is the entire reason this class compares text. T416 states arithmetic occurs only on byte offsets — verify.\n\n**4. F-T405-4 shipped as a driven REQUEST, not applied.** It proposes `EXEMPTION_PIN_LEDGER_INADMISSIBLE=0` and `_DIVERGENCE_PASS=1`, both measured by running, with `sed` extractions driven against three real transcripts. Confirm T405's narrowing: an inadmissible **divergence** vector leaves all four pinned LEDGER figures identical, while an inadmissible **parity** vector moves two. **Say whether the request is safe to apply**, and note `conformance.sh` is now free (T404 released it).\n\n**5. F-T405-6 — a behavioural remedy beyond the prose fix.** The exit-0 arm no longer prints 'NO DIVERGENCE IS RECORDED' over a store pinned to hold one, and T397's subtest expectation was **corrected, not deleted**, now following `DivergencePinCount()`. Judge whether correcting rather than deleting was right.\n\n**6. MERGE SAFETY.** T391 landed mid-task; T416 merged it and re-ran every drive, reporting `merge-tree` showed `admit.go` changed in both with **zero conflicts**. Its lines are **1332-1334, 1342-1352, 1354-1364**; T391's hunks are at **182-243, 243-300, 981**. **Verify disjointness yourself** and re-run the bar on a scratch merge onto current `main`. **T421 is concurrently editing the same package** — check for collision with it too.\n\nRead T416's handoff from the BRANCH: `git show softhouse/T416-t405-conditions:.softhouse/handoff/T416-t405-conditions.md`.\n\nBaseline on current `main`: exit 0, 46 parity / 7884 cells, ledger parity 10, money cells 63 == pinned 63, all 15 wrong impls dead, deadOccurrences 108, frontier 11 == pinned, host-state 18 == pinned. Bar from a CLEAN tree after commit, `bash` never `sh`, probe-line PRESENCE before value; **exit 2 with no probe line is a HARD-guard failure, not an oracle outage.** Do not write a bare `P-<n>` token for a pattern that does not exist. `go build ./...` and `go test -count=1 ./...` must be clean.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T416"
+      ],
+      "status": "in_progress",
+      "branch": "softhouse/T422-review-t416",
+      "files_hint": [
+        ".softhouse/reviews/t422-review-t416/"
       ],
       "note": "FILED AND DISPATCHED BY THE DRIVER, iter4; record pushed BEFORE git worktree add."
     }
