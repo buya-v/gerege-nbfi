@@ -112,11 +112,19 @@ func CellFields() []string {
 	var s cellSink
 	diffEntry(&s, probe, got)
 
+	// THE REFUSAL PROBE CARRIES AN ARG-ECHO SELECTOR, and it has to: the arg
+	// cell is emitted only when a selector is set, so a probe without one would
+	// silently drop `refusal.arg0_value` from the vocabulary and every
+	// divergent_cells entry naming it would become INADMISSIBLE. The probe's
+	// job is to exercise EVERY branch the comparator has [T307].
 	refProbe := &Vector{
-		Class:  ClassOracleRefusal,
-		Expect: Expect{Kind: "refusal", HTTPStatus: 403, Refusal: Refusal{HTTPStatus: 403, Code: "c", Message: "m"}},
+		Class:   ClassOracleRefusal,
+		Request: Request{TransactionDate: "2000-01-01"},
+		Expect: Expect{Kind: "refusal", HTTPStatus: 403, Refusal: Refusal{
+			HTTPStatus: 403, Code: "c", Message: "m", ArgEcho: ArgEchoTransactionDate}},
 	}
-	diffRefusal(&s, refProbe, &Refusal{HTTPStatus: 403, Code: "c", Message: "m"})
+	diffRefusal(&s, refProbe, &Refusal{
+		HTTPStatus: 403, Code: "c", Message: "m", Arg0Value: "2000-01-01"})
 
 	seen := map[string]bool{}
 	var out []string
@@ -202,7 +210,27 @@ func diffEntry(s *cellSink, v *Vector, got PostedEntry) ledger.MinorUnits {
 // diffRefusal compares an expected oracle refusal with the one an
 // implementation produced. Three cells, deliberately: a port that matches the
 // HTTP status while inventing the globalisation code is not matching the oracle.
+//
+// A FOURTH CELL IS COMPARED, AND ONLY WHEN THE VECTOR ASKS FOR IT  [T307, B-3].
+// `refusal.arg0_value` is the oracle's `errors[0].args[0].value`. The vector
+// does NOT carry the date: it carries a SELECTOR naming which input it already
+// declares the oracle echoed, and the `want` side is RESOLVED from Request here.
+// See Refusal.ArgEcho for the whole argument, including the two independent
+// grounds on which OB-01's 26-id list stays ungraded.
+//
+// WHY THE CELL IS CONDITIONAL AND THAT IS NOT A HOLE. An unset selector is not a
+// vector's choice: admit.go REQUIRES the selector on exactly the two refusal
+// codes whose throw sites pass a LocalDate (:631, :637) and FORBIDS it on every
+// other code, so "no selector" is a property of the refusal class, not a cell an
+// author may decline. A vector that dropped it would be INADMISSIBLE, not
+// quietly less-graded.
+//
+// IT REMAINS TRUE, AND T297's FINDING IS UNDISTURBED, that cmpMoney is
+// unreachable from this function: the cell below goes through cmpStr, so a
+// refusal vector still contributes ZERO money cells and
+// EXEMPTION_PIN_LEDGER_MONEYCELLS does not move for one.
 func diffRefusal(s *cellSink, v *Vector, got *Refusal) {
+	wantArg, gradeArg := ResolveArgEcho(v.Expect.Refusal.ArgEcho, v.Request)
 	if got == nil {
 		s.diffs = append(s.diffs,
 			"expected an ORACLE REFUSAL and the implementation returned a posted entry instead")
@@ -213,11 +241,17 @@ func diffRefusal(s *cellSink, v *Vector, got *Refusal) {
 		s.cmpInt("refusal.http_status", int64(v.Expect.Refusal.HTTPStatus), 0)
 		s.cmpStr("refusal.code", v.Expect.Refusal.Code, "")
 		s.cmpStr("refusal.message", v.Expect.Refusal.Message, "")
+		if gradeArg {
+			s.cmpStr("refusal.arg0_value", wantArg, "")
+		}
 		return
 	}
 	s.cmpInt("refusal.http_status", int64(v.Expect.Refusal.HTTPStatus), int64(got.HTTPStatus))
 	s.cmpStr("refusal.code", v.Expect.Refusal.Code, got.Code)
 	s.cmpStr("refusal.message", v.Expect.Refusal.Message, got.Message)
+	if gradeArg {
+		s.cmpStr("refusal.arg0_value", wantArg, got.Arg0Value)
+	}
 }
 
 func parseMinor(s string) (ledger.MinorUnits, error) {
