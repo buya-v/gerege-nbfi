@@ -2464,11 +2464,29 @@ guard_accepting_side_gap_declared() {
 # counted the whole HISTORY, not merely today's tree:
 #
 #     git log --format= --name-only --diff-filter=A -- .softhouse/capture .softhouse/reviews
-#       -> 128 distinct evidence directories EVER created in this repository
-#       -> 107 of them carry a t<n> id prefix
-#       -> ids prefixing MORE THAN ONE directory, over the entire history:   exactly ONE
+#       -> distinct evidence directories EVER created in this repository:   151
+#       -> of them carrying a t<n> id prefix:                               130
+#       -> ids prefixing MORE THAN ONE directory, over the entire history:  exactly ONE
 #       -> and that one is T256/T259 — the real defect the guard was written for, already
 #          declared by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+#
+# THE TWO CARDINALS ABOVE ARE VOLATILE AND HAVE ALREADY ROTTED ONCE. Iteration 1 of T323 wrote
+# them as 128 and 107; T323 iteration 3 re-derived the same query on today's tree and got 151
+# and 130. Neither figure was wrong when written — the corpus simply grew — which is precisely
+# why they are re-stated with the date of measurement and why THE CONCLUSION, not the cardinals,
+# is what this argument rests on. [RE-DERIVED INDEPENDENTLY: T323 iteration 3, 28 Aug 2026, and
+# it agrees with the guard's own live readback in the same run: "corpus 7739 tracked paths -> 151
+# evidence directories / 130 carry a t<n> id prefix".] A reader who finds these two numbers stale
+# again should re-run the query rather than trust them; the load-bearing claim is the LAST line,
+# "exactly ONE colliding id, and it is the declared one", and THAT has held across both
+# measurements.
+#
+# ONE TRAP IN RE-DERIVING IT, recorded because iteration 3 fell into it. A naive id regex of
+# `^(t|a)[0-9]+` reports TWO colliding ids — t256 and `a2`, the latter with SEVEN directories.
+# `a2` is an artifact of the SELECTOR, not a collision in the tree: T299 had already separated
+# the a2-<n> id space precisely because folding it produced false collisions (noted below). The
+# guard is right and the crude re-derivation was wrong. P-70 — a count is a statement about the
+# search, never about the world.
 #
 # The false-positive count of this predicate, over every evidence directory this program has
 # ever created, is ZERO; its true-positive count on the only event in class is ONE. The
