@@ -2,6 +2,7 @@ package conformance
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 	"testing"
@@ -117,27 +118,342 @@ func TestOpeningBalanceCapabilityIsScopedToTheObservedShape(t *testing.T) {
 			"ledger.opening.balance.and.closure, so the rule under test has nothing to scope")
 	}
 
-	// A CLOSURE-FAMILY shape: a plain create, carrying none of the
-	// opening-balance inputs, so nothing else in Admit can account for the
-	// refusal this arm demands.
-	v := *base
-	v.Request.Command = ""
-	v.Request.ContraGLAccountID = 0
-	v.Request.PostedNonContraTransactionIDs = nil
-	reasons := Admit(&v, opts)
 	// THE ANCHOR IS STRUCTURAL, NOT EDITORIAL [T305]. It used to be the sentence
 	// "EXACTLY ONE of the three shapes that row names is observed", which stopped
 	// matching the moment the message was corrected to say that the accepting side is
 	// now observed too — a green rule reported as a red test, for a reason that had
-	// nothing to do with the rule. Matching the field name and the offending value
-	// instead means this arm goes red only when the RULE stops refusing.
-	if !containsSubstring(reasons,
-		`capabilities_required names "ledger.opening.balance.and.closure" on a vector whose request.command is ""`) {
-		t.Fatalf("a vector claiming ledger.opening.balance.and.closure for a NON-opening-balance "+
-			"shape was ADMITTED, or refused for another reason. The ACCEPTING sides of the "+
-			"pre-closure and future-dated boundaries are still uncaptured, and a vector claiming "+
-			"this row for one of them reads as covered when it is not: %v", reasons)
+	// nothing to do with the rule. Matching the field name instead means these arms go
+	// red only when the RULE stops refusing. [T306: the value is no longer pinned into
+	// the anchor, because two of the arms below carry a non-empty command.]
+	const scoped = `capabilities_required names "ledger.opening.balance.and.closure" on a vector whose request.command is `
+
+	t.Run("a FOURTH shape with none of the three request-side facts REFUSES", func(t *testing.T) {
+		// A CLOSURE-FAMILY shape: a plain create carrying none of the
+		// opening-balance inputs and none of the date inputs, so NOTHING else in
+		// Admit can account for the refusal this arm demands -- not the command,
+		// not either date comparison.
+		v := *base
+		v.Request.Command = ""
+		v.Request.ContraGLAccountID = 0
+		v.Request.PostedNonContraTransactionIDs = nil
+		v.Request.TransactionDate = ""
+		v.Request.BusinessDate = ""
+		v.Request.LatestClosingDate = ""
+		if reasons := Admit(&v, opts); !containsSubstring(reasons, scoped) {
+			t.Fatalf("a vector claiming ledger.opening.balance.and.closure for a shape OUTSIDE the "+
+				"four this store observed was ADMITTED, or refused for another reason: %v", reasons)
+		}
+	})
+
+	t.Run("an ACCEPTANCE at either DATE boundary REFUSES", func(t *testing.T) {
+		// T306, THE FOURTH SHAPE AS IT STANDS AFTER T305. LDG-05 made the
+		// ACCEPTING side of the defineOpeningBalance COMMAND an observed shape, so
+		// that arm rightly takes either expect.kind. The accepting side of the two
+		// DATE boundaries is a different claim, and the reason it is still refused
+		// CHANGED while T306 was in flight — say the current reason, not the old one:
+		//
+		//   NOT "it is uncaptured". T327 fired backlog B-1 and B-2 and BOTH
+		//   RETURNED HTTP 200 [.softhouse/capture/t327-closure-accepting-side/
+		//   throwaway/out/B1-ACCEPT-06-entry-one-day-after-closing-date.status,
+		//   B2-ACCEPT-01-entry-on-business-date.status]. The bytes exist.
+		//
+		//   BUT NOTHING WAS PROMOTED. No vector in the store carries them, and a
+		//   `capabilities_required` entry asserts coverage by VECTORS, not by the
+		//   contents of a capture directory. A vector recording an entry ACCEPTED
+		//   on or before a closing date, or ACCEPTED with a future transaction
+		//   date, still describes an observation THIS STORE cannot grade.
+		//
+		// The tripwire arm below is what notices when that stops being true.
+		//
+		// THE ARMS CARRY THE REQUEST FACTS OF EACH BOUNDARY, which is the whole
+		// point: if the date arms ever stop requiring a refusal expectation, these
+		// two go red. Both dates are strict zero-padded yyyy-MM-dd, which is what
+		// the byte-wise comparison in isoBefore/isoAfter needs.
+		for _, arm := range []struct {
+			name                   string
+			txn, business, closing string
+		}{
+			{"pre-closure boundary, transaction ON the closing date", "2026-01-31", "2026-08-23", "2026-01-31"},
+			{"future-dated, one day after the business date", "2026-08-24", "2026-08-23", ""},
+		} {
+			v := *base
+			v.Request.Command = ""
+			v.Request.ContraGLAccountID = 0
+			v.Request.PostedNonContraTransactionIDs = nil
+			v.Request.TransactionDate = arm.txn
+			v.Request.BusinessDate = arm.business
+			v.Request.LatestClosingDate = arm.closing
+			v.Class = ClassParity
+			v.Expect.Kind = "journal-entry"
+			v.Expect.HTTPStatus = 200
+			v.Expect.Refusal = Refusal{}
+			if reasons := Admit(&v, opts); !containsSubstring(reasons, scoped) {
+				t.Fatalf("an ACCEPTANCE claiming ledger.opening.balance.and.closure at the %s was "+
+					"ADMITTED by the capability gate. T327 captured both accepting sides (HTTP 200) "+
+					"but NO VECTOR carries them, so this store cannot grade the claim: %v",
+					arm.name, reasons)
+			}
+		}
+	})
+
+	t.Run("the date arms' precondition is justified by the STORE, and says so out loud",
+		func(t *testing.T) {
+			// T306 TRIPWIRE, added at the merge that brought T327 in. The date arms
+			// keep `expect.kind == "refusal"` for ONE reason and it is a fact about
+			// the STORE: no committed vector is an acceptance at either boundary.
+			// That reason used to be "the bytes do not exist" and T327 falsified it
+			// in the same fire — the bytes exist and returned HTTP 200 twice.
+			//
+			// SO THIS ARM PINS THE REASON THAT IS ACTUALLY LOAD-BEARING. The moment a
+			// promoting task (T328) lifts B-1/B-2 into vectors, this goes RED and
+			// names the edit, INSTEAD of the promoter finding the door already open
+			// -- which is the exact failure T296 wrote the original rule to prevent
+			// and the exact failure T295 then walked into.
+			//
+			// IT IS NOT A DUPLICATE OF THE ARM ABOVE. That one mutates a vector and
+			// asks whether the RULE refuses; this one reads the committed store and
+			// asks whether the rule's stated REASON is still true. A rule can be
+			// right for a reason that has expired (P-11), and the expired reason is
+			// what the next contributor acts on.
+			for _, c := range vs {
+				var names bool
+				for _, n := range c.CapabilitiesRequired {
+					if n == "ledger.opening.balance.and.closure" {
+						names = true
+					}
+				}
+				if !names || c.Expect.Kind == "refusal" {
+					continue
+				}
+				preClosure := c.Request.LatestClosingDate != "" && c.Request.TransactionDate != "" &&
+					!isoBefore(c.Request.LatestClosingDate, c.Request.TransactionDate)
+				futureDated := c.Request.TransactionDate != "" && c.Request.BusinessDate != "" &&
+					isoAfter(c.Request.TransactionDate, c.Request.BusinessDate)
+				if preClosure || futureDated {
+					t.Fatalf("vector %q is an ACCEPTANCE at a date boundary claiming "+
+						"ledger.opening.balance.and.closure (pre_closure=%v future_dated=%v). The "+
+						"date arms in admit.go still require expect.kind == \"refusal\", so this "+
+						"vector is INADMISSIBLE and the bar is exit 2. PROMOTING T327's B-1/B-2 "+
+						"BYTES AND WIDENING THE DATE ARMS ARE ONE DIFF, NOT TWO -- drop the "+
+						"precondition from preClosureInputs/futureDatedInputs in the same change, "+
+						"and re-run the mutant census (MUTANT W in "+
+						".softhouse/reviews/T306/probe/mutation-arms.sh becomes the correct form)",
+						c.CaseID, preClosure, futureDated)
+				}
+			}
+		})
+
+	t.Run("the claim is NOT bought by declaring a refusal CODE", func(t *testing.T) {
+		// T306-F-2. Two of the driver's three arms read expect.refusal.code, which
+		// is the ANSWER THE VECTOR CLAIMS, not a fact about the request the oracle
+		// was given. Here the code is declared and the request-side facts that
+		// decide it are ABSENT: a code-keyed gate stays silent -- measured, it
+		// contributed no reason at all -- and a request-keyed gate speaks.
+		for _, code := range []string{codeAccountingClosed, codeFutureDate} {
+			v := *base
+			v.Request.Command = ""
+			v.Request.ContraGLAccountID = 0
+			v.Request.PostedNonContraTransactionIDs = nil
+			v.Request.TransactionDate = ""
+			v.Request.BusinessDate = ""
+			v.Request.LatestClosingDate = ""
+			v.Expect.Refusal.Code = code
+			if reasons := Admit(&v, opts); !containsSubstring(reasons, scoped) {
+				t.Fatalf("declaring expect.refusal.code %q bought the capability claim with no "+
+					"request-side fact behind it: %v", code, reasons)
+			}
+		}
+	})
+
+	t.Run("EVERY committed claimant is still ADMITTED, and LDG-05 by name", func(t *testing.T) {
+		// THE ANTI-VACUITY CONTROL, and it is the arm T320 required [T320-4]. A
+		// rule that refused everything would pass all three arms above. The four
+		// committed vectors that claim this row must contribute NO capability-gate
+		// reason, and the ACCEPTING one must be named explicitly: T306's first
+		// pass put `Kind == "refusal"` in front of all three arms and made LDG-05
+		// INADMISSIBLE, which withdrew the ONLY kill of
+		// `ledger-wrong-openingbalance-always-refusing` -- T296 arm A, a port that
+		// refuses every opening balance and passed 4 of 4 graded ledger parity
+		// vectors without it [.softhouse/reviews/T306/out/20-mutant-survival.txt].
+		var claimants, sawAccepting int
+		for _, c := range vs {
+			var names bool
+			for _, n := range c.CapabilitiesRequired {
+				if n == "ledger.opening.balance.and.closure" {
+					names = true
+				}
+			}
+			if !names {
+				continue
+			}
+			claimants++
+			if c.Expect.Kind != "refusal" {
+				sawAccepting++
+			}
+			if reasons := Admit(c, opts); containsSubstring(reasons, scoped) {
+				t.Fatalf("committed vector %s claims this row and the capability gate REFUSES it. "+
+					"The scope may only refuse shapes this store has NOT observed: %v",
+					c.CaseID, reasons)
+			}
+		}
+		if claimants != 4 {
+			t.Fatalf("%d committed vectors claim ledger.opening.balance.and.closure; the observed "+
+				"shapes are LDG-REFUSE-03 (:717), LDG-05 (its accepting side, :812), LDG-REFUSE-04 "+
+				"(:636) and LDG-REFUSE-05 (:629-631). A different number means the store moved and "+
+				"this control no longer covers what it names", claimants)
+		}
+		if sawAccepting != 1 {
+			t.Fatalf("%d ACCEPTING vectors claim this row, want exactly 1 (LDG-05). If it is 0 the "+
+				"corpus has lost the only observation that kills a port refusing every opening "+
+				"balance; if it is more than 1, a shape was promoted without widening this control",
+				sawAccepting)
+		}
+	})
+}
+
+// surplusCount pulls the COUNT out of the multiset rule's surplus sentence, so
+// an arm can assert the NUMBER rather than a spelling of it.
+var surplusCount = regexp.MustCompile(`carry amount "[^"]*" (-?\d+) time\(s\) more than twice-per-request-leg allows`)
+
+// TestOpeningBalanceLegPairingIsRedDrivable drives T305's TWO leg rules RED.
+//
+// Neither shipped with an arm that fires [T320-3]. They are the rules that make
+// LDG-05 admissible at all -- 6 expect legs for 3 request legs, paired by
+// MULTISET rather than by position -- so a relaxation of either would not show
+// up as a red bar, it would show up as a vector nobody could refuse.
+//
+//	THE LENGTH RULE. saveAllDebitOrCreditOpeningBalanceEntries persists the leg
+//	at :791 AND its contra at :796 INSIDE the per-leg loop, so an ACCEPTED
+//	opening balance stores exactly 2*len(legs) journal entries [VERIFIED:
+//	JournalEntryWritePlatformServiceJpaRepositoryImpl.java:759-797 at the pinned
+//	commit 426a23544; OB-ACCEPT-01 sent three legs and the oracle wrote six].
+//
+//	THE MULTISET RULE. :796 writes the contra with the SAME amount as its leg,
+//	so every request amount must occur EXACTLY TWICE among the expect legs.
+//
+// The mutations are made on the COMMITTED accepting vector, so the premise is
+// the real capture and not a fixture invented for the test.
+func TestOpeningBalanceLegPairingIsRedDrivable(t *testing.T) {
+	vs, opts := loadCommitted(t)
+	base := pickOpeningBalance(t, vs, false)
+
+	// THE PREMISE, CHECKED RATHER THAN ASSUMED. If a later capture changed the
+	// shape, these arms would mutate something they no longer describe.
+	if got, want := len(base.Expect.Legs), 2*len(base.Request.Legs); got != want {
+		t.Fatalf("%s carries %d expect legs for %d request legs; the accepting shape this test "+
+			"mutates is 2 expect legs per request leg", base.CaseID, got, len(base.Request.Legs))
 	}
+
+	t.Run("the COMMITTED accepting vector is admitted with NO reason at all", func(t *testing.T) {
+		// THE ANTI-VACUITY CONTROL FOR EVERY ARM BELOW, and the one that catches a
+		// relaxation as well as a tightening. Asserting "some reason appeared" is
+		// how a mutation survives: a rule that computed the WRONG expected length
+		// would still produce a reason for a mutated vector while quietly refusing
+		// the real one. This arm demands ZERO reasons on the real capture.
+		if reasons := Admit(base, opts); len(reasons) != 0 {
+			t.Fatalf("%s -- the committed ACCEPTING opening-balance capture -- is INADMISSIBLE. "+
+				"It is the only observation in this store of an accepted opening balance and the "+
+				"only vector that kills a port refusing every one of them: %v", base.CaseID, reasons)
+		}
+	})
+
+	t.Run("a leg SHORT of 2*request.legs is refused, and the rule NAMES 2*legs", func(t *testing.T) {
+		// THE NUMBER IS THE ASSERTION, not the sentence. A first draft of this arm
+		// asserted only the substring "an accepted entry stores" and a mutant that
+		// relaxed `want` from 2*len(legs) to len(legs) SURVIVED it -- the mutant
+		// still produced that sentence, for the wrong number, while making the
+		// committed LDG-05 inadmissible. Measured, then fixed
+		// [.softhouse/reviews/T306/out/30-mutation-arms.txt, MUTANT L].
+		v := *base
+		v.Expect.Legs = append([]ExpectLeg(nil), base.Expect.Legs[:len(base.Expect.Legs)-1]...)
+		want := fmt.Sprintf("an accepted entry stores %d ", 2*len(v.Request.Legs))
+		if reasons := Admit(&v, opts); !containsSubstring(reasons, want) {
+			t.Fatalf("%d expect legs for %d request legs was ADMITTED on defineOpeningBalance, or "+
+				"refused for a DIFFERENT expected length than %d. saveAllDebitOrCredit"+
+				"OpeningBalanceEntries writes the leg at :791 AND its contra at :796 inside the "+
+				"per-leg loop: %v", len(v.Expect.Legs), len(v.Request.Legs), 2*len(v.Request.Legs),
+				reasons)
+		}
+	})
+
+	t.Run("an amount carried a THIRD time is refused as a SURPLUS", func(t *testing.T) {
+		// Also exercises the length rule -- 7 legs for 3 -- so the arm asserts the
+		// MULTISET sentence specifically, not merely "some reason appeared".
+		v := *base
+		v.Expect.Legs = append(append([]ExpectLeg(nil), base.Expect.Legs...), base.Expect.Legs[0])
+		reasons := Admit(&v, opts)
+		if !containsSubstring(reasons, "more than twice-per-request-leg allows") {
+			t.Fatalf("an expect amount carried THREE times was ADMITTED by the multiset rule: %v",
+				reasons)
+		}
+		// T306, closing a T320 defect: the count in that sentence is a SURPLUS and
+		// must never be printed negative. A shortfall is the OTHER loop's sentence.
+		for _, r := range reasons {
+			if strings.Contains(r, "more than twice-per-request-leg allows") &&
+				strings.Contains(r, "-1 time(s) more") {
+				t.Fatalf("the SURPLUS message printed a NEGATIVE count: %q", r)
+			}
+		}
+	})
+
+	t.Run("an amount occurring ONCE is reported as a shortfall, not as a negative surplus",
+		func(t *testing.T) {
+			// Replace one contra leg's amount with a duplicate of another, so one
+			// request amount occurs once and another occurs three times. LENGTH is
+			// unchanged, which is what isolates the multiset rule.
+			v := *base
+			legs := append([]ExpectLeg(nil), base.Expect.Legs...)
+			legs[1].AmountMajorText = legs[0].AmountMajorText
+			// legs[1] was the contra of legs[0]; giving it legs[0]'s text leaves
+			// legs[0]'s amount at 2 and drops legs[1]'s original amount to... it had
+			// no original of its own, so mutate a DIFFERENT pair instead.
+			legs = append([]ExpectLeg(nil), base.Expect.Legs...)
+			legs[2].AmountMajorText = legs[0].AmountMajorText
+			v.Expect.Legs = legs
+			reasons := Admit(&v, opts)
+			if !containsSubstring(reasons, "occurs fewer than twice among the expect legs") {
+				t.Fatalf("a request amount occurring FEWER than twice was ADMITTED: %v", reasons)
+			}
+			// THE SIGN IS THE ASSERTION. T305's loop reported every non-zero
+			// residue through the SURPLUS sentence, so a shortfall came out as
+			// "carry amount X -1 time(s) MORE than twice-per-request-leg allows" --
+			// the same defect named twice, once backwards. A first draft of this
+			// arm asserted a SPELLING and could never fire; the mutant survived it
+			// [.softhouse/reviews/T306/out/30-mutation-arms.txt, MUTANT S].
+			for _, r := range reasons {
+				m := surplusCount.FindStringSubmatch(r)
+				if m == nil {
+					continue
+				}
+				n, err := strconv.Atoi(m[1])
+				if err != nil || n <= 0 {
+					t.Fatalf("the SURPLUS sentence reported a count of %q, which is not a positive "+
+						"surplus. A shortfall has its own sentence and must not be reported through "+
+						"this one: %q", m[1], r)
+				}
+			}
+		})
+
+	t.Run("the SURPLUS report is ORDER-STABLE across runs", func(t *testing.T) {
+		// T306, closing the second T320 defect: the surplus loop used to range over
+		// a Go MAP and append to the reason slice, so with two surplus amounts the
+		// ORDER of an inadmissibility report varied run to run. In a harness whose
+		// discipline is byte-stable transcripts that is a diff nobody can read.
+		v := *base
+		v.Expect.Legs = append(append([]ExpectLeg(nil), base.Expect.Legs...),
+			base.Expect.Legs[0], base.Expect.Legs[2])
+		first := strings.Join(Admit(&v, opts), "\n")
+		for i := 0; i < 64; i++ {
+			if got := strings.Join(Admit(&v, opts), "\n"); got != first {
+				t.Fatalf("the inadmissibility report is NOT order-stable; run %d differs:\n%s\n---\n%s",
+					i, first, got)
+			}
+		}
+		if !strings.Contains(first, "more than twice-per-request-leg allows") {
+			t.Fatalf("this arm asserts stability over a report that does not contain the surplus "+
+				"sentence, so it proves nothing: %s", first)
+		}
+	})
 }
 
 // TestOpeningBalanceRefusalPrecedesTheBalanceRule locks the ONE precedence this

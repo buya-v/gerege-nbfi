@@ -1,0 +1,85 @@
+registered wrong ledger implementations:
+  ledger-wrong-closure-boundary-exclusive
+  ledger-wrong-code-ignored
+  ledger-wrong-future-date-ignored
+  ledger-wrong-header-refusing
+  ledger-wrong-manual-permission-ignored
+  ledger-wrong-netting-totals
+  ledger-wrong-openingbalance-always-refusing
+  ledger-wrong-openingbalance-no-contra
+  ledger-wrong-openingbalance-posted-entries-ignored
+  ledger-wrong-split-drift
+  ledger-wrong-truncating
+
+==============================================================
+ARM A — THE ADJUDICATED PREDICATE, full store (this branch)
+==============================================================
+  ledger-wrong-closure-boundary-exclusive              killed          exit 1 — a captured cell disagreed
+  ledger-wrong-code-ignored                            killed          exit 1 — a captured cell disagreed
+  ledger-wrong-future-date-ignored                     killed          exit 1 — a captured cell disagreed
+  ledger-wrong-header-refusing                         killed          exit 1 — a captured cell disagreed
+  ledger-wrong-manual-permission-ignored               killed          exit 1 — a captured cell disagreed
+  ledger-wrong-netting-totals                          killed          exit 1 — a captured cell disagreed
+  ledger-wrong-openingbalance-always-refusing          killed          exit 1 — a captured cell disagreed
+  ledger-wrong-openingbalance-no-contra                killed          exit 1 — a captured cell disagreed
+  ledger-wrong-openingbalance-posted-entries-ignored   killed          exit 1 — a captured cell disagreed
+  ledger-wrong-split-drift                             killed          exit 1 — a captured cell disagreed
+  ledger-wrong-truncating                              killed          exit 1 — a captured cell disagreed
+  ---- ARM A over store 'full': KILLED BY GRADING=11  SURVIVED=0  HARNESS-REFUSED=0 ----
+
+==============================================================
+ARM N — T306's FIRST-PASS NARROWING, full store.
+        LDG-05 goes INADMISSIBLE. Read the exit codes, not a count.
+==============================================================
+  patched admit.go -> T306's FIRST-PASS narrowing
+  ledger-wrong-closure-boundary-exclusive              killed          exit 1 — a captured cell disagreed
+  ledger-wrong-code-ignored                            killed          exit 1 — a captured cell disagreed
+  ledger-wrong-future-date-ignored                     killed          exit 1 — a captured cell disagreed
+  ledger-wrong-header-refusing                         killed          exit 1 — a captured cell disagreed
+  ledger-wrong-manual-permission-ignored               killed          exit 1 — a captured cell disagreed
+  ledger-wrong-netting-totals                          killed          exit 1 — a captured cell disagreed
+  ledger-wrong-openingbalance-always-refusing          NOT A KILL      exit 2 — HARNESS REFUSED TO GRADE
+  ledger-wrong-openingbalance-no-contra                NOT A KILL      exit 2 — HARNESS REFUSED TO GRADE
+  ledger-wrong-openingbalance-posted-entries-ignored   killed          exit 1 — a captured cell disagreed
+  ledger-wrong-split-drift                             killed          exit 1 — a captured cell disagreed
+  ledger-wrong-truncating                              killed          exit 1 — a captured cell disagreed
+  ---- ARM N over store 'full': KILLED BY GRADING=9  SURVIVED=0  HARNESS-REFUSED=2 ----
+
+==============================================================
+ARM Np — the SAME first-pass narrowing, LDG-05 RETIRED.
+        One step later: the red bar is cleared by removing the
+        vector the gate refuses. Does the mutant come back?
+==============================================================
+  ledger-wrong-closure-boundary-exclusive              killed          exit 1 — a captured cell disagreed
+  ledger-wrong-code-ignored                            killed          exit 1 — a captured cell disagreed
+  ledger-wrong-future-date-ignored                     killed          exit 1 — a captured cell disagreed
+  ledger-wrong-header-refusing                         killed          exit 1 — a captured cell disagreed
+  ledger-wrong-manual-permission-ignored               killed          exit 1 — a captured cell disagreed
+  ledger-wrong-netting-totals                          killed          exit 1 — a captured cell disagreed
+  ledger-wrong-openingbalance-always-refusing          NOT A KILL      exit 2 — HARNESS REFUSED TO GRADE
+  ledger-wrong-openingbalance-no-contra                NOT A KILL      exit 2 — HARNESS REFUSED TO GRADE
+  ledger-wrong-openingbalance-posted-entries-ignored   killed          exit 1 — a captured cell disagreed
+  ledger-wrong-split-drift                             killed          exit 1 — a captured cell disagreed
+  ledger-wrong-truncating                              killed          exit 1 — a captured cell disagreed
+  ---- ARM Np over store 'no-ldg05': KILLED BY GRADING=9  SURVIVED=0  HARNESS-REFUSED=2 ----
+
+==============================================================
+CONTROL — the ADJUDICATED predicate, LDG-05 RETIRED.
+        Isolates WHICH of the two changes withdraws the kill:
+        the predicate, or the missing vector.
+==============================================================
+  ledger-wrong-closure-boundary-exclusive              killed          exit 1 — a captured cell disagreed
+  ledger-wrong-code-ignored                            killed          exit 1 — a captured cell disagreed
+  ledger-wrong-future-date-ignored                     killed          exit 1 — a captured cell disagreed
+  ledger-wrong-header-refusing                         killed          exit 1 — a captured cell disagreed
+  ledger-wrong-manual-permission-ignored               killed          exit 1 — a captured cell disagreed
+  ledger-wrong-netting-totals                          killed          exit 1 — a captured cell disagreed
+  ledger-wrong-openingbalance-always-refusing          NOT A KILL      exit 2 — HARNESS REFUSED TO GRADE
+  ledger-wrong-openingbalance-no-contra                NOT A KILL      exit 2 — HARNESS REFUSED TO GRADE
+  ledger-wrong-openingbalance-posted-entries-ignored   killed          exit 1 — a captured cell disagreed
+  ledger-wrong-split-drift                             killed          exit 1 — a captured cell disagreed
+  ledger-wrong-truncating                              killed          exit 1 — a captured cell disagreed
+  ---- ARM Ap over store 'no-ldg05': KILLED BY GRADING=9  SURVIVED=0  HARNESS-REFUSED=2 ----
+
+scratch: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t306-mutant.1eJDpYPl
+T306-RESTORE: before=efb69632c005 after=efb69632c005 restored=1
