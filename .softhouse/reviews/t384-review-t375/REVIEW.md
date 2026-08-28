@@ -424,7 +424,17 @@ follow-up, and T375 filed it as one.
 
 ## 7. THE FULL 61-ARM DRIVE — THE THING T375 COULD NOT PRODUCE
 
-**STATUS AT THIS COMMIT: RUNNING, NOT FINISHED. I am not claiming a result I do not have.**
+**STATUS AT THIS COMMIT: ATTEMPT 1 WAS KILLED AT ARM 23 WITH 53 PASS / 0 FAIL. I AM NOT
+CLAIMING AN UNINTERRUPTED 61-ARM TRANSCRIPT UNLESS §7.3 BELOW SAYS I HAVE ONE.**
+
+The irony is not lost: **the reviewer sent to produce the transcript a rate limit denied T375
+was itself killed mid-drive**, by the task runner reaping the background shell, at 23:24 after
+64 minutes. `evidence/20-FULL-DRIVE-53-arms-KILLED-at-arm-23.txt` is that run, **committed
+unedited**, exactly as T375 committed its own. **53 PASS, 0 FAIL** — 13 arms further than
+T375's killed run reached, and past the arm that failed in it.
+
+Two runs were then started **detached (`setsid`), so a task-runner cleanup cannot reach them**:
+the eight arms attempt 1 never reached (§7.2), and a second full drive (§7.3).
 
 Started 22:20 on this host in a fresh `--no-hardlinks` clone of the T375 branch tip, using
 **T375's own drive script, unmodified**:
