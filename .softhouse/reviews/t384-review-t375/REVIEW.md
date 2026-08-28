@@ -438,9 +438,23 @@ session and the verdict above stands on §§1–6, which do not depend on it.** 
 establish independently of the drive: the four fail-opens close, both healthy controls stay
 green, arm 32 can fail, the transcript is unedited, the merge is clean and its bar is exit 0.
 
-Progress at the last checkpoint before this commit: **8 arms, 8 PASS, 0 FAIL**, all in ARM
-SET 1 (T323's fifteen, re-run UNMODIFIED against T375's `conformance.sh`) — which is already
-the first half of T375's strongest healthy-control claim.
+### 7.1 ARM SET 1 — CONFIRMED, AND THIS IS THE STRONGEST HEALTHY-CONTROL EVIDENCE ON THE BRANCH
+
+**T375's claim that arm set 1 re-runs UNMODIFIED and passes is TRUE, and I watched it happen
+in this drive rather than reading its transcript:**
+
+    T323 RED DRIVE: 15 passed, 0 failed.
+    >>> ARM SET 1: T323 DRIVE PASSED in full.
+    T358 RED DRIVE: 14 passed, 0 failed.  (arm set 1 counts as one.)
+    >>> ARM SET 1: T358 DRIVE PASSED in full.
+
+**All 28 arms** written by two earlier generations, against two earlier harnesses, by other
+authors — including their own green controls and, decisively, their `population=… 
+invoked-by-nothing=N` **substring markers**. **Appending `symlink-members=N` at the END of the
+census line silently retuned nothing.** That placement decision is load-bearing and T375 says
+so; this is the measurement that backs it. It is also, per the drive script's own rule, a
+result that cannot be manufactured: **a missing predecessor drive is a REFUSAL here, not a
+skip**, so "arm set 1 passed" cannot be produced by arm set 1 failing to run.
 
 ---
 
