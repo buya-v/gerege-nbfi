@@ -1,0 +1,29 @@
+T409 APPEND VERIFICATION (bytes, not lines)
+
+  main   PROBES.tsv        7336 bytes  sha256 22fdaaa7f613a278cb4d632fb08202abc07994c459e16022a298e934c27ac358
+  T390   PROBES.tsv       17360 bytes  sha256 fc0bf8e2375f7e82316c9288e467b6f1ff9e82f57f06286bacdd0ab46522e205
+  T388   append source     5211 bytes  sha256 89b9ded0d45805562a318e437c4cfe336ace1778e4e7c612041e3402436520d8   [/tmp/t409/PROBES-APPEND-T388.tsv]
+  same path at tip         5211 bytes  sha256 89b9ded0d45805562a318e437c4cfe336ace1778e4e7c612041e3402436520d8   [/tmp/t409/PROBES-APPEND-T388-tip.tsv]
+
+  [1] in-tree source == same path at branch tip 977e37af : SAME
+      T390's claimed digest 89b9ded0d45805562a318e437c4cfe336ace1778e4e7c612041e3402436520d8
+      measured             89b9ded0d45805562a318e437c4cfe336ace1778e4e7c612041e3402436520d8  -> MATCH
+
+  [2] main's PROBES.tsv is a byte PREFIX of T390's        : YES
+      appended tail: 10024 bytes
+
+  [3] T388 source occurs CONTIGUOUSLY in the tail         : YES at offset 1
+
+  [4] bytes BEFORE the verbatim block: 1
+      b'\n'
+  [5] bytes AFTER  the verbatim block: 4812  (T390's own scheduler block)
+      registry rows in the after-block: 3
+        txn	L32	SCHEDULER-JOB-11	20260828-140005	NOT FIRED BY ANY TASK. Scheduled job 11 "Add Accrual Transactions", job_run_his
+        txn	L33	SCHEDULER-JOB-11	20260828-140005	same job, same run 12721. Six legs on loan 8, entry_date 2026-06-15, loan trans
+        txn	L34	SCHEDULER-JOB-11	20260828-140005	same job, same run 12721. Six legs on loan 8, entry_date 2026-07-15, loan trans
+
+  [6] every txn/cmd row of the final registry has >= 5 tab-separated fields
+      short/malformed rows: 0
+
+VERDICT: APPEND IS VERBATIM AND NOTHING ABOVE IT MOVED
+exit=0
