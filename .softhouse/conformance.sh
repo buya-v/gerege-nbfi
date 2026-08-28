@@ -4473,7 +4473,7 @@ gate_exemption_census() {
 #     promote a vector no implementation could fail independently. T307 added the
 #     fourth cell as a SELECTOR (expect.refusal.arg_echo), which is what makes
 #     A2-02's bytes gradeable without pinning anything to a calendar.
-EXEMPTION_PIN_LEDGER_WRONGIMPLS=13
+EXEMPTION_PIN_LEDGER_WRONGIMPLS=14
 
 gate_wrong_ledger_impls_die() {
   local bin="$1" probe="$2"
