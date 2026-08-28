@@ -1,0 +1,30 @@
+T409 DRIVE of T390's capsql.sh -- 2026-08-28T18:47:32Z
+subject: /tmp/t409/capsql-drive/capsql.sh  (extracted verbatim from softhouse/T390-baseline-attribution)
+subject sha256: 045327c94f32764aae87a1812b5a3349513803c0ffbfb36184b8c5ec92a9d8ba
+
+  ok   RED   arm: bad statement -> rc=3 (non-zero, fails closed)
+  ok   GREEN control: good statement -> rc=0
+
+--- RED transcript ---
+-- T390 red-bad-column -- 2026-08-28T18:47:33Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: a6206dd45e6b3961afb07e54cfbaa235f15bfbcd8dde6f64ec8632c29505938b
+--
+psql:<stdin>:1: ERROR:  column "no_such_column" does not exist
+LINE 1: SELECT no_such_column FROM acc_gl_journal_entry LIMIT 1;
+               ^
+-- psql rc=3
+--- GREEN transcript ---
+-- T390 green-control -- 2026-08-28T18:47:33Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: 8ad7c4dc7e47f08307b3e0f0dc40b6a8ebfe45a33f3318efe23f7c6f7c02b664
+--
+ ok 
+----
+  1
+(1 row)
+
+-- psql rc=0
+
+DRIVE VERDICT: capsql.sh fails closed on a failed statement (exit 0).
+exit=0

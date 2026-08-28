@@ -1,0 +1,23 @@
+-- T409 r18-final-state -- 2026-08-28T18:45:53Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: d7edf0b92943f9fd3f8a577f261bcf761e311ebc8b5a51ec9d559ecfd3b709b1
+--
+Pager usage is off.
+                      k                       |               v               
+----------------------------------------------+-------------------------------
+ acc_gl_journal_entry rows/maxid              | 109/113
+ acc_gl_journal_entry distinct transaction_id | 38
+ acc_gl_closure rows/maxid                    | 0/null
+ m_portfolio_command_source rows/maxid        | 379/379
+ m_loan rows                                  | 8
+ m_office rows                                | 1
+ m_loan_transaction rows/maxid                | 24/34
+ acc_gl_account rows/maxid                    | 36/47
+ THE PROMOTED PAIR gl 18 legs                 | 0
+ THE PROMOTED PAIR gl 22 legs                 | 0
+ max created_on_utc on the ledger             | 2026-08-28 16:01:00.117772+00
+ max last_modified_on_utc on the ledger       | 2026-08-28 16:01:00.117772+00
+ job_run_history rows/maxid                   | 12926/12926
+(13 rows)
+
+-- psql rc=0
