@@ -4,7 +4,7 @@
   "pid": 75306,
   "fire": "20260828-140005",
   "started_at": "2026-08-28T06:00:21Z",
-  "heartbeat": "2026-08-28T17:00:00Z",
+  "heartbeat": "2026-08-28T17:05:00Z",
   "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
   "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260828-140005.log",
   "oracle": "REACHABLE at https://localhost:8443/fineract-provider/actuator/health",
@@ -26,5 +26,6 @@
   "merge_hazard": "conformance.sh is contended by TWO dispatched tasks. T404 holds the registration-guard regions; T391 may bump pinned counts ONLY, and BY NAME. Merge them SERIALLY into a scratch worktree, run the bar on the MERGE RESULT, then main. Never apply a pin bump by line number -- iteration 3 measured a 546-line shift between two branches on EXEMPTION_PIN_LEDGER_WRONGIMPLS.",
   "operational_note": "T383 measured, and every driver should know: A LIVE FIRE EXPORTS FIRE_SNAPSHOT_OF, AND FIRE_NO_SNAPSHOT=1 DOES NOT OVERRIDE IT. Its first --probe inherited it and announced the REAL repo copy as its origin. Unset the three before probing the wrapper from inside a fire.",
   "fire_elapsed_note": "~11.0h elapsed at iteration 4 dispatch, past the 9.52h longest-fire record. The lock is MINE (fire id and started_at match this fire); STEP 0 arm \"never judge your own\".",
-  "driver_error": "CARRIED FORWARD from iteration 3, unresolved as a mechanism: T393 was recorded as dispatched and NEVER SPAWNED, undetected for 2h20m. Push-before-spawn protects against the record claiming LESS than reality and does nothing about the opposite. Iteration 4 therefore VERIFIES every branch exists after the wave and before any close."
+  "driver_error": "CARRIED FORWARD from iteration 3, unresolved as a mechanism: T393 was recorded as dispatched and NEVER SPAWNED, undetected for 2h20m. Push-before-spawn protects against the record claiming LESS than reality and does nothing about the opposite. Iteration 4 therefore VERIFIES every branch exists after the wave and before any close.",
+  "dispatch_verified": "ALL TEN WORKTREES CONFIRMED PRESENT after spawn, by name, against `git worktree list` -- not asserted. This is the check iteration 3 did not make: it recorded T393 as dispatched and never called the Agent tool, and nothing detected it for 2h20m. A dispatch record is only true if the dispatch happened; push-before-spawn guards the record claiming LESS than reality, this guards the opposite. Ten agent ids, ten worktrees, zero misses."
 }
