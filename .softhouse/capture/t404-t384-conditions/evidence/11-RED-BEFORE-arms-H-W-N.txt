@@ -1,0 +1,4 @@
+=== T404 RED/GREEN DRIVE -- src=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a2cd5e8ea5e842dba ref=5e5c3a61 arms=T404-H-TWO-symlink-members-CENSUS-UNDERCOUNTS T404-W-AMBIGUOUS-WITNESS-already-REFUSED T404-N-CQUOTED-member-path-WRONG-DIAGNOSIS ===
+
+MODE: the guard at 5e5c3a61 is UNFIXED (detected from its own blob, not asserted)
+
