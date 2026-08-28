@@ -89,3 +89,26 @@ Sole writer of `.softhouse/vectors/`, `.softhouse/conformance.sh`, `dead-path-fr
 
 **Bar on `main` right now:** exit 0, probe PRESENT and `up`, 46 parity vectors / 7884 cells, LEDGER 5/5/29,
 11/11 wrong impls dead, dead-path frontier 109 == pinned, corpus 1214.
+
+---
+
+## BATCH 4 — **6 WORKERS DISPATCHED. LIVE.** Record pushed before the first spawn.
+
+| Task | Branch | Owns (sole writer) |
+|---|---|---|
+| **T278** | `softhouse/T278-review-t277` | `.softhouse/reviews/t278-review-t277/` — **independent review of T277, already merged** |
+| **T331** | `softhouse/T331-wire-pnumber-checker` | `.softhouse/conformance.sh`, `dead-path-frontier.pin` |
+| **T322** | `softhouse/T322-admit-widening` | `nexus/…/admit.go`, `.softhouse/vectors/capabilities-ledger.json` |
+| **T145** | `softhouse/T145-analysis-float` | `.softhouse/capture/t145-analysis-float/` + non-evidence analysis scripts |
+| **T321** | `softhouse/T321-variable-paths-and-resets` | `.softhouse/capture/t321-*`, `.softhouse/capture/t316-dead-path-guards/` |
+| **T301** | `softhouse/T301-wrapper-self-modification` | `.softhouse/bin/fire-program.sh` |
+
+**T145's `files_hint` says `.softhouse/capture/` and that was NOT taken literally** — it is scoped to its own
+dir plus analysis scripts that produced no committed evidence, with every other worker's dir named forbidden.
+
+**MERGED THIS FIRE (8):** T306 `3da08fbb` · T272 `16c59715` · T329 `61c0f382` · T277 `e8374743` ·
+T326 `6c3d0787` · T330 `fc104776` · T325 `e590b865` · T282 `35a92f30` · T328 `817d2b53`.
+
+**Bar on `main`:** exit 0, probe **PRESENT** and `up`, 46 parity vectors / 7884 cells, LEDGER parity **7**,
+oracle-refusal 5, money cells **39**, **12/12** wrong ledger implementations DIED, dead-path frontier
+**109 == pinned**, corpus 1237.
