@@ -4619,9 +4619,9 @@
       "dependencies": [
         "T280"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Premise REFUTED by T280's F-C before dispatch -- the hook cannot refuse on /usr/bin/git 2.50.1, only warn. Task reframed from 'install it' to 'decide what mechanism is available and worth having'. This is why it was gated on T280 rather than dispatched with batch 1. | DISPATCHED fire 20260828-080001 iter 2 BATCH 2. Dispatch record pushed BEFORE `git worktree add`.",
+      "note": "COMPLETE on branch f86c2e4a, AWAITING INDEPENDENT REVIEW (T347). Scope clean (18 files; fire-program.sh NOT touched as granted). Driver verified independently that .git/hooks/reference-transaction is T312's genuine guard and not a leftover probe wrapper -- T336's 'live repo byte-identical' claim HOLDS. *** F-C REPRODUCED AND THEN SUPERSEDED BY SOMETHING BIGGER: THE AGENT HARNESS CREATES WORKER WORKTREES WITHOUT RUNNING GIT HOOKS AT ALL. Measured with a control -- both hooks fired for ordinary worker git commands at 12:01:38 and 12:03:18, and the harness spawn at 12:03:00 sits between those log lines and wrote nothing; core.hooksPath unset; git demonstrably ran (real reflog). So the hook does not merely fail to refuse, IT DOES NOT RUN -- which retires the entire T279/T336 hook approach. *** Chose (c) detector, rejected (a) on FACT not judgement (its premise 'a warning lands in the worker's output' is false -- nothing lands), rejected (b) after FINDING a hook that genuinely can veto (reference-transaction in `prepared` aborts worktree add rc 255, no branch, no directory) which is useless because the harness never invokes it, rejected (d) narrowly. Installed NO git hook. *** OPEN QUESTION RESOLVED: at hook time HEAD is worktree-agent-<id> and the worktree->task mapping is recoverable only AFTER THE FACT, so no spawn-time hook could ever have checked it. Successors: T348, T349, and SKILL.md corrections folded into T343.",
       "branch": "softhouse/T336-post-checkout-decision"
     },
     {
@@ -4737,15 +4737,15 @@
       "dependencies": [
         "T280"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Filed from T280's F-A, fire 20260828-080001 iter 2. | DISPATCHED fire 20260828-080001 iter 2 BATCH 2. Dispatch record pushed BEFORE `git worktree add`.",
+      "note": "COMPLETE on branch d870db1d, AWAITING INDEPENDENT REVIEW (T346). Scope clean (23 files, fire-program.sh + its own capture dir; conformance.sh and the pin NOT touched, as granted). *** THE CENSUS FOUND 7 FAIL-OPENS, NOT 1, plus 2 fail-SHUT defects nobody had recorded (arm 2 could not reclaim a hard-killed fire's lock when `pid` was the last key or separators were compact -- the lock would sit for 24h). It replaced string surgery in all four field reads with python3 + json.load, typed, refusing duplicate keys, at 0.42s per fire start. The decisive argument was NOT tidiness: ready-tasks.py reads the SAME lock with a real parser and REFUSES what these readers called FREE -- one program, one file, opposite polarity, which is the P-85 shape STEP 0 exists to prevent. *** IT CORRECTED T280: 'adding {} does not compile' is wrong -- it PARSES (zsh -n rc 0) and fails at RUNTIME with `bad pattern`, so the natural syntax check waves it through. *** AND IT CAUGHT MAIN RED (T316 dead-path guard, caused by the driver's own T280 merge), verified it reproduced on a pristine clone of its branch base, and correctly declined to fix it as out of grant. *** ITS SHARPEST FINDING: the 192-state driver reported 0 disagreements BEFORE, with all seven fail-opens live -- because that driver SUPPLIES the signals and never runs a reader. Its PASS was never a statement about this code.",
       "branch": "softhouse/T342-releasedat-failopen"
     },
     {
       "id": "T343",
       "title": "F-B: the seven lock arms partition only inside rules.py, and ONLY BY CONSTRUCTION — the shipped prose multi-matches 36 states and the shipped wrapper is first-match-wins",
-      "description": "RAISED BY T280 (merged 346b7a1d) as F-B, BLOCKING, and it is the finding the driver's own brief asked for and did not expect to get. The brief said: *if the arms truly partition, ordering is irrelevant — so if you find a state where ordering DOES change the answer, the partition claim is false.* **T280 found it.**\n\nTHE TWO MEASUREMENTS. (1) Transcribing the SHIPPED PROSE of STEP 0 literally, under the same discipline `rules.py` states for itself, yields **36 multi-match states and 33 opposite-verdict states** — e.g. `{released_at set, tip <6h}` matches arm 1 (FREE) and arm 4 (HELD) with no textual tiebreak. (2) The SHIPPED WRAPPER is first-match-wins: T280 built a copy with **arms 3 and 4 transposed and nothing else changed**, and **3 of 192 verdicts flip** — including the exact 105 h-lock / 2.99 h-tip case that arm 3 was added to bound (`TAKE-ceiling` becomes `HELD-live`). The partition holds only in `rules.py:NEW_ARMS`, where N6 is defined as the negation of N0–N5 and N2–N5 carry exclusion prefixes the transcription installed. **The proof proved a property of the prover.**\n\nWHY THIS IS NOT PEDANTRY. STEP 0 says, in bold, that the arms are *'mutually exclusive, not merely first-match-wins'*, and it gives a REASON: *'a rule set whose answer depends on evaluation order is a rule set two orchestrators can read two ways, and that is the P-85 shape.'* If the claim is false, the stated protection against P-85 is not there. Two orchestrators CAN read it two ways.\n\nYOUR JOB IS THE DECISION, AND IT IS YOURS TO MAKE (CLAUDE.md 'Answering gates' — this is ENGINEERING, decide it and record the reasoning). There are two honest repairs and they are not equally good; argue for one:\n  (A) **MAKE THE ARMS ACTUALLY PARTITION.** Write the exclusion conditions into the shipped prose and the shipped `lock_decide()` so every arm is self-guarding and order genuinely cannot matter. Cost: the arms get longer and harder to read, and a human following them by hand is more likely to slip.\n  (B) **STATE THAT IT IS ORDERED, AND MAKE THE ORDER LOAD-BEARING AND EXPLICIT.** Delete the mutual-exclusivity claim, number the arms as a decision LIST evaluated top to bottom, and justify each arm's POSITION rather than pretending position is irrelevant. Cost: 'read them in order' is a discipline, and this program's whole recorded history is that disciplines without mechanism decay (P-45).\nWhichever you choose, the acceptance test is the same and it is not negotiable: **transposing any two arms must either change nothing (A), or change something the document PREDICTS IN ADVANCE (B).** Drive it — do not assert it.\n\nTHREE FILES MUST AGREE WHEN YOU ARE DONE, and today they do not: `.claude/skills/softhouse-program/SKILL.md` STEP 0 (the prose), `.softhouse/bin/fire-program.sh` `lock_decide()` (the wrapper), and `.softhouse/capture/t279-lock-partition/rules.py` (the prover). **Re-run the 192-state driver and report the real disagreement count**, before and after. If `rules.py` has to change, note that it produced committed evidence and T114 applies: supersede with a scratch copy, do not edit in place.\n\nALSO IN SCOPE, because T280 recorded them as PRE-EXISTING rather than T279's: `heartbeat` is written once and never refreshed although SKILL.md describes it as refreshed — either refresh it or delete the claim, and note that STEP 0 already says heartbeat appears in NO arm, so deleting the claim is defensible; and **arm 5 will take a lock whose `pid_state` is `alive_here`**, which deserves either a fix or an explicit written reason.\n\nSCOPE: `.claude/skills/softhouse-program/SKILL.md`, `.softhouse/bin/fire-program.sh`, `.softhouse/capture/t343-arm-partition/`. **SERIALISED BEHIND T342**, which holds `fire-program.sh` first for a one-line fail-open fix — start from its branch, not from main.",
+      "description": "RAISED BY T280 (merged 346b7a1d) as F-B, BLOCKING, and it is the finding the driver's own brief asked for and did not expect to get. The brief said: *if the arms truly partition, ordering is irrelevant — so if you find a state where ordering DOES change the answer, the partition claim is false.* **T280 found it.**\n\nTHE TWO MEASUREMENTS. (1) Transcribing the SHIPPED PROSE of STEP 0 literally, under the same discipline `rules.py` states for itself, yields **36 multi-match states and 33 opposite-verdict states** — e.g. `{released_at set, tip <6h}` matches arm 1 (FREE) and arm 4 (HELD) with no textual tiebreak. (2) The SHIPPED WRAPPER is first-match-wins: T280 built a copy with **arms 3 and 4 transposed and nothing else changed**, and **3 of 192 verdicts flip** — including the exact 105 h-lock / 2.99 h-tip case that arm 3 was added to bound (`TAKE-ceiling` becomes `HELD-live`). The partition holds only in `rules.py:NEW_ARMS`, where N6 is defined as the negation of N0–N5 and N2–N5 carry exclusion prefixes the transcription installed. **The proof proved a property of the prover.**\n\nWHY THIS IS NOT PEDANTRY. STEP 0 says, in bold, that the arms are *'mutually exclusive, not merely first-match-wins'*, and it gives a REASON: *'a rule set whose answer depends on evaluation order is a rule set two orchestrators can read two ways, and that is the P-85 shape.'* If the claim is false, the stated protection against P-85 is not there. Two orchestrators CAN read it two ways.\n\nYOUR JOB IS THE DECISION, AND IT IS YOURS TO MAKE (CLAUDE.md 'Answering gates' — this is ENGINEERING, decide it and record the reasoning). There are two honest repairs and they are not equally good; argue for one:\n  (A) **MAKE THE ARMS ACTUALLY PARTITION.** Write the exclusion conditions into the shipped prose and the shipped `lock_decide()` so every arm is self-guarding and order genuinely cannot matter. Cost: the arms get longer and harder to read, and a human following them by hand is more likely to slip.\n  (B) **STATE THAT IT IS ORDERED, AND MAKE THE ORDER LOAD-BEARING AND EXPLICIT.** Delete the mutual-exclusivity claim, number the arms as a decision LIST evaluated top to bottom, and justify each arm's POSITION rather than pretending position is irrelevant. Cost: 'read them in order' is a discipline, and this program's whole recorded history is that disciplines without mechanism decay (P-45).\nWhichever you choose, the acceptance test is the same and it is not negotiable: **transposing any two arms must either change nothing (A), or change something the document PREDICTS IN ADVANCE (B).** Drive it — do not assert it.\n\nTHREE FILES MUST AGREE WHEN YOU ARE DONE, and today they do not: `.claude/skills/softhouse-program/SKILL.md` STEP 0 (the prose), `.softhouse/bin/fire-program.sh` `lock_decide()` (the wrapper), and `.softhouse/capture/t279-lock-partition/rules.py` (the prover). **Re-run the 192-state driver and report the real disagreement count**, before and after. If `rules.py` has to change, note that it produced committed evidence and T114 applies: supersede with a scratch copy, do not edit in place.\n\nALSO IN SCOPE, because T280 recorded them as PRE-EXISTING rather than T279's: `heartbeat` is written once and never refreshed although SKILL.md describes it as refreshed — either refresh it or delete the claim, and note that STEP 0 already says heartbeat appears in NO arm, so deleting the claim is defensible; and **arm 5 will take a lock whose `pid_state` is `alive_here`**, which deserves either a fix or an explicit written reason.\n\nSCOPE: `.claude/skills/softhouse-program/SKILL.md`, `.softhouse/bin/fire-program.sh`, `.softhouse/capture/t343-arm-partition/`. **SERIALISED BEHIND T342**, which holds `fire-program.sh` first for a one-line fail-open fix — start from its branch, not from main.\n\n*** ADDED AFTER FILING, FROM T336 (branch f86c2e4a) — THIS IS NOW THE MOST IMPORTANT PART OF YOUR SKILL.md WORK. ***\n\nT336 MEASURED that **the agent harness creates worker worktrees WITHOUT RUNNING GIT HOOKS AT ALL** — with a control that makes it a measurement rather than an absence: both an always-exit-0 `post-checkout` and a wrapper around T312's `reference-transaction` fired for ordinary worker git commands at 12:01:38 and 12:03:18, and the harness spawn at 12:03:00 sits between those two log lines and wrote nothing. `core.hooksPath` is unset; git demonstrably ran (real `branch: Created from origin/main` reflog).\n\n**CONSEQUENCE FOR THE TEXT YOU OWN.** STEP 0's push-before-spawn paragraph says the enforcing hook 'is built and driven RED/GREEN … and it is not installed', i.e. it presents installation as the remaining step. **That is now known to be false — installing it would change nothing, because it would never fire.** T279's hook header asserts the same non-existent capability. **Correct both.** Say plainly that push-before-spawn is a CONVENTION with no mechanical backing on the spawn route, and name what does exist (T336's after-the-fact detector at `.softhouse/hooks/push-before-spawn-audit.py`) without describing a detector as enforcement. Do not soften this: a document that claims a guard it does not have is the exact defect P-45 names.",
       "agent_role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -4753,7 +4753,8 @@
       "files_hint": [
         ".claude/skills/softhouse-program/SKILL.md",
         ".softhouse/bin/fire-program.sh",
-        ".softhouse/capture/t343-arm-partition/"
+        ".softhouse/capture/t343-arm-partition/",
+        ".softhouse/capture/t279-lock-partition/post-checkout"
       ],
       "context": "harness-integrity",
       "dependencies": [
@@ -4807,6 +4808,89 @@
       "status": "pending",
       "attempts": 0,
       "note": "Filed from T258's stop-and-report, fire 20260828-080001 iter 2. The pin patch MUST NOT be applied alone."
+    },
+    {
+      "id": "T348",
+      "title": "Wire T336's push-before-spawn detector into fire-program.sh BEFORE the prune sweep — after the sweep it is blind by construction",
+      "description": "RAISED BY T336 (branch f86c2e4a) AND IT IS A PLACEMENT FINDING, not a wiring chore. Getting the line right and the POSITION wrong produces a detector that reports clean forever.\n\n**THE FACT THAT DECIDES THE POSITION.** T336's audit reads each worker worktree's own `logs/HEAD` to recover the worktree->task mapping — that mapping is not available at spawn time and is recoverable only after the fact. **The exit protocol's prune sweep DESTROYS those worktrees.** So the audit run after the sweep cannot see anything: T336 states that **it cannot see the violation this very fire committed**, because the sweep had already removed the evidence. A detector wired after the sweep is not a weak guard, it is a guard that is blind BY CONSTRUCTION and will report clean forever — P-45 with a green transcript, which is worse than no detector at all.\n\nT336 named the site: **`.softhouse/bin/fire-program.sh` line 2126, BEFORE the sweep.** **Verify 2126 is still the right line at your commit** — T342 has just rewritten four field readers in that file and the line numbers have moved. Do not paste a number; find the sweep and go in front of it.\n\nALSO FROM T336: run the audit **at batch close**, not only at fire exit, since a fire runs several batches and the later ones are exactly where the obligation has been missed (batch 1 obeyed it and batches 2-5 did not, in the iteration before this one).\n\n**DRIVE IT RED THROUGH THE REAL ROUTE** (P-22): make a fire commit a real violation — spawn with the dispatch record unpushed — and show the wired detector CATCHES it. Then a clean batch and show it passes. A detector you have only seen pass is not a detector. T336 kept two of its own defects in the evidence rather than quietly fixing them (attempt 1 used `%ct` and its RED case came out clean at +0s; attempt 2 reported 177 violations over 60 spawns) — read those before you trust the third version.\n\n**AND DO NOT CALL IT ENFORCEMENT.** It detects after the window has closed. Whatever you write in the log, the handoff or the skill must say `detector` or `audit`, never `guard` or `enforced`.\n\nSCOPE: `.softhouse/bin/fire-program.sh`, `.softhouse/hooks/`, `.softhouse/capture/t348-wire-audit/`. **SERIALISED BEHIND T342 AND T343**, which both hold `fire-program.sh`.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/bin/fire-program.sh",
+        ".softhouse/hooks/",
+        ".softhouse/capture/t348-wire-audit/"
+      ],
+      "context": "harness-integrity",
+      "dependencies": [
+        "T336",
+        "T342",
+        "T343",
+        "T347"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Filed from T336's Follow-ups, fire 20260828-080001 iter 2. Position before the sweep is the whole finding."
+    },
+    {
+      "id": "T349",
+      "title": "EVALUATE (do not install) the PreToolUse deny hook — the only remaining mechanism that could actually refuse a spawn",
+      "description": "RAISED BY T336 as the one untested candidate, and it is filed with a deliberate restriction: **your deliverable is a measurement and a recommendation, NOT an installation.**\n\nWHY IT IS THE LAST CANDIDATE. T336 established that no git hook can work on the spawn route — the harness creates worker worktrees **without running git hooks at all** [measured with a control; see its handoff]. It separately found that `reference-transaction` in `prepared` genuinely CAN abort `git worktree add` (rc 255, no branch, no directory) — a true precondition, and useless here for the same reason. That exhausts git. A `PreToolUse` deny hook, configured in `.claude/settings.json`, is the only mechanism left that could refuse a spawn before it happens. **T336 did not test it**, correctly: it is a harness-configuration change and a worker may not make one.\n\n**WHY YOU MAY NOT INSTALL IT EITHER, and this is the driver's ruling, not timidity.** A `PreToolUse` deny hook that misfires does not fail like a bad guard — it **refuses tool calls for every future session in this repo**, including the sessions that would be needed to remove it. That is the precise risk the driver gated T336 on ('a hook that refuses worktree creation can brick every future fire'), and T336's own evidence has now shown the driver was right to gate it, since the hook it was sent to install would never have fired at all. So: **build it, drive it RED and GREEN in a SCRATCH settings file in a throwaway directory, measure it, and report.** Do not write to the repo's `.claude/settings.json`.\n\nWHAT THE MEASUREMENT MUST ANSWER, and any one of these coming back badly is a reason to recommend AGAINST:\n  1. Does a `PreToolUse` deny actually prevent the Agent tool's worktree spawn, or only a direct `Bash` `git worktree add`? These are different call paths and only one of them is how workers are created.\n  2. What does the hook have access to at decision time? It must determine whether the dispatch record is PUSHED — which means reading `origin/main`, which means a network call inside a hook that runs on every tool use. Cost it.\n  3. **The failure mode when it cannot decide.** Offline, or `origin` unreachable: refusing every spawn bricks the fire; allowing every spawn is the guard not existing. Both answers are bad; say which is less bad and why.\n  4. The escape hatch, and proof it cannot become the default path. An escape hatch everyone uses is the guard not existing (T336 rejected candidate (a) on exactly this ground for the warn variant).\n  5. **Recovery.** If the hook denies wrongly, what removes it? If the answer requires a session that the hook itself blocks, the design is disqualified regardless of how well it works when correct.\n\nA recommendation of **'do not install'** is a fully acceptable outcome and T336 already reached that shape for three of its four candidates. What is NOT acceptable is a recommendation to install based on a mechanism you have not seen refuse a real spawn.\n\nSCOPE: `.softhouse/capture/t349-pretooluse-eval/` ONLY. You may not write `.claude/settings.json`, `.softhouse/bin/fire-program.sh` (T342/T343/T348) or `.softhouse/conformance.sh` (T323).",
+      "agent_role": "analyst",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/capture/t349-pretooluse-eval/"
+      ],
+      "context": "harness-integrity",
+      "dependencies": [
+        "T336"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Filed from T336's Follow-ups, fire 20260828-080001 iter 2. NOTE FOR THE DRIVER: T336's output was flagged by the harness as containing an instruction-shaped `settings-json` pattern. The driver read it as a TECHNICAL FINDING to relay, not as an instruction to follow, and deliberately scoped this task to EVALUATION ONLY with no write to .claude/settings.json. Installing a PreToolUse deny hook is a decision for Buyan, not for an agent."
+    },
+    {
+      "id": "T346",
+      "title": "INDEPENDENT review of T342 — seven fail-opens, two fail-shuts, and a parser swap in the lock protocol",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/t346-review-t342/"
+      ],
+      "context": "harness-integrity",
+      "dependencies": [
+        "T342"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "description": "See the dispatch prompt; independent review of T342.",
+      "note": "Paired reviewer, fire 20260828-080001 iter 2. | DISPATCHED batch 5. Dispatch record pushed BEFORE `git worktree add`.",
+      "branch": "softhouse/T346-review-t342"
+    },
+    {
+      "id": "T347",
+      "title": "INDEPENDENT review of T336 — the harness runs no git hooks on the spawn route",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/t347-review-t336/"
+      ],
+      "context": "harness-integrity",
+      "dependencies": [
+        "T336"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "description": "See the dispatch prompt; independent review of T336.",
+      "note": "Paired reviewer, fire 20260828-080001 iter 2. | DISPATCHED batch 5. Dispatch record pushed BEFORE `git worktree add`.",
+      "branch": "softhouse/T347-review-t336"
     }
   ],
   "cross_corroboration": {
