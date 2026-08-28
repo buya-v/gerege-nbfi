@@ -1,6 +1,8 @@
 # T421 — T406's six conditions on T391, driven
 
-**Branch:** `softhouse/T421-t406-conditions` — seven commits, incremental.
+**Branch:** `softhouse/T421-t406-conditions`. Committed incrementally; `git log main..HEAD`
+for the count, because a number that counts its own commit rots on the next one — the same
+lesson F-T406-3 is about, one artefact over.
 **All six conditions closed, plus T406's informational.** One cardinal of T406's own
 is corrected, and one of its findings is enlarged from ten branches to eleven.
 
