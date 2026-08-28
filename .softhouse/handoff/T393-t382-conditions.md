@@ -247,10 +247,19 @@ construction.
 1. **P-45 / the wiring.** Section 4 above. Not done — `conformance.sh` is T404's this wave.
    Needs filing as a task with an owner, not a paragraph.
 2. **The disclosed residual** — a committed change to a post-fork observation with its manifest
-   row rewritten in the same commit. Not closable from inside this rig. If the driver wants it
-   closed, the shape is an out-of-band digest list committed at a known moment and never
-   rewritten by the capture scripts, i.e. a second baseline — which is a real new artefact and a
-   real decision, unlike the one T374's follow-up asked for.
+   row rewritten in the same commit. Not closable from inside this rig.
+
+   **T374's follow-up #1 is half right, and the half that is wrong is the half that matters.**
+   It asks for *"a tracked `OBSERVATIONS.sha256` under `capture/tierA-a2`, regenerated only by
+   an explicit capture task"* and calls it a **new evidence artefact**. T382 is right that the
+   *digest list* already exists — `MANIFEST.sha256`, and I re-verified its coverage above, so
+   the arm was cheap and should have been added rather than deferred. But the clause
+   **"regenerated only by an explicit capture task"** describes a property `MANIFEST.sha256`
+   does **not** have: `manifest.py` rewrites it, and `manifest.py` sits in the same directory
+   as the observations it hashes. That clause is exactly what would close the residual, and it
+   is genuinely new work — a baseline the capture scripts cannot rewrite. So the follow-up
+   should not simply be struck: it should be **narrowed** to that clause, with the digest-list
+   half marked done by ARM C.
 3. **MERGE HAZARD — ARM C's set equality is now load-bearing on `MANIFEST.sha256`.** Any worker
    who adds or removes a file under `.softhouse/capture/tierA-a2/{out,req}/` must re-run
    `manifest.py` in the same commit, or section 10 goes red with `ADDED-WITHOUT-A-ROW` /
