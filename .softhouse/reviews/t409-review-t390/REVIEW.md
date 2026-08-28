@@ -557,7 +557,30 @@ None of C1–C5 requires re-running a probe against the oracle, and none of them
 
 ## 14. BAR
 
-Run from a **CLEAN tree AFTER commit**, with `bash`, never `sh`. Transcript: `out/BAR-T409-clean-tree.txt`.
-**P-84 applied: probe-line PRESENCE checked before value.**
+Run from a **CLEAN tree AFTER commit**, with `bash`, never `sh`.
+Transcripts: `out/BAR-T409-clean-tree.txt` (tree `6a34876c`) and
+`out/BAR-2-T409-final-tree.txt` (the final content head). Figures below are from the first;
+`out/BAR-SUMMARY.txt` carries the line references.
 
-See `out/BAR-T409-clean-tree.txt` and `out/BAR-SUMMARY.txt` for the figures as run.
+**P-84 applied, PRESENCE before value:** `grep -c 'probe = '` = **1**, then the value —
+`reference oracle (https://localhost:8443/…/health) probe = up`.
+
+**EXIT 0.** Baseline held, every figure read from the transcript:
+
+* **46** parity vectors PASS / **0** FAIL · **7884** cells compared, 93 ungraded
+* contract-refusal 4/0 · divergence vectors 1/0 (pinned 1) · self-test fixture 1/0 (excluded)
+* ledger cells compared **144** graded, of which **39** are MONEY cells in **int64 minor units**
+* exemption census: **every** figure `== pinned` (ledger parity 7, oracle-refusal 6, money cells 39,
+  GROUNDED 4, UNGROUNDED 0)
+* **14** wrong ledger implementations discovered, **pinned at 14**, all 14 KILLED through the harness
+* dead-path frontier **GREEN**, `deadOccurrences=108` — **back at the pin**. This review added four
+  tracked `.sh`/`.py` files to the census corpus (1403 → 1410) and moved the frontier by **zero**.
+* repo-state attest frontier 11 == pinned 11; temp-path census 18 == pinned
+
+**`.softhouse/conformance.sh` was never edited** — sha256
+`e8621e6f27cf5cbb08d8f6005dceb51feee5ec3ffe328b725cea5353b2259e95` before and after. The wiring
+patch was checked with `git apply --check` and applied **only inside a `/tmp` scratch tree**.
+
+**Re-run the bar on the merge result regardless** — a transcript is evidence about the tree it ran
+on, not about a merge, and T391 is expected to move ledger pins when it lands. Re-baseline by
+RUNNING (P-83), never by arithmetic.
