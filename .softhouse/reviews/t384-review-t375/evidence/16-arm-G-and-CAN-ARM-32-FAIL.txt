@@ -1,0 +1,65 @@
+=== T384 arm G -- the AMBIGUOUS-pathspec construction, against the T375 branch tree ===
+T375-G-glob-member-AMBIGUOUS-symlink                   exit=0 probe=PRESENT dirty=no
+    census : population=8 invoked=3 declared=2 reached-by=3 invoked-by-nothing=0 symlink-members=0
+    verdict: VERDICT: PASS (exit 0) — 46 parity vectors mat
+
+=== the same arm against MAIN, to show what the construction does to the OLD guard ===
+MAIN-G-glob-member-AMBIGUOUS-symlink                   exit=0 probe=PRESENT dirty=no
+    census : population=8 invoked=3 declared=2 reached-by=3 invoked-by-nothing=0
+    verdict: VERDICT: PASS (exit 0) — 46 parity vectors mat
+
+
+=== T384: CAN ARM 32 FAIL? ===
+--- 1. arm 32 EXACTLY AS T375 SHIPS IT (expect >>> PASS) ---
+>>> T384: arm 32 ALONE, exactly as T375 ships it.
+T375-32-REVERT-BOTH-selfreference-tests-HOLE-REOPENS     exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+PASSES=1 FAILS=0
+HONEST RC=0
+
+--- 2. arm 32 with ONE of its two reverts REMOVED, so the hole does NOT reopen
+---    (if the arm is a real control it must now go >>> FAIL) ---
+>>> T384: arm 32 ALONE, exactly as T375 ships it.
+T375-32-REVERT-BOTH-selfreference-tests-HOLE-REOPENS     exit=2  (want 0 )  probe=ABSENT   (want PRESENT )  marker=NO   >>> FAIL
+    --- transcript tail ---
+    conformance:   namespace:           152 carry a t<n> id prefix; 21 do not and CANNOT collide this way
+    conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
+    conformance:   namespace:   T255 -> 2 directories; ownership records required 1, present 1
+    conformance:   namespace:       DECLARED   capture/t255-frontier-rot                    by .softhouse/capture/t255-frontier-rot/OWNER-IS-T258-NOT-T255.md
+    conformance:   namespace:       UNCLAIMED  capture/t255-dec2-rev8                       (record: <absent>)
+    conformance:   namespace:   T256 -> 2 directories; ownership records required 1, present 1
+    conformance:   namespace:       DECLARED   capture/t256-verdict-predicate               by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+    conformance:   namespace:       UNCLAIMED  capture/t256-toolchain-population            (record: <absent>)
+    conformance:   NAMESPACE-CENSUS: dirs=173 prefixed=152 unprefixed=21 collidingIds=2 declared=2 unclaimed=2 shortfallIds=0
+    conformance:   namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
+    conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+    conformance:   T316-DEADPATH-CENSUS: corpus=1344 deadFiles=76 deadOccurrences=109 resolving=1253 indeterminate=93 prose=336
+    conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
+    conformance:   (the planted T309 single-term predicate drives cell B-prime RED; the shipped
+    conformance:   tool keeps it GREEN. Both legs ran here — --selftest is not optional.)
+    conformance:   GUARD-COST CENSUS: 15 guards timed, 65s total wall,
+    conformance:   ceiling breaches 0, unbudgeted guards 0.
+    conformance:     COST 0s / ceiling 60s   guard_graded_root_is_this_tree
+    conformance:     COST 1s / ceiling 60s   guard_no_float_in_vectors
+    conformance:     COST 1s / ceiling 60s   guard_no_float_in_harness
+    conformance:     COST 1s / ceiling 60s   guard_gofmt
+    conformance:     COST 1s / ceiling 60s   guard_no_float_in_capture_requests
+    conformance:     COST 0s / ceiling 60s   guard_no_narrow_catch_in_capture_rigs
+    conformance:     COST 2s / ceiling 300s   guard_ledger_invariants
+    conformance:     COST 5s / ceiling 60s   guard_no_fail_open_instruments
+    conformance:     COST 0s / ceiling 60s   guard_no_host_state_in_lint_corpus
+    conformance:     COST 19s / ceiling 300s   guard_pnumber_citations
+    conformance:     COST 0s / ceiling 60s   guard_accepting_side_gap_declared
+    conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
+    conformance:     COST 0s / ceiling 60s   guard_capture_namespace
+    conformance:     COST 2s / ceiling 60s   guard_dead_path_frontier
+    conformance:     COST 32s / ceiling 500s   guard_reconciler_ownership
+    conformance:   (RESOLUTION 1 s, from bash SECONDS; a 0 means UNDER ONE SECOND. The elapsed
+    conformance:   figures are RECORDED and NOT PINNED — wall clock is a fact about the host as
+    conformance:   well as the tree. What is pinned, by NAME: every guard has a ceiling row,
+    conformance:   every ceiling row was timed, and at least one guard was timed. The ceiling is
+    conformance:   read AFTER the guard returns, so it turns a spin that RETURNS into a named
+    conformance:   refusal; it does not interrupt one that never does. [T375, FU-T358-1.])
+    conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+    conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+PASSES=0 FAILS=1
+SABOTAGED RC=1

@@ -1,0 +1,18 @@
+#!/bin/bash
+# T384 arm A -- THE WITNESS IS A SYMLINK TO THE MEMBER.
+# Plant an unwired checker in the canonical guards directory and forge its REACHED-BY witness
+# as a tracked SYMLINK pointing back at the member itself. `git ls-files` resolves a symlink to
+# its OWN path, so the self-reference compare is satisfied; `-f` and `grep` both DEREFERENCE,
+# so the guard grades the member's own bytes and finds the member's own basename in them.
+# Written from the DESCRIPTION of the defect; not copied from T375's drive script.
+set -eu
+GD=.softhouse/guards
+FX=.softhouse/reviews/t384-review-t375/fixtures
+mkdir -p "$FX"
+cat > "$GD/zz-t384a-member.sh" <<'INNER'
+#!/usr/bin/env bash
+# zz-t384a-member.sh -- a planted, UNWIRED checker. Nothing in this harness invokes it.
+# GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/reviews/t384-review-t375/fixtures/witness-A.txt
+exit 0
+INNER
+ln -s ../../../guards/zz-t384a-member.sh "$FX/witness-A.txt"

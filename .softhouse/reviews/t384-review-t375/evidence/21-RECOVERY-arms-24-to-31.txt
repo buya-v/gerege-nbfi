@@ -1,0 +1,20 @@
+T384 -- THE EIGHT ARMS THE KILLED FULL DRIVE NEVER REACHED (T375-24 .. T375-31).
+Same drive script, same helpers, arms 24-31 only. Started Fri Aug 28 23:36:31 +08 2026
+
+T375-24-selfcert-via-REPEATED-DOTSLASH                   exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-25-witness-with-a-TRAILING-SLASH                    exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-26-witness-CASE-FOLDED-on-a-case-insensitive-fs     exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-27-unwired-main_test.go                             exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-28-unwired-CASE-FOLDED-Main.go                      exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-29-unwired-main.go-ONE-DIRECTORY-DEEPER             exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-30-member-IS-a-tracked-SYMLINK-named-main.go        exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-31-REVERT-symlink-MEMBER-test-INHERITS-again        exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+
+T375 RED DRIVE: 8 passed, 0 failed. (arm set 1 counts as one.)
+DISTINCT ARMS IN THIS FILE: 33. The line above counts arm set 1 as ONE, so its total is
+33 + 1 = 34 and NOT the sum of every arm that ran -- T364's NOTE-1 charged exactly that
+double-count against T358's '29 arms' label, and the label is spelled here so it cannot
+be inferred wrongly. The predecessor drives report their own counts in their own output.
+PASSES=8 FAILS=0
+TAIL RC=0
+finished Fri Aug 28 23:45:27 +08 2026

@@ -1,0 +1,20 @@
+--- ls-files -s ---
+120000 9a254f982f228ce86e87a9e126cf9d8b646444d1 0	.softhouse/guards/zz/w-witness.sh
+100644 9e145226dcca7067c47faed28aaeaf15e1a82fd2 0	.softhouse/guards/zz/zz-probe.sh
+--- spellings: [resolved] rc ---
+.softhouse/guards/zz/zz-probe.sh                     => [.softhouse/guards/zz/zz-probe.sh]
+     -f typed? YES
+./.softhouse/guards/zz/zz-probe.sh                   => [.softhouse/guards/zz/zz-probe.sh]
+     -f typed? YES
+.//.softhouse/guards/zz/zz-probe.sh                  => [.softhouse/guards/zz/zz-probe.sh]
+     -f typed? YES
+./././.softhouse/guards/zz/zz-probe.sh               => [.softhouse/guards/zz/zz-probe.sh]
+     -f typed? YES
+.softhouse/guards/zz/zz-probe.sh/                    => [<ERR>]
+     -f typed? NO
+/tmp/t375p/.softhouse/guards/zz/zz-probe.sh          => [.softhouse/guards/zz/zz-probe.sh]
+     -f typed? YES
+.SOFTHOUSE/GUARDS/ZZ/ZZ-PROBE.SH                     => [<ERR>]
+     -f typed? YES
+.softhouse/guards/zz/w-witness.sh                    => [.softhouse/guards/zz/w-witness.sh]
+     -f typed? YES

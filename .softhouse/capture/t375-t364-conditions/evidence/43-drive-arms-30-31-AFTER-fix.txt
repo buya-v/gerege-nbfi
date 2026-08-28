@@ -1,0 +1,20 @@
+--- smoke2 clone at d61c7c69 ---
+T375 RED DRIVE -- every arm runs the WHOLE BAR, never a guard standalone, never `sh`.
+
+>>> ARM SET 1: drive-red-t358.sh, unmodified, against T375's conformance.sh.
+>>> (that drive runs drive-red-t323.sh as ITS arm set 1, so all three generations run.)
+>>> ARM SET 1: T358 DRIVE PASSED in full.
+
+>>> ARM SET 2: T375's own arms.
+T375-00-GREEN-CONTROL-clean-tree                         exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+
+>>> ARM SET 3: T375 pass 2 -- what pass 1's arms missed by one.
+T375-30-member-IS-a-tracked-SYMLINK-named-main.go        exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-31-REVERT-symlink-MEMBER-test-INHERITS-again        exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+
+T375 RED DRIVE: 4 passed, 0 failed. (arm set 1 counts as one.)
+DISTINCT ARMS IN THIS FILE: 32. The line above counts arm set 1 as ONE, so its total is
+32 + 1 = 33 and NOT the sum of every arm that ran -- T364's NOTE-1 charged exactly that
+double-count against T358's '29 arms' label, and the label is spelled here so it cannot
+be inferred wrongly. The predecessor drives report their own counts in their own output.
+SMOKE2 RC=0

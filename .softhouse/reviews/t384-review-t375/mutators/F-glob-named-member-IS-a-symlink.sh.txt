@@ -1,0 +1,25 @@
+#!/bin/bash
+# T384 arm F -- FU-T375-7 DRIVEN, THE SYMLINK HALF. The same glob-named member, but the member
+# ITSELF is a TRACKED SYMLINK -- i.e. F-T375-7, the fail-open T375 did not predict and closed,
+# REOPENED by one glob character in the filename.
+#
+# The link target is deliberately OUTSIDE the guards directory, so the target is not itself a
+# member and nothing else in the population changes. The guard reads the member THROUGH the
+# filesystem, so it picks up the target's REACHED-BY row; the witness is an ordinary
+# independent tracked file that names the link's basename. Every test T375 added is skipped
+# because `git ls-files -s -- 'zz-t384f[1].sh'` matches nothing.
+set -eu
+GD=.softhouse/guards
+FX=.softhouse/reviews/t384-review-t375/fixtures
+mkdir -p "$FX"
+cat > "$FX/target-F.sh.txt" <<'INNER'
+#!/usr/bin/env bash
+# The symlink target for T384 arm F. Not a member: it lives outside the guards directory.
+# GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/reviews/t384-review-t375/fixtures/witness-F.txt
+exit 0
+INNER
+cat > "$FX/witness-F.txt" <<'INNER'
+T384 arm F witness. An ordinary independent tracked regular file. It names the planted member
+zz-t384f[1].sh so that the guard's final `grep -qF -- "$base"` is satisfied.
+INNER
+ln -s ../reviews/t384-review-t375/fixtures/target-F.sh.txt "$GD/zz-t384f[1].sh"

@@ -1,0 +1,52 @@
+#!/bin/bash
+# T384 arm G -- FU-T375-7 DRIVEN TO A FAIL-OPEN. THE MEMBER-IS-A-SYMLINK REFUSAL (F-T375-7,
+# the one T375 did NOT predict and closed) IS SKIPPED BY ONE GLOB CHARACTER IN A FILENAME.
+#
+# WHAT ARM E ESTABLISHED FIRST, and it corrects my own initial reasoning as well as a reader's:
+# `git ls-files -s -- '<path with [1] in it>'` DOES return the literal path, because git's
+# pathspec matcher tries EXACT literal equality before it tries wildmatch. So a glob character
+# alone is NOT enough -- arm E is REFUSED, correctly, with BYTE-IDENTICAL.
+#
+# THE REACHABLE CONSTRUCTION IS THE ONE T375 ACTUALLY NAMED: make the pathspec match MORE THAN
+# ONE tracked path, so `member_mode` and `member_blob` are taken from WHICHEVER LINE GIT PRINTED
+# FIRST. Two tracked files:
+#     .softhouse/guards/zz-t384g1.sh    an ordinary, honestly-registered regular member
+#     .softhouse/guards/zz-t384g[1].sh  a SYMLINK -- the unwired checker being smuggled in
+# `git ls-files` prints in byte order and '1' (0x31) sorts before '[' (0x5B), so the DECOY is
+# line 1. `member_mode` is therefore 100644, the symlink refusal never fires, and the guard
+# goes on to read the SYMLINK'S REACHED-BY row THROUGH THE FILESYSTEM -- exactly the defect
+# T375 closed for every member whose name has no glob character in it.
+#
+# `member_blob` is likewise the DECOY's blob, so the blob test is comparing the wrong file.
+set -eu
+GD=.softhouse/guards
+FX=.softhouse/reviews/t384-review-t375/fixtures
+mkdir -p "$FX"
+
+# (1) THE DECOY: an ordinary member with an HONEST registration. Nothing about it is a forgery;
+#     it is here only so that the pathspec matches two paths instead of one.
+cat > "$GD/zz-t384g1.sh" <<'INNER'
+#!/usr/bin/env bash
+# zz-t384g1.sh -- an ordinary planted checker with an honest REACHED-BY row.
+# GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/reviews/t384-review-t375/fixtures/witness-G1.txt
+exit 0
+INNER
+cat > "$FX/witness-G1.txt" <<'INNER'
+T384 arm G, witness 1. An independent tracked regular file naming the checker it reaches:
+zz-t384g1.sh is run by this review's arm G as the decoy member.
+INNER
+
+# (2) THE SMUGGLED CHECKER: a TRACKED SYMLINK whose name differs from the decoy's by one glob
+#     character. Its target lives OUTSIDE the guards directory, so the target is not itself a
+#     member and the population changes by exactly the two files above.
+cat > "$FX/target-G.sh.txt" <<'INNER'
+#!/usr/bin/env bash
+# The symlink target for T384 arm G. Not a member: it is outside the guards directory.
+# GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/reviews/t384-review-t375/fixtures/witness-G2.txt
+exit 0
+INNER
+cat > "$FX/witness-G2.txt" <<'INNER'
+T384 arm G, witness 2. An independent tracked regular file. It names the smuggled member
+zz-t384g[1].sh so the guard's closing `grep -qF -- "$base"` is satisfied.
+INNER
+ln -s ../reviews/t384-review-t375/fixtures/target-G.sh.txt "$GD/zz-t384g[1].sh"

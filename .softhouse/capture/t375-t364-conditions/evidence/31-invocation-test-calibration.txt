@@ -1,0 +1,38 @@
+T375 -- the invocation-test calibration. The haystack line numbers are the COMMENT-STRIPPED
+file's, which is what the guard searches; they are not conformance.sh's own.
+
+ONE CAVEAT, so this transcript is not over-read: the script below does NOT apply the guard's
+DECLARATION-TABLE CUT, so the table's own rows appear here (:953, :954). The guard removes them
+from the haystack before the invocation test, which is why row 2's witness column --
+'.softhouse/guards/ledgerguard/main.go' -- does not absolve main.go. [T358 built that cut.]
+
+THE TWO OCCURRENCES AT :1074 AND :1182 ARE T375'S OWN NEW TEXT, quoting the defect by name.
+Under the OLD basename predicate they would have been fresh absolutions for any file called
+main.go. Under the path predicate they are inert. That is the finding, not a coincidence.
+
+=== population (git ls-files, ':(glob)' magic, .sh/.py/.go at any depth) ===
+.softhouse/guards/check-capture-namespace.sh
+.softhouse/guards/check-dead-path-frontier.sh
+.softhouse/guards/check-ledger-invariants.sh
+.softhouse/guards/drive-red-ledger-invariants.sh
+.softhouse/guards/ledgerguard/main.go
+.softhouse/guards/repo-state-attest.sh
+
+=== occurrences in the comment-stripped haystack, by BASENAME ===
+317:  bash "$REPO_ROOT/.softhouse/guards/check-ledger-invariants.sh" || rc=$?
+319:  local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+332:  say "conformance:   the cannotCatch const in .softhouse/guards/ledgerguard/main.go, which its"
+680:  local g="$REPO_ROOT/.softhouse/guards/check-capture-namespace.sh"
+745:  local g="$REPO_ROOT/.softhouse/guards/check-dead-path-frontier.sh"
+953:  DECLARED="repo-state-attest.sh|CALLER|.softhouse/bin/fire-program.sh|repo-state-attest.sh
+954:drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|ledgerguard"
+1074:          warn "conformance: basename absolved, so an unwired checker named 'main.go' was"
+1182:  say "conformance:   unwired checker named 'main.go' read INVOKED with the bar GREEN.] It is"
+
+=== occurrences by FULL REPO-RELATIVE PATH (what T375 matches on) ===
+317:  bash "$REPO_ROOT/.softhouse/guards/check-ledger-invariants.sh" || rc=$?
+319:  local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+332:  say "conformance:   the cannotCatch const in .softhouse/guards/ledgerguard/main.go, which its"
+680:  local g="$REPO_ROOT/.softhouse/guards/check-capture-namespace.sh"
+745:  local g="$REPO_ROOT/.softhouse/guards/check-dead-path-frontier.sh"
+954:drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|ledgerguard"

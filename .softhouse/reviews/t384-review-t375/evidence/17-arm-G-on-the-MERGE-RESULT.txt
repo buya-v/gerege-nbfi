@@ -1,0 +1,4 @@
+MERGE-G-glob-member-AMBIGUOUS-symlink                  exit=0 probe=PRESENT dirty=no
+    census : population=8 invoked=3 declared=2 reached-by=3 invoked-by-nothing=0 symlink-members=0
+    verdict: VERDICT: PASS (exit 0) — 46 parity vectors mat
+

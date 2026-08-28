@@ -1,0 +1,22 @@
+#!/bin/bash
+# T384 arm Y -- THE SECOND HEALTHY CONTROL, and the one that matters most for THIS change.
+# A LEGITIMATE, independently-authored witness: a real regular tracked file whose blob is NOT
+# the member's blob and which is NOT a symlink, naming the member. T375's fixes tighten what
+# counts as "registered", so the failure mode nearest to them is REFUSING A WIRED CHECKER.
+# This arm must be ACCEPTED (bar exit 0, reached-by counted). Without it, "refuses a symlink
+# witness" and "refuses every REACHED-BY row" are indistinguishable.
+set -eu
+GD=.softhouse/guards
+FX=.softhouse/reviews/t384-review-t375/fixtures
+mkdir -p "$FX"
+cat > "$GD/zz-t384y-member.sh" <<'INNER'
+#!/usr/bin/env bash
+# zz-t384y-member.sh -- a planted checker with an HONEST registration.
+# GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/reviews/t384-review-t375/fixtures/witness-Y.txt
+exit 0
+INNER
+cat > "$FX/witness-Y.txt" <<'INNER'
+T384 arm Y witness. This file is not a copy, a hard link or a symlink of the member; it is an
+independent tracked regular file whose only job is to name the checker that reaches it:
+zz-t384y-member.sh is run by this document's owning review as part of arm Y.
+INNER

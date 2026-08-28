@@ -1,0 +1,27 @@
+=== T384 SET MAIN : source tree /tmp/t384/mainclone ===
+=== source HEAD: d16ee6db ===
+
+MAIN-Z-healthy-control                                 exit=0 probe=PRESENT dirty=no
+    census : population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0
+    verdict: VERDICT: PASS (exit 0) — 46 parity vectors mat
+
+MAIN-Y-legit-witness-control                           exit=0 probe=PRESENT dirty=no
+    census : population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+    verdict: VERDICT: PASS (exit 0) — 46 parity vectors mat
+
+MAIN-A-witness-symlink                                 exit=0 probe=PRESENT dirty=no
+    census : population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+    verdict: VERDICT: PASS (exit 0) — 46 parity vectors mat
+
+MAIN-B-witness-hardlink                                exit=0 probe=PRESENT dirty=no
+    census : population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+    verdict: VERDICT: PASS (exit 0) — 46 parity vectors mat
+
+MAIN-C-witness-copy                                    exit=0 probe=PRESENT dirty=no
+    census : population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+    verdict: VERDICT: PASS (exit 0) — 46 parity vectors mat
+
+MAIN-D-member-is-symlink                               exit=0 probe=PRESENT dirty=no
+    census : population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+    verdict: VERDICT: PASS (exit 0) — 46 parity vectors mat
+

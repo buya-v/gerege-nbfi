@@ -1,0 +1,20 @@
+=== T384 FU-T375-7 GLOB ARMS, against the T375 branch tree (the FIXED guard) ===
+T375-E-glob-named-member-witness-copy                  exit=2 probe=ABSENT  dirty=no
+    census : population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    verdict: <none>
+    FAILED : guard_guards_dir_registration FAILED
+    refusal: conformance: and THAT WITNESS IS BYTE-IDENTICAL TO THIS MEMBER — same git object
+
+T375-F-glob-named-member-IS-a-symlink                  exit=2 probe=ABSENT  dirty=no
+    census : population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=1
+    verdict: <none>
+    FAILED : guard_guards_dir_registration FAILED
+    refusal: conformance: guard_guards_dir_registration: .softhouse/guards/zz-t384f[1].sh IS A SYMLINK, and a symlink is not
+
+=== the same two arms against the MERGE RESULT, so the finding is about what would land ===
+MERGE-E-glob-named-member-witness-copy                 exit=2 probe=ABSENT  dirty=no
+    census : population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    verdict: <none>
+    FAILED : guard_guards_dir_registration FAILED
+    refusal: conformance: and THAT WITNESS IS BYTE-IDENTICAL TO THIS MEMBER — same git object
+

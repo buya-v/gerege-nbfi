@@ -1,0 +1,40 @@
+T384 -- THE MECHANISM OF THE FIFTH FAIL-OPEN, read straight out of git.
+
+Scratch clone of the T375 branch tree (2c1f5723) with arm G's mutation applied and COMMITTED:
+/tmp/t384/run/T375-G-glob-member-AMBIGUOUS-symlink
+
+$ git ls-files -s -- ".softhouse/guards/zz-t384g[1].sh"          # exactly what the guard runs
+100644 b44f181a74f9c89dfae2f8fbd73235ef69b3a319 0	.softhouse/guards/zz-t384g1.sh
+120000 67d15208e588517800522f9c1d531f5cfb38e903 0	.softhouse/guards/zz-t384g[1].sh
+
+  -> TWO lines. `member_mode="${member_stat%% *}"` takes the FIRST, which is 100644, so the
+     symlink-member refusal T375 added NEVER FIRES; and `member_blob` is the DECOY's blob,
+     so the blob test is also comparing the wrong file.
+
+$ git ls-files -s -- ":(literal).softhouse/guards/zz-t384g[1].sh"      # the ground truth
+120000 67d15208e588517800522f9c1d531f5cfb38e903 0	.softhouse/guards/zz-t384g[1].sh
+
+  -> ONE line, mode 120000. The member IS a symlink. The guard cannot see that, because it
+     hands $rel to git as a PATHSPEC and not as a literal.
+
+This is FU-T375-7 exactly as T375 wrote it down, and it is REACHABLE.
+
+--------------------------------------------------------------------------------------------
+A CORRECTION TO MY OWN FIRST HYPOTHESIS, recorded because it changes what the repair must be.
+
+I first predicted that a glob character ALONE would defeat both tests, on the reasoning that
+`[1]` as a wildmatch pattern matches the single character `1` and therefore cannot match the
+literal filename `zz-t384e[1].sh`, leaving `member_stat` EMPTY -- which would skip the symlink
+refusal (`member_mode` != 120000) AND the blob test (guarded by `[ -n "$member_blob" ]`).
+
+THAT PREDICTION IS WRONG, AND ARM E IS THE ARM THAT SAYS SO. git's pathspec matcher tries
+EXACT LITERAL EQUALITY BEFORE it tries wildmatch, so a glob-named path always matches itself:
+
+  arm E  member `zz-t384e[1].sh`, witness a COPY of it   -> exit 2, BYTE-IDENTICAL   REFUSED
+  arm F  member `zz-t384f[1].sh` IS a symlink            -> exit 2, IS A SYMLINK     REFUSED
+                                                            symlink-members=1
+
+So one glob character is NOT enough. The reachable construction is the one T375's own
+disclosure names: make the pathspec match MORE THAN ONE tracked path, and the first line wins.
+Arms E and F are kept as the controls that establish that -- without them the finding would be
+"a glob character breaks it", which is false.

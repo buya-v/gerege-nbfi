@@ -1,0 +1,10 @@
+#!/bin/bash
+# T384 arm D -- THE MEMBER ITSELF IS A TRACKED SYMLINK to an already-registered member.
+# The guard greps the MEMBER for its REACHED-BY directive THROUGH THE FILESYSTEM, so the
+# planted link inherits the target's row, resolves the TARGET's witness, and -- because the
+# link is named `main.go` too -- that witness names the basename. An unwired checker enters
+# the canonical guards directory GREEN by being a symlink to a registered one.
+set -eu
+GD=.softhouse/guards
+mkdir -p "$GD/zz-t384d"
+ln -s ../ledgerguard/main.go "$GD/zz-t384d/main.go"

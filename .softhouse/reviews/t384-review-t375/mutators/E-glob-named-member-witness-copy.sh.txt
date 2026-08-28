@@ -1,0 +1,26 @@
+#!/bin/bash
+# T384 arm E -- FU-T375-7 DRIVEN. A MEMBER WHOSE FILENAME CONTAINS A PATHSPEC GLOB CHARACTER.
+#
+# T375 disclosed this against itself and did NOT patch it, describing it as "could match MORE
+# THAN ONE path, and member_mode would be taken from whichever line git printed first".
+# THE ACTUAL FAILURE IS LARGER THAN THAT DESCRIPTION. `git ls-files -s -- "$rel"` treats $rel
+# as a PATHSPEC, so for a member literally named `zz[1].sh` the pattern `[1]` matches the single
+# character `1` and therefore matches NOTHING. member_stat is EMPTY, so member_mode is empty
+# (the symlink refusal is skipped) AND member_blob is empty (the blob test is guarded by
+# `[ -n "$member_blob" ]`, so it is skipped too). BOTH of T375's new tests are disabled at once
+# for that member.
+#
+# This arm exercises the blob half: the witness is a PLAIN COPY of the member, which arm C
+# proves T375 refuses when the member has an ordinary name.
+set -eu
+GD=.softhouse/guards
+FX=.softhouse/reviews/t384-review-t375/fixtures
+mkdir -p "$FX"
+M="$GD/zz-t384e[1].sh"
+cat > "$M" <<'INNER'
+#!/usr/bin/env bash
+# zz-t384e[1].sh -- a planted, UNWIRED checker. Nothing in this harness invokes it.
+# GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/reviews/t384-review-t375/fixtures/witness-E.txt
+exit 0
+INNER
+cp "$M" "$FX/witness-E.txt"

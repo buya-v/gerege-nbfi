@@ -2470,21 +2470,28 @@ guard_accepting_side_gap_declared() {
 #       -> and EVERY one of them is DECLARED — the guard prints each collision with the
 #          OWNER*.md that claims it, or names the UNCLAIMED directory and refuses.
 #
-# THE CARDINALS ARE NOT RETYPED HERE ANY MORE, AND THAT IS T358 REPAIRING A ROT THAT HAPPENED
-# TWICE IN THREE FIRES. Iteration 1 of T323 wrote 128 / 107 / "exactly ONE colliding id"; T323
-# iteration 3 re-derived them as 151 / 130 / "exactly ONE"; T358 re-derived them again, one fire
-# later, as 159 / 138 / **TWO** — t255 and t256 — because t255-frontier-rot merged in the
-# meantime with its OWNER-IS-T258-NOT-T255.md. Every one of those figures was true when written.
-# NONE of them survived the fire after it, and the "exactly ONE" line in particular was still
-# being cited as load-bearing two iterations after it went false. A cardinal restated in a
-# comment beside a guard that MEASURES IT LIVE is a second source of truth with no owner, so the
-# fix is to delete the copy rather than to correct it again: the guard prints
+# THE CARDINALS ARE NOT RETYPED HERE ANY MORE. T358 said that was the fix and then retyped one
+# more pair on its way out; T375 finishes the job, and the reason is that the retyped pair had
+# ALREADY ROTTED BY THE TIME THE INK DRIED.
+#
+# THE ROT, WITH NO NUMBERS IN IT, because a history of rotted cardinals must not be told in
+# cardinals. Iteration 1 of T323 wrote a directory count, an id-prefixed count and "exactly ONE
+# colliding id". T323 iteration 3 re-derived all three and got two different counts and the same
+# "exactly ONE". T358 re-derived them one fire later and got two different counts again and
+# **TWO** colliding ids — t255 and t256 — because t255-frontier-rot had merged in the meantime
+# with its OWNER-IS-T258-NOT-T255.md, so "exactly ONE" was being cited as load-bearing two
+# iterations after it went false. T364 re-derived them a THIRD time on the branch and got two
+# further different counts. T375 re-derived them a FOURTH time and got two more. FIVE
+# derivations, five different pairs of counts, and the ONLY figure that has held is the one that
+# is not a count of the corpus at all: the collision list, which the guard MEASURES on every run.
+#
+# So there is nothing left here to correct, only something to delete. A cardinal restated in a
+# comment beside a guard that MEASURES IT LIVE is a second source of truth with no owner — P-80,
+# "A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the same defect as the
+# line number." [VERIFIED: .softhouse/patterns.md:2775]. The guard prints
 # "corpus <N> tracked paths -> <D> evidence directories", "<P> carry a t<n> id prefix", and one
-# line per colliding id, a few lines into its own output. READ THAT.
-# [T358 RE-DERIVATION, 28 Aug 2026, method above with ids folded case-insensitively: 159
-# directories, 138 id-prefixed, 2 colliding ids (t255, t256) — agreeing with the guard's own
-# readback in the same run TO THE ROW. Recorded as a dated measurement, not as a cardinal to
-# maintain.]
+# line per colliding id with the OWNER*.md that claims it, a few lines into its own output.
+# READ THAT. Any figure a task needs belongs in that task's own dated handoff, never here.
 #
 # THE CLAIM THAT ACTUALLY CARRIES THE HARD ARGUMENT is not a count at all: it is that EVERY
 # collision this predicate has ever fired on was a TRUE positive with an IN-GRANT remedy — one
@@ -2504,21 +2511,25 @@ guard_accepting_side_gap_declared() {
 #   OVER HEAD'S ANCESTRY — the only corpus a run of this bar can be about — the false-positive
 #   count of this predicate is ZERO. Its TRUE-positive count is whatever the guard's own live
 #   readback says a few lines into its output, and DELIBERATELY IS NOT RESTATED HERE. T323 wrote
-#   "exactly ONE colliding id" and that had already rotted by the next fire: T358 re-derived it
-#   independently (git log HEAD --diff-filter=A over capture/ and reviews/, ids folded
-#   case-insensitively) and got 159 directories, 138 id-prefixed, and TWO colliding ids — t255
-#   and t256 — with the guard's own readback in the same run agreeing to the row. So the
-#   sentence T337 proposed as the one-line repair, "say over HEAD's ancestry and it is true",
-#   would have shipped a SECOND stale cardinal. A volatile count restated in prose rots; the
-#   scope of the claim does not. State the scope, cite the readback, never retype the number.
+#   "exactly ONE colliding id" and that had already rotted by the next fire, so the sentence
+#   T337 proposed as the one-line repair — "say `over HEAD's ancestry` and it is true" — would
+#   have shipped a SECOND stale cardinal, correcting the scope of the first clause while leaving
+#   a false count standing in the second. A volatile count restated in prose rots; the SCOPE of
+#   the claim does not. State the scope, cite the readback, never retype the number. [T375: the
+#   re-derivation method is the `git log --diff-filter=A` query printed at the top of this block,
+#   ids folded case-insensitively off `^t[0-9]+`; run it, do not read a number here.]
 #
-#   OVER THE REPOSITORY'S FULL REF SPACE (`git log --all`) there are THREE colliding ids, not
-#   two: the t255 and t256 pairs above, plus a t286 pair whose second directory (leaf
-#   `t286-rvpa-retry`, named without its prefix so this comment creates no dead-path literal)
-#   lives only on an unmerged rescued-WIP branch. A READER PLANNING A MERGE NEEDS THAT NUMBER,
+#   OVER THE REPOSITORY'S FULL REF SPACE (`git log --all`) there is AT LEAST ONE FURTHER
+#   colliding id that HEAD's ancestry cannot see, and it is NAMED rather than counted, because
+#   a name does not rot and a count does: **t286**, whose second directory (leaf
+#   `t286-rvpa-retry`, written without its prefix so this comment creates no dead-path literal)
+#   lives only on an unmerged rescued-WIP branch. A READER PLANNING A MERGE NEEDS THAT NAME,
 #   because merging that branch turns this bar red on arrival. IT DOES NOT OVERTURN HARD: it is
 #   a TRUE positive — an undocumented collision is exactly what this guard is for — and its
 #   remedy is one OWNER*.md inside a directory the merging task already owns, which is in-grant.
+#   The full-ref query above lists every such id on the day it is run; that is the readback, and
+#   "how many" is a question for the run and not for this comment. [T248 / T258 / T340 — correct
+#   where NAMED, never where RESTATED.]
 #
 # The remaining risk is prospective, not historical: a future task that legitimately wants two
 # directories of its own. For that case the threshold is ALREADY N-1 rather than N — T299
@@ -3036,14 +3047,31 @@ guard_reconciler_ownership() {
 #
 #     POPULATION = git ls-files, ':(glob)' magic, over the TRACKED '*.sh' / '*.py' / '*.go'
 #                  files at ANY DEPTH under the canonical guards directory, from $REPO_ROOT.
-#     INVOKED    = the member's basename occurs on a NON-COMMENT line of this file.
+#     INVOKED    = the member's REPO-RELATIVE PATH occurs on a NON-COMMENT line of this file.
+#                  NOT its basename — a basename is shared, a path identifies. [T375, T364 F-1.]
 #     DECLARED   = a row in the table inside this function (directions CALLER and SUBJECT).
 #     REACHED-BY = a row in the MEMBER'S OWN header, naming a tracked witness that names it.
+#                  The witness path is NORMALISED by git before it is compared to anything,
+#                  so './M', 'a/../M' and the absolute spelling are all the same path as 'M'
+#                  and a member cannot vouch for itself in a different spelling. [T375, T364 F-2.]
 #
 # WHAT THE SELECTOR DOES NOT REACH, stated in the same breath as what it does, because the
 # previous wording of this block did not and a reader concluded a class was closed that was not
 # [T337 F-T337-3, repaired by T358]. It does not reach: any checker written in a language other
 # than shell, Python or Go; any committed binary; and anything outside this one directory.
+#
+# THE TWO THINGS T375 CHANGED HERE, both of them fail-OPENs T364 found by FORGING them through
+# the whole bar against controls, and both of them wrong PASSes about THIS GUARD'S OWN COVERAGE
+# rather than about money or any graded quantity:
+#   1. INVOKED matched the member's BASENAME. `main.go` occurs on two non-comment lines of this
+#      file where a different guard reads that file's text, so ANY unwired Go checker named
+#      `main.go`, at any depth here, read INVOKED and the bar stayed GREEN — while the identical
+#      file under a unique basename was refused. Closing `.go` was T358's whole point and this
+#      missed it by one identifier. INVOKED now matches the member's repo-relative PATH.
+#   2. The REACHED-BY self-certification test was a RAW STRING COMPARE while every other step in
+#      that chain normalised, so the rule this guard PRINTS — "a file may not vouch for itself" —
+#      was defeated by a leading './'. The compare is now on the path GIT resolves.
+# Both are driven RED, in both directions, with controls, by T375's red drive.
 #
 # THE THREE THINGS T358 CHANGED HERE, each of which was a defect in what this block CLAIMED
 # rather than in what the code did — which is the more dangerous kind, because the claim is
@@ -3087,14 +3115,21 @@ guard_reconciler_ownership() {
 # THE "NAMED, NOT EXECUTED" GAP HAS A CONCRETE INSTANCE ON THIS TREE, and it is written down
 # rather than left for the next reader to trip over [T337 F-T337-4, instanced by T358].
 # `.softhouse/guards/ledgerguard/main.go` is a checker that this harness NEVER RUNS — it is
-# built and run by check-ledger-invariants.sh — yet its basename occurs on a non-comment line
-# here at conformance.sh:1484, `local ccsrc="$REPO_ROOT/…/ledgerguard/main.go"`, where a
-# DIFFERENT guard reads its text. Absent its REACHED-BY row, main.go would read INVOKED off that
-# assignment. The row records the truth; the invocation test would have accepted a convenient
-# fiction. Tightening the test to require an executed call is NOT done here: two of the three
-# genuinely-invoked members are reached through `bash "$g"` after a `local g=` assignment, so an
-# execution test needs dataflow this harness has no business growing. The honest move is to say
-# what the test measures, which the printed selector now does.
+# built and run by check-ledger-invariants.sh — yet its FULL REPO-RELATIVE PATH occurs on a
+# non-comment line here at conformance.sh:1484, `local ccsrc="$REPO_ROOT/…/ledgerguard/main.go"`,
+# where a DIFFERENT guard reads its text. Absent its REACHED-BY row, main.go would read INVOKED
+# off that assignment — and it still would after T375 tightened the test from basename to path,
+# because that line does spell this member's own path. The row records the truth; the invocation
+# test would have accepted a convenient fiction. Tightening the test to require an executed call
+# is NOT done here: two of the three genuinely-invoked members are reached through `bash "$g"`
+# after a `local g=` assignment, so an execution test needs dataflow this harness has no business
+# growing. The honest move is to say what the test measures, which the printed selector does.
+#
+# WHAT T375's PATH TIGHTENING DID AND DID NOT DO TO THIS GAP, because the two are one word apart.
+# It did NOT close "named, not executed" — the line above is exactly that gap and it survives. It
+# DID close the strictly larger hole T364 found underneath it: before T375 the test matched the
+# BASENAME, so this ONE line about THIS ONE file absolved EVERY file called `main.go` anywhere
+# under the guards directory. The gap is now confined to the file the line actually names.
 #
 # WHY THIS POPULATION IS PINNABLE WHERE T304'S WAS NOT — the question T323 had to answer before
 # it was allowed to build this at all. T323's refusal of T304's census rested on a MEASURED
@@ -3131,14 +3166,29 @@ guard_reconciler_ownership() {
 #
 # P-84 SURVIVES UNCHANGED, AND T358 RE-VERIFIED IT STRUCTURALLY AFTER EDITING, NOT FROM
 # TRANSCRIPTS [P-45 — cite the call site by file and line]:
-#   run_guards is DEFINED at conformance.sh:3554 and CALLED at exactly one site, :4032, as a
-#   bare command — not in a subshell and not in a command substitution — so its `exit` at :3567
-#   terminates the whole shell rather than returning a status;
-#   probe_oracle is invoked at exactly one site, :4057, and the probe line is printed at :4058,
-#   both strictly DOWNSTREAM of :4032.
-#   [Re-derived AFTER the last edit to this file, because these five numbers moved by nine lines
-#   when the paragraph you are reading was inserted. P-45 cites a call site by line; a line cited
-#   before the edit that shifts it is a citation to nothing.]
+#   run_guards is DEFINED at conformance.sh:4090 and CALLED at exactly one site, :4585, as a
+#   bare command — not in a subshell and not in a command substitution — so the two `exit`s
+#   inside it, the short-circuit at :4109 and the tally at :4143, terminate the whole shell
+#   rather than returning a status;
+#   probe_oracle is invoked at exactly one site, :4610, and the probe line is printed at :4611,
+#   both strictly DOWNSTREAM of :4585.
+#   guard_cost_census is called from run_guards at :4140, upstream of the tally exit at :4143,
+#   so a WALL-CLOCK CEILING BREACH is also exit 2 with NO probe line and is read by P-84's rule
+#   exactly like any other HARD refusal.
+#
+#   [RE-DERIVED BY T375 PASS 2 AFTER ITS OWN EDITS, WHICH MOVED EVERY ONE OF THESE NUMBERS AGAIN
+#   — pass 1 re-derived them once and pass 2 shifted them by a further ~90 lines, so the figures
+#   pass 1 wrote were already citations to nothing by the time pass 2 committed. P-45 cites a
+#   call site by line; a line cited before the edit that shifts it is a citation to nothing, and
+#   THIS BLOCK HAS NOW ROTTED TWICE INSIDE ONE TASK. That is not an argument for re-deriving
+#   more carefully; it is the standing evidence for the rule the driver adopted in this fire
+#   after measuring a 546-line shift in this same file: MATCH BY NAME, NEVER BY LINE. Every
+#   identifier above is unique in this file and `grep -n` re-derives the whole block in one
+#   command. T364's NOTE-2 is also settled here: T358's block named a single exit that was
+#   guard_graded_root_is_this_tree's SHORT-CIRCUIT, not the TALLY exit a failed
+#   guard_guards_dir_registration actually takes. BOTH are named above, because both are inside
+#   run_guards and either one is upstream of the probe — which is the property that matters and
+#   the reason T364 graded it mechanical.]
 # There is therefore no path on which a HARD guard fails and the probe line is printed.
 # This returns 1 into run_guards' tally, which exits EXIT_UNUSABLE
 # BEFORE probe_oracle prints, so a failure here is exit 2 with NO probe line — "'EXIT 2 WITH NO
@@ -3147,21 +3197,25 @@ guard_reconciler_ownership() {
 # the driver's park condition needs exit 2 AND a probe line PRESENT reading down. P-84 draws
 # that one distinction and says nothing about money in either direction.
 #
-# COST: 0.23 s wall, MEASURED by T358 after the widening as the mean of 10 uncontended
-# iterations of every operation this function performs — one `git ls-files` with three
-# pathspecs, one comment-stripping grep over this file, one `grep -vF` per DECLARATION TABLE row
-# to cut the table out of the haystack, one marker grep per member, one witness grep and one
-# `git ls-files --error-unmatch` per DECLARED or REACHED-BY row. No temporary file.
-# T323 measured 0.16 s pre-widening and T337 independently measured 0.064 s for the operations
-# as they then stood; the growth is four extra command substitutions over a ~200 KB string and
-# three extra small greps, and it is stated rather than rounded away.
+# COST: MEASURED AND PRINTED ON EVERY RUN by guard_cost_census, which reports this function's
+# elapsed wall clock beside a ceiling that REFUSES. THE NUMBER IS NOT RETYPED HERE, and its
+# absence is the repair, not an omission [T375, FU-T358-1 / C-T364-4].
 #
-# THE COST NUMBER IS IN THIS COMMENT BECAUSE A BAR NOBODY WILL WAIT FOR GETS BYPASSED, and T358
-# proved that is not theoretical. See the note beside the table-cut below: the first version of
-# that four-line block ran at 99.7% CPU for over NINE MINUTES and had to be killed. It was
-# caught by running the WHOLE BAR and by nothing else. Order of magnitude is what the next
-# reader needs: a fifth of a second against a ~74 s bar dominated by
-# guard_reconciler_ownership at ~30 s.
+# THE HISTORY THAT MADE THAT THE RIGHT CALL, kept because it is the whole argument. This comment
+# used to carry a hand-written figure: T323 wrote 0.16 s, T337 independently measured 0.064 s for
+# the operations as they then stood, T358 measured 0.23 s after widening the population, T364
+# re-measured 0.297 s under contention from its own drive. Four numbers, four authors, none of
+# them checked by anything. And in the very fire that produced the last two, the first version of
+# the table-cut block below ran at 99.7% CPU FOR OVER NINE MINUTES and had to be killed — while
+# this comment still read 0.23 s. A cost claim nothing measures is not a weak guard; it is a
+# claim with no arm at all, and the only detector of that spin was a human noticing.
+#
+# The operations whose cost the census now reports, listed because the SHAPE is what a reader
+# needs and the shape does not rot: one `git ls-files` with three pathspecs, one comment-stripping
+# grep over this file, one `grep -vF` per DECLARATION TABLE row to cut the table out of the
+# haystack, one marker grep per member, one witness grep and one `git ls-files --error-unmatch`
+# per DECLARED or REACHED-BY row. No temporary file, no pipeline, no second process in the
+# invocation test.
 guard_guards_dir_registration() {
   local gdrel=".softhouse/guards"
   local gd="$REPO_ROOT/$gdrel"
@@ -3262,8 +3316,9 @@ guard_guards_dir_registration() {
   #
   #     GUARDS-DIR-REGISTRATION: REACHED-BY <witness path, repo-relative>
   #
-  # and the guard then verifies, below, that the witness EXISTS, is TRACKED, is NOT the member
-  # itself, and NAMES THE MEMBER'S BASENAME. That is the same evidentiary standard as a CALLER
+  # and the guard then verifies, below, that the witness EXISTS, is TRACKED, is A REGULAR FILE
+  # AND NOT A SYMLINK, is NOT the member itself IN ANY SPELLING, is NOT A COPY OR HARD LINK OF
+  # the member, and NAMES THE MEMBER'S BASENAME. That is the same evidentiary standard as a CALLER
   # row — the row's LOCATION moved, its burden of proof did not — and the excuse now travels in
   # the same diff as the file it excuses, which is a strictly smaller blast radius than a table
   # in this file where one task can excuse another task's file.
@@ -3286,6 +3341,20 @@ guard_guards_dir_registration() {
   # member may not vouch for itself, and a witness that stops naming the member turns this
   # guard RED at the next graded run — the declaration is re-verified every run, never trusted
   # once.
+  #
+  # "A MEMBER MAY NOT VOUCH FOR ITSELF" HAS NOW BEEN FALSIFIED AS IMPLEMENTED FOUR TIMES, AND
+  # THE COUNT IS KEPT HERE BECAUSE IT IS THE ARGUMENT. T364 forged the row with a leading './'
+  # and with an interior '/../' — a raw string compare where every other step normalised. T375
+  # pass 1 fixed the compare and, asking what its OWN arms missed by one, T375 pass 2 found
+  # THREE MORE, all measured with the whole bar GREEN: a witness that is a SYMLINK to the
+  # member (git resolves a symlink to its own path, `grep` dereferences), a HARD LINK to it,
+  # and a plain COPY of it (one blob under two names). Each was one line inside the tripping
+  # task's own grant. THE LESSON THAT GENERALISES, and the reason every one of these is now
+  # driven by its own arm rather than argued: THE WITNESS IS IDENTIFIED BY A PATH, AND A PATH
+  # IS NOT A FILE — every fix so far tightened the resolution of the NAME while leaving open
+  # another route by which the member's own bytes come back as somebody else's testimony. The
+  # next reader should assume there is a fifth and go looking for it, not conclude from this
+  # paragraph that the class is now shut.
   # ────────────────────────────────────────────────────────────────────────────────────────
   #
   # ROW 1 — repo-state-attest.sh [T318 / FU-T304-2, adopted by T325]. A DIFFERENTIAL repo-state
@@ -3300,8 +3369,20 @@ guard_guards_dir_registration() {
 drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|ledgerguard"
 
   local total=0 invoked=0 decl_ok=0 selfdecl=0 unwired=0 bad=0
+  # SYMLINK MEMBERS GET THEIR OWN COUNTER RATHER THAN JOINING `unwired`. [T375 pass 2.] They are
+  # not "invoked by nothing" — they are not gradeable at all — and folding a second finding into
+  # an existing cardinal is how a census stops showing what it found. IT IS PRINTED AT THE END
+  # OF THE CENSUS LINE, DELIBERATELY: every arm in the T323, T358 and T375 drives matches that
+  # line by a substring ending at `invoked-by-nothing=N`, so appending cannot silently retune an
+  # older arm — a new field in the MIDDLE would have.
+  local symlinked=0
   local rel base row rowbase dir witness token found
-  local self_row self_wit
+  local self_row self_wit self_norm self_multi
+  local self_stat self_mode self_blob member_stat member_mode member_blob
+  # One literal newline, so the multi-line test below is a `case` pattern and starts no second
+  # process. Spelled once, here, rather than inside the pattern where it reads as a typo.
+  local CONF_LF
+  CONF_LF="$(printf '\nx')"; CONF_LF="${CONF_LF%x}"
 
   # THE DECLARATION TABLE'S OWN TEXT IS CUT OUT OF THE HAYSTACK BEFORE THE INVOCATION TEST.
   # [T358.] T323 already matched DECLARED rows first "so that the table's own text cannot
@@ -3321,6 +3402,12 @@ drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|led
   # bypassed, which is the same failure as switching the guard off. THE LESSON IS THE ROUTE, NOT
   # THE IDIOM: the standalone reasoning was clean and the whole-bar run refused to finish, which
   # is T323's own thesis pointed back at T358.
+  #
+  # AND THE SECOND LESSON, WHICH IS THE ONE T375 ACTED ON: the only detector of that nine-minute
+  # spin was a human noticing. The advertised figure was a comment, and a comment is not an arm.
+  # `guard_cost_census` now measures this function's wall clock on every graded run and REFUSES
+  # over a ceiling, so a spin that RETURNS is a named refusal rather than a silent pass. It still
+  # cannot interrupt one that never returns — see that function's own statement of its limit.
   #
   # A HERE-STRING IS NOT A PIPELINE, so this keeps the P-57 property the parameter expansion was
   # chosen for: there is no upstream writer to take EPIPE, and `grep -v` consumes all of its
@@ -3342,6 +3429,49 @@ TABLETEXT
     [ -n "$rel" ] || continue
     total=$((total + 1))
     base="${rel##*/}"
+
+    # THE MEMBER'S OWN INDEX ENTRY IS READ FIRST, AND A MEMBER THAT IS A SYMLINK IS REFUSED
+    # BEFORE ANY OTHER TEST TOUCHES IT. [T375 pass 2. DRIVEN: arm T375-30 was written expecting
+    # this to be fail-CLOSED already, and it FAILED — exit 0, probe PRESENT — which is how this
+    # was found. The arm is kept at its original expectation and now passes for the right
+    # reason.]
+    #
+    # THE DEFECT, AND IT IS THE WORST OF THE FOUR IN THIS CLASS. Every test below reads the
+    # member THROUGH THE FILESYSTEM: the REACHED-BY directive is grepped out of
+    # "$REPO_ROOT/$rel", and `-f` and `grep` both DEREFERENCE. But git tracks a symlink as a
+    # blob containing its TARGET PATH, so for a symlink member the bytes graded are some other
+    # file's. MEASURED: a tracked symlink `zz-t375-symmember/main.go -> ../ledgerguard/main.go`
+    # INHERITED the real main.go's REACHED-BY row wholesale — the guard read the target's
+    # directive, resolved the target's witness, found that witness names the basename `main.go`,
+    # and PASSED the planted file. Whole bar exit 0, `reached-by=2`, `invoked-by-nothing=0`.
+    # An unwired checker could land in this directory GREEN by being a symlink to a registered
+    # one, which is the exact class T323 built this guard to make impossible.
+    #
+    # WHY REFUSE RATHER THAN READ THE BLOB. Reading the tracked blob instead would make the
+    # guard grade the string "../ledgerguard/main.go" as if it were a checker's source, which
+    # is meaningless. A symlink is not a checker. It also cannot be executed as one on a host
+    # whose checkout does not materialise symlinks. The population is "tracked .sh/.py/.go
+    # SOURCES under this directory"; a link is not a source, and saying so is narrower and more
+    # honest than inventing a reading for it. THE REFUSAL IS DELIBERATELY NOT WAIVABLE BY A
+    # REACHED-BY ROW, because the row would be read through the link too.
+    member_stat=""; member_mode=""; member_blob=""
+    member_stat="$( cd "$REPO_ROOT" 2>/dev/null && \
+      git ls-files -s -- "$rel" 2>/dev/null )" || member_stat=""
+    member_mode="${member_stat%% *}"
+    member_blob="${member_stat#* }"; member_blob="${member_blob%% *}"
+    if [ "$member_mode" = "120000" ]; then
+      bad=1
+      symlinked=$((symlinked + 1))
+      warn "conformance: guard_guards_dir_registration: $rel IS A SYMLINK, and a symlink is not"
+      warn "conformance: a checker. What git tracks at that path is the TARGET PATH STRING,"
+      warn "conformance: while every test in this guard reads the file through the filesystem"
+      warn "conformance: and therefore grades the TARGET's bytes. A tracked symlink to an"
+      warn "conformance: already-registered member INHERITED that member's REACHED-BY row and"
+      warn "conformance: landed GREEN [T375 pass 2, arm T375-30]. This refusal is NOT waivable"
+      warn "conformance: by a REACHED-BY row, because that row would be read through the link"
+      warn "conformance: too. Commit a real file, or move it out of $gdrel. REFUSED."
+      continue
+    fi
 
     # DECLARED ROWS ARE MATCHED FIRST, so that the table's own text cannot satisfy the
     # invocation test below and vouch for its own subject.
@@ -3377,28 +3507,168 @@ INNER
         self_wit="${self_row##*REACHED-BY}"
         self_wit="${self_wit#"${self_wit%%[![:space:]]*}"}"
         self_wit="${self_wit%%[[:space:]]*}"
+
+        # THE WITNESS PATH IS NORMALISED BEFORE IT IS COMPARED TO ANYTHING. [T375, closing
+        # T364's F-T364-2, which was DRIVEN through the whole bar with a control before it
+        # was reported and is driven red again here.]
+        #
+        # THE DEFECT: the self-certification test below used to be a RAW STRING COMPARE,
+        # `[ "$self_wit" = "$rel" ]`, and it was the only step in this chain that did not
+        # normalise. Every other step handed the path to git or to the filesystem, both of
+        # which resolve `./p` and `a/../p` to `p`. So the sentence this guard PRINTS in its
+        # own refusal — "a file may not vouch for itself" — was true of exactly ONE spelling
+        # of the member's path and false of every other. T364 forged two of them (`./M` and
+        # `.../x/../M`), each in ONE LINE inside the tripping task's own edit grant, and the
+        # whole bar stayed GREEN while the guard printed "(verified: it names …)".
+        #
+        # THE FIX IS TO ASK GIT, WHICH IS ALREADY BEING ASKED. `git ls-files --error-unmatch`
+        # was already run on the witness to prove it TRACKED; it was run with its output
+        # discarded. Its output IS the canonical repo-relative path, so capturing it costs
+        # nothing and closes the class rather than a spelling. MEASURED on this tree [T375]:
+        # `M`, `./M`, `.//M`, `./././M`, `a/./M`, `a/x/../M` and the ABSOLUTE path all
+        # normalise to the identical `.softhouse/guards/ledgerguard/main.go`. The absolute
+        # spelling is one T364 did not test and this compare closes it too.
+        #
+        # WHAT DELIBERATELY DID NOT MOVE. The `-f` existence test still runs on the TYPED
+        # spelling, so the two refusals T364 verified fail-closed by inspection — a witness
+        # that is a DIRECTORY, and a witness carrying PATHSPEC MAGIC such as ":(glob)*" —
+        # still refuse there and refuse first. Normalising before `-f` without that would
+        # have let `:(glob)…` through git and then past `-f` on the resolved path, i.e. this
+        # repair could have opened a hole while closing one. It does not; the magic spelling
+        # is driven red as its own arm.
+        #
+        # A WITNESS THAT RESOLVES TO MORE THAN ONE PATH IS NOW A REFUSAL. `git ls-files` over
+        # a pathspec can print many lines; "the witness" would then be whichever line came
+        # first, which is not a measurement — the same reasoning `_census_one` uses for an
+        # ambiguous sed match. No pipeline is used to count them (P-57 — "THE MACHINERY THAT
+        # EXISTS TO CATCH A SILENT GUARD CAN INVERT ITSELF, AND IT INVERTS ON EXACTLY THE
+        # INPUTS THAT MATTER" [VERIFIED: .softhouse/patterns.md:1654]); a `case` on an
+        # embedded newline starts no second process at all.
+        self_norm=""
+        if [ -n "$self_wit" ]; then
+          self_norm="$( cd "$REPO_ROOT" 2>/dev/null && \
+            git ls-files --error-unmatch -- "$self_wit" 2>/dev/null )" || self_norm=""
+        fi
+        self_multi=0
+        case "$self_norm" in
+          *"$CONF_LF"*) self_multi=1 ;;
+        esac
+
+        # THE WITNESS MUST BE AN INDEPENDENT TRACKED FILE, AND `grep` MUST READ THE BYTES GIT
+        # TRACKS AT THAT PATH. [T375 pass 2, closing three fail-opens of F-T364-2's OWN class
+        # that pass 1's normalisation does not reach. All three were DRIVEN GREEN — i.e. the
+        # whole bar exited 0 with `VERDICT: PASS` — before this block was written, and are
+        # driven RED by arms T375-18..21 after it.]
+        #
+        # THE DEFECT. Pass 1 fixed the SPELLING of the witness path and stopped there. But
+        # `self_norm` names a PATH, and a path is not a file: three different constructions let
+        # the member's own bytes come back as "some other file that names me", and the guard
+        # then printed `(verified: it names <base>)` while the bar stayed GREEN.
+        #
+        #   SYMLINK.   `git ls-files` resolves a symlink to ITS OWN PATH, never to its target,
+        #              so `self_norm != rel` and the self-reference compare above is satisfied.
+        #              `-f` and `grep` both DEREFERENCE. So a member `m.sh` plus a tracked
+        #              symlink `w.txt -> m.sh` made `m.sh` vouch for itself. MEASURED: exit 0,
+        #              probe PRESENT, `reached-by=2`.
+        #   HARD LINK. `ln m.sh w.txt` — two tracked paths, ONE inode, one blob. Same result.
+        #   PLAIN COPY. `cp m.sh w.txt` — two inodes, still ONE blob, because the witness holds
+        #              nothing but the member's own text. "Another file names me" satisfied by
+        #              my own words retyped is self-certification with an extra step.
+        #
+        # WHY TWO TESTS AND NOT ONE. They fail differently and neither subsumes the other:
+        # a symlink's tracked blob is the TARGET PATH STRING, so it does NOT collide with the
+        # member's blob and no content compare can catch it; a hard link and a copy are
+        # ordinary regular files, so no mode check can catch them.
+        #
+        #   (1) MODE. A symlink witness is refused outright, and the reason is independent of
+        #       self-reference: what git tracks at that path is the target path string, while
+        #       `grep` reads the DEREFERENCED file's bytes. The bytes graded are then not the
+        #       bytes committed at that path, and the target may not be in this repository at
+        #       all — which is the identical objection this direction already prints for an
+        #       untracked witness, "it is absent from every commit and cannot be reviewed".
+        #   (2) BLOB. A witness whose tracked blob IS the member's tracked blob is the member.
+        #       Comparing object ids compares what is COMMITTED, not what is on this host, so
+        #       it is stable across checkouts and it catches copy and hard link with one test.
+        #
+        # MEASURED ON THIS TREE BEFORE THE CHANGE [T375 pass 2]: the guards directory tracks no
+        # symlink and no two identical blobs, so neither test refuses anything standing today —
+        # verified by `git ls-files -s .softhouse/guards`, and by arm T375-09, the legitimate
+        # `./`-spelled witness, which stays ACCEPTED.
+        #
+        # NO PIPELINE, for the reason P-57 gives and this function keeps everywhere else
+        # [VERIFIED: .softhouse/patterns.md:1654]. `git ls-files -s` prints
+        # `<mode> <objectid> <stage>\t<path>`; the two fields are taken with shell parameter
+        # expansion, which starts no second process and cannot EPIPE.
+        # `member_blob` is ALREADY IN HAND — it was read at the top of this loop iteration, by
+        # the symlink refusal above, from the same `git ls-files -s` call. It is not re-read
+        # here: two reads of one quantity are two chances to disagree.
+        self_stat=""; self_mode=""; self_blob=""
+        if [ -n "$self_norm" ] && [ "$self_multi" -eq 0 ]; then
+          self_stat="$( cd "$REPO_ROOT" 2>/dev/null && \
+            git ls-files -s -- "$self_norm" 2>/dev/null )" || self_stat=""
+          self_mode="${self_stat%% *}"
+          self_blob="${self_stat#* }"; self_blob="${self_blob%% *}"
+        fi
         if [ -z "$self_wit" ]; then
           bad=1
           warn "conformance: guard_guards_dir_registration: $rel carries a REACHED-BY directive"
           warn "conformance: with NO witness path after it. An unreadable declaration is an"
           warn "conformance: ERROR, never a pass."
-        elif [ "$self_wit" = "$rel" ]; then
+        elif [ "$self_multi" -ne 0 ]; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
+          warn "conformance: which resolves to MORE THAN ONE TRACKED PATH. A witness is one file"
+          warn "conformance: that names this member; 'whichever path git listed first' is not a"
+          warn "conformance: measurement and cannot be reviewed. Name the one file. REFUSED."
+        elif [ "$self_wit" = "$rel" ] || [ "$self_norm" = "$rel" ]; then
           bad=1
           warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY ITSELF. A"
           warn "conformance: file may not vouch for itself — that is self-certification, which"
           warn "conformance: is exactly the amnesty this direction was built to avoid. REFUSED."
+          if [ "$self_wit" != "$rel" ]; then
+            warn "conformance: (the row spells it '$self_wit', which git resolves to '$self_norm'."
+            warn "conformance: The COMPARE IS ON THE RESOLVED PATH — T364's F-T364-2, closed by"
+            warn "conformance: T375 — so a leading './', an interior '/../' or an absolute path"
+            warn "conformance: is the same self-reference and is refused as one.)"
+          fi
         elif [ ! -f "$REPO_ROOT/$self_wit" ]; then
           bad=1
           warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
           warn "conformance: and THAT REACHED-BY WITNESS DOES NOT EXIST. A declaration whose"
           warn "conformance: witness is gone is an amnesty, not a record. REFUSED."
-        elif ! ( cd "$REPO_ROOT" 2>/dev/null && git ls-files --error-unmatch -- "$self_wit" ) \
-               >/dev/null 2>&1; then
+        elif [ -z "$self_norm" ]; then
           bad=1
           warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
           warn "conformance: which is NOT TRACKED. An untracked witness is host state — it is"
           warn "conformance: absent from every commit and cannot be reviewed. REFUSED."
-        elif ! LC_ALL=C grep -qF -- "$base" "$REPO_ROOT/$self_wit"; then
+          warn "conformance: (READ THIS BEFORE CONCLUDING THE GUARD IS WRONG. The file EXISTS on"
+          warn "conformance: disk — the existence test above passed — yet git will not resolve"
+          warn "conformance: the spelling. The usual cause is CASE: this program's macOS hosts"
+          warn "conformance: mount a case-INSENSITIVE filesystem, so '-f' accepts a wrong-case"
+          warn "conformance: path that git, which indexes case-SENSITIVELY, does not. Spell the"
+          warn "conformance: witness exactly as 'git ls-files' prints it. The other cause is a"
+          warn "conformance: path reaching THROUGH a symlinked directory, which git never"
+          warn "conformance: indexes. Either way the refusal stands: a spelling git cannot"
+          warn "conformance: resolve cannot be re-verified on another checkout [T375 pass 2].)"
+        elif [ "$self_mode" = "120000" ]; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
+          warn "conformance: and THAT WITNESS IS A SYMLINK. What git tracks at that path is the"
+          warn "conformance: TARGET PATH STRING; the test below would follow the link and grade"
+          warn "conformance: bytes that are not committed at that path — and the target may not"
+          warn "conformance: be in this repository at all. A symlink to the member ITSELF made"
+          warn "conformance: this file vouch for itself and the bar stayed GREEN [T375 pass 2,"
+          warn "conformance: the same class as T364's F-T364-2]. Name a real tracked file."
+          warn "conformance: REFUSED."
+        elif [ -n "$member_blob" ] && [ "$self_blob" = "$member_blob" ]; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
+          warn "conformance: and THAT WITNESS IS BYTE-IDENTICAL TO THIS MEMBER — same git object"
+          warn "conformance: $member_blob. A copy or a hard link of the member is the member: it"
+          warn "conformance: names $base only because the member's own text names it. That is"
+          warn "conformance: self-certification with an extra step, which is exactly the amnesty"
+          warn "conformance: this direction exists to refuse [T375 pass 2]. REFUSED."
+        elif ! LC_ALL=C grep -qF -- "$base" "$REPO_ROOT/$self_norm"; then
           bad=1
           warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
           warn "conformance: and THAT REACHED-BY WITNESS DOES NOT NAME $base. The declaration is"
@@ -3407,11 +3677,48 @@ INNER
         else
           selfdecl=$((selfdecl + 1))
           say "conformance:     REACHED-BY $rel — declared in its own header, reached by"
-          say "conformance:                $self_wit (verified: it names $base)"
+          say "conformance:                $self_norm (verified: it names $base)"
         fi
         continue
       fi
 
+      # THE INVOCATION TEST MATCHES THE MEMBER'S REPO-RELATIVE PATH, NOT ITS BARE BASENAME.
+      # [T375, closing T364's F-T364-1 — which T364 DROVE with a control, and which is driven
+      # red here in both directions.]
+      #
+      # THE DEFECT T364 FOUND, and it was a hole in the very claim T358 was commissioned to
+      # repair. The test was `case "$code" in *"$base"*)`, i.e. the member's BASENAME anywhere
+      # on a non-comment line. `main.go` occurs on two non-comment lines of this file — at the
+      # `local ccsrc=` assignment and the `say` beneath it, where a DIFFERENT guard reads that
+      # file's TEXT — so a genuinely unwired Go checker named `main.go`, in ANY subdirectory
+      # under the guards directory, read INVOKED and the whole bar stayed GREEN. The same file
+      # under a unique basename was correctly refused; the basename was the entire difference.
+      # T358 widened the population to `.go` precisely so an unwired Go checker could not land
+      # unseen, and `main.go` is the single most likely filename for the next one, in a
+      # directory whose only Go checker is already called that. The population widened and the
+      # predicate did not follow it.
+      #
+      # WHY THE PATH IS THE RIGHT PREDICATE AND NOT MERELY A TIGHTER ONE. A basename is not an
+      # identifier: it is shared by every file that happens to be called that, so a mention of
+      # ANOTHER file absolves this one. A repo-relative path IS an identifier — it names one
+      # tracked file and no other. MEASURED on this tree before the change was made [T375], so
+      # this is a calibration and not a hope: all three genuinely-invoked members are named by
+      # their FULL repo-relative path on the line that runs them —
+      #     .softhouse/guards/check-ledger-invariants.sh   `bash "$REPO_ROOT/…"`
+      #     .softhouse/guards/check-capture-namespace.sh   `local g="$REPO_ROOT/…"`
+      #     .softhouse/guards/check-dead-path-frontier.sh  `local g="$REPO_ROOT/…"`
+      # — so `invoked` is unchanged at 3 and the CALIBRATION arm below is not weakened by this.
+      #
+      # THIS IS STILL A NAMING TEST AND STILL NOT PROOF OF EXECUTION, and T358's reason for
+      # refusing to make it one is untouched: two of those three are reached through `bash "$g"`
+      # after a `local g=` assignment, so an execution test needs dataflow this harness has no
+      # business growing. What changed is WHICH STRING counts as naming this member. The gap
+      # that remains is one order of magnitude narrower and is stated in the printed selector:
+      # a non-comment line that spells THIS MEMBER'S OWN PATH while not calling it still
+      # absolves it. `.softhouse/guards/ledgerguard/main.go` is such a line today, which is why
+      # main.go carries a REACHED-BY row recording what actually reaches it — the row is read
+      # ABOVE this test, so the truthful record wins over the convenient fiction either way.
+      #
       # NO PIPELINE HERE, AND THAT IS NOT A STYLE CHOICE. `printf … | grep -q` is a member of
       # the EPIPE family P-57 names: grep -q exits on its FIRST match, printf then dies of
       # SIGPIPE, and under `set -o pipefail` — which this file sets at the top — the pipeline
@@ -3419,7 +3726,7 @@ INNER
       # CALIBRATION arm refused the very first graded run, reporting all three genuinely
       # invoked checkers as unwired. A shell `case` starts no second process and cannot EPIPE.
       case "$code" in
-      *"$base"*)
+      *"$rel"*)
         invoked=$((invoked + 1))
         say "conformance:     INVOKED    $rel"
         ;;
@@ -3432,6 +3739,21 @@ INNER
         warn "conformance: is not a guard … verify the path that actually executes in"
         warn "conformance: CI/conformance calls it, not merely that a test does.'"
         warn "conformance:"
+        # THE DIAGNOSTIC THAT NAMES T364's F-T364-1 OUT LOUD, because the reader who trips this
+        # arm on a file called `main.go` will otherwise search this harness, find its basename,
+        # and conclude the guard is broken. It is not: the occurrence names a DIFFERENT file.
+        case "$code" in
+        *"$base"*)
+          warn "conformance: NOTE — the BASENAME '$base' DOES occur on a non-comment line of this"
+          warn "conformance: harness, and that is NOT a registration. The occurrence names some"
+          warn "conformance: OTHER file with the same basename; this member's own path,"
+          warn "conformance: $rel, does not occur. Until T375 the bare"
+          warn "conformance: basename absolved, so an unwired checker named 'main.go' was"
+          warn "conformance: reported INVOKED and the bar stayed GREEN [T364 F-T364-1]. Use the"
+          warn "conformance: REACHED-BY row below to record what actually reaches this file."
+          warn "conformance:"
+          ;;
+        esac
         warn "conformance: THE FIX YOU CAN ALMOST CERTAINLY MAKE YOURSELF, without holding"
         warn "conformance: this file: if $base is reached by something OTHER than this harness"
         warn "conformance: — a test, a build script, the fire driver, a Go module's own runner"
@@ -3439,9 +3761,16 @@ INNER
         warn "conformance:"
         warn "conformance:     GUARDS-DIR-REGISTRATION: REACHED-BY <witness path, repo-relative>"
         warn "conformance:"
-        warn "conformance: The witness must be TRACKED, must not be $base itself, and must NAME"
-        warn "conformance: $base — this guard re-verifies all three every run, so it is a record"
-        warn "conformance: and not an amnesty. Both files are yours; no edit to this harness is"
+        warn "conformance: The witness must be TRACKED; must be a REGULAR FILE, never a symlink;"
+        warn "conformance: must not be $rel in ANY"
+        warn "conformance: spelling — a leading './', an interior '/../' and an absolute path all"
+        warn "conformance: resolve to the same file and are refused as the same self-reference;"
+        warn "conformance: must not be a COPY or a HARD LINK of it, which git shows as the same"
+        warn "conformance: object id; and must NAME $base. This guard re-verifies EVERY ONE of"
+        warn "conformance: those every run, so it is a record and not an amnesty — each was a"
+        warn "conformance: way to forge this row and each is now driven RED by its own arm"
+        warn "conformance: [T364 F-T364-2; T375 passes 1 and 2]."
+        warn "conformance: Both files are yours; no edit to this harness is"
         warn "conformance: needed, which is the point: the two older remedies below both require"
         warn "conformance: editing a file this program serialises to one holder per batch."
         warn "conformance:"
@@ -3532,15 +3861,20 @@ STALE
     return 1
   fi
 
-  say "conformance:   GUARDS-DIR-REGISTRATION: population=$total invoked=$invoked declared=$decl_ok reached-by=$selfdecl invoked-by-nothing=$unwired"
+  say "conformance:   GUARDS-DIR-REGISTRATION: population=$total invoked=$invoked declared=$decl_ok reached-by=$selfdecl invoked-by-nothing=$unwired symlink-members=$symlinked"
   say "conformance:   (selector: git ls-files with ':(glob)' magic over the TRACKED '*.sh', '*.py'"
   say "conformance:   and '*.go' files at ANY DEPTH under $gdrel, from \$REPO_ROOT. NOT closed over"
   say "conformance:   other languages or committed binaries — this is a count over that search.)"
-  say "conformance:   (INVOKED means the basename appears on a NON-COMMENT line of this file. That"
-  say "conformance:   is a NAMING test and NOT proof of execution: two of the three members that"
-  say "conformance:   read INVOKED today are named on a 'local g=' assignment, and the call is a"
-  say "conformance:   variable expansion this test cannot see. [T337 F-T337-4, corrected by T358 —"
-  say "conformance:   the old wording said 'never a mention', which overstated it.])"
+  say "conformance:   (INVOKED means the member's REPO-RELATIVE PATH appears on a NON-COMMENT line"
+  say "conformance:   of this file — NOT its bare basename. [T375, closing T364 F-T364-1: a"
+  say "conformance:   basename is shared, so a mention of ANOTHER file absolved this one, and an"
+  say "conformance:   unwired checker named 'main.go' read INVOKED with the bar GREEN.] It is"
+  say "conformance:   still a NAMING test and still NOT proof of execution: two of the three"
+  say "conformance:   members that read INVOKED today are named on a 'local g=' assignment and the"
+  say "conformance:   call is a variable expansion this test cannot see. [T337 F-T337-4, corrected"
+  say "conformance:   by T358 — the old wording said 'never a mention', which overstated it.] What"
+  say "conformance:   remains open, stated so nobody concludes more than was closed: a non-comment"
+  say "conformance:   line spelling THIS member's own path without calling it still absolves it.)"
   if [ "$bad" -ne 0 ]; then
     warn "conformance: guard_guards_dir_registration FAILED. A checker in the canonical guards"
     warn "conformance: directory is unreached, or a declaration about one is no longer true."
@@ -3551,8 +3885,216 @@ STALE
   return 0
 }
 
+# ===========================================================================================
+# THE BAR MEASURES ITS OWN WALL-CLOCK COST, PER GUARD, AND REFUSES ON A CEILING.
+#   [T375, closing FU-T358-1 / C-T364-4.]
+# ===========================================================================================
+# WHY THIS EXISTS, and it is not a performance feature. T358 wrote four lines of this function
+# as bash parameter substitution over a ~94 KB string. That substitution is quadratic; the
+# guard — ADVERTISED IN THIS FUNCTION'S OWN COMMENT AT 0.23 s — spun at 99.7% CPU for 9m43s and
+# had to be killed. T364 reproduced the idiom gap independently and off the bar: the delivered
+# `grep -vF` here-string form did the identical job in 0.144 s while the rejected form was still
+# running after 40 s and was killed.
+#
+# THE FINDING IS NOT THE BUG. The bug was fixed in one line. The finding is that NOTHING IN THIS
+# HARNESS MEASURED IT. Four hand-written cost comments sat in this function — 0.23 s, 0.4 s,
+# 1.3 s, 30.3 s — and not one of them was checked by anything, so a guard whose comment said
+# 0.23 s and whose real cost was unbounded was caught by A HUMAN NOTICING that a 75-second run
+# had not returned in ten minutes. That is P-45 in its purest form: "A test-only guard is not a
+# guard. … when hardening a check, verify the path that actually executes in CI/conformance
+# calls it, not merely that a test does." [VERIFIED: .softhouse/patterns.md:1503]. A comment is
+# not even a test-only guard; it is a claim with no arm at all. And the consequence is the one
+# this file already argues about severity, one level down: A GRADING INSTRUMENT NOBODY WILL WAIT
+# FOR GETS BYPASSED, which is indistinguishable from switching it off.
+#
+# WHAT IS MEASURED AND WHAT IS PINNED — read this before "fixing" a breach by raising a number.
+# The ELAPSED SECONDS ARE NOT PINNED and must never be: a wall-clock figure is a statement about
+# the host as much as the tree, and a bar that goes red because somebody else's build was
+# running is a bar that gets bypassed — which is the same failure the ceiling exists to prevent.
+# T358 raised exactly that objection against building a timing gate at all and it is correct, so
+# it is this instrument's FIRST DESIGN CONSTRAINT rather than an afterthought. What IS pinned,
+# in the way every other frontier in this file is pinned — BY NAME, never by magnitude — is:
+#   * every guard run through this function HAS A BUDGET ROW (an unbudgeted guard REFUSES), and
+#   * every budget row WAS ACTUALLY TIMED (a row for a guard that no longer runs REFUSES, the
+#     same stale-amnesty shape the DECLARATION TABLE above refuses), and
+#   * AT LEAST ONE guard was timed (an empty census passes everything — the vacuity arm this
+#     file already applies to the guards-directory population, to T362's corpus guard and to
+#     the pre-fire lock control, all three of which reported a population of ZERO and PASSED).
+#
+# HOW THE BUDGETS WERE SET, so the next author can re-derive them instead of guessing:
+#   budget = max(60, 10 x the elapsed seconds MEASURED by this instrument on an idle host),
+# rounded up to a round number. Ten times, because the defect class is an UNBOUNDED SPIN — 583 s
+# against an advertised 0.23 s, a factor of ~2500 — and not a 30% regression; a ceiling that
+# fires on a factor of two would fire on a loaded host and teach the next reader to ignore it.
+# A floor of 60 s, because every sub-second guard would otherwise have a budget inside the
+# resolution of the clock. The 9m43s spin breaches the smallest of these budgets nine times over.
+# `guard_ledger_invariants` is the one exception to the arithmetic and it is deliberate: it
+# measures 2 s here on a WARM Go build cache and a cold one is a different order of magnitude, so
+# its ceiling is set for the cold case rather than for the measurement.
+#
+# THE FIRST RUN OF THIS INSTRUMENT ALREADY FOUND TWO WRONG COST CLAIMS, which is the whole
+# argument for it and is recorded rather than tidied away. (1) `guard_reconciler_ownership`
+# measured **41 s** against the 30.3 s its hand-written comment had claimed since T323 — a third
+# high, never noticed, because nothing read it. (2) `guard_pnumber_citations` measured **21 s**
+# and HAD NO COST CLAIM AT ALL: it is the second most expensive guard in this function and no
+# reader of this file could have known that. Both figures are now printed by the census on every
+# run and neither is retyped here as a cardinal to maintain.
+#
+# WHAT THIS DOES NOT DO, STATED PLAINLY BECAUSE THE HONEST LIMIT IS SMALLER THAN THE FEATURE
+# SOUNDS. It does NOT interrupt a running guard. A guard is a shell function that must be called
+# in THIS shell — running it under `timeout` or in a background subshell would break the `exit`
+# that `guard_graded_root_is_this_tree` takes and would discard every `failed=1` the others set
+# — so the elapsed time is read AFTER the guard returns. A guard that never returns still hangs
+# the bar forever. WHAT CHANGES IS THAT A SPIN THAT DOES RETURN IS NOW A REFUSAL WITH A NAMED
+# GUARD AND A MEASURED COST, instead of a silent PASS that only a watching human ever caught.
+# Bounding a non-returning guard needs a subprocess architecture this function does not have and
+# is recorded as a follow-up, not smuggled in here.
+#
+# RESOLUTION IS ONE SECOND, from bash's `SECONDS`. Deliberate: `EPOCHREALTIME` is bash 5 only
+# (this host's /bin/bash is 3.2) and its value carries a decimal point that would have to be
+# taken apart in a file whose no-float guards read every line here. Integer seconds cannot
+# express 0.23 s and this instrument does not pretend to — it prints `0` and means "under one
+# second". The defect class it exists for is three orders of magnitude away from that.
+#
+# P-84 IS UNAFFECTED AND WAS RE-DERIVED AFTER THIS BLOCK WAS INSERTED, not before. Every line
+# added here executes INSIDE run_guards, which is called at exactly one site as a bare command,
+# strictly upstream of the single site that prints the oracle probe line. A cost refusal is
+# therefore exit 2 with NO probe line — "'EXIT 2 WITH NO PROBE LINE' IS THE GUARD WORKING. READ
+# THE ABSENCE, NOT THE VALUE." [VERIFIED: .softhouse/patterns.md:2813]. The two call sites are
+# re-cited by line at the foot of guard_cost_census, AFTER these lines shifted them.
+GUARD_COST_BUDGETS="guard_graded_root_is_this_tree|60
+guard_no_float_in_vectors|60
+guard_no_float_in_harness|60
+guard_gofmt|60
+guard_no_float_in_capture_requests|60
+guard_no_narrow_catch_in_capture_rigs|60
+guard_ledger_invariants|300
+guard_no_fail_open_instruments|60
+guard_no_host_state_in_lint_corpus|60
+guard_pnumber_citations|300
+guard_accepting_side_gap_declared|60
+guard_guards_dir_registration|60
+guard_capture_namespace|60
+guard_dead_path_frontier|60
+guard_reconciler_ownership|500"
+
+GUARD_COST_ROWS=""
+GUARD_COST_TIMED=0
+GUARD_COST_TOTAL=0
+GUARD_COST_BREACH=0
+GUARD_COST_UNBUDGETED=0
+
+# timed_guard <guard-function-name>
+# Calls the guard AS A BARE COMMAND IN THIS SHELL — no subshell, no command substitution, no
+# `timeout` — so an `exit` inside a guard still terminates the run and every global a guard sets
+# still lands. Returns the guard's own status unchanged; a budget breach is recorded here and
+# ADJUDICATED in guard_cost_census, so that a slow guard and a failing guard stay two separate
+# findings and neither can mask the other.
+timed_guard() {
+  local gname="$1" budget="" row t0 elapsed rc=0
+  while IFS= read -r row; do
+    [ -n "$row" ] || continue
+    if [ "${row%%|*}" = "$gname" ]; then budget="${row##*|}"; fi
+  done <<COSTBUDGETS
+$GUARD_COST_BUDGETS
+COSTBUDGETS
+  t0=$SECONDS
+  "$gname" || rc=1
+  elapsed=$((SECONDS - t0))
+  GUARD_COST_TIMED=$((GUARD_COST_TIMED + 1))
+  GUARD_COST_TOTAL=$((GUARD_COST_TOTAL + elapsed))
+  if [ -z "$budget" ]; then
+    GUARD_COST_UNBUDGETED=$((GUARD_COST_UNBUDGETED + 1))
+    GUARD_COST_ROWS="$GUARD_COST_ROWS$gname|$elapsed|NO-BUDGET-ROW
+"
+    warn "conformance: guard-cost: $gname ran with NO BUDGET ROW in GUARD_COST_BUDGETS. An"
+    warn "conformance: unbudgeted guard is an unmeasured one, and this instrument exists because"
+    warn "conformance: an unmeasured guard spun the whole bar for 9m43s. Add its row."
+  else
+    GUARD_COST_ROWS="$GUARD_COST_ROWS$gname|$elapsed|$budget
+"
+    if [ "$elapsed" -gt "$budget" ]; then
+      GUARD_COST_BREACH=$((GUARD_COST_BREACH + 1))
+      warn "conformance: guard-cost: $gname took ${elapsed}s, over its ${budget}s CEILING."
+      warn "conformance: This is not a performance complaint. A guard nobody will wait for is a"
+      warn "conformance: guard that gets bypassed, and the last time one ran away it spun at"
+      warn "conformance: 99.7% CPU for 9m43s while its own comment advertised 0.23 s. REFUSED."
+    fi
+  fi
+  return "$rc"
+}
+
+# The census. Prints EVERY row on EVERY run, pass or fail — a guard that speaks only when it
+# fires cannot be told apart from one that never ran (P-22 — "A guard, a canary, or a control
+# that cannot fail is worse than none — because it is believed"
+# [VERIFIED: .softhouse/patterns.md:473]).
+guard_cost_census() {
+  local row name elapsed budget bad=0 stale=0 rows=0 seen
+  if [ "$GUARD_COST_TIMED" -eq 0 ]; then
+    warn "conformance: guard-cost: NOT ONE guard was timed. That is a SELECTOR failure, not a"
+    warn "conformance: cheap run — this function calls fifteen guards. An empty census passes"
+    warn "conformance: everything. REFUSED."
+    return 1
+  fi
+  say "conformance:   GUARD-COST CENSUS: $GUARD_COST_TIMED guards timed, ${GUARD_COST_TOTAL}s total wall,"
+  say "conformance:   ceiling breaches $GUARD_COST_BREACH, unbudgeted guards $GUARD_COST_UNBUDGETED."
+  while IFS= read -r row; do
+    [ -n "$row" ] || continue
+    rows=$((rows + 1))
+    name="${row%%|*}"
+    budget="${row##*|}"
+    elapsed="${row#*|}"; elapsed="${elapsed%%|*}"
+    say "conformance:     COST ${elapsed}s / ceiling ${budget}s   $name"
+  done <<COSTROWS
+$GUARD_COST_ROWS
+COSTROWS
+  # A BUDGET ROW THAT WAS NEVER TIMED is a row for a guard this function no longer runs. Same
+  # refusal, and the same reason, as a DECLARATION TABLE row whose subject has left the
+  # population: a stale row starts excusing the next guard to take that name.
+  while IFS= read -r row; do
+    [ -n "$row" ] || continue
+    name="${row%%|*}"
+    seen=""
+    while IFS= read -r elapsed; do
+      [ -n "$elapsed" ] || continue
+      if [ "${elapsed%%|*}" = "$name" ]; then seen=1; fi
+    done <<COSTSEEN
+$GUARD_COST_ROWS
+COSTSEEN
+    if [ -z "$seen" ]; then
+      stale=$((stale + 1))
+      bad=1
+      warn "conformance: guard-cost: GUARD_COST_BUDGETS carries a row for $name, which this run"
+      warn "conformance: NEVER TIMED. A budget for a guard that no longer runs is a row that will"
+      warn "conformance: start excusing the next guard to take that name. Drop it in the same"
+      warn "conformance: commit that removed the guard."
+    fi
+  done <<COSTSTALE
+$GUARD_COST_BUDGETS
+COSTSTALE
+  say "conformance:   (RESOLUTION 1 s, from bash SECONDS; a 0 means UNDER ONE SECOND. The elapsed"
+  say "conformance:   figures are RECORDED and NOT PINNED — wall clock is a fact about the host as"
+  say "conformance:   well as the tree. What is pinned, by NAME: every guard has a ceiling row,"
+  say "conformance:   every ceiling row was timed, and at least one guard was timed. The ceiling is"
+  say "conformance:   read AFTER the guard returns, so it turns a spin that RETURNS into a named"
+  say "conformance:   refusal; it does not interrupt one that never does. [T375, FU-T358-1.])"
+  if [ "$GUARD_COST_BREACH" -ne 0 ] || [ "$GUARD_COST_UNBUDGETED" -ne 0 ] || [ "$bad" -ne 0 ]; then
+    warn "conformance: guard_cost_census FAILED: $GUARD_COST_BREACH ceiling breach(es),"
+    warn "conformance: $GUARD_COST_UNBUDGETED unbudgeted guard(s), $stale stale budget row(s)."
+    return 1
+  fi
+  say "conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached."
+  return 0
+}
+
 run_guards() {
   local failed=0
+  # EVERY GUARD BELOW IS CALLED THROUGH `timed_guard`, which wraps it WITHOUT a subshell so the
+  # short-circuit `exit` immediately below still terminates the run. The cost census is folded
+  # into the same `failed` tally as the guards themselves, at the end, so that a ceiling breach
+  # and a guard verdict are two separate findings in the transcript and one cannot hide the
+  # other. [T375, FU-T358-1 / C-T364-4.]
+  #
   # FIRST, and it SHORT-CIRCUITS rather than joining the `failed=1` tally the others use.
   # Two reasons, both learned the expensive way. (1) Every guard below answers a question
   # about $REPO_ROOT; until it is settled that $REPO_ROOT is the tree being GRADED, none of
@@ -3561,30 +4103,41 @@ run_guards() {
   # statement was in the output and the reader took the summary instead. (2) The tally style
   # exists so that one bad guard does not hide another; here there is nothing to hide, the
   # divergence subsumes every downstream result.
-  guard_graded_root_is_this_tree || {
+  timed_guard guard_graded_root_is_this_tree || {
     warn "conformance: EXIT 2 — no verdict is available, and NO other guard was run: their"
     warn "conformance: results would describe a tree this run was not going to grade."
     exit "$EXIT_UNUSABLE"
   }
-  guard_no_float_in_vectors           || failed=1
-  guard_no_float_in_harness           || failed=1
-  guard_gofmt                         || failed=1
-  guard_no_float_in_capture_requests  || failed=1
-  guard_no_narrow_catch_in_capture_rigs || failed=1
-  guard_ledger_invariants             || failed=1
-  guard_no_fail_open_instruments      || failed=1
-  guard_no_host_state_in_lint_corpus  || failed=1
-  guard_pnumber_citations             || failed=1        # T282, wired HARD by T331
-  guard_accepting_side_gap_declared   || failed=1
+  timed_guard guard_no_float_in_vectors           || failed=1
+  timed_guard guard_no_float_in_harness           || failed=1
+  timed_guard guard_gofmt                         || failed=1
+  timed_guard guard_no_float_in_capture_requests  || failed=1
+  timed_guard guard_no_narrow_catch_in_capture_rigs || failed=1
+  timed_guard guard_ledger_invariants             || failed=1
+  timed_guard guard_no_fail_open_instruments      || failed=1
+  timed_guard guard_no_host_state_in_lint_corpus  || failed=1
+  timed_guard guard_pnumber_citations             || failed=1   # T282, wired HARD by T331
+  timed_guard guard_accepting_side_gap_declared   || failed=1
   # T323 — the three guards T299, T316 and T319 each built, drove red AND green, and could not
   # wire because this file was assigned to somebody else. Each joins the `failed=1` tally rather
   # than short-circuiting: unlike guard_graded_root_is_this_tree none of them invalidates the
   # other guards' answers, and one bad guard must not hide another. Registered CHEAPEST FIRST so
   # a fast refusal prints before the 30-second one is paid for.
-  guard_guards_dir_registration       || failed=1        # T323 iter 2, T358 —  0.23 s
-  guard_capture_namespace             || failed=1        # T299, wired by T323 —  0.4 s
-  guard_dead_path_frontier            || failed=1        # T316, wired by T323 —  1.3 s
-  guard_reconciler_ownership          || failed=1        # T319, wired by T323 — 30.3 s
+  #
+  # THE PER-GUARD COST FIGURES THAT USED TO SIT IN THIS COLUMN AS COMMENTS ARE GONE, AND THAT IS
+  # THE POINT OF T375, NOT AN OMISSION. They read 0.23 s / 0.4 s / 1.3 s / 30.3 s; not one of
+  # them was checked by anything; and one of the four was wrong by a factor of ~2500 for nine
+  # minutes and forty-three seconds while still reading 0.23 s. A cardinal maintained by hand
+  # beside an instrument that MEASURES IT LIVE is a second source of truth with no owner — the
+  # identical defect T358 removed from guard_capture_namespace one iteration earlier, and P-80's
+  # own prescription: "A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the
+  # same defect as the line number." [VERIFIED: .softhouse/patterns.md:2775]. The costs are now
+  # PRINTED, EVERY RUN, by guard_cost_census below. READ THAT.
+  timed_guard guard_guards_dir_registration       || failed=1   # T323 iter 2, T358, T375
+  timed_guard guard_capture_namespace             || failed=1   # T299, wired by T323
+  timed_guard guard_dead_path_frontier            || failed=1   # T316, wired by T323
+  timed_guard guard_reconciler_ownership          || failed=1   # T319, wired by T323
+  guard_cost_census                               || failed=1   # T375, FU-T358-1 / C-T364-4
   if [ "$failed" -ne 0 ]; then
     warn "conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass."
     exit "$EXIT_UNUSABLE"

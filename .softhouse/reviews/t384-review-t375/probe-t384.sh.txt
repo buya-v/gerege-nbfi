@@ -1,0 +1,44 @@
+#!/bin/bash
+# T384 — independent fail-open probe harness for the review of T375.
+#
+# WHAT IT DOES, and why each step is there rather than in the drive script it re-checks.
+#   $1 = a tree to copy (a clone of `main` or of the T375 branch)
+#   $2 = arm name
+#   $3 = a mutator script, run with CWD = the scratch clone
+#
+# It clones $1 with --no-hardlinks (so a hard-link arm cannot be an artefact of the clone),
+# applies the mutator, COMMITS (`git add -A` first, then commit — the T361/T370 defect is
+# avoided by ORDERING, and the harness reports `dirty=YES` if anything is left uncommitted),
+# and then runs the WHOLE BAR with `bash`, never `sh` (exit 3 is a wrong-interpreter refusal,
+# not a verdict).
+#
+# It reads the ORACLE PROBE LINE'S PRESENCE BEFORE ITS VALUE — P-84,
+# [VERIFIED: .softhouse/patterns.md:2813]. exit 2 with NO probe line is the guard WORKING.
+#
+# THE RESULT LINE IS DELIBERATELY NOT A PASS/FAIL. This harness measures; the reviewer
+# adjudicates against the expectation written beside each arm in REVIEW.md. A probe that
+# scores itself can only find what its author expected.
+set -u
+SRC="$1"; ARM="$2"; MUT="$3"
+W="/tmp/t384/run/$ARM"
+rm -rf "$W"; mkdir -p /tmp/t384/run
+git clone --no-hardlinks -q "$SRC" "$W" >/dev/null 2>&1 || { echo "$ARM CLONE-FAILED"; exit 9; }
+HEADSHA="$(git -C "$SRC" rev-parse HEAD)"
+( cd "$W" && git checkout -q "$HEADSHA" ) >/dev/null 2>&1
+( cd "$W" && bash "$MUT" ) || { echo "$ARM MUTATOR-FAILED"; exit 9; }
+( cd "$W" && git add -A && git -c user.email=t384@x -c user.name=t384 commit -q -m "$ARM" ) >/dev/null 2>&1
+DIRTY="$( cd "$W" && git status --porcelain )"
+OUT="/tmp/t384/run/$ARM.out"
+( cd "$W" && bash .softhouse/conformance.sh ) > "$OUT" 2>&1
+RC=$?
+PROBE_N=$(grep -c 'probe = ' "$OUT")
+if [ "$PROBE_N" -gt 0 ]; then PSTATE=PRESENT; else PSTATE=ABSENT; fi
+if [ -z "$DIRTY" ]; then DSTATE=no; else DSTATE=YES; fi
+VERD=$(grep -m1 '^VERDICT' "$OUT" | cut -c1-46)
+CENSUS=$(grep -m1 'GUARDS-DIR-REGISTRATION: population' "$OUT" | sed 's/.*GUARDS-DIR-REGISTRATION: //')
+printf '%-54s exit=%s probe=%-7s dirty=%s\n' "$ARM" "$RC" "$PSTATE" "$DSTATE"
+printf '    census : %s\n' "${CENSUS:-<none printed>}"
+printf '    verdict: %s\n' "${VERD:-<none>}"
+grep -o 'guard_[a-z_]* FAILED' "$OUT" | sort -u | sed 's/^/    FAILED : /'
+grep -m3 'IS A SYMLINK\|BYTE-IDENTICAL\|MORE THAN ONE TRACKED\|REACHED-BY ITSELF\|is not a checker\|INVOKED BY NOTHING\|is NOT TRACKED' "$OUT" | sed 's/^/    refusal: /'
+echo

@@ -1,0 +1,112 @@
+FULL DRIVE against 1be94cc5 on branch softhouse/T375-t364-conditions
+
+T375 RED DRIVE -- every arm runs the WHOLE BAR, never a guard standalone, never `sh`.
+
+>>> ARM SET 1: drive-red-t358.sh, unmodified, against T375's conformance.sh.
+>>> (that drive runs drive-red-t323.sh as ITS arm set 1, so all three generations run.)
+============================================================================================
+T358 RED DRIVE -- every arm runs the WHOLE BAR, never a guard standalone.
+scratch clone: /tmp/t375-full
+============================================================================================
+
+--- ARM SET 1: T323's fifteen arms, run unmodified against T358's conformance.sh ---------
+    (no gate T323 pinned may move because T358 widened a population.)
+============================================================================================
+T323 RED DRIVE -- every arm runs the WHOLE BAR, never a guard standalone.
+scratch clone: /tmp/t375-full
+============================================================================================
+00-GREEN-CONTROL-clean-tree                    exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T299-01-undocumented-collision                 exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T299-02-same-collision-DOCUMENTED              exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T299-03-decalibrated-corpus                    exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T299-04-no-root-line-readback                  exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T316-05-frontier-grew-unrecorded               exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T316-06-census-removed-SELFREF                 exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T316-07-pin-removed-SELFREF                    exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+populated the list with 1 ALREADY-PINNED row, pin untouched: .softhouse/bin/fire-program.sh | .softhouse/tasks.json.t288.tmp
+T316-08-stale-reconcile-list                   exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T319-09-shipped-tool-demotes                   exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T319-10-matrix-blind-to-redispatch             exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T319-11-rig-removed                            exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T323-12-new-checker-invoked-by-nothing         exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T323-13-caller-declaration-now-false           exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T323-14-subject-declaration-now-false          exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+============================================================================================
+T323 RED DRIVE: 15 passed, 0 failed.
+============================================================================================
+>>> ARM SET 1: T323 DRIVE PASSED in full.
+
+--- ARM SET 2: T358's own arms ------------------------------------------------------------
+00-GREEN-CONTROL-clean-tree                          exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T358-15-nested-fixture-UNDECLARED                    exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T358-16-nested-fixture-DECLARED-in-grant             exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T358-17-witness-does-not-name-member                 exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T358-18-witness-does-not-exist                       exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T358-19-witness-untracked                            exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T358-20-member-declares-ITSELF                       exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T358-26-unreadable-row-empty-witness                 exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T358-21-python-checker-unwired                       exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T358-22-go-checker-unwired-NESTED                    exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T358-23-strip-row-FALLS-BACK-to-INVOKED              exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T358-24-real-witness-stops-naming-member             exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T358-25-pin-PRESENT-BUT-EMPTY                        exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+============================================================================================
+T358 RED DRIVE: 14 passed, 0 failed.  (arm set 1 counts as one.)
+============================================================================================
+>>> ARM SET 1: T358 DRIVE PASSED in full.
+
+>>> ARM SET 2: T375's own arms.
+T375-00-GREEN-CONTROL-clean-tree                         exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T375-01-unwired-main.go-NOW-REFUSED                      exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-02-CONTROL-unwired-UNIQUE-basename                  exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-03-REVERT-fix-main.go-is-ABSOLVED-again             exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T375-04-selfcert-EXACT-spelling                          exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-05-selfcert-via-DOTSLASH                            exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-06-selfcert-via-DOTDOT                              exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-07-selfcert-via-ABSOLUTE-path                       exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-08-REVERT-fix-DOTSLASH-is-ACCEPTED-again            exit=2  (want 0 )  probe=ABSENT   (want PRESENT )  marker=NO   >>> FAIL
+    --- transcript tail ---
+    conformance:   namespace:           152 carry a t<n> id prefix; 21 do not and CANNOT collide this way
+    conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
+    conformance:   namespace:   T255 -> 2 directories; ownership records required 1, present 1
+    conformance:   namespace:       DECLARED   capture/t255-frontier-rot                    by .softhouse/capture/t255-frontier-rot/OWNER-IS-T258-NOT-T255.md
+    conformance:   namespace:       UNCLAIMED  capture/t255-dec2-rev8                       (record: <absent>)
+    conformance:   namespace:   T256 -> 2 directories; ownership records required 1, present 1
+    conformance:   namespace:       DECLARED   capture/t256-verdict-predicate               by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+    conformance:   namespace:       UNCLAIMED  capture/t256-toolchain-population            (record: <absent>)
+    conformance:   NAMESPACE-CENSUS: dirs=173 prefixed=152 unprefixed=21 collidingIds=2 declared=2 unclaimed=2 shortfallIds=0
+    conformance:   namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
+    conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+    conformance:   T316-DEADPATH-CENSUS: corpus=1344 deadFiles=76 deadOccurrences=109 resolving=1253 indeterminate=93 prose=336
+    conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
+    conformance:   (the planted T309 single-term predicate drives cell B-prime RED; the shipped
+    conformance:   tool keeps it GREEN. Both legs ran here — --selftest is not optional.)
+    conformance:   GUARD-COST CENSUS: 15 guards timed, 111s total wall,
+    conformance:   ceiling breaches 0, unbudgeted guards 0.
+    conformance:     COST 0s / ceiling 60s   guard_graded_root_is_this_tree
+    conformance:     COST 1s / ceiling 60s   guard_no_float_in_vectors
+    conformance:     COST 2s / ceiling 60s   guard_no_float_in_harness
+    conformance:     COST 0s / ceiling 60s   guard_gofmt
+    conformance:     COST 1s / ceiling 60s   guard_no_float_in_capture_requests
+    conformance:     COST 1s / ceiling 60s   guard_no_narrow_catch_in_capture_rigs
+    conformance:     COST 4s / ceiling 300s   guard_ledger_invariants
+    conformance:     COST 10s / ceiling 60s   guard_no_fail_open_instruments
+    conformance:     COST 1s / ceiling 60s   guard_no_host_state_in_lint_corpus
+    conformance:     COST 37s / ceiling 300s   guard_pnumber_citations
+    conformance:     COST 0s / ceiling 60s   guard_accepting_side_gap_declared
+    conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
+    conformance:     COST 1s / ceiling 60s   guard_capture_namespace
+    conformance:     COST 3s / ceiling 60s   guard_dead_path_frontier
+    conformance:     COST 49s / ceiling 500s   guard_reconciler_ownership
+    conformance:   (RESOLUTION 1 s, from bash SECONDS; a 0 means UNDER ONE SECOND. The elapsed
+    conformance:   figures are RECORDED and NOT PINNED — wall clock is a fact about the host as
+    conformance:   well as the tree. What is pinned, by NAME: every guard has a ceiling row,
+    conformance:   every ceiling row was timed, and at least one guard was timed. The ceiling is
+    conformance:   read AFTER the guard returns, so it turns a spin that RETURNS into a named
+    conformance:   refusal; it does not interrupt one that never does. [T375, FU-T358-1.])
+    conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+    conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+T375-09-CONTROL-legit-DOTSLASH-witness-ACCEPTED          exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T375-10-witness-is-a-DIRECTORY                           exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-11-witness-carries-PATHSPEC-MAGIC                   exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-12-witness-UNTRACKED-still-refused                  exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
