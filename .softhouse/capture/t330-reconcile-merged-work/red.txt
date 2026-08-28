@@ -2,7 +2,7 @@ MODULE UNDER DRIVE: /tmp/t330-red/.softhouse/bin/ready-tasks.py
 git:               /usr/bin/git
 
 ARM (a) MERGED-AND-PRUNED
-  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-odht9ykq
+  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-fbnokm13
   recorded branch: softhouse/T900-merged-and-pruned
   git rev-parse  : rc=1 out=''   <-- IDENTICAL ACROSS ALL FOUR ARMS
   signature      : branch_wip(branch)  [PRE-T330 -- takes no task id at all]
@@ -13,7 +13,7 @@ ARM (a) MERGED-AND-PRUNED
   note           : Its recorded branch softhouse/T900-merged-and-pruned does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch that was MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- looks exactly the same from here, and so does a branch that was RENAMED (T302 measured one: T299's recorded name was stale after a rename and the live branch was elsewhere). Provenance UNVERIF
 
 ARM (b) NEVER-STARTED
-  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-srtgd14o
+  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-n1pvcfe8
   recorded branch: softhouse/T901-never-started
   git rev-parse  : rc=1 out=''   <-- IDENTICAL ACROSS ALL FOUR ARMS
   signature      : branch_wip(branch)  [PRE-T330 -- takes no task id at all]
@@ -24,7 +24,7 @@ ARM (b) NEVER-STARTED
   note           : Its recorded branch softhouse/T901-never-started does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch that was MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- looks exactly the same from here, and so does a branch that was RENAMED (T302 measured one: T299's recorded name was stale after a rename and the live branch was elsewhere). Provenance UNVERIFIED;
 
 ARM (c) RENAMED
-  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-csb9fb6y
+  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-alztjtr3
   recorded branch: softhouse/T902-old-name
   git rev-parse  : rc=1 out=''   <-- IDENTICAL ACROSS ALL FOUR ARMS
   signature      : branch_wip(branch)  [PRE-T330 -- takes no task id at all]
@@ -35,13 +35,13 @@ ARM (c) RENAMED
   note           : Its recorded branch softhouse/T902-old-name does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch that was MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- looks exactly the same from here, and so does a branch that was RENAMED (T302 measured one: T299's recorded name was stale after a rename and the live branch was elsewhere). Provenance UNVERIFIED; chec
 
 ARM (d) CASE-SHADOWED
-  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-qh5m20sl
+  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-o9mj3gvl
   recorded branch: softhouse/T903-Case-Shadow
   git rev-parse  : rc=1 out=''   <-- IDENTICAL ACROSS ALL FOUR ARMS
   signature      : branch_wip(branch)  [PRE-T330 -- takes no task id at all]
   VERDICT        : absent/CASE-VARIANT
   ACTION         : demote to needs_retry  (pre-T330: reconcile() demotes EVERY kind; the verdict is printed, never compared)
-  EXPECTED       : MUST NOT DEMOTE -- packed-only case-variant softhouse/t903-case-shadow holds d4626d066
+  EXPECTED       : MUST NOT DEMOTE -- packed-only case-variant softhouse/t903-case-shadow holds 0196e881f
   RESULT         : WRONG  <<<<
   note           : Its recorded branch softhouse/T903-Case-Shadow does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch that was MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- looks exactly the same from here, and so does a branch that was RENAMED (T302 measured one: T299's recorded name was stale after a rename and the live branch was elsewhere). Provenance UNVERIFIED; c
 

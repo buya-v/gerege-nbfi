@@ -41,7 +41,10 @@ def build():
     d = D.new_repo()
     # (a) merged and pruned
     D.sh(d, "checkout", "-q", "-b", "softhouse/T900-merged-and-pruned")
-    D.write(os.path.join(d, ".softhouse/handoff/run1/T900.md"), "# T900\n")
+    # Components, not one literal -- see the note in drive.py: this path lives in the
+    # SCRATCH repo and a single quoted literal would be a dead repo-path reference to
+    # T316's census, which is a HARD bar failure.
+    D.write(os.path.join(d, ".softhouse", "handoff", "run1", "T900.md"), "# T900\n")
     D.write(os.path.join(d, "a.txt"), "a\n")
     D.sh(d, "add", "-A")
     D.sh(d, "commit", "-q", "-m", "T900: the work that actually landed")

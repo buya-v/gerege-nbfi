@@ -3,7 +3,7 @@ RED  (main's bytes) -- /tmp/t330-red/.softhouse/bin/ready-tasks.py
 ==============================================================================
 RECONCILE -- fire t330-e2e
   git:  /usr/bin/git
-  repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-2wn3gs_b
+  repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-pv8iyjmk
   lock: no .softhouse/LOCK on disk, AND the caller passed --no-live-session-established-out-of-band, asserting it ran a liveness probe of this checkout itself. This module has no liveness check of its own, so that assertion is the whole basis for the authority and it is the CALLER's to justify.
   mode: wrapper   (lock fire id: NONE RECORDED)
   in_progress tasks found: 4  (out of 4 in tasks.json -- every task was read to get this count, it is not a default)
@@ -15,7 +15,7 @@ RECONCILE -- fire t330-e2e
            in_progress -> needs_retry
   T903     softhouse/T903-Case-Shadow                 WIP=absent/CASE-VARIANT
            in_progress -> needs_retry
-  RESULT: WROTE /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-2wn3gs_b/.softhouse/tasks.json -- 4 task(s) demoted in_progress -> needs_retry.
+  RESULT: WROTE /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-pv8iyjmk/.softhouse/tasks.json -- 4 task(s) demoted in_progress -> needs_retry.
   (exit 0)
 
   RESULTING tasks.json:
@@ -29,7 +29,7 @@ GREEN (working tree) -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac2d8253d
 ==============================================================================
 RECONCILE -- fire t330-e2e
   git:  /usr/bin/git
-  repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-ytg_goe8
+  repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-_t_vbt6r
   lock: no .softhouse/LOCK on disk, AND the caller passed --no-live-session-established-out-of-band, asserting it ran a liveness probe of this checkout itself. This module has no liveness check of its own, so that assertion is the whole basis for the authority and it is the CALLER's to justify.
   mode: wrapper   (lock fire id: NONE RECORDED)
   in_progress tasks found: 4  (out of 4 in tasks.json -- every task was read to get this count, it is not a default)
@@ -45,7 +45,7 @@ RECONCILE -- fire t330-e2e
            in_progress -> in_progress   *** REFUSED TO DEMOTE ***
            REFUSE to demote -- a live ref carrying this task's id exists under another name; `needs_retry` would duplicate a line that still exists
   T330 REFUSALS: 3 task(s) were NOT demoted because work bearing their id is on main, or a live ref still carries it -- T900, T902, T903. Their status is UNCHANGED and their note now says so. THIS IS THE FIX FOR FU-RECONCILE-1; before T330 every one of these was written `needs_retry` and OFFERED FOR RE-DISPATCH.
-  RESULT: WROTE /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-ytg_goe8/.softhouse/tasks.json -- 1 task(s) demoted in_progress -> needs_retry, 3 REFUSED (T330: work is on main or a live ref carries the id; status left in_progress, note rewritten).
+  RESULT: WROTE /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-_t_vbt6r/.softhouse/tasks.json -- 1 task(s) demoted in_progress -> needs_retry, 3 REFUSED (T330: work is on main or a live ref carries the id; status left in_progress, note rewritten).
   (exit 0)
 
   RESULTING tasks.json:

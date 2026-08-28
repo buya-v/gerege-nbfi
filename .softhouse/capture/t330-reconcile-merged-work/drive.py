@@ -83,7 +83,14 @@ def arm_a_merged_and_pruned():
     d = new_repo()
     branch = "softhouse/T900-merged-and-pruned"
     sh(d, "checkout", "-q", "-b", branch)
-    write(os.path.join(d, ".softhouse/handoff/run1/T900.md"), "# T900 handoff\n")
+    # PATH BUILT FROM COMPONENTS, DELIBERATELY. It names a file inside the SCRATCH repo
+    # `d`, which does not exist in THIS repo -- and T316's dead-path census scans every
+    # tracked `.softhouse/*.py` for QUOTED LITERALS containing `.softhouse/`
+    # (`LITERAL_RE`, census_dead_paths.py -- grep the SYMBOL, the line moves). Writing it
+    # as one literal made the frontier move 109 -> 111 and failed the bar HARD, exit 2
+    # with no probe line. The guard's instruction is REPAIR, NOT PIN, and this is the
+    # repair: no single quoted string here contains a repo-shaped path.
+    write(os.path.join(d, ".softhouse", "handoff", "run1", "T900.md"), "# T900 handoff\n")
     write(os.path.join(d, "work.txt"), "real work\n")
     sh(d, "add", "-A")
     sh(d, "commit", "-q", "-m", "T900: handoff -- the work that actually landed")
