@@ -1,0 +1,19 @@
+T328 mutation arms -- HEAD 2400389c
+---
+=== RUN   TestDateRuleMutationArms
+=== RUN   TestDateRuleMutationArms/W-1_REGISTERED:_closure_guard_first,_both_guards_presence-keyed
+    daterules_mutation_test.go:117: agreed with the oracle on [LDG-REFUSE-04-preclosure-entry-on-closing-date LDG-REFUSE-05-future-dated-entry-one-day-after-business-date]; diverged on [LDG-06-postclosure-entry-accepted-one-day-after-closing-date LDG-07-entry-on-the-business-date-accepted]
+=== RUN   TestDateRuleMutationArms/W-2_oracle_order,_both_guards_presence-keyed
+    daterules_mutation_test.go:117: agreed with the oracle on [LDG-REFUSE-05-future-dated-entry-one-day-after-business-date]; diverged on [LDG-REFUSE-04-preclosure-entry-on-closing-date LDG-06-postclosure-entry-accepted-one-day-after-closing-date LDG-07-entry-on-the-business-date-accepted]
+=== RUN   TestDateRuleMutationArms/W-3_oracle_order,_future_guard_NON-STRICT,_closure_presence-keyed
+    daterules_mutation_test.go:117: agreed with the oracle on [LDG-REFUSE-04-preclosure-entry-on-closing-date LDG-REFUSE-05-future-dated-entry-one-day-after-business-date]; diverged on [LDG-07-entry-on-the-business-date-accepted LDG-06-postclosure-entry-accepted-one-day-after-closing-date]
+=== RUN   TestDateRuleMutationArms/the_CORRECT_implementation_agrees_with_the_oracle_on_all_four
+--- PASS: TestDateRuleMutationArms (0.07s)
+    --- PASS: TestDateRuleMutationArms/W-1_REGISTERED:_closure_guard_first,_both_guards_presence-keyed (0.00s)
+    --- PASS: TestDateRuleMutationArms/W-2_oracle_order,_both_guards_presence-keyed (0.00s)
+    --- PASS: TestDateRuleMutationArms/W-3_oracle_order,_future_guard_NON-STRICT,_closure_presence-keyed (0.00s)
+    --- PASS: TestDateRuleMutationArms/the_CORRECT_implementation_agrees_with_the_oracle_on_all_four (0.00s)
+PASS
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	0.457s
+---
+T328 mutation arms: EXIT 0

@@ -1,0 +1,20 @@
+exit=2
+T145 GUARD -- two-sided float() comparison deciding a money claim
+SELECTOR: ast.Compare where BOTH the left operand and at least one comparator
+          contain a float(...) call. One-sided float comparisons are PERMITTED
+          (T186 rule A1: repr(float(tok)) == tok) and are NOT reported.
+POPULATION: 674 tracked .py under .softhouse
+
+DECLARED  .softhouse/capture/t145-analysis-float/bin/selftest-discriminate-predicate.py:35
+          T145's own RED/GREEN battery. The predicate is TRANSCRIBED CHARACTER FOR CHARACTER from discriminate.py:160 in order to drive it red; it is the SIMULATED DEFECT, in the sense check_wire_float_roundtrip.py's docstring uses (P-25). Declaring it here rather than exempting the path is deliberate: the guard must stay able to fail on this file if the line ever moves.
+
+two-sided float comparisons found : 2 in 2 files
+declared                          : 2
+BREACHES                          : 2
+  BREACH .softhouse/capture/actualactual/analysis/discriminate.py:160 -- NEW two-sided float money comparison
+  BREACH .softhouse/capture/actualactual/analysis/discriminate.py:9999 -- DECLARED SITE HAS VANISHED -- the declaration is now a silencer for a site that no longer exists; remove it
+
+GUARD FAILED -- a binary float is deciding a money claim. This is the first
+non-negotiable: 'No floating-point in any monetary code path ... including
+intermediate calculation.'
+

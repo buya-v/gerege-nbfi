@@ -1,0 +1,4459 @@
+{
+ "rev": "817d2b531c905a12cae4ae6de58fa0f0c6edb448",
+ "files": 664,
+ "hits": [
+  {
+   "file": ".softhouse/bin/ready-tasks.py",
+   "line": 191,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "for t in json.load(fh)[\"tasks\"]:"
+  },
+  {
+   "file": ".softhouse/bin/ready-tasks.py",
+   "line": 197,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/bin/ready-tasks.py",
+   "line": 474,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "body = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/bin/ready-tasks.py",
+   "line": 629,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "prior = json.loads(blob)[\"tasks\"]"
+  },
+  {
+   "file": ".softhouse/bin/ready-tasks.py",
+   "line": 1140,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(raw)"
+  },
+  {
+   "file": ".softhouse/bin/ready-tasks.py",
+   "line": 1336,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "if json.dumps(json.loads(raw), indent=2, ensure_ascii=False) + tail != raw:"
+  },
+  {
+   "file": ".softhouse/bin/ready-tasks.py",
+   "line": 1457,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "gates = json.load(fh).get(\"gates_pending\", [])"
+  },
+  {
+   "file": ".softhouse/capture/actualactual/analysis/discriminate.py",
+   "line": 28,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/actualactual/analysis/pathb-crosscheck.py",
+   "line": 46,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "doc = json.loads(f.read_text(), parse_float=str, parse_int=str)"
+  },
+  {
+   "file": ".softhouse/capture/actualactual/analysis/pathb-crosscheck.py",
+   "line": 49,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "left = bare(json.loads(side.read_text()))"
+  },
+  {
+   "file": ".softhouse/capture/actualactual/analysis/pathb-crosscheck.py",
+   "line": 57,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.loads((PB / (stem + \"-exact.json\")).read_text())"
+  },
+  {
+   "file": ".softhouse/capture/actualactual/analysis/pathb-crosscheck.py",
+   "line": 118,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "calc = json.loads((OUT / \"t48-calc.json\").read_text())"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/analysis/T175-red/census.py",
+   "line": 26,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "json.load(open(p))"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/analysis/T175-red/census.py",
+   "line": 36,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "json.load(open(p))"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/analysis/T207/t44_float_roundtrip_v3.py",
+   "line": 265,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "json.load(open(p), parse_float=make_hook(p))"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/analysis/t44_detail.py",
+   "line": 10,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.load(open(sys.argv[1]), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/analysis/t44_float_roundtrip.py",
+   "line": 28,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "json.load(open(p), parse_float=hook)"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/analysis/t44_float_roundtrip_v2.py",
+   "line": 111,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "json.load(open(p), parse_float=make_hook(p))"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/analysis/t44_float_scan.py",
+   "line": 38,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.load(open(p), parse_float=make_hook(p))"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/analysis/t44_periodratio_independent.py",
+   "line": 141,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.load(open(path), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/analysis/t44_provenance_t39.py",
+   "line": 13,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.load(open(PAY), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/charges/bin/analyse_probes.py",
+   "line": 12,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(f, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/charges/bin/audit_recompute.py",
+   "line": 15,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(f, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/charges/bin/spotcheck.py",
+   "line": 12,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(f, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/mathcontext/analysis/audit_controls.py",
+   "line": 18,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "by = {c[\"id\"]: c for c in json.load(open(P))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/mathcontext/analysis/audit_crosschecks.py",
+   "line": 15,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d1 = json.load(open(os.path.join(MC, \"t42-mathcontext.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/mathcontext/analysis/audit_crosschecks.py",
+   "line": 16,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d2 = json.load(open(os.path.join(MC, \"t42-mathcontext2.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants.py",
+   "line": 30,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.load(open(os.path.join(MC, payload)), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants_failability.py",
+   "line": 13,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(P))"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/mathcontext/analysis/audit_recompute.py",
+   "line": 21,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.load(f, parse_float=Decimal, parse_int=int)"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/rerun-periodratio/analysis/controls.py",
+   "line": 131,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(PAYLOAD))"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/rerun-periodratio/analysis/discriminate.py",
+   "line": 72,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(PAYLOAD))"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/attest-t40.py",
+   "line": 223,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "cj = json.loads(fh.read().decode(), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/attest-t40.py",
+   "line": 244,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "r = json.loads(row, parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/attest-t40.py",
+   "line": 264,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "r = json.loads(row, parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/attest-t40.py",
+   "line": 370,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "'image_repo_digests': (json.loads(image_repodigests, parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/attest.py",
+   "line": 211,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "cj = json.loads(fh.read().decode(), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/attest.py",
+   "line": 233,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "r = json.loads(row, parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/attest.py",
+   "line": 308,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "'image_repo_digests': json.loads(image_repodigests) if image_repodigests else None,"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/feecols.py",
+   "line": 23,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.load(f, parse_float=Decimal, parse_int=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/fullcell.py",
+   "line": 39,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.load(f, parse_float=Decimal, parse_int=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/invariants.py",
+   "line": 37,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.load(f, parse_float=Decimal, parse_int=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t46-defvsreq.py",
+   "line": 25,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.loads(pathlib.Path(p).read_text(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t46-defvsreq.py",
+   "line": 36,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.loads(text, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t46-exacttext.py",
+   "line": 66,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.loads(text, parse_float=str, parse_int=str)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t46-exacttext.py",
+   "line": 122,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "back = json.loads(sidecar.read_text())        # plain load: everything is a string"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t46-invariants.py",
+   "line": 45,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.load(f, parse_float=Decimal, parse_int=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t48-analyse.py",
+   "line": 57,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "exact = json.loads(text, parse_float=str, parse_int=str)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t48-analyse.py",
+   "line": 61,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "left = bare_numbers(json.loads(side.read_text()))"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t48-analyse.py",
+   "line": 65,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "raw_leaves = bare_numbers(json.loads(text))"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t48-analyse.py",
+   "line": 66,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "ex = json.loads(side.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t48-analyse.py",
+   "line": 90,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.loads((O / (stem + \"-exact.json\")).read_text())"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t48-analyse.py",
+   "line": 151,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.loads(f.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t51-analyse.py",
+   "line": 85,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "exact = json.loads(text, parse_float=str, parse_int=str)"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t51-analyse.py",
+   "line": 88,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "left = bare_numbers(json.loads(side.read_text()))"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t51-analyse.py",
+   "line": 91,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "raw_leaves = bare_numbers(json.loads(text))"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t51-analyse.py",
+   "line": 92,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "ex = json.loads(side.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t51-analyse.py",
+   "line": 111,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.loads((O / (stem + \"-exact.json\")).read_text())"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t51-analyse.py",
+   "line": 306,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(f.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t51-analyse2.py",
+   "line": 18,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.loads((O / (stem + \"-exact.json\")).read_text())"
+  },
+  {
+   "file": ".softhouse/capture/charges/bin/t51-analyse3.py",
+   "line": 16,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.loads((O / (stem + \"-exact.json\")).read_text())"
+  },
+  {
+   "file": ".softhouse/capture/dec1-binding/analysis/discriminate.py",
+   "line": 107,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cap = json.load(open(CAP))"
+  },
+  {
+   "file": ".softhouse/capture/emiloop/analyse.py",
+   "line": 48,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/capture/emiloop/p03-control.py",
+   "line": 21,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cases = {c[\"id\"]: c for c in json.load(open(os.path.join("
+  },
+  {
+   "file": ".softhouse/capture/emiloop/t37-crosscheck.py",
+   "line": 14,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "A = {c[\"id\"]: c for c in json.load(open(os.path.join("
+  },
+  {
+   "file": ".softhouse/capture/emiloop/t37-crosscheck.py",
+   "line": 16,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "B = {c[\"id\"]: c for c in json.load(open(os.path.join("
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/T175-red/field-census.py",
+   "line": 50,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc0 = json.loads(pristine)"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/T175-red/field-census.py",
+   "line": 70,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(pristine)"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/T175-red/field-census.py",
+   "line": 77,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(pristine)"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py",
+   "line": 42,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "json.loads(open(p).read(), parse_float=str, parse_int=str)"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py",
+   "line": 85,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "A = m.cells(json.load(open(fa)))"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py",
+   "line": 86,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "B = m.cells(json.load(open(fb)))"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/T175-red/plant.py",
+   "line": 74,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/T207/measure-other-sites-v2.py",
+   "line": 156,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "json.loads(open(p).read(), parse_float=str, parse_int=str)"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/T207/measure-other-sites-v2.py",
+   "line": 188,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(fh)                       # EXACTLY the target's own call"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/T207/measure-other-sites-v2.py",
+   "line": 189,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=str)          # the counterfactual"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/t55-analyse.py",
+   "line": 79,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "doc = json.loads(text, parse_float=str, parse_int=str)"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/t55-analyse.py",
+   "line": 87,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "reloaded = json.loads(body)"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/t55-analyse.py",
+   "line": 109,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/t55-analyse.py",
+   "line": 510,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "theirs = cells(json.load(fh))"
+  },
+  {
+   "file": ".softhouse/capture/leapboundary/analysis/t55-prior-capture-assessment.py",
+   "line": 52,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/lib/attest_population.py",
+   "line": 218,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pin = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+   "line": 169,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "json.loads(text, parse_float=hook('float'), parse_int=hook('int'))"
+  },
+  {
+   "file": ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+   "line": 192,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.loads(text, parse_float=hook('float'), parse_int=hook('int'))"
+  },
+  {
+   "file": ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+   "line": 249,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(open(p, 'rb').read().decode('utf-8'))"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/analysis/controls.py",
+   "line": 104,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(PAYLOAD))"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/analysis/count_cells.py",
+   "line": 15,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(OUT / \"t42-mathcontext.json\"))"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/analysis/count_cells.py",
+   "line": 40,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d2 = json.load(open(OUT / \"t42-mathcontext2.json\"))"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/analysis/discriminate.py",
+   "line": 57,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(PAYLOAD))"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/analysis/discriminate2.py",
+   "line": 43,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(PAYLOAD))"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/analysis/t46_distinct_coverage.py",
+   "line": 58,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.load(open(PAYLOAD), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/analysis/t46_m5_identity.py",
+   "line": 63,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "a = json.load(open(a_path), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/analysis/t46_m5_identity.py",
+   "line": 64,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "b = json.load(open(b_path), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/analysis/t50_assert_tier1.py",
+   "line": 33,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/analysis/t50_assert_tier2.py",
+   "line": 39,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/analysis/t50_pivot_tier1.py",
+   "line": 21,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/capture/out/t21-probe-invariants.py",
+   "line": 40,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "data = json.load(open(sys.argv[1]))"
+  },
+  {
+   "file": ".softhouse/capture/out/t21-probe-rederive.py",
+   "line": 207,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "obs = {c[\"id\"]: c for c in json.load(open(sys.argv[1]))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/out/t21-probe-rederive2.py",
+   "line": 94,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "obs = {c[\"id\"]: c for c in json.load(open(sys.argv[1]))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/out/t35-byte-identity.py",
+   "line": 56,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal, parse_int=int)"
+  },
+  {
+   "file": ".softhouse/capture/out/t35-newcolumn-checks.py",
+   "line": 49,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(path, encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/pathb/provenance.py",
+   "line": 143,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(fh)['tenant']['identifier']"
+  },
+  {
+   "file": ".softhouse/capture/pathb/provenance.py",
+   "line": 195,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "old = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/provenance.py",
+   "line": 310,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "index = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/provenance.py",
+   "line": 395,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "index = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t125/blast-radius.py",
+   "line": 57,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "d = json.load(open(os.path.join(CAPTURE, rel)), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t147/mutate-blast-radius-provenance.py",
+   "line": 46,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.load(fh, parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t149/compare-arms.py",
+   "line": 49,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "a = json.loads(q('fineract_default', \"select to_jsonb(t) from m_product_loan t where id=10;\"),"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t149/compare-arms.py",
+   "line": 51,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "b = json.loads(q('fineract_gerege', \"select to_jsonb(t) from m_product_loan t where id=11;\"),"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t149/compare-arms.py",
+   "line": 68,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "hu = json.load(open(HU), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t149/compare-arms.py",
+   "line": 69,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "he = json.load(open(HE), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t149/crosscheck-vs-patha.py",
+   "line": 51,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "b = json.load(open(PATHB), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t149/crosscheck-vs-patha.py",
+   "line": 52,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "a = json.load(open(PATHA), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t149/promote-vector.py",
+   "line": 192,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "j = json.load(fh, parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t149/promote-vector.py",
+   "line": 194,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "att = json.load(fh, parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t153/rederive-schedule-exact.py",
+   "line": 58,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "vec = json.load(open(VEC))"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t153/verify-transcription.py",
+   "line": 52,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "vec = json.load(open(VEC), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t153/verify-transcription.py",
+   "line": 53,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "raw = json.load(open(RAW), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/jdiff.py",
+   "line": 10,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "a=flat(json.load(open(sys.argv[1])));b=flat(json.load(open(sys.argv[2])))"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/jdiff.py",
+   "line": 10,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "a=flat(json.load(open(sys.argv[1])));b=flat(json.load(open(sys.argv[2])))"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/mkmode.py",
+   "line": 17,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [
+    "object_pairs_hook"
+   ],
+   "src": "p = json.load(open(os.path.join(W, 'req', 'product-2-multiplesof100.json')),"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/mkmode.py",
+   "line": 25,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [
+    "object_pairs_hook"
+   ],
+   "src": "c = json.load(open(os.path.join(W, 'req', 'calc-B-01-baseline.json')),"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/mkmode2.py",
+   "line": 22,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [
+    "object_pairs_hook"
+   ],
+   "src": "p = json.load(open(os.path.join(W, 'req', 'product-1-baseline.json')),"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/mkmode2.py",
+   "line": 29,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [
+    "object_pairs_hook"
+   ],
+   "src": "c = json.load(open(os.path.join(W, 'req', 'calc-B-01-baseline.json')),"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/mkprobe.py",
+   "line": 22,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [
+    "object_pairs_hook"
+   ],
+   "src": "return json.load(open(os.path.join(W, 'req', n + '.json')),"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/rowdiff.py",
+   "line": 4,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rows = [json.loads(l) for l in open(sys.argv[1])]"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/t22_claims.py",
+   "line": 13,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.loads(open(W + F[k], 'rb').read().decode(), parse_float=Decimal,"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/t22_crosspath.py",
+   "line": 26,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "pa = json.load(open(A), parse_float=Decimal, parse_int=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/t22_crosspath.py",
+   "line": 29,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "pb = json.loads(open(B, 'rb').read().decode(), parse_float=Decimal,"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/t22_invariants.py",
+   "line": 38,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.loads(fh.read().decode(\"utf-8\"),"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/t22_rederive.py",
+   "line": 122,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.loads(open(path, 'rb').read().decode(), parse_float=Decimal,"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-audit/xpath.py",
+   "line": 10,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pa = json.load(open(A))"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-probe/invariants.py",
+   "line": 48,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.loads(raw.decode(\"utf-8\"), parse_float=Decimal,"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-probe/mkcalc.py",
+   "line": 17,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [
+    "object_pairs_hook"
+   ],
+   "src": "o = json.load(open(os.path.join(W, \"req\", f + \".json\")),"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-probe/mkreq.py",
+   "line": 21,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [
+    "object_pairs_hook"
+   ],
+   "src": "o = json.load(open(src), object_pairs_hook=collections.OrderedDict)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t22-probe/rederive.py",
+   "line": 154,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "j = json.loads(fh.read().decode(\"utf-8\"), parse_float=Decimal,"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t36/attest.py",
+   "line": 179,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "rev = json.load(fh, parse_float=str).get('dec1_revision')"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t36/attest.py",
+   "line": 351,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "cj = json.loads(fh.read().decode(), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t36/attest.py",
+   "line": 376,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "r = json.loads(row, parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t36/attest.py",
+   "line": 467,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "'image_repo_digests': (json.loads(image_repodigests, parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t36/t36_diff.py",
+   "line": 24,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.loads(raw.decode(\"utf-8\"), parse_float=Decimal, parse_int=Decimal), raw"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t36/t36_emiloop_verdict.py",
+   "line": 31,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.loads(fh.read().decode(), parse_float=Decimal, parse_int=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t76/t76_crosscheck.py",
+   "line": 29,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.loads(fh.read().decode('utf-8'), parse_float=D, parse_int=D)"
+  },
+  {
+   "file": ".softhouse/capture/pathb/t76/t76_mirror_invariant.py",
+   "line": 49,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "doc = json.loads(fh.read().decode('utf-8'), parse_float=D, parse_int=D)"
+  },
+  {
+   "file": ".softhouse/capture/periodratio/analysis/controls.py",
+   "line": 131,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(PAYLOAD))"
+  },
+  {
+   "file": ".softhouse/capture/periodratio/analysis/discriminate.py",
+   "line": 72,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(PAYLOAD))"
+  },
+  {
+   "file": ".softhouse/capture/periodratio/analysis/t46_arms_ratio.py",
+   "line": 159,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.loads(payload.read_text(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/periodratio/analysis/t46_reemit_identity.py",
+   "line": 44,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.loads(path.read_text(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/src/t169-red/postcheck_t169.py",
+   "line": 46,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "EXPECTED = ['P-CAL-ZPA', 'P-CAL-ZPB'] + json.load(open(idsp))"
+  },
+  {
+   "file": ".softhouse/capture/src/t169-red/postcheck_t169.py",
+   "line": 51,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/src/t169-red/recount_history.py",
+   "line": 54,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/src/t169-red/recount_history.py",
+   "line": 56,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/classify_two_families.py",
+   "line": 47,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(gzip.open(path)) if path.endswith('.gz') else json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/classify_two_families.py",
+   "line": 47,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(gzip.open(path)) if path.endswith('.gz') else json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/closed_form_check.py",
+   "line": 44,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(gzip.open(p)) if p.endswith('.gz') else json.load(open(p))"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/closed_form_check.py",
+   "line": 44,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(gzip.open(p)) if p.endswith('.gz') else json.load(open(p))"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+   "line": 92,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "\"captured_at\": json.load(open(CAP))[\"attestation\"][\"capturedAtUtc\"],"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+   "line": 128,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.loads(p.stdout)"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+   "line": 169,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = {c[\"id\"]: c for c in json.load(open(CAP))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+   "line": 170,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pin_rev = json.load(open(os.path.join(ROOT, \".softhouse/vectors/PIN.json\")))[\"dec1_revision\"]"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/inspect_shape.py",
+   "line": 6,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(gzip.open(path)) if path.endswith('.gz') else json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/inspect_shape.py",
+   "line": 6,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(gzip.open(path)) if path.endswith('.gz') else json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/postcheck.py",
+   "line": 7,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(jsonp))"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/postcheck.py",
+   "line": 9,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "EXPECTED = ['P-CAL-ZPA', 'P-CAL-ZPB'] + json.load(open(idsp))"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/postcheck.py",
+   "line": 37,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "ref = {c['id']: c for c in json.load(open(ref3g))['captures']}"
+  },
+  {
+   "file": ".softhouse/capture/t116-familyb-promotion/src/T116-promote-vectors.py",
+   "line": 111,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/t116-familyb-promotion/src/T116-promote-vectors.py",
+   "line": 115,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "PIN_REV = json.load(fh)[\"dec1_revision\"]"
+  },
+  {
+   "file": ".softhouse/capture/t116-familyb-promotion/src/classify_t116.py",
+   "line": 36,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+   "line": 99,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return {r[\"case\"]: r[\"rows\"] for r in json.loads(p.stdout)}"
+  },
+  {
+   "file": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+   "line": 116,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = {c[\"id\"]: c for c in json.load(fh)[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/t116-familyb-promotion/src/postcheck_t116.py",
+   "line": 25,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t116-familyb-promotion/src/postcheck_t116.py",
+   "line": 30,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "EXPECTED = ['P-CAL-ZPA', 'P-CAL-ZPB'] + json.load(open(idsp))"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/classify_t117.py",
+   "line": 53,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/ctrl_reproduction.py",
+   "line": 42,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/postcheck.py",
+   "line": 23,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/postcheck.py",
+   "line": 28,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "EXPECTED = ['P-CAL-ZPA', 'P-CAL-ZPB'] + json.load(open(idsp))"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/postcheck_pass2.py",
+   "line": 23,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/postcheck_pass2.py",
+   "line": 28,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "EXPECTED = ['P-CAL-ZPA', 'P-CAL-ZPB'] + json.load(open(idsp))"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/residual_census.py",
+   "line": 36,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/rp_reproduction_pass2.py",
+   "line": 26,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/shape_check.py",
+   "line": 28,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/tie_profile.py",
+   "line": 32,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t159-review-t117/src/census_t159.py",
+   "line": 44,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t159-review-t117/src/census_t159.py",
+   "line": 94,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "pred = json.load(open(pred_p), parse_float=Decimal)[\"cases\"]"
+  },
+  {
+   "file": ".softhouse/capture/t159-review-t117/src/postcheck_t159.py",
+   "line": 23,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t159-review-t117/src/postcheck_t159.py",
+   "line": 28,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "EXPECTED = ['P-CAL-ZPA', 'P-CAL-ZPB'] + json.load(open(idsp))"
+  },
+  {
+   "file": ".softhouse/capture/t159-review-t117/src/rederive_t159.py",
+   "line": 42,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t159-review-t117/src/verify_quotes_t159.py",
+   "line": 37,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(fh, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t170-g8-rebuild/src/extract_t170.py",
+   "line": 62,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(gzip.decompress(raw))"
+  },
+  {
+   "file": ".softhouse/capture/t170-g8-rebuild/src/extract_t170.py",
+   "line": 64,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(raw)"
+  },
+  {
+   "file": ".softhouse/capture/t177-so-nondeterminism/analyze_t177.py",
+   "line": 68,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cap = json.load(f)"
+  },
+  {
+   "file": ".softhouse/capture/t177-so-nondeterminism/analyze_t177.py",
+   "line": 139,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.loads(ln)"
+  },
+  {
+   "file": ".softhouse/capture/t177-so-nondeterminism/calibrate_t177.py",
+   "line": 26,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "ref = json.load(open(ref_path))"
+  },
+  {
+   "file": ".softhouse/capture/t177-so-nondeterminism/calibrate_t177.py",
+   "line": 34,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.loads(ln)"
+  },
+  {
+   "file": ".softhouse/capture/t177-so-nondeterminism/check_claims_t177.py",
+   "line": 27,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.loads(ln)"
+  },
+  {
+   "file": ".softhouse/capture/t177-so-nondeterminism/t159_context.py",
+   "line": 14,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cap = json.load(f)"
+  },
+  {
+   "file": ".softhouse/capture/t219-g8-residual/src/check_promoted_t219.py",
+   "line": 99,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cap = json.load(open(CAP))"
+  },
+  {
+   "file": ".softhouse/capture/t219-g8-residual/src/check_promoted_t219.py",
+   "line": 103,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "_v = json.load(open(VDIR + \"/\" + PAIRS[1][1]))"
+  },
+  {
+   "file": ".softhouse/capture/t219-g8-residual/src/check_promoted_t219.py",
+   "line": 114,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "v = json.load(open(VDIR + \"/\" + vf))"
+  },
+  {
+   "file": ".softhouse/capture/t219-g8-residual/src/classify_t219.py",
+   "line": 22,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(op(path))"
+  },
+  {
+   "file": ".softhouse/capture/t219-g8-residual/src/classify_t219.py",
+   "line": 26,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pred = {p[\"id\"]: p for p in json.load(open(sys.argv[2]))}"
+  },
+  {
+   "file": ".softhouse/capture/t219-g8-residual/src/dump_rows.py",
+   "line": 12,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "raw = json.load(op(sys.argv[1]))"
+  },
+  {
+   "file": ".softhouse/capture/t219-g8-residual/src/make_harness_t219.py",
+   "line": 20,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cells = json.load(open(CELLS))"
+  },
+  {
+   "file": ".softhouse/capture/t219-g8-residual/src/site3.py",
+   "line": 218,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cells = json.load(open(sys.argv[1]))"
+  },
+  {
+   "file": ".softhouse/capture/t223-g8-region-predicate/src/classify_t223.py",
+   "line": 28,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cap = json.load(open(cap_path))"
+  },
+  {
+   "file": ".softhouse/capture/t223-g8-region-predicate/src/classify_t223.py",
+   "line": 29,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pred = json.load(open(os.path.join(HERE, \"..\", \"prediction.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/t223-g8-region-predicate/src/classify_t223.py",
+   "line": 30,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "ref3g = json.load(open(os.path.join(REPO, \".softhouse/capture/out/capture-prod3g-raw.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/t223-g8-region-predicate/src/peek.py",
+   "line": 11,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(opener(path))"
+  },
+  {
+   "file": ".softhouse/capture/t223-g8-region-predicate/src/validate_emi.py",
+   "line": 35,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/t223-g8-region-predicate/src/validate_predicate.py",
+   "line": 74,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/t229-g8-site3/src/classify_t229.py",
+   "line": 22,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(op(path))"
+  },
+  {
+   "file": ".softhouse/capture/t229-g8-site3/src/classify_t229.py",
+   "line": 26,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pred = {p[\"id\"]: p for p in json.load(open(sys.argv[2]))}"
+  },
+  {
+   "file": ".softhouse/capture/t229-g8-site3/src/dump_rows.py",
+   "line": 12,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "raw = json.load(op(sys.argv[1]))"
+  },
+  {
+   "file": ".softhouse/capture/t229-g8-site3/src/make_harness_t229.py",
+   "line": 20,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cells = json.load(open(CELLS))"
+  },
+  {
+   "file": ".softhouse/capture/t229-g8-site3/src/peek159.py",
+   "line": 7,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(gzip.open(path))"
+  },
+  {
+   "file": ".softhouse/capture/t229-g8-site3/src/peekrows.py",
+   "line": 14,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(gzip.open(path))"
+  },
+  {
+   "file": ".softhouse/capture/t229-g8-site3/src/rederive_total_interest_t241.py",
+   "line": 162,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "loaded[path] = {c[\"id\"]: c for c in json.load(fh)[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/t229-g8-site3/src/site3.py",
+   "line": 302,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cells = json.load(open(sys.argv[1]))"
+  },
+  {
+   "file": ".softhouse/capture/t229-g8-site3/src/validate_corpus.py",
+   "line": 44,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "raw = json.load(gzip.open(path))"
+  },
+  {
+   "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/32-triage-live.py",
+   "line": 20,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "ml=json.load(open(SELF+\"evidence/multiline-only-hits.json\"))"
+  },
+  {
+   "file": ".softhouse/capture/t243-wiring/instruments/31-citation-census.py",
+   "line": 80,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "v = json.load(open(os.path.join(LEDGER, f), encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t252-tier3/instruments/30-additivity.py",
+   "line": 52,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(j))"
+  },
+  {
+   "file": ".softhouse/capture/t252-tier3/instruments/40-c6-red-drive.py",
+   "line": 108,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(j))"
+  },
+  {
+   "file": ".softhouse/capture/t256-verdict-predicate/census_verdict_shape.py",
+   "line": 37,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "reg = json.loads((HERE / \"boolean-key-register.json\").read_text(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t256-verdict-predicate/census_verdict_shape.py",
+   "line": 46,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.loads(p.read_text(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py",
+   "line": 83,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.loads(path.read_text(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t256-verdict-predicate/red/mutate_one_predicate.py",
+   "line": 19,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.loads(open(src).read(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t256-verdict-predicate/rederive_counts_t259.py",
+   "line": 94,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.loads(TARGET.read_text(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t271-b1-t219/compare_sections_t271.py",
+   "line": 22,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "a = json.loads(pa.read_text(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t271-b1-t219/compare_sections_t271.py",
+   "line": 23,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "b = json.loads(pb.read_text(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t271-b1-t219/independent_recheck_t271.py",
+   "line": 53,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.loads(fh.read(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t271-b1-t219/independent_recheck_t271.py",
+   "line": 57,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.loads(p.read_text(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t271-b1-t219/red/drive-red-t271.py",
+   "line": 119,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(ACK_T271.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t271-b1-t219/red/drive-red-t271.py",
+   "line": 223,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "tdoc = json.loads(good_targets.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t271-b1-t219/red/drive-red-t271.py",
+   "line": 226,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "md = json.loads(json.dumps(tdoc))"
+  },
+  {
+   "file": ".softhouse/capture/t271-b1-t219/red/drive-red-t271.py",
+   "line": 231,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "nd = json.loads(json.dumps(tdoc))"
+  },
+  {
+   "file": ".softhouse/capture/t271-b1-t219/rederive_t219_carriers.py",
+   "line": 58,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.loads(path.read_text(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t271-b1-t219/rederive_t219_carriers.py",
+   "line": 63,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.loads(fh.read(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py",
+   "line": 62,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.loads(path.read_text(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t277-shapelaw-salvage/src/crosscheck_seven_t277b.py",
+   "line": 211,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "raw = json.load(handle)"
+  },
+  {
+   "file": ".softhouse/capture/t277-shapelaw-salvage/src/dump_seven_t277.py",
+   "line": 37,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "raw = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/t277-shapelaw-salvage/src/shapelaw_census_t277.py",
+   "line": 211,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "raw = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 43,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(FINDINGS, encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 45,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "for k, v in json.load(open(ADJ, encoding=\"utf-8\"))[\"verdicts\"].items():"
+  },
+  {
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
+   "line": 73,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "census = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 40,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "HAND = json.load(open(_ADJ, encoding=\"utf-8\"))[\"verdicts\"]"
+  },
+  {
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 87,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(J, encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t284-schema2-callsites/instruments/10-callsite-registry.py",
+   "line": 206,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pin = json.loads(fh.read().decode(\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/check_verdict_predicate_agreement_t292.py",
+   "line": 220,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "object_pairs_hook",
+    "parse_constant",
+    "parse_float"
+   ],
+   "src": "doc = json.loads(text, parse_float=Decimal,"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/probe/adversary_t292.py",
+   "line": 204,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cur = json.loads(json.dumps(doc))"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/probe/adversary_t292.py",
+   "line": 312,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "out[\"T291/\" + p.stem] = json.loads(p.read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/probe/adversary_t292.py",
+   "line": 380,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "corpus[\"REAL/classify-t229\"] = json.loads(REAL_229.read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/probe/adversary_t292.py",
+   "line": 382,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "corpus[\"REAL/classify-t219\"] = json.loads(REAL_219.read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/probe/census_real_corpus.py",
+   "line": 67,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(p.read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/probe/drive_f_t290_1b.py",
+   "line": 56,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "ackdoc = json.loads((T256 / \"acknowledged.json\").read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/probe/drive_f_t290_1b.py",
+   "line": 67,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(REAL.read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/probe/drive_f_t290_1b.py",
+   "line": 75,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "a1 = json.loads(json.dumps(ackdoc))"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/probe/drive_f_t290_1b.py",
+   "line": 85,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "a2 = json.loads(json.dumps(ackdoc))"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/probe/drive_f_t290_1b.py",
+   "line": 101,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc3 = json.loads(REAL.read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/probe/drive_f_t290_1b.py",
+   "line": 107,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "a3 = json.loads(json.dumps(ackdoc))"
+  },
+  {
+   "file": ".softhouse/capture/t286-t268-retry/probe/prove_adversary_sees_a_lost_refusal.py",
+   "line": 68,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.loads(legs.read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/attack_acknowledgement_t290.py",
+   "line": 100,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(backup.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/attack_acknowledgement_t290.py",
+   "line": 112,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(backup.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/diagnose_calibration_t290.py",
+   "line": 57,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "raw = json.loads(gzip.open(RAW, \"rt\").read())"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/diagnose_calibration_t290.py",
+   "line": 58,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cls = json.loads(CLS.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/diagnose_calibration_t290.py",
+   "line": 59,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "ref = json.loads(REF.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/diagnose_calibration_t290.py",
+   "line": 111,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(p))"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py",
+   "line": 114,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "floor_doc = json.loads(fpath.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/probe_t286_rule_t290.py",
+   "line": 121,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(backup.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/probe_t286_rule_t290.py",
+   "line": 135,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "ad = json.loads(ACK.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/prove_repair_inert.py",
+   "line": 49,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rep = json.loads(REPAIR.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/prove_repair_inert.py",
+   "line": 50,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(ACK.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/red/drive-red-t290.py",
+   "line": 96,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(path.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/red/drive-red-t290.py",
+   "line": 126,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(ACK219.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/rederive_t290.py",
+   "line": 82,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "raw = json.loads(gzip.open(CAP, \"rt\").read(), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/rederive_t290.py",
+   "line": 83,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "preds = {p[\"id\"]: p for p in json.loads(open(PRED).read(), parse_float=Decimal)}"
+  },
+  {
+   "file": ".softhouse/capture/t290-review-t271/verify_t271_claims_t290.py",
+   "line": 99,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(cls.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py",
+   "line": 67,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rows = json.load(open(readback_path))"
+  },
+  {
+   "file": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py",
+   "line": 68,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "posted = json.load(open(response_path))"
+  },
+  {
+   "file": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py",
+   "line": 74,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "req_body = json.load(open(request_path))"
+  },
+  {
+   "file": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py",
+   "line": 83,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "body = json.load(open(os.path.join(OUT, fn + \".req\")))"
+  },
+  {
+   "file": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py",
+   "line": 127,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "contra_id = json.load(open(os.path.join(OUT, \"S-03-financialactivity.req\")))[\"glAccountId\"]"
+  },
+  {
+   "file": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py",
+   "line": 143,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "graded_against = json.load(open(os.path.join(DIR, \"LDG-05-graded-against.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/patch-capability.py",
+   "line": 18,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(CAP))"
+  },
+  {
+   "file": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/patch-capability.py",
+   "line": 35,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "check = json.load(open(CAP))"
+  },
+  {
+   "file": ".softhouse/capture/t314-witness-path-forgery/check_verdict_predicate_agreement_t314.py",
+   "line": 277,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "object_pairs_hook",
+    "parse_constant",
+    "parse_float"
+   ],
+   "src": "doc = json.loads(text, parse_float=Decimal,"
+  },
+  {
+   "file": ".softhouse/capture/t314-witness-path-forgery/probe/t314_render_path_injective.py",
+   "line": 119,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "out.append(json.loads(s[i:j + 1]))"
+  },
+  {
+   "file": ".softhouse/capture/t316-dead-path-guards/screen_exit_behaviour.py",
+   "line": 73,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(census.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t318-committed-clobber-blindness/instruments/20-blindness-triage.py",
+   "line": 49,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "census = json.load(open(os.path.join(here, \"evidence\", \"10-census.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/t319-reconciler-f5/probe-objdiff.py",
+   "line": 35,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return {t[\"id\"]: t for t in json.loads(out.stdout)[\"tasks\"]}"
+  },
+  {
+   "file": ".softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py",
+   "line": 143,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "spec = json.load(open(spec_path))"
+  },
+  {
+   "file": ".softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py",
+   "line": 155,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "spec = json.load(open(spec_path))"
+  },
+  {
+   "file": ".softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py",
+   "line": 210,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.loads(p.stdout)"
+  },
+  {
+   "file": ".softhouse/capture/t326-frontier-host-state/instruments/10-regen-pin.py",
+   "line": 207,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(census_path.read_text())"
+  },
+  {
+   "file": ".softhouse/capture/t326-frontier-host-state/instruments/rows.py",
+   "line": 20,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(sys.argv[1]))"
+  },
+  {
+   "file": ".softhouse/capture/t327-closure-accepting-side/throwaway/invariant-minor-units.py",
+   "line": 60,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rows = json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py",
+   "line": 141,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "body = json.load(open(os.path.join(OUT, fn + \".req\")))"
+  },
+  {
+   "file": ".softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py",
+   "line": 164,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "lo = json.load(open(os.path.join(OUT, \"B2-ACCEPT-01-entry-on-business-date.req\")))[\"transactionDate\"]"
+  },
+  {
+   "file": ".softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py",
+   "line": 166,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "hi = json.load(open(os.path.join(OUT, \"B2-CTRL-02-entry-one-day-after-business-date.req\")))[\"transactionDate\"]"
+  },
+  {
+   "file": ".softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py",
+   "line": 168,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "hi_body = json.load(open(os.path.join(OUT, \"B2-CTRL-02-entry-one-day-after-business-date.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py",
+   "line": 193,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rows = json.load(open(os.path.join(OUT, \"B1-glclosures-list.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py",
+   "line": 225,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "req_body = json.load(open(req_path))"
+  },
+  {
+   "file": ".softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py",
+   "line": 226,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "posted = json.load(open(rsp_path))"
+  },
+  {
+   "file": ".softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py",
+   "line": 229,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rows = [r for r in json.load(open(rb_path)) if r[\"transaction_id\"] == txn]"
+  },
+  {
+   "file": ".softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py",
+   "line": 366,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "v[\"graded_against\"] = json.load(open(os.path.join(PROSE, case_id + \".graded-against.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/t330-reconcile-merged-work/budget.py",
+   "line": 49,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(os.path.join(REPO, \".softhouse\", \"tasks.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/t330-reconcile-merged-work/e2e.py",
+   "line": 98,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(os.path.join(repodir, \".softhouse\", \"tasks.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/t330-reconcile-merged-work/e2e.py",
+   "line": 165,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(os.path.join(d, \".softhouse\", \"tasks.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/t330-reconcile-merged-work/population.py",
+   "line": 113,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(f))"
+  },
+  {
+   "file": ".softhouse/capture/t58-counterfactuals/src/cross-harness-t39-vs-pass3e.py",
+   "line": 65,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "t39 = {c[\"id\"]: c for c in json.load(open(T39))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/t58-counterfactuals/src/cross-harness-t39-vs-pass3e.py",
+   "line": 66,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "p3e = {c[\"id\"]: c for c in json.load(open(P3E))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/t61-halfeven/check-prediction.py",
+   "line": 64,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = {c[\"id\"]: c for c in json.load(open(CAP))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+   "line": 80,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return {r[\"case\"]: r[\"rows\"] for r in json.loads(p.stdout)}"
+  },
+  {
+   "file": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+   "line": 102,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = {c[\"id\"]: c for c in json.load(open(CAP))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/t64-zeroprincipal/check-prediction.py",
+   "line": 42,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pred = json.load(open(PRED))"
+  },
+  {
+   "file": ".softhouse/capture/t64-zeroprincipal/check-prediction.py",
+   "line": 43,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = {c[\"id\"]: c for c in json.load(open(CAP))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py",
+   "line": 66,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "PIN = json.load(open(\".softhouse/vectors/PIN.json\"))"
+  },
+  {
+   "file": ".softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py",
+   "line": 270,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(P3G_REF))"
+  },
+  {
+   "file": ".softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py",
+   "line": 272,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cfs = {r[\"case\"]: r for r in json.load(open(CF_REF))}"
+  },
+  {
+   "file": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+   "line": 80,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return {r[\"case\"]: r[\"rows\"] for r in json.loads(p.stdout)}"
+  },
+  {
+   "file": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+   "line": 96,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = {c[\"id\"]: c for c in json.load(open(CAP))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/t66-unrecognized-interest/check-prediction.py",
+   "line": 22,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(CAP, encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t66-unrecognized-interest/dump-rows.py",
+   "line": 7,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(\".softhouse/capture/out/capture-prod3h-raw.json\", encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/mutate.py",
+   "line": 36,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(open(p, encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/mutate.py",
+   "line": 64,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "clone = json.loads(json.dumps(case(doc, \"T74-E-P4\")))"
+  },
+  {
+   "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+   "line": 176,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = mutate(json.load(open(ref, encoding=\"utf-8\")), mode)"
+  },
+  {
+   "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+   "line": 184,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rows = json.load(open(f, encoding=\"utf-8\"))[\"expect\"][\"periods\"]"
+  },
+  {
+   "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+   "line": 210,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "root, basep, mutate(json.load(open(ref, encoding=\"utf-8\")), mode), tmp, \"base\")"
+  },
+  {
+   "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+   "line": 213,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "a = json.load(open(os.path.join(out, mod.FILENAMES[cid]), encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+   "line": 214,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "b = json.load(open(os.path.join(out_base, mod_base.FILENAMES[cid]), encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/capture/t74-multiplesof/build-counterfactuals.py",
+   "line": 60,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(capture_path, encoding='utf-8'))"
+  },
+  {
+   "file": ".softhouse/capture/t74-multiplesof/build-prediction.py",
+   "line": 40,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "ab = json.load(open(sectionb_path, encoding='utf-8'))"
+  },
+  {
+   "file": ".softhouse/capture/t74-multiplesof/check-prediction.py",
+   "line": 55,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(capture_path, encoding='utf-8'))"
+  },
+  {
+   "file": ".softhouse/capture/t74-multiplesof/check-prediction.py",
+   "line": 56,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pred = json.load(open(predicted_path, encoding='utf-8'))"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/check-prediction.py",
+   "line": 24,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pred = json.load(open(predp))"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/check-prediction.py",
+   "line": 25,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "meas = json.load(open(measp))"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/check-prediction.py",
+   "line": 26,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(rawp))"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/classify-boundary.py",
+   "line": 92,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+   "line": 147,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "\"captured_at\": json.load(open(CAP))[\"attestation\"][\"capturedAtUtc\"],"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+   "line": 191,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.loads(p.stdout)"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+   "line": 195,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = {c[\"id\"]: c for c in json.load(open(CAP))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+   "line": 196,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pin = json.load(open(os.path.join(ROOT, \".softhouse/vectors/PIN.json\")))"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+   "line": 66,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "res = json.loads(p.stdout)"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+   "line": 84,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = {c[\"id\"]: c for c in json.load(open(CAP))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/a2-29-retype-path.py",
+   "line": 25,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_constant",
+    "parse_float"
+   ],
+   "src": "doc = json.loads(fh.read().decode(\"utf-8\"), parse_float=decimal.Decimal,"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/analyze7.py",
+   "line": 39,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(f, parse_float=decimal.Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/audit-req-float-roundtrip.py",
+   "line": 65,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "json.loads(text, parse_float=hook(\"float\"), parse_int=hook(\"int\"))"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/audit-req-float-roundtrip.py",
+   "line": 226,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "resolved_doc = json.loads(rb.decode(), parse_float=decimal.Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/audit-req-float-roundtrip.py",
+   "line": 236,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "observed_doc = json.loads(ob.decode(), parse_float=decimal.Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/census-a2-26.py",
+   "line": 49,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.loads(raw.decode(\"utf-8\"), parse_float=D, parse_int=int)"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/mkje-a2-29.py",
+   "line": 42,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_constant",
+    "parse_float"
+   ],
+   "src": "doc = json.loads(raw.decode(\"utf-8\"), parse_float=decimal.Decimal,"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/mkje-a2-29.py",
+   "line": 151,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_constant",
+    "parse_float"
+   ],
+   "src": "doc = json.loads(body, parse_float=decimal.Decimal, parse_constant=_refuse_constant)"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py",
+   "line": 70,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "body = json.loads(first[victim])"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py",
+   "line": 119,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "body = json.load(open(out_p)) if os.path.exists(out_p) else {}"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py",
+   "line": 126,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "body = json.load(open(out_p))"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py",
+   "line": 148,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "v = json.loads('{\"amount\": 1200000.000000}', parse_float=decimal.Decimal)[\"amount\"]"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/prove-resolve8-float-red.py",
+   "line": 107,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_constant",
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "doc = json.loads(text, parse_int=_Raw, parse_float=_Raw,"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/prove-resolve8-float-red.py",
+   "line": 152,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "real = json.loads(fh.read().decode(), parse_float=decimal.Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/prove-t275-reissue.py",
+   "line": 242,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "b = json.load(f, parse_float=str)"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/resolve7.py",
+   "line": 24,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "body = json.load(open(tmpl))"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/resolve7.py",
+   "line": 25,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "resp = json.load(open(observed))"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/resolve8.py",
+   "line": 101,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_constant",
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "doc = json.loads(text,"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/resolve8.py",
+   "line": 265,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_constant",
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "doc = json.loads(text,"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/show.py",
+   "line": 14,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(f, parse_float=decimal.Decimal)"
+  },
+  {
+   "file": ".softhouse/capture/tierA-a2/verify-provenance-a2-15.py",
+   "line": 24,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "v = json.load(open(p))"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-12-amount-census.py",
+   "line": 47,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.loads(f.read_text(), parse_float=decimal.Decimal)"
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/t205-diff-scopes.py",
+   "line": 4,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "for r in json.load(open(p)):"
+  },
+  {
+   "file": ".softhouse/handoff/T57-float-scan.py",
+   "line": 39,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "json.loads(raw, parse_float=lambda s: floats.append(s) or 0)"
+  },
+  {
+   "file": ".softhouse/handoff/T57-promote-emi-vectors.py",
+   "line": 62,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "PIN = json.load(open(os.path.join(ROOT, \".softhouse\", \"vectors\", \"PIN.json\")))"
+  },
+  {
+   "file": ".softhouse/handoff/T57-promote-emi-vectors.py",
+   "line": 155,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "cap = json.load(open(os.path.join(ROOT, CAP_REL)), parse_float=str, parse_int=str)"
+  },
+  {
+   "file": ".softhouse/handoff/T57-transcription-audit.py",
+   "line": 20,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "CAP = json.load(open(CAPPATH), parse_float=str, parse_int=str)"
+  },
+  {
+   "file": ".softhouse/handoff/T57-transcription-audit.py",
+   "line": 47,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "v = json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/handoff/T58-promote-vectors.py",
+   "line": 83,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "PIN = json.load(open(\".softhouse/vectors/PIN.json\"))"
+  },
+  {
+   "file": ".softhouse/handoff/T58-promote-vectors.py",
+   "line": 248,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(P3E_REF))"
+  },
+  {
+   "file": ".softhouse/handoff/T58-promote-vectors.py",
+   "line": 253,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(P3D_REF))"
+  },
+  {
+   "file": ".softhouse/handoff/T58-promote-vectors.py",
+   "line": 258,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return {r[\"case\"]: r for r in json.load(open(path))}"
+  },
+  {
+   "file": ".softhouse/handoff/T58-promote-vectors.py",
+   "line": 669,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "at3e = json.load(open(P3E_REF))[\"attestation\"][\"capturedAtUtc\"]"
+  },
+  {
+   "file": ".softhouse/handoff/T58-promote-vectors.py",
+   "line": 693,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "captured_at = json.load(open(P3D_REF))[\"attestation\"][\"capturedAtUtc\"]"
+  },
+  {
+   "file": ".softhouse/handoff/T58-transcription-audit.py",
+   "line": 131,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps[path] = {c[\"id\"]: c for c in json.load(open(path))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/handoff/T58-transcription-audit.py",
+   "line": 137,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "v = json.load(open(os.path.join(VEC_DIR, n)))"
+  },
+  {
+   "file": ".softhouse/handoff/T58-transcription-audit.py",
+   "line": 186,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "json.load(open(cap_path)).get(\"fineractCommit\")"
+  },
+  {
+   "file": ".softhouse/handoff/T58-transcription-audit.py",
+   "line": 187,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "or json.load(open(cap_path))[\"attestation\"][\"fineract\"][\"gitCommitId\"])"
+  },
+  {
+   "file": ".softhouse/handoff/T61-mutations.py",
+   "line": 345,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "marker = json.load(f)"
+  },
+  {
+   "file": ".softhouse/handoff/T61-promote-vectors.py",
+   "line": 59,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "PIN = json.load(open(\".softhouse/vectors/PIN.json\"))"
+  },
+  {
+   "file": ".softhouse/handoff/T61-promote-vectors.py",
+   "line": 192,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = {c[\"id\"]: c for c in json.load(open(P3F_REF))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/handoff/T61-promote-vectors.py",
+   "line": 193,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cfs = {r[\"case\"]: r for r in json.load(open(CF_REF))}"
+  },
+  {
+   "file": ".softhouse/handoff/T61-promote-vectors.py",
+   "line": 321,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "\"captured_at\": json.load(open(P3F_REF))[\"attestation\"][\"capturedAtUtc\"],"
+  },
+  {
+   "file": ".softhouse/handoff/T61-transcription-audit.py",
+   "line": 31,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "PIN = json.load(open(\".softhouse/vectors/PIN.json\"))"
+  },
+  {
+   "file": ".softhouse/handoff/T61-transcription-audit.py",
+   "line": 78,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "v = json.loads(raw)"
+  },
+  {
+   "file": ".softhouse/handoff/T61-transcription-audit.py",
+   "line": 101,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = {c[\"id\"]: c for c in json.load(open(ref))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/handoff/T74-promote-vectors.py",
+   "line": 91,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "PIN = json.load(open(\".softhouse/vectors/PIN.json\"))"
+  },
+  {
+   "file": ".softhouse/handoff/T74-promote-vectors.py",
+   "line": 373,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(P3I_REF))"
+  },
+  {
+   "file": ".softhouse/handoff/T74-promote-vectors.py",
+   "line": 375,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "cfs = {r[\"case\"]: r for r in json.load(open(CF_REF))}"
+  },
+  {
+   "file": ".softhouse/handoff/T8-promote-vectors.py",
+   "line": 56,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "PIN = json.load(open(os.path.join(ROOT, \".softhouse\", \"vectors\", \"PIN.json\")))"
+  },
+  {
+   "file": ".softhouse/handoff/T8-promote-vectors.py",
+   "line": 106,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "cap = json.load(open(os.path.join(ROOT, CAP_REL)), parse_float=str, parse_int=str)"
+  },
+  {
+   "file": ".softhouse/handoff/T8-transcription-audit.py",
+   "line": 14,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "CAP = json.load(open(os.path.join(ROOT, \".softhouse\", \"capture\", \"out\","
+  },
+  {
+   "file": ".softhouse/handoff/T8-transcription-audit.py",
+   "line": 33,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "v = json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/handoff/t57-fraction-crosscheck.py",
+   "line": 13,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "C = json.load(open(os.path.join(ROOT, \".softhouse\", \"capture\", \"out\", \"capture-prod3c-raw.json\")),"
+  },
+  {
+   "file": ".softhouse/handoff/t57-fraction-crosscheck.py",
+   "line": 19,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "v = json.load(open(os.path.join(V, f)))"
+  },
+  {
+   "file": ".softhouse/reviews/A2-11/check-shape.py",
+   "line": 25,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.loads(fh.read().decode(\"utf-8\"), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/A2-11/check-shape.py",
+   "line": 47,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "req = json.loads(fh.read().decode(\"utf-8\"), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/A2-11/enumerate-corpus.py",
+   "line": 103,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "d = json.loads(raw.decode(\"utf-8\"), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/A2-11/prove-resolve7-float-red.py",
+   "line": 67,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "real = json.loads(fh.read().decode(), parse_float=decimal.Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/A2-11/prove-resolve7-float-red.py",
+   "line": 72,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "resolved_real = json.loads(fh.read().decode(), parse_float=decimal.Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/A2-11/verify-double-entry-minor-units.py",
+   "line": 56,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.loads(raw, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/T182-evidence/t182_independent_tally.py",
+   "line": 19,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.loads(ln)"
+  },
+  {
+   "file": ".softhouse/reviews/T182-evidence/t182_t159check.py",
+   "line": 3,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.loads(gzip.open(p, 'rt').read())"
+  },
+  {
+   "file": ".softhouse/reviews/T296/probe/add-graded-against.py",
+   "line": 17,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "v = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/reviews/T296/probe/build-closure-probe-vector.py",
+   "line": 38,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "v = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/reviews/T302/a2/cmp-lockset.py",
+   "line": 26,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return {t[\"id\"]: t for t in json.loads(o.stdout)[\"tasks\"]}"
+  },
+  {
+   "file": ".softhouse/reviews/T306/probe/build-probes.py",
+   "line": 58,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.load(fh)"
+  },
+  {
+   "file": ".softhouse/reviews/T306/probe/build-probes.py",
+   "line": 69,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.loads(json.dumps(v))"
+  },
+  {
+   "file": ".softhouse/reviews/T306/probe/inject-acceptance.py",
+   "line": 38,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.loads(src.read_text())"
+  },
+  {
+   "file": ".softhouse/reviews/T308/probe/t308_both_axes.py",
+   "line": 134,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "strict[\"T291/\" + p.stem] = json.loads(p.read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/reviews/T308/probe/t308_survivor_mutants.py",
+   "line": 161,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "legs = json.loads((tmp / (mid + \"-legs.json\")).read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/reviews/T308/probe/t308_theorem_b_counterrule.py",
+   "line": 53,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.loads((T256 / \"boolean-key-register.json\").read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/reviews/T308/probe/t308_theorem_b_counterrule.py",
+   "line": 141,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "CORPUS[\"T291/\" + p.stem] = json.loads(p.read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/reviews/T308/probe/t308_theorem_b_counterrule.py",
+   "line": 143,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "CORPUS[\"REAL/classify-t229\"] = json.loads(REAL_229.read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/reviews/T308/probe/t308_theorem_b_counterrule.py",
+   "line": 145,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "CORPUS[\"REAL/classify-t219\"] = json.loads(REAL_219.read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/reviews/T308/probe/t308_unicode_digit_predicate.py",
+   "line": 76,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "reg = json.loads((T256 / \"boolean-key-register.json\").read_text(encoding=\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/agree.py",
+   "line": 2,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rep = json.load(open('/tmp/t84-port-report.json'))"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/agree.py",
+   "line": 3,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rows = {r['id']: r for r in json.load(open('/tmp/t84-eval-rows.json')) + json.load(open('/tmp/t84b-rows.json'))}"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/agree.py",
+   "line": 3,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rows = {r['id']: r for r in json.load(open('/tmp/t84-eval-rows.json')) + json.load(open('/tmp/t84b-rows.json'))}"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/classify.py",
+   "line": 6,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open(RAW))"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/eval-probe1.py",
+   "line": 4,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open('/tmp/t84probe/out/capture-t84-raw.json'))"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/eval-probe1.py",
+   "line": 5,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pred = json.load(open('/tmp/t84-prediction.json'))"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/eval-probe1.py",
+   "line": 6,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "t83 = {c['id']: c for c in json.load(open("
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/eval-probe2.py",
+   "line": 4,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.load(open('/tmp/t84probe2/out/capture-t84b-raw.json'))"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/eval-probe2.py",
+   "line": 5,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pred = json.load(open('/tmp/t84b-prediction.json'))"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+   "line": 90,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "\"captured_at\": json.load(open(CAP))[\"attestation\"][\"capturedAtUtc\"],"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+   "line": 121,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "return json.loads(p.stdout)"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+   "line": 123,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = {c[\"id\"]: c for c in json.load(open(CAP))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+   "line": 124,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pin_rev = json.load(open(os.path.join(ROOT, \".softhouse/vectors/PIN.json\")))[\"dec1_revision\"]"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/gen-port.py",
+   "line": 8,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(src))"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/run-port.py",
+   "line": 18,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "port = {r[\"case\"]: r for r in json.loads(p.stdout)}"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/run-port.py",
+   "line": 31,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "for c in json.load(open(f))[\"captures\"]:"
+  },
+  {
+   "file": ".softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py",
+   "line": 18,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(f))"
+  },
+  {
+   "file": ".softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py",
+   "line": 51,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "pin = json.load(open(os.path.join(R, \".softhouse/vectors/PIN-ledger.json\")))"
+  },
+  {
+   "file": ".softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py",
+   "line": 54,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(f))"
+  },
+  {
+   "file": ".softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py",
+   "line": 62,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(f))"
+  },
+  {
+   "file": ".softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py",
+   "line": 68,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(f))"
+  },
+  {
+   "file": ".softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py",
+   "line": 83,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(f))"
+  },
+  {
+   "file": ".softhouse/reviews/t185-probe/measure-cells-drop.py",
+   "line": 55,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "raw_float = json.load(open(f))                     # what measure-other-sites.py does"
+  },
+  {
+   "file": ".softhouse/reviews/t185-probe/measure-cells-drop.py",
+   "line": 74,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(f))"
+  },
+  {
+   "file": ".softhouse/reviews/t185-probe/probe-t55-successor.py",
+   "line": 49,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "doc = json.load(fh, parse_float=str, parse_int=str)  # T185: no binary float"
+  },
+  {
+   "file": ".softhouse/reviews/t21v2/t21v2-crosspass.py",
+   "line": 4,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "p1 = {c[\"id\"]: c for c in json.load(open(W + \"/capture-raw.json\"))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/reviews/t21v2/t21v2-crosspass.py",
+   "line": 5,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "p2 = {c[\"id\"]: c for c in json.load(open(W + \"/capture-tenant-raw.json\"))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/reviews/t21v2/t21v2-crosspass.py",
+   "line": 6,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "p3 = {c[\"id\"]: c for c in json.load(open(W + \"/capture-prod-raw.json\"))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/reviews/t21v2/t21v2-invariants.py",
+   "line": 44,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "data = json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/reviews/t21v2/t21v2-rederive.py",
+   "line": 307,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = {c[\"id\"]: c for c in json.load(open(path))[\"captures\"]}"
+  },
+  {
+   "file": ".softhouse/reviews/t23-probe/t23_rederive.py",
+   "line": 171,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "obs = json.load(open(\".softhouse/capture/out/capture-prod-raw.json\"))"
+  },
+  {
+   "file": ".softhouse/reviews/t24-probe/t24_check_prod_corpus.py",
+   "line": 19,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "obs = json.load(open(\".softhouse/capture/out/capture-prod-raw.json\"))"
+  },
+  {
+   "file": ".softhouse/reviews/t24-probe/t24_count_p12_p19_divergences.py",
+   "line": 12,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "o = json.load(open(\".softhouse/capture/out/capture-raw.json\"))"
+  },
+  {
+   "file": ".softhouse/reviews/t249-g14-scope/drive/drive.py",
+   "line": 189,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "prog = json.load(fh)"
+  },
+  {
+   "file": ".softhouse/reviews/t261-tenant-attestation/instruments/t261-fixture-location.py",
+   "line": 43,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "json.loads(fh.read().decode(\"utf-8\"), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/reviews/t261-tenant-attestation/instruments/t261-fixture-location.py",
+   "line": 84,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "json.loads(fh.read().decode(\"utf-8\"))"
+  },
+  {
+   "file": ".softhouse/reviews/t261-tenant-attestation/instruments/t261-vector-tenant-census.py",
+   "line": 62,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.loads(fh.read().decode(\"utf-8\"), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/reviews/t261-tenant-attestation/instruments/t261-vector-tenant-census.py",
+   "line": 86,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.loads(fh.read().decode(\"utf-8\"), parse_float=str)"
+  },
+  {
+   "file": ".softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py",
+   "line": 160,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "reg = json.loads(REG.read_text())"
+  },
+  {
+   "file": ".softhouse/reviews/t262-verdict-predicate/b1_row_detail_t262.py",
+   "line": 12,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "cls = json.load(open(\".softhouse/capture/t219-g8-residual/out/classify-t219.json\"),"
+  },
+  {
+   "file": ".softhouse/reviews/t262-verdict-predicate/b1_row_detail_t262.py",
+   "line": 22,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "raw = json.load(gzip.open(rawp, \"rt\"), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/t262-verdict-predicate/pin_test2_t262.py",
+   "line": 64,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(EVID.read_text())"
+  },
+  {
+   "file": ".softhouse/reviews/t262-verdict-predicate/pin_test2_t262.py",
+   "line": 75,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "ackdoc = json.loads(ACK.read_text())"
+  },
+  {
+   "file": ".softhouse/reviews/t262-verdict-predicate/pin_test_t262.py",
+   "line": 62,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(EVID.read_text())"
+  },
+  {
+   "file": ".softhouse/reviews/t262-verdict-predicate/pin_test_t262.py",
+   "line": 76,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "ackdoc = json.loads(ACK.read_text())"
+  },
+  {
+   "file": ".softhouse/reviews/t262-verdict-predicate/rederive_t262.py",
+   "line": 34,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "cls = json.load(open(cls_p), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/t262-verdict-predicate/rederive_t262.py",
+   "line": 35,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "raw = json.load(gzip.open(raw_p, \"rt\"), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/t262-verdict-predicate/rederive_t262.py",
+   "line": 36,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "pred = {p[\"id\"]: p for p in json.load(open(BASE + \"/prediction.json\"), parse_float=Decimal)}"
+  },
+  {
+   "file": ".softhouse/reviews/t262-verdict-predicate/spotcheck_b1_t262.py",
+   "line": 17,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "doc = json.load(open(P), parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py",
+   "line": 52,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(f))"
+  },
+  {
+   "file": ".softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py",
+   "line": 90,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "for p, v in float_leaves(json.load(open(f))):"
+  },
+  {
+   "file": ".softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py",
+   "line": 125,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(tmpl))"
+  },
+  {
+   "file": ".softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py",
+   "line": 134,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rt = json.loads(json.dumps(v))"
+  },
+  {
+   "file": ".softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py",
+   "line": 135,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "exact = repr(v) == repr(json.loads(json.dumps(json.loads(json.dumps(v)))))"
+  },
+  {
+   "file": ".softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py",
+   "line": 135,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "exact = repr(v) == repr(json.loads(json.dumps(json.loads(json.dumps(v)))))"
+  },
+  {
+   "file": ".softhouse/reviews/t27-probe/t27_mutate.py",
+   "line": 170,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(src))"
+  },
+  {
+   "file": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+   "line": 105,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.load(open(P(\".softhouse/capture/out/capture-prod-raw.json\")))"
+  },
+  {
+   "file": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+   "line": 119,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "d = json.loads(raw)"
+  },
+  {
+   "file": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+   "line": 144,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "j = json.load(open(P(\".softhouse/capture/pathb/t22-audit/out-rounddown/\""
+  },
+  {
+   "file": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+   "line": 146,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "req = json.load(open(P(\".softhouse/capture/pathb/t22-audit/req/calc-prounddown.json\")))"
+  },
+  {
+   "file": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+   "line": 147,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "prod = json.load(open(P(\".softhouse/capture/pathb/t22-audit/req/prounddown.json\")))"
+  },
+  {
+   "file": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+   "line": 165,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "b01 = json.load(open(P(\".softhouse/capture/pathb/out/B-01-baseline-raw.json\")))"
+  },
+  {
+   "file": ".softhouse/reviews/t291-review-t286/probe/drive-t291.py",
+   "line": 232,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "reg = json.loads(REG.read_text())"
+  },
+  {
+   "file": ".softhouse/reviews/t291-review-t286/probe/drive-t291.py",
+   "line": 238,
+   "call": "json.loads",
+   "guarded": false,
+   "kwargs": [],
+   "src": "doc = json.loads(f.read_text())"
+  },
+  {
+   "file": ".softhouse/reviews/t30-probe/t30_rederive_b03_b04.py",
+   "line": 247,
+   "call": "json.loads",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "return json.loads(open(path, 'rb').read().decode(), parse_float=Decimal, parse_int=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/t34-probe/t34_capture_check.py",
+   "line": 31,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "data = json.load(open(RAW))"
+  },
+  {
+   "file": ".softhouse/reviews/t34-probe/t34_corpus_blind.py",
+   "line": 33,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "data = json.load(open(\".softhouse/capture/out/capture-prod-raw.json\"))"
+  },
+  {
+   "file": ".softhouse/reviews/t34-probe/t34_rollforward.py",
+   "line": 57,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "data = json.load(open(\".softhouse/capture/out/capture-prod-raw.json\"))"
+  },
+  {
+   "file": ".softhouse/reviews/t38-probe/t38_corpus_blind.py",
+   "line": 40,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "data = json.load(open(path), parse_float=Decimal, parse_int=int)"
+  },
+  {
+   "file": ".softhouse/reviews/t38-probe/t38_disbrow_coverage.py",
+   "line": 43,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "data = json.load(open(path), parse_float=Decimal, parse_int=int)"
+  },
+  {
+   "file": ".softhouse/reviews/t38-probe/t38_disbrow_coverage.py",
+   "line": 76,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "data = json.load(open(path), parse_float=Decimal, parse_int=int)"
+  },
+  {
+   "file": ".softhouse/reviews/t38-probe/t38_disbrow_coverage.py",
+   "line": 92,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "data = json.load(open(p3b), parse_float=Decimal, parse_int=int)"
+  },
+  {
+   "file": ".softhouse/reviews/t38-probe/t38_discriminate.py",
+   "line": 52,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float",
+    "parse_int"
+   ],
+   "src": "data = json.load(open(path), parse_float=Decimal, parse_int=int)"
+  },
+  {
+   "file": ".softhouse/reviews/t38-probe/t38_pass2_membership.py",
+   "line": 148,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "for cap in json.load(open(path))[\"captures\"]:"
+  },
+  {
+   "file": ".softhouse/reviews/t38-probe/t38_validate.py",
+   "line": 134,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "data = json.load(open(path))"
+  },
+  {
+   "file": ".softhouse/reviews/t41-probe/t41_discriminate.py",
+   "line": 68,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(f, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/t41-probe/t41_validate.py",
+   "line": 78,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(f, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/t45-probe/t45_discriminate.py",
+   "line": 68,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(f, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/t45-probe/t45_extra.py",
+   "line": 161,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = json.load(open(\".softhouse/capture/out/capture-prod3b-raw.json\"))[\"captures\"]"
+  },
+  {
+   "file": ".softhouse/reviews/t45-probe/t45_extra.py",
+   "line": 237,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "obs = json.load(open(os.path.join(base, fn)))"
+  },
+  {
+   "file": ".softhouse/reviews/t45-probe/t45_extra.py",
+   "line": 314,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "att = json.load(open(\".softhouse/capture/charges/out/attested/attestation.json\"))"
+  },
+  {
+   "file": ".softhouse/reviews/t45-probe/t45_extra.py",
+   "line": 351,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "obs = json.load(open(os.path.join(base, fn)))"
+  },
+  {
+   "file": ".softhouse/reviews/t45-probe/t45_extra.py",
+   "line": 364,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rq = json.load(open(rp))"
+  },
+  {
+   "file": ".softhouse/reviews/t45-probe/t45_validate.py",
+   "line": 78,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(f, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/t47-probe/t47_discriminate.py",
+   "line": 68,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(f, parse_float=Decimal)"
+  },
+  {
+   "file": ".softhouse/reviews/t47-probe/t47_extra.py",
+   "line": 161,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "caps = json.load(open(\".softhouse/capture/out/capture-prod3b-raw.json\"))[\"captures\"]"
+  },
+  {
+   "file": ".softhouse/reviews/t47-probe/t47_extra.py",
+   "line": 237,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "obs = json.load(open(os.path.join(base, fn)))"
+  },
+  {
+   "file": ".softhouse/reviews/t47-probe/t47_extra.py",
+   "line": 314,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "att = json.load(open(\".softhouse/capture/charges/out/attested/attestation.json\"))"
+  },
+  {
+   "file": ".softhouse/reviews/t47-probe/t47_extra.py",
+   "line": 351,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "obs = json.load(open(os.path.join(base, fn)))"
+  },
+  {
+   "file": ".softhouse/reviews/t47-probe/t47_extra.py",
+   "line": 364,
+   "call": "json.load",
+   "guarded": false,
+   "kwargs": [],
+   "src": "rq = json.load(open(rp))"
+  },
+  {
+   "file": ".softhouse/reviews/t47-probe/t47_validate.py",
+   "line": 78,
+   "call": "json.load",
+   "guarded": true,
+   "kwargs": [
+    "parse_float"
+   ],
+   "src": "return json.load(f, parse_float=Decimal)"
+  }
+ ]
+}

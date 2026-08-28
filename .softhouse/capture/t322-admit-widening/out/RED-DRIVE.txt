@@ -1,0 +1,59 @@
+==========================================================================
+T322 RED DRIVE -- admit.go opening-balance leg rules
+target : nexus/internal/apps/ledger/conformance/admit.go
+sha256 : 2d8958ceae30c7a7a238be9bb4487d23d7bf93f268927acde0b9c273a04208ff  (before any mutation)
+==========================================================================
+
+GREEN BASELINE -- every arm must PASS on the UNMUTATED file, or every RED
+below could be red for a reason that has nothing to do with its mutant.
+  [GREEN] go test rc=0  -> .softhouse/capture/t322-admit-widening/out/00-green-baseline.txt
+
+--------------------------------------------------------------------------
+MUTANT W1 -- the WIDENING itself -- positional gate keyed on the COMMAND alone (T305's shape)
+  FROM: if !obAcceptingLegs &&
+			i < len(v.Request.Legs)
+  TO  : if v.Request.Command != "defineOpeningBalance" &&
+			i < len(v.Request.Legs)
+  [W1] go test rc=1  -> .softhouse/capture/t322-admit-widening/out/W1.txt
+  MUTANT W1 DIED, and for its OWN reason (matched: gate and the multiset gate have stopped being complements)
+
+--------------------------------------------------------------------------
+MUTANT W2 -- the OVER-correction -- positional pairing applied to the ACCEPTING shape too
+  FROM: if !obAcceptingLegs &&
+			i < len(v.Request.Legs)
+  TO  : if true &&
+			i < len(v.Request.Legs)
+  [W2] go test rc=1  -> .softhouse/capture/t322-admit-widening/out/W2.txt
+  MUTANT W2 DIED, and for its OWN reason (matched: INADMISSIBLE)
+
+--------------------------------------------------------------------------
+MUTANT L -- THE LENGTH RULE relaxed from 2*len(legs) to len(legs)
+  FROM: want = 2 * len(v.Request.Legs)
+  TO  : want = len(v.Request.Legs)
+  [L] go test rc=1  -> .softhouse/capture/t322-admit-widening/out/L.txt
+  MUTANT L DIED, and for its OWN reason (matched: was ADMITTED on defineOpeningBalance, or)
+
+--------------------------------------------------------------------------
+MUTANT M -- THE MULTISET RULE's surplus report switched off
+  FROM: if left > 0 {
+  TO  : if left > 0 && false {
+  [M] go test rc=1  -> .softhouse/capture/t322-admit-widening/out/M.txt
+  MUTANT M DIED, and for its OWN reason (matched: ADMITTED by the multiset rule)
+
+--------------------------------------------------------------------------
+MUTANT S -- THE NEGATIVE COUNT reintroduced -- shortfalls reported through the SURPLUS sentence
+  FROM: if left > 0 {
+  TO  : if left != 0 {
+  [S] go test rc=1  -> .softhouse/capture/t322-admit-widening/out/S.txt
+  MUTANT S DIED, and for its OWN reason (matched: which is not a positive)
+
+--------------------------------------------------------------------------
+MUTANT D -- THE NON-DETERMINISM reintroduced -- the surplus report left unsorted
+  FROM: 		sort.Strings(surplus)
+  TO  : 		_ = sort.Strings // MUTANT D: the sort removed
+  [D] go test rc=1  -> .softhouse/capture/t322-admit-widening/out/D.txt
+  MUTANT D DIED, and for its OWN reason (matched: is NOT order-stable)
+
+==========================================================================
+RESTORED: before=2d8958ceae30c7a7a238be9bb4487d23d7bf93f268927acde0b9c273a04208ff after=2d8958ceae30c7a7a238be9bb4487d23d7bf93f268927acde0b9c273a04208ff restored=1
+T322 RED DRIVE: ALL 6 MUTANTS DIED, each matched by its own arm's own sentence -- EXIT 0

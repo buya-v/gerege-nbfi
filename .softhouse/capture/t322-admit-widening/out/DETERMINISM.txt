@@ -1,0 +1,10 @@
+$ go test ./internal/apps/ledger/conformance/ -run 'TestOpeningBalanceLegPairingIsRedDrivable/the_SURPLUS_report_is_ORDER-STABLE_across_runs' -count=20 -v
+=== RUN   TestOpeningBalanceLegPairingIsRedDrivable/the_SURPLUS_report_is_ORDER-STABLE_across_runs
+--- PASS: TestOpeningBalanceLegPairingIsRedDrivable (0.07s)
+    --- PASS: TestOpeningBalanceLegPairingIsRedDrivable/the_SURPLUS_report_is_ORDER-STABLE_across_runs (0.03s)
+PASS
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	1.727s
+
+ARM PASSES = 20   ARM FAILS = 0   go rc=0
+EVALUATIONS = 1300  (65 Admit() calls per invocation, each in a fresh process)
+T322-DETERMINISM: byte-identical reason text in 20 independent processes -- EXIT 0

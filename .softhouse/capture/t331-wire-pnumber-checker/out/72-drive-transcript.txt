@@ -1,0 +1,31 @@
+
+########## PRE-FLIGHT: the tree must be clean at the index before planting
+OK: conformance.sh matches the index.
+
+########## PLANT: insert one verbatim drifted line inside guard_pnumber_citations
+planted at line 1764
+ .softhouse/conformance.sh | 1 +
+ 1 file changed, 1 insertion(+)
+
+########## RED: bash .softhouse/conformance.sh  (NEVER sh/zsh/dash)
+exit=2
+--- probe line count (P-84: read the PRESENCE before the value) ---
+0
+--- the guard's own words ---
+conformance: A CITED P-NUMBER CARRIES A RULE SENTENCE THAT patterns.md DEFINES UNDER A
+PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/conformance.sh:1764 P-79 -- gloss (colon) 'never fix a rotted number; make the second site READ the first). ' matches P-80 (12) better than the cited P-79 (0); patterns.md P-80 = 'A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the same defect as the line number.'
+--- FOR THIS REASON AND NO OTHER: every other guard's refusal line ---
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+conformance: the cited rule. EXIT 2 — no verdict is available. This is NOT a pass.
+
+########## REVERT: restore conformance.sh and PROVE it byte-identical to the index
+OK: byte-identical to the index (git diff --quiet).
+
+########## GREEN: bash .softhouse/conformance.sh on the reverted tree
+exit=0
+conformance:   P-number citations: VERDICT PASS (evidence-zone drift is REPORTED, never
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+########## VERDICT
+T331-DRIVE: PASS -- the guard fails THROUGH conformance.sh and recovers.

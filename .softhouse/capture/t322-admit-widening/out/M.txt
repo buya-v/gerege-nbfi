@@ -1,0 +1,8 @@
+--- FAIL: TestOpeningBalanceLegPairingIsRedDrivable (0.08s)
+    --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/an_amount_carried_a_THIRD_time_is_refused_as_a_SURPLUS (0.00s)
+        openingbalance_test.go:499: an expect amount carried THREE times was ADMITTED by the multiset rule: [expect.legs has 7 entries and request.legs has 3; on request.command "defineOpeningBalance" an accepted entry stores 6 (saveAllDebitOrCreditOpeningBalanceEntries persists the leg at :791 AND its contra at :796, inside the per-leg loop), and a length mismatch is a transcription defect, not a divergence to grade]
+    --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/the_SURPLUS_report_is_ORDER-STABLE_across_runs (0.03s)
+        openingbalance_test.go:566: this arm asserts stability over a report that does not contain the surplus sentence, so it proves nothing: expect.legs has 8 entries and request.legs has 3; on request.command "defineOpeningBalance" an accepted entry stores 6 (saveAllDebitOrCreditOpeningBalanceEntries persists the leg at :791 AND its contra at :796, inside the per-leg loop), and a length mismatch is a transcription defect, not a divergence to grade
+FAIL
+FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.323s
+FAIL

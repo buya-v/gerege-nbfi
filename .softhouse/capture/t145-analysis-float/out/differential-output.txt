@@ -1,0 +1,286 @@
+SELECTOR (population): every tracked .py under .softhouse with >=1 UNGUARDED
+                       json.load site, per out/census.json
+SELECTOR (repair):     PYTHONPATH sitecustomize patching json.load/loads to
+                       inject parse_float=Decimal when absent. ZERO bytes edited.
+REV: a66d047c135c039e64f2a8d6b6de7bcc51c7c13a   TIMEOUT: 25s
+UNGUARDED FILES (whole population)          : 196
+  EXCLUDED .softhouse/bin/** pipeline drivers: 1
+  EXCLUDED as git-mutating                   : 2
+  SWEPT                                      : 193
+    EXCLUDED .softhouse/bin/ready-tasks.py
+    EXCLUDED .softhouse/capture/t252-tier3/instruments/40-c6-red-drive.py
+    EXCLUDED .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py
+
+TREE SAFETY: 7 dirty entries after the sweep, 6 of them OUTSIDE this task's
+             own capture dir. Those 6 are restored below.
+   COLLATERAL M .softhouse/capture/pathb/t22-probe/req/calc-B-01-baseline-repro.json
+   COLLATERAL  M .softhouse/capture/pathb/t22-probe/req/product-1-baseline-repro.json
+   COLLATERAL  M .softhouse/capture/t219-g8-residual/out/classify-t219.json
+   COLLATERAL  M .softhouse/capture/t282-pnumber-drift/out/concept-sweep-8081-8384.txt
+   COLLATERAL  M .softhouse/reviews/T296/probe/LDG-REFUSE-04-PROBE-future-dated-entry.json
+   COLLATERAL ?? .softhouse/capture/charges/bin/out/
+
+==== RESULT ====
+NOT-RUNNABLE (both legs fail identically; needs argv/env/oracle) : 101
+IDENTICAL    (parse_float changes NOTHING this script prints)    : 79
+DIFFERS      (the repair MOVES this script's output)             : 13
+
+---- DIFFERS: .softhouse/capture/charges/bin/t48-analyse.py
+     exit A=0  B=0
+     line 2
+       A:   19 sidecars written; 218 raw numeric leaves checked in the last file
+       B:   19 sidecars written; 80 raw numeric leaves checked in the last file
+---- DIFFERS: .softhouse/capture/charges/bin/t51-analyse2.py
+     exit A=1  B=0
+     line 112
+       A: 
+       B:    T51-FL-INTEREST-REJECT     HTTP 403 : Fixed Length configuration is only allowed for zero interest products
+     line 113
+       A: <EOF>
+       B:    T51-FL0-11                 HTTP 403 : Wrong configuration between Number Of Repayments: 12 * 1 and Fixed Length: 11 values
+     line 114
+       A: <EOF>
+       B: 
+     line 115
+       A: <EOF>
+       B:    T51-FL0-CTRL     loanTermInDays=365      last period 2026-12-1 -> 2027-1-1   totalInterestCharged=0.00
+     line 116
+       A: <EOF>
+       B:    T51-FL0-12       loanTermInDays=365      last period 2026-12-1 -> 2027-1-1   totalInterestCharged=0.00
+     line 117
+       A: <EOF>
+       B:    T51-FL0-18       loanTermInDays=546      last period 2026-12-1 -> 2027-7-1   totalInterestCharged=0.00
+     line 118
+       A: <EOF>
+       B:    T51-FL0-365      loanTermInDays=11109    last period 2026-12-1 -> 2056-6-1   totalInterestCharged=0.00
+     line 119
+       A: <EOF>
+       B: 
+     line 120
+       A: <EOF>
+       B: == fixedLength 12 (== the natural term) vs no fixedLength
+     line 121
+       A: <EOF>
+       B:    0 of 280 cells differ   [expected: observe]
+     ... more differences suppressed
+     stderr differs; A tail: json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+                     B tail: 
+---- DIFFERS: .softhouse/capture/pathb/t22-probe/mkcalc.py
+     exit A=0  B=1
+     line 1
+       A: wrote calc-B-01-baseline-repro.json productId -> 5
+       B: 
+     line 2
+       A: wrote calc-B-02-multiplesof100-repro.json productId -> 6
+       B: <EOF>
+     line 3
+       A: wrote calc-B-03-diycs-fullleapyear-repro.json productId -> 7
+       B: <EOF>
+     line 4
+       A: wrote calc-B-04-diycs-feb29only-repro.json productId -> 8
+       B: <EOF>
+     line 5
+       A: 
+       B: <EOF>
+     stderr differs; A tail: 
+                     B tail: TypeError: Object of type Decimal is not JSON serializable
+---- DIFFERS: .softhouse/capture/pathb/t22-probe/mkreq.py
+     exit A=0  B=1
+     line 1
+       A: wrote product-1-baseline-repro.json
+       B: 
+     line 2
+       A: wrote product-2-multiplesof100-repro.json
+       B: <EOF>
+     line 3
+       A: wrote product-3-diycs-fullleapyear-repro.json
+       B: <EOF>
+     line 4
+       A: wrote product-4-diycs-feb29only-repro.json
+       B: <EOF>
+     line 5
+       A: 
+       B: <EOF>
+     stderr differs; A tail: 
+                     B tail: TypeError: Object of type Decimal is not JSON serializable
+---- DIFFERS: .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py
+     exit A=0  B=1
+     line 40
+       A:      sha256 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+       B:      sha256 1e42704d4cdbc7cf68b87b719ecb6822f2cdb718028ca6fd7d3ed2910f2cb3cb
+     line 41
+       A: 
+       B:   !! ACKNOWLEDGEMENT BLOCK VOID -- registered for sha256 5226eacea7ff004eb545a9d8d02278096834e22ccd64f74828472dc0c5708bc8
+     line 42
+       A:   *** DISAGREEMENT [ACKNOWLEDGED] cells[3]:T219-R600p0-N103-B1
+       B:      but the live file is       sha256 1e42704d4cdbc7cf68b87b719ecb6822f2cdb718028ca6fd7d3ed2910f2cb3cb
+     line 43
+       A:       recorded predicate : P2_emiDifferenceEqualsB = false
+       B:      The evidence was edited after the acknowledgement was written, OR the acknowledgement
+     line 44
+       A:       recorded verdict   : verdict='AS PREDICTED'
+       B:      names the wrong bytes. Either way it does NOT apply. T114/T176.
+     line 45
+       A:       disposition        : PREDICATE OUT OF ITS DOMAIN ON THIS ROW; VERDICT STANDS; T259's EXPECTATION FOR THIS ROW IS FALSIFIED
+       B: 
+     line 46
+       A:       reason             : P2's first conjunct 'lastRowTotal - row1Total == B' is a claim about the FAMILY-B non-amortising shape: n instalments of E with the balloon B riding on the last row. This is
+       B: ------------------------------------------------------------------------------
+     line 47
+       A:       corrected form     : NOT CORRECTED -- WITHDRAWN ON THIS ROW. There is no corrected form of 'emiDifference == B' for a schedule with no balloon row. The only statement that survives here is the u
+       B:   files inspected           : 2
+     line 48
+       A:       verdict scope      : classify_t219.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD (lines 97-104): the observed OUTCOME FAMILY versus `predictedOutcome` (equality
+       B:   rows inspected            : 22
+     line 49
+       A: 
+       B:   predicate booleans read   : 51
+     ... more differences suppressed
+---- DIFFERS: .softhouse/capture/t290-review-t271/probe_t286_rule_t290.py
+     exit A=0  B=1
+     line 9
+       A:   case0  t286  exit 0  GREEN    disagreements=4
+       B:   case0  t286  exit 1  REFUSED  disagreements=0
+     line 23
+       A:   CASE A: GREEN on the live rule, REFUSED on T286's. **T286 ALREADY CLOSES THE
+       B:   REFUSED: CASE 0 did not green on both rules -- the control failed, so no negative below is trustworthy (P-72)
+     line 24
+       A:   void_acks HALF**, independently and before this review. F-T290-1a is live
+       B: T290-T286: REFUSED caseA_live=GREEN caseA_t286=REFUSED caseB_live=GREEN caseB_t286=GREEN
+     line 25
+       A:   only against the rule on main today, and T269 must state WHICH rule it
+       B: 
+     line 26
+       A:   installs.
+       B: <EOF>
+     line 27
+       A: 
+       B: <EOF>
+     line 28
+       A:   CASE B: GREEN ON BOTH. The consistent two-file edit leaves nothing to void,
+       B: <EOF>
+     line 29
+       A:   so `voidAcks` cannot see it and `unacknowledged=0` is satisfied. **ONLY A
+       B: <EOF>
+     line 30
+       A:   FLOOR ON `disagreements` CATCHES THIS**, and no rule on any branch has one.
+       B: <EOF>
+     line 31
+       A:   This is the half of F-T290-1 that survives everything, and it is the shape a
+       B: <EOF>
+     ... more differences suppressed
+---- DIFFERS: .softhouse/capture/t290-review-t271/prove_repair_inert.py
+     exit A=1  B=1
+     line 7
+       A:     before: T259-VPA: GREEN files=1 rows=11 predicates=27 disagreements=4 acknowledged=4 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+       B:     before: T259-VPA: GREEN files=1 rows=11 predicates=27 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+     line 9
+       A:   REFUSED: a probe line moved
+       B:   REFUSED: the repaired disposition never appeared in the rule's output, so this proof measured nothing
+     line 10
+       A:   REFUSED: the repaired disposition never appeared in the rule's output, so this proof measured nothing
+       B: T290-REPAIR-INERT: REFUSED rowsReplaced=2 probeLinesBefore=1 probeLinesAfter=1 identical=1
+     line 11
+       A: T290-REPAIR-INERT: REFUSED rowsReplaced=2 probeLinesBefore=1 probeLinesAfter=1 identical=0
+       B: 
+     line 12
+       A: 
+       B: <EOF>
+---- DIFFERS: .softhouse/capture/t290-review-t271/red/drive-red-t290.py
+     exit A=1  B=1
+     line 10
+       A:   R1-clean-tree-both-green                       GREEN          GREEN          PASS
+       B:   R1-clean-tree-both-green                       GREEN          REFUSED        FAIL wanted GREEN / GREEN
+     line 30
+       A: T290-REDGREEN: REFUSED legs=5 passed=4 failed=1 restored=3
+       B: T290-REDGREEN: REFUSED legs=5 passed=3 failed=2 restored=3
+---- DIFFERS: .softhouse/capture/t330-reconcile-merged-work/e2e.py
+     exit A=0  B=0
+     line 6
+       A:   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-loxrhc1v
+       B:   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-mdglkqry
+     line 18
+       A:   RESULT: WROTE /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-loxrhc1v/.softhouse/tasks.json -- 4 task(s) demoted in_progress -> needs_retry.
+       B:   RESULT: WROTE /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-mdglkqry/.softhouse/tasks.json -- 4 task(s) demoted in_progress -> needs_retry.
+     line 32
+       A:   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-1iq5uo5j
+       B:   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-hnhofcke
+     line 48
+       A:   RESULT: WROTE /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-1iq5uo5j/.softhouse/tasks.json -- 1 task(s) demoted in_progress -> needs_retry, 3 REFUSED (T330: work is on main or a live ref
+       B:   RESULT: WROTE /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-hnhofcke/.softhouse/tasks.json -- 1 task(s) demoted in_progress -> needs_retry, 3 REFUSED (T330: work is on main or a live ref
+---- DIFFERS: .softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py
+     exit A=1  B=1
+     line 2
+       A: scratch: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t262-attack-2bz12wqv
+       B: scratch: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t262-attack-7s1zt_1t
+---- DIFFERS: .softhouse/reviews/t262-verdict-predicate/pin_test_t262.py
+     exit A=1  B=1
+     line 1
+       A: scratch repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t262-pin-ncabm53x
+       B: scratch repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t262-pin-0v4i_i1j
+---- DIFFERS: .softhouse/reviews/t45-probe/t45_extra.py
+     exit A='TIMEOUT'  B=0
+     line 1
+       A: 
+       B: ==============================================================================
+     line 2
+       A: <EOF>
+       B: C1  Path-A PASS 3B, .softhouse/capture/out/capture-prod3b-raw.json
+     line 3
+       A: <EOF>
+       B:     The twelve re-emissions that added the disbursement row's `balance`.
+     line 4
+       A: <EOF>
+       B:     CELLS COMPARED per repayment row: periodFromDate, dueDate, principal,
+     line 5
+       A: <EOF>
+       B:     interest, balance, total; plus loanTermInDays, totalInterestAmount, and
+     line 6
+       A: <EOF>
+       B:     the DISBURSEMENT row's principal AND balance -- the column pass 3 lacked.
+     line 7
+       A: <EOF>
+       B: ==============================================================================
+     line 8
+       A: <EOF>
+       B: P-CAL            SKIPPED (threaded precision 12, not 19)
+     line 9
+       A: <EOF>
+       B: P-00             rows=6   cells=40   OK
+     line 10
+       A: <EOF>
+       B: P-01             rows=18  cells=112  OK
+     ... more differences suppressed
+---- DIFFERS: .softhouse/reviews/t47-probe/t47_extra.py
+     exit A='TIMEOUT'  B=0
+     line 1
+       A: 
+       B: ==============================================================================
+     line 2
+       A: <EOF>
+       B: C1  Path-A PASS 3B, .softhouse/capture/out/capture-prod3b-raw.json
+     line 3
+       A: <EOF>
+       B:     The twelve re-emissions that added the disbursement row's `balance`.
+     line 4
+       A: <EOF>
+       B:     CELLS COMPARED per repayment row: periodFromDate, dueDate, principal,
+     line 5
+       A: <EOF>
+       B:     interest, balance, total; plus loanTermInDays, totalInterestAmount, and
+     line 6
+       A: <EOF>
+       B:     the DISBURSEMENT row's principal AND balance -- the column pass 3 lacked.
+     line 7
+       A: <EOF>
+       B: ==============================================================================
+     line 8
+       A: <EOF>
+       B: P-CAL            SKIPPED (threaded precision 12, not 19)
+     line 9
+       A: <EOF>
+       B: P-00             rows=6   cells=40   OK
+     line 10
+       A: <EOF>
+       B: P-01             rows=18  cells=112  OK
+     ... more differences suppressed

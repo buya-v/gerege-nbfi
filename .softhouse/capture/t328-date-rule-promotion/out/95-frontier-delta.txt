@@ -1,0 +1,27 @@
+T328 frontier delta -- HEAD 8828c95c
+
+BASELINE  T316-DEADPATH-CENSUS: corpus=1220 deadFiles=76 deadOccurrences=109 resolving=1077 indeterminate=72 prose=289
+
+(1) DID THE CENSUS SEE T328's INSTRUMENTS?
+    corpus printed by the census        : 1220
+    corpus counted from the selector    : 1220
+    of which T328 instruments           : 6
+    OK: the census corpus IS the selector's set and T328's 6 instruments are in it.
+
+    frontier: 109, pinned 109
+    OK: unmoved. T328's instruments cite only paths that exist and are TRACKED --
+    every capture_ref, transcript and README they name is committed in this branch.
+
+(2) RED DRIVE -- one deliberate dead reference appended to .softhouse/capture/t328-date-rule-promotion/instruments/run-impl.sh
+    T316-DEADPATH-CENSUS: corpus=1220 deadFiles=77 deadOccurrences=110 resolving=1077 indeterminate=72 prose=289
+    OK: frontier 109 -> 110, GREW BY EXACTLY ONE.
+          -> .softhouse/capture/t328-date-rule-promotion/out/THIS-FILE-DOES-NOT-EXIST.txt
+
+RESTORED  T316-DEADPATH-CENSUS: corpus=1220 deadFiles=76 deadOccurrences=109 resolving=1077 indeterminate=72 prose=289
+    OK: back to 109.
+
+CONCLUSION: dead-path frontier 109 == pinned 109, added=0 removed=0, and that zero is
+  a MEASUREMENT -- the census sees T328's instruments and grows by one when given a
+  dead reference in one of them. NO PIN MOVE IS WARRANTED, and moving it would be the
+  blanket regeneration FU-T326-8 warns against.
+T328 frontier delta: EXIT 0

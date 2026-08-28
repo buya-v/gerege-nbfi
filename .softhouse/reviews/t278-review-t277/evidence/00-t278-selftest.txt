@@ -1,0 +1,30 @@
+T278 SELFTEST - hand-checked integer arithmetic
+  minor('0.28')                                              got=28             want=28             OK
+  minor('9.99')                                              got=999            want=999            OK
+  minor('1498.00')                                           got=149800         want=149800         OK
+  minor('0')                                                 got=0              want=0              OK
+  minor('-0.05')                                             got=-5             want=-5             OK
+  half_up 1/2                                                got=1              want=1              OK
+  half_up 3/2                                                got=2              want=2              OK
+  half_up 5/2 (HALF_EVEN would say 2)                        got=3              want=3              OK
+  half_up 7/2                                                got=4              want=4              OK
+  half_up 4/2                                                got=2              want=2              OK
+  half_up 1/3                                                got=0              want=0              OK
+  half_up 2/3                                                got=1              want=1              OK
+  rate 600.0 -> monthly                                      got=(1, 2)         want=(1, 2)         OK
+  rate 300.0 -> monthly                                      got=(1, 4)         want=(1, 4)         OK
+  rate 36.0  -> monthly                                      got=(3, 100)       want=(3, 100)       OK
+  rate 21.6  -> monthly                                      got=(9, 500)       want=(9, 500)       OK
+  rate 7.0   -> monthly                                      got=(7, 1200)      want=(7, 1200)      OK
+  600.0 terminates<=19                                       got=True           want=True           OK
+  36.0 terminates<=19                                        got=True           want=True           OK
+  7.0 does NOT terminate<=19                                 got=False          want=False          OK
+  I1q for B=999 at 600.0%                                    got=500            want=500            OK
+  law (ii) predicts 0 on B=999/n=2000                        got=0              want=0              OK
+  full_family_b holds on B=999/n=2000                        got=True           want=True           OK
+  law (ii) FAILS there                                       got=False          want=False          OK
+  last-row form 499+999-1332                                 got=True           want=True           OK
+  I1q for B=11 at 600.0%                                     got=6              want=6              OK
+T278 SELFTEST - AST money-discipline + independence audit of this file
+  AST violations in t278_rederive.py                         got=0              want=0              OK
+SELFTEST PASS

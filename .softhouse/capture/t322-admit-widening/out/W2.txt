@@ -1,0 +1,5 @@
+--- FAIL: TestAcceptedOpeningBalanceIsNotPairedPOSITIONALLY (0.05s)
+    admit_widening_test.go:221: LDG-05-openingbalance-accepted-empty-ledger -- the ONLY accepted-opening-balance observation this program has taken, and the only vector that kills ledger-wrong-openingbalance-always-refusing -- is INADMISSIBLE. It disagrees positionally at 2 of its legs BY CONSTRUCTION, so a positional amount rule applied to this shape withdraws a mutant kill: [expect.legs[1].amount_major_text "250000.250000" and request.legs[1].amount_major_text "100000.370000" disagree; both transcribe the same oracle characters expect.legs[2].amount_major_text "100000.370000" and request.legs[2].amount_major_text "350000.620000" disagree; both transcribe the same oracle characters]
+FAIL
+FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.282s
+FAIL

@@ -1,0 +1,41 @@
+[
+ {
+  "impl": "ledger-wrong-date-rules-always-refusing",
+  "kind": "structural",
+  "margin_minor": "0",
+  "divergent_cells": [
+   "leg_count"
+  ],
+  "note": "THE KILL THIS VECTOR EXISTS FOR, and it is the CLOSURE half. A port whose :636 guard fires on the mere PRESENCE of a GLClosure -- rather than on !isBefore(closingDate, transactionDate) -- refuses this request with HTTP 403 error.msg.glJournalEntry.invalid.accounting.closed where the oracle returned 200 and wrote three journal entries. MEASURED: the comparator reports exactly one cell, leg_count want 3 got 0, because gradeOne records `the implementation REFUSED a request the oracle ACCEPTED` and compares leg_count alone on that path (grade.go). Diverging from the oracle BY REFUSING is still diverging -- the same shape LDG-04 records for ledger-wrong-header-refusing and LDG-05 for ledger-wrong-openingbalance-always-refusing. WHAT MAKES THIS ONE WORTH REGISTERING: it PASSED THE ENTIRE CORPUS before this vector existed -- 5 of 5 parity, 5 of 5 refusal, exit 0, VERDICT PASS [.softhouse/capture/t328-date-rule-promotion/out/10-mutant-SURVIVES-before.txt] -- because until now every vector in this store that carried a closing date was a REFUSAL, and a port that refuses everything agrees with every refusal ever captured. LDG-07 kills the SAME implementation on its OTHER guard; neither vector subsumes the other, and deleting this one brings the closure half back to life [.softhouse/capture/t328-date-rule-promotion/out/60-load-bearing-one-vector-at-a-time.txt]."
+ },
+ {
+  "impl": "ledger-wrong-truncating",
+  "kind": "money",
+  "margin_minor": "-62",
+  "divergent_cells": [
+   "legs[].amount_minor",
+   "total_debits_minor",
+   "total_credits_minor"
+  ],
+  "note": "Reads the major-unit text as a whole number and drops the minor units. MEASURED on all three legs -- -25 on 250000.25, -37 on 100000.37, -62 on 350000.62 -- and -62 on each total, since 25000025 + 10000037 = 35000062 truncates to 35000000. The largest single margin is -62 minor units. THIS IS THE MONEY HALF OF DEC-2 5.2 requirement 7 AND IT IS NOT DECORATION ON A DATE VECTOR: an accepting-side date capture whose amounts were graded by nothing would be a date assertion wearing a parity vector's coat, and the harness refuses a parity vector that names no money kill. NOTE WHAT SURVIVES ON THIS PORT'S OUTPUT: double_entry_balances still HOLDS (35000000 == 35000000), so the invariant cannot see the defect and only the captured cells can."
+ },
+ {
+  "impl": "ledger-wrong-netting-totals",
+  "kind": "structural",
+  "margin_minor": "0",
+  "divergent_cells": [
+   "total_debits_minor",
+   "total_credits_minor"
+  ],
+  "note": "Nets credits against debits into one accumulator, so both totals report 25000025 + 10000037 - 35000062 = 0 while every per-leg cell still matches. I-1 would hold by construction on its output, which is exactly why Expect carries the two totals separately. Recorded as STRUCTURAL with a zero margin for the reason LDG-01 records for the identical shape: the defect is that the port never computed two numbers to compare, not that it computed one of them wrongly by some amount."
+ },
+ {
+  "impl": "ledger-wrong-code-ignored",
+  "kind": "structural",
+  "margin_minor": "0",
+  "divergent_cells": [
+   "legs[].gl_account_code"
+  ],
+  "note": "A port carrying account ids and never joining the chart: every resolved gl_account_code is empty where the readback carries T327-1000, T327-1100 and T327-2000."
+ }
+]
