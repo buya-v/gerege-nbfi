@@ -1,3 +1,14 @@
+==================================================================
+T371 RED DRIVE -- casualty-sweep.sh fail-open (T367 F2)
+repo   : e6682df6   ref under test: HEAD (e6682df6)
+date   : 2026-08-28T10:15:58Z
+workdir: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t371-drive-iUh6Up
+==================================================================
+
+BEFORE sha256: c4aa5f62d2f2350f3503089c694fc582bdefbee2c0912a117ada48c927e7d590
+AFTER  sha256: e9f30047bb0fbd46826624cdfa3b63e0dd7c03e6abaffb7cb1ae751e4bd57f31
+BEFORE reads git grep exit status? NO -- this is the defect
+AFTER  reads git grep exit status? yes
 
 ########## A  BEFORE (main) -- the two facts that must differ, and do not
 
@@ -15,19 +26,19 @@
 
 ---------- C-after-EMPTY-result
     SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
-    SWEEP CALIBRATE-: PASS -- known negative matched 0 times in .softhouse/
+    SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
     === TEST-SELECTOR
-        MEASURED ZERO -- engine ran over 8227 tracked files under .softhouse/ and matched nothing
+        MEASURED ZERO -- engine ran over 8240 tracked files under .softhouse/ and matched nothing
         hits total: 0   archived (snapshots, correctly stale): 0   LIVE: 0
-    SWEEP-RESULT: commit=eda436bf selectors=1 did_not_run=0 calibration=yes exit=0
+    SWEEP-RESULT: commit=e6682df6 selectors=1 did_not_run=0 calibration=yes exit=0
     EXIT=0
 
 ---------- B-after-MALFORMED
     SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
-    SWEEP CALIBRATE-: PASS -- known negative matched 0 times in .softhouse/
+    SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
     === TEST-SELECTOR
         *** SELECTOR DID NOT RUN (git grep rc=128). THIS IS NOT "ZERO HITS" -- no absence
-    SWEEP-RESULT: commit=eda436bf selectors=1 did_not_run=1 calibration=yes exit=4
+    SWEEP-RESULT: commit=e6682df6 selectors=1 did_not_run=1 calibration=yes exit=4
     *** 1 SELECTOR(S) DID NOT RUN. The casualty list from this run is INCOMPLETE
     EXIT=4
 
@@ -41,12 +52,12 @@
 ########## E/F  calibration -- prove the engine works BEFORE any zero is interpretable
 
 ---------- E-positive-calibration-MISSES
-    SWEEP ABORT (exit 3): CALIBRATION MISSED. 'zzq-t371-positive-calibration-broken-23572-23426' found 0 in .softhouse/capture/t363-oracle-baseline/instruments/,
+    SWEEP ABORT (exit 3): CALIBRATION MISSED. 'zzq-t371-positive-calibration-broken-67285-31827' found 0 in .softhouse/capture/t363-oracle-baseline/instruments/,
     EXIT=3
 
 ---------- F-anti-calibration-MATCHES
     SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
-    SWEEP ABORT (exit 3): ANTI-CALIBRATION FAILED. The known-absent sentinel matched 5 time(s).
+    SWEEP ABORT (exit 3): ANTI-CALIBRATION FAILED. The known-absent sentinel matched 6 time(s).
     EXIT=3
 
 ########## G  corpus unusable -- outside any git work tree
@@ -58,12 +69,13 @@
 ########## H  AFTER, unmodified -- green, and S12 now sees the casualty T363's 11 missed
     EXIT=0
     SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
-    SWEEP CALIBRATE-: PASS -- known negative matched 0 times in .softhouse/
-    SWEEP-RESULT: commit=eda436bf selectors=16 did_not_run=0 calibration=yes exit=0
+    SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
+    SWEEP-RESULT: commit=e6682df6 selectors=16 did_not_run=0 calibration=yes exit=0
     S12/S13 hits on the F3 site (reference-oracle.md, the PROCESSED/ERROR split):
-      1115:      .softhouse/reference-oracle.md:929:`0 INVALID, 1 PROCESSED, 2 AWAITING_APPROVAL, 3 REJECTED, 4 UNDER_PROCESSING, 5 ERROR`]. Across the whole
-      1116:      .softhouse/reference-oracle.md:930:`gerege` audit table the split is **156 PROCESSED / 194 ERROR**, so refusals are the majority of this
-      1145:      .softhouse/reference-oracle.md:930:`gerege` audit table the split is **156 PROCESSED / 194 ERROR**, so refusals are the majority of this
+      1103:      .softhouse/capture/t363-oracle-baseline/CASUALTIES.md:97:| `.softhouse/reference-oracle.md:930` | *"the split **is** `156 PROCESSED / 194 ERROR`"* — **PRESENT TENSE, whole-table, live doctrine** | **M
+      1112:      .softhouse/capture/t371-t367-conditions/README.md:45:**F3 — the status split.** `reference-oracle.md:930` said, in the **present tense**, `156 PROCESSED /
+      1131:      .softhouse/reference-oracle.md:929:`0 INVALID, 1 PROCESSED, 2 AWAITING_APPROVAL, 3 REJECTED, 4 UNDER_PROCESSING, 5 ERROR`]. Across the
+      1132:      .softhouse/reference-oracle.md:934:> The sentence read *"the split **is** `156 PROCESSED / 194 ERROR`"*. That was T287's measurement,
     Same site under the BEFORE selectors S1..S11 only:
       hits: 0
 
@@ -78,5 +90,3 @@ SUMMARY
   G  no corpus         exit 2
   H  green             exit 0
 ==================================================================
-
-[exited with code 0]

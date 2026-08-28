@@ -106,7 +106,7 @@ conformance:   and deleted on reboot — and C1/C6 decide TIER by asking whether
 conformance:   census == pinned (all 18 site(s), by path and source line).
 conformance:   PNUMBER-CITATIONS: declared-dangling ids (recorded in the .softhouse/patterns.md errata with their repair) = [131, 261]
 conformance:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=97 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
-conformance:   PNUMBER-CITATIONS: sites=10654 definition=98 consistent=555 bare=9891 misdirecting=76 undefined=20 negative-control=14
+conformance:   PNUMBER-CITATIONS: sites=10656 definition=98 consistent=555 bare=9893 misdirecting=76 undefined=20 negative-control=14
 conformance:   PNUMBER-CITATIONS: skipped self-output-files=22 self-source-files=2 (stated, not silent -- both contain deliberately drifted text)
 conformance:   PNUMBER-CITATIONS:   directive MISDIRECTING 2
 conformance:   PNUMBER-CITATIONS:   directive UNDEFINED    4

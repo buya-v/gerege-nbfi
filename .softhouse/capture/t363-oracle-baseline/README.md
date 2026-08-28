@@ -84,3 +84,11 @@ the obligation in `reference-oracle.md` POLICY § 2 and the reason that obligati
 
 Four red drives, because a guard nobody has watched fail enforces nothing — and the third one caught a
 real defect in this instrument before it was committed (see `CASUALTIES.md` § E).
+
+**Cost, measured by T371 and stated so nobody assumes the sweep hung.** The full sweep is **minutes**,
+not seconds, on this corpus (~8,200 tracked files). `git grep` runs multi-threaded at ~250–300 % CPU and
+several selectors take 10–60 s each; **S15 is the slowest**, because its second alternative starts a scan
+at every run of two or more digits. That cost grows as `out/` transcripts accumulate. It is accepted
+rather than optimised: the sweep gates nothing, is run by hand, and a selector that is cheap because it
+is narrow is the failure mode this whole instrument exists to prevent. If it ever becomes intolerable,
+narrow **S15's reverse arm**, not the selector set.
