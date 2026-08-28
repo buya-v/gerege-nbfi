@@ -3513,3 +3513,217 @@ control and never a real id (`.softhouse/patterns.md:3253`, `.softhouse/capture/
 above this one — never `P-98` itself, and never `P-99`. If a rival `P-98` lands anyway, renumber this one
 and run `.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py` to find every restatement.
 
+
+---
+
+<!-- T398-MEASURED-BUT-BACKWARDS -->
+
+**P-100 — A REMEDY CAN BE CORRECTLY MEASURED AND STILL GRADE BACKWARDS. ONE IMPLEMENTATION CANNOT
+DETECT AN INVERSION, BECAUSE THE SIGNAL IS IDENTICAL FROM THAT SIDE.**
+
+*Local fire `20260828-140005`. `T352` banked the candidate vector, `T359` reviewed it and measured a
+one-line remedy, `T360` declined the remedy on reasoning, and `T387`'s independent review of `T360`
+(`.softhouse/reviews/t387-review-t360/REVIEW.md`, §1.1–§1.7) ran the same patch against **two**
+implementations and found the grading inverted. Merged at `cc45c5af`.*
+
+**WHAT WAS MEASURED, AND IT WAS MEASURED CORRECTLY.** `T359`'s finding F-T359-1 proposed a one-line
+change at `impl.go:276-279`: make the port's sub-minor-unit residue refusal return `(*Refusal, nil)`
+with an HTTP `422` instead of a Go `error`. `T359` built it, ran it, and reported that `T352`'s stuck
+candidate vector then grades `FAIL` with exit 1 and no schema change. **That measurement reproduces
+exactly** — `T387` rebuilt the patch from source in a scratch worktree at `main`
+(`instruments/patch_t359.py`) and got the reported result line for line. `T359` was also right that
+the polarity exists, right that the routing is the cause, and right that `T352`'s "the schema cannot
+represent it" premise was false. Nothing about the *diagnosis* is wrong, and nothing about the
+*measurement* is wrong.
+
+**WHAT ONE IMPLEMENTATION COULD NOT SEE.** `T387` ran the identical patched tree against the identical
+store with exactly one flag changed — `-ledger-impl=ledger-wrong-residue-rounding`, the deliberately
+wrong port that rounds the residue HALF_UP and posts. Re-verified for this entry against the committed
+transcripts themselves rather than the review prose
+(`out/DRIVE-A2-t359-remedy-ledgergo-FULL.log:273,276,281` and its tail `RC_ledger_go=1`;
+`out/DRIVE-B2-t359-remedy-wrongimpl-FULL.log:246,276,277,279,284,479` and its tail `RC_wrongimpl=0`):
+
+| implementation | the candidate vector | ledger parity | ledger cells graded / MONEY cells | run verdict |
+|---|---|---|---|---|
+| `ledger-go` — **the CORRECT port** | `FAIL` — 1 cell, **0 money** | `PASS 7` **`FAIL 1`** | `143` graded, `39` MONEY | **`FAIL (exit 1)`** |
+| `ledger-wrong-residue-rounding` — **DELIBERATELY WRONG** | `PASS` — 11 cells, **4 MONEY** | **`PASS 8`** `FAIL 0` | `153` graded, `43` MONEY | **`PASS (exit 0)`** |
+
+**Under a remedy that was correctly measured, the deliberately wrong implementation is the one that
+passes and greens the bar, and the correct port is the one that reds it.** The wrong port passes by
+matching an `amount_minor` of `10013` across four money cells — a minor-unit quantity that `T352` wrote
+knowing **neither the reference oracle (Fineract) nor the port ever produced it**. Note what that
+inflation is and is not: the corpus never treats `10013` as a *number* to be recomputed, only as bytes
+to be compared, and the port's residue detection scans fraction bytes against `'0'` with no `strconv`,
+no division and no exponent. **No float is involved anywhere in this defect**, and money stays integer
+minor units throughout. The failure is that a fabricated integer minor-unit value entered the graded
+money census at all, moving a pinned figure (`LEDGER money cells compared`) by four.
+
+**THE RULE.** *Verifying that a fix makes the failing case fail is not verifying that it grades
+correctly.* A change to a **grading** path — a comparator, a routing decision, an outcome polarity, a
+gate criterion — must be driven against **at least one correct implementation and at least one
+deliberately wrong one, in the same pass, on the same bytes**, and the correct one must come back green
+while the wrong one dies. One implementation cannot detect an inversion: from a single side, "my patch
+made the stuck vector red" and "my patch made every conforming port red and every wrong port green"
+emit **the same observation**.
+
+**THE TWO COROLLARIES, both found by `T387` and named by neither `T359` nor `T360`.**
+
+1. **A permanent baseline FAIL makes a `kills >= 1` criterion vacuous.**
+   `.softhouse/conformance.sh:gate_wrong_ledger_impls_die` decides that a wrong port DIED from
+   `rc == 1 && banner && (parityFAIL + refusalFAIL) >= 1`, read off the *printed* figures. Under the
+   remedy the **correct** port prints `ledger parity FAIL 1` permanently, so every implementation
+   inherits the floor and satisfies `>= 1` without the corpus discriminating anything. That is the
+   shape of `P-35` — every vacuous guard in this repo is a NEGATIVE assertion, and that is the whole
+   diagnosis — arriving through the back door of a *fix*.
+2. **A diff appended UNCONDITIONALLY means no vector shape can ever be green.** In `grade.go` the
+   refusal-on-a-parity-vector branch appends its diff before `cmpInt("leg_count", …)`, and `gradeOne`
+   sets `OutcomeFail` whenever `Detail` is non-empty. There is no vector shape — not even
+   `expect.legs: []` — that reaches that branch and passes. So the remedy could only ever express an
+   open, gated disagreement as **a permanently red bar**, which is the state a later engineer deletes
+   to get a green run.
+
+**THE DUTY.** Before a grading change lands: name the correct implementation and the wrong one you drove
+it against, commit both transcripts, and state the exit code of each. If the corpus has no wrong
+implementation for the behaviour under change, **that is the finding** — build one first, per `P-3`: a
+green conformance run says nothing about behaviours no vector exercises, so mutate the port. And when a
+grading change moves a pinned money figure, reconcile it by running, never by arithmetic (`P-83`).
+
+**`T359`'S REMEDY IS `DO-NOT-APPLY`.** This is the durable marking the record was missing, and it is
+recorded here because `T359`'s review is committed evidence that may not be rewritten in place. A later
+reader who finds `T359`'s review alone finds a measured, confident, reproducible recommendation with
+nothing beside it saying **do not apply this patch**. Applying `T359`'s `impl.go:276-279` change will:
+(a) fabricate a wire status and a Fineract globalisation code that no observed refusal carries — every
+one of the port's nine existing `&Refusal{…}` sites carries an *observed* `403` and a real code;
+(b) invert the grading, so a wrong port greens the bar and the correct port reds it; (c) admit an
+invented `amount_minor` into the money-cell census; and (d) make the wrong-implementation kill criterion
+vacuous per corollary 1. **`T360` was right to refuse it.** `T359`'s *diagnosis* stands and `T360` built
+on it correctly; only the patch is condemned. Compare `P-82` — a proposed fix can be measured inert, and
+that is a result worth the tokens — and note the sharper case this is: a fix measured **active**, in the
+direction its author intended, and still wrong.
+
+**Why this is not `P-98`.** `P-98` is the rule that a control that cannot fail and a control that refuses
+everything are the same defect wearing opposite signs, and both read green from outside; its duty is to
+ride a healthy GREEN control case alongside the refusal cases. This rule is about a control that
+*discriminates perfectly and points the wrong way*. A healthy-case control of the kind `P-98` prescribes
+would not have caught `T359`'s remedy, because under it the healthy implementation is exactly the one
+that goes red — the control fires, correctly, and reports the wrong verdict. The defect is **polarity**,
+not **vacuity**, and it needs a wrong implementation rather than a clean input to expose it.
+
+**COLLISION HAZARD, declared rather than discovered**, following `T282`'s and `T392`'s precedent: this
+entry claims **`P-100`**. `P-98` was the register's high-water mark at the moment of writing, taken by
+`T392` and merged to `main` at `2f4c3378`; `P-99` is permanently reserved as a deliberate negative
+control and is never a usable id (`.softhouse/patterns.md:3253`,
+`.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py:61`). `100` was verified free by
+enumerating every `P-n` token in this file and across the whole tree before writing: the only
+pre-existing occurrences of the literal `P-100` anywhere were three *instructions to take it*
+(`.softhouse/RESUME.md`, `.softhouse/tasks.json`, and `T392`'s handoff), and no definition. A worker who
+must write a not-yet-defined id in prose inside a directive file should know that the citation checker
+reads any `P-<n>` token as a citation regardless of the surrounding words — `T392` scored an UNDEFINED
+citation that way while drafting this very forward reference — so define the id in the same commit that
+first names it.
+
+---
+
+<!-- T398-SELF-REFERENTIAL-CENSUS -->
+
+**P-101 — WRITING A FINDING DOWN DESTROYS THE MEASUREMENT THAT REPRODUCES IT. THE CORPUS STARTS
+MATCHING ITS OWN DOCUMENTATION, AND THE CONTROLS GO FIRST.**
+
+*Local fire `20260828-140005`. `T238` recorded the finding, `T379` inherited its framing, `T381`
+re-measured and corrected it, and `T386`'s review of `T381`
+(`.softhouse/reviews/t386-review-t381/REVIEW.md`) found that `T234` had already run the decisive control
+many fires earlier and that the number it produced had since rotted. Re-measured for this entry by
+`T398` on head `4cf77a42` with `T386`'s own instrument, unmodified; transcript at
+`.softhouse/capture/t398-measured-but-backwards/out/T398-r3-remeasure.txt`.*
+
+**THE UNDERLYING HAZARD IS REAL AND UNCHANGED.** `git grep -E` compiles POSIX ERE, which has no word
+boundary, so the escape in `-E '\bmain\b'` degrades to the literal letters and the pattern is exactly
+`-F 'bmainb'`. Not a similar count — **the same bytes**: all three forms return one output whose sha256
+is `f4f1f727bd97a7ecb72fefc0e66a2d02cfbc62c8972016da00236f15b40f2445` on today's tree. A sweep written
+with `\bmain\b` under `-E` silently searches for a word nobody writes. This is the same family as
+`P-75`. The engine that actually has word boundaries is `-P`.
+
+**WHAT WENT WRONG WAS THE FRAMING, AND IT SURVIVED THREE TASKS.** `T238` read "the two patterns return
+the same count" as the engine **fabricating** matches. It is not fabricating anything: `T386`'s control
+— which nobody before it ran — shows the engine interprets ERE alternation perfectly well, because
+`-E 'ma(in|ni)'` and `-F 'ma(in|ni)'` disagree by four orders of magnitude. POSIX ERE simply has no
+`\b`. Worse, `T234`'s handoff (`.softhouse/capture/t234-sweep-instrument-audit/HANDOFF.md:266-276`) had
+**already run the `-P` control and already quantified the damage** — *"a 95.3 % recall loss (61/64)"* —
+so the program spent three more tasks rediscovering a result it already had in writing, filed where the
+reader who needed it did not look (`P-73`).
+
+**AND THEN THE MEASUREMENT DIED OF BEING RECORDED.** Every number below is a count of matching lines,
+`git grep -c` summed, scope `-- .softhouse`, same instrument each time:
+
+| term | `T234` (`HANDOFF.md:272`) | `T386` (`out/T386-r3-measure.txt`, head `9eedfe4d`) | `T398` re-measure (head `4cf77a42`) |
+|---|---|---|---|
+| `-E '\bmain\b'` | **0** | 114 | **138** |
+| `-E 'bmainb'` | **0** | 114 | **138** |
+| `-F 'bmainb'` | not run | 114 | **138** |
+| `-E 'ma(in\|ni)'` — ERE-interpretation control | not run | 33,751 | **35,633** |
+| `-F 'ma(in\|ni)'` — the literal half of that control | not run | **0** | **7** |
+| `-P '\bmain\b'` — the real answer | 17,646 *(repo-wide)* | 22,524 | **23,111** *(23,324 repo-wide)* |
+| `-E 'bzzqabsenttermb'` — `T386`'s ABSENT-TERM negative control | not run | **0** | **3** |
+
+**The `-E` figure went from 0 to 138 for one reason: the program kept writing the finding down.** Every
+one of the 138 is a document *this program authored about this hazard* — `T234`'s handoff and its
+instrument, `T381`'s and `T386`'s material, and now this entry. A term that was absent from the corpus
+is now abundant in it, purely as an artefact of documenting its absence, and the measurement that proved
+the point can no longer prove it.
+
+**THE CONTROLS DEGRADED FASTEST, AND INSIDE ONE FIRE.** `T386` built two controls and both were clean
+when built. Re-run one day later, unmodified: the ERE-interpretation control's literal half has gone
+`0 → 7`, and **`T386`'s deliberately-absent negative control has gone `0 → 3`**. All ten of those new
+hits are `T386`'s own review, `T386`'s own instrument source, `T386`'s own transcript, and the task
+description written to dispatch this entry. `T386`'s instrument still prints its hardcoded narration
+*"both 0, they AGREE"* over a measurement that now reads 3 and 3 — a stale sentence standing over a
+moved number, which is `P-80`: a corrected cardinal rots in every place it was restated, and the count
+is the same defect as the line number. The reserved-id discipline that protects `P-99` is this same
+discipline applied to a name rather than a search term, and it is the only reason `P-99` has not
+suffered the same fate.
+
+**THE RULE.** Any census that greps *this repo* for evidence *about this repo* is self-referential, and
+its population grows every time a task records the finding. Such a count is **a fact about today's
+corpus, not a property** (`P-7`), and it decays in a specific direction: toward the program's own
+documentation, which means toward false positives that all look like confirmations. A negative control
+built from a literal search term is the most fragile part of the instrument, because the act of
+publishing the control publishes the term.
+
+**THE DUTY, four parts.**
+
+1. **Never state a self-referential count as a standing fact.** State it with its head sha, its scope,
+   its exact invocation, and the date — `P-33`: a tool claim is a claim about a binary, a version, a
+   locale, an invocation AND an input shape, so name all five.
+2. **Re-measure before citing, never inherit.** `T379` inherited `T238`'s framing and carried it a
+   further task; `T381` re-measured and corrected it in one pass.
+3. **Exclude the program's own record from a census about the program**, or partition the hits into
+   "code and instruments under test" and "documents about the hazard" and report both. A census whose
+   population is dominated by its own commentary has measured its own commentary.
+4. **Build negative controls that cannot be contaminated by publication** — derive them (a term
+   generated at run time, a population read from the executing bytes) rather than typing a literal
+   nonce into a file that will be committed. If a literal nonce is unavoidable, assert its count against
+   an expected value that is *computed*, so the instrument goes red when it rots instead of printing a
+   stale gloss. `P-72`: a sweep is an INSTRUMENT, so calibrate it on a known positive before you report
+   its negatives — and note that a *known negative* needs the same care and gets far less.
+
+**THIS ENTRY IS ITSELF AN INSTANCE, AND IT WAS MEASURED RATHER THAN PREDICTED.** The same instrument was
+re-run immediately after this entry was committed, and every figure in the table above had already moved
+again: `-E 'bmainb'` **138 → 147**, `-F 'ma(in|ni)'` **7 → 11**, `-E 'ma(in|ni)'` 35,633 → 35,653
+(`out/T398-r3-remeasure.txt` vs `out/T398-r3-remeasure-AFTER-COMMIT.txt`, same instrument, same scope,
+one commit apart). **The act of recording the rule invalidated the numbers the rule cites**, inside one
+commit, exactly as the rule says it will. That is not a reason to leave the rule unwritten; it is the
+reason it must be written **with its invocation and its head sha attached**, so the next reader re-runs
+it instead of quoting it. `P-84` applies to reading these numbers as much as to a probe line: read the
+absence, not the value.
+
+**COLLISION HAZARD, declared rather than discovered:** this entry claims **`P-101`**, verified free the
+same way `P-100` was — no `P-101` token existed anywhere in the tree before this commit, defined or
+cited, and `P-100` is defined immediately above by the same task in the same commit.
+
+**One pattern or two, and why two.** `P-100` and `P-101` were dispatched together and both are about a
+measurement that is sound from the only vantage point its author occupied. They are filed separately
+because their **populations** differ (implementations under grade, versus documents in a corpus), their
+**remedies** differ (add a deliberately wrong implementation to the same pass, versus exclude the
+program's own record and derive the control), and a single merged entry would be cited for one half and
+read for the other — which is the exact hazard `P-86` records: the pattern ids themselves rotted, in the
+file that names the rot.

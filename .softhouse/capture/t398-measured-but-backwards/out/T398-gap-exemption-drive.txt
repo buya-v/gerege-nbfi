@@ -1,0 +1,33 @@
+repo    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a30e30958e2a860fb
+engine  : Python 3.9.6 (default, May 22 2026, 11:13:45) 
+
+=== ARM A: CORRECT INPUT -- the real tree, P-99 reserved-absent, P-100/P-101 defined ===
+    PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=100 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+    PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal; 98 report-only findings in committed evidence (corrected FORWARD in patterns.md, never edited in place)
+    rc=0   EXPECT rc=0 and gaps=none
+
+=== ARM B: WRONG INPUT -- an UNDECLARED hole (P-97 definition deleted) =================
+    deleted P-97 definition lines: 1
+    PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=99 gaps=[97] in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+    PNUMBER-CITATIONS: FATAL REGISTER GAP P-97: cited ids may resolve to nothing
+    PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/RESUME.md:36 P-97 -- P-97 is defined in neither register
+    PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/RESUME.md:41 P-97 -- P-97 is defined in neither register
+    PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/patterns.md:3367 P-97 -- P-97 is defined in neither register
+    PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/patterns.md:3368 P-97 -- P-97 is defined in neither register
+    PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/patterns.md:3509 P-97 -- P-97 is defined in neither register
+    PNUMBER-CITATIONS: VERDICT FAIL -- 6 fatal (register 1, directive-file 5)
+    rc=1   EXPECT rc=1 and REGISTER GAP P-97 -- the exemption must NOT cover an undeclared id
+
+=== ARM C: CONTROL -- neutralise the exemption, ARM A input must go RED ================
+    exemption neutralised in the COPY at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t398-gap.cpVJqM/c/.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py
+    PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=100 gaps=[99] in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+    PNUMBER-CITATIONS: FATAL REGISTER GAP P-99: cited ids may resolve to nothing
+    PNUMBER-CITATIONS: VERDICT FAIL -- 1 fatal (register 1, directive-file 0)
+    rc=1   EXPECT rc=1 and REGISTER GAP P-99 -- proves the exemption is load-bearing
+
+=== SUMMARY ============================================================================
+  ARM A correct-input    rc=0  (want 0)
+  ARM B undeclared-gap   rc=1  (want 1)
+  ARM C exemption-removed rc=1 (want 1)
+  >>> ALL THREE AS EXPECTED. The exemption is load-bearing, narrow, and does not
+  >>> silence an undeclared hole. Correct input green, both wrong inputs dead.
