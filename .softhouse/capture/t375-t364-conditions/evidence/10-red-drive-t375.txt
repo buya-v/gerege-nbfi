@@ -61,3 +61,4 @@ T375-03-REVERT-fix-main.go-is-ABSOLVED-again             exit=0  (want 0 )  prob
 T375-04-selfcert-EXACT-spelling                          exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
 T375-05-selfcert-via-DOTSLASH                            exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
 T375-06-selfcert-via-DOTDOT                              exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-07-selfcert-via-ABSOLUTE-path                       exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
