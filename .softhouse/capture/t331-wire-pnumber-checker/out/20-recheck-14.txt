@@ -1,0 +1,17 @@
+T331-RECHECK: errata rows parsed from .softhouse/patterns.md = 14
+  row  1  LINE-HOLDS zone=evidence     checker-sees=yes fatal=no  .softhouse/capture/t234-sweep-instrument-audit/instruments/31-sound-sweep.py:14
+  row  2  LINE-HOLDS zone=evidence     checker-sees=yes fatal=no  .softhouse/capture/t255-dec2-rev8/instruments/20-verify-anchors.py:36
+  row  3  LINE-HOLDS zone=evidence     checker-sees=yes fatal=no  .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:72
+  row  4  LINE-HOLDS zone=evidence     checker-sees=yes fatal=no  .softhouse/capture/t256-verdict-predicate/RULES-failopen.md:17
+  row  5  LINE-HOLDS zone=evidence     checker-sees=yes fatal=no  .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py:24
+  row  6  LINE-HOLDS zone=evidence     checker-sees=yes fatal=no  .softhouse/capture/t304-evidence-destruction/evidence/10-raw-sites.tsv:1718
+  row  7  LINE-HOLDS zone=evidence     checker-sees=yes fatal=no  .softhouse/reviews/t260-dec2-rev8/evidence/20-normative-set-diff.txt:65
+  row  8  LINE-HOLDS zone=evidence     checker-sees=yes fatal=no  .softhouse/reviews/t260-dec2-rev8/evidence/90-per-section-line-delta.txt:271
+  row  9  LINE-HOLDS zone=evidence     checker-sees=yes fatal=no  .softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh:5
+  row 10  LINE-HOLDS zone=orchestrator checker-sees=yes fatal=no  .softhouse/tasks.json:2374
+  row 11  LINE-HOLDS zone=orchestrator checker-sees=yes fatal=no  .softhouse/tasks.json:2427
+  row 12  LINE-HOLDS zone=orchestrator checker-sees=yes fatal=no  .softhouse/tasks.json:2427
+  row 13  LINE-HOLDS zone=orchestrator checker-sees=yes fatal=no  .softhouse/tasks.json:3149
+  row 14  LINE-HOLDS zone=ratified     checker-sees=yes fatal=no  docs/adr/DEC-2-gl-accounting-adapter.md:294
+T331-RECHECK: fatal-today = 0
+T331-RECHECK: VERDICT CLEAR -- every filed site is in a report-only zone today, so wiring the guard does not turn main red on the filed population.
