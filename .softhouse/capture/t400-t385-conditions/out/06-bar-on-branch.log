@@ -107,7 +107,7 @@ conformance:   and deleted on reboot — and C1/C6 decide TIER by asking whether
 conformance:   census == pinned (all 18 site(s), by path and source line).
 conformance:   PNUMBER-CITATIONS: declared-dangling ids (recorded in the .softhouse/patterns.md errata with their repair) = [131, 261]
 conformance:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=97 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
-conformance:   PNUMBER-CITATIONS: sites=11531 definition=98 consistent=599 bare=10723 misdirecting=77 undefined=20 negative-control=14
+conformance:   PNUMBER-CITATIONS: sites=11542 definition=98 consistent=599 bare=10734 misdirecting=77 undefined=20 negative-control=14
 conformance:   PNUMBER-CITATIONS: skipped self-output-files=22 self-source-files=2 (stated, not silent -- both contain deliberately drifted text)
 conformance:   PNUMBER-CITATIONS:   directive MISDIRECTING 2
 conformance:   PNUMBER-CITATIONS:   directive UNDEFINED    4
@@ -149,7 +149,7 @@ conformance:   file, DECLARED against a verified witness, or carries a verified 
 conformance:   namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
 conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
 conformance:   namespace:   root    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f41697a6ade993d
-conformance:   namespace:   corpus  8883 tracked paths -> 190 evidence directories
+conformance:   namespace:   corpus  8885 tracked paths -> 190 evidence directories
 conformance:   namespace:           168 carry a t<n> id prefix; 22 do not and CANNOT collide this way
 conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
 conformance:   namespace:   T255 -> 2 directories; ownership records required 1, present 1
@@ -165,23 +165,23 @@ conformance:   T316-DEADPATH-CENSUS: corpus=1395 deadFiles=75 deadOccurrences=10
 conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
 conformance:   (the planted T309 single-term predicate drives cell B-prime RED; the shipped
 conformance:   tool keeps it GREEN. Both legs ran here — --selftest is not optional.)
-conformance:   GUARD-COST CENSUS: 15 guards timed, 170s total wall,
+conformance:   GUARD-COST CENSUS: 15 guards timed, 111s total wall,
 conformance:   ceiling breaches 0, unbudgeted guards 0.
 conformance:     COST 0s / ceiling 60s   guard_graded_root_is_this_tree
 conformance:     COST 2s / ceiling 60s   guard_no_float_in_vectors
-conformance:     COST 2s / ceiling 60s   guard_no_float_in_harness
-conformance:     COST 0s / ceiling 60s   guard_gofmt
-conformance:     COST 3s / ceiling 60s   guard_no_float_in_capture_requests
+conformance:     COST 1s / ceiling 60s   guard_no_float_in_harness
+conformance:     COST 1s / ceiling 60s   guard_gofmt
+conformance:     COST 2s / ceiling 60s   guard_no_float_in_capture_requests
 conformance:     COST 2s / ceiling 60s   guard_no_narrow_catch_in_capture_rigs
 conformance:     COST 4s / ceiling 300s   guard_ledger_invariants
-conformance:     COST 16s / ceiling 60s   guard_no_fail_open_instruments
-conformance:     COST 2s / ceiling 60s   guard_no_host_state_in_lint_corpus
-conformance:     COST 52s / ceiling 300s   guard_pnumber_citations
+conformance:     COST 13s / ceiling 60s   guard_no_fail_open_instruments
+conformance:     COST 1s / ceiling 60s   guard_no_host_state_in_lint_corpus
+conformance:     COST 39s / ceiling 300s   guard_pnumber_citations
 conformance:     COST 0s / ceiling 60s   guard_accepting_side_gap_declared
 conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
-conformance:     COST 2s / ceiling 60s   guard_capture_namespace
-conformance:     COST 4s / ceiling 60s   guard_dead_path_frontier
-conformance:     COST 80s / ceiling 500s   guard_reconciler_ownership
+conformance:     COST 1s / ceiling 60s   guard_capture_namespace
+conformance:     COST 3s / ceiling 60s   guard_dead_path_frontier
+conformance:     COST 41s / ceiling 500s   guard_reconciler_ownership
 conformance:   (RESOLUTION 1 s, from bash SECONDS; a 0 means UNDER ONE SECOND. The elapsed
 conformance:   figures are RECORDED and NOT PINNED — wall clock is a fact about the host as
 conformance:   well as the tree. What is pinned, by NAME: every guard has a ceiling row,
