@@ -1,0 +1,66 @@
+FAIL-CLOSED DRIVE -- module /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac2d8253d149717c8/.softhouse/bin/ready-tasks.py
+arm under test: (a) merged-and-pruned, scratch repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-elkdlcwj
+                the ONE arm whose honest verdict is `merged` (= REFUSE),
+                so any degradation that still refuses shows up here.
+
+CASE: budget exhausted before anything ran
+  why      : set_deadline(-1): _run answers rc=None WITHOUT spawning, from the first call on
+  verdict  : unverified
+  action   : demote to needs_retry
+  required : MUST DEMOTE -- an unrun probe may not buy a reprieve
+  RESULT   : ok
+  note     : Could not run git to inspect branch softhouse/T900-merged-and-pruned (wall-clock budget exhausted before git could be run) -- WIP state UNVERIFIED.
+
+CASE: budget exhausted after rev-parse, at _absent_verdict
+  why      : the branch really is absent; the LANDED probes are the ones that cannot run
+  verdict  : indeterminate
+  action   : demote to needs_retry
+  required : MUST DEMOTE -- an unrun probe may not buy a reprieve
+  RESULT   : ok
+  note     : s. Provenance UNVERIFIED. The task IS still demoted, because a dead dispatch is dead whether or not git answered -- but `needs_retry` here means SOMEBODY MUST LOOK, not 'nothing was done'. FAIL-CLOSED BY DESIGN: an unrun probe must never buy a task a reprieve.
+
+CASE: git not on PATH
+  why      : GIT = '' -- _run's `if not argv[0]` leg, the missing-binary degradation
+  verdict  : indeterminate
+  action   : demote to needs_retry
+  required : MUST DEMOTE -- an unrun probe may not buy a reprieve
+  RESULT   : ok
+  note     : s. Provenance UNVERIFIED. The task IS still demoted, because a dead dispatch is dead whether or not git answered -- but `needs_retry` here means SOMEBODY MUST LOOK, not 'nothing was done'. FAIL-CLOSED BY DESIGN: an unrun probe must never buy a task a reprieve.
+
+CASE: caller passed NO task id
+  why      : an unconverted call site must fail LOUDLY and CONSERVATIVELY, not silently
+  verdict  : indeterminate
+  action   : demote to needs_retry
+  required : MUST DEMOTE -- an unrun probe may not buy a reprieve
+  RESULT   : ok
+  note     : e. Provenance UNVERIFIED. The task IS still demoted, because a dead dispatch is dead whether or not git answered -- but `needs_retry` here means SOMEBODY MUST LOOK, not 'nothing was done'. FAIL-CLOSED BY DESIGN: an unrun probe must never buy a task a reprieve.
+
+CASE: ref store unreadable (branch_sweep import broken)
+  why      : the (c)/(d) signal is gone; a MISS on it must not be read as 'no ref exists'
+  verdict  : indeterminate
+  action   : demote to needs_retry
+  required : MUST DEMOTE -- an unrun probe may not buy a reprieve
+  RESULT   : ok
+  note     : t. Provenance UNVERIFIED. The task IS still demoted, because a dead dispatch is dead whether or not git answered -- but `needs_retry` here means SOMEBODY MUST LOOK, not 'nothing was done'. FAIL-CLOSED BY DESIGN: an unrun probe must never buy a task a reprieve.
+
+CASE: `git log` succeeds but the handoff listing fails
+  why      : a HALF-built index is reported UNAVAILABLE, never half-trusted
+  verdict  : indeterminate
+  action   : demote to needs_retry
+  required : MUST DEMOTE -- an unrun probe may not buy a reprieve
+  RESULT   : ok
+  note     : s. Provenance UNVERIFIED. The task IS still demoted, because a dead dispatch is dead whether or not git answered -- but `needs_retry` here means SOMEBODY MUST LOOK, not 'nothing was done'. FAIL-CLOSED BY DESIGN: an unrun probe must never buy a task a reprieve.
+
+CASE: INDEX BUILT FIRST, budget exhausted afterwards  [MUST STILL SAY merged]
+  why      : a cached POSITIVE is a real measurement; dropping it would demote merged work
+  verdict  : merged
+  action   : REFUSE to demote -- work bearing this task's id is ON MAIN; `needs_retry` would OFFER completed work
+  required : REFUSE (cached positive)
+  RESULT   : ok
+  note     : damage FU-RECONCILE-1 records. A HUMAN MUST ADJUDICATE whether it is `done`; this reconciler will not assert a review that did not happen. (Signals: 2 of 3 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 1 handoff .md path(s) tracked on main.)
+
+FAIL-OPEN CASES: 0 of 7
+
+PROPERTY HELD: no degradation of budget, git, ref store or caller argument
+produced a REFUSAL. Every one of them landed on a verdict that DEMOTES --
+the pre-T330 behaviour -- with the reason named in the note.
