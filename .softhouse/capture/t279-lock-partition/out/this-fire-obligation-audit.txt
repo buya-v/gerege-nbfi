@@ -1,0 +1,35 @@
+T279 — push-before-spawn audit of fire 20260828-080001, batch 5 (T307 T332 T334 T279)
+
+A. worker worktrees of batch 5, by directory birth time = the instant `git worktree add` ran:
+   2026-08-28 10:44:04  agent-a92fe8f69d728d1c2
+   2026-08-28 10:44:30  agent-a77014c126f86c320
+   2026-08-28 10:45:12  agent-a4a3dffe7f78ce39c
+   2026-08-28 10:45:48  agent-aa976a5989c9a5d25
+   FIRST SPAWN: 2026-08-28 10:44:04
+
+B. the three things that must be PUSHED before that instant — newest commit on origin/main:
+   LOCK                             0591a0a0 2026-08-28T08:00:18+08:00  softhouse: local fire lock (20260828-080001)
+   RESUME.md (in-flight manifest)   59fc41b4 2026-08-28T10:46:13+08:00  softhouse: T321 merged; batch 5 DISPATCHED -- T307 T332 T334 T279
+   tasks.json (dispatch record)     59fc41b4 2026-08-28T10:46:13+08:00  softhouse: T321 merged; batch 5 DISPATCHED -- T307 T332 T334 T279
+
+C. push times, from the reflog of refs/remotes/origin/main:
+   59fc41b4 refs/remotes/origin/main@{2026-08-28 10:46:19 +0800}: update by push
+   4246ce63 refs/remotes/origin/main@{2026-08-28 10:42:59 +0800}: update by push
+   4ea85609 refs/remotes/origin/main@{2026-08-28 10:03:47 +0800}: update by push
+   cd67ec44 refs/remotes/origin/main@{2026-08-28 09:51:36 +0800}: update by push
+
+D. content check — what tasks.json said on origin at the moment of the first spawn:
+   at 5301f24b (the newest .softhouse/ state published before 10:44:04):
+     T279   status=pending      branch=None
+     T307   status=pending      branch=None
+
+E. VERDICT
+   The LOCK was on time — 0591a0a0, committed 08:00:18, at fire start.
+   The dispatch record AND the in-flight RESUME.md were in the SAME commit 59fc41b4,
+   committed 10:46:13 and PUSHED 10:46:19 — 135 SECONDS AFTER the first worker of
+   batch 5 spawned at 10:44:04.
+   So TWO of the three were late this time, against ONE of three in the 101-second
+   window T265 measured on 2026-08-22. The obligation was NOT met by this fire.
+   For those 135 seconds `ready-tasks.py` run against origin would have offered all
+   four batch-5 tasks as READY with no branch — the duplicate-dispatch input P-85
+   exists to prevent.

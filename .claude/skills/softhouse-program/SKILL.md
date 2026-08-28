@@ -136,9 +136,19 @@ Logs: `~/Library/Logs/gerege-nbfi/fire-*.log`. Probe the environment without run
    the LOCK and `RESUME.md` on time and the **machine-readable** dispatch record **101 seconds after the
    first worker spawned**, and for those 101 seconds `ready-tasks.py` run against `origin` would have offered
    all six live tasks as READY with no branch — the exact duplicate-dispatch input P-85 exists to prevent.
-   **This obligation is a convention with no mechanical backing.** The hook that would enforce it at the
-   instant it must hold is built and driven in `.softhouse/capture/t279-lock-partition/post-checkout`; until
-   it is installed, the only thing enforcing this paragraph is you reading it.
+   **AND IT HAS NOW BEEN MISSED TWICE, SIX DAYS APART, BY DRIVERS WHO HAD READ THIS PARAGRAPH.** On
+   2026-08-28 the LOCK went out at 08:00:18 and the dispatch record **and** the in-flight `RESUME.md` — this
+   time in the *same* commit `59fc41b4` — were pushed at 10:46:19, **135 seconds after** the first
+   `git worktree add` of the batch at 10:44:04. Worse than the 101 s window: two of three late, not one.
+   [Measured: `.softhouse/capture/t279-lock-partition/audit-this-fire.py`, output
+   `out/this-fire-obligation-audit.txt`.] **So do not read the paragraph above as the fix.** Two drivers
+   read it and missed it in the first batch after reading, which is **P-45** — *"a guard that only works
+   when someone remembers to run it enforces nothing"*, from the pattern titled *"A test-only guard is not a
+   guard"* [`.softhouse/patterns.md:1503-1506`]. **This obligation is a convention with zero mechanical
+   backing.** The hook that would enforce it at the instant it must hold — `git worktree add` runs
+   `post-checkout` in the new worktree — is built and driven RED/GREEN in
+   `.softhouse/capture/t279-lock-partition/post-checkout`, **and it is not installed.** Until it is, the
+   only thing enforcing this paragraph is you, reading it, at 10:44 on a Friday.
 1. `git status` — if dirty, commit `.softhouse/` state only; never stash worker WIP.
 2. `git pull --ff-only` — a scheduled fire may be a fresh clone/session; the repo is the only memory.
 3. Read `CLAUDE.md`, `.softhouse/patterns.md`, `.softhouse/program.json`, `.softhouse/tasks.json`, `.softhouse/RESUME.md`, `.softhouse/state/*.STATE.json`, `.softhouse/gates.md`, newest `.softhouse/runs/*.json`.
