@@ -98,6 +98,121 @@ that catches a fix that is wrong *only* on the healthy case.
 
 ---
 
+## 2. THE FIFTH FAIL-OPEN — `FU-T375-7` IS NOT A THEORETICAL HAZARD. I REACHED IT.
+
+**FINDING F-T384-1 — SEVERITY: the same class T375 exists to close, still open on its own tree.**
+**DRIVEN, with its control, on the T375 branch and on current `main`.**
+
+T375 disclosed against itself that `guard_guards_dir_registration` passes `$rel` to git as a
+**pathspec** rather than a literal:
+
+    member_stat="$( cd "$REPO_ROOT" && git ls-files -s -- "$rel" )"
+    member_mode="${member_stat%% *}"
+    member_blob="${member_stat#* }"; member_blob="${member_blob%% *}"
+
+and said it was *"not reachable on any tree that exists today … narrow and named"*, and did not
+patch it. **It IS reachable, and reaching it takes two files.**
+
+### What it takes, and what it buys
+
+`mutators/G-glob-member-AMBIGUOUS-symlink.sh.txt` commits two tracked paths into the canonical
+guards directory:
+
+* `.softhouse/guards/zz-t384g1.sh` — an **ordinary member with an entirely honest**
+  `REACHED-BY` row. Nothing about it is forged. It is there only so the pathspec matches twice.
+* `.softhouse/guards/zz-t384g[1].sh` — a **tracked SYMLINK**, the unwired checker being
+  smuggled in, whose target is outside the guards directory and carries a `REACHED-BY` row.
+
+`git ls-files` prints in byte order and `1` (0x31) sorts before `[` (0x5B), so the guard's own
+call returns the **decoy first** [`evidence/15-arm-G-mechanism-git-ls-files-probe.txt`]:
+
+    $ git ls-files -s -- ".softhouse/guards/zz-t384g[1].sh"     # what the guard runs
+    100644 b44f181a… 0	.softhouse/guards/zz-t384g1.sh
+    120000 67d15208… 0	.softhouse/guards/zz-t384g[1].sh
+
+    $ git ls-files -s -- ":(literal).softhouse/guards/zz-t384g[1].sh"   # the ground truth
+    120000 67d15208… 0	.softhouse/guards/zz-t384g[1].sh
+
+`member_mode` is therefore **`100644`**, so **T375's symlink-member refusal never fires**; and
+`member_blob` is the **decoy's** blob, so **T375's blob test compares the wrong file**. Both of
+pass 2's new tests are neutralised for that member at once.
+
+### The measurement — the whole bar, on a clean committed tree
+
+| tree | arm | exit | probe | guards-dir census | verdict |
+|---|---|---|---|---|---|
+| **T375 branch `2c1f5723`** | `G` | **0** | **PRESENT** | `population=8 invoked=3 declared=2 reached-by=3 invoked-by-nothing=0` **`symlink-members=0`** | **`VERDICT: PASS`** |
+| current `main` `d16ee6db` | `G` | 0 | PRESENT | `population=8 … reached-by=3` | `VERDICT: PASS` |
+
+The guard's own output credits the link [`evidence/14-FIFTH-FAILOPEN-arm-G-whole-bar-GREEN.txt`]:
+
+    conformance:     REACHED-BY .softhouse/guards/zz-t384g[1].sh — declared in its own header, reached by
+    conformance:                .softhouse/reviews/…/witness-G2.txt (verified: it names zz-t384g[1].sh)
+
+**`symlink-members=0` while a symlink member sits in the population is the census reporting the
+opposite of what is on the tree.** That is worse than the count being absent: the field T375
+added specifically so a symlink member could not hide inside `invoked-by-nothing` now prints a
+zero that a reader will believe. It is the same shape as `F-T375-7` itself — an unwired checker
+entering the canonical guards directory GREEN by being a symlink to something registered.
+
+### THE CONTROLS THAT MAKE THIS A FINDING AND NOT A GUESS — and they corrected me
+
+I predicted at first that **one** glob character would be enough, on the reasoning that `[1]`
+as a wildmatch pattern matches the character `1` and so cannot match the literal filename,
+leaving `member_stat` empty and both tests skipped. **That prediction is false**, and two arms
+say so rather than my re-reading the code:
+
+| control | construction | result on the T375 branch |
+|---|---|---|
+| `E` | member `zz-t384e[1].sh`, witness a **COPY** of it | **exit 2, ABSENT**, `BYTE-IDENTICAL TO THIS MEMBER` — REFUSED |
+| `F` | member `zz-t384f[1].sh` **IS a symlink**, one match only | **exit 2, ABSENT**, `IS A SYMLINK`, `symlink-members=1` — REFUSED |
+
+git's pathspec matcher tries **exact literal equality before wildmatch**, so a glob-named path
+always matches itself. **A glob character alone does not defeat the guard; AMBIGUITY does** —
+which is precisely what T375's own disclosure says, and it deserves the credit for describing
+the mechanism correctly. E and F also confirm the same two arms are refused when the same
+filenames are used *without* a second matching path, so arm G's greenness is attributable to
+the ambiguity and to nothing else.
+
+### ADJUDICATION OF T375's DECISION NOT TO PATCH IT
+
+**T375 was RIGHT to refuse the one-token change, and WRONG about the reachability — and only
+the first half of that is the part it had to get right on the day.**
+
+* **On process: right, and I would not have it decide otherwise.** Its stated reason — *"the
+  60-arm drive was already in flight against this code, an executable change would have
+  invalidated it, and a one-token change shipped without its arm is precisely what this task
+  exists to refuse"* — is the correct call in a task whose entire subject is one-token changes
+  shipped without arms. Patching in flight would have produced a fix with no drive at all, in
+  a task that has just demonstrated twice (arm 30, arm 08) that this class's expectations are
+  wrong until they are run. **Disclosing it, naming the repair, and filing it as `FU-T375-7`
+  is the honest move and it is the one it made.**
+* **On the claim: half of it does not hold.** "Not reachable on any tree that exists today"
+  is true and I confirm it — the population is six files with plain names. But the sentence a
+  reader takes away is *narrow*, and the threat model of this guard is **not accident**. Every
+  defect this guard has ever caught was **deliberately forged by a task inside its own edit
+  grant** — that is how T364 found F-T364-1 and F-T364-2 and how T375 found all four of its
+  own. Against that threat model, "no such file exists today" is not narrowness: **the
+  attacker chooses the filename.** Two files, one of them entirely honest, is a cheaper forgery
+  than any of the four T375 just closed.
+* **The half T375 got right and that I want on the record:** its recorded mechanism is exactly
+  correct — "could match MORE THAN ONE path, and `member_mode` would be taken from whichever
+  line git printed first". It described this hole precisely and then under-rated it. **A hole
+  that is recorded accurately and mis-rated is a far better outcome than one that is silently
+  left**, and it is why I found it in twenty minutes.
+
+**Not patching a known hole is defensible only if the hole is genuinely unreachable AND
+recorded. It is recorded — properly, with the repair named. It is NOT unreachable.** So the
+condition below is about the *next* task, not a retraction of T375's judgement.
+
+**THE REPAIR, and it is the one T375 already wrote down:** `":(literal)$rel"` on the member's
+index lookup, plus a `self_multi`-shaped refusal for a member whose lookup returns more than
+one line — **the witness side of this same function already does exactly that** — plus its own
+arm. Arm G in `mutators/G-glob-member-AMBIGUOUS-symlink.sh.txt` is that arm, written and
+driven, and can be lifted into `drive-red-t375.sh` unchanged.
+
+---
+
 ## CONDITIONS
 
 *(none recorded yet)*
