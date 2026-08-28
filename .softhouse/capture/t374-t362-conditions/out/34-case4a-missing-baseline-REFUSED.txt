@@ -1,0 +1,64 @@
+=== 0. THE INSTRUMENT ITSELF — driven RED before it is trusted (P-22) ===
+  PASS  the comparator reports IDENTICAL on identical bytes
+          7d432cd60871d25c
+  PASS  the comparator reports DIFFERENT on bytes with ONE line appended — the exact mutation shape T362 used to prove F-1
+          7d432cd60871d25c vs 451c230f34f023fe
+
+=== 1. THE BASELINE EXISTS — a missing baseline is REFUSED, never read as clean ===
+  REFUSED  the literal fork sha 12a7f8d9a3af is not present in this repository.
+           That is an INSTRUMENT failure, not a clean corpus. With no baseline there is
+           nothing to compare the captured observations against, and a comparison that
+           cannot run is not a comparison that passed.
+
+=== 2. POPULATION — enumerated from the fork tree AND from HEAD ===
+    An EMPTY population is a SELECTOR failure, not a clean tree: this repository
+    tracks captured oracle observations under .softhouse/capture/tierA-a2/{out,req}/ and always
+    has. An empty census passes everything. REFUSED. (Same spelling as
+    guard_guards_dir_registration in conformance.sh — one idea, one spelling.)
+      at the fork sha : 0 observations  {'out': 0, 'req': 0}
+      at HEAD         : 0 observations  {'out': 0, 'req': 0}
+  REFUSED  the HEAD observation population is EMPTY or missing a whole directory: {'out': 0, 'req': 0}
+           SELECTOR failure. REFUSED.
+
+=== 3. ARM A — every observation that existed at the fork sha, RECOMPUTED ===
+    git blob at 12a7f8d9a3af  vs  the bytes on disk today.
+      enumerated                : 0
+      byte-identical            : 0
+      DIFFER                    : 0
+      MISSING on disk           : 0
+      unreadable at the fork sha: 0
+  PASS  NO captured oracle observation that existed at the fork sha has been MUTATED
+          differ=0
+  PASS  NO captured oracle observation that existed at the fork sha has been DELETED
+          missing=0 unreadable=0
+
+=== 4. ARM B — every observation tracked at HEAD, including ones captured SINCE ===
+    git blob at HEAD  vs  the bytes on disk. Arm A cannot see an observation that
+    did not exist at the fork sha; 0 of the 0 tracked today are in that class.
+      enumerated     : 0
+      byte-identical : 0
+      DIFFER         : 0
+      MISSING on disk: 0
+  PASS  NO captured oracle observation tracked at HEAD differs from its committed bytes
+          differ=0
+  PASS  NO captured oracle observation tracked at HEAD is missing from the working tree
+          missing=0
+
+=== 5. POSITIVE CONTROL — the two arms actually READ bytes ===
+  FAIL  ARM A compared a non-empty population
+          0 observations at the fork sha
+  FAIL  ARM B compared a non-empty population
+          0 observations at HEAD
+  PASS  ARM B's population is a SUPERSET of ARM A's — every historical observation is still tracked, so neither arm is silently narrower than it reads
+          in fork but not at HEAD: []
+
+REFUSALS: 2
+  - the literal fork sha 12a7f8d9a3af is not present in this repository.
+  - the HEAD observation population is EMPTY or missing a whole directory: {'out': 0, 'req': 0}
+FAILURES: 2
+  - ARM A compared a non-empty population
+  - ARM B compared a non-empty population
+
+VERDICT: REFUSED (exit 2). The instrument could not measure. This is NOT a pass,
+and run-all.sh adjudicates this section to 0, so a refusal moves it and fails the
+aggregate verdict.

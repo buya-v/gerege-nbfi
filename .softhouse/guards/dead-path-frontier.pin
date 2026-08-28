@@ -252,7 +252,6 @@
 .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh | .softhouse/.T97-proof.XXXXXX
 .softhouse/handoff/T61-mutations.py | .softhouse/toolchain
 .softhouse/handoff/T61-sweep/run-sweep.py | .softhouse/toolchain
-.softhouse/reviews/A2-11/verify-manifest-independently.py | .softhouse/A2-7-capture-mandatory-accounts
 .softhouse/reviews/T155-probe/prove-xiii-deflation.sh | .softhouse/vectors/T155-INFLATE.json
 .softhouse/reviews/T184-evidence/t184-probe-green-catch.sh | .softhouse/capture/t184-probe/src/CaptureT184Probe.java
 .softhouse/reviews/T184-evidence/t184-probe-green-float.sh | .softhouse/capture/t184-probe/req/probe-body.json

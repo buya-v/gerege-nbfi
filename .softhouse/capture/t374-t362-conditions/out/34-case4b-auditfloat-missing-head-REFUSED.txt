@@ -1,0 +1,4 @@
+REFUSED: A2-7's head b3f2d9b26c34 is not present in this checkout, so the set of
+         files A2-7 ADDED cannot be enumerated. An empty list here would read as
+         'A2-7 added no Python and therefore has no float defect', which is a
+         vacuous pass. Fetch origin/main -- that commit is reachable from it.
