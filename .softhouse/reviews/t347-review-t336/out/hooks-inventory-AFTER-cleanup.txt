@@ -1,0 +1,21 @@
+live  sha256: e36a9becda1f8aa1d9feb01fa63270ca8dc2a2cbaf22a4c986afd92d006de270 549 bytes
+canon sha256: e36a9becda1f8aa1d9feb01fa63270ca8dc2a2cbaf22a4c986afd92d006de270 549 bytes
+IDENTICAL: True
+branch_sweep.hook_status -> True | hook at /Users/buv/gerege-nbfi/.git/hooks/reference-transaction carries the softhouse-t312-ref-guard marker and is executable
+
+=== .git/hooks inventory (non-sample files are the only ones that run) ===
+SAMPLE (inert) applypatch-msg.sample            0223497a0b8b033a
+SAMPLE (inert) commit-msg.sample                1f74d5e9292979b5
+SAMPLE (inert) fsmonitor-watchman.sample        e0549964e93897b5
+SAMPLE (inert) post-update.sample               81765af2daef3230
+SAMPLE (inert) pre-applypatch.sample            e15c5b469ea3e0a6
+SAMPLE (inert) pre-commit.sample                57185b7b9f05239d
+SAMPLE (inert) pre-merge-commit.sample          d3825a70337940eb
+SAMPLE (inert) pre-push.sample                  ecce9c7e04d3f5dd
+SAMPLE (inert) pre-rebase.sample                4febce8677900523
+SAMPLE (inert) pre-receive.sample               a4c3d2b9c7bb3fd8
+SAMPLE (inert) prepare-commit-msg.sample        e9ddcaa4189fddd2
+SAMPLE (inert) push-to-checkout.sample          a53d0741798b287c
+*** LIVE ***   reference-transaction            e36a9becda1f8aa1
+SAMPLE (inert) sendemail-validate.sample        44ebfc923dc5466b
+SAMPLE (inert) update.sample                    8d5f2fa83e103cf0

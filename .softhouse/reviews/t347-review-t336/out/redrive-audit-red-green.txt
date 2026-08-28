@@ -1,0 +1,102 @@
+############################################################
+# RED — driver COMMITS the dispatch record, SPAWNS, and pushes 2 s later.
+#       That is the 101 s / 135 s shape. The audit MUST fail.
+############################################################
+  (committed, spawned, pushed 2 s later)
+
+push-before-spawn audit -- repo /tmp/t336-audit.hEdGoF/repo
+  SELECTOR: LIVE worktree admin dirs matching 'agent-red*' under .git/worktrees/
+  It asks, for each spawn: what did origin/main SAY at that instant?
+  BLIND SPOT: pruned worktrees are gone and invisible; this UNDER-REPORTS.
+
+A. SPAWNS SEEN (1), each judged against origin/main AS OF ITS OWN INSTANT
+   2026-08-28 14:14:44  agent-red1                   softhouse/T999-red                             VIOLATION vs origin aa494bd5
+
+B. THE VIOLATIONS, IN FULL
+   2026-08-28 14:14:44  agent-red1  (softhouse/T999-red)
+      origin/main was aa494bd5933a91e249a072bd886095cd2d630a4b at that instant
+      - origin's dispatch record names NO task with branch 'softhouse/T999-red' -- `ready-tasks.py` against origin would have offered it as READY with no branch (the duplicate-dispatch input P-85 exists to prevent)
+      -   task T999 IS on origin, status='ready', branch=None -- so the record was published but not yet carrying this branch
+
+C. VERDICT
+   clean=0  VIOLATION=1  pre-history=0  unmapped=0  (of 1 live worktrees)
+   For each violation window, origin's HEAD was an ACTIVE LIE to the next orchestrator (P-85).
+
+  AUDIT EXIT: 1   <-- must be 1
+
+############################################################
+# GREEN — next batch: commit, PUSH, then spawn.
+############################################################
+  (committed, pushed, spawned 2 s later)
+
+push-before-spawn audit -- repo /tmp/t336-audit.hEdGoF/repo
+  SELECTOR: LIVE worktree admin dirs matching 'agent-green*' under .git/worktrees/
+  It asks, for each spawn: what did origin/main SAY at that instant?
+  BLIND SPOT: pruned worktrees are gone and invisible; this UNDER-REPORTS.
+
+A. SPAWNS SEEN (1), each judged against origin/main AS OF ITS OWN INSTANT
+   2026-08-28 14:14:49  agent-green1                 softhouse/T998-green                           published in time (origin 26e5899d carried softhouse/T998-green in_progress)
+
+C. VERDICT
+   clean=1  VIOLATION=0  pre-history=0  unmapped=0  (of 1 live worktrees)
+   No violation among the 1 spawns this audit could judge.
+   THIS IS NOT ENFORCEMENT. Nothing prevented a violation; this run only failed to find one, over subjects that still exist (P-45).
+
+  AUDIT EXIT: 0   <-- must be 0
+
+############################################################
+# RED 2 — the OTHER half of P-85: the LOCK itself is not published.
+#         origin says no fire is running while a worker is live.
+############################################################
+push-before-spawn audit -- repo /tmp/t336-audit.hEdGoF/repo
+  SELECTOR: LIVE worktree admin dirs matching 'agent-nolock*' under .git/worktrees/
+  It asks, for each spawn: what did origin/main SAY at that instant?
+  BLIND SPOT: pruned worktrees are gone and invisible; this UNDER-REPORTS.
+
+A. SPAWNS SEEN (1), each judged against origin/main AS OF ITS OWN INSTANT
+   2026-08-28 14:14:53  agent-nolock1                softhouse/T997-nolock                          VIOLATION vs origin 12592a0d
+
+B. THE VIOLATIONS, IN FULL
+   2026-08-28 14:14:53  agent-nolock1  (softhouse/T997-nolock)
+      origin/main was 12592a0d45b7d27b0fad9292240163d0893f1e40 at that instant
+      - no .softhouse/LOCK on origin -- origin said NO FIRE WAS RUNNING
+
+C. VERDICT
+   clean=0  VIOLATION=1  pre-history=0  unmapped=0  (of 1 live worktrees)
+   For each violation window, origin's HEAD was an ACTIVE LIE to the next orchestrator (P-85).
+
+  AUDIT EXIT: 1   <-- must be 1 (LOCK absent from origin)
+
+############################################################
+# CONTROL — too few subjects must be REFUSED (exit 2), never a PASS.
+############################################################
+push-before-spawn audit -- repo /tmp/t336-audit.hEdGoF/repo
+  SELECTOR: LIVE worktree admin dirs matching 'agent-nothing-matches-*' under .git/worktrees/
+  It asks, for each spawn: what did origin/main SAY at that instant?
+  BLIND SPOT: pruned worktrees are gone and invisible; this UNDER-REPORTS.
+
+A. SPAWNS SEEN (0)
+
+AUDIT COULD NOT RUN: saw 0 spawns, --min-spawns 1. A check that inspected too few subjects must not print PASS (P-22).
+
+  AUDIT EXIT: 2   <-- must be 2
+
+############################################################
+# CONTROL — a worktree that never adopted a softhouse/* branch is UNMAPPED,
+#           and a run in which NOTHING was judged must be exit 2, not 0.
+############################################################
+push-before-spawn audit -- repo /tmp/t336-audit.hEdGoF/repo
+  SELECTOR: LIVE worktree admin dirs matching 'agent-unmapped*' under .git/worktrees/
+  It asks, for each spawn: what did origin/main SAY at that instant?
+  BLIND SPOT: pruned worktrees are gone and invisible; this UNDER-REPORTS.
+
+A. SPAWNS SEEN (1), each judged against origin/main AS OF ITS OWN INSTANT
+   2026-08-28 14:14:53  agent-unmapped1              -                                              UNMAPPED (this worktree never adopted a softhouse/* branch)
+
+C. VERDICT
+   clean=0  VIOLATION=0  pre-history=0  unmapped=1  (of 1 live worktrees)
+   NOTHING WAS ACTUALLY JUDGED -- every subject was pre-history or unmapped. This is not a pass (P-22).
+
+  AUDIT EXIT: 2   <-- must be 2 (nothing judged), NOT 0
+
+scratch: /tmp/t336-audit.hEdGoF

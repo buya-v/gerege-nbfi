@@ -1,0 +1,17 @@
+push-before-spawn audit -- repo /Users/buv/gerege-nbfi
+  SELECTOR: LIVE worktree admin dirs matching 'agent-*' under .git/worktrees/, spawned at or after 2026-08-28 13:30:00
+  It asks, for each spawn: what did origin/main SAY at that instant?
+  BLIND SPOT: pruned worktrees are gone and invisible; this UNDER-REPORTS.
+
+A. SPAWNS SEEN (5), each judged against origin/main AS OF ITS OWN INSTANT
+   2026-08-28 14:06:36  agent-a00dbfd6196b49bc0      softhouse/T339-review-t270                     published in time (origin 9ae2b01c carried softhouse/T339-review-t270 in_progress)
+   2026-08-28 14:06:54  agent-acbd12251e8f420f6      softhouse/T340-review-t258                     published in time (origin 9ae2b01c carried softhouse/T340-review-t258 in_progress)
+   2026-08-28 14:07:23  agent-af8cbcb1cfe18931b      softhouse/T346-review-t342                     published in time (origin 9ae2b01c carried softhouse/T346-review-t342 in_progress)
+   2026-08-28 14:07:51  agent-a75f8a5c86c8c2b7e      softhouse/T347-review-t336                     published in time (origin 9ae2b01c carried softhouse/T347-review-t336 in_progress)
+   2026-08-28 14:08:24  agent-a81af6377829e0888      softhouse/T323-wire-unwired-guards             published in time (origin 9ae2b01c carried softhouse/T323-wire-unwired-guards in_progress)
+
+C. VERDICT
+   clean=5  VIOLATION=0  pre-history=0  unmapped=0  (of 5 live worktrees)
+   No violation among the 5 spawns this audit could judge.
+   THIS IS NOT ENFORCEMENT. Nothing prevented a violation; this run only failed to find one, over subjects that still exist (P-45).
+AUDIT EXIT: 0
