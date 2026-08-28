@@ -70,7 +70,7 @@
     "park_after_retries": true,
     "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
   },
-  "cursor": "Fire 20260828-140005 CLOSED CLEAN. 12 branches merged, bar green on the merge result and re-run after every wave. THE FIRE'S REAL RESULT: the first PARITY DIVERGENCE ever recorded in this program -- the reference oracle ACCEPTS a sub-minor-unit residue (100.125 MNT -> HTTP 200, stored numeric(19,6) at scale 6, currency still declaring decimalPlaces 2) that the Go port's READER refuses. Independently re-derived by T359 with its own transaction at 300.6255545, a value chosen so HALF_UP separates from both HALF_EVEN and truncation. Raised as G-19 and then CORRECTED IN PLACE when T359 refuted two of the driver's own claims in it. NEXT FIRE, IN ORDER: T364 (main carries T323's depth-crossing pathspec -- any task adding a .sh fixture under .softhouse/guards BRICKS THE BAR; fail-closed so it cannot produce a false PASS, and T358's branch already fixes it), then T362, then T365 (a zero-value released_at instant still frees a live lock), T366 (land T361's rescued review without tripping the dead-path guard), T363, T360, T354, T355, T356, T357-review. UNMERGED AND COMPLETE ON BRANCHES: T358, T357, T361. G-19 OPEN for Buyan and blocks nothing.",
+  "cursor": "Fire 20260828-140005 chain iteration 3 IN FLIGHT (8.1h elapsed at time of writing; longest fire on record 9.52h). FOUR merges landed, EVERY ONE verified by running the bar on the MERGE RESULT in a scratch worktree BEFORE touching main, then again on main after: T374+T382 (01a7a05a), T388+T389 (a010f733), T383+T385 (e6cd307f), T381+T386 (5497a85d). Bar on main: exit 0, probe line PRESENT reading up, VERDICT PASS 46 parity / 7884 cells, ledger 7/6/0/142/39, dead-path frontier GREEN at deadOccurrences 108. THE FIRE'S REAL RESULT: the FIRST ACCRUAL OBSERVATIONS in this program (T388) -- 9 journal entries through INTEREST/FEES/PENALTIES_RECEIVABLE slots, on a NEW ACCRUAL_PERIODIC product on CLEAN GL accounts, with no promoted account moved (T389 re-derived that on four independent axes). ledger.accrual.entry was ENTIRELY UNGRADED and the bar's every-run assertion 'NOT ONE JOURNAL ENTRY IN THIS TENANT ARRIVED THROUGH A RECEIVABLE SLOT' is now false. SECOND RESULT: T387 established that T359's MEASURED remedy would have made the bar GRADE BACKWARDS -- the deliberately wrong port passes at exit 0 while the correct port reds -- recorded DO-NOT-APPLY. STILL IN FLIGHT: T384 (reviewing T375) and T393. T360 is COMPLETE and CANNOT MERGE until T375 lands and EXEMPTION_PIN_LEDGER_WRONGIMPLS is bumped 13->14 MATCHED BY NAME, NEVER BY LINE (it moved 546 lines on T375's branch). NEXT FIRE, IN ORDER: land T375+T384, then T360+T387 with the pin, then T402 (blocks T399), then T399, T393/T394, T390, T391, T395, T396, T397, T400, T401, T392, T398.",
   "contexts": [
     {
       "id": "tier0-harness-schedule-poc",
@@ -753,7 +753,9 @@
       "recorded_in": ".softhouse/gates.md",
       "raised_by": "local fire 20260828-140005",
       "blocks": "nothing"
-    }
+    },
+    "G-20",
+    "G-21"
   ],
   "history": [
     {
@@ -2243,6 +2245,39 @@
         "G-19 (OPEN, blocks nothing)"
       ],
       "push_before_spawn": "OBEYED and measured on all 7 dispatch batches; minimum margin +66s on batch 1"
+    },
+    {
+      "run_id": "fire-20260828-140005-iter3",
+      "context": "tierA-gl-accounting-A2",
+      "date": "2026-08-28",
+      "workers_dispatched": 12,
+      "branches_merged": 8,
+      "merges_reverted": 0,
+      "bar_at_open": "exit 0, probe PRESENT reading up, 46 parity / 7884 cells / 0 FAIL / 0 inadmissible, dead-path 109",
+      "bar_at_close": "exit 0, probe PRESENT reading up, 46 parity / 7884 cells / 0 FAIL / 0 inadmissible, dead-path 108 (T374's absorbed shrink, attributed by running five trees)",
+      "headline": "THE FIRST ACCRUAL OBSERVATIONS IN THIS PROGRAM. T388 took 9 journal entries through three RECEIVABLE slots on a NEW ACCRUAL_PERIODIC product built on CLEAN GL accounts -- the expensive route T352 had measured, costed and correctly declined, because the cheap route posts into gl 16, a promoted leg of three graded vectors. ledger.accrual.entry had been ENTIRELY UNGRADED. Dispatched under G-20, which this driver raised and then executed in the SAME fire rather than recommending for the next one.",
+      "reviewer_catches": [
+        "T387 vs T359: T359's MEASURED one-line remedy would have INVERTED the grading -- the deliberately wrong port passes and GREENS the bar (parity PASS 8 FAIL 0, exit 0, matching an amount_minor of 10013 neither system produced, inflating money cells 39->43) while the CORRECT port reds it. T359's measurement was correct and reproduces; measuring that the stuck case FAILS is not measuring that the harness grades RIGHT, and from one implementation the two are indistinguishable. Recorded DO-NOT-APPLY.",
+        "T389 vs T388: found a MAJOR casualty in a RATIFIED DEC-2 -- '60 of the 60 rows' is 60 of 91 live. Driver re-derived it against the database before raising G-21. The systemic half: NO casualty task in this program has ever swept docs/.",
+        "T386 vs T381: found a SEVENTH instance of the discarded-status defect, NEW IN T381's OWN R4 REPAIR -- a 2> redirect that cannot be opened returns 1 without running the command, and 1 is the status the file reads as 'matched nothing'. 15 selectors printed MEASURED ZERO for searches that never ran, at exit 0. The audit missed it because a command substitution is neither a 2>/dev/null nor a pipeline: A TAXONOMY NARROWER THAN THE DEFECT CLASS CERTIFIES ONLY WHAT THE TAXONOMY COULD SEE.",
+        "T386 also: t234's HANDOFF.md had ALREADY run the decisive -P control and called it a 95.3% recall loss, measuring -E 'bmainb' repo-wide as ZERO. It is 114 today, and all 114 are documents this program wrote ABOUT the hazard. THE NUMBER GREW FROM 0 PURELY BECAUSE THE PROGRAM WROTE THE FINDING DOWN.",
+        "T385 vs T383: T383's transient zsh scalar-length bug returned 41 for EXACTLY ONE LINE but the CORRECT count for 2 and 3 -- wrong ONLY on the healthy case, so it would have passed every 'does it refuse?' test ever written. Also found a SIXTH defeat T383 never enumerated (a summary line arriving as a FILENAME the self-test echoes: rc 0, fire STARTS on main).",
+        "T382 vs T374: the disclosed gap is LARGER than disclosed -- four more cases outside both arms; and section 10's FORK is an unchecked constant one line from reinstating T362's original defect on the branch that fixes it.",
+        "T375 against ITSELF: asked what its own arm missed by one and found FOUR more fail-opens, including the unpredicted one -- the MEMBER itself being a symlink inherits a registered member's row. Also disclosed FU-T375-7 in its own fix and deliberately did NOT patch it, because a one-token change without its arm is what the task exists to refuse.",
+        "T381 against ITSELF: found a sixth instance of the shape in its own repair before shipping; corrected the R3 framing T379 and T238 both carried."
+      ],
+      "driver_errors_recorded": [
+        "Wrote 'not one journal entry has ever arrived through a RECEIVABLE slot' in RESUME.md in the PRESENT tense AFTER dispatching the task that would falsify it an hour later. Caught by T389. Corrected in place with the tense named.",
+        "Used git merge -m with backticks in the message; zsh command-substituted them and silently ate two fragments. Amended BEFORE push, so no sha was circulated -- unlike the A2-15 incident where an amend on an already-circulated merge orphaned a sha. Recorded in the merge message itself.",
+        "Read T375's branch head before it had committed and reported it as stale progress to the user; T375 corrected me.",
+        "Gave T388 a forbidden-account set in its brief that was MISSING TWO MEMBERS (gl 22 and gl 15). T388 derived its own from all 67 store files rather than trusting mine, which is the only reason the P0 held."
+      ],
+      "gates_raised": [
+        "G-20 (the effort ratio: 60% of the Go is the instrument, 39% the port it grades; no live task ports a Fineract behaviour)",
+        "G-21 (a ratified DEC-2 carries a cardinal the oracle moved out from under; nothing sweeps docs/)"
+      ],
+      "push_before_spawn": "HONOURED ON EVERY DISPATCH. Dispatch record, LOCK and in-flight RESUME.md pushed BEFORE the first git worktree add of each wave (05ce01de, dbf7d312, and one per subsequent single dispatch). Paired reviewers were filed in the SAME commit as the dispatch, so plan-gate check 1 held AT dispatch rather than by later audit -- iteration 2 had found three code tasks dispatched with no reviewer at all.",
+      "p45_census": "SEVEN guards found BUILT AND WIRED TO NOTHING, surfaced in this ONE fire by four workers independently: oracle-state-baseline.sh, run-all.sh, casualty-sweep.sh (T381 filed that one against itself), plus still-pending T311, T303, T313, T333. T333 guards a MONEY non-negotiable. Filed as T399, which now BLOCKS on T402."
     }
   ],
   "database": {
