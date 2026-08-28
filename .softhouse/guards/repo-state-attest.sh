@@ -23,22 +23,60 @@
 # single state.
 #
 # USAGE
-#   repo-state-attest.sh snapshot <repo-dir> <out-file>
-#   repo-state-attest.sh compare  <before-file> <after-file> [OPTIONS]
+#   repo-state-attest.sh snapshot     <repo-dir> <out-file>
+#   repo-state-attest.sh compare      <before-file> <after-file> [OPTIONS]
+#   repo-state-attest.sh survey       <repo-dir>                     (T325)
+#   repo-state-attest.sh fire-compare <before-file> <after-file>     (T325)
 #
 #   OPTIONS to compare (the WRIT -- what the operation was allowed to do):
 #     --writ-branch <name>     this ref may FAST-FORWARD (and only fast-forward).
 #                              Repeatable. Default: none may move.
+#     --writ-ref <ere>         T325. Any ref whose FULL NAME matches this ERE may
+#                              FAST-FORWARD. Repeatable. `--writ-branch main` is
+#                              shorthand for `--writ-ref '^refs/heads/main$'`
+#                              that also authorizes HEAD to sit on it.
 #     --allow-new-ref <ere>    a newly created ref matching this ERE is
 #                              authorized. Repeatable. Default: none.
+#     --allow-deleted-ref <ere>
+#                              T325. A DELETED ref matching this ERE is
+#                              authorized ONLY IF its tip is still REACHABLE from
+#                              a surviving writ ref (i.e. the branch was merged).
+#                              An ERE can never authorize destroying unmerged
+#                              work -- reachability is MEASURED, not asserted.
 #     --allow-dirty            a non-empty `git status` is expected (e.g. a
 #                              mid-operation snapshot). Default: dirty = damage.
 #     --scratch-prefix <path>  newly IGNORED files under this path are expected.
+#     --writ-artefact <path>   this invariant artefact may change in HEAD.
+#                              `ALL` names every one of them.
+#     --artefact-advisory      T325. An UNDECLARED invariant-artefact change is
+#                              reported as ADVISORY instead of DAMAGE. For gates
+#                              whose operation legitimately merges other agents'
+#                              branches and therefore cannot enumerate, in
+#                              advance, which artefacts will move. See the
+#                              rationale at the T7 block -- this is a REDUCTION in
+#                              power, taken deliberately, and it is the term that
+#                              would otherwise fire on an ordinary merge fire and
+#                              get the whole guard switched off.
 #
 # EXIT CODES  (fail CLOSED -- "I could not measure" is never "clean")
 #     0  NO DAMAGE   every observed delta is inside the writ
 #     1  DAMAGE      at least one delta outside the writ
 #     2  REFUSED     could not measure (bad repo, git not answering, bad args)
+#
+# T325 -- WHY THERE IS A SINGLE-STATE `survey` NEXT TO THE DIFFERENTIAL `compare`
+# -------------------------------------------------------------------------------
+# `compare` is the real instrument and nothing here demotes it. But two of the
+# five blind gates have NO "before" available to them at the moment they fire:
+#   * a fire's PRE-FLIGHT gate runs before anything of this fire has happened, so
+#     what it needs is not a delta but a BASELINE READING -- the exact concern
+#     FU-T318-5 names, "an undetected clobber from the previous fire silently
+#     adopted as the baseline";
+#   * the worker-worktree sweep meets worktrees that were CREATED DURING the fire
+#     it is ending, so no snapshot of them can exist from before it started.
+# `survey` is the subset of the seven terms whose PRESENCE ALONE is unauthorized
+# by this program's own protocol, and nothing else. It is deliberately NOT the
+# whole guard: a single-state reading cannot tell a legitimate commit from a
+# clobber, and pretending otherwise is the mistake this file exists to correct.
 #
 # EVERY RUN PRINTS THE LEGACY PREDICATE BESIDE THE NEW ONE, so that a report
 # claiming this guard fired is always accompanied by what the old gate would
@@ -192,7 +230,8 @@ cmd_snapshot() {
 cmd_compare() {
   local before="" after=""
   local -a writ_branches=() allow_new=() writ_artefacts=()
-  local allow_dirty=0 scratch_prefix=""
+  local -a writ_refs=() allow_deleted=()
+  local allow_dirty=0 scratch_prefix="" artefact_advisory=0
 
   [ $# -ge 2 ] || die "usage: $ME compare <before> <after> [options]"
   before="$1"; shift
@@ -206,6 +245,12 @@ cmd_compare() {
                         writ_branches+=("$2"); shift 2 ;;
       --allow-new-ref)  [ $# -ge 2 ] || die "--allow-new-ref needs a value"
                         allow_new+=("$2"); shift 2 ;;
+      --writ-ref)       [ $# -ge 2 ] || die "--writ-ref needs a value"
+                        writ_refs+=("$2"); shift 2 ;;
+      --allow-deleted-ref)
+                        [ $# -ge 2 ] || die "--allow-deleted-ref needs a value"
+                        allow_deleted+=("$2"); shift 2 ;;
+      --artefact-advisory) artefact_advisory=1; shift ;;
       --scratch-prefix) [ $# -ge 2 ] || die "--scratch-prefix needs a value"
                         scratch_prefix="$2"; shift 2 ;;
       --writ-artefact)  [ $# -ge 2 ] || die "--writ-artefact needs a value"
@@ -227,6 +272,24 @@ cmd_compare() {
   local field
   get() { LC_ALL=C awk -F'\t' -v a="$2" -v b="$3" '$1==a && $2==b{print $3; exit}' "$1"; }
 
+  # T325. ONE definition of "does the writ name this ref", used by T1 (where
+  # HEAD landed) and by T2 (which refs may move). Before T325 the two asked the
+  # question with two hand-rolled loops over `writ_branches` alone, which is why
+  # `refs/remotes/origin/main` -- moved by the `git push` that STEP 5.5 itself
+  # mandates -- had no way to be authorized. A gate that flags its own protocol's
+  # final step is the G5 failure mode, one step further along.
+  ref_in_writ() {
+    local rn="$1" w pat
+    for w in ${writ_branches+"${writ_branches[@]}"}; do
+      [ "$rn" = "refs/heads/$w" ] && return 0
+      [ "$rn" = "$w" ] && return 0
+    done
+    for pat in ${writ_refs+"${writ_refs[@]}"}; do
+      printf '%s' "$rn" | LC_ALL=C grep -Eq "$pat" && return 0
+    done
+    return 1
+  }
+
   # ---- T1 HEAD ------------------------------------------------------------
   local hb ha rb ra
   hb=$(get "$before" HEAD sha); ha=$(get "$after" HEAD sha)
@@ -240,10 +303,8 @@ cmd_compare() {
     # It is damage when HEAD lands on a ref the writ does NOT name.
     # A5 (checkout -b to an UNDECLARED branch) must stay red; G5 (checkout -b
     # to a DECLARED writ branch) must go green. Both are driven.
-    local rok=0 w
-    for w in ${writ_branches+"${writ_branches[@]}"}; do
-      if [ "$ra" = "refs/heads/$w" ] || [ "$ra" = "$w" ]; then rok=1; break; fi
-    done
+    local rok=0
+    ref_in_writ "$ra" && rok=1
     if [ "$rok" = "1" ]; then
       INFO+=("T1 HEAD ref moved $rb -> $ra, which the writ names (authorized)")
     else
@@ -270,10 +331,8 @@ cmd_compare() {
     if [ "$ff" = "0" ]; then
       DAMAGE+=("T1 HEAD moved NON-FAST-FORWARD: $hb -> $ha  (old HEAD is NOT an ancestor of new HEAD: amend / reset / rebase / clobber)")
     elif [ "$ff" = "1" ]; then
-      local named=0 w
-      for w in ${writ_branches+"${writ_branches[@]}"}; do
-        [ "$ra" = "refs/heads/$w" ] || [ "$ra" = "$w" ] && named=1
-      done
+      local named=0
+      ref_in_writ "$ra" && named=1
       if [ "$named" = "1" ]; then
         INFO+=("T1 HEAD fast-forwarded on the WRIT branch $ra: $hb -> $ha  (authorized)")
       else
@@ -311,9 +370,48 @@ cmd_compare() {
              | while read -r n; do printf '%s\t%s\n' "$n" "$(LC_ALL=C awk -F'\t' -v n="$n" '$1==n{print $2}' "$tmpa")"; done)
 
   # deleted refs
+  #
+  # T325 -- THE FALSE POSITIVE THAT WOULD HAVE KILLED ADOPTION AT THE FIRE GATE.
+  # `fire-program.sh`'s prune sweep runs `git branch -d "$BR"` on every worktree
+  # branch it has just confirmed MERGED, and `branch_sweep.py` deletes shadowed
+  # refs after copying them to `refs/rescue/<fire>/`. Both are sanctioned, both
+  # happen on ordinary fires, and T318's unconditional rule called each of them
+  # DAMAGE. That is arm G5's lesson exactly: a check that reports ordinary
+  # pipeline work as damage is switched off within two fires.
+  #
+  # But an ERE must not be allowed to authorize destruction on its own, because
+  # `softhouse/T318-x` matches the same pattern whether it was merged or not.
+  # So the authorization has TWO conjuncts and the second is MEASURED: the
+  # deleted tip must still be REACHABLE from a surviving ref the writ names.
+  # `git branch -d` (which refuses on unmerged) passes it; `git branch -D` of
+  # live worker output does not, and stays red.
+  local -a SURVIVING_WRIT_OBJS=()
+  local swn swo
+  while IFS=$'\t' read -r swn swo; do
+    [ -n "$swn" ] || continue
+    ref_in_writ "$swn" && SURVIVING_WRIT_OBJS+=("$swo")
+  done < "$tmpa"
+
   while read -r rname; do
     [ -n "$rname" ] || continue
-    DAMAGE+=("T2 REF DELETED: $rname  (a deleted branch destroys unmerged work and leaves \`git status\` clean)")
+    local dobj dok=0 pat
+    dobj=$(LC_ALL=C awk -F'\t' -v n="$rname" '$1==n{print $2}' "$tmpb")
+    for pat in ${allow_deleted+"${allow_deleted[@]}"}; do
+      if printf '%s' "$rname" | LC_ALL=C grep -Eq "$pat"; then dok=1; break; fi
+    done
+    if [ "$dok" != "1" ]; then
+      DAMAGE+=("T2 REF DELETED: $rname -> $dobj  (a deleted branch destroys unmerged work and leaves \`git status\` clean; no --allow-deleted-ref names it)")
+      continue
+    fi
+    local reach=0 s
+    for s in ${SURVIVING_WRIT_OBJS+"${SURVIVING_WRIT_OBJS[@]}"}; do
+      if git -C "$repo" merge-base --is-ancestor "$dobj" "$s" >/dev/null 2>&1; then reach=1; break; fi
+    done
+    if [ "$reach" = "1" ]; then
+      INFO+=("T2 ref deleted and its tip is STILL REACHABLE from a surviving writ ref (merged): $rname -> $dobj")
+    else
+      DAMAGE+=("T2 REF DELETED AND ITS TIP IS UNREACHABLE from every surviving writ ref: $rname -> $dobj  (--allow-deleted-ref matched the NAME, but the pattern cannot authorize destroying unmerged work -- the commit is now reachable from nothing)")
+    fi
   done < <(LC_ALL=C comm -23 <(cut -f1 "$tmpb") <(cut -f1 "$tmpa"))
 
   # moved refs
@@ -323,10 +421,8 @@ cmd_compare() {
     ob=$(LC_ALL=C awk -F'\t' -v n="$rname" '$1==n{print $2}' "$tmpb")
     nb=$(LC_ALL=C awk -F'\t' -v n="$rname" '$1==n{print $2}' "$tmpa")
     [ "$ob" = "$nb" ] && continue
-    local named=0 w
-    for w in ${writ_branches+"${writ_branches[@]}"}; do
-      [ "$rname" = "refs/heads/$w" ] && named=1
-    done
+    local named=0
+    ref_in_writ "$rname" && named=1
     git -C "$repo" merge-base --is-ancestor "$ob" "$nb" >/dev/null 2>&1
     local mb=$?
     if [ "$named" = "1" ] && [ $mb -eq 0 ]; then
@@ -415,6 +511,18 @@ cmd_compare() {
     done
     if [ "$aok" = "1" ]; then
       INFO+=("T7 invariant artefact changed in HEAD, and the writ names it: $p  $pb -> $pa")
+    elif [ "$artefact_advisory" = "1" ]; then
+      # T325 -- A DELIBERATE REDUCTION IN POWER, NAMED SO IT CANNOT BE MISREAD.
+      # T7 works by comparing an observation against a DECLARATION, so it is
+      # exactly as strong as the caller's ability to declare in advance. A FIRE
+      # cannot: it merges whatever worker branches went green, and a worker that
+      # legitimately owns `conformance.sh` or `patterns.md` this fire moves that
+      # blob. Blocking there would fire on ordinary merge fires -- the G5 shape --
+      # and the guard would be off within two fires, taking T1/T2/T5/T6 with it.
+      # So at that ONE gate T7 reports and does not block; where the writ IS
+      # per-operation (a worker, a driver step, the drives in
+      # capture/t325-adopt-attestation/) it stays blocking and arm A1b stays red.
+      ADVISORY+=("T7 invariant artefact changed in HEAD and the writ does NOT name it: $p  $pb -> $pa  (ADVISORY at this gate by --artefact-advisory: the operation merges other agents' branches and cannot enumerate artefacts in advance. Attribute it before trusting it.)")
     else
       DAMAGE+=("T7 INVARIANT ARTEFACT CHANGED IN HEAD WITHOUT BEING DECLARED: $p  $pb -> $pa  (pass --writ-artefact '$p' if the operation was supposed to change it)")
     fi
@@ -446,8 +554,138 @@ cmd_compare() {
   return 0
 }
 
+# ---------------------------------------------------------------------------
+# survey  (T325) -- the SINGLE-STATE subset, for the two gates that have no
+#                   "before" available to them. See the header for why this is
+#                   deliberately weaker than `compare` and must not replace it.
+#
+#   0  no hidden work found       1  hidden work found       2  refused
+#
+# The ONLY term that votes is the index skip bit, and that is an argued choice
+# rather than caution:
+#   * a skip bit is not produced by ANY legitimate operation in this pipeline --
+#     `git update-index --assume-unchanged|--skip-worktree` appears nowhere in
+#     `.softhouse/bin`, `.softhouse/guards`, `.softhouse/conformance.sh` or
+#     `.claude/skills` except inside the two guards that READ the bits (T324's
+#     `wt_prune_blindspot_check` and this file) [VERIFIED: grep over those four
+#     roots, T325]. Its presence alone is therefore unauthorized, with no writ
+#     needed to say so;
+#   * and it is the term that blinds the porcelain check, `git worktree remove`
+#     and the prune classifier simultaneously (T318 instrument 50).
+#
+# `refs/stash` is ADVISORY here and NOT a vote, and the reason is a measurement,
+# not a preference: `refs/stash` lives in the COMMON git dir, so `for-each-ref`
+# inside every linked worktree reports a stash created in any other one
+# [VERIFIED: git 2.50.1 probe, evidence/05-stash-scope-probe.txt -- one stash
+# taken in the main tree, listed by `git -C wt1 for-each-ref`]. Voting on it in a
+# per-worktree survey would report the SAME stash as damage in all 40-odd
+# worktrees at once. Stash CREATION is caught where it can be attributed: T2 of
+# the differential `compare`, which sees it appear between two snapshots.
+# ---------------------------------------------------------------------------
+cmd_survey() {
+  [ $# -ge 1 ] || die "usage: $ME survey <repo-dir> [--label <text>]"
+  local repo label="" top
+  repo=$(resolve_dir "$1") || exit 2
+  shift
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --label) [ $# -ge 2 ] || die "--label needs a value"; label="$2"; shift 2 ;;
+      *) die "unknown option: $1" ;;
+    esac
+  done
+  top=$(git -C "$repo" rev-parse --show-toplevel 2>/dev/null) \
+    || die "git cannot resolve a worktree at $repo"
+  [ -n "$top" ] || die "git cannot resolve a worktree at $repo"
+
+  local sk rc
+  sk=$(git -C "$repo" ls-files -v -- ':(top)' 2>/dev/null); rc=$?
+  [ $rc -eq 0 ] || die "git ls-files -v failed (rc=$rc) at $repo -- an unreadable index is not an unmarked one"
+  local marked
+  marked=$(printf '%s\n' "$sk" | LC_ALL=C grep -v '^H ' | LC_ALL=C grep -v '^$') || true
+
+  local st
+  st=$(git -C "$repo" status --porcelain -uall -- ':(top)' 2>/dev/null); rc=$?
+  [ $rc -eq 0 ] || die "git status --porcelain -uall failed (rc=$rc) at $repo -- refusing to record a tree as clean"
+
+  local stash
+  stash=$(git -C "$repo" for-each-ref --format='%(refname)' refs/stash 2>/dev/null); rc=$?
+  [ $rc -eq 0 ] || die "git for-each-ref refs/stash failed (rc=$rc) at $repo"
+
+  local ig
+  ig=$(git -C "$repo" status --porcelain --ignored=matching -- ':(top)' 2>/dev/null \
+        | LC_ALL=C grep -c '^!! ') || ig=0
+
+  local n_skip=0 n_dirty=0 n_ig="$ig"
+  [ -n "$marked" ] && n_skip=$(printf '%s\n' "$marked" | LC_ALL=C grep -c '.')
+  [ -n "$st" ]     && n_dirty=$(printf '%s\n' "$st"     | LC_ALL=C grep -c '.')
+
+  say "$ME: SURVEY ${label:+[$label] }$top"
+  say "  legacy predicate (\`git status --porcelain\` empty?) : $( [ "$n_dirty" -eq 0 ] && echo 'CLEAN (0 entries)' || echo "DIRTY ($n_dirty entries, -uall)" )"
+  say "  S3 uncommitted (visible, not hidden)                : $n_dirty"
+  say "  S4 ignored files (ADVISORY -- .DS_Store lives here) : $n_ig"
+  if [ -n "$stash" ]; then
+    say "  ADVISORY  refs/stash EXISTS. \`git stash\` is what MAKES the legacy predicate report clean, and \`.claude/skills/softhouse-program/SKILL.md:76\` forbids stashing worker WIP. NOT attributed to this worktree: refs/stash is COMMON-DIR scoped, so every linked worktree sees it (measured, git 2.50.1)."
+  fi
+  if [ "$n_skip" -gt 0 ]; then
+    say "  HIDDEN WORK  $n_skip index entr(y|ies) carry a NON-'H' tag. \`git update-index --assume-unchanged\` (-> 'h') / \`--skip-worktree\` (-> 'S') switches OFF the working-tree comparison that the porcelain gate, \`git worktree remove\` and the prune classifier ALL depend on -- one bit blinds three checks at once (T318 instrument 50: PRUNE, rc=0, 61 bytes destroyed)."
+    printf '%s\n' "$marked" | sed -n '1,5p' | sed 's/^/    /'
+    say "VERDICT: HIDDEN WORK PRESENT"
+    return 1
+  fi
+  say "VERDICT: no hidden-work term fired (skip bits 0)"
+  return 0
+}
+
+# ---------------------------------------------------------------------------
+# fire-compare  (T325) -- ONE definition of the fire's writ.
+#
+# P-45's rule, verbatim (`patterns.md`): "A test-only guard is not a guard. ...
+# verify the path that actually executes in CI/conformance calls it, not merely
+# that a test does." The corollary that bites here is subtler: if the WRAPPER
+# spelled this writ out and the DRIVE spelled its own copy, the drive would be
+# proving a green about a writ the fire does not use, and the two would drift
+# apart silently. So the writ lives HERE, once; `fire-program.sh` calls this
+# subcommand and the false-positive arms in
+# `.softhouse/capture/t325-adopt-attestation/` call the SAME subcommand.
+#
+# EVERY ENTRY BELOW IS A MEASURED FIRE BEHAVIOUR, not a guess -- the census is in
+# the T325 handoff, and each line names the code that produces it:
+#   refs/heads/main                fast-forwards as the driver commits/merges
+#   refs/remotes/origin/*          moves on `git push -q origin main` (STEP 5.5.5)
+#   refs/heads/softhouse/*         created by workers, fast-forwards as they commit,
+#                                  deleted when merged (prune sweep `git branch -d`)
+#   refs/heads/worktree-agent-*    the harness's per-worktree default branch
+#   refs/rescue/*                  written by branch_sweep.py before it deletes a
+#                                  shadowed ref (T312)
+# HEAD itself must stay on `main`: the fire never checks the main tree out
+# anywhere else, so a HEAD ref change there is real damage and stays red.
+# ---------------------------------------------------------------------------
+cmd_fire_compare() {
+  [ $# -ge 2 ] || die "usage: $ME fire-compare <before> <after> [extra compare options]"
+  local b="$1" a="$2"; shift 2
+  cmd_compare "$b" "$a" \
+    --writ-branch main \
+    --writ-ref '^refs/heads/softhouse/' \
+    --writ-ref '^refs/heads/worktree-agent-' \
+    --writ-ref '^refs/remotes/origin/' \
+    --allow-new-ref '^refs/heads/softhouse/' \
+    --allow-new-ref '^refs/heads/worktree-agent-' \
+    --allow-new-ref '^refs/remotes/origin/' \
+    --allow-new-ref '^refs/rescue/' \
+    --allow-deleted-ref '^refs/heads/softhouse/' \
+    --allow-deleted-ref '^refs/heads/worktree-agent-' \
+    --allow-deleted-ref '^refs/remotes/origin/' \
+    --writ-artefact .softhouse/tasks.json \
+    --writ-artefact .softhouse/RESUME.md \
+    --writ-artefact .softhouse/program.json \
+    --artefact-advisory \
+    "$@"
+}
+
 case "${1:-}" in
-  snapshot) shift; cmd_snapshot "$@" ;;
-  compare)  shift; cmd_compare  "$@" ;;
-  *) die "usage: $ME {snapshot|compare} ..." ;;
+  snapshot)     shift; cmd_snapshot     "$@" ;;
+  compare)      shift; cmd_compare      "$@" ;;
+  survey)       shift; cmd_survey       "$@" ;;
+  fire-compare) shift; cmd_fire_compare "$@" ;;
+  *) die "usage: $ME {snapshot|compare|survey|fire-compare} ..." ;;
 esac
