@@ -25,7 +25,8 @@ so as plainly as where one did not.
 | **T381 vs T379/T238 on R3** | **T381 is right, and I can make its case harder than it did.** See §4. |
 | **Is `T371.md:146` really false?** | **YES**, and it is refuted eight lines further down *its own file*. |
 | **Bar on the branch** | `BAR_EXIT=0`, probe line **PRINTED** at `:162` reading `up`, frontier 11/11, dead-path GREEN 109/109, `VERDICT: PASS … 46 parity vectors, 7884 cells`. |
-| **Bar on the merge result** | `BAR_EXIT=0`, probe **PRINTED** reading `up`, frontier 11/11, dead-path **GREEN 108/108**. The 109→108 move is **`main`'s, not T381's** — established by running the guard on three trees (§8). |
+| **Bar on the merge result** | `BAR_EXIT=0`, probe **PRINTED** reading `up`, frontier 11/11, dead-path **GREEN 108/108**. The 109→108 move is **not T381's**: `109` is what T381's own merge base `05ce01de` measures, and the shrink is `T374`'s (`1e71afe5`). Established by running the guard on **five** trees and reading the pin's history — never by subtraction (§8). |
+| **Bar on this review's own branch** | `BAR_EXIT=0`, probe **PRINTED** reading `up`, frontier 11/11, dead-path GREEN 108/108, `VERDICT: PASS`. Run from a clean tree **after** `git add -A` and commit, at `d1e550e2` — `git status --porcelain` empty, which is the check `T370` and `T361` skipped. |
 
 ---
 
@@ -533,18 +534,34 @@ merged clean by `ort`, no conflicts) — `out/T386-BAR-mergeresult-67fe18f0.txt`
 
 ### The dead-path number moved, and I established whose it is by RUNNING (P-83)
 
-The branch says 109 and the merge result says 108. Three runs of
-`.softhouse/guards/check-dead-path-frontier.sh`, on three trees, no arithmetic:
+The branch says 109 and the merge result says 108. My brief warned me not to subtract. So:
+**five** runs of `.softhouse/guards/check-dead-path-frontier.sh` on five clean trees
+(`out/T386-deadpath-attribution.txt`), and every one prints its own cardinals:
 
 | tree | census | frontier |
 |---|---|---|
-| `main` `094bffca`, alone | `corpus=1373 deadFiles=75 deadOccurrences=108` | `GREEN rows=108 pinned=108 added=0 removed=0` |
+| `05ce01de` — **T381's merge base** | `corpus=1348 deadFiles=76 deadOccurrences=109` | `GREEN rows=109 pinned=109 added=0 removed=0` |
 | `softhouse/T381-…` `9eedfe4d` | `corpus=1351 deadFiles=76 deadOccurrences=109` | `GREEN rows=109 pinned=109 added=0 removed=0` |
+| `main` `094bffca`, alone | `corpus=1373 deadFiles=75 deadOccurrences=108` | `GREEN rows=108 pinned=108 added=0 removed=0` |
 | merge result `67fe18f0` | `corpus=1376 deadFiles=75 deadOccurrences=108` | `GREEN rows=108 pinned=108 added=0 removed=0` |
+| **this review's own branch** `d1e550e2` | `corpus=1380 deadFiles=75 deadOccurrences=108` | `GREEN rows=108 pinned=108 added=0 removed=0` |
 
-**The 109 → 108 move is `main`'s** — it arrived with the `T383`+`T385` merge, which also carried
-the matching pin. T381 contributes `+3` to the corpus and **`+0` dead paths**; `added=0
-removed=0` on the merge result is the check, and it is a measurement, not a subtraction.
+**109 is a property of T381's MERGE BASE, not of T381.** It measures 109 on `05ce01de` before a
+line of T381 exists. T381 adds `+3` to the corpus and `+0` dead paths.
+
+And the move itself is attributable by name, not by subtraction:
+
+```
+$ git log --oneline 05ce01de..5f9895c8 -- .softhouse/guards/dead-path-frontier.pin
+1e71afe5 T374: evidence-integrity arm, non-vacuous corpus guard, clone-portable refs
+         -- and the frontier shrink absorbed
+```
+
+**`T374` shrank it, and said so in its own commit subject.** It reached `main` at `01a7a05a`.
+*(I had guessed the `T383`+`T385` merge from the two numbers I had; running the guard on the base
+and reading the pin's history said otherwise. Recorded because a guess corrected by a measurement
+is the only kind worth writing down.)* `added=0 removed=0` on every one of the five trees is the
+actual check, and it is a measurement rather than a subtraction.
 
 ---
 
