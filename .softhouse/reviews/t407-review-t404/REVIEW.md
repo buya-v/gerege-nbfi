@@ -381,7 +381,42 @@ claims fails loudly.
 
 ## 13. MY BAR
 
-Recorded in `evidence/50-FINAL-BAR-clean-committed-tree.txt`, run with `bash` on a clean
-committed tree with `git status --porcelain` empty **before** the run. My branch is a review
-branch off `main`, so it does **not** carry T404's fix; the baseline it must hold is `main`'s.
-The figures are in that file and in the summary below.
+`bash .softhouse/conformance.sh` — **`bash`, never `sh`** — on a clean committed tree, with
+`git status --porcelain` **EMPTY before the run**. My branch is a review branch off
+**`5e378102`**, so it does **not** carry T404's fix; the baseline it must hold is that commit's.
+Full transcript at `evidence/50-FINAL-BAR-clean-committed-tree.txt` (734 lines).
+
+**`P-84` discipline: the probe line's PRESENCE was established before its value —
+`grep -c 'probe = '` is `1`.**
+
+| | |
+|---|---|
+| **exit** | **0** |
+| **probe** | **PRESENT ×1**, reading `up` |
+| **VERDICT** | **PASS — 46 parity vectors, 7884 cells** |
+| guards-dir census | `population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0` |
+| dead-path census | `corpus=1406 deadFiles=75` **`deadOccurrences=108`** |
+| fail-open frontier | **11 == pinned 11**, GREEN |
+| ledger cells | **144** graded, **39** MONEY in int64 minor units |
+| wrong implementations | **all 14** died through the harness |
+| guard cost | `guard_guards_dir_registration` 0 s / ceiling 60 s |
+| P-number citations | VERDICT PASS |
+
+**`corpus` 1405 → 1406 is EXACTLY `drive-t407.sh` entering T316's corpus, and
+`deadOccurrences` did NOT move** — measured: `5e378102` carries 1405 tracked `.softhouse/`
+`.py`/`.sh` files and my branch carries 1406, the difference being that one file. Every planted
+path in my drive is assembled at run time from a directory variable plus a leaf, and I ran
+T316's own `LITERAL_RE` / `classify()` over the script to confirm it contributes **zero
+CONCRETE literals**. No pin regeneration is required by this branch.
+
+**Every `P-<n>` token I cite is defined**, checked by `grep` on `.softhouse/patterns.md`:
+`P-22` `:473`, `P-45` `:1503`, `P-57` `:1654`, `P-80` `:2775`, `P-84` `:2813`, `P-86` `:2854`,
+`P-98` `:3411`. T404's two citations (`P-22` at `:473`, `P-84` at `:2813`) are accurate.
+
+**A NOTE ON THE BASE, so nobody reads a stale figure.** `main` advanced from `5e378102` to
+`0040cdce` while this review ran (T390's merge, then the G-22 escalation). **My RED-BEFORE ref
+is `5e378102`, which is where this worktree started and which is still fix-ABSENT**; my
+GREEN-AFTER ref is T404's tip `31b7e1f6`. Nothing in this review is measured against
+`0040cdce`, and the driver should re-baseline by RUNNING rather than by reading my table if it
+merges T404 on top of the newer `main`. **T391 has not landed** — the ledger pins on my run are
+still parity 7 / money 39 / wrong impls 14.
