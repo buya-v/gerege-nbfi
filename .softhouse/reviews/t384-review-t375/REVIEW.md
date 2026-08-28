@@ -22,6 +22,15 @@ exit 0 on it with every pin holding. **T375 also told the truth about what it co
 produce** — it says plainly that no uninterrupted 61-arm transcript exists rather than shipping
 a partial run as a clean one, and that sentence is the most creditworthy thing in the handoff.
 
+**ON THE DRIVE: every one of the 61 distinct arms is now driven and NONE is red** — 53 in one
+uninterrupted run before the task runner killed my own drive at arm 23, and the remaining 8,
+which T375's killed run never reached at all, in a recovery run. **Arm set 1 — T323's 15 and
+T358's 13, 28 arms by other authors against earlier harnesses — re-runs UNMODIFIED and passes
+in full**, which is the measurement behind T375's claim that appending `symlink-members=N` at
+the END of the census line retuned nothing. **I do not have a single uninterrupted 61-arm
+transcript either; a second attempt is running detached. See §7 and read it before quoting a
+number from this review.**
+
 **The conditions exist because of one thing: I found the FIFTH fail-open, and it is the one
 T375 disclosed against itself and rated unreachable.** `FU-T375-7` — `$rel` used as a git
 pathspec rather than a literal — **is reachable**, and I reached it with two committed files.
