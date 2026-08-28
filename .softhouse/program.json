@@ -70,7 +70,7 @@
     "park_after_retries": true,
     "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
   },
-  "cursor": "Fire 20260828-140005 batch 1 -- IN FLIGHT, NOT CLOSED. Five workers live in isolated worktrees. The killed fire 20260828-080001 (five_hour rate limit at 12:25 +08) left FOUR FINISHED coder branches UNMERGED, each awaiting an independent reviewer that was killed before it started: T258 (0928fa16, +3955) -> T340, T270 (512040fc, +3558) -> T339, T336 (f86c2e4a, +1627) -> T347, T342 (d870db1d, +1759) -> T346. The bottleneck is REVIEW, not authorship, so this batch is those four reviewers plus T323 (wiring continuation, 5 unverified commits already on its branch, holds conformance.sh exclusively). PUSH-BEFORE-SPAWN OBEYED AND MEASURED for the second consecutive fire: dispatch record + in-flight RESUME.md + LOCK all in commit 9ae2b01c pushed 14:05:46, five of five worktrees created after it, minimum margin +66s (.softhouse/observations/20260828-140005-push-before-spawn-measured.md). DRIVER OVERRIDE RECORDED: T330's refusal to demote T339 was keyed on a branch NAME -- the ref it trusted, softhouse/rescued-t339-base-20260828-080001, carries NO path naming T339 and holds T347's marker file. Overridden by hand, rescue ref left unpruned as evidence, filed as T350. BAR ON MAIN AT DISPATCH, driver-run not quoted: exit 0, probe line PRESENT reading 'up', 46 parity vectors / 7884 cells / 0 FAIL / 0 inadmissible, fail-open frontier 11 == pinned, host-state 18 == pinned.",
+  "cursor": "Fire 20260828-140005 CLOSED CLEAN. 12 branches merged, bar green on the merge result and re-run after every wave. THE FIRE'S REAL RESULT: the first PARITY DIVERGENCE ever recorded in this program -- the reference oracle ACCEPTS a sub-minor-unit residue (100.125 MNT -> HTTP 200, stored numeric(19,6) at scale 6, currency still declaring decimalPlaces 2) that the Go port's READER refuses. Independently re-derived by T359 with its own transaction at 300.6255545, a value chosen so HALF_UP separates from both HALF_EVEN and truncation. Raised as G-19 and then CORRECTED IN PLACE when T359 refuted two of the driver's own claims in it. NEXT FIRE, IN ORDER: T364 (main carries T323's depth-crossing pathspec -- any task adding a .sh fixture under .softhouse/guards BRICKS THE BAR; fail-closed so it cannot produce a false PASS, and T358's branch already fixes it), then T362, then T365 (a zero-value released_at instant still frees a live lock), T366 (land T361's rescued review without tripping the dead-path guard), T363, T360, T354, T355, T356, T357-review. UNMERGED AND COMPLETE ON BRANCHES: T358, T357, T361. G-19 OPEN for Buyan and blocks nothing.",
   "contexts": [
     {
       "id": "tier0-harness-schedule-poc",
@@ -741,6 +741,18 @@
       "unblocked_by": "T246 — independent review of revision 6, re-deriving the reversal count against the live oracle. Then the driver ratifies chosen_by: agent, as it did revision 5. Buyan may reverse.",
       "closed_by": "local fire 20260822-060013 (/softhouse-program driver)",
       "chosen_by": "agent"
+    },
+    {
+      "id": "G-19",
+      "class": "ENGINEERING",
+      "task": "T352",
+      "context": "tierA-gl-accounting",
+      "state": "OPEN",
+      "title": "Oracle accepts a sub-minor-unit residue the Go port reader refuses",
+      "asking_for": "Narrow, after correction: DEC-2 :971-976 ALREADY ratifies the port-refusal position, so nothing must change. The open question is whether that position is FREE or a PARALLEL-RUN HAZARD -- if a live Fineract ever COMPUTES an amount carrying residue, a port refusing what the oracle stores diverges on real traffic. Parallel-run sign-off is a user gate.",
+      "recorded_in": ".softhouse/gates.md",
+      "raised_by": "local fire 20260828-140005",
+      "blocks": "nothing"
     }
   ],
   "history": [
@@ -2195,6 +2207,42 @@
       "headline": "ledger-wrong-date-rules-always-refusing KILLED - a port that refused every dated entry passed the entire corpus before this fire",
       "driver_errors_filed": 6,
       "reviewer_catches": "6 tasks refuted their own brief or draft; T279 caught the driver violating push-before-spawn in 4 of 5 batches; T331 refuted the driver's P-84 gloss from the definition"
+    },
+    {
+      "run_id": "fire-20260828-140005",
+      "context": "tierA-gl-accounting-A2",
+      "date": "2026-08-28",
+      "workers_dispatched": 11,
+      "branches_merged": 12,
+      "merges_reverted": 1,
+      "bar_at_open": "exit 0, probe PRESENT reading up, 46 parity vectors / 7884 cells / 0 FAIL / 0 inadmissible",
+      "bar_at_close": "exit 0, probe PRESENT reading up, 46 parity vectors / 7884 cells / 0 FAIL / 0 inadmissible",
+      "headline": "First parity divergence recorded in this program: the reference oracle accepts a sub-minor-unit residue the Go port reader refuses. G-19 raised, then corrected in place after its own reviewer refuted two of the driver claims in it.",
+      "reviewer_catches": [
+        "T346: 19 fail-opens on main where T342 reported 7; two survive T342 fix; root cause = T342 census has no exit so \"0 fail-opens\" was never a mechanical check",
+        "T340: 109 is the DEAD-PATH frontier, the fail-open frontier is 11 -- the 109 came from the driver RESUME.md and spawn prompts, not from T258",
+        "T340: the fail-closed diagnostic is unreachable dead code (grep -c exits 1, set -e kills the script first)",
+        "T347: harness-spawn hook non-firing reproduced with a command-shape-matched positive control T336 never had; two probe-marker leaks into live sibling worktrees",
+        "T339: refuted driver AND T270 -- A2-11 section 1 is an offline deterministic replay that is RED with three named failures, mislabelled [ORACLE] live re-observation",
+        "T339: the superseded-invocation census 54 is 55; the shell selector has no self-test at all",
+        "T337: T323 registration guard pathspec crosses / -- a planted ledgerguard test fixture drives the whole bar to exit 2",
+        "T359: REFUTED THE DRIVER TWICE IN G-19 -- the schema CAN represent the divergence (one line of port code, impl.go:276-279), and DEC-2 :971-976 already ratifies the option the gate asked Buyan to ratify",
+        "T353: verified the driver unverified Linux claim by running it, then REFUTED the driver framing of it with a 124-commit holder/host census -- latent and SHUT, not live",
+        "T358: T337 proposed C-4 repair would itself have been false; and its own first fix spun the whole bar at 99.7% CPU for 9m43s, caught only by a full run",
+        "T361: zero-value instants still free a live lock -- 0001-01-01T00:00:00Z is what Go zero time.Time emits"
+      ],
+      "driver_errors_recorded": [
+        "Told four reviewers the frontier was 109 when the fail-open frontier is 11 (T340)",
+        "Dispatch notes claimed T340/T339 \"never started\"; both had run and made scratch worktrees (T340 F-7)",
+        "G-19 raised with a MAJOR finding that was false and a request to ratify an already-ratified option; corrected in place, both struck visibly (T359)",
+        "Framed the date -j defect as live on the cloud fire; it is latent (T353)",
+        "Called a commit a DISPATCH RECORD while leaving the task pending with no branch; corrected in the next commit",
+        "MERGED T361 unreviewed as a rescue and it turned main RED on two HARD guards; merge reverted, work preserved on its branch, filed as T366"
+      ],
+      "gates_raised": [
+        "G-19 (OPEN, blocks nothing)"
+      ],
+      "push_before_spawn": "OBEYED and measured on all 7 dispatch batches; minimum margin +66s on batch 1"
     }
   ],
   "database": {

@@ -1,0 +1,12 @@
+{
+  "task": "T358",
+  "status": "done_unmerged",
+  "branch": "softhouse/T358-t323-conditions",
+  "head": "34303ea2",
+  "current_item": "complete on branch; awaiting T364",
+  "step": "work finished and committed; NOT merged to main",
+  "next_action": "dispatch T364, then merge",
+  "blocked_on": "independent review (T364) -- this pipeline does not merge a code task unreviewed",
+  "open_questions": [],
+  "gate_pending": null
+}

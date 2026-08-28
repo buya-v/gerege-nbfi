@@ -1,0 +1,13 @@
+{
+  "task": "T361",
+  "status": "done_unmerged",
+  "branch": "softhouse/T361-review-t353",
+  "head": "b4bf2abf",
+  "current_item": "complete on branch; awaiting T366",
+  "step": "work finished and committed; NOT merged to main",
+  "next_action": "dispatch T366, then merge",
+  "blocked_on": "T366 must land it without tripping guard_dead_path_frontier and the fail-open census",
+  "open_questions": [],
+  "gate_pending": null,
+  "WARNING": "branch IS an ancestor of main (merge 380f0d64) but its FILES ARE NOT on main (revert 2fa4015b). `git merge` is a silent no-op. Revert the revert or cherry-pick."
+}

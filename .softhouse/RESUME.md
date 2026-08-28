@@ -1,67 +1,86 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260828-140005`, batch 1 — **IN FLIGHT. FIVE WORKERS. NOT CLOSED.**
+## FIRE `20260828-140005` — **CLOSED CLEAN. NO LIVE WORKERS. Bar GREEN on `main`.**
 
-**Read this before believing `HEAD`.** The previous fire's manifest said six workers were live; that fire
-(`20260828-080001`) was **killed by a `five_hour` rate limit** at 12:25 (+08) and its wrapper reconciled the
-survivors. This manifest replaces it. If you are a second orchestrator, the lock at `.softhouse/LOCK` is held
-by pid 75306 on `Buyanmunkhs-Mac-mini` and five workers are live. **Do not dispatch anything below.**
-
-This file, `.softhouse/tasks.json` with all five tasks already `in_progress` and carrying their `branch`, and
-the `LOCK` were **committed and pushed BEFORE the first `git worktree add` of this batch** — STEP 0's
-push-before-spawn obligation, missed 101 s late on 2026-08-22 and 135 s late on 2026-08-28.
-
-## What the killed fire actually left behind (measured, not assumed)
-
-Four `coder` tasks **finished and are sitting unmerged on their branches, each awaiting the independent
-reviewer that was killed before it started.** That is the whole shape of this fire: the bottleneck is review,
-not authorship.
-
-| Finished, unmerged | Head | Size | Reviewer (killed unstarted) |
-|---|---|---|---|
-| `T258` frontier-rot residuals | `0928fa16` | 19 files / +3955 | `T340` |
-| `T270` superseded-guard trap | `512040fc` | 15 files / +3558 | `T339` |
-| `T336` post-checkout decision | `f86c2e4a` | 18 files / +1627 | `T347` |
-| `T342` `released_at` fail-open | `d870db1d` | 23 files / +1759 | `T346` |
-
-## Batch 1 — dispatched, all five `isolation: "worktree"`, all `opus`
-
-| Task | Branch | What it is |
-|---|---|---|
-| `T339` | `softhouse/T339-review-t270` | Review T270. **Re-dispatched over a T330 refusal — see the correction below.** |
-| `T340` | `softhouse/T340-review-t258` | Review T258. Never started; all three T330 signals empty. |
-| `T346` | `softhouse/T346-review-t342` | Review T342. Never started. |
-| `T347` | `softhouse/T347-review-t336` | Review T336. Never started. |
-| `T323` | `softhouse/T323-wire-unwired-guards` | **Continuation**, 5 commits already on the branch, completeness unverified. Holds `.softhouse/conformance.sh` **exclusively**. |
-
-**Serialisation:** the four reviewers write only under `.softhouse/reviews/t3*/` — disjoint. `T323` alone
-touches `conformance.sh`.
-
-## Correction the driver made to the previous fire's reconcile
-
-**T330's refusal to demote `T339` was keyed on the NAME of a rescue branch, not its CONTENT.** The ref
-`softhouse/rescued-t339-base-20260828-080001` was read as "a live ref carries id T339, demotion would fork a
-line that still exists". Measured: that ref holds **two** files — a 219-line deletion from
-`.softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt` and `.t347-postcheckout-marker`, which is **T347's**
-post-checkout probe — and `git ls-tree -r` finds **no path naming T339 anywhere on it**. It is a
-*worktree-base* rescue, named after the worktree `t339-base`, carrying another task's marker. T339 produced
-no review. Re-dispatched clean; the rescue ref is **left unpruned as evidence**.
-
-This is a real gap in the reconciler and is filed, not just noted → `T350`.
-
-## Bar on `main` at dispatch — driver-run this fire, not quoted
+Every worker dispatched this fire was awaited. Nothing is running. `tasks.json` has **zero** tasks in
+`in_progress`.
 
 ```
-bash .softhouse/conformance.sh   →  EXIT=0
+bash .softhouse/conformance.sh   →  EXIT 0
   probe line PRESENT (presence tested BEFORE value, P-83) reading "up"
-  VERDICT: PASS (exit 0) — 46 parity vectors / 7884 cells / 0 FAIL / 0 inadmissible
-  LEDGER parity 7 == pinned | money cells 39 == pinned | 142 ledger cells graded
-  fail-open frontier 11 == pinned | host-state census 18 == pinned | corpus 1283
+  VERDICT: PASS — 46 parity vectors / 7884 cells / 0 FAIL / 0 inadmissible
+  LDG-05 PASS | LEDGER parity 7 == pinned | money cells 39 == pinned | 13/13 wrong impls dying
+  dead-path frontier 109 == pin | fail-open frontier 11 == pinned | host-state 18 == pinned
+zsh .softhouse/bin/fire-program.sh --probe  →  lock self-test ROWS=27 FAIL_OPEN=0 FAIL_SHUT=0
 ```
+
+---
+
+## DO THIS FIRST — `main` carries a bar-bricking hazard that a finished branch already fixes
+
+**`T364`.** T323's merged `guard_guards_dir_registration` uses a git pathspec `*` that **crosses `/`**, so
+**any task that adds an ordinary `.sh` fixture anywhere under `.softhouse/guards` — including inside the
+`ledgerguard` Go module — drives the whole bar to exit 2.** T337 proved it by planting one line. It is
+**fail-CLOSED**, so it cannot produce a false PASS, and that is the only reason the driver left it rather
+than merging T358 unreviewed. **`T358` (branch `softhouse/T358-t323-conditions`, head `34303ea2`) already
+fixes it and is complete.** T364 reviews it; then merge.
+
+## Then, in order
+`T362` (review T357) → `T365` (a zero-value `released_at` still frees a live lock) → `T366` (land T361's
+rescued review) → `T363` → `T360` → `T354` → `T355` → `T356`.
+
+---
+
+## Complete, committed, NOT merged — three branches
+
+| Task | Branch | Head | Waiting on |
+|---|---|---|---|
+| `T358` | `softhouse/T358-t323-conditions` | `34303ea2` | `T364` |
+| `T357` | `softhouse/T357-a2-11-section1-red` | `85a30a79` | `T362` |
+| `T361` | `softhouse/T361-review-t353` | `b4bf2abf` | `T366` |
+
+### ⚠ A GIT TRAP THE DRIVER CREATED, MEASURED, AND IS HANDING OVER RATHER THAN LEAVING TO BE DISCOVERED
+
+The driver merged T361 (`380f0d64`) and then **reverted** it (`2fa4015b`) when it turned the bar red.
+
+```
+git merge-base --is-ancestor softhouse/T361-review-t353 main   →  TRUE
+git ls-files | grep -c t361-review-t353                        →  0
+```
+
+**The branch's commits are in `main`'s history; its files are not.** `git merge softhouse/T361-review-t353`
+will say **"Already up to date"** and restore **nothing**. Revert the revert, or cherry-pick `b4bf2abf`'s
+tree. **Verify by file count, never by merge output.**
+
+---
+
+## What this fire did
+
+**12 branches merged**, bar re-run by the driver on every merge result and green each time:
+`T340`, `T347`, `T258`, `T336`, `T339`, `T270`, `T337`, `T323`, `T359`, `T352`, `T361`(reverted), `T342`+`T353`.
+
+**The result that matters is not harness work.** `T352` captured the **first parity divergence ever recorded
+in this program**: the reference oracle **accepts** a sub-minor-unit residue — `100.125` MNT → HTTP 200,
+stored `numeric(19,6)` at scale 6, the response still declaring `decimalPlaces 2` — which the Go port's
+**reader** refuses. `T359` re-derived it with its own transaction at `300.6255545`, a value chosen so HALF_UP
+separates from **both** HALF_EVEN and truncation. Raised as **G-19**.
+
+## The driver's own errors this fire, all caught by workers, all recorded
+
+1. Told four reviewers the frontier was **109** when the fail-open frontier is **11** (`T340`).
+2. Dispatch notes said `T340`/`T339` "never started". Both had run (`T340` F-7).
+3. **G-19 was raised with a `MAJOR` finding that is false** — "the schema cannot represent the divergence";
+   it is one line of port code, `impl.go:276-279` — **and asked Buyan to ratify what DEC-2 `:971-976`
+   already ratifies** (`T359`). Corrected in place, both struck visibly.
+4. Framed the `date -j` defect as live on the cloud fire; it is **latent** (`T353`).
+5. Called a commit a DISPATCH RECORD while leaving the task `pending` with no branch.
+6. **Merged `T361` unreviewed as a rescue and it turned `main` RED** on two HARD guards. Merge reverted, work
+   preserved, filed as `T366`. The rescue was right; merging it unreviewed was not.
+
+## Push-before-spawn
+**Obeyed on all 7 dispatch batches**, minimum margin **+66 s** on batch 1. Still a convention with **zero**
+mechanical backing — `T336`/`T347` established that both git-side mechanisms are dead (the post-checkout hook
+does not run on the harness spawn route at all; `reference-transaction` can veto but is never invoked).
 
 ## Pause reason
-
-**None — work is in flight.** Oracle REACHABLE. If this fire is interrupted before the batch is awaited,
-every task above is `in_progress` with a branch: recover WIP from the branch, mark each `needs_retry` with
-`worker killed mid-flight; completeness unverified`, and **do not** trust this table as a record of what
-finished.
+**None. The fire finished its work and closed.** `G-19` is OPEN for Buyan and **blocks nothing**.

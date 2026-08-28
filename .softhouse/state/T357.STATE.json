@@ -1,0 +1,12 @@
+{
+  "task": "T357",
+  "status": "done_unmerged",
+  "branch": "softhouse/T357-a2-11-section1-red",
+  "head": "85a30a79",
+  "current_item": "complete on branch; awaiting T362",
+  "step": "work finished and committed; NOT merged to main",
+  "next_action": "dispatch T362, then merge",
+  "blocked_on": "independent review (T362) -- this pipeline does not merge a code task unreviewed",
+  "open_questions": [],
+  "gate_pending": null
+}
