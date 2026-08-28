@@ -1,0 +1,37 @@
+zsh: 5.9
+work: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-frag.m7ulW
+
+=== ARM OFFSET — how many bytes of itself has the fire read when it blocks? ===
+  wrapper: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-frag.m7ulW/clone-offset/.softhouse/bin/fire-program.sh  (131779 bytes)
+  the fire is in `wait`; asking lsof for the OFFSET of every fd it holds on that file:
+    pid 6964 raw: o0t131779 n/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-frag.m7ulW/clone-offset/.softhouse/bin/fire-program.sh 
+    pid 8198 raw: o0t131779 n/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-frag.m7ulW/clone-offset/.softhouse/bin/fire-program.sh 
+    pid 8199 raw: o0t131779 n/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-frag.m7ulW/clone-offset/.softhouse/bin/fire-program.sh 
+  READ THIS AS: o0t<N> is the byte the shell will read next. If N equals the
+  131779-byte file size, the fire has consumed ITS WHOLE SELF before blocking,
+  and no later edit of any kind can change what it goes on to execute.
+  fire rc=0  — chain finished: 1
+
+=== ARM FRAGILE — top-level code after the chain loop, FIRE_NO_SNAPSHOT=1 ===
+  wrapper now 147869 bytes; zsh -n: parses
+  driver up after 5s; mutating IN PLACE
+    mutated in place at byte 147811 of 147869 (+35)
+  fire rc=0   chain finished: 1
+  MARKER REACHED THE RUNNING FIRE: YES (count=1)
+    [09:54:00] wrapper snapshot: DISABLED by FIRE_NO_SNAPSHOT=1 — this fire reads its own bytes from the repo path for its whole life
+
+=== ARM FRAGILE-SNAP — top-level code after the chain loop, FIRE_NO_SNAPSHOT=0 ===
+  wrapper now 147869 bytes; zsh -n: parses
+  driver up after 5s; mutating IN PLACE
+    mutated in place at byte 147811 of 147869 (+35)
+  fire rc=0   chain finished: 1
+  MARKER REACHED THE RUNNING FIRE: no (count=0)
+    [09:54:56] wrapper snapshot: RUNNING FROM A SNAPSHOT — repo copy=/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-frag.m7ulW/clone-FRAGILE-SNAP/.softhouse/bin/fire-program.sh inode=16098852 sha256=8b225afa29584a63 bytes=147869; the repo copy is now free to be modified by the fire this wrapper is about to start
+
+HOW TO READ THIS:
+  FRAGILE reached + FRAGILE-SNAP not reached  => the shipped wrapper's immunity is
+    a LAYOUT ACCIDENT that one ordinary edit removes, and the snapshot is what
+    makes the immunity a property of the mechanism instead of the layout.
+  FRAGILE not reached                         => the immunity is more robust than
+    the hypothesis says, and the snapshot is buying much less than it looks.
+DONE
