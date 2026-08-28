@@ -1,0 +1,18 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"time"
+)
+
+type lock struct {
+	Holder     string    `json:"holder"`
+	ReleasedAt time.Time `json:"released_at"`
+}
+
+func main() {
+	b, _ := json.Marshal(lock{Holder: "go-fire"})
+	fmt.Println(string(b))
+	fmt.Println("zero time.Time RFC3339:", time.Time{}.UTC().Format(time.RFC3339))
+}

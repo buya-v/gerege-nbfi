@@ -1,0 +1,8 @@
+src=/tmp/main-fire.sh
+  sha256=c55a9c8b3a56e894030f4dc68a2bc4c8597d43a0ba18fce048d11c327086e22d
+  released_at=<empty> started_age=13158 pid_state=alive_here
+  VERDICT=HELD-live
+src=/tmp/t365-fire-program.sh
+  sha256=06c57d0e192fa1484b9c25ad5ac7995049471a98ddf4425d0d663561b034bf53
+  released_at=<empty> started_age=13159 pid_state=alive_here
+  VERDICT=HELD-live

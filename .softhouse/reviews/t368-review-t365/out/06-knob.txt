@@ -1,0 +1,16 @@
+SKEW=abc                              rc=1   ROWS=45 FAIL_OPEN=0 FAIL_SHUT=2 SKIPPED=0
+d01  *** FAIL-SHUT  want=FREE-released   got=HELD-live        released_at a real ISO-8601 UTC instant
+z07  *** FAIL-SHUT  want=FREE-released   got=HELD-live        CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+SKEW=''                               rc=0   ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+SKEW=-100000                          rc=1   ROWS=45 FAIL_OPEN=1 FAIL_SHUT=2 SKIPPED=0
+d01  *** FAIL-SHUT  want=FREE-released   got=HELD-live        released_at a real ISO-8601 UTC instant
+z06  *** FAIL-OPEN  want=HELD            got=FREE-released    DERIVED: past the skew bound -- a clock-skewed or scheduled writer
+z07  *** FAIL-SHUT  want=FREE-released   got=HELD-live        CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+SKEW=0                                rc=0   ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+SKEW=1                                rc=0   ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+SKEW=99999999999999999999             rc=1   ROWS=45 FAIL_OPEN=0 FAIL_SHUT=2 SKIPPED=0
+d01  *** FAIL-SHUT  want=FREE-released   got=HELD-live        released_at a real ISO-8601 UTC instant
+z07  *** FAIL-SHUT  want=FREE-released   got=HELD-live        CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+SKEW=0\)\)\ \|\|\ \{\ print\ HACKED\;\ \}\;\ \(\(1 rc=1   ROWS=45 FAIL_OPEN=0 FAIL_SHUT=2 SKIPPED=0
+d01  *** FAIL-SHUT  want=FREE-released   got=HELD-live        released_at a real ISO-8601 UTC instant
+z07  *** FAIL-SHUT  want=FREE-released   got=HELD-live        CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
