@@ -1,0 +1,75 @@
+T258 CARDINAL-RESTATEMENT CENSUS
+root   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-aac32d39717605690
+commit : fc23ad0bc1595648da81067b6910450caa5ea02a
+
+CALIBRATION (P-72), fatal:
+  CAL+  'frontier == pinned (all 9 rows, by path).'                    -> ['R1', 'R4'] (want ['R1', 'R4'])
+  CAL-  'the frontier equals the pin, by path, with no cardinal here'  -> [] (want [])
+  calibration OK -- a zero from this run is a real zero.
+
+corpus : 1285 tracked .sh/.py file(s) (git ls-files, whole repository)
+exempt : .softhouse/conformance.sh -- the SOURCE OF TRUTH, the one file entitled to hold the cardinal
+
+scanned: 1284 file(s) after the exemption
+
+WIDE minus NARROW -- what the narrowing DROPPED, listed so it can be disputed:
+  R1  .softhouse/capture/audit-t44/charges/bin/spotcheck.py:20
+      | say("=== FC-01 (handoff §5 worked example, all 13 rows) ===")
+  R1  .softhouse/capture/pathb/t149/promote-vector.py:151
+      | "column is 1 minor unit apart on all 12 rows, period 12's principal and row total are 1 "
+  R4  .softhouse/capture/t255-frontier-rot/instruments/20-cardinal-restatement-census.py:254
+      | CAL_POSITIVE = ("frontier == pinned (all %d rows, by path)." % _CAL_N, {"R1", "R4"})
+  R2  .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py:167
+      | "outstanding balance pinned at 0.28 through all of them and the whole principal settling in "
+  WIDE total 17, NARROW total 13, dropped 4
+
+MEASURED restatements (rule, file:line):
+  R1  .softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py:120
+      | "frontier == pinned (all 11 rows, by path)." in out2),
+  R4  .softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py:120
+      | "frontier == pinned (all 11 rows, by path)." in out2),
+  R2  .softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py:121
+      | ("census line reads `pinned at 11`", "pinned at 11." in out2),
+  R4  .softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py:140
+      | "frontier == pinned" in out2),
+  R2  .softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh:120
+      | echo '  say "conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: $m, pinned at 17."'
+  R2  .softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh:121
+      | echo '  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at 11."'
+  R2  .softhouse/capture/t300-census-cardinal/instruments/50-red-drive.sh:114
+      | if ! LC_ALL=C grep -qF 'pinned at 17.' "$OUT/C-prefix-subject.sh.txt"; then
+  R3  .softhouse/capture/t328-date-rule-promotion/instruments/95-frontier-delta.sh:120
+      | echo "CONCLUSION: dead-path frontier 109 == pinned 109, added=0 removed=0, and that zero is"
+  R3  .softhouse/reviews/t254-harness-portability/instruments/42-bar-extract.py:51
+      | print("    7884 cells, frontier 11 == pinned 11, 9 exemption pins, 6/6 killed)")
+  R2  .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh:55
+      | value "frontier count"        "frontier 11, pinned at 11."
+  R3  .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh:55
+      | value "frontier count"        "frontier 11, pinned at 11."
+  R1  .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh:56
+      | value "frontier equality"     "frontier == pinned (all 11 rows, by path)."
+  R4  .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh:56
+      | value "frontier equality"     "frontier == pinned (all 11 rows, by path)."
+
+PIN COMPARISON (- pinned, + measured), by (rule, file):
+  frontier == pinned (all 11 rows, by rule and path)
+
+
+SECOND ARM -- every cardinal literal above, checked against a REAL graded run.
+This is the arm that catches a restatement rotted on PUNCTUATION rather than on
+the number, which no search for a number can find.
+transcript: .softhouse/capture/t255-frontier-rot/evidence/00-graded-run.txt
+  live      .softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py:120  'frontier == pinned (all 11 rows, by path).'
+  STALE     .softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py:121  'census line reads `pinned at 11`'
+  STALE     .softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py:121  'pinned at 11.'
+  by-design .softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh:120  'conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: $m, pinned at 17.'
+  by-design .softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh:121  'conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at 11.'
+  by-design .softhouse/capture/t328-date-rule-promotion/instruments/95-frontier-delta.sh:120  'CONCLUSION: dead-path frontier 109 == pinned 109, added=0 removed=0, and that zero is'
+  by-design .softhouse/reviews/t254-harness-portability/instruments/42-bar-extract.py:51  '    7884 cells, frontier 11 == pinned 11, 9 exemption pins, 6/6 killed)'
+  STALE     .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh:55  'frontier 11, pinned at 11.'
+  live      .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh:56  'frontier == pinned (all 11 rows, by path).'
+  literals asserted that DO NOT OCCUR in that graded run: 3
+  Each is a live assertion that is FALSE TODAY. Note the count in it may still
+  be right -- the sentence around it moved.
+
+T258 CARDINAL-RESTATEMENT CENSUS: REFUSED

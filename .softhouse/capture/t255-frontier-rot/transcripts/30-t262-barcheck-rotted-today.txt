@@ -1,0 +1,23 @@
+=== STEP 1: probe-line PRESENCE (before any value is read) ===
+  PRESENT  fail-open frontier probe
+  PRESENT  frontier equality probe
+  PRESENT  VERDICT line
+  PRESENT  exemption census block
+
+=== STEP 2: only now, the VALUES ===
+  MISMATCH frontier count   expected: frontier 11, pinned at 11.
+  MATCH    frontier equality
+  MATCH    invariant violations
+
+=== STEP 3: the fail-open instrument census on THIS branch ===
+  tracked .sh/.py on this branch (live): 1281
+conformance: CENSUS fail-open instruments — inspected 1281 tracked .sh/.py file(s) under
+
+=== STEP 4: exemption census pins -- every row must read '== pinned' ===
+  exemption census rows: 9   rows reading '== pinned': 9
+
+=== STEP 5: vector store digest, read live ===
+  HEAD:.softhouse/vectors = 3b0713620556edbdac1b93942c83a81b5844e5a5
+  DIGEST MOVED -- expected 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+
+BAR CHECK: at least one probe absent or value mismatched.
