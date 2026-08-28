@@ -448,6 +448,31 @@ session and the verdict above stands on §§1–6, which do not depend on it.** 
 establish independently of the drive: the four fail-opens close, both healthy controls stay
 green, arm 32 can fail, the transcript is unedited, the merge is clean and its bar is exit 0.
 
+### 7.2 THE EIGHT ARMS ATTEMPT 1 NEVER REACHED — ALL PASS
+
+`T375-24 .. T375-31`, run from **the same drive script with the same helpers**, arms 24–31
+only, in a fresh clone [`tail-arms-24-to-31.sh.txt`, `evidence/21-RECOVERY-arms-24-to-31.txt`]:
+
+    T375-24-selfcert-via-REPEATED-DOTSLASH                exit=2 (want 2) probe=ABSENT  marker=YES >>> PASS
+    T375-25-witness-with-a-TRAILING-SLASH                 exit=2 (want 2) probe=ABSENT  marker=YES >>> PASS
+    T375-26-witness-CASE-FOLDED-on-a-case-insensitive-fs  exit=2 (want 2) probe=ABSENT  marker=YES >>> PASS
+    T375-27-unwired-main_test.go                          exit=2 (want 2) probe=ABSENT  marker=YES >>> PASS
+    T375-28-unwired-CASE-FOLDED-Main.go                   exit=2 (want 2) probe=ABSENT  marker=YES >>> PASS
+    T375-29-unwired-main.go-ONE-DIRECTORY-DEEPER          exit=2 (want 2) probe=ABSENT  marker=YES >>> PASS
+    T375-30-member-IS-a-tracked-SYMLINK-named-main.go     exit=2 (want 2) probe=ABSENT  marker=YES >>> PASS
+    T375-31-REVERT-symlink-MEMBER-test-INHERITS-again     exit=0 (want 0) probe=PRESENT marker=YES >>> PASS
+    T375 RED DRIVE: 8 passed, 0 failed.
+
+**SO EVERY ONE OF THE 61 DISTINCT ARMS HAS NOW BEEN DRIVEN AND EVERY ONE PASSES** — 53 in one
+uninterrupted run, 8 in this recovery run. **That is not the same thing as one uninterrupted
+61-arm transcript, and I will not call it one.** What it does establish, and this is the part
+the verdict rests on: **arms 41–61 of the drive, which T375's killed run never reached at all,
+have now been run — and none of them fails.** No arm anywhere in the file is red.
+
+Note `T375-30` and `T375-31` in that list: the arm that found `F-T375-7` and its revert. Both
+pass, so the unpredicted fail-open is genuinely closed **for a member whose name resolves
+unambiguously** — which is exactly the boundary my arm G walks around (§2).
+
 ### 7.1 ARM SET 1 — CONFIRMED, AND THIS IS THE STRONGEST HEALTHY-CONTROL EVIDENCE ON THE BRANCH
 
 **T375's claim that arm set 1 re-runs UNMODIFIED and passes is TRUE, and I watched it happen
