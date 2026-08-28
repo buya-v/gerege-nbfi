@@ -295,6 +295,81 @@ applied to the guard's own comments: **delete the retyped pair and cite the comm
 
 ---
 
+## 5. THE COST CENSUS (`guard_cost_census`, FU-T358-1) — READ ADVERSARIALLY
+
+This is pass 1's work, not pass 2's, and it is the largest single addition in the diff. It is
+sound and I did not find a fail-open in it, but three things belong on the record.
+
+**What it does right, and it is the right lesson.** The defect it answers is not "a guard was
+slow"; it is that **four hand-written cost figures sat in comments and nothing checked any of
+them**, while the real cost of one was 9m43s against an advertised 0.23 s. The instrument pins
+**by NAME, never by magnitude** — every guard has a ceiling row, every ceiling row was timed,
+at least one guard was timed — and prints the elapsed figures as *recorded and not pinned*.
+That is the same discipline the rest of this file uses for its frontiers, and it is the only
+design under which a wall-clock gate does not become a bar that goes red because somebody
+else's build was running. It also states its own limit plainly: it reads elapsed time **after**
+the guard returns, so **a guard that never returns still hangs the bar forever** — a spin that
+returns becomes a named refusal, and nothing more is claimed.
+
+**Its first run already found two wrong cost claims** (`guard_reconciler_ownership` at 41 s
+against a comment reading 30.3 s; `guard_pnumber_citations` at 21 s with no claim at all).
+An instrument that finds something on its first run is not decoration.
+
+**OBSERVATION O-T384-1 — the real headroom is 6x, not the 10x the derivation claims.**
+The budgets are documented as `max(60, 10 × measured)`. Measured by me on this host:
+
+| guard | idle | under 4 concurrent bars | ceiling | tightest observed ratio |
+|---|---|---|---|---|
+| `guard_no_fail_open_instruments` | 5 s | **10 s** | 60 s | **6×** |
+| `guard_pnumber_citations` | 18 s | 37 s | 300 s | 8× |
+| `guard_reconciler_ownership` | 32 s | 49 s | 500 s | 10× |
+
+Four concurrent whole-bar runs did not breach anything, so the margin is adequate today. But
+the consequence of a breach is worth naming because of how it presents: a ceiling breach is
+`failed=1`, therefore **exit 2 with NO probe line**, which P-84 trains a driver to read as a
+failed HARD guard. It is diagnosable — the transcript names the guard and prints
+`over its Ns CEILING` — but a host-load event would wear the costume of a guard failure. Not a
+defect; a thing the next holder of this file should know before tightening a ceiling.
+
+**OBSERVATION O-T384-2 — two small non-refusals in `timed_guard`.** The budget lookup takes the
+**last** matching row rather than the first and does not detect a duplicate name, so a second
+row for the same guard with a larger number silently wins; and a guard timed twice is not an
+error. Neither is reachable without editing `GUARD_COST_BUDGETS`, which means holding this
+file. Recorded, not charged.
+
+---
+
+## 6. SCOPE, MONEY, AND THE COORDINATION FACT
+
+**Scope: clean.** 24 files, all inside three places T375 owns —
+`.softhouse/conformance.sh`, `.softhouse/capture/t375-t364-conditions/`, and its own handoff.
+**`tasks.json`, `patterns.md`, `.softhouse/guards/`, and T358's and T364's capture directories
+are untouched.** No new `.sh` fixture was committed under `.softhouse/guards/` (the T323
+hazard); every fixture is planted at run time in a scratch clone. Confirmed against
+`git diff main...` with three dots.
+
+**Money math: none, and I checked rather than assumed.** The diff introduces no arithmetic
+beyond integer counters (`symlinked`, `GUARD_COST_*`), two git object-id string compares, and
+`SECONDS` subtraction. Every decimal literal in the diff is inside a comment about wall-clock
+history. No currency, no rounding, no division, no `MathContext`. The bar's own money figures
+are **identical on all three trees**: 46 parity vectors, 7884 cells, 13 wrong implementations
+killed, `EXEMPTION_PIN_LEDGER_WRONGIMPLS=13`. Nothing here is a monetary code path, and the
+findings above are all wrong-PASSes about **the bar's own coverage**.
+
+**`EXEMPTION_PIN_LEDGER_WRONGIMPLS`: NOT TOUCHED, and I matched it BY NAME.** 13 on `main`, 13
+on the branch, 13 on the merge result. Its line moved 3923 → 4476. I did not read it by line
+and the driver should not either.
+
+**`FU-T375-5` (the DECLARED direction) — I did not drive it, and here is why that is defensible
+rather than a gap I am waving through.** The `REACHED-BY` direction is forgeable **inside a
+tripping task's own grant**; the `DECLARED` table is a two-row literal **inside
+`conformance.sh`**, so adding a row requires holding a file this program serialises to one
+holder per batch. The same symlink/copy shapes do apply there — T375 says so and does not
+claim otherwise — but the cost of reaching them is an order of magnitude higher. It stays a
+follow-up, and T375 filed it as one.
+
+---
+
 ## CONDITIONS
 
 *(none recorded yet)*
