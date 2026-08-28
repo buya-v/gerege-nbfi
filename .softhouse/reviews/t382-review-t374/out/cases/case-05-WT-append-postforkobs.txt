@@ -1,0 +1,59 @@
+=== 0. THE INSTRUMENT ITSELF — driven RED before it is trusted (P-22) ===
+  PASS  the comparator reports IDENTICAL on identical bytes
+          7d432cd60871d25c
+  PASS  the comparator reports DIFFERENT on bytes with ONE line appended — the exact mutation shape T362 used to prove F-1
+          7d432cd60871d25c vs 451c230f34f023fe
+
+=== 1. THE BASELINE EXISTS — a missing baseline is REFUSED, never read as clean ===
+  PASS  literal baseline sha 12a7f8d9a3af is present
+
+=== 2. POPULATION — enumerated from the fork tree AND from HEAD ===
+    An EMPTY population is a SELECTOR failure, not a clean tree: this repository
+    tracks captured oracle observations under .softhouse/capture/tierA-a2/{out,req}/ and always
+    has. An empty census passes everything. REFUSED. (Same spelling as
+    guard_guards_dir_registration in conformance.sh — one idea, one spelling.)
+      at the fork sha : 403 observations  {'out': 327, 'req': 76}
+      at HEAD         : 1035 observations  {'out': 906, 'req': 129}
+
+=== 3. ARM A — every observation that existed at the fork sha, RECOMPUTED ===
+    git blob at 12a7f8d9a3af  vs  the bytes on disk today.
+      enumerated                : 403
+      byte-identical            : 403
+      DIFFER                    : 0
+      MISSING on disk           : 0
+      unreadable at the fork sha: 0
+  PASS  NO captured oracle observation that existed at the fork sha has been MUTATED
+          differ=0
+  PASS  NO captured oracle observation that existed at the fork sha has been DELETED
+          missing=0 unreadable=0
+
+=== 4. ARM B — every observation tracked at HEAD, including ones captured SINCE ===
+    git blob at HEAD  vs  the bytes on disk. Arm A cannot see an observation that
+    did not exist at the fork sha; 632 of the 1035 tracked today are in that class.
+      enumerated     : 1035
+      byte-identical : 1034
+      DIFFER         : 1
+      MISSING on disk: 0
+        MUTATED .softhouse/capture/tierA-a2/out/A2-201-read-gl16-fundsource.json
+                HEAD  91005b8baeff3c71c3170ff7962f69440921e3a23e17b6f48fbffa60a3bb9c33
+                disk  5362d722fa836ff774ab6a3c04bc6fcdae6db35050a427d3cff27f819bccc92a
+  FAIL  NO captured oracle observation tracked at HEAD differs from its committed bytes
+          differ=1
+  PASS  NO captured oracle observation tracked at HEAD is missing from the working tree
+          missing=0
+
+=== 5. POSITIVE CONTROL — the two arms actually READ bytes ===
+  PASS  ARM A compared a non-empty population
+          403 observations at the fork sha
+  PASS  ARM B compared a non-empty population
+          1035 observations at HEAD
+  PASS  ARM B's population is a SUPERSET of ARM A's — every historical observation is still tracked, so neither arm is silently narrower than it reads
+          in fork but not at HEAD: []
+
+FAILURES: 1
+  - NO captured oracle observation tracked at HEAD differs from its committed bytes
+
+VERDICT: FAIL (exit 1). A CAPTURED ORACLE OBSERVATION HAS BEEN MUTATED OR LOST.
+This is the evidence the whole program grades against. Do not repair it by
+re-capturing and committing over the top: that launders the mutation into the
+record. Establish what changed, and why, first.

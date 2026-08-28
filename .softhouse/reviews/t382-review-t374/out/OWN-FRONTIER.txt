@@ -1,0 +1,7 @@
+census rc=0
+T316-DEADPATH-CENSUS: corpus=1358 deadFiles=76 deadOccurrences=109 resolving=1273 indeterminate=95 prose=351
+
+--- rows my review contributes ---
+rows contributed by this review: 0
+total dead rows repo-wide      : 109   (the pin is the number to compare against)
+reader rc=0  (0 = my review contributes NO dead row; 1 = it does, named above; 2 = REFUSED)

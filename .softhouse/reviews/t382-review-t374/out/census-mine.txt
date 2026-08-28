@@ -1,0 +1,219 @@
+T316 -- dead repo-path references among tracked `.softhouse/` instruments
+========================================================================================
+SELECTOR (P-66: `not found` is a statement about the search)
+  corpus     : git ls-files '.softhouse/*.py' '.softhouse/*.sh'   -> 1358 tracked file(s)
+  literals   : quoted strings containing `.softhouse/`, trimmed to that root
+  regex      : (['"])((?:[^'"\\\n]|\\.)*?\.softhouse/(?:[^'"\\\n]|\\.)*?)\1
+  resolution : TRACKED CONTENT ONLY [T326] -- membership in `git ls-files -z`
+               (8432 path(s)) or in the set of their directory prefixes (740).
+               NOT os.path.exists. THE DISK IS NEVER CONSULTED, so this census is a
+               property of the COMMIT and not of the machine, the checkout, or what a
+               previous run left lying about. `.` / `..` are collapsed LEXICALLY.
+  EXCLUDED   : templates (placeholder %s/{}/$VAR/<x>) and globs -> INDETERMINATE;
+               literals containing WHITESPACE -> PROSE (a message that quotes a path).
+               Both counted separately, NEVER added to the DEAD figure.
+  BLIND TO   : untracked files as CORPUS; paths assembled from variables at runtime.
+  DELIBERATE : an UNTRACKED path -- `.gitignore`d build output, a runtime-materialised
+               toolchain, another run's scratch -- is DEAD, present on disk or not.
+               Same answer on every host: that is the whole point [T326].
+
+CALIBRATION: both FU-T299-2 known positives were seen as DEAD by this selector.
+
+COUNTS (both terms printed -- P-67)
+  files naming any `.softhouse/` literal : 604
+  occurrences that RESOLVE               : 1273
+  occurrences that are INDETERMINATE     : 95  (in 59 file(s))
+  occurrences that are PROSE             : 351
+  occurrences that are DEAD              : 109  (in 76 file(s))
+
+THE 76 FILE(S) NAMING A DEAD CONCRETE PATH
+----------------------------------------------------------------------------------------
+  .softhouse/bin/fire-program.sh
+      -> .softhouse/tasks.json.t288.tmp
+  .softhouse/bin/go-env.sh
+      -> .softhouse/toolchain
+  .softhouse/capture/lib/check_no_narrow_catch.py
+      -> .softhouse/capture/existing/src/CaptureAlreadyFixed.java
+      -> .softhouse/capture/newrig/src/CaptureBrandNew.java
+  .softhouse/capture/lib/check_wire_float_roundtrip.py
+      -> .softhouse/capture/out/capture-that-does-not-exist.json
+  .softhouse/capture/pathb/t36/attest.py
+      -> .softhouse/vectors/PIN.json:dec1_revision
+  .softhouse/capture/pathb/t80/prove-f1-noswap.py
+      -> .softhouse/capture/pathb/t36/.f1-prefix-attest.py
+      -> .softhouse/capture/pathb/t80/.f1-swap-in-progress
+      -> .softhouse/capture/pathb/t80/out/.f1-prefix.py
+      -> .softhouse/capture/pathb/t80/out/out
+      -> .softhouse/capture/pathb/t80/out/out/emiloop
+  .softhouse/capture/pathb/t80/prove-f1-recovery.py
+      -> .softhouse/capture/pathb/t36/.f1-prefix-attest.py
+      -> .softhouse/capture/pathb/t80/.f1-swap-in-progress
+  .softhouse/capture/pathb/t80/prove-f1-sandbox-run.sh
+      -> .softhouse/capture/pathb/t36/.f1-prefix-attest.py
+      -> .softhouse/capture/pathb/t80/.f1-swap-in-progress
+  .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py
+      -> .softhouse/toolchain
+  .softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py
+      -> .softhouse/toolchain
+  .softhouse/capture/t154-nofloat/drive-leg1-e2e.sh
+      -> .softhouse/vectors/T154-POISON-store-root.json
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/32-triage-live.py
+      -> .softhouse/uat.md
+  .softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh
+      -> .softhouse/capture/t243-wiring/evidence/planted-failopen-sweep.sh
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py
+      -> .softhouse/capture/t248-failopen-widen/.probes-c1
+  .softhouse/capture/t252-tier3/instruments/40-c6-red-drive.py
+      -> .softhouse/capture/t252-tier3/evidence/red-drive-scratch
+  .softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py
+      -> .softhouse/capture/t252-tier3/evidence/conf-red-scratch
+  .softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh
+      -> .softhouse/toolchain
+      -> .softhouse/toolchain/go
+  .softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py
+      -> .softhouse/toolchain
+  .softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh
+      -> .softhouse/toolchain
+  .softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh
+      -> .softhouse/toolchain
+  .softhouse/capture/t256-verdict-predicate/census_verdict_shape.py
+      -> .softhouse/capture/t256-verdict-predicate/`
+  .softhouse/capture/t271-b1-t219/red/drive-red-t271.py
+      -> .softhouse/capture/t219-g8-residual/out/NOT-THERE.json
+  .softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh
+      -> .softhouse/toolchain
+  .softhouse/capture/t272-goenv-graft/instruments/60-cloud-f3-reproduction.sh
+      -> .softhouse/toolchain
+  .softhouse/capture/t284-schema2-callsites/instruments/30-red-drive.sh
+      -> .softhouse/capture/t284-schema2-callsites/scratch
+      -> .softhouse/capture/t284-schema2-callsites/scratch/rogue.sh
+  .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py
+      -> .softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py
+  .softhouse/capture/t290-review-t271/red/drive-red-t290.py
+      -> .softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py
+  .softhouse/capture/t299-namespace-and-default-safety/instruments/30-drive-the-rename.sh
+      -> .softhouse/capture/t259-verdict-predicate
+  .softhouse/capture/t299-namespace-and-default-safety/instruments/40-drive-namespace-guard.sh
+      -> .softhouse/capture/t256-planted-by-t299
+      -> .softhouse/capture/t256-planted-by-t299/note.txt
+      -> .softhouse/capture/t290-second-rig
+      -> .softhouse/capture/t290-second-rig/note.txt
+  .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh
+      -> .softhouse/capture/t999-rig/attest
+      -> .softhouse/capture/t999-rig/attest/gerege.disposable
+      -> .softhouse/vectors/ledger/ACCEPT.json
+      -> .softhouse/vectors/ledger/REFUSE.json
+  .softhouse/capture/t309-sigterm-reconcile-bypass/patch5.py
+      -> .softhouse/tasks.json.t288.tmp
+  .softhouse/capture/t309-sigterm-reconcile-bypass/probe-git-inode.sh
+      -> .softhouse/bin/w.sh
+  .softhouse/capture/t316-dead-path-guards/census_dead_paths.py
+      -> .softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py
+  .softhouse/capture/t316-dead-path-guards/drive-red-t316.py
+      -> .softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py
+      -> .softhouse/capture/t316-dead-path-guards/no-such-file-planted-by-G2.json
+      -> .softhouse/capture/t316-dead-path-guards/planted_regression.py
+  .softhouse/capture/t326-frontier-host-state/instruments/20-cross-host-drive.sh
+      -> .softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch
+      -> .softhouse/toolchain
+  .softhouse/capture/t326-frontier-host-state/instruments/30-bar-in-both-conditions.sh
+      -> .softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch
+      -> .softhouse/toolchain
+  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py
+      -> .softhouse/toolchain
+  .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py
+      -> .softhouse/toolchain
+  .softhouse/capture/t66-unrecognized-interest/gotest.sh
+      -> .softhouse/toolchain/go
+      -> .softhouse/toolchain/gocache
+      -> .softhouse/toolchain/gomodcache
+  .softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/verify-on-scratch-merge.sh
+      -> .softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA.new
+  .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py
+      -> .softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch
+  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py
+      -> .softhouse/toolchain
+  .softhouse/capture/t83-nonamortizing/src/run-port.py
+      -> .softhouse/toolchain
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh
+      -> .softhouse/.T113-b5-inner.sh
+      -> .softhouse/.T113-b5-prefix.sh
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh
+      -> .softhouse/.T113-matrix-benv.sh
+      -> .softhouse/.T113-matrix-noifs.sh
+      -> .softhouse/.T113-matrix-seeifs.sh
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh
+      -> .softhouse/.T113-inner.sh
+      -> .softhouse/.T113-prefix-conformance.sh
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh
+      -> .softhouse/.T97-proof.XXXXXX
+  .softhouse/handoff/T61-mutations.py
+      -> .softhouse/toolchain
+  .softhouse/handoff/T61-sweep/run-sweep.py
+      -> .softhouse/toolchain
+  .softhouse/reviews/A2-11/verify-manifest-independently.py
+      -> .softhouse/A2-7-capture-mandatory-accounts
+  .softhouse/reviews/T155-probe/prove-xiii-deflation.sh
+      -> .softhouse/vectors/T155-INFLATE.json
+  .softhouse/reviews/T184-evidence/t184-probe-green-catch.sh
+      -> .softhouse/capture/t184-probe/src/CaptureT184Probe.java
+  .softhouse/reviews/T184-evidence/t184-probe-green-float.sh
+      -> .softhouse/capture/t184-probe/req/probe-body.json
+  .softhouse/reviews/T184-evidence/t184-probe-red-catch.sh
+      -> .softhouse/capture/t184-probe/src
+      -> .softhouse/capture/t184-probe/src/CaptureT184Probe.java
+  .softhouse/reviews/T184-evidence/t184-probe-red-float.sh
+      -> .softhouse/capture/t184-probe/req
+      -> .softhouse/capture/t184-probe/req/probe-body.json
+  .softhouse/reviews/T184-evidence/t184-vacuity.sh
+      -> .softhouse/capture-T184HIDDEN
+      -> .softhouse/capture/t184-probe
+  .softhouse/reviews/T188-probe/drive-t188.sh
+      -> .softhouse/capture/t188-probe
+      -> .softhouse/capture/t188-probe/src
+  .softhouse/reviews/T298/attack-marker-extractor.sh
+      -> .softhouse/bin/go-env.sh\n```\n
+  .softhouse/reviews/T298/t298b-census.sh
+      -> .softhouse/toolchain
+  .softhouse/reviews/T298/t298b-marker-attack-matrix.sh
+      -> .softhouse/bin/go-env.sh\n```\n
+  .softhouse/reviews/T298/t298b-worktree-composition-drive.sh
+      -> .softhouse/toolchain
+      -> .softhouse/toolchain/go
+      -> .softhouse/toolchain/gomodcache
+  .softhouse/reviews/T306/probe/inject-acceptance.py
+      -> .softhouse/vectors/ledger/ZZZ-T306-INJECTED-preclosure-acceptance.json
+  .softhouse/reviews/T84-evidence/src/exemption-demo.py
+      -> .softhouse/toolchain
+  .softhouse/reviews/T84-evidence/src/run-port.py
+      -> .softhouse/toolchain
+  .softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh
+      -> .softhouse/vectors/ledger/A2-34-RD5-INFLATION-PROBE.json
+  .softhouse/reviews/t179-guard-classifier/fixtures/green_atexit.py
+      -> .softhouse/capture/t179-fixture-never-run/conformance.sh
+  .softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py
+      -> .softhouse/vectors/t179-fixture-never-run/case.json
+  .softhouse/reviews/t179-guard-classifier/fixtures/green_real_trap.sh
+      -> .softhouse/vectors/t179-fixture-never-run/case.json
+  .softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py
+      -> .softhouse/vectors/t179-fixture-never-run/case.json
+  .softhouse/reviews/t179-guard-classifier/fixtures/red_guard_elsewhere.py
+      -> .softhouse/capture/t179-fixture-never-run/out.txt
+  .softhouse/reviews/t179-guard-classifier/fixtures/red_prose_guard.py
+      -> .softhouse/vectors/t179-fixture-never-run/case.json
+  .softhouse/reviews/t262-verdict-predicate/pin_test_t262.py
+      -> .softhouse/capture/t229-g8-site3/out/classify-t229-copy.json
+  .softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh
+      -> .softhouse/capture/t273-residue/instruments/80-host-state-bracket.py
+  .softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh
+      -> .softhouse/capture/t273-residue/instruments/80-host-state-bracket.py
+  .softhouse/reviews/t291-review-t286/probe/reproduce-in-t286s-own-sweep.sh
+      -> .softhouse/capture/t268-rvpa-failopen/out/red-green-legs.json
+      -> .softhouse/capture/t286-rvpa-retry/red/drive_red_t286.py
+      -> .softhouse/capture/t286-rvpa-retry/red/fixtures
+  .softhouse/reviews/t47-probe/t178-redprobe.py
+      -> .softhouse/reviews/t47-probe/t47_edit_N.py
+
+  JSON written to /tmp/t382-out/census-mine.json
+
+T316-DEADPATH-CENSUS: corpus=1358 deadFiles=76 deadOccurrences=109 resolving=1273 indeterminate=95 prose=351

@@ -1,0 +1,84 @@
+############ T374 — driving the T362 conditions RED, in a scratch clone
+source tree : /tmp/t382-sprover EXIT=0
+    T362 saw 'NEGATIVE CONTROL DID NOT TRIP: (a) ...' while driving a genuine fourth
+    failure — the control had tripped HARDER than expected, and said the opposite.
+  PASS  (6) adjudicate-section1.py still RED on a genuine fourth failure         rc=1
+  PASS  (6) the fourth failure is reported as UNADJUDICATED                     
+  PASS  (6) and control (a) does NOT falsely claim it did not trip              
+
+=== case 7 — GREEN AGAIN: the scratch is byte-clean and the whole review reproduces ===
+    A prover that only ever produces RED is as useless as one that only produces GREEN.
+  PASS  (7) every mutation reverted; scratch tree byte-clean                    
+  PASS  (7) run-all.sh green again after every mutation is reverted              rc=0
+  PASS  (7) 10/10 as adjudicated, 0 deviations                                  
+
+NOTE (T374, its own F-5): this run REWROTE tracked evidence under
+  .softhouse/capture/t374-t362-conditions/out/
+which carries generation timestamps. To restore:
+  git checkout -- .softhouse/capture/t374-t362-conditions/out/
+
+############ SUMMARY   PASS=28   FAIL=0
+T374 PROVER: PASS — every fix on this branch was driven RED on real bytes, and the
+clean tree is still GREEN. Nothing in the working tree was mutated at any point.
+--- working tree after the prover (T374 discloses it rewrites tracked evidence) ---
+ M .softhouse/capture/t374-t362-conditions/out/30-case0-F6-fresh-clone-GREEN.txt
+ M .softhouse/capture/t374-t362-conditions/out/31-case1-F1-mutated-observation-now-FATAL.txt
+ M .softhouse/capture/t374-t362-conditions/out/35-case5-F2-empty-vector-store-REFUSED.txt
+ M .softhouse/capture/t374-t362-conditions/out/36-case6-F3-fixed-synthetic-base.txt
+ M .softhouse/capture/t374-t362-conditions/out/37-case7-GREEN-again.txt
+tated observation             rc=1
+  PASS  (1b) section 10 is the one that MOVED                                   
+  PASS  (1b) RUN-ALL VERDICT is FAIL, not PASS                                  
+  PASS  (1b) section 4 is STILL as adjudicated -- the drift arm was not disturbed
+
+=== case 2 (F-1) — RED: a DELETED captured oracle observation ===
+    Deletion is the other way evidence rots, and a comparator that only diffs
+    existing files would report 'all identical' over a shrinking population.
+  PASS  (2) verify-capture-integrity.py on a DELETED observation                 rc=1
+  PASS  (2) it names the missing file                                           
+
+=== case 3 (F-1 / F-2 class) — REFUSED: an EMPTY observation population ===
+    Committing away out/ and req/ leaves nothing to compare. 'Zero differences over
+    zero files' is a SELECTOR failure, not a clean corpus. It must REFUSE (exit 2),
+    never pass, and the refusal must move section 10 too.
+  PASS  (3) verify-capture-integrity.py on an EMPTY population                   rc=2
+  PASS  (3) it REFUSES rather than passing                                      
+  PASS  (3) the verdict line says REFUSED, not PASS                             
+
+=== case 4 (F-6) — REFUSED: the baseline commit-ish is ABSENT ===
+    A2_11_ROOT is pointed at a git repo that has neither the fork sha nor A2-7's head.
+    Every arm below then has nothing to measure against, and each script must say so
+    by name instead of aborting on a traceback or reporting an empty clean run.
+  PASS  (4a) verify-capture-integrity.py with no baseline                        rc=2
+  PASS  (4a) the missing baseline is named                                      
+  PASS  (4b) audit-float.py with no A2-7 head REFUSES instead of auditing 0 files rc=2
+  PASS  (4b) it says REFUSED and explains the vacuous-pass shape                
+
+=== case 5 (F-2) — RED: the vector store hidden, the corpus guard must REFUSE ===
+    T362 measured the shipped behaviour: population 0, 'all zero', PASS, rc=0
+    (out/12-F2-RED-vacuous-pass-empty-vector-store.txt).
+  PASS  (5) adjudicate-section1.py with an EMPTY vector store                    rc=1
+  PASS  (5) the empty population is REFUSED by name                             
+  PASS  (5) the provenance-ref enumeration refuses too                          
+
+=== case 6 (F-3) — the (a) control no longer prints a FALSE message under a 4th failure ===
+    T362 saw 'NEGATIVE CONTROL DID NOT TRIP: (a) ...' while driving a genuine fourth
+    failure — the control had tripped HARDER than expected, and said the opposite.
+  PASS  (6) adjudicate-section1.py still RED on a genuine fourth failure         rc=1
+  PASS  (6) the fourth failure is reported as UNADJUDICATED                     
+  PASS  (6) and control (a) does NOT falsely claim it did not trip              
+
+=== case 7 — GREEN AGAIN: the scratch is byte-clean and the whole review reproduces ===
+    A prover that only ever produces RED is as useless as one that only produces GREEN.
+  PASS  (7) every mutation reverted; scratch tree byte-clean                    
+  PASS  (7) run-all.sh green again after every mutation is reverted              rc=0
+  PASS  (7) 10/10 as adjudicated, 0 deviations                                  
+
+NOTE (T374, its own F-5): this run REWROTE tracked evidence under
+  .softhouse/capture/t374-t362-conditions/out/
+which carries generation timestamps. To restore:
+  git checkout -- .softhouse/capture/t374-t362-conditions/out/
+
+############ SUMMARY   PASS=28   FAIL=0
+T374 PROVER: PASS — every fix on this branch was driven RED on real bytes, and the
+clean tree is still GREEN. Nothing in the working tree was mutated at any point.

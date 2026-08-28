@@ -1,0 +1,22 @@
+tracked observations under out/ + req/      : 1035
+  of which POST-FORK (arm A is blind to them): 632
+MANIFEST.sha256 total rows                   : 1139
+  of which out/ or req/ rows                 : 1035
+
+tracked observations with NO manifest row    : 0 []
+manifest rows naming NO tracked observation  : 0 []
+
+manifest digest vs disk, over out/ + req/    :
+  agree      : 1035
+  DISAGREE   : 0
+  unreadable : 0
+
+POST-FORK observations covered by a manifest row: 632 of 632
+
+RESULT: the tracked MANIFEST.sha256 ALREADY IS a pinned per-file digest list over
+        every one of the 1035 tracked observations, its row-set is EXACTLY the tracked
+        path-set, and every digest agrees with disk. T374's follow-up #1 calls the
+        closing artefact 'a NEW evidence artefact'; it is not new. A third arm in
+        verify-capture-integrity.py reading this file would close the committed-
+        deletion and fabricated-addition cases outright (set equality) and raise
+        the bar on committed mutation to 'mutate the observation AND the manifest'.

@@ -1,0 +1,10 @@
+fork-sha observations : 403
+HEAD observations     : 1035
+post-fork (ARM A blind): 632
+
+--- first 5 post-fork observations ---
+.softhouse/capture/tierA-a2/out/A2-200-glaccounts-live-precheck.http
+.softhouse/capture/tierA-a2/out/A2-200-glaccounts-live-precheck.json
+.softhouse/capture/tierA-a2/out/A2-200-glaccounts-live-precheck.status
+.softhouse/capture/tierA-a2/out/A2-201-read-gl16-fundsource.http
+.softhouse/capture/tierA-a2/out/A2-201-read-gl16-fundsource.json

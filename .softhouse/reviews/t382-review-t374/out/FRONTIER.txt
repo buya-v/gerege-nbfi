@@ -1,0 +1,51 @@
+### 0. what main is RIGHT NOW
+22070115 softhouse: iter3 manifest -- T360 result, the second merge hazard, T387 dispatched
+pin rows committed on main: 109
+
+### 1. census RUN at main
+census rc=0
+  occurrences that are DEAD              : 109  (in 76 file(s))
+THE 76 FILE(S) NAMING A DEAD CONCRETE PATH
+  .softhouse/capture/t316-dead-path-guards/census_dead_paths.py
+  .softhouse/capture/t316-dead-path-guards/drive-red-t316.py
+      -> .softhouse/capture/t316-dead-path-guards/no-such-file-planted-by-G2.json
+      -> .softhouse/capture/t316-dead-path-guards/planted_regression.py
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh
+T316-DEADPATH-CENSUS: corpus=1348 deadFiles=76 deadOccurrences=109 resolving=1258 indeterminate=93 prose=342
+
+### 2. regenerator --check at main (does main's own pin reproduce?)
+regen --check rc=0
+IDENTICAL: /private/tmp/t382-pin/.softhouse/guards/dead-path-frontier.pin matches the derived content
+
+### 3. T374 branch ALONE — census RUN
+f4157d42 T374: handoff -- T362's F-1..F-6 on T357 all closed, driven RED first, verified on the merge result
+pin rows committed on T374: 108
+census rc=0
+regen --check rc=0  (0 = the committed pin IS what the regenerator produces here)
+IDENTICAL: /private/tmp/t382-pin/.softhouse/guards/dead-path-frontier.pin matches the derived content
+
+### 4. THE MERGE RESULT — census RUN, and what the regenerator would produce
+9266d935 Merge remote-tracking branch 'origin/softhouse/T374-t362-conditions' into pinmerge
+pin rows in the MERGE RESULT as committed: 108
+census rc=0
+regen --check rc=0
+IDENTICAL: /private/tmp/t382-pin/.softhouse/guards/dead-path-frontier.pin matches the derived content
+
+### 5. the ROW DELTA main -> merge result, named (this is the F-2 question)
+--- rows on main but NOT on T374 (REMOVED) ---
+.softhouse/reviews/A2-11/verify-manifest-independently.py | .softhouse/A2-7-capture-mandatory-accounts
+--- rows on T374 but NOT on main (ADDED) ---
+
+### 6. does the REMOVED literal still occur anywhere tracked on the merge result?
+  occurrences in the census corpus (tracked .softhouse/*.py and *.sh): 11
+.softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh:75:echo "    softhouse/A2-7-capture-mandatory-accounts, which a clone does not have, and both"
+.softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh:79:( cd "$R" && git branch --list 'softhouse/A2-7-capture-mandatory-accounts' ) > "$SCRATCH/localref.txt"
+.softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh:84:  echo "    confirmed: the scratch clone has NO local softhouse/A2-7-capture-mandatory-accounts"
+.softhouse/capture/tierA-a2/prove-a2-7-additive.py:33:# The fork point of branch softhouse/A2-7-capture-mandatory-accounts. Immutable.
+.softhouse/reviews/A2-11/audit-float.py:33:# T374 REPAIR (T362 F-6) -- was BRANCH = "softhouse/A2-7-capture-mandatory-accounts", a
+.softhouse/reviews/A2-11/audit-float.py:39:#   $ git rev-parse softhouse/A2-7-capture-mandatory-accounts
+.softhouse/reviews/A2-11/verify-manifest-independently.py:37:# T374 REPAIR (T362 F-6) -- was the LOCAL branch name softhouse/A2-7-capture-mandatory-accounts.
+.softhouse/reviews/A2-11/verify-manifest-independently.py:39:# origin/softhouse/A2-7-capture-mandatory-accounts exists, every `git` call naming the bare
+.softhouse/reviews/A2-11/verify-manifest-independently.py:50:#   $ git rev-parse softhouse/A2-7-capture-mandatory-accounts
+.softhouse/reviews/t362-review-t357/rig/t362-drive-red-both-directions.sh:16:#     git -C <tmp> branch -f softhouse/A2-7-capture-mandatory-accounts \
+.softhouse/reviews/t362-review-t357/rig/t362-drive-red-both-directions.sh:17:#           origin/softhouse/A2-7-capture-mandatory-accounts   # section 5 needs this ref

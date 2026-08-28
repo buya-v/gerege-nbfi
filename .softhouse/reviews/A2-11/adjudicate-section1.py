@@ -198,6 +198,27 @@ TOKENS = ["paymentChannelToFundSourceMappings", "feeToIncomeAccountMappings",
           "A2-211-read-product-nine-mandatory", "a2-11-get-loanproduct"]
 vector_files = sorted(p for p in (SOFTHOUSE / "vectors").rglob("*") if p.is_file())
 conf = SOFTHOUSE / "conformance.sh"
+
+# T374 / T362 F-2 -- THE POPULATION IS ASSERTED BEFORE IT IS SEARCHED.
+# As shipped, this section PRINTED len(vector_files) and never checked it. T362 measured
+# the consequence: with the vector store moved aside the whole section reported
+# "population searched: 0", "all zero", "0 distinct capture_ref values inspected" and
+# PASSED. A zero-hit table over an empty population is a vacuous pass -- the exact defect
+# this file spends sixty lines prosecuting elsewhere (P-22, P-45).
+#
+# The spelling is deliberately the one this repository already has right, in
+# guard_guards_dir_registration: an empty population is a SELECTOR failure, not a clean
+# tree, and it is REFUSED rather than passed. Do not invent a fourth spelling of this idea.
+check("POSITIVE CONTROL — the vector store was actually READ. An EMPTY population is a "
+      "SELECTOR failure, not a clean tree: this repository tracks graded vectors under "
+      ".softhouse/vectors/ and always has. An empty census passes everything. REFUSED",
+      len(vector_files) > 0,
+      "%d files under .softhouse/vectors/" % len(vector_files))
+check("POSITIVE CONTROL — conformance.sh was actually READ; a missing or empty haystack "
+      "would report every token absent. REFUSED",
+      conf.is_file() and conf.stat().st_size > 0,
+      "%s, %d bytes" % (conf, conf.stat().st_size if conf.is_file() else -1))
+
 hit_rows = []
 for tok in TOKENS:
     vhits = [p for p in vector_files if tok in p.read_text(errors="replace")]
@@ -211,15 +232,31 @@ check("NO vector in the store, and no line of conformance.sh, mentions ANY of th
       all(v == 0 and not c for _, v, c, _ in hit_rows),
       "; ".join("%s v=%d c=%s %s" % r for r in hit_rows if r[1] or r[2]) or "all zero")
 
+# T374 / T362 F-4 -- BOTH provenance ref fields, not one.
+# The shipped regex was r'"capture_ref"\s*:\s*"..."', which cannot match
+# "request_capture_ref" because of the leading quote. Six ledger vectors carry that field
+# and the permanent guard was not looking at them. T362 enumerated them by hand and found
+# all six point at journal-entry .req captures, so the CONCLUSION was unaffected -- but a
+# guard that does not read a field cannot keep being right about it by luck.
+REF_RE = r'"(?:request_)?capture_ref"\s*:\s*"([^"]*)"'
 capture_refs = set()
-for p in vector_files:
-    if p.suffix == ".json":
-        capture_refs.update(re.findall(r'"capture_ref"\s*:\s*"([^"]*)"', p.read_text(errors="replace")))
+json_vectors = [p for p in vector_files if p.suffix == ".json"]
+for p in json_vectors:
+    capture_refs.update(re.findall(REF_RE, p.read_text(errors="replace")))
 loanproduct_refs = sorted(r for r in capture_refs if "loanproduct" in r or "product-nine" in r)
-check("NO vector's provenance.capture_ref points at a loan-product read",
+# T374 / T362 F-2, same class as above: "0 distinct capture_ref values inspected" is not
+# a clean answer, it is an instrument failure. Assert the enumeration found something.
+check("POSITIVE CONTROL — provenance refs were actually ENUMERATED; zero distinct refs "
+      "over zero JSON vectors is a vacuous pass, not a clean corpus. REFUSED",
+      len(json_vectors) > 0 and len(capture_refs) > 0,
+      "%d JSON vectors, %d distinct capture_ref/request_capture_ref values"
+      % (len(json_vectors), len(capture_refs)))
+check("NO vector's provenance.capture_ref or request_capture_ref points at a "
+      "loan-product read",
       loanproduct_refs == [],
-      "%d distinct capture_ref values inspected; loan-product-shaped: %s"
-      % (len(capture_refs), loanproduct_refs))
+      "%d distinct ref values inspected across %d JSON vectors (BOTH capture_ref and "
+      "request_capture_ref); loan-product-shaped: %s"
+      % (len(capture_refs), len(json_vectors), loanproduct_refs))
 
 print()
 print("=== 5. NEGATIVE CONTROLS — P-22, each arm above driven RED on purpose ===")
@@ -234,7 +271,20 @@ def control(label, cond, detail=""):
 
 
 # control (a): a FOURTH, unadjudicated failure must be caught.
-fake4 = r1.stdout + "\nFAILURES: 4\n" + "".join(
+#
+# T374 / T362 F-3 -- THE SYNTHETIC BASE IS FIXED, NOT DERIVED FROM THE LIVE RUN.
+# As shipped this was `r1.stdout + "\nFAILURES: 4\n" + names`. parse_verdict takes the
+# FIRST "FAILURES: n" line, and r1.stdout already contains one, so the control actually
+# parsed the REAL transcript and then swept up the appended names too. When the tree
+# genuinely carries a fourth failure the difference set holds TWO entries, the equality
+# fails, and the file prints "NEGATIVE CONTROL DID NOT TRIP: (a) a FOURTH failure is
+# detected as UNADJUDICATED" -- a false message, in exactly the situation this control
+# exists to make legible. T362 observed it while driving D2; T374 reproduced it before
+# fixing it (P-22). It was fail-CLOSED (it adds a failure), but it said the wrong thing.
+# A pure function deserves a pure input: this base depends on nothing outside this file.
+SYNTH_BASE = ("  (synthetic transcript, fixed text, built by this file for control (a);\n"
+              "   it deliberately shares no bytes with the live check-shape.py run)\n")
+fake4 = SYNTH_BASE + "FAILURES: 4\n" + "".join(
     "  - %s\n" % f for f in sorted(ADJUDICATED | {"  something nobody has adjudicated"}))
 n4, d4, _ = parse_verdict(fake4, 1)
 control("(a) a FOURTH failure is detected as UNADJUDICATED",

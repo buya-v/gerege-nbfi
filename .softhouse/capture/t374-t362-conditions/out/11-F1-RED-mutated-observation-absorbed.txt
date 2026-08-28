@@ -1,5 +1,5 @@
 ############ A2-11 independent review of A2-7 — full transcript
-generated 2026-08-28T10:22:22Z
+generated 2026-08-28T09:59:29Z
 
 READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
 exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
@@ -240,22 +240,12 @@ BYTE-IDENTICAL, 0 are missing, the current manifest agrees with disk on all 430 
 laundering), and the 2 that differ are NAMED — CAPTURE-PLAN.md and cap.sh, which are
 rig tooling and a plan document. NO CAPTURED ORACLE OBSERVATION under out/ or req/ has
 been mutated. If that ever stops being true, this section will say so by name.
-
-T374 / T362 F-1 -- READ THIS BEFORE TRUSTING THE SENTENCE ABOVE. It says so BY NAME,
-in printed text, and until T374 that was ALL it did. This section is adjudicated RED
-for drift, so the integrity arm is SATURATED: it cannot make the section any redder,
-and the VERDICT block below therefore could not see it. T362 PROVED that by appending
-one line to out/A2-000-glaccounts-preexisting.http -- section 4 printed DIFF for it BY
-NAME and run-all.sh still exited 0 printing RUN-ALL VERDICT: PASS. T374 reproduced it
-in a scratch clone before repairing it. THE REPAIR IS SECTION 10, which asks the
-integrity question where GREEN is the adjudicated value. Section 4 keeps the drift arm.
 === 0. the baseline is a LITERAL sha, and it is A2-7's real fork point (P-24) ===
   PASS  prove-a2-7-additive.py hard-codes the literal sha
   PASS  prove-a2-7-additive.py contains NO `git merge-base` anywhere
           the only occurrence is the comment explaining why it is NOT used
-  PASS  A2-7's head b3f2d9b26c34 is present in this checkout (it is reachable from origin/main, so a fresh clone has it; the BRANCH NAME it replaced was local-only and a fresh clone did NOT)
-  PASS  the literal sha is a genuine ancestor of A2-7's head
-  PASS  A2-7's head carries exactly 2 commits past that sha
+  PASS  the literal sha is a genuine ancestor of A2-7's branch
+  PASS  A2-7's branch carries exactly 2 commits past that sha
           count=2
 
 === 1. entry counts, from the manifest BLOBS themselves ===
@@ -274,30 +264,37 @@ integrity question where GREEN is the adjudicated value. Section 4 keeps the dri
       (recomputed from the git blob and from disk; the manifest's recorded hash is
        used only as a THIRD cross-check, never as the source of truth)
       enumerated 430 pre-existing entries
-      byte-identical fork-vs-today       : 428
-      DIFFER                             : 2
+      byte-identical fork-vs-today       : 427
+      DIFFER                             : 3
       missing on disk (named, not skipped): 0 []
       not in the fork tree (named)        : 0 []
-      current manifest hash agrees w/ disk: 430
+      current manifest hash agrees w/ disk: 429
         DIFF CAPTURE-PLAN.md
              fork  7c2e2795863fa035424aa1cf23e7d1735dad502c535b16f31a0938a3fc0050bd
              today da0760bacc8af5f5fdbe8c0b6d9a56f1904158b4c4b2ada3f3a5547d2e4e99dd
         DIFF cap.sh
              fork  67640ea31eb16c0ba0f929cfd93459f4ced687be3dda0f10db00c1b2d31f542a
              today 6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62
+        DIFF out/A2-000-glaccounts-preexisting.http
+             fork  4fb117c7b50ee50ddde483cfb75abf4712714f98316000340156c892ce569f65
+             today 63ce4984825b2c62a0edf5c3c18c046b4988af6fab3db09630a30c8f1546b343
+        MANIFEST MISMATCH out/A2-000-glaccounts-preexisting.http
+             manifest 4fb117c7b50ee50ddde483cfb75abf4712714f98316000340156c892ce569f65
+             disk     63ce4984825b2c62a0edf5c3c18c046b4988af6fab3db09630a30c8f1546b343
   FAIL  all 430 pre-existing files are byte-identical to the fork sha
-          identical=428 differ=2 missing=0 unreadable=0
-  PASS  and the CURRENT manifest records those same recomputed hashes (no laundering)
-          agrees=430
+          identical=427 differ=3 missing=0 unreadable=0
+  FAIL  and the CURRENT manifest records those same recomputed hashes (no laundering)
+          agrees=429
 
 === 4. the git diff agrees: exactly one pre-existing path modified ===
   PASS  the ONLY non-Added path in the whole branch is MANIFEST.sha256
           non-added: ['M\t.softhouse/capture/tierA-a2/MANIFEST.sha256']
 
-FAILURES: 3
+FAILURES: 4
   - manifest on disk today holds 571 entries
   - 571 - 430 = 141 added
   - all 430 pre-existing files are byte-identical to the fork sha
+  - and the CURRENT manifest records those same recomputed hashes (no laundering)
 exit=1
 
 ############ 5. P-25 float audit of A2-7's scripts (offline)   EXPECTED RC 0
@@ -376,7 +373,6 @@ exit=1
 SUMMARY
   A2-7-added Python with a float defect: 2 ['.softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py', '.softhouse/capture/tierA-a2/resolve7.py']
   whole-rig Python with a float defect : 9 ['.softhouse/capture/tierA-a2/audit-req-float-roundtrip.py', '.softhouse/capture/tierA-a2/mkje-a2-29.py', '.softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py', '.softhouse/capture/tierA-a2/prove-quit-trap-a226.py', '.softhouse/capture/tierA-a2/prove-quit-trap-cap.py', '.softhouse/capture/tierA-a2/prove-quit-trap-cap9.py', '.softhouse/capture/tierA-a2/prove-resolve8-float-red.py', '.softhouse/capture/tierA-a2/resolve7.py', '.softhouse/capture/tierA-a2/verify-provenance-a2-15.py']
-  population audited (a zero here would be REFUSED, not passed): A2-7-added=5 whole-rig=35
 exit=0
 
 ############ 6. resolve7.py P-25 defect, driven RED (offline)   EXPECTED RC 0
@@ -484,7 +480,7 @@ SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> guard-parse-float-ast.py
 ==============================================================================
 T164 -- json.load/loads call-site guard (AST, not source grep)
 ==============================================================================
-ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5bf073021afa7bc3/.softhouse/capture/tierA-a2
+ROOT: /tmp/t374-scratch/.softhouse/capture/tierA-a2
 
 SELECTOR SELF-TEST: 4 synthetic call sites found across 4 alias shapes; 3 decoy line(s)
   (`parse_float` in a docstring, a comment and a string literal -- all three invisible to the selector)
@@ -619,10 +615,6 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
     Searched: every file under .softhouse/vectors/ (recursive), and .softhouse/
     conformance.sh. Tokens: the three key names, 'accountingMappings', 'loanproduct',
     and the capture files section 1 replays.
-  PASS  POSITIVE CONTROL — the vector store was actually READ. An EMPTY population is a SELECTOR failure, not a clean tree: this repository tracks graded vectors under .softhouse/vectors/ and always has. An empty census passes everything. REFUSED
-          69 files under .softhouse/vectors/
-  PASS  POSITIVE CONTROL — conformance.sh was actually READ; a missing or empty haystack would report every token absent. REFUSED
-          /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5bf073021afa7bc3/.softhouse/conformance.sh, 310358 bytes
       paymentChannelToFundSourceMappings     vectors=0  conformance.sh=False
       feeToIncomeAccountMappings             vectors=0  conformance.sh=False
       penaltyToIncomeAccountMappings         vectors=0  conformance.sh=False
@@ -633,10 +625,8 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
     (population searched: 69 files under .softhouse/vectors/, plus conformance.sh)
   PASS  NO vector in the store, and no line of conformance.sh, mentions ANY of these tokens — the three failures touch NOTHING in the graded corpus
           all zero
-  PASS  POSITIVE CONTROL — provenance refs were actually ENUMERATED; zero distinct refs over zero JSON vectors is a vacuous pass, not a clean corpus. REFUSED
-          68 JSON vectors, 36 distinct capture_ref/request_capture_ref values
-  PASS  NO vector's provenance.capture_ref or request_capture_ref points at a loan-product read
-          36 distinct ref values inspected across 68 JSON vectors (BOTH capture_ref and request_capture_ref); loan-product-shaped: []
+  PASS  NO vector's provenance.capture_ref points at a loan-product read
+          23 distinct capture_ref values inspected; loan-product-shaped: []
 
 === 5. NEGATIVE CONTROLS — P-22, each arm above driven RED on purpose ===
   PASS  (a) a FOURTH failure is detected as UNADJUDICATED
@@ -657,73 +647,6 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
 FAILURES: 0
 exit=0
 
-############ 10. EVIDENCE INTEGRITY — captured oracle observations (offline)
-############    EXPECTED RC 0. T374, closing T362's F-1.
-
-The corpus this whole program grades against is the captured oracle observations
-under capture/tierA-a2/out/ and req/. Section 4 already compares them byte for byte —
-but section 4 is adjudicated RED for manifest drift, and a status that cannot get
-worse cannot carry new information. So the integrity question is asked HERE, in a
-section adjudicated GREEN, where a mutated or deleted observation MOVES the section
-and fails the aggregate verdict. Two arms: against the literal fork sha (403
-observations, the historical baseline) and against HEAD (every observation tracked
-today, including the 632 captured since). An empty population is REFUSED with exit 2,
-not passed.
-=== 0. THE INSTRUMENT ITSELF — driven RED before it is trusted (P-22) ===
-  PASS  the comparator reports IDENTICAL on identical bytes
-          7d432cd60871d25c
-  PASS  the comparator reports DIFFERENT on bytes with ONE line appended — the exact mutation shape T362 used to prove F-1
-          7d432cd60871d25c vs 451c230f34f023fe
-
-=== 1. THE BASELINE EXISTS — a missing baseline is REFUSED, never read as clean ===
-  PASS  literal baseline sha 12a7f8d9a3af is present
-
-=== 2. POPULATION — enumerated from the fork tree AND from HEAD ===
-    An EMPTY population is a SELECTOR failure, not a clean tree: this repository
-    tracks captured oracle observations under .softhouse/capture/tierA-a2/{out,req}/ and always
-    has. An empty census passes everything. REFUSED. (Same spelling as
-    guard_guards_dir_registration in conformance.sh — one idea, one spelling.)
-      at the fork sha : 403 observations  {'out': 327, 'req': 76}
-      at HEAD         : 1035 observations  {'out': 906, 'req': 129}
-
-=== 3. ARM A — every observation that existed at the fork sha, RECOMPUTED ===
-    git blob at 12a7f8d9a3af  vs  the bytes on disk today.
-      enumerated                : 403
-      byte-identical            : 403
-      DIFFER                    : 0
-      MISSING on disk           : 0
-      unreadable at the fork sha: 0
-  PASS  NO captured oracle observation that existed at the fork sha has been MUTATED
-          differ=0
-  PASS  NO captured oracle observation that existed at the fork sha has been DELETED
-          missing=0 unreadable=0
-
-=== 4. ARM B — every observation tracked at HEAD, including ones captured SINCE ===
-    git blob at HEAD  vs  the bytes on disk. Arm A cannot see an observation that
-    did not exist at the fork sha; 632 of the 1035 tracked today are in that class.
-      enumerated     : 1035
-      byte-identical : 1035
-      DIFFER         : 0
-      MISSING on disk: 0
-  PASS  NO captured oracle observation tracked at HEAD differs from its committed bytes
-          differ=0
-  PASS  NO captured oracle observation tracked at HEAD is missing from the working tree
-          missing=0
-
-=== 5. POSITIVE CONTROL — the two arms actually READ bytes ===
-  PASS  ARM A compared a non-empty population
-          403 observations at the fork sha
-  PASS  ARM B compared a non-empty population
-          1035 observations at HEAD
-  PASS  ARM B's population is a SUPERSET of ARM A's — every historical observation is still tracked, so neither arm is silently narrower than it reads
-          in fork but not at HEAD: []
-
-FAILURES: 0
-
-VERDICT: PASS (exit 0). Every captured oracle observation under .softhouse/capture/tierA-a2/{out,req}/
-is byte-identical to both its fork-sha blob and its HEAD blob.
-exit=0
-
 ############ VERDICT — every section against its adjudicated exit code
 
   SECTION   EXPECTED       ACTUAL    RESULT
@@ -736,9 +659,8 @@ exit=0
   7         0              0         as adjudicated
   8         0              0         as adjudicated
   9         0              0         as adjudicated
-  10        0              0         as adjudicated
 
-  sections run: 10    deviations: 0
+  sections run: 9    deviations: 0
   RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
   for it. Note that this INCLUDES sections 1, 2 and 4, which are adjudicated RED.
   PASS here means 'the review reproduces', NOT 'A2-7 was right'.

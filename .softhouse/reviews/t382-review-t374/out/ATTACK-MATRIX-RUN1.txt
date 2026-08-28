@@ -1,0 +1,50 @@
+=========== T382 ATTACK MATRIX vs verify-capture-integrity.py ===========
+scratch clone: /tmp/t382-scratch   pristine: ffe0947c
+
+00-CONTROL-unmutated               expected=0         GOT=0   control: the same command on unmutated input
+01-WT-append-forkobs               expected=1         GOT=1   one line appended to a fork-sha observation (T362's exact shape)
+02-WT-midbyte-forkobs              expected=1         GOT=1   ONE byte changed in the middle of a fork-sha observation
+03-WT-delete-forkobs               expected=1         GOT=1   a fork-sha observation DELETED from the working tree
+04-WT-empty-forkobs                expected=1         GOT=1   a fork-sha observation replaced by an EMPTY file
+05-WT-append-postforkobs           expected=1         GOT=1   one line appended to a POST-FORK observation
+06-WT-midbyte-postforkobs          expected=1         GOT=1   ONE byte changed in the middle of a POST-FORK observation
+07-WT-delete-postforkobs           expected=1         GOT=1   a POST-FORK observation DELETED from the working tree
+08-WT-empty-postforkobs            expected=1         GOT=1   a POST-FORK observation replaced by an EMPTY file
+09-WT-symlink-same-bytes           expected=1?        GOT=0   regular file replaced by a SYMLINK to identical bytes
+10-WT-symlink-diff-bytes           expected=1         GOT=1   regular file replaced by a SYMLINK to DIFFERENT bytes
+11-WT-symlink-devnull              expected=1         GOT=1   regular file replaced by a SYMLINK to /dev/null
+12-COMMIT-mutate-forkobs           expected=1         GOT=1   COMMITTED append to a FORK-SHA observation (ARM A should still see it)
+13-COMMIT-mutate-postforkobs       expected=1 (T374 says UNCOVERED) GOT=0   COMMITTED append to a POST-FORK observation — T374's disclosed gap
+14-COMMIT-delete-postforkobs       expected=1 (T374 discloses MUTATION only) GOT=0   COMMITTED DELETION of a POST-FORK observation
+15-COMMIT-add-fabricated           expected=1?        GOT=0   a FABRICATED observation COMMITTED into out/ (the oracle never returned it)
+16-UNTRACKED-add-fabricated        expected=1?        GOT=0   a FABRICATED observation left UNTRACKED in out/
+manifest rows rewritten: 1
+17-LAUNDER-obs-and-manifest        expected=1         GOT=1   observation mutated AND MANIFEST.sha256 updated to match
+18-BASELINE-present                expected=0         GOT=0   baseline object present (control for 19)
+19-BASELINE-sha-swapped            expected=2         GOT=2   the FORK baseline constant swapped for a nonexistent sha
+20-CONTROL-again                   expected=0         GOT=0   control repeated after every mutation, tree back to pristine
+
+=========== results ===========
+00-CONTROL-unmutated          0                                 0  control: the same command on unmutated input
+01-WT-append-forkobs          1                                 1  one line appended to a fork-sha observation (T362's exact shape)
+02-WT-midbyte-forkobs         1                                 1  ONE byte changed in the middle of a fork-sha observation
+03-WT-delete-forkobs          1                                 1  a fork-sha observation DELETED from the working tree
+04-WT-empty-forkobs           1                                 1  a fork-sha observation replaced by an EMPTY file
+05-WT-append-postforkobs      1                                 1  one line appended to a POST-FORK observation
+06-WT-midbyte-postforkobs     1                                 1  ONE byte changed in the middle of a POST-FORK observation
+07-WT-delete-postforkobs      1                                 1  a POST-FORK observation DELETED from the working tree
+08-WT-empty-postforkobs       1                                 1  a POST-FORK observation replaced by an EMPTY file
+09-WT-symlink-same-bytes      1?                                0  regular file replaced by a SYMLINK to identical bytes
+10-WT-symlink-diff-bytes      1                                 1  regular file replaced by a SYMLINK to DIFFERENT bytes
+11-WT-symlink-devnull         1                                 1  regular file replaced by a SYMLINK to /dev/null
+12-COMMIT-mutate-forkobs      1                                 1  COMMITTED append to a FORK-SHA observation (ARM A should still see it)
+13-COMMIT-mutate-postforkobs  1 (T374 says UNCOVERED)           0  COMMITTED append to a POST-FORK observation — T374's disclosed gap
+14-COMMIT-delete-postforkobs  1 (T374 discloses MUTATION only)  0  COMMITTED DELETION of a POST-FORK observation
+15-COMMIT-add-fabricated      1?                                0  a FABRICATED observation COMMITTED into out/ (the oracle never returned it)
+16-UNTRACKED-add-fabricated   1?                                0  a FABRICATED observation left UNTRACKED in out/
+17-LAUNDER-obs-and-manifest   1                                 1  observation mutated AND MANIFEST.sha256 updated to match
+18-BASELINE-present           0                                 0  baseline object present (control for 19)
+19-BASELINE-sha-swapped       2                                 2  the FORK baseline constant swapped for a nonexistent sha
+20-CONTROL-again              0                                 0  control repeated after every mutation, tree back to pristine
+
+[exited with code 0]

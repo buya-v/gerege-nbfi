@@ -1,5 +1,5 @@
 ############ A2-11 independent review of A2-7 — full transcript
-generated 2026-08-28T10:22:22Z
+generated 2026-08-28T10:48:25Z
 
 READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
 exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
@@ -274,30 +274,37 @@ integrity question where GREEN is the adjudicated value. Section 4 keeps the dri
       (recomputed from the git blob and from disk; the manifest's recorded hash is
        used only as a THIRD cross-check, never as the source of truth)
       enumerated 430 pre-existing entries
-      byte-identical fork-vs-today       : 428
-      DIFFER                             : 2
+      byte-identical fork-vs-today       : 427
+      DIFFER                             : 3
       missing on disk (named, not skipped): 0 []
       not in the fork tree (named)        : 0 []
-      current manifest hash agrees w/ disk: 430
+      current manifest hash agrees w/ disk: 429
         DIFF CAPTURE-PLAN.md
              fork  7c2e2795863fa035424aa1cf23e7d1735dad502c535b16f31a0938a3fc0050bd
              today da0760bacc8af5f5fdbe8c0b6d9a56f1904158b4c4b2ada3f3a5547d2e4e99dd
         DIFF cap.sh
              fork  67640ea31eb16c0ba0f929cfd93459f4ced687be3dda0f10db00c1b2d31f542a
              today 6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62
+        DIFF out/A2-000-glaccounts-preexisting.http
+             fork  4fb117c7b50ee50ddde483cfb75abf4712714f98316000340156c892ce569f65
+             today e2d19f4596e7d2f1596fda31497efcbc9515b9785f0383cf566e6dffda060db4
+        MANIFEST MISMATCH out/A2-000-glaccounts-preexisting.http
+             manifest 4fb117c7b50ee50ddde483cfb75abf4712714f98316000340156c892ce569f65
+             disk     e2d19f4596e7d2f1596fda31497efcbc9515b9785f0383cf566e6dffda060db4
   FAIL  all 430 pre-existing files are byte-identical to the fork sha
-          identical=428 differ=2 missing=0 unreadable=0
-  PASS  and the CURRENT manifest records those same recomputed hashes (no laundering)
-          agrees=430
+          identical=427 differ=3 missing=0 unreadable=0
+  FAIL  and the CURRENT manifest records those same recomputed hashes (no laundering)
+          agrees=429
 
 === 4. the git diff agrees: exactly one pre-existing path modified ===
   PASS  the ONLY non-Added path in the whole branch is MANIFEST.sha256
           non-added: ['M\t.softhouse/capture/tierA-a2/MANIFEST.sha256']
 
-FAILURES: 3
+FAILURES: 4
   - manifest on disk today holds 571 entries
   - 571 - 430 = 141 added
   - all 430 pre-existing files are byte-identical to the fork sha
+  - and the CURRENT manifest records those same recomputed hashes (no laundering)
 exit=1
 
 ############ 5. P-25 float audit of A2-7's scripts (offline)   EXPECTED RC 0
@@ -484,7 +491,7 @@ SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> guard-parse-float-ast.py
 ==============================================================================
 T164 -- json.load/loads call-site guard (AST, not source grep)
 ==============================================================================
-ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5bf073021afa7bc3/.softhouse/capture/tierA-a2
+ROOT: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t374-prove.yXLbT0S75s/repo/.softhouse/capture/tierA-a2
 
 SELECTOR SELF-TEST: 4 synthetic call sites found across 4 alias shapes; 3 decoy line(s)
   (`parse_float` in a docstring, a comment and a string literal -- all three invisible to the selector)
@@ -622,7 +629,7 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
   PASS  POSITIVE CONTROL — the vector store was actually READ. An EMPTY population is a SELECTOR failure, not a clean tree: this repository tracks graded vectors under .softhouse/vectors/ and always has. An empty census passes everything. REFUSED
           69 files under .softhouse/vectors/
   PASS  POSITIVE CONTROL — conformance.sh was actually READ; a missing or empty haystack would report every token absent. REFUSED
-          /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5bf073021afa7bc3/.softhouse/conformance.sh, 310358 bytes
+          /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t374-prove.yXLbT0S75s/repo/.softhouse/conformance.sh, 310358 bytes
       paymentChannelToFundSourceMappings     vectors=0  conformance.sh=False
       feeToIncomeAccountMappings             vectors=0  conformance.sh=False
       penaltyToIncomeAccountMappings         vectors=0  conformance.sh=False
@@ -689,12 +696,15 @@ not passed.
 === 3. ARM A — every observation that existed at the fork sha, RECOMPUTED ===
     git blob at 12a7f8d9a3af  vs  the bytes on disk today.
       enumerated                : 403
-      byte-identical            : 403
-      DIFFER                    : 0
+      byte-identical            : 402
+      DIFFER                    : 1
       MISSING on disk           : 0
       unreadable at the fork sha: 0
-  PASS  NO captured oracle observation that existed at the fork sha has been MUTATED
-          differ=0
+        MUTATED .softhouse/capture/tierA-a2/out/A2-000-glaccounts-preexisting.http
+                fork  4fb117c7b50ee50ddde483cfb75abf4712714f98316000340156c892ce569f65
+                today e2d19f4596e7d2f1596fda31497efcbc9515b9785f0383cf566e6dffda060db4
+  FAIL  NO captured oracle observation that existed at the fork sha has been MUTATED
+          differ=1
   PASS  NO captured oracle observation that existed at the fork sha has been DELETED
           missing=0 unreadable=0
 
@@ -702,11 +712,14 @@ not passed.
     git blob at HEAD  vs  the bytes on disk. Arm A cannot see an observation that
     did not exist at the fork sha; 632 of the 1035 tracked today are in that class.
       enumerated     : 1035
-      byte-identical : 1035
-      DIFFER         : 0
+      byte-identical : 1034
+      DIFFER         : 1
       MISSING on disk: 0
-  PASS  NO captured oracle observation tracked at HEAD differs from its committed bytes
-          differ=0
+        MUTATED .softhouse/capture/tierA-a2/out/A2-000-glaccounts-preexisting.http
+                HEAD  4fb117c7b50ee50ddde483cfb75abf4712714f98316000340156c892ce569f65
+                disk  e2d19f4596e7d2f1596fda31497efcbc9515b9785f0383cf566e6dffda060db4
+  FAIL  NO captured oracle observation tracked at HEAD differs from its committed bytes
+          differ=1
   PASS  NO captured oracle observation tracked at HEAD is missing from the working tree
           missing=0
 
@@ -718,11 +731,15 @@ not passed.
   PASS  ARM B's population is a SUPERSET of ARM A's — every historical observation is still tracked, so neither arm is silently narrower than it reads
           in fork but not at HEAD: []
 
-FAILURES: 0
+FAILURES: 2
+  - NO captured oracle observation that existed at the fork sha has been MUTATED
+  - NO captured oracle observation tracked at HEAD differs from its committed bytes
 
-VERDICT: PASS (exit 0). Every captured oracle observation under .softhouse/capture/tierA-a2/{out,req}/
-is byte-identical to both its fork-sha blob and its HEAD blob.
-exit=0
+VERDICT: FAIL (exit 1). A CAPTURED ORACLE OBSERVATION HAS BEEN MUTATED OR LOST.
+This is the evidence the whole program grades against. Do not repair it by
+re-capturing and committing over the top: that launders the mutation into the
+record. Establish what changed, and why, first.
+exit=1
 
 ############ VERDICT — every section against its adjudicated exit code
 
@@ -736,9 +753,15 @@ exit=0
   7         0              0         as adjudicated
   8         0              0         as adjudicated
   9         0              0         as adjudicated
-  10        0              0         as adjudicated
+  10        0              1         *** MOVED ***
 
-  sections run: 10    deviations: 0
-  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
-  for it. Note that this INCLUDES sections 1, 2 and 4, which are adjudicated RED.
-  PASS here means 'the review reproduces', NOT 'A2-7 was right'.
+  sections run: 10    deviations: 1
+  RUN-ALL VERDICT: FAIL — 1 section(s) moved off the adjudicated verdict.
+  Read the moved sections above. A section that moved is either a new defect or a
+  repair that nobody recorded; both need a human, neither is absorbed here.
+
+NOTE (T374 / T362 F-5): this run REWROTE the tracked file
+  .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt
+so your working tree is now dirty. That is expected — the transcript carries a
+generation timestamp — and it is NOT a finding. To restore it:
+  git checkout -- .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt

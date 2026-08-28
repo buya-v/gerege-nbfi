@@ -1,0 +1,84 @@
+############ T374 — driving the T362 conditions RED, in a scratch clone
+source tree : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5bf073021afa7bc3
+scratch     : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t374-prove.yXLbT0S75s
+generated 2026-08-28T10:45:35Z
+
+The scratch is a real git clone, which means it has NO local branch refs -- only
+origin/*. That is exactly the fresh-clone condition of T362's F-6, so case 0 measures
+F-6 on the same population as the fix.
+
+=== case 0 (F-6) — GREEN: a FRESH CLONE with NO local ref now completes ===
+    BEFORE T374 this exited 1: sections 4 and 5 named the LOCAL branch
+    softhouse/A2-7-capture-mandatory-accounts, which a clone does not have, and both
+    aborted with 'returned non-zero exit status 128'. Measured, not assumed:
+    out/10-F6-RED-fresh-clone-no-local-ref.txt. The repair is the LITERAL sha
+    b3f2d9b2..., which is reachable from origin/main and therefore survives a clone.
+    confirmed: the scratch clone has NO local softhouse/A2-7-capture-mandatory-accounts
+  PASS  (0) run-all.sh in a fresh clone, no local ref                            rc=0
+  PASS  (0) 10 sections recorded, 0 deviations                                  
+  PASS  (0) no 'exit status 128' anywhere in the transcript                     
+
+=== case 1 (F-1) — RED: a MUTATED captured oracle observation ===
+    The SAME mutation T362 used: one line appended to
+    out/A2-000-glaccounts-preexisting.http. Before T374, section 4 detected it,
+    printed DIFF for it BY NAME, and run-all.sh STILL exited 0 printing PASS
+    (out/11-F1-RED-mutated-observation-absorbed.txt). It must now be fatal.
+  PASS  (1a) verify-capture-integrity.py on a mutated observation                rc=1
+  PASS  (1a) it names the mutated file                                          
+  PASS  (1a) both arms catch it (fork-sha arm and HEAD arm)                     
+  PASS  (1b) run-all.sh AGGREGATE now fails on a mutated observation             rc=1
+  PASS  (1b) section 10 is the one that MOVED                                   
+  PASS  (1b) RUN-ALL VERDICT is FAIL, not PASS                                  
+  PASS  (1b) section 4 is STILL as adjudicated -- the drift arm was not disturbed
+
+=== case 2 (F-1) — RED: a DELETED captured oracle observation ===
+    Deletion is the other way evidence rots, and a comparator that only diffs
+    existing files would report 'all identical' over a shrinking population.
+  PASS  (2) verify-capture-integrity.py on a DELETED observation                 rc=1
+  PASS  (2) it names the missing file                                           
+
+=== case 3 (F-1 / F-2 class) — REFUSED: an EMPTY observation population ===
+    Committing away out/ and req/ leaves nothing to compare. 'Zero differences over
+    zero files' is a SELECTOR failure, not a clean corpus. It must REFUSE (exit 2),
+    never pass, and the refusal must move section 10 too.
+  PASS  (3) verify-capture-integrity.py on an EMPTY population                   rc=2
+  PASS  (3) it REFUSES rather than passing                                      
+  PASS  (3) the verdict line says REFUSED, not PASS                             
+
+=== case 4 (F-6) — REFUSED: the baseline commit-ish is ABSENT ===
+    A2_11_ROOT is pointed at a git repo that has neither the fork sha nor A2-7's head.
+    Every arm below then has nothing to measure against, and each script must say so
+    by name instead of aborting on a traceback or reporting an empty clean run.
+  PASS  (4a) verify-capture-integrity.py with no baseline                        rc=2
+  PASS  (4a) the missing baseline is named                                      
+  PASS  (4b) audit-float.py with no A2-7 head REFUSES instead of auditing 0 files rc=2
+  PASS  (4b) it says REFUSED and explains the vacuous-pass shape                
+
+=== case 5 (F-2) — RED: the vector store hidden, the corpus guard must REFUSE ===
+    T362 measured the shipped behaviour: population 0, 'all zero', PASS, rc=0
+    (out/12-F2-RED-vacuous-pass-empty-vector-store.txt).
+  PASS  (5) adjudicate-section1.py with an EMPTY vector store                    rc=1
+  PASS  (5) the empty population is REFUSED by name                             
+  PASS  (5) the provenance-ref enumeration refuses too                          
+
+=== case 6 (F-3) — the (a) control no longer prints a FALSE message under a 4th failure ===
+    T362 saw 'NEGATIVE CONTROL DID NOT TRIP: (a) ...' while driving a genuine fourth
+    failure — the control had tripped HARDER than expected, and said the opposite.
+  PASS  (6) adjudicate-section1.py still RED on a genuine fourth failure         rc=1
+  PASS  (6) the fourth failure is reported as UNADJUDICATED                     
+  PASS  (6) and control (a) does NOT falsely claim it did not trip              
+
+=== case 7 — GREEN AGAIN: the scratch is byte-clean and the whole review reproduces ===
+    A prover that only ever produces RED is as useless as one that only produces GREEN.
+  PASS  (7) every mutation reverted; scratch tree byte-clean                    
+  PASS  (7) run-all.sh green again after every mutation is reverted              rc=0
+  PASS  (7) 10/10 as adjudicated, 0 deviations                                  
+
+NOTE (T374, its own F-5): this run REWROTE tracked evidence under
+  .softhouse/capture/t374-t362-conditions/out/
+which carries generation timestamps. To restore:
+  git checkout -- .softhouse/capture/t374-t362-conditions/out/
+
+############ SUMMARY   PASS=28   FAIL=0
+T374 PROVER: PASS — every fix on this branch was driven RED on real bytes, and the
+clean tree is still GREEN. Nothing in the working tree was mutated at any point.

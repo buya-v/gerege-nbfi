@@ -1,0 +1,34 @@
+at: a8b57494 Merge remote-tracking branch 'origin/softhouse/T374-t362-conditions' into pinmerge
+target (currently byte-identical to the fork sha): .softhouse/capture/tierA-a2/manifest.py
+
+### CONTROL
+  section 4 EXIT=1
+      byte-identical fork-vs-today       : 428
+      DIFFER                             : 2
+      current manifest hash agrees w/ disk: 430
+  run-all   EXIT=0
+  4         1              1         as adjudicated
+  10        0              0         as adjudicated
+  sections run: 10    deviations: 0
+
+### MUTATED — one line appended to .softhouse/capture/tierA-a2/manifest.py
+  section 4 EXIT=1  (adjudicated 1 — SATURATED)
+      byte-identical fork-vs-today       : 427
+      DIFFER                             : 3
+      current manifest hash agrees w/ disk: 429
+        DIFF manifest.py
+        MANIFEST MISMATCH manifest.py
+  section 10 EXIT=0  (the T374 guard — out/ and req/ ONLY, so blind here)
+  run-all   EXIT=0
+NAME and run-all.sh still exited 0 printing RUN-ALL VERDICT: PASS. T374 reproduced it
+  4         1              1         as adjudicated
+  10        0              0         as adjudicated
+  sections run: 10    deviations: 0
+  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
+
+### CONTROL AGAIN
+  run-all   EXIT=0
+
+### is run-all.sh (and therefore section 10) invoked by the graded bar at all?
+0
+  0 occurrences of run-all.sh in conformance.sh

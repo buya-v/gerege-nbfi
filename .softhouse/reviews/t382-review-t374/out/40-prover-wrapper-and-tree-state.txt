@@ -1,0 +1,30 @@
+at: ffe0947c Merge remote-tracking branch 'origin/softhouse/T374-t362-conditions' into mergeresult
+prover EXIT=0
+    T362 saw 'NEGATIVE CONTROL DID NOT TRIP: (a) ...' while driving a genuine fourth
+    failure — the control had tripped HARDER than expected, and said the opposite.
+  PASS  (6) adjudicate-section1.py still RED on a genuine fourth failure         rc=1
+  PASS  (6) the fourth failure is reported as UNADJUDICATED                     
+  PASS  (6) and control (a) does NOT falsely claim it did not trip              
+
+=== case 7 — GREEN AGAIN: the scratch is byte-clean and the whole review reproduces ===
+    A prover that only ever produces RED is as useless as one that only produces GREEN.
+  PASS  (7) every mutation reverted; scratch tree byte-clean                    
+  PASS  (7) run-all.sh green again after every mutation is reverted              rc=0
+  PASS  (7) 10/10 as adjudicated, 0 deviations                                  
+
+NOTE (T374, its own F-5): this run REWROTE tracked evidence under
+  .softhouse/capture/t374-t362-conditions/out/
+which carries generation timestamps. To restore:
+  git checkout -- .softhouse/capture/t374-t362-conditions/out/
+
+############ SUMMARY   PASS=28   FAIL=0
+T374 PROVER: PASS — every fix on this branch was driven RED on real bytes, and the
+clean tree is still GREEN. Nothing in the working tree was mutated at any point.
+--- working tree after the prover (T374 discloses it rewrites tracked evidence) ---
+ M .softhouse/capture/t374-t362-conditions/out/30-case0-F6-fresh-clone-GREEN.txt
+ M .softhouse/capture/t374-t362-conditions/out/31-case1-F1-mutated-observation-now-FATAL.txt
+ M .softhouse/capture/t374-t362-conditions/out/35-case5-F2-empty-vector-store-REFUSED.txt
+ M .softhouse/capture/t374-t362-conditions/out/36-case6-F3-fixed-synthetic-base.txt
+ M .softhouse/capture/t374-t362-conditions/out/37-case7-GREEN-again.txt
+
+[exited with code 0]

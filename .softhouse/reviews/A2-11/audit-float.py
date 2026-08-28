@@ -29,7 +29,27 @@ from pathlib import Path
 ROOT = Path(os.environ.get("A2_11_ROOT") or Path(__file__).resolve().parents[3])
 CAP = ROOT / ".softhouse/capture/tierA-a2"
 FORK = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"
-BRANCH = "softhouse/A2-7-capture-mandatory-accounts"
+
+# T374 REPAIR (T362 F-6) -- was BRANCH = "softhouse/A2-7-capture-mandatory-accounts", a
+# LOCAL-ONLY ref. In a fresh clone only the origin/ copy exists, this call raised
+# CalledProcessError ... exit status 128, section 5 aborted, and run-all.sh went to exit 1.
+# Replaced by the LITERAL sha of that branch's head, which is REACHABLE FROM origin/main and
+# therefore survives a fresh clone -- and, being immutable, is more P-24 correct than the
+# name. Output-neutral wherever the branch ref does exist: the two resolve to the same commit.
+#   $ git rev-parse softhouse/A2-7-capture-mandatory-accounts
+#   b3f2d9b26c347c31fae17a835b458e6b0485d710
+BRANCH = "b3f2d9b26c347c31fae17a835b458e6b0485d710"
+
+_have = subprocess.run(["git", "-C", str(ROOT), "cat-file", "-e", BRANCH + "^{commit}"],
+                       capture_output=True).returncode == 0
+if not _have:
+    # A refusal, printed by name -- not a traceback, and not an empty file list read as
+    # "A2-7 added no Python" (which is the vacuous-pass shape, P-22).
+    print("REFUSED: A2-7's head %s is not present in this checkout, so the set of" % BRANCH[:12])
+    print("         files A2-7 ADDED cannot be enumerated. An empty list here would read as")
+    print("         'A2-7 added no Python and therefore has no float defect', which is a")
+    print("         vacuous pass. Fetch origin/main -- that commit is reachable from it.")
+    sys.exit(2)
 
 added = subprocess.run(
     ["git", "-C", str(ROOT), "diff", "--name-only", "--diff-filter=A", f"{FORK}...{BRANCH}"],
@@ -143,4 +163,16 @@ bad2 = audit(all_py, "context: EVERY .py in the A2 capture rig (A2-7's and every
 print("SUMMARY")
 print("  A2-7-added Python with a float defect: %d %s" % (len(bad1), bad1))
 print("  whole-rig Python with a float defect : %d %s" % (len(bad2), bad2))
+
+# T374 (T362 F-2's class, same spelling): "0 files audited, 0 defects" is not a clean answer,
+# it is a SELECTOR failure. An empty population passes everything. REFUSED, never passed.
+if not a2_7_py or not all_py:
+    print()
+    print("REFUSED: the audited population is EMPTY (A2-7-added=%d, whole-rig=%d). That is a"
+          % (len(a2_7_py), len(all_py)))
+    print("         SELECTOR failure, not a clean tree -- A2-7 added Python and this rig is")
+    print("         full of it. An empty census passes everything. REFUSED.")
+    sys.exit(2)
+print("  population audited (a zero here would be REFUSED, not passed): A2-7-added=%d "
+      "whole-rig=%d" % (len(a2_7_py), len(all_py)))
 sys.exit(0)

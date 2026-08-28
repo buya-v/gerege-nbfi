@@ -1,0 +1,4 @@
+00-CONTROL-unmutated	0	0	control: the same command on unmutated input
+01-WT-append-forkobs	1	1	one line appended to a fork-sha observation (T362's exact shape)
+02-WT-midbyte-forkobs	1	1	ONE byte changed in the middle of a fork-sha observation
+03-WT-delete-forkobs	1	1	a fork-sha observation DELETED from the working tree
