@@ -24,15 +24,16 @@ conformance:   defect, 3 stay GREEN on the clean equivalent; both directions REA
 conformance: CENSUS narrow-catch — inspected 63 .java files across 24 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
 conformance:   census figure READ: inspected 63 >= 63 tracked by git (floor DERIVED, not pinned)
 ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)
-ledger-invariants: CENSUS ledger-invariants — inspected 59 Go files / 6 packages / 666 funcs (1 hold-named) / 1062 assignment or inc-dec statements / 572 write targets / 6199 string literals in 5331 concatenation groups / 6701 calls under /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff/nexus (recursive, whole Go tree)
-ledger-invariants: CENSUS ledger-invariants SQL surface — 172 SQL-shaped literals, of which 7 carry a DML verb (UPPER BOUND: English prose containing "update" satisfies it) and 0 name an actual table; 0 exec-family calls (0 mutating). Findings: 0
+ledger-invariants: CENSUS ledger-invariants — inspected 59 Go files / 6 packages / 667 funcs (1 hold-named) / 1095 assignment or inc-dec statements / 598 write targets / 6292 string literals in 5393 concatenation groups / 6781 calls under /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff/nexus (recursive, whole Go tree)
+ledger-invariants: CENSUS ledger-invariants SQL surface — 176 SQL-shaped literals, of which 8 carry a DML verb (UPPER BOUND: English prose containing "update" satisfies it) and 0 name an actual table; 0 exec-family calls (0 mutating). Findings: 0
 ledger-invariants: CENSUS   covered: internal/apps/ledger
 ledger-invariants: CENSUS   covered: internal/apps/ledger/conformance
 ledger-invariants: CENSUS   covered: internal/apps/loanschedule
 ledger-invariants: CENSUS   covered: internal/apps/loanschedule/conformance
 ledger-invariants: CENSUS   covered: internal/apps/loanschedule/conformance/cmd/conformance
 ledger-invariants: CENSUS   covered: internal/apps/loanschedule/contract
-ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/conformance/admit.go:977:5  citationNameOnlyPin carries %q, but part two of that citation resolved %s on this run, not FILE-NAME-ONLY. The pin excuses a weakness tha...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/conformance/admit.go:1086:5  citationNameOnlyPin carries %q, but part two of that citation resolved %s on this run, not FILE-NAME-ONLY. The pin excuses a weakness tha...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/conformance/openingbalance_test.go:233:15  vector %q is an ACCEPTANCE at a date boundary claiming ledger.opening.balance.and.closure (pre_closure=%v future_dated=%v). The date arms...
 ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/financialactivity_test.go:62:13  %d is creatable but NOT settable on update
 ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/financialactivity_test.go:67:13  %d should be settable on update
 ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:389:7  invariant_exemptions switches off %q and THIS VECTOR CITES NO CAPTURE AT ALL (provenance.capture_ref is empty) - %s. A vector with no cap...
@@ -40,7 +41,7 @@ ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/c
 ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:541:8  invariant_exemptions switches off %q, but that invariant reports %q on the schedule this vector recorded — with NOTHING withdrawn, so t...
 ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/vector.go:1130:3  DUPLICATE case_id IN THE VECTOR STORE — %s. A case_id is a vector's IDENTITY, and the two numbers this program quotes as its coverage e...
 ledger-invariants: CENSUS   hold-named func: internal/apps/ledger/slots_test.go:187:1  TestPlaceholderDisjointnessHolds
-ledger-invariants: NIL-COVERAGE — the SQL surface inspected 6199 string literals and found ZERO SQL DML statements of any kind under /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
+ledger-invariants: NIL-COVERAGE — the SQL surface inspected 6292 string literals and found ZERO SQL DML statements of any kind under /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
 ledger-invariants: NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module declares no database driver at all.
 ledger-invariants:   census figure READ: inspected 59 >= 59 tracked by git (floor DERIVED, not pinned)
 ledger-invariants: CANNOT-CATCH — the honest limits of this guard, printed on every run, pass or fail:
@@ -87,7 +88,7 @@ conformance:   dynamic SQL is caught only through the call set it recognises; tr
 conformance:   migrations and stored procedures are not walked at all; I-5's semantic half
 conformance:   and non-Go callers are not covered. A PASS here means 'no violation is visible
 conformance:   to a source-level guard over the Go tree', NOT 'the ledger tree is covered'.
-conformance: CENSUS fail-open instruments — inspected 1197 tracked .sh/.py file(s) under
+conformance: CENSUS fail-open instruments — inspected 1205 tracked .sh/.py file(s) under
 conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff (git ls-files, whole repository); frontier 11, pinned at 11
 conformance:   (DERIVED from FAILOPEN_PIN_FILE_LIST by counting it, never typed).
 conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a
@@ -110,16 +111,16 @@ conformance:   accepting capture in this tree.
 conformance:   namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
 conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
 conformance:   namespace:   root    /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff
-conformance:   namespace:   corpus  7374 tracked paths -> 133 evidence directories
-conformance:   namespace:           112 carry a t<n> id prefix; 21 do not and CANNOT collide this way
+conformance:   namespace:   corpus  7396 tracked paths -> 134 evidence directories
+conformance:   namespace:           113 carry a t<n> id prefix; 21 do not and CANNOT collide this way
 conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
 conformance:   namespace:   T256 -> 2 directories; ownership records required 1, present 1
 conformance:   namespace:       DECLARED   capture/t256-verdict-predicate               by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
 conformance:   namespace:       UNCLAIMED  capture/t256-toolchain-population            (record: <absent>)
-conformance:   NAMESPACE-CENSUS: dirs=133 prefixed=112 unprefixed=21 collidingIds=1 declared=1 unclaimed=1 shortfallIds=0
+conformance:   NAMESPACE-CENSUS: dirs=134 prefixed=113 unprefixed=21 collidingIds=1 declared=1 unclaimed=1 shortfallIds=0
 conformance:   namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
 conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
-conformance:   T316-DEADPATH-CENSUS: corpus=1197 deadFiles=73 deadOccurrences=106 resolving=1045 indeterminate=70 prose=276
+conformance:   T316-DEADPATH-CENSUS: corpus=1205 deadFiles=74 deadOccurrences=107 resolving=1061 indeterminate=70 prose=276
 conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
 conformance:   (the planted T309 single-term predicate drives cell B-prime RED; the shipped
 conformance:   tool keeps it GREEN. Both legs ran here — --selftest is not optional.)
@@ -525,7 +526,7 @@ T74-E-P72                    parity           path_a_e... PASS            257   
     invariant violations    0
     invariant assertions    0 NOT RUN (a cell nobody observed; listed above, never inferred)
     invariant assertions    4 EXEMPTED BY A VECTOR (switched off on purpose; each one's reason is listed above)
-    no-float census         6 Go packages / 59 Go files / 128292 tokens / 261 import specs inspected under nexus (recursive)
+    no-float census         6 Go packages / 59 Go files / 129897 tokens / 262 import specs inspected under nexus (recursive)
                             0 forbidden identifiers, 0 floating-point or imaginary LITERALS, 0 forbidden imports, 0 unscannable files
                             covered: nexus/internal/apps/ledger
                             covered: nexus/internal/apps/ledger/conformance
