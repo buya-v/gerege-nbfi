@@ -1423,6 +1423,76 @@ func (slotFamilyBlindPoster) PostEntry(req Request) (PostedEntry, *Refusal, erro
 	return base, ref, err
 }
 
+// mappingKeyIgnoringPoster resolves an accounting-path leg to the FIRST row of
+// the product's mapping table instead of KEYING that table by the leg's slot
+// code.
+//
+// WHY IT EXISTS, AND WHY IT IS THE SIXTEENTH RATHER THAN A FOOTNOTE. T391's
+// headline structural claim is that `expect.legs[].gl_account_id` and
+// `expect.legs[].gl_account_code` stopped being INPUTS copied out of the vector
+// and became OUTPUTS the port must compute: "a port that resolves slot 8 to the
+// wrong account now differs from the expectation; before this field existed it
+// could not, because the vector handed it the answer." T406 measured that no
+// registered wrong implementation demonstrated it. `ledger-wrong-code-ignored`
+// blanks the code on EVERY vector, manual ones included, so it says nothing
+// about RESOLUTION; `ledger-wrong-slot-family-blind` deliberately gets every
+// account RIGHT, because being blind to the FAMILY and not to the KEY is its
+// whole point. The only `gl_account_id` cell difference anywhere in the matrix
+// came from `ledger-wrong-openingbalance-no-contra` on LDG-05, a different path.
+// So the claim was TRUE and graded by nothing that had ever been watched to
+// fail — the gap RegisterWrong exists to close, one field over (P-45, P-10).
+//
+// T406 proved it with a THROWAWAY probe. A throwaway probe is not a guard: it
+// held for the length of one review and then was deleted. This is that probe,
+// registered, so the next refactor of `resolveLegAccount` has something holding
+// it in place.
+//
+// THE DEFECT IS PLAUSIBLE, WHICH IS THE BAR FOR REGISTRATION. `acc_product_mapping`
+// is keyed on (product_id, product_type, financial_account_type) and a porter who
+// loads the rows for a product and forgets the third component of the key — or
+// who takes `rows[0]` because the observed table happened to arrive sorted and
+// the first row "looked right" — writes exactly this. admit.go's own comment
+// says such a mis-keying "would fail as a graded cell difference"; this is the
+// implementation that makes that sentence a measurement.
+//
+// WHAT IT KEEPS CORRECT, DELIBERATELY. The slot NAME is still decoded from the
+// leg's own code on the product's own accounting family, so `legs[].slot_name`
+// is RIGHT on every leg; the sides, the leg order and every money cell are
+// untouched. It dies on `gl_account_id` and `gl_account_code` and on nothing
+// else — which is what makes it the measurement of THIS claim rather than a
+// second copy of the slot-family one.
+//
+// IT IS INERT ON EVERY VECTOR THAT PREDATES T391 — all FOURTEEN of them: seven
+// parity, six oracle-refusal, one divergence. T421 counted `product_mappings`
+// on every ledger vector in the store rather than reasoning about it
+// (out/T421-W03-vector-mapping-census.txt): the fourteen carry ZERO rows and
+// only the three ACC vectors carry any (13 each). So the guard below returns the
+// correct port untouched on all fourteen and their verdicts and REASONS do not
+// move — which is the property that makes this a NEW measurement rather than a
+// second copy of an existing one.
+//
+// NO FLOAT, NO ARITHMETIC, NO MONEY PATH IS TOUCHED. The defect is a TABLE
+// LOOKUP; the amounts pass through ledger-go untouched.
+type mappingKeyIgnoringPoster struct{}
+
+func (mappingKeyIgnoringPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	if len(req.ProductMappings) == 0 {
+		return GoPoster{}.PostEntry(req)
+	}
+	// Rewrite the table so every slot code resolves to the FIRST row's account.
+	// The SlotCode column is preserved, so the resolver still finds a row for
+	// each leg and the slot name is still decoded correctly — only the account
+	// the key selects is wrong.
+	r := req
+	first := req.ProductMappings[0]
+	rows := make([]ProductMapping, 0, len(req.ProductMappings))
+	for _, m := range req.ProductMappings {
+		rows = append(rows, ProductMapping{SlotCode: m.SlotCode, GLAccountID: first.GLAccountID})
+	}
+	r.ProductMappings = rows
+	return GoPoster{}.PostEntry(r)
+}
+
 func init() {
 	Register("ledger-go", NewGoPoster())
 	RegisterWrong("ledger-wrong-split-drift",
@@ -1521,6 +1591,25 @@ func init() {
 			"T242's error (A2-34 F-4) in port form: a corpus that graded the ACCOUNT and not the SLOT "+
 			"would report it GREEN",
 		slotFamilyBlindPoster{})
+	RegisterWrong("ledger-wrong-mapping-key-ignored",
+		"resolves every accounting-path leg to the FIRST row of the product's mapping table instead "+
+			"of KEYING that table by the leg's slot code, so it names the RIGHT SLOT and lands on "+
+			"the WRONG ACCOUNT -- the exact mirror image of ledger-wrong-slot-family-blind. It is "+
+			"the measurement of T391's headline claim that expect.legs[].gl_account_id and "+
+			"expect.legs[].gl_account_code are OUTPUTS the port RESOLVES and no longer inputs the "+
+			"vector hands it: before those fields existed this defect could not be seen at all. "+
+			"acc_product_mapping is keyed on (product_id, product_type, financial_account_type) and "+
+			"a porter who drops the third component -- or who takes rows[0] because the observed "+
+			"table arrived sorted -- writes exactly this. It is INERT on all FOURTEEN vectors that "+
+			"predate T391 (7 parity, 6 oracle-refusal, 1 divergence), every one of which carries "+
+			"ZERO product_mappings rows, and it dies on the three ACC vectors on "+
+			"legs[].gl_account_id and legs[].gl_account_code and on NOTHING else -- 18 account-id "+
+			"cells and 18 code cells, 36 cell differences in the whole run and not one more: every "+
+			"slot name, every side, every leg order and every money cell it produces is correct. "+
+			"T406 found "+
+			"this cell graded by nothing and drove it with a throwaway probe; T421 registers the "+
+			"probe, because a throwaway probe is not a guard (P-45)",
+		mappingKeyIgnoringPoster{})
 }
 
 // minorText renders minor units as the decimal-free integer STRING the schema

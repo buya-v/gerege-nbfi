@@ -1,0 +1,24 @@
+T391-A01-je-L29.json                                                   legs=6  amount tokens NOT byte-preserved=6
+      24000.000000 -> 24000
+      24000.000000 -> 24000
+      2500.000000 -> 2500
+      2500.000000 -> 2500
+      1200.000000 -> 1200
+      1200.000000 -> 1200
+T391-A02-je-L30.json                                                   legs=6  amount tokens NOT byte-preserved=6
+      20195.380000 -> 20195.38
+      20195.380000 -> 20195.38
+      2500.000000 -> 2500
+      2500.000000 -> 2500
+      1200.000000 -> 1200
+      1200.000000 -> 1200
+T391-A04-je-L32.json                                                   legs=6  amount tokens NOT byte-preserved=6
+      12356.340000 -> 12356.34
+      12356.340000 -> 12356.34
+      2500.000000 -> 2500
+      2500.000000 -> 2500
+      1200.000000 -> 1200
+      1200.000000 -> 1200
+
+TOTAL contributed by T391's three cited bodies: 18
+The bar prints 104; before T391 it printed 86 -- that is the +18.
