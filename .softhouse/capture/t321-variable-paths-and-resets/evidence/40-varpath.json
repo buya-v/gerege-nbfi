@@ -1,0 +1,677 @@
+{
+  "enforced_set": [
+    ".softhouse/capture/lib/check_no_narrow_catch.py",
+    ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+    ".softhouse/guards/check-capture-namespace.sh",
+    ".softhouse/guards/check-dead-path-frontier.sh",
+    ".softhouse/guards/check-ledger-invariants.sh",
+    ".softhouse/guards/drive-red-ledger-invariants.sh",
+    ".softhouse/guards/repo-state-attest.sh"
+  ],
+  "named_but_absent": [],
+  "derivation": {
+    ".softhouse/guards/check-capture-namespace.sh": "guards dir (wired)",
+    ".softhouse/guards/check-dead-path-frontier.sh": "guards dir (wired)",
+    ".softhouse/guards/check-ledger-invariants.sh": "guards dir (wired)",
+    ".softhouse/guards/drive-red-ledger-invariants.sh": "guards dir (wired)",
+    ".softhouse/guards/repo-state-attest.sh": "guards dir (wired)",
+    ".softhouse/capture/t238-failopen/instruments/50-failopen-lint.py": "assigned to `lint` and invoked",
+    ".softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py": "assigned to `chk` and invoked",
+    ".softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py": "assigned to `rig` and invoked",
+    ".softhouse/conformance.sh": "assigned to `script` and invoked",
+    ".softhouse/capture/lib/check_wire_float_roundtrip.py": "ASSEMBLED at run time via _run_capture_guard() -- INVISIBLE TO THE LITERAL CENSUS",
+    ".softhouse/capture/lib/check_no_narrow_catch.py": "ASSEMBLED at run time via _run_capture_guard() -- INVISIBLE TO THE LITERAL CENSUS"
+  },
+  "assembled_invocations": {
+    ".softhouse/capture/lib/check_wire_float_roundtrip.py": "_run_capture_guard() at line 1026, argument $1",
+    ".softhouse/capture/lib/check_no_narrow_catch.py": "_run_capture_guard() at line 1026, argument $1"
+  },
+  "excluded_by_only": [
+    ".softhouse/capture/t238-failopen/instruments/50-failopen-lint.py",
+    ".softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py",
+    ".softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py"
+  ],
+  "only": "guards/|capture/lib/",
+  "observed": {
+    ".softhouse/capture/lib/check_no_narrow_catch.py": {
+      "exit": 0,
+      "n_touched": 0,
+      "paths": [],
+      "kinds": {},
+      "invisible_to_literal_census": [],
+      "tracer_loaded": true,
+      "probe_tokens": []
+    },
+    ".softhouse/capture/lib/check_wire_float_roundtrip.py": {
+      "exit": 0,
+      "n_touched": 0,
+      "paths": [],
+      "kinds": {},
+      "invisible_to_literal_census": [],
+      "tracer_loaded": true,
+      "probe_tokens": []
+    },
+    ".softhouse/guards/check-capture-namespace.sh": {
+      "exit": 0,
+      "n_touched": 5,
+      "paths": [
+        "+T321XTRACE|rec=.softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md",
+        ".softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md",
+        "p=.softhouse/capture/t256-toolchain-population",
+        "p=.softhouse/capture/t256-verdict-predicate",
+        "s#^\\.softhouse/(capture|reviews)/([^/]+)/.*#\\1/\\2#p"
+      ],
+      "kinds": {
+        "s#^\\.softhouse/(capture|reviews)/([^/]+)/.*#\\1/\\2#p": [
+          "xtrace"
+        ],
+        "p=.softhouse/capture/t256-toolchain-population": [
+          "xtrace"
+        ],
+        "p=.softhouse/capture/t256-verdict-predicate": [
+          "xtrace"
+        ],
+        "+T321XTRACE|rec=.softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md": [
+          "xtrace"
+        ],
+        ".softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md": [
+          "xtrace"
+        ]
+      },
+      "invisible_to_literal_census": [
+        "+T321XTRACE|rec=.softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md",
+        ".softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md"
+      ],
+      "tracer_loaded": false,
+      "probe_tokens": [
+        "NAMESPACE-CENSUS"
+      ]
+    },
+    ".softhouse/guards/check-dead-path-frontier.sh": {
+      "exit": 2,
+      "n_touched": 8,
+      "paths": [
+        "+T321XTRACE|CENSUS=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+        "+T321XTRACE|PIN=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards/dead-path-frontier.pin",
+        "+T321XTRACE|SELF_DIR=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards",
+        ".softhouse",
+        ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+        ".softhouse/guards",
+        ".softhouse/guards/check-dead-path-frontier.sh",
+        ".softhouse/guards/dead-path-frontier.pin"
+      ],
+      "kinds": {
+        ".softhouse/guards/check-dead-path-frontier.sh": [
+          "xtrace"
+        ],
+        ".softhouse/guards": [
+          "xtrace"
+        ],
+        "+T321XTRACE|SELF_DIR=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards": [
+          "xtrace"
+        ],
+        ".softhouse": [
+          "xtrace"
+        ],
+        "+T321XTRACE|CENSUS=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/capture/t316-dead-path-guards/census_dead_paths.py": [
+          "xtrace"
+        ],
+        "+T321XTRACE|PIN=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards/dead-path-frontier.pin": [
+          "xtrace"
+        ],
+        ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py": [
+          "xtrace"
+        ],
+        ".softhouse/guards/dead-path-frontier.pin": [
+          "xtrace"
+        ]
+      },
+      "invisible_to_literal_census": [
+        "+T321XTRACE|CENSUS=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+        "+T321XTRACE|PIN=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards/dead-path-frontier.pin",
+        "+T321XTRACE|SELF_DIR=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards",
+        ".softhouse",
+        ".softhouse/guards",
+        ".softhouse/guards/check-dead-path-frontier.sh"
+      ],
+      "tracer_loaded": true,
+      "probe_tokens": [
+        "ERROR"
+      ]
+    },
+    ".softhouse/guards/check-ledger-invariants.sh": {
+      "exit": 0,
+      "n_touched": 21,
+      "paths": [
+        "++T321XTRACE|_g_abs=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/toolchain",
+        "++T321XTRACE|_g_abs=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/toolchain",
+        "++T321XTRACE|_g_anchor=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin",
+        "++T321XTRACE|_g_anchor=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin/go-env.sh",
+        "++T321XTRACE|_g_common=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.git",
+        "+T321XTRACE|GUARD_SRC=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards/ledgerguard",
+        "+T321XTRACE|SCRIPT_DIR=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards",
+        ".softhouse/bin",
+        ".softhouse/bin/go-env.sh",
+        ".softhouse/guards",
+        ".softhouse/guards/check-ledger-invariants.sh",
+        ".softhouse/guards/ledgerguard",
+        ".softhouse/guards/ledgerguard/go.mod",
+        ".softhouse/guards/ledgerguard/main.go",
+        ".softhouse/toolchain",
+        ".softhouse/toolchain/go/bin/go",
+        "env_script=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin/go-env.sh",
+        "nexus",
+        "nexus.",
+        "toolchain",
+        "toolchain/go/bin/go"
+      ],
+      "kinds": {
+        ".softhouse/guards/check-ledger-invariants.sh": [
+          "xtrace"
+        ],
+        ".softhouse/guards": [
+          "xtrace"
+        ],
+        "+T321XTRACE|SCRIPT_DIR=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards": [
+          "xtrace"
+        ],
+        "+T321XTRACE|GUARD_SRC=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards/ledgerguard": [
+          "xtrace"
+        ],
+        "env_script=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin/go-env.sh": [
+          "xtrace"
+        ],
+        ".softhouse/bin/go-env.sh": [
+          "xtrace"
+        ],
+        "++T321XTRACE|_g_anchor=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin/go-env.sh": [
+          "xtrace"
+        ],
+        ".softhouse/bin": [
+          "xtrace"
+        ],
+        "++T321XTRACE|_g_anchor=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin": [
+          "xtrace"
+        ],
+        "++T321XTRACE|_g_common=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.git": [
+          "xtrace"
+        ],
+        ".softhouse/toolchain": [
+          "xtrace"
+        ],
+        "++T321XTRACE|_g_abs=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/toolchain": [
+          "xtrace"
+        ],
+        ".softhouse/toolchain/go/bin/go": [
+          "xtrace"
+        ],
+        "toolchain": [
+          "xtrace"
+        ],
+        "++T321XTRACE|_g_abs=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/toolchain": [
+          "xtrace"
+        ],
+        "toolchain/go/bin/go": [
+          "xtrace"
+        ],
+        ".softhouse/guards/ledgerguard/main.go": [
+          "xtrace"
+        ],
+        ".softhouse/guards/ledgerguard/go.mod": [
+          "xtrace"
+        ],
+        ".softhouse/guards/ledgerguard": [
+          "xtrace"
+        ],
+        "nexus": [
+          "xtrace"
+        ],
+        "nexus.": [
+          "xtrace"
+        ]
+      },
+      "invisible_to_literal_census": [
+        "++T321XTRACE|_g_abs=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/toolchain",
+        "++T321XTRACE|_g_abs=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/toolchain",
+        "++T321XTRACE|_g_anchor=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin",
+        "++T321XTRACE|_g_anchor=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin/go-env.sh",
+        "++T321XTRACE|_g_common=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.git",
+        "+T321XTRACE|GUARD_SRC=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards/ledgerguard",
+        "+T321XTRACE|SCRIPT_DIR=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards",
+        ".softhouse/bin",
+        ".softhouse/guards",
+        ".softhouse/guards/check-ledger-invariants.sh",
+        ".softhouse/guards/ledgerguard",
+        ".softhouse/guards/ledgerguard/go.mod",
+        ".softhouse/guards/ledgerguard/main.go",
+        ".softhouse/toolchain",
+        ".softhouse/toolchain/go/bin/go",
+        "env_script=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin/go-env.sh",
+        "nexus.",
+        "toolchain",
+        "toolchain/go/bin/go"
+      ],
+      "tracer_loaded": false,
+      "probe_tokens": []
+    },
+    ".softhouse/guards/drive-red-ledger-invariants.sh": {
+      "exit": 0,
+      "n_touched": 18,
+      "paths": [
+        "++T321XTRACE|_g_abs=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/toolchain",
+        "++T321XTRACE|_g_abs=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/toolchain",
+        "++T321XTRACE|_g_anchor=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin",
+        "++T321XTRACE|_g_anchor=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin/go-env.sh",
+        "++T321XTRACE|_g_common=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.git",
+        "+T321XTRACE|GUARD_SRC=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards/ledgerguard",
+        "+T321XTRACE|SCRIPT_DIR=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards",
+        "+T321XTRACE|env_script=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin/go-env.sh",
+        ".softhouse/bin",
+        ".softhouse/bin/go-env.sh",
+        ".softhouse/guards",
+        ".softhouse/guards/drive-red-ledger-invariants.sh",
+        ".softhouse/guards/ledgerguard",
+        ".softhouse/toolchain",
+        ".softhouse/toolchain/go/bin/go",
+        "nexus",
+        "toolchain",
+        "toolchain/go/bin/go"
+      ],
+      "kinds": {
+        ".softhouse/guards/drive-red-ledger-invariants.sh": [
+          "xtrace"
+        ],
+        ".softhouse/guards": [
+          "xtrace"
+        ],
+        "+T321XTRACE|SCRIPT_DIR=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards": [
+          "xtrace"
+        ],
+        "+T321XTRACE|GUARD_SRC=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards/ledgerguard": [
+          "xtrace"
+        ],
+        "+T321XTRACE|env_script=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin/go-env.sh": [
+          "xtrace"
+        ],
+        ".softhouse/bin/go-env.sh": [
+          "xtrace"
+        ],
+        "++T321XTRACE|_g_anchor=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin/go-env.sh": [
+          "xtrace"
+        ],
+        ".softhouse/bin": [
+          "xtrace"
+        ],
+        "++T321XTRACE|_g_anchor=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin": [
+          "xtrace"
+        ],
+        "++T321XTRACE|_g_common=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.git": [
+          "xtrace"
+        ],
+        ".softhouse/toolchain": [
+          "xtrace"
+        ],
+        "++T321XTRACE|_g_abs=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/toolchain": [
+          "xtrace"
+        ],
+        ".softhouse/toolchain/go/bin/go": [
+          "xtrace"
+        ],
+        "toolchain": [
+          "xtrace"
+        ],
+        "++T321XTRACE|_g_abs=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/toolchain": [
+          "xtrace"
+        ],
+        "toolchain/go/bin/go": [
+          "xtrace"
+        ],
+        "nexus": [
+          "xtrace"
+        ],
+        ".softhouse/guards/ledgerguard": [
+          "xtrace"
+        ]
+      },
+      "invisible_to_literal_census": [
+        "++T321XTRACE|_g_abs=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/toolchain",
+        "++T321XTRACE|_g_abs=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/toolchain",
+        "++T321XTRACE|_g_anchor=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin",
+        "++T321XTRACE|_g_anchor=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin/go-env.sh",
+        "++T321XTRACE|_g_common=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.git",
+        "+T321XTRACE|GUARD_SRC=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards/ledgerguard",
+        "+T321XTRACE|SCRIPT_DIR=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/guards",
+        "+T321XTRACE|env_script=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou/clone/.softhouse/bin/go-env.sh",
+        ".softhouse/bin",
+        ".softhouse/guards",
+        ".softhouse/guards/drive-red-ledger-invariants.sh",
+        ".softhouse/guards/ledgerguard",
+        ".softhouse/toolchain",
+        ".softhouse/toolchain/go/bin/go",
+        "toolchain",
+        "toolchain/go/bin/go"
+      ],
+      "tracer_loaded": false,
+      "probe_tokens": [
+        "DRIVE-RED"
+      ]
+    },
+    ".softhouse/guards/repo-state-attest.sh": {
+      "exit": 2,
+      "n_touched": 6,
+      "paths": [
+        ".softhouse/RESUME.md",
+        ".softhouse/conformance.sh",
+        ".softhouse/patterns.md",
+        ".softhouse/program.json",
+        ".softhouse/tasks.json",
+        ".softhouse/vectors"
+      ],
+      "kinds": {
+        ".softhouse/tasks.json": [
+          "xtrace"
+        ],
+        ".softhouse/RESUME.md": [
+          "xtrace"
+        ],
+        ".softhouse/program.json": [
+          "xtrace"
+        ],
+        ".softhouse/patterns.md": [
+          "xtrace"
+        ],
+        ".softhouse/conformance.sh": [
+          "xtrace"
+        ],
+        ".softhouse/vectors": [
+          "xtrace"
+        ]
+      },
+      "invisible_to_literal_census": [],
+      "tracer_loaded": false,
+      "probe_tokens": []
+    }
+  },
+  "arms": [
+    {
+      "instrument": ".softhouse/guards/check-capture-namespace.sh",
+      "removed": ".softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md",
+      "baseline_exit": 0,
+      "exit": 1,
+      "baseline_probe": [
+        "NAMESPACE-CENSUS"
+      ],
+      "probe": [
+        "NAMESPACE-CENSUS"
+      ],
+      "verdict": "DIES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/check-dead-path-frontier.sh",
+      "removed": ".softhouse",
+      "baseline_exit": 0,
+      "exit": 127,
+      "baseline_probe": [
+        "T316-DEADPATH-CENSUS",
+        "T316-DEADPATH-FRONTIER"
+      ],
+      "probe": [],
+      "verdict": "DIES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/check-dead-path-frontier.sh",
+      "removed": ".softhouse/guards",
+      "baseline_exit": 0,
+      "exit": 127,
+      "baseline_probe": [
+        "T316-DEADPATH-CENSUS",
+        "T316-DEADPATH-FRONTIER"
+      ],
+      "probe": [],
+      "verdict": "DIES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/check-dead-path-frontier.sh",
+      "removed": ".softhouse/guards/check-dead-path-frontier.sh",
+      "baseline_exit": 0,
+      "exit": 127,
+      "baseline_probe": [
+        "T316-DEADPATH-CENSUS",
+        "T316-DEADPATH-FRONTIER"
+      ],
+      "probe": [],
+      "verdict": "DIES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/check-dead-path-frontier.sh",
+      "removed": ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+      "baseline_exit": 0,
+      "exit": 2,
+      "baseline_probe": [
+        "T316-DEADPATH-CENSUS",
+        "T316-DEADPATH-FRONTIER"
+      ],
+      "probe": [
+        "ERROR"
+      ],
+      "verdict": "DIES",
+      "invisible_to_literal_census": false
+    },
+    {
+      "instrument": ".softhouse/guards/check-dead-path-frontier.sh",
+      "removed": ".softhouse/guards/dead-path-frontier.pin",
+      "baseline_exit": 0,
+      "exit": 2,
+      "baseline_probe": [
+        "T316-DEADPATH-CENSUS",
+        "T316-DEADPATH-FRONTIER"
+      ],
+      "probe": [
+        "ERROR"
+      ],
+      "verdict": "DIES",
+      "invisible_to_literal_census": false
+    },
+    {
+      "instrument": ".softhouse/guards/check-ledger-invariants.sh",
+      "removed": ".softhouse/bin",
+      "baseline_exit": 0,
+      "exit": 0,
+      "baseline_probe": [],
+      "probe": [],
+      "verdict": "SURVIVES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/check-ledger-invariants.sh",
+      "removed": ".softhouse/guards",
+      "baseline_exit": 0,
+      "exit": 127,
+      "baseline_probe": [],
+      "probe": [],
+      "verdict": "DIES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/check-ledger-invariants.sh",
+      "removed": ".softhouse/guards/check-ledger-invariants.sh",
+      "baseline_exit": 0,
+      "exit": 127,
+      "baseline_probe": [],
+      "probe": [],
+      "verdict": "DIES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/check-ledger-invariants.sh",
+      "removed": ".softhouse/guards/ledgerguard",
+      "baseline_exit": 0,
+      "exit": 2,
+      "baseline_probe": [],
+      "probe": [],
+      "verdict": "DIES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/check-ledger-invariants.sh",
+      "removed": ".softhouse/guards/ledgerguard/go.mod",
+      "baseline_exit": 0,
+      "exit": 2,
+      "baseline_probe": [],
+      "probe": [],
+      "verdict": "DIES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/check-ledger-invariants.sh",
+      "removed": ".softhouse/guards/ledgerguard/main.go",
+      "baseline_exit": 0,
+      "exit": 2,
+      "baseline_probe": [],
+      "probe": [],
+      "verdict": "DIES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/drive-red-ledger-invariants.sh",
+      "removed": ".softhouse/bin",
+      "baseline_exit": 0,
+      "exit": 0,
+      "baseline_probe": [
+        "DRIVE-RED"
+      ],
+      "probe": [
+        "DRIVE-RED"
+      ],
+      "verdict": "SURVIVES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/drive-red-ledger-invariants.sh",
+      "removed": ".softhouse/guards",
+      "baseline_exit": 0,
+      "exit": 127,
+      "baseline_probe": [
+        "DRIVE-RED"
+      ],
+      "probe": [],
+      "verdict": "DIES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/drive-red-ledger-invariants.sh",
+      "removed": ".softhouse/guards/drive-red-ledger-invariants.sh",
+      "baseline_exit": 0,
+      "exit": 127,
+      "baseline_probe": [
+        "DRIVE-RED"
+      ],
+      "probe": [],
+      "verdict": "DIES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/drive-red-ledger-invariants.sh",
+      "removed": ".softhouse/guards/ledgerguard",
+      "baseline_exit": 0,
+      "exit": 2,
+      "baseline_probe": [
+        "DRIVE-RED"
+      ],
+      "probe": [],
+      "verdict": "DIES",
+      "invisible_to_literal_census": true
+    },
+    {
+      "instrument": ".softhouse/guards/drive-red-ledger-invariants.sh",
+      "removed": ".softhouse/bin/go-env.sh",
+      "baseline_exit": 0,
+      "exit": 0,
+      "baseline_probe": [
+        "DRIVE-RED"
+      ],
+      "probe": [
+        "DRIVE-RED"
+      ],
+      "verdict": "SURVIVES",
+      "invisible_to_literal_census": false
+    },
+    {
+      "instrument": ".softhouse/guards/drive-red-ledger-invariants.sh",
+      "removed": "nexus",
+      "baseline_exit": 0,
+      "exit": 2,
+      "baseline_probe": [
+        "DRIVE-RED"
+      ],
+      "probe": [],
+      "verdict": "DIES",
+      "invisible_to_literal_census": false
+    },
+    {
+      "instrument": ".softhouse/guards/repo-state-attest.sh",
+      "removed": ".softhouse/RESUME.md",
+      "baseline_exit": 2,
+      "exit": 2,
+      "baseline_probe": [],
+      "probe": [],
+      "verdict": "INCONCLUSIVE",
+      "invisible_to_literal_census": false
+    },
+    {
+      "instrument": ".softhouse/guards/repo-state-attest.sh",
+      "removed": ".softhouse/conformance.sh",
+      "baseline_exit": 2,
+      "exit": 2,
+      "baseline_probe": [],
+      "probe": [],
+      "verdict": "INCONCLUSIVE",
+      "invisible_to_literal_census": false
+    },
+    {
+      "instrument": ".softhouse/guards/repo-state-attest.sh",
+      "removed": ".softhouse/patterns.md",
+      "baseline_exit": 2,
+      "exit": 2,
+      "baseline_probe": [],
+      "probe": [],
+      "verdict": "INCONCLUSIVE",
+      "invisible_to_literal_census": false
+    },
+    {
+      "instrument": ".softhouse/guards/repo-state-attest.sh",
+      "removed": ".softhouse/program.json",
+      "baseline_exit": 2,
+      "exit": 2,
+      "baseline_probe": [],
+      "probe": [],
+      "verdict": "INCONCLUSIVE",
+      "invisible_to_literal_census": false
+    },
+    {
+      "instrument": ".softhouse/guards/repo-state-attest.sh",
+      "removed": ".softhouse/tasks.json",
+      "baseline_exit": 2,
+      "exit": 2,
+      "baseline_probe": [],
+      "probe": [],
+      "verdict": "INCONCLUSIVE",
+      "invisible_to_literal_census": false
+    },
+    {
+      "instrument": ".softhouse/guards/repo-state-attest.sh",
+      "removed": ".softhouse/vectors",
+      "baseline_exit": 2,
+      "exit": 2,
+      "baseline_probe": [],
+      "probe": [],
+      "verdict": "INCONCLUSIVE",
+      "invisible_to_literal_census": false
+    }
+  ],
+  "skipped_too_slow": []
+}

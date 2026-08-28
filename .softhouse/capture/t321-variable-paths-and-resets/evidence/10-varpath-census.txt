@@ -1,0 +1,37 @@
+SELECTOR, stated as a limit on the search:
+  corpus     : git ls-files '.softhouse/*.py'  ->  686 tracked python instruments
+  method     : AST abstract interpretation. Assign-once constant propagation; a name
+               assigned twice is POISONED, never resolved to the last value seen.
+  folds      : str + str, pathlib `/`, f-strings, os.path.join, Path(...), .joinpath
+  resolution : TRACKED CONTENT ONLY (git ls-files + directory prefixes). The disk is
+               never consulted -- T326's correction, so a row here is commensurable
+               with a dead-path-frontier row.
+  blind to   : components from argv, env, config, loop variables or parameters; any
+               shell script; untracked files; other workers' worktrees. Those are
+               counted as UNRESOLVABLE and handed to the removal drive.
+  calibration: five assembly forms of one path, ENFORCED; failure aborts at exit 2
+               with no probe line.
+
+  ASSEMBLED-DEAD  .softhouse/capture/pathb/t80/prove-f1-noswap.py:76  ->  .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+  ASSEMBLED-DEAD  .softhouse/capture/pathb/t80/prove-f1-noswap.py:512  ->  .softhouse/capture/pathb/t80/out/out/emiloop/CAPTURED-FROM-TENANT
+  ASSEMBLED-DEAD  .softhouse/capture/pathb/t80/prove-f1-recovery.py:63  ->  .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+  ASSEMBLED-DEAD  .softhouse/capture/t248-failopen-widen/instruments/40-red-drive.py:70  ->  .softhouse/capture/t248-failopen-widen/.redplant
+  ASSEMBLED-DEAD  .softhouse/capture/t252-tier3/instruments/40-c6-red-drive.py:176  ->  .softhouse/capture/t252-tier3/evidence/red-drive-scratch/L1.sh
+  ASSEMBLED-DEAD  .softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py:38  ->  .softhouse/capture/t252-tier3/evidence/conf-red-scratch/planted-c6-failopen.sh
+  ASSEMBLED-DEAD  .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py:50  ->  .softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py
+  ASSEMBLED-DEAD  .softhouse/reviews/A2-11/audit-float.py:24  ->  .softhouse/A2-7-capture-mandatory-accounts
+  ASSEMBLED-DEAD  .softhouse/reviews/T158-drive-f1-dangerous-half.py:7  ->  .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+  ASSEMBLED-DEAD  .softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py:18  ->  .softhouse/vectors/t179-fixture-never-run/case.json.bak
+  ASSEMBLED-DEAD  .softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py:22  ->  .softhouse/vectors/t179-fixture-never-run/case.json.bak
+  ASSEMBLED-DEAD  .softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py:20  ->  .softhouse/vectors/t179-fixture-never-run/case.json.bak
+
+  ASSEMBLED-DEAD under the RUNTIME TOOLCHAIN (absent by design, never committed on
+  any ref; the same status the literal `.softhouse/toolchain` already has on the
+  frontier): 40 rows across 10 files -- listed in --json, not here, because putting
+  them in the headline would make this instrument a wolf-crier.
+
+T321-VARPATH-CENSUS: corpus=686 assembledLive=131 assembledDead=54 invisibleToLiteralCensus=52 ofWhichRuntimeToolchain=40 ofWhichOther=12 unresolvable=396
+      UNRESOLVABLE is the MEASURED SIZE OF THE HOLE, not a defect count: 396 expressions
+      rooted at a `.softhouse/` literal whose components are not statically known.
+      Nothing about them is decidable by reading -- see probe_variable_paths_t321.py,
+      which removes the dependency and observes the exit (P-95).

@@ -1,0 +1,4018 @@
+{
+  "corpus": 686,
+  "live": [
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/analyse_probes.py",
+      "line": 36,
+      "resolved": ".softhouse/capture/charges/out/control/B-01-baseline-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/analyse_probes.py",
+      "line": 37,
+      "resolved": ".softhouse/capture/charges/out/control/B-02-multiplesof100-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/analyse_probes.py",
+      "line": 81,
+      "resolved": ".softhouse/capture/audit-t44/charges/out/probes/AP-4-b02-pctamtint-instalment-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/analyse_probes.py",
+      "line": 101,
+      "resolved": ".softhouse/capture/audit-t44/charges/out/PROBES.md",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/audit_recompute.py",
+      "line": 8,
+      "resolved": ".softhouse/capture/charges/out/fc",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/audit_recompute.py",
+      "line": 9,
+      "resolved": ".softhouse/capture/charges/out/attested",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/audit_recompute.py",
+      "line": 10,
+      "resolved": ".softhouse/capture/charges/out/fc-rerun",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/audit_recompute.py",
+      "line": 11,
+      "resolved": ".softhouse/capture/charges/out/control/B-01-baseline-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/audit_recompute.py",
+      "line": 141,
+      "resolved": ".softhouse/capture/charges/out/fc/FC-17-fee-after-final-duedate-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/audit_recompute.py",
+      "line": 142,
+      "resolved": ".softhouse/capture/charges/out/fc/FC-20-pctinterest-sdd-on-disb-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/audit_recompute.py",
+      "line": 143,
+      "resolved": ".softhouse/capture/charges/out/attested/FC-17-fee-after-final-duedate-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/audit_recompute.py",
+      "line": 144,
+      "resolved": ".softhouse/capture/charges/out/attested/FC-20-pctinterest-sdd-on-disb-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/charges/bin/audit_recompute.py",
+      "line": 145,
+      "resolved": ".softhouse/capture/charges/out/attested/CTRL-B-01-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/charges/bin/t46-fix-paths.py",
+      "line": 51,
+      "resolved": ".softhouse/capture/charges/bin/lib.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+      "line": 118,
+      "resolved": ".softhouse/capture",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+      "line": 119,
+      "resolved": ".softhouse/vectors",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/mkmode.py",
+      "line": 15,
+      "resolved": ".softhouse/capture/pathb/t22-audit/req",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/mkmode.py",
+      "line": 17,
+      "resolved": ".softhouse/capture/pathb/req/product-2-multiplesof100.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/mkmode.py",
+      "line": 23,
+      "resolved": ".softhouse/capture/pathb/t22-audit/req/pmode-mult1.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/mkmode.py",
+      "line": 25,
+      "resolved": ".softhouse/capture/pathb/req/calc-B-01-baseline.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/mkmode2.py",
+      "line": 20,
+      "resolved": ".softhouse/capture/pathb/t22-audit/req",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/mkmode2.py",
+      "line": 22,
+      "resolved": ".softhouse/capture/pathb/req/product-1-baseline.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/mkmode2.py",
+      "line": 27,
+      "resolved": ".softhouse/capture/pathb/t22-audit/req/pmode2-halfcent.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/mkmode2.py",
+      "line": 29,
+      "resolved": ".softhouse/capture/pathb/req/calc-B-01-baseline.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/mkprobe.py",
+      "line": 17,
+      "resolved": ".softhouse/capture/pathb/t22-audit/req",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/t22_crosspath.py",
+      "line": 15,
+      "resolved": ".softhouse/capture/out/capture-prod-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/t22_crosspath.py",
+      "line": 16,
+      "resolved": ".softhouse/capture/pathb/out/B-01-baseline-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/t22_rederive.py",
+      "line": 157,
+      "resolved": ".softhouse/capture/pathb/out/B-01-baseline-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/t22_rederive.py",
+      "line": 158,
+      "resolved": ".softhouse/capture/pathb/out/B-02-multiplesof100-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 23,
+      "resolved": ".softhouse/capture/t100-g8-rescope/out/capture-t100-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 24,
+      "resolved": ".softhouse/capture/t83-nonamortizing/src",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 122,
+      "resolved": ".softhouse/capture/t83-nonamortizing/src/t83grade.go.txt",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 205,
+      "resolved": ".softhouse/capture/t100-g8-rescope/out/exemption-demo-t100.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 170,
+      "resolved": ".softhouse/vectors/PIN.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/T116-promote-vectors.py",
+      "line": 132,
+      "resolved": ".softhouse/capture/t116-familyb-promotion/out/capture-t116-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/11-census.py",
+      "line": 117,
+      "resolved": ".softhouse/capture/t234-sweep-instrument-audit/evidence/census.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/12-sweep-census.py",
+      "line": 81,
+      "resolved": ".softhouse/capture/t234-sweep-instrument-audit/evidence/sweep-census.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/31-sound-sweep.py",
+      "line": 131,
+      "resolved": ".softhouse/capture/t234-sweep-instrument-audit/evidence/sound-sweep-HEAD.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/31-sound-sweep.py",
+      "line": 147,
+      "resolved": ".softhouse/capture/t234-sweep-instrument-audit/evidence/multiline-only-hits.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/32-triage-live.py",
+      "line": 20,
+      "resolved": ".softhouse/capture/t234-sweep-instrument-audit/evidence/multiline-only-hits.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/32-triage-live.py",
+      "line": 47,
+      "resolved": ".softhouse/capture/t234-sweep-instrument-audit/evidence/multiline-live-hits.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t238-failopen/instruments/10-failopen-census.py",
+      "line": 227,
+      "resolved": ".softhouse/capture/t238-failopen/evidence/failopen-census.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t243-wiring/instruments/31-citation-census.py",
+      "line": 32,
+      "resolved": ".softhouse/vectors/ledger",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t243-wiring/instruments/31-citation-census.py",
+      "line": 63,
+      "resolved": ".softhouse/capture/tierA-a2/out/A2-390-db-ledger-state-a2-15.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t248-failopen-widen/instruments/40-red-drive.py",
+      "line": 69,
+      "resolved": ".softhouse/capture/t248-failopen-widen/shapes",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t252-tier3/instruments/30-additivity.py",
+      "line": 38,
+      "resolved": ".softhouse/capture/t238-failopen/instruments/50-failopen-lint.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/50-red-drive.py",
+      "line": 77,
+      "resolved": ".softhouse/capture/t255-dec2-rev8/instruments/20-verify-anchors.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/50-red-drive.py",
+      "line": 93,
+      "resolved": ".softhouse/capture/t255-dec2-rev8/instruments/20-verify-anchors.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/55-real-t253-collision.py",
+      "line": 37,
+      "resolved": ".softhouse/conformance.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/55-real-t253-collision.py",
+      "line": 63,
+      "resolved": ".softhouse/capture/t255-dec2-rev8/instruments/20-verify-anchors.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/55-real-t253-collision.py",
+      "line": 69,
+      "resolved": ".softhouse/conformance.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/55-real-t253-collision.py",
+      "line": 44,
+      "resolved": ".softhouse/conformance.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/55-real-t253-collision.py",
+      "line": 52,
+      "resolved": ".softhouse/conformance.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+      "line": 129,
+      "resolved": ".softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py`.",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+      "line": 132,
+      "resolved": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md`.",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+      "line": 151,
+      "resolved": ".softhouse/capture/t282-pnumber-drift/out/population.md`.",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t299-namespace-and-default-safety/instruments/10-collision-census.py",
+      "line": 95,
+      "resolved": ".softhouse/capture/t256-verdict-predicate",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t299-namespace-and-default-safety/instruments/10-collision-census.py",
+      "line": 120,
+      "resolved": ".softhouse/capture/t256-verdict-predicate",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t299-namespace-and-default-safety/instruments/10-collision-census.py",
+      "line": 67,
+      "resolved": ".softhouse/capture/t256-verdict-predicate",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t299-namespace-and-default-safety/instruments/10-collision-census.py",
+      "line": 68,
+      "resolved": ".softhouse/capture/t256-toolchain-population",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py",
+      "line": 161,
+      "resolved": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/OB-ACCEPT-01-readback-db.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py",
+      "line": 164,
+      "resolved": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/OB-ACCEPT-01-openingbalance-empty-ledger.req",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/sweep_resets.py",
+      "line": 586,
+      "resolved": ".softhouse/capture/t325-adopt-attestation/instruments/20-fire-writ-drive.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/sweep_resets.py",
+      "line": 592,
+      "resolved": ".softhouse/capture/t316-dead-path-guards/drive-red-t316.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/sweep_resets.py",
+      "line": 594,
+      "resolved": ".softhouse/capture/t316-dead-path-guards/drive-red-t316.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/A2-10-probe/reissue-a2-4-corpus-property.py",
+      "line": 16,
+      "resolved": ".softhouse/capture/tierA-a2/req",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-10-probe/reissue-a2-4-corpus-property.py",
+      "line": 23,
+      "resolved": ".softhouse/capture/tierA-a2/out",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-10-probe/reissue-a2-4-corpus-property.py",
+      "line": 65,
+      "resolved": ".softhouse/capture/tierA-a2/manifest.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-10-probe/reissue-a2-4-corpus-property.py",
+      "line": 18,
+      "resolved": ".softhouse/capture/tierA-a2",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/A2-10-probe/reissue-a2-4-corpus-property.py",
+      "line": 27,
+      "resolved": ".softhouse/capture/tierA-a2/out",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-10-probe/reissue-a2-4-corpus-property.py",
+      "line": 47,
+      "resolved": ".softhouse/capture/tierA-a2/out",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-10-probe/reissue-a2-4-corpus-property.py",
+      "line": 34,
+      "resolved": ".softhouse/capture/tierA-a2/out",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/audit-float.py",
+      "line": 19,
+      "resolved": ".softhouse/capture/tierA-a2",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/enumerate-corpus.py",
+      "line": 131,
+      "resolved": ".softhouse/capture/tierA-a2/out/A2-150-db-final-state.txt",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/enumerate-corpus.py",
+      "line": 131,
+      "resolved": ".softhouse/capture/tierA-a2",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/enumerate-corpus.py",
+      "line": 38,
+      "resolved": ".softhouse/capture/tierA-a2/out",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/prove-a2-7-guards-are-falsifiable.py",
+      "line": 36,
+      "resolved": ".softhouse/capture/tierA-a2/out/A2-235-je-after-recovery.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/prove-a2-7-guards-are-falsifiable.py",
+      "line": 60,
+      "resolved": ".softhouse/capture/tierA-a2/mkreq7.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/prove-resolve7-float-red.py",
+      "line": 44,
+      "resolved": ".softhouse/capture/tierA-a2/resolve7.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/prove-resolve7-float-red.py",
+      "line": 66,
+      "resolved": ".softhouse/capture/tierA-a2/req/a2-7-loan-220.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/prove-resolve7-float-red.py",
+      "line": 71,
+      "resolved": ".softhouse/capture/tierA-a2/req/a2-7-loan-220-resolved.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+      "line": 24,
+      "resolved": ".softhouse/capture/tierA-a2/MANIFEST.sha256",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+      "line": 67,
+      "resolved": ".softhouse/capture/tierA-a2/MANIFEST.sha256",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+      "line": 88,
+      "resolved": ".softhouse/capture/tierA-a2",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+      "line": 53,
+      "resolved": ".softhouse/capture/tierA-a2/prove-a2-7-additive.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+      "line": 134,
+      "resolved": ".softhouse/capture/tierA-a2/MANIFEST.sha256",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+      "line": 53,
+      "resolved": ".softhouse/capture/tierA-a2",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+      "line": 68,
+      "resolved": ".softhouse/capture/tierA-a2/MANIFEST.sha256",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T158-drive-f1-dangerous-half.py",
+      "line": 6,
+      "resolved": ".softhouse/capture/pathb/t36/out/emiloop",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/T158-drive-t156-refusals.py",
+      "line": 33,
+      "resolved": ".softhouse/capture/pathb/t149/prove-redgreen.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T158-drive-untrapped-signals.py",
+      "line": 12,
+      "resolved": ".softhouse/capture/pathb/t149/prove-redgreen.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T158-drive-untrapped-signals.py",
+      "line": 26,
+      "resolved": ".softhouse/vectors",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T158-drive-untrapped-signals.py",
+      "line": 28,
+      "resolved": ".softhouse/capture/pathb/t149/prove-redgreen.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 17,
+      "resolved": ".softhouse/capture/t83-nonamortizing/src",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 116,
+      "resolved": ".softhouse/capture/t83-nonamortizing/src/t83grade.go.txt",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 124,
+      "resolved": ".softhouse/vectors/PIN.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py",
+      "line": 7,
+      "resolved": ".softhouse/vectors/ledger",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py",
+      "line": 51,
+      "resolved": ".softhouse/vectors/PIN-ledger.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t185-probe/measure-cells-drop.py",
+      "line": 16,
+      "resolved": ".softhouse/capture/leapboundary/analysis",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t185-probe/measure-cells-drop.py",
+      "line": 17,
+      "resolved": ".softhouse/capture/actualactual/pathb/out",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t185-probe/measure-cells-drop.py",
+      "line": 19,
+      "resolved": ".softhouse/capture/leapboundary/analysis/t55-analyse.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t185-probe/probe-t55-successor.py",
+      "line": 16,
+      "resolved": ".softhouse/capture/leapboundary/analysis",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t185-probe/probe-t55-successor.py",
+      "line": 17,
+      "resolved": ".softhouse/capture/leapboundary/analysis/t55-invariants-v2.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t185-probe/probe-t55-successor.py",
+      "line": 18,
+      "resolved": ".softhouse/capture/leapboundary/analysis/t55-analyse.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t185-probe/probe-t55-successor.py",
+      "line": 19,
+      "resolved": ".softhouse/capture/leapboundary/out",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t21v2/t21v2-crosspass.py",
+      "line": 4,
+      "resolved": ".softhouse/capture/out/capture-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t21v2/t21v2-crosspass.py",
+      "line": 5,
+      "resolved": ".softhouse/capture/out/capture-tenant-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t21v2/t21v2-crosspass.py",
+      "line": 6,
+      "resolved": ".softhouse/capture/out/capture-prod-raw.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack2_compound_t262.py",
+      "line": 13,
+      "resolved": ".softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack2_compound_t262.py",
+      "line": 14,
+      "resolved": ".softhouse/capture/t256-verdict-predicate/boolean-key-register.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack2_compound_t262.py",
+      "line": 15,
+      "resolved": ".softhouse/capture/t256-verdict-predicate/acknowledged.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack2_compound_t262.py",
+      "line": 16,
+      "resolved": ".softhouse/capture/t229-g8-site3/out/classify-t229.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py",
+      "line": 20,
+      "resolved": ".softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py",
+      "line": 21,
+      "resolved": ".softhouse/capture/t256-verdict-predicate/boolean-key-register.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py",
+      "line": 22,
+      "resolved": ".softhouse/capture/t256-verdict-predicate/acknowledged.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/b1_row_detail_t262.py",
+      "line": 19,
+      "resolved": ".softhouse/capture/t219-g8-residual/out/capture-t219-raw.json.gz",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/pin_test2_t262.py",
+      "line": 20,
+      "resolved": ".softhouse/capture/t256-verdict-predicate",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/pin_test2_t262.py",
+      "line": 22,
+      "resolved": ".softhouse/capture/t229-g8-site3/out/classify-t229.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/pin_test_t262.py",
+      "line": 15,
+      "resolved": ".softhouse/capture/t256-verdict-predicate",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/pin_test_t262.py",
+      "line": 20,
+      "resolved": ".softhouse/capture/t229-g8-site3/out/classify-t229.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/rederive_t262.py",
+      "line": 29,
+      "resolved": ".softhouse/capture/t229-g8-site3/out/classify-t229.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/rederive_t262.py",
+      "line": 30,
+      "resolved": ".softhouse/capture/t229-g8-site3/out/capture-t229-raw.json.gz",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/rederive_t262.py",
+      "line": 36,
+      "resolved": ".softhouse/capture/t229-g8-site3/prediction.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/spotcheck_b1_t262.py",
+      "line": 14,
+      "resolved": ".softhouse/capture/t219-g8-residual/out/classify-t219.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t276-review-t275-capture/evidence/40-uncovered-get-captures.py",
+      "line": 9,
+      "resolved": ".softhouse/capture/tierA-a2/out",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t276-review-t275-capture/evidence/40-uncovered-get-captures.py",
+      "line": 23,
+      "resolved": ".softhouse/capture/tierA-a2/out/A2-521-loanproduct23-after-channel-repoint.json",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/t187-reconcile-counts.py",
+      "line": 77,
+      "resolved": ".softhouse/reviews/t41-probe",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/t41_validate.py",
+      "line": 248,
+      "resolved": ".softhouse/capture/charges/out/fc",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t45-probe/t45_validate.py",
+      "line": 248,
+      "resolved": ".softhouse/capture/charges/out/fc",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t181-split-census.py",
+      "line": 55,
+      "resolved": ".softhouse/reviews/t41-probe",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_validate.py",
+      "line": 248,
+      "resolved": ".softhouse/capture/charges/out/fc",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    }
+  ],
+  "dead": [
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+      "line": 76,
+      "resolved": ".softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+      "line": 512,
+      "resolved": ".softhouse/capture/pathb/t80/out/out/emiloop/CAPTURED-FROM-TENANT",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-recovery.py",
+      "line": 63,
+      "resolved": ".softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 30,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 30,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 30,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 31,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 58,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 58,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 58,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 59,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t248-failopen-widen/instruments/40-red-drive.py",
+      "line": 70,
+      "resolved": ".softhouse/capture/t248-failopen-widen/.redplant",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t252-tier3/instruments/40-c6-red-drive.py",
+      "line": 176,
+      "resolved": ".softhouse/capture/t252-tier3/evidence/red-drive-scratch/L1.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py",
+      "line": 38,
+      "resolved": ".softhouse/capture/t252-tier3/evidence/conf-red-scratch/planted-c6-failopen.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 40,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 40,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 40,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 41,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 39,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 39,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 39,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 40,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+      "line": 50,
+      "resolved": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 42,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 42,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 42,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 43,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "line": 36,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "line": 36,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "line": 36,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "line": 37,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 396,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 396,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 396,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 397,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 33,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 33,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 33,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 34,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/audit-float.py",
+      "line": 24,
+      "resolved": ".softhouse/A2-7-capture-mandatory-accounts",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+      "line": 62,
+      "resolved": ".softhouse/A2-7-capture-mandatory-accounts",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+      "line": 131,
+      "resolved": ".softhouse/A2-7-capture-mandatory-accounts",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": true
+    },
+    {
+      "path": ".softhouse/reviews/T158-drive-f1-dangerous-half.py",
+      "line": 7,
+      "resolved": ".softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 22,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 22,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 22,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 23,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "line": 7,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "line": 7,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "line": 7,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "line": 8,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py",
+      "line": 18,
+      "resolved": ".softhouse/vectors/t179-fixture-never-run/case.json.bak",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py",
+      "line": 22,
+      "resolved": ".softhouse/vectors/t179-fixture-never-run/case.json.bak",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py",
+      "line": 20,
+      "resolved": ".softhouse/vectors/t179-fixture-never-run/case.json.bak",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    }
+  ],
+  "dead_invisible_to_literal_census": [
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+      "line": 76,
+      "resolved": ".softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+      "line": 512,
+      "resolved": ".softhouse/capture/pathb/t80/out/out/emiloop/CAPTURED-FROM-TENANT",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-recovery.py",
+      "line": 63,
+      "resolved": ".softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 30,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 30,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 30,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 31,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 58,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 58,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 58,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 59,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t248-failopen-widen/instruments/40-red-drive.py",
+      "line": 70,
+      "resolved": ".softhouse/capture/t248-failopen-widen/.redplant",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t252-tier3/instruments/40-c6-red-drive.py",
+      "line": 176,
+      "resolved": ".softhouse/capture/t252-tier3/evidence/red-drive-scratch/L1.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py",
+      "line": 38,
+      "resolved": ".softhouse/capture/t252-tier3/evidence/conf-red-scratch/planted-c6-failopen.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 40,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 40,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 40,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 41,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 39,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 39,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 39,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 40,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+      "line": 50,
+      "resolved": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 42,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 42,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 42,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 43,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "line": 36,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "line": 36,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "line": 36,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "line": 37,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 396,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 396,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 396,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 397,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 33,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 33,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 33,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 34,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/audit-float.py",
+      "line": 24,
+      "resolved": ".softhouse/A2-7-capture-mandatory-accounts",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T158-drive-f1-dangerous-half.py",
+      "line": 7,
+      "resolved": ".softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 22,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 22,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 22,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 23,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "line": 7,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "line": 7,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "line": 7,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "line": 8,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py",
+      "line": 18,
+      "resolved": ".softhouse/vectors/t179-fixture-never-run/case.json.bak",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py",
+      "line": 22,
+      "resolved": ".softhouse/vectors/t179-fixture-never-run/case.json.bak",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py",
+      "line": 20,
+      "resolved": ".softhouse/vectors/t179-fixture-never-run/case.json.bak",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    }
+  ],
+  "dead_runtime_toolchain": [
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 30,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 30,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 30,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 31,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 58,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 58,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 58,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 59,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 40,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 40,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 40,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 41,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 39,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 39,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 39,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 40,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 42,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 42,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 42,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 43,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "line": 36,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "line": 36,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "line": 36,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-port.py",
+      "line": 37,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 396,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 396,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 396,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 397,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 33,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 33,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 33,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 34,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 22,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 22,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 22,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 23,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "line": 7,
+      "resolved": ".softhouse/toolchain/go",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "line": 7,
+      "resolved": ".softhouse/toolchain/gopath",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "line": 7,
+      "resolved": ".softhouse/toolchain/gocache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/run-port.py",
+      "line": 8,
+      "resolved": ".softhouse/toolchain/gomodcache",
+      "under_runtime_toolchain": true,
+      "visible_to_literal_census": false
+    }
+  ],
+  "dead_other": [
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+      "line": 76,
+      "resolved": ".softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+      "line": 512,
+      "resolved": ".softhouse/capture/pathb/t80/out/out/emiloop/CAPTURED-FROM-TENANT",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-recovery.py",
+      "line": 63,
+      "resolved": ".softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t248-failopen-widen/instruments/40-red-drive.py",
+      "line": 70,
+      "resolved": ".softhouse/capture/t248-failopen-widen/.redplant",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t252-tier3/instruments/40-c6-red-drive.py",
+      "line": 176,
+      "resolved": ".softhouse/capture/t252-tier3/evidence/red-drive-scratch/L1.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py",
+      "line": 38,
+      "resolved": ".softhouse/capture/t252-tier3/evidence/conf-red-scratch/planted-c6-failopen.sh",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+      "line": 50,
+      "resolved": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-BASE.py",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/audit-float.py",
+      "line": 24,
+      "resolved": ".softhouse/A2-7-capture-mandatory-accounts",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/T158-drive-f1-dangerous-half.py",
+      "line": 7,
+      "resolved": ".softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py",
+      "line": 18,
+      "resolved": ".softhouse/vectors/t179-fixture-never-run/case.json.bak",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py",
+      "line": 22,
+      "resolved": ".softhouse/vectors/t179-fixture-never-run/case.json.bak",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py",
+      "line": 20,
+      "resolved": ".softhouse/vectors/t179-fixture-never-run/case.json.bak",
+      "under_runtime_toolchain": false,
+      "visible_to_literal_census": false
+    }
+  ],
+  "unresolvable": [
+    {
+      "path": ".softhouse/bin/ready-tasks.py",
+      "line": 580,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/bin/ready-tasks.py",
+      "line": 621,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/bin/ready-tasks.py",
+      "line": 891,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/bin/ready-tasks.py",
+      "line": 609,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/bin/ready-tasks.py",
+      "line": 802,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/bin/ready-tasks.py",
+      "line": 465,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/bin/ready-tasks.py",
+      "line": 583,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/bin/ready-tasks.py",
+      "line": 586,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/bin/ready-tasks.py",
+      "line": 596,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/bin/ready-tasks.py",
+      "line": 994,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/bin/ready-tasks.py",
+      "line": 460,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/analysis/T207/t44_float_roundtrip_v3.py",
+      "line": 367,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/rerun-periodratio/analysis/controls.py",
+      "line": 159,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/rerun-periodratio/analysis/controls.py",
+      "line": 180,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/audit-t44/rerun-periodratio/analysis/controls.py",
+      "line": 197,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/charges/bin/feecols.py",
+      "line": 18,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/charges/bin/fullcell.py",
+      "line": 20,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/charges/bin/invariants.py",
+      "line": 30,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/charges/bin/t46-fix-paths.py",
+      "line": 51,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/emiloop/analyse.py",
+      "line": 31,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/emiloop/analyse.py",
+      "line": 32,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/emiloop/p03-control.py",
+      "line": 21,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/emiloop/t37-crosscheck.py",
+      "line": 14,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/emiloop/t37-crosscheck.py",
+      "line": 16,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/leapboundary/analysis/T207/json-load-census.py",
+      "line": 79,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/leapboundary/analysis/T207/json-load-census.py",
+      "line": 78,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/lib/check_no_narrow_catch.py",
+      "line": 293,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/lib/check_no_narrow_catch.py",
+      "line": 313,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+      "line": 458,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+      "line": 642,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/pathb/t147/cp-digest-census.py",
+      "line": 58,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/pathb/t147/float-sweep.py",
+      "line": 53,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
+      "line": 52,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
+      "line": 54,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/pathb/t22-audit/t22_findmode.py",
+      "line": 12,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+      "line": 547,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+      "line": 505,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+      "line": 526,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+      "line": 506,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/periodratio/analysis/controls.py",
+      "line": 159,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/periodratio/analysis/controls.py",
+      "line": 180,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/periodratio/analysis/controls.py",
+      "line": 197,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 205,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 170,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py",
+      "line": 185,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/T116-promote-vectors.py",
+      "line": 54,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/T116-promote-vectors.py",
+      "line": 114,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 33,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 34,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 35,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py",
+      "line": 149,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t145-analysis-float/bin/classify.py",
+      "line": 88,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t145-analysis-float/bin/classify.py",
+      "line": 97,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t145-analysis-float/bin/differential.py",
+      "line": 85,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t145-analysis-float/bin/differential.py",
+      "line": 65,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t145-analysis-float/bin/selftest-discriminate-predicate.py",
+      "line": 100,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t170-g8-rebuild/src/aggregate_t170.py",
+      "line": 117,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t170-g8-rebuild/src/diff_units_t170.py",
+      "line": 46,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t170-g8-rebuild/src/diff_units_t170.py",
+      "line": 64,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t170-g8-rebuild/src/diff_units_t170.py",
+      "line": 47,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t170-g8-rebuild/src/extract_t170.py",
+      "line": 228,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t170-g8-rebuild/src/paragraphs_t170.py",
+      "line": 17,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t170-g8-rebuild/src/paragraphs_t170.py",
+      "line": 85,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t170-g8-rebuild/src/split_claims_t170.py",
+      "line": 22,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t170-g8-rebuild/src/split_claims_t170.py",
+      "line": 101,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t177-so-nondeterminism/calibrate_t177.py",
+      "line": 25,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t177-so-nondeterminism/check_claims_t177.py",
+      "line": 16,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t177-so-nondeterminism/t159_context.py",
+      "line": 13,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t177-so-nondeterminism/verify_quotes_t177.py",
+      "line": 15,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t177-so-nondeterminism/verify_quotes_t177.py",
+      "line": 16,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t177-so-nondeterminism/verify_quotes_t177.py",
+      "line": 17,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t223-g8-region-predicate/src/classify_t223.py",
+      "line": 30,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/10-census.py",
+      "line": 124,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/10-census.py",
+      "line": 128,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/10-census.py",
+      "line": 105,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/10-census.py",
+      "line": 125,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/10-census.py",
+      "line": 34,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/10-census.py",
+      "line": 75,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/11-census.py",
+      "line": 119,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/12-sweep-census.py",
+      "line": 84,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/31-sound-sweep.py",
+      "line": 117,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/32-triage-live.py",
+      "line": 25,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t234-sweep-instrument-audit/instruments/32-triage-live.py",
+      "line": 26,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t238-failopen/instruments/60-multiline-sweep.py",
+      "line": 90,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t239-r11-rerun/instruments/30-classify.py",
+      "line": 90,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t239-r11-rerun/instruments/30-classify.py",
+      "line": 91,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t239-r11-rerun/instruments/40-multiline.py",
+      "line": 89,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t247-dec2-rev7/verify-line-numbers.py",
+      "line": 16,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py",
+      "line": 233,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py",
+      "line": 237,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t248-failopen-widen/instruments/40-red-drive.py",
+      "line": 245,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t250-tenant-attestation/instruments/50-oraclestamp-tenant-gate.py",
+      "line": 45,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t250-tenant-attestation/instruments/50-oraclestamp-tenant-gate.py",
+      "line": 47,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t250-tenant-attestation/instruments/50-oraclestamp-tenant-gate.py",
+      "line": 54,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py",
+      "line": 54,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py",
+      "line": 78,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py",
+      "line": 138,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py",
+      "line": 20,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py",
+      "line": 21,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py",
+      "line": 95,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py",
+      "line": 99,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py",
+      "line": 102,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py",
+      "line": 63,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py",
+      "line": 64,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/10-enumerate-citations.py",
+      "line": 37,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/15-p5-probe.py",
+      "line": 80,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/15-p5-probe.py",
+      "line": 89,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/15-p5-probe.py",
+      "line": 96,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 31,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 101,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 187,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 218,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 290,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 326,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 400,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 533,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 563,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 622,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 687,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 715,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 852,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 903,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 932,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 988,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 1067,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 1077,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 1099,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 1180,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 1199,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py",
+      "line": 1208,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t255-dec2-rev8/instruments/50-red-drive.py",
+      "line": 149,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t256-verdict-predicate/census_verdict_shape.py",
+      "line": 70,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t256-verdict-predicate/census_verdict_shape.py",
+      "line": 85,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t273-residue/instruments/60-outside-repo-state-sweep.py",
+      "line": 113,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t273-residue/instruments/60-outside-repo-state-sweep.py",
+      "line": 115,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t277-shapelaw-salvage/src/dump_seven_t277.py",
+      "line": 95,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+      "line": 151,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t282-pnumber-drift/bin/census.py",
+      "line": 170,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t282-pnumber-drift/bin/census.py",
+      "line": 171,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
+      "line": 91,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/attack_acknowledgement_t290.py",
+      "line": 48,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/attack_acknowledgement_t290.py",
+      "line": 49,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/attack_acknowledgement_t290.py",
+      "line": 50,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/diagnose_calibration_t290.py",
+      "line": 46,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/diagnose_calibration_t290.py",
+      "line": 106,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py",
+      "line": 85,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py",
+      "line": 86,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/probe_t286_rule_t290.py",
+      "line": 57,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/probe_t286_rule_t290.py",
+      "line": 58,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/prove_repair_inert.py",
+      "line": 34,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/prove_repair_inert.py",
+      "line": 35,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/prove_repair_inert.py",
+      "line": 36,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/red/drive-red-t290.py",
+      "line": 49,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/red/drive-red-t290.py",
+      "line": 50,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/red/drive-red-t290.py",
+      "line": 51,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/red/drive-red-t290.py",
+      "line": 46,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/red/drive-red-t290.py",
+      "line": 47,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/rederive_t290.py",
+      "line": 41,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/rederive_t290.py",
+      "line": 42,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/verify_t271_claims_t290.py",
+      "line": 50,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/verify_t271_claims_t290.py",
+      "line": 51,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/verify_t271_claims_t290.py",
+      "line": 52,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t299-namespace-and-default-safety/instruments/10-collision-census.py",
+      "line": 150,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t299-namespace-and-default-safety/instruments/10-collision-census.py",
+      "line": 122,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t304-evidence-destruction/instruments/80-foreign-writes.py",
+      "line": 33,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py",
+      "line": 207,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t305-openingbalance-accepting-side/throwaway/patch-capability.py",
+      "line": 12,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t309-sigterm-reconcile-bypass/patch11.py",
+      "line": 15,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t309-sigterm-reconcile-bypass/patch11.py",
+      "line": 87,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+      "line": 68,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+      "line": 109,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+      "line": 300,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+      "line": 344,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+      "line": 347,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+      "line": 349,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+      "line": 368,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py",
+      "line": 285,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/drive-red-t316.py",
+      "line": 110,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/drive-red-t316.py",
+      "line": 111,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/drive-red-t316.py",
+      "line": 161,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/drive-red-t316.py",
+      "line": 162,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/drive-red-t316.py",
+      "line": 214,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t319-reconciler-f5/probe-objdiff.py",
+      "line": 30,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t319-reconciler-f5/probe-objdiff.py",
+      "line": 31,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py",
+      "line": 206,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py",
+      "line": 317,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py",
+      "line": 330,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py",
+      "line": 340,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py",
+      "line": 349,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/census_variable_paths.py",
+      "line": 112,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/census_variable_paths.py",
+      "line": 348,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/census_variable_paths.py",
+      "line": 372,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/census_variable_paths.py",
+      "line": 383,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/drive-reset-contamination-t321.py",
+      "line": 72,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py",
+      "line": 119,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py",
+      "line": 129,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py",
+      "line": 208,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py",
+      "line": 288,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py",
+      "line": 312,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py",
+      "line": 135,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py",
+      "line": 146,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/sweep_resets.py",
+      "line": 292,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/sweep_resets.py",
+      "line": 639,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t325-adopt-attestation/instruments/10-wiring-census.py",
+      "line": 33,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t325-adopt-attestation/instruments/10-wiring-census.py",
+      "line": 84,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t325-adopt-attestation/instruments/10-wiring-census.py",
+      "line": 60,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t325-adopt-attestation/instruments/10-wiring-census.py",
+      "line": 64,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t325-adopt-attestation/instruments/10-wiring-census.py",
+      "line": 76,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t326-frontier-host-state/instruments/10-regen-pin.py",
+      "line": 238,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t326-frontier-host-state/instruments/legacy_rows.py",
+      "line": 25,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t326-frontier-host-state/instruments/legacy_rows.py",
+      "line": 65,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t330-reconcile-merged-work/budget.py",
+      "line": 68,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t330-reconcile-merged-work/budget.py",
+      "line": 83,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t330-reconcile-merged-work/e2e.py",
+      "line": 118,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t330-reconcile-merged-work/population.py",
+      "line": 100,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t330-reconcile-merged-work/population.py",
+      "line": 102,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t330-reconcile-merged-work/population.py",
+      "line": 125,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t330-reconcile-merged-work/population.py",
+      "line": 131,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t331-wire-pnumber-checker/bin/capture-findings.py",
+      "line": 35,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t331-wire-pnumber-checker/bin/capture-findings.py",
+      "line": 36,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t331-wire-pnumber-checker/bin/measure-fatal-predicate.py",
+      "line": 33,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t331-wire-pnumber-checker/bin/measure-fatal-predicate.py",
+      "line": 46,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t331-wire-pnumber-checker/bin/recheck-14-true-drift.py",
+      "line": 67,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/check-prediction.py",
+      "line": 18,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 27,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 28,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 32,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 33,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t61-halfeven/src/run-counterfactuals.py",
+      "line": 129,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py",
+      "line": 66,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py",
+      "line": 384,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 27,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 28,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py",
+      "line": 129,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t66-unrecognized-interest/dump-rows.py",
+      "line": 7,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+      "line": 54,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+      "line": 172,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py",
+      "line": 204,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 196,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 226,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py",
+      "line": 125,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/tierA-a2/census-a2-26.py",
+      "line": 177,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/tierA-a2/census-json-float-siblings.py",
+      "line": 155,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/tierA-a2/census-json-float-siblings.py",
+      "line": 331,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/tierA-a2/census-json-float-siblings.py",
+      "line": 341,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/tierA-a2/sweep-t164-selfmatch-guards.py",
+      "line": 329,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/tierA-a2/sweep-t164-selfmatch-guards.py",
+      "line": 508,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/tierA-a2/verify-provenance-a2-15.py",
+      "line": 23,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-12-amount-census.py",
+      "line": 57,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-green.py",
+      "line": 38,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-redgreen.py",
+      "line": 47,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-redgreen.py",
+      "line": 93,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T57-promote-emi-vectors.py",
+      "line": 218,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T57-promote-emi-vectors.py",
+      "line": 413,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T58-promote-vectors.py",
+      "line": 83,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T58-promote-vectors.py",
+      "line": 678,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T58-promote-vectors.py",
+      "line": 695,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T61-mutations.py",
+      "line": 399,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T61-promote-vectors.py",
+      "line": 59,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T61-promote-vectors.py",
+      "line": 265,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T61-promote-vectors.py",
+      "line": 306,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/build-pass3f.py",
+      "line": 15,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/build-pass3f.py",
+      "line": 222,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/build-pass3f.py",
+      "line": 278,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T61-sweep/run-sweep.py",
+      "line": 23,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T61-transcription-audit.py",
+      "line": 31,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T74-promote-vectors.py",
+      "line": 91,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T74-promote-vectors.py",
+      "line": 506,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/handoff/T8-promote-vectors.py",
+      "line": 229,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/audit-float.py",
+      "line": 111,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/audit-float.py",
+      "line": 112,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+      "line": 62,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/A2-11/verify-manifest-independently.py",
+      "line": 131,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T158-drive-f1-dangerous-half.py",
+      "line": 8,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T158-rederive-sweep.py",
+      "line": 18,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T158-rederive-sweep.py",
+      "line": 20,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T296/probe/build-closure-probe-vector.py",
+      "line": 23,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T296/probe/build-closure-probe-vector.py",
+      "line": 25,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T296/probe/build-closure-probe-vector.py",
+      "line": 26,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T302/a2/cmp-lockset.py",
+      "line": 21,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T302/a2/cmp-lockset.py",
+      "line": 22,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T306/probe/inject-acceptance.py",
+      "line": 34,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T306/probe/inject-acceptance.py",
+      "line": 52,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/eval-probe1.py",
+      "line": 6,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 124,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/exemption-demo.py",
+      "line": 149,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/T84-evidence/src/gen-port.py",
+      "line": 17,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py",
+      "line": 51,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+      "line": 1387,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+      "line": 171,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+      "line": 173,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t185-probe/t185-independent-sweep.py",
+      "line": 90,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t23-probe/t23_rederive.py",
+      "line": 171,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t24-probe/t24_check_prod_corpus.py",
+      "line": 19,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t24-probe/t24_count_p12_p19_divergences.py",
+      "line": 12,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t251-dec2-rev7/hunk-anchors.py",
+      "line": 20,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t260-dec2-rev8/instruments/60-c-items-and-residuals.py",
+      "line": 33,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t260-dec2-rev8/instruments/60-c-items-and-residuals.py",
+      "line": 55,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t260-dec2-rev8/instruments/60-c-items-and-residuals.py",
+      "line": 56,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t261-tenant-attestation/instruments/t261-vector-tenant-census.py",
+      "line": 38,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t261-tenant-attestation/instruments/t261-vector-tenant-census.py",
+      "line": 70,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack2_compound_t262.py",
+      "line": 13,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack2_compound_t262.py",
+      "line": 14,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack2_compound_t262.py",
+      "line": 15,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack2_compound_t262.py",
+      "line": 16,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py",
+      "line": 20,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py",
+      "line": 21,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py",
+      "line": 22,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/b1_row_detail_t262.py",
+      "line": 12,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/pin_test2_t262.py",
+      "line": 20,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/pin_test2_t262.py",
+      "line": 27,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/pin_test_t262.py",
+      "line": 15,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t262-verdict-predicate/pin_test_t262.py",
+      "line": 96,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py",
+      "line": 80,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_mutate.py",
+      "line": 70,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_mutate.py",
+      "line": 71,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_mutate.py",
+      "line": 118,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_mutate.py",
+      "line": 119,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 57,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 58,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 64,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 105,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 118,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 131,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 144,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 146,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 147,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 165,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 188,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 204,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
+      "line": 128,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t278-review-t277/probe/t278_float_audit.py",
+      "line": 125,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t28-probe/t28_spec_check.py",
+      "line": 26,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t291-review-t286/probe/drive-t291.py",
+      "line": 46,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t291-review-t286/probe/drive-t291.py",
+      "line": 49,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t291-review-t286/probe/drive-t291.py",
+      "line": 234,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t291-review-t286/probe/enumerate-exit0-t291.py",
+      "line": 36,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t291-review-t286/probe/enumerate-exit0-t291.py",
+      "line": 39,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t34-probe/t34_corpus_blind.py",
+      "line": 33,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t34-probe/t34_rollforward.py",
+      "line": 54,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t34-probe/t34_rollforward.py",
+      "line": 57,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit.py",
+      "line": 133,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit.py",
+      "line": 153,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit.py",
+      "line": 217,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit12.py",
+      "line": 112,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit12.py",
+      "line": 147,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit13.py",
+      "line": 112,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit13.py",
+      "line": 148,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit13.py",
+      "line": 175,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit14.py",
+      "line": 144,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit14.py",
+      "line": 162,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit16.py",
+      "line": 111,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit16.py",
+      "line": 156,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit18.py",
+      "line": 189,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit19.py",
+      "line": 133,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit20.py",
+      "line": 120,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit21.py",
+      "line": 184,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit3.py",
+      "line": 128,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit5.py",
+      "line": 114,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit6.py",
+      "line": 112,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit6.py",
+      "line": 147,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit6.py",
+      "line": 193,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit7.py",
+      "line": 116,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit8.py",
+      "line": 112,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit8.py",
+      "line": 138,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit_go1.py",
+      "line": 138,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit_go1.py",
+      "line": 190,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/edit_go3.py",
+      "line": 160,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t41-probe/t187-redgreen.py",
+      "line": 200,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t45-probe/t45_extra.py",
+      "line": 155,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t45-probe/t45_extra.py",
+      "line": 219,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t45-probe/t45_extra.py",
+      "line": 314,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t45-probe/t45_extra.py",
+      "line": 161,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t167-redprobe.py",
+      "line": 79,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t167-sibling-census.py",
+      "line": 123,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t178-edit-identity.py",
+      "line": 78,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t178-redprobe.py",
+      "line": 236,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t178-redprobe.py",
+      "line": 193,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t178-redprobe.py",
+      "line": 194,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t181-census-zero-inspection.py",
+      "line": 58,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t181-drive-prefix-red.py",
+      "line": 64,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t181-split-census.py",
+      "line": 103,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_edit_2.py",
+      "line": 102,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_edit_2.py",
+      "line": 137,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_edit_3.py",
+      "line": 102,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_edit_4.py",
+      "line": 160,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_edit_5.py",
+      "line": 89,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_edit_6.py",
+      "line": 89,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_edit_6.py",
+      "line": 104,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_edit_6.py",
+      "line": 122,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_edit_7.py",
+      "line": 102,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_edit_8.py",
+      "line": 117,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_extra.py",
+      "line": 155,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_extra.py",
+      "line": 219,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_extra.py",
+      "line": 314,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t47-probe/t47_extra.py",
+      "line": 161,
+      "why": "components not statically known"
+    }
+  ]
+}

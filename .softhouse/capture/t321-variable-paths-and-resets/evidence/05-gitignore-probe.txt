@@ -1,0 +1,16 @@
+the rule under test (one line, directory-only):
+    .softhouse/toolchain/
+
+READING 1 -- directory ABSENT, query without trailing slash (what T316 ran):
+    rc=1
+
+READING 2 -- directory PRESENT, same query:
+.gitignore:1:.softhouse/toolchain/	.softhouse/toolchain
+    rc=0
+
+READING 3 -- directory ABSENT again, trailing slash on the QUERY:
+.gitignore:1:.softhouse/toolchain/	.softhouse/toolchain/
+    rc=0
+
+T321-GITIGNORE-PROBE: absentNoSlash=1 presentNoSlash=0 absentWithSlash=0 verdict=COMMENT-IS-CORRECT/FU-T316-5-REFUTED
+gitVersion: git version 2.50.1 (Apple Git-155)

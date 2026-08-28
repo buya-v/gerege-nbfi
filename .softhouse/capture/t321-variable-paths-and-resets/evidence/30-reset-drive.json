@@ -1,0 +1,186 @@
+[
+  {
+    "arm": "K1",
+    "what": "STAGED_ADD / git checkout -- . && git clean -fd",
+    "expect": "PRESENT",
+    "observed": "PRESENT",
+    "pass": true,
+    "note": "T316's RECORDED contamination, reproduced"
+  },
+  {
+    "arm": "K2",
+    "what": "STAGED_ADD / git reset --hard -q && git clean -fdq",
+    "expect": "ABSENT",
+    "observed": "ABSENT",
+    "pass": true,
+    "note": "T316's FIX"
+  },
+  {
+    "arm": "K3",
+    "what": "STAGED_ADD / git reset -q",
+    "expect": "PRESENT",
+    "observed": "PRESENT",
+    "pass": true,
+    "note": "a MIXED reset unstages; the file stays on disk, now untracked"
+  },
+  {
+    "arm": "K4",
+    "what": "UNTRACKED / git reset --hard -q",
+    "expect": "PRESENT",
+    "observed": "PRESENT",
+    "pass": true,
+    "note": "reset --hard does not remove untracked files"
+  },
+  {
+    "arm": "K5",
+    "what": "UNTRACKED / git clean -fdq",
+    "expect": "ABSENT",
+    "observed": "ABSENT",
+    "pass": true,
+    "note": ""
+  },
+  {
+    "arm": "K6",
+    "what": "IGNORED / git clean -fdq",
+    "expect": "PRESENT",
+    "observed": "PRESENT",
+    "pass": true,
+    "note": "-x is what reaches an ignored file"
+  },
+  {
+    "arm": "K7",
+    "what": "IGNORED / git clean -fdxq",
+    "expect": "ABSENT",
+    "observed": "ABSENT",
+    "pass": true,
+    "note": ""
+  },
+  {
+    "arm": "K8",
+    "what": "WT_EDIT / git checkout -- .",
+    "expect": "ABSENT",
+    "observed": "ABSENT",
+    "pass": true,
+    "note": ""
+  },
+  {
+    "arm": "K9",
+    "what": "COMMIT / git reset --hard -q && git clean -fdxq",
+    "expect": "PRESENT",
+    "observed": "PRESENT",
+    "pass": true,
+    "note": "THE HEADLINE: bare reset --hard resets to HEAD, and the arm MOVED HEAD; porcelain=''"
+  },
+  {
+    "arm": "K10",
+    "what": "COMMIT / git reset --hard -q \"$(git rev-list --max-parents=0 HEAD)\" && git clean -fdxq",
+    "expect": "ABSENT",
+    "observed": "ABSENT",
+    "pass": true,
+    "note": "naming a REF is what makes reset --hard undo a commit; porcelain=''"
+  },
+  {
+    "arm": "C-probe-writer-inode-zsh/U",
+    "what": "UNTRACKED survives their own reset",
+    "expect": "CONVICTED-or-ACQUITTED",
+    "observed": "CONVICTED",
+    "pass": true,
+    "note": "porcelain='?? planted.txt'"
+  },
+  {
+    "arm": "C-mutation-arms-sh/U",
+    "what": "UNTRACKED survives their own reset",
+    "expect": "CONVICTED-or-ACQUITTED",
+    "observed": "CONVICTED",
+    "pass": true,
+    "note": "porcelain='?? planted.txt'"
+  },
+  {
+    "arm": "A1",
+    "what": "COMMIT residue after bare `reset --hard` + `clean -fdx`",
+    "expect": "1",
+    "observed": "1",
+    "pass": true,
+    "note": "LEGACY(git status --porcelain)=CLEAN | THE HEADLINE: porcelain cannot see it; the differential can"
+  },
+  {
+    "arm": "A2",
+    "what": "STAGED-ADD residue after `checkout -- .` + `clean -fd`",
+    "expect": "1",
+    "observed": "1",
+    "pass": true,
+    "note": "LEGACY(git status --porcelain)=DIRTY | T316's recorded case; porcelain DOES see this"
+  },
+  {
+    "arm": "A3",
+    "what": "UNTRACKED residue after `reset --hard`",
+    "expect": "1",
+    "observed": "1",
+    "pass": true,
+    "note": "LEGACY(git status --porcelain)=DIRTY"
+  },
+  {
+    "arm": "A4",
+    "what": "IGNORED residue after `clean -fd`",
+    "expect": "0",
+    "observed": "0",
+    "pass": true,
+    "note": "LEGACY(git status --porcelain)=CLEAN | DECLARED LIMIT: T4 is ADVISORY by design, so exit is 0 -- the residue is NAMED in the output but does not block"
+  },
+  {
+    "arm": "A5",
+    "what": "null control: the reset actually worked",
+    "expect": "0",
+    "observed": "0",
+    "pass": true,
+    "note": "LEGACY(git status --porcelain)=CLEAN"
+  },
+  {
+    "arm": "L1",
+    "what": "the drive creates its own sanctioned softhouse/<task> branch",
+    "expect": "0",
+    "observed": "0",
+    "pass": true,
+    "note": "LEGACY(git status --porcelain)=CLEAN | T318 arm G5 replayed against THIS writ"
+  },
+  {
+    "arm": "L2",
+    "what": "the drive writes IGNORED scratch output under a declared prefix",
+    "expect": "0",
+    "observed": "0",
+    "pass": true,
+    "note": "LEGACY(git status --porcelain)=CLEAN"
+  },
+  {
+    "arm": "L3",
+    "what": "an arm that does nothing at all (null)",
+    "expect": "0",
+    "observed": "0",
+    "pass": true,
+    "note": "LEGACY(git status --porcelain)=CLEAN"
+  },
+  {
+    "arm": "L4",
+    "what": "a legitimate mutate-and-restore round trip that RESTORED",
+    "expect": "0",
+    "observed": "0",
+    "pass": true,
+    "note": "LEGACY(git status --porcelain)=CLEAN"
+  },
+  {
+    "arm": "L6",
+    "what": "a read-only arm: status and log, nothing written",
+    "expect": "0",
+    "observed": "0",
+    "pass": true,
+    "note": "LEGACY(git status --porcelain)=CLEAN | a read-only arm"
+  },
+  {
+    "arm": "L5b",
+    "what": "pre-existing untracked file, unchanged across the window",
+    "expect": "0",
+    "observed": "0",
+    "pass": true,
+    "note": "LEGACY(git status --porcelain)=DIRTY (it was dirty before, too)"
+  }
+]
