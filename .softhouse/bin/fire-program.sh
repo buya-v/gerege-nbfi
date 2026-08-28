@@ -777,7 +777,15 @@ if [[ "${1:-}" == "--self-test-lock-readers" ]]; then
   # expression the rows evaluate. The claim is now true BY CONSTRUCTION rather than by promise —
   # there is no second site left to drift. It is NOT separately enforced: re-inlining the
   # arithmetic into a row would re-open F-T385-2, and `grep -n '_SKEW_FAR\|_SKEW_NEAR'` is how a
-  # reviewer sees that in one line. `_SKEW_NEAR` is compared with `>=`, not `>`: a skew
+  # reviewer sees that in one line. RE-DRIVEN by T400, GREEN on this file and RED on the file
+  # that shipped before it [`.softhouse/capture/t400-t385-conditions/out/02-skew-drift-redrive
+  # .txt` `CHECKS=7 WRONG=0`; `out/03-skew-drift-RED-on-main.txt` `WRONG=4`, where T385's `s01`
+  # reproduces: `z06 *** FAIL-OPEN` and *"this is the READERS"*]. STATED RESIDUAL, driven as
+  # case `s03` and NOT closed by this fix: pointing a row at the WRONG variable (z06 reading
+  # `_SKEW_NEAR`) is a typo no derivation can catch — it lands FAIL-OPEN and IS blamed on the
+  # readers. C and G have carried the identical residual since T361 (`_OLD` vs `_NEAR`); what
+  # derivation buys is that the fixture and its assertion cannot hold DIFFERENT VALUES, not
+  # that a row cannot name the wrong fixture. `_SKEW_NEAR` is compared with `>=`, not `>`: a skew
   # of ZERO is legitimate (it means "believe no future instant at all"; `_knob_int`'s minimum
   # for it is 0 and T368/T380 measured the self-test green there), and it makes z07's instant
   # exactly NOW, which is still inside a bound of 0. [MEASURED both ways: case f07.]
@@ -1478,9 +1486,11 @@ fi
 #     Neither holds: `_ST_OUT` is captured from the subprocess and the `lockselftest| ` prefix
 #     is added AFTERWARDS, when each line is handed to `log()`, so that echo is DOWNSTREAM of
 #     the population and cannot join it whether the selector is anchored or not. MEASURED
-#     [`.softhouse/reviews/t385-review-t383/out/05-substring-claim.txt`]: on a healthy run
-#     `_ST_OUT` is 70 lines, `/ROWS=/` unanchored matches **1**, the anchored selector matches
-#     **1**, `/lockselftest\| ROWS=/` matches **0**; the echo IS emitted once, into the log;
+#     [T385 `.softhouse/reviews/t385-review-t383/out/05-substring-claim.txt`; re-measured on
+#     THIS file by T400, `.softhouse/capture/t400-t385-conditions/out/01-substring-and-
+#     healthy.txt`]: on a healthy run `/ROWS=/` unanchored matches **1** line of `_ST_OUT`
+#     and it IS the summary, the anchored selector matches the same **1**, and
+#     `/lockselftest\| ROWS=/` matches **0**; the echo IS emitted once, into the log;
 #     and the naive unanchored `grep 'ROWS='` wrapper, built and driven, **STARTS the healthy
 #     fire at rc 0** with `tally VERIFIED …`, its control (the shipped anchored wrapper) also
 #     rc 0. THE ANCHORING STAYS — it is right for a reason that does not depend on that echo:

@@ -1,5 +1,5 @@
 T400 skew-drift RE-DRIVE (post-fix)
-subject: /private/tmp/t400/fixed.sh  sha256=3584adf27e938e377edf330702bb2abc9d78b84431f3c5ca57c75ae441ca9fbe
+subject: /private/tmp/t400/fixed.sh  sha256=4e8af76d8736f6efe3c254767fcf38e07c7b8b40a1d6d17fa1e115caa76909b2
 zsh    : 5.9
 
 --- where the four gate variables occur (executable lines only) ---
@@ -7,46 +7,46 @@ zsh    : 5.9
 698:  _OLD="$(_epoch_iso8601 $(( _NOW_E - _OLD_AGE )))"
 706:  _NEAR_AGE=$(( LOCK_CEILING_SECS - 3600 ))                # inside the ceiling by one hour
 707:  _NEAR="$(_epoch_iso8601 $(( _NOW_E - _NEAR_AGE )))"
-784:  _SKEW_FAR=$(( LOCK_RELEASE_SKEW_SECS * 2 + 60 ))
-785:  _SKEW_NEAR=$(( LOCK_RELEASE_SKEW_SECS / 2 ))
-787:  (( _OLD_AGE > LOCK_CEILING_SECS ))                     || _FIXOK=0   # c01/c02: `CEILING*2 + 60` did not wrap
-788:  (( _NOW_E - _OLD_AGE >= 0 ))                           || _FIXOK=0   # c01/c02: the past-ceiling instant is post-epoch
-789:  (( _NEAR_AGE > 0 && _NEAR_AGE < LOCK_CEILING_SECS ))   || _FIXOK=0   # g01: an age genuinely INSIDE the ceiling
-790:  (( _SKEW_FAR > LOCK_RELEASE_SKEW_SECS ))               || _FIXOK=0   # z06: `SKEW*2 + 60` did not wrap
-791:  (( _NOW_E + _SKEW_FAR > _NOW_E ))                      || _FIXOK=0   # z06: the far-future instant is representable
-792:  (( _NOW_E + _SKEW_NEAR >= _NOW_E ))                    || _FIXOK=0   # z07: the inside-bound instant is representable
-794:    print -u2 -r -- "FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that consume them require, so this run would g
-897:  print -r -- "--- C. LIVE holder, started_at ${_OLD_AGE}s old vs the ${LOCK_CEILING_SECS}s CEILING (fixture DERIVED, T361 C3). Correct = TAKE-ceiling (arm 
-918:  _row z06 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + _SKEW_FAR )))\"}" "DERIVED
-919:  _row z07 FREE-released "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + _SKEW_NEAR )))\"}
-935:  _row g01 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NEAR\"}" "started_at ${_NEAR_AGE}s old, INSIDE the ${LOCK_CEILING_SECS}s ceiling: 
+792:  _SKEW_FAR=$(( LOCK_RELEASE_SKEW_SECS * 2 + 60 ))
+793:  _SKEW_NEAR=$(( LOCK_RELEASE_SKEW_SECS / 2 ))
+795:  (( _OLD_AGE > LOCK_CEILING_SECS ))                     || _FIXOK=0   # c01/c02: `CEILING*2 + 60` did not wrap
+796:  (( _NOW_E - _OLD_AGE >= 0 ))                           || _FIXOK=0   # c01/c02: the past-ceiling instant is post-epoch
+797:  (( _NEAR_AGE > 0 && _NEAR_AGE < LOCK_CEILING_SECS ))   || _FIXOK=0   # g01: an age genuinely INSIDE the ceiling
+798:  (( _SKEW_FAR > LOCK_RELEASE_SKEW_SECS ))               || _FIXOK=0   # z06: `SKEW*2 + 60` did not wrap
+799:  (( _NOW_E + _SKEW_FAR > _NOW_E ))                      || _FIXOK=0   # z06: the far-future instant is representable
+800:  (( _NOW_E + _SKEW_NEAR >= _NOW_E ))                    || _FIXOK=0   # z07: the inside-bound instant is representable
+802:    print -u2 -r -- "FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that consume them require, so this run would g
+905:  print -r -- "--- C. LIVE holder, started_at ${_OLD_AGE}s old vs the ${LOCK_CEILING_SECS}s CEILING (fixture DERIVED, T361 C3). Correct = TAKE-ceiling (arm 
+926:  _row z06 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + _SKEW_FAR )))\"}" "DERIVED
+927:  _row z07 FREE-released "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + _SKEW_NEAR )))\"}
+943:  _row g01 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NEAR\"}" "started_at ${_NEAR_AGE}s old, INSIDE the ${LOCK_CEILING_SECS}s ceiling: 
 
 --- the z06/z07 rows ---
-918:  _row z06 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + _SKEW_FAR )))\"}" "DERIVED from _SKEW_FAR: past the skew bound -- a clock-skewed or scheduled writer"
-919:  _row z07 FREE-released "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + _SKEW_NEAR )))\"}" "CONTROL for z06, DERIVED from _SKEW_NEAR: INSIDE the skew bound must still FR
+926:  _row z06 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + _SKEW_FAR )))\"}" "DERIVED from _SKEW_FAR: past the skew bound -- a clock-skewed or scheduled writer"
+927:  _row z07 FREE-released "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + _SKEW_NEAR )))\"}" "CONTROL for z06, DERIVED from _SKEW_NEAR: INSIDE the skew bound must still FR
 
 s00    ok                                       rc=0   CONTROL: unmutated -- the fire must START
-        | [01:11:20] lockselftest| z06  ok             want=HELD            got=HELD-live        DERIVED from _SKEW_FAR: past the skew bound -- a clock-skewed or scheduled writer
-        | [01:11:20] lockselftest| z07  ok             want=FREE-released   got=FREE-released    CONTROL for z06, DERIVED from _SKEW_NEAR: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
-        | [01:11:21] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.ilzacc/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisf
-        | [01:11:21] probe only — exiting without taking the lock or invoking the driver
+        | [01:23:55] lockselftest| z06  ok             want=HELD            got=HELD-live        DERIVED from _SKEW_FAR: past the skew bound -- a clock-skewed or scheduled writer
+        | [01:23:55] lockselftest| z07  ok             want=FREE-released   got=FREE-released    CONTROL for z06, DERIVED from _SKEW_NEAR: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+        | [01:23:55] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.9K39uS/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisf
+        | [01:23:55] probe only — exiting without taking the lock or invoking the driver
 s01s   ok                                       STRUCTURAL: 0 z06/z07 row lines spell LOCK_RELEASE_SKEW_SECS inline
 s01v   ok (T385's s01 is now a NO-OP)           the string it drifted, 'LOCK_RELEASE_SKEW_SECS * 2 + 60', is not in the z06 row
 s01    ok                                       rc=0   T385's s01 verbatim: byte-identical mutant, so the fire STARTS and z06 is ok
-        | [01:11:41] lockselftest| z06  ok             want=HELD            got=HELD-live        DERIVED from _SKEW_FAR: past the skew bound -- a clock-skewed or scheduled writer
-        | [01:11:41] lockselftest| z07  ok             want=FREE-released   got=FREE-released    CONTROL for z06, DERIVED from _SKEW_NEAR: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
-        | [01:11:41] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.5DqFkn/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisf
-        | [01:11:41] probe only — exiting without taking the lock or invoking the driver
+        | [01:24:19] lockselftest| z06  ok             want=HELD            got=HELD-live        DERIVED from _SKEW_FAR: past the skew bound -- a clock-skewed or scheduled writer
+        | [01:24:19] lockselftest| z07  ok             want=FREE-released   got=FREE-released    CONTROL for z06, DERIVED from _SKEW_NEAR: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+        | [01:24:20] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.gLv53G/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisf
+        | [01:24:20] probe only — exiting without taking the lock or invoking the driver
 s01b   ok                                       rc=78  the drift with nowhere to hide: ONE spelling, so the gate CATCHES it (THRESHOLD, not readers)
-        | [01:11:43] lockselftest| FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that consume them require, so this run would grade the FIXTURE and report it as a lock-reader fault. LOCK_CEILING_SECS=86400 LOCK_RELEASE_SKEW_SECS=3600 now=1787937103; past-ceiling age=
-        | [01:11:43] FATAL: the lock-reader self-test refused with EX_CONFIG (rc=78) — a lock THRESHOLD is misconfigured (LOCK_MAX_AGE_SECS / LOCK_CEILING_SECS / LOCK_RELEASE_SKEW_SECS). This is NOT a lock-reader regression: no lock was read. The refusal reason is on stderr above. Fix the environment and re-r
+        | [01:24:23] lockselftest| FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that consume them require, so this run would grade the FIXTURE and report it as a lock-reader fault. LOCK_CEILING_SECS=86400 LOCK_RELEASE_SKEW_SECS=3600 now=1787937863; past-ceiling age=
+        | [01:24:23] FATAL: the lock-reader self-test refused with EX_CONFIG (rc=78) — a lock THRESHOLD is misconfigured (LOCK_MAX_AGE_SECS / LOCK_CEILING_SECS / LOCK_RELEASE_SKEW_SECS). This is NOT a lock-reader regression: no lock was read. The refusal reason is on stderr above. Fix the environment and re-r
 s02    ok                                       rc=78  T385's CONTROL: drift the GATE variable -- still EX_CONFIG 78, the gate is live
-        | [01:11:45] lockselftest| FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that consume them require, so this run would grade the FIXTURE and report it as a lock-reader fault. LOCK_CEILING_SECS=86400 LOCK_RELEASE_SKEW_SECS=3600 now=1787937105; past-ceiling age=
-        | [01:11:45] FATAL: the lock-reader self-test refused with EX_CONFIG (rc=78) — a lock THRESHOLD is misconfigured (LOCK_MAX_AGE_SECS / LOCK_CEILING_SECS / LOCK_RELEASE_SKEW_SECS). This is NOT a lock-reader regression: no lock was read. The refusal reason is on stderr above. Fix the environment and re-r
+        | [01:24:26] lockselftest| FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that consume them require, so this run would grade the FIXTURE and report it as a lock-reader fault. LOCK_CEILING_SECS=86400 LOCK_RELEASE_SKEW_SECS=3600 now=1787937866; past-ceiling age=
+        | [01:24:26] FATAL: the lock-reader self-test refused with EX_CONFIG (rc=78) — a lock THRESHOLD is misconfigured (LOCK_MAX_AGE_SECS / LOCK_CEILING_SECS / LOCK_RELEASE_SKEW_SECS). This is NOT a lock-reader regression: no lock was read. The refusal reason is on stderr above. Fix the environment and re-r
 s03    ok                                       rc=2   STATED RESIDUAL: wrong VARIABLE in the row is a typo no derivation can catch (C/G share it)
-        | [01:12:04] lockselftest| z06  *** FAIL-OPEN  want=HELD            got=FREE-released    DERIVED from _SKEW_FAR: past the skew bound -- a clock-skewed or scheduled writer
-        | [01:12:04] lockselftest| z07  ok             want=FREE-released   got=FREE-released    CONTROL for z06, DERIVED from _SKEW_NEAR: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
-        | [01:12:05] FATAL: the lock-reader self-test FAILED (rc=1, FAIL_OPEN=1, FAIL_SHUT=0, over 45 of 45 declared rows). The thresholds validated at startup, so this is the READERS. A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P-85); a FAIL-SHUT row means a reclaimabl
+        | [01:24:54] lockselftest| z06  *** FAIL-OPEN  want=HELD            got=FREE-released    DERIVED from _SKEW_FAR: past the skew bound -- a clock-skewed or scheduled writer
+        | [01:24:54] lockselftest| z07  ok             want=FREE-released   got=FREE-released    CONTROL for z06, DERIVED from _SKEW_NEAR: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+        | [01:24:54] FATAL: the lock-reader self-test FAILED (rc=1, FAIL_OPEN=1, FAIL_SHUT=0, over 45 of 45 declared rows). The thresholds validated at startup, so this is the READERS. A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P-85); a FAIL-SHUT row means a reclaimabl
 
 CHECKS=7 WRONG=0 VOID=0
 RESULT: PASS -- every case landed where predicted.
