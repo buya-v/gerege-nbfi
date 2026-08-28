@@ -17,6 +17,20 @@ ADJ = os.path.join(HERE, "..", "out", "adjudication.json")
 
 MARK = "<!-- T282-CITATION-ERRATA -->"
 
+# A REPO PATH IN A STRING LITERAL MUST END AT THE PATH.
+# T323's dead-path frontier guard (merged from main mid-task) flagged three
+# rows in THIS file: the markdown this script emits writes paths as `...py`.
+# and the guard's extractor took the trailing backtick-and-full-stop as part
+# of the path, which then resolved to nothing. Splitting the closing
+# punctuation into its own token keeps the EMITTED MARKDOWN byte-identical
+# while letting every path in this source terminate cleanly.
+#
+# Repaired rather than pinned, for two reasons: the guard's own text says so,
+# and `.softhouse/guards/dead-path-frontier.pin` is not T282's file. This is
+# also the trailing-punctuation artefact class T316 already measured -- 56 of
+# its 154 first-pass dead rows, 36%, were exactly this.
+BQ_DOT = "`."
+
 sha = sys.argv[1] if len(sys.argv) > 1 else "UNSTAMPED"
 
 body = open(PATTERNS, encoding="utf-8").read()
@@ -112,9 +126,11 @@ out = ["", "---", "", MARK,
        "instrument below is exactly what was missing when `P-78` collided: it detects a renumbering that failed",
        "to reach the places restating it. **Renumbering is now safe in a way it has never been in this program.**",
        "",
-       "**INSTRUMENT:** `.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py`.",
+       "**INSTRUMENT:** `.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py"
+       + BQ_DOT,
        "`--selftest` = 11/11. **NOT YET WIRED into `conformance.sh`** — `T326` held that file for the batch;",
-       "the exact un-applied wiring diff is in `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md`.",
+       "the exact un-applied wiring diff is in "
+       "`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md" + BQ_DOT,
        "**Until it is applied this enforces nothing**, which is the sixth occurrence of this program's",
        "most-repeated lesson and is recorded here so it is not the seventh.",
        "",
@@ -132,7 +148,7 @@ for i, r in enumerate(rows, 1):
 out.append("")
 out.append("**Total: %d.** Full population, including the 21 adjudicated FALSE POSITIVES and the 2 ambiguous"
            % len(rows))
-out.append("rule-pairs, in `.softhouse/capture/t282-pnumber-drift/out/population.md`.")
+out.append("rule-pairs, in `.softhouse/capture/t282-pnumber-drift/out/population.md" + BQ_DOT)
 out.append("")
 
 with open(PATTERNS, "a", encoding="utf-8") as fh:

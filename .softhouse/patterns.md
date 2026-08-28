@@ -3166,9 +3166,17 @@ THE NUMBER WOULD HAVE PASSED EVERY INSTANCE.**
 *`T282`, measured at `c086ecb2a01b`.*
 
 `P-86` recorded the pattern ids rotting. `T282` was sent to settle the four ids it named and found the
-population had never been measured: **8,448 `P-n` citation sites across the tracked tree, 37 flagged,
-14 genuinely drifted** — including one nobody had seen, `tasks.json:2374`, which cites `P-69` for
+population had never been measured. It is **~8,500 `P-n` citation sites across the tracked tree**, of which
+**14 are genuinely drifted** — including one nobody had seen, `tasks.json:2374`, which cites `P-69` for
 `P-79`'s rule and is *not* part of the `P-86` off-by-one at all.
+
+**The exact figures are DELIBERATELY NOT RESTATED HERE.** They moved four times while this task ran — twice
+from merging `main`, once from adding this very entry (which changed the rare-token frequencies the scorer
+derives *from this register*), and once from the handoff's own citations entering the corpus. **A count
+copied into a second document is `P-80`**, so the second site READS the first: run
+`.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py`, or read the sha-stamped table in
+`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md` §2. **The 14 is stable and is the
+number that matters**; the corpus size is a property of the day it was swept.
 
 **THE RULE, and it is the half `P-86` left implicit.** `P-86` says cite the id **and its sentence**.
 The mechanical consequence is that **the checkable property is the SENTENCE, never the id**: a guard

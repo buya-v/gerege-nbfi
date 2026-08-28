@@ -1,21 +1,21 @@
---- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/capture/t282-pnumber-drift/bin/../red/fixture-RED-RESUME.md	2026-08-28 08:41:21
-+++ /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/capture/t282-pnumber-drift/bin/../red/fixture-GREEN-RESUME.md	2026-08-28 08:41:22
+--- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/capture/t282-pnumber-drift/bin/../red/fixture-RED-RESUME.md	2026-08-28 08:47:52
++++ /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/capture/t282-pnumber-drift/bin/../red/fixture-GREEN-RESUME.md	2026-08-28 08:47:53
 @@ -1,4 +1,4 @@
  # STANDING INSTRUCTIONS (T282 RED fixture 1)
  
 -> section number and restates no number** — `P-79`: never fix a rotted number, make the second site
 +> section number and restates no number** — `P-80`: never fix a rotted number, make the second site
  > READ the first.
---- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/capture/t282-pnumber-drift/bin/../red/fixture-RED-obligations.md	2026-08-28 08:41:21
-+++ /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/capture/t282-pnumber-drift/bin/../red/fixture-GREEN-obligations.md	2026-08-28 08:41:22
+--- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/capture/t282-pnumber-drift/bin/../red/fixture-RED-obligations.md	2026-08-28 08:47:52
++++ /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/capture/t282-pnumber-drift/bin/../red/fixture-GREEN-obligations.md	2026-08-28 08:47:53
 @@ -2,4 +2,4 @@
  
  | idiom | why it is a fail-open |
  |---|---|
 -| `\|\| echo …` | **P-80**: prints an absence over an error. `grep` exits 1 on NO MATCH and >1 on ERROR; `\|\| echo 0` makes those the same number |
 +| `\|\| echo …` | **P-81**: prints an absence over an error. `grep` exits 1 on NO MATCH and >1 on ERROR; `\|\| echo 0` makes those the same number |
---- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/capture/t282-pnumber-drift/bin/../red/fixture-RED-reference-oracle.md	2026-08-28 08:41:21
-+++ /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/capture/t282-pnumber-drift/bin/../red/fixture-GREEN-reference-oracle.md	2026-08-28 08:41:22
+--- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/capture/t282-pnumber-drift/bin/../red/fixture-RED-reference-oracle.md	2026-08-28 08:47:53
++++ /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/capture/t282-pnumber-drift/bin/../red/fixture-GREEN-reference-oracle.md	2026-08-28 08:47:53
 @@ -1,3 +1,3 @@
  # REFERENCE ORACLE NOTES (T282 RED fixture 3)
  
