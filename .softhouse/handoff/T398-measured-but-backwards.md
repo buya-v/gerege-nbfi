@@ -186,7 +186,35 @@ condemned. A later reader who greps `patterns.md` for `T359` now finds the warni
 
 ## 6. FINAL BAR
 
-<!-- BAR-OUTPUT -->
+`bash .softhouse/conformance.sh` — **`bash`, never `sh`** — from a **clean tree** (`git status --porcelain`
+empty) at `a2cbe5b7`, after `git add -A` and commit. **Exit 0.** Every pinned baseline held:
+
+```
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+reference oracle (https://localhost:8443/…/actuator/health) probe = up
+    presence before value (P-84): `grep -c 'probe = '` over the run = 1
+
+exemption census READ: LEDGER parity vectors        = 7  == pinned 7
+exemption census READ: LEDGER oracle-refusal vector = 6  == pinned 6
+exemption census READ: LEDGER money cells compared  = 39 == pinned 39
+    ledger parity           PASS 7    FAIL 0
+    ledger cells compared   144 graded, of which 39 are MONEY cells in int64 minor units
+    divergence vectors      PASS 1    FAIL 0   (pinned 1)
+    cells compared          7884 graded, 93 ungraded
+
+T316-DEADPATH-CENSUS: corpus=1396 deadFiles=75 deadOccurrences=108 resolving=1316 …
+CENSUS wrong ledger implementations — discovered 14 … pinned at 14
+    all 14 wrong ledger implementations DIED through this harness, not by hand.
+
+PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=100 gaps=none in-file-collisions=2
+P-number citations: VERDICT PASS
+```
+
+**Baseline held in full:** exit 0, 46 parity / 7884 cells, `deadOccurrences 108`, 14 wrong
+implementations dead, wrong-impl pin 14, `LEDGER money cells compared = 39`. The only figures that moved
+are the citation-census totals (`ids` 98 → 100, `definition` 99 → 101, and evidence-zone `bare`), which
+is what filing two patterns is supposed to do.
 
 ---
 
