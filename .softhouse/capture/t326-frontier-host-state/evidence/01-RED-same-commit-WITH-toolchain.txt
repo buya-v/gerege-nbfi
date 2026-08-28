@@ -1,0 +1,42 @@
+conformance: CENSUS dead repo-path references among tracked .softhouse/ instruments
+conformance:   selector and per-bucket counts are printed by the census itself:
+T316-DEADPATH-CENSUS: corpus=1183 deadFiles=53 deadOccurrences=79 resolving=1063 indeterminate=70 prose=275
+conformance:   frontier 79 row(s), pinned at 98
+conformance:   (both cardinals DERIVED by counting the files compared, never typed)
+conformance: !! THE DEAD-PATH FRONTIER MOVED.
+conformance: !! 4 NEW dead path reference(s). A '+' row is a NEW site: REPAIR it
+conformance: !! rather than pinning it. Either make the path resolve, or -- if the
+conformance: !! reference is a deliberate fallback candidate -- make the instrument
+conformance: !! REFUSE when no candidate resolves, and record why in the pin.
+> .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest
+> .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/capture/t999-rig/attest/gerege.disposable
+> .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/ACCEPT.json
+> .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh | .softhouse/vectors/ledger/REFUSE.json
+conformance: !! 23 row(s) GONE from the frontier. That is GOOD NEWS, and the pin
+conformance: !! must lose the row IN THE SAME COMMIT, or it starts excusing a weakness
+conformance: !! that is no longer there (conformance.sh:1715 -- a frontier, not an amnesty).
+< .softhouse/bin/go-env.sh | .softhouse/toolchain
+< .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py | .softhouse/toolchain
+< .softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py | .softhouse/toolchain
+< .softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh | .softhouse/toolchain
+< .softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh | .softhouse/toolchain/go
+< .softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py | .softhouse/toolchain
+< .softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh | .softhouse/toolchain
+< .softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh | .softhouse/toolchain
+< .softhouse/capture/t61-halfeven/src/run-counterfactuals.py | .softhouse/toolchain
+< .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py | .softhouse/toolchain
+< .softhouse/capture/t66-unrecognized-interest/gotest.sh | .softhouse/toolchain/go
+< .softhouse/capture/t66-unrecognized-interest/gotest.sh | .softhouse/toolchain/gocache
+< .softhouse/capture/t66-unrecognized-interest/gotest.sh | .softhouse/toolchain/gomodcache
+< .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py | .softhouse/toolchain
+< .softhouse/capture/t83-nonamortizing/src/run-port.py | .softhouse/toolchain
+< .softhouse/handoff/T61-mutations.py | .softhouse/toolchain
+< .softhouse/handoff/T61-sweep/run-sweep.py | .softhouse/toolchain
+< .softhouse/reviews/T298/t298b-census.sh | .softhouse/toolchain
+< .softhouse/reviews/T298/t298b-worktree-composition-drive.sh | .softhouse/toolchain
+< .softhouse/reviews/T298/t298b-worktree-composition-drive.sh | .softhouse/toolchain/go
+< .softhouse/reviews/T298/t298b-worktree-composition-drive.sh | .softhouse/toolchain/gomodcache
+< .softhouse/reviews/T84-evidence/src/exemption-demo.py | .softhouse/toolchain
+< .softhouse/reviews/T84-evidence/src/run-port.py | .softhouse/toolchain
+conformance:   The pin is /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee525215e9f9d410/.softhouse/guards/dead-path-frontier.pin
+T316-DEADPATH-FRONTIER: REFUSED rows=79 pinned=98 added=4 removed=23
