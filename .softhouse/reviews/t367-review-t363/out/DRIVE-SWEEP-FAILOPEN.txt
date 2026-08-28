@@ -1,0 +1,21 @@
+A) a selector that IS valid and DOES hit
+  -F 'acc_gl_journal_entry'                      total=684   archived=210   LIVE=474
+
+B) a selector that IS valid and genuinely finds nothing
+  -F 'zzz-no-such-string-t367'                   total=0     archived=0     LIVE=0
+
+C) a selector that is MALFORMED and never ran -- indistinguishable from B
+  -E 'gl (16|17' (unbalanced paren)              total=0     archived=0     LIVE=0
+
+D) the same malformed selector with the exit status the script throws away:
+     git grep rc for the MALFORMED pattern = 128
+     git grep rc for the EMPTY-RESULT pattern = 1
+     git grep rc for the HITTING pattern      = 0
+
+  If rc for MALFORMED differs from rc for EMPTY-RESULT, the information needed to
+  distinguish B from C exists and casualty-sweep.sh discards it.
+
+E) does the shipped script read that status anywhere?
+     'git grep' occurrences in the shipped sweep: 4
+     20:cd "$(git rev-parse --show-toplevel)" || exit 2
+     (nothing above means: no exit status of git grep is ever inspected)

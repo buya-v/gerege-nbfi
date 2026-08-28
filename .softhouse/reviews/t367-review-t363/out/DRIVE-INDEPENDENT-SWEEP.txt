@@ -1,0 +1,43 @@
+T367 INDEPENDENT SWEEP -- selectors NOT in casualty-sweep.sh
+repo: 4e911441  date: 2026-08-28T09:23:04Z
+
+=== X1  the PROCESSED/ERROR split of the audit table (present tense)
+    total=2   LIVE=1
+      .softhouse/reference-oracle.md:924:`gerege` audit table the split is **156 PROCESSED / 194 ERROR**, so refusals are the majority of this
+
+=== X2  any present-tense row count for m_portfolio_command_source
+    total=18   LIVE=0
+
+=== X3  'the whole gerege audit table' style scope claims
+    total=0   LIVE=0
+
+=== X4  distinct transaction_id spelled as a live cardinal
+    total=17   LIVE=0
+
+=== X5  '26 transactions' / '31 transactions' style
+    total=0   LIVE=0
+
+=== X6  claims that the ledger has 60 or 71 rows, present tense
+    total=0   LIVE=0
+
+=== X7  MNT-only assertions not already named by T363
+    total=9   LIVE=2
+      .softhouse/capture/t247-dec2-rev7/REVISION-7-PROPOSED.md:614:| **YES, SINCE `A2-15` — AND REVISION 7 CORRECTS WHAT REVISIONS 1–6 SAID HERE, WHICH WAS *"NO. §5 — no admissible vector can carr
+      .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:515:    """| **YES, SINCE `A2-15` — AND REVISION 7 CORRECTS WHAT REVISIONS 1–6 SAID HERE, WHICH WAS *"NO. §5 — no admissi
+
+=== X8  a max-id pin other than 64/352 (a floor someone else typed)
+    total=0   LIVE=0
+
+=== X9  is oracle-state-baseline.sh referenced by anything that RUNS?
+    total=0   LIVE=0
+
+=== X10 is PROBES.tsv referenced by anything that RUNS?
+    total=1   LIVE=1
+      .softhouse/tasks.json:5240:      "description": "T363 is COMPLETE on softhouse/T363-oracle-baseline @ 8313ab6d (15 files, scope CLEAN against its grant, verified by the driver with the three
+
+=== X11 a deliberately MALFORMED selector, to prove this sweep refuses
+    *** SELECTOR DID NOT RUN (git grep rc=128). This is NOT "zero hits".
+fatal: command line, 'gl (16|17': parentheses not balanced
+
+END. X11 must report 'SELECTOR DID NOT RUN'. If it reports 0 hits, this sweep is as
+fail-open as the one it is auditing.

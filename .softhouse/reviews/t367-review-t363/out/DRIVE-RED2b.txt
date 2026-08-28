@@ -1,0 +1,8 @@
+ORACLE STATE BASELINE -- derived, 2026-08-28T09:25:14Z
+  container=fineract-db-1  database=no_such_db_t367  tenant=gerege
+  registry=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a57a6c411cc2556f9/.softhouse/reviews/t367-review-t363/t363-under-test/PROBES.tsv
+  READ-ONLY: every statement below is a SELECT.
+------------------------------------------------------------------------
+UNREACHABLE: could not read the tenant database. No observation was made.
+  psql said: psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  database "no_such_db_t367" does not exist
+VERDICT: UNREACHABLE (exit 2) -- this is NOT a statement about the ledger.

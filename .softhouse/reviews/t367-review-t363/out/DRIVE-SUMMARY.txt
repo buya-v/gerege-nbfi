@@ -1,0 +1,14 @@
+ok   DRIVE-GREEN                  exit 0  (expected 0)
+ok   DRIVE-RED4                   exit 1  (expected 1)
+ok   DRIVE-RED1                   exit 1  (expected 1)
+ok   DRIVE-RED1b                  exit 1  (expected 1)
+ok   DRIVE-RED2                   exit 2  (expected 2)
+ok   DRIVE-RED2b                  exit 2  (expected 2)
+ok   DRIVE-RED5                   exit 1  (expected 1)
+ok   DRIVE-RED6                   exit 1  (expected 1)
+ok   DRIVE-INTERP-sh              exit 3  (expected 3)
+ok   DRIVE-INTERP-dash            exit 3  (expected 3)
+ok   DRIVE-INTERP-zsh             exit 3  (expected 3)
+ok   DRIVE-INTERP-ksh             exit 3  (expected 3)
+
+ALL DRIVES BEHAVED AS EXPECTED

@@ -1,0 +1,29 @@
+ status |  n  
+--------+-----
+      1 | 162
+      5 | 197
+(2 rows)
+
+ total 
+-------
+   359
+(1 row)
+
+ status | n_at_or_below_352 
+--------+-------------------
+      1 |               157
+      5 |               195
+(2 rows)
+
+ null_key | empty_key | null_or_blank_key | rows_total 
+----------+-----------+-------------------+------------
+        0 |         0 |                 0 |        359
+(1 row)
+
+    column_name     | is_nullable |     data_type     
+--------------------+-------------+-------------------
+ status             | NO          | smallint
+ result_status_code | YES         | integer
+ idempotency_key    | NO          | character varying
+(3 rows)
+

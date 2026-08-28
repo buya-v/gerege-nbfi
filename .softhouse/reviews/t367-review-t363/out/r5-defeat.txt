@@ -1,0 +1,42 @@
+== sequences: last_value vs max(id). The instrument reads max(id) only. ==
+ schemaname |           sequencename            | last_value 
+------------+-----------------------------------+------------
+ public     | acc_gl_closure_id_seq             |          1
+ public     | acc_gl_journal_entry_id_seq       |         75
+ public     | m_portfolio_command_source_id_seq |        359
+(3 rows)
+
+== the tables the instrument ATTRIBUTES on (2) vs the tables in the tenant ==
+ tables_in_public_schema 
+-------------------------
+                     281
+(1 row)
+
+== reversed journal entries -- the instrument never reads this column ==
+ reversed | count 
+----------+-------
+ f        |    63
+ t        |     8
+(2 rows)
+
+== manual_entry / entry_date spread, also unread ==
+ manual_entry | count 
+--------------+-------
+ f            |    34
+ t            |    37
+(2 rows)
+
+== acc_gl_account: a GL-account retype leaves NO row in either watched table ==
+ERROR:  column "manual_entries_allowed" does not exist
+LINE 1: ...id, gl_code, name, classification_enum, disabled, manual_ent...
+                                                             ^
+== float columns across the WHOLE tenant, not just the 2 ledger tables ==
+ float_cols_whole_db 
+---------------------
+                   0
+(1 row)
+
+ table_name | column_name | data_type 
+------------+-------------+-----------
+(0 rows)
+

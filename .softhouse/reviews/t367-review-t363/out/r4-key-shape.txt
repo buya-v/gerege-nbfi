@@ -1,0 +1,39 @@
+ looks_like_uuid | not_uuid | total 
+-----------------+----------+-------
+             339 |       20 |   359
+(1 row)
+
+         bucket         | count 
+------------------------+-------
+ uuid-shaped, id <= 352 |   339
+(1 row)
+
+        bucket         | count 
+-----------------------+-------
+ uuid-shaped, id > 352 |     0
+(1 row)
+
+ id  |          idempotency_key          
+-----+-----------------------------------
+ 281 | a2-26-idem-probe-0000000000000001
+ 282 | a2-26-idem-probe-0000000000000002
+ 290 | a2-29-rb-org-0001
+ 297 | a2-29-je-1-0001
+ 298 | a2-29-rb-org-0002
+ 300 | a2-29-rb-org-0003
+ 301 | a2-29-je-2-0001
+ 302 | a2-29-rb-org-0004
+ 303 | a2-29-je-2-0002
+ 304 | a2-29-rb-org-0005
+ 305 | a2-29-rev-0001
+ 306 | a2-29-rb-off-0001
+ 307 | a2-29-rb-org-0006
+ 353 | t352-a01-residue-3dp
+ 354 | t352-a03-balance-scale
+ 355 | t352-a04-overscale
+ 356 | t352-a07-usd
+ 357 | T359-P01-residue-post
+ 358 | T359-P02-residue-post
+ 359 | T359-P03-residue-post
+(20 rows)
+
