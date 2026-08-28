@@ -81,38 +81,38 @@ WINDOW_AFTER = 14
 LEDGER = [
     # ---- LIVE SITES that must carry a scope marker -------------------------------
     ('The residual is AT MOST `min(B_minor, n·δ)`: the principal is what it is',
-     'SCOPED', 'STANDING RULE, seventh mechanism: present-tense general law inside a rule a later '
+     'SCOPED', 'S1 | STANDING RULE, seventh mechanism: present-tense general law inside a rule a later '
                'writer is meant to APPLY.'),
     ('a fact about and the term is only the cap. T117 and T159 topped out',
-     'SCOPED', 'continuation of the same sentence.'),
+     'SCOPED', 'S1 | continuation of the same sentence.'),
     ('`B_minor − n·δ` — **1, 51 and 99** minor units at `δ = 1` and `n = 200`',
-     'SCOPED', 'per-cell claim about B201/B251/B299, and MEASURED WRONG IN ITS OWN RIGHT before '
+     'SCOPED', 'S2* | per-cell claim about B201/B251/B299, and MEASURED WRONG IN ITS OWN RIGHT before '
                'T332: the sentence called `B_minor − n·δ` "their residual" when it is what those '
                'cells REPAY (1/51/99) and their residual is 200. FU-T332-1.'),
     ('derived the FULL/PARTIAL split from it** — `TOTAL PRINCIPAL =',
-     'SCOPED', 'law (ii) proper, line-wrapped; the formula lands on the next line.'),
+     'SCOPED', 'S3 | law (ii) proper, line-wrapped; the formula lands on the next line.'),
     ('max(0, B_minor − n·δ)`, which predicted the amount repaid on three partial cells',
-     'SCOPED', 'law (ii) proper, stated live in the family-B answered-questions block; it pointed '
+     'SCOPED', 'S3 | law (ii) proper, stated live in the family-B answered-questions block; it pointed '
                'at gap 2 but not at the correction that narrows it.'),
     ('`min(B_minor, n·δ)`; the term enters only as the **cap**',
-     'SCOPED', 'T219 correction block: present-tense general law about "an unrescued family-B cell".'),
+     'SCOPED', 'S4 | T219 correction block: present-tense general law about "an unrescued family-B cell".'),
     ('residual = B_minor − max(0, B_minor − n·δ) = min(B_minor, n·δ)',
-     'SCOPED', 'the twin identity itself, fenced, in THE RESIDUAL RECORD block; the identity is '
+     'SCOPED', 'S5 | the twin identity itself, fenced, in THE RESIDUAL RECORD block; the identity is '
                'exact and the law under it is not, which is exactly why the twin inherits the '
                'seven counterexamples.'),
     ('the term is only the cap; **the principals asked are what the figure is',
-     'SCOPED', 'the SEVENTH site. PROSE ONLY -- it contains no formula, so every grep for the '
+     'SCOPED', 'S6* | the SEVENTH site. PROSE ONLY -- it contains no formula, so every grep for the '
                'symbolic form misses it. This is why the sweep carries CAP-PROSE selectors.'),
     ('the residual is AT MOST `min(B_minor, n·δ)` — a function of the **PRINCIPAL**',
-     'SCOPED', 'T241 pointer INSIDE the superseded G-8-NOTICE. The block is history, but this '
+     'SCOPED', 'S7 | T241 pointer INSIDE the superseded G-8-NOTICE. The block is history, but this '
                'blockquote is the present-tense POINTER T241 added, and the block itself rules '
                'that adding a pointer does not corrupt a historical record.'),
     ('The residual of an unrescued family-B cell is AT MOST `min(B_minor, n·δ)` — a fact about the PRINCIPAL',
-     'SCOPED', 'PRESCRIPTIVE: the ground of a "must" telling a future writer what to disclose '
+     'SCOPED', 'S8 | PRESCRIPTIVE: the ground of a "must" telling a future writer what to disclose '
                'about G-8. A false rule in a prescription propagates into work not yet done. '
                'CORRECTED FIRST.'),
     ('capped by the term.** T219 tripled the record *at T159\'s own term',
-     'SCOPED', 'continuation of the prescriptive sentence.'),
+     'SCOPED', 'S8 | continuation of the prescriptive sentence.'),
 
     # ---- ARGUED EXEMPT ------------------------------------------------------------
     ('last row EMI = E + B ;   TOTAL PRINCIPAL = max(0, B_minor − n·δ)',
@@ -347,9 +347,16 @@ def main():
 
     n_scoped = sum(1 for _, cls, _, _, _ in rows if cls.startswith('SCOPED'))
     n_exempt = sum(1 for _, cls, _, _, _ in rows if cls.startswith('EXEMPT'))
+    # DISTINCT sites, derived from the ledger's own site labels and never typed --
+    # a claim can wrap across two lines and counting lines would over-report it.
+    # A trailing '*' marks a site that was NOT among the six T278 named.
+    sites = sorted({why.split('|')[0].strip()
+                    for k in used for _, cls, why in [LEDGER[k]] if cls == 'SCOPED'})
     print('')
-    print('SCOPED sites: %d   argued-exempt sites: %d   unclassified: %d   stale ledger rows: %d'
-          % (n_scoped, n_exempt, len(unclassified), len(stale)))
+    print('SCOPED lines: %d over %d DISTINCT sites %s   (%d of them NOT among the six T278 named)'
+          % (n_scoped, len(sites), sites, sum(1 for s in sites if s.endswith('*'))))
+    print('argued-exempt lines: %d   unclassified: %d   stale ledger rows: %d'
+          % (n_exempt, len(unclassified), len(stale)))
     print('T332 SWEEP: %s' % ('PASS' if ok else 'FAIL'))
     return 0 if ok else 1
 

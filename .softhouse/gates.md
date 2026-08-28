@@ -1680,16 +1680,7 @@ one-run fluke.
 before the oracle was asked.** T229 registered "family B PARTIAL, repaying 1 / 51 / 99 minor units"
 in an ancestor commit and the oracle returned exactly those three numbers. What they **REPAY** is
 `B_minor − n·δ` — **1, 51 and 99** minor units at `δ = 1` and `n = 200` — which is why all three leave
-**exactly 200 minor units** outstanding.
-
-> **[T332 — CORRECTED IN PLACE, AND IT IS THIS SECTION'S OWN SEVENTH MECHANISM ONE MORE TIME.** The
-> sentence above read *"Their residual is `B_minor − n·δ`"*. Measured, `B_minor − n·δ` is **1 / 51 / 99**
-> — what those three cells REPAY — while their **residual** is the **200** the same sentence then names.
-> The figure was right and the variable it was labelled with was wrong, which is exactly the failure the
-> STANDING RULE's seventh mechanism was added to catch. `[VERIFIED: `.softhouse/capture/t332-residual-twin-sweep/src/t332_twin_audit.py --sites` → `trio_B201_B251_B299`, integer minor units from
-> `capture-t229-raw.json.gz`.]` Law (ii) holds on all three of these PARTIAL cells and on all 5 PARTIAL
-> witnesses in the whole committed corpus; **in general it is an UPPER BOUND, NOT AN EQUALITY** — see
-> `#### CORRECTION (T277)` under `### THE LAW`.]** **`T229-R600p0-N200-B299` is the cell that falsified the ceiling this section carried**
+**exactly 200 minor units** outstanding. **`T229-R600p0-N200-B299` is the cell that falsified the ceiling this section carried**
 — MNT 2.99 failing at n = 200, where the old text said nothing above MNT 1.00 could fail — and it is
 why the ceiling paragraph in *THE REGION* below had to be rewritten. **They are NOT the largest
 residual on record; that is `3000` minor units — MNT 30.00 — at n = 3000** [T219; this sentence read
@@ -1697,6 +1688,17 @@ residual on record; that is `3000` minor units — MNT 30.00 — at n = 3000** [
 figures are family-B cells at 600.0 %]. **And no claim is made that MNT 2.99 is the
 largest failing disbursement at a short term** — T231 did not sweep for that and does not know, and
 **neither did T219, which asked nothing at n = 200 at all** `[UNVERIFIED]`.
+
+> **[T332 — `B_minor − n·δ` IS AN UPPER BOUND, NOT AN EQUALITY, AND THE SENTENCE ABOVE ALSO NAMED THE
+> WRONG VARIABLE — corrected in place. See `#### CORRECTION (T277)` under `### THE LAW`.** It read
+> *"Their residual is `B_minor − n·δ`"*. Measured, `B_minor − n·δ` is **1 / 51 / 99** — what those three
+> cells REPAY — while their **residual** is the **200** the same sentence then names. The figure was right
+> and the variable it was labelled with was wrong, which is exactly the failure the STANDING RULE's seventh
+> mechanism was added to catch.
+> `[VERIFIED: .softhouse/capture/t332-residual-twin-sweep/src/t332_twin_audit.py --sites → trio_B201_B251_B299,
+> integer minor units from capture-t229-raw.json.gz.]` Law (ii) holds on all three of these PARTIAL cells
+> and on all 5 PARTIAL witnesses in the whole committed corpus. **This site is NOT one of the five T278
+> named; the sweep found it.**]**
 
 **On all 209 family-B cells the unamortized residual equals the final row's `balance` exactly, and
 `totalOutstandingAmount` reads `0`** — 209 of 209, 0 exceptions [T170]. So `totalOutstandingAmount`
@@ -2464,7 +2466,7 @@ STILL exactly those seven**. Widening the population by 95 % adds no eighth exce
   exactly, so `δ` is not derivable for it and **every `δ`-dependent claim above is silent about it.**
   `[UNVERIFIED — that cell's δ.]`
 
-#### T332 — THE SAME CLAIM, SWEPT: law (ii)'s algebraic twin was live at SIX further sites in this file, one of them a PRESCRIPTION
+#### T332 — THE SAME CLAIM, SWEPT: the twin was live at EIGHT sites in this file, TWO of which nobody had named, and one of them is a PRESCRIPTION
 
 **Classification: ENGINEERING** (`CLAUDE.md` § Answering gates). Nothing RESERVED is touched: no cutover,
 no regulatory sign-off, no licence fact, no money spent, no endpoint exposed. No `DEC-n` is amended,
@@ -2477,8 +2479,11 @@ the conservative superset `B_minor < 1.5·n`, it still rests entirely on the unp
 rejected cloud branch was that it measured one of two laws and affirmed the other without testing it on the
 domain it had just written. `T277` measured law (ii), corrected the block in front of it, and **did not sweep
 its own file for the same claim in other words** — its follow-up says *"I corrected the one live statement I
-own."* `T278` found five more; `T332` swept and found **six**, plus one that no grep for the formula could
-have caught because **it contains no formula at all**.
+own."* `T278` named **six** (five twin restatements plus law (ii) proper). `T332` swept and found **eight**,
+and the two `T278` did not name are the interesting ones: one **contains no formula at all**, so no grep for
+the symbolic form could have caught it, and the other **also named the wrong variable** — it called
+`B_minor − n·δ` the *residual* of `B201`/`B251`/`B299` when it is what those cells REPAY. **A claim restated
+six times was restated eight.**
 
 **THE TWIN IS THE SAME CLAIM.** `residual = B_minor − max(0, B_minor − n·δ) = min(B_minor, n·δ)` is an exact
 identity over the integers — verified exhaustively, not asserted — so the residual form is FALSE on **exactly
@@ -2506,21 +2511,32 @@ the same one excluded cell (`T84-RP-R7p0-N56-B23`). **There is no fourth opinion
   `2·B_minor < 3·n`: failing cells OUTSIDE the region **0** in both scopes, all seven inside.
 - **No vector is affected.** `grep -rn 'n·δ\|n\*delta\|B_minor' .softhouse/vectors/` → no match.
 
-**THE SEVEN SITES, EACH SCOPED WHERE IT STANDS.** `:3679`-equivalent — the **prescriptive disclosure
-instruction** inside `## G-8-NOTICE` — was corrected **first**, because a false rule in an instruction
-propagates into work not yet done. The other six: the STANDING RULE's seventh mechanism; the family-B
-"what is NOT known" block (law (ii) proper, and the T219 correction under it); the `Discriminator for family
-B` sentence about `B201`/`B251`/`B299`; the registered-thesis identity in *THE RESIDUAL RECORD, RE-MEASURED*;
-the prose-only restatement in *The bound on the failing principal, RESTATED OVER THE DOMAIN ACTUALLY SWEPT*
-(*"the term is only the cap; the principals asked are what the figure is actually a fact about"*); and the
-T241 pointer inside `## G-8-NOTICE`.
+**THE EIGHT SITES, EACH SCOPED WHERE IT STANDS, NAMED BY HEADING AND NOT BY LINE NUMBER.** The
+**prescriptive disclosure instruction** under `### UPDATE — T159 reviewed T117…` inside `## G-8-NOTICE` was
+corrected **FIRST**, because a false rule in an instruction propagates into work not yet done. The other
+seven: `### STANDING RULE — how to edit this section` (the seventh mechanism); `### What is NOT known about
+family B`, twice — law (ii) proper, and the T219 correction under it; `### Discriminator for family B`
+(**not named by T278**, and doubly wrong — see the note there); the registered-thesis identity under
+`## THE RESIDUAL RECORD, RE-MEASURED`; the prose-only restatement under `## The bound on the failing
+principal, RESTATED OVER THE DOMAIN ACTUALLY SWEPT` — *"the term is only the cap; the principals asked are
+what the figure is actually a fact about"*, **not named by T278 and invisible to any symbolic grep**; and
+the T241 pointer at the head of `## G-8-NOTICE`.
 
 **AND SITES THAT WERE ARGUED NOT TO NEED IT, RATHER THAN MISSED.** The fenced `### THE LAW` block is left
 byte-unchanged on its own stated ground; every restatement inside `#### CORRECTION (T277)` is a quotation made
 in order to refute; per-cell figures (`B3001`/`B4499` leaving exactly `n·δ`; `n = 104`/`108` at `B = 1`) were
 **measured true on the cells they name**, not waved through; the `n·δ` sentence in *What T219 did NOT do* is a
 disclaimer that narrows rather than asserts; and the contributor-list mention of T219's registered thesis is a
-past-tense report of a registration. **Fourteen sites argued exempt, seven scoped.**
+past-tense report of a registration. **The sweep's own count, derived and never typed: 11 scoped lines over
+8 distinct sites, 33 argued-exempt lines, 0 unclassified.**
+
+**ONE LIVE SITE OUTSIDE THIS FILE, REPORTED AND NOT EDITED (`FU-T332-2`).**
+`.softhouse/gates-proposed-answers.md`, under `## P-6 · Freeze a gate write-up once its measurements
+reproduce`, states the twin unqualified inside a live `T228` correction that ends *"Do not restate any of
+these without the PRINCIPAL."* It is outside `T332`'s declared sole-writer scope and was left alone; the
+sweep already runs on it (`--file`) and reports it as unclassified. Every other repo-wide hit is committed
+evidence — prediction registers, handoffs, reviews, `T277`'s and `T278`'s own instruments — which is
+correct-forward territory (T114 / T176 / T316), and `T332` makes no claim about them beyond noting they exist.
 
 **THE SWEEP RE-RUNS, AND THAT IS THE POINT.**
 `python3 .softhouse/capture/t332-residual-twin-sweep/src/t332_sweep_gates.py --list` re-derives the site list
@@ -2529,7 +2545,7 @@ restatement appears, if a scoped site loses its scope marker, or if a ledgered s
 The ledger is keyed by **quoted snippets of the line, never by line number** (P-86 — *"an id is a cardinal:
 cite the rule TEXT beside any P-number"*; gates.md line numbers move every time anybody edits above them,
 which is this correction's own subject matter). `bash .softhouse/capture/t332-residual-twin-sweep/src/verify_t332.sh`
-runs it with four positive and six negative calibrations.
+runs it with six positive and seven negative calibrations, plus the three `cmp` proofs.
 
 ##### The rejected `T241` branch: what is salvaged, and what is recorded as FALSE
 

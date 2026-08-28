@@ -1,7 +1,7 @@
 T332 — where I looked, verbatim, so 'not found' is a statement about the SEARCH.
 
 $ grep -c . .softhouse/gates.md
-3727
+3742
 
 --- every symbolic form, repo-wide, over text files (REPORTED, NOT EDITED outside gates.md)
 $ grep -rn "min(B_minor\|max(0, B_minor\|B_minor − n·δ" --include=*.md --include=*.py --include=*.json --include=*.sh --include=*.go .
@@ -15,7 +15,7 @@ $ grep -rn "min(B_minor\|max(0, B_minor\|B_minor − n·δ" --include=*.md --inc
 ./.softhouse/capture/t277-shapelaw-salvage/src/shapelaw_census_t277.py:1
 ./.softhouse/capture/t282-pnumber-drift/out/live-AFTER-repair.json:1
 ./.softhouse/gates-proposed-answers.md:1
-./.softhouse/gates.md:23
+./.softhouse/gates.md:25
 ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T219-handoff.md:2
 ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T229.md:2
 ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241-evidence/scope-table-t241.json:7
