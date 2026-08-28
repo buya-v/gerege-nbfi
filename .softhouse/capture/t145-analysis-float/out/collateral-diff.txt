@@ -1,0 +1,241 @@
+diff --git a/.softhouse/capture/pathb/t22-probe/req/calc-B-01-baseline-repro.json b/.softhouse/capture/pathb/t22-probe/req/calc-B-01-baseline-repro.json
+index dece9bb6..83185afd 100644
+--- a/.softhouse/capture/pathb/t22-probe/req/calc-B-01-baseline-repro.json
++++ b/.softhouse/capture/pathb/t22-probe/req/calc-B-01-baseline-repro.json
+@@ -8,14 +8,4 @@
+  "numberOfRepayments": 12,
+  "repaymentEvery": 1,
+  "repaymentFrequencyType": 2,
+- "interestRatePerPeriod": 21.6,
+- "interestRateFrequencyType": 3,
+- "amortizationType": 1,
+- "interestType": 0,
+- "interestCalculationPeriodType": 1,
+- "transactionProcessingStrategyCode": "advanced-payment-allocation-strategy",
+- "expectedDisbursementDate": "01 January 2026",
+- "submittedOnDate": "01 January 2026",
+- "locale": "en",
+- "dateFormat": "dd MMMM yyyy"
+-}
+\ No newline at end of file
++ "interestRatePerPeriod": 
+\ No newline at end of file
+diff --git a/.softhouse/capture/pathb/t22-probe/req/product-1-baseline-repro.json b/.softhouse/capture/pathb/t22-probe/req/product-1-baseline-repro.json
+index 557d9420..700655a2 100644
+--- a/.softhouse/capture/pathb/t22-probe/req/product-1-baseline-repro.json
++++ b/.softhouse/capture/pathb/t22-probe/req/product-1-baseline-repro.json
+@@ -9,85 +9,4 @@
+  "numberOfRepayments": 12,
+  "repaymentEvery": 1,
+  "repaymentFrequencyType": 2,
+- "interestRatePerPeriod": 21.6,
+- "interestRateFrequencyType": 3,
+- "amortizationType": 1,
+- "interestType": 0,
+- "interestCalculationPeriodType": 1,
+- "transactionProcessingStrategyCode": "advanced-payment-allocation-strategy",
+- "loanScheduleType": "PROGRESSIVE",
+- "loanScheduleProcessingType": "HORIZONTAL",
+- "daysInYearType": 1,
+- "daysInMonthType": 1,
+- "accountingRule": 1,
+- "locale": "en",
+- "dateFormat": "dd MMMM yyyy",
+- "paymentAllocation": [
+-  {
+-   "transactionType": "DEFAULT",
+-   "futureInstallmentAllocationRule": "NEXT_INSTALLMENT",
+-   "paymentAllocationOrder": [
+-    {
+-     "paymentAllocationRule": "PAST_DUE_PENALTY",
+-     "order": 1
+-    },
+-    {
+-     "paymentAllocationRule": "PAST_DUE_FEE",
+-     "order": 2
+-    },
+-    {
+-     "paymentAllocationRule": "PAST_DUE_PRINCIPAL",
+-     "order": 3
+-    },
+-    {
+-     "paymentAllocationRule": "PAST_DUE_INTEREST",
+-     "order": 4
+-    },
+-    {
+-     "paymentAllocationRule": "DUE_PENALTY",
+-     "order": 5
+-    },
+-    {
+-     "paymentAllocationRule": "DUE_FEE",
+-     "order": 6
+-    },
+-    {
+-     "paymentAllocationRule": "DUE_PRINCIPAL",
+-     "order": 7
+-    },
+-    {
+-     "paymentAllocationRule": "DUE_INTEREST",
+-     "order": 8
+-    },
+-    {
+-     "paymentAllocationRule": "IN_ADVANCE_PENALTY",
+-     "order": 9
+-    },
+-    {
+-     "paymentAllocationRule": "IN_ADVANCE_FEE",
+-     "order": 10
+-    },
+-    {
+-     "paymentAllocationRule": "IN_ADVANCE_PRINCIPAL",
+-     "order": 11
+-    },
+-    {
+-     "paymentAllocationRule": "IN_ADVANCE_INTEREST",
+-     "order": 12
+-    }
+-   ]
+-  }
+- ],
+- "isInterestRecalculationEnabled": false,
+- "isEqualAmortization": false,
+- "multiDisburseLoan": false,
+- "canDefineInstallmentAmount": false,
+- "holdGuaranteeFunds": false,
+- "accountMovesOutOfNPAOnlyOnArrearsCompletion": false,
+- "enableDownPayment": false,
+- "dueDaysForRepaymentEvent": 0,
+- "overDueDaysForRepaymentEvent": 0,
+- "enableInstallmentLevelDelinquency": false,
+- "fundId": null,
+- "charges": []
+-}
+\ No newline at end of file
++ "interestRatePerPeriod": 
+\ No newline at end of file
+diff --git a/.softhouse/capture/t219-g8-residual/out/classify-t219.json b/.softhouse/capture/t219-g8-residual/out/classify-t219.json
+index 2ffadffc..1aa5317d 100644
+--- a/.softhouse/capture/t219-g8-residual/out/classify-t219.json
++++ b/.softhouse/capture/t219-g8-residual/out/classify-t219.json
+@@ -105,9 +105,9 @@
+    "observedOutcome": "AMORTIZES_FULLY(last-row-only)",
+    "_obsDeltaFromRow1": 0,
+    "verdict": "AS PREDICTED",
+-   "P2_emiDifferenceEqualsB": false,
++   "P2_emiDifferenceEqualsB": true,
+    "P2_emiObservedEqualsPredicted": true,
+-   "P2_totalInterestEqualsNEplusB": false
++   "P2_totalInterestEqualsNEplusB": true
+   },
+   {
+    "id": "T219-R600p0-N3000-B1001",
+@@ -167,7 +167,7 @@
+    "verdict": "AS PREDICTED",
+    "P2_emiDifferenceEqualsB": true,
+    "P2_emiObservedEqualsPredicted": true,
+-   "P2_totalInterestEqualsNEplusB": false
++   "P2_totalInterestEqualsNEplusB": true
+   },
+   {
+    "id": "T219-R600p0-N108-B1",
+@@ -227,7 +227,7 @@
+    "verdict": "AS PREDICTED",
+    "P2_emiDifferenceEqualsB": true,
+    "P2_emiObservedEqualsPredicted": true,
+-   "P2_totalInterestEqualsNEplusB": false
++   "P2_totalInterestEqualsNEplusB": true
+   },
+   {
+    "id": "T219-R600p0-N3000-B1999",
+diff --git a/.softhouse/capture/t282-pnumber-drift/out/concept-sweep-8081-8384.txt b/.softhouse/capture/t282-pnumber-drift/out/concept-sweep-8081-8384.txt
+index fcfc39f3..da31ada2 100644
+--- a/.softhouse/capture/t282-pnumber-drift/out/concept-sweep-8081-8384.txt
++++ b/.softhouse/capture/t282-pnumber-drift/out/concept-sweep-8081-8384.txt
+@@ -5,27 +5,25 @@ Context read: the citation line plus ONE line each side, 300 chars each way.
+ A keyword sweep cannot see a subject stated further away, and UNCLASSIFIED
+ means the sweep had nothing to go on -- never that the citation is correct.
+ 
+-P-80 AMBIGUOUS (both vocabularies)            9
+-P-80 SUBJECT IS P-81                          79
+-P-80 UNCLASSIFIED (neither vocabulary)        54
+-P-80 consistent                               27
+-P-83 SUBJECT IS P-84                          45
+-P-83 UNCLASSIFIED (neither vocabulary)        16
++P-80 AMBIGUOUS (both vocabularies)            7
++P-80 SUBJECT IS P-81                          76
++P-80 UNCLASSIFIED (neither vocabulary)        65
++P-80 consistent                               21
++P-83 SUBJECT IS P-84                          43
++P-83 UNCLASSIFIED (neither vocabulary)        18
+ P-83 consistent                               16
+ 
+ == P-80 AMBIGUOUS (both vocabularies) ==
+   1   .softhouse/capture/t253-portability/instruments/50-t234-residue-probe.sh  lines 17
+   1   .softhouse/capture/t256-verdict-predicate/red/drive-red.sh  lines 28
+   1   .softhouse/capture/t284-schema2-callsites/evidence/60-failopen-lint.txt  lines 109
+-  1   .softhouse/conformance.sh  lines 1614
+-  1   .softhouse/guards/check-dead-path-frontier.sh  lines 46
+   1   .softhouse/handoff/T259-verdict-predicate.md  lines 239
+   1   .softhouse/reviews/T293/evidence/10-lint-residue-ABSENT.txt  lines 109
+   1   .softhouse/reviews/T293/evidence/11-lint-residue-PRESENT.txt  lines 106
+   1   .softhouse/reviews/t262-verdict-predicate/REVIEW.md  lines 419
+ 
+ == P-80 SUBJECT IS P-81 ==
+-  9   .softhouse/tasks.json  lines 2404,2427,2427,2450,2474,2474,2496,3422,3422
++  7   .softhouse/tasks.json  lines 2404,2427,2427,2450,2474,2474,2496
+   4   .softhouse/capture/t256-verdict-predicate/red/drive-red.sh  lines 8,33,34,198
+   4   .softhouse/reviews/t260-dec2-rev8/REVIEW.md  lines 27,28,311,328
+   4   .softhouse/reviews/t260-dec2-rev8/instruments/70-spotcheck-stale-sites.sh  lines 3,5,21,55
+@@ -36,7 +34,6 @@ P-83 consistent                               16
+   2   .softhouse/capture/t256-verdict-predicate/run-output.txt  lines 48,591
+   2   .softhouse/capture/t304-evidence-destruction/evidence/10-raw-sites.tsv  lines 1713,4095
+   2   .softhouse/handoff/T255-dec2-rev8.md  lines 54,216
+-  2   .softhouse/patterns.md  lines 2835,2836
+   2   .softhouse/reviews/t254-harness-portability/instruments/80-instrument-audit.sh  lines 3,17
+   2   .softhouse/reviews/t260-dec2-rev8/evidence/20-normative-set-diff.txt  lines 45,72
+   2   .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh  lines 6,23
+@@ -58,6 +55,7 @@ P-83 consistent                               16
+   1   .softhouse/capture/t271-b1-t219/run.sh  lines 84
+   1   .softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py  lines 30
+   1   .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py  lines 46
++  1   .softhouse/conformance.sh  lines 1757
+   1   .softhouse/handoff/T164-analyze7-float-guard.md  lines 75
+   1   .softhouse/handoff/T253-harness-portability.md  lines 186
+   1   .softhouse/reviews/t254-harness-portability/REVIEW.md  lines 401
+@@ -91,13 +89,11 @@ P-83 consistent                               16
+   1   .softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py  lines 34
+   1   .softhouse/capture/t273-residue/evidence/10-PREFIX-reproduction.txt  lines 52
+   1   .softhouse/capture/t273-residue/instruments/10-reproduce-residue-dependence.sh  lines 105
+-  1   .softhouse/gates.md  lines 4103
+   1   .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T273.md  lines 123
+   1   .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T274.md  lines 251
+   1   .softhouse/handoff/T250-tenant-attestation.md  lines 280
+   1   .softhouse/handoff/T253-harness-portability.md  lines 17
+   1   .softhouse/handoff/T260-review-dec2-rev8.md  lines 102
+-  1   .softhouse/patterns.md  lines 2834
+   1   .softhouse/reviews/t261-tenant-attestation/REVIEW.md  lines 494
+   1   .softhouse/reviews/t261-tenant-attestation/evidence/91-bar-baseline-noT250.txt  lines 4
+   1   .softhouse/reviews/t261-tenant-attestation/evidence/92-bar-merged-T250.txt  lines 4
+diff --git a/.softhouse/reviews/T296/probe/LDG-REFUSE-04-PROBE-future-dated-entry.json b/.softhouse/reviews/T296/probe/LDG-REFUSE-04-PROBE-future-dated-entry.json
+index 5898ded9..fb1191c4 100644
+--- a/.softhouse/reviews/T296/probe/LDG-REFUSE-04-PROBE-future-dated-entry.json
++++ b/.softhouse/reviews/T296/probe/LDG-REFUSE-04-PROBE-future-dated-entry.json
+@@ -88,17 +88,6 @@
+       "message": "The journal entry cannot be made for a future date"
+     }
+   },
+-  "graded_against": [
+-    {
+-      "impl": "ledger-wrong-openingbalance-posted-entries-ignored",
+-      "kind": "structural",
+-      "margin_minor": "0",
+-      "divergent_cells": [
+-        "refusal.code",
+-        "refusal.message"
+-      ],
+-      "note": "T296 PROBE ONLY -- a placeholder kill claim, present solely so the vector clears the non-empty graded_against gate and the CAPABILITY gate becomes the only thing left that could refuse it."
+-    }
+-  ],
++  "graded_against": [],
+   "invariant_exemptions": []
+ }

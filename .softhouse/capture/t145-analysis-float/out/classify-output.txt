@@ -1,0 +1,79 @@
+SELECTOR (sites)   : out/census.json, hits with guarded=false
+SELECTOR (classes) : ast walk of the WHOLE module -- json.dump present (C1);
+                     isinstance(_, float)/(int,float) or `is float` (C2);
+                     a BinOp arithmetic op / sum,round,abs,min,max / float()
+                     cast AND a filename literal in the money-float hazard set (C3)
+SELECTOR (hazard)  : basenames from out/corpus-float-census.txt HAZARD SET
+REV: 9b4ce79835b01e4cc446a1bb2b17148ce347ed48
+UNGUARDED SITES: 362 in 196 files
+
+==== OVERLAPPING membership (a module can be in several) ====
+  C1 ROUNDTRIP-WRITER  -- DO NOT CONVERT           files=100  sites=221
+  C2 FLOAT-DETECTOR    -- CONVERTING IT IS A REGRESSION files=8    sites=17
+  C3 CARRIES-VALUE     -- THE REAL FIX             files=48   sites=128
+
+==== DISJOINT assignment, priority C3 > C2 > C1 > C4 ====
+  C3 files=48   sites=128
+  C2 files=0    sites=0
+  C1 files=71   sites=135
+  C4 files=77   sites=99
+
+==== C3 -- THE CANDIDATE CARRY SET (the only class where parse_float is the fix) ====
+  .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py       sites=9   float()@-
+  .softhouse/bin/ready-tasks.py                                                  sites=7   float()@[1583]
+  .softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py          sites=6   float()@-
+  .softhouse/reviews/t27-probe/t27_verify_claims.py                              sites=6   float()@-
+  .softhouse/capture/charges/bin/t48-analyse.py                                  sites=5   float()@-
+  .softhouse/capture/charges/bin/t51-analyse.py                                  sites=5   float()@-
+  .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py    sites=5   float()@-
+  .softhouse/reviews/t45-probe/t45_extra.py                                      sites=5   float()@-
+  .softhouse/reviews/t47-probe/t47_extra.py                                      sites=5   float()@-
+  .softhouse/capture/pathb/provenance.py                                         sites=4   float()@-
+  .softhouse/capture/t286-t268-retry/probe/adversary_t292.py                     sites=4   float()@-
+  .softhouse/capture/t290-review-t271/diagnose_calibration_t290.py               sites=4   float()@-
+  .softhouse/handoff/T58-transcription-audit.py                                  sites=4   float()@-
+  .softhouse/reviews/T308/probe/t308_theorem_b_counterrule.py                    sites=4   float()@-
+  .softhouse/capture/actualactual/analysis/pathb-crosscheck.py                   sites=3   float()@-
+  .softhouse/capture/leapboundary/analysis/T175-red/field-census.py              sites=3   float()@-
+  .softhouse/capture/leapboundary/analysis/t55-analyse.py                        sites=3   float()@-
+  .softhouse/capture/t223-g8-region-predicate/src/classify_t223.py               sites=3   float()@-
+  .softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py                          sites=3   float()@-
+  .softhouse/handoff/T61-transcription-audit.py                                  sites=3   float()@-
+  .softhouse/reviews/T84-evidence/src/eval-probe1.py                             sites=3   float()@[88]
+  .softhouse/capture/audit-t44/analysis/T175-red/census.py                       sites=2   float()@-
+  .softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py       sites=2   float()@-
+  .softhouse/capture/pathb/t22-audit/mkmode.py                                   sites=2   float()@-
+  .softhouse/capture/pathb/t22-audit/mkmode2.py                                  sites=2   float()@-
+  .softhouse/capture/t116-familyb-promotion/src/T116-promote-vectors.py          sites=2   float()@-
+  .softhouse/reviews/T84-evidence/src/eval-probe2.py                             sites=2   float()@-
+  .softhouse/reviews/t291-review-t286/probe/drive-t291.py                        sites=2   float()@-
+  .softhouse/capture/actualactual/analysis/discriminate.py                       sites=1   float()@[160]
+  .softhouse/capture/charges/bin/attest.py                                       sites=1   float()@-
+  .softhouse/capture/charges/bin/t46-exacttext.py                                sites=1   float()@-
+  .softhouse/capture/leapboundary/analysis/T175-red/plant.py                     sites=1   float()@-
+  .softhouse/capture/leapboundary/analysis/T207/measure-other-sites-v2.py        sites=1   float()@-
+  .softhouse/capture/lib/check_wire_float_roundtrip.py                           sites=1   float()@[278]
+  .softhouse/capture/t177-so-nondeterminism/check_claims_t177.py                 sites=1   float()@-
+  .softhouse/capture/t229-g8-site3/src/site3.py                                  sites=1   float()@-
+  .softhouse/capture/t229-g8-site3/src/validate_corpus.py                        sites=1   float()@-
+  .softhouse/capture/t243-wiring/instruments/31-citation-census.py               sites=1   float()@-
+  .softhouse/capture/t277-shapelaw-salvage/src/crosscheck_seven_t277b.py         sites=1   float()@-
+  .softhouse/capture/t277-shapelaw-salvage/src/dump_seven_t277.py                sites=1   float()@-
+  .softhouse/capture/t277-shapelaw-salvage/src/shapelaw_census_t277.py           sites=1   float()@-
+  .softhouse/capture/t284-schema2-callsites/instruments/10-callsite-registry.py  sites=1   float()@-
+  .softhouse/capture/t330-reconcile-merged-work/population.py                    sites=1   float()@-
+  .softhouse/reviews/T182-evidence/t182_independent_tally.py                     sites=1   float()@-
+  .softhouse/reviews/T308/probe/t308_both_axes.py                                sites=1   float()@-
+  .softhouse/reviews/T84-evidence/src/gen-port.py                                sites=1   float()@-
+  .softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py                  sites=1   float()@-
+  .softhouse/reviews/t27-probe/t27_mutate.py                                     sites=1   float()@-
+
+==== C2 -- FLOAT DETECTORS. Converting these SILENCES them (P-22). ====
+  .softhouse/capture/actualactual/analysis/pathb-crosscheck.py                   sites=3   isinstance-float@[39]
+  .softhouse/capture/leapboundary/analysis/T207/measure-other-sites-v2.py        sites=1   isinstance-float@[128]
+  .softhouse/capture/leapboundary/analysis/t55-analyse.py                        sites=3   isinstance-float@[98]
+  .softhouse/capture/t177-so-nondeterminism/check_claims_t177.py                 sites=1   isinstance-float@[77]
+  .softhouse/capture/t277-shapelaw-salvage/src/crosscheck_seven_t277b.py         sites=1   isinstance-float@[339]
+  .softhouse/capture/t277-shapelaw-salvage/src/shapelaw_census_t277.py           sites=1   isinstance-float@[588]
+  .softhouse/reviews/T182-evidence/t182_independent_tally.py                     sites=1   isinstance-float@[111]
+  .softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py          sites=6   isinstance-float@[38]

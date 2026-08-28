@@ -1,0 +1,4 @@
+44a45,47
+> CONTROL   T48-A2-CTL-B03       sum of dueInterest = 144659.21  (committed Path B value 144659.21): REPRODUCED
+> CONTROL   T48-A2-CTL-B04       sum of dueInterest = 145011.43  (committed Path B value 145011.43): REPRODUCED
+> CONTROL   T48-A2-CTL-B03NULL   sum of dueInterest = 144659.21  (committed Path B value 144659.21): REPRODUCED

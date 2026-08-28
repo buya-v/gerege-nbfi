@@ -1,0 +1,56 @@
+T145 -- RED/GREEN battery for discriminate.py:159-160
+SELECTOR: predicate text transcribed from
+          .softhouse/capture/actualactual/analysis/discriminate.py:159-160 @ 817d2b53
+python: 3.9.6
+
+AS PRED. GREEN  real S1 row 0
+           literal source text : [1713.21, 80.53, 1632.68, 8367.32]
+           captured exact text : ['1713.21', '80.53', '1632.68', '8367.32']
+           ORIG want (post-double) : ['1713.21', '80.53', '1632.68', '8367.32']
+           NEW  want (post-Decimal): ['1713.21', '80.53', '1632.68', '8367.32']
+           ORIG says match=True  -> it prints: ALL 1 PERIODS REPRODUCED DIGIT FOR DIGIT
+           NEW  DIGIT=True   VALUE=True 
+           why: the honest case: text, value and the banner all agree
+
+AS PRED. RED-A  real S1 FINAL row -- ORIG's own `want` is not digit-identical
+           literal source text : [1713.18, 13.69, 1699.49, 0.00]
+           captured exact text : ['1713.18', '13.69', '1699.49', '0.00']
+           ORIG want (post-double) : ['1713.18', '13.69', '1699.49', '0.0']
+           NEW  want (post-Decimal): ['1713.18', '13.69', '1699.49', '0.00']
+           ORIG says match=True  -> it prints: ALL 1 PERIODS REPRODUCED DIGIT FOR DIGIT
+           NEW  DIGIT=True   VALUE=True 
+           why: ORIG passes and prints DIGIT FOR DIGIT, but its own want list holds '0.0' while the capture holds '0.00'. The banner asserts a text identity ORIG never checked and which was FALSE of the strings it actually held. R1 restores the scale, so NEW's DIGIT predicate is true ON THE EXACT TEXT rather than true by accident.
+
+AS PRED. RED-B  VALUE LOSS -- two different amounts, one double
+           literal source text : [9007199254740993.00, 13.69, 1699.49, 0.00]
+           captured exact text : ['9007199254740992.00', '13.69', '1699.49', '0.00']
+           ORIG want (post-double) : ['9007199254740992.0', '13.69', '1699.49', '0.0']
+           NEW  want (post-Decimal): ['9007199254740993.00', '13.69', '1699.49', '0.00']
+           ORIG says match=True  -> it prints: ALL 1 PERIODS REPRODUCED DIGIT FOR DIGIT
+           NEW  DIGIT=False  VALUE=False
+           why: 2**53+1 vs 2**53: the amounts differ by a whole unit and ORIG says they match. THIS IS THE MONEY KILL -- ORIG prints 'REPRODUCED DIGIT FOR DIGIT' over a one-unit discrepancy.
+
+AS PRED. RED-C  SCALE LOSS -- DECIMAL(19,6) shape vs a 1-place literal
+           literal source text : [1200.0, 13.69, 1699.49, 0.00]
+           captured exact text : ['1200.000000', '13.69', '1699.49', '0.00']
+           ORIG want (post-double) : ['1200.0', '13.69', '1699.49', '0.0']
+           NEW  want (post-Decimal): ['1200.0', '13.69', '1699.49', '0.00']
+           ORIG says match=True  -> it prints: ALL 1 PERIODS REPRODUCED DIGIT FOR DIGIT
+           NEW  DIGIT=False  VALUE=True 
+           why: the oracle's own scale-6 emission (T186 rule A4). Value intact, text not identical. ORIG prints DIGIT FOR DIGIT anyway; NEW says EQUAL IN VALUE, NOT digit for digit.
+
+AS PRED. RED-D  DECIMAL(19,6) money at 17 significant digits
+           literal source text : [10000000000.000001, 13.69, 1699.49, 0.00]
+           captured exact text : ['10000000000.000002', '13.69', '1699.49', '0.00']
+           ORIG want (post-double) : ['10000000000.000002', '13.69', '1699.49', '0.0']
+           NEW  want (post-Decimal): ['10000000000.000001', '13.69', '1699.49', '0.00']
+           ORIG says match=True  -> it prints: ALL 1 PERIODS REPRODUCED DIGIT FOR DIGIT
+           NEW  DIGIT=False  VALUE=False
+           why: 10,000,000,000 MNT at Fineract's own numeric(19,6) scale, differing by one unit in the last place the SCHEMA can represent. binary64 cannot separate them, so ORIG reports DIGIT FOR DIGIT. This is not a contrived magnitude: it is in-schema.
+
+HEADLINE  on RED-B (amounts differ by a whole unit):
+          ORIG reaches 'REPRODUCED DIGIT FOR DIGIT' : True
+          NEW  VALUE predicate holds                : False
+
+ARMS: 5   AS PREDICTED: 5   WRONG: 0
+BATTERY PASS -- every arm behaved as predicted

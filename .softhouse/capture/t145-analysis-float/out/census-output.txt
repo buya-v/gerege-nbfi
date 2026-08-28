@@ -1,0 +1,375 @@
+SELECTOR (population): git ls-files -- .softhouse | grep '\.py$'
+SELECTOR (sites):      ast.parse -> ast.Call whose func is json.load/json.loads
+                       (or a `from json import load[s]` alias); GUARDED iff a
+                       parse_float= keyword is present on that call node.
+REV: 817d2b531c905a12cae4ae6de58fa0f0c6edb448
+
+DENOMINATOR  tracked .py files under .softhouse : 664
+             of which unparsable by ast.parse   : 0
+TOTAL        json.load/loads call sites          : 511
+  GUARDED    (parse_float= present)              : 149   in 112 files
+  UNGUARDED  (no parse_float=)                   : 362   in 196 files
+NUMERATOR (files with >=1 unguarded site)        : 196 of 664
+
+UNGUARDED .softhouse/bin/ready-tasks.py:191  for t in json.load(fh)["tasks"]:
+UNGUARDED .softhouse/bin/ready-tasks.py:197  doc = json.load(fh)
+UNGUARDED .softhouse/bin/ready-tasks.py:474  body = json.load(fh)
+UNGUARDED .softhouse/bin/ready-tasks.py:629  prior = json.loads(blob)["tasks"]
+UNGUARDED .softhouse/bin/ready-tasks.py:1140  doc = json.loads(raw)
+UNGUARDED .softhouse/bin/ready-tasks.py:1336  if json.dumps(json.loads(raw), indent=2, ensure_ascii=False) + tail != raw:
+UNGUARDED .softhouse/bin/ready-tasks.py:1457  gates = json.load(fh).get("gates_pending", [])
+UNGUARDED .softhouse/capture/actualactual/analysis/discriminate.py:28  return json.load(fh)
+UNGUARDED .softhouse/capture/actualactual/analysis/pathb-crosscheck.py:49  left = bare(json.loads(side.read_text()))
+UNGUARDED .softhouse/capture/actualactual/analysis/pathb-crosscheck.py:57  return json.loads((PB / (stem + "-exact.json")).read_text())
+UNGUARDED .softhouse/capture/actualactual/analysis/pathb-crosscheck.py:118  calc = json.loads((OUT / "t48-calc.json").read_text())
+UNGUARDED .softhouse/capture/audit-t44/analysis/T175-red/census.py:26  json.load(open(p))
+UNGUARDED .softhouse/capture/audit-t44/analysis/T175-red/census.py:36  json.load(open(p))
+UNGUARDED .softhouse/capture/audit-t44/mathcontext/analysis/audit_controls.py:18  by = {c["id"]: c for c in json.load(open(P))["captures"]}
+UNGUARDED .softhouse/capture/audit-t44/mathcontext/analysis/audit_crosschecks.py:15  d1 = json.load(open(os.path.join(MC, "t42-mathcontext.json")))
+UNGUARDED .softhouse/capture/audit-t44/mathcontext/analysis/audit_crosschecks.py:16  d2 = json.load(open(os.path.join(MC, "t42-mathcontext2.json")))
+UNGUARDED .softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants_failability.py:13  doc = json.load(open(P))
+UNGUARDED .softhouse/capture/audit-t44/rerun-periodratio/analysis/controls.py:131  doc = json.load(open(PAYLOAD))
+UNGUARDED .softhouse/capture/audit-t44/rerun-periodratio/analysis/discriminate.py:72  doc = json.load(open(PAYLOAD))
+UNGUARDED .softhouse/capture/charges/bin/attest.py:308  'image_repo_digests': json.loads(image_repodigests) if image_repodigests else None,
+UNGUARDED .softhouse/capture/charges/bin/t46-exacttext.py:122  back = json.loads(sidecar.read_text())        # plain load: everything is a string
+UNGUARDED .softhouse/capture/charges/bin/t48-analyse.py:61  left = bare_numbers(json.loads(side.read_text()))
+UNGUARDED .softhouse/capture/charges/bin/t48-analyse.py:65  raw_leaves = bare_numbers(json.loads(text))
+UNGUARDED .softhouse/capture/charges/bin/t48-analyse.py:66  ex = json.loads(side.read_text())
+UNGUARDED .softhouse/capture/charges/bin/t48-analyse.py:90  return json.loads((O / (stem + "-exact.json")).read_text())
+UNGUARDED .softhouse/capture/charges/bin/t48-analyse.py:151  d = json.loads(f.read_text())
+UNGUARDED .softhouse/capture/charges/bin/t51-analyse.py:88  left = bare_numbers(json.loads(side.read_text()))
+UNGUARDED .softhouse/capture/charges/bin/t51-analyse.py:91  raw_leaves = bare_numbers(json.loads(text))
+UNGUARDED .softhouse/capture/charges/bin/t51-analyse.py:92  ex = json.loads(side.read_text())
+UNGUARDED .softhouse/capture/charges/bin/t51-analyse.py:111  return json.loads((O / (stem + "-exact.json")).read_text())
+UNGUARDED .softhouse/capture/charges/bin/t51-analyse.py:306  doc = json.loads(f.read_text())
+UNGUARDED .softhouse/capture/charges/bin/t51-analyse2.py:18  return json.loads((O / (stem + "-exact.json")).read_text())
+UNGUARDED .softhouse/capture/charges/bin/t51-analyse3.py:16  return json.loads((O / (stem + "-exact.json")).read_text())
+UNGUARDED .softhouse/capture/dec1-binding/analysis/discriminate.py:107  cap = json.load(open(CAP))
+UNGUARDED .softhouse/capture/emiloop/analyse.py:48  d = json.load(open(path))
+UNGUARDED .softhouse/capture/emiloop/p03-control.py:21  cases = {c["id"]: c for c in json.load(open(os.path.join(
+UNGUARDED .softhouse/capture/emiloop/t37-crosscheck.py:14  A = {c["id"]: c for c in json.load(open(os.path.join(
+UNGUARDED .softhouse/capture/emiloop/t37-crosscheck.py:16  B = {c["id"]: c for c in json.load(open(os.path.join(
+UNGUARDED .softhouse/capture/leapboundary/analysis/T175-red/field-census.py:50  doc0 = json.loads(pristine)
+UNGUARDED .softhouse/capture/leapboundary/analysis/T175-red/field-census.py:70  doc = json.loads(pristine)
+UNGUARDED .softhouse/capture/leapboundary/analysis/T175-red/field-census.py:77  doc = json.loads(pristine)
+UNGUARDED .softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py:85  A = m.cells(json.load(open(fa)))
+UNGUARDED .softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py:86  B = m.cells(json.load(open(fb)))
+UNGUARDED .softhouse/capture/leapboundary/analysis/T175-red/plant.py:74  doc = json.load(fh)
+UNGUARDED .softhouse/capture/leapboundary/analysis/T207/measure-other-sites-v2.py:188  return json.load(fh)                       # EXACTLY the target's own call
+UNGUARDED .softhouse/capture/leapboundary/analysis/t55-analyse.py:87  reloaded = json.loads(body)
+UNGUARDED .softhouse/capture/leapboundary/analysis/t55-analyse.py:109  doc = json.load(fh)
+UNGUARDED .softhouse/capture/leapboundary/analysis/t55-analyse.py:510  theirs = cells(json.load(fh))
+UNGUARDED .softhouse/capture/leapboundary/analysis/t55-prior-capture-assessment.py:52  return json.load(fh)
+UNGUARDED .softhouse/capture/lib/attest_population.py:218  pin = json.load(fh)
+UNGUARDED .softhouse/capture/lib/check_wire_float_roundtrip.py:249  doc = json.loads(open(p, 'rb').read().decode('utf-8'))
+UNGUARDED .softhouse/capture/mathcontext/analysis/controls.py:104  doc = json.load(open(PAYLOAD))
+UNGUARDED .softhouse/capture/mathcontext/analysis/count_cells.py:15  d = json.load(open(OUT / "t42-mathcontext.json"))
+UNGUARDED .softhouse/capture/mathcontext/analysis/count_cells.py:40  d2 = json.load(open(OUT / "t42-mathcontext2.json"))
+UNGUARDED .softhouse/capture/mathcontext/analysis/discriminate.py:57  doc = json.load(open(PAYLOAD))
+UNGUARDED .softhouse/capture/mathcontext/analysis/discriminate2.py:43  doc = json.load(open(PAYLOAD))
+UNGUARDED .softhouse/capture/mathcontext/analysis/t50_assert_tier1.py:33  doc = json.load(fh)
+UNGUARDED .softhouse/capture/mathcontext/analysis/t50_assert_tier2.py:39  doc = json.load(open(path))
+UNGUARDED .softhouse/capture/mathcontext/analysis/t50_pivot_tier1.py:21  doc = json.load(open(path))
+UNGUARDED .softhouse/capture/out/t21-probe-invariants.py:40  data = json.load(open(sys.argv[1]))
+UNGUARDED .softhouse/capture/out/t21-probe-rederive.py:207  obs = {c["id"]: c for c in json.load(open(sys.argv[1]))["captures"]}
+UNGUARDED .softhouse/capture/out/t21-probe-rederive2.py:94  obs = {c["id"]: c for c in json.load(open(sys.argv[1]))["captures"]}
+UNGUARDED .softhouse/capture/out/t35-newcolumn-checks.py:49  doc = json.load(open(path, encoding="utf-8"))
+UNGUARDED .softhouse/capture/pathb/provenance.py:143  return json.load(fh)['tenant']['identifier']
+UNGUARDED .softhouse/capture/pathb/provenance.py:195  old = json.load(fh)
+UNGUARDED .softhouse/capture/pathb/provenance.py:310  index = json.load(fh)
+UNGUARDED .softhouse/capture/pathb/provenance.py:395  index = json.load(fh)
+UNGUARDED .softhouse/capture/pathb/t153/rederive-schedule-exact.py:58  vec = json.load(open(VEC))
+UNGUARDED .softhouse/capture/pathb/t22-audit/jdiff.py:10  a=flat(json.load(open(sys.argv[1])));b=flat(json.load(open(sys.argv[2])))
+UNGUARDED .softhouse/capture/pathb/t22-audit/jdiff.py:10  a=flat(json.load(open(sys.argv[1])));b=flat(json.load(open(sys.argv[2])))
+UNGUARDED .softhouse/capture/pathb/t22-audit/mkmode.py:17  p = json.load(open(os.path.join(W, 'req', 'product-2-multiplesof100.json')),
+UNGUARDED .softhouse/capture/pathb/t22-audit/mkmode.py:25  c = json.load(open(os.path.join(W, 'req', 'calc-B-01-baseline.json')),
+UNGUARDED .softhouse/capture/pathb/t22-audit/mkmode2.py:22  p = json.load(open(os.path.join(W, 'req', 'product-1-baseline.json')),
+UNGUARDED .softhouse/capture/pathb/t22-audit/mkmode2.py:29  c = json.load(open(os.path.join(W, 'req', 'calc-B-01-baseline.json')),
+UNGUARDED .softhouse/capture/pathb/t22-audit/mkprobe.py:22  return json.load(open(os.path.join(W, 'req', n + '.json')),
+UNGUARDED .softhouse/capture/pathb/t22-audit/rowdiff.py:4  rows = [json.loads(l) for l in open(sys.argv[1])]
+UNGUARDED .softhouse/capture/pathb/t22-audit/xpath.py:10  pa = json.load(open(A))
+UNGUARDED .softhouse/capture/pathb/t22-probe/mkcalc.py:17  o = json.load(open(os.path.join(W, "req", f + ".json")),
+UNGUARDED .softhouse/capture/pathb/t22-probe/mkreq.py:21  o = json.load(open(src), object_pairs_hook=collections.OrderedDict)
+UNGUARDED .softhouse/capture/periodratio/analysis/controls.py:131  doc = json.load(open(PAYLOAD))
+UNGUARDED .softhouse/capture/periodratio/analysis/discriminate.py:72  doc = json.load(open(PAYLOAD))
+UNGUARDED .softhouse/capture/src/t169-red/postcheck_t169.py:46  EXPECTED = ['P-CAL-ZPA', 'P-CAL-ZPB'] + json.load(open(idsp))
+UNGUARDED .softhouse/capture/src/t169-red/recount_history.py:54  return json.load(fh)
+UNGUARDED .softhouse/capture/src/t169-red/recount_history.py:56  return json.load(fh)
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/classify_two_families.py:47  return json.load(gzip.open(path)) if path.endswith('.gz') else json.load(open(path))
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/classify_two_families.py:47  return json.load(gzip.open(path)) if path.endswith('.gz') else json.load(open(path))
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/closed_form_check.py:44  return json.load(gzip.open(p)) if p.endswith('.gz') else json.load(open(p))
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/closed_form_check.py:44  return json.load(gzip.open(p)) if p.endswith('.gz') else json.load(open(p))
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py:92  "captured_at": json.load(open(CAP))["attestation"]["capturedAtUtc"],
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py:128  return json.loads(p.stdout)
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py:169  caps = {c["id"]: c for c in json.load(open(CAP))["captures"]}
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py:170  pin_rev = json.load(open(os.path.join(ROOT, ".softhouse/vectors/PIN.json")))["dec1_revision"]
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/inspect_shape.py:6  d = json.load(gzip.open(path)) if path.endswith('.gz') else json.load(open(path))
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/inspect_shape.py:6  d = json.load(gzip.open(path)) if path.endswith('.gz') else json.load(open(path))
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/postcheck.py:7  doc = json.load(open(jsonp))
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/postcheck.py:9  EXPECTED = ['P-CAL-ZPA', 'P-CAL-ZPB'] + json.load(open(idsp))
+UNGUARDED .softhouse/capture/t100-g8-rescope/src/postcheck.py:37  ref = {c['id']: c for c in json.load(open(ref3g))['captures']}
+UNGUARDED .softhouse/capture/t116-familyb-promotion/src/T116-promote-vectors.py:111  doc = json.load(fh)
+UNGUARDED .softhouse/capture/t116-familyb-promotion/src/T116-promote-vectors.py:115  PIN_REV = json.load(fh)["dec1_revision"]
+UNGUARDED .softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py:99  return {r["case"]: r["rows"] for r in json.loads(p.stdout)}
+UNGUARDED .softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py:116  caps = {c["id"]: c for c in json.load(fh)["captures"]}
+UNGUARDED .softhouse/capture/t116-familyb-promotion/src/postcheck_t116.py:30  EXPECTED = ['P-CAL-ZPA', 'P-CAL-ZPB'] + json.load(open(idsp))
+UNGUARDED .softhouse/capture/t117-familyb/src/postcheck.py:28  EXPECTED = ['P-CAL-ZPA', 'P-CAL-ZPB'] + json.load(open(idsp))
+UNGUARDED .softhouse/capture/t117-familyb/src/postcheck_pass2.py:28  EXPECTED = ['P-CAL-ZPA', 'P-CAL-ZPB'] + json.load(open(idsp))
+UNGUARDED .softhouse/capture/t159-review-t117/src/postcheck_t159.py:28  EXPECTED = ['P-CAL-ZPA', 'P-CAL-ZPB'] + json.load(open(idsp))
+UNGUARDED .softhouse/capture/t170-g8-rebuild/src/extract_t170.py:62  doc = json.loads(gzip.decompress(raw))
+UNGUARDED .softhouse/capture/t170-g8-rebuild/src/extract_t170.py:64  doc = json.loads(raw)
+UNGUARDED .softhouse/capture/t177-so-nondeterminism/analyze_t177.py:68  cap = json.load(f)
+UNGUARDED .softhouse/capture/t177-so-nondeterminism/analyze_t177.py:139  d = json.loads(ln)
+UNGUARDED .softhouse/capture/t177-so-nondeterminism/calibrate_t177.py:26  ref = json.load(open(ref_path))
+UNGUARDED .softhouse/capture/t177-so-nondeterminism/calibrate_t177.py:34  d = json.loads(ln)
+UNGUARDED .softhouse/capture/t177-so-nondeterminism/check_claims_t177.py:27  d = json.loads(ln)
+UNGUARDED .softhouse/capture/t177-so-nondeterminism/t159_context.py:14  cap = json.load(f)
+UNGUARDED .softhouse/capture/t219-g8-residual/src/check_promoted_t219.py:99  cap = json.load(open(CAP))
+UNGUARDED .softhouse/capture/t219-g8-residual/src/check_promoted_t219.py:103  _v = json.load(open(VDIR + "/" + PAIRS[1][1]))
+UNGUARDED .softhouse/capture/t219-g8-residual/src/check_promoted_t219.py:114  v = json.load(open(VDIR + "/" + vf))
+UNGUARDED .softhouse/capture/t219-g8-residual/src/classify_t219.py:22  return json.load(op(path))
+UNGUARDED .softhouse/capture/t219-g8-residual/src/classify_t219.py:26  pred = {p["id"]: p for p in json.load(open(sys.argv[2]))}
+UNGUARDED .softhouse/capture/t219-g8-residual/src/dump_rows.py:12  raw = json.load(op(sys.argv[1]))
+UNGUARDED .softhouse/capture/t219-g8-residual/src/make_harness_t219.py:20  cells = json.load(open(CELLS))
+UNGUARDED .softhouse/capture/t219-g8-residual/src/site3.py:218  cells = json.load(open(sys.argv[1]))
+UNGUARDED .softhouse/capture/t223-g8-region-predicate/src/classify_t223.py:28  cap = json.load(open(cap_path))
+UNGUARDED .softhouse/capture/t223-g8-region-predicate/src/classify_t223.py:29  pred = json.load(open(os.path.join(HERE, "..", "prediction.json")))
+UNGUARDED .softhouse/capture/t223-g8-region-predicate/src/classify_t223.py:30  ref3g = json.load(open(os.path.join(REPO, ".softhouse/capture/out/capture-prod3g-raw.json")))
+UNGUARDED .softhouse/capture/t223-g8-region-predicate/src/peek.py:11  d = json.load(opener(path))
+UNGUARDED .softhouse/capture/t223-g8-region-predicate/src/validate_emi.py:35  doc = json.load(fh)
+UNGUARDED .softhouse/capture/t223-g8-region-predicate/src/validate_predicate.py:74  doc = json.load(fh)
+UNGUARDED .softhouse/capture/t229-g8-site3/src/classify_t229.py:22  return json.load(op(path))
+UNGUARDED .softhouse/capture/t229-g8-site3/src/classify_t229.py:26  pred = {p["id"]: p for p in json.load(open(sys.argv[2]))}
+UNGUARDED .softhouse/capture/t229-g8-site3/src/dump_rows.py:12  raw = json.load(op(sys.argv[1]))
+UNGUARDED .softhouse/capture/t229-g8-site3/src/make_harness_t229.py:20  cells = json.load(open(CELLS))
+UNGUARDED .softhouse/capture/t229-g8-site3/src/peek159.py:7  d = json.load(gzip.open(path))
+UNGUARDED .softhouse/capture/t229-g8-site3/src/peekrows.py:14  d = json.load(gzip.open(path))
+UNGUARDED .softhouse/capture/t229-g8-site3/src/rederive_total_interest_t241.py:162  loaded[path] = {c["id"]: c for c in json.load(fh)["captures"]}
+UNGUARDED .softhouse/capture/t229-g8-site3/src/site3.py:302  cells = json.load(open(sys.argv[1]))
+UNGUARDED .softhouse/capture/t229-g8-site3/src/validate_corpus.py:44  raw = json.load(gzip.open(path))
+UNGUARDED .softhouse/capture/t234-sweep-instrument-audit/instruments/32-triage-live.py:20  ml=json.load(open(SELF+"evidence/multiline-only-hits.json"))
+UNGUARDED .softhouse/capture/t243-wiring/instruments/31-citation-census.py:80  v = json.load(open(os.path.join(LEDGER, f), encoding="utf-8"))
+UNGUARDED .softhouse/capture/t252-tier3/instruments/30-additivity.py:52  d = json.load(open(j))
+UNGUARDED .softhouse/capture/t252-tier3/instruments/40-c6-red-drive.py:108  d = json.load(open(j))
+UNGUARDED .softhouse/capture/t271-b1-t219/red/drive-red-t271.py:119  doc = json.loads(ACK_T271.read_text())
+UNGUARDED .softhouse/capture/t271-b1-t219/red/drive-red-t271.py:223  tdoc = json.loads(good_targets.read_text())
+UNGUARDED .softhouse/capture/t271-b1-t219/red/drive-red-t271.py:226  md = json.loads(json.dumps(tdoc))
+UNGUARDED .softhouse/capture/t271-b1-t219/red/drive-red-t271.py:231  nd = json.loads(json.dumps(tdoc))
+UNGUARDED .softhouse/capture/t277-shapelaw-salvage/src/crosscheck_seven_t277b.py:211  raw = json.load(handle)
+UNGUARDED .softhouse/capture/t277-shapelaw-salvage/src/dump_seven_t277.py:37  raw = json.load(fh)
+UNGUARDED .softhouse/capture/t277-shapelaw-salvage/src/shapelaw_census_t277.py:211  raw = json.load(fh)
+UNGUARDED .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:43  d = json.load(open(FINDINGS, encoding="utf-8"))
+UNGUARDED .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:45  for k, v in json.load(open(ADJ, encoding="utf-8"))["verdicts"].items():
+UNGUARDED .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:73  census = json.load(fh)
+UNGUARDED .softhouse/capture/t282-pnumber-drift/bin/population-table.py:40  HAND = json.load(open(_ADJ, encoding="utf-8"))["verdicts"]
+UNGUARDED .softhouse/capture/t282-pnumber-drift/bin/population-table.py:87  d = json.load(open(J, encoding="utf-8"))
+UNGUARDED .softhouse/capture/t284-schema2-callsites/instruments/10-callsite-registry.py:206  pin = json.loads(fh.read().decode("utf-8"))
+UNGUARDED .softhouse/capture/t286-t268-retry/probe/adversary_t292.py:204  cur = json.loads(json.dumps(doc))
+UNGUARDED .softhouse/capture/t286-t268-retry/probe/adversary_t292.py:312  out["T291/" + p.stem] = json.loads(p.read_text(encoding="utf-8"))
+UNGUARDED .softhouse/capture/t286-t268-retry/probe/adversary_t292.py:380  corpus["REAL/classify-t229"] = json.loads(REAL_229.read_text(encoding="utf-8"))
+UNGUARDED .softhouse/capture/t286-t268-retry/probe/adversary_t292.py:382  corpus["REAL/classify-t219"] = json.loads(REAL_219.read_text(encoding="utf-8"))
+UNGUARDED .softhouse/capture/t286-t268-retry/probe/census_real_corpus.py:67  doc = json.loads(p.read_text(encoding="utf-8"))
+UNGUARDED .softhouse/capture/t286-t268-retry/probe/drive_f_t290_1b.py:56  ackdoc = json.loads((T256 / "acknowledged.json").read_text(encoding="utf-8"))
+UNGUARDED .softhouse/capture/t286-t268-retry/probe/drive_f_t290_1b.py:67  doc = json.loads(REAL.read_text(encoding="utf-8"))
+UNGUARDED .softhouse/capture/t286-t268-retry/probe/drive_f_t290_1b.py:75  a1 = json.loads(json.dumps(ackdoc))
+UNGUARDED .softhouse/capture/t286-t268-retry/probe/drive_f_t290_1b.py:85  a2 = json.loads(json.dumps(ackdoc))
+UNGUARDED .softhouse/capture/t286-t268-retry/probe/drive_f_t290_1b.py:101  doc3 = json.loads(REAL.read_text(encoding="utf-8"))
+UNGUARDED .softhouse/capture/t286-t268-retry/probe/drive_f_t290_1b.py:107  a3 = json.loads(json.dumps(ackdoc))
+UNGUARDED .softhouse/capture/t286-t268-retry/probe/prove_adversary_sees_a_lost_refusal.py:68  d = json.loads(legs.read_text(encoding="utf-8"))
+UNGUARDED .softhouse/capture/t290-review-t271/attack_acknowledgement_t290.py:100  doc = json.loads(backup.read_text())
+UNGUARDED .softhouse/capture/t290-review-t271/attack_acknowledgement_t290.py:112  doc = json.loads(backup.read_text())
+UNGUARDED .softhouse/capture/t290-review-t271/diagnose_calibration_t290.py:57  raw = json.loads(gzip.open(RAW, "rt").read())
+UNGUARDED .softhouse/capture/t290-review-t271/diagnose_calibration_t290.py:58  cls = json.loads(CLS.read_text())
+UNGUARDED .softhouse/capture/t290-review-t271/diagnose_calibration_t290.py:59  ref = json.loads(REF.read_text())
+UNGUARDED .softhouse/capture/t290-review-t271/diagnose_calibration_t290.py:111  d = json.load(open(p))
+UNGUARDED .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py:114  floor_doc = json.loads(fpath.read_text())
+UNGUARDED .softhouse/capture/t290-review-t271/probe_t286_rule_t290.py:121  doc = json.loads(backup.read_text())
+UNGUARDED .softhouse/capture/t290-review-t271/probe_t286_rule_t290.py:135  ad = json.loads(ACK.read_text())
+UNGUARDED .softhouse/capture/t290-review-t271/prove_repair_inert.py:49  rep = json.loads(REPAIR.read_text())
+UNGUARDED .softhouse/capture/t290-review-t271/prove_repair_inert.py:50  doc = json.loads(ACK.read_text())
+UNGUARDED .softhouse/capture/t290-review-t271/red/drive-red-t290.py:96  doc = json.loads(path.read_text())
+UNGUARDED .softhouse/capture/t290-review-t271/red/drive-red-t290.py:126  doc = json.loads(ACK219.read_text())
+UNGUARDED .softhouse/capture/t290-review-t271/verify_t271_claims_t290.py:99  doc = json.loads(cls.read_text())
+UNGUARDED .softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py:67  rows = json.load(open(readback_path))
+UNGUARDED .softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py:68  posted = json.load(open(response_path))
+UNGUARDED .softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py:74  req_body = json.load(open(request_path))
+UNGUARDED .softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py:83  body = json.load(open(os.path.join(OUT, fn + ".req")))
+UNGUARDED .softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py:127  contra_id = json.load(open(os.path.join(OUT, "S-03-financialactivity.req")))["glAccountId"]
+UNGUARDED .softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py:143  graded_against = json.load(open(os.path.join(DIR, "LDG-05-graded-against.json")))
+UNGUARDED .softhouse/capture/t305-openingbalance-accepting-side/throwaway/patch-capability.py:18  doc = json.load(open(CAP))
+UNGUARDED .softhouse/capture/t305-openingbalance-accepting-side/throwaway/patch-capability.py:35  check = json.load(open(CAP))
+UNGUARDED .softhouse/capture/t314-witness-path-forgery/probe/t314_render_path_injective.py:119  out.append(json.loads(s[i:j + 1]))
+UNGUARDED .softhouse/capture/t316-dead-path-guards/screen_exit_behaviour.py:73  doc = json.loads(census.read_text())
+UNGUARDED .softhouse/capture/t318-committed-clobber-blindness/instruments/20-blindness-triage.py:49  census = json.load(open(os.path.join(here, "evidence", "10-census.json")))
+UNGUARDED .softhouse/capture/t319-reconciler-f5/probe-objdiff.py:35  return {t["id"]: t for t in json.loads(out.stdout)["tasks"]}
+UNGUARDED .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py:143  spec = json.load(open(spec_path))
+UNGUARDED .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py:155  spec = json.load(open(spec_path))
+UNGUARDED .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py:210  return json.loads(p.stdout)
+UNGUARDED .softhouse/capture/t326-frontier-host-state/instruments/10-regen-pin.py:207  doc = json.loads(census_path.read_text())
+UNGUARDED .softhouse/capture/t326-frontier-host-state/instruments/rows.py:20  doc = json.load(open(sys.argv[1]))
+UNGUARDED .softhouse/capture/t327-closure-accepting-side/throwaway/invariant-minor-units.py:60  rows = json.load(open(path))
+UNGUARDED .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:141  body = json.load(open(os.path.join(OUT, fn + ".req")))
+UNGUARDED .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:164  lo = json.load(open(os.path.join(OUT, "B2-ACCEPT-01-entry-on-business-date.req")))["transactionDate"]
+UNGUARDED .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:166  hi = json.load(open(os.path.join(OUT, "B2-CTRL-02-entry-one-day-after-business-date.req")))["transactionDate"]
+UNGUARDED .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:168  hi_body = json.load(open(os.path.join(OUT, "B2-CTRL-02-entry-one-day-after-business-date.json")))
+UNGUARDED .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:193  rows = json.load(open(os.path.join(OUT, "B1-glclosures-list.json")))
+UNGUARDED .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:225  req_body = json.load(open(req_path))
+UNGUARDED .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:226  posted = json.load(open(rsp_path))
+UNGUARDED .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:229  rows = [r for r in json.load(open(rb_path)) if r["transaction_id"] == txn]
+UNGUARDED .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:366  v["graded_against"] = json.load(open(os.path.join(PROSE, case_id + ".graded-against.json")))
+UNGUARDED .softhouse/capture/t330-reconcile-merged-work/budget.py:49  doc = json.load(open(os.path.join(REPO, ".softhouse", "tasks.json")))
+UNGUARDED .softhouse/capture/t330-reconcile-merged-work/e2e.py:98  doc = json.load(open(os.path.join(repodir, ".softhouse", "tasks.json")))
+UNGUARDED .softhouse/capture/t330-reconcile-merged-work/e2e.py:165  doc = json.load(open(os.path.join(d, ".softhouse", "tasks.json")))
+UNGUARDED .softhouse/capture/t330-reconcile-merged-work/population.py:113  doc = json.load(open(f))
+UNGUARDED .softhouse/capture/t58-counterfactuals/src/cross-harness-t39-vs-pass3e.py:65  t39 = {c["id"]: c for c in json.load(open(T39))["captures"]}
+UNGUARDED .softhouse/capture/t58-counterfactuals/src/cross-harness-t39-vs-pass3e.py:66  p3e = {c["id"]: c for c in json.load(open(P3E))["captures"]}
+UNGUARDED .softhouse/capture/t61-halfeven/check-prediction.py:64  caps = {c["id"]: c for c in json.load(open(CAP))["captures"]}
+UNGUARDED .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:80  return {r["case"]: r["rows"] for r in json.loads(p.stdout)}
+UNGUARDED .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:102  caps = {c["id"]: c for c in json.load(open(CAP))["captures"]}
+UNGUARDED .softhouse/capture/t64-zeroprincipal/check-prediction.py:42  pred = json.load(open(PRED))
+UNGUARDED .softhouse/capture/t64-zeroprincipal/check-prediction.py:43  caps = {c["id"]: c for c in json.load(open(CAP))["captures"]}
+UNGUARDED .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py:66  PIN = json.load(open(".softhouse/vectors/PIN.json"))
+UNGUARDED .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py:270  doc = json.load(open(P3G_REF))
+UNGUARDED .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py:272  cfs = {r["case"]: r for r in json.load(open(CF_REF))}
+UNGUARDED .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py:80  return {r["case"]: r["rows"] for r in json.loads(p.stdout)}
+UNGUARDED .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py:96  caps = {c["id"]: c for c in json.load(open(CAP))["captures"]}
+UNGUARDED .softhouse/capture/t66-unrecognized-interest/check-prediction.py:22  doc = json.load(open(CAP, encoding="utf-8"))
+UNGUARDED .softhouse/capture/t66-unrecognized-interest/dump-rows.py:7  d = json.load(open(".softhouse/capture/out/capture-prod3h-raw.json", encoding="utf-8"))
+UNGUARDED .softhouse/capture/t74-multiplesof/T82-guard-proofs/mutate.py:36  return json.load(open(p, encoding="utf-8"))
+UNGUARDED .softhouse/capture/t74-multiplesof/T82-guard-proofs/mutate.py:64  clone = json.loads(json.dumps(case(doc, "T74-E-P4")))
+UNGUARDED .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py:176  doc = mutate(json.load(open(ref, encoding="utf-8")), mode)
+UNGUARDED .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py:184  rows = json.load(open(f, encoding="utf-8"))["expect"]["periods"]
+UNGUARDED .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py:210  root, basep, mutate(json.load(open(ref, encoding="utf-8")), mode), tmp, "base")
+UNGUARDED .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py:213  a = json.load(open(os.path.join(out, mod.FILENAMES[cid]), encoding="utf-8"))
+UNGUARDED .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py:214  b = json.load(open(os.path.join(out_base, mod_base.FILENAMES[cid]), encoding="utf-8"))
+UNGUARDED .softhouse/capture/t74-multiplesof/build-counterfactuals.py:60  doc = json.load(open(capture_path, encoding='utf-8'))
+UNGUARDED .softhouse/capture/t74-multiplesof/build-prediction.py:40  ab = json.load(open(sectionb_path, encoding='utf-8'))
+UNGUARDED .softhouse/capture/t74-multiplesof/check-prediction.py:55  doc = json.load(open(capture_path, encoding='utf-8'))
+UNGUARDED .softhouse/capture/t74-multiplesof/check-prediction.py:56  pred = json.load(open(predicted_path, encoding='utf-8'))
+UNGUARDED .softhouse/capture/t83-nonamortizing/src/check-prediction.py:24  pred = json.load(open(predp))
+UNGUARDED .softhouse/capture/t83-nonamortizing/src/check-prediction.py:25  meas = json.load(open(measp))
+UNGUARDED .softhouse/capture/t83-nonamortizing/src/check-prediction.py:26  doc = json.load(open(rawp))
+UNGUARDED .softhouse/capture/t83-nonamortizing/src/classify-boundary.py:92  doc = json.load(open(path))
+UNGUARDED .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:147  "captured_at": json.load(open(CAP))["attestation"]["capturedAtUtc"],
+UNGUARDED .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:191  return json.loads(p.stdout)
+UNGUARDED .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:195  caps = {c["id"]: c for c in json.load(open(CAP))["captures"]}
+UNGUARDED .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:196  pin = json.load(open(os.path.join(ROOT, ".softhouse/vectors/PIN.json")))
+UNGUARDED .softhouse/capture/t83-nonamortizing/src/run-port.py:66  res = json.loads(p.stdout)
+UNGUARDED .softhouse/capture/t83-nonamortizing/src/run-port.py:84  caps = {c["id"]: c for c in json.load(open(CAP))["captures"]}
+UNGUARDED .softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py:70  body = json.loads(first[victim])
+UNGUARDED .softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py:119  body = json.load(open(out_p)) if os.path.exists(out_p) else {}
+UNGUARDED .softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py:126  body = json.load(open(out_p))
+UNGUARDED .softhouse/capture/tierA-a2/resolve7.py:24  body = json.load(open(tmpl))
+UNGUARDED .softhouse/capture/tierA-a2/resolve7.py:25  resp = json.load(open(observed))
+UNGUARDED .softhouse/capture/tierA-a2/verify-provenance-a2-15.py:24  v = json.load(open(p))
+UNGUARDED .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/t205-diff-scopes.py:4  for r in json.load(open(p)):
+UNGUARDED .softhouse/handoff/T57-promote-emi-vectors.py:62  PIN = json.load(open(os.path.join(ROOT, ".softhouse", "vectors", "PIN.json")))
+UNGUARDED .softhouse/handoff/T57-transcription-audit.py:47  v = json.load(open(path))
+UNGUARDED .softhouse/handoff/T58-promote-vectors.py:83  PIN = json.load(open(".softhouse/vectors/PIN.json"))
+UNGUARDED .softhouse/handoff/T58-promote-vectors.py:248  doc = json.load(open(P3E_REF))
+UNGUARDED .softhouse/handoff/T58-promote-vectors.py:253  doc = json.load(open(P3D_REF))
+UNGUARDED .softhouse/handoff/T58-promote-vectors.py:258  return {r["case"]: r for r in json.load(open(path))}
+UNGUARDED .softhouse/handoff/T58-promote-vectors.py:669  at3e = json.load(open(P3E_REF))["attestation"]["capturedAtUtc"]
+UNGUARDED .softhouse/handoff/T58-promote-vectors.py:693  captured_at = json.load(open(P3D_REF))["attestation"]["capturedAtUtc"]
+UNGUARDED .softhouse/handoff/T58-transcription-audit.py:131  caps[path] = {c["id"]: c for c in json.load(open(path))["captures"]}
+UNGUARDED .softhouse/handoff/T58-transcription-audit.py:137  v = json.load(open(os.path.join(VEC_DIR, n)))
+UNGUARDED .softhouse/handoff/T58-transcription-audit.py:186  json.load(open(cap_path)).get("fineractCommit")
+UNGUARDED .softhouse/handoff/T58-transcription-audit.py:187  or json.load(open(cap_path))["attestation"]["fineract"]["gitCommitId"])
+UNGUARDED .softhouse/handoff/T61-mutations.py:345  marker = json.load(f)
+UNGUARDED .softhouse/handoff/T61-promote-vectors.py:59  PIN = json.load(open(".softhouse/vectors/PIN.json"))
+UNGUARDED .softhouse/handoff/T61-promote-vectors.py:192  caps = {c["id"]: c for c in json.load(open(P3F_REF))["captures"]}
+UNGUARDED .softhouse/handoff/T61-promote-vectors.py:193  cfs = {r["case"]: r for r in json.load(open(CF_REF))}
+UNGUARDED .softhouse/handoff/T61-promote-vectors.py:321  "captured_at": json.load(open(P3F_REF))["attestation"]["capturedAtUtc"],
+UNGUARDED .softhouse/handoff/T61-transcription-audit.py:31  PIN = json.load(open(".softhouse/vectors/PIN.json"))
+UNGUARDED .softhouse/handoff/T61-transcription-audit.py:78  v = json.loads(raw)
+UNGUARDED .softhouse/handoff/T61-transcription-audit.py:101  caps = {c["id"]: c for c in json.load(open(ref))["captures"]}
+UNGUARDED .softhouse/handoff/T74-promote-vectors.py:91  PIN = json.load(open(".softhouse/vectors/PIN.json"))
+UNGUARDED .softhouse/handoff/T74-promote-vectors.py:373  doc = json.load(open(P3I_REF))
+UNGUARDED .softhouse/handoff/T74-promote-vectors.py:375  cfs = {r["case"]: r for r in json.load(open(CF_REF))}
+UNGUARDED .softhouse/handoff/T8-promote-vectors.py:56  PIN = json.load(open(os.path.join(ROOT, ".softhouse", "vectors", "PIN.json")))
+UNGUARDED .softhouse/handoff/T8-transcription-audit.py:33  v = json.load(open(path))
+UNGUARDED .softhouse/handoff/t57-fraction-crosscheck.py:19  v = json.load(open(os.path.join(V, f)))
+UNGUARDED .softhouse/reviews/T182-evidence/t182_independent_tally.py:19  d = json.loads(ln)
+UNGUARDED .softhouse/reviews/T182-evidence/t182_t159check.py:3  d = json.loads(gzip.open(p, 'rt').read())
+UNGUARDED .softhouse/reviews/T296/probe/add-graded-against.py:17  v = json.load(fh)
+UNGUARDED .softhouse/reviews/T296/probe/build-closure-probe-vector.py:38  v = json.load(fh)
+UNGUARDED .softhouse/reviews/T302/a2/cmp-lockset.py:26  return {t["id"]: t for t in json.loads(o.stdout)["tasks"]}
+UNGUARDED .softhouse/reviews/T306/probe/build-probes.py:58  return json.load(fh)
+UNGUARDED .softhouse/reviews/T306/probe/build-probes.py:69  return json.loads(json.dumps(v))
+UNGUARDED .softhouse/reviews/T306/probe/inject-acceptance.py:38  d = json.loads(src.read_text())
+UNGUARDED .softhouse/reviews/T308/probe/t308_both_axes.py:134  strict["T291/" + p.stem] = json.loads(p.read_text(encoding="utf-8"))
+UNGUARDED .softhouse/reviews/T308/probe/t308_survivor_mutants.py:161  legs = json.loads((tmp / (mid + "-legs.json")).read_text(encoding="utf-8"))
+UNGUARDED .softhouse/reviews/T308/probe/t308_theorem_b_counterrule.py:53  return json.loads((T256 / "boolean-key-register.json").read_text(encoding="utf-8"))
+UNGUARDED .softhouse/reviews/T308/probe/t308_theorem_b_counterrule.py:141  CORPUS["T291/" + p.stem] = json.loads(p.read_text(encoding="utf-8"))
+UNGUARDED .softhouse/reviews/T308/probe/t308_theorem_b_counterrule.py:143  CORPUS["REAL/classify-t229"] = json.loads(REAL_229.read_text(encoding="utf-8"))
+UNGUARDED .softhouse/reviews/T308/probe/t308_theorem_b_counterrule.py:145  CORPUS["REAL/classify-t219"] = json.loads(REAL_219.read_text(encoding="utf-8"))
+UNGUARDED .softhouse/reviews/T308/probe/t308_unicode_digit_predicate.py:76  reg = json.loads((T256 / "boolean-key-register.json").read_text(encoding="utf-8"))
+UNGUARDED .softhouse/reviews/T84-evidence/src/agree.py:2  rep = json.load(open('/tmp/t84-port-report.json'))
+UNGUARDED .softhouse/reviews/T84-evidence/src/agree.py:3  rows = {r['id']: r for r in json.load(open('/tmp/t84-eval-rows.json')) + json.load(open('/tmp/t84b-rows.json'))}
+UNGUARDED .softhouse/reviews/T84-evidence/src/agree.py:3  rows = {r['id']: r for r in json.load(open('/tmp/t84-eval-rows.json')) + json.load(open('/tmp/t84b-rows.json'))}
+UNGUARDED .softhouse/reviews/T84-evidence/src/classify.py:6  doc = json.load(open(RAW))
+UNGUARDED .softhouse/reviews/T84-evidence/src/eval-probe1.py:4  doc = json.load(open('/tmp/t84probe/out/capture-t84-raw.json'))
+UNGUARDED .softhouse/reviews/T84-evidence/src/eval-probe1.py:5  pred = json.load(open('/tmp/t84-prediction.json'))
+UNGUARDED .softhouse/reviews/T84-evidence/src/eval-probe1.py:6  t83 = {c['id']: c for c in json.load(open(
+UNGUARDED .softhouse/reviews/T84-evidence/src/eval-probe2.py:4  doc = json.load(open('/tmp/t84probe2/out/capture-t84b-raw.json'))
+UNGUARDED .softhouse/reviews/T84-evidence/src/eval-probe2.py:5  pred = json.load(open('/tmp/t84b-prediction.json'))
+UNGUARDED .softhouse/reviews/T84-evidence/src/exemption-demo.py:90  "captured_at": json.load(open(CAP))["attestation"]["capturedAtUtc"],
+UNGUARDED .softhouse/reviews/T84-evidence/src/exemption-demo.py:121  return json.loads(p.stdout)
+UNGUARDED .softhouse/reviews/T84-evidence/src/exemption-demo.py:123  caps = {c["id"]: c for c in json.load(open(CAP))["captures"]}
+UNGUARDED .softhouse/reviews/T84-evidence/src/exemption-demo.py:124  pin_rev = json.load(open(os.path.join(ROOT, ".softhouse/vectors/PIN.json")))["dec1_revision"]
+UNGUARDED .softhouse/reviews/T84-evidence/src/gen-port.py:8  d = json.load(open(src))
+UNGUARDED .softhouse/reviews/T84-evidence/src/run-port.py:18  port = {r["case"]: r for r in json.loads(p.stdout)}
+UNGUARDED .softhouse/reviews/T84-evidence/src/run-port.py:31  for c in json.load(open(f))["captures"]:
+UNGUARDED .softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py:18  d = json.load(open(f))
+UNGUARDED .softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py:51  pin = json.load(open(os.path.join(R, ".softhouse/vectors/PIN-ledger.json")))
+UNGUARDED .softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py:54  d = json.load(open(f))
+UNGUARDED .softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py:62  d = json.load(open(f))
+UNGUARDED .softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py:68  d = json.load(open(f))
+UNGUARDED .softhouse/reviews/a2-34-review-a2-15/census-nonvacuity.py:83  d = json.load(open(f))
+UNGUARDED .softhouse/reviews/t185-probe/measure-cells-drop.py:55  raw_float = json.load(open(f))                     # what measure-other-sites.py does
+UNGUARDED .softhouse/reviews/t185-probe/measure-cells-drop.py:74  d = json.load(open(f))
+UNGUARDED .softhouse/reviews/t21v2/t21v2-crosspass.py:4  p1 = {c["id"]: c for c in json.load(open(W + "/capture-raw.json"))["captures"]}
+UNGUARDED .softhouse/reviews/t21v2/t21v2-crosspass.py:5  p2 = {c["id"]: c for c in json.load(open(W + "/capture-tenant-raw.json"))["captures"]}
+UNGUARDED .softhouse/reviews/t21v2/t21v2-crosspass.py:6  p3 = {c["id"]: c for c in json.load(open(W + "/capture-prod-raw.json"))["captures"]}
+UNGUARDED .softhouse/reviews/t21v2/t21v2-invariants.py:44  data = json.load(open(path))
+UNGUARDED .softhouse/reviews/t21v2/t21v2-rederive.py:307  caps = {c["id"]: c for c in json.load(open(path))["captures"]}
+UNGUARDED .softhouse/reviews/t23-probe/t23_rederive.py:171  obs = json.load(open(".softhouse/capture/out/capture-prod-raw.json"))
+UNGUARDED .softhouse/reviews/t24-probe/t24_check_prod_corpus.py:19  obs = json.load(open(".softhouse/capture/out/capture-prod-raw.json"))
+UNGUARDED .softhouse/reviews/t24-probe/t24_count_p12_p19_divergences.py:12  o = json.load(open(".softhouse/capture/out/capture-raw.json"))
+UNGUARDED .softhouse/reviews/t249-g14-scope/drive/drive.py:189  prog = json.load(fh)
+UNGUARDED .softhouse/reviews/t261-tenant-attestation/instruments/t261-fixture-location.py:84  json.loads(fh.read().decode("utf-8"))
+UNGUARDED .softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py:160  reg = json.loads(REG.read_text())
+UNGUARDED .softhouse/reviews/t262-verdict-predicate/pin_test2_t262.py:64  doc = json.loads(EVID.read_text())
+UNGUARDED .softhouse/reviews/t262-verdict-predicate/pin_test2_t262.py:75  ackdoc = json.loads(ACK.read_text())
+UNGUARDED .softhouse/reviews/t262-verdict-predicate/pin_test_t262.py:62  doc = json.loads(EVID.read_text())
+UNGUARDED .softhouse/reviews/t262-verdict-predicate/pin_test_t262.py:76  ackdoc = json.loads(ACK.read_text())
+UNGUARDED .softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py:52  d = json.load(open(f))
+UNGUARDED .softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py:90  for p, v in float_leaves(json.load(open(f))):
+UNGUARDED .softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py:125  d = json.load(open(tmpl))
+UNGUARDED .softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py:134  rt = json.loads(json.dumps(v))
+UNGUARDED .softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py:135  exact = repr(v) == repr(json.loads(json.dumps(json.loads(json.dumps(v)))))
+UNGUARDED .softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py:135  exact = repr(v) == repr(json.loads(json.dumps(json.loads(json.dumps(v)))))
+UNGUARDED .softhouse/reviews/t27-probe/t27_mutate.py:170  d = json.load(open(src))
+UNGUARDED .softhouse/reviews/t27-probe/t27_verify_claims.py:105  d = json.load(open(P(".softhouse/capture/out/capture-prod-raw.json")))
+UNGUARDED .softhouse/reviews/t27-probe/t27_verify_claims.py:119  d = json.loads(raw)
+UNGUARDED .softhouse/reviews/t27-probe/t27_verify_claims.py:144  j = json.load(open(P(".softhouse/capture/pathb/t22-audit/out-rounddown/"
+UNGUARDED .softhouse/reviews/t27-probe/t27_verify_claims.py:146  req = json.load(open(P(".softhouse/capture/pathb/t22-audit/req/calc-prounddown.json")))
+UNGUARDED .softhouse/reviews/t27-probe/t27_verify_claims.py:147  prod = json.load(open(P(".softhouse/capture/pathb/t22-audit/req/prounddown.json")))
+UNGUARDED .softhouse/reviews/t27-probe/t27_verify_claims.py:165  b01 = json.load(open(P(".softhouse/capture/pathb/out/B-01-baseline-raw.json")))
+UNGUARDED .softhouse/reviews/t291-review-t286/probe/drive-t291.py:232  reg = json.loads(REG.read_text())
+UNGUARDED .softhouse/reviews/t291-review-t286/probe/drive-t291.py:238  doc = json.loads(f.read_text())
+UNGUARDED .softhouse/reviews/t34-probe/t34_capture_check.py:31  data = json.load(open(RAW))
+UNGUARDED .softhouse/reviews/t34-probe/t34_corpus_blind.py:33  data = json.load(open(".softhouse/capture/out/capture-prod-raw.json"))
+UNGUARDED .softhouse/reviews/t34-probe/t34_rollforward.py:57  data = json.load(open(".softhouse/capture/out/capture-prod-raw.json"))
+UNGUARDED .softhouse/reviews/t38-probe/t38_pass2_membership.py:148  for cap in json.load(open(path))["captures"]:
+UNGUARDED .softhouse/reviews/t38-probe/t38_validate.py:134  data = json.load(open(path))
+UNGUARDED .softhouse/reviews/t45-probe/t45_extra.py:161  caps = json.load(open(".softhouse/capture/out/capture-prod3b-raw.json"))["captures"]
+UNGUARDED .softhouse/reviews/t45-probe/t45_extra.py:237  obs = json.load(open(os.path.join(base, fn)))
+UNGUARDED .softhouse/reviews/t45-probe/t45_extra.py:314  att = json.load(open(".softhouse/capture/charges/out/attested/attestation.json"))
+UNGUARDED .softhouse/reviews/t45-probe/t45_extra.py:351  obs = json.load(open(os.path.join(base, fn)))
+UNGUARDED .softhouse/reviews/t45-probe/t45_extra.py:364  rq = json.load(open(rp))
+UNGUARDED .softhouse/reviews/t47-probe/t47_extra.py:161  caps = json.load(open(".softhouse/capture/out/capture-prod3b-raw.json"))["captures"]
+UNGUARDED .softhouse/reviews/t47-probe/t47_extra.py:237  obs = json.load(open(os.path.join(base, fn)))
+UNGUARDED .softhouse/reviews/t47-probe/t47_extra.py:314  att = json.load(open(".softhouse/capture/charges/out/attested/attestation.json"))
+UNGUARDED .softhouse/reviews/t47-probe/t47_extra.py:351  obs = json.load(open(os.path.join(base, fn)))
+UNGUARDED .softhouse/reviews/t47-probe/t47_extra.py:364  rq = json.load(open(rp))
