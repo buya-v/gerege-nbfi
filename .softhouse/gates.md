@@ -4435,3 +4435,77 @@ Probe line **PRESENT**, tested for presence **before** value (**P-83**), and rea
 **`13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d`, unmoved all fire.**
 
 **IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a `user` gate, and nothing here touches it.**
+
+---
+
+## G-19 — the reference oracle ACCEPTS a sub-minor-unit residue that the Go port REFUSES, and the vector schema cannot represent the divergence
+
+**Raised by:** local fire `20260828-140005` (driver), from `T352`'s captures.
+**Context:** `tierA-gl-accounting` / A2. **Class:** ENGINEERING with a **DEC-2 amendment**, which per
+CLAUDE.md an agent may not perform without raising a gate. **State:** OPEN.
+**Blocks:** nothing. Every other task in the program continues; this parks one decision, not the factory.
+
+### What was proven, from the oracle's own readback and not from argument
+
+`capabilities-ledger.json` recorded the G-08 residue rule as *"specified from source and killed by
+nothing"*, and `money.go:8-84` carried an explicit `[UNVERIFIED]` — *"whether the oracle can produce one at
+all on a money column"* — promising that *"if a later fire captures residue … this is the one function that
+changes."* One POST settled it.
+
+```
+POST  debit gl 16 100.125 MNT / credit gl 21 100.125 MNT   ->  HTTP 200
+readback: "amount":100.125000,  "currency":{"code":"MNT", ... "decimalPlaces":2}
+stored:   numeric(19,6), at scale 6
+txn a29bca0816a7, tenant gerege, oracle pinned 426a23544
+```
+
+**The oracle neither refuses the sub-minor-unit residue nor rounds it away. The Go port refuses it.**
+Port and reference oracle demonstrably diverge on this input.
+
+Stated as precisely as T352 stated it: **the third decimal was supplied by the prober.** The oracle's own
+arithmetic *generating* residue is still unobserved. This is "the oracle accepts residue", not yet "the
+oracle produces residue".
+
+Two supporting observations, both from source as well as behaviour:
+- **The balance check runs at full scale.** `0.125 + 0.125` vs `0.25` was accepted; per-leg HALF_UP would
+  give `0.26` and refuse. Confirmed in the journal-entry package: no `setScale`, no `RoundingMode` anywhere.
+- `100.1234565` stored as `100.123457`. **Attribution stated rather than assumed:** since the write path
+  applies no Java rounding, that is **PostgreSQL's coercion, not `MoneyHelper`'s HALF_UP**, and may not be
+  cited as witnessing the ratified tenant rounding mode.
+
+### The second finding, which may matter more than the first
+
+**The vector schema cannot represent the divergence — driven, not argued.** A candidate vector with every
+other admission objection stripped returns `HARNESS-ERROR`, exit 2: `amount_minor` must be an `int64`, and
+no `int64` equals `100.125`. It is banked as `.NOT-PROMOTED` with its red-drive logs.
+
+So: **the corpus is green partly because it only admits shapes it can already represent.** That is a limit
+on what any "46 parity vectors PASS" statement is entitled to claim, and it must not be quoted as coverage
+of a class the store cannot express. This half is ENGINEERING, needs no gate, and is filed as **`T360`**.
+
+### What is being asked of Buyan
+
+Amend **DEC-2** to state which of these is the ratified position:
+
+- **(a) — the driver's recommendation. The port's refusal is CORRECT and stands; the divergence is recorded
+  as a deliberate, named deviation with its own vector class and a guard.** Rationale: CLAUDE.md's first
+  non-negotiable is *money is integer minor units*; accepting `100.125` MNT would require representing
+  sub-minor-unit money, which that rule forbids, and a third decimal in MNT is not a payable amount in
+  Mongolia. Fineract's permissiveness here is a property of Fineract, not a behaviour an NBFI ledger should
+  reproduce. But it must be **explicit** in DEC-2 and gradeable, never silent — an undocumented divergence
+  from the oracle is precisely what the parity corpus exists to prevent.
+- **(b)** The port must accept what the oracle accepts. **Rejected by the driver** — it collides head-on
+  with a stated non-negotiable, and no agent may relax that.
+- **(c)** Defer, and mark G-08 UNRESOLVED in DEC-2 rather than leaving it recorded as *"killed by nothing"*,
+  which is now false either way.
+
+**Doing nothing is not neutral**: `money.go`'s trap-4 comment currently cites an absence of evidence that no
+longer holds, and `capabilities-ledger.json` recorded a claim the oracle has now refuted.
+
+### What unblocks it
+Buyan choosing (a), (b) or (c). Nothing else — no further capture is needed to make the decision, though
+`FU-T352-2` (can the oracle's own arithmetic *generate* residue, rather than accept a supplied one?) would
+strengthen it and does not block it.
+
+### Not touched by this gate
+Cutover, regulatory sign-off and the licensing position are untouched and remain hard `user` gates.
