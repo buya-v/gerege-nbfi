@@ -1,20 +1,20 @@
 T326 CROSS-HOST DRIVE -- one commit, four disk conditions
 root: /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff
-HEAD: 097a254df625b7c6006ff366f685641bd7b69713
+HEAD: d7b26554edbe84fcce1ce54850d2691e72a77214
 ======================================================================================
-  A bare                       107 row(s)
-  A bare (legacy resolver)     107 row(s)
-  B +toolchain                 107 row(s)
-  B +toolchain (legacy)        82 row(s)
-  C +toolchain +residue        107 row(s)
-  C +toolchain +residue (legacy) 79 row(s)
-  D fresh clone                107 row(s)
+  A bare                       109 row(s)
+  A bare (legacy resolver)     110 row(s)
+  B +toolchain                 109 row(s)
+  B +toolchain (legacy)        83 row(s)
+  C +toolchain +residue        109 row(s)
+  C +toolchain +residue (legacy) 80 row(s)
+  D fresh clone                109 row(s)
 --------------------------------------------------------------------------------------
 ARMS
   PASS  tracked resolver: A_bare == B_toolchain   (frontier is a property of the COMMIT)
   PASS  tracked resolver: A_bare == C_residue   (frontier is a property of the COMMIT)
   PASS  tracked resolver: A_bare == D_clone (different path, no untracked content)
-  PASS  legacy resolver: A_bare_legacy != B_toolchain_legacy (25 row(s) move) -- DEFECT REPRODUCED
-  PASS  legacy resolver: A_bare_legacy != C_residue_legacy (28 row(s) move) -- DEFECT REPRODUCED
+  PASS  legacy resolver: A_bare_legacy != B_toolchain_legacy (27 row(s) move) -- DEFECT REPRODUCED
+  PASS  legacy resolver: A_bare_legacy != C_residue_legacy (30 row(s) move) -- DEFECT REPRODUCED
 --------------------------------------------------------------------------------------
 T326-CROSSHOST: GREEN pass=5 fail=0
