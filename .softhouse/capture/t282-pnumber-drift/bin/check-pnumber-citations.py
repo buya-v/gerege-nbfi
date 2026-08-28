@@ -148,7 +148,12 @@ EVIDENCE_PREFIX = (
 # verbatim transcript of every citation line in the repo, so grading it would
 # double-count every site in the program and grade this instrument against its
 # own printout. That is a self-reference, not a measurement.
-SELF_OUTPUT_PREFIX = ".softhouse/capture/t282-pnumber-drift/out/"
+SELF_OUTPUT_PREFIX = (".softhouse/capture/t282-pnumber-drift/out/",
+                      # ...and the RED-drive fixtures. `red/fixture-RED-*.md`
+                      # ARE the drifted citations, checked in so the RED
+                      # transcript can be re-derived. Grading them reports
+                      # this task's own controls as this task's own defects.
+                      ".softhouse/capture/t282-pnumber-drift/red/")
 
 # This checker's OWN SOURCE. Skipped for the SAME reason `P-99` is skipped, and
 # the reason is stated rather than assumed: SELFTEST_REGISTER below contains
@@ -163,7 +168,11 @@ SELF_OUTPUT_PREFIX = ".softhouse/capture/t282-pnumber-drift/out/"
 # not the `bin/` directory, so census.py and restamp.py beside it ARE still
 # graded. A directory-wide skip here would be a blind spot that grows every time
 # someone drops a file in.
-SELF_SOURCE_EXACT = ".softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py"
+SELF_SOURCE_EXACT = (
+    ".softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py",
+    # the RED driver embeds the three drifted lines as heredoc fixtures
+    ".softhouse/capture/t282-pnumber-drift/bin/drive-red-green.sh",
+)
 
 # patterns.md declares its own known-ambiguous ids in a machine-readable marker,
 # so a NEW collision is loud and an ACCEPTED one is quiet. Bound by CONTENT (the
@@ -508,7 +517,7 @@ def analyse(reg, files, root, min_evidence, min_margin):
         if rel.startswith(SELF_OUTPUT_PREFIX):
             counts["skipped_self_output"] = counts.get("skipped_self_output", 0) + 1
             continue
-        if rel == SELF_SOURCE_EXACT:
+        if rel in SELF_SOURCE_EXACT:
             # Counted and PRINTED, never silently dropped -- P-40: a sweep that
             # skips must say what it skipped and how many.
             counts["skipped_self_source"] = counts.get("skipped_self_source", 0) + 1
@@ -604,6 +613,34 @@ def analyse(reg, files, root, min_evidence, min_margin):
                     best, best_s = cand, s_
                     break
                 if best is None:
+                    best, best_s = n, mine
+                # ------------------------------------------------------------
+                # USE vs MENTION, and removing the erratum shield is what made
+                # this necessary. patterns.md:2866 reads:
+                #
+                #   what they call `P-80` (*`git grep` exits 1 on no-match but
+                #   >1 on error*) is part of **`P-81`**
+                #
+                # The drifted id is MENTIONED, not used -- quoted precisely so
+                # it can be corrected, with the correction on the same line. The
+                # P-86 shield used to cover that line; the shield had to go
+                # (it also covered the real drift), so the distinction must now
+                # be drawn on its own terms.
+                #
+                # And the rule to draw it with is P-86's own remedy: "cite the
+                # id AND its sentence together so a shifted number is
+                # SELF-CORRECTING". If the id the gloss actually matches is
+                # ALREADY PRESENT beside the citation, the text has bound the
+                # sentence to the right rule and no reader can be misdirected --
+                # which is the entire harm this checker exists to prevent.
+                #
+                # STATED BLIND SPOT, so it cannot rot into a surprise: a line
+                # that cites P-80 wrongly AND separately cites P-81 correctly is
+                # suppressed too. Accepted, because such a line still puts the
+                # right id in front of the reader.
+                nearby = set(int(x.group(1)) for x in CITE.finditer(joined))
+                if best != n and best in nearby:
+                    counts["self_corrected"] = counts.get("self_corrected", 0) + 1
                     best, best_s = n, mine
                 if evidence_s < min_evidence:
                     counts["bare"] += 1

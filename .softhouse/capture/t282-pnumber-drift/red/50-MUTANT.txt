@@ -1,14 +1,10 @@
 PNUMBER-CITATIONS: report DECLARED-AMBIGUOUS REGISTER COLLISION P-12 defined twice in .softhouse/patterns.md: :315 'a right conclusion on a wrong reason recurs in the artefact written to record it'  vs  :1385 'An ID SERIES that restarts in a second file is a name collision waiting for its '
 PNUMBER-CITATIONS: report DECLARED-AMBIGUOUS REGISTER COLLISION P-13 defined twice in .softhouse/patterns.md: :320 'for a specification-bearing comment, the comment IS the deliverable.** A reviewe'  vs  :1412 'Grepping the store for a VALUE does not answer what the store KILLS'
 PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=95 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
-PNUMBER-CITATIONS: sites=367 definition=96 consistent=12 bare=249 misdirecting=2 undefined=0 negative-control=0
+PNUMBER-CITATIONS: sites=361 definition=96 consistent=18 bare=245 misdirecting=2 undefined=0 negative-control=0
 PNUMBER-CITATIONS: skipped self-output-files=0 self-source-files=0 (stated, not silent -- both contain deliberately drifted text)
 PNUMBER-CITATIONS:   directive MISDIRECTING 2
-PNUMBER-CITATIONS: report BARE .softhouse/RESUME.md:6 P-79 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/RESUME.md:7 P-84 -- gloss (colon) 'never fix a rotted number, make the second site > READ the first.' matches P-80 (12) better than the cited P-84 (0); patterns.md P-80 = 'A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the same defect as the line number.'
-PNUMBER-CITATIONS: report BARE .softhouse/RESUME.md:10 P-80 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/RESUME.md:10 P-81 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): '> | `\\|\\| echo …` | **P-81**: prints an absence over an error. '
-PNUMBER-CITATIONS: report BARE .softhouse/RESUME.md:13 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/RESUME.md:3 P-84 -- gloss (colon) 'never fix a rotted number, make the second site > READ the first.' matches P-80 (12) better than the cited P-84 (0); patterns.md P-80 = 'A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the same defect as the line number.'
 PNUMBER-CITATIONS: report BARE .softhouse/gates-proposed-answers.md:4 P-1 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/gates-proposed-answers.md:4 P-5 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/gates-proposed-answers.md:5 P-5 -- the id carries no sentence -- nothing binds it to a rule
