@@ -70,7 +70,7 @@
     "park_after_retries": true,
     "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
   },
-  "cursor": "Fire 20260828-080001 LOCAL, IN FLIGHT. Oracle REACHABLE and CONFIRMED BY RUNNING THE BAR rather than by trusting the fire args: exit 0, probe line PRESENT and up, 46 parity vectors / 7884 cells, 11/11 wrong ledger impls dead. The previous fire died on a five_hour RATE LIMIT, not a defect, leaving real rescued WIP on five branches; this fire RESUMED those branches rather than rebuilding them. 8 workers dispatched in 2 batches. MERGED SO FAR: T306, T272, T329, T277. LIVE: T326, T282, T325, T330. PRE-FLIGHT CORRECTION: T324 had been demoted to needs_retry by the wrapper reconcile because its branch 'does not exist in this repo' -- it did not exist because it had ALREADY BEEN MERGED AND DELETED (a08a64e2 + d36863ad, 14 files / 2338 insertions). Branch-absence is not work-absence. Corrected to done; population swept and measured at EXACTLY ONE; mechanism filed as T330 and dispatched this fire. HEADLINE 1 -- T306 refused to defer to the driver on all five questions and returned a better answer than either of its two prior branches: the driver's capability-gate widening was VACUOUS, NOT EXPLOITABLE. The walk-through the brief demanded COULD NOT BE CONSTRUCTED, because a non-empty expect.refusal.code forces kind==refusal, making the output-keyed arms extensionally equivalent to request-keyed ones -- and that NEGATIVE is the result. The real defect was vacuity: the gate contributed no reason at all and delegated its request-side check 80 lines below. It also found the two prior T306 branches DISAGREE because the STORE MOVED UNDER THEM -- T305 landed the capture between the 23-Aug and 28-Aug reviews, so the earlier 'acceptance hole' verdict was true of its store and false of this one. HEADLINE 2 -- T329 refuted the framing of the finding it was filed to explain. The /glclosures vs /journalentries date disagreement is NOT a timezone bug: /journalentries.createdDate is a PLAIN ALIAS FOR submittedOnDate (the business date), while /glclosures.createdDate is an audit insertion timestamp on the JVM zone. Driver-verified at pinned 426a23544: JournalEntryData.java:63 declares it a LocalDate, :211 assigns it from submittedOnDate, and that query has no created-date column. A port that 'fixes the timezone' fixes nothing. It also handed T328 a live hazard: T327's captures contain createdDate, and grading it as a literal would make a parity vector pass or fail on WHAT TIME OF DAY CI RUNS. HEADLINE 3 -- T277 reproduced the false shape law with a second from-scratch instrument (law (ii) holds 213/220, the exception set is exactly the seven, T159-R600p0-N2000-B999 repays 166 minor units against a predicted 0), and found the citation pointing at it was 480 lines wrong. T272 found its own predecessor had tested the WRONG COUNTERFACTUAL. THE DRIVER'S OWN ERRORS, FILED NOT BURIED: the T324 mis-demotion inference; reproducing the recorded backtick command-substitution defect for the SECOND time in a commit message (FU-DRIVER-1, amended after reading the message back); and a naive AST float scan that produced 2 false positives against T277, both being the float DETECTOR naming the type it detects (FU-T277-7). STILL GATED: T328 -- promote T327's two captured acceptances and kill ledger-wrong-date-rules-always-refusing, the mutant that passes the ENTIRE corpus today by refusing every dated entry. Waits on T326, which owns conformance.sh.",
+  "cursor": "Fire 20260828-080001 LOCAL, CLOSED CLEAN. Oracle REACHABLE throughout, CONFIRMED BY RUNNING THE BAR rather than trusting the fire args. 19 tasks merged across 5 batches, 0 live workers at exit, main GREEN: exit 0, probe line PRESENT and up, 46 parity vectors / 7884 cells, LEDGER parity 7 / oracle-refusal 6 / money cells 39, ALL 13 wrong ledger implementations DIED, dead-path frontier 109 == pinned, corpus 1281, and a newly wired P-number citation guard reading VERDICT PASS. LEDGER MOVED: parity 5->7, refusal 5->6, money cells 29->39, wrong impls 11->13.\n\nHEADLINE -- THE MUTANT IS DEAD. T328 promoted T327's two captured acceptances and killed ledger-wrong-date-rules-always-refusing, a port that REFUSES EVERY DATED ENTRY and passed the ENTIRE corpus before this fire, because the store pinned only the REFUSING side of both date rules. Measured both ways: it passed 5/5 parity and 5/5 refusal before, and with both vectors withdrawn the hole reproduces (driver re-ran the arms). T307 then closed a second one-sided gap, promoting A2-02 as LDG-REFUSE-06 and registering a 13th mutant that echoes the transaction date where the oracle echoes the closing date.\n\nSECOND HEADLINE -- SIX TASKS REFUTED THEIR OWN BRIEF OR THEIR OWN DRAFT, AND EVERY ONE WAS RIGHT. T306: the driver's capability widening was VACUOUS, not exploitable, and the walk-through the brief demanded COULD NOT BE CONSTRUCTED. T329: the date disagreement is NOT a timezone bug -- /journalentries.createdDate is a plain alias for submittedOnDate -- so a port that 'fixes the timezone' fixes nothing. T272: its own predecessor had tested the WRONG COUNTERFACTUAL. T301: the wrapper hazard DID NOT REPRODUCE, and the immunity is LAYOUT not design. T321: refuted its own headline before shipping it. T328: refuted the driver's 48-vector target as a mis-derivation. T332: found EIGHT twin sites where the driver named five, two of them invisible to any symbolic grep.\n\nTHE DRIVER'S OWN ERRORS, ALL FILED NOT BURIED: (1) the T324 mis-demotion inference -- corrected, population measured at 1, mechanism filed as T330 which then measured that 96.3% of the reconciler's verdicts were wrong and only exposure kept the damage at one task; (2) the P-84 GLOSS -- the driver wrote 'a failed HARD guard = a money non-negotiable' into ~14 prompts and three task descriptions when P-84 says nothing about money, refuted by T331 from the definition and corrected forward; (3) PUSH-BEFORE-SPAWN -- batch 1 obeyed it, batches 2-5 did not, caught by T279 DISBELIEVING a brief that asserted compliance, 1 of 5 compliant; (4) reproducing the backtick command-substitution defect a second time in a commit message; (5) a naive AST float scan that false-positived on the float DETECTOR; (6) relaying T309's in-place-writer list, which T301 measured wrong in BOTH directions (sed -i '' renames, cp does not).\n\nGUARDS WIRED THIS FIRE, each proven THROUGH THE ROUTE THAT RUNS IT: T331 wired T282's P-number sentence-matching checker (planted drift -> exit 2, probe count 0, zero other guards failing); T325 wired three repo-state attestation gates including the driver's own STEP 5.5 in executable form; T326 made the dead-path frontier derive from TRACKED CONTENT so the bar's colour no longer depends on the host. Still unwired and filed: T145's narrow float-comparison guard (T333) and T279's post-checkout hook (FU-T279-3).\n\nNEXT FIRE PICKS UP: T333 (wire the float-comparison guard), FU-T279-3 (install the hook -- the only thing that would have closed this fire's 135-second window), T310/T311/T313/T315/T317 (the conformance.sh wiring queue), T269, T286, T270, T174, T192, T195, T226, T235, T257, T258, T266, T267. No user gate was crossed and none is newly pending.",
   "contexts": [
     {
       "id": "tier0-harness-schedule-poc",
@@ -2144,6 +2144,57 @@
       ],
       "aborted": "T323's guard wiring. Driver merged locally without committing and ran the bar: exit 2, ZERO probe lines, guard_dead_path_frontier REFUSED (rows=78 pinned=98 removed=24). T316's pin derives from UNTRACKED host state - .softhouse/toolchain, 0 tracked files, absent in the worker's worktree, named by 23 of the 24 vanished rows. main left GREEN; branch pinned at refs/rescue/20260827-230001/t323-wiring-branch; retry T326.",
       "rescue_refs": "refs/rescue/20260827-230001/* - every divergent branch line pinned and pushed, including two case-shadowed lines (T297 c1a3888a, T305 060f0033) and T304's work found on a harness worktree branch."
+    },
+    {
+      "fire": "20260828-080001",
+      "host": "local-mac",
+      "oracle": "REACHABLE (verified by running the bar)",
+      "tasks_merged": 19,
+      "live_workers_at_exit": 0,
+      "merged": [
+        "T306",
+        "T272",
+        "T329",
+        "T277",
+        "T326",
+        "T330",
+        "T325",
+        "T282",
+        "T328",
+        "T322",
+        "T278",
+        "T331",
+        "T145",
+        "T301",
+        "T321",
+        "T334",
+        "T307",
+        "T279",
+        "T332"
+      ],
+      "filed": [
+        "T330",
+        "T331",
+        "T332",
+        "T333",
+        "T334"
+      ],
+      "ledger_before": {
+        "parity": 5,
+        "refusal": 5,
+        "money_cells": 29,
+        "wrong_impls": 11
+      },
+      "ledger_after": {
+        "parity": 7,
+        "refusal": 6,
+        "money_cells": 39,
+        "wrong_impls": 13
+      },
+      "uat": "PASS - exit 0, probe PRESENT and up, 46 parity vectors / 7884 cells, 13/13 wrong impls dead, frontier 109 == pinned",
+      "headline": "ledger-wrong-date-rules-always-refusing KILLED - a port that refused every dated entry passed the entire corpus before this fire",
+      "driver_errors_filed": 6,
+      "reviewer_catches": "6 tasks refuted their own brief or draft; T279 caught the driver violating push-before-spawn in 4 of 5 batches; T331 refuted the driver's P-84 gloss from the definition"
     }
   ],
   "database": {
