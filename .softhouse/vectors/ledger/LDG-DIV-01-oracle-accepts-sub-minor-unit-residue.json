@@ -1,0 +1,112 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-DIV-01-oracle-accepts-sub-minor-unit-residue",
+  "context": "ledger",
+  "class": "divergence",
+  "title": "THE FIRST RECORDED PARITY DIVERGENCE IN THIS PROGRAM (G-19). The reference oracle ACCEPTED a MNT journal entry carrying a non-zero digit at the THIRD decimal place -- HTTP 200, transaction a29bca0816a7 -- stored it at scale 6 in a numeric(19,6) column and served it back as 100.125000, while the SAME response body declares the currency's decimalPlaces as 2. This Go port REFUSES that request. Neither side is graded against the other here, because there is no int64 count of MNT minor units equal to 100.125: this vector records the DISAGREEMENT and the oracle's own characters, and grades only that the port still refuses, and refuses for the residue.",
+  "dec2_revision": 5,
+  "_note": "WHY THIS IS NOT A PARITY VECTOR, and it is the whole reason the divergence class exists. A parity vector says 'the oracle produced this and the port must produce it too', and its money cell is expect.legs[].amount_minor -- an integer STRING parsed to ledger.MinorUnits, which is an int64. NO int64 EQUALS 100.125. 10012 and 10013 are both numbers NEITHER SYSTEM PRODUCED: the oracle produced 100.125000 and this port produced nothing at all, because it refused. T352 wrote 10013 into a candidate file to find out what the harness would do with an author who picked one anyway, correctly declined to promote the file, and banked it NOT-PROMOTED; T359 reproduced the HARNESS-ERROR it caused and traced the routing half of it to grade.go turning any PostEntry error into HARNESS-ERROR before the comparator ran. This file is the answer to both halves: a class in which the money cells DO NOT EXIST (admit.go refuses expect.legs, expect.total_*_minor, expect.refusal and expect.http_status on a divergence vector, so no author is ever placed in the position of having to invent a number), and a routing rule in gradeOne that treats the port's refusal as the ANSWER on this class alone. NO GL_ACCOUNT_TYPE EXCLUSION IS DECLARED AND NONE IS NEEDED. glAccountType is a projection of the ACCOUNT'S CURRENT classification rather than of the entry (A2-26 saw one row render ASSET in A2-088 and INCOME in A2-320 with every other cell byte-identical and no entry edited, G-10), and every parity vector in this store therefore excludes it. This vector grades NO LEG AT ALL, so the unstable cell is not merely excluded here, it is unreachable: the comparator compares divergence.port_outcome and divergence.port_refusal_marker and nothing else. The classification the capture rendered is recorded here and graded by nothing: gl 16 (10300) ASSET, gl 21 (99008) LIABILITY. WHAT THE ORACLE'S ROUNDING IS, since a reader will ask. The caller sent 100.125 and the readback returns 100.125000: those are the SAME value at two scales, and the scale is PostgreSQL's numeric(19,6) column, not a Java rounding step. T352 argued that from a source absence; T359 made it positive by asking the engine directly with no Java in the path ('100.1234565'::numeric(19,6) = 100.123457 and '300.6255545'::numeric(19,6) = 300.625555, both reproduced by the engine alone). So the divergence is NOT 'the oracle rounds differently'. It is that the oracle applies NO minor-unit rule at this boundary at all, and this port applies a refusal. WHAT THIS VECTOR DOES NOT SETTLE, stated rather than left to be assumed: it does not decide WHICH behaviour is correct for Gerege. That is gate G-19 and it is open. A green line here means only 'the disagreement is still exactly as recorded'. WHAT MOVED THE ORACLE. T352's four probes added rows to the tenant; this vector adds none. T360 re-read transaction a29bca0816a7 read-only against the live reference oracle on 2026-08-28 and the response was BYTE-IDENTICAL to the committed capture this vector cites (out/T360-R01-readback-a29bca0816a7.json under .softhouse/capture/t360-divergence-class/).",
+  "capabilities_required": [
+    "ledger.money.minor.unit.conversion",
+    "ledger.journal.entry.readback",
+    "ledger.manual.entry.posting"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/t352-a2-next-tranche/out/T352-A09-residue-3dp-readback-cited.json",
+    "capture_sha256": "7163378b7ab73e9daf72175b6a90568f1607daa88e9813212d74c7e493b23841",
+    "capture_case_id": "T352-A09-residue-3dp-readback-cited",
+    "request_capture_ref": ".softhouse/capture/t352-a2-next-tranche/out/T352-A01-residue-3dp.req",
+    "request_capture_sha256": "6a6f389538808d1ed7836ff66dc2b01d09321f891d20384f49e1dac3390e1cca",
+    "request_capture_case_id": "T352-A01-residue-3dp",
+    "rerun_invariant": "GET /journalentries?transactionId=a29bca0816a7 against the pinned reference oracle must return HTTP 200 with TWO pageItems, both carrying the characters 100.125000 in their amount and both carrying \"decimalPlaces\":2 in their currency block -- a DEBIT on gl 16 (10300) and a CREDIT on gl 21 (99008). If the oracle ever serves that entry back rounded to the minor unit, this vector is FALSE and must be re-captured, not exempted.",
+    "citation": "Captured by T352 (fire 20260828-140005) against the pinned reference oracle 426a23544; independently re-derived by T359 with its own transaction a29bd5eaeb1b at 300.6255545 -> 300.625555; re-read read-only and byte-identical by T360 on 2026-08-28."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_rest_posting",
+    "captured_at": "2026-08-28T06:59:25Z"
+  },
+  "request": {
+    "product_id": 0,
+    "product_type": "",
+    "accounting_rule": "",
+    "slot_family": "",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_rest_posting",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "a29bca0816a7",
+    "manual_entry": true,
+    "transaction_amount_major_text": "",
+    "accounts": [
+      {
+        "id": 16,
+        "gl_code": "10300",
+        "name": "Fund Source Alternate",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 21,
+        "gl_code": "99008",
+        "name": "Liability Under Asset",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 16,
+        "entry_side": "DEBIT",
+        "amount_major_text": "100.125"
+      },
+      {
+        "gl_account_id": 21,
+        "entry_side": "CREDIT",
+        "amount_major_text": "100.125"
+      }
+    ]
+  },
+  "oracle_accepted": {
+    "http_status": 200,
+    "observed_amount_texts": ["100.125000"],
+    "why_unrepresentable": "The oracle's own characters carry a non-zero digit at the THIRD decimal place of a currency whose declared minor unit is 2. The store's money cell is an int64 count of minor units and NO int64 equals 100.125; 10012 and 10013 are both values neither the oracle nor this port produced. The observation is therefore recorded as CHARACTERS -- byte-checked against provenance.capture_ref and never parsed, converted or compared -- and no money cell is graded on this vector at all.",
+    "gate": "G-19"
+  },
+  "expect": {
+    "kind": "port-refusal",
+    "http_status": 0,
+    "legs": [],
+    "total_debits_minor": "",
+    "total_credits_minor": "",
+    "refusal": {
+      "http_status": 0,
+      "code": "",
+      "message": ""
+    },
+    "port_refusal": {
+      "marker": "carries sub-minor-unit residue at scale 2",
+      "observed_text": "leg 0: ledger: monetary text \"100.125\" carries sub-minor-unit residue at scale 2 (digit \"5\" beyond 2 decimal places). This port applies NO truncation rule because no captured vector establishes one; refusing rather than silently inventing an amount"
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "ledger-wrong-residue-rounding",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "divergence.port_outcome",
+        "divergence.port_refusal_marker"
+      ],
+      "note": "A port that ROUNDS the residue HALF_UP and POSTS instead of refusing. It is the plausible wrong port rather than an absurd one: CLAUDE.md ratifies HALF_UP for MNT and MoneyHelper.getMathContext() is (19, HALF_UP), so a porter who applies that at the conversion boundary writes exactly this -- and the reference oracle does no such thing, it stores the residue unrounded. IT IS BYTE-IDENTICAL TO ledger-go ON ALL THIRTEEN VECTORS THAT EXISTED BEFORE THIS ONE, because its rewrite is a no-op on any amount whose fraction fits the minor unit, and none of those vectors carries a residue -- none of them COULD, since a residue has no int64 minor-unit cell to be graded in. It dies here alone. THE KILL IS DECLARED STRUCTURAL AND THAT IS FORCED, NOT CHOSEN: a money kill must carry a NON-ZERO margin_minor, a margin is the difference between two int64 minor-unit values, and this class has neither of them. Every kill a divergence vector can ever declare is structural, for the same reason the class exists."
+    }
+  ],
+  "invariant_exemptions": []
+}

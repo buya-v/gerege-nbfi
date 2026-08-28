@@ -1,0 +1,3 @@
+7163378b7ab73e9daf72175b6a90568f1607daa88e9813212d74c7e493b23841  /tmp/t387/T387-readback-a29bca0816a7.json
+7163378b7ab73e9daf72175b6a90568f1607daa88e9813212d74c7e493b23841  /tmp/t387/t360/.softhouse/capture/t352-a2-next-tranche/out/T352-A09-residue-3dp-readback-cited.json
+7163378b7ab73e9daf72175b6a90568f1607daa88e9813212d74c7e493b23841  /tmp/t387/t360/.softhouse/capture/t360-divergence-class/out/T360-R01-readback-a29bca0816a7.json

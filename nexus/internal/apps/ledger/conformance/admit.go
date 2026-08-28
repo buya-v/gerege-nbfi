@@ -1,6 +1,7 @@
 package conformance
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -60,9 +61,9 @@ func Admit(v *Vector, opts Options) []string {
 		add("context %q but the file sits in directory %q; the two must agree", v.Ctx, dir)
 	}
 	switch v.Class {
-	case ClassParity, ClassOracleRefusal:
+	case ClassParity, ClassOracleRefusal, ClassDivergence:
 	default:
-		add("class %q is not one this schema knows (parity, oracle-refusal)", v.Class)
+		add("class %q is not one this schema knows (parity, oracle-refusal, divergence)", v.Class)
 	}
 	if v.CaseID == "" {
 		add("case_id is empty")
@@ -783,8 +784,29 @@ func Admit(v *Vector, opts Options) []string {
 				"one 403 from another, and a refusal vector that grades only the status grades almost " +
 				"nothing")
 		}
+	case "port-refusal":
+		bad = append(bad, divergenceReasons(v, opts)...)
 	default:
-		add("expect.kind %q is not one this schema knows (journal-entry, refusal)", v.Expect.Kind)
+		add("expect.kind %q is not one this schema knows (journal-entry, refusal, port-refusal)",
+			v.Expect.Kind)
+	}
+	// THE OTHER DIRECTION. A divergence vector may not wear any other
+	// expectation shape, and a non-divergence vector may not carry the oracle
+	// acceptance block. Both are checked here rather than only inside
+	// divergenceReasons, because a rule that only fires on the class it
+	// describes cannot see a vector of another class that quietly grew the
+	// field -- which is precisely how expect.legs would accumulate on refusal
+	// vectors if the `case "refusal"` arm were the only guard.
+	if v.Class == ClassDivergence && v.Expect.Kind != "port-refusal" {
+		add("class divergence with expect.kind %q. A divergence records the ORACLE ACCEPTING a request "+
+			"THIS PORT REFUSES; its only admissible expectation shape is \"port-refusal\", because "+
+			"there is no port-side entry to describe and no port-side amount to grade", v.Expect.Kind)
+	}
+	if v.Class != ClassDivergence && !v.OracleAccepted.IsZero() {
+		add("oracle_accepted is populated on a %q vector. It is the ORACLE'S side of a DIVERGENCE and "+
+			"it carries an amount as CHARACTERS precisely because no int64 minor-unit cell can hold "+
+			"it. Carrying it anywhere else records an unrepresentable observation that nothing grades "+
+			"and nothing gates", v.Class)
 	}
 
 	// --- legs: the money pairing, and the request/expect correspondence ----
@@ -995,6 +1017,248 @@ func Admit(v *Vector, opts Options) []string {
 		add("this is a PARITY vector and it names no MONEY kill. DEC-2 §5.2 requirement 7, revision 4: " +
 			"the disjunction that made the money half optional is replaced by a conjunction, because a " +
 			"ledger corpus whose money cells only ever kill structurally has graded no amount")
+	}
+	return bad
+}
+
+// MinPortRefusalMarker is the shortest phrase a divergence vector may declare as
+// the marker of the port's refusal.
+//
+// A SHORT MARKER IS A COMPARISON THAT CANNOT FAIL, which is the one shape every
+// vacuous guard in this program has had (P-35). "at" is contained in almost any
+// English sentence; a two-character marker would let a port refuse for ANY
+// reason and be graded as agreeing with the recorded divergence. Twelve
+// characters is not a magic number -- it is the shortest length that excludes
+// every fragment of the other refusal texts in this store and is comfortably
+// shorter than the phrase the port actually emits.
+const MinPortRefusalMarker = 12
+
+// divergenceReasons is the admissibility rule set for the DIVERGENCE class.
+// [T360, G-19]
+//
+// THE HARD PART OF THIS CLASS IS THAT IT MUST RECORD A VALUE NO int64 CAN HOLD,
+// AND MUST DO SO WITHOUT PUTTING A FLOAT ANYWHERE NEAR A MONEY PATH. The rules
+// below are how that is made safe rather than merely promised:
+//
+//   - THE MONEY CELLS ARE FORBIDDEN OUTRIGHT. expect.legs, expect.total_*_minor
+//     and expect.refusal must all be empty. `amount_minor` cannot appear on a
+//     divergence vector at all, so no author is ever placed in the position T352
+//     was placed in -- having to write a number no system produced in order to
+//     file the observation. It is not that the number is hard to choose; it is
+//     that the field is not there.
+//
+//   - THE ORACLE'S VALUE IS CHARACTERS AND IS BYTE-CHECKED. Every entry of
+//     oracle_accepted.observed_amount_texts must occur VERBATIM in the bytes of
+//     the artefact provenance.capture_ref names. Not re-serialised, not
+//     re-formatted, not "equal after parsing" -- the same bytes, found with
+//     bytes.Contains. The one thing this rule cannot be satisfied by is a
+//     transcription somebody typed.
+//
+//   - AND SO IS THE REQUEST'S. Every request leg's amount_major_text must occur
+//     verbatim in the bytes of provenance.request_capture_ref. The two sides of
+//     the divergence are then each anchored to their own capture, and the
+//     characters the port converts are demonstrably the characters the caller
+//     sent -- which for this vector are `100.125` (the request) against
+//     `100.125000` (the readback), two different renderings of one observation
+//     that a single "amount text" field would have quietly conflated.
+//
+//   - THE OBSERVATION MUST ACTUALLY BE UNREPRESENTABLE. At least one observed
+//     text must carry a NON-ZERO digit beyond the currency's minor unit.
+//     Otherwise it is an ordinary amount and the vector belongs in the parity
+//     class -- a divergence badge on a representable value would be a way to
+//     move a vector out of the parity tally and keep the run green.
+//
+//     THE SCAN IS PURE BYTES. It finds the '.', walks the fraction digits by
+//     index and compares each byte with '0'. No strconv, no big.Float, no
+//     division, no exponent -- nothing that could be called an intermediate
+//     calculation on a money value. The amount is never a number in this
+//     program.
+func divergenceReasons(v *Vector, opts Options) []string {
+	var bad []string
+	add := func(f string, a ...any) { bad = append(bad, fmt.Sprintf(f, a...)) }
+
+	if v.Class != ClassDivergence {
+		add("expect.kind port-refusal on a %q vector; only a divergence vector records the ORACLE "+
+			"ACCEPTING what this port REFUSES", v.Class)
+	}
+
+	// --- the money cells are not merely empty, they are FORBIDDEN ------------
+	if len(v.Expect.Legs) > 0 {
+		add("expect.legs has %d entries on a DIVERGENCE vector. There is no port-side entry: the port "+
+			"REFUSED. And there is no oracle-side amount that can be written here either -- "+
+			"expect.legs[].amount_minor is an int64 count of minor units and the value observed is "+
+			"%v in a currency whose declared minor unit is %d. Writing 10012 or 10013 records a number "+
+			"NEITHER SYSTEM PRODUCED, which is the exact way an unobserved figure enters a store",
+			len(v.Expect.Legs), v.OracleAccepted.ObservedAmountTexts, v.Request.Currency.MinorUnitDigits)
+	}
+	if v.Expect.TotalDebitsMinor != "" || v.Expect.TotalCreditsMinor != "" {
+		add("expect totals are set on a DIVERGENCE vector; the port posted nothing to total")
+	}
+	if v.Expect.Refusal != (Refusal{}) {
+		add("expect.refusal is populated on a DIVERGENCE vector. That block is an ORACLE-OBSERVED wire " +
+			"refusal -- HTTP status, globalisation code, message -- and the oracle did not refuse: it " +
+			"returned 200. The port's own refusal goes in expect.port_refusal, which has no HTTP " +
+			"status because a port refusal was never on a wire")
+	}
+	if v.Expect.HTTPStatus != 0 {
+		add("expect.http_status is %d on a DIVERGENCE vector. `expect` is what the IMPLEMENTATION must "+
+			"produce and this port produces no HTTP response at all; the ORACLE's status belongs in "+
+			"oracle_accepted.http_status, where it is unmistakably an observation",
+			v.Expect.HTTPStatus)
+	}
+
+	// --- the port's side ----------------------------------------------------
+	marker := strings.TrimSpace(v.Expect.PortRefusal.Marker)
+	switch {
+	case marker == "":
+		add("expect.port_refusal.marker is empty. The graded assertion would then be 'the port refused " +
+			"for SOME reason', which any broken port satisfies -- an unknown account, a malformed " +
+			"date. Default-deny")
+	case len(marker) < MinPortRefusalMarker:
+		add("expect.port_refusal.marker %q is %d characters and the minimum is %d. A short marker is "+
+			"contained in almost any refusal text, so the cell would be a comparison that cannot fail",
+			marker, len(marker), MinPortRefusalMarker)
+	case v.Expect.PortRefusal.ObservedText == "":
+		add("expect.port_refusal.observed_text is empty. The marker is a FRAGMENT and this is the whole " +
+			"sentence it was cut from; without it a later reader cannot tell a re-worded refusal from " +
+			"a port that stopped refusing")
+	case !strings.Contains(v.Expect.PortRefusal.ObservedText, marker):
+		add("expect.port_refusal.marker %q does not occur in expect.port_refusal.observed_text. The two "+
+			"fields transcribe one refusal and a marker that is not in it was never cut from it",
+			marker)
+	}
+
+	// --- the oracle's side --------------------------------------------------
+	o := v.OracleAccepted
+	if o.HTTPStatus < 200 || o.HTTPStatus > 299 {
+		add("oracle_accepted.http_status %d is not a 2xx. This class exists for ORACLE-ACCEPTS / "+
+			"PORT-REFUSES; an oracle that refused is class oracle-refusal, and a divergence recording "+
+			"a refusal on the oracle side records the opposite of what was observed", o.HTTPStatus)
+	}
+	if strings.TrimSpace(o.WhyUnrepresentable) == "" {
+		add("oracle_accepted.why_unrepresentable is empty. Every divergence vector has to say, in its " +
+			"own file, why the observation could not be a PARITY vector -- otherwise the class becomes " +
+			"a place to put parity failures somebody could not make pass")
+	}
+	if strings.TrimSpace(o.Gate) == "" {
+		add("oracle_accepted.gate is empty. A recorded divergence with no gate is an open disagreement " +
+			"between this port and the reference oracle that nobody owns, sitting in a GREEN corpus")
+	}
+	if len(o.ObservedAmountTexts) == 0 {
+		add("oracle_accepted.observed_amount_texts is empty. The oracle's own characters ARE the " +
+			"observation; without them this vector asserts a divergence and records nothing about it")
+	}
+
+	// THE UNREPRESENTABILITY TEST, ON BYTES. See this function's doc comment.
+	residue := false
+	for i, t := range o.ObservedAmountTexts {
+		if strings.TrimSpace(t) == "" {
+			add("oracle_accepted.observed_amount_texts[%d] is blank", i)
+			continue
+		}
+		if hasResidueBeyondMinorUnit(t, v.Request.Currency.MinorUnitDigits) {
+			residue = true
+		}
+	}
+	if len(o.ObservedAmountTexts) > 0 && !residue {
+		add("no entry of oracle_accepted.observed_amount_texts carries a NON-ZERO digit beyond %d "+
+			"decimal places, so every value here IS representable as an int64 count of minor units. "+
+			"This observation belongs in the PARITY class, where the port is graded against it. A "+
+			"divergence badge on a representable amount moves a vector out of the parity tally and "+
+			"leaves the run green", v.Request.Currency.MinorUnitDigits)
+	}
+
+	// --- both sides anchored to their own capture, BYTE FOR BYTE ------------
+	bad = append(bad, verbatimInCapture(opts.RepoRoot, v.Provenance.CaptureRef,
+		"oracle_accepted.observed_amount_texts", "provenance.capture_ref", o.ObservedAmountTexts)...)
+	reqTexts := make([]string, 0, len(v.Request.Legs))
+	for _, l := range v.Request.Legs {
+		reqTexts = append(reqTexts, l.AmountMajorText)
+	}
+	bad = append(bad, verbatimInCapture(opts.RepoRoot, v.Provenance.RequestCaptureRef,
+		"request.legs[].amount_major_text", "provenance.request_capture_ref", reqTexts)...)
+
+	return bad
+}
+
+// hasResidueBeyondMinorUnit reports whether text carries a NON-ZERO digit past
+// the currency's minor unit.
+//
+// BYTES ONLY, AND THAT IS THE WHOLE DESIGN. It finds the decimal point by index,
+// walks the fraction one byte at a time and compares each byte with '0'. There is
+// no strconv, no arithmetic, no division and no exponent anywhere in it, so a
+// monetary value the store cannot represent is examined without ever becoming a
+// number -- which is the only way to hold an observation like `100.125000` while
+// obeying "no floating point in any monetary code path, including intermediate
+// calculation".
+//
+// It is the same predicate ledger.MinorUnitsFromDecimalText applies before it
+// refuses, re-implemented here for the same reason RejectFloatTokens is
+// re-implemented rather than imported: the RULE is shared, and this package must
+// be able to state it about a vector without asking a port to convert anything.
+func hasResidueBeyondMinorUnit(text string, minorDigits int) bool {
+	if minorDigits < 0 {
+		return false
+	}
+	dot := strings.IndexByte(text, '.')
+	if dot < 0 {
+		return false
+	}
+	frac := text[dot+1:]
+	if len(frac) <= minorDigits {
+		return false
+	}
+	for i := minorDigits; i < len(frac); i++ {
+		if frac[i] < '0' || frac[i] > '9' {
+			// A non-digit past the minor unit is a malformed transcription, not
+			// a residue. Say nothing here; the caller's blank/verbatim rules and
+			// the capture byte check are what catch it.
+			return false
+		}
+		if frac[i] != '0' {
+			return true
+		}
+	}
+	return false
+}
+
+// verbatimInCapture requires every text to occur BYTE FOR BYTE inside the
+// artefact ref names.
+//
+// IT IS A bytes.Contains AND NOTHING ELSE. Not "equal after parsing", not "equal
+// after normalising", not "equal as numbers" -- any of which would put the
+// observed amount through a numeric type on the way to being checked, and the
+// value in question is one no numeric type in this program can hold. The claim
+// being checked is exactly "these are the oracle's own characters", and the only
+// honest test of that claim is to look for those characters.
+func verbatimInCapture(repoRoot, ref, field, refField string, texts []string) []string {
+	var bad []string
+	if len(texts) == 0 {
+		return nil
+	}
+	if strings.TrimSpace(ref) == "" {
+		return []string{fmt.Sprintf(
+			"%s is non-empty and %s names no artefact, so nothing can check that these are the "+
+				"oracle's own characters rather than a transcription", field, refField)}
+	}
+	raw, err := os.ReadFile(filepath.Join(repoRoot, ref))
+	if err != nil {
+		return []string{fmt.Sprintf(
+			"%s names %q and it cannot be read (%v), so the verbatim check on %s could not run. "+
+				"ABSENT REFUSES: a check that did not run is not a check that passed",
+			refField, ref, err, field)}
+	}
+	for i, t := range texts {
+		if strings.TrimSpace(t) == "" {
+			continue
+		}
+		if !bytes.Contains(raw, []byte(t)) {
+			bad = append(bad, fmt.Sprintf(
+				"%s[%d] is %q and those bytes DO NOT OCCUR in %s (%s). The field claims to hold the "+
+					"characters the oracle emitted; if they are not in the artefact this vector cites, "+
+					"they came from somewhere else",
+				field, i, t, refField, ref))
+		}
 	}
 	return bad
 }

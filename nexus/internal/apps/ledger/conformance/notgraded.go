@@ -269,9 +269,10 @@ func notGradedRows(r *CapabilityRegistry, vectors []*Vector) []NotGradedCapabili
 // §5.2 rests on and also the practical point: the block is now testable in the
 // package that owns the registry it is derived from.
 func (s *Summary) NotGradedLines() []string {
-	out := []string{
+	out := s.divergenceCensusLines()
+	out = append(out,
 		"    WHAT A GREEN LEDGER SECTION DOES **NOT** MEAN — printed every run, not only when it fails.",
-	}
+	)
 
 	// THE COUNT IS PRINTED, and it is printed as a count OF THE REGISTRY rather
 	// than of this list, because the two being equal is the whole claim. A
@@ -327,6 +328,78 @@ func (s *Summary) NotGradedLines() []string {
 					"how this block came to print a false sentence on every run (A2-34 F-4).",
 				96, "            ")...)
 		}
+	}
+	out = append(out, "")
+	return out
+}
+
+// divergenceCensusLines renders the DIVERGENCE census and the claim limit that
+// goes with it. [T360, G-19]
+//
+// IT IS PRINTED ON EVERY RUN, INCLUDING WHEN THE POPULATION IS ZERO, for the
+// reason every other empty state in this report is not silent: "there is no
+// recorded divergence" and "nobody rendered the divergences" have to be
+// distinguishable, or the second hides behind the first.
+//
+// IT IS RENDERED HERE RATHER THAN IN THE REPORTER because the ledger context owns
+// its own prose (the boundary DEC-2 §5.2 rests on, and the reason A2-34's
+// hand-written six-of-eight block was replaced by a derived one), and because
+// the loanschedule reporter is not this task's to write. The consequence is
+// stated rather than hidden: the two figures below are NOT among the four the
+// `.softhouse/conformance.sh` exemption census reads, so the population is pinned
+// in Go instead -- DivergencePinCount() in grade.go, both directions, refusing at
+// exit 2. A patch that adds them to the shell census is filed under
+// `.softhouse/capture/t360-divergence-class/`.
+func (s *Summary) divergenceCensusLines() []string {
+	out := []string{
+		"    THE DIVERGENCE CENSUS — where THIS PORT AND THE REFERENCE ORACLE ARE KNOWN TO DISAGREE.",
+		fmt.Sprintf(
+			"      divergence vectors      PASS %-4d FAIL %d   (pinned %d; a `divergence` vector records",
+			s.DivergencePass, s.DivergenceFail, DivergencePinCount()),
+		"                                                the ORACLE ACCEPTING a request THIS PORT",
+		"                                                REFUSES — an OPEN, GATED disagreement)",
+	}
+	if s.DivergencePass+s.DivergenceFail == 0 {
+		out = append(out,
+			"      (NO DIVERGENCE VECTOR IS LOADED. That is not the same state as this census having been",
+			"      skipped, and it is a state worth doubting: this corpus was green for its whole life",
+			"      before T360 partly because it had no shape a port/oracle disagreement could be filed",
+			"      in — a residue the oracle accepts has no int64 minor-unit cell to be graded against.)",
+			"")
+		return out
+	}
+	out = append(out,
+		"",
+		"    WHAT THE DIVERGENCE COUNT IS AND IS NOT — the honest limit of the number above it.",
+		"",
+		"      A DIVERGENCE IS NOT A PARITY PASS, and it is counted NOWHERE in `ledger parity PASS`.",
+		"      On these vectors the port did NOT match the oracle: it REFUSED where the oracle",
+		"      ACCEPTED. `ledger parity PASS n` still means exactly n vectors on which this port",
+		"      reproduced the reference oracle's output, and this line cannot inflate it.",
+		"",
+		"      A DIVERGENCE FAIL *IS* ADDED TO `ledger parity FAIL`, deliberately and asymmetrically.",
+		"      A divergence never counts as evidence FOR the port and always counts as evidence",
+		"      AGAINST it when it moves, so the bar goes red the moment a recorded disagreement",
+		"      stops behaving as recorded. The fold is visible here beside the un-folded figure.",
+		"",
+		"      A GREEN DIVERGENCE VECTOR MEANS 'THE DISAGREEMENT IS STILL EXACTLY AS RECORDED'. It is",
+		"      NOT progress, NOT a fix, and NOT evidence the port is right — the gate named on each",
+		"      row below is open and only a `user` gate closes it.",
+		"",
+		"      WHAT THIS CORPUS STILL CANNOT EXPRESS, stated because a claim limit that is not",
+		"      printed is not a limit. This class records THAT the oracle accepted and WHICH",
+		"      CHARACTERS it returned. It does NOT grade the oracle's value against anything, because",
+		"      there is no int64 count of minor units equal to a sub-minor-unit residue and this",
+		"      program will not store money any other way. So a port that refused for the right",
+		"      reason and a port that refused for the right reason WHILE ALSO being wrong about what",
+		"      the oracle's amount was are indistinguishable here. Closing that needs a decided rule",
+		"      for over-scale money, not a wider schema.",
+		"")
+	for _, r := range s.Results {
+		if r.Class != ClassDivergence {
+			continue
+		}
+		out = append(out, fmt.Sprintf("      * %s — %s", r.CaseID, r.Outcome))
 	}
 	out = append(out, "")
 	return out
