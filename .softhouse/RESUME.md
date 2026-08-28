@@ -38,7 +38,8 @@ No prohibited-engine port open. **The iteration-3 merge hazard is genuinely clos
 | `T393` | `softhouse/T393-t382-conditions` | opus | T382's four conditions on T374. **The task iteration 3 recorded as dispatched and never spawned.** |
 | `T397` | `softhouse/T397-t387-conditions` | opus | `verbatimInCapture` is `bytes.Contains`, so a numeric PREFIX satisfies it. **No float, no parse — the amount is never a number.** |
 | `T396` | `softhouse/T396-t389-conditions` | opus | T389's three citation defects; m-3 hides three real port traps. |
-| `T392` | `softhouse/T392-vacuous-pass-pattern` | sonnet | Give the vacuous-pass rule a P-number. **Unblocks `T398`; the two must not collide on the number.** |
+| ~~`T392`~~ | **MERGED** at iter4 | sonnet | Took **P-98**. Driver verified it free independently before merge (zero hits repo-wide, highest was P-97). Bar green on the merge result; main's tree hash is identical to it. |
+| `T398` | `softhouse/T398-measured-but-backwards` | opus | Dispatched after T392 landed. **Must take the next free cardinal ABOVE P-98 — `P-99` is a permanent negative control, so `P-100`.** |
 
 ## ⚠ `conformance.sh` IS CONTENDED BY TWO OF THESE — MERGE SERIALLY
 
