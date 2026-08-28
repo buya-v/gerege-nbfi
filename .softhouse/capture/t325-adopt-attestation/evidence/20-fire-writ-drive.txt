@@ -1,0 +1,59 @@
+scratch root: /private/tmp/t325-fire-writ-Uh8L52
+repo under test (read-only, never written): /Users/buv/gerege-nbfi/.claude/worktrees/agent-a1c01d496742bb1cf
+guard: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a1c01d496742bb1cf/.softhouse/guards/repo-state-attest.sh
+git: git version 2.50.1 (Apple Git-155)
+
+=== LEGITIMATE ARMS — every one must be 0 ===
+ARM L1_ordinary_fire: PASS  guard=0 (expected 0)   LEGACY=CLEAN (0 entries)
+ARM L2_null_control: PASS  guard=0 (expected 0)   LEGACY=CLEAN (0 entries)
+ARM L3_live_worker_branch: PASS  guard=0 (expected 0)   LEGACY=CLEAN (0 entries)
+ARM L4_rescue_identity_commit: PASS  guard=0 (expected 0)   LEGACY=CLEAN (0 entries)
+ARM L5_sanctioned_checkout_b: PASS  guard=0 (expected 0)   LEGACY=CLEAN (0 entries)
+ARM L6_merge_touches_invariant_artefact: PASS  guard=0 (expected 0)   LEGACY=CLEAN (0 entries)
+        ADVISORY  T7 invariant artefact changed in HEAD and the writ does NOT name it: .softhouse/patterns.md  9582c1008d0e4a5490b84e5e881a37969ccd413b -> 46968eba402153f25031cc43e1a660e0ceaa5b3a  (ADVISORY at this gate by --artefact-advisory: the operation merges other agents' branches and cannot enumerate artefacts in advance. Attribute it before trusting it.)
+        ADVISORY  T7 invariant artefact changed in HEAD and the writ does NOT name it: .softhouse/conformance.sh  adab00dfa372cebecd75d9425a4d66482f38c2d3 -> eff859f688df237ed0f69e8aded1eec34ac153c6  (ADVISORY at this gate by --artefact-advisory: the operation merges other agents' branches and cannot enumerate artefacts in advance. Attribute it before trusting it.)
+
+=== DAMAGE ARMS — every one must be 1 ===
+ARM D1_committed_clobber: PASS  guard=1 (expected 1)   LEGACY=CLEAN (0 entries)
+        DAMAGE    T1 HEAD ref CHANGED to a ref the writ does NOT name: refs/heads/main -> refs/heads/fixture-branch  (a `git checkout -b` from the same commit leaves the SHA BYTE-IDENTICAL -- only this term sees it)
+        DAMAGE    T1 HEAD fast-forwarded on refs/heads/fixture-branch, which is NOT in the writ (--writ-branch was main )
+        DAMAGE    T2 NEW REF created outside the writ: refs/heads/fixture-branch -> f0701a97bf3586fc0dd6f954a47d6d7370b83012
+        DAMAGE    T6 config user.email REWRITTEN: 'buya.vol@gmail.com' -> 'someone@else'  (no legitimate operation in this program writes committer identity; `git -c k=v commit` is per-invocation and does NOT change it)
+        DAMAGE    T6 config user.name REWRITTEN: 'Buyan' -> 'someone else'  (no legitimate operation in this program writes committer identity; `git -c k=v commit` is per-invocation and does NOT change it)
+ARM D2_stash: PASS  guard=1 (expected 1)   LEGACY=CLEAN (0 entries)
+        DAMAGE    T2 refs/stash CREATED -- `git stash` empties the working tree into a ref, so `git status` reports CLEAN. SKILL.md:76 forbids stashing worker WIP outright.
+ARM D3_assume_unchanged: PASS  guard=1 (expected 1)   LEGACY=CLEAN (0 entries)
+        DAMAGE    T5 index SKIP BITS went 0 -> 1. `git update-index --assume-unchanged` / `--skip-worktree` silences `git status --porcelain` WITHOUT moving HEAD, touching a ref, or changing config -- T1, T2 and T6 all miss it.
+ARM D4_non_ff_reset: PASS  guard=1 (expected 1)   LEGACY=CLEAN (0 entries)
+        DAMAGE    T1 HEAD moved NON-FAST-FORWARD: e03d1c0b2a13a7defbf1f02b40106be6f6ee95a8 -> 77dcd566fa7344ecb94e1939c9e60687288795d2  (old HEAD is NOT an ancestor of new HEAD: amend / reset / rebase / clobber)
+        DAMAGE    T2 ref refs/heads/main moved NON-FAST-FORWARD e03d1c0b2a13a7defbf1f02b40106be6f6ee95a8 -> 77dcd566fa7344ecb94e1939c9e60687288795d2 (work that was on it is now unreachable)
+ARM D5_undeclared_branch: PASS  guard=1 (expected 1)   LEGACY=CLEAN (0 entries)
+        DAMAGE    T1 HEAD ref CHANGED to a ref the writ does NOT name: refs/heads/main -> refs/heads/rogue/not-in-the-writ  (a `git checkout -b` from the same commit leaves the SHA BYTE-IDENTICAL -- only this term sees it)
+        DAMAGE    T2 NEW REF created outside the writ: refs/heads/rogue/not-in-the-writ -> 2e894299e151f0f6f8acd82ec29974218f55c5ad
+ARM D6_stray_refs: PASS  guard=1 (expected 1)   LEGACY=CLEAN (0 entries)
+        DAMAGE    T2 NEW REF created outside the writ: refs/hidden/x -> c56084a3af19cae193cde1ba4e9faa0b30c7f29e
+        DAMAGE    T2 NEW REF created outside the writ: refs/notes/commits -> 01b86400d7057d42354e77783b1613f5d6924b8f
+        DAMAGE    T2 NEW REF created outside the writ: refs/tags/v-stray -> c56084a3af19cae193cde1ba4e9faa0b30c7f29e
+ARM D7_config_forgery: PASS  guard=1 (expected 1)   LEGACY=CLEAN (0 entries)
+        DAMAGE    T6 config user.email REWRITTEN: 'buya.vol@gmail.com' -> 'not@buyan'  (no legitimate operation in this program writes committer identity; `git -c k=v commit` is per-invocation and does NOT change it)
+        DAMAGE    T6 config user.name REWRITTEN: 'Buyan' -> 'not Buyan'  (no legitimate operation in this program writes committer identity; `git -c k=v commit` is per-invocation and does NOT change it)
+ARM D8_delete_unmerged_worker_branch: PASS  guard=1 (expected 1)   LEGACY=CLEAN (0 entries)
+        DAMAGE    T2 REF DELETED AND ITS TIP IS UNREACHABLE from every surviving writ ref: refs/heads/softhouse/T995-unmerged -> 4901ae1b3c1723af525d76cb0e03a29c4815eaad  (--allow-deleted-ref matched the NAME, but the pattern cannot authorize destroying unmerged work -- the commit is now reachable from nothing)
+ARM D9_worker_branch_rewound: PASS  guard=1 (expected 1)   LEGACY=CLEAN (0 entries)
+        DAMAGE    T2 ref refs/heads/softhouse/T994-rewound moved NON-FAST-FORWARD 21ba41794acf7a6561894fadcb84aa8f32f03071 -> b4c7c3e9e44c4af48a61da85d1b6c7203f1e8f1d (work that was on it is now unreachable)
+ARM D10_minimal_artefact_clobber: PASS  guard=1 (expected 1)   LEGACY=CLEAN (0 entries)
+        DAMAGE    T7 INVARIANT ARTEFACT CHANGED IN HEAD WITHOUT BEING DECLARED: .softhouse/tasks.json  070c901ca4785a1f14514589457c5523e55f5b31 -> 965be2f35e86a82aa4fedfab1e233ef0e72ec3d1  (pass --writ-artefact '.softhouse/tasks.json' if the operation was supposed to change it)
+
+=== DECLARED LIMIT — passes while the limitation reproduces ===
+ARM R1_create_and_delete_inside_window: PASS  guard=0 (expected 0)   LEGACY=CLEAN (0 entries)
+
+=== WRIT-MUTATION ROWS — is each new term load-bearing, or decoration? ===
+MUT M0 full writ == fire-compare on L1: PASS  rc=0 (expected 0)
+MUT M1 no --allow-deleted-ref -> L1 goes RED: PASS  rc=1 (expected 1)
+MUT M2 no remote --writ-ref -> L1 goes RED: PASS  rc=1 (expected 1)
+MUT M3 no --artefact-advisory -> L6 goes RED: PASS  rc=1 (expected 1)
+MUT M4 D8 under L1's writ stays RED: PASS  rc=1 (expected 1)
+
+================================================================
+TOTAL: PASS=22 FAIL=0
+scratch kept for inspection: /private/tmp/t325-fire-writ-Uh8L52
