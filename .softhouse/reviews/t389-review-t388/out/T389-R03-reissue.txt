@@ -1,0 +1,58 @@
+T389 RE-ISSUE OF T388's 7 READ-ONLY RECIPES
+oracle: https://localhost:8443/fineract-provider/api/v1
+date  : 2026-08-28T12:12:31Z
+
+====================================================================
+RECIPE   : T388-A03-je-readback-L29
+RE-ISSUED: GET /journalentries?transactionId=L29&transactionDetails=true
+HTTP     : 200   (recorded: 200)
+COMPARED : against recorded T388-A03-je-readback-L29.json
+VERDICT  : IDENTICAL
+RESULT   : OK -- recipe re-issues
+====================================================================
+RECIPE   : T388-A04-je-readback-L30
+RE-ISSUED: GET /journalentries?transactionId=L30&transactionDetails=true
+HTTP     : 200   (recorded: 200)
+COMPARED : against recorded T388-A04-je-readback-L30.json
+VERDICT  : IDENTICAL
+RESULT   : OK -- recipe re-issues
+====================================================================
+RECIPE   : T388-A05-je-readback-L31
+RE-ISSUED: GET /journalentries?transactionId=L31&transactionDetails=true
+HTTP     : 200   (recorded: 200)
+COMPARED : against recorded T388-A05-je-readback-L31.json
+VERDICT  : IDENTICAL
+RESULT   : OK -- recipe re-issues
+====================================================================
+RECIPE   : T388-A06-loanproduct-63-readback
+RE-ISSUED: GET /loanproducts/63
+HTTP     : 200   (recorded: 200)
+COMPARED : against recorded T388-A06-loanproduct-63-readback.json
+VERDICT  : IDENTICAL
+RESULT   : OK -- recipe re-issues
+====================================================================
+RECIPE   : T388-A07-loan-8-readback-after-accrual
+RE-ISSUED: GET /loans/8?associations=all
+HTTP     : 200   (recorded: 200)
+COMPARED : against recorded T388-A07-loan-8-readback-after-accrual.json
+VERDICT  : IDENTICAL
+RESULT   : OK -- recipe re-issues
+====================================================================
+RECIPE   : T388-P01-businessdate
+RE-ISSUED: GET /businessdate
+HTTP     : 200   (recorded: 200)
+COMPARED : against recorded T388-P01-businessdate.json
+VERDICT  : IDENTICAL
+RESULT   : OK -- recipe re-issues
+====================================================================
+RECIPE   : T388-P08-loan-readback-before-accrual
+RE-ISSUED: GET /loans/8?associations=all
+HTTP     : 200   (recorded: 200)
+COMPARED : against recorded T388-P08-loan-readback-before-accrual.json
+VERDICT  : DIFFERENT
+WHY      : P08 was captured BEFORE POST /runaccruals; the accrual is permanent, so this GET cannot return the pre-accrual body again. Control: the same GET must now match A07 (post-accrual), asserted above.
+RESULT   : EXPECTED DIFFERENCE (declared, not hidden)
+====================================================================
+RE-ISSUED OK        : 6
+EXPECTED DIFFERENCES: 1 (declared)
+UNEXPECTED FAILURES : 0

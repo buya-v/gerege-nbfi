@@ -1,0 +1,146 @@
+=== T389 S-1: acc_gl_account state -- codes vector-pinned, and whether ANY pre-existing account was EDITED ===
+ id | gl_code |         name          | classification_enum | manual_journal_entries_allowed | disabled | account_usage | parent_id 
+----+---------+-----------------------+---------------------+--------------------------------+----------+---------------+-----------
+  1 | 10000   | Assets                |                   1 | t                              | f        |             2 |          
+  4 | 10201   | Loan Portfolio        |                   1 | t                              | f        |             1 |         3
+  6 | 20100   | Overpayment Liability |                   2 | t                              | f        |             1 |          
+  8 | 40100   | Interest On Loans     |                   4 | t                              | f        |             1 |          
+ 10 | 40300   | Income From Penalties |                   4 | t                              | f        |             1 |          
+ 16 | 10300   | Fund Source Alternate |                   1 | t                              | f        |             1 |          
+ 17 | 10400   | Disabled Asset        |                   1 | t                              | f        |             1 |          
+ 21 | 99008   | Liability Under Asset |                   2 | t                              | f        |             1 |         1
+(8 rows)
+
+-- gl 15,16,17,18,21,22 --
+ id | gl_code |          name           | manual_journal_entries_allowed | disabled 
+----+---------+-------------------------+--------------------------------+----------
+ 15 | 30000   | Equity                  | t                              | f
+ 16 | 10300   | Fund Source Alternate   | t                              | f
+ 17 | 10400   | Disabled Asset          | t                              | f
+ 18 | 10500   | No Manual Entries Asset | f                              | f
+ 21 | 99008   | Liability Under Asset   | t                              | f
+ 22 | 99010   | Unknown Param           | t                              | f
+(6 rows)
+
+-- code collision between T388 accounts (>=35) and any vector-pinned code --
+ collisions 
+------------
+          0
+(1 row)
+
+
+=== T389 S-2: product 63 -- accounting_type and its FULL account mapping ===
+ id |                  name                   | accounting_type | currency_code | currency_digits | currency_multiplesof 
+----+-----------------------------------------+-----------------+---------------+-----------------+----------------------
+ 28 | A2 Accrual Complete                     |               3 | MNT           |               2 |                    0
+ 63 | T388 Accrual Periodic On Clean Accounts |               3 | MNT           |               2 |                    0
+(2 rows)
+
+-- acc_product_mapping for product 63 --
+ id  | product_id | gl_account_id | product_type | payment_type | charge_id | financial_account_type 
+-----+------------+---------------+--------------+--------------+-----------+------------------------
+ 177 |         63 |            35 |            1 |              |           |                      1
+ 178 |         63 |            36 |            1 |              |           |                      2
+ 183 |         63 |            37 |            1 |              |           |                      3
+ 184 |         63 |            38 |            1 |              |           |                      4
+ 185 |         63 |            39 |            1 |              |           |                      5
+ 187 |         63 |            40 |            1 |              |           |                      6
+ 180 |         63 |            41 |            1 |              |           |                      7
+ 181 |         63 |            42 |            1 |              |           |                      8
+ 182 |         63 |            43 |            1 |              |           |                      9
+ 179 |         63 |            44 |            1 |              |           |                     10
+ 189 |         63 |            45 |            1 |              |           |                     11
+ 186 |         63 |            46 |            1 |              |           |                     12
+ 188 |         63 |            47 |            1 |              |           |                     13
+(13 rows)
+
+-- is gl_account_id -> financial_account_type a FUNCTION on product 63? (distinct accounts vs distinct mappings) --
+ mappings | distinct_accounts | distinct_slots 
+----------+-------------------+----------------
+       13 |                13 |             13
+(1 row)
+
+-- do any of product 63 accounts also appear on ANOTHER product with a DIFFERENT slot? (the gl-16 trap) --
+ gl_account_id | product_id | financial_account_type 
+---------------+------------+------------------------
+            35 |         63 |                      1
+            36 |         63 |                      2
+            37 |         63 |                      3
+            38 |         63 |                      4
+            39 |         63 |                      5
+            40 |         63 |                      6
+            41 |         63 |                      7
+            42 |         63 |                      8
+            43 |         63 |                      9
+            44 |         63 |                     10
+            45 |         63 |                     11
+            46 |         63 |                     12
+            47 |         63 |                     13
+(13 rows)
+
+
+=== T389 S-3: the nine claimed receivable-slot entries, decoded via acc_product_mapping JOIN (independent of T388 SQL) ===
+ je | transaction_id | entry_date | dr_cr  | gl |  gl_code  |     amount     | currency_code | manual_entry | loan_txn | txn_type | loan | product_id | accounting_type | slot 
+----+----------------+------------+--------+----+-----------+----------------+---------------+--------------+----------+----------+------+------------+-----------------+------
+ 76 | L28            | 2026-01-15 | DEBIT  | 36 | T388-1100 | 1200000.000000 | MNT           | f            |       28 |        1 |    8 |         63 |               3 |    2
+ 77 | L28            | 2026-01-15 | CREDIT | 35 | T388-1000 | 1200000.000000 | MNT           | f            |       28 |        1 |    8 |         63 |               3 |    1
+ 78 | L29            | 2026-02-15 | DEBIT  | 41 | T388-1200 |   24000.000000 | MNT           | f            |       29 |       10 |    8 |         63 |               3 |    7
+ 79 | L29            | 2026-02-15 | CREDIT | 37 | T388-4000 |   24000.000000 | MNT           | f            |       29 |       10 |    8 |         63 |               3 |    3
+ 80 | L29            | 2026-02-15 | CREDIT | 38 | T388-4100 |    2500.000000 | MNT           | f            |       29 |       10 |    8 |         63 |               3 |    4
+ 81 | L29            | 2026-02-15 | DEBIT  | 42 | T388-1300 |    2500.000000 | MNT           | f            |       29 |       10 |    8 |         63 |               3 |    8
+ 82 | L29            | 2026-02-15 | CREDIT | 39 | T388-4200 |    1200.000000 | MNT           | f            |       29 |       10 |    8 |         63 |               3 |    5
+ 83 | L29            | 2026-02-15 | DEBIT  | 43 | T388-1400 |    1200.000000 | MNT           | f            |       29 |       10 |    8 |         63 |               3 |    9
+ 84 | L30            | 2026-03-15 | DEBIT  | 41 | T388-1200 |   20195.380000 | MNT           | f            |       30 |       10 |    8 |         63 |               3 |    7
+ 85 | L30            | 2026-03-15 | CREDIT | 37 | T388-4000 |   20195.380000 | MNT           | f            |       30 |       10 |    8 |         63 |               3 |    3
+ 86 | L30            | 2026-03-15 | CREDIT | 38 | T388-4100 |    2500.000000 | MNT           | f            |       30 |       10 |    8 |         63 |               3 |    4
+ 87 | L30            | 2026-03-15 | DEBIT  | 42 | T388-1300 |    2500.000000 | MNT           | f            |       30 |       10 |    8 |         63 |               3 |    8
+ 88 | L30            | 2026-03-15 | CREDIT | 39 | T388-4200 |    1200.000000 | MNT           | f            |       30 |       10 |    8 |         63 |               3 |    5
+ 89 | L30            | 2026-03-15 | DEBIT  | 43 | T388-1400 |    1200.000000 | MNT           | f            |       30 |       10 |    8 |         63 |               3 |    9
+ 90 | L31            | 2026-04-15 | DEBIT  | 41 | T388-1200 |   16314.670000 | MNT           | f            |       31 |       10 |    8 |         63 |               3 |    7
+ 91 | L31            | 2026-04-15 | CREDIT | 37 | T388-4000 |   16314.670000 | MNT           | f            |       31 |       10 |    8 |         63 |               3 |    3
+ 92 | L31            | 2026-04-15 | CREDIT | 38 | T388-4100 |    2500.000000 | MNT           | f            |       31 |       10 |    8 |         63 |               3 |    4
+ 93 | L31            | 2026-04-15 | DEBIT  | 42 | T388-1300 |    2500.000000 | MNT           | f            |       31 |       10 |    8 |         63 |               3 |    8
+ 94 | L31            | 2026-04-15 | CREDIT | 39 | T388-4200 |    1200.000000 | MNT           | f            |       31 |       10 |    8 |         63 |               3 |    5
+ 95 | L31            | 2026-04-15 | DEBIT  | 43 | T388-1400 |    1200.000000 | MNT           | f            |       31 |       10 |    8 |         63 |               3 |    9
+(20 rows)
+
+
+=== T389 S-4: double entry, in INTEGER MINOR UNITS, per transaction (no float) ===
+ transaction_id | debit_minor | credit_minor | diff_minor | legs 
+----------------+-------------+--------------+------------+------
+ L28            |   120000000 |    120000000 |          0 |    2
+ L29            |     2770000 |      2770000 |          0 |    6
+ L30            |     2389538 |      2389538 |          0 |    6
+ L31            |     2001467 |      2001467 |          0 |    6
+(4 rows)
+
+-- do any T388 amounts have a non-zero third decimal (would mean sub-minor-unit precision)? --
+ id | amount | minor_units_exact 
+----+--------+-------------------
+(0 rows)
+
+
+=== T389 S-5: loan transactions 28-31 ===
+ id | loan_id | transaction_type_enum | transaction_date |     amount     | is_reversed |        created_on_utc         
+----+---------+-----------------------+------------------+----------------+-------------+-------------------------------
+ 28 |       8 |                     1 | 2026-01-15       | 1200000.000000 | f           | 2026-08-28 11:40:25.674869+00
+ 29 |       8 |                    10 | 2026-02-15       |   27700.000000 | f           | 2026-08-28 11:40:53.289796+00
+ 30 |       8 |                    10 | 2026-03-15       |   23895.380000 | f           | 2026-08-28 11:40:53.294581+00
+ 31 |       8 |                    10 | 2026-04-15       |   20014.670000 | f           | 2026-08-28 11:40:53.297456+00
+(4 rows)
+
+
+=== T389 S-6: enum meaning check -- ALL journal entries in the tenant that arrived through a receivable slot (7,8,9) on an ACCRUAL product ===
+ id | transaction_id | account_id | slot | accounting_type 
+----+----------------+------------+------+-----------------
+ 78 | L29            |         41 |    7 |               3
+ 81 | L29            |         42 |    8 |               3
+ 83 | L29            |         43 |    9 |               3
+ 84 | L30            |         41 |    7 |               3
+ 87 | L30            |         42 |    8 |               3
+ 89 | L30            |         43 |    9 |               3
+ 90 | L31            |         41 |    7 |               3
+ 93 | L31            |         42 |    8 |               3
+ 95 | L31            |         43 |    9 |               3
+(9 rows)
+

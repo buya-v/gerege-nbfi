@@ -1,0 +1,114 @@
+T389 -- INDEPENDENT DERIVATION of GL accounts read by the promoted vector store
+root       : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a049874f964182c77/.softhouse/vectors
+json files : 68  (T388 reported 67; this scan includes _selftest)
+
+instance    file                                                                   candidate gl ids
+----------------------------------------------------------------------------------------------------------------------------------
+standing-oracle PIN-ledger.json                                                        -
+standing-oracle PIN.json                                                               -
+standing-oracle _selftest/SELFTEST-01-two-period-zero-rate.json                        -
+standing-oracle capabilities-ledger.json                                               [7, 8, 9, 16, 18, 22, 28]
+standing-oracle capabilities.json                                                      -
+standing-oracle ledger/LDG-01-manual-je-3leg-minor-units.json                          [0, 16, 17, 21]
+standing-oracle ledger/LDG-02-repayment-split-4leg-minor-units.json                    [0, 4, 8, 10, 16]
+standing-oracle ledger/LDG-03-overpayment-4leg-minor-units.json                        [0, 4, 6, 8, 16]
+standing-oracle ledger/LDG-04-header-account-accepted.json                             [0, 1, 21]
+throwaway   ledger/LDG-05-openingbalance-accepted-empty-ledger.json                [0, 1, 2, 3, 4]
+throwaway   ledger/LDG-06-postclosure-entry-accepted-one-day-after-closing-date.json [0, 1, 2, 3]
+throwaway   ledger/LDG-07-entry-on-the-business-date-accepted.json                 [0, 1, 2, 3]
+standing-oracle ledger/LDG-REFUSE-01-unbalanced-by-one-minor-unit.json                 [0, 16, 21]
+standing-oracle ledger/LDG-REFUSE-02-manual-adjustments-not-permitted.json             [0, 18, 21]
+standing-oracle ledger/LDG-REFUSE-03-openingbalance-after-posted-entries.json          [0, 2, 4, 15]
+standing-oracle ledger/LDG-REFUSE-04-preclosure-entry-on-closing-date.json             [0, 2, 4]
+standing-oracle ledger/LDG-REFUSE-05-future-dated-entry-one-day-after-business-date.json [0, 2, 4]
+standing-oracle ledger/LDG-REFUSE-06-preclosure-entry-before-closing-date-echoes-the-closing-date.json [0, 2, 4]
+standing-oracle loanschedule/P-00-baseline-6x7pct.json                                 -
+standing-oracle loanschedule/P-01-18x18pt5pct-principal-87654321.json                  -
+standing-oracle loanschedule/P-02-monthend-seed-day-31.json                            -
+standing-oracle loanschedule/P-02b-monthend-seed-day-30.json                           -
+standing-oracle loanschedule/P-03-disbursement-on-repayment-due-date.json              -
+standing-oracle loanschedule/P-04f-fulltermfortranche-false.json                       -
+standing-oracle loanschedule/P-04t-fulltermfortranche-true.json                        -
+standing-oracle loanschedule/P-DRIFT-A-drift-start28-disb31-6x21pt6pct.json            -
+standing-oracle loanschedule/P-DRIFT-B-drift-start28-disb29-6x21pt6pct.json            -
+standing-oracle loanschedule/P-DRIFT-C-drift-12x16pt8pct-5M.json                       -
+standing-oracle loanschedule/P-DRIFT-D-drift-36x21pt6pct-50M.json                      -
+standing-oracle loanschedule/P-DRIFT-E-drift-common-year-2025.json                     -
+standing-oracle loanschedule/P-DRIFT-F-drift-smallest-principal-mnt100.json            -
+standing-oracle loanschedule/P-DRIFT-G-drift-seeded-in-march.json                      -
+standing-oracle loanschedule/P-DRIFT-H-drift-seeded-in-30-day-month.json               -
+standing-oracle loanschedule/P-EMI-36-127704-emi-smoothing-loop.json                   -
+standing-oracle loanschedule/P-EMI-6-1M014632-emi-smoothing-loop.json                  -
+standing-oracle loanschedule/P-LAT-MID-6x21pt6pct-mid-month-start.json                 -
+standing-oracle loanschedule/P-LAT-Q0a-6x21pt6pct-1M2.json                             -
+standing-oracle loanschedule/P-ME-A-monthend-3M924149-6x16pt8pct.json                  -
+standing-oracle loanschedule/P-ME-B-monthend-1M2-6x21pt6pct.json                       -
+standing-oracle loanschedule/P-ME-C-monthend-common-year-2023.json                     -
+standing-oracle loanschedule/P-ME-D-monthend-seed-day-30.json                          -
+standing-oracle loanschedule/P-MNT-1M2-12x21pt6pct.json                                -
+standing-oracle loanschedule/P-MNT-4M999-18x18pt5pct.json                              -
+standing-oracle loanschedule/P-MNT-50M-36x16pt8pct.json                                -
+standing-oracle loanschedule/P-MNT-5M-18x18pt5pct.json                                 -
+standing-oracle loanschedule/P-RND-S1-21021587pt50-6x21pt6pct-textbook-ratefactor.json -
+standing-oracle loanschedule/P-RND-S2-3139845pt86-6x7pct-ratefactor-setscale.json      -
+standing-oracle loanschedule/REFUSE-01-actual-actual-ungraded.json                     -
+standing-oracle loanschedule/REFUSE-02-half-even-ungraded.json                         -
+standing-oracle loanschedule/REFUSE-03-annual-fixed30360-precedence.json               -
+standing-oracle loanschedule/REFUSE-04-disbursement-after-maturity.json                -
+standing-oracle loanschedule/T116-G8-CLEAN-nonexempt-mnt0pt01-103x600pct.json          -
+standing-oracle loanschedule/T116-G8-FAMB-nonamortizing-mnt0pt01-104x600pct.json       -
+standing-oracle loanschedule/T116-G8-FAMB-nonamortizing-mnt0pt01-108x600pct.json       -
+standing-oracle loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json              -
+standing-oracle loanschedule/T61-HE-A-tie-quantization-1M000541pt50-6x21pt6pct.json    -
+standing-oracle loanschedule/T61-HE-B-tie-quantization-1M000052pt50-6x21pt6pct.json    -
+standing-oracle loanschedule/T61-HE-C-tie-quantization-1M000089pt50-6x21pt6pct.json    -
+standing-oracle loanschedule/T64-ZP-A-zero-principal-mnt0pt28-56x21pt6pct.json         -
+standing-oracle loanschedule/T64-ZP-B-early-payoff-dead-rows-mnt0pt28-55x21pt6pct.json -
+standing-oracle loanschedule/T64-ZP-C-zero-principal-mnt0pt17-34x36pct.json            -
+standing-oracle loanschedule/T64-ZP-D-zero-principal-mnt0pt36-72x16pt8pct.json         -
+standing-oracle loanschedule/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json -
+standing-oracle loanschedule/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json     -
+standing-oracle loanschedule/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json -
+standing-oracle loanschedule/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json   -
+standing-oracle loanschedule/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json -
+standing-oracle loanschedule/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json   -
+
+FORBIDDEN ON THE STANDING ORACLE (T389 independent): [1, 2, 4, 6, 7, 8, 9, 10, 15, 16, 17, 18, 21, 22, 28]
+THROWAWAY-INSTANCE ID SPACE, deliberately NOT merged: [1, 2, 3, 4]
+
+Which rule contributed which standing-oracle id (a value found ONLY by R2-R5 is one
+T388's ENDS-IN-gl_account_id rule R1 would have MISSED):
+  R1: [1, 2, 4, 6, 8, 10, 15, 16, 17, 18, 21, 22]
+  R2: [1, 2, 4, 6, 8, 10, 15, 16, 17, 18, 21, 22]
+  R3: [1, 2, 4, 6, 8, 10, 15, 16, 17, 18, 21, 22]
+  R4: [1, 2, 4, 6, 8, 10, 15, 16, 17, 18, 21, 22]
+  R5: [0, 7, 8, 9, 16, 18, 22, 28]
+
+STANDING ids NOT reachable by R1 alone (T388's stated rule): [7, 9, 28]
+
+NON-INTEGER account references (code/name pins -- no id scan would see these):
+  ledger/LDG-01-manual-je-3leg-minor-units.json           expect.legs.[0].gl_account_code = '10300'
+  ledger/LDG-01-manual-je-3leg-minor-units.json           expect.legs.[1].gl_account_code = '10400'
+  ledger/LDG-01-manual-je-3leg-minor-units.json           expect.legs.[2].gl_account_code = '99008'
+  ledger/LDG-02-repayment-split-4leg-minor-units.json     expect.legs.[0].gl_account_code = '10201'
+  ledger/LDG-02-repayment-split-4leg-minor-units.json     expect.legs.[1].gl_account_code = '40100'
+  ledger/LDG-02-repayment-split-4leg-minor-units.json     expect.legs.[2].gl_account_code = '40300'
+  ledger/LDG-02-repayment-split-4leg-minor-units.json     expect.legs.[3].gl_account_code = '10300'
+  ledger/LDG-03-overpayment-4leg-minor-units.json         expect.legs.[0].gl_account_code = '10201'
+  ledger/LDG-03-overpayment-4leg-minor-units.json         expect.legs.[1].gl_account_code = '40100'
+  ledger/LDG-03-overpayment-4leg-minor-units.json         expect.legs.[2].gl_account_code = '20100'
+  ledger/LDG-03-overpayment-4leg-minor-units.json         expect.legs.[3].gl_account_code = '10300'
+  ledger/LDG-04-header-account-accepted.json              expect.legs.[0].gl_account_code = '10000'
+  ledger/LDG-04-header-account-accepted.json              expect.legs.[1].gl_account_code = '99008'
+  ledger/LDG-05-openingbalance-accepted-empty-ledger.json expect.legs.[0].gl_account_code = 'T305-1000'
+  ledger/LDG-05-openingbalance-accepted-empty-ledger.json expect.legs.[1].gl_account_code = 'T305-3000'
+  ledger/LDG-05-openingbalance-accepted-empty-ledger.json expect.legs.[2].gl_account_code = 'T305-1100'
+  ledger/LDG-05-openingbalance-accepted-empty-ledger.json expect.legs.[3].gl_account_code = 'T305-3000'
+  ledger/LDG-05-openingbalance-accepted-empty-ledger.json expect.legs.[4].gl_account_code = 'T305-2000'
+  ledger/LDG-05-openingbalance-accepted-empty-ledger.json expect.legs.[5].gl_account_code = 'T305-3000'
+  ledger/LDG-06-postclosure-entry-accepted-one-day-after-closing-date.json expect.legs.[0].gl_account_code = 'T327-1000'
+  ledger/LDG-06-postclosure-entry-accepted-one-day-after-closing-date.json expect.legs.[1].gl_account_code = 'T327-1100'
+  ledger/LDG-06-postclosure-entry-accepted-one-day-after-closing-date.json expect.legs.[2].gl_account_code = 'T327-2000'
+  ledger/LDG-07-entry-on-the-business-date-accepted.json  expect.legs.[0].gl_account_code = 'T327-1000'
+  ledger/LDG-07-entry-on-the-business-date-accepted.json  expect.legs.[1].gl_account_code = 'T327-1100'
+  ledger/LDG-07-entry-on-the-business-date-accepted.json  expect.legs.[2].gl_account_code = 'T327-2000'
