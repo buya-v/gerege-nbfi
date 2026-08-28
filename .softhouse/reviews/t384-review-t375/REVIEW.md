@@ -372,4 +372,45 @@ follow-up, and T375 filed it as one.
 
 ## CONDITIONS
 
-*(none recorded yet)*
+**C-T384-1 — CLOSE `FU-T375-7`, WITH ARM G. NOT OPTIONAL, AND NOT FOR T375.**
+The member's index lookup must use `":(literal)$rel"`, and a member whose lookup returns more
+than one line must be REFUSED — the shape the witness side of the same function already has as
+`self_multi`. The arm is written and driven: lift
+`mutators/G-glob-member-AMBIGUOUS-symlink.sh.txt` into `drive-red-t375.sh` unchanged, together
+with arms `E` and `F` as its controls (without them the finding is mis-stated as "a glob
+character breaks it", which is false). **This is a follow-up task, not a change to T375's
+branch:** an executable edit now would invalidate the 61-arm drive that is the branch's whole
+evidentiary basis, which is the exact reasoning I have just endorsed T375 for.
+
+**C-T384-2 — the census line must not print `symlink-members=0` while a symlink member is in
+the population.** That is a stronger requirement than "refuse the member", and it is what
+makes the field worth having. It falls out of C-T384-1 but should be asserted by its own
+marker in the arm, because a fix that refuses and still miscounts would pass an exit-code-only
+arm.
+
+**C-T384-3 — delete the two restated `warn "` / `say "` counts from the handoff's §6 rather
+than correct them** (F-T384-2). The claim that carries the weight — no refusal path was
+removed — is true and is now independently counted here. The numbers are not, and a corrected
+cardinal rots in every place it was restated.
+
+**C-T384-4 — the driver must read `EXEMPTION_PIN_LEDGER_WRONGIMPLS` by NAME on the merge
+result.** It is 13 on all three trees and its line moved by 553. The bump to 14 belongs to a
+different task and must not be done by line number.
+
+---
+
+## WHAT I DID NOT VERIFY, STATED SO NOBODY READS MORE INTO THIS REVIEW THAN IS IN IT
+
+* **`FU-T375-5`, the `DECLARED` direction.** Reasoned about, not driven. See §6.
+* **Behaviour on a case-SENSITIVE filesystem.** This host is case-insensitive
+  (`core.ignorecase=true`); T375 says the same and I did not obtain a case-sensitive host.
+* **`guard_graded_root_is_this_tree`'s short-circuit path** is still driven by no arm in any
+  generation, T384 included. T375 carries this forward from pass 1 and I confirm it is still
+  true.
+* **A member path containing a NEWLINE.** Reasoned only: `git ls-files` C-quotes such a path,
+  so `$rel` arrives with literal quotes, the member grep fails, and the member falls through to
+  `INVOKED BY NOTHING` — fail-CLOSED. **Not driven**, and I am not claiming it is safe.
+* **A gitlink / submodule entry** whose path ends in `.sh`. Reasoned only, same fall-through.
+  **Not driven.**
+
+---
