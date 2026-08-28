@@ -25,7 +25,7 @@ regen --check rc=0  (0 = the committed pin IS what the regenerator produces here
 IDENTICAL: /private/tmp/t382-pin/.softhouse/guards/dead-path-frontier.pin matches the derived content
 
 ### 4. THE MERGE RESULT — census RUN, and what the regenerator would produce
-e60e498b Merge remote-tracking branch 'origin/softhouse/T374-t362-conditions' into pinmerge
+9266d935 Merge remote-tracking branch 'origin/softhouse/T374-t362-conditions' into pinmerge
 pin rows in the MERGE RESULT as committed: 108
 census rc=0
 regen --check rc=0
@@ -37,6 +37,7 @@ IDENTICAL: /private/tmp/t382-pin/.softhouse/guards/dead-path-frontier.pin matche
 --- rows on T374 but NOT on main (ADDED) ---
 
 ### 6. does the REMOVED literal still occur anywhere tracked on the merge result?
+  occurrences in the census corpus (tracked .softhouse/*.py and *.sh): 11
 .softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh:75:echo "    softhouse/A2-7-capture-mandatory-accounts, which a clone does not have, and both"
 .softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh:79:( cd "$R" && git branch --list 'softhouse/A2-7-capture-mandatory-accounts' ) > "$SCRATCH/localref.txt"
 .softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh:84:  echo "    confirmed: the scratch clone has NO local softhouse/A2-7-capture-mandatory-accounts"

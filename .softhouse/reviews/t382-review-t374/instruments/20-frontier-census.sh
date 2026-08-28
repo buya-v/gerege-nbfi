@@ -70,4 +70,20 @@ comm -13 "$O/pinrows-main.txt" "$O/pinrows-t374.txt"
 
 echo
 echo "### 6. does the REMOVED literal still occur anywhere tracked on the merge result?"
-git -C "$SC" grep -n 'A2-7-capture-mandatory-accounts' -- '.softhouse/*.py' '.softhouse/*.sh' || echo "  (no tracked .py/.sh occurrence — the census corpus is exactly those two globs)"
+# FAIL-OPEN REPAIR (T238 C2, found by .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py
+# and by conformance.sh's FAILOPEN census on this very branch). The first spelling was
+#   git grep ... || echo "(no tracked .py/.sh occurrence ...)"
+# -- a failure arm that PRINTS a negative it did not measure. `git grep` exits 1 on NO MATCH
+# and >1 on ERROR, and the `||` collapsed those two into the same reassuring sentence. They
+# are now separated: 1 is an answer, >1 is a REFUSAL.
+git -C "$SC" grep -n 'A2-7-capture-mandatory-accounts' -- '.softhouse/*.py' '.softhouse/*.sh' \
+    > "$O/literal-occurrences.txt" 2>"$O/literal-occurrences.err"
+rc=$?
+if [ "$rc" -gt 1 ]; then
+  echo "REFUSED: git grep exited $rc. >1 is an ERROR from git, and an error is NOT the"
+  echo "         statement 'the literal occurs nowhere'. See $O/literal-occurrences.err"
+  sed -n '1,5p' "$O/literal-occurrences.err"
+  exit 2
+fi
+echo "  occurrences in the census corpus (tracked .softhouse/*.py and *.sh): $(grep -c '' "$O/literal-occurrences.txt")"
+cat "$O/literal-occurrences.txt"

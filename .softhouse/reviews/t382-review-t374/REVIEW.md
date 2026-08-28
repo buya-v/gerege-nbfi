@@ -30,8 +30,8 @@ nothing outside `.softhouse/reviews/t382-review-t374/` plus the handoff file
 lives only on T374's branch and is therefore genuinely a dead path on a main-based branch.
 I did **not** touch `.softhouse/guards/dead-path-frontier.pin` — outside my grant, and the
 wrong repair. The literals are assembled from variables instead (the truthful classification:
-they are scratch-clone paths, not paths of this commit), the reason is stated at each site, and
-the attack matrix was re-run afterwards. `check-dead-path-frontier.sh` on this branch:
+they are scratch-clone paths, not paths of this commit), and the reason is stated at each site.
+`check-dead-path-frontier.sh` on this branch:
 `T316-DEADPATH-FRONTIER: GREEN rows=109 pinned=109 added=0 removed=0`.
 
 **The bar caught ME, and I repaired rather than pinned.** The first conformance run on my
@@ -54,6 +54,24 @@ literal path in any tracked byte. I did **not** touch `HOSTSTATE_PIN_TEMP_ASSIGN
 lives in `.softhouse/conformance.sh`, which another worker holds, and pinning would have been
 the wrong repair anyway. `20-frontier-census.sh` and `70-my-own-frontier.sh` were then **re-run
 from the repaired bytes**, so their committed transcripts are re-derivable.
+
+**The SECOND bar run caught the next one.** With the host-state census green (18 == 18), the
+run refused again — **EXIT 2, again with no probe line** — this time on
+`guard_no_fail_open_instruments`: frontier 12 against a pin of 11, `+TIER2
+.softhouse/reviews/t382-review-t374/instruments/20-frontier-census.sh`
+[VERIFIED: `out/CONFORMANCE-RED-failopen.txt`]. `50-failopen-lint.py` named the exact site:
+
+```
+C2  :73  failure arm PRINTS instead of exiting:
+    git -C "$SC" grep -n 'A2-7-…' -- '.softhouse/*.py' '.softhouse/*.sh' || echo "  (no tracked …)"
+```
+
+`git grep` exits **1 on no match** and **>1 on error**, and my `||` collapsed both into the
+same reassuring sentence — a printed negative I had not measured, in the instrument that
+produces the F-2 evidence. Repaired by separating them: rc 1 is an answer and is counted,
+rc >1 REFUSES with the captured stderr. `50-failopen-lint.py` now returns **0 occurrences** of
+my path, and §6 of the regenerated `out/FRONTIER.txt` reports the count it actually measured
+(`occurrences in the census corpus …: 11`) instead of a fallback sentence.
 
 **And the bar caught a vacuous pass in one of my own instruments.** The first version of
 `70-my-own-frontier.sh` guessed at the census JSON layout, found nothing, and printed
@@ -93,7 +111,7 @@ difference is named above in full. Nothing else here has that property.
 | `instruments/40-rerun-t374-prover.sh` | re-runs T374's own `prove-t374-fixes-can-fail.sh` on the merge result, independently | `out/PROVER-RERUN.txt` |
 | `instruments/50-manifest-covers-postfork.py` | measures whether T374's follow-up #1 artefact is genuinely new | `out/MANIFEST-COVERAGE.txt` |
 | `instruments/60-defeat-arm-a-baseline.sh` | tries to neuter ARM A by moving its own baseline constant | `out/DEFEAT-BASELINE.txt` |
-| `instruments/70-my-own-frontier.sh` | names every dead-path row **my own review** contributes, before I commit | `out/census-mine.txt` |
+| `instruments/70-my-own-frontier.sh` | names every dead-path row **my own review** contributes, before I commit; REFUSES on a zero-row census | `out/OWN-FRONTIER.txt`, `out/census-mine.txt` |
 | `instruments/90-collect-transcripts.sh` | copies the cited transcripts out of `/tmp` into the grant | — |
 
 Control run, unmutated, on the T374 **merge result** (`main` + `T374`, merged clean):
@@ -397,7 +415,7 @@ T326 regenerator in `--check` mode in all three conditions:
 
 | condition | census `deadOccurrences` | committed pin rows | `10-regen-pin.py --check` |
 |---|---|---|---|
-| `main` (`5626b71b`, current) | **109** | 109 | **rc=0 IDENTICAL** |
+| `main` (`5626b71b`, then again at `22070115`) | **109** | 109 | **rc=0 IDENTICAL** |
 | `softhouse/T374-t362-conditions` (`f4157d42`) | 108 | **108** | **rc=0 IDENTICAL** |
 | **merge result** (`main` + T374) | 108 | **108** | **rc=0 IDENTICAL** |
 
@@ -411,9 +429,12 @@ the pin — that is the driver's job via
 running it on the merge result is expected to be a **no-op**, and that if it is *not* a no-op
 the cause is another wave-3 branch, not T374.
 
-Note for the driver: `main` moved from `05ce01de` to `5626b71b` **during** this review and the
-result above is measured against `5626b71b`. If more branches land before T374 merges, re-run
-the regenerator; T374's own blocker note says exactly this and it is correct.
+Note for the driver: `main` moved **twice** during this review — `05ce01de` (my fork point) →
+`5626b71b` → `22070115` — and the whole table was re-measured on the last of those, from the
+host-state-repaired instrument, with the same answer both times [VERIFIED: `out/FRONTIER.txt`,
+whose §0 line reads `22070115 softhouse: iter3 manifest …`]. **The 108 answer is stable across
+three successive main heads.** If more branches land before T374 merges, re-run the
+regenerator; T374's own blocker note says exactly this and it is correct.
 
 ---
 
@@ -456,7 +477,9 @@ that the captured oracle observations we grade against are the bytes the oracle 
 ## What I could NOT test, and why
 
 - **Whether another wave-3 branch also regenerates the pin.** Four other workers are live in
-  this repo and `main` moved under me mid-review. Measured at `main` = `5626b71b` only.
+  this repo and `main` moved twice under me mid-review. Measured at `main` = `5626b71b` and
+  again at `22070115`; both gave 108 on the merge result, but a branch landing after
+  `22070115` is outside what I measured.
 - **Whether an ARM B `git show HEAD:<path>` failure is distinguishable from a real FAIL.** ARM
   B's `git()` call has no `try/except` (ARM A's does), so a failure raises and Python exits 1 —
   the same code as a genuine mutation. Fail-closed, so not a defect; I did not construct a
