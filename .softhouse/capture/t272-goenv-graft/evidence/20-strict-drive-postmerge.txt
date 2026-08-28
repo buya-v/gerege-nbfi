@@ -1,0 +1,239 @@
+  ASSERT OK   : scratch checkout has NO .softhouse/toolchain (decided by -d on the real directory)
+T272 DRIVE — GEREGE_GO_STRICT, both ways, toolchain present and absent
+repo        : $REPO (real path withheld: it is host state and this transcript is committed)
+base ref    : main   (the pre-graft go-env.sh, for A10/A11a)
+scratch     : $SCRATCH   (mktemp -d, removed on EXIT)
+------------------------------------------------------------------------
+A1 — toolchain PRESENT, GEREGE_GO_STRICT unset  (the launchd fire's real condition)
+  summary : rc=0|src=pinned|bin=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go|goroot=/Users/buv/gerege-nbfi/.softhouse/toolchain/go|pathgo=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+  --- stderr ---
+  | (stderr empty)
+  ASSERT OK   : A1 rc=0
+  ASSERT OK   : A1 GEREGE_GO_SOURCE=pinned
+  ASSERT OK   : A1 a go is on PATH
+  ASSERT OK   : A1 GOROOT exported
+  ASSERT OK   : A1 GEREGE_GO_BIN names the go in use
+  ASSERT OK   : A1 the pinned path is SILENT (nothing to announce)
+------------------------------------------------------------------------
+A2 — toolchain PRESENT, GEREGE_GO_STRICT=1     (strict must be a NO-OP here)
+  summary : rc=0|src=pinned|bin=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go|goroot=/Users/buv/gerege-nbfi/.softhouse/toolchain/go|pathgo=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+  --- stderr ---
+  | (stderr empty)
+  ASSERT OK   : A2 IDENTICAL to A1, byte for byte — strict changes NOTHING where the toolchain is present
+  ASSERT OK   : A2 still silent
+------------------------------------------------------------------------
+A3 — toolchain ABSENT, a `go` IS on PATH, strict unset  (the CHOSEN announced fallback)
+  summary : rc=0|src=fallback-path|bin=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go|goroot=UNSET|pathgo=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go
+  --- stderr as a transcript reader sees it ---
+  | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+  | go-env.sh:   searched (needed <cand>/go/bin/go):
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/toolchain
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  | go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go
+  | go-env.sh:   go version go1.26.6 darwin/arm64
+  | go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+  | go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+  | go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+  | go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2).
+  ASSERT OK   : A3 rc=0 — a sourced env file must not abort its caller by default
+  ASSERT OK   : A3 GEREGE_GO_SOURCE=fallback-path (token unchanged from T253b)
+  ASSERT OK   : A3 NO GOROOT exported (a GOROOT pointing nowhere is the D2 symptom)
+  ASSERT OK   : A3 GEREGE_GO_BIN names the substituted binary
+  ASSERT OK   : A3 a usable go is on PATH
+  ASSERT OK   : A3 stderr says IN WORDS that this is not the pinned toolchain
+  ASSERT OK   : A3 stderr NAMES THE PATHS SEARCHED — absence reported as a search result (P-70)
+  ASSERT OK   : A3 the fallback banner NAMES the switch that would refuse instead
+  --- and it must actually COMPILE, not merely announce that it might ---
+  go build ./... in the scratch nexus -> rc=0
+  ASSERT OK   : A3 the fallback toolchain COMPILES the module off-host — resolution is real
+------------------------------------------------------------------------
+A4 — toolchain ABSENT, a `go` IS on PATH, GEREGE_GO_STRICT=1  (THE GRAFT)
+  summary : rc=2|src=refused|bin=UNSET|goroot=UNSET|pathgo=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go
+  --- stderr as a transcript reader sees it ---
+  | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+  | go-env.sh:   searched (needed <cand>/go/bin/go):
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/toolchain
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  | go-env.sh: GEREGE_GO_STRICT is set, so this is a REFUSAL and not a substitution.
+  | go-env.sh:   there IS a `go` on PATH and it was DELIBERATELY NOT adopted:
+  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go
+  | go-env.sh: Nothing was exported. Install the pinned toolchain, or set GEREGE_TOOLCHAIN,
+  | go-env.sh: or unset GEREGE_GO_STRICT to allow a STATED fallback to the go on PATH.
+  | go-env.sh: GEREGE_GO_SOURCE=refused, and SOURCING THIS FILE RETURNS 2 — this arm is
+  | go-env.sh: the ONLY one that returns non-zero. A caller under `set -e` aborts here;
+  | go-env.sh: that is strict mode working, not a bug.
+  | go-env.sh: PATH IS UNCHANGED — this file will not hide a compiler it did not install.
+  | go-env.sh: A caller that checks NEITHER this status NOR GEREGE_GO_SOURCE will still find
+  | go-env.sh: that `go` and build with it. As of T272 none of the three consumers checks
+  | go-env.sh: either, so STRICT IS LOUD BUT ADVISORY AT THE CALL SITE until FU-T272-1 lands
+  | go-env.sh: (.softhouse/capture/t272-goenv-graft/GOENV-STRICT-WIRING.md).
+  ASSERT OK   : A4 rc=2 — the refusal REACHES THE CALLER, it is not swallowed by the cleanup
+  ASSERT OK   : A4 GEREGE_GO_SOURCE=refused
+  ASSERT OK   : A4 nothing exported: no GOROOT
+  ASSERT OK   : A4 nothing exported: no GEREGE_GO_BIN
+  ASSERT OK   : A4 the PATH go is STILL VISIBLE, and the banner says so — strict refuses, it does not conceal
+  ASSERT OK   : A4 the refusal is stated in words
+  ASSERT OK   : A4 stderr names the go it declined to adopt
+  ASSERT OK   : A4 the banner states its OWN limitation — a caller that ignores it still builds
+  ASSERT OK   : A4 the refusal STILL names the paths searched (actionable, not merely negative)
+------------------------------------------------------------------------
+A5 — toolchain ABSENT and NO `go` anywhere, strict unset
+  summary : rc=0|src=absent|bin=UNSET|goroot=UNSET|pathgo=NONE
+  --- stderr ---
+  | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+  | go-env.sh:   searched (needed <cand>/go/bin/go):
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/toolchain
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  | go-env.sh: and there is NO `go` on PATH either. Nothing was exported.
+  | go-env.sh: The caller's own toolchain check will now refuse — that refusal is
+  | go-env.sh: correct and fail-closed. GEREGE_GO_SOURCE=absent.
+  ASSERT OK   : A5 rc=0 — the caller's own refusal is the authoritative one
+  ASSERT OK   : A5 GEREGE_GO_SOURCE=absent (token unchanged from T253b)
+  ASSERT OK   : A5 no GEREGE_GO_BIN — there is no go to name
+  ASSERT OK   : A5 the failure is LOUD, not a silent no-op
+------------------------------------------------------------------------
+A6 — toolchain ABSENT and NO `go` anywhere, GEREGE_GO_STRICT=1
+  summary : rc=2|src=refused|bin=UNSET|goroot=UNSET|pathgo=NONE
+  --- stderr ---
+  | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+  | go-env.sh:   searched (needed <cand>/go/bin/go):
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/toolchain
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  | go-env.sh: GEREGE_GO_STRICT is set, so this is a REFUSAL and not a substitution.
+  | go-env.sh:   there is no `go` on PATH either, so nothing was available to adopt.
+  | go-env.sh: Nothing was exported. Install the pinned toolchain, or set GEREGE_TOOLCHAIN,
+  | go-env.sh: or unset GEREGE_GO_STRICT to allow a STATED fallback to the go on PATH.
+  | go-env.sh: GEREGE_GO_SOURCE=refused, and SOURCING THIS FILE RETURNS 2 — this arm is
+  | go-env.sh: the ONLY one that returns non-zero. A caller under `set -e` aborts here;
+  | go-env.sh: that is strict mode working, not a bug.
+  | go-env.sh: PATH IS UNCHANGED — this file will not hide a compiler it did not install.
+  | go-env.sh: A caller that checks NEITHER this status NOR GEREGE_GO_SOURCE will still find
+  | go-env.sh: that `go` and build with it. As of T272 none of the three consumers checks
+  | go-env.sh: either, so STRICT IS LOUD BUT ADVISORY AT THE CALL SITE until FU-T272-1 lands
+  | go-env.sh: (.softhouse/capture/t272-goenv-graft/GOENV-STRICT-WIRING.md).
+  ASSERT OK   : A6 rc=2 — strict refuses whether or not a PATH go existed
+  ASSERT OK   : A6 GEREGE_GO_SOURCE=refused
+  ASSERT OK   : A6 the banner tells the TRUTH about this arm (nothing was refused; nothing existed)
+------------------------------------------------------------------------
+A7 — a STALE inherited GOROOT must be dropped in BOTH modes (the Mac half of the graft)
+  default mode summary : rc=0|src=fallback-path|bin=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go|goroot=UNSET|pathgo=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go
+  --- stderr ---
+  | go-env.sh: dropping inherited GOROOT=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/no-such-goroot — that directory does not exist.
+  | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+  | go-env.sh:   searched (needed <cand>/go/bin/go):
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/toolchain
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  | go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go
+  | go-env.sh:   go version go1.26.6 darwin/arm64
+  | go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+  | go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+  | go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+  | go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2).
+  ASSERT OK   : A7 default: the stale GOROOT was DROPPED
+  ASSERT OK   : A7 default: the drop is ANNOUNCED
+  strict  mode summary : rc=2|src=refused|bin=UNSET|goroot=UNSET|pathgo=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go
+  --- stderr ---
+  | go-env.sh: dropping inherited GOROOT=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/no-such-goroot — that directory does not exist.
+  | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+  | go-env.sh:   searched (needed <cand>/go/bin/go):
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/toolchain
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  | go-env.sh: GEREGE_GO_STRICT is set, so this is a REFUSAL and not a substitution.
+  | go-env.sh:   there IS a `go` on PATH and it was DELIBERATELY NOT adopted:
+  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go
+  | go-env.sh: Nothing was exported. Install the pinned toolchain, or set GEREGE_TOOLCHAIN,
+  | go-env.sh: or unset GEREGE_GO_STRICT to allow a STATED fallback to the go on PATH.
+  | go-env.sh: GEREGE_GO_SOURCE=refused, and SOURCING THIS FILE RETURNS 2 — this arm is
+  | go-env.sh: the ONLY one that returns non-zero. A caller under `set -e` aborts here;
+  | go-env.sh: that is strict mode working, not a bug.
+  | go-env.sh: PATH IS UNCHANGED — this file will not hide a compiler it did not install.
+  | go-env.sh: A caller that checks NEITHER this status NOR GEREGE_GO_SOURCE will still find
+  | go-env.sh: that `go` and build with it. As of T272 none of the three consumers checks
+  | go-env.sh: either, so STRICT IS LOUD BUT ADVISORY AT THE CALL SITE until FU-T272-1 lands
+  | go-env.sh: (.softhouse/capture/t272-goenv-graft/GOENV-STRICT-WIRING.md).
+  ASSERT OK   : A7 strict: the stale GOROOT was DROPPED TOO — the graft sits AFTER the drop
+  ASSERT OK   : A7 strict: the drop is ANNOUNCED before the refusal
+  ASSERT OK   : A7 strict: and it still refuses
+------------------------------------------------------------------------
+A8 — a caller written with `set -e`, which reference-oracle.md's activation line invites
+     (T256 asked T272 to DECIDE this rather than let someone debug it later)
+  default : rc=0  stdout=[REACHED-AFTER-ACTIVATION]
+  strict=1: rc=2  stdout=[]
+  ASSERT OK   : A8 default: a `set -e` script SURVIVES activation and keeps running
+  ASSERT OK   : A8 strict: a `set -e` script ABORTS AT THE ACTIVATION LINE with rc 2 — DECIDED, not discovered
+------------------------------------------------------------------------
+A9 — THE REAL CONSUMER under strict. The honest limit of an advisory switch.
+  strict=1, a shim go on PATH: check-ledger-invariants.sh -> rc=1
+  --- the guard's OWN VERDICT (its last lines), which is what decides what rc=1 means ---
+  | go-env.sh: the ONLY one that returns non-zero. A caller under `set -e` aborts here;
+  | go-env.sh: that is strict mode working, not a bug.
+  | go-env.sh: PATH IS UNCHANGED — this file will not hide a compiler it did not install.
+  | go-env.sh: A caller that checks NEITHER this status NOR GEREGE_GO_SOURCE will still find
+  | go-env.sh: that `go` and build with it. As of T272 none of the three consumers checks
+  | go-env.sh: either, so STRICT IS LOUD BUT ADVISORY AT THE CALL SITE until FU-T272-1 lands
+  | go-env.sh: (.softhouse/capture/t272-goenv-graft/GOENV-STRICT-WIRING.md).
+  | ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)
+  | ledger-invariants: the POPULATION FLOOR did not derive (git ls-files over nexus returned
+  | ledger-invariants:   '0'). A floor of zero readmits exactly the vacuous pass this
+  | ledger-invariants:   check exists to refuse, so an underived floor is an ERROR, not a pass.
+  | ledger-invariants: the I-3/I-4 SOURCE GUARD FAILED. DEC-2 §4.4 obliges these invariants
+  | ledger-invariants: and §4.4.1 records that this guard is the only mechanism that can
+  | ledger-invariants: enforce them. This is NOT a pass.
+  ASSERT OK   : A9 the guard RAN ANYWAY (rc=1). This is the TRUE, UNFLATTERING result: the guard tests
+       `command -v go` for itself and never looks at the sourcing status, so strict did NOT
+       stop it. Recorded, not hidden — it is the whole content of follow-up FU-T272-1.
+  strict=1, NO go on PATH:     check-ledger-invariants.sh -> rc=2
+  | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+  | go-env.sh:   searched (needed <cand>/go/bin/go):
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/toolchain
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  | go-env.sh: GEREGE_GO_STRICT is set, so this is a REFUSAL and not a substitution.
+  | go-env.sh:   there is no `go` on PATH either, so nothing was available to adopt.
+  | go-env.sh: Nothing was exported. Install the pinned toolchain, or set GEREGE_TOOLCHAIN,
+  ASSERT OK   : A9 with no compiler at all the guard still EXITS 2 on its own merits — no guard is weakened
+  ASSERT OK   : A9 and its refusal is legible in words
+------------------------------------------------------------------------
+A10 — DEFAULT-MODE REGRESSION: the grafted file vs the pre-graft file, same conditions
+      With GEREGE_GO_STRICT unset — which is what BOTH fires run — nothing may change.
+  fallback arm  OLD: rc=0|src=fallback-path|goroot=UNSET|pathgo=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go
+  fallback arm  NEW: rc=0|src=fallback-path|goroot=UNSET|pathgo=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go
+  ASSERT OK   : A10 fallback: rc / src / goroot / pathgo IDENTICAL old vs new (GEREGE_GO_BIN is additive)
+  absent   arm  OLD: rc=0|src=absent|goroot=UNSET|pathgo=NONE
+  absent   arm  NEW: rc=0|src=absent|goroot=UNSET|pathgo=NONE
+  ASSERT OK   : A10 absent: rc / src / goroot / pathgo IDENTICAL old vs new
+  --- stderr delta on the fallback arm (old -> new), which must be ADDITIVE only ---
+  | @@ -9,3 +9,4 @@
+  |  go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+  |  go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+  |  go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+  | +go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2).
+------------------------------------------------------------------------
+A11 — VACUITY. Watch the strict assertions FAIL before believing them when they pass.
+  (a) the PRE-GRAFT file, which has no strict arm at all
+      rc=0|src=fallback-path|bin=UNSET|goroot=UNSET|pathgo=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go
+  ASSERT OK   : A11a the pre-graft file IGNORES GEREGE_GO_STRICT (rc=0, src=fallback-path): A4 discriminates
+  (b) the NEW file with the _g_rc propagation deleted — the 'loud but inert graft'
+      rc=0|src=refused|bin=UNSET|goroot=UNSET|pathgo=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/shim/go
+      --- stderr: the refusal STILL PRINTS, which is exactly why rc had to be asserted ---
+      | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+      | go-env.sh:   searched (needed <cand>/go/bin/go):
+      |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/toolchain
+      |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin/../../toolchain
+      | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.codoUswRLF/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+      | go-env.sh: GEREGE_GO_STRICT is set, so this is a REFUSAL and not a substitution.
+  ASSERT OK   : A11b the inert variant prints the whole refusal and returns rc=0 — an inert graft is
+                LOUD AND USELESS, and A4's rc=2 assertion is the only thing that catches it
+------------------------------------------------------------------------
+asserts: 48   failures: 0   skipped-without-a-failure: 0
+(every condition this drive could not exercise is recorded as an ASSERT FAIL above and
+ never dropped — P-40: an enumerator must count what it skipped and say so.)
+DRIVE: GREEN
