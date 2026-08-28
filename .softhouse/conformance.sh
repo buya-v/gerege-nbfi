@@ -3275,7 +3275,7 @@ run_guards() {
   # than short-circuiting: unlike guard_graded_root_is_this_tree none of them invalidates the
   # other guards' answers, and one bad guard must not hide another. Registered CHEAPEST FIRST so
   # a fast refusal prints before the 30-second one is paid for.
-  guard_guards_dir_registration       || failed=1        # T323 iter 2      —  0.05 s
+  guard_guards_dir_registration       || failed=1        # T323 iter 2 — <=0.16 s
   guard_capture_namespace             || failed=1        # T299, wired by T323 —  0.4 s
   guard_dead_path_frontier            || failed=1        # T316, wired by T323 —  1.3 s
   guard_reconciler_ownership          || failed=1        # T319, wired by T323 — 30.3 s
