@@ -51,7 +51,7 @@ T363 caught this one.
 | `T349` PreToolUse evaluation | `a007dd636fe410978` | running |
 | `T367` review T363 | `a57a6c411cc2556f9` | running |
 | `T369` review T351 | `acc7ea7c08e7d5521` | running |
-| `T368` review T365 | (see below) | running |
+| `T368` review T365 | `a33788600f45d98f9` | running |
 | `T363` oracle baseline | `ad65dab4e80c74658` | **done** @ `8313ab6d` |
 | `T351` progress accounting | `ad437d46842bec227` | **done** @ `a0139c5d` |
 
