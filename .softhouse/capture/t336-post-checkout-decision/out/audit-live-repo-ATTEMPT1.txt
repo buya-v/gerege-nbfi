@@ -1,0 +1,136 @@
+push-before-spawn audit -- repo /Users/buv/gerege-nbfi
+  SELECTOR: worktree admin dirs matching 'agent-*' under .git/worktrees/, paths .softhouse/LOCK, .softhouse/tasks.json, .softhouse/RESUME.md
+  NOTE: pruned worktrees are invisible to this audit; it UNDER-REPORTS.
+
+A. SPAWNS SEEN (60)
+   2026-08-18 08:08:33  agent-a26856b7cbf4ce967
+   2026-08-18 17:01:53  agent-a43f1c46c0e637fed
+   2026-08-18 17:02:31  agent-a9dc03a754bd32556
+   2026-08-18 17:11:20  agent-a223f68f4c6d4fa11
+   2026-08-18 20:02:04  agent-a2027f85cea4effc9
+   2026-08-18 20:02:33  agent-a353b03c0dea4dd41
+   2026-08-18 23:41:11  agent-ab4f6ef3da612f053
+   2026-08-19 08:03:10  agent-a3f751d711f6261f9
+   2026-08-19 08:03:50  agent-a02fbff9391fc1420
+   2026-08-19 08:04:21  agent-aae6901cc4f028513
+   2026-08-19 08:30:23  agent-a3afd18baf89b21fe
+   2026-08-20 11:35:54  agent-aded5a27da9fffe91
+   2026-08-20 15:54:35  agent-a1dabef0a78792389
+   2026-08-20 20:03:18  agent-a1d6d1027939daa35
+   2026-08-20 23:25:02  agent-a0aed3828d5f8f61a
+   2026-08-21 08:09:24  agent-a7aa8927c30980e67
+   2026-08-21 08:32:35  agent-a27d19378919db7ce
+   2026-08-21 08:43:44  agent-ac1dedb629a52a489
+   2026-08-21 08:58:21  agent-a266e9c0ed65d4219
+   2026-08-21 09:02:47  agent-a76f2ba43853c8af3
+   2026-08-21 10:07:45  agent-a8581c69bafc13152
+   2026-08-21 10:08:35  agent-a1be0f4db12e4b8b8
+   2026-08-21 23:09:07  agent-a7b052ea3e92337d3
+   2026-08-22 11:16:08  agent-a37ede77a94989d14
+   2026-08-22 21:58:37  agent-ad4264728c497493b
+   2026-08-22 21:58:51  agent-a2dfa8274443adb39
+   2026-08-22 21:59:20  agent-af13c240170c61019
+   2026-08-22 21:59:37  agent-ace495b14b24377f1
+   2026-08-22 22:28:13  agent-a9c310565babf95f7
+   2026-08-22 22:28:30  agent-a533818f28c9c0299
+   2026-08-22 22:41:19  agent-a157842e280d9a835
+   2026-08-22 22:42:34  agent-a4668dbfbf66ea6a6
+   2026-08-23 08:06:45  agent-a7366eddb92a92551
+   2026-08-23 11:58:32  agent-a4bdc82a96c0a241c
+   2026-08-23 11:58:54  agent-ae1cb93efc023c229
+   2026-08-23 12:00:00  agent-ac1fa12c69146149b
+   2026-08-23 12:00:15  agent-a31f5a02b9f6a59b0
+   2026-08-23 14:06:00  agent-a7a1b4142600dc53f
+   2026-08-23 14:06:24  agent-acee94120db93ffce
+   2026-08-23 14:06:55  agent-af8f23cb68de0effa
+   2026-08-23 14:07:43  agent-ada96e5f185108346
+   2026-08-23 14:08:07  agent-af9f82a58b9ee7eb4
+   2026-08-23 14:08:34  agent-a8a7245a580869366
+   2026-08-23 14:08:58  agent-a69970ae1feee7231
+   2026-08-27 23:06:43  agent-a6aebb11acf360806
+   2026-08-27 23:29:10  agent-a3e635faba72121c8
+   2026-08-28 01:23:25  agent-a3cb97ad28e05db9e
+   2026-08-28 01:24:49  agent-a5b22a94bf4172083
+   2026-08-28 01:25:15  agent-ab61c54c7e7251fba
+   2026-08-28 08:03:59  agent-afabde695fbda8dff
+   2026-08-28 09:19:22  agent-ac46eb4bb5492bba1
+   2026-08-28 11:34:58  agent-ac70608b49d46f77a
+   2026-08-28 11:35:26  agent-adcb0122e4f0d6738
+   2026-08-28 11:35:47  agent-a2b34ba7fee3c2de6
+   2026-08-28 11:36:05  agent-a932bd0ee5b1bb219
+   2026-08-28 11:36:24  agent-aac32d39717605690
+   2026-08-28 11:36:43  agent-afc904cf109cb64cf
+   2026-08-28 11:53:49  agent-a6d3c423b14da671b
+   2026-08-28 11:54:11  agent-ac0beb58b1e2738ea
+   2026-08-28 12:06:18  agent-a70d9f6137d4ad21d
+
+B. PUBLICATION INSTANTS (from the reflog of refs/remotes/origin/main)
+   .softhouse/LOCK            2026-08-28 12:05:41  first reflog entry containing fef9a9a6
+   .softhouse/tasks.json      2026-08-28 12:05:41  first reflog entry containing fef9a9a6
+   .softhouse/RESUME.md       2026-08-28 12:05:41  first reflog entry containing fef9a9a6
+
+C. MARGINS  (spawn - publish; negative = the spawn came FIRST = VIOLATION)
+   2026-08-18 08:08:33  agent-a26856b7cbf4ce967      LOCK=-878227s  tasks.json=-878227s  RESUME.md=-878227s
+   2026-08-18 17:01:53  agent-a43f1c46c0e637fed      LOCK=-846227s  tasks.json=-846227s  RESUME.md=-846227s
+   2026-08-18 17:02:31  agent-a9dc03a754bd32556      LOCK=-846189s  tasks.json=-846189s  RESUME.md=-846189s
+   2026-08-18 17:11:20  agent-a223f68f4c6d4fa11      LOCK=-845660s  tasks.json=-845660s  RESUME.md=-845660s
+   2026-08-18 20:02:04  agent-a2027f85cea4effc9      LOCK=-835416s  tasks.json=-835416s  RESUME.md=-835416s
+   2026-08-18 20:02:33  agent-a353b03c0dea4dd41      LOCK=-835387s  tasks.json=-835387s  RESUME.md=-835387s
+   2026-08-18 23:41:11  agent-ab4f6ef3da612f053      LOCK=-822269s  tasks.json=-822269s  RESUME.md=-822269s
+   2026-08-19 08:03:10  agent-a3f751d711f6261f9      LOCK=-792150s  tasks.json=-792150s  RESUME.md=-792150s
+   2026-08-19 08:03:50  agent-a02fbff9391fc1420      LOCK=-792110s  tasks.json=-792110s  RESUME.md=-792110s
+   2026-08-19 08:04:21  agent-aae6901cc4f028513      LOCK=-792079s  tasks.json=-792079s  RESUME.md=-792079s
+   2026-08-19 08:30:23  agent-a3afd18baf89b21fe      LOCK=-790517s  tasks.json=-790517s  RESUME.md=-790517s
+   2026-08-20 11:35:54  agent-aded5a27da9fffe91      LOCK=-692986s  tasks.json=-692986s  RESUME.md=-692986s
+   2026-08-20 15:54:35  agent-a1dabef0a78792389      LOCK=-677465s  tasks.json=-677465s  RESUME.md=-677465s
+   2026-08-20 20:03:18  agent-a1d6d1027939daa35      LOCK=-662542s  tasks.json=-662542s  RESUME.md=-662542s
+   2026-08-20 23:25:02  agent-a0aed3828d5f8f61a      LOCK=-650438s  tasks.json=-650438s  RESUME.md=-650438s
+   2026-08-21 08:09:24  agent-a7aa8927c30980e67      LOCK=-618976s  tasks.json=-618976s  RESUME.md=-618976s
+   2026-08-21 08:32:35  agent-a27d19378919db7ce      LOCK=-617585s  tasks.json=-617585s  RESUME.md=-617585s
+   2026-08-21 08:43:44  agent-ac1dedb629a52a489      LOCK=-616916s  tasks.json=-616916s  RESUME.md=-616916s
+   2026-08-21 08:58:21  agent-a266e9c0ed65d4219      LOCK=-616039s  tasks.json=-616039s  RESUME.md=-616039s
+   2026-08-21 09:02:47  agent-a76f2ba43853c8af3      LOCK=-615773s  tasks.json=-615773s  RESUME.md=-615773s
+   2026-08-21 10:07:45  agent-a8581c69bafc13152      LOCK=-611875s  tasks.json=-611875s  RESUME.md=-611875s
+   2026-08-21 10:08:35  agent-a1be0f4db12e4b8b8      LOCK=-611825s  tasks.json=-611825s  RESUME.md=-611825s
+   2026-08-21 23:09:07  agent-a7b052ea3e92337d3      LOCK=-564993s  tasks.json=-564993s  RESUME.md=-564993s
+   2026-08-22 11:16:08  agent-a37ede77a94989d14      LOCK=-521372s  tasks.json=-521372s  RESUME.md=-521372s
+   2026-08-22 21:58:37  agent-ad4264728c497493b      LOCK=-482823s  tasks.json=-482823s  RESUME.md=-482823s
+   2026-08-22 21:58:51  agent-a2dfa8274443adb39      LOCK=-482809s  tasks.json=-482809s  RESUME.md=-482809s
+   2026-08-22 21:59:20  agent-af13c240170c61019      LOCK=-482780s  tasks.json=-482780s  RESUME.md=-482780s
+   2026-08-22 21:59:37  agent-ace495b14b24377f1      LOCK=-482763s  tasks.json=-482763s  RESUME.md=-482763s
+   2026-08-22 22:28:13  agent-a9c310565babf95f7      LOCK=-481047s  tasks.json=-481047s  RESUME.md=-481047s
+   2026-08-22 22:28:30  agent-a533818f28c9c0299      LOCK=-481030s  tasks.json=-481030s  RESUME.md=-481030s
+   2026-08-22 22:41:19  agent-a157842e280d9a835      LOCK=-480261s  tasks.json=-480261s  RESUME.md=-480261s
+   2026-08-22 22:42:34  agent-a4668dbfbf66ea6a6      LOCK=-480186s  tasks.json=-480186s  RESUME.md=-480186s
+   2026-08-23 08:06:45  agent-a7366eddb92a92551      LOCK=-446335s  tasks.json=-446335s  RESUME.md=-446335s
+   2026-08-23 11:58:32  agent-a4bdc82a96c0a241c      LOCK=-432428s  tasks.json=-432428s  RESUME.md=-432428s
+   2026-08-23 11:58:54  agent-ae1cb93efc023c229      LOCK=-432406s  tasks.json=-432406s  RESUME.md=-432406s
+   2026-08-23 12:00:00  agent-ac1fa12c69146149b      LOCK=-432340s  tasks.json=-432340s  RESUME.md=-432340s
+   2026-08-23 12:00:15  agent-a31f5a02b9f6a59b0      LOCK=-432325s  tasks.json=-432325s  RESUME.md=-432325s
+   2026-08-23 14:06:00  agent-a7a1b4142600dc53f      LOCK=-424780s  tasks.json=-424780s  RESUME.md=-424780s
+   2026-08-23 14:06:24  agent-acee94120db93ffce      LOCK=-424756s  tasks.json=-424756s  RESUME.md=-424756s
+   2026-08-23 14:06:55  agent-af8f23cb68de0effa      LOCK=-424725s  tasks.json=-424725s  RESUME.md=-424725s
+   2026-08-23 14:07:43  agent-ada96e5f185108346      LOCK=-424677s  tasks.json=-424677s  RESUME.md=-424677s
+   2026-08-23 14:08:07  agent-af9f82a58b9ee7eb4      LOCK=-424653s  tasks.json=-424653s  RESUME.md=-424653s
+   2026-08-23 14:08:34  agent-a8a7245a580869366      LOCK=-424626s  tasks.json=-424626s  RESUME.md=-424626s
+   2026-08-23 14:08:58  agent-a69970ae1feee7231      LOCK=-424602s  tasks.json=-424602s  RESUME.md=-424602s
+   2026-08-27 23:06:43  agent-a6aebb11acf360806      LOCK=-46737s  tasks.json=-46737s  RESUME.md=-46737s
+   2026-08-27 23:29:10  agent-a3e635faba72121c8      LOCK=-45390s  tasks.json=-45390s  RESUME.md=-45390s
+   2026-08-28 01:23:25  agent-a3cb97ad28e05db9e      LOCK=-38535s  tasks.json=-38535s  RESUME.md=-38535s
+   2026-08-28 01:24:49  agent-a5b22a94bf4172083      LOCK=-38451s  tasks.json=-38451s  RESUME.md=-38451s
+   2026-08-28 01:25:15  agent-ab61c54c7e7251fba      LOCK=-38425s  tasks.json=-38425s  RESUME.md=-38425s
+   2026-08-28 08:03:59  agent-afabde695fbda8dff      LOCK=-14501s  tasks.json=-14501s  RESUME.md=-14501s
+   2026-08-28 09:19:22  agent-ac46eb4bb5492bba1      LOCK=-9978s  tasks.json=-9978s  RESUME.md=-9978s
+   2026-08-28 11:34:58  agent-ac70608b49d46f77a      LOCK=-1842s  tasks.json=-1842s  RESUME.md=-1842s
+   2026-08-28 11:35:26  agent-adcb0122e4f0d6738      LOCK=-1814s  tasks.json=-1814s  RESUME.md=-1814s
+   2026-08-28 11:35:47  agent-a2b34ba7fee3c2de6      LOCK=-1793s  tasks.json=-1793s  RESUME.md=-1793s
+   2026-08-28 11:36:05  agent-a932bd0ee5b1bb219      LOCK=-1775s  tasks.json=-1775s  RESUME.md=-1775s
+   2026-08-28 11:36:24  agent-aac32d39717605690      LOCK=-1756s  tasks.json=-1756s  RESUME.md=-1756s
+   2026-08-28 11:36:43  agent-afc904cf109cb64cf      LOCK=-1737s  tasks.json=-1737s  RESUME.md=-1737s
+   2026-08-28 11:53:49  agent-a6d3c423b14da671b      LOCK=-711s  tasks.json=-711s  RESUME.md=-711s
+   2026-08-28 11:54:11  agent-ac0beb58b1e2738ea      LOCK=-689s  tasks.json=-689s  RESUME.md=-689s
+   2026-08-28 12:06:18  agent-a70d9f6137d4ad21d      LOCK=+37s  tasks.json=+37s  RESUME.md=+37s
+
+D. VERDICT
+   VIOLATION: 177 (spawn, artefact) pairs where the worker worktree was created BEFORE the artefact was published.
+   For that window origin's HEAD was an ACTIVE LIE to the next orchestrator (P-85).
