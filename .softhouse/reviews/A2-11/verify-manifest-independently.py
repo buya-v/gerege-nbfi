@@ -33,6 +33,26 @@ import sys
 ROOT = os.environ.get("A2_11_ROOT") or str(pathlib.Path(__file__).resolve().parents[3])
 CAPREL = ".softhouse/capture/tierA-a2"
 FORK = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"   # LITERAL, not merge-base (P-24)
+
+# T374 REPAIR (T362 F-6) -- was the LOCAL branch name softhouse/A2-7-capture-mandatory-accounts.
+# A local-only ref is NOT clone-portable. T362 hit this for real: in a fresh clone only
+# origin/softhouse/A2-7-capture-mandatory-accounts exists, every `git` call naming the bare
+# branch raised CalledProcessError ... exit status 128, this script aborted with a traceback,
+# and -- because T357 had just made the aggregate verdict real -- run-all.sh went to exit 1.
+# T374 reproduced that in a fresh clone before repairing it (P-22); evidence in
+# .softhouse/capture/t374-t362-conditions/out/10-F6-RED-fresh-clone-no-local-ref.txt.
+#
+# THIS FIRE ALREADY LOST A REVIEW TO EXACTLY THIS: softhouse/T361-review-t353 was absent both
+# locally and on origin, and the only durable spelling turned out to be a commit-ish reachable
+# from origin/main. So the branch NAME is replaced by the LITERAL sha of its head, which is
+# reachable from origin/main and therefore survives a fresh clone. It is also more P-24
+# correct than the name it replaces: an immutable sha cannot be moved by a later push.
+#   $ git rev-parse softhouse/A2-7-capture-mandatory-accounts
+#   b3f2d9b26c347c31fae17a835b458e6b0485d710
+#   $ git merge-base --is-ancestor b3f2d9b2 origin/main && echo REACHABLE   -> REACHABLE
+# Section 0 asserts that reachability rather than assuming it, so a checkout where the object
+# is genuinely absent REFUSES by name instead of aborting on a traceback.
+A2_7_HEAD = "b3f2d9b26c347c31fae17a835b458e6b0485d710"
 MANIFEST = CAPREL + "/MANIFEST.sha256"
 fails = []
 
@@ -68,11 +88,25 @@ check("prove-a2-7-additive.py hard-codes the literal sha",
 check("prove-a2-7-additive.py contains NO `git merge-base` anywhere",
       "merge-base" not in src.replace("`git merge-base main HEAD` resolves to", ""),
       "the only occurrence is the comment explaining why it is NOT used")
-anc = subprocess.run(["git", "-C", ROOT, "merge-base", "--is-ancestor", FORK,
-                      "softhouse/A2-7-capture-mandatory-accounts"])
-check("the literal sha is a genuine ancestor of A2-7's branch", anc.returncode == 0)
-on_branch = git("rev-list", "--count", FORK + "..softhouse/A2-7-capture-mandatory-accounts").decode().strip()
-check("A2-7's branch carries exactly 2 commits past that sha", on_branch == "2", "count=" + on_branch)
+# T374 / T362 F-6: both commit-ishes must be PRESENT before anything is asked of them, or a
+# clone missing an object reports a traceback where it should report a refusal.
+have = subprocess.run(["git", "-C", ROOT, "cat-file", "-e", A2_7_HEAD + "^{commit}"],
+                      capture_output=True).returncode == 0
+check("A2-7's head %s is present in this checkout (it is reachable from "
+      "origin/main, so a fresh clone has it; the BRANCH NAME it replaced was local-only "
+      "and a fresh clone did NOT)" % A2_7_HEAD[:12], have)
+if not have:
+    print("  REFUSED  without that object nothing below can be measured. Stopping here rather")
+    print("           than aborting on a traceback three arms later.")
+    print()
+    print("FAILURES: %d" % len(fails))
+    for f in fails:
+        print("  - " + f)
+    sys.exit(1)
+anc = subprocess.run(["git", "-C", ROOT, "merge-base", "--is-ancestor", FORK, A2_7_HEAD])
+check("the literal sha is a genuine ancestor of A2-7's head", anc.returncode == 0)
+on_branch = git("rev-list", "--count", FORK + ".." + A2_7_HEAD).decode().strip()
+check("A2-7's head carries exactly 2 commits past that sha", on_branch == "2", "count=" + on_branch)
 
 print()
 print("=== 1. entry counts, from the manifest BLOBS themselves ===")
@@ -140,7 +174,7 @@ check("and the CURRENT manifest records those same recomputed hashes (no launder
 
 print()
 print("=== 4. the git diff agrees: exactly one pre-existing path modified ===")
-ns = git("diff", "--name-status", FORK + "...softhouse/A2-7-capture-mandatory-accounts").decode().split("\n")
+ns = git("diff", "--name-status", FORK + "..." + A2_7_HEAD).decode().split("\n")
 mods = [l for l in ns if l and not l.startswith("A\t")]
 check("the ONLY non-Added path in the whole branch is MANIFEST.sha256",
       mods == ["M\t" + MANIFEST], "non-added: %s" % mods)

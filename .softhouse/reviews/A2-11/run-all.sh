@@ -94,6 +94,15 @@ sec() {
   echo "laundering), and the 2 that differ are NAMED — CAPTURE-PLAN.md and cap.sh, which are"
   echo "rig tooling and a plan document. NO CAPTURED ORACLE OBSERVATION under out/ or req/ has"
   echo "been mutated. If that ever stops being true, this section will say so by name."
+  echo
+  echo "T374 / T362 F-1 -- READ THIS BEFORE TRUSTING THE SENTENCE ABOVE. It says so BY NAME,"
+  echo "in printed text, and until T374 that was ALL it did. This section is adjudicated RED"
+  echo "for drift, so the integrity arm is SATURATED: it cannot make the section any redder,"
+  echo "and the VERDICT block below therefore could not see it. T362 PROVED that by appending"
+  echo "one line to out/A2-000-glaccounts-preexisting.http -- section 4 printed DIFF for it BY"
+  echo "NAME and run-all.sh still exited 0 printing RUN-ALL VERDICT: PASS. T374 reproduced it"
+  echo "in a scratch clone before repairing it. THE REPAIR IS SECTION 10, which asks the"
+  echo "integrity question where GREEN is the adjudicated value. Section 4 keeps the drift arm."
   sec 4 1 python3 "$DIR/verify-manifest-independently.py"
   echo
   echo "############ 5. P-25 float audit of A2-7's scripts (offline)   EXPECTED RC 0"
@@ -152,6 +161,20 @@ sec() {
   echo "############    conformance.sh. It goes RED on a fourth failure or a vanished one."
   sec 9 0 python3 "$DIR/adjudicate-section1.py"
   echo
+  echo "############ 10. EVIDENCE INTEGRITY — captured oracle observations (offline)"
+  echo "############    EXPECTED RC 0. T374, closing T362's F-1."
+  echo
+  echo "The corpus this whole program grades against is the captured oracle observations"
+  echo "under capture/tierA-a2/out/ and req/. Section 4 already compares them byte for byte —"
+  echo "but section 4 is adjudicated RED for manifest drift, and a status that cannot get"
+  echo "worse cannot carry new information. So the integrity question is asked HERE, in a"
+  echo "section adjudicated GREEN, where a mutated or deleted observation MOVES the section"
+  echo "and fails the aggregate verdict. Two arms: against the literal fork sha (403"
+  echo "observations, the historical baseline) and against HEAD (every observation tracked"
+  echo "today, including the 632 captured since). An empty population is REFUSED with exit 2,"
+  echo "not passed."
+  sec 10 0 python3 "$DIR/verify-capture-integrity.py"
+  echo
   echo "############ VERDICT — every section against its adjudicated exit code"
   echo
   printf '  %-9s %-14s %-9s %s\n' SECTION EXPECTED ACTUAL RESULT
@@ -167,8 +190,10 @@ sec() {
   SECTIONS=$(wc -l < "$STATUS" | tr -d ' ')
   echo
   echo "  sections run: $SECTIONS    deviations: $DEVIATIONS"
-  if [ "$SECTIONS" -ne 9 ]; then
-    echo "  RUN-ALL VERDICT: FAIL — $SECTIONS sections recorded, expected 9. A section that"
+  # T374: 9 -> 10. Section 10 (evidence integrity) is new. If you are adding a section,
+  # this number moves WITH it — a stale bound here would read a missing section as a pass.
+  if [ "$SECTIONS" -ne 10 ]; then
+    echo "  RUN-ALL VERDICT: FAIL — $SECTIONS sections recorded, expected 10. A section that"
     echo "  did not record a verdict is a section that did not run, and it is never read as"
     echo "  a pass."
     echo "$((DEVIATIONS + 1))" > "$STATUS.rc"
@@ -185,6 +210,36 @@ sec() {
   fi
 } 2>&1 | tee "$DIR/TRANSCRIPT-A2-11.txt"
 
+# ----------------------------------------------------------------------------------------
+# T374, closing T362's F-5. THIS SCRIPT JUST OVERWROTE A TRACKED FILE.
+# TRANSCRIPT-A2-11.txt is committed evidence, and the `tee` above rewrites it on every run —
+# at minimum its "generated <timestamp>" line on line 2. That means `bash run-all.sh` leaves
+# a dirty working tree, silently, and a reader who then runs `git status` sees a modified
+# review artefact with no idea who modified it. It is also the item MISSING from T357's own
+# T356 disclosure: T357 disclosed six edited files with an exact revert for each; this
+# transcript is the seventh modified tracked path and had no revert entry. T362 graded the
+# disclosure and named the gap. This block closes it, at the site, so it cannot go missing
+# from a handoff again.
+#
+# The transcript is deliberately still WRITTEN — it is the re-derivable record, and making it
+# opt-in would decide something T356 owns. What changes is that the effect is now DISCLOSED
+# with its exact revert, every run, in the terminal rather than only in a handoff.
+if command -v git >/dev/null 2>&1 &&
+   ! git -C "$DIR" diff --quiet -- "$DIR/TRANSCRIPT-A2-11.txt" 2>/dev/null; then
+  echo
+  echo "NOTE (T374 / T362 F-5): this run REWROTE the tracked file"
+  echo "  .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt"
+  echo "so your working tree is now dirty. That is expected — the transcript carries a"
+  echo "generation timestamp — and it is NOT a finding. To restore it:"
+  echo "  git checkout -- .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt"
+fi
+
 RC=$(cat "$STATUS.rc" 2>/dev/null || echo 1)
 rm -f "$STATUS.rc"
+
+# T374 / T362 F-1, stated where the exit code is produced, because this is the sentence that
+# gets quoted: DO NOT READ EXIT 0 AS "THE A2-11 EVIDENCE IS INTACT" on any version of this
+# file that predates section 10. Before T374 a mutated capture under out/ or req/ was absorbed
+# by section 4's adjudicated RED and this script exited 0 printing PASS. From T374 the
+# integrity question is section 10's, adjudicated GREEN, and a mutation moves it.
 exit "$RC"

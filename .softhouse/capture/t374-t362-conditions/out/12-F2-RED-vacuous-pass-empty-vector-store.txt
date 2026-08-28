@@ -1,0 +1,92 @@
+=== 1. section 1 is OFFLINE — proved from check-shape.py's AST, not from its prose ===
+    run-all.sh advertised this section as '[ORACLE] live re-observation'. It is
+    neither. It replays committed bytes under obs/. Proving that is what makes the
+    corrected label a measurement instead of a second unchecked adjective.
+  PASS  check-shape.py contains NO route to the network (AST-walked: imports, attribute calls, URL literals)
+          hits=[]
+  PASS  check-shape.py's whole import set is {json, sys, decimal, pathlib}
+          ['decimal', 'json', 'pathlib', 'sys']
+
+=== 2. and it is DETERMINISTIC — run twice, compare bytes ===
+  PASS  two consecutive runs of check-shape.py emit byte-identical stdout
+          len=5720 vs 5720
+  PASS  two consecutive runs of check-shape.py return the same exit code
+          rc=1 vs 1
+
+=== 3. the verdict: exit 1, and EXACTLY the three adjudicated failures ===
+  PASS  check-shape.py exits 1 (RED)
+          rc=1
+  PASS  it declares a failure COUNT and names that many
+          declared=3 named=3
+  PASS  NO UNADJUDICATED FAILURE — a fourth failure here is a NEW defect and must be read, not absorbed
+          unexpected=[]
+  PASS  all three adjudicated failures are STILL PRESENT — losing one would mean the checker was edited into agreeing with the fabricated A2-7 claim (P-46)
+          missing=[]
+
+  ADJUDICATION of each, and it is the SAME for all three:
+    VERDICT   NOT a defect in the observed evidence. NOT a defect in the checker's
+              arithmetic. The checker asserts A2-7's REFUTED claim, and the RED is
+              the correct, intended verdict — the executable form of P-46 / A2-11 F-1.
+    EVIDENCE  T357 re-observed GET /loanproducts/{46,22,28} and /glaccounts/2 from the
+              LIVE reference oracle on fire 20260828-140005 and the bytes came back
+              BYTE-IDENTICAL to the committed obs/ files (sha256 match, 4 of 4). The
+              obs bytes are not stale and not corrupt. See
+              .softhouse/capture/t357-a2-11-section1-red/.
+    SOURCE    Fineract's read path serialises through GoogleGsonSerializerHelper,
+              which never calls serializeNulls() [VERIFIED: fineract-core/src/main/
+              java/org/apache/fineract/infrastructure/core/serialization/
+              GoogleGsonSerializerHelper.java — the ONLY serializeNulls() in
+              fineract-core + fineract-provider is CommandProcessingResultJson
+              Serializer.java:38, the COMMAND-RESULT serializer, not the read
+              serializer]. Gson omits null fields by default, so on the read path a
+              null-valued field is ABSENT — uniformly, for scalar mapping slots AND
+              for collection-valued mapping fields alike. A2-7's 'the collection-
+              valued mapping fields behave the opposite way: they are present with
+              the value null' is refuted at the source, not merely at the wire.
+    CONTRAST  Product 22 has a payment-channel override, and there
+              paymentChannelToFundSourceMappings IS present, as a LIST. Set -> present.
+              Unset -> absent. Never null. That is the rule the Go port must encode
+              (`omitempty` / pointer-vs-value), and it is P-46 rule 3.
+    MONEY     Checked and NEGATIVE: none of the three is about rounding, precision or
+              a float-shaped cell. check-shape.py parses every document with
+              parse_float=Decimal (:25, :47) and compares only ids, key sets and
+              strings. No money value is asserted anywhere in section 1, so the
+              MathContext(19, HALF_UP) admissibility rule is not engaged. This is a
+              WIRE-SHAPE finding, graded MATERIAL-TO-THE-PORT and IMMATERIAL-TO-THE-
+              CORPUS — see section 4, which measures the corpus half rather than
+              asserting it.
+
+=== 4. THE CORPUS QUESTION, MEASURED: does any of the three touch a GRADED vector? ===
+    Searched: every file under .softhouse/vectors/ (recursive), and .softhouse/
+    conformance.sh. Tokens: the three key names, 'accountingMappings', 'loanproduct',
+    and the capture files section 1 replays.
+      paymentChannelToFundSourceMappings     vectors=0  conformance.sh=False
+      feeToIncomeAccountMappings             vectors=0  conformance.sh=False
+      penaltyToIncomeAccountMappings         vectors=0  conformance.sh=False
+      accountingMappings                     vectors=0  conformance.sh=False
+      loanproduct                            vectors=0  conformance.sh=False
+      A2-211-read-product-nine-mandatory     vectors=0  conformance.sh=False
+      a2-11-get-loanproduct                  vectors=0  conformance.sh=False
+    (population searched: 0 files under .softhouse/vectors/, plus conformance.sh)
+  PASS  NO vector in the store, and no line of conformance.sh, mentions ANY of these tokens — the three failures touch NOTHING in the graded corpus
+          all zero
+  PASS  NO vector's provenance.capture_ref points at a loan-product read
+          0 distinct capture_ref values inspected; loan-product-shaped: []
+
+=== 5. NEGATIVE CONTROLS — P-22, each arm above driven RED on purpose ===
+  PASS  (a) a FOURTH failure is detected as UNADJUDICATED
+          unexpected=['  something nobody has adjudicated']
+  PASS  (b) an adjudicated failure that VANISHES is detected as missing
+          missing=['  penaltyToIncomeAccountMappings present and null']
+  PASS  (c) a section 1 that went GREEN is detected (rc==0 and all three missing)
+          declared=0
+  PASS  (d) a transcript with NO 'FAILURES:' line yields declared=None, not 0 — an aborted run is never read as a clean run
+          declared=None named=set()
+  PASS  (e) the offline prover TRIPS on a synthetic script that imports urllib and opens a URL
+          hits=["URL literal 'https://localhost:8443/x'", 'call .urlopen(', 'import urllib.request']
+  PASS  (f) the offline prover TRIPS on the subprocess+curl spelling too
+          hits=["URL literal 'https://localhost:8443/x'", 'call .run(', 'import subprocess']
+  PASS  (g) the offline prover does NOT trip on a genuinely offline script (the control discriminates, it does not just always fire)
+          hits=[]
+
+FAILURES: 0
