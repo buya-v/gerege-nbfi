@@ -1,0 +1,24 @@
+T375 RED DRIVE -- every arm runs the WHOLE BAR, never a guard standalone, never `sh`.
+
+>>> ARM SET 1: drive-red-t358.sh, unmodified, against T375's conformance.sh.
+>>> (that drive runs drive-red-t323.sh as ITS arm set 1, so all three generations run.)
+============================================================================================
+T358 RED DRIVE -- every arm runs the WHOLE BAR, never a guard standalone.
+scratch clone: /tmp/t375-drive/scratch
+============================================================================================
+
+--- ARM SET 1: T323's fifteen arms, run unmodified against T358's conformance.sh ---------
+    (no gate T323 pinned may move because T358 widened a population.)
+============================================================================================
+T323 RED DRIVE -- every arm runs the WHOLE BAR, never a guard standalone.
+scratch clone: /tmp/t375-drive/scratch
+============================================================================================
+00-GREEN-CONTROL-clean-tree                    exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T299-01-undocumented-collision                 exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T299-02-same-collision-DOCUMENTED              exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T299-03-decalibrated-corpus                    exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T299-04-no-root-line-readback                  exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T316-05-frontier-grew-unrecorded               exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T316-06-census-removed-SELFREF                 exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T316-07-pin-removed-SELFREF                    exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+populated the list with 1 ALREADY-PINNED row, pin untouched: .softhouse/bin/fire-program.sh | .softhouse/tasks.json.t288.tmp
