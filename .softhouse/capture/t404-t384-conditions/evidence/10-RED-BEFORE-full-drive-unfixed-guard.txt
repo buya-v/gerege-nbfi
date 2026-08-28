@@ -12,3 +12,48 @@ T404-F-globname-member-IS-SYMLINK-REFUSED            exit=2 (want 2 ) probe=ABSE
     census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=1
 T404-G-AMBIGUOUS-globname-symlink-member-FAILOPEN    exit=0 (want 0 ) probe=PRESENT (want PRESENT ) marker=YES census=YES dirty=no  >>> PASS
     census: population=8 invoked=3 declared=2 reached-by=3 invoked-by-nothing=0 symlink-members=0
+T404-H-TWO-symlink-members-CENSUS-UNDERCOUNTS        exit=2 (want 2 ) probe=ABSENT  (want ABSENT  ) marker=NO  census=NO  dirty=no  >>> FAIL
+    census: <none printed>
+    --- transcript tail ---
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    conformance:   and deleted on reboot — and C1/C6 decide TIER by asking whether a path EXISTS.
+    conformance:   census == pinned (all 18 site(s), by path and source line).
+.softhouse/capture/t404-t384-conditions/drive-red-t404.sh: line 353: 23456 Done                    LC_ALL=C tail -30 "$out"
+     23457 Abort trap: 6           | sed -n 's/^/    /p'
+T404-W-AMBIGUOUS-WITNESS-already-REFUSED             exit=2 (want 2 ) probe=ABSENT  (want ABSENT  ) marker=NO  census=NO  dirty=no  >>> FAIL
+    census: <none printed>
+    --- transcript tail ---
+    conformance: the dead-path frontier is UNGRADED. HARD failure, never a pass.
+    conformance: guard_reconciler_ownership: /tmp/t404-drive/T404-W-AMBIGUOUS-WITNESS-already-REFUSED/.softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py is MISSING. The reconciler's ownership
+    conformance: predicate is UNGRADED. This is a HARD failure, not a pass: the last three
+    conformance: versions of that predicate each shipped able to demote live workers, and
+    conformance: the rig is what catches it.
+    conformance:   GUARD-COST CENSUS: 15 guards timed, 130s total wall,
+    conformance:   ceiling breaches 0, unbudgeted guards 0.
+    conformance:     COST 0s / ceiling 60s   guard_graded_root_is_this_tree
+    conformance:     COST 2s / ceiling 60s   guard_no_float_in_vectors
+    conformance:     COST 2s / ceiling 60s   guard_no_float_in_harness
+    conformance:     COST 0s / ceiling 60s   guard_gofmt
+    conformance:     COST 2s / ceiling 60s   guard_no_float_in_capture_requests
+    conformance:     COST 2s / ceiling 60s   guard_no_narrow_catch_in_capture_rigs
+    conformance:     COST 6s / ceiling 300s   guard_ledger_invariants
+    conformance:     COST 25s / ceiling 60s   guard_no_fail_open_instruments
+    conformance:     COST 1s / ceiling 60s   guard_no_host_state_in_lint_corpus
+    conformance:     COST 90s / ceiling 300s   guard_pnumber_citations
+    conformance:     COST 0s / ceiling 60s   guard_accepting_side_gap_declared
+    conformance:     COST 0s / ceiling 60s   guard_guards_dir_registration
+    conformance:     COST 0s / ceiling 60s   guard_capture_namespace
+    conformance:     COST 0s / ceiling 60s   guard_dead_path_frontier
+    conformance:     COST 0s / ceiling 500s   guard_reconciler_ownership
+    conformance:   (RESOLUTION 1 s, from bash SECONDS; a 0 means UNDER ONE SECOND. The elapsed
+    conformance:   figures are RECORDED and NOT PINNED — wall clock is a fact about the host as
+    conformance:   well as the tree. What is pinned, by NAME: every guard has a ceiling row,
+    conformance:   every ceiling row was timed, and at least one guard was timed. The ceiling is
+    conformance:   read AFTER the guard returns, so it turns a spin that RETURNS into a named
+    conformance:   refusal; it does not interrupt one that never does. [T375, FU-T358-1.])
+    conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+    conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+T404-N-CQUOTED-member-path-WRONG-DIAGNOSIS           exit=2 (want 2 ) probe=ABSENT  (want ABSENT  ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=1 symlink-members=0
+
+=== T404 DRIVE: 6 PASS / 2 FAIL of 8 ===

@@ -1,0 +1,8 @@
+=== T404 RED/GREEN DRIVE -- src=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a2cd5e8ea5e842dba ref=HEAD arms=T404-R3-REVERT-BOTH-THE-HOLE-REOPENS ===
+
+MODE: the guard at HEAD is FIXED (detected from its own blob, not asserted)
+
+T404-R3-REVERT-BOTH-THE-HOLE-REOPENS                 exit=0 (want 0 ) probe=PRESENT (want PRESENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=8 invoked=3 declared=2 reached-by=3 invoked-by-nothing=0 symlink-members=0
+
+=== T404 DRIVE: 1 PASS / 0 FAIL of 1 ===

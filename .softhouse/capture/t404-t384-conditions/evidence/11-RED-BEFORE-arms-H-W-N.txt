@@ -2,3 +2,7 @@
 
 MODE: the guard at 5e5c3a61 is UNFIXED (detected from its own blob, not asserted)
 
+T404-H-TWO-symlink-members-CENSUS-UNDERCOUNTS        exit=2 (want 2 ) probe=ABSENT  (want ABSENT  ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=9 invoked=3 declared=2 reached-by=3 invoked-by-nothing=0 symlink-members=1
+T404-W-AMBIGUOUS-WITNESS-already-REFUSED             exit=2 (want 2 ) probe=ABSENT  (want ABSENT  ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
