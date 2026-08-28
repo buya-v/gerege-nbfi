@@ -10,12 +10,12 @@ GATE 1: SPECIFIED-ONLY    .claude/skills/softhouse-program/SKILL.md:226
          line: 1. **Commit every deliverable a worker produced.** An uncommitted file is invisible to the next fire and to th
          owner: softhouse-program skill (outside T325's edit set)
 
-GATE 2: WIRED             .softhouse/bin/fire-program.sh:145
+GATE 2: WIRED             .softhouse/bin/fire-program.sh:151
          STEP 5.5's EXECUTABLE form (run_exit_guard)
          line: attest_exit_protocol() {
          owner: T325
 
-GATE 3: WIRED             .softhouse/bin/fire-program.sh:1732
+GATE 3: WIRED             .softhouse/bin/fire-program.sh:1739
          the worker-worktree rescue sweep
          line: BS_OUT=$(wt_prune_blindspot_check "$W"); BS_RC=$?
          owner: T325
@@ -35,7 +35,7 @@ GATE 6: COVERED-BY-T324   .softhouse/bin/lib-worktree-prune.zsh:64
          line: wt_prune_check() {
          owner: T324 (merged)
 
-GATE 4/5-exec: WIRED             .softhouse/bin/fire-program.sh:236
+GATE 4/5-exec: WIRED             .softhouse/bin/fire-program.sh:243
          fire pre-flight BASELINE reading (FU-T318-5)
          line: attest_run "attest-preflight" survey "$REPO" --label "fire $STAMP pre-flight baseline"
          owner: T325
@@ -67,22 +67,22 @@ FIGURE: 24 cleanliness assertions in the live pipeline; COVERED 18, BLIND 6.
    COVERED  .claude/skills/softhouse-program/SKILL.md:76  1. `git status` — if dirty, commit `.softhouse/` state only; never stash worker WIP.
    BLIND    .claude/skills/softhouse-program/SKILL.md:226  1. **Commit every deliverable a worker produced.** An uncommitted file is invisible to the   [no attestation anywhere in this file]
    COVERED  .softhouse/bin/fire-program.sh:94  #     "`git status --porcelain` must come back empty"
-   COVERED  .softhouse/bin/fire-program.sh:148  log "ERROR: exit-protocol attestation: NO BASELINE SNAPSHOT for this iteration (${ATTEST_B
-   COVERED  .softhouse/bin/fire-program.sh:162  1) log "ERROR: EXIT-PROTOCOL VIOLATION — the repo-state attestation reports DAMAGE (see th
-   COVERED  .softhouse/bin/fire-program.sh:218  # `/softhouse` STEP 0.1 and `/softhouse-plan` STEP 0.1 both say "`git status` —
-   BLIND    .softhouse/bin/fire-program.sh:762  # linked worktree with a `git status` each (43 of them when last counted, and the count   [same FILE does call the attestation elsewhere -- BLIND here is a statement about the +/-40 window]
-   COVERED  .softhouse/bin/fire-program.sh:1404  #   2. `wt_prune_check` rule 2 — `git status --porcelain`
-   COVERED  .softhouse/bin/fire-program.sh:1446  #   TERM 2  `git status --porcelain -uall` — REFUSE if anything is listed.
-   COVERED  .softhouse/bin/fire-program.sh:1543  UNTR=$(git -C "$W" status --porcelain -uall -- ':(top)' 2>/dev/null)
-   COVERED  .softhouse/bin/fire-program.sh:1546  print -r -- "REFUSE: \`git status --porcelain -uall\` failed inside $W (rc=$UNTR_RC) — ref
-   COVERED  .softhouse/bin/fire-program.sh:1551  print -r -- "REFUSE: $W has ${#U} path(s) that \`git status --porcelain -uall\` reports an
-   BLIND    .softhouse/bin/fire-program.sh:1582  DIRTY=$(git status --porcelain -- ':(top)' ':(top,exclude).softhouse/LOCK')   [same FILE does call the attestation elsewhere -- BLIND here is a statement about the +/-40 window]
-   BLIND    .softhouse/bin/fire-program.sh:1585  log "ERROR: exit-protocol guard could not read git status (rc=$GS_RC) — REFUSING to conclu   [same FILE does call the attestation elsewhere -- BLIND here is a statement about the +/-40 window]
-   COVERED  .softhouse/bin/fire-program.sh:1697  WS=$(git -C "$W" status --porcelain)
-   COVERED  .softhouse/bin/fire-program.sh:1700  log "ERROR: worktree sweep could not read git status for $W (rc=$WS_RC) — REFUSING to trea
-   COVERED  .softhouse/bin/fire-program.sh:1704  # theory of "there is nothing here to rescue", and it is `git status
-   COVERED  .softhouse/bin/fire-program.sh:1734  log "ERROR: worktree $(basename "$W") reads CLEAN to this sweep's \`git status --porcelain
-   COVERED  .softhouse/bin/fire-program.sh:1972  # the repository. Until now the only thing it could say was `git status
+   COVERED  .softhouse/bin/fire-program.sh:154  log "ERROR: exit-protocol attestation: NO BASELINE SNAPSHOT for this iteration (${ATTEST_B
+   COVERED  .softhouse/bin/fire-program.sh:168  1) log "ERROR: EXIT-PROTOCOL VIOLATION — the repo-state attestation reports DAMAGE (see th
+   COVERED  .softhouse/bin/fire-program.sh:225  # `/softhouse` STEP 0.1 and `/softhouse-plan` STEP 0.1 both say "`git status` —
+   BLIND    .softhouse/bin/fire-program.sh:769  # linked worktree with a `git status` each (43 of them when last counted, and the count   [same FILE does call the attestation elsewhere -- BLIND here is a statement about the +/-40 window]
+   COVERED  .softhouse/bin/fire-program.sh:1411  #   2. `wt_prune_check` rule 2 — `git status --porcelain`
+   COVERED  .softhouse/bin/fire-program.sh:1453  #   TERM 2  `git status --porcelain -uall` — REFUSE if anything is listed.
+   COVERED  .softhouse/bin/fire-program.sh:1550  UNTR=$(git -C "$W" status --porcelain -uall -- ':(top)' 2>/dev/null)
+   COVERED  .softhouse/bin/fire-program.sh:1553  print -r -- "REFUSE: \`git status --porcelain -uall\` failed inside $W (rc=$UNTR_RC) — ref
+   COVERED  .softhouse/bin/fire-program.sh:1558  print -r -- "REFUSE: $W has ${#U} path(s) that \`git status --porcelain -uall\` reports an
+   BLIND    .softhouse/bin/fire-program.sh:1589  DIRTY=$(git status --porcelain -- ':(top)' ':(top,exclude).softhouse/LOCK')   [same FILE does call the attestation elsewhere -- BLIND here is a statement about the +/-40 window]
+   BLIND    .softhouse/bin/fire-program.sh:1592  log "ERROR: exit-protocol guard could not read git status (rc=$GS_RC) — REFUSING to conclu   [same FILE does call the attestation elsewhere -- BLIND here is a statement about the +/-40 window]
+   COVERED  .softhouse/bin/fire-program.sh:1704  WS=$(git -C "$W" status --porcelain)
+   COVERED  .softhouse/bin/fire-program.sh:1707  log "ERROR: worktree sweep could not read git status for $W (rc=$WS_RC) — REFUSING to trea
+   COVERED  .softhouse/bin/fire-program.sh:1711  # theory of "there is nothing here to rescue", and it is `git status
+   COVERED  .softhouse/bin/fire-program.sh:1741  log "ERROR: worktree $(basename "$W") reads CLEAN to this sweep's \`git status --porcelain
+   COVERED  .softhouse/bin/fire-program.sh:1979  # the repository. Until now the only thing it could say was `git status
    COVERED  .softhouse/bin/lib-worktree-prune.zsh:10  #   2. `git -C <worktree> status --porcelain -- :(top)` both SUCCEEDS (exit 0)
    COVERED  .softhouse/bin/lib-worktree-prune.zsh:121  CS=$(git -C "$W" status --porcelain -- ':(top)' 2>/dev/null)
    COVERED  .softhouse/bin/lib-worktree-prune.zsh:124  print -r -- "KEEP: git status failed inside $W (rc=$CS_RC) — unreadable gitdir or broken w

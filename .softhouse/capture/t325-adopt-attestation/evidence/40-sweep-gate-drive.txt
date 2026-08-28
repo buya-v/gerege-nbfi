@@ -1,4 +1,4 @@
-scratch: /private/tmp/t325-sweep-MxDQGJ
+scratch: /private/tmp/t325-sweep-yLYPHr
 shipped file under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a1c01d496742bb1cf/.softhouse/bin/fire-program.sh
 git: git version 2.50.1 (Apple Git-155)
 
@@ -12,15 +12,15 @@ ARM S3_ordinary_dirty_worktree: PASS  T325-gate-fired=0 rescue-path-reached=1   
 
 === HIDDEN-WORK ARMS — the gate must FIRE, and the pre-T325 line could not ===
 ARM S4_skip_bit_hides_content: PASS  T325-gate-fired=1 rescue-path-reached=0   [pre-T325 line: rescue-reached=0, and it can say NOTHING else]
-      ERROR: worktree s4 reads CLEAN to this sweep's `git status --porcelain`, and the hidden-work terms DISAGREE — REFUSE: /private/tmp/t325-sweep-MxDQGJ/s4 has 1 index entries carrying a NON-'H' git index tag — a skip bit (`--assume-unchanged` -> 'h', `--skip-worktree` -> 'S') switches OFF the working-tree comparison that BOTH the porcelain clean check AND `git worktree remove` rely on, so all of them would report clean while live content sits on disk. First 5: h worker-output.txt
-             NOT rescued: this sweep will not clear an index bit or commit inside a worktree that may still hold a live agent. The prune loop below KEEPS it (T324), so nothing is destroyed — but the content is uncommitted and invisible to the next fire. Inspect /private/tmp/t325-sweep-MxDQGJ/s4 by hand.
+      ERROR: worktree s4 reads CLEAN to this sweep's `git status --porcelain`, and the hidden-work terms DISAGREE — REFUSE: /private/tmp/t325-sweep-yLYPHr/s4 has 1 index entries carrying a NON-'H' git index tag — a skip bit (`--assume-unchanged` -> 'h', `--skip-worktree` -> 'S') switches OFF the working-tree comparison that BOTH the porcelain clean check AND `git worktree remove` rely on, so all of them would report clean while live content sits on disk. First 5: h worker-output.txt
+             NOT rescued: this sweep will not clear an index bit or commit inside a worktree that may still hold a live agent. The prune loop below KEEPS it (T324), so nothing is destroyed — but the content is uncommitted and invisible to the next fire. Inspect /private/tmp/t325-sweep-yLYPHr/s4 by hand.
 ARM S5_skip_worktree_bit: PASS  T325-gate-fired=1 rescue-path-reached=0   [pre-T325 line: rescue-reached=0, and it can say NOTHING else]
-      ERROR: worktree s5 reads CLEAN to this sweep's `git status --porcelain`, and the hidden-work terms DISAGREE — REFUSE: /private/tmp/t325-sweep-MxDQGJ/s5 has 1 index entries carrying a NON-'H' git index tag — a skip bit (`--assume-unchanged` -> 'h', `--skip-worktree` -> 'S') switches OFF the working-tree comparison that BOTH the porcelain clean check AND `git worktree remove` rely on, so all of them would report clean while live content sits on disk. First 5: S worker-output.txt
-             NOT rescued: this sweep will not clear an index bit or commit inside a worktree that may still hold a live agent. The prune loop below KEEPS it (T324), so nothing is destroyed — but the content is uncommitted and invisible to the next fire. Inspect /private/tmp/t325-sweep-MxDQGJ/s5 by hand.
+      ERROR: worktree s5 reads CLEAN to this sweep's `git status --porcelain`, and the hidden-work terms DISAGREE — REFUSE: /private/tmp/t325-sweep-yLYPHr/s5 has 1 index entries carrying a NON-'H' git index tag — a skip bit (`--assume-unchanged` -> 'h', `--skip-worktree` -> 'S') switches OFF the working-tree comparison that BOTH the porcelain clean check AND `git worktree remove` rely on, so all of them would report clean while live content sits on disk. First 5: S worker-output.txt
+             NOT rescued: this sweep will not clear an index bit or commit inside a worktree that may still hold a live agent. The prune loop below KEEPS it (T324), so nothing is destroyed — but the content is uncommitted and invisible to the next fire. Inspect /private/tmp/t325-sweep-yLYPHr/s5 by hand.
 ARM S6_untracked_hidden_by_config: PASS  T325-gate-fired=1 rescue-path-reached=0   [pre-T325 line: rescue-reached=0, and it can say NOTHING else]
-      ERROR: worktree s6 reads CLEAN to this sweep's `git status --porcelain`, and the hidden-work terms DISAGREE — REFUSE: /private/tmp/t325-sweep-MxDQGJ/s6 has 1 path(s) that `git status --porcelain -uall` reports and a bare `--porcelain` can be configured not to (`status.showUntrackedFiles=no`). First 5: ?? handoff.md
-             NOT rescued: this sweep will not clear an index bit or commit inside a worktree that may still hold a live agent. The prune loop below KEEPS it (T324), so nothing is destroyed — but the content is uncommitted and invisible to the next fire. Inspect /private/tmp/t325-sweep-MxDQGJ/s6 by hand.
+      ERROR: worktree s6 reads CLEAN to this sweep's `git status --porcelain`, and the hidden-work terms DISAGREE — REFUSE: /private/tmp/t325-sweep-yLYPHr/s6 has 1 path(s) that `git status --porcelain -uall` reports and a bare `--porcelain` can be configured not to (`status.showUntrackedFiles=no`). First 5: ?? handoff.md
+             NOT rescued: this sweep will not clear an index bit or commit inside a worktree that may still hold a live agent. The prune loop below KEEPS it (T324), so nothing is destroyed — but the content is uncommitted and invisible to the next fire. Inspect /private/tmp/t325-sweep-yLYPHr/s6 by hand.
 
 ================================================================
 TOTAL: PASS=6 FAIL=0
-scratch kept: /private/tmp/t325-sweep-MxDQGJ
+scratch kept: /private/tmp/t325-sweep-yLYPHr

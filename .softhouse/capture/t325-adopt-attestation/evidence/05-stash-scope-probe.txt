@@ -1,5 +1,5 @@
 git: git version 2.50.1 (Apple Git-155)
-scratch: /private/tmp/t325-stash-scope-eovDD8
+scratch: /private/tmp/t325-stash-scope-eityqt
 
 --- a stash is created in the MAIN tree only:
   main  `git status --porcelain` : []   <-- stash EMPTIED it

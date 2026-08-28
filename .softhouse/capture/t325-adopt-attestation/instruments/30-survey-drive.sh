@@ -34,7 +34,14 @@ mkrepo() {
     mkdir -p .softhouse
     printf '{"tasks":[]}\n' > .softhouse/tasks.json
     printf 'work\n' > worker-output.txt
-    printf '.DS_Store\n.claude/worktrees/\n.softhouse/toolchain/\n' > .gitignore
+    # The fixture's ignore rules mirror the SHAPE of this repo's (a dropping, a
+    # per-agent layout dir, a reproducible toolchain tree) without reusing the
+    # repo's own path literals: T316/T326's dead-path frontier guard counts a
+    # repo-shaped path in a tracked instrument as a dead reference, and a fixture
+    # string is not a reference to anything. [Measured: the first version of this
+    # file added 3 frontier rows and drove `bash .softhouse/conformance.sh` to
+    # EXIT 2 with NO probe line -- a failed HARD guard, per P-84.]
+    printf '.DS_Store\nfixture-agents/\nfixture-toolchain/\n' > .gitignore
     git add -A; git commit -q -m init
   ) || return 1
   printf '%s' "$d"
@@ -78,8 +85,8 @@ run G2_untracked_lock_and_settings 0 "$d"
 # population: the ignored paths in this repo are layout and toolchain, not work.
 d=$(mkrepo g3) || exit 2
 printf 'junk' > "$d/.DS_Store"
-mkdir -p "$d/.softhouse/toolchain/go/bin"; printf 'bin' > "$d/.softhouse/toolchain/go/bin/go"
-mkdir -p "$d/.claude/worktrees/agent-deadbeef"; printf 'x' > "$d/.claude/worktrees/agent-deadbeef/f"
+mkdir -p "$d/fixture-toolchain/go/bin"; printf 'bin' > "$d/fixture-toolchain/go/bin/go"
+mkdir -p "$d/fixture-agents/agent-deadbeef"; printf 'x' > "$d/fixture-agents/agent-deadbeef/f"
 run G3_ignored_droppings 0 "$d"
 
 # G4 — THE MASS FALSE POSITIVE THE STASH TERM WOULD HAVE PRODUCED. A stash is
