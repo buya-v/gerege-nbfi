@@ -1,32 +1,32 @@
-[11:08:50] fire start — repo=/tmp/t279-probe2/repo probe=1 force=0 log=/tmp/t279-probe2/logs/fire-20260828-110850.log
-[11:08:50] wrapper identity: path=/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.zAKvYK/fire-program.sh inode=16432572 sha256=555d4996a4d1f91e bytes=142290
-[11:08:50] wrapper snapshot: RUNNING FROM A SNAPSHOT — repo copy=/private/tmp/t279-probe2/repo/.softhouse/bin/fire-program.sh inode=16424050 sha256=555d4996a4d1f91e bytes=142290; the repo copy is now free to be modified by the fire this wrapper is about to start
-[11:08:50] fineract source: present at /Users/buv/fineract
-[11:08:50] postgres: reachable at localhost:5432
-[11:08:51] docker: running (29.6.2)
-[11:08:52] reference oracle (Fineract): REACHABLE at https://localhost:8443/fineract-provider/actuator/health
-[11:08:52] refguard| ref guard INSTALLED at /tmp/t279-probe2/repo/.git/hooks/reference-transaction -> /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /tmp/t279-probe2/repo/.softhouse/bin/branch_sweep.py hook
-[11:08:52] refguard|   it now refuses any ref CREATION under refs/heads/softhouse/ whose name differs from an existing ref only by case, for every git command.
-[11:08:52] sweep| BRANCH SWEEP -- T312 instrument (/private/tmp/t279-probe2/repo/.softhouse/bin/branch_sweep.py)
-[11:08:52] sweep| SELECTOR, stated because 'not found' is a statement about the search:
-[11:08:52] sweep|   repo          /tmp/t279-probe2/repo  (read .git/ directly)
-[11:08:52] sweep|   patterns      'softhouse/*'
-[11:08:52] sweep|   matching      fnmatch on the CASE-FOLDED short name -- 'softhouse/t3*' and 'softhouse/T3*' select identically here.  `git branch --list` does NOT; that is the defect this replaces.
-[11:08:52] sweep|   storage       walked /tmp/t279-probe2/repo/.git/refs/heads -- 1 loose head(s), names as stored on disk
-[11:08:52] sweep|   storage       parsed /tmp/t279-probe2/repo/.git/packed-refs -- 0 packed head(s), matched CASE-SENSITIVELY as git does
-[11:08:52] sweep|   matched       0 ref name(s) in 0 case-folded group(s), out of 1 head(s) present
-[11:08:52] sweep| 
-[11:08:52] sweep| 
-[11:08:52] sweep|   (--quiet: 0 unflagged group(s) inspected and not printed; they were LOOKED AT, not skipped)
-[11:08:52] sweep| FINDINGS: case-shadow groups=0  unreachable values=0  diverged pairs=0
-[11:08:52] sweep|   (informational, NOT a finding: 0 name(s) hold different loose and packed values under the same spelling -- the ordinary stale packed entry)
-[11:08:52] sweep|   none -- and that is a measurement over the selector printed above, not a default.
-[11:08:52] sweep| 
-[11:08:52] sweep| REF GUARD: INSTALLED -- hook at /tmp/t279-probe2/repo/.git/hooks/reference-transaction carries the softhouse-t312-ref-guard marker and is executable
-[11:08:53] attest-preflight| repo-state-attest.sh: SURVEY [fire 20260828-110850 pre-flight baseline] /private/tmp/t279-probe2/repo
-[11:08:53] attest-preflight|   legacy predicate (`git status --porcelain` empty?) : DIRTY (1 entries, -uall)
-[11:08:53] attest-preflight|   S3 uncommitted (visible, not hidden)                : 1
-[11:08:53] attest-preflight|   S4 ignored files (ADVISORY -- .DS_Store lives here) : 0
-[11:08:53] attest-preflight| VERDICT: no hidden-work term fired (skip bits 0)
-[11:08:53] attest-preflight: baseline reading taken — no hidden-work term fired in /tmp/t279-probe2/repo before this fire started
-[11:08:53] probe only — exiting without taking the lock or invoking the driver
+[11:11:06] fire start — repo=/tmp/t279-probe3/repo probe=1 force=0 log=/tmp/t279-probe3/logs/fire-20260828-111106.log
+[11:11:06] wrapper identity: path=/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.Te8zEO/fire-program.sh inode=16451931 sha256=555d4996a4d1f91e bytes=142290
+[11:11:06] wrapper snapshot: RUNNING FROM A SNAPSHOT — repo copy=/private/tmp/t279-probe3/repo/.softhouse/bin/fire-program.sh inode=16443623 sha256=555d4996a4d1f91e bytes=142290; the repo copy is now free to be modified by the fire this wrapper is about to start
+[11:11:06] fineract source: present at /Users/buv/fineract
+[11:11:06] postgres: reachable at localhost:5432
+[11:11:07] docker: running (29.6.2)
+[11:11:07] reference oracle (Fineract): REACHABLE at https://localhost:8443/fineract-provider/actuator/health
+[11:11:08] refguard| ref guard INSTALLED at /tmp/t279-probe3/repo/.git/hooks/reference-transaction -> /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /tmp/t279-probe3/repo/.softhouse/bin/branch_sweep.py hook
+[11:11:08] refguard|   it now refuses any ref CREATION under refs/heads/softhouse/ whose name differs from an existing ref only by case, for every git command.
+[11:11:08] sweep| BRANCH SWEEP -- T312 instrument (/private/tmp/t279-probe3/repo/.softhouse/bin/branch_sweep.py)
+[11:11:08] sweep| SELECTOR, stated because 'not found' is a statement about the search:
+[11:11:08] sweep|   repo          /tmp/t279-probe3/repo  (read .git/ directly)
+[11:11:08] sweep|   patterns      'softhouse/*'
+[11:11:08] sweep|   matching      fnmatch on the CASE-FOLDED short name -- 'softhouse/t3*' and 'softhouse/T3*' select identically here.  `git branch --list` does NOT; that is the defect this replaces.
+[11:11:08] sweep|   storage       walked /tmp/t279-probe3/repo/.git/refs/heads -- 1 loose head(s), names as stored on disk
+[11:11:08] sweep|   storage       parsed /tmp/t279-probe3/repo/.git/packed-refs -- 0 packed head(s), matched CASE-SENSITIVELY as git does
+[11:11:08] sweep|   matched       0 ref name(s) in 0 case-folded group(s), out of 1 head(s) present
+[11:11:08] sweep| 
+[11:11:08] sweep| 
+[11:11:08] sweep|   (--quiet: 0 unflagged group(s) inspected and not printed; they were LOOKED AT, not skipped)
+[11:11:08] sweep| FINDINGS: case-shadow groups=0  unreachable values=0  diverged pairs=0
+[11:11:08] sweep|   (informational, NOT a finding: 0 name(s) hold different loose and packed values under the same spelling -- the ordinary stale packed entry)
+[11:11:08] sweep|   none -- and that is a measurement over the selector printed above, not a default.
+[11:11:08] sweep| 
+[11:11:08] sweep| REF GUARD: INSTALLED -- hook at /tmp/t279-probe3/repo/.git/hooks/reference-transaction carries the softhouse-t312-ref-guard marker and is executable
+[11:11:09] attest-preflight| repo-state-attest.sh: SURVEY [fire 20260828-111106 pre-flight baseline] /private/tmp/t279-probe3/repo
+[11:11:09] attest-preflight|   legacy predicate (`git status --porcelain` empty?) : DIRTY (1 entries, -uall)
+[11:11:09] attest-preflight|   S3 uncommitted (visible, not hidden)                : 1
+[11:11:09] attest-preflight|   S4 ignored files (ADVISORY -- .DS_Store lives here) : 0
+[11:11:09] attest-preflight| VERDICT: no hidden-work term fired (skip bits 0)
+[11:11:09] attest-preflight: baseline reading taken — no hidden-work term fired in /tmp/t279-probe3/repo before this fire started
+[11:11:09] probe only — exiting without taking the lock or invoking the driver
