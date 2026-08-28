@@ -1,0 +1,70 @@
+self-test: file=/private/tmp/t380-subject/.softhouse/bin/fire-program.sh
+self-test: host=Buyanmunkhs-Mac-mini self_pid=39213 reaped_pid=39229 now=2026-08-28T10:34:43Z old=2026-08-26T10:33:43Z scratch=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//fire-selftest.dZB7If
+
+--- A. LIVE holder on THIS host, fresh started_at. Correct = HELD-*. Anything else = FAIL-OPEN (P-85 safety).
+a01  ok             want=HELD            got=HELD-live        baseline, no released_at key (what this file writes)
+a02  ok             want=HELD            got=HELD-live        released_at null as the LAST key (T280 F-A)
+a03  ok             want=HELD            got=HELD-live        compact separators, no space after any colon
+a04  ok             want=HELD            got=HELD-live        released_at twice, string then null (first-wins says FREE)
+a05  ok             want=HELD            got=HELD-live        released_at twice, null then string (last-wins says FREE)
+a06  ok             want=HELD            got=HELD-live        not JSON at all, contains the token
+a07  ok             want=HELD            got=HELD-live        write truncated mid-value
+a08  ok             want=HELD            got=HELD-live        empty file
+a09  ok             want=HELD            got=HELD-live        released_at is the STRING null
+a10  ok             want=HELD            got=HELD-live        released_at is the STRING None -- what str(None) emits
+a11  ok             want=HELD            got=HELD-live        released_at is the STRING pending
+a12  ok             want=HELD            got=HELD-live        released_at is a single SPACE
+a13  ok             want=HELD            got=HELD-live        released_at is the STRING 0
+a14  ok             want=HELD            got=HELD-live        released_at is a DATE, not an instant
+a15  ok             want=HELD            got=HELD-live        released_at is the NUMBER 0
+a16  ok             want=HELD            got=HELD-live        released_at NESTED under another key
+a17  ok             want=HELD            got=HELD-live        top level is an ARRAY, not an object
+a18  ok             want=HELD            got=HELD-live        pid is a STRING
+a19  ok             want=HELD            got=HELD-live        pid is the bool true
+a20  ok             want=HELD            got=HELD-live        started_at twice, past-ceiling then NOW (first-wins fires arm 3)
+a21  ok             want=HELD            got=HELD-live        valid object then trailing garbage
+
+--- B. DEAD holder on THIS host. Correct = TAKE-dead-pid. Anything else = FAIL-SHUT (liveness).
+b01  ok             want=TAKE-dead-pid   got=TAKE-dead-pid    pid is the LAST key
+b02  ok             want=TAKE-dead-pid   got=TAKE-dead-pid    compact separators, pid last
+b03  ok             want=TAKE-dead-pid   got=TAKE-dead-pid    canonical order + released_at null
+
+--- C. LIVE holder, started_at 172860s old vs the 86400s CEILING (fixture DERIVED, T361 C3). Correct = TAKE-ceiling (arm 3). Anything else = FAIL-SHUT.
+c01  ok             want=TAKE-ceiling    got=TAKE-ceiling     past the ceiling, spaced separators
+c02  ok             want=TAKE-ceiling    got=TAKE-ceiling     past the ceiling, compact separators
+
+--- D. GENUINELY released lock. Correct = FREE-released (arm 1). Anything else = FAIL-SHUT.
+d01  ok             want=FREE-released   got=FREE-released    released_at a real ISO-8601 UTC instant
+
+--- Z. T361 C1 (F-T361-1). released_at is a ZERO-VALUE or SENTINEL instant while a LIVE pid holds the lock.
+    Syntactically valid, semantically NOT RELEASED. Correct = HELD-*. Anything else = FAIL-OPEN (P-85 safety).
+    Every one of these read FREE-released before T365; each is what some runtime emits for a field it never set.
+z01  ok             want=HELD            got=HELD-live        Go's zero time.Time through encoding/json, and python datetime.min
+z02  ok             want=HELD            got=HELD-live        year-zero sentinel
+z03  ok             want=HELD            got=HELD-live        the UNIX epoch -- an int64 0 formatted
+z04  ok             want=HELD            got=HELD-live        datetime.max / a 'never' sentinel
+z05  ok             want=HELD            got=HELD-live        a far-future 'not yet' sentinel
+z06  ok             want=HELD            got=HELD-live        DERIVED: past the skew bound -- a clock-skewed or scheduled writer
+z07  ok             want=FREE-released   got=FREE-released    CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+
+--- E. T361 C4 (F-T361-4). FOREIGN host. lock_pid_state must return other_host and NEVER judge another machine.
+    This is the literal P-85 line, and before T365 no self-test row exercised it. Correct = HELD-*; anything else = FAIL-OPEN.
+e01  ok             want=HELD            got=HELD-live        FOREIGN host, pid DEAD here: arm 2 must NOT fire -- deleting the host check turns this red
+e02  ok             want=HELD            got=HELD-live        FOREIGN host, pid live here: still other_host
+
+--- G. T361 C5 (F-T361-5). The PARSER's arithmetic, reached through a real lock body.
+    Correct = HELD-* except where stated. A wrong epoch here is FAIL-OPEN: it fires arm 3 against a live holder.
+g01  ok             want=HELD            got=HELD-live        started_at 82800s old, INSIDE the 86400s ceiling: arm 3 must NOT fire (an epoch drifting LOW fires it; the other sign is invisible here, which is what group H is for)
+g02  ok             want=HELD            got=HELD-live        released_at is a NON-EXISTENT date: the day-bound check must refuse it (dropping it decodes to 2026-03-02, a plausible past instant, and frees the lock)
+g03  ok             want=HELD            got=HELD-live        started_at PRE-epoch: the negative-epoch guard must refuse it (dropping it reads a ~57-year age and fires the ceiling)
+g04  ok             want=HELD            got=HELD-live        released_at month 13: the month bound must refuse it
+
+--- H. T361 C5, the half the body rows cannot reach: _iso8601_epoch asserted DIRECTLY against exact constants.
+    See the _arow header for why C1 makes the century rule unreachable through a lock body.
+h01  ok             want=0               got=0                the epoch anchor: days-from-civil must land exactly on 0
+h02  ok             want=86400           got=86400            one day past the epoch: grades the *86400 scaling and the day term
+h03  ok             want=951782400       got=951782400        a REAL leap day (div-400 rule) must be ACCEPTED with this exact value
+h04  ok             want=REFUSE          got=REFUSE           century NON-leap: div-100 rule must REFUSE. Unreachable via released_at under C1 -- this is the only grader.
+h05  ok             want=4102444799      got=4102444799       end of century, all four fields at maximum: grades hh/mi/ss and the year term together
+
+ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0

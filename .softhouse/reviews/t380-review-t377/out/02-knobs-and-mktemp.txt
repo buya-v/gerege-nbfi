@@ -1,0 +1,31 @@
+=== T380 knob + mktemp attack — subject /tmp/t380-subject/.softhouse/bin/fire-program.sh
+
+k01  ok  rc=78  LOCK_RELEASE_SKEW_SECS=abc
+k02  ok  rc=78  LOCK_RELEASE_SKEW_SECS=99999999999999999999
+k03  ok  rc=78  LOCK_RELEASE_SKEW_SECS=-100000
+k04  ok  rc=78  LOCK_CEILING_SECS=abc
+k05  ok  rc=78  LOCK_CEILING_SECS=0
+k06  ok  rc=78  LOCK_MAX_AGE_SECS=0
+k07  ok  rc=78  LOCK_RELEASE_SKEW_SECS=0)) || { print INJECTED; }; ((1
+k08  ok  rc=78  LOCK_RELEASE_SKEW_SECS=$(print INJECTED)
+k09  ok  rc=0  LOCK_RELEASE_SKEW_SECS=0
+k10  ok  rc=0  LOCK_CEILING_SECS=604800
+k11  ok  rc=0  LOCK_RELEASE_SKEW_SECS=0003600
+k12  *** WRONG rc=2 want=0  rc=2  LOCK_CEILING_SECS=9223372036854775807
+k13  ok  rc=78  LOCK_CEILING_SECS=9223372036854775808
+k14  ok  rc=0  LOCK_RELEASE_SKEW_SECS=
+k15  ok  rc=78  LOCK_RELEASE_SKEW_SECS= 3600
+k16  ok  rc=78  LOCK_RELEASE_SKEW_SECS=+3600
+k17  ok  rc=78  LOCK_RELEASE_SKEW_SECS=3600.0
+k18  ok  rc=78  LOCK_RELEASE_SKEW_SECS=0x10
+
+--- B. $FIRE_MKTEMP must NEVER be resolvable through $PATH or the environment ---
+hij:8: no matches found: /tmp/t380-hijacked.*
+h01  ok  rc=0
+hij:8: no matches found: /tmp/t380-hijacked.*
+h02  ok  rc=0
+hij:8: no matches found: /tmp/t380-hijacked.*
+h03  ok  rc=0
+
+CHECKS=21 WRONG=1
+RESULT: FAIL

@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+AssertionError: 0
+=== step 1: busybox userland — where is mktemp?
+ls: /usr/bin/mktemp: No such file or directory
+lrwxrwxrwx    1 root     root            12 Jun 13 16:39 /bin/mktemp -> /bin/busybox
+
+=== step 2: PROVISIONED alpine (apk add zsh python3), SHIPPED file (resolver ON)
+  -rwxr-xr-x    2 root     root        681216 Dec 10  2025 /bin/zsh
+  lrwxrwxrwx    1 root     root            10 Aug 28 10:58 /usr/bin/python3 -> python3.14
+sh: syntax error: bad substitution
+h05  ok             want=4102444799      got=4102444799       end of century, all four fields at maximum: grades hh/mi/ss and the year term together
+
+ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+
+=== step 3: CONTROL — same file, resolver forced back to the literal /usr/bin/mktemp
+self-test: could not create a scratch directory under /tmp; refusing to run against an unknown path
+sh: syntax error: bad substitution
+
+=== T380 rc capture (re-run; busybox ash has no PIPESTATUS, so the first pass could not print rc) ===
+SHIPPED  rc=0   ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+FORCED   rc=2   self-test: could not create a scratch directory under /tmp; refusing to run against an unknown path
