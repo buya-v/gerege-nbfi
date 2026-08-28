@@ -5799,7 +5799,7 @@
     },
     {
       "id": "T397",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -5815,7 +5815,7 @@
       ],
       "title": "T387's two MINOR conditions on T360 -- an unqualified verdict sentence, and a byte check a numeric PREFIX satisfies",
       "description": "T387 APPROVED T360 WITH CONDITIONS. Condition (a), the `EXEMPTION_PIN_LEDGER_WRONGIMPLS` 13->14 bump, is the DRIVER's to apply on the merge result and is not yours. These two are.\n\n**F-T387-2 -- `verbatimInCapture` is `bytes.Contains`, so a numeric PREFIX satisfies it.** `\"100.12\"` is contained in `\"100.125\"`, so a vector citing the shorter text passes the verbatim check against a capture holding the longer one. T387 drove it and showed it **self-correcting** -- the port then accepts, the vector FAILs, exit 1 -- which is why this is MINOR rather than a fail-open. **Close it anyway, and keep the self-correction as a control.** A check that is only saved by a downstream check is one refactor away from being saved by nothing (P-45). Match on a token boundary, not a substring, and drive the prefix case RED before and GREEN after.\n**Do not reach for a numeric comparison to fix it.** The whole design of this class is that the amount is NEVER a number -- no `strconv`, no arithmetic, no exponent, because no `int64` holds `100.125`. A float or a parse here is an instant REJECT under CLAUDE.md's first non-negotiable, however tempting it looks as a 'proper' fix.\n\n**F-T387-1 -- `report.go:592`'s verdict prose now sits UNQUALIFIED over a captured vector the port does not match.** The divergence class records a case where the oracle accepted and the port refused; a verdict sentence that does not say so invites exactly the misreading G-19 exists to prevent. Qualify it. `report.go` was outside T360's grant, which is why this is yours.\n\nRead T387's review on `main` at `.softhouse/reviews/t387-review-t360/REVIEW.md`, and T360's handoff. **Re-drive T387's 16 authoring attacks after your change** -- all 16 must still be refused, and parity must stay `PASS 7 FAIL 0` with money cells `39 == pinned 39`. Run `go build ./...` and `go test -count=1 ./...` and record both.\n\nBar from a CLEAN tree AFTER `git add -A` and commit, `bash` never `sh`; probe-line PRESENCE before value (P-84). By the time you run, the wrong-impl pin should read 14 on `main`; if it still reads 13 the bar exits 2 on `WRONG-IMPLEMENTATION POPULATION 14, PINNED 13` and that is the pin working, not an outage.",
-      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
+      "note": "COMPLETE on softhouse/T397-t387-conditions, 4 commits, NOT MERGED -- awaiting T405. Driver re-ran the float sweep independently: 4 hits, all inside comments stating the prohibition. Scope confirmed; report.go is outside files_hint but explicitly assigned by the task text."
     },
     {
       "id": "T398",
@@ -5950,6 +5950,119 @@
       "title": "F-T384-1: the FIFTH registration fail-open is REACHABLE with two committed files -- a decoy plus an ambiguous-glob symlink neutralises BOTH of T375's new tests at once",
       "description": "**T375 disclosed this against itself as `FU-T375-7` and rated it unreachable. `T384` REACHED IT.** The arm is written, driven on three trees, and ready to lift — it is `arm G` in `.softhouse/reviews/t384-review-t375/`, with controls E and F beside it.\n\n**THE MECHANISM, MEASURED.** The guard runs `git ls-files -s -- \"$rel\"` with `$rel` as a **pathspec, not a literal**. Plant an *honestly registered* decoy `zz-t384g1.sh` and a tracked symlink `zz-t384g[1].sh`: the pathspec matches **both**, `git ls-files` returns **two** lines, `1` sorts before `[`, so `member_mode` is the decoy's `100644` and `member_blob` is the decoy's blob. **Both of T375's new tests are neutralised at once.** Whole bar: **exit 0, probe PRESENT, `VERDICT: PASS`, `reached-by=3`, and the census printing `symlink-members=0` while a symlink member sits in the population.** Driven on T375's branch, on `main`, and on the merge result.\n\n**A GLOB CHARACTER ALONE IS NOT ENOUGH — T384's own controls refuted that.** Controls E and F use the same filenames without the ambiguity and are correctly REFUSED. **T375's recorded mechanism — 'more than one path, first line wins' — was exactly right.** Do not 'fix' this by rejecting glob characters in filenames; that would be the wrong repair and would refuse legitimate names.\n\n**THE REPAIR IS THE ONE T375 ALREADY WROTE:** `\":(literal)$rel\"` plus a `self_multi`-shaped refusal. Lift arm G (and E/F as controls) into the drive. Drive RED before GREEN and **keep a healthy control** — an honestly registered checker with an independent regular-file witness must still be ACCEPTED at `reached-by=2`, which is the control T384 verified stays green.\n\n**C-2 (also T384's): assert `symlink-members` COUNTS CORRECTLY, not merely that the member is refused.** The census printed `symlink-members=0` while one was present — a count that cannot rise is a count nobody should read.\n\n**C-3: delete two restated cardinals in T375's handoff §6 that DO NOT REPRODUCE.** T384 measures the `warn \"`/`say \"` counts as **367→405 and 139→139**, not the handoff's 366→396/137→137. The load-bearing 'nothing removed' claim IS true and independently counted — so **delete the restated numbers rather than refreshing them**, which is the remedy DEC-2 revision 8 chose for the same shape.\n\n**WHY T375 WAS RIGHT NOT TO FIX THIS IN FLIGHT, and you should say so in your handoff:** an executable change would have invalidated the 61-arm drive, and a one-token change without its arm is precisely what that task existed to refuse. What was wrong was the SEVERITY rating, not the process — the threat model of this guard is deliberate forgery inside a task's own grant, where **the attacker chooses the filename**.\n\n`conformance.sh` is free as of `d8ea93b8` — confirm no worker holds it before you write it. Bar from a CLEAN tree AFTER `git add -A` and commit; probe-line PRESENCE before value (P-84). Baseline: exit 0, 46 parity / 7884 cells, ledger 7/0, 144 cells / 39 money, all 14 wrong implementations dead, frontier GREEN at deadOccurrences 108, `EXEMPTION_PIN_LEDGER_WRONGIMPLS` now **14** — match it BY NAME if you ever touch it.\n\nT384 also listed what it did NOT drive, so you inherit it honestly: FU-T375-5 (DECLARED direction), a case-sensitive host, newline and gitlink member paths, and `guard_graded_root_is_this_tree`'s short-circuit.",
       "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
+    },
+    {
+      "id": "T405",
+      "title": "INDEPENDENT review of T397 -- a change to the ADMISSION COMPARATOR, which is grading",
+      "description": "T397 changed `verbatimInCapture` from a bare `bytes.Contains` to a token-bounded match, and qualified `report.go`'s exit-0 verdict. **This is a change to how the harness GRADES**, which is the exact class P-98 and T387's adjudication say must be run against at least one CORRECT and one DELIBERATELY WRONG implementation -- the correct one must pass while the wrong one dies. T359 measured a one-line remedy correctly and it was BACKWARDS; one implementation cannot detect an inversion.\n\nRE-DERIVE, do not read the author's conclusions. Read the handoff from the BRANCH (`git show softhouse/T397-t387-conditions:.softhouse/handoff/T397-t387-conditions.md`), not from disk.\n\nSPECIFIC THINGS TO SETTLE:\n1. **A17 moved from FAIL (exit 1) to INADMISSIBLE (exit 2).** Is that a strengthening or a weakening? An inadmissible vector is EXCLUDED from the corpus; a failing one REDS the bar. Satisfy yourself the store on `main` is unaffected and that no real vector becomes inadmissible. `inadmissible` is a PINNED census.\n2. **Run the new comparator against a deliberately wrong implementation**, not only against the correct one. All 14 `ledger-wrong-*` must still die, and say whether any dies for a NEW reason -- a kill that moves reason is a kill that may be accidental.\n3. **The boundary classifier.** `numericLeftNeighbour` = digit/`.`/`-`/`+`, `numericRightNeighbour` = digit/`.`/`e`/`E`. Attack it: is there a capture text where a LEGITIMATE amount is now rejected? Is there one where a prefix still slips through? Drive both.\n4. **NO FLOAT, NO PARSE.** Re-sweep the diff yourself. The amount must never become a number -- no `strconv`, no arithmetic, no exponent. The driver's own sweep found 4 hits, all inside comments; confirm independently rather than inheriting that.\n5. T397's diff touches `loanschedule/conformance/report.go`, outside its literal `files_hint` but explicitly assigned by its task text. Confirm that is all it touched outside the grant.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T397"
+      ],
+      "status": "in_progress",
+      "files_hint": [
+        ".softhouse/reviews/t405-review-t397/"
+      ],
+      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "branch": "softhouse/T405-review-t397"
+    },
+    {
+      "id": "T406",
+      "title": "INDEPENDENT review of T391 -- the first accrual vectors, and every pinned count they move",
+      "description": "T391 promotes the program's first accrual observations into the vector store. **RE-DERIVE THE MONEY MATH AGAINST THE VECTORS AND THE ORACLE, NEVER AGAINST THE CODE.** Highest-stakes item in the wave.\n\nSettle: every promoted vector was OBSERVED from the reference oracle (Fineract) and none synthesised; the vectors grade the SLOT, not the GL ACCOUNT (T242's lesson -- one account backs several slots, and the harness once printed 'gl 16 carries ZERO entries' when it had sixteen); the registered wrong implementation is genuinely killed BY THE NEW VECTORS and not by a pre-existing one; every count that moved moved in the summary AND every pinned census restating it, in ONE commit (P-83), with the pin REGENERATED BY RUNNING, never by arithmetic; NO FLOAT anywhere near the amounts; and no promoted account moved. Precision: these captures are NOT a `(19, HALF_UP)` parity claim and must not be presented as one.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T391"
+      ],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/reviews/t406-review-t391/"
+      ],
+      "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
+    },
+    {
+      "id": "T407",
+      "title": "INDEPENDENT review of T404 -- the fifth registration fail-open and its symlink census",
+      "description": "T404 lifts T384's arm G into the registration guard and adds a `symlink-members` count assertion. RE-DERIVE. Settle: the `:(literal)` repair does NOT refuse legitimate filenames containing glob characters (T384's controls E and F refuted 'a glob character alone is enough' -- re-run them); the healthy control still ACCEPTS at `reached-by=2`; the `symlink-members` count RISES when a symlink member is present, rather than merely being refused -- a count that cannot rise is a count nobody should read; and the RED drive genuinely fails before the fix. Check the restated cardinals in T375's handoff were DELETED rather than refreshed.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T404"
+      ],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/reviews/t407-review-t404/"
+      ],
+      "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
+    },
+    {
+      "id": "T408",
+      "title": "INDEPENDENT review of T402 -- the scratch-file fail-open, and whether the re-audit covered the CLASS",
+      "description": "T402 fixes a `2>` redirect that returns 1 without running the command, in `casualty-sweep.sh`. **T399 will WIRE this instrument, so a residual fail-open here becomes a green bar on a blind instrument.** RE-DERIVE. Settle: `cat`'s status is read at BOTH sites; the RED drive reproduces T386's 15 false MEASURED-ZERO lines before the fix and none after; the healthy control still passes; and -- the important one -- whether T402 re-audited the **CLASS** (every construct where a status can be lost) or merely the two syntactic forms T381 enumerated. A taxonomy narrower than the defect class certifies only what the taxonomy could see. State explicitly whether the instrument is now safe for T399 to wire.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T402"
+      ],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/reviews/t408-review-t402/"
+      ],
+      "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
+    },
+    {
+      "id": "T409",
+      "title": "INDEPENDENT review of T390 -- baseline attribution, and the wiring request it ships",
+      "description": "T390 appends T388's probes to `PROBES.tsv`, corrects `CASUALTIES.md`'s `m_loan` claim, and ships a `conformance.sh` wiring patch as a REQUEST. RE-DERIVE. Settle: the append came from T388's branch verbatim and `oracle-state-baseline.sh` now exits 0; the `m_loan` pins were re-verified in all three scripts INDEPENDENTLY rather than inherited from T388's prose; the wiring patch was actually DRIVEN RED (an unattributed row exists and the guard refuses) with a healthy control, not merely proposed; and no promoted account moved. A patch that has not been driven red is a proposal, not a request.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T390"
+      ],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/reviews/t409-review-t390/"
+      ],
+      "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
+    },
+    {
+      "id": "T410",
+      "title": "INDEPENDENT review of T400 -- the wrapper offsets, and the 192-state equivalence",
+      "description": "T400 edits `fire-program.sh`, the wrapper every fire runs. RE-DERIVE. Settle: the z06/z07 offsets are now derived from ONE place (or the gate checks the inline spelling), so the comment's claim is TRUE; T385's `s01` drift no longer fails open and its `s02` control still exits 78; `drive-wrapper-vs-skill.zsh` reports **0 disagreements across all 192 states** -- and if T400 changed a lock arm, the SKILL text was changed to match, because the wrapper and the skill must decide identically; a HEALTHY fire still starts (a control that refuses everything is the same defect as one that cannot fail -- P-98); and the file was never written through its original inode (P-97).",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T400"
+      ],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/reviews/t410-review-t400/"
+      ],
+      "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
+    },
+    {
+      "id": "T411",
+      "title": "INDEPENDENT review of T401 -- the .zsh census gap and whatever it decided to do about it",
+      "description": "T401 decides whether to extend the fail-open/dead-path census to 110 tracked `.zsh` files. RE-DERIVE. Settle: its four re-measured counts, independently (the bar currently reports `corpus=1395`, not the 1348 in T385's prose, so at least one had already moved); whether its chosen option is argued on measured cost rather than preference; if it extended the selector, that the new frontier pin was REGENERATED BY RUNNING the census and landed in ONE commit with the selector change (P-83), and that the guard was driven RED on a planted `.zsh` fail-open with a healthy control beside it. If it declined to extend, whether the reason is a real cost or an avoidance.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T401"
+      ],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/reviews/t411-review-t401/"
+      ],
+      "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
     }
   ],
   "cross_corroboration": {
