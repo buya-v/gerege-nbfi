@@ -98,8 +98,22 @@ REF="${2:?usage: drive-red-t404.sh <repo-path> <git-ref> [arm ...]}"
 shift 2
 WANT_ARMS="$*"
 
-WORK="${T404_WORK:-/tmp/t404-drive}"
-mkdir -p "$WORK"
+# THE WORK ROOT IS UNIQUE PER INVOCATION, AND THAT IS A REPAIR OF A DEFECT THIS DRIVE
+# ACTUALLY SUFFERED [T404, measured]. It was `/tmp/t404-drive` with one subdirectory per ARM
+# NAME. Two invocations of this drive overlapped, each `rm -rf`'d the other's scratch tree
+# while its bar was mid-run, and arms H and W came back `exit=2 probe=ABSENT census=<none
+# printed>` -- a plausible-looking REFUSAL that was really a deleted checkout. The tell was
+# BSD `sed` aborting on the corrupted transcript, not the verdict. A harness whose failure
+# mode is indistinguishable from the finding it is looking for is the shape this whole task
+# exists to refuse, so: the root carries the PID and a timestamp, and a root that somehow
+# already exists is a REFUSAL rather than a reuse. Both conflicting transcripts of that run
+# are committed unedited; the arms were re-driven under this repair.
+WORK="${T404_WORK:-/tmp/t404-drive/run-$$-$(date +%s)}"
+if [ -e "$WORK" ]; then
+  echo "T404 drive: work root $WORK already exists; refusing to reuse it" >&2
+  exit 2
+fi
+mkdir -p "$WORK" || exit 2
 
 PASSES=0
 FAILS=0
