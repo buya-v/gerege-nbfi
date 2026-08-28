@@ -1,0 +1,58 @@
+REPO    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4a3dffe7f78ce39c
+HEAD    : 9e9bf71b
+SCRATCH : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t334-p45.i4YIxL
+
+=== 1. P-45's RECORDED TEXT, read from the register itself ===
+1503:**P-45 — A test-only guard is not a guard.** T154's float-literal census is called from **`Run`**, not only
+1504-from the Go test, because `conformance.sh` never invokes `go test` — a test-only fix would have left the
+1505-third silent green standing while looking fixed. *Rule: when hardening a check, verify the path that
+1506-actually executes in CI/conformance calls it, not merely that a test does.*
+1507-
+
+=== 2. DOES ANY RECORDED RULE STATE THE PARAPHRASE? ===
+grep for the paraphrase inside patterns.md (the register):
+  hits in patterns.md: 0
+  => 0 means the sentence is an UNRECORDED GLOSS: it is not P-45's text and it is not
+     any other P-n's text either. This is NOT the T282 off-by-one shape (cited P-x,
+     actually P-y); there is no P-y.
+
+=== 3. WHO CITES IT AS P-45 (tracked tree, checker's own corpus) ===
+  .softhouse/bin/branch_sweep.py:1
+  .softhouse/bin/fire-program.sh:2
+  .softhouse/capture/t282-pnumber-drift/out/census.json:6
+  .softhouse/capture/t282-pnumber-drift/out/census.txt:6
+  .softhouse/capture/t282-pnumber-drift/out/live-AFTER-repair.json:17
+  .softhouse/capture/t282-pnumber-drift/out/live-AFTER-repair.txt:11
+  .softhouse/capture/t282-pnumber-drift/out/live-BEFORE-repair.json:17
+  .softhouse/capture/t282-pnumber-drift/out/live-BEFORE-repair.txt:11
+  .softhouse/capture/t300-census-cardinal/instruments/50-red-drive.sh:1
+  .softhouse/capture/t309-sigterm-reconcile-bypass/patch10.py:1
+  .softhouse/capture/t319-reconciler-f5/CONFORMANCE-WIRING.md:1
+  .softhouse/conformance.sh:1
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T312.md:1
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T319.md:1
+  .softhouse/observations/20260827-branch-case-collision-shadows-committed-work.md:1
+  .softhouse/reviews/T302/REVIEW.md:1
+  .softhouse/tasks.json:13
+
+=== 4. BEFORE: checker verdict on the tree as it stands ===
+PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal; 90 report-only findings in committed evidence (corrected FORWARD in patterns.md, never edited in place)
+  paraphrase findings: 25 across 18 files; kinds={'BARE': 25}; fatal=0; cited ids=[45]
+  => every one is BARE ('matches no registered rule', best trigram 1 < 6) and NON-FATAL.
+     The checker cannot bind the sentence because nothing defines it.
+
+=== 5. THE TRAP: record the paraphrase as its own rule, then re-run ===
+  PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/bin/branch_sweep.py:39 P-45 -- gloss (dash) '"a guard that only works when someone remembers to run it enforces nothing."   A sweep the driver retypes each fire is exactly such a guard,'
+  PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/bin/fire-program.sh:247 P-45 -- gloss (colon) '\'a guard that only works when someone remembers to run it enforces nothing\' — one that is not on disk enforces less.)"     return 2'
+  PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/bin/fire-program.sh:327 P-45 -- gloss (dash) '"a guard that # only works when someone remembers to run it enforces nothing" — is exactly how fire'
+  PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/bin/ready-tasks.py:46 P-45 -- gloss (bracketed) '"a guard that only works when someone   remembers to run it enforces nothing"'
+  PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/bin/ready-tasks.py:704 P-45 -- gloss (dash) '"a guard that only works when someone       remembers to run it enforces nothing" [VERIFIED: .softhouse/patterns.md, P-45] --'
+  PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/bin/ready-tasks.py:1425 P-45 -- gloss (dash) '"a guard that only works when someone         # remembers to run it enforces nothing" [VERIFIED: .softhouse/patterns.md, P-45]'
+  PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/conformance.sh:2162 P-45 -- gloss (dash) '"a guard that   # only works when someone remembers to run it enforces nothing"; '
+  PNUMBER-CITATIONS: VERDICT FAIL -- 7 fatal (register 0, directive-file 7)
+
+  => Recording the sentence turns 25 harmless BARE citations into MISDIRECTING ones,
+     7 of them in the DIRECTIVE zone, which is FATAL and turns the bar RED -- in four
+     files T334 is forbidden to edit. So the erratum is the correction, and promoting
+     the gloss to a rule is a SEQUENCED change: fix the 25 citing sites FIRST.
+DONE
