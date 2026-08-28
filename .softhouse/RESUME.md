@@ -112,3 +112,22 @@ T326 `6c3d0787` · T330 `fc104776` · T325 `e590b865` · T282 `35a92f30` · T328
 **Bar on `main`:** exit 0, probe **PRESENT** and `up`, 46 parity vectors / 7884 cells, LEDGER parity **7**,
 oracle-refusal 5, money cells **39**, **12/12** wrong ledger implementations DIED, dead-path frontier
 **109 == pinned**, corpus 1237.
+
+---
+
+## BATCH 5 — **4 WORKERS DISPATCHED. LIVE.** Record pushed before the first spawn.
+
+| Task | Branch | Owns (sole writer) |
+|---|---|---|
+| **T307** | `softhouse/T307-grade-refusal-args` | `.softhouse/vectors/`, `nexus/…/ledger/conformance/`, `.softhouse/conformance.sh`, the frontier pin |
+| **T332** | `softhouse/T332-residual-twin-sweep` | `.softhouse/gates.md` |
+| **T334** | `softhouse/T334-writer-guidance` | `.softhouse/patterns.md` |
+| **T279** | `softhouse/T279-lock-partition` | `.claude/skills/softhouse-program/SKILL.md`, `.softhouse/bin/fire-program.sh` |
+
+**MERGED THIS FIRE (15):** T306 `3da08fbb` · T272 `16c59715` · T329 `61c0f382` · T277 `e8374743` ·
+T326 `6c3d0787` · T330 `fc104776` · T325 `e590b865` · T282 `35a92f30` · T328 `817d2b53` · T322 `f39ed526` ·
+T278 `fa045d8c` · T331 `57521fee` · T145 `08be3c56` · T301 `3e024dfa` · T321 `4246ce63`.
+
+**Bar on `main`:** exit 0, probe **PRESENT** and `up`, 46 parity vectors / 7884 cells, LEDGER parity **7**,
+oracle-refusal 5, money cells **39**, **12/12** wrong ledger implementations DIED, dead-path frontier
+**109 == pinned**, corpus 1266, and the newly wired **`P-number citations: VERDICT PASS`**.
