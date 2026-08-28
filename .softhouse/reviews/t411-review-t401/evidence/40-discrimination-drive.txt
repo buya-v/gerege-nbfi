@@ -1,0 +1,46 @@
+T411 DISCRIMINATION DRIVE @ d07ecab5
+bait source (already on the pinned frontier): .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+
+BAIT    : bait-failopen.zsh  == byte-identical to .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh (2230 bytes)
+CONTROL : control-healthy.zsh == byte copy of .softhouse/guards/check-capture-namespace.sh
+BAIT-DP : bait-deadpath.zsh == byte-identical to .softhouse/bin/fire-program.sh (already on the dead-path pin)
+
+scratch index: 3 planted files visible to git ls-files; real index untouched.
+
+=============== ARM 1/2 : S1 FAIL-OPEN LINTER ===============
+   shipped corpus: corpus    : 1412 tracked .sh/.py; 149 are repo-wide search instruments
+   ARM1 shipped       bait rows: 0     control rows: 0  
+     -> bait must be 0 here (INVISIBLE), control 0
+   widened corpus: corpus    : 1536 tracked .sh/.py; 154 are repo-wide search instruments
+   ARM2 widened       bait rows: 1     control rows: 0  
+     -> bait must be 1 here (CAUGHT), control still 0
+   is the control IN the widened corpus at all? (if not, 'no row' is vacuous)
+     files from the scratch dir in the widened corpus: 3  (MUST be 3)
+
+=============== ARM 3/4 : S2 DEAD-PATH CENSUS ===============
+   shipped: T316-DEADPATH-CENSUS: corpus=1412 deadFiles=75 deadOccurrences=108 resolving=1344 indeterminate=104 prose=366
+   widened: T316-DEADPATH-CENSUS: corpus=1536 deadFiles=81 deadOccurrences=116 resolving=1416 indeterminate=105 prose=381
+   ARM3 shipped       bait-DP rows: 0     control rows: 0  
+     -> bait must be 0 here (INVISIBLE), control 0
+   ARM4 widened       bait-DP rows: 1     control rows: 0  
+     -> bait must be >0 here (CAUGHT), control still 0
+   bait rows caught, with their literals:
+     .softhouse/reviews/t411-review-t401/.drive-scratch/bait-deadpath.zsh | .softhouse/tasks.json.t288.tmp
+   is the control IN the widened corpus at all?
+     3
+     ^ planted .zsh files the widened S2 selector reaches (MUST be 3)
+
+=============== VERDICT ===============
+   PASS  S1 shipped: bait INVISIBLE (=0)
+   PASS  S1 widened: bait CAUGHT (=1)
+   PASS  S1 shipped: control spared (=0)
+   PASS  S1 widened: control spared (=0)
+   PASS  S2 shipped: bait INVISIBLE (=0)
+   PASS  S2 shipped: control spared (=0)
+   PASS  S2 widened: control spared (=0)
+   PASS  S2 widened: bait CAUGHT (=1 row(s))
+
+DRIVE: PASS -- the widening discriminates on CONTENT, not on extension.
+
+TEARDOWN: worktree residue rows naming the scratch = 0 (MUST be 0)
+TEARDOWN: real index still clean? 2 non-clean path(s) (expected: only this task's own edits)
