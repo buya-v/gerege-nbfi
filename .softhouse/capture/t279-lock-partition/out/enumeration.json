@@ -1,0 +1,158 @@
+{
+  "old": {
+    "label": "OLD \u2014 the four rules as shipped on main (SKILL.md STEP 0)",
+    "n_states": 97,
+    "zero": "[(('present', 'null', 'lt6', 'ge6', 'alive_here'), {'lock': 'present', 'released': 'null', 'started': 'lt6', 'tip': 'ge6', 'pid': 'alive_here'}), (('present', 'null', 'lt6', 'ge6', 'absent'), {'lock': 'present', 'released': 'null', 'started': 'lt6', 'tip': 'ge6', 'pid': 'absent'}), (('present', 'null', 'lt6', 'ge6', 'other_host'), {'lock': 'present', 'released': 'null', 'started': 'lt6', 'tip': 'ge6', 'pid': 'other_host'}), (('present', 'null', 'lt6', 'unreadable', 'alive_here'), {'lock': 'present', 'released': 'null', 'started': 'lt6', 'tip': 'unreadable', 'pid': 'alive_here'}), (('present', 'null', 'lt6', 'unreadable', 'absent'), {'lock': 'present', 'released': 'null', 'started': 'lt6', 'tip': 'unreadable', 'pid': 'absent'}), (('present', 'null', 'lt6', 'unreadable', 'other_host'), {'lock': 'present', 'released': 'null', 'started': 'lt6', 'tip': 'unreadable', 'pid': 'other_host'}), (('present', 'null', 'b6_24', 'unreadable', 'alive_here'), {'lock': 'present', 'released': 'null', 'started': 'b6_24', 'tip': 'unreadable', 'pid': 'alive_here'}), (('present', 'null', 'b6_24', 'unreadable', 'absent'), {'lock': 'present', 'released': 'null', 'started': 'b6_24', 'tip': 'unreadable', 'pid': 'absent'}), (('present', 'null', 'b6_24', 'unreadable', 'other_host'), {'lock': 'present', 'released': 'null', 'started': 'b6_24', 'tip': 'unreadable', 'pid': 'other_host'}), (('present', 'null', 'ge24', 'unreadable', 'alive_here'), {'lock': 'present', 'released': 'null', 'started': 'ge24', 'tip': 'unreadable', 'pid': 'alive_here'}), (('present', 'null', 'ge24', 'unreadable', 'absent'), {'lock': 'present', 'released': 'null', 'started': 'ge24', 'tip': 'unreadable', 'pid': 'absent'}), (('present', 'null', 'ge24', 'unreadable', 'other_host'), {'lock': 'present', 'released': 'null', 'started': 'ge24', 'tip': 'unreadable', 'pid': 'other_host'}), (('present', 'null', 'unreadable', 'ge6', 'alive_here'), {'lock': 'present', 'released': 'null', 'started': 'unreadable', 'tip': 'ge6', 'pid': 'alive_here'}), (('present', 'null', 'unreadable', 'ge6', 'absent'), {'lock': 'present', 'released': 'null', 'started': 'unreadable', 'tip': 'ge6', 'pid': 'absent'}), (('present', 'null', 'unreadable', 'ge6', 'other_host'), {'lock': 'present', 'released': 'null', 'started': 'unreadable', 'tip': 'ge6', 'pid': 'other_host'}), (('present', 'null', 'unreadable', 'unreadable', 'alive_here'), {'lock': 'present', 'released': 'null', 'started': 'unreadable', 'tip': 'unreadable', 'pid': 'alive_here'}), (('present', 'null', 'unreadable', 'unreadable', 'absent'), {'lock': 'present', 'released': 'null', 'started': 'unreadable', 'tip': 'unreadable', 'pid': 'absent'}), (('present', 'null', 'unreadable', 'unreadable', 'other_host'), {'lock': 'present', 'released': 'null', 'started': 'unreadable', 'tip': 'unreadable', 'pid': 'other_host'})]",
+    "multi": "[(('present', 'null', 'lt6', 'lt6', 'dead_here'), ['O2', 'O4'], ['HELD', 'TAKE']), (('present', 'null', 'b6_24', 'lt6', 'dead_here'), ['O2', 'O4'], ['HELD', 'TAKE']), (('present', 'null', 'b6_24', 'ge6', 'dead_here'), ['O3', 'O4'], ['TAKE']), (('present', 'null', 'ge24', 'lt6', 'dead_here'), ['O2', 'O4'], ['HELD', 'TAKE']), (('present', 'null', 'ge24', 'ge6', 'dead_here'), ['O3', 'O4'], ['TAKE']), (('present', 'null', 'unreadable', 'lt6', 'dead_here'), ['O2', 'O4'], ['HELD', 'TAKE']), (('present', 'set', 'lt6', 'lt6', 'dead_here'), ['O1', 'O4'], ['FREE', 'TAKE']), (('present', 'set', 'lt6', 'ge6', 'dead_here'), ['O1', 'O4'], ['FREE', 'TAKE']), (('present', 'set', 'lt6', 'unreadable', 'dead_here'), ['O1', 'O4'], ['FREE', 'TAKE']), (('present', 'set', 'b6_24', 'lt6', 'dead_here'), ['O1', 'O4'], ['FREE', 'TAKE']), (('present', 'set', 'b6_24', 'ge6', 'alive_here'), ['O1', 'O3'], ['FREE', 'TAKE']), (('present', 'set', 'b6_24', 'ge6', 'dead_here'), ['O1', 'O3', 'O4'], ['FREE', 'TAKE']), (('present', 'set', 'b6_24', 'ge6', 'absent'), ['O1', 'O3'], ['FREE', 'TAKE']), (('present', 'set', 'b6_24', 'ge6', 'other_host'), ['O1', 'O3'], ['FREE', 'TAKE']), (('present', 'set', 'b6_24', 'unreadable', 'dead_here'), ['O1', 'O4'], ['FREE', 'TAKE']), (('present', 'set', 'ge24', 'lt6', 'dead_here'), ['O1', 'O4'], ['FREE', 'TAKE']), (('present', 'set', 'ge24', 'ge6', 'alive_here'), ['O1', 'O3'], ['FREE', 'TAKE']), (('present', 'set', 'ge24', 'ge6', 'dead_here'), ['O1', 'O3', 'O4'], ['FREE', 'TAKE']), (('present', 'set', 'ge24', 'ge6', 'absent'), ['O1', 'O3'], ['FREE', 'TAKE']), (('present', 'set', 'ge24', 'ge6', 'other_host'), ['O1', 'O3'], ['FREE', 'TAKE']), (('present', 'set', 'ge24', 'unreadable', 'dead_here'), ['O1', 'O4'], ['FREE', 'TAKE']), (('present', 'set', 'unreadable', 'lt6', 'dead_here'), ['O1', 'O4'], ['FREE', 'TAKE']), (('present', 'set', 'unreadable', 'ge6', 'dead_here'), ['O1', 'O4'], ['FREE', 'TAKE']), (('present', 'set', 'unreadable', 'unreadable', 'dead_here'), ['O1', 'O4'], ['FREE', 'TAKE'])]",
+    "conflict": "[(('present', 'null', 'lt6', 'lt6', 'dead_here'), [('O2', 'HELD'), ('O4', 'TAKE')]), (('present', 'null', 'b6_24', 'lt6', 'dead_here'), [('O2', 'HELD'), ('O4', 'TAKE')]), (('present', 'null', 'ge24', 'lt6', 'dead_here'), [('O2', 'HELD'), ('O4', 'TAKE')]), (('present', 'null', 'unreadable', 'lt6', 'dead_here'), [('O2', 'HELD'), ('O4', 'TAKE')]), (('present', 'set', 'lt6', 'lt6', 'dead_here'), [('O1', 'FREE'), ('O4', 'TAKE')]), (('present', 'set', 'lt6', 'ge6', 'dead_here'), [('O1', 'FREE'), ('O4', 'TAKE')]), (('present', 'set', 'lt6', 'unreadable', 'dead_here'), [('O1', 'FREE'), ('O4', 'TAKE')]), (('present', 'set', 'b6_24', 'lt6', 'dead_here'), [('O1', 'FREE'), ('O4', 'TAKE')]), (('present', 'set', 'b6_24', 'ge6', 'alive_here'), [('O1', 'FREE'), ('O3', 'TAKE')]), (('present', 'set', 'b6_24', 'ge6', 'dead_here'), [('O1', 'FREE'), ('O3', 'TAKE'), ('O4', 'TAKE')]), (('present', 'set', 'b6_24', 'ge6', 'absent'), [('O1', 'FREE'), ('O3', 'TAKE')]), (('present', 'set', 'b6_24', 'ge6', 'other_host'), [('O1', 'FREE'), ('O3', 'TAKE')]), (('present', 'set', 'b6_24', 'unreadable', 'dead_here'), [('O1', 'FREE'), ('O4', 'TAKE')]), (('present', 'set', 'ge24', 'lt6', 'dead_here'), [('O1', 'FREE'), ('O4', 'TAKE')]), (('present', 'set', 'ge24', 'ge6', 'alive_here'), [('O1', 'FREE'), ('O3', 'TAKE')]), (('present', 'set', 'ge24', 'ge6', 'dead_here'), [('O1', 'FREE'), ('O3', 'TAKE'), ('O4', 'TAKE')]), (('present', 'set', 'ge24', 'ge6', 'absent'), [('O1', 'FREE'), ('O3', 'TAKE')]), (('present', 'set', 'ge24', 'ge6', 'other_host'), [('O1', 'FREE'), ('O3', 'TAKE')]), (('present', 'set', 'ge24', 'unreadable', 'dead_here'), [('O1', 'FREE'), ('O4', 'TAKE')]), (('present', 'set', 'unreadable', 'lt6', 'dead_here'), [('O1', 'FREE'), ('O4', 'TAKE')]), (('present', 'set', 'unreadable', 'ge6', 'dead_here'), [('O1', 'FREE'), ('O4', 'TAKE')]), (('present', 'set', 'unreadable', 'unreadable', 'dead_here'), [('O1', 'FREE'), ('O4', 'TAKE')])]",
+    "per_arm": {
+      "O2": 16,
+      "O4": 24,
+      "O3": 16,
+      "O1": 48,
+      "O0": 1
+    },
+    "overlap": "{('O2', 'O4'): 4, ('O3', 'O4'): 4, ('O1', 'O4'): 12, ('O1', 'O3'): 8}",
+    "residue": [],
+    "ids": [
+      "O0",
+      "O1",
+      "O2",
+      "O3",
+      "O4"
+    ]
+  },
+  "new": {
+    "label": "NEW \u2014 the repaired seven arms",
+    "n_states": 97,
+    "zero": "[]",
+    "multi": "[]",
+    "conflict": "[]",
+    "per_arm": {
+      "N4": 9,
+      "N2": 12,
+      "N6": 15,
+      "N5": 3,
+      "N3": 9,
+      "N1": 48,
+      "N0": 1
+    },
+    "overlap": "{}",
+    "residue": [
+      [
+        "present",
+        "null",
+        "lt6",
+        "ge6",
+        "alive_here"
+      ],
+      [
+        "present",
+        "null",
+        "lt6",
+        "ge6",
+        "absent"
+      ],
+      [
+        "present",
+        "null",
+        "lt6",
+        "ge6",
+        "other_host"
+      ],
+      [
+        "present",
+        "null",
+        "lt6",
+        "unreadable",
+        "alive_here"
+      ],
+      [
+        "present",
+        "null",
+        "lt6",
+        "unreadable",
+        "absent"
+      ],
+      [
+        "present",
+        "null",
+        "lt6",
+        "unreadable",
+        "other_host"
+      ],
+      [
+        "present",
+        "null",
+        "b6_24",
+        "unreadable",
+        "alive_here"
+      ],
+      [
+        "present",
+        "null",
+        "b6_24",
+        "unreadable",
+        "absent"
+      ],
+      [
+        "present",
+        "null",
+        "b6_24",
+        "unreadable",
+        "other_host"
+      ],
+      [
+        "present",
+        "null",
+        "unreadable",
+        "ge6",
+        "alive_here"
+      ],
+      [
+        "present",
+        "null",
+        "unreadable",
+        "ge6",
+        "absent"
+      ],
+      [
+        "present",
+        "null",
+        "unreadable",
+        "ge6",
+        "other_host"
+      ],
+      [
+        "present",
+        "null",
+        "unreadable",
+        "unreadable",
+        "alive_here"
+      ],
+      [
+        "present",
+        "null",
+        "unreadable",
+        "unreadable",
+        "absent"
+      ],
+      [
+        "present",
+        "null",
+        "unreadable",
+        "unreadable",
+        "other_host"
+      ]
+    ],
+    "ids": [
+      "N0",
+      "N1",
+      "N2",
+      "N3",
+      "N4",
+      "N5",
+      "N6"
+    ]
+  }
+}
