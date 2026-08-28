@@ -198,6 +198,34 @@ conditions; this task was scoped to **condition 2 only** (m-1/m-2/m-3).
 ## 7. The bar
 
 Run from a **clean tree** after `git add -A` and commit, with **`bash`**, never `sh`. Probe-line
-**presence** tested before its value (P-84).
+**presence** tested before its value (P-84): `grep -n 'probe'` first, then the value read from the
+matched line — the line is **PRESENT** at `T396-BAR.txt:192` and reads
+`reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up`.
 
-<!-- BAR-RESULT -->
+**Transcripts:** `.softhouse/capture/t396-t389-conditions/T396-BAR.txt` (run 1, on
+`1d2670e2`+handoff, exit 0) and `T396-BAR-run2.txt` (run 2, on the fully-committed tree including
+run 1's own transcript — the T370/T361 residual, closed positively rather than asserted).
+
+| figure | required baseline | measured, run 1 | measured, run 2 |
+|---|---|---|---|
+| exit code | 0 | **0** | **0** |
+| probe line | PRESENT, then `up` | **PRESENT** (`:192`), `probe = up` | **PRESENT**, `probe = up` |
+| loanschedule parity | 46 / 0 | **46 PASS / 0 FAIL** | **46 / 0** |
+| cells compared | 7,884 | **7884 graded**, 93 ungraded | **7884** |
+| dead-path frontier | GREEN at deadOccurrences 108 | **GREEN**, `deadOccurrences=108` (corpus 1395, deadFiles 75); frontier 11 == pinned 11 | **GREEN**, `108` |
+| wrong-impl pin | 14 | **all 14 wrong ledger implementations DIED through this harness** | **14** |
+| ledger parity | — | **7 PASS / 0 FAIL** (== pinned 7) | **7 / 0** |
+| ledger oracle-refusal | — | **6 PASS / 0 FAIL** (== pinned 6) | **6 / 0** |
+| ledger money cells | — | **39** (== pinned 39) | **39** |
+| inadmissible / harness errors / invariant violations / NOT RUN | 0 | **0 / 0 / 0 / 0** | **0 / 0 / 0 / 0** |
+| VERDICT | PASS | **PASS (exit 0)** | **PASS (exit 0)** |
+
+**One figure differs from T389's transcript, and it is `main`'s doing, not T396's — attributed
+rather than waved through.** T389 recorded `ledger cells 142 / 39 money`; this run reads
+**`144 graded, of which 39 are MONEY`**. Cause: `main` advanced from T389's `01a7a05a` to
+`7400d9f2`, merging T360/T387 —
+`git diff --name-only 01a7a05a main -- .softhouse/vectors/ nexus/` returns
+`.softhouse/vectors/ledger/LDG-DIV-01-oracle-accepts-sub-minor-unit-residue.json` and six
+`nexus/internal/apps/ledger/conformance/*.go` files. **T396's diff is four Markdown files and
+touches no vector and no Go file** (`git diff --name-only main...HEAD`), so it cannot have moved a
+graded cell. The **money** cell count is unmoved at 39.
