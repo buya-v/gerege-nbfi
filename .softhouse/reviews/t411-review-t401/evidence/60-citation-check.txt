@@ -1,0 +1,39 @@
+conformance.sh as of 988bdee4: 5123 lines
+
+REQUEST A citations:
+  OK    :2131  A1 S3 host-state selector
+  OK    :2225  A2 S3 printed selector
+  OK    :3267  A3 S4 population glob
+  OK    :3865  A4 S4 printed selector
+  OK    :1676  A5a fail-open corpus warn
+  OK    :1707  A5b fail-open census say
+
+restatement sites REQUEST A says must move in the same commit (P-80):
+  OK    :3048  prose block 1
+  OK    :3453  prose block 2 (T401 cites :3453)
+  STALE :3860  comment block (T401 cites :3860-3862)
+        cited line holds :     warn "conformance: is not measuring anything. REFUSED."
+        actually at line : 4
+
+  A check with an EMPTY expected string always passes; the first draft of this
+  instrument had two, which is the same defect it exists to find. Both now carry
+  a real substring. Below: EVERY restatement of the guards-dir population, found
+  by searching, so the P-80 list is derived rather than inherited from T401.
+    1676:    warn "conformance: the fail-open linter reports a corpus of $corpus tracked .sh/.py files."
+    1707:  say "conformance: CENSUS fail-open instruments — inspected $corpus tracked .sh/.py file(s) under"
+    2225:  say "conformance:   read from git grep over tracked *.sh/*.py under $REPO_ROOT; sites that assign a"
+    3048:#     POPULATION = git ls-files, ':(glob)' magic, over the TRACKED '*.sh' / '*.py' / '*.go'
+    3082:#   2. The population was '*.sh' alone while the handoff claimed "a fourth unwired checker
+    3242:  # well. T323 wrote the selector as one trailing '*.sh' and PRINTED it as "the members of"
+    3259:  # "a fourth unwired checker cannot land"; the population was '*.sh' alone, and this directory
+    3453:    # whose checkout does not materialise symlinks. The population is "tracked .sh/.py/.go
+    3865:  say "conformance:   (selector: git ls-files with ':(glob)' magic over the TRACKED '*.sh', '*.py'"
+
+REQUEST B / C citations (files NOT held by T404):
+  B  50-failopen-lint.py:211 endswith  -> 1
+  B  actual line of the selector       -> 211
+  C  census_dead_paths.py:110 ls-files -> 1
+  C  actual line of the selector       -> 110
+
+does the regen tool REQUEST C names actually exist?
+  OK    .softhouse/capture/t326-frontier-host-state/instruments/10-regen-pin.py exists
