@@ -4,17 +4,15 @@
   "pid": 75306,
   "fire": "20260828-140005",
   "started_at": "2026-08-28T06:00:21Z",
-  "heartbeat": "2026-08-28T14:40:52Z",
+  "heartbeat": "2026-08-28T16:52:13Z",
   "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
   "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260828-140005.log",
   "oracle": "REACHABLE at https://localhost:8443/fineract-provider/actuator/health",
   "postgres": "reachable at localhost:5432",
   "chain_iteration": 3,
-  "in_flight": [
-    "T384"
-  ],
+  "in_flight": [],
   "rate_limit": "Iteration 2 ended on a five_hour limit at 2026-08-28T10:35Z (resetsAt=1787914200). RESET CONFIRMED before iteration 3 dispatched at 11:2xZ.",
-  "merge_hazard": "T374/T388 merged and bar-verified. STILL LIVE: T360 needs EXEMPTION_PIN_LEDGER_WRONGIMPLS 13->14. *** MATCH IT BY NAME, NEVER BY LINE NUMBER. *** It is :3923 on main and :4469 on softhouse/T375-t364-conditions -- a 546-line shift, and T375 itself flagged the hazard while estimating it at ~90. Applying 13->14 at :3923 after T375 merges would edit an unrelated line. T375 has NOT touched the pin; its diff is confined to guard_guards_dir_registration and its docs. T360's branch is exit 2 on this pin with the probe line PRINTED reading up -- P-84 says that is THE PIN WORKING, not an outage.",
+  "merge_hazard": "RESOLVED. All six merges landed; the pin is bumped to 14 on main at d8ea93b8, matched by name. No merge hazard outstanding.",
   "operational_note": "T383 measured, and every driver should know: A LIVE FIRE EXPORTS FIRE_SNAPSHOT_OF, AND FIRE_NO_SNAPSHOT=1 DOES NOT OVERRIDE IT. Its first --probe inherited it and announced the REAL repo copy as its origin. Unset the three before probing the wrapper from inside a fire.",
   "fire_elapsed_note": "8.0h elapsed at T384 dispatch. Longest fire on record is 9.52h. T384 was told to commit incrementally and to do merge-blocking checks BEFORE the 95-minute drive.",
   "driver_error": "T393 was recorded as dispatched at 25e910b4 and NEVER SPAWNED. Caught at 14:40Z when its branch did not exist after 2h20m. Reset to pending. A dispatch record is only true if the dispatch happens; push-before-spawn protects against the record claiming LESS than reality and does nothing about the opposite."
