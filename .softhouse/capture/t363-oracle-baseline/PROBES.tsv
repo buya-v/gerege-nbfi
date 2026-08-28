@@ -90,3 +90,108 @@ txn	a29bd5eaeb1b	T359	20260828-140005	independent re-derivation of T352's residu
 cmd	T359-P01-residue-post	T359	20260828-140005	status 5 ERROR -- HTTP 400, comments exceeds max length 500. NO journal entry, but a permanent command-source row
 cmd	T359-P02-residue-post	T359	20260828-140005	status 5 ERROR -- HTTP 400, same cause. NO journal entry, but a permanent command-source row
 cmd	T359-P03-residue-post	T359	20260828-140005	status 1 PROCESSED -> txn a29bd5eaeb1b
+
+# ==========================================================================================
+# T388 ATTRIBUTION ROWS -- READY TO APPEND TO
+#     .softhouse/capture/t363-oracle-baseline/PROBES.tsv
+#
+# THEY ARE NOT APPENDED THERE BY T388, AND THAT IS A GRANT BOUNDARY, NOT AN OVERSIGHT.
+# T388's write grant is exactly `.softhouse/capture/t388-accrual-capture/` plus its handoff;
+# `PROBES.tsv` is outside it and its directory was concurrently held by another task in the
+# same fire. So the rows are staged HERE, verbatim and in the file's own format, and the
+# obligation is handed on.
+#
+# THE CONSEQUENCE, STATED PLAINLY: until these twenty-four rows are appended,
+#     bash .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh
+# WILL EXIT 1 and print L28/L29/L30/L31 and the twenty `T388-*` idempotency keys as
+# UNATTRIBUTED. That is the instrument working exactly as designed -- the absence of a
+# record is what goes red -- and it must be discharged by the next task that touches that
+# directory, not explained away.
+#
+# Fire 20260828-140005, tenant `gerege`, oracle pinned at 426a23544e8426a38ae43ae404670a0a7e85b9eb.
+# Floor at the time of this probe: acc_gl_journal_entry max id 75, m_portfolio_command_source
+# max id 359 -- BOTH ABOVE the floor rows already in PROBES.tsv (64 / 352), which is correct:
+# T352 and T359 moved it first and are already registered there.
+# ==========================================================================================
+
+# ---- fire 20260828-140005, task T388 -- FOUR accepted journal-entry transactions, TWENTY legs ----
+txn	L28	T388	20260828-140005	loan 8 DISBURSEMENT on the NEW ACCRUAL_PERIODIC product 63: gl 36 T388-1100 DEBIT / gl 35 T388-1000 CREDIT 1200000.000000 MNT. Slots 2 LOAN_PORTFOLIO and 1 FUND_SOURCE.
+txn	L29	T388	20260828-140005	THE FIRST ACCRUAL JOURNAL ENTRY IN THIS TENANT. Six legs on loan 8, entry_date 2026-02-15: DEBIT gl 41 T388-1200 24000.000000 through slot 7 INTEREST_RECEIVABLE, DEBIT gl 42 T388-1300 2500.000000 through slot 8 FEES_RECEIVABLE, DEBIT gl 43 T388-1400 1200.000000 through slot 9 PENALTIES_RECEIVABLE, against credits on slots 3 / 4 / 5.
+txn	L30	T388	20260828-140005	second accrual, six legs, entry_date 2026-03-15: 20195.380000 interest / 2500.000000 fee / 1200.000000 penalty, same three receivable slots.
+txn	L31	T388	20260828-140005	third accrual, six legs, entry_date 2026-04-15: 16314.670000 interest / 2500.000000 fee / 1200.000000 penalty, same three receivable slots.
+cmd	T388-G01-gl-fund-source	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 35 (T388-1000), slot 1 FUND_SOURCE
+cmd	T388-G02-gl-loan-portfolio	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 36 (T388-1100), slot 2 LOAN_PORTFOLIO
+cmd	T388-G03-gl-interest-on-loans	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 37 (T388-4000), slot 3 INTEREST_ON_LOANS
+cmd	T388-G04-gl-income-from-fees	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 38 (T388-4100), slot 4 INCOME_FROM_FEES
+cmd	T388-G05-gl-income-from-penalties	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 39 (T388-4200), slot 5 INCOME_FROM_PENALTIES
+cmd	T388-G06-gl-losses-written-off	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 40 (T388-5000), slot 6 LOSSES_WRITTEN_OFF
+cmd	T388-G07-gl-interest-receivable	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 41 (T388-1200), slot 7 INTEREST_RECEIVABLE
+cmd	T388-G08-gl-fees-receivable	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 42 (T388-1300), slot 8 FEES_RECEIVABLE
+cmd	T388-G09-gl-penalties-receivable	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 43 (T388-1400), slot 9 PENALTIES_RECEIVABLE
+cmd	T388-G10-gl-transfers-suspense	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 44 (T388-1500), slot 10 TRANSFERS_SUSPENSE
+cmd	T388-G11-gl-overpayment	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 45 (T388-2000), slot 11 OVERPAYMENT
+cmd	T388-G12-gl-income-from-recovery	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 46 (T388-4300), slot 12 INCOME_FROM_RECOVERY
+cmd	T388-G13-gl-goodwill-credit	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 47 (T388-5100), slot 13 GOODWILL_CREDIT
+cmd	T388-P02-create-accrual-product	T388	20260828-140005	status 1 PROCESSED -> LOANPRODUCT 63, the SECOND ACCRUAL_PERIODIC product in this tenant
+cmd	T388-P03-create-client	T388	20260828-140005	status 1 PROCESSED -> CLIENT 3, external id УБ90051423
+cmd	T388-P04-loan-application	T388	20260828-140005	status 5 ERROR -- HTTP 400, charges[1][amount] and charges[2][amount] mandatory. NO loan, but a permanent command-source row (id 375) and a BURNED idempotency key.
+cmd	T388-P05-loan-application	T388	20260828-140005	status 1 PROCESSED -> LOAN 8 on product 63, client 3
+cmd	T388-P06-loan-approve	T388	20260828-140005	status 1 PROCESSED -> LOAN 8 approved 15 January 2026
+cmd	T388-P07-loan-disburse	T388	20260828-140005	status 1 PROCESSED -> LOAN 8 disbursed 15 January 2026, loan transaction 28, journal transaction L28
+cmd	T388-A01-runaccruals	T388	20260828-140005	status 1 PROCESSED -> EXECUTE PERIODICACCRUALACCOUNTING tillDate 15 April 2026. Produced loan transactions 29/30/31 and journal transactions L29/L30/L31. Same code path as scheduled job 16.
+
+# ==========================================================================================
+# T390 -- AUTONOMOUS SCHEDULER MOVEMENT. A FOURTH BLIND SPOT, AND THE FIRST ROWS IN THIS FILE
+# THAT NAME NO TASK, BECAUSE NO TASK DID IT.
+#
+# T388 accrued loan 8 through 15 April 2026 by API (EXECUTE PERIODICACCRUALACCOUNTING, tillDate
+# 15 April 2026) and registered L28-L31 above. It stopped there. THE FINERACT SCHEDULER DID NOT.
+#
+# At 2026-08-28 16:01:00 UTC -- 00:01 on 2026-08-29 in Asia/Ulaanbaatar (+08), which is what the
+# cron `0 1 0 1/1 * ? *` means -- job 11 "Add Accrual Transactions" ran and accrued the remaining
+# THREE periods of loan 8, writing loan transactions 32/33/34 and journal entries 96-113, i.e.
+# transactions L32/L33/L34. [job_run_history id 12721, start 16:01:00.049, end 16:01:00.12,
+# status success; out/q4-job-run-history.txt.]
+#
+# WHY THIS BREAKS THE FILE'S MODEL, AND WHY IT IS NOT A DEFECT IN T388.
+# This file's obligation is "a task that fires a probe MUST append its rows in the same commit
+# as its handoff". Here there IS NO TASK. The writer is app user 2 `system`
+# [out/q7-who-is-user-2.txt] -- T388's own probes carry created_by 1 `mifos`. And the scheduler
+# DOES NOT PASS THE COMMAND BUS: m_portfolio_command_source stops at 379, T388's last key, with
+# no row for any of these eighteen legs [out/q2-command-source-tail.txt]. So the command-floor
+# coverage argument written into oracle-state-baseline.sh -- "every API-driven write lands a
+# command-source row" -- is TRUE AND IRRELEVANT to this movement. It is a fourth exception class
+# beside T371's (a) consumed sequence, (b) direct SQL, (c) update below the floor:
+#
+#     (d) THE SCHEDULER. An in-process Spring Batch job writes journal entries with no
+#         command-source row and no task to attribute them to. The ONLY reason this run went
+#         red rather than silent is that job 11 writes to acc_gl_journal_entry, which IS one of
+#         the two watched tables. A scheduled job touching any of the other 279 would be
+#         invisible.
+#
+# IS IT BOUNDED? YES, FOR LOAN 8, AND MEASURED RATHER THAN HOPED. Loan 8 matured 2026-07-15 and
+# has SIX schedule periods; six unreversed accrual transactions (29-34) now exist, the last dated
+# 2026-07-15 [out/q6-business-date-and-schedule.txt]. There is nothing left on loan 8 to accrue,
+# so tomorrow's 00:01 run adds nothing. m_business_date is EMPTY and the business-date config is
+# off [out/q8-business-date-table.txt], so the job accrues to the system date and caught up in
+# one sweep rather than dripping a period a day.
+#
+# WHAT IS *NOT* BOUNDED, AND IS THE REAL WARNING TO THE NEXT PROBER: job 11 is is_active = t and
+# so are jobs 2/6/7/9/10/12/13/14/15/16/17/18/19/20/21/22/30/31/35 [out/q3-jobs.txt]. THE NEXT
+# TASK THAT CREATES AN ACCRUAL-ACCOUNTING LOAN AND LEAVES IT PART-ACCRUED WILL HAVE THE
+# SCHEDULER FINISH THE JOB FOR IT OVERNIGHT, and this file will go red on rows that task never
+# fired. Register them here the same way, naming the job and the job_run_history id. Do NOT
+# widen the floor, and do NOT teach the instrument to wave through anything written by user 2 --
+# that would make every future scheduler write invisible, which is strictly worse than a red
+# run somebody has to read.
+#
+# THESE ROWS USE THE `txn` TYPE UNCHANGED. Field 3 carries `SCHEDULER-JOB-11` where a task id
+# would go. That is deliberate: the instrument's awk match is on field 2 and it prints field 3
+# verbatim, so no code change is needed and the output says SCHEDULER-JOB-11 in the place a
+# reader already looks for "who". Field 4 carries the fire that CAUSED it, not one that fired it.
+# ==========================================================================================
+
+# ---- fire 20260828-140005, AUTONOMOUS: scheduler job 11 completed T388's accrual series ----
+txn	L32	SCHEDULER-JOB-11	20260828-140005	NOT FIRED BY ANY TASK. Scheduled job 11 "Add Accrual Transactions", job_run_history 12721, 2026-08-28 16:01:00 UTC = 00:01 Asia/Ulaanbaatar. Six legs on loan 8, entry_date 2026-05-15, loan transaction 32: 12356.340000 interest / 2500.000000 fee / 1200.000000 penalty on gl 41/42/43 against 37/38/39. created_by 2 `system`; NO m_portfolio_command_source row exists for it.
+txn	L33	SCHEDULER-JOB-11	20260828-140005	same job, same run 12721. Six legs on loan 8, entry_date 2026-06-15, loan transaction 33: 8318.850000 interest / 2500.000000 fee / 1200.000000 penalty, same six accounts.
+txn	L34	SCHEDULER-JOB-11	20260828-140005	same job, same run 12721. Six legs on loan 8, entry_date 2026-07-15, loan transaction 34: 4200.610000 interest / 2500.000000 fee / 1200.000000 penalty. This is loan 8's MATURITY period -- the accrual series is now complete at 6 of 6 schedule periods and job 11 has nothing further to add for this loan.
