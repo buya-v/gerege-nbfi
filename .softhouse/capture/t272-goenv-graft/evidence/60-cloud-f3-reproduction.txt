@@ -4,17 +4,17 @@ T272 DRIVE (a) — the CLOUD's UNFIXED go-env.sh vs the GRAFTED one, same condit
 cloud ref   : d7a7ea35  (.softhouse/bin/go-env.sh out of the object store)
 condition   : no pinned toolchain + a go on PATH + a STALE inherited GOROOT
 stale GOROOT: <scratch>/no-such-goroot  (never created; -d is false)
-date        : 2026-08-28T00:09:38Z
+date        : 2026-08-28T00:16:27Z
 ------------------------------------------------------------------------
 R1 — the UNFIXED CLOUD form, DEFAULT mode. Reproducing F-3 (HIGH).
-  rc=0|src=substituted:/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/shim/go|goroot=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/no-such-goroot|goversion_rc=2|gobuild_rc=2
-  goversion_out=go: cannot find GOROOT directory: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/no-such-goroot
+  rc=0|src=substituted:/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/shim/go|goroot=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/no-such-goroot|goversion_rc=2|gobuild_rc=2
+  goversion_out=go: cannot find GOROOT directory: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/no-such-goroot
   its own SUBSTITUTING banner, verbatim:
   | gerege go-env: THE PINNED GO TOOLCHAIN IS NOT ON THIS HOST.
   | gerege go-env:   looked for an executable go/bin/go under, in order:
-  | gerege go-env:     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/offhost/.softhouse/toolchain   ABSENT
-  | gerege go-env: SUBSTITUTING the go already on PATH:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/shim/go
-  | gerege go-env:   go: cannot find GOROOT directory: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/no-such-goroot
+  | gerege go-env:     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/offhost/.softhouse/toolchain   ABSENT
+  | gerege go-env: SUBSTITUTING the go already on PATH:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/shim/go
+  | gerege go-env:   go: cannot find GOROOT directory: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/no-such-goroot
   | gerege go-env:   WHY: the pinned toolchain is gitignored and host-local, so it is absent on
   | gerege go-env:   every host but the one it was installed on. Refusing here would make the
   | gerege go-env:   harness unrunnable rather than safer — the compiler-absent refusals in
@@ -36,14 +36,14 @@ R2 — the GRAFTED file, DEFAULT mode, IDENTICAL conditions. (a): it must RUN.
   rc=0|src=fallback-path|goroot=UNSET|goversion_rc=0|gobuild_rc=0
   goversion_out=go version go1.26.6 darwin/arm64
   its banner, verbatim:
-  | go-env.sh: dropping inherited GOROOT=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/no-such-goroot — that directory does not exist.
+  | go-env.sh: dropping inherited GOROOT=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/no-such-goroot — that directory does not exist.
   | go-env.sh: the PINNED Go toolchain was NOT found on this host.
   | go-env.sh:   searched (needed <cand>/go/bin/go):
-  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/offhost/.softhouse/toolchain
-  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/offhost/.softhouse/bin/../../toolchain
-  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/offhost/.softhouse/toolchain
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
   | go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
-  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/shim/go
+  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/shim/go
   | go-env.sh:   go version go1.26.6 darwin/arm64
   | go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
   | go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
@@ -62,15 +62,15 @@ R3 — (b) GEREGE_GO_STRICT=1 on the GRAFTED file: a LOUD REFUSAL, rc 2.
   rc=2|src=refused|goroot=UNSET|goversion_rc=0|gobuild_rc=0
   goversion_out=go version go1.26.6 darwin/arm64
   its banner, verbatim:
-  | go-env.sh: dropping inherited GOROOT=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/no-such-goroot — that directory does not exist.
+  | go-env.sh: dropping inherited GOROOT=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/no-such-goroot — that directory does not exist.
   | go-env.sh: the PINNED Go toolchain was NOT found on this host.
   | go-env.sh:   searched (needed <cand>/go/bin/go):
-  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/offhost/.softhouse/toolchain
-  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/offhost/.softhouse/bin/../../toolchain
-  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/offhost/.softhouse/toolchain
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
   | go-env.sh: GEREGE_GO_STRICT is set, so this is a REFUSAL and not a substitution.
   | go-env.sh:   there IS a `go` on PATH and it was DELIBERATELY NOT adopted:
-  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/shim/go
+  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/shim/go
   | go-env.sh: Nothing was exported. Install the pinned toolchain, or set GEREGE_TOOLCHAIN,
   | go-env.sh: or unset GEREGE_GO_STRICT to allow a STATED fallback to the go on PATH.
   | go-env.sh: GEREGE_GO_SOURCE=refused, and SOURCING THIS FILE RETURNS 2 — this arm is
@@ -90,8 +90,8 @@ R4 — (c) the STALE GOROOT in BOTH modes, and the cloud form fails this BOTH wa
   ASSERT OK   : R4 grafted, DEFAULT : stale GOROOT dropped
   ASSERT OK   : R4 grafted, STRICT  : stale GOROOT dropped TOO (the graft sits AFTER the drop)
   ASSERT OK   : R4 grafted, STRICT  : and the drop is announced BEFORE the refusal
-  cloud+STRICT: rc=2|src=refused:strict|goroot=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/no-such-goroot|goversion_rc=2|gobuild_rc=2
-  cloud+STRICT: goversion_out=go: cannot find GOROOT directory: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.rvFI0QrXRv/no-such-goroot
+  cloud+STRICT: rc=2|src=refused:strict|goroot=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/no-such-goroot|goversion_rc=2|gobuild_rc=2
+  cloud+STRICT: goversion_out=go: cannot find GOROOT directory: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.ZjXz12rAF9/no-such-goroot
   ASSERT OK   : R4 cloud,  STRICT  : it does refuse with rc 2 (this is the half worth grafting)
   ASSERT OK   : R4 cloud,  STRICT  : *** but the stale GOROOT SURVIVES ITS REFUSAL TOO — F-3 is in BOTH cloud arms ***
 ------------------------------------------------------------------------
