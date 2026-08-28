@@ -1,0 +1,15 @@
+#!/bin/bash
+# T384 arm B -- THE WITNESS IS A HARD LINK TO THE MEMBER.
+# Two tracked paths, ONE inode, ONE git blob. The witness is a regular file, so no mode test
+# catches it; it names the member's basename only because it IS the member's own text.
+set -eu
+GD=.softhouse/guards
+FX=.softhouse/reviews/t384-review-t375/fixtures
+mkdir -p "$FX"
+cat > "$GD/zz-t384b-member.sh" <<'INNER'
+#!/usr/bin/env bash
+# zz-t384b-member.sh -- a planted, UNWIRED checker. Nothing in this harness invokes it.
+# GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/reviews/t384-review-t375/fixtures/witness-B.txt
+exit 0
+INNER
+ln "$GD/zz-t384b-member.sh" "$FX/witness-B.txt"

@@ -1,0 +1,14 @@
+#!/bin/bash
+# T384 arm C -- THE WITNESS IS A PLAIN COPY OF THE MEMBER.
+# Two inodes, still ONE git blob. "Another file names me", satisfied by my own words retyped.
+set -eu
+GD=.softhouse/guards
+FX=.softhouse/reviews/t384-review-t375/fixtures
+mkdir -p "$FX"
+cat > "$GD/zz-t384c-member.sh" <<'INNER'
+#!/usr/bin/env bash
+# zz-t384c-member.sh -- a planted, UNWIRED checker. Nothing in this harness invokes it.
+# GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/reviews/t384-review-t375/fixtures/witness-C.txt
+exit 0
+INNER
+cp "$GD/zz-t384c-member.sh" "$FX/witness-C.txt"

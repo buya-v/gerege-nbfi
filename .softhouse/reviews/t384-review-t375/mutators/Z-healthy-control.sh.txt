@@ -1,0 +1,5 @@
+#!/bin/bash
+# T384 arm Z -- THE HEALTHY CONTROL. No mutation at all. The bar must be GREEN on an
+# unmutated tree, or every red arm below it means nothing (P-50).
+set -eu
+:
