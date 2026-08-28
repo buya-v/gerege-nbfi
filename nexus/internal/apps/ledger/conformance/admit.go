@@ -245,14 +245,26 @@ func Admit(v *Vector, opts Options) []string {
 	// --- the capability claim is SCOPED TO THE OBSERVED SHAPE [T296] ---------
 	//
 	// `ledger.opening.balance.and.closure` names THREE shapes in its own
-	// description — defining opening balances after journal entries have been
-	// posted, an entry dated on or before the latest GLClosure, and a
+	// description — defining opening balances after a NON-CONTRA journal entry
+	// has been posted, an entry dated on or before the latest GLClosure, and a
 	// future-dated entry — and T294 flipped the row to in_graded_domain TRUE on
 	// the strength of the FIRST one only. [HISTORY, TRUE WHEN T296 WROTE IT AND NO
 	// LONGER TRUE: at that moment the other two were captured raw in
 	// .softhouse/capture/t287-closure-refusals and nothing promoted them. T295
 	// promoted both, and T305 then captured the ACCEPTING side of the first.
 	// See the adjudicated gate below.]
+	//
+	// [CORRECTED T322, and this is THE FIFTH SITE of a refuted rule. The first
+	// shape above used to read "after journal entries have been posted" — the
+	// oracle's own :814 message, which is WRONG: findNonContraTransactionIds
+	// EXCLUDES every transaction that touches the contra account and every entry
+	// an opening balance writes touches it (:796), so OPENING BALANCES DO NOT
+	// BLOCK EACH OTHER [T305, OB-ACCEPT-02: byte-identical bytes, HTTP 200 a
+	// second time, the first one REVERSED]. T305 corrected three sites, T320
+	// found a fourth (the registry row's own `description`), and this comment is
+	// the fifth — it is here BECAUSE it QUOTES that description, which is exactly
+	// how a wrong first field propagates: the longest field gets the correction
+	// and the shortest one gets copied. Both are fixed in T322's diff.]
 	//
 	// THE FLIP IS MEASURED TO WIDEN THE GATE, and this rule is what puts the
 	// width back. T296 built a closure-family refusal vector from T287's real
