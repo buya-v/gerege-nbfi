@@ -1,0 +1,63 @@
+reference implementations available: BSD date -j=0  /usr/bin/python3=1
+
+--- A. WELL-FORMED. mine must equal every reference present.
+  1970-01-01T00:00:00Z   mine=0             bsd=-             py=0             ok
+  1970-01-01T00:00:01Z   mine=1             bsd=-             py=1             ok
+  1999-12-31T23:59:59Z   mine=946684799     bsd=-             py=946684799     ok
+  2000-01-01T00:00:00Z   mine=946684800     bsd=-             py=946684800     ok
+  2000-02-29T12:00:00Z   mine=951825600     bsd=-             py=951825600     ok
+  2001-02-28T23:59:59Z   mine=983404799     bsd=-             py=983404799     ok
+  2004-02-29T00:00:00Z   mine=1078012800    bsd=-             py=1078012800    ok
+  2024-02-29T06:30:00Z   mine=1709188200    bsd=-             py=1709188200    ok
+  2026-08-28T14:00:05Z   mine=1787925605    bsd=-             py=1787925605    ok
+  2026-08-24T02:36:16Z   mine=1787538976    bsd=-             py=1787538976    ok
+  2026-01-31T00:00:00Z   mine=1769817600    bsd=-             py=1769817600    ok
+  2026-03-01T00:00:00Z   mine=1772323200    bsd=-             py=1772323200    ok
+  2026-12-31T23:59:59Z   mine=1798761599    bsd=-             py=1798761599    ok
+  2038-01-19T03:14:07Z   mine=2147483647    bsd=-             py=2147483647    ok
+  2038-01-19T03:14:08Z   mine=2147483648    bsd=-             py=2147483648    ok
+  2100-02-28T00:00:00Z   mine=4107456000    bsd=-             py=4107456000    ok
+  2100-03-01T00:00:00Z   mine=4107542400    bsd=-             py=4107542400    ok
+  2400-02-29T00:00:00Z   mine=13574563200   bsd=-             py=13574563200   ok
+  9999-12-31T23:59:59Z   mine=253402300799  bsd=-             py=253402300799  ok
+
+--- B. MALFORMED. mine must REFUSE every one (rc 1, nothing on stdout).
+  ''                             -> <REFUSED>    ok refused               empty
+  ' '                            -> <REFUSED>    ok refused               a space
+  'null'                         -> <REFUSED>    ok refused               the string null
+  'None'                         -> <REFUSED>    ok refused               str(None) -- F-T346-1
+  'NULL'                         -> <REFUSED>    ok refused               SQL-ish null
+  'pending'                      -> <REFUSED>    ok refused               a hand-writer's not-yet
+  'false'                        -> <REFUSED>    ok refused               a bool spelled as a string
+  '0'                            -> <REFUSED>    ok refused               a zero
+  '-'                            -> <REFUSED>    ok refused               a dash
+  '2026-08-28'                   -> <REFUSED>    ok refused               date only, no time
+  '2026-08-28T14:00:05'          -> <REFUSED>    ok refused               no Z
+  '2026-08-28T14:00:05+08:00'    -> <REFUSED>    ok refused               an offset, not UTC
+  '2026-08-28t14:00:05z'         -> <REFUSED>    ok refused               lowercase separators
+  '2026-08-28 14:00:05Z'         -> <REFUSED>    ok refused               space instead of T
+  '26-08-28T14:00:05Z'           -> <REFUSED>    ok refused               two-digit year
+  '2026-8-28T14:00:05Z'          -> <REFUSED>    ok refused               unpadded month
+  '2026-13-01T00:00:00Z'         -> <REFUSED>    ok refused               month 13
+  '2026-00-01T00:00:00Z'         -> <REFUSED>    ok refused               month 0
+  '2026-02-30T00:00:00Z'         -> <REFUSED>    ok refused               30 February
+  '2026-02-29T00:00:00Z'         -> <REFUSED>    ok refused               29 Feb in a NON-leap year
+  '2100-02-29T00:00:00Z'         -> <REFUSED>    ok refused               29 Feb in a century non-leap year
+  '2026-04-31T00:00:00Z'         -> <REFUSED>    ok refused               31 April
+  '2026-08-00T00:00:00Z'         -> <REFUSED>    ok refused               day 0
+  '2026-08-32T00:00:00Z'         -> <REFUSED>    ok refused               day 32
+  '2026-08-28T24:00:00Z'         -> <REFUSED>    ok refused               hour 24
+  '2026-08-28T14:60:00Z'         -> <REFUSED>    ok refused               minute 60
+  '2026-08-28T14:00:61Z'         -> <REFUSED>    ok refused               second 61
+  '2026-08-28T14:00:05Z '        -> <REFUSED>    ok refused               trailing space
+  ' 2026-08-28T14:00:05Z'        -> <REFUSED>    ok refused               leading space
+  '2026-08-28T14:00:05Zx'        -> <REFUSED>    ok refused               trailing junk
+  '202X-08-28T14:00:05Z'         -> <REFUSED>    ok refused               a letter in the year
+  '2026-08-28T14:00:05.123Z'     -> <REFUSED>    ok refused               fractional seconds
+
+--- C. LEAP SECOND. Deliberately ACCEPTED as :60 and mapped onto the next second,
+    which is what a POSIX epoch can represent. BSD date does the same; python's
+    strptime refuses it. Recorded, not treated as a disagreement.
+  2016-12-31T23:59:60Z   mine=1483228800  bsd=
+
+ROWS=51 DISAGREEMENTS=0

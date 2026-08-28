@@ -1,0 +1,16 @@
+file=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a97cc4fa528064e94/.softhouse/capture/t353-t342-conditions/../../bin/fire-program.sh  host=Buyanmunkhs-Mac-mini  LIVE pid=4510  started_at=2026-08-28T06:56:15Z (fresh)
+Correct answer for every row: HELD-* . FREE-released here = a LIVE lock declared free.
+
+  released_at=null                     -> verdict=HELD-default
+  released_at="2026-08-28T06:00:00Z"   -> verdict=FREE-released
+  released_at="null"                   -> verdict=HELD-default
+  released_at="None"                   -> verdict=HELD-default
+  released_at="NULL"                   -> verdict=HELD-default
+  released_at=" "                      -> verdict=HELD-default
+  released_at="   "                    -> verdict=HELD-default
+  released_at="false"                  -> verdict=HELD-default
+  released_at="0"                      -> verdict=HELD-default
+  released_at="no"                     -> verdict=HELD-default
+  released_at="-"                      -> verdict=HELD-default
+  released_at="pending"                -> verdict=HELD-default
+  released_at=""                       -> verdict=HELD-default

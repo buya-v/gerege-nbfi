@@ -1,0 +1,9 @@
+# T353 / CONDITION 1. A GNU/musl Linux host with the same zsh the Mac runs (5.9), so the
+# REAL `fire-program.sh --lock-signals` can be executed off-Mac instead of reasoned about.
+# The point of the exercise is `/bin/date`: on this image it is busybox, which -- like GNU
+# coreutils and like uutils -- has no `-j`. Nothing here is a build of the product; it is a
+# test host. No database, no oracle, no network at run time.
+FROM alpine:3
+RUN apk add --no-cache zsh git python3 coreutils
+# `coreutils` puts GNU date at /usr/bin/date and leaves busybox at /bin/date, which is what
+# the wrapper hard-codes. Both are wrong for `-j`; having both installed makes that visible.

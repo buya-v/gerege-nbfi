@@ -1,0 +1,24 @@
+=== host ===
+Linux 27ebd53b1350 6.12.76-linuxkit #1 SMP Sat Jul 11 11:18:11 UTC 2026 aarch64 GNU/Linux
+zsh 5.9
+/bin/date -> /bin/coreutils
+/usr/bin/python3: Python 3.14.7
+
+host=27ebd53b1350 live=26 dead=27 now=2026-08-28T06:36:16Z old=2026-08-24T02:36:16Z
+
+A01  ok             want=HELD            got=HELD-default     live holder, fresh started_at
+     lock_present=1 released_at=<null> started_age=<unreadable> tip_age=<unreadable> pid_state=alive_here
+B01  ok             want=TAKE-dead-pid   got=TAKE-dead-pid    dead holder on this host (arm 2)
+     lock_present=1 released_at=<null> started_age=<unreadable> tip_age=<unreadable> pid_state=dead_here
+C01  *** FAIL-SHUT  want=TAKE-ceiling    got=HELD-default     100 h old -> arm 3 CEILING
+     lock_present=1 released_at=<null> started_age=<unreadable> tip_age=<unreadable> pid_state=alive_here
+C02  *** FAIL-SHUT  want=TAKE-ceiling    got=HELD-default     100 h old, compact separators
+     lock_present=1 released_at=<null> started_age=<unreadable> tip_age=<unreadable> pid_state=alive_here
+D01  ok             want=FREE-released   got=FREE-released    genuinely released (arm 1)
+     lock_present=1 released_at=2026-08-28T06:36:16Z started_age=<unreadable> tip_age=<unreadable> pid_state=alive_here
+D02  *** FAIL-OPEN  want=HELD            got=FREE-released    released_at is the STRING None (F-T346-1)
+     lock_present=1 released_at=None started_age=<unreadable> tip_age=<unreadable> pid_state=alive_here
+D03  *** FAIL-OPEN  want=HELD            got=FREE-released    released_at is the STRING pending
+     lock_present=1 released_at=pending started_age=<unreadable> tip_age=<unreadable> pid_state=alive_here
+
+ROWS=7 FAIL_OPEN=2 FAIL_SHUT=2

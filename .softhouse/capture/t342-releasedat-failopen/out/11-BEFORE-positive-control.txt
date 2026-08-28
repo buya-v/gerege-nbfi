@@ -1,0 +1,17 @@
+wrapper under test: /private/tmp/t342-old-fire-program.sh
+dead pid used: 6006 (running: no)
+
+ARM 1 must still fire on a WELL-FORMED release:
+  OK    released_at a real timestamp, key LAST               -> FREE-released
+  OK    released_at a real timestamp, key in the MIDDLE      -> FREE-released
+  OK    released_at a real timestamp, COMPACT separators     -> FREE-released
+
+ARM 2 must still fire on a DEAD holder on this host:
+  OK    dead pid on this host, pid key in the middle         -> TAKE-dead-pid
+  FAIL  dead pid on this host, pid key LAST (was pid_state=absent before T342) -> HELD-live  (wanted TAKE-dead-pid)
+  FAIL  dead pid on this host, COMPACT separators (was absent before T342) -> HELD-live  (wanted TAKE-dead-pid)
+
+ARM 0 must still fire when there is no lock at all:
+  OK    no LOCK file                                         -> FREE-no-lock
+
+RESULT: FAIL — 2 positive control(s) regressed. The fix is fail-SHUT, not fail-closed.
