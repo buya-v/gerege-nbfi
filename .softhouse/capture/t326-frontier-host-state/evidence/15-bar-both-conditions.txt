@@ -1,0 +1,14 @@
+T326 -- THE WHOLE BAR IN BOTH DISK CONDITIONS
+root: /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff
+HEAD: 7e3c6113cb15bc680ed71488417610c257e0848f
+======================================================================================
+  A_bare                 exit=0   probe=PRESENT  value=up        -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff/.softhouse/capture/t326-frontier-host-state/instruments/../evidence/20-bar-A_bare.txt
+  B_hoststate            exit=0   probe=PRESENT  value=up        -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff/.softhouse/capture/t326-frontier-host-state/instruments/../evidence/20-bar-B_hoststate.txt
+--------------------------------------------------------------------------------------
+  PASS  the two conditions AGREE: exit=0 probe=PRESENT value=up
+  PASS  identical T316 census cardinals in both conditions:
+        conformance:   T316-DEADPATH-CENSUS: corpus=1210 deadFiles=76 deadOccurrences=109 resolving=1073 indeterminate=70 prose=288
+  PASS  the two bar transcripts are BYTE IDENTICAL (566 lines each).
+--------------------------------------------------------------------------------------
+T326-BOTHCONDITIONS: GREEN fail=0
+EXIT=0
