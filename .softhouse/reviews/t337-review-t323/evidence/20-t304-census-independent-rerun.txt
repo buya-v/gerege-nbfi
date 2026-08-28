@@ -1,0 +1,29 @@
+T337 independent re-run of T304's 10-population-census.py on the delivered tree (f2484f67).
+Command: python3 .softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py
+
+SELECTOR: tracked AND (ext in .sh/.py/.zsh/.bash/.psql OR mode 100755 OR shebang)
+POPULATION SIZE: 1401 instruments
+DESTRUCTIVE-SITE HITS: 6291 across 1036 files
+
+op class distribution (column 4), header row excluded:
+4971 redirect
+ 609 rm
+ 261 truncate
+ 218 py-rmtree
+  73 mv
+  53 inplace-edit
+  46 tee
+  36 git-restore
+  24 git-clean
+
+redirect share: 4971 / 6291 = 79.02%  -- T323's figure reproduced exactly.
+
+The lexical defect, read straight off the matcher
+  redirect = (?<![0-9<>&|])>\s*(?!&|\s*>)[A-Za-z0-9_$"'./{-]
+'-' is NOT in the lookbehind exclusion set, so '->' matches; and a bare '>' with spaces
+around it matches, so numeric comparison matches. Both confirmed against real rows below.
+
+Money-adjacent rows this classes as 'destructive' (T323's example, reproduced):
+.softhouse/reviews/t47-probe/t47_edit_1.py	ext	277	redirect	"packed(a, b) = k − [a.day > b.day]                       # ChronoUnit.MONTHS.between, :1435\n"
+.softhouse/reviews/t47-probe/t47_edit_1.py	ext	280	redirect	"packed(a, b) != clamped(a, b)  <=>  b.day == len(b)  AND  a.day > b.day\n"
+.softhouse/reviews/t47-probe/t47_edit_1.py	ext	285	redirect	"equivalence is exact: `min(a.day, len(b)) > b.day` implies `a.day > b.day`, so "
