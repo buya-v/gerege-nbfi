@@ -1683,6 +1683,170 @@ guard_no_fail_open_instruments() {
   return 0
 }
 
+
+# ---------------------------------------------------------------------------
+# guard_pnumber_citations: A CITED P-NUMBER MUST CARRY ITS OWN RULE'S SENTENCE.
+# [T282 built and drove it; T331 wired it.]
+# ---------------------------------------------------------------------------
+# T282 — P-NUMBER CITATION DRIFT.  The predicate is the SENTENCE, never the id:
+# a guard asking only "is P-n defined?" returns PASS on every recorded instance
+# of this defect, because every drifted citation names an id that EXISTS.
+# Demonstrated at .softhouse/capture/t282-pnumber-drift/red/20-existence-only-on-RED.txt.
+#
+# ===========================================================================================
+# WIRED HARD, AND HERE IS THE ARGUMENT.  T331 was told not to inherit the tier, so it did not.
+# ===========================================================================================
+# THE OBJECTION, STATED AT ITS STRONGEST.  This defect's measured materiality was LOW twice,
+# and for a specific reason: every prompt wrote the full rule text beside the id, so the number
+# was decoration and the sentence carried the instruction. Not one worker was ever misdirected.
+# A HARD guard exits 2 BEFORE the probe line prints. Does a citation-drift defect deserve that?
+#
+# FOUR MEASUREMENTS, taken by T331 at .softhouse/capture/t331-wire-pnumber-checker/out/, not
+# reasoned about:
+#
+#  (1) THE BRIEF'S PREMISE ABOUT THE SIGNAL IS FALSE, and P-84's own text refutes it. P-84 is
+#      "EXIT 2 WITH NO PROBE LINE" IS THE GUARD WORKING — READ THE ABSENCE, NOT THE VALUE:
+#      it separates a HARD-guard refusal from an ORACLE OUTAGE, and says nothing about money.
+#      The instance it was written from was p5-probe.sh moving the fail-open frontier 10 -> 11
+#      — an instrument-hygiene guard of exactly this guard's class, not a money violation.
+#      Eleven guards above already share this exit; gofmt is one of them.
+#
+#  (2) THERE IS NO SOFT TIER IN THIS FILE, AND INVENTING ONE IS THE DEFECT. A SOFT wiring
+#      prints a line that nothing depends on — P-22, "a guard, a canary, or a control that
+#      cannot fail is worse than none, because it is believed". That sentence is already the
+#      argument this file records at the T323 block below, and a line scrolling past in a
+#      3,800-line report is T165 verbatim: the true statement was in the output and the reader
+#      took the summary instead.
+#
+#  (3) THE CHECKER IS ALREADY TWO-TIERED, so a SOFT wiring would be a THIRD tier that deletes
+#      the second. Its REPORT tier is generous and prints on every run (81 findings today, in
+#      committed evidence, ratified ADRs and orchestrator-owned files — all corrected FORWARD
+#      in the patterns.md errata, never edited in place). Its FATAL tier is the DIRECTIVE zone
+#      alone, which is the only class that is BOTH read as instruction by workers not yet born
+#      AND lawfully repairable in place by an ordinary task. Wiring SOFT obtains the reporting
+#      that wiring at all already obtains, and forfeits the only thing the tiers were built for.
+#
+#  (4) T326's LESSON CANNOT BITE HERE, and that was checked rather than hoped. "WIRING A GUARD
+#      HARD IS THE FIRST TIME ANYONE FINDS OUT WHETHER ITS PIN IS A MEASUREMENT OR A SNAPSHOT
+#      OF SOMEBODY'S DISK" — this guard HAS NO PIN. It derives its register from patterns.md
+#      and its corpus from `git ls-files -z` [VERIFIED: check-pnumber-citations.py:719], never
+#      from the disk, so the four-disk-conditions failure that aborted T323's first merge of
+#      the frontier guard has no purchase on it.
+#
+# RESIDUAL RISK, MEASURED AND STATED SO IT IS NOT REDISCOVERED AS A SURPRISE — this is the real
+# cost of HARD and it is not small. With the zone restriction LIFTED the fatal predicate fires
+# on 41 of 9,016 sites tree-wide, of which only 10 are filed TRUE-DRIFT; 28 of the other 31 are
+# in raw SWEEP OUTPUTS — dumps of citations gathered from elsewhere, where a citation is a
+# MENTION and not a claim. So the DIRECTIVE zone is doing 100% of the work of keeping this
+# guard honest, and the fatal scorer alone would be ~76% false positives.
+# In the directive zone today: 6 findings, 0 fatal. The CLOSEST is IN THIS VERY FILE — the
+# `P-66/P-70` citation in guard_no_host_state_in_lint_corpus's STATED SCOPE paragraph below,
+# named by its text and not by its ordinal because inserting this block moved it :1866 -> :2008
+# and a line number into a moving file is the same defect as a stale count. It scores 8 against
+# a fatal floor of 9, ONE POINT below firing, and T331 adjudicated it a FALSE POSITIVE: it cites
+# `P-66/P-70 — "not found" is a statement about the search`, which is CORRECT [VERIFIED:
+# patterns.md defines P-70 as four ways this program stated a search result as a world fact, and
+# restates "P-66 / P-70 — 'not found' is a statement about the search" verbatim], and the
+# extractor merely swept the gloss past the citation's own sentence into the paragraph beneath
+# it about population and corpus — which is P-76's subject, not P-70's.
+# IT IS DELIBERATELY LEFT ALONE. Rewording a correct citation to move a heuristic score is
+# fitting the tree to the guard, and this file already records that clearing a guard by removing
+# its subject is the move a reviewer should distrust most.
+# FILED: FU-T331-1 (the margin) and FU-T331-2 (MISDIRECTING has no declaration escape hatch, so
+# a false positive inside patterns.md can only be answered by rewording the register of record).
+#
+# FAIL-CLOSED DIRECTION, FOR THIS GUARD ALONE: it fails closed towards "a DIRECTIVE file states
+# one rule's sentence under another rule's number, near-verbatim, and states the cited rule not
+# at all". It asserts nothing about evidence, nothing about ratified ADRs, nothing about
+# orchestrator-owned files — P-31, never snapshot a file the orchestrator is actively editing —
+# and nothing about whether an id merely exists.
+#
+# EXIT SEMANTICS, never conflated: 0 = no directive-zone fatal finding; 1 = there is one;
+# 3 = the checker's own refusal to run (register unreadable, `git ls-files` failed). run_guards
+# folds ANY non-zero into failed=1 and exits EXIT_UNUSABLE — "no verdict is available", never
+# "FAIL".
+#
+# COST, WALL CLOCK, MEASURED ON THIS HOST BY T331 over a ~9,200-site corpus — not estimated:
+#     --selftest (11 synthetic fixtures, reads no repo file)                0.14 s
+#     the graded run (git ls-files, whole tree, sentence scoring)          17.26 s
+#     TOTAL ADDED TO EVERY GRADED RUN                                      ~17.4 s
+# That makes it the SECOND most expensive guard in this file, after guard_reconciler_ownership
+# (30.3 s). The selftest is 0.8% of that and is not optional: a checker whose predicate has
+# stopped discriminating reports a clean tree in exactly the same words as a clean tree.
+#
+# A TENSION, STATED RATHER THAN QUIETLY RESOLVED. T282's anchor 2 puts this call in the FIRST
+# guard block, which is in historical order, so 17.4 s is now paid BEFORE guard_capture_namespace
+# (0.4 s) and guard_dead_path_frontier (1.3 s) — and the T323 block below says in terms that its
+# three are "registered CHEAPEST FIRST so a fast refusal prints before the 30-second one is paid
+# for". T331 kept T282's position anyway: the wiring is then auditable line-for-line against the
+# diff T282 published, and the cost of the wrong order is 1.7 s on runs that were going to refuse
+# regardless. If a reviewer disagrees the fix is to move ONE LINE below guard_dead_path_frontier;
+# nothing else depends on the position.
+# ---------------------------------------------------------------------------
+guard_pnumber_citations() {
+  local chk="$REPO_ROOT/.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py"
+  if [ ! -f "$chk" ]; then
+    warn "conformance: THE P-NUMBER CITATION CHECKER IS ABSENT: $chk"
+    warn "conformance: it is wired into this guard, so its absence is a REFUSAL and never a pass."
+    return 1
+  fi
+  # THE INTERPRETER IS CHECKED BY NAME, SEPARATELY FROM THE SELFTEST.  T331 addition, and it is
+  # a diagnosis fix rather than a strength change: without it an absent python3 makes the
+  # subshell below exit 127 and this guard reports "FAILED ITS OWN SELFTEST" — fail-closed, but
+  # naming the wrong cause. Same shape and same refusal as guard_reconciler_ownership.
+  if [ ! -x /usr/bin/python3 ]; then
+    warn "conformance: guard_pnumber_citations: /usr/bin/python3 is absent. The checker cannot"
+    warn "conformance: run. It REFUSES rather than degrading to a smaller green."
+    return 1
+  fi
+  local out rc
+  out="$(mktemp "${TMPDIR:-/tmp}/conformance-pnumber.XXXXXXXXXX")" || return 1
+
+  # SELFTEST FIRST. A checker whose predicate has stopped discriminating would
+  # report a clean tree in exactly the same words as a clean tree (P-22: a guard,
+  # a canary, or a control that cannot fail is worse than none, because it is
+  # believed).
+  if ! ( cd "$REPO_ROOT" && /usr/bin/python3 "$chk" --selftest ) >"$out" 2>&1; then
+    warn "conformance: the P-number citation checker FAILED ITS OWN SELFTEST. Its verdict on this"
+    warn "conformance: tree is worthless until that is fixed."
+    LC_ALL=C sed -n '1,20p' "$out" >&2
+    rm -f "$out"; return 1
+  fi
+
+  ( cd "$REPO_ROOT" && /usr/bin/python3 "$chk" ) >"$out" 2>&1
+  rc=$?
+
+  # PRESENCE BEFORE VALUE (P-84: "exit 2 with no probe line" is the guard working
+  # — read the ABSENCE, not the value). A verdict line that was never PRINTED is a
+  # crash, and it must never be read as a clean run.
+  if ! LC_ALL=C grep -aqE '^PNUMBER-CITATIONS: VERDICT ' "$out"; then
+    warn "conformance: the P-number citation checker printed NO VERDICT line (exit $rc). It did not"
+    warn "conformance: run, or did not finish. Silence here reads exactly like a clean register."
+    LC_ALL=C sed -n '1,20p' "$out" >&2
+    rm -f "$out"; return 1
+  fi
+  if [ "$rc" -ne 0 ] && [ "$rc" -ne 1 ]; then
+    warn "conformance: the P-number citation checker exited $rc, which is neither clean (0) nor"
+    warn "conformance: violations (1). 3 is its own refusal-to-run; anything else is a crash."
+    LC_ALL=C sed -n '1,20p' "$out" >&2
+    rm -f "$out"; return 1
+  fi
+
+  LC_ALL=C grep -aE '^PNUMBER-CITATIONS: (register|sites|skipped|declared|  )' "$out" \
+    | while IFS= read -r l; do say "conformance:   $l"; done
+  if [ "$rc" -ne 0 ]; then
+    warn "conformance: A CITED P-NUMBER CARRIES A RULE SENTENCE THAT patterns.md DEFINES UNDER A"
+    warn "conformance: DIFFERENT NUMBER, in a DIRECTIVE file — a file that instructs future workers."
+    LC_ALL=C grep -aE '^PNUMBER-CITATIONS: (FATAL|VERDICT)' "$out" >&2
+    warn "conformance: The remedy is to write the sentence the rule wants: correct the id, or state"
+    warn "conformance: the cited rule. EXIT 2 — no verdict is available. This is NOT a pass."
+    rm -f "$out"; return 1
+  fi
+  say "conformance:   P-number citations: VERDICT PASS (evidence-zone drift is REPORTED, never"
+  say "conformance:   fatal, and is corrected FORWARD in the patterns.md errata — never in place)."
+  rm -f "$out"
+  return 0
+}
 # ---------------------------------------------------------------------------
 # guard_no_host_state_in_lint_corpus: THE FAIL-OPEN FRONTIER MUST BE A PROPERTY
 # OF THE TREE AND NOT OF THIS MAC'S /tmp.  [T273]
@@ -2767,6 +2931,7 @@ run_guards() {
   guard_ledger_invariants             || failed=1
   guard_no_fail_open_instruments      || failed=1
   guard_no_host_state_in_lint_corpus  || failed=1
+  guard_pnumber_citations             || failed=1        # T282, wired HARD by T331
   guard_accepting_side_gap_declared   || failed=1
   # T323 — the three guards T299, T316 and T319 each built, drove red AND green, and could not
   # wire because this file was assigned to somebody else. Each joins the `failed=1` tally rather
