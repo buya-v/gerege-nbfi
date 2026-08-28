@@ -6,14 +6,14 @@
       ".zsh",
       ".bash"
     ],
-    "corpus_size": 1285,
+    "corpus_size": 1318,
     "loop_factor": 4
   },
   "counts": {
-    "TEARDOWN": 21,
-    "SUFFICIENT": 6,
+    "TEARDOWN": 25,
+    "SUFFICIENT": 8,
     "SUFFICIENT-TARGETED": 3,
-    "ISOLATED": 6,
+    "ISOLATED": 7,
     "DECORATIVE": 1
   },
   "rows": [
@@ -146,6 +146,54 @@
         "W"
       ],
       "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/t145-analysis-float/bin/differential-confirm.py",
+      "verdict": "SUFFICIENT",
+      "latent_commit_gap": true,
+      "porcelain_assertion": true,
+      "restore_idioms": {
+        "checkout_wt": [
+          67
+        ]
+      },
+      "restore_multiplicity": 52,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [],
+      "cleared_classes": [
+        "W"
+      ],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/t145-analysis-float/bin/differential.py",
+      "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
+      "restore_idioms": {
+        "reset_mixed": [
+          62
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "C",
+        "R",
+        "S"
+      ],
+      "cleared_classes": [],
+      "cleared_anywhere": [
+        "S"
+      ],
+      "uncleared_classes": [
+        "C",
+        "R",
+        "S"
+      ]
     },
     {
       "path": ".softhouse/capture/t273-residue/instruments/50-red-drive.sh",
@@ -565,6 +613,129 @@
       ]
     },
     {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/drive-reset-contamination-t321.py",
+      "verdict": "ISOLATED",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
+      "restore_idioms": {
+        "checkout_wt": [
+          151,
+          163,
+          198,
+          329,
+          338,
+          380
+        ],
+        "clean_plain": [
+          151,
+          153,
+          159,
+          160,
+          201,
+          329,
+          334,
+          338
+        ],
+        "clean_x": [
+          162,
+          164,
+          167,
+          200,
+          325
+        ],
+        "reset_hard": [
+          153,
+          157,
+          164,
+          166,
+          196,
+          325,
+          332,
+          357
+        ],
+        "reset_mixed": [
+          155,
+          197
+        ],
+        "restore_wt": [
+          199
+        ],
+        "rm_targeted": [
+          189,
+          265,
+          313,
+          316,
+          389
+        ]
+      },
+      "restore_multiplicity": 40,
+      "fresh_repo_multiplicity": 19,
+      "mutation_classes": [
+        "C",
+        "I",
+        "R",
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "C",
+        "U"
+      ],
+      "cleared_anywhere": [
+        "C",
+        "I",
+        "S",
+        "U",
+        "W"
+      ],
+      "uncleared_classes": [
+        "I",
+        "R",
+        "S",
+        "W"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py",
+      "verdict": "SUFFICIENT",
+      "latent_commit_gap": true,
+      "porcelain_assertion": true,
+      "restore_idioms": {
+        "clean_x": [
+          347
+        ],
+        "reset_hard": [
+          346
+        ],
+        "rm_targeted": [
+          228,
+          427,
+          430,
+          467
+        ]
+      },
+      "restore_multiplicity": 13,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "I",
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "I",
+        "S",
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
       "path": ".softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh",
       "verdict": "SUFFICIENT",
       "latent_commit_gap": true,
@@ -630,6 +801,84 @@
       "uncleared_classes": [
         "R",
         "S",
+        "U",
+        "W"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t328-date-rule-promotion/instruments/80-red-drive-tripwire.sh",
+      "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
+      "restore_idioms": {
+        "checkout_wt": [
+          35,
+          93,
+          112
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": [
+        "U",
+        "W"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t328-date-rule-promotion/instruments/95-frontier-delta.sh",
+      "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
+      "restore_idioms": {
+        "checkout_wt": [
+          43,
+          108
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": [
+        "U",
+        "W"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t331-wire-pnumber-checker/bin/drive-through-the-route.sh",
+      "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
+      "restore_idioms": {
+        "checkout_wt": [
+          76
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": [
         "U",
         "W"
       ]

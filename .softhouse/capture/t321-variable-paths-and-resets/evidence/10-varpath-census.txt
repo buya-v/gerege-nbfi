@@ -1,5 +1,5 @@
 SELECTOR, stated as a limit on the search:
-  corpus     : git ls-files '.softhouse/*.py'  ->  667 tracked python instruments
+  corpus     : git ls-files '.softhouse/*.py'  ->  686 tracked python instruments
   method     : AST abstract interpretation. Assign-once constant propagation; a name
                assigned twice is POISONED, never resolved to the last value seen.
   folds      : str + str, pathlib `/`, f-strings, os.path.join, Path(...), .joinpath
@@ -30,8 +30,8 @@ SELECTOR, stated as a limit on the search:
   frontier): 40 rows across 10 files -- listed in --json, not here, because putting
   them in the headline would make this instrument a wolf-crier.
 
-T321-VARPATH-CENSUS: corpus=667 assembledLive=131 assembledDead=54 invisibleToLiteralCensus=52 ofWhichRuntimeToolchain=40 ofWhichOther=12 unresolvable=381
-      UNRESOLVABLE is the MEASURED SIZE OF THE HOLE, not a defect count: 381 expressions
+T321-VARPATH-CENSUS: corpus=686 assembledLive=131 assembledDead=54 invisibleToLiteralCensus=52 ofWhichRuntimeToolchain=40 ofWhichOther=12 unresolvable=396
+      UNRESOLVABLE is the MEASURED SIZE OF THE HOLE, not a defect count: 396 expressions
       rooted at a `.softhouse/` literal whose components are not statically known.
       Nothing about them is decidable by reading -- see probe_variable_paths_t321.py,
       which removes the dependency and observes the exit (P-95).

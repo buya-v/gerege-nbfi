@@ -193,6 +193,10 @@ def enforced_set(root: Path):
                     toks.append("$REPO_ROOT")
                 elif "$" in t:
                     drop.append(t)
+                    # a flag whose VALUE was dropped must go too, or the target gets a dangling
+                    # `--tool` and usage-errors -- which would look exactly like a refusal.
+                    if toks and toks[-1].startswith("-"):
+                        drop.append(toks.pop())
                 else:
                     toks.append(t)
             if toks and rel not in argv_tail:
@@ -278,6 +282,7 @@ def probe_tokens(stdout, stderr):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--max-arms", type=int, default=200)
+    ap.add_argument("--max-per-instrument", type=int, default=8)
     ap.add_argument("--json", default=str(HERE / "evidence/40-varpath.json"))
     args = ap.parse_args()
 
@@ -385,6 +390,7 @@ def main():
                 continue
             invisible.add(n)
         obs[rel] = {"exit": rc, "n_touched": len(paths), "paths": sorted(paths),
+                    "kinds": {k: sorted(v) for k, v in paths.items()},
                     "invisible_to_literal_census": sorted(invisible),
                     "tracer_loaded": loaded,
                     "probe_tokens": sorted(probe_tokens(out, err))}
@@ -413,7 +419,22 @@ def main():
         print("\n  %s -- BASELINE exit=%s probeTokens=%s" % (rel, brc, sorted(btok) or "none"))
         if not reset_and_attest("baseline of " + rel):
             return 2
-        cands = [p for p in obs[rel]["paths"] if (clone / p).exists()]
+        # NOT EVERY TOUCH IS A DEPENDENCY. `50-failopen-lint.py` walks the whole corpus and
+        # stat()s 1243 files; removing one of them tests nothing about the lint and would spend
+        # the whole budget proving it. So a removal candidate must have been OPENED, READ or
+        # EXECUTED -- not merely enumerated -- and the ones INVISIBLE TO THE LITERAL CENSUS go
+        # first, because they are the ones only this method could have nominated. The per-
+        # instrument cap is PRINTED beside the count so nobody reads the arm total as a
+        # population (P-67: both terms, always).
+        READKINDS = {"open", "Path.open", "Path.read_text", "Path.read_bytes", "argv"}
+        kinds = obs[rel]["kinds"]
+        inv = set(obs[rel]["invisible_to_literal_census"])
+        pool = [p for p in obs[rel]["paths"]
+                if (clone / p).exists() and (READKINDS & set(kinds.get(p, [])))]
+        pool.sort(key=lambda p: (0 if p in inv else 1, p))
+        cands = pool[:args.max_per_instrument]
+        print("     candidates: %d opened/executed of %d touched; driving %d (cap %d)"
+              % (len(pool), obs[rel]["n_touched"], len(cands), args.max_per_instrument))
         for p in cands:
             if arms >= args.max_arms:
                 break

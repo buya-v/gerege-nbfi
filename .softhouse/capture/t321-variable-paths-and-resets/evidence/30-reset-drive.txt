@@ -1,6 +1,6 @@
 T321 reset-contamination drive
   guard under test : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/.softhouse/guards/repo-state-attest.sh
-  population from  : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/.softhouse/capture/t321-variable-paths-and-resets/evidence/20-reset-sweep.json (37 rows, 1 DECORATIVE)
+  population from  : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/.softhouse/capture/t321-variable-paths-and-resets/evidence/20-reset-sweep.json (44 rows, 1 DECORATIVE)
   scratch root     : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T (refused if it resolves inside the repo)
 
 BLOCK K -- GROUND TRUTH: what each restore idiom actually clears

@@ -1,5 +1,5 @@
 {
-  "corpus": 667,
+  "corpus": 686,
   "live": [
     {
       "path": ".softhouse/capture/audit-t44/charges/bin/analyse_probes.py",
@@ -2290,6 +2290,31 @@
       "why": "components not statically known"
     },
     {
+      "path": ".softhouse/capture/t145-analysis-float/bin/classify.py",
+      "line": 88,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t145-analysis-float/bin/classify.py",
+      "line": 97,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t145-analysis-float/bin/differential.py",
+      "line": 85,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t145-analysis-float/bin/differential.py",
+      "line": 65,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t145-analysis-float/bin/selftest-discriminate-predicate.py",
+      "line": 100,
+      "why": "components not statically known"
+    },
+    {
       "path": ".softhouse/capture/t170-g8-rebuild/src/aggregate_t170.py",
       "line": 117,
       "why": "components not statically known"
@@ -2955,6 +2980,26 @@
       "why": "components not statically known"
     },
     {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/census_variable_paths.py",
+      "line": 112,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/census_variable_paths.py",
+      "line": 348,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/census_variable_paths.py",
+      "line": 372,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t321-variable-paths-and-resets/census_variable_paths.py",
+      "line": 383,
+      "why": "components not statically known"
+    },
+    {
       "path": ".softhouse/capture/t321-variable-paths-and-resets/drive-reset-contamination-t321.py",
       "line": 72,
       "why": "components not statically known"
@@ -2971,17 +3016,17 @@
     },
     {
       "path": ".softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py",
-      "line": 161,
+      "line": 208,
       "why": "components not statically known"
     },
     {
       "path": ".softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py",
-      "line": 241,
+      "line": 288,
       "why": "components not statically known"
     },
     {
       "path": ".softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py",
-      "line": 265,
+      "line": 312,
       "why": "components not statically known"
     },
     {
@@ -3077,6 +3122,31 @@
     {
       "path": ".softhouse/capture/t330-reconcile-merged-work/population.py",
       "line": 131,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t331-wire-pnumber-checker/bin/capture-findings.py",
+      "line": 35,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t331-wire-pnumber-checker/bin/capture-findings.py",
+      "line": 36,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t331-wire-pnumber-checker/bin/measure-fatal-predicate.py",
+      "line": 33,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t331-wire-pnumber-checker/bin/measure-fatal-predicate.py",
+      "line": 46,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/capture/t331-wire-pnumber-checker/bin/recheck-14-true-drift.py",
+      "line": 67,
       "why": "components not statically known"
     },
     {
@@ -3617,6 +3687,11 @@
     {
       "path": ".softhouse/reviews/t27-probe/t27_verify_claims.py",
       "line": 128,
+      "why": "components not statically known"
+    },
+    {
+      "path": ".softhouse/reviews/t278-review-t277/probe/t278_float_audit.py",
+      "line": 125,
       "why": "components not statically known"
     },
     {
