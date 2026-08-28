@@ -8,8 +8,14 @@
 #     control:  428 byte-identical, 2 DIFFER   run-all EXIT 0
 #     mutated:  427 byte-identical, 3 DIFFER   run-all EXIT ?
 set -u
-SC=/tmp/t382-pin
-O=/tmp/t382-out
+# HOST STATE IS A PARAMETER, NOT A LITERAL (guard_no_host_state_in_lint_corpus).
+# A /tmp path assigned to a name in a tracked instrument is shared across worktrees,
+# absent from every commit and deleted on reboot. Supply them:
+#   T382_CLONE=<throwaway clone> T382_OUT=<scratch dir> bash <this script>
+# The committed transcripts were produced with T382_OUT=/tmp/t382-out and the clone
+# named in each transcript's first line.
+SC="${T382_CLONE:?set T382_CLONE to a throwaway clone of this repo}"
+O="${T382_OUT:?set T382_OUT to a scratch output directory}"
 T=".softhouse/capture/tierA-a2/manifest.py"
 mkdir -p "$O"
 

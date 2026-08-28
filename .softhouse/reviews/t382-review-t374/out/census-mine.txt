@@ -1,11 +1,11 @@
 T316 -- dead repo-path references among tracked `.softhouse/` instruments
 ========================================================================================
 SELECTOR (P-66: `not found` is a statement about the search)
-  corpus     : git ls-files '.softhouse/*.py' '.softhouse/*.sh'   -> 1357 tracked file(s)
+  corpus     : git ls-files '.softhouse/*.py' '.softhouse/*.sh'   -> 1358 tracked file(s)
   literals   : quoted strings containing `.softhouse/`, trimmed to that root
   regex      : (['"])((?:[^'"\\\n]|\\.)*?\.softhouse/(?:[^'"\\\n]|\\.)*?)\1
   resolution : TRACKED CONTENT ONLY [T326] -- membership in `git ls-files -z`
-               (8373 path(s)) or in the set of their directory prefixes (738).
+               (8432 path(s)) or in the set of their directory prefixes (740).
                NOT os.path.exists. THE DISK IS NEVER CONSULTED, so this census is a
                property of the COMMIT and not of the machine, the checkout, or what a
                previous run left lying about. `.` / `..` are collapsed LEXICALLY.
@@ -21,12 +21,12 @@ CALIBRATION: both FU-T299-2 known positives were seen as DEAD by this selector.
 
 COUNTS (both terms printed -- P-67)
   files naming any `.softhouse/` literal : 604
-  occurrences that RESOLVE               : 1272
+  occurrences that RESOLVE               : 1273
   occurrences that are INDETERMINATE     : 95  (in 59 file(s))
   occurrences that are PROSE             : 351
-  occurrences that are DEAD              : 114  (in 78 file(s))
+  occurrences that are DEAD              : 109  (in 76 file(s))
 
-THE 78 FILE(S) NAMING A DEAD CONCRETE PATH
+THE 76 FILE(S) NAMING A DEAD CONCRETE PATH
 ----------------------------------------------------------------------------------------
   .softhouse/bin/fire-program.sh
       -> .softhouse/tasks.json.t288.tmp
@@ -211,16 +211,9 @@ THE 78 FILE(S) NAMING A DEAD CONCRETE PATH
       -> .softhouse/capture/t268-rvpa-failopen/out/red-green-legs.json
       -> .softhouse/capture/t286-rvpa-retry/red/drive_red_t286.py
       -> .softhouse/capture/t286-rvpa-retry/red/fixtures
-  .softhouse/reviews/t382-review-t374/instruments/10-attack-section10.sh
-      -> .softhouse/capture/tierA-a2/T382-decoy-different.bin
-      -> .softhouse/capture/tierA-a2/T382-decoy-identical.bin
-      -> .softhouse/capture/tierA-a2/out/A2-999-T382-FABRICATED.http
-      -> .softhouse/reviews/A2-11/verify-capture-integrity.py
-  .softhouse/reviews/t382-review-t374/instruments/60-defeat-arm-a-baseline.sh
-      -> .softhouse/reviews/A2-11/verify-capture-integrity.py
   .softhouse/reviews/t47-probe/t178-redprobe.py
       -> .softhouse/reviews/t47-probe/t47_edit_N.py
 
   JSON written to /tmp/t382-out/census-mine.json
 
-T316-DEADPATH-CENSUS: corpus=1357 deadFiles=78 deadOccurrences=114 resolving=1272 indeterminate=95 prose=351
+T316-DEADPATH-CENSUS: corpus=1358 deadFiles=76 deadOccurrences=109 resolving=1273 indeterminate=95 prose=351

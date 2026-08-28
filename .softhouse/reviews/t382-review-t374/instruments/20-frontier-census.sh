@@ -3,8 +3,14 @@
 # dead-path census between main and the T374 merge result, and what the T326 regenerator
 # would produce on the merge result.
 set -u
-SC=/tmp/t382-pin
-O=/tmp/t382-out
+# HOST STATE IS A PARAMETER, NOT A LITERAL (guard_no_host_state_in_lint_corpus).
+# A /tmp path assigned to a name in a tracked instrument is shared across worktrees,
+# absent from every commit and deleted on reboot. Supply them:
+#   T382_CLONE=<throwaway clone> T382_OUT=<scratch dir> bash <this script>
+# The committed transcripts were produced with T382_OUT=/tmp/t382-out and the clone
+# named in each transcript's first line.
+SC="${T382_CLONE:?set T382_CLONE to a throwaway clone of this repo}"
+O="${T382_OUT:?set T382_OUT to a scratch output directory}"
 CENSUS=".softhouse/capture/t316-dead-path-guards/census_dead_paths.py"
 REGEN=".softhouse/capture/t326-frontier-host-state/instruments/10-regen-pin.py"
 PIN=".softhouse/guards/dead-path-frontier.pin"

@@ -2,11 +2,16 @@
 # T382 — copy every transcript this review cites out of /tmp and into the grant, so the
 # evidence is committed alongside the instruments that produced it.
 set -u
-O=/tmp/t382-out
+# HOST STATE IS A PARAMETER, NOT A LITERAL (guard_no_host_state_in_lint_corpus).
+# A /tmp path assigned to a name in a tracked instrument is shared across worktrees,
+# absent from every commit and deleted on reboot. Supply them:
+#   T382_CLONE=<throwaway clone> T382_OUT=<scratch dir> bash <this script>
+# The committed transcripts were produced with T382_OUT=/tmp/t382-out and the clone
+# named in each transcript's first line.
+O="${T382_OUT:?set T382_OUT to a scratch output directory}"
 DEST="$(cd "$(dirname "$0")/.." && pwd)/out"
 mkdir -p "$DEST"
 cp -f "$O"/POPULATIONS.txt "$DEST"/ 2>/dev/null
-cp -f "$O"/ATTACK-MATRIX.txt "$DEST"/ 2>/dev/null
 cp -f "$O"/ATTACK-MATRIX-RUN1.txt "$DEST"/ 2>/dev/null
 cp -f "$O"/ATTACK-MATRIX-RUN2-partial.txt "$DEST"/ 2>/dev/null
 cp -f "$O"/attack-results-RUN2-partial.tsv "$DEST"/ 2>/dev/null

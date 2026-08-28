@@ -34,6 +34,35 @@ they are scratch-clone paths, not paths of this commit), the reason is stated at
 the attack matrix was re-run afterwards. `check-dead-path-frontier.sh` on this branch:
 `T316-DEADPATH-FRONTIER: GREEN rows=109 pinned=109 added=0 removed=0`.
 
+**The bar caught ME, and I repaired rather than pinned.** The first conformance run on my
+committed branch came back **EXIT 2 with NO probe line** — under **P-84** a failed HARD guard,
+not an oracle outage, and I read it that way. Cause, named by the guard itself:
+
+```
+conformance: CENSUS host state in the lint corpus — 156 repo-wide search instrument(s) …
+             sites that assign a literal /tmp … path to a name: 20, pinned at 18
++.softhouse/reviews/t382-review-t374/instruments/20-frontier-census.sh | O=/tmp/t382-out
++.softhouse/reviews/t382-review-t374/instruments/20-frontier-census.sh | SC=/tmp/t382-pin
+conformance: EXIT 2 — no verdict is available. This is NOT a pass.
+```
+[VERIFIED: `out/CONFORMANCE-RED-hoststate.txt`.] Only `20-frontier-census.sh` was in the
+guard's corpus (it is the only one of my nine that does a repo-wide `git grep`). Repairing
+*only* the site the guard happened to look at would be the exact P-45 shape this review charges
+T374 with, so **all nine** instruments were repaired identically: the scratch clone and the
+output directory are now required parameters (`${T382_CLONE:?…}`, `${T382_OUT:?…}`) with no
+literal path in any tracked byte. I did **not** touch `HOSTSTATE_PIN_TEMP_ASSIGN_LIST` — that
+lives in `.softhouse/conformance.sh`, which another worker holds, and pinning would have been
+the wrong repair anyway. `20-frontier-census.sh` and `70-my-own-frontier.sh` were then **re-run
+from the repaired bytes**, so their committed transcripts are re-derivable.
+
+**And the bar caught a vacuous pass in one of my own instruments.** The first version of
+`70-my-own-frontier.sh` guessed at the census JSON layout, found nothing, and printed
+`count: 0  total rows: 0` over a census that had 114 rows. That is the defect this review
+prosecutes, in my own file. It now REFUSES on an unrecognised layout or a zero-row census, and
+I drove the reader RED on a planted row before trusting it (`rows contributed by this
+review: 1`, rc=1) — the clean run reports `0 mine / 109 total`, `rc=0`
+[VERIFIED: `out/OWN-FRONTIER.txt`].
+
 **Disclosure about that substitution — stated, not hidden (T356/P-22 spelling).** The full
 21-row matrix in `out/ATTACK-MATRIX-RUN1.txt` was produced by the **pre-substitution spelling**
 of `10-attack-section10.sh`. The substitution is:
@@ -263,7 +292,7 @@ cardinality. Result of moving that one constant forward to a commit that contain
   FAIL  NO captured oracle observation that existed at the fork sha has been MUTATED
 
 ### 2. now move section 10's OWN baseline forward to the commit that contains it
-  FORK = "8d819d0e45d399464814938d8d1850df8b854ae8"
+  FORK = "4b81baa31ec8caa0004e0972510abb701f20af92"   <- the probe commit
   section 10 EXIT=0
       at the fork sha : 1035 observations  {'out': 906, 'req': 129}
       at HEAD         : 1035 observations  {'out': 906, 'req': 129}
@@ -297,10 +326,9 @@ tripwire whose calibration is a bare unchecked constant is a tripwire with a swi
 section 4 already demonstrates the cheap fix by tying its own copy of the same literal to
 `prove-a2-7-additive.py`.
 
-This is a two-line change and it is visible in a diff, so it is a *tripwire* weakness rather
-than an exploit; but the whole value of section 10 is as a tripwire. A one-line assertion —
-`len(fork_paths) == 403` — closes it and would also have caught FINDING 1's cases 14/15 on the
-ARM A side.
+It is visible in a diff, so it is a *tripwire* weakness rather than an exploit; but the whole
+value of section 10 is as a tripwire. A one-line assertion — `len(fork_paths) == 403` — closes
+it, and would also have caught FINDING 1's cases 14/15 on the ARM A side.
 
 **CONDITION 4.** Pin the ARM A population cardinality (`403`) and/or assert that `FORK` equals
 the literal carried by `verify-manifest-independently.py`, in the same spelling section 4

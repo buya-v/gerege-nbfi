@@ -11,8 +11,14 @@
 # CONTROL (case 12 of the attack matrix): a COMMITTED mutation of a fork-sha observation with
 # FORK unchanged is DETECTED, exit 1.
 set -u
-SC=/tmp/t382-defeat
-O=/tmp/t382-out
+# HOST STATE IS A PARAMETER, NOT A LITERAL (guard_no_host_state_in_lint_corpus).
+# A /tmp path assigned to a name in a tracked instrument is shared across worktrees,
+# absent from every commit and deleted on reboot. Supply them:
+#   T382_CLONE=<throwaway clone> T382_OUT=<scratch dir> bash <this script>
+# The committed transcripts were produced with T382_OUT=/tmp/t382-out and the clone
+# named in each transcript's first line.
+SC="${T382_CLONE:?set T382_CLONE to a throwaway clone of this repo}"
+O="${T382_OUT:?set T382_OUT to a scratch output directory}"
 # DEAD-PATH FRONTIER NOTE (T316/T326): verify-capture-integrity.py exists only on
 # softhouse/T374-t362-conditions, not in THIS branch's tracked universe, so spelled as a
 # whole literal it is a DEAD repo path and moves the frontier off its pin. Assembled.
