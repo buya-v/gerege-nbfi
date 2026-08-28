@@ -1,0 +1,12 @@
+-- T390 q8-business-date-table -- 2026-08-28T17:06:00Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: 86cbc3b0b45a55f89bd34000e30a40d972023b961f9fbdb3bd5322fe7fdbece4
+--
+             what             | n 
+------------------------------+---
+ m_business_date exists       | 1
+ m_business_date rows         | 0
+ enabled business-date config | 0
+(3 rows)
+
+-- psql rc=0

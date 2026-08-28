@@ -1,0 +1,13 @@
+-- T390 q2-command-source-tail -- 2026-08-28T17:04:19Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: a552ef80f4ef740ea0e501475c5d665e3d356c00c3886753173bb238cd8276cd
+--
+ id  |      idempotency_key      | status | action_name |        entity_name        | made_on_date 
+-----+---------------------------+--------+-------------+---------------------------+--------------
+ 376 | T388-P05-loan-application |      1 | CREATE      | LOAN                      | 
+ 377 | T388-P06-loan-approve     |      1 | APPROVE     | LOAN                      | 
+ 378 | T388-P07-loan-disburse    |      1 | DISBURSE    | LOAN                      | 
+ 379 | T388-A01-runaccruals      |      1 | EXECUTE     | PERIODICACCRUALACCOUNTING | 
+(4 rows)
+
+-- psql rc=0

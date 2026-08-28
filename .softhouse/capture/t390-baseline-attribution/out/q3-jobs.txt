@@ -1,0 +1,50 @@
+-- T390 q3-jobs -- 2026-08-28T17:04:19Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: 8ae3048d3bd0d83abe230f9846788d802934b45647f75c941cc1c6f0e6c8724c
+--
+ id |                             display_name                              |  cron_expression  | is_active | currently_running | previous_run_start_time |    next_run_time    | task_priority 
+----+-----------------------------------------------------------------------+-------------------+-----------+-------------------+-------------------------+---------------------+---------------
+  2 | Update Loan Arrears Ageing                                            | 0 1 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:01:00.003 | 2026-08-29 16:01:00 |             5
+  4 | Apply Annual Fee For Savings                                          | 0 20 22 1/1 * ? * | t         | f                 | 2026-08-28 14:20:00.005 | 2026-08-29 14:20:00 |             5
+  5 | Apply Holidays To Loans                                               | 0 0 12 * * ?      | t         | f                 | 2026-08-28 04:00:00.01  | 2026-08-29 04:00:00 |             5
+  6 | Post Interest For Savings                                             | 0 0 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:00:00.007 | 2026-08-29 16:00:00 |             5
+  7 | Transfer Fee For Loans From Savings                                   | 0 1 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:01:00.003 | 2026-08-29 16:01:00 |             5
+  8 | Pay Due Savings Charges                                               | 0 0 12 * * ?      | t         | f                 | 2026-08-28 04:00:00.011 | 2026-08-29 04:00:00 |             5
+  9 | Update Accounting Running Balances                                    | 0 1 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:01:00.003 | 2026-08-29 16:01:00 |             5
+ 10 | Execute Standing Instruction                                          | 0 0 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:00:00.006 | 2026-08-29 16:00:00 |             5
+ 11 | Add Accrual Transactions                                              | 0 1 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:01:00.049 | 2026-08-29 16:01:00 |             3
+ 12 | Apply penalty to overdue loans                                        | 0 0 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:00:00.006 | 2026-08-29 16:00:00 |             5
+ 13 | Update Non Performing Assets                                          | 0 0 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:00:00.005 | 2026-08-29 16:00:00 |             6
+ 14 | Transfer Interest To Savings                                          | 0 2 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:02:00.002 | 2026-08-29 16:02:00 |             4
+ 15 | Update Deposit Accounts Maturity details                              | 0 0 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:00:00.062 | 2026-08-29 16:00:00 |             5
+ 16 | Add Periodic Accrual Transactions                                     | 0 2 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:02:00.002 | 2026-08-29 16:02:00 |             2
+ 17 | Recalculate Interest For Loans                                        | 0 1 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:01:00.032 | 2026-08-29 16:01:00 |             4
+ 18 | Generate Mandatory Savings Schedule                                   | 0 5 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:05:00.011 | 2026-08-29 16:05:00 |             5
+ 19 | Generate Loan Loss Provisioning                                       | 0 0 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:00:00.006 | 2026-08-29 16:00:00 |             5
+ 20 | Post Dividends For Shares                                             | 0 0 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:00:00.006 | 2026-08-29 16:00:00 |             5
+ 21 | Update Savings Dormant Accounts                                       | 0 0 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:00:00.069 | 2026-08-29 16:00:00 |             3
+ 22 | Add Accrual Transactions For Loans With Income Posted As Transactions | 0 1 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:01:00.002 | 2026-08-29 16:01:00 |             5
+ 23 | Execute Report Mailing Jobs                                           | 0 0/15 * * * ?    | t         | f                 | 2026-08-28 17:00:00.007 | 2026-08-28 17:15:00 |             5
+ 24 | Update SMS Outbound with Campaign Message                             | 0 0 5 1/1 * ? *   | t         | f                 | 2026-08-27 21:00:00.003 | 2026-08-28 21:00:00 |             3
+ 25 | Send Messages to SMS Gateway                                          | 0 0 5 1/1 * ? *   | t         | f                 | 2026-08-27 21:00:00.046 | 2026-08-28 21:00:00 |             2
+ 26 | Get Delivery Reports from SMS Gateway                                 | 0 0 5 1/1 * ? *   | t         | f                 | 2026-08-27 21:00:00.064 | 2026-08-28 21:00:00 |             1
+ 27 | Execute Email                                                         | 0 0/10 * * * ?    | t         | f                 | 2026-08-28 17:00:00.007 | 2026-08-28 17:10:00 |             5
+ 28 | Update Email Outbound with campaign message                           | 0 0/15 * * * ?    | t         | f                 | 2026-08-28 17:00:00.007 | 2026-08-28 17:15:00 |             5
+ 29 | Generate AdhocClient Schedule                                         | 0 0 12 1/1 * ? *  | t         | f                 | 2026-08-28 04:00:00.011 | 2026-08-29 04:00:00 |             5
+ 30 | Update Trial Balance Details                                          | 0 1 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:01:00.003 | 2026-08-29 16:01:00 |             5
+ 31 | Execute All Dirty Jobs                                                | 0 1 0 1/1 * ? *   | t         | f                 | 2026-08-28 16:01:00.002 | 2026-08-29 16:01:00 |             5
+ 32 | Increase Business Date by 1 day                                       | 0 0 0 1/1 * ? *   | f         | f                 |                         |                     |            99
+ 33 | Increase COB Date by 1 day                                            | 0 0 0 1/1 * ? *   | f         | f                 |                         |                     |            98
+ 34 | Loan COB                                                              | 0 0 0 * * ?       | f         | f                 |                         |                     |             5
+ 35 | Loan Delinquency Classification                                       | 0 0 22 1/1 * ? *  | t         | f                 | 2026-08-28 14:00:00.005 | 2026-08-29 14:00:00 |             5
+ 36 | Send Asynchronous Events                                              | 0 0/1 * * *  ?    | t         | f                 | 2026-08-28 17:04:00.01  | 2026-08-28 17:05:00 |             5
+ 37 | Purge External Events                                                 | 0 1 0 1/1 * ? *   | f         | f                 | 2026-08-18 16:01:00.052 |                     |             5
+ 38 | Purge Processed Commands                                              | 0 0 1 * * ?       | f         | f                 | 2026-08-18 16:01:00.055 |                     |             5
+ 39 | Accrual Activity Posting                                              | 0 0 1 * * ?       | f         | f                 | 2026-08-18 16:01:00.05  |                     |             5
+ 40 | Journal Entry Aggregation                                             | 0 0 6 * * ?       | f         | f                 | 2026-08-18 16:01:00.053 |                     |             5
+ 41 | Retained Earning Job                                                  | 0 0 6 * * ?       | f         | f                 |                         |                     |             5
+ 42 | Add Accrual Transactions For Savings                                  | 0 1 0 1/1 * ? *   | f         | f                 | 2026-08-18 16:01:00.055 |                     |             5
+ 43 | Working Capital Loan COB                                              | 0 0 0 * * ?       | f         | f                 |                         |                     |             5
+(41 rows)
+
+-- psql rc=0

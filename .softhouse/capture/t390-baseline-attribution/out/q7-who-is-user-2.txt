@@ -1,0 +1,12 @@
+-- T390 q7-who-is-user-2 -- 2026-08-28T17:06:00Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: 0ab125cb808c9e3c7841942e9a600142262b19265c9c3184b206a665623333d4
+--
+ id |  username   | firstname |   lastname    |       email       | is_deleted 
+----+-------------+-----------+---------------+-------------------+------------
+  1 | mifos       | App       | Administrator | demomfi@mifos.org | f
+  2 | system      | system    | system        | demomfi@mifos.org | f
+  3 | interopUser | Interop   | User          | email@email.com   | f
+(3 rows)
+
+-- psql rc=0
