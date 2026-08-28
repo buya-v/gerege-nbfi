@@ -1,0 +1,192 @@
+wrote ZZZ-T306-P1-acceptance-plain-create
+wrote ZZZ-T306-P2-acceptance-openingbalance-command
+wrote ZZZ-T306-P3-code-declared-on-foreign-capture
+wrote ZZZ-T306-P4-openingbalance-declaring-future-date
+wrote ZZZ-T306-P5-closure-code-without-the-closing-date
+wrote ZZZ-T306-P6-acceptance-at-the-preclosure-boundary
+wrote ZZZ-T306-P7-acceptance-at-the-future-date-boundary
+wrote ZZZ-T306-P8-openingbalance-five-expect-legs
+wrote ZZZ-T306-P9-openingbalance-amount-three-times
+
+==============================================================
+ARM A — THE ADJUDICATED PREDICATE (this branch, as committed)
+==============================================================
+  binary exit=1
+
+  --- verdict per vector ---
+      LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    PASS             15 cells (5 money)
+      LDG-02-repayment-split-4leg-minor-units        parity         ledger_rest_posting    PASS             19 cells (6 money)
+      LDG-03-overpayment-4leg-minor-units            parity         ledger_rest_posting    PASS             19 cells (6 money)
+      LDG-04-header-account-accepted                 parity         ledger_db_readback     PASS             11 cells (4 money)
+      LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     PASS             27 cells (8 money)
+      LDG-REFUSE-01-unbalanced-by-one-minor-unit     oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-02-manual-adjustments-not-permitted oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      ZZZ-T306-P1-acceptance-plain-create            parity         ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P2-acceptance-openingbalance-command  parity         ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P3-code-declared-on-foreign-capture   oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      ZZZ-T306-P4-openingbalance-declaring-future... oracle-refusal ledger_rest_posting    FAIL              3 cells (0 money)
+      ZZZ-T306-P5-closure-code-without-the-closin... oracle-refusal ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P6-acceptance-at-the-preclosure-bo... parity         ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P7-acceptance-at-the-future-date-b... parity         ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P8-openingbalance-five-expect-legs    parity         ledger_db_readback     INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P9-openingbalance-amount-three-times  parity         ledger_db_readback     INADMISSIBLE      0 cells (0 money)
+              LDG-03-overpayment-4leg-minor-units, ZZZ-T306-P1-acceptance-plain-create,
+              ZZZ-T306-P2-acceptance-openingbalance-command,
+              ZZZ-T306-P6-acceptance-at-the-preclosure-boundary,
+              ZZZ-T306-P7-acceptance-at-the-future-date-boundary), through a DIFFERENT slot. THE
+
+  --- census ---
+      ledger parity           PASS 5    FAIL 0
+      ledger oracle-refusal   PASS 6    FAIL 1   (an HTTP status and error code the ORACLE returned
+      ledger inadmissible     7
+      ledger cells compared   112 graded, of which 29 are MONEY cells in int64 minor units
+
+  --- WHICH RULE refused WHICH vector (the attribution, not the verdict) ---
+  ARM A
+    LDG-01-manual-je-3leg-minor-units                PASS          OTHER
+    LDG-02-repayment-split-4leg-minor-units          PASS          OTHER
+    LDG-03-overpayment-4leg-minor-units              PASS          OTHER
+    LDG-04-header-account-accepted                   PASS          OTHER
+    LDG-05-openingbalance-accepted-empty-ledger      PASS          OTHER
+    LDG-REFUSE-01-unbalanced-by-one-minor-unit       PASS          -
+    LDG-REFUSE-02-manual-adjustments-not-permitted   PASS          -
+    LDG-REFUSE-03-openingbalance-after-posted-e...   PASS          -
+    LDG-REFUSE-04-preclosure-entry-on-closing-date   PASS          -
+    LDG-REFUSE-05-future-dated-entry-one-day-af...   PASS          -
+    ZZZ-T306-P1-acceptance-plain-create              INADMISSIBLE  CAPABILITY-GATE, CITATION
+    ZZZ-T306-P2-acceptance-openingbalance-command    INADMISSIBLE  LEG-LENGTH, LEG-MULTISET-SHORT
+    ZZZ-T306-P3-code-declared-on-foreign-capture     PASS          -
+    ZZZ-T306-P4-openingbalance-declaring-future...   FAIL          OTHER
+    ZZZ-T306-P5-closure-code-without-the-closin...   INADMISSIBLE  CAPABILITY-GATE, DATE-RULE
+    ZZZ-T306-P6-acceptance-at-the-preclosure-bo...   INADMISSIBLE  CAPABILITY-GATE, DATE-PRECEDENCE
+    ZZZ-T306-P7-acceptance-at-the-future-date-b...   INADMISSIBLE  CAPABILITY-GATE, DATE-PRECEDENCE
+    ZZZ-T306-P8-openingbalance-five-expect-legs      INADMISSIBLE  LEG-LENGTH, LEG-MULTISET-SHORT
+    ZZZ-T306-P9-openingbalance-amount-three-times    INADMISSIBLE  LEG-LENGTH, LEG-MULTISET-SURPLUS, OTHER
+  
+
+==============================================================
+ARM D — THE DRIVER'S MERGED PREDICATE, put back
+==============================================================
+  patched admit.go -> the DRIVER's predicate
+  binary exit=1
+
+  --- verdict per vector ---
+      LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    PASS             15 cells (5 money)
+      LDG-02-repayment-split-4leg-minor-units        parity         ledger_rest_posting    PASS             19 cells (6 money)
+      LDG-03-overpayment-4leg-minor-units            parity         ledger_rest_posting    PASS             19 cells (6 money)
+      LDG-04-header-account-accepted                 parity         ledger_db_readback     PASS             11 cells (4 money)
+      LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     PASS             27 cells (8 money)
+      LDG-REFUSE-01-unbalanced-by-one-minor-unit     oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-02-manual-adjustments-not-permitted oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      ZZZ-T306-P1-acceptance-plain-create            parity         ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P2-acceptance-openingbalance-command  parity         ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P3-code-declared-on-foreign-capture   oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      ZZZ-T306-P4-openingbalance-declaring-future... oracle-refusal ledger_rest_posting    FAIL              3 cells (0 money)
+      ZZZ-T306-P5-closure-code-without-the-closin... oracle-refusal ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P6-acceptance-at-the-preclosure-bo... parity         ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P7-acceptance-at-the-future-date-b... parity         ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P8-openingbalance-five-expect-legs    parity         ledger_db_readback     INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P9-openingbalance-amount-three-times  parity         ledger_db_readback     INADMISSIBLE      0 cells (0 money)
+              LDG-03-overpayment-4leg-minor-units, ZZZ-T306-P1-acceptance-plain-create,
+              ZZZ-T306-P2-acceptance-openingbalance-command,
+              ZZZ-T306-P6-acceptance-at-the-preclosure-boundary,
+              ZZZ-T306-P7-acceptance-at-the-future-date-boundary), through a DIFFERENT slot. THE
+
+  --- census ---
+      ledger parity           PASS 5    FAIL 0
+      ledger oracle-refusal   PASS 6    FAIL 1   (an HTTP status and error code the ORACLE returned
+      ledger inadmissible     7
+      ledger cells compared   112 graded, of which 29 are MONEY cells in int64 minor units
+
+  --- WHICH RULE refused WHICH vector (the attribution, not the verdict) ---
+  ARM D
+    LDG-01-manual-je-3leg-minor-units                PASS          OTHER
+    LDG-02-repayment-split-4leg-minor-units          PASS          OTHER
+    LDG-03-overpayment-4leg-minor-units              PASS          OTHER
+    LDG-04-header-account-accepted                   PASS          OTHER
+    LDG-05-openingbalance-accepted-empty-ledger      PASS          OTHER
+    LDG-REFUSE-01-unbalanced-by-one-minor-unit       PASS          -
+    LDG-REFUSE-02-manual-adjustments-not-permitted   PASS          -
+    LDG-REFUSE-03-openingbalance-after-posted-e...   PASS          -
+    LDG-REFUSE-04-preclosure-entry-on-closing-date   PASS          -
+    LDG-REFUSE-05-future-dated-entry-one-day-af...   PASS          -
+    ZZZ-T306-P1-acceptance-plain-create              INADMISSIBLE  CAPABILITY-GATE, CITATION
+    ZZZ-T306-P2-acceptance-openingbalance-command    INADMISSIBLE  LEG-LENGTH, LEG-MULTISET-SHORT
+    ZZZ-T306-P3-code-declared-on-foreign-capture     PASS          -
+    ZZZ-T306-P4-openingbalance-declaring-future...   FAIL          OTHER
+    ZZZ-T306-P5-closure-code-without-the-closin...   INADMISSIBLE  DATE-RULE
+    ZZZ-T306-P6-acceptance-at-the-preclosure-bo...   INADMISSIBLE  CAPABILITY-GATE, DATE-PRECEDENCE
+    ZZZ-T306-P7-acceptance-at-the-future-date-b...   INADMISSIBLE  CAPABILITY-GATE, DATE-PRECEDENCE
+    ZZZ-T306-P8-openingbalance-five-expect-legs      INADMISSIBLE  LEG-LENGTH, LEG-MULTISET-SHORT
+    ZZZ-T306-P9-openingbalance-amount-three-times    INADMISSIBLE  LEG-LENGTH, LEG-MULTISET-SURPLUS, OTHER
+  
+
+==============================================================
+ARM N — T306's FIRST-PASS NARROWING (kind==refusal on ALL arms)
+         This is the arm T320 blocked. Watch LDG-05.
+==============================================================
+  patched admit.go -> T306's FIRST-PASS narrowing
+  binary exit=1
+
+  --- verdict per vector ---
+      LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    PASS             15 cells (5 money)
+      LDG-02-repayment-split-4leg-minor-units        parity         ledger_rest_posting    PASS             19 cells (6 money)
+      LDG-03-overpayment-4leg-minor-units            parity         ledger_rest_posting    PASS             19 cells (6 money)
+      LDG-04-header-account-accepted                 parity         ledger_db_readback     PASS             11 cells (4 money)
+      LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     INADMISSIBLE      0 cells (0 money)
+      LDG-REFUSE-01-unbalanced-by-one-minor-unit     oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-02-manual-adjustments-not-permitted oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      ZZZ-T306-P1-acceptance-plain-create            parity         ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P2-acceptance-openingbalance-command  parity         ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P3-code-declared-on-foreign-capture   oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      ZZZ-T306-P4-openingbalance-declaring-future... oracle-refusal ledger_rest_posting    FAIL              3 cells (0 money)
+      ZZZ-T306-P5-closure-code-without-the-closin... oracle-refusal ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P6-acceptance-at-the-preclosure-bo... parity         ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P7-acceptance-at-the-future-date-b... parity         ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P8-openingbalance-five-expect-legs    parity         ledger_db_readback     INADMISSIBLE      0 cells (0 money)
+      ZZZ-T306-P9-openingbalance-amount-three-times  parity         ledger_db_readback     INADMISSIBLE      0 cells (0 money)
+              LDG-03-overpayment-4leg-minor-units, ZZZ-T306-P1-acceptance-plain-create,
+              ZZZ-T306-P2-acceptance-openingbalance-command,
+              ZZZ-T306-P6-acceptance-at-the-preclosure-boundary,
+              ZZZ-T306-P7-acceptance-at-the-future-date-boundary), through a DIFFERENT slot. THE
+
+  --- census ---
+      ledger parity           PASS 4    FAIL 0
+      ledger oracle-refusal   PASS 6    FAIL 1   (an HTTP status and error code the ORACLE returned
+      ledger inadmissible     8
+      ledger cells compared   85 graded, of which 21 are MONEY cells in int64 minor units
+
+  --- WHICH RULE refused WHICH vector (the attribution, not the verdict) ---
+  ARM N
+    LDG-01-manual-je-3leg-minor-units                PASS          OTHER
+    LDG-02-repayment-split-4leg-minor-units          PASS          OTHER
+    LDG-03-overpayment-4leg-minor-units              PASS          OTHER
+    LDG-04-header-account-accepted                   PASS          OTHER
+    LDG-05-openingbalance-accepted-empty-ledger      INADMISSIBLE  CAPABILITY-GATE
+    LDG-REFUSE-01-unbalanced-by-one-minor-unit       PASS          -
+    LDG-REFUSE-02-manual-adjustments-not-permitted   PASS          -
+    LDG-REFUSE-03-openingbalance-after-posted-e...   PASS          -
+    LDG-REFUSE-04-preclosure-entry-on-closing-date   PASS          -
+    LDG-REFUSE-05-future-dated-entry-one-day-af...   PASS          -
+    ZZZ-T306-P1-acceptance-plain-create              INADMISSIBLE  CAPABILITY-GATE, CITATION
+    ZZZ-T306-P2-acceptance-openingbalance-command    INADMISSIBLE  CAPABILITY-GATE, LEG-LENGTH, LEG-MULTISET-SHORT
+    ZZZ-T306-P3-code-declared-on-foreign-capture     PASS          -
+    ZZZ-T306-P4-openingbalance-declaring-future...   FAIL          OTHER
+    ZZZ-T306-P5-closure-code-without-the-closin...   INADMISSIBLE  CAPABILITY-GATE, DATE-RULE
+    ZZZ-T306-P6-acceptance-at-the-preclosure-bo...   INADMISSIBLE  CAPABILITY-GATE, DATE-PRECEDENCE
+    ZZZ-T306-P7-acceptance-at-the-future-date-b...   INADMISSIBLE  CAPABILITY-GATE, DATE-PRECEDENCE
+    ZZZ-T306-P8-openingbalance-five-expect-legs      INADMISSIBLE  CAPABILITY-GATE, LEG-LENGTH, LEG-MULTISET-SHORT
+    ZZZ-T306-P9-openingbalance-amount-three-times    INADMISSIBLE  CAPABILITY-GATE, LEG-LENGTH, LEG-MULTISET-SURPLUS, OTHER
+  
+
+scratch: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t306-matrix.0xIfFALV
+T306-RESTORE: before=efb69632c005 after=efb69632c005 restored=1
