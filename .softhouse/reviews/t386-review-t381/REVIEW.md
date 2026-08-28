@@ -251,9 +251,10 @@ Measured, not read from the handoff [`out/T386-status-census.txt` §1]:
 ```
 
 `main`'s copy of `casualty-sweep.sh` (sha `e9f30047bb0fbd46…`, the same BEFORE hash T379 cites
-and T381's drive re-derives) has carried `set -uo pipefail` the whole time, while **six**
-instances of the fail-open shape lived in it, including the two calibration arms at `:100` and
-`:108` that T367, T379 and T381 successively dug out.
+and T381's drive re-derives) has carried `set -uo pipefail` the whole time — through T363's
+original `all=$(git grep … 2>/dev/null)` that T367 drove, through T371's `:100`/`:108`
+calibration arms that T379 filed as R2, and through the two archive-predicate greps of R1. The
+option was on for every one of them. It has never once caused a status to be read.
 
 > **Propagating a status that nothing reads is not a guard.** `pipefail` made `git grep`'s 128
 > available at the assignment. Nobody read the assignment. A reviewer who greps a file for
@@ -593,16 +594,23 @@ corpus    : 2 tracked .sh/.py; 1 are repo-wide search instruments
 TIER 1 … : 0
 ```
 
-and the bar's own census line from my branch run, `:93–94`:
-`CENSUS fail-open instruments — inspected 1351 tracked .sh/.py file(s) under … (git ls-files,
-whole repository)`. The linter opens `casualty-sweep.sh`; the dead-path census opens it too, and
-T371's own RED is the proof that it does.
+and the bar's own census line — `1351` tracked `.sh/.py` on T381's branch (`:93–94` of
+`out/T386-BAR-branch-9eedfe4d.txt`), `1380` on mine — `git ls-files, whole repository` in both.
+The linter opens `casualty-sweep.sh`; the dead-path census opens it too, and T371's own RED is
+the proof that it does.
 
 **A merged handoff carrying a claim its own next paragraph disproves is worth a finding of its
 own. `FU-T386-6`, MINOR** — the intended meaning ("no vector, no graded artefact") is correct and
 the repair is one line, in a file outside both T381's grant and mine.
 
-### `FU-T381-3` — real, outside T381's grant (`CASUALTIES.md:97`, `reference-oracle.md:930`). Confirmed as sited; not re-litigated here.
+### `FU-T381-3` — real, and correctly sited.
+
+`.softhouse/reference-oracle.md:930` reads *"Across the whole `gerege` audit table **refusals are
+the majority of this tenant's command history** … That is the claim; it is qualitative on
+purpose."* T371 deliberately deleted the cardinal rather than retyping a pair that the next probe
+would falsify — the right call — but "the majority" is unfalsifiable at 51 % and at 99 % alike.
+`CASUALTIES.md:97` is the matching row. Both are outside T381's grant (`…/instruments/` only) and
+outside mine. Recording the margin, or making the claim structurally true, remains open.
 
 ### `FU-T381-4` / `P-45` / `T399` — the sweep still gates nothing. **Is wiring it safe?**
 
