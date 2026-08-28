@@ -1,8 +1,22 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260828-140005`, chain iteration 2 — **IN FLIGHT. SIX LIVE WORKERS.**
+## FIRE `20260828-140005`, chain iteration 2 — **IN FLIGHT. SIX LIVE WORKERS.** (T363 landed; T367 replaced it in the batch)
 
 **If you are reading this and no driver session is running, six workers were killed mid-flight.**
+
+### PLAN-GATE VIOLATION FOUND AND CLOSED THIS ITERATION
+`T363`, `T365` and `T351` are `code` tasks and were dispatched **with no paired reviewer**, which the
+STEP 2 plan gate forbids (check 1). They were filed that way by an earlier driver and this driver did not
+check before dispatching. Reviewers now exist: **`T367`** (reviews T363, dispatched immediately since T363
+is complete), **`T368`** (reviews T365), **`T369`** (reviews T351). **None of the three code tasks may
+merge before its reviewer clears** — merging unreviewed is exactly what turned `main` red earlier in this
+same fire.
+
+### DONE, SCOPE-CLEAN, NOT MERGED
+`T363` @ `8313ab6d` — 15 files, every path inside its grant (verified with the **three-dot** form; the
+two-dot form falsely showed `LOCK`/`RESUME.md`/`tasks.json` because `main` had advanced under it). Adds
+two `.sh` instruments under `.softhouse/capture/`, **not** under `.softhouse/guards/`, so the
+guards-dir registration population stays at 5 and the T323 hazard is not tripped. Awaiting `T367`.
 Their branches below may hold partial work. Mark each `needs_retry`, do not read `in_progress` as
 "work is happening".
 
@@ -11,7 +25,7 @@ Their branches below may hold partial work. Mark each `needs_retry`, do not read
 | `T364` | `softhouse/T364-review-t358` | opus | `.softhouse/reviews/t364-review-t358/` |
 | `T362` | `softhouse/T362-review-t357` | opus | `.softhouse/reviews/t362-review-t357/` |
 | `T365` | `softhouse/T365-t361-conditions` | opus | `.softhouse/bin/fire-program.sh`, `.softhouse/capture/t365-t361-conditions/` |
-| `T363` | `softhouse/T363-oracle-baseline` | opus | `.softhouse/capture/t363-oracle-baseline/`, `.softhouse/reference-oracle.md` |
+| `T367` | `softhouse/T367-review-t363` | opus | `.softhouse/reviews/t367-review-t363/` |
 | `T349` | `softhouse/T349-pretooluse-eval` | opus | `.softhouse/capture/t349-pretooluse-eval/` |
 | `T351` | `softhouse/T351-progress-accounting` | sonnet | `.softhouse/program.json`, `.softhouse/bin/` (**excluding `fire-program.sh`, held by T365**), `.softhouse/capture/t351-progress-accounting/` |
 
