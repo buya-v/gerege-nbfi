@@ -1,0 +1,54 @@
+REPO            : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac2d8253d149717c8
+tasks.json      : 219 tasks, 962919 bytes
+in_progress     : 3  (the reconcile's real N -- branch_wip is called on the
+                  demote list, not on all 219)
+commits on main : 1795
+
+--- 1. THE NAIVE SHAPE: three git calls PER TASK -------------------------
+  git log --grep='^Merge <TID>:'   0.1214s
+  git log --grep='^<TID>:'         0.1193s
+  git ls-files '<handoff>/<TID>.md' 0.0337s
+  PER TASK                         0.2743s
+    x N=3    ->    0.82s   FITS the ~6s inner budget
+    x N=8    ->    2.19s   FITS the ~6s inner budget
+    x N=20   ->    5.49s   FITS the ~6s inner budget
+    x N=100  ->   27.43s   *** BLOWS the ~6s inner budget ***
+    x N=219  ->   60.08s   *** BLOWS the ~6s inner budget ***
+
+--- 2. WHAT T330 ACTUALLY DOES: ONE index, TWO git calls, any N ----------
+  git log main --format=%H%x09%s   0.1140s   (ALL commit subjects, once)
+  git ls-tree -r main -- handoff/   0.0399s   (ALL handoff paths, once)
+  ref index (branch_sweep.RefIndex) 0.0000s  -- pure filesystem, NO subprocess
+  TOTAL, INDEPENDENT OF N          0.1539s
+  per task after that              a dict lookup + one compiled-regex scan
+  ratio vs naive at N=219:          390.3x cheaper
+
+--- 3. END TO END: --reconcile --dry-run on the REAL tasks.json ----------
+  tasks carrying a `branch` field: 137
+  PRE-T330  branch_wip over ALL 137 branched tasks:  11.039s  (0.0806s/task)
+             verdicts: absent=79, absent/CASE-VARIANT=2, commits=6, merged=50
+  POST-T330 branch_wip over ALL 137 branched tasks:  11.456s  (0.0836s/task)
+             verdicts: commits=6, merged=126, merged/CASE-VARIANT=2, unstarted=3
+  DELTA: +0.418s total, +0.0030s/task, +3.8% -- and it does NOT scale with N,
+         because 0.1539s of it is the ONE-TIME index above.
+
+  HOW OFTEN THE OLD `absent` VERDICT WAS FACTUALLY WRONG, on the live file:
+    pre-T330 said `absent` (-> DEMOTE) on          81 branched task(s)
+    of those, T330 measures work reachable on      78
+    genuinely unstarted                            3
+    => 96.3% of the pre-T330 `absent` verdicts in this file are WRONG about
+       whether anything was done. They did no damage only because the
+       reconcile touches `in_progress` tasks and 3 of 219 are in_progress.
+
+  NOTE ON THE REAL N: the reconcile calls branch_wip only on `in_progress`
+  tasks. The figure above is the WORST CASE -- every branched task in the
+  file -- and is reported instead of the convenient one.
+
+--- 4. THE PRE-EXISTING O(N), WHICH T330 DID NOT INTRODUCE AND DOES NOT FIX -
+  The PRE-T330 column is 0.0806s/task with NO T330 probe in it at all: that is
+  the EXISTING per-branch `rev-parse` + `rev-list` (+ `merge-base` on the
+  ambiguous zero). It was already O(N) and already crosses a ~6s inner
+  budget at N ~ 74. T330 moves that crossover to N ~ 71.
+  Recorded as FU-T330-1, NOT fixed here: batching the per-branch queries the
+  way the landed index is batched is a separate change with its own drive.
+  At the real N (in_progress = 3) neither shape is near the budget.
