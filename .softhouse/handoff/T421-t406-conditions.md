@@ -1,6 +1,6 @@
 # T421 — T406's six conditions on T391, driven
 
-**Branch:** `softhouse/T421-t406-conditions` — three commits, incremental.
+**Branch:** `softhouse/T421-t406-conditions` — six commits, incremental.
 **All six conditions closed, plus T406's informational.** One cardinal of T406's own
 is corrected, and one of its findings is enlarged from ten branches to eleven.
 
