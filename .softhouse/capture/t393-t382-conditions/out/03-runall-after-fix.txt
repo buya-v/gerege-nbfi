@@ -866,3 +866,9 @@ exit=0
   RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
   for it. Note that this INCLUDES sections 1, 2 and 4, which are adjudicated RED.
   PASS here means 'the review reproduces', NOT 'A2-7 was right'.
+
+NOTE (T374 / T362 F-5): this run REWROTE the tracked file
+  .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt
+so your working tree is now dirty. That is expected — the transcript carries a
+generation timestamp — and it is NOT a finding. To restore it:
+  git checkout -- .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt
