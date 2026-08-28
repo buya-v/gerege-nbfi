@@ -1,0 +1,35 @@
+=== T407 INDEPENDENT DRIVE -- src=/tmp/t407-drive/run-1787941029/base ref=31b7e1f6 arms=ALL work=/tmp/t407-drive/run-1787941029/greenall ===
+
+MODE: the member-side lookup at 31b7e1f6 is FIXED (detected from its own blob, not asserted)
+      the WITNESS-side lookup is a PATHSPEC in BOTH modes -- that is FU-T404-1.
+
+T407-Z-healthy-UNMUTATED                       exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T407-Y-healthy-honest-witness-ACCEPTED         exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+T407-E-globname-witness-COPY-REFUSED           exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T407-F-globname-member-IS-SYMLINK-REFUSED      exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=1
+T407-G-AMBIGUOUS-symlink-member-REFUSED        exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=8 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=1
+T407-H-TWO-symlink-members-COUNTS-BOTH         exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=9 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=2
+T407-R1-REVERT-literal-ONLY-multi-CATCHES      exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=8 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+T407-R2-DISARM-multi-ONLY-literal-CATCHES      exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=8 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=1
+T407-R3-REVERT-BOTH-THE-HOLE-REOPENS           exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=8 invoked=3 declared=2 reached-by=3 invoked-by-nothing=0 symlink-members=0
+T407-X-WITNESS-ambiguity-FAILOPEN              exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+T407-XS-witness-symlink-NO-decoy-REFUSED       exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T407-XC-witness-PLAIN-spelling-REFUSED         exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T407-XF-witness-literal-REPAIR-REFUSES-X       exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T407-XFY-healthy-Y-UNDER-the-repair-ACCEPTED   exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+
+=== T407 DRIVE: 14 PASS / 0 FAIL of 14 ===
