@@ -172,12 +172,24 @@ GREEN  exit 0, with the wired guard printing ALL MOVEMENT ATTRIBUTED
 
 ## 4. Bar
 
-`bash .softhouse/conformance.sh` from a CLEAN tree at `d6c02540` — **EXIT 0** [`out/BAR-1-clean-tree-d6c02540.txt`].
+Run **twice**, both from a CLEAN tree after `git add -A` and commit, with `bash` and never `sh`.
 
-- **P-84 first:** `grep -c 'probe = '` = **1**; value `up`.
-- 46 parity / 0 fail · 7884 cells graded · ledger parity 7/0 · exemption census all `== pinned` · **14** wrong ledger implementations all KILLED, pin **14** · dead-path frontier **GREEN**, `deadOccurrences=108`.
+| | tree | result |
+|---|---|---|
+| `out/BAR-1-clean-tree-d6c02540.txt` | `d6c02540` — before the drives landed | **EXIT 0** |
+| **`out/BAR-2-clean-tree-0c6d21d6.txt`** | **`0c6d21d6` — the final content head, including the dead-path repair** | **EXIT 0** |
 
-⚠ **`044d52a1` is not covered by that transcript** — it lands the dead-path repair and re-drives, and the frontier reading in it is the whole point. **Re-run the bar on the merge result.** The repair is the reason it should be green; the drive that found it is committed either way.
+**P-84 tested first, on the final run:** `grep -c 'probe = '` = **1** (presence), then value `up`.
+
+Baseline held, all figures read from `BAR-2`:
+
+- **46** parity vectors PASS / 0 FAIL · **7884** cells compared
+- ledger parity **7/0**; ledger cells compared 144 graded, **39** money cells in int64 minor units
+- exemption census: every figure `== pinned`
+- **14** wrong ledger implementations, all KILLED through the harness, **pin 14**
+- dead-path frontier **GREEN**, `deadOccurrences=108` — back at the pin after the repair in §3
+
+The only commit after `BAR-2`'s tree is this handoff plus that transcript. **Re-run the bar on the merge result** regardless — a transcript is evidence about the tree it ran on, not about the merge.
 
 ---
 
