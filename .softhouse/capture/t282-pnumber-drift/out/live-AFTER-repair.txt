@@ -2,7 +2,7 @@ PNUMBER-CITATIONS: report DECLARED-AMBIGUOUS REGISTER COLLISION P-12 defined twi
 PNUMBER-CITATIONS: report DECLARED-AMBIGUOUS REGISTER COLLISION P-13 defined twice in .softhouse/patterns.md: :320 'for a specification-bearing comment, the comment IS the deliverable.** A reviewe'  vs  :1412 'Grepping the store for a VALUE does not answer what the store KILLS'
 PNUMBER-CITATIONS: declared-dangling ids (recorded in the .softhouse/patterns.md errata with their repair) = [131, 261]
 PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=96 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
-PNUMBER-CITATIONS: sites=8529 definition=97 consistent=365 bare=8016 misdirecting=34 undefined=6 negative-control=11
+PNUMBER-CITATIONS: sites=8685 definition=97 consistent=382 bare=8155 misdirecting=34 undefined=6 negative-control=11
 PNUMBER-CITATIONS: skipped self-output-files=21 self-source-files=2 (stated, not silent -- both contain deliberately drifted text)
 PNUMBER-CITATIONS:   directive MISDIRECTING 2
 PNUMBER-CITATIONS:   directive UNDEFINED    4
@@ -14,6 +14,8 @@ PNUMBER-CITATIONS: report BARE .claude/skills/softhouse-program/SKILL.md:35 P-85
 PNUMBER-CITATIONS: report BARE .claude/skills/softhouse-program/SKILL.md:51 P-45 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .claude/skills/softhouse-program/SKILL.md:72 P-85 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '   **AND THE OBLIGATION THAT ACTUALLY PREVENTS THIS'
 PNUMBER-CITATIONS: report BARE .claude/skills/softhouse-program/SKILL.md:105 P-66 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/RESUME.md:5 P-85 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/RESUME.md:14 P-84 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/bin/branch_sweep.py:33 P-66 -- gloss (dash) matches no registered rule (best trigram score 4 < 6): '"\'Not found\' is a statement about the search, never about the world. '
 PNUMBER-CITATIONS: report BARE .softhouse/bin/branch_sweep.py:39 P-45 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): '"a guard that only works when someone remembers to run it enforces nothing."   A sweep the driver retypes each fire is exactly such a guard,'
 PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:130 P-45 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): '"a guard that # only works when someone remembers to run it enforces nothing" — is exactly how fire'
@@ -24,14 +26,20 @@ PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:429 P-58 -- the id
 PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:656 P-69 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:872 P-57 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1219 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1306 P-58 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1314 P-57 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1351 P-35 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1355 P-33 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1355 P-58 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1488 P-69 -- gloss (colon) matches no registered rule (best trigram score 0 < 6): "a measured count's shelf life is shorter than # a busy fire. "
-PNUMBER-CITATIONS: report BARE .softhouse/bin/go-env.sh:107 P-80 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'the rc is CLASSIFIED, not swallowed — it is carried in _g_gitrc and reported in     # the diagnostic below. '
-PNUMBER-CITATIONS: report BARE .softhouse/bin/go-env.sh:186 P-80 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '# own merits — there is no swallowed failure here to hide one'
+PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1379 P-66 -- gloss (possessive) matches no registered rule (best trigram score 4 < 6): ': "\'NOT FOUND\' is a # statement about the search, never about the world"). '
+PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1474 P-58 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1482 P-57 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1519 P-35 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1523 P-33 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1523 P-58 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/bin/fire-program.sh:1656 P-69 -- gloss (colon) matches no registered rule (best trigram score 0 < 6): "a measured count's shelf life is shorter than # a busy fire. "
+PNUMBER-CITATIONS: report BARE .softhouse/bin/go-env.sh:105 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the anchor beside the number). Recipe: REVIEW.md F-6 #   and merge-step 2, whose words are *"Take `go-env.sh` from MAC as the base, the'
+PNUMBER-CITATIONS: report BARE .softhouse/bin/go-env.sh:127 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/bin/go-env.sh:148 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/bin/go-env.sh:183 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): "the anchor, not just the cardinal) — and T256's drive #                     ASSERTS on them, so renaming them would rot a document this task"
+PNUMBER-CITATIONS: report BARE .softhouse/bin/go-env.sh:238 P-80 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'the rc is CLASSIFIED, not swallowed — it is carried in _g_gitrc and reported in     # the diagnostic below. '
+PNUMBER-CITATIONS: report BARE .softhouse/bin/go-env.sh:365 P-70 -- gloss (colon) matches no registered rule (best trigram score 2 < 6): "absence — and presence —         # decided by testing the actual file, never inferred from another command's output)."
+PNUMBER-CITATIONS: report BARE .softhouse/bin/go-env.sh:404 P-80 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '# on its own merits — there is no swallowed failure here to hide one'
 PNUMBER-CITATIONS: report BARE .softhouse/bin/ready-tasks.py:46 P-45 -- gloss (bracketed) matches no registered rule (best trigram score 1 < 6): '"a guard that only works when someone   remembers to run it enforces nothing"'
 PNUMBER-CITATIONS: report BARE .softhouse/bin/ready-tasks.py:79 P-91 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/bin/ready-tasks.py:99 P-91 -- the id carries no sentence -- nothing binds it to a rule
@@ -1694,6 +1702,32 @@ PNUMBER-CITATIONS: report BARE .softhouse/capture/t271-b1-t219/targets-proposed-
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t271-b1-t219/targets-proposed-for-T269.json:47 P-83 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t271-b1-t219/targets-proposed-for-T269.json:67 P-66 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t271-b1-t219/targets-proposed-for-T269.json:67 P-70 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/20-strict-drive-postmerge.txt:46 P-70 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '  ASSERT OK   : A3 stderr NAMES THE PATHS SEARCHED — absence reported as a search result'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/20-strict-drive-postmerge.txt:183 P-22 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/20-strict-drive-postmerge.txt:183 P-50 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/20-strict-drive-postmerge.txt:238 P-40 -- gloss (colon) matches no registered rule (best trigram score 5 < 6): 'an enumerator must count what it skipped and say so.) DRIVE: GREEN'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/20-strict-drive.txt:46 P-70 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '  ASSERT OK   : A3 stderr NAMES THE PATHS SEARCHED — absence reported as a search result'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/20-strict-drive.txt:183 P-22 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/20-strict-drive.txt:183 P-50 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/20-strict-drive.txt:238 P-40 -- gloss (colon) matches no registered rule (best trigram score 5 < 6): 'an enumerator must count what it skipped and say so.) DRIVE: GREEN'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/30-full-bar-RED-frontier.txt:26 P-22 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/30-full-bar-RED-frontier.txt:26 P-50 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/30-full-bar.txt:26 P-22 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/30-full-bar.txt:26 P-50 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/40-t256-drive-after-graft.txt:115 P-40 -- gloss (colon) matches no registered rule (best trigram score 5 < 6): 'an enumerator must count what it skipped and say so.) DRIVE: GREEN'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/80-full-bar-postmerge.txt:26 P-22 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/evidence/80-full-bar-postmerge.txt:26 P-50 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/instruments/10-locate-cloud-arm.sh:75 P-35 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '    echo "  A search over an empty corpus proves nothing'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/instruments/10-locate-cloud-arm.sh:88 P-70 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/instruments/10-locate-cloud-arm.sh:112 P-40 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '           echo "  ref this loop could not read is a ref that would leave the census silently'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh:12 P-45 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): '"a guard that only works when someone remembers to run it #            enforces nothing"): the same assertions run against (a) the PRE-GRAFT'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh:79 P-40 -- gloss (colon) matches no registered rule (best trigram score 5 < 6): 'an enumerator must count what it skipped and say so)." >&2   exit 2'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh:152 P-70 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'grep -q "searched" "$ERR"       && ok "A3 stderr NAMES THE PATHS SEARCHED — absence reported as a search result'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh:165 P-40 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '  bad "A3 no nexus/ to compile — NOT skipped quietly'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh:307 P-40 -- gloss (colon) matches no registered rule (best trigram score 5 < 6): 'an enumerator must count what it skipped and say so.)" [ "$FAILURES" -eq 0 ] && { echo "DRIVE: GREEN"; '
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/instruments/60-cloud-f3-reproduction.sh:55 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/instruments/60-cloud-f3-reproduction.sh:71 P-40 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'count what you skipped and say so)." >&2   exit 2'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t272-goenv-graft/instruments/70-consumer-census.sh:8 P-70 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'an absence — or a census — is a statement about the SEARCH; '
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t273-residue/evidence/00-baseline-residue-PRESENT.log:22 P-22 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t273-residue/evidence/00-baseline-residue-PRESENT.log:22 P-50 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t273-residue/evidence/10-PREFIX-reproduction.txt:10 P-72 -- the id carries no sentence -- nothing binds it to a rule
@@ -1765,6 +1799,37 @@ PNUMBER-CITATIONS: report BARE .softhouse/capture/t274-attestation-failopen/evid
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh:34 P-22 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh:34 P-72 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh:20 P-72 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): '# A calibration that cannot fail is not a calibration'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t277-shapelaw-salvage/evidence/50-conformance-bar.log:26 P-22 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t277-shapelaw-salvage/evidence/50-conformance-bar.log:26 P-50 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t277-shapelaw-salvage/evidence/51-conformance-bar-second-worker.log:26 P-22 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t277-shapelaw-salvage/evidence/51-conformance-bar-second-worker.log:26 P-50 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:2 P-96 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:43 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:44 P-81 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:45 P-81 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:46 P-81 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:47 P-81 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:72 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:80 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:82 P-69 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:83 P-79 -- gloss (possessive) matches no registered rule (best trigram score 0 < 6): 'and is *not* part of the `P-86` off-by-one at all.",        "",'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:83 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:85 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:85 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:95 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:95 P-78 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:95 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:97 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:101 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:103 P-33 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '**A markdown table cell is a citation boundary.** A correct `'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:104 P-25 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:106 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:106 P-80 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): '** inserting this file\'s new banner shifted every",        "definition line beneath it (`P-12` `:284`→`:315`), including the line numbers th'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:107 P-12 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): '284`→`:315`), including the line numbers the new banner cites. '
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:110 P-96 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:111 P-96 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:112 P-78 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/append-pattern.py:140 P-96 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/census.py:9 P-66 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/census.py:9 P-70 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/census.py:37 P-40 -- the id carries no sentence -- nothing binds it to a rule
@@ -1774,33 +1839,35 @@ PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:5 P-84 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:13 P-80 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:14 P-81 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:16 P-83 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:18 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:21 P-80 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:22 P-81 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:22 P-80 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:23 P-83 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:24 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:24 P-83 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:25 P-86 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:52 P-80 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:52 P-81 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:53 P-83 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:53 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:96 P-80 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:96 P-81 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:96 P-83 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:96 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:48 P-79 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:48 P-80 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:48 P-83 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:49 P-86 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:51 P-79 -- gloss (dash) matches no registered rule (best trigram score 0 < 6): 'the P-86 off-by-one"     if "prints an absence over an error" in g or "exits 1 on NO MATCH" in g \\'
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:51 P-86 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:54 P-86 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:56 P-80 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:56 P-83 -- gloss (dash) matches no registered rule (best trigram score 0 < 6): 'the P-86 off-by-one"     # (2) sweep/census OUTPUT files: the \'gloss\' is a grep result line, i.e. '
-PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:56 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:18 P-83 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:20 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:23 P-81 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:28 P-48 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:35 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:36 P-81 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:36 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:37 P-83 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:38 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:38 P-83 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:39 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:66 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:66 P-81 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:67 P-83 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:67 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:110 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:110 P-81 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:110 P-83 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py:110 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:49 P-79 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:49 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:49 P-83 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:50 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:52 P-79 -- gloss (dash) matches no registered rule (best trigram score 0 < 6): 'the P-86 off-by-one"     if "prints an absence over an error" in g or "exits 1 on NO MATCH" in g \\'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:52 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:55 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:57 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:57 P-83 -- gloss (dash) matches no registered rule (best trigram score 0 < 6): 'the P-86 off-by-one"     # (2) sweep/census OUTPUT files: the \'gloss\' is a grep result line, i.e. '
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/population-table.py:57 P-86 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/restamp.py:4 P-80 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/restamp.py:4 P-80 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t282-pnumber-drift/bin/restamp.py:35 P-12 -- the id carries no sentence -- nothing binds it to a rule
@@ -2128,6 +2195,25 @@ PNUMBER-CITATIONS: report BARE .softhouse/capture/t319-reconciler-f5/run-ownersh
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py:284 P-85 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py:414 P-22 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py:538 P-22 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '                      "green run from it means nothing'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t324-worktree-prune-skipbit/evidence/60-conformance.txt:26 P-22 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t324-worktree-prune-skipbit/evidence/60-conformance.txt:26 P-50 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t327-closure-accepting-side/README.md:134 P-72 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t327-closure-accepting-side/README.md:134 P-22 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:14 P-92 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:373 P-11 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:377 P-72 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '# its residue rule is calibrated on known positives by red-drive-residue-rule.py'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t327-closure-accepting-side/throwaway/docker-compose.t327.yml:6 P-11 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t327-closure-accepting-side/throwaway/docker-compose.t327.yml:6 P-11 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t327-closure-accepting-side/throwaway/env.sh:11 P-22 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): "# a clobbering assignment made a guard's own fail-closed branch untestable"
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t327-closure-accepting-side/throwaway/guard-throwaway-isolation.sh:82 P-72 -- gloss (bracketed) matches no registered rule (best trigram score 3 < 6): '"calibrate the instrument on a known positive"'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t327-closure-accepting-side/throwaway/invariant-minor-units.py:11 P-11 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t327-closure-accepting-side/throwaway/red-drive-residue-rule.py:2 P-72 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t329-audit-date-zone-disagreement/README.md:297 P-1 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): "never infer a date's meaning from its field name.** `createdDate` is an audit timestamp on `/glclosures` and a business date on `/journalent"
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t329-audit-date-zone-disagreement/README.md:302 P-2 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): 'model the three quantities separately, because they are three.**'
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t329-audit-date-zone-disagreement/README.md:310 P-3 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): 'the business date is an INPUT, never a clock read.** A port must never call `time.Now()` to obtain it. '
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t329-audit-date-zone-disagreement/README.md:315 P-4 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): 'the tenant zone comes from the tenant row.** `ZoneId.of(tenant.getTimezoneId())` `[VERIFIED: DateUtils.java:65-68]`. '
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t329-audit-date-zone-disagreement/README.md:319 P-5 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): "the audit zone is a THIRD zone and it is the deployment's, not the tenant's.** `ZoneId.systemDefault()` `[VERIFIED: DateUtils.java:101-104]`"
+PNUMBER-CITATIONS: report BARE .softhouse/capture/t329-audit-date-zone-disagreement/README.md:327 P-6 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): "the deserialiser must accept all three shapes and must not guess.** Decide the shape from the *endpoint + DTO*, matching §1's table, and **f"
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t64-zeroprincipal/MECHANISM-CORRECTION.md:5 P-11 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t64-zeroprincipal/MECHANISM-CORRECTION.md:7 P-11 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/capture/t64-zeroprincipal/MECHANISM-CORRECTION.md:34 P-11 -- the id carries no sentence -- nothing binds it to a rule
@@ -2450,38 +2536,39 @@ PNUMBER-CITATIONS: report BARE .softhouse/gates.md:1203 P-24 -- gloss (trailing-
 PNUMBER-CITATIONS: report BARE .softhouse/gates.md:1567 P-23 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2006 P-61 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2053 P-9 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2493 P-72 -- gloss (trailing-id) matches no registered rule (best trigram score 2 < 6): '**The comparator was calibrated on a known negative before it was believed'
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2503 P-69 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): "section's prose says, confirmed against the live oracle** at gates.md commit `2d41838`"
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2565 P-69 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2736 P-25 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2790 P-25 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2805 P-25 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2931 P-70 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3062 P-22 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'It also **attacked the rig**'
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3065 P-20 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3108 P-46 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3267 P-32 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3378 P-40 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3378 P-46 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3427 P-37 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3449 P-9 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3546 P-26 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3546 P-37 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3555 P-46 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3595 P-50 -- gloss (dash) matches no registered rule (best trigram score 2 < 6): 'the prover was never made falsifiable toward the fix). '
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3606 P-8 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3606 P-1 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3606 P-5 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3878 P-61 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3900 P-73 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3949 P-69 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3971 P-61 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4013 P-76 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4061 P-81 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4085 P-66 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4085 P-70 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4098 P-78 -- gloss (colon) matches no registered rule (best trigram score 2 < 6): 'prepare **and** land in one    fire, on a host that can run the BAR). '
-PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4103 P-83 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2397 P-86 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'line number that pointed at the wrong thing**'
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2686 P-72 -- gloss (trailing-id) matches no registered rule (best trigram score 2 < 6): '**The comparator was calibrated on a known negative before it was believed'
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2696 P-69 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): "section's prose says, confirmed against the live oracle** at gates.md commit `2d41838`"
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2758 P-69 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2929 P-25 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2983 P-25 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:2998 P-25 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3124 P-70 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3255 P-22 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'It also **attacked the rig**'
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3258 P-20 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3301 P-46 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3460 P-32 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3571 P-40 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3571 P-46 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3620 P-37 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3642 P-9 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3739 P-26 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3739 P-37 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3748 P-46 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3788 P-50 -- gloss (dash) matches no registered rule (best trigram score 2 < 6): 'the prover was never made falsifiable toward the fix). '
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3799 P-8 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3799 P-1 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:3799 P-5 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4071 P-61 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4093 P-73 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4142 P-69 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4164 P-61 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4206 P-76 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4254 P-81 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4278 P-66 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4278 P-70 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4291 P-78 -- gloss (colon) matches no registered rule (best trigram score 2 < 6): 'prepare **and** land in one    fire, on a host that can run the BAR). '
+PNUMBER-CITATIONS: report BARE .softhouse/gates.md:4296 P-83 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/guards/check-capture-namespace.sh:11 P-45 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/guards/check-capture-namespace.sh:19 P-84 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/guards/check-capture-namespace.sh:33 P-85 -- the id carries no sentence -- nothing binds it to a rule
@@ -4449,6 +4536,12 @@ PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accou
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T271.md:469 P-88 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T271.md:473 P-88 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T271.md:473 P-88 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md:45 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md:98 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md:110 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md:126 P-86 -- gloss (dash) matches no registered rule (best trigram score 3 < 6): 'every cardinal re-verified before being re-cited**, since the tree moved after T254b measured:   - cloud `d7a7ea35:go-env.sh:159-167` — **st'
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md:251 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md:332 P-70 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T273.md:75 P-57 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'No pipeline anywhere in it'
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T273.md:123 P-83 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T273.md:145 P-72 -- the id carries no sentence -- nothing binds it to a rule
@@ -4456,6 +4549,13 @@ PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accou
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T274.md:272 P-45 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T274.md:328 P-83 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T275.md:317 P-61 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md:257 P-70 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md:289 P-70 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'I cannot say a stale one is absent elsewhere'
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md:297 P-69 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md:393 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md:468 P-70 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '  above stands, unchanged and still open'
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md:489 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md:500 P-84 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T283.md:59 P-81 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T283.md:210 P-89 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): '`oracle_send`\'s "self-check VOIDS the capture" is prose, and prose does not fire'
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T283.md:328 P-89 -- the id carries no sentence -- nothing binds it to a rule
@@ -4564,6 +4664,8 @@ PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accou
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T305.md:170 P-11 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T305.md:177 P-84 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T305.md:311 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T306.md:96 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T306.md:116 P-89 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T309.md:98 P-85 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T309.md:99 P-45 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T309.md:100 P-45 -- the id carries no sentence -- nothing binds it to a rule
@@ -4613,6 +4715,18 @@ PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accou
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T319.md:247 P-84 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T319.md:306 P-85 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T319.md:342 P-89 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T324.md:197 P-86 -- gloss (dash) matches no registered rule (best trigram score 3 < 6): '*"an ID IS A CARDINAL … cite the id AND its sentence together so a shifted number is self-correcting"* — both rules are quoted here beside t'
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md:39 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md:197 P-72 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): '**Arm 4 is the calibration'
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md:273 P-11 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md:273 P-11 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): 'twice now):    - `env.sh`, `manifest.sh` — **PURE RENAMES**, `cmp`-identical.'
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md:287 P-11 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T329.md:114 P-1 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): "**PORT:** never infer a date's meaning from its name"
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T329.md:115 P-2 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'audit instant as three different types'
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T329.md:116 P-3 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T329.md:116 P-4 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'tenant zone from the tenant row'
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T329.md:117 P-5 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T329.md:117 P-6 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'the deserialiser must fail loudly on an unexpected shape, never fall back'
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/CLOUD-FIRE-20260822-2000.md:31 P-69 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/CLOUD-FIRE-20260822-2000.md:104 P-78 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/handoff/T164-analyze7-float-guard.md:50 P-35 -- the id carries no sentence -- nothing binds it to a rule
@@ -4774,6 +4888,7 @@ PNUMBER-CITATIONS: report BARE .softhouse/observations/20260827-branch-case-coll
 PNUMBER-CITATIONS: report BARE .softhouse/observations/20260827-branch-case-collision-shadows-committed-work.md:95 P-66 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/observations/20260827-branch-case-collision-shadows-committed-work.md:97 P-66 -- gloss (dash) matches no registered rule (best trigram score 4 < 6): '*"\'Not found\' is a statement about the search, never about the world. '
 PNUMBER-CITATIONS: report BARE .softhouse/observations/20260827-branch-case-collision-shadows-committed-work.md:103 P-45 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): '*"a guard that only works when someone remembers to run it enforces nothing."* The corpse   sweep is a guard the driver runs by hand, by eye'
+PNUMBER-CITATIONS: report BARE .softhouse/observations/20260828-reconcile-demotes-merged-work.md:63 P-66 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/patterns.md:3 P-1 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/patterns.md:3 P-5 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/patterns.md:8 P-1 -- the id carries no sentence -- nothing binds it to a rule
@@ -5063,7 +5178,6 @@ PNUMBER-CITATIONS: report UNDEFINED .softhouse/patterns.md:3236 P-261 -- P-261 i
 PNUMBER-CITATIONS: report BARE .softhouse/patterns.md:3237 P-13 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/patterns.md:3237 P-31 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/patterns.md:3237 P-26 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/program.json:73 P-95 -- gloss (trailing-id) matches no registered rule (best trigram score 3 < 6): "T316 refuted a task the driver filed with the conclusion in its title - the 'fail-open' is an announced two-candidate fallback"
 PNUMBER-CITATIONS: report BARE .softhouse/program.json:88 P-2 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/program.json:88 P-5 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/program.json:89 P-5 -- the id carries no sentence -- nothing binds it to a rule
@@ -5675,6 +5789,22 @@ PNUMBER-CITATIONS: report BARE .softhouse/reviews/T302/REVIEW.md:336 P-22 -- the
 PNUMBER-CITATIONS: report BARE .softhouse/reviews/T302/a2/out-conformance.txt:25 P-22 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/reviews/T302/a2/out-conformance.txt:25 P-50 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/reviews/T302/a2/out-f5.txt:20 P-85 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '    DISPATCH fire 20260823-140001 batch 1 — 8 workers, PUSHED BEFORE SPAWN'
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/REVIEW.md:103 P-35 -- gloss (colon) matches no registered rule (best trigram score 2 < 6): '*"every vacuous guard this program has found was a NEGATIVE assertion"* — and a guard whose safety is'
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/REVIEW.md:182 P-89 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/REVIEW.md:271 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/REVIEW.md:290 P-89 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/out/00-bar-BASELINE-main.txt:26 P-22 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/out/00-bar-BASELINE-main.txt:26 P-50 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/out/40-flip-armA-graded-true.txt:135 P-35 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'Stated rather than left as silence'
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/out/41-flip-armB-graded-false.txt:135 P-35 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'Stated rather than left as silence'
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/out/41-flip-armB-graded-false.txt:172 P-11 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/out/41-flip-armB-graded-false.txt:176 P-11 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/out/41-flip-armB-graded-false.txt:178 P-11 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/out/41-flip-armB-graded-false.txt:180 P-11 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/out/41-flip-armB-graded-false.txt:379 P-11 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/out/60-bar-FINAL.txt:26 P-22 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/out/60-bar-FINAL.txt:26 P-50 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/reviews/T306/probe/store-tripwire.sh:8 P-35 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/reviews/T308/REVIEW.md:45 P-84 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/reviews/T308/REVIEW.md:76 P-84 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/reviews/T308/REVIEW.md:303 P-91 -- the id carries no sentence -- nothing binds it to a rule
@@ -7279,7 +7409,7 @@ PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1656 P-67 -- the id carries
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1661 P-22 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'A guard you have not personally seen fail is not a guard'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1675 P-71 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1675 P-70 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1679 P-45 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '      "title": "v3 is wired to nothing — T185\'s F-4 survives T207'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1679 P-45 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '      "title": "v3 is wired to nothing \\u2014 T185\'s F-4 survives T207'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1680 P-45 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1680 P-22 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'a guard you have not seen fail THROUGH THE ROUTE THAT RUNS IT is not wired). '
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1696 P-45 -- the id carries no sentence -- nothing binds it to a rule
@@ -7297,6 +7427,7 @@ PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1743 P-71 -- the id carries
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1770 P-22 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1784 P-22 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'That is the SEVENTH vacuous guard in this program'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1804 P-70 -- gloss (trailing-id) matches no registered rule (best trigram score 2 < 6): 'and IT DID NOT SWEEP patterns.md, obligations.md, gates-proposed-answers.md, docs/ or the T116-G8-FAMB-* reason strings for the falsified n/'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1809 P-72 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1810 P-66 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1810 P-66 -- gloss (bracketed) matches no registered rule (best trigram score 0 < 6): 'not-found is about the search'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:1810 P-40 -- gloss (bracketed) matches no registered rule (best trigram score 1 < 6): 'count and state what you skipped'
@@ -7372,8 +7503,8 @@ PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2077 P-75 -- the id carries
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2091 P-75 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2091 P-61 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2097 P-69 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2097 P-69 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): ' notices when the world moves under a claim it publishes as measured fact — and it put the most perishable such claim where every reader is '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2097 P-26 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'the concept, not the sentence). A document that went stale in one banner went stale on a date, not in a paragraph.\\n\\n⚠ **DO NOT BUMP `.soft'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2097 P-69 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'ces when the world moves under a claim it publishes as measured fact \\u2014 and it put the most perishable such claim where every reader is '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2097 P-26 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'the concept, not the sentence). A document that went stale in one banner went stale on a date, not in a paragraph.\\n\\n\\u26a0 **DO NOT BUMP `'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2097 P-61 -- gloss (trailing-id) matches no registered rule (best trigram score 4 < 6): 'bumping both moves the vector-store digest every BAR pins'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2097 P-75 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2111 P-5 -- the id carries no sentence -- nothing binds it to a rule
@@ -7420,7 +7551,7 @@ PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2230 P-66 -- gloss (colon) 
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2230 P-76 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'Record the alternative you rejected.\\n(3) RED-DRIVE both fixes on shapes you did not design the rule around'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2230 P-76 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2230 P-75 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'Never bare `grep`/`rg` in a committed instrument'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2230 P-74 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'Never `git commit -m` with a backtick — heredoc + `git commit -F`'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2230 P-74 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'Never `git commit -m` with a backtick \\u2014 heredoc + `git commit -F`'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2231 P-69 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2231 P-69 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2263 P-76 -- the id carries no sentence -- nothing binds it to a rule
@@ -7438,7 +7569,7 @@ PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2315 P-40 -- gloss (trailin
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2316 P-45 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): 'a guard that only works when someone remembers to run it enforces nothing). '
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2316 P-84 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2337 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2337 P-22 -- gloss (dash) matches no registered rule (best trigram score 0 < 6): 'standalone red is not wired; you must see it fail through the route that runs it). '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2337 P-22 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2337 P-67 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'ENUMERATE every MANIFEST/SHA256-shaped file in the repo and state BOTH TERMS'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2337 P-66 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2337 P-70 -- the id carries no sentence -- nothing binds it to a rule
@@ -7451,21 +7582,21 @@ PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2356 P-70 -- the id carries
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2356 P-72 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2357 P-84 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2374 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report MISDIRECTING .softhouse/tasks.json:2374 P-69 -- gloss (trailing-id) 'ayer out: the guard did not merely fail to run, it RAN, wrote its answer down, and the summary line above it said the opposite.\\n\\nTHE JOB:\\' matches P-79 (21) better than the cited P-69 (0); patterns.md P-79 = 'EVIDENCE NOT MISSING, UNREAD. A recorded predicate that no summary consults.'
+PNUMBER-CITATIONS: report MISDIRECTING .softhouse/tasks.json:2374 P-69 -- gloss (trailing-id) 'out: the guard did not merely fail to run, it RAN, wrote its answer down, and the summary line above it said the opposite.\\n\\nTHE JOB:\\n(1) ' matches P-79 (21) better than the cited P-69 (0); patterns.md P-79 = 'EVIDENCE NOT MISSING, UNREAD. A recorded predicate that no summary consults.'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2374 P-66 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2374 P-70 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2374 P-76 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'DRIVE IT RED on a row you did not design the rule around'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2375 P-84 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2404 P-67 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2404 P-22 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'A checker you did not see fail is a checker you have not verified'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2404 P-75 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'Use /usr/bin/grep, git grep -P or python3 re — never bare grep, never rg'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2404 P-75 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'Use /usr/bin/grep, git grep -P or python3 re \\u2014 never bare grep, never rg'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2404 P-80 -- gloss (trailing-id) matches no registered rule (best trigram score 2 < 6): 'Classify git grep exit status: 0 matched, 1 real negative, >1 ABORT'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2427 P-67 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'ENUMERATE every capture script in the tree that writes an attestation line, and report BOTH TERMS'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2427 P-76 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2427 P-75 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2427 P-80 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report MISDIRECTING .softhouse/tasks.json:2427 P-80 -- gloss (trailing-id) 'Three separate workers last fire wrote fail-opens INTO instruments meant to enforce the rule they broke' matches P-81 (9) better than the cited P-80 (1); patterns.md P-81 = "THE FAIL-OPEN GUARD CAUGHT THREE WORKERS' OWN INSTRUMENTS IN ONE FIRE, INCLUDING TWO WRITTEN TO ENFORCE THE VE"
-PNUMBER-CITATIONS: report MISDIRECTING .softhouse/tasks.json:2427 P-83 -- gloss (trailing-id) "hree separate workers last fire wrote fail-opens INTO instruments meant to enforce the rule they broke (P-80) — check T250's own instruments" matches P-81 (9) better than the cited P-83 (0); patterns.md P-81 = "THE FAIL-OPEN GUARD CAUGHT THREE WORKERS' OWN INSTRUMENTS IN ONE FIRE, INCLUDING TWO WRITTEN TO ENFORCE THE VE"
+PNUMBER-CITATIONS: report MISDIRECTING .softhouse/tasks.json:2427 P-83 -- gloss (trailing-id) "separate workers last fire wrote fail-opens INTO instruments meant to enforce the rule they broke (P-80) \\u2014 check T250's own instruments" matches P-81 (9) better than the cited P-83 (0); patterns.md P-81 = "THE FAIL-OPEN GUARD CAUGHT THREE WORKERS' OWN INSTRUMENTS IN ONE FIRE, INCLUDING TWO WRITTEN TO ENFORCE THE VE"
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2450 P-76 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'If it was, that is a HIGH rejection regardless of how good the fix is.\\n(4) DRIVE THE NEW RULE RED YOURSELF on a row T259 did not design it '
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2450 P-75 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2450 P-80 -- gloss (colon) matches no registered rule (best trigram score 0 < 6): 'no bare grep, no rg, no `'
@@ -7504,7 +7635,7 @@ PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2663 P-69 -- gloss (trailin
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2679 P-71 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2721 P-1 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2721 P-5 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): 'is recorded for the A2-15 successor.",       "branch": "softhouse/A2-17-review-dec2-rev2"'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2726 P-8 -- gloss (dash) matches no registered rule (best trigram score 2 < 6): 'build the I-3/I-4 source guard that does not exist: nothing anywhere looks for a balance write path or an UPDATE/DELETE against the journal"'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2726 P-8 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2737 P-8 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2737 P-1 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2737 P-5 -- the id carries no sentence -- nothing binds it to a rule
@@ -7514,7 +7645,7 @@ PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2739 P-35 -- the id carries
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2739 P-35 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'five populations gated at zero, floor from a SECOND PROGRAM (WalkDir 44, git ls-files 44), and the head READS THE VALUE -- --prove shows it '
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2739 P-61 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2760 P-6 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2760 P-7 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): 'the capabilities.json and PIN.json schema ids — BEFORE P-1..P-5).",       "acceptance": null,'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2760 P-7 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2760 P-1 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2760 P-5 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2762 P-59 -- the id carries no sentence -- nothing binds it to a rule
@@ -7555,7 +7686,7 @@ PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:2990 P-10 -- the id carries
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3010 P-67 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3030 P-71 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3030 P-67 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3036 P-72 -- gloss (dash) matches no registered rule (best trigram score 2 < 6): "`git grep -E` reads \\\\\\\\b as a LITERAL 'b' on this machine and returns zero SILENTLY, T232's measurement).\\n\\nGRADE THESE SPECIFICALLY, each"
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3036 P-72 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3036 P-22 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'DRIVE THE INVARIANT RED'
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3036 P-40 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): "A2-15's brief named five things it must state as NAMED GAPS and not silently paper over"
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3036 P-69 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'Verify by re-running, not by reading the diff.\\n\\nA2-370 IS A SNAPSHOT AND A2-26 MOVED THE ORACLE'
@@ -7582,98 +7713,103 @@ PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3195 P-26 -- gloss (trailin
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3195 P-67 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3195 P-66 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3195 P-70 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3242 P-80 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3242 P-76 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'So this task BLOCKS the wiring of the attestation half of T269.\\n\\nDRIVE EACH OF THE FIVE RED through the shape that got through, not a shap'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3355 P-85 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3406 P-80 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3422 P-80 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3422 P-81 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3422 P-83 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3422 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3422 P-80 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3422 P-81 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3422 P-83 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3422 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3422 P-78 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3422 P-83 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3563 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3563 P-89 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3563 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3563 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3566 P-45 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'Both repairs SELF-CLEAR, so the fix installs nothing new to remember'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3566 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3656 P-75 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3656 P-89 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3656 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3679 P-88 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3682 P-88 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3682 P-88 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3707 P-92 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3732 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule text,\\nnever the pattern id alone.",       "dispatched_by_fire": "20260824-000016",'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3755 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule text beside any pattern id.",       "dispatched_by_fire": "20260824-000016",'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3757 P-89 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'T296 measured the consequence instead and found the flip converted a DATA refusal into a PROSE one'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3778 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule text beside any pattern id.",       "branch": "softhouse/t297-review-t295",'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3805 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number. \'Not found\' is a statement about the search -- say where you looked.",       "branch": "softhouse/T2'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3830 P-45 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'A convention that asks a future fire to remember something enforces nothing'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3830 P-86 -- gloss (colon) matches no registered rule (best trigram score 2 < 6): 'cite the rule TEXT beside any P-number.",       "branch": "softhouse/t299-t256-namespace-collision",'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3855 P-80 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3855 P-45 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): 'a guard that only works when someone remembers to run it enforces nothing; '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3855 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "dispatched_by_fire": "20260824-000016",'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3857 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3877 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3877 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number."     },'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3899 P-45 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'If either can persist, the fix installs a new thing to remember, which is what it was written to avoid'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3899 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number. \'Not found\' is a statement about the search -- say where you looked.",       "branch": "softhouse/T3'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3925 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3925 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3925 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3925 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number."     },'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3944 P-45 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'A convention someone must remember enforces nothing'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3944 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "branch": "softhouse/T304b-evidence-destruction",'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3972 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "branch": "softhouse/t305-openingbalance-accepting-side",'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3997 P-89 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'The claim is that a FOURTH shape -- most obviously an ACCEPTANCE, which no capture in this store observes -- is still refused as DATA rather'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3997 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "branch": "softhouse/T306-adjudicate-admit-widening",'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4025 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number."     },'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4048 P-91 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4048 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number. \'Not found\' is a statement about the search -- say where you looked.",       "branch": "softhouse/T3'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4074 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4074 P-85 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4074 P-85 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4074 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "branch": "softhouse/t309-sigterm-reconcile-bypass",'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4098 P-10 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4098 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from T297\'s blocking finding F-T297-1. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4117 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4117 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from T297\'s F-T297-3. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4135 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4135 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "note": "DONE, MERGED f327c8df. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4136 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4155 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4155 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from T298 F-3/F-4/B-2/B-3. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4173 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "note": "DONE, MERGED 1461d9ba. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4174 P-94 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4195 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4195 P-45 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4195 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report MISDIRECTING .softhouse/tasks.json:4195 P-86 -- gloss (colon) 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from FU-T299-1. ' matches P-95 (8) better than the cited P-86 (1); patterns.md P-95 = 'A FALLBACK AND A FAIL-OPEN ARE INDISTINGUISHABLE BY READING, AND THEY HAVE OPPOSITE SEVERITIES.'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4215 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "note": "DONE, MERGED. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4237 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from FU-T304-1. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4254 P-66 -- gloss (trailing-id) matches no registered rule (best trigram score 4 < 6): "'Not found' is a statement about the search, never about the world"
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4254 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "note": "DONE, MERGED 2f1ba61c. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4275 P-85 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4275 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number."     },'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4310 P-95 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4310 P-86 -- gloss (colon) matches no registered rule (best trigram score 5 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from FU-T316-3 and T316\'s decorative-reset observatio'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4330 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from T320\'s MEDIUM/micro findings. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4349 P-45 -- gloss (bracketed) matches no registered rule (best trigram score 1 < 6): "'a guard that only works when someone remembers to run it enforces nothing'"
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4349 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4349 P-84 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4349 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number."     },'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4365 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from T318 FU-T318-2. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4385 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from T318. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4404 P-84 -- gloss (dash) matches no registered rule (best trigram score 4 < 6): 'read the ABSENCE, it is a failed HARD guard, NOT an oracle outage), `T316-DEADPATH-FRONTIER: REFUSED rows=78 pinned=98 added=4 removed=24`. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4404 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 after ABORTING the T323 merge. '
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4421 P-16 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'a driver claim is worker-checkable'
-PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4421 P-86 -- gloss (colon) matches no registered rule (best trigram score 3 < 6): 'cite the rule TEXT beside any P-number.\\nHandoff to .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md, COMMITTED TO YOUR BRA'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3244 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3244 P-76 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'So this task BLOCKS the wiring of the attestation half of T269.\\n\\nDRIVE EACH OF THE FIVE RED through the shape that got through, not a shap'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3317 P-86 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3360 P-85 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3411 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3427 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3427 P-81 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3427 P-83 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3427 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3427 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3427 P-81 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3427 P-83 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3427 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3427 P-78 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3427 P-83 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3571 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3571 P-89 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3571 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3571 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3574 P-45 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'Both repairs SELF-CLEAR, so the fix installs nothing new to remember'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3574 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3664 P-75 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3664 P-89 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3664 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3687 P-88 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3690 P-88 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3690 P-88 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3715 P-92 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3740 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule text,\\nnever the pattern id alone.",       "dispatched_by_fire": "20260824-000016",'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3763 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule text beside any pattern id.",       "dispatched_by_fire": "20260824-000016",'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3765 P-89 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'T296 measured the consequence instead and found the flip converted a DATA refusal into a PROSE one'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3786 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule text beside any pattern id.",       "branch": "softhouse/t297-review-t295",'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3813 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number. \'Not found\' is a statement about the search -- say where you looked.",       "branch": "softhouse/T2'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3838 P-45 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'A convention that asks a future fire to remember something enforces nothing'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3838 P-86 -- gloss (colon) matches no registered rule (best trigram score 2 < 6): 'cite the rule TEXT beside any P-number.",       "branch": "softhouse/t299-t256-namespace-collision",'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3863 P-80 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3863 P-45 -- gloss (dash) matches no registered rule (best trigram score 1 < 6): 'a guard that only works when someone remembers to run it enforces nothing; '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3863 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "dispatched_by_fire": "20260824-000016",'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3865 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3885 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3885 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number."     },'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3907 P-45 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'If either can persist, the fix installs a new thing to remember, which is what it was written to avoid'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3907 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number. \'Not found\' is a statement about the search -- say where you looked.",       "branch": "softhouse/T3'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3933 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3933 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3933 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3933 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number."     },'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3952 P-45 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'A convention someone must remember enforces nothing'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3952 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "branch": "softhouse/T304b-evidence-destruction",'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:3980 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "branch": "softhouse/t305-openingbalance-accepting-side",'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4005 P-89 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'The claim is that a FOURTH shape -- most obviously an ACCEPTANCE, which no capture in this store observes -- is still refused as DATA rather'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4005 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "branch": "softhouse/T306-admit-gate-adjudication",'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4033 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number."     },'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4056 P-91 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4056 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number. \'Not found\' is a statement about the search -- say where you looked.",       "branch": "softhouse/T3'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4082 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4082 P-85 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4082 P-85 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4082 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "branch": "softhouse/t309-sigterm-reconcile-bypass",'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4106 P-10 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4106 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from T297\'s blocking finding F-T297-1. '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4125 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4125 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from T297\'s F-T297-3. '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4143 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4143 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "note": "DONE, MERGED f327c8df. '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4144 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4163 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4163 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from T298 F-3/F-4/B-2/B-3. '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4181 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "note": "DONE, MERGED 1461d9ba. '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4182 P-94 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4203 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4203 P-45 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4203 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report MISDIRECTING .softhouse/tasks.json:4203 P-86 -- gloss (colon) 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from FU-T299-1. ' matches P-95 (8) better than the cited P-86 (1); patterns.md P-95 = 'A FALLBACK AND A FAIL-OPEN ARE INDISTINGUISHABLE BY READING, AND THEY HAVE OPPOSITE SEVERITIES.'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4223 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "note": "DONE, MERGED. '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4245 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from FU-T304-1. '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4262 P-66 -- gloss (trailing-id) matches no registered rule (best trigram score 4 < 6): "'Not found' is a statement about the search, never about the world"
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4262 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "note": "DONE, MERGED 2f1ba61c. '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4283 P-85 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4283 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number."     },'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4318 P-95 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4318 P-86 -- gloss (colon) matches no registered rule (best trigram score 5 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from FU-T316-3 and T316\'s decorative-reset observatio'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4338 P-86 -- gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.",       "note": "Filed by fire 20260827-230001 from T320\'s MEDIUM/micro findings. '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4357 P-45 -- gloss (bracketed) matches no registered rule (best trigram score 1 < 6): "'a guard that only works when someone remembers to run it enforces nothing'"
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4357 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4357 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4357 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number."     },'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4373 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "note": "RECONCILE ERROR CORRECTED by fire 20260828-080001. '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4396 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "note": "DISPATCHED by fire 20260828-080001 batch 2. '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4416 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4416 P-86 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.",       "note": "DISPATCHED by fire 20260828-080001 batch 1, resuming rescued WIP (not rebuilding). '
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4436 P-16 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'a driver claim is worker-checkable'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4436 P-86 -- gloss (colon) matches no registered rule (best trigram score 3 < 6): 'cite the rule TEXT beside any P-number.\\nHandoff to .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md, COMMITTED TO YOUR BRA'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4463 P-89 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'CHECK IT IS STILL DEFAULT-DENY AFTER YOUR WIDENING, by construction: build a vector for a shape NO capture\\n    observes and show it is REFU'
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4497 P-66 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4497 P-84 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE .softhouse/tasks.json:4497 P-86 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/vectors/PIN-ledger.json:4 P-7 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/vectors/PIN-ledger.json:4 P-7 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE .softhouse/vectors/PIN-ledger.json:4 P-7 -- the id carries no sentence -- nothing binds it to a rule
@@ -7940,11 +8076,13 @@ PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/capture_test.go:261 P-
 PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:43 P-35 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '// has found was a NEGATIVE assertion'
 PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:52 P-9 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:150 P-1 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:264 P-89 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:472 P-8 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:644 P-10 -- the id carries no sentence -- nothing binds it to a rule
-PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:653 P-10 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'graded_against is a declarative record and does not execute "+ \t\t\t\t"anything, so a name nobody can run makes the claim unfalsifiable. '
-PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:845 P-66 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '// LIMIT OF THIS CLASSIFICATION, MEASURED AND STATED'
+PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:267 P-89 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:300 P-89 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '\t\t//     ACCEPTANCE -- is still refused, as DATA and not as prose'
+PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:305 P-89 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:545 P-8 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:753 P-10 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:762 P-10 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'graded_against is a declarative record and does not execute "+ \t\t\t\t"anything, so a name nobody can run makes the claim unfalsifiable. '
+PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/admit.go:954 P-66 -- gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '// LIMIT OF THIS CLASSIFICATION, MEASURED AND STATED'
 PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/capability.go:15 P-6 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/capability.go:18 P-6 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/capability.go:31 P-7 -- the id carries no sentence -- nothing binds it to a rule
@@ -7971,8 +8109,9 @@ PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/notgraded_
 PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/notgraded_test.go:209 P-35 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): '\t\t\t"measurement runs over nothing'
 PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/openingbalance_accept_test.go:77 P-10 -- gloss (colon) matches no registered rule (best trigram score 0 < 6): '// "graded_against is a DECLARATIVE record and does not execute anything" — so it'
 PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/openingbalance_accept_test.go:99 P-10 -- gloss (colon) matches no registered rule (best trigram score 1 < 6): 'a row "+ \t\t\t\t"naming an implementation nobody can execute is a sentence, not evidence", name)'
-PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/openingbalance_test.go:96 P-22 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): '// is worse than none'
-PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/openingbalance_test.go:226 P-7 -- the id carries no sentence -- nothing binds it to a rule
+PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/openingbalance_test.go:97 P-22 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): '// is worse than none'
+PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/openingbalance_test.go:216 P-11 -- gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): '\t\t\t// right for a reason that has expired'
+PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/openingbalance_test.go:542 P-7 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/vector.go:21 P-2 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/vector.go:63 P-9 -- the id carries no sentence -- nothing binds it to a rule
 PNUMBER-CITATIONS: report BARE nexus/internal/apps/ledger/conformance/vector.go:87 P-2 -- the id carries no sentence -- nothing binds it to a rule

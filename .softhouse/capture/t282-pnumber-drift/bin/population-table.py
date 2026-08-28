@@ -24,12 +24,19 @@ MENTION = "ERRATA-MENTION"
 # because a verdict with no reason is not a verdict. The handoff RENDERS from
 # here rather than restating it -- P-80: never restate a corrected value, make
 # the second site read the first.
+#
+# KEYED BY TEXT, NEVER BY LINE NUMBER. The first version keyed on
+# "file:LINE:cited"; merging main moved tasks.json:4195 -> :4203, the key
+# stopped matching, and the site silently reverted to UNADJUDICATED. That is
+# P-80 ("the count is the same defect as the line number") committed inside the
+# adjudication table for a citation-rot defect. Entries now match on
+# file + cited id + a stable gloss FRAGMENT, and an entry that matches NOTHING
+# is reported loudly -- a key that stopped matching must never look like a site
+# nobody judged.
 _ADJ = os.path.join(HERE, "..", "out", "adjudication.json")
-HAND = {}
+HAND = []
 if os.path.isfile(_ADJ):
-    for k, v in json.load(open(_ADJ, encoding="utf-8"))["verdicts"].items():
-        rel, ln, cid = k.rsplit(":", 2)
-        HAND[(rel, int(ln), int(cid))] = tuple(v)
+    HAND = json.load(open(_ADJ, encoding="utf-8"))["verdicts"]
 else:
     # Never silently proceed unadjudicated -- that would report REVIEW rows as
     # if nobody had looked, which is indistinguishable from nobody looking.
@@ -44,8 +51,10 @@ def adjudicate(f):
     conservative and its report tier is generous."""
     rel, ln, cited, best = f["file"], f["line"], f["cited"], f.get("best")
     g = (f.get("gloss") or "")
-    if (rel, ln, cited) in HAND:
-        return HAND[(rel, ln, cited)]
+    for e in HAND:
+        if e["file"] == rel and e["cited"] == cited and e["gloss_contains"] in g:
+            e["_hit"] = e.get("_hit", 0) + 1
+            return e["verdict"], e["reason"]
     # (1) the drift the task was dispatched for: P-79/P-80/P-83 carrying the
     # rule patterns.md defines one number higher. Recorded at P-86.
     if "never fix a rotted number" in g or "never fix a rotted" in g:
@@ -107,6 +116,14 @@ def main():
             print("  %s:%d %s" % (r[1], r[2], r[3]))
     else:
         print("\nUNADJUDICATED: 0 -- every flagged site has a verdict and a reason.")
+    stale = [e for e in HAND if not e.get("_hit")]
+    if stale:
+        print("STALE ADJUDICATION KEYS (%d) -- matched NOTHING in this run. A key that "
+              "stopped matching must not look like a site nobody judged:" % len(stale))
+        for e in stale:
+            print("  %s P-%d  gloss_contains=%r" % (e["file"], e["cited"], e["gloss_contains"]))
+    else:
+        print("STALE ADJUDICATION KEYS: 0 -- every recorded verdict found its site.")
     tp = [r for r in rows if r[5] == TP]
     z = {}
     for r in tp:

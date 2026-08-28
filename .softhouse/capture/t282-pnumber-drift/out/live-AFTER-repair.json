@@ -124,16 +124,16 @@
   6
  ],
  "counts": {
-  "sites": 8529,
+  "sites": 8685,
   "definition": 97,
-  "bare": 8016,
-  "consistent": 365,
+  "bare": 8155,
+  "consistent": 382,
   "misdirecting": 34,
   "undefined": 6,
   "negative_control": 11,
   "cross_referenced": 22,
   "skipped_self_source": 2,
-  "self_corrected": 25,
+  "self_corrected": 24,
   "skipped_self_output": 21
  },
  "thresholds": {
@@ -207,6 +207,26 @@
    "cited": 66,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "> meanwhile been reporting \"no vector added for two fires\" as though the cause were external. See **P-66**.",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/RESUME.md",
+   "line": 5,
+   "cited": 85,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "Written and pushed **BEFORE the first worker was spawned** (STEP 0 standing obligation, P-85). If you are",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/RESUME.md",
+   "line": 14,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "P-84), **46 parity vectors / 7884 cells**, 11/11 wrong ledger implementations DIED. Main is GREEN.",
    "zone": "directive",
    "fatal": false
   },
@@ -313,7 +333,17 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/fire-program.sh",
-   "line": 1306,
+   "line": 1379,
+   "cited": 66,
+   "detail": "gloss (possessive) matches no registered rule (best trigram score 4 < 6): ': \"\\'NOT FOUND\\' is a # statement about the search, never about the world\"). '",
+   "text": "# KNOWN LIMIT, STATED RATHER THAN IMPLIED (P-66's rule: \"'NOT FOUND' is a",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/bin/fire-program.sh",
+   "line": 1474,
    "cited": 58,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "#   grep-implementation question from a load-bearing guard (T189, P-58).",
@@ -323,7 +353,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/fire-program.sh",
-   "line": 1314,
+   "line": 1482,
    "cited": 57,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# pipeline status (measured rc=141 at 50k lines), which is P-57's hazard sitting",
@@ -333,7 +363,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/fire-program.sh",
-   "line": 1351,
+   "line": 1519,
    "cited": 35,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# iterations that were indistinguishable from \"no linked worktrees\" — P-35, a",
@@ -343,7 +373,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/fire-program.sh",
-   "line": 1355,
+   "line": 1523,
    "cited": 33,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# guard (P-33/P-58) — zsh's own `${(@f)}` and array slice do the same work.",
@@ -353,7 +383,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/fire-program.sh",
-   "line": 1355,
+   "line": 1523,
    "cited": 58,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# guard (P-33/P-58) — zsh's own `${(@f)}` and array slice do the same work.",
@@ -363,7 +393,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/fire-program.sh",
-   "line": 1488,
+   "line": 1656,
    "cited": 69,
    "detail": "gloss (colon) matches no registered rule (best trigram score 0 < 6): \"a measured count's shelf life is shorter than # a busy fire. \"",
    "text": "# one day, on one fire — P-69: a measured count's shelf life is shorter than",
@@ -373,7 +403,47 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/go-env.sh",
-   "line": 107,
+   "line": 105,
+   "cited": 86,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the anchor beside the number). Recipe: REVIEW.md F-6 #   and merge-step 2, whose words are *\"Take `go-env.sh` from MAC as the base, the'",
+   "text": "#   bare cardinal rots (P-86: cite the anchor beside the number). Recipe: REVIEW.md F-6",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/bin/go-env.sh",
+   "line": 127,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "#     It is also why strict is OPT-IN and OFF BY DEFAULT — see the P-84 caveat below.",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/bin/go-env.sh",
+   "line": 148,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "#     P-84 CAVEAT, WHICH IS WHY STRICT IS NOT THE DEFAULT. P-84: \"exit 2 with NO probe",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/bin/go-env.sh",
+   "line": 183,
+   "cited": 86,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): \"the anchor, not just the cardinal) — and T256's drive #                     ASSERTS on them, so renaming them would rot a document this task\"",
+   "text": "#                     (P-86: the anchor, not just the cardinal) — and T256's drive",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/bin/go-env.sh",
+   "line": 238,
    "cited": 80,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'the rc is CLASSIFIED, not swallowed — it is carried in _g_gitrc and reported in     # the diagnostic below. '",
    "text": "# P-80: the rc is CLASSIFIED, not swallowed — it is carried in _g_gitrc and reported in",
@@ -383,10 +453,20 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/go-env.sh",
-   "line": 186,
+   "line": 365,
+   "cited": 70,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 2 < 6): \"absence — and presence —         # decided by testing the actual file, never inferred from another command's output).\"",
+   "text": "# use\" must not be handed a name it cannot exec (P-70: absence — and presence —",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/bin/go-env.sh",
+   "line": 404,
    "cited": 80,
-   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '# own merits — there is no swallowed failure here to hide one'",
-   "text": "# own merits — there is no swallowed failure here to hide one (P-80).",
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '# on its own merits — there is no swallowed failure here to hide one'",
+   "text": "# on its own merits — there is no swallowed failure here to hide one (P-80).",
    "zone": "directive",
    "fatal": false
   },
@@ -17042,6 +17122,266 @@
   },
   {
    "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/20-strict-drive-postmerge.txt",
+   "line": 46,
+   "cited": 70,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '  ASSERT OK   : A3 stderr NAMES THE PATHS SEARCHED — absence reported as a search result'",
+   "text": "ASSERT OK   : A3 stderr NAMES THE PATHS SEARCHED — absence reported as a search result (P-70)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/20-strict-drive-postmerge.txt",
+   "line": 183,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/20-strict-drive-postmerge.txt",
+   "line": 183,
+   "cited": 50,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/20-strict-drive-postmerge.txt",
+   "line": 238,
+   "cited": 40,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 5 < 6): 'an enumerator must count what it skipped and say so.) DRIVE: GREEN'",
+   "text": "never dropped — P-40: an enumerator must count what it skipped and say so.)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/20-strict-drive.txt",
+   "line": 46,
+   "cited": 70,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '  ASSERT OK   : A3 stderr NAMES THE PATHS SEARCHED — absence reported as a search result'",
+   "text": "ASSERT OK   : A3 stderr NAMES THE PATHS SEARCHED — absence reported as a search result (P-70)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/20-strict-drive.txt",
+   "line": 183,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/20-strict-drive.txt",
+   "line": 183,
+   "cited": 50,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/20-strict-drive.txt",
+   "line": 238,
+   "cited": 40,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 5 < 6): 'an enumerator must count what it skipped and say so.) DRIVE: GREEN'",
+   "text": "never dropped — P-40: an enumerator must count what it skipped and say so.)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/30-full-bar-RED-frontier.txt",
+   "line": 26,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/30-full-bar-RED-frontier.txt",
+   "line": 26,
+   "cited": 50,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/30-full-bar.txt",
+   "line": 26,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/30-full-bar.txt",
+   "line": 26,
+   "cited": 50,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/40-t256-drive-after-graft.txt",
+   "line": 115,
+   "cited": 40,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 5 < 6): 'an enumerator must count what it skipped and say so.) DRIVE: GREEN'",
+   "text": "dropped — P-40: an enumerator must count what it skipped and say so.)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/80-full-bar-postmerge.txt",
+   "line": 26,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/evidence/80-full-bar-postmerge.txt",
+   "line": 26,
+   "cited": 50,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/instruments/10-locate-cloud-arm.sh",
+   "line": 75,
+   "cited": 35,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '    echo \"  A search over an empty corpus proves nothing'",
+   "text": "echo \"  A search over an empty corpus proves nothing (P-35), so no conclusion follows.\"",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/instruments/10-locate-cloud-arm.sh",
+   "line": 88,
+   "cited": 70,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# A false ABSENCE produced by the selector and not by the world: P-70 exactly. The",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/instruments/10-locate-cloud-arm.sh",
+   "line": 112,
+   "cited": 40,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '           echo \"  ref this loop could not read is a ref that would leave the census silently'",
+   "text": "echo \"  ref this loop could not read is a ref that would leave the census silently (P-40).\"",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh",
+   "line": 12,
+   "cited": 45,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): '\"a guard that only works when someone remembers to run it #            enforces nothing\"): the same assertions run against (a) the PRE-GRAFT'",
+   "text": "#        A11 VACUITY (P-45 — \"a guard that only works when someone remembers to run it",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh",
+   "line": 79,
+   "cited": 40,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 5 < 6): 'an enumerator must count what it skipped and say so).\" >&2   exit 2'",
+   "text": "echo \"REFUSING: quietly (P-40: an enumerator must count what it skipped and say so).\" >&2",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh",
+   "line": 152,
+   "cited": 70,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'grep -q \"searched\" \"$ERR\"       && ok \"A3 stderr NAMES THE PATHS SEARCHED — absence reported as a search result'",
+   "text": "grep -q \"searched\" \"$ERR\"       && ok \"A3 stderr NAMES THE PATHS SEARCHED — absence reported as a search result (P-70)\" || bad \"A3 asserts an absence without showing the search\"",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh",
+   "line": 165,
+   "cited": 40,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '  bad \"A3 no nexus/ to compile — NOT skipped quietly'",
+   "text": "bad \"A3 no nexus/ to compile — NOT skipped quietly (P-40)\"",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh",
+   "line": 307,
+   "cited": 40,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 5 < 6): 'an enumerator must count what it skipped and say so.)\" [ \"$FAILURES\" -eq 0 ] && { echo \"DRIVE: GREEN\"; '",
+   "text": "echo \" never dropped — P-40: an enumerator must count what it skipped and say so.)\"",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/instruments/60-cloud-f3-reproduction.sh",
+   "line": 55,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# A cardinal without an anchor is P-86 bait. Assert the ANCHOR TEXT, not the line number.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/instruments/60-cloud-f3-reproduction.sh",
+   "line": 71,
+   "cited": 40,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'count what you skipped and say so).\" >&2   exit 2'",
+   "text": "echo \"REFUSING: drive will NOT skip quietly (P-40: count what you skipped and say so).\" >&2",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t272-goenv-graft/instruments/70-consumer-census.sh",
+   "line": 8,
+   "cited": 70,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'an absence — or a census — is a statement about the SEARCH; '",
+   "text": "# (P-70: an absence — or a census — is a statement about the SEARCH; say where you looked).",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
    "file": ".softhouse/capture/t273-residue/evidence/00-baseline-residue-PRESENT.log",
    "line": 22,
    "cited": 22,
@@ -17752,6 +18092,316 @@
   },
   {
    "kind": "BARE",
+   "file": ".softhouse/capture/t277-shapelaw-salvage/evidence/50-conformance-bar.log",
+   "line": 26,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t277-shapelaw-salvage/evidence/50-conformance-bar.log",
+   "line": 26,
+   "cited": 50,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t277-shapelaw-salvage/evidence/51-conformance-bar-second-worker.log",
+   "line": 26,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t277-shapelaw-salvage/evidence/51-conformance-bar-second-worker.log",
+   "line": 26,
+   "cited": 50,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 2,
+   "cited": 96,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"\"\"T282 -- append the P-96 entry and the citation ERRATA table to patterns.md.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 43,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"never fix a rotted\": (80, \"P-80\"),",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 44,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"prints an absence over an error\": (81, \"P-81\"),",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 45,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"exits 1 on NO MATCH\": (81, \"P-81\"),",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 46,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"exits 1 on no match\": (81, \"P-81\"),",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 47,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"fail-opens INTO instruments meant to enforce the rule they broke\": (81, \"P-81\"),",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 72,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"the `P-86` off-by-one: the sentence is the rule defined one number higher\"))",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 80,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"`P-86` recorded the pattern ids rotting. `T282` was sent to settle the four ids it named and found the\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 82,
+   "cited": 69,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"14 genuinely drifted** — including one nobody had seen, `tasks.json:2374`, which cites `P-69` for\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 83,
+   "cited": 79,
+   "detail": "gloss (possessive) matches no registered rule (best trigram score 0 < 6): 'and is *not* part of the `P-86` off-by-one at all.\",        \"\",'",
+   "text": "\"`P-79`'s rule and is *not* part of the `P-86` off-by-one at all.\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 83,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"`P-79`'s rule and is *not* part of the `P-86` off-by-one at all.\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 85,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"**THE RULE, and it is the half `P-86` left implicit.** `P-86` says cite the id **and its sentence**.\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 85,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"**THE RULE, and it is the half `P-86` left implicit.** `P-86` says cite the id **and its sentence**.\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 95,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"1. **The erratum was a shield.** `P-86`'s body names `P-78`…`P-84` *in order to say those citations are\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 95,
+   "cited": 78,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"1. **The erratum was a shield.** `P-86`'s body names `P-78`…`P-84` *in order to say those citations are\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 95,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"1. **The erratum was a shield.** `P-86`'s body names `P-78`…`P-84` *in order to say those citations are\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 97,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"   already bound\\\"* — therefore exempted the drifted citations **because `P-86` mentions them**. The\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 101,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"   *quoted* with the correction on the same line. Resolved by `P-86`'s own remedy: if the right id is\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 103,
+   "cited": 33,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '**A markdown table cell is a citation boundary.** A correct `'",
+   "text": "\"3. **A markdown table cell is a citation boundary.** A correct `(P-33)` at the end of a row scored\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 104,
+   "cited": 25,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"   against `P-25` because the extractor walked backwards into a neighbouring cell about floating point.\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 106,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"**And the repair for `P-80` nearly committed `P-80`:** inserting this file's new banner shifted every\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 106,
+   "cited": 80,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): '** inserting this file\\'s new banner shifted every\",        \"definition line beneath it (`P-12` `:284`→`:315`), including the line numbers th'",
+   "text": "\"**And the repair for `P-80` nearly committed `P-80`:** inserting this file's new banner shifted every\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 107,
+   "cited": 12,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): '284`→`:315`), including the line numbers the new banner cites. '",
+   "text": "\"definition line beneath it (`P-12` `:284`→`:315`), including the line numbers the new banner cites. They\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 110,
+   "cited": 96,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"**COLLISION HAZARD, declared rather than discovered.** This entry claims **`P-96`** while four other\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 111,
+   "cited": 96,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"workers were live in the same fire. If a rival `P-96` lands, **renumber this one** — and note that the\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 112,
+   "cited": 78,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"instrument below is exactly what was missing when `P-78` collided: it detects a renumbering that failed\",",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/append-pattern.py",
+   "line": 140,
+   "cited": 96,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "print(\"appended P-96 + errata table with %d rows\" % len(rows))",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/census.py",
    "line": 9,
    "cited": 66,
@@ -17836,14 +18486,14 @@
    "line": 14,
    "cited": 81,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "patterns.md P-81  = the FAIL-OPEN guard / `|| echo` / `git grep` exits 1 on no",
+   "text": "patterns.md P-81  = the FAIL-OPEN guard: a search program's no-match status and",
    "zone": "evidence",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 16,
+   "line": 18,
    "cited": 83,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "patterns.md P-83  = TWO INDEPENDENT MOVEMENTS of one pinned number reconcile by",
@@ -17853,7 +18503,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 18,
+   "line": 20,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "patterns.md P-84  = exit 2 with NO PROBE LINE is the guard working -- read the",
@@ -17863,17 +18513,37 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 21,
-   "cited": 80,
+   "line": 23,
+   "cited": 81,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "So a P-80 citation whose neighbourhood talks about `|| echo` / no-match exit",
+   "text": "WHY THE P-81 LINE ABOVE AVOIDS QUOTING THE IDIOM, and it is the same lesson one",
    "zone": "evidence",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 22,
+   "line": 28,
+   "cited": 48,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "that CONTAINS a fail-open. That is patterns.md P-48 exactly (\"a source-text grep",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
+   "line": 35,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "So a P-80 citation whose neighbourhood talks about search-program exit",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
+   "line": 36,
    "cited": 81,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "codes and NOT about cardinals is citing P-81's subject under P-80's number, and",
@@ -17883,7 +18553,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 22,
+   "line": 36,
    "cited": 80,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "codes and NOT about cardinals is citing P-81's subject under P-80's number, and",
@@ -17893,7 +18563,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 23,
+   "line": 37,
    "cited": 83,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "a P-83 citation whose neighbourhood talks about the probe line's presence is",
@@ -17903,7 +18573,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 24,
+   "line": 38,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "citing P-84's subject under P-83's number. That is exactly the off-by-one",
@@ -17913,7 +18583,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 24,
+   "line": 38,
    "cited": 83,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "citing P-84's subject under P-83's number. That is exactly the off-by-one",
@@ -17923,7 +18593,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 25,
+   "line": 39,
    "cited": 86,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "patterns.md P-86 records.",
@@ -17933,7 +18603,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 52,
+   "line": 66,
    "cited": 80,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "80: (\"P-80 cardinal-rot\", CARDINAL, \"P-81 fail-open/exit-code\", FAILOPEN, 81),",
@@ -17943,7 +18613,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 52,
+   "line": 66,
    "cited": 81,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "80: (\"P-80 cardinal-rot\", CARDINAL, \"P-81 fail-open/exit-code\", FAILOPEN, 81),",
@@ -17953,7 +18623,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 53,
+   "line": 67,
    "cited": 83,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "83: (\"P-83 two-movements\", TWOMOVE, \"P-84 probe-line presence\", PRESENCE, 84),",
@@ -17963,7 +18633,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 53,
+   "line": 67,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "83: (\"P-83 two-movements\", TWOMOVE, \"P-84 probe-line presence\", PRESENCE, 84),",
@@ -17973,7 +18643,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 96,
+   "line": 110,
    "cited": 80,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "out.append(\"T282 CONCEPT SWEEP -- P-80 vs P-81, P-83 vs P-84\")",
@@ -17983,7 +18653,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 96,
+   "line": 110,
    "cited": 81,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "out.append(\"T282 CONCEPT SWEEP -- P-80 vs P-81, P-83 vs P-84\")",
@@ -17993,7 +18663,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 96,
+   "line": 110,
    "cited": 83,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "out.append(\"T282 CONCEPT SWEEP -- P-80 vs P-81, P-83 vs P-84\")",
@@ -18003,7 +18673,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/concept-sweep-8081-8384.py",
-   "line": 96,
+   "line": 110,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "out.append(\"T282 CONCEPT SWEEP -- P-80 vs P-81, P-83 vs P-84\")",
@@ -18013,28 +18683,8 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 48,
+   "line": 49,
    "cited": 79,
-   "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "# (1) the drift the task was dispatched for: P-79/P-80/P-83 carrying the",
-   "zone": "evidence",
-   "fatal": false
-  },
-  {
-   "kind": "BARE",
-   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 48,
-   "cited": 80,
-   "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "# (1) the drift the task was dispatched for: P-79/P-80/P-83 carrying the",
-   "zone": "evidence",
-   "fatal": false
-  },
-  {
-   "kind": "BARE",
-   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 48,
-   "cited": 83,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# (1) the drift the task was dispatched for: P-79/P-80/P-83 carrying the",
    "zone": "evidence",
@@ -18044,6 +18694,26 @@
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
    "line": 49,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# (1) the drift the task was dispatched for: P-79/P-80/P-83 carrying the",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 49,
+   "cited": 83,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# (1) the drift the task was dispatched for: P-79/P-80/P-83 carrying the",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 50,
    "cited": 86,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# rule patterns.md defines one number higher. Recorded at P-86.",
@@ -18053,7 +18723,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 51,
+   "line": 52,
    "cited": 79,
    "detail": "gloss (dash) matches no registered rule (best trigram score 0 < 6): 'the P-86 off-by-one\"     if \"prints an absence over an error\" in g or \"exits 1 on NO MATCH\" in g \\\\'",
    "text": "return TP, \"P-80's rule ('a corrected cardinal rots in every place it was restated') cited as P-79 -- the P-86 off-by-one\"",
@@ -18063,7 +18733,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 51,
+   "line": 52,
    "cited": 86,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "return TP, \"P-80's rule ('a corrected cardinal rots in every place it was restated') cited as P-79 -- the P-86 off-by-one\"",
@@ -18073,7 +18743,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 54,
+   "line": 55,
    "cited": 86,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "return TP, \"P-81's rule (git grep exits 1 on no-match, >1 on error) cited as P-80 -- the P-86 off-by-one\"",
@@ -18083,7 +18753,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 56,
+   "line": 57,
    "cited": 80,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "return TP, \"P-81's rule (the fail-open guard caught three workers' own instruments) cited as P-80/P-83 -- the P-86 off-by-one\"",
@@ -18093,7 +18763,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 56,
+   "line": 57,
    "cited": 83,
    "detail": "gloss (dash) matches no registered rule (best trigram score 0 < 6): 'the P-86 off-by-one\"     # (2) sweep/census OUTPUT files: the \\'gloss\\' is a grep result line, i.e. '",
    "text": "return TP, \"P-81's rule (the fail-open guard caught three workers' own instruments) cited as P-80/P-83 -- the P-86 off-by-one\"",
@@ -18103,7 +18773,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 56,
+   "line": 57,
    "cited": 86,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "return TP, \"P-81's rule (the fail-open guard caught three workers' own instruments) cited as P-80/P-83 -- the P-86 off-by-one\"",
@@ -21399,6 +22069,196 @@
   },
   {
    "kind": "BARE",
+   "file": ".softhouse/capture/t324-worktree-prune-skipbit/evidence/60-conformance.txt",
+   "line": 26,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t324-worktree-prune-skipbit/evidence/60-conformance.txt",
+   "line": 26,
+   "cited": 50,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t327-closure-accepting-side/README.md",
+   "line": 134,
+   "cited": 72,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`1.239` and `100.00000001` (P-72 / P-22), output in `out/RESIDUE-RULE-red-drive.txt`.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t327-closure-accepting-side/README.md",
+   "line": 134,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`1.239` and `100.00000001` (P-72 / P-22), output in `out/RESIDUE-RULE-red-drive.txt`.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh",
+   "line": 14,
+   "cited": 92,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# THE FENCE IS ON THE TARGET, NOT ON THE BODY -- T305's finding, inherited verbatim. P-92's content",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh",
+   "line": 373,
+   "cited": 11,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# LABEL was wrong, which is P-11 exactly: \"the code can be RIGHT and its stated reason WRONG, and",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh",
+   "line": 377,
+   "cited": 72,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '# its residue rule is calibrated on known positives by red-drive-residue-rule.py'",
+   "text": "# its residue rule is calibrated on known positives by red-drive-residue-rule.py (P-72).",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t327-closure-accepting-side/throwaway/docker-compose.t327.yml",
+   "line": 6,
+   "cited": 11,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# else\") until the measurement was actually taken -- which is P-11 in the file that teaches P-11, so",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t327-closure-accepting-side/throwaway/docker-compose.t327.yml",
+   "line": 6,
+   "cited": 11,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# else\") until the measurement was actually taken -- which is P-11 in the file that teaches P-11, so",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t327-closure-accepting-side/throwaway/env.sh",
+   "line": 11,
+   "cited": 22,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): \"# a clobbering assignment made a guard's own fail-closed branch untestable\"",
+   "text": "# a clobbering assignment made a guard's own fail-closed branch untestable (P-22).",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t327-closure-accepting-side/throwaway/guard-throwaway-isolation.sh",
+   "line": 82,
+   "cited": 72,
+   "detail": "gloss (bracketed) matches no registered rule (best trigram score 3 < 6): '\"calibrate the instrument on a known positive\"'",
+   "text": "# mode\" -- a false positive that P-72 (\"calibrate the instrument on a known positive\") is about, and",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t327-closure-accepting-side/throwaway/invariant-minor-units.py",
+   "line": 11,
+   "cited": 11,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "is P-11 exactly (\"the code can be RIGHT and its stated reason WRONG, and the reason is what the next",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t327-closure-accepting-side/throwaway/red-drive-residue-rule.py",
+   "line": 2,
+   "cited": 72,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"\"\"T327 -- P-72 CALIBRATION OF THE RESIDUE RULE.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t329-audit-date-zone-disagreement/README.md",
+   "line": 297,
+   "cited": 1,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): \"never infer a date's meaning from its field name.** `createdDate` is an audit timestamp on `/glclosures` and a business date on `/journalent\"",
+   "text": "**Rule P-1 — never infer a date's meaning from its field name.** `createdDate` is an audit timestamp",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t329-audit-date-zone-disagreement/README.md",
+   "line": 302,
+   "cited": 2,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): 'model the three quantities separately, because they are three.**'",
+   "text": "**Rule P-2 — model the three quantities separately, because they are three.**",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t329-audit-date-zone-disagreement/README.md",
+   "line": 310,
+   "cited": 3,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): 'the business date is an INPUT, never a clock read.** A port must never call `time.Now()` to obtain it. '",
+   "text": "**Rule P-3 — the business date is an INPUT, never a clock read.** A port must never call",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t329-audit-date-zone-disagreement/README.md",
+   "line": 315,
+   "cited": 4,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): 'the tenant zone comes from the tenant row.** `ZoneId.of(tenant.getTimezoneId())` `[VERIFIED: DateUtils.java:65-68]`. '",
+   "text": "**Rule P-4 — the tenant zone comes from the tenant row.** `ZoneId.of(tenant.getTimezoneId())`",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t329-audit-date-zone-disagreement/README.md",
+   "line": 319,
+   "cited": 5,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): \"the audit zone is a THIRD zone and it is the deployment's, not the tenant's.** `ZoneId.systemDefault()` `[VERIFIED: DateUtils.java:101-104]`\"",
+   "text": "**Rule P-5 — the audit zone is a THIRD zone and it is the deployment's, not the tenant's.**",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t329-audit-date-zone-disagreement/README.md",
+   "line": 327,
+   "cited": 6,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): \"the deserialiser must accept all three shapes and must not guess.** Decide the shape from the *endpoint + DTO*, matching §1's table, and **f\"",
+   "text": "**Rule P-6 — the deserialiser must accept all three shapes and must not guess.** Decide the shape",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
    "file": ".softhouse/capture/t64-zeroprincipal/MECHANISM-CORRECTION.md",
    "line": 5,
    "cited": 11,
@@ -24644,7 +25504,17 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 2493,
+   "line": 2397,
+   "cited": 86,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'line number that pointed at the wrong thing**'",
+   "text": "line number that pointed at the wrong thing** (P-86): the task brief and `T264` both located gap 2 at",
+   "zone": "ratified",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/gates.md",
+   "line": 2686,
    "cited": 72,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 2 < 6): '**The comparator was calibrated on a known negative before it was believed'",
    "text": "**The comparator was calibrated on a known negative before it was believed (P-72), and it needed to",
@@ -24654,7 +25524,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 2503,
+   "line": 2696,
    "cited": 69,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): \"section's prose says, confirmed against the live oracle** at gates.md commit `2d41838`\"",
    "text": "section's prose says, confirmed against the live oracle** at gates.md commit `2d41838` (P-69). And",
@@ -24664,7 +25534,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 2565,
+   "line": 2758,
    "cited": 69,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "> **DISCHARGED BY T241 — ANNOTATED, NOT REWRITTEN, and it turned out to be a P-69 instance rather",
@@ -24674,7 +25544,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 2736,
+   "line": 2929,
    "cited": 25,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "decision path, P-25) over all 29 family-B cells of the four committed raw captures — **and over",
@@ -24684,7 +25554,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 2790,
+   "line": 2983,
    "cited": 25,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "float still reached this gate. **22 is the count.** The rule is now written down as **P-25** in",
@@ -24694,7 +25564,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 2805,
+   "line": 2998,
    "cited": 25,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "1. **A LIVE FLOAT in an analysis script — P-25 in a file, not in a lesson.**",
@@ -24704,7 +25574,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 2931,
+   "line": 3124,
    "cited": 70,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": ">   P-70. **T223's follow-up 1, \"sweep the `n/2` ceiling concept OUTSIDE this section\", is still",
@@ -24714,7 +25584,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3062,
+   "line": 3255,
    "cited": 22,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'It also **attacked the rig**'",
    "text": "and `grade.go` citation. It also **attacked the rig** (P-22): T83's prediction checker was driven",
@@ -24724,7 +25594,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3065,
+   "line": 3258,
    "cited": 20,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "brief** (P-20): the brief attributed the family-B exemption result to family A for the **third**",
@@ -24734,7 +25604,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3108,
+   "line": 3301,
    "cited": 46,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "`out/census-t159.json`, `out/quote-audit-t159.json` (the 102-check P-46 audit) and",
@@ -24744,7 +25614,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3267,
+   "line": 3460,
    "cited": 32,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "It is P-32 (a snapshot read as the current state; the driver also passed A2-7 a likely-origin hypothesis it",
@@ -24754,7 +25624,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3378,
+   "line": 3571,
    "cited": 40,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "single unreviewed worker report, is precisely the mistake that produced **P-40** and **P-46** this same fire.",
@@ -24764,7 +25634,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3378,
+   "line": 3571,
    "cited": 46,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "single unreviewed worker report, is precisely the mistake that produced **P-40** and **P-46** this same fire.",
@@ -24774,7 +25644,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3427,
+   "line": 3620,
    "cited": 37,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "sentences and correctly marked that list a starting point, not the sweep (**P-37**); T159 found **25**, and",
@@ -24784,7 +25654,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3449,
+   "line": 3642,
    "cited": 9,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "committed digests reproduce; the P-9 control genuine by `merge-base --is-ancestor`, with the prediction",
@@ -24794,7 +25664,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3546,
+   "line": 3739,
    "cited": 26,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "as a floor rather than a ceiling and re-sweeping the file for the concept (P-26/P-37). T170 re-derived every",
@@ -24804,7 +25674,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3546,
+   "line": 3739,
    "cited": 37,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "as a floor rather than a ceiling and re-sweeping the file for the concept (P-26/P-37). T170 re-derived every",
@@ -24814,7 +25684,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3555,
+   "line": 3748,
    "cited": 46,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "P-46 shape at one remove: the reviewer was handed a subtly wrong version of what it was checking.*",
@@ -24824,7 +25694,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3595,
+   "line": 3788,
    "cited": 50,
    "detail": "gloss (dash) matches no registered rule (best trigram score 2 < 6): 'the prover was never made falsifiable toward the fix). '",
    "text": "negative**: it failed on two *author-correctable* defects, not a structural wall (**P-50** — the prover was",
@@ -24834,7 +25704,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3606,
+   "line": 3799,
    "cited": 8,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "misreading; and **P-8 is genuinely independent of P-1…P-5**, which is what licensed `A2-18` to build the",
@@ -24844,7 +25714,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3606,
+   "line": 3799,
    "cited": 1,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "misreading; and **P-8 is genuinely independent of P-1…P-5**, which is what licensed `A2-18` to build the",
@@ -24854,7 +25724,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3606,
+   "line": 3799,
    "cited": 5,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "misreading; and **P-8 is genuinely independent of P-1…P-5**, which is what licensed `A2-18` to build the",
@@ -24864,7 +25734,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3878,
+   "line": 4071,
    "cited": 61,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "`admit.go:49-52` marks a ledger vector INADMISSIBLE when its `dec2_revision` differs from the store pin, and all six `LDG-*` vectors and `PIN-ledger.json` currently say **5**. The check compares vector-to-pin and **never",
@@ -24874,7 +25744,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3900,
+   "line": 4093,
    "cited": 73,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "> authoritative — a **`P-73`** instance (filed where the reader who needs it will not look), and the",
@@ -24884,7 +25754,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3949,
+   "line": 4142,
    "cited": 69,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "**`P-69` at maximum blast radius.** Revision 5 was written **2h13m before** `A2-15` promoted the six ledger",
@@ -24894,7 +25764,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 3971,
+   "line": 4164,
    "cited": 61,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "every BAR pins (P-61). Driven four ways by `T246`, including `pin6/vec6 → 0`, the direction `T244` did not drive.",
@@ -24904,7 +25774,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 4013,
+   "line": 4206,
    "cited": 76,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "fallback. A guard proved only on the shape it was designed around is P-76's tautology-with-a-transcript.",
@@ -24914,7 +25784,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 4061,
+   "line": 4254,
    "cited": 81,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "(**P-81**): the checker covers **4 rows** while DEC-2 carried **115** `path:NNNN` citations, **90** into this",
@@ -24924,7 +25794,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 4085,
+   "line": 4278,
    "cited": 66,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "carrying a trailing `; MEASURED by …` are **silently unchecked**, contradicting its own P-66/P-70 claim.",
@@ -24934,7 +25804,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 4085,
+   "line": 4278,
    "cited": 70,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "carrying a trailing `; MEASURED by …` are **silently unchecked**, contradicting its own P-66/P-70 claim.",
@@ -24944,7 +25814,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 4098,
+   "line": 4291,
    "cited": 78,
    "detail": "gloss (colon) matches no registered rule (best trigram score 2 < 6): 'prepare **and** land in one    fire, on a host that can run the BAR). '",
    "text": "**REJECTED**. The row has been amended to the route actually taken (**P-78**: prepare **and** land in one",
@@ -24954,7 +25824,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/gates.md",
-   "line": 4103,
+   "line": 4296,
    "cited": 83,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "Probe line **PRESENT**, tested for presence **before** value (**P-83**), and reads `probe = up`.",
@@ -44673,6 +45543,66 @@
   },
   {
    "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md",
+   "line": 45,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "4. **P-86 pass over every cardinal in the graft comment** — each re-verified against the tree today and",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md",
+   "line": 98,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| probe line **PRESENCE** (read first, P-84) | **PRESENT, count 1** | PRESENT |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md",
+   "line": 110,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**No delta to explain.** The probe line's presence was read before its value: P-84's four exit-2",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md",
+   "line": 126,
+   "cited": 86,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 3 < 6): 'every cardinal re-verified before being re-cited**, since the tree moved after T254b measured:   - cloud `d7a7ea35:go-env.sh:159-167` — **st'",
+   "text": "- **P-86 — every cardinal re-verified before being re-cited**, since the tree moved after T254b measured:",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md",
+   "line": 251,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "NO probe line**, which by P-84 is a **failed hard guard, not an oracle outage** — and it was mine:",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md",
+   "line": 332,
+   "cited": 70,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "non-consumers of the file that puts a compiler on their PATH. Same family as P-70 and as sitting 1's",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
    "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T273.md",
    "line": 75,
    "cited": 57,
@@ -44738,6 +45668,76 @@
    "cited": 61,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "vectors** moves the vector-store digest `13b8342e…` that every BAR pins under P-61.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md",
+   "line": 257,
+   "cited": 70,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`max(0, B_minor − n·δ)`. Follow-up 3. `[UNVERIFIED]` (P-70.)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md",
+   "line": 289,
+   "cited": 70,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'I cannot say a stale one is absent elsewhere'",
+   "text": "own; I cannot say a stale one is absent elsewhere (P-70).",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md",
+   "line": 297,
+   "cited": 69,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "landed. Adjacent to P-69 (unread evidence) but distinct: here the evidence was read, published,",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md",
+   "line": 393,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "The substantive claim survives intact; only the cardinal was wrong. This is **P-86** in the small",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md",
+   "line": 468,
+   "cited": 70,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '  above stands, unchanged and still open'",
+   "text": "above stands, unchanged and still open (P-70).",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md",
+   "line": 489,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "citation was not. P-86, in the small, twice in the same lineage.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md",
+   "line": 500,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**P-84 applied in the right order — PRESENCE before VALUE.** *\"Exit 2 with NO probe line printed is a",
    "zone": "evidence",
    "fatal": false
   },
@@ -45831,6 +46831,26 @@
   },
   {
    "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T306.md",
+   "line": 96,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**P-84 applied in the prescribed order — PRESENCE before value.** *\"Exit 2 with NO probe line is a failed",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T306.md",
+   "line": 116,
+   "cited": 89,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`command=defineOpeningBalance` was ADMITTED AND GRADED, 15 cells / 5 money). **P-89 one level up: prose",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
    "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T309.md",
    "line": 98,
    "cited": 85,
@@ -46316,6 +47336,126 @@
    "cited": 89,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "`.softhouse/patterns.md`, P-89]. This handoff is a sentence until somebody files it.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T324.md",
+   "line": 197,
+   "cited": 86,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 3 < 6): '*\"an ID IS A CARDINAL … cite the id AND its sentence together so a shifted number is self-correcting\"* — both rules are quoted here beside t'",
+   "text": "Per **P-86** — *\"an ID IS A CARDINAL … cite the id AND its sentence together so a shifted",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md",
+   "line": 39,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**`bash .softhouse/conformance.sh` on the committed tree → exit 0.** **P-84 applied in the prescribed",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md",
+   "line": 197,
+   "cited": 72,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): '**Arm 4 is the calibration'",
+   "text": "4. **Arm 4 is the calibration (P-72).** It proves the closure is live and the boundary **INCLUSIVE** on",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md",
+   "line": 273,
+   "cited": 11,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "than was true (P-11, in the same task where I flag P-11 — twice now):",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md",
+   "line": 273,
+   "cited": 11,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): 'twice now):    - `env.sh`, `manifest.sh` — **PURE RENAMES**, `cmp`-identical.'",
+   "text": "than was true (P-11, in the same task where I flag P-11 — twice now):",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md",
+   "line": 287,
+   "cited": 11,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "2. **I SHIPPED A FALSE LABEL AND THEN CORRECTED IT, WHICH IS P-11 IN MY OWN SCRIPT.** `capture.sh`",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T329.md",
+   "line": 114,
+   "cited": 1,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): \"**PORT:** never infer a date's meaning from its name\"",
+   "text": "**PORT:** never infer a date's meaning from its name (P-1); model calendar date / business date /",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T329.md",
+   "line": 115,
+   "cited": 2,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'audit instant as three different types'",
+   "text": "audit instant as three different types (P-2); the business date is an **input**, never `time.Now()`",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T329.md",
+   "line": 116,
+   "cited": 3,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "(P-3); tenant zone from the tenant row (P-4); the audit zone is a **third** zone, the deployment's",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T329.md",
+   "line": 116,
+   "cited": 4,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'tenant zone from the tenant row'",
+   "text": "(P-3); tenant zone from the tenant row (P-4); the audit zone is a **third** zone, the deployment's",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T329.md",
+   "line": 117,
+   "cited": 5,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "(P-5); the deserialiser must fail loudly on an unexpected shape, never fall back (P-6).",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T329.md",
+   "line": 117,
+   "cited": 6,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'the deserialiser must fail loudly on an unexpected shape, never fall back'",
+   "text": "(P-5); the deserialiser must fail loudly on an unexpected shape, never fall back (P-6).",
    "zone": "evidence",
    "fatal": false
   },
@@ -47926,6 +49066,16 @@
    "cited": 45,
    "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): '*\"a guard that only works when someone remembers to run it enforces nothing.\"* The corpse   sweep is a guard the driver runs by hand, by eye'",
    "text": "- **P-45** — *\"a guard that only works when someone remembers to run it enforces nothing.\"* The corpse",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/observations/20260828-reconcile-demotes-merged-work.md",
+   "line": 63,
+   "cited": 66,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "archived out of `tasks.json` into `.softhouse/runs/*.tasks.json` (P-66's population), and that remains",
    "zone": "evidence",
    "fatal": false
   },
@@ -50829,16 +51979,6 @@
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "`P-13`/`P-31` and `P-26`, though only their authors can say. Naming them in this table made the checker go",
    "zone": "directive",
-   "fatal": false
-  },
-  {
-   "kind": "BARE",
-   "file": ".softhouse/program.json",
-   "line": 73,
-   "cited": 95,
-   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 3 < 6): \"T316 refuted a task the driver filed with the conclusion in its title - the 'fail-open' is an announced two-candidate fallback\"",
-   "text": "\"cursor\": \"Fire 20260827-230001 LOCAL. Oracle was UNREACHABLE at start and THIS FIRE BROUGHT IT UP on the postgresql compose profile (80s to healthy, PostgreSQL 18.3, pinned Fineract 426a23544) - it was never a park reas",
-   "zone": "orchestrator",
    "fatal": false
   },
   {
@@ -56948,6 +58088,166 @@
    "cited": 85,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '    DISPATCH fire 20260823-140001 batch 1 — 8 workers, PUSHED BEFORE SPAWN'",
    "text": "DISPATCH fire 20260823-140001 batch 1 — 8 workers, PUSHED BEFORE SPAWN (P-85)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/REVIEW.md",
+   "line": 103,
+   "cited": 35,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 2 < 6): '*\"every vacuous guard this program has found was a NEGATIVE assertion\"* — and a guard whose safety is'",
+   "text": "**The capability gate contributed NO REASON AT ALL under the driver's predicate.** patterns.md, P-35:",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/REVIEW.md",
+   "line": 182,
+   "cited": 89,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| **the driver's OWN flagged clause**: T296's *\"a FOURTH shape — most obviously an ACCEPTANCE — is still refused\"* | **the driver was RIGHT to flag it FALSE, and right about which half.** P2 measured ADMITTED AND GRADED ",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/REVIEW.md",
+   "line": 271,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "- **P-84 applied in the prescribed order — PRESENCE before value.** The probe line is **PRESENT** at",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/REVIEW.md",
+   "line": 290,
+   "cited": 89,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| **T306-F-1** | HIGH — CLOSED | The gate's comment asserted a control that was not firing: *\"a FOURTH shape — most obviously an ACCEPTANCE — is still refused, as DATA and not as prose\"*. Measured: an acceptance with `co",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/out/00-bar-BASELINE-main.txt",
+   "line": 26,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/out/00-bar-BASELINE-main.txt",
+   "line": 26,
+   "cited": 50,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/out/40-flip-armA-graded-true.txt",
+   "line": 135,
+   "cited": 35,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'Stated rather than left as silence'",
+   "text": "and none was minted. Stated rather than left as silence (P-35).",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/out/41-flip-armB-graded-false.txt",
+   "line": 135,
+   "cited": 35,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'Stated rather than left as silence'",
+   "text": "and none was minted. Stated rather than left as silence (P-35).",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/out/41-flip-armB-graded-false.txt",
+   "line": 172,
+   "cited": 11,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "capability \"ledger.opening.balance.and.closure\" is marked in_graded_domain FALSE: TWO OF THE THREE SHAPES ARE NOW OBSERVED [T295; was one]. (1) THE OPENING-BALANCE REFUSAL, by T294's OB-01: POST /journalentries?command=d",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/out/41-flip-armB-graded-false.txt",
+   "line": 176,
+   "cited": 11,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "capability \"ledger.opening.balance.and.closure\" is marked in_graded_domain FALSE: TWO OF THE THREE SHAPES ARE NOW OBSERVED [T295; was one]. (1) THE OPENING-BALANCE REFUSAL, by T294's OB-01: POST /journalentries?command=d",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/out/41-flip-armB-graded-false.txt",
+   "line": 178,
+   "cited": 11,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "capability \"ledger.opening.balance.and.closure\" is marked in_graded_domain FALSE: TWO OF THE THREE SHAPES ARE NOW OBSERVED [T295; was one]. (1) THE OPENING-BALANCE REFUSAL, by T294's OB-01: POST /journalentries?command=d",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/out/41-flip-armB-graded-false.txt",
+   "line": 180,
+   "cited": 11,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "capability \"ledger.opening.balance.and.closure\" is marked in_graded_domain FALSE: TWO OF THE THREE SHAPES ARE NOW OBSERVED [T295; was one]. (1) THE OPENING-BALANCE REFUSAL, by T294's OB-01: POST /journalentries?command=d",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/out/41-flip-armB-graded-false.txt",
+   "line": 379,
+   "cited": 11,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "carries the distinction -- which is P-11 exactly: the code can be right and its stated",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/out/60-bar-FINAL.txt",
+   "line": 26,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/out/60-bar-FINAL.txt",
+   "line": 26,
+   "cited": 50,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/reviews/T306/probe/store-tripwire.sh",
+   "line": 8,
+   "cited": 35,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# A guard that has never been seen red is not a guard (P-35, patterns.md:",
    "zone": "evidence",
    "fatal": false
   },
@@ -70962,7 +72262,7 @@
    "line": 192,
    "cited": 9,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'Register predictions BEFORE running the probe'",
-   "text": "\"description\": \"T101's suggested probe, carried forward by T112 as its follow-up 5 and unexecuted. Family B (600.0% p.a., MNT 0.01, n >= 104) is a GENUINE non-amortization that the Go port reproduces cell for cell — so '",
+   "text": "\"description\": \"T101's suggested probe, carried forward by T112 as its follow-up 5 and unexecuted. Family B (600.0% p.a., MNT 0.01, n >= 104) is a GENUINE non-amortization that the Go port reproduces cell for cell \\u2014",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -70972,7 +72272,7 @@
    "line": 193,
    "cited": 5,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T112 follow-up 5 / T101. NEEDS THE ORACLE — local-fire-only work. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tie",
+   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T112 follow-up 5 / T101. NEEDS THE ORACLE \\u2014 local-fire-only work. || local fire 20260821-134344: P-5 triage \\u2014 MONEY-EXEMPT, stays LIVE. Carried in",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -70982,7 +72282,7 @@
    "line": 193,
    "cited": 9,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'Told to commit predictions FIRST'",
-   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T112 follow-up 5 / T101. NEEDS THE ORACLE — local-fire-only work. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tie",
+   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T112 follow-up 5 / T101. NEEDS THE ORACLE \\u2014 local-fire-only work. || local fire 20260821-134344: P-5 triage \\u2014 MONEY-EXEMPT, stays LIVE. Carried in",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -70992,7 +72292,7 @@
    "line": 193,
    "cited": 25,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'Told to commit predictions FIRST (P-9), decide the can-it-exceed-one-minor-unit question in Decimal/integers never float'",
-   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T112 follow-up 5 / T101. NEEDS THE ORACLE — local-fire-only work. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tie",
+   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T112 follow-up 5 / T101. NEEDS THE ORACLE \\u2014 local-fire-only work. || local fire 20260821-134344: P-5 triage \\u2014 MONEY-EXEMPT, stays LIVE. Carried in",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -71002,7 +72302,7 @@
    "line": 193,
    "cited": 9,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T112 follow-up 5 / T101. NEEDS THE ORACLE — local-fire-only work. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tie",
+   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T112 follow-up 5 / T101. NEEDS THE ORACLE \\u2014 local-fire-only work. || local fire 20260821-134344: P-5 triage \\u2014 MONEY-EXEMPT, stays LIVE. Carried in",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -71072,7 +72372,7 @@
    "line": 249,
    "cited": 5,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || ",
+   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129. || local fire 20260821-134344: P-5 triage \\u2014 MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md \\u",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -71142,7 +72442,7 @@
    "line": 283,
    "cited": 5,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T136 / T128. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local f",
+   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T136 / T128. || local fire 20260821-134344: P-5 triage \\u2014 MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md \\u00a71. ",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -71152,7 +72452,7 @@
    "line": 283,
    "cited": 13,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T136 / T128. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local f",
+   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T136 / T128. || local fire 20260821-134344: P-5 triage \\u2014 MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md \\u00a71. ",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -71162,7 +72462,7 @@
    "line": 283,
    "cited": 24,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T136 / T128. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local f",
+   "text": "\"note\": \"Raised by the driver, local fire 20260821-080001, from T136 / T128. || local fire 20260821-134344: P-5 triage \\u2014 MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md \\u00a71. ",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -72436,7 +73736,7 @@
    "line": 1044,
    "cited": 35,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"title\": \"P-35 INSIDE THE P-35 MACHINERY — the harness reads the census line's PRESENCE and never its NUMBERS, so a 0/0/0 stub is a PASS\",",
+   "text": "\"title\": \"P-35 INSIDE THE P-35 MACHINERY \\u2014 the harness reads the census line's PRESENCE and never its NUMBERS, so a 0/0/0 stub is a PASS\",",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -72446,7 +73746,7 @@
    "line": 1044,
    "cited": 35,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"title\": \"P-35 INSIDE THE P-35 MACHINERY — the harness reads the census line's PRESENCE and never its NUMBERS, so a 0/0/0 stub is a PASS\",",
+   "text": "\"title\": \"P-35 INSIDE THE P-35 MACHINERY \\u2014 the harness reads the census line's PRESENCE and never its NUMBERS, so a 0/0/0 stub is a PASS\",",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -73105,8 +74405,8 @@
    "file": ".softhouse/tasks.json",
    "line": 1679,
    "cited": 45,
-   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '      \"title\": \"v3 is wired to nothing — T185\\'s F-4 survives T207'",
-   "text": "\"title\": \"v3 is wired to nothing — T185's F-4 survives T207 (P-45), and the two originals are still unguarded\",",
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '      \"title\": \"v3 is wired to nothing \\\\u2014 T185\\'s F-4 survives T207'",
+   "text": "\"title\": \"v3 is wired to nothing \\u2014 T185's F-4 survives T207 (P-45), and the two originals are still unguarded\",",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -73277,6 +74577,16 @@
    "cited": 70,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 2 < 6): 'and IT DID NOT SWEEP patterns.md, obligations.md, gates-proposed-answers.md, docs/ or the T116-G8-FAMB-* reason strings for the falsified n/'",
    "text": "\"note\": \"local fire 20260822-140002: DONE + MERGED (1707793). THE G-8 SECTION IS REBUILT AROUND T229's MEASURED LAW AND THE FALSIFIED CEILING IS GONE -- and, the actual point of the task, THE PROSE THAT REASONED FROM IT ",
+   "zone": "orchestrator",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/tasks.json",
+   "line": 1809,
+   "cited": 72,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"title\": \"Write P-72 \\u2014 a sweep is an INSTRUMENT; calibrate it on a known positive before you report its negatives\",",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -73526,7 +74836,7 @@
    "line": 1891,
    "cited": 40,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"title\": \"cap9.sh:49 still lacks QUIT — T216's named P-40 residual, and the 'successor file once evidence is committed' convention needs deciding, not assuming\",",
+   "text": "\"title\": \"cap9.sh:49 still lacks QUIT \\u2014 T216's named P-40 residual, and the 'successor file once evidence is committed' convention needs deciding, not assuming\",",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -73696,7 +75006,7 @@
    "line": 1952,
    "cited": 24,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"title\": \"T138's r11 hygiene check lost 95.3% of its hits to a literal-`b` escape — re-run it with a sound instrument and report what a P-24 check never saw\",",
+   "text": "\"title\": \"T138's r11 hygiene check lost 95.3% of its hits to a literal-`b` escape \\u2014 re-run it with a sound instrument and report what a P-24 check never saw\",",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -73816,7 +75126,7 @@
    "line": 2015,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"title\": \"A GREEN HARNESS RUN EXECUTES NONE OF THE SIX WRONG IMPLEMENTATIONS — the fourth instance of P-45; plus a citation check that resolves tautologically\",",
+   "text": "\"title\": \"A GREEN HARNESS RUN EXECUTES NONE OF THE SIX WRONG IMPLEMENTATIONS \\u2014 the fourth instance of P-45; plus a citation check that resolves tautologically\",",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -73896,7 +75206,7 @@
    "line": 2037,
    "cited": 69,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'stamp what you measure with the commit you measured it at). '",
-   "text": "\"description\": \"A2-15 found it, A2-34 confirmed it, and BOTH correctly declined to act on it.\\n\\nTHE DEFECT. `docs/adr/DEC-2-gl-accounting-adapter.md` line 823 (§4.4) states that `I-5` is ungraded because **'the corpus c",
+   "text": "\"description\": \"A2-15 found it, A2-34 confirmed it, and BOTH correctly declined to act on it.\\n\\nTHE DEFECT. `docs/adr/DEC-2-gl-accounting-adapter.md` line 823 (\\u00a74.4) states that `I-5` is ungraded because **'the cor",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -73906,7 +75216,7 @@
    "line": 2037,
    "cited": 26,
    "detail": "gloss (colon) matches no registered rule (best trigram score 2 < 6): \"the concept, not the sentence). If 'the corpus contains no reversal' or an equivalent has been restated in handoffs, reviews, `capabilities-\"",
-   "text": "\"description\": \"A2-15 found it, A2-34 confirmed it, and BOTH correctly declined to act on it.\\n\\nTHE DEFECT. `docs/adr/DEC-2-gl-accounting-adapter.md` line 823 (§4.4) states that `I-5` is ungraded because **'the corpus c",
+   "text": "\"description\": \"A2-15 found it, A2-34 confirmed it, and BOTH correctly declined to act on it.\\n\\nTHE DEFECT. `docs/adr/DEC-2-gl-accounting-adapter.md` line 823 (\\u00a74.4) states that `I-5` is ungraded because **'the cor",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -74026,7 +75336,7 @@
    "line": 2097,
    "cited": 69,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later — and BIGGER, because this defect sits where every reader of DEC-2 is instructed to start.\\n\\nTHE DEFECT. `do",
+   "text": "\"description\": \"G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later \\u2014 and BIGGER, because this defect sits where every reader of DEC-2 is instructed to start.\\n\\nTHE DEFECT",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -74035,8 +75345,8 @@
    "file": ".softhouse/tasks.json",
    "line": 2097,
    "cited": 69,
-   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): ' notices when the world moves under a claim it publishes as measured fact — and it put the most perishable such claim where every reader is '",
-   "text": "\"description\": \"G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later — and BIGGER, because this defect sits where every reader of DEC-2 is instructed to start.\\n\\nTHE DEFECT. `do",
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'ces when the world moves under a claim it publishes as measured fact \\\\u2014 and it put the most perishable such claim where every reader is '",
+   "text": "\"description\": \"G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later \\u2014 and BIGGER, because this defect sits where every reader of DEC-2 is instructed to start.\\n\\nTHE DEFECT",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -74045,8 +75355,8 @@
    "file": ".softhouse/tasks.json",
    "line": 2097,
    "cited": 26,
-   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'the concept, not the sentence). A document that went stale in one banner went stale on a date, not in a paragraph.\\\\n\\\\n⚠ **DO NOT BUMP `.soft'",
-   "text": "\"description\": \"G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later — and BIGGER, because this defect sits where every reader of DEC-2 is instructed to start.\\n\\nTHE DEFECT. `do",
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'the concept, not the sentence). A document that went stale in one banner went stale on a date, not in a paragraph.\\\\n\\\\n\\\\u26a0 **DO NOT BUMP `'",
+   "text": "\"description\": \"G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later \\u2014 and BIGGER, because this defect sits where every reader of DEC-2 is instructed to start.\\n\\nTHE DEFECT",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -74056,7 +75366,7 @@
    "line": 2097,
    "cited": 61,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 4 < 6): 'bumping both moves the vector-store digest every BAR pins'",
-   "text": "\"description\": \"G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later — and BIGGER, because this defect sits where every reader of DEC-2 is instructed to start.\\n\\nTHE DEFECT. `do",
+   "text": "\"description\": \"G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later \\u2014 and BIGGER, because this defect sits where every reader of DEC-2 is instructed to start.\\n\\nTHE DEFECT",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -74066,7 +75376,7 @@
    "line": 2097,
    "cited": 75,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later — and BIGGER, because this defect sits where every reader of DEC-2 is instructed to start.\\n\\nTHE DEFECT. `do",
+   "text": "\"description\": \"G-14, raised from T246's F-1 (HIGH). Same shape as T244/G-13, one document, one revision later \\u2014 and BIGGER, because this defect sits where every reader of DEC-2 is instructed to start.\\n\\nTHE DEFECT",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -74515,7 +75825,7 @@
    "file": ".softhouse/tasks.json",
    "line": 2230,
    "cited": 74,
-   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'Never `git commit -m` with a backtick — heredoc + `git commit -F`'",
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'Never `git commit -m` with a backtick \\\\u2014 heredoc + `git commit -F`'",
    "text": "\"description\": \"MEASURED THIS FIRE on Linux (cloud catch-up fire 2026-08-22T12:00Z), on clean main at 2b1e2e7: `bash .softhouse/conformance.sh` EXITS 2 WITH NO PROBE LINE PRINTED. Per the softhouse-program decision table",
    "zone": "orchestrator",
    "fatal": false
@@ -74695,7 +76005,7 @@
    "file": ".softhouse/tasks.json",
    "line": 2337,
    "cited": 22,
-   "detail": "gloss (dash) matches no registered rule (best trigram score 0 < 6): 'standalone red is not wired; you must see it fail through the route that runs it). '",
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"T236 (merged 40c6b4c) went looking for a missing QUIT in a trap and found something larger it was not sent to find: `manifest.py verify` under .softhouse/capture/tierA-a2/ had been FAILING, with 13 discre",
    "zone": "orchestrator",
    "fatal": false
@@ -74825,9 +76135,9 @@
    "file": ".softhouse/tasks.json",
    "line": 2374,
    "cited": 69,
-   "detail": "gloss (trailing-id) 'ayer out: the guard did not merely fail to run, it RAN, wrote its answer down, and the summary line above it said the opposite.\\\\n\\\\nTHE JOB:\\\\' matches P-79 (21) better than the cited P-69 (0); patterns.md P-79 = 'EVIDENCE NOT MISSING, UNREAD. A recorded predicate that no summary consults.'",
+   "detail": "gloss (trailing-id) 'out: the guard did not merely fail to run, it RAN, wrote its answer down, and the summary line above it said the opposite.\\\\n\\\\nTHE JOB:\\\\n(1) ' matches P-79 (21) better than the cited P-69 (0); patterns.md P-79 = 'EVIDENCE NOT MISSING, UNREAD. A recorded predicate that no summary consults.'",
    "best": 79,
-   "gloss": "ayer out: the guard did not merely fail to run, it RAN, wrote its answer down, and the summary line above it said the opposite.\\n\\nTHE JOB:\\n(1) RE-DERIVE the driver's measurement yourself before accepting it — read classify-t229.json at HEAD, state the commit",
+   "gloss": "out: the guard did not merely fail to run, it RAN, wrote its answer down, and the summary line above it said the opposite.\\n\\nTHE JOB:\\n(1) RE-DERIVE the driver's measurement yourself before accepting it \\u2014 read classify-t229.json at HEAD, state the commit",
    "how": "trailing-id",
    "grams": 6,
    "score": 21,
@@ -74884,7 +76194,7 @@
    "line": 2404,
    "cited": 67,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"You are an INDEPENDENT reviewer. You did not write T255. ASSUME DEFECTS EXIST. T255 was told to PREPARE AND LAND DEC-2 revision 8 in one fire, applying T251's C-1..C-8, and — the load-bearing instruction ",
+   "text": "\"description\": \"You are an INDEPENDENT reviewer. You did not write T255. ASSUME DEFECTS EXIST. T255 was told to PREPARE AND LAND DEC-2 revision 8 in one fire, applying T251's C-1..C-8, and \\u2014 the load-bearing instruc",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -74894,7 +76204,7 @@
    "line": 2404,
    "cited": 22,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'A checker you did not see fail is a checker you have not verified'",
-   "text": "\"description\": \"You are an INDEPENDENT reviewer. You did not write T255. ASSUME DEFECTS EXIST. T255 was told to PREPARE AND LAND DEC-2 revision 8 in one fire, applying T251's C-1..C-8, and — the load-bearing instruction ",
+   "text": "\"description\": \"You are an INDEPENDENT reviewer. You did not write T255. ASSUME DEFECTS EXIST. T255 was told to PREPARE AND LAND DEC-2 revision 8 in one fire, applying T251's C-1..C-8, and \\u2014 the load-bearing instruc",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -74903,8 +76213,8 @@
    "file": ".softhouse/tasks.json",
    "line": 2404,
    "cited": 75,
-   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'Use /usr/bin/grep, git grep -P or python3 re — never bare grep, never rg'",
-   "text": "\"description\": \"You are an INDEPENDENT reviewer. You did not write T255. ASSUME DEFECTS EXIST. T255 was told to PREPARE AND LAND DEC-2 revision 8 in one fire, applying T251's C-1..C-8, and — the load-bearing instruction ",
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'Use /usr/bin/grep, git grep -P or python3 re \\\\u2014 never bare grep, never rg'",
+   "text": "\"description\": \"You are an INDEPENDENT reviewer. You did not write T255. ASSUME DEFECTS EXIST. T255 was told to PREPARE AND LAND DEC-2 revision 8 in one fire, applying T251's C-1..C-8, and \\u2014 the load-bearing instruc",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -74914,7 +76224,7 @@
    "line": 2404,
    "cited": 80,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 2 < 6): 'Classify git grep exit status: 0 matched, 1 real negative, >1 ABORT'",
-   "text": "\"description\": \"You are an INDEPENDENT reviewer. You did not write T255. ASSUME DEFECTS EXIST. T255 was told to PREPARE AND LAND DEC-2 revision 8 in one fire, applying T251's C-1..C-8, and — the load-bearing instruction ",
+   "text": "\"description\": \"You are an INDEPENDENT reviewer. You did not write T255. ASSUME DEFECTS EXIST. T255 was told to PREPARE AND LAND DEC-2 revision 8 in one fire, applying T251's C-1..C-8, and \\u2014 the load-bearing instruc",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -74981,9 +76291,9 @@
    "file": ".softhouse/tasks.json",
    "line": 2427,
    "cited": 83,
-   "detail": "gloss (trailing-id) \"hree separate workers last fire wrote fail-opens INTO instruments meant to enforce the rule they broke (P-80) — check T250's own instruments\" matches P-81 (9) better than the cited P-83 (0); patterns.md P-81 = \"THE FAIL-OPEN GUARD CAUGHT THREE WORKERS' OWN INSTRUMENTS IN ONE FIRE, INCLUDING TWO WRITTEN TO ENFORCE THE VE\"",
+   "detail": "gloss (trailing-id) \"separate workers last fire wrote fail-opens INTO instruments meant to enforce the rule they broke (P-80) \\\\u2014 check T250's own instruments\" matches P-81 (9) better than the cited P-83 (0); patterns.md P-81 = \"THE FAIL-OPEN GUARD CAUGHT THREE WORKERS' OWN INSTRUMENTS IN ONE FIRE, INCLUDING TWO WRITTEN TO ENFORCE THE VE\"",
    "best": 81,
-   "gloss": "hree separate workers last fire wrote fail-opens INTO instruments meant to enforce the rule they broke (P-80) — check T250's own instruments before you check anything else.\\n(6) Re-run the BAR yourself and report the probe line's PRESENCE first, then its value",
+   "gloss": "separate workers last fire wrote fail-opens INTO instruments meant to enforce the rule they broke (P-80) \\u2014 check T250's own instruments before you check anything else.\\n(6) Re-run the BAR yourself and report the probe line's PRESENCE first, then its value",
    "how": "trailing-id",
    "grams": 2,
    "score": 9,
@@ -75379,8 +76689,8 @@
    "file": ".softhouse/tasks.json",
    "line": 2726,
    "cited": 8,
-   "detail": "gloss (dash) matches no registered rule (best trigram score 2 < 6): 'build the I-3/I-4 source guard that does not exist: nothing anywhere looks for a balance write path or an UPDATE/DELETE against the journal\"'",
-   "text": "\"title\": \"DEC-2 P-8 — build the I-3/I-4 source guard that does not exist: nothing anywhere looks for a balance write path or an UPDATE/DELETE against the journal\",",
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"title\": \"DEC-2 P-8 \\u2014 build the I-3/I-4 source guard that does not exist: nothing anywhere looks for a balance write path or an UPDATE/DELETE against the journal\",",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -75390,7 +76700,7 @@
    "line": 2737,
    "cited": 8,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"DEC-2 rev 2 precondition P-8, and §5.3 states it is INDEPENDENT of P-1..P-5 and could be written today. The banner at the top of docs/adr/DEC-2-gl-accounting-adapter.md says it plainly: run_guards invokes",
+   "text": "\"description\": \"DEC-2 rev 2 precondition P-8, and \\u00a75.3 states it is INDEPENDENT of P-1..P-5 and could be written today. The banner at the top of docs/adr/DEC-2-gl-accounting-adapter.md says it plainly: run_guards in",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -75400,7 +76710,7 @@
    "line": 2737,
    "cited": 1,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"DEC-2 rev 2 precondition P-8, and §5.3 states it is INDEPENDENT of P-1..P-5 and could be written today. The banner at the top of docs/adr/DEC-2-gl-accounting-adapter.md says it plainly: run_guards invokes",
+   "text": "\"description\": \"DEC-2 rev 2 precondition P-8, and \\u00a75.3 states it is INDEPENDENT of P-1..P-5 and could be written today. The banner at the top of docs/adr/DEC-2-gl-accounting-adapter.md says it plainly: run_guards in",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -75410,7 +76720,7 @@
    "line": 2737,
    "cited": 5,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"DEC-2 rev 2 precondition P-8, and §5.3 states it is INDEPENDENT of P-1..P-5 and could be written today. The banner at the top of docs/adr/DEC-2-gl-accounting-adapter.md says it plainly: run_guards invokes",
+   "text": "\"description\": \"DEC-2 rev 2 precondition P-8, and \\u00a75.3 states it is INDEPENDENT of P-1..P-5 and could be written today. The banner at the top of docs/adr/DEC-2-gl-accounting-adapter.md says it plainly: run_guards in",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -75470,7 +76780,7 @@
    "line": 2760,
    "cited": 6,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"DEC-2 rev 2 carries: 'A further independent review must pass clean before the driver may ratify.' A2-17 WAS a review and returned MICRO-FIX, applying its own 7-line fix — so the document AS IT NOW STANDS ",
+   "text": "\"description\": \"DEC-2 rev 2 carries: 'A further independent review must pass clean before the driver may ratify.' A2-17 WAS a review and returned MICRO-FIX, applying its own 7-line fix \\u2014 so the document AS IT NOW ST",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -75479,8 +76789,8 @@
    "file": ".softhouse/tasks.json",
    "line": 2760,
    "cited": 7,
-   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): 'the capabilities.json and PIN.json schema ids — BEFORE P-1..P-5).\",       \"acceptance\": null,'",
-   "text": "\"description\": \"DEC-2 rev 2 carries: 'A further independent review must pass clean before the driver may ratify.' A2-17 WAS a review and returned MICRO-FIX, applying its own 7-line fix — so the document AS IT NOW STANDS ",
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"description\": \"DEC-2 rev 2 carries: 'A further independent review must pass clean before the driver may ratify.' A2-17 WAS a review and returned MICRO-FIX, applying its own 7-line fix \\u2014 so the document AS IT NOW ST",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -75490,7 +76800,7 @@
    "line": 2760,
    "cited": 1,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"DEC-2 rev 2 carries: 'A further independent review must pass clean before the driver may ratify.' A2-17 WAS a review and returned MICRO-FIX, applying its own 7-line fix — so the document AS IT NOW STANDS ",
+   "text": "\"description\": \"DEC-2 rev 2 carries: 'A further independent review must pass clean before the driver may ratify.' A2-17 WAS a review and returned MICRO-FIX, applying its own 7-line fix \\u2014 so the document AS IT NOW ST",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -75500,7 +76810,7 @@
    "line": 2760,
    "cited": 5,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"DEC-2 rev 2 carries: 'A further independent review must pass clean before the driver may ratify.' A2-17 WAS a review and returned MICRO-FIX, applying its own 7-line fix — so the document AS IT NOW STANDS ",
+   "text": "\"description\": \"DEC-2 rev 2 carries: 'A further independent review must pass clean before the driver may ratify.' A2-17 WAS a review and returned MICRO-FIX, applying its own 7-line fix \\u2014 so the document AS IT NOW ST",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -75889,7 +77199,7 @@
    "file": ".softhouse/tasks.json",
    "line": 3036,
    "cited": 72,
-   "detail": "gloss (dash) matches no registered rule (best trigram score 2 < 6): \"`git grep -E` reads \\\\\\\\\\\\\\\\b as a LITERAL 'b' on this machine and returns zero SILENTLY, T232's measurement).\\\\n\\\\nGRADE THESE SPECIFICALLY, each\"",
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"*** THE PAIRED INDEPENDENT REVIEWER FOR A2-15, the first vectors in this program that will ever grade a GL account, a mapping, a financial activity or a journal entry. Plan-gate rule 1. *** \\n\\nREAD THE U",
    "zone": "orchestrator",
    "fatal": false
@@ -75970,7 +77280,7 @@
    "line": 3079,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"title\": \"T259's R-VPA rule FAILS OPEN: it prints REFUSED NIL COVERAGE in its body while its exit code says GREEN — the P-45 shape inside the eliminator\",",
+   "text": "\"title\": \"T259's R-VPA rule FAILS OPEN: it prints REFUSED NIL COVERAGE in its body while its exit code says GREEN \\u2014 the P-45 shape inside the eliminator\",",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -76165,7 +77475,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3242,
+   "line": 3244,
    "cited": 80,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T261 reviewing T250. T261 accepted T250's population counts (29/4 and 50/5/0/45, reproduced EXACTLY with a WIDER instrument: 45 and 52/6/0/46) and confirmed the long-header wrap fix is genuinely",
@@ -76175,7 +77485,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3242,
+   "line": 3244,
    "cited": 76,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'So this task BLOCKS the wiring of the attestation half of T269.\\\\n\\\\nDRIVE EACH OF THE FIVE RED through the shape that got through, not a shap'",
    "text": "\"description\": \"RAISED BY T261 reviewing T250. T261 accepted T250's population counts (29/4 and 50/5/0/45, reproduced EXACTLY with a WIDER instrument: 45 and 52/6/0/46) and confirmed the long-header wrap fix is genuinely",
@@ -76185,7 +77495,17 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3355,
+   "line": 3317,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"note\": \"MERGED at e8374743 by fire 20260828-080001. The seven cells REPRODUCED by a second instrument written from scratch (importing neither T264's scripts nor the cloud's rederive_t241.py): law (ii) holds 213/220, the",
+   "zone": "orchestrator",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/tasks.json",
+   "line": 3360,
    "cited": 85,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"The driver wrote the STEP 0 lock fix and reviewed nothing. T265 reviewed it and found four blockers. F-4 is ALREADY FIXED (the driver repaired its own LOCK mid-fire: real hostname, real pid, rule 4 driven",
@@ -76195,7 +77515,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3406,
+   "line": 3411,
    "cited": 80,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"title\": \"SETTLE the P-number drift: patterns.md and three merged instruments cite P-80/81/83/84 differently, and the manifest already propagated one off-by-one into ten worker prompts\",",
@@ -76205,7 +77525,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3422,
+   "line": 3427,
    "cited": 80,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T268 AS FU-T268-2, and it is the SECOND instance of this defect in two fires. patterns.md defines P-80/P-81/P-83/P-84 differently from how T259, T262 and lint_failopen_t259.py CITE them -- they ",
@@ -76215,7 +77535,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3422,
+   "line": 3427,
    "cited": 81,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T268 AS FU-T268-2, and it is the SECOND instance of this defect in two fires. patterns.md defines P-80/P-81/P-83/P-84 differently from how T259, T262 and lint_failopen_t259.py CITE them -- they ",
@@ -76225,7 +77545,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3422,
+   "line": 3427,
    "cited": 83,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T268 AS FU-T268-2, and it is the SECOND instance of this defect in two fires. patterns.md defines P-80/P-81/P-83/P-84 differently from how T259, T262 and lint_failopen_t259.py CITE them -- they ",
@@ -76235,7 +77555,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3422,
+   "line": 3427,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T268 AS FU-T268-2, and it is the SECOND instance of this defect in two fires. patterns.md defines P-80/P-81/P-83/P-84 differently from how T259, T262 and lint_failopen_t259.py CITE them -- they ",
@@ -76245,7 +77565,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3422,
+   "line": 3427,
    "cited": 80,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T268 AS FU-T268-2, and it is the SECOND instance of this defect in two fires. patterns.md defines P-80/P-81/P-83/P-84 differently from how T259, T262 and lint_failopen_t259.py CITE them -- they ",
@@ -76255,7 +77575,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3422,
+   "line": 3427,
    "cited": 81,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T268 AS FU-T268-2, and it is the SECOND instance of this defect in two fires. patterns.md defines P-80/P-81/P-83/P-84 differently from how T259, T262 and lint_failopen_t259.py CITE them -- they ",
@@ -76265,7 +77585,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3422,
+   "line": 3427,
    "cited": 83,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T268 AS FU-T268-2, and it is the SECOND instance of this defect in two fires. patterns.md defines P-80/P-81/P-83/P-84 differently from how T259, T262 and lint_failopen_t259.py CITE them -- they ",
@@ -76275,7 +77595,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3422,
+   "line": 3427,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T268 AS FU-T268-2, and it is the SECOND instance of this defect in two fires. patterns.md defines P-80/P-81/P-83/P-84 differently from how T259, T262 and lint_failopen_t259.py CITE them -- they ",
@@ -76285,7 +77605,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3422,
+   "line": 3427,
    "cited": 78,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T268 AS FU-T268-2, and it is the SECOND instance of this defect in two fires. patterns.md defines P-80/P-81/P-83/P-84 differently from how T259, T262 and lint_failopen_t259.py CITE them -- they ",
@@ -76295,7 +77615,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3422,
+   "line": 3427,
    "cited": 83,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T268 AS FU-T268-2, and it is the SECOND instance of this defect in two fires. patterns.md defines P-80/P-81/P-83/P-84 differently from how T259, T262 and lint_failopen_t259.py CITE them -- they ",
@@ -76305,7 +77625,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3563,
+   "line": 3571,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"MEASURED BY THE DRIVER, local fire 20260823-080004, from the logs of the two preceding fires. This is a P-45 instance in the WRAPPER itself: a guard that fires, prints, and changes nothing.\\n\\nWHAT HAPPEN",
@@ -76315,7 +77635,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3563,
+   "line": 3571,
    "cited": 89,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"MEASURED BY THE DRIVER, local fire 20260823-080004, from the logs of the two preceding fires. This is a P-45 instance in the WRAPPER itself: a guard that fires, prints, and changes nothing.\\n\\nWHAT HAPPEN",
@@ -76325,7 +77645,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3563,
+   "line": 3571,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"MEASURED BY THE DRIVER, local fire 20260823-080004, from the logs of the two preceding fires. This is a P-45 instance in the WRAPPER itself: a guard that fires, prints, and changes nothing.\\n\\nWHAT HAPPEN",
@@ -76335,7 +77655,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3563,
+   "line": 3571,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"MEASURED BY THE DRIVER, local fire 20260823-080004, from the logs of the two preceding fires. This is a P-45 instance in the WRAPPER itself: a guard that fires, prints, and changes nothing.\\n\\nWHAT HAPPEN",
@@ -76345,7 +77665,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3566,
+   "line": 3574,
    "cited": 45,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'Both repairs SELF-CLEAR, so the fix installs nothing new to remember'",
    "text": "\"note\": \"MERGED d8cf2c1. Chose REPAIR over REFUSE: at fire exit the wrapper rewrites every in_progress task to needs_retry with evidence-bearing notes, and stamps a staleness banner into RESUME.md. Both repairs SELF-CLEA",
@@ -76355,7 +77675,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3566,
+   "line": 3574,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"note\": \"MERGED d8cf2c1. Chose REPAIR over REFUSE: at fire exit the wrapper rewrites every in_progress task to needs_retry with evidence-bearing notes, and stamps a staleness banner into RESUME.md. Both repairs SELF-CLEA",
@@ -76365,7 +77685,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3656,
+   "line": 3664,
    "cited": 75,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"FOURTH ATTEMPT IN THIS LINEAGE. Read the whole chain before writing a line, because THE CHAIN IS THE FINDING:\\n  T259  shipped a rule that printed REFUSED NIL COVERAGE in its body and exited GREEN.\\n  T26",
@@ -76375,7 +77695,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3656,
+   "line": 3664,
    "cited": 89,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"FOURTH ATTEMPT IN THIS LINEAGE. Read the whole chain before writing a line, because THE CHAIN IS THE FINDING:\\n  T259  shipped a rule that printed REFUSED NIL COVERAGE in its body and exited GREEN.\\n  T26",
@@ -76385,7 +77705,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3656,
+   "line": 3664,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"FOURTH ATTEMPT IN THIS LINEAGE. Read the whole chain before writing a line, because THE CHAIN IS THE FINDING:\\n  T259  shipped a rule that printed REFUSED NIL COVERAGE in its body and exited GREEN.\\n  T26",
@@ -76395,7 +77715,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3679,
+   "line": 3687,
    "cited": 88,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"THE DRIVER MADE A JUDGEMENT CALL AT FIRE CLOSE WITH NO REVIEWER AVAILABLE AND IS FILING IT TO BE SECOND-GUESSED. Fire 20260823-080004 merged T273 (which INSTALLED guard_no_host_state_in_lint_corpus) and T",
@@ -76405,7 +77725,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3682,
+   "line": 3690,
    "cited": 88,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"note\": \"MERGED aba2d4f. VERDICT UPHELD-WITH-REPAIR. The row stays; TWO OF THE DRIVER'S STATED REASONS WERE MEASURED FALSE. F1 HIGH: the justification cited 02-escape-matrix-fix.sh:6 hard-coding the path in the PRESENT T",
@@ -76415,7 +77735,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3682,
+   "line": 3690,
    "cited": 88,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"note\": \"MERGED aba2d4f. VERDICT UPHELD-WITH-REPAIR. The row stays; TWO OF THE DRIVER'S STATED REASONS WERE MEASURED FALSE. F1 HIGH: the justification cited 02-escape-matrix-fix.sh:6 hard-coding the path in the PRESENT T",
@@ -76425,7 +77745,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3707,
+   "line": 3715,
    "cited": 92,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"note\": \"MERGED e4b9428 (47 files, +2154/-8). THE LEDGER CORPUS MOVED FOR THE FIRST TIME IN MANY FIRES: 6 -> 7 vectors, refusal 2 -> 3, wrong impls 6 -> 7. Captured OB-01: POST /journalentries?command=defineOpeningBalanc",
@@ -76435,7 +77755,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3732,
+   "line": 3740,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule text,\\\\nnever the pattern id alone.\",       \"dispatched_by_fire\": \"20260824-000016\",'",
    "text": "\"description\": \"T287 captured four refusal observations and NOT ONE became a vector. T289 then found that NONE of the\\nfour is promotable as a literal-date vector. This task settles what happens to them: promote what is\\",
@@ -76445,7 +77765,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3755,
+   "line": 3763,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule text beside any pattern id.\",       \"dispatched_by_fire\": \"20260824-000016\",'",
    "text": "\"description\": \"INDEPENDENT review. Read T294's handoff from its BRANCH (`git show softhouse/t294-<slug>:.softhouse/handoff/...`), not from a working tree, and RE-DERIVE rather than check. T289 is the model for this revi",
@@ -76455,7 +77775,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3757,
+   "line": 3765,
    "cited": 89,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'T296 measured the consequence instead and found the flip converted a DATA refusal into a PROSE one'",
    "text": "\"note\": \"MERGED. VERDICT APPROVED with a micro-fix applied on the branch. Re-derived from the pinned checkout, not from T294's prose, and broke none of it. THE PRECEDENCE CLAIM IS SOUND: both grounds exist for OB-01 and ",
@@ -76465,7 +77785,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3778,
+   "line": 3786,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule text beside any pattern id.\",       \"branch\": \"softhouse/t297-review-t295\",'",
    "text": "\"description\": \"INDEPENDENT review of T295. Read its handoff from its BRANCH, and RE-DERIVE.\\n\\n 1. THE INCLUSIVE BOUNDARY IS THE POINT. Re-derive `!DateUtils.isBefore(closingDate, transactionDate)` at JournalEntryWriteP",
@@ -76475,7 +77795,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3805,
+   "line": 3813,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number. \\'Not found\\' is a statement about the search -- say where you looked.\",       \"branch\": \"softhouse/T2'",
    "text": "\"description\": \"INDEPENDENT review of T256 (merged d97fae3). Read its handoff from the merge, then RE-DERIVE rather than check. T256 refuted the driver's own brief on its central number and the driver accepted that; test",
@@ -76485,7 +77805,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3830,
+   "line": 3838,
    "cited": 45,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'A convention that asks a future fire to remember something enforces nothing'",
    "text": "\"description\": \"RAISED BY T256, correctly declared out of its scope rather than fixed quietly. Two independent defects; decide each on its own.\\n\\n 1. NAMESPACE COLLISION. `.softhouse/capture/t256-verdict-predicate/` was",
@@ -76495,7 +77815,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3830,
+   "line": 3838,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 2 < 6): 'cite the rule TEXT beside any P-number.\",       \"branch\": \"softhouse/t299-t256-namespace-collision\",'",
    "text": "\"description\": \"RAISED BY T256, correctly declared out of its scope rather than fixed quietly. Two independent defects; decide each on its own.\\n\\n 1. NAMESPACE COLLISION. `.softhouse/capture/t256-verdict-predicate/` was",
@@ -76505,7 +77825,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3855,
+   "line": 3863,
    "cited": 80,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"CROSS-CORROBORATED BY THREE INDEPENDENT WORKERS IN FIRE 20260824-000016 -- T294, T288 and T293 each hit it without knowing the others had, and T293 declined it correctly as outside its declared partition ",
@@ -76515,7 +77835,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3855,
+   "line": 3863,
    "cited": 45,
    "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): 'a guard that only works when someone remembers to run it enforces nothing; '",
    "text": "\"description\": \"CROSS-CORROBORATED BY THREE INDEPENDENT WORKERS IN FIRE 20260824-000016 -- T294, T288 and T293 each hit it without knowing the others had, and T293 declined it correctly as outside its declared partition ",
@@ -76525,7 +77845,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3855,
+   "line": 3863,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"dispatched_by_fire\": \"20260824-000016\",'",
    "text": "\"description\": \"CROSS-CORROBORATED BY THREE INDEPENDENT WORKERS IN FIRE 20260824-000016 -- T294, T288 and T293 each hit it without knowing the others had, and T293 declined it correctly as outside its declared partition ",
@@ -76535,7 +77855,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3857,
+   "line": 3865,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"note\": \"MERGED. 17 was never changed to 18 -- five sites now DERIVE the cardinal from the list they print beside (host-state census, fail-open frontier, ledger invariant block, both prove() tails, and a comment spelling",
@@ -76545,7 +77865,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3877,
+   "line": 3885,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY THE DRIVER IN FIRE 20260824-000016, at the moment of merging T288, and recorded rather than waved through.\\n\\n`.softhouse/bin/fire-program.sh` is the zsh script that RUNS each local fire. It lau",
@@ -76555,7 +77875,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3877,
+   "line": 3885,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\"     },'",
    "text": "\"description\": \"RAISED BY THE DRIVER IN FIRE 20260824-000016, at the moment of merging T288, and recorded rather than waved through.\\n\\n`.softhouse/bin/fire-program.sh` is the zsh script that RUNS each local fire. It lau",
@@ -76565,7 +77885,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3899,
+   "line": 3907,
    "cited": 45,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'If either can persist, the fix installs a new thing to remember, which is what it was written to avoid'",
    "text": "\"description\": \"INDEPENDENT review of T288 (merged d8cf2c1). RE-DERIVE, do not check. T288 disclosed its own central weakness, which is a reason to trust it and NOT a reason to skip verifying it.\\n\\n 1. THE GAP T288 NAME",
@@ -76575,7 +77895,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3899,
+   "line": 3907,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number. \\'Not found\\' is a statement about the search -- say where you looked.\",       \"branch\": \"softhouse/T3'",
    "text": "\"description\": \"INDEPENDENT review of T288 (merged d8cf2c1). RE-DERIVE, do not check. T288 disclosed its own central weakness, which is a reason to trust it and NOT a reason to skip verifying it.\\n\\n 1. THE GAP T288 NAME",
@@ -76585,7 +77905,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3925,
+   "line": 3933,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T284 AGAINST ITSELF, which is why it is being acted on rather than filed and forgotten. T284 built a registry guard and drove it RED sixteen ways, 16 of 16 as expected, with a Z0 arm proving the",
@@ -76595,7 +77915,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3925,
+   "line": 3933,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T284 AGAINST ITSELF, which is why it is being acted on rather than filed and forgotten. T284 built a registry guard and drove it RED sixteen ways, 16 of 16 as expected, with a Z0 arm proving the",
@@ -76605,7 +77925,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3925,
+   "line": 3933,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T284 AGAINST ITSELF, which is why it is being acted on rather than filed and forgotten. T284 built a registry guard and drove it RED sixteen ways, 16 of 16 as expected, with a Z0 arm proving the",
@@ -76615,7 +77935,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3925,
+   "line": 3933,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\"     },'",
    "text": "\"description\": \"RAISED BY T284 AGAINST ITSELF, which is why it is being acted on rather than filed and forgotten. T284 built a registry guard and drove it RED sixteen ways, 16 of 16 as expected, with a Z0 arm proving the",
@@ -76625,7 +77945,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3944,
+   "line": 3952,
    "cited": 45,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'A convention someone must remember enforces nothing'",
    "text": "\"description\": \"RAISED BY T284, correctly declared out of its scope rather than fixed quietly. F-T283-6 recorded that certain instruments `rm -rf` committed evidence. T284 measured that T274's instruments 20 and 30 DO IT",
@@ -76635,7 +77955,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3944,
+   "line": 3952,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"branch\": \"softhouse/T304b-evidence-destruction\",'",
    "text": "\"description\": \"RAISED BY T284, correctly declared out of its scope rather than fixed quietly. F-T283-6 recorded that certain instruments `rm -rf` committed evidence. T284 measured that T274's instruments 20 and 30 DO IT",
@@ -76645,7 +77965,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3972,
+   "line": 3980,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"branch\": \"softhouse/t305-openingbalance-accepting-side\",'",
    "text": "\"description\": \"MEASURED BY T296 WITH FOUR MUTATION ARMS ON THE PORT, not argued. Read .softhouse/reviews/T296/REVIEW.md and .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T294.md first.\\n\\n arm E -- the rule ",
@@ -76655,7 +77975,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3997,
+   "line": 4005,
    "cited": 89,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'The claim is that a FOURTH shape -- most obviously an ACCEPTANCE, which no capture in this store observes -- is still refused as DATA rather'",
    "text": "\"description\": \"THE DRIVER MADE A JUDGEMENT CALL AT A MERGE CONFLICT WITH NO REVIEWER AND IS FILING IT TO BE SECOND-GUESSED, exactly as it filed T293 last fire. The reasoning is written into admit.go BESIDE THE RULE, not",
@@ -76665,9 +77985,9 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 3997,
+   "line": 4005,
    "cited": 86,
-   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"branch\": \"softhouse/T306-adjudicate-admit-widening\",'",
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"branch\": \"softhouse/T306-admit-gate-adjudication\",'",
    "text": "\"description\": \"THE DRIVER MADE A JUDGEMENT CALL AT A MERGE CONFLICT WITH NO REVIEWER AND IS FILING IT TO BE SECOND-GUESSED, exactly as it filed T293 last fire. The reasoning is written into admit.go BESIDE THE RULE, not",
    "zone": "orchestrator",
    "fatal": false
@@ -76675,7 +77995,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4025,
+   "line": 4033,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\"     },'",
    "text": "\"description\": \"RAISED BY T295 AS BACKLOG B-3 AND FLAGGED BY IT AS THE ONE TO TAKE FIRST, because it is the ONLY item in that backlog that costs nothing at the reference oracle. B-1 and B-2 -- the ACCEPTANCE sides of the",
@@ -76685,7 +78005,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4048,
+   "line": 4056,
    "cited": 91,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"INDEPENDENT review, FIFTH LINK IN THE R-VPA LINEAGE. Read P-91 and the T281/T286/T291 reviews before you start: five successive fixes each looked correct and each lost, and FOUR OF THE FIVE WERE KILLED BY",
@@ -76695,7 +78015,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4048,
+   "line": 4056,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number. \\'Not found\\' is a statement about the search -- say where you looked.\",       \"branch\": \"softhouse/T3'",
    "text": "\"description\": \"INDEPENDENT review, FIFTH LINK IN THE R-VPA LINEAGE. Read P-91 and the T281/T286/T291 reviews before you start: five successive fixes each looked correct and each lost, and FOUR OF THE FIVE WERE KILLED BY",
@@ -76705,47 +78025,47 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4074,
+   "line": 4082,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"MEASURED, NOT REASONED. Fire 20260823-080004 session 2 dispatched 8 workers, was SIGTERMed at 12:06:13 ('driver stopped on SIGTERM; no survivors' — ~/Library/Logs/gerege-nbfi/fire-20260823-080004.log), an",
+   "text": "\"description\": \"MEASURED, NOT REASONED. Fire 20260823-080004 session 2 dispatched 8 workers, was SIGTERMed at 12:06:13 ('driver stopped on SIGTERM; no survivors' \\u2014 ~/Library/Logs/gerege-nbfi/fire-20260823-080004.log",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4074,
+   "line": 4082,
    "cited": 85,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"MEASURED, NOT REASONED. Fire 20260823-080004 session 2 dispatched 8 workers, was SIGTERMed at 12:06:13 ('driver stopped on SIGTERM; no survivors' — ~/Library/Logs/gerege-nbfi/fire-20260823-080004.log), an",
+   "text": "\"description\": \"MEASURED, NOT REASONED. Fire 20260823-080004 session 2 dispatched 8 workers, was SIGTERMed at 12:06:13 ('driver stopped on SIGTERM; no survivors' \\u2014 ~/Library/Logs/gerege-nbfi/fire-20260823-080004.log",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4074,
+   "line": 4082,
    "cited": 85,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"MEASURED, NOT REASONED. Fire 20260823-080004 session 2 dispatched 8 workers, was SIGTERMed at 12:06:13 ('driver stopped on SIGTERM; no survivors' — ~/Library/Logs/gerege-nbfi/fire-20260823-080004.log), an",
+   "text": "\"description\": \"MEASURED, NOT REASONED. Fire 20260823-080004 session 2 dispatched 8 workers, was SIGTERMed at 12:06:13 ('driver stopped on SIGTERM; no survivors' \\u2014 ~/Library/Logs/gerege-nbfi/fire-20260823-080004.log",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4074,
+   "line": 4082,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"branch\": \"softhouse/t309-sigterm-reconcile-bypass\",'",
-   "text": "\"description\": \"MEASURED, NOT REASONED. Fire 20260823-080004 session 2 dispatched 8 workers, was SIGTERMed at 12:06:13 ('driver stopped on SIGTERM; no survivors' — ~/Library/Logs/gerege-nbfi/fire-20260823-080004.log), an",
+   "text": "\"description\": \"MEASURED, NOT REASONED. Fire 20260823-080004 session 2 dispatched 8 workers, was SIGTERMed at 12:06:13 ('driver stopped on SIGTERM; no survivors' \\u2014 ~/Library/Logs/gerege-nbfi/fire-20260823-080004.log",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4098,
+   "line": 4106,
    "cited": 10,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T297 (merged b7e70bc7) AS A BLOCKING FINDING, F-T297-1, AND ESTABLISHED BY CONSTRUCTION RATHER THAN BY ARGUMENT. Read .softhouse/reviews/T297/T297-review-of-T295.md and its evidence/ directory F",
@@ -76755,7 +78075,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4098,
+   "line": 4106,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"Filed by fire 20260827-230001 from T297\\'s blocking finding F-T297-1. '",
    "text": "\"description\": \"RAISED BY T297 (merged b7e70bc7) AS A BLOCKING FINDING, F-T297-1, AND ESTABLISHED BY CONSTRUCTION RATHER THAN BY ARGUMENT. Read .softhouse/reviews/T297/T297-review-of-T295.md and its evidence/ directory F",
@@ -76765,7 +78085,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4117,
+   "line": 4125,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T297 (merged b7e70bc7) AS F-T297-3, MEASURED ON 2026-08-27 AND NOT PREDICTED.\\n\\nTHE FACT. T305's and T297's briefs both said 'a1-02 arms 2026-08-24, TOMORROW'. That was written when the busines",
@@ -76775,7 +78095,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4117,
+   "line": 4125,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"Filed by fire 20260827-230001 from T297\\'s F-T297-3. '",
    "text": "\"description\": \"RAISED BY T297 (merged b7e70bc7) AS F-T297-3, MEASURED ON 2026-08-27 AND NOT PREDICTED.\\n\\nTHE FACT. T305's and T297's briefs both said 'a1-02 arms 2026-08-24, TOMORROW'. That was written when the busines",
@@ -76785,27 +78105,27 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4135,
+   "line": 4143,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
-   "text": "\"description\": \"MEASURED THIS FIRE, AND THE DRIVER WAS THE ONE WHO GOT IT WRONG. Read .softhouse/observations/20260827-branch-case-collision-shadows-committed-work.md FIRST — the full measurement is there and you should ",
+   "text": "\"description\": \"MEASURED THIS FIRE, AND THE DRIVER WAS THE ONE WHO GOT IT WRONG. Read .softhouse/observations/20260827-branch-case-collision-shadows-committed-work.md FIRST \\u2014 the full measurement is there and you sh",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4135,
+   "line": 4143,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"DONE, MERGED f327c8df. '",
-   "text": "\"description\": \"MEASURED THIS FIRE, AND THE DRIVER WAS THE ONE WHO GOT IT WRONG. Read .softhouse/observations/20260827-branch-case-collision-shadows-committed-work.md FIRST — the full measurement is there and you should ",
+   "text": "\"description\": \"MEASURED THIS FIRE, AND THE DRIVER WAS THE ONE WHO GOT IT WRONG. Read .softhouse/observations/20260827-branch-case-collision-shadows-committed-work.md FIRST \\u2014 the full measurement is there and you sh",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4136,
+   "line": 4144,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"note\": \"DONE, MERGED f327c8df. Reproduced the driver observation numbers from a DIFFERENT instrument - exactly 2 shadow groups, T297 hiding c1a3888a (4 commits) and T305 hiding 060f00330 (8), both diverged. Built branch",
@@ -76815,7 +78135,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4155,
+   "line": 4163,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T298 (merged e9ce61e8) AS F-3/B-1, MAJOR, AND DEMONSTRATED RATHER THAN ARGUED. Read .softhouse/reviews/T298/PART-B.md and its evidence/ directory first.\\n\\nTHE BLOCK SAYS 'THIS BLOCK IS EXECUTED",
@@ -76825,7 +78145,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4155,
+   "line": 4163,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"Filed by fire 20260827-230001 from T298 F-3/F-4/B-2/B-3. '",
    "text": "\"description\": \"RAISED BY T298 (merged e9ce61e8) AS F-3/B-1, MAJOR, AND DEMONSTRATED RATHER THAN ARGUED. Read .softhouse/reviews/T298/PART-B.md and its evidence/ directory first.\\n\\nTHE BLOCK SAYS 'THIS BLOCK IS EXECUTED",
@@ -76835,17 +78155,17 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4173,
+   "line": 4181,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"DONE, MERGED 1461d9ba. '",
-   "text": "\"description\": \"RAISED BY T308 (merged 5f95d666) AS F-T308-6, MEDIUM, AND ESTABLISHED BY CONSTRUCTION. Read .softhouse/reviews/T308/ — in particular probe/t308_witness_path_forgery.py and out/t308-witness-path-forgery.tx",
+   "text": "\"description\": \"RAISED BY T308 (merged 5f95d666) AS F-T308-6, MEDIUM, AND ESTABLISHED BY CONSTRUCTION. Read .softhouse/reviews/T308/ \\u2014 in particular probe/t308_witness_path_forgery.py and out/t308-witness-path-forge",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4174,
+   "line": 4182,
    "cited": 94,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"note\": \"DONE, MERGED 1461d9ba. Closed F-T308-6 with an injective path encoding proved by a LEFT INVERSE (12,735/12,735), not a lucky collision count: T292 47 collisions, naive newline-only escape 47 (A1 fully alive), T3",
@@ -76855,7 +78175,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4195,
+   "line": 4203,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T299 (merged 34ff904e) AS FU-T299-1, AND DECLARED IN THE GUARD'S OWN HEADER per T238's precedent rather than left silent. Read .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T299.md a",
@@ -76865,7 +78185,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4195,
+   "line": 4203,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T299 (merged 34ff904e) AS FU-T299-1, AND DECLARED IN THE GUARD'S OWN HEADER per T238's precedent rather than left silent. Read .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T299.md a",
@@ -76875,7 +78195,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4195,
+   "line": 4203,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T299 (merged 34ff904e) AS FU-T299-1, AND DECLARED IN THE GUARD'S OWN HEADER per T238's precedent rather than left silent. Read .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T299.md a",
@@ -76885,7 +78205,7 @@
   {
    "kind": "MISDIRECTING",
    "file": ".softhouse/tasks.json",
-   "line": 4195,
+   "line": 4203,
    "cited": 86,
    "detail": "gloss (colon) 'cite the rule TEXT beside any P-number.\",       \"note\": \"Filed by fire 20260827-230001 from FU-T299-1. ' matches P-95 (8) better than the cited P-86 (1); patterns.md P-95 = 'A FALLBACK AND A FAIL-OPEN ARE INDISTINGUISHABLE BY READING, AND THEY HAVE OPPOSITE SEVERITIES.'",
    "best": 95,
@@ -76903,7 +78223,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4215,
+   "line": 4223,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"DONE, MERGED. '",
    "text": "\"description\": \"PRE-EXISTING DEFECT FOUND BY T299 (merged 34ff904e) WHILE DOING SOMETHING ELSE, correctly declared out of its grant rather than fixed quietly. Read T299's handoff first.\\n\\nTHE FACT. guard_rvpa_floor_t290",
@@ -76913,7 +78233,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4237,
+   "line": 4245,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"Filed by fire 20260827-230001 from FU-T304-1. '",
    "text": "\"description\": \"RAISED BY T304 (merged 5993d8e2) AS FU-T304-1, ITS OWN MOST IMPORTANT FOLLOW-UP. Read .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T304.md and the rig under .softhouse/capture/t304-evidence-d",
@@ -76923,27 +78243,27 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4254,
+   "line": 4262,
    "cited": 66,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 4 < 6): \"'Not found' is a statement about the search, never about the world\"",
-   "text": "\"description\": \"RAISED BY T304 (merged 5993d8e2) AS FU-T304-2, AFTER ITS OWN VERDICT PREDICATE FELL FOR IT. This is the most general finding of that task and it is not about T304's instruments — it is about how this prog",
+   "text": "\"description\": \"RAISED BY T304 (merged 5993d8e2) AS FU-T304-2, AFTER ITS OWN VERDICT PREDICATE FELL FOR IT. This is the most general finding of that task and it is not about T304's instruments \\u2014 it is about how this",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4254,
+   "line": 4262,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"DONE, MERGED 2f1ba61c. '",
-   "text": "\"description\": \"RAISED BY T304 (merged 5993d8e2) AS FU-T304-2, AFTER ITS OWN VERDICT PREDICATE FELL FOR IT. This is the most general finding of that task and it is not about T304's instruments — it is about how this prog",
+   "text": "\"description\": \"RAISED BY T304 (merged 5993d8e2) AS FU-T304-2, AFTER ITS OWN VERDICT PREDICATE FELL FOR IT. This is the most general finding of that task and it is not about T304's instruments \\u2014 it is about how this",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4275,
+   "line": 4283,
    "cited": 85,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"RAISED BY T302 (merged f327c8df) AS F5, CRITICAL, ON REAL DATA. Read .softhouse/reviews/T302/REVIEW.md and REVIEW-A2.md and the drive scripts under .softhouse/reviews/T302/a2/ FIRST. T302 built the reprod",
@@ -76953,7 +78273,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4275,
+   "line": 4283,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\"     },'",
    "text": "\"description\": \"RAISED BY T302 (merged f327c8df) AS F5, CRITICAL, ON REAL DATA. Read .softhouse/reviews/T302/REVIEW.md and REVIEW-A2.md and the drive scripts under .softhouse/reviews/T302/a2/ FIRST. T302 built the reprod",
@@ -76963,7 +78283,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4310,
+   "line": 4318,
    "cited": 95,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"TWO FINDINGS T316 (merged 344d0ac3) DECLARED OUT OF ITS GRANT. Read its handoff and .softhouse/capture/t316-dead-path-guards/ first. They are independent; decide each on its own.\\n\\n1. THE CENSUS SEES LIT",
@@ -76973,7 +78293,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4310,
+   "line": 4318,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 5 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"Filed by fire 20260827-230001 from FU-T316-3 and T316\\'s decorative-reset observatio'",
    "text": "\"description\": \"TWO FINDINGS T316 (merged 344d0ac3) DECLARED OUT OF ITS GRANT. Read its handoff and .softhouse/capture/t316-dead-path-guards/ first. They are independent; decide each on its own.\\n\\n1. THE CENSUS SEES LIT",
@@ -76983,17 +78303,17 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4330,
+   "line": 4338,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"Filed by fire 20260827-230001 from T320\\'s MEDIUM/micro findings. '",
-   "text": "\"description\": \"RAISED BY T320 (merged 8332a0e9). Read .softhouse/reviews/T320/REVIEW.md and its probe/ transcripts FIRST. SERIALISED BEHIND T306 because T306 owns admit.go and is currently BLOCKED — read T306's note bef",
+   "text": "\"description\": \"RAISED BY T320 (merged 8332a0e9). Read .softhouse/reviews/T320/REVIEW.md and its probe/ transcripts FIRST. SERIALISED BEHIND T306 because T306 owns admit.go and is currently BLOCKED \\u2014 read T306's not",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4349,
+   "line": 4357,
    "cited": 45,
    "detail": "gloss (bracketed) matches no registered rule (best trigram score 1 < 6): \"'a guard that only works when someone remembers to run it enforces nothing'\"",
    "text": "\"description\": \"THIS IS A STRUCTURAL FINDING OF FIRE 20260827-230001, not a chore. THREE SEPARATE WORKERS built a guard, drove it red and green, and then could not wire it because conformance.sh was assigned to someone e",
@@ -77003,7 +78323,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4349,
+   "line": 4357,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"THIS IS A STRUCTURAL FINDING OF FIRE 20260827-230001, not a chore. THREE SEPARATE WORKERS built a guard, drove it red and green, and then could not wire it because conformance.sh was assigned to someone e",
@@ -77013,7 +78333,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4349,
+   "line": 4357,
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"THIS IS A STRUCTURAL FINDING OF FIRE 20260827-230001, not a chore. THREE SEPARATE WORKERS built a guard, drove it red and green, and then could not wire it because conformance.sh was assigned to someone e",
@@ -77023,7 +78343,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4349,
+   "line": 4357,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\"     },'",
    "text": "\"description\": \"THIS IS A STRUCTURAL FINDING OF FIRE 20260827-230001, not a chore. THREE SEPARATE WORKERS built a guard, drove it red and green, and then could not wire it because conformance.sh was assigned to someone e",
@@ -77033,9 +78353,9 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4365,
+   "line": 4373,
    "cited": 86,
-   "detail": "gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"Filed by fire 20260827-230001 from T318 FU-T318-2. '",
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"RECONCILE ERROR CORRECTED by fire 20260828-080001. '",
    "text": "\"description\": \"RAISED BY T318 (merged 2f1ba61c) AS FU-T318-2, HIGH, AND DRIVEN END TO END. THIS EXISTS IN COMMITTED CODE TODAY AND DESTROYS WORK. Read .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T318.md an",
    "zone": "orchestrator",
    "fatal": false
@@ -77043,37 +78363,37 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4385,
+   "line": 4396,
    "cited": 86,
-   "detail": "gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"Filed by fire 20260827-230001 from T318. '",
-   "text": "\"description\": \"RAISED BY T318 (merged 2f1ba61c). T318 built `.softhouse/guards/repo-state-attest.sh` — a seven-term differential check — and measured SIX live damage gates of which FIVE ARE BLIND to a committed clobber.",
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"DISPATCHED by fire 20260828-080001 batch 2. '",
+   "text": "\"description\": \"RAISED BY T318 (merged 2f1ba61c). T318 built `.softhouse/guards/repo-state-attest.sh` \\u2014 a seven-term differential check \\u2014 and measured SIX live damage gates of which FIVE ARE BLIND to a committe",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4404,
+   "line": 4416,
    "cited": 84,
-   "detail": "gloss (dash) matches no registered rule (best trigram score 4 < 6): 'read the ABSENCE, it is a failed HARD guard, NOT an oracle outage), `T316-DEADPATH-FRONTIER: REFUSED rows=78 pinned=98 added=4 removed=24`. '",
-   "text": "\"description\": \"READ `.softhouse/observations/20260827-dead-path-frontier-pin-encodes-host-state.md` FIRST — the driver measured this and the measurement is not in dispute.\\n\\nSTART FROM T323's BRANCH, DO NOT REBUILD IT:",
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"description\": \"READ `.softhouse/observations/20260827-dead-path-frontier-pin-encodes-host-state.md` FIRST \\u2014 the driver measured this and the measurement is not in dispute.\\n\\nSTART FROM T323's BRANCH, DO NOT REBUIL",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4404,
+   "line": 4416,
    "cited": 86,
-   "detail": "gloss (colon) matches no registered rule (best trigram score 4 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"Filed by fire 20260827-230001 after ABORTING the T323 merge. '",
-   "text": "\"description\": \"READ `.softhouse/observations/20260827-dead-path-frontier-pin-encodes-host-state.md` FIRST — the driver measured this and the measurement is not in dispute.\\n\\nSTART FROM T323's BRANCH, DO NOT REBUILD IT:",
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'cite the rule TEXT beside any P-number.\",       \"note\": \"DISPATCHED by fire 20260828-080001 batch 1, resuming rescued WIP (not rebuilding). '",
+   "text": "\"description\": \"READ `.softhouse/observations/20260827-dead-path-frontier-pin-encodes-host-state.md` FIRST \\u2014 the driver measured this and the measurement is not in dispute.\\n\\nSTART FROM T323's BRANCH, DO NOT REBUIL",
    "zone": "orchestrator",
    "fatal": false
   },
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4421,
+   "line": 4436,
    "cited": 16,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'a driver claim is worker-checkable'",
    "text": "\"description\": \"THE ORACLE IS UP AND THIS IS THE ONLY FIRE THAT CAN TAKE THIS CAPTURE. The driver verified it at dispatch:\\n  curl -sk https://localhost:8443/fineract-provider/actuator/health -> {\\\"status\\\":\\\"UP\\\",\\\"grou",
@@ -77083,10 +78403,50 @@
   {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
-   "line": 4421,
+   "line": 4436,
    "cited": 86,
    "detail": "gloss (colon) matches no registered rule (best trigram score 3 < 6): 'cite the rule TEXT beside any P-number.\\\\nHandoff to .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T327.md, COMMITTED TO YOUR BRA'",
    "text": "\"description\": \"THE ORACLE IS UP AND THIS IS THE ONLY FIRE THAT CAN TAKE THIS CAPTURE. The driver verified it at dispatch:\\n  curl -sk https://localhost:8443/fineract-provider/actuator/health -> {\\\"status\\\":\\\"UP\\\",\\\"grou",
+   "zone": "orchestrator",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/tasks.json",
+   "line": 4463,
+   "cited": 89,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'CHECK IT IS STILL DEFAULT-DENY AFTER YOUR WIDENING, by construction: build a vector for a shape NO capture\\\\n    observes and show it is REFU'",
+   "text": "\"description\": \"NO ORACLE CONTACT IS REQUIRED AND NONE IS PERMITTED. T327 banked every byte with sidecars and a 99-entry manifest\\nprecisely so this task needs none. You are ADMITTING a capture already taken, not taking ",
+   "zone": "orchestrator",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/tasks.json",
+   "line": 4497,
+   "cited": 66,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"description\": \"READ `.softhouse/observations/20260828-reconcile-demotes-merged-work.md` FIRST \\u2014 the driver measured this and the measurement is not in dispute.\\n\\nWHAT HAPPENED. The wrapper's post-fire reconcile (9",
+   "zone": "orchestrator",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/tasks.json",
+   "line": 4497,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"description\": \"READ `.softhouse/observations/20260828-reconcile-demotes-merged-work.md` FIRST \\u2014 the driver measured this and the measurement is not in dispute.\\n\\nWHAT HAPPENED. The wrapper's post-fire reconcile (9",
+   "zone": "orchestrator",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/tasks.json",
+   "line": 4497,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"description\": \"READ `.softhouse/observations/20260828-reconcile-demotes-merged-work.md` FIRST \\u2014 the driver measured this and the measurement is not in dispute.\\n\\nWHAT HAPPENED. The wrapper's post-fire reconcile (9",
    "zone": "orchestrator",
    "fatal": false
   },
@@ -79761,7 +81121,7 @@
   {
    "kind": "BARE",
    "file": "nexus/internal/apps/ledger/conformance/admit.go",
-   "line": 264,
+   "line": 267,
    "cited": 89,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "// evidence PROSE said it should be refused, and P-89 is exactly that: \"PROSE",
@@ -79771,7 +81131,27 @@
   {
    "kind": "BARE",
    "file": "nexus/internal/apps/ledger/conformance/admit.go",
-   "line": 472,
+   "line": 300,
+   "cited": 89,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '\\t\\t//     ACCEPTANCE -- is still refused, as DATA and not as prose'",
+   "text": "//     ACCEPTANCE -- is still refused, as DATA and not as prose (P-89)\". Probe P2",
+   "zone": "other",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": "nexus/internal/apps/ledger/conformance/admit.go",
+   "line": 305,
+   "cited": 89,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "//     P-89 one level up: prose claimed DATA was firing and it was not.",
+   "zone": "other",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": "nexus/internal/apps/ledger/conformance/admit.go",
+   "line": 545,
    "cited": 8,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"exempt (P-8)\", len(v.InvariantExemptions))",
@@ -79781,7 +81161,7 @@
   {
    "kind": "BARE",
    "file": "nexus/internal/apps/ledger/conformance/admit.go",
-   "line": 644,
+   "line": 753,
    "cited": 10,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "// --- graded_against: P-10, and T9-F1b ---------------------------------",
@@ -79791,7 +81171,7 @@
   {
    "kind": "BARE",
    "file": "nexus/internal/apps/ledger/conformance/admit.go",
-   "line": 653,
+   "line": 762,
    "cited": 10,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'graded_against is a declarative record and does not execute \"+ \\t\\t\\t\\t\"anything, so a name nobody can run makes the claim unfalsifiable. '",
    "text": "\"precondition P-10: graded_against is a declarative record and does not execute \"+",
@@ -79801,7 +81181,7 @@
   {
    "kind": "BARE",
    "file": "nexus/internal/apps/ledger/conformance/admit.go",
-   "line": 845,
+   "line": 954,
    "cited": 66,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '// LIMIT OF THIS CLASSIFICATION, MEASURED AND STATED'",
    "text": "// LIMIT OF THIS CLASSIFICATION, MEASURED AND STATED (P-66). CitationBySidecar",
@@ -80071,7 +81451,7 @@
   {
    "kind": "BARE",
    "file": "nexus/internal/apps/ledger/conformance/openingbalance_test.go",
-   "line": 96,
+   "line": 97,
    "cited": 22,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): '// is worse than none'",
    "text": "// is worse than none (P-22).",
@@ -80081,7 +81461,17 @@
   {
    "kind": "BARE",
    "file": "nexus/internal/apps/ledger/conformance/openingbalance_test.go",
-   "line": 226,
+   "line": 216,
+   "cited": 11,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): '\\t\\t\\t// right for a reason that has expired'",
+   "text": "// right for a reason that has expired (P-11), and the expired reason is",
+   "zone": "other",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": "nexus/internal/apps/ledger/conformance/openingbalance_test.go",
+   "line": 542,
    "cited": 7,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "// refusal silently began asserting over the accept — which is the P-7 shape, a test",

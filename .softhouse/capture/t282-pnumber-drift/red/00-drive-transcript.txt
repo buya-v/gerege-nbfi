@@ -1,0 +1,47 @@
+
+== FIXTURE TREE: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t282-redgreen.1hXauZ  (register copied verbatim from /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/patterns.md)
+
+== STAGE 1 -- RED. Expect: VERDICT FAIL printed, exit 1, 3 DETECTED, 2 FATAL.
+PNUMBER-CITATIONS: VERDICT FAIL -- 2 fatal (register 0, directive-file 2)
+PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/RESUME.md:3 P-79 -- gloss (colon) 'never fix a rotted number, make the second site > READ the first.' matches P-80 (12) better than the cited P-79 (0); patterns.md P-80 = 'A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the same defect as the line number.'
+PNUMBER-CITATIONS: report MISDIRECTING .softhouse/obligations.md:5 P-80 -- gloss (colon) 'prints an absence over an error. `grep` exits 1 on NO MATCH and >1 on ERROR; ' matches P-81 (6) better than the cited P-80 (0); patterns.md P-81 = "THE FAIL-OPEN GUARD CAUGHT THREE WORKERS' OWN INSTRUMENTS IN ONE FIRE, INCLUDING TWO WRITTEN TO ENFORCE THE VE"
+PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/reference-oracle.md:3 P-80 -- gloss (trailing-id) 'Three separate workers last fire wrote fail-opens INTO instruments meant to enforce the rule they broke' matches P-81 (9) better than the cited P-80 (1); patterns.md P-81 = "THE FAIL-OPEN GUARD CAUGHT THREE WORKERS' OWN INSTRUMENTS IN ONE FIRE, INCLUDING TWO WRITTEN TO ENFORCE THE VE"
+exit=1  detected=3  fatal=2
+
+== STAGE 2 -- THE OBVIOUS CHECKER, ON THE SAME RED BYTES.
+The predicate 'is the cited P-number defined in patterns.md?' -- run over
+the identical fixture that just produced 3 MISDIRECTING findings.
+EXISTENCE-ONLY CHECKER: register holds 96 ids; 3 citations examined
+EXISTENCE-ONLY CHECKER: undefined citations = 0  []
+EXISTENCE-ONLY CHECKER: VERDICT PASS
+exit=0
+^^ THIS IS THE POINT. Every cited id EXISTS, so the obvious guard is GREEN
+   on the exact bytes the sentence-matching guard flags three times. A guard
+   that only checks the number would have passed BOTH recorded instances.
+
+== STAGE 3 -- REPAIR. Change the CARDINALS ONLY; every sentence is untouched.
+repaired 3 cardinals across 3 files; 0 sentences altered
+--- the entire repair, and it is three digits: ---
+  -> section number and restates no number** — `P-79`: never fix a rotted number, make the second site
+  +> section number and restates no number** — `P-80`: never fix a rotted number, make the second site
+  -| `\|\| echo …` | **P-80**: prints an absence over an error. `grep` exits 1 on NO MATCH and >1 on ERROR; `\|\| echo 0` makes those the same number |
+  +| `\|\| echo …` | **P-81**: prints an absence over an error. `grep` exits 1 on NO MATCH and >1 on ERROR; `\|\| echo 0` makes those the same number |
+  -Three separate workers last fire wrote fail-opens INTO instruments meant to enforce the rule they broke (P-80) — check T250's own instruments before you check anything else.
+  +Three separate workers last fire wrote fail-opens INTO instruments meant to enforce the rule they broke (P-81) — check T250's own instruments before you check anything else.
+
+== STAGE 4 -- GREEN. Same file, same sentences, repaired ids. Expect exit 0.
+PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal; 5 report-only findings in committed evidence (corrected FORWARD in patterns.md, never edited in place)
+exit=0  fatal=0
+
+== STAGE 5 -- MUTATION CONTROL. Re-break ONE id and confirm the guard notices
+a single-site regression, not merely the batch of three (P-76: driven red
+only on the shape it was built from proves the wiring, not the coverage).
+re-broke exactly one cardinal: P-80 -> P-84 (a DIFFERENT wrong id than the original drift)
+PNUMBER-CITATIONS: VERDICT FAIL -- 1 fatal (register 0, directive-file 1)
+PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/RESUME.md:3 P-84 -- gloss (colon) 'never fix a rotted number, make the second site > READ the first.' matches P-80 (12) better than the cited P-84 (0); patterns.md P-80 = 'A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the same defect as the line number.'
+exit=1  directive-fatal=1
+
+== RESULT
+T282 RED/GREEN: PASS -- RED exit 1 (3 detected, 2 fatal) / existence-only
+GREEN on the same bytes / repaired GREEN exit 0 / single-site mutant RED
+exit 1 (1 fatal).
