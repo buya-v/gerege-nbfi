@@ -114,7 +114,8 @@ Two further self-imposed refusals:
 | `evidence/40-negative-calibration.txt` | two deliberate mutations, both trip the guard, exit 1 |
 | `src/crosscheck_seven_t277b.py` | the SECOND census — shares no line of code with the first |
 | `src/verify_t277.sh` | **one command**: both instruments, both censuses, four mutations that must trip |
-| `evidence/50-conformance-bar.log` | `bash .softhouse/conformance.sh` on the delivered tree |
+| `evidence/50-conformance-bar.log` | `bash .softhouse/conformance.sh`, first worker |
+| `evidence/51-conformance-bar-second-worker.log` | the same bar re-run on the **delivered** tree, after both merges of `main` |
 | `evidence/60-crosscheck-DEAD-END-i1q-from-row.txt` | the `I₁q`-from-the-schedule trap, reproduced, exit 1 |
 | `evidence/61-crosscheck-second-instrument.txt` | the second instrument's self-test and census, exit 0 |
 | `evidence/70-verify-all.txt` | `verify_t277.sh` on the delivered tree — 5 positives, 4 negatives, exit 0 |
