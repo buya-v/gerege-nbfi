@@ -1,0 +1,8 @@
+LEAK  softhouse/rescued-agent-a2b34ba7fee3c2de6-20260828-080001  ::  .t347-postcheckout-marker 
+LEAK  softhouse/rescued-agent-a414c482df5740790-20260828-080001  ::  .t347-postcheckout-marker 
+LEAK  softhouse/rescued-agent-a4b1e3daa9362e909-20260828-080001  ::  .t347-postcheckout-marker 
+LEAK  softhouse/rescued-agent-a70d9f6137d4ad21d-20260828-080001  ::  .t347-postcheckout-marker 
+LEAK  softhouse/rescued-agent-a932bd0ee5b1bb219-20260828-080001  ::  .T336-POSTCHECKOUT-FIRED .t347-postcheckout-marker 
+LEAK  softhouse/rescued-agent-afc904cf109cb64cf-20260828-080001  ::  .t347-postcheckout-marker 
+LEAK  softhouse/rescued-t339-base-20260828-080001  ::  .t347-postcheckout-marker 
+--- scan complete ---

@@ -1,0 +1,84 @@
+git version 2.50.1 (Apple Git-155)
+===== A. git worktree add -b brA (WITH checkout) =====
+rc=0
+--- hook.log (expect ONE fire, old=null-sha) ---
+POSTCHECKOUT-FIRED pwd=/private/tmp/t347-scratch/wtA old=0000000000000000000000000000000000000000 new=f6d06ace517dad147f6678a83359dfb0b3cec42d isbranch=1
+--- marker dropped in wtA? ---
+/tmp/t347-scratch/wtA/.t347-scratch-marker
+--- wtA logs/HEAD ---
+0000000000000000000000000000000000000000 f6d06ace517dad147f6678a83359dfb0b3cec42d T347 <t347@local> 1787897946 +0800
+f6d06ace517dad147f6678a83359dfb0b3cec42d f6d06ace517dad147f6678a83359dfb0b3cec42d T347 <t347@local> 1787897946 +0800	reset: moving to HEAD
+--- branch reflog ---
+0000000000000000000000000000000000000000 f6d06ace517dad147f6678a83359dfb0b3cec42d T347 <t347@local> 1787897946 +0800	branch: Created from HEAD
+
+===== B. git worktree add --no-checkout -b brB =====
+rc=0
+--- hook.log (expect EMPTY) ---
+[end]
+--- wtB contents (expect .git only) ---
+.
+..
+.git
+--- wtB logs/HEAD (expect ONE line, no 'reset: moving to HEAD') ---
+0000000000000000000000000000000000000000 f6d06ace517dad147f6678a83359dfb0b3cec42d T347 <t347@local> 1787897946 +0800
+
+===== C. git reset --hard inside wtB =====
+--- hook.log (expect EMPTY) ---
+[end]
+--- wtB logs/HEAD after reset ---
+0000000000000000000000000000000000000000 f6d06ace517dad147f6678a83359dfb0b3cec42d T347 <t347@local> 1787897946 +0800
+f6d06ace517dad147f6678a83359dfb0b3cec42d f6d06ace517dad147f6678a83359dfb0b3cec42d T347 <t347@local> 1787897947 +0800	reset: moving to HEAD
+
+===== D. does git worktree add fire reference-transaction? =====
+rc=0
+--- reftxn.log (expect refs/heads/brD created from null-sha) ---
+REFTXN state=prepared pwd=/private/tmp/t347-scratch/repo
+0000000000000000000000000000000000000000 f6d06ace517dad147f6678a83359dfb0b3cec42d refs/heads/brD
+REFTXN state=committed pwd=/private/tmp/t347-scratch/repo
+0000000000000000000000000000000000000000 f6d06ace517dad147f6678a83359dfb0b3cec42d refs/heads/brD
+REFTXN state=prepared pwd=/private/tmp/t347-scratch/repo
+0000000000000000000000000000000000000000 ref:refs/heads/brD HEAD
+REFTXN state=committed pwd=/private/tmp/t347-scratch/repo
+0000000000000000000000000000000000000000 ref:refs/heads/brD HEAD
+REFTXN state=prepared pwd=/private/tmp/t347-scratch/wtD
+0000000000000000000000000000000000000000 f6d06ace517dad147f6678a83359dfb0b3cec42d ORIG_HEAD
+REFTXN state=committed pwd=/private/tmp/t347-scratch/wtD
+0000000000000000000000000000000000000000 f6d06ace517dad147f6678a83359dfb0b3cec42d ORIG_HEAD
+REFTXN state=prepared pwd=/private/tmp/t347-scratch/wtD
+f6d06ace517dad147f6678a83359dfb0b3cec42d f6d06ace517dad147f6678a83359dfb0b3cec42d refs/heads/brD
+REFTXN state=committed pwd=/private/tmp/t347-scratch/wtD
+f6d06ace517dad147f6678a83359dfb0b3cec42d f6d06ace517dad147f6678a83359dfb0b3cec42d refs/heads/brD
+REFTXN state=aborted pwd=/private/tmp/t347-scratch/wtD
+0000000000000000000000000000000000000000 0000000000000000000000000000000000000000 AUTO_MERGE
+REFTXN state=prepared pwd=/private/tmp/t347-scratch/wtD
+0000000000000000000000000000000000000000 0000000000000000000000000000000000000000 AUTO_MERGE
+REFTXN state=committed pwd=/private/tmp/t347-scratch/wtD
+0000000000000000000000000000000000000000 0000000000000000000000000000000000000000 AUTO_MERGE
+REFTXN state=aborted pwd=/private/tmp/t347-scratch/wtD
+0000000000000000000000000000000000000000 0000000000000000000000000000000000000000 AUTO_MERGE
+REFTXN state=prepared pwd=/private/tmp/t347-scratch/wtD
+0000000000000000000000000000000000000000 0000000000000000000000000000000000000000 AUTO_MERGE
+REFTXN state=committed pwd=/private/tmp/t347-scratch/wtD
+0000000000000000000000000000000000000000 0000000000000000000000000000000000000000 AUTO_MERGE
+--- post-checkout log ---
+POSTCHECKOUT-FIRED pwd=/private/tmp/t347-scratch/wtD old=0000000000000000000000000000000000000000 new=f6d06ace517dad147f6678a83359dfb0b3cec42d isbranch=1
+
+===== E. T280's F-C core: post-checkout exits 1 =====
+Preparing worktree (new branch 'brFC')
+HEAD is now at f6d06ac c1
+REFUSING (post-checkout, exit 1) pwd=/private/tmp/t347-scratch/wtFC
+rc=1  <-- F-C says 1
+--- branch created anyway? ---
+f6d06ace517dad147f6678a83359dfb0b3cec42d
+--- tree populated anyway? ---
+.
+..
+.git
+a.txt
+--- admin dir registered anyway? ---
+/tmp/t347-scratch/repo/.git/worktrees/wtFC
+--- can a worker commit in the REFUSED worktree? ---
+COMMIT SUCCEEDED
+87697e2 committed inside the REFUSED worktree
+
+scratch: /tmp/t347-scratch

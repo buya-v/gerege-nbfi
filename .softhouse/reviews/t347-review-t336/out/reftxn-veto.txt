@@ -1,0 +1,21 @@
+===== ARM 1 (RED): reference-transaction exits 1 in 'prepared' =====
+Preparing worktree (new branch 'worktree-agent-RED')
+T347 reftxn: refusing 0000000000000000000000000000000000000000 123cf0c82235d41d47517a6a6d8a5c1d4a259c3e refs/heads/worktree-agent-RED
+fatal: ref updates aborted by hook
+  rc=255
+  branch worktree-agent-RED : ABSENT
+  directory /tmp/t347-reftxn/wtRED : ABSENT
+  admin dir : ABSENT
+
+===== ARM 2 (CONTROL): the SAME hook, exiting 0 =====
+Preparing worktree (new branch 'worktree-agent-OK')
+T347 reftxn: refusing 0000000000000000000000000000000000000000 123cf0c82235d41d47517a6a6d8a5c1d4a259c3e refs/heads/worktree-agent-OK
+T347 reftxn: refusing 0000000000000000000000000000000000000000 ref:refs/heads/worktree-agent-OK HEAD
+T347 reftxn: refusing 123cf0c82235d41d47517a6a6d8a5c1d4a259c3e 123cf0c82235d41d47517a6a6d8a5c1d4a259c3e refs/heads/worktree-agent-OK
+HEAD is now at 123cf0c c1
+  rc=0
+  branch worktree-agent-OK : 123cf0c82235d41d47517a6a6d8a5c1d4a259c3e
+  directory /tmp/t347-reftxn/wtOK : PRESENT
+  admin dir : PRESENT
+
+scratch: /tmp/t347-reftxn
