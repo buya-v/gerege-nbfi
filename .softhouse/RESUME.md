@@ -1,184 +1,88 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260828-140005`, chain iteration 2 — **IN FLIGHT. SIX LIVE WORKERS.** (T363 landed; T367 replaced it in the batch)
+## FIRE `20260828-140005`, chain iteration 3 — **IN FLIGHT. FIVE LIVE WORKERS.**
 
-**If you are reading this and no driver session is running, six workers were killed mid-flight.**
+**If you are reading this and no driver session is running, five workers were killed mid-flight.**
+Mark each `needs_retry` with the WIP evidence from its branch. `in_progress` never means "work is
+happening"; it means "a driver said so, once".
 
-### PLAN-GATE VIOLATION FOUND AND CLOSED THIS ITERATION
-`T363`, `T365` and `T351` are `code` tasks and were dispatched **with no paired reviewer**, which the
-STEP 2 plan gate forbids (check 1). They were filed that way by an earlier driver and this driver did not
-check before dispatching. Reviewers now exist: **`T367`** (reviews T363, dispatched immediately since T363
-is complete), **`T368`** (reviews T365), **`T369`** (reviews T351). **None of the three code tasks may
-merge before its reviewer clears** — merging unreviewed is exactly what turned `main` red earlier in this
-same fire.
+### Why this iteration exists
+Iteration 2 ended at ~10:35Z on a `five_hour` rate limit (`resetsAt=1787914200`), not on a stop
+condition. The wrapper reconciled state at `cefd8f6c`. The limit had reset by the time this iteration
+started (11:15Z), the tree was clean, `origin/main` tip was 47 s old, and **zero workers were live**.
 
-### DONE, SCOPE-CLEAN, NOT MERGED
-`T351` @ `a0139c5d` — 5 files, scope CLEAN, and it honoured BOTH holds (conformance.sh and fire-program.sh untouched). Zero program.json edits by choice. Awaiting `T369`.
+### Pre-flight, measured — not assumed
+| Check | Result |
+|---|---|
+| Lock arm taken | own fire (`20260828-140005`), wrapper-held |
+| `origin/main` tip age | 0.01 h |
+| `git status --porcelain` | empty |
+| `bash .softhouse/conformance.sh` on `main` | **EXIT 0**, probe line **PRESENT** at line 162 reading `up` |
+| loanschedule | parity **PASS 46 FAIL 0**, contract-refusal 4, inadmissible 0, 7,884 cells |
+| ledger | parity **PASS 7 FAIL 0**, oracle-refusal 6, inadmissible 0, 142 cells (39 money) |
+| 13 `ledger-wrong-*` drives | all **KILLED** |
+| Pre-fire attestation snapshot | `/tmp/attest-before-iter3.json` (7-term, T318 shape) |
 
-`T363` @ `8313ab6d` — 15 files, every path inside its grant (verified with the **three-dot** form; the
-two-dot form falsely showed `LOCK`/`RESUME.md`/`tasks.json` because `main` had advanced under it). Adds
-two `.sh` instruments under `.softhouse/capture/`, **not** under `.softhouse/guards/`, so the
-guards-dir registration population stays at 5 and the T323 hazard is not tripped. Awaiting `T367`.
-Their branches below may hold partial work. Mark each `needs_retry`, do not read `in_progress` as
-"work is happening".
+Reference oracle **REACHABLE**: `https://localhost:8443/fineract-provider/actuator/health`.
+PostgreSQL up on `:5432`. No prohibited-engine port open.
 
-| Task | Branch | Model | Grant |
+## WAVE 1 — IN FLIGHT. Five workers. Grants are pairwise DISJOINT.
+
+| Task | Branch | Model | Exclusive grant |
 |---|---|---|---|
-| `T364` | `softhouse/T364-review-t358` | opus | `.softhouse/reviews/t364-review-t358/` |
-| `T362` | `softhouse/T362-review-t357` | opus | `.softhouse/reviews/t362-review-t357/` |
-| `T368` | `softhouse/T368-review-t365` | opus | `.softhouse/reviews/t368-review-t365/` |
-| `T367` | `softhouse/T367-review-t363` | opus | `.softhouse/reviews/t367-review-t363/` |
-| `T349` | `softhouse/T349-pretooluse-eval` | opus | `.softhouse/capture/t349-pretooluse-eval/` |
-| `T369` | `softhouse/T369-review-t351` | opus | `.softhouse/reviews/t369-review-t351/` |
-| `T351` | `softhouse/T351-progress-accounting` | sonnet | `.softhouse/program.json`, `.softhouse/bin/` (**excluding `fire-program.sh`, held by T365**), `.softhouse/capture/t351-progress-accounting/` |
+| `T382` review T374 | `softhouse/T382-review-t374` | opus | `.softhouse/reviews/t382-review-t374/` |
+| `T375` T364's conditions on T358 | `softhouse/T375-t364-conditions` | opus | **`.softhouse/conformance.sh`**, `.softhouse/capture/t375-t364-conditions/` |
+| `T383` F-T380-1 tail -1 fail-open | `softhouse/T383-t380-conditions` | opus | **`.softhouse/bin/fire-program.sh`**, `.softhouse/capture/t383-t380-conditions/` |
+| `T381` T379's R2 anti-calibration | `softhouse/T381-t379-conditions` | opus | `.softhouse/capture/t363-oracle-baseline/instruments/`, `.softhouse/capture/t381-t379-conditions/` |
+| `T360` divergence vector class | `softhouse/T360-divergence-class` | opus | `.softhouse/vectors/`, `.softhouse/capture/t360-divergence-class/`, `nexus/internal/apps/ledger/conformance/` |
 
-Chosen so no two grants overlap. `T363`'s grant was **narrowed by the driver** from `.softhouse/reviews/`
-(the whole review tree — it collided with both reviewers in this wave) to `.softhouse/reference-oracle.md`.
+`T375` is a **RESUME of a killed worker**, from its own 8-commit branch head `2422adc9` — not a restart,
+and **not** a consumed retry: it was killed by a rate limit, not rejected.
 
+### Plan gate, checked AT dispatch rather than after
+Four of the five are `code` tasks, so check 1 needs a paired reviewer for each. **`T384` (reviews
+T375), `T385` (T383), `T386` (T381), `T387` (T360) were filed in the SAME commit as the dispatch**,
+before any worker spawned. Iteration 2 found three code tasks dispatched with no reviewer at all; this
+closes that shape by construction rather than by inspection.
 
-## Worker roster — READ THE ID BACK OFF THIS TABLE BEFORE SENDING A MESSAGE
+### Deliberately NOT dispatched, with reasons
+- **`T372`** (install the PreToolUse push-before-spawn gate) — its own brief forbids dispatch while any
+  worker is live, because it installs a `deny` hook on the **Agent** tool. Reserved for a wave with
+  **zero** live workers. This is the only mechanism that would give the push-before-spawn obligation any
+  mechanical backing; it currently has none (P-45).
+- **`T366`** — the previous manifest records it as touching `conformance.sh`, which `T375` holds.
+- **`T373`, `T378`** — blocked on `T370`, which is **parked** (rejected by `T376`, and already T351's one
+  retry). `T378` is the landing task that unblocks them.
 
-The driver misrouted two coordinator messages this iteration by typing the wrong id (write-up:
-`.softhouse/observations/20260828-140005-iter2-driver-misrouted-a-worker-message.md`). Always **name the
-task in the message's first line** so a misroute is self-identifying to whoever receives it — that is how
-T363 caught this one.
+## MERGE HAZARD carried forward from iteration 2 — read before merging anything
+`T374` ships the dead-path pin at **108**; `main` is at **109**; `T375` is at **109**.
+**Re-run `.softhouse/capture/t326-frontier-host-state/instruments/10-regen-pin.py` ON THE MERGE RESULT.
+Never pick a side between two pins** (P-83: two independent movements of one pinned number reconcile by
+running, never by arithmetic).
 
-| Task | Agent id | State |
-|---|---|---|
-| `T364` review T358 | `a1090571f8572948f` | running |
-| `T362` review T357 | `a7d891ca5eb35f7d1` | running |
-| `T365` lock zero-value instants | `a0170054b87414aa1` | **done** @ `5aedfc4a` |
-| `T349` PreToolUse evaluation | `a007dd636fe410978` | running |
-| `T367` review T363 | `a57a6c411cc2556f9` | running |
-| `T369` review T351 | `acc7ea7c08e7d5521` | **done** @ `e10e3f07` — **REJECTED** |
-| `T368` review T365 | `a33788600f45d98f9` | running |
-| `T363` oracle baseline | `ad65dab4e80c74658` | **done** @ `8313ab6d` |
-| `T351` progress accounting | `ad437d46842bec227` | **needs_retry** — rejected |
-| `T370` T351 retry (opus) | `aeff4acda7f392048` | running |
+`T360` may move the parity counts. If it does, the summary and **every pinned census that restates them**
+move in ONE commit, and the bar is re-run on the merge result.
 
-
-
-## WAVE 3 — IN FLIGHT. Five live workers. If no driver is running, they were killed.
-
-| Task | Branch | Agent id | Exclusive hold |
-|---|---|---|---|
-| `T376` review T370 | `softhouse/T376-review-t370` | `a4c65d61b570bb5fb` | — |
-| `T371` T367's conditions on T363 | `softhouse/T371-t367-conditions` | `a051948d8d4547685` | `.softhouse/reference-oracle.md` |
-| `T374` T362's conditions on T357 | `softhouse/T374-t362-conditions` | `a5bf073021afa7bc3` | `.softhouse/capture/tierA-a2/` |
-| `T375` T364's conditions on T358 | `softhouse/T375-t364-conditions` | `ac5a2db446e903ba0` | **`.softhouse/conformance.sh`** |
-| `T377` T368's conditions on T365 | `softhouse/T377-t368-conditions` | `a7857166bf26cc586` | **`.softhouse/bin/fire-program.sh`** |
-
-**Deliberately NOT dispatched, with reasons:** `T366` (would need `conformance.sh`, which `T375` holds);
-`T373` (its row-1 dead path resolves by ORDERING once `T370` merges, and `T370` awaits `T376`);
-`T372` (installs a `PreToolUse` deny hook — must run with **zero** live workers).
-
-## MERGED THIS ITERATION — nine branches, every one bar-verified on `main` before its push
-
-`T363` `T367` `T349` · `T357` `T362` · `T358` `T364` · `T365` `T368`
-
-The four-branch batch containing `T369` went **RED** in a scratch worktree
-(`guard_dead_path_frontier`, rows=111 pinned=109) and **never touched `main`**.
-
-## THE PARITY FIGURES, AS SETTLED BY T369 — quote these, and quote the right one
-
-T369 re-derived them **by running the bar**, not by arithmetic, summing each corpus's own case table.
-T351's combined `53 / 8,026` was right about the vectors and **wrong to present 8,026 as a parity count**.
-
-| Figure | Value | When to quote it |
-|---|---|---|
-| Parity vectors | **53** / 0 FAIL | whenever you say "parity vectors" |
-| ALL-CLASS graded cells | **8,026** | only when you mean every graded cell |
-| Cells graded BY PARITY VECTORS | **7,980** | **whenever the sentence says "parity"** |
-
-Breakdown: loanschedule 51 rows → 7,884 cells = 7,859 parity + 4 contract-refusal + **21 self-test fixture
-cells the harness itself labels "EXCLUDED FROM THE PARITY COUNT"**. Ledger 13 rows → 142 = 121 parity +
-21 oracle-refusal. `EXEMPTION_PIN_LEDGER_PARITY=7` and the harness's own "SECOND SCHEMA, SEPARATE COUNTS"
-header corroborate the split.
-
-**"46 parity vectors" is loanschedule-only and is NOT the program total.** It stays correct wherever it is
-scoped to loanschedule — which is how `conformance.sh` and the older manifests use it — and is wrong
-wherever it is offered as the whole corpus. Corrected here, where it is NAMED; not retyped into every
-document that restates it (T248/T258/T340).
-
-
-## CITATION ERRATUM — cite **P-84**, not P-83, for the probe rule
-
-Caught by `T364`, confirmed by the driver against `patterns.md`, and independently cited correctly by
-`T370` before either was told.
-
-| Pattern | What it actually says | Line |
-|---|---|---|
-| **P-84** | *"EXIT 2 WITH NO PROBE LINE" IS THE GUARD WORKING. READ THE ABSENCE, NOT THE VALUE.* | `patterns.md:2813` |
-| **P-83** | *TWO INDEPENDENT MOVEMENTS OF ONE PINNED NUMBER RECONCILE BY RUNNING, NEVER BY ARITHMETIC.* | `patterns.md:2806` |
-
-**The probe-line presence-before-value rule is `P-84`.** This driver wrote "(P-83)" for it in every worker
-prompt it authored this iteration, and 20 task descriptions in `tasks.json` carry the same error. The live
-ones (`status: pending`) have been corrected; completed tasks' text is left as historical record.
-
-**This exact off-by-one is already recorded as an erratum in `patterns.md`** — six patterns were renumbered
-on landing after a cloud fire published a conflicting `P-78`, the renumbering was applied to `patterns.md`
-and never to `RESUME.md`'s restatement, and the corrected cardinal rotted where it was restated. It was
-reproduced anyway, by a driver that had the errata file open. **That is the pattern arguing for itself.**
-
-And P-83 is not idle here: reconciling a pinned number's movement **by running** is exactly what a
-merge-result bar run is for, and it is what this iteration did five times.
-
-## State inherited from chain iteration 1 (unchanged, still true)
-
-Bar GREEN on `main`: `bash .softhouse/conformance.sh` → exit 0, probe line PRESENT reading `up`,
-46 parity vectors / 7884 cells / 0 FAIL / 0 inadmissible.
-
-**`main` still carries the T323 bar-bricking hazard.** T323's merged `guard_guards_dir_registration`
-uses a git pathspec `*` that crosses `/`, so any task adding an ordinary `.sh` fixture anywhere under
-`.softhouse/guards` drives the whole bar to exit 2. Fail-CLOSED, so no false PASS. **`T358`
-(`softhouse/T358-t323-conditions` @ `aac9e12b`) already fixes it.** `T364` is reviewing it now; merge
-on a clean review.
-
-### Complete, committed, NOT merged
-
+## UNMERGED AND COMPLETE ON BRANCHES
 | Task | Branch | Head | Waiting on |
 |---|---|---|---|
-| `T358` | `softhouse/T358-t323-conditions` | `aac9e12b` | `T364` (dispatched) |
-| `T357` | `softhouse/T357-a2-11-section1-red` | `85a30a79` | `T362` (dispatched) |
-| `T361` | `softhouse/T361-review-t353` | `b4bf2abf` | `T366` (next wave) |
+| `T374` | `softhouse/T374-t362-conditions` | `f4157d42` | `T382` (dispatched) |
+| `T376` | `softhouse/T376-review-t370` | `9255d1af` | nothing — it is a review, verdict **REJECTED** |
+| `T370` | `softhouse/T370-t351-retry` | `4925bbef` | **parked**; substance verified good, lands via `T378` |
+| `T351` | `softhouse/T351-progress-accounting` | `a0139c5d` | superseded by `T370`/`T378` |
+| `T369` | `softhouse/T369-review-t351` | `e10e3f07` | `T373` |
 
-### ⚠ The git trap — and a SECOND one the driver found underneath it
+## THE PROGRAM-LEVEL FACT THIS DRIVER IS SURFACING TO BUYAN
+`T352` found it and it is still true, measured again this iteration: **the READY queue contains 31 tasks
+and not one of them ports Fineract code.** Every one repairs the harness. Program progress stands at
+**1 of 17 contexts done, 182 LOC of ~544,000**. The harness work is not waste — the bar has caught a
+false PASS in nearly every fire — but a driver that only ever dispatches harness repair will never
+finish the migration. Raised as `G-20` in `.softhouse/gates.md`; it blocks nothing and needs no answer
+to keep working.
 
-The driver merged T361 (`380f0d64`) and reverted it (`2fa4015b`). **The commits are in `main`'s history;
-the files are not.** `git merge` will say "Already up to date" and restore nothing.
-
-**AND THE BRANCH NAME THE PREVIOUS MANIFEST GAVE FOR RECOVERY DID NOT EXIST.** Measured this fire:
-`softhouse/T361-review-t353` resolved to `fatal: Not a valid object name` — absent locally *and* on origin
-(`git ls-remote --heads origin | grep -i t361` → 0 hits; only 34 of 243 local `softhouse/*` branches are
-pushed at all, so absence from origin alone is normal — absence from both is not). The previous RESUME.md
-and T366's task text both instructed the next reader to use that name. The driver restored it:
-
-```
-git branch softhouse/T361-review-t353 b4bf2abf
-git merge-base --is-ancestor softhouse/T361-review-t353 main   →  TRUE
-git ls-files | grep -c t361-review-t353                        →  0
-git ls-tree -r --name-only softhouse/T361-review-t353 | grep -c t361-review-t353   →  40
-```
-
-**USE THE CLONE-PORTABLE SPELLING INSTEAD.** `b4bf2abf` is the second parent of the merge `380f0d64`, so it
-is reachable from `origin/main`, can never be GC'd, and works in a fresh clone that has no local branches —
-which a local branch ref demonstrably does not:
-
-```
-git ls-tree -r --name-only '380f0d64^2' | grep -c t361-review-t353   →  40
-git show '380f0d64^2':.softhouse/reviews/t361-review-t353/REVIEW.md
-```
-
-**Verify by file count, never by merge output.** T366's task text has been patched with this correction, and
-the live `T365` worker — which was dispatched with the broken command — was messaged directly.
-
-## Next wave, after this one is awaited and merged
-`T366` (land T361 without reddening the bar) → `T360` (a vector class for oracle-ACCEPTS/port-REFUSES)
-→ `T354` → `T355` → `T356`. `T366` and `T360` both touch `conformance.sh`, as does the unmerged `T358`
-— serialise them behind the T358 merge rather than running them alongside it.
-
-## Open gate
-`G-19` is OPEN for Buyan and **blocks nothing**.
+## Open gates
+`G-19` (oracle accepts a sub-minor-unit residue the port refuses) — OPEN for Buyan, blocks nothing.
+`G-20` (the READY queue has no porting work in it) — OPEN for Buyan, blocks nothing.
 
 ## Pause reason
-**Not paused.** Four workers dispatched and being awaited by chain iteration 2.
+**Not paused.** Five workers dispatched and being awaited by chain iteration 3.

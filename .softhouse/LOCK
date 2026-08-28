@@ -4,15 +4,19 @@
   "pid": 75306,
   "fire": "20260828-140005",
   "started_at": "2026-08-28T06:00:21Z",
-  "heartbeat": "2026-08-28T11:09:18Z",
+  "heartbeat": "2026-08-28T11:21:27Z",
   "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
   "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260828-140005.log",
   "oracle": "REACHABLE at https://localhost:8443/fineract-provider/actuator/health",
   "postgres": "reachable at localhost:5432",
-  "chain_iteration": 2,
+  "chain_iteration": 3,
   "in_flight": [
-    "T375"
+    "T382",
+    "T375",
+    "T383",
+    "T381",
+    "T360"
   ],
-  "rate_limit": "Session limit hit 2026-08-28T10:35Z; resets 18:50 Asia/Ulaanbaatar. T368 killed mid-sentence by HTTP 429.",
+  "rate_limit": "Iteration 2 ended on a five_hour limit at 2026-08-28T10:35Z (resetsAt=1787914200). RESET CONFIRMED before iteration 3 dispatched at 11:2xZ.",
   "merge_hazard": "T374 ships dead-path pin at 108, main at 109, T375 at 109. Re-run .softhouse/capture/t326-frontier-host-state/instruments/10-regen-pin.py ON THE MERGE RESULT; never pick a side."
 }
