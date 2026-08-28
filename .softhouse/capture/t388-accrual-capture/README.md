@@ -17,6 +17,22 @@ Start with **`ORACLE-STATE-MOVED-BY-T388.md`**. It is the record of what this ca
 permanently did to the shared reference oracle, the derived blast-radius list, and the P0
 before/after table.
 
+## ⚠ IF YOU ARE HERE TO PROMOTE THESE OBSERVATIONS, OR TO PORT THE ACCRUAL CODE
+
+Read **`.softhouse/capture/t396-t389-conditions/PORT-TRAPS-periodic-accrual-period-selection.md`**
+before you write the period-selection predicate. T389 found that this capture attributed its
+*"periods 1–3 accrued, 4–6 did not"* observation to `FIND_LOANS_FOR_PERIODIC_ACCRUAL`, a JPQL that
+selects **loans**, not periods. The observation is right; the mechanism named for it was not, and
+the real mechanism (`LoanAccrualsProcessingServiceImpl.getInstallmentsToAccrue:466-475`) carries
+**three traps this capture is blind to** — a `<=` on the first installment, a global config row
+that switches the date test off entirely, and a `+1 day` shift that applies to interest and
+installment selection but not to charges. T396 corrected the citations in place in
+`ORACLE-STATE-MOVED-BY-T388.md` §2 and wrote the traps up with vectors to add.
+
+**Nothing in this capture's *observations* changed.** The corrections are to three supporting
+citations only; the headline claim, the nine receivable-slot entries, the amounts and the P0
+result all stand exactly as recorded.
+
 ## The expensive route, which T352 named as correct and declined to pay for
 
 T352 measured the cheap route down to one missing ingredient — a loan on product 28, whose
@@ -70,6 +86,11 @@ loan**, so that the accrual posts into accounts nothing grades.
 - **Not that the SCHEDULED JOB was observed.** The accrual was triggered by hand through
   `POST /runaccruals`, which reaches `addPeriodicAccruals(tillDate)` by the same path job 16
   does but with the date supplied by the caller. This is not evidence about the scheduler.
+  **T396 note:** the *method* is the same, the *pipeline* is not — the API path additionally
+  carries a permission check, idempotency + replay guard, a command-source row, a maker-checker
+  gate and a `tillDate <= businessDate` validator. Four of the five cannot change what is
+  accrued; the maker-checker gate can roll the whole accrual back. Enumerated with citations and
+  a per-item verdict in `ORACLE-STATE-MOVED-BY-T388.md` §2.
 - **Not that these amounts are a parity claim.** They are one loan's observed accrual on one
   set of terms. A parity vector needs the promotion task to decide what is graded, and the
   ratified `MathContext (19, HALF_UP)` question applies to it exactly as it does to every other

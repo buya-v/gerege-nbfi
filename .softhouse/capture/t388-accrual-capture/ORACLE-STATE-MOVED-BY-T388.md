@@ -109,16 +109,85 @@ Client 3 on product 63, submitted / approved / disbursed `15 January 2026`, prin
 scheduled job was not waited for. The trigger request and response are captured at
 `out/T388-A01-runaccruals.req` / `.http` / `.json` / `.status` (HTTP 200, body `{}`).
 
+> **CITATION CORRECTIONS APPLIED IN PLACE BY T396**, discharging T389 condition 2 (findings
+> **m-1**, **m-2**, **m-3**). The load-bearing claim — that `/runaccruals` and job 16 converge on
+> one method, so these observations are genuine *periodic* accruals — is **unchanged and was
+> never in question**. Three supporting citations around it were wrong. Every line number below
+> was re-read by T396 against `/Users/buv/fineract` @ `426a23544e8426a38ae43ae404670a0a7e85b9eb`;
+> none is inherited from prose (P-86). What was replaced is recorded in
+> `.softhouse/handoff/T396-t389-conditions.md`.
+
 **This is the SAME CODE PATH as scheduled job 16 "Add Periodic Accrual Transactions", and the
-difference is one argument.** [VERIFIED at the pinned sha:
-`AccrualAccountingApiResource.java:62` → `excuteAccrualAccounting` →
-`AccrualAccountingWritePlatformServiceImpl.executeLoansPeriodicAccrual` →
-`loanAccrualsProcessingService.addPeriodicAccruals(tillDate)`, where `tillDate` comes from the
-request; `AddPeriodicAccrualEntriesTasklet.execute` calls the identical
-`loanAccrualsProcessingService.addPeriodicAccruals(...)` with
-`DateUtils.getBusinessLocalDate()`.] So the only thing the manual trigger changes is *which
+difference in *what gets accrued* is one argument.** [VERIFIED at the pinned sha
+`426a23544e8426a38ae43ae404670a0a7e85b9eb`, every line re-read by T396:
+
+*API path (what this capture fired) — **m-1 corrected**, the dispatch is `:64`, not `:62`:*
+`AccrualAccountingApiResource.executePeriodicAccrualAccounting:61-65` — **`:62-63` BUILDS a
+`CommandWrapper`** (`new CommandWrapperBuilder().excuteAccrualAccounting()`, which sets
+`actionName = EXECUTE`, `entityName = PERIODICACCRUALACCOUNTING`, `href = /accrualaccounting` at
+`CommandWrapperBuilder.excuteAccrualAccounting:1769-1775`); **`:64` DISPATCHES** it —
+`commandsSourceWritePlatformService.logCommandSource(commandRequest)` →
+`PortfolioCommandSourceWritePlatformServiceImpl.logCommandSource:56-82` (`:81`
+`processAndLogCommandService.executeCommand`) →
+`SynchronousCommandProcessingService.executeCommand:105-109` → `executeCommandAttempt:111-152` →
+`executeCommandInTransaction:154-196` (`:159`) →
+`CommandSourceService.processCommandAndSaveResult:116-124` (`:120` `handler.processCommand`) →
+`ExecutePeriodicAccrualCommandHandler.processCommand:37-41`
+(`@CommandType(entity = "PERIODICACCRUALACCOUNTING", action = "EXECUTE")` at `:31`) →
+`AccrualAccountingWritePlatformServiceImpl.executeLoansPeriodicAccrual:44-59`, whose `:49` calls
+`loanAccrualsProcessingService.addPeriodicAccruals(tillDate)` with `tillDate` read from the
+request at `:47`.
+
+*Job path:* job row **16** is seeded in source at `0002_initial_data.xml:821-839` (`id` at `:822`,
+`name "Add Periodic Accrual Transactions"` at `:823`, cron `0 2 0 1/1 * ? *` at `:825`), wired
+name → `JobName.ADD_PERIODIC_ACCRUAL_ENTRIES` (`JobName.java:36`) →
+`AddPeriodicAccrualEntriesConfig.java:42-57` → `AddPeriodicAccrualEntriesTasklet.execute:39-47`,
+whose `:42` calls `addPeriodicAccruals(DateUtils.getBusinessLocalDate())` → `:49-51` → the same
+method.
+
+*The convergence point:* **`LoanAccrualsProcessingServiceImpl.addPeriodicAccruals(LocalDate):120-140`
+is a single overload**, and its own Javadoc at `:120-122` names both callers — *"method adds
+accrual for batch job \"Add Periodic Accrual Transactions\" and add accruals api for Loan"*. A
+`git grep` over the pinned checkout finds **exactly two** non-test callers of the one-argument
+method: `AccrualAccountingWritePlatformServiceImpl.java:49` and
+`AddPeriodicAccrualEntriesTasklet.java:50`. (`AddPeriodicAccrualEntriesBusinessStep.java:41` is a
+third accrual entry point but calls the **two-argument** per-loan overload
+`addPeriodicAccruals(tillDate, loan)` — `LoanAccrualsProcessingServiceImpl.java:145-153` — under
+the COB action context; see the `ActionContext` note below.)]
+
+So the only thing the manual trigger changes about **which accruals are computed** is *which
 date* is accrued to — it is not a different mechanism, and this capture is not evidence about
 the scheduler.
+
+### The same METHOD is not the same PIPELINE — five differences before it (m-2)
+
+**Corrected by T396.** This record originally said *"the **only** thing the manual trigger
+changes is which date is accrued to."* Read as a statement about the *pipeline* that is **false**,
+and it errs in this capture's own favour: it **understates** the difference between the two paths
+rather than overstating the result. Inside `addPeriodicAccruals` the two paths are identical;
+**before** it they are not. All five extras sit on the **API** side only — the tasklet calls the
+service directly with no command bus in between (`AddPeriodicAccrualEntriesTasklet.java:39-51`).
+
+| # | difference (API path only) | citation, pinned sha, re-read by T396 | **does it change WHAT gets accrued?** |
+|---|---|---|---|
+| 1 | **Permission check `EXECUTE_PERIODICACCRUALACCOUNTING`** — `authenticatedUser(wrapper).validateHasPermissionTo(wrapper.getTaskPermissionName())` | `PortfolioCommandSourceWritePlatformServiceImpl.java:70`; the permission string is `actionName + "_" + entityName` (`CommandWrapper.java:103`, accessor `taskPermissionName():314`), the two halves set at `CommandWrapperBuilder.java:1770-1771` | **NO.** A binary gate on the whole call: either it throws before `addPeriodicAccruals` runs, or the run is identical. It can never accrue a *different* set. |
+| 2 | **Idempotency-key resolution + replay guard** — key from the request, else the request attribute, else a minted UUID; then a duplicate-key lookup that throws on `UNDER_PROCESSING` / `PROCESSED` / `ERROR` | `SynchronousCommandProcessingService.java:131` → `IdempotencyKeyResolver.resolve:35-37`; guard `SynchronousCommandProcessingService.exceptionWhenTheRequestAlreadyProcessed:241-262`, invoked at `:133` | **NO — but it decides whether it runs at all.** Same gate shape as (1): throw, or an identical run. It is what makes a *repeat* `POST /runaccruals` a refusal instead of a second accrual — real behaviour the Go port owes — but it never alters the installment set of the run that proceeds. |
+| 3 | **A persisted `m_portfolio_command_source` row**, then the result written back onto it | `SynchronousCommandProcessingService.java:136-143` (`commandSourceService.saveInitial` at `:140`); result update `CommandSourceService.processCommandAndSaveResult:122-123` | **NO.** An audit write, outside the accrual's arithmetic. It is why this capture's command-source row **379** (`EXECUTE / PERIODICACCRUALACCOUNTING`) exists and carries an `Idempotency-Key`; the job path writes no such row. |
+| 4 | **Maker-checker gate** — if the permission is maker-checker enabled (or the handler asked for rollback) and the caller is neither checker nor checker-superuser, the command is marked awaiting approval and the transaction is rolled back | `CommandSourceService.validateMakerChecker:126-143`, called at `:121`; test `configurationDomainService.isMakerCheckerEnabledForTask(permission)` at `:129-130`; `markAsAwaitingApproval` + `RollbackTransactionNotApprovedException` at `:139-140` | **YES, IN ONE DIRECTION — it can make the accrual not happen.** It runs **after** `handler.processCommand` (`:120`) has already computed and written the accrual, then rolls the whole transaction back. On a maker-checker-enabled tenant the API path computes exactly what the job would and persists **nothing**, pending approval. It cannot make it accrue something *different*. **Inert on this tenant** by seed default, which is why this capture's accrual landed. |
+| 5 | **`tillDate` validator: `tillDate <= businessDate`, plus unsupported-parameter rejection** | `AccrualAccountingWritePlatformServiceImpl.java:46` → `AccrualAccountingDataValidator.validateLoanPeriodicAccrualData:54-71`; the date test is `validateDateBefore(DateUtils.getBusinessLocalDate())` at `:67-68`; semantics at `DataValidatorBuilder.validateDateBefore:1036-1043` — it errors only when `isBefore(businessDate, tillDate)`, so **equality is permitted** | **NO, AND IT CANNOT.** It only *restricts the domain* of `tillDate` to `<= businessDate`. Because equality passes, the API can reproduce the job's exact input — there is no `tillDate` the job can use that the API cannot. This is the one difference that could in principle have made the paths inequivalent, and it does not. |
+
+**A sixth asymmetry, on the JOB side, stated because it cuts the other way:** the scheduler sets
+`ThreadLocalContextUtil.setActionContext(ActionContext.DEFAULT)` explicitly
+(`JobStarter.java:95`), and `DateUtils.getBusinessLocalDate:238-240` →
+`ThreadLocalContextUtil.getBusinessDate:94-97` resolves through
+`getActionContext().getBusinessDateType()` — `ActionContext.DEFAULT` → `BUSINESS_DATE`,
+`ActionContext.COB` → `COB_DATE` (`ActionContext.java:29-30`). The *same expression*
+`DateUtils.getBusinessLocalDate()` therefore yields a **different date** under a COB action
+context, which is exactly the context `AddPeriodicAccrualEntriesBusinessStep.java:41` runs in.
+
+**None of this touches the operative conclusion, which stands unchanged: this capture is NOT
+evidence about the scheduler.** If anything the corrected argument supports it more strongly than
+the one originally given.
 
 `enable-business-date` is **`f`** on this tenant [`out/T388-B05-tenant-clock.txt`], so the
 job's own `tillDate` would have been today's tenant date; `15 April 2026` was chosen instead
@@ -126,10 +195,56 @@ so the accrual lands inside the loan's schedule and the observation is about acc
 about the clock.
 
 **Three ACCRUAL loan transactions were produced** — 29 (2026-02-15), 30 (2026-03-15),
-31 (2026-04-15) — and each wrote a six-leg journal entry. That periods 1–3 accrued and periods
-4–6 did not is the `FIND_LOANS_FOR_PERIODIC_ACCRUAL` predicate behaving as written
-(`ls.fromDate < :tillDate`; period 4's `fromDate` is `2026-04-15`, which is not `< 2026-04-15`,
-and it is not the minimum instalment).
+31 (2026-04-15) — and each wrote a six-leg journal entry. **Periods 1–3 accrued and periods 4–6
+did not.**
+
+### The 1–3 / 4–6 split was attributed to a query that selects LOANS, not PERIODS (m-3)
+
+**Corrected by T396.** This record originally credited the split to
+`FIND_LOANS_FOR_PERIODIC_ACCRUAL` behaving as written (`ls.fromDate < :tillDate`). That JPQL is
+`select l from Loan l … where … and (exists (select ls.id from LoanRepaymentScheduleInstallment
+ls where ls.loan.id = l.id …))` — `LoanRepository.LOANS_FOR_ACCRUAL:109-116` +
+`FIND_LOANS_FOR_PERIODIC_ACCRUAL:117-118`, bound at `findLoansForPeriodicAccrual:261-264`. It
+**selects which LOANS enter the loop, not which PERIODS accrue.** Because it is an `EXISTS`,
+installment 1 alone (`fromDate 2026-01-15 < 2026-04-15`) makes loan 8 eligible; the query never
+renders a verdict on period 4. The reading of the JPQL text was correct; explaining a per-period
+outcome with it was not.
+
+**The per-period cutoff is `LoanAccrualsProcessingServiceImpl.getInstallmentsToAccrue:466-475`**,
+reached from `calculateAccrualAmounts:447-464` at `:456-457` with `isFinal = false` (set by
+`addAccruals(loan, tillDate, true, false, true, chargeOnDueDate)` at `:152`). Its predicate at
+`:471-474` keeps installment `i` when
+
+```
+!i.isDownPayment()
+&& (!chargeOnDueDate
+    || (periodic ? !isBeforePeriod(tillDate, i, i.getInstallmentNumber().equals(firstInstallmentNumber))
+                 : isFullPeriod(tillDate, i)))
+&& !isAfterPeriod(organisationStartDate, i)
+```
+
+and `LoanRepaymentScheduleProcessingWrapper.isBeforePeriod:260-263` is
+`isFirstPeriod ? DateUtils.isBefore(targetDate, fromDate) : !DateUtils.isAfter(targetDate, fromDate)`.
+Negated, that is **`tillDate >= fromDate` for the first installment and `tillDate > fromDate` for
+every other one.** On this loan with `tillDate = 2026-04-15`: installment 1 (`fromDate
+2026-01-15`) is kept by the inclusive branch, 2 (`2026-02-15`) and 3 (`2026-03-15`) by the strict
+branch, and 4 (`fromDate 2026-04-15`) is dropped because `2026-04-15` is not **after**
+`2026-04-15`. **The observed 1–3 / 4–6 split is exactly right — only the mechanism named for it
+was wrong.**
+
+> **⚠ THE MIS-CITATION HID THREE PORT TRAPS.** Written up in full, with truth tables and the Go
+> consequence of each, at
+> **`.softhouse/capture/t396-t389-conditions/PORT-TRAPS-periodic-accrual-period-selection.md`**.
+> **Any task that promotes these observations into a vector, or ports
+> `LoanAccrualsProcessingService`, must read that file before writing the predicate.** One line
+> each:
+> **(A)** the **first** installment compares `<=`, not `<`, and "first" means first
+> *non-down-payment* installment, which is not always number 1;
+> **(B)** setting the global `charge-accrual-date` to `submitted-date` switches the date test
+> **off entirely**, at both the loan level and the period level, from one config row;
+> **(C)** on a progressive schedule with `isInterestRecognitionOnDisbursementDate()` the date used
+> for installment selection *and* interest is `tillDate.plusDays(1)`, while charges still use the
+> unshifted `tillDate`.
 
 ---
 
