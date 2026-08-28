@@ -1,0 +1,26 @@
+scratch: /private/tmp/t325-glue-Wwuc0J
+shipped glue under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a1c01d496742bb1cf/.softhouse/bin/fire-program.sh
+git: git version 2.50.1 (Apple Git-155)
+
+extracted 51 lines of shipped wiring
+
+ATTEST resolves to: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a1c01d496742bb1cf/.softhouse/bin/../guards/repo-state-attest.sh
+
+=== W1 — the ordinary case: a clean iteration attests PASS ===
+ARM W1_clean_iteration: PASS  rc=0 (expected 0), log contains exit-protocol attestation PASSED...
+
+=== W2 — damage: the wiring must REPORT it, not swallow it ===
+ARM W2_damage_is_reported: PASS  rc=1 (expected 1), log contains EXIT-PROTOCOL VIOLATION...
+
+=== W3 — NO BASELINE: unattested must not resolve to clean ===
+ARM W3_no_baseline_is_unattested: PASS  rc=2 (expected 2), log contains UNATTESTED...
+
+=== W4 — the guard file is MISSING: fail closed, loudly ===
+ARM W4_missing_guard_refuses: PASS  rc=2 (expected 2), log contains NOT READABLE...
+
+=== W5 — the AFTER snapshot cannot be taken: still not clean ===
+ARM W5_after_snapshot_refused: PASS  rc=2 (expected 2), log contains UNATTESTED...
+
+================================================================
+TOTAL: PASS=5 FAIL=0
+scratch kept: /private/tmp/t325-glue-Wwuc0J

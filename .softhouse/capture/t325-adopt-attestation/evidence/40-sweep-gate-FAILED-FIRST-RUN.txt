@@ -1,0 +1,22 @@
+T325 instrument 40 — FIRST RUN: 3 of 6 arms FAILED, and the harness was wrong, not the gate.
+
+    ARM S4_skip_bit_hides_content: FAIL  T325-gate-fired=0 (want 1) rescue-path-reached=0 (want 0)
+    ARM S5_skip_worktree_bit:      FAIL  T325-gate-fired=0 (want 1) rescue-path-reached=0 (want 0)
+    ARM S6_untracked_hidden_by_config: FAIL T325-gate-fired=0 (want 1) rescue-path-reached=0 (want 0)
+    TOTAL: PASS=3 FAIL=3
+    (plus a parse error at the tail: `... exit 1 fi` on one line, missing the `;`)
+
+CAUSE. The harness invoked the sweep inside a command substitution — `out=$(sweep_t325 "$d")`
+— to capture its stdout. That is a SUBSHELL, so the `LOGBUF+=(...)` the fake `log()`
+performed died with it and the harness read an empty array every time. The gate HAD fired;
+the instrument could not see it.
+
+WHY THIS TRANSCRIPT IS KEPT. It is the same defect the whole task is about, one level up: a
+measurement apparatus that reports the reassuring value because it never actually looked.
+Had the polarity been the other way round — arms that expected 0 and got a silent 0 — this
+drive would have "passed" while testing nothing, and I would have shipped a green about a
+gate I had never observed fire. The expectation being 1 is the only reason it surfaced.
+
+FIX: `log()` appends to a FILE, and `run()` reads the file back after the substitution
+returns. The re-run is in 40-sweep-gate-drive.txt: 6/6, with the ERROR text quoted in full
+for each of S4, S5, S6 and the pre-T325 counterfactual printed beside every arm.

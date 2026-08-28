@@ -1,0 +1,62 @@
+T325 instrument 20 — FIRST RUN, 5 of 21 rows FAILED. Kept, per this program's own
+discipline (T318 committed two failure transcripts for the same reason): a drive whose
+only surviving record is the run where everything passed is a drive nobody can audit.
+
+WHAT WAS WRONG, AND IT WAS THE INSTRUMENT, NOT THE GUARD
+--------------------------------------------------------
+The first draft had no `setup_<arm>` hook, so every arm built its ENTIRE state inside
+the attested window. Three damage arms therefore asked the guard a question to which 0
+was the correct answer:
+
+  D4  committed one commit and then `reset --hard HEAD~1` back to the BYTE-IDENTICAL
+      starting state. Nothing had moved between the two snapshots. T318's A4 resets to a
+      DIFFERENT non-descendant; mine returned to the origin.
+  D8  created softhouse/T995-unmerged AND deleted it inside the window, so the ref is in
+      NEITHER snapshot and no two-point differential can see it.
+  D9  same shape: the branch was created and force-moved inside the window, so it read as
+      a NEW ref (authorized by --allow-new-ref), not as a rewound one.
+  M1  depended on L1's `git branch -d`, and L1 created that branch inside the window too.
+  M4  is D8 under a different writ; it inherited D8's defect.
+
+FIX: a `setup_<arm>` function that runs BEFORE the baseline snapshot, and the pre-existing
+state moved into it. That is also the more faithful fixture — the branches a fire's prune
+sweep deletes were created by EARLIER fires, not by the one being attested.
+
+WHAT IT TAUGHT, WHICH IS NOW ARM R1: a ref created and destroyed entirely inside one
+window is invisible to any two-point differential. That is a real residual gap; it is now
+a declared, driven row that PASSES while the limitation reproduces and FAILS LOUDLY if a
+term is ever added that sees it. Closing it would require the reflog or `git fsck`
+dangling objects, both of which T318 excluded with reasons that still stand.
+
+CAPTURED CONSOLE OUTPUT OF THE FAILING RUN
+------------------------------------------
+[The pre-fix bytes of the instrument were never committed — this file records the console
+ output of that run, not a re-execution. The passing run of the fixed instrument is in
+ 20-fire-writ-drive.txt.]
+
+ARM D8_delete_unmerged_worker_branch: FAIL  guard=0 (expected 1)   LEGACY=CLEAN (0 entries)
+      repo-state-attest.sh: ATTESTATION  before=/private/tmp/t325-fire-writ-z0CEmW/D8_delete_unmerged_worker_branch.before  after=.../D8_delete_unmerged_worker_branch.after
+        LEGACY PREDICATE  (`git status --porcelain` empty?) : CLEAN (0 entries)
+      VERDICT: NO DAMAGE -- every delta is inside the declared writ
+
+ARM D9_worker_branch_rewound: FAIL  guard=0 (expected 1)   LEGACY=CLEAN (0 entries)
+        info      T2 new ref refs/heads/softhouse/T994-rewound (authorized by --allow-new-ref)
+      VERDICT: NO DAMAGE -- every delta is inside the declared writ
+
+MUT M1 no --allow-deleted-ref -> L1 goes RED: FAIL  rc=0 (expected 1)
+        info      T1 HEAD fast-forwarded on the WRIT branch refs/heads/main: 73158d76 -> c39e79d3  (authorized)
+        info      T2 new ref refs/heads/worktree-agent-deadbeef (authorized by --allow-new-ref)
+        info      T2 new ref refs/rescue/20260828-000001/shadow (authorized by --allow-new-ref)
+        info      T2 writ branch refs/heads/main fast-forwarded 73158d76 -> c39e79d3 (authorized)
+        info      T2 writ branch refs/remotes/origin/main fast-forwarded 73158d76 -> c39e79d3 (authorized)
+        info      T7 invariant artefact changed in HEAD, and the writ names it: .softhouse/tasks.json
+        info      T7 invariant artefact changed in HEAD, and the writ names it: .softhouse/RESUME.md
+      VERDICT: NO DAMAGE -- every delta is inside the declared writ
+
+MUT M4 D8 under L1's writ stays RED: FAIL  rc=0 (expected 1)
+      VERDICT: NO DAMAGE -- every delta is inside the declared writ
+
+TOTAL: PASS=16 FAIL=5
+FAILED ARMS: D4_non_ff_reset D8_delete_unmerged_worker_branch D9_worker_branch_rewound
+             "M1 no --allow-deleted-ref -> L1 goes RED" "M4 D8 under L1's writ stays RED"
+scratch: /private/tmp/t325-fire-writ-z0CEmW

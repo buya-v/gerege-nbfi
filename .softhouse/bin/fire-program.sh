@@ -86,6 +86,92 @@ fi
 
 source "$SCRIPT_DIR/lib-worktree-prune.zsh" || { log "FATAL: could not source lib-worktree-prune.zsh"; exit 1; }
 
+# ------------------------------------------ T325: repo-state attestation ---
+# T318 measured six live damage gates in this program and found FIVE OF THEM
+# BLIND to a committed clobber. Two of the five are in THIS FILE, and the worst
+# of them is this file's implementation of the driver's own STEP 5.5:
+#
+#     "`git status --porcelain` must come back empty"
+#
+# T318 drove nine distinct shapes of destruction and six legitimate operations
+# through that sentence. It answered CLEAN on ALL FIFTEEN
+# [VERIFIED: .softhouse/capture/t318-committed-clobber-blindness/evidence/
+#  30-red-green-drive.txt, the LEGACY column]. That is not a weak test; over this
+# class it has NO discriminating power at all, and every fire that has asserted
+# cleanliness from it has been asserting nothing.
+#
+# The reframing that fixes it: "is the tree clean?" is not the property anyone
+# wants -- a fire is SUPPOSED to commit, to move tasks.json, to create worker
+# branches. The property wanted is "the repo differs from before only in ways
+# this operation was authorized to produce", which is a relation between THREE
+# things (before, after, writ) and which NO predicate over a single state can
+# express. So the wiring below is differential: snapshot at the top of each chain
+# iteration, snapshot again at the end of the exit guard, compare against the
+# fire's writ (`fire-compare`, whose writ is defined once inside the guard so the
+# wrapper and the false-positive drives cannot drift apart).
+#
+# NEVER FATAL, AND THAT IS ARGUED, NOT TIMID. The attestation reports; it does
+# not abort a fire. A guard that stops the program on its own false positive is
+# removed within two fires -- T318's arm G5 caught exactly that shape in its own
+# first draft (it flagged the sanctioned `git checkout -b softhouse/<task>` as
+# damage). The value here is that the finding reaches the log and the postmortem
+# at all: today the fire asserts "clean" and is not even wrong, it is uninformed.
+# T325-ATTEST-WIRING BEGIN
+#   (marker: .softhouse/capture/t325-adopt-attestation/instruments/
+#    50-wrapper-glue-drive.zsh EXTRACTS the lines between these two markers and
+#    drives THE SHIPPED GLUE — because a guard that works and a wiring that
+#    fails open are indistinguishable from the guard's own test suite. The
+#    instrument REFUSES if it cannot find the markers.)
+ATTEST="${ATTEST:-$SCRIPT_DIR/../guards/repo-state-attest.sh}"
+ATTEST_DIR="${ATTEST_DIR:-$LOG_DIR}"
+ATTEST_BEFORE=""   # per chain iteration. EMPTY means "no baseline was taken",
+                   # which resolves to UNATTESTED, never to clean.
+
+# Run the guard and log every line it prints, prefixed. Returns the guard's rc.
+# `bash`, never `sh`/`zsh`: the guard is a bash script and uses bash arrays --
+# the same wrong-interpreter discipline `conformance.sh` enforces with exit 3.
+attest_run() {
+  local prefix="$1"; shift
+  if [[ ! -r "$ATTEST" ]]; then
+    log "ERROR: $prefix — the repo-state attestation guard is NOT READABLE at $ATTEST. This fire is UNATTESTED: nothing in this log supports a claim that nothing was destroyed. (P-45: 'a guard that only works when someone remembers to run it enforces nothing' — one that is not on disk enforces less.)"
+    return 2
+  fi
+  local out rc l
+  out=$(bash "$ATTEST" "$@" 2>&1); rc=$?
+  for l in "${(@f)out}"; do
+    [[ -n "$l" ]] && log "$prefix| $l"
+  done
+  return $rc
+}
+
+# The exit-protocol half of the attestation. Called at the very end of
+# run_exit_guard, AFTER the wrapper's own rescue/repair commits and its push, so
+# the window it attests is the whole iteration including everything STEP 5.5
+# itself does.
+attest_exit_protocol() {
+  local after rc
+  if [[ -z "$ATTEST_BEFORE" || ! -r "$ATTEST_BEFORE" ]]; then
+    log "ERROR: exit-protocol attestation: NO BASELINE SNAPSHOT for this iteration (${ATTEST_BEFORE:-<none taken>}). The fire is UNATTESTED — which is NOT the same as clean, and must not be reported as clean. Everything below the legacy \`git status\` line in this log is the pre-T325 blind reading."
+    return 2
+  fi
+  after="${ATTEST_BEFORE%.before}.after"
+  attest_run "attest-after" snapshot "$REPO" "$after"
+  rc=$?
+  if (( rc != 0 )); then
+    log "ERROR: exit-protocol attestation: could not take the AFTER snapshot (rc=$rc). UNATTESTED — the guard fails CLOSED, so 'I could not measure' never resolves to 'no damage'."
+    return 2
+  fi
+  attest_run "attest" fire-compare "$ATTEST_BEFORE" "$after"
+  rc=$?
+  case $rc in
+    0) log "attest: exit-protocol attestation PASSED — every delta between $ATTEST_BEFORE and $after is inside this fire's writ (seven terms, not one)" ;;
+    1) log "ERROR: EXIT-PROTOCOL VIOLATION — the repo-state attestation reports DAMAGE (see the attest| lines above for which term fired). This is reported, never suppressed: it is the finding the legacy \`git status --porcelain\` check could not produce for any of the nine shapes T318 drove." ;;
+    *) log "ERROR: exit-protocol attestation REFUSED (rc=$rc) — it could not measure. UNATTESTED, not clean." ;;
+  esac
+  return $rc
+}
+# T325-ATTEST-WIRING END
+
 cd "$REPO" || { log "FATAL: repo not found"; exit 1; }
 
 # ---------------------------------------------------------------- preflight ---
@@ -133,6 +219,34 @@ log "reference oracle (Fineract): $ORACLE_STATUS"
 # Never fatal: both are `|| true`, and a broken guard must not stop a fire.
 /usr/bin/python3 "$SCRIPT_DIR/branch_sweep.py" install-hook --repo "$REPO" 2>&1 | while IFS= read -r l; do log "refguard| $l"; done || true
 /usr/bin/python3 "$SCRIPT_DIR/branch_sweep.py" sweep --repo "$REPO" --pattern 'softhouse/*' --quiet 2>&1 | while IFS= read -r l; do log "sweep| $l"; done || true
+
+# T325 — THE PRE-FLIGHT BASELINE READING (FU-T318-5).
+#
+# `/softhouse` STEP 0.1 and `/softhouse-plan` STEP 0.1 both say "`git status` —
+# abort if the tree is dirty". T318 lists both as BLIND gates, and the reason
+# they matter most is the moment they occupy: pre-flight is the point at which an
+# undetected clobber left by the PREVIOUS fire is silently adopted as this
+# fire's baseline. Everything the fire then measures is measured against damage.
+#
+# Those two gates live in `.claude/skills/*/SKILL.md`, outside T325's edit set,
+# and this line does not change them — see the T325 handoff, which states the
+# exact prose replacement and its owner. What this line does is put the reading
+# on the path that actually executes on this host every day, so the fact reaches
+# a log even while the prose stays stale.
+#
+# It is a SURVEY, not a compare, because at pre-flight there is no "before" to
+# be differential against — and the survey votes on exactly one term (index skip
+# bits), which no legitimate operation in this pipeline produces. Deliberately
+# NOT fatal: a fire that refuses to start because of an inherited condition it
+# cannot fix would park the whole program, and would be commented out within two
+# fires. It reports, loudly, and the fire proceeds.
+attest_run "attest-preflight" survey "$REPO" --label "fire $STAMP pre-flight baseline"
+ATTEST_PRE_RC=$?
+case $ATTEST_PRE_RC in
+  0) log "attest-preflight: baseline reading taken — no hidden-work term fired in $REPO before this fire started" ;;
+  1) log "ERROR: attest-preflight: HIDDEN WORK IS ALREADY PRESENT in $REPO before this fire has done anything. An index skip bit switches off the working-tree comparison that this file's exit guard, \`git worktree remove\` and the prune classifier all rely on. Do NOT read this fire's later 'clean' lines as evidence about those paths; clear the bit by hand (\`git update-index --no-assume-unchanged <path>\`) after checking what is under it." ;;
+  *) log "WARN: attest-preflight: the baseline survey REFUSED (rc=$ATTEST_PRE_RC) — this fire starts from an UNMEASURED baseline. Not fatal, but the exit attestation's 'no damage' is weaker by exactly this much." ;;
+esac
 
 if (( PROBE_ONLY )); then
   log "probe only — exiting without taking the lock or invoking the driver"
@@ -1593,7 +1707,43 @@ for (( WI = 1; WI <= ${#WT_PATHS}; WI++ )); do
     log "ERROR: worktree sweep could not read git status for $W (rc=$WS_RC) — REFUSING to treat it as clean. NOT rescued, because git is not answering there; treat anything inside it as UNVERIFIED and inspect it by hand."
     continue
   fi
-  [[ -n "$WS" ]] || continue
+  # T325 — GATE 3 OF FIVE. `[[ -n "$WS" ]] || continue` is this sweep's whole
+  # theory of "there is nothing here to rescue", and it is `git status
+  # --porcelain` again: the same predicate T318 drove CLEAN through nine
+  # destruction shapes. In a worktree the shape that matters is the index skip
+  # bit, because it makes the sweep skip the worktree AND (before T324) let the
+  # prune loop delete it — the sweep's silence was the first link of that chain.
+  #
+  # WHY A SURVEY AND NOT THE DIFFERENTIAL `compare` HERE, stated so the asymmetry
+  # is a decision and not an omission: the worktrees that most need this are the
+  # ones a worker CREATED during the fire now ending, so no "before" snapshot of
+  # them can exist. `wt_prune_blindspot_check` (T324, defined above, already
+  # fixture-driven against the shipped bytes) is exactly the single-state subset
+  # that applies, so it is REUSED rather than reimplemented — a second copy of a
+  # rule is a rule that will disagree with itself later.
+  #
+  # DETECTIVE, NOT CORRECTIVE. It logs; it does not clear the skip bit and does
+  # not commit behind the worker's back. Clearing an index bit in a worktree that
+  # may still have a live agent in it is a mutation this sweep has no writ for,
+  # and the destruction it would guard against is already blocked one loop below
+  # by T324's prune override. One fire of delay, not destruction — the same trade
+  # the signal path already makes for the whole sweep.
+  # T325-SWEEP-HIDDENWORK-GUARD BEGIN
+  #   (marker: .softhouse/capture/t325-adopt-attestation/instruments/
+  #    40-sweep-gate-drive.zsh EXTRACTS the lines between these two markers and
+  #    drives THE SHIPPED BYTES, the discipline T324 established for its own
+  #    guard. Do not delete or reword the markers; the instrument REFUSES to run
+  #    if it cannot find them, rather than quietly testing a copy of the rule.)
+  if [[ -z "$WS" ]]; then
+    local BS_OUT BS_RC
+    BS_OUT=$(wt_prune_blindspot_check "$W"); BS_RC=$?
+    if (( BS_RC != 0 )); then
+      log "ERROR: worktree $(basename "$W") reads CLEAN to this sweep's \`git status --porcelain\`, and the hidden-work terms DISAGREE — $BS_OUT"
+      log "       NOT rescued: this sweep will not clear an index bit or commit inside a worktree that may still hold a live agent. The prune loop below KEEPS it (T324), so nothing is destroyed — but the content is uncommitted and invisible to the next fire. Inspect $W by hand."
+    fi
+    continue
+  fi
+  # T325-SWEEP-HIDDENWORK-GUARD END
   local -a WS_LINES; WS_LINES=("${(@f)WS}")
   WD=${#WS_LINES}
   WN=$(basename "$W")
@@ -1820,11 +1970,37 @@ Reconcile: $RECON_VERDICT" >/dev/null 2>&1 \
 fi
 
   git push -q origin main 2>/dev/null || log "WARN: could not push after exit-protocol guard"
+
+# T325 — GATE 2 OF FIVE, AND THE ONE THE TASK CALLS MOST IMPORTANT: this
+# function IS the driver's STEP 5.5 in executable form. Everything above has now
+# happened — the deliverable rescue, the worktree sweep, the tasks.json
+# reconcile, the RESUME.md banner, the wrapper's own commit and the push — so
+# this is the last moment at which the fire can say anything about what it did to
+# the repository. Until now the only thing it could say was `git status
+# --porcelain`, which T318 measured to be CLEAN on a re-inited repo with a forged
+# identity and a committed clobber. It is called AFTER the push deliberately:
+# the push moves `refs/remotes/origin/main`, and a gate that cannot see its own
+# protocol's final step is a gate nobody will keep.
+attest_exit_protocol
 }
 
 # --------------------------------------------------------------- chain loop ---
 while (( CHAIN_N < CHAIN_MAX )); do
   HEAD_BEFORE=$(git rev-parse HEAD)
+  # T325 — the BEFORE half of the exit-protocol attestation, taken PER ITERATION
+  # rather than per fire. A chained fire runs the driver up to CHAIN_MAX times and
+  # `run_exit_guard` after each one, so a per-fire baseline would attribute
+  # iteration 3's damage to a window that also contains iterations 1 and 2 and
+  # would blur exactly the attribution the guard exists to provide.
+  # Cost, measured rather than assumed (T318 left it Unverified-6): 1.08s wall on
+  # this repo at 7,391 tracked files and 612 refs — against a fire whose
+  # foreground child runs for hours.
+  ATTEST_BEFORE="$ATTEST_DIR/attest-$STAMP-iter$((CHAIN_N+1)).before"
+  attest_run "attest-before" snapshot "$REPO" "$ATTEST_BEFORE"
+  if (( $? != 0 )); then
+    log "WARN: could not take the pre-driver repo-state snapshot for iteration $((CHAIN_N+1)) — this iteration will end UNATTESTED (which is not the same as clean)."
+    ATTEST_BEFORE=""
+  fi
   run_driver
   run_exit_guard
   CHAIN_N=$((CHAIN_N+1))
