@@ -1281,6 +1281,174 @@ reconcile_tasks_json() {
   return 0
 }
 
+# --------------------------------------------- T324: the prune blind-spot gate ---
+# T324-PRUNE-BLINDSPOT-GUARD BEGIN
+#   (marker: .softhouse/capture/t324-worktree-prune-skipbit/instruments/
+#    20-blindspot-guard-drive.zsh EXTRACTS the lines between these two markers and
+#    drives THE SHIPPED BYTES. Do not delete or reword the markers; the instrument
+#    refuses to run if it cannot find them, rather than testing a copy.)
+#
+# WHAT WENT WRONG, AND THE WORD THAT WENT WRONG IS "INDEPENDENT".
+# ------------------------------------------------------------------------------
+# Until T324 the prune path had three checks and the comment below (still there,
+# now corrected) called the third of them "a THIRD, independent clean check":
+#
+#   1. `wt_prune_check` rule 1 — `git merge-base --is-ancestor`
+#   2. `wt_prune_check` rule 2 — `git status --porcelain`
+#   3. `git worktree remove` without `--force`, which refuses on a dirty tree
+#
+# THEY ARE NOT INDEPENDENT. Checks 2 and 3 both ask ONE oracle the SAME question:
+# "git, compare the working tree against the index". A git index SKIP BIT
+# (`git update-index --assume-unchanged` or `--skip-worktree`) TURNS THAT
+# COMPARISON OFF for a path. It moves no ref, no HEAD, no config and no commit, so
+# there is nothing for check 1 to see either. One bit therefore blinds all three
+# AT THE SAME INSTANT.
+#
+# THAT IS WORSE THAN HAVING ONE CHECK, NOT BETTER. Three checks that fail
+# independently would agree only by coincidence, so agreement is evidence. Three
+# checks that share an oracle agree by construction, and their agreement is read
+# as strong evidence when it carries no more information than the single check
+# they are all restating. The redundancy did not add safety; it added CONFIDENCE
+# it had not earned, and the confidence is what let the removal proceed.
+#
+# DRIVEN, END TO END, NOT REASONED:
+#   T318, evidence/50-prune-mitigation-drive.txt — `wt_prune_check` answered
+#   PRUNE, `git worktree remove` returned rc=0, and a worktree holding 61 bytes of
+#   irreplaceable worker output was DESTROYED.
+#   T324, evidence/10-taxonomy.txt — reproduced on git 2.50.1 (Apple Git-155) for
+#   `--assume-unchanged`, for `--skip-worktree`, and for both bits at once.
+#
+# WHAT THIS FUNCTION ADDS, AND WHY IT IS ACTUALLY INDEPENDENT
+# ------------------------------------------------------------------------------
+# It does not ask git to compare anything. It reads THE INDEX'S OWN PER-ENTRY
+# BITS — the very state that switches the comparison off. A term cannot be
+# silenced by the mechanism it is looking at, which is the property the other
+# three lack and the only reason this one is worth adding.
+#
+#   TERM 1  `git ls-files -v` — REFUSE if any entry's tag is not `H`.
+#           MEASURED TAG LETTERS, not read off a man page (T324 instrument 10):
+#             --assume-unchanged            -> `h`  (lowercase of the normal tag)
+#             --skip-worktree               -> `S`  (UPPERCASE)
+#             both bits set together        -> `h`  (assume-unchanged wins the display)
+#           SO THE RULE MUST BE "TAG != H", NEVER "TAG IS LOWERCASE". A
+#           lowercase-only rule reads as the natural one and would sail past
+#           `--skip-worktree` — the exact shape the T324 brief demanded be settled
+#           by experiment rather than by assumption. Both bits produce identical
+#           destruction; only their letters differ.
+#
+#   TERM 2  `git status --porcelain -uall` — REFUSE if anything is listed.
+#           This is NOT a restatement of `wt_prune_check` rule 2, and the
+#           difference is the whole point: worktree-local
+#           `status.showUntrackedFiles=no` makes a bare `--porcelain` report CLEAN
+#           with live untracked files on disk, and `git worktree remove` inherits
+#           that config and destroys them (T324 instrument 10, shape H, measured
+#           rc=0 with 56 bytes lost). `-uall` is a command-line override and is
+#           immune to it.
+#           `git -c status.showUntrackedFiles=normal` was measured to defeat the
+#           same config equally well, and is DELIBERATELY NOT STACKED ON TOP.
+#           It defends the same threat by the same mechanism — config precedence —
+#           so the pair would be one term wearing two hats, which is the exact
+#           error this whole comment exists to name. One term, chosen and stated.
+#
+# DIRECTION — FAIL CLOSED, AND THE ASYMMETRY IS THE ARGUMENT, NOT A PREFERENCE.
+# ------------------------------------------------------------------------------
+# Refusing to prune a worktree that was in fact disposable costs a directory on
+# disk and a reader's patience, and the next fire re-evaluates it. Pruning one
+# that was not destroys work that exists nowhere else — no ref, no reflog, no
+# stash, no remote. The two errors differ by orders of magnitude AND by
+# reversibility, so the tie is not a tie and it breaks toward KEEP.
+#
+# BUT T319 RECORDED THE COUNTER-CONSIDERATION AND IT IS HONOURED HERE. Its F3a
+# note rejects a repair that would "replace a fail-OPEN with a permanent
+# fail-CLOSED, which is the failure T288 exists to remove." A prune check that
+# refuses everything has traded a rare catastrophe for a permanent one: the
+# wrapper's cleanup becomes inert and worktrees accumulate without bound, which
+# is T213's original defect restored. So the refusal here is NARROW by
+# construction and its cost is MEASURED, not asserted:
+#   - it fires only on evidence that git's own comparison has been switched off
+#     for this worktree, or that something untracked is really there;
+#   - a genuinely clean worktree is untouched (instrument 10 shape A: `H-only`,
+#     no untracked, still PRUNE — the control that proves it is not inert);
+#   - live-checkout census of all 55 linked worktrees, read-only
+#     (evidence/30-live-worktree-census.txt): ZERO of 55 carry a non-'H' index
+#     tag, so TERM 1's refusal cost on the current population is EXACTLY NOTHING.
+#     6 of 55 carry untracked content, and every one of those was ALREADY being
+#     kept by `wt_prune_check` rule 2, so TERM 2 adds no refusal either — it
+#     changes the answer only where config has hidden those files from rule 2.
+#
+# KNOWN LIMIT, STATED RATHER THAN IMPLIED (P-66's rule: "'NOT FOUND' is a
+# statement about the search, never about the world"). This closes the SKIP-BIT
+# chain and the untracked-config chain. It does NOT close GITIGNORED content:
+# instrument 10 shape G shows `status` CLEAN, `ls-files -v` `H-only`,
+# `git worktree remove` rc=0, and 35 bytes of a gitignored file destroyed. That is
+# a real kill shape, and it is a FOLLOW-UP (FU-T324-1) rather than something
+# fixed here.
+#
+# THE REASON IS NOT THE ONE THAT WAS FIRST WRITTEN HERE, AND THE MEASUREMENT IS
+# WHY. The draft of this comment said an ignored-file term "would refuse
+# essentially every worktree in this repo". The census says otherwise: 3 of 55.
+# That is not inertness and the claim is withdrawn. The actual reason to decide
+# that term deliberately instead of reflexively is WHAT the ignored paths are —
+# measured, they are `.claude/worktrees/` (the directory every worktree lives in,
+# an artefact of the layout) and `.softhouse/toolchain/`, which `.gitignore`
+# itself annotates "NOT committed — reversible with `rm -rf
+# .softhouse/toolchain`". A gate that refuses on content the repository declares
+# reproducible is refusing for a reason uncorrelated with whether work exists,
+# and its refusal rate is not stable: it grows with whatever build output a later
+# task adds to `.gitignore`. So it is a real decision with a real trade-off,
+# taken by whoever holds that task, with the numbers in front of them.
+#
+# Returns 0 = no blind-spot evidence, removal may proceed.
+#         1 = REFUSE; prints the reason. Every git failure resolves to 1
+#             (fail-closed): "I could not read the index" is never "the index is
+#             clean", the same T190/T202 polarity discipline as the rest of this
+#             file and of lib-worktree-prune.zsh.
+wt_prune_blindspot_check() {
+  local W="$1"
+  if [[ -z "$W" || ! -d "$W" ]]; then
+    print -r -- "REFUSE: blind-spot check got no readable worktree path (${W:-<empty>})"
+    return 1
+  fi
+
+  # --- TERM 1: the index's own per-entry bits ---------------------------------
+  # Exit status captured on its own line, BEFORE the output is looked at, and the
+  # filtering is done with a zsh array subscript rather than a pipeline — T190's
+  # rule in this file: under `set -uo pipefail` without `-e`, a pipeline reports
+  # the RIGHTMOST status, so `git-fails | filter-finds-nothing` is byte-identical
+  # to `git-succeeds | filter-finds-nothing`. No pipeline, no conflation.
+  local LSV LSV_RC
+  LSV=$(git -C "$W" ls-files -v -- ':(top)' 2>/dev/null)
+  LSV_RC=$?
+  if (( LSV_RC != 0 )); then
+    print -r -- "REFUSE: could not read the index of $W (git ls-files -v rc=$LSV_RC) — an unreadable index is not evidence of an unmarked one"
+    return 1
+  fi
+  local -a LSV_LINES MARKED
+  LSV_LINES=(${(f)LSV})
+  MARKED=(${LSV_LINES:#H *})
+  if (( ${#MARKED} > 0 )); then
+    print -r -- "REFUSE: $W has ${#MARKED} index entries carrying a NON-'H' git index tag — a skip bit (\`--assume-unchanged\` -> 'h', \`--skip-worktree\` -> 'S') switches OFF the working-tree comparison that BOTH the porcelain clean check AND \`git worktree remove\` rely on, so all of them would report clean while live content sits on disk. First 5: ${(j:, :)MARKED[1,5]}"
+    return 1
+  fi
+
+  # --- TERM 2: untracked content, immune to status.showUntrackedFiles ---------
+  local UNTR UNTR_RC
+  UNTR=$(git -C "$W" status --porcelain -uall -- ':(top)' 2>/dev/null)
+  UNTR_RC=$?
+  if (( UNTR_RC != 0 )); then
+    print -r -- "REFUSE: \`git status --porcelain -uall\` failed inside $W (rc=$UNTR_RC) — refusing to treat an unanswerable tree as an empty one"
+    return 1
+  fi
+  if [[ -n "$UNTR" ]]; then
+    local -a U; U=(${(f)UNTR})
+    print -r -- "REFUSE: $W has ${#U} path(s) that \`git status --porcelain -uall\` reports and a bare \`--porcelain\` can be configured not to (\`status.showUntrackedFiles=no\`). First 5: ${(j:, :)U[1,5]}"
+    return 1
+  fi
+
+  return 0
+}
+# T324-PRUNE-BLINDSPOT-GUARD END
+
 # ------------------------------------------------------- exit-protocol guard ---
 run_exit_guard() {
 # Reset per iteration: a value left over from the previous chain iteration would make
@@ -1500,18 +1668,58 @@ done
 # in isolation — see that file's header for the polarity discipline. This
 # loop's only job is to act on a PRUNE verdict; it does not re-derive one.
 #
-# `git worktree remove` (no --force) is itself a THIRD, independent clean
-# check — git refuses if it finds modifications we somehow missed, or if the
-# worktree is locked — so a race between our check and this call fails closed
-# too, not silently.
+# T324 CORRECTION — THIS COMMENT USED TO CLAIM SOMETHING THAT IS MEASURED FALSE,
+# AND THE CLAIM IS THE DEFECT. It read:
+#
+#     "`git worktree remove` (no --force) is itself a THIRD, independent clean
+#      check — git refuses if it finds modifications we somehow missed"
+#
+# `git worktree remove` IS A THIRD CHECK. IT IS NOT AN INDEPENDENT ONE. It asks
+# git to compare the working tree against the index — the same question
+# `wt_prune_check`'s rule 2 asks, of the same oracle. A single index skip bit
+# (`git update-index --assume-unchanged` / `--skip-worktree`) switches that
+# comparison off, and because a skip bit moves no ref, no HEAD, no config and no
+# commit, rule 1 cannot see it either. ONE BIT BLINDS ALL THREE SIMULTANEOUSLY,
+# and T318 drove it end to end: PRUNE, then rc=0, then a worktree destroyed with
+# 61 bytes of irreplaceable worker output in it
+# (.softhouse/capture/t318-committed-clobber-blindness/evidence/
+#  50-prune-mitigation-drive.txt).
+#
+# Counting checks is not measuring safety. Three checks sharing one oracle are
+# ONE check that has been read three times, and the agreement between them is
+# read as corroboration when it is only repetition — which is why this comment
+# made the situation worse than a single honest check would have.
+#
+# `git worktree remove` is still called without `--force`, and it is still worth
+# having: it is the term that catches a plain untracked file (instrument 10 shape
+# F: rc=128, content survives) and a worktree locked between our check and this
+# call. It is simply not a second opinion about a tree that git has been told to
+# stop looking at. `wt_prune_blindspot_check` above is the term that IS
+# independent, because it reads the skip bits themselves rather than the
+# comparison they suppress.
 local WT_PRUNED=0 WT_KEPT=0
-local i W BR WLK VERDICT VERDICT_RC RM_OUT RM_RC
+local i W BR WLK VERDICT VERDICT_RC RM_OUT RM_RC BSPOT BSPOT_RC
 for (( i = 1; i <= ${#WT_PATHS}; i++ )); do
   W="${WT_PATHS[$i]}"
   BR="${WT_BRANCHES[$i]}"
   WLK="${WT_LOCKED[$i]}"
   VERDICT=$(wt_prune_check "$W" "$BR" main "$WLK")
   VERDICT_RC=$?
+  # T324: a PRUNE verdict from wt_prune_check is NECESSARY, not sufficient. Its
+  # two rules read refs and the porcelain comparison; neither can see the index
+  # bit that disables the comparison. Ask the independent term before acting.
+  if (( VERDICT_RC == 0 )); then
+    BSPOT=$(wt_prune_blindspot_check "$W")
+    BSPOT_RC=$?
+    if (( BSPOT_RC != 0 )); then
+      # Fold into the existing verdict variables so the single `keep:` line
+      # below reports it once, with WT_KEPT counted once. The prefix names the
+      # override so a log reader can see that two checks DISAGREED — the case
+      # that matters, and the one a silent downgrade would hide.
+      VERDICT_RC=$BSPOT_RC
+      VERDICT="T324 BLIND-SPOT OVERRIDE (wt_prune_check said PRUNE) — $BSPOT"
+    fi
+  fi
   if (( VERDICT_RC == 0 )); then
     RM_OUT=$(git worktree remove "$W" 2>&1)
     RM_RC=$?

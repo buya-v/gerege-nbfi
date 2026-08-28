@@ -1,0 +1,16 @@
+POST /glclosures
+case-id: B1-SETUP-03-create-glclosure
+instance: THROWAWAY t327-oracle-app, image fineract:latest (same image id as the standing fineract-fineract-1), port 8444
+Fineract-Platform-TenantId: t327
+Authorization: Basic <mifos:password>
+Idempotency-Key: t327-b1-setup-03
+Content-Type: application/json
+body-wire-bytes-artefact: B1-SETUP-03-create-glclosure.req
+body-sha256: 21129b81c40b77da0af960ec133a8cb269b75914f000246c32811a8fc4b68ad0
+body-bytes: 212
+response-status: 200
+response-sha256: b1824e61a07710710b435cea52be8627bf7bd16c31a51ef068a23d64b89a2074
+business-date-candidate: 2026-08-28 (DERIVED today in Asia/Ulaanbaatar; MEASURED by B2-ACCEPT-01 + B2-CTRL-02)
+latest-closing-date-at-fire-time: 2026-08-26
+captured-at-utc: 2026-08-27T17:33:40Z
+note: B-1 precondition: GLClosure at office 1, closingDate 2026-08-26

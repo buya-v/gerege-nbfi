@@ -1,0 +1,24 @@
+{
+  "officeId": 1,
+  "transactionDate": "2026-08-29",
+  "dateFormat": "yyyy-MM-dd",
+  "locale": "en",
+  "currencyCode": "MNT",
+  "comments": "T327 B-2 CONTROL: manual journal entry dated ONE DAY AFTER the business date. Expected REFUSAL. Its purpose is to bound the business date from above so that B2-ACCEPT-01's 200 measures it exactly.",
+  "debits": [
+    {
+      "glAccountId": 1,
+      "amount": 250000.25
+    },
+    {
+      "glAccountId": 2,
+      "amount": 100000.37
+    }
+  ],
+  "credits": [
+    {
+      "glAccountId": 3,
+      "amount": 350000.62
+    }
+  ]
+}

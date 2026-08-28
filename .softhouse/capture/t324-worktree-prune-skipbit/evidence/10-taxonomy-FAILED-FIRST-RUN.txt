@@ -1,0 +1,27 @@
+T324 INSTRUMENT 10 — SKIP-BIT / BLIND-SPOT TAXONOMY
+root       : /private/tmp/t324-tax-1
+date       : 2026-08-27T17:27:58Z
+git        : git version 2.50.1 (Apple Git-155)
+uname      : Darwin 25.5.0
+
+=== shapes (S = status, L = ls-files -v, R = worktree remove) ===
+
+--- A control: genuinely clean worktree
+    expectation                  : BENIGN
+    witness                      : .softhouse/tasks.json (14 bytes on disk before removal)
+    S  git status --porcelain    : CLEAN
+    L  git ls-files -v           : H-only
+    R  git worktree remove       : rc=0  <no output>
+    R  content after             : WORKTREE DESTROYED
+  FAIL  A control: genuinely clean worktree  UNEXPECTED KILL SHAPE (S=CLEAN after=WORKTREE DESTROYED) — a second hole, not covered by this task's brief
+  PASS  A control: genuinely clean worktree  ls-files -v stays quiet (H-only) — no inertness cost
+
+  FAIL  B --assume-unchanged + modification: could not create worktree
+  FAIL  C --skip-worktree + modification: could not create worktree
+  FAIL  D both bits + modification: could not create worktree
+  FAIL  E skip bit set, content UNMODIFIED: could not create worktree
+  FAIL  F plain untracked file (no bits): could not create worktree
+  FAIL  G gitignored file with content: could not create worktree
+  FAIL  H status.showUntrackedFiles=no + untracked: could not create worktree
+PASS=1  FAIL=8
+scratch kept at: /private/tmp/t324-tax-1

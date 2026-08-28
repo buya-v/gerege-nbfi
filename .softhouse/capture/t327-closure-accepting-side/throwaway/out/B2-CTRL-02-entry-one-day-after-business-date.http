@@ -1,0 +1,16 @@
+POST /journalentries
+case-id: B2-CTRL-02-entry-one-day-after-business-date
+instance: THROWAWAY t327-oracle-app, image fineract:latest (same image id as the standing fineract-fineract-1), port 8444
+Fineract-Platform-TenantId: t327
+Authorization: Basic <mifos:password>
+Idempotency-Key: t327-b2-ctrl-02
+Content-Type: application/json
+body-wire-bytes-artefact: B2-CTRL-02-entry-one-day-after-business-date.req
+body-sha256: 717505bceff091d9fded4699deed863c1ffa31e6b37ab5c5beeac05f99eb3e1e
+body-bytes: 568
+response-status: 403
+response-sha256: 7c7a424337b3c6fef474d2b1a1ce8492bca159f7db9e85218fb19ca66d73d518
+business-date-candidate: 2026-08-28 (DERIVED today in Asia/Ulaanbaatar; MEASURED by B2-ACCEPT-01 + B2-CTRL-02)
+latest-closing-date-at-fire-time: (none)
+captured-at-utc: 2026-08-27T17:33:39Z
+note: B-2 CONTROL: transactionDate == business date + 1 = 2026-08-29; :630 FUTURE_DATE expected
