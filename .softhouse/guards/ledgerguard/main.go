@@ -1,5 +1,22 @@
 // Command ledgerguard is the source-level guard that DEC-2 §4.4 requires for I-3 and I-4.
 //
+// GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/guards/check-ledger-invariants.sh
+//
+// That one line is a machine-read row, not a comment for humans, and T358 added it. It answers
+// guard_guards_dir_registration in .softhouse/conformance.sh, whose population now covers Go
+// and Python as well as shell at any depth under the guards directory. This file is a checker
+// that the conformance harness never names: the harness calls check-ledger-invariants.sh, and
+// THAT script builds and runs this module. The guard re-verifies the row every graded run — the
+// witness must exist, be tracked, not be this file, and literally name "main.go" (it does, at
+// check-ledger-invariants.sh:67-68) — so this is a record that rots loudly, never an amnesty.
+//
+// WHAT THE ROW DOES NOT DO, said here so nobody over-reads it. Deleting it does NOT turn the bar
+// red for this file: conformance.sh:1484 holds a `local ccsrc="…/ledgerguard/main.go"` on a
+// non-comment line — a different guard reading THIS FILE'S TEXT, not anything that runs it — and
+// the registration guard's invocation test is a substring match, so main.go would silently fall
+// back to "INVOKED". The row is a TRUTH improvement, recording what actually reaches this
+// checker, and T358's red drive pins that fallback in an arm rather than hiding it.
+//
 // ⚠ CORRECTION (T227, 22 August 2026). This line read "...the source-level guard that DEC-2
 // §4.4.1 records as NOT EXISTING." That was TRUE THE DAY A2-18 WROTE IT and it is FALSE NOW.
 // T208 wired this guard into run_guards; DEC-2 §8.3 retracted the claim; and §4.4.1 is today
