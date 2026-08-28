@@ -78,6 +78,29 @@ scoped to loanschedule — which is how `conformance.sh` and the older manifests
 wherever it is offered as the whole corpus. Corrected here, where it is NAMED; not retyped into every
 document that restates it (T248/T258/T340).
 
+
+## CITATION ERRATUM — cite **P-84**, not P-83, for the probe rule
+
+Caught by `T364`, confirmed by the driver against `patterns.md`, and independently cited correctly by
+`T370` before either was told.
+
+| Pattern | What it actually says | Line |
+|---|---|---|
+| **P-84** | *"EXIT 2 WITH NO PROBE LINE" IS THE GUARD WORKING. READ THE ABSENCE, NOT THE VALUE.* | `patterns.md:2813` |
+| **P-83** | *TWO INDEPENDENT MOVEMENTS OF ONE PINNED NUMBER RECONCILE BY RUNNING, NEVER BY ARITHMETIC.* | `patterns.md:2806` |
+
+**The probe-line presence-before-value rule is `P-84`.** This driver wrote "(P-83)" for it in every worker
+prompt it authored this iteration, and 20 task descriptions in `tasks.json` carry the same error. The live
+ones (`status: pending`) have been corrected; completed tasks' text is left as historical record.
+
+**This exact off-by-one is already recorded as an erratum in `patterns.md`** — six patterns were renumbered
+on landing after a cloud fire published a conflicting `P-78`, the renumbering was applied to `patterns.md`
+and never to `RESUME.md`'s restatement, and the corrected cardinal rotted where it was restated. It was
+reproduced anyway, by a driver that had the errata file open. **That is the pattern arguing for itself.**
+
+And P-83 is not idle here: reconciling a pinned number's movement **by running** is exactly what a
+merge-result bar run is for, and it is what this iteration did five times.
+
 ## State inherited from chain iteration 1 (unchanged, still true)
 
 Bar GREEN on `main`: `bash .softhouse/conformance.sh` → exit 0, probe line PRESENT reading `up`,

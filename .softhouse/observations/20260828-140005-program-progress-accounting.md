@@ -66,3 +66,25 @@ to grade 46 vectors green; the next fires should be spending that capability, no
 any harness-debt task, unless the bar on `main` is RED.** Harness repair continues, but it stops being the
 default. Recorded here rather than asked, per CLAUDE.md § Answering gates. Nothing in this touches cutover,
 licensing or regulatory sign-off, all of which remain hard `user` gates.
+
+---
+
+## SUPERSEDED FIGURES — corrected 2026-08-28 by fire `20260828-140005` iter2
+
+Two numbers in this file were wrong and are corrected here, at the place they are NAMED, rather than
+retyped throughout (T248/T258/T340).
+
+1. **"46 parity vectors … of which 7 are LEDGER" conflates two corpora that `conformance.sh` keeps
+   separate.** T369 re-derived by RUNNING the bar and summing each corpus's own case table, and T370
+   reproduced it independently. The figures are: **53 parity vectors / 0 FAIL**; **8,026 ALL-CLASS graded
+   cells**; **7,980 cells graded BY PARITY VECTORS** — quote 7,980 whenever the sentence says "parity".
+   loanschedule 51 rows → 7,884 cells (7,859 parity + 4 contract-refusal + 21 self-test fixture cells the
+   harness itself labels EXCLUDED FROM THE PARITY COUNT); ledger 13 rows → 142 (121 parity + 21
+   oracle-refusal). "46 parity vectors" is **loanschedule-only** and is correct only when scoped that way.
+
+2. The `1.04%` figure produced by the first version of `progress-report.py` was a **49× overstatement** —
+   it divided Go lines written by Fineract Java lines to port. T369 caught it (P0); T370 deleted the ratio
+   rather than re-dividing it. The honest coverage figure is **0.02%**. The capture output at
+   `.softhouse/capture/t351-progress-accounting/live-report-20260828.txt` still shows `1.04%` and is
+   **deliberately left unedited** — it is a captured witness, and editing it to match a later truth would
+   forge one.
