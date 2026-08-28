@@ -248,8 +248,11 @@ func Admit(v *Vector, opts Options) []string {
 	// description — defining opening balances after journal entries have been
 	// posted, an entry dated on or before the latest GLClosure, and a
 	// future-dated entry — and T294 flipped the row to in_graded_domain TRUE on
-	// the strength of the FIRST one only. The other two are captured raw in
-	// .softhouse/capture/t287-closure-refusals and nothing promotes them.
+	// the strength of the FIRST one only. [HISTORY, TRUE WHEN T296 WROTE IT AND NO
+	// LONGER TRUE: at that moment the other two were captured raw in
+	// .softhouse/capture/t287-closure-refusals and nothing promoted them. T295
+	// promoted both, and T305 then captured the ACCEPTING side of the first.
+	// See the adjudicated gate below.]
 	//
 	// THE FLIP IS MEASURED TO WIDEN THE GATE, and this rule is what puts the
 	// width back. T296 built a closure-family refusal vector from T287's real
@@ -277,49 +280,119 @@ func Admit(v *Vector, opts Options) []string {
 		if name != "ledger.opening.balance.and.closure" {
 			continue
 		}
-		// WIDENED BY THE DRIVER AT MERGE TIME, and this is the widening T296's own
-		// comment above prescribed: "when a closure refusal IS promoted, this rule is
-		// what that task must widen, DELIBERATELY AND WITH THE CAPTURE IN HAND, instead
-		// of finding the door already open." T295 promoted both remaining shapes IN THE
-		// SAME FIRE, from T287's real artefacts and without re-firing either probe:
+		// THE DRIVER WIDENED THIS AT A MERGE CONFLICT WITH NO REVIEWER AND FILED IT AS
+		// T306. T306 ADJUDICATED IT: the widening was RIGHT TO HAPPEN and WRONG AS
+		// WRITTEN, and this is the re-keyed form. Both defects were measured, not argued
+		// [.softhouse/reviews/T306/out/].
 		//
-		//   LDG-REFUSE-03  defineOpeningBalance after posted entries  (:717)   [T294]
-		//   LDG-REFUSE-04  entry dated ON the latest closing date     (:636)   [T295]
-		//   LDG-REFUSE-05  entry dated one day after the business date (:629)  [T295]
+		//   T306-F-2  KEYED ON AN OUTPUT. Two of the driver's three arms read
+		//     `v.Expect.Refusal.Code`, which is the ANSWER THE VECTOR CLAIMS, not a fact
+		//     about the request the oracle was given. Measured (probe P5: LDG-REFUSE-04
+		//     with request.latest_closing_date deleted): against the driver's predicate
+		//     THIS GATE CONTRIBUTED NO REASON AT ALL — the only refusal came from the
+		//     date-rule block ~80 lines below, so the gate's entire request-side check
+		//     was delegated to a rule a later edit could relax without ever reading this
+		//     one. Both date arms are now the SAME COMPARISON THE ORACLE MAKES, read off
+		//     the vector's own inputs.
 		//
-		// That is all three shapes the row names, so the row's evidence prose and the
-		// gate now agree by MEASUREMENT rather than by assertion. The gate is still
-		// default-deny.
+		//   T306-F-1  THE COMMENT ASSERTED A CONTROL THAT WAS NOT FIRING. It read "a
+		//     vector claiming this capability for a FOURTH shape -- most obviously an
+		//     ACCEPTANCE -- is still refused, as DATA and not as prose (P-89)". Probe P2
+		//     — LDG-01's real ACCEPTED 3-leg manual entry with this row added and
+		//     request.command set to "defineOpeningBalance" — was ADMITTED AND GRADED,
+		//     15 cells, 5 of them money. The gate never refused acceptances; it refused
+		//     PLAIN-CREATE acceptances, and one request field bought the claim. That was
+		//     P-89 one level up: prose claimed DATA was firing and it was not.
 		//
-		// THIS RESOLUTION WAS MADE BY THE DRIVER AT A MERGE CONFLICT AND WAS NOT
-		// INDEPENDENTLY REVIEWED. It is filed as T306. A reviewer that disagrees should
-		// narrow it back and say which vector it means to refuse.
+		// WHAT THIS STORE HAS OBSERVED ON THIS ROW IS FOUR VECTORS, NOT THREE, AND THEY
+		// ARE NOT SYMMETRICAL. The asymmetry IS the measurement and it is why the arms
+		// differ:
 		//
-		// ⚠ THE PARAGRAPH ABOVE USED TO END: "a vector claiming this capability for a
-		// FOURTH shape -- most obviously an ACCEPTANCE, which no capture in this store
-		// observes and which T305 records as costing a permanent journal entry -- is
-		// still refused." BOTH HALVES OF THAT ARE NOW FALSE, and only the message text
-		// changes here — THE PREDICATE IS UNTOUCHED, because it already admitted any
-		// `defineOpeningBalance` vector and T306 owns this block. [T305]
-		//   * the ACCEPTANCE IS OBSERVED: LDG-05-openingbalance-accepted-empty-ledger,
-		//     HTTP 200 and six journal entries on an empty ledger;
-		//   * it cost NO permanent journal entry anywhere this program keeps: it was
-		//     taken on a throwaway instance built from the same image and destroyed in
-		//     the same run, with the standing oracle's counters unmoved before, after
-		//     and after teardown.
-		observedShape := v.Request.Command == "defineOpeningBalance" ||
-			v.Expect.Refusal.Code == codeAccountingClosed ||
-			v.Expect.Refusal.Code == codeFutureDate
+		//   the defineOpeningBalance command — BOTH SIDES of :811's emptiness test
+		//     LDG-REFUSE-03  REFUSAL   findNonContraTransactionIds NON-EMPTY  :717 -> :810-813
+		//     LDG-05         ACCEPTED  findNonContraTransactionIds EMPTY, :812 falls through,
+		//                              HTTP 200 and SIX journal entries for three request legs
+		//   the two DATE boundaries — REFUSING SIDE ONLY, accepting side still uncaptured
+		//     LDG-REFUSE-04  REFUSAL   !isBefore(latestClosingDate, transactionDate)   :636
+		//     LDG-REFUSE-05  REFUSAL   isDateInTheFuture(transactionDate)              :629-631
+		//
+		// [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java at the pinned
+		// commit 426a23544. :717 is validateJournalEntriesArePostedBefore(contraId) inside
+		// defineOpeningBalance; :810-813 is that method, :811 the findNonContraTransactionIds
+		// query and :812 the `if (!CollectionUtils.isEmpty(transactionIds))` whose FALSE
+		// branch is LDG-05. :626 declares validateBusinessRulesForJournalEntries; the
+		// future-date GUARD STATEMENT is :630 and :629 is its comment line — this store
+		// cites it as ":629" throughout and that citation is one line high; :636 is
+		// literally `if (!DateUtils.isBefore(latestGLClosure.getClosingDate(), transactionDate))`.]
+		//
+		// SO THE COMMAND ARM TAKES EITHER expect.kind AND THE DATE ARMS DO NOT. T306's
+		// own first pass put `v.Expect.Kind == "refusal" &&` in front of ALL THREE arms,
+		// which was correct on the store it could see and became WRONG the moment T305
+		// landed: it would have made LDG-05 INADMISSIBLE and brought back to life the
+		// mutant LDG-05 exists to kill — `ledger-wrong-openingbalance-always-refusing`,
+		// T296 arm A, a port that REFUSES EVERY OPENING BALANCE and stays green on the
+		// whole corpus [T320 finding T320-4, HIGH]. Dropping the precondition on THIS ONE
+		// ARM is the widening T306's first pass said must arrive "deliberately and with
+		// the capture in hand"; T305 put the capture in hand, so it arrives here and
+		// nowhere else. The date arms KEEP it, and the reason CHANGED UNDER THIS TASK'S
+		// FEET between its first commit and its merge — which is why the reason is
+		// written out rather than left as "backlog B-1/B-2 is open":
+		//
+		//   WAS (true until T327 merged): "no capture in this store shows an entry
+		//     ACCEPTED at either date boundary."  THAT CLAUSE IS NOW FALSE.
+		//   IS: T327 FIRED BOTH BACKLOG ARMS AND BOTH RETURNED HTTP 200 — B-1, an entry
+		//     dated one day AFTER the closing date (2026-08-27 vs a closure closed
+		//     2026-08-26), and B-2, an entry dated ON the business date (2026-08-28)
+		//     [VERIFIED: .softhouse/capture/t327-closure-accepting-side/throwaway/out/
+		//      B1-ACCEPT-06-entry-one-day-after-closing-date.status = 200 and
+		//      B2-ACCEPT-01-entry-on-business-date.status = 200]. So the BYTES exist.
+		//   AND THE ARMS STILL KEEP THE PRECONDITION, because T327 PROMOTED NOTHING: the
+		//     ledger store holds the same ten vectors it held before that merge, and not
+		//     one of them is an acceptance at either date boundary. THE GATE KEYS ON THE
+		//     STORE, NEVER ON THE CAPTURE DIRECTORY. A capture is an observation; a vector
+		//     is a graded claim, and only the second is what a `capabilities_required`
+		//     entry can honestly assert coverage of.
+		//
+		// SO THE NEXT WIDENING IS NOW EARNED AND UNCLAIMED, and it is exactly one edit:
+		// when T327's B-1/B-2 bytes are PROMOTED to vectors, drop `v.Expect.Kind ==
+		// "refusal"` from the date arms too — deliberately, in the promoting task, with
+		// the capture in hand. Until then MUTANT W (the same drop, made early) is held
+		// red by TestOpeningBalanceCapabilityIsScopedToTheObservedShape/"an ACCEPTANCE at
+		// either DATE boundary REFUSES", and that red is CORRECT, not an obstacle
+		// [.softhouse/reviews/T306/out/30-mutation-arms.txt].
+		//
+		// WHAT THIS STILL DOES NOT DO, stated rather than left to be discovered: it
+		// cannot bind a TRANSCRIPTION to its capture. A vector whose provenance cites a
+		// manual-adjustments capture, with only the refusal code and the three dates
+		// edited to the closure shape, is admitted by this rule — its INPUTS really are
+		// the pre-closure shape. No capability gate can catch that; only re-reading the
+		// cited artefact can, and that is the citation rules' job, not this one's
+		// [T306-F-6].
+		openingBalanceCommand := v.Request.Command == "defineOpeningBalance"
+		preClosureInputs := v.Request.LatestClosingDate != "" && v.Request.TransactionDate != "" &&
+			!isoBefore(v.Request.LatestClosingDate, v.Request.TransactionDate)
+		futureDatedInputs := v.Request.TransactionDate != "" && v.Request.BusinessDate != "" &&
+			isoAfter(v.Request.TransactionDate, v.Request.BusinessDate)
+		observedShape := openingBalanceCommand ||
+			(v.Expect.Kind == "refusal" && (preClosureInputs || futureDatedInputs))
 		if !observedShape {
-			add("capabilities_required names %q on a vector whose request.command is %q. "+
-				"THE SHAPES THIS STORE HAS OBSERVED ARE: the defineOpeningBalance-after-a-NON-CONTRA-entry "+
-				"refusal at JournalEntryWritePlatformServiceJpaRepositoryImpl.java:717 (LDG-REFUSE-03), its "+
-				"ACCEPTING side at :812 (LDG-05, HTTP 200 and six entries on an empty ledger), and the "+
-				"PRE-CLOSURE and FUTURE-DATED refusals at :626-640 (LDG-REFUSE-04, LDG-REFUSE-05). A vector "+
-				"claiming this capability for a shape OUTSIDE those -- the ACCEPTING side of either DATE "+
-				"boundary, most obviously, which remains uncaptured -- would read as covered when it is not. "+
-				"PROMOTE THE CAPTURE FIRST, then widen this rule",
-				name, v.Request.Command)
+			add("capabilities_required names %q on a vector whose request.command is %q and whose "+
+				"expect.kind is %q. THE SHAPES THIS STORE HAS OBSERVED ARE: the "+
+				"defineOpeningBalance-after-a-NON-CONTRA-entry refusal at "+
+				"JournalEntryWritePlatformServiceJpaRepositoryImpl.java:717 (LDG-REFUSE-03) and its "+
+				"ACCEPTING side at :812 (LDG-05, HTTP 200 and six entries on an empty ledger) -- so on "+
+				"that COMMAND either expectation is covered -- and the PRE-CLOSURE (:636) and "+
+				"FUTURE-DATED (:629-631) REFUSALS (LDG-REFUSE-04, LDG-REFUSE-05), whose ACCEPTING "+
+				"sides are CAPTURED BUT NOT PROMOTED. The claim on the two DATE shapes is decided by "+
+				"THIS VECTOR'S REQUEST -- the same two date comparisons the oracle makes -- and never "+
+				"by the refusal code it declares, because that is the answer it is asking to be "+
+				"believed about. A vector outside those four -- an entry ACCEPTED at either date "+
+				"boundary, most obviously -- would read as covered when it is not. T327 fired backlog "+
+				"B-1 and B-2 and BOTH RETURNED HTTP 200, so the oracle bytes now EXIST "+
+				"(.softhouse/capture/t327-closure-accepting-side/), but NO VECTOR carries them and this "+
+				"gate keys on the STORE, never on the capture directory. PROMOTE THE CAPTURE FIRST, "+
+				"then widen this rule",
+				name, v.Request.Command, v.Expect.Kind)
 		}
 	}
 
@@ -551,9 +624,27 @@ func Admit(v *Vector, opts Options) []string {
 	// supposed to derive — the circularity DEC-2 forbids in as many words — and
 	// would also make the request bytes and the vector's request disagree, which
 	// is the one thing provenance exists to prevent.
+	//
+	// ONE BOOLEAN, READ BY ALL THREE LEG RULES [T306, closing T320-3]. T305 wrote the
+	// condition out three times and the three copies were NOT complements: the
+	// POSITIONAL amount_major_text pairing was skipped for `defineOpeningBalance`
+	// REGARDLESS of expect.kind, while the MULTISET pairing that replaces it was
+	// gated on `defineOpeningBalance` AND kind != "refusal". For a defineOpeningBalance
+	// REFUSAL carrying expect legs, both were therefore off and the request/expect
+	// amount cross-check was ABSENT ENTIRELY.
+	//
+	// MEASURED SEVERITY, because "a hole" and "an exploitable hole" are different
+	// claims: that combination is ALREADY inadmissible one rule higher -- the
+	// `case "refusal"` arm of the expect.kind switch refuses `len(v.Expect.Legs) > 0`
+	// UNCONDITIONALLY ("a refused request created no entry"), so no vector could
+	// reach the missing check without collecting that reason first. It is closed
+	// anyway, as one variable rather than three copies, because the argument that it
+	// is unreachable depends on a DIFFERENT rule staying exactly as it is, and that
+	// is precisely the shape of dependency this file exists to refuse.
+	obAcceptingLegs := v.Request.Command == "defineOpeningBalance" && v.Expect.Kind != "refusal"
 	if len(v.Expect.Legs) > 0 {
 		want := len(v.Request.Legs)
-		if v.Request.Command == "defineOpeningBalance" && v.Expect.Kind != "refusal" {
+		if obAcceptingLegs {
 			want = 2 * len(v.Request.Legs)
 		}
 		if len(v.Expect.Legs) != want {
@@ -594,7 +685,7 @@ func Admit(v *Vector, opts Options) []string {
 			add("expect.legs[%d].amount_major_text is empty. The pairing is mandatory: the graded value "+
 				"is the minor-unit integer and the major-unit text is the transcription cross-check", i)
 		}
-		if v.Request.Command != "defineOpeningBalance" &&
+		if !obAcceptingLegs &&
 			i < len(v.Request.Legs) && v.Request.Legs[i].AmountMajorText != l.AmountMajorText {
 			add("expect.legs[%d].amount_major_text %q and request.legs[%d].amount_major_text %q "+
 				"disagree; both transcribe the same oracle characters",
@@ -610,7 +701,7 @@ func Admit(v *Vector, opts Options) []string {
 	// order the request listed them in — OB-ACCEPT-01's request happened to be
 	// debits-first, so the capture is consistent with both orderings and this
 	// rule declines to assert the one it cannot see.
-	if v.Request.Command == "defineOpeningBalance" && v.Expect.Kind != "refusal" && len(v.Expect.Legs) > 0 {
+	if obAcceptingLegs && len(v.Expect.Legs) > 0 {
 		count := map[string]int{}
 		for _, l := range v.Expect.Legs {
 			count[l.AmountMajorText]++
@@ -624,12 +715,30 @@ func Admit(v *Vector, opts Options) []string {
 					i, l.AmountMajorText)
 			}
 		}
+		// SORTED, AND SURPLUS ONLY [T306, closing two T320 defects in T305's rule].
+		//
+		//   * `range` OVER A GO MAP IS RANDOMISED PER RUN. Appending to the reason
+		//     slice inside it made the ORDER of an inadmissibility report vary run to
+		//     run whenever two amounts were surplus at once. In a harness whose whole
+		//     discipline is byte-stable transcripts, a report that reorders itself is a
+		//     diff nobody can read and a guard nobody can pin.
+		//   * A SHORTFALL IS NOT A SURPLUS. `left` is negative exactly when a request
+		//     amount occurred FEWER than twice -- which the loop above has ALREADY
+		//     reported, in its own words -- and printing it here produced the sentence
+		//     "carry amount X -1 time(s) MORE than twice-per-request-leg allows". Only
+		//     a genuine surplus is reported here now, so each defect is named once and
+		//     named correctly.
+		surplus := make([]string, 0, len(count))
 		for text, left := range count {
-			if left != 0 {
-				add("expect.legs carry amount %q %d time(s) more than twice-per-request-leg allows; the "+
-					"only entries an accepted opening balance writes are the caller's legs and their "+
-					"contras", text, left)
+			if left > 0 {
+				surplus = append(surplus, text)
 			}
+		}
+		sort.Strings(surplus)
+		for _, text := range surplus {
+			add("expect.legs carry amount %q %d time(s) more than twice-per-request-leg allows; the "+
+				"only entries an accepted opening balance writes are the caller's legs and their "+
+				"contras", text, count[text])
 		}
 	}
 	if v.Expect.Kind == "journal-entry" {
