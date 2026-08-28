@@ -82,7 +82,41 @@ aggregate.
 `13-move-fork-constant.py`, which REFUSES unless it matches exactly one
 `FORK = "<40 hex>"` line (a "one-line move" is only one line if there is one line):
 
-<!--MATRIX-F4-->
+| case | ref | section 10 | run-all rc | run-all verdict | section 4 printed `DIFF out/A2-000-…` by name |
+|---|---|---|---|---|---|
+| `f4a-control-commit-mutate-forkobs` | BEFORE | 1 | 1 | FAIL | **1** |
+| `f4a-control-commit-mutate-forkobs` | AFTER | 1 | 1 | FAIL | **1** |
+| **`f4b-move-fork-constant`** | **BEFORE** | **0** | **0** | **PASS** | **1** |
+| **`f4b-move-fork-constant`** | **AFTER** | **2** | **1** | **FAIL** | **1** |
+
+**The `f4b` BEFORE row is T362's F-1 verbatim, reproduced on the branch that fixes F-1** — one
+transcript containing all four of:
+
+```
+        DIFF out/A2-000-glaccounts-preexisting.http          <- section 4, BY NAME
+      at the fork sha : 1035 observations  {'out': 906, 'req': 129}   <- ARM A collapsed
+      at HEAD         : 1035 observations  {'out': 906, 'req': 129}
+  10        0              0         as adjudicated
+  RUN-ALL VERDICT: PASS
+```
+[VERIFIED: `out/drive/case-f4b-move-fork-constant-BEFORE.txt:288,693,694,746,749`.]
+
+At AFTER the same mutation trips **four independent tripwires**, not one:
+
+```
+  REFUSED  .../prove-a2-7-additive.py does NOT carry `BASELINE = "2d132fb0…"`.
+  REFUSED  .../verify-manifest-independently.py does NOT carry `FORK = "2d132fb0…"`.
+  REFUSED  ARM A's population is 1035 observations, and it is PINNED at 403.
+  REFUSED  ARM E's population is 104 entries, and it is PINNED at 27.
+  VERDICT: REFUSED (exit 2). The instrument could not measure. This is NOT a pass,
+  10        0              2         *** MOVED ***
+  RUN-ALL VERDICT: FAIL — 1 section(s) moved off the adjudicated verdict.
+```
+[VERIFIED: `out/drive/case-f4b-move-fork-constant-AFTER.txt:875,876,877,883,900,903`.]
+
+The `f4a` control is the row that keeps the `f4b` row honest: it is the **same committed
+mutation without the constant move**, and ARM A catches it at **both** refs. So `f4b`'s BEFORE
+`PASS` is caused by the constant move and by nothing else.
 
 ---
 
@@ -107,7 +141,25 @@ empty population is a SELECTOR failure, not a clean tree"* — and section 10 ap
   `open(path,"rb")` **follows symlinks**, so a regular file replaced by a symlink to identical
   bytes reported PASS. This arm starts from the disk and does not follow.
 
-<!--MATRIX-F1-->
+| T382 case | attack | BEFORE `4eeed2b3` | AFTER `fc51790d` | which arm catches it | closed against a laundered manifest? |
+|---|---|---|---|---|---|
+| 13 | committed **mutation** of a post-fork observation | **0 / run-all 0 / PASS** | **1 / run-all 1 / FAIL** | ARM C digest | no — see the residual |
+| 14 | committed **DELETION** of a post-fork observation | **0 / 0 / PASS** | **1 / 1 / FAIL** | ARM C `ROW-WITHOUT-A-FILE` | no |
+| 15 | committed **ADDITION** of a fabricated observation | **0 / 0 / PASS** | **1 / 1 / FAIL** | ARM C `ADDED-WITHOUT-A-ROW` | no |
+| 16 | **UNTRACKED** fabricated observation in `out/` | **0 / 0 / PASS** | **1 / 1 / FAIL** | ARM D `UNTRACKED` | **yes, outright** |
+| 09 | **SYMLINK** whose target has identical bytes | **0 / 0 / PASS** | **1 / 1 / FAIL** | ARM D `SYMLINK` | **yes, outright** |
+| — | control, unmutated | 0 / 0 / PASS | 0 / 0 / PASS | — | — |
+
+[VERIFIED: `out/drive/MATRIX.tsv`, per-case transcripts `out/drive/case-*.txt`, driver
+transcript `out/DRIVE.txt` — **22 rows, `unexpected results: 0`, `DRIVE VERDICT: PASS`,
+exit 0**. Each case prints its failure BY NAME; e.g. case 13 at AFTER prints
+`MANIFEST MISMATCH out/A2-200-glaccounts-live-precheck.http` and
+`RUN-ALL VERDICT: FAIL — 1 section(s) moved off the adjudicated verdict`.]
+
+Cases 16 and 09 are closed **outright**: a fabricated file with a manifest row added for it
+breaks the set equality instead, and a symlink is never a regular file whatever its target
+says. Cases 13, 14 and 15 are closed against the un-laundered attack and *raised* against the
+laundered one, which is the residual below.
 
 ### The residual, named exactly, and DRIVEN so the boundary statement is a measurement
 
@@ -149,7 +201,14 @@ to the fork bytes**. That second half follows section 9's precedent for section 
 permanent failures: a vanished adjudicated red is a move too. The re-adjudication procedure and
 the command that prints the new digests are written at the constant.
 
-<!--MATRIX-F3-->
+| case | attack | BEFORE `4eeed2b3` | AFTER `fc51790d` |
+|---|---|---|---|
+| `f3-commit-mutate-nonobs` | committed mutation of `manifest.py` — T382's own target, the script that WRITES the manifest | **0 / run-all 0 / PASS** | **1 / run-all 1 / FAIL** |
+| `f3b-commit-mutate-nonobs-laundered` | the same, **with its `MANIFEST.sha256` row rewritten to match** | **0 / 0 / PASS** | **1 / 1 / FAIL** |
+
+The `f3b` row is the reason ARM E is not a restatement of ARM C: ARM C reads the current
+manifest and a laundered row satisfies it, while ARM E compares against the **blob at
+`12a7f8d9`**, which no edit in the working tree can reach.
 
 `run-all.sh`'s section 4 banner now states this in place of implying the split closed the
 problem, and the docstring's DOES-NOT-COVER block was rewritten to name the measured set rather
@@ -191,7 +250,19 @@ must be **done before** the wiring, not with it.
 
 *Cheap?* **Section 10 alone: yes, at a cost worth naming. `run-all.sh` entire: no.**
 
-<!--COST-->
+Measured on this host at load average **6.08** on 10 cores, on the clean tree:
+
+```
+bash .softhouse/reviews/A2-11/run-all.sh          51.76s user 49.23s system   1:51.32 total
+python3 .../verify-capture-integrity.py           28.71s user 29.06s system   1:05.11 total
+```
+
+For scale, the bar's own guard-cost census on the same run reads **`15 guards timed, 70s total
+wall, ceiling breaches 0, unbudgeted guards 0`**, with the most expensive single guard at 20s
+against a 300s ceiling. **Wiring section 10 as it stands would roughly double the guards' total
+wall time in one step**, and wiring `run-all.sh` would nearly treble it. That is the honest
+number, and it is why the `git cat-file --batch` conversion belongs in the same task rather
+than after it.
 
 Section 10 spawns roughly 1465 `git show` subprocesses (403 + 1035 + 27). If it is wired into
 the graded bar, that should become one `git cat-file --batch` stream in the same task — this is
@@ -211,7 +282,47 @@ later task can wire `run-all.sh` once its transcript destination is a parameter.
 
 ## 5. THE BAR, ON A CLEAN TREE, AFTER `git add -A` AND COMMIT
 
-<!--BAR-->
+`git status --porcelain` **empty** before the run. Never `sh` — `bash .softhouse/conformance.sh`.
+**Read in the P-84 order, not the tempting one:** the probe line was tested for **PRESENCE**
+first — `grep -c 'probe = '` returns **1**, so the line was printed — and only then for its
+value.
+
+```
+BAR_EXIT=0
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+    parity vectors          PASS 46   FAIL 0        inadmissible 0
+    cells compared          7884 graded, 93 ungraded
+  exemption census READ: LEDGER parity vectors        = 7 == pinned 7
+  exemption census READ: LEDGER oracle-refusal vector = 6 == pinned 6
+  exemption census READ: LEDGER money cells compared  = 39 == pinned 39
+    ledger inadmissible     0        ledger cells compared 144 graded, 39 MONEY cells
+  all 14 wrong ledger implementations DIED through this harness, not by hand.
+  CENSUS fail-open instruments — frontier 11, pinned at 11; frontier == pinned (all 11 rows, by path)
+  CENSUS host state — sites that assign a literal /tmp path to a name: 18, pinned at 18; census == pinned
+  dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+  T316-DEADPATH-CENSUS: corpus=1401 deadFiles=75 deadOccurrences=108 resolving=1324 …
+  GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0
+  namespace: PASS — every task-id prefix shared by two directories carries its OWNER record.
+```
+[Transcript: `.softhouse/capture/t393-t382-conditions/out/07-CONFORMANCE.txt`.]
+
+**Baseline held.** 46 parity / 7884 cells — unmoved. Fail-open 11 == 11, host-state 18 == 18,
+dead-path frontier **GREEN at `deadOccurrences 108`** — exactly the pinned baseline, so the six
+new tracked `.py`/`.sh` files I added contribute **zero** dead-path rows and zero fail-open
+rows.
+
+**TWO BASELINE FIGURES IN THE BRIEF HAVE MOVED, AND NEITHER MOVE IS MINE — STATED RATHER THAN
+LEFT TO BE FOUND.** The brief pins `ledger 7/6/0/142/39` and T382's merge note says *13* wrong
+ledger implementations. This run reads **144 ledger cells** and **14 wrong implementations**
+(`pinned at 14`, and every `== pinned` comparison in the exemption census agrees, which is why
+the bar is green). Both moved on `main` **before my fork point** — my base is `1eacb63e`,
+which already carries the `T360-divergence-class + T387` merge that adds the divergence class
+and its implementation. **Proof that it cannot be mine, by measurement rather than assertion:**
+`git diff 1eacb63e --name-only` is 42 paths, and
+`git diff 1eacb63e --name-only | grep -cE '\.go$|^nexus/|^\.softhouse/vectors/|ledger'` = **0**.
+This branch touches no Go file, no vector, and nothing with `ledger` in its path. The `7 / 6 /
+0 / 39` quarters of the baseline are all **unmoved and pinned**.
 
 ---
 
