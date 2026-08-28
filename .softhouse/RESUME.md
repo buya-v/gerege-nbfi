@@ -57,6 +57,28 @@ T363 caught this one.
 | `T370` T351 retry (opus) | `aeff4acda7f392048` | running |
 
 
+
+## WAVE 3 — IN FLIGHT. Five live workers. If no driver is running, they were killed.
+
+| Task | Branch | Agent id | Exclusive hold |
+|---|---|---|---|
+| `T376` review T370 | `softhouse/T376-review-t370` | `a4c65d61b570bb5fb` | — |
+| `T371` T367's conditions on T363 | `softhouse/T371-t367-conditions` | (below) | `.softhouse/reference-oracle.md` |
+| `T374` T362's conditions on T357 | `softhouse/T374-t362-conditions` | (below) | `.softhouse/capture/tierA-a2/` |
+| `T375` T364's conditions on T358 | `softhouse/T375-t364-conditions` | (below) | **`.softhouse/conformance.sh`** |
+| `T377` T368's conditions on T365 | `softhouse/T377-t368-conditions` | (below) | **`.softhouse/bin/fire-program.sh`** |
+
+**Deliberately NOT dispatched, with reasons:** `T366` (would need `conformance.sh`, which `T375` holds);
+`T373` (its row-1 dead path resolves by ORDERING once `T370` merges, and `T370` awaits `T376`);
+`T372` (installs a `PreToolUse` deny hook — must run with **zero** live workers).
+
+## MERGED THIS ITERATION — nine branches, every one bar-verified on `main` before its push
+
+`T363` `T367` `T349` · `T357` `T362` · `T358` `T364` · `T365` `T368`
+
+The four-branch batch containing `T369` went **RED** in a scratch worktree
+(`guard_dead_path_frontier`, rows=111 pinned=109) and **never touched `main`**.
+
 ## THE PARITY FIGURES, AS SETTLED BY T369 — quote these, and quote the right one
 
 T369 re-derived them **by running the bar**, not by arithmetic, summing each corpus's own case table.
