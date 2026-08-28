@@ -26,7 +26,7 @@ Their branches below may hold partial work. Mark each `needs_retry`, do not read
 |---|---|---|---|
 | `T364` | `softhouse/T364-review-t358` | opus | `.softhouse/reviews/t364-review-t358/` |
 | `T362` | `softhouse/T362-review-t357` | opus | `.softhouse/reviews/t362-review-t357/` |
-| `T365` | `softhouse/T365-t361-conditions` | opus | `.softhouse/bin/fire-program.sh`, `.softhouse/capture/t365-t361-conditions/` |
+| `T368` | `softhouse/T368-review-t365` | opus | `.softhouse/reviews/t368-review-t365/` |
 | `T367` | `softhouse/T367-review-t363` | opus | `.softhouse/reviews/t367-review-t363/` |
 | `T349` | `softhouse/T349-pretooluse-eval` | opus | `.softhouse/capture/t349-pretooluse-eval/` |
 | `T369` | `softhouse/T369-review-t351` | opus | `.softhouse/reviews/t369-review-t351/` |
@@ -47,10 +47,11 @@ T363 caught this one.
 |---|---|---|
 | `T364` review T358 | `a1090571f8572948f` | running |
 | `T362` review T357 | `a7d891ca5eb35f7d1` | running |
-| `T365` lock zero-value instants | `a0170054b87414aa1` | running |
+| `T365` lock zero-value instants | `a0170054b87414aa1` | **done** @ `5aedfc4a` |
 | `T349` PreToolUse evaluation | `a007dd636fe410978` | running |
 | `T367` review T363 | `a57a6c411cc2556f9` | running |
 | `T369` review T351 | `acc7ea7c08e7d5521` | running |
+| `T368` review T365 | (see below) | running |
 | `T363` oracle baseline | `ad65dab4e80c74658` | **done** @ `8313ab6d` |
 | `T351` progress accounting | `ad437d46842bec227` | **done** @ `a0139c5d` |
 
