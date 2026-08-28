@@ -1,0 +1,25 @@
+zsh 5.9 on Darwin 25.5.0 arm64
+
+one summary line is 41 characters long
+
+--- A. THE BUG T383 CAUGHT: the nested form in an ASSIGNMENT context ---
+  lines=0   BUGGY  _NSUM=${#${(f)v}}      -> 0
+  lines=1   BUGGY  _NSUM=${#${(f)v}}      -> 41
+  lines=2   BUGGY  _NSUM=${#${(f)v}}      -> 2
+  lines=3   BUGGY  _NSUM=${#${(f)v}}      -> 3
+
+--- B. THE SHIPPED IDIOM: split into a real array, then count it ---
+  lines=0   SHIPPED  arr=( ${(f)v} ); ${#arr} -> 0   CORRECT
+  lines=1   SHIPPED  arr=( ${(f)v} ); ${#arr} -> 1   CORRECT
+  lines=2   SHIPPED  arr=( ${(f)v} ); ${#arr} -> 2   CORRECT
+  lines=3   SHIPPED  arr=( ${(f)v} ); ${#arr} -> 3   CORRECT
+
+--- C. the [[ -n ]] guard matters: what an EMPTY variable splits to ---
+  arr=( ${(f)EMPTY} )      -> 0 element(s)   (unquoted: empty word removed)
+  arr=( "${(@f)EMPTY}" )  -> 1 element(s)   (quoted: ONE EMPTY element -- would report a phantom tally line)
+  the shipped code guards with [[ -n "$_ST_SUMS" ]] before splitting, so neither form can produce a phantom.
+
+--- D. glob hazard in the unquoted array assignment ---
+  a line carrying a glob metachar -> 1 element(s); value = ROWS=45 FAIL_OPEN=* FAIL_SHUT=0 SKIPPED=0
+  (unquoted parameter expansion is not globbed unless GLOB_SUBST is set; it is off here.)
+  NOTE: this line could never reach the array anyway -- the anchored grep admits only [0-9]+ fields.

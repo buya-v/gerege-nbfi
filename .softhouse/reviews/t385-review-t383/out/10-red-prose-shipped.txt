@@ -1,0 +1,11 @@
+T385 prose-direction drive
+wrapper under test : /private/tmp/t385/shipped.sh
+sha256             : dbb18b7b80033384455a9c93086d681ecdf453558bedd049141bc1a542123d89
+
+p-under  WRONG(missing /UNDERSTATES/)             rc=2   ROWS < CENSUS (one row guarded off) -> must read UNDERSTATES
+         | [20:47:24] FATAL: the lock-reader self-test does not reconcile — ROWS=44 + SKIPPED=0 = 44, but 45 rows are DECLARED in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.jTMz5W/fire-program.sh. Rows exist that neither ran nor announced themselves skipped, so the tally understates what was left ungraded. Refusing to start.
+p-over   WRONG(missing /OVERSTATES/)              rc=2   ROWS > CENSUS (two rows on one line) -> must read OVERSTATES
+         | [20:47:47] FATAL: the lock-reader self-test does not reconcile — ROWS=45 + SKIPPED=0 = 45, but 44 rows are DECLARED in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.RlGVhx/fire-program.sh. Rows exist that neither ran nor announced themselves skipped, so the tally understates what was left ungraded. Refusing to start.
+
+CHECKS=2 WRONG=2 VOID=0
+RESULT: FAIL

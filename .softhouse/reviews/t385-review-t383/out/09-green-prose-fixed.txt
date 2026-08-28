@@ -1,0 +1,11 @@
+T385 prose-direction drive
+wrapper under test : /private/tmp/t385/fixed.sh
+sha256             : 5c4f0244c8b54dc6a6493e7371b89864fc90f5c00e4bcb06767d3ef371a60ae1
+
+p-under  ok                                       rc=2   ROWS < CENSUS (one row guarded off) -> must read UNDERSTATES
+         | [20:46:31] FATAL: the lock-reader self-test does not reconcile — ROWS=44 + SKIPPED=0 = 44, but 45 rows are DECLARED in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.yeYX1f/fire-program.sh. Rows are DECLARED that neither ran nor announced themselves skipped, so the tally UNDERSTATES what was left ungraded — a group guarded off, an early return, or a mangled if. Refusing to start.
+p-over   ok                                       rc=2   ROWS > CENSUS (two rows on one line) -> must read OVERSTATES
+         | [20:46:57] FATAL: the lock-reader self-test does not reconcile — ROWS=45 + SKIPPED=0 = 45, but 44 rows are DECLARED in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.f7mLe9/fire-program.sh. MORE rows ran than the census can find declared, so the tally OVERSTATES relative to the population — the selector no longer sees every row it grades (two rows on one line, or a row reached through a wrapper). Nothing was left ungraded, but the census can no longer certify the corp
+
+CHECKS=2 WRONG=0 VOID=0
+RESULT: PASS

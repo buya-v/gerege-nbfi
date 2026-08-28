@@ -1,0 +1,52 @@
+T385 threshold drive
+wrapper under test : /private/tmp/t385/shipped.sh
+sha256             : dbb18b7b80033384455a9c93086d681ecdf453558bedd049141bc1a542123d89
+default in file    : LOCK_CEILING_SECS="${LOCK_CEILING_SECS:-86400}"   # 24h — T279 lifetime CEILING (STEP 0 arm 3)
+                     LOCK_RELEASE_SKEW_SECS="${LOCK_RELEASE_SKEW_SECS:-3600}"   # 1h — plausibility bound on released_at (arm 1)
+
+--- the accepted side: defaults and legitimate non-defaults MUST START ---
+t00   ok                                     rc=0   DEFAULTS (86400 / 3600) -- what the launchd plist actually runs   [NOOP=1]
+        | [20:52:24] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.lWxVCT/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it ri
+        | [20:52:24] probe only — exiting without taking the lock or invoking the driver
+t03   ok                                     rc=0   ceiling 604800 = 7 days, legitimate   [LOCK_CEILING_SECS=604800]
+        | [20:52:45] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.PJZX2Z/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it ri
+        | [20:52:45] probe only — exiting without taking the lock or invoking the driver
+t04   ok                                     rc=0   ceiling 3601 = one second above the bound   [LOCK_CEILING_SECS=3601]
+        | [20:53:04] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.QsGATL/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it ri
+        | [20:53:04] probe only — exiting without taking the lock or invoking the driver
+t07   ok                                     rc=0   skew 0, legitimate (believe no future instant)   [LOCK_RELEASE_SKEW_SECS=0]
+        | [20:53:25] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.08ra27/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it ri
+        | [20:53:25] probe only — exiting without taking the lock or invoking the driver
+t09   ok                                     rc=0   ceiling 86401, just above the shipped default   [LOCK_CEILING_SECS=86401]
+        | [20:53:44] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.YJr8en/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it ri
+        | [20:53:44] probe only — exiting without taking the lock or invoking the driver
+t10   ok                                     rc=0   skew 86400 = 24 h, generous but plausible   [LOCK_RELEASE_SKEW_SECS=86400]
+        | [20:54:03] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.jzbSKZ/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it ri
+        | [20:54:03] probe only — exiting without taking the lock or invoking the driver
+
+--- the refused side, each paired with the accepting case above ---
+t01   WRONG(FORBIDDEN /this is the READERS/) rc=2   ceiling = int64 max (T380 k12)   [LOCK_CEILING_SECS=9223372036854775807]
+        | [20:54:23] FATAL: the lock-reader self-test FAILED (rc=1, FAIL_OPEN=0, FAIL_SHUT=2, over 45 of 45 declared rows). The thresholds validated at startup, so this is the READERS. A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P
+t02   WRONG(missing /inside-ceiling age=-1800/) rc=0   ceiling 1800: g01 was VACUOUS before   [LOCK_CEILING_SECS=1800]
+        | [20:54:42] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.YNEhH4/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it ri
+        | [20:54:42] probe only — exiting without taking the lock or invoking the driver
+t05   WRONG(missing /inside-ceiling age=0/)  rc=0   ceiling 3600: the exact boundary   [LOCK_CEILING_SECS=3600]
+        | [20:55:02] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.EZ0kBs/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it ri
+        | [20:55:02] probe only — exiting without taking the lock or invoking the driver
+t06   WRONG(FORBIDDEN /this is the READERS/) rc=2   skew = int64 max   [LOCK_RELEASE_SKEW_SECS=9223372036854775807]
+        | [20:55:22] FATAL: the lock-reader self-test FAILED (rc=1, FAIL_OPEN=0, FAIL_SHUT=2, over 45 of 45 declared rows). The thresholds validated at startup, so this is the READERS. A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P
+t08   ok                                     rc=78  ceiling = abc: the OLD _knob_int gate, not displaced   [LOCK_CEILING_SECS=abc]
+        | FATAL: CONFIGURATION ERROR — LOCK_CEILING_SECS is not a non-negative decimal integer of seconds. Got: 'abc'. This is a misconfigured THRESHOLD, not a lock-reader regression; nothing in this file has read a lock yet. Fix the environment and re-run.
+
+--- NEW: the TOP of the accepted range, which T383 left [UNVERIFIED] ---
+  now(epoch)=1787921722  =>  derived maximum ceiling = 893960831 s  ~ 28 years
+t11   ok                                     rc=0   ceiling just BELOW the derived maximum   [LOCK_CEILING_SECS=893957231]
+        | [20:55:41] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.lmeP7E/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it ri
+        | [20:55:41] probe only — exiting without taking the lock or invoking the driver
+t12   WRONG(FORBIDDEN /this is the READERS/) rc=2   ceiling just ABOVE the derived maximum   [LOCK_CEILING_SECS=893964431]
+        | [20:56:00] FATAL: the lock-reader self-test FAILED (rc=1, FAIL_OPEN=0, FAIL_SHUT=2, over 45 of 45 declared rows). The thresholds validated at startup, so this is the READERS. A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P
+t13   WRONG(FORBIDDEN /this is the READERS/) rc=2   ceiling = int64max/2 (CEILING*2+60 wraps)   [LOCK_CEILING_SECS=4611686018427387903]
+        | [20:56:20] FATAL: the lock-reader self-test FAILED (rc=1, FAIL_OPEN=0, FAIL_SHUT=2, over 45 of 45 declared rows). The thresholds validated at startup, so this is the READERS. A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P
+
+CHECKS=14 WRONG=6
+RESULT: FAIL

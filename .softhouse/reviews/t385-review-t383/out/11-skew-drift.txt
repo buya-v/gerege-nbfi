@@ -1,0 +1,46 @@
+T385 skew-drift probe
+subject: /tmp/t385/fixed.sh  sha256=5c4f0244c8b54dc6a6493e7371b89864fc90f5c00e4bcb06767d3ef371a60ae1
+
+--- where the four gate variables actually occur ---
+697:  _OLD_AGE=$(( LOCK_CEILING_SECS * 2 + 60 ))               # comfortably past the ceiling, whatever the ceiling is
+698:  _OLD="$(_epoch_iso8601 $(( _NOW_E - _OLD_AGE )))"
+706:  _NEAR_AGE=$(( LOCK_CEILING_SECS - 3600 ))                # inside the ceiling by one hour
+707:  _NEAR="$(_epoch_iso8601 $(( _NOW_E - _NEAR_AGE )))"
+727:  #   * `_OLD_AGE` must EXCEED the ceiling it was derived from — catches `CEILING*2 + 60`
+729:  #   * `_NOW_E - _OLD_AGE` must be >= 0 — the instant group C needs must be representable.
+731:  #   * `_NEAR_AGE` must be STRICTLY between 0 and the ceiling — g01's entire claim is "an age
+749:  # that consume them cannot drift apart. `_SKEW_NEAR` is compared with `>=`, not `>`: a skew
+753:  _SKEW_FAR=$(( LOCK_RELEASE_SKEW_SECS * 2 + 60 ))
+754:  _SKEW_NEAR=$(( LOCK_RELEASE_SKEW_SECS / 2 ))
+756:  (( _OLD_AGE > LOCK_CEILING_SECS ))                     || _FIXOK=0   # c01/c02: `CEILING*2 + 60` did not wrap
+757:  (( _NOW_E - _OLD_AGE >= 0 ))                           || _FIXOK=0   # c01/c02: the past-ceiling instant is post-e
+758:  (( _NEAR_AGE > 0 && _NEAR_AGE < LOCK_CEILING_SECS ))   || _FIXOK=0   # g01: an age genuinely INSIDE the ceiling
+759:  (( _SKEW_FAR > LOCK_RELEASE_SKEW_SECS ))               || _FIXOK=0   # z06: `SKEW*2 + 60` did not wrap
+760:  (( _NOW_E + _SKEW_FAR > _NOW_E ))                      || _FIXOK=0   # z06: the far-future instant is representabl
+761:  (( _NOW_E + _SKEW_NEAR >= _NOW_E ))                    || _FIXOK=0   # z07: the inside-bound instant is representa
+763:    print -u2 -r -- "FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that c
+866:  print -r -- "--- C. LIVE holder, started_at ${_OLD_AGE}s old vs the ${LOCK_CEILING_SECS}s CEILING (fixture DERIVED
+900:  _row g01 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NEAR\"}" "started_at ${_NEAR_AGE}s old, IN
+
+--- the z06/z07 rows, which re-spell the offsets ---
+883:  _row z06 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + LOCK_RELEASE_SKEW_SECS * 2 + 60 )))\"}" "DERIVED: past the skew bo
+884:  _row z07 FREE-released "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + LOCK_RELEASE_SKEW_SECS / 2 )))\"}" "CONTROL for z06: INSI
+
+s00   ok                                       rc=0   CONTROL: unmutated -- the fire must start
+        | [20:50:02] lockselftest| z06  ok             want=HELD            got=HELD-live        DERIVED: past the skew bound -- a clock-skewed or scheduled writer
+        | [20:50:02] lockselftest| z07  ok             want=FREE-released   got=FREE-released    CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+        | [20:50:02] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.wvjHNB/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisf
+        | [20:50:02] probe only — exiting without taking the lock or invoking the driver
+s01   ok                                       rc=2   DRIFT the ROW spelling: the gate must FAIL to notice (that is the finding)
+        | [20:50:24] lockselftest| z06  *** FAIL-OPEN  want=HELD            got=FREE-released    DERIVED: past the skew bound -- a clock-skewed or scheduled writer
+        | [20:50:24] lockselftest| z07  ok             want=FREE-released   got=FREE-released    CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+        | [20:50:24] FATAL: the lock-reader self-test FAILED (rc=1, FAIL_OPEN=1, FAIL_SHUT=0, over 45 of 45 declared rows). The thresholds validated at startup, so this is the READERS. A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P-85); a FAIL-SHUT row means a reclaimabl
+s02   ok                                       rc=78  CONTROL: drift the GATE variable -- the gate MUST notice, EX_CONFIG 78
+        | [20:50:26] lockselftest| FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that consume them require, so this run would grade the FIXTURE and report it as a lock-reader fault. LOCK_CEILING_SECS=86400 LOCK_RELEASE_SKEW_SECS=3600 now=1787921426; past-ceiling age=
+        | [20:50:26] FATAL: the lock-reader self-test refused with EX_CONFIG (rc=78) — a lock THRESHOLD is misconfigured (LOCK_MAX_AGE_SECS / LOCK_CEILING_SECS / LOCK_RELEASE_SKEW_SECS). This is NOT a lock-reader regression: no lock was read. The refusal reason is on stderr above. Fix the environment and re-r
+
+CHECKS=3 WRONG=0 VOID=0
+RESULT: PASS -- every case landed where predicted.
+MEANING: s01 confirms the row spelling is OUTSIDE the gate's reach, so the
+         comment's 'cannot drift apart' is FALSE. s02 confirms the gate is
+         live and reacts to its own variable, so s01 is not a dead gate.
