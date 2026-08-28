@@ -55,10 +55,19 @@ def main():
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
-    kept = []
+    # BARE findings are DROPPED WHOLESALE, not merely redacted, and the count is kept in their
+    # place. A BARE finding says only "an id appears here carrying no sentence" -- it has no
+    # verdict in it, nothing downstream reads one, and they are 99% of the file (8,392 of 8,473
+    # at the baseline, 1.4 MB of derived data). Keeping the COUNT and dropping the LIST is the
+    # same trade the checker's own summary line makes.
+    kept, bare = [], 0
     for f in d["findings"]:
+        if f.get("kind") == "BARE":
+            bare += 1
+            continue
         kept.append({k: v for k, v in f.items() if k not in DROP})
     d["findings"] = kept
+    d["_t331_bare_findings_dropped"] = bare
     d["_t331_redaction"] = {
         "dropped_fields": list(DROP),
         "why": ("these three fields carry the cited SENTENCE verbatim; committing them makes "

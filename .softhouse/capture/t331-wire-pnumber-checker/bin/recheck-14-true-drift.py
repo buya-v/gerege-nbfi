@@ -90,7 +90,10 @@ def main():
         state = "LINE-HOLDS" if holds else ("LINE-MOVED" if where else "ID-GONE")
         hits = by_pair.get((rel, r["cited"]), [])
         seen = [h for h in hits if h["kind"] in ("MISDIRECTING", "UNDEFINED")]
-        zone = hits[0]["zone"] if hits else "<not-in-corpus>"
+        # BARE findings are not carried in the redacted capture (see capture-findings.py), so
+        # "no hit" here means "no finding with a verdict in it", NOT "this file is not in the
+        # corpus". Say which -- a key that stopped matching must never look like a clean site.
+        zone = hits[0]["zone"] if hits else "<no-graded-finding>"
         fatal = any(h["fatal"] for h in hits)
         if fatal:
             fatal_rows.append(r)

@@ -1,6 +1,6 @@
 T331-FATALRATE: thresholds {"min_evidence": 6, "min_margin": 6}
-T331-FATALRATE: sites=9028  MISDIRECTING(report tier)=69  high_confidence(fatal tier)=41
-T331-FATALRATE: the fatal tier is 59.4% of the report tier -- the two tiers are NOT the same guard.
+T331-FATALRATE: sites=9201  MISDIRECTING(report tier)=70  high_confidence(fatal tier)=42
+T331-FATALRATE: the fatal tier is 60.0% of the report tier -- the two tiers are NOT the same guard.
 T331-FATALRATE: filed TRUE-DRIFT (file,cited) pairs in the patterns.md errata = 14
 
 T331-FATALRATE: EVERY high-confidence finding tree-wide, zone restriction LIFTED:
@@ -8,6 +8,7 @@ T331-FATALRATE: EVERY high-confidence finding tree-wide, zone restriction LIFTED
   would-fire evidence     .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:72  P-79 -> P-80  (grams=4 score=12 cited=0)  filed=YES
   would-fire evidence     .softhouse/capture/t304-evidence-destruction/evidence/10-raw-sites.tsv:1564  P-54 -> P-80  (grams=2 score=9 cited=0)  filed=NO -- ADJUDICATE
   would-fire evidence     .softhouse/capture/t304-evidence-destruction/evidence/10-raw-sites.tsv:1718  P-79 -> P-80  (grams=2 score=9 cited=0)  filed=YES
+  would-fire evidence     .softhouse/capture/t331-wire-pnumber-checker/bin/drive-through-the-route.sh:35  P-79 -> P-80  (grams=4 score=12 cited=0)  filed=NO -- ADJUDICATE
   would-fire evidence     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:1079  P-40 -> P-96  (grams=4 score=15 cited=0)  filed=NO -- ADJUDICATE
   would-fire evidence     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:1107  P-35 -> P-96  (grams=4 score=15 cited=0)  filed=NO -- ADJUDICATE
   would-fire evidence     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:1858  P-40 -> P-54  (grams=3 score=11 cited=1)  filed=NO -- ADJUDICATE
@@ -39,19 +40,19 @@ T331-FATALRATE: EVERY high-confidence finding tree-wide, zone restriction LIFTED
   would-fire evidence     .softhouse/reviews/a2-33-dec2-rev5/sweep-output-live-population.txt:6364  P-22 -> P-96  (grams=4 score=15 cited=0)  filed=NO -- ADJUDICATE
   would-fire evidence     .softhouse/reviews/t260-dec2-rev8/evidence/20-normative-set-diff.txt:65  P-79 -> P-80  (grams=4 score=12 cited=0)  filed=YES
   would-fire evidence     .softhouse/reviews/t260-dec2-rev8/evidence/90-per-section-line-delta.txt:271  P-79 -> P-80  (grams=4 score=12 cited=0)  filed=YES
-  would-fire orchestrator .softhouse/tasks.json:363  P-22 -> P-96  (grams=4 score=15 cited=0)  filed=NO -- ADJUDICATE
-  would-fire orchestrator .softhouse/tasks.json:2374  P-69 -> P-79  (grams=6 score=21 cited=0)  filed=YES
-  would-fire orchestrator .softhouse/tasks.json:2427  P-80 -> P-81  (grams=2 score=9 cited=1)  filed=YES
-  would-fire orchestrator .softhouse/tasks.json:2427  P-83 -> P-81  (grams=2 score=9 cited=0)  filed=YES
-  would-fire orchestrator .softhouse/tasks.json:3149  P-79 -> P-80  (grams=3 score=10 cited=0)  filed=YES
+  would-fire orchestrator .softhouse/tasks.json:364  P-22 -> P-96  (grams=4 score=15 cited=0)  filed=NO -- ADJUDICATE
+  would-fire orchestrator .softhouse/tasks.json:2375  P-69 -> P-79  (grams=6 score=21 cited=0)  filed=YES
+  would-fire orchestrator .softhouse/tasks.json:2428  P-80 -> P-81  (grams=2 score=9 cited=1)  filed=YES
+  would-fire orchestrator .softhouse/tasks.json:2428  P-83 -> P-81  (grams=2 score=9 cited=0)  filed=YES
+  would-fire orchestrator .softhouse/tasks.json:3150  P-79 -> P-80  (grams=3 score=10 cited=0)  filed=YES
   would-fire ratified     docs/adr/DEC-2-gl-accounting-adapter.md:294  P-79 -> P-80  (grams=4 score=12 cited=0)  filed=YES
 
 T331-FATALRATE: high-confidence findings ALREADY FILED as true drift = 10
-T331-FATALRATE: high-confidence findings NOT filed (candidate false positives) = 31
+T331-FATALRATE: high-confidence findings NOT filed (candidate false positives) = 32
 T331-FATALRATE: of these, actually FATAL today (directive zone) = 0
 
 T331-FATALRATE: directive-zone findings of ANY kind, and whether each goes fatal:
-  report MISDIRECTING  .softhouse/conformance.sh:2008 P-70  hc=False
+  report MISDIRECTING  .softhouse/conformance.sh:2013 P-70  hc=False
   report MISDIRECTING  .softhouse/patterns.md:2343 P-69  hc=False
   report UNDEFINED     .softhouse/patterns.md:3226 P-131  hc=None
   report UNDEFINED     .softhouse/patterns.md:3230 P-261  hc=None
