@@ -474,6 +474,31 @@ does not exist here. `MathContext(19, HALF_UP)` admissibility is not at stake on
 The rule that *is* at stake — and that this branch defends — is the one upstream of all of it:
 that the captured oracle observations we grade against are the bytes the oracle returned.
 
+## The bar, on a CLEAN tree, after `git add -A` and commit
+
+Run at `db933e16`, with `git status --porcelain` **empty** before the run (the two earlier
+refusals and their repairs are above; this is the third run and the first that reaches a
+verdict). Never `sh` — `bash .softhouse/conformance.sh`.
+
+```
+$ git status --porcelain            # empty
+$ bash .softhouse/conformance.sh ; echo "BAR_EXIT=$?"
+...
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+...
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+conformance:   all 13 wrong ledger implementations DIED through this harness, not by hand.
+BAR_EXIT=0
+```
+
+**Read in the P-84 order, not the tempting one:** the probe line was tested for PRESENCE first
+— `grep -c 'probe = '` returns **1**, so the line was printed — and only then for its value,
+`up`. **EXIT 0.** Parity is unmoved: 46 vectors / 7884 cells, the same figures T374 reports.
+Frontier `GREEN rows=109 pinned=109 added=0 removed=0`; fail-open frontier `11 == 11`;
+host-state census `18 == 18`; guards-dir registration PASS, `invoked-by-nothing=0`; namespace
+PASS. Transcript: `out/CONFORMANCE-GREEN-final.txt` (664 lines),
+exit code `out/CONFORMANCE-GREEN-final.exit`.
+
 ## What I could NOT test, and why
 
 - **Whether another wave-3 branch also regenerates the pin.** Four other workers are live in
