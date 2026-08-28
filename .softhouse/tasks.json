@@ -6063,6 +6063,20 @@
         ".softhouse/reviews/t411-review-t401/"
       ],
       "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
+    },
+    {
+      "id": "T412",
+      "title": "THE DRIVER PUSHES TO main WITHOUT EVER RUNNING THE BAR ON ITS OWN COMMITS -- and did redden main this fire",
+      "description": "**MEASURED, NOT HYPOTHETICAL.** On 2026-08-28 the /softhouse-program driver wrote the literal token `P-100` into `.softhouse/RESUME.md` while dispatching T398, naming a pattern that did not exist yet. `.softhouse/RESUME.md` is a DIRECTIVE file to `check-pnumber-citations.py`, so that is a FATAL UNDEFINED citation, and `guard_pnumber_citations` is a HARD guard: the whole bar went `EXIT 2 -- no verdict is available`, with **no probe line printed at all**. `main` was RED across three pushed commits (`4cf77a42`, `a2c03b3e`, and the T392 merge in between) and **nothing detected it**. It surfaced only because an unrelated merge result (T396's, innocent) was being graded.\n\n**THE GAP.** Every worker in this pipeline is required to run `bash .softhouse/conformance.sh` from a clean tree before handing off. **The driver is required to do no such thing**, and it is the only identity that pushes to `main`. It writes `RESUME.md`, `tasks.json`, `LOCK`, `program.json` and `gates.md` on every fire -- and `RESUME.md`, `patterns.md` and `CLAUDE.md` are all read BY GUARDS. So the one actor that never grades itself is the one actor with direct commit access to the graded branch.\n\n**DECIDE AND ARGUE IT EITHER WAY. Do not just say 'run the bar every time'** -- the bar costs ~4 minutes and the driver commits state many times per fire, several of them while workers hold the very files the bar reads. Options worth costing:\n- a CHEAP pre-push subset for driver-only commits (the citation checker alone is 46 s of the 136 s guard budget, and it is the guard that actually fired);\n- a `pre-push` hook that runs only the guards whose INPUTS the commit touched -- `RESUME.md` and `patterns.md` changed => run `guard_pnumber_citations`;\n- full bar before push, and measure what that costs a real fire from this fire's own log.\n\n**THE TRAP IN THE OBVIOUS FIX.** A hook that runs guards on driver commits must NOT run while a worker holds a contended file, and must not itself become the fifth or sixth thing 'that only works if someone remembers to run it' -- that is **P-45**, and this program has now logged seven guards built and wired to nothing (T399's census). **If you build it, wire it and drive it RED**: make a commit carrying a bad citation and show the push refused, with a healthy control commit that pushes clean. A guard that cannot refuse anything is the same defect as one that refuses everything -- see the newly landed **P-98**.\n\nNote the aggravating detail, because it is the real lesson: **T392's own handoff had REPORTED this exact near-miss** (it wrote `P-100` in prose while drafting, the checker scored it UNDEFINED, and it reworded before commit). The driver read that report and reproduced the defect within minutes. A warning whose only enforcement is the reader remembering it enforces nothing.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/capture/t412-driver-selfgrading/"
+      ],
+      "note": "FILED BY THE DRIVER against itself, iter4, from a red main it caused and pushed."
     }
   ],
   "cross_corroboration": {
