@@ -1,0 +1,30 @@
+T364 -- F-T358-2 REPRODUCED INDEPENDENTLY BY THE REVIEWER.
+
+T358 reports that its FIRST version of the DECLARATION-TABLE cut, written as pure bash
+parameter substitution, ran at 99.7% CPU for 9 min 43 s and had to be killed, and that
+NOTHING SHORT OF A FULL BAR RUN DETECTED IT. I did not take that on trust. This test runs
+OFF the bar entirely -- no oracle, no database, no guard -- so it isolates the idiom.
+
+haystack file bytes:   310358
+comment-stripped haystack bytes: 94346
+DELIVERED grep -vF here-string: 0.1440s  result bytes 94164
+PARAM-EXPANSION IDIOM: STILL RUNNING AFTER 40s -- KILLED. F-T358-2 REPRODUCED.
+
+-----------------------------------------------------------------------------------------
+F-T358-2 IS REAL. The rejected idiom does not finish in 40 SECONDS on two rows; the
+delivered idiom does the identical job in ~0.15 s. The P-57 property the parameter
+expansion was chosen for is preserved by the delivered form: a here-string is not a
+pipeline, so there is no upstream writer to take EPIPE under 'set -o pipefail', and
+'grep -v' consumes all of its input rather than exiting on first match.
+
+THE HALF THAT MATTERS IS THE DETECTION. I confirmed all three of T358's points:
+  * bash -n on the delivered conformance.sh is CLEAN, and was clean on the bad version too
+    -- a quadratic substitution is syntactically perfect.
+  * the pathology is a function of the ~94 KB comment-stripped haystack, which only the
+    real conformance.sh supplies; a lifted-out function on a small tree returns instantly.
+  * NOTHING IN THE BAR MEASURES THE BAR. run_guards carries four hand-written cost
+    comments -- 0.23 s / 0.4 s / 1.3 s / 30.3 s -- and not one of them is checked by
+    anything. T358 corrected the number from '<=0.16 s' to a measured '0.23 s', which
+    makes the comment true today and leaves it exactly as unenforceable as it was.
+
+That is T364 condition C-T364-4: FU-T358-1 must become a filed task.

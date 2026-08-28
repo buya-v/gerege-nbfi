@@ -1,0 +1,36 @@
+T364 -- THE './' AND '..' NORMALISATION THAT DEFEATS THE NO-SELF-CERTIFICATION TEST.
+Run on the delivered tree, aac9e12b73000d2737e57cf2950f976867950a24.
+
+The guard adjudicates a REACHED-BY row in this order (conformance.sh:3380-3401), read out of
+the delivered file:
+
+  :3380  [ -z "$self_wit" ]                            the row is unreadable
+  :3385  [ "$self_wit" = "$rel" ]                      NOT the member itself   <-- RAW STRING
+  :3390  [ ! -f "$REPO_ROOT/$self_wit" ]               the witness exists
+  :3395  git ls-files --error-unmatch -- "$self_wit"   the witness is tracked
+  :3401  grep -qF -- "$base" "$REPO_ROOT/$self_wit"    the witness names the member
+
+THE THREE TESTS AT :3390, :3395 AND :3401 ALL NORMALISE THE PATH. THE ONE AT :3385 DOES NOT --
+it is a raw string comparison, and it is the ONLY place in this function where a path is
+accepted without being normalised. Measured:
+
+$ git ls-files --error-unmatch -- ./.softhouse/guards/ledgerguard/main.go
+.softhouse/guards/ledgerguard/main.go
+  rc=0
+
+$ git ls-files --error-unmatch -- .softhouse/guards/ledgerguard/../ledgerguard/main.go
+.softhouse/guards/ledgerguard/main.go
+  rc=0
+
+$ test -f "$REPO_ROOT/./.softhouse/guards/ledgerguard/main.go"
+  EXISTS (rc=0)
+
+$ grep -c 'main\.go' .softhouse/guards/ledgerguard/main.go   # step 4, satisfied by the file's own text
+3
+
+CONCLUSION: for any member M, the single line
+    # GUARDS-DIR-REGISTRATION: REACHED-BY ./<M's own repo-relative path>
+passes :3390, :3395 and :3401, and slips past :3385 because './M' != 'M' as a string. The row's OWN TEXT
+satisfies step 4, because the row contains M's basename. The guard then PRINTS
+    REACHED-BY M -- declared in its own header, reached by ./M (verified: it names M)
+which is a file vouching for itself. Driven through the whole bar as arms F3 and F4.

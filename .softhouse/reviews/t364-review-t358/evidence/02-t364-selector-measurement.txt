@@ -1,0 +1,37 @@
+T364 -- T337's F-T337-1 SELECTOR MEASUREMENT, RE-DERIVED BY THE REVIEWER.
+
+Clone of main at f6c831576e86046a391570f948df11649d5b5637, with ONE ordinary tracked Go test
+fixture planted at .softhouse/guards/ledgerguard/testdata/setup.sh.
+
+$ git --version
+git version 2.50.1 (Apple Git-155)
+
+$ git ls-files -- '.softhouse/guards/*.sh'        # main's pathspec: NO :(glob) magic
+.softhouse/guards/check-capture-namespace.sh
+.softhouse/guards/check-dead-path-frontier.sh
+.softhouse/guards/check-ledger-invariants.sh
+.softhouse/guards/drive-red-ledger-invariants.sh
+.softhouse/guards/ledgerguard/testdata/setup.sh
+.softhouse/guards/repo-state-attest.sh
+
+  ^^ A git pathspec without ':(glob)' is fnmatch WITHOUT FNM_PATHNAME, so '*' CROSSES '/'.
+     The fixture is in the population. main's guard prints 'the members of' ONE directory.
+
+$ git ls-files -- ':(glob).softhouse/guards/*.sh'   # :(glob), single trailing segment
+.softhouse/guards/check-capture-namespace.sh
+.softhouse/guards/check-dead-path-frontier.sh
+.softhouse/guards/check-ledger-invariants.sh
+.softhouse/guards/drive-red-ledger-invariants.sh
+.softhouse/guards/repo-state-attest.sh
+
+$ git ls-files -- ':(glob).../**/*.sh' ':(glob).../**/*.py' ':(glob).../**/*.go'   # T358
+.softhouse/guards/check-capture-namespace.sh
+.softhouse/guards/check-dead-path-frontier.sh
+.softhouse/guards/check-ledger-invariants.sh
+.softhouse/guards/drive-red-ledger-invariants.sh
+.softhouse/guards/ledgerguard/main.go
+.softhouse/guards/ledgerguard/testdata/setup.sh
+.softhouse/guards/repo-state-attest.sh
+
+CONCLUSION: T337 is right. The depth is real on main, it is UNDECLARED on main, and T358
+KEEPS the depth while DECLARING it -- 7 members including ledgerguard/main.go.
