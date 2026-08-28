@@ -1,4 +1,0 @@
-GET /loans/8?associations=all
-Fineract-Platform-TenantId: gerege
-Authorization: Basic <mifos:password>
-Idempotency-Key: T391-A08-loan-8

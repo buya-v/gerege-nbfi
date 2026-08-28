@@ -1,4 +1,0 @@
-GET /journalentries?transactionId=L29&transactionDetails=true
-Fineract-Platform-TenantId: gerege
-Authorization: Basic <mifos:password>
-Idempotency-Key: T391-A01-je-L29

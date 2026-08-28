@@ -13,12 +13,26 @@
 #
 # Everything else is carried over from cap11.sh verbatim in behaviour:
 #   * a mandatory Idempotency-Key argument, refused if absent (P-22);
-#   * out/NAME.req = the exact wire bytes, plus out/NAME.req.sha256;
 #   * out/NAME.http = the record INCLUDING the key actually sent;
 #   * out/NAME.status and out/NAME.json;
 #   * nothing written under out/ until the exchange completed, so an aborted run
 #     leaves no half-artefact;
 #   * a non-2xx is recorded AS DATA, never treated as an error.
+#
+# NO `out/NAME.req` IS WRITTEN, AND THAT IS A CORRECTION THE BAR MADE. The first
+# draft of this script wrote one, holding the request LINE and headers. The
+# repository-wide wire-float round-trip guard takes EVERY `*.req` at any depth
+# under .softhouse/capture as A REQUEST BODY and requires it to parse as JSON
+# [.softhouse/conformance.sh, the guard's own derive(): "every *.json whose DIRECT
+# parent directory is named req, plus every *.req wire-bytes artefact"], so eight
+# text files that are not bodies REFUSED the whole run at exit 2. The guard was
+# RIGHT and the script was wrong: A GET HAS NO BODY, so there are no body bytes
+# to pin, and a `.req` that is not a request body is a lie about the population
+# it joins. cap11.sh has the same property and writes no `.req` for its GETs
+# either -- T388's own A03/A04/A05 GET captures carry `.http`, `.status` and
+# `.json` and nothing else. The `.http` record below carries the request line,
+# the headers and the Idempotency-Key actually sent, which is the whole of what a
+# GET request IS.
 #
 # `Idempotency-Key` is the pinned oracle's own configured header name
 # [VERIFIED: fineract-provider/src/main/resources/application.properties,
@@ -36,10 +50,8 @@ NAME=${1-}; RPATH=${2-}; KEY=${3-}
 OUT="$DIR/out/$NAME.json"
 STATUS="$DIR/out/$NAME.status"
 HTTP="$DIR/out/$NAME.http"
-REQ="$DIR/out/$NAME.req"
-REQSHA="$DIR/out/$NAME.req.sha256"
 
-for f in "$OUT" "$STATUS" "$HTTP" "$REQ" "$REQSHA"; do
+for f in "$OUT" "$STATUS" "$HTTP"; do
   [ -e "$f" ] && { echo "REFUSING: $f already exists. This tool never overwrites a committed observation." >&2; exit 2; }
 done
 
@@ -67,8 +79,6 @@ fi
 
 cp "$TMPD/body" "$OUT"
 printf '%s\n' "$code" > "$STATUS"
-cp "$TMPD/req" "$REQ"
-( cd "$DIR/out" && shasum -a 256 "$NAME.req" > "$NAME.req.sha256" )
 {
   cat "$TMPD/req"
   printf 'body: <none>\n'

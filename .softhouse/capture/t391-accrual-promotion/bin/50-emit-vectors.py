@@ -82,7 +82,7 @@ VECTORS = [
         "transaction_id": "L29",
         "capture": "T391-A01-je-L29",
         "capture_sha256": "4ac271a907422f3432493b0d41da7fdba5d0540fb16aefd1665d8413f48cd3b4",
-        "request_sha256": "b8a9a0bd40649fc26e80a3ce3e6393d4d23c4a781a03dc5cf8ff6b991396c907",
+        "request_sha256": "e89ab942e7414ce58a1dc2b26754a181f0554b7175ff72be4db0275ce49d8db6",
         "trigger": (
             "POST /v1/runaccruals {\"tillDate\":\"15 April 2026\"} -- a HAND-FIRED "
             "trigger, m_portfolio_command_source row 379, Idempotency-Key "
@@ -114,7 +114,7 @@ VECTORS = [
         "transaction_id": "L30",
         "capture": "T391-A02-je-L30",
         "capture_sha256": "360ed3ebcb26d9961859c2320155ea9e8d18683905dd1f8de3a5e4d38e818eeb",
-        "request_sha256": "6b55f90d5dcbb06427dd5e7043ae24e214347dcaddaa8911ec3b810c66460260",
+        "request_sha256": "d4eae8560d57ba25df3673a9b4f87b0472488fc5fec0226276d93f68ae133dbe",
         "trigger": (
             "POST /v1/runaccruals {\"tillDate\":\"15 April 2026\"} -- the SAME "
             "hand-fired trigger as LDG-ACC-01; one call produced L29, L30 and L31"
@@ -158,7 +158,7 @@ VECTORS = [
         "transaction_id": "L32",
         "capture": "T391-A04-je-L32",
         "capture_sha256": "d933e7a18de9af266e34761069e22e386983f390c5b5401c9a6d33404403a9bb",
-        "request_sha256": "43b5a2bbf959f9ff6c5ba11348a70d0d46a99d29c81828b9fb5e82d82bbb0512",
+        "request_sha256": "aaafcf8fa6427b19cca6eca3297abed7eee57152bb30353a388d7ef0d23cd0ff",
         "trigger": (
             "NO API CALL AT ALL. A SCHEDULED JOB wrote this transaction while "
             "nobody was watching: journal entries 96-101 carry created_on_utc "
@@ -323,7 +323,7 @@ def build(v):
             "capture_ref": ref + ".json",
             "capture_sha256": v["capture_sha256"],
             "capture_case_id": v["capture"],
-            "request_capture_ref": ref + ".req",
+            "request_capture_ref": ref + ".http",
             "request_capture_sha256": v["request_sha256"],
             "request_capture_case_id": v["capture"],
             "rerun_invariant": (
