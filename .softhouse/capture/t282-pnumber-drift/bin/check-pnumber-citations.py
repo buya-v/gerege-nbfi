@@ -150,6 +150,21 @@ EVIDENCE_PREFIX = (
 # own printout. That is a self-reference, not a measurement.
 SELF_OUTPUT_PREFIX = ".softhouse/capture/t282-pnumber-drift/out/"
 
+# This checker's OWN SOURCE. Skipped for the SAME reason `P-99` is skipped, and
+# the reason is stated rather than assumed: SELFTEST_REGISTER below contains
+# DELIBERATELY DRIFTED fixtures -- `Per P-80: read the absence, not the value`
+# is P-84's rule under P-80's id, planted so `--selftest` can prove the
+# predicate fires. Grading them reports this instrument's own controls as
+# defects (3 of the 39 findings in the pre-repair run were exactly that), which
+# is a checker marking its calibration wrong. P-72: calibrate a sweep on a known
+# answer -- you may not then score the known answer.
+#
+# NARROW ON PURPOSE, and this is the part that could rot: the skip is ONE FILE,
+# not the `bin/` directory, so census.py and restamp.py beside it ARE still
+# graded. A directory-wide skip here would be a blind spot that grows every time
+# someone drops a file in.
+SELF_SOURCE_EXACT = ".softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py"
+
 # patterns.md declares its own known-ambiguous ids in a machine-readable marker,
 # so a NEW collision is loud and an ACCEPTED one is quiet. Bound by CONTENT (the
 # marker text), never by line number -- P-78: an ordinal used as an identifier
@@ -441,6 +456,11 @@ def analyse(reg, files, root, min_evidence, min_margin):
         if rel.startswith(SELF_OUTPUT_PREFIX):
             counts["skipped_self_output"] = counts.get("skipped_self_output", 0) + 1
             continue
+        if rel == SELF_SOURCE_EXACT:
+            # Counted and PRINTED, never silently dropped -- P-40: a sweep that
+            # skips must say what it skipped and how many.
+            counts["skipped_self_source"] = counts.get("skipped_self_source", 0) + 1
+            continue
         ap = os.path.join(root, rel)
         if not os.path.isfile(ap):
             continue
@@ -727,6 +747,9 @@ def main():
           % (counts["sites"], counts["definition"], counts["consistent"],
              counts["bare"], counts["misdirecting"], counts["undefined"],
              counts["negative_control"]))
+    print("PNUMBER-CITATIONS: skipped self-output-files=%d self-source-files=%d "
+          "(stated, not silent -- both contain deliberately drifted text)"
+          % (counts.get("skipped_self_output", 0), counts.get("skipped_self_source", 0)))
     z = {}
     for f in findings:
         if f["kind"] in ("MISDIRECTING", "UNDEFINED"):

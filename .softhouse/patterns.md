@@ -10,14 +10,45 @@
 > | P-3 | A green conformance run says nothing about unexercised behaviours | Reporting cadence → exceptions only |
 > | P-4 | Latent harness defects detonate on first real use | Stop revising the contract — ratify with obligations |
 > | P-5 | Cut the worker's worktree from the commit containing the artefact | **Close tier 0 — obligations, not fifth drafts** |
+> | P-6 | Re-deriving from the same document three times is one check, not three | Freeze a gate write-up once its measurements reproduce |
 >
-> `P-6`…`P-39` are defined only here and are unambiguous.
+> **`P-6` JOINED THE COLLISION, EXACTLY AS THE PARAGRAPH BELOW PREDICTED IT WOULD.** This banner used to end
+> *"`P-6`…`P-39` are defined only here and are unambiguous"*, and that sentence was **false** — measured by
+> `T282` at sha `4d695ba8bb56`: `gates-proposed-answers.md:195` defines `P-6`, so the decision series
+> reached 6 and the banner's own forecast (*"no collision could occur until the decision series reached 5"*)
+> came due one id later without anyone updating the sentence it invalidated. **The claim of unambiguity is
+> now `P-7`…`P-39`, and it is a MEASUREMENT that goes stale, not a fact** — re-run
+> `.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py`, which prints
+> `cross-register-collisions=` on every run, rather than trusting this line.
 >
 > **Always cite the file, never the bare number** — write "P-5 (`gates-proposed-answers.md`)" or
 > "P-5 (`patterns.md`)". A worker told to act "under P-5" with no file could apply the worktree-cutting rule
 > when the user meant *close tier 0*, or the reverse. This was latent until 21 Aug 2026: `patterns.md`'s P-5
 > existed but **nothing had ever cited it**, so no collision could occur until the decision series reached 5.
 > It is recorded rather than renamed because the decision headings are the user's own text.
+
+> **SECOND SERIES HAZARD — `patterns.md` ALSO COLLIDES WITH ITSELF.** `P-12` and `P-13` are each defined
+> **twice in this file**, and neither had ever been recorded until `T282` measured it:
+>
+> | id | first definition | second definition |
+> |---|---|---|
+> | P-12 | `:315` — *a right conclusion on a wrong reason recurs in the artefact written to record it* | `:1385` — *an ID SERIES that restarts in a second file is a name collision waiting for its first citation* |
+> | P-13 | `:320` — *for a specification-bearing comment, the comment IS the deliverable* | `:1412` — *grepping the store for a VALUE does not answer what the store KILLS* |
+>
+> Read `P-12`'s **second** definition again and note what it is: *"an ID SERIES that restarts in a second
+> file is a name collision waiting for its first citation."* **That rule is defined at the id it is itself
+> colliding on.** The register restated its own series and rotted, which is `P-80` (*a corrected cardinal
+> rots in every place it was restated*) and `P-86` (*the pattern ids themselves rotted, in the file that
+> names the rot*) reaching the same conclusion a third time, one layer further in.
+>
+> These two are **DECLARED, not renumbered.** Renumbering would rewrite the cardinal under every citation
+> already published against it — the exact defect `P-80` names. The declaration below is machine-read by
+> the citation checker so a **NEW** collision is fatal while these two stay quiet; a declaration for an id
+> that is *not* actually colliding is itself fatal, so this list cannot rot into a silencer.
+>
+> `PNUMBER-REGISTER-DECLARED-COLLISIONS: 12, 13`
+>
+> **Cite these two by FILE AND LINE, never by bare id** — "P-12 (`patterns.md:1385`)".
 
 Softhouse reads this file during pre-flight and applies it when planning. Anything above the markers is hand-written project knowledge; everything between the markers is appended automatically by each run's postmortem.
 
