@@ -1,0 +1,19 @@
+T278 EXCEPTION-CELL DUMP - scope=t229corpus  i1q_from_row=False
+principal is the SUM OF THE PRINCIPAL COLUMN, never a header
+
+T117P2-R600p0-N108-B11     src=capture-t117p2-raw.json.gz   n=108   B=11    E=5     I1q=6     delta=1  FULLfamB=True  predicts=0    OBSERVED=5      hdr=5     I_last=11     lastTotal=16     E+B=16    
+                             principal rows non-zero at: [(108, 5)]
+T117P2-R600p0-N121-B11     src=capture-t117p2-raw.json.gz   n=121   B=11    E=5     I1q=6     delta=1  FULLfamB=True  predicts=0    OBSERVED=4      hdr=4     I_last=12     lastTotal=16     E+B=16    
+                             principal rows non-zero at: [(121, 4)]
+T117P2-R600p0-N150-B11     src=capture-t117p2-raw.json.gz   n=150   B=11    E=5     I1q=6     delta=1  FULLfamB=True  predicts=0    OBSERVED=2      hdr=2     I_last=14     lastTotal=16     E+B=16    
+                             principal rows non-zero at: [(150, 2)]
+T159-R600p0-N108-B11       src=capture-t159-raw.json.gz     n=108   B=11    E=5     I1q=6     delta=1  FULLfamB=True  predicts=0    OBSERVED=5      hdr=5     I_last=11     lastTotal=16     E+B=16    
+                             principal rows non-zero at: [(108, 5)]
+T159-R600p0-N121-B11       src=capture-t159-raw.json.gz     n=121   B=11    E=5     I1q=6     delta=1  FULLfamB=True  predicts=0    OBSERVED=4      hdr=4     I_last=12     lastTotal=16     E+B=16    
+                             principal rows non-zero at: [(121, 4)]
+T159-R600p0-N150-B11       src=capture-t159-raw.json.gz     n=150   B=11    E=5     I1q=6     delta=1  FULLfamB=True  predicts=0    OBSERVED=2      hdr=2     I_last=14     lastTotal=16     E+B=16    
+                             principal rows non-zero at: [(150, 2)]
+T159-R600p0-N2000-B999     src=capture-t159-raw.json.gz     n=2000  B=999   E=499   I1q=500   delta=1  FULLfamB=True  predicts=0    OBSERVED=166    hdr=166   I_last=1332   lastTotal=1498   E+B=1498  
+                             principal rows non-zero at: [(2000, 166)]
+
+exception count: 7   amounts: [5, 2, 4, 5, 2, 166, 4]

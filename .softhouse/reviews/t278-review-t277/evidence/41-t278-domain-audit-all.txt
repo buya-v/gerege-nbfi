@@ -1,0 +1,35 @@
+==============================================================================
+T278 DOMAIN AUDIT  scope=all   stuck cells=578
+==============================================================================
+
+(a) LIVE CLAIM, gates.md :1164 :1891 :2603 :3543 :3679 --
+    'the residual of an unrescued family-B cell IS min(B_minor, n*delta)'
+    holds : 571 of 578
+    FAILS : 7
+      T117P2-R600p0-N108-B11   n=108   B=11    delta=1  formula says residual=11     OBSERVED residual=6      (repaid 5)
+      T117P2-R600p0-N121-B11   n=121   B=11    delta=1  formula says residual=11     OBSERVED residual=7      (repaid 4)
+      T117P2-R600p0-N150-B11   n=150   B=11    delta=1  formula says residual=11     OBSERVED residual=9      (repaid 2)
+      T159-R600p0-N108-B11     n=108   B=11    delta=1  formula says residual=11     OBSERVED residual=6      (repaid 5)
+      T159-R600p0-N121-B11     n=121   B=11    delta=1  formula says residual=11     OBSERVED residual=7      (repaid 4)
+      T159-R600p0-N150-B11     n=150   B=11    delta=1  formula says residual=11     OBSERVED residual=9      (repaid 2)
+      T159-R600p0-N2000-B999   n=2000  B=999   delta=1  formula says residual=999    OBSERVED residual=833    (repaid 166)
+    cells where OBSERVED residual EXCEEDS the formula (unsafe direction): 0
+    -> the formula is therefore an UPPER BOUND that holds, but the
+       EQUALITY asserted in the file is FALSE on 7 cells.
+    exception set of the residual form == exception set of law (ii)? True
+
+(b) CONSERVATIVE REGION  B_minor < 1.5*n  (integers: 2B < 3n)
+    stuck cells that do NOT fully amortize : 215
+    stuck cells that DO fully amortize     : 363
+    FAILING cells OUTSIDE the region (would be a HOLE): 0
+    clean cells INSIDE the region (over-refusal, expected of a superset): 363
+    all seven law-(ii) exceptions inside the region? True
+    -> superset claim HOLDS on this scope
+
+(c) RECORD FIGURES, re-measured from the principal column
+    largest unamortized residual      : 3000 minor units  ['T219-R600p0-N3000-B4499', 'T219-R600p0-N3000-B3001']
+    largest FULL family-B residual    : 2999 minor units  ['T219-R600p0-N3000-B2999']
+    largest FAILING disbursement      : 4499 minor units  ['T219-R600p0-N3000-B4499']
+
+(d) law (ii) exception set on this scope: 7  ['T117P2-R600p0-N108-B11', 'T117P2-R600p0-N121-B11', 'T117P2-R600p0-N150-B11', 'T159-R600p0-N108-B11', 'T159-R600p0-N121-B11', 'T159-R600p0-N150-B11', 'T159-R600p0-N2000-B999']
+    amounts repaid, in id order above    : [5, 4, 2, 5, 4, 2, 166]

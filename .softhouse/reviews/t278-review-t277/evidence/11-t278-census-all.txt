@@ -1,0 +1,46 @@
+T278 CENSUS - scope=all   i1q_from_row=False
+  admitted                                   761
+  admittedNotStuck                           183
+  capturesRead                               775
+  correctedInterestForm_onFactA              441
+  correctedInterestForm_onNotFactA           0
+  delta0_cells_that_hold_factA               226
+  delta0_count                               363
+  delta1_count                               215
+  deltaHistogram                             {'0': 363, '1': 215}
+  deltaOtherThan0or1                         []
+  exceptionAmounts                           [5, 2, 4, 5, 2, 166, 4]
+  exceptionIds                               ['T117P2-R600p0-N108-B11', 'T117P2-R600p0-N150-B11', 'T117P2-R600p0-N121-B11', 'T159-R600p0-N108-B11', 'T159-R600p0-N150-B11', 'T159-R600p0-N2000-B999', 'T159-R600p0-N121-B11']
+  exceptions_all_satisfy_fullFamilyB         True
+  exceptions_intersect_delta0                0
+  exceptions_intersect_factA_failures        0
+  factA_fails                                137
+  factA_failures_that_are_delta0             137
+  factA_holds                                441
+  files                                      ['.softhouse/capture/t117-familyb/out/capture-t117-raw.json.gz', '.softhouse/capture/t117-familyb/out/capture-t117p2-raw.json.gz', '.softhouse/capture/t159-review-t117/out/capture-t159-raw.json.gz', '.softhouse/capture/t219-g8-residual/out/capture-t219-raw.json.gz', '.softhouse/capture/t219-g8-residual/out/capture-t219-run2-raw.json.gz', '.softhouse/capture/t219-g8-residual/out/capture-t219-run3-raw.json.gz', '.softhouse/capture/t223-g8-region-predicate/out/capture-t223-raw.json.gz', '.softhouse/capture/t229-g8-site3/out/capture-t229-raw.json.gz', '.softhouse/reviews/T84-evidence/out/capture-t84-raw.json.gz', '.softhouse/reviews/T84-evidence/out/capture-t84b-raw.json.gz']
+  fullFamilyB_count                          210
+  headerInterestMismatches                   0
+  headerPrincipalMismatches                  0
+  headerRepaymentMismatches                  0
+  interestEqualsNEplusB_allStuck             203
+  interestEqualsNEplusB_fails_allStuck       375
+  interestEqualsNEplusB_on_delta0            0
+  lastRowLaw_holds_onFactA                   441
+  lastRowLaw_holds_onNotFactA                0
+  lawII_fails_allStuck                       7
+  lawII_fails_onFactA                        7
+  lawII_holds_allStuck                       571
+  lawII_holds_onFactA                        434
+  lawII_holds_on_delta0                      363
+  lawII_holds_on_fullFamilyB                 203
+  lawII_holds_on_partialFamilyB              5
+  partialFamilyB_count                       5
+  principalConfinedToLastRow_onFactA         441
+  principalConfinedToLastRow_onNotFactA      0
+  rejectReasons                              ["monthly rate factor 7/1200 does not terminate within 19 fractional digits; the oracle's setScale(19) value is not reproducible here", 'no observed block (refusal/error capture)']
+  rejected                                   14
+  rejectedIds                                ['T159-R600p0-N2000-B10001', 'T159-R600p0-N3000-B100001', 'T219-R600p0-N3000-B1999', 'T219-R600p0-N3000-B1999-RUN2', 'T219-R600p0-N3000-B4501', 'T219-R600p0-N3000-B4501-RUN2', 'T84-FAR-R7p0-N56-B100', 'T84-FAR-R7p0-N56-B1000', 'T84-FAR-R7p0-N56-B10000', 'T84-FAR-R7p0-N56-B100000', 'T84-FAR-R7p0-N56-B30', 'T84-FAR-R7p0-N56-B50', 'T84-RP-R7p0-N56-B23', 'T84-RP-R7p0-N56-B24']
+  scope                                      all
+  stuckCells                                 578
+  totalRepaymentLaw_onFactA                  441
+  totalRepaymentLaw_onNotFactA               0

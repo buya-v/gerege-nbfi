@@ -1,0 +1,46 @@
+T278 CENSUS - scope=t229corpus   i1q_from_row=False
+  admitted                                   347
+  admittedNotStuck                           51
+  capturesRead                               349
+  correctedInterestForm_onFactA              220
+  correctedInterestForm_onNotFactA           0
+  delta0_cells_that_hold_factA               37
+  delta0_count                               113
+  delta1_count                               183
+  deltaHistogram                             {'0': 113, '1': 183}
+  deltaOtherThan0or1                         []
+  exceptionAmounts                           [5, 2, 4, 5, 2, 166, 4]
+  exceptionIds                               ['T117P2-R600p0-N108-B11', 'T117P2-R600p0-N150-B11', 'T117P2-R600p0-N121-B11', 'T159-R600p0-N108-B11', 'T159-R600p0-N150-B11', 'T159-R600p0-N2000-B999', 'T159-R600p0-N121-B11']
+  exceptions_all_satisfy_fullFamilyB         True
+  exceptions_intersect_delta0                0
+  exceptions_intersect_factA_failures        0
+  factA_fails                                76
+  factA_failures_that_are_delta0             76
+  factA_holds                                220
+  files                                      ['.softhouse/capture/t117-familyb/out/capture-t117-raw.json.gz', '.softhouse/capture/t117-familyb/out/capture-t117p2-raw.json.gz', '.softhouse/capture/t159-review-t117/out/capture-t159-raw.json.gz', '.softhouse/capture/t223-g8-region-predicate/out/capture-t223-raw.json.gz']
+  fullFamilyB_count                          183
+  headerInterestMismatches                   0
+  headerPrincipalMismatches                  0
+  headerRepaymentMismatches                  0
+  interestEqualsNEplusB_allStuck             176
+  interestEqualsNEplusB_fails_allStuck       120
+  interestEqualsNEplusB_on_delta0            0
+  lastRowLaw_holds_onFactA                   220
+  lastRowLaw_holds_onNotFactA                0
+  lawII_fails_allStuck                       7
+  lawII_fails_onFactA                        7
+  lawII_holds_allStuck                       289
+  lawII_holds_onFactA                        213
+  lawII_holds_on_delta0                      113
+  lawII_holds_on_fullFamilyB                 176
+  lawII_holds_on_partialFamilyB              0
+  partialFamilyB_count                       0
+  principalConfinedToLastRow_onFactA         220
+  principalConfinedToLastRow_onNotFactA      0
+  rejectReasons                              ['no observed block (refusal/error capture)']
+  rejected                                   2
+  rejectedIds                                ['T159-R600p0-N2000-B10001', 'T159-R600p0-N3000-B100001']
+  scope                                      t229corpus
+  stuckCells                                 296
+  totalRepaymentLaw_onFactA                  220
+  totalRepaymentLaw_onNotFactA               0
