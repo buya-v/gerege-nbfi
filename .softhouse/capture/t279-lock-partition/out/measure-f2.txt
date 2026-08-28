@@ -1,0 +1,162 @@
+origin/main commits: 1967   real fires (>=5 min): 25
+thresholds: rule-2 freshness 6 h, ceiling 24 h
+
+--- 0. identities publishing to origin/main ---
+    Buyanmunkh <buv@Buyanmunkhs-Mac-mini.local>           1313
+    SoftFactory <softfactory@local>                        354
+    Buyan <buya.vol@gmail.com>                             184
+    Claude <noreply@anthropic.com>                          43
+    softhouse <softhouse@gerege.local>                      23
+    softhouse cloud <buya.vol@gmail.com>                    14
+    softhouse T31 <buya.vol@gmail.com>                       7
+    softhouse T29 <buya.vol@gmail.com>                       6
+    softhouse T33 <buya.vol@gmail.com>                       5
+    softhouse T32 <buya.vol@gmail.com>                       4
+    softhouse <buya.vol@gmail.com>                           3
+    softhouse T75 <noreply@anthropic.com>                    2
+    softhouse T24 <buya.vol@gmail.com>                       1
+    softhouse T25 <buya.vol@gmail.com>                       1
+    softhouse T26 <buya.vol@gmail.com>                       1
+    softhouse T27 <buya.vol@gmail.com>                       1
+    softhouse T28 <buya.vol@gmail.com>                       1
+    softhouse T30 <buya.vol@gmail.com>                       1
+    T121 <t121@local>                                        1
+    T138 <t138@local>                                        1
+    Buyanmunkh <buya.vol@gmail.com>                          1
+
+--- 1. rule 2 AS WRITTEN: stranded lock at every fire start ---
+    fire-20260817-191707.log       newest-by-anyone   0.00 h   HELD (idles)
+    fire-20260818-080003.log       newest-by-anyone   9.70 h   takeable
+    fire-20260818-152328.log       newest-by-anyone   0.00 h   HELD (idles)
+    fire-20260818-170002.log       newest-by-anyone   1.04 h   HELD (idles)
+    fire-20260818-173900.log       newest-by-anyone   0.02 h   HELD (idles)
+    fire-20260818-200001.log       newest-by-anyone   0.85 h   HELD (idles)
+    fire-20260818-230002.log       newest-by-anyone   0.44 h   HELD (idles)
+    fire-20260819-080001.log       newest-by-anyone   7.55 h   takeable
+    fire-20260819-140003.log       newest-by-anyone   2.60 h   HELD (idles)
+    fire-20260819-170001.log       newest-by-anyone   1.14 h   HELD (idles)
+    fire-20260819-200001.log       newest-by-anyone   1.97 h   HELD (idles)
+    fire-20260820-080002.log       newest-by-anyone   8.85 h   takeable
+    fire-20260820-110001.log       newest-by-anyone   1.75 h   HELD (idles)
+    fire-20260820-140000.log       newest-by-anyone   1.44 h   HELD (idles)
+    fire-20260820-170001.log       newest-by-anyone   0.75 h   HELD (idles)
+    fire-20260820-200002.log       newest-by-anyone   1.30 h   HELD (idles)
+    fire-20260820-230001.log       newest-by-anyone   1.44 h   HELD (idles)
+    fire-20260821-080001.log       newest-by-anyone   7.84 h   takeable
+    fire-20260821-134344.log       newest-by-anyone   0.00 h   HELD (idles)
+    fire-20260822-080001.log       newest-by-anyone   8.75 h   takeable
+    fire-20260822-140002.log       newest-by-anyone   1.79 h   HELD (idles)
+    fire-20260823-080004.log       newest-by-anyone   8.99 h   takeable
+    fire-20260823-140001.log       newest-by-anyone   1.90 h   HELD (idles)
+    fire-20260827-230001.log       newest-by-anyone   2.99 h   HELD (idles)
+    fire-20260828-080001.log       newest-by-anyone   6.18 h   takeable
+
+    18 of 25 fire starts read a STRANDED lock as HELD.
+
+--- 2. (A) AUTHOR-MATCH: same starts, push term restricted to the holder ---
+    holder := the fire immediately preceding this start; its identity := the
+    author of its LAST commit inside its own window.  A stranded holder never
+    pushes again, so this term ages monotonically.
+    fire-20260818-080003.log       holder Buyan                              newest-by-holder  12.06 h  takeable
+    fire-20260818-152328.log       holder Buyan                              newest-by-holder   0.00 h  HELD
+    fire-20260818-170002.log       holder Buyan                              newest-by-holder   1.04 h  HELD
+    fire-20260818-173900.log       holder Buyan                              newest-by-holder   0.02 h  HELD
+    fire-20260818-200001.log       holder Buyan                              newest-by-holder   0.85 h  HELD
+    fire-20260818-230002.log       holder Buyan                              newest-by-holder   2.77 h  HELD
+    fire-20260819-080001.log       holder Buyan                              newest-by-holder   7.55 h  takeable
+    fire-20260819-140003.log       holder Buyan                              newest-by-holder   2.60 h  HELD
+    fire-20260819-170001.log       holder Buyan                              newest-by-holder   1.14 h  HELD
+    fire-20260819-200001.log       holder Buyan                              newest-by-holder   1.97 h  HELD
+    fire-20260820-080002.log       holder Buyan                              newest-by-holder   8.85 h  takeable
+    fire-20260820-110001.log       holder Buyan                              newest-by-holder   1.75 h  HELD
+    fire-20260820-140000.log       holder Buyan                              newest-by-holder   1.44 h  HELD
+    fire-20260820-170001.log       holder Buyan                              newest-by-holder   0.75 h  HELD
+    fire-20260820-200002.log       holder Buyan                              newest-by-holder   1.30 h  HELD
+    fire-20260820-230001.log       holder Buyan                              newest-by-holder   1.44 h  HELD
+    fire-20260821-080001.log       holder Buyan                              newest-by-holder   7.84 h  takeable
+    fire-20260821-134344.log       holder Buyan                              newest-by-holder   0.00 h  HELD
+    fire-20260822-080001.log       holder Buyan                              newest-by-holder   8.75 h  takeable
+    fire-20260822-140002.log       holder Buyan                              newest-by-holder   1.79 h  HELD
+    fire-20260823-080004.log       holder Buyan                              newest-by-holder   8.99 h  takeable
+    fire-20260823-140001.log       holder Buyan                              newest-by-holder   1.90 h  HELD
+    fire-20260827-230001.log       holder Buyan                              newest-by-holder   2.99 h  HELD
+    fire-20260828-080001.log       holder Buyan                              newest-by-holder   6.18 h  takeable
+
+    17 of 24 starts read a STRANDED lock as HELD under author-match.
+
+--- 3. (A) AUTHOR-MATCH SAFETY: distinct identities inside ONE LIVE fire ---
+    fire-20260817-191707.log        7 commits, 2 identities: Buyan x4; softhouse x3
+    fire-20260818-080003.log        3 commits, 1 identity: Buyan x3
+    fire-20260818-152328.log       26 commits, 2 identities: Buyanmunkh x20; Buyan x6
+    fire-20260818-170002.log        5 commits, 2 identities: Buyanmunkh x3; Buyan x2
+    fire-20260818-173900.log       20 commits, 2 identities: Buyanmunkh x18; Buyan x2
+    fire-20260818-200001.log        4 commits, 2 identities: Buyan x2; Buyanmunkh x2
+    fire-20260818-230002.log       34 commits, 2 identities: Buyanmunkh x32; Buyan x2
+    fire-20260819-080001.log       120 commits, 2 identities: Buyanmunkh x117; Buyan x3
+    fire-20260819-140003.log       53 commits, 2 identities: Buyanmunkh x51; Buyan x2
+    fire-20260819-170001.log       32 commits, 3 identities: Buyanmunkh x17; softhouse x13; Buyan x2
+    fire-20260819-200001.log       42 commits, 2 identities: Buyanmunkh x40; Buyan x2
+    fire-20260820-080002.log       23 commits, 2 identities: Buyanmunkh x21; Buyan x2
+    fire-20260820-110001.log       27 commits, 2 identities: Buyanmunkh x25; Buyan x2
+    fire-20260820-140000.log       41 commits, 2 identities: Buyanmunkh x39; Buyan x2
+    fire-20260820-170001.log       30 commits, 4 identities: Buyanmunkh x21; Claude x5; Buyan x2; softhouse T75 x2
+    fire-20260820-200002.log       61 commits, 2 identities: Buyanmunkh x59; Buyan x2
+    fire-20260820-230001.log       58 commits, 2 identities: Buyanmunkh x53; Buyan x5
+    fire-20260821-080001.log       114 commits, 5 identities: Buyanmunkh x105; softhouse x5; Buyan x2; T121 x1; T138 x1
+    fire-20260821-134344.log       242 commits, 4 identities: Buyanmunkh x234; Buyan x6; Buyanmunkh x1; softhouse x1
+    fire-20260822-080001.log       164 commits, 2 identities: Buyanmunkh x161; Buyan x3
+    fire-20260822-140002.log       206 commits, 4 identities: Buyanmunkh x189; Claude x11; softhouse x4; Buyan x2
+    fire-20260823-080004.log       78 commits, 2 identities: Buyanmunkh x73; Buyan x5
+    fire-20260823-140001.log       40 commits, 2 identities: Buyanmunkh x27; Buyan x13
+    fire-20260827-230001.log       170 commits, 3 identities: SoftFactory x158; Buyan x6; Buyanmunkh x6
+    fire-20260828-080001.log       197 commits, 2 identities: SoftFactory x196; Buyan x1
+
+    24 of 25 fires that published anything did so under MORE THAN ONE identity.
+    The LOCK body records `holder`, `host`, `pid`, `fire` -- and NO git identity,
+    so author-match has nothing to match against today; it must first be given a
+    field, and that field can only name ONE of the identities measured above.
+
+--- 4. (B) CEILING: what a ceiling can be wrong about is a LONG LEGITIMATE fire ---
+    fire-20260821-134344.log       ran   9.52 h
+    fire-20260822-140002.log       ran   8.88 h
+    fire-20260822-080001.log       ran   4.22 h
+    fire-20260823-080004.log       ran   4.11 h
+    fire-20260819-080001.log       ran   3.40 h
+    longest fire on record: 9.52 h   ceiling 24 h   margin 2.52x
+
+--- 5. (B) CEILING liveness: lock stranded by the PREVIOUS fire ---
+    fire-20260818-080003.log       lock age  12.72 h  tip age   9.70 h  -> takeable (N5 both stale)
+    fire-20260818-152328.log       lock age   7.39 h  tip age   0.00 h  -> HELD     (N4 live)
+    fire-20260818-170002.log       lock age   1.61 h  tip age   1.04 h  -> HELD     (N4 live)
+    fire-20260818-173900.log       lock age   0.65 h  tip age   0.02 h  -> HELD     (N4 live)
+    fire-20260818-200001.log       lock age   2.35 h  tip age   0.85 h  -> HELD     (N4 live)
+    fire-20260818-230002.log       lock age   3.00 h  tip age   0.44 h  -> HELD     (N4 live)
+    fire-20260819-080001.log       lock age   9.00 h  tip age   7.55 h  -> takeable (N5 both stale)
+    fire-20260819-140003.log       lock age   6.00 h  tip age   2.60 h  -> HELD     (N4 live)
+    fire-20260819-170001.log       lock age   3.00 h  tip age   1.14 h  -> HELD     (N4 live)
+    fire-20260819-200001.log       lock age   3.00 h  tip age   1.97 h  -> HELD     (N4 live)
+    fire-20260820-080002.log       lock age  12.00 h  tip age   8.85 h  -> takeable (N5 both stale)
+    fire-20260820-110001.log       lock age   3.00 h  tip age   1.75 h  -> HELD     (N4 live)
+    fire-20260820-140000.log       lock age   3.00 h  tip age   1.44 h  -> HELD     (N4 live)
+    fire-20260820-170001.log       lock age   3.00 h  tip age   0.75 h  -> HELD     (N4 live)
+    fire-20260820-200002.log       lock age   3.00 h  tip age   1.30 h  -> HELD     (N4 live)
+    fire-20260820-230001.log       lock age   3.00 h  tip age   1.44 h  -> HELD     (N4 live)
+    fire-20260821-080001.log       lock age   9.00 h  tip age   7.84 h  -> takeable (N5 both stale)
+    fire-20260821-134344.log       lock age   5.73 h  tip age   0.00 h  -> HELD     (N4 live)
+    fire-20260822-080001.log       lock age  18.27 h  tip age   8.75 h  -> takeable (N5 both stale)
+    fire-20260822-140002.log       lock age   6.00 h  tip age   1.79 h  -> HELD     (N4 live)
+    fire-20260823-080004.log       lock age  18.00 h  tip age   8.99 h  -> takeable (N5 both stale)
+    fire-20260823-140001.log       lock age   6.00 h  tip age   1.90 h  -> HELD     (N4 live)
+    fire-20260827-230001.log       lock age 105.00 h  tip age   2.99 h  -> takeable (N3 ceiling)
+    fire-20260828-080001.log       lock age   9.00 h  tip age   6.18 h  -> takeable (N5 both stale)
+
+    16 of 24 read HELD under the repaired arms.
+    Under the ceiling the takeover time is BOUNDED at started_at + 24 h for every
+    one of them; under rule 2 as written there is no bound at all.
+
+--- 6. HEAD TO HEAD: at how many real fire starts does each repair CHANGE the
+       verdict rule 2 as written would have given? ---
+    fire-20260827-230001.log       ceiling       HELD -> takeable
+
+    (A) AUTHOR-MATCH changes the verdict at 0 of 24 real fire starts.
+    (B) CEILING       changes the verdict at 1 of 24 real fire starts.
