@@ -392,3 +392,24 @@ and *"CENSUS float-shaped tokens … ALTERED by a binary-double round trip 0"*.
 4. **T406's "12 and 12" and "all seven pre-T391 vectors" are both understated** (18/18 and
    fourteen). Recorded here and in the `graded_against` note; the review file itself is
    unmerged and uncorrected.
+
+---
+
+## 10. `main` MOVED WHILE I WORKED — re-checked, and it changes nothing
+
+`main` went `8a5a2e54` → **`d3b93690`** during this task (T393/T402/T398/T414 recorded,
+T423–T427 filed). I re-checked rather than assuming:
+
+```
+git diff --stat 8a5a2e54 main -- nexus/ .softhouse/conformance.sh .softhouse/vectors/
+    (EMPTY)
+git show main:.softhouse/conformance.sh | grep -n '^EXEMPTION_PIN_LEDGER_WRONGIMPLS='
+    4476:EXEMPTION_PIN_LEDGER_WRONGIMPLS=15
+git merge-tree --write-tree main HEAD    -> exit 0, tree 37f323a6, ZERO conflicts
+```
+
+The move touched **no Go source, no vector and not the bar** — only handoffs, reviews,
+`patterns.md` and `tasks.json`. So the pin is still at `:4476` on `main`, my by-name move
+still lands on it, and `out/T421-BAR-05-FINAL-clean-tree.txt` remains representative of the
+merge result. `merge-tree` is read-only: no scratch worktree was created and `main` was never
+touched.
