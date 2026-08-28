@@ -105,7 +105,7 @@ open(p, "w").write(s.replace(old, new))
 print("  applied")
 PY
 
-mutate S "the SURPLUS guard reverted to T305's `left != 0` — a shortfall reported as a negative surplus" <<'PY'
+mutate S "the SURPLUS guard reverted to T305's  left != 0  — a shortfall reported as a negative surplus" <<'PY'
 import sys
 p = sys.argv[1]; s = open(p).read()
 old = "			if left > 0 {\n				surplus = append(surplus, text)"
