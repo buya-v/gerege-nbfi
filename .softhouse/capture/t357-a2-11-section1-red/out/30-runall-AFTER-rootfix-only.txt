@@ -1,53 +1,25 @@
 ############ A2-11 independent review of A2-7 — full transcript
-generated 2026-08-28T07:14:20Z
+generated 2026-08-28T06:54:23Z
 
 READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
-exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
-that should hold. Every failing assertion is printed by name, and the VERDICT block at
-the end compares every section against the exit code adjudicated for it.
+exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-8 assert things
+that should hold. Every failing assertion is printed by name.
 
-############ HISTORY OF THIS FILE — three corrections, each by measurement
-
-T270. Section 8 used to run a SUPERSEDED prover that could not fail. Bytes preserved,
-execution stopped; the successor is READ from the register. See section 8.
-
-T270 also recorded that sections 2, 4, 5, 6 and 7 ABORTED with a traceback, because
+STALENESS NOTICE ADDED BY T270 -- READ IT BEFORE READING ANY EXIT CODE BELOW.
+The committed TRANSCRIPT-A2-11.txt (generated 2026-08-21T08:11:39Z) records sections
+3-8 all at exit=0. That is NO LONGER what this script produces, and the earlier
+sentence claiming 'all of them exit 0' was removed because it had become false.
+MEASURED on 2026-08-28: sections 2, 4, 5, 6 and 7 abort with a traceback, because
 enumerate-corpus.py:22, verify-manifest-independently.py:21, audit-float.py:18,
 prove-resolve7-float-red.py:33 and prove-a2-7-guards-are-falsifiable.py:19 each
-hard-coded ROOT/RIG to the RETIRED worktree path .../agent-a3ac3d56d665ff7da. T270
-left them alone, calling the repair a separate decision.
+hard-code ROOT/RIG to the RETIRED worktree path .../agent-a3ac3d56d665ff7da, which
+no longer exists. So the committed transcript is ALREADY not re-derivable from this
+script -- that is a statement about a measurement, not an assumption.
+Those five failures are LOUD (a traceback, exit 1) and are left alone here: fixing
+the hard-coded roots means editing scripts that produced committed evidence, which
+is a separate decision. T270 removed only the SILENT one -- see section 8.
 
-T357 MADE THAT DECISION AND REPAIRED THEM. Each of the five now derives its root from
-__file__ (parents[3] IS the checkout root), with an A2_11_ROOT env override. The
-substitution was chosen because it is OUTPUT-NEUTRAL in the worktree that produced the
-committed evidence — in agent-a3ac3d56d665ff7da, parents[3] resolved to exactly that
-path — so it RESTORES re-derivability rather than altering the record. That is a
-MEASUREMENT, not a hope: T357 diffed the regenerated transcript against the committed
-one section by section, and sections 1, 2, 3, 6 and 7 came back IDENTICAL, including
-section 2's three findings against A2-7. Sections 4 and 5 differ, for a stated reason
-given at each site: both enumerate the CURRENT capture rig, which has grown since A2-7.
-Section 8 differs because T270 changed it. Evidence:
-.softhouse/capture/t357-a2-11-section1-red/out/40-section-diff-committed-vs-rootfix.txt
-
-T357 also corrected the SECTION 1 LABEL, which read '[ORACLE] live re-observation' and
-was wrong twice: check-shape.py imports only json, sys, decimal and pathlib and replays
-committed bytes under obs/. It never contacts the oracle. In a program that grades
-provenance, a section advertising an offline replay as a live observation is a false
-provenance claim. The corrected label is now itself PROVED, in section 9, from the
-AST — not swapped for a second unchecked adjective.
-
-############ 1. contract shape, replayed OFFLINE from A2-11's committed obs/ bytes
-############    [NO ORACLE CONTACTED — proved from the AST in section 9]
-
-EXPECTED RC 1. This section is PERMANENTLY AND CORRECTLY RED, with three named
-failures, and has been since it was committed on 2026-08-21. They are the executable
-form of A2-11's finding F-1 / patterns.md P-46: A2-7 printed three FABRICATED lines
-claiming the collection-valued mapping fields come back 'present with the value null',
-reasoned a contract rule from them, and fed that rule to the coder A2-8. The lines are
-not in any capture. The oracle omits a null field on the read path. Section 9
-ADJUDICATES this RED and goes red itself if a FOURTH failure ever appears, or if any
-of the three ever disappears.
-
+############ 1. contract shape, from A2-11's OWN live re-observation  [ORACLE]
 === (a) write/read field-name asymmetry on GET /loanproducts/46 ===
   accountingMappings keys: ['fundSourceAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
   PASS  all nine WRITE names present in the POST body and NONE of them in the read
@@ -116,8 +88,6 @@ FAILURES: 3
 exit=1
 
 ############ 2. corpus enumeration at A2-7's fork point (offline, counts its skips)
-############    EXPECTED RC 1 — asserts A2-7's claims; three of them are refuted.
-############    Reproduces the committed transcript IDENTICALLY after T357's root fix.
 === corpus at the fork sha 12a7f8d9a3af ===
   327 files under out/, by extension: {'http': 108, 'json': 108, 'status': 108, 'txt': 3}
 
@@ -181,7 +151,7 @@ FAILURES: 3
   - CLAIM 2b — all four are ASSET
 exit=1
 
-############ 3. double-entry in INTEGER MINOR UNITS (offline)   EXPECTED RC 0
+############ 3. double-entry in INTEGER MINOR UNITS (offline)
 === A2-7's committed A2-235 (A2-235-je-after-recovery.json) ===
     je#11   DEBIT  1200000.000000 ->    120000000 minor units  gl 10201
     je#12   CREDIT 1200000.000000 ->    120000000 minor units  gl 10300
@@ -229,17 +199,6 @@ FAILURES: 0
 exit=0
 
 ############ 4. manifest, hashes RECOMPUTED not trusted (offline)
-############    EXPECTED RC 1 — and the reason is DRIFT, not a defect.
-
-This section pins counts taken AT A2-7'S MOMENT (a 571-entry manifest, 141 added over
-the 430 at the fork sha). The rig has been added to by many tasks since, so it now
-holds 1139, and the count assertions necessarily fail. That is the section measuring
-the passage of time, not finding a defect. READ THE THIRD ARM INSTEAD, which is the
-one that matters: of the 430 files that existed at the fork sha, 428 are still
-BYTE-IDENTICAL, 0 are missing, the current manifest agrees with disk on all 430 (no
-laundering), and the 2 that differ are NAMED — CAPTURE-PLAN.md and cap.sh, which are
-rig tooling and a plan document. NO CAPTURED ORACLE OBSERVATION under out/ or req/ has
-been mutated. If that ever stops being true, this section will say so by name.
 === 0. the baseline is a LITERAL sha, and it is A2-7's real fork point (P-24) ===
   PASS  prove-a2-7-additive.py hard-codes the literal sha
   PASS  prove-a2-7-additive.py contains NO `git merge-base` anywhere
@@ -290,9 +249,7 @@ FAILURES: 3
   - all 430 pre-existing files are byte-identical to the fork sha
 exit=1
 
-############ 5. P-25 float audit of A2-7's scripts (offline)   EXPECTED RC 0
-############    Enumerates the CURRENT rig, so its file list grows over time; the
-############    VERDICT is the flag count, and A2-7's two flagged files are stable.
+############ 5. P-25 float audit of A2-7's scripts (offline)
 === files A2-7 ADDED that are Python (from the literal fork sha, three dots) ===
    .softhouse/capture/tierA-a2/analyze7.py
    .softhouse/capture/tierA-a2/mkreq7.py
@@ -368,7 +325,7 @@ SUMMARY
   whole-rig Python with a float defect : 9 ['.softhouse/capture/tierA-a2/audit-req-float-roundtrip.py', '.softhouse/capture/tierA-a2/mkje-a2-29.py', '.softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py', '.softhouse/capture/tierA-a2/prove-quit-trap-a226.py', '.softhouse/capture/tierA-a2/prove-quit-trap-cap.py', '.softhouse/capture/tierA-a2/prove-quit-trap-cap9.py', '.softhouse/capture/tierA-a2/prove-resolve8-float-red.py', '.softhouse/capture/tierA-a2/resolve7.py', '.softhouse/capture/tierA-a2/verify-provenance-a2-15.py']
 exit=0
 
-############ 6. resolve7.py P-25 defect, driven RED (offline)   EXPECTED RC 0
+############ 6. resolve7.py P-25 defect, driven RED (offline)
 === CONTROL: A2-7's ACTUAL template has an INTEGER principal, so THIS run was unharmed ===
   PASS  a2-7-loan-220.json principal is an int, not a decimal literal
           principal=1200000 (int)
@@ -400,7 +357,7 @@ exit=0
 FAILURES: 0
 exit=0
 
-############ 7. are A2-7's 16 assertions falsifiable? (offline, sabotage)   EXPECTED RC 0
+############ 7. are A2-7's 16 assertions falsifiable? (offline, sabotage)
 === BASELINE: the unmutated prover on an unmutated copy ===
   exit=0  ok=16  FAIL=0   last line: 16 assertions, 0 failed
   PASS  baseline: exit 0 and exactly 16 assertions, none failed
@@ -448,7 +405,7 @@ FAILURES: 0
 exit=0
 
 ############ 8. the float property A2-7's guard prover claimed — RUN FROM ITS
-############    REPLACEMENT, because the original could not fail (offline)  EXPECTED RC 0
+############    REPLACEMENT, because the original could not fail (offline)
 
 T270. Until this change, this section ran prove-mkreq7-guard-red.py unmodified and
 printed 'ok  it parses JSON numbers as Decimal' / '16 assertions, 0 failed' / exit=0.
@@ -539,121 +496,3 @@ prove-mkreq7-guard-red.py carried 16 assertions. guard-parse-float-ast.py replac
 only the 3 in its analyze7.py float arm. The other 13 — mkreq7.py's D-1 refusal
 behaviour and resolve7.py's four refusals — are re-run by NOTHING today. They are
 recorded as an open follow-up in the T270 handoff, not silently absorbed.
-
-############ 9. ADJUDICATE section 1's permanent RED (offline)   EXPECTED RC 0
-############    T357. Section 1 has been RED with three named failures since the day
-############    it was written and NOBODY READ THEM. This section pins those three,
-############    proves section 1 is offline and deterministic from the AST, and
-############    MEASURES whether any of them touches a vector graded by
-############    conformance.sh. It goes RED on a fourth failure or a vanished one.
-=== 1. section 1 is OFFLINE — proved from check-shape.py's AST, not from its prose ===
-    run-all.sh advertised this section as '[ORACLE] live re-observation'. It is
-    neither. It replays committed bytes under obs/. Proving that is what makes the
-    corrected label a measurement instead of a second unchecked adjective.
-  PASS  check-shape.py contains NO route to the network (AST-walked: imports, attribute calls, URL literals)
-          hits=[]
-  PASS  check-shape.py's whole import set is {json, sys, decimal, pathlib}
-          ['decimal', 'json', 'pathlib', 'sys']
-
-=== 2. and it is DETERMINISTIC — run twice, compare bytes ===
-  PASS  two consecutive runs of check-shape.py emit byte-identical stdout
-          len=5720 vs 5720
-  PASS  two consecutive runs of check-shape.py return the same exit code
-          rc=1 vs 1
-
-=== 3. the verdict: exit 1, and EXACTLY the three adjudicated failures ===
-  PASS  check-shape.py exits 1 (RED)
-          rc=1
-  PASS  it declares a failure COUNT and names that many
-          declared=3 named=3
-  PASS  NO UNADJUDICATED FAILURE — a fourth failure here is a NEW defect and must be read, not absorbed
-          unexpected=[]
-  PASS  all three adjudicated failures are STILL PRESENT — losing one would mean the checker was edited into agreeing with the fabricated A2-7 claim (P-46)
-          missing=[]
-
-  ADJUDICATION of each, and it is the SAME for all three:
-    VERDICT   NOT a defect in the observed evidence. NOT a defect in the checker's
-              arithmetic. The checker asserts A2-7's REFUTED claim, and the RED is
-              the correct, intended verdict — the executable form of P-46 / A2-11 F-1.
-    EVIDENCE  T357 re-observed GET /loanproducts/{46,22,28} and /glaccounts/2 from the
-              LIVE reference oracle on fire 20260828-140005 and the bytes came back
-              BYTE-IDENTICAL to the committed obs/ files (sha256 match, 4 of 4). The
-              obs bytes are not stale and not corrupt. See
-              .softhouse/capture/t357-a2-11-section1-red/.
-    SOURCE    Fineract's read path serialises through GoogleGsonSerializerHelper,
-              which never calls serializeNulls() [VERIFIED: fineract-core/src/main/
-              java/org/apache/fineract/infrastructure/core/serialization/
-              GoogleGsonSerializerHelper.java — the ONLY serializeNulls() in
-              fineract-core + fineract-provider is CommandProcessingResultJson
-              Serializer.java:38, the COMMAND-RESULT serializer, not the read
-              serializer]. Gson omits null fields by default, so on the read path a
-              null-valued field is ABSENT — uniformly, for scalar mapping slots AND
-              for collection-valued mapping fields alike. A2-7's 'the collection-
-              valued mapping fields behave the opposite way: they are present with
-              the value null' is refuted at the source, not merely at the wire.
-    CONTRAST  Product 22 has a payment-channel override, and there
-              paymentChannelToFundSourceMappings IS present, as a LIST. Set -> present.
-              Unset -> absent. Never null. That is the rule the Go port must encode
-              (`omitempty` / pointer-vs-value), and it is P-46 rule 3.
-    MONEY     Checked and NEGATIVE: none of the three is about rounding, precision or
-              a float-shaped cell. check-shape.py parses every document with
-              parse_float=Decimal (:25, :47) and compares only ids, key sets and
-              strings. No money value is asserted anywhere in section 1, so the
-              MathContext(19, HALF_UP) admissibility rule is not engaged. This is a
-              WIRE-SHAPE finding, graded MATERIAL-TO-THE-PORT and IMMATERIAL-TO-THE-
-              CORPUS — see section 4, which measures the corpus half rather than
-              asserting it.
-
-=== 4. THE CORPUS QUESTION, MEASURED: does any of the three touch a GRADED vector? ===
-    Searched: every file under .softhouse/vectors/ (recursive), and .softhouse/
-    conformance.sh. Tokens: the three key names, 'accountingMappings', 'loanproduct',
-    and the capture files section 1 replays.
-      paymentChannelToFundSourceMappings     vectors=0  conformance.sh=False
-      feeToIncomeAccountMappings             vectors=0  conformance.sh=False
-      penaltyToIncomeAccountMappings         vectors=0  conformance.sh=False
-      accountingMappings                     vectors=0  conformance.sh=False
-      loanproduct                            vectors=0  conformance.sh=False
-      A2-211-read-product-nine-mandatory     vectors=0  conformance.sh=False
-      a2-11-get-loanproduct                  vectors=0  conformance.sh=False
-    (population searched: 69 files under .softhouse/vectors/, plus conformance.sh)
-  PASS  NO vector in the store, and no line of conformance.sh, mentions ANY of these tokens — the three failures touch NOTHING in the graded corpus
-          all zero
-  PASS  NO vector's provenance.capture_ref points at a loan-product read
-          23 distinct capture_ref values inspected; loan-product-shaped: []
-
-=== 5. NEGATIVE CONTROLS — P-22, each arm above driven RED on purpose ===
-  PASS  (a) a FOURTH failure is detected as UNADJUDICATED
-          unexpected=['  something nobody has adjudicated']
-  PASS  (b) an adjudicated failure that VANISHES is detected as missing
-          missing=['  penaltyToIncomeAccountMappings present and null']
-  PASS  (c) a section 1 that went GREEN is detected (rc==0 and all three missing)
-          declared=0
-  PASS  (d) a transcript with NO 'FAILURES:' line yields declared=None, not 0 — an aborted run is never read as a clean run
-          declared=None named=set()
-  PASS  (e) the offline prover TRIPS on a synthetic script that imports urllib and opens a URL
-          hits=["URL literal 'https://localhost:8443/x'", 'call .urlopen(', 'import urllib.request']
-  PASS  (f) the offline prover TRIPS on the subprocess+curl spelling too
-          hits=["URL literal 'https://localhost:8443/x'", 'call .run(', 'import subprocess']
-  PASS  (g) the offline prover does NOT trip on a genuinely offline script (the control discriminates, it does not just always fire)
-          hits=[]
-
-FAILURES: 0
-exit=0
-
-############ VERDICT — every section against its adjudicated exit code
-
-  SECTION   EXPECTED       ACTUAL    RESULT
-  1         1              1         as adjudicated
-  2         1              1         as adjudicated
-  3         0              0         as adjudicated
-  4         1              1         as adjudicated
-  5         0              0         as adjudicated
-  6         0              0         as adjudicated
-  7         0              0         as adjudicated
-  8         0              0         as adjudicated
-  9         0              0         as adjudicated
-
-  sections run: 9    deviations: 0
-  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
-  for it. Note that this INCLUDES sections 1, 2 and 4, which are adjudicated RED.
-  PASS here means 'the review reproduces', NOT 'A2-7 was right'.

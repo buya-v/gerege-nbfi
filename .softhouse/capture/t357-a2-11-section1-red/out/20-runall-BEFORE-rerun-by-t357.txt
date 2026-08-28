@@ -1,0 +1,281 @@
+############ A2-11 independent review of A2-7 — full transcript
+generated 2026-08-28T06:52:07Z
+
+READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
+exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-8 assert things
+that should hold. Every failing assertion is printed by name.
+
+STALENESS NOTICE ADDED BY T270 -- READ IT BEFORE READING ANY EXIT CODE BELOW.
+The committed TRANSCRIPT-A2-11.txt (generated 2026-08-21T08:11:39Z) records sections
+3-8 all at exit=0. That is NO LONGER what this script produces, and the earlier
+sentence claiming 'all of them exit 0' was removed because it had become false.
+MEASURED on 2026-08-28: sections 2, 4, 5, 6 and 7 abort with a traceback, because
+enumerate-corpus.py:22, verify-manifest-independently.py:21, audit-float.py:18,
+prove-resolve7-float-red.py:33 and prove-a2-7-guards-are-falsifiable.py:19 each
+hard-code ROOT/RIG to the RETIRED worktree path .../agent-a3ac3d56d665ff7da, which
+no longer exists. So the committed transcript is ALREADY not re-derivable from this
+script -- that is a statement about a measurement, not an assumption.
+Those five failures are LOUD (a traceback, exit 1) and are left alone here: fixing
+the hard-coded roots means editing scripts that produced committed evidence, which
+is a separate decision. T270 removed only the SILENT one -- see section 8.
+
+############ 1. contract shape, from A2-11's OWN live re-observation  [ORACLE]
+=== (a) write/read field-name asymmetry on GET /loanproducts/46 ===
+  accountingMappings keys: ['fundSourceAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
+  PASS  all nine WRITE names present in the POST body and NONE of them in the read
+  PASS  all nine READ names present in accountingMappings and NONE of them in the POST body
+  PASS      fundSourceAccountId (write, id 16) -> fundSourceAccount (read)  -- read id=16
+  PASS      incomeFromFeeAccountId (write, id 9) -> incomeFromFeeAccount (read)  -- read id=9
+  PASS      incomeFromPenaltyAccountId (write, id 10) -> incomeFromPenaltyAccount (read)  -- read id=10
+  PASS      incomeFromRecoveryAccountId (write, id 11) -> incomeFromRecoveryAccount (read)  -- read id=11
+  PASS      interestOnLoanAccountId (write, id 8) -> interestOnLoanAccount (read)  -- read id=8
+  PASS      loanPortfolioAccountId (write, id 4) -> loanPortfolioAccount (read)  -- read id=4
+  PASS      overpaymentLiabilityAccountId (write, id 6) -> overpaymentLiabilityAccount (read)  -- read id=6
+  PASS      transfersInSuspenseAccountId (write, id 17) -> transfersInSuspenseAccount (read)  -- read id=17
+  PASS      writeOffAccountId (write, id 13) -> writeOffAccount (read)  -- read id=13
+
+=== the read value is an OBJECT with exactly {id,name,glCode} ===
+  PASS    fundSourceAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    incomeFromFeeAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    incomeFromPenaltyAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    incomeFromRecoveryAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    interestOnLoanAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    loanPortfolioAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    overpaymentLiabilityAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    transfersInSuspenseAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    writeOffAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS  no 'type' key anywhere in accountingMappings
+  PASS  no 'usage' key anywhere in accountingMappings
+  PASS  no 'disabled' / 'manualEntriesAllowed' key anywhere in accountingMappings
+
+=== unmapped optional slots are ABSENT, not null ===
+  PASS    goodwillCreditAccount absent from accountingMappings
+  PASS    goodwillCreditAccount does not occur in the raw bytes at all
+  PASS    chargeOffExpenseAccount absent from accountingMappings
+  PASS    chargeOffExpenseAccount does not occur in the raw bytes at all
+  ... while the COLLECTION-valued mapping fields are PRESENT with value null:
+  FAIL    paymentChannelToFundSourceMappings present and null  -- '<absent>'
+  FAIL    feeToIncomeAccountMappings present and null  -- '<absent>'
+  FAIL    penaltyToIncomeAccountMappings present and null  -- '<absent>'
+
+=== product 22: sparse/slot-keyed, one extra key vs 46 ===
+  22 keys: ['fundSourceAccount', 'goodwillCreditAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
+  PASS    22 == 46's keys plus exactly {goodwillCreditAccount}
+  PASS    22 goodwillCreditAccount is gl 14 / glCode 50200  -- {'id': 14, 'name': 'Goodwill Credit', 'glCode': '50200'}
+  PASS    22 paymentChannelToFundSourceMappings is a non-empty LIST of {paymentType,fundSourceAccount}  -- [{"paymentType": {"id": 1, "name": "Money Transfer"}, "fundSourceAccount": {"id": 16, "name": "Fund Source Alternate", "glCode": "10300"}}]
+  PASS    22 DEFAULT fundSourceAccount is gl 2 (the retyped one), override is gl 16  -- default={'id': 2, 'name': 'Fund Source', 'glCode': '10100'}, override={'id': 16, 'name': 'Fund Source Alternate', 'glCode': '10300'}
+
+=== product 28: accrual shape, thirteen keys, three receivables ===
+  28 keys (13): ['fundSourceAccount', 'goodwillCreditAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'receivableFeeAccount', 'receivableInterestAccount', 'receivablePenaltyAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
+  PASS    28 accountingRule is accrual periodic  -- {'id': 3, 'code': 'accountingRuleType.accrual.periodic', 'value': 'ACCRUAL PERIODIC'}
+  PASS    28 has exactly thirteen keys  -- 13
+  PASS    28 carries the three receivables
+
+=== gl 2 is INCOME at the contract boundary, but products serve it silently ===
+  PASS    GET /glaccounts/2 glCode 10100, name 'Fund Source', type INCOME  -- 10100 / Fund Source / {'id': 4, 'code': 'accountType.income', 'value': 'INCOME'}
+  PASS    nameDecorated is '....Fund Source' (four dots per level)  -- '....Fund Source'
+  PASS    the GL read DOES expose type and usage as {id,code,value} objects
+  PASS    'hierarchy' is NOT returned by the GL REST read  -- ['description', 'disabled', 'glCode', 'id', 'manualEntriesAllowed', 'name', 'nameDecorated', 'parentId', 'tagId', 'type', 'usage']
+
+=== how many of the 26 products carry gl 2 in the DEFAULT FUND_SOURCE slot? ===
+  product ids: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 46]
+  PASS    the list holds 26 products, ids 1-24, 27, 28, 46  -- 27 products
+
+FAILURES: 3
+  -   paymentChannelToFundSourceMappings present and null
+  -   feeToIncomeAccountMappings present and null
+  -   penaltyToIncomeAccountMappings present and null
+exit=1
+
+############ 2. corpus enumeration at A2-7's fork point (offline, counts its skips)
+Traceback (most recent call last):
+  File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8fafef10a9f74aa/.softhouse/reviews/A2-11/enumerate-corpus.py", line 38, in <module>
+    paths = [p for p in git("ls-tree", "-r", "--name-only", FORK, "--", CAP + "/out").decode().split("\n") if p]
+  File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8fafef10a9f74aa/.softhouse/reviews/A2-11/enumerate-corpus.py", line 35, in git
+    return subprocess.run(["git", "-C", ROOT, *a], capture_output=True, check=True).stdout
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', '-C', '/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da', 'ls-tree', '-r', '--name-only', '12a7f8d9a3af4665fd5281a9f9c001d4f1276a53', '--', '.softhouse/capture/tierA-a2/out']' returned non-zero exit status 128.
+exit=1
+
+############ 3. double-entry in INTEGER MINOR UNITS (offline)
+=== A2-7's committed A2-235 (A2-235-je-after-recovery.json) ===
+    je#11   DEBIT  1200000.000000 ->    120000000 minor units  gl 10201
+    je#12   CREDIT 1200000.000000 ->    120000000 minor units  gl 10300
+    je#14   CREDIT  200000.000000 ->     20000000 minor units  gl 10201
+    je#15   DEBIT   200000.000000 ->     20000000 minor units  gl 10300
+    je#16   DEBIT  1000000.000000 ->    100000000 minor units  gl 50100
+    je#17   CREDIT 1000000.000000 ->    100000000 minor units  gl 10201
+    je#18   DEBIT    50000.000000 ->      5000000 minor units  gl 10300
+    je#19   CREDIT   50000.000000 ->      5000000 minor units  gl 40400
+    entries: 8   DEBIT total = 245000000 minor units   CREDIT total = 245000000 minor units
+  PASS  A2-7's committed A2-235 — every amount is a WHOLE number of minor units (no sub-minor residue)
+          []
+  PASS  A2-7's committed A2-235 — DEBIT == CREDIT in INTEGER minor units
+          debit=245000000 credit=245000000 delta=0
+  PASS  A2-7's committed A2-235 — both sides are exactly 245,000,000 minor units == MNT 2,450,000
+          debit=245000000 credit=245000000
+  PASS  A2-7's committed A2-235 — the totals are Python ints, not floats or Decimals
+          int / int
+
+=== A2-11's live re-observation (a2-11-get-je-loan5.json) ===
+    je#11   DEBIT  1200000.000000 ->    120000000 minor units  gl 10201
+    je#12   CREDIT 1200000.000000 ->    120000000 minor units  gl 10300
+    je#14   CREDIT  200000.000000 ->     20000000 minor units  gl 10201
+    je#15   DEBIT   200000.000000 ->     20000000 minor units  gl 10300
+    je#16   DEBIT  1000000.000000 ->    100000000 minor units  gl 50100
+    je#17   CREDIT 1000000.000000 ->    100000000 minor units  gl 10201
+    je#18   DEBIT    50000.000000 ->      5000000 minor units  gl 10300
+    je#19   CREDIT   50000.000000 ->      5000000 minor units  gl 40400
+    entries: 8   DEBIT total = 245000000 minor units   CREDIT total = 245000000 minor units
+  PASS  A2-11's live re-observation — every amount is a WHOLE number of minor units (no sub-minor residue)
+          []
+  PASS  A2-11's live re-observation — DEBIT == CREDIT in INTEGER minor units
+          debit=245000000 credit=245000000 delta=0
+  PASS  A2-11's live re-observation — both sides are exactly 245,000,000 minor units == MNT 2,450,000
+          debit=245000000 credit=245000000
+  PASS  A2-11's live re-observation — the totals are Python ints, not floats or Decimals
+          int / int
+
+=== A2-7's capture and my live re-observation must agree entry for entry ===
+  PASS  same entry ids, sides, amounts and GL codes
+          A2-7=[(11, 'DEBIT', '1200000.000000', '10201'), (12, 'CREDIT', '1200000.000000', '10300'), (14, 'CREDIT', '200000.000000', '10201'), (15, 'DEBIT', '200000.000000', '10300'), (16, 'DEBIT', '1000000.000000', '50100'), (17, 'CREDIT', '1000000.000000', '10201'), (18, 'DEBIT', '50000.000000', '10300'), (19, 'CREDIT', '50000.000000', '40400')]
+          A2-11=[(11, 'DEBIT', '1200000.000000', '10201'), (12, 'CREDIT', '1200000.000000', '10300'), (14, 'CREDIT', '200000.000000', '10201'), (15, 'DEBIT', '200000.000000', '10300'), (16, 'DEBIT', '1000000.000000', '50100'), (17, 'CREDIT', '1000000.000000', '10201'), (18, 'DEBIT', '50000.000000', '10300'), (19, 'CREDIT', '50000.000000', '40400')]
+
+FAILURES: 0
+exit=0
+
+############ 4. manifest, hashes RECOMPUTED not trusted (offline)
+=== 0. the baseline is a LITERAL sha, and it is A2-7's real fork point (P-24) ===
+Traceback (most recent call last):
+  File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8fafef10a9f74aa/.softhouse/reviews/A2-11/verify-manifest-independently.py", line 53, in <module>
+    src = open(ROOT + "/" + CAPREL + "/prove-a2-7-additive.py").read()
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da/.softhouse/capture/tierA-a2/prove-a2-7-additive.py'
+exit=1
+
+############ 5. P-25 float audit of A2-7's scripts (offline)
+Traceback (most recent call last):
+  File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8fafef10a9f74aa/.softhouse/reviews/A2-11/audit-float.py", line 23, in <module>
+    added = subprocess.run(
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', '-C', '/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da', 'diff', '--name-only', '--diff-filter=A', '12a7f8d9a3af4665fd5281a9f9c001d4f1276a53...softhouse/A2-7-capture-mandatory-accounts']' returned non-zero exit status 128.
+exit=1
+
+############ 6. resolve7.py P-25 defect, driven RED (offline)
+Traceback (most recent call last):
+  File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8fafef10a9f74aa/.softhouse/reviews/A2-11/prove-resolve7-float-red.py", line 44, in <module>
+    shutil.copy(os.path.join(RIG, "resolve7.py"), d)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/shutil.py", line 418, in copy
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/shutil.py", line 264, in copyfile
+    with open(src, 'rb') as fsrc, open(dst, 'wb') as fdst:
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da/.softhouse/capture/tierA-a2/resolve7.py'
+exit=1
+
+############ 7. are A2-7's 16 assertions falsifiable? (offline, sabotage)
+=== BASELINE: the unmutated prover on an unmutated copy ===
+Traceback (most recent call last):
+  File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8fafef10a9f74aa/.softhouse/reviews/A2-11/prove-a2-7-guards-are-falsifiable.py", line 50, in <module>
+    r, err = run_prover_with([])
+  File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8fafef10a9f74aa/.softhouse/reviews/A2-11/prove-a2-7-guards-are-falsifiable.py", line 34, in run_prover_with
+    shutil.copy(os.path.join(RIG, f), d)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/shutil.py", line 418, in copy
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/shutil.py", line 264, in copyfile
+    with open(src, 'rb') as fsrc, open(dst, 'wb') as fdst:
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da/.softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py'
+exit=1
+
+############ 8. the float property A2-7's guard prover claimed — RUN FROM ITS
+############    REPLACEMENT, because the original could not fail (offline)
+
+T270. Until this change, this section ran prove-mkreq7-guard-red.py unmodified and
+printed 'ok  it parses JSON numbers as Decimal' / '16 assertions, 0 failed' / exit=0.
+That arm is a WHOLE-FILE SOURCE GREP (`"parse_float=decimal.Decimal" in src`), and
+the token occurs twice in its target analyze7.py — at :39 in the code and at :6 in
+the file's OWN DOCSTRING. Delete the keyword from the CALL SITE and the assertion is
+still satisfied, by the prose. T164 reproduced that end to end and replaced the arm.
+
+T114 requires the BYTES of prove-mkreq7-guard-red.py be preserved, so that
+RED-GREEN-A2-7-guards.txt stays re-derivable from the script that made it. It does
+NOT require the file keep being EXECUTED as though it still graded something. Those
+are two different obligations. A superseded guard that still prints PASS is not
+preserved evidence, it is a trap — P-45 inverted: not a guard that never runs, but a
+NON-guard that always runs and always says PASS. Bytes unchanged; execution stopped.
+
+The successor is not named here. It is READ from the register, so this site cannot
+drift out of step with it, and a DELETED register line makes this section REFUSE
+rather than quietly fall back to the trap.
+
+SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> guard-parse-float-ast.py
+
+==============================================================================
+T164 -- json.load/loads call-site guard (AST, not source grep)
+==============================================================================
+ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8fafef10a9f74aa/.softhouse/capture/tierA-a2
+
+SELECTOR SELF-TEST: 4 synthetic call sites found across 4 alias shapes; 3 decoy line(s)
+  (`parse_float` in a docstring, a comment and a string literal -- all three invisible to the selector)
+
+DECLARATION REGISTER (PARSE-FLOAT-EXEMPT.txt) -- 6 record(s), every one printed, default-deny
+  ALLOW   prove-mkreq7-guard-red.py:70   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced RED-GREEN-A2-7-guards.txt; provenance: evidence NAMES its producer; git: tracked
+          reason: sandbox-only; reads mkreq7.py's own generated bodies inside tempfile.mkdtemp. MEASURED: 12 generated bodies, 0 JSON-float leaves, so the omission is non-material today.
+  ALLOW   prove-mkreq7-guard-red.py:119  FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced RED-GREEN-A2-7-guards.txt; provenance: evidence NAMES its producer; git: tracked
+          reason: sandbox-only; reads the resolver sandbox output {"clientId": 1, "productId": 46}. MEASURED: 0 JSON-float leaves; no float leaf is constructible from that document.
+  ALLOW   prove-mkreq7-guard-red.py:126  FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced RED-GREEN-A2-7-guards.txt; provenance: evidence NAMES its producer; git: tracked
+          reason: sandbox-only; same document as line 119. MEASURED: 0 JSON-float leaves.
+  ALLOW   resolve7.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced req/a2-7-loan-220-resolved.json; provenance: ASSERTED ONLY -- the evidence does not name its producer, so this field is a human claim the guard cannot verify; git: tracked
+          reason: MATERIAL: 117 req/*.json templates carry 11 JSON-float leaves (e.g. /debits/0/amount 100000.25). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+  ALLOW   resolve7.py:25   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced req/a2-7-loan-220-resolved.json; provenance: ASSERTED ONLY -- the evidence does not name its producer, so this field is a human claim the guard cannot verify; git: tracked
+          reason: MATERIAL: the 5 out/A2-21*.json observation files carry 12 JSON-float leaves (e.g. /principal 1200000.0). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+  ALLOW   verify-provenance-a2-15.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced PROVENANCE-A2-15.txt; provenance: ASSERTED ONLY -- the evidence does not name its producer, so this field is a human claim the guard cannot verify; git: tracked
+          reason: reads .softhouse/vectors/ledger/*.json. MEASURED: 6 vectors, 0 JSON-float leaves — every promoted money cell is a STRING (amount_major_text, amount_minor), so no money value passes through a binary double here.
+
+POPULATION -- both terms (P-67)
+  Python files inspected .................. 35
+  json.load/loads CALL SITES inspected .... 21
+  ... carrying parse_float= ............... 15
+  ... carrying parse_float=float (a dodge)  0
+  ... declared in the register ............ 6
+  ... VIOLATIONS .......................... 0
+
+parse_float= VALUE EXPRESSIONS ACTUALLY PASSED (6 distinct) -- listed so a reader can audit them, not allowlisted
+  D                  1 site(s): census-a2-26.py:49
+  JsonNumber         2 site(s): resolve8.py:101, resolve8.py:265
+  _Raw               1 site(s): prove-resolve8-float-red.py:107
+  decimal.Decimal    9 site(s): a2-29-retype-path.py:25, analyze7.py:39, audit-req-float-roundtrip.py:226, audit-req-float-roundtrip.py:236, mkje-a2-29.py:42, mkje-a2-29.py:151, prove-mkreq7-guard-red.py:148, prove-resolve8-float-red.py:152, show.py:14
+  hook('float')      1 site(s): audit-req-float-roundtrip.py:65
+  str                1 site(s): prove-t275-reissue.py:242
+
+EVERY CALL SITE, GRADED
+  ok          a2-29-retype-path.py            :25   json.loads  parse_float=decimal.Decimal
+  ok          analyze7.py                     :39   json.load   parse_float=decimal.Decimal
+  ok          audit-req-float-roundtrip.py    :65   json.loads  parse_float=hook('float')
+  ok          audit-req-float-roundtrip.py    :226  json.loads  parse_float=decimal.Decimal
+  ok          audit-req-float-roundtrip.py    :236  json.loads  parse_float=decimal.Decimal
+  ok          census-a2-26.py                 :49   json.loads  parse_float=D
+  ok          mkje-a2-29.py                   :42   json.loads  parse_float=decimal.Decimal
+  ok          mkje-a2-29.py                   :151  json.loads  parse_float=decimal.Decimal
+  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :70   json.loads  parse_float=MISSING
+  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :119  json.load   parse_float=MISSING
+  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :126  json.load   parse_float=MISSING
+  ok          prove-mkreq7-guard-red.py       :148  json.loads  parse_float=decimal.Decimal
+  ok          prove-resolve8-float-red.py     :107  json.loads  parse_float=_Raw
+  ok          prove-resolve8-float-red.py     :152  json.loads  parse_float=decimal.Decimal
+  ok          prove-t275-reissue.py           :242  json.load   parse_float=str
+  DECLARED FROZEN-T114 resolve7.py                     :24   json.load   parse_float=MISSING
+  DECLARED FROZEN-T114 resolve7.py                     :25   json.load   parse_float=MISSING
+  ok          resolve8.py                     :101  json.loads  parse_float=JsonNumber
+  ok          resolve8.py                     :265  json.loads  parse_float=JsonNumber
+  ok          show.py                         :14   json.load   parse_float=decimal.Decimal
+  DECLARED FROZEN-T114 verify-provenance-a2-15.py      :24   json.load   parse_float=MISSING
+
+PASS -- 21 call site(s) across 35 file(s): 15 carry parse_float=, 6 are declared and their preconditions hold, 0 violations.
+exit=0
+
+NOT COVERED BY THE REPLACEMENT, STATED SO THIS IS NOT READ AS EQUIVALENT (P-40):
+prove-mkreq7-guard-red.py carried 16 assertions. guard-parse-float-ast.py replaces
+only the 3 in its analyze7.py float arm. The other 13 — mkreq7.py's D-1 refusal
+behaviour and resolve7.py's four refusals — are re-run by NOTHING today. They are
+recorded as an open follow-up in the T270 handoff, not silently absorbed.
