@@ -3295,7 +3295,7 @@
     {
       "id": "T277",
       "title": "SALVAGE from the rejected T241 branch: the corpus re-bucketing, and the FALSE shape law still live in main's gates.md at :2298",
-      "status": "in_progress",
+      "status": "merged",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -3314,7 +3314,7 @@
       "acceptance": "The seven cells independently re-derived in integer minor units from raw schedules with a fresh instrument, and either reproduced (law re-scoped, block true about main) or refuted (with the measurement that refutes it); exception set checked against gap 2 at gates.md:1868 and against the 76 delta=0 cells; re-bucketing landed as a RE-RUNNABLE instrument; zero float anywhere; conformance.sh, DEC-n and vectors/ untouched.",
       "branch": "softhouse/T277-shapelaw-salvage",
       "dispatched_at": "2026-08-27T17:26:19Z",
-      "note": "DISPATCHED by fire 20260828-080001 batch 1, resuming rescued WIP (not rebuilding). Sole writer of its files this batch; see .softhouse/RESUME.md sole-writer table. Baseline on main measured GREEN before dispatch: exit 0, probe line PRESENT and up, 46 vectors / 7884 cells, 11/11 wrong impls dead. Previous attempt was killed by a five_hour rate limit, NOT by a defect. worker killed mid-flight by fire 20260827-230001 -- OBSERVED: this wrapper stopped its own driver and is reconciling its own dispatches. -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit with live workers', item "
+      "note": "MERGED at e8374743 by fire 20260828-080001. The seven cells REPRODUCED by a second instrument written from scratch (importing neither T264's scripts nor the cloud's rederive_t241.py): law (ii) holds 213/220, the exception set is EXACTLY the seven, all delta=1, all satisfying the block's own FULL family B antecedent, T159-R600p0-N2000-B999 repaying 166 minor units against a predicted 0. Disjointness HOLDS and the exception set IS gap 2, checked amount-for-amount not by counting to seven twice. The :1868 citation was 480 lines wrong (gap 2 is at :2349) -- P-86 landing on the task that cites it. Driver re-verified independently: scope clean, the worker's own verifier re-run from a detached worktree with 5 positives PASS and all 4 negatives TRIPPED, and an AST float scan whose 2 hits were both the float DETECTOR naming the type it detects (FU-T277-7 -- the false positive generalises to any such scanner). Bar exit 0, probe PRESENT and up, 46 vectors, 11/11 dead, no delta."
     },
     {
       "id": "T278",
