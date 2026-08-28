@@ -1,0 +1,22 @@
+99:conformance:   frontier == pinned (all 11 rows, by path).
+117:conformance:   P-number citations: VERDICT PASS (evidence-zone drift is REPORTED, never
+119:conformance:   ACCEPTING-SIDE GAP: accepting opening-balance vector found: LDG-05-openingbalance-accepted-empty-ledger.json
+140:conformance:   T316-DEADPATH-CENSUS: corpus=1302 deadFiles=76 deadOccurrences=109 resolving=1219 indeterminate=87 prose=320
+144:conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+219:        the count above, so a run with NO implementation registered — 0 cells compared — printed
+246:        is inadmissible, because a rig that silently rounded it would grade the port against a
+402:    LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     PASS             27 cells (8 money)
+420:    ledger inadmissible     0
+422:    ledger cells compared   142 graded, of which 39 are MONEY cells in int64 minor units
+449:          WHY NOT: NOT GRADED BY ANY VECTOR IN THIS STORE. The four parity vectors assert a
+466:          inadmissible today (A2-314, 403). An accrual vector needs a NEW accrual product on
+541:    parity vectors          PASS 46   FAIL 0
+545:    inadmissible            0
+547:    cells compared          7884 graded, 93 ungraded (never recorded by the capture)
+563:VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+573:conformance:   exemption census READ: LEDGER parity vectors        = 7 == pinned 7
+574:conformance:   exemption census READ: LEDGER oracle-refusal vector = 6 == pinned 6
+575:conformance:   exemption census READ: LEDGER money cells compared  = 39 == pinned 39
+592:conformance:   all 13 wrong ledger implementations DIED through this harness, not by hand.
+593:EXIT=0
+594:SECONDS=72
