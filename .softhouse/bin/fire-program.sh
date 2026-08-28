@@ -37,6 +37,88 @@ for a in "$@"; do
   esac
 done
 
+# ================================================================ T301 ============
+# RUN FROM AN IMMUTABLE SNAPSHOT OF THIS FILE.
+#
+# WHY, MEASURED. zsh does not slurp a script; it goes back to the file for more input
+# as it executes. T301 measured how far ahead it has read when it blocks: about
+# 7.6 KB [.softhouse/capture/t301-wrapper-self-modification/probe-source-and-shift.txt,
+# PART 3b]. This file is ~124 KB and the multi-hour `wait` on the driver sits at byte
+# ~66,000, so roughly 50 KB of it is UNREAD for the entire fire -- and that 50 KB is not
+# inert filler. It is `run_exit_guard`, `reconcile_tasks_json`, `wt_prune_blindspot_check`
+# and the worktree-prune sweep that calls `git worktree remove`. Corrupt a byte there and
+# the failure is not "the fire crashes", it is "the classifier that decides what to
+# DELETE was rewritten under us".
+#
+# WHAT ACTUALLY HAPPENS ON AN IN-PLACE EDIT, MEASURED. Not a clean line-boundary swap.
+# T301 PART 3b swapped ORIG->MARK, four characters for four, so nothing shifted at all,
+# and still caught a SPLICE at the read boundary: the row that straddled it executed as
+#     ROW 0291 ORIK
+# -- three bytes from the file the shell started with, the rest from the file on disk
+# after the edit. It fell inside a quoted string there so it printed harmlessly. Inside a
+# command name, a variable, an `if`/`fi` or a heredoc delimiter it is a syntax error or,
+# worse, a DIFFERENT COMMAND. [probe-source-and-shift.txt, PART 3b, verbatim rows.]
+#
+# WHY THIS IS NOT ALREADY SOLVED BY GIT. It nearly is, and that is worth stating plainly
+# rather than overselling the fix. A shell holds an fd on an INODE, so only a writer that
+# keeps the inode can reach it. T301 measured 17 writers + both Claude Code file tools
+# [probe-writer-inode.txt]:
+#   ISOLATED (new inode): git merge / checkout -- <path> / pull --ff-only / reset --hard /
+#     stash pop / apply / checkout-index / restore; sed -i '' (BSD); mv; install; patch;
+#     Claude Code Write; Claude Code Edit.
+#   IN PLACE (same inode, CAN REACH A RUNNING FIRE):
+#     cat > file    python open(path,"w")    >> append    tee file    cp src dst
+#     dd conv=notrunc    ex -s
+# So landing a branch is safe, and always was. The residual is the second list, and it is
+# not hypothetical: `cp` is what a human reaches for ("copy the fixed wrapper over the
+# live one"), it is the dangerous half of the cp/mv pair, and agents in this pipeline run
+# under instructions that PREFER `cat > file` heredocs to the (isolated) Write tool.
+# P-45 -- "a guard that only works when someone remembers to run it enforces nothing" --
+# is the whole argument against leaving this as the convention "never edit the live path".
+# Fifteen lines of `cp` + `exec` turn that convention into a mechanism.
+#
+# THE COSTS, AND HOW EACH IS PAID.
+#   * `${0:A:h}` resolved SCRIPT_DIR against this script's own path, and SCRIPT_DIR
+#     locates lib-worktree-prune.zsh, branch_sweep.py, ready-tasks.py and
+#     ../guards/repo-state-attest.sh. Running from /tmp would break all four. So the
+#     ORIGINAL directory is pinned into FIRE_SCRIPT_DIR before the exec and SCRIPT_DIR
+#     reads it back below. Nothing else in this file uses $0.
+#     (Those four are not exposed to the hazard anyway: a sourced zsh file is read and
+#     parsed entirely by `source` and a later edit -- in place OR renamed -- cannot reach
+#     it [probe-source-and-shift.txt, PART 1], and python compiles a whole module before
+#     running it. Only THIS file is read incrementally.)
+#   * The re-exec loop is guarded by FIRE_SNAPSHOT_OF, which only the exec'd copy sees.
+#   * FAIL-OPEN, deliberately: if mktemp or cp fails we log it loudly and run from the
+#     repo copy exactly as before. A fire that refuses to start because /tmp is full
+#     would be a worse bug than the one being fixed, and the failure is visible at
+#     second zero of the log rather than silently hours in.
+#   * Stale snapshots from earlier fires are swept below. The CURRENT one is left on
+#     disk; it is ~124 KB and the running shell needs it.
+#
+# ALTERNATIVE REJECTED: "forbid merging bin/ changes from inside a fire, hand them to the
+# cloud fire or a human." It is unnecessary (git renames; measured) AND unenforceable
+# (P-45 again), so it buys nothing and costs a rule someone must remember. It would also
+# have blocked this fire's own T324 and T325 wrapper landings, which were correct.
+FIRE_SCRIPT_DIR="${FIRE_SCRIPT_DIR:-${0:A:h}}"
+FIRE_REPO_SCRIPT="${FIRE_REPO_SCRIPT:-${0:A}}"
+FIRE_SNAPSHOT_NOTE=""
+if [[ -z "${FIRE_SNAPSHOT_OF:-}" && "${FIRE_NO_SNAPSHOT:-0}" != "1" ]]; then
+  # sweep snapshots older than a day from fires that are long gone
+  /usr/bin/find "${TMPDIR:-/tmp}" -maxdepth 1 -name 'fire-wrapper-snap.*' -type d -mtime +1 \
+    -exec /bin/rm -rf {} + 2>/dev/null || true
+  _t301_dir="$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/fire-wrapper-snap.XXXXXX" 2>/dev/null)" || _t301_dir=""
+  if [[ -n "$_t301_dir" && -r "${0:A}" ]] && /bin/cp "${0:A}" "$_t301_dir/fire-program.sh" 2>/dev/null; then
+    /bin/chmod +x "$_t301_dir/fire-program.sh" 2>/dev/null
+    export FIRE_SNAPSHOT_OF="${0:A}"
+    export FIRE_SCRIPT_DIR FIRE_REPO_SCRIPT
+    exec /bin/zsh "$_t301_dir/fire-program.sh" "$@"
+    # not reached; if exec itself failed zsh has already died with an error
+  fi
+  FIRE_SNAPSHOT_NOTE="SNAPSHOT FAILED (mktemp/cp under ${TMPDIR:-/tmp}) — running directly from the repo copy, which an IN-PLACE writer (cat >, cp, tee, >>, python open(w)) could still reach mid-fire"
+  print -u2 "WARN: $FIRE_SNAPSHOT_NOTE"
+fi
+# ==================================================================================
+
 mkdir -p "$LOG_DIR"
 STAMP="$(date +%Y%m%d-%H%M%S)"
 FIRE_START_EPOCH=$(date +%s)
@@ -52,7 +134,11 @@ log "fire start — repo=$REPO probe=$PROBE_ONLY force=$FORCE log=$LOG"
 # against the script's own path (before the `cd "$REPO"` below moves us),
 # so this works whether fire-program.sh was invoked with a relative or
 # absolute path.
-SCRIPT_DIR="${0:A:h}"
+# T301: pinned before the snapshot re-exec above, so this still points at the REPO's
+# bin/ directory even though $0 now names a copy under $TMPDIR. When no snapshot was
+# taken FIRE_SCRIPT_DIR was set from ${0:A:h} a few lines above, so the value is
+# identical to what this line produced before T301.
+SCRIPT_DIR="${FIRE_SCRIPT_DIR:-${0:A:h}}"
 
 # T309 -- WHICH BYTES IS THIS FIRE ACTUALLY RUNNING?
 # T301 exists because a branch that changed THIS FILE was landed while a fire was live,
@@ -75,13 +161,33 @@ SCRIPT_DIR="${0:A:h}"
 #     asserts the content actually changed, because the first draft passed vacuously].
 # CONSEQUENCE: landing a branch that edits this file while a fire is live is SAFE; the
 # live fire finishes on the bytes it started with. What is NOT safe is an IN-PLACE
-# rewrite of the live path -- `sed -i ''`, `cat > fire-program.sh`, a python
-# `open(path,"w")`, or an editor that saves without an atomic rename. Do not do that to a
-# checkout that has a fire running in it; edit in a worktree and land it through git.
+# rewrite of the live path. T301 CORRECTS THE LIST THIS COMMENT USED TO GIVE, because
+# two of its four entries were asserted rather than measured
+# [.../t301-wrapper-self-modification/probe-writer-inode.txt]:
+#   * `sed -i ''` on this host does NOT rewrite in place -- BSD sed writes a temp file
+#     and renames, so it is ISOLATED. It was named here as dangerous and is not.
+#   * `cp src dst` IS in place and was NOT named. So are `tee`, `>>` and `ex -s`.
+#     `cp` is the one that bites: "copy the fixed wrapper over the live one" is the
+#     natural thing to type and it is the dangerous half of the cp/mv pair.
+# Since T301 this is belt AND braces: the fire re-execs from a snapshot under $TMPDIR
+# (see the T301 block above), so even an in-place writer against the repo path cannot
+# reach the running interpreter. Still edit in a worktree and land it through git -- the
+# snapshot protects the RUNNING fire, not the next one.
 if [[ -r "${0:A}" ]]; then
   log "wrapper identity: path=${0:A} inode=$(/usr/bin/stat -f %i "${0:A}" 2>/dev/null || print '?') sha256=$(/usr/bin/shasum -a 256 "${0:A}" 2>/dev/null | cut -c1-16 || print '?') bytes=$(/usr/bin/stat -f %z "${0:A}" 2>/dev/null || print '?')"
 else
   log "WARN: could not read this script's own bytes at ${0:A} -- the version of the wrapper this fire ran is UNRECORDED"
+fi
+# T301 -- the line above now identifies a copy under $TMPDIR, which is the honest answer
+# to "which bytes is this fire running" but loses the answer to "which commit is that".
+# So log the REPO copy too, and say which mode we are in. If the snapshot failed, say
+# that here as well rather than only on stderr before the log existed.
+if [[ -n "${FIRE_SNAPSHOT_OF:-}" ]]; then
+  log "wrapper snapshot: RUNNING FROM A SNAPSHOT — repo copy=$FIRE_SNAPSHOT_OF inode=$(/usr/bin/stat -f %i "$FIRE_SNAPSHOT_OF" 2>/dev/null || print '?') sha256=$(/usr/bin/shasum -a 256 "$FIRE_SNAPSHOT_OF" 2>/dev/null | cut -c1-16 || print '?') bytes=$(/usr/bin/stat -f %z "$FIRE_SNAPSHOT_OF" 2>/dev/null || print '?'); the repo copy is now free to be modified by the fire this wrapper is about to start"
+elif [[ -n "${FIRE_SNAPSHOT_NOTE:-}" ]]; then
+  log "WARN: wrapper snapshot: $FIRE_SNAPSHOT_NOTE"
+else
+  log "wrapper snapshot: DISABLED by FIRE_NO_SNAPSHOT=1 — this fire reads its own bytes from the repo path for its whole life"
 fi
 
 source "$SCRIPT_DIR/lib-worktree-prune.zsh" || { log "FATAL: could not source lib-worktree-prune.zsh"; exit 1; }
