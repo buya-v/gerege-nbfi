@@ -97,7 +97,7 @@ HEADER = """\
 # generated at runtime and will never be tracked.
 #
 # -------------------------------------------------------------------------------------------
-# THE ROWS FOLDED IN BY T326, EACH INSPECTED. The pin moved from 98 rows to 106.
+# THE ROWS FOLDED IN BY T326, EACH INSPECTED. The pin moved from 98 rows to 107.
 # -------------------------------------------------------------------------------------------
 # +4  T305's red drive `red-drive-conformance-guard.sh`. Carried since T323 in
 #     `DEADPATH_T323_RECONCILE_LIST` in conformance.sh because the pin was outside T323's edit
@@ -123,6 +123,37 @@ HEADER = """\
 #
 # -0  Nothing was removed. The 24 host-dependent rows STAY, by the decision above, and they now
 #     stay in every condition rather than in some of them.
+#
+# +1  `.softhouse/reviews/T306/probe/inject-acceptance.py |
+#      .softhouse/vectors/ledger/ZZZ-T306-INJECTED-preclosure-acceptance.json`
+#     ARRIVED ON `main` WHILE T326 WAS RUNNING, in T306's merge, and THE GUARD CAUGHT IT ON THE
+#     FIRST BAR AFTER THE MERGE -- `REFUSED rows=107 pinned=106 added=1 removed=0`. That is the
+#     wired guard doing the job it was wired for, on a site nobody had told it about. It was
+#     INSPECTED ONCE, BY A HUMAN-EQUIVALENT READ OF THE SOURCE, before being pinned:
+#
+#       * the literal is joined onto `scratch`, which is `pathlib.Path(sys.argv[1]).resolve()`
+#         and is REQUIRED to be under `tempfile.gettempdir()` -- the script exits with
+#         "REFUSING to write" otherwise. So it is a path the probe CREATES AT RUN TIME inside a
+#         throwaway copy of the vector store, and it MUST NOT exist in the repo: the probe
+#         injects a deliberately-wrong vector, and a committed copy of that would be a poisoned
+#         store.
+#       * FUNCTIONAL by T323's test -- "CAN THE INSTRUMENT STILL DO ITS JOB IF THE LITERAL GOES
+#         AWAY?" -- no: it is the file the probe writes; without it the probe writes nothing.
+#       * SAME CLASS, byte for byte, as the four T305 rows above. Pinning it is the disposition
+#         T316's own header prescribes: "a SMELL that must be inspected once, by a human, and
+#         then either repaired or pinned WITH ITS REASON."
+#       * REPAIR WAS CONSIDERED AND IS NOT AVAILABLE. "Make the path resolve" means committing
+#         `ZZZ-T306-INJECTED-preclosure-acceptance.json` into `.softhouse/vectors/ledger/`,
+#         which would put a deliberately-wrong acceptance vector into the graded store. The
+#         other literal in the same file --
+#         `.softhouse/vectors/ledger/LDG-04-header-account-accepted.json` -- RESOLVES, which is
+#         why only one row arrived rather than two, and is the control that shows the census is
+#         reading this file correctly.
+#       * HOST-STABLE: the target is never tracked on any host, in any condition, because the
+#         script refuses to write it into a repo at all. Re-proved by the cross-host drive at
+#         107 rows in all four disk conditions.
+#     T306's file is NOT EDITED here: T306 is another worker's partition and the row is correct
+#     as written. Filed as FU-T326-7 so the next holder of that file knows the row exists.
 #
 # -------------------------------------------------------------------------------------------
 # A ROW IS NOT AN ACCUSATION. It records that an instrument names a path the repository does not
