@@ -6028,11 +6028,12 @@
       "dependencies": [
         "T390"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/reviews/t409-review-t390/"
       ],
-      "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
+      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "branch": "softhouse/T409-review-t390"
     },
     {
       "id": "T410",
@@ -6112,11 +6113,12 @@
       "dependencies": [
         "T398"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/reviews/t414/"
       ],
-      "note": "FILED BY THE DRIVER, iter4."
+      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "branch": "softhouse/T414-review-t398"
     },
     {
       "id": "T415",
