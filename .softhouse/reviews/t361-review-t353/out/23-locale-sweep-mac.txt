@@ -1,0 +1,24 @@
+T361 locale sweep — want on EVERY row:
+  valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1
+
+ok         C                  valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1
+out='valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1'
+ok         POSIX              valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1
+out='valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1'
+ok         en_US.UTF-8        valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1
+out='valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1'
+ok         en_US.ISO8859-1    valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1
+out='valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1'
+ok         tr_TR.UTF-8        valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1
+out='valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1'
+ok         ar_SA.UTF-8        valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1
+out='valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1'
+ok         mn_MN.UTF-8        valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1
+out='valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1'
+ok         de_DE.UTF-8        valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1
+out='valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1'
+ok         ja_JP.UTF-8        valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1
+out='valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1'
+ok         zh_CN.UTF-8        valid=1787925605/rc0  arabic=rc1  fullwidth=rc1  feb29nonleap=rc1  lowercase_z=rc1
+
+LOCALES=10 WRONG=0

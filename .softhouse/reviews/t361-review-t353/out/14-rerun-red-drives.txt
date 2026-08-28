@@ -1,0 +1,27 @@
+--- 1. _iso8601_epoch. The parser that replaced `date -j`.
+  r01 shape glob gutted -> epoch-parity          want=RED    got=RED    rc=1   ok        accepts any non-empty string
+  r01 shape glob gutted -> self-test             want=RED    got=RED    rc=1   ok        ROWS=27 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0
+  r02 leap rule -> plain %4 -> epoch-parity      want=RED    got=RED    rc=1   ok        2100-02-29 wrongly accepted
+  r03 epoch offset off by one day -> epoch-parity want=RED    got=RED    rc=1   ok        differs from BSD date and python
+
+--- 2. lock_released_at. Direction OPEN — these are the P-85 safety mutations.
+  r04 shape gate removed (= T342 as reviewed)    want=RED    got=RED    rc=1   ok        ROWS=27 FAIL_OPEN=6 FAIL_SHUT=0 SKIPPED=0
+  r05 maximal fail-open: always released         want=RED    got=RED    rc=1   ok        ROWS=27 FAIL_OPEN=21 FAIL_SHUT=5 SKIPPED=0
+
+--- 3. lock_started_age / lock_pid_state. Direction SHUT — liveness mutations.
+  r06 date -j restored -> self-test ON THIS MAC  want=GREEN  got=GREEN  rc=0   ok        GREEN here is the finding: the Mac cannot see this defect
+       (the same mutation is driven on Linux by 03-BEFORE-linux-arms.txt, where it is RED)
+  r07 host/pid snapshot unreadable               want=RED    got=RED    rc=1   ok        ROWS=27 FAIL_OPEN=0 FAIL_SHUT=3 SKIPPED=0
+  r08 arm 2 deleted                              want=RED    got=RED    rc=1   ok        ROWS=27 FAIL_OPEN=0 FAIL_SHUT=3 SKIPPED=0
+  r09 arm 3 ceiling comparison flipped           want=RED    got=RED    rc=1   ok        ROWS=27 FAIL_OPEN=13 FAIL_SHUT=2 SKIPPED=0
+
+--- 4. THE WIRING. Does the FIRE actually refuse, or does it only print?
+       Each row runs the REAL preflight via --probe against a scratch repo.
+  control: --probe on pristine reaches 'probe only' want=GREEN  got=GREEN  rc=0   ok        1 'probe only' line(s)
+  r04 (fail-open reader) -> --probe must REFUSE  want=RED    got=RED    rc=2   ok        FATAL: the lock-reader self-test FAILED
+  r10 /usr/bin/python3 absent -> --probe must REFUSE want=RED    got=RED    rc=2   ok        
+  r11 interpreter prints to stdout -> --probe must REFUSE want=RED    got=RED    rc=2   ok        
+
+CHECKS=17 WRONG=0
+
+[exited with code 0]

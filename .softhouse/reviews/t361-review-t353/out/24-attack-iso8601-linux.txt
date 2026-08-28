@@ -1,0 +1,127 @@
+T361 attack on _iso8601_epoch
+source        : /rv/out/_src-T353.sh
+sha256(source): 
+zsh           : 5.9   uname: Linux aarch64
+locale        : LC_ALL=<unset> LANG=<unset>
+
+=== A. WELL-FORMED. want = calendar.timegm (independent of BSD date and of T353's rig)
+ok         1970-01-01T00:00:00Z                   rc=0 got=0                  want=0
+ok         1969-12-31T23:59:59Z                   rc=0 got=-1                 want=-1
+ok         2026-08-28T14:00:05Z                   rc=0 got=1787925605         want=1787925605
+ok         1900-02-28T00:00:00Z                   rc=0 got=-2203977600        want=-2203977600
+ok         1900-03-01T00:00:00Z                   rc=0 got=-2203891200        want=-2203891200
+ok         2000-02-29T12:34:56Z                   rc=0 got=951827696          want=951827696
+ok         2000-03-01T00:00:00Z                   rc=0 got=951868800          want=951868800
+ok         2100-02-28T23:59:59Z                   rc=0 got=4107542399         want=4107542399
+ok         2100-03-01T00:00:00Z                   rc=0 got=4107542400         want=4107542400
+ok         2004-02-29T00:00:00Z                   rc=0 got=1078012800         want=1078012800
+ok         2400-02-29T00:00:00Z                   rc=0 got=13574563200        want=13574563200
+ok         2038-01-19T03:14:07Z                   rc=0 got=2147483647         want=2147483647
+ok         2038-01-19T03:14:08Z                   rc=0 got=2147483648         want=2147483648
+ok         1901-12-13T20:45:52Z                   rc=0 got=-2147483648        want=-2147483648
+ok         9999-12-31T23:59:59Z                   rc=0 got=253402300799       want=253402300799
+ok         0001-01-01T00:00:00Z                   rc=0 got=-62135596800       want=-62135596800
+ok         1582-10-15T00:00:00Z                   rc=0 got=-12219292800       want=-12219292800
+ok         1752-09-03T00:00:00Z                   rc=0 got=-6858172800        want=-6858172800
+ok         0000-01-01T00:00:00Z (year zero)       rc=0 got=-62167219200       want=-62167219200
+
+=== B. CALENDAR IMPOSSIBILITIES. want REFUSE. An ACCEPT here is OPEN on released_at.
+ok         1900-02-29 (century non-leap)          rc=1 got=REFUSE             want=REFUSE
+ok         2100-02-29 (century non-leap)          rc=1 got=REFUSE             want=REFUSE
+ok         2026-02-29 (plain non-leap)            rc=1 got=REFUSE             want=REFUSE
+ok         2026-02-30                             rc=1 got=REFUSE             want=REFUSE
+ok         2026-04-31 (30-day month)              rc=1 got=REFUSE             want=REFUSE
+ok         2026-06-31                             rc=1 got=REFUSE             want=REFUSE
+ok         2026-09-31                             rc=1 got=REFUSE             want=REFUSE
+ok         2026-11-31                             rc=1 got=REFUSE             want=REFUSE
+ok         day 00                                 rc=1 got=REFUSE             want=REFUSE
+ok         day 32                                 rc=1 got=REFUSE             want=REFUSE
+ok         month 00                               rc=1 got=REFUSE             want=REFUSE
+ok         month 13                               rc=1 got=REFUSE             want=REFUSE
+ok         month 99                               rc=1 got=REFUSE             want=REFUSE
+ok         hour 24                                rc=1 got=REFUSE             want=REFUSE
+ok         hour 99                                rc=1 got=REFUSE             want=REFUSE
+ok         minute 60                              rc=1 got=REFUSE             want=REFUSE
+ok         second 61                              rc=1 got=REFUSE             want=REFUSE
+ok         second 99                              rc=1 got=REFUSE             want=REFUSE
+
+=== C. THE LEAP SECOND — T353 DELIBERATELY ACCEPTS :60 AND MAPS IT TO THE NEXT SECOND.
+    Recorded as an acceptance, not scored as a disagreement. want = the mapped value.
+ok         2016-12-31T23:59:60Z (real leap second) rc=0 got=1483228800         want=1483228800
+ok         14:00:60Z (NOT a leap second, still taken) rc=0 got=1787925660         want=1787925660
+
+=== D. SHAPE. want REFUSE everywhere. An ACCEPT is OPEN; these are the strings a
+    writer emits to mean NOT RELEASED, or that another producer emits legitimately.
+ok         lowercase z                            rc=1 got=REFUSE             want=REFUSE
+ok         +00:00 instead of Z                    rc=1 got=REFUSE             want=REFUSE
+ok         +08:00 (Asia/Ulaanbaatar)              rc=1 got=REFUSE             want=REFUSE
+ok         -00:00                                 rc=1 got=REFUSE             want=REFUSE
+ok         no zone designator at all              rc=1 got=REFUSE             want=REFUSE
+ok         space instead of T                     rc=1 got=REFUSE             want=REFUSE
+ok         lowercase t                            rc=1 got=REFUSE             want=REFUSE
+ok         fractional seconds                     rc=1 got=REFUSE             want=REFUSE
+ok         basic format, no separators            rc=1 got=REFUSE             want=REFUSE
+ok         5-digit year                           rc=1 got=REFUSE             want=REFUSE
+ok         3-digit year                           rc=1 got=REFUSE             want=REFUSE
+ok         negative year                          rc=1 got=REFUSE             want=REFUSE
+ok         leading + on year                      rc=1 got=REFUSE             want=REFUSE
+ok         leading space                          rc=1 got=REFUSE             want=REFUSE
+ok         trailing space                         rc=1 got=REFUSE             want=REFUSE
+ok         trailing newline                       rc=1 got=REFUSE             want=REFUSE
+ok         leading newline                        rc=1 got=REFUSE             want=REFUSE
+ok         trailing tab                           rc=1 got=REFUSE             want=REFUSE
+ok         trailing CR                            rc=1 got=REFUSE             want=REFUSE
+ok         trailing NUL                           rc=1 got=REFUSE             want=REFUSE
+ok         NUL in the middle                      rc=1 got=REFUSE             want=REFUSE
+ok         empty string                           rc=1 got=REFUSE             want=REFUSE
+ok         the string None                        rc=1 got=REFUSE             want=REFUSE
+ok         the string null                        rc=1 got=REFUSE             want=REFUSE
+ok         the string pending                     rc=1 got=REFUSE             want=REFUSE
+ok         a bare space                           rc=1 got=REFUSE             want=REFUSE
+ok         just Z                                 rc=1 got=REFUSE             want=REFUSE
+ok         date only                              rc=1 got=REFUSE             want=REFUSE
+ok         unix epoch as a decimal string         rc=1 got=REFUSE             want=REFUSE
+
+=== E. EVALUATION / INJECTION. An ACCEPT or a non-empty stdout here is a CODE-EXECUTION
+    class defect: the extracted fields land in zsh arithmetic (`local -i`, `(( ))`).
+ok         arith injection via subscript          rc=1 got=REFUSE             want=REFUSE
+ok         command substitution in the value      rc=1 got=REFUSE             want=REFUSE
+ok         backtick                               rc=1 got=REFUSE             want=REFUSE
+ok         glob metachars                         rc=1 got=REFUSE             want=REFUSE
+ok         bracket class in the input             rc=1 got=REFUSE             want=REFUSE
+ok         zsh <n-m> numeric glob                 rc=1 got=REFUSE             want=REFUSE
+ok         arithmetic expression as the year      rc=1 got=REFUSE             want=REFUSE
+ok         hex-looking year                       rc=1 got=REFUSE             want=REFUSE
+ok         no side-effect file created           
+ok         arith canary unfired (_T361_CANARY=0) 
+
+=== E2. OCTAL — 08 and 09 are the classic shell date bug. want the CORRECT epoch.
+ok         2026-08-08T08:08:08Z (leading-zero fields) rc=0 got=1786176488         want=1786176488
+ok         2026-09-09T09:09:09Z (leading-zero fields) rc=0 got=1788944949         want=1788944949
+ok         2026-08-09T00:00:09Z (leading-zero fields) rc=0 got=1786233609         want=1786233609
+ok         2009-09-09T00:00:00Z (leading-zero fields) rc=0 got=1252454400         want=1252454400
+
+=== F. NON-ASCII DIGITS. zsh [0-9] is a CODE-POINT range; a match here would put a
+    non-ASCII digit into `10#` arithmetic. want REFUSE.
+ok         Arabic-Indic digits (U+0660..)         rc=1 got=REFUSE             want=REFUSE
+ok         fullwidth digits (U+FF10..)            rc=1 got=REFUSE             want=REFUSE
+ok         Devanagari digits                      rc=1 got=REFUSE             want=REFUSE
+ok         superscript two in the year            rc=1 got=REFUSE             want=REFUSE
+
+=== G. SIZE / OVERFLOW.
+ok         10 MB of digits                        rc=1 got=REFUSE             want=REFUSE
+ok         10 MB after a valid instant            rc=1 got=REFUSE             want=REFUSE
+ok         9223372036854775807 as the input       rc=1 got=REFUSE             want=REFUSE
+ok         9999-12-31T23:59:59Z (shape max)       rc=0 got=253402300799       want=253402300799
+ok         0000-01-01T00:00:00Z (shape min)       rc=0 got=-62167219200       want=-62167219200
+    note: the 4-digit-year glob BOUNDS the output to [-62167219200, 253402300799]
+    i.e. |value| < 2.6e11, ~7 orders of magnitude inside int64. Overflow is UNREACHABLE.
+
+=== H. ROUND-TRIP _epoch_iso8601 -> _iso8601_epoch, 4000 pseudo-random instants + edges
+ok         round-trip pairs=4012 mismatches=0
+
+=== I. CROSS-CHECK _epoch_iso8601 AGAINST python (it builds the self-test's fixtures;
+    a wrong '100 h ago' stamp makes group C prove nothing).
+ok         formatted=509 disagreements=0
+
+CHECKS=93 WRONG=0
