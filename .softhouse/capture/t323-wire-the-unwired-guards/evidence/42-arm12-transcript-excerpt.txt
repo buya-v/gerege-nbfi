@@ -1,0 +1,39 @@
+conformance:   capabilities-ledger declaration ABSENT.
+conformance:   CLOSED, and the declaration was removed with it.
+conformance:   no tracked disposability attestation — nothing authorises an irreversible
+conformance:   accepting capture in this tree.
+conformance:     INVOKED    .softhouse/guards/check-capture-namespace.sh
+conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+conformance:     INVOKED    .softhouse/guards/check-ledger-invariants.sh
+conformance:     DECLARED   .softhouse/guards/drive-red-ledger-invariants.sh — not a guard: the red drive for ledgerguard (verified)
+conformance:     DECLARED   .softhouse/guards/repo-state-attest.sh — run by .softhouse/bin/fire-program.sh (verified: it names repo-state-attest.sh)
+conformance: guard_guards_dir_registration: .softhouse/guards/zz-t323-planted-checker.sh IS INVOKED BY NOTHING.
+conformance: It sits in the canonical guards directory and no non-comment line of
+conformance: this file names it, so it enforces nothing — P-45, 'A test-only guard
+conformance: is not a guard … verify the path that actually executes in
+conformance: CI/conformance calls it, not merely that a test does.' THE FIX is to
+conformance: call it from run_guards, or — if something else already runs it — to
+conformance: add its row to the DECLARATION TABLE in this function, naming the
+conformance: witness that runs it. A comment saying it is run is not a row.
+conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 invoked-by-nothing=1
+conformance:   (selector: git ls-files over the '*.sh' members of .softhouse/guards, from $REPO_ROOT;
+conformance:   INVOKED means named on a NON-COMMENT line of this file, never a mention)
+conformance: guard_guards_dir_registration FAILED. A checker in the canonical guards
+conformance: directory is unreached, or a declaration about one is no longer true.
+conformance:   namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
+conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
+conformance:   namespace:   root    /private/tmp/t323/scratch2
+conformance:   namespace:   corpus  7712 tracked paths -> 150 evidence directories
+conformance:   namespace:           129 carry a t<n> id prefix; 21 do not and CANNOT collide this way
+conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
+conformance:   namespace:   T256 -> 2 directories; ownership records required 1, present 1
+conformance:   namespace:       DECLARED   capture/t256-verdict-predicate               by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+conformance:   namespace:       UNCLAIMED  capture/t256-toolchain-population            (record: <absent>)
+conformance:   NAMESPACE-CENSUS: dirs=150 prefixed=129 unprefixed=21 collidingIds=1 declared=1 unclaimed=1 shortfallIds=0
+conformance:   namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+conformance:   T316-DEADPATH-CENSUS: corpus=1282 deadFiles=76 deadOccurrences=109 resolving=1198 indeterminate=84 prose=312
+conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
+conformance:   (the planted T309 single-term predicate drives cell B-prime RED; the shipped
+conformance:   tool keeps it GREEN. Both legs ran here — --selftest is not optional.)
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
