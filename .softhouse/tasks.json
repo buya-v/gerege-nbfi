@@ -5780,7 +5780,7 @@
     },
     {
       "id": "T396",
-      "status": "in_progress",
+      "status": "merged",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -5795,7 +5795,7 @@
       ],
       "title": "T389's three citation defects around T388's /runaccruals claim -- the core claim holds, its supports do not, and one hides three real port traps",
       "description": "T389 APPROVED T388 WITH CONDITIONS. **The load-bearing claim HOLDS and is not in question**: `/runaccruals` and job 16 converge on the single-overload `addPeriodicAccruals(LocalDate)`, whose own Javadoc names both callers, and job 16 is seeded in source. So T388's observations ARE genuine periodic accruals. Three supporting citations around it are wrong, and one of them matters to the port.\n\n**m-3 IS THE ONE THAT COSTS SOMETHING.** T388's 'periods 1-3 vs 4-6' finding is attributed to a JPQL that **selects loans, not periods**. T389 says the misattribution **hides three real traps for a Go port**. Find them, name them, and write them down where a porting task will meet them -- that is the whole value of this correction. A wrong citation under a right conclusion is how the previous defect in this same fire survived (see G-21).\n\n**m-1.** `AccrualAccountingApiResource.java:62` **builds** a `CommandWrapper`; dispatch is at **`:64`** via the command bus. Correct the citation.\n\n**m-2.** 'the ONLY difference is where `tillDate` comes from' is **false**, and note it errs in T388's own favour -- it understates the difference rather than overstating the result. The manual path also carries a permission check, idempotency, command-source audit, maker-checker and a date validator. **Enumerate all five with citations from the pinned checkout `/Users/buv/fineract` @ `426a23544`**, and say for each whether it could change what gets accrued. That is the difference between 'the same method' and 'the same behaviour'.\n\nRead T389's review on `main` at `.softhouse/reviews/t389-review-t388/REVIEW.md`. Your grant includes T388's capture directory so the corrections land where the observations are, not in a separate file nobody reads. **Correct in place and say what you corrected**; do not rewrite T388's conclusions, which survived review.\n\nBar from a CLEAN tree after commit; probe-line presence before value (P-84).",
-      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
+      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits. MERGED at e96197a4; the driver merged it and FAILED TO UPDATE THIS RECORD for several commits. Caught by a status-vs-git audit, not by the driver noticing."
     },
     {
       "id": "T397",
@@ -6063,11 +6063,11 @@
       "dependencies": [
         "T401"
       ],
-      "status": "done",
+      "status": "merged",
       "files_hint": [
         ".softhouse/reviews/t411-review-t401/"
       ],
-      "note": "APPROVED WITH CONDITIONS. CONFIRMED T401 symptom and REFUTED its diagnosis: `\\|` does NOT drop a branch; the real cause is BSD BRE treating a NON-TERMINAL `$` as a literal dollar. Driver re-verified: `\\.sh\\|\\.py` = 3 (alternation works), `\\.sh$\\|\\.py$` = 2 matching a.sh$X and MISSING a.sh. Also found a NEW dead expression at conformance.sh:4530 and showed two of T385 five figures were WRONG WHEN WRITTEN, not rotted. Built its own discrimination drive because ALL of T401 controls are .sh and therefore in the corpus in BOTH arms -- they never exercise the widening.",
+      "note": "APPROVED WITH CONDITIONS. CONFIRMED T401 symptom and REFUTED its diagnosis: `\\|` does NOT drop a branch; the real cause is BSD BRE treating a NON-TERMINAL `$` as a literal dollar. Driver re-verified: `\\.sh\\|\\.py` = 3 (alternation works), `\\.sh$\\|\\.py$` = 2 matching a.sh$X and MISSING a.sh. Also found a NEW dead expression at conformance.sh:4530 and showed two of T385 five figures were WRONG WHEN WRITTEN, not rotted. Built its own discrimination drive because ALL of T401 controls are .sh and therefore in the corpus in BOTH arms -- they never exercise the widening. Review MERGED to main.",
       "branch": "softhouse/T411-review-t401"
     },
     {
