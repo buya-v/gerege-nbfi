@@ -524,10 +524,16 @@ def classify(path, text):
     cleared_anywhere = set()
     for name in restores:
         cleared_anywhere |= RESTORE_CLEARS[name]
-    lb_scopes = {sc for (mm, sc, _n) in site_idioms if mm == restore_mult}
+    # LOAD-BEARING == multiplicity >= 2, which is the rule stated at the top of this file --
+    # NOT "multiplicity == the maximum". The argmax version was tried and the DRIVE refuted it
+    # on `t273-residue/instruments/50-red-drive.sh`: its `restore()` helper does BOTH
+    # `git checkout -- "$M1" "$M3"` and `rm -f`, but a lone `rm -f` inside a for-loop elsewhere
+    # in the file scored a HIGHER multiplicity, so argmax kept the `rm` and threw the
+    # `git checkout` away -- and the file was accused of not clearing W by a reset that clears
+    # W four lines above. Reading nominated; driving convicted the READING.
     cleared = set()
-    for (mm, sc, name) in site_idioms:
-        if mm == restore_mult and sc in lb_scopes:
+    for (mm, _sc, name) in site_idioms:
+        if mm >= 2:
             cleared |= RESTORE_CLEARS[name]
     if "reset_hard" in restores and named_ref_reset(code):
         cleared.add("C")
@@ -549,9 +555,19 @@ def classify(path, text):
     else:
         verdict = "SUFFICIENT"
 
+    # LATENT DECORATIVE. A reset that clears W, S, U and I is still not a reset if an arm
+    # COMMITS: a BARE `git reset --hard` resets to HEAD, and the arm already moved HEAD.
+    # DRIVEN in the K block (K9 residue PRESENT with `git status --porcelain` EMPTY; K10 shows
+    # naming a ref is what fixes it). A file is flagged when its load-bearing reset cannot
+    # clear C -- whether or not it commits TODAY, because that is one arm away.
+    latent_commit_gap = (restore_mult >= 2 and "C" not in cleared)
+    porcelain_assert = bool(re.search(r"status\s+--porcelain|--porcelain", "\n".join(code)))
+
     return {
         "path": path,
         "verdict": verdict,
+        "latent_commit_gap": latent_commit_gap,
+        "porcelain_assertion": porcelain_assert,
         "restore_idioms": {k: v[:8] for k, v in sorted(restores.items())},
         "restore_multiplicity": restore_mult,
         "fresh_repo_multiplicity": fresh_mult,
@@ -645,17 +661,32 @@ def main():
     for r in sorted(rows, key=lambda x: (order[x["verdict"]], x["path"])):
         if args.verdict and r["verdict"] != args.verdict:
             continue
-        print("%-19s uncleared=%-8s mut=%-11s cleared=%-11s rMult=%-3d fMult=%-3d %s"
-              % (r["verdict"], ",".join(r["uncleared_classes"]) or "-",
-                 ",".join(r["mutation_classes"]) or "-",
-                 ",".join(r["cleared_classes"]) or "-",
-                 r["restore_multiplicity"], r["fresh_repo_multiplicity"], r["path"]))
+        # For ISOLATED and TEARDOWN the gap is not the question, so the columns show the
+        # FILE-WIDE restore capability and the gap reads `n/a` rather than a number nobody
+        # should act on. Printing a gap for a reset that is not load-bearing would be the
+        # wolf-cry this sweep is built to avoid.
+        load_bearing = r["verdict"] in ("DECORATIVE", "SUFFICIENT", "SUFFICIENT-TARGETED")
+        gap = (",".join(r["uncleared_classes"]) or "-") if load_bearing else "n/a"
+        cl = ",".join(r["cleared_classes"] if load_bearing else r["cleared_anywhere"]) or "-"
+        print("%-19s gap=%-8s mut=%-11s cleared=%-11s rMult=%-3d fMult=%-3d %s%s"
+              % (r["verdict"], gap, ",".join(r["mutation_classes"]) or "-", cl,
+                 r["restore_multiplicity"], r["fresh_repo_multiplicity"],
+                 "C!" if r["latent_commit_gap"] else "  ", r["path"]))
     print()
     print("%s corpus=%d population=%d decorative=%d sufficientTargeted=%d sufficient=%d "
           "isolated=%d teardown=%d"
           % (PROBE, len(files), len(rows), by.get("DECORATIVE", 0),
              by.get("SUFFICIENT-TARGETED", 0), by.get("SUFFICIENT", 0),
              by.get("ISOLATED", 0), by.get("TEARDOWN", 0)))
+    lb = [r for r in rows if r["restore_multiplicity"] >= 2]
+    latent = [r for r in lb if r["latent_commit_gap"]]
+    porc = [r for r in latent if r["porcelain_assertion"]]
+    print("%s loadBearing=%d latentCommitGap=%d ofWhichAssertWithPorcelain=%d"
+          % (PROBE, len(lb), len(latent), len(porc)))
+    print("      `C!` marks a load-bearing reset that CANNOT undo a commit. A BARE `git reset")
+    print("      --hard` resets to HEAD and a committing arm has already moved HEAD -- and")
+    print("      `git status --porcelain` comes back EMPTY afterwards (T318's blind spot,")
+    print("      arriving inside an inter-arm reset). Driven: K9 / K10 / A1.")
     print("NOTE: DECORATIVE is a CANDIDATE, not a finding. Reading nominates; the drive convicts")
     print("      (P-95). See drive-reset-contamination-t321.py.")
 

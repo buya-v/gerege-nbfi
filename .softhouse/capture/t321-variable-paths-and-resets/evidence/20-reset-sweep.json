@@ -6,20 +6,22 @@
       ".zsh",
       ".bash"
     ],
-    "corpus_size": 1284,
+    "corpus_size": 1285,
     "loop_factor": 4
   },
   "counts": {
     "TEARDOWN": 21,
     "SUFFICIENT": 6,
-    "SUFFICIENT-TARGETED": 1,
-    "DECORATIVE": 3,
-    "ISOLATED": 6
+    "SUFFICIENT-TARGETED": 3,
+    "ISOLATED": 6,
+    "DECORATIVE": 1
   },
   "rows": [
     {
       "path": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "checkout_wt": [
           148
@@ -28,9 +30,7 @@
       "restore_multiplicity": 1,
       "fresh_repo_multiplicity": 1,
       "mutation_classes": [],
-      "cleared_classes": [
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "W"
       ],
@@ -39,6 +39,8 @@
     {
       "path": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
       "verdict": "SUFFICIENT",
+      "latent_commit_gap": true,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           527
@@ -77,6 +79,8 @@
     {
       "path": ".softhouse/capture/pathb/t80/prove-f1-recovery.py",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "clean_plain": [
           182
@@ -94,21 +98,22 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "S",
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "S",
         "U",
         "W"
       ],
-      "uncleared_classes": []
+      "uncleared_classes": [
+        "U",
+        "W"
+      ]
     },
     {
       "path": ".softhouse/capture/pathb/t80/prove-f1.sh",
       "verdict": "SUFFICIENT-TARGETED",
+      "latent_commit_gap": true,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           117,
@@ -144,7 +149,9 @@
     },
     {
       "path": ".softhouse/capture/t273-residue/instruments/50-red-drive.sh",
-      "verdict": "DECORATIVE",
+      "verdict": "SUFFICIENT-TARGETED",
+      "latent_commit_gap": true,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           41,
@@ -165,19 +172,20 @@
         "W"
       ],
       "cleared_classes": [
-        "U"
+        "U",
+        "W"
       ],
       "cleared_anywhere": [
         "U",
         "W"
       ],
-      "uncleared_classes": [
-        "W"
-      ]
+      "uncleared_classes": []
     },
     {
       "path": ".softhouse/capture/t284-schema2-callsites/instruments/30-red-drive.sh",
       "verdict": "SUFFICIENT",
+      "latent_commit_gap": true,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "clean_plain": [
           114
@@ -218,6 +226,8 @@
     {
       "path": ".softhouse/capture/t290-review-t271/attack_acknowledgement_t290.py",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "backup_copy": [
           72,
@@ -238,19 +248,21 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
       ],
-      "uncleared_classes": []
+      "uncleared_classes": [
+        "U",
+        "W"
+      ]
     },
     {
       "path": ".softhouse/capture/t290-review-t271/probe_t286_rule_t290.py",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "backup_copy": [
           82,
@@ -267,19 +279,21 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
       ],
-      "uncleared_classes": []
+      "uncleared_classes": [
+        "U",
+        "W"
+      ]
     },
     {
       "path": ".softhouse/capture/t299-namespace-and-default-safety/instruments/20-drive-destination-safety.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           51
@@ -291,10 +305,7 @@
       "restore_multiplicity": 1,
       "fresh_repo_multiplicity": 1,
       "mutation_classes": [],
-      "cleared_classes": [
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
@@ -304,6 +315,8 @@
     {
       "path": ".softhouse/capture/t299-namespace-and-default-safety/instruments/40-drive-namespace-guard.sh",
       "verdict": "SUFFICIENT",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "clean_plain": [
           78
@@ -340,6 +353,8 @@
     {
       "path": ".softhouse/capture/t304-evidence-destruction/instruments/100-dead-cd-red-drive.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           68
@@ -356,21 +371,22 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
       ],
       "uncleared_classes": [
-        "R"
+        "R",
+        "U",
+        "W"
       ]
     },
     {
       "path": ".softhouse/capture/t304-evidence-destruction/instruments/70-drive-in-scratch-clone.sh",
       "verdict": "SUFFICIENT",
+      "latent_commit_gap": true,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           45
@@ -398,6 +414,8 @@
     {
       "path": ".softhouse/capture/t309-sigterm-reconcile-bypass/probe-git-inode.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "checkout_wt": [
           92,
@@ -418,10 +436,7 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
@@ -429,12 +444,16 @@
       "uncleared_classes": [
         "C",
         "R",
-        "S"
+        "S",
+        "U",
+        "W"
       ]
     },
     {
       "path": ".softhouse/capture/t316-dead-path-guards/drive-red-t316.py",
       "verdict": "SUFFICIENT",
+      "latent_commit_gap": true,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "clean_plain": [
           72
@@ -472,6 +491,8 @@
     {
       "path": ".softhouse/capture/t318-committed-clobber-blindness/instruments/30-red-green-drive.sh",
       "verdict": "ISOLATED",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "reset_hard": [
           186,
@@ -513,6 +534,8 @@
     {
       "path": ".softhouse/capture/t318-committed-clobber-blindness/instruments/40-term-mutation-drive.sh",
       "verdict": "ISOLATED",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "reset_hard": [
           166
@@ -544,6 +567,8 @@
     {
       "path": ".softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh",
       "verdict": "SUFFICIENT",
+      "latent_commit_gap": true,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "clean_plain": [
           41
@@ -578,6 +603,8 @@
     {
       "path": ".softhouse/capture/t325-adopt-attestation/instruments/20-fire-writ-drive.sh",
       "verdict": "ISOLATED",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "reset_hard": [
           238
@@ -593,9 +620,7 @@
         "W"
       ],
       "cleared_classes": [
-        "C",
-        "S",
-        "W"
+        "C"
       ],
       "cleared_anywhere": [
         "C",
@@ -604,12 +629,16 @@
       ],
       "uncleared_classes": [
         "R",
-        "U"
+        "S",
+        "U",
+        "W"
       ]
     },
     {
       "path": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/verify-on-scratch-merge.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           44,
@@ -626,19 +655,21 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
       ],
-      "uncleared_classes": []
+      "uncleared_classes": [
+        "U",
+        "W"
+      ]
     },
     {
       "path": ".softhouse/guards/repo-state-attest.sh",
       "verdict": "ISOLATED",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           311
@@ -655,22 +686,23 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
       ],
       "uncleared_classes": [
         "C",
-        "R"
+        "R",
+        "U",
+        "W"
       ]
     },
     {
       "path": ".softhouse/reviews/T135-evidence/f6-runall-red.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           27
@@ -682,19 +714,20 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "W"
       ],
       "uncleared_classes": [
-        "U"
+        "U",
+        "W"
       ]
     },
     {
       "path": ".softhouse/reviews/T158-drive-t156-refusals.py",
       "verdict": "ISOLATED",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "backup_copy": [
           175
@@ -716,19 +749,21 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
       ],
-      "uncleared_classes": []
+      "uncleared_classes": [
+        "U",
+        "W"
+      ]
     },
     {
       "path": ".softhouse/reviews/T189-probe/reachability.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           69
@@ -746,9 +781,7 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "U"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
@@ -756,12 +789,15 @@
       "uncleared_classes": [
         "C",
         "S",
+        "U",
         "W"
       ]
     },
     {
       "path": ".softhouse/reviews/T298/t298b-marker-attack-matrix.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           18
@@ -773,19 +809,20 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "W"
       ],
       "uncleared_classes": [
-        "U"
+        "U",
+        "W"
       ]
     },
     {
       "path": ".softhouse/reviews/T302/drive-phantom-rescue.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           46
@@ -798,9 +835,7 @@
         "R",
         "S"
       ],
-      "cleared_classes": [
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "W"
       ],
@@ -813,6 +848,8 @@
     {
       "path": ".softhouse/reviews/T306/probe/measure-gate.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "checkout_wt": [
           32,
@@ -825,19 +862,20 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "W"
       ],
       "uncleared_classes": [
-        "U"
+        "U",
+        "W"
       ]
     },
     {
       "path": ".softhouse/reviews/T306/probe/mutant-survival.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "checkout_wt": [
           47,
@@ -853,19 +891,21 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
       ],
-      "uncleared_classes": []
+      "uncleared_classes": [
+        "U",
+        "W"
+      ]
     },
     {
       "path": ".softhouse/reviews/T306/probe/mutation-arms.sh",
       "verdict": "DECORATIVE",
+      "latent_commit_gap": true,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "checkout_wt": [
           21,
@@ -891,6 +931,8 @@
     {
       "path": ".softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           62
@@ -905,19 +947,21 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
       ],
-      "uncleared_classes": []
+      "uncleared_classes": [
+        "U",
+        "W"
+      ]
     },
     {
       "path": ".softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           67
@@ -932,19 +976,21 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
       ],
-      "uncleared_classes": []
+      "uncleared_classes": [
+        "U",
+        "W"
+      ]
     },
     {
       "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_contextmanager.py",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "backup_copy": [
           16
@@ -956,19 +1002,20 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "W"
       ],
       "uncleared_classes": [
-        "U"
+        "U",
+        "W"
       ]
     },
     {
       "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "backup_copy": [
           18,
@@ -981,19 +1028,20 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "W"
       ],
       "uncleared_classes": [
-        "U"
+        "U",
+        "W"
       ]
     },
     {
       "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_real_trap.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "backup_copy": [
           7
@@ -1005,19 +1053,20 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "W"
       ],
       "uncleared_classes": [
-        "U"
+        "U",
+        "W"
       ]
     },
     {
       "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "backup_copy": [
           21,
@@ -1030,19 +1079,20 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "W"
       ],
       "uncleared_classes": [
-        "U"
+        "U",
+        "W"
       ]
     },
     {
       "path": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
       "verdict": "TEARDOWN",
+      "latent_commit_gap": false,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           29,
@@ -1061,19 +1111,21 @@
         "U",
         "W"
       ],
-      "cleared_classes": [
-        "U",
-        "W"
-      ],
+      "cleared_classes": [],
       "cleared_anywhere": [
         "U",
         "W"
       ],
-      "uncleared_classes": []
+      "uncleared_classes": [
+        "U",
+        "W"
+      ]
     },
     {
       "path": ".softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh",
       "verdict": "ISOLATED",
+      "latent_commit_gap": true,
+      "porcelain_assertion": true,
       "restore_idioms": {
         "checkout_wt": [
           34
@@ -1103,7 +1155,9 @@
     },
     {
       "path": ".softhouse/reviews/t291-review-t286/probe/reproduce-in-t286s-own-sweep.sh",
-      "verdict": "DECORATIVE",
+      "verdict": "SUFFICIENT-TARGETED",
+      "latent_commit_gap": true,
+      "porcelain_assertion": false,
       "restore_idioms": {
         "checkout_wt": [
           37,
@@ -1120,15 +1174,14 @@
         "W"
       ],
       "cleared_classes": [
+        "U",
         "W"
       ],
       "cleared_anywhere": [
         "U",
         "W"
       ],
-      "uncleared_classes": [
-        "U"
-      ]
+      "uncleared_classes": []
     }
   ],
   "unreadable": []

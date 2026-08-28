@@ -1,0 +1,51 @@
+T321 reset-contamination drive
+  guard under test : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/.softhouse/guards/repo-state-attest.sh
+  population from  : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/.softhouse/capture/t321-variable-paths-and-resets/evidence/20-reset-sweep.json (37 rows, 1 DECORATIVE)
+  scratch root     : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T (refused if it resolves inside the repo)
+
+BLOCK K -- GROUND TRUTH: what each restore idiom actually clears
+  (every row of sweep_resets.py's table, measured rather than quoted)
+  K1     STAGED_ADD / git checkout -- . && git clean -fd            expect=PRESENT   observed=PRESENT   PASS  | T316's RECORDED contamination, reproduced
+  K2     STAGED_ADD / git reset --hard -q && git clean -fdq         expect=ABSENT    observed=ABSENT    PASS  | T316's FIX
+  K3     STAGED_ADD / git reset -q                                  expect=PRESENT   observed=PRESENT   PASS  | a MIXED reset unstages; the file stays on disk, now untracked
+  K4     UNTRACKED / git reset --hard -q                            expect=PRESENT   observed=PRESENT   PASS  | reset --hard does not remove untracked files
+  K5     UNTRACKED / git clean -fdq                                 expect=ABSENT    observed=ABSENT    PASS
+  K6     IGNORED / git clean -fdq                                   expect=PRESENT   observed=PRESENT   PASS  | -x is what reaches an ignored file
+  K7     IGNORED / git clean -fdxq                                  expect=ABSENT    observed=ABSENT    PASS
+  K8     WT_EDIT / git checkout -- .                                expect=ABSENT    observed=ABSENT    PASS
+  K9     COMMIT / git reset --hard -q && git clean -fdxq            expect=PRESENT   observed=PRESENT   PASS  | THE HEADLINE: bare reset --hard resets to HEAD, and the arm MOVED HEAD; porcelain=''
+  K10    COMMIT / git reset --hard -q "$(git rev-list --max-parents=0 HEAD)" && git clean -fdxq expect=ABSENT    observed=ABSENT    PASS  | naming a REF is what makes reset --hard undo a commit; porcelain=''
+
+BLOCK C -- THE DECORATIVE CANDIDATES, their own reset replayed against the class
+  they are accused of not clearing. The extracted source lines are printed, so the
+  mapping from THEIR line to the command driven is checkable and not merely claimed.
+
+  C-mutation-arms-sh -- .softhouse/reviews/T306/probe/mutation-arms.sh
+     accused of not clearing: U
+     extracted reset sites (line: idiom: THEIR OWN TEXT):
+          21: checkout_wt  git -C "$W" checkout -- "$ADMIT"
+          35: checkout_wt  git -C "$W" checkout -- "$ADMIT"
+     replayed as: git checkout -- .
+  C-mutation-arms-sh/U UNTRACKED survives their own reset                         expect=CONVICTED-or-ACQUITTED observed=CONVICTED PASS  | porcelain='?? planted.txt'
+
+BLOCK A -- the proposed inter-arm reset assertion FIRES on residue
+  check = repo-state-attest.sh snapshot/compare, empty writ. NOT a new instrument.
+  A1     COMMIT residue after bare `reset --hard` + `clean -fdx`    expect=1         observed=1         PASS  | LEGACY(git status --porcelain)=CLEAN | THE HEADLINE: porcelain cannot see it; the differential can
+  A2     STAGED-ADD residue after `checkout -- .` + `clean -fd`     expect=1         observed=1         PASS  | LEGACY(git status --porcelain)=DIRTY | T316's recorded case; porcelain DOES see this
+  A3     UNTRACKED residue after `reset --hard`                     expect=1         observed=1         PASS  | LEGACY(git status --porcelain)=DIRTY
+  A4     IGNORED residue after `clean -fd`                          expect=0         observed=0         PASS  | LEGACY(git status --porcelain)=CLEAN | DECLARED LIMIT: T4 is ADVISORY by design, so exit is 0 -- the residue is NAMED in the output but does not block
+  A5     null control: the reset actually worked                    expect=0         observed=0         PASS  | LEGACY(git status --porcelain)=CLEAN
+
+BLOCK L -- LEGITIMATE OPERATIONS. The check must stay QUIET on every one of these.
+  T325 arm G5: a check that reports ordinary drive setup as contamination will be
+  disabled within two fires. Each L arm is a thing a drive in this repo really does.
+  L1     the drive creates its own sanctioned softhouse/<task> branch expect=0         observed=0         PASS  | LEGACY(git status --porcelain)=CLEAN | T318 arm G5 replayed against THIS writ
+  L2     the drive writes IGNORED scratch output under a declared prefix expect=0         observed=0         PASS  | LEGACY(git status --porcelain)=CLEAN
+  L3     an arm that does nothing at all (null)                     expect=0         observed=0         PASS  | LEGACY(git status --porcelain)=CLEAN
+  L4     a legitimate mutate-and-restore round trip that RESTORED   expect=0         observed=0         PASS  | LEGACY(git status --porcelain)=CLEAN
+  L6     a read-only arm: status and log, nothing written           expect=0         observed=0         PASS  | LEGACY(git status --porcelain)=CLEAN | a read-only arm
+
+  L5b -- pre-existing dirt, present before the baseline AND after the reset
+  L5b    pre-existing untracked file, unchanged across the window   expect=0         observed=0         PASS  | LEGACY(git status --porcelain)=DIRTY (it was dirty before, too)
+
+T321-RESET-DRIVE: arms=22 pass=22 fail=0
