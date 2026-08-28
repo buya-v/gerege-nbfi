@@ -170,13 +170,38 @@ amounts they move remain integer minor units under the ratified production `Math
 | `.softhouse/capture/t388-accrual-capture/ORACLE-STATE-MOVED-BY-T388.md` | §2 rewritten **in place**: a correction banner naming m-1/m-2/m-3 and the sha; the corrected `/runaccruals` chain (m-1); a new subsection *"The same METHOD is not the same PIPELINE"* with the five-row verdict table and the `ActionContext` note (m-2); a new subsection replacing the JPQL attribution with `getInstallmentsToAccrue` + `isBeforePeriod`, re-derived on T388's own dates, ending in the boxed pointer to the traps file (m-3). **T388's observations, amounts, tables and conclusions are untouched.** |
 | `.softhouse/capture/t388-accrual-capture/README.md` | `⚠` section added above the fold pointing promotion/porting tasks at the traps file, and stating explicitly that no *observation* changed; T396 note appended to the *"Not that the SCHEDULED JOB was observed"* bullet summarising the five pipeline differences. |
 | `.softhouse/capture/t396-t389-conditions/PORT-TRAPS-periodic-accrual-period-selection.md` | **new.** Audience, why it exists, the pinned code quoted with line numbers, the three traps with truth tables and Go consequences, the vectors each one demands, and a *"what a promotion task must not do"* list. |
+| `.softhouse/capture/t388-accrual-capture/MANIFEST.sha256` | **regenerated** — see §4a. |
+| `.softhouse/capture/t396-t389-conditions/T396-BAR.txt`, `T396-BAR-run2.txt` | the two bar transcripts. |
 | `.softhouse/handoff/T396-t389-conditions.md` | this file. |
+
+### 4a. The manifest — a casualty of my own correction, repaired narrowly and declared
+
+`MANIFEST.sha256` pins **all 193** files in T388's capture directory, prose included. Correcting
+two prose documents therefore broke it: measured before repair,
+`shasum -a 256 -c MANIFEST.sha256` reported **191 OK, 2 FAILED**
+(`./ORACLE-STATE-MOVED-BY-T388.md`, `./README.md`).
+
+Repaired by re-running **T388's own generator**, `sh manifest.sh`, unmodified — not by hand-editing
+digests. Result: **193 entries, `shasum -c` 193/193 OK, zero FAILED**, and
+`git diff --stat .softhouse/capture/t388-accrual-capture/MANIFEST.sha256` is
+**`1 file changed, 2 insertions(+), 2 deletions(-)`** — exactly the two prose digests. **All 191
+evidence digests — every byte under `out/`, `req/`, `sql/` and every script — are unchanged**, and
+the diff proves it rather than asserting it.
+
+Declared loudly, in the corrected file's own banner as well as here, because a regenerated
+integrity manifest is the shape of a tampered one. T389's `out/T389-R04-manifest-integrity.txt`
+records the pre-correction digests; that transcript is history and is not superseded. **The
+alternative — leaving T388's integrity instrument permanently red — was worse.**
 
 ## 5. Held paths — not touched
 
-`git diff --name-only main...HEAD` is **4 files**, all inside the grant plus this handoff.
-**Zero** hits for `.softhouse/vectors/` (T391), `capabilities-ledger.json` (T391) or
-`.softhouse/conformance.sh` (T404). Transcript in `§6`.
+`git diff --name-only main...HEAD` is **7 files**: 3 under
+`.softhouse/capture/t388-accrual-capture/` (two prose corrections + the regenerated manifest),
+3 under `.softhouse/capture/t396-t389-conditions/` (the traps write-up + two bar transcripts), and
+this handoff. **Zero** hits for `.softhouse/vectors/` (T391), `capabilities-ledger.json` (T391) or
+`.softhouse/conformance.sh` (T404) —
+`git diff --name-only main...HEAD | grep -E 'vectors/|capabilities-ledger|conformance\.sh'`
+returns **rc 1, no matches** (the engine ran and matched nothing; not an unrun selector).
 
 ## 6. Conditions NOT discharged by this task
 
@@ -226,6 +251,10 @@ rather than waved through.** T389 recorded `ledger cells 142 / 39 money`; this r
 `7400d9f2`, merging T360/T387 —
 `git diff --name-only 01a7a05a main -- .softhouse/vectors/ nexus/` returns
 `.softhouse/vectors/ledger/LDG-DIV-01-oracle-accepts-sub-minor-unit-residue.json` and six
-`nexus/internal/apps/ledger/conformance/*.go` files. **T396's diff is four Markdown files and
-touches no vector and no Go file** (`git diff --name-only main...HEAD`), so it cannot have moved a
-graded cell. The **money** cell count is unmoved at 39.
+`nexus/internal/apps/ledger/conformance/*.go` files. **T396's diff is Markdown, two `.txt`
+transcripts and one `.sha256` manifest — no vector and no Go file**
+(`git diff --name-only main...HEAD`), so it cannot have moved a graded cell. The **money** cell
+count is unmoved at 39.
+
+**A third bar run was taken after the manifest repair** (`T396-BAR-run3.txt`), because the repair
+landed after run 2 and a transcript must cover the tree it describes.
