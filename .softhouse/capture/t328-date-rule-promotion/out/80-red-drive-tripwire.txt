@@ -1,0 +1,31 @@
+T328 tripwire red-drive -- HEAD e79adbaa
+arm under drive: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/"every committed claimant's EXPECTATION AGREES with its date REGION"
+
+--- BASELINE  committed store, untouched -- the arm must be GREEN
+    go test exit: 0
+    OK: green baseline
+
+--- ARM A  LDG-07's business_date moved back one day (acceptance -> refusing region)
+    --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape (0.05s)
+        --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/every_committed_claimant's_EXPECTATION_AGREES_with_its_date_REGION (0.00s)
+            openingbalance_test.go:320: vector "LDG-07-entry-on-the-business-date-accepted" records an ACCEPTANCE while its own dates put it in the REFUSING region (transaction_date "2026-08-28", business_date "2026-08-27", latest_closing_date ""). The capability gate in admit.go requires expect.kind to AGREE with the region, so this vector is INADMISSIBLE and the bar is exit 2. IF THE ORACLE'S ANSWER ON THIS SHAPE HAS ACTUALLY BEEN OBSERVED, PROMOTING THE CAPTURE AND WIDENING THE REGION RULE ARE ONE DIFF, NOT TWO -- widen refusingRegion/acceptingRegion in admit.go in the same change, add the mirror arm above, and re-run the date-rule mutation arms (TestDateRuleMutationArms) so the new shape's effect on ledger-wrong-date-rules-always-refusing is MEASURED and not assumed
+        --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/EVERY_committed_claimant_is_still_ADMITTED,_and_LDG-05_by_name (0.00s)
+    FAIL
+    FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.274s
+    FAIL
+    go test exit: 1
+    OK: RED, and the message names the vector and the region
+
+--- ARM B  LDG-REFUSE-04's latest_closing_date moved back one day (refusal -> accepting region)
+    --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape (0.05s)
+        --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/every_committed_claimant's_EXPECTATION_AGREES_with_its_date_REGION (0.00s)
+            openingbalance_test.go:320: vector "LDG-REFUSE-04-preclosure-entry-on-closing-date" records a REFUSAL while its own dates put it in the ACCEPTING region (transaction_date "2026-01-31", business_date "2026-08-23", latest_closing_date "2026-01-30"). The capability gate in admit.go requires expect.kind to AGREE with the region, so this vector is INADMISSIBLE and the bar is exit 2. IF THE ORACLE'S ANSWER ON THIS SHAPE HAS ACTUALLY BEEN OBSERVED, PROMOTING THE CAPTURE AND WIDENING THE REGION RULE ARE ONE DIFF, NOT TWO -- widen refusingRegion/acceptingRegion in admit.go in the same change, add the mirror arm above, and re-run the date-rule mutation arms (TestDateRuleMutationArms) so the new shape's effect on ledger-wrong-date-rules-always-refusing is MEASURED and not assumed
+        --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/EVERY_committed_claimant_is_still_ADMITTED,_and_LDG-05_by_name (0.00s)
+    FAIL
+    FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.272s
+    FAIL
+    go test exit: 1
+    OK: RED, and the message names the vector and the region
+
+restored: 0 dirty vector file(s) (want 0)
+T328 tripwire red-drive: EXIT 0

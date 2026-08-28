@@ -44,7 +44,13 @@ trap restore EXIT
 
 run_arm() { # $1 = label
   local out rc
-  out="$( cd "$REPO/nexus" && go test ./internal/apps/ledger/conformance -run "$TEST" 2>&1 )"
+  # -count=1 IS LOAD-BEARING AND WAS MEASURED, NOT ADDED FROM HABIT. The first
+  # run of this script omitted it and reported BOTH ARMS GREEN -- go test replayed
+  # a CACHED result, because the perturbation is to a data file outside the module
+  # and nothing in the package source changed. A red-drive that measures the test
+  # cache instead of the code is exactly the vacuous control it exists to prevent
+  # [FU-T328-2]. The same trap applies to any future arm that perturbs the store.
+  out="$( cd "$REPO/nexus" && go test -count=1 ./internal/apps/ledger/conformance -run "$TEST" 2>&1 )"
   rc=$?
   echo "--- $1"
   printf '%s\n' "$out" | LC_ALL=C grep -a -E "FAIL|records (an ACCEPTANCE|a REFUSAL)|ONE DIFF, NOT TWO" \
