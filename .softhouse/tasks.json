@@ -5534,7 +5534,7 @@
     },
     {
       "id": "T383",
-      "status": "done",
+      "status": "merged",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -5572,7 +5572,7 @@
     },
     {
       "id": "T385",
-      "status": "in_progress",
+      "status": "merged",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -5586,7 +5586,7 @@
         "T383"
       ],
       "description": "T383 replaces a `tail -1` read of the pre-fire self-test summary in `.softhouse/bin/fire-program.sh` with a refusal on multiplicity. Read from the branch:\n    git show softhouse/T383-t380-conditions:.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T383.md\n    git diff main...softhouse/T383-t380-conditions\n\nTHIS FILE IS THE WRAPPER THAT LAUNCHES EVERY FIRE, INCLUDING THE ONE YOU ARE RUNNING IN. A defect you miss here silences a real failure at the start of every future fire. P-45 applies with full force: a control that only works when the summary happens to be well-formed enforces nothing.\n\nDRIVE ALL THREE ARMS YOURSELF, against the shipped file, via `bash .softhouse/bin/fire-program.sh` in whatever self-test / --probe mode it exposes -- do not simulate them in a copy:\n  ZERO summary lines -> must REFUSE (P-84's presence-before-value rule: read the ABSENCE, not the value).\n  EXACTLY ONE -> must behave as before.\n  TWO OR MORE, where the FIRST reports FAIL_OPEN=1 and the second FAIL_OPEN=0 -> must REFUSE. This is the exact input T380 measured the fire STARTING on.\nThen try to defeat it: a summary line with trailing whitespace, one inside a quoted string, one emitted on stderr rather than stdout, one that arrives split across a pipe boundary. If `head -1` reappears anywhere in the new logic, that is a REJECT -- T380 named it as the non-fix and said why.\n\nVerify the wrapper still starts a fire at all after the change; a control that refuses everything is not a pass. Every finding needs a driven reproduction.",
-      "note": "Filed by the driver of fire 20260828-140005 iteration 3 at dispatch time (plan-gate check 1). | DISPATCHED on T383 completing; branch recorded before the worktree."
+      "note": "Filed by the driver of fire 20260828-140005 iteration 3 at dispatch time (plan-gate check 1). | DISPATCHED on T383 completing; branch recorded before the worktree. | APPROVED WITH CONDITIONS, MERGED at e6cd307f. Answered 'does a healthy fire still start' NINE independent ways plus twelve healthy-start cases. THE DETAIL THAT JUSTIFIES THE WHOLE DISCIPLINE: T383's transient zsh scalar-length bug returned 41 for EXACTLY ONE LINE but the CORRECT count for 2 and 3 -- wrong ONLY on the healthy case, so it would have passed every 'does it refuse?' test ever written. Found a SIXTH defeat T383 never enumerated (n01: a summary line arriving as a FILENAME the self-test echoes -- rc 0, FIRE STARTS on main), closed by the fix anyway. Own 20-case driver GREEN 20/0 on the branch, RED 20 with 8 failures on main. 192-state partition 0 disagreements on BOTH the branch and main as control; lock_decide() byte-identical at 1005 bytes. The 3600 floor is a bound not a ban, and it measured the TOP of the accepted range T383 left UNVERIFIED at ~8.94e8s (~28.3 years). CORRECTED T383's STATED REASON for keeping substring containment green -- the lockselftest echo is added AFTER the capture and is never in the population -- while confirming the anchoring itself is correct and independently justified. C12 on the merge instrument: LOW for correctness, MODERATE as documentation, and the operative flag is --shared not hardlinks (the clone holds 6 objects plus objects/info/alternates); residual risk is a concurrent source-side gc --prune, which would make the bar CRASH not lie. Safe for the driver to use today."
     },
     {
       "id": "T386",
@@ -5854,6 +5854,44 @@
       "title": "SEVEN guards in this program are BUILT AND WIRED TO NOTHING -- census them, then wire or retire every one",
       "description": "**THIS IS THE PROGRAM'S MOST-REPEATED DEFECT AND NOBODY HAS EVER COUNTED IT.** `P-45` (`.softhouse/patterns.md:1503-1506`) says a guard that only works when someone remembers to run it enforces nothing. The driver of fire `20260828-140005` iteration 3 logged **seven live instances in a single fire**, four of them found by different workers who did not know about each other's:\n\n  1. `oracle-state-baseline.sh` -- invoked by NOTHING that runs; its only references outside its own directory are inside `t367-review-t363`'s own drives, and T367 asked the question explicitly. The instrument built to detect unattributed oracle-state movement would not have fired when `T388` moved the oracle. (`T390` item 3)\n  2. `run-all.sh` -- the whole A2-11 adjudication rig `T374`/`T382`/`T393` have been hardening. `grep -c` from `conformance.sh` is **0**. (T382 informational finding)\n  3. `casualty-sweep.sh` -- `T381` filed this AGAINST ITSELF as FU-T381-4 after repairing four fail-opens in it: *'the sweep still gates nothing'*.\n  4. `guard-probe-expiry.sh` -- `T311`, still pending.\n  5. `T284`'s registry guard -- `T303`, still pending.\n  6. `T256`'s marker drive -- `T313`, still pending.\n  7. `T145`'s narrow two-sided-float-money-comparison guard -- `T333`, still pending. **This one guards a MONEY non-negotiable.**\n\n**FIRST, MEASURE — DO NOT TRUST THIS LIST.** It was assembled from worker reports across one fire, not from a census. Enumerate every guard, checker and drive under `.softhouse/guards/`, `.softhouse/bin/` and `.softhouse/capture/**/instruments/`, and for each determine whether anything that RUNS invokes it -- `conformance.sh`, `fire-program.sh`, a git hook, CI, or another wired instrument. **A reference from a review's own drive script does not count as wired**; that is exactly how items 1 and 2 hid. Report the denominator: how many exist, how many are wired, how many are not.\n\n**THEN DECIDE EACH ONE, AND WIRE OR RETIRE IT.** An unwired guard is not automatically a defect to fix by wiring: some are one-shot investigative rigs that did their job and should be RETIRED with a note, and wiring those would add cost and fragility for nothing. Say which is which and why. **But an unwired guard that is still cited anywhere as though it protects something is a fail-open by documentation**, and that is the class to close hardest.\n\n**THE COST YOU MUST NOT PAY.** Do not wire everything and redden the bar. Every wiring lands with a RED drive first, and the bar must be exit 0 on the merge result afterwards. And heed the inverse defect this same fire produced twice: `T383` shipped a fail-open fix that briefly **refused every healthy fire**, and `T381` found a sixth fail-open in its own repair. **A guard that refuses everything and a guard that cannot fail are the same defect wearing opposite signs.** Keep a healthy control beside every red drive and report its result.\n\n`conformance.sh` is the wiring site for most of these and is contended -- confirm with the driver that no worker holds it before you write it. If it is held, produce the exact patch as a request and say so, the way `T360` did.\n\nBar from a CLEAN tree AFTER `git add -A` and commit, `bash` never `sh`; probe-line PRESENCE before value (P-84).",
       "note": "Filed by the driver of fire 20260828-140005 iteration 3. Seven instances of P-45 surfaced in ONE fire by four workers independently; item 7 guards a money non-negotiable. Nobody has ever counted them, which is why the count kept being rediscovered one at a time."
+    },
+    {
+      "id": "T400",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "branch": null,
+      "files_hint": [
+        ".softhouse/bin/fire-program.sh",
+        ".softhouse/capture/t400-t385-conditions/"
+      ],
+      "dependencies": [
+        "T383",
+        "T385"
+      ],
+      "title": "T385's three conditions on T383 -- a comment that says two offsets 'cannot drift apart' when they are re-spelled 90 lines later, and they DO drift",
+      "description": "All three are comment-only in `.softhouse/bin/fire-program.sh`, but F-T385-2 is a MEASURED fail-open in the reasoning, not just prose.\n\n**READ P-97 FIRST (`.softhouse/patterns.md:3259`) BEFORE YOU WRITE THIS FILE.** It is the wrapper that launches every fire, it may be EXECUTING while you work, and a write that goes through the original inode can be executed as a spliced tail -- reproduced at a read-buffer boundary with no length change at all. **Edit in your worktree and land it through git** (all eight git write paths rename), or use a renaming writer (`sed -i`, `mv`, `install`, the harness Write/Edit tools). **Never `cp` over it** -- `cp` is in-place on macOS and Linux both, and 'copy the fixed wrapper over the live one' is exactly what a person types. Never invoke the wrapper in a mode that starts a fire, takes the lock or dispatches; `zsh -n`, `--self-test-lock-readers`, `--lock-decide` and `--probe` against a throwaway repo only. And unset `FIRE_SNAPSHOT_OF` / `FIRE_NO_SNAPSHOT` first -- a live fire exports the former and the latter does NOT override it (`fire-program.sh:999`), confirmed independently by T383 and T385.\n\n**F-T385-2 (MODERATE, DRIVEN).** `:748-749` claims the z06/z07 offsets *cannot drift apart* from the rows. **They are re-spelled inline at `:883-884`.** T385 drove the drift (case `s01`): the gate does not fire, `z06` goes **FAIL-OPEN**, and the wiring then says *'The thresholds validated at startup, so this is the READERS'* -- **the exact misattribution F-T380-2 exists to close**. Its control `s02` (drift the gate's own variable) exits 78, so the gate is live and it is only this pair that escapes. Fix it so the claim is TRUE -- derive the offsets from one place, or make the gate check the inline spelling too -- and re-drive `s01` and `s02`.\n\n**F-T385-1 (MINOR).** T383's stated reason for keeping substring containment green is **false**: the `lockselftest| ROWS=` echo is added *after* the capture and is never in the population. T385 built the naive unanchored-count wrapper and it **starts the healthy fire at rc 0**, so the anchoring is still correct and independently justified -- **only the example is wrong**. Replace the false example with T385's measured one. Do not weaken the anchoring.\n\n**F-T385-3 (MINOR, P-80).** `:724` says *'the four tests below ARE the four fixture expressions'*; the code has **six** (`:756-761`). A restated cardinal that rotted.\n\nAfter your change: re-run `.softhouse/capture/t279-lock-partition/drive-wrapper-vs-skill.zsh` (192 states, must be 0 disagreements), re-drive T385's 20-case driver, and confirm a HEALTHY fire still starts -- a control that refuses everything is the same defect as one that cannot fail, and this fire produced that inversion once already. Bar from a CLEAN tree after `git add -A` and commit; probe-line PRESENCE before value (P-84).",
+      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T385 F-T385-1..3."
+    },
+    {
+      "id": "T401",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "branch": null,
+      "files_hint": [
+        ".softhouse/capture/t401-zsh-census-gap/"
+      ],
+      "dependencies": [
+        "T385"
+      ],
+      "title": "F-T385-4: the fail-open and dead-path censuses read .sh and .py only -- 110 tracked .zsh files are INVISIBLE, and .zsh is what new driving instruments are written in",
+      "description": "T385 filed this rather than fixing it, correctly -- it was outside its grant.\n\n**THE MEASUREMENT.** The fail-open/dead-path census corpus is tracked `.sh`/`.py` only. T385 verified T383's selector reasoning is CORRECT and empirical -- it added 7 `.zsh` files and `corpus` stayed at 1348. **But 110 tracked `.zsh` files exist** (98 of them under `capture/` and `reviews/`), against 626 `.sh` and 722 `.py`. So the linter systematically omits **the language most new driving instruments are written in**, and every `.zsh` instrument added since is unlinted for fail-opens and contributes no dead-path rows.\n\n**RE-MEASURE ALL FOUR COUNTS YOURSELF** before acting -- they are prose in a review, which is exactly the class of number this program has watched rot repeatedly.\n\n**THEN DECIDE, AND ARGUE IT EITHER WAY.** Extending the selector to `.zsh` is not obviously right: it will add dead-path rows and may surface fail-opens in 110 files at once, which would redden the bar in a single step. Options worth weighing: extend the selector and pin the new frontier in ONE commit (P-83 -- regenerate by RUNNING, never by arithmetic); extend it in report-only mode first and publish the count; or rule that driving instruments must be `.sh`/`.py` and convert them. **Say what it costs before you choose**, and if you extend it, drive the guard RED on a planted `.zsh` fail-open first, and keep a healthy control beside it.\n\nThis is adjacent to `T399` (seven guards wired to nothing) but distinct: T399 is about guards that never RUN, this is about a guard that runs and cannot SEE. Coordinate if both are live -- both may want `conformance.sh`, which is contended; if it is held, ship the exact patch as a request the way T360 did.",
+      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T385 F-T385-4. Distinct from T399: that is guards that never run, this is a guard that runs and is blind to 110 tracked files."
     }
   ],
   "cross_corroboration": {
