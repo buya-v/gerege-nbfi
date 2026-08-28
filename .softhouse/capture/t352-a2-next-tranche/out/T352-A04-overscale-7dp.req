@@ -1,0 +1,14 @@
+{
+  "officeId": 1,
+  "transactionDate": "01 June 2026",
+  "currencyCode": "MNT",
+  "comments": "T352 storage-scale probe: SEVEN decimal places, one digit beyond the DECIMAL(19,6) column scale. Does the oracle refuse, truncate, or round HALF_UP into scale 6?",
+  "debits": [
+    {"glAccountId": 16, "amount": 100.1234565}
+  ],
+  "credits": [
+    {"glAccountId": 21, "amount": 100.1234565}
+  ],
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}

@@ -1,0 +1,129 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-T352-CANDIDATE-residue-3dp",
+  "context": "ledger",
+  "class": "parity",
+  "title": "T352 CANDIDATE, NOT PROMOTED. The oracle accepted and persisted a MNT journal entry carrying a non-zero digit at the THIRD decimal place, in a currency whose declared minor unit is 2. Transaction a29bca0816a7, read back as amount 100.125000 on both legs.",
+  "dec2_revision": 5,
+  "_note": "GL_ACCOUNT_TYPE IS EXCLUDED FROM EVERY LEG, for LDG-01's reason: glAccountType in a /journalentries response is a projection of the ACCOUNT'S CURRENT classification, not of the entry (A2-26 observed the identical row rendering ASSET in A2-088 and INCOME in A2-320 with every other cell byte-identical and NO entry edited). THE POINT OF THIS FILE: amount_minor is UNKNOWABLE. There is no int64 count of MNT minor units equal to 100.125. 10012 and 10013 are both wrong. 10013 is written here only so the harness can be asked what it does when a vector author picks one anyway.",
+  "capabilities_required": [
+    "ledger.journal.entry.readback",
+    "ledger.money.minor.unit.conversion",
+    "ledger.manual.entry.posting"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/t352-a2-next-tranche/out/T352-A09-residue-3dp-readback-cited.json",
+    "capture_sha256": "7163378b7ab73e9daf72175b6a90568f1607daa88e9813212d74c7e493b23841",
+    "capture_case_id": "T352-A09-residue-3dp-readback-cited",
+    "request_capture_ref": ".softhouse/capture/t352-a2-next-tranche/out/T352-A01-residue-3dp.req",
+    "request_capture_sha256": "6a6f389538808d1ed7836ff66dc2b01d09321f891d20384f49e1dac3390e1cca",
+    "request_capture_case_id": "T352-A01-residue-3dp",
+    "rerun_invariant": "Re-posting req/T352-R01-residue-3dp.json must return HTTP 200 and the read-back must carry amount 100.125000 on BOTH legs, on GL 16 DEBIT and GL 21 CREDIT.",
+    "citation": "T352, fire 20260828-140005, against the pinned oracle 426a23544."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_rest_posting",
+    "captured_at": "2026-08-28T06:59:25Z"
+  },
+  "request": {
+    "product_id": 0,
+    "product_type": "",
+    "accounting_rule": "",
+    "slot_family": "",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_rest_posting",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "a29bca0816a7",
+    "manual_entry": true,
+    "transaction_amount_major_text": "",
+    "accounts": [
+      {
+        "id": 16,
+        "gl_code": "10300",
+        "name": "Fund Source Alternate",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 21,
+        "gl_code": "99008",
+        "name": "Liability Under Asset",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 16,
+        "entry_side": "DEBIT",
+        "amount_major_text": "100.125000"
+      },
+      {
+        "gl_account_id": 21,
+        "entry_side": "CREDIT",
+        "amount_major_text": "100.125000"
+      }
+    ]
+  },
+  "expect": {
+    "kind": "journal-entry",
+    "http_status": 200,
+    "legs": [
+      {
+        "gl_account_id": 16,
+        "gl_account_code": "10300",
+        "entry_side": "DEBIT",
+        "amount_minor": "10013",
+        "amount_major_text": "100.125000",
+        "excluded_fields": ["gl_account_type"]
+      },
+      {
+        "gl_account_id": 21,
+        "gl_account_code": "99008",
+        "entry_side": "CREDIT",
+        "amount_minor": "10013",
+        "amount_major_text": "100.125000",
+        "excluded_fields": ["gl_account_type"]
+      }
+    ],
+    "total_debits_minor": "10013",
+    "total_credits_minor": "10013",
+    "refusal": {
+      "http_status": 0,
+      "code": "",
+      "message": ""
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "ledger-wrong-truncating",
+      "kind": "money",
+      "margin_minor": "-13",
+      "divergent_cells": [
+        "legs[].amount_minor",
+        "total_debits_minor",
+        "total_credits_minor"
+      ],
+      "note": "A port reading the major text as a whole number loses the .125 on both legs."
+    },
+    {
+      "impl": "ledger-wrong-code-ignored",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "legs[].gl_account_code"
+      ],
+      "note": "A port carrying account ids and never joining the chart."
+    }
+  ],
+  "invariant_exemptions": []
+}

@@ -1,0 +1,6 @@
+GET /glclosures
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: t352-p04
+body: <none>
+captured-at-utc: 2026-08-28T06:51:44Z

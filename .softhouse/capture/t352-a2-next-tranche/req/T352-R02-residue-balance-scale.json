@@ -1,0 +1,15 @@
+{
+  "officeId": 1,
+  "transactionDate": "01 June 2026",
+  "currencyCode": "MNT",
+  "comments": "T352 discriminator: debits 0.125 + 0.125 balance the credit 0.25 AT FULL SCALE, but NOT if each leg is first rounded HALF_UP to the currency minor unit (0.13 + 0.13 = 0.26)",
+  "debits": [
+    {"glAccountId": 16, "amount": 0.125},
+    {"glAccountId": 17, "amount": 0.125}
+  ],
+  "credits": [
+    {"glAccountId": 21, "amount": 0.25}
+  ],
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}

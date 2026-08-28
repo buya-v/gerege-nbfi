@@ -1,0 +1,6 @@
+GET /glaccounts?manualEntriesAllowed=true&usage=1
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: t352-p03
+body: <none>
+captured-at-utc: 2026-08-28T06:51:21Z

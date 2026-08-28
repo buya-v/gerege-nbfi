@@ -1,0 +1,10 @@
+POST /journalentries
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: t352-a01-residue-3dp
+Content-Type: application/json
+body-file: req/T352-R01-residue-3dp.json
+body-wire-bytes-artefact: T352-A01-residue-3dp.req
+body-sha256: 6a6f389538808d1ed7836ff66dc2b01d09321f891d20384f49e1dac3390e1cca
+body-bytes: 367
+captured-at-utc: 2026-08-28T06:52:11Z
