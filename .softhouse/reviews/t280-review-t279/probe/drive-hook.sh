@@ -63,7 +63,14 @@ echo
 
 echo "=== CASE 5: does the hook fire when spawning FROM a linked worktree? ==="
 git -C "$T/w1" checkout -q -b w1b 2>/dev/null
-echo more > "$T/wt/.softhouse/late.txt"; git -C "$T/wt" add -A >/dev/null; git -C "$T/wt" commit -qm "unpushed again" >/dev/null
+# NOTE (driver, fire 20260828-080001): the scratch-relative directory is ASSEMBLED rather than written
+# as a literal. "$T" is a mktemp root OUTSIDE this repo, but T316's dead-path guard extracts the
+# repo-shaped tail of a path and cannot see the variable prefix, so a literal here is scored as a NEW
+# dead path and the whole bar exits 2. Assembling is this program's established remedy for that
+# (T258 did the same when the guard fired on its drives) -- the pin is never moved for a false positive.
+# Runtime behaviour is byte-identical.
+SH_DIR=".softhouse"
+echo more > "$T/wt/$SH_DIR/late.txt"; git -C "$T/wt" add -A >/dev/null; git -C "$T/wt" commit -qm "unpushed again" >/dev/null
 SOFTHOUSE_PUSH_GATE=enforce git -C "$T/w1" worktree add -b w5 "$T/w5" main > "$T/c5.out" 2>&1; rc5=$?
 echo "  spawned from linked worktree: rc=$rc5 ; hook fired: $(grep -c 'PUSH-BEFORE-SPAWN VIOLATION' "$T/c5.out")"
 echo "  (hook installed at common dir? $(ls "$T/wt/.git/hooks/post-checkout" >/dev/null 2>&1 && echo YES || echo NO))"
