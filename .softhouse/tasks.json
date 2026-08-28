@@ -5128,13 +5128,13 @@
     },
     {
       "id": "T362",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
       "role": null,
       "title": "INDEPENDENT review of T357 -- the corpus-isolation proof, and a run-all.sh that exited 0 no matter what",
-      "branch": null,
+      "branch": "softhouse/T362-review-t357",
       "files_hint": [
         ".softhouse/reviews/t362-review-t357/"
       ],
@@ -5142,37 +5142,37 @@
         "T357"
       ],
       "description": "PRIORITY: dispatch this early in the next fire. T357 is COMPLETE and UNMERGED on softhouse/T357-a2-11-section1-red (head 85a30a79, 32 files / +4832), and its fix for a real fail-open -- run-all.sh reporting exit 0 no matter what -- stays unlanded until you clear it.\n\nATTACK THE CORPUS-ISOLATION PROOF FIRST, because the driver acted on it. T357 answered 'do the three section-1 failures touch a currently-GRADED vector?' with NO, on this evidence: 0 hits for seven named tokens across all 69 files under .softhouse/vectors/ and all 4132 lines of conformance.sh; all 23 distinct provenance.capture_ref values pointing at loanschedule or ledger and none at a loan-product read; graded domain confined to conformance.sh:410-411 and :2312 with no loan-product arm in the call graph. RE-DERIVE ALL THREE LEGS. A token-based absence proof is only as good as its token list -- construct the list yourself from the failing assertions rather than reusing T357's seven, and say where you looked. THIS IS THE FINDING THE WHOLE TASK RESTS ON: if a graded vector IS touched, the driver's report that the corpus is unaffected was wrong.\n\nTHEN: (a) verify run-all.sh really did exit 0 unconditionally because `{ ... } | tee` returns tee's status, and that the new adjudicated VERDICT block cannot regress to it; (b) T357 claims adjudicate-section1.py goes RED on a fourth failure OR a VANISHED one -- drive BOTH directions yourself, the vanished one is the dangerous direction and the easy one to fake; (c) confirm check-shape.py and obs/** are BYTE-UNCHANGED, since the whole legitimacy of the repair is that it touched the reading layer and not the evidence; (d) verify the 'output-neutral' claim for the five __file__ reroots -- sections 1,2,3,6,7 reproducing the committed transcript IDENTICALLY; (e) re-derive section 4's 428/430 drift figure and confirm no captured oracle observation under out/ or req/ was mutated.\n\nCOORDINATE, DO NOT DUPLICATE: T357 edited six files in the class T356 owns the rule for, and disclosed it with an exact revert per file. Grade that disclosure's completeness; do not re-decide T356's rule.\n\nT357 confirmed its adjudication three ways including a fresh live-oracle re-observation and a source-level refutation (Fineract's read path never calls serializeNulls(); the only occurrence in fineract-core+provider is CommandProcessingResultJsonSerializer.java:38). Spot-check the source claim in the pinned checkout at /Users/buv/fineract rather than accepting the citation.\n\nSCOPE: your review dir and handoff. Read anything; write only your own files. bash .softhouse/conformance.sh, never sh; probe-line presence tested before value (P-83).",
-      "note": "Filed by the driver of fire 20260828-140005. NOT dispatched -- three workers were live and STEP 5.5 forbids dispatching what the fire cannot see through. First thing for the next fire."
+      "note": "Filed by the driver of fire 20260828-140005. NOT dispatched -- three workers were live and STEP 5.5 forbids dispatching what the fire cannot see through. First thing for the next fire. | Dispatched by fire 20260828-140005 chain-iteration 2. Worktree-isolated."
     },
     {
       "id": "T363",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
       "role": null,
       "title": "The reference oracle's state moved permanently and NOTHING ON MAIN RECORDS IT -- plus two throwaway rigs that pin live counts by string equality and now fail closed",
-      "branch": null,
+      "branch": "softhouse/T363-oracle-baseline",
       "files_hint": [
         ".softhouse/capture/t363-oracle-baseline/",
-        ".softhouse/reviews/"
+        ".softhouse/reference-oracle.md"
       ],
       "dependencies": [
         "T352",
         "T359"
       ],
       "description": "T352 and T359 fired probes at the shared reference oracle. A journal entry CANNOT BE DELETED, so the movement is permanent: 4 transactions / 9 legs from T352 plus T359's own probe, including THE FIRST NON-MNT (USD) JOURNAL ENTRY EVER IN THIS TENANT.\n\nT352 recorded this properly in its own capture dir with before/after per-account counts -- that discipline is why this task can exist at all rather than someone meeting an unexplained discrepancy in two fires. But T359 found the record has two holes, and the second is live:\n\n1. THE BLAST-RADIUS LIST IS INCOMPLETE AND PARTLY WRONG (C-2, MAJOR). The ONE casualty T352 declared -- A2-15's sql/q4-a2-26-ledger-state.sql -- has a path that DOES NOT EXIST, and the file it evidently meant carries NO MNT assertion at all. Meanwhile two throwaway rigs, t305 and t327, pin 60/64 and 26 BY STRING EQUALITY, and live is now 71/75 and 31, so both FAIL CLOSED today. Find the real casualties yourself -- grep for count pins and currency assertions across .softhouse/, do not reuse either task's list -- and say where you looked.\n\n2. NOTHING ON `main` RECORDS THAT THE ORACLE MOVED. The record lives only inside T352's capture directory. The next task to re-derive a count against the live PostgreSQL has no reason to look there. Put a baseline record where a reader WILL find it, and make it DERIVED rather than typed -- a count someone must remember to update is P-45 again, and this program has been bitten by typed cardinals repeatedly this week (T248/T258/T340: correct the count where it is NAMED, never where it is RESTATED).\n\nALSO SETTLE THE POLICY, because this will happen again on every oracle-reaching fire: a probe against the shared reference oracle is IRREVERSIBLE. State when a task may fire one, what it must record, and where. T352's ORACLE-STATE-MOVED-BY-T352.md and the earlier ORACLE-STATE-MOVED-BY-T276.md are the shape to generalise -- they are good, they are just filed where nobody reads them.\n\nCORRECTED FIGURE: gl 21 moved 8->12, NOT 7->12; T352 inherited its 'before' from T242 instead of measuring it. Re-derive every before/after yourself against the live database. gl 18 and gl 22 were unmoved and that matters, because they are the pair the accrual argument rests on.\n\nPREFER READ-ONLY VERIFICATION. If you must fire a probe, record it with the same discipline. Do NOT weaken the bar: 46 parity vectors / 0 FAIL / 0 inadmissible. bash .softhouse/conformance.sh, never sh; probe-line presence tested before value (P-83). SCOPE: your capture dir and the rig files you repair.",
-      "note": "Filed by the driver of fire 20260828-140005 from T359's C-2."
+      "note": "Filed by the driver of fire 20260828-140005 from T359's C-2. | Dispatched by fire 20260828-140005 chain-iteration 2. Worktree-isolated. | files_hint NARROWED by the driver from \".softhouse/reviews/\" (collided with T364+T362 in the same wave) to reference-oracle.md, which is where a reader will actually look for oracle state."
     },
     {
       "id": "T364",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
       "role": null,
       "title": "INDEPENDENT review of T358 -- the registration guard's in-grant REACHED-BY remedy, an out-of-scope main.go row, and a guard that spun the bar for 9m43s",
-      "branch": null,
+      "branch": "softhouse/T364-review-t358",
       "files_hint": [
         ".softhouse/reviews/t364-review-t358/"
       ],
@@ -5180,17 +5180,17 @@
         "T358"
       ],
       "description": "*** DISPATCH THIS FIRST IN THE NEXT FIRE, AHEAD OF T362. *** Until it clears, `main` carries a LIVE HAZARD that T358 has already fixed on its branch: T323's merged guard_guards_dir_registration uses a git pathspec `*` that CROSSES `/`, so any task adding an ordinary .sh fixture anywhere under .softhouse/guards -- including inside the ledgerguard Go module -- drives the WHOLE BAR to exit 2. It is fail-CLOSED, so it cannot produce a false PASS, and that is the only reason the driver left it rather than merging T358 unreviewed. It will brick a graded run.\n\nReview softhouse/T358-t323-conditions, head 34303ea2 (4 commits). Read T337's review first (.softhouse/reviews/t337-review-t323/), since T358 answers its conditions AND contradicts one of them.\n\nATTACK, hardest first:\n1. THE OUT-OF-SCOPE EDIT. T358 wrote .softhouse/guards/ledgerguard/main.go, outside its files_hint. The driver read it and graded it a scope NOTE rather than a violation, because it is one machine-read REACHED-BY row required by T358's own C-2 design. CONFIRM OR REFUTE THAT JUDGEMENT -- do not inherit it. A design that requires writing outside your grant is either a good design with a scope note or a bad design excusing itself, and only re-derivation tells you which.\n2. THE REACHED-BY DIRECTION IS THE LOAD-BEARING NEW IDEA. Its whole claim is that the tripping task can perform the remedy IN ITS OWN SCOPE, which is the gap T337 found in T323's HARD argument. Drive arm 16 yourself. Then try to FORGE a witness: a row naming a file that does not exist, is untracked, is the member itself, or does not actually reach it. T358 says four such failures are driven red (arms 17-20) plus arm 26 -- regenerate them, do not accept the transcript (P-22).\n3. T358 SAYS main.go WOULD STILL READ `INVOKED` EVEN WITH ITS ROW STRIPPED, off conformance.sh:1484's `local ccsrc=...` -- a substring match against a DIFFERENT guard that merely reads the file's text. It pinned that fallback in arm 23 as the one deliberately-GREEN new arm instead of fixing it. JUDGE THAT CHOICE. A registration guard whose invocation test is satisfied by an unrelated mention is weaker than it reads.\n4. F-T358-3 IS A FINDING AGAINST T337: its proposed C-4 repair would itself have been false (two colliding ids over HEAD's ancestry, three over the full ref space, not one). ADJUDICATE IT -- re-derive the corpus a third time. Deleting the cardinal rather than retyping it is the claimed right answer; test that.\n5. F-T358-2 -- a guard CAN spin the whole bar (99.7% CPU, 9m43s) and nothing short of a full run detects it. Verify the repair, and treat the general claim seriously: is there any cheap detector, or is the cost profile genuinely only visible end-to-end?\n6. THE DRIVE INVOKES T323's DRIVE AS ARM SET 1 rather than copying its fifteen arms. Verify that composition actually runs them and that a MISSING T323 drive is a hard failure, not a silent skip -- that is the difference between reuse and a hole.\n7. EVERY PINNED GATE in T358's before/after table (§0), re-measured by you: 46/0, 0 inadmissible, 7884 cells, LDG-05 PASS, LEDGER 7/6/39/0, 13/13 dying, dead-path 109 == pin, fail-open 11, host-state 18, and GUARDS-DIR-REGISTRATION moving population 5->6 with reached-by=1. Re-verify P-84 STRUCTURALLY after the edits, not from transcripts.\n\nT358 did NOT commit its standalone fast-check and labelled its transcript NOT-EVIDENCE. Check nothing in the handoff's claims silently rests on it.\n\nSCOPE: your review dir and handoff. Read conformance.sh freely; write it only if you take the conformance.sh hold for your batch and the driver confirms nobody else has it. bash .softhouse/conformance.sh, never sh; probe-line presence tested before value (P-83).",
-      "note": "Filed by the driver of fire 20260828-140005. HIGHEST PRIORITY for the next fire: main carries a bar-bricking pathspec that T358's branch fixes. Review head is aac9e12b (NOT 34303ea2 -- T358 was resumed and finished its drive; the earlier head was mid-drive at arm 8/29). Its red drive is now 29 arms / 29 PASS. T358 states the merge result needs its own bar run because its before/after pair isolates the fork-point effect only."
+      "note": "Filed by the driver of fire 20260828-140005. HIGHEST PRIORITY for the next fire: main carries a bar-bricking pathspec that T358's branch fixes. Review head is aac9e12b (NOT 34303ea2 -- T358 was resumed and finished its drive; the earlier head was mid-drive at arm 8/29). Its red drive is now 29 arms / 29 PASS. T358 states the merge result needs its own bar run because its before/after pair isolates the fork-point effect only. | Dispatched by fire 20260828-140005 chain-iteration 2. Worktree-isolated."
     },
     {
       "id": "T365",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
       "role": null,
       "title": "F-T361-1: a zero-value instant in `released_at` still frees a LIVE lock -- 0001-01-01T00:00:00Z is what Go's zero time.Time emits",
-      "branch": null,
+      "branch": "softhouse/T365-t361-conditions",
       "files_hint": [
         ".softhouse/bin/fire-program.sh",
         ".softhouse/capture/t365-t361-conditions/"
@@ -5200,7 +5200,7 @@
         "T361"
       ],
       "description": "The T342+T353 stack is MERGED (5dfd1c9f). T361 reviewed it ACCEPT-WITH-CONDITIONS and C1 is the one OPEN finding. Read .softhouse/reviews/t361-review-t353/REVIEW.md -- EVERY condition below arrives as a supplied diff or a literal row, because T361 correctly wrote nothing into fire-program.sh.\n\nC1 (BLOCKING, F-T361-1, MEDIUM, direction OPEN = P-85 safety). T353 tightened arm 1's input from 'any non-empty JSON string' to 'any syntactically valid ISO-8601 UTC instant'. That closes \"None\", \"pending\", \"null\" and \" \". It does NOT close the ZERO-VALUE INSTANTS, which are exactly what a machine emits for a timestamp it never set, and which mean NOT RELEASED just as loudly: 0001-01-01T00:00:00Z (Go's zero time.Time through encoding/json), 0000-01-01T00:00:00Z, 1970-01-01T00:00:00Z (an int64 0 formatted), 9999-12-31T23:59:59Z (datetime.max / a 'never' sentinel), 2999-01-01T00:00:00Z. ALL FIVE currently return FREE-released against a LIVE pid on this host, measured, and reproduced on Linux so it is not a macOS artefact. Reject implausible instants and add a self-test row per closed case.\n\nC2 (F-2, SHUT) -- check mktemp; never let _st_dir be `/`. C3 (F-3, SHUT) -- derive the group-C fixture from LOCK_CEILING_SECS rather than hard-coding it. C4 (F-4, OPEN-coverage) -- two foreign-host rows in the self-test. C5 (F-5, OPEN-coverage) -- four arithmetic rows, and SAY IN THE SOURCE that epoch-parity.zsh is EVIDENCE, NOT A CONTROL. C8/C9/C11/C12 -- one-line corrections.\n\nT361 said C1..C5 should be ONE task and it should be next; that is this task. C6/C7/C10 are NOT yours -- they belong to T343.\n\nThe self-test is now wired to run FATALLY BEFORE THE FIRE READS THE LOCK, so a defect you introduce here does not fail a graded run, it STOPS EVERY FIRE FROM STARTING. Verify with `zsh .softhouse/bin/fire-program.sh --probe` (zsh, not bash -- the file is #!/bin/zsh and uses zsh glob syntax that bash cannot parse) and keep ROWS>=27 FAIL_OPEN=0 FAIL_SHUT=0. Re-run T361's 24-body corpus, T346's 35-row corpus, T342's census and the 192-state driver; the driver must still show 0 disagreements. State the FAIL DIRECTION of every change. P-22 drive each fix red first. bash .softhouse/conformance.sh must stay exit 0 with 46 parity vectors.",
-      "note": "Filed by the driver of fire 20260828-140005 from T361's C1-C5."
+      "note": "Filed by the driver of fire 20260828-140005 from T361's C1-C5. | Dispatched by fire 20260828-140005 chain-iteration 2. Worktree-isolated."
     },
     {
       "id": "T366",
