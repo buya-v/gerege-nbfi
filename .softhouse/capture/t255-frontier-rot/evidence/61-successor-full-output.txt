@@ -1,0 +1,170 @@
+######## ROOT AND CORPUS (asserted before anything is swept)
+repo root (discovered, never typed): /Users/buv/gerege-nbfi/.claude/worktrees/agent-aac32d39717605690
+commit                             : fc23ad0bc1595648da81067b6910450caa5ea02a
+ledger vectors found               : 13
+capture artefacts found            : 906
+
+######## ENGINE IDENTIFICATION
+/usr/bin/grep
+grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+######## CALIBRATION (P-72) -- FATAL, unlike the original's
+calibration subject: .softhouse/vectors/ledger/LDG-01-manual-je-3leg-minor-units.json
+CAL+  '"case_id"'          : 1
+CAL-  'ZZZ_NOT_PRESENT_ZZZ' : 0
+calibration OK -- a zero below is a real zero.
+
+######## ARTEFACT EXISTENCE / SIZE / SHA256 (vs the sha the vector CITES)
+######## THREE-PART CAPTURE CITATION (T233)
+######## PER-CELL BYTE RE-DERIVATION -- integer minor units only, no float
+
+--- LDG-01-manual-je-3leg-minor-units
+    OK  RESP    2213B sha=a942e4d2503fe97a cited=a942e4d2503fe97a MATCH NONEMPTY
+    OK  REQ      385B sha=be692ac41b58081b cited=be692ac41b58081b MATCH NONEMPTY
+    OK  RESP case_id=A2-347-je-manual-readback in_bytes=False in_filename=True sidecar=-
+    OK  REQ  case_id=A2-343-manual-je-3leg in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=460 NON-EMPTY
+    OK  leg[0] gl= 16 code= 10300  DEBIT major=   100000.250000 minor=  10000025 derived=  10000025 math=OK | '100000.250000' in RESP=1 in REQ=0
+    OK  leg[1] gl= 17 code= 10400  DEBIT major=    25000.370000 minor=   2500037 derived=   2500037 math=OK | '25000.370000' in RESP=1 in REQ=0
+    OK  leg[2] gl= 21 code= 99008 CREDIT major=   125000.620000 minor=  12500062 derived=  12500062 math=OK | '125000.620000' in RESP=1 in REQ=0
+    OK  total_debits_minor = 12500062  recomputed from promoted legs = 12500062
+    OK  total_credits_minor = 12500062  recomputed from promoted legs = 12500062
+
+--- LDG-02-repayment-split-4leg-minor-units
+    OK  RESP    5589B sha=cc2437b4b939bfb1 cited=cc2437b4b939bfb1 MATCH NONEMPTY
+    OK  REQ      122B sha=dd56f6371aa5abac cited=dd56f6371aa5abac MATCH NONEMPTY
+    OK  RESP case_id=A2-338-je-after-repayment-coverage in_bytes=False in_filename=True sidecar=-
+    OK  REQ  case_id=A2-337-repayment-split in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=418 NON-EMPTY
+    OK  leg[0] gl=  4 code= 10201 CREDIT major=   270450.580000 minor=  27045058 derived=  27045058 math=OK | '270450.580000' in RESP=1 in REQ=0
+    OK  leg[1] gl=  8 code= 40100 CREDIT major=    22049.420000 minor=   2204942 derived=   2204942 math=OK | '22049.420000' in RESP=1 in REQ=0
+    OK  leg[2] gl= 10 code= 40300 CREDIT major=     7500.000000 minor=    750000 derived=    750000 math=OK | '7500.000000' in RESP=1 in REQ=0
+    OK  leg[3] gl= 16 code= 10300  DEBIT major=   300000.000000 minor=  30000000 derived=  30000000 math=OK | '300000.000000' in RESP=1 in REQ=0
+    OK  total_debits_minor = 30000000  recomputed from promoted legs = 30000000
+    OK  total_credits_minor = 30000000  recomputed from promoted legs = 30000000
+
+--- LDG-03-overpayment-4leg-minor-units
+    OK  RESP    9753B sha=efc4bfa0dc39815a cited=efc4bfa0dc39815a MATCH NONEMPTY
+    OK  REQ      121B sha=b93a498a4efb499f cited=b93a498a4efb499f MATCH NONEMPTY
+    OK  RESP case_id=A2-383-je-after-overpay in_bytes=False in_filename=True sidecar=-
+    OK  REQ  case_id=A2-382-repayment-overpay in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=275 NON-EMPTY
+    OK  leg[0] gl=  4 code= 10201 CREDIT major=   889549.420000 minor=  88954942 derived=  88954942 math=OK | '889549.420000' in RESP=1 in REQ=0
+    OK  leg[1] gl=  8 code= 40100 CREDIT major=    20298.820000 minor=   2029882 derived=   2029882 math=OK | '20298.820000' in RESP=1 in REQ=0
+    OK  leg[2] gl=  6 code= 20100 CREDIT major=    90151.760000 minor=   9015176 derived=   9015176 math=OK | '90151.760000' in RESP=1 in REQ=0
+    OK  leg[3] gl= 16 code= 10300  DEBIT major=  1000000.000000 minor= 100000000 derived= 100000000 math=OK | '1000000.000000' in RESP=1 in REQ=0
+    OK  total_debits_minor = 100000000  recomputed from promoted legs = 100000000
+    OK  total_credits_minor = 100000000  recomputed from promoted legs = 100000000
+
+--- LDG-04-header-account-accepted
+    OK  RESP   28692B sha=d694d558fb5956cb cited=d694d558fb5956cb MATCH NONEMPTY
+    OK  REQ      348B sha=d2093f2a06fe2166 cited=d2093f2a06fe2166 MATCH NONEMPTY
+    OK  RESP case_id=A2-390-db-ledger-state-a2-15 in_bytes=True in_filename=True sidecar=.http 
+    OK  REQ  case_id=A2-345-manual-je-header in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=299 NON-EMPTY
+    OK  leg[0] gl=  1 code= 10000  DEBIT major=   100000.250000 minor=  10000025 derived=  10000025 math=OK | '100000.250000' in RESP=8 in REQ=0
+    OK  leg[1] gl= 21 code= 99008 CREDIT major=   100000.250000 minor=  10000025 derived=  10000025 math=OK | '100000.250000' in RESP=8 in REQ=0
+    OK  total_debits_minor = 10000025  recomputed from promoted legs = 10000025
+    OK  total_credits_minor = 10000025  recomputed from promoted legs = 10000025
+
+--- LDG-05-openingbalance-accepted-empty-ledger
+    OK  RESP    1855B sha=aad8f3ed33ef50de cited=aad8f3ed33ef50de MATCH NONEMPTY
+    OK  REQ      544B sha=9ec6eaa257aa4493 cited=9ec6eaa257aa4493 MATCH NONEMPTY
+    OK  RESP case_id=OB-ACCEPT-01-readback-db in_bytes=False in_filename=True sidecar=.http 
+    OK  REQ  case_id=OB-ACCEPT-01-openingbalance-empty-ledger in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=1013 NON-EMPTY
+    OK  leg[0] gl=  2 code=T305-1000  DEBIT major=   250000.250000 minor=  25000025 derived=  25000025 math=OK | '250000.250000' in RESP=1 in REQ=0
+    OK  leg[1] gl=  1 code=T305-3000 CREDIT major=   250000.250000 minor=  25000025 derived=  25000025 math=OK | '250000.250000' in RESP=1 in REQ=0
+    OK  leg[2] gl=  3 code=T305-1100  DEBIT major=   100000.370000 minor=  10000037 derived=  10000037 math=OK | '100000.370000' in RESP=1 in REQ=0
+    OK  leg[3] gl=  1 code=T305-3000 CREDIT major=   100000.370000 minor=  10000037 derived=  10000037 math=OK | '100000.370000' in RESP=1 in REQ=0
+    OK  leg[4] gl=  4 code=T305-2000 CREDIT major=   350000.620000 minor=  35000062 derived=  35000062 math=OK | '350000.620000' in RESP=1 in REQ=0
+    OK  leg[5] gl=  1 code=T305-3000  DEBIT major=   350000.620000 minor=  35000062 derived=  35000062 math=OK | '350000.620000' in RESP=1 in REQ=0
+    OK  total_debits_minor = 70000124  recomputed from promoted legs = 70000124
+    OK  total_credits_minor = 70000124  recomputed from promoted legs = 70000124
+
+--- LDG-06-postclosure-entry-accepted-one-day-after-closing-date
+    OK  RESP     928B sha=75a039a123db23db cited=75a039a123db23db MATCH NONEMPTY
+    OK  REQ      576B sha=d162b13898f6b2d8 cited=d162b13898f6b2d8 MATCH NONEMPTY
+    OK  RESP case_id=B1-ACCEPT-06-readback-db in_bytes=False in_filename=True sidecar=.http 
+    OK  REQ  case_id=B1-ACCEPT-06-entry-one-day-after-closing-date in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=2894 NON-EMPTY
+    OK  leg[0] gl=  1 code=T327-1000  DEBIT major=   250000.250000 minor=  25000025 derived=  25000025 math=OK | '250000.250000' in RESP=1 in REQ=0
+    OK  leg[1] gl=  2 code=T327-1100  DEBIT major=   100000.370000 minor=  10000037 derived=  10000037 math=OK | '100000.370000' in RESP=1 in REQ=0
+    OK  leg[2] gl=  3 code=T327-2000 CREDIT major=   350000.620000 minor=  35000062 derived=  35000062 math=OK | '350000.620000' in RESP=1 in REQ=0
+    OK  total_debits_minor = 35000062  recomputed from promoted legs = 35000062
+    OK  total_credits_minor = 35000062  recomputed from promoted legs = 35000062
+
+--- LDG-07-entry-on-the-business-date-accepted
+    OK  RESP     928B sha=d7c5c8196de89d39 cited=d7c5c8196de89d39 MATCH NONEMPTY
+    OK  REQ      572B sha=bd67ed4eae9255ce cited=bd67ed4eae9255ce MATCH NONEMPTY
+    OK  RESP case_id=B2-ACCEPT-01-readback-db in_bytes=False in_filename=True sidecar=.http 
+    OK  REQ  case_id=B2-ACCEPT-01-entry-on-business-date in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=2951 NON-EMPTY
+    OK  leg[0] gl=  1 code=T327-1000  DEBIT major=   250000.250000 minor=  25000025 derived=  25000025 math=OK | '250000.250000' in RESP=1 in REQ=0
+    OK  leg[1] gl=  2 code=T327-1100  DEBIT major=   100000.370000 minor=  10000037 derived=  10000037 math=OK | '100000.370000' in RESP=1 in REQ=0
+    OK  leg[2] gl=  3 code=T327-2000 CREDIT major=   350000.620000 minor=  35000062 derived=  35000062 math=OK | '350000.620000' in RESP=1 in REQ=0
+    OK  total_debits_minor = 35000062  recomputed from promoted legs = 35000062
+    OK  total_credits_minor = 35000062  recomputed from promoted legs = 35000062
+
+--- LDG-REFUSE-01-unbalanced-by-one-minor-unit
+    OK  RESP     576B sha=a2162fcf5ff5c4e8 cited=a2162fcf5ff5c4e8 MATCH NONEMPTY
+    OK  REQ      354B sha=15b82c1c363e03e4 cited=15b82c1c363e03e4 MATCH NONEMPTY
+    OK  RESP case_id=A2-344-manual-je-unbalanced in_bytes=False in_filename=True sidecar=.http 
+    OK  REQ  case_id=A2-344-manual-je-unbalanced in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=163 NON-EMPTY
+    OK  refusal.http_status = '403'  in RESP=1 in .status sidecar=1
+    OK  refusal.code = 'error.msg.glJournalEntry.invalid.mismatch.debits.credits'  in RESP=1 in .status sidecar=0
+    OK  refusal.message = 'Sum of All Debits must equal the sum of all Credits for a Journal Entr'  in RESP=1 in .status sidecar=0
+
+--- LDG-REFUSE-02-manual-adjustments-not-permitted
+    OK  RESP     595B sha=8c25952d36d3f210 cited=8c25952d36d3f210 MATCH NONEMPTY
+    OK  REQ      372B sha=26d581ea3feeac7f cited=26d581ea3feeac7f MATCH NONEMPTY
+    OK  RESP case_id=A2-346-manual-je-nomanual in_bytes=False in_filename=True sidecar=.http 
+    OK  REQ  case_id=A2-346-manual-je-nomanual in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=342 NON-EMPTY
+    OK  refusal.http_status = '403'  in RESP=1 in .status sidecar=1
+    OK  refusal.code = 'error.msg.glJournalEntry.invalid.account.manual.adjustments.not.permit'  in RESP=1 in .status sidecar=0
+    OK  refusal.message = 'Target account does not allow manual adjustments'  in RESP=1 in .status sidecar=0
+
+--- LDG-REFUSE-03-openingbalance-after-posted-entries
+    OK  RESP     822B sha=9383ed52390f73c3 cited=9383ed52390f73c3 MATCH NONEMPTY
+    OK  REQ      556B sha=dae579d2e7a34a26 cited=dae579d2e7a34a26 MATCH NONEMPTY
+    OK  RESP case_id=OB-01-openingbalance-after-posted-entries in_bytes=False in_filename=True sidecar=.http 
+    OK  REQ  case_id=OB-01-openingbalance-after-posted-entries in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=1476 NON-EMPTY
+    OK  refusal.http_status = '403'  in RESP=1 in .status sidecar=1
+    OK  refusal.code = 'error.msg.journalentry.defining.openingbalance.not.allowed'  in RESP=1 in .status sidecar=0
+    OK  refusal.message = 'Defining Opening balances not allowed after journal entries posted'  in RESP=1 in .status sidecar=0
+
+--- LDG-REFUSE-04-preclosure-entry-on-closing-date
+    OK  RESP     604B sha=c12e977f1c633356 cited=c12e977f1c633356 MATCH NONEMPTY
+    OK  REQ      407B sha=61c9b228b517e92f cited=61c9b228b517e92f MATCH NONEMPTY
+    OK  RESP case_id=A2-01-preclosure-on-date in_bytes=False in_filename=True sidecar=.http 
+    OK  REQ  case_id=A2-01-preclosure-on-date in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=2311 NON-EMPTY
+    OK  refusal.http_status = '403'  in RESP=1 in .status sidecar=1
+    OK  refusal.code = 'error.msg.glJournalEntry.invalid.accounting.closed'  in RESP=1 in .status sidecar=0
+    OK  refusal.message = 'Journal entry cannot be made prior to last account closing date for th'  in RESP=1 in .status sidecar=0
+
+--- LDG-REFUSE-05-future-dated-entry-one-day-after-business-date
+    OK  RESP     542B sha=dacfce8688080d3e cited=dacfce8688080d3e MATCH NONEMPTY
+    OK  REQ      401B sha=7f92fefc2deb96b4 cited=7f92fefc2deb96b4 MATCH NONEMPTY
+    OK  RESP case_id=A1-02-future-boundary-plus1 in_bytes=False in_filename=True sidecar=.http 
+    OK  REQ  case_id=A1-02-future-boundary-plus1 in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=2457 NON-EMPTY
+    OK  refusal.http_status = '403'  in RESP=1 in .status sidecar=1
+    OK  refusal.code = 'error.msg.glJournalEntry.invalid.future.date'  in RESP=1 in .status sidecar=0
+    OK  refusal.message = 'The journal entry cannot be made for a future date'  in RESP=1 in .status sidecar=0
+
+--- LDG-REFUSE-06-preclosure-entry-before-closing-date-echoes-the-closing-date
+    OK  RESP     604B sha=c12e977f1c633356 cited=c12e977f1c633356 MATCH NONEMPTY
+    OK  REQ      376B sha=6d1ca1e11a481542 cited=6d1ca1e11a481542 MATCH NONEMPTY
+    OK  RESP case_id=A2-02-preclosure-before in_bytes=False in_filename=True sidecar=.http 
+    OK  REQ  case_id=A2-02-preclosure-before in_bytes=False in_filename=True sidecar=.http 
+    OK  rerun_invariant len=1711 NON-EMPTY
+    OK  refusal.http_status = '403'  in RESP=1 in .status sidecar=1
+    OK  refusal.code = 'error.msg.glJournalEntry.invalid.accounting.closed'  in RESP=1 in .status sidecar=0
+    OK  refusal.message = 'Journal entry cannot be made prior to last account closing date for th'  in RESP=1 in .status sidecar=0
+
+    VECTOR FILES READ    : 13
+    PROMOTED CELLS SWEPT : 122   NOT BYTE-PRESENT / ARITHMETIC FAIL: 0
