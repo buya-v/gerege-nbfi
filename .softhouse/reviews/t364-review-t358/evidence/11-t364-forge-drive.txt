@@ -1,0 +1,52 @@
+============================================================================================
+T364 FORGE DRIVE -- the reviewer's own arms against T358. Whole bar, every arm.
+scratch: /tmp/t364/forgescratch
+head:    aac9e12b73000d2737e57cf2950f976867950a24
+============================================================================================
+F0-GREEN-CONTROL                               exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+      conformance:     INVOKED    .softhouse/guards/check-capture-namespace.sh
+      conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+      conformance:     INVOKED    .softhouse/guards/check-ledger-invariants.sh
+      conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+      conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0
+F1-unwired-main.go-ABSOLVED                    exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+      conformance:     INVOKED    .softhouse/guards/check-capture-namespace.sh
+      conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+      conformance:     INVOKED    .softhouse/guards/check-ledger-invariants.sh
+      conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+      conformance:     INVOKED    .softhouse/guards/zz-t364-checker/main.go
+      conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=4 declared=2 reached-by=1 invoked-by-nothing=0
+F2-CONTROL-unwired-unique.go                   exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+      conformance:     INVOKED    .softhouse/guards/check-capture-namespace.sh
+      conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+      conformance:     INVOKED    .softhouse/guards/check-ledger-invariants.sh
+      conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+      conformance:     GUARDS-DIR-REGISTRATION: REACHED-BY <witness path, repo-relative>
+      conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=1
+F3-selfcert-via-dotslash                       exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+      conformance:     INVOKED    .softhouse/guards/check-capture-namespace.sh
+      conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+      conformance:     INVOKED    .softhouse/guards/check-ledger-invariants.sh
+      conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+      conformance:     REACHED-BY .softhouse/guards/zz-t364-selfcert.sh — declared in its own header, reached by
+      conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+F4-selfcert-via-dotdot                         exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+      conformance:     INVOKED    .softhouse/guards/check-capture-namespace.sh
+      conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+      conformance:     INVOKED    .softhouse/guards/check-ledger-invariants.sh
+      conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+      conformance:     REACHED-BY .softhouse/guards/zz-t364-selfcert2.sh — declared in its own header, reached by
+      conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+F5-CONTROL-selfcert-exact                      exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+      conformance:     INVOKED    .softhouse/guards/check-capture-namespace.sh
+      conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+      conformance:     INVOKED    .softhouse/guards/check-ledger-invariants.sh
+      conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+      conformance: guard_guards_dir_registration: .softhouse/guards/zz-t364-selfcert3.sh declares REACHED-BY ITSELF. A
+      conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0
+============================================================================================
+T364 FORGE DRIVE: 6 arms matched their prediction, 0 did not.
+F1, F3 and F4 PREDICT A FAIL-OPEN and assert exit 0. A PASS on those three is a DEFECT
+FOUND. F2 and F5 are their controls and must be RED.
+============================================================================================
+FORGE RC=0

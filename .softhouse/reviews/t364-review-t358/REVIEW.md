@@ -21,16 +21,35 @@ live inside the grading instrument on `main` today**, and every gate it claims i
 re-measured myself and found unmoved. Nothing in it touches money, the ledger, a vector, a
 `DEC-n`, the frozen adapter contract or a `user` gate.
 
-**But I found two fail-OPENs T358 did not, both in the new `REACHED-BY` direction and its
-widened population, and both of them defeat a guarantee the guard PRINTS in its own output.**
+**But I found two fail-OPENs T358 did not, and I DROVE BOTH THROUGH THE WHOLE BAR WITH
+CONTROLS — they are proven, not argued.** Both defeat a guarantee the guard PRINTS in its own
+output:
+
+* **F-T364-1** — an unwired Go checker named **`main.go`**, in any subdirectory under
+  `.softhouse/guards`, is reported **`INVOKED`** and the bar stays **GREEN**. The same file under
+  a unique basename is refused. **`main.go` is the most likely filename for the next Go checker
+  in a directory whose only Go checker is already called that**, and closing `.go` was C-3's
+  whole point.
+* **F-T364-2** — the rule *"a file may not vouch for itself"*, which the guard prints in its own
+  refusal text, is defeated by a leading **`./`**. One line — `REACHED-BY ./<its own path>` —
+  absolves any unwired checker, and the guard then prints `(verified: it names …)`.
+
 Neither can produce a wrong answer about money or about any graded parity quantity — they
 produce a wrong PASS about *the guard's own coverage*, which is the same class as the
 `F-T337-3` defect T358 was commissioned to repair. That is why this is conditions and not
 REJECT, and why the conditions are not optional.
 
+**ONE THING THE DRIVER WILL MISREAD IF I DO NOT SAY IT HERE (§8.2).** T358 does **not** stop an
+ordinary `.sh` fixture under `.softhouse/guards` from taking the bar to `exit 2` — **I planted
+one on the merge result and it still exits 2.** T358 deliberately *keeps* the depth and instead
+gives the tripping task a remedy it can apply **in its own edit grant**. **It converts an
+unfixable refusal into a fixable one.** That is the right trade and T358 argues it properly, but
+"the hazard is fixed" is not the same sentence as "nobody trips it again".
+
 **ON THE MERGE QUESTION THE DRIVER ASKED — answered in full at §9.** Short form: **yes, merge
-it**, and re-run the bar on the merge result before believing anything. I did that re-run
-myself; the numbers are in §9.
+it, and merge it before the next task that touches `.softhouse/guards`.** I ran the bar on the
+merge result myself — **EXIT 0, every pinned gate holding, `deadOccurrences=109` on a corpus of
+1314** — and I ran it again with this review branch merged on top. Both green.
 
 ---
 
@@ -326,11 +345,12 @@ The invocation test is `case "$code" in *"$base"*)` over the comment-stripped ha
 **two non-comment lines** of `conformance.sh` [VERIFIED, my own haystack:]
 
 ```
-:319   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
-:332   say "conformance:   the cannotCatch const in .softhouse/guards/ledgerguard/main.go, which its"
+haystack :319  ( = conformance.sh:1484 )  local ccsrc="$REPO_ROOT/…/ledgerguard/main.go" cc ccsize
+haystack :332  ( = conformance.sh:1497 )  say "conformance:   the cannotCatch const in …/main.go, which its"
 ```
 
-Neither is a call site. Both belong to a **different** guard that reads that file's *text*.
+**The line numbers on the left are the COMMENT-STRIPPED haystack's, which is what the guard
+actually searches; the ones in brackets are `conformance.sh`'s own.** Neither is a call site. Both belong to a **different** guard that reads that file's *text*.
 
 **T358 records this as a fact about ONE FILE — "`main.go` would read INVOKED off
 `conformance.sh:1484`" — and pins it in arm 23. It is not a fact about one file. It is a fact
@@ -516,13 +536,128 @@ to apply to its own.
 I accepted no transcript. Fresh `git clone --no-hardlinks` of `aac9e12b`, every arm through
 **the whole bar** via `bash .softhouse/conformance.sh`, never a guard standalone.
 
-<!--DRIVE_RESULTS-->
+### 7.1 T358's OWN DRIVE, REGENERATED IN FULL — **28 arms, 28 PASS, 0 FAIL, `DRIVE RC=0`**
+
+`bash .softhouse/capture/t358-t323-conditions/drive-red-t358.sh <scratch>` against a fresh
+`git clone --no-hardlinks` of `aac9e12b`. **I ran the drive T358 committed, unmodified.**
+Full transcript: `evidence/10-t364-t358-drive-REGENERATED.txt`.
+
+* **ARM SET 1 — T323's fifteen arms, run unmodified against T358's `conformance.sh`: 15 PASS,
+  0 FAIL.** `>>> ARM SET 1: T323 DRIVE PASSED in full.` **Nothing T323 pinned moved because T358
+  widened a population**, and that set contains both of T323's *green* arms
+  (`00-GREEN-CONTROL`, `T299-02-same-collision-DOCUMENTED`), so a bar that had started refusing
+  everything would have failed the set rather than passed it.
+* **ARM SET 2 — T358's own thirteen arms: 13 PASS, 0 FAIL.** Every red arm: `exit=2` **AND**
+  `probe=ABSENT` **AND** its narrow refusal marker. Every green arm: `exit=0` **AND**
+  `probe=PRESENT` **AND** `VERDICT: PASS`.
+
+**P-84 held behaviourally on all 26 red arms** — not one printed a probe line — which is the
+empirical half of the structural proof at §10.
+
+**The load-bearing arm, read out of MY OWN transcript.** `T358-16-nested-fixture-DECLARED-in-grant`:
+
+```
+T358-16-nested-fixture-DECLARED-in-grant   exit=0 (want 0)  probe=PRESENT (want PRESENT)  marker=YES  >>> PASS
+
+conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+conformance:     REACHED-BY .softhouse/guards/ledgerguard/testdata/setup.sh — declared in its own header, reached by
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+```
+
+**That is C-2's whole claim, proven through the wired route by me: the same tree that refuses at
+arm 15 goes green at arm 16 on TWO LINES, both inside the `ledgerguard` module — one
+`REACHED-BY` row in the fixture's own header, one line in `main.go` naming the fixture.
+Neither touches `.softhouse/conformance.sh`. The tripping task can perform the remedy inside its
+own edit grant.** T337's F-T337-2 is answered.
+
+### 7.2 MY OWN FORGE DRIVE — **6 arms, 6 matched my prediction, and THREE OF THOSE PREDICTIONS WERE FAIL-OPENS**
+
+`.softhouse/reviews/t364-review-t358/drive-forge-t364.sh`, same discipline: whole bar every arm,
+exit **and** probe presence **and** marker, green control first. The committed script is
+**byte-identical** to the one I ran (`cmp`). Transcript: `evidence/11-t364-forge-drive.txt`.
+
+**READ THE `want` COLUMN. F1, F3 and F4 ASSERT `exit 0` BECAUSE I PREDICTED A FAIL-OPEN. A PASS
+ON THOSE THREE IS A DEFECT FOUND, NOT A GUARD WORKING.**
+
+| arm | exit | probe | census line | what it establishes |
+|---|---|---|---|---|
+| `F0-GREEN-CONTROL` | **0** | PRESENT | `population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0` | the control; the bar is not refusing everything |
+| **`F1-unwired-main.go-ABSOLVED`** | **0** | PRESENT | `population=7 **invoked=4** … invoked-by-nothing=0` | **F-T364-1 PROVEN.** A genuinely unwired Go checker at `.softhouse/guards/zz-t364-checker/main.go` is reported **`INVOKED`** and the bar stays **GREEN** |
+| `F2-CONTROL-unwired-unique.go` | **2** | ABSENT | `population=7 … **invoked-by-nothing=1**` | the SAME file under a unique basename is refused. **The basename is the whole difference** |
+| **`F3-selfcert-via-dotslash`** | **0** | PRESENT | `population=7 … **reached-by=2** … invoked-by-nothing=0` | **F-T364-2 PROVEN.** One line, `REACHED-BY ./<its own path>`, and the guard prints `REACHED-BY … zz-t364-selfcert.sh — declared in its own header, reached by` — **a file vouching for itself** |
+| **`F4-selfcert-via-dotdot`** | **0** | PRESENT | `population=7 … **reached-by=2**` | the same, via `…/ledgerguard/../<its own leaf>`. Two spellings, both accepted |
+| `F5-CONTROL-selfcert-exact` | **2** | ABSENT | `declares REACHED-BY ITSELF` | T358's arm 20 fires correctly on the *exact* spelling. **So the check works and my two spellings walk around it** |
+
+`T364 FORGE DRIVE: 6 arms matched their prediction, 0 did not.`
+
+**Both findings are controlled, not merely observed.** F1 vs F2 differ in exactly one identifier
+— the planted file's basename — and F3/F4 vs F5 differ in exactly one prefix on the witness
+path. **Nothing else in the tree changed between an arm and its control.**
+
+**One prediction I made and had to abandon, recorded because a review should say when it was
+wrong.** I expected `F4` to be confounded by `guard_dead_path_frontier` — the row's literal
+`…/ledgerguard/../zz-t364-selfcert2.sh` is not a path `git ls-files` lists, so I thought the
+census would score it a dead path and refuse for the wrong reason. **It did not**
+(`deadOccurrences` did not move in that arm), so F4's `exit 0` really is the registration guard
+accepting the row. The confound would have made the arm useless; it did not materialise.
 
 ---
 
 ## 8. THE HAZARD AND THE REMEDY, DRIVEN END TO END
 
-<!--HAZARD_RESULTS-->
+**Three bar runs, all mine, all `bash`, all through the whole harness.**
+
+### 8.1 THE HAZARD ON `main` IS REAL — one ordinary tracked fixture bricks every graded run
+
+Clone of `main`, one tracked file planted at `.softhouse/guards/ledgerguard/testdata/setup.sh`
+containing `#!/bin/sh` and an `echo`:
+
+```
+conformance: guard_guards_dir_registration: .softhouse/guards/ledgerguard/testdata/setup.sh IS INVOKED BY NOTHING.
+conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 invoked-by-nothing=1
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+EXIT=2       probe line count: 0 — ABSENT
+```
+[VERIFIED: `evidence/14-t364-hazard-on-main-DRIVEN.txt`.] **T337's F-T337-1 and the driver's
+premise are both correct.** `.softhouse/guards/ledgerguard/` is the home of the money guard this
+program cares most about, and a shell fixture beside a Go test is not an exotic input.
+**Fail-CLOSED — it cannot manufacture a PASS — which is the only reason leaving it on `main` was
+survivable.**
+
+### 8.2 **WHAT T358 DOES AND DOES NOT DO ABOUT IT — THE DRIVER MUST NOT MISREAD THIS**
+
+I planted the **identical** fixture on the **merge result** (`main` + T358):
+
+```
+conformance: guard_guards_dir_registration: .softhouse/guards/ledgerguard/testdata/setup.sh IS INVOKED BY NOTHING.
+conformance:     GUARDS-DIR-REGISTRATION: REACHED-BY <witness path, repo-relative>
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=1
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+EXIT=2       probe line count: 0 — ABSENT
+```
+[VERIFIED: `evidence/15-t364-hazard-on-merge-result.txt`.]
+
+# **STILL EXIT 2. T358 DOES NOT STOP THE FIXTURE TRIPPING THE GUARD, AND IT NEVER CLAIMED TO.**
+
+The task brief says the hazard *"will brick a graded run"* and that T358 *"has already fixed it
+on its branch"*. **Both halves are true, but not in the way a fast reader will take them.** T358
+**deliberately keeps the depth** — narrowing the pathspec to one directory level would buy the
+fix by no longer looking, trading T337's F-1 for a larger F-3, and T358 argues that at length
+and declines T337's one-token patch on exactly that ground. **What T358 removes is not the
+refusal. It is the DEAD END.**
+
+* On `main`, the tripping task reads a refusal whose only two remedies are edits to
+  `.softhouse/conformance.sh`, a file this program serialises to one holder per batch. **It must
+  wait for a fire that grants it that file.** That is the bricking.
+* On the merge result, the same refusal now prints, first, **a remedy the task can perform in its
+  own grant** — one `REACHED-BY` line in the new file's own header — and my arm 16 regeneration
+  (§7.1) proves that remedy takes the whole bar back to `exit 0` with the probe present.
+
+**So the correct statement for the driver's records is: T358 converts an unfixable refusal into a
+fixable one.** A task that adds a shell fixture under `.softhouse/guards` will still see
+`EXIT 2` on its first run, and must still add one line — it just no longer needs somebody else's
+edit grant to do it. **Merging T358 does not mean nobody trips this guard again.**
 
 ---
 
@@ -579,7 +714,30 @@ and it is the pattern whose ordinal both T358's drive and my own brief spend on 
 **I DID THAT RUN, so the driver does not have to take it on faith.** `bash
 .softhouse/conformance.sh` on the merge of `main` + `aac9e12b`:
 
-<!--MERGE_BAR-->
+```
+=== MERGE RESULT (main @ 635c6f60  +  aac9e12b) ===
+EXIT=0   WALL=75s   probe line: 1 occurrence, PRESENT, reading `up`
+
+conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0
+conformance:   namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
+conformance:   T316-DEADPATH-CENSUS: corpus=1314 deadFiles=76 deadOccurrences=109 …
+conformance:   … frontier 11, pinned at 11
+conformance:   … literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
+    parity vectors          PASS 46   FAIL 0
+    inadmissible            0
+    cells compared          7884 graded
+    ledger cells compared   142 graded, of which 39 are MONEY cells in int64 minor units
+    ledger inadmissible     0
+conformance:   exemption census READ: LEDGER parity vectors = 7 == pinned 7
+conformance:   exemption census READ: LEDGER money cells compared = 39 == pinned 39
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+```
+[VERIFIED: `evidence/13-t364-bar-on-merge-result.txt`, complete and unedited.]
+
+**THE MERGE RESULT IS GREEN AND EVERY PINNED GATE HOLDS ON IT.** And note the number that could
+only have come from a run: **`corpus=1314`** — `main`'s 1313 plus T358's one new tracked `.sh` —
+with **`deadOccurrences=109`, equal to the pin.** Two independent movements of one pinned corpus,
+reconciled by running.
 
 **THE NUMBER TO WATCH IS `deadOccurrences`, AND IT IS THE ONE THAT CANNOT BE COMPUTED.** T358
 adds one tracked `.sh` to T316's corpus; `main` independently added ten more files to it since
@@ -695,6 +853,68 @@ Checked, so that finding nothing is distinguishable from not looking.
   disturb it either.
 * I drove the witness-is-a-directory and witness-is-pathspec-magic cases by **reading**, not
   through the bar. Both are fail-closed by inspection; neither is asserted as driven.
+
+---
+
+## 10a. THIS REVIEW AGAINST ITS OWN RULES
+
+A reviewer who charges an author with turning the bar red, and then turns the bar red, has not
+read his own review. **So I ran it.** `main` + T358 + **this review branch**, merged in a scratch
+clone, whole bar:
+
+```
+=== main + T358 + T364, EXIT=0, probe line 1 occurrence PRESENT ===
+conformance:   T316-DEADPATH-CENSUS: corpus=1315 deadFiles=76 deadOccurrences=109 …   == pin
+conformance:   … frontier 11, pinned at 11
+conformance:   … literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
+conformance:   namespace: PASS
+conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0
+    parity vectors          PASS 46   FAIL 0
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+```
+[VERIFIED: `evidence/16-t364-SELFCHECK-main-plus-T358-plus-T364.txt`.]
+
+**AND I RAN IT A SECOND TIME ON MY FINAL COMMIT, AGAINST A NEWER `main`** (`main` moved from
+`635c6f60` to `f8ef2cd6` while I wrote this, and its corpus grew from 1314 to 1340):
+
+```
+=== main @ f8ef2cd6 + T358 + T364 FINAL, EXIT=0, probe line 1 occurrence PRESENT ===
+conformance:   T316-DEADPATH-CENSUS: corpus=1340 deadFiles=76 deadOccurrences=109 …   == pin
+conformance:   … frontier 11, pinned at 11 ; … /tmp path to a name: 18, pinned at 18
+conformance:   namespace: PASS
+conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0
+    parity vectors          PASS 46   FAIL 0        inadmissible  0
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+```
+[VERIFIED: `evidence/17-t364-SELFCHECK-FINAL-newer-main.txt`.]
+
+**THAT IS THE STRONGER RESULT AND THE DRIVER SHOULD USE IT: T358 merges green against TWO
+DIFFERENT `main` TIPS, 26 commits apart in corpus terms (1314 → 1340), with
+`deadOccurrences=109` on both.** It still is not a substitute for the driver's own run on the
+actual merge commit — `main` will have moved again — but it is two independent confirmations
+rather than one, and it is the direct empirical answer to P-83's question.
+
+**`corpus` 1314 → 1315** — my `drive-forge-t364.sh` is a tracked `.sh` and joins T316's corpus
+like anybody else's — **and `deadOccurrences` stays 109, the frontier stays 11, and the
+host-state census stays 18.** Two hazards I had to design around and both are measured clean:
+
+* **Host state.** My first draft assigned a literal `/tmp` transcript path to a variable, which is
+  exactly what `guard_no_host_state_in_lint_corpus` pins at 18 sites. I caught it before running
+  and rewrote it to `mktemp` with the transcript directory as an argument — the same shape T358's
+  own drive uses, and the same reason T358 left its fast-check uncommitted.
+* **Dead paths.** My first draft wrote the phrase `.softhouse/-ROOTED` unquoted in a comment,
+  which is a `.softhouse/`-rooted literal that resolves to nothing and would have put a row on
+  T316's frontier. Quoted.
+
+Neither would have been caught by `bash -n`, and neither is visible until the file is **tracked
+and the whole bar is run** — which is F-T358-2's lesson, arriving one review later.
+
+**Namespace (T299):** `T364` prefixes exactly one directory, `.softhouse/reviews/t364-review-t358`.
+No collision, no `OWNER*.md` needed, guard PASS on the merged tree.
+
+**Money:** this review adds one `.md`, one `.sh` that plants shell and Go stubs in a scratch
+clone, and thirteen `.txt` transcripts. **No monetary code path, schema, fixture or vector is
+touched by anything I wrote.**
 
 ---
 
