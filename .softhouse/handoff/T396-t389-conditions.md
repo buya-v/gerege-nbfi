@@ -195,10 +195,10 @@ alternative — leaving T388's integrity instrument permanently red — was wors
 
 ## 5. Held paths — not touched
 
-`git diff --name-only main...HEAD` is **7 files**: 3 under
+`git diff --name-only main...HEAD` is **8 files**: 3 under
 `.softhouse/capture/t388-accrual-capture/` (two prose corrections + the regenerated manifest),
-3 under `.softhouse/capture/t396-t389-conditions/` (the traps write-up + two bar transcripts), and
-this handoff. **Zero** hits for `.softhouse/vectors/` (T391), `capabilities-ledger.json` (T391) or
+4 under `.softhouse/capture/t396-t389-conditions/` (the traps write-up + three bar transcripts),
+and this handoff. **Zero** hits for `.softhouse/vectors/` (T391), `capabilities-ledger.json` (T391) or
 `.softhouse/conformance.sh` (T404) —
 `git diff --name-only main...HEAD | grep -E 'vectors/|capabilities-ledger|conformance\.sh'`
 returns **rc 1, no matches** (the engine ran and matched nothing; not an unrun selector).
@@ -262,3 +262,10 @@ after run 2 and a transcript must cover the tree it describes. **Exit 0**; probe
 `11 == pinned 11`; ledger **7 / 0** parity and **6 / 0** oracle-refusal, **39** money cells;
 inadmissible **0**, harness errors **0**, invariant violations **0**; **all 14 wrong ledger
 implementations DIED**. Identical to runs 1 and 2 on every required figure.
+
+**The one residual, stated rather than papered over:** run 3's own transcript, and this handoff's
+final paragraph, are not covered by the run that produced them — the same irreducible case T389
+named on T388. It is bounded: the only files added after run 3 are this Markdown handoff and a
+`.txt` transcript, neither of which the bar reads. Run 3's `T316-DEADPATH-CENSUS` walks
+`git ls-files` and read `corpus=1395` on a fully-committed tree, identical to runs 1 and 2, so no
+T396 file was untracked at bar time.
