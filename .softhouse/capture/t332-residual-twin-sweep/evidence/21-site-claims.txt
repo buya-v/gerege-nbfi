@@ -1,0 +1,161 @@
+{
+  "B999_residual_833": {
+    "B": 999,
+    "OUTSTANDING_residual": 833,
+    "id": "T159-R600p0-N2000-B999",
+    "is_833": true,
+    "repaid": 166,
+    "twin_predicts": 999
+  },
+  "n103_n104_n108_B1": [
+    {
+      "B": 1,
+      "E": 1,
+      "I1q": 1,
+      "delta": 0,
+      "full_family_b": false,
+      "id": "T117-CTRL-R600p0-N103-B1",
+      "law_ii_holds": true,
+      "n": 103,
+      "observed_principal": 1
+    },
+    {
+      "B": 1,
+      "E": 1,
+      "I1q": 1,
+      "delta": 0,
+      "full_family_b": false,
+      "id": "T219-R600p0-N103-B1",
+      "law_ii_holds": true,
+      "n": 103,
+      "observed_principal": 1
+    },
+    {
+      "B": 1,
+      "E": 1,
+      "I1q": 1,
+      "delta": 0,
+      "full_family_b": false,
+      "id": "T84B-NSW-R600p0-N103-B1",
+      "law_ii_holds": true,
+      "n": 103,
+      "observed_principal": 1
+    },
+    {
+      "B": 1,
+      "E": 0,
+      "I1q": 1,
+      "delta": 1,
+      "full_family_b": true,
+      "id": "T219-R600p0-N104-B1",
+      "law_ii_holds": true,
+      "n": 104,
+      "observed_principal": 0
+    },
+    {
+      "B": 1,
+      "E": 0,
+      "I1q": 1,
+      "delta": 1,
+      "full_family_b": true,
+      "id": "T84B-NSW-R600p0-N104-B1",
+      "law_ii_holds": true,
+      "n": 104,
+      "observed_principal": 0
+    },
+    {
+      "B": 1,
+      "E": 0,
+      "I1q": 1,
+      "delta": 1,
+      "full_family_b": true,
+      "id": "T219-R600p0-N108-B1",
+      "law_ii_holds": true,
+      "n": 108,
+      "observed_principal": 0
+    },
+    {
+      "B": 1,
+      "E": 0,
+      "I1q": 1,
+      "delta": 1,
+      "full_family_b": true,
+      "id": "T84-TIE-R600p0-N108-B1",
+      "law_ii_holds": true,
+      "n": 108,
+      "observed_principal": 0
+    },
+    {
+      "B": 1,
+      "E": 0,
+      "I1q": 1,
+      "delta": 1,
+      "full_family_b": true,
+      "id": "T84B-NSW-R600p0-N108-B1",
+      "law_ii_holds": true,
+      "n": 108,
+      "observed_principal": 0
+    }
+  ],
+  "pair_B3001_B4499": {
+    "both_leave_exactly_n_delta": true,
+    "rows": [
+      {
+        "B": 3001,
+        "OUTSTANDING_residual": 3000,
+        "delta": 1,
+        "id": "T219-R600p0-N3000-B3001",
+        "law_ii_holds": true,
+        "n": 3000,
+        "n_delta": 3000
+      },
+      {
+        "B": 4499,
+        "OUTSTANDING_residual": 3000,
+        "delta": 1,
+        "id": "T219-R600p0-N3000-B4499",
+        "law_ii_holds": true,
+        "n": 3000,
+        "n_delta": 3000
+      }
+    ]
+  },
+  "trio_B201_B251_B299": {
+    "B_minus_n_delta_equals_REPAID_not_residual": true,
+    "B_minus_n_delta_equals_the_residual": false,
+    "all_leave_exactly_200": true,
+    "rows": [
+      {
+        "B": 201,
+        "B_minus_n_delta": 1,
+        "OUTSTANDING_residual": 200,
+        "delta": 1,
+        "id": "T229-R600p0-N200-B201",
+        "n": 200,
+        "repaid": 1,
+        "twin_min_B_ndelta": 200
+      },
+      {
+        "B": 251,
+        "B_minus_n_delta": 51,
+        "OUTSTANDING_residual": 200,
+        "delta": 1,
+        "id": "T229-R600p0-N200-B251",
+        "n": 200,
+        "repaid": 51,
+        "twin_min_B_ndelta": 200
+      },
+      {
+        "B": 299,
+        "B_minus_n_delta": 99,
+        "OUTSTANDING_residual": 200,
+        "delta": 1,
+        "id": "T229-R600p0-N200-B299",
+        "n": 200,
+        "repaid": 99,
+        "twin_min_B_ndelta": 200
+      }
+    ]
+  }
+}
+SITES: PASS

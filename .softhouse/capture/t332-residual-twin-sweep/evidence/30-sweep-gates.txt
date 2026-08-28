@@ -1,0 +1,110 @@
+T332 SWEEP — every wording of law (ii) / its twin in .softhouse/gates.md
+
+SELECTOR (published beside the figure — "not found" is a statement about the search):
+    TWIN-SYMBOLIC          min\(\s*B_minor\s*,\s*n\s*[·*x]\s*(?:δ|delta)\s*\)
+    TWIN-SYMBOLIC-SHORT    min\(\s*B\s*,\s*n\s*[·*x]\s*(?:δ|delta)\s*\)
+    LAW-SYMBOLIC           max\(\s*0\s*,\s*B_minor\s*[−\-]\s*n\s*[·*x]\s*(?:δ|delta)\s*\)
+    DIFFERENCE-FORM        B_minor\s*[−\-]\s*n\s*[·*x]\s*(?:δ|delta)
+    NDELTA-BARE            n\s*[·*x]\s*(?:δ|delta)
+    CAP-PROSE              (?:term (?:is only|enters only as)|capped by|is (?:only )?the cap\b|the cap the law names)
+    FUNCTION-OF-PROSE      (?:function of the (?:\*\*)?PRINCIPAL|fact about the (?:\*\*)?PRINCIPAL|principals asked are what the figure is)
+    TOTAL-PRINCIPAL-LAW    TOTAL PRINCIPAL\s*=
+SCOPE MARKS (any one of these inside [-4, +14] lines covers a SCOPED site):
+    UPPER BOUND, NOT AN EQUALITY
+    CORRECTION \(T277\)
+    FALSE on a measured set of seven
+    law \(ii\) of the block above is FALSE
+WHERE I LOOKED: every line of .softhouse/gates.md, top to bottom, no section excluded.
+
+lines swept: 4422   hit lines: 43   ledger entries: 27
+
+ 1067  EXEMPT-ATTRIBUTED      FUNCTION-OF-PROSE                  **T219** (registered before probing that the residual record is a function of the PRINCIPAL asked
+       anchor: ## G-8 — TWO phenomena at the rounding floor (one of them in TWO shapes), and a THIRD outcome in which there i
+ 1164  SCOPED [covered]       TWIN-SYMBOLIC,NDELTA-BARE          > named the wrong variable.** The residual is AT MOST `min(B_minor, n·δ)`: the principal is what it 
+       anchor: ### STANDING RULE — how to edit this section (adopted at T140, proposed by T129)
+ 1165  SCOPED [covered]       CAP-PROSE                          > a fact about and the term is only the cap. T117 and T159 topped out at principals of 501 and 1001 
+       anchor: ### STANDING RULE — how to edit this section (adopted at T140, proposed by T129)
+ 1170  EXEMPT-T332-NOTE       TWIN-SYMBOLIC,NDELTA-BARE          > **[T332 — `min(B_minor, n·δ)` is an UPPER BOUND, NOT AN EQUALITY.** It is measured FALSE on seven
+       anchor: ### STANDING RULE — how to edit this section (adopted at T140, proposed by T129)
+ 1172  EXEMPT-T332-NOTE       FUNCTION-OF-PROSE                  > claim this mechanism rests on is untouched — the residual is a fact about the PRINCIPAL — and the
+       anchor: ### STANDING RULE — how to edit this section (adopted at T140, proposed by T129)
+ 1682  SCOPED [covered]       DIFFERENCE-FORM,NDELTA-BARE        `B_minor − n·δ` — **1, 51 and 99** minor units at `δ = 1` and `n = 200` — which is why all three lea
+       anchor: ### Discriminator for family B
+ 1686  EXEMPT-T332-NOTE       DIFFERENCE-FORM,NDELTA-BARE        > sentence above read *"Their residual is `B_minor − n·δ`"*. Measured, `B_minor − n·δ` is **1 / 51 /
+       anchor: ### Discriminator for family B
+ 1879  SCOPED [covered]       TOTAL-PRINCIPAL-LAW                > characterised that site and derived the FULL/PARTIAL split from it** — `TOTAL PRINCIPAL =
+       anchor: ### What is NOT known about family B
+ 1880  SCOPED [covered]       LAW-SYMBOLIC,DIFFERENCE-FORM,NDELTA-BARE > max(0, B_minor − n·δ)`, which predicted the amount repaid on three partial cells before they were
+       anchor: ### What is NOT known about family B
+ 1909  SCOPED [covered]       TWIN-SYMBOLIC,NDELTA-BARE,CAP-PROSE > `min(B_minor, n·δ)`; the term enters only as the **cap**, and T159 had used one third of the
+       anchor: ### What is NOT known about family B
+ 1914  EXEMPT-T332-NOTE       TWIN-SYMBOLIC,NDELTA-BARE          > RE-MEASURED* below. **[T332 — `min(B_minor, n·δ)` is an UPPER BOUND, NOT AN EQUALITY: false on
+       anchor: ### What is NOT known about family B
+ 2318  EXEMPT-FROZEN          LAW-SYMBOLIC,DIFFERENCE-FORM,NDELTA-BARE,TOTAL-PRINCIPAL-LAW last row EMI = E + B ;   TOTAL PRINCIPAL = max(0, B_minor − n·δ)
+       anchor: ### THE LAW
+ 2319  EXEMPT-FROZEN          NDELTA-BARE                        FULL family B    ⟺ δ ≥ 1 ∧ B_minor ≤ n·δ
+       anchor: ### THE LAW
+ 2320  EXEMPT-FROZEN          DIFFERENCE-FORM,NDELTA-BARE        PARTIAL family B ⟺ δ ≥ 1 ∧ n·δ < B_minor < (δ + ½)·n , repaying exactly B_minor − n·δ
+       anchor: ### THE LAW
+ 2340  EXEMPT-CORRECTION      LAW-SYMBOLIC,DIFFERENCE-FORM,NDELTA-BARE,TOTAL-PRINCIPAL-LAW `TOTAL PRINCIPAL = max(0, B_minor − n·δ)` — **does not**.
+       anchor: #### CORRECTION (T277) — law (ii) of the block above is FALSE on SEVEN cells, and those seven are EXACTLY gap 
+ 2382  EXEMPT-CORRECTION      LAW-SYMBOLIC,DIFFERENCE-FORM,NDELTA-BARE,TOTAL-PRINCIPAL-LAW | (ii) `TOTAL PRINCIPAL = max(0, B_minor − n·δ)` | all 296 | **289 of 296** |
+       anchor: #### CORRECTION (T277) — law (ii) of the block above is FALSE on SEVEN cells, and those seven are EXACTLY gap 
+ 2391  EXEMPT-CORRECTION      NDELTA-BARE                        | cell | capture | n | `B` minor | `E` | `I₁q` | `δ` | `B ≤ n·δ`? | law (ii) predicts | **OBSERVED p
+       anchor: #### CORRECTION (T277) — law (ii) of the block above is FALSE on SEVEN cells, and those seven are EXACTLY gap 
+ 2401  EXEMPT-CORRECTION      NDELTA-BARE                        **Every one of the seven satisfies the block's own `FULL family B` antecedent**, `δ ≥ 1 ∧ B_minor ≤ 
+       anchor: #### CORRECTION (T277) — law (ii) of the block above is FALSE on SEVEN cells, and those seven are EXACTLY gap 
+ 2435  EXEMPT-CORRECTION      TOTAL-PRINCIPAL-LAW                TOTAL PRINCIPAL = max(0, E + B_minor − I_last)      [ I_last = the LAST repayment row's interest ]
+       anchor: #### CORRECTION (T277) — law (ii) of the block above is FALSE on SEVEN cells, and those seven are EXACTLY gap 
+ 2442  EXEMPT-CORRECTION      LAW-SYMBOLIC,DIFFERENCE-FORM,NDELTA-BARE `max(0, B_minor − n·δ)` is computed from the inputs before the oracle is asked. What it does is
+       anchor: #### CORRECTION (T277) — law (ii) of the block above is FALSE on SEVEN cells, and those seven are EXACTLY gap 
+ 2483  EXEMPT-T332-SECTION    TWIN-SYMBOLIC,LAW-SYMBOLIC,DIFFERENCE-FORM,NDELTA-BARE **THE TWIN IS THE SAME CLAIM.** `residual = B_minor − max(0, B_minor − n·δ) = min(B_minor, n·δ)` is 
+       anchor: #### T332 — THE SAME CLAIM, SWEPT: law (ii)'s algebraic twin was live at SIX further sites in this file, one o
+ 2500  EXEMPT-T332-SECTION    TWIN-SYMBOLIC,NDELTA-BARE          `min(B_minor, n·δ)` survives as a valid **UPPER BOUND** on unamortized exposure; what is false is th
+       anchor: #### T332 — THE SAME CLAIM, SWEPT: law (ii)'s algebraic twin was live at SIX further sites in this file, one o
+ 2507  EXEMPT-T332-SECTION    NDELTA-BARE                        - **No vector is affected.** `grep -rn 'n·δ\|n\*delta\|B_minor' .softhouse/vectors/` → no match.
+       anchor: #### T332 — THE SAME CLAIM, SWEPT: law (ii)'s algebraic twin was live at SIX further sites in this file, one o
+ 2515  EXEMPT-T332-SECTION    CAP-PROSE,FUNCTION-OF-PROSE        (*"the term is only the cap; the principals asked are what the figure is actually a fact about"*); a
+       anchor: #### T332 — THE SAME CLAIM, SWEPT: law (ii)'s algebraic twin was live at SIX further sites in this file, one o
+ 2520  EXEMPT-T332-SECTION    NDELTA-BARE                        in order to refute; per-cell figures (`B3001`/`B4499` leaving exactly `n·δ`; `n = 104`/`108` at `B =
+       anchor: #### T332 — THE SAME CLAIM, SWEPT: law (ii)'s algebraic twin was live at SIX further sites in this file, one o
+ 2521  EXEMPT-T332-SECTION    NDELTA-BARE                        **measured true on the cells they name**, not waved through; the `n·δ` sentence in *What T219 did NO
+       anchor: #### T332 — THE SAME CLAIM, SWEPT: law (ii)'s algebraic twin was live at SIX further sites in this file, one o
+ 2632  EXEMPT-CORRECTION      TOTAL-PRINCIPAL-LAW                > predicts `TOTAL PRINCIPAL = 0` on every one of them. Law (ii) holds on **213 of the 220** FACT-A
+       anchor: ### The gaps, carried forward verbatim rather than smoothed
+ 2690  SCOPED [covered]       TWIN-SYMBOLIC,LAW-SYMBOLIC,DIFFERENCE-FORM,NDELTA-BARE residual = B_minor − max(0, B_minor − n·δ) = min(B_minor, n·δ)
+       anchor: ## THE RESIDUAL RECORD, RE-MEASURED — the record moved at a term nobody had to enlarge (T219, registered befor
+ 2693  EXEMPT-CORRECTION      NDELTA-BARE,CAP-PROSE,FUNCTION-OF-PROSE — **a function of the PRINCIPAL asked, capped by `n·δ`.** The term enters only as the cap. T117 and
+       anchor: ## THE RESIDUAL RECORD, RE-MEASURED — the record moved at a term nobody had to enlarge (T219, registered befor
+ 2699  EXEMPT-T332-NOTE       LAW-SYMBOLIC,DIFFERENCE-FORM,NDELTA-BARE **[T332 — THE IDENTITY IN THAT FENCE IS EXACT; THE LAW UNDER IT IS NOT.** `B_minor − max(0, B_minor 
+       anchor: ## THE RESIDUAL RECORD, RE-MEASURED — the record moved at a term nobody had to enlarge (T219, registered befor
+ 2700  EXEMPT-T332-NOTE       TWIN-SYMBOLIC,NDELTA-BARE          and `min(B_minor, n·δ)` are the same expression for every integer `B_minor` and `n·δ` — verified
+       anchor: ## THE RESIDUAL RECORD, RE-MEASURED — the record moved at a term nobody had to enlarge (T219, registered befor
+ 2738  EXEMPT-PERCELL         NDELTA-BARE                        reach it, `T219-R600p0-N3000-B3001` and `T219-R600p0-N3000-B4499`, and both leave exactly `n·δ`
+       anchor: ### The three things this changes
+ 2739  EXEMPT-PERCELL         CAP-PROSE                          with `δ = 1`, which is the cap the law names. The largest **FULL** family-B residual is
+       anchor: ### The three things this changes
+ 2797  EXEMPT-PERCELL         NDELTA-BARE                        `E = 0` against `I₁q = 1`, so `δ = 1` and `B_minor = 1 ≤ n·δ` — FULL family B.
+       anchor: ### The three PROMOTED vectors sit exactly where this section says the region is — RE-OBSERVED LIVE
+ 2835  EXEMPT-LIMITATION      NDELTA-BARE                        is `n·δ` there too. `n·δ` was measured at n = 3000 and at no other term.
+       anchor: ### What T219 did NOT do, stated so this block cannot be over-read
+ 2944  SCOPED [covered]       CAP-PROSE,FUNCTION-OF-PROSE        > not enough, because the term is only the cap; **the principals asked are what the figure is
+       anchor: ## The bound on the failing principal, RESTATED OVER THE DOMAIN ACTUALLY SWEPT
+ 2948  EXEMPT-T332-NOTE       TWIN-SYMBOLIC,NDELTA-BARE          > **[T332 — this is the same claim as `min(B_minor, n·δ)` written without a symbol, which is why a
+       anchor: ## The bound on the failing principal, RESTATED OVER THE DOMAIN ACTUALLY SWEPT
+ 3647  SCOPED [covered]       TWIN-SYMBOLIC,NDELTA-BARE,CAP-PROSE,FUNCTION-OF-PROSE > the residual is AT MOST `min(B_minor, n·δ)` — a function of the **PRINCIPAL**, capped by the term.
+       anchor: ## G-8-NOTICE (SUPERSEDED — historical record; the LIVE G-8 section is above) — local fire `20260821-134344`: 
+ 3649  EXEMPT-T332-NOTE       TWIN-SYMBOLIC,NDELTA-BARE          > above for the current state. **[T332 — "AT MOST" is this pointer's only edit: `min(B_minor, n·δ)` 
+       anchor: ## G-8-NOTICE (SUPERSEDED — historical record; the LIVE G-8 section is above) — local fire `20260821-134344`: 
+ 3787  SCOPED [covered]       TWIN-SYMBOLIC,NDELTA-BARE,FUNCTION-OF-PROSE > **The residual of an unrescued family-B cell is AT MOST `min(B_minor, n·δ)` — a fact about the PRI
+       anchor: ### UPDATE — T159 reviewed T117, APPROVED it, and then DOUBLED the headline by asking the question T117 said n
+ 3788  SCOPED [covered]       CAP-PROSE                          > capped by the term.** T219 tripled the record *at T159's own term, n = 3000*, by asking a bigger p
+       anchor: ### UPDATE — T159 reviewed T117, APPROVED it, and then DOUBLED the headline by asking the question T117 said n
+ 3791  EXEMPT-T332-NOTE       TWIN-SYMBOLIC,NDELTA-BARE          > **[T332 — `min(B_minor, n·δ)` IS AN UPPER BOUND, NOT AN EQUALITY, AND THIS SITE WAS CORRECTED FIRS
+       anchor: ### UPDATE — T159 reviewed T117, APPROVED it, and then DOUBLED the headline by asking the question T117 said n
+ 3796  EXEMPT-T332-NOTE       TWIN-SYMBOLIC,NDELTA-BARE          > where the law predicts **0**; `min(B_minor, n·δ)` therefore over-states their residual by exactly 
+       anchor: ### UPDATE — T159 reviewed T117, APPROVED it, and then DOUBLED the headline by asking the question T117 said n
+
+
+SCOPED sites: 11   argued-exempt sites: 32   unclassified: 0   stale ledger rows: 0
+T332 SWEEP: PASS

@@ -1,0 +1,11 @@
+THE SEVEN — T332's own derivation, integer minor units, I1q COMPUTED
+id                           n     B     E   I1q   d | law(ii)=P obs=P | twin=R obs=R
+T117P2-R600p0-N108-B11     108    11     5     6   1 |       0       5 |     11      6   rows=[108]
+T117P2-R600p0-N121-B11     121    11     5     6   1 |       0       4 |     11      7   rows=[121]
+T117P2-R600p0-N150-B11     150    11     5     6   1 |       0       2 |     11      9   rows=[150]
+T159-R600p0-N108-B11       108    11     5     6   1 |       0       5 |     11      6   rows=[108]
+T159-R600p0-N121-B11       121    11     5     6   1 |       0       4 |     11      7   rows=[121]
+T159-R600p0-N150-B11       150    11     5     6   1 |       0       2 |     11      9   rows=[150]
+T159-R600p0-N2000-B999    2000   999   499   500   1 |       0     166 |    999    833   rows=[2000]
+
+full-tuple comparison against the pinned expectation: MATCH

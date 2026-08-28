@@ -1,0 +1,51 @@
+=== scope all ===
+  admitted                                       761
+  amortizing                                     183
+  delta0_and_law_ii_exceptions_intersect         0
+  delta_histogram                                {'0': 363, '1': 215}
+  descriptive_last_row_form_on_fact_a            '441/441'
+  exception_sets_identical                       True
+  fact_a_and_law_ii_exceptions_intersect         0
+  fact_a_fails                                   137
+  fact_a_holds                                   441
+  failing_cells_inside_conservative_region       7
+  failing_cells_outside_conservative_region      0
+  files                                          10
+  full_family_b_n                                210
+  header_ne_rowsum                               0
+  law_ii_fails                                   7
+  law_ii_holds                                   571
+  law_ii_on_delta0                               363
+  law_ii_on_fact_a                               434
+  law_ii_on_full_family_b                        203
+  observed_residual_EXCEEDS_formula              0
+  observed_residual_below_formula                7
+  partial_family_b_law_holds                     5
+  partial_family_b_n                             5
+  principal_in_last_row_only_on_fact_a           '441/441'
+  rate_inexact                                   8
+  rate_inexact_ids                               ['T84-FAR-R7p0-N56-B100', 'T84-FAR-R7p0-N56-B1000', 'T84-FAR-R7p0-N56-B10000', 'T84-FAR-R7p0-N56-B100000', 'T84-FAR-R7p0-N56-B30', 'T84-FAR-R7p0-N56-B50', 'T84-RP-R7p0-N56-B23', 'T84-RP-R7p0-N56-B24']
+  record_largest_failing_disbursement            4499
+  record_largest_failing_disbursement_cells      ['T219-R600p0-N3000-B4499']
+  record_largest_full_family_b_cells             ['T219-R600p0-N3000-B2999']
+  record_largest_full_family_b_residual          2999
+  record_largest_unamortized_residual            3000
+  record_largest_unamortized_residual_cells      ['T219-R600p0-N3000-B3001', 'T219-R600p0-N3000-B4499']
+  residual_equals_last_row_balance               '468/578'
+  scope                                          'all'
+  setting_violations                             []
+  stuck                                          578
+  threw                                          6
+  total_captures                                 775
+  twin_fails                                     7
+  twin_holds                                     571
+  twin_identity_holds_every_cell                 True
+  exceptions:
+    T117P2-R600p0-N108-B11   law(ii) predicts 0, observed 5 | twin predicts residual 11, observed 6
+    T117P2-R600p0-N121-B11   law(ii) predicts 0, observed 4 | twin predicts residual 11, observed 7
+    T117P2-R600p0-N150-B11   law(ii) predicts 0, observed 2 | twin predicts residual 11, observed 9
+    T159-R600p0-N108-B11     law(ii) predicts 0, observed 5 | twin predicts residual 11, observed 6
+    T159-R600p0-N121-B11     law(ii) predicts 0, observed 4 | twin predicts residual 11, observed 7
+    T159-R600p0-N150-B11     law(ii) predicts 0, observed 2 | twin predicts residual 11, observed 9
+    T159-R600p0-N2000-B999   law(ii) predicts 0, observed 166 | twin predicts residual 999, observed 833
+  GRADE: PASS (every pinned figure reproduced)
