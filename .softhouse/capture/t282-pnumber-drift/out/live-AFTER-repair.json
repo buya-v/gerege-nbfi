@@ -124,17 +124,17 @@
   6
  ],
  "counts": {
-  "sites": 8685,
+  "sites": 8818,
   "definition": 97,
-  "bare": 8155,
-  "consistent": 382,
+  "bare": 8264,
+  "consistent": 400,
   "misdirecting": 34,
-  "undefined": 6,
+  "undefined": 12,
   "negative_control": 11,
-  "cross_referenced": 22,
+  "cross_referenced": 24,
   "skipped_self_source": 2,
-  "self_corrected": 24,
-  "skipped_self_output": 21
+  "self_corrected": 32,
+  "skipped_self_output": 22
  },
  "thresholds": {
   "min_evidence": 6,
@@ -18683,7 +18683,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 49,
+   "line": 58,
    "cited": 79,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# (1) the drift the task was dispatched for: P-79/P-80/P-83 carrying the",
@@ -18693,7 +18693,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 49,
+   "line": 58,
    "cited": 80,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# (1) the drift the task was dispatched for: P-79/P-80/P-83 carrying the",
@@ -18703,7 +18703,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 49,
+   "line": 58,
    "cited": 83,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# (1) the drift the task was dispatched for: P-79/P-80/P-83 carrying the",
@@ -18713,7 +18713,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 50,
+   "line": 59,
    "cited": 86,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# rule patterns.md defines one number higher. Recorded at P-86.",
@@ -18723,7 +18723,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 52,
+   "line": 61,
    "cited": 79,
    "detail": "gloss (dash) matches no registered rule (best trigram score 0 < 6): 'the P-86 off-by-one\"     if \"prints an absence over an error\" in g or \"exits 1 on NO MATCH\" in g \\\\'",
    "text": "return TP, \"P-80's rule ('a corrected cardinal rots in every place it was restated') cited as P-79 -- the P-86 off-by-one\"",
@@ -18733,7 +18733,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 52,
+   "line": 61,
    "cited": 86,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "return TP, \"P-80's rule ('a corrected cardinal rots in every place it was restated') cited as P-79 -- the P-86 off-by-one\"",
@@ -18743,7 +18743,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 55,
+   "line": 64,
    "cited": 86,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "return TP, \"P-81's rule (git grep exits 1 on no-match, >1 on error) cited as P-80 -- the P-86 off-by-one\"",
@@ -18753,7 +18753,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 57,
+   "line": 66,
    "cited": 80,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "return TP, \"P-81's rule (the fail-open guard caught three workers' own instruments) cited as P-80/P-83 -- the P-86 off-by-one\"",
@@ -18763,7 +18763,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 57,
+   "line": 66,
    "cited": 83,
    "detail": "gloss (dash) matches no registered rule (best trigram score 0 < 6): 'the P-86 off-by-one\"     # (2) sweep/census OUTPUT files: the \\'gloss\\' is a grep result line, i.e. '",
    "text": "return TP, \"P-81's rule (the fail-open guard caught three workers' own instruments) cited as P-80/P-83 -- the P-86 off-by-one\"",
@@ -18773,7 +18773,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
-   "line": 57,
+   "line": 66,
    "cited": 86,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "return TP, \"P-81's rule (the fail-open guard caught three workers' own instruments) cited as P-80/P-83 -- the P-86 off-by-one\"",
@@ -18927,6 +18927,46 @@
    "cited": 6,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "print(\"restamped at sha %s; gates P-6 at :%d\" % (sha, g6))",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/wiring/20-RED-planted-drift.txt",
+   "line": 13,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/patterns.md:3248 P-79 -- gloss (colon) 'never fix a rotted number, make the second site READ the first.' matches P-80 (12) better than the cited P-79 (0); patterns.md P-80",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/wiring/20-RED-planted-drift.txt",
+   "line": 13,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/patterns.md:3248 P-79 -- gloss (colon) 'never fix a rotted number, make the second site READ the first.' matches P-80 (12) better than the cited P-79 (0); patterns.md P-80",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/wiring/20-RED-planted-drift.txt",
+   "line": 13,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "PNUMBER-CITATIONS: FATAL MISDIRECTING .softhouse/patterns.md:3248 P-79 -- gloss (colon) 'never fix a rotted number, make the second site READ the first.' matches P-80 (12) better than the cited P-79 (0); patterns.md P-80",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/wiring/extracted-guard.sh",
+   "line": 34,
+   "cited": 84,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '  # PRESENCE BEFORE VALUE'",
+   "text": "# PRESENCE BEFORE VALUE (P-84): a verdict line that was never PRINTED is a",
    "zone": "evidence",
    "fatal": false
   },
@@ -45738,6 +45778,1122 @@
    "cited": 84,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "**P-84 applied in the right order — PRESENCE before VALUE.** *\"Exit 2 with NO probe line printed is a",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 7,
+   "cited": 86,
+   "detail": "gloss (bracketed) matches no registered rule (best trigram score 3 < 6): '*an ID IS A CARDINAL — cite the id AND its sentence together so a shifted number is self-correcting*'",
+   "text": "**`P-86`** (*an ID IS A CARDINAL — cite the id AND its sentence together so a shifted number is",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 23,
+   "cited": 78,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "carries the merge note: the six patterns *\"were renumbered on landing\"* from `P-78`…`P-83` to",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 23,
+   "cited": 83,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "carries the merge note: the six patterns *\"were renumbered on landing\"* from `P-78`…`P-83` to",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 24,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-79`…`P-84` because a cloud fire had already published a rival `P-78`. So `patterns.md` holds the",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 24,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-79`…`P-84` because a cloud fire had already published a rival `P-78`. So `patterns.md` holds the",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 24,
+   "cited": 78,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-79`…`P-84` because a cloud fire had already published a rival `P-78`. So `patterns.md` holds the",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 30,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "here for a specific reason — **the drifted sites are not independent witnesses.** `P-86` records that a",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 32,
+   "cited": 67,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "mistake is one mistake, and counting them as ninety is the error `P-67` names (*a figure certified EXACT",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 46,
+   "cited": 70,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`\"Not found\" is a statement about the search` — **`P-70`**. So, precisely:",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 55,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| **NOT searched — GIT COMMIT MESSAGES** | they are not files. **This is a real gap**: `P-86` records that the previous fire's *commit messages* carried shifted ids, and this sweep cannot see them. Filed as `FU-T282-8`. ",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 58,
+   "cited": 40,
+   "detail": "gloss (bracketed) matches no registered rule (best trigram score 1 < 6): '*say what you skipped and how many*'",
+   "text": "| **DELIBERATELY EXCLUDED — this task's own drifted fixtures** | `bin/check-pnumber-citations.py`, `bin/drive-red-green.sh` and `red/` contain deliberately wrong citations by construction. Skipped, **counted, and printed",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 64,
+   "cited": 12,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "2 DECLARED in-file collisions (P-12, P-13)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 64,
+   "cited": 13,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "2 DECLARED in-file collisions (P-12, P-13)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 65,
+   "cited": 1,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "6 cross-register collisions with gates-proposed-answers.md (P-1..P-6)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 65,
+   "cited": 6,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "6 cross-register collisions with gates-proposed-answers.md (P-1..P-6)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "UNDEFINED",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 66,
+   "cited": 131,
+   "detail": "P-131 is defined in neither register (DECLARED dangling in patterns.md errata)",
+   "text": "2 DECLARED dangling cited ids (P-131, P-261)",
+   "zone": "evidence",
+   "declared_dangling": true,
+   "fatal": false
+  },
+  {
+   "kind": "UNDEFINED",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 66,
+   "cited": 261,
+   "detail": "P-261 is defined in neither register (DECLARED dangling in patterns.md errata)",
+   "text": "2 DECLARED dangling cited ids (P-131, P-261)",
+   "zone": "evidence",
+   "declared_dangling": true,
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 87,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "* **A whole class nobody had recorded: `P-79` cited carrying `P-80`'s rule.** Seven sites say `P-79` beside",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 87,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "* **A whole class nobody had recorded: `P-79` cited carrying `P-80`'s rule.** Seven sites say `P-79` beside",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 89,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "cardinal rots in every place it was restated*). Same `P-86` off-by-one, a different id from the four in",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 91,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "* **An INDEPENDENT drift, unrelated to `P-86`, and the strongest signal in the corpus (score 21).**",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 92,
+   "cited": 69,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`.softhouse/tasks.json:2374` cites `P-69` for *\"the guard did not merely fail to run, it RAN, wrote its",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 94,
+   "cited": 69,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "MISSING, UNREAD: a recorded predicate that no summary consults*) almost verbatim. `P-69` is *the measured",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "UNDEFINED",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 97,
+   "cited": 131,
+   "detail": "P-131 is defined in neither register (DECLARED dangling in patterns.md errata)",
+   "text": "* **Two ids cited that resolve to NOTHING:** `P-131` and `P-261`.",
+   "zone": "evidence",
+   "declared_dangling": true,
+   "fatal": false
+  },
+  {
+   "kind": "UNDEFINED",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 97,
+   "cited": 261,
+   "detail": "P-261 is defined in neither register (DECLARED dangling in patterns.md errata)",
+   "text": "* **Two ids cited that resolve to NOTHING:** `P-131` and `P-261`.",
+   "zone": "evidence",
+   "declared_dangling": true,
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 109,
+   "cited": 70,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-70` in `conformance.sh`, `P-71` in `T251.md`, `P-22`/`P-46`/`P-69`/`P-86` in `tasks.json` are all",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 109,
+   "cited": 71,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-70` in `conformance.sh`, `P-71` in `T251.md`, `P-22`/`P-46`/`P-69`/`P-86` in `tasks.json` are all",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 109,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-70` in `conformance.sh`, `P-71` in `T251.md`, `P-22`/`P-46`/`P-69`/`P-86` in `tasks.json` are all",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 109,
+   "cited": 46,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-70` in `conformance.sh`, `P-71` in `T251.md`, `P-22`/`P-46`/`P-69`/`P-86` in `tasks.json` are all",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 109,
+   "cited": 69,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-70` in `conformance.sh`, `P-71` in `T251.md`, `P-22`/`P-46`/`P-69`/`P-86` in `tasks.json` are all",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 109,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-70` in `conformance.sh`, `P-71` in `T251.md`, `P-22`/`P-46`/`P-69`/`P-86` in `tasks.json` are all",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 119,
+   "cited": 6,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**R1 — the banner's unambiguity claim was FALSE.** It ended *\"`P-6`…`P-39` are defined only here and are",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 119,
+   "cited": 39,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**R1 — the banner's unambiguity claim was FALSE.** It ended *\"`P-6`…`P-39` are defined only here and are",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 120,
+   "cited": 6,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "unambiguous.\"* `gates-proposed-answers.md:195` defines `## P-6 · Freeze a gate write-up once its",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 123,
+   "cited": 7,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-7`…`P-39` and rewritten as a **measurement that goes stale**, pointing at the checker that re-derives it.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 123,
+   "cited": 39,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-7`…`P-39` and rewritten as a **measurement that goes stale**, pointing at the checker that re-derives it.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 125,
+   "cited": 12,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**R2 — `patterns.md` collides with ITSELF.** `P-12` and `P-13` are each defined **twice**:",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 125,
+   "cited": 13,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**R2 — `patterns.md` collides with ITSELF.** `P-12` and `P-13` are each defined **twice**:",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 129,
+   "cited": 12,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `P-12` | `:315` *a right conclusion on a wrong reason recurs in the artefact written to record it* | `:1385` *an ID SERIES that restarts in a second file is a name collision waiting for its first citation* |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 130,
+   "cited": 13,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `P-13` | `:320` *for a specification-bearing comment, the comment IS the deliverable* | `:1412` *grepping the store for a VALUE does not answer what the store KILLS* |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 132,
+   "cited": 12,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "Read `P-12`'s second definition again. **The rule about id series colliding is defined at the id it is",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 134,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "already-published citation, which is `P-80` exactly. The declaration",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 138,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**R3 — the repair for `P-80` nearly committed `P-80`.** Inserting the new banner shifted every definition",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 138,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**R3 — the repair for `P-80` nearly committed `P-80`.** Inserting the new banner shifted every definition",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 139,
+   "cited": 12,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): '284`→`:315`, `P-13` `:1381`→`:1412` — **including the four line numbers the new banner cites.** `bin/restamp.py` derives them from the live '",
+   "text": "line beneath it — `P-12` `:284`→`:315`, `P-13` `:1381`→`:1412` — **including the four line numbers the new",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 139,
+   "cited": 13,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): '1381`→`:1412` — **including the four line numbers the new banner cites.** `bin/restamp.py` derives them from the live file via the same `bui'",
+   "text": "line beneath it — `P-12` `:284`→`:315`, `P-13` `:1381`→`:1412` — **including the four line numbers the new",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 143,
+   "cited": 96,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**Plus `P-96` and the forward-correction errata table**, derived by `bin/append-pattern.py` from the",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 147,
+   "cited": 96,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "> **`P-96` declares its own collision hazard.** It claims a cardinal while four other workers were live in",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 148,
+   "cited": 96,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "> the same fire. **If a rival `P-96` lands, renumber this one** — and note that the instrument it ships is",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 149,
+   "cited": 78,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "> precisely what was missing when `P-78` collided: it detects a renumbering that failed to reach the places",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 165,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-1` | `docs/adr/DEC-2-gl-accounting-adapter.md:294` | `` `P-79` `` → `` `P-80` `` beside *\"never fix a rotted number, make the second site READ the first\"*. **Ratified ADR — needs a DEC-2 amendment**, not a doc",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 166,
+   "cited": 69,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 0 < 6): '**`P-79`** beside *\"the guard did not merely fail to run, it RAN…\"*. '",
+   "text": "| `FU-T282-2` | `.softhouse/tasks.json:2374` | `P-69` → **`P-79`** beside *\"the guard did not merely fail to run, it RAN…\"*. **Orchestrator-owned (`P-31`).** The most material single repair in the set. |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 166,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-2` | `.softhouse/tasks.json:2374` | `P-69` → **`P-79`** beside *\"the guard did not merely fail to run, it RAN…\"*. **Orchestrator-owned (`P-31`).** The most material single repair in the set. |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 166,
+   "cited": 31,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-2` | `.softhouse/tasks.json:2374` | `P-69` → **`P-79`** beside *\"the guard did not merely fail to run, it RAN…\"*. **Orchestrator-owned (`P-31`).** The most material single repair in the set. |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 167,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-3` | `.softhouse/tasks.json:3149` | `P-79` → **`P-80`** beside *\"make the second site READ the first, do not restate the cardinal\"*. Orchestrator-owned. |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 168,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-4` | `.softhouse/tasks.json:2427` | `P-80` → **`P-81`** and `P-83` → **`P-81`** beside *\"three separate workers wrote fail-opens INTO instruments meant to enforce the rule they broke\"*. Orchestrator-owned. |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 168,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-4` | `.softhouse/tasks.json:2427` | `P-80` → **`P-81`** and `P-83` → **`P-81`** beside *\"three separate workers wrote fail-opens INTO instruments meant to enforce the rule they broke\"*. Orchestrator-owned. |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 169,
+   "cited": 79,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): '`P-80` / `P-80`→`P-81`. **Committed evidence — do NOT edit.** Already corrected forward in the `patterns.md` errata; '",
+   "text": "| `FU-T282-5` | 7 evidence sites (`t255-dec2-rev8/`, `t260-dec2-rev8/`, `t256-verdict-predicate/RULES-failopen.md:17`, `t304-evidence-destruction/`) | `P-79`→`P-80` / `P-80`→`P-81`. **Committed evidence — do NOT edit.** ",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 169,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-5` | 7 evidence sites (`t255-dec2-rev8/`, `t260-dec2-rev8/`, `t256-verdict-predicate/RULES-failopen.md:17`, `t304-evidence-destruction/`) | `P-79`→`P-80` / `P-80`→`P-81`. **Committed evidence — do NOT edit.** ",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 169,
+   "cited": 80,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): '`P-81`. **Committed evidence — do NOT edit.** Already corrected forward in the `patterns.md` errata; '",
+   "text": "| `FU-T282-5` | 7 evidence sites (`t255-dec2-rev8/`, `t260-dec2-rev8/`, `t256-verdict-predicate/RULES-failopen.md:17`, `t304-evidence-destruction/`) | `P-79`→`P-80` / `P-80`→`P-81`. **Committed evidence — do NOT edit.** ",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 169,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-5` | 7 evidence sites (`t255-dec2-rev8/`, `t260-dec2-rev8/`, `t256-verdict-predicate/RULES-failopen.md:17`, `t304-evidence-destruction/`) | `P-79`→`P-80` / `P-80`→`P-81`. **Committed evidence — do NOT edit.** ",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "UNDEFINED",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 170,
+   "cited": 131,
+   "detail": "P-131 is defined in neither register (DECLARED dangling in patterns.md errata)",
+   "text": "| `FU-T282-6` | `31-sound-sweep.py:14` (`P-131`), `guard_rvpa_floor_t290.py:24` (`P-261`) | Cited ids resolving to nothing; almost certainly `P-13`/`P-31` and `P-26`. **Only their authors can say**, so declared rather th",
+   "zone": "evidence",
+   "declared_dangling": true,
+   "fatal": false
+  },
+  {
+   "kind": "UNDEFINED",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 170,
+   "cited": 261,
+   "detail": "P-261 is defined in neither register (DECLARED dangling in patterns.md errata)",
+   "text": "| `FU-T282-6` | `31-sound-sweep.py:14` (`P-131`), `guard_rvpa_floor_t290.py:24` (`P-261`) | Cited ids resolving to nothing; almost certainly `P-13`/`P-31` and `P-26`. **Only their authors can say**, so declared rather th",
+   "zone": "evidence",
+   "declared_dangling": true,
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 170,
+   "cited": 13,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-6` | `31-sound-sweep.py:14` (`P-131`), `guard_rvpa_floor_t290.py:24` (`P-261`) | Cited ids resolving to nothing; almost certainly `P-13`/`P-31` and `P-26`. **Only their authors can say**, so declared rather th",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 170,
+   "cited": 31,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-6` | `31-sound-sweep.py:14` (`P-131`), `guard_rvpa_floor_t290.py:24` (`P-261`) | Cited ids resolving to nothing; almost certainly `P-13`/`P-31` and `P-26`. **Only their authors can say**, so declared rather th",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 170,
+   "cited": 26,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-6` | `31-sound-sweep.py:14` (`P-131`), `guard_rvpa_floor_t290.py:24` (`P-261`) | Cited ids resolving to nothing; almost certainly `P-13`/`P-31` and `P-26`. **Only their authors can say**, so declared rather th",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 171,
+   "cited": 11,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-7` | `T108.md:40` (`P-11`/`P-12`), `T198.md:31` (`P-58`/`P-75`) | Two AMBIGUOUS adjacent-rule pairs. Left for their authors. |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 171,
+   "cited": 12,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-7` | `T108.md:40` (`P-11`/`P-12`), `T198.md:31` (`P-58`/`P-75`) | Two AMBIGUOUS adjacent-rule pairs. Left for their authors. |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 171,
+   "cited": 58,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-7` | `T108.md:40` (`P-11`/`P-12`), `T198.md:31` (`P-58`/`P-75`) | Two AMBIGUOUS adjacent-rule pairs. Left for their authors. |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 171,
+   "cited": 75,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-7` | `T108.md:40` (`P-11`/`P-12`), `T198.md:31` (`P-58`/`P-75`) | Two AMBIGUOUS adjacent-rule pairs. Left for their authors. |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 173,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `FU-T282-9` | the sweep | **Commit messages are not covered.** `P-86` records that shifted ids reached commit messages, and a `git ls-files` sweep cannot see them. Needs a `git log`-based pass. |",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 209,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "id. **`P-86` is an erratum: its body names `P-78`…`P-84` precisely in order to say those citations are",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 209,
+   "cited": 78,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "id. **`P-86` is an erratum: its body names `P-78`…`P-84` precisely in order to say those citations are",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 209,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "id. **`P-86` is an erratum: its body names `P-78`…`P-84` precisely in order to say those citations are",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 210,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "wrong.** On the real drifted line from `RULES-failopen.md:17`, `P-86` and `P-81` tied at 6, the tie broke",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 210,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "wrong.** On the real drifted line from `RULES-failopen.md:17`, `P-86` and `P-81` tied at 6, the tie broke",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 211,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "toward the higher id, `P-86` won, was suppressed *because it names `P-80`* — and the finding vanished.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 211,
+   "cited": 80,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): 'and the finding vanished.    **The correction was absorbing the defect it documented.** Fixed: a suppressed winner may be skipped but'",
+   "text": "toward the higher id, `P-86` won, was suppressed *because it names `P-80`* — and the finding vanished.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 220,
+   "cited": 33,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "(P-33)\"* — a **correct** citation of `P-33` (*a tool claim is a claim about a binary, a version, a",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 222,
+   "cited": 25,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "row's first cell, *\"Money is integer minor units, no floating point\"*, and scored it against `P-25`.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 226,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ids with the correction on the same line. Resolved with `P-86`'s own remedy: if the id the gloss actually",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 243,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "second site > READ the first.' matches P-80 (12) better than the cited P-79 (0)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 243,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "second site > READ the first.' matches P-80 (12) better than the cited P-79 (0)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 245,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`grep` exits 1 on NO MATCH and >1 on ERROR' matches P-81 (6) better than the cited P-80 (0)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 245,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`grep` exits 1 on NO MATCH and >1 on ERROR' matches P-81 (6) better than the cited P-80 (0)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 246,
+   "cited": 80,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): \"matches P-81 (9) > cited P-80 (1)        gloss: 'Three separate workers last fire wrote fail-opens INTO instruments meant to\"",
+   "text": "FATAL  MISDIRECTING .softhouse/reference-oracle.md:3 P-80 -- matches P-81 (9) > cited P-80 (1)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 246,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "FATAL  MISDIRECTING .softhouse/reference-oracle.md:3 P-80 -- matches P-81 (9) > cited P-80 (1)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 246,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "FATAL  MISDIRECTING .softhouse/reference-oracle.md:3 P-80 -- matches P-81 (9) > cited P-80 (1)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 255,
+   "cited": 79,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'never fix a rotted number …      +  `P-80`: never fix a rotted number … -  **P-80**: prints an absence over an error …  +  **P-81**: prints '",
+   "text": "-  `P-79`: never fix a rotted number …      +  `P-80`: never fix a rotted number …",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 255,
+   "cited": 80,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'never fix a rotted number … -  **P-80**: prints an absence over an error …  +  **P-81**: prints an absence over an error …'",
+   "text": "-  `P-79`: never fix a rotted number …      +  `P-80`: never fix a rotted number …",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 256,
+   "cited": 80,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'prints an absence over an error …  +  **P-81**: prints an absence over an error … -  the rule they broke (P-80) …            +  the rule the'",
+   "text": "-  **P-80**: prints an absence over an error …  +  **P-81**: prints an absence over an error …",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 256,
+   "cited": 81,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'prints an absence over an error … -  the rule they broke (P-80) …            +  the rule they broke (P-81) …'",
+   "text": "-  **P-80**: prints an absence over an error …  +  **P-81**: prints an absence over an error …",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 257,
+   "cited": 80,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '-  the rule they broke'",
+   "text": "-  the rule they broke (P-80) …            +  the rule they broke (P-81) …",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 257,
+   "cited": 81,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '-  the rule they broke (P-80) …            +  the rule they broke'",
+   "text": "-  the rule they broke (P-80) …            +  the rule they broke (P-81) …",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 263,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "FATAL MISDIRECTING .softhouse/RESUME.md:3 P-84 …         exit=1  directive-fatal=1",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 266,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**2 fatal and not 3 — stated, not tuned away.** `RULES-failopen.md:17` **paraphrases** `P-81` rather than",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 267,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "restating it (score 6 against a fatal floor of 9); `P-86` itself hedges and calls that sentence only *\"part",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 268,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "of `P-81`\"*. **Detection covers 3/3; the fatal tier covers 2/3.** Lowering the floor to catch it would be",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 288,
+   "cited": 80,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 0 < 6): 'a line number into a moving file is the same defect as a stale count.)'",
+   "text": "`guard_no_host_state_in_lint_corpus() {`.** (Anchored on that string, not a line number — `P-80`: a",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 321,
+   "cited": 84,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '  # PRESENCE BEFORE VALUE'",
+   "text": "# PRESENCE BEFORE VALUE (P-84): a verdict line that was never PRINTED is a",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 362,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "(`P-22`; and `T243`'s lesson that a guard is not wired until it has been seen to fail *through the route",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 367,
+   "cited": 80,
+   "detail": "gloss (possessive) matches no registered rule (best trigram score 0 < 6): \", not `P-79`'s ```\"",
+   "text": "> READ the first.        <-- DELIBERATELY DRIFTED: that sentence is `P-80`'s rule, not `P-79`'s",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 367,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "> READ the first.        <-- DELIBERATELY DRIFTED: that sentence is `P-80`'s rule, not `P-79`'s",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 370,
+   "cited": 80,
+   "detail": "gloss (possessive) matches no registered rule (best trigram score 1 < 6): \", not `P-79`'s, and it is named here so the snippet is self-correcting rather than a fresh instance of the defect. \"",
+   "text": "…which is a **deliberately drifted fixture** — that sentence is **`P-80`**'s rule, not `P-79`'s, and it is",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 370,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "…which is a **deliberately drifted fixture** — that sentence is **`P-80`**'s rule, not `P-79`'s, and it is",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 385,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| **RED** — one drifted citation planted in `patterns.md`, a DIRECTIVE file | `A CITED P-NUMBER CARRIES A RULE SENTENCE THAT patterns.md DEFINES UNDER A DIFFERENT NUMBER` / `FATAL MISDIRECTING … matches P-80 (12) better ",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 385,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| **RED** — one drifted citation planted in `patterns.md`, a DIRECTIVE file | `A CITED P-NUMBER CARRIES A RULE SENTENCE THAT patterns.md DEFINES UNDER A DIFFERENT NUMBER` / `FATAL MISDIRECTING … matches P-80 (12) better ",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 408,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "moving it 11→12 against a pin of 11 — a HARD guard, exit 2. Per **`P-84`** the probe line's **presence** was",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 414,
+   "cited": 48,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "file that **contains** one. That is **`P-48`** verbatim. Repaired by restating the rule by description —",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 433,
+   "cited": 96,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "because its text changed** — it is still there — but because adding `P-96` changed the rare-token",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md",
+   "line": 444,
+   "cited": 96,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| `.softhouse/patterns.md` | R1–R3, `P-96`, the `T282` CITATION ERRATA table, both machine-readable declarations |",
    "zone": "evidence",
    "fatal": false
   },

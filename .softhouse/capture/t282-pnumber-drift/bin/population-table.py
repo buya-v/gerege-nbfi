@@ -18,6 +18,7 @@ FP = "FALSE-POSITIVE"
 TP = "TRUE-DRIFT"
 AMB = "AMBIGUOUS"
 MENTION = "ERRATA-MENTION"
+T282_HANDOFF = (".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md")
 
 # Hand adjudication lives in DATA, beside the evidence, not in this code:
 # out/adjudication.json, keyed "file:line:cited". Each entry carries its reason,
@@ -51,6 +52,14 @@ def adjudicate(f):
     conservative and its report tier is generous."""
     rel, ln, cited, best = f["file"], f["line"], f["cited"], f.get("best")
     g = (f.get("gloss") or "")
+    # T282's OWN handoff RECORDS the drifted citations -- its errata table and
+    # follow-up rows necessarily quote "P-79 -> P-80" and the sentences beside
+    # them. Those are the RECORD of the defect, not instances of it, exactly as
+    # patterns.md's errata table is. Named as ONE FILE, not a directory, so a
+    # future handoff in the same folder is still graded.
+    if rel == T282_HANDOFF:
+        return MENTION, ("T282's own handoff RECORDING this drift -- the errata and "
+                         "follow-up rows quote the wrong id beside the right one on purpose")
     for e in HAND:
         if e["file"] == rel and e["cited"] == cited and e["gloss_contains"] in g:
             e["_hit"] = e.get("_hit", 0) + 1
@@ -80,12 +89,13 @@ def main():
     rows = []
     for f in sorted(fs, key=lambda x: (x["zone"], x["file"], x["line"])):
         if f["kind"] == "UNDEFINED":
-            if f.get("declared_dangling") and f["file"].endswith("patterns.md"):
+            if f.get("declared_dangling") and (f["file"].endswith("patterns.md")
+                                                or f["file"] == T282_HANDOFF):
                 # patterns.md's OWN errata table names these ids in order to
                 # record that they resolve to nothing. A MENTION, not a use --
                 # the same use/mention line the checker draws for misdirection.
                 rows.append((f["zone"], f["file"], f["line"], "P-%d" % f["cited"], "-",
-                             MENTION, "the T282 errata table naming the dangling id "
+                             MENTION, "the T282 errata/handoff naming the dangling id "
                                       "it exists to record"))
                 continue
             rows.append((f["zone"], f["file"], f["line"], "P-%d" % f["cited"], "-",

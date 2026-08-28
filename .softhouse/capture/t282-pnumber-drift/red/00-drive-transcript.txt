@@ -1,5 +1,5 @@
 
-== FIXTURE TREE: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t282-redgreen.1hXauZ  (register copied verbatim from /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/patterns.md)
+== FIXTURE TREE: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t282-redgreen.5V3Jfe  (register copied verbatim from /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8dcafe23f3810be/.softhouse/patterns.md)
 
 == STAGE 1 -- RED. Expect: VERDICT FAIL printed, exit 1, 3 DETECTED, 2 FATAL.
 PNUMBER-CITATIONS: VERDICT FAIL -- 2 fatal (register 0, directive-file 2)
