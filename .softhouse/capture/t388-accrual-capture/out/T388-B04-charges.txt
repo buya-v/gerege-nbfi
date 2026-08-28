@@ -1,0 +1,60 @@
+=== charges ===
+ id |                           name                            | currency_code | charge_applies_to_enum | charge_time_enum | charge_calculation_enum | charge_payment_mode_enum |    amount    | is_penalty | is_active | is_deleted 
+----+-----------------------------------------------------------+---------------+------------------------+------------------+-------------------------+--------------------------+--------------+------------+-----------+------------
+  1 | T40 flat fee at disbursement                              | MNT           |                      1 |                1 |                       1 |                        0 | 15000.000000 | f          | t         | f
+  2 | T40 flat fee per instalment                               | MNT           |                      1 |                8 |                       1 |                        0 |  2500.000000 | f          | t         | f
+  3 | T40 percent of amount at disbursement                     | MNT           |                      1 |                1 |                       2 |                        0 |     1.234500 | f          | t         | f
+  4 | T40 percent of interest per instalment                    | MNT           |                      1 |                8 |                       4 |                        0 |     3.750000 | f          | t         | f
+  5 | T40 percent of amount plus interest per instalment        | MNT           |                      1 |                8 |                       3 |                        0 |     1.234500 | f          | t         | f
+  6 | T40 PENALTY flat on specified due date                    | MNT           |                      1 |                2 |                       1 |                        0 |  7500.000000 | t          | t         | f
+  7 | T40 flat fee on specified due date                        | MNT           |                      1 |                2 |                       1 |                        0 |  9000.000000 | f          | t         | f
+  8 | T40 PENALTY flat per instalment                           | MNT           |                      1 |                8 |                       1 |                        0 |  1200.000000 | t          | t         | f
+  9 | T40 percent of amount per instalment                      | MNT           |                      1 |                8 |                       2 |                        0 |     0.500000 | f          | t         | f
+ 10 | T40 percent of amount on specified due date               | MNT           |                      1 |                2 |                       2 |                        0 |     1.234500 | f          | t         | f
+ 11 | T40 percent of interest on specified due date             | MNT           |                      1 |                2 |                       4 |                        0 |     3.750000 | f          | t         | f
+ 12 | T40 percent of amount plus interest on specified due date | MNT           |                      1 |                2 |                       3 |                        0 |     1.234500 | f          | t         | f
+ 13 | T48 percent of disbursement amount TRANCHE                | MNT           |                      1 |               12 |                       5 |                        0 |     1.234500 | f          | t         | f
+ 14 | T51 flat TRANCHE disbursement                             | MNT           |                      1 |               12 |                       1 |                        0 |  7000.000000 | f          | t         | f
+ 15 | T51 pct of disbursement TRANCHE maxCap5000                | MNT           |                      1 |               12 |                       5 |                        0 |     1.234500 | f          | t         | f
+ 16 | T51 pct of amount DISB maxCap5000                         | MNT           |                      1 |                1 |                       2 |                        0 |     1.234500 | f          | t         | f
+ 17 | T51 pct of disbursement TRANCHE minCap8000                | MNT           |                      1 |               12 |                       5 |                        0 |     0.100000 | f          | t         | f
+ 18 | T51 pct of amount DISB minCap8000                         | MNT           |                      1 |                1 |                       2 |                        0 |     0.100000 | f          | t         | f
+(18 rows)
+
+=== max ids I am about to move ===
+      tbl       | max 
+----------------+-----
+ acc_gl_account |  34
+ m_product_loan |  60
+ m_client       |   2
+ m_loan         |   7
+(4 rows)
+
+=== gl codes already in use ===
+ gl_code 
+---------
+ 10000
+ 10100
+ 10200
+ 10201
+ 10300
+ 10400
+ 10500
+ 19929
+ 19930
+ 19998
+ 20000
+ 20100
+ 30000
+ 40000
+ 40100
+ 40200
+ 40300
+ 40400
+ 50000
+ 50100
+ 50200
+ 99008
+ 99010
+(23 rows)
+

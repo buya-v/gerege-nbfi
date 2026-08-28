@@ -1,0 +1,10 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-G03-gl-interest-on-loans
+Content-Type: application/json
+body-file: req/G03-gl-interest-on-loans.json
+body-wire-bytes-artefact: T388-G03-gl-interest-on-loans.req
+body-sha256: f228bb46d25a78f2e4a97514668e338c2e843522f67c442d6bc530549f687dbb
+body-bytes: 293
+captured-at-utc: 2026-08-28T11:37:49Z

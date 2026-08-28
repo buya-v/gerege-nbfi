@@ -1,0 +1,10 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-G06-gl-losses-written-off
+Content-Type: application/json
+body-file: req/G06-gl-losses-written-off.json
+body-wire-bytes-artefact: T388-G06-gl-losses-written-off.req
+body-sha256: d0dd283461da641c138cf35d71272befc35c269bb0b01c1f63791c4f2800491c
+body-bytes: 295
+captured-at-utc: 2026-08-28T11:37:50Z

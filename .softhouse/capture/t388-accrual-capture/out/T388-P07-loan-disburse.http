@@ -1,0 +1,10 @@
+POST /loans/8?command=disburse
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-P07-loan-disburse
+Content-Type: application/json
+body-file: req/L04-disburse.json
+body-wire-bytes-artefact: T388-P07-loan-disburse.req
+body-sha256: 7315818b7138f34f46b8c81ff6baeac21e0c64ad0ea7beccf7a06e691d45733d
+body-bytes: 115
+captured-at-utc: 2026-08-28T11:40:25Z

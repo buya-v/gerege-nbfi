@@ -1,0 +1,134 @@
+=== 1. engine ===
+                                                         version                                                          
+--------------------------------------------------------------------------------------------------------------------------
+ PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+(1 row)
+
+=== 2. append-table floors (the two tables oracle-state-baseline.sh watches) ===
+            tbl             | rows | max_id 
+----------------------------+------+--------
+ acc_gl_account             |   23 |     34
+ acc_gl_closure             |    0 |       
+ acc_gl_journal_entry       |   71 |     75
+ acc_product_mapping        |  132 |    156
+ m_client                   |    2 |      2
+ m_loan                     |    7 |      7
+ m_loan_transaction         |   17 |     27
+ m_portfolio_command_source |  359 |    359
+ m_product_loan             |   33 |     60
+(9 rows)
+
+=== 3. PER-GL-ACCOUNT journal entry counts -- EVERY account, LEFT JOIN so zero is printed ===
+psql:<stdin>:32: ERROR:  column a.manual_entries_allowed does not exist
+LINE 2:        a.manual_entries_allowed, a.disabled,
+               ^
+=== 4. every loan product, its accounting_type, and its loan count ===
+ id |                      name                       | short_name | currency_code | accounting_type | loans 
+----+-------------------------------------------------+------------+---------------+-----------------+-------
+  1 | PathB Progressive MNT                           | PBM1       | MNT           |               1 |     0
+  2 | PathB Progressive MNT mult100                   | PBM2       | MNT           |               1 |     0
+  3 | PathB DIYCS FULL_LEAP_YEAR                      | PB3        | MNT           |               1 |     0
+  4 | PathB DIYCS FEB_29_PERIOD_ONLY                  | PB4        | MNT           |               1 |     0
+  5 | T22 probe p05-diycs-sarp-full                   | TP5        | MNT           |               1 |     0
+  6 | T22 probe p06-diycs-sarp-feb29                  | TP6        | MNT           |               1 |     0
+  7 | T22 probe p07-daily-actact                      | TP7        | MNT           |               1 |     0
+  8 | T22 probe p08-daily-360-30                      | TP8        | MNT           |               1 |     0
+  9 | T22 probe p09-sarp-360-30                       | TP9        | MNT           |               1 |     0
+ 10 | T22 mode probe mult1                            | TM1        | MNT           |               1 |     0
+ 11 | T22 mode probe halfcent                         | TM2        | MNT           |               1 |     0
+ 12 | T22 rounddown probe                             | TR1        | MNT           |               1 |     0
+ 13 | T36 recreate baseline                           | T61        | MNT           |               1 |     0
+ 14 | T36 recreate mult100                            | T62        | MNT           |               1 |     0
+ 15 | T36 recreate FULL_LEAP_YEAR                     | T63        | MNT           |               1 |     0
+ 16 | T36 recreate FEB_29_PERIOD_ONLY                 | T64        | MNT           |               1 |     0
+ 17 | T51 IROD true                                   | T5A        | MNT           |               1 |     0
+ 18 | T51 IROD false                                  | T5B        | MNT           |               1 |     0
+ 19 | T51 tranche multidisburse                       | T5C        | MNT           |               1 |     0
+ 20 | T51 FTT IROD true                               | T5D        | MNT           |               1 |     0
+ 21 | T51 FTT IROD false                              | T5E        | MNT           |               1 |     0
+ 22 | A2 Cash Mapping With Channel Override           | A2C1       | MNT           |               2 |     2
+ 23 | A2 Cash Mapping No Override                     | A2C2       | MNT           |               2 |     0
+ 24 | A2 Map Header Account                           | A2R1       | MNT           |               2 |     1
+ 27 | A2 Duplicate Channel                            | A2R5       | MNT           |               2 |     1
+ 28 | A2 Accrual Complete                             | A2A1       | MNT           |               3 |     0
+ 46 | A2-7 Cash Nine Mandatory Only                   | A7M1       | MNT           |               2 |     2
+ 54 | A2-26 G10c readmit of product 46 mapping        | N46R       | MNT           |               2 |     0
+ 55 | A2-26 Ledger Coverage Cash Interest Fee Penalty | N26C       | MNT           |               2 |     1
+ 56 | T275 Charge Dimension Fee And Penalty           | T7A0       | MNT           |               2 |     0
+ 57 | T275 Fee Charge Not Attached                    | T7A1       | MNT           |               2 |     0
+ 58 | T275 Penalty Mapping On Fee Charge              | T7A2       | MNT           |               2 |     0
+ 60 | T275 Duplicate Fee Charge                       | T7A4       | MNT           |               2 |     0
+(33 rows)
+
+=== 5. ACCRUAL_PERIODIC (accounting_type = 3) products only ===
+ id |        name         | short_name | currency_code | accounting_type 
+----+---------------------+------------+---------------+-----------------
+ 28 | A2 Accrual Complete | A2A1       | MNT           |               3
+(1 row)
+
+=== 6. clients ===
+ id | account_no |      display_name       | firstname | middlename | lastname | external_id | status_enum | office_id | activation_date 
+----+------------+-------------------------+-----------+------------+----------+-------------+-------------+-----------+-----------------
+  1 | 000000001  | Path B Fixture Borrower |           |            |          |             |         300 |         1 | 2026-01-01
+  2 | 000000002  | Path B Leap Fixture     |           |            |          |             |         300 |         1 | 2023-01-01
+(2 rows)
+
+=== 7. accrual + COB scheduled jobs ===
+ id |                                 name                                  | is_active | cron_expression | previous_run_start_time |    next_run_time    | currently_running 
+----+-----------------------------------------------------------------------+-----------+-----------------+-------------------------+---------------------+-------------------
+ 11 | Add Accrual Transactions                                              | t         | 0 1 0 1/1 * ? * | 2026-08-27 16:01:00.071 | 2026-08-28 16:01:00 | f
+ 16 | Add Periodic Accrual Transactions                                     | t         | 0 2 0 1/1 * ? * | 2026-08-27 16:02:00.001 | 2026-08-28 16:02:00 | f
+ 22 | Add Accrual Transactions For Loans With Income Posted As Transactions | t         | 0 1 0 1/1 * ? * | 2026-08-27 16:01:00.002 | 2026-08-28 16:01:00 | f
+ 33 | Increase COB Date by 1 day                                            | f         | 0 0 0 1/1 * ? * |                         |                     | f
+ 34 | Loan COB                                                              | f         | 0 0 0 * * ?     |                         |                     | f
+(5 rows)
+
+=== 8. business date ===
+ id | type | date | created_by | created_date | version | last_modified_by | lastmodified_date | created_on_utc | last_modified_on_utc 
+----+------+------+------------+--------------+---------+------------------+-------------------+----------------+----------------------
+(0 rows)
+
+=== 9. tenant currency config: MNT ===
+ id | code | decimal_places | currency_multiplesof |       name       | display_symbol | internationalized_name_code 
+----+------+----------------+----------------------+------------------+----------------+-----------------------------
+ 22 | MNT  |              2 |                      | Mongolian Tugrik |                | currency.MNT
+ 23 | USD  |              2 |                      | US Dollar        | $              | currency.USD
+(2 rows)
+
+=== 10. offices ===
+ id |    name     | opening_date | hierarchy 
+----+-------------+--------------+-----------
+  1 | Head Office | 2009-01-01   | .
+(1 row)
+
+=== 11. journal entries grouped by entry type/source, to show none is an accrual today ===
+psql:<stdin>:56: ERROR:  column j.entry_type_enum does not exist
+LINE 1: SELECT j.entry_type_enum, j.type_enum, j.manual_entry, count...
+               ^
+HINT:  Perhaps you meant to reference the column "j.entity_type_enum".
+=== 12. loan transactions by type -- transaction_type_enum 10 is ACCRUAL ===
+ transaction_type_enum | rows 
+-----------------------+------
+                     1 |    7
+                     2 |    4
+                     5 |    1
+                     6 |    1
+                     8 |    1
+                    10 |    2
+                    23 |    1
+(7 rows)
+
+=== 13. is any journal entry linked to a loan ACCRUAL transaction today? ===
+ accrual_linked_journal_entries 
+--------------------------------
+                              0
+(1 row)
+
+=== 14. funds and payment types (needed for product/loan creation) ===
+    kind     | id |              name               
+-------------+----+---------------------------------
+ paymenttype |  1 | Money Transfer
+ paymenttype |  2 | Repayment Adjustment Chargeback
+ paymenttype |  3 | Repayment Adjustment Refund
+(3 rows)
+

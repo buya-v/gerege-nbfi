@@ -1,0 +1,86 @@
+T388 -- GL ACCOUNTS READ BY THE PROMOTED VECTOR STORE, DERIVED
+vector store: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8fa18aedf7a9db13/.softhouse/vectors
+contexts    : ledger, loanschedule
+vectors read: 67
+
+context        vector                                                           class    instance        gl_account_ids
+------------------------------------------------------------------------------------------------------------------------------------------------------
+ledger         LDG-01-manual-je-3leg-minor-units.json                           parity   standing-oracle [16, 17, 21]
+ledger         LDG-02-repayment-split-4leg-minor-units.json                     parity   standing-oracle [4, 8, 10, 16]
+ledger         LDG-03-overpayment-4leg-minor-units.json                         parity   standing-oracle [4, 6, 8, 16]
+ledger         LDG-04-header-account-accepted.json                              parity   standing-oracle [1, 21]
+ledger         LDG-05-openingbalance-accepted-empty-ledger.json                 parity   throwaway       [1, 2, 3, 4]
+ledger         LDG-06-postclosure-entry-accepted-one-day-after-closing-date.json parity   throwaway       [1, 2, 3]
+ledger         LDG-07-entry-on-the-business-date-accepted.json                  parity   throwaway       [1, 2, 3]
+ledger         LDG-REFUSE-01-unbalanced-by-one-minor-unit.json                  oracle-refusal standing-oracle [16, 21]
+ledger         LDG-REFUSE-02-manual-adjustments-not-permitted.json              oracle-refusal standing-oracle [18, 21]
+ledger         LDG-REFUSE-03-openingbalance-after-posted-entries.json           oracle-refusal standing-oracle [2, 4, 15]
+ledger         LDG-REFUSE-04-preclosure-entry-on-closing-date.json              oracle-refusal standing-oracle [2, 4]
+ledger         LDG-REFUSE-05-future-dated-entry-one-day-after-business-date.json oracle-refusal standing-oracle [2, 4]
+ledger         LDG-REFUSE-06-preclosure-entry-before-closing-date-echoes-the-closing-date.json oracle-refusal standing-oracle [2, 4]
+loanschedule   P-00-baseline-6x7pct.json                                        parity   standing-oracle -
+loanschedule   P-01-18x18pt5pct-principal-87654321.json                         parity   standing-oracle -
+loanschedule   P-02-monthend-seed-day-31.json                                   parity   standing-oracle -
+loanschedule   P-02b-monthend-seed-day-30.json                                  parity   standing-oracle -
+loanschedule   P-03-disbursement-on-repayment-due-date.json                     parity   standing-oracle -
+loanschedule   P-04f-fulltermfortranche-false.json                              parity   standing-oracle -
+loanschedule   P-04t-fulltermfortranche-true.json                               parity   standing-oracle -
+loanschedule   P-DRIFT-A-drift-start28-disb31-6x21pt6pct.json                   parity   standing-oracle -
+loanschedule   P-DRIFT-B-drift-start28-disb29-6x21pt6pct.json                   parity   standing-oracle -
+loanschedule   P-DRIFT-C-drift-12x16pt8pct-5M.json                              parity   standing-oracle -
+loanschedule   P-DRIFT-D-drift-36x21pt6pct-50M.json                             parity   standing-oracle -
+loanschedule   P-DRIFT-E-drift-common-year-2025.json                            parity   standing-oracle -
+loanschedule   P-DRIFT-F-drift-smallest-principal-mnt100.json                   parity   standing-oracle -
+loanschedule   P-DRIFT-G-drift-seeded-in-march.json                             parity   standing-oracle -
+loanschedule   P-DRIFT-H-drift-seeded-in-30-day-month.json                      parity   standing-oracle -
+loanschedule   P-EMI-36-127704-emi-smoothing-loop.json                          parity   standing-oracle -
+loanschedule   P-EMI-6-1M014632-emi-smoothing-loop.json                         parity   standing-oracle -
+loanschedule   P-LAT-MID-6x21pt6pct-mid-month-start.json                        parity   standing-oracle -
+loanschedule   P-LAT-Q0a-6x21pt6pct-1M2.json                                    parity   standing-oracle -
+loanschedule   P-ME-A-monthend-3M924149-6x16pt8pct.json                         parity   standing-oracle -
+loanschedule   P-ME-B-monthend-1M2-6x21pt6pct.json                              parity   standing-oracle -
+loanschedule   P-ME-C-monthend-common-year-2023.json                            parity   standing-oracle -
+loanschedule   P-ME-D-monthend-seed-day-30.json                                 parity   standing-oracle -
+loanschedule   P-MNT-1M2-12x21pt6pct.json                                       parity   standing-oracle -
+loanschedule   P-MNT-4M999-18x18pt5pct.json                                     parity   standing-oracle -
+loanschedule   P-MNT-50M-36x16pt8pct.json                                       parity   standing-oracle -
+loanschedule   P-MNT-5M-18x18pt5pct.json                                        parity   standing-oracle -
+loanschedule   P-RND-S1-21021587pt50-6x21pt6pct-textbook-ratefactor.json        parity   standing-oracle -
+loanschedule   P-RND-S2-3139845pt86-6x7pct-ratefactor-setscale.json             parity   standing-oracle -
+loanschedule   REFUSE-01-actual-actual-ungraded.json                            contract-refusal standing-oracle -
+loanschedule   REFUSE-02-half-even-ungraded.json                                contract-refusal standing-oracle -
+loanschedule   REFUSE-03-annual-fixed30360-precedence.json                      contract-refusal standing-oracle -
+loanschedule   REFUSE-04-disbursement-after-maturity.json                       contract-refusal standing-oracle -
+loanschedule   T116-G8-CLEAN-nonexempt-mnt0pt01-103x600pct.json                 parity   standing-oracle -
+loanschedule   T116-G8-FAMB-nonamortizing-mnt0pt01-104x600pct.json              parity   standing-oracle -
+loanschedule   T116-G8-FAMB-nonamortizing-mnt0pt01-108x600pct.json              parity   standing-oracle -
+loanschedule   T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json                     parity   standing-oracle -
+loanschedule   T61-HE-A-tie-quantization-1M000541pt50-6x21pt6pct.json           parity   standing-oracle -
+loanschedule   T61-HE-B-tie-quantization-1M000052pt50-6x21pt6pct.json           parity   standing-oracle -
+loanschedule   T61-HE-C-tie-quantization-1M000089pt50-6x21pt6pct.json           parity   standing-oracle -
+loanschedule   T64-ZP-A-zero-principal-mnt0pt28-56x21pt6pct.json                parity   standing-oracle -
+loanschedule   T64-ZP-B-early-payoff-dead-rows-mnt0pt28-55x21pt6pct.json        parity   standing-oracle -
+loanschedule   T64-ZP-C-zero-principal-mnt0pt17-34x36pct.json                   parity   standing-oracle -
+loanschedule   T64-ZP-D-zero-principal-mnt0pt36-72x16pt8pct.json                parity   standing-oracle -
+loanschedule   T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json        parity   standing-oracle -
+loanschedule   T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json            parity   standing-oracle -
+loanschedule   T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json        parity   standing-oracle -
+loanschedule   T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json          parity   standing-oracle -
+loanschedule   T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json      parity   standing-oracle -
+loanschedule   T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json          parity   standing-oracle -
+<store>        PIN-ledger.json                                                  store    standing-oracle -
+<store>        PIN.json                                                         store    standing-oracle -
+<store>        capabilities-ledger.json                                         store    standing-oracle [16, 18, 22]
+<store>        capabilities.json                                                store    standing-oracle -
+
+FORBIDDEN SET on the STANDING REFERENCE ORACLE (the instance T388 writes to):
+  [1, 2, 4, 6, 8, 10, 15, 16, 17, 18, 21, 22]
+FORBIDDEN SET on the THROWAWAY instances (a DIFFERENT id space; listed, not merged):
+  [1, 2, 3, 4]
+
+Provenance of every vector counted as THROWAWAY:
+  LDG-05-openingbalance-accepted-empty-ledger.json                 .softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/OB-ACCEPT-01-readback-db.json
+  LDG-06-postclosure-entry-accepted-one-day-after-closing-date.json .softhouse/capture/t327-closure-accepting-side/throwaway/out/B1-ACCEPT-06-readback-db.json
+  LDG-07-entry-on-the-business-date-accepted.json                  .softhouse/capture/t327-closure-accepting-side/throwaway/out/B2-ACCEPT-01-readback-db.json
+
+no --check given; set derived only.

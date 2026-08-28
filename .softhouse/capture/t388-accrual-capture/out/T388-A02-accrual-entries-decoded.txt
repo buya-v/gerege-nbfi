@@ -1,0 +1,137 @@
+=== 1. every journal entry T388 produced, with its slot decode ===
+ je_id | transaction_id | entry_date | dr1_cr2 | gl_id |  gl_code  |           gl_name           |     amount     | currency_code | manual_entry | loan_transaction_id | loan_txn_type | loan_id | product_id | accounting_type | slot_code |       slot_name       
+-------+----------------+------------+---------+-------+-----------+-----------------------------+----------------+---------------+--------------+---------------------+---------------+---------+------------+-----------------+-----------+-----------------------
+    76 | L28            | 2026-01-15 |       2 |    36 | T388-1100 | T388 Accrual Loan Portfolio | 1200000.000000 | MNT           | f            |                  28 |             1 |       8 |         63 |               3 |         2 | LOAN_PORTFOLIO
+    77 | L28            | 2026-01-15 |       1 |    35 | T388-1000 | T388 Accrual Fund Source    | 1200000.000000 | MNT           | f            |                  28 |             1 |       8 |         63 |               3 |         1 | FUND_SOURCE
+    78 | L29            | 2026-02-15 |       2 |    41 | T388-1200 | T388 Interest Receivable    |   24000.000000 | MNT           | f            |                  29 |            10 |       8 |         63 |               3 |         7 | INTEREST_RECEIVABLE
+    79 | L29            | 2026-02-15 |       1 |    37 | T388-4000 | T388 Interest On Loans      |   24000.000000 | MNT           | f            |                  29 |            10 |       8 |         63 |               3 |         3 | INTEREST_ON_LOANS
+    80 | L29            | 2026-02-15 |       1 |    38 | T388-4100 | T388 Income From Fees       |    2500.000000 | MNT           | f            |                  29 |            10 |       8 |         63 |               3 |         4 | INCOME_FROM_FEES
+    81 | L29            | 2026-02-15 |       2 |    42 | T388-1300 | T388 Fees Receivable        |    2500.000000 | MNT           | f            |                  29 |            10 |       8 |         63 |               3 |         8 | FEES_RECEIVABLE
+    82 | L29            | 2026-02-15 |       1 |    39 | T388-4200 | T388 Income From Penalties  |    1200.000000 | MNT           | f            |                  29 |            10 |       8 |         63 |               3 |         5 | INCOME_FROM_PENALTIES
+    83 | L29            | 2026-02-15 |       2 |    43 | T388-1400 | T388 Penalties Receivable   |    1200.000000 | MNT           | f            |                  29 |            10 |       8 |         63 |               3 |         9 | PENALTIES_RECEIVABLE
+    84 | L30            | 2026-03-15 |       2 |    41 | T388-1200 | T388 Interest Receivable    |   20195.380000 | MNT           | f            |                  30 |            10 |       8 |         63 |               3 |         7 | INTEREST_RECEIVABLE
+    85 | L30            | 2026-03-15 |       1 |    37 | T388-4000 | T388 Interest On Loans      |   20195.380000 | MNT           | f            |                  30 |            10 |       8 |         63 |               3 |         3 | INTEREST_ON_LOANS
+    86 | L30            | 2026-03-15 |       1 |    38 | T388-4100 | T388 Income From Fees       |    2500.000000 | MNT           | f            |                  30 |            10 |       8 |         63 |               3 |         4 | INCOME_FROM_FEES
+    87 | L30            | 2026-03-15 |       2 |    42 | T388-1300 | T388 Fees Receivable        |    2500.000000 | MNT           | f            |                  30 |            10 |       8 |         63 |               3 |         8 | FEES_RECEIVABLE
+    88 | L30            | 2026-03-15 |       1 |    39 | T388-4200 | T388 Income From Penalties  |    1200.000000 | MNT           | f            |                  30 |            10 |       8 |         63 |               3 |         5 | INCOME_FROM_PENALTIES
+    89 | L30            | 2026-03-15 |       2 |    43 | T388-1400 | T388 Penalties Receivable   |    1200.000000 | MNT           | f            |                  30 |            10 |       8 |         63 |               3 |         9 | PENALTIES_RECEIVABLE
+    90 | L31            | 2026-04-15 |       2 |    41 | T388-1200 | T388 Interest Receivable    |   16314.670000 | MNT           | f            |                  31 |            10 |       8 |         63 |               3 |         7 | INTEREST_RECEIVABLE
+    91 | L31            | 2026-04-15 |       1 |    37 | T388-4000 | T388 Interest On Loans      |   16314.670000 | MNT           | f            |                  31 |            10 |       8 |         63 |               3 |         3 | INTEREST_ON_LOANS
+    92 | L31            | 2026-04-15 |       1 |    38 | T388-4100 | T388 Income From Fees       |    2500.000000 | MNT           | f            |                  31 |            10 |       8 |         63 |               3 |         4 | INCOME_FROM_FEES
+    93 | L31            | 2026-04-15 |       2 |    42 | T388-1300 | T388 Fees Receivable        |    2500.000000 | MNT           | f            |                  31 |            10 |       8 |         63 |               3 |         8 | FEES_RECEIVABLE
+    94 | L31            | 2026-04-15 |       1 |    39 | T388-4200 | T388 Income From Penalties  |    1200.000000 | MNT           | f            |                  31 |            10 |       8 |         63 |               3 |         5 | INCOME_FROM_PENALTIES
+    95 | L31            | 2026-04-15 |       2 |    43 | T388-1400 | T388 Penalties Receivable   |    1200.000000 | MNT           | f            |                  31 |            10 |       8 |         63 |               3 |         9 | PENALTIES_RECEIVABLE
+(20 rows)
+
+=== 2. ONLY the entries that arrived through a RECEIVABLE slot (7, 8, 9) ===
+ je_id | transaction_id | entry_date | dr1_cr2 | gl_id |  gl_code  |    amount    | slot_code |      slot_name       
+-------+----------------+------------+---------+-------+-----------+--------------+-----------+----------------------
+    78 | L29            | 2026-02-15 |       2 |    41 | T388-1200 | 24000.000000 |         7 | INTEREST_RECEIVABLE
+    81 | L29            | 2026-02-15 |       2 |    42 | T388-1300 |  2500.000000 |         8 | FEES_RECEIVABLE
+    83 | L29            | 2026-02-15 |       2 |    43 | T388-1400 |  1200.000000 |         9 | PENALTIES_RECEIVABLE
+    84 | L30            | 2026-03-15 |       2 |    41 | T388-1200 | 20195.380000 |         7 | INTEREST_RECEIVABLE
+    87 | L30            | 2026-03-15 |       2 |    42 | T388-1300 |  2500.000000 |         8 | FEES_RECEIVABLE
+    89 | L30            | 2026-03-15 |       2 |    43 | T388-1400 |  1200.000000 |         9 | PENALTIES_RECEIVABLE
+    90 | L31            | 2026-04-15 |       2 |    41 | T388-1200 | 16314.670000 |         7 | INTEREST_RECEIVABLE
+    93 | L31            | 2026-04-15 |       2 |    42 | T388-1300 |  2500.000000 |         8 | FEES_RECEIVABLE
+    95 | L31            | 2026-04-15 |       2 |    43 | T388-1400 |  1200.000000 |         9 | PENALTIES_RECEIVABLE
+(9 rows)
+
+=== 3. the ACCRUAL loan transactions on loan 8 ===
+ id | loan_id | transaction_type_enum | transaction_date |     amount     | principal_portion_derived | interest_portion_derived | fee_charges_portion_derived | penalty_charges_portion_derived | is_reversed 
+----+---------+-----------------------+------------------+----------------+---------------------------+--------------------------+-----------------------------+---------------------------------+-------------
+ 28 |       8 |                     1 | 2026-01-15       | 1200000.000000 |                           |                          |                             |                                 | f
+ 29 |       8 |                    10 | 2026-02-15       |   27700.000000 |                           |             24000.000000 |                 2500.000000 |                     1200.000000 | f
+ 30 |       8 |                    10 | 2026-03-15       |   23895.380000 |                           |             20195.380000 |                 2500.000000 |                     1200.000000 | f
+ 31 |       8 |                    10 | 2026-04-15       |   20014.670000 |                           |             16314.670000 |                 2500.000000 |                     1200.000000 | f
+(4 rows)
+
+=== 4. double entry check: debits = credits per transaction_id, in MINOR UNITS ===
+ transaction_id | legs | debit_minor | credit_minor | difference_minor 
+----------------+------+-------------+--------------+------------------
+ L28            |    2 |   120000000 |    120000000 |                0
+ L29            |    6 |     2770000 |      2770000 |                0
+ L30            |    6 |     2389538 |      2389538 |                0
+ L31            |    6 |     2001467 |      2001467 |                0
+(4 rows)
+
+=== 5. per-GL-account counts AFTER T388 -- every account, so the diff is derivable ===
+ gl_id |  gl_code  |            name             | je_rows 
+-------+-----------+-----------------------------+---------
+     1 | 10000     | Assets                      |       3
+     2 | 10100     | Fund Source                 |       3
+     3 | 10200     | Current Assets              |       0
+     4 | 10201     | Loan Portfolio              |      12
+     5 | 20000     | Liabilities                 |       0
+     6 | 20100     | Overpayment Liability       |       1
+     7 | 40000     | Income                      |       0
+     8 | 40100     | Interest On Loans           |       2
+     9 | 40200     | Income From Fees            |       1
+    10 | 40300     | Income From Penalties       |       1
+    11 | 40400     | Recoveries                  |       1
+    12 | 50000     | Expenses                    |       0
+    13 | 50100     | Losses Written Off          |       1
+    14 | 50200     | Goodwill Credit             |       1
+    15 | 30000     | Equity                      |       0
+    16 | 10300     | Fund Source Alternate       |      21
+    17 | 10400     | Disabled Asset              |       5
+    18 | 10500     | No Manual Entries Asset     |       0
+    21 | 99008     | Liability Under Asset       |      13
+    22 | 99010     | Unknown Param               |       0
+    24 | 19998     | Update Discriminator        |       0
+    33 | 19929     | A2-29 Drift Probe Asset     |       3
+    34 | 19930     | A2-29 Drift Probe Liability |       3
+    35 | T388-1000 | T388 Accrual Fund Source    |       1
+    36 | T388-1100 | T388 Accrual Loan Portfolio |       1
+    37 | T388-4000 | T388 Interest On Loans      |       3
+    38 | T388-4100 | T388 Income From Fees       |       3
+    39 | T388-4200 | T388 Income From Penalties  |       3
+    40 | T388-5000 | T388 Losses Written Off     |       0
+    41 | T388-1200 | T388 Interest Receivable    |       3
+    42 | T388-1300 | T388 Fees Receivable        |       3
+    43 | T388-1400 | T388 Penalties Receivable   |       3
+    44 | T388-1500 | T388 Transfers Suspense     |       0
+    45 | T388-2000 | T388 Overpayment Liability  |       0
+    46 | T388-4300 | T388 Income From Recovery   |       0
+    47 | T388-5100 | T388 Goodwill Credit        |       0
+(36 rows)
+
+=== 6. append-table state AFTER T388 ===
+            tbl             | rows | max_id 
+----------------------------+------+--------
+ acc_gl_account             |   36 |     47
+ acc_gl_closure             |    0 |       
+ acc_gl_journal_entry       |   91 |     95
+ acc_product_mapping        |  145 |    189
+ m_client                   |    3 |      3
+ m_loan                     |    8 |      8
+ m_loan_transaction         |   21 |     31
+ m_portfolio_command_source |  379 |    379
+ m_product_loan             |   34 |     63
+(9 rows)
+
+=== 7. the command-source rows T388 wrote, by idempotency key ===
+ id  | action_name |        entity_name        | resource_id | status |          idempotency_key          
+-----+-------------+---------------------------+-------------+--------+-----------------------------------
+ 360 | CREATE      | GLACCOUNT                 |          35 |      1 | T388-G01-gl-fund-source
+ 361 | CREATE      | GLACCOUNT                 |          36 |      1 | T388-G02-gl-loan-portfolio
+ 362 | CREATE      | GLACCOUNT                 |          37 |      1 | T388-G03-gl-interest-on-loans
+ 363 | CREATE      | GLACCOUNT                 |          38 |      1 | T388-G04-gl-income-from-fees
+ 364 | CREATE      | GLACCOUNT                 |          39 |      1 | T388-G05-gl-income-from-penalties
+ 365 | CREATE      | GLACCOUNT                 |          40 |      1 | T388-G06-gl-losses-written-off
+ 366 | CREATE      | GLACCOUNT                 |          41 |      1 | T388-G07-gl-interest-receivable
+ 367 | CREATE      | GLACCOUNT                 |          42 |      1 | T388-G08-gl-fees-receivable
+ 368 | CREATE      | GLACCOUNT                 |          43 |      1 | T388-G09-gl-penalties-receivable
+ 369 | CREATE      | GLACCOUNT                 |          44 |      1 | T388-G10-gl-transfers-suspense
+ 370 | CREATE      | GLACCOUNT                 |          45 |      1 | T388-G11-gl-overpayment
+ 371 | CREATE      | GLACCOUNT                 |          46 |      1 | T388-G12-gl-income-from-recovery
+ 372 | CREATE      | GLACCOUNT                 |          47 |      1 | T388-G13-gl-goodwill-credit
+ 373 | CREATE      | LOANPRODUCT               |          63 |      1 | T388-P02-create-accrual-product
+ 374 | CREATE      | CLIENT                    |           3 |      1 | T388-P03-create-client
+ 375 | CREATE      | LOAN                      |             |      5 | T388-P04-loan-application
+ 376 | CREATE      | LOAN                      |           8 |      1 | T388-P05-loan-application
+ 377 | APPROVE     | LOAN                      |           8 |      1 | T388-P06-loan-approve
+ 378 | DISBURSE    | LOAN                      |           8 |      1 | T388-P07-loan-disburse
+ 379 | EXECUTE     | PERIODICACCRUALACCOUNTING |             |      1 | T388-A01-runaccruals
+(20 rows)
+

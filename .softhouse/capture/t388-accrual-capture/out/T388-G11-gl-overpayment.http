@@ -1,0 +1,10 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-G11-gl-overpayment
+Content-Type: application/json
+body-file: req/G11-gl-overpayment.json
+body-wire-bytes-artefact: T388-G11-gl-overpayment.req
+body-sha256: 32946111daee8455e45a331a414ecbca7154732b2ee044f355f0009f6dd9e166
+body-bytes: 292
+captured-at-utc: 2026-08-28T11:37:51Z

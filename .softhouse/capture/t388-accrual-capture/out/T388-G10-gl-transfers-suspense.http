@@ -1,0 +1,10 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-G10-gl-transfers-suspense
+Content-Type: application/json
+body-file: req/G10-gl-transfers-suspense.json
+body-wire-bytes-artefact: T388-G10-gl-transfers-suspense.req
+body-sha256: b17e14646c24c643e83efcb0e93b7b32896f389225647b9454ca040066b9c681
+body-bytes: 296
+captured-at-utc: 2026-08-28T11:37:51Z

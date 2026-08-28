@@ -1,0 +1,10 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-G09-gl-penalties-receivable
+Content-Type: application/json
+body-file: req/G09-gl-penalties-receivable.json
+body-wire-bytes-artefact: T388-G09-gl-penalties-receivable.req
+body-sha256: 5e962d3737caa8aaad63d515a735e13197c8d249570ef9965190eb541ce9dd73
+body-bytes: 299
+captured-at-utc: 2026-08-28T11:37:50Z

@@ -1,0 +1,1 @@
+{"name":"T388 Accrual Loan Portfolio","glCode":"T388-1100","manualEntriesAllowed":true,"type":1,"usage":1,"description":"T388 accrual capture: AccrualAccountsForLoan slot 2 LOAN_PORTFOLIO. A NEW account created by T388, so that no GL account any PROMOTED vector reads is moved by this capture."}

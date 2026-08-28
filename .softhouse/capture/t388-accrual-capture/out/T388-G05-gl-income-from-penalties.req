@@ -1,0 +1,1 @@
+{"name":"T388 Income From Penalties","glCode":"T388-4200","manualEntriesAllowed":true,"type":4,"usage":1,"description":"T388 accrual capture: AccrualAccountsForLoan slot 5 INCOME_FROM_PENALTIES. A NEW account created by T388, so that no GL account any PROMOTED vector reads is moved by this capture."}

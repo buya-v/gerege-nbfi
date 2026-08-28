@@ -1,0 +1,1 @@
+{"name":"T388 Interest On Loans","glCode":"T388-4000","manualEntriesAllowed":true,"type":4,"usage":1,"description":"T388 accrual capture: AccrualAccountsForLoan slot 3 INTEREST_ON_LOANS. A NEW account created by T388, so that no GL account any PROMOTED vector reads is moved by this capture."}

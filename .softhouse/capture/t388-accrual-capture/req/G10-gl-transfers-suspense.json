@@ -1,0 +1,1 @@
+{"name":"T388 Transfers Suspense","glCode":"T388-1500","manualEntriesAllowed":true,"type":1,"usage":1,"description":"T388 accrual capture: AccrualAccountsForLoan slot 10 TRANSFERS_SUSPENSE. A NEW account created by T388, so that no GL account any PROMOTED vector reads is moved by this capture."}

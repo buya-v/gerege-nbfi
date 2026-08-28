@@ -1,0 +1,10 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-G05-gl-income-from-penalties
+Content-Type: application/json
+body-file: req/G05-gl-income-from-penalties.json
+body-wire-bytes-artefact: T388-G05-gl-income-from-penalties.req
+body-sha256: 862f81fcce4e077fb4210994b0f172d8e77273d99c14129fcfa670ffa16c28a2
+body-bytes: 301
+captured-at-utc: 2026-08-28T11:37:50Z

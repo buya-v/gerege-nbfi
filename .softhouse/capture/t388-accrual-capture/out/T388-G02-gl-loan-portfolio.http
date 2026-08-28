@@ -1,0 +1,10 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-G02-gl-loan-portfolio
+Content-Type: application/json
+body-file: req/G02-gl-loan-portfolio.json
+body-wire-bytes-artefact: T388-G02-gl-loan-portfolio.req
+body-sha256: dffb47897e79916b32f01a3284a360199c907405b763ab87331f018d763dc863
+body-bytes: 295
+captured-at-utc: 2026-08-28T11:37:49Z

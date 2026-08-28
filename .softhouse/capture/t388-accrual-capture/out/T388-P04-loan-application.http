@@ -1,0 +1,10 @@
+POST /loans
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-P04-loan-application
+Content-Type: application/json
+body-file: req/L01-loan-application.json
+body-wire-bytes-artefact: T388-P04-loan-application.req
+body-sha256: 92a9992e480d96561f75060545379a2d5312b2adca1f4c207e2eeb77e8e33e6d
+body-bytes: 547
+captured-at-utc: 2026-08-28T11:39:57Z

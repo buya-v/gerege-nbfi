@@ -1,0 +1,6 @@
+GET /loans/8?associations=all
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-A07-loan-8-readback-after-accrual
+body: <none>
+captured-at-utc: 2026-08-28T11:41:56Z

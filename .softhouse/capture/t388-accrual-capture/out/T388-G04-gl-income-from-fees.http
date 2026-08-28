@@ -1,0 +1,10 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-G04-gl-income-from-fees
+Content-Type: application/json
+body-file: req/G04-gl-income-from-fees.json
+body-wire-bytes-artefact: T388-G04-gl-income-from-fees.req
+body-sha256: 81c42b50373da799df1c110cb11e2cc583426005ee1b822e29002707f9b68ab3
+body-bytes: 291
+captured-at-utc: 2026-08-28T11:37:49Z
