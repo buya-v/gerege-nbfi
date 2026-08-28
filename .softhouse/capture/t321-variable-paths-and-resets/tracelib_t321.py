@@ -32,6 +32,9 @@ import sys
 
 _OUT = os.environ.get("T321_TRACE_OUT")
 _REAL_OPEN = builtins.open          # captured BEFORE anything is patched
+_FH = None
+_N = 0
+_CAP = 400000
 
 
 def _log(kind, p):
@@ -54,11 +57,36 @@ def _log(kind, p):
         existed = "1" if os.path.lexists(s) else "0"
     except Exception:
         existed = "?"
+    global _FH, _N
+    if _N > _CAP:
+        return
     try:
-        with _REAL_OPEN(_OUT, "a") as fh:
-            fh.write("%s\t%s\t%s\t%d\n" % (kind, existed, s, os.getpid()))
+        if _FH is None:
+            _FH = _REAL_OPEN(_OUT, "a", buffering=1 << 16)
+            import atexit
+            atexit.register(_close)
+        _FH.write("%s\t%s\t%s\t%d\n" % (kind, existed, s, os.getpid()))
+        _N += 1
     except Exception:
         pass
+
+
+def _close():
+    """The handle is HELD OPEN, not reopened per event. Opening, appending and closing the trace
+    file on every stat() made a lint over 1266 files take ten minutes and turned this instrument
+    into something nobody would run twice. O_APPEND makes the concurrent child writes safe.
+    A per-process CAP exists so a pathological target cannot fill the disk; the cap is REPORTED
+    by the runner if it is hit, never silently truncating into a smaller-looking result."""
+    global _FH
+    try:
+        if _FH is not None:
+            if _N > _CAP:
+                _FH.write("cap-hit\t?\t%d\t%d\n" % (_N, os.getpid()))
+            _FH.flush()
+            _FH.close()
+    except Exception:
+        pass
+    _FH = None
 
 
 _log_safe = _log
