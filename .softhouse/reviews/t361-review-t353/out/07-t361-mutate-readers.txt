@@ -1,0 +1,28 @@
+T361 mutation drive of --self-test-lock-readers
+source=.softhouse/reviews/t361-review-t353/out/_src-T353.sh sha256=c55a9c8b3a56e894030f4dc68a2bc4c8597d43a0ba18fce048d11c327086e22d
+
+--- control
+c00   BLIND     CONTROL: comment-only edit, self-test MUST stay green      rc=0 ok   [ROWS=27 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]
+
+--- mutations the self-test SHOULD catch (fail-OPEN direction, P-85 safety)
+n01   CAUGHT    lock_released_at: drop the _iso8601_epoch shape gate       rc=1 ok   [ROWS=27 FAIL_OPEN=6 FAIL_SHUT=0 SKIPPED=0]
+n02   CAUGHT    python reader: accept DUPLICATE keys (drop object_pairs_hook) rc=1 ok   [ROWS=27 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0]
+n03   BLIND     python reader: drop the released_at str/ctrl check (MASKED downstream) rc=0 ok   [ROWS=27 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]
+n04   BLIND     python reader: accept a BOOL as pid (MASKED by <1-> in lock_pid_state) rc=0 ok   [ROWS=27 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]
+n05   CAUGHT    lock_started_age: negate the age (now-e -> e-now)          rc=1 ok   [ROWS=27 FAIL_OPEN=0 FAIL_SHUT=2 SKIPPED=0]
+n06   BLIND     _iso8601_epoch: drop the day-of-month upper bound (BLIND, see note) rc=0 ok   [ROWS=27 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]
+n12   CAUGHT    _iso8601_epoch: shift the epoch by MINUS one whole day     rc=1 ok   [ROWS=27 FAIL_OPEN=13 FAIL_SHUT=0 SKIPPED=0]
+
+--- mutations I EXPECT the self-test to be BLIND to. Each is a real fail-OPEN or
+    fail-SHUT in production; BLIND here means the new control does not cover it.
+n07   BLIND     lock_pid_state: DELETE the host check -> judges ANOTHER machine's pid rc=0 ok   [ROWS=27 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]
+n08   BLIND     _iso8601_epoch: century leap rule -> plain %4 (2100-02-29 accepted) rc=0 ok   [ROWS=27 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]
+n09   BLIND     lock_started_age: delete the <1-> guard -> a NEGATIVE epoch passes rc=0 ok   [ROWS=27 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]
+n10   BLIND     python reader: drop the CONTROL-CHARACTER rejection only   rc=0 ok   [ROWS=27 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]
+n11   BLIND     _iso8601_epoch: shift the epoch by one whole DAY           rc=0 ok   [ROWS=27 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]
+
+CHECKS=13 UNEXPECTED=0
+
+READ THIS AS: 'BLIND' rows are the self-test's coverage boundary. n07 is the one that
+matters — deleting the host check makes the wrapper judge a LIVE process on ANOTHER
+machine, which is a FAIL-OPEN, and NEITHER grader sees it.

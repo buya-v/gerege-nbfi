@@ -1,0 +1,36 @@
+=== PART 1 — T346's mutate-driver, byte-for-byte as it was written
+    (M08 targets a line T353 replaced; it is EXPECTED to report VOID, and a
+     replacement measurement is in part 2.)
+
+driver: /private/tmp/t361/rerun/.softhouse/capture/t279-lock-partition/drive-wrapper-vs-skill.zsh
+wrapper under test: /private/tmp/t361/rerun/.softhouse/bin/fire-program.sh
+
+M00 pristine (no mutation)                          disagreements=0   [expect 0]
+M01 arm 1 inverted: -n rel -> -z rel
+      disagreements=96   ok  driver CAUGHT it
+M02 arm 2 deleted: dead holder is never reclaimed
+      disagreements=12   ok  driver CAUGHT it
+M03 arm 3 comparison flipped: >= ceiling -> < ceiling
+      disagreements=27   ok  driver CAUGHT it
+M04 arm 4 freshness condition gutted
+      disagreements=9   ok  driver CAUGHT it
+M05 arm 6 default flipped from HELD to TAKE
+      disagreements=15   ok  driver CAUGHT it
+M06 control: comment-only change, driver must still say 0
+      disagreements=0   ok  correctly unmoved (control)
+
+--- reader mutations: the driver supplies these signals, so it should be blind ---
+M07 lock_released_at gutted: ALWAYS reports released (maximal fail-open)
+      disagreements=0   *** DRIVER BLIND
+M08 *** MUTATION DID NOT APPLY -- result is void (lock_pid_state host read replaced by a constant)
+
+=== PART 2 — the reader mutations restated against T353's code.
+    Expectation: BOTH still print 0. The 192-state driver SUPPLIES the five
+    signals, so no reader mutation can reach it. If either moves, the driver has
+    grown reader coverage and the self-test's justification needs re-reading.
+  M07b   driver_disagreements=0      DRIVER BLIND (expected)      self-test CAUGHT it (rc=1)
+         lock_released_at gutted: ALWAYS reports released (maximal fail-open)
+  M08b   driver_disagreements=0      DRIVER BLIND (expected)      self-test CAUGHT it (rc=1)
+         lock_pid_state host/pid replaced by constants (T353 restatement of M08)
+  M09b   driver_disagreements=0      DRIVER BLIND (expected)      self-test CAUGHT it (rc=1)
+         the T353 shape gate removed from lock_released_at (= the reviewed T342 behaviour)

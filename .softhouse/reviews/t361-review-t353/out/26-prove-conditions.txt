@@ -1,0 +1,60 @@
+applied: C1 threshold
+applied: C1 predicate
+applied: C2 mktemp
+applied: C3 derived fixture
+applied: C1/C4 self-test rows
+
+=== 1. zsh -n
+  PASS
+
+=== 2. T361 reader corpus — want ROWS=24 FAIL_OPEN=0 FAIL_SHUT=0 (x16/x17 controls green)
+z01   ok             want=HELD           got=HELD-live        Go time.Time ZERO VALUE (encoding/json RFC3339) -- VERIFIED by running go
+y01   ok             want=HELD           got=HELD-live        released_at one YEAR in the future
+x11   *** FAIL-SHUT  want=FREE-released  got=HELD-live        \u0032 IS the digit 2: the shape check runs on the DECODED string. CORRECT, and want was set to FREE after measuring it
+x16   ok             want=FREE-released  got=FREE-released    CONTROL: a genuine release MUST still fire arm 1
+x17   ok             want=TAKE-ceiling   got=TAKE-ceiling     CONTROL: 100 h old MUST still fire arm 3
+ROWS=24 FAIL_OPEN=0 FAIL_SHUT=1
+  corpus rc=1
+  NOTE: the one residual FAIL-SHUT is row x11 and it is C1 WORKING, not C1 breaking.
+  x11's literal is the fixed instant 2026-08-28T14:00:05Z, which is hours AHEAD of
+  the clock at the time of this run, so C1's plausibility bound refuses it. That is
+  the STATED COST of C1: a released_at further ahead than LOCK_RELEASE_SKEW_SECS
+  reads as NOT released. Direction SHUT, configurable, and preferable to the OPEN
+  direction it replaces. x11 was written against T353's contract; under C1 its
+  correct expectation is HELD. Recorded rather than rescored.
+
+=== 3. --self-test-lock-readers on the patched file (want rc 0, ROWS=32)
+ROWS=32 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+  rc=0
+
+=== 3b. and it must CATCH C1 being reverted (else C1 is an ungraded fix)
+ROWS=32 FAIL_OPEN=3 FAIL_SHUT=0 SKIPPED=0
+  rc=1  (want NON-ZERO)
+
+=== 3c. and it must CATCH C4 being reverted
+ROWS=32 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0
+  rc=1  (want NON-ZERO)
+
+=== 4. T342 positive control — every takeover arm must still fire
+  OK    released_at a real timestamp, key LAST               -> FREE-released
+  OK    released_at a real timestamp, key in the MIDDLE      -> FREE-released
+  OK    released_at a real timestamp, COMPACT separators     -> FREE-released
+  OK    dead pid on this host, pid key in the middle         -> TAKE-dead-pid
+  OK    dead pid on this host, pid key LAST (was pid_state=absent before T342) -> TAKE-dead-pid
+  OK    dead pid on this host, COMPACT separators (was absent before T342) -> TAKE-dead-pid
+  OK    no LOCK file                                         -> FREE-no-lock
+RESULT: PASS — every takeover arm still fires on the input it is written for.
+
+=== 5. 192-state driver — no arm may have moved
+disagreements with SKILL.md STEP 0 as modelled in rules.py: 0
+RESULT: PASS — the wrapper and the skill agree on all 192 states.
+
+=== 6. C3 at LOCK_CEILING_SECS=604800 — the value that used to stop the fire
+ROWS=32 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+  rc=0  (want 0)
+
+=== 7. C2 — mktemp failure must now REFUSE, not fall back to /
+510:  _st_dir="$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/fire-selftest.XXXXXX" 2>/dev/null)" || _st_dir=""
+692:  _t301_dir="$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/fire-wrapper-snap.XXXXXX" 2>/dev/null)" || _t301_dir=""
+512:    print -u2 "self-test: could not create a scratch directory under ${TMPDIR:-/tmp}; refusing to run against an unknown path"
+0

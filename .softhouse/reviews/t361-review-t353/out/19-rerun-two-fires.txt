@@ -1,0 +1,90 @@
+sandbox      : /tmp/t279-fires.Vov3Qv
+wrapper      : /private/tmp/t361/rerun/.softhouse/bin/fire-program.sh
+this host    : Buyanmunkhs-Mac-mini     this pid: 45434
+
+warning: You appear to have cloned an empty repository.
+
+================ S1  P-85 REPLAY — cloud fire at 12:10:00Z: tip 19m27s old, started_at 6h07m old ================
+  On 2026-08-22 the pre-fix rule read started_at alone (6h07m > 6h) and TOOK THE LOCK.
+  Four worker branches died with the cloud's sandbox. Expected now: HELD-live.
+    repo=/tmp/t279-fires.Vov3Qv/cloud
+    lock_present=1 released_at=<null> started_age=22020 tip_age=1168 pid_state=alive_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=HELD-live
+
+================ S2  THE HOLE — released_at null, started_at 0.5h, tip 8.75h (every 08:00 fire) ================
+  Shipped arms 1-4: NONE match. No verdict. An agent that matches nothing improvises,
+  and improvising is how the incident happened. Expected now: HELD-default (arm 6).
+    repo=/tmp/t279-fires.Vov3Qv/cloud
+    lock_present=1 released_at=<null> started_age=1800 tip_age=31501 pid_state=alive_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=HELD-default
+
+================ S3  fire-20260827-230001 — lock 105h old, tip 2.99h old ================
+  Arm 4 alone reads HELD-by-a-live-holder, and there is no bound on how long.
+  Expected now: TAKE-ceiling (arm 3).
+    repo=/tmp/t279-fires.Vov3Qv/cloud
+    lock_present=1 released_at=<null> started_age=378000 tip_age=10765 pid_state=alive_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=TAKE-ceiling
+
+================ S4  DEAD PID ON THIS HOST, TIP FRESH — the shipped arms CONTRADICT each other ================
+  Shipped arm 2 says HELD (tip <6h); shipped arm 4 says TAKE (dead pid). Two
+  orchestrators reading in different orders get different answers.
+  Expected now: TAKE-dead-pid (arm 2), unambiguously — dead pid outranks freshness.
+  (dead pid used: 45461 — reaped above; kill -0 rc=1)
+    repo=/tmp/t279-fires.Vov3Qv/cloud
+    lock_present=1 released_at=<null> started_age=3600 tip_age=601 pid_state=dead_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=TAKE-dead-pid
+
+================ S4b SAME STATE, BUT THE PID IS ON ANOTHER HOST — must NOT be judged ================
+  Expected: pid_state=other_host, verdict HELD-live (the tip is still fresh).
+    repo=/tmp/t279-fires.Vov3Qv/cloud
+    lock_present=1 released_at=<null> started_age=3601 tip_age=602 pid_state=other_host
+    mtime_age=1   # printed only; decides nothing
+    verdict=HELD-live
+
+================ S5  released_at SET ================
+  Expected: FREE-released (arm 1).
+    repo=/tmp/t279-fires.Vov3Qv/cloud
+    lock_present=1 released_at=2026-08-28T01:00:00Z started_age=3600 tip_age=602 pid_state=alive_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=FREE-released
+
+================ S6  NO LOCK AT ALL ================
+  Expected: FREE-no-lock (arm 0).
+    repo=/tmp/t279-fires.Vov3Qv/cloud
+    lock_present=0 released_at=<null> started_age=<unreadable> tip_age=603 pid_state=absent
+    mtime_age=1787903505   # printed only; decides nothing
+    verdict=FREE-no-lock
+
+================ S7  THE MTIME TRAP — T265 F-3, reproduced ================
+  A lock stamped 8h ago whose FILE was rewritten 12.6 minutes ago by the
+  `git pull --ff-only` the wrapper runs seconds earlier. The old wrapper read
+  759s and exited 'another orchestrator holds the lock', costing the fire 6h.
+  Expected: mtime_age near 0 (the OLD signal, which would say HELD) while
+  started_age=28800 and tip_age=43200 give TAKE-both-stale (arm 5).
+    repo=/tmp/t279-fires.Vov3Qv/cloud
+    lock_present=1 released_at=<null> started_age=28800 tip_age=43200 pid_state=alive_here
+    mtime_age=1   # printed only; decides nothing
+    verdict=TAKE-both-stale
+
+================ S8  THE CASE NO LOCK DESIGN CAN FIX — the holder committed and NEVER PUSHED ================
+  This is P-85's actual cause. The holder is live with five workers running; its
+  lock refresh, dispatch record and in-flight RESUME.md are COMMITTED LOCALLY and
+  unpushed, so the published tip is the previous fire's "closed clean, zero live
+  workers" attestation, 12h old, and the published LOCK is the previous fire's.
+  Expected: TAKE-both-stale — the repaired rules take the lock and the incident
+  HAPPENS AGAIN. This is not a defect in the arms; it is the proof that the arms
+  are the SECOND line of defence. The first is the obligation in STEP 0, and the
+  only mechanical backing for it is the post-checkout hook in this directory.
+    repo=/tmp/t279-fires.Vov3Qv/cloud
+    lock_present=1 released_at=<null> started_age=43200 tip_age=43200 pid_state=other_host
+    mtime_age=1   # printed only; decides nothing
+    verdict=TAKE-both-stale
+
+================ what this drive did NOT touch ================
+  no worktree was added or removed anywhere;
+  $GEREGE_NBFI_REPO was pointed at /tmp/t279-fires.Vov3Qv/cloud for every call;
+  the real repo at /Users/buv/gerege-nbfi was never opened by this script.

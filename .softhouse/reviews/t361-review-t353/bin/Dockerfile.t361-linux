@@ -1,0 +1,9 @@
+# T361 — my own Linux test host, written rather than reused, so the "it works on Linux"
+# claim is regenerated (P-22) and not inherited from T353's image definition.
+#
+# alpine:3 -> /bin/date is BUSYBOX, which is the userland the wrapper's hard-coded
+# `/bin/date` actually resolves to there. zsh 5.9 matches the Mac. python3 is added
+# because the wrapper hard-codes /usr/bin/python3; the fact that a STOCK image does not
+# ship it is measured separately (see 08-t361-stock-images.txt), not assumed here.
+FROM alpine:3
+RUN apk add --no-cache zsh git python3 coreutils

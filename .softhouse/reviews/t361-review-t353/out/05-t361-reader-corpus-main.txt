@@ -1,0 +1,1 @@
+ABORT: extraction of _lock_json_field failed
