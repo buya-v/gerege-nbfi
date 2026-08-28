@@ -1,0 +1,36 @@
+at: 88bee71e Merge remote-tracking branch 'origin/softhouse/T374-t362-conditions' into mergeresult
+
+### 1. commit a mutation of a FORK-SHA observation (control repro of matrix case 12)
+  section 10 EXIT=1  (expect 1 — ARM A sees it)
+  PASS  the comparator reports DIFFERENT on bytes with ONE line appended — the exact mutation shape T362 used to prove F-1
+      DIFFER                    : 1
+        MUTATED .softhouse/capture/tierA-a2/out/A2-000-glaccounts-preexisting.http
+  FAIL  NO captured oracle observation that existed at the fork sha has been MUTATED
+
+### 2. now move section 10's OWN baseline forward to the commit that contains it
+67:FORK = "4b81baa31ec8caa0004e0972510abb701f20af92"
+  section 10 EXIT=0
+  PASS  the comparator reports DIFFERENT on bytes with ONE line appended — the exact mutation shape T362 used to prove F-1
+      at the fork sha : 1035 observations  {'out': 906, 'req': 129}
+      at HEAD         : 1035 observations  {'out': 906, 'req': 129}
+=== 3. ARM A — every observation that existed at the fork sha, RECOMPUTED ===
+      DIFFER                    : 0
+      unreadable at the fork sha: 0
+  PASS  NO captured oracle observation that existed at the fork sha has been MUTATED
+  PASS  NO captured oracle observation that existed at the fork sha has been DELETED
+
+### 3. and the whole runner
+  run-all EXIT=0
+NAME and run-all.sh still exited 0 printing RUN-ALL VERDICT: PASS. T374 reproduced it
+  4         1              1         as adjudicated
+  10        0              0         as adjudicated
+  sections run: 10    deviations: 0
+  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
+  --- does section 4 (saturated) still print the mutation by name? ---
+one line to out/A2-000-glaccounts-preexisting.http -- section 4 printed DIFF for it BY
+        DIFF CAPTURE-PLAN.md
+        DIFF cap.sh
+        DIFF out/A2-000-glaccounts-preexisting.http
+
+### 4. restore
+restored to: 88bee71e Merge remote-tracking branch 'origin/softhouse/T374-t362-conditions' into mergeresult

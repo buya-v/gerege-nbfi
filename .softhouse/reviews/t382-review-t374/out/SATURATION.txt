@@ -1,0 +1,95 @@
+at: a8b57494 Merge remote-tracking branch 'origin/softhouse/T374-t362-conditions' into pinmerge
+
+### A. WHICH pre-existing files does section 4 guard that section 10 does NOT?
+  entries in the fork-sha manifest      : 430
+  of those, under out/ or req/ (sec 10) : 403
+  NOT under out/ or req/ (sec 4 ONLY)   : 27
+CAPTURE-PLAN.md
+DEFECTS-FOUND-BY-REVIEW.md
+FLAGGED-NOT-REPRODUCIBLE.txt
+RED-GREEN-D2-cap-transport.txt
+RED-GREEN-D3-manifest-blindness.txt
+cap.sh
+env.sh
+manifest.py
+mkreq.py
+mkreq2.py
+mkreq3.py
+mkreq4.py
+mkreq5.py
+mkreq6.py
+prove-cap-transport-red.py
+prove-manifest-blind-red.py
+prove-manifest-red.py
+rename1.py
+run-020-accounts.sh
+run-040-refusals.sh
+run-060-mappings.sh
+run-100-finactivity.sh
+run-120-delete-update.sh
+show.py
+sql/q1-glaccount-rows.sql
+sql/q2-product-mapping-rows.sql
+sql/q3-final-state.sql
+
+### B. CONTROL — unmutated merge result
+  run-all EXIT=0
+  4         1              1         as adjudicated
+  10        0              0         as adjudicated
+NAME and run-all.sh still exited 0 printing RUN-ALL VERDICT: PASS. T374 reproduced it
+  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
+
+### C. DRIVE — mutate a pre-existing capture INSTRUMENT (not an observation).
+  target: .softhouse/capture/tierA-a2/CAPTURE-PLAN.md
+  section 4 alone EXIT=1  (adjudicated 1 -> cannot move)
+      byte-identical fork-vs-today       : 428
+      DIFFER                             : 2
+        DIFF CAPTURE-PLAN.md
+        DIFF cap.sh
+        MANIFEST MISMATCH CAPTURE-PLAN.md
+  FAIL  all 430 pre-existing files are byte-identical to the fork sha
+  - all 430 pre-existing files are byte-identical to the fork sha
+  section 10 alone EXIT=0  (does the NEW guard see it?)
+
+VERDICT: PASS (exit 0). Every captured oracle observation under .softhouse/capture/tierA-a2/{out,req}/
+is byte-identical to both its fork-sha blob and its HEAD blob.
+  run-all EXIT=0
+  4         1              1         as adjudicated
+  10        0              0         as adjudicated
+NAME and run-all.sh still exited 0 printing RUN-ALL VERDICT: PASS. T374 reproduced it
+  sections run: 10    deviations: 0
+  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
+
+### D. DRIVE — LAUNDER: mutate the instrument AND update MANIFEST.sha256 to match
+  manifest rows rewritten: 1
+  run-all EXIT=0
+  4         1              1         as adjudicated
+  10        0              0         as adjudicated
+NAME and run-all.sh still exited 0 printing RUN-ALL VERDICT: PASS. T374 reproduced it
+  sections run: 10    deviations: 0
+  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
+
+### E. DRIVE — an UNTRACKED fabricated observation dropped into out/
+  run-all EXIT=0
+  4         1              1         as adjudicated
+  10        0              0         as adjudicated
+NAME and run-all.sh still exited 0 printing RUN-ALL VERDICT: PASS. T374 reproduced it
+  sections run: 10    deviations: 0
+  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
+
+### F. CONTROL AGAIN — same command, unmutated
+  run-all EXIT=0
+NAME and run-all.sh still exited 0 printing RUN-ALL VERDICT: PASS. T374 reproduced it
+  sections run: 10    deviations: 0
+  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
+
+### G. is any section OTHER than 4 adjudicated non-zero, and is it live or frozen?
+75:  sec 1 1 python3 "$DIR/check-shape.py"
+80:  sec 2 1 python3 "$DIR/enumerate-corpus.py"
+83:  sec 3 0 python3 "$DIR/verify-double-entry-minor-units.py"
+106:  sec 4 1 python3 "$DIR/verify-manifest-independently.py"
+111:  sec 5 0 python3 "$DIR/audit-float.py"
+114:  sec 6 0 python3 "$DIR/prove-resolve7-float-red.py"
+117:  sec 7 0 python3 "$DIR/prove-a2-7-guards-are-falsifiable.py"
+162:  sec 9 0 python3 "$DIR/adjudicate-section1.py"
+176:  sec 10 0 python3 "$DIR/verify-capture-integrity.py"

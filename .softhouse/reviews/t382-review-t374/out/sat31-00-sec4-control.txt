@@ -1,0 +1,49 @@
+=== 0. the baseline is a LITERAL sha, and it is A2-7's real fork point (P-24) ===
+  PASS  prove-a2-7-additive.py hard-codes the literal sha
+  PASS  prove-a2-7-additive.py contains NO `git merge-base` anywhere
+          the only occurrence is the comment explaining why it is NOT used
+  PASS  A2-7's head b3f2d9b26c34 is present in this checkout (it is reachable from origin/main, so a fresh clone has it; the BRANCH NAME it replaced was local-only and a fresh clone did NOT)
+  PASS  the literal sha is a genuine ancestor of A2-7's head
+  PASS  A2-7's head carries exactly 2 commits past that sha
+          count=2
+
+=== 1. entry counts, from the manifest BLOBS themselves ===
+  PASS  manifest at the fork sha holds 430 entries
+          len=430
+  FAIL  manifest on disk today holds 571 entries
+          len=1139
+  FAIL  571 - 430 = 141 added
+          delta=709
+
+=== 2. nothing pre-existing was DROPPED or RENAMED ===
+  PASS  0 pre-existing entries dropped
+          dropped: []
+
+=== 3. RECOMPUTED: every pre-existing file's bytes today == its bytes at the fork sha ===
+      (recomputed from the git blob and from disk; the manifest's recorded hash is
+       used only as a THIRD cross-check, never as the source of truth)
+      enumerated 430 pre-existing entries
+      byte-identical fork-vs-today       : 428
+      DIFFER                             : 2
+      missing on disk (named, not skipped): 0 []
+      not in the fork tree (named)        : 0 []
+      current manifest hash agrees w/ disk: 430
+        DIFF CAPTURE-PLAN.md
+             fork  7c2e2795863fa035424aa1cf23e7d1735dad502c535b16f31a0938a3fc0050bd
+             today da0760bacc8af5f5fdbe8c0b6d9a56f1904158b4c4b2ada3f3a5547d2e4e99dd
+        DIFF cap.sh
+             fork  67640ea31eb16c0ba0f929cfd93459f4ced687be3dda0f10db00c1b2d31f542a
+             today 6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62
+  FAIL  all 430 pre-existing files are byte-identical to the fork sha
+          identical=428 differ=2 missing=0 unreadable=0
+  PASS  and the CURRENT manifest records those same recomputed hashes (no laundering)
+          agrees=430
+
+=== 4. the git diff agrees: exactly one pre-existing path modified ===
+  PASS  the ONLY non-Added path in the whole branch is MANIFEST.sha256
+          non-added: ['M\t.softhouse/capture/tierA-a2/MANIFEST.sha256']
+
+FAILURES: 3
+  - manifest on disk today holds 571 entries
+  - 571 - 430 = 141 added
+  - all 430 pre-existing files are byte-identical to the fork sha

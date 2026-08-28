@@ -1,0 +1,7 @@
+=========== T382 ATTACK MATRIX vs verify-capture-integrity.py ===========
+scratch clone: /tmp/t382-rerun   pristine: 38b15e22
+
+00-CONTROL-unmutated               expected=0         GOT=0   control: the same command on unmutated input
+01-WT-append-forkobs               expected=1         GOT=1   one line appended to a fork-sha observation (T362's exact shape)
+02-WT-midbyte-forkobs              expected=1         GOT=1   ONE byte changed in the middle of a fork-sha observation
+03-WT-delete-forkobs               expected=1         GOT=1   a fork-sha observation DELETED from the working tree
