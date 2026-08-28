@@ -62,3 +62,20 @@ T375-04-selfcert-EXACT-spelling                          exit=2  (want 2 )  prob
 T375-05-selfcert-via-DOTSLASH                            exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
 T375-06-selfcert-via-DOTDOT                              exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
 T375-07-selfcert-via-ABSOLUTE-path                       exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-08-REVERT-fix-DOTSLASH-is-ACCEPTED-again            exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T375-09-CONTROL-legit-DOTSLASH-witness-ACCEPTED          exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T375-10-witness-is-a-DIRECTORY                           exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-11-witness-carries-PATHSPEC-MAGIC                   exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-12-witness-UNTRACKED-still-refused                  exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-13-SLOW-guard-BREACHES-its-ceiling                  exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-14-CONTROL-slow-but-UNDER-the-ceiling               exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T375-15-guard-with-NO-BUDGET-ROW-refuses                 exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-16-STALE-budget-row-refuses                         exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-17-VACUOUS-cost-census-refuses                      exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+
+T375 RED DRIVE: 19 passed, 0 failed. (arm set 1 counts as one.)
+DISTINCT ARMS IN THIS FILE: 18. The line above counts arm set 1 as ONE, so its total is
+18 + 1 = 19 and NOT the sum of every arm that ran -- T364's NOTE-1 charged exactly that
+double-count against T358's '29 arms' label, and the label is spelled here so it cannot
+be inferred wrongly. The predecessor drives report their own counts in their own output.
+DRIVE RC=0
