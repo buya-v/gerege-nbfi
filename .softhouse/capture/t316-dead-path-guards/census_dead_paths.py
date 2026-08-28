@@ -80,6 +80,12 @@ ELLIPSIS_RE = re.compile(r"\.\.\.|…")
 # `evidence/50-selector-artefacts.txt`.
 TRAILING_PUNCT = ")}],;:.…"
 
+# A TRAILING LINE-RANGE CITATION: `:36`, `:36-44`. ANCHORED AT THE END and digits only, so
+# `PIN.json:dec1_revision` (a path plus a JSON key) is NOT matched and stays dead. Consulted
+# only to say YES, and only after the verbatim and punctuation forms have both failed --
+# see `resolves()` for the argument and the measurement that provoked it [T326].
+CITATION_RE = re.compile(r":\d+(?:-\d+)?$")
+
 # The two references FU-T299-2 names. The selector must see both, or the census aborts.
 CALIBRATION = [
     (".softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py",
@@ -214,22 +220,55 @@ def _lexical_norm(path: str) -> str:
 
 def resolves(files, dirs, path: str) -> bool:
     """A literal RESOLVES if it names a TRACKED file, or a directory containing at least one
-    tracked file, EITHER verbatim OR after trailing sentence punctuation is stripped.
+    tracked file: verbatim, or after trailing sentence punctuation is stripped, or after a
+    trailing LINE-RANGE CITATION is stripped.
 
     The punctuation arm is unchanged from T316 and is not laxity: `".softhouse/vectors)"` is a
     reference to a directory that exists, wearing a closing paren from the sentence around it.
     Reporting it dead is a false positive, and false positives are how a census gets pinned away
     (it was 56 of the first 154 rows). The stripped form is only ever consulted to say YES, so it
     can never turn a live reference into a dead one.
+
+    THE CITATION ARM [T326] IS THE SAME ARGUMENT, MEASURED THE SAME WAY. T272's merge landed
+    `"...t254-harness-portability/REVIEW.md:36-44)"` inside a prose `echo`, and the frontier
+    guard reported it as a NEW DEAD PATH. The file it names IS TRACKED [VERIFIED:
+    `git ls-files .softhouse/reviews/t254-harness-portability/` lists `REVIEW.md`]; what the
+    census could not see past was a `:36-44` LINE-RANGE CITATION -- the exact shape T326 spent
+    its day repairing under P-86. The guard's own printed rule is "a '+' row is a NEW site:
+    REPAIR it rather than pinning it", and pinning a false positive is how a census decays into
+    the wolf-crier its own header warns about, so this is repaired in the SELECTOR rather than
+    excused in the pin.
+
+    WHY THIS CANNOT WEAKEN THE CENSUS, stated as a property and not as a hope. Every arm here is
+    consulted ONLY AFTER the previous one has failed, and every arm can only answer YES. A
+    literal is still DEAD unless some form of it names something in the TRACKED universe -- the
+    disk is not consulted in any arm -- so no genuinely dead path can be made to resolve by
+    stripping a suffix: the remaining prefix must itself be a tracked file or a tracked
+    directory. The suffix pattern is anchored and deliberately narrow: `:N` or `:N-M` at the very
+    END, digits only. The frontier's existing `PIN.json` row -- a path plus a JSON KEY rather
+    than a line number -- does NOT match and stays dead, which is the control that shows the arm
+    is not a blanket "strip anything after a colon". That row is named in the pin; it is not
+    quoted here, because this census counts quoted literals and quoting it in its own source
+    would ADD A ROW TO THE FRONTIER FROM THIS FILE -- which is precisely what happened on the
+    first attempt at this comment, and the guard caught it on the next run. Repaired rather than
+    pinned, per the rule the guard prints.
     """
     n = _lexical_norm(path)
     if n and (n in files or n in dirs):
         return True
     stripped = path.rstrip(TRAILING_PUNCT)
-    if not stripped or stripped == path:
+    if stripped and stripped != path:
+        s = _lexical_norm(stripped)
+        if s and (s in files or s in dirs):
+            return True
+    # THE CITATION ARM. Applied to the punctuation-stripped form, because a citation in prose
+    # arrives wearing both: `REVIEW.md:36-44)`.
+    base = stripped if stripped else path
+    m = CITATION_RE.search(base)
+    if not m:
         return False
-    s = _lexical_norm(stripped)
-    return bool(s) and (s in files or s in dirs)
+    c = _lexical_norm(base[: m.start()])
+    return bool(c) and (c in files or c in dirs)
 
 
 def scan(root: Path, rel: str, files, dirs):

@@ -76,7 +76,7 @@
 # generated at runtime and will never be tracked.
 #
 # -------------------------------------------------------------------------------------------
-# THE ROWS FOLDED IN BY T326, EACH INSPECTED. The pin moved from 98 rows to 107.
+# THE ROWS FOLDED IN BY T326, EACH INSPECTED. The pin moved from 98 rows to 109.
 # -------------------------------------------------------------------------------------------
 # +4  T305's red drive `red-drive-conformance-guard.sh`. Carried since T323 in
 #     `DEADPATH_T323_RECONCILE_LIST` in conformance.sh because the pin was outside T323's edit
@@ -134,6 +134,35 @@
 #     T306's file is NOT EDITED here: T306 is another worker's partition and the row is correct
 #     as written. Filed as FU-T326-7 so the next holder of that file knows the row exists.
 #
+# +2  `.softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh | .softhouse/toolchain`
+#     and `.../60-cloud-f3-reproduction.sh | .softhouse/toolchain`, arriving in T272's merge --
+#     the THIRD time `main` moved under T326 and the SECOND time the wired guard caught a site
+#     nobody had told it about. Both are the STANDING toolchain class: T272's whole subject is
+#     the Go-toolchain graft, so of course its drives name `.softhouse/toolchain`, and 20 other
+#     tracked instruments already carry that same row for the same reason. Pinned under the
+#     decision at the top of this header -- an untracked-but-expected path is DEAD, present or
+#     not -- which is exactly why these two rows are STABLE: they are dead on Buyan's Mac with
+#     the toolchain unpacked and dead on the cloud fire without it.
+#
+# +0/-1 A THIRD ROW ARRIVED IN THE SAME MERGE AND WAS REPAIRED RATHER THAN PINNED:
+#     `.softhouse/capture/t272-goenv-graft/instruments/10-locate-cloud-arm.sh` names
+#     `...t254-harness-portability/REVIEW.md:36-44)` inside a prose `echo`. THE FILE IS TRACKED;
+#     what the census could not see past was a LINE-RANGE CITATION -- the same P-86 shape T326
+#     spent its day repairing. The guard's printed rule is "a '+' row is a NEW site: REPAIR it
+#     rather than pinning it", and pinning a false positive is how a census decays into the
+#     wolf-crier its own header warns about. So the SELECTOR was repaired (`CITATION_RE` in
+#     census_dead_paths.py, an arm consulted only after the others fail and only ever to say
+#     YES) and no row was added. Measured delta of that repair, end to end: deadFiles 77 -> 76,
+#     resolving 1072 -> 1073, and NOTHING ELSE MOVED.
+#
+#     ITS OWN FIRST DRAFT ADDED A ROW AND THE GUARD CAUGHT IT ON THE NEXT RUN. The comment
+#     explaining the arm quoted the frontier's `PIN.json` row as a control, and this census
+#     counts quoted literals, so the explanation became an instrument naming a dead path. The
+#     quotation was removed rather than the row pinned. That is the third time in this file's
+#     history that the frontier guard has caught the very commit that touches it (T323's wiring
+#     quotations, T306's probe, this comment), and it is the strongest argument on record that
+#     wiring it HARD was right.
+#
 # -------------------------------------------------------------------------------------------
 # A ROW IS NOT AN ACCUSATION. It records that an instrument names a path the repository does not
 # contain. That may be a defect (a required input that will never resolve, silently skipped) or
@@ -179,6 +208,8 @@
 .softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh | .softhouse/toolchain
 .softhouse/capture/t256-verdict-predicate/census_verdict_shape.py | .softhouse/capture/t256-verdict-predicate/`
 .softhouse/capture/t271-b1-t219/red/drive-red-t271.py | .softhouse/capture/t219-g8-residual/out/NOT-THERE.json
+.softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh | .softhouse/toolchain
+.softhouse/capture/t272-goenv-graft/instruments/60-cloud-f3-reproduction.sh | .softhouse/toolchain
 .softhouse/capture/t284-schema2-callsites/instruments/30-red-drive.sh | .softhouse/capture/t284-schema2-callsites/scratch
 .softhouse/capture/t284-schema2-callsites/instruments/30-red-drive.sh | .softhouse/capture/t284-schema2-callsites/scratch/rogue.sh
 .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py | .softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py
