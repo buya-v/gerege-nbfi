@@ -2145,8 +2145,10 @@ guard_accepting_side_gap_declared() {
 # The root was measured by T302, re-run by T319, and re-run again by T323 on this branch:
 #     grep -c 'fire-program\|ready-tasks\|reconcile\|in_progress' .softhouse/conformance.sh
 # returned 0 over 3,101 lines (T319's checkout) and 0 over 3,253 lines (T323's, immediately
-# before this block) — in a file whose own line 909 requires the selftest to run on every
-# conformance run, "not on the day someone remembers".
+# before this block) — in a file whose own block headed "EACH GUARD RUNS ITS OWN SELFTEST
+# FIRST, IN THE SAME INVOCATION" requires the selftest to run on every conformance run, "not
+# on the day someone remembers". GREP THAT HEADING (P-86): T323 cited it as "line 909" and
+# T326 measured it at :920 — stale by 11 within one fire.
 #
 # ALL THREE ARE HARD. None is advisory. A SOFT wiring prints a line that nothing depends on,
 # which is P-22 — "a guard, a canary, or a control that cannot fail is worse than none, because
@@ -2399,8 +2401,10 @@ guard_capture_namespace() {
 # guard below FAILS if that is done without emptying the list, so it cannot rot into a double
 # amnesty.
 #
-# IT IS A FRONTIER, NOT AN AMNESTY, AND THE LIST BELOW IS HELD TO THE SAME RULE (line 1715,
-# quoted because the rule is that pin's and not this one's): "A '+' row is a NEW site: repair it
+# IT IS A FRONTIER, NOT AN AMNESTY, AND THE LIST BELOW IS HELD TO THE SAME RULE (grep this
+# file for the heading THE PIN IS A FRONTIER, NOT AN AMNESTY — T323 cited it as "line 1715"
+# and T326 measured it at :1727, stale by 12; the line moves, the sentence does not. Quoted
+# because the rule is that pin's and not this one's): "A '+' row is a NEW site: repair it
 # … rather than pinning it. A '-' row is a site that was REPAIRED or DELETED, which is good
 # news, and the pin must lose that row IN THE SAME COMMIT or it starts excusing a weakness that
 # is no longer there." Concretely, this wiring REFUSES on every one of:
@@ -2531,7 +2535,8 @@ guard_dead_path_frontier() {
       warn "conformance: guard_dead_path_frontier: THE T323 RECONCILIATION LIST HAS GONE STALE."
       warn "conformance: The guard is GREEN — frontier == pin — yet DEADPATH_T323_RECONCILE_LIST"
       warn "conformance: still carries $rec_n row(s) it is excusing. A pin is a frontier, not an"
-      warn "conformance: amnesty (line 1715): a row that is no longer there must be dropped IN THE"
+      warn "conformance: amnesty (grep this file for THE PIN IS A FRONTIER, NOT AN AMNESTY — the"
+      warn "conformance: line moves): a row that is no longer there must be dropped IN THE"
       warn "conformance: SAME COMMIT, or it starts excusing a weakness that no longer exists."
       warn "conformance: THE FIX: set DEADPATH_T323_RECONCILE_LIST='' in .softhouse/conformance.sh."
       rm -rf "$d"

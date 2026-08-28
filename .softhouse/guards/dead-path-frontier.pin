@@ -56,9 +56,11 @@
 #       On the cloud fire, which never unpacks a toolchain, the allowlist would say a path
 #       resolves that is not there. That is P-22 -- "a guard, a canary, or a control that CANNOT
 #       FAIL is worse than none, because it is believed". It also converts the frontier from a
-#       derived measurement into a hand-maintained amnesty, which is the exact thing
-#       conformance.sh:1715 forbids ("A '+' row is a NEW site: repair it ... rather than
-#       pinning it").
+#       derived measurement into a hand-maintained amnesty, which is the exact thing the block
+#       in conformance.sh headed THE PIN IS A FRONTIER, NOT AN AMNESTY forbids ("A '+' row is
+#       a NEW site: repair it ... rather than pinning it"). GREP THAT SENTENCE, not a line
+#       number: it was cited as :1715 and T326 measured it at :1727 -- stale by 12 before this
+#       pin existed (P-86).
 #
 #   (c) DEAD, always, present or not.       CHOSEN. From the commit alone, nothing establishes
 #       that `.softhouse/toolchain` exists; a reference to it is a reference to something the
@@ -110,7 +112,8 @@
 # two-candidate list whose second candidate resolves, and when neither resolves both exit 2 with
 # the probe line absent.
 #
-# THIS IS A FRONTIER, NOT AN AMNESTY (conformance.sh:1715). A NEW row must be REPAIRED, not
+# THIS IS A FRONTIER, NOT AN AMNESTY (conformance.sh -- grep that sentence; the line moves and
+# the cardinal :1715 was already stale by 12). A NEW row must be REPAIRED, not
 # pinned. A row that disappears is good news and must be deleted here IN THE SAME COMMIT, or the
 # pin starts excusing a weakness that is no longer there.
 #

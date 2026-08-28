@@ -44,8 +44,11 @@
 # same shape, and deliberately the same terms, as `FAILOPEN_PIN_FILE_LIST` and
 # `HOSTSTATE_PIN_TEMP_ASSIGN_LIST` in `conformance.sh`.
 #
-# THE PIN IS A FRONTIER, NOT AN AMNESTY -- `conformance.sh:1715`, quoted because the rule is
-# theirs and not mine: "A '+' row is a NEW site: repair it ... rather than pinning it. A '-' row
+# THE PIN IS A FRONTIER, NOT AN AMNESTY -- the block in `conformance.sh` headed with that same
+# sentence (P-86: GREP THE SENTENCE, the line moves. That citation read `conformance.sh:1715`
+# until T326 measured it: the text is at :1727 and the cardinal was stale by 12 lines on main
+# BEFORE this guard was written). Quoted because the rule is theirs and not mine: "A '+' row
+# is a NEW site: repair it ... rather than pinning it. A '-' row
 # is a site that was REPAIRED or DELETED, which is good news, and the pin must lose that row IN
 # THE SAME COMMIT or it starts excusing a weakness that is no longer there."
 #
@@ -221,7 +224,9 @@ fi
 if [ "$removed_n" -gt 0 ]; then
   echo "conformance: !! $removed_n row(s) GONE from the frontier. That is GOOD NEWS, and the pin"
   echo "conformance: !! must lose the row IN THE SAME COMMIT, or it starts excusing a weakness"
-  echo "conformance: !! that is no longer there (conformance.sh:1715 -- a frontier, not an amnesty)."
+  echo "conformance: !! that is no longer there -- a frontier, not an amnesty. The rule is in"
+  echo "conformance: !! conformance.sh; grep the sentence THE PIN IS A FRONTIER, NOT AN AMNESTY"
+  echo "conformance: !! rather than a line number, because the line number moves."
   sed -n '1,40p' "$REMOVED"
 fi
 echo "conformance:   The pin is $PIN"
