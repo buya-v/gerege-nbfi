@@ -1,0 +1,1 @@
+SELFTEST PASS -- parser, HALF_UP quantizer and rate factor verified; AST clean: no float literal, no float()/round() call, no true-division, no decimal/fractions/math import.

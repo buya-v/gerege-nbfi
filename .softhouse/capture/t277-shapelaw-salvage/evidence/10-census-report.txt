@@ -1,0 +1,93 @@
+T277 shape-law census -- 10 raw .json.gz captures under ./.softhouse
+    .softhouse/capture/t117-familyb/out/capture-t117-raw.json.gz
+    .softhouse/capture/t117-familyb/out/capture-t117p2-raw.json.gz
+    .softhouse/capture/t159-review-t117/out/capture-t159-raw.json.gz
+    .softhouse/capture/t219-g8-residual/out/capture-t219-raw.json.gz
+    .softhouse/capture/t219-g8-residual/out/capture-t219-run2-raw.json.gz
+    .softhouse/capture/t219-g8-residual/out/capture-t219-run3-raw.json.gz
+    .softhouse/capture/t223-g8-region-predicate/out/capture-t223-raw.json.gz
+    .softhouse/capture/t229-g8-site3/out/capture-t229-raw.json.gz
+    .softhouse/reviews/T84-evidence/out/capture-t84-raw.json.gz
+    .softhouse/reviews/T84-evidence/out/capture-t84b-raw.json.gz
+
+CAPTURES REJECTED BEFORE THE CENSUS: {'not-stuck': 187, 'threw-or-empty': 6, 'rate-factor-inexact-at-19': 1, '<2-repayment-rows': 3}
+
+==============================================================================
+SCOPE t229corpus    296 admitted stuck cells   PASS
+==============================================================================
+   antecedent_FULL_count                          183                    (expected 183)
+   antecedent_FULL_lawII_fails                    7                      (expected 7)
+   antecedent_PARTIAL_count                       0                      (expected 0)
+   antecedent_PARTIAL_lawII_fails                 0                      (expected 0)
+   delta0_count                                   113                    (expected 113)
+   deltaHistogram                                 {'0': 113, '1': 183}   (expected {'0': 113, '1': 183})
+   exceptions_intersect_delta0                    0                      (expected 0)
+   exceptions_intersect_notFactA                  0                      (expected 0)
+   headerRowMismatches                            0                      (expected 0)
+   interestLaw_fails_all                          120                    (expected 120)
+   interestLaw_holds_all                          176                    (expected 176)
+   interestLaw_holds_on_delta0                    0                      (expected 0)
+   interestMinusPrincipalLaw_holds_on_factA       220                    (expected 220)
+   interestMinusPrincipalLaw_holds_on_notFactA    0                      (expected 0)
+   lastRowLaw_holds_on_factA                      220                    (expected 220)
+   lastRowLaw_holds_on_notFactA                   0                      (expected 0)
+   lawII_factA_domain                             220                    (expected 220)
+   lawII_holds_all                                289                    (expected 289)
+   lawII_holds_on_factA                           213                    (expected 213)
+   lawI_factA_holds                               220                    (expected 220)
+   notFactA_all_delta0                            True                   (expected True)
+   notFactA_count                                 76                     (expected 76)
+   principalConfinedToLastRow_on_factA            220                    (expected 220)
+   repaymentLaw_holds_on_factA                    220                    (expected 220)
+   repaymentLaw_holds_on_notFactA                 0                      (expected 0)
+   stuckCellsExamined                             296                    (expected 296)
+
+  LAW (ii) EXCEPTION SET -- observed principal vs a law-predicted 0:
+    T117P2-R600p0-N108-B11   capture-t117p2-raw.json.gz   n=108   B=11    E=5     I1q=6     d=1 B<=n*d=True  predicted=0 OBSERVED=5
+    T117P2-R600p0-N121-B11   capture-t117p2-raw.json.gz   n=121   B=11    E=5     I1q=6     d=1 B<=n*d=True  predicted=0 OBSERVED=4
+    T117P2-R600p0-N150-B11   capture-t117p2-raw.json.gz   n=150   B=11    E=5     I1q=6     d=1 B<=n*d=True  predicted=0 OBSERVED=2
+    T159-R600p0-N108-B11     capture-t159-raw.json.gz     n=108   B=11    E=5     I1q=6     d=1 B<=n*d=True  predicted=0 OBSERVED=5
+    T159-R600p0-N121-B11     capture-t159-raw.json.gz     n=121   B=11    E=5     I1q=6     d=1 B<=n*d=True  predicted=0 OBSERVED=4
+    T159-R600p0-N150-B11     capture-t159-raw.json.gz     n=150   B=11    E=5     I1q=6     d=1 B<=n*d=True  predicted=0 OBSERVED=2
+    T159-R600p0-N2000-B999   capture-t159-raw.json.gz     n=2000  B=999   E=499   I1q=500   d=1 B<=n*d=True  predicted=0 OBSERVED=166
+
+==============================================================================
+SCOPE all           578 admitted stuck cells   PASS
+==============================================================================
+   antecedent_FULL_count                          210                    (expected 210)
+   antecedent_FULL_lawII_fails                    7                      (expected 7)
+   antecedent_PARTIAL_count                       5                      (expected 5)
+   antecedent_PARTIAL_lawII_fails                 0                      (expected 0)
+   delta0_count                                   363                    (expected 363)
+   deltaHistogram                                 {'0': 363, '1': 215}   (expected {'0': 363, '1': 215})
+   exceptions_intersect_delta0                    0                      (expected 0)
+   exceptions_intersect_notFactA                  0                      (expected 0)
+   headerRowMismatches                            0                      (expected 0)
+   interestLaw_fails_all                          375                    (expected 375)
+   interestLaw_holds_all                          203                    (expected 203)
+   interestLaw_holds_on_delta0                    0                      (expected 0)
+   interestMinusPrincipalLaw_holds_on_factA       441                    (expected 441)
+   interestMinusPrincipalLaw_holds_on_notFactA    0                      (expected 0)
+   lastRowLaw_holds_on_factA                      441                    (expected 441)
+   lastRowLaw_holds_on_notFactA                   0                      (expected 0)
+   lawII_factA_domain                             441                    (expected 441)
+   lawII_holds_all                                571                    (expected 571)
+   lawII_holds_on_factA                           434                    (expected 434)
+   lawI_factA_holds                               441                    (expected 441)
+   notFactA_all_delta0                            True                   (expected True)
+   notFactA_count                                 137                    (expected 137)
+   principalConfinedToLastRow_on_factA            441                    (expected 441)
+   repaymentLaw_holds_on_factA                    441                    (expected 441)
+   repaymentLaw_holds_on_notFactA                 0                      (expected 0)
+   stuckCellsExamined                             578                    (expected 578)
+
+  LAW (ii) EXCEPTION SET -- observed principal vs a law-predicted 0:
+    T117P2-R600p0-N108-B11   capture-t117p2-raw.json.gz   n=108   B=11    E=5     I1q=6     d=1 B<=n*d=True  predicted=0 OBSERVED=5
+    T117P2-R600p0-N121-B11   capture-t117p2-raw.json.gz   n=121   B=11    E=5     I1q=6     d=1 B<=n*d=True  predicted=0 OBSERVED=4
+    T117P2-R600p0-N150-B11   capture-t117p2-raw.json.gz   n=150   B=11    E=5     I1q=6     d=1 B<=n*d=True  predicted=0 OBSERVED=2
+    T159-R600p0-N108-B11     capture-t159-raw.json.gz     n=108   B=11    E=5     I1q=6     d=1 B<=n*d=True  predicted=0 OBSERVED=5
+    T159-R600p0-N121-B11     capture-t159-raw.json.gz     n=121   B=11    E=5     I1q=6     d=1 B<=n*d=True  predicted=0 OBSERVED=4
+    T159-R600p0-N150-B11     capture-t159-raw.json.gz     n=150   B=11    E=5     I1q=6     d=1 B<=n*d=True  predicted=0 OBSERVED=2
+    T159-R600p0-N2000-B999   capture-t159-raw.json.gz     n=2000  B=999   E=499   I1q=500   d=1 B<=n*d=True  predicted=0 OBSERVED=166
+
+RESULT: PASS -- every expectation reproduced in both scopes, exception set exact and identical.

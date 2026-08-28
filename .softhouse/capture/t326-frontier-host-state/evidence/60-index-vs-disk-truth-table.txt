@@ -1,0 +1,88 @@
+T326 -- INDEX vs DISK: the four-cell truth table that states the fix exactly
+============================================================================================
+WHY THIS EXISTS. `20-cross-host-drive.sh` proves the frontier does not move when untracked
+state is materialised. This probe states the SAME property as a truth table over the two
+variables that were conflated before T326: is the INSTRUMENT tracked, is the TARGET tracked,
+and separately, is the target PRESENT ON DISK. It also closes Part I's
+`[UNVERIFIED] Determinism under a dirty index` with a measurement instead of an argument.
+
+DELIBERATELY NOT AN INSTRUMENT FILE. A new `*.sh` under `.softhouse/` enters the census
+corpus, and a probe of this kind must NAME a deliberately-dead path, which would add frontier
+rows and force a pin regeneration for a throwaway measurement. The commands are recorded here
+verbatim instead, and they are copy-pasteable. This is the same restraint T323's wiring block
+records after the census caught its own quotations.
+
+REPRODUCE (nothing below touches the working tree; it all happens in a throwaway clone made
+with `git clone --no-hardlinks` of the graded HEAD, entered with `cd`):
+
+    C() { python3 .softhouse/capture/t316-dead-path-guards/census_dead_paths.py 2>&1 \
+            | grep 'T316-DEADPATH-CENSUS:'; }
+
+BASELINE (clean clone of the graded HEAD)
+------------------------------------------------------------------------------------------
+    C
+T316-DEADPATH-CENSUS: corpus=1197 deadFiles=73 deadOccurrences=106 resolving=1045 indeterminate=70 prose=276
+
+STEP A -- an INSTRUMENT that exists on disk but is UNTRACKED
+------------------------------------------------------------------------------------------
+    printf '#!/usr/bin/env bash\nX=".softhouse/capture/t326-DIRTY-INDEX-PROBE/no-such-file.json"\n' \
+        > .softhouse/probe-dirty-index.sh
+    C
+T316-DEADPATH-CENSUS: corpus=1197 deadFiles=73 deadOccurrences=106 resolving=1045 indeterminate=70 prose=276
+
+    => corpus UNCHANGED at 1197. An untracked instrument is INVISIBLE to the census, exactly
+       as the printed selector says ("BLIND TO: untracked files as CORPUS"). That is a stated
+       limit of the census, not a claim about the world.
+
+STEP B -- the SAME instrument STAGED (in the index, not committed)
+------------------------------------------------------------------------------------------
+    git add .softhouse/probe-dirty-index.sh
+    C
+T316-DEADPATH-CENSUS: corpus=1198 deadFiles=74 deadOccurrences=107 resolving=1045 indeterminate=70 prose=276
+
+    => corpus 1197 -> 1198, dead 106 -> 107. THE INDEX IS THE UNIVERSE, and this is the
+       DELIBERATE choice recorded in the census header: a worker who adds an instrument and
+       the file it references in ONE change is graded on what they staged, so they can be
+       green BEFORE committing rather than after. It is also why the harness rule is "STAGE
+       YOUR CHANGES BEFORE RUNNING THE BAR" -- the bar reads tracked content.
+
+STEP C -- the TARGET materialised ON DISK, still untracked.  ** THIS IS THE WHOLE FIX. **
+------------------------------------------------------------------------------------------
+    mkdir -p .softhouse/capture/t326-DIRTY-INDEX-PROBE
+    echo '{}' > .softhouse/capture/t326-DIRTY-INDEX-PROBE/no-such-file.json
+    C
+T316-DEADPATH-CENSUS: corpus=1198 deadFiles=74 deadOccurrences=107 resolving=1045 indeterminate=70 prose=276
+
+    => IDENTICAL TO STEP B. The file the literal names now EXISTS on this disk, and the
+       verdict does not move by one row. Under T316's `os.path.exists()` resolver this cell
+       would have read 106 / resolving=1046 -- that single flip, multiplied by 24 rows, is
+       the whole defect the driver hit: `REFUSED rows=78 pinned=98 added=4 removed=24`,
+       exit 2, probe line ABSENT.
+
+STEP D -- the TARGET STAGED
+------------------------------------------------------------------------------------------
+    git add .softhouse/capture/t326-DIRTY-INDEX-PROBE/no-such-file.json
+    C
+T316-DEADPATH-CENSUS: corpus=1198 deadFiles=73 deadOccurrences=106 resolving=1046 indeterminate=70 prose=276
+
+    => dead 107 -> 106, resolving 1045 -> 1046. The row DIES the moment the target enters the
+       tracked universe -- and only then.
+
+THE TRUTH TABLE
+------------------------------------------------------------------------------------------
+    target absent, untracked             -> DEAD
+    target PRESENT ON DISK, untracked    -> DEAD          <-- the fix, in one cell
+    target tracked (staged or committed) -> RESOLVES
+
+    instrument untracked                 -> NOT IN CORPUS
+    instrument tracked (staged)          -> IN CORPUS
+
+  Resolution is a function of the INDEX and of nothing else. The disk is not an input, so the
+  launchd fire on Buyan's Mac and the cloud fire that never runs on that host cannot reach
+  different verdicts from the same commit.
+
+  ONE LIMIT, STATED: `git ls-files` reads the INDEX, so a STAGED-BUT-UNCOMMITTED change does
+  move the frontier (step B and step D above are exactly that case). That is intended and is
+  written into the census header. It is NOT host state -- the index is a property of the
+  working copy the grader was pointed at, and every graded path in this program stages before
+  it grades.

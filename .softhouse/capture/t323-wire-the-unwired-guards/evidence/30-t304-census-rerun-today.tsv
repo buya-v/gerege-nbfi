@@ -1,0 +1,308 @@
+tracked_files_destroyed	op	file	lineno	target	text
+7129	rm	.softhouse/conformance.sh	610	.softhouse	[ -n "$CONF_BIN" ] && rm -f "$CONF_BIN"
+7129	rm	.softhouse/conformance.sh	611	.softhouse	[ -n "$CONF_TMP" ] && rm -rf "$CONF_TMP"
+7129	py-rmtree	.softhouse/reviews/T158-drive-t156-refusals.py	189	.softhouse	shutil.rmtree(os.path.join(sb, ".softhouse", "vectors"))
+906	mv	.softhouse/capture/tierA-a2/cap.sh	94	.softhouse/capture/tierA-a2/out/${1-}; METHOD=${2-}; RPATH=${3-}; BODY=${4-}.json	mv "$TMPBODY" "$OUT"
+906	mv	.softhouse/capture/tierA-a2/cap10.sh	107	.softhouse/capture/tierA-a2/out/${1-}; METHOD=${2-}; RPATH=${3-}; BODY=${4-}; KEY=${5-}.req	mv "$TMPREQ" "$REQ"
+906	mv	.softhouse/capture/tierA-a2/cap10.sh	110	.softhouse/capture/tierA-a2/out/${1-}; METHOD=${2-}; RPATH=${3-}; BODY=${4-}; KEY=${5-}.json	mv "$TMPBODY" "$OUT"
+906	mv	.softhouse/capture/tierA-a2/cap8.sh	110	.softhouse/capture/tierA-a2/out/${1-}; METHOD=${2-}; RPATH=${3-}; BODY=${4-}.req	mv "$TMPREQ" "$REQ"
+906	mv	.softhouse/capture/tierA-a2/cap8.sh	113	.softhouse/capture/tierA-a2/out/${1-}; METHOD=${2-}; RPATH=${3-}; BODY=${4-}.json	mv "$TMPBODY" "$OUT"
+906	mv	.softhouse/capture/tierA-a2/cap9.sh	89	.softhouse/capture/tierA-a2/out/${1-}; METHOD=${2-}; RPATH=${3-}; BODY=${4-}; KEY=${5-}.req	mv "$TMPREQ" "$REQ"
+906	mv	.softhouse/capture/tierA-a2/cap9.sh	92	.softhouse/capture/tierA-a2/out/${1-}; METHOD=${2-}; RPATH=${3-}; BODY=${4-}; KEY=${5-}.json	mv "$TMPBODY" "$OUT"
+906	mv	.softhouse/capture/tierA-a2/capsql.sh	99	.softhouse/capture/tierA-a2/out/${1-}; SQLFILE=${2-}.txt	mv "$TMPOUT" "$TXT"
+906	mv	.softhouse/capture/tierA-a2/capsql.sh	100	.softhouse/capture/tierA-a2/out/${1-}; SQLFILE=${2-}.sql	mv "$TMPSQL" "$SQL"
+192	rm	.softhouse/capture/t91/run-attacks.sh	73	.softhouse/capture/t91/out/$LABEL-${SH:-sh}/link-to-canon.json	rm -f "$O/link-to-canon.json"
+145	rm	.softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh	46	.softhouse/capture/t274-attestation-failopen/evidence/wrap	rm -rf "$EV"
+110	rm	.softhouse/reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh	35	.softhouse/reviews/t261-tenant-attestation/evidence/redC	rm -rf "$EV"; mkdir -p "$EV"
+107	rm	.softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh	37	.softhouse/reviews/t261-tenant-attestation/evidence/redB	rm -rf "$EV"; mkdir -p "$EV/src" "$EV/req"
+107	rm	.softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh	103	./.softhouse/reviews/t261-tenant-attestation/evidence/redB/$1	mk() { rm -rf "$EV/$1"; cp -R "$EV/src/$2" "$EV/$1"; }
+91	rm	.softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh	62	.softhouse/capture/t274-attestation-failopen/evidence/t250arms	rm -rf "$EV"
+76	mv	.softhouse/capture/t287-closure-refusals/cap.sh	87	.softhouse/capture/t287-closure-refusals/out/${1-}; METHOD=${2-}; RPATH=${3-}; BODY=${4-}.json	mv "$TMPBODY" "$OUT"
+76	mv	.softhouse/capture/t287-closure-refusals/cap.sh	96	.softhouse/capture/t287-closure-refusals/out/${1-}; METHOD=${2-}; RPATH=${3-}; BODY=${4-}.req	mv "$TMPREQ" "$REQ"
+76	mv	.softhouse/capture/t287-closure-refusals/capsql.sh	68	.softhouse/capture/t287-closure-refusals/out/${1-}; SQLFILE=${2-}.txt	mv "$TMPOUT" "$TXT"
+76	mv	.softhouse/capture/t287-closure-refusals/capsql.sh	69	.softhouse/capture/t287-closure-refusals/out/${1-}; SQLFILE=${2-}.sql	mv "$TMPSQL" "$SQL"
+70	rm	.softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh	50	.softhouse/capture/t250-tenant-attestation/evidence/redB	rm -rf "$EV"
+68	rm	.softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh	83	.softhouse/capture/t274-attestation-failopen/evidence/red	rm -rf "$EV/red" "$EV/green"
+66	rm	.softhouse/capture/t305-openingbalance-accepting-side/throwaway/run-all.sh	29	.softhouse/capture/t305-openingbalance-accepting-side/throwaway/out	rm -rf "$OUT" "$DIR/req"
+43	inplace-edit	.softhouse/capture/charges/bin/t51-capture.sh	137	.softhouse/capture/charges/bin	sed -i '' "s/\"chargeId\": 0,/\"chargeId\": $_cid,/" "$CH/req/calc-T51-$4.json"
+43	inplace-edit	.softhouse/capture/charges/bin/t51-capture3.sh	67	.softhouse/capture/charges/bin	sed -i '' 's/"interestRatePerPeriod": 0,/"interestRatePerPeriod": 21.6,/' "$R/calc-T51-FL-INTEREST-REJECT.json"
+38	mv	.softhouse/reviews/T155-probe/prove-xiii-deflation.sh	46	.softhouse/reviews/T155-probe	mv /tmp/t155/victims/*.json "$V"/
+28	mv	.softhouse/capture/t294-openingbalance-refusal/cap.sh	90	.softhouse/capture/t294-openingbalance-refusal/out/${1-}; METHOD=${2-}; RPATH=${3-}; BODY=${4-}.json	mv "$TMPBODY" "$OUT"
+28	mv	.softhouse/capture/t294-openingbalance-refusal/cap.sh	99	.softhouse/capture/t294-openingbalance-refusal/out/${1-}; METHOD=${2-}; RPATH=${3-}; BODY=${4-}.req	mv "$TMPREQ" "$REQ"
+28	mv	.softhouse/capture/t294-openingbalance-refusal/capsql.sh	70	.softhouse/capture/t294-openingbalance-refusal/out/${1-}; SQLFILE=${2-}.txt	mv "$TMPOUT" "$TXT"
+28	mv	.softhouse/capture/t294-openingbalance-refusal/capsql.sh	71	.softhouse/capture/t294-openingbalance-refusal/out/${1-}; SQLFILE=${2-}.sql	mv "$TMPSQL" "$SQL"
+24	rm	.softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh	54	.softhouse/capture/t250-tenant-attestation/evidence/redC	rm -rf "$EV"
+24	mv	.softhouse/capture/t305-openingbalance-accepting-side/capsql.sh	82	.softhouse/capture/t305-openingbalance-accepting-side/out/${1-}; DB=${2-}; SQLFILE=${3-}.txt	mv "$TMPOUT" "$TXT"
+24	mv	.softhouse/capture/t305-openingbalance-accepting-side/capsql.sh	83	.softhouse/capture/t305-openingbalance-accepting-side/out/${1-}; DB=${2-}; SQLFILE=${3-}.sql	mv "$TMPSQL" "$SQL"
+22	mv	.softhouse/capture/t299-namespace-and-default-safety/instruments/30-drive-the-rename.sh	128	.softhouse/capture/t256-verdict-predicate	( cd "$CLONE" && git mv "$OLD" "$NEW" ) || { echo "ABORT(2): git mv failed"; exit 2; }
+22	mv	.softhouse/capture/t299-namespace-and-default-safety/instruments/30-drive-the-rename.sh	129	.softhouse/capture/t256-verdict-predicate	echo "  git mv $OLD -> $NEW"
+22	rm	.softhouse/capture/t299-namespace-and-default-safety/instruments/40-drive-namespace-guard.sh	123	.softhouse/capture/t256-verdict-predicate	( cd "$CLONE" && git rm -rqf .softhouse/capture/t256-verdict-predicate \
+15	rm	.softhouse/capture/t91/prove-guards.sh	211	.softhouse/capture/t91/out/prefix-livetwin-sh	rm -rf "$S/g5"; cp -R "$ROOT/.softhouse/capture/t91/out/prefix-livetwin-sh" "$S/g5"
+15	rm	.softhouse/capture/t91/prove-guards.sh	217	.softhouse/capture/t91/out/prefix-livetwin-sh	rm -rf "$S/g5ro"; cp -R "$ROOT/.softhouse/capture/t91/out/prefix-livetwin-sh" "$S/g5ro"
+14	git-restore	.softhouse/capture/pathb/t80/prove-f1.sh	157	.softhouse/capture/pathb/t36/out/emiloop	git checkout -- "$E" \
+14	git-restore	.softhouse/capture/pathb/t80/prove-f1.sh	159	.softhouse/capture/pathb/t36/out/emiloop	|| echo "guard: COULD NOT restore t36/out/emiloop — run: git checkout -- $E" >&2
+14	rm	.softhouse/capture/t250-tenant-attestation/instruments/20-redA-sidecar-tracks-the-send.sh	39	.softhouse/capture/t250-tenant-attestation/evidence/redA	rm -rf "$EV"
+11	rm	.softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py	13	.softhouse/capture/t304-evidence-destruction/instruments	rm -rf / rm -r / rm -f / rm          (removal)
+11	mv	.softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py	14	.softhouse/capture/t304-evidence-destruction/instruments	mv                                    (move-over / rename away)
+11	py-rmtree	.softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py	15	.softhouse/capture/t304-evidence-destruction/instruments	shutil.rmtree / os.remove / os.unlink / Path.unlink / pathlib .rmdir
+11	git-restore	.softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py	19	.softhouse/capture/t304-evidence-destruction/instruments	git checkout -- / git restore / git reset --hard   (index/worktree overwrite)
+11	inplace-edit	.softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py	20	.softhouse/capture/t304-evidence-destruction/instruments	sed -i / perl -i                       (in-place edit)
+11	rm	.softhouse/capture/t304-evidence-destruction/instruments/30-count-tracked-under-target.py	5	.softhouse/capture/t304-evidence-destruction/instruments	"Hard-destructive" = rm / mv / shutil.rmtree / os.remove / os.unlink / git clean /
+11	git-restore	.softhouse/capture/t304-evidence-destruction/instruments/30-count-tracked-under-target.py	6	.softhouse/capture/t304-evidence-destruction/instruments	git checkout -- / git restore / git reset --hard / sed -i / perl -i.
+10	rm	.softhouse/capture/t243-wiring/instruments/30-citation-red-drive.sh	56	.softhouse/vectors/ledger	rm -rf "$V"
+10	mv	.softhouse/capture/tierA-a2/red-green-a2-15.sh	193	.softhouse/vectors/ledger	mv "$VEC"/*.json "$TMP/ledger-aside/"
+10	mv	.softhouse/capture/tierA-a2/red-green-a2-15.sh	201	.softhouse/vectors/ledger	mv "$TMP/ledger-aside"/*.json "$VEC/"
+10	git-restore	.softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh	62	.softhouse/vectors/ledger	revert() { git checkout -- .softhouse/vectors/ledger; }
+10	git-restore	.softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh	67	.softhouse/vectors/ledger	git checkout -- .softhouse/vectors/ledger
+6	mv	.softhouse/capture/t253-portability/instruments/50-t234-residue-probe.sh	29	.softhouse/capture/t253-portability/instruments	mv -f "$STASH" "$RESIDUE"
+6	mv	.softhouse/capture/t253-portability/instruments/50-t234-residue-probe.sh	84	.softhouse/capture/t253-portability/instruments	mv -f "$RESIDUE" "$STASH"
+2	rm	.softhouse/capture/t131-grep/probe-ignorefiles.sh	11	.softhouse/capture/t131-grep/ignoretest	rm -rf "$D"; mkdir -p "$D"
+1	mv	.softhouse/bin/fire-program.sh	1580	.softhouse/RESUME.md	mv -f .softhouse/RESUME.md.t288.tmp .softhouse/RESUME.md
+1	git-restore	.softhouse/capture/pathb/t80/prove-f1.sh	117	.softhouse/capture/pathb/t36/attest.py	echo "guard: refusing to guess whose bytes those are. Inspect, then: git checkout -- $REL_A" >&2
+1	rm	.softhouse/capture/t238-failopen/instruments/30-pr4-nondead-mechanisms.sh	30	.softhouse/conformance.sh	rm -f .softhouse/conformance.sh
+1	mv	.softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh	222	.softhouse/capture/t250-tenant-attestation/evidence/redC/out/inject.req.NOT-JSON-BY-DESIGN.txt	mv "$EV/out/inject.req" "$EV/out/inject.req.NOT-JSON-BY-DESIGN.txt"
+1	mv	.softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh	228	.softhouse/capture/t250-tenant-attestation/evidence/redC/out/inject.req.sha256.txt	mv "$EV/out/inject.req.sha256" "$EV/out/inject.req.sha256.txt"
+1	rm	.softhouse/capture/t299-namespace-and-default-safety/instruments/40-drive-namespace-guard.sh	108	.softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md	( cd "$CLONE" && git rm -q -f .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md ) || exit 2
+1	inplace-edit	.softhouse/capture/t304-evidence-destruction/instruments/100-dead-cd-red-drive.sh	109	.softhouse/reviews/t288-drive/build-fixture.sh	/usr/bin/sed -i '' 's%^cd "\$REPO"$%cd "$REPO" || exit 2%' "$F"
+1	git-restore	.softhouse/reviews/T298/t298b-marker-attack-matrix.sh	18	.softhouse/reference-oracle.md	restore() { git checkout -- "$DOC"; }
+1	inplace-edit	.softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh	80	.softhouse/vectors/ledger/LDG-02-repayment-split-4leg-minor-units.json	/usr/bin/sed -i '' 's/"amount_minor": "27045058"/"amount_minor": "27045059"/' "$F"
+1	inplace-edit	.softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh	96	.softhouse/vectors/ledger/LDG-02-repayment-split-4leg-minor-units.json	/usr/bin/sed -i '' 's/"transaction_amount_major_text": "1000000"/"transaction_amount_major_text": "1000000.01"/' "$F"
+1	rm	.softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh	120	.softhouse/vectors/ledger/LDG-04-header-account-accepted.json	rm $V/LDG-04-header-account-accepted.json
+1	inplace-edit	.softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh	154	.softhouse/vectors/ledger/LDG-02-repayment-split-4leg-minor-units.json	/usr/bin/sed -i '' 's/"gl_account_type"$/"gl_account_type", "amount_minor"/' "$F"
+1	inplace-edit	.softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh	71	.softhouse/reviews/T158-compare-enumerators.sh	/usr/bin/sed -i '' 's%^C=/tmp/t158-clone$%C="$(mktemp -d "${TMPDIR:-/tmp}/t158-clone.XXXXXXXXXX")"%' "$PINNED"
+1	inplace-edit	.softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh	80	.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh	/usr/bin/sed -i '' 's%^D="\$(mktemp -d .*$%C=/tmp/t234_matrix2.txt%' "$ESCAPE"
+1	rm	.softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh	81	.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh	/usr/bin/sed -i '' "s%^trap 'rm -rf \"\\\$D\"' EXIT\$%%" "$ESCAPE"
+1	inplace-edit	.softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh	82	.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh	/usr/bin/sed -i '' 's%^C="\$D/matrix2.txt"$%%' "$ESCAPE"
+1	inplace-edit	.softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh	38	.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh	/usr/bin/sed -i '' 's%^D="\$(mktemp -d .*$%C=/tmp/t234_matrix2.txt%' "$F"
+1	rm	.softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh	39	.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh	/usr/bin/sed -i '' "s%^trap 'rm -rf \"\\\$D\"' EXIT\$%%" "$F"
+1	inplace-edit	.softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh	40	.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh	/usr/bin/sed -i '' 's%^C="\$D/matrix2.txt"$%%' "$F"
+1	inplace-edit	.softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh	74	.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh	/usr/bin/sed -i '' '/for a literal `> \/tmp\/t234_matrix2.txt` and the redirection here/d' "$F"
+0	rm	.softhouse/bin/fire-program.sh	354	${GEREGE_NBFI_REPO:-/Users/buv/gerege-nbfi}/.softhouse/LOCK	rm -f "$LOCK"
+0	rm	.softhouse/bin/fire-program.sh	694	${LOG_DIR:-$HOME/Library/Logs/gerege-nbfi}/fire-$(date +%Y%m%d-%H%M%S).recon-verdict	rm -f "$vf"
+0	rm	.softhouse/bin/fire-program.sh	709	${GEREGE_NBFI_REPO:-/Users/buv/gerege-nbfi}/.softhouse/tasks.json.t288.tmp	rm -f "$REPO/.softhouse/tasks.json.t288.tmp"
+0	rm	.softhouse/bin/fire-program.sh	717	${LOG_DIR:-$HOME/Library/Logs/gerege-nbfi}/fire-$(date +%Y%m%d-%H%M%S).recon-verdict	rm -f "$vf"
+0	rm	.softhouse/bin/fire-program.sh	983	${LOG_DIR:-$HOME/Library/Logs/gerege-nbfi}/fire-$(date +%Y%m%d-%H%M%S).driver-rc	rm -f "$DRIVER_RC_FILE"
+0	rm	.softhouse/capture/actualactual/src/negative-tests.sh	72	$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/out/.seam-backup	rm -f "$CAPDIR/out/.seam-backup"
+0	mv	.softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh	78	$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/out/__cp.txt	mv "$CAPDIR/out/__cp.txt" "$CPLIST" 2>/dev/null || true
+0	rm	.softhouse/capture/lib/oracle_send.sh	120	${4-}	cp "$os_body" "$os_tmpreq" || { rm -rf "$os_tmpd"; trap - EXIT; return 2; }
+0	rm	.softhouse/capture/lib/oracle_send.sh	167	$	os_sha=$(shasum -a 256 "$os_tmpreq") || { rm -rf "$os_tmpd"; trap - EXIT; return 2; }
+0	rm	.softhouse/capture/lib/oracle_send.sh	169	$	os_sha=$(sha256sum "$os_tmpreq") || { rm -rf "$os_tmpd"; trap - EXIT; return 2; }
+0	rm	.softhouse/capture/lib/oracle_send.sh	172	$OS_OUTDIR/${1-}.req	mv "$os_tmpreq" "$os_req" || { rm -rf "$os_tmpd"; trap - EXIT; return 2; }
+0	rm	.softhouse/capture/lib/oracle_send.sh	186	$OS_OUTDIR/${1-}.json	mv "$os_tmpbody" "$os_out" || { rm -rf "$os_tmpd"; trap - EXIT; return 2; }
+0	rm	.softhouse/capture/lib/oracle_send.sh	205	$OS_OUTDIR/${1-}.http	rm -f "$os_http" "$os_reqhdr" "$os_req" "$os_reqsha" "$os_out" "$os_status" \
+0	mv	.softhouse/capture/mathcontext/src/run-mathcontext2.sh	78	$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/out/__cp.txt	mv "$CAPDIR/out/__cp.txt" "$CPLIST" 2>/dev/null || true
+0	rm	.softhouse/capture/mathcontext/src/run-mathcontext3.sh	76	$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/out/.t46-capture3-before	rm -f "$CAPDIR/out/.t46-capture3-before"
+0	mv	.softhouse/capture/mathcontext/src/run-mathcontext3.sh	138	$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/out/t46-mathcontext3.json	mv "$JSON" "$JSON.REJECTED"
+0	mv	.softhouse/capture/mathcontext/src/run-t50-tier1.sh	146	$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/out/${T50_OUT_PREFIX:-t50-tier1}.json	mv "$JSON" "$JSON.REJECTED"
+0	mv	.softhouse/capture/mathcontext/src/run-t50-tier2.sh	146	$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/out/${T50_OUT_PREFIX:-t50-tier2}.json	mv "$JSON" "$JSON.REJECTED"
+0	rm	.softhouse/capture/mathcontext/src/t50-negative-tests.sh	108	$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/out/negative/.t50-tmp.json	rm -f "$TMP"
+0	rm	.softhouse/capture/pathb/t149/prove-redgreen.sh	100	$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.parked-vector.json	rm -f "$PARK"
+0	mv	.softhouse/capture/pathb/t149/prove-redgreen.sh	103	$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.parked-vector.json	mv "$PARK" "$VEC" \
+0	mv	.softhouse/capture/pathb/t149/prove-redgreen.sh	127	$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.parked-vector.json	mv "$PARK" "$VEC" || { echo "RESTORE FAILED: could not move $PARK back to $VEC" >&2; _st=1; }
+0	rm	.softhouse/capture/pathb/t149/prove-redgreen.sh	131	$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.parked-vector.json	rm -f "$PARK"
+0	rm	.softhouse/capture/pathb/t149/prove-redgreen.sh	152	$_ta	rm -f "$_tb" "$_ta"
+0	rm	.softhouse/capture/pathb/t149/prove-redgreen.sh	156	$?	[ "$_st" = 0 ] && rm -f "$BACKUP"
+0	mv	.softhouse/capture/pathb/t149/prove-redgreen.sh	176	$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../../.." && pwd)/.softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json	mv "$VEC" "$PARK" || fail "could not park the vector"
+0	mv	.softhouse/capture/pathb/t149/prove-redgreen.sh	186	$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.parked-vector.json	mv "$PARK" "$VEC" || fail "could not restore the vector — DO NOT COMMIT until it is back"
+0	rm	.softhouse/capture/pathb/t149/t156-p24-scratch-merge.sh	31	${TMPDIR:-/tmp}/t156-p24-scratch	rm -rf "$SCRATCH" || die "cannot clear $SCRATCH"
+0	rm	.softhouse/capture/pathb/t80/prove-f1.sh	291	$_ta	rm -f "$_tb" "$_ta"
+0	rm	.softhouse/capture/pathb/t80/shell-invariance.sh	34	.softhouse/capture/pathb/t80/out/.norm-sh.$$	rm -f "$O/.norm-sh.$$" "$O/.norm-bash.$$"
+0	rm	.softhouse/capture/pathb/t99/prove-f1.sh	40	$TREE/t36/out/recapture-default/sub-gerege	rm -rf "$TREE/$ATTACK"
+0	rm	.softhouse/capture/pathb/t99/prove-f1.sh	86	$P/t36/out/recapture-default/sub-gerege	rm -rf "$P/$ATTACK"
+0	rm	.softhouse/capture/pathb/t99/prove-f1.sh	102	$F/t36/out/recapture-default/sub-gerege	rm -rf "$F/$ATTACK"
+0	rm	.softhouse/capture/pathb/t99/prove-f2.sh	196	${TMPDIR	rm -f "${TMPDIR:-/tmp}/t99-f2-status-before.$$" "${TMPDIR:-/tmp}/t99-f2-status-after.$$"
+0	rm	.softhouse/capture/pathb/t99/prove-f3.sh	102	$TREE/t80/out/attack-9x-planted-nopin.txt	rm -f "$TREE/t80/out/attack-9x-planted-nopin.txt" "$TREE/t80/out/attack-9w-planted-default.txt"
+0	rm	.softhouse/capture/pathb/t99/prove-f4.sh	68	$P/t80/out/recapture-gerege          # stamped: written after the mechanism landed/CAPTURED-FROM-TENANT	rm -f "$P/$STAMPED/CAPTURED-FROM-TENANT"
+0	rm	.softhouse/capture/pathb/t99/prove-f4.sh	85	$F/t80/out/recapture-gerege          # stamped: written after the mechanism landed/CAPTURED-FROM-TENANT	rm -f "$F/$STAMPED/CAPTURED-FROM-TENANT"
+0	rm	.softhouse/capture/pathb/t99/prove-f4.sh	107	$F/t36/out/recapture-gerege        # the directory the finding names: predates it/CAPTURED-FROM-TENANT	rm -f "$F/$UNSTAMPED/CAPTURED-FROM-TENANT"
+0	rm	.softhouse/capture/pathb/t99/prove-f4.sh	134	$F/t99/out/smuggled-gerege	rm -rf "$F/t99/out/smuggled-gerege"
+0	rm	.softhouse/capture/pathb/t99/prove-f4.sh	165	$F/t99/out/nowhere	rm -rf "$F/t99/out/nowhere"
+0	rm	.softhouse/capture/pathb/t99/run-all.sh	49	.softhouse/capture/pathb/t99/out/.raw-$f-$shell	rm -f "$O/.raw-$f-$shell"
+0	rm	.softhouse/capture/t154-nofloat/drive-leg1-e2e.sh	79	$1/.softhouse/vectors/T154-POISON-store-root.json	unplant() { rm -f "$1/.softhouse/vectors/T154-POISON-store-root.json"; }
+0	rm	.softhouse/capture/t154-nofloat/drive-leg2.sh	56	$	uninject() { rm -f "$(probe_path "$1")"; }
+0	mv	.softhouse/capture/t154-nofloat/drive-leg3.sh	178	$1/loanschedule	m_f1_symlink(){ mv "$1/loanschedule" "$1/loanschedule-real"; ln -s loanschedule-real "$1/loanschedule"; }
+0	rm	.softhouse/capture/t154-nofloat/drive-leg3.sh	261	$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../.." && pwd)/.softhouse/vectors	rm -rf "$TMP/scratch-store"; cp -R "$REPO_ROOT/.softhouse/vectors" "$TMP/scratch-store"
+0	rm	.softhouse/capture/t154-nofloat/regen-leg1-red.sh	12	$	TMP="$(mktemp -d -t t154-regen)"; trap 'rm -rf "$TMP"' EXIT
+0	rm	.softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh	40	$(git rev-parse --show-toplevel)/.softhouse/capture/t243-wiring/evidence/planted-failopen-sweep.sh	git rm -q --cached --ignore-unmatch -- "$PLANT" >/dev/null 2>&1 || true
+0	rm	.softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh	41	$(git rev-parse --show-toplevel)/.softhouse/capture/t243-wiring/evidence/planted-failopen-sweep.sh	rm -f "$PLANT"
+0	rm	.softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh	99	.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-$1	rm -rf "$d"; mkdir -p "$d"
+0	rm	.softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh	142	.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-$1/probe.reqhdr	rm -f "$d/probe.reqhdr"
+0	rm	.softhouse/capture/t253-portability/instruments/10-mktemp-matrix.sh	68	$BSD_OUT	if [ "$BSD_RC" -eq 0 ]; then rm -f "$BSD_OUT"; fi
+0	rm	.softhouse/capture/t253-portability/instruments/10-mktemp-matrix.sh	89	$BSD_OUT	rm -f "$BSD_OUT"
+0	rm	.softhouse/capture/t273-residue/instruments/10-reproduce-residue-dependence.sh	129	${2:?usage: 10-reproduce-residue-dependence.sh <label> <residue-path>}	rm -f "$RESIDUE" || exit 2
+0	git-restore	.softhouse/capture/t273-residue/instruments/50-red-drive.sh	41	"$(git rev-parse --show-toplevel)" || { echo "T273: not in a git work tree"; exit 2; }/.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh	git checkout -- "$M1" "$M3" 2>/dev/null
+0	git-restore	.softhouse/capture/t273-residue/instruments/50-red-drive.sh	101	"$(git rev-parse --show-toplevel)" || { echo "T273: not in a git work tree"; exit 2; }/.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh	git checkout -- "$M1"
+0	git-restore	.softhouse/capture/t273-residue/instruments/50-red-drive.sh	112	"$(git rev-parse --show-toplevel)" || { echo "T273: not in a git work tree"; exit 2; }/.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh	git checkout -- "$M1"
+0	inplace-edit	.softhouse/capture/t273-residue/instruments/50-red-drive.sh	119	$	LC_ALL=C sed -i.t273bak 's%^C=/tmp/t158-clone$%C="$(mktemp -d "${TMPDIR:-/tmp}/t158-clone.XXXXXXXXXX")"%' "$M3"
+0	rm	.softhouse/capture/t273-residue/instruments/50-red-drive.sh	120	"$(git rev-parse --show-toplevel)" || { echo "T273: not in a git work tree"; exit 2; }/.softhouse/reviews/T158-compare-enumerators.sh.t273bak	rm -f "$M3.t273bak"
+0	git-restore	.softhouse/capture/t273-residue/instruments/50-red-drive.sh	124	"$(git rev-parse --show-toplevel)" || { echo "T273: not in a git work tree"; exit 2; }/.softhouse/reviews/T158-compare-enumerators.sh	git checkout -- "$M3"
+0	rm	.softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh	107	${4-}	cp "$os_body" "$os_tmpreq" || { rm -rf "$os_tmpd"; trap - EXIT; return 2; }
+0	rm	.softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh	153	$	os_sha=$(shasum -a 256 "$os_tmpreq") || { rm -rf "$os_tmpd"; trap - EXIT; return 2; }
+0	rm	.softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh	155	$	os_sha=$(sha256sum "$os_tmpreq") || { rm -rf "$os_tmpd"; trap - EXIT; return 2; }
+0	rm	.softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh	158	$OS_OUTDIR/${1-}.req	mv "$os_tmpreq" "$os_req" || { rm -rf "$os_tmpd"; trap - EXIT; return 2; }
+0	rm	.softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh	178	$OS_OUTDIR/${1-}.http	rm -f "$os_http" "$os_reqhdr" "$os_req" "$os_reqsha"
+0	rm	.softhouse/capture/t274-attestation-failopen/baseline/oracle_send.sh	184	$OS_OUTDIR/${1-}.json	mv "$os_tmpbody" "$os_out" || { rm -rf "$os_tmpd"; trap - EXIT; return 2; }
+0	rm	.softhouse/capture/t299-namespace-and-default-safety/instruments/50-final-state.sh	36	${TMPDIR	rm -f "${TMPDIR:-/tmp}/t299-final-before.$$"
+0	rm	.softhouse/capture/t299-namespace-and-default-safety/instruments/50-final-state.sh	80	${TMPDIR	rm -f "${TMPDIR:-/tmp}/t299-final-before.$$" "${TMPDIR:-/tmp}/t299-final-after.$$" \
+0	rm	.softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh	185	$(git rev-parse --show-toplevel)/.softhouse/capture/t300-census-cardinal/evidence/10-sweep-hits.txt.rest	rm -f "$rest" "$rest.2" "$rest.3" "$rest.4"
+0	rm	.softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh	188	$(git rev-parse --show-toplevel)/.softhouse/capture/t300-census-cardinal/evidence/10-sweep-hits.txt.rest	rm -f "$rest" "$rest.2" "$rest.3" "$rest.4"
+0	rm	.softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh	191	$(git rev-parse --show-toplevel)/.softhouse/capture/t300-census-cardinal/evidence/10-sweep-hits.txt.stage1	rm -f "$hits.stage1" "$hits.stage2"
+0	rm	.softhouse/capture/t300-census-cardinal/instruments/50-red-drive.sh	38	$(git rev-parse --show-toplevel)/.softhouse/conformance.sh	if [ -f "$BACKUP" ]; then cp "$BACKUP" "$SUBJ"; rm -f "$BACKUP"; fi
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/drive-deadline.zsh	20	${TMPDIR:-/tmp}/t309-deadline.$$	trap 'rm -rf "$WORK"' EXIT
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/drive-deadline.zsh	39	${TMPDIR:-/tmp}/t309-deadline.$$/repo/.softhouse/LOCK	rm -f "$WORK/repo/.softhouse/LOCK"     # no lock => wrapper authority
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/drive-in-session.zsh	25	${TMPDIR:-/tmp}/t309-insession.$$	trap 'rm -rf "$WORK"' EXIT
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/drive-in-session.zsh	55	${TMPDIR:-/tmp}/t309-insession.$$/repo	rm -rf "$WORK/repo"
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/drive-in-session.zsh	167	${TMPDIR:-/tmp}/t309-insession.$$/repo/.softhouse/LOCK	rm -f "$WORK/repo/.softhouse/LOCK"
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/drive-sigterm.zsh	62	${TMPDIR:-/tmp}/t309-drive.$$	if (( ! KEEP )); then trap 'rm -rf "$WORK"' EXIT; fi
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/drive-sigterm.zsh	172	${TMPDIR:-/tmp}/t309-drive.$$/wrapper.pid	rm -f "$WORK/wrapper.pid"
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/patch5.py	107	$REPO/.softhouse/tasks.json.t288.tmp	rm -f "$REPO/.softhouse/tasks.json.t288.tmp"
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/patch5.py	143	$LOCK	rm -f "$LOCK"
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/patch6.py	33	$LOG_DIR/fire-$STAMP.recon-verdict	rm -f "$vf"
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/patch6.py	49	$LOG_DIR/fire-$STAMP.recon-verdict	rm -f "$vf"
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/patch7.py	18	$LOCK	rm -f "$LOCK"
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/probe-git-inode.sh	28	${TMPDIR:-/tmp}/t309-gitinode.$$	trap 'rm -rf "$WORK"' EXIT
+0	rm	.softhouse/capture/t309-sigterm-reconcile-bypass/probe-zsh-reread.zsh	28	${TMPDIR:-/tmp}/t309-zshreread.$$	trap 'rm -rf "$WORK"' EXIT
+0	mv	.softhouse/capture/t309-sigterm-reconcile-bypass/probe-zsh-reread.zsh	57	${TMPDIR:-/tmp}/t309-zshreread.$$/$1 n=$2.new	{ /bin/sleep 1; cp "$WORK/$name.new" "$WORK/$name.tmp"; mv -f "$WORK/$name.tmp" "$WORK/$name.zsh" } &
+0	mv	.softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/drive-red.sh	122	${1:?repo root}/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA	mv "$PIN" /tmp/t109-pin-hidden
+0	mv	.softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/drive-red.sh	124	${1:?repo root}/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA	mv /tmp/t109-pin-hidden "$PIN"
+0	rm	.softhouse/capture/t91/t115-drive-mf1.sh	64	$_dir	rm -rf "$S/w"; cp -R "$_dir" "$S/w"
+0	rm	.softhouse/capture/t91/t115-rerun-attacks.sh	88	.softhouse/capture/t91/out/t115-$phase-$SH	rm -rf "$dst"; mkdir -p "$dst"
+0	rm	.softhouse/capture/t91/t151-drive-g4.sh	59	$1	rm -rf "$1"
+0	rm	.softhouse/capture/t91/t151-drive-g67.sh	45	$1	rm -rf "$1"
+0	rm	.softhouse/capture/t91/t151-drive-vb.sh	120	$d	t=$S/tr-$1-$b; rm -rf "$t"; cp -R "$d" "$t"; chmod -R u+w "$t"
+0	rm	.softhouse/capture/t91/verdict.sh	103	${1:?usage: sh verdict.sh <transcript dir>}/.score-fail	rm -f "$D/.score-fail"          # tidy up the pre-T115 location if an old run left one
+0	rm	.softhouse/capture/tierA-a2/mkreq-a2-26.sh	68	.softhouse/capture/tierA-a2/req/.verify.$sfx.tmp	rm -f "$R/.verify.$sfx.tmp"
+0	rm	.softhouse/capture/tierA-a2/prove-cap-transport-red.py	7	$OUT	diagnostic and the `rm -f "$OUT"` never ran.  Against an unreachable endpoint a STALE
+0	inplace-edit	.softhouse/capture/tierA-a2/red-green-a2-15.sh	73	$expr	LC_ALL=C sed -i '' "$expr" "$f"
+0	rm	.softhouse/conformance.sh	1582	"$(python3 "$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && pwd)/.softhouse/capture/lib/$1" label="$2" floor="${3:-}" --selftest 2>&1)"; rc=$?	rm -f "$out" "$json" "$want" "$got"
+0	rm	.softhouse/conformance.sh	1589	"$(python3 "$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && pwd)/.softhouse/capture/lib/$1" label="$2" floor="${3:-}" --selftest 2>&1)"; rc=$?	rm -f "$out" "$json" "$want" "$got"
+0	rm	.softhouse/conformance.sh	1597	"$(python3 "$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && pwd)/.softhouse/capture/lib/$1" label="$2" floor="${3:-}" --selftest 2>&1)"; rc=$?	rm -f "$out" "$json" "$want" "$got"
+0	rm	.softhouse/conformance.sh	1623	"$(python3 "$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && pwd)/.softhouse/capture/lib/$1" label="$2" floor="${3:-}" --selftest 2>&1)"; rc=$?	rm -f "$out" "$json" "$want" "$want.raw" "$got" "$got.raw"
+0	rm	.softhouse/conformance.sh	1644	"$(python3 "$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && pwd)/.softhouse/capture/lib/$1" label="$2" floor="${3:-}" --selftest 2>&1)"; rc=$?	rm -f "$out" "$out.diff" "$json" "$want" "$want.raw" "$got" "$got.raw"
+0	rm	.softhouse/conformance.sh	1648	"$(python3 "$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && pwd)/.softhouse/capture/lib/$1" label="$2" floor="${3:-}" --selftest 2>&1)"; rc=$?	rm -f "$out" "$out.diff" "$json" "$want" "$want.raw" "$got" "$got.raw"
+0	rm	.softhouse/conformance.sh	1992	$D	warn "conformance: name.XXXXXXXXXX\")\` with a \`trap 'rm -rf \"\$D\"' EXIT\` is the adoptable shape, and"
+0	rm	.softhouse/conformance.sh	3019	"$(python3 "$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.." && pwd)/.softhouse/capture/lib/$1" label="$2" floor="${3:-}" --selftest 2>&1)"; rc=$?	rm -f "$list" "$out"
+0	rm	.softhouse/conformance.sh	3113	$1	rm -f "$report"
+0	rm	.softhouse/conformance.sh	3116	$1	rm -f "$report"
+0	rm	.softhouse/guards/drive-red-ledger-invariants.sh	201	$(fresh_copy control)	rm -rf "$CTRL"
+0	rm	.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh	42	$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../../.." && pwd)/.softhouse/.T113-b5-prefix.sh	trap 'rm -f "$PREFIX" "$INNER"' EXIT
+0	rm	.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/hostile-env-matrix.sh	22	${2	[ "${2:-}" = "--kill-devfd" ] && rm -f /dev/fd
+0	rm	.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh	208	$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../../.." && pwd)/.softhouse/.T113-matrix-noifs.sh	trap 'rm -f "$NOIFS" "$BENV" "$SEEIFS"' EXIT
+0	rm	.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh	334	$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../../.." && pwd)/.softhouse/.T113-matrix-noifs.sh	rm -f "$NOIFS" "$BENV" "$SEEIFS"
+0	rm	.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh	52	$(cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../../.." && pwd)/.softhouse/.T113-prefix-conformance.sh	trap 'rm -f "$PREFIX" "$INNER"' EXIT
+0	mv	.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh	75	$1" tok="$2" mode="$3.t	mv "$out.t" "$out"
+0	rm	.softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh	18	$?	grep -n 'rc=\$?\|rc=0\|rm -f\|TRANSPORT' /tmp/poison/cap-counterfactual.sh
+0	rm	.softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh	61	$ec	report "$d" "$ec"; rm -rf "$d"
+0	rm	.softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh	65	$	d=$(seed /tmp/poison/cap-counterfactual.sh); rm -f "$d"/out/*
+0	rm	.softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh	67	$ec	report "$d" "$ec"; rm -rf "$d"
+0	rm	.softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh	73	$ec	report "$d" "$ec"; rm -rf "$d"
+0	rm	.softhouse/reviews/A2-10-probe/poison-d2-shell-matrix.sh	37	$	SKIP=$((SKIP+1)); printf '  skip    %-40s (shell refused the options)\n' "$desc"; rm -rf "$d"; return
+0	rm	.softhouse/reviews/A2-10-probe/poison-d2-shell-matrix.sh	79	${BRANCH}	check "shebang ${BRANCH}" "$d" "$ec" "$errf"; rm -f "$errf"
+0	rm	.softhouse/reviews/A2-11/re-derive-runtime.sh	26	$?	if [ $rc -ne 0 ]; then echo "TRANSPORT FAILURE rc=$rc on $path" >&2; rm -f "$OUT/$name.json"; exit 1; fi
+0	rm	.softhouse/reviews/A2-11/re-observe.sh	19	$?	if [ $rc -ne 0 ]; then echo "TRANSPORT FAILURE rc=$rc on $path" >&2; rm -f "$OUT/$name.json"; return 1; fi
+0	rm	.softhouse/reviews/A2-11/re-observe.sh	28	$?	if [ $rc -ne 0 ]; then echo "TRANSPORT FAILURE rc=$rc on $path" >&2; rm -f "$OUT/$name.json"; return 1; fi
+0	rm	.softhouse/reviews/T138-evidence/r1-mf1.sh	33	$1	rm -rf "$1"; mkdir -p "$1"
+0	rm	.softhouse/reviews/T138-evidence/r1-mf1.sh	60	${2:?usage: r1-mf1.sh <post-sha> <workdir>}/g-$d	rm -rf "$W/g-$d"; cp -R "$W/pre/.softhouse/capture/t91/out/$d" "$W/g-$d"; chmod -R u+w "$W/g-$d"
+0	rm	.softhouse/reviews/T138-evidence/r1-mf1.sh	73	${2:?usage: r1-mf1.sh <post-sha> <workdir>}/gp-$d	rm -rf "$W/gp-$d"; cp -R "$W/post/.softhouse/capture/t91/out/$d" "$W/gp-$d"; chmod -R u+w "$W/gp-$d"
+0	rm	.softhouse/reviews/T138-evidence/r1-mf1.sh	88	${2:?usage: r1-mf1.sh <post-sha> <workdir>}/sh-$tree-$(basename "$d")	rm -rf "$W/sh-$tree-$b"; cp -R "$d" "$W/sh-$tree-$b"; chmod -R u+w "$W/sh-$tree-$b"
+0	rm	.softhouse/reviews/T138-evidence/r1-mf1.sh	103	${2:?usage: r1-mf1.sh <post-sha> <workdir>}/bare	rm -rf "$W/bare"; cp -R "$W/pre/.softhouse/capture/t91/out/postfix-livetwin-sh" "$W/bare" 2>/dev/null \
+0	rm	.softhouse/reviews/T138-evidence/r1-mf1.sh	117	${2:?usage: r1-mf1.sh <post-sha> <workdir>}/bare2	rm -rf "$W/bare2"; cp -R "$W/bare" "$W/bare2"
+0	inplace-edit	.softhouse/reviews/T138-evidence/r13-vb.sh	53	$r.txt	LC_ALL=C sed -i.bak "s|^$r.txt|CLEAN|$r.txt|BREACH|" "$D/verdict-all-breach.sh" 2>/dev/null
+0	inplace-edit	.softhouse/reviews/T138-evidence/r13-vb.sh	54	$r.txt	LC_ALL=C sed -i.bak2 "s|^$r.txt\\|CLEAN\\||$r.txt\\|BREACH\\||" "$D/verdict-all-breach.sh"
+0	rm	.softhouse/reviews/T138-evidence/r14-g4fix.sh	11	$1	rm -rf "$1"
+0	rm	.softhouse/reviews/T138-evidence/r14-g4fix.sh	22	$1/.softhouse/capture/t91/prove-guards.sh	rm -f "$P".bak*
+0	inplace-edit	.softhouse/reviews/T138-evidence/r14-g4fix.sh	38	$S	LC_ALL=C sed -i.bak 's|if LC_ALL=C grep -aqF "\$S" "\$f"; then c=YES; else c=no; fi|c=no  # T138 mutation: scanner blinded|' "$V"
+0	inplace-edit	.softhouse/reviews/T138-evidence/r14-g4fix.sh	47	$S	LC_ALL=C sed -i.bak 's|if LC_ALL=C grep -aqF "\$S" "\$f"; then c=YES; else c=no; fi|if LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 /usr/bin/grep -aqF "$S" "$f"; then c=YES; else c=no; fi  
+0	rm	.softhouse/reviews/T138-evidence/r14-g4fix.sh	56	${1:?checkout}	rm -rf "$D"; git clone --quiet --no-hardlinks --shared "$C" "$D"
+0	inplace-edit	.softhouse/reviews/T138-evidence/r14-g4fix.sh	59	$S	LC_ALL=C sed -i.bak 's|if LC_ALL=C grep -aqF "\$S" "\$f"; then c=YES; else c=no; fi|if LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 /usr/bin/grep -aqF "$S" "$f"; then c=YES; else c=no; fi  
+0	rm	.softhouse/reviews/T138-evidence/r14b-g4fix.sh	10	$1	rm -rf "$1"
+0	rm	.softhouse/reviews/T138-evidence/r15-vbfix.sh	44	$d	t=/tmp/T138-vb-$tree-$b; rm -rf "$t"; cp -R "$d" "$t"; chmod -R u+w "$t"
+0	rm	.softhouse/reviews/T138-evidence/r1b-mf1-red.sh	19	${1:?workdir}/red-$base-$scorer	rm -rf "$d"; mkdir -p "$d"
+0	rm	.softhouse/reviews/T138-evidence/r2-va.sh	16	${1:?workdir}/va-$scorer	rm -rf "$d"; mkdir -p "$d"
+0	rm	.softhouse/reviews/T138-evidence/r2-va.sh	33	${1:?workdir}/va-$scorer	rm -rf "$d"; mkdir -p "$d"
+0	rm	.softhouse/reviews/T138-evidence/r3-vcef.sh	16	${1:?workdir}/vc	rm -rf "$W/vc"; mkdir -p "$W/vc"
+0	rm	.softhouse/reviews/T138-evidence/r3-vcef.sh	48	${1:?workdir}/ve	rm -rf "$W/ve"; mkdir -p "$W/ve/z-sh" "$W/ve/z-bash"
+0	rm	.softhouse/reviews/T138-evidence/r3-vcef.sh	58	${1:?workdir}/ve2	rm -rf "$W/ve2"; mkdir -p "$W/ve2/z-sh" "$W/ve2/z-bash"
+0	rm	.softhouse/reviews/T138-evidence/r3-vcef.sh	67	${1:?workdir}/vf	rm -rf "$W/vf"; mkdir -p "$W/vf/z-sh" "$W/vf/z-bash"
+0	rm	.softhouse/reviews/T138-evidence/r3b-vf.sh	12	$1	rm -rf "$1"; mkdir -p "$1/z-sh" "$1/z-bash"
+0	inplace-edit	.softhouse/reviews/T138-evidence/r4-guards-red.sh	65	$S	LC_ALL=C sed -i.bak 's|if LC_ALL=C grep -aqF "\$S" "\$f"; then c=YES; else c=no; fi|c=no  # T138 mutation: scanner blinded|' "$V"
+0	inplace-edit	.softhouse/reviews/T138-evidence/r4-guards-red.sh	88	$O/req-mutated-55.json	LC_ALL=C sed -i.bak 's|^assert_mutated "\$O/req-mutated-55.json" 1162502.55$|# T138 mutation: assert_mutated REMOVED|' "$K/.softhouse/capture/t91/run-attacks.sh"
+0	inplace-edit	.softhouse/reviews/T138-evidence/r4-guards-red.sh	89	$O/req-crafted-04.json	LC_ALL=C sed -i.bak2 's|^assert_mutated "\$O/req-crafted-04.json" 1162502.4$|# T138 mutation: assert_mutated REMOVED|' "$K/.softhouse/capture/t91/run-attacks.sh"
+0	inplace-edit	.softhouse/reviews/T138-evidence/r4-guards-red.sh	90	$CAP/pathb/t22-audit/req/calc-pmode2-gerege.json$	LC_ALL=C sed -i.bak3 's|^CANON=\$CAP/pathb/t22-audit/req/calc-pmode2-gerege.json$|CANON=$CAP/pathb/t22-audit/req/calc-pmode2-gerege.json\nRECIPE_CHECK_FAIL=1|' "$K/.softhouse/captu
+0	inplace-edit	.softhouse/reviews/T138-evidence/r4-guards-red.sh	95	$CANON	LC_ALL=C sed -i.bak 's|^ln -s "\$CANON" "\$O/link-to-canon.json" .*$|ln -s /nonexistent/nope.json "$O/link-to-canon.json"  # T138 mutation|' "$K/.softhouse/capture/t91/run-attacks.
+0	inplace-edit	.softhouse/reviews/T138-evidence/r5-mutate-g5-g7.sh	15	$@	LC_ALL=C sed -i.bak "$@" "$D/$f"
+0	rm	.softhouse/reviews/T138-evidence/r6-mf2.sh	18	$2	rm -rf "$2"; mkdir -p "$2"
+0	rm	.softhouse/reviews/T155-probe/prove-ii-literals.sh	66	$1/nexus/internal/apps/loanschedule/t155_probe.go	clean() { rm -f "$1/$REL/t155_probe.go"; }
+0	rm	.softhouse/reviews/T155-probe/prove-iii-census.sh	86	$1" dest="$2" cid="$3/.softhouse/vectors/evilctx	rm -f "$V/evilctx"
+0	mv	.softhouse/reviews/T155-probe/prove-iii-census.sh	89	$1" dest="$2" cid="$3/.softhouse/vectors/loanschedule	mv "$V/loanschedule" "$EVIL/loanschedule-real"
+0	rm	.softhouse/reviews/T155-probe/prove-iii-census.sh	92	$1" dest="$2" cid="$3/.softhouse/vectors/loanschedule	rm -f "$V/loanschedule"; mv "$EVIL/loanschedule-real" "$V/loanschedule"
+0	rm	.softhouse/reviews/T155-probe/prove-iii-census.sh	97	$1" dest="$2" cid="$3/.softhouse/vectors/loanschedule/sub	rm -rf "$V/loanschedule/sub"
+0	rm	.softhouse/reviews/T155-probe/prove-iii-census.sh	102	$1" dest="$2" cid="$3/.softhouse/vectors/loanschedule/T155-UPPER.JSON	rm -f "$V/loanschedule/T155-UPPER.JSON"
+0	rm	.softhouse/reviews/T155-probe/prove-iii-census.sh	107	$1" dest="$2" cid="$3/.softhouse/vectors/loanschedule/T155-case-clash.json	rm -f "$V/loanschedule/T155-case-clash.json"
+HARD sites over a tracked path: 262
+  ... of which destroy >=1 TRACKED FILE: 78, in 43 instruments
+    .softhouse/bin/fire-program.sh
+    .softhouse/capture/charges/bin/t51-capture.sh
+    .softhouse/capture/charges/bin/t51-capture3.sh
+    .softhouse/capture/pathb/t80/prove-f1.sh
+    .softhouse/capture/t131-grep/probe-ignorefiles.sh
+    .softhouse/capture/t238-failopen/instruments/30-pr4-nondead-mechanisms.sh
+    .softhouse/capture/t243-wiring/instruments/30-citation-red-drive.sh
+    .softhouse/capture/t250-tenant-attestation/instruments/20-redA-sidecar-tracks-the-send.sh
+    .softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh
+    .softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh
+    .softhouse/capture/t253-portability/instruments/50-t234-residue-probe.sh
+    .softhouse/capture/t274-attestation-failopen/instruments/10-four-routes-red-green.sh
+    .softhouse/capture/t274-attestation-failopen/instruments/20-wrap-boundary-and-derivation-unchanged.sh
+    .softhouse/capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh
+    .softhouse/capture/t287-closure-refusals/cap.sh
+    .softhouse/capture/t287-closure-refusals/capsql.sh
+    .softhouse/capture/t294-openingbalance-refusal/cap.sh
+    .softhouse/capture/t294-openingbalance-refusal/capsql.sh
+    .softhouse/capture/t299-namespace-and-default-safety/instruments/30-drive-the-rename.sh
+    .softhouse/capture/t299-namespace-and-default-safety/instruments/40-drive-namespace-guard.sh
+    .softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py
+    .softhouse/capture/t304-evidence-destruction/instruments/100-dead-cd-red-drive.sh
+    .softhouse/capture/t304-evidence-destruction/instruments/30-count-tracked-under-target.py
+    .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh
+    .softhouse/capture/t305-openingbalance-accepting-side/throwaway/run-all.sh
+    .softhouse/capture/t91/prove-guards.sh
+    .softhouse/capture/t91/run-attacks.sh
+    .softhouse/capture/tierA-a2/cap.sh
+    .softhouse/capture/tierA-a2/cap10.sh
+    .softhouse/capture/tierA-a2/cap8.sh
+    .softhouse/capture/tierA-a2/cap9.sh
+    .softhouse/capture/tierA-a2/capsql.sh
+    .softhouse/capture/tierA-a2/red-green-a2-15.sh
+    .softhouse/conformance.sh
+    .softhouse/reviews/T155-probe/prove-xiii-deflation.sh
+    .softhouse/reviews/T158-drive-t156-refusals.py
+    .softhouse/reviews/T298/t298b-marker-attack-matrix.sh
+    .softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh
+    .softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh
+    .softhouse/reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh
+    .softhouse/reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh
+    .softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh
+    .softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh
+0	rm	.softhouse/reviews/T155-probe/prove-iii-census.sh	113	$1" dest="$2" cid="$3/.softhouse/vectors/loanschedule/T155-nfc.json	rm -f "$V/loanschedule/T155-nfc.json" "$V/loanschedule/T155-nfd.json"
+0	rm	.softhouse/reviews/T155-probe/prove-iii-census.sh	118	$1" dest="$2" cid="$3/.softhouse/vectors/T155-ROOT-CLEAN.json	rm -f "$V/T155-ROOT-CLEAN.json"
+0	rm	.softhouse/reviews/T155-probe/prove-iii-census.sh	123	$1" dest="$2" cid="$3/.softhouse/vectors/T155-ROOT-POISON.json	rm -f "$V/T155-ROOT-POISON.json"
+0	rm	.softhouse/reviews/T155-probe/prove-iii-census.sh	128	$1" dest="$2" cid="$3/.softhouse/vectors/T155-ROOT-PLAINFLOAT.json	rm -f "$V/T155-ROOT-PLAINFLOAT.json"
+0	mv	.softhouse/reviews/T155-probe/prove-xiii-deflation.sh	43	$	for f in $(find "$V" -name 'P-*.json' -type f | sort | head -5); do mv "$f" /tmp/t155/victims/; n=$((n+1)); done
+0	mv	.softhouse/reviews/T184-evidence/t184-vacuity2.sh	15	$d	mv "$d" "$STASH/$b"
+0	mv	.softhouse/reviews/T184-evidence/t184-vacuity2.sh	20	$d	for d in "$STASH"/*; do mv "$d" "$CAP/$(basename "$d")"; done
+0	rm	.softhouse/reviews/T188-probe/drive-t188.sh	24	$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)/.softhouse/capture/t188-probe	rm -rf "$W/.softhouse/capture/t188-probe" "$W/.claude/worktrees/agent-t188-fake"
+0	rm	.softhouse/reviews/T188-probe/drive-t188.sh	56	$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)/.softhouse/capture/t188-probe	rm -rf "$W/.softhouse/capture/t188-probe"
+0	rm	.softhouse/reviews/T191-probe/mutate-exclusion.sh	11	$	TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
+0	inplace-edit	.softhouse/reviews/T298/t298b-census.sh	25	$out	sed -i '' "s|^${rev}:||" "$out" 2>/dev/null || sed -i "s|^${rev}:||" "$out"
+0	rm	.softhouse/reviews/T302/a2/drive-f5-cell.zsh	66	$	FAIL=$((FAIL+1)); rm -rf $TMP; print ""; return
+0	rm	.softhouse/reviews/T302/a2/drive-f9-realcorpses.zsh	50	$lockjson	if [[ "$lockjson" == NONE ]]; then rm -f $R/.softhouse/LOCK
+0	rm	.softhouse/reviews/t172-probe/run-move-demo.sh	78	${0:A:h}/fire-program.sh.MOVE-scratch-copy.sh	rm -f "$MUTANT"
+0	rm	.softhouse/reviews/t172-probe/run-red-demo-site1.sh	82	${0:A:h}/fire-program.sh.RED-site1-scratch-copy.sh	rm -f "$MUTANT"
+0	rm	.softhouse/reviews/t172-probe/run-red-demo-site2.sh	84	${0:A:h}/fire-program.sh.RED-site2-scratch-copy.sh	rm -f "$MUTANT"
+0	rm	.softhouse/reviews/t172-probe/run-red-demo.sh	68	${0:A:h}/fire-program.sh.RED-scratch-copy.sh	rm -f "$MUTANT"
+0	rm	.softhouse/reviews/t172-probe/run-zero-match-demo.sh	28	${0:A:h}/decoy-no-anchor.RED-scratch-copy.sh	rm -f "$DECOY"
+0	rm	.softhouse/reviews/t185-probe/probe-t44-successor.sh	5	$	S=$(mktemp -d); trap 'rm -rf "$S"' EXIT
+0	rm	.softhouse/reviews/t202-probe/patch.py	85	$LOCK	rm -f "$LOCK"
+0	rm	.softhouse/reviews/t202-probe/patch.py	91	$LOCK	rm -f "$LOCK"
+0	rm	.softhouse/reviews/t291-review-t286/probe/reproduce-in-t286s-own-sweep.sh	34	./.softhouse/capture/t286-rvpa-retry/red/fixtures/$f.json	for f in $FIXTURES; do rm -f "$T286FIX/$f.json"; done
