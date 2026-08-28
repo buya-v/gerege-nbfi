@@ -1,0 +1,45 @@
+scratch: /private/tmp/t325-survey-aR32Nv
+git: git version 2.50.1 (Apple Git-155)
+
+=== LEGITIMATE ARMS — every one must be 0 ===
+ARM G1_clean_checkout: PASS  rc=0 (expected 0)
+        legacy predicate (`git status --porcelain` empty?) : CLEAN (0 entries)
+        S4 ignored files (ADVISORY -- .DS_Store lives here) : 0
+      VERDICT: no hidden-work term fired (skip bits 0)
+ARM G2_untracked_lock_and_settings: PASS  rc=0 (expected 0)
+        legacy predicate (`git status --porcelain` empty?) : DIRTY (2 entries, -uall)
+        S4 ignored files (ADVISORY -- .DS_Store lives here) : 0
+      VERDICT: no hidden-work term fired (skip bits 0)
+ARM G3_ignored_droppings: PASS  rc=0 (expected 0)
+        legacy predicate (`git status --porcelain` empty?) : CLEAN (0 entries)
+        S4 ignored files (ADVISORY -- .DS_Store lives here) : 3
+      VERDICT: no hidden-work term fired (skip bits 0)
+ARM G4_worktree_with_foreign_stash: PASS  rc=0 (expected 0)
+        legacy predicate (`git status --porcelain` empty?) : CLEAN (0 entries)
+        S4 ignored files (ADVISORY -- .DS_Store lives here) : 0
+        ADVISORY  refs/stash EXISTS. `git stash` is what MAKES the legacy predicate report clean, and `.claude/skills/softhouse-program/SKILL.md:76` forbids stashing worker WIP. NOT attributed to this worktree: refs/stash is COMMON-DIR scoped, so every linked worktree sees it (measured, git 2.50.1).
+      VERDICT: no hidden-work term fired (skip bits 0)
+ARM G5_this_live_worktree: PASS  rc=0 (expected 0)
+        legacy predicate (`git status --porcelain` empty?) : DIRTY (4 entries, -uall)
+        S4 ignored files (ADVISORY -- .DS_Store lives here) : 0
+      VERDICT: no hidden-work term fired (skip bits 0)
+
+=== HIDDEN-WORK ARMS — every one must be 1 ===
+ARM R1_assume_unchanged: PASS  rc=1 (expected 1)
+        legacy predicate (`git status --porcelain` empty?) : CLEAN (0 entries)
+        S4 ignored files (ADVISORY -- .DS_Store lives here) : 0
+        HIDDEN WORK  1 index entr(y|ies) carry a NON-'H' tag. `git update-index --assume-unchanged` (-> 'h') / `--skip-worktree` (-> 'S') switches OFF the working-tree comparison that the porcelain gate, `git worktree remove` and the prune classifier ALL depend on -- one bit blinds three checks at once (T318 instrument 50: PRUNE, rc=0, 61 bytes destroyed).
+      VERDICT: HIDDEN WORK PRESENT
+ARM R2_skip_worktree: PASS  rc=1 (expected 1)
+        legacy predicate (`git status --porcelain` empty?) : CLEAN (0 entries)
+        S4 ignored files (ADVISORY -- .DS_Store lives here) : 0
+        HIDDEN WORK  1 index entr(y|ies) carry a NON-'H' tag. `git update-index --assume-unchanged` (-> 'h') / `--skip-worktree` (-> 'S') switches OFF the working-tree comparison that the porcelain gate, `git worktree remove` and the prune classifier ALL depend on -- one bit blinds three checks at once (T318 instrument 50: PRUNE, rc=0, 61 bytes destroyed).
+      VERDICT: HIDDEN WORK PRESENT
+
+=== REFUSAL ARMS — 'I could not measure' must never be 'clean' ===
+ARM X1_not_a_repo: PASS  rc=2 (expected 2)
+ARM X2_missing_path: PASS  rc=2 (expected 2)
+
+================================================================
+TOTAL: PASS=9 FAIL=0
+scratch kept: /private/tmp/t325-survey-aR32Nv

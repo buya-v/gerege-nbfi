@@ -1,0 +1,19 @@
+git: git version 2.50.1 (Apple Git-155)
+scratch: /private/tmp/t325-stash-scope-eovDD8
+
+--- a stash is created in the MAIN tree only:
+  main  `git status --porcelain` : []   <-- stash EMPTIED it
+
+--- refs visible from the MAIN tree:
+    refs/heads/main
+    refs/heads/wt1branch
+    refs/stash
+--- refs visible from LINKED WORKTREE wt1 (which never stashed anything):
+    refs/heads/main
+    refs/heads/wt1branch
+    refs/stash
+
+RESULT: refs/stash IS visible from a worktree that did not create it.
+        => COMMON-DIR SCOPED. A per-worktree survey must NOT vote on it;
+           stash CREATION is caught by the differential compare (T2) instead,
+           where it can be attributed to a window.
