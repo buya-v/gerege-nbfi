@@ -1,0 +1,47 @@
+
+=== t305-openingbalance-accepting-side
+    baseline: .softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/STANDING-baseline.txt
+    baseline taken at: 2026-08-27T15:38:48Z
+    ***  acc_gl_journal_entry         pinned 60/64      now 71/75       WOULD REFUSE
+    ok   acc_gl_closure               pinned 0/null     now 0/null    
+    ***  distinct_transaction_id      pinned 26         now 31          WOULD REFUSE
+    ***  m_portfolio_command_source   pinned 352/352    now 359/359     WOULD REFUSE
+
+=== t327-closure-accepting-side
+    baseline: .softhouse/capture/t327-closure-accepting-side/throwaway/out/STANDING-baseline.txt
+    baseline taken at: 2026-08-27T17:31:27Z
+    ***  acc_gl_journal_entry         pinned 60/64      now 71/75       WOULD REFUSE
+    ok   acc_gl_closure               pinned 0/null     now 0/null    
+    ***  distinct_transaction_id      pinned 26         now 31          WOULD REFUSE
+    ***  m_portfolio_command_source   pinned 352/352    now 359/359     WOULD REFUSE
+
+=== how run-all.sh treats the committed out/ before capture.sh reads the baseline
+    .softhouse/capture/t305-openingbalance-accepting-side/throwaway/run-all.sh
+       15:#   0  guard-throwaway-isolation.sh  -- refuses unless the rig cannot touch the standing stack,
+       29:rm -rf "$OUT" "$DIR/req"
+       33:bash "$DIR/guard-throwaway-isolation.sh" > "$OUT/STANDING-baseline.txt" 2>&1 || {
+       34:  cat "$OUT/STANDING-baseline.txt"; echo "REFUSED at step 0."; exit 1; }
+       53:bash "$DIR/capture.sh" 2>&1 | tee "$OUT/CAPTURE.txt"
+       committed files under out/: 66
+    .softhouse/capture/t327-closure-accepting-side/throwaway/run-all.sh
+       8:#     rm -rf "$OUT" "$DIR/req"
+       24:#   0  guard-throwaway-isolation.sh  -- refuses unless the rig cannot touch the standing stack,
+       39:  if [ "${T327_FORCE_OVERWRITE:-0}" != "1" ]; then
+       40:    echo "REFUSE: $OUT is not empty. An accepting capture's bytes are irreplaceable -- the instance"
+       41:    echo "        that produced them is destroyed. Move them aside, or set T327_FORCE_OVERWRITE=1"
+       45:  rm -rf "$OUT"
+       50:bash "$DIR/guard-throwaway-isolation.sh" > "$OUT/STANDING-baseline.txt" 2>&1 || {
+       51:  cat "$OUT/STANDING-baseline.txt"; echo "REFUSED at step 0."; exit 1; }
+       70:bash "$DIR/capture.sh" 2>&1 | tee "$OUT/CAPTURE.txt"
+       committed files under out/: 89
+
+=== the 5 sites FU-T363-2 names
+    .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh
+    .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh
+    .softhouse/capture/t305-openingbalance-accepting-side/throwaway/down.sh
+    .softhouse/capture/t305-openingbalance-accepting-side/throwaway/run-all.sh
+    .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh
+    .softhouse/capture/t327-closure-accepting-side/throwaway/down.sh
+    .softhouse/capture/t327-closure-accepting-side/throwaway/run-all.sh
+
+AT LEAST ONE PIN IS STALE -- the rigs would refuse on a STANDALONE capture.sh

@@ -1,0 +1,49 @@
+ORACLE STATE BASELINE -- derived, 2026-08-28T09:25:10Z
+  container=fineract-db-1  database=fineract_gerege  tenant=gerege
+  registry=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a57a6c411cc2556f9/.softhouse/reviews/t367-review-t363/t363-under-test/PROBES.tsv
+  READ-ONLY: every statement below is a SELECT.
+------------------------------------------------------------------------
+FLOOR (identities, not counts -- an append-only table's max id is true forever)
+  acc_gl_journal_entry       last id before the registered probes : 64
+  m_portfolio_command_source last id before the registered probes : 352
+------------------------------------------------------------------------
+LIVE COUNTERS (derived now; do not transcribe these into prose -- re-run instead)
+  acc_gl_journal_entry rows/maxid	71/75
+  acc_gl_journal_entry distinct transaction_id	31
+  acc_gl_journal_entry distinct currency_code	MNT,USD
+  acc_gl_closure rows/maxid	0/null
+  m_portfolio_command_source rows/maxid	359/359
+  m_loan rows	7
+  m_office rows	1
+------------------------------------------------------------------------
+PER-ACCOUNT LEGS -- 'at floor' is DERIVED by excluding the registered transactions
+  account    at floor       live moved?
+  gl 16            16         21 YES +5
+  gl 17             4          5 YES +1
+  gl 18             0          0 no -- UNMOVED
+  gl 21             8         13 YES +5
+  gl 22             0          0 no -- UNMOVED
+------------------------------------------------------------------------
+JOURNAL-ENTRY MOVEMENT above id 64
+  ok   a29bca0816a7   legs=2  ids 65-66  gl 16+21    MNT      <- T352
+  ok   a29bca9bf813   legs=3  ids 67-69  gl 16+17+21 MNT      <- T352
+  ok   a29bcaa6a41b   legs=2  ids 70-71  gl 16+21    MNT      <- T352
+  ok   a29bcb5d6fcf   legs=2  ids 72-73  gl 16+21    USD      <- T352
+  ok   a29bd5eaeb1b   legs=2  ids 74-75  gl 16+21    MNT      <- T359
+------------------------------------------------------------------------
+COMMAND-SOURCE MOVEMENT above id 352  (a REFUSED post still writes a row here)
+  ok   353  t352-a01-residue-3dp           PROCESSED  CREATE/JOURNALENTRY    <- T352
+  ok   354  t352-a03-balance-scale         PROCESSED  CREATE/JOURNALENTRY    <- T352
+  ok   355  t352-a04-overscale             PROCESSED  CREATE/JOURNALENTRY    <- T352
+  ok   356  t352-a07-usd                   PROCESSED  CREATE/JOURNALENTRY    <- T352
+  ok   357  T359-P01-residue-post          ERROR      CREATE/JOURNALENTRY    <- T359
+  ok   358  T359-P02-residue-post          ERROR      CREATE/JOURNALENTRY    <- T359
+  ok   359  T359-P03-residue-post          PROCESSED  CREATE/JOURNALENTRY    <- T359
+------------------------------------------------------------------------
+NON-NEGOTIABLE CHECKS (derived)
+  ok   0 floating-point columns on the ledger tables
+  ok   engine: PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1)  (PostgreSQL is the only permitted database)
+------------------------------------------------------------------------
+VERDICT: ALL MOVEMENT ATTRIBUTED (exit 0).
+  Movement is normal -- the oracle is shared and probes are permanent. What this run
+  asserts is that every row above the floor names the task that created it.

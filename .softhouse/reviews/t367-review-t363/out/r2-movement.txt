@@ -1,0 +1,70 @@
+== journal-entry id gaps (append-only claim) ==
+ missing_id 
+------------
+          5
+          8
+         13
+         22
+(4 rows)
+
+== journal entries above floor 64 ==
+ id | transaction_id | account_id | type_enum | currency_code |   amount   |        created_on_utc         | reversed 
+----+----------------+------------+-----------+---------------+------------+-------------------------------+----------
+ 65 | a29bca0816a7   |         16 |         2 | MNT           | 100.125000 | 2026-08-28 06:52:11.588683+00 | f
+ 66 | a29bca0816a7   |         21 |         1 | MNT           | 100.125000 | 2026-08-28 06:52:11.597359+00 | f
+ 67 | a29bca9bf813   |         16 |         2 | MNT           |   0.125000 | 2026-08-28 06:53:48.499229+00 | f
+ 68 | a29bca9bf813   |         17 |         2 | MNT           |   0.125000 | 2026-08-28 06:53:48.501137+00 | f
+ 69 | a29bca9bf813   |         21 |         1 | MNT           |   0.250000 | 2026-08-28 06:53:48.50216+00  | f
+ 70 | a29bcaa6a41b   |         16 |         2 | MNT           | 100.123457 | 2026-08-28 06:53:55.493201+00 | f
+ 71 | a29bcaa6a41b   |         21 |         1 | MNT           | 100.123457 | 2026-08-28 06:53:55.494461+00 | f
+ 72 | a29bcb5d6fcf   |         16 |         2 | USD           |  12.340000 | 2026-08-28 06:55:55.290311+00 | f
+ 73 | a29bcb5d6fcf   |         21 |         1 | USD           |  12.340000 | 2026-08-28 06:55:55.292734+00 | f
+ 74 | a29bd5eaeb1b   |         16 |         2 | MNT           | 300.625555 | 2026-08-28 07:25:25.733103+00 | f
+ 75 | a29bd5eaeb1b   |         21 |         1 | MNT           | 300.625555 | 2026-08-28 07:25:25.735232+00 | f
+(11 rows)
+
+== rows at/below floor: last 3 ==
+ id | transaction_id | account_id | currency_code |     amount     |        created_on_utc         
+----+----------------+------------+---------------+----------------+-------------------------------
+ 64 | a28f614e0263   |         34 | MNT           | 1000000.000000 | 2026-08-22 02:49:25.258129+00
+ 63 | a28f614e0263   |         33 | MNT           | 1000000.000000 | 2026-08-22 02:49:25.256109+00
+ 62 | a28f60c8a8e3   |         33 | MNT           |  500000.000000 | 2026-08-22 02:47:57.865086+00
+(3 rows)
+
+== command source above floor 352 ==
+ id  |    idempotency_key     | status | action_name | entity_name  | made_on_date 
+-----+------------------------+--------+-------------+--------------+--------------
+ 353 | t352-a01-residue-3dp   |      1 | CREATE      | JOURNALENTRY | 
+ 354 | t352-a03-balance-scale |      1 | CREATE      | JOURNALENTRY | 
+ 355 | t352-a04-overscale     |      1 | CREATE      | JOURNALENTRY | 
+ 356 | t352-a07-usd           |      1 | CREATE      | JOURNALENTRY | 
+ 357 | T359-P01-residue-post  |      5 | CREATE      | JOURNALENTRY | 
+ 358 | T359-P02-residue-post  |      5 | CREATE      | JOURNALENTRY | 
+ 359 | T359-P03-residue-post  |      1 | CREATE      | JOURNALENTRY | 
+(7 rows)
+
+== command source rows 350-352 ==
+ id  |           idempotency_key            | status |     action_name      | entity_name  | made_on_date 
+-----+--------------------------------------+--------+----------------------+--------------+--------------
+ 349 | 2658190f-7139-456b-9828-23501f0513c3 |      5 | CREATE               | JOURNALENTRY | 
+ 350 | 8be05d29-36f6-4985-bafd-811b430db53c |      5 | CREATE               | JOURNALENTRY | 
+ 351 | e87cb179-248e-4766-b18d-33ae16bb681e |      1 | DELETE               | GLCLOSURE    | 
+ 352 | 138af578-bd93-4ae5-b8a5-16b6213d0f43 |      5 | DEFINEOPENINGBALANCE | JOURNALENTRY | 
+(4 rows)
+
+== per-account legs, live and excluding the 5 registered txns ==
+ account | at_floor | live 
+---------+----------+------
+ gl 16   |       16 |   21
+ gl 17   |        4 |    5
+ gl 18   |        0 |    0
+ gl 21   |        8 |   13
+ gl 22   |        0 |    0
+(5 rows)
+
+== distinct currencies excluding registered txns ==
+ ccy_at_floor 
+--------------
+ MNT
+(1 row)
+

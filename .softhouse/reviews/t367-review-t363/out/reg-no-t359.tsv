@@ -1,0 +1,45 @@
+# PROBES.tsv -- THE REGISTRY OF EVERY DELIBERATE WRITE TO THE SHARED REFERENCE ORACLE.
+#
+# Read by instruments/oracle-state-baseline.sh. This file is NOT a set of counts and must
+# never be turned into one. It carries two things only:
+#
+#   1. a FLOOR, expressed as MAX IDs on append-only tables at a named moment;
+#   2. one row per deliberate write ABOVE that floor, naming the task that fired it.
+#
+# WHY IDENTITIES AND NOT COUNTS. A count is true for an instant; the next probe falsifies it
+# and nothing goes red. A max id on an append-only table is true FOREVER -- "row 64 was the
+# last row before T352" cannot stop being true. So the instrument DERIVES every count from
+# the live database and uses this file only to decide whether the movement it finds is
+# EXPLAINED. Movement is normal. UNEXPLAINED movement is the defect.
+#
+# THE OBLIGATION THIS FILE CREATES. A task that fires a probe at the standing oracle MUST
+# append its rows here in the same commit as its handoff. If it does not, the next run of the
+# instrument prints the orphaned transaction ids and idempotency keys and exits 1. That is the
+# enforcement: the record cannot silently go missing, because the absence is what goes red.
+#
+# FORMAT -- tab-separated, '#' comments, blank lines ignored.
+#
+#   floor<TAB>acc_gl_journal_entry<TAB><max id><TAB><when><TAB><note>
+#   floor<TAB>m_portfolio_command_source<TAB><max id><TAB><when><TAB><note>
+#   txn<TAB><transaction_id><TAB><task><TAB><fire><TAB><note>
+#   cmd<TAB><idempotency_key><TAB><task><TAB><fire><TAB><note>
+#
+# 'txn' attributes JOURNAL ENTRY rows. 'cmd' attributes COMMAND-SOURCE audit rows, INCLUDING
+# REFUSED ones -- a refused POST writes an m_portfolio_command_source row with status 5 (ERROR)
+# and moves the standing oracle even though it moves no journal entry
+# [VERIFIED: CommandProcessingResultType.java:31-37 at 426a23544; observed live, ids 357/358].
+# "A refused write writes nothing" is true of the LEDGER and false of the DATABASE.
+
+floor	acc_gl_journal_entry	64	pre-fire-20260828-140005	the last journal-entry row before T352's first probe; re-derived by T363 against the live database, not inherited
+floor	m_portfolio_command_source	352	pre-fire-20260828-140005	the last command-source row before T352's first probe; matches the figure the driver's own standing baseline recorded on 2026-08-27
+
+# ---- fire 20260828-140005, task T352 -- four accepted journal entries, nine legs ----------
+txn	a29bca0816a7	T352	20260828-140005	G-08 residue probe: gl 16 DEBIT / gl 21 CREDIT 100.125000 MNT -- a non-zero digit at the THIRD decimal in a 2-minor-unit currency
+txn	a29bca9bf813	T352	20260828-140005	three legs, gl 16 + gl 17 DEBIT 0.125000 each / gl 21 CREDIT 0.250000 -- whether debits==credits is checked before or after minor-unit rounding
+txn	a29bcaa6a41b	T352	20260828-140005	posted at SEVEN decimals (100.1234565), stored at the column's scale 6 as 100.123457
+txn	a29bcb5d6fcf	T352	20260828-140005	THE FIRST NON-MNT JOURNAL ENTRY EVER IN THIS TENANT -- gl 16 DEBIT / gl 21 CREDIT 12.340000 USD
+cmd	t352-a01-residue-3dp	T352	20260828-140005	status 1 PROCESSED -> txn a29bca0816a7
+cmd	t352-a03-balance-scale	T352	20260828-140005	status 1 PROCESSED -> txn a29bca9bf813
+cmd	t352-a04-overscale	T352	20260828-140005	status 1 PROCESSED -> txn a29bcaa6a41b
+cmd	t352-a07-usd	T352	20260828-140005	status 1 PROCESSED -> txn a29bcb5d6fcf
+

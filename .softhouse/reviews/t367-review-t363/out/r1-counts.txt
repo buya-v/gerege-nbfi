@@ -1,0 +1,20 @@
+cs_total_rows|359
+cs_max_id|359
+cs_min_id|1
+cs_null_idem|0
+cs_blank_idem|0
+cs_distinct_idem|359
+cs_rows_gt_352|7
+cs_gaps_in_id|0
+je_rows|71
+je_max_id|75
+je_min_id|1
+je_rows_gt_64|11
+je_distinct_txn|31
+je_currencies|MNT,USD
+closure_rows|0
+closure_max_id|null
+m_loan_rows|7
+m_office_rows|1
+ledger_float_cols|0
+engine|PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1)
