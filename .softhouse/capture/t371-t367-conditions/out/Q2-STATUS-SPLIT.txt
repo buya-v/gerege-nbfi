@@ -1,0 +1,11 @@
+ status | rows_total | rows_at_or_below_floor | rows_above_floor 
+--------+------------+------------------------+------------------
+      1 |        162 |                    157 |                5
+      5 |        197 |                    195 |                2
+(2 rows)
+
+ grand_total 
+-------------
+         359
+(1 row)
+

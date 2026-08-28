@@ -1,0 +1,34 @@
+ is_nullable |     data_type     
+-------------+-------------------
+ NO          | character varying
+(1 row)
+
+ total_rows | null_keys | blank_keys | distinct_keys | uuid_shaped | not_uuid_shaped | not_uuid_above_floor | carries_task_token 
+------------+-----------+------------+---------------+-------------+-----------------+----------------------+--------------------
+        359 |         0 |          0 |           359 |         339 |              20 |                    7 |                 20
+(1 row)
+
+ id  | status |          idempotency_key          
+-----+--------+-----------------------------------
+ 281 |      1 | a2-26-idem-probe-0000000000000001
+ 282 |      1 | a2-26-idem-probe-0000000000000002
+ 290 |      1 | a2-29-rb-org-0001
+ 297 |      1 | a2-29-je-1-0001
+ 298 |      1 | a2-29-rb-org-0002
+ 300 |      1 | a2-29-rb-org-0003
+ 301 |      5 | a2-29-je-2-0001
+ 302 |      1 | a2-29-rb-org-0004
+ 303 |      1 | a2-29-je-2-0002
+ 304 |      1 | a2-29-rb-org-0005
+ 305 |      1 | a2-29-rev-0001
+ 306 |      1 | a2-29-rb-off-0001
+ 307 |      1 | a2-29-rb-org-0006
+ 353 |      1 | t352-a01-residue-3dp
+ 354 |      1 | t352-a03-balance-scale
+ 355 |      1 | t352-a04-overscale
+ 356 |      1 | t352-a07-usd
+ 357 |      5 | T359-P01-residue-post
+ 358 |      5 | T359-P02-residue-post
+ 359 |      1 | T359-P03-residue-post
+(20 rows)
+

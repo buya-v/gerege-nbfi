@@ -40,10 +40,30 @@ baseline once.
 to `PROBES.tsv` makes the next run exit 1 with its own transaction ids printed. That is the enforcement,
 and it is why the obligation is on the registry rather than on prose.
 
-**Attribution is total because of a non-negotiable we already have.** `Idempotency-Key` is mandatory on
-every money-movement POST, Fineract persists it on `m_portfolio_command_source`, and all 359 rows in
-this tenant carry one [VERIFIED: T363, live]. So every command — **including every refusal** — names the
-task that fired it, if the task named itself in the key.
+**Attribution is a CONVENTION this policy mandates, not a property of the schema. [Corrected by T371;
+found by T367 as F1.]** T363 argued here that attribution is *total* because every row in
+`m_portfolio_command_source` carries an `Idempotency-Key`. That argument is a **tautology and the strong
+claim under it is false**:
+
+- `idempotency_key` is a **`NOT NULL`** column, so "all rows carry one" could not have come out any
+  other way [VERIFIED: T371, live, `information_schema.columns`].
+- Fineract **mints** a key when the caller sends no header —
+  `IdempotencyKeyResolver.resolve → …orElseGet(idempotencyKeyGenerator::create)`,
+  `create()` = `UUID.randomUUID().toString()` [VERIFIED: T371, `IdempotencyKeyResolver.java:36`,
+  `IdempotencyKeyGenerator.java:25-29`, pinned `426a23544`].
+- So most keys in this tenant name **nothing**. Re-derived by T371 with two independent classifiers
+  that agree — UUID shape, and "carries a task token" — **20 of 359 rows name a task, 7 of them above
+  the floor** [`.softhouse/capture/t371-t367-conditions/sql/q3-key-naming.sql`, output in that
+  directory's `out/`]. Every remaining row is **unattributable forever**.
+
+**This does not break the instrument, and knowing why matters.** A minted UUID matches no row in
+`PROBES.tsv`, so an unrecorded probe is starred UNATTRIBUTED and the run exits 1. The instrument is
+**fail-closed on the absence of a record**, which is the design; it was never fail-closed *because* the
+column is populated. A prober who forgets the header still goes red — and is then unidentifiable, which
+is the standing predicament of row 352.
+
+So: a command names the task that fired it **if and only if the task named itself in the key**, which is
+the obligation in `reference-oracle.md` POLICY § 2 and the reason that obligation is written down.
 
 ## Files
 
@@ -51,7 +71,7 @@ task that fired it, if the task named itself in the key.
 |---|---|
 | `PROBES.tsv` | the floor and the attribution registry. **Append to this when you probe.** |
 | `instruments/oracle-state-baseline.sh` | the derivation. Read-only. |
-| `instruments/casualty-sweep.sh` | where I looked for things the movement invalidated: population, engine, flags, 11 selectors |
+| `instruments/casualty-sweep.sh` | where I looked for things the movement invalidated: population, engine, flags, **16** selectors. **Repaired by T371 (T367 F2).** It now reads `git grep`'s exit status, calibrates on a known positive **and** a known negative, and has its own exit contract — `0` every selector ran / `2` no corpus / `3` calibration failed / `4` a selector DID NOT RUN. It still gates nothing; the exit code says whether the sweep is *admissible*, never whether a casualty exists. Red-driven both ways in `.softhouse/capture/t371-t367-conditions/out/DRIVE-SWEEP-FAILCLOSED.txt` |
 | `CASUALTIES.md` | what the movement actually broke, what it did not, and the `t305`/`t327` decision |
 | `out/GREEN-baseline.txt` | the instrument's green run, exit 0 |
 | `out/RED-1-no-attribution.txt` | red drive: floor with no attribution rows → exit 1 |
@@ -59,8 +79,16 @@ task that fired it, if the task named itself in the key.
 | `out/RED-3-wrong-interpreter.txt` | **the version that ADMITTED `sh`** — kept as the transcript of the defect |
 | `out/RED-3b-wrong-interpreter-fixed.txt` | red drive: `sh` → exit 3 |
 | `out/RED-4-one-unrecorded-probe.txt` | red drive: **one** forgotten probe, not a wholesale loss → exit 1, names it |
-| `out/CASUALTY-SWEEP.txt` | the sweep output |
+| `out/CASUALTY-SWEEP.txt` | the sweep output **as T363 ran it**. A dated transcript of the pre-repair instrument; deliberately not regenerated here. T371's post-repair run is `.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt` |
 | `out/BAR-conformance.txt` | `bash .softhouse/conformance.sh` after the movement — PASS, exit 0 |
 
 Four red drives, because a guard nobody has watched fail enforces nothing — and the third one caught a
 real defect in this instrument before it was committed (see `CASUALTIES.md` § E).
+
+**Cost, measured by T371 and stated so nobody assumes the sweep hung.** The full sweep is **minutes**,
+not seconds, on this corpus (~8,200 tracked files). `git grep` runs multi-threaded at ~250–300 % CPU and
+several selectors take 10–60 s each; **S15 is the slowest**, because its second alternative starts a scan
+at every run of two or more digits. That cost grows as `out/` transcripts accumulate. It is accepted
+rather than optimised: the sweep gates nothing, is run by hand, and a selector that is cheap because it
+is narrow is the failure mode this whole instrument exists to prevent. If it ever becomes intolerable,
+narrow **S15's reverse arm**, not the selector set.

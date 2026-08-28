@@ -29,6 +29,48 @@
 # and moves the standing oracle even though it moves no journal entry
 # [VERIFIED: CommandProcessingResultType.java:31-37 at 426a23544; observed live, ids 357/358].
 # "A refused write writes nothing" is true of the LEDGER and false of the DATABASE.
+#
+# ==========================================================================================
+# T371 ADDITIONS. Three facts a prober reading this file must have before firing anything.
+# ==========================================================================================
+#
+# 1. A 4xx BURNS THE IDEMPOTENCY KEY. A REFUSAL IS AS IRREVERSIBLE AS AN ACCEPTANCE.
+#    SynchronousCommandProcessingService.executeCommandAttempt calls saveInitial (:140) BEFORE
+#    executeCommandInTransaction (:151) -- CommandSourceService's own class comment says the
+#    initial command source is persisted SEPARATELY FOR IDEMPOTENCY. A later request reusing
+#    that key hits exceptionWhenTheRequestAlreadyProcessed (:133), which for a status=ERROR row
+#    throws IdempotentCommandProcessFailedException unless the caller is an explicit retry
+#    [VERIFIED: T371, SynchronousCommandProcessingService.java:133,140,151,241-260 @ 426a23544].
+#    So there is NO SAFE WRITE to this tenant, not even a rejected one. Register a refusal
+#    probe here exactly as you would register an accepted one. T359's rows 357/358 are the
+#    worked example.
+#
+# 2. THE PRESENCE OF A KEY IS NOT ATTRIBUTION. m_portfolio_command_source.idempotency_key is a
+#    NOT NULL column, and Fineract MINTS a UUID when the caller sends no header
+#    (IdempotencyKeyResolver.java:36 -> IdempotencyKeyGenerator.create() = UUID.randomUUID()).
+#    Re-derived by T371 with two independent classifiers that agree: 20 of 359 rows name a task,
+#    7 of them above the floor; the other 339 name nothing and are UNATTRIBUTABLE FOREVER
+#    [.softhouse/capture/t371-t367-conditions/sql/q3-key-naming.sql]. Row 352 -- the +1 this
+#    program has never explained -- carries a minted UUID, so it can never be attributed. Stop
+#    looking for it. Attribution works because THIS FILE is appended to, not because the column
+#    is populated.
+#
+# 3. THE INSTRUMENT'S BOUND. oracle-state-baseline.sh is fail-closed for the APPEND PATH IT
+#    WATCHES -- two tables, floored on max(id). It is not a guarantee about the database.
+#    Three ways to move this tenant and still read green, all re-derived live by T371:
+#      (a) a CONSUMED SEQUENCE is invisible. acc_gl_closure_id_seq reads last_value 1,
+#          is_called t while acc_gl_closure reads 0 rows / max id null -- and the consumed
+#          sequence is the one permanent movement reference-oracle.md itself documents;
+#      (b) DIRECT SQL to any of the other 279 tables. There are 281 base tables in this tenant
+#          and the instrument attributes on 2. Its coverage rests on the argument that every
+#          API-driven write lands a command-source row above the floor, which is true of the
+#          command bus and false of psql;
+#      (c) an UPDATE BELOW THE FLOOR. 8 acc_gl_journal_entry rows already carry reversed = t,
+#          all at or below id 64, and the instrument never reads that column.
+#    (Also: a rolled-back transaction leaves nothing to attribute at all.)
+#    None of these is a defect in the instrument -- it grades attribution of appends and does
+#    that correctly. They are the shape of the probe that would defeat it, written down so that
+#    "the baseline ran green" is always quoted with its scope attached.
 
 floor	acc_gl_journal_entry	64	pre-fire-20260828-140005	the last journal-entry row before T352's first probe; re-derived by T363 against the live database, not inherited
 floor	m_portfolio_command_source	352	pre-fire-20260828-140005	the last command-source row before T352's first probe; matches the figure the driver's own standing baseline recorded on 2026-08-27
