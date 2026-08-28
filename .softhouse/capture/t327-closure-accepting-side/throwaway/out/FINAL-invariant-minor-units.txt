@@ -1,0 +1,11 @@
+T327 double-entry invariant, INTEGER MNT MINOR UNITS, recomputed from out/FINAL-ledger-db.json
+wire/stored scales seen in amount_major_text (digits after the point -> count): {6: 6}
+maximum stored scale = 6; currency minor digits = 2; residue beyond 2 digits found: NONE
+
+  a29aac720487  entry_date(s)=2026-08-28  legs=3  debits=35000062  credits=35000062  BALANCES
+  a29aac77c01b  entry_date(s)=2026-08-27  legs=3  debits=35000062  credits=35000062  BALANCES
+
+  WHOLE LEDGER: debits=70000124 credits=70000124 BALANCES
+
+  SPLITS SUM TO WHOLE, per transaction, as integers:
+    25000025 + 10000037 = 35000062, and the single credit leg is 35000062 -- equal: True

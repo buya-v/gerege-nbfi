@@ -1,0 +1,16 @@
+POST /journalentries
+case-id: B1-CTRL-05-entry-before-closing-date
+instance: THROWAWAY t327-oracle-app, image fineract:latest (same image id as the standing fineract-fineract-1), port 8444
+Fineract-Platform-TenantId: t327
+Authorization: Basic <mifos:password>
+Idempotency-Key: t327-b1-ctrl-05
+Content-Type: application/json
+body-wire-bytes-artefact: B1-CTRL-05-entry-before-closing-date.req
+body-sha256: f998091c560c73d68110891dc40ff958d9cfb5a8dddc80b62390451d20c20131
+body-bytes: 578
+response-status: 403
+response-sha256: 4cd69b17a47977ef4d81e436a678cfd36129d4224edfcb8dd3e890db076483c3
+business-date-candidate: 2026-08-28 (DERIVED today in Asia/Ulaanbaatar; MEASURED by B2-ACCEPT-01 + B2-CTRL-02)
+latest-closing-date-at-fire-time: 2026-08-26
+captured-at-utc: 2026-08-27T17:33:40Z
+note: B-1 CONTROL: transactionDate 2026-08-25 < closingDate 2026-08-26; :636 ACCOUNTING_CLOSED expected, args echoing the CLOSING date

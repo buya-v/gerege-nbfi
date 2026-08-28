@@ -1,0 +1,74 @@
+T324 INSTRUMENT 20 — RED/GREEN DRIVE OF THE PRUNE DECISION CHAIN
+target fire-program.sh : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6bea6f184d5a6545/.softhouse/bin/fire-program.sh
+  sha256               : fa13185f25051c5df85ed1afd5bb24cc322b4793d1ccc9a4f52fbe216397eba4
+  bytes                : 112611
+  blind-spot guard     : PRESENT (extracted between the markers and eval-ed)
+  guard source lines   : 161
+lib-worktree-prune.zsh : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a6bea6f184d5a6545/.softhouse/bin/lib-worktree-prune.zsh
+  sha256               : 0780d703bb2c6f4b1c011b38972db5028c9509ccc3a9677ab653c58fe8fbf156
+root                   : /private/tmp/t324-green-final
+date                   : 2026-08-27T17:42:24Z
+git                    : git version 2.50.1 (Apple Git-155)
+
+cwd                    : /private/tmp/t324-green-final/host   (wt_prune_check's MERGED rule is cwd-relative — FU-T318-4)
+
+=== rows ===
+
+--- R1 --assume-unchanged hides a live modification
+    polarity   : PRESERVE
+    witness    : .softhouse/tasks.json (55 bytes before the decision)
+    decision   : rc=1  KEEP by T324 blind-spot check: REFUSE: /private/tmp/t324-green-final/wt.OS9EFs has 1 index entries carrying a NON-'H' git index tag — a skip bit (`--assume-unchanged` -> 'h', `--skip-worktree` -> 'S') switches OFF the working-tree comparison that BOTH the porcelain clean check AND `git worktree remove` rely on, so all of them would report clean while live content sits on disk. First 5: h .softhouse/tasks.json
+    action     : not removed (git worktree remove rc=-)
+    outcome    : SURVIVED (55 bytes)
+  PASS  R1 --assume-unchanged hides a live modification  content PRESERVED
+
+--- R2 --skip-worktree hides a live modification
+    polarity   : PRESERVE
+    witness    : .softhouse/tasks.json (52 bytes before the decision)
+    decision   : rc=1  KEEP by T324 blind-spot check: REFUSE: /private/tmp/t324-green-final/wt.0q4sJi has 1 index entries carrying a NON-'H' git index tag — a skip bit (`--assume-unchanged` -> 'h', `--skip-worktree` -> 'S') switches OFF the working-tree comparison that BOTH the porcelain clean check AND `git worktree remove` rely on, so all of them would report clean while live content sits on disk. First 5: S .softhouse/tasks.json
+    action     : not removed (git worktree remove rc=-)
+    outcome    : SURVIVED (52 bytes)
+  PASS  R2 --skip-worktree hides a live modification  content PRESERVED
+
+--- R3 both index bits at once
+    polarity   : PRESERVE
+    witness    : .softhouse/tasks.json (48 bytes before the decision)
+    decision   : rc=1  KEEP by T324 blind-spot check: REFUSE: /private/tmp/t324-green-final/wt.8Za1f7 has 1 index entries carrying a NON-'H' git index tag — a skip bit (`--assume-unchanged` -> 'h', `--skip-worktree` -> 'S') switches OFF the working-tree comparison that BOTH the porcelain clean check AND `git worktree remove` rely on, so all of them would report clean while live content sits on disk. First 5: h .softhouse/tasks.json
+    action     : not removed (git worktree remove rc=-)
+    outcome    : SURVIVED (48 bytes)
+  PASS  R3 both index bits at once  content PRESERVED
+
+--- R4 status.showUntrackedFiles=no hides untracked
+    polarity   : PRESERVE
+    witness    : .softhouse/handoff-draft.md (56 bytes before the decision)
+    decision   : rc=1  KEEP by T324 blind-spot check: REFUSE: /private/tmp/t324-green-final/wt.XNMN2n has 1 path(s) that `git status --porcelain -uall` reports and a bare `--porcelain` can be configured not to (`status.showUntrackedFiles=no`). First 5: ?? .softhouse/handoff-draft.md
+    action     : not removed (git worktree remove rc=-)
+    outcome    : SURVIVED (56 bytes)
+  PASS  R4 status.showUntrackedFiles=no hides untracked  content PRESERVED
+
+--- R5 plain untracked file (no hiding)
+    polarity   : PRESERVE
+    witness    : .softhouse/handoff-draft.md (30 bytes before the decision)
+    decision   : rc=1  KEEP by wt_prune_check: KEEP: /private/tmp/t324-green-final/wt.DYaHug has uncommitted changes
+    action     : not removed (git worktree remove rc=-)
+    outcome    : SURVIVED (30 bytes)
+  PASS  R5 plain untracked file (no hiding)  content PRESERVED
+
+--- R6 CONTROL: genuinely clean, disposable worktree
+    polarity   : PRUNE
+    witness    : .softhouse/tasks.json (14 bytes before the decision)
+    decision   : rc=0  REMOVE
+    action     : REMOVED (git worktree remove rc=0)
+    outcome    : WORKTREE DESTROYED, WITNESS GONE
+  PASS  R6 CONTROL: genuinely clean, disposable worktree  pruned, as it should be — the chain is NOT inert
+
+--- R7 KNOWN-UNCLOSED: gitignored content (FU-T324-1)
+    polarity   : PRUNE
+    witness    : ignored-scratch/notes.md (35 bytes before the decision)
+    decision   : rc=0  REMOVE
+    action     : REMOVED (git worktree remove rc=0)
+    outcome    : WORKTREE DESTROYED, WITNESS GONE
+  PASS  R7 KNOWN-UNCLOSED: gitignored content (FU-T324-1)  pruned, as it should be — the chain is NOT inert
+
+PASS=7  FAIL=0
+scratch kept at: /private/tmp/t324-green-final

@@ -1,13 +1,12 @@
 {
   "holder": "local-launchd",
   "host": "Buyanmunkhs-Mac-mini",
-  "pid": 68244,
-  "started_at": "2026-08-27T15:00:08Z",
-  "heartbeat": "2026-08-27T17:22:32Z",
+  "pid": 86145,
+  "fire": "20260828-080001",
+  "started_at": "2026-08-28T00:00:18Z",
+  "heartbeat": "2026-08-28T00:00:18Z",
   "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
-  "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260827-230001.log",
-  "oracle": "UNREACHABLE at https://localhost:8443/fineract-provider/actuator/health",
-  "postgres": "reachable at localhost:5432",
-  "chain_iteration": 2,
-  "in_flight": "7 workers: T324 T326 T306 T327 T282 T272 T277 -- see .softhouse/RESUME.md"
+  "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260828-080001.log",
+  "oracle": "REACHABLE at https://localhost:8443/fineract-provider/actuator/health",
+  "postgres": "reachable at localhost:5432"
 }
