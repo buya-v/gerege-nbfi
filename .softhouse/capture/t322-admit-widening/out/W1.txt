@@ -1,0 +1,6 @@
+--- FAIL: TestOpeningBalanceRefusalStillCrossChecksLegAmounts (0.06s)
+    --- FAIL: TestOpeningBalanceRefusalStillCrossChecksLegAmounts/a_defineOpeningBalance_REFUSAL_whose_expect_amounts_DISAGREE_is_refused_BY_THE_AMOUNT_RULE (0.00s)
+        admit_widening_test.go:121: a defineOpeningBalance REFUSAL carrying an expect amount that DISAGREES with the request amount at the same position was admitted WITHOUT the amount cross-check firing. The positional gate and the multiset gate have stopped being complements and the money cross-check is absent on this shape again -- T320-3, closed by T306's obAcceptingLegs. Reasons: [expect.legs is non-empty on a refusal expectation. A refused request created no entry, so a leg here would be an amount nobody observed -- the exact way an unobserved number enters a store]
+FAIL
+FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.292s
+FAIL

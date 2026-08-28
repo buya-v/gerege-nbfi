@@ -1,0 +1,6 @@
+--- FAIL: TestOpeningBalanceLegPairingIsRedDrivable (0.08s)
+    --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/an_amount_occurring_ONCE_is_reported_as_a_shortfall,_not_as_a_negative_surplus (0.00s)
+        openingbalance_test.go:543: the SURPLUS sentence reported a count of "-1", which is not a positive surplus. A shortfall has its own sentence and must not be reported through this one: "expect.legs carry amount \"100000.370000\" -1 time(s) more than twice-per-request-leg allows; the only entries an accepted opening balance writes are the caller's legs and their contras"
+FAIL
+FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.302s
+FAIL
