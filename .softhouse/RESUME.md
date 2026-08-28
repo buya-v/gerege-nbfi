@@ -66,7 +66,8 @@ whoever receives it.
 | `T375` registration-guard fail-opens | `abfb64ef9a5d23f1a` | code (RESUME of a killed worker) | running |
 | `T383` fire-wrapper `tail -1` fail-open | `af72b6ec837e41331` | code | running |
 | `T381` anti-calibration fail-open | `aab1c4d016f417758` | code | running |
-| `T360` divergence vector class | `ad3a06a761a0fd26d` | code | running |
+| `T360` divergence vector class | `ad3a06a761a0fd26d` | code | **done** @ `d6979763` |
+| `T387` review T360 | `a33a413de77ef1024` | reviewer | running |
 | `T388` FIRST accrual capture | `a8fa18aedf7a9db13` | test_writer (ORACLE-ONLY) | **done** @ `977e37af` |
 | `T389` review T388 | `a049874f964182c77` | reviewer | running |
 
@@ -117,6 +118,39 @@ because T388 already found two members the driver's own brief had missed.
 wire the unwired baseline) and `T391` (promote the observations, and rewrite the four sentences in
 `capabilities-ledger.json` the harness now prints falsely every run) are FILED and sequenced behind their
 holders.
+
+### `T360` RESULT — and it refused its own reviewer's measured remedy
+
+T360 concluded **(c) BOTH** and then **declined the one change T359 had measured for it**. T359's remedy was
+`impl.go:276-279` returning `(*Refusal, nil)` instead of a Go `error`. T360's objections: that return produces
+a **fabricated HTTP 422** no oracle, port or wire ever produced, and it changes the meaning of the return for
+**every** class — a residue arriving on a *parity* vector would grade as "the port refused" when the truth is
+a broken corpus. It routed in `gradeOne` on the class instead, and gave `PortRefusal` **no HTTP status field
+at all**. `T387` was dispatched to **adjudicate that specific disagreement from source**, not to prefer either
+side. A worker refusing a reviewer's specific remedy, with a reason, is the pipeline working.
+
+**The money constraint was the hard part and it held.** Money cells are **ABSENT, not empty** — `admit`
+refuses `expect.legs`, `total_*_minor`, `expect.refusal` and `expect.http_status` on the new class — so no
+author is ever put in T352's position of inventing `10013` for a value no `int64` can hold. The oracle's
+`100.125` is **characters**, byte-checked verbatim on both sides, with representability decided by a pure byte
+scan of the fraction digits: no `strconv`, no arithmetic, no exponent. **The amount is never a number in this
+program.**
+
+`LDG-DIV-01` is built from T352's committed capture, re-read live read-only this fire and byte-identical.
+T360 posted nothing and moved no oracle state. The 14th wrong implementation is KILLED and load-bearing
+**measured both ways**. ledger parity 7/6 and 39 money cells **unmoved**; cells 142 → 144; divergence
+**PASS 1 FAIL 0**.
+
+### ⚠ SECOND MERGE HAZARD — `T360` CANNOT MERGE BEFORE `T375`
+
+`T360` needs `EXEMPTION_PIN_LEDGER_WRONGIMPLS` **13 → 14** at `.softhouse/conformance.sh:3923` — a file
+`T375` holds, so T360 correctly did not touch it and filed
+`.softhouse/capture/t360-divergence-class/CONFORMANCE-SH-PATCH-REQUEST.md` instead.
+
+**Its branch is `exit 2` and that is CORRECT.** The probe line is **PRINTED** and reads `up`, and the sole
+refusal is `WRONG-IMPLEMENTATION POPULATION 14, PINNED 13`. Under **P-84** that is **the pin working** — not
+an oracle outage, not a corpus defect. **Do not park anything over it.** The driver applies the one integer
+on the **merge result** after `T375` lands (P-83).
 
 ## MERGE HAZARD carried forward from iteration 2 — read before merging anything
 `T374` ships the dead-path pin at **108**; `main` is at **109**; `T375` is at **109**.
