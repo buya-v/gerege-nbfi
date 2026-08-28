@@ -5623,6 +5623,43 @@
       ],
       "description": "T360 gives the vector store a first-class way to record an ORACLE-ACCEPTS / PORT-REFUSES divergence. A new vector class is the highest-risk change this harness can take, because a class that grades nothing still increments a PASS count. Read from the branch:\n    git show softhouse/T360-divergence-class:.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T360.md\n    git diff main...softhouse/T360-divergence-class\n\nT359 ALREADY RE-SCOPED THE BRIEF AND FALSIFIED ITS PREMISE (C-1, MAJOR): grade.go:551-556 ALREADY grades that polarity, four live vectors use it, and the HARNESS-ERROR came from one line of port code at impl.go:276-279. YOUR FIRST JOB IS TO CHECK T360 HONOURED THAT RE-SCOPE rather than building the thing the original false premise asked for. A duplicate mechanism beside a working one is a REJECT.\n\nTHEN ATTACK THE CLASS ITSELF:\n  - VACUITY. Write a deliberately WRONG port implementation and confirm the new class FAILS on it. A class no wrong implementation can fail is decoration. Register it in the wrong-implementation drive the way the 13 existing `ledger-wrong-*` drives are registered, and show it KILLED.\n  - THE MONEY NON-NEGOTIABLE, which is where this task is genuinely hard. The divergence being recorded is the oracle accepting 100.125 MNT, a sub-minor-unit residue that NO int64 can hold. Confirm T360 did NOT introduce a float, a decimal string parsed to float, or a widened numeric type into ANY money field, struct, schema column, API field or fixture, INCLUDING intermediate calculation. Grep the diff yourself and run the no-float guards. A float here is an instant REJECT under CLAUDE.md's first non-negotiable, however well motivated.\n  - THE CLAIM LIMIT. Confirm the bar's printed summary now states honestly what the corpus can and cannot express, and that the parity count did not silently absorb divergence vectors -- a divergence is not a parity pass.\n\nRun `bash .softhouse/conformance.sh` on the branch from a CLEAN tree AFTER commit, against the live oracle. Record the exit code and test the probe line's PRESENCE before its value (P-84, patterns.md:2813). If counts move, they must move in the summary AND in every pinned census that restates them, in ONE commit (P-83).",
       "note": "Filed by the driver of fire 20260828-140005 iteration 3 at dispatch time (plan-gate check 1)."
+    },
+    {
+      "id": "T388",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "role": "test_writer",
+      "branch": "softhouse/T388-accrual-capture",
+      "contract_independent": false,
+      "title": "FU-T352-3 ORACLE-ONLY: take the FIRST accrual observations in this program -- ledger.accrual.entry is ENTIRELY UNGRADED and the only missing ingredient is a loan",
+      "files_hint": [
+        ".softhouse/capture/t388-accrual-capture/"
+      ],
+      "dependencies": [
+        "T352"
+      ],
+      "description": "RAW OBSERVED CAPTURE ONLY. This task may NOT promote anything into `.softhouse/vectors/` -- that directory is held by a concurrent worker (T360). Promotion is a separate follow-on task.\n\nTHE GAP, quoted from the bar's own every-run coverage block: `ledger.accrual.entry` -- an accrual journal entry through INTEREST_RECEIVABLE, FEES_RECEIVABLE or PENALTIES_RECEIVABLE -- is ENTIRELY UNGRADED, 'and the reason is that the observations do not exist rather than that the machinery does not.' NOT ONE JOURNAL ENTRY IN THIS TENANT EVER ARRIVED THROUGH A RECEIVABLE SLOT.\n\nT352 MEASURED THE COST DOWN and then declined to pay it, for a reason that is itself the design constraint on this task. Product 28 is the only ACCRUAL_PERIODIC product; its mapping is COMPLETE (all 13 slots); the periodic accrual job (id 16) is ACTIVE and ran 2026-08-27 16:02. The single missing ingredient is A LOAN. But the CHEAP route is forbidden: product 28's slot 9 resolves to **gl 16, a PROMOTED LEG of LDG-01, LDG-02 and LDG-03**, and A2-314/403 hold product 28's mapping INADMISSIBLE. So the cheap route posts accrual rows into an account three graded vectors read, through a mapping the store refuses.\n\nTAKE THE EXPENSIVE ROUTE, which T352 named as the right one: a NEW ACCRUAL_PERIODIC product on CLEAN GL accounts. See the full task prompt for the constraints.",
+      "note": "Filed and dispatched by the driver of fire 20260828-140005 iteration 3, as the FIRST action under the G-20 decision (a port-or-capture task before any further harness repair). FU-T352-3 had no task; checked against tasks.json (FU-T352-1, -2 and -4 exist, -3 did not). Grant is capture-only because T360 holds .softhouse/vectors/ this wave."
+    },
+    {
+      "id": "T389",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "reviewer",
+      "branch": null,
+      "title": "INDEPENDENT review of T388 -- the first accrual observations, and a deliberate permanent move of shared oracle state",
+      "files_hint": [
+        ".softhouse/reviews/t389-review-t388/"
+      ],
+      "dependencies": [
+        "T388"
+      ],
+      "description": "T388 took the program's first accrual observations from the reference oracle and, in doing so, moved shared oracle state PERMANENTLY. Both halves need review, and the second is the one previous fires got wrong. Read from the branch:\n    git show softhouse/T388-accrual-capture:.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T388.md\n    git diff main...softhouse/T388-accrual-capture\n\n1. NON-CONTAMINATION IS THE P0. Re-derive, against the LIVE PostgreSQL reference oracle and NOT from T388's notes, that no journal entry T388 caused landed on any GL account that a promoted vector reads. The promoted legs to check are at minimum gl 16, gl 17 and gl 21; derive the full set yourself from the promoted corpus rather than trusting that list. T352 moved gl 16 from 16 rows to 20 and gl 21 from 8 to 12 in an earlier fire, so this is a measured hazard, not a hypothetical one. If ANY promoted account moved, that is a REJECT and the driver must be told immediately.\n2. RE-RUN THE BAR on `main` and confirm the ledger section is still PASS 7 / oracle-refusal 6 / inadmissible 0 with 142 cells and 39 money cells. A capture that reddens the existing corpus has destroyed evidence, which is worse than capturing nothing.\n3. RE-ISSUE ITS RECIPES. Every `.req` must re-issue and produce a response that matches its recorded `.http`/`.json` in every graded respect, or T388 must have declared why not. This is the T276/T289 discipline: a reviewer of a capture RE-ISSUES, it does not read.\n4. THE OBSERVATIONS MUST BE ACCRUALS. Confirm the entries actually arrived through a RECEIVABLE slot (INTEREST_RECEIVABLE / FEES_RECEIVABLE / PENALTIES_RECEIVABLE) and were produced by the accrual job, not hand-posted to look like accruals. Decode the slot through the ported AccrualAccountsForLoan enum.\n5. MONEY. Every amount in every captured artefact must be recorded as the oracle returned it, and nothing in the capture rig may parse it to a float. Run the no-float guards over the branch.\n6. THE STATE-MOVE RECORD. T388 must ship an ORACLE-STATE-MOVED-BY-T388.md in the T352/T276 shape, and it must be COMPLETE -- T359 found T352's blast-radius list incomplete (C-2, MAJOR), naming a casualty path that does not exist while missing rigs that pin counts by string equality and now fail closed. Find T388's equivalents: grep the tracked corpus for every rig that pins a row count or an account balance by literal, and check each against the NEW live values.\n\nRun `bash .softhouse/conformance.sh` from a CLEAN tree after commit; test the probe line's PRESENCE before its value (P-84, patterns.md:2813). Verdict: APPROVED / APPROVED WITH CONDITIONS / REJECTED, every finding with a driven reproduction.",
+      "note": "Filed at T388 dispatch time so the plan gate (every code/test task has a paired reviewer) holds AT dispatch."
     }
   ],
   "cross_corroboration": {
