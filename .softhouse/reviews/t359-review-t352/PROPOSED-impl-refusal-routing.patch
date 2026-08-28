@@ -1,0 +1,78 @@
+T359 / F-T359-1 — HANDED OVER AS A DIFF, NOT APPLIED. `nexus/` is out of this review's scope.
+
+WHAT IT DOES, AND WHY IT IS NOT A DECISION I MAY MAKE
+-----------------------------------------------------
+This is the one-line change that turns T352's `HARNESS-ERROR` into a graded `FAIL`. It is
+NOT a fix to be merged on my say-so: whether the port's residue refusal is an "I cannot
+answer" (error) or an "I refuse, and that refusal is the answer" (Refusal) is exactly the
+question G-19 puts to Buyan. Option (a) — the port's refusal is CORRECT and stands, recorded
+as a deliberate named deviation — implies this routing, because a deliberate deviation must
+be GRADEABLE. Option (b) implies deleting the refusal instead. So this patch lands only if
+(a) is chosen, and the HTTP status and code below are placeholders a real change must settle.
+
+It was applied ONLY in a throwaway /tmp copy of the repo, to MEASURE the claim in F-T359-1.
+Evidence: `schema-drive/runD-patched.log` — with this change and T352's candidate vector
+BYTE-IDENTICAL (`amount_minor: "10013"` untouched), the run reports
+
+    LDG-T352-CANDIDATE-residue-3dp  parity  ledger_rest_posting  FAIL  1 cells (0 money)
+        the implementation REFUSED a request the oracle ACCEPTED (HTTP 422 …): ledger:
+        monetary text "100.125000" carries sub-minor-unit residue at scale 2 …
+    ledger parity  PASS 7  FAIL 1
+    ledger harness errors  0
+    EXIT=1
+
+i.e. the divergence grades as a definite, reproducible red with NO schema change whatsoever
+— which is the whole of F-T359-1.
+
+CONTEXT AT `nexus/internal/apps/ledger/conformance/impl.go:270-279`, unmodified:
+
+    for i, l := range req.Legs {
+        acct, ok := chart[l.AccountID]
+        if !ok {
+            return PostedEntry{}, nil, fmt.Errorf(
+                "leg %d points at GL account %d, which the vector's chart does not carry", i, l.AccountID)
+        }
+        amt, cerr := ledger.MinorUnitsFromDecimalText(l.AmountMajorText, req.Currency.MinorUnitDigits)
+        if cerr != nil {
+            return PostedEntry{}, nil, fmt.Errorf("leg %d: %w", i, cerr)
+        }
+
+THE CHANGE, at `:277-279` only:
+
+--- a/nexus/internal/apps/ledger/conformance/impl.go
++++ b/nexus/internal/apps/ledger/conformance/impl.go
+@@
+ 		amt, cerr := ledger.MinorUnitsFromDecimalText(l.AmountMajorText, req.Currency.MinorUnitDigits)
+ 		if cerr != nil {
+-			return PostedEntry{}, nil, fmt.Errorf("leg %d: %w", i, cerr)
++			// A sub-minor-unit residue is a REFUSAL, not an inability to answer.
++			// EntryPoster's contract (:36-44) draws exactly that line, and the
++			// reference oracle ACCEPTS this input [T352 txn a29bca0816a7, T359
++			// txn a29bd5eaeb1b, both HTTP 200], so the port's refusal is a
++			// DIVERGENCE the comparator must grade — grade.go:551-556 — and not
++			// a harness error that hides it. Status and code are placeholders
++			// until DEC-2 settles G-19 option (a).
++			return PostedEntry{}, &Refusal{
++				HTTPStatus: 422,
++				Code:       "ledger.residue.refused",
++				Message:    fmt.Sprintf("leg %d: %v", i, cerr),
++			}, nil
+ 		}
+
+WHAT MUST BE SETTLED BEFORE THIS IS MERGED, none of it mine to settle:
+
+  1. G-19 option (a) ratified by Buyan. Under (b) this patch is wrong and the refusal goes
+     away entirely.
+  2. The HTTP status and code. 422 / "ledger.residue.refused" are invented by me for the
+     measurement. This is a PORT-ORIGINATED refusal with no oracle counterpart, so it needs
+     its own namespace convention — the existing refusal codes are all oracle codes
+     transcribed from captures, and reusing that shape would make a port invention look like
+     an oracle observation.
+  3. Whether the port should refuse an amount the oracle emitted at all, versus refusing only
+     an amount a CALLER supplied. The two directions are not the same question and DEC-2 §4.3
+     consequence 2 as written does not separate them.
+  4. The vector to promote alongside it, which needs the `amount_minor` sentinel from
+     F-T359-1 — otherwise its author is still forced to write a fiction, and `10013` in the
+     store is worse than no vector.
+  5. `EXEMPTION_PIN_LEDGER_PARITY` / `_REFUSAL` / `_MONEYCELLS` at `.softhouse/conformance.sh:681-683`
+     move in the same commit as any promoted vector (compared by `-eq` at `:3469-3471`).

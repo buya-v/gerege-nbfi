@@ -1,0 +1,11 @@
+REFUSED  100.125000       scale=2  T359/T352 residue probe, MNT readback text
+         err: ledger: monetary text "100.125000" carries sub-minor-unit residue at scale 2 (digit "5" beyond 2 decimal places). This port applies NO truncation rule because no captured vector establishes one; refusing rather than silently inventing an amount
+REFUSED  100.125          scale=2  the same amount as posted on the wire
+         err: ledger: monetary text "100.125" carries sub-minor-unit residue at scale 2 (digit "5" beyond 2 decimal places). This port applies NO truncation rule because no captured vector establishes one; refusing rather than silently inventing an amount
+REFUSED  0.125000         scale=2  T352 balance-scale discriminator debit leg
+         err: ledger: monetary text "0.125000" carries sub-minor-unit residue at scale 2 (digit "5" beyond 2 decimal places). This port applies NO truncation rule because no captured vector establishes one; refusing rather than silently inventing an amount
+ACCEPTED 0.250000         scale=2  -> 25 minor units   T352 balance-scale discriminator credit leg
+REFUSED  100.123457       scale=2  T352 over-scale probe, as STORED by the oracle
+         err: ledger: monetary text "100.123457" carries sub-minor-unit residue at scale 2 (digit "3" beyond 2 decimal places). This port applies NO truncation rule because no captured vector establishes one; refusing rather than silently inventing an amount
+ACCEPTED 12.340000        scale=2  -> 1234 minor units   T352 USD probe amount (2 minor digits)
+ACCEPTED 1200000.000000   scale=2  -> 120000000 minor units   control: an amount the corpus already grades

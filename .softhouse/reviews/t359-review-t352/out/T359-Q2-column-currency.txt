@@ -1,0 +1,22 @@
+      table_name      | column_name | data_type | numeric_precision | numeric_scale 
+----------------------+-------------+-----------+-------------------+---------------
+ acc_gl_journal_entry | amount      | numeric   |                19 |             6
+
+ currency_code | legs | txns 
+---------------+------+------
+ MNT           |   67 |   29
+ USD           |    2 |    1
+
+ legs_with_scale_gt_2 
+----------------------
+                    6
+
+ id | transaction_id | account_id | currency_code |   amount   
+----+----------------+------------+---------------+------------
+ 65 | a29bca0816a7   |         16 | MNT           | 100.125000
+ 66 | a29bca0816a7   |         21 | MNT           | 100.125000
+ 67 | a29bca9bf813   |         16 | MNT           |   0.125000
+ 68 | a29bca9bf813   |         17 | MNT           |   0.125000
+ 70 | a29bcaa6a41b   |         16 | MNT           | 100.123457
+ 71 | a29bcaa6a41b   |         21 | MNT           | 100.123457
+
