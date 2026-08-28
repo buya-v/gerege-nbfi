@@ -396,12 +396,21 @@ func (GoPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 	// is SKIPPED — never "default to today", which would make the harness's
 	// answer depend on the morning it ran, which is the exact defect T289 found
 	// in T287's captures.
+	//
+	// AND IT ECHOES THE **TRANSACTION** DATE, NOT THE BUSINESS DATE. [T307]
+	// :631 constructs the exception with `transactionDate` — the date it just
+	// compared — and NOT with the business date it compared it against. So the
+	// one quantity on this path that is derived from a WALL CLOCK
+	// (getLocalDateOfTenant) never reaches the wire, which is why an args cell
+	// on this refusal is a calendar-independent claim. Graded as
+	// `refusal.arg0_value` via arg_echo "transaction_date" on LDG-REFUSE-05.
 	if req.BusinessDate != "" && req.TransactionDate != "" &&
 		isoAfter(req.TransactionDate, req.BusinessDate) {
 		return PostedEntry{}, &Refusal{
 			HTTPStatus: 403,
 			Code:       codeFutureDate,
 			Message:    msgFutureDate,
+			Arg0Value:  req.TransactionDate,
 		}, nil
 	}
 
@@ -435,12 +444,24 @@ func (GoPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 	// EMPTY LatestClosingDate IS THE ORACLE'S `latestGLClosure == null` BRANCH
 	// (:635), not a missing input: the repository returns null when the office
 	// has no closure, and this port then refuses nothing, exactly as :635 does.
+	//
+	// AND IT ECHOES THE **CLOSING** DATE, NOT THE TRANSACTION DATE. [T307]
+	// :637 constructs the exception with `latestGLClosure.getClosingDate()`,
+	// where :631 five lines above constructs its own with `transactionDate`.
+	// THE SAME WIRE FIELD MEANS DIFFERENT THINGS IN THE TWO REFUSALS. On A2-01
+	// the two dates are EQUAL, so that capture cannot show it; A2-02 posted
+	// 2026-01-15 against the same 2026-01-31 closure and the oracle echoed
+	// 2026-01-31, which is the only observation in this corpus that separates
+	// them. Graded as `refusal.arg0_value` via arg_echo "latest_closing_date",
+	// and `ledger-wrong-accounting-closed-echoes-transaction-date` is the port
+	// that gets this line wrong while getting every other cell right.
 	if req.LatestClosingDate != "" && req.TransactionDate != "" &&
 		!isoBefore(req.LatestClosingDate, req.TransactionDate) {
 		return PostedEntry{}, &Refusal{
 			HTTPStatus: 403,
 			Code:       codeAccountingClosed,
 			Message:    msgAccountingClosed,
+			Arg0Value:  req.LatestClosingDate,
 		}, nil
 	}
 
@@ -929,11 +950,20 @@ func (dateRulesAlwaysRefusingPoster) PostEntry(req Request) (PostedEntry, *Refus
 	// consulted second. Consulting the closure first is the natural
 	// accounting-shaped ordering ("is the period closed?" before "is this in the
 	// future?"), so the surviving mutant is not contrived.
+	//
+	// IT KEEPS THE ARG ECHOES TOO, AND THAT IS DELIBERATE. [T307] This port's
+	// declared defect is that it throws away the two COMPARISONS while keeping
+	// the rules, the codes and the messages. Emitting the wrong
+	// `errors[0].args[0].value` as well would be a FOURTH defect nobody argued
+	// for, and it would hand this mutant a spurious kill on LDG-REFUSE-04/05/06
+	// — vectors T328 measured it to SURVIVE. A mutant that dies for a reason its
+	// own doc comment does not claim tells the corpus nothing.
 	if req.TransactionDate != "" && req.LatestClosingDate != "" {
 		return PostedEntry{}, &Refusal{
 			HTTPStatus: 403,
 			Code:       codeAccountingClosed,
 			Message:    msgAccountingClosed,
+			Arg0Value:  req.LatestClosingDate,
 		}, nil
 	}
 	if req.TransactionDate != "" && req.BusinessDate != "" {
@@ -941,9 +971,50 @@ func (dateRulesAlwaysRefusingPoster) PostEntry(req Request) (PostedEntry, *Refus
 			HTTPStatus: 403,
 			Code:       codeFutureDate,
 			Message:    msgFutureDate,
+			Arg0Value:  req.TransactionDate,
 		}, nil
 	}
 	return GoPoster{}.PostEntry(req)
+}
+
+// accountingClosedEchoesTransactionDatePoster gets the CLOSURE BOUNDARY RIGHT
+// and gets the ECHOED DATE WRONG.  [T307, closing T295 backlog B-3.]
+//
+// THE DEFECT, IN ONE LINE: `:637` constructs ACCOUNTING_CLOSED with
+// `latestGLClosure.getClosingDate()`, but `:631` — five lines above, in the same
+// method, for the OTHER date refusal — constructs FUTURE_DATE with
+// `transactionDate`. THE SAME WIRE FIELD MEANS DIFFERENT THINGS IN THE TWO
+// REFUSALS [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java:631,
+// 637-638, pinned 426a23544]. A porter who reads one throw site and generalises
+// — or who reasons, quite naturally, that an error should quote the input that
+// was rejected — echoes the transaction date in BOTH. This port is that porter.
+//
+// WHY IT IS NOT A DUPLICATE, AND WHY IT NEEDS A NEW CAPTURE TO DIE.
+// ledger-wrong-closure-boundary-exclusive gets the BOUNDARY wrong and dies on
+// LDG-REFUSE-04. This one gets the boundary exactly right: it refuses precisely
+// the requests the oracle refuses, with the oracle's status, code and message.
+// On LDG-REFUSE-04 it is INDISTINGUISHABLE from the reference implementation,
+// because A2-01 was posted ON the closing date and the two dates are EQUAL
+// there. It dies on LDG-REFUSE-06 alone — A2-02, the only capture in this corpus
+// where the transaction date (2026-01-15) and the closing date (2026-01-31)
+// DIFFER — on one cell, `refusal.arg0_value`.
+//
+// SO IT IS THE EXECUTABLE FORM OF THE CLAIM T295 COULD NOT PROMOTE. Before this
+// task A2-02's captured body was byte-identical to A2-01's on every graded cell
+// and adding it would have raised the corpus count by one and the kill count by
+// zero. It now raises both.
+type accountingClosedEchoesTransactionDatePoster struct{}
+
+func (accountingClosedEchoesTransactionDatePoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	base, ref, err := GoPoster{}.PostEntry(req)
+	if ref != nil && ref.Code == codeAccountingClosed {
+		// Everything else the reference implementation decided is kept. The one
+		// line this port gets wrong is which date it quotes back.
+		wrong := *ref
+		wrong.Arg0Value = req.TransactionDate
+		return base, &wrong, err
+	}
+	return base, ref, err
 }
 
 // nettingPoster sums every leg into one accumulator, treating a credit as a
@@ -1079,6 +1150,16 @@ func init() {
 			"and 5/5 refusal vectors on the store as it stood before T328, and killed by LDG-06 (the "+
 			"closure half) and LDG-07 (the future-date half), one each",
 		dateRulesAlwaysRefusingPoster{})
+	RegisterWrong("ledger-wrong-accounting-closed-echoes-transaction-date",
+		"gets the closure BOUNDARY exactly right and echoes the WRONG DATE back: it returns the "+
+			"submitted transactionDate in errors[0].args[0].value where :637-638 constructs "+
+			"ACCOUNTING_CLOSED with latestGLClosure.getClosingDate(). The two throw sites five lines "+
+			"apart disagree -- :631 DOES echo the transaction date, for FUTURE_DATE -- so a porter who "+
+			"reads one and generalises writes this. It is INDISTINGUISHABLE from a correct port on "+
+			"LDG-REFUSE-04, where A2-01 was posted ON the closing date and the two dates are EQUAL, "+
+			"and it dies on LDG-REFUSE-06 alone (T307, A2-02: transaction 2026-01-15, closure "+
+			"2026-01-31, oracle echoed 2026-01-31)",
+		accountingClosedEchoesTransactionDatePoster{})
 	RegisterWrong("ledger-wrong-netting-totals",
 		"nets credits against debits into one accumulator, so I-1 holds by construction and both totals "+
 			"report the netted figure",

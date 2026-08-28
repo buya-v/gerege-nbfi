@@ -1,152 +1,12 @@
-conformance: no-float guard — inspected 67 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/.softhouse/vectors
-conformance: no-float guard — inspected 6 Go packages / 61 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/nexus (recursive, whole module)
-conformance: gofmt guard — inspected 61 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/nexus (recursive, whole module; contract.go exempt, gate G-3)
-conformance: wire-float round-trip guard — selftest OK, 13 cases (10 drive it RED on a planted
-conformance:   defect, 3 stay GREEN on the clean equivalent; both directions READ)
-conformance: CENSUS wire-float round-trip — inspected 521 documents / 10309 numeric tokens: 500 request bodies (*.json under a req/ dir, plus *.req) across 12 capture rigs / 58 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/.softhouse/capture, and 21 capture records cited by the vector store (recursive, whole capture tree)
-conformance: CENSUS float-shaped tokens PRESENT 354 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
-conformance: CENSUS recorded-request blocks — 21 capture records DERIVED from provenance.capture_ref across 67 *.json in /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/.softhouse/vectors; 8 of those records carry a recorded-request block and 13 carry none; 96 blocks (key `inputs` or `request`, any depth, located by parser walk) / 783 numeric tokens GRADED, float-shaped PRESENT 0, ALTERED 0
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-338-je-after-repayment-coverage.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-383-je-after-overpay.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-390-db-ledger-state-a2-15.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/OB-ACCEPT-01-readback-db.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t327-closure-accepting-side/throwaway/out/B1-ACCEPT-06-readback-db.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t327-closure-accepting-side/throwaway/out/B2-ACCEPT-01-readback-db.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-344-manual-je-unbalanced.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-346-manual-je-nomanual.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t294-openingbalance-refusal/out/OB-01-openingbalance-after-posted-entries.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t287-closure-refusals/out/A2-01-preclosure-on-date.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t287-closure-refusals/out/A1-02-future-boundary-plus1.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/pathb/t149/out/gerege/T149-TIE-P9-raw.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
-conformance: CENSUS   READ BUT NOT GRADED: 4339 numeric tokens in cited capture records sit OUTSIDE any recorded-request block; 84 of them are NOT byte-preserved (.softhouse/capture/pathb/t149/out/gerege/T149-TIE-P9-raw.json x59; .softhouse/capture/tierA-a2/out/A2-338-je-after-repayment-coverage.json x8; .softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json x3; .softhouse/capture/tierA-a2/out/A2-383-je-after-overpay.json x14). These are ORACLE OBSERVATIONS and T186 §7 A4 forbids rewriting, re-emitting or scale-normalising one, so byte-fidelity is not the verdict property for them — the count is printed so the blind spot is STATED, not implied. Example: $.pageItems[0].amount 100000.250000 -> 100000.25
-conformance:   census figure READ: inspected 521 >= 521 tracked by git (floor DERIVED, not pinned)
-conformance: narrow-catch guard — selftest OK, 8 cases (5 drive it RED on a planted
-conformance:   defect, 3 stay GREEN on the clean equivalent; both directions READ)
-conformance: CENSUS narrow-catch — inspected 63 .java files across 24 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
-conformance:   census figure READ: inspected 63 >= 63 tracked by git (floor DERIVED, not pinned)
-ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)
-ledger-invariants: CENSUS ledger-invariants — inspected 61 Go files / 6 packages / 673 funcs (1 hold-named) / 1122 assignment or inc-dec statements / 617 write targets / 6441 string literals in 5472 concatenation groups / 6849 calls under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/nexus (recursive, whole Go tree)
-ledger-invariants: CENSUS ledger-invariants SQL surface — 187 SQL-shaped literals, of which 7 carry a DML verb (UPPER BOUND: English prose containing "update" satisfies it) and 0 name an actual table; 0 exec-family calls (0 mutating). Findings: 0
-ledger-invariants: CENSUS   covered: internal/apps/ledger
-ledger-invariants: CENSUS   covered: internal/apps/ledger/conformance
-ledger-invariants: CENSUS   covered: internal/apps/loanschedule
-ledger-invariants: CENSUS   covered: internal/apps/loanschedule/conformance
-ledger-invariants: CENSUS   covered: internal/apps/loanschedule/conformance/cmd/conformance
-ledger-invariants: CENSUS   covered: internal/apps/loanschedule/contract
-ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/conformance/admit.go:1183:5  citationNameOnlyPin carries %q, but part two of that citation resolved %s on this run, not FILE-NAME-ONLY. The pin excuses a weakness tha...
-ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/financialactivity_test.go:62:13  %d is creatable but NOT settable on update
-ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/financialactivity_test.go:67:13  %d should be settable on update
-ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:389:7  invariant_exemptions switches off %q and THIS VECTOR CITES NO CAPTURE AT ALL (provenance.capture_ref is empty) - %s. A vector with no cap...
-ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:523:8  invariant_exemptions switches off %q, BUT THAT INVARIANT HOLDS OUTRIGHT ON THE SCHEDULE THIS VECTOR ITSELF RECORDED, with no assertion wi...
-ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:541:8  invariant_exemptions switches off %q, but that invariant reports %q on the schedule this vector recorded — with NOTHING withdrawn, so t...
-ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/vector.go:1130:3  DUPLICATE case_id IN THE VECTOR STORE — %s. A case_id is a vector's IDENTITY, and the two numbers this program quotes as its coverage e...
-ledger-invariants: CENSUS   hold-named func: internal/apps/ledger/slots_test.go:187:1  TestPlaceholderDisjointnessHolds
-ledger-invariants: NIL-COVERAGE — the SQL surface inspected 6441 string literals and found ZERO SQL DML statements of any kind under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
-ledger-invariants: NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module declares no database driver at all.
-ledger-invariants:   census figure READ: inspected 61 >= 61 tracked by git (floor DERIVED, not pinned)
-ledger-invariants: CANNOT-CATCH — the honest limits of this guard, printed on every run, pass or fail:
-ledger-invariants:   1. DYNAMIC SQL. A statement assembled at run time (fmt.Sprintf, strings.Builder, a query
-ledger-invariants:      builder's own AST) is not readable as text. The guard converts that blind spot into a
-ledger-invariants:      REFUSAL for the mutating driver family (class OPAQUE-SQL) — but only where it recognises
-ledger-invariants:      the call. A mutating call through an interface method it does not name, or through
-ledger-invariants:      reflection, is invisible.
-ledger-invariants:   2. INDIRECTION THROUGH A NAME THAT IS NOT A BALANCE. A field called Amount, Total, Net or
-ledger-invariants:      Position that IS a stored balance is not detected: the surface is the NAME, because
-ledger-invariants:      without a type checker there is nothing else to key on. Renaming a balance defeats it.
-ledger-invariants:   3. STORED PROCEDURES, TRIGGERS AND MIGRATIONS. This guard walks Go only. An UPDATE inside a
-ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
-ledger-invariants:      and the schema is Fineract's, which HAS such objects.
-ledger-invariants:   4. I-5. "A correction that mutates a leg instead of adding a reversing pair" is only
-ledger-invariants:      decidable once a leg type and a correction path exist in the Go tree. Neither does. The
-ledger-invariants:      mechanical half (a write to a committed row, a write to a balance) IS covered; the
-ledger-invariants:      semantic half is not, and is not claimed.
-ledger-invariants:   5. SEMANTICS OF DERIVATION. A function that CACHES a balance in a map keyed by account, then
-ledger-invariants:      returns the cache, is caught only if the cache is named as a balance (class I3-PKG-STATE
-ledger-invariants:      covers the package-level case). A struct-field cache inside a service object with a
-ledger-invariants:      non-balance name is not.
-ledger-invariants:   6. NON-GO CALLERS. Anything that reaches the database without going through this module.
-ledger-invariants:   7. TWO MEASURED OVER-MATCHES, NAMED SO NOBODY REDISCOVERS THEM AS BUGS. (i) The DML-verb
-ledger-invariants:      test fires on English prose: on nexus/ at the commit this guard was written, all three
-ledger-invariants:      DML-classified literals are message text, not SQL — which is why every one is PRINTED
-ledger-invariants:      with its position and why the NIL-COVERAGE notice keys on the narrower "names a table"
-ledger-invariants:      count. (ii) The hold-name matcher fires on "...Holds" meaning "the property holds":
-ledger-invariants:      nexus/internal/apps/ledger/slots_test.go:187 TestPlaceholderDisjointnessHolds is counted
-ledger-invariants:      as a hold-named function. Neither over-match can produce a FINDING on its own — a finding
-ledger-invariants:      additionally requires a protected table, a balance column, or a balance write — so both
-ledger-invariants:      are noise in a count, never a false rejection.
-ledger-invariants:   8. TESTS ARE INSPECTED, NOT EXEMPTED. A _test.go file that assigns a balance field as a
-ledger-invariants:      FIXTURE is reported as a violation. That is fail-CLOSED by choice; if a legitimate
-ledger-invariants:      fixture ever trips it, the fix is a constructor, not an exemption.
-ledger-invariants: PASS — I-3 (balances are derived) and I-4 (append-only) hold over the
-ledger-invariants:   Go tree AS FAR AS A SOURCE-LEVEL GUARD CAN SEE. Read the CANNOT-CATCH
-ledger-invariants:   block and the NIL-COVERAGE lines before quoting this as coverage.
-conformance: ledger-invariants LIMITS (CANNOT-CATCH, condensed; the full 33-line block is
-conformance:   the cannotCatch const in .softhouse/guards/ledgerguard/main.go, which its
-conformance:   head prints IN FULL ABOVE since T209 — so this is a redundant restatement):
-conformance:   the detection surface is the NAME, so RENAMING A BALANCE DEFEATS THIS GUARD;
-conformance:   dynamic SQL is caught only through the call set it recognises; triggers,
-conformance:   migrations and stored procedures are not walked at all; I-5's semantic half
-conformance:   and non-Go callers are not covered. A PASS here means 'no violation is visible
-conformance:   to a source-level guard over the Go tree', NOT 'the ledger tree is covered'.
-conformance: CENSUS fail-open instruments — inspected 1266 tracked .sh/.py file(s) under
-conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1 (git ls-files, whole repository); frontier 11, pinned at 11
-conformance:   (DERIVED from FAILOPEN_PIN_FILE_LIST by counting it, never typed).
-conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a
-conformance:   directory that is not there and carries on, whatever it prints afterwards. TIER2 =
-conformance:   printing arm only, corpus reachable today. All are pinned by PATH, not by count.
-conformance:   frontier == pinned (all 11 rows, by path).
-conformance: CENSUS host state in the lint corpus — 138 repo-wide search instrument(s)
-conformance:   read from git grep over tracked *.sh/*.py under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1; sites that assign a
-conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
-conformance:   (DERIVED from HOSTSTATE_PIN_TEMP_ASSIGN_LIST by counting it, never typed).
-conformance:   Such a path is host state — shared across worktrees, absent from every commit,
-conformance:   and deleted on reboot — and C1/C6 decide TIER by asking whether a path EXISTS.
-conformance:   census == pinned (all 18 site(s), by path and source line).
-conformance:   PNUMBER-CITATIONS: declared-dangling ids (recorded in the .softhouse/patterns.md errata with their repair) = [131, 261]
-conformance:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=96 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
-conformance:   PNUMBER-CITATIONS: sites=9356 definition=97 consistent=475 bare=8680 misdirecting=70 undefined=20 negative-control=14
-conformance:   PNUMBER-CITATIONS: skipped self-output-files=22 self-source-files=2 (stated, not silent -- both contain deliberately drifted text)
-conformance:   PNUMBER-CITATIONS:   directive MISDIRECTING 2
-conformance:   PNUMBER-CITATIONS:   directive UNDEFINED    4
-conformance:   PNUMBER-CITATIONS:   evidence  MISDIRECTING 59
-conformance:   PNUMBER-CITATIONS:   evidence  UNDEFINED    16
-conformance:   PNUMBER-CITATIONS:   orchestrator MISDIRECTING 8
-conformance:   PNUMBER-CITATIONS:   ratified  MISDIRECTING 1
-conformance:   P-number citations: VERDICT PASS (evidence-zone drift is REPORTED, never
-conformance:   fatal, and is corrected FORWARD in the patterns.md errata — never in place).
-conformance:   ACCEPTING-SIDE GAP: accepting opening-balance vector found: LDG-05-openingbalance-accepted-empty-ledger.json
-conformance: CENSUS opening-balance ACCEPTING side — accepting vectors 1,
-conformance:   capabilities-ledger declaration ABSENT.
-conformance:   CLOSED, and the declaration was removed with it.
-conformance:   no tracked disposability attestation — nothing authorises an irreversible
-conformance:   accepting capture in this tree.
-conformance:   namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
-conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
-conformance:   namespace:   root    /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1
-conformance:   namespace:   corpus  7653 tracked paths -> 146 evidence directories
-conformance:   namespace:           125 carry a t<n> id prefix; 21 do not and CANNOT collide this way
-conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
-conformance:   namespace:   T256 -> 2 directories; ownership records required 1, present 1
-conformance:   namespace:       DECLARED   capture/t256-verdict-predicate               by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
-conformance:   namespace:       UNCLAIMED  capture/t256-toolchain-population            (record: <absent>)
-conformance:   NAMESPACE-CENSUS: dirs=146 prefixed=125 unprefixed=21 collidingIds=1 declared=1 unclaimed=1 shortfallIds=0
-conformance:   namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
-conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
-conformance:   T316-DEADPATH-CENSUS: corpus=1266 deadFiles=76 deadOccurrences=109 resolving=1182 indeterminate=81 prose=307
-conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
-conformance:   (the planted T309 single-term predicate drives cell B-prime RED; the shipped
-conformance:   tool keeps it GREEN. Both legs ran here — --selftest is not optional.)
-conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
 
 === GOLDEN-VECTOR CONFORMANCE — Fineract reference oracle vs Go module ===
-    repo root       /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1
+    repo root       /Users/buv/gerege-nbfi/.claude/worktrees/agent-a92fe8f69d728d1c2
                     resolved from the BUILD ANCHOR — the tree this binary was compiled from
-                    anchor: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/nexus/internal/apps/loanschedule/conformance/reporoot.go
-                    cwd cross-check: SAME — cwd /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1 resolves to the graded root
-    store           /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/.softhouse/vectors
+                    anchor: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a92fe8f69d728d1c2/nexus/internal/apps/loanschedule/conformance/reporoot.go
+                    cwd cross-check: SAME — cwd /Users/buv/gerege-nbfi/.claude/worktrees/agent-a92fe8f69d728d1c2/nexus resolves to the graded root
+    store           /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.f2mIZvyffT
     implementation  loanschedule-go
-    oracle probe    UP
+    oracle probe    SKIPPED
 
 CASE                         CLASS            SEAM        OUTCOME       CELLS UNGRADED  REASON
 ----------------------------------------------------------------------------------------------------------------------
@@ -382,7 +242,10 @@ T74-E-P72                    parity           path_a_e... PASS            257   
     NONE — every invariant assertion ran, on cells somebody actually observed.
 
 --- LEDGER (tierA-gl-accounting) — SECOND SCHEMA, SECOND COMPARATOR, SEPARATE COUNTS ---
-    implementation          ledger-go
+    implementation          ledger-wrong-accounting-closed-echoes-transaction-date
+    ⚠ THIS IS A DELIBERATELY WRONG IMPLEMENTATION, selected with -ledger-impl:
+      gets the closure BOUNDARY exactly right and echoes the WRONG DATE back: it returns the submitted transactionDate in errors[0].args[0].value where :637-638 constructs ACCOUNTING_CLOSED with latestGLClosure.getClosingDate(). The two throw sites five lines apart disagree -- :631 DOES echo the transaction date, for FUTURE_DATE -- so a porter who reads one and generalises writes this. It is INDISTINGUISHABLE from a correct port on LDG-REFUSE-04, where A2-01 was posted ON the closing date and the two dates are EQUAL, and it dies on LDG-REFUSE-06 alone (T307, A2-02: transaction 2026-01-15, closure 2026-01-31, oracle echoed 2026-01-31)
+      A RED below is the EXPECTED result and is not a defect in the port.
     LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    PASS             15 cells (5 money)
         INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 12500062 == credits 12500062 (minor units), over 3 legs
         INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 12500062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
@@ -407,14 +270,14 @@ T74-E-P72                    parity           path_a_e... PASS            257   
     LDG-REFUSE-01-unbalanced-by-one-minor-unit     oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
     LDG-REFUSE-02-manual-adjustments-not-permitted oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
     LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
-    LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
-    LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+    LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
+    LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
     ledger parity           PASS 7    FAIL 0
     ledger oracle-refusal   PASS 5    FAIL 0   (an HTTP status and error code the ORACLE returned
                                               and a capture recorded — NOT a contract sentinel)
     ledger inadmissible     0
     ledger harness errors   0
-    ledger cells compared   136 graded, of which 39 are MONEY cells in int64 minor units
+    ledger cells compared   138 graded, of which 39 are MONEY cells in int64 minor units
     ledger kills named      10 money, 20 structural
     ledger invariants       0 violation(s), 19 non-vacuous assertion(s) made, of which 16 are
                             INDEPENDENT (able to go RED while every other invariant on the same
@@ -545,7 +408,7 @@ T74-E-P72                    parity           path_a_e... PASS            257   
     invariant violations    0
     invariant assertions    0 NOT RUN (a cell nobody observed; listed above, never inferred)
     invariant assertions    4 EXEMPTED BY A VECTOR (switched off on purpose; each one's reason is listed above)
-    no-float census         6 Go packages / 61 Go files / 132070 tokens / 265 import specs inspected under nexus (recursive)
+    no-float census         6 Go packages / 62 Go files / 134078 tokens / 269 import specs inspected under nexus (recursive)
                             0 forbidden identifiers, 0 floating-point or imaginary LITERALS, 0 forbidden imports, 0 unscannable files
                             covered: nexus/internal/apps/ledger
                             covered: nexus/internal/apps/ledger/conformance
@@ -553,34 +416,11 @@ T74-E-P72                    parity           path_a_e... PASS            257   
                             covered: nexus/internal/apps/loanschedule/conformance
                             covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
                             covered: nexus/internal/apps/loanschedule/contract
-                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/nexus
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a92fe8f69d728d1c2/nexus
 
-VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
-         This means "matches the reference oracle on captured vectors, within the graded domain".
-         IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
+--- WHY THIS RUN CANNOT BE TRUSTED ---
+    * the reference oracle was not probed: a conformance PASS is a claim about parity with a live pinned oracle build, so an unprobed run is exit 2 by construction (.softhouse/patterns.md: "if it is down, conformance reports exit 2, not a false PASS")
 
-conformance:   exemption census READ: exempted assertions (graded) = 4 == pinned 4
-conformance:   exemption census READ: declared exemptions (loaded) = 4 == pinned 4
-conformance:   exemption census READ: GROUNDED                     = 4 == pinned 4
-conformance:   exemption census READ: UNDETERMINED-ON-THE-RECORD   = 0 == pinned 0
-conformance:   exemption census READ: UNGROUNDED                   = 0 == pinned 0
-conformance:   exemption census READ: LEDGER declared exemptions   = 0 == pinned 0
-conformance:   exemption census READ: LEDGER parity vectors        = 7 == pinned 7
-conformance:   exemption census READ: LEDGER oracle-refusal vector = 5 == pinned 5
-conformance:   exemption census READ: LEDGER money cells compared  = 39 == pinned 39
-conformance: CENSUS wrong ledger implementations — discovered 12 registered as DELIBERATELY
-conformance:   WRONG from the binary's own -list-implementations; pinned at
-conformance:   12.
-conformance:   KILLED  ledger-wrong-closure-boundary-exclusive — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
-conformance:   KILLED  ledger-wrong-code-ignored — exit 1, ledger parity FAIL 7 + oracle-refusal FAIL 0
-conformance:   KILLED  ledger-wrong-date-rules-always-refusing — exit 1, ledger parity FAIL 2 + oracle-refusal FAIL 0
-conformance:   KILLED  ledger-wrong-future-date-ignored — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
-conformance:   KILLED  ledger-wrong-header-refusing — exit 1, ledger parity FAIL 1 + oracle-refusal FAIL 0
-conformance:   KILLED  ledger-wrong-manual-permission-ignored — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
-conformance:   KILLED  ledger-wrong-netting-totals — exit 1, ledger parity FAIL 7 + oracle-refusal FAIL 0
-conformance:   KILLED  ledger-wrong-openingbalance-always-refusing — exit 1, ledger parity FAIL 1 + oracle-refusal FAIL 0
-conformance:   KILLED  ledger-wrong-openingbalance-no-contra — exit 1, ledger parity FAIL 1 + oracle-refusal FAIL 0
-conformance:   KILLED  ledger-wrong-openingbalance-posted-entries-ignored — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
-conformance:   KILLED  ledger-wrong-split-drift — exit 1, ledger parity FAIL 2 + oracle-refusal FAIL 0
-conformance:   KILLED  ledger-wrong-truncating — exit 1, ledger parity FAIL 7 + oracle-refusal FAIL 0
-conformance:   all 12 wrong ledger implementations DIED through this harness, not by hand.
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+exit status 2

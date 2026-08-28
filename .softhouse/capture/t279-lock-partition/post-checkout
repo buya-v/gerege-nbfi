@@ -1,0 +1,87 @@
+#!/bin/sh
+# T279 / T265 F-7 — PUSH BEFORE YOU SPAWN. Enforced at the instant it must hold.
+#
+# THE OBLIGATION: push your LOCK, your dispatch record (`.softhouse/tasks.json`) and your
+# in-flight `.softhouse/RESUME.md` BEFORE you spawn the first worker. P-85 is what happens
+# when you do not: on 2026-08-22 a local driver COMMITTED its lock refresh, dispatch record
+# and in-flight manifest and NEVER PUSHED THEM, a cloud fire read a published HEAD that
+# said "closed clean, zero live workers", took the lock, and four worker branches died
+# with its sandbox. Both facts the cloud reasoned from were true of the repo as published
+# and false of the world.
+#
+# WHY *THIS* HOOK. Every worker in this pipeline is spawned by `git worktree add`, and
+# `git worktree add` runs `post-checkout` in the new worktree. So this file executes at
+# the exact instant the obligation must already hold, invoked by the exact command that
+# violates it. That is the difference between a convention and a precondition (P-45:
+# "a test-only guard is not a guard" — a guard that only works when somebody remembers to
+# run it enforces nothing).
+#
+# WHAT IT MEASURES, in the SHARED repo (not the new worktree):
+#   1. commits on the spawning branch that touch `.softhouse/` and are NOT on origin/main
+#      — the exact P-85 shape: committed, not pushed;
+#   2. uncommitted changes under `.softhouse/` — not even committed.
+# It deliberately does NOT fetch. A hook that hits the network runs on every checkout and
+# will be disabled within two fires (T318 arm G5, T325 §headline). The remote-tracking ref
+# is written by the driver's own push seconds earlier, so it is exactly the right witness.
+#
+# EXIT SEMANTICS, MEASURED NOT ASSUMED — see out/drive-post-checkout.txt. Set
+# SOFTHOUSE_PUSH_GATE=enforce to exit non-zero; the driver records what git does with that.
+# Default is announce-loudly, because a hook that can abort every worker spawn on a false
+# positive is a hook that parks the whole program.
+#
+# Install:  cp .softhouse/capture/t279-lock-partition/post-checkout \
+#              "$(git rev-parse --git-common-dir)/hooks/post-checkout" && chmod +x "$_"
+# Bypass:   SOFTHOUSE_PUSH_GATE=off git worktree add ...
+
+set -u
+
+# $3 == 1 is a branch checkout (which is what `git worktree add` and `git clone` do).
+# A file checkout ($3 == 0) cannot spawn a worker; stay out of its way.
+[ "${3:-1}" = "1" ] || exit 0
+[ "${SOFTHOUSE_PUSH_GATE:-warn}" = "off" ] && exit 0
+
+COMMON=$(git rev-parse --git-common-dir 2>/dev/null) || exit 0
+case "$COMMON" in /*) ;; *) COMMON="$(pwd)/$COMMON" ;; esac
+MAIN_WT=$(cd "$COMMON/.." 2>/dev/null && pwd) || exit 0
+[ -d "$MAIN_WT/.softhouse" ] || exit 0     # not this program's repo; nothing to say
+
+BR=$(git -C "$MAIN_WT" symbolic-ref --quiet --short HEAD 2>/dev/null || echo HEAD)
+UP="origin/$BR"
+git -C "$MAIN_WT" rev-parse --verify --quiet "$UP" >/dev/null 2>&1 || exit 0
+
+UNPUSHED=$(git -C "$MAIN_WT" rev-list --count "$UP..HEAD" -- .softhouse/ 2>/dev/null || echo 0)
+DIRTY=$(git -C "$MAIN_WT" status --porcelain -- .softhouse/ 2>/dev/null | wc -l | tr -d ' ')
+
+[ "$UNPUSHED" = "0" ] && [ "$DIRTY" = "0" ] && exit 0
+
+{
+  echo "=============================================================================="
+  echo "P-85 PUSH-BEFORE-SPAWN VIOLATION — a worker worktree is being created while the"
+  echo "spawning repo's .softhouse/ state is NOT PUBLISHED."
+  echo
+  echo "  repo            : $MAIN_WT"
+  echo "  branch          : $BR (upstream $UP)"
+  echo "  unpushed commits touching .softhouse/ : $UNPUSHED"
+  echo "  uncommitted paths under .softhouse/   : $DIRTY"
+  echo
+  if [ "$UNPUSHED" != "0" ]; then
+    echo "  the unpushed commits:"
+    git -C "$MAIN_WT" log --oneline "$UP..HEAD" -- .softhouse/ | sed 's/^/    /'
+    echo
+    echo "  files they touch that the next orchestrator reads to decide whether it may run:"
+    git -C "$MAIN_WT" diff --name-only "$UP..HEAD" -- .softhouse/LOCK .softhouse/tasks.json \
+        .softhouse/RESUME.md | sed 's/^/    /'
+    echo
+  fi
+  if [ "$DIRTY" != "0" ]; then
+    git -C "$MAIN_WT" status --porcelain -- .softhouse/ | sed 's/^/    /'
+    echo
+  fi
+  echo "  Until this is pushed, origin's HEAD is an ACTIVE LIE to the next orchestrator:"
+  echo "  it says nothing is running while this worker runs. Push, then spawn."
+  echo "     git -C '$MAIN_WT' push origin $BR"
+  echo "=============================================================================="
+} >&2
+
+[ "${SOFTHOUSE_PUSH_GATE:-warn}" = "enforce" ] && exit 1
+exit 0

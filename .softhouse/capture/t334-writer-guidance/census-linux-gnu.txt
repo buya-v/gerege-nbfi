@@ -1,0 +1,55 @@
+HOST      : Linux 6.12.76-linuxkit (aarch64)
+uname -a  : Linux 3bfd5752a721 6.12.76-linuxkit #1 SMP Sat Jul 11 11:18:11 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux
+  sh       /usr/bin/sh          
+  sed      /usr/bin/sed         /usr/bin/sed (GNU sed) 4.9
+  cp       /usr/bin/cp          
+  install  /usr/bin/install     
+  patch    MISSING              
+  git      MISSING              
+  perl     /usr/bin/perl        
+  ex       MISSING              
+  ed       MISSING              
+  tee      /usr/bin/tee         
+  dd       /usr/bin/dd          
+SELECTOR  : os.stat(path).st_ino before/after  AND  held read fd -> os.lseek(fd,0)+os.read
+WORKDIR   : /tmp/t334-writers.hvbphfep
+
+WRITER                         INODE_BEFORE INODE_AFTER  CHANGED  FD_SEES_NEW VERDICT
+-------------------------------------------------------------------------------------
+cat > file                     171295       171295       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+printf > file (truncate)       171297       171297       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+>> append                      171299       171299       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+tee file                       171301       171301       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+tee -a file                    171303       171303       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+dd conv=notrunc                171305       171305       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+cp src dst                     171307       171307       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+cp -p src dst                  171310       171310       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+cat src > dst                  171313       171313       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+mv src dst                     171316       171317       yes      no          ISOLATED (rename)
+install -m 755                 171318       171320       yes      no          ISOLATED (rename)
+python open(w)                 171321       171321       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+python open(r+)                171323       171323       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+python write+os.replace        171325       171326       yes      no          ISOLATED (rename)
+sed -i (in-place flag)         171327       171328       yes      no          ISOLATED (rename)
+sed -i.bak                     171329       171330       yes      no          ISOLATED (rename)
+sed > tmp; cat tmp > f         171332       171332       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+perl -i -pe                    171335       171336       yes      no          ISOLATED (rename)
+ex -s                          171337       171337       NO       no          ERROR rc=127 /bin/sh: 1: ex: not found 
+ed -s                          171339       171339       NO       no          ERROR rc=127 /bin/sh: 1: ed: not found 
+awk > tmp; mv tmp f            171341       171342       yes      no          ISOLATED (rename)
+patch                          171343       171343       NO       no          ERROR rc=127 /bin/sh: 1: patch: not found 
+noclobber-defeating >|         171347       171347       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+git merge --ff-only            171349       171349       NO       no          ERROR rc=127 /bin/sh: 1: git: not found 
+git checkout other -- <p>      171351       171351       NO       no          ERROR rc=127 /bin/sh: 1: git: not found 
+git restore -s other <p>       171353       171353       NO       no          ERROR rc=127 /bin/sh: 1: git: not found 
+git reset --hard other         171355       171355       NO       no          ERROR rc=127 /bin/sh: 1: git: not found 
+git apply <patch>              171357       171357       NO       no          ERROR rc=127 /bin/sh: 1: git: not found 
+git checkout-index -f -a       171360       171360       NO       no          ERROR rc=127 /bin/sh: 1: git: not found 
+git stash pop                  171362       171363       yes      no          ERROR rc=127 /bin/sh: 1: git: not found 
+git pull --ff-only             171364       171364       NO       no          ERROR rc=127 /bin/sh: 1: git: not found 
+
+IN PLACE (dangerous): cat > file, printf > file (truncate), >> append, tee file, tee -a file, dd conv=notrunc, cp src dst, cp -p src dst, cat src > dst, python open(w), python open(r+), sed > tmp; cat tmp > f, noclobber-defeating >|
+ISOLATED (safe)     : mv src dst, install -m 755, python write+os.replace, sed -i (in-place flag), sed -i.bak, perl -i -pe, awk > tmp; mv tmp f
+UNSCORED            : ex -s [ERROR rc=127 /bin/sh: 1: ex: not found ], ed -s [ERROR rc=127 /bin/sh: 1: ed: not found ], patch [ERROR rc=127 /bin/sh: 1: patch: not found ], git merge --ff-only [ERROR rc=127 /bin/sh: 1: git: not found ], git checkout other -- <p> [ERROR rc=127 /bin/sh: 1: git: not found ], git restore -s other <p> [ERROR rc=127 /bin/sh: 1: git: not found ], git reset --hard other [ERROR rc=127 /bin/sh: 1: git: not found ], git apply <patch> [ERROR rc=127 /bin/sh: 1: git: not found ], git checkout-index -f -a [ERROR rc=127 /bin/sh: 1: git: not found ], git stash pop [ERROR rc=127 /bin/sh: 1: git: not found ], git pull --ff-only [ERROR rc=127 /bin/sh: 1: git: not found ]
+legs=31 in_place=13 isolated=7 unscored=11
+DONE

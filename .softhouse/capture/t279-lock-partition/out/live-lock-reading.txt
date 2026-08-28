@@ -1,0 +1,4 @@
+repo=/tmp/t279-probe/repo
+lock_present=1 released_at=<null> started_age=10856 tip_age=901 pid_state=alive_here
+mtime_age=20   # printed only; decides nothing
+verdict=HELD-live

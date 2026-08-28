@@ -54,25 +54,101 @@ Logs: `~/Library/Logs/gerege-nbfi/fire-*.log`. Probe the environment without run
    **never pushed them**, so the only evidence the other orchestrator could read said the opposite of the
    truth. A `heartbeat` field would have been in those same unpushed commits and would have changed nothing.
 
-   **The test, in order:**
-   1. `released_at` is non-null → **free**. Take it.
-   2. `origin/main`'s newest commit is under 6 h old **and** `released_at` is null → **HELD, WHATEVER
-      `started_at` SAYS.** Print it and exit. A holder that is pushing is a holder that is alive.
-   3. Both `started_at` and the newest `origin/main` commit are over 6 h old → **stale**. Take it over, and
-      say in your first commit message which signal you used and what it read.
-   4. The lock names a `pid` on **this** host and that pid is gone → **dead holder**, take over immediately
-      regardless of age. (The local wrapper already does this; it is why a hard-killed local fire does not
-      cost the next fire six hours.)
+   **THE TEST — SEVEN ARMS, AND THEY PARTITION.** Read every arm; the answer is the one that matches, and
+   **exactly one always matches.** The arms are written to be **mutually exclusive**, not merely
+   first-match-wins, so reading them out of order cannot change the answer — which matters because a rule set
+   whose answer depends on evaluation order is a rule set two orchestrators can read two ways, and that is the
+   **P-85** shape — *"two orchestrators held the lock at once, and the cause was an unpushed
+   in-flight state"* [`.softhouse/patterns.md:2822`]. The four arms this replaces did **not** partition: over the 192-state space
+   {lock present/absent} × {`released_at` null/set} × {`started_at` <6 h / 6–24 h / ≥24 h / unreadable} ×
+   {tip <6 h / ≥6 h / unreadable} × {pid alive-here / dead-here / absent / other-host}, **18 distinguishable
+   states matched NO arm and had no verdict at all, and 22 matched arms that gave OPPOSITE verdicts** — arm 2
+   said HELD and arm 4 said take-over on the same state. The state `{released_at null, started_at <6 h, tip
+   >6 h}` — which had no verdict, and which is the state of **every 08:00 fire** after the overnight quiet —
+   is now arm 6. [Derived by running the predicates, not by reading them:
+   `.softhouse/capture/t279-lock-partition/enumerate.py`, output in `out/enumeration.txt`; T265 F-1.]
+
+   0. **No `LOCK` file.** → **free.** Write it.
+   1. `released_at` is **non-null** → **free.** Take it.
+   2. The lock names a `pid` on **this** host and that pid is gone → **DEAD HOLDER. Take over immediately,
+      whatever every other signal says.** This arm is above the freshness arms deliberately: a hard-killed
+      local fire is the *normal* outcome on this host, not the exotic one, and without this arm it costs the
+      next fire the full 6 h. Never judge a pid on another host, and never judge your own.
+   3. **CEILING.** `started_at` is over **24 h** old → **stale.** Take it over, however fresh `origin/main`
+      looks. See "what arm 3 is for" below — this is the arm that gives the lock a *guaranteed* takeover time.
+   4. `origin/main`'s newest commit is under 6 h old → **HELD, WHATEVER `started_at` SAYS** (short of arm 3).
+      Print it and exit. A holder that is publishing is a holder that is alive.
+   5. `origin/main`'s newest commit is over 6 h old **and** `started_at` is over 6 h old → **stale.** Take it
+      over, and say in your first commit message which signal you used and what it read.
+   6. **Anything else — including any signal you could not read — → HELD. Exit.** This arm is not a
+      formality; it is where the morning fire lands, and where every unreadable `started_at`, unreadable tip
+      and absent `pid` lands. **A signal you cannot read is never permission to take the lock.**
+
+   **WHAT ARM 3 IS FOR, AND WHY IT IS NOT A RELAPSE INTO `started_at`.** Arm 4 as originally written asked
+   *"has anything been published to `origin/main` recently?"* — a question about the **repository**. The
+   question it must ask is *"is there still reason to believe **this holder** is alive?"*, which has two
+   necessary terms: **evidence of life** (something was published recently) and **possibility of life** (the
+   holder has not exceeded the longest life a fire can have). Arm 4 supplies only the first, and the first is
+   refreshed by **third parties** — `origin/main` takes commits from more than a dozen identities — so on its
+   own the lock has **no guaranteed takeover time whatsoever**. That is not theoretical: at the start of
+   `fire-20260827-230001` a lock **105 h old** faced a tip **2.99 h old**, which arm 4 alone reads as
+   HELD-by-a-live-holder, indefinitely. Arm 3 bounds it. `started_at` is still **not a freshness signal** —
+   it cannot tell a dead holder from a working one — but it **is** a valid *lifetime bound*, and that
+   distinction is the whole of the repair. The longest fire ever recorded ran **9.52 h**, so a 24 h ceiling
+   carries a 2.52× margin. [T265 F-2; measured in `.softhouse/capture/t279-lock-partition/measure-f2.py`,
+   output `out/measure-f2.txt`.]
+
+   **The alternative was rejected on measurement, not taste.** T265's other candidate was to restrict arm 4's
+   push term to commits **authored by the holder**. Driven against the same fire history: it changes the
+   verdict at **0 of 24** real fire starts, and **24 of 25** fires publish under **more than one git identity**
+   (`Buyanmunkh` for the driver session, `Buyan` for the wrapper's own lock commits, `SoftFactory`, `Claude`
+   for the cloud fire, per-task identities…). The `LOCK` body records no git identity at all, so the field
+   would have to be invented, and it could only name **one** of them — at which point a **live** holder
+   publishing under its other identity reads STALE. That converts F-2's *liveness* bug into the **P-85** *safety* bug — *"two
+   orchestrators held the lock at once"* [`patterns.md:2822`]. Rejected.
 
    **`heartbeat` is written and refreshed as well** — cheap, and it disambiguates a fire that is thinking
    hard between pushes — but it is corroboration, never the primary. **If `heartbeat` and push-recency
    disagree, believe push-recency**, because the field can be stale for the same reason the incident
-   happened.
+   happened. `heartbeat` appears in **no arm above**; that is deliberate.
+
+   **THE WRAPPER DECIDES THE SAME WAY, AND THAT IS NOW MEASURED.** `.softhouse/bin/fire-program.sh` used to
+   decide staleness on the lock **file's mtime**, which the `git pull --ff-only` it runs seconds earlier
+   **resets** — T265 measured it reading 12.6 minutes for a lock stamped 8 hours ago, 38× off. It now runs
+   these seven arms in `lock_decide()`, and `drive-wrapper-vs-skill.zsh` puts all **192** states through the
+   shipped file via `fire-program.sh --lock-decide` and diffs them against this text: **0 disagreements**.
+   Mtime is still printed in the fire log so the gap between the two signals stays visible; it decides
+   nothing. If you change an arm here, that driver fails until you change it there too.
+
+   **KNOWN AND DELIBERATELY UNFIXED, so they are not rediscovered as defects.** (a) `kill -0` returns EPERM
+   for a **live** process owned by another uid, and arm 2 reads that as dead — so "arm 2 can never make a live
+   lock look free" holds only **for a holder running as the same user**. Both fires run as uid 501 under a
+   user-domain launchd agent; running a fire under `sudo` makes it reachable. (b) `%ct` of the tip can move
+   **backwards** if a branch whose tip is hours old is fast-forwarded onto main; 0 occurrences in 756
+   first-parent commits, held by the habit of real merge commits rather than by any rule. [T265 F-5, F-6.]
 
    **AND THE OBLIGATION THAT ACTUALLY PREVENTS THIS (P-85), which no lock design can substitute for: push
-   your lock, your dispatch record and your in-flight `RESUME.md` BEFORE you spawn the first worker.** A
-   `HEAD` that says *"closed clean, zero live workers"* while five are running is an **active lie to the next
-   orchestrator**, and no freshness rule can read through it.
+   your lock, your dispatch record (`tasks.json` with every dispatched task already flipped off `pending`
+   and carrying its `branch`) and your in-flight `RESUME.md` BEFORE you spawn the first worker — before
+   `git worktree add`, not before the end of the batch.** A `HEAD` that says *"closed clean, zero live
+   workers"* while five are running is an **active lie to the next orchestrator**, and no freshness rule can
+   read through it. **All three, or none of it counts:** on 2026-08-22 the author of this obligation pushed
+   the LOCK and `RESUME.md` on time and the **machine-readable** dispatch record **101 seconds after the
+   first worker spawned**, and for those 101 seconds `ready-tasks.py` run against `origin` would have offered
+   all six live tasks as READY with no branch — the exact duplicate-dispatch input P-85 exists to prevent.
+   **AND IT HAS NOW BEEN MISSED TWICE, SIX DAYS APART, BY DRIVERS WHO HAD READ THIS PARAGRAPH.** On
+   2026-08-28 the LOCK went out at 08:00:18 and the dispatch record **and** the in-flight `RESUME.md` — this
+   time in the *same* commit `59fc41b4` — were pushed at 10:46:19, **135 seconds after** the first
+   `git worktree add` of the batch at 10:44:04. Worse than the 101 s window: two of three late, not one.
+   [Measured: `.softhouse/capture/t279-lock-partition/audit-this-fire.py`, output
+   `out/this-fire-obligation-audit.txt`.] **So do not read the paragraph above as the fix.** Two drivers
+   read it and missed it in the first batch after reading, which is **P-45** — *"a guard that only works
+   when someone remembers to run it enforces nothing"*, from the pattern titled *"A test-only guard is not a
+   guard"* [`.softhouse/patterns.md:1503-1506`]. **This obligation is a convention with zero mechanical
+   backing.** The hook that would enforce it at the instant it must hold — `git worktree add` runs
+   `post-checkout` in the new worktree — is built and driven RED/GREEN in
+   `.softhouse/capture/t279-lock-partition/post-checkout`, **and it is not installed.** Until it is, the
+   only thing enforcing this paragraph is you, reading it, at 10:44 on a Friday.
 1. `git status` — if dirty, commit `.softhouse/` state only; never stash worker WIP.
 2. `git pull --ff-only` — a scheduled fire may be a fresh clone/session; the repo is the only memory.
 3. Read `CLAUDE.md`, `.softhouse/patterns.md`, `.softhouse/program.json`, `.softhouse/tasks.json`, `.softhouse/RESUME.md`, `.softhouse/state/*.STATE.json`, `.softhouse/gates.md`, newest `.softhouse/runs/*.json`.
@@ -223,7 +299,9 @@ Append to `.softhouse/gates.md`, one block per gate: gate id, context, what was 
 Applies to **every** way this driver ends — success, soft limit, gate, park, error, or "nothing left I can do right now". A fire that ends without this has destroyed work, because the next fire is a fresh session that knows only what is committed.
 
 Before returning, in this order:
-1. **Commit every deliverable a worker produced.** An uncommitted file is invisible to the next fire and to the cloud fire. `git status --porcelain` must come back empty.
+1. **Commit every deliverable a worker produced, and attest that nothing else moved.** An uncommitted file is invisible to the next fire and to the cloud fire. But `git status --porcelain` coming back empty is **not** evidence that nothing was destroyed — a committed clobber, a `git stash`, an `--assume-unchanged`, a deleted branch and a commit on the wrong branch all leave it empty (T318: nine driven shapes, `git status` CLEAN on all nine **and** on all six legitimate operations).
+   Take `bash .softhouse/guards/repo-state-attest.sh snapshot . <before>` when the fire starts, the same again as `<after>` before returning, and compare them with `bash .softhouse/guards/repo-state-attest.sh fire-compare <before> <after>` — the writ for a fire is defined **once**, inside the guard, so it cannot drift from what the wrapper uses. **A non-zero exit is an exit-protocol violation and must be reported, never suppressed.** `git status --porcelain` empty remains **necessary**; it has never been sufficient.
+   *(On this host `fire-program.sh` already does exactly this around every chain iteration — see the `attest|` lines in the fire log. This item is what a driver run by hand, or by the cloud fire, must do for itself.)*
 2. **Make `tasks.json` truthful** — no task left claiming `in_progress` without a `note` saying what actually landed and what has not. If a retry ran at a different model than planned, record it; the `model` field alone becomes stale and misleads the postmortem's cost accounting.
 3. **Write `.softhouse/state/<squad>.STATE.json`** for every task not in a terminal state: current item, step, branch, next_action, blocked_on, open_questions, gate_pending.
 4. **Rewrite `.softhouse/RESUME.md`** with the real task table, the concrete next action, and an honest `Pause reason`. Leaving a stale manifest is worse than leaving none — the next fire will act on it.

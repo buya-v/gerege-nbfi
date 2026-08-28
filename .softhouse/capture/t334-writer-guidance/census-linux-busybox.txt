@@ -1,0 +1,55 @@
+HOST      : Linux 6.12.76-linuxkit (aarch64)
+uname -a  : Linux 481755105da8 6.12.76-linuxkit #1 SMP Sat Jul 11 11:18:11 UTC 2026 aarch64 Linux
+  sh       /bin/sh              
+  sed      /bin/sed             This is not GNU sed version 4.0
+  cp       /bin/cp              
+  install  /usr/bin/install     
+  patch    /usr/bin/patch       
+  git      /usr/bin/git         git version 2.54.0
+  perl     MISSING              
+  ex       MISSING              
+  ed       MISSING              
+  tee      /usr/bin/tee         
+  dd       /bin/dd              
+SELECTOR  : os.stat(path).st_ino before/after  AND  held read fd -> os.lseek(fd,0)+os.read
+WORKDIR   : /tmp/t334-writers.x65c1oab
+
+WRITER                         INODE_BEFORE INODE_AFTER  CHANGED  FD_SEES_NEW VERDICT
+-------------------------------------------------------------------------------------
+cat > file                     291667       291667       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+printf > file (truncate)       291669       291669       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+>> append                      291671       291671       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+tee file                       291673       291673       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+tee -a file                    291675       291675       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+dd conv=notrunc                291677       291677       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+cp src dst                     291679       291681       yes      no          ISOLATED (rename)
+cp -p src dst                  291682       291684       yes      no          ISOLATED (rename)
+cat src > dst                  291685       291685       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+mv src dst                     291688       291689       yes      no          ISOLATED (rename)
+install -m 755                 291690       291692       yes      no          ISOLATED (rename)
+python open(w)                 291693       291693       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+python open(r+)                291695       291695       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+python write+os.replace        291697       291698       yes      no          ISOLATED (rename)
+sed -i (in-place flag)         291699       291700       yes      no          ISOLATED (rename)
+sed -i.bak                     291701       291702       yes      no          ISOLATED (rename)
+sed > tmp; cat tmp > f         291704       291704       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+perl -i -pe                    291707       291707       NO       no          ERROR rc=127 /bin/sh: perl: not found 
+ex -s                          291709       291709       NO       no          ERROR rc=127 /bin/sh: ex: not found 
+ed -s                          291711       291711       NO       no          ERROR rc=127 /bin/sh: ed: not found 
+awk > tmp; mv tmp f            291713       291714       yes      no          ISOLATED (rename)
+patch                          291715       291718       yes      no          ISOLATED (rename)
+noclobber-defeating >|         291719       291719       yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+git merge --ff-only            291744       291771       yes      no          ISOLATED (rename)
+git checkout other -- <p>      291796       291816       yes      no          ISOLATED (rename)
+git restore -s other <p>       291846       291866       yes      no          ISOLATED (rename)
+git reset --hard other         291896       291916       yes      no          ISOLATED (rename)
+git apply <patch>              291947       291985       yes      no          ISOLATED (rename)
+git checkout-index -f -a       292868       292877       yes      no          ISOLATED (rename)
+git stash pop                  292957       292974       yes      no          ISOLATED (rename)
+git pull --ff-only             293050       293124       yes      no          ISOLATED (rename)
+
+IN PLACE (dangerous): cat > file, printf > file (truncate), >> append, tee file, tee -a file, dd conv=notrunc, cat src > dst, python open(w), python open(r+), sed > tmp; cat tmp > f, noclobber-defeating >|
+ISOLATED (safe)     : cp src dst, cp -p src dst, mv src dst, install -m 755, python write+os.replace, sed -i (in-place flag), sed -i.bak, awk > tmp; mv tmp f, patch, git merge --ff-only, git checkout other -- <p>, git restore -s other <p>, git reset --hard other, git apply <patch>, git checkout-index -f -a, git stash pop, git pull --ff-only
+UNSCORED            : perl -i -pe [ERROR rc=127 /bin/sh: perl: not found ], ex -s [ERROR rc=127 /bin/sh: ex: not found ], ed -s [ERROR rc=127 /bin/sh: ed: not found ]
+legs=31 in_place=11 isolated=17 unscored=3
+DONE

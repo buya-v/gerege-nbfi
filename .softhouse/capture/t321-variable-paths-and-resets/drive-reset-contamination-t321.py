@@ -371,10 +371,10 @@ def block_l5_preexisting():
     a worker's own settings file, is sitting in the tree the whole time."""
     print("\n  L5b -- pre-existing dirt, present before the baseline AND after the reset")
     d = new_repo("l5b")
+    before = d.parent / (d.name + ".before")
+    after = d.parent / (d.name + ".after")
     try:
         (d / "preexisting.txt").write_text("a worker's untracked file, there the whole time\n")
-        before = d.parent / (d.name + ".before")
-        after = d.parent / (d.name + ".after")
         attest_snapshot(d, before)
         sh("printf CHANGED > tracked.txt", d)
         sh("git checkout -- .", d)
@@ -386,7 +386,18 @@ def block_l5_preexisting():
             for ln in aout.splitlines()[:12]:
                 print("        | " + ln)
     finally:
+        # THE SNAPSHOTS LIVE IN d.parent, NOT IN d, so `rmtree(d)` does not reach them. The first
+        # version of this arm leaked two 771-byte attest files into the system temp root on every
+        # run -- ten of them by the end of this task, found only by listing the temp root after
+        # the branch was otherwise finished. `attested_arm()` unlinks its pair; this block did
+        # not, and the asymmetry is exactly P-94's corollary: A SCRATCH FENCE IS SCOPED TO THE
+        # PREFIX IT NAMES. Measured over the whole temp root, never inferred from the fence.
         shutil.rmtree(d, ignore_errors=True)
+        for f in (before, after):
+            try:
+                f.unlink()
+            except OSError:
+                pass
 
 
 def main():
