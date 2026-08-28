@@ -5663,7 +5663,7 @@
     },
     {
       "id": "T390",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -5680,7 +5680,7 @@
       ],
       "title": "T388's P0: the oracle-state baseline cannot attribute L28-L31 or T388's 20 command keys, and CASUALTIES.md's m_loan claim is now half false",
       "description": "T388 moved shared oracle state deliberately and correctly, and left ONE thing it could not do inside its own grant: `.softhouse/capture/t363-oracle-baseline/PROBES.tsv` does not know about what it created.\n\n1. APPEND `out/PROBES-APPEND-T388.tsv` from `softhouse/T388-accrual-capture` to `PROBES.tsv`. Until this lands, `oracle-state-baseline.sh` exits 1, printing loans L28-L31 and T388's 20 `T388-` command-source rows (360-379) as UNATTRIBUTED. Read the append from the branch, do not retype it:\n    git show softhouse/T388-accrual-capture:.softhouse/capture/t388-accrual-capture/out/PROBES-APPEND-T388.tsv\n2. CORRECT `CASUALTIES.md:40,44`. It records `m_loan` as UNMOVED. T388 created loan 8, so the claim is now half false, and `t327/throwaway/capture.sh:82` and `down.sh:54` pin `m_loan = 7` by STRING EQUALITY. T388 verified `t305` does NOT pin it, by reading all three scripts -- re-verify rather than inherit that.\n3. THE FINDING UNDERNEATH, which is worth more than either fix. The driver measured this while triaging T388: **`oracle-state-baseline.sh` is invoked by NOTHING THAT RUNS.** The only references outside its own directory are in `t367-review-t363/drive.sh` and `drive-independent-sweep.sh` -- a review's own drives. T367 even asked the question explicitly ('X9 is oracle-state-baseline.sh referenced by anything that RUNS?'). So the instrument built to detect unattributed oracle-state movement would not have fired if T388 had contaminated a promoted account. **This is P-45** (`.softhouse/patterns.md:1503-1506`) -- a guard that only works when someone remembers to run it enforces nothing -- and it is the same shape as T311 (`guard-probe-expiry.sh` is invoked by nothing) and T303 and T313 and T333, all still pending. **Wire it, or state precisely why it must not be wired.** If you wire it, drive it RED first: make an unattributed row exist and show the bar refusing.\n\nSEQUENCED AFTER T381, which holds `t363-oracle-baseline/instruments/`. Your grant is the directory ROOT (`PROBES.tsv`, `CASUALTIES.md`) plus your own capture dir; if wiring requires editing `instruments/oracle-state-baseline.sh` or `conformance.sh`, confirm with the driver that the holder has landed before you write either.",
-      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
+      "note": "COMPLETE, 9 commits, bar exit 0, deadOccurrences back at pin 108. Held for T409. FOUND WHAT ITS BRIEF DID NOT CONTAIN: seven transactions unattributed, not four -- L32/L33/L34 written by the Fineract SCHEDULER (job 11), bypassing the command bus. Raised as G-22. Also corrected two citations it was handed (down.sh comparison is :51 not :54) and found a THIRD m_loan site. Recorded three of its own failures, including moving the dead-path frontier 108->109 and then reproducing the same defect in the comment explaining the fix."
     },
     {
       "id": "T391",
@@ -6144,6 +6144,23 @@
         ".softhouse/capture/t416/"
       ],
       "note": "FILED BY THE DRIVER, iter4."
+    },
+    {
+      "id": "T417",
+      "title": "G-22: the reference oracle edits itself overnight -- pin the scheduler, and do NOT do it by trusting app user 2",
+      "description": "**MEASURED BY T390, NOT SUSPECTED.** The Fineract scheduler wrote journal transactions L32/L33/L34 (je ids 96-113, **eighteen legs**) at `2026-08-28 16:01:00.10 UTC` = **00:01 Asia/Ulaanbaatar**, as app user **2 `system`**, with **no `m_portfolio_command_source` row for any of them** — the scheduler does not pass the command bus. Author: **job 11 'Add Accrual Transactions'**, `job_run_history` 12721, bracketing every leg. It **finished T388's accrual series**: T388 accrued 3 of loan 8's 6 periods by API, the scheduler did the other 3 overnight.\n\n**WHY THIS IS NOT A SMALL BOOKKEEPING ITEM.** A captured vector now has a **shelf life** — the oracle state it was graded against can move with no task acting. A shadow-parity window compares the Go module against an oracle that is editing itself, so a divergence may be **the clock rather than the port**, and parity sign-off is a `user` gate. **Nineteen jobs are `is_active = t`**, and this one was caught by luck: job 11 happens to write to one of the two tables the attribution instrument watches. A scheduled job touching any of the other 279 tables would be **invisible**.\n\n**WHAT TO BUILD, and the trap in the obvious version.** T390's derived fix is to verify `created_by` **and** a bracketing `job_run_history` row. **T390 explicitly warns this must never become a rule that waves through app user 2** — that would make every scheduler write invisible instead of attributed, converting an unattributed-movement alarm into a blanket exemption. It is also deliberately built on ONE observation, so widen it: enumerate the 19 active jobs, determine which tables each can write, and say which of them could move state a vector depends on.\n\n**THEN DECIDE, AND ARGUE IT:** quiesce the active jobs for the duration of capture and shadow runs and record that they were quiesced; or leave them running and record the `job_run_history` bracket beside every capture so a later reader can separate task-driven from scheduled movement. Cost both. Quiescing makes the oracle less like production, which is an argument against it — say so if you choose it.\n\n**DRIVE IT RED.** Make a scheduled-looking write exist and show the instrument attributing it correctly; keep a healthy control where a task-driven write is still attributed to its task. A control that cannot fail and one that refuses everything are the same defect (**P-98**).\n\nSEQUENCED AFTER T390 and its review T409. `PROBES.tsv` must be uncontended when this lands — T390 notes each worktree reads its own copy, so wiring while other worktrees are live breaks their bars. **Never write to the oracle to produce a red**; T390 made its red by deleting a row from a COPY of the registry.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T390",
+        "T409"
+      ],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/capture/t417-scheduler-attribution/"
+      ],
+      "note": "FILED BY THE DRIVER, iter4, from T390s out-of-brief finding. Carries G-22."
     }
   ],
   "cross_corroboration": {
