@@ -1,0 +1,31 @@
+######## ENGINE IDENTIFICATION
+-- which grep (interactive name may be a function; scripts get this one):
+/usr/bin/grep
+grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+-- does /usr/bin/grep -P exist?
+grep: invalid option -- P
+usage: grep [-abcdDEFGHhIiJLlMmnOopqRSsUVvwXxZz] [-A num] [-B num] [-C[num]]
+	[-e pattern] [-f file] [--binary-files=value] [--color=when]
+	[--context[=num]] [--directories=action] [--label] [--line-buffered]
+	[--null] [pattern] [file ...]
+   /usr/bin/grep -P exit=2
+-- does /usr/bin/grep honour \b ?
+1
+   exit=0
+-- git grep -E with \b (T232/T234 claim: reads b literally, returns zero):
+.softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh: line 24: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea: No such file or directory
+   git grep -E exit=1
+.softhouse/vectors/ledger/LDG-01-manual-je-3leg-minor-units.json:10
+   git grep -F exit=0
+
+######## CALIBRATION (P-72): instrument must show non-zero recall AND a true zero
+CAL+  '"amount"' in A2-347 : grep: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea/.softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json: No such file or directory
+CAL-  'ZZZ_NOT_PRESENT_ZZZ' in A2-347 : grep: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea/.softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json: No such file or directory
+
+######## ARTEFACT EXISTENCE / SIZE / SHA256 (vs the sha the vector CITES)
+
+######## THREE-PART CAPTURE CITATION (T233): capture_case_id occurs in the artefact bytes; rerun_invariant non-empty
+
+######## PER-CELL BYTE RE-DERIVATION — every promoted amount_major_text, swept with grep -aF
+
+    PROMOTED CELLS SWEPT: 0   NOT BYTE-PRESENT / ARITHMETIC FAIL: 0

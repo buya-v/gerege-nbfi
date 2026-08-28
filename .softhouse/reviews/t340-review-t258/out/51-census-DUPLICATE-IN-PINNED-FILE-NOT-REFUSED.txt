@@ -1,0 +1,25 @@
+T340 CENSUS DUPLICATE PROBE in /tmp/t340-probe at 0928fa161fc1092c198d1df375e4083f3737315a
+
+== BASELINE — census on the unmutated tree ==
+  exit=0  (want 0)
+    | PIN COMPARISON (- pinned, + measured), by (rule, file):
+    | T258 CARDINAL-RESTATEMENT CENSUS: PIN MATCHED
+
+== PERTURB — append a NEW typed cardinal to .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh, which is ALREADY on the pin under R2 ==
+  perturbation landed (want 1): 1
+
+== MEASURE — does the census refuse? ==
+  exit=0   <-- 0 means IT DID NOT REFUSE
+  the planted line IS reported (hits): 2
+    | PIN COMPARISON (- pinned, + measured), by (rule, file):
+    |   frontier == pinned (all 11 rows, by rule and path)
+    | 
+    | 
+    | T258 CARDINAL-RESTATEMENT CENSUS: PIN MATCHED
+
+  *** F-T340-2 CONFIRMED: a NEW typed frontier cardinal in an ALREADY-PINNED file leaves
+  *** the pin MATCHED and the census exit 0. FU-6's proposed wiring gates on `rc -ne 0`,
+  *** so wiring it as written would install a guard blind to this shape.
+
+  restored; planted lines remaining (want 0): 0
+T340 CENSUS DUPLICATE PROBE DONE

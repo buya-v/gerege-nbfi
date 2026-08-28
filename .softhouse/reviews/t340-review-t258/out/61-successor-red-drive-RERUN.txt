@@ -1,0 +1,59 @@
+T258 RED DRIVE — rederive-provenance.sh (TIER1B) and its successor
+commit : 0928fa161fc1092c198d1df375e4083f3737315a
+
+==================================================================
+ARM 0 — THE ORIGINAL, over today's tree. Measured, not read.
+==================================================================
+  exit=0
+  OK   [ARM0] found: PROMOTED CELLS SWEPT: 0
+  OK   [ARM0] exit 0 while sweeping ZERO cells — the fail-open, live at this commit
+  the root it hard-codes, and whether it exists:
+    | R=/Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea
+
+==================================================================
+ARM 1 — THE SUCCESSOR, over the same tree. Same exit code as ARM 0,
+opposite meaning: it reached a corpus and says how big it was.
+==================================================================
+  exit=0
+  OK   [ARM1] found: calibration OK -- a zero below is a real zero.
+  OK   [ARM1] found: VECTOR FILES READ    : 13
+  OK   [ARM1] absent as required: PROMOTED CELLS SWEPT : 0   
+  OK   [ARM1] exit 0
+  --- the two counts, side by side: ---
+    ORIGINAL      PROMOTED CELLS SWEPT: 0   NOT BYTE-PRESENT / ARITHMETIC FAIL: 0
+    SUCCESSOR     PROMOTED CELLS SWEPT : 122   NOT BYTE-PRESENT / ARITHMETIC FAIL: 0
+
+==================================================================
+ARM 2 — the SUCCESSOR with its corpus taken away. The guard the
+original does not have: a zero it never took is never printed.
+==================================================================
+  OK   [ARM2] the perturbation landed (anchor found and replaced)
+  exit=2
+  OK   [ARM2] found: REFUSED -- the ledger vector directory is not there
+  OK   [ARM2] found: No count is reported, because no count was taken.
+  OK   [ARM2] absent as required: PROMOTED CELLS SWEPT
+  OK   [ARM2] exit 2
+
+==================================================================
+ARM 3 — the SUCCESSOR with its P-72 calibration POSITIVE broken.
+The original ran a calibration, printed an EMPTY count, and carried
+on. Here it is fatal, and it fires BEFORE any cell is reported.
+==================================================================
+  OK   [ARM3] the perturbation landed (anchor found and replaced)
+  exit=2
+  OK   [ARM3] found: CAL+ found ZERO known-positive hits
+  OK   [ARM3] absent as required: PROMOTED CELLS SWEPT
+  OK   [ARM3] exit 2
+
+==================================================================
+ARM 4 — the SUCCESSOR from OUTSIDE any git repository. It discovers
+its root rather than typing one, so it cannot inherit a dead root
+the way the original did.
+==================================================================
+  exit=128
+  OK   [ARM4] absent as required: PROMOTED CELLS SWEPT
+  OK   [ARM4] exit 128 (non-zero) and no cell count printed
+
+==================================================================
+T258 REDERIVE RED DRIVE: 17 passed, 0 failed
+==================================================================
