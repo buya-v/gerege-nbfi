@@ -58,7 +58,8 @@ Logs: `~/Library/Logs/gerege-nbfi/fire-*.log`. Probe the environment without run
    **exactly one always matches.** The arms are written to be **mutually exclusive**, not merely
    first-match-wins, so reading them out of order cannot change the answer — which matters because a rule set
    whose answer depends on evaluation order is a rule set two orchestrators can read two ways, and that is the
-   P-85 shape. The four arms this replaces did **not** partition: over the 192-state space
+   **P-85** shape — *"two orchestrators held the lock at once, and the cause was an unpushed
+   in-flight state"* [`.softhouse/patterns.md:2822`]. The four arms this replaces did **not** partition: over the 192-state space
    {lock present/absent} × {`released_at` null/set} × {`started_at` <6 h / 6–24 h / ≥24 h / unreadable} ×
    {tip <6 h / ≥6 h / unreadable} × {pid alive-here / dead-here / absent / other-host}, **18 distinguishable
    states matched NO arm and had no verdict at all, and 22 matched arms that gave OPPOSITE verdicts** — arm 2
@@ -103,8 +104,8 @@ Logs: `~/Library/Logs/gerege-nbfi/fire-*.log`. Probe the environment without run
    (`Buyanmunkh` for the driver session, `Buyan` for the wrapper's own lock commits, `SoftFactory`, `Claude`
    for the cloud fire, per-task identities…). The `LOCK` body records no git identity at all, so the field
    would have to be invented, and it could only name **one** of them — at which point a **live** holder
-   publishing under its other identity reads STALE. That converts F-2's *liveness* bug into the P-85 *safety*
-   bug. Rejected.
+   publishing under its other identity reads STALE. That converts F-2's *liveness* bug into the **P-85** *safety* bug — *"two
+   orchestrators held the lock at once"* [`patterns.md:2822`]. Rejected.
 
    **`heartbeat` is written and refreshed as well** — cheap, and it disambiguates a fire that is thinking
    hard between pushes — but it is corroboration, never the primary. **If `heartbeat` and push-recency

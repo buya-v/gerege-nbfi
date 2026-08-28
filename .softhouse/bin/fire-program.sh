@@ -39,7 +39,9 @@ FINERACT_HEALTH_URL="${FINERACT_HEALTH_URL:-https://localhost:8443/fineract-prov
 # `git pull --ff-only` a few lines below REWRITES the file and resets its mtime. So the
 # only fire that can reach the reference oracle decided on a signal that the fire's own
 # first action destroys, while STEP 0 of `softhouse-program/SKILL.md` declared push
-# recency authoritative. Two orchestrators reading two different rules is the P-85 shape.
+# recency authoritative. Two orchestrators reading two different rules is the P-85 shape --
+# P-85 is *"two orchestrators held the lock at once, and the cause was an unpushed in-flight
+# state"* [.softhouse/patterns.md:2822].
 # [T265 F-3, `.softhouse/reviews/t265-review-lock-fix/` on branch softhouse/t265-review-lock-fix @422f517a.]
 #
 # WHY IT IS A PURE FUNCTION OF FIVE SIGNALS. T265 F-1 measured that the four arms STEP 0
