@@ -1,0 +1,82 @@
+T365 red drives
+source=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a0170054b87414aa1/.softhouse/bin/fire-program.sh
+sha256=565fd410601b8ff82cc0fac3a4341516090ec570253b0580c4cfa194c7825c95
+
+=== r00 CONTROL — the shipped file, unmutated. If this is not GREEN nothing below means anything.
+r00   GREEN   rc=0   ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0      shipped file, no mutation
+
+=== C1 (F-T361-1, direction OPEN) — reject implausible instants in released_at
+r01   GREEN   rc=1   ROWS=45 FAIL_OPEN=3 FAIL_SHUT=0 SKIPPED=0      revert the >0 bound: Go zero / year zero / epoch free a LIVE lock
+        expected row pattern /^z01  \*\*\* FAIL-OPEN/ present: yes
+        z01  *** FAIL-OPEN  want=HELD            got=FREE-released    Go's zero time.Time through encoding/json, and python datetime.min
+        z02  *** FAIL-OPEN  want=HELD            got=FREE-released    year-zero sentinel
+        z03  *** FAIL-OPEN  want=HELD            got=FREE-released    the UNIX epoch -- an int64 0 formatted
+r02   GREEN   rc=1   ROWS=45 FAIL_OPEN=3 FAIL_SHUT=0 SKIPPED=0      revert the future bound: datetime.max / far-future sentinels free a LIVE lock
+        expected row pattern /^z04  \*\*\* FAIL-OPEN/ present: yes
+        z04  *** FAIL-OPEN  want=HELD            got=FREE-released    datetime.max / a 'never' sentinel
+        z05  *** FAIL-OPEN  want=HELD            got=FREE-released    a far-future 'not yet' sentinel
+        z06  *** FAIL-OPEN  want=HELD            got=FREE-released    DERIVED: past the skew bound -- a clock-skewed or scheduled writer
+r03   GREEN   rc=1   ROWS=45 FAIL_OPEN=6 FAIL_SHUT=0 SKIPPED=0      revert C1 entirely: this is exactly T353's shipped behaviour, and it is 6 fail-open rows
+        expected row pattern /^z01  \*\*\* FAIL-OPEN/ present: yes
+        z01  *** FAIL-OPEN  want=HELD            got=FREE-released    Go's zero time.Time through encoding/json, and python datetime.min
+        z02  *** FAIL-OPEN  want=HELD            got=FREE-released    year-zero sentinel
+        z03  *** FAIL-OPEN  want=HELD            got=FREE-released    the UNIX epoch -- an int64 0 formatted
+        z04  *** FAIL-OPEN  want=HELD            got=FREE-released    datetime.max / a 'never' sentinel
+        z05  *** FAIL-OPEN  want=HELD            got=FREE-released    a far-future 'not yet' sentinel
+        z06  *** FAIL-OPEN  want=HELD            got=FREE-released    DERIVED: past the skew bound -- a clock-skewed or scheduled writer
+
+=== C4 (F-T361-4, direction OPEN-coverage) — the host guard, the literal P-85 line
+r04   GREEN   rc=1   ROWS=45 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0      delete the host guard: this local fire now judges ANOTHER machine's pid dead and takes its lock
+        expected row pattern /^e01  \*\*\* FAIL-OPEN/ present: yes
+        e01  *** FAIL-OPEN  want=HELD            got=TAKE-dead-pid    FOREIGN host, pid DEAD here: arm 2 must NOT fire -- deleting the host check turns this red
+
+=== C5 (F-T361-5, direction OPEN) — the parser's arithmetic, previously graded by nothing wired
+r05   *** WRONG rc=1   ROWS=45 FAIL_OPEN=5 FAIL_SHUT=3 SKIPPED=0      epoch one day high: a lock INSIDE the ceiling reads past it and arm 3 takes a live holder's lock
+        expected row pattern /^g01  \*\*\* FAIL-OPEN/ present: NO
+        d01  *** FAIL-SHUT  want=FREE-released   got=HELD-live        released_at a real ISO-8601 UTC instant
+        z03  *** FAIL-OPEN  want=HELD            got=FREE-released    the UNIX epoch -- an int64 0 formatted
+        z07  *** FAIL-SHUT  want=FREE-released   got=HELD-live        CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+        g03  *** FAIL-OPEN  want=HELD            got=TAKE-ceiling     started_at PRE-epoch: the negative-epoch guard must refuse it (dropping it reads a ~57-year age and fires the ceiling)
+        h01  *** FAIL-OPEN  want=0               got=86400            the epoch anchor: days-from-civil must land exactly on 0
+        h02  *** FAIL-OPEN  want=86400           got=172800           one day past the epoch: grades the *86400 scaling and the day term
+        h03  *** FAIL-SHUT  want=951782400       got=951868800        a REAL leap day (div-400 rule) must be ACCEPTED with this exact value
+        h05  *** FAIL-OPEN  want=4102444799      got=4102531199       end of century, all four fields at maximum: grades hh/mi/ss and the year term together
+r06   *** WRONG rc=1   ROWS=45 FAIL_OPEN=3 FAIL_SHUT=5 SKIPPED=0      drop the day bound: 2026-02-30 becomes a valid past instant and frees a LIVE lock
+        expected row pattern /^g02  \*\*\* FAIL-OPEN/ present: NO
+        c01  *** FAIL-SHUT  want=TAKE-ceiling    got=HELD-live        past the ceiling, spaced separators
+        c02  *** FAIL-SHUT  want=TAKE-ceiling    got=HELD-live        past the ceiling, compact separators
+        d01  *** FAIL-SHUT  want=FREE-released   got=HELD-live        released_at a real ISO-8601 UTC instant
+        z07  *** FAIL-SHUT  want=FREE-released   got=HELD-live        CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+        h01  *** FAIL-OPEN  want=0               got=REFUSE           the epoch anchor: days-from-civil must land exactly on 0
+        h02  *** FAIL-OPEN  want=86400           got=REFUSE           one day past the epoch: grades the *86400 scaling and the day term
+        h03  *** FAIL-SHUT  want=951782400       got=REFUSE           a REAL leap day (div-400 rule) must be ACCEPTED with this exact value
+        h05  *** FAIL-OPEN  want=4102444799      got=REFUSE           end of century, all four fields at maximum: grades hh/mi/ss and the year term together
+r07   GREEN   rc=1   ROWS=45 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0      break the century rule: ONLY group H sees this — see r07b for why the body route cannot
+        expected row pattern /^h04  \*\*\* FAIL-OPEN/ present: yes
+        h04  *** FAIL-OPEN  want=REFUSE          got=4107542400       century NON-leap: div-100 rule must REFUSE. Unreachable via released_at under C1 -- this is the only grader.
+r08   GREEN   rc=1   ROWS=45 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0      delete the negative-epoch guard: a pre-epoch started_at reads a ~57-year age and fires the ceiling
+        expected row pattern /^g03  \*\*\* FAIL-OPEN/ present: yes
+        g03  *** FAIL-OPEN  want=HELD            got=TAKE-ceiling     started_at PRE-epoch: the negative-epoch guard must refuse it (dropping it reads a ~57-year age and fires the ceiling)
+
+=== r07b — THE FINDING THIS TASK MADE WHILE PROVING C5.
+T361 proposed grading the century rule with a BODY row: released_at = 2100-02-29T00:00:00Z.
+Under C1 that row is BLIND, because if the century rule breaks the date decodes to 2100-03-01,
+which C1 then refuses as far-future — so the body still reads HELD and the mutation is invisible.
+Driven below on the SAME mutated file that r07 caught: the body route says HELD, group H says FAIL.
+r07b  GREEN   body verdict=HELD-live (BLIND) while _iso8601_epoch accepted it -> 4107542400. The body row could not have caught this; group H did.
+
+=== C3 (F-T361-3, direction SHUT) — the group-C fixture must DERIVE from LOCK_CEILING_SECS
+r09   GREEN   rc=1   ROWS=45 FAIL_OPEN=0 FAIL_SHUT=2 SKIPPED=0      hard-coded fixture at LOCK_CEILING_SECS=604800: group C goes SHUT and THE FIRE DOES NOT START
+r10   GREEN   rc=0   ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0      CONTROL: the SHIPPED derived fixture at the same threshold — the value that used to stop the fire no longer does
+
+=== C2 (F-T361-2, direction SHUT) — mktemp must be checked; _st_dir must never be /
+SAFETY: the pre-C2 shape is reconstructed with its trap's `rm -rf` REPLACED BY A PRINT.
+This driver runs on the real host. It proves the code REACHES _st_dir=/ ; it does not
+re-measure the deletion, which T361 measured in a throwaway container [T361 out/21].
+r11   GREEN   rc=1   pre-C2 shape with an unwritable TMPDIR reaches _st_dir=/ and its trap targets the ROOT DIRECTORY:
+        T365 NEUTERED: the pre-C2 trap WOULD HAVE RUN: rm -rf /
+        self-test: host=Buyanmunkhs-Mac-mini self_pid=58390 reaped_pid=58397 now=2026-08-28T09:03:28Z old=2026-08-26T09:02:28Z scratch=/
+r12   GREEN   rc=2   CONTROL: the SHIPPED file refuses instead, before any trap is installed
+r13   GREEN   the shipped file contains 0 occurrences of _st_dir="${LOCK:h}"
+
+CHECKS=15 WRONG=2
