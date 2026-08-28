@@ -45,9 +45,56 @@ exactly the rot the by-name rule exists for.
 
 ---
 
-## 1. THE FOUR NEW FAIL-OPENS — RE-DRIVEN INDEPENDENTLY
+## 1. THE FOUR NEW FAIL-OPENS — RE-DRIVEN INDEPENDENTLY, BOTH DIRECTIONS
 
-*(section filled in as arms land — see `evidence/10-*` / `evidence/11-*`)*
+**Constructed from T375's DESCRIPTION of each defect, not copied from its drive script.** A
+reviewer who runs the author's own instrument measures the author's own instrument. The
+mutators are in `mutators/*.sh.txt`; the harness is `probe-t384.sh.txt`. Every arm clones
+`--no-hardlinks`, applies the mutation, **`git add -A` and COMMITS**, then runs the **whole
+bar** with `bash` — and the harness prints `dirty=` from `git status --porcelain` so the
+T361/T370 defect (a transcript captured while the subject file was still untracked) is
+excluded by measurement, not by intention. **Every arm below reported `dirty=no`.**
+
+The harness deliberately does **not** score itself PASS/FAIL. It reports exit, probe presence,
+the census line and the refusal text; the adjudication is here.
+
+### RED-BEFORE — against `main`'s guard (`d16ee6db`), which is T375's fix ABSENT
+
+| arm | construction | exit | probe | guards-dir census | verdict |
+|---|---|---|---|---|---|
+| `MAIN-Z` **healthy control**, runs first | no mutation | **0** | PRESENT | `population=6 … reached-by=1` | bar GREEN |
+| `MAIN-Y` **healthy control** | an *honest* independent regular-file witness | **0** | PRESENT | `population=7 … reached-by=2` | **ACCEPTED, correctly** |
+| `MAIN-A` | witness is a **SYMLINK** to the member | **0** | PRESENT | `population=7 … reached-by=2` | **FAIL-OPEN** |
+| `MAIN-B` | witness is a **HARD LINK** to the member | **0** | PRESENT | `population=7 … reached-by=2` | **FAIL-OPEN** |
+| `MAIN-C` | witness is a plain **COPY** of the member | **0** | PRESENT | `population=7 … reached-by=2` | **FAIL-OPEN** |
+| `MAIN-D` | **the MEMBER is a tracked SYMLINK** to a registered member | **0** | PRESENT | `population=7 … reached-by=2` | **FAIL-OPEN** |
+
+Every one of the four reached `VERDICT: PASS (exit 0) — 46 parity vectors … 7884 cells`.
+**T375's four fail-opens are real, and I reproduced all four independently.**
+[`evidence/10-RED-BEFORE-four-failopens-on-main.txt`.]
+
+### GREEN-AFTER — against T375's guard (`2c1f5723`)
+
+| arm | exit | probe | census | refusal actually printed |
+|---|---|---|---|---|
+| `T375-Z` healthy control | **0** | PRESENT | `population=6 … invoked-by-nothing=0 symlink-members=0` | — bar GREEN |
+| `T375-Y` healthy control | **0** | PRESENT | `population=7 … reached-by=2 symlink-members=0` | — **still ACCEPTED** |
+| `T375-A` witness symlink | **2** | **ABSENT** | `reached-by=1` | `THAT WITNESS IS A SYMLINK` |
+| `T375-B` witness hard link | **2** | **ABSENT** | `reached-by=1` | `BYTE-IDENTICAL TO THIS MEMBER` |
+| `T375-C` witness copy | **2** | **ABSENT** | `reached-by=1` | `BYTE-IDENTICAL TO THIS MEMBER` |
+| `T375-D` member is a symlink | **2** | **ABSENT** | `symlink-members=1` | `IS A SYMLINK, and a symlink is not a checker` |
+
+`exit 2` with the probe line **ABSENT** is the guard **working** — P-84, and presence was read
+before any value. [`evidence/11-GREEN-AFTER-four-failopens-on-T375.txt`.]
+
+**THE HEALTHY CONTROL IS THE ONE THAT MATTERED AND IT IS GREEN.** `T375-Y` plants a checker
+with a genuinely honest registration — an independent tracked regular file, not a link, not a
+copy — and T375's tightened guard **still accepts it** (`reached-by=2`, bar exit 0, `VERDICT:
+PASS`). The failure mode nearest to this change is refusing a legitimately wired checker, and
+it does not occur. This is the arm the T383 precedent in this same fire says is the only one
+that catches a fix that is wrong *only* on the healthy case.
+
+**SO: ALL FOUR NEW FAIL-OPENS GENUINELY CLOSE, AND NOTHING HEALTHY IS REFUSED.**
 
 ---
 

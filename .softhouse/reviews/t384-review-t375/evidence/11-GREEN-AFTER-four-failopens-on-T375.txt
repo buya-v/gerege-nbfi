@@ -1,0 +1,29 @@
+=== T384 SET T375 : source tree /tmp/t384/t375clone ===
+=== source HEAD: 2c1f5723 ===
+
+T375-Z-healthy-control                                 exit=0 probe=PRESENT dirty=no
+    census : population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    verdict: VERDICT: PASS (exit 0) — 46 parity vectors mat
+
+T375-Y-legit-witness-control                           exit=0 probe=PRESENT dirty=no
+    census : population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+    verdict: VERDICT: PASS (exit 0) — 46 parity vectors mat
+
+T375-A-witness-symlink                                 exit=2 probe=ABSENT  dirty=no
+    census : population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    verdict: <none>
+    FAILED : guard_guards_dir_registration FAILED
+    refusal: conformance: and THAT WITNESS IS A SYMLINK. What git tracks at that path is the
+
+T375-B-witness-hardlink                                exit=2 probe=ABSENT  dirty=no
+    census : population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    verdict: <none>
+    FAILED : guard_guards_dir_registration FAILED
+    refusal: conformance: and THAT WITNESS IS BYTE-IDENTICAL TO THIS MEMBER — same git object
+
+T375-C-witness-copy                                    exit=2 probe=ABSENT  dirty=no
+    census : population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    verdict: <none>
+    FAILED : guard_guards_dir_registration FAILED
+    refusal: conformance: and THAT WITNESS IS BYTE-IDENTICAL TO THIS MEMBER — same git object
+
