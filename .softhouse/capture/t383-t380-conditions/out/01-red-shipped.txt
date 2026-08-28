@@ -1,0 +1,20 @@
+=== T383 multiplicity drive — subject /tmp/t383-subject/.softhouse/bin/fire-program.sh
+=== sha256: dbb18b7b80033384455a9c93086d681ecdf453558bedd049141bc1a542123d89
+=== expectations are POST-FIX; RED against the shipped file is the finding
+
+m00  ok  rc=0
+m01  ok  rc=2
+m02  ok  rc=2
+m03  *** WRONG rc=0 want=2  rc=0
+m04  *** WRONG missing /printed 2 TALLY LINES/  rc=2
+m05  *** WRONG rc=0 want=2  rc=0
+m06a  ok  rc=2
+m06b  ok  rc=2
+m07  *** WRONG rc=0 want=2  rc=0
+m08  *** WRONG rc=0 want=2  rc=0
+m09a  ok  rc=0
+m09b  ok  rc=2
+m10  ok  rc=0
+
+CHECKS=13 WRONG=5 VOID=0
+RESULT: FAIL

@@ -1,0 +1,33 @@
+=== T383 · F-T380-2 reproduced against the SHIPPED file (sha256 dbb18b7b8003…) ===
+
+=== f01  LOCK_CEILING_SECS=9223372036854775807 — accepted by _knob_int, fixture underflows,
+===      and the wiring blames the READERS for a THRESHOLD.  This is T380's measurement.
+14:[19:37:26] lockselftest| self-test: host=Buyanmunkhs-Mac-mini self_pid=17407 reaped_pid=17415 now=2026-08-28T11:37:12Z old=2026-08-28T11:36:14Z scratch=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//fire-selftest.pw0kL3
+45:[19:37:26] lockselftest| c01  *** FAIL-SHUT  want=TAKE-ceiling    got=HELD-live        past the ceiling, spaced separators
+46:[19:37:26] lockselftest| c02  *** FAIL-SHUT  want=TAKE-ceiling    got=HELD-live        past the ceiling, compact separators
+83:[19:37:26] FATAL: the lock-reader self-test FAILED (rc=1, FAIL_OPEN=0, FAIL_SHUT=2, over 45 of 45 declared rows). The thresholds validated at startup, so this is the READERS. A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P-85); a FAIL-SHUT row means a reclaimable lock cannot be reclaimed. Either way this wrapper must not decide a lock today. Refusing to start.
+
+=== f02  LOCK_CEILING_SECS=1800 — the fire STARTS and g01 reads 'ok'.  It is VACUOUS:
+===      _NEAR_AGE is -1800, so _NEAR is a FUTURE instant, the age reads negative, and arm 6
+===      answers HELD-default.  The row wants HELD, so it passes while grading nothing.
+69:[19:37:42] lockselftest| g01  ok             want=HELD            got=HELD-live        started_at -1800s old, INSIDE the 1800s ceiling: arm 3 must NOT fire (an epoch drifting LOW fires it; the other sign is invisible here, which is what group H is for)
+82:[19:37:42] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+83:[19:37:42] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/tmp/t383-shipped/.softhouse/bin/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisfied by an empty one.
+84:[19:37:42] probe only — exiting without taking the lock or invoking the driver
+
+=== f05  LOCK_CEILING_SECS=3600 — the exact boundary.  _NEAR_AGE = 0: an 'inside the
+===      ceiling' fixture that is NOW.  Fire starts pre-fix.
+69:[19:38:28] lockselftest| g01  ok             want=HELD            got=HELD-live        started_at 0s old, INSIDE the 3600s ceiling: arm 3 must NOT fire (an epoch drifting LOW fires it; the other sign is invisible here, which is what group H is for)
+83:[19:38:28] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/tmp/t383-shipped/.softhouse/bin/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisfied by an empty one.
+84:[19:38:28] probe only — exiting without taking the lock or invoking the driver
+
+=== f06  LOCK_RELEASE_SKEW_SECS=9223372036854775807 — SKEW*2+60 wraps, z06's 'past the
+===      skew bound' fixture lands in the PAST, and again the log blames the readers.
+54:[19:38:43] lockselftest| z01  ok             want=HELD            got=HELD-live        Go's zero time.Time through encoding/json, and python datetime.min
+55:[19:38:43] lockselftest| z02  ok             want=HELD            got=HELD-live        year-zero sentinel
+56:[19:38:43] lockselftest| z03  ok             want=HELD            got=HELD-live        the UNIX epoch -- an int64 0 formatted
+57:[19:38:43] lockselftest| z04  ok             want=HELD            got=HELD-live        datetime.max / a 'never' sentinel
+58:[19:38:43] lockselftest| z05  ok             want=HELD            got=HELD-live        a far-future 'not yet' sentinel
+59:[19:38:43] lockselftest| z06  ok             want=HELD            got=HELD-live        DERIVED: past the skew bound -- a clock-skewed or scheduled writer
+60:[19:38:43] lockselftest| z07  *** FAIL-SHUT  want=FREE-released   got=HELD-live        CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+83:[19:38:43] FATAL: the lock-reader self-test FAILED (rc=1, FAIL_OPEN=0, FAIL_SHUT=2, over 45 of 45 declared rows). The thresholds validated at startup, so this is the READERS. A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P-85); a FAIL-SHUT row means a reclaimable lock cannot be reclaimed. Either way this wrapper must not decide a lock today. Refusing to start.

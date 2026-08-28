@@ -1,0 +1,16 @@
+=== T383 threshold/fixture drive — subject /tmp/t383-shipped/.softhouse/bin/fire-program.sh
+=== sha256: dbb18b7b80033384455a9c93086d681ecdf453558bedd049141bc1a542123d89
+=== expectations are POST-FIX; nothing is mutated, the ENVIRONMENT is the input
+
+f00  ok  rc=0   [FIRE_T383=1]
+f01  *** WRONG rc=2 want=78  rc=2   [LOCK_CEILING_SECS=9223372036854775807]
+f02  *** WRONG rc=0 want=78  rc=0   [LOCK_CEILING_SECS=1800]
+f03  ok  rc=0   [LOCK_CEILING_SECS=604800]
+f04  ok  rc=0   [LOCK_CEILING_SECS=3601]
+f05  *** WRONG rc=0 want=78  rc=0   [LOCK_CEILING_SECS=3600]
+f06  *** WRONG rc=2 want=78  rc=2   [LOCK_RELEASE_SKEW_SECS=9223372036854775807]
+f07  ok  rc=0   [LOCK_RELEASE_SKEW_SECS=0]
+f08  ok  rc=78   [LOCK_CEILING_SECS=abc]
+
+CHECKS=9 WRONG=4
+RESULT: FAIL

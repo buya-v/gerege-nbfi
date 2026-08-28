@@ -1,0 +1,8 @@
+=== T383 reconciliation-prose drive — subject /tmp/t383-subject/.softhouse/bin/fire-program.sh
+=== sha256: 5c4f0244c8b54dc6a6493e7371b89864fc90f5c00e4bcb06767d3ef371a60ae1
+
+p01  ok  rc=2
+p02  ok  rc=2
+
+CHECKS=2 WRONG=0 VOID=0
+RESULT: PASS

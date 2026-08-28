@@ -1,0 +1,30 @@
+=== T383 · the SHIPPED file (not a copy) driven on its own safe entry points ===
+file:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-af72b6ec837e41331/.softhouse/bin/fire-program.sh
+sha256: 5c4f0244c8b54dc6a6493e7371b89864fc90f5c00e4bcb06767d3ef371a60ae1
+census: 45 declared _row/_arow invocations
+
+--- 1. zsh -n (parse only)
+rc=0
+
+--- 2. --self-test-lock-readers  (writes only a mktemp -d scratch LOCK; no repo, no network)
+h05  ok             want=4102444799      got=4102444799       end of century, all four fields at maximum: grades hh/mi/ss and the year term together
+
+ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+rc=0
+
+--- 3. --lock-decide, one arm per verdict (a QUERY: takes nothing, writes nothing, spawns nothing)
+  --lock-decide 0 '' '' '' absent  ->  FREE-no-lock
+  --lock-decide 1 2026-08-28T00:00:00Z 3600 3600 alive_here  ->  FREE-released
+  --lock-decide 1 '' 3600 3600 dead_here  ->  TAKE-dead-pid
+  --lock-decide 1 '' 90000 3600 alive_here  ->  TAKE-ceiling
+  --lock-decide 1 '' 3600 3600 alive_here  ->  HELD-live
+  --lock-decide 1 '' 28800 43200 alive_here  ->  TAKE-both-stale
+  --lock-decide 1 '' unreadable 3600 other_host  ->  HELD-live
+
+--- 4. --probe against the SHIPPED file, pointed at a SCRATCH repo. Exits before the lock is
+---    read and before anything is dispatched: 'probe only' is the last line.
+[19:59:40] lockselftest| 
+[19:59:40] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+[19:59:40] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /Users/buv/gerege-nbfi/.claude/worktrees/agent-af72b6ec837e41331/.softhouse/bin/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisfied by an empty one.
+[19:59:40] probe only — exiting without taking the lock or invoking the driver
+rc=0
