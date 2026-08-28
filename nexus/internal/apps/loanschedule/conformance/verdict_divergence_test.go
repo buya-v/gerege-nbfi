@@ -73,16 +73,44 @@ func TestTheExitZeroVerdictNamesTheRecordedDivergences(t *testing.T) {
 		}
 	})
 
-	t.Run("a_zero_divergence_store_says_so_rather_than_going_silent", func(t *testing.T) {
-		// "There are none" and "nobody looked" must stay distinguishable, which
-		// is the discipline every other empty state in this report already keeps.
+	// THIS ARM'S EXPECTATION WAS CORRECTED BY T416 (T405's F-T405-6), and the
+	// correction is the finding rather than a tidy-up.
+	//
+	// It used to assert that a ledger Summary with no GRADED divergences prints
+	// "NO DIVERGENCE IS RECORDED in this store". That sentence is false in this
+	// very fixture: the store is PINNED to hold DivergencePinCount() == 1, and a
+	// pinned divergence vector that loaded and was then refused admission is
+	// exactly this state — zero graded, one recorded. The two figures count
+	// different things (graded counters vs a loaded population pin), so the old
+	// arm was pinning the report to the SAFER-SOUNDING of two sentences, which
+	// is the wrong direction for a disagreement with the reference oracle.
+	//
+	// The distinction the arm was written to protect — "there are none" versus
+	// "nobody looked" — is kept, and a third state is now separated out of it.
+	t.Run("a_zero_graded_divergence_run_does_not_claim_the_store_has_none", func(t *testing.T) {
 		out := render(passingSummary(&ledgerconf.Summary{ParityPass: 7}))
 		if strings.Contains(out, "IT EXCLUDES") {
-			t.Fatalf("an empty divergence census printed an exclusion:\n%s", out)
+			t.Fatalf("a run that graded no divergence printed an exclusion:\n%s", out)
 		}
-		if !strings.Contains(out, "NO DIVERGENCE IS RECORDED in this store") {
-			t.Fatalf("a store with no divergence printed nothing about it, so a reader cannot tell "+
-				"that state from a run in which the census was skipped:\n%s", out)
+		if ledgerconf.DivergencePinCount() == 0 {
+			// The pin is a compile-time constant. If it ever returns to 0 this
+			// fixture IS the empty-store state and the original sentence is the
+			// correct one again, so the arm follows the pin rather than
+			// hard-coding today's value.
+			if !strings.Contains(out, "NO DIVERGENCE IS RECORDED in this store") {
+				t.Fatalf("with a zero pin, a store with no divergence printed nothing about it, so "+
+					"a reader cannot tell that state from a run in which the census was skipped:\n%s", out)
+			}
+			return
+		}
+		if strings.Contains(out, "NO DIVERGENCE IS RECORDED in this store") {
+			t.Fatalf("the report told the reader this store records NO port/oracle disagreement "+
+				"while it is PINNED to hold %d. Zero GRADED and zero RECORDED are different facts "+
+				"[T405 F-T405-6]:\n%s", ledgerconf.DivergencePinCount(), out)
+		}
+		if !strings.Contains(out, "PINNED TO HOLD") || !strings.Contains(out, "GRADED NONE OF THEM") {
+			t.Fatalf("the report went silent about a pinned divergence that reached no comparator, "+
+				"which is the state a reader most needs named:\n%s", out)
 		}
 	})
 

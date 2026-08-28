@@ -611,10 +611,31 @@ func WriteReport(w io.Writer, s *Summary) {
 			p("         a request this port REFUSES. Each is an OPEN disagreement held at the gate named on")
 			p("         its row, and a green line there means only \"the disagreement is still exactly as")
 			p("         recorded\" — never that it has been fixed, and never that the port is right.")
-		} else if s.Ledger != nil {
+		} else if s.Ledger != nil && ledgerconf.DivergencePinCount() == 0 {
 			p("         NO DIVERGENCE IS RECORDED in this store, so the sentence above is not excluding any")
 			p("         known port/oracle disagreement. That is a fact about the CORPUS, not a fact about")
 			p("         the port: a disagreement nobody has captured is not a disagreement that is absent.")
+		} else if s.Ledger != nil {
+			// THE THIRD STATE, WHICH USED TO BORROW THE SECOND ONE'S SENTENCE
+			// [T416, closing T405's F-T405-6].
+			//
+			// The two figures beside each other here COUNT DIFFERENT THINGS:
+			// recordedDivergences() sums the ledger's GRADED divergence counters,
+			// and DivergencePinCount() is the population the store is PINNED to
+			// hold, which the ledger census satisfies from LOADED vectors. A
+			// divergence vector that loads and is then refused admission is in
+			// the second and not the first, and the branch above would then have
+			// printed "NO DIVERGENCE IS RECORDED in this store" over a store that
+			// records one.
+			//
+			// That resolves toward the SAFER-SOUNDING sentence, which is the
+			// wrong direction for a disagreement with the reference oracle, so
+			// the state gets its own words instead of the reassuring ones.
+			p("         THIS STORE IS PINNED TO HOLD %d DIVERGENCE VECTOR(S) AND THIS RUN GRADED NONE OF THEM.",
+				ledgerconf.DivergencePinCount())
+			p("         A pinned divergence that never reached the comparator is a recorded port/oracle")
+			p("         disagreement this verdict is NOT excluding because it could not see it. Read the")
+			p("         DIVERGENCE CENSUS above for which vectors loaded and what happened to them.")
 		}
 		p("         IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.")
 	case code == 1:
@@ -681,10 +702,24 @@ func WriteReport(w io.Writer, s *Summary) {
 //
 // IT READS THE LEDGER SUMMARY AND COMPOSES NOTHING. The ledger context renders
 // its own divergence census (ledger/conformance/notgraded.go); this returns the
-// same two fields that census prints, so the verdict qualifier and the census can
-// never disagree about how many there are. A second, independently maintained
+// same two GRADED fields that census prints. A second, independently maintained
 // count here is exactly the defect A2-34 found in the hand-written not-graded
 // block.
+//
+// THE CLAIM THAT USED TO STAND HERE WAS FALSE, AND T405's F-T405-6 IS RIGHT
+// ABOUT IT [corrected by T416]. It said the qualifier and the census "can never
+// disagree about how many there are". They can, because THEY COUNT DIFFERENT
+// THINGS: this function sums the ledger's GRADED counters (DivergencePass +
+// DivergenceFail), while the census line prints "(pinned n)" from
+// DivergencePinCount() — the population the store is pinned to HOLD, satisfied
+// from LOADED vectors. A divergence vector that loads and is then refused
+// admission is counted by the second and not by the first, and the census then
+// prints "PASS 0 FAIL 0 (pinned 1)" while this returns 0.
+//
+// What is true, and is all that was ever needed, is the narrower statement: this
+// figure and the census's own PASS/FAIL pair are read from the SAME two fields,
+// so those two cannot drift apart. The pin is a third number and the caller
+// tests it separately — see the exit-0 arm's third branch.
 //
 // Nil ledger — self-test mode, a context filter, or a store with no ledger vector
 // — returns 0. The caller distinguishes "zero because there are none" from "zero
