@@ -4619,9 +4619,10 @@
       "dependencies": [
         "T280"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Premise REFUTED by T280's F-C before dispatch -- the hook cannot refuse on /usr/bin/git 2.50.1, only warn. Task reframed from 'install it' to 'decide what mechanism is available and worth having'. This is why it was gated on T280 rather than dispatched with batch 1."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Premise REFUTED by T280's F-C before dispatch -- the hook cannot refuse on /usr/bin/git 2.50.1, only warn. Task reframed from 'install it' to 'decide what mechanism is available and worth having'. This is why it was gated on T280 rather than dispatched with batch 1. | DISPATCHED fire 20260828-080001 iter 2 BATCH 2. Dispatch record pushed BEFORE `git worktree add`.",
+      "branch": "softhouse/T336-post-checkout-decision"
     },
     {
       "id": "T337",
@@ -4734,9 +4735,10 @@
       "dependencies": [
         "T280"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Filed from T280's F-A, fire 20260828-080001 iter 2."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Filed from T280's F-A, fire 20260828-080001 iter 2. | DISPATCHED fire 20260828-080001 iter 2 BATCH 2. Dispatch record pushed BEFORE `git worktree add`.",
+      "branch": "softhouse/T342-releasedat-failopen"
     },
     {
       "id": "T343",

@@ -1,6 +1,6 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260828-080001`, chain iteration 2 — **IN FLIGHT. SIX WORKERS DISPATCHED. NOT CLOSED.**
+## FIRE `20260828-080001`, chain iteration 2 — **IN FLIGHT. SEVEN WORKERS. NOT CLOSED.**
 
 **Read this before believing `HEAD`.** The previous chain iteration of this same fire closed clean and its
 `RESUME.md` said so. That manifest is now stale by design: this iteration re-opened work. If you are a second
@@ -54,3 +54,23 @@ bash .softhouse/conformance.sh   →  exit 0
 awaited, every task above is `in_progress` with a branch: recover WIP from the branch, mark each
 `needs_retry` with `worker killed mid-flight; completeness unverified`, and **do not** trust this table as a
 record of what finished.
+
+---
+
+## UPDATE — batch 2 dispatched, and batch 1's first result
+
+**`T280` came back REJECTED and is MERGED (`346b7a1d`).** It is the only batch-1 task that is finished. The
+other five are still live. Its three findings all became work rather than notes:
+
+| New/changed | From | Why |
+|---|---|---|
+| `T342` **dispatched** → `softhouse/T342-releasedat-failopen` | F-A | `lock_released_at()` cuts at the first **comma** and its strip class has no `}`, so a LOCK with `"released_at": null` as its **last key** reads as `null}`, arm 1 fires, and **a live lock is declared FREE**. P-85 failure mode. Driver re-derived it from `fire-program.sh:120-131` before filing. |
+| `T343` filed, **blocked on `T342`** | F-B | The seven arms partition **only inside `rules.py`, and there by construction**. The shipped prose multi-matches 36 states; the shipped wrapper is first-match-wins and transposing arms 3/4 flips 3 of 192 verdicts. STEP 0's stated protection against P-85 is not actually there. |
+| `T336` **REFRAMED and dispatched** → `softhouse/T336-post-checkout-decision` | F-C | The hook **cannot refuse**: on `/usr/bin/git` 2.50.1, `enforce` returns rc=1 **and git creates the worktree anyway**. The task filed an hour ago as "install it" is now "decide what mechanism is available and worth having", with *nothing is worth it* listed as a legitimate answer. |
+
+**This is why `T336` was gated on `T280` rather than shipped in batch 1** — the review refuted the task
+before the task ran.
+
+**Serialisation now:** `T323` holds `conformance.sh`. `T342` holds `fire-program.sh` — `T336` has been told
+in its prompt that it may not touch that file this batch even if its own analysis points there, and must hand
+the patch to `T343` instead.
