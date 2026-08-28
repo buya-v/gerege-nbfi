@@ -1,0 +1,51 @@
+T330 -- ARCHIVED-RUNS POPULATION SWEEP
+repo: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac2d8253d149717c8
+
+WHERE I LOOKED -- 1. the archive directory as it stands on disk
+  glob            : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac2d8253d149717c8/.softhouse/runs/*.tasks.json
+  files matched   : 1 ['2026-08-17-run1-harness-schedule-poc.tasks.json']
+  wider glob      : .softhouse/runs/*.json -> 1 file(s) ['2026-08-17-run1-harness-schedule-poc.tasks.json']
+  (ready-tasks.py load() uses the WIDER glob -- .softhouse/runs/*.json -- so
+   an archive named without `.tasks` would still feed dependency resolution
+   while a `*.tasks.json` sweep missed it. Both are swept here.)
+  other files in runs/: []
+
+  FILE: 2026-08-17-run1-harness-schedule-poc.tasks.json
+    tasks                                : 153
+    statuses                             : {'done': 120, 'closed_as_obligation': 26, 'pending': 7}
+    carrying a `branch`                  : 38
+    AT RISK (in_progress / needs_retry)  : 0
+    ... of those, with LANDED/REF evidence: 0   <-- THE DEFECT COUNT
+    terminal tasks that ALSO carry merge evidence: 109  (NOT defects -- recorded so the defect count above is not inflated by them)
+
+WHERE I LOOKED -- 2. the GIT HISTORY of the archive directory, because a
+  file deleted from it is invisible to a glob
+  git log --all --name-status -- .softhouse/runs/  rc=0
+  every path that EVER existed there: ['.softhouse/runs/.gitkeep', '.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json']
+  paths in history but NOT on disk now: NONE -- nothing was ever deleted from the archive
+
+WHERE I LOOKED -- 3. anywhere else a tasks file could hide
+  git ls-files '*tasks*.json' (tracked, this checkout):
+    .softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json
+    .softhouse/tasks.json
+  (Untracked copies under .claude/worktrees/*/ are per-worker checkouts of
+   the SAME tracked file, not additional archives -- they are the worktrees
+   the hard rules forbid touching, and they are not a population.)
+
+RESULT
+  archived tasks swept              : 153
+  archived tasks AT RISK            : 0  (in_progress or needs_retry)
+  archived DEFECTS found            : 0
+
+  P-66's population is now MEASURED, not assumed: the archive holds 153
+  tasks and NONE is in a status the reconcile touches (it only rewrites
+  `in_progress`), so the archive CANNOT hold an instance of
+  FU-RECONCILE-1. That is a stronger claim than 'I found none' and it is
+  the one the evidence supports.
+
+  THE HONEST LIMIT OF THIS RESULT. 109 of the 153 archived tasks DO carry
+  landed-work evidence while sitting in a terminal status -- which is
+  what a healthy archive looks like, and which also means the archive
+  would have been a rich source of false demotions had the reconcile ever
+  been pointed at it. It is not: reconcile() reads `root/tasks.json` and
+  nothing else. The archive is read only by load() for dependency edges.

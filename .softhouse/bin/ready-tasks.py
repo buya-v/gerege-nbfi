@@ -155,6 +155,7 @@ Exit codes:
 import json
 import glob
 import os
+import re
 import shutil
 import subprocess
 import textwrap
@@ -808,21 +809,239 @@ def _case_clause(branch):
         % (len(variants), ", ".join(branch_sweep.short(v) for v in variants), branch))
 
 
-def branch_wip(branch):
+# ------------------------------------------------- T330: LANDED-WORK EVIDENCE ------
+# FU-RECONCILE-1.  On 2026-08-28 the wrapper's post-fire reconcile demoted T324 from
+# `in_progress` to `needs_retry` because its recorded branch was absent.  The branch was
+# absent because the work had been MERGED AND THE BRANCH PRUNED -- a08a64e2 plus merge
+# d36863ad, 14 files / 2,338 insertions, including fire-program.sh +218.  Had the next
+# fire believed that state file it would have re-dispatched a completed task into the
+# file that decides whether worktrees get destroyed.
+#
+# THE FUNCTION ALREADY SAID THE RIGHT THING.  T319's F1 had ALREADY replaced the
+# flattering assertion with "THIS IS NOT EVIDENCE THAT NOTHING WAS DONE ...", and it
+# changed NOTHING, because the code printed the caveat and demoted regardless.  T312's
+# `/CASE-VARIANT` suffix behaves the same way -- see red.txt arm (d), where the warning
+# fires and the demotion happens anyway.  So:
+#
+#   A CAVEAT IS NOT A CONTROL.
+#
+# which is `P-45` -- "A test-only guard is not a guard" / a guard that only works when
+# someone remembers to run it enforces nothing [VERIFIED: .softhouse/patterns.md:1472,
+# "**P-45 — A test-only guard is not a guard.**"] -- one turn further out: a guard that
+# discharges its duty by NARRATING the doubt to a human enforces nothing either, because
+# on this path (a SIGTERM handler inside launchd's ~20s grace) there is no human.
+#
+# COST, AND WHY IT IS NOT PER-TASK.  The three signals the observation names are per-task
+# `git log --grep` / `git ls-files` calls.  Three git calls x N tasks against a 219-task
+# file does not fit the signal-path budget (fire-program.sh derives ~7s outer / ~6s inner
+# from SIGNAL_GRACE_SECS).  Measured on this repo: ~0.09-0.12s per `git log --grep`, so
+# 3N would cross the inner budget at N ~ 20 and cost ~59s at N = 219.  This module
+# therefore builds the evidence ONCE, as an INDEX, in TWO git calls for the whole run,
+# independent of N -- 0.131s for every commit subject on main (1,795 of them) and 0.044s
+# for every tracked handoff path on main.  Per-task cost after that is a dict lookup.
+# See .softhouse/capture/t330-reconcile-merged-work/budget.txt.
+#
+# POLARITY -- FAIL-CLOSED, AND THE DIRECTION MATTERS MORE HERE THAN ANYWHERE ELSE IN
+# THIS FILE.  An exhausted --deadline-secs budget, a git failure, an unreadable ref
+# store or a caller that passed no task id must degrade to `indeterminate`, which
+# DEMOTES -- i.e. to exactly the pre-T330 behaviour.  It must NEVER degrade to `merged`,
+# because `merged` REFUSES to demote and a refusal manufactured by a check that did not
+# run is the accident this whole file exists to prevent.  An unrun probe cannot buy a
+# task a reprieve.
+_LANDED = ("uncached", None)
+
+
+def landed_index():
+    """({tid: [evidence, ...]} or None, note).  ONE git call per source, per process.
+
+    `None` means the index could not be built and NOTHING may be concluded from a miss.
+    The note always states how the question was answered, including when it was not.
+    """
+    global _LANDED
+    if _LANDED[0] != "uncached":
+        return _LANDED
+    idx = {}
+    notes = []
+    # Source 1 -- every commit subject on main.  Parsed HERE rather than filtered with
+    # `--grep`, because a per-task `--grep` is the per-task cost this design exists to
+    # avoid and a single generic `--grep` measured SLOWER than no grep at all (0.154s
+    # vs 0.131s: git walks every commit either way, and the regex is pure overhead).
+    rc, out, err = _run([GIT, "log", "main", "--format=%H%x09%s"], timeout=15)
+    if rc != 0:
+        _LANDED = (None, "could not read commit subjects on main (git rc=%s, %s) -- so "
+                         "NO merged-work evidence was gathered, and the ABSENCE of "
+                         "evidence below means NOTHING WAS LOOKED AT" % (rc, err))
+        return _LANDED
+    n = 0
+    for line in out.splitlines():
+        sha, _, subject = line.partition("\t")
+        head = subject[6:] if subject.startswith("Merge ") else subject
+        tid, sep, _rest = head.partition(":")
+        if not sep or not tid or " " in tid:
+            continue
+        idx.setdefault(tid.strip(), []).append(
+            "commit %s on main, subject %r" % (sha[:9], subject[:90]))
+        n += 1
+    notes.append("%d of %d commit subjects on main carry a `<id>:` or `Merge <id>:` "
+                 "prefix" % (n, len(out.splitlines())))
+    # Source 2 -- every handoff path tracked ON MAIN.  `git ls-files` (which the
+    # observation named) answers about the INDEX OF THE CURRENT CHECKOUT, and a worker
+    # worktree's index is not main; `ls-tree main` asks the branch the work lands on,
+    # which is the question, and measured the same 0.044s.
+    rc2, out2, err2 = _run([GIT, "ls-tree", "-r", "--name-only", "main", "--",
+                            ".softhouse/handoff"], timeout=15)
+    if rc2 != 0:
+        _LANDED = (None, "commit subjects were read, but the handoff listing on main "
+                         "failed (git rc=%s, %s). The index is INCOMPLETE, so it is "
+                         "reported as UNAVAILABLE rather than half-trusted"
+                   % (rc2, err2))
+        return _LANDED
+    h = 0
+    for path in out2.splitlines():
+        base = os.path.basename(path)
+        if not base.endswith(".md"):
+            continue
+        idx.setdefault(base[:-3], []).append("handoff %s tracked on main" % path)
+        h += 1
+    notes.append("%d handoff .md path(s) tracked on main" % h)
+    _LANDED = (idx, "; ".join(notes))
+    return _LANDED
+
+
+def landed_evidence(tid):
+    """(evidence_list_or_None, note).  None = the probes DID NOT RUN."""
+    if not tid:
+        return None, ("NO TASK ID was passed to branch_wip, so none of the three "
+                      "landed-work signals could be run at all")
+    idx, note = landed_index()
+    if idx is None:
+        return None, note
+    return idx.get(tid, []), note
+
+
+def refs_naming(tid, exclude):
+    """(refs_or_None, note).  Live refs OTHER than `exclude` whose name carries `tid`.
+
+    Covers arms (c) RENAMED and (d) CASE-SHADOWED at once.  Matching is
+    case-INSENSITIVE on purpose: T308's 2026-08-27 shadows differed only in case, and
+    the whole point is that the recorded spelling cannot reach them.  The index is
+    branch_sweep.RefIndex -- IMPORTED, not reimplemented (T213's rule) -- which reads
+    loose refs and packed-refs SEPARATELY and so sees a packed-only variant that
+    `git rev-parse` on the recorded spelling misses twice over (no loose file; packed
+    matched case-SENSITIVELY).  Pure filesystem: it costs NO subprocess and cannot eat
+    the --deadline-secs budget.
+    """
+    if not tid:
+        return None, "NO TASK ID was passed, so no ref could be matched against one"
+    idx, note = ref_index()
+    if idx is None:
+        return None, note
+    pat = re.compile(r"(?<![0-9A-Za-z])" + re.escape(tid) + r"(?![0-9A-Za-z])",
+                     re.IGNORECASE)
+    excl = branch_sweep.full(exclude) if exclude else None
+    hits = sorted(n for n in idx.names()
+                  if n != excl and pat.search(branch_sweep.short(n)))
+    return hits, note
+
+
+def reconcile_action(kind):
+    """THE ONE PLACE A VERDICT BECOMES AN ACTION.  Returns a human string starting with
+    either "REFUSE" or "demote".
+
+    It is a function, not a set literal inline in reconcile(), so that the four-arm
+    fixture and the fire ask the SAME bytes what a verdict means -- T213's rule. Before
+    T330 there was nothing to ask: reconcile()'s loop wrote `needs_retry` for every task
+    it was handed and no caller ever COMPARED the kind.
+    """
+    base = (kind or "").split("/")[0]
+    if base.startswith("merged"):
+        return ("REFUSE to demote -- work bearing this task's id is ON MAIN; "
+                "`needs_retry` would OFFER completed work for re-dispatch")
+    if base.startswith("relocated"):
+        return ("REFUSE to demote -- a live ref carrying this task's id exists under "
+                "another name; `needs_retry` would duplicate a line that still exists")
+    return "demote to needs_retry"
+
+
+def _absent_verdict(branch, tid):
+    """The THREE-WAY (four, counting `relocated`) reading of an absent branch.
+
+    `git rev-parse --verify <branch>` answers rc=1/empty in FOUR different worlds and
+    this function's whole job is that they are not the same world:
+      merged      -- work is on main, branch pruned.  MUST NOT demote.  (T324.)
+      relocated   -- a live ref carries the id elsewhere.  MUST NOT demote.  (T302/T308.)
+      unstarted   -- all signals ran and all came back empty.  Demote; this is the only
+                     world the pre-T330 code was right about.
+      indeterminate -- a signal DID NOT RUN.  Demote, and say the word UNVERIFIED.
+    """
+    head = ("Its recorded branch %s does not exist in this repo. THIS IS NOT EVIDENCE "
+            "THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this "
+            "repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a "
+            "branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 "
+            "therefore does not stop at that observation. " % branch)
+    ev, ev_note = landed_evidence(tid)
+    refs, ref_note = refs_naming(tid, branch)
+    if ev:
+        return "merged", (head + "MEASURED: work bearing id %s IS ON MAIN -- %s. The "
+                          "work LANDED; the branch was pruned after the merge. This "
+                          "task is NOT demoted: `needs_retry` is the status that OFFERS "
+                          "a task for re-dispatch, and re-dispatching merged work is the "
+                          "concrete damage FU-RECONCILE-1 records. A HUMAN MUST "
+                          "ADJUDICATE whether it is `done`; this reconciler will not "
+                          "assert a review that did not happen. (Signals: %s.)"
+                          % (tid, "; ".join(ev[:4]), ev_note))
+    if refs:
+        return "relocated", (head + "MEASURED: the branch is gone under its RECORDED "
+                             "spelling, but %d live ref(s) carry id %s -- %s. A rename "
+                             "or a case-variant (T308's 2026-08-27 defect, which hid 4 "
+                             "commits on T297 and 8 on T305) looks exactly like a "
+                             "pruned branch from the recorded name. NOT demoted: the "
+                             "line still exists and re-dispatch would fork it. Run "
+                             "`python3 .softhouse/bin/branch_sweep.py sweep --pattern "
+                             "'*%s*' --counts` before touching either. (Ref store: %s.)"
+                             % (len(refs), tid,
+                                ", ".join(branch_sweep.short(r) for r in refs[:6]),
+                                tid, ref_note))
+    if ev is None or refs is None:
+        return "indeterminate", (head + "BUT THE SIGNALS THAT WOULD SEPARATE THOSE "
+                                 "WORLDS DID NOT RUN: landed-work evidence -- %s; ref "
+                                 "store -- %s. Provenance UNVERIFIED. The task IS still "
+                                 "demoted, because a dead dispatch is dead whether or "
+                                 "not git answered -- but `needs_retry` here means "
+                                 "SOMEBODY MUST LOOK, not 'nothing was done'. FAIL-"
+                                 "CLOSED BY DESIGN: an unrun probe must never buy a "
+                                 "task a reprieve." % (ev_note, ref_note))
+    return "unstarted", (head + "MEASURED, and all three signals came back EMPTY: no "
+                         "commit subject on main begins `%s:` or `Merge %s:`, no "
+                         "handoff `%s.md` is tracked on main, and no live ref carries "
+                         "the id. This is the unstarted world, and saying so is now a "
+                         "measurement rather than the default reading of an absence. "
+                         "(Landed index: %s. Ref store: %s.)"
+                         % (tid, tid, tid, ev_note, ref_note))
+
+
+def branch_wip(branch, tid=None):
     """What WIP exists for a task branch. Returns (kind, human_text).
 
-    kind is one of: none / absent / commits / unverified -- each optionally suffixed
-    `/CASE-VARIANT` or `/CASE-UNCHECKED` by T312.  Nothing in this program COMPARES
-    kind; it is printed, so the suffix is safe to carry.
+    `tid` is REQUIRED in practice: without it the three T330 landed-work signals cannot
+    run and every absent branch degrades to `indeterminate` (which demotes, i.e. the
+    pre-T330 behaviour) with the omission NAMED in the note. It is keyword-optional only
+    so that an unconverted caller fails LOUDLY and CONSERVATIVELY rather than by
+    TypeError inside a SIGTERM handler.
+
+    kind is one of: none / absent / merged / relocated / unstarted / indeterminate /
+    commits / unverified -- each optionally suffixed `/CASE-VARIANT` or
+    `/CASE-UNCHECKED` by T312. `reconcile_action(kind)` -- and nothing else -- turns a
+    kind into an ACTION; the suffixes are stripped there, so they remain safe to carry.
     """
-    kind, text = _branch_wip_core(branch)
+    kind, text = _branch_wip_core(branch, tid)
     if not branch:
         return kind, text
     case_kind, case_text = _case_clause(branch)
     return kind + case_kind, text + case_text
 
 
-def _branch_wip_core(branch):
+def _branch_wip_core(branch, tid=None):
     if not branch:
         return "none", ("No branch was recorded for this task -- suspect an isolation "
                         "violation; no WIP could be looked for.")
@@ -833,14 +1052,10 @@ def _branch_wip_core(branch):
     if rc == 1 and not sha:
         # T319 -- F1, the pruned half. A merged-and-then-pruned branch is byte-identical
         # to a branch that never existed, and this used to assert the flattering one.
-        return "absent", ("Its recorded branch %s does not exist in this repo. THIS IS "
-                          "NOT EVIDENCE THAT NOTHING WAS DONE: a branch that was MERGED "
-                          "INTO main AND THEN PRUNED -- this repo's stated habit -- looks "
-                          "exactly the same from here, and so does a branch that was "
-                          "RENAMED (T302 measured one: T299's recorded name was stale "
-                          "after a rename and the live branch was elsewhere). Provenance "
-                          "UNVERIFIED; check `git log --all --grep` for the task id before "
-                          "treating this as unstarted." % branch)
+        # T319 replaced the assertion with a CAVEAT and the code demoted anyway; on
+        # 2026-08-28 that cost T324 (FU-RECONCILE-1). T330 replaces the caveat with a
+        # MEASUREMENT that has an ACTION attached -- see _absent_verdict.
+        return _absent_verdict(branch, tid)
     if rc != 0:
         return "unverified", ("git rev-parse on %s exited %d (%s) -- WIP state "
                               "UNVERIFIED, NOT assumed empty." % (branch, rc, err))
@@ -982,9 +1197,10 @@ def reconcile(fire, rescue_map, named_corpses, dry_run=False):
                   "so by hand.")
             return 4
 
+    refused = []
     for t in demote:
         branch = t.get("branch") or ""
-        kind, text = branch_wip(branch)
+        kind, text = branch_wip(branch, t.get("id"))
         rescued = rescue_map.get(branch)
         clauses = [text]
         if rescued:
@@ -1017,12 +1233,65 @@ def reconcile(fire, rescue_map, named_corpses, dry_run=False):
                       "named it as a corpse. So the dispatch predates %s. WHICH earlier "
                       "fire is NOT established, and no field on this task is trusted to "
                       "say." % (fire_id or fire, fire_id or fire))
+        # T330 -- THE VERDICT NOW DECIDES THE ACTION. Before this, the loop wrote
+        # `needs_retry` for every task it was handed and the kind was printed, never
+        # compared: T319's caveat and T312's `/CASE-VARIANT` flag both fired correctly
+        # and changed nothing. `reconcile_action` is the only place the mapping lives,
+        # and the four-arm fixture asks the SAME function (T213's rule).
+        action = reconcile_action(kind)
+        print("  %-8s %-42s %s" % (t.get("id", "?"),
+                                   branch or "(NO BRANCH RECORDED)",
+                                   "WIP=%s%s" % (kind, "+rescued" if rescued else "")))
+        if action.startswith("REFUSE"):
+            # WHY REFUSE AND NOT PROMOTE. The argued decision is in the handoff and in
+            # .softhouse/capture/t330-reconcile-merged-work/design.md; the short form:
+            # this reconciler establishes that a commit or handoff bearing the id is on
+            # main. It does NOT establish that THIS dispatch completed, that a reviewer
+            # saw it, or that the merge was of this attempt -- and its own note has
+            # always said "Completeness UNVERIFIED". Writing `done`/`merged` from a
+            # SIGTERM handler would assert a review that did not happen, and that
+            # assertion is unfalsifiable afterwards because a terminal task is never
+            # looked at again. P-22 -- "A guard, a canary, or a control that cannot fail
+            # is worse than none -- because it is believed" [VERIFIED:
+            # .softhouse/patterns.md:442]. So: leave the status alone and rewrite the
+            # NOTE. `in_progress` is already the status the ready-list prints as
+            # "ALREADY DISPATCHED, do not dispatch again", it is NOT in TERMINAL so no
+            # downstream edge unblocks on it, and the note lands in tasks.json -- which
+            # is COMMITTED -- rather than in a log file nobody opens, the exact failure
+            # this function's own header records.
+            marker = "[T330-REFUSED-DEMOTION]"
+            note = ("%s This task was NOT demoted by fire %s in `%s` mode, and its "
+                    "status is DELIBERATELY LEFT `in_progress`. %s -- %s %s "
+                    "WHAT A HUMAN MUST DO: read the history named above and set this "
+                    "task to its true terminal status by hand. This reconciler will not "
+                    "promote it: it established that work bearing this id is reachable, "
+                    "NOT that this dispatch was completed or reviewed. It will also not "
+                    "demote it: `needs_retry` OFFERS work for re-dispatch, and that is "
+                    "the FU-RECONCILE-1 damage (T324, 2026-08-28: 14 files / 2,338 "
+                    "insertions were up for redoing). NOTE: `in_progress` here does NOT "
+                    "mean a worker is alive -- it is not, and this line is a placeholder "
+                    "for an adjudication, not a claim of liveness."
+                    % (marker, fire, mode, action, " ".join(clauses),
+                       ("Uncommitted WIP was also swept onto %s." % rescued)
+                       if rescued else ""))
+            prior_note = t.get("note")
+            # IDEMPOTENCE. A refused task keeps its status, so this branch runs again on
+            # EVERY subsequent fire. Appending `[prior note: ...]` each time would grow
+            # the note without bound inside a 792 KB file. A note this function already
+            # wrote is REPLACED, not nested; anything else is preserved once.
+            if prior_note and marker not in prior_note:
+                note += "  [prior note: %s]" % prior_note
+            print("           in_progress -> in_progress   *** REFUSED TO DEMOTE ***")
+            print("           %s" % action)
+            refused.append(t)
+            if not dry_run:
+                t["note"] = note
+            continue
         merged_clause = ""
-        if kind.startswith("merged"):
-            merged_clause = (" !! READ THIS BEFORE RE-DISPATCHING: its branch is MERGED "
-                             "INTO main. `needs_retry` here means SOMEBODY MUST "
-                             "ADJUDICATE, not 'do it again' -- re-running merged work is "
-                             "the concrete cost T302 measured on 3 of 8 real corpses.")
+        if kind.split("/")[0] == "indeterminate":
+            merged_clause = (" !! THE T330 LANDED-WORK PROBES DID NOT RUN for this task, "
+                             "so MERGED and UNSTARTED were NOT told apart. `needs_retry` "
+                             "here means SOMEBODY MUST LOOK, not 'do it again'.")
         note = ("worker killed mid-flight by %s -- the fire ended while this task "
                 "was still in_progress, and a killed worker is dead, not paused "
                 "(softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). "
@@ -1032,13 +1301,21 @@ def reconcile(fire, rescue_map, named_corpses, dry_run=False):
         prior_note = t.get("note")
         if prior_note:
             note += "  [prior note: %s]" % prior_note
-        print("  %-8s %-42s %s" % (t.get("id", "?"),
-                                   branch or "(NO BRANCH RECORDED)",
-                                   "WIP=%s%s" % (kind, "+rescued" if rescued else "")))
         print("           in_progress -> needs_retry")
         if not dry_run:
             t["status"] = "needs_retry"
             t["note"] = note
+    # Identity, not id: two records could carry the same (or a missing) `id`, and a
+    # membership test on strings would silently drop the wrong record from the count.
+    _refused_ids = set(id(t) for t in refused)
+    demote = [t for t in demote if id(t) not in _refused_ids]
+    if refused:
+        print("  T330 REFUSALS: %d task(s) were NOT demoted because work bearing their "
+              "id is on main, or a live ref still carries it -- %s. Their status is "
+              "UNCHANGED and their note now says so. THIS IS THE FIX FOR "
+              "FU-RECONCILE-1; before T330 every one of these was written "
+              "`needs_retry` and OFFERED FOR RE-DISPATCH."
+              % (len(refused), ", ".join(t.get("id", "?") for t in refused)))
 
     if BUDGET_NOTE:
         print("  NOTE: %s -- some WIP evidence above is UNVERIFIED for that reason, not "
@@ -1047,8 +1324,8 @@ def reconcile(fire, rescue_map, named_corpses, dry_run=False):
               % BUDGET_NOTE)
 
     if dry_run:
-        print("  RESULT: DRY RUN -- %d task(s) WOULD be demoted; tasks.json untouched."
-              % len(demote))
+        print("  RESULT: DRY RUN -- %d task(s) WOULD be demoted, %d WOULD be REFUSED "
+              "(T330); tasks.json untouched." % (len(demote), len(refused)))
         return 0
 
     # Preserve the file's own serialisation so the diff is the demotions and nothing
@@ -1074,8 +1351,10 @@ def reconcile(fire, rescue_map, named_corpses, dry_run=False):
             pass
         print("  RESULT: REFUSED -- nothing was changed, and this state is NOT truthful.")
         return 3
-    print("  RESULT: WROTE %s -- %d task(s) demoted in_progress -> needs_retry%s."
+    print("  RESULT: WROTE %s -- %d task(s) demoted in_progress -> needs_retry%s%s."
           % (path, len(demote),
+             ", %d REFUSED (T330: work is on main or a live ref carries the id; status "
+             "left in_progress, note rewritten)" % len(refused) if refused else "",
              ", %d WITHHELD" % len(withheld) if withheld else ""))
     return 0
 
@@ -1115,9 +1394,14 @@ def main():
     #   whether the key is absent, null or empty.
     for tid, t in sorted(live):
         branch = t.get("branch") or ""
-        kind, text = branch_wip(branch)
+        kind, text = branch_wip(branch, tid)
         print("  %-8s %s" % (tid, branch or "NO BRANCH RECORDED -- suspect an isolation violation"))
         print("           WIP: %s  %s" % (kind.upper(), text))
+        # T330 -- the ACTION beside the verdict, at STEP 0 too. The driver reads this
+        # list to decide what to dispatch, and "absent branch" is the observation it has
+        # historically read as "unstarted". Saying what the reconciler WOULD do makes the
+        # two readers agree.
+        print("           RECONCILE WOULD: %s" % reconcile_action(kind))
     # T319 -- `fire` AND `dispatched_at` ARE NO LONGER PRINTED, AND NOTHING READS THEM.
     # T309 attempt 2 printed both with a disclaimer attached. T302 then measured what the
     # disclaimer was disclaiming: `dispatched_at` four days stale where present and
