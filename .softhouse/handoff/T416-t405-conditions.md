@@ -283,7 +283,26 @@ go test -count=1 ./...
 Transcripts `out/go-build.txt`, `out/go-test.txt`.
 
 **Bar** — `bash .softhouse/conformance.sh` (never `sh`) from a clean tree after `git add -A` and
-commit. Transcript `out/BAR-t416.log`. See the final section of this file for the post-merge run.
+commit, on the MERGED tree. Transcript `out/BAR-t416.log`.
+
+```
+BAR exit=0
+probe line PRESENCE first (P-84): grep -c 'probe = ' = 1
+conformance: reference oracle (https://localhost:8443/...) probe = up
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+T316-DEADPATH-CENSUS: corpus=1428 deadFiles=75 deadOccurrences=108 resolving=1353 indeterminate=106 prose=372
+dead-path frontier: GREEN — frontier == pinned (all 11 rows, by path)
+host-state census == pinned (all 18 sites, by path and source line)
+exemption census READ: LEDGER parity vectors        = 10 == pinned 10
+exemption census READ: LEDGER oracle-refusal vector = 6  == pinned 6
+exemption census READ: LEDGER money cells compared  = 63 == pinned 63
+exemption census READ: LEDGER declared exemptions   = 0  == pinned 0
+all 15 wrong ledger implementations DIED through this harness, not by hand.
+P-number citations: VERDICT PASS
+```
+
+Baseline held exactly against the post-T391 `main`: parity 10 / money cells 63 / wrong impls 15,
+`deadOccurrences` 108, 46 parity / 7884 cells. Nothing this branch changes moves a pinned figure.
 
 `P-<n>` tokens used: P-1, P-02, P-03, P-22, P-35, P-45, P-66, P-83, P-89, P-98, P-8, P-9, P-10 —
 all defined in `.softhouse/patterns.md` (`ids=98`). No bare token for a pattern that does not
