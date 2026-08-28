@@ -1,0 +1,13 @@
+SELECTOR (population): git ls-files -- .softhouse | grep '\.py$'
+SELECTOR (sites):      ast.parse -> ast.Call whose func is json.load/json.loads
+                       (or a `from json import load[s]` alias); GUARDED iff a
+                       parse_float= keyword is present on that call node.
+REV: 5379650aa5613d1eb11d4469ebb0d64c4ab9712c
+
+DENOMINATOR  tracked .py files under .softhouse : 677
+             of which unparsable by ast.parse   : 0
+TOTAL        json.load/loads call sites          : 519
+  GUARDED    (parse_float= present)              : 152   in 115 files
+  UNGUARDED  (no parse_float=)                   : 367   in 201 files
+NUMERATOR (files with >=1 unguarded site)        : 201 of 677
+

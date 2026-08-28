@@ -245,14 +245,26 @@ func Admit(v *Vector, opts Options) []string {
 	// --- the capability claim is SCOPED TO THE OBSERVED SHAPE [T296] ---------
 	//
 	// `ledger.opening.balance.and.closure` names THREE shapes in its own
-	// description — defining opening balances after journal entries have been
-	// posted, an entry dated on or before the latest GLClosure, and a
+	// description — defining opening balances after a NON-CONTRA journal entry
+	// has been posted, an entry dated on or before the latest GLClosure, and a
 	// future-dated entry — and T294 flipped the row to in_graded_domain TRUE on
 	// the strength of the FIRST one only. [HISTORY, TRUE WHEN T296 WROTE IT AND NO
 	// LONGER TRUE: at that moment the other two were captured raw in
 	// .softhouse/capture/t287-closure-refusals and nothing promoted them. T295
 	// promoted both, and T305 then captured the ACCEPTING side of the first.
 	// See the adjudicated gate below.]
+	//
+	// [CORRECTED T322, and this is THE FIFTH SITE of a refuted rule. The first
+	// shape above used to read "after journal entries have been posted" — the
+	// oracle's own :814 message, which is WRONG: findNonContraTransactionIds
+	// EXCLUDES every transaction that touches the contra account and every entry
+	// an opening balance writes touches it (:796), so OPENING BALANCES DO NOT
+	// BLOCK EACH OTHER [T305, OB-ACCEPT-02: byte-identical bytes, HTTP 200 a
+	// second time, the first one REVERSED]. T305 corrected three sites, T320
+	// found a fourth (the registry row's own `description`), and this comment is
+	// the fifth — it is here BECAUSE it QUOTES that description, which is exactly
+	// how a wrong first field propagates: the longest field gets the correction
+	// and the shortest one gets copied. Both are fixed in T322's diff.]
 	//
 	// THE FLIP IS MEASURED TO WIDEN THE GATE, and this rule is what puts the
 	// width back. T296 built a closure-family refusal vector from T287's real
@@ -304,17 +316,25 @@ func Admit(v *Vector, opts Options) []string {
 		//     PLAIN-CREATE acceptances, and one request field bought the claim. That was
 		//     P-89 one level up: prose claimed DATA was firing and it was not.
 		//
-		// WHAT THIS STORE HAS OBSERVED ON THIS ROW IS FOUR VECTORS, NOT THREE, AND THEY
-		// ARE NOT SYMMETRICAL. The asymmetry IS the measurement and it is why the arms
-		// differ:
+		// WHAT THIS STORE HAS OBSERVED ON THIS ROW IS SIX VECTORS [T328; T306 read four,
+		// and the ASYMMETRY it recorded IS NOW GONE — that asymmetry was the entire reason
+		// its arms differed, so read this table before the paragraphs below, which are
+		// kept as history]:
 		//
 		//   the defineOpeningBalance command — BOTH SIDES of :811's emptiness test
 		//     LDG-REFUSE-03  REFUSAL   findNonContraTransactionIds NON-EMPTY  :717 -> :810-813
 		//     LDG-05         ACCEPTED  findNonContraTransactionIds EMPTY, :812 falls through,
 		//                              HTTP 200 and SIX journal entries for three request legs
-		//   the two DATE boundaries — REFUSING SIDE ONLY, accepting side still uncaptured
-		//     LDG-REFUSE-04  REFUSAL   !isBefore(latestClosingDate, transactionDate)   :636
-		//     LDG-REFUSE-05  REFUSAL   isDateInTheFuture(transactionDate)              :629-631
+		//   the CLOSURE boundary — BOTH SIDES of :636
+		//     LDG-REFUSE-04  REFUSAL   txn ON the closing date, !isBefore(closing, txn)  :636
+		//     LDG-06         ACCEPTED  txn one day AFTER the closing date, HTTP 200, three
+		//                              journal entries and no contra expansion    [T327 B-1]
+		//   the FUTURE-DATE guard — BOTH SIDES of :629-631
+		//     LDG-REFUSE-05  REFUSAL   txn one day after the business date, isDateInTheFuture
+		//     LDG-07         ACCEPTED  txn ON the business date, HTTP 200 — the only
+		//                              observation here that tells isAfter from !isBefore,
+		//                              i.e. a STRICT comparison from a non-strict one
+		//                                                                        [T327 B-2]
 		//
 		// [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java at the pinned
 		// commit 426a23544. :717 is validateJournalEntriesArePostedBefore(contraId) inside
@@ -324,6 +344,18 @@ func Admit(v *Vector, opts Options) []string {
 		// future-date GUARD STATEMENT is :630 and :629 is its comment line — this store
 		// cites it as ":629" throughout and that citation is one line high; :636 is
 		// literally `if (!DateUtils.isBefore(latestGLClosure.getClosingDate(), transactionDate))`.]
+		//
+		// ***** EVERYTHING FROM HERE TO THE PREDICATE IS T306's REASONING AND IS KEPT AS
+		// HISTORY. ITS CONCLUSION -- "the date arms KEEP the expect.kind precondition" --
+		// IS SUPERSEDED BY T328, whose own paragraph sits directly above the predicate. It
+		// is left visible rather than deleted for the reason this store applies to every
+		// refuted rule: it was quoted forward (in T306's handoff, in openingbalance_test.go
+		// and in this file's own message string), and a reader who meets it there must be
+		// able to find the correction. NOTE WHAT T328 MEASURED ABOUT IT: the edit this
+		// paragraph prescribes -- "drop `v.Expect.Kind == \"refusal\"` from the date arms"
+		// -- WOULD HAVE ADMITTED NEITHER PROMOTED VECTOR, because both preconditions it
+		// names are the REFUSING-region comparisons. The instruction was right about WHEN
+		// to widen and wrong about WHAT to widen. *****
 		//
 		// SO THE COMMAND ARM TAKES EITHER expect.kind AND THE DATE ARMS DO NOT. T306's
 		// own first pass put `v.Expect.Kind == "refusal" &&` in front of ALL THREE arms,
@@ -368,31 +400,96 @@ func Admit(v *Vector, opts Options) []string {
 		// the pre-closure shape. No capability gate can catch that; only re-reading the
 		// cited artefact can, and that is the citation rules' job, not this one's
 		// [T306-F-6].
+		// ***** T328 WIDENED THE TWO DATE ARMS, DELIBERATELY, WITH THE CAPTURE IN HAND,
+		// AND THE PRECONDITION IT DROPPED IS NOT THE ONE THE COMMENT ABOVE PREDICTED.
+		// *****
+		//
+		// The prediction above was "drop `v.Expect.Kind == \"refusal\"` from the date
+		// arms". THAT ALONE WOULD HAVE ADMITTED NOTHING, and it was measured before it was
+		// argued: `preClosureInputs` is `!isoBefore(closing, txn)`, which is TRUE only when
+		// the transaction date is ON OR BEFORE the closing date -- the REFUSING region.
+		// T327's B-1 arm is dated ONE DAY AFTER the closing date, so preClosureInputs is
+		// FALSE on it, and the same asymmetry holds for `futureDatedInputs` against B-2
+		// (dated ON the business date, so isoAfter is false). Both promoted vectors sit in
+		// the ACCEPTING region of their comparison, which is the whole reason they are
+		// worth capturing, and the old predicate had no term that could ever be true for
+		// them. Dropping the expect.kind precondition would have left the gate refusing
+		// them and the task would have "widened" nothing [MEASURED:
+		// .softhouse/capture/t328-date-rule-promotion/out/40-RED-door-is-closed-inadmissible.txt
+		// -- both vectors INADMISSIBLE on this rule with the pre-T328 predicate].
+		//
+		// SO THE SHAPE IS NOW KEYED ON THE REGION, AND THE EXPECTATION MUST AGREE WITH THE
+		// REGION. Four date shapes are observed on this row, not two, and the store now
+		// carries a vector for each:
+		//
+		//   the CLOSURE boundary at :636, !isBefore(closingDate, transactionDate)
+		//     txn <= closing   REFUSED   LDG-REFUSE-04 (txn ON the closing date, 403)
+		//     txn >  closing   ACCEPTED  LDG-06 (closing 2026-08-26, txn 2026-08-27, 200)
+		//   the FUTURE-DATE guard at :629-631, isAfter(transactionDate, businessDate)
+		//     txn >  business  REFUSED   LDG-REFUSE-05 (business + 1, 403)
+		//     txn <= business  ACCEPTED  LDG-07 (txn ON the business date, 200)
+		//
+		// [VERIFIED: the two acceptances are HTTP 200 in
+		// .softhouse/capture/t327-closure-accepting-side/throwaway/out/
+		// B1-ACCEPT-06-entry-one-day-after-closing-date.status and
+		// B2-ACCEPT-01-entry-on-business-date.status, promoted by T328's builder.]
+		//
+		// THIS IS STILL KEYED ON THE REQUEST, WHICH IS T306-F-2's RULE AND IT SURVIVES.
+		// The REGION is computed from the vector's own two dates by the same comparison the
+		// oracle makes; expect.kind is then required to AGREE with the region, and
+		// expect.refusal.code is still never read here. That is not "keying on the answer":
+		// a vector claiming the oracle REFUSED where the store observed it ACCEPTING, or
+		// ACCEPTED where the store observed it refusing, is claiming coverage of a shape
+		// nobody captured, and the region is what says which. DEFAULT-DENY IS PRESERVED IN
+		// BOTH DIRECTIONS and is exercised by
+		// TestOpeningBalanceCapabilityIsScopedToTheObservedShape: a vector with NO date
+		// inputs is still refused, an ACCEPTANCE in a REFUSING region is still refused, and
+		// T328 adds the mirror arm -- a REFUSAL in an ACCEPTING region -- which the old
+		// predicate also refused but for the accidental reason that it refused every
+		// accepting-region shape.
 		openingBalanceCommand := v.Request.Command == "defineOpeningBalance"
-		preClosureInputs := v.Request.LatestClosingDate != "" && v.Request.TransactionDate != "" &&
+		closureInputs := v.Request.LatestClosingDate != "" && v.Request.TransactionDate != ""
+		businessInputs := v.Request.TransactionDate != "" && v.Request.BusinessDate != ""
+		preClosureInputs := closureInputs &&
 			!isoBefore(v.Request.LatestClosingDate, v.Request.TransactionDate)
-		futureDatedInputs := v.Request.TransactionDate != "" && v.Request.BusinessDate != "" &&
+		futureDatedInputs := businessInputs &&
 			isoAfter(v.Request.TransactionDate, v.Request.BusinessDate)
+		postClosureInputs := closureInputs &&
+			isoBefore(v.Request.LatestClosingDate, v.Request.TransactionDate)
+		onOrBeforeBusinessDateInputs := businessInputs &&
+			!isoAfter(v.Request.TransactionDate, v.Request.BusinessDate)
+		// THE REFUSING REGION WINS WHEN BOTH APPLY, because the oracle refuses as soon as
+		// EITHER guard fires: a vector that is past the closure but future-dated is a
+		// refusal shape, not an accepting one.
+		refusingRegion := preClosureInputs || futureDatedInputs
+		acceptingRegion := (postClosureInputs || onOrBeforeBusinessDateInputs) && !refusingRegion
 		observedShape := openingBalanceCommand ||
-			(v.Expect.Kind == "refusal" && (preClosureInputs || futureDatedInputs))
+			(v.Expect.Kind == "refusal" && refusingRegion) ||
+			(v.Expect.Kind != "refusal" && acceptingRegion)
 		if !observedShape {
-			add("capabilities_required names %q on a vector whose request.command is %q and whose "+
-				"expect.kind is %q. THE SHAPES THIS STORE HAS OBSERVED ARE: the "+
+			add("capabilities_required names %q on a vector whose request.command is %q, whose "+
+				"expect.kind is %q, and whose date inputs are transaction_date %q, business_date %q, "+
+				"latest_closing_date %q. THE SHAPES THIS STORE HAS OBSERVED ARE: the "+
 				"defineOpeningBalance-after-a-NON-CONTRA-entry refusal at "+
 				"JournalEntryWritePlatformServiceJpaRepositoryImpl.java:717 (LDG-REFUSE-03) and its "+
 				"ACCEPTING side at :812 (LDG-05, HTTP 200 and six entries on an empty ledger) -- so on "+
-				"that COMMAND either expectation is covered -- and the PRE-CLOSURE (:636) and "+
-				"FUTURE-DATED (:629-631) REFUSALS (LDG-REFUSE-04, LDG-REFUSE-05), whose ACCEPTING "+
-				"sides are CAPTURED BUT NOT PROMOTED. The claim on the two DATE shapes is decided by "+
-				"THIS VECTOR'S REQUEST -- the same two date comparisons the oracle makes -- and never "+
-				"by the refusal code it declares, because that is the answer it is asking to be "+
-				"believed about. A vector outside those four -- an entry ACCEPTED at either date "+
-				"boundary, most obviously -- would read as covered when it is not. T327 fired backlog "+
-				"B-1 and B-2 and BOTH RETURNED HTTP 200, so the oracle bytes now EXIST "+
-				"(.softhouse/capture/t327-closure-accepting-side/), but NO VECTOR carries them and this "+
-				"gate keys on the STORE, never on the capture directory. PROMOTE THE CAPTURE FIRST, "+
-				"then widen this rule",
-				name, v.Request.Command, v.Expect.Kind)
+				"that COMMAND either expectation is covered -- and BOTH SIDES OF BOTH DATE "+
+				"BOUNDARIES: the PRE-CLOSURE refusal at :636 (LDG-REFUSE-04, transaction date ON the "+
+				"closing date) with its ACCEPTING side one day later (LDG-06, HTTP 200), and the "+
+				"FUTURE-DATED refusal at :629-631 (LDG-REFUSE-05, one day after the business date) "+
+				"with its ACCEPTING side ON the business date (LDG-07, HTTP 200, which is the only "+
+				"observation in this store that tells a STRICT comparison from a non-strict one). "+
+				"THE CLAIM IS DECIDED BY THIS VECTOR'S REQUEST -- the same two date comparisons the "+
+				"oracle makes -- and never by the refusal code it declares, because that is the "+
+				"answer it is asking to be believed about. WHAT IS STILL REFUSED, and this is "+
+				"default-deny rather than an oversight: a vector claiming this row with NO date "+
+				"inputs and no opening-balance command (nothing decides it); a vector claiming the "+
+				"oracle ACCEPTED with dates in a REFUSING region; and a vector claiming the oracle "+
+				"REFUSED with dates in an ACCEPTING region. Each of those describes an observation "+
+				"nobody took. A capture is not a vector: this gate keys on the STORE, never on the "+
+				"contents of a capture directory",
+				name, v.Request.Command, v.Expect.Kind, v.Request.TransactionDate,
+				v.Request.BusinessDate, v.Request.LatestClosingDate)
 		}
 	}
 

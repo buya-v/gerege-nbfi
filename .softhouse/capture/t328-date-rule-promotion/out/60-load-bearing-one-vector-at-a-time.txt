@@ -1,0 +1,24 @@
+T328 load-bearing probe -- HEAD 2400389c, impl ledger-wrong-date-rules-always-refusing
+Each arm withdraws ONE vector from a SCRATCH COPY. The committed store is never touched.
+
+=== ARM 0  both vectors present (the control)
+    ledger parity PASS/FAIL: 5 2
+    LDG-06-postclosure-entry-accepted-one-day-a... parity         ledger_db_readback     FAIL              1 cells (0 money)
+LDG-07-entry-on-the-business-date-accepted     parity         ledger_db_readback     FAIL              1 cells (0 money)
+
+=== ARM 1  LDG-07 WITHDRAWN -- does LDG-06 still kill it?
+    ledger parity PASS/FAIL: 5 1
+    LDG-06-postclosure-entry-accepted-one-day-a... parity         ledger_db_readback     FAIL              1 cells (0 money)
+
+=== ARM 2  LDG-06 WITHDRAWN -- does LDG-07 still kill it?
+    ledger parity PASS/FAIL: 5 1
+    LDG-07-entry-on-the-business-date-accepted     parity         ledger_db_readback     FAIL              1 cells (0 money)
+
+=== ARM 3  BOTH WITHDRAWN -- the store as it stood before T328
+    ledger parity PASS/FAIL: 5 0
+    
+
+CONCLUSION
+  ARM 3 reproduces the hole; ARM 1 and ARM 2 each show ONE surviving guard, so
+  NEITHER VECTOR IS DECORATIVE: each kills a guard the other cannot see.
+T328 load-bearing probe: EXIT 0

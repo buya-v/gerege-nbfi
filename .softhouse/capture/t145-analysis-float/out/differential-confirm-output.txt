@@ -1,0 +1,110 @@
+SELECTOR: the 13 files the wide sweep reported as DIFFERS, re-run SERIALLY
+          three times each (A, A', B) with A' as the determinism control.
+REV: a66d047c135c039e64f2a8d6b6de7bcc51c7c13a   TIMEOUT: 120s   serial, no thread pool
+
+ATTRIBUTABLE         .softhouse/capture/charges/bin/t48-analyse.py
+      exit  A=0  A'=0  B=0
+      tree writes restored: A=0 A'=0 B=0
+      L2    A:   19 sidecars written; 218 raw numeric leaves checked in the last file
+           B:   19 sidecars written; 80 raw numeric leaves checked in the last file
+
+IDENTICAL-ON-RERUN   .softhouse/capture/charges/bin/t51-analyse2.py
+      exit  A=0  A'=0  B=0
+      tree writes restored: A=0 A'=0 B=0
+
+ATTRIBUTABLE         .softhouse/capture/pathb/t22-probe/mkcalc.py
+      exit  A=0  A'=0  B=1
+      tree writes restored: A=0 A'=0 B=1
+      L1    A: wrote calc-B-01-baseline-repro.json productId -> 5
+           B: 
+      L2    A: wrote calc-B-02-multiplesof100-repro.json productId -> 6
+           B: <EOF>
+      L3    A: wrote calc-B-03-diycs-fullleapyear-repro.json productId -> 7
+           B: <EOF>
+      L4    A: wrote calc-B-04-diycs-feb29only-repro.json productId -> 8
+           B: <EOF>
+      L5    A: 
+           B: <EOF>
+      stderr A: <empty>
+      stderr B: TypeError: Object of type Decimal is not JSON serializable
+
+ATTRIBUTABLE         .softhouse/capture/pathb/t22-probe/mkreq.py
+      exit  A=0  A'=0  B=1
+      tree writes restored: A=1 A'=1 B=2
+      L1    A: wrote product-1-baseline-repro.json
+           B: 
+      L2    A: wrote product-2-multiplesof100-repro.json
+           B: <EOF>
+      L3    A: wrote product-3-diycs-fullleapyear-repro.json
+           B: <EOF>
+      L4    A: wrote product-4-diycs-feb29only-repro.json
+           B: <EOF>
+      L5    A: 
+           B: <EOF>
+      stderr A: <empty>
+      stderr B: TypeError: Object of type Decimal is not JSON serializable
+
+IDENTICAL-ON-RERUN   .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py
+      exit  A=0  A'=0  B=0
+      tree writes restored: A=1 A'=1 B=1
+
+IDENTICAL-ON-RERUN   .softhouse/capture/t290-review-t271/probe_t286_rule_t290.py
+      exit  A=0  A'=0  B=0
+      tree writes restored: A=1 A'=1 B=1
+
+IDENTICAL-ON-RERUN   .softhouse/capture/t290-review-t271/prove_repair_inert.py
+      exit  A=0  A'=0  B=0
+      tree writes restored: A=1 A'=1 B=1
+
+IDENTICAL-ON-RERUN   .softhouse/capture/t290-review-t271/red/drive-red-t290.py
+      exit  A=0  A'=0  B=0
+      tree writes restored: A=1 A'=1 B=1
+
+NONDETERMINISTIC     .softhouse/capture/t330-reconcile-merged-work/e2e.py
+      exit  A=0  A'=0  B=0
+      tree writes restored: A=1 A'=1 B=1
+      A  vs A' first divergence, L6:
+           A :   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-fjjvduwl
+           A':   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-odww67yh
+
+NONDETERMINISTIC     .softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py
+      exit  A=1  A'=1  B=1
+      tree writes restored: A=1 A'=1 B=1
+      A  vs A' first divergence, L2:
+           A : scratch: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t262-attack-adfb98ll
+           A': scratch: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t262-attack-fi0swyvd
+
+NONDETERMINISTIC     .softhouse/reviews/t262-verdict-predicate/pin_test_t262.py
+      exit  A=1  A'=1  B=1
+      tree writes restored: A=1 A'=1 B=1
+      A  vs A' first divergence, L1:
+           A : scratch repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t262-pin-ovw1s8oh
+           A': scratch repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t262-pin-bmz7c9ho
+
+IDENTICAL-ON-RERUN   .softhouse/reviews/t45-probe/t45_extra.py
+      exit  A=0  A'=0  B=0
+      tree writes restored: A=1 A'=1 B=1
+
+IDENTICAL-ON-RERUN   .softhouse/reviews/t47-probe/t47_extra.py
+      exit  A=0  A'=0  B=0
+      tree writes restored: A=1 A'=1 B=1
+
+==== CONFIRMATION RESULT ====
+ATTRIBUTABLE         : 3
+      .softhouse/capture/charges/bin/t48-analyse.py
+      .softhouse/capture/pathb/t22-probe/mkcalc.py
+      .softhouse/capture/pathb/t22-probe/mkreq.py
+NONDETERMINISTIC     : 3
+      .softhouse/capture/t330-reconcile-merged-work/e2e.py
+      .softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py
+      .softhouse/reviews/t262-verdict-predicate/pin_test_t262.py
+IDENTICAL-ON-RERUN   : 7
+      .softhouse/capture/charges/bin/t51-analyse2.py
+      .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py
+      .softhouse/capture/t290-review-t271/probe_t286_rule_t290.py
+      .softhouse/capture/t290-review-t271/prove_repair_inert.py
+      .softhouse/capture/t290-review-t271/red/drive-red-t290.py
+      .softhouse/reviews/t45-probe/t45_extra.py
+      .softhouse/reviews/t47-probe/t47_extra.py
+
+FINAL TREE CHECK: 1 entries outside this task's capture dir (0 == clean)

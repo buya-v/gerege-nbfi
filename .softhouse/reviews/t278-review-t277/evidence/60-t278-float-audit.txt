@@ -1,0 +1,14 @@
+T278 NO-FLOAT AUDIT -- money is integer minor units, intermediates too
+
+  .softhouse/capture/t277-shapelaw-salvage/src/shapelaw_census_t277.py HARD=0 BENIGN=1
+      benign identifier `float` at line 588 -- inside a DETECTOR (isinstance/type comparison), NOT arithmetic
+  .softhouse/capture/t277-shapelaw-salvage/src/crosscheck_seven_t277b.py HARD=0 BENIGN=1
+      benign identifier `float` at line 339 -- inside a DETECTOR (isinstance/type comparison), NOT arithmetic
+  .softhouse/capture/t277-shapelaw-salvage/src/dump_seven_t277.py  HARD=0 BENIGN=0
+  .softhouse/reviews/t278-review-t277/probe/t278_rederive.py       HARD=0 BENIGN=0
+  .softhouse/reviews/t278-review-t277/probe/t278_domain_audit.py   HARD=0 BENIGN=0
+  .softhouse/reviews/t278-review-t277/probe/t278_float_audit.py    HARD=0 BENIGN=0
+
+  verify_t277.sh  decimal-looking literals: none
+
+T278 NO-FLOAT AUDIT: PASS

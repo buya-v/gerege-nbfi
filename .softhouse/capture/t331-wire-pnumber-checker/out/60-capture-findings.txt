@@ -1,0 +1,2 @@
+T331-CAPTURE: wrote .softhouse/capture/t331-wire-pnumber-checker/baseline/10-findings-redacted.json -- 90 findings, 3 free-text fields dropped per finding.
+T331-CAPTURE: counts {"bare": 8539, "consistent": 461, "cross_referenced": 25, "definition": 97, "misdirecting": 70, "negative_control": 14, "self_corrected": 34, "sites": 9201, "skipped_self_output": 22, "skipped_self_source": 2, "undefined": 20}

@@ -860,6 +860,92 @@ func (closureBoundaryExclusivePoster) PostEntry(req Request) (PostedEntry, *Refu
 	return GoPoster{}.PostEntry(r)
 }
 
+// dateRulesAlwaysRefusingPoster REFUSES EVERY DATED ENTRY. Both date guards fire
+// on the PRESENCE of their precondition state and neither ever performs its
+// comparison.
+//
+// THE DEFECT, AND IT IS THE SAME SHAPE AS openingBalanceAlwaysRefusingPoster.
+// The oracle's two date rules are each a COMPARISON:
+//
+//	:630  isDateInTheFuture(transactionDate)  ->  isAfter(txn, businessDate)   STRICT
+//	:636  !isBefore(closingDate, transactionDate)                              INCLUSIVE
+//
+// [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java:626-640 and
+// DateUtils.java:258-264, 296-302, at the pinned commit 426a23544.] This port
+// keeps the RULES, keeps their CODES and their MESSAGES, and throws away the two
+// comparisons: a GLClosure exists, so the ledger is closed; a business date
+// exists, so the entry is in the future. It answers 403 to every request that
+// carries the state either rule reads.
+//
+// WHY IT SURVIVED THE CORPUS, WHICH IS THE POINT OF REGISTERING IT. Until T328,
+// exactly two vectors in this store carried a date, and BOTH ARE REFUSALS:
+// LDG-REFUSE-04 (transaction date ON the closing date, accounting.closed) and
+// LDG-REFUSE-05 (one day after the business date, future.date). Every other
+// ledger vector carries no transaction_date at all, so this port falls through
+// to GoPoster on all eight of them. MEASURED against the store as it stood at
+// commit 136a2be6, BEFORE the promotion: 5 of 5 parity PASS, 5 of 5 refusal
+// PASS, exit 0, "VERDICT: PASS"
+// [.softhouse/capture/t328-date-rule-promotion/out/10-mutant-SURVIVES-before.txt].
+// That is the identical hole T296 measured for opening balances (arm A) and T305
+// closed with an ACCEPTING-side capture: every refusal capture in a
+// refusal-only corpus AGREES with a port that refuses everything.
+//
+// WHAT KILLS IT, AND EACH VECTOR KILLS EXACTLY ONE HALF — neither is redundant:
+//
+//	LDG-06  a live GLClosure at 2026-08-26 and an entry dated 2026-08-27.
+//	        The oracle ACCEPTED (HTTP 200, three entries). This port refuses
+//	        with accounting.closed because a closure exists. Kills the :636 half.
+//	LDG-07  NO closure at all, and an entry dated ON the business date.
+//	        The oracle ACCEPTED. This port refuses with future.date because a
+//	        business date exists. Kills the :629-631 half.
+//
+// Delete either vector and this implementation comes back to life on the other
+// guard, which is what makes both of them load-bearing rather than one of them
+// decorative [.softhouse/capture/t328-date-rule-promotion/out/].
+//
+// WHY IT IS NOT A DUPLICATE OF ANY REGISTERED IMPLEMENTATION.
+// ledger-wrong-future-date-ignored and ledger-wrong-closure-boundary-exclusive
+// both FAIL OPEN — they post where the oracle refuses — and both are killed by
+// the two REFUSAL vectors. This one FAILS CLOSED, and refusal vectors cannot see
+// it. They are opposite errors on the same two rules and no vector kills both
+// directions: that asymmetry is exactly why an accepting-side capture was
+// needed. ledger-wrong-openingbalance-always-refusing is the same SHAPE on a
+// different rule (the command, not the dates) and diverges from this one on
+// LDG-05 and LDG-REFUSE-03.
+type dateRulesAlwaysRefusingPoster struct{}
+
+func (dateRulesAlwaysRefusingPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	// THE ORDER IS INVERTED RELATIVE TO THE ORACLE (:630 before :636), AND THAT
+	// INVERSION IS FORCED — it is not a fourth defect chosen for flavour. It was
+	// MEASURED [.softhouse/capture/t328-date-rule-promotion/out/20-mutation-arms.txt,
+	// arm W-2]: a variant keeping the oracle's order with a presence-keyed future
+	// guard DIES ON THE STORE AS IT STANDS TODAY, on LDG-REFUSE-04, because that
+	// vector carries a business date of 2026-08-23 with a transaction date of
+	// 2026-01-31 and expects accounting.closed — so a future guard that fires on
+	// the mere PRESENCE of a business date answers with the wrong globalisation
+	// code. That is a real, if narrow, constraint the refusal-only corpus already
+	// imposed, and it is worth naming precisely: the corpus can see a
+	// presence-keyed future guard IN ORACLE ORDER; it cannot see one that is
+	// consulted second. Consulting the closure first is the natural
+	// accounting-shaped ordering ("is the period closed?" before "is this in the
+	// future?"), so the surviving mutant is not contrived.
+	if req.TransactionDate != "" && req.LatestClosingDate != "" {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       codeAccountingClosed,
+			Message:    msgAccountingClosed,
+		}, nil
+	}
+	if req.TransactionDate != "" && req.BusinessDate != "" {
+		return PostedEntry{}, &Refusal{
+			HTTPStatus: 403,
+			Code:       codeFutureDate,
+			Message:    msgFutureDate,
+		}, nil
+	}
+	return GoPoster{}.PostEntry(req)
+}
+
 // nettingPoster sums every leg into one accumulator, treating a credit as a
 // negative debit, and then reports totals from it.
 //
@@ -984,6 +1070,15 @@ func init() {
 			"closingDate INCLUSIVE. It therefore FAILS OPEN on an entry dated ON the closing date, "+
 			"which is the day a period-end adjustment carries (T295, A2-01)",
 		closureBoundaryExclusivePoster{})
+	RegisterWrong("ledger-wrong-date-rules-always-refusing",
+		"REFUSES EVERY DATED ENTRY: both date guards fire on the PRESENCE of the state they read "+
+			"and neither ever performs its comparison -- a GLClosure exists so the ledger is closed "+
+			"(:636), a business date exists so the entry is in the future (:629-631). It keeps both "+
+			"globalisation codes and both messages, so a refusal-only corpus cannot tell it from a "+
+			"correct port. This is the DATE-RULE twin of T296's arm A: measured surviving 5/5 parity "+
+			"and 5/5 refusal vectors on the store as it stood before T328, and killed by LDG-06 (the "+
+			"closure half) and LDG-07 (the future-date half), one each",
+		dateRulesAlwaysRefusingPoster{})
 	RegisterWrong("ledger-wrong-netting-totals",
 		"nets credits against debits into one accumulator, so I-1 holds by construction and both totals "+
 			"report the netted figure",

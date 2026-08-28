@@ -1,0 +1,35 @@
+SELECTOR: regex /\bfloat\s*\(/ over every tracked .py that has >=1 UNGUARDED
+          json.load site (out/census.json).
+POPULATION: 196 files
+
+.softhouse/bin/ready-tasks.py:1583: secs = float(args[i])
+.softhouse/capture/actualactual/analysis/discriminate.py:160: if [float(g) for g in got] != [float(w) for w in want]:
+.softhouse/capture/lib/check_wire_float_roundtrip.py:45: THE ONE DELIBERATE `float()` (P-25)
+.softhouse/capture/lib/check_wire_float_roundtrip.py:47: The line marked SIMULATE calls `float()` on purpose: it SIMULATES THE DEFECT, which is the only
+.softhouse/capture/lib/check_wire_float_roundtrip.py:278: return json.dumps(float(tok))          # SIMULATE the defect. Deliberate float (P-25).
+.softhouse/capture/t100-g8-rescope/src/closed_form_check.py:14: `float(gap)` below is a DISPLAY conversion of a dimensionless residual `B*a - 1/2`, used only to
+.softhouse/capture/t100-g8-rescope/src/closed_form_check.py:65: tie=(gap == 0), gap_float=float(gap),
+.softhouse/capture/t219-g8-residual/src/site3.py:6: `fractions.Fraction`, or `decimal.Decimal` under an explicit Context. There is no `float()` call
+.softhouse/capture/t223-g8-region-predicate/src/classify_t223.py:6: Reads only the raw capture and ../prediction.json. Integer minor units everywhere; no float (P-25).
+.softhouse/capture/t229-g8-site3/src/rederive_total_interest_t241.py:31: `int` minor units by string surgery -- there is no `float()`, no float literal, and no
+.softhouse/capture/t229-g8-site3/src/site3.py:76: `fractions.Fraction`, or `decimal.Decimal` under an explicit Context. There is no `float()` call
+.softhouse/capture/t277-shapelaw-salvage/src/crosscheck_seven_t277b.py:40: INTEGER MINOR UNITS ONLY. There is no float, no `float()`, no `round()`, no
+.softhouse/capture/t277-shapelaw-salvage/src/crosscheck_seven_t277b.py:357: assert calls == 0, "float()/round() call present"
+.softhouse/capture/t277-shapelaw-salvage/src/crosscheck_seven_t277b.py:360: "AST clean: 0 float literals, 0 true-division, 0 float()/round(), "
+.softhouse/capture/t277-shapelaw-salvage/src/shapelaw_census_t277.py:27: INTEGER MINOR UNITS ONLY. There is no `float`, no `float()`, no `Decimal`,
+.softhouse/capture/t277-shapelaw-salvage/src/shapelaw_census_t277.py:576: for token in ("float(", "Decimal", "Fraction", "import decimal", "import fractions"):
+.softhouse/capture/t277-shapelaw-salvage/src/shapelaw_census_t277.py:583: """AST-level proof: no float literal, no float() call, no true-division node."""
+.softhouse/capture/t277-shapelaw-salvage/src/shapelaw_census_t277.py:613: "AST clean: no float literal, no float()/round() call, no true-division, "
+.softhouse/capture/t284-schema2-callsites/instruments/10-callsite-registry.py:66: is no `float(` and no `json.load(...)` of a capture body anywhere in it; the only
+.softhouse/capture/t305-openingbalance-accepting-side/throwaway/build-vector.py:11: arithmetic on int -- exactly the way DEC-2 §4.3 requires of the port itself. `float()` is never
+.softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:13: arithmetic on int. `float()` is never called on a money value and `decimal` is not imported:
+.softhouse/capture/t83-nonamortizing/src/classify-boundary.py:102: for (rate, n), rs in sorted(by_shape.items(), key=lambda kv: (float(kv[0][0]), kv[0][1])):
+.softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py:144: check("it never calls bare float()", "float(" not in src.replace("parse_float=", ""))
+.softhouse/handoff/T74-promote-vectors.py:293: # Zero is decided by exact string inspection, never by float(). "0", "0.00", "-0.0" and "+0"
+.softhouse/reviews/T84-evidence/src/classify.py:47: for k in sorted(grid, key=lambda k:(float(k[0]),k[1])):
+.softhouse/reviews/T84-evidence/src/classify.py:56: for k in sorted(grid, key=lambda k:(float(k[0]),k[1])):
+.softhouse/reviews/T84-evidence/src/classify.py:94: if pred != r['fails']: mism.append((r['id'], float(Fraction(r['B'])*a), r['fails'], pred))
+.softhouse/reviews/T84-evidence/src/eval-probe1.py:88: for k in sorted(sh, key=lambda k: (float(k[0]), k[1])):
+.softhouse/reviews/t263-analyze7-float-guard/remeasure-materiality.py:128: print("  -> the committed run of resolve7.py carried %s float(s) into a request body."
+
+float() CASTS: 29, in 19 of the 196 unguarded-population files

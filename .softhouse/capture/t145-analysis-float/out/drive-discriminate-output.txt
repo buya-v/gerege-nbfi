@@ -1,0 +1,23 @@
+ROOT=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a107fbffe4ed4c4b5
+REV=4d3fc48f1c65eb8f7bd0b15b9a3ff2c61231e106
+python=Python 3.9.6 (default, May 22 2026, 11:13:45)  [Clang 21.0.0 (clang-2100.1.1.101)] 
+
+############ LEG 0 -- the ORIGINAL, re-run from its own directory (a READ) ############
+  exit=0
+  ORIGINAL DIVERGES FROM ITS COMMITTED TRANSCRIPT -- diff below
+44a45,47
+> CONTROL   T48-A2-CTL-B03       sum of dueInterest = 144659.21  (committed Path B value 144659.21): REPRODUCED
+> CONTROL   T48-A2-CTL-B04       sum of dueInterest = 145011.43  (committed Path B value 145011.43): REPRODUCED
+> CONTROL   T48-A2-CTL-B03NULL   sum of dueInterest = 144659.21  (committed Path B value 144659.21): REPRODUCED
+  original bytes UNCHANGED on disk: 0 modified-file lines (0 == untouched)
+
+############ LEG 1 -- the SCRATCH COPY (parse_float=Decimal + exact-text predicate) ############
+  exit=0
+
+############ LEG 2 -- WHICH PUBLISHED NUMBERS CHANGE ############
+  diff  committed transcript  vs  SCRATCH COPY output:
+    DIFFERS. Full delta in out/published-delta.txt; changed lines:
+    44a45,47
+    > CONTROL   T48-A2-CTL-B03       sum of dueInterest = 144659.21  (committed Path B value 144659.21): REPRODUCED
+    > CONTROL   T48-A2-CTL-B04       sum of dueInterest = 145011.43  (committed Path B value 145011.43): REPRODUCED
+    > CONTROL   T48-A2-CTL-B03NULL   sum of dueInterest = 144659.21  (committed Path B value 144659.21): REPRODUCED
