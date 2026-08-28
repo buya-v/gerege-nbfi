@@ -1,0 +1,2 @@
+MNT decimal_places=2
+MNT | decimal_places=2 | name=Mongolian Tugrik

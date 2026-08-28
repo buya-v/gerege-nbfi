@@ -1,0 +1,16 @@
+POST /journalentries
+case-id: B1-CTRL-04-entry-on-closing-date
+instance: THROWAWAY t327-oracle-app, image fineract:latest (same image id as the standing fineract-fineract-1), port 8444
+Fineract-Platform-TenantId: t327
+Authorization: Basic <mifos:password>
+Idempotency-Key: t327-b1-ctrl-04
+Content-Type: application/json
+body-wire-bytes-artefact: B1-CTRL-04-entry-on-closing-date.req
+body-sha256: 6e7f2486655965ad53b4047ce78d78479f08e8ec8965fcf9670c31efe2ed770d
+body-bytes: 609
+response-status: 403
+response-sha256: 4cd69b17a47977ef4d81e436a678cfd36129d4224edfcb8dd3e890db076483c3
+business-date-candidate: 2026-08-28 (DERIVED today in Asia/Ulaanbaatar; MEASURED by B2-ACCEPT-01 + B2-CTRL-02)
+latest-closing-date-at-fire-time: 2026-08-26
+captured-at-utc: 2026-08-27T17:33:40Z
+note: B-1 CONTROL: transactionDate == closingDate 2026-08-26; :636 ACCOUNTING_CLOSED expected (inclusive boundary)

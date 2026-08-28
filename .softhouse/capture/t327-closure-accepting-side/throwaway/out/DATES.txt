@@ -1,0 +1,10 @@
+derived-business-date-candidate (today in Asia/Ulaanbaatar) = 2026-08-28
+business-date-plus-1                                        = 2026-08-29
+glclosure closing date D                                    = 2026-08-26
+D + 1 (the B-1 acceptance)                                  = 2026-08-27
+D - 1 (free control)                                        = 2026-08-25
+host UTC now                                                = 2026-08-27T17:33:37Z
+host UTC date                                               = 2026-08-27
+target db now()                                             = 2026-08-27 17:33:37.503102+00
+target enable-business-date row                             = (no such row)
+target m_business_date row count                            = 0

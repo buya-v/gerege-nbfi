@@ -1,0 +1,4 @@
+a29aac720487 | type_enum 1 | sum 350000.620000 | legs 1
+a29aac720487 | type_enum 2 | sum 350000.620000 | legs 2
+a29aac77c01b | type_enum 1 | sum 350000.620000 | legs 1
+a29aac77c01b | type_enum 2 | sum 350000.620000 | legs 2

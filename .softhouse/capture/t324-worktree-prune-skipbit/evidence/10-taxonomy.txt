@@ -1,0 +1,98 @@
+T324 INSTRUMENT 10 — SKIP-BIT / BLIND-SPOT TAXONOMY
+root       : /private/tmp/t324-tax-final2
+date       : 2026-08-27T17:42:06Z
+git        : git version 2.50.1 (Apple Git-155)
+uname      : Darwin 25.5.0
+
+=== shapes (S = status, L = ls-files -v, R = worktree remove) ===
+
+--- A control: genuinely clean worktree
+    expectation                  : BENIGN
+    witness                      : .softhouse/tasks.json (14 bytes on disk before removal)
+    witness recoverable from git : yes
+    S  git status --porcelain    : CLEAN
+    L  git ls-files -v           : H-only
+    R  git worktree remove       : rc=0  <no output>
+    R  content after             : WORKTREE DESTROYED
+  PASS  A control: genuinely clean worktree  not a kill shape (S=CLEAN, after=WORKTREE DESTROYED)
+  PASS  A control: genuinely clean worktree  ls-files -v stays quiet (H-only) — no inertness cost
+
+--- B --assume-unchanged + modification
+    expectation                  : KILL
+    witness                      : .softhouse/tasks.json (55 bytes on disk before removal)
+    witness recoverable from git : no
+    S  git status --porcelain    : CLEAN
+    L  git ls-files -v           : NON-H:[h]
+    R  git worktree remove       : rc=0  <no output>
+    R  content after             : WORKTREE DESTROYED
+  PASS  B --assume-unchanged + modification  KILL SHAPE REPRODUCES (status CLEAN, remove rc=0, content gone)
+  PASS  B --assume-unchanged + modification  ls-files -v COVERS it (NON-H:[h])
+
+--- C --skip-worktree + modification
+    expectation                  : KILL
+    witness                      : .softhouse/tasks.json (52 bytes on disk before removal)
+    witness recoverable from git : no
+    S  git status --porcelain    : CLEAN
+    L  git ls-files -v           : NON-H:[S]
+    R  git worktree remove       : rc=0  <no output>
+    R  content after             : WORKTREE DESTROYED
+  PASS  C --skip-worktree + modification  KILL SHAPE REPRODUCES (status CLEAN, remove rc=0, content gone)
+  PASS  C --skip-worktree + modification  ls-files -v COVERS it (NON-H:[S])
+
+--- D both bits + modification
+    expectation                  : KILL
+    witness                      : .softhouse/tasks.json (48 bytes on disk before removal)
+    witness recoverable from git : no
+    S  git status --porcelain    : CLEAN
+    L  git ls-files -v           : NON-H:[h]
+    R  git worktree remove       : rc=0  <no output>
+    R  content after             : WORKTREE DESTROYED
+  PASS  D both bits + modification  KILL SHAPE REPRODUCES (status CLEAN, remove rc=0, content gone)
+  PASS  D both bits + modification  ls-files -v COVERS it (NON-H:[h])
+
+--- E skip bit set, content UNMODIFIED
+    expectation                  : BENIGN-FLAG-BY-DESIGN
+    witness                      : .softhouse/tasks.json (14 bytes on disk before removal)
+    witness recoverable from git : yes
+    S  git status --porcelain    : CLEAN
+    L  git ls-files -v           : NON-H:[h]
+    R  git worktree remove       : rc=0  <no output>
+    R  content after             : WORKTREE DESTROYED
+  PASS  E skip bit set, content UNMODIFIED  nothing unrecoverable at risk at this instant (S=CLEAN, after=WORKTREE DESTROYED)
+  PASS  E skip bit set, content UNMODIFIED  ls-files -v flags it BY DESIGN (NON-H:[h]) — TERM 1 keys on the BIT, not on a difference that a write could create after the check and before the removal. Measured cost on the live checkout: 0 of 55 worktrees (evidence/30-live-worktree-census.txt)
+
+--- F plain untracked file (no bits)
+    expectation                  : BENIGN
+    witness                      : .softhouse/handoff-draft.md (30 bytes on disk before removal)
+    witness recoverable from git : no
+    S  git status --porcelain    : DIRTY
+    L  git ls-files -v           : H-only
+    R  git worktree remove       : rc=128  fatal: '/private/tmp/t324-tax-final2/wt.VCPscF' contains modified or untracked files, use --force to delete it
+    R  content after             : SURVIVED (30 bytes)
+  PASS  F plain untracked file (no bits)  not a kill shape (S=DIRTY, after=SURVIVED (30 bytes))
+  PASS  F plain untracked file (no bits)  ls-files -v stays quiet (H-only) — no inertness cost
+
+--- G gitignored file with content
+    expectation                  : KILL-UNCOVERED
+    witness                      : ignored-scratch/notes.md (35 bytes on disk before removal)
+    witness recoverable from git : no
+    S  git status --porcelain    : CLEAN
+    L  git ls-files -v           : H-only
+    R  git worktree remove       : rc=0  <no output>
+    R  content after             : WORKTREE DESTROYED
+  PASS  G gitignored file with content  KILL SHAPE REPRODUCES (status CLEAN, remove rc=0, content gone)
+  PASS  G gitignored file with content  ls-files -v is BLIND to it, AS DECLARED (H-only) — a SECOND blind spot, reported not fixed
+
+--- H status.showUntrackedFiles=no + untracked
+    expectation                  : KILL-UNCOVERED
+    witness                      : .softhouse/handoff-draft.md (56 bytes on disk before removal)
+    witness recoverable from git : no
+    S  git status --porcelain    : CLEAN
+    L  git ls-files -v           : H-only
+    R  git worktree remove       : rc=0  <no output>
+    R  content after             : WORKTREE DESTROYED
+  PASS  H status.showUntrackedFiles=no + untracked  KILL SHAPE REPRODUCES (status CLEAN, remove rc=0, content gone)
+  PASS  H status.showUntrackedFiles=no + untracked  ls-files -v is BLIND to it, AS DECLARED (H-only) — a SECOND blind spot, reported not fixed
+
+PASS=16  FAIL=0
+scratch kept at: /private/tmp/t324-tax-final2

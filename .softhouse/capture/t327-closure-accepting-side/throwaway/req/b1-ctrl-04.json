@@ -1,0 +1,24 @@
+{
+  "officeId": 1,
+  "transactionDate": "2026-08-26",
+  "dateFormat": "yyyy-MM-dd",
+  "locale": "en",
+  "currencyCode": "MNT",
+  "comments": "T327 B-1 CONTROL: manual journal entry dated ON the closing date. Expected REFUSAL (ACCOUNTING_CLOSED). Calibrates the instrument: it proves the closure at office 1 is live before the acceptance one day later is claimed to mean anything.",
+  "debits": [
+    {
+      "glAccountId": 1,
+      "amount": 250000.25
+    },
+    {
+      "glAccountId": 2,
+      "amount": 100000.37
+    }
+  ],
+  "credits": [
+    {
+      "glAccountId": 3,
+      "amount": 350000.62
+    }
+  ]
+}

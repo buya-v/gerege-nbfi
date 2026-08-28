@@ -1,0 +1,99 @@
+# T327 -- THROWAWAY REFERENCE-ORACLE INSTANCE for the CLOSURE-BOUNDARY and BUSINESS-DATE
+# accepting-side capture (T295 backlog B-1 and B-2).
+#
+# THIS FILE IS T305's docker-compose.t305.yml, RENAMED. THE CLAIM IS MEASURED, NOT ASSERTED, and
+# an earlier draft of this very comment OVERSTATED IT ("with the identifiers changed and nothing
+# else") until the measurement was actually taken -- which is P-11 in the file that teaches P-11, so
+# it is corrected here rather than quietly. What `out/T327-RIG-PROVENANCE-rename-proof.txt` shows,
+# by sed-ing this file BACK to `t305` and diffing against T305's committed original:
+#   * strip comments and blank lines -- i.e. compare only what DOCKER reads -- and EXACTLY ONE line
+#     differs, `FINERACT_DEFAULT_TENANTDB_DESCRIPTION`, which is free text naming this capture.
+#     Every other executable line is T305's byte for byte.
+#   * the COMMENT HEADER, by contrast, IS rewritten: T305's compose-value audit is compressed and a
+#     new paragraph on the timezone (below) is added, because the timezone is load-bearing here in a
+#     way it was not for T305.
+# WHY A COPY RATHER THAN A RE-RUN
+# OF T305's RIG IN PLACE: T305's `run-all.sh` opens with
+#     rm -rf "$OUT" "$DIR/req"
+# so running it in the merged tree would DELETE T305's committed out/ and req/ -- the irreplaceable
+# bytes of an accepting capture taken on an instance that no longer exists. The brief said "use
+# T305's rig, do not build a second one"; the rig is reused verbatim in structure and content, and
+# the ONE thing not reused is the destructive in-place invocation. Recorded here and in the handoff.
+#
+# WHY THE TENANT IS NAMED `t327` AND NOT `gerege` OR `t305`: T305's rule, kept. "A capture whose
+# provenance said tenant `gerege` while it was taken on a throwaway would be indistinguishable from
+# one taken on the graded tenant. The identifier is the disclosure." Naming it `t305` would be the
+# same defect one level down -- it would make a T327 observation look like a T305 one.
+#
+# IT IS SELF-CONTAINED ON PURPOSE. It does NOT `extends:` the pinned checkout's
+# docker-compose-postgresql.yml, because that file publishes 5432 and 8443 -- the ports the
+# STANDING reference oracle is already serving on -- and compose MERGES `ports` lists by appending,
+# so an override could not unpublish them.
+#
+# WHAT DIFFERS FROM THE STANDING STACK, and nothing else does:
+#   1. NO published database port (the standing db owns 5432; this one is reached by `docker exec`)
+#   2. 8444:8443 instead of 8443:8443
+#   3. the tenant-seed environment variables below
+#   4. the log volume points at /tmp, never into the pinned checkout
+#
+# THE SEED VARIABLES ARE THE WHOLE POINT AND THEY ARE SOURCE-VERIFIED (T305's audit, re-read):
+#   FINERACT_DEFAULT_TENANTDB_IDENTIFIER -> application.properties:61 -> spring.liquibase.parameters
+#     .fineract.tenant.identifier -> db/changelog/tenant-store/parts/0002_initial_data.xml
+#   FINERACT_DEFAULT_TENANTDB_TIMEZONE   -> the same seed, column timezone_id
+#   FINERACT_CONFIG_ROUNDING_MODE        -> db/changelog/tenant/parts/0002_initial_data.xml:219-220
+#     so the tenant is SEEDED at HALF_UP=4, the CLAUDE.md-ratified mode, not patched to it after.
+#
+# THE TIMEZONE IS LOAD-BEARING FOR THIS CAPTURE IN A WAY IT WAS NOT FOR T305's.
+# BusinessDateReadPlatformServiceImpl:74 seeds BUSINESS_DATE with `DateUtils.getLocalDateOfTenant()`
+# = `LocalDate.now(getDateTimeZoneOfTenant())` [DateUtils.java:70-72] when `enable-business-date` is
+# off, which it is on a fresh tenant. So the business date this capture is graded against is TODAY
+# IN Asia/Ulaanbaatar (+08, no DST, zone named, offset never hard-coded) -- and arm B2-ACCEPT-01
+# fires on exactly that date.
+#
+# FOR CAPTURE PURPOSES ONLY. Destroyed by `down.sh` with `-v`.
+services:
+  db:
+    image: postgres:18.3
+    container_name: t327-oracle-db
+    volumes:
+      - /Users/buv/fineract/config/docker/postgresql/docker-entrypoint-initdb.d/01-init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
+    env_file:
+      - /Users/buv/fineract/config/docker/env/postgresql.env
+    environment:
+      FINERACT_TENANT_DEFAULT_DB_NAME: fineract_t327
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 10s
+      retries: 10
+
+  fineract:
+    image: fineract:latest
+    container_name: t327-oracle-app
+    user: "1000:1000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - /Users/buv/fineract/config/docker/logback/logback-override.xml:/app/logback-override.xml:ro
+      - /Users/buv/fineract/config/docker/aws/etc/credentials:/etc/aws/credentials:ro
+      - /tmp/t327-oracle-logs:/var/logs/fineract:rw
+    tmpfs:
+      - /tmp:rw,nosuid,size=256m
+    ports:
+      - "8444:8443"
+    env_file:
+      - /Users/buv/fineract/config/docker/env/fineract.env
+      - /Users/buv/fineract/config/docker/env/fineract-common.env
+      - /Users/buv/fineract/config/docker/env/fineract-postgresql.env
+    environment:
+      FINERACT_DEFAULT_TENANTDB_IDENTIFIER: t327
+      FINERACT_DEFAULT_TENANTDB_NAME: fineract_t327
+      FINERACT_DEFAULT_TENANTDB_DESCRIPTION: T327 throwaway closure/business-date accepting-side capture tenant
+      FINERACT_DEFAULT_TENANTDB_TIMEZONE: Asia/Ulaanbaatar
+      FINERACT_CONFIG_ROUNDING_MODE: "4"
+    healthcheck:
+      test: ["CMD", 'sh', '-c', 'echo -e "Checking for the availability of Fineract server deployment"; while ! nc -z "localhost" 8443; do sleep 1; printf "-"; done; echo -e " >> Fineract server has started";' ]
+      timeout: 1s
+      retries: 60
+    depends_on:
+      db:
+        condition: service_healthy

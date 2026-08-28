@@ -1,0 +1,8 @@
+PSQL SELECT (seam ledger_db_readback)
+case-id: B2-ACCEPT-01-readback-db
+container: t327-oracle-db   database: fineract_t327   tenant: t327
+instance: THROWAWAY, destroyed by down.sh in the same run
+query: json_agg over acc_gl_journal_entry JOIN acc_gl_account for one transaction_id, ordered by j.id, amounts as ::text at the STORED scale
+transaction-id: a29aac720487
+response-sha256: d7c5c8196de89d391e623f61d91d94397975243f840d196b66e1bbed382890e3
+captured-at-utc: 2026-08-27T17:33:38Z
