@@ -1,0 +1,6 @@
+  case        OLD reader                NEW reader (proposed)
+  last        'null}'                  ''
+  last_real   '2026-08-28T09:00:00Z}'  '2026-08-28T09:00:00Z'
+  mid         ''                       ''
+
+  expected: last -> '' (null, lock HELD) ; last_real -> the timestamp ; mid -> ''

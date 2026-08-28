@@ -1,0 +1,41 @@
+holder pid 63700  running: YES  uid: 501
+
+--- 1. HELD, live holder, released_at ABSENT (what the wrapper itself writes)
+    lock_present=1 released_at=<null> started_age=0 tip_age=1 pid_state=alive_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=HELD-live
+
+--- 2. HELD, live holder, released_at null but NOT the last key
+    lock_present=1 released_at=<null> started_age=0 tip_age=1 pid_state=alive_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=HELD-live
+
+--- 3. HELD, live holder, released_at null AS THE LAST KEY   <-- THE DEFECT
+    lock_present=1 released_at=null} started_age=0 tip_age=1 pid_state=alive_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=FREE-released
+
+--- 4. same, written by python json.dumps(indent=2) with released_at added last
+    lock_present=1 released_at=null} started_age=1 tip_age=2 pid_state=alive_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=FREE-released
+    (body: {  "holder": "local-launchd",  "host": "Buyanmunkhs-Mac-mini",  "pid": 63700,  "started_at": "2026-08-28T03:44:10Z",  "released_at": null})
+
+--- 5. compact json.dumps (no indent), released_at last
+    lock_present=1 released_at=null} started_age=1 tip_age=2 pid_state=alive_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=FREE-released
+    (body: {"holder": "local-launchd", "host": "Buyanmunkhs-Mac-mini", "pid": 63700, "started_at": "2026-08-28T03:44:10Z", "released_at": null})
+
+--- 6. ARM 3 CEILING end to end: lock 105 h old, tip 2.99 h old, holder ALIVE
+    lock_present=1 released_at=<null> started_age=378000 tip_age=10741 pid_state=alive_here
+    mtime_age=1   # printed only; decides nothing
+    verdict=TAKE-ceiling
+
+--- 7. ARM 5 takes the lock from a DEMONSTRABLY LIVE holder on THIS host
+    lock_present=1 released_at=<null> started_age=28800 tip_age=43200 pid_state=alive_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=TAKE-both-stale
+    holder pid 63700 still running: YES
+
+scratch: /tmp/t280-relnull.ApEsKS

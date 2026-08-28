@@ -1,0 +1,61 @@
+--- A. baseline: wrapper-shaped live lock (pid 1, other proc, this host)
+    lock_present=1 released_at=<null> started_age=0 tip_age=0 pid_state=dead_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=TAKE-dead-pid
+
+--- B. released_at is the LAST key, value null  <-- no trailing comma
+    lock_present=1 released_at=null} started_age=0 tip_age=0 pid_state=dead_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=FREE-released
+
+--- C. released_at NOT last, value null (trailing comma present)
+    lock_present=1 released_at=<null> started_age=0 tip_age=0 pid_state=dead_here
+    mtime_age=1   # printed only; decides nothing
+    verdict=TAKE-dead-pid
+
+--- D. released_at last key, genuinely RELEASED
+    lock_present=1 released_at=2026-08-28T09:00:00Z} started_age=1 tip_age=1 pid_state=dead_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=FREE-released
+
+--- E. lock body is NOT JSON at all
+    lock_present=1 released_at=<null> started_age=<unreadable> tip_age=1 pid_state=absent
+    mtime_age=0   # printed only; decides nothing
+    verdict=HELD-live
+
+--- F. pid is null (last key), live holder on this host
+    lock_present=1 released_at=<null> started_age=1 tip_age=1 pid_state=absent
+    mtime_age=0   # printed only; decides nothing
+    verdict=HELD-live
+
+--- G. pid 0 (T265 F-4)
+    lock_present=1 released_at=<null> started_age=1 tip_age=1 pid_state=absent
+    mtime_age=0   # printed only; decides nothing
+    verdict=HELD-live
+
+--- H. started_at in the FUTURE (+48h) -- negative age
+    lock_present=1 released_at=<null> started_age=-172799 tip_age=2 pid_state=dead_here
+    mtime_age=1   # printed only; decides nothing
+    verdict=TAKE-dead-pid
+
+--- I. started_at 100h old, pid 1 alive, tip fresh -> should be arm 3 CEILING
+    lock_present=1 released_at=<null> started_age=360002 tip_age=2 pid_state=dead_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=TAKE-dead-pid
+
+=== direct lock_decide probes (no repo needed) ===
+  negative started_age, fresh tip                                  -> HELD-live
+  fresh started_age, NEGATIVE tip age (clock skew)                 -> HELD-default
+  started 25h + NEGATIVE tip                                       -> TAKE-ceiling
+  released_at = 4-char string 'null'                               -> FREE-released
+  released_at reads as the string 'null}' (case B)                 -> FREE-released
+  started_age non-numeric junk                                     -> HELD-live
+  tip_age non-numeric junk                                         -> HELD-default
+
+=== origin/main ABSENT (fresh init, no remote branch) ===
+    repo=/tmp/t280-lock.hNMieS/norem
+    lock_present=1 released_at=<null> started_age=2 tip_age=<unreadable> pid_state=dead_here
+    mtime_age=0   # printed only; decides nothing
+    verdict=TAKE-dead-pid
+
+scratch: /tmp/t280-lock.hNMieS

@@ -1,0 +1,180 @@
+SHIPPED PROSE: .claude/skills/softhouse-program/SKILL.md STEP 0, arms 0-6.
+SKILL.md's own claim under test:
+  "Read every arm; the answer is the one that matches, and **exactly one
+   always matches.** The arms are written to be **mutually exclusive**, not
+   merely first-match-wins, so reading them out of order cannot change the
+   answer."
+
+===== PROSE AS WRITTEN, honouring arm 2's textual priority marker =====
+distinguishable states: 97
+A. matched ZERO decisive arms (-> arm 6 default, by design): 15
+B. matched MORE THAN ONE arm (order-dependent): 36
+     lock=present released=null started=ge24 tip=ge6 pid=alive_here   P3=TAKE,P5=TAKE
+     lock=present released=null started=ge24 tip=ge6 pid=absent   P3=TAKE,P5=TAKE
+     lock=present released=null started=ge24 tip=ge6 pid=other_host   P3=TAKE,P5=TAKE
+     lock=present released=set started=lt6 tip=lt6 pid=alive_here   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=lt6 tip=lt6 pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=lt6 tip=lt6 pid=absent   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=lt6 tip=lt6 pid=other_host   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=lt6 tip=ge6 pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=lt6 tip=unreadable pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=lt6 pid=alive_here   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=lt6 pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=lt6 pid=absent   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=lt6 pid=other_host   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=ge6 pid=alive_here   P1=FREE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=ge6 pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=ge6 pid=absent   P1=FREE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=ge6 pid=other_host   P1=FREE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=unreadable pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=lt6 pid=alive_here   P1=FREE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=lt6 pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=lt6 pid=absent   P1=FREE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=lt6 pid=other_host   P1=FREE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=ge6 pid=alive_here   P1=FREE,P3=TAKE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=ge6 pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=ge6 pid=absent   P1=FREE,P3=TAKE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=ge6 pid=other_host   P1=FREE,P3=TAKE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=unreadable pid=alive_here   P1=FREE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=unreadable pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=unreadable pid=absent   P1=FREE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=unreadable pid=other_host   P1=FREE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=unreadable tip=lt6 pid=alive_here   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=unreadable tip=lt6 pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=unreadable tip=lt6 pid=absent   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=unreadable tip=lt6 pid=other_host   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=unreadable tip=ge6 pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=unreadable tip=unreadable pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+C. of those, OPPOSITE verdicts: 33
+     lock=present released=set started=lt6 tip=lt6 pid=alive_here   P1=FREE  P4=HELD
+     lock=present released=set started=lt6 tip=lt6 pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=lt6 tip=lt6 pid=absent   P1=FREE  P4=HELD
+     lock=present released=set started=lt6 tip=lt6 pid=other_host   P1=FREE  P4=HELD
+     lock=present released=set started=lt6 tip=ge6 pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=lt6 tip=unreadable pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=b6_24 tip=lt6 pid=alive_here   P1=FREE  P4=HELD
+     lock=present released=set started=b6_24 tip=lt6 pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=b6_24 tip=lt6 pid=absent   P1=FREE  P4=HELD
+     lock=present released=set started=b6_24 tip=lt6 pid=other_host   P1=FREE  P4=HELD
+     lock=present released=set started=b6_24 tip=ge6 pid=alive_here   P1=FREE  P5=TAKE
+     lock=present released=set started=b6_24 tip=ge6 pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=b6_24 tip=ge6 pid=absent   P1=FREE  P5=TAKE
+     lock=present released=set started=b6_24 tip=ge6 pid=other_host   P1=FREE  P5=TAKE
+     lock=present released=set started=b6_24 tip=unreadable pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=ge24 tip=lt6 pid=alive_here   P1=FREE  P3=TAKE
+     lock=present released=set started=ge24 tip=lt6 pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=ge24 tip=lt6 pid=absent   P1=FREE  P3=TAKE
+     lock=present released=set started=ge24 tip=lt6 pid=other_host   P1=FREE  P3=TAKE
+     lock=present released=set started=ge24 tip=ge6 pid=alive_here   P1=FREE  P3=TAKE  P5=TAKE
+     lock=present released=set started=ge24 tip=ge6 pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=ge24 tip=ge6 pid=absent   P1=FREE  P3=TAKE  P5=TAKE
+     lock=present released=set started=ge24 tip=ge6 pid=other_host   P1=FREE  P3=TAKE  P5=TAKE
+     lock=present released=set started=ge24 tip=unreadable pid=alive_here   P1=FREE  P3=TAKE
+     lock=present released=set started=ge24 tip=unreadable pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=ge24 tip=unreadable pid=absent   P1=FREE  P3=TAKE
+     lock=present released=set started=ge24 tip=unreadable pid=other_host   P1=FREE  P3=TAKE
+     lock=present released=set started=unreadable tip=lt6 pid=alive_here   P1=FREE  P4=HELD
+     lock=present released=set started=unreadable tip=lt6 pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=unreadable tip=lt6 pid=absent   P1=FREE  P4=HELD
+     lock=present released=set started=unreadable tip=lt6 pid=other_host   P1=FREE  P4=HELD
+     lock=present released=set started=unreadable tip=ge6 pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=unreadable tip=unreadable pid=dead_here   P1=FREE  P2=TAKE
+VERDICT: NOT A PARTITION  (multi=36, conflicting=33)
+
+===== PROSE AS WRITTEN, taking every arm as a bare predicate (no priority) =====
+distinguishable states: 97
+A. matched ZERO decisive arms (-> arm 6 default, by design): 15
+B. matched MORE THAN ONE arm (order-dependent): 43
+     lock=present released=null started=lt6 tip=lt6 pid=dead_here   P2=TAKE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=null started=b6_24 tip=lt6 pid=dead_here   P2=TAKE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=null started=b6_24 tip=ge6 pid=dead_here   P2=TAKE,P5=TAKE
+     lock=present released=null started=ge24 tip=lt6 pid=dead_here   P2=TAKE,P3=TAKE
+     lock=present released=null started=ge24 tip=ge6 pid=alive_here   P3=TAKE,P5=TAKE
+     lock=present released=null started=ge24 tip=ge6 pid=dead_here   P2=TAKE,P3=TAKE,P5=TAKE
+     lock=present released=null started=ge24 tip=ge6 pid=absent   P3=TAKE,P5=TAKE
+     lock=present released=null started=ge24 tip=ge6 pid=other_host   P3=TAKE,P5=TAKE
+     lock=present released=null started=ge24 tip=unreadable pid=dead_here   P2=TAKE,P3=TAKE
+     lock=present released=null started=unreadable tip=lt6 pid=dead_here   P2=TAKE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=lt6 tip=lt6 pid=alive_here   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=lt6 tip=lt6 pid=dead_here   P1=FREE,P2=TAKE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=lt6 tip=lt6 pid=absent   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=lt6 tip=lt6 pid=other_host   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=lt6 tip=ge6 pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=lt6 tip=unreadable pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=lt6 pid=alive_here   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=lt6 pid=dead_here   P1=FREE,P2=TAKE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=lt6 pid=absent   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=lt6 pid=other_host   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=ge6 pid=alive_here   P1=FREE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=ge6 pid=dead_here   P1=FREE,P2=TAKE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=ge6 pid=absent   P1=FREE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=ge6 pid=other_host   P1=FREE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=b6_24 tip=unreadable pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=lt6 pid=alive_here   P1=FREE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=lt6 pid=dead_here   P1=FREE,P2=TAKE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=lt6 pid=absent   P1=FREE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=lt6 pid=other_host   P1=FREE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=ge6 pid=alive_here   P1=FREE,P3=TAKE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=ge6 pid=dead_here   P1=FREE,P2=TAKE,P3=TAKE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=ge6 pid=absent   P1=FREE,P3=TAKE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=ge6 pid=other_host   P1=FREE,P3=TAKE,P5=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=unreadable pid=alive_here   P1=FREE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=unreadable pid=dead_here   P1=FREE,P2=TAKE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=unreadable pid=absent   P1=FREE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=ge24 tip=unreadable pid=other_host   P1=FREE,P3=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=unreadable tip=lt6 pid=alive_here   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=unreadable tip=lt6 pid=dead_here   P1=FREE,P2=TAKE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=unreadable tip=lt6 pid=absent   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=unreadable tip=lt6 pid=other_host   P1=FREE,P4=HELD   <-- ARMS DISAGREE
+     lock=present released=set started=unreadable tip=ge6 pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+     lock=present released=set started=unreadable tip=unreadable pid=dead_here   P1=FREE,P2=TAKE   <-- ARMS DISAGREE
+C. of those, OPPOSITE verdicts: 36
+     lock=present released=null started=lt6 tip=lt6 pid=dead_here   P2=TAKE  P4=HELD
+     lock=present released=null started=b6_24 tip=lt6 pid=dead_here   P2=TAKE  P4=HELD
+     lock=present released=null started=unreadable tip=lt6 pid=dead_here   P2=TAKE  P4=HELD
+     lock=present released=set started=lt6 tip=lt6 pid=alive_here   P1=FREE  P4=HELD
+     lock=present released=set started=lt6 tip=lt6 pid=dead_here   P1=FREE  P2=TAKE  P4=HELD
+     lock=present released=set started=lt6 tip=lt6 pid=absent   P1=FREE  P4=HELD
+     lock=present released=set started=lt6 tip=lt6 pid=other_host   P1=FREE  P4=HELD
+     lock=present released=set started=lt6 tip=ge6 pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=lt6 tip=unreadable pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=b6_24 tip=lt6 pid=alive_here   P1=FREE  P4=HELD
+     lock=present released=set started=b6_24 tip=lt6 pid=dead_here   P1=FREE  P2=TAKE  P4=HELD
+     lock=present released=set started=b6_24 tip=lt6 pid=absent   P1=FREE  P4=HELD
+     lock=present released=set started=b6_24 tip=lt6 pid=other_host   P1=FREE  P4=HELD
+     lock=present released=set started=b6_24 tip=ge6 pid=alive_here   P1=FREE  P5=TAKE
+     lock=present released=set started=b6_24 tip=ge6 pid=dead_here   P1=FREE  P2=TAKE  P5=TAKE
+     lock=present released=set started=b6_24 tip=ge6 pid=absent   P1=FREE  P5=TAKE
+     lock=present released=set started=b6_24 tip=ge6 pid=other_host   P1=FREE  P5=TAKE
+     lock=present released=set started=b6_24 tip=unreadable pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=ge24 tip=lt6 pid=alive_here   P1=FREE  P3=TAKE
+     lock=present released=set started=ge24 tip=lt6 pid=dead_here   P1=FREE  P2=TAKE  P3=TAKE
+     lock=present released=set started=ge24 tip=lt6 pid=absent   P1=FREE  P3=TAKE
+     lock=present released=set started=ge24 tip=lt6 pid=other_host   P1=FREE  P3=TAKE
+     lock=present released=set started=ge24 tip=ge6 pid=alive_here   P1=FREE  P3=TAKE  P5=TAKE
+     lock=present released=set started=ge24 tip=ge6 pid=dead_here   P1=FREE  P2=TAKE  P3=TAKE  P5=TAKE
+     lock=present released=set started=ge24 tip=ge6 pid=absent   P1=FREE  P3=TAKE  P5=TAKE
+     lock=present released=set started=ge24 tip=ge6 pid=other_host   P1=FREE  P3=TAKE  P5=TAKE
+     lock=present released=set started=ge24 tip=unreadable pid=alive_here   P1=FREE  P3=TAKE
+     lock=present released=set started=ge24 tip=unreadable pid=dead_here   P1=FREE  P2=TAKE  P3=TAKE
+     lock=present released=set started=ge24 tip=unreadable pid=absent   P1=FREE  P3=TAKE
+     lock=present released=set started=ge24 tip=unreadable pid=other_host   P1=FREE  P3=TAKE
+     lock=present released=set started=unreadable tip=lt6 pid=alive_here   P1=FREE  P4=HELD
+     lock=present released=set started=unreadable tip=lt6 pid=dead_here   P1=FREE  P2=TAKE  P4=HELD
+     lock=present released=set started=unreadable tip=lt6 pid=absent   P1=FREE  P4=HELD
+     lock=present released=set started=unreadable tip=lt6 pid=other_host   P1=FREE  P4=HELD
+     lock=present released=set started=unreadable tip=ge6 pid=dead_here   P1=FREE  P2=TAKE
+     lock=present released=set started=unreadable tip=unreadable pid=dead_here   P1=FREE  P2=TAKE
+VERDICT: NOT A PARTITION  (multi=43, conflicting=36)
+
+===== the state that breaks the claim, spelled out =====
+  {'lock': 'present', 'released': 'set', 'started': 'lt6', 'tip': 'lt6', 'pid': 'absent'}
+    P1 -> FREE   1. `released_at` is **non-null** -> **free.** Take it.
+    P4 -> HELD   4. `origin/main`'s newest commit is under 6 h old -> **HELD, WHATEVER `started_at` SAYS (short of arm 3).** Print it and exit.
+  There is NO textual tiebreak between arm 1 and arm 4.
+  Reading arm 1 first -> take the lock.  Reading arm 4 first -> exit.
+
+  rules.py NEW_ARMS on the same state (the model T279 proved a partition over):
+    [('N1', 'FREE')]
+  It answers uniquely ONLY because N4 carries `_lock_held(s)`, i.e. the
+  conjunct `released_at is null`, which the prose sentence does not contain.
