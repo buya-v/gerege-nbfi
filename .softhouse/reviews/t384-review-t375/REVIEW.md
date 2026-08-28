@@ -7,9 +7,34 @@ appended at the end.
 
 ---
 
-## VERDICT (provisional until every section below is marked DRIVEN)
+## VERDICT
 
-**APPROVED WITH CONDITIONS.** — see the CONDITIONS section at the foot; refined as sections land.
+# APPROVED WITH CONDITIONS.
+
+**Merge it. Then open the follow-up in the same breath.**
+
+**What T375 claims is true, and I re-drove all of it rather than reading it.** All four new
+fail-opens are real on `main` and all four genuinely close on the branch; **both healthy
+controls stay green**, which is the failure mode this change was nearest to; arm 32 **can**
+fail and I made it; the committed failing transcript is **unedited**; arm 08's retarget
+describes what it actually measures; the merge into current `main` is clean and the bar is
+exit 0 on it with every pin holding. **T375 also told the truth about what it could not
+produce** — it says plainly that no uninterrupted 61-arm transcript exists rather than shipping
+a partial run as a clean one, and that sentence is the most creditworthy thing in the handoff.
+
+**The conditions exist because of one thing: I found the FIFTH fail-open, and it is the one
+T375 disclosed against itself and rated unreachable.** `FU-T375-7` — `$rel` used as a git
+pathspec rather than a literal — **is reachable**, and I reached it with two committed files.
+On the T375 branch, the whole bar goes **exit 0, probe PRESENT, `VERDICT: PASS`** with a
+tracked **symlink** credited `reached-by=3` and the census printing **`symlink-members=0`**.
+T375's mechanism description of this hole is exactly correct; only its severity rating is
+wrong. **It is not a reason to reject.** It is present on `main` too, it is strictly narrower
+than the four holes this branch closes, and the branch is a large net improvement in a guard
+that has now been walked around five times. Rejecting a fix because a sixth route exists is
+how the fifth route survives another fire.
+
+**T375's decision NOT to patch it in flight was correct** and I would not have it decide
+otherwise — see §2.
 
 ---
 
