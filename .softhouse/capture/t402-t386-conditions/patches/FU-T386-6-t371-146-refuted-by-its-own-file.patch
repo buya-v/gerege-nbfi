@@ -1,0 +1,25 @@
+diff --git a/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T371.md b/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T371.md
+index 24273edd..f22a2886 100644
+--- a/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T371.md
++++ b/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T371.md
+@@ -144,8 +144,18 @@ fail-closed **for the append path it watches**, not for the database, and now sa
+ ## Vectors run (pass/fail)
+ 
+ **No vector was captured, promoted, edited or re-graded by T371.** No file this task touched is read by
+-`conformance.sh`; the changes are one shell instrument, one registry's comment header, and three
+-Markdown documents.
++`conformance.sh` **as a graded artefact — no vector, no cell, no pinned count**; the changes are one
++shell instrument, one registry's comment header, and three Markdown documents.
++
++> **CORRECTION [T402, closing `FU-T386-6`, raised by T381 as `FU-T381-2`].** The sentence as
++> originally written — *"No file this task touched is read by `conformance.sh`"* — is **false, and
++> it is refuted eight lines below it in this same file**: `:154` prints the bar refusing **on the
++> file T371 touched** (`T316-DEADPATH-FRONTIER: REFUSED rows=110 pinned=109 added=1`, naming
++> `casualty-sweep.sh`), and `:175` says so in words. `conformance.sh` reads every tracked `.sh` in
++> the repository through `guard_no_fail_open_instruments` and every tracked file through the
++> dead-path census. The intended meaning — no **graded** artefact — is correct and is now what the
++> sentence says. **A handoff carrying a claim its own next paragraph disproves is worth a finding
++> of its own.**
+ 
+ **THE BAR WENT RED FIRST, AND IT WAS MY DEFECT.** Recorded here rather than only in the green transcript,
+ because a green run that hides a red one is worth less:

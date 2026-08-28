@@ -1,0 +1,22 @@
+T402 PATCH VERIFICATION
+
+=== 1. git apply --check, every patch =====================================
+  FU-T386-1-audit-main100-is-failclosed.patch              APPLIES CLEAN
+  FU-T386-5-cite-the-site-by-name-not-by-line.patch        APPLIES CLEAN
+  FU-T386-6-t371-146-refuted-by-its-own-file.patch         APPLIES CLEAN
+  FU-T386-7-red-drive-must-report-failure.patch            APPLIES CLEAN
+
+=== 2. the one EXECUTABLE patch, applied to a scratch copy ================
+  scratch copy built: 33 added lines
+  patched drive                                            bash -n SYNTAX OK
+  guard block extracted                                    31 line(s)
+  guard, CLEAN transcript      -> exit 0                   OK
+  guard, FAILING transcript    -> exit 1                   OK
+  guard, NO log configured     -> exit 2                   OK
+  -- guard output, failing transcript --
+      *** 1 ARM(S) DID NOT REPRODUCE OR ARE NOT PROVEN. This drive now reports that
+      *** through its exit status. [T402, FU-T386-7]
+
+VERIFY-RESULT: failures=0
+*** ALL FOUR PATCHES CHECK, AND THE EXECUTABLE ONE BEHAVES IN ALL THREE OUTCOMES.
+VERIFY_EXIT=0

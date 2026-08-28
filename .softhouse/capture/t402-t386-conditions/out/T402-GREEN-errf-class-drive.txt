@@ -1,0 +1,76 @@
+T402 ERRF CLASS DRIVE
+  repo       : .
+  ref        : HEAD  (d718ff72)
+  under test : .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh
+  sha256     : fdfe8d06087ec51cc3cec673f14f05e3708e2dd03eb2c23f829ba5f60727b0fb
+  mode       : expecting green
+  host git   : git version 2.50.1 (Apple Git-155)
+
+  ARM M specimen : NOT BUILT -- the anchors T386's five-line fix patches are not present
+                 exactly once in this ref. ARM M is reported as NOT-APPLICABLE, never
+                 as a pass. Builder output:
+                 |   anchor engine_count ENGINE_ERR=$(cat ...)       occurrences=0
+                 |   anchor sel err=$(cat ...)                       occurrences=0
+                 |   REFUSED: engine_count ENGINE_ERR=$(cat ...) occurs 0 times, wanted exactly 1
+                 |   REFUSED: sel err=$(cat ...) occurs 0 times, wanted exactly 1
+
+fatal: no pattern given
+fatal: no pattern given
+.softhouse/capture/t402-t386-conditions/instruments/t402-errf-class-drive.sh: line 99: -n: command not found
+=== CONTROL -- shim installed, nothing sabotaged ========================================
+    SWEEP CALIBRATE+F: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+    SWEEP CALIBRATE-F: PASS -- known negative matched 0 times, and the search RAN (rc=1)
+    SWEEP CALIBRATE+E: PASS -- -E interpreted it (2 hit(s)) and -F did not (0). They DISAGREE,
+    SWEEP CALIBRATE-E: PASS -- known negative matched 0 times under -E, and the search RAN (rc=1)
+    SWEEP OBSERVE: T238 hazard LIVE -- escaped=139 literal=139 AGREE while pcre=23110 DISAGREES,
+  -- control result
+    SWEEP-RESULT: commit=d718ff72 corpus=8801 selectors=16 did_not_run=0 refused=0 calibration=yes exit=0
+    sweep exit=0   MEASURED-ZERO lines=0   DID-NOT-RUN lines=0
+    EXPECT healthy sweep exits 0              0          OK
+    EXPECT healthy sweep has no MZ line       0          OK
+    EXPECT healthy sweep ran 16 selectors     16         OK
+
+=== ARM U -- the scratch DIRECTORY is removed once calibration is past ==================
+    redirect fails ENOENT; cat fails ENOENT. T386 F-1b, re-driven.
+  -- ARM U result
+    SWEEP-RESULT: commit=d718ff72 corpus=8801 selectors=16 did_not_run=16 refused=0 calibration=yes exit=4
+    sweep exit=4   MEASURED-ZERO lines=0   DID-NOT-RUN lines=16
+    EXPECT ARM U refuses (exit 4)             4          OK
+    EXPECT ARM U fabricated MZ lines          0          OK
+    EXPECT ARM U refusals                     16         OK (> 0)
+    -- S2 block from ARM U --
+      === S2  the standing-baseline pin format 'gerege <table> = '
+          engine: git grep -n -E gerege (acc_gl_journal_entry|acc_gl_closure|distinct_transaction_id|m_portfolio_command_source|m_loan|m_office) = 
+      /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t402-errf.vt7aAtas/sweep.sh: line 197: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t402-errf.vt7aAtas/errdir/errf: No such file or directory
+          *** SELECTOR DID NOT RUN: the engine's stderr channel could not be OPENED FOR WRITING before the search.
+          *** A 2> redirect the shell cannot open makes bash return 1 WITHOUT RUNNING the
+          *** command, and 1 is the status this file reads as a MEASURED ZERO. Nothing was
+          *** searched here, so no absence may be read from this selector. [T402 C-1]
+      
+
+=== ARM R -- the scratch FILE is left readable, filled with STALE text, chmod 0444 ======
+    redirect fails EACCES; cat SUCCEEDS. This is the arm a cat-status check cannot see.
+  -- ARM R result
+    SWEEP-RESULT: commit=d718ff72 corpus=8801 selectors=16 did_not_run=15 refused=0 calibration=yes exit=4
+    sweep exit=4   MEASURED-ZERO lines=0   DID-NOT-RUN lines=15
+    EXPECT ARM R refuses (exit 4)             4          OK
+    EXPECT ARM R fabricated MZ lines          0          OK
+    EXPECT ARM R refusals                     15         OK (> 0)
+    -- S2 block from ARM R --
+      === S2  the standing-baseline pin format 'gerege <table> = '
+          engine: git grep -n -E gerege (acc_gl_journal_entry|acc_gl_closure|distinct_transaction_id|m_portfolio_command_source|m_loan|m_office) = 
+      /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t402-errf.vt7aAtas/sweep.sh: line 197: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t402-errf.vt7aAtas/errdir/errf: Permission denied
+          *** SELECTOR DID NOT RUN: the engine's stderr channel could not be OPENED FOR WRITING before the search.
+          *** A 2> redirect the shell cannot open makes bash return 1 WITHOUT RUNNING the
+          *** command, and 1 is the status this file reads as a MEASURED ZERO. Nothing was
+          *** searched here, so no absence may be read from this selector. [T402 C-1]
+      
+
+=== ARM M -- ARM R against T386's literal five-line fix, and NOTHING else =============
+    NOT APPLICABLE at this ref -- the specimen could not be constructed (see above).
+    Reported as not-applicable, never as a pass.
+
+DRIVE-RESULT: ref=d718ff72 mode=green control_exit=0 control_mz=0 control_sel=16 U_exit=4 U_mz=0 U_dnr=16 R_exit=4 R_mz=0 R_dnr=15
+DRIVE-EXPECTATIONS-FAILED: 0
+*** ALL EXPECTATIONS FOR MODE=green HELD.
+DRIVE_EXIT=0

@@ -1,0 +1,29 @@
+T402 ERRF-HELPER UNIT DRIVE
+  ref        : HEAD
+  file       : .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh
+  file sha256: fdfe8d06087ec51cc3cec673f14f05e3708e2dd03eb2c23f829ba5f60727b0fb
+  extracted  : _errf_prime 8 line(s), _errf_read 15 line(s)
+  extract sha: b0836710b9817df0c8b49bee76679f1126417c04a82d8f521040479fbe31f9cd
+
+=== THE PRIME CHECK =======================================================
+  Z0 CONTROL: writable path, prime must SUCCEED        OK  rc=0
+  Z4 file chmod 0444, prime must REFUSE                /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t402-helpers.MC32wOyZ/helpers.sh: line 3: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t402-helpers.MC32wOyZ/errf: Permission denied
+OK  rc=1
+        why: the engine's stderr channel could not be OPENED FOR WRITING before the search
+
+=== THE READ CHECK AND THE WITNESS CHECK ==================================
+  (each case sets the scratch file to a state and calls _errf_read)
+  Z1 CONTROL: redirect opened, engine wrote stderr     OK  rc=0  text=[warning: a real engine complaint]
+  Z2 CONTROL: redirect opened, engine silent           OK  rc=0  text=[]
+  Z3 WITNESS: sentinel survived -- command never ran   OK  rc=1  text=[]
+        why: the sentinel written before the search IS STILL THERE, so the shell never truncated the file: the 2> redirect was never opened and THE COMMAND NEVER RAN
+  Z5 READ: scratch file removed, cat fails             cat: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t402-helpers.MC32wOyZ/errf: No such file or directory
+OK  rc=1  text=[]
+        why: the engine's stderr channel could not be READ BACK (cat rc=1)
+  Z6 witness is exact-match, not substring             OK  rc=0  text=[warning: something mentioning zzq-t402-drive-sentinel-52501-32322-fixed in passing]
+
+DRIVE-RESULT: cases_failed=0
+*** ALL SIX CASES BEHAVED AS SPECIFIED, INCLUDING THE THREE CONTROLS.
+*** The WITNESS check (Z3) is driven here and nowhere else: it is the only one of the
+*** three that proves the command never ran rather than inferring it from a reader.
+DRIVE_EXIT=0
