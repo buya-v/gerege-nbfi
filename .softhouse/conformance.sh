@@ -2464,22 +2464,32 @@ guard_accepting_side_gap_declared() {
 # counted the whole HISTORY, not merely today's tree:
 #
 #     git log --format= --name-only --diff-filter=A -- .softhouse/capture .softhouse/reviews
-#       -> distinct evidence directories EVER created in this repository:   151
-#       -> of them carrying a t<n> id prefix:                               130
-#       -> ids prefixing MORE THAN ONE directory, over the entire history:  exactly ONE
-#       -> and that one is T256/T259 — the real defect the guard was written for, already
-#          declared by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+#       -> distinct evidence directories EVER created in this repository:   READBACK
+#       -> of them carrying a t<n> id prefix:                               READBACK
+#       -> ids prefixing MORE THAN ONE directory, over that history:        READBACK
+#       -> and EVERY one of them is DECLARED — the guard prints each collision with the
+#          OWNER*.md that claims it, or names the UNCLAIMED directory and refuses.
 #
-# THE TWO CARDINALS ABOVE ARE VOLATILE AND HAVE ALREADY ROTTED ONCE. Iteration 1 of T323 wrote
-# them as 128 and 107; T323 iteration 3 re-derived the same query on today's tree and got 151
-# and 130. Neither figure was wrong when written — the corpus simply grew — which is precisely
-# why they are re-stated with the date of measurement and why THE CONCLUSION, not the cardinals,
-# is what this argument rests on. [RE-DERIVED INDEPENDENTLY: T323 iteration 3, 28 Aug 2026, and
-# it agrees with the guard's own live readback in the same run: "corpus 7739 tracked paths -> 151
-# evidence directories / 130 carry a t<n> id prefix".] A reader who finds these two numbers stale
-# again should re-run the query rather than trust them; the load-bearing claim is the LAST line,
-# "exactly ONE colliding id, and it is the declared one", and THAT has held across both
-# measurements.
+# THE CARDINALS ARE NOT RETYPED HERE ANY MORE, AND THAT IS T358 REPAIRING A ROT THAT HAPPENED
+# TWICE IN THREE FIRES. Iteration 1 of T323 wrote 128 / 107 / "exactly ONE colliding id"; T323
+# iteration 3 re-derived them as 151 / 130 / "exactly ONE"; T358 re-derived them again, one fire
+# later, as 159 / 138 / **TWO** — t255 and t256 — because t255-frontier-rot merged in the
+# meantime with its OWNER-IS-T258-NOT-T255.md. Every one of those figures was true when written.
+# NONE of them survived the fire after it, and the "exactly ONE" line in particular was still
+# being cited as load-bearing two iterations after it went false. A cardinal restated in a
+# comment beside a guard that MEASURES IT LIVE is a second source of truth with no owner, so the
+# fix is to delete the copy rather than to correct it again: the guard prints
+# "corpus <N> tracked paths -> <D> evidence directories", "<P> carry a t<n> id prefix", and one
+# line per colliding id, a few lines into its own output. READ THAT.
+# [T358 RE-DERIVATION, 28 Aug 2026, method above with ids folded case-insensitively: 159
+# directories, 138 id-prefixed, 2 colliding ids (t255, t256) — agreeing with the guard's own
+# readback in the same run TO THE ROW. Recorded as a dated measurement, not as a cardinal to
+# maintain.]
+#
+# THE CLAIM THAT ACTUALLY CARRIES THE HARD ARGUMENT is not a count at all: it is that EVERY
+# collision this predicate has ever fired on was a TRUE positive with an IN-GRANT remedy — one
+# OWNER*.md, inside a directory the tripping task already owns. That has held across all three
+# measurements and does not rot when the corpus grows.
 #
 # ONE TRAP IN RE-DERIVING IT, recorded because iteration 3 fell into it. A naive id regex of
 # `^(t|a)[0-9]+` reports TWO colliding ids — t256 and `a2`, the latter with SEVEN directories.
@@ -2488,9 +2498,29 @@ guard_accepting_side_gap_declared() {
 # guard is right and the crude re-derivation was wrong. P-70 — a count is a statement about the
 # search, never about the world.
 #
-# The false-positive count of this predicate, over every evidence directory this program has
-# ever created, is ZERO; its true-positive count on the only event in class is ONE. The
-# remaining risk is prospective, not historical: a future task that legitimately wants two
+# THE FALSE-POSITIVE COUNT BELOW IS SCOPED, AND THE SCOPE IS THE LOAD-BEARING PART OF IT
+# [T337 F-T337-5; corpus named, and the cardinal itself re-derived, by T358].
+#
+#   OVER HEAD'S ANCESTRY — the only corpus a run of this bar can be about — the false-positive
+#   count of this predicate is ZERO. Its TRUE-positive count is whatever the guard's own live
+#   readback says a few lines into its output, and DELIBERATELY IS NOT RESTATED HERE. T323 wrote
+#   "exactly ONE colliding id" and that had already rotted by the next fire: T358 re-derived it
+#   independently (git log HEAD --diff-filter=A over capture/ and reviews/, ids folded
+#   case-insensitively) and got 159 directories, 138 id-prefixed, and TWO colliding ids — t255
+#   and t256 — with the guard's own readback in the same run agreeing to the row. So the
+#   sentence T337 proposed as the one-line repair, "say over HEAD's ancestry and it is true",
+#   would have shipped a SECOND stale cardinal. A volatile count restated in prose rots; the
+#   scope of the claim does not. State the scope, cite the readback, never retype the number.
+#
+#   OVER THE REPOSITORY'S FULL REF SPACE (`git log --all`) there are THREE colliding ids, not
+#   two: the t255 and t256 pairs above, plus a t286 pair whose second directory (leaf
+#   `t286-rvpa-retry`, named without its prefix so this comment creates no dead-path literal)
+#   lives only on an unmerged rescued-WIP branch. A READER PLANNING A MERGE NEEDS THAT NUMBER,
+#   because merging that branch turns this bar red on arrival. IT DOES NOT OVERTURN HARD: it is
+#   a TRUE positive — an undocumented collision is exactly what this guard is for — and its
+#   remedy is one OWNER*.md inside a directory the merging task already owns, which is in-grant.
+#
+# The remaining risk is prospective, not historical: a future task that legitimately wants two
 # directories of its own. For that case the threshold is ALREADY N-1 rather than N — T299
 # lowered it because its own first draft went red against a correctly-named directory — and the
 # remedy the guard PRINTS is to add one file, inside a directory the worker already owns, whose
@@ -2500,9 +2530,11 @@ guard_accepting_side_gap_declared() {
 #
 # RESIDUAL RISK, STATED HERE SO IT IS NOT REDISCOVERED AS A SURPRISE: the id space is folded
 # across capture/ AND reviews/, so a future `reviews/T<n>/` directory beside a `capture/t<n>-…/`
-# directory WOULD collide. That shape does not exist today — reviews are overwhelmingly FLAT
-# .md files, and no tracked review DIRECTORY shares an id with a capture directory (measured:
-# collidingIds=1, and it is T256). Should reviews become directories by convention, this guard
+# directory WOULD collide. That shape does not exist today — no tracked review DIRECTORY shares
+# an id with a capture directory — but the premise it used to rest on, "reviews are
+# overwhelmingly FLAT .md files", is WEAKENING: review directories are now being created
+# (t337-review-t323 is one), and each is a candidate for exactly this collision. [T358, 28 Aug
+# 2026.] Should reviews become directories by convention, this guard
 # needs its two namespaces separated, the way T299 already separated the a2-<n> id space after
 # folding it produced FOUR false collisions.
 #
@@ -2839,7 +2871,11 @@ guard_dead_path_frontier() {
   elif [ "$removed_n" -ne 0 ]; then
     warn "conformance: guard_dead_path_frontier: $removed_n row(s) GONE from the frontier. That is"
     warn "conformance: GOOD NEWS and the PIN must absorb it — a frontier, not an amnesty. This"
-    warn "conformance: harness cannot absorb it for you: the pin is outside T323's edit grant."
+    warn "conformance: harness cannot absorb it for you: the pin is a TRACKED file, and folding a"
+    warn "conformance: removed row into it belongs in the same commit that removed the path, so a"
+    warn "conformance: reviewer sees the repair and the shrink together. [T358: this line used to"
+    warn "conformance: say 'the pin is outside T323's edit grant', which stopped being true when"
+    warn "conformance: T326 regenerated the pin — a false statement inside a refusal message.]"
     bad=1
   elif ! LC_ALL=C diff "$d/rec" "$d/added" >"$d/diff" 2>&1; then
     warn "conformance: guard_dead_path_frontier: THE FRONTIER MOVED IN A WAY NOBODY RECORDED."
@@ -2998,8 +3034,28 @@ guard_reconciler_ownership() {
 # four ways this program stated a search result as a world fact, in one fire"
 # [VERIFIED: .softhouse/patterns.md:1931]:
 #
-#     POPULATION = git ls-files over the '*.sh' members of .softhouse/guards, from $REPO_ROOT.
+#     POPULATION = git ls-files, ':(glob)' magic, over the TRACKED '*.sh' / '*.py' / '*.go'
+#                  files at ANY DEPTH under the canonical guards directory, from $REPO_ROOT.
 #     INVOKED    = the member's basename occurs on a NON-COMMENT line of this file.
+#     DECLARED   = a row in the table inside this function (directions CALLER and SUBJECT).
+#     REACHED-BY = a row in the MEMBER'S OWN header, naming a tracked witness that names it.
+#
+# WHAT THE SELECTOR DOES NOT REACH, stated in the same breath as what it does, because the
+# previous wording of this block did not and a reader concluded a class was closed that was not
+# [T337 F-T337-3, repaired by T358]. It does not reach: any checker written in a language other
+# than shell, Python or Go; any committed binary; and anything outside this one directory.
+#
+# THE THREE THINGS T358 CHANGED HERE, each of which was a defect in what this block CLAIMED
+# rather than in what the code did — which is the more dangerous kind, because the claim is
+# what the next author builds on:
+#   1. The pathspec had no ':(glob)' magic, so '*' crossed '/' and the search was ALREADY
+#      any-depth while the printed line said "the members of" one directory. An ordinary Go
+#      test fixture under the ledgerguard module therefore took the whole bar to exit 2.
+#   2. The population was '*.sh' alone while the handoff claimed "a fourth unwired checker
+#      cannot land". A Go checker lives in this directory today and Python checkers are
+#      routine here; both were outside the population by construction.
+#   3. Every remedy the guard printed required editing THIS file, which the program serialises.
+#      See the REACHED-BY block inside the function for that argument in full.
 #
 # THE SECOND CLAUSE IS NOT PEDANTRY. Every unwired guard this program has shipped was MENTIONED
 # somewhere — T257's own finding is that `git grep -n manifest -- conformance.sh` returned ONE
@@ -3019,17 +3075,25 @@ guard_reconciler_ownership() {
 # refused once, for T304's destructive-site census. Their wiring is one named task each
 # (T333, T303, T311, T257) and each needs its own tier argument and its own repair first.
 #
-# WHAT IT DOES CLAIM, exactly one thing: NO NEW CHECKER CAN ENTER THE CANONICAL GUARDS DIRECTORY
-# WITHOUT EITHER BEING RUN BY THIS FILE OR BEING DECLARED, IN A DIFF A REVIEWER READS.
+# WHAT IT DOES CLAIM, exactly one thing, AND THE SCOPE OF THE CLAIM IS PART OF THE CLAIM: NO NEW
+# TRACKED SHELL, PYTHON OR GO FILE CAN ENTER THE CANONICAL GUARDS DIRECTORY, AT ANY DEPTH,
+# WITHOUT EITHER BEING RUN BY THIS FILE, BEING DECLARED IN THE TABLE BELOW, OR CARRYING A
+# VERIFIED REACHED-BY ROW IN ITS OWN HEADER — IN A DIFF A REVIEWER READS.
+#
+# It does NOT claim that "a fourth unwired checker cannot land", which is how T323's handoff put
+# it and which is false in two directions: a checker in a fourth language is outside the
+# population, and a file inside the population is only proven NAMED, never proven EXECUTED.
 #
 # WHY THIS POPULATION IS PINNABLE WHERE T304'S WAS NOT — the question T323 had to answer before
 # it was allowed to build this at all. T323's refusal of T304's census rested on a MEASURED
 # property: T304 classifies a site by RESOLVING its target against the whole tracked corpus, so
 # rows move for reasons no diff contains (three instruments last touched days before T304's
 # census began contributing hard sites without a byte of them changing). This population has no
-# such property. Membership is "a tracked shell file in one directory", so a row can appear or
-# disappear ONLY in the commit that adds or removes that file. Attributable by construction,
-# which is the whole difference.
+# such property. Membership is "a tracked file of one of three extensions, under one directory",
+# so a row can appear or disappear ONLY in the commit that adds, removes or renames that file.
+# Attributable by construction, which is the whole difference — and widening the population from
+# one extension to three in T358 does not touch that property, because it is a property of how
+# membership is DECIDED and not of how many files satisfy it.
 #
 # FAIL-CLOSED DIRECTION, FOR THIS GUARD ALONE, and not widened to serve a second purpose: it
 # fails closed towards "a checker sitting in the guards directory that this harness does not
@@ -3086,8 +3150,37 @@ guard_guards_dir_registration() {
   # file sits in T316's dead-path corpus, and a glob spelled whole reads there as a path that
   # resolves to nothing. T323's own red drive learned that the expensive way — its first version
   # put five rows on the frontier.
+  #
+  # ':(glob)' MAGIC IS LOAD-BEARING AND IS NOT A NARROWING [T358, from T337 F-T337-1].
+  # A git pathspec WITHOUT ':(glob)' is fnmatch WITHOUT FNM_PATHNAME, so '*' matches '/' as
+  # well. T323 wrote the selector as one trailing '*.sh' and PRINTED it as "the members of"
+  # this one directory, while the search it actually ran swept every tracked shell file at ANY
+  # DEPTH beneath it — including inside the ledgerguard GO MODULE that lives here. An ordinary
+  # Go test fixture, `ledgerguard/testdata/setup.sh`, therefore turned the WHOLE BAR to exit 2.
+  # [T358 MEASURED on this tree with that fixture planted: the un-magic pathspec returns 6
+  # members, ':(glob)' with a single trailing segment returns 5, ':(glob)' with '**/' returns 6.]
+  #
+  # THE DEPTH IS KEPT, DELIBERATELY, and this is where T358 declines the one-token patch T337
+  # offered. Spelling the pathspec as one trailing segment fixes the misdescription by DELETING
+  # the coverage: a genuine unwired checker one directory down would then be invisible, which
+  # trades T337's F-1 for a larger F-3. So the glob says '**/' — the depth is now DECLARED
+  # rather than inherited from an fnmatch accident — and the friction the depth creates is
+  # answered by the REACHED-BY direction below, which is a remedy the tripping task can perform
+  # inside its own edit grant. Coverage is paid for with an in-grant remedy, never with a
+  # narrower search.
+  #
+  # THE POPULATION IS NO LONGER SHELL-ONLY [T358, from T337 F-T337-3]. T323's handoff claimed
+  # "a fourth unwired checker cannot land"; the population was '*.sh' alone, and this directory
+  # contains a Go checker TODAY (the ledgerguard module) plus this program writes checkers in
+  # Python routinely. Shell, Python and Go are all in the population now. WHAT IS STILL OUTSIDE,
+  # stated because a count is a statement about the search: any other language, and any
+  # committed binary. The class closed is "tracked .sh / .py / .go sources under this directory,
+  # at any depth" — NOT "every checker".
   local pop
-  pop="$( cd "$REPO_ROOT" 2>/dev/null && git ls-files -- "$gdrel/"'*.sh' 2>/dev/null )"
+  pop="$( cd "$REPO_ROOT" 2>/dev/null && git ls-files -- \
+            ":(glob)$gdrel/"'**/*.sh' \
+            ":(glob)$gdrel/"'**/*.py' \
+            ":(glob)$gdrel/"'**/*.go' 2>/dev/null )"
   if [ -z "$pop" ]; then
     warn "conformance: guard_guards_dir_registration: the population is EMPTY. That is a SELECTOR"
     warn "conformance: failure, not a clean tree — this repository tracks shell checkers in"
@@ -3114,6 +3207,55 @@ guard_guards_dir_registration() {
   # Both are verified below. Neither is a suppression: if the witness disappears, or stops
   # naming the token, or the declared member itself leaves the population, this guard goes RED.
   #
+  # ────────────────────────────────────────────────────────────────────────────────────────
+  # THERE IS A THIRD DIRECTION AND ITS ROW DOES NOT LIVE IN THIS FILE. Read this before
+  # touching either of the two rows below. [T358, answering T337 F-T337-2.]
+  #
+  # THE DEFECT: both remedies T323's guard printed — "call it from run_guards" and "add its row
+  # to the DECLARATION TABLE" — require editing .softhouse/conformance.sh, and this program
+  # SERIALISES this file to one holder per batch. So the task that trips the guard could not
+  # lawfully fix it. That is not hypothetical: check-capture-namespace.sh's own header says
+  # wiring itself here "would be the scope violation this program treats as a rejection", which
+  # is the entire reason T299's guard sat unwired until T323 was granted this file.
+  #
+  # T323's argument for HARD — "a guard whose remedy is 'say the thing the rule is asking for'
+  # is not a blocker, it is the rule" — is SOUND FOR T299, whose remedy is an OWNER*.md inside
+  # the tripping task's own directory. It DOES NOT TRANSFER to a guard whose only remedies are
+  # edits to a file the tripping task is forbidden to open. A HARD guard whose remedy is
+  # out-of-grant is not a bar; it is a bar that gets switched off, and the guard would then be
+  # the very thing it was written to prevent.
+  #
+  # THE FIX IS THE REMEDY, NOT THE SEVERITY. Direction REACHED-BY lets the MEMBER carry its own
+  # row, in its own header, on one line:
+  #
+  #     GUARDS-DIR-REGISTRATION: REACHED-BY <witness path, repo-relative>
+  #
+  # and the guard then verifies, below, that the witness EXISTS, is TRACKED, is NOT the member
+  # itself, and NAMES THE MEMBER'S BASENAME. That is the same evidentiary standard as a CALLER
+  # row — the row's LOCATION moved, its burden of proof did not — and the excuse now travels in
+  # the same diff as the file it excuses, which is a strictly smaller blast radius than a table
+  # in this file where one task can excuse another task's file.
+  #
+  # ALTERNATIVES REJECTED, named so this is not re-litigated as a preference:
+  #   * MAKE IT SOFT. Rejected. The defect T323 existed to close is three finished guards that
+  #     reached nothing and nobody noticed for three fires. A warning nobody must act on is
+  #     that same non-event with a line of output. SOFT is also what T299 explicitly rejected
+  #     for its own guard, on the identical ground.
+  #   * MOVE THE WHOLE REGISTRATION RECORD OUT, into a shared .softhouse registry file.
+  #     Rejected on three counts. (1) It only relocates the serialisation point — a single
+  #     shared registry becomes the next contended file. (2) It is a suppression LIST: it lets
+  #     one task excuse a file it does not own, and it grows without the excuse ever appearing
+  #     beside the thing excused. (3) It has a bootstrap hole — the registry would itself sit
+  #     in this directory, and nothing would guard the guard's own registry.
+  #   * DROP THE DEPTH so fixtures cannot trip it (T337's one-token patch, applied alone).
+  #     Rejected above at the selector: it buys the remedy problem away by not looking.
+  #
+  # WHAT REACHED-BY IS NOT: it is not proof of execution, and it is not self-certification. A
+  # member may not vouch for itself, and a witness that stops naming the member turns this
+  # guard RED at the next graded run — the declaration is re-verified every run, never trusted
+  # once.
+  # ────────────────────────────────────────────────────────────────────────────────────────
+  #
   # ROW 1 — repo-state-attest.sh [T318 / FU-T304-2, adopted by T325]. A DIFFERENTIAL repo-state
   # attestation, used AROUND an operation (snapshot, run, compare against the operation's writ).
   # It cannot be a verdict guard in a harness that grades ONE state; its caller is the fire
@@ -3125,8 +3267,9 @@ guard_guards_dir_registration() {
   DECLARED="repo-state-attest.sh|CALLER|.softhouse/bin/fire-program.sh|repo-state-attest.sh
 drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|ledgerguard"
 
-  local total=0 invoked=0 decl_ok=0 unwired=0 bad=0
+  local total=0 invoked=0 decl_ok=0 selfdecl=0 unwired=0 bad=0
   local rel base row rowbase dir witness token found
+  local self_row self_wit
 
   while IFS= read -r rel; do
     [ -n "$rel" ] || continue
@@ -3145,6 +3288,63 @@ $DECLARED
 INNER
 
     if [ -z "$found" ]; then
+      # ── DIRECTION 3: REACHED-BY, the row the MEMBER carries in its own header. [T358]
+      # Read BEFORE the invocation test, for the same reason the table is: a member that
+      # declares itself must be adjudicated on the declaration, not accidentally absolved by
+      # its basename appearing somewhere in this file.
+      #
+      # THE DIRECTIVE IS MATCHED ANCHORED TO ITS OWN MARKER, not by a loose grep, and the
+      # marker is long enough that no file mentions it by accident. `grep -m1` here is NOT in
+      # a pipeline, and that is the same discipline the rest of this function keeps — P-57,
+      # "THE MACHINERY THAT EXISTS TO CATCH A SILENT GUARD CAN INVERT ITSELF, AND IT INVERTS ON
+      # EXACTLY THE INPUTS THAT MATTER" [VERIFIED: .softhouse/patterns.md:1654], whose worked
+      # example is a `printf … | grep -q` that reports a MISS on a MATCH because grep exits
+      # first, printf takes EPIPE and `pipefail` propagates the 141. That family already cost
+      # this guard its first graded run. A miss here is a plain exit 1 that `|| self_row=""`
+      # absorbs under `set -u -o pipefail`.
+      self_row=""
+      self_row="$(LC_ALL=C grep -m1 -E \
+        'GUARDS-DIR-REGISTRATION:[[:space:]]+REACHED-BY[[:space:]]+[^[:space:]]+' \
+        "$REPO_ROOT/$rel" 2>/dev/null)" || self_row=""
+      if [ -n "$self_row" ]; then
+        self_wit="${self_row##*REACHED-BY}"
+        self_wit="${self_wit#"${self_wit%%[![:space:]]*}"}"
+        self_wit="${self_wit%%[[:space:]]*}"
+        if [ -z "$self_wit" ]; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel carries a REACHED-BY directive"
+          warn "conformance: with NO witness path after it. An unreadable declaration is an"
+          warn "conformance: ERROR, never a pass."
+        elif [ "$self_wit" = "$rel" ]; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY ITSELF. A"
+          warn "conformance: file may not vouch for itself — that is self-certification, which"
+          warn "conformance: is exactly the amnesty this direction was built to avoid. REFUSED."
+        elif [ ! -f "$REPO_ROOT/$self_wit" ]; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
+          warn "conformance: and THAT REACHED-BY WITNESS DOES NOT EXIST. A declaration whose"
+          warn "conformance: witness is gone is an amnesty, not a record. REFUSED."
+        elif ! ( cd "$REPO_ROOT" 2>/dev/null && git ls-files --error-unmatch -- "$self_wit" ) \
+               >/dev/null 2>&1; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
+          warn "conformance: which is NOT TRACKED. An untracked witness is host state — it is"
+          warn "conformance: absent from every commit and cannot be reviewed. REFUSED."
+        elif ! LC_ALL=C grep -qF -- "$base" "$REPO_ROOT/$self_wit"; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
+          warn "conformance: and THAT REACHED-BY WITNESS DOES NOT NAME $base. The declaration is"
+          warn "conformance: an unverified assertion, and this direction exists precisely so that"
+          warn "conformance: it never is. REFUSED."
+        else
+          selfdecl=$((selfdecl + 1))
+          say "conformance:     REACHED-BY $rel — declared in its own header, reached by"
+          say "conformance:                $self_wit (verified: it names $base)"
+        fi
+        continue
+      fi
+
       # NO PIPELINE HERE, AND THAT IS NOT A STYLE CHOICE. `printf … | grep -q` is a member of
       # the EPIPE family P-57 names: grep -q exits on its FIRST match, printf then dies of
       # SIGPIPE, and under `set -o pipefail` — which this file sets at the top — the pipeline
@@ -3163,10 +3363,25 @@ INNER
         warn "conformance: It sits in the canonical guards directory and no non-comment line of"
         warn "conformance: this file names it, so it enforces nothing — P-45, 'A test-only guard"
         warn "conformance: is not a guard … verify the path that actually executes in"
-        warn "conformance: CI/conformance calls it, not merely that a test does.' THE FIX is to"
-        warn "conformance: call it from run_guards, or — if something else already runs it — to"
-        warn "conformance: add its row to the DECLARATION TABLE in this function, naming the"
-        warn "conformance: witness that runs it. A comment saying it is run is not a row."
+        warn "conformance: CI/conformance calls it, not merely that a test does.'"
+        warn "conformance:"
+        warn "conformance: THE FIX YOU CAN ALMOST CERTAINLY MAKE YOURSELF, without holding"
+        warn "conformance: this file: if $base is reached by something OTHER than this harness"
+        warn "conformance: — a test, a build script, the fire driver, a Go module's own runner"
+        warn "conformance: — put ONE LINE in $rel's own header:"
+        warn "conformance:"
+        warn "conformance:     GUARDS-DIR-REGISTRATION: REACHED-BY <witness path, repo-relative>"
+        warn "conformance:"
+        warn "conformance: The witness must be TRACKED, must not be $base itself, and must NAME"
+        warn "conformance: $base — this guard re-verifies all three every run, so it is a record"
+        warn "conformance: and not an amnesty. Both files are yours; no edit to this harness is"
+        warn "conformance: needed, which is the point: the two older remedies below both require"
+        warn "conformance: editing a file this program serialises to one holder per batch."
+        warn "conformance:"
+        warn "conformance: THE OTHER TWO FIXES, which need whoever holds this harness: call it"
+        warn "conformance: from run_guards, or add its row to the DECLARATION TABLE in this"
+        warn "conformance: function, naming the witness that runs it. A comment saying it is"
+        warn "conformance: run is not a row."
         ;;
       esac
       continue
@@ -3250,16 +3465,22 @@ STALE
     return 1
   fi
 
-  say "conformance:   GUARDS-DIR-REGISTRATION: population=$total invoked=$invoked declared=$decl_ok invoked-by-nothing=$unwired"
-  say "conformance:   (selector: git ls-files over the '*.sh' members of $gdrel, from \$REPO_ROOT;"
-  say "conformance:   INVOKED means named on a NON-COMMENT line of this file, never a mention)"
+  say "conformance:   GUARDS-DIR-REGISTRATION: population=$total invoked=$invoked declared=$decl_ok reached-by=$selfdecl invoked-by-nothing=$unwired"
+  say "conformance:   (selector: git ls-files with ':(glob)' magic over the TRACKED '*.sh', '*.py'"
+  say "conformance:   and '*.go' files at ANY DEPTH under $gdrel, from \$REPO_ROOT. NOT closed over"
+  say "conformance:   other languages or committed binaries — this is a count over that search.)"
+  say "conformance:   (INVOKED means the basename appears on a NON-COMMENT line of this file. That"
+  say "conformance:   is a NAMING test and NOT proof of execution: two of the three members that"
+  say "conformance:   read INVOKED today are named on a 'local g=' assignment, and the call is a"
+  say "conformance:   variable expansion this test cannot see. [T337 F-T337-4, corrected by T358 —"
+  say "conformance:   the old wording said 'never a mention', which overstated it.])"
   if [ "$bad" -ne 0 ]; then
     warn "conformance: guard_guards_dir_registration FAILED. A checker in the canonical guards"
     warn "conformance: directory is unreached, or a declaration about one is no longer true."
     return 1
   fi
-  say "conformance:   guards-dir registration: PASS — every checker in $gdrel is either invoked"
-  say "conformance:   by this file or DECLARED against a verified witness."
+  say "conformance:   guards-dir registration: PASS — every member of $gdrel is invoked by this"
+  say "conformance:   file, DECLARED against a verified witness, or carries a verified REACHED-BY."
   return 0
 }
 
