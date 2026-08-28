@@ -406,7 +406,7 @@ T74-E-P72                    parity           path_a_e... PASS            257   
     invariant violations    0
     invariant assertions    0 NOT RUN (a cell nobody observed; listed above, never inferred)
     invariant assertions    4 EXEMPTED BY A VECTOR (switched off on purpose; each one's reason is listed above)
-    no-float census         6 Go packages / 61 Go files / 132672 tokens / 265 import specs inspected under nexus (recursive)
+    no-float census         6 Go packages / 62 Go files / 134078 tokens / 269 import specs inspected under nexus (recursive)
                             0 forbidden identifiers, 0 floating-point or imaginary LITERALS, 0 forbidden imports, 0 unscannable files
                             covered: nexus/internal/apps/ledger
                             covered: nexus/internal/apps/ledger/conformance

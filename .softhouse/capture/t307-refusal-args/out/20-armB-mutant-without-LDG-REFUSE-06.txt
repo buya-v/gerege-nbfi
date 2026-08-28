@@ -4,7 +4,7 @@
                     resolved from the BUILD ANCHOR — the tree this binary was compiled from
                     anchor: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a92fe8f69d728d1c2/nexus/internal/apps/loanschedule/conformance/reporoot.go
                     cwd cross-check: SAME — cwd /Users/buv/gerege-nbfi/.claude/worktrees/agent-a92fe8f69d728d1c2/nexus resolves to the graded root
-    store           /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.sHwq88Sl7j
+    store           /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.f2mIZvyffT
     implementation  loanschedule-go
     oracle probe    SKIPPED
 
@@ -408,7 +408,7 @@ T74-E-P72                    parity           path_a_e... PASS            257   
     invariant violations    0
     invariant assertions    0 NOT RUN (a cell nobody observed; listed above, never inferred)
     invariant assertions    4 EXEMPTED BY A VECTOR (switched off on purpose; each one's reason is listed above)
-    no-float census         6 Go packages / 61 Go files / 132672 tokens / 265 import specs inspected under nexus (recursive)
+    no-float census         6 Go packages / 62 Go files / 134078 tokens / 269 import specs inspected under nexus (recursive)
                             0 forbidden identifiers, 0 floating-point or imaginary LITERALS, 0 forbidden imports, 0 unscannable files
                             covered: nexus/internal/apps/ledger
                             covered: nexus/internal/apps/ledger/conformance
