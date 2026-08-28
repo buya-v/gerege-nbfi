@@ -1,0 +1,15 @@
+PNUMBER-CITATIONS: report DECLARED-AMBIGUOUS REGISTER COLLISION P-12 defined twice in .softhouse/patterns.md: :315 'a right conclusion on a wrong reason recurs in the artefact written to record it'  vs  :1385 'An ID SERIES that restarts in a second file is a name collision waiting for its '
+PNUMBER-CITATIONS: report DECLARED-AMBIGUOUS REGISTER COLLISION P-13 defined twice in .softhouse/patterns.md: :320 'for a specification-bearing comment, the comment IS the deliverable.** A reviewe'  vs  :1412 'Grepping the store for a VALUE does not answer what the store KILLS'
+PNUMBER-CITATIONS: declared-dangling ids (recorded in the .softhouse/patterns.md errata with their repair) = [131, 261]
+PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=98 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+PNUMBER-CITATIONS: sites=11567 definition=99 consistent=597 bare=10744 misdirecting=78 undefined=24 negative-control=25
+PNUMBER-CITATIONS: skipped self-output-files=22 self-source-files=2 (stated, not silent -- both contain deliberately drifted text)
+PNUMBER-CITATIONS:   directive MISDIRECTING 2
+PNUMBER-CITATIONS:   directive UNDEFINED    5
+PNUMBER-CITATIONS:   evidence  MISDIRECTING 66
+PNUMBER-CITATIONS:   evidence  UNDEFINED    18
+PNUMBER-CITATIONS:   orchestrator MISDIRECTING 9
+PNUMBER-CITATIONS:   orchestrator UNDEFINED    1
+PNUMBER-CITATIONS:   ratified  MISDIRECTING 1
+PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/RESUME.md:42 P-100 -- P-100 is defined in neither register
+PNUMBER-CITATIONS: VERDICT FAIL -- 1 fatal (register 0, directive-file 1)
