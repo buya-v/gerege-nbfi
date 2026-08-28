@@ -1,0 +1,140 @@
+=== 1. the schema columns this rig needs, so no query guesses a name ===
+      table_name      |             column_name              |          data_type          
+----------------------+--------------------------------------+-----------------------------
+ acc_gl_account       | id                                   | bigint
+ acc_gl_account       | name                                 | character varying
+ acc_gl_account       | parent_id                            | bigint
+ acc_gl_account       | hierarchy                            | character varying
+ acc_gl_account       | gl_code                              | character varying
+ acc_gl_account       | disabled                             | boolean
+ acc_gl_account       | manual_journal_entries_allowed       | boolean
+ acc_gl_account       | account_usage                        | smallint
+ acc_gl_account       | classification_enum                  | smallint
+ acc_gl_account       | tag_id                               | integer
+ acc_gl_account       | description                          | character varying
+ acc_gl_journal_entry | id                                   | bigint
+ acc_gl_journal_entry | account_id                           | bigint
+ acc_gl_journal_entry | office_id                            | bigint
+ acc_gl_journal_entry | reversal_id                          | bigint
+ acc_gl_journal_entry | currency_code                        | character varying
+ acc_gl_journal_entry | transaction_id                       | character varying
+ acc_gl_journal_entry | loan_transaction_id                  | bigint
+ acc_gl_journal_entry | savings_transaction_id               | bigint
+ acc_gl_journal_entry | client_transaction_id                | bigint
+ acc_gl_journal_entry | reversed                             | boolean
+ acc_gl_journal_entry | ref_num                              | character varying
+ acc_gl_journal_entry | manual_entry                         | boolean
+ acc_gl_journal_entry | entry_date                           | date
+ acc_gl_journal_entry | type_enum                            | smallint
+ acc_gl_journal_entry | amount                               | numeric
+ acc_gl_journal_entry | description                          | character varying
+ acc_gl_journal_entry | entity_type_enum                     | smallint
+ acc_gl_journal_entry | entity_id                            | bigint
+ acc_gl_journal_entry | created_by                           | bigint
+ acc_gl_journal_entry | last_modified_by                     | bigint
+ acc_gl_journal_entry | created_date                         | timestamp without time zone
+ acc_gl_journal_entry | lastmodified_date                    | timestamp without time zone
+ acc_gl_journal_entry | is_running_balance_calculated        | boolean
+ acc_gl_journal_entry | office_running_balance               | numeric
+ acc_gl_journal_entry | organization_running_balance         | numeric
+ acc_gl_journal_entry | payment_details_id                   | bigint
+ acc_gl_journal_entry | share_transaction_id                 | bigint
+ acc_gl_journal_entry | transaction_date                     | date
+ acc_gl_journal_entry | created_on_utc                       | timestamp with time zone
+ acc_gl_journal_entry | last_modified_on_utc                 | timestamp with time zone
+ acc_gl_journal_entry | submitted_on_date                    | date
+ acc_product_mapping  | id                                   | bigint
+ acc_product_mapping  | gl_account_id                        | bigint
+ acc_product_mapping  | product_id                           | bigint
+ acc_product_mapping  | product_type                         | smallint
+ acc_product_mapping  | payment_type                         | integer
+ acc_product_mapping  | charge_id                            | bigint
+ acc_product_mapping  | financial_account_type               | smallint
+ acc_product_mapping  | charge_off_reason_id                 | integer
+ acc_product_mapping  | capitalized_income_classification_id | integer
+ acc_product_mapping  | buydown_fee_classification_id        | integer
+ acc_product_mapping  | write_off_reason_id                  | bigint
+(53 rows)
+
+=== 2. EVERY journal transaction on loan 8, with leg count and dates ===
+ transaction_id | legs | entry_date |        created_on_utc         | min_loan_txn | max_loan_txn | min_je | max_je 
+----------------+------+------------+-------------------------------+--------------+--------------+--------+--------
+ L28            |    2 | 2026-01-15 | 2026-08-28 11:40:25.686753+00 |           28 |           28 |     76 |     77
+ L29            |    6 | 2026-02-15 | 2026-08-28 11:40:53.302232+00 |           29 |           29 |     78 |     83
+ L30            |    6 | 2026-03-15 | 2026-08-28 11:40:53.30947+00  |           30 |           30 |     84 |     89
+ L31            |    6 | 2026-04-15 | 2026-08-28 11:40:53.314635+00 |           31 |           31 |     90 |     95
+ L32            |    6 | 2026-05-15 | 2026-08-28 16:01:00.100207+00 |           32 |           32 |     96 |    101
+ L33            |    6 | 2026-06-15 | 2026-08-28 16:01:00.109113+00 |           33 |           33 |    102 |    107
+ L34            |    6 | 2026-07-15 | 2026-08-28 16:01:00.11431+00  |           34 |           34 |    108 |    113
+(7 rows)
+
+=== 3. every loan transaction on loan 8 ===
+ id | loan_id | transaction_type_enum | transaction_date |     amount     | principal_portion_derived | interest_portion_derived | fee_charges_portion_derived | penalty_charges_portion_derived | is_reversed |        created_on_utc         
+----+---------+-----------------------+------------------+----------------+---------------------------+--------------------------+-----------------------------+---------------------------------+-------------+-------------------------------
+ 28 |       8 |                     1 | 2026-01-15       | 1200000.000000 |                           |                          |                             |                                 | f           | 2026-08-28 11:40:25.674869+00
+ 29 |       8 |                    10 | 2026-02-15       |   27700.000000 |                           |             24000.000000 |                 2500.000000 |                     1200.000000 | f           | 2026-08-28 11:40:53.289796+00
+ 30 |       8 |                    10 | 2026-03-15       |   23895.380000 |                           |             20195.380000 |                 2500.000000 |                     1200.000000 | f           | 2026-08-28 11:40:53.294581+00
+ 31 |       8 |                    10 | 2026-04-15       |   20014.670000 |                           |             16314.670000 |                 2500.000000 |                     1200.000000 | f           | 2026-08-28 11:40:53.297456+00
+ 32 |       8 |                    10 | 2026-05-15       |   16056.340000 |                           |             12356.340000 |                 2500.000000 |                     1200.000000 | f           | 2026-08-28 16:01:00.068246+00
+ 33 |       8 |                    10 | 2026-06-15       |   12018.850000 |                           |              8318.850000 |                 2500.000000 |                     1200.000000 | f           | 2026-08-28 16:01:00.092597+00
+ 34 |       8 |                    10 | 2026-07-15       |    7900.610000 |                           |              4200.610000 |                 2500.000000 |                     1200.000000 | f           | 2026-08-28 16:01:00.095647+00
+(7 rows)
+
+=== 4. append-table state TODAY ===
+            tbl             | rows | max_id 
+----------------------------+------+--------
+ acc_gl_account             |   36 |     47
+ acc_gl_closure             |    0 |       
+ acc_gl_journal_entry       |  109 |    113
+ acc_product_mapping        |  145 |    189
+ m_client                   |    3 |      3
+ m_loan                     |    8 |      8
+ m_loan_transaction         |   24 |     34
+ m_portfolio_command_source |  379 |    379
+ m_product_loan             |   34 |     63
+(9 rows)
+
+=== 5. the forbidden set -- twelve promoted accounts, counted TODAY ===
+ gl_id | gl_code | je_rows 
+-------+---------+---------
+     1 | 10000   |       3
+     2 | 10100   |       3
+     4 | 10201   |      12
+     6 | 20100   |       1
+     8 | 40100   |       2
+    10 | 40300   |       1
+    15 | 30000   |       0
+    16 | 10300   |      21
+    17 | 10400   |       5
+    18 | 10500   |       0
+    21 | 99008   |      13
+    22 | 99010   |       0
+(12 rows)
+
+=== 6. the scheduled jobs that could have moved loan 8 ===
+psql:<stdin>:58: ERROR:  column "previous_run_status" does not exist
+LINE 2:        previous_run_status
+               ^
+=== 7. rows created AFTER T388 finished (2026-08-28T12:00:00Z) ===
+ id  | transaction_id | account_id | dr2_cr1 |    amount    | entry_date |        created_on_utc         | loan_transaction_id 
+-----+----------------+------------+---------+--------------+------------+-------------------------------+---------------------
+  96 | L32            |         41 |       2 | 12356.340000 | 2026-05-15 | 2026-08-28 16:01:00.100207+00 |                  32
+  97 | L32            |         37 |       1 | 12356.340000 | 2026-05-15 | 2026-08-28 16:01:00.102863+00 |                  32
+  98 | L32            |         38 |       1 |  2500.000000 | 2026-05-15 | 2026-08-28 16:01:00.10489+00  |                  32
+  99 | L32            |         42 |       2 |  2500.000000 | 2026-05-15 | 2026-08-28 16:01:00.105589+00 |                  32
+ 100 | L32            |         39 |       1 |  1200.000000 | 2026-05-15 | 2026-08-28 16:01:00.10696+00  |                  32
+ 101 | L32            |         43 |       2 |  1200.000000 | 2026-05-15 | 2026-08-28 16:01:00.107617+00 |                  32
+ 102 | L33            |         41 |       2 |  8318.850000 | 2026-06-15 | 2026-08-28 16:01:00.109113+00 |                  33
+ 103 | L33            |         37 |       1 |  8318.850000 | 2026-06-15 | 2026-08-28 16:01:00.109714+00 |                  33
+ 104 | L33            |         38 |       1 |  2500.000000 | 2026-06-15 | 2026-08-28 16:01:00.110808+00 |                  33
+ 105 | L33            |         42 |       2 |  2500.000000 | 2026-06-15 | 2026-08-28 16:01:00.111386+00 |                  33
+ 106 | L33            |         39 |       1 |  1200.000000 | 2026-06-15 | 2026-08-28 16:01:00.112391+00 |                  33
+ 107 | L33            |         43 |       2 |  1200.000000 | 2026-06-15 | 2026-08-28 16:01:00.112891+00 |                  33
+ 108 | L34            |         41 |       2 |  4200.610000 | 2026-07-15 | 2026-08-28 16:01:00.11431+00  |                  34
+ 109 | L34            |         37 |       1 |  4200.610000 | 2026-07-15 | 2026-08-28 16:01:00.114834+00 |                  34
+ 110 | L34            |         38 |       1 |  2500.000000 | 2026-07-15 | 2026-08-28 16:01:00.115836+00 |                  34
+ 111 | L34            |         42 |       2 |  2500.000000 | 2026-07-15 | 2026-08-28 16:01:00.116365+00 |                  34
+ 112 | L34            |         39 |       1 |  1200.000000 | 2026-07-15 | 2026-08-28 16:01:00.117256+00 |                  34
+ 113 | L34            |         43 |       2 |  1200.000000 | 2026-07-15 | 2026-08-28 16:01:00.117772+00 |                  34
+(18 rows)
+

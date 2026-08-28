@@ -1,0 +1,27 @@
+==============================================================================
+.softhouse/capture/t391-accrual-promotion/out/T391-A01-je-L29.json
+totalFilteredRecords = 6
+  je=78 txn=L29 gl=41 code=T388-1200 name=T388 Interest Receivable acctype=ASSET side=DEBIT amount=24000.000000 date=['2026', '2', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=29 loan_txn_type=10/Accrual
+  je=79 txn=L29 gl=37 code=T388-4000 name=T388 Interest On Loans acctype=INCOME side=CREDIT amount=24000.000000 date=['2026', '2', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=29 loan_txn_type=10/Accrual
+  je=80 txn=L29 gl=38 code=T388-4100 name=T388 Income From Fees acctype=INCOME side=CREDIT amount=2500.000000 date=['2026', '2', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=29 loan_txn_type=10/Accrual
+  je=81 txn=L29 gl=42 code=T388-1300 name=T388 Fees Receivable acctype=ASSET side=DEBIT amount=2500.000000 date=['2026', '2', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=29 loan_txn_type=10/Accrual
+  je=82 txn=L29 gl=39 code=T388-4200 name=T388 Income From Penalties acctype=INCOME side=CREDIT amount=1200.000000 date=['2026', '2', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=29 loan_txn_type=10/Accrual
+  je=83 txn=L29 gl=43 code=T388-1400 name=T388 Penalties Receivable acctype=ASSET side=DEBIT amount=1200.000000 date=['2026', '2', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=29 loan_txn_type=10/Accrual
+==============================================================================
+.softhouse/capture/t391-accrual-promotion/out/T391-A02-je-L30.json
+totalFilteredRecords = 6
+  je=84 txn=L30 gl=41 code=T388-1200 name=T388 Interest Receivable acctype=ASSET side=DEBIT amount=20195.380000 date=['2026', '3', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=30 loan_txn_type=10/Accrual
+  je=85 txn=L30 gl=37 code=T388-4000 name=T388 Interest On Loans acctype=INCOME side=CREDIT amount=20195.380000 date=['2026', '3', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=30 loan_txn_type=10/Accrual
+  je=86 txn=L30 gl=38 code=T388-4100 name=T388 Income From Fees acctype=INCOME side=CREDIT amount=2500.000000 date=['2026', '3', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=30 loan_txn_type=10/Accrual
+  je=87 txn=L30 gl=42 code=T388-1300 name=T388 Fees Receivable acctype=ASSET side=DEBIT amount=2500.000000 date=['2026', '3', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=30 loan_txn_type=10/Accrual
+  je=88 txn=L30 gl=39 code=T388-4200 name=T388 Income From Penalties acctype=INCOME side=CREDIT amount=1200.000000 date=['2026', '3', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=30 loan_txn_type=10/Accrual
+  je=89 txn=L30 gl=43 code=T388-1400 name=T388 Penalties Receivable acctype=ASSET side=DEBIT amount=1200.000000 date=['2026', '3', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=30 loan_txn_type=10/Accrual
+==============================================================================
+.softhouse/capture/t391-accrual-promotion/out/T391-A04-je-L32.json
+totalFilteredRecords = 6
+  je=96 txn=L32 gl=41 code=T388-1200 name=T388 Interest Receivable acctype=ASSET side=DEBIT amount=12356.340000 date=['2026', '5', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=32 loan_txn_type=10/Accrual
+  je=97 txn=L32 gl=37 code=T388-4000 name=T388 Interest On Loans acctype=INCOME side=CREDIT amount=12356.340000 date=['2026', '5', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=32 loan_txn_type=10/Accrual
+  je=98 txn=L32 gl=38 code=T388-4100 name=T388 Income From Fees acctype=INCOME side=CREDIT amount=2500.000000 date=['2026', '5', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=32 loan_txn_type=10/Accrual
+  je=99 txn=L32 gl=42 code=T388-1300 name=T388 Fees Receivable acctype=ASSET side=DEBIT amount=2500.000000 date=['2026', '5', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=32 loan_txn_type=10/Accrual
+  je=100 txn=L32 gl=39 code=T388-4200 name=T388 Income From Penalties acctype=INCOME side=CREDIT amount=1200.000000 date=['2026', '5', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=32 loan_txn_type=10/Accrual
+  je=101 txn=L32 gl=43 code=T388-1400 name=T388 Penalties Receivable acctype=ASSET side=DEBIT amount=1200.000000 date=['2026', '5', '15'] manual=False reversed=False entity=LOAN/8 loan_txn=32 loan_txn_type=10/Accrual

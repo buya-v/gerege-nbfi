@@ -1,0 +1,91 @@
+=== 1. product 63: every slot mapping, decoded on AccrualAccountsForLoan ===
+=== 2. product 63 itself: accounting_type, currency, scale ===
+psql:<stdin>:50: ERROR:  column a.manual_entries_allowed does not exist
+LINE 25:        a.manual_entries_allowed,
+                ^
+ id |                  name                   | short_name | accounting_type | currency_code | currency_digits | currency_multiplesof | principal_amount | nominal_interest_rate_per_period | interest_period_frequency_enum | interest_method_enum | number_of_repayments | repay_every | repayment_period_frequency_enum 
+----+-----------------------------------------+------------+-----------------+---------------+-----------------+----------------------+------------------+----------------------------------+--------------------------------+----------------------+----------------------+-------------+---------------------------------
+ 63 | T388 Accrual Periodic On Clean Accounts | T388       |               3 | MNT           |               2 |                    0 |   1200000.000000 |                        24.000000 |                              3 |                    0 |                    6 |           1 |                               2
+(1 row)
+
+=== 3. the EIGHTEEN legs of L29/L30/L31, each decoded to its slot ===
+psql:<stdin>:93: ERROR:  column j.is_reversed does not exist
+LINE 10:        j.is_reversed,
+                ^
+HINT:  Perhaps you meant to reference the column "t.is_reversed".
+=== 4. IS THE DECODE UNAMBIGUOUS? bijection on 63, and no account shared ===
+-- 4a. mapping count vs distinct accounts vs distinct slots on product 63 --
+ mappings | distinct_accounts | distinct_slots 
+----------+-------------------+----------------
+       13 |                13 |             13
+(1 row)
+
+-- 4b. does any OTHER product map any of accounts 35-47? (expect ZERO rows) --
+ product_id | product_type | slot_code | gl_account_id 
+------------+--------------+-----------+---------------
+(0 rows)
+
+-- 4c. the CONTRAST that makes 4b load-bearing: gl 16, the T242 trap, live --
+ product_id | accounting_type | slot_code | je_rows_on_gl16 
+------------+-----------------+-----------+-----------------
+         22 |               2 |         1 |              21
+         23 |               2 |         1 |              21
+         27 |               2 |         1 |              21
+         28 |               3 |         9 |              21
+         46 |               2 |         1 |              21
+         54 |               2 |         1 |              21
+         55 |               2 |         1 |              21
+         56 |               2 |         1 |              21
+         57 |               2 |         1 |              21
+         58 |               2 |         1 |              21
+         60 |               2 |         1 |              21
+(11 rows)
+
+=== 5. double entry per transaction, in INTEGER MINOR UNITS (numeric, no float) ===
+ transaction_id | legs | debit_minor | credit_minor | difference_minor 
+----------------+------+-------------+--------------+------------------
+ L29            |    6 |     2770000 |      2770000 |                0
+ L30            |    6 |     2389538 |      2389538 |                0
+ L31            |    6 |     2001467 |      2001467 |                0
+(3 rows)
+
+=== 6. SUB-MINOR-UNIT RESIDUE CHECK: any amount with a non-zero 3rd decimal? ===
+ id | transaction_id | amount 
+----+----------------+--------
+(0 rows)
+
+=== 7. product 63 slots that are still UNPOSTED -- 6, 10, 11, 12, 13 ===
+ slot_code | gl_account_id |  gl_code  |           gl_name           | je_rows 
+-----------+---------------+-----------+-----------------------------+---------
+         1 |            35 | T388-1000 | T388 Accrual Fund Source    |       1
+         2 |            36 | T388-1100 | T388 Accrual Loan Portfolio |       1
+         6 |            40 | T388-5000 | T388 Losses Written Off     |       0
+        10 |            44 | T388-1500 | T388 Transfers Suspense     |       0
+        11 |            45 | T388-2000 | T388 Overpayment Liability  |       0
+        12 |            46 | T388-4300 | T388 Income From Recovery   |       0
+        13 |            47 | T388-5100 | T388 Goodwill Credit        |       0
+(7 rows)
+
+=== 8. product 28 slots 7/8/9, the ones the registry still records as unposted ===
+ slot_code | gl_account_id | gl_code | je_rows_on_account | je_rows_through_product_28 
+-----------+---------------+---------+--------------------+----------------------------
+         7 |            18 | 10500   |                  0 |                          0
+         8 |            22 | 99010   |                  0 |                          0
+         9 |            16 | 10300   |                 21 |                          0
+(3 rows)
+
+=== 9. every ACCRUAL_PERIODIC product in this tenant (accounting_type = 3) ===
+ id |                  name                   | accounting_type | loans 
+----+-----------------------------------------+-----------------+-------
+ 28 | A2 Accrual Complete                     |               3 |     0
+ 63 | T388 Accrual Periodic On Clean Accounts |               3 |     1
+(2 rows)
+
+=== 10. THE CORPUS SENTENCE: receivable-slot entries in the TENANT, by product ===
+ product_id | slot_code | entries 
+------------+-----------+---------
+         63 |         7 |       6
+         63 |         8 |       6
+         63 |         9 |       6
+(3 rows)
+
