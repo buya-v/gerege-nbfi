@@ -1,0 +1,27 @@
+T411 COUNTS @ 1eacb63e  (softhouse: fire 20260828-140005 iter4 DISPATCH RECORD -- 10 )
+instrument: 10-t411-counts.sh
+grep      : grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+FIGURE                                        COUNT
+tracked .zsh, whole repo                        121   selector: ls-tree -r --name-only | grep -cE '[.]zsh$'
+tracked .zsh under capture/+reviews/            109   selector: ... grep -cE '^[.]softhouse/(capture|reviews)/.*[.]zsh$'
+tracked .sh, whole repo                         657   selector: ls-tree -r --name-only | grep -cE '[.]sh$'
+tracked .py, whole repo                         738   selector: ls-tree -r --name-only | grep -cE '[.]py$'
+S1 fail-open corpus (.sh + .py)                1395   selector: ls-tree -r --name-only | grep -cE '([.]sh|[.]py)$'
+
+--- cross-checks: independent selectors that MUST agree ---
+  .sh + .py summed separately             : 1395
+  S1 corpus via python str.endswith       : 1395
+  .zsh via python str.endswith            : 121
+
+--- THE DEFECTIVE IDIOM, on this same corpus, for contrast (F-T411-1) ---
+  /usr/bin/grep -c BRE  '[.]sh$\|[.]py$' : 738
+  ... exit status of that call            : 0  <-- SUCCESS while undercounting
+
+--- .zsh distribution ---
+  62 .softhouse/capture
+  47 .softhouse/reviews
+  11 .softhouse/handoff
+   1 .softhouse/bin
+  .zsh NOT under .softhouse/              : 0
+  .zsh under the guards directory         : 0
