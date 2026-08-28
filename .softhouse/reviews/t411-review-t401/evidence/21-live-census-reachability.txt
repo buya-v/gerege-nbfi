@@ -1,0 +1,131 @@
+REACHABLE from conformance.sh (transitive path-literal closure): 73 files
+
+  .softhouse/bin/branch_sweep.py
+  .softhouse/bin/fire-program.sh
+  .softhouse/bin/go-env.sh
+  .softhouse/bin/ready-tasks.py
+  .softhouse/capture/actualactual/analysis/discriminate.py
+  .softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh
+  .softhouse/capture/charges/bin/preconditions.sh
+  .softhouse/capture/charges/bin/run-preconditions.sh
+  .softhouse/capture/charges/bin/t51-negative.sh
+  .softhouse/capture/lib/check_no_narrow_catch.py
+  .softhouse/capture/lib/check_wire_float_roundtrip.py
+  .softhouse/capture/lib/oracle_send.sh
+  .softhouse/capture/pathb/t36/preconditions.sh
+  .softhouse/capture/pathb/t80/run-attacks.sh
+  .softhouse/capture/t116-familyb-promotion/src/run-harness-mutations-t116.sh
+  .softhouse/capture/t145-analysis-float/bin/guard-float-decides-money.py
+  .softhouse/capture/t145-analysis-float/bin/selftest-discriminate-predicate.py
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/01-escape-matrix.sh
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+  .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+  .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py
+  .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+  .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+  .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+  .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+  .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+  .softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh
+  .softhouse/capture/t247-dec2-rev7/verify-line-numbers.py
+  .softhouse/capture/t253-portability/instruments/50-t234-residue-probe.sh
+  .softhouse/capture/t255-dec2-rev8/instruments/15-p5-probe.py
+  .softhouse/capture/t255-dec2-rev8/instruments/20-verify-anchors.py
+  .softhouse/capture/t271-b1-t219/probe_tmp_dependency_t271.sh
+  .softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py
+  .softhouse/capture/t273-residue/instruments/40-selector-agreement.py
+  .softhouse/capture/t279-lock-partition/enumerate.py
+  .softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py
+  .softhouse/capture/t282-pnumber-drift/bin/drive-red-green.sh
+  .softhouse/capture/t284-schema2-callsites/instruments/10-callsite-registry.py
+  .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh
+  .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py
+  .softhouse/capture/t290-review-t271/red/drive-red-t290.py
+  .softhouse/capture/t299-namespace-and-default-safety/instruments/20-drive-destination-safety.sh
+  .softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh
+  .softhouse/capture/t316-dead-path-guards/census_dead_paths.py
+  .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py
+  .softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh
+  .softhouse/capture/t64-zeroprincipal/src/run-harness-mutations.sh
+  .softhouse/capture/t91/prove-guards.sh
+  .softhouse/capture/t91/run-attacks.sh
+  .softhouse/capture/t91/t115-drive-mf1.sh
+  .softhouse/capture/t91/t115-drive-mf2.sh
+  .softhouse/capture/t91/t115-drive-mf3-mf4.sh
+  .softhouse/capture/t91/t151-drive-g4.sh
+  .softhouse/capture/t91/verdict.sh
+  .softhouse/capture/tierA-a2/manifest.py
+  .softhouse/capture/tierA-a2/resolve8.py
+  .softhouse/conformance.sh
+  .softhouse/guards/check-capture-namespace.sh
+  .softhouse/guards/check-dead-path-frontier.sh
+  .softhouse/guards/check-ledger-invariants.sh
+  .softhouse/guards/drive-red-ledger-invariants.sh
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+  .softhouse/reviews/T138-evidence/r11-hygiene.sh
+  .softhouse/reviews/T138-evidence/r7-mf3-mf4.sh
+  .softhouse/reviews/T138-evidence/r7b-census.sh
+  .softhouse/reviews/T155-probe/prove-ix-sweep-and-help.sh
+  .softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh
+  .softhouse/reviews/T158-compare-enumerators.sh
+  .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+  .softhouse/reviews/t246-dec2-rev6/drive-pin-red.sh
+  .softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh
+  .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh
+
+==================================================================
+OF THOSE, WHICH BUILD A CORPUS FROM FILE EXTENSIONS?
+==================================================================
+
+### .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py
+    211:         .stdout.split("\n") if f.endswith((".sh", ".py"))]
+
+### .softhouse/capture/t273-residue/instruments/40-selector-agreement.py
+    41:files = [f for f in out.split("\n") if f.endswith((".sh", ".py"))]
+
+### .softhouse/capture/t284-schema2-callsites/instruments/10-callsite-registry.py
+    94:        ["git", "-C", root, "ls-files", "-z", "--", "*.sh", "*.py"],
+    105:            "`git ls-files -- '*.sh' '*.py'` matched NOTHING under %s. That is a "
+    274:    print("  engine: git ls-files -z -- '*.sh' '*.py'  +  python re "
+
+### .softhouse/capture/t316-dead-path-guards/census_dead_paths.py
+    11:    corpus     : `git ls-files '.softhouse/*.py' '.softhouse/*.sh'` -- TRACKED files only.
+    110:        ["git", "ls-files", ".softhouse/*.py", ".softhouse/*.sh"],
+    347:    print("  corpus     : git ls-files '.softhouse/*.py' '.softhouse/*.sh'   -> %d tracked file(s)"
+
+### .softhouse/capture/t91/t115-drive-mf3-mf4.sh
+    87:LC_ALL=C grep -rn --exclude-dir=.git --include='*.sh' --include='*.py' 'run-preconditions\.sh' "$C" \
+
+### .softhouse/conformance.sh
+    1284:  floor="$(git -C "$REPO_ROOT" ls-files -z -- '*.java' 2>/dev/null \
+    2131:  ( cd "$REPO_ROOT" || exit 9; LC_ALL=C git grep -l -E "$rw" -- '*.sh' '*.py' ) >"$list.raw" 2>/dev/null
+    2361:  attest="$(cd "$REPO_ROOT" && git ls-files -- '.softhouse/capture/*/attest/*.disposable' 2>/dev/null || true)"
+    3048:#     POPULATION = git ls-files, ':(glob)' magic, over the TRACKED '*.sh' / '*.py' / '*.go'
+    3267:            ":(glob)$gdrel/"'**/*.sh' \
+    3268:            ":(glob)$gdrel/"'**/*.py' \
+    3269:            ":(glob)$gdrel/"'**/*.go' 2>/dev/null )"
+    3865:  say "conformance:   (selector: git ls-files with ':(glob)' magic over the TRACKED '*.sh', '*.py'"
+
+### .softhouse/reviews/T138-evidence/r7-mf3-mf4.sh
+    53:LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'charges/bin/preconditions\.sh' "$CAP" \
+    58:LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'run-preconditions\.sh' "$CAP" \
+    63:DIRECT=$(LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'charges/bin/preconditions\.sh' "$CAP" | LC_ALL=C grep -av '/t91/' | wc -l | tr -d ' ')
+    64:WRAP=$(LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'run-preconditions\.sh' "$CAP" | LC_ALL=C grep -av '/t91/' | wc -l | tr -d ' ')
+    68:LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'charges/bin/preconditions\.sh' "$CAP" \
+
+### .softhouse/reviews/T138-evidence/r7b-census.sh
+    11:LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'preconditions\.sh' "$CAP" \
+    27:LC_ALL=C grep -rn --include='*.py' -a "preconditions" "$CAP/charges/bin" | LC_ALL=C grep -a "'sh'\|\"sh\"\|preconditions.sh" | LC_ALL=C sed "s|$CAP/||" | sed 's/^/    /'
+    42:LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'run-preconditions\.sh' "$CAP" \
+
+### .softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh
+    41:( cd nexus && LC_ALL=C grep -arnE '\b(float32|float64|complex64|complex128)\b' --include='*.go' . | LC_ALL=C grep -av 'nofloat.go' | sed 's/^/    /' )
+
+### .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh
+    63:live=$(git ls-files '*.sh' '*.py' | /usr/bin/grep -c . || true)
+
+==================================================================
+REACHES .zsh?  (a selector naming zsh anywhere in the reachable set)
+==================================================================
+.softhouse/bin/fire-program.sh:49:#   * `<0->` is zsh's non-negative-integer glob. It refuses `abc`, `-100000`, `1e3`, `0x10`,

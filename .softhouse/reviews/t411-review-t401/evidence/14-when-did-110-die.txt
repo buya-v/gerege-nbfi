@@ -1,0 +1,25 @@
+  .zsh    0  first seen at 2355730c  [ancestor of T385's first commit]  Scaffold gerege-nbfi: CLAUDE.md, softhouse skills, p
+  .zsh   11  first seen at 5f6e8e19  [ancestor of T385's first commit]  merge T202-fireprogram-twin (fire 20260822-080001, b
+  .zsh   22  first seen at 0d89d038  [ancestor of T385's first commit]  merge T211-sigterm-prompt-stop (fire 20260822-080001
+  .zsh   30  first seen at e6c91afd  [ancestor of T385's first commit]  merge T217 (fire 20260822-000013, wave 1): bound rel
+  .zsh   31  first seen at 2b3b0465  [ancestor of T385's first commit]  merge T213: worktree pruning with FOUR fail-closed c
+  .zsh   39  first seen at 2dfbe422  [ancestor of T385's first commit]  Merge T309: the SIGTERM path bypassed the reconciler
+  .zsh   45  first seen at 14632ec6  [ancestor of T385's first commit]  Merge T302: REJECTED (split) - T309's REPLACEMENT di
+  .zsh   46  first seen at 27985031  [ancestor of T385's first commit]  Merge T319: F5 closed - the broken inference NAMED, 
+  .zsh   47  first seen at 2f1ba61c  [ancestor of T385's first commit]  Merge T318: git status has ZERO discriminating power
+  .zsh   50  first seen at d36863ad  [ancestor of T385's first commit]  Merge T324: the skip-bit prune kill chain is closed 
+  .zsh   52  first seen at e590b865  [ancestor of T385's first commit]  Merge T325: T318's attestation would have cried DAMA
+  .zsh   57  first seen at 3e024dfa  [ancestor of T385's first commit]  Merge T301: the hazard DID NOT REPRODUCE -- and the 
+  .zsh   60  first seen at eac45bdc  [ancestor of T385's first commit]  Merge T279: the lock arms DID NOT PARTITION -- 24 st
+  .zsh   65  first seen at 346b7a1d  [ancestor of T385's first commit]  Merge T280: REJECT T279 -- the partition is a proper
+  .zsh   69  first seen at 909822b1  [ancestor of T385's first commit]  Merge T346: independent review of T342 -- ACCEPT-WIT
+  .zsh   73  first seen at 8faf2063  [ancestor of T385's first commit]  Merge T336: the harness runs no git hooks on the spa
+  .zsh   81  first seen at 380f0d64  [ancestor of T385's first commit]  Merge T361: independent review of the T342+T353 lock
+  .zsh   98  first seen at 5dfd1c9f  [ancestor of T385's first commit]  Merge T342+T353: the lock protocol's released_at fai
+  .zsh   90  first seen at 2fa4015b  [ancestor of T385's first commit]  Revert the T361 merge: it turned main RED, and the g
+  .zsh  100  first seen at 59845ece  [ancestor of T385's first commit]  Merge T349-pretooluse-eval: bar verified green on th
+  .zsh  103  first seen at 8b24dc3d  [ancestor of T385's first commit]  Merge T365-t361-conditions: T368 APPROVED -- z07 pro
+  .zsh  106  first seen at e3eb73f9  [ancestor of T385's first commit]  Merge T368-review-t365: T368 APPROVED -- z07 proved 
+  .zsh  108  first seen at 78b602af  [ancestor of T385's first commit]  Merge T377-t368-conditions
+  .zsh  110  first seen at b96e4be4  [ancestor of T385's first commit]  Merge T380-review-t377
+  .zsh  121  first seen at e6cd307f  [AFTER-or-AT T385]  Merge T383-t380-conditions + T385-review-t383 -- ref
