@@ -63,6 +63,13 @@ current `main`, with `corpus=1385` — `main`'s 1384 plus exactly one file, T375
 `drive-red-t375.sh`. **T375 adds a file to the corpus and moves the dead-path count by zero.**
 No pin regeneration is required by this merge.
 
+**THIS REVIEW'S OWN BRANCH IS GREEN, measured the same way.** `bash .softhouse/conformance.sh`
+from a CLEAN COMMITTED tree (`git status --porcelain` EMPTY *before* the run, not after):
+**exit 0**, probe **PRESENT** reading `up`, `corpus=1384 deadOccurrences=108` — **unmoved**,
+because every instrument this review adds is committed as `.txt` and stays out of T316's
+`.sh`/`.py` corpus by construction — frontier 11 == 11, `VERDICT: PASS`.
+[`evidence/04-bar-on-T384-review-branch-CLEAN-COMMITTED.txt`.]
+
 **`EXEMPTION_PIN_LEDGER_WRONGIMPLS` — matched BY NAME, never by line, as instructed.**
 It reads **13** on current `main` (`conformance.sh:3923`), **13** on the T375 branch
 (`:4476`) and **13** on the merge result (`:4476`). **Untouched by T375**; the 553-line shift is
