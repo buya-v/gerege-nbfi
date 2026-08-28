@@ -330,8 +330,11 @@ echo "  AFTER : exit $rc_4a; the warning appears $w_after time(s) in its output"
 grep -B1 -m2 'zz-t381-drive-synthetic-engine-warning' "$D/r4-after.out" | sed 's/^/      | /' | head -4
 # The discriminator is not the warning's presence but WHERE it is counted. Compare the first
 # selector's `hits total` between the shimmed and unshimmed runs of each version.
-run "$D/before.sh" "$D/r4-before-clean.out"; :
-run "$D/after.sh"  "$D/r4-after-clean.out";  :
+# The unshimmed baselines are the D-R2 CONTROL runs, reused rather than re-run: same script,
+# same corpus, same commit, and re-running them would cost two more full sweeps for bytes that
+# are already captured above.
+cp "$D/r2-before-control.out" "$D/r4-before-clean.out"
+cp "$D/r2-after-control.out"  "$D/r4-after-clean.out"
 hb_dirty=$(grep -m1 'hits total' "$D/r4-before.out"       | sed 's/.*hits total: *\([0-9]*\).*/\1/')
 hb_clean=$(grep -m1 'hits total' "$D/r4-before-clean.out" | sed 's/.*hits total: *\([0-9]*\).*/\1/')
 ha_dirty=$(grep -m1 'hits total' "$D/r4-after.out"        | sed 's/.*hits total: *\([0-9]*\).*/\1/')
@@ -358,13 +361,62 @@ echo
 echo "============================================================================"
 echo "D-GREEN  the repair on an unbroken engine -- it must still be usable"
 echo "============================================================================"
-run "$D/after.sh" "$D/green.out"; rc_g=$?
+# Reuses the D-R2 AFTER control run, for the same reason.
+cp "$D/r2-after-control.out" "$D/green.out"; rc_g=$rc_ac
 say_rc "$rc_g"
 show "$D/green.out" 'CALIBRATE|OBSERVE|SWEEP-RESULT' 10
 if [ "$rc_g" -eq 0 ] && grep -q 'did_not_run=0' "$D/green.out" && grep -q 'calibration=yes' "$D/green.out"; then
   echo "  >>> GREEN: exit 0, all sixteen selectors ran, four calibration arms passed."
 else
   echo "  >>> THE REPAIRED INSTRUMENT DOES NOT RUN CLEAN (exit $rc_g). That is a defect."
+fi
+echo
+
+# =============================================================================================
+# D-R5 -- THE BACKSLASH-CLASS CHECK'S OWN STATUS. [found by T381's own audit of T381's own fix]
+# =============================================================================================
+# The obvious way to write the R3 refusal is `if printf | grep -q PAT; then refuse; fi`, and
+# that is the FIFTH instance of this file's own defect: `grep` exits 2 on ERROR, an `if` reads
+# a 2 as FALSE, and a check that DID NOT RUN passes the selector through. There is no version
+# on `main` to compare against because the check is new, so the RED specimen is CONSTRUCTED --
+# exactly what T238 did when it preserved `sweep-ORIGINAL.sh`. Both variants then have the
+# CHECK'S OWN PATTERN replaced by an invalid BRE so `grep` really does error, and the only
+# difference left between them is whether that error is read.
+echo "============================================================================"
+echo "D-R5  the backslash-class check's OWN exit status  (T381's audit of T381's fix)"
+echo "============================================================================"
+MK="$TOP/.softhouse/capture/t381-t379-conditions/instruments/t381-make-r5-variants.py"
+if [ ! -f "$MK" ]; then
+  echo "  D-R5: the variant builder is ABSENT at $MK. DRIVE FAILED -- not skipped."; exit 4
+fi
+if ! python3 "$MK" "$D/after.sh" "$D/r5-red.sh" "$D/r5-green.sh" | sed 's/^/    /'; then
+  echo "  D-R5: the variant builder REFUSED. DRIVE FAILED."; exit 4
+fi
+for v in red green; do
+  awk -v ins="$PROBE_SEL" '/^echo$/ && !seen { print ins; seen=1 } { print }' \
+    "$D/r5-$v.sh" > "$D/r5-$v-probe.sh"
+  if ! grep -q 'ZZ-DRIVE' "$D/r5-$v-probe.sh"; then
+    echo "  D-R5: could not insert the probe selector into the $v variant. DRIVE FAILED."; exit 4
+  fi
+done
+run "$D/r5-red-probe.sh"   "$D/r5-red.out";   rc_5r=$?
+run "$D/r5-green-probe.sh" "$D/r5-green.out"; rc_5g=$?
+echo "  RED specimen (check written as an \`if\` over the pipeline; check pattern invalid):"
+say_rc "$rc_5r"
+grep -A3 'ZZ-DRIVE' "$D/r5-red.out" | sed 's/^/      | /' | head -5
+echo "  SHIPPED form (status read explicitly; same invalid check pattern):"
+say_rc "$rc_5g"
+grep -A3 'ZZ-DRIVE' "$D/r5-green.out" | sed 's/^/      | /' | head -5
+if grep -A3 'ZZ-DRIVE' "$D/r5-red.out" | grep -q 'MEASURED ZERO'; then
+  echo "  >>> RED CONFIRMED: with the check itself erroring, the naive form lets the selector"
+  echo "  >>> through and prints a zero. The guard did not run and nothing said so."
+else
+  echo "  >>> D-R5 DID NOT REPRODUCE in the RED specimen."
+fi
+if grep -A3 'ZZ-DRIVE' "$D/r5-green.out" | grep -q 'CHECK ITSELF did not run' && [ "$rc_5g" -ne 0 ]; then
+  echo "  >>> GREEN CONFIRMED: the shipped form REFUSES and exits $rc_5g."
+else
+  echo "  >>> THE SHIPPED FORM DID NOT REFUSE (exit $rc_5g). THE HARDENING IS NOT PROVEN."
 fi
 echo
 echo "END OF DRIVES."

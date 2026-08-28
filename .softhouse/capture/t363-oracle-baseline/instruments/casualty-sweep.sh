@@ -284,9 +284,21 @@ sel() { # sel <label> <git-grep args...>
   # SILENTLY -- calibrate() re-measures that on every run and prints the result. A selector
   # carrying one would emit a negative nobody measured, which is the invariant this whole file
   # is named after, so it is REFUSED before the engine is asked anything at all.
-  local a
+  # THE CHECK'S OWN STATUS IS READ TOO. [T381, from its own 2>/dev/null / discarded-pipe audit]
+  # `if printf | grep -q ...; then` would have been the fifth instance of the shape in this one
+  # file: grep exits 2 on ERROR, an `if` reads that as FALSE, and the selector would sail past
+  # a check that never ran. The three outcomes are separated instead. `set -o pipefail` is on,
+  # so esc_rc is the PIPELINE's status and a failed printf is caught here as well.
+  local a esc_rc
   for a in "$@"; do
-    if printf '%s' "$a" | LC_ALL=C grep -q '\\[bBdDsSwW<>]'; then
+    printf '%s' "$a" | LC_ALL=C grep -q '\\[bBdDsSwW<>]'; esc_rc=$?
+    if [ "$esc_rc" -ge 2 ]; then
+      printf '    *** SELECTOR REFUSED: the backslash-class CHECK ITSELF did not run (rc=%s). An\n' "$esc_rc"
+      printf '    *** unrun check is not a clean check, so nothing was searched.\n'
+      [ "$SWEEP_RC" -ge 3 ] || SWEEP_RC=3
+      return
+    fi
+    if [ "$esc_rc" -eq 0 ]; then
       printf '    *** SELECTOR REFUSED: its pattern carries a backslash-class, which this engine\n'
       printf '    *** reads as a LITERAL letter (see the SWEEP OBSERVE line above). Nothing was\n'
       printf '    *** searched, because the zero it would return would not be a measurement.\n'

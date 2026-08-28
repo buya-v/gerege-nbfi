@@ -1,0 +1,47 @@
+============================================================================
+T381 RED DRIVES -- R1..R4 of T379's review of T371
+repo      : 86dc8259   date: 2026-08-28T11:39:18Z
+engine    : git version 2.50.1 (Apple Git-155)
+corpus    : 8365 tracked files (non-empty, asserted before grading)
+target    : .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh
+BEFORE_REF: main     AFTER_REF: HEAD
+============================================================================
+BEFORE sha256: e9f30047bb0fbd46826624cdfa3b63e0dd7c03e6abaffb7cb1ae751e4bd57f31   (203 lines)
+AFTER  sha256: af15ea2d909c4b93a676109703f52b0c1b4548e271692fbe6ada4ebfd12b0d7f    (386 lines)
+CALIBRATE comparator: PASS -- it sees a planted difference and sees a planted sameness.
+
+============================================================================
+D-R2  the ANTI-CALIBRATION on a search that ERRORED  (T379 R2, the near-rejection)
+============================================================================
+  BEFORE, unmodified (control):
+    exit=0
+      | SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+      | SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
+      | SWEEP-RESULT: commit=86dc8259 selectors=16 did_not_run=0 calibration=yes exit=0
+  BEFORE, anti-calibration search FORCED TO ERROR (git grep rc=128):
+    exit=0
+      | SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+      | SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
+      | SWEEP-RESULT: commit=86dc8259 selectors=16 did_not_run=0 calibration=yes exit=0
+
+  >>> RED CONFIRMED: BEFORE's calibration lines are BYTE-IDENTICAL whether the search ran
+  >>> or ERRORED, and both runs exit 0/0. That is a PASS printed for a search
+  >>> that never happened -- a negative the instrument did not measure.
+
+  AFTER, unmodified (control):
+    exit=0
+      | SWEEP CALIBRATE+F: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+      | SWEEP CALIBRATE-F: PASS -- known negative matched 0 times, and the search RAN (rc=1)
+      | SWEEP CALIBRATE+E: PASS -- ERE metacharacters ARE interpreted; pattern matched 2 time(s)
+      | SWEEP CALIBRATE-E: PASS -- known negative matched 0 times under -E, and the search RAN (rc=1)
+      | SWEEP-RESULT: commit=86dc8259 selectors=16 did_not_run=0 calibration=yes exit=0
+  AFTER, anti-calibration search FORCED TO ERROR:
+    exit=3
+      | SWEEP CALIBRATE+F: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+      | SWEEP ABORT (exit 3): the -F ANTI calibration search DID NOT RUN -- git grep rc=128.
+      |     ! fatal: Invalid pathspec magic 'zzbogusmagic' in ':(zzbogusmagic)x'
+  >>> GREEN CONFIRMED: AFTER REFUSES -- exit 3, and it names the engine's status.
+
+============================================================================
+D-R1  the ARCHIVE-predicate greps' discarded status  (T379 R1, inherited from main)
+============================================================================
