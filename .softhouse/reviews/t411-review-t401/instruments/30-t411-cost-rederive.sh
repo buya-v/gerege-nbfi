@@ -136,14 +136,25 @@ B=$( ( cd "$ROOT" && LC_ALL=C git grep -l -E "$RW" -- '*.sh' '*.py' '*.zsh' ) 2>
 echo "   population shipped : $A"
 echo "   population widened : $B   (delta $((B-A)))"
 echo "   the .zsh files that ENTER the population:"
-( cd "$ROOT" && LC_ALL=C git grep -l -E "$RW" -- '*.zsh' ) 2>/dev/null | sed 's/^/     /' || echo "     (none)"
+# The empty case is a RESULT here, so it may not be printed off a pipeline exit status
+# (C2). Materialise, count, then report -- and the count must reconcile with the delta
+# computed above or the two measurements disagree and this refuses.
+ZENTER="$SCRATCH/s3-zsh-entrants.txt"
+( cd "$ROOT" && LC_ALL=C git grep -l -E "$RW" -- '*.zsh' ) >"$ZENTER" 2>/dev/null || true
+NZ="$($GREP -c . "$ZENTER" || true)"
+if [ "$NZ" != "$((B-A))" ]; then
+  echo "   REFUSE: entrant count $NZ disagrees with the population delta $((B-A))."
+  exit 1
+fi
+if [ "$NZ" = "0" ]; then echo "     (none -- measured, not inferred)"; else sed 's/^/     /' "$ZENTER"; fi
 echo
 echo "   -- do any of them assign a host path, i.e. would the PIN move? --"
 HS_RE='(^|[[:space:]])[A-Za-z_][A-Za-z0-9_]*=(\"|'"'"')?/(tmp|var|private)/'
-( cd "$ROOT" && LC_ALL=C git grep -l -E "$RW" -- '*.zsh' ) 2>/dev/null | while read -r f; do
+while read -r f; do
+   [ -n "$f" ] || continue
    hits=$(LC_ALL=C $GREP -cE "$HS_RE" "$f" || true)
    echo "     $f  host-path assignments: $hits"
-done
+done < "$ZENTER"
 echo "   raw NAME=/tmp assignment lines in ALL tracked .zsh (for contrast):"
 echo -n "     "; git ls-files '*.zsh' | while read -r f; do LC_ALL=C $GREP -HnE "$HS_RE" "$f" || true; done | $GREP -c . || true
 
