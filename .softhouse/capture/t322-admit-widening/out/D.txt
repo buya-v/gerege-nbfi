@@ -1,0 +1,13 @@
+--- FAIL: TestOpeningBalanceLegPairingIsRedDrivable (0.05s)
+    --- FAIL: TestOpeningBalanceLegPairingIsRedDrivable/the_SURPLUS_report_is_ORDER-STABLE_across_runs (0.00s)
+        openingbalance_test.go:561: the inadmissibility report is NOT order-stable; run 2 differs:
+            expect.legs has 8 entries and request.legs has 3; on request.command "defineOpeningBalance" an accepted entry stores 6 (saveAllDebitOrCreditOpeningBalanceEntries persists the leg at :791 AND its contra at :796, inside the per-leg loop), and a length mismatch is a transcription defect, not a divergence to grade
+            expect.legs carry amount "250000.250000" 1 time(s) more than twice-per-request-leg allows; the only entries an accepted opening balance writes are the caller's legs and their contras
+            expect.legs carry amount "100000.370000" 1 time(s) more than twice-per-request-leg allows; the only entries an accepted opening balance writes are the caller's legs and their contras
+            ---
+            expect.legs has 8 entries and request.legs has 3; on request.command "defineOpeningBalance" an accepted entry stores 6 (saveAllDebitOrCreditOpeningBalanceEntries persists the leg at :791 AND its contra at :796, inside the per-leg loop), and a length mismatch is a transcription defect, not a divergence to grade
+            expect.legs carry amount "100000.370000" 1 time(s) more than twice-per-request-leg allows; the only entries an accepted opening balance writes are the caller's legs and their contras
+            expect.legs carry amount "250000.250000" 1 time(s) more than twice-per-request-leg allows; the only entries an accepted opening balance writes are the caller's legs and their contras
+FAIL
+FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.283s
+FAIL
