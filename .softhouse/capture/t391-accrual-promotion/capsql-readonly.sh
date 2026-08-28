@@ -70,12 +70,46 @@ NAME=${1-}; SQLFILE=${2-}
 [ -f "$DIR/$SQLFILE" ] || { echo "REFUSING: $SQLFILE does not exist -- nothing to execute and nothing to record." >&2; exit 2; }
 
 # --- T391's read-only refusal, before anything else touches the engine ---------
-# Case-insensitive, anchored at a word boundary via a character-class dance that
-# works in POSIX grep -E. A hit REFUSES the whole invocation at exit 2.
-if grep -Eiq '(^|[^A-Za-z_])(insert|update|delete|truncate|drop|alter|create|grant|revoke|copy|vacuum|reindex|refresh|call|do|merge|set +session|begin|commit|rollback)([^A-Za-z_]|$)' "$DIR/$SQLFILE"; then
+#
+# TWO ARMS, and the second one exists because the FIRST DRAFT OF THIS GUARD FIRED
+# ON A COMMENT. `-- did any API call produce L32?` contains `call`, the guard
+# refused a SELECT-only file, and that false positive is recorded rather than
+# quietly engineered away (out/T391-05-readonly-guard-drive.txt, case F1). A guard
+# that cries wolf on prose gets disabled by the next author, which is how a guard
+# stops guarding.
+#
+# ARM 1 -- META-COMMAND ALLOWLIST. psql meta-commands are not SQL and the keyword
+# scan below would never see them. `\copy` writes, `\i` includes another file,
+# `\o` redirects, `\!` runs a shell. Exactly ONE is allowed: `\echo`.
+#
+# ARM 2 -- KEYWORD SCAN over the EXECUTABLE TEXT ONLY: `--` comments and `\echo`
+# lines are removed first, so a keyword in prose is prose and a keyword in a
+# statement is a statement. `/* */` is not stripped and is instead REFUSED
+# outright by arm 1's companion check, because a block comment is a way to hide
+# executable text from a line-oriented reader and this rig has no use for one.
+#
+# Both arms are driven RED by bin/40-red-drive-readonly-guard.sh. A guard nobody
+# has watched fail enforces nothing (P-45).
+BAD_META=$(grep -nE '^[[:space:]]*\\' "$DIR/$SQLFILE" | grep -Ev '^[0-9]+:[[:space:]]*\\echo([[:space:]]|$)' || true)
+if [ -n "$BAD_META" ]; then
+  echo "REFUSING: $SQLFILE uses a psql meta-command other than \\echo." >&2
+  echo "  \\copy writes, \\i includes, \\o redirects and \\! shells out. This rig allows \\echo only." >&2
+  printf '%s\n' "$BAD_META" >&2
+  exit 2
+fi
+if grep -Fq '/*' "$DIR/$SQLFILE"; then
+  echo "REFUSING: $SQLFILE contains a /* block comment." >&2
+  echo "  A block comment can hide executable text from the line-oriented scan below." >&2
+  exit 2
+fi
+
+# The EXECUTABLE text: `--` comments and `\echo` lines removed.
+EXEC_TEXT=$(sed -e 's/--.*$//' "$DIR/$SQLFILE" | grep -Ev '^[[:space:]]*\\echo([[:space:]]|$)')
+WRITE_RE='(^|[^A-Za-z_])(insert|update|delete|truncate|drop|alter|create|grant|revoke|copy|vacuum|reindex|refresh|call|merge|execute|prepare|lock|notify|listen|comment|import|security)([^A-Za-z_]|$)'
+if printf '%s\n' "$EXEC_TEXT" | grep -Eiq "$WRITE_RE"; then
   echo "REFUSING: $SQLFILE contains a statement keyword that could move oracle state." >&2
   echo "  T391's mutation budget for the reference oracle is ZERO. This rig issues SELECT only." >&2
-  grep -Eino '(^|[^A-Za-z_])(insert|update|delete|truncate|drop|alter|create|grant|revoke|copy|vacuum|reindex|refresh|call|do|merge|set +session|begin|commit|rollback)([^A-Za-z_]|$)' "$DIR/$SQLFILE" >&2
+  printf '%s\n' "$EXEC_TEXT" | grep -Eino "$WRITE_RE" >&2
   exit 2
 fi
 

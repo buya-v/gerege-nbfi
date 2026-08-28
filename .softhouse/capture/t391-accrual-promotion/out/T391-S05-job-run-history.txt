@@ -1,0 +1,30 @@
+=== 1. job_run_history columns ===
+  column_name  |          data_type          
+---------------+-----------------------------
+ id            | bigint
+ job_id        | bigint
+ version       | bigint
+ start_time    | timestamp without time zone
+ end_time      | timestamp without time zone
+ status        | character varying
+ error_message | text
+ trigger_type  | character varying
+ error_log     | text
+(9 rows)
+
+=== 2. every run recorded on 2026-08-28 for the accrual jobs ===
+  id   | job_id | version |       start_time        |        end_time         | status  | error_message | trigger_type | error_log 
+-------+--------+---------+-------------------------+-------------------------+---------+---------------+--------------+-----------
+ 12721 |     11 |       9 | 2026-08-28 16:01:00.049 | 2026-08-28 16:01:00.12  | success |               | cron         | 
+ 12724 |     16 |       9 | 2026-08-28 16:02:00.002 | 2026-08-28 16:02:00.035 | success |               | cron         | 
+ 12713 |     22 |       8 | 2026-08-28 16:01:00.002 | 2026-08-28 16:01:00.03  | success |               | cron         | 
+(3 rows)
+
+=== 3. m_loan columns whose name mentions posted or transaction ===
+          column_name           |     data_type     
+--------------------------------+-------------------
+ loan_transaction_strategy_id   | bigint
+ loan_transaction_strategy_code | character varying
+ loan_transaction_strategy_name | character varying
+(3 rows)
+
