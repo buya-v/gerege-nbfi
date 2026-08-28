@@ -307,16 +307,16 @@ done
 run "$D/r3b-before.sh" "$D/r3b-before.out"; rc_3bb=$?
 run "$D/r3b-after.sh"  "$D/r3b-after.out";  rc_3ba=$?
 echo "  BEFORE with the probe selector appended:"; say_rc "$rc_3bb"
-grep -A3 'ZZ-DRIVE' "$D/r3b-before.out" | sed 's/^/      | /' | head -6
+grep -A12 'ZZ-DRIVE' "$D/r3b-before.out" | sed 's/^/      | /' | head -13
 echo "  AFTER with the probe selector appended:"; say_rc "$rc_3ba"
-grep -A4 'ZZ-DRIVE' "$D/r3b-after.out" | sed 's/^/      | /' | head -6
-if grep -A3 'ZZ-DRIVE' "$D/r3b-before.out" | grep -q 'MEASURED ZERO'; then
+grep -A12 'ZZ-DRIVE' "$D/r3b-after.out" | sed 's/^/      | /' | head -13
+if grep -A12 'ZZ-DRIVE' "$D/r3b-before.out" | grep -q 'MEASURED ZERO'; then
   echo "  >>> RED CONFIRMED: BEFORE prints MEASURED ZERO for a pattern the engine compiled to"
   echo "  >>> the literal letters -- a negative it did not measure -- and counts it as a selector."
 else
   echo "  >>> R3b DID NOT REPRODUCE in BEFORE."
 fi
-if grep -A3 'ZZ-DRIVE' "$D/r3b-after.out" | grep -q 'SELECTOR REFUSED' && [ "$rc_3ba" -ne 0 ]; then
+if grep -A12 'ZZ-DRIVE' "$D/r3b-after.out" | grep -q 'SELECTOR REFUSED' && [ "$rc_3ba" -ne 0 ]; then
   echo "  >>> GREEN CONFIRMED: AFTER REFUSES the selector and exits $rc_3ba, non-zero."
 else
   echo "  >>> AFTER DID NOT REFUSE (exit $rc_3ba). THE REPAIR IS NOT PROVEN."
@@ -422,19 +422,24 @@ for v in red green; do
 done
 run "$D/r5-red-probe.sh"   "$D/r5-red.out";   rc_5r=$?
 run "$D/r5-green-probe.sh" "$D/r5-green.out"; rc_5g=$?
+# WINDOW 12, NOT 3 -- see the note at D-R3b. The erroring check prints one `grep: invalid
+# character range` PER ARGUMENT before the selector reaches its result, so a narrow window reads
+# the noise and calls the defect absent.
 echo "  RED specimen (check written as an \`if\` over the pipeline; check pattern invalid):"
 say_rc "$rc_5r"
-grep -A3 'ZZ-DRIVE' "$D/r5-red.out" | sed 's/^/      | /' | head -5
+grep -A12 'ZZ-DRIVE' "$D/r5-red.out" | sed 's/^/      | /' | head -13
 echo "  SHIPPED form (status read explicitly; same invalid check pattern):"
 say_rc "$rc_5g"
-grep -A3 'ZZ-DRIVE' "$D/r5-green.out" | sed 's/^/      | /' | head -5
-if grep -A3 'ZZ-DRIVE' "$D/r5-red.out" | grep -q 'MEASURED ZERO'; then
+grep -A12 'ZZ-DRIVE' "$D/r5-green.out" | sed 's/^/      | /' | head -13
+if grep -A12 'ZZ-DRIVE' "$D/r5-red.out" | grep -qE 'MEASURED ZERO|hits total'; then
   echo "  >>> RED CONFIRMED: with the check itself erroring, the naive form lets the selector"
-  echo "  >>> through and prints a zero. The guard did not run and nothing said so."
+  echo "  >>> through and prints a RESULT for it, at exit $rc_5r. The guard did not run and"
+  echo "  >>> nothing in the output says so -- only the engine's own complaint, which is not a"
+  echo "  >>> statement about the selector."
 else
   echo "  >>> D-R5 DID NOT REPRODUCE in the RED specimen."
 fi
-if grep -A3 'ZZ-DRIVE' "$D/r5-green.out" | grep -q 'CHECK ITSELF did not run' && [ "$rc_5g" -ne 0 ]; then
+if grep -A12 'ZZ-DRIVE' "$D/r5-green.out" | grep -q 'CHECK ITSELF did not run' && [ "$rc_5g" -ne 0 ]; then
   echo "  >>> GREEN CONFIRMED: the shipped form REFUSES and exits $rc_5g."
 else
   echo "  >>> THE SHIPPED FORM DID NOT REFUSE (exit $rc_5g). THE HARDENING IS NOT PROVEN."
