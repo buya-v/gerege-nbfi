@@ -1,6 +1,6 @@
 T321 reset-contamination drive
   guard under test : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/.softhouse/guards/repo-state-attest.sh
-  population from  : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/.softhouse/capture/t321-variable-paths-and-resets/evidence/20-reset-sweep.json (44 rows, 1 DECORATIVE)
+  population from  : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac46eb4bb5492bba1/.softhouse/capture/t321-variable-paths-and-resets/evidence/20-reset-sweep.json (45 rows, 2 DECORATIVE)
   scratch root     : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T (refused if it resolves inside the repo)
 
 BLOCK K -- GROUND TRUTH: what each restore idiom actually clears
@@ -19,6 +19,22 @@ BLOCK K -- GROUND TRUTH: what each restore idiom actually clears
 BLOCK C -- THE DECORATIVE CANDIDATES, their own reset replayed against the class
   they are accused of not clearing. The extracted source lines are printed, so the
   mapping from THEIR line to the command driven is checkable and not merely claimed.
+
+  C-probe-writer-inode-zsh -- .softhouse/capture/t301-wrapper-self-modification/probe-writer-inode.zsh
+     accused of not clearing: U
+     extracted reset sites (line: idiom: THEIR OWN TEXT):
+         160: reset_hard   g_reset_hard()     { git reset -q --hard HEAD; }
+         161: stash_pop    g_stash_pop()      { git stash pop -q; }
+         169: restore_wt   g_restore()        { git restore subject.sh; }
+         171: reset_hard   git_leg "git reset --hard (dirty tree)"  dirty   g_reset_hard
+         172: reset_hard   ( cd "$GR"; git reset -q --hard HEAD )
+         173: stash_pop    git_leg "git stash pop"                  stashit g_stash_pop
+         174: reset_hard   ( cd "$GR"; git reset -q --hard HEAD )
+         176: reset_hard   ( cd "$GR"; git reset -q --hard HEAD )
+         178: reset_hard   ( cd "$GR"; git reset -q --hard HEAD )
+         179: restore_wt   git_leg "git restore <path>"             dirty   g_restore
+     replayed as: git reset --hard -q && git restore .
+  C-probe-writer-inode-zsh/U UNTRACKED survives their own reset                         expect=CONVICTED-or-ACQUITTED observed=CONVICTED PASS  | porcelain='?? planted.txt'
 
   C-mutation-arms-sh -- .softhouse/reviews/T306/probe/mutation-arms.sh
      accused of not clearing: U
@@ -48,4 +64,4 @@ BLOCK L -- LEGITIMATE OPERATIONS. The check must stay QUIET on every one of thes
   L5b -- pre-existing dirt, present before the baseline AND after the reset
   L5b    pre-existing untracked file, unchanged across the window   expect=0         observed=0         PASS  | LEGACY(git status --porcelain)=DIRTY (it was dirty before, too)
 
-T321-RESET-DRIVE: arms=22 pass=22 fail=0
+T321-RESET-DRIVE: arms=23 pass=23 fail=0

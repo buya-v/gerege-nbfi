@@ -80,6 +80,14 @@
     "note": "naming a REF is what makes reset --hard undo a commit; porcelain=''"
   },
   {
+    "arm": "C-probe-writer-inode-zsh/U",
+    "what": "UNTRACKED survives their own reset",
+    "expect": "CONVICTED-or-ACQUITTED",
+    "observed": "CONVICTED",
+    "pass": true,
+    "note": "porcelain='?? planted.txt'"
+  },
+  {
     "arm": "C-mutation-arms-sh/U",
     "what": "UNTRACKED survives their own reset",
     "expect": "CONVICTED-or-ACQUITTED",

@@ -1,5 +1,5 @@
 SELECTOR, stated as a limit on the search:
-  corpus      : git ls-files '.softhouse/' filtered to .py .sh .zsh .bash  ->  1318 tracked files
+  corpus      : git ls-files '.softhouse/' filtered to .py .sh .zsh .bash  ->  1323 tracked files
   population  : corpus files with >=1 RESTORE SITE, line comments stripped first
   restore     : reset_hard, reset_mixed, checkout_wt, restore_wt, clean_x, clean_plain, stash_pop, backup_copy, rm_targeted
   classes     : W worktree-edit  S staged-add  U untracked  I ignored  C commit  R ref
@@ -14,6 +14,7 @@ SELECTOR, stated as a limit on the search:
                 POS-RECORDED T316's pre-fix reset, in-memory -> DECORATIVE uncleared=S
                 all three ENFORCED; failure aborts at exit 2 with NO probe line.
 
+DECORATIVE          gap=U        mut=C,S,U,W     cleared=C,S,W       rMult=48  fMult=1     .softhouse/capture/t301-wrapper-self-modification/probe-writer-inode.zsh
 DECORATIVE          gap=U        mut=U,W         cleared=W           rMult=7   fMult=0   C!.softhouse/reviews/T306/probe/mutation-arms.sh
 SUFFICIENT-TARGETED gap=-        mut=U,W         cleared=U,W         rMult=3   fMult=0   C!.softhouse/capture/pathb/t80/prove-f1.sh
 SUFFICIENT-TARGETED gap=-        mut=U,W         cleared=U,W         rMult=4   fMult=1   C!.softhouse/capture/t273-residue/instruments/50-red-drive.sh
@@ -24,7 +25,7 @@ SUFFICIENT          gap=-        mut=S,U,W       cleared=S,U,W       rMult=15  f
 SUFFICIENT          gap=-        mut=S,U,W       cleared=C,S,U,W     rMult=7   fMult=1     .softhouse/capture/t299-namespace-and-default-safety/instruments/40-drive-namespace-guard.sh
 SUFFICIENT          gap=-        mut=-           cleared=U,W         rMult=9   fMult=1   C!.softhouse/capture/t304-evidence-destruction/instruments/70-drive-in-scratch-clone.sh
 SUFFICIENT          gap=-        mut=S,U,W       cleared=S,U,W       rMult=12  fMult=1   C!.softhouse/capture/t316-dead-path-guards/drive-red-t316.py
-SUFFICIENT          gap=-        mut=U,W         cleared=I,S,U,W     rMult=13  fMult=1   C!.softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py
+SUFFICIENT          gap=-        mut=U,W         cleared=I,S,U,W     rMult=17  fMult=1   C!.softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py
 SUFFICIENT          gap=-        mut=S,U,W       cleared=S,U,W       rMult=88  fMult=1   C!.softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh
 ISOLATED            gap=n/a      mut=C,I,R,S,U,W cleared=C,S,U,W     rMult=17  fMult=17    .softhouse/capture/t318-committed-clobber-blindness/instruments/30-red-green-drive.sh
 ISOLATED            gap=n/a      mut=U,W         cleared=C,S,U,W     rMult=999 fMult=999   .softhouse/capture/t318-committed-clobber-blindness/instruments/40-term-mutation-drive.sh
@@ -59,8 +60,8 @@ TEARDOWN            gap=n/a      mut=U,W         cleared=W           rMult=1   f
 TEARDOWN            gap=n/a      mut=U,W         cleared=W           rMult=0   fMult=0     .softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py
 TEARDOWN            gap=n/a      mut=U,W         cleared=U,W         rMult=1   fMult=1     .softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh
 
-T321-RESET-SWEEP: corpus=1318 population=44 decorative=1 sufficientTargeted=3 sufficient=8 isolated=7 teardown=25
-T321-RESET-SWEEP: loadBearing=16 latentCommitGap=12 ofWhichAssertWithPorcelain=8
+T321-RESET-SWEEP: corpus=1323 population=45 decorative=2 sufficientTargeted=3 sufficient=8 isolated=7 teardown=25
+T321-RESET-SWEEP: loadBearing=17 latentCommitGap=12 ofWhichAssertWithPorcelain=8
       `C!` marks a load-bearing reset that CANNOT undo a commit. A BARE `git reset
       --hard` resets to HEAD and a committing arm has already moved HEAD -- and
       `git status --porcelain` comes back EMPTY afterwards (T318's blind spot,

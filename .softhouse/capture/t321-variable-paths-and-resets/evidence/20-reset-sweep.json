@@ -6,15 +6,15 @@
       ".zsh",
       ".bash"
     ],
-    "corpus_size": 1318,
+    "corpus_size": 1323,
     "loop_factor": 4
   },
   "counts": {
     "TEARDOWN": 25,
     "SUFFICIENT": 8,
     "SUFFICIENT-TARGETED": 3,
-    "ISOLATED": 7,
-    "DECORATIVE": 1
+    "DECORATIVE": 2,
+    "ISOLATED": 7
   },
   "rows": [
     {
@@ -399,6 +399,51 @@
       "uncleared_classes": []
     },
     {
+      "path": ".softhouse/capture/t301-wrapper-self-modification/probe-writer-inode.zsh",
+      "verdict": "DECORATIVE",
+      "latent_commit_gap": false,
+      "porcelain_assertion": false,
+      "restore_idioms": {
+        "reset_hard": [
+          160,
+          171,
+          172,
+          174,
+          176,
+          178
+        ],
+        "restore_wt": [
+          169,
+          179
+        ],
+        "stash_pop": [
+          161,
+          173
+        ]
+      },
+      "restore_multiplicity": 48,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "C",
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "C",
+        "S",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "C",
+        "S",
+        "W"
+      ],
+      "uncleared_classes": [
+        "U"
+      ]
+    },
+    {
       "path": ".softhouse/capture/t304-evidence-destruction/instruments/100-dead-cd-red-drive.sh",
       "verdict": "TEARDOWN",
       "latent_commit_gap": false,
@@ -703,19 +748,19 @@
       "porcelain_assertion": true,
       "restore_idioms": {
         "clean_x": [
-          347
+          392
         ],
         "reset_hard": [
-          346
+          391
         ],
         "rm_targeted": [
-          228,
-          427,
-          430,
-          467
+          250,
+          510,
+          513,
+          568
         ]
       },
-      "restore_multiplicity": 13,
+      "restore_multiplicity": 17,
       "fresh_repo_multiplicity": 1,
       "mutation_classes": [
         "U",
