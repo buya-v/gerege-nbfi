@@ -1,0 +1,8 @@
+targets: FORKOBS=out/A2-000-glaccounts-preexisting.http  POSTFORK=out/A2-200-glaccounts-live-precheck.http  NONOBS=manifest.py
+############ T393 RED-BEFORE-GREEN DRIVE
+BEFORE = 4eeed2b30d1e48eb9d71b8088de4622574dd2946   (T374's section 10, two arms, untied constant)
+AFTER  = fc51790dd7fc881c48f807aa80104368e9d07efb   (T393's section 10, five arms, cross-checked constant)
+
+--- control @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
+--- control @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)

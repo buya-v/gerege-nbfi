@@ -1,0 +1,2 @@
+case	ref	sec10	runall_rc	verdict	sec4_named_the_mutation	expected	result
+control	BEFORE	0	0	PASS	0	0	as expected
