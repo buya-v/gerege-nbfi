@@ -13,6 +13,8 @@ merge before its reviewer clears** — merging unreviewed is exactly what turned
 same fire.
 
 ### DONE, SCOPE-CLEAN, NOT MERGED
+`T351` @ `a0139c5d` — 5 files, scope CLEAN, and it honoured BOTH holds (conformance.sh and fire-program.sh untouched). Zero program.json edits by choice. Awaiting `T369`.
+
 `T363` @ `8313ab6d` — 15 files, every path inside its grant (verified with the **three-dot** form; the
 two-dot form falsely showed `LOCK`/`RESUME.md`/`tasks.json` because `main` had advanced under it). Adds
 two `.sh` instruments under `.softhouse/capture/`, **not** under `.softhouse/guards/`, so the
@@ -27,6 +29,7 @@ Their branches below may hold partial work. Mark each `needs_retry`, do not read
 | `T365` | `softhouse/T365-t361-conditions` | opus | `.softhouse/bin/fire-program.sh`, `.softhouse/capture/t365-t361-conditions/` |
 | `T367` | `softhouse/T367-review-t363` | opus | `.softhouse/reviews/t367-review-t363/` |
 | `T349` | `softhouse/T349-pretooluse-eval` | opus | `.softhouse/capture/t349-pretooluse-eval/` |
+| `T369` | `softhouse/T369-review-t351` | opus | `.softhouse/reviews/t369-review-t351/` |
 | `T351` | `softhouse/T351-progress-accounting` | sonnet | `.softhouse/program.json`, `.softhouse/bin/` (**excluding `fire-program.sh`, held by T365**), `.softhouse/capture/t351-progress-accounting/` |
 
 Chosen so no two grants overlap. `T363`'s grant was **narrowed by the driver** from `.softhouse/reviews/`
