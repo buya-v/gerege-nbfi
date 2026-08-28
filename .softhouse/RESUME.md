@@ -22,8 +22,8 @@ zsh .softhouse/bin/fire-program.sh --probe  →  lock self-test ROWS=27 FAIL_OPE
 **any task that adds an ordinary `.sh` fixture anywhere under `.softhouse/guards` — including inside the
 `ledgerguard` Go module — drives the whole bar to exit 2.** T337 proved it by planting one line. It is
 **fail-CLOSED**, so it cannot produce a false PASS, and that is the only reason the driver left it rather
-than merging T358 unreviewed. **`T358` (branch `softhouse/T358-t323-conditions`, head `34303ea2`) already
-fixes it and is complete.** T364 reviews it; then merge.
+than merging T358 unreviewed. **`T358` (branch `softhouse/T358-t323-conditions`, head `aac9e12b`) already
+fixes it and is complete — red drive **29 arms / 29 PASS**, bar exit 0, every pinned gate identical.** T364 reviews it; then merge.
 
 ## Then, in order
 `T362` (review T357) → `T365` (a zero-value `released_at` still frees a live lock) → `T366` (land T361's
@@ -35,7 +35,7 @@ rescued review) → `T363` → `T360` → `T354` → `T355` → `T356`.
 
 | Task | Branch | Head | Waiting on |
 |---|---|---|---|
-| `T358` | `softhouse/T358-t323-conditions` | `34303ea2` | `T364` |
+| `T358` | `softhouse/T358-t323-conditions` | **`aac9e12b`** | `T364` |
 | `T357` | `softhouse/T357-a2-11-section1-red` | `85a30a79` | `T362` |
 | `T361` | `softhouse/T361-review-t353` | `b4bf2abf` | `T366` |
 
@@ -81,6 +81,17 @@ separates from **both** HALF_EVEN and truncation. Raised as **G-19**.
 **Obeyed on all 7 dispatch batches**, minimum margin **+66 s** on batch 1. Still a convention with **zero**
 mechanical backing — `T336`/`T347` established that both git-side mechanisms are dead (the post-checkout hook
 does not run on the harness spawn route at all; `reference-transaction` can veto but is never invoked).
+
+## Late arrival, recorded rather than left stale
+
+`T358` stopped mid-drive at arm 8/29 and was **resumed by the driver**, then finished after this manifest was
+first written. Its head is **`aac9e12b`**, not the `34303ea2` originally recorded, and its red drive is now
+**29 arms / 29 PASS / 0 FAIL**, every arm through the whole bar on a fresh clone. Reviewer `T364` must review
+**`aac9e12b`**.
+
+`T358` also leaves the merger an instruction worth honouring: `main` advanced 8 commits during its work and
+never touched `conformance.sh`, so the exclusive hold held — but its before/after pair isolates the effect at
+the **fork point**, and **the merge result needs its own bar run.**
 
 ## Pause reason
 **None. The fire finished its work and closed.** `G-19` is OPEN for Buyan and **blocks nothing**.

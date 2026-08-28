@@ -2,10 +2,10 @@
   "task": "T358",
   "status": "done_unmerged",
   "branch": "softhouse/T358-t323-conditions",
-  "head": "34303ea2",
+  "head": "aac9e12b",
   "current_item": "complete on branch; awaiting T364",
-  "step": "work finished and committed; NOT merged to main",
-  "next_action": "dispatch T364, then merge",
+  "step": "COMPLETE: red drive 29 arms / 29 PASS, bar exit 0, all pinned gates identical. Committed, worktree clean.",
+  "next_action": "dispatch T364 against head aac9e12b, then merge and RUN THE BAR ON THE MERGE RESULT (T358 isolated only the fork-point effect)",
   "blocked_on": "independent review (T364) -- this pipeline does not merge a code task unreviewed",
   "open_questions": [],
   "gate_pending": null
