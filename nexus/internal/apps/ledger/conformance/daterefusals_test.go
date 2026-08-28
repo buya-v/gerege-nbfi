@@ -23,22 +23,43 @@ import (
 // proving the corpus is admitted in the first place, so a rule that refused
 // EVERYTHING could not satisfy this file.
 
-// findByRefusalCode returns the one committed vector expecting code.
-func findByRefusalCode(t *testing.T, vs []*Vector, code string) *Vector {
+// findByRefusalCode returns the NAMED committed vector expecting code, and
+// CENSUSES the population expecting it.
+//
+// IT USED TO REFUSE A SECOND VECTOR OUTRIGHT, and that refusal was right for its
+// era: these tests PERTURB one vector, so an arbitrary pick from a population of
+// two would make every arm below a coin toss. T307 promoted LDG-REFUSE-06, so
+// the accounting-closed population is now TWO and the choice has to be made
+// EXPLICITLY rather than by accident of iteration order.
+//
+// THE CENSUS IS KEPT AND ITS NUMBER IS PINNED, because the original refusal was
+// doing two jobs: naming the pick, and noticing that the store moved. Dropping
+// to "find the one with this case id" would keep the first and silently lose the
+// second, and this store's whole discipline is that a population which is not
+// COUNTED drifts in both directions with nothing watching (T220-N1, the T160
+// shape).
+func findByRefusalCode(t *testing.T, vs []*Vector, code, caseID string, wantPop int) *Vector {
 	t.Helper()
 	var found *Vector
+	var pop []string
 	for _, v := range vs {
 		if v.Expect.Refusal.Code == code {
-			if found != nil {
-				t.Fatalf("two committed vectors expect %q (%s and %s); these tests perturb ONE and "+
-					"would otherwise be testing an arbitrary pick", code, found.CaseID, v.CaseID)
+			pop = append(pop, v.CaseID)
+			if v.CaseID == caseID {
+				found = v
 			}
-			found = v
 		}
 	}
+	if len(pop) != wantPop {
+		t.Fatalf("%d committed vector(s) expect %q (%v), want %d. These tests PERTURB one named "+
+			"vector; a changed population means the store moved and this file has to say which "+
+			"member it drives and why, rather than discovering it by iteration order",
+			len(pop), code, pop, wantPop)
+	}
 	if found == nil {
-		t.Fatalf("no committed ledger vector expects %q. Every arm below perturbs one, so its "+
-			"absence would make this test pass over nothing (P-35)", code)
+		t.Fatalf("no committed ledger vector has case_id %q (the ones expecting %q are %v). Every "+
+			"arm below perturbs it, so its absence would make this test pass over nothing (P-35)",
+			caseID, code, pop)
 	}
 	return found
 }
@@ -52,8 +73,17 @@ func findByRefusalCode(t *testing.T, vs []*Vector, code string) *Vector {
 // rules is just prose in a different font.
 func TestDateInputsAreDefaultDeny(t *testing.T) {
 	vs, opts := loadCommitted(t)
-	closure := findByRefusalCode(t, vs, codeAccountingClosed)
-	future := findByRefusalCode(t, vs, codeFutureDate)
+	// THE CLOSURE POPULATION IS TWO SINCE T307. LDG-REFUSE-04 is the member these
+	// arms drive, and the choice is not arbitrary: it is the vector taken ON the
+	// boundary (transaction_date == latest_closing_date), so a perturbation of
+	// EITHER date moves it across the :636 comparison and the RED arms below have
+	// something to measure. LDG-REFUSE-06 sits 16 days inside the closed period,
+	// where the same perturbations leave the relation unchanged and the arms would
+	// be green for the wrong reason.
+	closure := findByRefusalCode(t, vs, codeAccountingClosed,
+		"LDG-REFUSE-04-preclosure-entry-on-closing-date", 2)
+	future := findByRefusalCode(t, vs, codeFutureDate,
+		"LDG-REFUSE-05-future-dated-entry-one-day-after-business-date", 1)
 
 	t.Run("ANTI-VACUITY: both committed date vectors are ADMITTED", func(t *testing.T) {
 		for _, v := range []*Vector{closure, future} {
