@@ -88,14 +88,14 @@ conformance:   dynamic SQL is caught only through the call set it recognises; tr
 conformance:   migrations and stored procedures are not walked at all; I-5's semantic half
 conformance:   and non-Go callers are not covered. A PASS here means 'no violation is visible
 conformance:   to a source-level guard over the Go tree', NOT 'the ledger tree is covered'.
-conformance: CENSUS fail-open instruments — inspected 1205 tracked .sh/.py file(s) under
+conformance: CENSUS fail-open instruments — inspected 1210 tracked .sh/.py file(s) under
 conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff (git ls-files, whole repository); frontier 11, pinned at 11
 conformance:   (DERIVED from FAILOPEN_PIN_FILE_LIST by counting it, never typed).
 conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a
 conformance:   directory that is not there and carries on, whatever it prints afterwards. TIER2 =
 conformance:   printing arm only, corpus reachable today. All are pinned by PATH, not by count.
 conformance:   frontier == pinned (all 11 rows, by path).
-conformance: CENSUS host state in the lint corpus — 121 repo-wide search instrument(s)
+conformance: CENSUS host state in the lint corpus — 123 repo-wide search instrument(s)
 conformance:   read from git grep over tracked *.sh/*.py under /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff; sites that assign a
 conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
 conformance:   (DERIVED from HOSTSTATE_PIN_TEMP_ASSIGN_LIST by counting it, never typed).
@@ -111,16 +111,16 @@ conformance:   accepting capture in this tree.
 conformance:   namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
 conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
 conformance:   namespace:   root    /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff
-conformance:   namespace:   corpus  7396 tracked paths -> 134 evidence directories
-conformance:   namespace:           113 carry a t<n> id prefix; 21 do not and CANNOT collide this way
+conformance:   namespace:   corpus  7417 tracked paths -> 136 evidence directories
+conformance:   namespace:           115 carry a t<n> id prefix; 21 do not and CANNOT collide this way
 conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
 conformance:   namespace:   T256 -> 2 directories; ownership records required 1, present 1
 conformance:   namespace:       DECLARED   capture/t256-verdict-predicate               by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
 conformance:   namespace:       UNCLAIMED  capture/t256-toolchain-population            (record: <absent>)
-conformance:   NAMESPACE-CENSUS: dirs=134 prefixed=113 unprefixed=21 collidingIds=1 declared=1 unclaimed=1 shortfallIds=0
+conformance:   NAMESPACE-CENSUS: dirs=136 prefixed=115 unprefixed=21 collidingIds=1 declared=1 unclaimed=1 shortfallIds=0
 conformance:   namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
 conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
-conformance:   T316-DEADPATH-CENSUS: corpus=1205 deadFiles=74 deadOccurrences=107 resolving=1061 indeterminate=70 prose=276
+conformance:   T316-DEADPATH-CENSUS: corpus=1210 deadFiles=76 deadOccurrences=109 resolving=1073 indeterminate=70 prose=288
 conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
 conformance:   (the planted T309 single-term predicate drives cell B-prime RED; the shipped
 conformance:   tool keeps it GREEN. Both legs ran here — --selftest is not optional.)
