@@ -4522,3 +4522,101 @@ oracle moved at all.** Filed as **`T363`**.
 
 ### Not touched by this gate
 Cutover, regulatory sign-off and the licensing position remain hard `user` gates.
+
+---
+
+## G-20 — the program is advancing, but almost none of the advance is porting Fineract
+
+**Raised by:** the `/softhouse-program` driver, local fire `20260828-140005` chain iteration 3, 2026-08-28.
+**Class:** PRODUCT / ENGINEERING under CLAUDE.md § Answering gates.
+**Blocks:** nothing. The driver dispatched a full wave in the same fire that raised it.
+**Asks Buyan for:** a steer on effort allocation, not a decision the program is stuck behind.
+
+### This is a measurement, and the driver's first framing of it was wrong
+
+`T352` recorded the finding as *"the READY queue has ZERO port and ZERO vector tasks in it."* This driver
+went to confirm that from `files_hint` and got the same answer — and then checked it against **git**, which
+says something different and more interesting. **`files_hint` undercounts.** Three tasks touched ported Go
+**this morning**: `T307` (`c2ddfadb`, `4aa4b831`, `ae356394`), `T322` (`46c97183`, `1f7fd42b`), `T328`
+(`cd3d0274`, `5034cc34`, `e79adbaa`), and `T352` added to the vector store at `a67ccbdc` — none of which
+declared `nexus/` in `files_hint`. **So "zero port work is happening" is FALSE and should not be quoted.**
+
+What is true is the **ratio**, measured on `main` over the last seven days:
+
+| Area | Commits, last 7 days | Share of 1,204 |
+|---|---|---|
+| `.softhouse/capture/` | 415 | 34.5 % |
+| `.softhouse/reviews/` | 202 | 16.8 % |
+| `.softhouse/conformance.sh` | 45 | 3.7 % |
+| `.softhouse/bin/` | 45 | 3.7 % |
+| **`nexus/` (all Go, harness included)** | **34** | **2.8 %** |
+| **`.softhouse/vectors/`** | **13** | **1.1 %** |
+
+And the same shape inside the Go itself — 22,817 non-test lines, split by what they are *for*:
+
+| Package | Source LOC | What it is |
+|---|---|---|
+| `loanschedule/conformance` | 8,659 | grades the port |
+| `ledger/conformance` | 5,043 | grades the port |
+| `loanschedule` | 3,253 | **ported Fineract behaviour** |
+| `ledger` | 3,112 | **ported Fineract behaviour** |
+| `loanschedule/contract` | 2,548 | the frozen DEC-1 boundary |
+| | | |
+| **harness** | **13,702 (60 %)** | |
+| **ported behaviour + contract** | **8,913 (39 %)** | |
+
+**The instrument that grades the port is 1.5× the size of the port.**
+
+### The forward queue is where it actually shows
+
+Of the **43** live tasks (`pending` / `needs_retry` / `in_progress`) at the start of this iteration, the
+driver read every title. **Not one has porting a new Fineract behaviour as its purpose.** They are: 29
+harness/process repairs, 11 reviews of those repairs, 2 vector-store tasks, 1 Go-harness task. Every one
+is a repair, a review of a repair, or the landing of a repair. `T360` — a way to record an oracle-accepts /
+port-refuses divergence — is the closest thing to substantive work in the queue, and it is an instrument too.
+
+Program state for scale: **1 of 17 contexts done, 182 LOC of ~544,000.** Tier A alone is ~186k LOC across
+six contexts, every one `pending`.
+
+### The honest case FOR the current allocation, which the driver is not dismissing
+
+The harness work is **not** waste, and a driver that framed it as waste would be wrong:
+- The bar has caught a false PASS or a fail-open in **nearly every fire**. This iteration alone inherited
+  four live fail-opens (`T375`'s two, `T381`'s anti-calibration, `T383`'s `tail -1`), each of which would
+  have let a real failure through **silently**.
+- `CLAUDE.md` makes Fineract the oracle and forbids a cutover without passing vectors. A port graded by an
+  instrument that fails open is a port with **no** evidence — worse than no port, because it looks like
+  evidence.
+- Three separate tasks last fire shipped a `[VERIFIED] exit 0` captured *before* `git add`. The discipline
+  is not yet reliable enough to trust unaudited output.
+
+### The case AGAINST, which is the reason this is being raised
+
+At the current allocation the harness is being hardened **faster than it is being used**, and hardening has
+no natural stopping point: each repair is reviewed, each review files conditions, each condition becomes a
+task, and that task is itself reviewed. Several of the most recent task ids in this file are the third or
+fourth generation of a single original finding. **A guard chain that only ever guards other guards never
+reaches the money.**
+
+### What the driver did about it, unilaterally, this fire
+
+Nothing that needed asking. It dispatched the four highest-severity fail-opens **and** `T360`, and it is
+recording this so the next fire inherits the measurement rather than the impression. Under CLAUDE.md this
+is PRODUCT/ENGINEERING and therefore the driver's call — so the driver's recommendation, adopted unless
+Buyan says otherwise:
+
+> **From the next planned wave, every fire must dispatch at least one task whose purpose is to port a
+> Fineract behaviour or capture a vector from the reference oracle, before it dispatches any harness
+> repair.** Harness repair keeps its place, but stops being the default. The obvious first candidates are
+> `tierA-gl-accounting`'s named gaps — accrual, account transfers (gl 17), charge-off, multi-currency,
+> opening balances, `GLClosure`, and slot resolution, which `program.json` records as **graded by nothing**.
+
+### What only Buyan can answer
+
+Nothing here is RESERVED, and the driver is not blocking on any of it. The one question worth his time is
+a **priority** call, not a fact:
+
+> Is the goal to reach a defensible Tier-A cutover as early as possible — in which case the harness is
+> already good enough for gl-accounting and the ratio should invert now — or to get the instrument
+> demonstrably fail-open-free first, accepting that Tier A slips? The driver has assumed the **first** and
+> will act on it from the next wave. Reversing that costs one line here.
