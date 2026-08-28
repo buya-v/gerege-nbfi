@@ -1,0 +1,11 @@
+exit = 2
+    a grading-time question and nothing here asserts it. Three verdicts are INADMISSIBLE, refused
+    carrying it is INADMISSIBLE).
+    LDG-DIV-01-oracle-accepts-sub-minor-unit-re... divergence     ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+    request.legs[].amount_major_text[0] is "100.12" and those bytes occur in provenance.request_capture_ref (.softhouse/capture/t352-a2-next-tranche/out/T352-A01-residue-3dp.
+    request.legs[].amount_major_text[1] is "100.12" and those bytes occur in provenance.request_capture_ref (.softhouse/capture/t352-a2-next-tranche/out/T352-A01-residue-3dp.
+    ledger parity           PASS 7    FAIL 0
+    ledger inadmissible     1
+    INADMISSIBLE, so this figure is pinned at 0 by
+    ledger/conformance/admit.go, and a fourth is INADMISSIBLE.
+A17 CLOSED AT ADMISSION: True
