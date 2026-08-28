@@ -445,4 +445,42 @@ follow-up, not a condition. `T415` will be in this file next; that is the moment
 `bash .softhouse/conformance.sh` — **`bash`, never `sh`** — from a **clean tree** after commit.
 Transcript: `out/T414-BAR.txt`.
 
-<!-- BAR-RESULT -->
+Run from `softhouse/T414-review-t398` at `b4e79e12`, `git status --porcelain` empty. **EXIT 0.**
+
+**Probe-line PRESENCE checked before its value** (`P-84`): `grep -c 'probe = '` over the run = **1**.
+
+```
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+  ledger parity           PASS 7    FAIL 0
+  ledger cells compared   144 graded, of which 39 are MONEY cells in int64 minor units
+  divergence vectors      PASS 1    FAIL 0   (pinned 1)
+  cells compared          7884 graded, 93 ungraded
+
+exemption census READ: LEDGER parity vectors        = 7  == pinned 7
+exemption census READ: LEDGER oracle-refusal vector = 6  == pinned 6
+exemption census READ: LEDGER money cells compared  = 39 == pinned 39
+
+T316-DEADPATH-CENSUS: corpus=1406 deadFiles=75 deadOccurrences=108 resolving=1339 …
+CENSUS wrong ledger implementations — discovered 14 … pinned at 14
+  all 14 wrong ledger implementations DIED through this harness, not by hand.
+
+PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=98 gaps=none in-file-collisions=2
+P-number citations: VERDICT PASS
+```
+
+**Every pinned baseline held:** exit 0, 46 parity / 7884 cells, `deadOccurrences 108`, 14 wrong
+implementations dead, wrong-impl pin 14, `LEDGER money cells compared = 39`.
+
+Two figures moved, both explained and neither pinned: the deadpath census corpus `1396 → 1406` and
+`resolving 1316 → 1339`, which is this review's six added files entering the corpus. **`deadOccurrences`
+held at 108**, which is the figure that is pinned.
+
+`PNUMBER-CITATIONS` reports `ids=98` and not 100 because **this review branches from `main`, not from
+T398** — that is deliberate, and it is also a live demonstration of the review's own §2 finding: on this
+tree `max(reg)` is 98, the reserved id sits beyond the register, and the gap scan is quiet. This
+REVIEW.md cites `P-100` and `P-101`, which are undefined here; `.softhouse/reviews/` is in
+`EVIDENCE_PREFIX`, so those are counted and printed, never fatal. **Directive-zone fatal stayed at 0.**
+
