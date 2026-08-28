@@ -64,7 +64,7 @@ def main():
     if len(rows) != 14:
         print(f"T331-RECHECK: NOTE the filed population was 14; this table holds {len(rows)}.")
 
-    live_path = ROOT / ".softhouse/capture/t331-wire-pnumber-checker/baseline/10-live-checker.json"
+    live_path = ROOT / ".softhouse/capture/t331-wire-pnumber-checker/baseline/10-findings-redacted.json"
     live = json.loads(live_path.read_text(encoding="utf-8"))
     findings = live["findings"]
     by_pair = {}

@@ -1,0 +1,5 @@
+T331-APPLY: T282's literal anchor 1 'guard_no_host_state_in_lint_corpus() {' resolves at line(s) [1905]
+T331-APPLY: doc-block header at line 1687; inserting before its `# ---` rule at line 1686
+T331-APPLY: (T282's token anchor would have inserted at line 1905, i.e. BETWEEN the T273 doc block and the function it documents -- see the handoff.)
+T331-APPLY: anchor 2 '  guard_no_host_state_in_lint_corpus  || failed=1' resolves at line(s) [2769]
+T331-APPLY: applied. 3900 lines -> 4043 lines.
