@@ -6164,11 +6164,12 @@
         "T390",
         "T409"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/capture/t417-scheduler-attribution/"
       ],
-      "note": "FILED BY THE DRIVER, iter4, from T390s out-of-brief finding. Carries G-22."
+      "note": "dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.",
+      "branch": "softhouse/T417-scheduler-attribution"
     },
     {
       "id": "T418",
@@ -6196,11 +6197,12 @@
       "model": "opus",
       "target": "code",
       "dependencies": [],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/capture/t419/"
       ],
-      "note": "FILED BY THE DRIVER, iter4, from T411 review of T401."
+      "note": "dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.",
+      "branch": "softhouse/T419-grep-bre-portability"
     },
     {
       "id": "T420",
@@ -6281,11 +6283,12 @@
         "T402",
         "T408"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/capture/t424/"
       ],
-      "note": "FILED BY THE DRIVER, iter4."
+      "note": "dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.",
+      "branch": "softhouse/T424-t408-conditions"
     },
     {
       "id": "T425",
@@ -6362,11 +6365,12 @@
       "dependencies": [
         "T409"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/capture/t429-oracle-derived-columns/"
       ],
-      "note": "FILED BY THE DRIVER, iter4, carrying G-22(c). Prepares a DEC-2 revision; does not edit the ratified DEC."
+      "note": "dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.",
+      "branch": "softhouse/T429-oracle-derived-columns"
     },
     {
       "id": "T430",
@@ -6397,12 +6401,13 @@
         "T404",
         "T407"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/conformance.sh",
         ".softhouse/capture/t431-t407-conditions/"
       ],
-      "note": "FILED BY THE DRIVER, iter4. C-T407-1 is MAJOR and its arms are already committed in T407 grant."
+      "note": "dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.",
+      "branch": "softhouse/T431-t407-conditions"
     }
   ],
   "cross_corroboration": {
