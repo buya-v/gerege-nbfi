@@ -113,3 +113,73 @@ of which T323 built or drove — stated as directions, not as findings:
   last-touched dates above are the check on that.
 - `[UNVERIFIED]` whether a per-instrument declaration guard would itself stay green on today's
   tree. It would need its own red drive and its own baseline, which is the next task's work.
+
+---
+
+# ITERATION 3 — A THIRD DATAPOINT, AND A SECOND, INDEPENDENT REASON TO REFUSE
+
+Iteration 3 re-ran `10-population-census.py` unmodified on the delivered tree, as its own check
+rather than accepting the two measurements above (**P-22** — *"a guard, a canary, or a control
+that cannot fail is worse than none, because it is believed"*; the same disbelief is owed to a
+predecessor's cardinals). Raw rows are in `evidence/70-t304-census-rerun-iter3.tsv`, the
+per-operation breakdown in `evidence/71-t304-ops-iter3.txt`.
+
+## The drift is not slowing — it is accelerating
+
+| measured by | date | raw destructive sites |
+|---|---|---|
+| T304 | 2026-08-27 | 4,901 |
+| T323 iteration 2 | 2026-08-28 | 5,409 |
+| **T323 iteration 3** | **2026-08-28, same day, later** | **6,291** |
+
+**+882 rows inside a single day**, on top of iteration 2's +508. A pin regenerated at the start
+of a fire is stale by the end of the same fire. That is the "pin it and fail on GROWTH" answer
+dying on contact for the second time, and the second measurement is the one that makes it a
+property rather than an anecdote.
+
+## THE SECOND REASON, WHICH IS WORSE, AND WHICH THE FIRST TWO MEASUREMENTS DID NOT NAME
+
+The refusal above rests on *instability*. Iteration 3 also looked at **what the rows actually
+are**, and the population is not merely unstable — it is overwhelmingly **not destructive sites
+at all**.
+
+Of the 6,291 rows, **4,971 (79.0%) are the `redirect` class**, and `redirect` is matching the
+two-character sequence `->` in ordinary program output. Verbatim rows, unedited:
+
+```
+.softhouse/capture/charges/bin/t46-defvsreq.py   98  redirect  print(f"   if DEFINITION governs -> {pred_def}")
+.softhouse/capture/charges/bin/t46-defvsreq.py  125  redirect  f"| HALF_UP -> {hu} | HALF_EVEN -> {he} | OBSERVED {observed} "
+.softhouse/reviews/t49-probe/citecheck.py        28  redirect  if a<1 or b>n or a>b:
+.softhouse/reviews/t47-probe/t47_monthend.py     75  redirect  return k - (1 if a.day > b.day else 0)
+```
+
+An ASCII arrow inside a `print`, and a **numeric comparison operator**, are being counted as
+sites that destroy evidence. Note the third and fourth rows especially: `b>n` and `a.day > b.day`
+are arithmetic, and one of them is in a **money-adjacent** month-difference probe — so a census
+guard failing on any hit would be reporting *the loan schedule's date arithmetic* as an evidence
+destruction risk. Nothing would discredit the guard faster with the next reader.
+
+**Consequence for the baseline question the brief posed.** The brief's worry was that a census
+guard "re-reports the legitimate ones forever and gets switched off within two fires". The
+measurement says the situation is a full order of magnitude worse than that framing: it is not
+223 legitimate-but-flagged sites, it is **~5,000 rows that are not destructive operations in any
+sense**, growing by hundreds a day. Pinning that is pinning noise, and a pin over noise is an
+amnesty with a checksum — it would go red on the next fire for reasons no reviewer could
+adjudicate, and it would be switched off. Refusing to wire it is the outcome that preserves the
+detector for whoever fixes the selector.
+
+**WHAT WOULD MAKE IT WIREABLE, stated so the refusal is actionable and not a dead end.** The
+defect is in `10-population-census.py`'s lexical matcher, not in the wiring and not in T304's
+classification work, which remains sound for the sites it actually adjudicated. The `redirect`
+class needs to distinguish a shell redirection from `->` and from `>` as a comparison — at
+minimum by not applying shell-redirection lexis to `.py` files, which is where essentially all
+of the noise lives. That is one task against `10-population-census.py`, after which the
+population drops by roughly four fifths and the stability question can be asked again honestly.
+**It is not this task**: T323's edit set is `conformance.sh` and its own capture directory, and
+rewriting another task's instrument to make it gradeable would be exactly the scope-wandering
+the program treats as a rejection.
+
+**FAIL DIRECTION, HAD IT BEEN WIRED — recorded because the brief asked for one per guard.** It
+would have failed closed towards "a tracked file gained a destructive operation against evidence
+that nobody declared". It is **not wired**, so it has no direction today, and this file is the
+statement of that rather than a silence a later reader could mistake for an oversight.

@@ -1,0 +1,10 @@
+4971 redirect
+ 609 rm
+ 261 truncate
+ 218 py-rmtree
+  73 mv
+  53 inplace-edit
+  46 tee
+  36 git-restore
+  24 git-clean
+   1 op

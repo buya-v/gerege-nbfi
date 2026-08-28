@@ -2464,11 +2464,29 @@ guard_accepting_side_gap_declared() {
 # counted the whole HISTORY, not merely today's tree:
 #
 #     git log --format= --name-only --diff-filter=A -- .softhouse/capture .softhouse/reviews
-#       -> 128 distinct evidence directories EVER created in this repository
-#       -> 107 of them carry a t<n> id prefix
-#       -> ids prefixing MORE THAN ONE directory, over the entire history:   exactly ONE
+#       -> distinct evidence directories EVER created in this repository:   151
+#       -> of them carrying a t<n> id prefix:                               130
+#       -> ids prefixing MORE THAN ONE directory, over the entire history:  exactly ONE
 #       -> and that one is T256/T259 — the real defect the guard was written for, already
 #          declared by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+#
+# THE TWO CARDINALS ABOVE ARE VOLATILE AND HAVE ALREADY ROTTED ONCE. Iteration 1 of T323 wrote
+# them as 128 and 107; T323 iteration 3 re-derived the same query on today's tree and got 151
+# and 130. Neither figure was wrong when written — the corpus simply grew — which is precisely
+# why they are re-stated with the date of measurement and why THE CONCLUSION, not the cardinals,
+# is what this argument rests on. [RE-DERIVED INDEPENDENTLY: T323 iteration 3, 28 Aug 2026, and
+# it agrees with the guard's own live readback in the same run: "corpus 7739 tracked paths -> 151
+# evidence directories / 130 carry a t<n> id prefix".] A reader who finds these two numbers stale
+# again should re-run the query rather than trust them; the load-bearing claim is the LAST line,
+# "exactly ONE colliding id, and it is the declared one", and THAT has held across both
+# measurements.
+#
+# ONE TRAP IN RE-DERIVING IT, recorded because iteration 3 fell into it. A naive id regex of
+# `^(t|a)[0-9]+` reports TWO colliding ids — t256 and `a2`, the latter with SEVEN directories.
+# `a2` is an artifact of the SELECTOR, not a collision in the tree: T299 had already separated
+# the a2-<n> id space precisely because folding it produced false collisions (noted below). The
+# guard is right and the crude re-derivation was wrong. P-70 — a count is a statement about the
+# search, never about the world.
 #
 # The false-positive count of this predicate, over every evidence directory this program has
 # ever created, is ZERO; its true-positive count on the only event in class is ONE. The
@@ -2955,6 +2973,296 @@ guard_reconciler_ownership() {
   return 0
 }
 
+# -------------------------------------------------------------------------------------------
+# guard_guards_dir_registration — THE CANONICAL GUARDS DIRECTORY IS ITSELF GRADED.      [T323]
+# -------------------------------------------------------------------------------------------
+# WHY THIS EXISTS, and why it is WIRING rather than a new detector. T323 was filed because THREE
+# workers in one fire each built a guard, drove it red and green, and shipped it reaching
+# nothing. That is P-45 — "A test-only guard is not a guard. … Rule: when hardening a check,
+# verify the path that actually executes in CI/conformance calls it, not merely that a test
+# does." [VERIFIED: .softhouse/patterns.md:1503]. The three were wired above, one at a time, by
+# hand. NOTHING IN THIS FILE STOPPED A FOURTH, and the fix for "someone must remember" is never
+# a better memo.
+#
+# So this grades the one population where grading it is cheap AND honest: the tracked shell
+# checkers sitting DIRECTLY IN .softhouse/guards, the directory this program has made the home
+# of its checkers. Every member must either be INVOKED BY THIS FILE, or carry a DECLARATION in
+# the table below saying what its relation to the harness actually is — and the declaration is
+# VERIFIED, never believed: the witness file must exist and the naming must be real, in the
+# stated direction. A declaration whose SUBJECT HAS VANISHED is also a failure, so the table
+# cannot rot into a blanket suppressor. That is the mechanism T145's float guard uses for its
+# two declared sites and the one patterns.md uses for its declared-collision register.
+#
+# SELECTOR, PRINTED BESIDE THE FIGURE, because a count is a statement about a search and never
+# about the world — P-70, "'Latent', 'not promoted', 'can never resolve', 'no guard exists' —
+# four ways this program stated a search result as a world fact, in one fire"
+# [VERIFIED: .softhouse/patterns.md:1931]:
+#
+#     POPULATION = git ls-files over the '*.sh' members of .softhouse/guards, from $REPO_ROOT.
+#     INVOKED    = the member's basename occurs on a NON-COMMENT line of this file.
+#
+# THE SECOND CLAUSE IS NOT PEDANTRY. Every unwired guard this program has shipped was MENTIONED
+# somewhere — T257's own finding is that `git grep -n manifest -- conformance.sh` returned ONE
+# hit and it was a COMMENT at :450. A predicate that accepts a mention would have called that
+# guard wired. Comment lines are therefore excluded from the invocation test, and the DECLARED
+# rows below are matched BEFORE it so that this guard's own table cannot vouch for itself.
+#
+# IT IS DELIBERATELY NARROW AND THE NARROWNESS IS MEASURED, not timid. It does NOT claim to find
+# every unwired checker in this repository. T323 ran four of them by hand on this tree and every
+# one is invoked by nothing automatic:
+#     .softhouse/capture/t145-analysis-float/bin/guard-float-decides-money.py     exit 0 (GREEN)
+#     .softhouse/capture/t284-schema2-callsites/instruments/10-callsite-registry.py exit 1 (RED)
+#     .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh              exit 1 (RED)
+#     .softhouse/capture/tierA-a2/manifest.py verify                              exit 1 (RED)
+# Three of those four are RED ON TODAY'S TREE, so a selector wide enough to reach them would
+# make this guard red on arrival — the "switched off within two fires" outcome T323 already
+# refused once, for T304's destructive-site census. Their wiring is one named task each
+# (T333, T303, T311, T257) and each needs its own tier argument and its own repair first.
+#
+# WHAT IT DOES CLAIM, exactly one thing: NO NEW CHECKER CAN ENTER THE CANONICAL GUARDS DIRECTORY
+# WITHOUT EITHER BEING RUN BY THIS FILE OR BEING DECLARED, IN A DIFF A REVIEWER READS.
+#
+# WHY THIS POPULATION IS PINNABLE WHERE T304'S WAS NOT — the question T323 had to answer before
+# it was allowed to build this at all. T323's refusal of T304's census rested on a MEASURED
+# property: T304 classifies a site by RESOLVING its target against the whole tracked corpus, so
+# rows move for reasons no diff contains (three instruments last touched days before T304's
+# census began contributing hard sites without a byte of them changing). This population has no
+# such property. Membership is "a tracked shell file in one directory", so a row can appear or
+# disappear ONLY in the commit that adds or removes that file. Attributable by construction,
+# which is the whole difference.
+#
+# FAIL-CLOSED DIRECTION, FOR THIS GUARD ALONE, and not widened to serve a second purpose: it
+# fails closed towards "a checker sitting in the guards directory that this harness does not
+# run, and that does not say what does, is a refusal". It asserts nothing about what any checker
+# checks, nothing about namespaces, dead paths or ownership predicates — those are the three
+# guards above and they have their own directions — and nothing whatever about money.
+#
+# CALIBRATION BEFORE VERDICT. If NOT ONE member is found invoked by this file, the reading
+# mechanism is broken rather than the tree being clean: three members are invoked verbatim a few
+# hundred lines above. Zero invoked is a REFUSAL, never a green.
+#
+# THE CALIBRATION EARNED ITS KEEP ON THE FIRST GRADED RUN, and the episode is recorded rather
+# than tidied away. T323's first version tested invocation with `printf … | grep -qF`. Standalone
+# it printed three INVOKED and a PASS. Through the bar it reported ALL THREE genuinely invoked
+# checkers as unwired and refused at the calibration: `grep -q` exits on the first match, `printf`
+# dies of SIGPIPE, and `set -o pipefail` (conformance.sh:396) turns the pipeline's 141 into a
+# MISS. That is P-57's EPIPE family, in a guard written a few hundred lines under a comment
+# warning about it. Two lessons are load-bearing here. (1) A standalone green says nothing about
+# the wired route — which is the whole thesis of T323 — and here the standalone leg was green
+# while the wired leg refused. (2) The refusal was the guard's OWN vacuity arm, not a downstream
+# symptom: without it the run would have printed three plausible "IS INVOKED BY NOTHING" findings
+# about correctly wired checkers, and the next worker would have "fixed" the tree.
+#
+# P-84 SURVIVES UNCHANGED. This returns 1 into run_guards' tally, which exits EXIT_UNUSABLE
+# BEFORE probe_oracle prints, so a failure here is exit 2 with NO probe line — "'EXIT 2 WITH NO
+# PROBE LINE' IS THE GUARD WORKING. READ THE ABSENCE, NOT THE VALUE."
+# [VERIFIED: .softhouse/patterns.md:2813]. That is a failed HARD guard and NOT an oracle outage;
+# the driver's park condition needs exit 2 AND a probe line PRESENT reading down. P-84 draws
+# that one distinction and says nothing about money in either direction.
+#
+# COST: 0.16 s wall, MEASURED on this host by T323 — and the figure is the WHOLE of an extraction
+# wrapper (`bash` start-up, a `sed` that lifts this function out of this file, then one call), so
+# the guard's own share is SMALLER than 0.16 s and was not separated out. Stated the wide way on
+# purpose: an over-stated cost cannot mislead the next person deciding what the bar can afford.
+# One git ls-files, one comment-stripping grep over this file, at most one grep per member, and
+# no temporary file.
+guard_guards_dir_registration() {
+  local gdrel=".softhouse/guards"
+  local gd="$REPO_ROOT/$gdrel"
+  local conf="$REPO_ROOT/.softhouse/conformance.sh"
+  if [ ! -d "$gd" ]; then
+    warn "conformance: guard_guards_dir_registration: $gd is MISSING. The canonical guards"
+    warn "conformance: directory IS the thing this grades; with it absent there is nothing to"
+    warn "conformance: check, which is a REFUSAL and never a pass."
+    return 1
+  fi
+  if [ ! -f "$conf" ]; then
+    warn "conformance: guard_guards_dir_registration: $conf is MISSING, so this harness cannot"
+    warn "conformance: read itself and cannot say which checkers it invokes. REFUSED."
+    return 1
+  fi
+
+  # The pathspec is ASSEMBLED AT RUN TIME rather than spelled as one literal. Not cosmetic: this
+  # file sits in T316's dead-path corpus, and a glob spelled whole reads there as a path that
+  # resolves to nothing. T323's own red drive learned that the expensive way — its first version
+  # put five rows on the frontier.
+  local pop
+  pop="$( cd "$REPO_ROOT" 2>/dev/null && git ls-files -- "$gdrel/"'*.sh' 2>/dev/null )"
+  if [ -z "$pop" ]; then
+    warn "conformance: guard_guards_dir_registration: the population is EMPTY. That is a SELECTOR"
+    warn "conformance: failure, not a clean tree — this repository tracks shell checkers in"
+    warn "conformance: $gdrel and always has. An empty census passes everything. REFUSED."
+    return 1
+  fi
+
+  # This file with every comment line removed. The invocation test reads THIS, not the file, so
+  # a checker that is only ever discussed is not counted as run.
+  local code
+  code="$(LC_ALL=C grep -v '^[[:space:]]*#' "$conf")"
+  if [ -z "$code" ]; then
+    warn "conformance: guard_guards_dir_registration: stripping comments from $conf left NOTHING."
+    warn "conformance: That is an instrument failure — this file is mostly executable text — and"
+    warn "conformance: an empty haystack would report every checker unwired. REFUSED."
+    return 1
+  fi
+
+  # DECLARATION TABLE. One row per member this file does NOT invoke, in the form
+  #   <basename>|<direction>|<witness path, repo-relative>|<token that must be present>
+  # direction CALLER  — the witness is what RUNS the member; the WITNESS must name the token.
+  # direction SUBJECT — the member is not a guard but an instrument ABOUT the witness; the
+  #                     MEMBER must name the token.
+  # Both are verified below. Neither is a suppression: if the witness disappears, or stops
+  # naming the token, or the declared member itself leaves the population, this guard goes RED.
+  #
+  # ROW 1 — repo-state-attest.sh [T318 / FU-T304-2, adopted by T325]. A DIFFERENTIAL repo-state
+  # attestation, used AROUND an operation (snapshot, run, compare against the operation's writ).
+  # It cannot be a verdict guard in a harness that grades ONE state; its caller is the fire
+  # driver, which is where the before/after pair exists.
+  # ROW 2 — drive-red-ledger-invariants.sh. NOT a guard: it is the P-22 RED DRIVE for
+  # ledgerguard, planting one violation per class into a scratch copy of nexus/. Calling it from
+  # run_guards would mean every graded run drives its own money guard red on purpose.
+  local DECLARED
+  DECLARED="repo-state-attest.sh|CALLER|.softhouse/bin/fire-program.sh|repo-state-attest.sh
+drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|ledgerguard"
+
+  local total=0 invoked=0 decl_ok=0 unwired=0 bad=0
+  local rel base row rowbase dir witness token found
+
+  while IFS= read -r rel; do
+    [ -n "$rel" ] || continue
+    total=$((total + 1))
+    base="${rel##*/}"
+
+    # DECLARED ROWS ARE MATCHED FIRST, so that the table's own text cannot satisfy the
+    # invocation test below and vouch for its own subject.
+    found=""
+    while IFS= read -r row; do
+      [ -n "$row" ] || continue
+      rowbase="${row%%|*}"
+      if [ "$rowbase" = "$base" ]; then found="$row"; fi
+    done <<INNER
+$DECLARED
+INNER
+
+    if [ -z "$found" ]; then
+      # NO PIPELINE HERE, AND THAT IS NOT A STYLE CHOICE. `printf … | grep -q` is a member of
+      # the EPIPE family P-57 names: grep -q exits on its FIRST match, printf then dies of
+      # SIGPIPE, and under `set -o pipefail` — which this file sets at the top — the pipeline
+      # reports 141, so A MATCH READS AS A MISS. T323 wrote it that way, and the guard's own
+      # CALIBRATION arm refused the very first graded run, reporting all three genuinely
+      # invoked checkers as unwired. A shell `case` starts no second process and cannot EPIPE.
+      case "$code" in
+      *"$base"*)
+        invoked=$((invoked + 1))
+        say "conformance:     INVOKED    $rel"
+        ;;
+      *)
+        unwired=$((unwired + 1))
+        bad=1
+        warn "conformance: guard_guards_dir_registration: $rel IS INVOKED BY NOTHING."
+        warn "conformance: It sits in the canonical guards directory and no non-comment line of"
+        warn "conformance: this file names it, so it enforces nothing — P-45, 'A test-only guard"
+        warn "conformance: is not a guard … verify the path that actually executes in"
+        warn "conformance: CI/conformance calls it, not merely that a test does.' THE FIX is to"
+        warn "conformance: call it from run_guards, or — if something else already runs it — to"
+        warn "conformance: add its row to the DECLARATION TABLE in this function, naming the"
+        warn "conformance: witness that runs it. A comment saying it is run is not a row."
+        ;;
+      esac
+      continue
+    fi
+
+    dir="${found#*|}"; dir="${dir%%|*}"
+    witness="${found#*|*|}"; witness="${witness%%|*}"
+    token="${found##*|}"
+    if [ ! -f "$REPO_ROOT/$witness" ]; then
+      bad=1
+      warn "conformance: guard_guards_dir_registration: $rel is DECLARED against the witness"
+      warn "conformance: $witness, and that file DOES NOT EXIST. A declaration whose witness is"
+      warn "conformance: gone is an amnesty, not a record. REFUSED."
+      continue
+    fi
+    case "$dir" in
+      CALLER)
+        if LC_ALL=C grep -qF -- "$token" "$REPO_ROOT/$witness"; then
+          decl_ok=$((decl_ok + 1))
+          say "conformance:     DECLARED   $rel — run by $witness (verified: it names $token)"
+        else
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel is DECLARED as being run by"
+          warn "conformance: $witness, and that file NO LONGER NAMES $token. The declaration is"
+          warn "conformance: FALSE and the checker is unwired again. REFUSED."
+        fi
+        ;;
+      SUBJECT)
+        if LC_ALL=C grep -qF -- "$token" "$REPO_ROOT/$rel"; then
+          decl_ok=$((decl_ok + 1))
+          say "conformance:     DECLARED   $rel — not a guard: the red drive for $token (verified)"
+        else
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel is DECLARED as the red drive for"
+          warn "conformance: $token and NO LONGER NAMES IT. Either it stopped being that, or the"
+          warn "conformance: declaration was wrong. Both are refusals, never a pass."
+        fi
+        ;;
+      *)
+        bad=1
+        warn "conformance: guard_guards_dir_registration: $rel carries an unreadable declaration"
+        warn "conformance: direction '$dir'. An unreadable table row is an ERROR, never a pass."
+        ;;
+    esac
+  done <<POPULATION
+$pop
+POPULATION
+
+  # A DECLARED ROW WHOSE SUBJECT HAS LEFT THE POPULATION is a stale amnesty. Checked here rather
+  # than in the loop above, which only ever sees members that still exist.
+  # Same P-57 discipline as above: no pipeline, so no `grep -q` EPIPE under `pipefail`. The
+  # membership test is EXACT BASENAME EQUALITY rather than a suffix match, so a declaration for
+  # `x.sh` is not satisfied by a `zzx.sh` that happens to be in the directory.
+  while IFS= read -r row; do
+    [ -n "$row" ] || continue
+    rowbase="${row%%|*}"
+    found=""
+    while IFS= read -r rel; do
+      [ -n "$rel" ] || continue
+      if [ "${rel##*/}" = "$rowbase" ]; then found=1; fi
+    done <<POPCHECK
+$pop
+POPCHECK
+    if [ -z "$found" ]; then
+      bad=1
+      warn "conformance: guard_guards_dir_registration: the DECLARATION TABLE still carries"
+      warn "conformance: $rowbase, which is NO LONGER IN THE POPULATION. A row that excuses a"
+      warn "conformance: file that is gone starts excusing the next file to take that name. Drop"
+      warn "conformance: it in the same commit that removed the file."
+    fi
+  done <<STALE
+$DECLARED
+STALE
+
+  if [ "$invoked" -eq 0 ]; then
+    warn "conformance: guard_guards_dir_registration: CALIBRATION FAILED — NOT ONE member of the"
+    warn "conformance: population was found on a non-comment line of this file, yet three of them"
+    warn "conformance: are invoked verbatim a few hundred lines above. The reading mechanism is"
+    warn "conformance: broken, not the tree. A guard that cannot re-find what it knows is there"
+    warn "conformance: is not measuring anything. REFUSED."
+    return 1
+  fi
+
+  say "conformance:   GUARDS-DIR-REGISTRATION: population=$total invoked=$invoked declared=$decl_ok invoked-by-nothing=$unwired"
+  say "conformance:   (selector: git ls-files over the '*.sh' members of $gdrel, from \$REPO_ROOT;"
+  say "conformance:   INVOKED means named on a NON-COMMENT line of this file, never a mention)"
+  if [ "$bad" -ne 0 ]; then
+    warn "conformance: guard_guards_dir_registration FAILED. A checker in the canonical guards"
+    warn "conformance: directory is unreached, or a declaration about one is no longer true."
+    return 1
+  fi
+  say "conformance:   guards-dir registration: PASS — every checker in $gdrel is either invoked"
+  say "conformance:   by this file or DECLARED against a verified witness."
+  return 0
+}
+
 run_guards() {
   local failed=0
   # FIRST, and it SHORT-CIRCUITS rather than joining the `failed=1` tally the others use.
@@ -2985,6 +3293,7 @@ run_guards() {
   # than short-circuiting: unlike guard_graded_root_is_this_tree none of them invalidates the
   # other guards' answers, and one bad guard must not hide another. Registered CHEAPEST FIRST so
   # a fast refusal prints before the 30-second one is paid for.
+  guard_guards_dir_registration       || failed=1        # T323 iter 2 — <=0.16 s
   guard_capture_namespace             || failed=1        # T299, wired by T323 —  0.4 s
   guard_dead_path_frontier            || failed=1        # T316, wired by T323 —  1.3 s
   guard_reconciler_ownership          || failed=1        # T319, wired by T323 — 30.3 s
