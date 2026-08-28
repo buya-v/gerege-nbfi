@@ -1,0 +1,54 @@
+3c3
+< repo      : 3798074d   date: 2026-08-28T12:41:08Z
+---
+> repo      : 9eedfe4d   date: 2026-08-28T13:23:00Z
+5c5
+< corpus    : 8369 tracked files (non-empty, asserted before grading)
+---
+> corpus    : 8371 tracked files (non-empty, asserted before grading)
+20c20
+<       | SWEEP-RESULT: commit=3798074d selectors=16 did_not_run=0 calibration=yes exit=0
+---
+>       | SWEEP-RESULT: commit=9eedfe4d selectors=16 did_not_run=0 calibration=yes exit=0
+25c25
+<       | SWEEP-RESULT: commit=3798074d selectors=16 did_not_run=0 calibration=yes exit=0
+---
+>       | SWEEP-RESULT: commit=9eedfe4d selectors=16 did_not_run=0 calibration=yes exit=0
+37c37
+<       | SWEEP-RESULT: commit=3798074d selectors=16 did_not_run=0 calibration=yes exit=0
+---
+>       | SWEEP-RESULT: commit=9eedfe4d selectors=16 did_not_run=0 calibration=yes exit=0
+53c53
+<       |     hits total: 230   archived (snapshots, correctly stale):    LIVE: 0
+---
+>       |     hits total: 234   archived (snapshots, correctly stale):    LIVE: 0
+73c73
+<       | SWEEP-RESULT: commit=3798074d selectors=16 did_not_run=0 calibration=yes exit=0
+---
+>       | SWEEP-RESULT: commit=9eedfe4d selectors=16 did_not_run=0 calibration=yes exit=0
+98c98
+<       |     MEASURED ZERO -- engine ran over 8289 tracked files under .softhouse/ and matched nothing
+---
+>       |     MEASURED ZERO -- engine ran over 8291 tracked files under .softhouse/ and matched nothing
+103c103
+<       | SWEEP-RESULT: commit=3798074d selectors=17 did_not_run=0 calibration=yes exit=0
+---
+>       | SWEEP-RESULT: commit=9eedfe4d selectors=17 did_not_run=0 calibration=yes exit=0
+114c114
+<       | SWEEP-RESULT: commit=3798074d selectors=16 did_not_run=0 calibration=yes exit=3
+---
+>       | SWEEP-RESULT: commit=9eedfe4d selectors=16 did_not_run=0 calibration=yes exit=3
+169c169
+<       |     MEASURED ZERO -- engine ran over 8289 tracked files in the sweep corpus and matched nothing
+---
+>       |     MEASURED ZERO -- engine ran over 8291 tracked files in the sweep corpus and matched nothing
+174c174
+<       | SWEEP-RESULT: commit=3798074d selectors=17 did_not_run=0 calibration=yes exit=0
+---
+>       | SWEEP-RESULT: commit=9eedfe4d selectors=17 did_not_run=0 calibration=yes exit=0
+185c185
+<       | SWEEP-RESULT: commit=3798074d selectors=0 did_not_run=0 calibration=yes exit=3
+---
+>       | SWEEP-RESULT: commit=9eedfe4d selectors=0 did_not_run=0 calibration=yes exit=3
+193d192
+< DRIVE EXIT=0

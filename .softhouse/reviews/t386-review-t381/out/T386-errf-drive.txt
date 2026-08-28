@@ -1,0 +1,34 @@
+UNDER TEST : softhouse/T381-t379-conditions:.softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh
+  sha256   : 1fa6acfe6a24588cfdab967caa3a1710695f3ac503ad2e2c061b0429ba88e923
+
+=== ARM 1: what exit status does bash give when a 2> redirect cannot be opened? =====
+/Users/buv/gerege-nbfi/.claude/worktrees/agent-a09b804e9672f487b/.softhouse/reviews/t386-review-t381/instruments/t386-errf-drive.sh: line 43: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t386-errf.NUOJ3hlO/a1/nosuchdir/errf: No such file or directory
+  parent directory missing   : rc=1  stdout=[]
+/Users/buv/gerege-nbfi/.claude/worktrees/agent-a09b804e9672f487b/.softhouse/reviews/t386-review-t381/instruments/t386-errf-drive.sh: line 46: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t386-errf.NUOJ3hlO/a1/ro: Permission denied
+  scratch file mode 000      : rc=1 stdout=[]
+  >>> bash returns 1 -- the SAME status git grep uses for 'ran, matched nothing'.
+
+=== ARM 2 (RED): the shipped sweep with an unwritable $SWEEP_ERRF ==================
+  --- first 24 lines of the RED run ---
+  CASUALTY SWEEP for the T352+T359 oracle-state movement
+  repo: 67fe18f0   date: 2026-08-28T13:40:00Z
+  population: 8660 tracked files under .softhouse/
+  untracked under .softhouse/: 0
+  /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t386-errf.NUOJ3hlO/sweep.sh: line 205: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t386-errf.NUOJ3hlO/gone/errf: No such file or directory
+  cat: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t386-errf.NUOJ3hlO/gone/errf: No such file or directory
+  SWEEP ABORT (exit 3): CALIBRATION MISSED. 'CASUALTY SWEEP for the T352' found 0 in .softhouse/capture/t363-oracle-baseline/instruments/,
+    where it is KNOWN present. The engine, the pattern language or the corpus is broken;
+    no negative printed below would be interpretable, so nothing is printed.
+  SWEEP EXIT=3
+  --- the summary line and exit ---
+  SWEEP EXIT=3
+
+  RED VERDICT: exit=3  'MEASURED ZERO' lines=0
+
+=== ARM 3 (CONTROL): the same shipped sweep, scratch file writable =================
+  SWEEP-RESULT: commit=67fe18f0 selectors=16 did_not_run=0 calibration=yes exit=0
+  SWEEP EXIT=0
+
+DRIVE-RESULT: red_exit=3 red_measured_zero_lines=0 control_exit=0
+F-1 did not reproduce at this head.
+EXIT=0

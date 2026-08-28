@@ -1,0 +1,193 @@
+============================================================================
+T381 RED DRIVES -- R1..R4 of T379's review of T371
+repo      : 3798074d   date: 2026-08-28T12:41:08Z
+engine    : git version 2.50.1 (Apple Git-155)
+corpus    : 8369 tracked files (non-empty, asserted before grading)
+target    : .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh
+BEFORE_REF: main     AFTER_REF: HEAD
+============================================================================
+BEFORE sha256: e9f30047bb0fbd46826624cdfa3b63e0dd7c03e6abaffb7cb1ae751e4bd57f31   (203 lines)
+AFTER  sha256: 1fa6acfe6a24588cfdab967caa3a1710695f3ac503ad2e2c061b0429ba88e923    (449 lines)
+CALIBRATE comparator: PASS -- it sees a planted difference and sees a planted sameness.
+
+============================================================================
+D-R2  the ANTI-CALIBRATION on a search that ERRORED  (T379 R2, the near-rejection)
+============================================================================
+  BEFORE, unmodified (control):
+    exit=0
+      | SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+      | SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
+      | SWEEP-RESULT: commit=3798074d selectors=16 did_not_run=0 calibration=yes exit=0
+  BEFORE, anti-calibration search FORCED TO ERROR (git grep rc=128):
+    exit=0
+      | SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+      | SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
+      | SWEEP-RESULT: commit=3798074d selectors=16 did_not_run=0 calibration=yes exit=0
+
+  >>> RED CONFIRMED: BEFORE's calibration lines are BYTE-IDENTICAL whether the search ran
+  >>> or ERRORED, and both runs exit 0/0. That is a PASS printed for a search
+  >>> that never happened -- a negative the instrument did not measure.
+
+  AFTER, unmodified (control):
+    exit=0
+      | SWEEP CALIBRATE+F: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+      | SWEEP CALIBRATE-F: PASS -- known negative matched 0 times, and the search RAN (rc=1)
+      | SWEEP CALIBRATE+E: PASS -- -E interpreted it (2 hit(s)) and -F did not (0). They DISAGREE,
+      | SWEEP CALIBRATE-E: PASS -- known negative matched 0 times under -E, and the search RAN (rc=1)
+      | SWEEP-RESULT: commit=3798074d selectors=16 did_not_run=0 calibration=yes exit=0
+  AFTER, anti-calibration search FORCED TO ERROR:
+    exit=3
+      | SWEEP CALIBRATE+F: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+      | SWEEP ABORT (exit 3): the -F ANTI calibration search DID NOT RUN -- git grep rc=128.
+      |     ! fatal: Invalid pathspec magic 'zzbogusmagic' in ':(zzbogusmagic)x'
+  >>> GREEN CONFIRMED: AFTER REFUSES -- exit 3, and it names the engine's status.
+
+============================================================================
+D-R1  the ARCHIVE-predicate greps' discarded status  (T379 R1, inherited from main)
+============================================================================
+  BEFORE, $ARCHIVE replaced by an INVALID ERE (nothing else touched):
+    exit=0
+      |     hits total: 74   archived (snapshots, correctly stale):    LIVE: 0
+      |     hits total: 15   archived (snapshots, correctly stale):    LIVE: 0
+      |     hits total: 22   archived (snapshots, correctly stale):    LIVE: 0
+      |     hits total: 230   archived (snapshots, correctly stale):    LIVE: 0
+  AFTER, same break:
+    exit=4
+      |     *** SELECTOR HIT, BUT ITS CLASSIFICATION DID NOT RUN (archive-predicate grep
+      |     *** SELECTOR HIT, BUT ITS CLASSIFICATION DID NOT RUN (archive-predicate grep
+      |     *** SELECTOR HIT, BUT ITS CLASSIFICATION DID NOT RUN (archive-predicate grep
+      |     *** SELECTOR HIT, BUT ITS CLASSIFICATION DID NOT RUN (archive-predicate grep
+      |     *** SELECTOR HIT, BUT ITS CLASSIFICATION DID NOT RUN (archive-predicate grep
+      |     *** SELECTOR HIT, BUT ITS CLASSIFICATION DID NOT RUN (archive-predicate grep
+  >>> RED CONFIRMED: BEFORE prints 'LIVE: 0' for selectors that HIT, and exits 0.
+  >>> GREEN CONFIRMED: AFTER refuses to print a LIVE figure it could not compute; exit 4.
+
+============================================================================
+D-R3a the calibration runs in -F; thirteen selectors run in -E  (T379 R3)
+============================================================================
+  shim: rewrites 'git grep -E' to 'git grep -F'; all other subcommands pass through.
+  BEFORE under the literal-minded engine:
+    exit=0
+      | SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+      | SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
+      | SWEEP-RESULT: commit=3798074d selectors=16 did_not_run=0 calibration=yes exit=0
+  AFTER under the literal-minded engine:
+    exit=3
+      | SWEEP CALIBRATE+F: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+      | SWEEP CALIBRATE-F: PASS -- known negative matched 0 times, and the search RAN (rc=1)
+      | SWEEP ABORT (exit 3): -E CALIBRATION MISSED. The pattern matched 0 times under -E in
+      |   NOBODY MEASURED. Nothing is printed.
+      | selectors reporting `hits total`: clean=16 shimmed=16 ; rows that CHANGED: 13
+      | `MEASURED ZERO` lines under the shim: 0 (see the note in the source -- a literal
+      |   engine returns SELF-REFERENTIAL hits on this corpus, not zeros)
+  >>> RED CONFIRMED: the engine's semantics changed under BEFORE's feet -- 13 selector
+  >>> row(s) report a different hit count -- and BEFORE still printed calibration=yes and
+  >>> exited 0, because both of its calibration arms are -F and cannot reach the hazard.
+  >>> GREEN CONFIRMED: AFTER's -E/-F discrimination pair catches it; exit 3, no selector
+  >>> result printed at all.
+
+============================================================================
+D-R3b a selector pattern carrying a backslash-class  (T379 R3, the enforced claim)
+============================================================================
+    inserted the probe selector, backslash-class intact: sel "ZZ-DRIVE  a selector carrying a backslash-class" -n -E 'zz\bprobe'
+    inserted the probe selector, backslash-class intact: sel "ZZ-DRIVE  a selector carrying a backslash-class" -n -E 'zz\bprobe'
+  BEFORE with the probe selector appended:
+    exit=0
+      | === ZZ-DRIVE  a selector carrying a backslash-class
+      |     engine: git grep -n -E zz\bprobe
+      |     MEASURED ZERO -- engine ran over 8289 tracked files under .softhouse/ and matched nothing
+      |     hits total: 0   archived (snapshots, correctly stale): 0   LIVE: 0
+      | 
+      | END OF SWEEP. A selector not listed above was not searched, and this file is the
+      | record of that. Add a selector and re-run rather than asserting absence.
+      | SWEEP-RESULT: commit=3798074d selectors=17 did_not_run=0 calibration=yes exit=0
+  AFTER with the probe selector appended:
+    exit=3
+      | === ZZ-DRIVE  a selector carrying a backslash-class
+      |     engine: git grep -n -E zz\bprobe
+      |     *** SELECTOR REFUSED: its pattern carries a backslash-class, which this engine
+      |     *** reads as a LITERAL letter (see the SWEEP OBSERVE line above). Nothing was
+      |     *** searched, because the zero it would return would not be a measurement.
+      | 
+      | END OF SWEEP. A selector not listed above was not searched, and this file is the
+      | record of that. Add a selector and re-run rather than asserting absence.
+      | SWEEP-RESULT: commit=3798074d selectors=16 did_not_run=0 calibration=yes exit=3
+  >>> RED CONFIRMED: BEFORE prints MEASURED ZERO for a pattern the engine compiled to
+  >>> the literal letters -- a negative it did not measure -- and counts it as a selector.
+  >>> GREEN CONFIRMED: AFTER REFUSES the selector and exits 3, non-zero.
+
+============================================================================
+D-R4  a warning line counted as a hit  (T379 R4, cosmetic but a wrong cardinal)
+============================================================================
+  BEFORE: exit 0; the warning appears 16 time(s) in its output
+      |       .softhouse/vectors/ledger/LDG-05-openingbalance-accepted-empty-ledger.json:8: "_note": "THE FIRST ACCEPTING-SIDE OPENING-BALANCE OBSERVATION THIS PROGRAM HAS EVER TAKEN, AND IT WAS NOT TAKEN ON TENANT
+      |       warning: zz-t381-drive-synthetic-engine-warning
+      | --
+      |     hits total: 16   archived (snapshots, correctly stale): 15   LIVE: 1
+  AFTER : exit 0; the warning appears 16 time(s) in its output
+      |     ENGINE STDERR on a search that DID complete (rc=0). NOT counted as a hit:
+      |       ~ warning: zz-t381-drive-synthetic-engine-warning
+      | --
+      |     ENGINE STDERR on a search that DID complete (rc=0). NOT counted as a hit:
+  first selector "hits total"     BEFORE: clean=74  with-warning=75
+                                AFTER : clean=74  with-warning=74
+  >>> RED CONFIRMED: BEFORE's hit count GREW by 1 because a stderr line was
+  >>> folded into the hit set. The printed "hits total" is not a hit count in BEFORE.
+  >>> GREEN CONFIRMED: AFTER's hit count is UNCHANGED and the warning is reported on its
+  >>> own ENGINE STDERR line instead of being counted or dropped.
+
+============================================================================
+D-GREEN  the repair on an unbroken engine -- it must still be usable
+============================================================================
+    exit=0
+      | SWEEP CALIBRATE+F: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+      | SWEEP CALIBRATE-F: PASS -- known negative matched 0 times, and the search RAN (rc=1)
+      | SWEEP CALIBRATE+E: PASS -- -E interpreted it (2 hit(s)) and -F did not (0). They DISAGREE,
+      | SWEEP CALIBRATE-E: PASS -- known negative matched 0 times under -E, and the search RAN (rc=1)
+      | SWEEP OBSERVE: T238 hazard LIVE -- escaped=114 literal=114 AGREE, so -E compiles the
+      |       .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capability-tail.txt:1:***** THE OPENING-BALANCE ACCEPTING SIDE IS NOW OBSERVED, AND ARM A IS DEAD. [T305, closing T296 F-T296-2.] ***** 
+      |       .softhouse/capture/tierA-a2/run-400-a2-29-boundary.sh:5:# A psql dump is NOT the contract boundary. This batch OBSERVES the live reference
+      |       .softhouse/vectors/loanschedule/P-EMI-36-127704-emi-smoothing-loop.json:18:      "evidence": "Derived at the ratified production MathContext (19, HALF_UP); every OBSERVED value below is transcribed fr
+      |       .softhouse/vectors/loanschedule/P-EMI-6-1M014632-emi-smoothing-loop.json:18:      "evidence": "Derived at the ratified production MathContext (19, HALF_UP); every OBSERVED value below is transcribed f
+      |       .softhouse/gates.md:4058:- **A full recompute HEALED all 54 rows** [OBSERVED: `A2-420`, `A2-421`]. **Taken alone this would say
+  >>> GREEN: exit 0, all sixteen selectors ran, four calibration arms passed.
+
+============================================================================
+D-R5  the backslash-class check's OWN exit status  (T381's audit of T381's fix)
+============================================================================
+    D-R5 variants built: RED uses `if printf | grep -q`, GREEN reads the status; both have
+      the check's own pattern replaced by the invalid BRE '[zz-unclosed'
+    inserted the probe selector, backslash-class intact: sel "ZZ-DRIVE  a selector carrying a backslash-class" -n -E 'zz\bprobe'
+    inserted the probe selector, backslash-class intact: sel "ZZ-DRIVE  a selector carrying a backslash-class" -n -E 'zz\bprobe'
+  RED specimen (check written as an `if` over the pipeline; check pattern invalid):
+    exit=0
+      | === ZZ-DRIVE  a selector carrying a backslash-class
+      |     engine: git grep -n -E zz\bprobe
+      | grep: invalid character range
+      | grep: invalid character range
+      | grep: invalid character range
+      |     MEASURED ZERO -- engine ran over 8289 tracked files in the sweep corpus and matched nothing
+      |     hits total: 0   archived (snapshots, correctly stale): 0   LIVE: 0
+      | 
+      | END OF SWEEP. A selector not listed above was not searched, and this file is the
+      | record of that. Add a selector and re-run rather than asserting absence.
+      | SWEEP-RESULT: commit=3798074d selectors=17 did_not_run=0 calibration=yes exit=0
+  SHIPPED form (status read explicitly; same invalid check pattern):
+    exit=3
+      | === ZZ-DRIVE  a selector carrying a backslash-class
+      |     engine: git grep -n -E zz\bprobe
+      | grep: invalid character range
+      |     *** SELECTOR REFUSED: the backslash-class CHECK ITSELF did not run (rc=2). An
+      |     *** unrun check is not a clean check, so nothing was searched.
+      | 
+      | END OF SWEEP. A selector not listed above was not searched, and this file is the
+      | record of that. Add a selector and re-run rather than asserting absence.
+      | SWEEP-RESULT: commit=3798074d selectors=0 did_not_run=0 calibration=yes exit=3
+  >>> RED CONFIRMED: with the check itself erroring, the naive form lets the selector
+  >>> through and prints a RESULT for it, at exit 0. The guard did not run and
+  >>> nothing in the output says so -- only the engine's own complaint, which is not a
+  >>> statement about the selector.
+  >>> GREEN CONFIRMED: the shipped form REFUSES and exits 3.
+
+END OF DRIVES.
+DRIVE EXIT=0

@@ -1,0 +1,131 @@
+SHIPPED  softhouse/T381-t379-conditions  469 lines  sha 1fa6acfe6a24588c
+AUDITED  93e82869    433 lines  sha 0945586377188a2c
+MAIN                 215 lines  sha e9f30047bb0fbd46
+
+=== 1. `set -o pipefail` ===========================================================
+  SHIPPED : 84:#     `set -o pipefail` is ON in this file and did NOT help, because the status of the
+118:set -uo pipefail
+341:  # a check that never ran. The three outcomes are separated instead. `set -o pipefail` is on,
+  MAIN    : 56:set -uo pipefail
+  >>> if MAIN already carries it, then 'pipefail is on' was TRUE while all six fail-opens
+  >>> were live, and greping for pipefail is not a way to learn anything about this file.
+
+=== 2. `2>/dev/null` on an EXECUTABLE line =========================================
+127:_top=$(git rev-parse --show-toplevel 2>/dev/null) || _top=""
+
+=== 3. every executable line carrying a SHELL PIPE =================================
+    (regex alternation inside single quotes is excluded by hand below; each line is shown
+     so the reader classifies it rather than trusting a count)
+121:SWEEP_ERRF=$(mktemp "${TMPDIR:-/tmp}/casualty-sweep-stderr.XXXXXXXXXX") || {
+127:_top=$(git rev-parse --show-toplevel 2>/dev/null) || _top=""
+128:if [ -z "$_top" ] || ! cd "$_top"; then
+209:  n=$(printf '%s\n' "$out" | awk -F: '{s+=$NF} END{print s+0}'); arc=$?
+211:  case "$n" in ''|*[!0-9]*) return 3 ;; esac
+222:    printf '%s' "$ENGINE_ERR" | grep . | cut -c1-200 | sed 's/^/    ! /' >&2
+234:  [ "$ec" -eq 0 ] || _calib_refuse "-F POSITIVE" "$ec"
+246:  [ "$ec" -eq 0 ] || _calib_refuse "-F ANTI" "$ec"
+264:  [ "$ec" -eq 0 ] || _calib_refuse "-E POSITIVE" "$ec"
+267:  [ "$ec" -eq 0 ] || _calib_refuse "-E POSITIVE's -F control" "$ec"
+289:  [ "$ec" -eq 0 ] || _calib_refuse "-E ANTI" "$ec"
+309:  [ "$ec" -eq 0 ] || _calib_refuse "-E T238-HAZARD (escaped)" "$ec"
+312:  [ "$ec" -eq 0 ] || _calib_refuse "-E T238-HAZARD (literal)" "$ec"
+345:    printf '%s' "$a" | LC_ALL=C grep -q '\\[bBdDsSwW<>]'; esc_rc=$?
+349:      [ "$SWEEP_RC" -ge 3 ] || SWEEP_RC=3
+356:      [ "$SWEEP_RC" -ge 3 ] || SWEEP_RC=3
+375:    printf '%s' "$err" | grep . | cut -c1-200 | sed 's/^/      ! /'
+380:    printf '%s' "$err" | grep . | cut -c1-200 | sed 's/^/      ~ /'
+384:      "$(git ls-files .softhouse | grep -c .)"
+392:  live=$(printf '%s' "$all" | grep -v -E "$ARCHIVE"); live_rc=$?
+393:  arch=$(printf '%s' "$all" | grep -c -E "$ARCHIVE"); arch_rc=$?
+394:  if [ "$live_rc" -ge 2 ] || [ "$arch_rc" -ge 2 ]; then
+398:      "$live_rc" "$arch_rc" "$(printf '%s' "$all" | grep -c .)"
+404:    "$(printf '%s' "$all" | grep -c .)" "$arch" "$(printf '%s' "$live" | grep -c .)"
+405:  printf '%s' "$live" | grep . | cut -c1-200 | sed 's/^/      /'
+410:echo "population: $(git ls-files .softhouse | wc -l | tr -d ' ') tracked files under .softhouse/"
+411:echo "untracked under .softhouse/: $(git ls-files --others --exclude-standard .softhouse | wc -l | tr -d ' ')"
+412:if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]; then
+
+=== 4. every executable line whose NEXT token reads a status (`; *rc=\$?` or `||`) ==
+121:SWEEP_ERRF=$(mktemp "${TMPDIR:-/tmp}/casualty-sweep-stderr.XXXXXXXXXX") || {
+127:_top=$(git rev-parse --show-toplevel 2>/dev/null) || _top=""
+128:if [ -z "$_top" ] || ! cd "$_top"; then
+205:  out=$(git grep "$@" 2>"$SWEEP_ERRF"); rc=$?
+209:  n=$(printf '%s\n' "$out" | awk -F: '{s+=$NF} END{print s+0}'); arc=$?
+233:  engine_count -c -F "$CALIB_POS_STR" -- "$CALIB_POS_PATH"; ec=$?
+234:  [ "$ec" -eq 0 ] || _calib_refuse "-F POSITIVE" "$ec"
+245:  engine_count -c -F "$CALIB_NEG_STR" -- .softhouse; ec=$?
+246:  [ "$ec" -eq 0 ] || _calib_refuse "-F ANTI" "$ec"
+263:  engine_count -c -E "$CALIB_POS_ERE" -- "$CALIB_POS_PATH"; ec=$?
+264:  [ "$ec" -eq 0 ] || _calib_refuse "-E POSITIVE" "$ec"
+266:  engine_count -c -F "$CALIB_POS_ERE" -- "$CALIB_POS_PATH"; ec=$?
+267:  [ "$ec" -eq 0 ] || _calib_refuse "-E POSITIVE's -F control" "$ec"
+288:  engine_count -c -E "$CALIB_NEG_ERE" -- .softhouse; ec=$?
+289:  [ "$ec" -eq 0 ] || _calib_refuse "-E ANTI" "$ec"
+308:  engine_count -c -E "$hz_esc" -- .softhouse; ec=$?
+309:  [ "$ec" -eq 0 ] || _calib_refuse "-E T238-HAZARD (escaped)" "$ec"
+311:  engine_count -c -E "$hz_lit" -- .softhouse; ec=$?
+312:  [ "$ec" -eq 0 ] || _calib_refuse "-E T238-HAZARD (literal)" "$ec"
+345:    printf '%s' "$a" | LC_ALL=C grep -q '\\[bBdDsSwW<>]'; esc_rc=$?
+349:      [ "$SWEEP_RC" -ge 3 ] || SWEEP_RC=3
+356:      [ "$SWEEP_RC" -ge 3 ] || SWEEP_RC=3
+369:  all=$(git grep "$@" -- .softhouse 2>"$SWEEP_ERRF"); rc=$?
+392:  live=$(printf '%s' "$all" | grep -v -E "$ARCHIVE"); live_rc=$?
+393:  arch=$(printf '%s' "$all" | grep -c -E "$ARCHIVE"); arch_rc=$?
+394:  if [ "$live_rc" -ge 2 ] || [ "$arch_rc" -ge 2 ]; then
+
+=== 5. every COMMAND SUBSTITUTION whose status is NOT read =========================
+    (this is the class AUDIT.md does not have a row for: not a `2>/dev/null`, not a pipe)
+166:CALIB_NEG_STR="zzq-t371-anticalibration-sentinel-$$-${RANDOM}-$(date -u +%s)"
+194:CALIB_NEG_ERE="(zzq|qzz)-t381-ere-anticalib-[0-9]+-$$-${RANDOM}-$(date -u +%s)"
+207:  ENGINE_ERR=$(cat "$SWEEP_ERRF")
+360:  SWEEP_SELECTORS=$((SWEEP_SELECTORS+1))
+370:  err=$(cat "$SWEEP_ERRF")
+372:    SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+384:      "$(git ls-files .softhouse | grep -c .)"
+395:    SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+398:      "$live_rc" "$arch_rc" "$(printf '%s' "$all" | grep -c .)"
+404:    "$(printf '%s' "$all" | grep -c .)" "$arch" "$(printf '%s' "$live" | grep -c .)"
+409:echo "repo: $(git rev-parse --short HEAD)   date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+410:echo "population: $(git ls-files .softhouse | wc -l | tr -d ' ') tracked files under .softhouse/"
+411:echo "untracked under .softhouse/: $(git ls-files --others --exclude-standard .softhouse | wc -l | tr -d ' ')"
+412:if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]; then
+464:  "$(git rev-parse --short HEAD)" "$SWEEP_SELECTORS" "$SWEEP_DIDNOTRUN" "$SWEEP_CALIBRATED" "$SWEEP_RC"
+
+=== 6. AUDIT.md line numbers vs the SHIPPED file ===================================
+  :118  SAME   audit=[set -uo pipefail]
+  :127  SAME   audit=[_top=$(git rev-parse --show-toplevel 2>/dev/null) || _top=""]
+  :193  MOVED  audit=[  n=$(printf '%s\n' "$out" | awk -F: '{s+=$NF} END{print s+0}'); arc=$?]
+            shipped :193  =[CALIB_POS_ERE="C[A]SUALTY SW${_ere_alt} for the T3${_ere_dig}{2}"]
+  :206  MOVED  audit=[    printf '%s' "$ENGINE_ERR" | grep . | cut -c1-200 | sed 's/^/    ! /']
+            shipped :206  =[  ENGINE_RC=$rc]
+  :309  MOVED  audit=[    printf '%s' "$a" | LC_ALL=C grep -q '\\[bBdDsSwW<>]'; esc_rc=$?]
+            shipped :309  =[  [ "$ec" -eq 0 ] || _calib_refuse "-E T238-HAZARD (escaped)" "$ec"]
+  :339  MOVED  audit=[    printf '%s' "$err" | grep . | cut -c1-200 | sed 's/^/      ! /']
+            shipped :339  =[  # `if printf | grep -q ...; then` would have been the fifth instance o]
+  :344  MOVED  audit=[    printf '%s' "$err" | grep . | cut -c1-200 | sed 's/^/      ~ /']
+            shipped :344  =[  for a in "$@"; do]
+  :348  MOVED  audit=[      "$(git ls-files .softhouse | grep -c .)"]
+            shipped :348  =[      printf '    *** unrun check is not a clean check, so nothing was s]
+  :356  MOVED  audit=[  live=$(printf '%s' "$all" | grep -v -E "$ARCHIVE"); live_rc=$?]
+            shipped :356  =[      [ "$SWEEP_RC" -ge 3 ] || SWEEP_RC=3]
+  :357  MOVED  audit=[  arch=$(printf '%s' "$all" | grep -c -E "$ARCHIVE"); arch_rc=$?]
+            shipped :357  =[      return]
+  :362  MOVED  audit=[      "$live_rc" "$arch_rc" "$(printf '%s' "$all" | grep -c .)"]
+            shipped :362  =[  # THE REPAIR. The status is READ.]
+  :368  MOVED  audit=[    "$(printf '%s' "$all" | grep -c .)" "$arch" "$(printf '%s' "$live" |]
+            shipped :368  =[  # and at rc=1 it was thrown away unprinted. It is now neither counted ]
+  :369  MOVED  audit=[  printf '%s' "$live" | grep . | cut -c1-200 | sed 's/^/      /']
+            shipped :369  =[  all=$(git grep "$@" -- .softhouse 2>"$SWEEP_ERRF"); rc=$?]
+  :374  MOVED  audit=[echo "population: $(git ls-files .softhouse | wc -l | tr -d ' ') tracked]
+            shipped :374  =[    printf '    *** may be read from this selector. Engine output follow]
+  :375  MOVED  audit=[echo "untracked under .softhouse/: $(git ls-files --others --exclude-sta]
+            shipped :375  =[    printf '%s' "$err" | grep . | cut -c1-200 | sed 's/^/      ! /']
+  :376  MOVED  audit=[if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]; then]
+            shipped :376  =[    return]
+
+  offset between the two heads, measured:
+    audit  :309 = printf '%s' "$a" | LC_ALL=C grep -q '\\[bBdDsSwW<>]'; es
+    shipped:343 = local a esc_rc
+    shipped:344 = for a in "$@"; do
+    shipped:345 = printf '%s' "$a" | LC_ALL=C grep -q '\\[bBdDsSwW<>]'; es
+    shipped:346 = if [ "$esc_rc" -ge 2 ]; then

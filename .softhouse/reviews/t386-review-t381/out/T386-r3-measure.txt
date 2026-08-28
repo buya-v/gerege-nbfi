@@ -1,0 +1,45 @@
+repo    : /private/tmp/t386-t381
+head    : 9eedfe4d
+engine  : git version 2.50.1 (Apple Git-155)
+corpus  : 8291 tracked files under .softhouse/
+
+=== ARM A: the three counts ========================================================
+  -E '\bmain\b'     = 114
+  -E 'bmainb'       = 114
+  -F 'bmainb'       = 114   <- the term T379 and T238 never measured
+
+=== ARM B: are the three OUTPUTS byte-identical, or only their counts? =============
+  esc  114 lines  sha256 c49a10cc1061a4a299661b9dfe6fec52c438dfef0b8b40a2d80419377fd82c4a
+  lit  114 lines  sha256 c49a10cc1061a4a299661b9dfe6fec52c438dfef0b8b40a2d80419377fd82c4a
+  fix  114 lines  sha256 c49a10cc1061a4a299661b9dfe6fec52c438dfef0b8b40a2d80419377fd82c4a
+  >>> BYTE-IDENTICAL. `-E "\bmain\b"` IS `-F "bmainb"` on this engine -- not a similar
+  >>> count, the same bytes. The escape compiles to the literal letters.
+  sample of what those lines actually are:
+    .softhouse/capture/t234-sweep-instrument-audit/HANDOFF.md:266:The first four alternatives are literal and work. The fift
+    .softhouse/capture/t234-sweep-instrument-audit/HANDOFF.md:272:git grep -E -c 'bmainb'  repo-wide = 0        git grep -E 
+    .softhouse/capture/t234-sweep-instrument-audit/HANDOFF.md:410:| **L-2** | `.softhouse/reviews/T138-evidence/r11-hygiene.
+    .softhouse/capture/t234-sweep-instrument-audit/instruments/21-r11-recall-loss.sh:6:# git's ERE to the literal string "bm
+  >>> every one is a DOCUMENT ABOUT THIS HAZARD. The corpus is matching its own notes.
+
+=== ARM C: THE CONTROL. Does this engine interpret ERE metacharacters at all? ======
+  -E 'ma(in|ni)'    = 33751
+  -F 'ma(in|ni)'    = 0
+  >>> they DISAGREE by four orders of magnitude, so ERE alternation IS interpreted. The
+  >>> engine is NOT literal-minded and is NOT broken. POSIX ERE simply has no \b.
+
+=== ARM D: the true answer, from an engine that HAS word boundaries ================
+  -P '\bmain\b'     = 22524
+  >>> that, not 108/114, is the number `\bmain\b` was ever asking for.
+
+=== ARM F: T234 ALREADY RAN THIS CONTROL, AND ITS NUMBERS WERE DIFFERENT ==========
+  git grep -E -c 'bmainb'    repo-wide = 114     (T234 measured 0)
+  git grep -E -c '\bmain\b'  repo-wide = 114     (T234 measured 0)
+  git grep -P -c '\bmain\b'  repo-wide = 22737 (T234 measured 17646)
+  >>> the -E figures went 0 -> today PURELY BECAUSE THE PROGRAM WROTE THE FINDING DOWN.
+  >>> That is the self-referential artefact, demonstrated across time rather than asserted.
+
+=== ARM E: SWEEP OBSERVE would report "hazard LIVE" from a VACUOUS measurement =====
+  -E '\bzzqabsentterm\b'      = 0
+  -E 'bzzqabsenttermb'        = 0
+  >>> both 0, they AGREE, and the arm prints "T238 hazard LIVE" having measured nothing.
+  >>> The -E/-P pair in ARM D cannot agree vacuously; it is the better discriminator.

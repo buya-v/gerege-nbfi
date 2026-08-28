@@ -1,0 +1,45 @@
+==============================================================================
+TREE : /private/tmp/t386-base
+HEAD : 05ce01de  softhouse: fire 20260828-140005 iter3 dispatch record -- PUSHED BEFORE
+CLEAN: 0 modified/untracked path(s)
+T316-DEADPATH-CENSUS: corpus=1348 deadFiles=76 deadOccurrences=109 resolving=1258 indeterminate=93 prose=342
+conformance:   frontier 109 row(s), pinned at 109
+conformance:   frontier == pinned (all 109 row(s), by path AND by literal)
+T316-DEADPATH-FRONTIER: GREEN rows=109 pinned=109 added=0 removed=0
+
+==============================================================================
+TREE : /private/tmp/t386-t381
+HEAD : 9eedfe4d  softhouse: T381 -- record the confirming bar run at 3869f41f
+CLEAN: 0 modified/untracked path(s)
+T316-DEADPATH-CENSUS: corpus=1351 deadFiles=76 deadOccurrences=109 resolving=1261 indeterminate=93 prose=341
+conformance:   frontier 109 row(s), pinned at 109
+conformance:   frontier == pinned (all 109 row(s), by path AND by literal)
+T316-DEADPATH-FRONTIER: GREEN rows=109 pinned=109 added=0 removed=0
+
+==============================================================================
+TREE : /private/tmp/t386-main
+HEAD : 094bffca  softhouse: T383+T385 recorded merged; T400 and T401 file what the revi
+CLEAN: 0 modified/untracked path(s)
+T316-DEADPATH-CENSUS: corpus=1373 deadFiles=75 deadOccurrences=108 resolving=1287 indeterminate=95 prose=357
+conformance:   frontier 108 row(s), pinned at 108
+conformance:   frontier == pinned (all 108 row(s), by path AND by literal)
+T316-DEADPATH-FRONTIER: GREEN rows=108 pinned=108 added=0 removed=0
+
+==============================================================================
+TREE : /private/tmp/t386-mr
+HEAD : 67fe18f0  Merge branch 'softhouse/T381-t379-conditions' into HEAD
+CLEAN: 0 modified/untracked path(s)
+T316-DEADPATH-CENSUS: corpus=1376 deadFiles=75 deadOccurrences=108 resolving=1290 indeterminate=95 prose=356
+conformance:   frontier 108 row(s), pinned at 108
+conformance:   frontier == pinned (all 108 row(s), by path AND by literal)
+T316-DEADPATH-FRONTIER: GREEN rows=108 pinned=108 added=0 removed=0
+
+==============================================================================
+TREE : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a09b804e9672f487b
+HEAD : d1e550e2  T386: independent review of T381 -- APPROVED WITH CONDITIONS; a SEVENT
+CLEAN: 0 modified/untracked path(s)
+T316-DEADPATH-CENSUS: corpus=1380 deadFiles=75 deadOccurrences=108 resolving=1294 indeterminate=95 prose=357
+conformance:   frontier 108 row(s), pinned at 108
+conformance:   frontier == pinned (all 108 row(s), by path AND by literal)
+T316-DEADPATH-FRONTIER: GREEN rows=108 pinned=108 added=0 removed=0
+

@@ -1,0 +1,89 @@
+T386 -- HEALTHY-CORPUS CONTROL RUN of casualty-sweep.sh at softhouse/T381-t379-conditions (9eedfe4d), from the clean worktree /private/tmp/t386-t381
+  cmd  : bash .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh
+
+FILTERED, and the filter is stated so the omission is not a claim:
+  removed are ONLY the indented hit-listing lines (^' '{6}) -- the sweep quoting other
+  files' lines verbatim. Committing them would import those files' repo-path references
+  into T316's dead-path census; that is how T371's own bar went RED. Every calibration
+  line, every per-selector cardinal and the SWEEP-RESULT summary are untouched.
+  raw output: 1498 non-empty lines; regenerate with the command above.
+  raw sha256: 8411f7fe95e17501dd9db1344a2821bc94b25d4ad56a758f110bdd95b7c621a6
+==============================================================================
+CASUALTY SWEEP for the T352+T359 oracle-state movement
+repo: 9eedfe4d   date: 2026-08-28T13:10:57Z
+population: 8291 tracked files under .softhouse/
+untracked under .softhouse/: 0
+SWEEP CALIBRATE+F: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+SWEEP CALIBRATE-F: PASS -- known negative matched 0 times, and the search RAN (rc=1)
+SWEEP CALIBRATE+E: PASS -- -E interpreted it (2 hit(s)) and -F did not (0). They DISAGREE,
+SWEEP CALIBRATE-E: PASS -- known negative matched 0 times under -E, and the search RAN (rc=1)
+SWEEP OBSERVE: T238 hazard LIVE -- escaped=114 literal=114 AGREE, so -E compiles the
+
+=== S1  the literal row/maxid pin '60/64'
+    engine: git grep -n -F 60/64
+    hits total: 74   archived (snapshots, correctly stale): 59   LIVE: 15
+
+=== S2  the standing-baseline pin format 'gerege <table> = '
+    engine: git grep -n -E gerege (acc_gl_journal_entry|acc_gl_closure|distinct_transaction_id|m_portfolio_command_source|m_loan|m_office) = 
+    hits total: 15   archived (snapshots, correctly stale): 15   LIVE: 0
+
+=== S3  string-equality comparison of a standing counter
+    engine: git grep -n -F STANDING ORACLE MOVED
+    hits total: 22   archived (snapshots, correctly stale): 15   LIVE: 7
+
+=== S4  per-account leg counts spelled as words in the capability store
+    engine: git grep -n -E gl 16 (carries|->) (SIXTEEN|TWENTY)|is TWELVE|gl 17 is|gl 21 is
+    hits total: 234   archived (snapshots, correctly stale): 223   LIVE: 11
+
+=== S5  per-account leg counts spelled as digits
+    engine: git grep -n -E gl (16|17|18|21|22) (->|=) [0-9]+
+    hits total: 221   archived (snapshots, correctly stale): 214   LIVE: 7
+
+=== S6  'every row currency_code = MNT' and its relatives
+    engine: git grep -n -E every row currency_code|every journal entry (in the corpus )?is MNT|Every entry is MNT
+    hits total: 196   archived (snapshots, correctly stale): 190   LIVE: 6
+
+=== S7  the captured distinct_currency_codes projection
+    engine: git grep -n -F distinct_currency_codes
+    hits total: 19   archived (snapshots, correctly stale): 15   LIVE: 4
+
+=== S8  MULTI-CURRENCY untouched claims
+    engine: git grep -n -E MULTI-CURRENCY untouched|no cross-currency|multi.currency entry
+    hits total: 217   archived (snapshots, correctly stale): 210   LIVE: 7
+
+=== S9  does the conformance harness or a guard reach the tenant database at all?
+    engine: git grep -n -E psql|docker exec|fineract-db-1
+    hits total: 2144   archived (snapshots, correctly stale): 1672   LIVE: 472
+
+=== S10 count(*) over the ledger tables in an executable
+    engine: git grep -n -E count\(\*\).{0,40}acc_gl_journal_entry|acc_gl_journal_entry.{0,40}count\(\*\)
+    hits total: 190   archived (snapshots, correctly stale): 146   LIVE: 44
+
+=== S11 the ledger invariant guard's own pins
+    engine: git grep -n -E EXEMPTION_PIN|parity vectors|LEDGER_.*PIN
+    hits total: 3360   archived (snapshots, correctly stale): 2899   LIVE: 461
+
+=== S12 a command-source STATUS SPLIT written as a cardinal
+    engine: git grep -n -E [0-9]+ (PROCESSED|ERROR|REJECTED|INVALID|AWAITING_APPROVAL|UNDER_PROCESSING)
+    hits total: 329   archived (snapshots, correctly stale): 278   LIVE: 51
+
+=== S13 present-tense 'the <thing> is/are/now <digits>' about a live counter
+    engine: git grep -n -E (split|count|total|tally) (is|are|now) [*]*[0-9]
+    hits total: 94   archived (snapshots, correctly stale): 77   LIVE: 17
+
+=== S14 'N rows' / 'max id N' prose pins over any watched table
+    engine: git grep -n -E [0-9]+ rows|max id [0-9]+
+    hits total: 1831   archived (snapshots, correctly stale): 1586   LIVE: 245
+
+=== S15 a digit sitting next to a watched table name, either order
+    engine: git grep -n -E (acc_gl_journal_entry|acc_gl_closure|m_portfolio_command_source|m_office|m_loan)[^0-9]{0,30}[0-9]{2,}|[0-9]{2,}[^0-9]{0,30}(acc_gl_journal_entry|acc_gl_closure|m_portfolio_command_source)
+    hits total: 571   archived (snapshots, correctly stale): 500   LIVE: 71
+
+=== S16 status-enum prose, which is where a stale split tends to sit
+    engine: git grep -n -E status *= *5|status 5|CommandProcessingResultType
+    hits total: 72   archived (snapshots, correctly stale): 55   LIVE: 17
+
+END OF SWEEP. A selector not listed above was not searched, and this file is the
+record of that. Add a selector and re-run rather than asserting absence.
+SWEEP-RESULT: commit=9eedfe4d selectors=16 did_not_run=0 calibration=yes exit=0
+EXIT=0
