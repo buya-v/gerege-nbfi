@@ -1,8 +1,8 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260828-140005`, chain iteration 2 — **IN FLIGHT. FOUR LIVE WORKERS.**
+## FIRE `20260828-140005`, chain iteration 2 — **IN FLIGHT. SIX LIVE WORKERS.**
 
-**If you are reading this and no driver session is running, four workers were killed mid-flight.**
+**If you are reading this and no driver session is running, six workers were killed mid-flight.**
 Their branches below may hold partial work. Mark each `needs_retry`, do not read `in_progress` as
 "work is happening".
 
@@ -12,6 +12,8 @@ Their branches below may hold partial work. Mark each `needs_retry`, do not read
 | `T362` | `softhouse/T362-review-t357` | opus | `.softhouse/reviews/t362-review-t357/` |
 | `T365` | `softhouse/T365-t361-conditions` | opus | `.softhouse/bin/fire-program.sh`, `.softhouse/capture/t365-t361-conditions/` |
 | `T363` | `softhouse/T363-oracle-baseline` | opus | `.softhouse/capture/t363-oracle-baseline/`, `.softhouse/reference-oracle.md` |
+| `T349` | `softhouse/T349-pretooluse-eval` | opus | `.softhouse/capture/t349-pretooluse-eval/` |
+| `T351` | `softhouse/T351-progress-accounting` | sonnet | `.softhouse/program.json`, `.softhouse/bin/` (**excluding `fire-program.sh`, held by T365**), `.softhouse/capture/t351-progress-accounting/` |
 
 Chosen so no two grants overlap. `T363`'s grant was **narrowed by the driver** from `.softhouse/reviews/`
 (the whole review tree — it collided with both reviewers in this wave) to `.softhouse/reference-oracle.md`.

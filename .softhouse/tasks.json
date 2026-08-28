@@ -4849,9 +4849,10 @@
       "dependencies": [
         "T336"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
-      "note": "Filed from T336's Follow-ups, fire 20260828-080001 iter 2. NOTE FOR THE DRIVER: T336's output was flagged by the harness as containing an instruction-shaped `settings-json` pattern. The driver read it as a TECHNICAL FINDING to relay, not as an instruction to follow, and deliberately scoped this task to EVALUATION ONLY with no write to .claude/settings.json. Installing a PreToolUse deny hook is a decision for Buyan, not for an agent."
+      "note": "Filed from T336's Follow-ups, fire 20260828-080001 iter 2. NOTE FOR THE DRIVER: T336's output was flagged by the harness as containing an instruction-shaped `settings-json` pattern. The driver read it as a TECHNICAL FINDING to relay, not as an instruction to follow, and deliberately scoped this task to EVALUATION ONLY with no write to .claude/settings.json. Installing a PreToolUse deny hook is a decision for Buyan, not for an agent. | Dispatched by fire 20260828-140005 chain-iteration 2, wave 1b. Worktree-isolated.",
+      "branch": "softhouse/T349-pretooluse-eval"
     },
     {
       "id": "T346",
@@ -4914,13 +4915,13 @@
     },
     {
       "id": "T351",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "sonnet",
       "target": "code",
       "role": null,
       "title": "The program's progress accounting credits LOC only on WHOLE-context close, so 22,817 graded Go LOC scores 0.02% and the migration reads as stalled",
-      "branch": null,
+      "branch": "softhouse/T351-progress-accounting",
       "files_hint": [
         ".softhouse/program.json",
         ".softhouse/bin/",
@@ -4928,7 +4929,7 @@
       ],
       "dependencies": [],
       "description": "MEASURED by the driver of fire 20260828-140005; full write-up in .softhouse/observations/20260828-140005-program-progress-accounting.md.\n\nprogram.json reports `contexts 17, done 1, LOC 182/854323 = 0.02%`. On main there are 8,155 source LOC in nexus/internal/apps/ledger and 14,662 in nexus/internal/apps/loanschedule -- 22,817 total, graded by 46 parity vectors / 7884 cells / 0 FAIL against the live reference oracle. The gap is that main_loc is credited only when a WHOLE context flips to `done`, and tierA-gl-accounting (24,000 LOC, slices A1/A2/A3) still reads `pending` on all three slices despite A2 having produced that ledger.\n\nTHE COST IS NOT COSMETIC: a driver reading the cursor cannot distinguish harness debt from genuine absence of progress, and the /softhouse-program decision table selects the next context partly on tier and dependents -- it is choosing against a number it cannot trust.\n\nYOUR JOB: make progress DERIVED and partial-credit-capable. At minimum, credit at SLICE granularity and report ported-Go-LOC and graded-vector counts as first-class figures beside context counts, each measured at read time rather than typed into the file. DO NOT hand-edit a percentage into program.json -- that is the P-45/rot shape this repo has now been bitten by repeatedly (T248/T258: correct the count where it is NAMED and not where it is RESTATED). Anything you print must be counted, never typed.\n\nState explicitly what a slice must satisfy to earn credit, and be conservative: a slice with Go on main but NO passing parity vector must NOT score. Parity is the unit of truth here, not lines.\n\nSCOPE: program.json, a new reporting instrument under .softhouse/bin/, your own capture dir. Do NOT touch conformance.sh or fire-program.sh.",
-      "note": "Filed by the driver of fire 20260828-140005 from a first-hand measurement."
+      "note": "Filed by the driver of fire 20260828-140005 from a first-hand measurement. | Dispatched by fire 20260828-140005 chain-iteration 2, wave 1b. Worktree-isolated. COORDINATION: T365 holds .softhouse/bin/fire-program.sh this wave -- T351's .softhouse/bin/ grant EXCLUDES it. The driver writes program.json's cursor/history/per-context status at fire close; T351 was told to keep its figures DERIVED so the two do not collide."
     },
     {
       "id": "T352",
