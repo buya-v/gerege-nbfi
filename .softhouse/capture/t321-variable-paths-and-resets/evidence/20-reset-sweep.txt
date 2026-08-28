@@ -1,0 +1,57 @@
+SELECTOR, stated as a limit on the search:
+  corpus      : git ls-files '.softhouse/' filtered to .py .sh .zsh .bash  ->  1284 tracked files
+  population  : corpus files with >=1 RESTORE SITE, line comments stripped first
+  restore     : reset_hard, reset_mixed, checkout_wt, restore_wt, clean_x, clean_plain, stash_pop, backup_copy, rm_targeted
+  classes     : W worktree-edit  S staged-add  U untracked  I ignored  C commit  R ref
+  multiplicity: textual call graph, mult(<top>)=1, loop factor 4;
+                fresh-repo site mult>=2 => ISOLATED; restore site mult<2 => TEARDOWN
+  blind to    : untracked files; other workers' live worktrees; drives in a language
+                this selector does not read; a restore done by a helper it cannot name
+  bias        : a file-write counts as dirtying BOTH W and U (static text cannot tell
+                a tracked target from a new one) -- inflates DECORATIVE, never deflates
+  calibration : NEG-ISOLATED .softhouse/capture/t325-adopt-attestation/instruments/20-fire-writ-drive.sh
+                NEG-FIXED    .softhouse/capture/t316-dead-path-guards/drive-red-t316.py
+                POS-RECORDED T316's pre-fix reset, in-memory -> DECORATIVE uncleared=S
+                all three ENFORCED; failure aborts at exit 2 with NO probe line.
+
+DECORATIVE          uncleared=W        mut=U,W         cleared=U           rMult=4   fMult=1   .softhouse/capture/t273-residue/instruments/50-red-drive.sh
+DECORATIVE          uncleared=U        mut=U,W         cleared=W           rMult=7   fMult=0   .softhouse/reviews/T306/probe/mutation-arms.sh
+DECORATIVE          uncleared=U        mut=U,W         cleared=W           rMult=16  fMult=0   .softhouse/reviews/t291-review-t286/probe/reproduce-in-t286s-own-sweep.sh
+SUFFICIENT-TARGETED uncleared=-        mut=U,W         cleared=U,W         rMult=3   fMult=0   .softhouse/capture/pathb/t80/prove-f1.sh
+SUFFICIENT          uncleared=-        mut=U,W         cleared=U,W         rMult=4   fMult=0   .softhouse/capture/pathb/t80/prove-f1-noswap.py
+SUFFICIENT          uncleared=-        mut=S,U,W       cleared=S,U,W       rMult=15  fMult=1   .softhouse/capture/t284-schema2-callsites/instruments/30-red-drive.sh
+SUFFICIENT          uncleared=-        mut=S,U,W       cleared=C,S,U,W     rMult=7   fMult=1   .softhouse/capture/t299-namespace-and-default-safety/instruments/40-drive-namespace-guard.sh
+SUFFICIENT          uncleared=-        mut=-           cleared=U,W         rMult=9   fMult=1   .softhouse/capture/t304-evidence-destruction/instruments/70-drive-in-scratch-clone.sh
+SUFFICIENT          uncleared=-        mut=S,U,W       cleared=S,U,W       rMult=12  fMult=1   .softhouse/capture/t316-dead-path-guards/drive-red-t316.py
+SUFFICIENT          uncleared=-        mut=S,U,W       cleared=S,U,W       rMult=88  fMult=1   .softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh
+ISOLATED            uncleared=I,R,S,W  mut=C,I,R,S,U,W cleared=C,U         rMult=17  fMult=17  .softhouse/capture/t318-committed-clobber-blindness/instruments/30-red-green-drive.sh
+ISOLATED            uncleared=W        mut=U,W         cleared=C,U         rMult=999 fMult=999 .softhouse/capture/t318-committed-clobber-blindness/instruments/40-term-mutation-drive.sh
+ISOLATED            uncleared=R,U      mut=C,R,S,U,W   cleared=C,S,W       rMult=0   fMult=22  .softhouse/capture/t325-adopt-attestation/instruments/20-fire-writ-drive.sh
+ISOLATED            uncleared=C,R      mut=C,R,U,W     cleared=U,W         rMult=1   fMult=4   .softhouse/guards/repo-state-attest.sh
+ISOLATED            uncleared=-        mut=U,W         cleared=U,W         rMult=1   fMult=10  .softhouse/reviews/T158-drive-t156-refusals.py
+ISOLATED            uncleared=W        mut=U,W         cleared=U           rMult=36  fMult=2   .softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh
+TEARDOWN            uncleared=-        mut=-           cleared=W           rMult=1   fMult=1   .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py
+TEARDOWN            uncleared=-        mut=U,W         cleared=S,U,W       rMult=0   fMult=0   .softhouse/capture/pathb/t80/prove-f1-recovery.py
+TEARDOWN            uncleared=-        mut=U,W         cleared=U,W         rMult=1   fMult=1   .softhouse/capture/t290-review-t271/attack_acknowledgement_t290.py
+TEARDOWN            uncleared=-        mut=U,W         cleared=U,W         rMult=1   fMult=1   .softhouse/capture/t290-review-t271/probe_t286_rule_t290.py
+TEARDOWN            uncleared=-        mut=-           cleared=U,W         rMult=1   fMult=1   .softhouse/capture/t299-namespace-and-default-safety/instruments/20-drive-destination-safety.sh
+TEARDOWN            uncleared=R        mut=R,U,W       cleared=U,W         rMult=1   fMult=1   .softhouse/capture/t304-evidence-destruction/instruments/100-dead-cd-red-drive.sh
+TEARDOWN            uncleared=C,R,S    mut=C,R,S,U,W   cleared=U,W         rMult=1   fMult=1   .softhouse/capture/t309-sigterm-reconcile-bypass/probe-git-inode.sh
+TEARDOWN            uncleared=-        mut=U,W         cleared=U,W         rMult=1   fMult=1   .softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/verify-on-scratch-merge.sh
+TEARDOWN            uncleared=U        mut=U,W         cleared=W           rMult=1   fMult=0   .softhouse/reviews/T135-evidence/f6-runall-red.sh
+TEARDOWN            uncleared=C,S,W    mut=C,S,U,W     cleared=U           rMult=1   fMult=1   .softhouse/reviews/T189-probe/reachability.sh
+TEARDOWN            uncleared=U        mut=U,W         cleared=W           rMult=1   fMult=0   .softhouse/reviews/T298/t298b-marker-attack-matrix.sh
+TEARDOWN            uncleared=C,R,S    mut=C,R,S       cleared=W           rMult=1   fMult=1   .softhouse/reviews/T302/drive-phantom-rescue.sh
+TEARDOWN            uncleared=U        mut=U,W         cleared=W           rMult=1   fMult=1   .softhouse/reviews/T306/probe/measure-gate.sh
+TEARDOWN            uncleared=-        mut=U,W         cleared=U,W         rMult=1   fMult=1   .softhouse/reviews/T306/probe/mutant-survival.sh
+TEARDOWN            uncleared=-        mut=U,W         cleared=U,W         rMult=1   fMult=0   .softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh
+TEARDOWN            uncleared=-        mut=U,W         cleared=U,W         rMult=1   fMult=0   .softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh
+TEARDOWN            uncleared=U        mut=U,W         cleared=W           rMult=0   fMult=0   .softhouse/reviews/t179-guard-classifier/fixtures/green_contextmanager.py
+TEARDOWN            uncleared=U        mut=U,W         cleared=W           rMult=0   fMult=0   .softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py
+TEARDOWN            uncleared=U        mut=U,W         cleared=W           rMult=1   fMult=0   .softhouse/reviews/t179-guard-classifier/fixtures/green_real_trap.sh
+TEARDOWN            uncleared=U        mut=U,W         cleared=W           rMult=0   fMult=0   .softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py
+TEARDOWN            uncleared=-        mut=U,W         cleared=U,W         rMult=1   fMult=1   .softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh
+
+T321-RESET-SWEEP: corpus=1284 population=37 decorative=3 sufficientTargeted=1 sufficient=6 isolated=6 teardown=21
+NOTE: DECORATIVE is a CANDIDATE, not a finding. Reading nominates; the drive convicts
+      (P-95). See drive-reset-contamination-t321.py.

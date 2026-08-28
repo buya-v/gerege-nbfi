@@ -1,0 +1,1135 @@
+{
+  "selector": {
+    "suffixes": [
+      ".py",
+      ".sh",
+      ".zsh",
+      ".bash"
+    ],
+    "corpus_size": 1284,
+    "loop_factor": 4
+  },
+  "counts": {
+    "TEARDOWN": 21,
+    "SUFFICIENT": 6,
+    "SUFFICIENT-TARGETED": 1,
+    "DECORATIVE": 3,
+    "ISOLATED": 6
+  },
+  "rows": [
+    {
+      "path": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          148
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [],
+      "cleared_classes": [
+        "W"
+      ],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-noswap.py",
+      "verdict": "SUFFICIENT",
+      "restore_idioms": {
+        "checkout_wt": [
+          527
+        ],
+        "clean_x": [
+          164
+        ],
+        "reset_hard": [
+          163
+        ],
+        "rm_targeted": [
+          249,
+          523,
+          525,
+          526
+        ]
+      },
+      "restore_multiplicity": 4,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "I",
+        "S",
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1-recovery.py",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "clean_plain": [
+          182
+        ],
+        "reset_hard": [
+          181
+        ],
+        "rm_targeted": [
+          264
+        ]
+      },
+      "restore_multiplicity": 0,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "S",
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/pathb/t80/prove-f1.sh",
+      "verdict": "SUFFICIENT-TARGETED",
+      "restore_idioms": {
+        "checkout_wt": [
+          117,
+          157,
+          159
+        ],
+        "rm_targeted": [
+          125,
+          143,
+          144,
+          154,
+          184,
+          187,
+          213,
+          291
+        ]
+      },
+      "restore_multiplicity": 3,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/t273-residue/instruments/50-red-drive.sh",
+      "verdict": "DECORATIVE",
+      "restore_idioms": {
+        "checkout_wt": [
+          41,
+          101,
+          112,
+          124
+        ],
+        "rm_targeted": [
+          42,
+          69,
+          120
+        ]
+      },
+      "restore_multiplicity": 4,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": [
+        "W"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t284-schema2-callsites/instruments/30-red-drive.sh",
+      "verdict": "SUFFICIENT",
+      "restore_idioms": {
+        "clean_plain": [
+          114
+        ],
+        "reset_hard": [
+          113
+        ],
+        "rm_targeted": [
+          98,
+          159,
+          185,
+          192,
+          199,
+          251,
+          259,
+          267
+        ]
+      },
+      "restore_multiplicity": 15,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "S",
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/attack_acknowledgement_t290.py",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "backup_copy": [
+          72,
+          97,
+          109,
+          124,
+          128,
+          134,
+          172
+        ],
+        "rm_targeted": [
+          175
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/t290-review-t271/probe_t286_rule_t290.py",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "backup_copy": [
+          82,
+          147,
+          191
+        ],
+        "rm_targeted": [
+          194
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/t299-namespace-and-default-safety/instruments/20-drive-destination-safety.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          51
+        ],
+        "rm_targeted": [
+          41
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/t299-namespace-and-default-safety/instruments/40-drive-namespace-guard.sh",
+      "verdict": "SUFFICIENT",
+      "restore_idioms": {
+        "clean_plain": [
+          78
+        ],
+        "reset_hard": [
+          78
+        ],
+        "rm_targeted": [
+          36,
+          123
+        ]
+      },
+      "restore_multiplicity": 7,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "C",
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "C",
+        "S",
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/t304-evidence-destruction/instruments/100-dead-cd-red-drive.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          68
+        ],
+        "rm_targeted": [
+          22,
+          100
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "R",
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": [
+        "R"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t304-evidence-destruction/instruments/70-drive-in-scratch-clone.sh",
+      "verdict": "SUFFICIENT",
+      "restore_idioms": {
+        "checkout_wt": [
+          45
+        ],
+        "clean_plain": [
+          46
+        ],
+        "rm_targeted": [
+          23
+        ]
+      },
+      "restore_multiplicity": 9,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/t309-sigterm-reconcile-bypass/probe-git-inode.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          92,
+          94,
+          96,
+          97
+        ],
+        "rm_targeted": [
+          28
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "C",
+        "R",
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": [
+        "C",
+        "R",
+        "S"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t316-dead-path-guards/drive-red-t316.py",
+      "verdict": "SUFFICIENT",
+      "restore_idioms": {
+        "clean_plain": [
+          72
+        ],
+        "reset_hard": [
+          71
+        ],
+        "rm_targeted": [
+          142,
+          151,
+          192,
+          198,
+          261
+        ]
+      },
+      "restore_multiplicity": 12,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "S",
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/t318-committed-clobber-blindness/instruments/30-red-green-drive.sh",
+      "verdict": "ISOLATED",
+      "restore_idioms": {
+        "reset_hard": [
+          186,
+          188,
+          190
+        ],
+        "rm_targeted": [
+          61,
+          313
+        ]
+      },
+      "restore_multiplicity": 17,
+      "fresh_repo_multiplicity": 17,
+      "mutation_classes": [
+        "C",
+        "I",
+        "R",
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "C",
+        "U"
+      ],
+      "cleared_anywhere": [
+        "C",
+        "S",
+        "U",
+        "W"
+      ],
+      "uncleared_classes": [
+        "I",
+        "R",
+        "S",
+        "W"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t318-committed-clobber-blindness/instruments/40-term-mutation-drive.sh",
+      "verdict": "ISOLATED",
+      "restore_idioms": {
+        "reset_hard": [
+          166
+        ],
+        "rm_targeted": [
+          80
+        ]
+      },
+      "restore_multiplicity": 999,
+      "fresh_repo_multiplicity": 999,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "C",
+        "U"
+      ],
+      "cleared_anywhere": [
+        "C",
+        "S",
+        "U",
+        "W"
+      ],
+      "uncleared_classes": [
+        "W"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t323-wire-the-unwired-guards/drive-red-t323.sh",
+      "verdict": "SUFFICIENT",
+      "restore_idioms": {
+        "clean_plain": [
+          41
+        ],
+        "reset_hard": [
+          40
+        ],
+        "rm_targeted": [
+          71,
+          136
+        ]
+      },
+      "restore_multiplicity": 88,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "S",
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/capture/t325-adopt-attestation/instruments/20-fire-writ-drive.sh",
+      "verdict": "ISOLATED",
+      "restore_idioms": {
+        "reset_hard": [
+          238
+        ]
+      },
+      "restore_multiplicity": 0,
+      "fresh_repo_multiplicity": 22,
+      "mutation_classes": [
+        "C",
+        "R",
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "C",
+        "S",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "C",
+        "S",
+        "W"
+      ],
+      "uncleared_classes": [
+        "R",
+        "U"
+      ]
+    },
+    {
+      "path": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/verify-on-scratch-merge.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          44,
+          53,
+          72
+        ],
+        "rm_targeted": [
+          12
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/guards/repo-state-attest.sh",
+      "verdict": "ISOLATED",
+      "restore_idioms": {
+        "checkout_wt": [
+          311
+        ],
+        "rm_targeted": [
+          532
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 4,
+      "mutation_classes": [
+        "C",
+        "R",
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": [
+        "C",
+        "R"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/T135-evidence/f6-runall-red.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          27
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "W"
+      ],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": [
+        "U"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/T158-drive-t156-refusals.py",
+      "verdict": "ISOLATED",
+      "restore_idioms": {
+        "backup_copy": [
+          175
+        ],
+        "rm_targeted": [
+          147,
+          158,
+          163,
+          170,
+          176,
+          183,
+          189,
+          193
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 10,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/reviews/T189-probe/reachability.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          69
+        ],
+        "rm_targeted": [
+          21,
+          69
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "C",
+        "S",
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": [
+        "C",
+        "S",
+        "W"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/T298/t298b-marker-attack-matrix.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          18
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "W"
+      ],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": [
+        "U"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/T302/drive-phantom-rescue.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          46
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "C",
+        "R",
+        "S"
+      ],
+      "cleared_classes": [
+        "W"
+      ],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": [
+        "C",
+        "R",
+        "S"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/T306/probe/measure-gate.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          32,
+          84
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "W"
+      ],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": [
+        "U"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/T306/probe/mutant-survival.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          47,
+          127
+        ],
+        "rm_targeted": [
+          44
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/reviews/T306/probe/mutation-arms.sh",
+      "verdict": "DECORATIVE",
+      "restore_idioms": {
+        "checkout_wt": [
+          21,
+          35
+        ]
+      },
+      "restore_multiplicity": 7,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "W"
+      ],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": [
+        "U"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          62
+        ],
+        "rm_targeted": [
+          146
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          67
+        ],
+        "rm_targeted": [
+          74
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_contextmanager.py",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "backup_copy": [
+          16
+        ]
+      },
+      "restore_multiplicity": 0,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "W"
+      ],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": [
+        "U"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_indirect.py",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "backup_copy": [
+          18,
+          22
+        ]
+      },
+      "restore_multiplicity": 0,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "W"
+      ],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": [
+        "U"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_real_trap.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "backup_copy": [
+          7
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "W"
+      ],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": [
+        "U"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/t179-guard-classifier/fixtures/green_try_finally.py",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "backup_copy": [
+          21,
+          27
+        ]
+      },
+      "restore_multiplicity": 0,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "W"
+      ],
+      "cleared_anywhere": [
+        "W"
+      ],
+      "uncleared_classes": [
+        "U"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh",
+      "verdict": "TEARDOWN",
+      "restore_idioms": {
+        "checkout_wt": [
+          29,
+          34
+        ],
+        "rm_targeted": [
+          81,
+          88,
+          92,
+          95
+        ]
+      },
+      "restore_multiplicity": 1,
+      "fresh_repo_multiplicity": 1,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": []
+    },
+    {
+      "path": ".softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh",
+      "verdict": "ISOLATED",
+      "restore_idioms": {
+        "checkout_wt": [
+          34
+        ],
+        "rm_targeted": [
+          39,
+          45,
+          78
+        ]
+      },
+      "restore_multiplicity": 36,
+      "fresh_repo_multiplicity": 2,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "U"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": [
+        "W"
+      ]
+    },
+    {
+      "path": ".softhouse/reviews/t291-review-t286/probe/reproduce-in-t286s-own-sweep.sh",
+      "verdict": "DECORATIVE",
+      "restore_idioms": {
+        "checkout_wt": [
+          37,
+          40
+        ],
+        "rm_targeted": [
+          34
+        ]
+      },
+      "restore_multiplicity": 16,
+      "fresh_repo_multiplicity": 0,
+      "mutation_classes": [
+        "U",
+        "W"
+      ],
+      "cleared_classes": [
+        "W"
+      ],
+      "cleared_anywhere": [
+        "U",
+        "W"
+      ],
+      "uncleared_classes": [
+        "U"
+      ]
+    }
+  ],
+  "unreadable": []
+}
