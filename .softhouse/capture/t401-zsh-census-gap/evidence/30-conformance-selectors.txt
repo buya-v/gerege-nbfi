@@ -1,0 +1,30 @@
+T401 -- conformance.sh's OWN TWO .sh/.py-ONLY SELECTORS
+commit : 794b40eb
+
+== S3. HOST-STATE CENSUS (conformance.sh:2131) ==
+   both regexes VERIFIED byte-present in .softhouse/conformance.sh
+   population (repo-wide search instruments)   base 167   +zsh 169
+   .zsh files that ARE repo-wide search instruments:
+     .softhouse/capture/t324-worktree-prune-skipbit/instruments/10-skipbit-taxonomy-probe.zsh
+     .softhouse/capture/t324-worktree-prune-skipbit/instruments/30-live-worktree-census.zsh
+   NOTE: the figures below are the census over the WHOLE extension set, not the
+   population-restricted set conformance.sh uses; the population-restricted delta is
+   printed under it and is the one that matters.
+   raw NAME=/tmp assignment lines   base 167   +zsh 205
+   NEW HOSTSTATE ROWS the pin would have to absorb : 0
+
+== S4. GUARDS-DIRECTORY UNWIRED-CHECKER CENSUS (conformance.sh:3267-3269) ==
+   tracked *.sh under .softhouse/guards (any depth) : 5
+   tracked *.py under .softhouse/guards (any depth) : 0
+   tracked *.go under .softhouse/guards (any depth) : 1
+   tracked *.zsh under .softhouse/guards (any depth) : 0
+   => widening S4 to .zsh costs ZERO rows today, and is pure insurance.
+
+== WHERE EACH OF THE FOUR SELECTORS LIVES ==
+   S1 fail-open  .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py:210-211
+   S2 dead-path  .softhouse/capture/t316-dead-path-guards/census_dead_paths.py:110
+   S3 host-state .softhouse/conformance.sh:2131            <- IN conformance.sh
+   S4 guards-dir .softhouse/conformance.sh:3267-3269       <- IN conformance.sh
+   S1 and S2 are outside this task's grant AND outside conformance.sh. A conformance.sh
+   patch cannot fix them; it can only stop conformance.sh from PRINTING a claim about
+   coverage those two selectors do not have.

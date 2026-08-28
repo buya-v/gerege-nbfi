@@ -1,0 +1,37 @@
+T401 COST OF EXTENDING THE CENSUS SELECTORS TO .zsh
+commit  : 794b40eb
+patches : failopen  endswith((".sh",".py"))  ->  endswith((".sh",".py",".zsh"))
+          deadpath  ls-files .softhouse/{*.py,*.sh}  ->  + .softhouse/*.zsh
+
+== 1. FAIL-OPEN LINTER (T238) ==
+  exit code                    base 1   +zsh 1   (0=clean 1=violations 2=abort)
+  corpus (tracked files)       base 1401   +zsh 1522
+  repo-wide search instruments base 146   +zsh 148
+  FRONTIER ROWS                base 11   +zsh 11
+  NEW FRONTIER ROWS the pin would have to absorb:
+    (none)
+  ROWS LOST (must be empty -- widening may not drop a row):
+    (none)
+
+== 2. DEAD-PATH CENSUS (T316) ==
+  base : T316-DEADPATH-CENSUS: corpus=1401 deadFiles=75 deadOccurrences=108 resolving=1332 indeterminate=104 prose=363
+  +zsh : T316-DEADPATH-CENSUS: corpus=1522 deadFiles=80 deadOccurrences=115 resolving=1398 indeterminate=104 prose=371
+  NEW DEAD-PATH ROWS the pin would have to absorb (file -> literal):
+    +       -> .softhouse/LOCK.bak
+    +       -> .softhouse/LOCKDIR/f.md
+    +       -> .softhouse/LOCKED_STATE.md
+    +       -> .softhouse/handoff-draft.md
+    +       -> .softhouse/handoff-draft.md
+    +       -> .softhouse/vector.json
+    +       -> .softhouse/x
+    +   .softhouse/capture/t324-worktree-prune-skipbit/instruments/10-skipbit-taxonomy-probe.zsh
+    +   .softhouse/capture/t324-worktree-prune-skipbit/instruments/20-blindspot-guard-drive.zsh
+    +   .softhouse/capture/t353-t342-conditions/bin/probe-scratch.zsh
+    +   .softhouse/reviews/t202-probe/green-Tb.zsh
+    +   .softhouse/reviews/t202-probe/red-Tb.zsh
+    + T316-DEADPATH-CENSUS: corpus=1522 deadFiles=80 deadOccurrences=115 resolving=1398 indeterminate=104 prose=371
+    + THE 80 FILE(S) NAMING A DEAD CONCRETE PATH
+
+== 3. THE PIN FILE THE DEAD-PATH GUARD COMPARES AGAINST ==
+  /Users/buv/gerege-nbfi/.claude/worktrees/agent-aeeb05b8ed0c8cccc/.softhouse/guards/dead-path-frontier.pin
+  pin rows (non-comment, non-blank): 108

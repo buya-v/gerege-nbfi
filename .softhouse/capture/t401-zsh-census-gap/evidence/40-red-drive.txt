@@ -1,0 +1,38 @@
+T401 RED DRIVE -- PLANTED .zsh FAIL-OPEN vs HEALTHY CONTROL
+commit  : 794b40eb
+index   : SCRATCH copy of the real index; the real index is untouched
+BAIT-FO : .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+          -> copied verbatim to .t401-plant/bait-failopen.zsh (extension is the ONLY change)
+BAIT-DP : .softhouse/bin/fire-program.sh
+          -> copied verbatim to .t401-plant/bait-deadpath.zsh
+CONTROL : .softhouse/capture/charges/bin/selfcheck.sh
+          -> copied verbatim to .t401-plant/control.zsh; it IS a repo-wide search
+             instrument and is on NEITHER the frontier nor the dead-file list.
+
+ARM 1  SHIPPED failopen selector, bait staged
+       corpus 1401   frontier rows 11   rows naming a planted file: 0
+       => BLIND. A byte-identical TIER1 fail-open is invisible under a .zsh name.
+
+ARM 2  WIDENED failopen selector (+.zsh), same bait
+       corpus 1525   frontier rows 12
+       CAUGHT the planted fail-open:
+         FAILOPEN-FRONTIER TIER1 .softhouse/capture/t401-zsh-census-gap/.t401-plant/bait-failopen.zsh
+       CONTROL not flagged -- the widening discriminates.
+
+ARM 3  SHIPPED dead-path selector, bait staged
+       T316-DEADPATH-CENSUS: corpus=1401 deadFiles=75 deadOccurrences=108 resolving=1332 indeterminate=104 prose=363
+       rows naming a planted file: 0
+       => BLIND. A byte-identical dead-path namer is invisible under a .zsh name.
+
+ARM 4  WIDENED dead-path selector (+.zsh), same bait
+       T316-DEADPATH-CENSUS: corpus=1525 deadFiles=81 deadOccurrences=116 resolving=1403 indeterminate=104 prose=377
+       CAUGHT the planted dead path:
+           .softhouse/capture/t401-zsh-census-gap/.t401-plant/bait-deadpath.zsh
+               -> .softhouse/tasks.json.t288.tmp
+       CONTROL not counted dead -- the widening discriminates.
+
+TEARDOWN
+       GIT_INDEX_FILE unset; scratch index discarded; copies removed
+       residue under .t401-plant: 0  (must be 0)
+
+T401-RED-DRIVE: PASSED -- blind before, caught after, control spared in both directions.

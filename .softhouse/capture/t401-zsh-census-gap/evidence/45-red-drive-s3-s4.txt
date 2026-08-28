@@ -1,0 +1,34 @@
+T401 RED DRIVE -- S3 (host-state census) and S4 (guards-dir census), both spelled in
+the T404-held conformance.sh. Driven at SELECTOR level; the limit is stated above.
+commit : 794b40eb
+selector fragments VERIFIED byte-present in .softhouse/conformance.sh
+
+== S3  HOST-STATE CENSUS (conformance.sh:2131) ==
+   BAIT    .softhouse/capture/t116-familyb-promotion/src/run-harness-mutations-t116.sh  (already on the host-state pin: a repo-wide search
+           instrument that assigns a literal /tmp path) -> .zsh copy
+   CONTROL .softhouse/bin/fire-program.sh  (a repo-wide search instrument with NO such
+           assignment) -> .zsh copy
+   ARM A  SHIPPED pathspec '*.sh' '*.py'
+          planted files reaching the POPULATION : 0
+          planted host-state ROWS censused      : 0
+          => BLIND. A byte-identical host-state site is invisible under a .zsh name.
+   ARM B  WIDENED pathspec '*.sh' '*.py' '*.zsh'
+          CAUGHT the planted host-state site:
+            .softhouse/capture/t401-zsh-census-gap/.t401-plant34/bait-hoststate.zsh:31:SCRATCH=/tmp/t116-harness
+          CONTROL is in the widened POPULATION but produces NO row -- the widening
+          discriminates, and it discriminates on the assignment, not on the extension.
+
+== S4  GUARDS-DIR UNWIRED-CHECKER CENSUS (conformance.sh:3267-3269) ==
+   BAIT .softhouse/guards/check-capture-namespace.sh -> .zsh copy inside the guards directory, invoked by nothing,
+        declared nowhere, carrying no REACHED-BY row.
+   ARM A  SHIPPED pathspec (sh|py|go)   planted checkers in population: 0
+   ARM B  WIDENED pathspec (+zsh)       planted checkers in population: 1
+          => BLIND. An unwired zsh checker can land in the guards directory today.
+          CAUGHT. Under the widened pathspec the unwired zsh checker is a member,
+          and members must be INVOKED, DECLARED or REACHED-BY.
+
+TEARDOWN
+       GIT_INDEX_FILE unset; scratch index discarded; copies removed
+       residue: 0  (must be 0)
+
+T401-RED-DRIVE-S3-S4: PASSED -- blind before, reached after, control spared.
