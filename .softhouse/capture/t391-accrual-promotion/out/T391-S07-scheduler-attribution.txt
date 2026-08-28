@@ -1,0 +1,41 @@
+=== 1. WHO wrote each cohort of journal entries ===
+          cohort           | created_by | username | legs |          first_write          |          last_write           
+---------------------------+------------+----------+------+-------------------------------+-------------------------------
+ id <= 75  (predates T388) |          1 | mifos    |   71 | 2026-08-21 06:03:41.494198+00 | 2026-08-28 07:25:25.735232+00
+ id 76-95  (T388, by API)  |          1 | mifos    |   20 | 2026-08-28 11:40:25.686753+00 | 2026-08-28 11:40:53.318539+00
+ id 96-113 (the scheduler) |          2 | system   |   18 | 2026-08-28 16:01:00.100207+00 | 2026-08-28 16:01:00.117772+00
+(3 rows)
+
+=== 2. is there ANY command-source row for the scheduler legs? ===
+ command_source_rows_above_379 
+-------------------------------
+                             0
+(1 row)
+
+=== 3. loan 8: every schedule period and whether it has accrued ===
+=== 4. the six accrual loan transactions on loan 8, with author ===
+psql:<stdin>:31: ERROR:  column r.interest_accrued_derived does not exist
+LINE 3:        r.interest_accrued_derived, r.fee_accrued_derived, r....
+               ^
+ id | transaction_type_enum | transaction_date |     amount     | created_by | username |        created_on_utc         | is_reversed 
+----+-----------------------+------------------+----------------+------------+----------+-------------------------------+-------------
+ 28 |                     1 | 2026-01-15       | 1200000.000000 |          1 | mifos    | 2026-08-28 11:40:25.674869+00 | f
+ 29 |                    10 | 2026-02-15       |   27700.000000 |          1 | mifos    | 2026-08-28 11:40:53.289796+00 | f
+ 30 |                    10 | 2026-03-15       |   23895.380000 |          1 | mifos    | 2026-08-28 11:40:53.294581+00 | f
+ 31 |                    10 | 2026-04-15       |   20014.670000 |          1 | mifos    | 2026-08-28 11:40:53.297456+00 | f
+ 32 |                    10 | 2026-05-15       |   16056.340000 |          2 | system   | 2026-08-28 16:01:00.068246+00 | f
+ 33 |                    10 | 2026-06-15       |   12018.850000 |          2 | system   | 2026-08-28 16:01:00.092597+00 | f
+ 34 |                    10 | 2026-07-15       |    7900.610000 |          2 | system   | 2026-08-28 16:01:00.095647+00 | f
+(7 rows)
+
+=== 5. how many jobs are ACTIVE, and how many tables could one touch unseen ===
+ active_jobs | total_jobs 
+-------------+------------
+          31 |         41
+(1 row)
+
+ tables_in_this_database 
+-------------------------
+                     281
+(1 row)
+

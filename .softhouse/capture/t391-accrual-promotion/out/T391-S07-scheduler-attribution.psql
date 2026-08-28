@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/q7-t391-scheduler-attribution.sql
+query-bytes-artefact: T391-S07-scheduler-attribution.sql
+query-sha256: a34f1bd8f0e5569faa1eaecc7f28e8d4df06c7f622988c1fea4c20f35534cc1e
+query-bytes: 2294
+psql-exit-status: 0
+captured-at-utc: 2026-08-28T17:53:19Z

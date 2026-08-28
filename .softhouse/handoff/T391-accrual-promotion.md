@@ -36,6 +36,67 @@ figures in the brief were correct. Baseline transcript: the first run recorded i
 
 ---
 
+## 1a. THE DRIVER'S MID-FLIGHT WARNING — ANSWERED, AND EVERY CLAIM IN IT RE-MEASURED
+
+The driver warned, from T390's measurement, that the scheduler moved loan 8 overnight and
+that a capture taken before it is a snapshot of a state the oracle has left. **T391 found
+that independently before the warning arrived (§ 2.1), and every one of its observations is
+POST-SCHEDULER.** Answering each point:
+
+**(1) WHICH SIDE OF THE SCHEDULER RUN.** **ALL OF THEM ARE AFTER IT, AND ALL OF THEM ARE
+LIVE.** The scheduler ran `2026-08-28 16:01:00`. Every T391 observation was taken
+**2026-08-29**, against the live database (`capsql-readonly.sh`, eight `SELECT`-only queries)
+and the live contract boundary (`capget.sh`, eight `GET`s). **T391 read no cached capture as
+its evidence.** It read T388's committed bodies only to *compare* them with today's — that is
+`bin/20-compare-to-t388.py`, and its verdict is byte-identity, `rc=0`.
+
+**(2) 3 PERIODS OR 6 — AND WHY IT DOES NOT REACH A GRADED CELL.** **Loan 8 is 6/6 accrued**
+[`out/T391-S08-loan8-periods.txt` §3: installments 1–6 → accrual transactions 29, 30, 31, 32,
+33, 34; the first three `created_by 1 mifos`, the last three `created_by 2 system`]. **No cell
+in any T391 vector is a function of the period population.** Each vector grades ONE journal
+TRANSACTION selected by an explicit `transaction_id` (`L29`, `L30`, `L32`) and its six legs;
+there is no aggregate, no per-account total, no count and no balance anywhere in the schema
+(`PostedEntry` has no balance field at all — G-12). A seventh accrual would add a
+seventh transaction and change **nothing** in `L29`/`L30`/`L32`. **This is precisely the
+property that grading the SLOT rather than the ACCOUNT buys**: an account-level assertion WOULD
+have moved when the scheduler ran, which is the T242 failure mode the driver is right to fear.
+`LDG-ACC-03` is in fact *period 4*, the FIRST scheduler-written accrual, and its graded
+interest `12356.340000` is character-identical to `m_loan_repayment_schedule` installment 4's
+`interest_amount` [§2].
+
+**(3) THE FOURTH EXCEPTION CLASS — CONFIRMED, WITH TWO OF THE DRIVER'S FIGURES CORRECTED**
+[`out/T391-S07-scheduler-attribution.txt`]:
+
+| the driver's claim | measured by T391 |
+|---|---|
+| app user **2 `system`** on the scheduler legs, `1 mifos` on T388's | **CONFIRMED**: id ≤ 75 → `1 mifos` (71 legs); 76–95 → `1 mifos` (20); **96–113 → `2 system` (18)** |
+| **no command-source row** for any of the eighteen | **CONFIRMED**: rows above 379 = **0** |
+| job 11, `job_run_history` 12721, `.049 → .12`, bracketing every leg | **CONFIRMED** independently in § 2.1 before the warning |
+| it finished T388's series; loan 8 now 6/6 | **CONFIRMED** |
+| *"nineteen jobs are `is_active = t`"* | **31 of 41 are active**, not 19 |
+| *"the other 279 tables"* | **281 base tables** in `public`, so 280 unwatched |
+
+The correction makes the point **worse, not better**: thirty-one active jobs, not nineteen.
+
+**(4) WHAT WOULD FALSIFY THESE VECTORS, SAID PLAINLY.** Each vector's `rerun_invariant` names
+**two** conditions and separates them:
+
+* *the entry half* — the six legs of `L29`/`L30`/`L32` must still read back with those amounts
+  on those accounts in that order. **A posted journal entry cannot be deleted and an accrual is
+  permanent**, so this half is re-checkable forever with a `GET` and **cannot be moved by any
+  future scheduler run**: a further accrual writes a NEW transaction id, it does not edit
+  `L29`.
+* *the resolution half* — product 63's `acc_product_mapping` must still map 7→41, 8→42, 9→43,
+  3→37, 4→38, 5→39. **This one CAN move**, by a product edit (no scheduled job edits a product
+  mapping), and if it does the answer is **RE-CAPTURE, NOT EXEMPTION** (P-8). The vectors say so
+  in their own text, not only here.
+
+**One thing that CAN still move and is stated as an open risk:** `last_modified_on_utc` on the
+eighteen scheduler rows, which the running-balance job will touch on its next run — see § 10.5,
+where that is the whole finding.
+
+---
+
 ## 2. WHAT I MEASURED FROM THE ORACLE — INCLUDING SOMETHING T388 SAID IT COULD NOT
 
 ### 2.1 THE SCHEDULED JOB FIRED. T388's capture is now a strict subset of the tenant.
