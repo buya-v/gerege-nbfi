@@ -128,4 +128,7 @@ OF THOSE, WHICH BUILD A CORPUS FROM FILE EXTENSIONS?
 ==================================================================
 REACHES .zsh?  (a selector naming zsh anywhere in the reachable set)
 ==================================================================
-.softhouse/bin/fire-program.sh:49:#   * `<0->` is zsh's non-negative-integer glob. It refuses `abc`, `-100000`, `1e3`, `0x10`,
+  reachable files searched : 73
+  selector lines naming zsh: 1
+    .softhouse/bin/fire-program.sh:49:#   * `<0->` is zsh's non-negative-integer glob. It refuses `abc`, `-100000`, `1e3`, `0x10`,
+  => at least one reachable selector names .zsh

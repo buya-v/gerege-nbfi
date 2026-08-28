@@ -47,6 +47,18 @@ echo
 echo "=================================================================="
 echo "REACHES .zsh?  (a selector naming zsh anywhere in the reachable set)"
 echo "=================================================================="
+# The negative here is the WHOLE POINT of this section, so it may not be printed on
+# the strength of a grep exit status -- that is the C2 fail-open this very repo lints
+# for, and the T238 linter caught this line in its first draft. Materialise the result,
+# assert the corpus was non-empty, and report the COUNT.
+: > "$W/zsh.hits"
 while read -r f; do
-  $GREP -nE "zsh" "$f" 2>/dev/null | sed "s|^|$f:|" || true
-done < "$W/reach" | $GREP -E "endswith|ls-files|git grep|--include|glob" || echo "  NONE -- no reachable selector names .zsh"
+  $GREP -nE "zsh" "$f" 2>/dev/null | sed "s|^|$f:|" >> "$W/zsh.raw" || true
+done < "$W/reach"
+[ -s "$W/reach" ] || { echo "REFUSE: the reachable set is EMPTY -- that is a selector failure, not a clean result."; exit 2; }
+$GREP -E "endswith|ls-files|git grep|--include|glob" "$W/zsh.raw" > "$W/zsh.hits" 2>/dev/null || true
+NZ="$($GREP -c . "$W/zsh.hits" 2>/dev/null || echo 0)"
+echo "  reachable files searched : $($GREP -c . "$W/reach")"
+echo "  selector lines naming zsh: $NZ"
+[ "$NZ" -gt 0 ] && sed 's/^/    /' "$W/zsh.hits"
+echo "  => $( [ "$NZ" -eq 0 ] && echo 'NO reachable selector names .zsh' || echo 'at least one reachable selector names .zsh' )"
