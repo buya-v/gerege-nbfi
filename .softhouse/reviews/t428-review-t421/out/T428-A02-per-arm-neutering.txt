@@ -1,0 +1,74 @@
+T428 PER-ARM NEUTERING DRIVE -- 2026-08-28T19:08:40Z
+tree: /tmp/t428-t421tree
+admit.go sha256: a02a9d41203da818cba448ca8cb45ba1cf11b15ae40d0ed732a21d2c0e7ca2fc
+
+ARM 1  needle: carries BOTH gl_account_id
+    go test exit 1   sub-tests FAIL=1 PASS=11
+    failing arm(s): /1._a_leg_carrying_BOTH_gl_account_id_and_slot_code_REFUSES 
+    wanted only:    /1._a_leg_carrying_BOTH
+    VERDICT: EXACTLY-ITS-OWN-ARM
+
+ARM 2  needle: carries NEITHER a gl_account_id
+    go test exit 1   sub-tests FAIL=1 PASS=11
+    failing arm(s): /2._a_leg_carrying_NEITHER_gl_account_id_nor_slot_code_REFUSES 
+    wanted only:    /2._a_leg_carrying_NEITHER
+    VERDICT: EXACTLY-ITS-OWN-ARM
+
+ARM 3  needle: A placeholder code is a positive
+    go test exit 1   sub-tests FAIL=1 PASS=11
+    failing arm(s): /3._a_NEGATIVE_per-leg_slot_code_REFUSES 
+    wanted only:    /3._a_NEGATIVE_per-leg_slot_code
+    VERDICT: EXACTLY-ITS-OWN-ARM
+
+ARM 4  needle: request.product_mappings is EMPTY
+    go test exit 1   sub-tests FAIL=1 PASS=11
+    failing arm(s): /4._per-leg_slot_codes_with_an_EMPTY_mapping_table_REFUSES 
+    wanted only:    /4._per-leg_slot_codes_with_an_EMPTY
+    VERDICT: EXACTLY-ITS-OWN-ARM
+
+ARM 5  needle: AND request.legs carry per-leg slot codes
+    go test exit 1   sub-tests FAIL=1 PASS=11
+    failing arm(s): /5._an_ENTRY-LEVEL_slot_code_alongside_per-leg_codes_REFUSES 
+    wanted only:    /5._an_ENTRY-LEVEL_slot_code
+    VERDICT: EXACTLY-ITS-OWN-ARM
+
+ARM 6  needle: request.product_id is 0
+    go test exit 1   sub-tests FAIL=1 PASS=11
+    failing arm(s): /6._per-leg_slot_codes_with_product_id_0_REFUSES 
+    wanted only:    /6._per-leg_slot_codes_with_product_id_0
+    VERDICT: EXACTLY-ITS-OWN-ARM
+
+ARM 7  needle: NO leg resolves through any of them
+    go test exit 1   sub-tests FAIL=1 PASS=11
+    failing arm(s): /7._a_mapping_table_NO_leg_resolves_through_REFUSES 
+    wanted only:    /7._a_mapping_table_NO_leg_resolves
+    VERDICT: EXACTLY-ITS-OWN-ARM
+
+ARM 8  needle: a placeholder code is positive
+    go test exit 1   sub-tests FAIL=1 PASS=11
+    failing arm(s): /8._a_mapping_row_with_slot_code_0_REFUSES 
+    wanted only:    /8._a_mapping_row_with_slot_code_0
+    VERDICT: EXACTLY-ITS-OWN-ARM
+
+ARM 9  needle: twice. The oracle
+    go test exit 1   sub-tests FAIL=1 PASS=11
+    failing arm(s): /9._a_DUPLICATE_slot_code_in_the_mapping_table_REFUSES 
+    wanted only:    /9._a_DUPLICATE_slot_code
+    VERDICT: EXACTLY-ITS-OWN-ARM
+
+ARM 10  needle: which is NOT in
+    go test exit 1   sub-tests FAIL=1 PASS=11
+    failing arm(s): /10._a_mapping_row_OFF_THE_CHART_REFUSES 
+    wanted only:    /10._a_mapping_row_OFF_THE_CHART
+    VERDICT: EXACTLY-ITS-OWN-ARM
+
+ARM 11  needle: ].gl_account_id is %d
+    go test exit 1   sub-tests FAIL=1 PASS=11
+    failing arm(s): /11._a_mapping_row_with_a_NON-POSITIVE_gl_account_id_REFUSES 
+    wanted only:    /11._a_mapping_row_with_a_NON-POSITIVE
+    VERDICT: EXACTLY-ITS-OWN-ARM
+
+--- SUMMARY ---
+arms that died on EXACTLY their own branch: 11
+arms with an UNEXPECTED outcome:            0
+admit.go final sha256: a02a9d41203da818cba448ca8cb45ba1cf11b15ae40d0ed732a21d2c0e7ca2fc  (original a02a9d41203da818cba448ca8cb45ba1cf11b15ae40d0ed732a21d2c0e7ca2fc)

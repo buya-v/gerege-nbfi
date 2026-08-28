@@ -1,0 +1,212 @@
+T428 FLOAT SWEEP -- 2026-08-28T19:10:11Z
+range: main...softhouse/T421-t406-conditions
+added lines in the diff: 6078
+
+### T421's own regex   HITS=1
+    pattern: float64|float32|big\.Float|ParseFloat|FormatFloat|%f|Double|math\.Round
+    5641:`float64|float32|big.Float|ParseFloat|FormatFloat|%f|Double|math.Round`: **no hits.** Every
+
+### WIDER: float verbs   HITS=0
+    pattern: %[0-9.+#-]*[eEgG][^a-zA-Z]|%\.[0-9]+f
+
+### WIDER: float constructors   HITS=2
+    pattern: \bfloat\(|\bAtof\b|json\.Number|strconv\.Parse|decimal\.|new\(big\.Float\)|complex(64|128)?\b
+    151:the assertion below -- this script does not call float().
+    4408:Measured 2026-08-28T18:36Z, python3, repr() of float(token):
+
+### WIDER: any 'float' token   HITS=101
+    pattern: [Ff][Ll][Oo][Aa][Tt]
+    149:out of the digest-pinned .http records; the float renderings are string literals
+    151:the assertion below -- this script does not call float().
+    164:        "float_render": None,          # ACC-01's own number; the sentence is already true
+    169:        "float_render": "20195.38",
+    174:        "float_render": "12356.34",
+    204:BAD_FLOAT = ("a JSON reader that decodes them through a float prints 24000.0 and is not what "
+    246:    if spec["float_render"] is not None:
+    247:        good_float = ("a JSON reader that decodes them through a float prints %s and is not "
+    248:                      "what was read" % spec["float_render"])
+    249:        text = sub(text, BAD_FLOAT, good_float, 1, "F-T406-4 wrong float illustration", vpath)
+    251:        assert text.count(BAD_FLOAT) == 1, "ACC-01's own illustration went missing"
+    309:COUNTS them rather than asserting them, decoding with parse_float=str so no money
+    310:value becomes a float in the act of explaining a census about money values.
+    322:    doc = json.load(open(b), parse_float=str, parse_int=str)
+    327:    # fraction and compare, never by rendering a float.
+    331:        assert isinstance(raw, str), "amount decoded as a number -- parse_float=str failed"
+    410:    # re-parse to prove the file is still valid JSON, without floating anything
+    411:    doc = json.load(open(path), parse_float=str, parse_int=str)
+    427:Decoded with parse_float=str / parse_int=str: this file must not turn a value into
+    428:a float in the act of checking the store.
+    457:        doc = json.load(fh, parse_float=str, parse_int=str)
+    653:conformance: no-float guard — inspected 72 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/.softhouse/vectors
+    654:conformance: no-float guard — inspected 6 Go packages / 65 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/nexus (recursive, whole module)
+    656:conformance: wire-float round-trip guard — selftest OK, 13 cases (10 drive it RED on a planted
+    658:conformance: CENSUS wire-float round-trip — inspected 574 documents / 10951 numeric tokens: 548 request bodies (*.json under a req/ dir, plus *.req) across 14 capture rigs / 62 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/.softhouse/capture, and 26 capture records cited by the vector store (recursive, whole capture tree)
+    659:conformance: CENSUS float-shaped tokens PRESENT 372 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+    660:conformance: CENSUS recorded-request blocks — 26 capture records DERIVED from provenance.capture_ref across 72 *.json in /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/.softhouse/vectors; 8 of those records carry a recorded-request block and 18 carry none; 96 blocks (key `inputs` or `request`, any depth, located by parser walk) / 783 numeric tokens GRADED, float-shaped PRESENT 0, ALTERED 0
+    827:conformance:     COST 1s / ceiling 60s   guard_no_float_in_vectors
+    828:conformance:     COST 1s / ceiling 60s   guard_no_float_in_harness
+    830:conformance:     COST 2s / ceiling 60s   guard_no_float_in_capture_requests
+    1350:    no-float census         6 Go packages / 65 Go files / 141739 tokens / 278 import specs inspected under nexus (recursive)
+    1351:                            0 forbidden identifiers, 0 floating-point or imaginary LITERALS, 0 forbidden imports, 0 unscannable files
+    1398:conformance: no-float guard — inspected 72 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/.softhouse/vectors
+    1399:conformance: no-float guard — inspected 6 Go packages / 65 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/nexus (recursive, whole module)
+    1401:conformance: wire-float round-trip guard — selftest OK, 13 cases (10 drive it RED on a planted
+    1403:conformance: CENSUS wire-float round-trip — inspected 574 documents / 10951 numeric tokens: 548 request bodies (*.json under a req/ dir, plus *.req) across 14 capture rigs / 62 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/.softhouse/capture, and 26 capture records cited by the vector store (recursive, whole capture tree)
+    1404:conformance: CENSUS float-shaped tokens PRESENT 372 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+    1405:conformance: CENSUS recorded-request blocks — 26 capture records DERIVED from provenance.capture_ref across 72 *.json in /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/.softhouse/vectors; 8 of those records carry a recorded-request block and 18 carry none; 96 blocks (key `inputs` or `request`, any depth, located by parser walk) / 783 numeric tokens GRADED, float-shaped PRESENT 0, ALTERED 0
+    1572:conformance:     COST 2s / ceiling 60s   guard_no_float_in_vectors
+    1573:conformance:     COST 1s / ceiling 60s   guard_no_float_in_harness
+    1575:conformance:     COST 1s / ceiling 60s   guard_no_float_in_capture_requests
+    2095:    no-float census         6 Go packages / 65 Go files / 141911 tokens / 278 import specs inspected under nexus (recursive)
+    2096:                            0 forbidden identifiers, 0 floating-point or imaginary LITERALS, 0 forbidden imports, 0 unscannable files
+    2136:conformance: no-float guard — inspected 72 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/.softhouse/vectors
+    2137:conformance: no-float guard — inspected 6 Go packages / 65 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/nexus (recursive, whole module)
+    2139:conformance: wire-float round-trip guard — selftest OK, 13 cases (10 drive it RED on a planted
+    2141:conformance: CENSUS wire-float round-trip — inspected 574 documents / 10951 numeric tokens: 548 request bodies (*.json under a req/ dir, plus *.req) across 14 capture rigs / 62 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/.softhouse/capture, and 26 capture records cited by the vector store (recursive, whole capture tree)
+    2142:conformance: CENSUS float-shaped tokens PRESENT 372 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+    2143:conformance: CENSUS recorded-request blocks — 26 capture records DERIVED from provenance.capture_ref across 72 *.json in /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/.softhouse/vectors; 8 of those records carry a recorded-request block and 18 carry none; 96 blocks (key `inputs` or `request`, any depth, located by parser walk) / 783 numeric tokens GRADED, float-shaped PRESENT 0, ALTERED 0
+    2310:conformance:     COST 2s / ceiling 60s   guard_no_float_in_vectors
+    2311:conformance:     COST 1s / ceiling 60s   guard_no_float_in_harness
+    2313:conformance:     COST 1s / ceiling 60s   guard_no_float_in_capture_requests
+    2833:    no-float census         6 Go packages / 65 Go files / 141911 tokens / 278 import specs inspected under nexus (recursive)
+    2834:                            0 forbidden identifiers, 0 floating-point or imaginary LITERALS, 0 forbidden imports, 0 unscannable files
+    2882:conformance: no-float guard — inspected 72 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/.softhouse/vectors
+    2883:conformance: no-float guard — inspected 6 Go packages / 66 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/nexus (recursive, whole module)
+    2885:conformance: wire-float round-trip guard — selftest OK, 13 cases (10 drive it RED on a planted
+    2887:conformance: CENSUS wire-float round-trip — inspected 574 documents / 10951 numeric tokens: 548 request bodies (*.json under a req/ dir, plus *.req) across 14 capture rigs / 62 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/.softhouse/capture, and 26 capture records cited by the vector store (recursive, whole capture tree)
+    2888:conformance: CENSUS float-shaped tokens PRESENT 372 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+    2889:conformance: CENSUS recorded-request blocks — 26 capture records DERIVED from provenance.capture_ref across 72 *.json in /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2ec6f3a1824454b2/.softhouse/vectors; 8 of those records carry a recorded-request block and 18 carry none; 96 blocks (key `inputs` or `request`, any depth, located by parser walk) / 783 numeric tokens GRADED, float-shaped PRESENT 0, ALTERED 0
+
+### WIDER: division operator   HITS=1032
+    pattern: [^/*][/][^/*=]
+    1:++ b/.softhouse/capture/t421-t406-conditions/bin/40-red-drive-readonly-guard.sh
+    2:#!/bin/sh
+    7:DIR=$(dirname "$0")/..
+    11:echo "target script: $DIR/capsql-readonly.sh"
+    15:  printf '%s\n' "$1" > "$TMP/q.sql"
+    16:  OUTPUT=$(sh "$DIR/capsql-readonly.sh" T421-REDDRIVE "$TMP/q.sql" 2>&1)
+    35:printf 'SELECT 1;\n' > "$TMP/q.sql"
+    36:sh "$DIR/capsql-readonly.sh" T421-REDDRIVE-CONTROL "$TMP/q.sql" >/dev/null 2>&1
+    44:rm -f "$DIR/out/T421-REDDRIVE-CONTROL.txt" "$DIR/out/T421-REDDRIVE-CONTROL.sql" "$DIR/out/T421-REDDRIVE-CONTROL.psql"
+    53:++ b/.softhouse/capture/t421-t406-conditions/bin/50-red-drive-admission-arms.sh
+    54:#!/bin/sh
+    55:# T421 / F-T406-2, THE RED HALF (P-45).
+    68:ROOT=$(dirname "$0")/../../../..
+    69:ADMIT="$ROOT/nexus/internal/apps/ledger/conformance/admit.go"
+    122:go test -C "$ROOT/nexus" -count=1 -run TestSlotAdmissionInputsAreDefaultDeny -v \
+    123:  ./internal/apps/ledger/conformance/ > /tmp/t421-red.txt 2>&1
+    127:grep -E '^ *--- (PASS|FAIL): TestSlotAdmission' /tmp/t421-red.txt || true
+    129:FAILS=$(grep -c '^    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/' /tmp/t421-red.txt || true)
+    130:PASSES=$(grep -c '^    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/' /tmp/t421-red.txt || true)
+    137:  cat /tmp/t421-red.txt
+    140:++ b/.softhouse/capture/t421-t406-conditions/bin/60-apply-vector-corrections.py
+    141:#!/usr/bin/env python3
+    155:VEC = ".softhouse/vectors/ledger"
+    156:CAP = ".softhouse/capture/t391-accrual-promotion/out"
+    181:            "ported at nexus/internal/apps/ledger/slots.go]")
+    186:    "(T406 F-T406-3, re-verified by T421 against /Users/buv/fineract at the pinned sha). The "
+    191:    "nexus/internal/apps/ledger/slots.go]")
+    193:BAD_TEN = ("on TEN cash products [re-measured live by T391, out/T391-S01 section 4c: products "
+    197:    "1. Re-measured live by T391 at out/T391-S01 section 4c and AGAIN by T421 at "
+    198:    ".softhouse/capture/t421-t406-conditions/out/T421-S01-gl16-and-counters.txt section 1, "
+    258:++ b/.softhouse/capture/t421-t406-conditions/bin/61-record-captured-at-provenance.py
+    259:#!/usr/bin/env python3
+    260:"""T421 / F-T406-1 second half -- say IN THE VECTOR where oracle.captured_at came
+    267:VEC = ".softhouse/vectors/ledger"
+    295:++ b/.softhouse/capture/t421-t406-conditions/bin/70-explain-read-census-plus18.py
+    296:#!/usr/bin/env python3
+    315:    ".softhouse/capture/t391-accrual-promotion/out/T391-A01-je-L29.json",
+    316:    ".softhouse/capture/t391-accrual-promotion/out/T391-A02-je-L30.json",
+    317:    ".softhouse/capture/t391-accrual-promotion/out/T391-A04-je-L32.json",
+    347:++ b/.softhouse/capture/t421-t406-conditions/bin/80-add-graded-against-mapping-key.py
+    348:#!/usr/bin/env python3
+    349:"""T421 / F-T406-6 -- add the ledger-wrong-mapping-key-ignored graded_against row
+    358:out/T421-W02-arm-mapping-key-ignored.txt, which this script re-reads and
+    364:VEC = ".softhouse/vectors/ledger"
+    365:ARM = ".softhouse/capture/t421-t406-conditions/out/T421-W02-arm-mapping-key-ignored.txt"
+    384:    raise SystemExit("ABORT: expected 18 + 18 = 36, measured %r / %d" % (counts, total))
+    395:      "note": "THE KILL THAT MAKES THE ACCOUNT AN OUTPUT. This vector's headline structural claim is that expect.legs[].gl_account_id and expect.legs[].gl_account_code are RESOLVED by the port and are no longer inputs the vector hands it -- 'a port that resolves slot 8 to the wrong account now differs from the expectation; before this field existed it could not'. T406 measured that NO registered wrong implementation demonstrated that: ledger-wrong-code-ignored blanks the code on every vector including the manual ones, so it says nothing about RESOLUTION, and ledger-wrong-slot-family-blind deliberately gets every account RIGHT because being blind to the FAMILY is its whole point. So the claim was TRUE and graded by nothing that had ever been watched to fail. This implementation is the measurement: it resolves every accounting-path leg to the FIRST row of the product's mapping table instead of keying that table by the leg's slot code, so all six legs land on account 35 / T388-1000 while legs[].slot_name, every side, the leg order and every money cell stay CORRECT. It is the exact mirror image of ledger-wrong-slot-family-blind -- right slot, wrong account, where that one is right account, wrong slot -- and between them the two pin down that the slot and the account are independently graded. MEASURED BY T421 on this corpus: ledger parity PASS 7 FAIL 3, oracle-refusal PASS 6 FAIL 0, divergence PASS 1 FAIL 0, so all FOURTEEN vectors that predate T391 are untouched; 36 cell differences in the entire run, 18 gl_account_id and 18 gl_account_code, and not one other cell of any kind. NOT A MONEY KILL: margin_minor is 0 because no money cell moves. (T406's review reported this shape as '12 account-id cells and 12 code cells'; T421 re-ran it rather than inheriting the number and counted 18 and 18 -- three vectors of six legs each. The kill is the same; the cardinal was wrong.)"
+    416:++ b/.softhouse/capture/t421-t406-conditions/bin/timestamp-sweep.py
+    417:#!/usr/bin/env python3
+    418:"""T421 / F-T406-1 -- sweep EVERY json under .softhouse/vectors for a captured_at
+    423:every .json file under .softhouse/vectors is opened, every key whose name contains
+    427:Decoded with parse_float=str / parse_int=str: this file must not turn a value into
+    432:ROOT = ".softhouse/vectors"
+    489:++ b/.softhouse/capture/t421-t406-conditions/capsql-readonly.sh
+    490:#!/bin/sh
+    496:# bin/40-red-drive-readonly-guard.sh, because a guard nobody has watched fail
+    504:#   out/NAME.txt   psql output verbatim (stdout and stderr as seen)
+    505:#   out/NAME.sql   the exact bytes executed -- a snapshot, not a pointer
+    506:#   out/NAME.psql  container / database / psql exit status / captured-at-utc
+    520:OUT="$DIR/out"
+
+### WIDER: decimal literal   HITS=158
+    pattern: [^A-Za-z0-9_.]-?[0-9]+\.[0-9]+([eE][-+]?[0-9]+)?
+    169:        "float_render": "20195.38",
+    174:        "float_render": "12356.34",
+    204:BAD_FLOAT = ("a JSON reader that decodes them through a float prints 24000.0 and is not what "
+    303:oracle emitted. Fineract emits journal-entry amounts at SCALE 6 (`24000.000000`),
+    591:--- PASS: TestSlotAdmissionInputsAreDefaultDeny (0.06s)
+    592:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/the_committed_accounting-path_vector_is_ADMITTED (0.00s)
+    593:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/1._a_leg_carrying_BOTH_gl_account_id_and_slot_code_REFUSES (0.00s)
+    594:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/2._a_leg_carrying_NEITHER_gl_account_id_nor_slot_code_REFUSES (0.00s)
+    595:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/3._a_NEGATIVE_per-leg_slot_code_REFUSES (0.00s)
+    596:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/4._per-leg_slot_codes_with_an_EMPTY_mapping_table_REFUSES (0.00s)
+    597:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/5._an_ENTRY-LEVEL_slot_code_alongside_per-leg_codes_REFUSES (0.00s)
+    598:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/6._per-leg_slot_codes_with_product_id_0_REFUSES (0.00s)
+    599:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/7._a_mapping_table_NO_leg_resolves_through_REFUSES (0.00s)
+    600:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/8._a_mapping_row_with_slot_code_0_REFUSES (0.00s)
+    601:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/9._a_DUPLICATE_slot_code_in_the_mapping_table_REFUSES (0.00s)
+    602:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/10._a_mapping_row_OFF_THE_CHART_REFUSES (0.00s)
+    603:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/11._a_mapping_row_with_a_NON-POSITIVE_gl_account_id_REFUSES (0.00s)
+    605:ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	0.464s
+    613:--- FAIL: TestSlotAdmissionInputsAreDefaultDeny (0.07s)
+    614:    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/the_committed_accounting-path_vector_is_ADMITTED (0.00s)
+    615:    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/1._a_leg_carrying_BOTH_gl_account_id_and_slot_code_REFUSES (0.00s)
+    616:    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/2._a_leg_carrying_NEITHER_gl_account_id_nor_slot_code_REFUSES (0.00s)
+    617:    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/3._a_NEGATIVE_per-leg_slot_code_REFUSES (0.00s)
+    618:    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/4._per-leg_slot_codes_with_an_EMPTY_mapping_table_REFUSES (0.00s)
+    619:    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/5._an_ENTRY-LEVEL_slot_code_alongside_per-leg_codes_REFUSES (0.00s)
+    620:    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/6._per-leg_slot_codes_with_product_id_0_REFUSES (0.00s)
+    621:    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/7._a_mapping_table_NO_leg_resolves_through_REFUSES (0.00s)
+    622:    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/8._a_mapping_row_with_slot_code_0_REFUSES (0.00s)
+    623:    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/9._a_DUPLICATE_slot_code_in_the_mapping_table_REFUSES (0.00s)
+    624:    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/10._a_mapping_row_OFF_THE_CHART_REFUSES (0.00s)
+    625:    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/11._a_mapping_row_with_a_NON-POSITIVE_gl_account_id_REFUSES (0.00s)
+    632:ok  	github.com/gerege/nexus/internal/apps/ledger	0.494s
+    635:ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	4.607s
+    636:ok  	github.com/gerege/nexus/internal/apps/loanschedule	3.270s
+    637:ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	29.830s
+    639:ok  	github.com/gerege/nexus/internal/apps/ledger	0.568s
+    642:ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	4.818s
+    643:ok  	github.com/gerege/nexus/internal/apps/loanschedule	3.367s
+    644:ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	29.938s
+    646:ok  	github.com/gerege/nexus/internal/apps/ledger	0.515s
+    649:ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	4.578s
+    650:ok  	github.com/gerege/nexus/internal/apps/loanschedule	3.050s
+    651:ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	30.443s
+    679:conformance: CENSUS   READ BUT NOT GRADED: 4755 numeric tokens in cited capture records sit OUTSIDE any recorded-request block; 104 of them are NOT byte-preserved (.softhouse/capture/pathb/t149/out/gerege/T149-TIE-P9-raw.json x59; .softhouse/capture/t352-a2-next-tranche/out/T352-A09-residue-3dp-readback-cited.json x2; .softhouse/capture/t391-accrual-promotion/out/T391-A01-je-L29.json x6; .softhouse/capture/t391-accrual-promotion/out/T391-A02-je-L30.json x6; .softhouse/capture/t391-accrual-promotion/out/T391-A04-je-L32.json x6; .softhouse/capture/tierA-a2/out/A2-338-je-after-repayment-coverage.json x8; .softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json x3; .softhouse/capture/tierA-a2/out/A2-383-je-after-overpay.json x14). These are ORACLE OBSERVATIONS and T186 §7 A4 forbids rewriting, re-emitting or scale-normalising one, so byte-fidelity is not the verdict property for them — the count is printed so the blind spot is STATED, not implied. Example: $.pageItems[0].amount 100000.250000 -> 100000.25
+    806:conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
+    978:        all 12 call sites are changeInterestRate on an existing schedule model [VERIFIED: ProgressiveEMICalculatorTest.java:410, 459, 505, 549, 1725, 1726, 1770, 1771, 1772, 1773, 1814, 1815 — grep over the in-seam test tree returns exactly these 12, and every one is emiCalculator.changeInterestRate(model, date, value)]. The seam is structurally incapable of the origination form: LoanRepaymentScheduleModelData carries ONE scalar annualNominalInterestRate and no rate schedule at all [VERIFIED: LoanRepaymentScheduleModelData.java:32-39, the record header, 19 components]. Raised as T17 follow-up F4 against docs/analysis/tier0-vector-capture-plan.md section 3.4.
+    1012:        REASON: GATE G-8, FAMILY B, EXEMPTED BECAUSE THE REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE -- not because the port is being excused. The oracle advances 1 minor unit and its own principal column repays 0: every repayment row carries principal 0.00 and its totalPrincipalAmount reads 0.00. The Go port reproduces that CELL FOR CELL (0 divergent cells over this vector's graded money cells, measured; see graded_against evidence), so there is no port-vs-oracle divergence for this invariant to arbitrate: asserting it here would be asserting that the ORACLE is wrong, which is a graded-domain amendment and a hard `user` gate (G-8 options (b) and (c)), not a check the harness may make on its own authority. THE EXEMPTION IS SCOPED TO THIS ONE CAPTURED SHAPE. It is NOT a statement that 600.0 % p.a. is exempt: the sibling vector T116-G8-CLEAN-N103, one repayment shorter at the same rate and the same principal, amortizes normally and carries NO exemption at all.
+    1016:        REASON: GATE G-8, FAMILY B, same shape and same reason. The final row's outstanding balance is 1 minor unit because the loan was never repaid, not because a balance memo went stale: the balance column is 0.01 on EVERY row, the principal column is 0.00 on every row, and the port returns exactly that. Family A -- where the principal column DOES sum to the disbursement and only the final balance is stale -- is a different phenomenon, is a CELL DIFF rather than an invariant failure, and is NOT covered by this exemption; an exemption cannot cure a parity diff and T116 does not attempt one.
+    1020:        REASON: GATE G-8, FAMILY B, EXEMPTED BECAUSE THE REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE -- not because the port is being excused. The oracle advances 1 minor unit and its own principal column repays 0: every repayment row carries principal 0.00 and its totalPrincipalAmount reads 0.00. The Go port reproduces that CELL FOR CELL (0 divergent cells over this vector's graded money cells, measured; see graded_against evidence), so there is no port-vs-oracle divergence for this invariant to arbitrate: asserting it here would be asserting that the ORACLE is wrong, which is a graded-domain amendment and a hard `user` gate (G-8 options (b) and (c)), not a check the harness may make on its own authority. THE EXEMPTION IS SCOPED TO THIS ONE CAPTURED SHAPE. It is NOT a statement that 600.0 % p.a. is exempt: the sibling vector T116-G8-CLEAN-N103, one repayment shorter at the same rate and the same principal, amortizes normally and carries NO exemption at all.
+    1024:        REASON: GATE G-8, FAMILY B, same shape and same reason. The final row's outstanding balance is 1 minor unit because the loan was never repaid, not because a balance memo went stale: the balance column is 0.01 on EVERY row, the principal column is 0.00 on every row, and the port returns exactly that. Family A -- where the principal column DOES sum to the disbursement and only the final balance is stale -- is a different phenomenon, is a CELL DIFF rather than an invariant failure, and is NOT covered by this exemption; an exemption cannot cure a parity diff and T116 does not attempt one.
+    1290:          MNT]. There is NO OBSERVATION of a multi-currency entry, so DEC-2 §4.2 G-07 pins MNT
+    1306:          with currency USD decimalPlaces 2 and amount 12.340000 [out/T352-A07-usd-entry.json,
+    1317:          CORRECTS DEC-2 §4.4's stated reason ('the A2 corpus contains no reversal'), written
+    1329:          disagree with the derived sum by MNT 2,000,000.00 on the live oracle, surviving four
+    1424:conformance: CENSUS   READ BUT NOT GRADED: 4755 numeric tokens in cited capture records sit OUTSIDE any recorded-request block; 104 of them are NOT byte-preserved (.softhouse/capture/pathb/t149/out/gerege/T149-TIE-P9-raw.json x59; .softhouse/capture/t352-a2-next-tranche/out/T352-A09-residue-3dp-readback-cited.json x2; .softhouse/capture/t391-accrual-promotion/out/T391-A01-je-L29.json x6; .softhouse/capture/t391-accrual-promotion/out/T391-A02-je-L30.json x6; .softhouse/capture/t391-accrual-promotion/out/T391-A04-je-L32.json x6; .softhouse/capture/tierA-a2/out/A2-338-je-after-repayment-coverage.json x8; .softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json x3; .softhouse/capture/tierA-a2/out/A2-383-je-after-overpay.json x14). These are ORACLE OBSERVATIONS and T186 §7 A4 forbids rewriting, re-emitting or scale-normalising one, so byte-fidelity is not the verdict property for them — the count is printed so the blind spot is STATED, not implied. Example: $.pageItems[0].amount 100000.250000 -> 100000.25
+    1551:conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
+    1723:        all 12 call sites are changeInterestRate on an existing schedule model [VERIFIED: ProgressiveEMICalculatorTest.java:410, 459, 505, 549, 1725, 1726, 1770, 1771, 1772, 1773, 1814, 1815 — grep over the in-seam test tree returns exactly these 12, and every one is emiCalculator.changeInterestRate(model, date, value)]. The seam is structurally incapable of the origination form: LoanRepaymentScheduleModelData carries ONE scalar annualNominalInterestRate and no rate schedule at all [VERIFIED: LoanRepaymentScheduleModelData.java:32-39, the record header, 19 components]. Raised as T17 follow-up F4 against docs/analysis/tier0-vector-capture-plan.md section 3.4.
+    1757:        REASON: GATE G-8, FAMILY B, EXEMPTED BECAUSE THE REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE -- not because the port is being excused. The oracle advances 1 minor unit and its own principal column repays 0: every repayment row carries principal 0.00 and its totalPrincipalAmount reads 0.00. The Go port reproduces that CELL FOR CELL (0 divergent cells over this vector's graded money cells, measured; see graded_against evidence), so there is no port-vs-oracle divergence for this invariant to arbitrate: asserting it here would be asserting that the ORACLE is wrong, which is a graded-domain amendment and a hard `user` gate (G-8 options (b) and (c)), not a check the harness may make on its own authority. THE EXEMPTION IS SCOPED TO THIS ONE CAPTURED SHAPE. It is NOT a statement that 600.0 % p.a. is exempt: the sibling vector T116-G8-CLEAN-N103, one repayment shorter at the same rate and the same principal, amortizes normally and carries NO exemption at all.
+    1761:        REASON: GATE G-8, FAMILY B, same shape and same reason. The final row's outstanding balance is 1 minor unit because the loan was never repaid, not because a balance memo went stale: the balance column is 0.01 on EVERY row, the principal column is 0.00 on every row, and the port returns exactly that. Family A -- where the principal column DOES sum to the disbursement and only the final balance is stale -- is a different phenomenon, is a CELL DIFF rather than an invariant failure, and is NOT covered by this exemption; an exemption cannot cure a parity diff and T116 does not attempt one.
+    1765:        REASON: GATE G-8, FAMILY B, EXEMPTED BECAUSE THE REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE -- not because the port is being excused. The oracle advances 1 minor unit and its own principal column repays 0: every repayment row carries principal 0.00 and its totalPrincipalAmount reads 0.00. The Go port reproduces that CELL FOR CELL (0 divergent cells over this vector's graded money cells, measured; see graded_against evidence), so there is no port-vs-oracle divergence for this invariant to arbitrate: asserting it here would be asserting that the ORACLE is wrong, which is a graded-domain amendment and a hard `user` gate (G-8 options (b) and (c)), not a check the harness may make on its own authority. THE EXEMPTION IS SCOPED TO THIS ONE CAPTURED SHAPE. It is NOT a statement that 600.0 % p.a. is exempt: the sibling vector T116-G8-CLEAN-N103, one repayment shorter at the same rate and the same principal, amortizes normally and carries NO exemption at all.
+
+### WIDER: exponent literal   HITS=0
+    pattern: [^A-Za-z0-9_][0-9]+[eE][-+]?[0-9]+
+
+### ADDED GO LINES ONLY (the population that can execute), non-comment
+    added non-comment Go lines: 178
+    float-shaped hits among them:
+    (no line above means NONE)

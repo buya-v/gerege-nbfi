@@ -1,0 +1,28 @@
+T428 MONEY CELL CHECK -- *_minor fields only, integer string surgery only
+root: /tmp/t428-t421tree
+
+*_minor leaves inspected   : 123
+   integer or absent       : 123
+   NOT integer minor units : 0
+
+minor-unit residues (last two characters of the integer string):
+   residue 00 x24
+   residue 62 x15
+   residue 25 x10
+   residue 34 x6
+   residue 38 x6
+   residue 37 x5
+   residue 24 x3
+   residue 42 x2
+   residue 58 x2
+   residue 82 x2
+   residue 76 x1
+
+raw oracle major-unit TEXT fields (strings, never integers): 115
+
+EVERY occurrence of the token 100.125 in the ledger store, with its field:
+   LDG-DIV-01-oracle-accepts-sub-minor-unit-resid .request.legs[0].amount_major_text           '100.125'
+   LDG-DIV-01-oracle-accepts-sub-minor-unit-resid .request.legs[1].amount_major_text           '100.125'
+   LDG-DIV-01-oracle-accepts-sub-minor-unit-resid .oracle_accepted.observed_amount_texts[0]    '100.125000'
+
+VERDICT: CLEAN -- every *_minor field is an integer string or absent

@@ -1,0 +1,48 @@
+FILE /tmp/t428work/arms-t421/arm-ledger-wrong-mapping-key-ignored.txt
+
+--- ALL indented difference lines, verbatim ---
+276:        legs[0].gl_account_id: want 41, got 35
+277:        legs[0].gl_account_code: want "T388-1200", got "T388-1000"
+278:        legs[1].gl_account_id: want 37, got 35
+279:        legs[1].gl_account_code: want "T388-4000", got "T388-1000"
+280:        legs[2].gl_account_id: want 38, got 35
+281:        legs[2].gl_account_code: want "T388-4100", got "T388-1000"
+282:        legs[3].gl_account_id: want 42, got 35
+283:        legs[3].gl_account_code: want "T388-1300", got "T388-1000"
+284:        legs[4].gl_account_id: want 39, got 35
+285:        legs[4].gl_account_code: want "T388-4200", got "T388-1000"
+286:        legs[5].gl_account_id: want 43, got 35
+287:        legs[5].gl_account_code: want "T388-1400", got "T388-1000"
+291:        legs[0].gl_account_id: want 41, got 35
+292:        legs[0].gl_account_code: want "T388-1200", got "T388-1000"
+293:        legs[1].gl_account_id: want 37, got 35
+294:        legs[1].gl_account_code: want "T388-4000", got "T388-1000"
+295:        legs[2].gl_account_id: want 38, got 35
+296:        legs[2].gl_account_code: want "T388-4100", got "T388-1000"
+297:        legs[3].gl_account_id: want 42, got 35
+298:        legs[3].gl_account_code: want "T388-1300", got "T388-1000"
+299:        legs[4].gl_account_id: want 39, got 35
+300:        legs[4].gl_account_code: want "T388-4200", got "T388-1000"
+301:        legs[5].gl_account_id: want 43, got 35
+302:        legs[5].gl_account_code: want "T388-1400", got "T388-1000"
+306:        legs[0].gl_account_id: want 41, got 35
+307:        legs[0].gl_account_code: want "T388-1200", got "T388-1000"
+308:        legs[1].gl_account_id: want 37, got 35
+309:        legs[1].gl_account_code: want "T388-4000", got "T388-1000"
+310:        legs[2].gl_account_id: want 38, got 35
+311:        legs[2].gl_account_code: want "T388-4100", got "T388-1000"
+312:        legs[3].gl_account_id: want 42, got 35
+313:        legs[3].gl_account_code: want "T388-1300", got "T388-1000"
+314:        legs[4].gl_account_id: want 39, got 35
+315:        legs[4].gl_account_code: want "T388-4200", got "T388-1000"
+316:        legs[5].gl_account_id: want 43, got 35
+317:        legs[5].gl_account_code: want "T388-1400", got "T388-1000"
+
+--- COUNTS ---
+non-money 'X: want' lines : 36
+money     'X: MONEY want' : 0
+INVARIANT VIOLATED lines  : 0
+
+--- CELL NAMES (leg index collapsed) ---
+  18 legs[i].gl_account_code
+  18 legs[i].gl_account_id

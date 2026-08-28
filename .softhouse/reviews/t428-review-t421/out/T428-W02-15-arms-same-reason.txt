@@ -1,0 +1,19 @@
+IDENTICAL-REASON: arm-CONTROL-ledger-go.txt  (6 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-accounting-closed-echoes-transaction-date.txt  (8 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-closure-boundary-exclusive.txt  (11 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-code-ignored.txt  (59 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-date-rules-always-refusing.txt  (10 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-future-date-ignored.txt  (11 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-header-refusing.txt  (8 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-manual-permission-ignored.txt  (10 difference/verdict lines)
+ONLY-ON-T421: arm-ledger-wrong-mapping-key-ignored.txt
+IDENTICAL-REASON: arm-ledger-wrong-netting-totals.txt  (36 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-openingbalance-always-refusing.txt  (8 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-openingbalance-no-contra.txt  (18 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-openingbalance-posted-entries-ignored.txt  (9 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-residue-rounding.txt  (9 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-slot-family-blind.txt  (18 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-split-drift.txt  (12 difference/verdict lines)
+IDENTICAL-REASON: arm-ledger-wrong-truncating.txt  (65 difference/verdict lines)
+
+ARMS COMPARED: identical=16 moved=0 onlyOnT421=1

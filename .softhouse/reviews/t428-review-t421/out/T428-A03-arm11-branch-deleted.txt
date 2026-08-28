@@ -1,0 +1,31 @@
+T428 ARM-11 BRANCH-DELETION DRIVE -- 2026-08-28T19:09:25Z
+admit.go sha256: a02a9d41203da818cba448ca8cb45ba1cf11b15ae40d0ed732a21d2c0e7ca2fc
+go test exit: 1
+--- FAIL: TestSlotAdmissionInputsAreDefaultDeny (0.06s)
+    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/the_committed_accounting-path_vector_is_ADMITTED (0.00s)
+    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/1._a_leg_carrying_BOTH_gl_account_id_and_slot_code_REFUSES (0.00s)
+    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/2._a_leg_carrying_NEITHER_gl_account_id_nor_slot_code_REFUSES (0.00s)
+    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/3._a_NEGATIVE_per-leg_slot_code_REFUSES (0.00s)
+    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/4._per-leg_slot_codes_with_an_EMPTY_mapping_table_REFUSES (0.00s)
+    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/5._an_ENTRY-LEVEL_slot_code_alongside_per-leg_codes_REFUSES (0.00s)
+    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/6._per-leg_slot_codes_with_product_id_0_REFUSES (0.00s)
+    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/7._a_mapping_table_NO_leg_resolves_through_REFUSES (0.00s)
+    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/8._a_mapping_row_with_slot_code_0_REFUSES (0.00s)
+    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/9._a_DUPLICATE_slot_code_in_the_mapping_table_REFUSES (0.00s)
+    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/10._a_mapping_row_OFF_THE_CHART_REFUSES (0.00s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/11._a_mapping_row_with_a_NON-POSITIVE_gl_account_id_REFUSES (0.00s)
+
+--- what arm 11 saw with the branch GONE ---
+=== RUN   TestSlotAdmissionInputsAreDefaultDeny/11._a_mapping_row_with_a_NON-POSITIVE_gl_account_id_REFUSES
+    slotadmission_test.go:146: ADMITTED, or refused for a DIFFERENT reason. Wanted a reason containing "gl_account_id is 0" because the branch T406's finding does not list. A row with no account resolves to nothing, and it must not fall through to the off-the-chart check, which would report the wrong reason for the right refusal.
+        reasons = [request.product_mappings[0] resolves slot 1 to GL account 0, which is NOT in request.accounts. A mis-keying port that lands on that row would then fail as a HARNESS ERROR rather than as a graded cell difference, and a defect that shows up as a crash is a defect the comparator did not catch]
+--- FAIL: TestSlotAdmissionInputsAreDefaultDeny (0.06s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/11._a_mapping_row_with_a_NON-POSITIVE_gl_account_id_REFUSES (0.00s)
+FAIL
+FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.465s
+FAIL
+24:    slotadmission_test.go:146: ADMITTED, or refused for a DIFFERENT reason. Wanted a reason containing "gl_account_id is 0" because the branch T406's finding does not list. A row with no account resolves to nothing, and it must not fall through to the off-the-chart check, which would report the wrong reason for the right refusal.
+25-        reasons = [request.product_mappings[0] resolves slot 1 to GL account 0, which is NOT in request.accounts. A mis-keying port that lands on that row would then fail as a HARNESS ERROR rather than as a graded cell difference, and a defect that shows up as a crash is a defect the comparator did not catch]
+26---- FAIL: TestSlotAdmissionInputsAreDefaultDeny (0.06s)
+27-    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/the_committed_accounting-path_vector_is_ADMITTED (0.00s)
+admit.go RESTORED byte-for-byte (a02a9d41203da818cba448ca8cb45ba1cf11b15ae40d0ed732a21d2c0e7ca2fc)

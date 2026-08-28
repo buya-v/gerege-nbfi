@@ -1,0 +1,30 @@
+T428 LEDGER VECTOR CENSUS -- product_mappings rows per vector
+root: /tmp/t428-t421tree
+
+CASE                                                           CLASS            PMROW  LEGS  SLOT
+LDG-01-manual-je-3leg-minor-units                              parity               0     3     0
+LDG-02-repayment-split-4leg-minor-units                        parity               0     4     0
+LDG-03-overpayment-4leg-minor-units                            parity               0     4     0
+LDG-04-header-account-accepted                                 parity               0     2     0
+LDG-05-openingbalance-accepted-empty-ledger                    parity               0     3     0
+LDG-06-postclosure-entry-accepted-one-day-after-closing-date   parity               0     3     0
+LDG-07-entry-on-the-business-date-accepted                     parity               0     3     0
+LDG-ACC-01-accrual-six-slots-runaccruals-trigger               parity              13     6     6
+LDG-ACC-02-accrual-six-slots-minor-unit-residue                parity              13     6     6
+LDG-ACC-03-accrual-six-slots-scheduled-job                     parity              13     6     6
+LDG-DIV-01-oracle-accepts-sub-minor-unit-residue               divergence           0     2     0
+LDG-REFUSE-01-unbalanced-by-one-minor-unit                     oracle-refusal       0     2     0
+LDG-REFUSE-02-manual-adjustments-not-permitted                 oracle-refusal       0     2     0
+LDG-REFUSE-03-openingbalance-after-posted-entries              oracle-refusal       0     2     0
+LDG-REFUSE-04-preclosure-entry-on-closing-date                 oracle-refusal       0     2     0
+LDG-REFUSE-05-future-dated-entry-one-day-after-business-date   oracle-refusal       0     2     0
+LDG-REFUSE-06-preclosure-entry-before-closing-date-echoes-the- oracle-refusal       0     2     0
+
+VECTORS TOTAL              : 17
+WITH product_mappings rows : 3 ['LDG-ACC-01-accrual-six-slots-runaccruals-trigger', 'LDG-ACC-02-accrual-six-slots-minor-unit-residue', 'LDG-ACC-03-accrual-six-slots-scheduled-job']
+WITHOUT (i.e. PRE-T391)    : 14
+
+PRE-T391 BREAKDOWN BY CLASS:
+   divergence         1
+   oracle-refusal     6
+   parity             7
