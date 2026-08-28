@@ -1,0 +1,16 @@
+3600                                 -> ACCEPT 3600 
+0                                    -> ACCEPT 0 
+007                                  -> ACCEPT 7 
+86400                                -> ACCEPT 86400 
+abc                                  -> REFUSE not-a-non-negative-integer 
+-100000                              -> REFUSE not-a-non-negative-integer 
+99999999999999999999                 -> _k:4: number truncated after 19 digits: 99999999999999999999 REFUSE out-of-range (wrapped to -8446744073709551617) 
+9223372036854775807                  -> ACCEPT 9223372036854775807 
+<empty>                              -> REFUSE not-a-non-negative-integer 
+ 5                                   -> REFUSE not-a-non-negative-integer 
+5                                    -> REFUSE not-a-non-negative-integer 
+1e3                                  -> REFUSE not-a-non-negative-integer 
+0x10                                 -> REFUSE not-a-non-negative-integer 
+3600;print INJECTED                  -> REFUSE not-a-non-negative-integer 
+0)) || { print INJECTED; }; ((1      -> REFUSE not-a-non-negative-integer 
+$(print INJECTED)                    -> REFUSE not-a-non-negative-integer 
