@@ -176,7 +176,11 @@ pass 2's new tests are neutralised for that member at once.
 | tree | arm | exit | probe | guards-dir census | verdict |
 |---|---|---|---|---|---|
 | **T375 branch `2c1f5723`** | `G` | **0** | **PRESENT** | `population=8 invoked=3 declared=2 reached-by=3 invoked-by-nothing=0` **`symlink-members=0`** | **`VERDICT: PASS`** |
+| **MERGE RESULT** (what would actually land) | `G` | **0** | **PRESENT** | `population=8 … reached-by=3` **`symlink-members=0`** | **`VERDICT: PASS`** |
 | current `main` `d16ee6db` | `G` | 0 | PRESENT | `population=8 … reached-by=3` | `VERDICT: PASS` |
+
+**Driven on the merge result too, so the finding is about what would actually land and not
+about a branch nobody will run** [`evidence/17-arm-G-on-the-MERGE-RESULT.txt`].
 
 The guard's own output credits the link [`evidence/14-FIFTH-FAILOPEN-arm-G-whole-bar-GREEN.txt`]:
 
