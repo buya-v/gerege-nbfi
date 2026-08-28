@@ -1,0 +1,26 @@
+=== commits touching .softhouse/LOCK ===
+     124
+=== distinct "host" values across every historical LOCK body ===
+  55 
+   2 -
+  61 Buyanmunkhs-Mac-mini
+   3 buyan-mac
+   3 claude-code-remote-sandbox
+=== distinct "holder" values ===
+  55 
+   3 cloud-routine
+   2 local-fire-20260822-060013
+   3 local-fire-20260822-060013b
+  59 local-launchd
+   2 none
+=== host PAIRED WITH holder, which is what decides whether the cloud fire runs this wrapper ===
+  55 
+   3 cloud-routine @ claude-code-remote-sandbox
+   2 local-fire-20260822-060013 @ buyan-mac
+   2 local-fire-20260822-060013b @ Buyanmunkhs-Mac-mini
+   1 local-fire-20260822-060013b @ buyan-mac
+  59 local-launchd @ Buyanmunkhs-Mac-mini
+   2 none @ -
+=== this host ===
+Buyanmunkhs-Mac-mini
+Darwin

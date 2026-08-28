@@ -1,0 +1,103 @@
+wrapper under test : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a97cc4fa528064e94/.softhouse/bin/fire-program.sh
+live holder pid    : 5877 (running: YES), uid 501, host Buyanmunkhs-Mac-mini
+every body below names THAT pid on THIS host with a started_at of NOW.
+THE ONLY CORRECT VERDICT FOR EVERY ROW IS A *HELD* ONE. Anything else is a fail-open.
+
+==============================================================
+GROUP 1 — released_at (lock_released_at, cut at first COMMA)
+==============================================================
+  ---- 1a BASELINE: no released_at key at all (what the shipped writer emits)
+       lock_present=1 released_at=<null> started_age=1 tip_age=1 pid_state=alive_here
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 1b KEY LAST: "released_at": null is the final key
+       lock_present=1 released_at=<null> started_age=1 tip_age=1 pid_state=alive_here
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 1c KEY NOT LAST: identical semantics, comma follows
+       lock_present=1 released_at=<null> started_age=2 tip_age=2 pid_state=alive_here
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 1d KEY TWICE: first null, second a real timestamp (JSON says LAST wins => released)
+       lock_present=1 released_at=<null> started_age=<unreadable> tip_age=2 pid_state=absent
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 1e KEY TWICE: first a timestamp, second null (JSON says LAST wins => NOT released)
+       lock_present=1 released_at=<null> started_age=<unreadable> tip_age=3 pid_state=absent
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 1f NOT JSON AT ALL: the six-character substring in a prose note
+       lock_present=1 released_at=<null> started_age=<unreadable> tip_age=3 pid_state=absent
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 1g TRUNCATED WRITE: the writer died mid-object after released_at
+       lock_present=1 released_at=<null> started_age=<unreadable> tip_age=4 pid_state=absent
+       verdict=HELD-live
+       => held. safe.
+
+==============================================================
+GROUP 2 — pid (lock_pid_state, cut at first COMMA)
+==============================================================
+  ---- 2a KEY LAST: "pid" is the final key, so no comma follows it
+       lock_present=1 released_at=<null> started_age=4 tip_age=4 pid_state=alive_here
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 2b KEY TWICE: first the live pid, second a pid that is certainly dead
+       lock_present=1 released_at=<null> started_age=<unreadable> tip_age=5 pid_state=absent
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 2c KEY TWICE REVERSED: first a dead pid, second the live one (JSON: last wins => alive)
+       lock_present=1 released_at=<null> started_age=<unreadable> tip_age=5 pid_state=absent
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 2d COMPACT SEPARATORS: json.dumps(separators=(",",":")) — no space after the colon
+       lock_present=1 released_at=<null> started_age=6 tip_age=6 pid_state=alive_here
+       verdict=HELD-live
+       => held. safe.
+
+==============================================================
+GROUP 3 — host (lock_pid_state, cut at first QUOTE)
+==============================================================
+  ---- 3a VALUE CONTAINS A COMMA: a hostname with a comma in it
+       lock_present=1 released_at=<null> started_age=6 tip_age=6 pid_state=other_host
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 3b KEY TWICE: first this host, second another (JSON: last wins => other_host)
+       lock_present=1 released_at=<null> started_age=<unreadable> tip_age=7 pid_state=absent
+       verdict=HELD-live
+       => held. safe.
+
+==============================================================
+GROUP 4 — started_at (lock_started_age, cut at first QUOTE)
+==============================================================
+  ---- 4a KEY LAST: "started_at" is the final key
+       lock_present=1 released_at=<null> started_age=7 tip_age=7 pid_state=alive_here
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 4b KEY TWICE: first a 105h-old stamp, second NOW (JSON: last wins => young)
+       lock_present=1 released_at=<null> started_age=<unreadable> tip_age=8 pid_state=absent
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 4c NOT JSON AT ALL: garbage that still contains the started_at substring
+       lock_present=1 released_at=<null> started_age=<unreadable> tip_age=9 pid_state=absent
+       verdict=HELD-live
+       => held. safe.
+
+  ---- 4d COMPACT SEPARATORS: no space after the colon anywhere
+       lock_present=1 released_at=<null> started_age=9 tip_age=9 pid_state=alive_here
+       verdict=HELD-live
+       => held. safe.
+
+scratch: /tmp/t342-census.zRm6b5

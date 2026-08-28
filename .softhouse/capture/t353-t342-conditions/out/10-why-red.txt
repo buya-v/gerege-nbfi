@@ -1,0 +1,14 @@
+=== variant: /usr/bin/python3 is absent
+    PROBE_EXIT=2
+    last 3 lines:
+      [14:54:39] attest-preflight: baseline reading taken — no hidden-work term fired in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t353probe.yVjXP8/repo before this fire started
+      [14:54:39] FATAL: /nonexistent/python3 is missing or not executable. Every LOCK field is read through it, so arms 1, 2, 3 and 5 -- INCLUDING THE 24 h CEILING, THE ONLY ARM THAT GUARANTEES A TAKEOVER TIME -- could not fire, and this fire would sit behind a lock it cannot reclaim. Refusing to start.
+      PROBE_EXIT=2
+
+=== variant: /usr/bin/python3 is liar
+    PROBE_EXIT=2
+    last 3 lines:
+      [14:54:40] attest-preflight: baseline reading taken — no hidden-work term fired in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t353probe.8f9n1k/repo before this fire started
+      [14:54:40] FATAL: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t353why.g53g9s/liar exists but did not answer 'ok' to a trivial json.loads (got 'SPURIOUS'). Either it is broken or something on its stdout would be read as a LOCK field value -- an interpreter that prints a spurious word to stdout is read as a released_at, which is the fail-OPEN direction. Refusing to start.
+      PROBE_EXIT=2
+

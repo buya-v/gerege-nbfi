@@ -1,0 +1,16 @@
+file=/tmp/t353before/fire-program.sh  host=Buyanmunkhs-Mac-mini  LIVE pid=4188  started_at=2026-08-28T06:56:08Z (fresh)
+Correct answer for every row: HELD-* . FREE-released here = a LIVE lock declared free.
+
+  released_at=null                     -> verdict=HELD-default
+  released_at="2026-08-28T06:00:00Z"   -> verdict=FREE-released
+  released_at="null"                   -> verdict=FREE-released
+  released_at="None"                   -> verdict=FREE-released
+  released_at="NULL"                   -> verdict=FREE-released
+  released_at=" "                      -> verdict=FREE-released
+  released_at="   "                    -> verdict=FREE-released
+  released_at="false"                  -> verdict=FREE-released
+  released_at="0"                      -> verdict=FREE-released
+  released_at="no"                     -> verdict=FREE-released
+  released_at="-"                      -> verdict=FREE-released
+  released_at="pending"                -> verdict=FREE-released
+  released_at=""                       -> verdict=HELD-default

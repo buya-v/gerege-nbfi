@@ -91,13 +91,34 @@ lock_decide() {
   print -r -- HELD-default                                                         # arm 6
 }
 
-# ================================================================ T342 ============
-# THE LOCK IS READ WITH A REAL JSON PARSER. IT USED TO BE READ WITH STRING SURGERY,
-# AND OF 17 ADVERSARIAL LOCK BODIES THE STRING SURGERY GOT 7 WRONG — EVERY ONE OF THEM
-# IN THE FAIL-OPEN DIRECTION, i.e. a lock held by a LIVE process owned by THIS user read
-# as takeable. DO NOT RESTATE THAT 7 ANYWHERE (P-80 -- a corrected cardinal rots in every
-# place it was restated): it is DERIVED on every run by
-# `census-lock-readers.zsh`, which prints one `*** FAIL-OPEN` line per failing row.
+# =========================================================== T342 / T353 ============
+# THE LOCK IS READ WITH A REAL JSON PARSER. IT USED TO BE READ WITH STRING SURGERY, and on
+# an adversarial corpus of lock bodies the string surgery got a large minority of them
+# WRONG — every one of those in the FAIL-OPEN direction, i.e. a lock held by a LIVE process
+# owned by THIS user read as takeable.
+#
+# THE COUNT IS NOT WRITTEN HERE, IN ANY VINTAGE, AND THAT IS THE POINT. It is a property of
+# the CORPUS, not of the reader: T342 measured one figure against its own bodies and T346
+# measured a larger one against its own, from the same file, on the same day, and both were
+# correct. A numeral typed here is a numeral that rots — P-80, *"a corrected cardinal rots
+# in every place it was restated. The count is the same defect as the line number… the fix
+# is never the new number — it is to make the second site READ the first"*
+# [`.softhouse/patterns.md:2775`]. So READ IT OFF THE RUN:
+#
+#     zsh .softhouse/bin/fire-program.sh --self-test-lock-readers
+#
+# prints `ROWS=… FAIL_OPEN=… FAIL_SHUT=…` and **EXITS NON-ZERO** on any non-zero count. The
+# fire invokes it before it looks at the lock at all (grep `SELF-TEST` below), so a wrapper
+# whose readers have regressed refuses to take a lock instead of taking one it misread.
+# T342's own comment claimed a census "DERIVED on every run" that was wired into nothing and
+# had no `exit` — a control that cannot fail, believed because it was written down. That is
+# P-22, *"a guard, a canary, or a control that cannot fail is worse than none — because it
+# is believed"* [`.softhouse/patterns.md:473`], reached through P-45, *"a test-only guard is
+# not a guard… when hardening a check, verify the path that actually executes in
+# CI/conformance calls it, not merely that a test does"* [`.softhouse/patterns.md:1503`].
+# The self-test below is that path. It is NOT yet called from `.softhouse/conformance.sh`
+# (a different owner); the fire path is the one it is wired to, and this sentence is the
+# whole of the claim.
 #
 # WHAT WAS HERE BEFORE. Four fields were pulled out of the body with zsh substring
 # operators — `${${body#*\"pid\": }%%,*}` and friends — cutting at the first COMMA or
@@ -159,17 +180,41 @@ lock_decide() {
 #
 # POLARITY IS UNCHANGED AND IS NOW EXHAUSTIVE: **any doubt reads as unreadable, and an
 # unreadable signal is never permission to take the lock.** Unreadable file, invalid JSON,
-# not an object, DUPLICATE KEY, key absent, JSON null, wrong type, or a control character
-# in a string -> the field reads empty, `lock_pid_state` reads `absent`, and `lock_decide`
-# lands on arm 4/6 -> HELD. Refusing on duplicate keys is deliberate: it is strictly
-# fail-closed AND it makes the first-wins/last-wins question moot instead of answered.
-_lock_json_field() {
-  # $1 = key, $2 = expected JSON type (`str` | `int`).
-  # Prints the value and returns 0 only if every one of the conditions above is met.
-  # Prints nothing and returns 1 otherwise. Callers turn rc 1 into the fail-closed signal.
-  local key="$1" want="$2"
+# not an object, DUPLICATE KEY, key absent, JSON null, wrong type, a control character
+# in a string, or a `released_at` that is not an ISO-8601 UTC instant -> the field reads
+# empty, `lock_pid_state` reads `absent`, and `lock_decide` lands on arm 4/6 -> HELD.
+# Refusing on duplicate keys is deliberate: it is strictly fail-closed AND it makes the
+# first-wins/last-wins question moot instead of answered.
+#
+# AND THE PRICE OF THAT POLARITY, STATED WHERE IT IS PAID (T353, from T346 F-2). Every arm
+# that can TAKE a lock — 2, 3 and 5 — needs a field, and every field now needs
+# `/usr/bin/python3` to start. With the interpreter absent or broken, no arm fails OPEN (the
+# safe direction, and T342 got that right), but ALL THREE TAKEOVER PATHS go silent at once
+# and the lock becomes unreclaimable except by `--force`. In particular arm 3's *guaranteed*
+# takeover time — the thing STEP 0 says arm 3 exists to provide — becomes conditional on an
+# interpreter starting. That is not a dependency to leave implicit, so the fire now REFUSES
+# to reach the lock decision without it; grep `PYTHON3 PREFLIGHT` below.
+#
+# ONE PARSE, N FIELDS — T353, closing T346 F-6, direction SHUT (it removes a question about
+# read ATOMICITY rather than a measured bug). T342 read `host` and `pid` in TWO separate
+# forks, so `lock_pid_state` could see a `host` from one instant and a `pid` from another;
+# T346 walked the reachable interleavings, found them all landing shut, and said honestly
+# that it had not proved no fail-open interleaving exists. Reading both out of ONE
+# `json.load` costs one fork instead of two and makes the question unaskable. Every caller
+# that genuinely wants a single field still calls `_lock_json_field`, which is now a thin
+# filter over this.
+#
+# WIRE FORMAT, because it has to be unambiguous. One line per requested `key:type`, in the
+# order requested. `=<value>` means the field passed every condition above; a bare `!` means
+# it did not, for ANY reason (absent, wrong type, control character). Values are guaranteed
+# free of control characters by the check below, so they can never forge a line break, and
+# the marker byte makes an empty-string value distinguishable from a missing one. A body
+# that will not parse at all is rc 1 with no output — the whole snapshot is unreadable, and
+# unreadable is HELD.
+_lock_json_fields() {
+  # $@ = one or more `key:type` specs, type = `str` | `int`.
   [[ -r "$LOCK" ]] || return 1
-  /usr/bin/python3 - "$LOCK" "$key" "$want" <<'PY' 2>/dev/null
+  /usr/bin/python3 - "$LOCK" "$@" <<'PY' 2>/dev/null
 import json, sys
 
 def no_dupes(pairs):
@@ -180,28 +225,134 @@ def no_dupes(pairs):
         seen.add(k)
     return dict(pairs)
 
-path, key, want = sys.argv[1], sys.argv[2], sys.argv[3]
+path, specs = sys.argv[1], sys.argv[2:]
 try:
     with open(path, encoding="utf-8") as fh:
         body = json.load(fh, object_pairs_hook=no_dupes)
 except Exception:
     sys.exit(1)                      # unreadable, not JSON, or a duplicate key
-if not isinstance(body, dict) or key not in body:
+if not isinstance(body, dict):
     sys.exit(1)
-v = body[key]
-if want == "int":
-    # bool is a subclass of int in python; `"pid": true` is not a pid.
-    if not isinstance(v, int) or isinstance(v, bool):
-        sys.exit(1)
-    sys.stdout.write(str(v))
-else:
-    # `released_at`, `started_at` and `host` are timestamps and a hostname. A non-string
-    # there is malformed, and malformed reads as unreadable -- never as "released".
-    if not isinstance(v, str) or any(ord(c) < 0x20 for c in v):
-        sys.exit(1)
-    sys.stdout.write(v)
+out = []
+for spec in specs:
+    key, _, want = spec.partition(":")
+    if key not in body:
+        out.append("!")
+        continue
+    v = body[key]
+    if want == "int":
+        # bool is a subclass of int in python; `"pid": true` is not a pid.
+        if not isinstance(v, int) or isinstance(v, bool):
+            out.append("!")
+            continue
+        out.append("=" + str(v))
+    else:
+        # `released_at`, `started_at` and `host` are timestamps and a hostname. A non-string
+        # there is malformed, and malformed reads as unreadable -- never as "released".
+        if not isinstance(v, str) or any(ord(c) < 0x20 for c in v):
+            out.append("!")
+            continue
+        out.append("=" + v)
+sys.stdout.write("\n".join(out) + "\n")
 sys.exit(0)
 PY
+}
+
+_lock_json_field() {
+  # $1 = key, $2 = expected JSON type (`str` | `int`).
+  # Prints the value and returns 0 only if every one of the conditions above is met.
+  # Prints nothing and returns 1 otherwise. Callers turn rc 1 into the fail-closed signal.
+  local line
+  line="$(_lock_json_fields "$1:$2")" || return 1
+  [[ "$line" == '='* ]] || return 1
+  print -r -- "${line#=}"
+}
+
+# ---------------------------------------------------------------- T353 -------------
+# ISO-8601 UTC INSTANT -> EPOCH SECONDS, WITHOUT `date` AND WITHOUT A FORK.
+#
+# WHY THIS EXISTS, AND IT IS NOT AN OPTIMISATION. What stood here was
+# `TZ=UTC /bin/date -j -f "%Y-%m-%dT%H:%M:%SZ" "$iso" +%s`. **`-j` IS A BSD/macOS FLAG AND
+# NOTHING ELSE IMPLEMENTS IT.** Measured, not read: GNU coreutils 9.7 (Debian) answers
+# `invalid option -- 'j'`, uutils coreutils 0.8.0 (Ubuntu) answers `unexpected argument '-j'`
+# and busybox 1.37.0 (Alpine) answers `unrecognized option: j` — all rc 1, and the shipped
+# call swallows stderr, so `lock_started_age` returned EMPTY on every one of them.
+# `started_age` empty kills arm 3 (the CEILING) and arm 5 (both-stale) outright — measured
+# end-to-end by running the REAL `--lock-signals` inside a Linux container against the
+# branch this repairs: `started_age=<unreadable>` on every row, `TAKE-ceiling` never fired.
+# [`.softhouse/capture/t353-t342-conditions/out/01-date-portability.txt`, `out/03-BEFORE-linux-arms.txt`.]
+#
+# ARM 3 IS THE ARM STEP 0 CALLS *"the arm that gives the lock a guaranteed takeover time"*,
+# and without it arm 4 alone leaves the lock with no guaranteed takeover at all — the state
+# STEP 0 records live, a lock 105 h old facing a tip 2.99 h old. So a `date` spelling was
+# deciding whether the lock has a ceiling.
+#
+# WHAT THIS IS NOT: it is NOT a live incident on the cloud fire. The cloud fire does not
+# execute this wrapper — every LOCK it has ever written carries `"holder": "cloud-routine"`
+# while this file writes `"holder": "local-launchd"` unconditionally, and this file is
+# macOS-only in five further places (`/usr/bin/stat -f %m|%i|%z`, `$HOME/Library/Logs`, the
+# launchd plist that invokes it). The defect is LATENT: it fires the first time the wrapper
+# runs off-BSD, and it fires SILENTLY and in the SHUT direction, which is why nothing noticed.
+# [`.softhouse/capture/t353-t342-conditions/out/02-lock-host-census.txt`.]
+#
+# WHY NOT `date -u -d` INSTEAD: that is the GNU spelling, and busybox's `date -d` refuses a
+# `Z`-suffixed ISO stamp outright (measured, same file). There is no `date` invocation that
+# is correct on all three userlands, so the fix is to stop asking `date`. Integer arithmetic
+# in the shell has no userland to be wrong about: same answer on every host, no fork, and
+# no floating point anywhere (CLAUDE.md — money is integer minor units, and while a lock
+# timestamp is not money, a float creeping into a graded path is a rejection either way).
+_iso8601_epoch() {
+  # $1 = a UTC instant spelled exactly `YYYY-MM-DDTHH:MM:SSZ`. Prints epoch seconds and
+  # returns 0. Prints nothing and returns 1 on ANY other input — a wrong shape, a
+  # non-existent date (2026-02-30), an out-of-range field. Refusal is the fail-closed
+  # answer everywhere it is called.
+  local s="$1"
+  [[ "$s" == [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]T[0-9][0-9]:[0-9][0-9]:[0-9][0-9]Z ]] || return 1
+  local -i y mo d hh mi ss leap maxd yy era yoe doy doe days
+  y=10#${s[1,4]}; mo=10#${s[6,7]}; d=10#${s[9,10]}
+  hh=10#${s[12,13]}; mi=10#${s[15,16]}; ss=10#${s[18,19]}
+  (( mo >= 1 && mo <= 12 )) || return 1
+  (( hh <= 23 && mi <= 59 && ss <= 60 )) || return 1   # 60 tolerated: a leap second is a real stamp
+  leap=0
+  (( (y % 4 == 0 && y % 100 != 0) || y % 400 == 0 )) && leap=1
+  local -a dim=(31 28 31 30 31 30 31 31 30 31 30 31)
+  maxd=${dim[mo]}
+  (( mo == 2 )) && (( maxd += leap ))
+  (( d >= 1 && d <= maxd )) || return 1
+  # days-from-civil (Howard Hinnant), exact in integers for every year this program can see.
+  yy=y
+  (( mo <= 2 )) && (( yy -= 1 ))
+  (( era = (yy >= 0 ? yy : yy - 399) / 400 ))
+  (( yoe = yy - era * 400 ))
+  (( doy = (153 * (mo + (mo > 2 ? -3 : 9)) + 2) / 5 + d - 1 ))
+  (( doe = yoe * 365 + yoe / 4 - yoe / 100 + doy ))
+  (( days = era * 146097 + doe - 719468 ))
+  print -r -- $(( days * 86400 + hh * 3600 + mi * 60 + ss ))
+}
+
+# The inverse, same reasons and same arithmetic (civil-from-days). It exists so that
+# `--self-test-lock-readers` can build a "100 h ago" stamp on ANY host: the BSD spelling of
+# that is `date -u -v-100H`, the GNU spelling is `date -u -d @N`, busybox implements
+# neither, and a self-test that only runs on the machine whose portability bug it is
+# checking for is not a self-test. Round-tripped against `_iso8601_epoch` in
+# `.softhouse/capture/t353-t342-conditions/bin/epoch-parity.zsh`.
+_epoch_iso8601() {
+  # $1 = epoch seconds (integer, >= 0). Prints `YYYY-MM-DDTHH:MM:SSZ`.
+  local -i e=$1 days secs z era doe yoe y doy mp m d hh mi ss
+  (( e >= 0 )) || return 1
+  (( days = e / 86400 )); (( secs = e - days * 86400 ))
+  (( z = days + 719468 ))
+  (( era = (z >= 0 ? z : z - 146096) / 146097 ))
+  (( doe = z - era * 146097 ))
+  (( yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365 ))
+  (( y = yoe + era * 400 ))
+  (( doy = doe - (365 * yoe + yoe / 4 - yoe / 100) ))
+  (( mp = (5 * doy + 2) / 153 ))
+  (( d = doy - (153 * mp + 2) / 5 + 1 ))
+  (( m = mp + (mp < 10 ? 3 : -9) ))
+  (( m <= 2 )) && (( y += 1 ))
+  (( hh = secs / 3600 )); (( mi = (secs - hh * 3600) / 60 )); (( ss = secs % 60 ))
+  printf '%04d-%02d-%02dT%02d:%02d:%02dZ\n' $y $m $d $hh $mi $ss
 }
 
 # T279 — `lock_pid_state` is the four-way form; `lock_holder_is_dead` is kept as the thin
@@ -222,9 +373,12 @@ PY
 # unchanged from T279 (host-match before pid-validity), so no verdict moves except the
 # ones the census names.
 lock_pid_state() {
-  local host pid
-  host="$(_lock_json_field host str)" || { print -r -- absent; return 0; }
-  pid="$(_lock_json_field pid int)"   || { print -r -- absent; return 0; }
+  local snap host pid
+  # T353 — ONE snapshot, both fields (T346 F-6). Order of the tests below is still T279's.
+  snap="$(_lock_json_fields host:str pid:int)" || { print -r -- absent; return 0; }
+  host="${${(f)snap}[1]}"; pid="${${(f)snap}[2]}"
+  [[ "$host" == '='* && "$pid" == '='* ]] || { print -r -- absent; return 0; }
+  host="${host#=}"; pid="${pid#=}"
   [[ "$host" == "$(hostname -s)" ]] || { print -r -- other_host; return 0; }  # never judge another machine
   [[ "$pid" == <1-> ]]             || { print -r -- absent;     return 0; }   # junk, or the "pid": 0 T265 F-4 found
   (( pid == $$ ))                  && { print -r -- alive_here; return 0; }   # never judge ourselves
@@ -234,22 +388,42 @@ lock_pid_state() {
 
 lock_holder_is_dead() { [[ "$(lock_pid_state)" == dead_here ]] }
 
-# `released_at`, empty unless the key is present AND its value is a non-empty JSON STRING.
+# `released_at`, empty unless the key is present AND its value is an ISO-8601 UTC INSTANT.
 # Empty is the fail-closed answer and covers absent, `null`, a non-string, an unparseable
 # body and a duplicated key — see the T342 block above for why each of those is empty and
 # not "released".
+#
+# T353 / T346 F-1, direction OPEN, i.e. this closes a P-85 SAFETY hole. "A non-empty JSON
+# string" was not a tight enough contract, because arm 1 fires on ANY non-empty `rel`, so a
+# `released_at` whose value is a string MEANING "not released" was read as released and a
+# LIVE lock was declared FREE. Measured against a live pid: `"null"`, `"None"`, `"NULL"`,
+# `"pending"`, `" "`, `"false"`, `"0"`, `"-"` each yielded `FREE-released`. `"None"` sets
+# the severity — it is what `str(None)` emits and this program writes JSON from Python
+# (`ready-tasks.py`); `"pending"` is what a hand-writer produces to mean NOT YET RELEASED.
+# Both are the same inversion T342 correctly closed for a bare `null`: **the field written
+# to say HELD was read as FREE.**
+#
+# THE SHAPE CHECK IS `_iso8601_epoch`, NOT `date`. T346 proposed this fix spelled
+# `TZ=UTC /bin/date -j -f …`. That spelling is correct on this Mac and DEAD on every other
+# userland (see the `_iso8601_epoch` header), and taking it would have put a SECOND
+# BSD-only construct on the lock path: off-BSD it would have killed arm 1 as well as arms 3
+# and 5, leaving a lock with no release arm AND no takeover arm — reclaimable only by
+# `--force`. Same intent, portable spelling, and no fork.
 lock_released_at() {
   local v
   v="$(_lock_json_field released_at str)" || return 0
   [[ -z "$v" ]] && return 0
+  _iso8601_epoch "$v" >/dev/null || return 0
   print -r -- "$v"
 }
 
 # Age of the lock's `started_at`, in seconds. Empty = could not read it (arm 6, HELD).
+# T353 — `_iso8601_epoch` replaces `TZ=UTC /bin/date -j -f`; see its header for the three
+# userlands that measured `-j` as unimplemented and for what that did to arms 3 and 5.
 lock_started_age() {
   local iso e now
   iso="$(_lock_json_field started_at str)" || return 0
-  e=$(TZ=UTC /bin/date -j -f "%Y-%m-%dT%H:%M:%SZ" "$iso" +%s 2>/dev/null) || return 0
+  e="$(_iso8601_epoch "$iso")" || return 0
   [[ "$e" == <1-> ]] || return 0
   now=$(date +%s)
   print -r -- $(( now - e ))
@@ -296,6 +470,123 @@ if [[ "${1:-}" == "--lock-signals" ]]; then
   print -r -- "lock_present=$_p released_at=${_r:-<null>} started_age=${_s:-<unreadable>} tip_age=${_t:-<unreadable>} pid_state=$_ps"
   print -r -- "mtime_age=$(( $(date +%s) - $(/usr/bin/stat -f %m "$LOCK" 2>/dev/null || print 0) ))   # printed only; decides nothing"
   print -r -- "verdict=$(lock_decide "$_p" "$_r" "$_s" "$_t" "$_ps")"
+  exit 0
+fi
+
+# ============================================ T353 · SELF-TEST OF THE LOCK READERS ======
+#
+# WHAT THE 192-STATE DRIVER CANNOT SEE, AND THIS CAN. `drive-wrapper-vs-skill.zsh` puts all
+# 192 states through `lock_decide()` and diffs them against STEP 0. It is a real control —
+# mutating any one arm moves its counter — but it **SUPPLIES the five signals as arguments**,
+# so it never runs a signal READER. T346 measured the consequence directly: gut
+# `lock_released_at` into a maximal fail-open, every lock always reported released, and the
+# driver still prints `0 disagreements`. A conformance driver that SUPPLIES a function's
+# inputs proves nothing about the code that DERIVES them.
+#
+# So this drives the DERIVERS: it writes an adversarial body to a scratch `$LOCK`, calls
+# `lock_released_at` / `lock_started_age` / `lock_pid_state` for real, and hands the results
+# to `lock_decide` with a FIXED tip age. No git, no network, no real lock — `$LOCK` is
+# reassigned to a `mktemp -d` path for the duration and the process exits at the end.
+#
+# THE DIRECTION CONVENTION IS THE WHOLE POINT, and skipping it is what T292 identified as the
+# root of a five-fix losing streak:
+#   FAIL-OPEN  = a lock held by a LIVE process owned by this user reads as takeable. P-85,
+#                *"two orchestrators held the lock at once"* [`.softhouse/patterns.md:2822`].
+#                This is the direction that destroys work; group A exists to catch it.
+#   FAIL-SHUT  = a lock that SHOULD be reclaimable is not. A liveness bug: the fire waits.
+#                Groups B, C and D exist to catch it, because a census that only looks for
+#                false FREEs cannot see arm 2 going dead.
+#
+# IT EXITS NON-ZERO ON EITHER. That sentence is the difference between this and the census
+# T342 shipped, which printed its failures and always returned 0 — P-22, *"a guard, a
+# canary, or a control that cannot fail is worse than none — because it is believed"*
+# [`.softhouse/patterns.md:473`].
+if [[ "${1:-}" == "--self-test-lock-readers" ]]; then
+  LOCK="$(mktemp -d "${TMPDIR:-/tmp}/fire-selftest.XXXXXX")/LOCK"
+  _st_dir="${LOCK:h}"
+  trap '[[ -n "${_st_dir:-}" ]] && rm -rf "$_st_dir"' EXIT
+
+  _H="$(hostname -s)"
+  _NOW_E=$(date +%s)
+  _NOW="$(_epoch_iso8601 $_NOW_E)"
+  _OLD="$(_epoch_iso8601 $(( _NOW_E - 360000 )))"          # 100 h ago: past the 24 h ceiling
+  _LIVE=$$                                                 # `lock_pid_state` never judges itself -> alive_here
+
+  # A genuinely reaped pid. Retried, and if the pid is somehow still live the B rows are
+  # SKIPPED WITH A WARNING rather than failed: a self-test that wedges the fire on a pid
+  # race would be uninstalled within two fires, and a stated hole beats a flaky guard.
+  _DEAD=0
+  for _i in 1 2 3 4 5; do
+    sleep 0 & _cand=$!; wait $_cand 2>/dev/null
+    kill -0 $_cand 2>/dev/null || { _DEAD=$_cand; break; }
+  done
+
+  typeset -i _n=0 _open=0 _shut=0 _skipped=0
+  _row() {   # $1 id  $2 want (HELD | an exact verdict)  $3 body  $4 what
+    local id="$1" want="$2" body="$3" what="$4" rel sage pst verdict mark
+    printf '%s' "$body" > "$LOCK"
+    rel="$(lock_released_at)"; sage="$(lock_started_age)"; pst="$(lock_pid_state)"
+    # tip_age is SUPPLIED, fresh and readable, so every verdict below is attributable to a
+    # reader and not to whatever origin/main happens to look like on the day.
+    verdict="$(lock_decide 1 "$rel" "$sage" "60" "$pst")"
+    _n+=1; mark="ok"
+    if [[ "$want" == HELD ]]; then
+      [[ "$verdict" == HELD-* ]] || { mark="*** FAIL-OPEN"; _open+=1; }
+    else
+      [[ "$verdict" == "$want" ]] || { mark="*** FAIL-SHUT"; _shut+=1; }
+    fi
+    printf '%-4s %-14s want=%-15s got=%-16s %s\n' "$id" "$mark" "$want" "${verdict:-<none>}" "$what"
+  }
+
+  print -r -- "self-test: file=${0:A}"
+  print -r -- "self-test: host=$_H self_pid=$_LIVE reaped_pid=${_DEAD:-<none>} now=$_NOW old=$_OLD scratch=$_st_dir"
+  print -r -- ""
+  print -r -- "--- A. LIVE holder on THIS host, fresh started_at. Correct = HELD-*. Anything else = FAIL-OPEN (P-85 safety)."
+  _row a01 HELD "{\"holder\": \"f\", \"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\"}" "baseline, no released_at key (what this file writes)"
+  _row a02 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": null}" "released_at null as the LAST key (T280 F-A)"
+  _row a03 HELD "{\"host\":\"$_H\",\"pid\":$_LIVE,\"started_at\":\"$_NOW\",\"released_at\":null}" "compact separators, no space after any colon"
+  _row a04 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$_NOW\", \"released_at\": null}" "released_at twice, string then null (first-wins says FREE)"
+  _row a05 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": null, \"released_at\": \"$_NOW\"}" "released_at twice, null then string (last-wins says FREE)"
+  _row a06 HELD "host=$_H pid=$_LIVE \"released_at\": pending" "not JSON at all, contains the token"
+  _row a07 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"202" "write truncated mid-value"
+  _row a08 HELD "" "empty file"
+  _row a09 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"null\"}" "released_at is the STRING null"
+  _row a10 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"None\"}" "released_at is the STRING None -- what str(None) emits"
+  _row a11 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"pending\"}" "released_at is the STRING pending"
+  _row a12 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \" \"}" "released_at is a single SPACE"
+  _row a13 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"0\"}" "released_at is the STRING 0"
+  _row a14 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"2026-08-28\"}" "released_at is a DATE, not an instant"
+  _row a15 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": 0}" "released_at is the NUMBER 0"
+  _row a16 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"meta\": {\"released_at\": \"$_NOW\"}}" "released_at NESTED under another key"
+  _row a17 HELD "[{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\"}]" "top level is an ARRAY, not an object"
+  _row a18 HELD "{\"host\": \"$_H\", \"pid\": \"$_LIVE\", \"started_at\": \"$_NOW\", \"released_at\": null}" "pid is a STRING"
+  _row a19 HELD "{\"host\": \"$_H\", \"pid\": true, \"started_at\": \"$_NOW\", \"released_at\": null}" "pid is the bool true"
+  _row a20 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_OLD\", \"started_at\": \"$_NOW\"}" "started_at twice, 100 h then NOW (first-wins fires arm 3)"
+  _row a21 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\"} trailing garbage" "valid object then trailing garbage"
+
+  print -r -- ""
+  print -r -- "--- B. DEAD holder on THIS host. Correct = TAKE-dead-pid. Anything else = FAIL-SHUT (liveness)."
+  if (( _DEAD > 0 )); then
+    _row b01 TAKE-dead-pid "{\"holder\": \"f\", \"host\": \"$_H\", \"started_at\": \"$_NOW\", \"pid\": $_DEAD}" "pid is the LAST key"
+    _row b02 TAKE-dead-pid "{\"holder\":\"f\",\"host\":\"$_H\",\"started_at\":\"$_NOW\",\"pid\":$_DEAD}" "compact separators, pid last"
+    _row b03 TAKE-dead-pid "{\"host\": \"$_H\", \"pid\": $_DEAD, \"started_at\": \"$_NOW\", \"released_at\": null}" "canonical order + released_at null"
+  else
+    _skipped=3
+    print -r -- "     WARNING: could not obtain a reaped pid that reads dead; group B SKIPPED. Arm 2 is UNTESTED this run."
+  fi
+
+  print -r -- ""
+  print -r -- "--- C. LIVE holder, started_at past the ${LOCK_CEILING_SECS}s CEILING. Correct = TAKE-ceiling (arm 3). Anything else = FAIL-SHUT."
+  _row c01 TAKE-ceiling "{\"holder\": \"f\", \"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_OLD\"}" "100 h old, spaced separators"
+  _row c02 TAKE-ceiling "{\"holder\":\"f\",\"host\":\"$_H\",\"pid\":$_LIVE,\"started_at\":\"$_OLD\"}" "100 h old, compact separators"
+
+  print -r -- ""
+  print -r -- "--- D. GENUINELY released lock. Correct = FREE-released (arm 1). Anything else = FAIL-SHUT."
+  _row d01 FREE-released "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$_NOW\"}" "released_at a real ISO-8601 UTC instant"
+
+  print -r -- ""
+  print -r -- "ROWS=$_n FAIL_OPEN=$_open FAIL_SHUT=$_shut SKIPPED=$_skipped"
+  (( _open == 0 && _shut == 0 )) || exit 1
   exit 0
 fi
 
@@ -415,6 +706,19 @@ log "fire start — repo=$REPO probe=$PROBE_ONLY force=$FORCE log=$LOG"
 # taken FIRE_SCRIPT_DIR was set from ${0:A:h} a few lines above, so the value is
 # identical to what this line produced before T301.
 SCRIPT_DIR="${FIRE_SCRIPT_DIR:-${0:A:h}}"
+
+# T353 — THE RUNNING WRAPPER'S OWN ABSOLUTE PATH, PINNED HERE AND FOR THE SAME REASON
+# `SCRIPT_DIR` is pinned here: `${0:A}` resolves against the CURRENT DIRECTORY, and the
+# `cd "$REPO"` further down moves it. The lock-reader self-test re-invokes this file from
+# AFTER that `cd`, and `${0:A}` there produced `$REPO/.softhouse/bin/fire-program.sh` — a
+# path that does not exist when the fire is pointed at any repo other than the one the
+# wrapper lives in. Found by DRIVING `--probe` against a scratch repo, not by reading it:
+# the self-test died `rc=127 can't open input file` and the fire refused to start.
+# The direction of that defect was SHUT (a refusal, not a bad lock decision), which is the
+# safe half, but it would have wedged every relative-path invocation. The launchd plist
+# passes an absolute path, so it would never have shown on the real fire — the kind of
+# immunity that is layout rather than design.
+FIRE_SELF="${0:A}"
 
 # T309 -- WHICH BYTES IS THIS FIRE ACTUALLY RUNNING?
 # T301 exists because a branch that changed THIS FILE was landed while a fire was live,
@@ -629,6 +933,55 @@ case $ATTEST_PRE_RC in
   1) log "ERROR: attest-preflight: HIDDEN WORK IS ALREADY PRESENT in $REPO before this fire has done anything. An index skip bit switches off the working-tree comparison that this file's exit guard, \`git worktree remove\` and the prune classifier all rely on. Do NOT read this fire's later 'clean' lines as evidence about those paths; clear the bit by hand (\`git update-index --no-assume-unchanged <path>\`) after checking what is under it." ;;
   *) log "WARN: attest-preflight: the baseline survey REFUSED (rc=$ATTEST_PRE_RC) — this fire starts from an UNMEASURED baseline. Not fatal, but the exit attestation's 'no damage' is weaker by exactly this much." ;;
 esac
+
+# ==================================== T353 · PYTHON3 PREFLIGHT (T346 F-2) ==============
+#
+# DIRECTION: this REFUSES, so it is a liveness (SHUT) change. It is here because the thing
+# it replaces was a SILENT shut, and a silent permanent wedge is the one failure nobody
+# diagnoses. Since T342 every lock field is read through `/usr/bin/python3`. With that
+# interpreter absent or broken, `_lock_json_fields` returns 1 for everything, so
+# `released_at` and `started_age` read empty and `pid_state` reads `absent` — which means
+# arm 1 cannot fire, and arms 2, 3 and 5, WHICH ARE EVERY TAKEOVER PATH, cannot fire either.
+# Nothing fails OPEN (T342 chose the safe direction and that is the important half), but the
+# lock becomes unreclaimable except by `--force`, and arm 3's *guaranteed* takeover time
+# stops being guaranteed. The log line would read `started_age=<unreadable> pid_state=absent`,
+# which is indistinguishable from a genuinely corrupt lock body — and the two earlier
+# `/usr/bin/python3` call sites are both `|| true`, so nothing aborts first.
+#
+# One `[[ -x ]]` is not enough on its own: a present-but-broken interpreter, or a shim that
+# prints a banner to stdout, is the case that produced a verdict out of thin air. So the
+# preflight also makes it PROVE it can parse JSON and write nothing else.
+if [[ ! -x /usr/bin/python3 ]]; then
+  log "FATAL: /usr/bin/python3 is missing or not executable. Every LOCK field is read through it, so arms 1, 2, 3 and 5 -- INCLUDING THE 24 h CEILING, THE ONLY ARM THAT GUARANTEES A TAKEOVER TIME -- could not fire, and this fire would sit behind a lock it cannot reclaim. Refusing to start."
+  exit 2
+fi
+_PY_OK="$(/usr/bin/python3 -c 'import json,sys; sys.stdout.write(json.loads("{\"k\": \"ok\"}")["k"])' 2>/dev/null)"
+if [[ "$_PY_OK" != "ok" ]]; then
+  log "FATAL: /usr/bin/python3 exists but did not answer 'ok' to a trivial json.loads (got '${_PY_OK}'). Either it is broken or something on its stdout would be read as a LOCK field value -- an interpreter that prints a spurious word to stdout is read as a released_at, which is the fail-OPEN direction. Refusing to start."
+  exit 2
+fi
+log "python3 preflight: /usr/bin/python3 parses JSON and writes nothing spurious to stdout — the lock readers, and therefore arms 1/2/3/5, can fire"
+
+# ==================================== T353 · LOCK-READER SELF-TEST, WIRED ==============
+#
+# DIRECTION: refusal, so SHUT — but it guards the OPEN direction. It runs before the lock is
+# read, in a subprocess of the file that is actually executing (`$FIRE_SELF`, pinned before
+# the `cd "$REPO"` — see its definition for the defect that spelling `${0:A}` here caused — so under the T301
+# snapshot re-exec it grades the snapshot, which is the code that will decide), against a
+# scratch `$LOCK` under `$TMPDIR`. See the block beside `--self-test-lock-readers` above for
+# what it covers and why the 192-state driver cannot cover it. ~5 s, once per fire.
+#
+# FATAL BY DESIGN. If the readers have regressed, the safe move is not to take a lock we
+# would misread; a wrapper that starts anyway is the P-85 shape with a warning printed next
+# to it. T342's census printed its failures and returned 0 — P-45, *"a guard that only works
+# when someone remembers to run it enforces nothing"* [`.softhouse/patterns.md:1503`]. This
+# one is on the path that executes, and it exits.
+_ST_OUT="$(zsh "$FIRE_SELF" --self-test-lock-readers 2>&1)"; _ST_RC=$?
+print -r -- "$_ST_OUT" | while IFS= read -r l; do log "lockselftest| $l"; done
+if (( _ST_RC != 0 )); then
+  log "FATAL: the lock-reader self-test FAILED (rc=$_ST_RC). A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P-85); a FAIL-SHUT row means a reclaimable lock cannot be reclaimed. Either way this wrapper must not decide a lock today. Refusing to start."
+  exit 2
+fi
 
 if (( PROBE_ONLY )); then
   log "probe only — exiting without taking the lock or invoking the driver"
