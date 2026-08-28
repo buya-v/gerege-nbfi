@@ -24,6 +24,20 @@ CENSUS=.softhouse/capture/t316-dead-path-guards/census_dead_paths.py
 VICTIM=.softhouse/capture/t328-date-rule-promotion/instruments/run-impl.sh
 PINNED=109
 
+# THE BOGUS PATH IS ASSEMBLED AT RUNTIME, AND THAT IS LOAD-BEARING, NOT A FLOURISH.
+# The first version of this script carried the literal
+# `.softhouse/capture/.../out/THIS-FILE-DOES-NOT-EXIST.txt` inside a quoted string in
+# its own source -- and the census duly counted it, moving the frontier 109 -> 110 with
+# THIS FILE as the offending row. The `+` row was real and it was MINE. T326's precedent
+# on exactly this shape is to repair the INSTRUMENT rather than excuse the row in the
+# pin, so the concrete path is now built from two variables: what the census sees in this
+# source is `${DEADDIR}/${DEADNAME}`, which its PLACEHOLDER arm classifies INDETERMINATE
+# (a template, not a path). The path it WRITES into the victim is concrete, which is the
+# whole point of the drive.
+DEADDIR=".softhouse/capture/t328-date-rule-promotion/out"
+DEADNAME="THIS-FILE-DOES-NOT-EXIST.txt"
+BOGUS="${DEADDIR}/${DEADNAME}"
+
 cd "$REPO" || exit 2
 restore() {
   git checkout -- "$VICTIM" 2>/dev/null
@@ -71,7 +85,12 @@ else
 fi
 
 # (2) IT WOULD HAVE CAUGHT ONE.
-printf '%s\n' '# T328 SCRATCH: .softhouse/capture/t328-date-rule-promotion/out/THIS-FILE-DOES-NOT-EXIST.txt' >> "$VICTIM"
+# THE APPENDED LITERAL MUST BE QUOTED. LITERAL_RE only extracts a path that sits inside
+# single or double quotes, so a bare `# note .softhouse/...` comment is INVISIBLE to the
+# census -- measured: an unquoted append left the frontier at 110 and looked like a
+# broken selector. It is not; it is the selector's documented shape, and a red drive that
+# does not quote is measuring nothing [FU-T328-4].
+printf '# T328 SCRATCH DRIVE: "%s"\n' "$BOGUS" >> "$VICTIM"
 drive="$(census_line)"
 dd="$(dead_of "$drive")"
 echo ""
@@ -79,7 +98,7 @@ echo "(2) RED DRIVE -- one deliberate dead reference appended to $VICTIM"
 echo "    $drive"
 if [ "$dd" -eq $((bd + 1)) ]; then
   echo "    OK: frontier $bd -> $dd, GREW BY EXACTLY ONE."
-  python3 "$CENSUS" 2>&1 | LC_ALL=C grep -a 'THIS-FILE-DOES-NOT-EXIST' | sed 's/^/    /' | head -3
+  python3 "$CENSUS" 2>&1 | LC_ALL=C grep -a -F "$DEADNAME" | sed 's/^/    /' | head -3
 else
   echo "    *** frontier went $bd -> $dd, want $((bd + 1)). The census cannot see a dead"
   echo "    *** reference in a T328 instrument, so its silence about them proves nothing."
