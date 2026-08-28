@@ -1,0 +1,45 @@
+T401 RED DRIVE -- PLANTED .zsh FAIL-OPEN vs HEALTHY CONTROL
+commit : 6816b4b9
+index  : SCRATCH copy (/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t401-red.o0tTfk2akh/index); the real index is untouched
+planted: 3 files, staged in the scratch index only:
+         .softhouse/capture/t401-zsh-census-gap/.t401-plant/green-control.zsh
+         .softhouse/capture/t401-zsh-census-gap/.t401-plant/red-deadpath.zsh
+         .softhouse/capture/t401-zsh-census-gap/.t401-plant/red-failopen.zsh
+
+ARM 1  SHIPPED failopen selector, bait staged
+       corpus 1396   frontier rows 11   rows naming the bait: 0
+       => BLIND, as measured. A fail-open zsh instrument is INVISIBLE. This is the gap.
+
+ARM 2  WIDENED failopen selector (+.zsh), same bait
+       corpus 1520   frontier rows 12
+       CAUGHT the planted fail-open:
+         FAILOPEN-FRONTIER TIER1 .softhouse/capture/t401-zsh-census-gap/.t401-plant/red-failopen.zsh
+       CONTROL green-control.zsh NOT flagged -- the widening discriminates.
+
+ARM 3  SHIPPED dead-path selector, bait staged
+       T316-DEADPATH-CENSUS: corpus=1396 deadFiles=75 deadOccurrences=108 resolving=1314 indeterminate=98 prose=360
+       rows naming the bait: 0
+       => BLIND. A zsh instrument naming a path the repo does not contain is INVISIBLE.
+
+ARM 4  WIDENED dead-path selector (+.zsh), same bait
+       T316-DEADPATH-CENSUS: corpus=1520 deadFiles=81 deadOccurrences=116 resolving=1381 indeterminate=98 prose=368
+       CAUGHT the planted dead path:
+           .softhouse/capture/t401-zsh-census-gap/.t401-plant/red-deadpath.zsh
+               -> .softhouse/capture/t401-zsh-census-gap/this-file-is-not-in-the-index.json
+       CONTROL green-control.zsh NOT counted dead -- the widening discriminates.
+
+TEARDOWN
+       GIT_INDEX_FILE unset; scratch index discarded; planted files removed
+       git status --porcelain lines: 10  (0 or only this run's evidence is expected)
+          M .softhouse/capture/t401-zsh-census-gap/evidence/20-failopen-BASE.txt
+          M .softhouse/capture/t401-zsh-census-gap/evidence/21-deadpath-BASE.txt
+         ?? .softhouse/capture/t401-zsh-census-gap/evidence/22-failopen-ZSH.txt
+         ?? .softhouse/capture/t401-zsh-census-gap/evidence/23-deadpath-ZSH.txt
+         ?? .softhouse/capture/t401-zsh-census-gap/evidence/24-cost-report.txt
+         ?? .softhouse/capture/t401-zsh-census-gap/evidence/30-conformance-selectors.txt
+         ?? .softhouse/capture/t401-zsh-census-gap/evidence/40-red-drive.txt
+         ?? .softhouse/capture/t401-zsh-census-gap/instruments/20-cost-of-extending.sh
+         ?? .softhouse/capture/t401-zsh-census-gap/instruments/30-conformance-own-selectors.sh
+         ?? .softhouse/capture/t401-zsh-census-gap/instruments/40-red-drive-planted-zsh.sh
+
+T401-RED-DRIVE: PASSED -- blind before, caught after, control spared in both directions.

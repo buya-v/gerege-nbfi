@@ -1,7 +1,7 @@
 T316 -- dead repo-path references among tracked `.softhouse/` instruments
 ========================================================================================
 SELECTOR (P-66: `not found` is a statement about the search)
-  corpus     : git ls-files '.softhouse/*.py' '.softhouse/*.sh'   -> 1396 tracked file(s)
+  corpus     : git ls-files '.softhouse/*.py' '.softhouse/*.sh'   -> 1517 tracked file(s)
   literals   : quoted strings containing `.softhouse/`, trimmed to that root
   regex      : (['"])((?:[^'"\\\n]|\\.)*?\.softhouse/(?:[^'"\\\n]|\\.)*?)\1
   resolution : TRACKED CONTENT ONLY [T326] -- membership in `git ls-files -z`
@@ -20,13 +20,13 @@ SELECTOR (P-66: `not found` is a statement about the search)
 CALIBRATION: both FU-T299-2 known positives were seen as DEAD by this selector.
 
 COUNTS (both terms printed -- P-67)
-  files naming any `.softhouse/` literal : 625
-  occurrences that RESOLVE               : 1314
+  files naming any `.softhouse/` literal : 678
+  occurrences that RESOLVE               : 1380
   occurrences that are INDETERMINATE     : 98  (in 60 file(s))
-  occurrences that are PROSE             : 360
-  occurrences that are DEAD              : 108  (in 75 file(s))
+  occurrences that are PROSE             : 368
+  occurrences that are DEAD              : 115  (in 80 file(s))
 
-THE 75 FILE(S) NAMING A DEAD CONCRETE PATH
+THE 80 FILE(S) NAMING A DEAD CONCRETE PATH
 ----------------------------------------------------------------------------------------
   .softhouse/bin/fire-program.sh
       -> .softhouse/tasks.json.t288.tmp
@@ -113,12 +113,18 @@ THE 75 FILE(S) NAMING A DEAD CONCRETE PATH
       -> .softhouse/capture/t256-verdict-predicate/run_rvpa_over_targets.py
       -> .softhouse/capture/t316-dead-path-guards/no-such-file-planted-by-G2.json
       -> .softhouse/capture/t316-dead-path-guards/planted_regression.py
+  .softhouse/capture/t324-worktree-prune-skipbit/instruments/10-skipbit-taxonomy-probe.zsh
+      -> .softhouse/handoff-draft.md
+  .softhouse/capture/t324-worktree-prune-skipbit/instruments/20-blindspot-guard-drive.zsh
+      -> .softhouse/handoff-draft.md
   .softhouse/capture/t326-frontier-host-state/instruments/20-cross-host-drive.sh
       -> .softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch
       -> .softhouse/toolchain
   .softhouse/capture/t326-frontier-host-state/instruments/30-bar-in-both-conditions.sh
       -> .softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch
       -> .softhouse/toolchain
+  .softhouse/capture/t353-t342-conditions/bin/probe-scratch.zsh
+      -> .softhouse/x
   .softhouse/capture/t61-halfeven/src/run-counterfactuals.py
       -> .softhouse/toolchain
   .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py
@@ -199,6 +205,12 @@ THE 75 FILE(S) NAMING A DEAD CONCRETE PATH
       -> .softhouse/capture/t179-fixture-never-run/out.txt
   .softhouse/reviews/t179-guard-classifier/fixtures/red_prose_guard.py
       -> .softhouse/vectors/t179-fixture-never-run/case.json
+  .softhouse/reviews/t202-probe/green-Tb.zsh
+      -> .softhouse/LOCK.bak
+      -> .softhouse/LOCKDIR/f.md
+      -> .softhouse/LOCKED_STATE.md
+  .softhouse/reviews/t202-probe/red-Tb.zsh
+      -> .softhouse/vector.json
   .softhouse/reviews/t262-verdict-predicate/pin_test_t262.py
       -> .softhouse/capture/t229-g8-site3/out/classify-t229-copy.json
   .softhouse/reviews/t285-review-t273/instruments/70-independent-red-drive.sh
@@ -212,4 +224,4 @@ THE 75 FILE(S) NAMING A DEAD CONCRETE PATH
   .softhouse/reviews/t47-probe/t178-redprobe.py
       -> .softhouse/reviews/t47-probe/t47_edit_N.py
 
-T316-DEADPATH-CENSUS: corpus=1396 deadFiles=75 deadOccurrences=108 resolving=1314 indeterminate=98 prose=360
+T316-DEADPATH-CENSUS: corpus=1517 deadFiles=80 deadOccurrences=115 resolving=1380 indeterminate=98 prose=368
