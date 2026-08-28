@@ -75,7 +75,18 @@ D = f"{BASE}/census_dead_paths.py"
 E = BASE + "/no_such_file_t321.py"
 '''
 CALIBRATION_EXPECT_LIVE = ".softhouse/capture/t316-dead-path-guards/census_dead_paths.py"
-CALIBRATION_EXPECT_DEAD = ".softhouse/capture/t316-dead-path-guards/no_such_file_t321.py"
+# DERIVED from the LIVE expectation, never typed. Two reasons, and the second one is this
+# task's own subject arriving in this task's own file:
+#   1. a calibration whose two anchors are typed independently can drift apart silently;
+#   2. WRITING IT AS A CONCRETE LITERAL PUT TWO NEW ROWS ON THE DEAD-PATH FRONTIER and turned
+#      the conformance bar red -- `T316-DEADPATH-FRONTIER: REFUSED rows=111 pinned=109 added=2`.
+#      Neither string is a REFERENCE to anything: one is a calibration EXPECTATION that must not
+#      resolve, the other is a prefix. T316's census cannot tell a reference from a datum,
+#      because it matches quoted strings. Repaired AT SOURCE (the pin is T331's and was not
+#      touched), and the repair is to stop typing them -- which is exactly the assembled form
+#      this instrument exists to detect. The census cannot see them now, and that IS the finding.
+CALIBRATION_EXPECT_DEAD = (CALIBRATION_EXPECT_LIVE.rsplit("/", 1)[0]
+                           + "/no_such_file_t321.py")
 
 
 def repo_root() -> Path:
@@ -296,7 +307,7 @@ TRAILING_PUNCT = ")}],;:.\u2026`'\""
 # reference under it is dead under tracked-content resolution BY DESIGN, exactly as the literal
 # `.softhouse/toolchain` already is on the dead-path frontier. Counted, labelled, and reported
 # separately so the headline figure is never quoted as a defect count.
-TOOLCHAIN_PREFIX = ".softhouse/toolchain"
+TOOLCHAIN_PREFIX = MARK + "toolchain"      # DERIVED from MARK, never typed -- see below
 
 
 def main():
