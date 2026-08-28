@@ -49,3 +49,22 @@ Also unblocked by batch 1: `T325` (T324 now `done`), `T307`, `T322`.
 ## Pause reason
 
 **None — work is in flight.**
+
+---
+
+## BATCH 2 — dispatched after T306/T272/T329 merged. **LIVE.**
+
+| Task | Branch | Owns (sole writer) |
+|---|---|---|
+| **T325** | `softhouse/T325-adopt-attestation` | `.softhouse/guards/repo-state-attest.sh`, **`.softhouse/bin/fire-program.sh`** |
+| **T330** | `softhouse/T330-reconcile-merged-work` | `.softhouse/bin/ready-tasks.py` |
+
+Still live from batch 1: **T326** (`conformance.sh`, frontier pin), **T277** (`gates.md`), **T282** (`patterns.md`).
+
+**T325 owns `fire-program.sh` while a fire is running from it, and that is SAFE, measured not assumed.**
+T309's probes [`fire-program.sh:67-79`]: zsh 5.9 does not slurp a script, so an **in-place** rewrite (same
+inode) mid-run executes the rewritten tail — but **every git operation that lands a change writes a NEW inode
+and renames over the path**, which cannot reach the running shell's open fd. Landing through git is safe;
+`sed -i ''` / `cat >` / python `open(path,"w")` against the live checkout is not.
+
+**Merged this fire so far:** T306 (`3da08fbb`), T272 (`16c59715`), T329 (`61c0f382`).

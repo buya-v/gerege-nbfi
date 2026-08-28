@@ -1,0 +1,116 @@
+------------------------------------------------------------------------
+STEP 0 — extract the activation line prescribed by reference-oracle.md
+  markers  : T256-ACTIVATION-LINE:BEGIN … :END in /Users/buv/gerege-nbfi/.claude/worktrees/agent-afe7439954986245b/.softhouse/reference-oracle.md
+  extracted: [. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"]
+  lines    : 1
+  ASSERT OK   : the prescription is exactly ONE line (a line you must assemble is a line you will get wrong)
+  ASSERT OK   : the prescribed line names no /Users/... home directory
+  ASSERT OK   : the prescribed line names no /home/... home directory
+------------------------------------------------------------------------
+STEP 1 — GREEN: run the PRESCRIBED line verbatim from three working directories
+  cwd /
+    -> src=pinned|go=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go|root=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ASSERT OK   : cwd / : resolved the PINNED toolchain (GEREGE_GO_SOURCE=pinned)
+  ASSERT OK   : cwd / : a go binary is on PATH after activation
+  cwd /nexus
+    -> src=pinned|go=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go|root=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ASSERT OK   : cwd /nexus : resolved the PINNED toolchain (GEREGE_GO_SOURCE=pinned)
+  ASSERT OK   : cwd /nexus : a go binary is on PATH after activation
+  cwd /.softhouse/guards
+    -> src=pinned|go=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go|root=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+  ASSERT OK   : cwd /.softhouse/guards : resolved the PINNED toolchain (GEREGE_GO_SOURCE=pinned)
+  ASSERT OK   : cwd /.softhouse/guards : a go binary is on PATH after activation
+------------------------------------------------------------------------
+STEP 2 — build a scratch checkout that has NO toolchain (the cloud fire's real shape)
+  ASSERT OK   : scratch checkout has NO .softhouse/toolchain (decided by -d on the real directory)
+  scratch  : $SCRATCH/offhost   (real path withheld — it is a mktemp, and printing it
+             into a committed transcript would make the transcript un-reproducible)
+  ASSERT OK   : built a PATH-only `go` shim (a compiler that exists but is not the pinned one)
+------------------------------------------------------------------------
+STEP 3 — RED ARM A: no pinned toolchain, a `go` on PATH
+  summary  : src=fallback-path|goroot=UNSET|go=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.1yzlSGVorQ/shim/go
+  --- stderr as a reader would see it ---
+  | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+  | go-env.sh:   searched (needed <cand>/go/bin/go):
+  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/toolchain
+  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  | go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.1yzlSGVorQ/shim/go
+  | go-env.sh:   go version go1.26.6 darwin/arm64
+  | go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+  | go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+  | go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+  | go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2).
+  --- stdout ---
+  | (empty)
+  ASSERT OK   : GEREGE_GO_SOURCE=fallback-path — the substitution is RECORDED, not silent
+  ASSERT OK   : no GOROOT exported (a GOROOT pointing nowhere is the D2 symptom itself)
+  ASSERT OK   : a usable go is on PATH after activation
+  ASSERT OK   : stderr says in words that this is NOT the pinned toolchain
+  ASSERT OK   : stderr NAMES THE PATHS SEARCHED — 'not found' is reported as a statement about the search
+  --- proving the fallback compiles something real ---
+  go build ./... in the scratch nexus -> rc=0
+  ASSERT OK   : the fallback toolchain COMPILES the module off-host — resolution is real, not announced
+------------------------------------------------------------------------
+STEP 4 — RED ARM B: no pinned toolchain and NO go on PATH at all
+  summary  : src=absent|goroot=UNSET|go=NONE
+  --- stderr ---
+  | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+  | go-env.sh:   searched (needed <cand>/go/bin/go):
+  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/toolchain
+  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  | go-env.sh: and there is NO `go` on PATH either. Nothing was exported.
+  | go-env.sh: The caller's own toolchain check will now refuse — that refusal is
+  | go-env.sh: correct and fail-closed. GEREGE_GO_SOURCE=absent.
+  ASSERT OK   : GEREGE_GO_SOURCE=absent — the state is named, not left to be guessed
+  ASSERT OK   : nothing was exported
+  ASSERT OK   : the failure is LOUD (stderr is non-empty), not a silent no-op
+  --- and now the REAL consumer, in the same condition ---
+  check-ledger-invariants.sh -> rc=2
+  | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+  | go-env.sh:   searched (needed <cand>/go/bin/go):
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/toolchain
+  |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  | go-env.sh: and there is NO `go` on PATH either. Nothing was exported.
+  | go-env.sh: The caller's own toolchain check will now refuse — that refusal is
+  | go-env.sh: correct and fail-closed. GEREGE_GO_SOURCE=absent.
+  | ledger-invariants: no Go toolchain. Expected /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/bin/go-env.sh to put one on PATH.
+  | ledger-invariants: the guard is a Go program; without a compiler it inspects nothing
+  | ledger-invariants: and its absence would read as a pass. EXIT 2 — NOT a pass.
+  ASSERT OK   : the real guard EXITS 2 (unusable), which is a refusal and never a pass
+  ASSERT OK   : the guard says 'NOT a pass' in words a transcript reader cannot misread
+------------------------------------------------------------------------
+STEP 5 — a stale inherited GOROOT (points at a directory that is not there)
+  summary  : src=fallback-path|goroot=UNSET|go=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.1yzlSGVorQ/shim/go
+  --- stderr ---
+  | go-env.sh: dropping inherited GOROOT=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.1yzlSGVorQ/no-such-goroot — that directory does not exist.
+  | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+  | go-env.sh:   searched (needed <cand>/go/bin/go):
+  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/toolchain
+  |     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/bin/../../toolchain
+  | go-env.sh:   anchor: /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t256.1yzlSGVorQ/offhost/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+  | go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+  | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t256.1yzlSGVorQ/shim/go
+  | go-env.sh:   go version go1.26.6 darwin/arm64
+  | go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+  | go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+  | go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+  | go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2).
+  ASSERT OK   : the stale GOROOT was DROPPED rather than passed along to break the fallback
+  ASSERT OK   : the drop is ANNOUNCED on stderr
+------------------------------------------------------------------------
+STEP 6 — the prescribed line run from a directory that is not inside any git checkout
+  rc=1
+  --- stderr ---
+  | fatal: not a git repository (or any of the parent directories): .git
+  | .softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh: line 298: /.softhouse/bin/go-env.sh: No such file or directory
+  ASSERT OK   : non-zero rc outside a checkout — the caller can tell activation did not happen
+  ASSERT OK   : and it said so on stderr
+------------------------------------------------------------------------
+asserts: 26   failures: 0   skipped-without-a-failure: 0
+(a condition this drive could not exercise is recorded as an ASSERT FAIL above, never
+ dropped — P-40: an enumerator must count what it skipped and say so.)
+DRIVE: GREEN

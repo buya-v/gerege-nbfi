@@ -1,0 +1,45 @@
+------------------------------------------------------------------------
+(0) SYNTAX, in every shell on this host
+  sh -n : OK
+  bash -n : OK
+  zsh -n : OK
+  dash -n : OK
+  ksh -n : OK
+------------------------------------------------------------------------
+(1) SOURCED in each shell, toolchain PRESENT, GEREGE_GO_STRICT=1
+    Strict must be a NO-OP here in every shell: rc 0, src=pinned.
+  sh : rc=0 src=pinned
+  bash : rc=0 src=pinned
+  zsh : rc=0 src=pinned
+  dash : rc=0 src=pinned
+  ksh : rc=0 src=pinned
+------------------------------------------------------------------------
+(2) SOURCED in each shell, toolchain ABSENT, GEREGE_GO_STRICT=1 -> rc 2, src=refused
+  sh : rc=2 src=refused
+  bash : rc=2 src=refused
+  zsh : rc=2 src=refused
+  dash : rc=2 src=refused
+  ksh : rc=2 src=refused
+------------------------------------------------------------------------
+(3) EXECUTED rather than sourced — the UNSUPPORTED path the `|| exit 2` idiom covers
+    A top-level `return` is an error in bash and dash when the file is RUN. The idiom
+    suppresses that message and falls through to exit 2, so the status is still 2 and
+    never an accidental 0. This is the cloud arm's idiom and the reason it was kept.
+  sh : executed-directly rc=2
+  bash : executed-directly rc=2
+  zsh : executed-directly rc=2
+  dash : executed-directly rc=2
+------------------------------------------------------------------------
+(4) THE MODULE, through the grafted seam (CLAUDE.md § Verification)
+  activation: src=pinned  bin=/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+  go build ./... rc=0
+  go vet   ./... rc=0
+ok  	github.com/gerege/nexus/internal/apps/ledger	0.490s
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	2.534s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule	3.108s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	27.597s
+?   	github.com/gerege/nexus/internal/apps/loanschedule/conformance/cmd/conformance	[no test files]
+?   	github.com/gerege/nexus/internal/apps/loanschedule/contract	[no test files]
+  go test  ./... rc=0
+------------------------------------------------------------------------
+50-shells-and-build: GREEN
