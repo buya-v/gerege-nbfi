@@ -3706,11 +3706,15 @@ publishing the control publishes the term.
    stale gloss. `P-72`: a sweep is an INSTRUMENT, so calibrate it on a known positive before you report
    its negatives — and note that a *known negative* needs the same care and gets far less.
 
-**THIS ENTRY IS ITSELF AN INSTANCE, AND SAYS SO.** Committing this paragraph raises `-E 'bmainb'` again,
-raises `-F 'ma(in|ni)'` again, and raises `T386`'s absent-term control again. That is not a reason to
-leave the rule unwritten; it is the reason the rule must be written **with its invocation and its head
-sha attached**, so the next reader re-runs it instead of quoting it. `P-84` applies to reading these
-numbers as much as to a probe line: read the absence, not the value.
+**THIS ENTRY IS ITSELF AN INSTANCE, AND IT WAS MEASURED RATHER THAN PREDICTED.** The same instrument was
+re-run immediately after this entry was committed, and every figure in the table above had already moved
+again: `-E 'bmainb'` **138 → 147**, `-F 'ma(in|ni)'` **7 → 11**, `-E 'ma(in|ni)'` 35,633 → 35,653
+(`out/T398-r3-remeasure.txt` vs `out/T398-r3-remeasure-AFTER-COMMIT.txt`, same instrument, same scope,
+one commit apart). **The act of recording the rule invalidated the numbers the rule cites**, inside one
+commit, exactly as the rule says it will. That is not a reason to leave the rule unwritten; it is the
+reason it must be written **with its invocation and its head sha attached**, so the next reader re-runs
+it instead of quoting it. `P-84` applies to reading these numbers as much as to a probe line: read the
+absence, not the value.
 
 **COLLISION HAZARD, declared rather than discovered:** this entry claims **`P-101`**, verified free the
 same way `P-100` was — no `P-101` token existed anywhere in the tree before this commit, defined or
