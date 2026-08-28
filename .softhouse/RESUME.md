@@ -74,3 +74,31 @@ before the task ran.
 **Serialisation now:** `T323` holds `conformance.sh`. `T342` holds `fire-program.sh` — `T336` has been told
 in its prompt that it may not touch that file this batch even if its own analysis points there, and must hand
 the patch to `T343` instead.
+
+---
+
+## UPDATE 2 — `T270` complete and awaiting review; batch 3 dispatched
+
+`T270` committed to `softhouse/T270-superseded-trap` (`512040fc`). **NOT merged** — it is a `coder` task and
+gets an independent reviewer first. Driver scope-check passed: 15 files / 3558 insertions, nothing outside
+`files_hint`, and `prove-mkreq7-guard-red.py` is **byte-identical** (T114 honoured) and no longer invoked.
+
+**It reported three things past its brief, and the first is the sharpest:**
+
+1. `.softhouse/reviews/A2-11/run-all.sh` §§2,4,5,6,7 **abort with tracebacks** — five hard-coded paths into a
+   retired worktree — while the committed transcript records §§3–8 all at `exit=0`. So **exactly one section
+   was producing a real verdict, and the superseded trap was the only other thing on screen printing green.**
+2. Widened census over **5 registers / 1,345 callers → 54 live in-place invocations**, none named by the
+   brief: `cap.sh` ×52, `cap9.sh` ×1, and **`resolve7.py` ×1, graded MATERIAL — a P-25 float site on the
+   transport that captures oracle evidence.** Reported, not fixed (correctly — another task's remit). → `T344`.
+3. **T263's F-5 premise is false.** "Evidence names its producer" holds for **3 of 6** live records, not 6;
+   a JSON request body has nowhere to name its producer. Enforcing it as written would have turned the guard
+   permanently red on two MATERIAL records.
+
+It also disclosed **two defects in its own work** unprompted — a red-drive that briefly committed this task's
+own defect (an assertion satisfied by the census's own prose), and a census first cut that over-reported.
+
+**Dispatched:** `T339` → `softhouse/T339-review-t270`.
+**Filed, blocked on `T270`+`T339`:** `T344` — the 54 live invocations, `resolve7.py` first, because whether
+any vector in `.softhouse/vectors/` was captured through a float-carrying transport is a **parity-corpus**
+question, not a hygiene one.

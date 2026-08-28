@@ -3132,7 +3132,7 @@
     {
       "id": "T270",
       "title": "T164's superseded blind guard is STILL INVOKED — the trap T114 preservation was supposed to defuse is live",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -3151,7 +3151,7 @@
       ],
       "contract_independent": true,
       "description": "RAISED BY T263 reviewing T164, and it TESTED the fix rather than only naming the defect. `prove-mkreq7-guard-red.py` -- the blind whole-file-grep guard that T164 replaced, and which PASSES with `parse_float` deleted from the real call site -- is **ABSENT from `SUPERSEDED.txt`** and **`.softhouse/reviews/A2-11/run-all.sh:36` STILL INVOKES IT**. So the superseded guard still runs and still prints an authoritative-looking `ok ... 16 assertions, 0 failed`, next to the real one.\n\n**A superseded guard that still prints PASS is not preserved evidence, it is a trap.** T114 requires the bytes be preserved; it does NOT require the file keep being executed as though it graded something. Those are different obligations and this task turns on the distinction.\n\nT263 measured the remedy: the census ACCEPTS the redirect (5 verified, exit unchanged, one published number moves 4 -> 5). Apply it: register the file in `SUPERSEDED.txt`, redirect or retire the `run-all.sh` invocation, and leave the BYTES untouched. Report the moved published number rather than letting it surprise the next reader (P-79: make the second site READ the first, do not restate the cardinal).\n\nALSO FROM T263, on T164's exemption register -- these are the fail-open half and matter more than the trap:\n  (a) **The exemption dies but does not STAY dead.** `manifest.py write` revives it (measured: edit -> exit 2 -> `manifest.py write` -> exit 0). A death condition that any worker can undo with one routine command is a speed bump, not a guard.\n  (b) **A brand-new unguarded money-shaped loader can be MINTED into the register in two commands**, naming evidence it never produced, with `manifest.py verify` still green.\n  (c) `produced:` is EXISTENCE-ONLY -- swap it for `CAPTURE-PLAN.md` and it stays green.\n  (d) **`reproduces:` ACCEPTS AN ABSOLUTE PATH OUTSIDE THE REPO** -- an untracked out-of-tree file licenses an in-tree float, exit 0. **This is a money guard licensed by a file nobody can review.**\nFix (d) first; it is the one a reviewer cannot audit. Then (b), (c), (a). DRIVE EACH RED.",
-      "note": "Filed by the driver, local fire 20260822-060013, as a MERGE CONDITION set by an independent review. | DISPATCHED fire 20260828-080001 chain iteration 2, batch 1 of the fire. Dispatch record pushed BEFORE `git worktree add`.",
+      "note": "COMPLETE on branch 512040fc, AWAITING INDEPENDENT REVIEW (T339). Driver scope-check PASSED: three-dot diff 15 files / 3558 insertions, nothing outside files_hint; prove-mkreq7-guard-red.py BYTE-IDENTICAL (T114 honoured) and no longer invoked. Reported three things beyond its brief: (1) run-all.sh SS2,4,5,6,7 abort with tracebacks into a RETIRED worktree while the committed transcript records exit=0 for SS3-8 -- so only SS3 produced a real verdict and the superseded trap was the only other thing on screen printing green; (2) a widened census over 5 registers / 1345 callers found 54 LIVE in-place invocations the brief did not name, including a MATERIAL P-25 float site in resolve7.py; (3) T263's F-5 premise is FALSE -- 'evidence names its producer' holds for 3 of 6 live records, not 6. Also disclosed two defects in its OWN work. Successor: T344.",
       "branch": "softhouse/T270-superseded-trap"
     },
     {
@@ -4677,9 +4677,10 @@
       "dependencies": [
         "T270"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Paired reviewer filed with the batch, fire 20260828-080001 chain iteration 2."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Paired reviewer filed with the batch, fire 20260828-080001 chain iteration 2. | DISPATCHED fire 20260828-080001 iter 2 BATCH 3. Dispatch record pushed BEFORE `git worktree add`.",
+      "branch": "softhouse/T339-review-t270"
     },
     {
       "id": "T340",
@@ -4761,6 +4762,27 @@
       "status": "pending",
       "attempts": 0,
       "note": "Filed from T280's F-B, fire 20260828-080001 iter 2. Serialised behind T342 -- both hold fire-program.sh."
+    },
+    {
+      "id": "T344",
+      "title": "T270's widened census: FIFTY-FOUR live in-place invocations of superseded artefacts, one of them a MATERIAL float site on the path that captures oracle evidence",
+      "description": "RAISED BY T270 (branch softhouse/T270-superseded-trap) AS A DELIBERATE REPORT-NOT-FIX, correctly: fixing 10 evidence-producing scripts was another task's remit and widening its diff there would have been the scope violation. This is that task.\n\nWHAT T270 MEASURED. Its brief named ONE superseded artefact still being invoked. It censused **5 registers across 5 directories and 1,345 callers** and found **54 live in-place invocations**, NONE of which the brief named:\n  * `cap.sh` x52, across 8 capture recipes\n  * `cap9.sh` x1\n  * **`resolve7.py` x1 — and T270 grades this one MATERIAL, a P-25 float site**\n\nWHY THIS IS NOT HOUSEKEEPING. These are CAPTURE RECIPES. **Anyone re-running them captures reference-oracle evidence through the superseded transport.** A vector is a (request, response) pair observed from Fineract; if the transport that produced it is a retired implementation, the provenance recorded in the vector is a claim about a path that is no longer the path. And one of the 54 is a float site on that transport — CLAUDE.md's FIRST non-negotiable is that money is integer minor units with no floating point in ANY monetary code path **including intermediate calculation**, and a request body serialised through a binary double on the way TO the oracle is exactly that path. **Do `resolve7.py` FIRST**, and say plainly whether any vector currently in `.softhouse/vectors/` was captured through it — that is a parity-corpus question, not a hygiene question, and if the answer is yes it is a finding that outranks the rest of this task.\n\nT270's census is at `.softhouse/capture/t270-superseded-trap/` — read `CENSUS-T270-STILL-EXECUTED.txt` and its enumerated misses **M1-M7** first. M1 is only PARTLY measured (221 of 1,084 dynamic constructs), so **the 54 is a floor, not a total.** Do not report 54 back to the driver as though it were the answer; re-derive the population yourself and say what your method still misses. T332 in the previous fire found EIGHT sites where a driver named five, two of them invisible to any symbolic grep.\n\nT114 GOVERNS EVERY FIX: the superseded bytes are preserved and never edited. You change the CALLER, not the callee. And note T270's distinction, which is the whole basis of this family — T114 requires the bytes be preserved; it does NOT require the file keep being EXECUTED as though it graded something.\n\nP-22: for each class of fix, drive it. A recipe you have not re-run is a recipe you have not fixed.\n\nSCOPE: the capture recipes and registers the census names, plus `.softhouse/capture/t344-live-invocations/`. NOT `.softhouse/conformance.sh` (T323). NOT `.softhouse/bin/fire-program.sh` (T342/T343). **SERIALISED BEHIND T270's MERGE** — it touches `.softhouse/capture/tierA-a2/`, which T270's branch holds.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/capture/tierA-a2/",
+        ".softhouse/capture/t344-live-invocations/"
+      ],
+      "context": "harness-integrity",
+      "dependencies": [
+        "T270",
+        "T339"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Filed from T270's widened census, fire 20260828-080001 iter 2. resolve7.py is the priority item -- MATERIAL float site on the oracle-capture transport."
     }
   ],
   "cross_corroboration": {
