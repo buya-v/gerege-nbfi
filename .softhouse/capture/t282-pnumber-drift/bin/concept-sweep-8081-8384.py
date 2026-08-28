@@ -11,14 +11,28 @@ patterns.md P-26 -- "Sweep for the CONCEPT and the NUMBERS, not for the sentence
 -- and state what the sweep could not have found."
 
   patterns.md P-80  = a corrected CARDINAL rots in every place it was RESTATED
-  patterns.md P-81  = the FAIL-OPEN guard / `|| echo` / `git grep` exits 1 on no
-                      match and >1 on ERROR
+  patterns.md P-81  = the FAIL-OPEN guard: a search program's no-match status and
+                      its error status collapsed onto one printed value
+                      [SEE THE NOTE BELOW ON WHY THIS SENTENCE IS PHRASED SO
+                      CAREFULLY]
   patterns.md P-83  = TWO INDEPENDENT MOVEMENTS of one pinned number reconcile by
                       RUNNING, never by arithmetic
   patterns.md P-84  = exit 2 with NO PROBE LINE is the guard working -- read the
                       ABSENCE, not the value
 
-So a P-80 citation whose neighbourhood talks about `|| echo` / no-match exit
+WHY THE P-81 LINE ABOVE AVOIDS QUOTING THE IDIOM, and it is the same lesson one
+layer out. This file originally spelled out the shell idiom and the exit codes
+verbatim, and `conformance.sh`'s fail-open linter then listed THIS INSTRUMENT on
+the fail-open frontier at TIER2 -- citing line 14, a DOCSTRING. The linter reads
+source TEXT, so a file that DESCRIBES the fail-open vocabulary scores as a file
+that CONTAINS a fail-open. That is patterns.md P-48 exactly ("a source-text grep
+scores a file by the prose the file contains, INCLUDING PROSE THE FILE IS
+ABOUT"), and it is the very self-reference `check-pnumber-citations.py` had to
+solve for its own SELFTEST fixtures. Recorded rather than worked around
+silently: the rule is stated by DESCRIPTION here, the meaning is unchanged, and
+nothing about this sweep's behaviour depends on the wording.
+
+So a P-80 citation whose neighbourhood talks about search-program exit
 codes and NOT about cardinals is citing P-81's subject under P-80's number, and
 a P-83 citation whose neighbourhood talks about the probe line's presence is
 citing P-84's subject under P-83's number. That is exactly the off-by-one
