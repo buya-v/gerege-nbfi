@@ -54,14 +54,16 @@
 #   F-T364-2  the rule the guard PRINTS -- "a file may not vouch for itself" -- was defeated by
 #             a leading `./`, because the self-reference test was the one step in that chain
 #             that did not normalise. Closed by comparing the path GIT resolves. ARMS 04..08,
-#             with 08 the REVERT arm and 09 the control that the fix does not break a
-#             legitimate `./`-spelled witness.
+#             and 09 the control that the fix does not break a legitimate `./`-spelled witness.
+#             ARM 08 WAS THE REVERT ARM AND IS NOT ANY MORE: pass 2's blob test subsumes pass
+#             1's compare, so reverting pass 1 alone no longer reopens the hole. 08 now measures
+#             that overlap and ARM 32 carries the P-22 burden. See 08's mutation header.
 #
 #   FU-T358-1 nothing in the bar recorded a wall-clock cost. A guard spun at 99.7% CPU for
 #             9m43s while its own comment advertised 0.23 s, and the only detector was a human
 #             noticing. ARMS 13..17, driven with a DELIBERATELY SLOW GUARD and its control.
 #
-# PASS 2 ADDED FOURTEEN MORE ARMS (ARM SET 3), AND THEY EXIST BECAUSE OF THE INSTRUCTION T364's
+# PASS 2 ADDED FIFTEEN MORE ARMS (ARM SET 3), AND THEY EXIST BECAUSE OF THE INSTRUCTION T364's
 # FINDING CARRIES RATHER THAN BECAUSE OF ITS TEXT: HAVING CLOSED A HOLE, ASK WHAT YOUR OWN ARM
 # MISSES BY ONE. Pass 1 closed the SPELLING of the REACHED-BY witness path. Asking the question
 # turned up FOUR MORE FAIL-OPENS, each MEASURED GREEN on pass 1's own tree -- whole bar exit 0,
@@ -96,11 +98,19 @@
 # HOLE WAS NEVER IN THE RESOLUTION -- IT WAS THAT A PATH IS NOT A FILE, AND EVERY TEST IN THIS
 # GUARD READS ITS SUBJECT THROUGH THE FILESYSTEM WHILE GIT TRACKS SOMETHING ELSE.
 #
-# THE TWO REVERT ARMS ARE THE P-22 EVIDENCE AND THEY ARE THE POINT OF THIS FILE. "A guard, a
+# THE REVERT ARMS ARE THE P-22 EVIDENCE AND THEY ARE THE POINT OF THIS FILE. "A guard, a
 # canary, or a control that cannot fail is worse than none -- because it is believed"
-# [VERIFIED: .softhouse/patterns.md:473]. Arms 03 and 08 UNDO the one-token change each fix
-# consists of, in the scratch tree, and assert the bar goes GREEN on the very input the fixed
-# bar refuses. A fix whose removal changes nothing was never a fix.
+# [VERIFIED: .softhouse/patterns.md:473]. Each UNDOES the one-token change a fix consists of,
+# in the scratch tree, and asserts the bar goes GREEN on the very input the fixed bar refuses.
+# A fix whose removal changes nothing was never a fix. THEY ARE ARMS 03, 21, 22, 31 AND 32.
+#
+# ARM 08 USED TO BE ONE AND IS NOT ANY MORE, AND THAT DEMOTION IS ITSELF A PASS-2 FINDING. Pass
+# 2's blob test catches the `./` self-certification independently of pass 1's compare -- it must,
+# because a witness that RESOLVES TO THE MEMBER has the MEMBER'S BLOB whatever spelling was
+# typed. So pass 1's revert arm stopped being able to fail, and an arm that cannot fail is the
+# very thing P-22 names. IT WAS CAUGHT BY THE DRIVE, not by inspection: arm 08 FAILED on pass
+# 2's first full run. THE BURDEN WAS MOVED TO ARM 32 -- both tests off, hole reopens -- rather
+# than dropped, and 08 was retargeted to measure the overlap it now actually measures.
 #
 # USAGE:  bash drive-red-t375.sh /path/to/scratch/clone
 # =============================================================================================
@@ -324,12 +334,49 @@ m_selfcert_dotslash() { plant_selfcert "./$SELF_REL"; }
 m_selfcert_dotdot()   { plant_selfcert "$GUARDS_REL/$LG_LEAF/../$SELF_DIR_LEAF/$SELF_LEAF"; }
 m_selfcert_absolute() { plant_selfcert "$SCRATCH/$SELF_REL"; }
 
-# THE REVERT ARM FOR F-T364-2. Puts the self-reference test back to the RAW STRING COMPARE and
-# plants the `./` spelling. Expect the bar GREEN with reached-by=2 -- T364's F3 reproduced.
+# THE REVERT ARM FOR F-T364-2, AND ITS EXPECTATION CHANGED IN PASS 2 -- FOR A MEASURED REASON,
+# NOT TO MAKE IT PASS.
+#
+# AS PASS 1 WROTE IT, this arm reverted the self-reference compare to the RAW STRING COMPARE,
+# planted the `./` spelling, and asserted the bar GREEN -- T364's F3 reproduced. IT PASSED FOR
+# PASS 1 AND IT FAILED ON PASS 2's FIRST FULL DRIVE:
+#     T375-08  exit=2 (want 0)  probe=ABSENT (want PRESENT)  marker=NO  >>> FAIL
+# with the refusal `THAT WITNESS IS BYTE-IDENTICAL TO THIS MEMBER`.
+#
+# THE ARM WAS RIGHT AND THE EXPECTATION WAS STALE. Pass 2's blob test catches the `./` self-
+# certification INDEPENDENTLY, and on reflection it must: a witness that RESOLVES TO THE MEMBER
+# has, by definition, the MEMBER'S BLOB, whatever spelling was typed. SO PASS 2's BLOB TEST
+# SUBSUMES PASS 1's SELF-REFERENCE COMPARE FOR EVERY SPELLING. Reverting pass 1's compare alone
+# no longer reopens the hole, and asserting that it does would be asserting something false.
+#
+# BOTH TESTS ARE KEPT, and the reason is diagnostic rather than defensive: pass 1's compare runs
+# FIRST and says `declares REACHED-BY ITSELF ... a file may not vouch for itself`, which is the
+# rule the reader needs. The blob test would say `BYTE-IDENTICAL`, which is true, less useful,
+# and does not name self-certification. Overlapping coverage with the better message first.
+#
+# SO THIS ARM NOW MEASURES THE OVERLAP -- revert pass 1's compare ALONE, and assert PASS 2's
+# TEST CATCHES IT -- and arm T375-32 below carries the P-22 burden pass 1's arm used to carry:
+# revert BOTH, and the hole genuinely reopens. A revert arm that can no longer fail is worse
+# than none, so the burden was MOVED rather than dropped.
 revert_selfcert_to_raw_and_plant_dotslash() {
   subst_once "$CONF_ABS" \
     '        elif [ "$self_wit" = "$rel" ] || [ "$self_norm" = "$rel" ]; then' \
     '        elif [ "$self_wit" = "$rel" ]; then' || return 1
+  m_selfcert_dotslash || return 1
+}
+
+# THE ARM THAT NOW CARRIES THE P-22 BURDEN FOR THE SELF-REFERENCE CLASS. Disables BOTH the
+# pass-1 compare and the pass-2 blob test, one token each, and plants the same `./` spelling.
+# The hole REOPENS: exit 0, reached-by=2. That is T364's F3 reproduced on pass 2's tree, and it
+# is what makes arms 04..07 evidence rather than assertion.
+revert_BOTH_selfreference_tests_and_plant_dotslash() {
+  subst_once "$CONF_ABS" \
+    '        elif [ "$self_wit" = "$rel" ] || [ "$self_norm" = "$rel" ]; then' \
+    '        elif [ "$self_wit" = "$rel" ]; then' || return 1
+  subst_once "$CONF_ABS" \
+    '        elif [ -n "$member_blob" ] && [ "$self_blob" = "$member_blob" ]; then' \
+    '        elif [ -n "$member_blob" ] && [ "$self_blob" = "zz-t375-never-a-blob" ]; then' \
+    || return 1
   m_selfcert_dotslash || return 1
 }
 
@@ -628,9 +675,15 @@ arm "T375-06-selfcert-via-DOTDOT" 2 ABSENT \
   'declares REACHED-BY ITSELF' m_selfcert_dotdot
 arm "T375-07-selfcert-via-ABSOLUTE-path" 2 ABSENT \
   'declares REACHED-BY ITSELF' m_selfcert_absolute
-arm "T375-08-REVERT-fix-DOTSLASH-is-ACCEPTED-again" 0 PRESENT \
-  'population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0' \
+# EXPECTATION CHANGED IN PASS 2 ON MEASURED GROUNDS -- see the mutation's header. Reverting
+# pass 1's compare ALONE no longer reopens the hole, because pass 2's blob test subsumes it.
+arm "T375-08-REVERT-pass1-compare-ALONE-pass2-blob-test-CATCHES-it" 2 ABSENT \
+  'BYTE-IDENTICAL TO THIS MEMBER' \
   revert_selfcert_to_raw_and_plant_dotslash
+# ...and this is where the P-22 burden moved. BOTH tests off, and the hole is back.
+arm "T375-32-REVERT-BOTH-selfreference-tests-HOLE-REOPENS" 0 PRESENT \
+  'population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0' \
+  revert_BOTH_selfreference_tests_and_plant_dotslash
 arm "T375-09-CONTROL-legit-DOTSLASH-witness-ACCEPTED" 0 PRESENT \
   'population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0' \
   m_legit_dotslash_witness
@@ -712,8 +765,8 @@ arm "T375-31-REVERT-symlink-MEMBER-test-INHERITS-again" 0 PRESENT \
 reset_tree
 echo
 echo "T375 RED DRIVE: $PASSES passed, $FAILS failed. (arm set 1 counts as one.)"
-echo "DISTINCT ARMS IN THIS FILE: 32. The line above counts arm set 1 as ONE, so its total is"
-echo "32 + 1 = 33 and NOT the sum of every arm that ran -- T364's NOTE-1 charged exactly that"
+echo "DISTINCT ARMS IN THIS FILE: 33. The line above counts arm set 1 as ONE, so its total is"
+echo "33 + 1 = 34 and NOT the sum of every arm that ran -- T364's NOTE-1 charged exactly that"
 echo "double-count against T358's '29 arms' label, and the label is spelled here so it cannot"
 echo "be inferred wrongly. The predecessor drives report their own counts in their own output."
 [ "$FAILS" -eq 0 ]
