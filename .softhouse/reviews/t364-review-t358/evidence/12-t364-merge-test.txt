@@ -1,0 +1,41 @@
+T364 -- THE MERGE OF softhouse/T358-t323-conditions INTO CURRENT main, TESTED BY THE REVIEWER.
+Performed in a scratch clone. NOTHING WAS PUSHED and main was not touched.
+
+--- 1. THE EXCLUSIVE HOLD, over the WHOLE range main has moved, not just the 8 T358 saw ---
+
+$ git log --oneline be987aad..44fa1db4 | wc -l     # main at the moment T358 measured
+       9
+   (the 9th of those is the driver's own 'T358 complete on branch' record, so 8 when T358 looked)
+
+$ git log --oneline be987aad..main | wc -l          # main today
+      26
+
+$ git diff --name-only be987aad main -- .softhouse/conformance.sh .softhouse/guards
+   ^^ EMPTY. Over every commit main has taken since T358 forked, NEITHER conformance.sh NOR
+      anything under .softhouse/guards moved. T358's exclusive hold held, and still holds.
+
+--- 2. THE MERGE ITSELF ---
+
+$ git merge --no-edit aac9e12b   (onto a scratch clone of main)
+merge commit: 97c6ff75 Merge commit 'aac9e12b73000d2737e57cf2950f976867950a24' into mt
+ .../capture/t358-t323-conditions/drive-red-t358.sh | 339 ++++++++++++
+ .../evidence/00-bar-BEFORE-t358-main-tree.txt      | 602 ++++++++++++++++++++
+ .../evidence/10-bar-AFTER-t358-worktree.txt        | 610 +++++++++++++++++++++
+ .../20-red-drive-DELIVERED-TREE-29-arms.txt        |  49 ++
+ .../30-standalone-fastcheck-NOT-EVIDENCE.txt       |  39 ++
+ .../evidence/40-bar-on-t358-DELIVERED-TREE.txt     | 610 +++++++++++++++++++++
+ .softhouse/conformance.sh                          | 384 +++++++++++--
+ .softhouse/guards/ledgerguard/main.go              |  17 +
+ .../2026-08-21-run2-tierA-gl-accounting-A2/T358.md | 543 ++++++++++++++++++
+ 9 files changed, 3145 insertions(+), 48 deletions(-)
+
+   NO CONFLICT. rc 0.
+
+--- 3. WHAT A MERGE CAN STILL MOVE, AND WHY ARITHMETIC WILL NOT SETTLE IT -------------
+
+T358 adds ONE tracked .sh to T316's dead-path corpus. main independently added files to the
+same corpus while T358 ran: my two clones measure it at 1303 (T358's tree) and 1313 (main).
+Two independent movements of one pinned number. P-83 -- 'TWO INDEPENDENT MOVEMENTS OF ONE
+PINNED NUMBER RECONCILE BY RUNNING, NEVER BY ARITHMETIC' [VERIFIED: patterns.md:2806].
+109 + 0 + 0 = 109 is not an answer. The bar run on the merge result is.
+See evidence/13-t364-bar-on-merge-result.txt.

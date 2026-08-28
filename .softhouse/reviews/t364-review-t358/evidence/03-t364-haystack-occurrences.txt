@@ -1,0 +1,44 @@
+T364 -- THE INVOCATION-TEST HAYSTACK, READ OUT OF THE DELIVERED TREE (aac9e12b73000d2737e57cf2950f976867950a24).
+
+The guard's haystack is this file with every comment line removed:
+  code="$(LC_ALL=C grep -v '^[[:space:]]*#' "$conf")"          conformance.sh:3225
+and the invocation test is a SUBSTRING match on the member's BASENAME:
+  base="${rel##*/}"                                            conformance.sh:3344
+  case "$code" in *"$base"*)                                   conformance.sh:3421
+
+$ grep -c '' <haystack>
+1847
+
+$ grep -nE '<each member basename>' <haystack>
+317:  bash "$REPO_ROOT/.softhouse/guards/check-ledger-invariants.sh" || rc=$?
+319:  local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+332:  say "conformance:   the cannotCatch const in .softhouse/guards/ledgerguard/main.go, which its"
+680:  local g="$REPO_ROOT/.softhouse/guards/check-capture-namespace.sh"
+745:  local g="$REPO_ROOT/.softhouse/guards/check-dead-path-frontier.sh"
+953:  DECLARED="repo-state-attest.sh|CALLER|.softhouse/bin/fire-program.sh|repo-state-attest.sh
+954:drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|ledgerguard"
+
+READ THIS TWICE:
+  :317  check-ledger-invariants.sh  -- a REAL call, bash "$..." || rc=$?
+  :680  check-capture-namespace.sh  -- a 'local g=' ASSIGNMENT, not a call
+  :745  check-dead-path-frontier.sh -- a 'local g=' ASSIGNMENT, not a call
+        => T358's corrected printed wording, 'two of the three members that read INVOKED
+           today are named on a local g= assignment', is EXACT. T337's F-T337-4 reproduces.
+  :319, :332  main.go -- a 'local ccsrc=' and a 'say', both belonging to a DIFFERENT guard
+           that reads that file's TEXT. NEITHER IS A CALL SITE.
+  :953, :954  the DECLARATION TABLE. T358 CUTS THESE TWO LINES out of the haystack before
+           the invocation test (F-T358-1). Verified below.
+
+--- the table cut, verified exact -----------------------------------------------------
+$ grep -c '' <haystack> ; grep -c '' <haystack after the cut>
+1847
+1845
+$ diff <haystack> <haystack after the cut>
+953,954d952
+<   DECLARED="repo-state-attest.sh|CALLER|.softhouse/bin/fire-program.sh|repo-state-attest.sh
+< drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|ledgerguard"
+
+EXACTLY TWO LINES, AND THEY ARE THE TABLE. Nothing else is removed. After the cut,
+repo-state-attest.sh has ZERO occurrences (correct -- it lives on its DECLARED row), and
+main.go STILL HAS TWO. That is the fallback T358 pins in arm 23, and it is a fact about
+the BASENAME, not about that one file. See T364 F-T364-1.
