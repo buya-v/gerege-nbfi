@@ -1,0 +1,87 @@
+SET
+--- (0) column nullability, restated from the catalog
+ is_nullable |     data_type     | character_maximum_length 
+-------------+-------------------+--------------------------
+ NO          | character varying |                       50
+(1 row)
+
+--- (1) totals under three orthogonal discriminators
+ total | nulls | blanks | distinct_keys | min_id | max_id | shapea_uuidish | shapeb_v4 | shapec_haswords | nota | notb 
+-------+-------+--------+---------------+--------+--------+----------------+-----------+-----------------+------+------
+   359 |     0 |      0 |           359 |      1 |    359 |            339 |       339 |              17 |   20 |   20
+(1 row)
+
+--- (2) SET EQUALITY, not count equality: do notA and C name the SAME rows?
+ in_nota_only | in_c_only | in_both 
+--------------+-----------+---------
+            3 |         0 |      17
+(1 row)
+
+--- (3) A-positive but B-negative: uuid-shaped yet NOT randomUUID-minted
+ id | status | idempotency_key 
+----+--------+-----------------
+(0 rows)
+
+--- (4) uppercase-hex UUIDs? Java UUID.toString() is lowercase, so any hit is caller-supplied
+ uppercase_uuidish 
+-------------------
+                 0
+(1 row)
+
+--- (5) the full non-UUID list, with the above/below-floor mark
+ id  | status | above_floor |          idempotency_key          
+-----+--------+-------------+-----------------------------------
+ 281 |      1 | f           | a2-26-idem-probe-0000000000000001
+ 282 |      1 | f           | a2-26-idem-probe-0000000000000002
+ 290 |      1 | f           | a2-29-rb-org-0001
+ 297 |      1 | f           | a2-29-je-1-0001
+ 298 |      1 | f           | a2-29-rb-org-0002
+ 300 |      1 | f           | a2-29-rb-org-0003
+ 301 |      5 | f           | a2-29-je-2-0001
+ 302 |      1 | f           | a2-29-rb-org-0004
+ 303 |      1 | f           | a2-29-je-2-0002
+ 304 |      1 | f           | a2-29-rb-org-0005
+ 305 |      1 | f           | a2-29-rev-0001
+ 306 |      1 | f           | a2-29-rb-off-0001
+ 307 |      1 | f           | a2-29-rb-org-0006
+ 353 |      1 | t           | t352-a01-residue-3dp
+ 354 |      1 | t           | t352-a03-balance-scale
+ 355 |      1 | t           | t352-a04-overscale
+ 356 |      1 | t           | t352-a07-usd
+ 357 |      5 | t           | T359-P01-residue-post
+ 358 |      5 | t           | T359-P02-residue-post
+ 359 |      1 | t           | T359-P03-residue-post
+(20 rows)
+
+--- (6) rows 350..359 (FU-T367-4 asserts 352 carries a minted UUID)
+ id  | status |           idempotency_key            | is_v4_minted 
+-----+--------+--------------------------------------+--------------
+ 350 |      5 | 8be05d29-36f6-4985-bafd-811b430db53c | t
+ 351 |      1 | e87cb179-248e-4766-b18d-33ae16bb681e | t
+ 352 |      5 | 138af578-bd93-4ae5-b8a5-16b6213d0f43 | t
+ 353 |      1 | t352-a01-residue-3dp                 | f
+ 354 |      1 | t352-a03-balance-scale               | f
+ 355 |      1 | t352-a04-overscale                   | f
+ 356 |      1 | t352-a07-usd                         | f
+ 357 |      5 | T359-P01-residue-post                | f
+ 358 |      5 | T359-P02-residue-post                | f
+ 359 |      1 | T359-P03-residue-post                | f
+(10 rows)
+
+--- (7) F3 re-derivation: the status split, independently
+ status |  n  | at_or_below_floor | above_floor 
+--------+-----+-------------------+-------------
+      1 | 162 |               157 |           5
+      5 | 197 |               195 |           2
+(2 rows)
+
+--- (8) F3 robustness: how far from a tie is the ERROR majority?
+ total | errors | non_errors | margin_over_bare_majority 
+-------+--------+------------+---------------------------
+   359 |    197 |        162 |                        17
+(1 row)
+
+--- (9) POLICY 5 evasion spot-checks: sequence, base-table count, reversed rows
+psql:<stdin>:81: ERROR:  column "is_called" does not exist
+LINE 1: SELECT sequencename, last_value, is_called FROM pg_sequences
+                                         ^

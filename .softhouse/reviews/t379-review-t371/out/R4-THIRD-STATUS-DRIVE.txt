@@ -1,0 +1,51 @@
+==================================================================
+T379 THIRD-STATUS DRIVE -- attacking T371's F2 repair
+repo: f1272ae5   ref under test: softhouse/T371-t367-conditions (8441c7e3)
+date: 2026-08-28T10:29:07Z
+==================================================================
+AFTER sha256: e9f30047bb0fbd46826624cdfa3b63e0dd7c03e6abaffb7cb1ae751e4bd57f31
+
+########## X  THE CLASSIFICATION STEP -- a status the repair still discards
+
+---------- X1-control-VALID-archive-predicate  (expect hits>0, LIVE>0)
+    === TEST-SELECTOR
+        hits total: 2   archived (snapshots, correctly stale): 1   LIVE: 1
+    SWEEP-RESULT: commit=f1272ae5 selectors=1 did_not_run=0 calibration=yes exit=0
+    EXIT=0
+
+    ARCHIVE line as driven: ARCHIVE='(unterminated['
+
+---------- X2-MALFORMED-archive-predicate      (a hit, reported as LIVE 0, exit 0)
+    === TEST-SELECTOR
+        hits total: 2   archived (snapshots, correctly stale):    LIVE: 0
+    SWEEP-RESULT: commit=f1272ae5 selectors=1 did_not_run=0 calibration=yes exit=0
+    EXIT=0
+
+    ^^ If X2 prints a nonzero 'hits total' with 'LIVE: 0' and EXIT=0 while X1 printed a
+       LIVE list, the instrument has emitted a NEGATIVE IT NEVER MEASURED -- F2's exact
+       shape, at the classification step rather than the search step, and the exit
+       contract calls it 0 = 'every selector RAN'.
+
+########## Y  THE CALIBRATION ENGINE -- -F is calibrated, -E is used
+    calibration invocations in the shipped instrument:
+      32:#     * an ANTI-calibration -- prove a known-absent string returns zero, because `git grep -E`
+      100:  n=$(git grep -c -F "$CALIB_POS_STR" -- "$CALIB_POS_PATH" 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+      108:  n=$(git grep -c -F "$CALIB_NEG_STR" -- .softhouse/ 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+      100:  n=$(git grep -c -F "$CALIB_POS_STR" -- "$CALIB_POS_PATH" 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+      108:  n=$(git grep -c -F "$CALIB_NEG_STR" -- .softhouse/ 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+    shipped selectors by engine flag:  -F 3   -E 13
+    T232/T238 hazards are -E hazards. Demonstrated against THIS host:
+      git grep -E 'bmainb'       rc=1
+      git grep -E '\\bmain\\b'   hits=97
+      git grep -E 'bmainb'       hits=97   <- if these two agree, -E is reading \\b as literal b
+      git grep -F 'main'         hits=0   <- what the calibration actually exercises
+
+########## Z  stderr folded into the HIT set on the rc=0 path
+    the fold: 16:#     all=$(git grep "$@" -- .softhouse/ 2>/dev/null)          # <-- old :39, rc never read
+137:  all=$(git grep "$@" -- .softhouse/ 2>&1); rc=$?
+    it is unconditional -- rc is read AFTER the fold, so a warning on a HITTING
+    selector is counted by `grep -c .` as a hit and listed as LIVE.
+
+==================================================================
+END OF T379 THIRD-STATUS DRIVE
+==================================================================
