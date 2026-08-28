@@ -1,0 +1,73 @@
+=== T389 P0-3b: REDONE on created_on_utc (created_date is NULL in this schema) ===
+                    k                     |               v               
+------------------------------------------+-------------------------------
+ T388 first write (L28-L31)               | 2026-08-28 11:40:25.686753+00
+ forbidden-account LAST write             | 2026-08-28 07:25:25.735232+00
+ forbidden rows at/after T388 first write | 0
+(3 rows)
+
+
+=== T389 P0-3c: MAX je id per forbidden account vs T388 first je id (76) ===
+ max_forbidden_je_id | t388_min_je_id 
+---------------------+----------------
+                  75 |             76
+(1 row)
+
+
+=== T389 P0-6b: gl_account_code -> id bindings the standing-oracle vectors pin ===
+psql:<stdin>:18: ERROR:  column "manual_entries_allowed" does not exist
+LINE 1: select id, gl_code, name, classification_enum, manual_entrie...
+                                                       ^
+psql:<stdin>:22: ERROR:  column "manual_entries_allowed" does not exist
+LINE 1: select id, gl_code, name, manual_entries_allowed, disabled f...
+                                  ^
+
+=== T389 P0-6c: gl 15,18,22 (the three the brief singled out) ===
+
+=== T389 P0-9: gl 16 history -- when did it reach 21 rows? (T352 hazard account) ===
+ id | transaction_id | type_enum |     amount     | manual_entry | entry_date |        created_on_utc         
+----+----------------+-----------+----------------+--------------+------------+-------------------------------
+  2 | L1             |         1 | 1200000.000000 | f            | 2026-02-01 | 2026-08-21 06:03:41.499955+00
+ 12 | L11            |         1 | 1200000.000000 | f            | 2026-02-01 | 2026-08-21 07:27:41.208955+00
+ 15 | L14            |         2 |  200000.000000 | f            | 2026-03-01 | 2026-08-21 07:27:42.035264+00
+ 18 | L16            |         2 |   50000.000000 | f            | 2026-05-01 | 2026-08-21 07:28:20.036637+00
+ 21 | L17            |         1 | 1200000.000000 | f            | 2026-02-01 | 2026-08-21 07:58:26.464064+00
+ 24 | L20            |         2 |  200000.000000 | f            | 2026-03-01 | 2026-08-21 07:58:26.70794+00
+ 26 | L21            |         1 | 1200000.000000 | f            | 2026-02-01 | 2026-08-22 02:12:58.571322+00
+ 28 | L23            |         2 |   15000.000000 | f            | 2026-02-01 | 2026-08-22 02:12:58.593939+00
+ 32 | L25            |         2 |  300000.000000 | f            | 2026-03-01 | 2026-08-22 02:12:59.354892+00
+ 33 | a28f54bfdaf3   |         2 |  100000.250000 | t            | 2026-06-01 | 2026-08-22 02:14:18.828822+00
+ 38 | a28f54c1db73   |         1 |  100000.250000 | t            | 2026-06-01 | 2026-08-22 02:14:20.139349+00
+ 41 | a28f55a1af0f   |         2 |   33333.330000 | t            | 2026-06-02 | 2026-08-22 02:16:46.826199+00
+ 43 | a28f55a289cf   |         2 |   33333.330000 | t            | 2026-06-02 | 2026-08-22 02:16:47.38619+00
+ 45 | a28f573f34c7   |         2 |  100000.250000 | t            | 2026-06-01 | 2026-08-22 02:21:17.833274+00
+ 50 | a28f57412abb   |         1 |  100000.250000 | t            | 2026-06-01 | 2026-08-22 02:21:19.117628+00
+ 58 | L27            |         2 | 1000000.000000 | f            | 2026-05-01 | 2026-08-22 02:23:27.380554+00
+ 65 | a29bca0816a7   |         2 |     100.125000 | t            | 2026-06-01 | 2026-08-28 06:52:11.588683+00
+ 67 | a29bca9bf813   |         2 |       0.125000 | t            | 2026-06-01 | 2026-08-28 06:53:48.499229+00
+ 70 | a29bcaa6a41b   |         2 |     100.123457 | t            | 2026-06-01 | 2026-08-28 06:53:55.493201+00
+ 72 | a29bcb5d6fcf   |         2 |      12.340000 | t            | 2026-06-01 | 2026-08-28 06:55:55.290311+00
+ 74 | a29bd5eaeb1b   |         2 |     300.625555 | t            | 2026-06-01 | 2026-08-28 07:25:25.733103+00
+(21 rows)
+
+
+=== T389 P0-10: currencies present in the ledger ===
+ currency_code | count 
+---------------+-------
+ MNT           |    89
+ USD           |     2
+(2 rows)
+
+
+=== T389 P0-11: MNT currency definition (ISO 496 / minor unit 2) ===
+ code | decimal_places | currency_multiplesof |       name       | internationalized_name_code 
+------+----------------+----------------------+------------------+-----------------------------
+ MNT  |              2 |                      | Mongolian Tugrik | currency.MNT
+ USD  |              2 |                      | US Dollar        | currency.USD
+(2 rows)
+
+ code | decimal_places |       name       
+------+----------------+------------------
+ MNT  |              2 | Mongolian Tugrik
+(1 row)
+

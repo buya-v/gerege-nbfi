@@ -1,0 +1,62 @@
+=== the six counters t305/t327 STANDING-baseline.txt pins by literal ===
+                 pin                 |  live   
+-------------------------------------+---------
+ acc_gl_journal_entry rows/max       | 91/95
+ acc_gl_closure rows/max             | 0/null
+ distinct_transaction_id             | 35
+ m_portfolio_command_source rows/max | 379/379
+ m_loan                              | 8
+ m_office                            | 1
+(6 rows)
+
+=== m_portfolio_command_source status split (reference-oracle.md doctrine, T371 deleted the cardinal) ===
+ status | count 
+--------+-------
+      1 |   181
+      5 |   198
+(2 rows)
+
+=== ACCRUAL_PERIODIC products -- capabilities-ledger.json says product 28 is THE ONLY ONE ===
+ id |                  name                   | short_name | accounting_type 
+----+-----------------------------------------+------------+-----------------
+ 28 | A2 Accrual Complete                     | A2A1       |               3
+ 63 | T388 Accrual Periodic On Clean Accounts | T388       |               3
+(2 rows)
+
+=== journal entries that arrived through a RECEIVABLE slot -- the count the bar prints as ZERO ===
+ receivable_slot_journal_entries 
+---------------------------------
+                               9
+(1 row)
+
+=== gl 18 and gl 22 -- the pair the ledger.accrual.entry argument rests on ===
+ gl_id | gl_code | je_rows 
+-------+---------+---------
+    18 | 10500   |       0
+    22 | 99010   |       0
+(2 rows)
+
+=== EVERY GL account a PROMOTED vector reads, live -- the P0 check ===
+ gl_id | gl_code | je_rows 
+-------+---------+---------
+     1 | 10000   |       3
+     2 | 10100   |       3
+     4 | 10201   |      12
+     6 | 20100   |       1
+     8 | 40100   |       2
+    10 | 40300   |       1
+    15 | 30000   |       0
+    16 | 10300   |      21
+    17 | 10400   |       5
+    18 | 10500   |       0
+    21 | 99008   |      13
+    22 | 99010   |       0
+(12 rows)
+
+=== distinct currency codes ===
+ currency_code | count 
+---------------+-------
+ MNT           |    89
+ USD           |     2
+(2 rows)
+

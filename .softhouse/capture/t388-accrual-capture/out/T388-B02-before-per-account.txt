@@ -1,0 +1,90 @@
+=== A. acc_gl_account columns ===
+          column_name           |     data_type     
+--------------------------------+-------------------
+ id                             | bigint
+ name                           | character varying
+ parent_id                      | bigint
+ hierarchy                      | character varying
+ gl_code                        | character varying
+ disabled                       | boolean
+ manual_journal_entries_allowed | boolean
+ account_usage                  | smallint
+ classification_enum            | smallint
+ tag_id                         | integer
+ description                    | character varying
+(11 rows)
+
+=== B. acc_gl_journal_entry columns ===
+          column_name          |          data_type          
+-------------------------------+-----------------------------
+ id                            | bigint
+ account_id                    | bigint
+ office_id                     | bigint
+ reversal_id                   | bigint
+ currency_code                 | character varying
+ transaction_id                | character varying
+ loan_transaction_id           | bigint
+ savings_transaction_id        | bigint
+ client_transaction_id         | bigint
+ reversed                      | boolean
+ ref_num                       | character varying
+ manual_entry                  | boolean
+ entry_date                    | date
+ type_enum                     | smallint
+ amount                        | numeric
+ description                   | character varying
+ entity_type_enum              | smallint
+ entity_id                     | bigint
+ created_by                    | bigint
+ last_modified_by              | bigint
+ created_date                  | timestamp without time zone
+ lastmodified_date             | timestamp without time zone
+ is_running_balance_calculated | boolean
+ office_running_balance        | numeric
+ organization_running_balance  | numeric
+ payment_details_id            | bigint
+ share_transaction_id          | bigint
+ transaction_date              | date
+ created_on_utc                | timestamp with time zone
+ last_modified_on_utc          | timestamp with time zone
+ submitted_on_date             | date
+(31 rows)
+
+=== C. PER-GL-ACCOUNT journal entry counts -- EVERY account, LEFT JOIN so zero is printed ===
+psql:<stdin>:17: ERROR:  column a.manual_entries_allowed does not exist
+LINE 2:        a.manual_entries_allowed, a.disabled,
+               ^
+=== D. journal entries by type/manual flag ===
+ type_enum | manual_entry | entity_type_enum | rows 
+-----------+--------------+------------------+------
+         1 | f            |                1 |   19
+         1 | t            |                  |   18
+         2 | f            |                1 |   15
+         2 | t            |                  |   19
+(4 rows)
+
+=== E. the two existing ACCRUAL loan transactions, and their journal entries (expect none) ===
+ id | loan_id | product_id | transaction_type_enum | transaction_date |    amount    | is_reversed | je_rows 
+----+---------+------------+-----------------------+------------------+--------------+-------------+---------
+ 22 |       7 |         55 |                    10 | 2026-02-01       |  7500.000000 | f           |       0
+ 24 |       7 |         55 |                    10 | 2026-02-01       | 42348.240000 | f           |       0
+(2 rows)
+
+=== F. product 28 mapping, for the record ===
+ id | product_id | product_type | financial_account_type | gl_account_id | payment_type | charge_id 
+----+------------+--------------+------------------------+---------------+--------------+-----------
+ 54 |         28 |            1 |                      1 |             2 |              |          
+ 55 |         28 |            1 |                      2 |             4 |              |          
+ 60 |         28 |            1 |                      3 |             8 |              |          
+ 61 |         28 |            1 |                      4 |             9 |              |          
+ 62 |         28 |            1 |                      5 |            10 |              |          
+ 64 |         28 |            1 |                      6 |            13 |              |          
+ 57 |         28 |            1 |                      7 |            18 |              |          
+ 58 |         28 |            1 |                      8 |            22 |              |          
+ 59 |         28 |            1 |                      9 |            16 |              |          
+ 56 |         28 |            1 |                     10 |            17 |              |          
+ 66 |         28 |            1 |                     11 |             6 |              |          
+ 63 |         28 |            1 |                     12 |            11 |              |          
+ 65 |         28 |            1 |                     13 |            14 |              |          
+(13 rows)
+

@@ -1,0 +1,10 @@
+POST /loanproducts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-P02-create-accrual-product
+Content-Type: application/json
+body-file: req/P01-accrual-product.json
+body-wire-bytes-artefact: T388-P02-create-accrual-product.req
+body-sha256: a41853b80897c606aad734c5e65b10d0b7b890d4a29100821aa60bf181135a24
+body-bytes: 1321
+captured-at-utc: 2026-08-28T11:38:39Z

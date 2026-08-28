@@ -1,0 +1,10 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-G07-gl-interest-receivable
+Content-Type: application/json
+body-file: req/G07-gl-interest-receivable.json
+body-wire-bytes-artefact: T388-G07-gl-interest-receivable.req
+body-sha256: f2667ba2b35ec7906d377f9ac8920d3592be8353d7352957a2eb294c05e6f98b
+body-bytes: 297
+captured-at-utc: 2026-08-28T11:37:50Z

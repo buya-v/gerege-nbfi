@@ -1,0 +1,10 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-G12-gl-income-from-recovery
+Content-Type: application/json
+body-file: req/G12-gl-income-from-recovery.json
+body-wire-bytes-artefact: T388-G12-gl-income-from-recovery.req
+body-sha256: 68575afad0d5ff2666d85978a80a04e0654cf8250daecb060c41a6594d6a8fa8
+body-bytes: 300
+captured-at-utc: 2026-08-28T11:37:51Z

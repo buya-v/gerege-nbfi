@@ -1,0 +1,20 @@
+=== now, as the tenant database sees it ===
+           db_now_tz           | db_current_date |      ulaanbaatar_now       
+-------------------------------+-----------------+----------------------------
+ 2026-08-28 11:35:10.340024+00 | 2026-08-28      | 2026-08-28 19:35:10.340024
+(1 row)
+
+=== global configuration rows that bear on business date and accrual ===
+ id |                       name                        | enabled | value | date_value 
+----+---------------------------------------------------+---------+-------+------------
+ 36 | account-mapping-for-charge                        | t       |       | 
+ 67 | allow-cash-and-non-cash-accrual                   | t       |     0 | 
+ 56 | charge-accrual-date                               | t       |       | 
+ 45 | enable-automatic-cob-date-adjustment              | t       |       | 
+ 44 | enable-business-date                              | f       |       | 
+ 52 | enable-cob-bulk-event                             | f       |       | 
+ 61 | enable-immediate-charge-accrual-post-maturity     | f       |       | 
+ 27 | interest-charged-from-date-same-as-disbursal-date | f       |     0 | 
+ 26 | paymenttype-applicable-for-disbursement-charges   | f       |       | 
+(9 rows)
+

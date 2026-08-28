@@ -1,0 +1,35 @@
+=== PER-GL-ACCOUNT journal entry counts BEFORE T388 -- EVERY account, LEFT JOIN so zero is printed ===
+ gl_id | gl_code |            name             | classification_enum | account_usage | manual_ok | disabled | je_rows 
+-------+---------+-----------------------------+---------------------+---------------+-----------+----------+---------
+     1 | 10000   | Assets                      |                   1 |             2 | t         | f        |       3
+     2 | 10100   | Fund Source                 |                   4 |             1 | t         | f        |       3
+     3 | 10200   | Current Assets              |                   1 |             2 | t         | f        |       0
+     4 | 10201   | Loan Portfolio              |                   1 |             1 | t         | f        |      12
+     5 | 20000   | Liabilities                 |                   2 |             2 | t         | f        |       0
+     6 | 20100   | Overpayment Liability       |                   2 |             1 | t         | f        |       1
+     7 | 40000   | Income                      |                   4 |             2 | t         | f        |       0
+     8 | 40100   | Interest On Loans           |                   4 |             1 | t         | f        |       2
+     9 | 40200   | Income From Fees            |                   4 |             1 | t         | f        |       1
+    10 | 40300   | Income From Penalties       |                   4 |             1 | t         | f        |       1
+    11 | 40400   | Recoveries                  |                   4 |             1 | t         | f        |       1
+    12 | 50000   | Expenses                    |                   5 |             2 | t         | f        |       0
+    13 | 50100   | Losses Written Off          |                   5 |             1 | t         | f        |       1
+    14 | 50200   | Goodwill Credit             |                   5 |             1 | t         | f        |       1
+    15 | 30000   | Equity                      |                   3 |             2 | t         | f        |       0
+    16 | 10300   | Fund Source Alternate       |                   1 |             1 | t         | f        |      21
+    17 | 10400   | Disabled Asset              |                   1 |             1 | t         | f        |       5
+    18 | 10500   | No Manual Entries Asset     |                   1 |             1 | f         | f        |       0
+    21 | 99008   | Liability Under Asset       |                   2 |             1 | t         | f        |      13
+    22 | 99010   | Unknown Param               |                   1 |             1 | t         | f        |       0
+    24 | 19998   | Update Discriminator        |                   1 |             1 | t         | f        |       0
+    33 | 19929   | A2-29 Drift Probe Asset     |                   4 |             1 | t         | f        |       3
+    34 | 19930   | A2-29 Drift Probe Liability |                   2 |             1 | t         | f        |       3
+(23 rows)
+
+=== distinct currency codes present in the ledger ===
+ currency_code | count 
+---------------+-------
+ MNT           |    69
+ USD           |     2
+(2 rows)
+

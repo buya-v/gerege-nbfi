@@ -1,0 +1,48 @@
+# ==========================================================================================
+# T388 ATTRIBUTION ROWS -- READY TO APPEND TO
+#     .softhouse/capture/t363-oracle-baseline/PROBES.tsv
+#
+# THEY ARE NOT APPENDED THERE BY T388, AND THAT IS A GRANT BOUNDARY, NOT AN OVERSIGHT.
+# T388's write grant is exactly `.softhouse/capture/t388-accrual-capture/` plus its handoff;
+# `PROBES.tsv` is outside it and its directory was concurrently held by another task in the
+# same fire. So the rows are staged HERE, verbatim and in the file's own format, and the
+# obligation is handed on.
+#
+# THE CONSEQUENCE, STATED PLAINLY: until these twenty-four rows are appended,
+#     bash .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh
+# WILL EXIT 1 and print L28/L29/L30/L31 and the twenty `T388-*` idempotency keys as
+# UNATTRIBUTED. That is the instrument working exactly as designed -- the absence of a
+# record is what goes red -- and it must be discharged by the next task that touches that
+# directory, not explained away.
+#
+# Fire 20260828-140005, tenant `gerege`, oracle pinned at 426a23544e8426a38ae43ae404670a0a7e85b9eb.
+# Floor at the time of this probe: acc_gl_journal_entry max id 75, m_portfolio_command_source
+# max id 359 -- BOTH ABOVE the floor rows already in PROBES.tsv (64 / 352), which is correct:
+# T352 and T359 moved it first and are already registered there.
+# ==========================================================================================
+
+# ---- fire 20260828-140005, task T388 -- FOUR accepted journal-entry transactions, TWENTY legs ----
+txn	L28	T388	20260828-140005	loan 8 DISBURSEMENT on the NEW ACCRUAL_PERIODIC product 63: gl 36 T388-1100 DEBIT / gl 35 T388-1000 CREDIT 1200000.000000 MNT. Slots 2 LOAN_PORTFOLIO and 1 FUND_SOURCE.
+txn	L29	T388	20260828-140005	THE FIRST ACCRUAL JOURNAL ENTRY IN THIS TENANT. Six legs on loan 8, entry_date 2026-02-15: DEBIT gl 41 T388-1200 24000.000000 through slot 7 INTEREST_RECEIVABLE, DEBIT gl 42 T388-1300 2500.000000 through slot 8 FEES_RECEIVABLE, DEBIT gl 43 T388-1400 1200.000000 through slot 9 PENALTIES_RECEIVABLE, against credits on slots 3 / 4 / 5.
+txn	L30	T388	20260828-140005	second accrual, six legs, entry_date 2026-03-15: 20195.380000 interest / 2500.000000 fee / 1200.000000 penalty, same three receivable slots.
+txn	L31	T388	20260828-140005	third accrual, six legs, entry_date 2026-04-15: 16314.670000 interest / 2500.000000 fee / 1200.000000 penalty, same three receivable slots.
+cmd	T388-G01-gl-fund-source	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 35 (T388-1000), slot 1 FUND_SOURCE
+cmd	T388-G02-gl-loan-portfolio	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 36 (T388-1100), slot 2 LOAN_PORTFOLIO
+cmd	T388-G03-gl-interest-on-loans	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 37 (T388-4000), slot 3 INTEREST_ON_LOANS
+cmd	T388-G04-gl-income-from-fees	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 38 (T388-4100), slot 4 INCOME_FROM_FEES
+cmd	T388-G05-gl-income-from-penalties	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 39 (T388-4200), slot 5 INCOME_FROM_PENALTIES
+cmd	T388-G06-gl-losses-written-off	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 40 (T388-5000), slot 6 LOSSES_WRITTEN_OFF
+cmd	T388-G07-gl-interest-receivable	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 41 (T388-1200), slot 7 INTEREST_RECEIVABLE
+cmd	T388-G08-gl-fees-receivable	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 42 (T388-1300), slot 8 FEES_RECEIVABLE
+cmd	T388-G09-gl-penalties-receivable	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 43 (T388-1400), slot 9 PENALTIES_RECEIVABLE
+cmd	T388-G10-gl-transfers-suspense	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 44 (T388-1500), slot 10 TRANSFERS_SUSPENSE
+cmd	T388-G11-gl-overpayment	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 45 (T388-2000), slot 11 OVERPAYMENT
+cmd	T388-G12-gl-income-from-recovery	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 46 (T388-4300), slot 12 INCOME_FROM_RECOVERY
+cmd	T388-G13-gl-goodwill-credit	T388	20260828-140005	status 1 PROCESSED -> GLACCOUNT 47 (T388-5100), slot 13 GOODWILL_CREDIT
+cmd	T388-P02-create-accrual-product	T388	20260828-140005	status 1 PROCESSED -> LOANPRODUCT 63, the SECOND ACCRUAL_PERIODIC product in this tenant
+cmd	T388-P03-create-client	T388	20260828-140005	status 1 PROCESSED -> CLIENT 3, external id УБ90051423
+cmd	T388-P04-loan-application	T388	20260828-140005	status 5 ERROR -- HTTP 400, charges[1][amount] and charges[2][amount] mandatory. NO loan, but a permanent command-source row (id 375) and a BURNED idempotency key.
+cmd	T388-P05-loan-application	T388	20260828-140005	status 1 PROCESSED -> LOAN 8 on product 63, client 3
+cmd	T388-P06-loan-approve	T388	20260828-140005	status 1 PROCESSED -> LOAN 8 approved 15 January 2026
+cmd	T388-P07-loan-disburse	T388	20260828-140005	status 1 PROCESSED -> LOAN 8 disbursed 15 January 2026, loan transaction 28, journal transaction L28
+cmd	T388-A01-runaccruals	T388	20260828-140005	status 1 PROCESSED -> EXECUTE PERIODICACCRUALACCOUNTING tillDate 15 April 2026. Produced loan transactions 29/30/31 and journal transactions L29/L30/L31. Same code path as scheduled job 16.

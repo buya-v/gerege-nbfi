@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/q7-t388-after-vs-before.sql
+query-bytes-artefact: T388-S01-after-snapshot.sql
+query-sha256: 12b33f8f0b7a8005196c630d298a64ad32bc256b5236f40c31f7cb51125b4e72
+query-bytes: 2605
+psql-exit-status: 0
+captured-at-utc: 2026-08-28T11:42:43Z

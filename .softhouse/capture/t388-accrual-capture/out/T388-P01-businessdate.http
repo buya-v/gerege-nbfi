@@ -1,0 +1,6 @@
+GET /businessdate
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-P01-businessdate
+body: <none>
+captured-at-utc: 2026-08-28T11:34:59Z

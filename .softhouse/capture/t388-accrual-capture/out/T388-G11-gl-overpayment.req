@@ -1,0 +1,1 @@
+{"name":"T388 Overpayment Liability","glCode":"T388-2000","manualEntriesAllowed":true,"type":2,"usage":1,"description":"T388 accrual capture: AccrualAccountsForLoan slot 11 OVERPAYMENT. A NEW account created by T388, so that no GL account any PROMOTED vector reads is moved by this capture."}

@@ -1,0 +1,10 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-G08-gl-fees-receivable
+Content-Type: application/json
+body-file: req/G08-gl-fees-receivable.json
+body-wire-bytes-artefact: T388-G08-gl-fees-receivable.req
+body-sha256: 205b306a3047c74c1ecc9379788f8fac6d65d917a5091a22988a4e4bfd55d46e
+body-bytes: 289
+captured-at-utc: 2026-08-28T11:37:50Z

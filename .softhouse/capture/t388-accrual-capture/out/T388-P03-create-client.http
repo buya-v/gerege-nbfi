@@ -1,0 +1,10 @@
+POST /clients
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-P03-create-client
+Content-Type: application/json
+body-file: req/C01-client.json
+body-wire-bytes-artefact: T388-P03-create-client.req
+body-sha256: 77e7d8db2ca0dfdab3c73f923329a44d91294c72f9d620de4e987e335c8e3d15
+body-bytes: 279
+captured-at-utc: 2026-08-28T11:39:22Z

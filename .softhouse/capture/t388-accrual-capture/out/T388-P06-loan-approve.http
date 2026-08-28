@@ -1,0 +1,10 @@
+POST /loans/8?command=approve
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-P06-loan-approve
+Content-Type: application/json
+body-file: req/L03-approve.json
+body-wire-bytes-artefact: T388-P06-loan-approve.req
+body-sha256: b69350b096293910da123333b143c8c9b6443603ccba5a5946638ee72ed90bd0
+body-bytes: 153
+captured-at-utc: 2026-08-28T11:40:22Z

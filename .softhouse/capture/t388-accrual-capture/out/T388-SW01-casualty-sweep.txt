@@ -1,0 +1,733 @@
+CASUALTY SWEEP for the T388 oracle-state movement
+repo: dbf7d312   date: 2026-08-28T11:44:08Z
+population: 8470 tracked files under .softhouse/
+untracked under .softhouse/: 1
+NOTE: git grep sees TRACKED files only. Run this AFTER 'git add -A' or this task's own
+      new files are invisible to it -- the T370/T361 failure, in a different costume.
+SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t388-accrual-capture/
+SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
+
+=== S1  the t305/t327 standing-baseline pin lines 'gerege <table> = '
+    engine: git grep -n -E gerege (acc_gl_journal_entry|acc_gl_closure|distinct_transaction_id|m_portfolio_command_source|m_loan|m_office) = 
+    hits total: 15   archived (snapshots, correctly stale): 15   LIVE: 0
+
+=== S2  the executable string-equality refusal those pins feed
+    engine: git grep -n -F STANDING ORACLE MOVED
+    hits total: 23   archived (snapshots, correctly stale): 15   LIVE: 8
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:77:    [ "$now" = "$want" ] || refuse "F5 ($phase) STANDING ORACLE MOVED: $label baseline '$want', now '$now'."
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:59:    [ "$now" = "$want" ] || refuse "F5 ($1) STANDING ORACLE MOVED: $label baseline '$want', now '$now'."
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/down.sh:52:    say "  *** $label baseline '$want', now '$now' -- THE STANDING ORACLE MOVED ***"; rc=1
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:82:    [ "$now" = "$want" ] || refuse "F5 ($phase) STANDING ORACLE MOVED: $label baseline '$want', now '$now'."
+      .softhouse/capture/t327-closure-accepting-side/throwaway/down.sh:54:    say "  *** $label baseline '$want', now '$now' -- THE STANDING ORACLE MOVED ***"; rc=1
+      .softhouse/capture/t363-oracle-baseline/CASUALTIES.md:32:| `capture/t305-openingbalance-accepting-side/throwaway/capture.sh:77` | `[ "$now" = "$want" ] \|\| refuse "… STANDING ORACLE MOVED"` |
+      .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh:172:sel "S3  string-equality comparison of a standing counter" -n -F 'STANDING ORACLE MOVED'
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:147:sel "S2  the executable string-equality refusal those pins feed" -n -F 'STANDING ORACLE MOVED'
+
+=== S3  the literal row/maxid pins '60/64', '71/75', '352/352', '359/359'
+    engine: git grep -n -E 60/64|71/75|352/352|359/359
+    hits total: 136   archived (snapshots, correctly stale): 113   LIVE: 23
+      .softhouse/capture/audit-t44/mathcontext/AUDIT-MATHCONTEXT.md:107:| I1 Σ principal due (repayment+down-payment) == principal disbursed | **CLEAN 352/352** |
+      .softhouse/capture/t305-openingbalance-accepting-side/FINDING.md:168:| residue on the standing rig | **none measured.** Four counters, three times: `60/64` journal entries, `0` closures, `26` distinct
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/LDG-05-note.txt:1:THE FIRST ACCEPTING-SIDE OPENING-BALANCE OBSERVATION THIS PROGRAM HAS EVER TAKEN, AND IT WAS NOT TAKEN ON TENANT `gere
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capability-tail.txt:1:***** THE OPENING-BALANCE ACCEPTING SIDE IS NOW OBSERVED, AND ARM A IS DEAD. [T305, closing T296 F-T296-2.] ***** 
+      .softhouse/capture/t327-closure-accepting-side/README.md:147:acc_gl_journal_entry        = 60/64
+      .softhouse/capture/t327-closure-accepting-side/README.md:150:m_portfolio_command_source  = 352/352
+      .softhouse/capture/t363-oracle-baseline/CASUALTIES.md:39:`acc_gl_journal_entry = 60/64`, `distinct_transaction_id = 26`, `m_portfolio_command_source = 352/352`
+      .softhouse/capture/t363-oracle-baseline/CASUALTIES.md:62:- **Re-baseline: retype `60/64 → 71/75`, `26 → 31`, `352 → 359`.** Rejected, and this is the option the
+      .softhouse/capture/t363-oracle-baseline/CASUALTIES.md:96:| `.softhouse/capture/t327-closure-accepting-side/README.md:147` | `acc_gl_journal_entry = 60/64` in prose | **Stale**; historical prose in a c
+      .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh:170:sel "S1  the literal row/maxid pin '60/64'" -n -F '60/64'
+      .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh:15:# COUNT -- "60/64", "26", "gl 16 -> SIXTEEN". A count is true for an instant. T242 wrote
+      .softhouse/capture/t371-t367-conditions/README.md:15:out/Q1-OPENING.txt   je 71/75   cs 359/359   closure 0/null
+      .softhouse/capture/t371-t367-conditions/README.md:16:out/Q5-CLOSING.txt   je 71/75   cs 359/359   closure 0/null
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:30:#     acc_gl_journal_entry        71/75  -> 91/95
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:32:#     m_portfolio_command_source 359/359 -> 379/379
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:148:sel "S3  the literal row/maxid pins '60/64', '71/75', '352/352', '359/359'" -n -E '60/64|71/75|352/352|359/359'
+      .softhouse/gates.md:4519:the file it meant carries no MNT assertion, while two throwaway rigs (`t305`, `t327`) pin `60/64` and `26` by
+      .softhouse/gates.md:4520:**string equality** and now fail closed against a live `71/75` and `31`. **Nothing on `main` records that the
+      .softhouse/program.json:2091:      "oracle": "UNREACHABLE at start; brought up by this fire on the postgresql compose profile in 80s. PostgreSQL 18.3, tenant gerege -> database fineract_gerege, pinned
+      .softhouse/tasks.json:3996:      "note": "DONE, MERGED 6798b070. THE ACCEPTING SIDE IS CAPTURED - first new parity vector in several fires. LDG-05 PASS 27 cells / 8 money; ledger parity 4->5, LEDGER m
+      .softhouse/tasks.json:5090:      "note": "COMPLETE and MERGED, head 31b5ea09. VERDICT ACCEPT-WITH-CONDITIONS on T352. *** IT ANSWERED THE DRIVER'S QUESTION IN ONE SENTENCE AS ASKED: G-19 was raised on
+      .softhouse/tasks.json:5165:      "description": "T352 and T359 fired probes at the shared reference oracle. A journal entry CANNOT BE DELETED, so the movement is permanent: 4 transactions / 9 legs fro
+      .softhouse/vectors/ledger/LDG-05-openingbalance-accepted-empty-ledger.json:8: "_note": "THE FIRST ACCEPTING-SIDE OPENING-BALANCE OBSERVATION THIS PROGRAM HAS EVER TAKEN, AND IT WAS NOT TAKEN ON TENANT
+
+=== S4  a literal m_loan cardinal -- MOVED BY T388, 7 -> 8
+    engine: git grep -n -E m_loan = [0-9]+|m_loan .{0,12}= *[0-9]+|gerege m_loan
+    hits total: 10   archived (snapshots, correctly stale): 8   LIVE: 2
+      .softhouse/capture/t363-oracle-baseline/CASUALTIES.md:40:(t327 adds `m_loan = 7`, `m_office = 1`).
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:149:sel "S4  a literal m_loan cardinal -- MOVED BY T388, 7 -> 8" -n -E 'm_loan = [0-9]+|m_loan .{0,12}= *[0-9]+|gerege m_loan'
+
+=== S5  'product 28 is the ONLY ACCRUAL_PERIODIC product' and relatives
+    engine: git grep -n -E ONLY ACCRUAL_PERIODIC|only ACCRUAL_PERIODIC|ONLY row with that value|only row with that value
+    hits total: 361   archived (snapshots, correctly stale): 352   LIVE: 9
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:395:          rather than that the machinery does not. Product 28 is the only ACCRUAL_PERIODIC
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:396:          product (m_product_loan.accounting_type = 3, and it is the ONLY row with that value),
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:410:          rather than that the machinery does not. Product 28 is the only ACCRUAL_PERIODIC
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:411:          product (m_product_loan.accounting_type = 3, and it is the ONLY row with that value),
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:437:          rather than that the machinery does not. Product 28 is the only ACCRUAL_PERIODIC
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:438:          product (m_product_loan.accounting_type = 3, and it is the ONLY row with that value),
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:152:sel "S5  'product 28 is the ONLY ACCRUAL_PERIODIC product' and relatives" -n -E 'ONLY ACCRUAL_PERIODIC|only ACCRUAL_PERIODIC|ONLY 
+      .softhouse/tasks.json:5643:      "description": "RAW OBSERVED CAPTURE ONLY. This task may NOT promote anything into `.softhouse/vectors/` -- that directory is held by a concurrent worker (T360). Promo
+      .softhouse/vectors/capabilities-ledger.json:52:      "evidence": "ENTIRELY UNGRADED, and the reason is that the observations do not exist rather than that the machinery does not. Product 28 is the onl
+
+=== S6  'NOT ONE JOURNAL ENTRY ... RECEIVABLE SLOT' and relatives
+    engine: git grep -n -E NOT ONE (JOURNAL )?ENTRY|NOT ONE JOURNAL ENTRY|no accrual product has a loan|ARRIVED THROUGH A RECEIVABLE SLOT
+    hits total: 184   archived (snapshots, correctly stale): 176   LIVE: 8
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:399:          ENTRY IN THIS TENANT ARRIVED THROUGH A RECEIVABLE SLOT. Product 28's own mapping is
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:414:          ENTRY IN THIS TENANT ARRIVED THROUGH A RECEIVABLE SLOT. Product 28's own mapping is
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:441:          ENTRY IN THIS TENANT ARRIVED THROUGH A RECEIVABLE SLOT. Product 28's own mapping is
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:40:#     receivable-slot entries         0  -> 9          <-- "NOT ONE JOURNAL ENTRY" is now FALSE
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:153:sel "S6  'NOT ONE JOURNAL ENTRY ... RECEIVABLE SLOT' and relatives" -n -E 'NOT ONE (JOURNAL )?ENTRY|NOT ONE JOURNAL ENTRY|no accru
+      .softhouse/tasks.json:5643:      "description": "RAW OBSERVED CAPTURE ONLY. This task may NOT promote anything into `.softhouse/vectors/` -- that directory is held by a concurrent worker (T360). Promo
+      .softhouse/vectors/capabilities-ledger.json:22:      "evidence": "Exercised on product 55 (CASH BASED) / loan 7 by A2-337/A2-338 (transaction L25, four legs) and A2-382/A2-383 (transaction L27, four l
+      .softhouse/vectors/capabilities-ledger.json:52:      "evidence": "ENTIRELY UNGRADED, and the reason is that the observations do not exist rather than that the machinery does not. Product 28 is the onl
+
+=== S7  'accrual is entirely absent / entirely ungraded'
+    engine: git grep -n -E ACCRUAL is entirely absent|ENTIRELY UNGRADED|accrual .{0,20}entirely absent
+    hits total: 210   archived (snapshots, correctly stale): 200   LIVE: 10
+      .softhouse/capture/t244-dec2-rev6/bar-output-final.txt:395:      * ACCRUAL IS ENTIRELY UNGRADED. No accrual product has a loan, no accrual/COB job has run,
+      .softhouse/capture/t244-dec2-rev6/bar-output.txt:382:      * ACCRUAL IS ENTIRELY UNGRADED. No accrual product has a loan, no accrual/COB job has run,
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:394:          WHY NOT: ENTIRELY UNGRADED, and the reason is that the observations do not exist
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:409:          WHY NOT: ENTIRELY UNGRADED, and the reason is that the observations do not exist
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:436:          WHY NOT: ENTIRELY UNGRADED, and the reason is that the observations do not exist
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:154:sel "S7  'accrual is entirely absent / entirely ungraded'" -n -E 'ACCRUAL is entirely absent|ENTIRELY UNGRADED|accrual .{0,20}enti
+      .softhouse/tasks.json:5636:      "title": "FU-T352-3 ORACLE-ONLY: take the FIRST accrual observations in this program -- ledger.accrual.entry is ENTIRELY UNGRADED and the only missing ingredient is a 
+      .softhouse/tasks.json:5643:      "description": "RAW OBSERVED CAPTURE ONLY. This task may NOT promote anything into `.softhouse/vectors/` -- that directory is held by a concurrent worker (T360). Promo
+      .softhouse/vectors/capabilities-ledger.json:22:      "evidence": "Exercised on product 55 (CASH BASED) / loan 7 by A2-337/A2-338 (transaction L25, four legs) and A2-382/A2-383 (transaction L27, four l
+      .softhouse/vectors/capabilities-ledger.json:52:      "evidence": "ENTIRELY UNGRADED, and the reason is that the observations do not exist rather than that the machinery does not. Product 28 is the onl
+
+=== S8  'product 28 HAS NO LOAN' / 'the single missing ingredient is A LOAN'
+    engine: git grep -n -E HAS NO LOAN|missing ingredient is A LOAN|product_id = 28|zero loans
+    hits total: 213   archived (snapshots, correctly stale): 203   LIVE: 10
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:397:          it HAS NO LOAN (m_loan carries no product_id = 28; loans 1-7 are on products 22, 22,
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:412:          it HAS NO LOAN (m_loan carries no product_id = 28; loans 1-7 are on products 22, 22,
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:439:          it HAS NO LOAN (m_loan carries no product_id = 28; loans 1-7 are on products 22, 22,
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:129:    "missing ingredient is A LOAN: product 28 has zero, re-confirmed by a LEFT JOIN over "
+      .softhouse/capture/t352-a2-next-tranche/sql/q2-t352-accrual-reachability.sql:24: WHERE m.product_id = 28
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:155:sel "S8  'product 28 HAS NO LOAN' / 'the single missing ingredient is A LOAN'" -n -E 'HAS NO LOAN|missing ingredient is A LOAN|pro
+      .softhouse/capture/t388-accrual-capture/sql/q2-t388-before-schema-fix.sql:28:FROM acc_product_mapping m WHERE m.product_id = 28 ORDER BY m.financial_account_type;
+      .softhouse/tasks.json:2667:      "description": "Promote the A2 raw captures into PARITY vectors under .softhouse/vectors/<ledger-context>/ and extend the conformance harness to grade a SECOND bounded
+      .softhouse/tasks.json:5643:      "description": "RAW OBSERVED CAPTURE ONLY. This task may NOT promote anything into `.softhouse/vectors/` -- that directory is held by a concurrent worker (T360). Promo
+      .softhouse/vectors/capabilities-ledger.json:52:      "evidence": "ENTIRELY UNGRADED, and the reason is that the observations do not exist rather than that the machinery does not. Product 28 is the onl
+
+=== S9  claims that no accrual or COB job has run
+    engine: git grep -n -E no accrual or COB job|no accrual job has|COB job has ever run
+    hits total: 202   archived (snapshots, correctly stale): 195   LIVE: 7
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:398:          27, 24, 46, 46, 55), and no accrual or COB job has ever run -- so NOT ONE JOURNAL
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:413:          27, 24, 46, 46, 55), and no accrual or COB job has ever run -- so NOT ONE JOURNAL
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:440:          27, 24, 46, 46, 55), and no accrual or COB job has ever run -- so NOT ONE JOURNAL
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:117:    "stands and the COST ESTIMATE does not. (a) 'no accrual or COB job has ever run' is "
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:156:sel "S9  claims that no accrual or COB job has run" -n -E 'no accrual or COB job|no accrual job has|COB job has ever run'
+      .softhouse/vectors/capabilities-ledger.json:22:      "evidence": "Exercised on product 55 (CASH BASED) / loan 7 by A2-337/A2-338 (transaction L25, four legs) and A2-382/A2-383 (transaction L27, four l
+      .softhouse/vectors/capabilities-ledger.json:52:      "evidence": "ENTIRELY UNGRADED, and the reason is that the observations do not exist rather than that the machinery does not. Product 28 is the onl
+
+=== S10 per-account leg counts spelled as words
+    engine: git grep -n -E gl 16 (carries|->) (SIXTEEN|TWENTY|TWENTY-ONE)|is TWELVE|gl 17 is|gl 21 is
+    hits total: 231   archived (snapshots, correctly stale): 219   LIVE: 12
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:408:          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:423:          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:450:          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
+      .softhouse/capture/t352-a2-next-tranche/ORACLE-STATE-MOVED-BY-T352.md:37:rests on, and neither moved. The stale `gl 16 -> SIXTEEN` sentence in
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:141:    "[COUNT RESTATED, T352: T242's 'gl 16 -> SIXTEEN' above was measured in its own fire "
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:144:    "TWENTY, gl 17 is FIVE and gl 21 is TWELVE [out/T352-A10-accrual-reachability.txt]. "
+      .softhouse/capture/t363-oracle-baseline/CASUALTIES.md:92:| `.softhouse/vectors/capabilities-ledger.json:52` | *"the live count is now **TWENTY**, gl 17 is **FIVE** and gl 21 is **TWELVE**"* | **STALE.
+      .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh:175:sel "S4  per-account leg counts spelled as words in the capability store" -n -E 'gl 16 (carries|->) (SIXTEEN|TWENTY)|is TWELVE
+      .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh:15:# COUNT -- "60/64", "26", "gl 16 -> SIXTEEN". A count is true for an instant. T242 wrote
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:159:sel "S10 per-account leg counts spelled as words" -n -E 'gl 16 (carries|->) (SIXTEEN|TWENTY|TWENTY-ONE)|is TWELVE|gl 17 is|gl 21 i
+      .softhouse/vectors/capabilities-ledger.json:22:      "evidence": "Exercised on product 55 (CASH BASED) / loan 7 by A2-337/A2-338 (transaction L25, four legs) and A2-382/A2-383 (transaction L27, four l
+      .softhouse/vectors/capabilities-ledger.json:52:      "evidence": "ENTIRELY UNGRADED, and the reason is that the observations do not exist rather than that the machinery does not. Product 28 is the onl
+
+=== S11 per-account leg counts spelled as digits
+    engine: git grep -n -E gl (16|17|18|21|22) (->|=) [0-9]+
+    hits total: 217   archived (snapshots, correctly stale): 210   LIVE: 7
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:408:          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:423:          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:450:          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
+      .softhouse/capture/t352-a2-next-tranche/ORACLE-STATE-MOVED-BY-T352.md:36:`gl 18 -> 0` and `gl 22 -> 0` are the pair the `ledger.accrual.entry` argument actually
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:145:    "gl 18 -> 0 and gl 22 -> 0 are UNCHANGED, which is the pair this row's argument "
+      .softhouse/tasks.json:1996:      "description": "A2-34's F-4 (MED), F-5 (MED), F-6 (LOW) and F-8 (LOW). These are one defect wearing four faces: **the harness's account of its own coverage is hand-wri
+      .softhouse/vectors/capabilities-ledger.json:52:      "evidence": "ENTIRELY UNGRADED, and the reason is that the observations do not exist rather than that the machinery does not. Product 28 is the onl
+
+=== S12 a command-source STATUS SPLIT written as a cardinal
+    engine: git grep -n -E [0-9]+ (PROCESSED|ERROR|REJECTED|INVALID)
+    hits total: 329   archived (snapshots, correctly stale): 278   LIVE: 51
+      .softhouse/capture/charges/bin/t48-capture.sh:84:mkcharge "T48 INVALID calculation type 9" 1 9 1.2345 create-c9-invalid > /dev/null
+      .softhouse/capture/t247-dec2-rev7/sweep-repo-9b6c596.txt:36:     .softhouse/tasks.json:1239:    "description": "A2-16 drafted DEC-2 revision 2 after A2-14 REJECTED revision 1 on shape. Re-derive; do n
+      .softhouse/capture/t247-dec2-rev7/sweep-repo-9b6c596.txt:65:     .softhouse/tasks.json:1218:    "description": "A2-14 REJECTED DEC-2 revision 1 ON SHAPE, not on honesty: it opened over thirty citation
+      .softhouse/capture/t247-dec2-rev7/sweep-repo-9b6c596.txt:108:     .softhouse/tasks.json:1239:    "description": "A2-16 drafted DEC-2 revision 2 after A2-14 REJECTED revision 1 on shape. Re-derive; do 
+      .softhouse/capture/t256-verdict-predicate/red/drive-red.sh:8:# P-80: exit codes are classified, never conflated. 0 GREEN, 1 REAL MEASURED REFUSAL, 2 ERROR.
+      .softhouse/capture/t287-closure-refusals/ARM1-OBSERVATION.md:191:[VERIFIED: `CommandProcessingResultType.java:31-37` — `0 INVALID, 1 PROCESSED, 2 AWAITING_APPROVAL,
+      .softhouse/capture/t287-closure-refusals/ARM1-OBSERVATION.md:192:3 REJECTED, 4 UNDER_PROCESSING, 5 ERROR`], `resource_id` is NULL, and each row consumed an id and an
+      .softhouse/capture/t287-closure-refusals/ARM2-OBSERVATION.md:136:table: **156 PROCESSED, 194 ERROR** — refused commands are in fact the *majority* of this tenant's audit
+      .softhouse/capture/t287-closure-refusals/sql/q6-command-audit-status.sql:9:--   "1 INVALID, 2 PROCESSED, 3 AWAITING_APPROVAL, 4 REJECTED, 5 ERROR, 6 UNDER_PROCESSING"
+      .softhouse/capture/t287-closure-refusals/sql/q6-command-audit-status.sql:13:--   0 INVALID, 1 PROCESSED, 2 AWAITING_APPROVAL, 3 REJECTED, 4 UNDER_PROCESSING, 5 ERROR
+      .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py:46:EXIT CODES, never conflated (P-80): 0 GREEN, 1 a REAL measured refusal, 2 ERROR (usage, IO, or the
+      .softhouse/capture/t363-oracle-baseline/CASUALTIES.md:97:| `.softhouse/reference-oracle.md:930` | *"the split **is** `156 PROCESSED / 194 ERROR`"* — **PRESENT TENSE, whole-table, live doctrine** | **M
+      .softhouse/capture/t363-oracle-baseline/PROBES.tsv:83:cmd	t352-a01-residue-3dp	T352	20260828-140005	status 1 PROCESSED -> txn a29bca0816a7
+      .softhouse/capture/t363-oracle-baseline/PROBES.tsv:84:cmd	t352-a03-balance-scale	T352	20260828-140005	status 1 PROCESSED -> txn a29bca9bf813
+      .softhouse/capture/t363-oracle-baseline/PROBES.tsv:85:cmd	t352-a04-overscale	T352	20260828-140005	status 1 PROCESSED -> txn a29bcaa6a41b
+      .softhouse/capture/t363-oracle-baseline/PROBES.tsv:86:cmd	t352-a07-usd	T352	20260828-140005	status 1 PROCESSED -> txn a29bcb5d6fcf
+      .softhouse/capture/t363-oracle-baseline/PROBES.tsv:90:cmd	T359-P01-residue-post	T359	20260828-140005	status 5 ERROR -- HTTP 400, comments exceeds max length 500. NO journal entry, but a permanent comm
+      .softhouse/capture/t363-oracle-baseline/PROBES.tsv:91:cmd	T359-P02-residue-post	T359	20260828-140005	status 5 ERROR -- HTTP 400, same cause. NO journal entry, but a permanent command-source row
+      .softhouse/capture/t363-oracle-baseline/PROBES.tsv:92:cmd	T359-P03-residue-post	T359	20260828-140005	status 1 PROCESSED -> txn a29bd5eaeb1b
+      .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh:191:# `156 PROCESSED / 194 ERROR` -- live 162 / 197, T371 re-derived it against the live database
+      .softhouse/capture/t371-t367-conditions/README.md:45:**F3 — the status split.** `reference-oracle.md:930` said, in the **present tense**, `156 PROCESSED /
+      .softhouse/capture/t371-t367-conditions/README.md:46:194 ERROR`. Live:
+      .softhouse/capture/t371-t367-conditions/README.md:49:status 1 PROCESSED   162      (157 at or below the floor,  5 above)
+      .softhouse/capture/t371-t367-conditions/README.md:50:status 5 ERROR       197      (195 at or below the floor,  2 above)
+      .softhouse/capture/t371-t367-conditions/sql/q2-status-split.sql:2:-- CommandProcessingResultType at 426a23544: 0 INVALID, 1 PROCESSED, 2 AWAITING_APPROVAL,
+      .softhouse/capture/t371-t367-conditions/sql/q2-status-split.sql:3:-- 3 REJECTED, 4 UNDER_PROCESSING, 5 ERROR.
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:1242:   1568  "note": "Raised by the driver, fire 20260820-140000, after T71 REJECTED T70. NEEDS NO ORACLE. This is the FOURTH draft of a 
+      .softhouse/gates.md:989:- **T67 REJECTED T65 — a diff whose code was correct, because its written rule was false.** The
+      .softhouse/patterns.md:303:  - **T67 REJECTED T65** — a money-path change whose *executable* part was sound and unbreakable, on
+      .softhouse/program.json:700:      "review_history": "A2-14 REJECTED rev 1 (three shape findings). A2-17 returned MICRO-FIX on rev 2 and applied its OWN 7-line fix, leaving the document reviewed by nob
+      .softhouse/program.json:1133:      "reviewer_catches": "T67 REJECTED T65 on a still-false written rule (2 of 3 driver-confirmed from source); T69 found a defect in T67's own replacement citation; T68 
+      .softhouse/program.json:1160:      "reviewer_catches": "T66 REFUTED THE DRIVER'S OWN HYPOTHESIS at step 4 - the futureUnrecognizedInterest lookup runs on a till-date-truncated DEEP COPY (:1226, :1237,
+      .softhouse/program.json:1572:      "reviewer_catches": "A2-19 REJECTED DEC-2 rev 2 on a measured, driver-reproduced inflation of the headline parity count; T181 found T178's published 21/4 split wrong
+      .softhouse/program.json:1583:      "gates": "G-11 RAISED and recorded (DEC-2 rev 2 REJECTED, NOT RATIFIABLE -- not a user gate; ratification is agent-decidable but the clean-review condition is unmet)
+      .softhouse/program.json:1645:        "A2-25 REJECTED DEC-2 rev 3 on four claims false about main; its F-3 MEASURED that requirement 6 — which would have graded A2-15 — cannot be satisfied on the bytes
+      .softhouse/program.json:1698:        "A2-31 REJECTED DEC-2 rev 4 (two claims false about main); G-11 NOT MET; found a THIRD file carrying the retracted claim that T224's sweep missed the same fire",
+      .softhouse/program.json:1699:        "T225 REJECTED T222 AFTER MERGE -- the grounding rule refuses a legitimate exemption (measured 46->45, inadmissible exit 2); its one-builder pin passed under two m
+      .softhouse/program.json:1706:      "gates": "G-11 rev 4 REJECTED (rev 5 = A2-32). G-8 region MEASURED; options (b)/(c) BLOCKED on T229. G-12 unchanged. Nothing cut over.",
+      .softhouse/program.json:1880:        "T251 REJECTED DEC-2 revision 7: it corrects three stale line numbers with three ALREADY stale (run_guards :1504 not :1474; guard_ledger_invariants :1524 not :1494
+      .softhouse/reference-oracle.md:929:`0 INVALID, 1 PROCESSED, 2 AWAITING_APPROVAL, 3 REJECTED, 4 UNDER_PROCESSING, 5 ERROR`]. Across the
+      .softhouse/reference-oracle.md:934:> The sentence read *"the split **is** `156 PROCESSED / 194 ERROR`"*. That was T287's measurement,
+      .softhouse/state/loan-schedule.STATE.json:26:    {"id": "T70", "status": "rejected",     "why": "T71 REJECTED, driver-confirmed. NOT MERGED; the diff is preserved on softhouse/T70-fui-marker for T72 t
+      .softhouse/tasks.json:1087:      "description": "T183 REJECTED T179 with three material findings and supplied a +25-line patch it wrote, TESTED and deliberately did NOT apply, on the correct ground th
+      .softhouse/tasks.json:2689:      "description": "A2-14 REJECTED DEC-2 revision 1 ON SHAPE, not on honesty: it opened over thirty citations and every [VERIFIED] claim traced to real source at the exact
+      .softhouse/tasks.json:2710:      "description": "A2-16 drafted DEC-2 revision 2 after A2-14 REJECTED revision 1 on shape. Re-derive; do not read A2-16's conclusions and agree. The load-bearing claim t
+      .softhouse/tasks.json:2940:      "description": "A2-25 REJECTED revision 3 and listed EXHAUSTIVELY what would make it clean, explicitly so this is ONE revision and not two. Apply all seven. 1. Delete 
+      .softhouse/tasks.json:2994:      "description": "G-11 states its unblocking condition verbatim and it has now been attempted twice: 'a further independent review passing CLEAN'. A2-25 reviewed rev 3 a
+      .softhouse/tasks.json:3318:      "description": "T264 REJECTED the cloud's T241 branch (df0aed2) and the driver upheld it: the branch does not merge (CONFLICT in gates.md, add/add on the handoff) and 
+      .softhouse/tasks.json:3538:      "description": "T268 fixed a fail-open and introduced another. T281 REJECTED it. This is the retry and it starts from T281's branch findings, not from T268's handoff."
+      .softhouse/tasks.json:5240:      "description": "T363 is COMPLETE on softhouse/T363-oracle-baseline @ 8313ab6d (15 files, scope CLEAN against its grant, verified by the driver with the three-dot form)
+      .softhouse/tasks.json:5458:      "description": "T376 REJECTED T370, and the rejection is ONE finding that is NOT about the instrument:\n\n    bash .softhouse/conformance.sh on softhouse/T370-t351-ret
+
+=== S13 a cardinal immediately adjacent to a table name
+    engine: git grep -n -E (acc_gl_journal_entry|acc_gl_account|acc_product_mapping|m_product_loan|m_client|m_loan_transaction|m_portfolio_command_source)[^a-z_]{0,24}[0-9]+ (rows|entries|records)
+    hits total: 12   archived (snapshots, correctly stale): 9   LIVE: 3
+      .softhouse/capture/t287-closure-refusals/ARM2-OBSERVATION.md:114:| `m_portfolio_command_source` | 347 rows / max 347 | 351 rows / max 351 | **NO — permanent, append-only** |
+      .softhouse/reference-oracle.md:912:| **`m_portfolio_command_source`** | 347 rows / max id 347 | **351 rows / max id 351** | **NO — permanent, append-only** |
+      .softhouse/reference-oracle.md:913:| `acc_gl_journal_entry` | 60 rows / max id 64 / seq 64 | 60 rows / max id 64 / seq 64 | yes — **never moved** |
+
+=== S14 'there are N products / N clients / N loans in this tenant'
+    engine: git grep -n -E (THIRTY-THREE|thirty-three|33) (loan )?products|TWO clients|two clients in|SEVEN loans|seven loans
+    hits total: 4   archived (snapshots, correctly stale): 3   LIVE: 1
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:165:sel "S14 'there are N products / N clients / N loans in this tenant'" -n -E '(THIRTY-THREE|thirty-three|33) (loan )?products|TWO c
+
+=== S15 max-id pins on the tables T388 appended to
+    engine: git grep -n -E max\(id\)[^0-9]{0,20}(34|60|75|156|27|359)([^0-9]|$)
+    hits total: 1   archived (snapshots, correctly stale): 1   LIVE: 0
+
+=== S16 references to GL account ids 35-47, product 63, client 3, loan 8
+    engine: git grep -n -E gl (3[5-9]|4[0-7])([^0-9]|$)|product 63|loanproducts/63|clients/3([^0-9]|$)|loans/8([^0-9?]|$)
+    hits total: 2   archived (snapshots, correctly stale): 1   LIVE: 1
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:169:sel "S16 references to GL account ids 35-47, product 63, client 3, loan 8" -n -E 'gl (3[5-9]|4[0-7])([^0-9]|$)|product 63|loanprod
+
+=== S17 acc_gl_closure pins -- T388 did not touch closures (expect stale-or-fine, not new)
+    engine: git grep -n -E acc_gl_closure = |acc_gl_closure 0/null
+    hits total: 19   archived (snapshots, correctly stale): 15   LIVE: 4
+      .softhouse/capture/t363-oracle-baseline/CASUALTIES.md:44:[VERIFIED: T363, live]. `acc_gl_closure 0/null`, `m_loan 7`, `m_office 1` are unmoved.
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:172:sel "S17 acc_gl_closure pins -- T388 did not touch closures (expect stale-or-fine, not new)" -n -E 'acc_gl_closure = |acc_gl_closu
+      .softhouse/observations/20260827-chain2-standing-oracle-baseline.md:31:## Why `acc_gl_closure = 0` is the dangerous number here
+      .softhouse/observations/20260827-chain2-standing-oracle-baseline.md:38:So the correct reading of `acc_gl_closure = 0` is not "clean" but **"three of four probes are live"**.
+
+=== S18 does any guard or the harness reach the tenant database at all?
+    engine: git grep -n -E psql|docker exec|fineract-db-1
+    hits total: 2180   archived (snapshots, correctly stale): 1687   LIVE: 493
+      .softhouse/capture/actualactual/REPRODUCE.md:4:**Do not start, stop, restart or reconfigure `fineract-fineract-1` / `fineract-db-1`.** Every Path A /
+      .softhouse/capture/actualactual/src/negative-tests.sh:12:# neither fineract-fineract-1 nor fineract-db-1.
+      .softhouse/capture/actualactual/src/pathb-capture.sh:42:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/actualactual/src/pathb-capture.sh:51:LOANS_BEFORE=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_loan;")
+      .softhouse/capture/actualactual/src/pathb-capture.sh:121:LOANS_AFTER=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_loan;")
+      .softhouse/capture/actualactual/src/pathb-capture.sh:123:PROD_AFTER=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_product_loan;")
+      .softhouse/capture/actualactual/src/run-actualactual.sh:22:# shared fineract-fineract-1 / fineract-db-1 containers are never started, stopped,
+      .softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md:7:+ `fineract-db-1` (postgres:18.3), tenant `gerege`. "Oracle" throughout means the **Fineract reference
+      .softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md:85:both HTTP 200 from the live oracle; definitions read from `m_charge` by `psql`.]
+      .softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md:258:m_charge 12 | m_loan 0 | m_loan_charge 0 | m_product_loan 16      (fineract_gerege, psql)
+      .softhouse/capture/audit-t44/mathcontext/AUDIT-MATHCONTEXT.md:50:`fineract-db-1` were never started, stopped, restarted, re-tenanted, reconfigured or written to;
+      .softhouse/capture/audit-t44/mathcontext/AUDIT-MATHCONTEXT.md:51:the only contact with them was read-only `docker exec` (`unzip` into `/tmp`, `javap`, `sha256sum`).
+      .softhouse/capture/audit-t44/mathcontext/AUDIT-MATHCONTEXT.md:64:`docker exec -e JAVA_TOOL_OPTIONS= fineract-fineract-1 … javap -p -c` on the class extracted from
+      .softhouse/capture/audit-t44/mathcontext/src/read-pathb-wiring.sh:42:  docker exec "$CONTAINER" sh -c 'sha256sum /app/fineract-provider.jar' || fail "cannot read the jar"
+      .softhouse/capture/audit-t44/mathcontext/src/read-pathb-wiring.sh:43:  docker exec "$CONTAINER" sh -c '
+      .softhouse/capture/audit-t44/mathcontext/src/read-pathb-wiring.sh:51:docker exec "$CONTAINER" sh -c '
+      .softhouse/capture/audit-t44/mathcontext/src/read-pathb-wiring.sh:67:  docker exec -e JAVA_TOOL_OPTIONS= "$CONTAINER" sh -c "
+      .softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh:32:# The shared fineract-fineract-1 / fineract-db-1 containers are never started, stopped,
+      .softhouse/capture/audit-t44/rerun-periodratio/ATTESTATION.md:195:- Six throwaway `--rm` containers were run. The shared `fineract-fineract-1` / `fineract-db-1`
+      .softhouse/capture/audit-t44/rerun-periodratio/PROVENANCE.md:73:shared `fineract-fineract-1` / `fineract-db-1` containers — owned by a sibling worker this fire
+      .softhouse/capture/audit-t44/rerun-periodratio/REPRODUCE.md:8:**Do not start, stop or reconfigure `fineract-fineract-1` / `fineract-db-1`.** Every container
+      .softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh:35:# The shared fineract-fineract-1 / fineract-db-1 containers are never started, stopped,
+      .softhouse/capture/charges/ATTESTATION-T46.md:9:healthy, `fineract-db-1` (`postgres:18.3`) up 38 h healthy — run by this task].
+      .softhouse/capture/charges/ATTESTATION-T46.md:21:`psql -d fineract_gerege -tAc "select (select count(*) from m_charge), (select count(*) from m_loan),
+      .softhouse/capture/charges/REPRODUCE-T46.md:32:docker exec fineract-db-1 psql -U postgres -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/attest-t40.py:56:FIN, DB = 'fineract-fineract-1', 'fineract-db-1'
+      .softhouse/capture/charges/bin/attest-t40.py:142:gitprops = sh("docker exec %s sh -c 'unzip -p /app/fineract-provider.jar "
+      .softhouse/capture/charges/bin/attest-t40.py:149:jvm = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'java -version' 2>&1" % FIN)
+      .softhouse/capture/charges/bin/attest-t40.py:154:sh("docker exec %s sh -c 'mkdir -p /tmp/t40at && cd /tmp/t40at && unzip -o -q "
+      .softhouse/capture/charges/bin/attest-t40.py:156:javap = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'cd /tmp/t40at && javap -p -constants -cp "
+      .softhouse/capture/charges/bin/attest-t40.py:167:pg_version = sh("docker exec %s psql -U root -t -c 'select version();'" % DB)
+      .softhouse/capture/charges/bin/attest-t40.py:168:pg_version_num = sh("docker exec %s psql -U root -At -c 'show server_version_num;'" % DB)
+      .softhouse/capture/charges/bin/attest-t40.py:180:banned_jar = sh("docker exec %s sh -c 'unzip -l /app/fineract-provider.jar' "
+      .softhouse/capture/charges/bin/attest-t40.py:186:    return sh('docker exec %s psql -U root -d %s -At -c "%s"' % (DB, db, sql.replace('"', '\\"')))
+      .softhouse/capture/charges/bin/attest.py:49:FIN, DB = 'fineract-fineract-1', 'fineract-db-1'
+      .softhouse/capture/charges/bin/attest.py:125:gitprops = sh("docker exec %s sh -c 'unzip -p /app/fineract-provider.jar "
+      .softhouse/capture/charges/bin/attest.py:132:jvm = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'java -version' 2>&1" % FIN)
+      .softhouse/capture/charges/bin/attest.py:137:sh("docker exec %s sh -c 'mkdir -p /tmp/t36at && cd /tmp/t36at && unzip -o -q "
+      .softhouse/capture/charges/bin/attest.py:139:javap = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'cd /tmp/t36at && javap -p -constants -cp "
+      .softhouse/capture/charges/bin/attest.py:150:pg_version = sh("docker exec %s psql -U root -t -c 'select version();'" % DB)
+      .softhouse/capture/charges/bin/attest.py:151:pg_version_num = sh("docker exec %s psql -U root -At -c 'show server_version_num;'" % DB)
+      .softhouse/capture/charges/bin/attest.py:164:banned_jar = sh("docker exec %s sh -c 'unzip -l /app/fineract-provider.jar' "
+      .softhouse/capture/charges/bin/attest.py:169:    return sh('docker exec %s psql -U root -d %s -At -c "%s"' % (DB, db, sql.replace('"', '\\"')))
+      .softhouse/capture/charges/bin/create-charges.sh:23:docker exec fineract-db-1 psql -U root -d fineract_gerege -c \
+      .softhouse/capture/charges/bin/create-charges2.sh:17:docker exec fineract-db-1 psql -U root -d fineract_gerege -c \
+      .softhouse/capture/charges/bin/t48-capture.sh:33:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/charges/bin/t48-capture.sh:93:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/charges/bin/t48-capture.sh:147:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/charges/bin/t51-capture.sh:37:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture.sh:68:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture.sh:74:d=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture.sh:117:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture.sh:125:C5=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture.sh:187:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture2.sh:34:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture2.sh:77:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture2.sh:229:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture3.sh:26:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture3.sh:79:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture4.sh:28:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture4.sh:82:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture5.sh:27:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture5.sh:62:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture5.sh:65:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture5.sh:115:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture6.sh:26:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture6.sh:47:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-determinism.sh:14:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-determinism.sh:37:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-negative.sh:65:d=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/dec1-binding/ATTESTATION.md:115:- Two isolated containers were run; the shared `fineract-fineract-1` / `fineract-db-1`
+      .softhouse/capture/dec1-binding/REPRODUCE.md:27:**Do not start, stop or reconfigure `fineract-fineract-1` / `fineract-db-1`.** The container
+      .softhouse/capture/driver-20260822-060013/oracle-rederivation.txt:5:engine                 : PostgreSQL 18.3, container fineract-db-1, docker exec psql -U postgres
+      .softhouse/capture/leapboundary/REPRODUCE.md:4:**Do not start, stop, restart or reconfigure `fineract-fineract-1` / `fineract-db-1`.** T55 touches
+      .softhouse/capture/leapboundary/REPRODUCE.md:20:docker exec fineract-db-1 psql -U root -t -c 'select version();'   # PostgreSQL 18.3 …
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:61:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:74:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:81:LOANS_BEFORE=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_loan;")
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:82:PROD_BEFORE=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_product_loan;")
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:83:CLI_BEFORE=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_client;")
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:182:LOANS_AFTER=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_loan;")
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:183:PROD_AFTER=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_product_loan;")
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:184:CLI_AFTER=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_client;")
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:192:docker inspect fineract-db-1       --format '{{.State.StartedAt}} {{.RestartCount}}' >> "$O/container-state.txt"
+      .softhouse/capture/leapboundary/bin/t55-determinism.sh:39:LOANS=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_loan;")
+      .softhouse/capture/leapboundary/bin/t55-negative-tests.sh:180:d=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(distinct (days_in_month_enum,days_in_year_enum,interest
+      .softhouse/capture/mathcontext/ATTESTATION.md:408:`fineract-fineract-1` and `fineract-db-1` were **not** started, stopped, restarted, re-tenanted,
+      .softhouse/capture/mathcontext/ATTESTATION.md:409:reconfigured, dropped or written to. `read-pathb-wiring.sh` does `docker exec` into the running
+      .softhouse/capture/mathcontext/ATTESTATION.md:519:check, once admitted). `fineract-fineract-1` and `fineract-db-1` were **not** started, stopped,
+      .softhouse/capture/mathcontext/ATTESTATION.md:521:`docker exec` into the running `fineract-fineract-1` to run `unzip` and `javap` into its
+      .softhouse/capture/mathcontext/REPRODUCE.md:9:**Do not start, stop or reconfigure `fineract-fineract-1` / `fineract-db-1`.** Every capture
+      .softhouse/capture/mathcontext/REPRODUCE.md:11:does `docker exec` into the *running* `fineract-fineract-1` but is **read-only**: it runs `javap`
+      .softhouse/capture/mathcontext/REPRODUCE.md:187:`docker run --rm` containers; the running `fineract-fineract-1` / `fineract-db-1` are not started,
+      .softhouse/capture/mathcontext/src/read-pathb-wiring.sh:42:  docker exec "$CONTAINER" sh -c 'sha256sum /app/fineract-provider.jar' || fail "cannot read the jar"
+      .softhouse/capture/mathcontext/src/read-pathb-wiring.sh:43:  docker exec "$CONTAINER" sh -c '
+      .softhouse/capture/mathcontext/src/read-pathb-wiring.sh:51:docker exec "$CONTAINER" sh -c '
+      .softhouse/capture/mathcontext/src/read-pathb-wiring.sh:67:  docker exec -e JAVA_TOOL_OPTIONS= "$CONTAINER" sh -c "
+      .softhouse/capture/mathcontext/src/run-mathcontext.sh:32:# The shared fineract-fineract-1 / fineract-db-1 containers are never started, stopped,
+      .softhouse/capture/mathcontext/src/run-mathcontext3.sh:23:# fineract-db-1 are NOT started, stopped, restarted, re-tenanted, reconfigured or written to.
+      .softhouse/capture/mathcontext/src/run-t50-tier1.sh:8:# Throwaway container only (`docker run --rm`).  The running fineract-fineract-1 / fineract-db-1
+      .softhouse/capture/mathcontext/src/run-t50-tier2.sh:8:# Throwaway container only (`docker run --rm`).  The running fineract-fineract-1 / fineract-db-1
+      .softhouse/capture/mathcontext/src/t46-assert-pathb-slot.sh:60:      docker exec "$CONTAINER" sh -c 'sha256sum /app/fineract-provider.jar'
+      .softhouse/capture/mathcontext/src/t46-assert-pathb-slot.sh:62:      docker exec "$CONTAINER" sh -c '
+      .softhouse/capture/mathcontext/src/t46-assert-pathb-slot.sh:73:        docker exec -e JAVA_TOOL_OPTIONS= "$CONTAINER" sh -c "cd /tmp/t46j && javap -p -c -cp BOOT-INF/classes '$CLS'"
+      .softhouse/capture/pathb/t125/green-t36-gerege/attestation.json:50:  "container": "fineract-db-1",
+      .softhouse/capture/pathb/t125/green-t40-gerege/attestation.json:40:  "container": "fineract-db-1",
+      .softhouse/capture/pathb/t125/red-pre-fix-default/attestation.json:50:  "container": "fineract-db-1",
+      .softhouse/capture/pathb/t149/capture-halfeven-arm.sh:63:ord=$(docker exec fineract-db-1 psql -U root -d fineract_default -At \
+      .softhouse/capture/pathb/t149/compare-arms.py:18:DB = 'fineract-db-1'
+      .softhouse/capture/pathb/t149/compare-arms.py:41:    p = subprocess.run(['docker', 'exec', DB, 'psql', '-U', 'root', '-d', db, '-At', '-c', sql],
+      .softhouse/capture/pathb/t149/compare-arms.py:44:        sys.exit('psql failed: %s' % p.stderr.strip())
+      .softhouse/capture/pathb/t36/attest.py:111:FIN, DB = 'fineract-fineract-1', 'fineract-db-1'
+      .softhouse/capture/pathb/t36/attest.py:265:gitprops = sh("docker exec %s sh -c 'unzip -p /app/fineract-provider.jar "
+      .softhouse/capture/pathb/t36/attest.py:272:jvm = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'java -version' 2>&1" % FIN)
+      .softhouse/capture/pathb/t36/attest.py:277:sh("docker exec %s sh -c 'mkdir -p /tmp/t36at && cd /tmp/t36at && unzip -o -q "
+      .softhouse/capture/pathb/t36/attest.py:279:javap = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'cd /tmp/t36at && javap -p -constants -cp "
+      .softhouse/capture/pathb/t36/attest.py:290:pg_version = sh("docker exec %s psql -U root -t -c 'select version();'" % DB)
+      .softhouse/capture/pathb/t36/attest.py:291:pg_version_num = sh("docker exec %s psql -U root -At -c 'show server_version_num;'" % DB)
+      .softhouse/capture/pathb/t36/attest.py:304:banned_jar = sh("docker exec %s sh -c 'unzip -l /app/fineract-provider.jar' "
+      .softhouse/capture/pathb/t36/attest.py:309:    return sh('docker exec %s psql -U root -d %s -At -c "%s"' % (DB, db, sql.replace('"', '\\"')))
+      .softhouse/capture/pathb/t36/preconditions.sh:33:DB=fineract-db-1
+      .softhouse/capture/pathb/t36/preconditions.sh:76:gp=$(docker exec "$FIN" sh -c 'unzip -p /app/fineract-provider.jar BOOT-INF/classes/git.properties' 2>/dev/null)
+      .softhouse/capture/pathb/t36/preconditions.sh:86:docker exec "$FIN" sh -c 'mkdir -p /tmp/t36pc && cd /tmp/t36pc && unzip -o -q /app/fineract-provider.jar "BOOT-INF/lib/fineract-core-*.jar"' 2>/dev/nul
+      .softhouse/capture/pathb/t36/preconditions.sh:87:prec=$(docker exec -e JAVA_TOOL_OPTIONS= "$FIN" sh -c \
+      .softhouse/capture/pathb/t36/preconditions.sh:133:jarlist=$(docker exec "$FIN" sh -c 'unzip -l /app/fineract-provider.jar' 2>/dev/null)
+      .softhouse/capture/pathb/t36/preconditions.sh:147:pgv=$(docker exec "$DB" psql -U root -t -c 'select version();' 2>/dev/null | tr -d '\r' | sed -n '1s/^ *//p')
+      .softhouse/capture/pathb/t36/preconditions.sh:159:tzid=$(docker exec "$DB" psql -U root -d fineract_tenants -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:172:schema=$(docker exec "$DB" psql -U root -d fineract_tenants -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:174:rm_val=$(docker exec "$DB" psql -U root -d "$schema" -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:176:rm_en=$(docker exec "$DB" psql -U root -d "$schema" -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:188:# `[ -z "$scp" ]`, and a psql that never ran returns the empty string too, so a dead database, a
+      .softhouse/capture/pathb/t36/preconditions.sh:193:scp=$(docker exec "$DB" psql -U root -d fineract_tenants -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:203:port=$(docker exec "$DB" psql -U root -d fineract_tenants -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:282:mnt=$(docker exec "$DB" psql -U root -d "$schema" -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:286:mnt_on=$(docker exec "$DB" psql -U root -d "$schema" -At \
+      .softhouse/capture/pathb/t36/recapture.sh:172:SCHEMA=$(docker exec fineract-db-1 psql -U root -d fineract_tenants -At \
+      .softhouse/capture/pathb/t36/recapture.sh:175:docker exec fineract-db-1 psql -U root -d "$SCHEMA" -At \
+      .softhouse/capture/pathb/t36/recapture.sh:177:docker exec fineract-db-1 psql -U root -d "$SCHEMA" -At \
+      .softhouse/capture/pathb/t36/recreate-products.sh:89:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/pathb/t80/PREDICTION.md:14:* `fineract-fineract-1` and `fineract-db-1` both `Up (healthy)`, image `fineract:latest`
+      .softhouse/capture/pathb/t80/prove-f1.sh:340:# at all if it hung on a docker exec.  `wait` is interruptible, so the trap fires at once,
+      .softhouse/capture/pathb/t80/run-attacks.sh:8:# read-only docker/psql queries.  It creates no tenant, restarts nothing, writes no oracle row.
+      .softhouse/capture/pathb/t99/prove-f1.sh:14:#      calculation) and read-only docker/psql queries, into a /tmp export: no committed evidence
+      .softhouse/capture/pathb/t99/prove-f2.sh:12:# calculation) and read-only docker/psql queries; nothing is written to the oracle.  T99_LIVE=0
+      .softhouse/capture/pathb/t99/prove-f3.sh:144:echo "         P5's \$banned and P6's \$jarhits are \`grep -icE\` counts and P11's \$scp is a psql"
+      .softhouse/capture/pathb/t99/prove-f5-legs.sh:5:# `grep -icE` over an empty stream counts 0 and a `psql` that never ran returns the empty string, so
+      .softhouse/capture/pathb/t99/prove-f5-legs.sh:31:# ORACLE SAFETY.  Read-only `docker inspect` / `docker exec ... psql` / `unzip -l`, plus the pinned
+      .softhouse/capture/pathb/t99/prove-f5-legs.sh:105:# which word-splits the WHOLE argument list — so `psql -c "select ... where t.identifier='gerege';"`
+      .softhouse/capture/pathb/t99/prove-f5-legs.sh:215:# outage and none of the rows below mean what they say.  P12 reads the SAME psql join as P11.
+      .softhouse/capture/pathb/t99/sweep.sh:48:for tool in docker curl psql grep sed awk tr cut head unzip javap; do
+      .softhouse/capture/periodratio/ATTESTATION.md:195:- Six throwaway `--rm` containers were run. The shared `fineract-fineract-1` / `fineract-db-1`
+      .softhouse/capture/periodratio/PROVENANCE.md:73:shared `fineract-fineract-1` / `fineract-db-1` containers — owned by a sibling worker this fire
+      .softhouse/capture/periodratio/REPRODUCE.md:8:**Do not start, stop or reconfigure `fineract-fineract-1` / `fineract-db-1`.** Every container
+      .softhouse/capture/periodratio/analysis/run-t46-monthdiff.sh:7:# The shared fineract-fineract-1 / fineract-db-1 containers are not touched.
+      .softhouse/capture/periodratio/src/run-periodratio.sh:35:# The shared fineract-fineract-1 / fineract-db-1 containers are never started, stopped,
+      .softhouse/capture/periodratio/src/run-t46-periodratio.sh:35:# shared fineract-fineract-1 / fineract-db-1 containers are never started, stopped,
+      .softhouse/capture/t100-g8-rescope/src/run-t100.sh:8:# fineract-db-1 containers: it launches a throw-away `docker run --rm` from the pinned image and
+      .softhouse/capture/t116-familyb-promotion/src/run-t116.sh:10:# fineract-db-1 containers: it launches a throw-away `docker run --rm` from the pinned image and
+      .softhouse/capture/t117-familyb/REPRODUCE.md:6:does not touch `fineract-fineract-1` / `fineract-db-1`; it runs a throw-away `docker run --rm` from
+      .softhouse/capture/t117-familyb/src/run-t117-pass2.sh:9:# fineract-db-1 containers: it launches a throw-away `docker run --rm` from the pinned image and
+      .softhouse/capture/t117-familyb/src/run-t117.sh:9:# fineract-db-1 containers: it launches a throw-away `docker run --rm` from the pinned image and
+      .softhouse/capture/t159-review-t117/PREDICTION-T159.md:14:is started and `fineract-fineract-1` / `fineract-db-1` are not touched.
+      .softhouse/capture/t159-review-t117/src/run-t159.sh:9:# fineract-db-1 containers: it launches a throw-away `docker run --rm` from the pinned image and
+      .softhouse/capture/t219-g8-residual/src/run-t219-run2.sh:8:# does not touch the running fineract-fineract-1 / fineract-db-1 containers -- it launches a
+      .softhouse/capture/t219-g8-residual/src/run-t219-run3.sh:8:# does not touch the running fineract-fineract-1 / fineract-db-1 containers -- it launches a
+      .softhouse/capture/t219-g8-residual/src/run-t219.sh:8:# does not touch the running fineract-fineract-1 / fineract-db-1 containers -- it launches a
+      .softhouse/capture/t223-g8-region-predicate/src/run-t223.sh:8:# does not touch the running fineract-fineract-1 / fineract-db-1 containers -- it launches a
+      .softhouse/capture/t229-g8-site3/src/run-t229.sh:8:# does not touch the running fineract-fineract-1 / fineract-db-1 containers -- it launches a
+      .softhouse/capture/t244-dec2-rev6/bar-output-final.txt:86:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t244-dec2-rev6/bar-output.txt:73:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh:15:Q() { docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc "$1"; }
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh:16:T() { docker exec fineract-db-1 psql -U root -d fineract_gerege -c "$1"; }
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:25:Q() { docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc "$1"; }
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:26:T() { docker exec fineract-db-1 psql -U root -d fineract_gerege -c "$1"; }
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:52:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t250-tenant-attestation/instruments/10-population.py:11:          (curl / psql) AND emit at least one `Key: value` attestation line.
+      .softhouse/capture/t250-tenant-attestation/instruments/10-population.py:62:ORACLE_RE = re.compile(r"\bcurl\b|\bpsql\b")
+      .softhouse/capture/t250-tenant-attestation/instruments/11-selector-check.py:10:  NARROWING B: the file must itself contain `curl` or `psql`.
+      .softhouse/capture/t250-tenant-attestation/instruments/11-selector-check.py:60:    attest_no_oracle = []    # ... is .sh/.py, writes attestation, no curl/psql in file
+      .softhouse/capture/t250-tenant-attestation/instruments/11-selector-check.py:61:    helper_writers = []      # ... no curl/psql but calls a known transport helper
+      .softhouse/capture/t250-tenant-attestation/instruments/11-selector-check.py:113:    print("NARROWING B -- `curl|psql` in-file filter")
+      .softhouse/capture/t250-tenant-attestation/instruments/11-selector-check.py:114:    print("  .sh/.py attestation writers with NO curl/psql        : %d" % len(attest_no_oracle))
+      .softhouse/capture/t250-tenant-attestation/instruments/12-tenant-term.py:9:     or a `psql -d fineract_<tenant>` read-back)?
+      .softhouse/capture/t250-tenant-attestation/instruments/12-tenant-term.py:91:    print("SCOPE: git ls-files of %s ; suffix .sh/.py ; must invoke curl or psql" % ROOT)
+      .softhouse/capture/t253-portability/DRIVER-VERIFIED-residue-cleared-exit2.log:52:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:29:f147f8cb556d5a24347361d8581e32858cbf505e9ab1597b4547ce11504b305f  out/M-01-ledger-state.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:33:429e9000d31d09ec074014380573c123d27519e5395ae5a62c82e4917e7034ee  out/M-02-ledger-state-fixed.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:40:2a0d6c14c45ed462344c0d58e05c51f549f49d0ee1560e66850ab14b251333b0  out/M-04-writecheck-before-arm1.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:44:abed5db8b75bd5cb22475ee21189fdc1c88838aa86ac20a595da26c9d07c3e02  out/M-05-writecheck-after-arm1.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:54:590b71ad865733e0e512159a0bf0c23f1b2f795ac7157fb8ce1a2e6001592b2a  out/M-08-state-before-closure.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:58:802ed1aa0c8cdd3863b5bf7020c7dd6780198402353d6847a7883e3ccd2b2087  out/M-09-state-during-closure.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:62:618178f6c71122036e1ab22106d31441d9b862496f0c64cc224ff6e6eab14f82  out/M-10-command-audit.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:66:0a8362e00283b9a977e7643cff6afa69b7e62a79858e96ad187f7ab19642bae6  out/M-11-command-audit-status.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:70:3b5a33bed4c1044e4fddae4973c14a89bcd537bf33e5e9989a24bc3336d7f913  out/M-12-state-after-delete.psql
+      .softhouse/capture/t287-closure-refusals/capsql.sh:2:# capsql.sh NAME SQLFILE
+      .softhouse/capture/t287-closure-refusals/capsql.sh:5:# WERE ACTUALLY EXECUTED. Adapted for T287 from .softhouse/capture/tierA-a2/capsql.sh.
+      .softhouse/capture/t287-closure-refusals/capsql.sh:12:#   out/NAME.txt         the psql output, verbatim, stdout and stderr interleaved as seen
+      .softhouse/capture/t287-closure-refusals/capsql.sh:13:#   out/NAME.sql         the exact query bytes fed to psql -- a snapshot, not a pointer
+      .softhouse/capture/t287-closure-refusals/capsql.sh:15:#   out/NAME.psql        the record: container, tenant database, psql exit status, timestamp
+      .softhouse/capture/t287-closure-refusals/capsql.sh:17:# A SQL ERROR IS NOT A TRANSPORT FAILURE. psql exits non-zero on a bad query and that is an
+      .softhouse/capture/t287-closure-refusals/capsql.sh:18:# observation exactly as an HTTP 4xx is; it is recorded as data in `psql-exit-status:` and
+      .softhouse/capture/t287-closure-refusals/capsql.sh:19:# the output is kept. `docker exec` propagates psql's exit status, so rc alone cannot tell a
+      .softhouse/capture/t287-closure-refusals/capsql.sh:23:# PostgreSQL is the only database in this program (CLAUDE.md). This script names psql
+      .softhouse/capture/t287-closure-refusals/capsql.sh:30:[ -n "$NAME" ] && [ -n "$SQLFILE" ] || { echo "usage: capsql.sh NAME SQLFILE" >&2; exit 2; }
+      .softhouse/capture/t287-closure-refusals/capsql.sh:38:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/capsql287.XXXXXX")
+      .softhouse/capture/t287-closure-refusals/capsql.sh:47:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/t287-closure-refusals/capsql.sh:60:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -f - < "$TMPSQL" > "$TMPOUT" 2>&1 || rc=$?
+      .softhouse/capture/t287-closure-refusals/capsql.sh:72:  echo "docker exec -i $DBC psql -U $DBUSER -d $DBNAME -f -"
+      .softhouse/capture/t287-closure-refusals/capsql.sh:78:  echo "psql-exit-status: $rc"
+      .softhouse/capture/t287-closure-refusals/capsql.sh:81:printf '%-46s psql exit %s\n' "$NAME" "$rc"
+      .softhouse/capture/t287-closure-refusals/env.sh:11:DBC=fineract-db-1
+      .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh:70:  if ! docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1; then
+      .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh:75:  ENABLED=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh:77:  PINNED=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh:93:  LC=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t294-openingbalance-refusal/MANIFEST.sha256:1:f86127b1567986ba8cd3cab940e997c7fd2e63af977d550b4c52455aeaee49ae  out/M-01-precondition-before.psql
+      .softhouse/capture/t294-openingbalance-refusal/MANIFEST.sha256:5:824274d4b18605a009e455c03988a25ea16965706da7040f0503ff1155736f24  out/M-02-ledger-state-before.psql
+      .softhouse/capture/t294-openingbalance-refusal/MANIFEST.sha256:9:70eb7dc8b2cf89d069c0daff40228d53914bb912b5ba1c0c37166812db791c61  out/M-03-ledger-state-after.psql
+      .softhouse/capture/t294-openingbalance-refusal/MANIFEST.sha256:13:00cde1b8ddc6990b550960a32e4f46cfd7a25d3a300803f67c539b89590cbbc2  out/M-04-precondition-after.psql
+      .softhouse/capture/t294-openingbalance-refusal/MANIFEST.sha256:17:22daae1b625fa30595d238d47c3243f71e24145948caef7ff0f84e6941990708  out/M-05-command-residue.psql
+      .softhouse/capture/t294-openingbalance-refusal/OBSERVATION.md:6:PostgreSQL `fineract_gerege` in container `fineract-db-1`, REST at `https://localhost:8443`.
+      .softhouse/capture/t294-openingbalance-refusal/OBSERVATION.md:9:`env.sh`, `cap.sh`, `capsql.sh` and `manifest.sh` are **copies** of T287's, not sources of
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:2:# capsql.sh NAME SQLFILE
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:6:# .softhouse/capture/t287-closure-refusals/capsql.sh, which T287 had adapted from
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:7:# .softhouse/capture/tierA-a2/capsql.sh. Only this header block differs from that file.
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:14:#   out/NAME.txt         the psql output, verbatim, stdout and stderr interleaved as seen
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:15:#   out/NAME.sql         the exact query bytes fed to psql -- a snapshot, not a pointer
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:17:#   out/NAME.psql        the record: container, tenant database, psql exit status, timestamp
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:19:# A SQL ERROR IS NOT A TRANSPORT FAILURE. psql exits non-zero on a bad query and that is an
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:20:# observation exactly as an HTTP 4xx is; it is recorded as data in `psql-exit-status:` and
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:21:# the output is kept. `docker exec` propagates psql's exit status, so rc alone cannot tell a
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:25:# PostgreSQL is the only database in this program (CLAUDE.md). This script names psql
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:32:[ -n "$NAME" ] && [ -n "$SQLFILE" ] || { echo "usage: capsql.sh NAME SQLFILE" >&2; exit 2; }
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:40:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/capsql294.XXXXXX")
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:49:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:62:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -f - < "$TMPSQL" > "$TMPOUT" 2>&1 || rc=$?
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:74:  echo "docker exec -i $DBC psql -U $DBUSER -d $DBNAME -f -"
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:80:  echo "psql-exit-status: $rc"
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:83:printf '%-46s psql exit %s\n' "$NAME" "$rc"
+      .softhouse/capture/t294-openingbalance-refusal/env.sh:12:DBC=fineract-db-1
+      .softhouse/capture/t294-openingbalance-refusal/guard-precondition.sh:32:# PostgreSQL is the only database in this program. This script names psql and has no other
+      .softhouse/capture/t294-openingbalance-refusal/guard-precondition.sh:120:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/t294-openingbalance-refusal/guard-precondition.sh:125:  contra=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t294-openingbalance-refusal/guard-precondition.sh:135:  n=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t300-census-cardinal/red/A-pin-minus-one.txt:53:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t300-census-cardinal/red/B-pin-plus-one.txt:53:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t300-census-cardinal/red/C1-prefix-minus-one.txt:53:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t300-census-cardinal/red/C2-prefix-plus-one.txt:53:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t300-census-cardinal/red/D-failopen-minus-one.txt:53:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py:8:               ( extension in {.sh,.py,.zsh,.bash,.psql}
+      .softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py:29:EXT = {'.sh', '.py', '.zsh', '.bash', '.psql'}
+      .softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py:70:    sys.stderr.write('SELECTOR: tracked AND (ext in .sh/.py/.zsh/.bash/.psql OR mode 100755 OR shebang)\n')
+      .softhouse/capture/t304-evidence-destruction/instruments/80-foreign-writes.py:34:EXT = {'.sh', '.py', '.zsh', '.bash', '.psql'}
+      .softhouse/capture/t305-openingbalance-accepting-side/MANIFEST.sha256:5:486457d05616ddfe8ca510ee1b6b17eecb11eac725d2f3ba2212e2835f55b632  out/M-01-gerege-accepting-precondition.psql
+      .softhouse/capture/t305-openingbalance-accepting-side/MANIFEST.sha256:9:58df83f15f770fa8edc7a1c78b563618acb2160236b7096a171e64ddbb754923  out/M-02-default-accepting-precondition.psql
+      .softhouse/capture/t305-openingbalance-accepting-side/MANIFEST.sha256:13:45fa37145a3151504502fd4e9fcd6280a20b24142540f1cd8731da308aba382d  out/M-03-gerege-residue-class.psql
+      .softhouse/capture/t305-openingbalance-accepting-side/MANIFEST.sha256:17:6e875a1c07fc3066a3b11522a754b4091ab32519571cbc50c53c5c1217bcd64b  out/M-04-tenant-store-cost.psql
+      .softhouse/capture/t305-openingbalance-accepting-side/MANIFEST.sha256:21:2e7afa7cf44d1830dac68520103f8d6b153f148fba531ec385ede2d5f86aec2b  out/M-05-default-residue-class.psql
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:2:# capsql.sh NAME DBNAME SQLFILE
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:6:# .softhouse/capture/t294-openingbalance-refusal/capsql.sh. THE ONE BEHAVIOURAL DIFFERENCE
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:11:# recorded in out/NAME.psql, so no observation is ambiguous about which one it came from.
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:14:#   out/NAME.txt         the psql output, verbatim, stdout and stderr interleaved as seen
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:15:#   out/NAME.sql         the exact query bytes fed to psql -- a snapshot, not a pointer
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:17:#   out/NAME.psql        the record: container, database, psql exit status, timestamp
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:20:# `psql-exit-status:`. `probe` establishes reachability FIRST so a non-zero rc is
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:27:# PostgreSQL is the only database in this program (CLAUDE.md). This script names psql
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:34:[ -n "$NAME" ] && [ -n "$DB" ] && [ -n "$SQLFILE" ] || { echo "usage: capsql.sh NAME DBNAME SQLFILE" >&2; exit 2; }
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:53:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/capsql305.XXXXXX")
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:62:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DB" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:73:# statements are still worth executing. The failure is recorded in psql-exit-status.
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:74:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DB" -f - < "$TMPSQL" > "$TMPOUT" 2>&1 || rc=$?
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:86:  echo "docker exec -i $DBC psql -U $DBUSER -d $DB -f -"
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:92:  echo "psql-exit-status: $rc"
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:95:printf '%-46s db=%-18s psql exit %s\n' "$NAME" "$DB" "$rc"
+      .softhouse/capture/t305-openingbalance-accepting-side/env.sh:34:DBC=${DBC:-fineract-db-1}
+      .softhouse/capture/t305-openingbalance-accepting-side/guard-accepting-capture.sh:61:if ! docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME_STORE" -Atc 'SELECT 1' >/dev/null 2>&1; then
+      .softhouse/capture/t305-openingbalance-accepting-side/guard-accepting-capture.sh:67:TENANTS=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME_STORE" -At -F'|' \
+      .softhouse/capture/t305-openingbalance-accepting-side/guard-accepting-capture.sh:85:  RM=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DB" -Atc \
+      .softhouse/capture/t305-openingbalance-accepting-side/guard-accepting-capture.sh:102:  NC=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DB" -Atc \
+      .softhouse/capture/t305-openingbalance-accepting-side/guard-accepting-capture.sh:112:  FA=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DB" -Atc \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:30:STANDING_DB=fineract-db-1
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:46:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || refuse "F2 $DBC/$DBNAME unreachabl
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:50:REG=$(docker exec -i "$DBC" psql -U "$DBUSER" -d fineract_tenants -At -F'|' -c \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:53:RM=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT value FROM c_configuration WHERE name='rounding-mod
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:58:JE=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry")
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:73:    now=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:90:CONTRA=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-3000
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:91:D1=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-1000'")
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:92:D2=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-1100'")
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:93:C1=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-2000'")
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:95:FA=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT gl_account_id FROM acc_gl_financial_activity_accoun
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:187:  docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -c \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:191:  # The readback's own sidecar. A psql projection has no HTTP request to record, so what it records
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:36:STANDING_DB=fineract-db-1
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:45:REG=$(docker exec -i "$DBC" psql -U "$DBUSER" -d fineract_tenants -At -F'|' -c \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:48:JE=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry")
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:57:    now=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:107:D1=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-1000'"
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:108:C1=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-2000'"
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:135:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:147:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -F'|' -c \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:152:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -F'|' -c \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:155:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -c \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/docker-compose.t305.yml:20:#   1. NO published database port (the standing db owns 5432; this one is reached by `docker exec`)
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/down.sh:17:STANDING_DB=fineract-db-1
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/down.sh:47:  now=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/env.sh:6:# container t305-oracle-db (standing: fineract-db-1), database fineract_t305 (standing:
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/guard-throwaway-isolation.sh:29:STANDING_DB=fineract-db-1
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/guard-throwaway-isolation.sh:123:  v=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/setup.sh:77:# this line guessed the shorter name from the API field and psql refused it. Column names are read
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/setup.sh:79:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/setup.sh:82:CONTRA=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-3000'"
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/setup.sh:91:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/setup.sh:94:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry"
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:55:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:30:STANDING_DB=fineract-db-1
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:46:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || refuse "F2 $DBC/$DBNAME unreachable."
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:50:REG=$(docker exec -i "$DBC" psql -U "$DBUSER" -d fineract_tenants -At -F'|' -c \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:53:RM=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT value FROM c_configuration WHERE name='rounding-mode'")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:59:JE=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:61:CL=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_closure")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:78:    now=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:119:    "$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT now()::text')"
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:121:    "$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT coalesce((SELECT name||'='||value FROM c_configuration 
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:123:    "$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT count(*) FROM m_business_date')"
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:131:D1=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T327-1000'")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:132:D2=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T327-1100'")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:133:C1=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T327-2000'")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:207:    printf 'latest-closing-date-at-fire-time: %s\n' "$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT coalesc
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:232:  docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -c \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:316:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:318:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:358:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -c \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:364:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -c \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:381:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/docker-compose.t327.yml:34:#   1. NO published database port (the standing db owns 5432; this one is reached by `docker exec`)
+      .softhouse/capture/t327-closure-accepting-side/throwaway/down.sh:17:STANDING_DB=fineract-db-1
+      .softhouse/capture/t327-closure-accepting-side/throwaway/down.sh:49:  now=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t327-closure-accepting-side/throwaway/env.sh:6:# container t327-oracle-db (standing: fineract-db-1), database fineract_t327 (standing:
+      .softhouse/capture/t327-closure-accepting-side/throwaway/guard-throwaway-isolation.sh:29:STANDING_DB=fineract-db-1
+      .softhouse/capture/t327-closure-accepting-side/throwaway/guard-throwaway-isolation.sh:125:  v=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:74:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:79:  v=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='$code'")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:85:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:88:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:93:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry"
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:95:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_closure"
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:99:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:57:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t352-a2-next-tranche/MANIFEST.sha256:4:faf58253b95a3dfa75c87785f26b21fee31fc8039499a193e71c700691304c9a  ./capsql.sh
+      .softhouse/capture/t352-a2-next-tranche/ORACLE-STATE-MOVED-BY-T352.md:67:./capsql.sh <NAME> sql/q1-t352-residue-rows.sql
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:37:    "response's own currency block still declaring MNT decimalPlaces 2. psql confirms "
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:66:    "[out/T352-A03-residue-balance-scale.json; psql shows 0.125000 + 0.125000 = 0.250000 "
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:2:# capsql.sh NAME SQLFILE
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:11:#     docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f - < sql/qN.sql > out/A2-nnn.txt
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:22:#   out/NAME.txt         the psql output, verbatim, stdout and stderr interleaved as seen
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:23:#   out/NAME.sql         the exact query bytes fed to psql -- a snapshot, not a pointer
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:25:#   out/NAME.psql        the record: container, tenant database, psql exit status, timestamp
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:29:#     AFTER psql returns, so nothing under out/ can ever carry a fresh timestamp on stale
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:31:#   * `docker exec` failing (container gone, database gone, bad credentials) means NO
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:35:#   * A SQL ERROR is NOT a transport failure. psql exits non-zero on a bad query, and that
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:37:#     out/NAME.psql (`psql-exit-status:`) and the output is kept. The two cases are
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:38:#     distinguished by whether `docker exec` itself could run at all.
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:40:# PostgreSQL is the only database in this program (CLAUDE.md). This script names psql
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:46:[ -n "$NAME" ] && [ -n "$SQLFILE" ] || { echo "usage: capsql.sh NAME SQLFILE" >&2; exit 2; }
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:49:DBC=fineract-db-1
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:58:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/capsql.XXXXXX")
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:70:# `docker exec` propagates psql's exit status, so rc alone cannot tell a dead container
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:74:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:90:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -f - < "$TMPSQL" > "$TMPOUT" 2>&1 || rc=$?
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:103:  echo "docker exec -i $DBC psql -U $DBUSER -d $DBNAME -f -"
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:109:  echo "psql-exit-status: $rc"
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:112:printf '%-44s psql exit %s\n' "$NAME" "$rc"
+      .softhouse/capture/t363-oracle-baseline/CASUALTIES.md:22:**Most hits are archived and are NOT casualties.** A conformance transcript, a psql dump, an `out/`
+      .softhouse/capture/t363-oracle-baseline/CASUALTIES.md:154:  [VERIFIED: grep for `psql`, `docker exec`, `fineract-db-1`, `5432` over `conformance.sh` → only the
+      .softhouse/capture/t363-oracle-baseline/PROBES.tsv:67:#          command bus and false of psql;
+      .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh:69:# Most hits land in ARCHIVED evidence -- a conformance transcript, a psql dump, a review's
+      .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh:184:sel "S9  does the conformance harness or a guard reach the tenant database at all?" -n -E 'psql|docker exec|fineract-db-1'
+      .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh:56:#   (b) DIRECT SQL. A statement issued outside the command bus -- psql, a migration, a fixture
+      .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh:73:# PostgreSQL is the only database in this program (CLAUDE.md). This script names psql
+      .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh:101:DBC="${ORACLE_BASELINE_DB_CONTAINER:-fineract-db-1}"
+      .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh:108:q() { # q <sql> -> tab-separated rows on stdout; non-zero if psql could not run
+      .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh:109:  docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -F$'\t' -c "$1" 2>&1
+      .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh:123:  echo "  psql said: $PROBE"
+      .softhouse/capture/t371-t367-conditions/instruments/run-reads.sh:18:DB=${T371_DB_CONTAINER:-fineract-db-1}
+      .softhouse/capture/t371-t367-conditions/instruments/run-reads.sh:23:  docker exec -i "$DB" psql -U root -d "$TENANTDB" -f - < "$1" > "$2" 2>&1; rc=$?
+      .softhouse/capture/t371-t367-conditions/instruments/run-reads.sh:29:  # a psql that connected but errored still exits 0 under some invocations; catch it explicitly
+      .softhouse/capture/t371-t367-conditions/instruments/run-reads.sh:30:  if grep -q '^psql:.*ERROR' "$2"; then
+      .softhouse/capture/t371-t367-conditions/instruments/run-reads.sh:31:    echo "READ ERRORED inside psql on $1 -- see $2. No negative from this run is interpretable." >&2
+      .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:173:sel "S18 does any guard or the harness reach the tenant database at all?" -n -E 'psql|docker exec|fineract-db-1'
+      .softhouse/capture/t388-accrual-capture/capsql.sh:2:# capsql.sh NAME SQLFILE
+      .softhouse/capture/t388-accrual-capture/capsql.sh:11:#     docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f - < sql/qN.sql > out/A2-nnn.txt
+      .softhouse/capture/t388-accrual-capture/capsql.sh:22:#   out/NAME.txt         the psql output, verbatim, stdout and stderr interleaved as seen
+      .softhouse/capture/t388-accrual-capture/capsql.sh:23:#   out/NAME.sql         the exact query bytes fed to psql -- a snapshot, not a pointer
+      .softhouse/capture/t388-accrual-capture/capsql.sh:25:#   out/NAME.psql        the record: container, tenant database, psql exit status, timestamp
+      .softhouse/capture/t388-accrual-capture/capsql.sh:29:#     AFTER psql returns, so nothing under out/ can ever carry a fresh timestamp on stale
+      .softhouse/capture/t388-accrual-capture/capsql.sh:31:#   * `docker exec` failing (container gone, database gone, bad credentials) means NO
+      .softhouse/capture/t388-accrual-capture/capsql.sh:35:#   * A SQL ERROR is NOT a transport failure. psql exits non-zero on a bad query, and that
+      .softhouse/capture/t388-accrual-capture/capsql.sh:37:#     out/NAME.psql (`psql-exit-status:`) and the output is kept. The two cases are
+      .softhouse/capture/t388-accrual-capture/capsql.sh:38:#     distinguished by whether `docker exec` itself could run at all.
+      .softhouse/capture/t388-accrual-capture/capsql.sh:40:# PostgreSQL is the only database in this program (CLAUDE.md). This script names psql
+      .softhouse/capture/t388-accrual-capture/capsql.sh:46:[ -n "$NAME" ] && [ -n "$SQLFILE" ] || { echo "usage: capsql.sh NAME SQLFILE" >&2; exit 2; }
+      .softhouse/capture/t388-accrual-capture/capsql.sh:49:DBC=fineract-db-1
+      .softhouse/capture/t388-accrual-capture/capsql.sh:58:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/capsql.XXXXXX")
+      .softhouse/capture/t388-accrual-capture/capsql.sh:70:# `docker exec` propagates psql's exit status, so rc alone cannot tell a dead container
+      .softhouse/capture/t388-accrual-capture/capsql.sh:74:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/t388-accrual-capture/capsql.sh:90:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -f - < "$TMPSQL" > "$TMPOUT" 2>&1 || rc=$?
+      .softhouse/capture/t388-accrual-capture/capsql.sh:103:  echo "docker exec -i $DBC psql -U $DBUSER -d $DBNAME -f -"
+      .softhouse/capture/t388-accrual-capture/capsql.sh:109:  echo "psql-exit-status: $rc"
+      .softhouse/capture/t388-accrual-capture/capsql.sh:112:printf '%-44s psql exit %s\n' "$NAME" "$rc"
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:1169:    478  enabled — unchanged from what T22/T36/T76 all recorded [VERIFIED: `psql`].
+      .softhouse/capture/t91/run-attacks.sh:14:# read-only docker/psql queries.  It creates no tenant, restarts nothing, writes no oracle row.
+      .softhouse/capture/t91/t115-rerun-attacks.sh:14:# calculation endpoint) and read-only docker/psql reads.  No restart, no rebuild, no re-seed, no
+      .softhouse/capture/tierA-a2/CAPTURE-PLAN.md:328:docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f - < sql/q3-final-state.sql
+      .softhouse/capture/tierA-a2/CAPTURE-PLAN.md:364:`run-540`, `mkreq-t275.py`, `capsql.sh`, `sql/q8-*`, `sql/q9-*`, `t275-mapping-diff.py`,
+      .softhouse/capture/tierA-a2/CENSUS-A2-26.txt:48:      4  psql (SQL dump, see sql/)
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:587:1180c528dee2153d26bc6a46ed895c09f9d940715fdcf44d9978cb9f7fda34ab  out/A2-500-db-mapping-before.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:599:e770bd775c8c408421f96b474bf8e9ff0c60d0a65caf2e5a92d87b925571c4d8  out/A2-503-db-mapping-after-repoint.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:611:39134873f54f7458a209bec52c12fa52feeb1a5f803485fedf31a3c3b72bda53  out/A2-506-db-mapping-after-channel.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:623:2d500f1ff69279673b978a1338a01c280d9980bdba063e44706dcde9c7ba6afa  out/A2-509-db-mapping-after-description.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:632:673c06b388f32cc2c9126edc867ad89a85e4cb964932307d97f81a950b2f2968  out/A2-511-db-mapping-after-channel-empty.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:639:c357bb11f5c71ebb18b741352ead356feecd1a0d7c7f00f0d4708a3e2641fc11  out/A2-513-db-q2-product-mapping-rows.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:648:aa8361e48a69bd390a5e9f05bf836c76a215406e16829defa6f320d2519db9f8  out/A2-515-db-mapping-after-readd.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:657:d8f5e11d240027868fb8fdbd6a58ad1d9e3c557afad73f4b6ecf57f05d1deabb  out/A2-517-db-mapping-after-resend.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:666:bb41c92157323721845b803be65ebc263264fd5249d6524e6a67e4f137ad2d19  out/A2-519-db-mapping-after-channel-repoint.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:670:f237ef05e4294d63b5510db96e76e3a1da88e0f92208a8aa1d2b25ea90e455eb  out/A2-520-db-fixtures.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:705:82731ab68de9ba08d4d3d846d2745bf8c3f900c850b807e234cfb7275e7d3589  out/A2-528-db-mapping-after-charge-dimension.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:729:6cd0f015dd53dae865a4000d5846348379ae388876b8ed811774a54f7c1d2d1a  out/A2-544-db-mapping-after-reason-probes.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:1073:faf58253b95a3dfa75c87785f26b21fee31fc8039499a193e71c700691304c9a  capsql.sh
+      .softhouse/capture/tierA-a2/capsql.sh:2:# capsql.sh NAME SQLFILE
+      .softhouse/capture/tierA-a2/capsql.sh:11:#     docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f - < sql/qN.sql > out/A2-nnn.txt
+      .softhouse/capture/tierA-a2/capsql.sh:22:#   out/NAME.txt         the psql output, verbatim, stdout and stderr interleaved as seen
+      .softhouse/capture/tierA-a2/capsql.sh:23:#   out/NAME.sql         the exact query bytes fed to psql -- a snapshot, not a pointer
+      .softhouse/capture/tierA-a2/capsql.sh:25:#   out/NAME.psql        the record: container, tenant database, psql exit status, timestamp
+      .softhouse/capture/tierA-a2/capsql.sh:29:#     AFTER psql returns, so nothing under out/ can ever carry a fresh timestamp on stale
+      .softhouse/capture/tierA-a2/capsql.sh:31:#   * `docker exec` failing (container gone, database gone, bad credentials) means NO
+      .softhouse/capture/tierA-a2/capsql.sh:35:#   * A SQL ERROR is NOT a transport failure. psql exits non-zero on a bad query, and that
+      .softhouse/capture/tierA-a2/capsql.sh:37:#     out/NAME.psql (`psql-exit-status:`) and the output is kept. The two cases are
+      .softhouse/capture/tierA-a2/capsql.sh:38:#     distinguished by whether `docker exec` itself could run at all.
+      .softhouse/capture/tierA-a2/capsql.sh:40:# PostgreSQL is the only database in this program (CLAUDE.md). This script names psql
+      .softhouse/capture/tierA-a2/capsql.sh:46:[ -n "$NAME" ] && [ -n "$SQLFILE" ] || { echo "usage: capsql.sh NAME SQLFILE" >&2; exit 2; }
+      .softhouse/capture/tierA-a2/capsql.sh:49:DBC=fineract-db-1
+      .softhouse/capture/tierA-a2/capsql.sh:58:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/capsql.XXXXXX")
+      .softhouse/capture/tierA-a2/capsql.sh:70:# `docker exec` propagates psql's exit status, so rc alone cannot tell a dead container
+      .softhouse/capture/tierA-a2/capsql.sh:74:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/tierA-a2/capsql.sh:90:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -f - < "$TMPSQL" > "$TMPOUT" 2>&1 || rc=$?
+      .softhouse/capture/tierA-a2/capsql.sh:103:  echo "docker exec -i $DBC psql -U $DBUSER -d $DBNAME -f -"
+      .softhouse/capture/tierA-a2/capsql.sh:109:  echo "psql-exit-status: $rc"
+      .softhouse/capture/tierA-a2/capsql.sh:112:printf '%-44s psql exit %s\n' "$NAME" "$rc"
+      .softhouse/capture/tierA-a2/census-a2-26.py:10:It therefore SILENTLY SWALLOWED every psql .txt dump and every POST request body, and
+      .softhouse/capture/tierA-a2/census-a2-26.py:111:            r["method"] = "psql"
+      .softhouse/capture/tierA-a2/census-a2-26.py:301:    # itself a failure: out/ is written only by cap.sh / cap8.sh / cap9.sh and the psql
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:23:         decidable for capsql.sh's SQL captures the same way (out/NAME.sql).
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:40:         (cap8.sh / capsql.sh) running against a scratch out/ directory, and the returned
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:130:    """Parse a .http / .psql record into a dict of its `key: value` lines."""
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:146:        psql = os.path.join(root, "out", name + ".psql")
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:169:        elif os.path.exists(psql):
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:170:            rec = kv(psql)
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:186:            res[name] = ("STALE", "no .http and no .psql record at all")
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:194:              if n.endswith(".psql") and n.startswith("A2-5")]
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:195:    names = sorted({n[:-5] if n.endswith(".psql") else n for n in names})
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:328:        r = subprocess.run(["sh", os.path.join(copy, "capsql.sh"), name, qf],
+      .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh:6:# corpus before this task was out/A2-019-db-glaccount-rows.txt (a psql dump taken BEFORE
+      .softhouse/capture/tierA-a2/run-400-a2-29-boundary.sh:4:# A2-26 found office_running_balance / organization_running_balance in a psql dump.
+      .softhouse/capture/tierA-a2/run-400-a2-29-boundary.sh:5:# A psql dump is NOT the contract boundary. This batch OBSERVES the live reference
+      .softhouse/capture/tierA-a2/run-500-t275-mapping-update.sh:48:Q="$DIR/capsql.sh"
+      .softhouse/capture/tierA-a2/run-514-t275-channel-row-identity.sh:32:Q="$DIR/capsql.sh"
+      .softhouse/capture/tierA-a2/run-520-t275-charge-dimension.sh:32:Q="$DIR/capsql.sh"
+      .softhouse/capture/tierA-a2/run-540-t275-reason-mappings.sh:50:Q="$DIR/capsql.sh"
+      .softhouse/capture/tierA-a2/sql/q7-a2-15-ledger-state-json.sql:4:-- WHY THIS EXISTS BESIDE q4. q4 emits a psql TABLE, which is what a human reads
+      .softhouse/capture/tierA-a2/t275-mapping-diff.py:6:parses the psql box-drawing output already committed under out/ and reports which mapping
+      .softhouse/gates.md:3574:`glCode` and `name`. That silently swallowed every psql `.txt` dump — which is where the real state lives —
+      .softhouse/gates.md:3970:   `psql` dump — that is not the same as finding them in `/journalentries`.
+      .softhouse/guards/ledgerguard/main.go:772:     Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/nonnegotiable-guard-audit.md:69:| D-3 | P11 `schema_connection_parameters` must be EMPTY | same file `:154-158` | **VACUOUS — the only one with no compensating assertion** | A dead/absent `
+      .softhouse/observations/20260827-chain2-standing-oracle-baseline.md:11:docker exec fineract-db-1 psql -U postgres -d fineract_gerege -At -c "…"
+      .softhouse/patterns.md:787:| **PostgreSQL only; Oracle Database / MySQL / MariaDB prohibited** | `pathb/preconditions.sh` P5/P6/P11 | `grep -icE` over an **empty stream** is `0` and a dead `psql` retu
+      .softhouse/patterns.md:1466:That swallowed every psql `.txt` dump — which is where the captured state actually lives — and every POST
+      .softhouse/program.json:674:      "driver_error_correction": "THE DECISION STANDS; THE DRIVER'S CONSEQUENCE WAS FALSE AND IS CORRECTED IN gates.md. The driver claimed the A2 capture held 'exactly four
+      .softhouse/program.json:1852:        "T245 vs the DRIVER, HIGH: the driver's reference-oracle.md correction fixed the INVENTORY and left the INSTRUCTION — the connection-facts table still prescribed t
+      .softhouse/reference-oracle.md:167:| Postgres | **`psql -U root -d fineract_gerege`** inside `fineract-db-1` |
+      .softhouse/reference-oracle.md:172:`tenantIdentifier=default` and `psql -U root -d fineract_default`. That is not a record of a negative
+      .softhouse/reference-oracle.md:228:| local `20260819-080001` | **yes** | `actuator/health` → `{"status":"UP"}`; `fineract-fineract-1` (fineract:latest) and `fineract-db-1` (postgres:18.3) both healthy
+      .softhouse/reference-oracle.md:230:| local `20260822-080001` | **yes** | Driver re-asserted the DATABASE NON-NEGOTIABLE against the running stack rather than inheriting the wrapper's probe: `actuator/
+      .softhouse/reference-oracle.md:989:| `fineract-db-1` | `postgres:18.3` | **up 5 h, healthy**, `0.0.0.0:5432->5432/tcp` |
+      .softhouse/reference-oracle.md:1024:| Tenant database name | **`fineract_gerege`** — *not* `gerege`. `psql -d gerege` fails with `database "gerege" does not exist`; the API tenant id `gerege` maps to 
+      .softhouse/reference-oracle.md:1208:   command bus — `psql`, a migration, a fixture load — satisfies none of it.
+      .softhouse/state/fire-20260820-230001.STATE.json:7:  "oracle": "REACHABLE — https://localhost:8443/fineract-provider/actuator/health UP; fineract-fineract-1 + fineract-db-1 Up (healthy); PostgreSQL lo
+      .softhouse/tasks.json:124:      "note": "Raised by the driver from its own G-9 closure, local fire 20260821-054355. NEEDS THE ORACLE. || local fire 20260821-054355: DISPATCHED after A2-5 was APPROVED 
+      .softhouse/tasks.json:2072:      "note": "DONE, merged at 9fb60ea. All five driver claims re-measured and STAMPED at 9b6c596 against the live oracle. (2)(3) TRUE -- and T245 verified the tenant->datab
+      .softhouse/tasks.json:2619:      "description": "A2-9 returned MICRO-FIX on the A2 ledger port and APPROVED its money math and wire-visible behaviour, including adjudicating in A2-8's favour where A2-
+      .softhouse/tasks.json:2959:      "description": "RAISED BY A2-26 FROM A DB DUMP, local fire 20260822-000013. acc_gl_journal_entry carries office_running_balance and organization_running_balance -- Fin
+      .softhouse/tasks.json:4453:      "note": "Filed by fire 20260827-230001 chain-iteration 2, with the ORACLE VERIFIED UP at dispatch time (https://localhost:8443/fineract-provider/actuator/health -> {\"
+
+----------------------------------------------------------------------------------
+selectors run: 18   selectors that DID NOT RUN: 0
+A LIVE HIT IS A CANDIDATE, NOT A VERDICT. Adjudication is in ORACLE-STATE-MOVED-BY-T388.md.

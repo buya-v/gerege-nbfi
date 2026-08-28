@@ -1,0 +1,13 @@
+ is_t388_row | modified | total 
+-------------+----------+-------
+ f           |       60 |    71
+ t           |        0 |    20
+(2 rows)
+
+ live_now 
+----------
+ 60 of 91
+(1 row)
+
+--- DEC-2 pinned text ---
+60 of the 60 rows in `acc_gl_journal_entry` carry `last_modified_on_utc > created_on_utc`

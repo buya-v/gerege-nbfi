@@ -1,0 +1,92 @@
+T389 RE-DRIVE OF T388's DISJOINTNESS CHECKER
+checker : /tmp/t389scratch/.softhouse/capture/t388-accrual-capture/11-derive-forbidden-set.py
+vectors : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a049874f964182c77/.softhouse/vectors
+
+--------------------------------------------------------------------
+CASE   : CONTROL: real T388 accounts 35-47 (unmutated input)
+--check: 35,36,37,38,39,40,41,42,43,44,45,46,47
+expect : exit 0
+
+DISJOINTNESS CHECK
+  accounts T388 created : [35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]
+  forbidden (standing)  : [1, 2, 4, 6, 8, 10, 15, 16, 17, 18, 21, 22]
+  intersection          : EMPTY
+  VERDICT: PASS -- T388's accounts are disjoint from the promoted corpus.
+ACTUAL : exit 0
+RESULT : OK
+--------------------------------------------------------------------
+CASE   : MUTATION A: T388's own red drive, gl 16 injected
+--check: 16,41
+expect : exit 1
+
+DISJOINTNESS CHECK
+  accounts T388 created : [16, 41]
+  forbidden (standing)  : [1, 2, 4, 6, 8, 10, 15, 16, 17, 18, 21, 22]
+  intersection          : [16]
+  VERDICT: FAIL -- T388 would move a GL account a promoted vector reads.
+ACTUAL : exit 1
+RESULT : OK
+--------------------------------------------------------------------
+CASE   : MUTATION B: gl 22, found only via capabilities-ledger unposted_slots
+--check: 22,35
+expect : exit 1
+
+DISJOINTNESS CHECK
+  accounts T388 created : [22, 35]
+  forbidden (standing)  : [1, 2, 4, 6, 8, 10, 15, 16, 17, 18, 21, 22]
+  intersection          : [22]
+  VERDICT: FAIL -- T388 would move a GL account a promoted vector reads.
+ACTUAL : exit 1
+RESULT : OK
+--------------------------------------------------------------------
+CASE   : MUTATION C: gl 15, reached only via contra_gl_account_id
+--check: 15,36
+expect : exit 1
+
+DISJOINTNESS CHECK
+  accounts T388 created : [15, 36]
+  forbidden (standing)  : [1, 2, 4, 6, 8, 10, 15, 16, 17, 18, 21, 22]
+  intersection          : [15]
+  VERDICT: FAIL -- T388 would move a GL account a promoted vector reads.
+ACTUAL : exit 1
+RESULT : OK
+--------------------------------------------------------------------
+CASE   : MUTATION D: gl 18, LDG-REFUSE-02 rerun_invariant account
+--check: 18,43
+expect : exit 1
+
+DISJOINTNESS CHECK
+  accounts T388 created : [18, 43]
+  forbidden (standing)  : [1, 2, 4, 6, 8, 10, 15, 16, 17, 18, 21, 22]
+  intersection          : [18]
+  VERDICT: FAIL -- T388 would move a GL account a promoted vector reads.
+ACTUAL : exit 1
+RESULT : OK
+--------------------------------------------------------------------
+CASE   : MUTATION E: the whole real set PLUS one forbidden member
+--check: 35,36,37,38,39,40,41,42,43,44,45,46,47,17
+expect : exit 1
+
+DISJOINTNESS CHECK
+  accounts T388 created : [17, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]
+  forbidden (standing)  : [1, 2, 4, 6, 8, 10, 15, 16, 17, 18, 21, 22]
+  intersection          : [17]
+  VERDICT: FAIL -- T388 would move a GL account a promoted vector reads.
+ACTUAL : exit 1
+RESULT : OK
+--------------------------------------------------------------------
+CASE   : ANTI-CALIB: gl 999, in no set at all -- must PASS
+--check: 999
+expect : exit 0
+
+DISJOINTNESS CHECK
+  accounts T388 created : [999]
+  forbidden (standing)  : [1, 2, 4, 6, 8, 10, 15, 16, 17, 18, 21, 22]
+  intersection          : EMPTY
+  VERDICT: PASS -- T388's accounts are disjoint from the promoted corpus.
+ACTUAL : exit 0
+RESULT : OK
+====================================================================
+CASES OK: 7   UNEXPECTED: 0
+VERDICT: checker DRIVEN RED on 5 distinct intersecting inputs and GREEN on 2
+         disjoint inputs. It can fail, and it does not fail indiscriminately.

@@ -1,0 +1,10 @@
+POST /runaccruals
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-A01-runaccruals
+Content-Type: application/json
+body-file: req/A01-runaccruals-till-15-april-2026.json
+body-wire-bytes-artefact: T388-A01-runaccruals.req
+body-sha256: 4dda9f1dc9a552649ea89cba127cb83ed0120afdf4e894d96ffc892af84c279e
+body-bytes: 71
+captured-at-utc: 2026-08-28T11:40:53Z

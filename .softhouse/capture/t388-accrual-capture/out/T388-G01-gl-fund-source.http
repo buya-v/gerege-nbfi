@@ -1,0 +1,10 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T388-G01-gl-fund-source
+Content-Type: application/json
+body-file: req/G01-gl-fund-source.json
+body-wire-bytes-artefact: T388-G01-gl-fund-source.req
+body-sha256: 2d8c561789f7b42d92456fd800409b36b20c16a9b23e407a79e2c23f59ce7fec
+body-bytes: 289
+captured-at-utc: 2026-08-28T11:37:49Z
