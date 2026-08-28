@@ -6,3 +6,10 @@ T404-H-TWO-symlink-members-CENSUS-UNDERCOUNTS        exit=2 (want 2 ) probe=ABSE
     census: population=9 invoked=3 declared=2 reached-by=3 invoked-by-nothing=0 symlink-members=1
 T404-W-AMBIGUOUS-WITNESS-already-REFUSED             exit=2 (want 2 ) probe=ABSENT  (want ABSENT  ) marker=YES census=YES dirty=no  >>> PASS
     census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T404-N-CQUOTED-member-path-WRONG-DIAGNOSIS           exit=2 (want 2 ) probe=ABSENT  (want ABSENT  ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=1 symlink-members=0
+.softhouse/capture/t404-t384-conditions/drive-red-t404.sh: line 501: r: command not found
+T404-W-AMBIGUOUS-WITNESS-already-REFUSED             exit=2 (want 2 ) probe=ABSENT  (want ABSENT  ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+.softhouse/capture/t404-t384-conditions/drive-red-t404.sh: line 521: syntax error near unexpected token `fi'
+.softhouse/capture/t404-t384-conditions/drive-red-t404.sh: line 521: `fi'
