@@ -1,0 +1,16 @@
+=== RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape
+=== RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/a_FOURTH_shape_with_none_of_the_three_request-side_facts_REFUSES
+=== RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/an_ACCEPTANCE_at_either_DATE_boundary_REFUSES
+=== RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/the_date_arms'_precondition_is_justified_by_the_STORE,_and_says_so_out_loud
+=== RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/the_claim_is_NOT_bought_by_declaring_a_refusal_CODE
+=== RUN   TestOpeningBalanceCapabilityIsScopedToTheObservedShape/EVERY_committed_claimant_is_still_ADMITTED,_and_LDG-05_by_name
+    openingbalance_test.go:300: 6 committed vectors claim ledger.opening.balance.and.closure; the observed shapes are LDG-REFUSE-03 (:717), LDG-05 (its accepting side, :812), LDG-REFUSE-04 (:636) and LDG-REFUSE-05 (:629-631). A different number means the store moved and this control no longer covers what it names
+--- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape (0.06s)
+    --- PASS: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/a_FOURTH_shape_with_none_of_the_three_request-side_facts_REFUSES (0.00s)
+    --- PASS: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/an_ACCEPTANCE_at_either_DATE_boundary_REFUSES (0.00s)
+    --- PASS: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/the_date_arms'_precondition_is_justified_by_the_STORE,_and_says_so_out_loud (0.00s)
+    --- PASS: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/the_claim_is_NOT_bought_by_declaring_a_refusal_CODE (0.00s)
+    --- FAIL: TestOpeningBalanceCapabilityIsScopedToTheObservedShape/EVERY_committed_claimant_is_still_ADMITTED,_and_LDG-05_by_name (0.01s)
+FAIL
+FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.443s
+FAIL

@@ -597,9 +597,43 @@ EXEMPTION_PIN_LEDGER_DECLARED=0
 # the note above insisted on when it DECLINED to bump this pin for two refusal
 # vectors: ledger-wrong-truncating dies on all eight of them with measured
 # margins -25, -25, -37, -37, -62, -62 and -124 twice.
-EXEMPTION_PIN_LEDGER_PARITY=5
+#
+# T328 MOVES TWO OF THE THREE AGAIN, AND THE ARITHMETIC IS RE-DERIVED FROM THE
+# COMPARATOR RATHER THAN COPIED FROM T305's PARAGRAPH.
+#
+#   PARITY 5 -> 7. LDG-06-postclosure-entry-accepted-one-day-after-closing-date
+#   and LDG-07-entry-on-the-business-date-accepted are the ACCEPTING sides of the
+#   two DATE boundaries, promoted from T327's B-1 and B-2 arms (both HTTP 200 on
+#   a throwaway instance). Before them the store pinned only the REFUSING side of
+#   each rule, and `ledger-wrong-date-rules-always-refusing` -- a port that
+#   refuses every DATED entry -- passed 5/5 parity and 5/5 refusal, exit 0
+#   [out/10-mutant-SURVIVES-before.txt]. That is the same hole T305 closed for
+#   opening balances, on a different rule.
+#
+#   REFUSAL 5 -> 5. NEITHER NEW VECTOR IS A REFUSAL. Stated rather than left to
+#   be inferred, because this pin has now stayed still across three promotions
+#   for three different reasons.
+#
+#   MONEYCELLS 29 -> 39, RE-DERIVED FROM diffEntry AND NOT GUESSED. grade.go
+#   compares, per journal-entry vector: leg_count (cmpInt), then per leg
+#   gl_account_id (cmpInt), gl_account_code (cmpStr), entry_side (cmpStr) and
+#   amount_minor (cmpMoney), then total_debits_minor and total_credits_minor
+#   (cmpMoney). So a vector with L legs grades 1 + 4L + 2 cells of which L + 2
+#   are MONEY. Both new vectors carry L = 3 -- the plain create path (:146)
+#   writes ONE entry per request leg, with no contra expansion, which is
+#   defineOpeningBalance-only (:791/:796) -- so each adds 15 graded cells of
+#   which 5 are money: 3 leg amounts (25000025, 10000037, 35000062) and 2 totals
+#   (35000062 each). 29 + 5 + 5 = 39, and the run MEASURED 136 graded / 39 money.
+#   T297's reasoning about diffRefusal does NOT apply here and the difference is
+#   the point: cmpMoney is unreachable from diffRefusal (grade.go:202-221 calls
+#   only cmpInt/cmpStr), which is why T294 and T295 correctly declined to move
+#   this pin for three refusal vectors. These two are ACCEPTANCES routed through
+#   diffEntry, the comparisons are really performed, and ledger-wrong-truncating
+#   dies on all ten of them with measured margins -25, -37, -62 per vector on the
+#   legs and -62 on each total.
+EXEMPTION_PIN_LEDGER_PARITY=7
 EXEMPTION_PIN_LEDGER_REFUSAL=5
-EXEMPTION_PIN_LEDGER_MONEYCELLS=29
+EXEMPTION_PIN_LEDGER_MONEYCELLS=39
 
 # Scratch paths are script-global, not function-local: an EXIT trap fires after the
 # function that created them has returned, so a `local` would be out of scope by
@@ -3033,7 +3067,31 @@ gate_exemption_census() {
 #     double_entry_balances, so no invariant can see it -- only the captured
 #     cells can, and both totals are short by the entire opening position
 #     (-35000062 minor units).
-EXEMPTION_PIN_LEDGER_WRONGIMPLS=11
+#
+#   ledger-wrong-date-rules-always-refusing      [T328, and it is T296's ARM A on
+#                                                 the DATE rules instead of the
+#                                                 command]
+#     11 -> 12. THE SECOND ONE THIS CORPUS COULD NOT KILL, AND ITS SURVIVAL WAS
+#     MEASURED BEFORE IT WAS FIXED, which is the half that carries the argument.
+#     It REFUSES EVERY DATED ENTRY: both date guards fire on the PRESENCE of the
+#     state they read -- a GLClosure exists so the ledger is closed (:636), a
+#     business date exists so the entry is in the future (:629-631) -- and
+#     neither ever performs its comparison. It keeps both globalisation codes and
+#     both messages, so LDG-REFUSE-04 and LDG-REFUSE-05 cannot tell it from a
+#     correct port. RUN AGAINST THE STORE AS IT STOOD AT 136a2be6, BEFORE THE
+#     PROMOTION: ledger parity PASS 5 FAIL 0, ledger oracle-refusal PASS 5 FAIL 0,
+#     VERDICT PASS, EXIT 0
+#     [.softhouse/capture/t328-date-rule-promotion/out/10-mutant-SURVIVES-before.txt].
+#     Killed by LDG-06 and LDG-07 -- ONE GUARD EACH, and neither vector is
+#     decorative: withdrawing either revives the other guard, measured arm by arm
+#     in out/60-load-bearing-one-vector-at-a-time.txt.
+#     WHY THE PRE-EXISTING DATE IMPLEMENTATIONS DID NOT COVER THIS.
+#     ledger-wrong-future-date-ignored and ledger-wrong-closure-boundary-exclusive
+#     both FAIL OPEN -- they post where the oracle refuses -- and refusal vectors
+#     are exactly what kills those. This one FAILS CLOSED, and no refusal vector
+#     can see it. Opposite errors on the same two rules, and until T328 the corpus
+#     graded only one direction.
+EXEMPTION_PIN_LEDGER_WRONGIMPLS=12
 
 gate_wrong_ledger_impls_die() {
   local bin="$1" probe="$2"

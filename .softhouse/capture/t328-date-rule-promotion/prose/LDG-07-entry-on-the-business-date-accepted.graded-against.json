@@ -1,0 +1,41 @@
+[
+ {
+  "impl": "ledger-wrong-date-rules-always-refusing",
+  "kind": "structural",
+  "margin_minor": "0",
+  "divergent_cells": [
+   "leg_count"
+  ],
+  "note": "THE KILL THIS VECTOR EXISTS FOR, and it is the FUTURE-DATE half. A port whose :629-631 guard fires on the mere PRESENCE of a business date -- or, equivalently for this request, one that implements the comparison NON-STRICTLY as !isBefore(transactionDate, businessDate) where DateUtils has isAfter -- refuses this request with HTTP 403 error.msg.glJournalEntry.invalid.future.date where the oracle returned 200 and wrote three journal entries. MEASURED: exactly one cell, leg_count want 3 got 0, because gradeOne records `the implementation REFUSED a request the oracle ACCEPTED` and compares leg_count alone on that path (grade.go). THIS IS THE ONLY OBSERVATION IN THE CORPUS THAT CAN TELL > FROM >=: every date this store had ever seen refused was business date + 1, which BOTH readings refuse. The implementation PASSED THE ENTIRE CORPUS before this vector existed -- 5 of 5 parity, 5 of 5 refusal, exit 0 [.softhouse/capture/t328-date-rule-promotion/out/10-mutant-SURVIVES-before.txt]. LDG-06 kills the SAME implementation on its OTHER guard; delete this vector and the future-date half comes back to life, refusing every entry booked on the current business day [.softhouse/capture/t328-date-rule-promotion/out/60-load-bearing-one-vector-at-a-time.txt]."
+ },
+ {
+  "impl": "ledger-wrong-truncating",
+  "kind": "money",
+  "margin_minor": "-62",
+  "divergent_cells": [
+   "legs[].amount_minor",
+   "total_debits_minor",
+   "total_credits_minor"
+  ],
+  "note": "Reads the major-unit text as a whole number and drops the minor units. MEASURED on all three legs -- -25 on 250000.25, -37 on 100000.37, -62 on 350000.62 -- and -62 on each total, since 25000025 + 10000037 = 35000062 truncates to 35000000. The largest single margin is -62 minor units. THE MONEY HALF OF DEC-2 5.2 requirement 7, and the reason this date vector grades its amounts at all: a corpus whose accepting-side date captures graded no amount would have promoted a date assertion and called it parity. double_entry_balances still HOLDS on this port's output, so only the captured cells can see the defect."
+ },
+ {
+  "impl": "ledger-wrong-netting-totals",
+  "kind": "structural",
+  "margin_minor": "0",
+  "divergent_cells": [
+   "total_debits_minor",
+   "total_credits_minor"
+  ],
+  "note": "Nets credits against debits into one accumulator, so both totals report 0 while every per-leg cell still matches. I-1 would hold by construction on its output. Recorded as STRUCTURAL with a zero margin for the reason LDG-01 records for the identical shape: the port never computed two numbers to compare."
+ },
+ {
+  "impl": "ledger-wrong-code-ignored",
+  "kind": "structural",
+  "margin_minor": "0",
+  "divergent_cells": [
+   "legs[].gl_account_code"
+  ],
+  "note": "A port carrying account ids and never joining the chart: every resolved gl_account_code is empty where the readback carries T327-1000, T327-1100 and T327-2000."
+ }
+]
