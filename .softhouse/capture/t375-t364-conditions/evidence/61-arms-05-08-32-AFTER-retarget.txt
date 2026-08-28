@@ -1,0 +1,62 @@
+--- smoke3 clone at 1b18bf75 ---
+T375 RED DRIVE -- every arm runs the WHOLE BAR, never a guard standalone, never `sh`.
+
+>>> ARM SET 1: drive-red-t358.sh, unmodified, against T375's conformance.sh.
+>>> (that drive runs drive-red-t323.sh as ITS arm set 1, so all three generations run.)
+>>> ARM SET 1: T358 DRIVE PASSED in full.
+
+>>> ARM SET 2: T375's own arms.
+T375-00-GREEN-CONTROL-clean-tree                         exit=143 (want 0 )  probe=ABSENT   (want PRESENT )  marker=YES  >>> FAIL
+    --- transcript tail ---
+    conformance:     INVOKED    .softhouse/guards/check-capture-namespace.sh
+    conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+    conformance:     INVOKED    .softhouse/guards/check-ledger-invariants.sh
+    conformance:     DECLARED   .softhouse/guards/drive-red-ledger-invariants.sh — not a guard: the red drive for ledgerguard (verified)
+    conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+    conformance:                .softhouse/guards/check-ledger-invariants.sh (verified: it names main.go)
+    conformance:     DECLARED   .softhouse/guards/repo-state-attest.sh — run by .softhouse/bin/fire-program.sh (verified: it names repo-state-attest.sh)
+    conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    conformance:   (selector: git ls-files with ':(glob)' magic over the TRACKED '*.sh', '*.py'
+    conformance:   and '*.go' files at ANY DEPTH under .softhouse/guards, from $REPO_ROOT. NOT closed over
+    conformance:   other languages or committed binaries — this is a count over that search.)
+    conformance:   (INVOKED means the member's REPO-RELATIVE PATH appears on a NON-COMMENT line
+    conformance:   of this file — NOT its bare basename. [T375, closing T364 F-T364-1: a
+    conformance:   basename is shared, so a mention of ANOTHER file absolved this one, and an
+    conformance:   unwired checker named 'main.go' read INVOKED with the bar GREEN.] It is
+    conformance:   still a NAMING test and still NOT proof of execution: two of the three
+    conformance:   members that read INVOKED today are named on a 'local g=' assignment and the
+    conformance:   call is a variable expansion this test cannot see. [T337 F-T337-4, corrected
+    conformance:   by T358 — the old wording said 'never a mention', which overstated it.] What
+    conformance:   remains open, stated so nobody concludes more than was closed: a non-comment
+    conformance:   line spelling THIS member's own path without calling it still absolves it.)
+    conformance:   guards-dir registration: PASS — every member of .softhouse/guards is invoked by this
+    conformance:   file, DECLARED against a verified witness, or carries a verified REACHED-BY.
+    conformance:   namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
+    conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
+    conformance:   namespace:   root    /private/tmp/t375-smokeclone3
+    conformance:   namespace:   corpus  8323 tracked paths -> 173 evidence directories
+    conformance:   namespace:           152 carry a t<n> id prefix; 21 do not and CANNOT collide this way
+    conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
+    conformance:   namespace:   T255 -> 2 directories; ownership records required 1, present 1
+    conformance:   namespace:       DECLARED   capture/t255-frontier-rot                    by .softhouse/capture/t255-frontier-rot/OWNER-IS-T258-NOT-T255.md
+    conformance:   namespace:       UNCLAIMED  capture/t255-dec2-rev8                       (record: <absent>)
+    conformance:   namespace:   T256 -> 2 directories; ownership records required 1, present 1
+    conformance:   namespace:       DECLARED   capture/t256-verdict-predicate               by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+    conformance:   namespace:       UNCLAIMED  capture/t256-toolchain-population            (record: <absent>)
+    conformance:   NAMESPACE-CENSUS: dirs=173 prefixed=152 unprefixed=21 collidingIds=2 declared=2 unclaimed=2 shortfallIds=0
+    conformance:   namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
+    conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+    conformance:   T316-DEADPATH-CENSUS: corpus=1343 deadFiles=76 deadOccurrences=109 resolving=1253 indeterminate=93 prose=336
+    /tmp/t375-smoke3.sh: line 131: 32719 Terminated: 15          bash .softhouse/conformance.sh
+T375-05-selfcert-via-DOTSLASH                            exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-08-REVERT-pass1-compare-ALONE-pass2-blob-test-CATCHES-it exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-32-REVERT-BOTH-selfreference-tests-HOLE-REOPENS     exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+
+>>> ARM SET 3: T375 pass 2 -- what pass 1's arms missed by one.
+
+T375 RED DRIVE: 4 passed, 1 failed. (arm set 1 counts as one.)
+DISTINCT ARMS IN THIS FILE: 33. The line above counts arm set 1 as ONE, so its total is
+33 + 1 = 34 and NOT the sum of every arm that ran -- T364's NOTE-1 charged exactly that
+double-count against T358's '29 arms' label, and the label is spelled here so it cannot
+be inferred wrongly. The predecessor drives report their own counts in their own output.
+SMOKE3 RC=1
