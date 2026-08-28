@@ -247,19 +247,36 @@ echo "  shim: rewrites 'git grep -E' to 'git grep -F'; all other subcommands pas
 run "$D/before.sh" "$D/r3-before.out" "$D/shimE"; rc_3b=$?
 run "$D/after.sh"  "$D/r3-after.out"  "$D/shimE"; rc_3a=$?
 echo "  BEFORE under the literal-minded engine:"; say_rc "$rc_3b"
-show "$D/r3-before.out" 'CALIBRATE|SWEEP-RESULT' 4
-printf '      | MEASURED ZERO count: %s selector(s)\n' "$(grep -c 'MEASURED ZERO' "$D/r3-before.out")"
+show "$D/r3-before.out" 'CALIBRATE\+|CALIBRATE-|SWEEP-RESULT' 4
 echo "  AFTER under the literal-minded engine:"; say_rc "$rc_3a"
-show "$D/r3-after.out" 'CALIBRATE|SWEEP ABORT|not|NOBODY MEASURED' 8
-if [ "$rc_3b" -eq 0 ] && [ "$(grep -c 'MEASURED ZERO' "$D/r3-before.out")" -ge 10 ]; then
-  echo "  >>> RED CONFIRMED: BEFORE calibrates GREEN and then prints"
-  echo "  >>> $(grep -c 'MEASURED ZERO' "$D/r3-before.out") 'MEASURED ZERO' lines for searches whose patterns were never"
-  echo "  >>> interpreted -- because both its calibration arms are -F and cannot reach the hazard."
+show "$D/r3-after.out" 'CALIBRATE|SWEEP ABORT|NOBODY MEASURED|DISAGREE|SAME COUNT' 8
+# THE DISCRIMINATOR IS *NOT* A COUNT OF `MEASURED ZERO`, AND THE FIRST VERSION OF THIS DRIVE WAS
+# WRONG TO USE ONE. On this corpus a literal-minded engine does not fall silent: the ERE patterns
+# of S1..S16 appear VERBATIM in `.softhouse/` -- in the sweep script itself, in handoffs and in
+# transcripts that quote the selectors -- so searching for them literally returns SELF-REFERENTIAL
+# HITS instead of zeros. Measured: 0 `MEASURED ZERO` lines under the shim. That is a worse failure
+# than silence, not a milder one, and it is why the honest discriminator is DIVERGENCE: how many
+# selectors reported a different `hits total` once the engine's semantics changed underneath them,
+# while the instrument went on declaring `calibration=yes exit=0`.
+grep 'hits total' "$D/r2-before-control.out" > "$D/r3-hits-clean.txt"
+grep 'hits total' "$D/r3-before.out"         > "$D/r3-hits-shim.txt"
+n_clean=$(grep -c . "$D/r3-hits-clean.txt"); n_shim=$(grep -c . "$D/r3-hits-shim.txt")
+n_diff=$(diff "$D/r3-hits-clean.txt" "$D/r3-hits-shim.txt" | grep -c '^<')
+printf '      | selectors reporting `hits total`: clean=%s shimmed=%s ; rows that CHANGED: %s\n' \
+  "$n_clean" "$n_shim" "$n_diff"
+printf '      | `MEASURED ZERO` lines under the shim: %s (see the note in the source -- a literal\n' \
+  "$(grep -c 'MEASURED ZERO' "$D/r3-before.out")"
+printf '      |   engine returns SELF-REFERENTIAL hits on this corpus, not zeros)\n'
+if [ "$rc_3b" -eq 0 ] && grep -q 'calibration=yes' "$D/r3-before.out" && [ "${n_diff:-0}" -ge 1 ]; then
+  echo "  >>> RED CONFIRMED: the engine's semantics changed under BEFORE's feet -- $n_diff selector"
+  echo "  >>> row(s) report a different hit count -- and BEFORE still printed calibration=yes and"
+  echo "  >>> exited 0, because both of its calibration arms are -F and cannot reach the hazard."
 else
-  echo "  >>> R3 DID NOT REPRODUCE in BEFORE (exit $rc_3b)."
+  echo "  >>> R3 DID NOT REPRODUCE in BEFORE (exit $rc_3b, changed rows $n_diff)."
 fi
-if [ "$rc_3a" -eq 3 ] && grep -q 'NOBODY MEASURED' "$D/r3-after.out"; then
-  echo "  >>> GREEN CONFIRMED: AFTER's -E calibration arm catches it; exit 3, no selector printed."
+if [ "$rc_3a" -eq 3 ] && grep -qE 'NOBODY MEASURED|SAME COUNT' "$D/r3-after.out"; then
+  echo "  >>> GREEN CONFIRMED: AFTER's -E/-F discrimination pair catches it; exit 3, no selector"
+  echo "  >>> result printed at all."
 else
   echo "  >>> AFTER DID NOT REFUSE (exit $rc_3a). THE REPAIR IS NOT PROVEN."
 fi
@@ -271,14 +288,20 @@ echo
 echo "============================================================================"
 echo "D-R3b a selector pattern carrying a backslash-class  (T379 R3, the enforced claim)"
 echo "============================================================================"
-PROBE_SEL='sel "ZZ-DRIVE  a selector carrying a backslash-class" -n -E '"'"'zz\bprobe'"'"''
+# THE INSERTION IS DONE BY A SCRIPT, NOT BY `awk -v`, AND THE FIRST RUN OF THIS DRIVE IS WHY.
+# `awk -v` EXPANDS ESCAPE SEQUENCES in the assigned value, so the probe's `\b` arrived in the
+# file as an actual BACKSPACE. The drive then measured a selector carrying a backspace instead of
+# one carrying a backslash-class: the BEFORE arm printed MEASURED ZERO for the wrong reason and
+# the AFTER arm did not refuse at all. An instrument that mangles its own test input is the same
+# class of error as one that emits a negative it did not measure. The helper below refuses unless
+# the backslash-class survives the round trip.
+INS="$TOP/.softhouse/capture/t381-t379-conditions/instruments/t381-insert-probe-selector.py"
+if [ ! -f "$INS" ]; then
+  echo "  D-R3b: the probe inserter is ABSENT at $INS. DRIVE FAILED -- not skipped."; exit 4
+fi
 for v in before after; do
-  awk -v ins="$PROBE_SEL" '
-    /^echo$/ && !done { print ins; done=1 }
-    { print }
-  ' "$D/$v.sh" > "$D/r3b-$v.sh"
-  if ! grep -q 'ZZ-DRIVE' "$D/r3b-$v.sh"; then
-    echo "  D-R3b: could not insert the probe selector into $v. DRIVE FAILED."; exit 4
+  if ! python3 "$INS" "$D/$v.sh" "$D/r3b-$v.sh" | sed 's/^/    /'; then
+    echo "  D-R3b: the probe inserter REFUSED on $v. DRIVE FAILED."; exit 4
   fi
 done
 run "$D/r3b-before.sh" "$D/r3b-before.out"; rc_3bb=$?
@@ -393,10 +416,8 @@ if ! python3 "$MK" "$D/after.sh" "$D/r5-red.sh" "$D/r5-green.sh" | sed 's/^/    
   echo "  D-R5: the variant builder REFUSED. DRIVE FAILED."; exit 4
 fi
 for v in red green; do
-  awk -v ins="$PROBE_SEL" '/^echo$/ && !seen { print ins; seen=1 } { print }' \
-    "$D/r5-$v.sh" > "$D/r5-$v-probe.sh"
-  if ! grep -q 'ZZ-DRIVE' "$D/r5-$v-probe.sh"; then
-    echo "  D-R5: could not insert the probe selector into the $v variant. DRIVE FAILED."; exit 4
+  if ! python3 "$INS" "$D/r5-$v.sh" "$D/r5-$v-probe.sh" | sed 's/^/    /'; then
+    echo "  D-R5: the probe inserter REFUSED on the $v variant. DRIVE FAILED."; exit 4
   fi
 done
 run "$D/r5-red-probe.sh"   "$D/r5-red.out";   rc_5r=$?

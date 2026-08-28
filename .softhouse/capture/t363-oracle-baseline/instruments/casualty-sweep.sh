@@ -172,9 +172,25 @@ CALIB_NEG_STR="zzq-t371-anticalibration-sentinel-$$-${RANDOM}-$(date -u +%s)"
 # CALIB_POS_ERE matches ONLY if the engine really interprets a bracket expression, a group, an
 # alternation and a bounded quantifier. A literal-minded `-E` -- exactly the failure T238 named
 # -- returns 0 for it, and the run now ABORTS instead of printing thirteen unmeasured zeros. It
-# is written so that its OWN definition line cannot match it: the text here reads `C[A]SUALTY`
-# while the pattern demands a literal `CASUALTY`.
-CALIB_POS_ERE='C[A]SUALTY SW(EEP|OOP) for the T3[0-9]{2}'
+# is written so that its OWN definition line cannot match it UNDER `-E`: the text below reads
+# `C[A]SUALTY` while the pattern demands a literal `CASUALTY`.
+#
+# THAT WAS NOT ENOUGH, AND THE RED DRIVE IS WHAT SAID SO. T381's first version of this arm was a
+# single `-E` search, and D-R3a -- a shim that rewrites `-E` to `-F`, i.e. the literal-minded
+# engine -- showed it PASSING anyway with 1 hit. The hit was THIS FILE'S OWN DEFINITION LINE:
+# read literally, the pattern matches the line that spells it. A calibration that a broken
+# engine satisfies by reading the calibration's own source is not a calibration.
+#
+# Two changes, both from that measurement:
+#   * the pattern is ASSEMBLED from parts at run time, so its literal spelling exists in no
+#     file and `-F` can find it nowhere; and
+#   * the arm is a PAIR. The same pattern is run under `-E` and under `-F`, and the engine must
+#     answer DIFFERENTLY -- an engine that has stopped interpreting ERE returns the same count
+#     for both, whatever that count happens to be, and the comparison catches it without
+#     depending on either number being any particular value.
+_ere_alt='(EEP|OOP)'
+_ere_dig='[0-9]'
+CALIB_POS_ERE="C[A]SUALTY SW${_ere_alt} for the T3${_ere_dig}{2}"
 CALIB_NEG_ERE="(zzq|qzz)-t381-ere-anticalib-[0-9]+-$$-${RANDOM}-$(date -u +%s)"
 
 # --------------------------------------------------------------------------- engine plumbing
@@ -236,17 +252,37 @@ calibrate() {
   fi
   printf 'SWEEP CALIBRATE-F: PASS -- known negative matched 0 times, and the search RAN (rc=%s)\n' "$ENGINE_RC"
 
-  # ---- arm 3 of 4: -E POSITIVE. [T381 R3] The mode thirteen of the sixteen selectors use.
+  # ---- arm 3 of 4: -E POSITIVE, RUN AS A DISCRIMINATION PAIR. [T381 R3, hardened by D-R3a]
+  # The same pattern under -E and under -F. On a working engine the two CANNOT agree: as an ERE
+  # it matches a sentence that is present in $CALIB_POS_PATH; as a fixed string it matches
+  # nothing anywhere, because it is assembled at run time and its literal spelling is in no
+  # file. Equal counts therefore mean the engine is not distinguishing the two modes -- which is
+  # precisely T238's failure -- and the thirteen '-E' selectors below would be searching for
+  # something other than what they say.
+  local n_ere n_fix
   engine_count -c -E "$CALIB_POS_ERE" -- "$CALIB_POS_PATH"; ec=$?
   [ "$ec" -eq 0 ] || _calib_refuse "-E POSITIVE" "$ec"
-  if [ "$ENGINE_N" -lt 1 ]; then
-    echo "SWEEP ABORT (exit 3): -E CALIBRATION MISSED. The pattern '$CALIB_POS_ERE' matched 0 times" >&2
-    echo "  in $CALIB_POS_PATH, where an ERE-interpreting engine finds it. This engine is NOT" >&2
-    echo "  interpreting ERE metacharacters, so the thirteen '-E' selectors below would each print" >&2
-    echo "  a zero NOBODY MEASURED. Nothing is printed." >&2
+  n_ere="$ENGINE_N"
+  engine_count -c -F "$CALIB_POS_ERE" -- "$CALIB_POS_PATH"; ec=$?
+  [ "$ec" -eq 0 ] || _calib_refuse "-E POSITIVE's -F control" "$ec"
+  n_fix="$ENGINE_N"
+  if [ "$n_ere" -lt 1 ]; then
+    echo "SWEEP ABORT (exit 3): -E CALIBRATION MISSED. The pattern matched 0 times under -E in" >&2
+    echo "  $CALIB_POS_PATH, where an ERE-interpreting engine finds it. Either this engine is not" >&2
+    echo "  interpreting ERE metacharacters, or the sentence the arm is anchored to has been" >&2
+    echo "  edited out. Either way the thirteen '-E' selectors below would each print a result" >&2
+    echo "  NOBODY MEASURED. Nothing is printed." >&2
     exit 3
   fi
-  printf 'SWEEP CALIBRATE+E: PASS -- ERE metacharacters ARE interpreted; pattern matched %s time(s)\n' "$ENGINE_N"
+  if [ "$n_ere" -eq "$n_fix" ]; then
+    echo "SWEEP ABORT (exit 3): -E AND -F RETURNED THE SAME COUNT ($n_ere) for a pattern whose two" >&2
+    echo "  readings cannot agree on a working engine. This engine is NOT distinguishing extended" >&2
+    echo "  regular expressions from fixed strings -- T238's failure -- so the thirteen '-E'" >&2
+    echo "  selectors below would print results NOBODY MEASURED. Nothing is printed." >&2
+    exit 3
+  fi
+  printf 'SWEEP CALIBRATE+E: PASS -- -E interpreted it (%s hit(s)) and -F did not (%s). They DISAGREE,\n' "$n_ere" "$n_fix"
+  printf '                   which is the only outcome a working engine can produce here.\n'
 
   # ---- arm 4 of 4: -E ANTI. [T381 R3] No fabrication in the mode those thirteen use.
   engine_count -c -E "$CALIB_NEG_ERE" -- .softhouse; ec=$?
