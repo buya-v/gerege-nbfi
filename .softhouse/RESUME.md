@@ -35,12 +35,35 @@ on a clean review.
 | `T357` | `softhouse/T357-a2-11-section1-red` | `85a30a79` | `T362` (dispatched) |
 | `T361` | `softhouse/T361-review-t353` | `b4bf2abf` | `T366` (next wave) |
 
-### ⚠ The git trap, carried forward verbatim
-`git merge-base --is-ancestor softhouse/T361-review-t353 main` → TRUE, but `git ls-files | grep -c
-t361-review-t353` → 0. The driver merged T361 (`380f0d64`) and reverted it (`2fa4015b`). **The commits
-are in `main`'s history; the files are not.** `git merge` will say "Already up to date" and restore
-nothing. Revert the revert or cherry-pick `b4bf2abf`'s tree. **Verify by file count, never by merge
-output.**
+### ⚠ The git trap — and a SECOND one the driver found underneath it
+
+The driver merged T361 (`380f0d64`) and reverted it (`2fa4015b`). **The commits are in `main`'s history;
+the files are not.** `git merge` will say "Already up to date" and restore nothing.
+
+**AND THE BRANCH NAME THE PREVIOUS MANIFEST GAVE FOR RECOVERY DID NOT EXIST.** Measured this fire:
+`softhouse/T361-review-t353` resolved to `fatal: Not a valid object name` — absent locally *and* on origin
+(`git ls-remote --heads origin | grep -i t361` → 0 hits; only 34 of 243 local `softhouse/*` branches are
+pushed at all, so absence from origin alone is normal — absence from both is not). The previous RESUME.md
+and T366's task text both instructed the next reader to use that name. The driver restored it:
+
+```
+git branch softhouse/T361-review-t353 b4bf2abf
+git merge-base --is-ancestor softhouse/T361-review-t353 main   →  TRUE
+git ls-files | grep -c t361-review-t353                        →  0
+git ls-tree -r --name-only softhouse/T361-review-t353 | grep -c t361-review-t353   →  40
+```
+
+**USE THE CLONE-PORTABLE SPELLING INSTEAD.** `b4bf2abf` is the second parent of the merge `380f0d64`, so it
+is reachable from `origin/main`, can never be GC'd, and works in a fresh clone that has no local branches —
+which a local branch ref demonstrably does not:
+
+```
+git ls-tree -r --name-only '380f0d64^2' | grep -c t361-review-t353   →  40
+git show '380f0d64^2':.softhouse/reviews/t361-review-t353/REVIEW.md
+```
+
+**Verify by file count, never by merge output.** T366's task text has been patched with this correction, and
+the live `T365` worker — which was dispatched with the broken command — was messaged directly.
 
 ## Next wave, after this one is awaited and merged
 `T366` (land T361 without reddening the bar) → `T360` (a vector class for oracle-ACCEPTS/port-REFUSES)
