@@ -459,6 +459,35 @@ different task and must not be done by line number.
 
 ---
 
+## HOW TO REPRODUCE EVERY FINDING IN THIS REVIEW
+
+Nothing here needs my transcripts to be believed. Cite by NAME, never by line — every
+identifier below is unique in its file and `grep -n` re-derives it in one command.
+
+    # 1. clone the trees
+    git clone --no-hardlinks <repo> /tmp/x/main   && git -C /tmp/x/main   checkout main
+    git clone --no-hardlinks <repo> /tmp/x/t375   && git -C /tmp/x/t375   checkout softhouse/T375-t364-conditions
+
+    # 2. any arm: <source tree> <arm name> <mutator>
+    bash .softhouse/reviews/t384-review-t375/probe-t384.sh.txt \
+         /tmp/x/t375 MYARM \
+         .softhouse/reviews/t384-review-t375/mutators/G-glob-member-AMBIGUOUS-symlink.sh.txt
+
+    # 3. can arm 32 fail?
+    bash .softhouse/reviews/t384-review-t375/arm32-HONEST.sh.txt    <scratch clone>   # >>> PASS
+    bash .softhouse/reviews/t384-review-t375/arm32-SABOTAGED.sh.txt <scratch clone>   # >>> FAIL
+
+    # 4. the mechanism of the fifth fail-open, in two commands, in arm G's scratch clone
+    git ls-files -s -- '.softhouse/guards/zz-t384g[1].sh'             # TWO lines, first is 100644
+    git ls-files -s -- ':(literal).softhouse/guards/zz-t384g[1].sh'   # ONE line,  120000
+
+The three code sites the findings are about, **named**:
+`guard_guards_dir_registration`'s `member_stat=` / `member_mode=` / `member_blob=` assignments
+(F-T384-1); its `self_multi` refusal (the shape the repair should copy); and
+`GUARD_COST_BUDGETS` / `timed_guard` (O-T384-1, O-T384-2).
+
+---
+
 ## WHAT I DID NOT VERIFY, STATED SO NOBODY READS MORE INTO THIS REVIEW THAN IS IN IT
 
 * **`FU-T375-5`, the `DECLARED` direction.** Reasoned about, not driven. See §6.
