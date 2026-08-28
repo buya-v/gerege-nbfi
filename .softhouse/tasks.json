@@ -5684,7 +5684,7 @@
     },
     {
       "id": "T391",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -5701,7 +5701,7 @@
       ],
       "title": "Promote T388's accrual observations -- and the row the harness prints every run is now FALSE in four sentences",
       "description": "T388 took the program's FIRST accrual observations (9 entries through INTEREST_RECEIVABLE, FEES_RECEIVABLE and PENALTIES_RECEIVABLE). It promoted nothing, by design -- `.softhouse/vectors/` was held by T360 that wave. You are the promotion.\n\n1. **THE HARNESS IS NOW PRINTING FALSEHOODS EVERY RUN.** `capabilities-ledger.json`'s `ledger.accrual.entry` row says the observations 'do not exist', that 'NOT ONE JOURNAL ENTRY IN THIS TENANT ARRIVED THROUGH A RECEIVABLE SLOT', that product 28 is the only ACCRUAL_PERIODIC product, and that an accrual vector needs a new product PLUS a job run. **All four are false as of T388.** T388's own recommendation, which is right: keep the sentence that is still TRUE by narrowing it -- 'not one entry in this **CORPUS**', because the promoted store is still empty of accruals. Rewrite the row; do not delete it.\n2. **DECIDE WHAT AN ACCRUAL VECTOR GRADES, AND GRADE THE SLOT, NOT THE ACCOUNT.** This is T242's whole lesson: ONE GL ACCOUNT BACKS SEVERAL SLOTS, and the harness once printed 'gl 18, 22 and 16 carry ZERO journal entries' as measured fact when gl 16 had sixteen. Grading the account would reproduce exactly that error. Grading the slot means populating the ledger schema's slot fields for the FIRST time -- expect that to be the real work.\n3. **NON-VACUITY.** Register a wrong implementation alongside the 13 existing `ledger-wrong-*` drives and show it KILLED by your new vectors. A vector no wrong implementation can fail is decoration.\n4. **DO NOT PROMOTE THESE AS A PRECISION CLAIM.** T388 says so and is right: the `(19, HALF_UP)` question applies to these captures unchanged.\n5. Counts that move, move in the summary AND every pinned census that restates them, in ONE commit (P-83). Baseline before you start: ledger parity PASS 7, oracle-refusal 6, inadmissible 0, 142 cells / 39 money.\n\nRead T388's handoff and T389's review from their branches, never from disk. Five accrual slots remain unposted (6, 10, 11, 12, 13); product 63 and gl 40/44/45/46/47 are already clean, so the marginal cost of more observations is a transaction, not a product -- say whether you took them.",
-      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
+      "note": "COMPLETE on softhouse/T391-accrual-promotion, 10 commits, bar exit 0. HELD for T406. FIRST ACCRUAL VECTORS IN THE PROGRAM: LDG-ACC-01/02/03, grading the SLOT not the account. Pins moved by name: LEDGER_PARITY 7->10, MONEYCELLS 39->63, WRONGIMPLS 14->15. DECLARED A SECOND CONTENTION: it wrote in nexus/internal/apps/ledger/conformance/ (T397 grant) -- vector.go, admit.go, grade.go, impl.go and two tests -- but NOT verbatimInCapture and NOT report.go, T397 two targets. T397 is now merged, so merge T391 onto it in a scratch worktree and bar the merge result."
     },
     {
       "id": "T392",
@@ -5978,11 +5978,12 @@
       "dependencies": [
         "T391"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/reviews/t406-review-t391/"
       ],
-      "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
+      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "branch": "softhouse/T406-review-t391"
     },
     {
       "id": "T407",
