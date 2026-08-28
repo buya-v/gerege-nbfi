@@ -5933,7 +5933,7 @@
     },
     {
       "id": "T404",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -5949,7 +5949,7 @@
       ],
       "title": "F-T384-1: the FIFTH registration fail-open is REACHABLE with two committed files -- a decoy plus an ambiguous-glob symlink neutralises BOTH of T375's new tests at once",
       "description": "**T375 disclosed this against itself as `FU-T375-7` and rated it unreachable. `T384` REACHED IT.** The arm is written, driven on three trees, and ready to lift — it is `arm G` in `.softhouse/reviews/t384-review-t375/`, with controls E and F beside it.\n\n**THE MECHANISM, MEASURED.** The guard runs `git ls-files -s -- \"$rel\"` with `$rel` as a **pathspec, not a literal**. Plant an *honestly registered* decoy `zz-t384g1.sh` and a tracked symlink `zz-t384g[1].sh`: the pathspec matches **both**, `git ls-files` returns **two** lines, `1` sorts before `[`, so `member_mode` is the decoy's `100644` and `member_blob` is the decoy's blob. **Both of T375's new tests are neutralised at once.** Whole bar: **exit 0, probe PRESENT, `VERDICT: PASS`, `reached-by=3`, and the census printing `symlink-members=0` while a symlink member sits in the population.** Driven on T375's branch, on `main`, and on the merge result.\n\n**A GLOB CHARACTER ALONE IS NOT ENOUGH — T384's own controls refuted that.** Controls E and F use the same filenames without the ambiguity and are correctly REFUSED. **T375's recorded mechanism — 'more than one path, first line wins' — was exactly right.** Do not 'fix' this by rejecting glob characters in filenames; that would be the wrong repair and would refuse legitimate names.\n\n**THE REPAIR IS THE ONE T375 ALREADY WROTE:** `\":(literal)$rel\"` plus a `self_multi`-shaped refusal. Lift arm G (and E/F as controls) into the drive. Drive RED before GREEN and **keep a healthy control** — an honestly registered checker with an independent regular-file witness must still be ACCEPTED at `reached-by=2`, which is the control T384 verified stays green.\n\n**C-2 (also T384's): assert `symlink-members` COUNTS CORRECTLY, not merely that the member is refused.** The census printed `symlink-members=0` while one was present — a count that cannot rise is a count nobody should read.\n\n**C-3: delete two restated cardinals in T375's handoff §6 that DO NOT REPRODUCE.** T384 measures the `warn \"`/`say \"` counts as **367→405 and 139→139**, not the handoff's 366→396/137→137. The load-bearing 'nothing removed' claim IS true and independently counted — so **delete the restated numbers rather than refreshing them**, which is the remedy DEC-2 revision 8 chose for the same shape.\n\n**WHY T375 WAS RIGHT NOT TO FIX THIS IN FLIGHT, and you should say so in your handoff:** an executable change would have invalidated the 61-arm drive, and a one-token change without its arm is precisely what that task existed to refuse. What was wrong was the SEVERITY rating, not the process — the threat model of this guard is deliberate forgery inside a task's own grant, where **the attacker chooses the filename**.\n\n`conformance.sh` is free as of `d8ea93b8` — confirm no worker holds it before you write it. Bar from a CLEAN tree AFTER `git add -A` and commit; probe-line PRESENCE before value (P-84). Baseline: exit 0, 46 parity / 7884 cells, ledger 7/0, 144 cells / 39 money, all 14 wrong implementations dead, frontier GREEN at deadOccurrences 108, `EXEMPTION_PIN_LEDGER_WRONGIMPLS` now **14** — match it BY NAME if you ever touch it.\n\nT384 also listed what it did NOT drive, so you inherit it honestly: FU-T375-5 (DECLARED direction), a case-sensitive host, newline and gitlink member paths, and `guard_graded_root_is_this_tree`'s short-circuit.",
-      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
+      "note": "COMPLETE, 15 commits, bar exit 0, deadOccurrences 108 unmoved. Held for T407. RELEASES conformance.sh -- T413, T418 and F-T405-4 were all sequenced behind it. Disclosed FU-T404-1 against itself (the WITNESS-side second lookup at :3677 is still a pathspec; REASONED, NOT DRIVEN, and it deliberately did not make the one-token change, for the same reason T375 did not make its own). Also kept a defect in ITS OWN INSTRUMENT in the record: two drive invocations shared a work root and deleted each other mid-bar, producing exit=2 probe=ABSENT census=<none> -- INDISTINGUISHABLE FROM A CLEAN REFUSAL. Both conflicting transcripts stay committed unedited and neither corrupted row is claimed as a result."
     },
     {
       "id": "T405",
@@ -5995,11 +5995,12 @@
       "dependencies": [
         "T404"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/reviews/t407-review-t404/"
       ],
-      "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
+      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "branch": "softhouse/T407-review-t404"
     },
     {
       "id": "T408",
@@ -6101,7 +6102,7 @@
         ".softhouse/conformance.sh",
         ".softhouse/capture/t413-apply-zsh-census/"
       ],
-      "note": "FILED BY THE DRIVER, iter4. T401 decided and drove but could not apply; this applies."
+      "note": "FILED BY THE DRIVER, iter4. T401 decided and drove but could not apply; this applies. conformance.sh RELEASED by T404 as of iter4; this is now unblocked once its dependency review lands. NOTE T404 moved anchors: A4 moved :3865 -> :3934-3935, and EXEMPTION_PIN_LEDGER_WRONGIMPLS is at :4551. Apply BY CONTENT."
     },
     {
       "id": "T414",
@@ -6185,7 +6186,7 @@
         ".softhouse/conformance.sh",
         ".softhouse/capture/t418-driver-selfcontainment/"
       ],
-      "note": "FILED BY THE DRIVER, iter4, from T410 F-T410-2 and F-T410-3."
+      "note": "FILED BY THE DRIVER, iter4, from T410 F-T410-2 and F-T410-3. conformance.sh RELEASED by T404 as of iter4; this is now unblocked once its dependency review lands. NOTE T404 moved anchors: A4 moved :3865 -> :3934-3935, and EXEMPTION_PIN_LEDGER_WRONGIMPLS is at :4551. Apply BY CONTENT."
     }
   ],
   "cross_corroboration": {
