@@ -69,22 +69,43 @@
 #   F-8 CORRECTION (T272), because a false premise left in the tree is a trap for the
 #   next reader. This comment used to justify "always returns 0" partly by asserting
 #   that "a caller running under `set -e` would abort at the `. go-env.sh` line".
-#   THAT IS FACTUALLY WRONG ABOUT EVERY CURRENT CONSUMER and it is stated here as a
-#   fact about them. MEASURED by T272 on this tree, all three consumers of this file:
-#       .softhouse/conformance.sh:396                    set -u -o pipefail
-#       .softhouse/guards/check-ledger-invariants.sh:39  set -u -o pipefail
-#       .softhouse/guards/drive-red-ledger-invariants.sh:18  set -u -o pipefail
+#   THAT IS FACTUALLY WRONG ABOUT EVERY CURRENT LIVE CONSUMER and it is stated here as a
+#   fact about them. MEASURED by T272 on this tree — the three consumers the BAR runs,
+#   each cited by the `set` line itself so the anchor is grep-able and not just a number:
+#       .softhouse/conformance.sh:396                        `set -u -o pipefail`
+#       .softhouse/guards/check-ledger-invariants.sh:39      `set -u -o pipefail`
+#       .softhouse/guards/drive-red-ledger-invariants.sh:18  `set -u -o pipefail`
 #   Not one sets `-e`. (T254b measured the first two and named "both consumers";
 #   drive-red-ledger-invariants.sh is a THIRD and it agrees.) So the premise is WRONG
-#   about today's callers. It is RIGHT about tomorrow's: `reference-oracle.md`
-#   prescribes a bare `. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"`
-#   for new scripts to copy, and a new script written with `set -e` WILL abort at that
-#   line in the one arm below that returns non-zero. Saying exactly that is more useful
-#   than deleting the sentence, so it is said rather than deleted.
+#   about today's LIVE callers.
+#
+#   AND THE WORD "ALL" IN THAT SENTENCE WAS ITSELF TOO BROAD — corrected by T272's own
+#   census rather than left standing, since this comment exists to stop exactly that.
+#   "Three consumers" is a claim about the LIVE harness; it was written as a claim about
+#   the tree. MEASURED: 3 live consumers (0 under `set -e`, so the count above holds) and
+#   **47 ARCHIVED sourcers** under .softhouse/capture, .softhouse/reviews and
+#   .softhouse/handoff — of which **4 DO run under `set -e`**, named in the transcript.
+#   [.softhouse/capture/t272-goenv-graft/evidence/70-consumer-census.txt]
+#   None of them is a live hazard: no fire sets GEREGE_GO_STRICT, so the one non-zero arm
+#   is unreachable unless a human asks for it, and all four predate the switch. They are
+#   recorded because "all N consumers" is a claim about a SEARCH.
+#
+#   So the premise is also RIGHT about tomorrow's callers, and less hypothetically than
+#   the first draft of this comment implied: `reference-oracle.md` prescribes a bare
+#   `. "$(git rev-parse --show-toplevel)/.softhouse/bin/go-env.sh"` for new scripts to
+#   copy, four scripts in this tree ALREADY combine `set -e` with sourcing this file, and
+#   a new one written that way WILL abort at that line in the one arm below that returns
+#   non-zero. Saying exactly that is more useful than deleting the sentence, so it is
+#   said rather than deleted.
 #
 #   THE ONE NON-ZERO ARM — `GEREGE_GO_STRICT` (grafted by T272 from the cloud's T253
 #   implementation, origin/softhouse/T253-harness-portability = d7a7ea35,
-#   go-env.sh:159-167; recipe in REVIEW.md F-6).
+#   go-env.sh:159-167 — the block opening `if [ -n "${GEREGE_GO_STRICT:-}" ]; then` and
+#   closing on its `fi`, RE-VERIFIED line-for-line by T272 before being cited, because a
+#   bare cardinal rots (P-86: cite the anchor beside the number). Recipe: REVIEW.md F-6
+#   and merge-step 2, whose words are *"Take `go-env.sh` from MAC as the base, then graft
+#   one block from CLOUD"* / *"Graft it after the Mac's stale-`GOROOT` drop … which must
+#   be kept — it is the thing the cloud gets wrong (F-3)"*.)
 #
 #     WHAT IT MEANS. `GEREGE_GO_STRICT` set to any NON-EMPTY value makes the REJECTED
 #     hard-refusal decision above reachable as CONFIGURATION instead of as a patch.
@@ -156,7 +177,10 @@
 #                     `pinned` | `fallback-path` | `absent` | `refused`.
 #                     SAFE to compare across hosts and safe to print into a graded
 #                     transcript. The first three are T253b's and are kept unchanged:
-#                     `reference-oracle.md:660-661` documents them and T256's drive
+#                     `reference-oracle.md` documents them — the sentence "If a `go`
+#                     exists on `PATH` it announces the substitution and sets
+#                     `GEREGE_GO_SOURCE=fallback-path`", at :660-661 when T272 re-read it
+#                     (P-86: the anchor, not just the cardinal) — and T256's drive
 #                     ASSERTS on them, so renaming them would rot a document this task
 #                     does not own and redden a drive it did not write. `refused` is new.
 #   GEREGE_GO_BIN     the ABSOLUTE PATH of the `go` actually in use, or unset when
@@ -278,12 +302,36 @@ _gerege_go_env() {
     _g_pathgo=$(command -v go 2>/dev/null) || _g_pathgo=''
 
     # --- 4b-i. GEREGE_GO_STRICT — the REJECTED hard refusal, reachable as CONFIG. ---
-    # GRAFTED BY T272 from d7a7ea35:.softhouse/bin/go-env.sh:159-167, per T254b's recipe
-    # (REVIEW.md:36-44 "graft it AFTER the Mac's stale-GOROOT drop, which must be kept").
+    # GRAFTED BY T272 from the cloud's d7a7ea35:.softhouse/bin/go-env.sh — the block that
+    # opens `if [ -n "${GEREGE_GO_STRICT:-}" ]; then` (there, :159-167; T272 RE-VERIFIED
+    # that range line-for-line rather than inheriting the cardinal). T254b's recipe,
+    # quoted exactly rather than paraphrased inside quotation marks as this comment
+    # previously did:
+    #   "Graft it *after* the Mac's stale-`GOROOT` drop (mac `go-env.sh:153-156`), which
+    #    must be kept — it is the thing the cloud gets wrong (F-3)."
+    #   [.softhouse/reviews/t254-harness-portability/REVIEW.md, under the heading
+    #    "THE MERGE RECOMMENDATION — executable", numbered step 2 — at :41-44 when T272
+    #    re-read it; mac :153-156 re-verified against main and still exact]
     # It sits AFTER the drop above and AFTER the search diagnostics, so a strict refusal
     # still tells the reader which paths were searched and still repairs a stale GOROOT
     # it inherited — the two things that make the refusal actionable rather than merely
     # negative. The cloud version did NEITHER: it kept the stale GOROOT (F-3 HIGH).
+    #
+    # F-3 IS NOT TAKEN ON TRUST HERE. T272 fetched the UNFIXED cloud file out of the object
+    # store and SOURCED it under the exact condition — no pinned toolchain, a `go` on PATH,
+    # a stale inherited GOROOT — and measured, on this host:
+    #   cloud, default : rc=0, GOROOT STILL STALE, and its own banner prints
+    #                    `go: cannot find GOROOT directory: …` two lines above its own
+    #                    claim "this go uses its own built-in GOROOT". `go version` rc=2,
+    #                    `go build ./...` rc=2.
+    #   cloud, STRICT=1: rc=2, and THE STALE GOROOT SURVIVES THE REFUSAL TOO — F-3 is in
+    #                    BOTH cloud arms. That is why the drop goes FIRST, ahead of the
+    #                    branch, instead of inside either arm.
+    #   this file      : GOROOT dropped and announced in BOTH modes; default rc=0,
+    #                    `go version` rc=0, and `go build ./...` on the real nexus module
+    #                    rc=0 — the announced fallback does not merely announce, it RUNS.
+    # [.softhouse/capture/t272-goenv-graft/evidence/60-cloud-f3-reproduction.txt — 25
+    #  asserts, 0 failures; the instrument that produced it sits beside it]
     if [ -n "${GEREGE_GO_STRICT:-}" ]; then
         GEREGE_GO_SOURCE=refused
         export GEREGE_GO_SOURCE
