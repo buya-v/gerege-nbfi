@@ -1,8 +1,8 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260828-140005`, chain iteration 3 — **IN FLIGHT. ONE LIVE WORKER: `T384`.**
+## FIRE `20260828-140005`, chain iteration 3 — **CLOSED CLEAN. ZERO LIVE WORKERS.**
 
-**If you are reading this and no driver session is running, `T384` was killed mid-flight.** Mark each
+**Nothing was left running.** Every worker was awaited; every branch merged or recorded. Exit attestation: **NO DAMAGE**. Mark each
 `needs_retry` with the WIP evidence from its branch. `in_progress` never means "work is happening"; it means
 "a driver said so, once". Everything else below is either **merged** or **complete on a branch**.
 
@@ -129,6 +129,7 @@ Not dispatched now, deliberately: the fire is 8.7 h old against a 9.52 h record,
 dispatch what you have the budget to see through.
 
 ## Pause reason
-**Not paused.** `T384` dispatched and being awaited. Fire is 8.2 h old at the time of writing;
+**Closed clean, not paused.** All twelve dispatched workers awaited to completion, six merges landed, exit
+attestation `rc 0 / NO DAMAGE` with both advisories attributed. Fire ran ~8.9 h against a 9.52 h record. Fire is 8.2 h old at the time of writing;
 longest on record is 9.52 h. `T384` was dispatched with its verdict-critical checks ordered FIRST and the
 95-minute full drive LAST, so a kill mid-review still leaves a usable verdict.
