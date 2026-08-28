@@ -270,3 +270,17 @@ construction.
    `ADJUDICATED_DIFFERENT`. The procedure and the command are written at the constant.
 5. **`prove-t374-fixes-can-fail.sh` re-run.** T374's own prover drives four cases against this
    file. I re-ran it after the rewrite; result in section 5 above.
+6. **ARM B's `git show` still has no `try/except`, and that costs more now than when T382
+   raised it.** T382 recorded this and classified it correctly as *fail-closed, not a defect*:
+   a git failure raises, Python exits 1, and 1 is also the genuine-mutation code, so the
+   aggregate still goes red. **With five arms that is now a bigger hole than with two**: an
+   uncaught exception in ARM B means ARMs C, D and E never run and no verdict block is printed
+   at all, so the operator sees a traceback instead of a named failure and cannot tell which
+   population was actually compared. The repair is three lines — the same `except
+   subprocess.CalledProcessError` ARM A and ARM E already carry, recording a named
+   `b_unreadable` list. **Deliberately NOT done in this branch**, and the reason is not
+   scope: changing the graded file after the drive ran would mean the committed matrix and the
+   committed instrument were produced by different bytes, which is the exact disclosure T382
+   had to make about its own attack matrix. It should be one small task with a red drive
+   (make `git show HEAD:<path>` fail and require a named failure plus a verdict block, not a
+   traceback), and the drive here re-run against it.
