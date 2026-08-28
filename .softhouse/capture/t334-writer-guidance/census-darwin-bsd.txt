@@ -1,0 +1,55 @@
+HOST      : Darwin 25.5.0 (arm64)
+uname -a  : Darwin Buyanmunkhs-Mac-mini.local 25.5.0 Darwin Kernel Version 25.5.0: Mon Apr 27 20:41:26 PDT 2026; root:xnu-12377.121.6~2/RELEASE_ARM64_T8132 arm64
+  sh       /bin/sh              
+  sed      /usr/bin/sed         (rejects --version => BSD sed)
+  cp       /bin/cp              
+  install  /usr/bin/install     
+  patch    /usr/bin/patch       
+  git      /usr/bin/git         git version 2.50.1 (Apple Git-155)
+  perl     /usr/bin/perl        
+  ex       /usr/bin/ex          
+  ed       /bin/ed              
+  tee      /usr/bin/tee         
+  dd       /bin/dd              
+SELECTOR  : os.stat(path).st_ino before/after  AND  held read fd -> os.lseek(fd,0)+os.read
+WORKDIR   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t334-writers.qjmzcwot
+
+WRITER                         INODE_BEFORE INODE_AFTER  CHANGED  FD_SEES_NEW VERDICT
+-------------------------------------------------------------------------------------
+cat > file                     16330130     16330130     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+printf > file (truncate)       16330133     16330133     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+>> append                      16330135     16330135     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+tee file                       16330137     16330137     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+tee -a file                    16330139     16330139     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+dd conv=notrunc                16330141     16330141     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+cp src dst                     16330143     16330143     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+cp -p src dst                  16330146     16330146     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+cat src > dst                  16330149     16330149     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+mv src dst                     16330152     16330153     yes      no          ISOLATED (rename)
+install -m 755                 16330155     16330157     yes      no          ISOLATED (rename)
+python open(w)                 16330159     16330159     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+python open(r+)                16330161     16330161     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+python write+os.replace        16330163     16330164     yes      no          ISOLATED (rename)
+sed -i (in-place flag)         16330166     16330167     yes      no          ISOLATED (rename)
+sed -i.bak                     16330169     16330170     yes      no          ISOLATED (rename)
+sed > tmp; cat tmp > f         16330174     16330174     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+perl -i -pe                    16330177     16330178     yes      no          ISOLATED (rename)
+ex -s                          16330180     16330180     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+ed -s                          16330186     16330186     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+awk > tmp; mv tmp f            16330189     16330190     yes      no          ISOLATED (rename)
+patch                          16330192     16330195     yes      no          ISOLATED (rename)
+noclobber-defeating >|         16330200     16330200     yes      YES         IN PLACE  <-- CAN REACH A RUNNING SCRIPT
+git merge --ff-only            16330291     16330299     yes      no          ISOLATED (rename)
+git checkout other -- <p>      16330395     16330402     yes      no          ISOLATED (rename)
+git restore -s other <p>       16330493     16330500     yes      no          ISOLATED (rename)
+git reset --hard other         16330591     16330598     yes      no          ISOLATED (rename)
+git apply <patch>              16330696     16330703     yes      no          ISOLATED (rename)
+git checkout-index -f -a       16330794     16330801     yes      no          ISOLATED (rename)
+git stash pop                  16330892     16330927     yes      no          ISOLATED (rename)
+git pull --ff-only             16331024     16331034     yes      no          ISOLATED (rename)
+
+IN PLACE (dangerous): cat > file, printf > file (truncate), >> append, tee file, tee -a file, dd conv=notrunc, cp src dst, cp -p src dst, cat src > dst, python open(w), python open(r+), sed > tmp; cat tmp > f, ex -s, ed -s, noclobber-defeating >|
+ISOLATED (safe)     : mv src dst, install -m 755, python write+os.replace, sed -i (in-place flag), sed -i.bak, perl -i -pe, awk > tmp; mv tmp f, patch, git merge --ff-only, git checkout other -- <p>, git restore -s other <p>, git reset --hard other, git apply <patch>, git checkout-index -f -a, git stash pop, git pull --ff-only
+UNSCORED            : (none)
+legs=31 in_place=15 isolated=16 unscored=0
+DONE
