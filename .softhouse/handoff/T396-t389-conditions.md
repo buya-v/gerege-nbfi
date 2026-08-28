@@ -256,5 +256,9 @@ transcripts and one `.sha256` manifest — no vector and no Go file**
 (`git diff --name-only main...HEAD`), so it cannot have moved a graded cell. The **money** cell
 count is unmoved at 39.
 
-**A third bar run was taken after the manifest repair** (`T396-BAR-run3.txt`), because the repair
-landed after run 2 and a transcript must cover the tree it describes.
+**Run 3 was taken after the manifest repair** (`T396-BAR-run3.txt`), because the repair landed
+after run 2 and a transcript must cover the tree it describes. **Exit 0**; probe line PRESENT at
+`:192` reading `probe = up`; **46 parity / 0 FAIL / 7884 cells**; `deadOccurrences=108`, frontier
+`11 == pinned 11`; ledger **7 / 0** parity and **6 / 0** oracle-refusal, **39** money cells;
+inadmissible **0**, harness errors **0**, invariant violations **0**; **all 14 wrong ledger
+implementations DIED**. Identical to runs 1 and 2 on every required figure.
