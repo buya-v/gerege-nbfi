@@ -22,3 +22,4 @@ T316-05-frontier-grew-unrecorded               exit=2  (want 2 )  probe=ABSENT  
 T316-06-census-removed-SELFREF                 exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
 T316-07-pin-removed-SELFREF                    exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
 populated the list with 1 ALREADY-PINNED row, pin untouched: .softhouse/bin/fire-program.sh | .softhouse/tasks.json.t288.tmp
+T316-08-stale-reconcile-list                   exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
