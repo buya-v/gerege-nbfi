@@ -22,6 +22,10 @@ LOG_DIR="${LOG_DIR:-$HOME/Library/Logs/gerege-nbfi}"
 LOCK="$REPO/.softhouse/LOCK"
 LOCK_MAX_AGE_SECS="${LOCK_MAX_AGE_SECS:-21600}"   # 6h — freshness threshold (STEP 0 arms 4/5)
 LOCK_CEILING_SECS="${LOCK_CEILING_SECS:-86400}"   # 24h — T279 lifetime CEILING (STEP 0 arm 3)
+# T365 / T361 C1 — how far AHEAD of this host's clock a `released_at` may plausibly sit and
+# still be believed. Declared HERE, beside the other thresholds and BEFORE any function that
+# reads it, because `set -u` is in force and `lock_released_at` now depends on it.
+LOCK_RELEASE_SKEW_SECS="${LOCK_RELEASE_SKEW_SECS:-3600}"   # 1h — plausibility bound on released_at (arm 1)
 CLAUDE_BIN="${CLAUDE_BIN:-$HOME/.local/bin/claude}"
 
 # Reference-oracle probes. PostgreSQL only — never MySQL/MariaDB, never Oracle DB.
@@ -409,11 +413,43 @@ lock_holder_is_dead() { [[ "$(lock_pid_state)" == dead_here ]] }
 # BSD-only construct on the lock path: off-BSD it would have killed arm 1 as well as arms 3
 # and 5, leaving a lock with no release arm AND no takeover arm — reclaimable only by
 # `--force`. Same intent, portable spelling, and no fork.
+#
+# T365 / T361 F-T361-1 (condition C1), direction OPEN — this closes another P-85 SAFETY hole.
+# T353 tightened the contract from "any non-empty JSON string" to "any SYNTACTICALLY valid
+# ISO-8601 UTC instant". That closed `"None"`, `"pending"`, `"null"` and `" "`. It did NOT
+# close the ZERO-VALUE and SENTINEL instants, which is what a MACHINE emits for a timestamp
+# it never set, and which mean NOT RELEASED exactly as loudly as `"pending"` does:
+#   `0001-01-01T00:00:00Z`  Go's zero `time.Time` through `encoding/json`, and python's
+#                           `datetime.min`. This program is a "Fineract -> Go native
+#                           migration" (CLAUDE.md), so a Go writer with an unset field emits
+#                           precisely this string and satisfies the syntactic contract.
+#   `0000-01-01T00:00:00Z`  a year-zero sentinel.
+#   `1970-01-01T00:00:00Z`  an int64 0 formatted.
+#   `9999-12-31T23:59:59Z`  `datetime.max` / a "never" sentinel.
+#   `2999-01-01T00:00:00Z`  a "not yet" sentinel.
+# ALL FIVE read `FREE-released` against a LIVE pid on this host before this change — MEASURED,
+# on macOS and reproduced inside Linux, so it is not a BSD artefact
+# [`.softhouse/capture/t365-t361-conditions/out/01-BEFORE-t361-corpus.txt` rows z01-z06,y01;
+#  T361's `out/03`, `out/10` row R05].
+#
+# SO THE INSTANT MUST ALSO BE PLAUSIBLE, not merely well-formed: strictly after the UNIX
+# epoch, and not further ahead of this clock than `LOCK_RELEASE_SKEW_SECS`. A refusal here
+# returns empty, which is "not released", which is HELD — the fail-CLOSED side.
+#
+# THE STATED COST, so nobody rediscovers it as a bug: a genuine `released_at` more than
+# `LOCK_RELEASE_SKEW_SECS` in the future is now read as NOT released. Direction SHUT,
+# configurable, and strictly preferable to the OPEN direction it replaces — the lock still has
+# arms 2, 3 and 5, so it is a delay, never a stranding. Graded by self-test group Z below;
+# reverting either predicate turns group Z red.
 lock_released_at() {
   local v
+  local -i _e _now
   v="$(_lock_json_field released_at str)" || return 0
   [[ -z "$v" ]] && return 0
-  _iso8601_epoch "$v" >/dev/null || return 0
+  _e="$(_iso8601_epoch "$v")" || return 0
+  (( _e > 0 )) || return 0
+  _now=$(date +%s)
+  (( _e <= _now + LOCK_RELEASE_SKEW_SECS )) || return 0
   print -r -- "$v"
 }
 
@@ -502,14 +538,44 @@ fi
 # canary, or a control that cannot fail is worse than none — because it is believed"*
 # [`.softhouse/patterns.md:473`].
 if [[ "${1:-}" == "--self-test-lock-readers" ]]; then
-  LOCK="$(mktemp -d "${TMPDIR:-/tmp}/fire-selftest.XXXXXX")/LOCK"
-  _st_dir="${LOCK:h}"
-  trap '[[ -n "${_st_dir:-}" ]] && rm -rf "$_st_dir"' EXIT
+  # T365 / T361 F-T361-2 (condition C2), direction SHUT. The `mktemp` here was UNCHECKED.
+  # When it fails — measured in a throwaway container with an unwritable `TMPDIR` — `LOCK`
+  # became `/LOCK`, `_st_dir` became `/`, the `[[ -n ]]` test in the trap PASSED, and the trap
+  # issued `rm -rf /`. Both BSD and GNU `rm` refused it, so the realized outcome was 6 fail-shut
+  # rows and `exit 2`; but that refusal is THEIR guarantee, not ours, and a control this file
+  # relies on must not depend on one. This file already handles the same shape correctly for
+  # `_t301_dir` at the snapshot re-exec (`grep -n _t301_dir`); the self-test did not.
+  # The check runs BEFORE the trap is installed, so a refusal removes nothing.
+  _st_dir="$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/fire-selftest.XXXXXX" 2>/dev/null)" || _st_dir=""
+  if [[ -z "$_st_dir" || ! -d "$_st_dir" || "$_st_dir" == "/" ]]; then
+    print -u2 "self-test: could not create a scratch directory under ${TMPDIR:-/tmp}; refusing to run against an unknown path"
+    exit 2
+  fi
+  LOCK="$_st_dir/LOCK"
+  trap '[[ -n "${_st_dir:-}" && "${_st_dir:-}" != "/" ]] && rm -rf "$_st_dir"' EXIT
 
   _H="$(hostname -s)"
   _NOW_E=$(date +%s)
   _NOW="$(_epoch_iso8601 $_NOW_E)"
-  _OLD="$(_epoch_iso8601 $(( _NOW_E - 360000 )))"          # 100 h ago: past the 24 h ceiling
+  # T365 / T361 F-T361-3 (condition C3), direction SHUT. This fixture was the literal
+  # `_NOW_E - 360000` with the comment "100 h ago: past the 24 h ceiling". BOTH cardinals
+  # restate a value that is ENVIRONMENT-OVERRIDABLE (`LOCK_CEILING_SECS`, :24), so raising the
+  # threshold past 100 h stopped the fixture being past it and turned group C red — measured
+  # at `LOCK_CEILING_SECS=604800`: `FAIL_SHUT=2`, rc 1, which at the wiring below is `exit 2`
+  # and THE FIRE DOES NOT START, with a log that says the readers regressed when in fact a
+  # threshold moved. P-80, *"the fix is never the new number — it is to make the second site
+  # READ the first"* [`.softhouse/patterns.md:2775`]. So it is DERIVED and never typed.
+  _OLD_AGE=$(( LOCK_CEILING_SECS * 2 + 60 ))               # comfortably past the ceiling, whatever the ceiling is
+  _OLD="$(_epoch_iso8601 $(( _NOW_E - _OLD_AGE )))"
+  # T365 / T361 F-T361-5 (condition C5), direction OPEN-coverage. A started_at just INSIDE the
+  # ceiling. Its job is to fail if `_iso8601_epoch`'s arithmetic drifts LOW: an epoch that reads
+  # low makes the instant EARLIER, so `now - e` reads LARGER, a lock an hour inside the ceiling
+  # reads past it, arm 3 fires and a LIVE holder's lock is taken. The OTHER sign is invisible
+  # here — an epoch reading HIGH makes every age SMALLER, which is the SHUT direction and never
+  # trips a want=HELD row — and that asymmetry is why group H asserts the epoch directly.
+  # [MEASURED both ways: `.softhouse/capture/t365-t361-conditions/out/07-red-drives.txt` r05/r05b.]
+  _NEAR_AGE=$(( LOCK_CEILING_SECS - 3600 ))                # inside the ceiling by one hour
+  _NEAR="$(_epoch_iso8601 $(( _NOW_E - _NEAR_AGE )))"
   _LIVE=$$                                                 # `lock_pid_state` never judges itself -> alive_here
 
   # A genuinely reaped pid. Retried, and if the pid is somehow still live the B rows are
@@ -538,6 +604,39 @@ if [[ "${1:-}" == "--self-test-lock-readers" ]]; then
     printf '%-4s %-14s want=%-15s got=%-16s %s\n' "$id" "$mark" "$want" "${verdict:-<none>}" "$what"
   }
 
+  # T365 / T361 F-T361-5 (condition C5), and a finding this task made while proving it.
+  #
+  # `_iso8601_epoch` is the arithmetic the whole lock now rests on, and its only OTHER grader
+  # is `.softhouse/capture/t353-t342-conditions/bin/epoch-parity.zsh`, which is EVIDENCE, NOT
+  # A CONTROL: nothing invokes it. `conformance.sh` does not name it, this file does not run
+  # it, and `grep -rn epoch-parity` outside `capture/`, `reviews/` and `handoff/` returns
+  # exactly one hit and it is a comment. That is P-45's shape — *"when hardening a check,
+  # verify the path that actually executes in CI/conformance calls it, not merely that a test
+  # does"* [`.softhouse/patterns.md:1503`] — and P-22's, *"a guard, a canary, or a control that
+  # cannot fail is worse than none — because it is believed"* [`.softhouse/patterns.md:473`].
+  # A transcript in a capture directory is not a control. `_arow` is.
+  #
+  # WHY IT ASSERTS THE EPOCH DIRECTLY INSTEAD OF ROUTING THROUGH A LOCK BODY. T361 proposed
+  # four BODY rows, one of them a `released_at` of `2100-02-29T00:00:00Z` to grade the century
+  # non-leap rule. MEASURED HERE: condition C1 MASKS that row. If the century rule broke,
+  # `2100-02-29` would decode to `2100-03-01`, which C1's plausibility bound then refuses as
+  # far-future — so the row stays HELD and the mutation stays invisible. And no substitute
+  # date exists: Feb 29 of a non-leap century year is 1900 or earlier (negative epoch, refused
+  # by C1's `_e > 0`) or 2100 or later (future, refused by C1's skew bound). Under C1 the
+  # century rule is UNREACHABLE through `released_at`, and through `started_at` it only ever
+  # yields a negative age, which is HELD either way. So the body rows below keep the coverage
+  # they can carry (group G) and the arithmetic is graded where it actually lives (group H).
+  _arow() {  # $1 id  $2 want (an exact epoch, or REFUSE)  $3 input  $4 direction  $5 what
+    local id="$1" want="$2" in="$3" dir="$4" what="$5" got rc mark
+    got="$(_iso8601_epoch "$in" 2>/dev/null)"; rc=$?
+    (( rc == 0 )) || got="REFUSE"
+    _n+=1; mark="ok"
+    if [[ "$got" != "$want" ]]; then
+      if [[ "$dir" == OPEN ]]; then mark="*** FAIL-OPEN"; _open+=1; else mark="*** FAIL-SHUT"; _shut+=1; fi
+    fi
+    printf '%-4s %-14s want=%-15s got=%-16s %s\n' "$id" "$mark" "$want" "${got:-<none>}" "$what"
+  }
+
   print -r -- "self-test: file=${0:A}"
   print -r -- "self-test: host=$_H self_pid=$_LIVE reaped_pid=${_DEAD:-<none>} now=$_NOW old=$_OLD scratch=$_st_dir"
   print -r -- ""
@@ -561,7 +660,7 @@ if [[ "${1:-}" == "--self-test-lock-readers" ]]; then
   _row a17 HELD "[{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\"}]" "top level is an ARRAY, not an object"
   _row a18 HELD "{\"host\": \"$_H\", \"pid\": \"$_LIVE\", \"started_at\": \"$_NOW\", \"released_at\": null}" "pid is a STRING"
   _row a19 HELD "{\"host\": \"$_H\", \"pid\": true, \"started_at\": \"$_NOW\", \"released_at\": null}" "pid is the bool true"
-  _row a20 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_OLD\", \"started_at\": \"$_NOW\"}" "started_at twice, 100 h then NOW (first-wins fires arm 3)"
+  _row a20 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_OLD\", \"started_at\": \"$_NOW\"}" "started_at twice, past-ceiling then NOW (first-wins fires arm 3)"
   _row a21 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\"} trailing garbage" "valid object then trailing garbage"
 
   print -r -- ""
@@ -571,18 +670,58 @@ if [[ "${1:-}" == "--self-test-lock-readers" ]]; then
     _row b02 TAKE-dead-pid "{\"holder\":\"f\",\"host\":\"$_H\",\"started_at\":\"$_NOW\",\"pid\":$_DEAD}" "compact separators, pid last"
     _row b03 TAKE-dead-pid "{\"host\": \"$_H\", \"pid\": $_DEAD, \"started_at\": \"$_NOW\", \"released_at\": null}" "canonical order + released_at null"
   else
-    _skipped=3
+    _skipped+=3   # T365: `+=`, not `=`. Group E can also skip, and an assignment here would erase its count.
     print -r -- "     WARNING: could not obtain a reaped pid that reads dead; group B SKIPPED. Arm 2 is UNTESTED this run."
   fi
 
   print -r -- ""
-  print -r -- "--- C. LIVE holder, started_at past the ${LOCK_CEILING_SECS}s CEILING. Correct = TAKE-ceiling (arm 3). Anything else = FAIL-SHUT."
-  _row c01 TAKE-ceiling "{\"holder\": \"f\", \"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_OLD\"}" "100 h old, spaced separators"
-  _row c02 TAKE-ceiling "{\"holder\":\"f\",\"host\":\"$_H\",\"pid\":$_LIVE,\"started_at\":\"$_OLD\"}" "100 h old, compact separators"
+  print -r -- "--- C. LIVE holder, started_at ${_OLD_AGE}s old vs the ${LOCK_CEILING_SECS}s CEILING (fixture DERIVED, T361 C3). Correct = TAKE-ceiling (arm 3). Anything else = FAIL-SHUT."
+  _row c01 TAKE-ceiling "{\"holder\": \"f\", \"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_OLD\"}" "past the ceiling, spaced separators"
+  _row c02 TAKE-ceiling "{\"holder\":\"f\",\"host\":\"$_H\",\"pid\":$_LIVE,\"started_at\":\"$_OLD\"}" "past the ceiling, compact separators"
 
   print -r -- ""
   print -r -- "--- D. GENUINELY released lock. Correct = FREE-released (arm 1). Anything else = FAIL-SHUT."
   _row d01 FREE-released "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$_NOW\"}" "released_at a real ISO-8601 UTC instant"
+
+  print -r -- ""
+  print -r -- "--- Z. T361 C1 (F-T361-1). released_at is a ZERO-VALUE or SENTINEL instant while a LIVE pid holds the lock."
+  print -r -- "    Syntactically valid, semantically NOT RELEASED. Correct = HELD-*. Anything else = FAIL-OPEN (P-85 safety)."
+  print -r -- "    Every one of these read FREE-released before T365; each is what some runtime emits for a field it never set."
+  _row z01 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"0001-01-01T00:00:00Z\"}" "Go's zero time.Time through encoding/json, and python datetime.min"
+  _row z02 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"0000-01-01T00:00:00Z\"}" "year-zero sentinel"
+  _row z03 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"1970-01-01T00:00:00Z\"}" "the UNIX epoch -- an int64 0 formatted"
+  _row z04 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"9999-12-31T23:59:59Z\"}" "datetime.max / a 'never' sentinel"
+  _row z05 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"2999-01-01T00:00:00Z\"}" "a far-future 'not yet' sentinel"
+  _row z06 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + LOCK_RELEASE_SKEW_SECS * 2 + 60 )))\"}" "DERIVED: past the skew bound -- a clock-skewed or scheduled writer"
+  _row z07 FREE-released "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + LOCK_RELEASE_SKEW_SECS / 2 )))\"}" "CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban"
+
+  print -r -- ""
+  print -r -- "--- E. T361 C4 (F-T361-4). FOREIGN host. lock_pid_state must return other_host and NEVER judge another machine."
+  print -r -- "    This is the literal P-85 line, and before T365 no self-test row exercised it. Correct = HELD-*; anything else = FAIL-OPEN."
+  if (( _DEAD > 0 )); then
+    _row e01 HELD "{\"host\": \"not-$_H\", \"pid\": $_DEAD, \"started_at\": \"$_NOW\"}" "FOREIGN host, pid DEAD here: arm 2 must NOT fire -- deleting the host check turns this red"
+  else
+    _skipped+=1
+    print -r -- "     WARNING: no reaped pid available; row e01 SKIPPED, so the host guard is graded only by e02 this run."
+  fi
+  _row e02 HELD "{\"host\": \"not-$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\"}" "FOREIGN host, pid live here: still other_host"
+
+  print -r -- ""
+  print -r -- "--- G. T361 C5 (F-T361-5). The PARSER's arithmetic, reached through a real lock body."
+  print -r -- "    Correct = HELD-* except where stated. A wrong epoch here is FAIL-OPEN: it fires arm 3 against a live holder."
+  _row g01 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NEAR\"}" "started_at ${_NEAR_AGE}s old, INSIDE the ${LOCK_CEILING_SECS}s ceiling: arm 3 must NOT fire (an epoch drifting LOW fires it; the other sign is invisible here, which is what group H is for)"
+  _row g02 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"2026-02-30T00:00:00Z\"}" "released_at is a NON-EXISTENT date: the day-bound check must refuse it (dropping it decodes to 2026-03-02, a plausible past instant, and frees the lock)"
+  _row g03 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"1969-12-31T23:59:59Z\"}" "started_at PRE-epoch: the negative-epoch guard must refuse it (dropping it reads a ~57-year age and fires the ceiling)"
+  _row g04 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"2026-13-01T00:00:00Z\"}" "released_at month 13: the month bound must refuse it"
+
+  print -r -- ""
+  print -r -- "--- H. T361 C5, the half the body rows cannot reach: _iso8601_epoch asserted DIRECTLY against exact constants."
+  print -r -- "    See the _arow header for why C1 makes the century rule unreachable through a lock body."
+  _arow h01 0          "1970-01-01T00:00:00Z" OPEN "the epoch anchor: days-from-civil must land exactly on 0"
+  _arow h02 86400      "1970-01-02T00:00:00Z" OPEN "one day past the epoch: grades the *86400 scaling and the day term"
+  _arow h03 951782400  "2000-02-29T00:00:00Z" SHUT "a REAL leap day (div-400 rule) must be ACCEPTED with this exact value"
+  _arow h04 REFUSE     "2100-02-29T00:00:00Z" OPEN "century NON-leap: div-100 rule must REFUSE. Unreachable via released_at under C1 -- this is the only grader."
+  _arow h05 4102444799 "2099-12-31T23:59:59Z" OPEN "end of century, all four fields at maximum: grades hh/mi/ss and the year term together"
 
   print -r -- ""
   print -r -- "ROWS=$_n FAIL_OPEN=$_open FAIL_SHUT=$_shut SKIPPED=$_skipped"
@@ -951,6 +1090,16 @@ esac
 # One `[[ -x ]]` is not enough on its own: a present-but-broken interpreter, or a shim that
 # prints a banner to stdout, is the case that produced a verdict out of thin air. So the
 # preflight also makes it PROVE it can parse JSON and write nothing else.
+#
+# T365 / T361 F-T361-11 (condition C11) — SAY THE BLAST RADIUS, because the argument above is
+# only about the lock and the refusal is broader than the lock. Before this gate existed a
+# python3-less fire still RAN: the two `branch_sweep.py` calls are `|| true` and
+# `ready-tasks.py`'s rc is logged and swallowed (`grep -n branch_sweep.py; grep -n ready-tasks.py`),
+# so the fire degraded rather than stopped. After it, a broken interpreter stops the whole fire,
+# including work that never touches a lock. That is a DELIBERATE trade and not an oversight:
+# a silent permanent wedge behind an unreclaimable lock is worse than a loud refusal, and a
+# fire that cannot read its own lock has no business scheduling anything. Direction SHUT,
+# chosen knowingly, recorded here so it is not rediscovered as a regression.
 if [[ ! -x /usr/bin/python3 ]]; then
   log "FATAL: /usr/bin/python3 is missing or not executable. Every LOCK field is read through it, so arms 1, 2, 3 and 5 -- INCLUDING THE 24 h CEILING, THE ONLY ARM THAT GUARANTEES A TAKEOVER TIME -- could not fire, and this fire would sit behind a lock it cannot reclaim. Refusing to start."
   exit 2
@@ -973,10 +1122,22 @@ log "python3 preflight: /usr/bin/python3 parses JSON and writes nothing spurious
 #
 # FATAL BY DESIGN. If the readers have regressed, the safe move is not to take a lock we
 # would misread; a wrapper that starts anyway is the P-85 shape with a warning printed next
-# to it. T342's census printed its failures and returned 0 — P-45, *"a guard that only works
-# when someone remembers to run it enforces nothing"* [`.softhouse/patterns.md:1503`]. This
-# one is on the path that executes, and it exits.
-_ST_OUT="$(zsh "$FIRE_SELF" --self-test-lock-readers 2>&1)"; _ST_RC=$?
+# to it. T342's census printed its failures and returned 0 — P-45, *"A test-only guard is not
+# a guard … when hardening a check, verify the path that actually executes in CI/conformance
+# calls it, not merely that a test does"* [`.softhouse/patterns.md:1503`]. This one is on the
+# path that executes, and it exits.
+#   T365 / T361 F-T361-8 (condition C8): the sentence above used to read *"a guard that only
+#   works when someone remembers to run it enforces nothing"*. That is NOT P-45's recorded
+#   text and not any other pattern's — `patterns.md:3374-3379` is a standing erratum written
+#   to stop that exact string spreading, and citing it here added a site to the table. The
+#   recorded text is quoted instead, and it carries the point better: the charge against the
+#   census was never that nobody remembered it, it was that conformance never called it.
+#
+# T365 / T361 F-T361-9 (condition C9), direction SHUT: `/bin/zsh`, not a bare `zsh`. This file's
+# own idiom is the absolute path (`grep -n 'exec /bin/zsh'`), and a PATH without zsh would turn
+# this FATAL control into a fire that cannot start at all (rc 127 -> exit 2) — the same class of
+# failure T353 hit with `${0:A}` and fixed. Small residual risk, but the file has an idiom.
+_ST_OUT="$(/bin/zsh "$FIRE_SELF" --self-test-lock-readers 2>&1)"; _ST_RC=$?
 print -r -- "$_ST_OUT" | while IFS= read -r l; do log "lockselftest| $l"; done
 if (( _ST_RC != 0 )); then
   log "FATAL: the lock-reader self-test FAILED (rc=$_ST_RC). A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P-85); a FAIL-SHUT row means a reclaimable lock cannot be reclaimed. Either way this wrapper must not decide a lock today. Refusing to start."

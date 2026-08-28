@@ -1,0 +1,103 @@
+[17:07:04] fire start — repo=/Users/buv/gerege-nbfi probe=1 force=0 log=/Users/buv/Library/Logs/gerege-nbfi/fire-20260828-170704.log
+[17:07:04] wrapper identity: path=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a0170054b87414aa1/.softhouse/bin/fire-program.sh inode=17843318 sha256=06c57d0e192fa148 bytes=187856
+[17:07:04] wrapper snapshot: RUNNING FROM A SNAPSHOT — repo copy=/Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh inode=17650333 sha256=c55a9c8b3a56e894 bytes=173746; the repo copy is now free to be modified by the fire this wrapper is about to start
+[17:07:04] fineract source: present at /Users/buv/fineract
+[17:07:04] postgres: reachable at localhost:5432
+[17:07:05] docker: running (29.6.2)
+[17:07:05] reference oracle (Fineract): REACHABLE at https://localhost:8443/fineract-provider/actuator/health
+[17:07:05] refguard| ref guard already installed: hook at /Users/buv/gerege-nbfi/.git/hooks/reference-transaction carries the softhouse-t312-ref-guard marker and is executable
+[17:07:15] sweep| BRANCH SWEEP -- T312 instrument (/Users/buv/gerege-nbfi/.softhouse/bin/branch_sweep.py)
+[17:07:15] sweep| SELECTOR, stated because 'not found' is a statement about the search:
+[17:07:15] sweep|   repo          /Users/buv/gerege-nbfi  (read .git/ directly)
+[17:07:15] sweep|   patterns      'softhouse/*'
+[17:07:15] sweep|   matching      fnmatch on the CASE-FOLDED short name -- 'softhouse/t3*' and 'softhouse/T3*' select identically here.  `git branch --list` does NOT; that is the defect this replaces.
+[17:07:15] sweep|   storage       walked /Users/buv/gerege-nbfi/.git/refs/heads -- 95 loose head(s), names as stored on disk
+[17:07:15] sweep|   storage       parsed /Users/buv/gerege-nbfi/.git/packed-refs -- 517 packed head(s), matched CASE-SENSITIVELY as git does
+[17:07:15] sweep|   matched       245 ref name(s) in 245 case-folded group(s), out of 609 head(s) present
+[17:07:15] sweep|   counts        SKIPPED: 245 groups is over the 40-group budget for one `git rev-list` per name.  Re-run with --counts to force. Nothing below claims a branch is empty.
+[17:07:15] sweep| 
+[17:07:15] sweep| 
+[17:07:15] sweep|   (--quiet: 245 unflagged group(s) inspected and not printed; they were LOOKED AT, not skipped)
+[17:07:15] sweep| FINDINGS: case-shadow groups=0  unreachable values=0  diverged pairs=0
+[17:07:15] sweep|   (informational, NOT a finding: 0 name(s) hold different loose and packed values under the same spelling -- the ordinary stale packed entry)
+[17:07:15] sweep|   none -- and that is a measurement over the selector printed above, not a default.
+[17:07:15] sweep| 
+[17:07:15] sweep| REF GUARD: INSTALLED -- hook at /Users/buv/gerege-nbfi/.git/hooks/reference-transaction carries the softhouse-t312-ref-guard marker and is executable
+[17:07:16] attest-preflight| repo-state-attest.sh: SURVEY [fire 20260828-170704 pre-flight baseline] /Users/buv/gerege-nbfi
+[17:07:16] attest-preflight|   legacy predicate (`git status --porcelain` empty?) : CLEAN (0 entries)
+[17:07:16] attest-preflight|   S3 uncommitted (visible, not hidden)                : 0
+[17:07:16] attest-preflight|   S4 ignored files (ADVISORY -- .DS_Store lives here) : 3
+[17:07:16] attest-preflight| VERDICT: no hidden-work term fired (skip bits 0)
+[17:07:16] attest-preflight: baseline reading taken — no hidden-work term fired in /Users/buv/gerege-nbfi before this fire started
+[17:07:16] python3 preflight: /usr/bin/python3 parses JSON and writes nothing spurious to stdout — the lock readers, and therefore arms 1/2/3/5, can fire
+[17:07:30] lockselftest| self-test: file=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a0170054b87414aa1/.softhouse/bin/fire-program.sh
+[17:07:30] lockselftest| self-test: host=Buyanmunkhs-Mac-mini self_pid=77995 reaped_pid=78009 now=2026-08-28T09:07:16Z old=2026-08-26T09:06:16Z scratch=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//fire-selftest.sZ588Q
+[17:07:30] lockselftest| 
+[17:07:30] lockselftest| --- A. LIVE holder on THIS host, fresh started_at. Correct = HELD-*. Anything else = FAIL-OPEN (P-85 safety).
+[17:07:30] lockselftest| a01  ok             want=HELD            got=HELD-live        baseline, no released_at key (what this file writes)
+[17:07:30] lockselftest| a02  ok             want=HELD            got=HELD-live        released_at null as the LAST key (T280 F-A)
+[17:07:30] lockselftest| a03  ok             want=HELD            got=HELD-live        compact separators, no space after any colon
+[17:07:30] lockselftest| a04  ok             want=HELD            got=HELD-live        released_at twice, string then null (first-wins says FREE)
+[17:07:30] lockselftest| a05  ok             want=HELD            got=HELD-live        released_at twice, null then string (last-wins says FREE)
+[17:07:30] lockselftest| a06  ok             want=HELD            got=HELD-live        not JSON at all, contains the token
+[17:07:30] lockselftest| a07  ok             want=HELD            got=HELD-live        write truncated mid-value
+[17:07:30] lockselftest| a08  ok             want=HELD            got=HELD-live        empty file
+[17:07:30] lockselftest| a09  ok             want=HELD            got=HELD-live        released_at is the STRING null
+[17:07:30] lockselftest| a10  ok             want=HELD            got=HELD-live        released_at is the STRING None -- what str(None) emits
+[17:07:30] lockselftest| a11  ok             want=HELD            got=HELD-live        released_at is the STRING pending
+[17:07:30] lockselftest| a12  ok             want=HELD            got=HELD-live        released_at is a single SPACE
+[17:07:30] lockselftest| a13  ok             want=HELD            got=HELD-live        released_at is the STRING 0
+[17:07:30] lockselftest| a14  ok             want=HELD            got=HELD-live        released_at is a DATE, not an instant
+[17:07:30] lockselftest| a15  ok             want=HELD            got=HELD-live        released_at is the NUMBER 0
+[17:07:30] lockselftest| a16  ok             want=HELD            got=HELD-live        released_at NESTED under another key
+[17:07:30] lockselftest| a17  ok             want=HELD            got=HELD-live        top level is an ARRAY, not an object
+[17:07:30] lockselftest| a18  ok             want=HELD            got=HELD-live        pid is a STRING
+[17:07:30] lockselftest| a19  ok             want=HELD            got=HELD-live        pid is the bool true
+[17:07:30] lockselftest| a20  ok             want=HELD            got=HELD-live        started_at twice, past-ceiling then NOW (first-wins fires arm 3)
+[17:07:30] lockselftest| a21  ok             want=HELD            got=HELD-live        valid object then trailing garbage
+[17:07:30] lockselftest| 
+[17:07:30] lockselftest| --- B. DEAD holder on THIS host. Correct = TAKE-dead-pid. Anything else = FAIL-SHUT (liveness).
+[17:07:30] lockselftest| b01  ok             want=TAKE-dead-pid   got=TAKE-dead-pid    pid is the LAST key
+[17:07:30] lockselftest| b02  ok             want=TAKE-dead-pid   got=TAKE-dead-pid    compact separators, pid last
+[17:07:30] lockselftest| b03  ok             want=TAKE-dead-pid   got=TAKE-dead-pid    canonical order + released_at null
+[17:07:30] lockselftest| 
+[17:07:30] lockselftest| --- C. LIVE holder, started_at 172860s old vs the 86400s CEILING (fixture DERIVED, T361 C3). Correct = TAKE-ceiling (arm 3). Anything else = FAIL-SHUT.
+[17:07:30] lockselftest| c01  ok             want=TAKE-ceiling    got=TAKE-ceiling     past the ceiling, spaced separators
+[17:07:30] lockselftest| c02  ok             want=TAKE-ceiling    got=TAKE-ceiling     past the ceiling, compact separators
+[17:07:30] lockselftest| 
+[17:07:30] lockselftest| --- D. GENUINELY released lock. Correct = FREE-released (arm 1). Anything else = FAIL-SHUT.
+[17:07:30] lockselftest| d01  ok             want=FREE-released   got=FREE-released    released_at a real ISO-8601 UTC instant
+[17:07:30] lockselftest| 
+[17:07:30] lockselftest| --- Z. T361 C1 (F-T361-1). released_at is a ZERO-VALUE or SENTINEL instant while a LIVE pid holds the lock.
+[17:07:30] lockselftest|     Syntactically valid, semantically NOT RELEASED. Correct = HELD-*. Anything else = FAIL-OPEN (P-85 safety).
+[17:07:30] lockselftest|     Every one of these read FREE-released before T365; each is what some runtime emits for a field it never set.
+[17:07:30] lockselftest| z01  ok             want=HELD            got=HELD-live        Go's zero time.Time through encoding/json, and python datetime.min
+[17:07:30] lockselftest| z02  ok             want=HELD            got=HELD-live        year-zero sentinel
+[17:07:30] lockselftest| z03  ok             want=HELD            got=HELD-live        the UNIX epoch -- an int64 0 formatted
+[17:07:30] lockselftest| z04  ok             want=HELD            got=HELD-live        datetime.max / a 'never' sentinel
+[17:07:30] lockselftest| z05  ok             want=HELD            got=HELD-live        a far-future 'not yet' sentinel
+[17:07:30] lockselftest| z06  ok             want=HELD            got=HELD-live        DERIVED: past the skew bound -- a clock-skewed or scheduled writer
+[17:07:30] lockselftest| z07  ok             want=FREE-released   got=FREE-released    CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban
+[17:07:30] lockselftest| 
+[17:07:30] lockselftest| --- E. T361 C4 (F-T361-4). FOREIGN host. lock_pid_state must return other_host and NEVER judge another machine.
+[17:07:30] lockselftest|     This is the literal P-85 line, and before T365 no self-test row exercised it. Correct = HELD-*; anything else = FAIL-OPEN.
+[17:07:30] lockselftest| e01  ok             want=HELD            got=HELD-live        FOREIGN host, pid DEAD here: arm 2 must NOT fire -- deleting the host check turns this red
+[17:07:30] lockselftest| e02  ok             want=HELD            got=HELD-live        FOREIGN host, pid live here: still other_host
+[17:07:30] lockselftest| 
+[17:07:30] lockselftest| --- G. T361 C5 (F-T361-5). The PARSER's arithmetic, reached through a real lock body.
+[17:07:30] lockselftest|     Correct = HELD-* except where stated. A wrong epoch here is FAIL-OPEN: it fires arm 3 against a live holder.
+[17:07:30] lockselftest| g01  ok             want=HELD            got=HELD-live        started_at 82800s old, INSIDE the 86400s ceiling: arm 3 must NOT fire (an epoch drifting LOW fires it; the other sign is invisible here, which is what group H is for)
+[17:07:30] lockselftest| g02  ok             want=HELD            got=HELD-live        released_at is a NON-EXISTENT date: the day-bound check must refuse it (dropping it decodes to 2026-03-02, a plausible past instant, and frees the lock)
+[17:07:30] lockselftest| g03  ok             want=HELD            got=HELD-live        started_at PRE-epoch: the negative-epoch guard must refuse it (dropping it reads a ~57-year age and fires the ceiling)
+[17:07:30] lockselftest| g04  ok             want=HELD            got=HELD-live        released_at month 13: the month bound must refuse it
+[17:07:30] lockselftest| 
+[17:07:30] lockselftest| --- H. T361 C5, the half the body rows cannot reach: _iso8601_epoch asserted DIRECTLY against exact constants.
+[17:07:30] lockselftest|     See the _arow header for why C1 makes the century rule unreachable through a lock body.
+[17:07:30] lockselftest| h01  ok             want=0               got=0                the epoch anchor: days-from-civil must land exactly on 0
+[17:07:30] lockselftest| h02  ok             want=86400           got=86400            one day past the epoch: grades the *86400 scaling and the day term
+[17:07:30] lockselftest| h03  ok             want=951782400       got=951782400        a REAL leap day (div-400 rule) must be ACCEPTED with this exact value
+[17:07:30] lockselftest| h04  ok             want=REFUSE          got=REFUSE           century NON-leap: div-100 rule must REFUSE. Unreachable via released_at under C1 -- this is the only grader.
+[17:07:30] lockselftest| h05  ok             want=4102444799      got=4102444799       end of century, all four fields at maximum: grades hh/mi/ss and the year term together
+[17:07:30] lockselftest| 
+[17:07:30] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+[17:07:30] probe only — exiting without taking the lock or invoking the driver
