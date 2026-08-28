@@ -63,10 +63,10 @@ T363 caught this one.
 | Task | Branch | Agent id | Exclusive hold |
 |---|---|---|---|
 | `T376` review T370 | `softhouse/T376-review-t370` | `a4c65d61b570bb5fb` | — |
-| `T371` T367's conditions on T363 | `softhouse/T371-t367-conditions` | (below) | `.softhouse/reference-oracle.md` |
-| `T374` T362's conditions on T357 | `softhouse/T374-t362-conditions` | (below) | `.softhouse/capture/tierA-a2/` |
-| `T375` T364's conditions on T358 | `softhouse/T375-t364-conditions` | (below) | **`.softhouse/conformance.sh`** |
-| `T377` T368's conditions on T365 | `softhouse/T377-t368-conditions` | (below) | **`.softhouse/bin/fire-program.sh`** |
+| `T371` T367's conditions on T363 | `softhouse/T371-t367-conditions` | `a051948d8d4547685` | `.softhouse/reference-oracle.md` |
+| `T374` T362's conditions on T357 | `softhouse/T374-t362-conditions` | `a5bf073021afa7bc3` | `.softhouse/capture/tierA-a2/` |
+| `T375` T364's conditions on T358 | `softhouse/T375-t364-conditions` | `ac5a2db446e903ba0` | **`.softhouse/conformance.sh`** |
+| `T377` T368's conditions on T365 | `softhouse/T377-t368-conditions` | `a7857166bf26cc586` | **`.softhouse/bin/fire-program.sh`** |
 
 **Deliberately NOT dispatched, with reasons:** `T366` (would need `conformance.sh`, which `T375` holds);
 `T373` (its row-1 dead path resolves by ORDERING once `T370` merges, and `T370` awaits `T376`);
