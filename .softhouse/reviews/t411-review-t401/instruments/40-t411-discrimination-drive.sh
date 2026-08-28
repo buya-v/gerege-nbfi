@@ -143,7 +143,10 @@ echo "     -> bait must be 0 here (INVISIBLE), control 0"
 report_dp "ARM4 widened" "$W/s2b.rows"
 echo "     -> bait must be >0 here (CAUGHT), control still 0"
 echo "   bait rows caught, with their literals:"
-$GREP 'bait-deadpath.zsh' "$W/s2b.rows" | sed 's/^/     /' || echo "     (none)"
+# not `|| echo "(none)"` -- that prints a negative off an exit status, which is the very
+# C2 shape this drive exists to detect. Materialise, then report the count.
+$GREP 'bait-deadpath.zsh' "$W/s2b.rows" > "$W/s2b.bait" 2>/dev/null || true
+if [ -s "$W/s2b.bait" ]; then sed 's/^/     /' "$W/s2b.bait"; else echo "     0 rows (measured, not inferred)"; fi
 echo "   is the control IN the widened corpus at all?"
 echo -n "     "; $GREP -c 'drive-scratch' <(git ls-files '.softhouse/*.zsh') || true
 echo "     ^ planted .zsh files the widened S2 selector reaches (MUST be 3)"

@@ -1,4 +1,4 @@
-T411 DISCRIMINATION DRIVE @ d07ecab5
+T411 DISCRIMINATION DRIVE @ 8cdb59aa
 bait source (already on the pinned frontier): .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
 
 BAIT    : bait-failopen.zsh  == byte-identical to .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh (2230 bytes)
@@ -8,18 +8,18 @@ BAIT-DP : bait-deadpath.zsh == byte-identical to .softhouse/bin/fire-program.sh 
 scratch index: 3 planted files visible to git ls-files; real index untouched.
 
 =============== ARM 1/2 : S1 FAIL-OPEN LINTER ===============
-   shipped corpus: corpus    : 1412 tracked .sh/.py; 149 are repo-wide search instruments
+   shipped corpus: corpus    : 1414 tracked .sh/.py; 151 are repo-wide search instruments
    ARM1 shipped       bait rows: 0     control rows: 0  
      -> bait must be 0 here (INVISIBLE), control 0
-   widened corpus: corpus    : 1536 tracked .sh/.py; 154 are repo-wide search instruments
+   widened corpus: corpus    : 1538 tracked .sh/.py; 156 are repo-wide search instruments
    ARM2 widened       bait rows: 1     control rows: 0  
      -> bait must be 1 here (CAUGHT), control still 0
    is the control IN the widened corpus at all? (if not, 'no row' is vacuous)
      files from the scratch dir in the widened corpus: 3  (MUST be 3)
 
 =============== ARM 3/4 : S2 DEAD-PATH CENSUS ===============
-   shipped: T316-DEADPATH-CENSUS: corpus=1412 deadFiles=75 deadOccurrences=108 resolving=1344 indeterminate=104 prose=366
-   widened: T316-DEADPATH-CENSUS: corpus=1536 deadFiles=81 deadOccurrences=116 resolving=1416 indeterminate=105 prose=381
+   shipped: T316-DEADPATH-CENSUS: corpus=1414 deadFiles=75 deadOccurrences=108 resolving=1344 indeterminate=105 prose=368
+   widened: T316-DEADPATH-CENSUS: corpus=1538 deadFiles=81 deadOccurrences=116 resolving=1416 indeterminate=106 prose=383
    ARM3 shipped       bait-DP rows: 0     control rows: 0  
      -> bait must be 0 here (INVISIBLE), control 0
    ARM4 widened       bait-DP rows: 1     control rows: 0  
@@ -43,4 +43,4 @@ scratch index: 3 planted files visible to git ls-files; real index untouched.
 DRIVE: PASS -- the widening discriminates on CONTENT, not on extension.
 
 TEARDOWN: worktree residue rows naming the scratch = 0 (MUST be 0)
-TEARDOWN: real index still clean? 2 non-clean path(s) (expected: only this task's own edits)
+TEARDOWN: real index still clean? 3 non-clean path(s) (expected: only this task's own edits)
