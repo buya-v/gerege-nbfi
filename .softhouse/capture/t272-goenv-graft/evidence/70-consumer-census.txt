@@ -1,0 +1,32 @@
+T272 — go-env.sh CONSUMER CENSUS
+repo    : (path withheld: host state)
+date    : 2026-08-28T00:12:37Z
+selector: grep -rlE '^[[:space:]]*(\.|source)[[:space:]].*go-env\.sh' --include='*.sh' over the whole tree
+          plus a SECOND selector for the indirect form (a path held in a variable),
+          because the two guards source $REPO_ROOT/.softhouse/bin/go-env.sh and the
+          literal-path selector CANNOT see them. A one-selector census would have
+          reported the two load-bearing guards as non-consumers.
+
+=== LIVE consumers (run by the bar) ===
+  .softhouse/conformance.sh                                396:set -u -o pipefail
+  .softhouse/guards/check-ledger-invariants.sh             39:set -u -o pipefail
+  .softhouse/guards/drive-red-ledger-invariants.sh         18:set -u -o pipefail
+
+=== ARCHIVED sourcers (evidence from finished tasks; the bar does not run them) ===
+  .softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh     SET -e
+  .softhouse/capture/t253-portability/instruments/70-cross-impl-compare.sh SET -e
+  .softhouse/reviews/t246-dec2-rev6/drive-pin-red.sh                     SET -e
+  .softhouse/reviews/t254-harness-portability/instruments/30-goroot-stale-repro.sh SET -e
+  (only the `set -e` ones are listed by name; the rest are counted below)
+
+------------------------------------------------------------------------
+LIVE consumers                 : 3
+  of which run under `set -e` : 0
+ARCHIVED sourcers              : 47
+  of which run under `set -e` : 4
+go-env.sh itself               : 1 (excluded)
+
+READ THIS THE RIGHT WAY. An archived script under `set -e` is NOT a live hazard:
+GEREGE_GO_STRICT is set by no fire, so the one non-zero arm is unreachable unless a
+human asks for it, and every one of these scripts predates the switch. It is listed
+because 'all N consumers' is a claim about a SEARCH, and this is the search.
