@@ -1,0 +1,73 @@
+T258 RED DRIVE — the cardinal-restatement census
+commit : 0928fa161fc1092c198d1df375e4083f3737315a
+census : /private/tmp/t340-probe/.softhouse/capture/t255-frontier-rot/instruments/20-cardinal-restatement-census.py
+graded run used for the --against arm: /private/tmp/t340-probe/.softhouse/capture/t255-frontier-rot/evidence/00-graded-run.txt
+
+==================================================================
+CONTROL — the census over the delivered tree.
+==================================================================
+  exit=0
+  OK   [CONTROL] found: calibration OK
+  OK   [CONTROL] found: PIN MATCHED
+  OK   [CONTROL] exit 0
+
+==================================================================
+RED-A — a NEW restatement appears in a tracked instrument.
+==================================================================
+  exit=1
+  OK   [RED-A] found: +R1 .softhouse/capture/t255-frontier-rot/evidence/planted-restatement.sh
+  OK   [RED-A] found: DERIVE the count from the pin at run time; do not type it.
+  OK   [RED-A] found: REFUSED
+  OK   [RED-A] absent as required: PIN MATCHED
+  OK   [RED-A] exit 1
+
+==================================================================
+RED-B — a PINNED restatement is repaired or deleted. The pin must
+notice it LOSING a row, not only gaining one: a pin that only ever
+grows is an amnesty.
+==================================================================
+  OK   [RED-B] the extra pin row landed in the scratch copy (the perturbation is real)
+  exit=1
+  OK   [RED-B] found: -R9 .softhouse/capture/t255-frontier-rot/instruments/ALREADY-REPAIRED.sh
+  OK   [RED-B] found: IT IS A FRONTIER, NOT AN AMNESTY.
+  OK   [RED-B] exit 1
+
+==================================================================
+RED-C — the MATCHER is broken. The census must DIE on its own
+calibration and print NO hit list at all. A broken matcher that
+reports a clean tree is the exact defect this capture is about.
+==================================================================
+  OK   [RED-C] the matcher really was broken in the scratch copy (the perturbation landed)
+  exit=2
+  OK   [RED-C] found: the known-positive calibration line was NOT matched
+  OK   [RED-C] absent as required: PIN MATCHED
+  OK   [RED-C] absent as required: MEASURED restatements
+  OK   [RED-C] exit 2 — corpus/trust refusal, distinct from a pin mismatch
+
+==================================================================
+RED-D — the SECOND ARM, over a real graded run. This is the arm
+that catches a restatement whose NUMBER IS STILL CORRECT and whose
+SENTENCE has moved. No search for a number can find these.
+==================================================================
+  exit=1
+  OK   [RED-D] found: SECOND ARM
+  OK   [RED-D] found: STALE     .softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py
+  OK   [RED-D] found: STALE     .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh
+  OK   [RED-D] found: by-design .softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh
+  OK   [RED-D] exit 1
+  --- the stale literals, verbatim: ---
+      STALE     .softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py:121  'census line reads `pinned at 11`'
+      STALE     .softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py:121  'pinned at 11.'
+      STALE     .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh:55  'frontier 11, pinned at 11.'
+
+==================================================================
+GREEN AGAIN — nothing planted, nothing perturbed.
+==================================================================
+  exit=0
+  OK   [GREEN] found: PIN MATCHED
+  OK   [GREEN] exit 0
+  tree check: files git still tracks under the plant path: 0
+
+==================================================================
+T258 CENSUS RED DRIVE: 24 passed, 0 failed
+==================================================================

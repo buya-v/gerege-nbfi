@@ -1,0 +1,26 @@
+T340 ADVERSARIAL PROBES in /tmp/t340-probe at 0928fa161fc1092c198d1df375e4083f3737315a
+
+== PROBE 1 — CONTROL: unmutated tree, does the derivation produce the live pin? ==
+  pin block lines: 11
+  instrument's own rule counts: 11
+  harness's own rule counts   : 11
+
+== PROBE 2 — RENAME THE PIN VARIABLE. The derivation must DIE, not fall back to 0. ==
+  perturbation landed (renamed decls): 1
+  exit=1  (want 1 — the DERIVATION-FAILURE exit, distinct from a frontier movement)
+  DID IT ASSERT A FRONTIER ANYWAY? (want 0 hits)
+    hits: 0
+  DID IT RUN A GRADED BAR AT ALL? (want 0 — it must die BEFORE spending 4 minutes)
+    banner hits: 0
+
+== PROBE 3 — DIVERGE THE TWO COUNTERS. Add a pin row that does NOT start with TIER. ==
+   The HARNESS counts every line of the block; T258's rule counts only ^TIER[0-9].
+   So this is the one input on which the two-source agreement can disagree — and it is
+   also the shape a future author would produce by adding a comment inside the pin.
+  perturbation landed: 1
+  harness rule now counts    : 12
+  T258 instrument rule counts: 11
+  -> the two DISAGREE, which is exactly what want_pin_agreement exists to report.
+  restored: pin block lines back to 11
+
+T340 ADVERSARIAL PROBES DONE
