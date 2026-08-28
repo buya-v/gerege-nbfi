@@ -1,0 +1,80 @@
+{
+ "_README": [
+  "T282 HAND ADJUDICATION of every citation the checker flagged that the",
+  "keyword adjudicator in population-table.py could not decide.",
+  "",
+  "Keyed 'file:line:cited-id'. Every entry carries its REASON: a verdict with",
+  "no reason is not a verdict. Decided by reading the recorded gloss against",
+  "BOTH rules' text in patterns.md at the sha named in the T282 handoff.",
+  "",
+  "Data, not prose, so the handoff table RENDERS from this rather than",
+  "restating it -- P-80: never restate a corrected value; make the second",
+  "site read the first."
+ ],
+ "verdicts": {
+  ".softhouse/conformance.sh:1832:70": [
+   "FALSE-POSITIVE",
+   "P-70 IS '\"not found\" is a statement about the search'. Correctly cited. The gloss ran on into a following sentence about the fail-open linter's CORPUS, and that is what scored P-76."
+  ],
+  ".softhouse/patterns.md:2343:69": [
+   "FALSE-POSITIVE",
+   "A CONJUNCTION gloss. '**P-67 / P-69** - measure both terms, in the live artefact, at the moment of use' states THREE rules at once: both terms (P-67), moment of use (P-69), live artefact (P-63). Two of the three are cited; the uncited one won the score."
+  ],
+  ".softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:504:4": [
+   "FALSE-POSITIVE",
+   "The 'gloss' is a MEASUREMENT REPORT ('was PASS exit 0 at 36 parity vectors and 4,034 cells'), not rule text. The trailing-id extractor over-reached into a results line."
+  ],
+  ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T74.md:413:4": [
+   "FALSE-POSITIVE",
+   "The same measurement-report line as SWEEP.txt:504, quoted into the handoff. Same adjudication."
+  ],
+  ".softhouse/capture/t91/PREDICTION.md:67:9": [
+   "FALSE-POSITIVE",
+   "The gloss is a procedural aside about commit ancestry ('the prediction commit is a parent of the evidence commit'), and restates neither P-9 nor P-17."
+  ],
+  ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T108.md:40:11": [
+   "AMBIGUOUS",
+   "ADJACENT PAIR, not adjudicable from the text alone. P-11 = 'the code can be RIGHT and its stated reason WRONG'. P-12 = 'a right conclusion on a wrong reason RECURS IN THE ARTEFACT written to record it'. The gloss 'conclusion, wrong reason, PROPAGATED INTO A DURABLE FILE' leans P-12, but P-11 is P-12's own premise. Left for the author rather than guessed."
+  ],
+  ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T198.md:31:58": [
+   "AMBIGUOUS",
+   "RELATED PAIR. P-58 = 'when N attempts disagree about a tool, COUNT THE PROGRAMS before you count the votes'. P-75 = 'grep and rg in an agent shell are not the programs you think'. The gloss states the host FACT (P-75) inside an argument for the METHOD (P-58). Both defensible."
+  ],
+  ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T251.md:40:71": [
+   "FALSE-POSITIVE",
+   "P-71 IS 'a worker's fork point is UNPREDICTABLE: MEASURE IT, NEVER ASSERT IT', and the gloss is 'the fork point, MEASURED, not assumed'. Exactly right. P-24 ('an assertion about what happens ON MERGE can only be tested BY MERGING') won on the shared token alone."
+  ],
+  ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T285.md:235:81": [
+   "FALSE-POSITIVE",
+   "The 'gloss' is a MARKDOWN HEADING about a guard handling exit codes correctly, which is P-81's own subject. Correctly cited; P-93 won on 'guard'."
+  ],
+  ".softhouse/tasks.json:363:22": [
+   "FALSE-POSITIVE",
+   "The gloss ends 'apply it, and DRIVE IT RED first', which is P-22's remedy ('a guard, a canary, or a control that cannot fail is worse than none'). Correctly cited; the extractor swallowed a file path."
+  ],
+  ".softhouse/tasks.json:490:40": [
+   "FALSE-POSITIVE",
+   "Inside one long JSON string the extractor bound the span belonging to the NEIGHBOURING '(P-26)' citation. The text is not P-40's gloss at all."
+  ],
+  ".softhouse/tasks.json:956:46": [
+   "FALSE-POSITIVE",
+   "The gloss is 'quote by EXTRACTION', which is P-46's remedy ('a fabricated capture excerpt survived into merged evidence'). Correctly cited."
+  ],
+  ".softhouse/tasks.json:2374:69": [
+   "TRUE-DRIFT",
+   "NOT the P-86 off-by-one -- an INDEPENDENT drift, and the strongest signal in the entire population (score 21). Gloss: 'the guard did not merely fail to run, it RAN, wrote its answer down, and the summary line above it said the opposite'. That is P-79 almost verbatim ('EVIDENCE NOT MISSING, UNREAD. A recorded predicate that no summary consults'). The cited P-69 is 'the measured claim went stale between the review and the revision', a different rule entirely."
+  ],
+  ".softhouse/tasks.json:2404:69": [
+   "FALSE-POSITIVE",
+   "The gloss is 'three consecutive passes have shipped STALE line numbers', which is P-69 ('the measured claim went STALE between the review and the revision'). Correctly cited."
+  ],
+  ".softhouse/tasks.json:3149:79": [
+   "TRUE-DRIFT",
+   "Gloss 'make the second site READ the first, do not restate the cardinal' is P-80. This IS the P-86 off-by-one; the keyword adjudicator missed it only because the phrasing differs from the other seven instances."
+  ],
+  ".softhouse/tasks.json:4195:86": [
+   "FALSE-POSITIVE",
+   "The gloss is 'cite the rule TEXT beside any P-number', which is P-86 itself. Correctly cited; the score leaked into surrounding JSON punctuation."
+  ]
+ }
+}
