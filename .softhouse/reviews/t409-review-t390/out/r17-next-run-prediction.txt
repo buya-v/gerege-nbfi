@@ -1,0 +1,15 @@
+-- T409 r17-next-run-prediction -- 2026-08-28T18:15:34Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: e4532989d8d368cc4738e06a97df04a09ad1e0e00e261983f525c252076a9420
+--
+Pager usage is off.
+ id | transaction_id | entry_date | created_on_utc | last_modified_on_utc | is_running_balance_calculated 
+----+----------------+------------+----------------+----------------------+-------------------------------
+(0 rows)
+
+ next_entity_date | rows_the_next_00_01_run_will_update | rows_total 
+------------------+-------------------------------------+------------
+ 2026-05-15       |                                  55 |        109
+(1 row)
+
+-- psql rc=0
