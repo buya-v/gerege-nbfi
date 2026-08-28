@@ -3084,6 +3084,18 @@ guard_reconciler_ownership() {
 # it and which is false in two directions: a checker in a fourth language is outside the
 # population, and a file inside the population is only proven NAMED, never proven EXECUTED.
 #
+# THE "NAMED, NOT EXECUTED" GAP HAS A CONCRETE INSTANCE ON THIS TREE, and it is written down
+# rather than left for the next reader to trip over [T337 F-T337-4, instanced by T358].
+# `.softhouse/guards/ledgerguard/main.go` is a checker that this harness NEVER RUNS — it is
+# built and run by check-ledger-invariants.sh — yet its basename occurs on a non-comment line
+# here at conformance.sh:1484, `local ccsrc="$REPO_ROOT/…/ledgerguard/main.go"`, where a
+# DIFFERENT guard reads its text. Absent its REACHED-BY row, main.go would read INVOKED off that
+# assignment. The row records the truth; the invocation test would have accepted a convenient
+# fiction. Tightening the test to require an executed call is NOT done here: two of the three
+# genuinely-invoked members are reached through `bash "$g"` after a `local g=` assignment, so an
+# execution test needs dataflow this harness has no business growing. The honest move is to say
+# what the test measures, which the printed selector now does.
+#
 # WHY THIS POPULATION IS PINNABLE WHERE T304'S WAS NOT — the question T323 had to answer before
 # it was allowed to build this at all. T323's refusal of T304's census rested on a MEASURED
 # property: T304 classifies a site by RESOLVING its target against the whole tracked corpus, so
@@ -3117,19 +3129,39 @@ guard_reconciler_ownership() {
 # symptom: without it the run would have printed three plausible "IS INVOKED BY NOTHING" findings
 # about correctly wired checkers, and the next worker would have "fixed" the tree.
 #
-# P-84 SURVIVES UNCHANGED. This returns 1 into run_guards' tally, which exits EXIT_UNUSABLE
+# P-84 SURVIVES UNCHANGED, AND T358 RE-VERIFIED IT STRUCTURALLY AFTER EDITING, NOT FROM
+# TRANSCRIPTS [P-45 — cite the call site by file and line]:
+#   run_guards is DEFINED at conformance.sh:3554 and CALLED at exactly one site, :4032, as a
+#   bare command — not in a subshell and not in a command substitution — so its `exit` at :3567
+#   terminates the whole shell rather than returning a status;
+#   probe_oracle is invoked at exactly one site, :4057, and the probe line is printed at :4058,
+#   both strictly DOWNSTREAM of :4032.
+#   [Re-derived AFTER the last edit to this file, because these five numbers moved by nine lines
+#   when the paragraph you are reading was inserted. P-45 cites a call site by line; a line cited
+#   before the edit that shifts it is a citation to nothing.]
+# There is therefore no path on which a HARD guard fails and the probe line is printed.
+# This returns 1 into run_guards' tally, which exits EXIT_UNUSABLE
 # BEFORE probe_oracle prints, so a failure here is exit 2 with NO probe line — "'EXIT 2 WITH NO
 # PROBE LINE' IS THE GUARD WORKING. READ THE ABSENCE, NOT THE VALUE."
 # [VERIFIED: .softhouse/patterns.md:2813]. That is a failed HARD guard and NOT an oracle outage;
 # the driver's park condition needs exit 2 AND a probe line PRESENT reading down. P-84 draws
 # that one distinction and says nothing about money in either direction.
 #
-# COST: 0.16 s wall, MEASURED on this host by T323 — and the figure is the WHOLE of an extraction
-# wrapper (`bash` start-up, a `sed` that lifts this function out of this file, then one call), so
-# the guard's own share is SMALLER than 0.16 s and was not separated out. Stated the wide way on
-# purpose: an over-stated cost cannot mislead the next person deciding what the bar can afford.
-# One git ls-files, one comment-stripping grep over this file, at most one grep per member, and
-# no temporary file.
+# COST: 0.23 s wall, MEASURED by T358 after the widening as the mean of 10 uncontended
+# iterations of every operation this function performs — one `git ls-files` with three
+# pathspecs, one comment-stripping grep over this file, one `grep -vF` per DECLARATION TABLE row
+# to cut the table out of the haystack, one marker grep per member, one witness grep and one
+# `git ls-files --error-unmatch` per DECLARED or REACHED-BY row. No temporary file.
+# T323 measured 0.16 s pre-widening and T337 independently measured 0.064 s for the operations
+# as they then stood; the growth is four extra command substitutions over a ~200 KB string and
+# three extra small greps, and it is stated rather than rounded away.
+#
+# THE COST NUMBER IS IN THIS COMMENT BECAUSE A BAR NOBODY WILL WAIT FOR GETS BYPASSED, and T358
+# proved that is not theoretical. See the note beside the table-cut below: the first version of
+# that four-line block ran at 99.7% CPU for over NINE MINUTES and had to be killed. It was
+# caught by running the WHOLE BAR and by nothing else. Order of magnitude is what the next
+# reader needs: a fifth of a second against a ~74 s bar dominated by
+# guard_reconciler_ownership at ~30 s.
 guard_guards_dir_registration() {
   local gdrel=".softhouse/guards"
   local gd="$REPO_ROOT/$gdrel"
@@ -3270,6 +3302,41 @@ drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|led
   local total=0 invoked=0 decl_ok=0 selfdecl=0 unwired=0 bad=0
   local rel base row rowbase dir witness token found
   local self_row self_wit
+
+  # THE DECLARATION TABLE'S OWN TEXT IS CUT OUT OF THE HAYSTACK BEFORE THE INVOCATION TEST.
+  # [T358.] T323 already matched DECLARED rows first "so that the table's own text cannot
+  # satisfy the invocation test below and vouch for its own SUBJECT" — but that only protects
+  # the row's subject. A row also names a WITNESS PATH, and the invocation test is a substring
+  # match, so row 2's witness column (`…/ledgerguard/main.go`) would report main.go INVOKED —
+  # i.e. one member absolved because a DIFFERENT member's excuse happens to name it. Nothing in
+  # the table is a call site, so nothing in the table belongs in the haystack.
+  #
+  # `grep -vF` OVER A HERE-STRING, AND THE FIRST ATTEMPT IS RECORDED BECAUSE IT WAS A DISASTER
+  # AND ONLY THE WIRED RUN CAUGHT IT. T358 first wrote this as pure parameter expansion,
+  # `code="${code//"$row"/}"`, reasoning that no second process means no pipeline and no P-57
+  # EPIPE surface. That reasoning was right and the code was still unusable: bash's pattern
+  # substitution over a ~200 KB string is quadratic, and the guard — advertised in run_guards at
+  # under a fifth of a second — SPUN AT 99.7% CPU FOR OVER NINE MINUTES on two rows before it
+  # was killed. A grading instrument nobody will wait for is a grading instrument that gets
+  # bypassed, which is the same failure as switching the guard off. THE LESSON IS THE ROUTE, NOT
+  # THE IDIOM: the standalone reasoning was clean and the whole-bar run refused to finish, which
+  # is T323's own thesis pointed back at T358.
+  #
+  # A HERE-STRING IS NOT A PIPELINE, so this keeps the P-57 property the parameter expansion was
+  # chosen for: there is no upstream writer to take EPIPE, and `grep -v` consumes all of its
+  # input rather than exiting on first match. Two rows, two greps, milliseconds.
+  while IFS= read -r row; do
+    [ -n "$row" ] || continue
+    code="$(LC_ALL=C grep -vF -- "$row" <<<"$code")"
+  done <<TABLETEXT
+$DECLARED
+TABLETEXT
+  if [ -z "$code" ]; then
+    warn "conformance: guard_guards_dir_registration: cutting the DECLARATION TABLE out of the"
+    warn "conformance: haystack left NOTHING. That is an instrument failure — an empty haystack"
+    warn "conformance: would report every member unwired. REFUSED."
+    return 1
+  fi
 
   while IFS= read -r rel; do
     [ -n "$rel" ] || continue
@@ -3514,7 +3581,7 @@ run_guards() {
   # than short-circuiting: unlike guard_graded_root_is_this_tree none of them invalidates the
   # other guards' answers, and one bad guard must not hide another. Registered CHEAPEST FIRST so
   # a fast refusal prints before the 30-second one is paid for.
-  guard_guards_dir_registration       || failed=1        # T323 iter 2 — <=0.16 s
+  guard_guards_dir_registration       || failed=1        # T323 iter 2, T358 —  0.23 s
   guard_capture_namespace             || failed=1        # T299, wired by T323 —  0.4 s
   guard_dead_path_frontier            || failed=1        # T316, wired by T323 —  1.3 s
   guard_reconciler_ownership          || failed=1        # T319, wired by T323 — 30.3 s

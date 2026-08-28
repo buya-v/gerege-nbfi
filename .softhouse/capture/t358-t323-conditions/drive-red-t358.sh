@@ -200,6 +200,17 @@ m_20_self_witness() {
   ( cd "$SCRATCH" && git add -A "$FIXTURE_REL" ) || return 1
 }
 
+# 26 -- THE GREEDY STRIP. The witness is lifted with `${row##*REACHED-BY}`, which strips to the
+# LAST occurrence of the marker, so a row naming the marker twice leaves an EMPTY witness. An
+# unreadable row must be an ERROR and never a pass -- that branch is otherwise unreachable, and
+# a branch nobody has seen fire is a branch nobody has tested (P-22).
+m_26_unreadable_row() {
+  plant_fixture || return 1
+  ( printf '# %s REACHED-BY REACHED-BY\n' "$MARKER_WORD"; cat "$FIXTURE_ABS" ) > "$FIXTURE_ABS.tmp" || return 1
+  mv "$FIXTURE_ABS.tmp" "$FIXTURE_ABS" || return 1
+  ( cd "$SCRATCH" && git add -A "$FIXTURE_REL" ) || return 1
+}
+
 # =============================================================================================
 # C-3 -- THE POPULATION IS NO LONGER SHELL-ONLY. T323's handoff claimed "a fourth unwired checker
 # cannot land"; with a '*.sh' population a Python or Go checker landed unseen, and a Go checker
@@ -225,8 +236,17 @@ m_22_go_checker_unwired_nested() {
 # THE NEW ROW ON A REAL FILE IS LOAD-BEARING, NOT DECORATION. main.go now carries a REACHED-BY
 # row. Both halves of it must be able to fail.
 # =============================================================================================
-# 23 -- strip the row from main.go: a real Go checker in the guards directory is unexplained
-# again, and the bar must refuse.
+# 23 -- THE DISCRIMINATION ARM, AND IT IS DELIBERATELY GREEN. Strip the REACHED-BY row from
+# main.go and the bar does NOT refuse: main.go falls back to INVOKED, because
+# conformance.sh:1484 holds `local ccsrc="$REPO_ROOT/<guards>/ledgerguard/main.go"` on a
+# non-comment line -- a DIFFERENT guard reading main.go's text, not anything that runs it. That
+# is T337 F-T337-4 with a name and a line number: the invocation test proves a file is NAMED,
+# never that it is EXECUTED. So the row on main.go is a TRUTH improvement (it records what
+# actually reaches the checker) and is NOT what keeps main.go out of the unwired bucket. This
+# arm pins that fact rather than hiding it: it asserts the census line SHIFTS from
+# reached-by=1/invoked=3 to reached-by=0/invoked=4. If someone later tightens the invocation
+# test to require an executed call, THIS ARM GOES RED and tells them main.go now needs its row.
+# The load-bearing proofs of REACHED-BY are arms 15-20, 24 and 26, on the planted fixture.
 m_23_strip_real_row() {
   ( cd "$SCRATCH" && LC_ALL=C sed -i '' "/$MARKER_WORD/d" "$MAIN_REL" ) || return 1
   ! LC_ALL=C grep -qF -- "$MARKER_WORD" "$MAIN_ABS" || return 1
@@ -299,11 +319,13 @@ arm "T358-19-witness-untracked"                  2 ABSENT  'which is NOT TRACKED
 arm "T358-20-member-declares-ITSELF"             2 ABSENT  'declares REACHED-BY ITSELF'                     m_20_self_witness
 
 # C-3: the population is no longer shell-only.
+arm "T358-26-unreadable-row-empty-witness"       2 ABSENT  'with NO witness path after it'                  m_26_unreadable_row
+
 arm "T358-21-python-checker-unwired"             2 ABSENT  'IS INVOKED BY NOTHING'                          m_21_python_checker_unwired
 arm "T358-22-go-checker-unwired-NESTED"          2 ABSENT  'IS INVOKED BY NOTHING'                          m_22_go_checker_unwired_nested
 
 # The real row on main.go is load-bearing on both sides.
-arm "T358-23-strip-REACHED-BY-from-main.go"      2 ABSENT  'IS INVOKED BY NOTHING'                          m_23_strip_real_row
+arm "T358-23-strip-row-FALLS-BACK-to-INVOKED"    0 PRESENT 'population=6 invoked=4 declared=2 reached-by=0 invoked-by-nothing=0' m_23_strip_real_row
 arm "T358-24-real-witness-stops-naming-member"   2 ABSENT  'REACHED-BY WITNESS DOES NOT NAME'               m_24_real_witness_stops_naming
 
 # C-5: T337's extra arm, now committed.
