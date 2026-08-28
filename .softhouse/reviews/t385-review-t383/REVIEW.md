@@ -482,6 +482,25 @@ and 1348 at my head**, and the run reports `corpus=1348 deadOccurrences=109` —
 genuinely invisible to the `.sh`/`.py` selector, so the pin needed no regeneration on T383's branch
 either. That is also **F-T385-4**: the invisibility is real, and it is a gap.
 
+### Second run, on the fully clean tree that includes this review's own instruments — `EXIT 0`
+
+Re-run after committing the two bar transcripts and `bin/t385-mutate.py`, so the cited transcript is
+itself from a fully clean tree (`git status --porcelain` empty). `out/14-bar-on-branch-run2.txt`.
+
+```
+bash .softhouse/conformance.sh   ->   EXIT 0
+  reference oracle (…/actuator/health) probe = up
+  parity vectors  PASS 46  FAIL 0      cells compared 7884
+  frontier 11, pinned at 11 ; frontier == pinned (all 11 rows, by path).
+  T316-DEADPATH-CENSUS: corpus=1349 deadFiles=76 deadOccurrences=109 …
+  VERDICT: PASS (exit 0)
+```
+
+`corpus` moved **1348 → 1349** — exactly my one `.py` instrument — while `deadFiles=76`,
+`deadOccurrences=109` and the frontier are **unchanged**. So `t385-mutate.py` enters the corpus and
+adds no frontier row, and `10-regen-pin.py` was neither needed nor run here either. Measured, not
+assumed; this is the run that says so.
+
 ### On the MERGE RESULT (`main` + `softhouse/T383-t380-conditions`, in a scratch clone) — `EXIT 0`
 
 `bash .softhouse/capture/t353-t342-conditions/bin/bar-on-merge-result.sh <root>
