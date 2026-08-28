@@ -54,8 +54,23 @@
 #
 # T379 approved T371 and filed four residual defects. THREE OF THEM ARE THE SAME SHAPE AS THE
 # ONE T371 CAME HERE TO FIX, and one of those three was INSIDE T371's fix. Writing the rule
-# does not immunise you against it; only a guard that RUNS does (P-81; and P-45, whose rule is
-# that a control nobody is obliged to run enforces nothing).
+# does not immunise you against it; only a guard that RUNS does (P-81).
+#
+# WHAT IS AND IS NOT ENFORCED BY THIS REPAIR, said plainly because P-45's rule is "when
+# hardening a check, verify the path that actually executes in CI/conformance calls it, not
+# merely that a test does". THIS FILE STILL GATES NOTHING -- the paragraph above saying so is
+# still true and T381 did not change it. What T381 adds is:
+#   * four calibration arms and three refusals that run WHENEVER THIS SCRIPT RUNS, so a reader
+#     who quotes a zero from a transcript is quoting a measured one or an explicit refusal;
+#   * a RED DRIVE that constructs each defect and proves the refusal fires --
+#     `.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh`, transcript in
+#     `.softhouse/capture/t381-t379-conditions/out/D-RED-DRIVES.txt`;
+#   * and the bar's OWN static readers already cover this file -- `guard_no_fail_open_instruments`
+#     lints every tracked .sh in the repository and `guard_dead_path_frontier`'s census reads
+#     every tracked file here, so a regression that reintroduces the shape is visible there.
+# It is NOT invoked by `.softhouse/conformance.sh`, and T381 could not wire it: that file was
+# held by another worker this fire. That residual exposure is recorded in T381's handoff as
+# backlog rather than described as closed.
 #
 #   R2 (the near-rejection). The ANTI-calibration was itself fail-open:
 #
