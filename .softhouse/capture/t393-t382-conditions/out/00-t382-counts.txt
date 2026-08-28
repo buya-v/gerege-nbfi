@@ -1,0 +1,63 @@
+=== populations (T382 out/POPULATIONS.txt: 403 / 1035 / 632) ===
+  PASS  observations tracked at the fork sha (ARM A population)    got=403  T382=403
+  PASS  observations tracked at HEAD (ARM B population)            got=1035  T382=1035
+  PASS  post-fork observations (in ARM B, invisible to ARM A)      got=632  T382=632
+
+=== MANIFEST.sha256 coverage (T382 out/MANIFEST-COVERAGE.txt) ===
+  PASS  MANIFEST.sha256 total rows                                 got=1139  T382=1139
+  PASS  of which out/ or req/ rows                                 got=1035  T382=1035
+  PASS  tracked observations with NO manifest row                  got=0  T382=0
+  PASS  manifest rows naming NO tracked observation                got=0  T382=0
+  PASS  manifest digest vs disk: AGREE                             got=1035  T382=1035
+  PASS  manifest digest vs disk: DISAGREE                          got=0  T382=0
+  PASS  manifest digest vs disk: unreadable                        got=0  T382=0
+  PASS  POST-FORK observations covered by a manifest row           got=632  T382=632
+
+=== the fork-sha manifest, section 4's population (T382 FINDING 3: 430 / 403 / 27) ===
+  PASS  entries in the fork-sha manifest                           got=430  T382=430
+  PASS  of those under out/ or req/ (section 10 covers these)      got=403  T382=403
+  PASS  NOT under out/ or req/ (section 4 ONLY — the saturated set) got=27  T382=27
+      the 27, enumerated:
+        CAPTURE-PLAN.md
+        DEFECTS-FOUND-BY-REVIEW.md
+        FLAGGED-NOT-REPRODUCIBLE.txt
+        RED-GREEN-D2-cap-transport.txt
+        RED-GREEN-D3-manifest-blindness.txt
+        cap.sh
+        env.sh
+        manifest.py
+        mkreq.py
+        mkreq2.py
+        mkreq3.py
+        mkreq4.py
+        mkreq5.py
+        mkreq6.py
+        prove-cap-transport-red.py
+        prove-manifest-blind-red.py
+        prove-manifest-red.py
+        rename1.py
+        run-020-accounts.sh
+        run-040-refusals.sh
+        run-060-mappings.sh
+        run-100-finactivity.sh
+        run-120-delete-update.sh
+        show.py
+        sql/q1-glaccount-rows.sql
+        sql/q2-product-mapping-rows.sql
+        sql/q3-final-state.sql
+
+=== which of the 27 are NOT byte-identical to the fork sha today ===
+    T382 / section 4's banner name exactly two: CAPTURE-PLAN.md and cap.sh.
+        DIFFERS  CAPTURE-PLAN.md
+                 fork  7c2e2795863fa035424aa1cf23e7d1735dad502c535b16f31a0938a3fc0050bd
+                 today da0760bacc8af5f5fdbe8c0b6d9a56f1904158b4c4b2ada3f3a5547d2e4e99dd
+        DIFFERS  cap.sh
+                 fork  67640ea31eb16c0ba0f929cfd93459f4ced687be3dda0f10db00c1b2d31f542a
+                 today 6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62
+  PASS  of the 27 non-observation fork-sha entries, byte-identical got=25  T382=25
+  PASS  the differing set is exactly {CAPTURE-PLAN.md, cap.sh}     got=['CAPTURE-PLAN.md', 'cap.sh']  T382=['CAPTURE-PLAN.md', 'cap.sh']
+
+FAILURES: 0
+
+VERDICT: PASS (exit 0) — every count T382 reports reproduces from an independent
+enumeration. MANIFEST.sha256's out/req row-set IS the tracked observation path-set.
