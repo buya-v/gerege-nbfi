@@ -857,7 +857,26 @@ def main():
     findings, counts = analyse(reg, files, root, args.min_evidence, args.min_margin,
                                dangling_ok=dangling_ok)
 
-    gaps = [n for n in range(1, max(reg) + 1) if n not in reg]
+    # A RESERVED NEGATIVE-CONTROL ID IS NOT A GAP, and this line is the only
+    # reason the register can ever grow past it.  [T398]
+    #
+    # The gap scan was written when `max(reg)` was 96 and `P-99` was therefore
+    # BEYOND the register, never inside it. The moment any pattern is filed at
+    # 100 or above, 99 becomes an INTERIOR gap and this loop goes fatal on the
+    # very absence the file declares two hundred lines above as deliberate and
+    # permanent -- so the register would have been frozen at 98 forever, by a
+    # guard, silently, with the reason printed as "cited ids may resolve to
+    # nothing" when the truth is the opposite: `P-99` resolves to nothing BY
+    # CONSTRUCTION and three committed instruments depend on it doing so.
+    # P-4: latent harness defects detonate on first real use. This one had been
+    # armed since T282 and detonated on T398, the first entry filed above 99.
+    #
+    # The exemption is NOT a widening of the predicate: NEGATIVE_CONTROL_IDS
+    # already requires every entry to name the instrument that relies on it, so
+    # an id can only be excused here if it is excused for citations too, by the
+    # same declaration, on the same evidence. An undeclared hole is still fatal.
+    gaps = [n for n in range(1, max(reg) + 1)
+            if n not in reg and n not in NEGATIVE_CONTROL_IDS]
     cross = sorted(set(reg) & set(greg))
 
     fatal = [f for f in findings if f["fatal"]]
