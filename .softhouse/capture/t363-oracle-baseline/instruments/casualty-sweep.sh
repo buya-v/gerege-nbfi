@@ -29,10 +29,24 @@
 #   they now print differently and exit differently. Two further guards come with it:
 #     * a POSITIVE calibration -- prove a known-present string is findable before any zero here
 #       is interpretable (P-72);
-#     * an ANTI-calibration -- prove a known-absent string returns zero, because `git grep -E`
-#       on this host has been measured FABRICATING a hit (T238: `git grep -nE '\bmain\b'` and
-#       `git grep -nE 'bmainb'` returned byte-identical output, and it was the decoy line). So
-#       "I got hits, therefore my rig works" is NOT a valid calibration.
+#     * an ANTI-calibration -- prove a known-absent string returns zero. "I got hits, therefore
+#       my rig works" is NOT a valid calibration.
+#
+#   [T402, closing FU-T386-2. THIS PARAGRAPH USED TO SAY `git grep -E` HAD BEEN MEASURED
+#   "FABRICATING a hit", AND THAT IS WRONG. It contradicted the corrected account forty lines
+#   below in its own file, and it is a diagnosis this program had ALREADY got right and then
+#   lost: `.softhouse/capture/t234-sweep-instrument-audit/HANDOFF.md` -- the passage that prints
+#   `git grep -P ... contributes=61` beside `git grep -E ... contributes= 0` and concludes
+#   "PARTIALLY VOID ... a 95.3 % recall loss" -- ran the `-P` control three hundred tasks ago
+#   and characterised the hazard correctly, as RECALL LOSS. The engine is not fabricating and it
+#   is not broken: POSIX ERE has no `\b`, so `git grep -E` compiles the escape of an ordinary
+#   character down to that character and honestly matches the literal string `bmainb`. T238
+#   re-framed that as fabrication, the re-framing was copied forward through T371 into this
+#   header, and three later tasks re-derived a weaker version of a result already paid for.
+#   THE HAZARD IS REAL AND UNCHANGED -- a `\b` in an `-E` selector silently means literal `b`,
+#   and the count it returns is not the count it claims -- so the refusal in sel() stays
+#   exactly as it is. Only the DIAGNOSIS was wrong. When you re-frame an earlier measurement,
+#   cite its transcript or re-run it.]
 #
 # EXIT CODES -- chosen so a caller can tell the failures apart
 #   0  every selector RAN. Hits or measured zeros; both are MEASUREMENTS.
@@ -47,7 +61,17 @@
 #
 # ENGINE AND FLAGS, stated because they have bitten this program: `git grep` with `-E` and
 # `-F` explicitly per selector; NO `\b` anywhere, because `git grep -E` reads `\b` as a
-# LITERAL 'b' on this machine and returns zero SILENTLY (T232's measurement).
+# LITERAL 'b' on this machine.
+#
+#   [T402, closing FU-T386-2. This used to end "and returns zero SILENTLY", which is the wrong
+#   symptom and would send the next reader hunting for a zero. On THIS corpus the literal
+#   reading returns a LARGE SELF-REFERENTIAL COUNT, not a zero: `bmainb` matches the many notes
+#   this program has written ABOUT this very hazard -- 114 when T386 measured it, 138 when T402
+#   did, and it grows every time the finding is written down again. The symptom is therefore a
+#   number that LOOKS like a measurement and is a count of our own filing cabinet. That is
+#   strictly worse than a zero, because a zero at least reads as a finding. The SWEEP OBSERVE
+#   line below prints both spellings on every run so the reader sees it rather than trusting
+#   this sentence.]
 #
 # ------------------------------------------------------------------------------------------
 # T381 REPAIR -- R1..R4 FROM T379'S REVIEW OF THE T371 REPAIR ABOVE.
@@ -124,6 +148,76 @@ SWEEP_ERRF=$(mktemp "${TMPDIR:-/tmp}/casualty-sweep-stderr.XXXXXXXXXX") || {
   exit 2
 }
 trap 'rm -f "$SWEEP_ERRF"' EXIT HUP INT TERM
+
+# ==========================================================================================
+# T402 REPAIR -- C-1 / F-1 FROM T386'S REVIEW OF THE T381 REPAIR. THE SEVENTH INSTANCE.
+# ==========================================================================================
+# R4 above moved the engine's stderr out of the hit set and into $SWEEP_ERRF. That was the
+# right repair, and it made the scratch file LOAD-BEARING ON EVERY SEARCH IN THIS FILE while
+# checking nothing about it. Two failures, one root:
+#
+#   1. `err=$(cat "$SWEEP_ERRF")` discarded `cat`'s status, so a read that ERRORED was
+#      indistinguishable from a read that found nothing, and the whole R4 repair silently
+#      reverted to the pre-R4 behaviour it exists to remove.
+#
+#   2. AND THE ONE THAT MATTERS. `2>"$SWEEP_ERRF"` is opened BY THE SHELL, BEFORE the command
+#      runs. If it cannot be opened, THE COMMAND NEVER RUNS AND BASH RETURNS 1 -- and 1 is the
+#      exact status both engine_count() and sel() are built to read as "the engine ran over the
+#      corpus and matched nothing". T386 drove it: the scratch directory removed once
+#      calibration was past produced `SWEEP-RESULT: selectors=16 did_not_run=0 calibration=yes
+#      exit=0` with FIFTEEN selectors printing `MEASURED ZERO` for searches that never started.
+#
+# THE FIX IS NOT THE ONE THE REVIEW PROPOSED, AND T402 MEASURED WHY. T386 proposed five lines:
+# read `cat`'s status at both sites. T402 built that exact specimen (t402-make-t386min.sh) and
+# drove it against a second sabotage -- the scratch file left in place, filled with STALE text
+# and chmod 0444, so the redirect fails EACCES while `cat` SUCCEEDS. The five-line specimen
+# printed fifteen MEASURED ZEROs at exit 0, under a warning line naming a completion that never
+# happened [out/T402-RED-errf-class-drive.txt, ARM M]. READING A DOWNSTREAM READER'S STATUS
+# DOES NOT MEASURE WHETHER THE WRITER'S REDIRECT WAS EVER OPENED. Necessary, not sufficient.
+#
+# SO THE CHANNEL'S OPENABILITY IS MEASURED ON EVERY SEARCH, by three independent checks:
+#   * PRIME. A run-time sentinel is written into the file before the search. If the file cannot
+#     be opened for writing, the search is refused before the engine is asked anything.
+#   * READ. `cat`'s status is read (T386's check, kept).
+#   * WITNESS. If the sentinel SURVIVES the search, the shell never truncated the file, so the
+#     redirect was never opened and THE COMMAND NEVER RAN -- whatever status bash handed back.
+#     This is the only one of the three that is a positive proof rather than an inference.
+#
+# THE SENTINEL CARRIES NO COMMAND SUBSTITUTION, deliberately. It is built from `$$`, `$RANDOM`
+# and the mktemp suffix already in hand. A `$(date ...)` here would have been a new member of
+# the very class this repair exists to close.
+SWEEP_ERRF_SENTINEL="zzq-t402-channel-unwritten-$$-${RANDOM}-${SWEEP_ERRF##*/}"
+SWEEP_ERRF_WHY=""
+ERRF_TEXT=""
+
+# _errf_prime -- returns 0 if the channel is writable, non-zero with a reason if it is not.
+# Its stderr is NOT suppressed: a `2>/dev/null` here would be the eighth instance of the shape.
+_errf_prime() {
+  SWEEP_ERRF_WHY=""
+  if ! printf '%s\n' "$SWEEP_ERRF_SENTINEL" > "$SWEEP_ERRF"; then
+    SWEEP_ERRF_WHY="the engine's stderr channel could not be OPENED FOR WRITING before the search"
+    return 1
+  fi
+  return 0
+}
+
+# _errf_read -- sets ERRF_TEXT to the engine's stderr. Returns non-zero, with a reason, if the
+# channel cannot be trusted to have carried it.
+_errf_read() {
+  local t rc
+  ERRF_TEXT=""; SWEEP_ERRF_WHY=""
+  t=$(cat "$SWEEP_ERRF"); rc=$?
+  if [ "$rc" -ne 0 ]; then
+    SWEEP_ERRF_WHY="the engine's stderr channel could not be READ BACK (cat rc=$rc)"
+    return 1
+  fi
+  if [ "$t" = "$SWEEP_ERRF_SENTINEL" ]; then
+    SWEEP_ERRF_WHY="the sentinel written before the search IS STILL THERE, so the shell never truncated the file: the 2> redirect was never opened and THE COMMAND NEVER RAN"
+    return 1
+  fi
+  ERRF_TEXT="$t"
+  return 0
+}
 _top=$(git rev-parse --show-toplevel 2>/dev/null) || _top=""
 if [ -z "$_top" ] || ! cd "$_top"; then
   echo "SWEEP ABORT (exit 2): not inside a usable git work tree; there is no corpus to sweep" >&2
@@ -133,6 +227,12 @@ fi
 SWEEP_RC=0          # accumulated explicitly; never inherited from a pipeline
 SWEEP_SELECTORS=0
 SWEEP_DIDNOTRUN=0
+# T402, closing FU-T386-4. A REFUSED SELECTOR USED TO BE COUNTED NOWHERE. T386 drove a run
+# with a refusal that printed `selectors=16 did_not_run=0 calibration=yes` -- byte-identical
+# in all three cardinals to a perfectly clean run, distinguishable only by exit=3. A summary
+# line whose numbers cannot tell a refusal from a clean sweep is a summary a reader will
+# quote wrongly, so refusals are now counted and printed.
+SWEEP_REFUSED=0
 SWEEP_CALIBRATED=no
 
 # THE TOTAL IS NOT THE INTERESTING NUMBER, AND SAYING SO IS THE POINT OF THIS SCRIPT.
@@ -197,14 +297,20 @@ CALIB_NEG_ERE="(zzq|qzz)-t381-ere-anticalib-[0-9]+-$$-${RANDOM}-$(date -u +%s)"
 # T381 (R2). ONE PLACE RUNS `git grep` FOR A COUNT, AND IT READS BOTH STATUSES.
 #   ENGINE_RC   0 matched | 1 a MEASURED zero | >=2 the search DID NOT RUN
 #   return      0 usable  | 2 did-not-run     | 3 the TALLY itself failed
-# An errored search is not an empty one, and a missing count is not a count of zero.
+#               4 THE STDERR CHANNEL IS UNUSABLE, so ENGINE_RC cannot be interpreted at all
+#                 -- in particular a 1 from here may mean "bash could not open the redirect and
+#                 never ran the command". [T402, C-1]
+# An errored search is not an empty one, a missing count is not a count of zero, and a status
+# from a search that could not be given a stderr channel is not a status.
 ENGINE_N=""; ENGINE_RC=0; ENGINE_ERR=""
 engine_count() {
   local out rc n arc
   ENGINE_N=""; ENGINE_ERR=""
+  if ! _errf_prime; then ENGINE_RC=""; return 4; fi          # T402 C-1
   out=$(git grep "$@" 2>"$SWEEP_ERRF"); rc=$?
   ENGINE_RC=$rc
-  ENGINE_ERR=$(cat "$SWEEP_ERRF")
+  if ! _errf_read; then return 4; fi                          # T402 C-1
+  ENGINE_ERR="$ERRF_TEXT"
   if [ "$rc" -ge 2 ]; then return 2; fi
   n=$(printf '%s\n' "$out" | awk -F: '{s+=$NF} END{print s+0}'); arc=$?
   if [ "$arc" -ne 0 ]; then return 3; fi
@@ -215,7 +321,14 @@ engine_count() {
 
 _calib_refuse() { # _calib_refuse <arm label> <engine_count return>
   local arm="$1" ec="$2"
-  if [ "$ec" -eq 2 ]; then
+  if [ "$ec" -eq 4 ]; then
+    # [T402, C-1] The channel the search depends on could not be made to work.
+    echo "SWEEP ABORT (exit 3): the $arm calibration COULD NOT BE MEASURED --" >&2
+    echo "  $SWEEP_ERRF_WHY." >&2
+    echo "  A 2> redirect the shell cannot OPEN makes bash return 1 WITHOUT RUNNING THE COMMAND," >&2
+    echo "  and 1 is the exact status this file reads as 'the engine ran and matched nothing'." >&2
+    echo "  So no status from this arm is interpretable, and nothing below is printed." >&2
+  elif [ "$ec" -eq 2 ]; then
     echo "SWEEP ABORT (exit 3): the $arm calibration search DID NOT RUN -- git grep rc=$ENGINE_RC." >&2
     echo "  An ERRORED search is not a search that found nothing. Until T381 this arm discarded" >&2
     echo "  that status and printed PASS for exactly this state (T379 R2). Engine output follows:" >&2
@@ -311,12 +424,59 @@ calibrate() {
   engine_count -c -E "$hz_lit" -- .softhouse; ec=$?
   [ "$ec" -eq 0 ] || _calib_refuse "-E T238-HAZARD (literal)" "$ec"
   n_lit="$ENGINE_N"
-  if [ "$n_esc" -eq "$n_lit" ]; then
-    printf 'SWEEP OBSERVE: T238 hazard LIVE -- escaped=%s literal=%s AGREE, so -E compiles the\n' "$n_esc" "$n_lit"
-    printf '               backslash-class to the literal letters. sel() REFUSES such patterns.\n'
+
+  # T402, CLOSING FU-T386-3 -- THE NON-VACUITY CONTROL. THE DISCRIMINATOR ABOVE IS
+  # `escaped == literal => hazard LIVE`, AND TWO ZEROS ALSO AGREE. T386 measured it:
+  #
+  #     git grep -c -E '\bzzqabsentterm\b'  ->  0
+  #     git grep -c -E 'bzzqabsenttermb'    ->  0        AGREE  =>  "T238 hazard LIVE"
+  #
+  # i.e. this arm would keep reporting the hazard live on a corpus that had stopped containing
+  # the term -- a P-35 vacuous assertion, inside the one arm T381 added specifically to stop
+  # asserting this fact in prose.
+  #
+  # The control is a THIRD reading of the SAME escaped pattern, under `-P`. PCRE has real word
+  # boundaries, so on any corpus containing the word `main` it CANNOT agree with the other two;
+  # on a corpus containing nothing it agrees with them at zero and the arm says so instead of
+  # reporting. `-P` needs a PCRE-enabled git: if it is unavailable the search does not run, and
+  # that is reported as an UNAVAILABLE CONTROL rather than passed over. THIS ARM STILL GATES
+  # NOTHING and must not: it is a standing measurement, and `_calib_refuse` is deliberately NOT
+  # called here, because a host without PCRE is not a reason to refuse the sweep.
+  local n_pcre pcre_ec
+  engine_count -c -P "$hz_esc" -- .softhouse; pcre_ec=$?
+  if [ "$pcre_ec" -ne 0 ]; then
+    n_pcre="UNAVAILABLE"
   else
-    printf 'SWEEP OBSERVE: T238 hazard NOT reproducing here -- escaped=%s literal=%s DISAGREE. The\n' "$n_esc" "$n_lit"
-    printf '               refusal in sel() is conservative rather than necessary; it stays.\n'
+    n_pcre="$ENGINE_N"
+  fi
+
+  if [ "$n_pcre" = "UNAVAILABLE" ]; then
+    printf 'SWEEP OBSERVE: NOT REPORTED -- the -P non-vacuity control did not run (engine_count\n'
+    printf '               rc=%s), so escaped=%s literal=%s cannot be told apart from two zeros on\n' \
+      "$pcre_ec" "$n_esc" "$n_lit"
+    printf '               an empty corpus. An observation whose control did not run is not an\n'
+    printf '               observation. The refusal in sel() is unaffected and stays. [T402]\n'
+  elif [ "$n_esc" -eq 0 ] && [ "$n_lit" -eq 0 ] && [ "$n_pcre" -eq 0 ]; then
+    printf 'SWEEP OBSERVE: VACUOUS -- escaped=0 literal=0 pcre=0. All three readings measured\n'
+    printf '               NOTHING, so their agreement is not evidence of anything. No hazard\n'
+    printf '               verdict is printed. [T402, FU-T386-3]\n'
+  elif [ "$n_esc" -eq "$n_lit" ] && [ "$n_pcre" -ne "$n_esc" ]; then
+    printf 'SWEEP OBSERVE: T238 hazard LIVE -- escaped=%s literal=%s AGREE while pcre=%s DISAGREES,\n' \
+      "$n_esc" "$n_lit" "$n_pcre"
+    printf '               so -E compiles the backslash-class to the literal letters while -P reads\n'
+    printf '               a real word boundary. The -P control is what makes this non-vacuous: it\n'
+    printf '               cannot agree with the other two on a corpus containing the word.\n'
+    printf '               sel() REFUSES backslash-class patterns. [T402, FU-T386-3]\n'
+  elif [ "$n_esc" -eq "$n_lit" ]; then
+    printf 'SWEEP OBSERVE: INCONCLUSIVE -- escaped=%s literal=%s AGREE and pcre=%s agrees too.\n' \
+      "$n_esc" "$n_lit" "$n_pcre"
+    printf '               Three engines returning one number is not the signature of the hazard;\n'
+    printf '               something about this corpus or this git is not what the arm assumes.\n'
+    printf '               The refusal in sel() stays. [T402, FU-T386-3]\n'
+  else
+    printf 'SWEEP OBSERVE: T238 hazard NOT reproducing here -- escaped=%s literal=%s DISAGREE\n' "$n_esc" "$n_lit"
+    printf '               (pcre=%s). The refusal in sel() is conservative rather than necessary;\n' "$n_pcre"
+    printf '               it stays.\n'
   fi
   SWEEP_CALIBRATED=yes
 }
@@ -327,7 +487,7 @@ sel() { # sel <label> <git-grep args...>
   printf '    engine: git grep %s\n' "$*"
   if [ "$SWEEP_CALIBRATED" != yes ]; then
     printf '    *** SELECTOR REFUSED: sel() called before calibration. Nothing was searched.\n'
-    SWEEP_RC=3
+    SWEEP_REFUSED=$((SWEEP_REFUSED+1)); SWEEP_RC=3
     return
   fi
   # T381 (R3). THE HEADER'S `NO \b ANYWHERE` WAS A CLAIM. THIS MAKES IT A CHECK.
@@ -346,6 +506,7 @@ sel() { # sel <label> <git-grep args...>
     if [ "$esc_rc" -ge 2 ]; then
       printf '    *** SELECTOR REFUSED: the backslash-class CHECK ITSELF did not run (rc=%s). An\n' "$esc_rc"
       printf '    *** unrun check is not a clean check, so nothing was searched.\n'
+      SWEEP_REFUSED=$((SWEEP_REFUSED+1))
       [ "$SWEEP_RC" -ge 3 ] || SWEEP_RC=3
       return
     fi
@@ -353,6 +514,7 @@ sel() { # sel <label> <git-grep args...>
       printf '    *** SELECTOR REFUSED: its pattern carries a backslash-class, which this engine\n'
       printf '    *** reads as a LITERAL letter (see the SWEEP OBSERVE line above). Nothing was\n'
       printf '    *** searched, because the zero it would return would not be a measurement.\n'
+      SWEEP_REFUSED=$((SWEEP_REFUSED+1))
       [ "$SWEEP_RC" -ge 3 ] || SWEEP_RC=3
       return
     fi
@@ -366,8 +528,26 @@ sel() { # sel <label> <git-grep args...>
   # T381 (R4): stderr now goes to a scratch file OUTSIDE the hit set. T371 folded it in with
   # `2>&1`, so at rc=0 a warning line was counted by `grep -c .` as a hit and listed as LIVE,
   # and at rc=1 it was thrown away unprinted. It is now neither counted nor lost.
+  # T402 (C-1). THE CHANNEL IS PROVED BEFORE THE SEARCH AND WITNESSED AFTER IT. Without this,
+  # a scratch file that cannot be opened makes bash return 1 without running git grep at all,
+  # and the block below prints that 1 as `MEASURED ZERO`. Driven RED at fifteen selectors.
+  if ! _errf_prime; then
+    SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+    printf '    *** SELECTOR DID NOT RUN: %s.\n' "$SWEEP_ERRF_WHY"
+    printf '    *** A 2> redirect the shell cannot open makes bash return 1 WITHOUT RUNNING the\n'
+    printf '    *** command, and 1 is the status this file reads as a MEASURED ZERO. Nothing was\n'
+    printf '    *** searched here, so no absence may be read from this selector. [T402 C-1]\n'
+    return
+  fi
   all=$(git grep "$@" -- .softhouse 2>"$SWEEP_ERRF"); rc=$?
-  err=$(cat "$SWEEP_ERRF")
+  if ! _errf_read; then
+    SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+    printf '    *** SELECTOR DID NOT RUN: %s.\n' "$SWEEP_ERRF_WHY"
+    printf '    *** A git grep status of %s cannot be told apart from a search that never started,\n' "$rc"
+    printf '    *** so it is not read. [T402 C-1]\n'
+    return
+  fi
+  err="$ERRF_TEXT"
   if [ "$rc" -ge 2 ]; then
     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
     printf '    *** SELECTOR DID NOT RUN (git grep rc=%s). THIS IS NOT "ZERO HITS" -- no absence\n' "$rc"
@@ -380,8 +560,12 @@ sel() { # sel <label> <git-grep args...>
     printf '%s' "$err" | grep . | cut -c1-200 | sed 's/^/      ~ /'
   fi
   if [ "$rc" -eq 1 ]; then
+    # T402: the denominator is $SWEEP_CORPUS_N, a number MEASURED ONCE with its status read,
+    # not a command substitution buried in a printf argument where no $? can ever be consulted.
+    # That was FU-T381-1, and the site is named rather than numbered: it is the denominator of
+    # the MEASURED ZERO line inside sel(). [FU-T386-5: line numbers move; names do not.]
     printf '    MEASURED ZERO -- engine ran over %s tracked files in the sweep corpus and matched nothing\n' \
-      "$(git ls-files .softhouse | grep -c .)"
+      "$SWEEP_CORPUS_N"
     printf '    hits total: 0   archived (snapshots, correctly stale): 0   LIVE: 0\n'
     return
   fi
@@ -389,31 +573,98 @@ sel() { # sel <label> <git-grep args...>
   # to these two greps without reading theirs, so a malformed $ARCHIVE turned a REAL HIT into
   # `LIVE: 0` at exit 0 -- F2's exact shape, one step downstream of where it was repaired.
   # grep: 0 matched, 1 matched nothing (both legitimate here), >=2 CLASSIFICATION DID NOT RUN.
+  # T402, THE K1/K6 CLASS. The three cardinals on the `hits total` line were command
+  # substitutions INSIDE printf ARGUMENTS -- a position from which no exit status can ever be
+  # read, because there is no `$?` to consult and an empty field is the only symptom. They are
+  # computed here, with their statuses AND their numeric SHAPE checked, exactly as
+  # engine_count() checks its own tally. `grep -c` returns 1 for a count of zero, which is a
+  # measurement; >=2 is an error, which is not.
+  local n_all n_live nall_rc nlive_rc
+  n_all=$(printf '%s' "$all" | grep -c .); nall_rc=$?
   live=$(printf '%s' "$all" | grep -v -E "$ARCHIVE"); live_rc=$?
   arch=$(printf '%s' "$all" | grep -c -E "$ARCHIVE"); arch_rc=$?
+  n_live=$(printf '%s' "$live" | grep -c .); nlive_rc=$?
+  if [ "$nall_rc" -ge 2 ] || [ "$nlive_rc" -ge 2 ]; then
+    SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+    printf '    *** SELECTOR HIT, BUT ITS TALLY DID NOT RUN (grep -c rc=%s/%s). The hit set is\n' \
+      "$nall_rc" "$nlive_rc"
+    printf '    *** non-empty and could not be counted, so NO cardinal is printed for this\n'
+    printf '    *** selector -- an empty field would read as a zero. [T402, the K1/K6 class]\n'
+    return
+  fi
+  case "$n_all$n_live" in ''|*[!0-9]*)
+    SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+    printf '    *** SELECTOR HIT, BUT ITS TALLY IS NOT A NUMBER (total=[%s] live=[%s]). A count\n' \
+      "$n_all" "$n_live"
+    printf '    *** that is not a number is not a count. [T402, the K1/K6 class]\n'
+    return ;;
+  esac
   if [ "$live_rc" -ge 2 ] || [ "$arch_rc" -ge 2 ]; then
     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
     printf '    *** SELECTOR HIT, BUT ITS CLASSIFICATION DID NOT RUN (archive-predicate grep\n'
     printf '    *** rc=%s/%s). The engine FOUND %s line(s) and they could not be split into\n' \
-      "$live_rc" "$arch_rc" "$(printf '%s' "$all" | grep -c .)"
+      "$live_rc" "$arch_rc" "$n_all"
     printf '    *** archived and LIVE, so NO live figure may be printed here -- a "LIVE: 0" would\n'
     printf '    *** be a negative nobody measured. Check ARCHIVE is a valid ERE.\n'
     return
   fi
   printf '    hits total: %s   archived (snapshots, correctly stale): %s   LIVE: %s\n' \
-    "$(printf '%s' "$all" | grep -c .)" "$arch" "$(printf '%s' "$live" | grep -c .)"
+    "$n_all" "$arch" "$n_live"
   printf '%s' "$live" | grep . | cut -c1-200 | sed 's/^/      /'
 }
 
 echo "CASUALTY SWEEP for the T352+T359 oracle-state movement"
-echo "repo: $(git rev-parse --short HEAD)   date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-echo "population: $(git ls-files .softhouse | wc -l | tr -d ' ') tracked files under .softhouse/"
-echo "untracked under .softhouse/: $(git ls-files --others --exclude-standard .softhouse | wc -l | tr -d ' ')"
-if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]; then
+
+# ==========================================================================================
+# T402 -- THE CORPUS ASSERTION IS ITSELF MEASURED, AND F-2: IT USED TO BE FAIL-OPEN.
+# ==========================================================================================
+# This block used to read `if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]; then`. That
+# is a member of the class C-1 belongs to and nobody had audited it, because it is neither a
+# `2>/dev/null` nor a pipeline whose status anyone thought to look for -- it is a command
+# substitution in a NUMERIC TEST. DRIVEN, not reasoned:
+#
+#     $ bash -c 'x=""; if [ "$x" -lt 1 ]; then echo ABORTED; else echo "FELL THROUGH"; fi'
+#     bash: [: : integer expression expected
+#     FELL THROUGH
+#
+# `[` returns 2 on a malformed comparison, `if` reads any non-zero as FALSE, and the abort does
+# not fire. So if `git ls-files` had failed, THE CORPUS ASSERTION WOULD HAVE PASSED THE SWEEP
+# THROUGH ON A CORPUS IT NEVER COUNTED -- and T386's review cites this very assertion as the
+# BOUND on FU-T381-1's residual. The bound was fail-open. [T402 F-2]
+#
+# The count is now taken ONCE, its status read, its shape validated, and every later consumer
+# reads the variable. `git ls-files | grep -c .`: rc 0 means one or more, rc 1 means a genuine
+# zero, rc >= 2 means the count did not run.
+SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?
+if [ "$_corpus_rc" -ge 2 ]; then
+  echo "SWEEP ABORT (exit 2): the corpus COUNT DID NOT RUN (rc=$_corpus_rc). There is no" >&2
+  echo "  denominator, so there is no sweep. This is not 'zero files'; it is 'nobody counted'." >&2
+  exit 2
+fi
+case "$SWEEP_CORPUS_N" in ''|*[!0-9]*)
+  echo "SWEEP ABORT (exit 2): the corpus count is not a number ([$SWEEP_CORPUS_N]). A count that" >&2
+  echo "  is not a number is not a count, and every zero below would be denominated in it." >&2
+  exit 2 ;;
+esac
+if [ "$SWEEP_CORPUS_N" -lt 1 ]; then
   echo "SWEEP ABORT (exit 2): corpus reachable but tracks ZERO files under .softhouse/." >&2
   echo "  A sweep over nothing proves nothing (P-35); a denominator of zero is an ERROR, not a pass." >&2
   exit 2
 fi
+
+# T402, THE K1/K6 CLASS: provenance cardinals are computed with their statuses read, and print
+# the word UNMEASURED rather than an empty field when they cannot be taken. An empty field
+# reads as a zero, or worse as nothing at all -- and `commit=` is the one cardinal on the
+# SWEEP-RESULT line that tells a reader WHICH TREE this transcript grades.
+if ! SWEEP_COMMIT=$(git rev-parse --short HEAD); then SWEEP_COMMIT="UNMEASURED"; fi
+if ! SWEEP_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ); then SWEEP_DATE="UNMEASURED"; fi
+SWEEP_UNTRACKED_N=$(git ls-files --others --exclude-standard .softhouse | grep -c .); _unt_rc=$?
+if [ "$_unt_rc" -ge 2 ]; then SWEEP_UNTRACKED_N="UNMEASURED"; fi
+case "$SWEEP_UNTRACKED_N" in ''|*[!0-9]*) SWEEP_UNTRACKED_N="UNMEASURED" ;; esac
+
+echo "repo: $SWEEP_COMMIT   date: $SWEEP_DATE"
+echo "population: $SWEEP_CORPUS_N tracked files under .softhouse/"
+echo "untracked under .softhouse/: $SWEEP_UNTRACKED_N"
 calibrate
 
 # ---- S1..S3: the counter pins themselves ------------------------------------------------
@@ -460,8 +711,13 @@ sel "S16 status-enum prose, which is where a stale split tends to sit" -n -E 'st
 echo
 echo "END OF SWEEP. A selector not listed above was not searched, and this file is the"
 echo "record of that. Add a selector and re-run rather than asserting absence."
-printf 'SWEEP-RESULT: commit=%s selectors=%s did_not_run=%s calibration=%s exit=%s\n' \
-  "$(git rev-parse --short HEAD)" "$SWEEP_SELECTORS" "$SWEEP_DIDNOTRUN" "$SWEEP_CALIBRATED" "$SWEEP_RC"
+printf 'SWEEP-RESULT: commit=%s corpus=%s selectors=%s did_not_run=%s refused=%s calibration=%s exit=%s\n' \
+  "$SWEEP_COMMIT" "$SWEEP_CORPUS_N" "$SWEEP_SELECTORS" "$SWEEP_DIDNOTRUN" "$SWEEP_REFUSED" \
+  "$SWEEP_CALIBRATED" "$SWEEP_RC"
+if [ "$SWEEP_REFUSED" -gt 0 ]; then
+  echo "*** $SWEEP_REFUSED SELECTOR(S) REFUSED. They were never searched and are counted in" >&2
+  echo "*** neither selectors= nor did_not_run=. [T402, FU-T386-4]" >&2
+fi
 if [ "$SWEEP_DIDNOTRUN" -gt 0 ]; then
   echo "*** $SWEEP_DIDNOTRUN SELECTOR(S) DID NOT RUN. The casualty list from this run is INCOMPLETE" >&2
   echo "*** by an unknown amount, and no absence claimed above is admissible." >&2
