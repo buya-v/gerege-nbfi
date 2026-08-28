@@ -1,0 +1,11 @@
+T371 OPENING READ  2026-08-28T10:07:09Z
+       k        |  v   
+----------------+------
+ je_rows        | 71
+ je_max_id      | 75
+ cs_rows        | 359
+ cs_max_id      | 359
+ closure_rows   | 0
+ closure_max_id | null
+(6 rows)
+

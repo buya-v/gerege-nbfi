@@ -94,6 +94,26 @@ anywhere; converts a *silent wrong answer* into a named refusal. **NOT APPLIED H
 | `.softhouse/reference-oracle.md:907, 917, 1001` | `acc_gl_journal_entry` at `60 rows / max id 64` | **Correct as history, stale as a statement about today.** Fixed by T363 with a superseding marker at each table plus a new derived-baseline section — *not* by retyping the historical figures. |
 | `.softhouse/observations/20260827-chain2-standing-oracle-baseline.md:21-26` | six counters, three of which have moved | **Correct as a dated observation.** But its stated purpose is to make a *later* task's "I did not write to the standing oracle" claim checkable, so readers will treat it as a live reference. Needs a superseding pointer, not an edit. Outside this task's grant. |
 | `.softhouse/capture/t327-closure-accepting-side/README.md:147` | `acc_gl_journal_entry = 60/64` in prose | **Stale**; historical prose in a completed capture's README. Low value, listed for completeness. |
+| `.softhouse/reference-oracle.md:930` | *"the split **is** `156 PROCESSED / 194 ERROR`"* — **PRESENT TENSE, whole-table, live doctrine** | **MISSED BY T363's ELEVEN SELECTORS. Found by T367 as F3. Repaired by T371.** Live at 2026-08-28 was **162 / 197** [re-derived by T371, `.softhouse/capture/t371-t367-conditions/sql/q2-status-split.sql`]. The repair does **not** substitute today's pair — it deletes the cardinal, keeps the qualitative claim (*refusals are the majority*), and points at the derivation, because the replacement pair would be wrong by the next probe. |
+
+**How eleven selectors missed it, stated plainly, because it is the more useful finding.** Every one of
+S1–S11 hunts a **ledger** count — `acc_gl_journal_entry`, per-GL-account legs, currency. The missed site
+was an **audit-table** count, three lines above the sentence this document quotes for correction #2. The
+class is wider than either: *any cardinal about a live table, written in the present tense, in a file a
+reader treats as doctrine.* T371 added **S12–S16** to `casualty-sweep.sh` to look for that **shape**
+rather than for known strings, and drove that they now match the site
+[`.softhouse/capture/t371-t367-conditions/out/DRIVE-SWEEP-FAILCLOSED.txt` § H: 3 hits after, **0** with
+S1–S11 only]. T363's `[UNVERIFIED] that the 11 selectors are exhaustive` was the honest thing to write,
+and it bit.
+
+**And the sweep could not have told anyone.** T367's **F2**: `casualty-sweep.sh:39` discarded
+`git grep`'s exit status, so a selector that **never ran** (rc 128) and a selector that **ran and matched
+nothing** (rc 1) printed the identical `total=0 archived=0 LIVE=0`. A negative the instrument never
+measured, inside the instrument whose own header cites T232. **Repaired by T371** in T238 `sweeplib.sh`'s
+shape — status read, positive calibration, anti-calibration, and an exit contract
+(`0` ran / `2` no corpus / `3` calibration failed / `4` a selector did not run). Driven in both directions:
+BEFORE the two shapes are indistinguishable at exit 0; AFTER they are exit 0 vs exit 4
+[same transcript, § A/B/C/D].
 
 **All three `capabilities-ledger.json` rows are PRINTED BY THE HARNESS on every conformance run**, pass
 or fail, as measured fact [VERIFIED: `out/BAR-conformance.txt:459-508`]. That is what makes them worse

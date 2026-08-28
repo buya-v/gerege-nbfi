@@ -926,13 +926,37 @@ been used before T287 and is now marked called. Any capture that hard-codes clos
 
 **A REFUSED COMMAND STILL WRITES AN `m_portfolio_command_source` AUDIT ROW**, with
 `status = 5` (`ERROR`) and a NULL `resource_id` [VERIFIED: `CommandProcessingResultType.java:31-37` —
-`0 INVALID, 1 PROCESSED, 2 AWAITING_APPROVAL, 3 REJECTED, 4 UNDER_PROCESSING, 5 ERROR`]. Across the whole
-`gerege` audit table the split is **156 PROCESSED / 194 ERROR**, so refusals are the majority of this
-tenant's command history — as expected for a corpus built largely out of refusal probes.
+`0 INVALID, 1 PROCESSED, 2 AWAITING_APPROVAL, 3 REJECTED, 4 UNDER_PROCESSING, 5 ERROR`]. Across the
+whole `gerege` audit table **refusals are the majority of this tenant's command history** — as expected
+for a corpus built largely out of refusal probes. That is the claim; it is qualitative on purpose.
+
+> **⚠️ CORRECTED BY T371 — a live cardinal stood here in the PRESENT TENSE and had gone stale.**
+> The sentence read *"the split **is** `156 PROCESSED / 194 ERROR`"*. That was T287's measurement,
+> restated as a statement about today, and by 2026-08-28 it was wrong in both terms. It is not replaced
+> with today's pair, because **that pair would be wrong by the next probe** — the same trap this file
+> has now fallen into four times. **Derive it:**
+> `.softhouse/capture/t371-t367-conditions/sql/q2-status-split.sql`, or the baseline instrument.
+> Found by T367 as F3, and it is F2 seen from the other side: no selector in `casualty-sweep.sh`
+> matched a figure of this shape, so the sweep reported no casualty partly because it could not see
+> this one. Selectors **S12–S16** were added to that instrument by T371 and now match this line.
+> T287's own dated observation (`t287-closure-refusals/ARM2-OBSERVATION.md:136`) keeps the original
+> figure and is **correct as history** — a witness is not edited to agree with today (T248/T258/T340).
 
 Consequence: **"a refused write writes nothing" is true of the LEDGER and false of the DATABASE.** A
 write-check that watches only `acc_gl_journal_entry` will report a refusal as side-effect-free while it
 is in fact consuming command ids and idempotency keys.
+
+**And the key is not merely consumed — it is BURNED. [T367, carried forward by T371.]**
+`SynchronousCommandProcessingService.executeCommandAttempt` calls `commandSourceService.saveInitial`
+(`:140`) **before** `executeCommandInTransaction` (`:151`), and `CommandSourceService`'s own class
+comment says so: *"The initial command source is persisted separately for idempotency."* A later request
+reusing that key hits `exceptionWhenTheRequestAlreadyProcessed` (`:133`), which for a `status = ERROR`
+row throws `IdempotentCommandProcessFailedException` unless the caller is an explicit retry
+[VERIFIED: T371, `SynchronousCommandProcessingService.java:133,140,151,241-260`, pinned `426a23544`].
+**So a REFUSAL probe against the standing oracle is as irreversible as an accepted one.** Any text
+anywhere in this program that treats a 4xx as a safe no-op against this tenant is wrong: it is a no-op
+for the *ledger* and a permanent, unrepeatable consumption of a command id and an idempotency key. Fire
+one only under the POLICY at the end of this file, and register it in `PROBES.tsv` exactly like a write.
 
 ### Blast radius of a closure, for whoever creates the next one
 
@@ -1114,9 +1138,22 @@ rather than raised. Buyan may reverse it.
   why the number of writes you made is the smallest number that settles it. T359's *"Two rows, three
   claims. I judge that proportionate and I would not have fired a second"* is the standard.
 - **A distinct `Idempotency-Key` per probe, naming the task** — e.g. `t352-a07-usd`,
-  `T359-P03-residue-post`. This is not hygiene. It is the **only** total attribution link between a
-  command row and the task that fired it, every row in the table has one, and the baseline instrument
-  reads it. A shared or anonymous key makes your write unattributable forever.
+  `T359-P03-residue-post`. This is not hygiene. It is the **only** attribution link between a command
+  row and the task that fired it, and the baseline instrument reads it. A shared or anonymous key
+  makes your write unattributable forever.
+
+  **Do not read the presence of a key as attribution. [T371, correcting T363; found by T367.]**
+  `m_portfolio_command_source.idempotency_key` is a **`NOT NULL`** column [VERIFIED: T371, live,
+  `information_schema.columns`], so *"every row in the table has one"* is the schema restated and is
+  evidence of nothing. **Fineract MINTS a key when the caller sends no header** —
+  `IdempotencyKeyResolver.resolve` is `Optional.ofNullable(wrapper.getIdempotencyKey()).orElseGet(() ->
+  getAttribute().orElseGet(idempotencyKeyGenerator::create))` and `IdempotencyKeyGenerator.create()`
+  returns `UUID.randomUUID().toString()` [VERIFIED: T371, `fineract-core/…/commands/service/
+  IdempotencyKeyResolver.java:36` and `IdempotencyKeyGenerator.java:25-29`, pinned `426a23544`].
+  A minted UUID names nothing and its row is **unattributable forever**. Attribution therefore comes
+  from **this convention being obeyed**, never from the column being populated — which is exactly why
+  it is written here as an obligation rather than reported as a property. Derive the split rather than
+  reading one: `.softhouse/capture/t371-t367-conditions/sql/q3-key-naming.sql`.
 - **Touch no account a promoted vector grades**, if the question can be asked on another account. Three
   ledger parity vectors read `gl 16`; T352 posted to it anyway, which is why gl 16's count has now been
   restated three times in eight days.
@@ -1149,3 +1186,34 @@ derive the count.
 - **Do not "re-baseline" a rig by retyping its pin.** See the finding on `t305` / `t327` in
   `.softhouse/capture/t363-oracle-baseline/CASUALTIES.md` — the pin is not the bug, comparing against a
   baseline of *unknown age* is.
+
+### 5. THE BOUND ON THE INSTRUMENT — what `oracle-state-baseline.sh` cannot see
+
+**Recorded by T371 from T367's attack, because a guarantee whose limits are unwritten will be read as
+unlimited.** The instrument is **fail-closed for the APPEND PATH IT WATCHES** — two tables, floored on
+`max(id)`, attributed against `PROBES.tsv`. It is **not** a fail-closed guarantee about the database.
+T367 found three ways to move this tenant and leave a green run, and all three are open today:
+
+1. **A consumed sequence is invisible.** The floor is `max(id)`; the instrument never reads a sequence.
+   Live, `acc_gl_closure_id_seq` is `last_value 1, is_called t` while `acc_gl_closure` reads `0 rows /
+   max id null`. The instrument prints that as pristine — **yet this file already records that consumed
+   sequence as permanent, non-restoring movement** and warns that the next closure gets id 2. The one
+   class of irreversible movement the canonical record documents is a class the instrument cannot see.
+   (It is caught *indirectly*: creating or deleting a closure lands a command-source row above the
+   floor. Indirectly is not the same as directly.)
+2. **Direct SQL to any of the other 279 tables.** The instrument attributes on **2** tables; this tenant
+   has **281** base tables. Its real coverage argument is *"every API-driven write lands an
+   `m_portfolio_command_source` row above the floor, so the command floor catches a write anywhere."*
+   That argument is sound and was, until now, **nowhere written down**. A statement issued outside the
+   command bus — `psql`, a migration, a fixture load — satisfies none of it.
+3. **An `UPDATE` of a row BELOW the floor.** The floor detects appends, not mutations. Flipping
+   `reversed` on an existing journal-entry row moves the ledger's meaning and moves no id. **8 rows
+   already carry `reversed = t`**, and the instrument never reads that column.
+
+A fourth, weaker case: a **rolled-back** transaction leaves nothing to attribute at all.
+
+**How to read this.** None of the three is a defect *in* the instrument — it grades attribution of
+appends and it does that correctly. They are the **shape of the probe that would defeat it**, and they
+are written here so that "the baseline ran green" is quoted with its scope attached. Do not fire any of
+them at this tenant; if you must, none of the recording obligations in § 3 is waived by the instrument's
+blindness — they are made *more* important by it.

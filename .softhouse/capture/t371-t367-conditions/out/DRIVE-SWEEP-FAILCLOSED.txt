@@ -1,0 +1,82 @@
+
+########## A  BEFORE (main) -- the two facts that must differ, and do not
+
+---------- A1-before-EMPTY-result
+    === TEST-SELECTOR
+        hits total: 0   archived (snapshots, correctly stale): 0   LIVE: 0
+    EXIT=0
+
+---------- A2-before-MALFORMED
+    === TEST-SELECTOR
+        hits total: 0   archived (snapshots, correctly stale): 0   LIVE: 0
+    EXIT=0
+
+########## B/C  AFTER (HEAD) -- the same two facts
+
+---------- C-after-EMPTY-result
+    SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+    SWEEP CALIBRATE-: PASS -- known negative matched 0 times in .softhouse/
+    === TEST-SELECTOR
+        MEASURED ZERO -- engine ran over 8227 tracked files under .softhouse/ and matched nothing
+        hits total: 0   archived (snapshots, correctly stale): 0   LIVE: 0
+    SWEEP-RESULT: commit=eda436bf selectors=1 did_not_run=0 calibration=yes exit=0
+    EXIT=0
+
+---------- B-after-MALFORMED
+    SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+    SWEEP CALIBRATE-: PASS -- known negative matched 0 times in .softhouse/
+    === TEST-SELECTOR
+        *** SELECTOR DID NOT RUN (git grep rc=128). THIS IS NOT "ZERO HITS" -- no absence
+    SWEEP-RESULT: commit=eda436bf selectors=1 did_not_run=1 calibration=yes exit=4
+    *** 1 SELECTOR(S) DID NOT RUN. The casualty list from this run is INCOMPLETE
+    EXIT=4
+
+########## D  raw git grep exit statuses, so A/B/C is checkable against the engine
+    git grep EMPTY-RESULT rc = 1
+    git grep MALFORMED    rc = 128
+    git grep HITTING      rc = 0
+    'git grep' occurrences in BEFORE: 4 ; exit statuses inspected: 0
+    'git grep' occurrences in AFTER : 13 ; exit statuses inspected: 1
+
+########## E/F  calibration -- prove the engine works BEFORE any zero is interpretable
+
+---------- E-positive-calibration-MISSES
+    SWEEP ABORT (exit 3): CALIBRATION MISSED. 'zzq-t371-positive-calibration-broken-23572-23426' found 0 in .softhouse/capture/t363-oracle-baseline/instruments/,
+    EXIT=3
+
+---------- F-anti-calibration-MATCHES
+    SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+    SWEEP ABORT (exit 3): ANTI-CALIBRATION FAILED. The known-absent sentinel matched 5 time(s).
+    EXIT=3
+
+########## G  corpus unusable -- outside any git work tree
+
+---------- G-no-git-work-tree
+    SWEEP ABORT (exit 2): not inside a usable git work tree; there is no corpus to sweep
+    EXIT=2
+
+########## H  AFTER, unmodified -- green, and S12 now sees the casualty T363's 11 missed
+    EXIT=0
+    SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+    SWEEP CALIBRATE-: PASS -- known negative matched 0 times in .softhouse/
+    SWEEP-RESULT: commit=eda436bf selectors=16 did_not_run=0 calibration=yes exit=0
+    S12/S13 hits on the F3 site (reference-oracle.md, the PROCESSED/ERROR split):
+      1115:      .softhouse/reference-oracle.md:929:`0 INVALID, 1 PROCESSED, 2 AWAITING_APPROVAL, 3 REJECTED, 4 UNDER_PROCESSING, 5 ERROR`]. Across the whole
+      1116:      .softhouse/reference-oracle.md:930:`gerege` audit table the split is **156 PROCESSED / 194 ERROR**, so refusals are the majority of this
+      1145:      .softhouse/reference-oracle.md:930:`gerege` audit table the split is **156 PROCESSED / 194 ERROR**, so refusals are the majority of this
+    Same site under the BEFORE selectors S1..S11 only:
+      hits: 0
+
+==================================================================
+SUMMARY
+  A1 before EMPTY      exit 0
+  A2 before MALFORMED  exit 0   <- must be INDISTINGUISHABLE from A1 above. That is F2.
+  C  after  EMPTY      exit 0   <- a MEASURED zero
+  B  after  MALFORMED  exit 4   <- DID NOT RUN, and says so
+  E  calibration+ red  exit 3
+  F  anti-calibration  exit 3
+  G  no corpus         exit 2
+  H  green             exit 0
+==================================================================
+
+[exited with code 0]

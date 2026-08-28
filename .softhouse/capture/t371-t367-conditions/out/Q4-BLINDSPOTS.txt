@@ -1,0 +1,29 @@
+ kind |           sequencename            | last_value | lv  
+------+-----------------------------------+------------+-----
+ seq  | acc_gl_closure_id_seq             |          1 | 1
+ seq  | acc_gl_journal_entry_id_seq       |         75 | 75
+ seq  | m_portfolio_command_source_id_seq |        359 | 359
+(3 rows)
+
+          seq          | last_value | is_called 
+-----------------------+------------+-----------
+ acc_gl_closure_id_seq |          1 | t
+(1 row)
+
+           k           |  v  
+-----------------------+-----
+ base_tables_in_tenant | 281
+(1 row)
+
+              k               | v 
+------------------------------+---
+ reversed_true_rows           | 8
+ reversed_true_at_or_below_64 | 8
+ reversed_true_above_64       | 0
+(3 rows)
+
+             k              | v 
+----------------------------+---
+ float_columns_whole_schema | 0
+(1 row)
+

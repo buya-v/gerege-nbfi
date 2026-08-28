@@ -112,7 +112,10 @@ calibrate() {
     echo "  zeros. Nothing is printed." >&2
     exit 3
   fi
-  printf 'SWEEP CALIBRATE-: PASS -- known negative matched 0 times in .softhouse/\n'
+  # NB: no bare '.softhouse/' immediately before the \n. T316's dead-path census reads
+  # `.softhouse/\n` as a repo-path token, it does not resolve, and the frontier guard REFUSES.
+  # Measured on this exact line: frontier 109 -> 110, guard_dead_path_frontier FAILED.
+  printf 'SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus\n'
   SWEEP_CALIBRATED=yes
 }
 

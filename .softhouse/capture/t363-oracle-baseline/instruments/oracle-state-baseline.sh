@@ -31,6 +31,38 @@
 # READ-ONLY. Every statement it issues is a SELECT. It fires no HTTP request that writes and
 # posts no journal entry. Running it cannot move the thing it measures.
 #
+# ------------------------------------------------------------------------------------------
+# WHY TWO TABLES ARE CLAIMED TO COVER 281, AND WHERE THAT ARGUMENT STOPS.
+# [Written down by T371 because T367 found it load-bearing and NOWHERE STATED. Documentation
+#  only -- this block changes no behaviour of this instrument.]
+#
+# THE ARGUMENT. This tenant has 281 base tables [VERIFIED: T371, live]. This instrument
+# attributes on 2. The coverage claim is not "nothing else matters"; it is:
+#
+#     EVERY API-DRIVEN WRITE PASSES THE COMMAND BUS, AND THE COMMAND BUS LANDS AN
+#     m_portfolio_command_source ROW -- SO THE COMMAND FLOOR CATCHES A WRITE TO ANY OF THE
+#     OTHER 279 TABLES, EVEN THOUGH IT READS NONE OF THEM.
+#
+# That is sharper than it looks: the row is written by saveInitial BEFORE the handler runs, so
+# even a command whose business transaction is ROLLED BACK leaves the audit row behind
+# [VERIFIED: T371, SynchronousCommandProcessingService.java:140 then :151, @ 426a23544].
+#
+# WHERE IT STOPS -- three exception classes, all re-derived live by T371, all still open:
+#   (a) a CONSUMED SEQUENCE. The floor is max(id); this script never reads a sequence.
+#       acc_gl_closure_id_seq is last_value 1 / is_called t while acc_gl_closure is 0 rows /
+#       max id null. This script prints that as pristine -- and reference-oracle.md records
+#       that same consumed sequence as PERMANENT movement. Caught only indirectly, via the
+#       command-source row a closure create/delete also lands.
+#   (b) DIRECT SQL. A statement issued outside the command bus -- psql, a migration, a fixture
+#       load -- satisfies none of the argument above.
+#   (c) an UPDATE BELOW THE FLOOR. The floor detects appends, not mutations. 8 rows already
+#       carry reversed = t, all at or below id 64, and this script never reads that column.
+#
+# The float check is the one place DDL is covered, and it is narrower than it could be: it
+# looks at the two ledger tables, while live there are 0 float columns across ALL 281
+# [VERIFIED: T371]. Widening it is FU-T367-3 and is deliberately NOT done here.
+# ------------------------------------------------------------------------------------------
+#
 # EXIT CODES -- deliberately parallel to conformance.sh, for the same reason.
 #   0  every row above the floor is attributed
 #   1  UNATTRIBUTED MOVEMENT -- somebody probed the shared oracle and did not record it
