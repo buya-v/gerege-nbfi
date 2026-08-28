@@ -1,0 +1,32 @@
+=== RUN   TestTheExitOneVerdictCountsTheLedgerHalf
+=== RUN   TestTheExitOneVerdictCountsTheLedgerHalf/ledger_parity_fail_only
+=== RUN   TestTheExitOneVerdictCountsTheLedgerHalf/ledger_refusal_fail_only
+=== RUN   TestTheExitOneVerdictCountsTheLedgerHalf/ledger_divergence_fail_is_counted_once
+=== RUN   TestTheExitOneVerdictCountsTheLedgerHalf/ledger_invariant_violation_only
+=== RUN   TestTheExitOneVerdictCountsTheLedgerHalf/ledger_parity_and_refusal_and_invariant
+--- PASS: TestTheExitOneVerdictCountsTheLedgerHalf (0.00s)
+    --- PASS: TestTheExitOneVerdictCountsTheLedgerHalf/ledger_parity_fail_only (0.00s)
+    --- PASS: TestTheExitOneVerdictCountsTheLedgerHalf/ledger_refusal_fail_only (0.00s)
+    --- PASS: TestTheExitOneVerdictCountsTheLedgerHalf/ledger_divergence_fail_is_counted_once (0.00s)
+    --- PASS: TestTheExitOneVerdictCountsTheLedgerHalf/ledger_invariant_violation_only (0.00s)
+    --- PASS: TestTheExitOneVerdictCountsTheLedgerHalf/ledger_parity_and_refusal_and_invariant (0.00s)
+=== RUN   TestTheExitOneVerdictStillCountsTheLoanScheduleHalf
+=== RUN   TestTheExitOneVerdictStillCountsTheLoanScheduleHalf/loanschedule_parity_only
+=== RUN   TestTheExitOneVerdictStillCountsTheLoanScheduleHalf/loanschedule_contract_only
+=== RUN   TestTheExitOneVerdictStillCountsTheLoanScheduleHalf/loanschedule_selftest_only
+=== RUN   TestTheExitOneVerdictStillCountsTheLoanScheduleHalf/loanschedule_invariants_only
+=== RUN   TestTheExitOneVerdictStillCountsTheLoanScheduleHalf/both_halves
+--- PASS: TestTheExitOneVerdictStillCountsTheLoanScheduleHalf (0.00s)
+    --- PASS: TestTheExitOneVerdictStillCountsTheLoanScheduleHalf/loanschedule_parity_only (0.00s)
+    --- PASS: TestTheExitOneVerdictStillCountsTheLoanScheduleHalf/loanschedule_contract_only (0.00s)
+    --- PASS: TestTheExitOneVerdictStillCountsTheLoanScheduleHalf/loanschedule_selftest_only (0.00s)
+    --- PASS: TestTheExitOneVerdictStillCountsTheLoanScheduleHalf/loanschedule_invariants_only (0.00s)
+    --- PASS: TestTheExitOneVerdictStillCountsTheLoanScheduleHalf/both_halves (0.00s)
+=== RUN   TestTheExitOneVerdictSaysWhichHalfFailed
+=== RUN   TestTheExitOneVerdictSaysWhichHalfFailed/ledger_only
+=== RUN   TestTheExitOneVerdictSaysWhichHalfFailed/no_ledger_half_says_so
+--- PASS: TestTheExitOneVerdictSaysWhichHalfFailed (0.00s)
+    --- PASS: TestTheExitOneVerdictSaysWhichHalfFailed/ledger_only (0.00s)
+    --- PASS: TestTheExitOneVerdictSaysWhichHalfFailed/no_ledger_half_says_so (0.00s)
+PASS
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	0.411s

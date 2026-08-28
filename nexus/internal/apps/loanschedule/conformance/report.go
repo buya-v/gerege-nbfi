@@ -618,8 +618,51 @@ func WriteReport(w io.Writer, s *Summary) {
 		}
 		p("         IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.")
 	case code == 1:
+		// THE EXIT-1 SENTENCE COUNTS BOTH HALVES [T416, closing T405's F-T405-5].
+		//
+		// IT DID NOT, AND THE OMISSION WAS ABOUT MONEY. This line summed
+		// s.ParityFail + s.ContractFail + s.SelfTestFail — the LOAN SCHEDULE
+		// counters and nothing else — while ExitCode() reaches 1 for the ledger
+		// half through a SEPARATE arm (s.Ledger.ParityFail + s.Ledger.RefusalFail,
+		// s.Ledger.InvariantViolations) that contributes to none of those three.
+		// So a run in which one ledger parity vector failed on
+		// `legs[0].amount_minor: MONEY want 10000026, got 10000025` printed, two
+		// lines under the census that said `ledger parity PASS 6 FAIL 1`:
+		//
+		//     VERDICT: FAIL (exit 1) — 0 mismatched vector(s), 0 invariant violation(s).
+		//
+		// The exit code was right, so no machine made a wrong decision. The
+		// sentence a HUMAN reads was false, and it was false about a
+		// one-minor-unit discrepancy in the double-entry ledger.
+		//
+		// THE FIGURES COME FROM THE SUMMARIES THEMSELVES, and from exactly the
+		// fields ExitCode() tests, so the verdict and the exit code cannot come
+		// to different conclusions about whether the ledger half failed. This is
+		// the same discipline recordedDivergences() uses one arm above; the two
+		// arms had disagreed about whether the ledger half existed at all.
+		//
+		// DivergenceFail is NOT added: ledger grade.go folds it into
+		// Ledger.ParityFail by its own stated counting rule, and adding it again
+		// would double-count the one class whose count this program is most
+		// careful about.
+		lm, lv := s.ledgerMismatches(), s.ledgerInvariantViolations()
 		p("VERDICT: FAIL (exit 1) — %d mismatched vector(s), %d invariant violation(s).",
-			s.ParityFail+s.ContractFail+s.SelfTestFail, s.InvariantViolations)
+			s.ParityFail+s.ContractFail+s.SelfTestFail+lm, s.InvariantViolations+lv)
+		// THE SPLIT, because a total alone sends a reader to the wrong half of a
+		// seven-hundred-line report. Printed from the same fields the total is
+		// summed from — a second, independently maintained count here is the
+		// defect this block just finished being.
+		if s.Ledger != nil {
+			p("         LEDGER %d mismatch(es), %d invariant violation(s)  |  LOAN SCHEDULE %d mismatch(es), %d invariant violation(s).",
+				lm, lv, s.ParityFail+s.ContractFail+s.SelfTestFail, s.InvariantViolations)
+			p("         The per-vector rows above name every failing cell, and MONEY cells are marked")
+			p("         MONEY there with their margin in minor units.")
+		} else {
+			// "Zero ledger failures" and "the ledger half did not run" are
+			// different facts and the reader is owed which one this is, for the
+			// same reason the exit-0 arm distinguishes them.
+			p("         no ledger half ran in this configuration, so this counts LOAN SCHEDULE only.")
+		}
 	default:
 		p("VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.")
 	}
@@ -652,6 +695,46 @@ func (s *Summary) recordedDivergences() int {
 		return 0
 	}
 	return s.Ledger.DivergencePass + s.Ledger.DivergenceFail
+}
+
+// ledgerMismatches is how many LEDGER vectors this run compared against captured
+// oracle output and found different. [T416, for T405's F-T405-5]
+//
+// IT IS THE SAME EXPRESSION ExitCode() TESTS — `s.Ledger.ParityFail +
+// s.Ledger.RefusalFail` — and that is the point of it existing rather than being
+// written out at the call site. The exit-1 verdict sentence and the exit code
+// were computed from different fields for as long as both existed, and the
+// result was a MONEY mismatch in the double-entry ledger being announced as "0
+// mismatched vector(s)" by a run that had correctly exited 1.
+//
+// DivergenceFail is deliberately absent: ledger grade.go adds a divergence FAIL
+// to ParityFail as well as to its own counter (its "COUNTING RULE IS
+// ASYMMETRIC" note), so it is already in the figure below and adding it here
+// would report one failing vector as two.
+//
+// Nil ledger returns 0, and the caller must distinguish that from a graded-clean
+// ledger half by testing s.Ledger — this figure cannot carry that distinction
+// and does not pretend to.
+func (s *Summary) ledgerMismatches() int {
+	if s.Ledger == nil {
+		return 0
+	}
+	return s.Ledger.ParityFail + s.Ledger.RefusalFail
+}
+
+// ledgerInvariantViolations is the ledger half's property-invariant violations —
+// double-entry balance, and everything else ledger/conformance/invariants.go
+// asserts. [T416, for T405's F-T405-5]
+//
+// Separate from ledgerMismatches for the reason the verdict line keeps them
+// separate: a mismatch is "this port disagrees with the oracle", a violation is
+// "this posting is not a legal double entry at all", and collapsing them would
+// lose which of the two a reader is looking at. Same nil rule as above.
+func (s *Summary) ledgerInvariantViolations() int {
+	if s.Ledger == nil {
+		return 0
+	}
+	return s.Ledger.InvariantViolations
 }
 
 // sortedKeys returns m's keys in ascending byte-wise order.
