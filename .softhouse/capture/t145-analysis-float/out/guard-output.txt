@@ -2,7 +2,7 @@ T145 GUARD -- two-sided float() comparison deciding a money claim
 SELECTOR: ast.Compare where BOTH the left operand and at least one comparator
           contain a float(...) call. One-sided float comparisons are PERMITTED
           (T186 rule A1: repr(float(tok)) == tok) and are NOT reported.
-POPULATION: 671 tracked .py under .softhouse
+POPULATION: 677 tracked .py under .softhouse
 
 DECLARED  .softhouse/capture/actualactual/analysis/discriminate.py:160
           T145 verdict: CARRIES VALUE, not permitted measurement. Left BYTE-IDENTICAL under T114 (it produced analysis/DISCRIMINATION-OUTPUT.txt, cited by REPRODUCE.md:68); the repair is in the T145 scratch copy and filed as FU-T145-1.
