@@ -3252,3 +3252,157 @@ nowhere, stops the run):
 
 **`P-99` is NOT in that list and must never be.** It is a deliberate absence used as a negative control by
 three instruments; the checker carries it separately, with the instrument that depends on it named.
+
+
+---
+
+<!-- T334-WRITER-SAFETY -->
+
+**P-97 — NEVER WRITE IN PLACE TO A FILE THAT MAY BE EXECUTING. THE WRITERS THIS PIPELINE'S OWN
+GUIDANCE PREFERS ARE THE IN-PLACE ONES.**
+
+*Local fire `20260828-080001`. `T309` asked the question, `T301` censused 17 writers, `T334` re-measured
+it on three userlands and found the rule cannot be keyed to the writer at all.*
+
+**The mechanism.** zsh does not slurp a script — it returns to the open fd for more input. So a write that
+goes **through the original inode** of a script that is *currently running* can be executed as a spliced
+tail. `T301` reproduced the splice **at the read-buffer boundary with no length change at all**: four
+characters swapped for four, and the row straddling the boundary executed as `ROW 0291 ORIK` — three bytes
+from the old file, the rest from the new. Inside a quoted string that prints harmlessly; inside a command
+name, an `if`/`fi` or a heredoc delimiter it is a syntax error or **a different command**.
+
+**The census, re-measured by `T334` on three userlands.** Two instruments per writer, because the inode is
+only a proxy: (1) `st_ino` before/after, and (2) **a read fd held open across the write**, then `lseek(0)`
+and re-read — which is the hazard's own shape. Every leg asserts the bytes actually changed, so a writer
+that no-ops scores `NOOP` and is never counted as evidence. Instrument: `probe-writer-census.py` under
+`.softhouse/capture/t334-writer-guidance/` with its three outputs. The two instruments agreed on every
+scored leg on all three hosts.
+
+| writer | BSD / macOS | GNU / Linux | busybox / Alpine |
+|---|---|---|---|
+| `cat > file` | **in place** | **in place** | **in place** |
+| `printf > file (truncate)` | **in place** | **in place** | **in place** |
+| `>> append` | **in place** | **in place** | **in place** |
+| `tee file` | **in place** | **in place** | **in place** |
+| `tee -a file` | **in place** | **in place** | **in place** |
+| `dd conv=notrunc` | **in place** | **in place** | **in place** |
+| `cp src dst` | **in place** | **in place** | isolated |
+| `cp -p src dst` | **in place** | **in place** | isolated |
+| `cat src > dst` | **in place** | **in place** | **in place** |
+| `python open(w)` | **in place** | **in place** | **in place** |
+| `python open(r+)` | **in place** | **in place** | **in place** |
+| `sed > tmp; cat tmp > f` | **in place** | **in place** | **in place** |
+| `noclobber-defeating >\|` | **in place** | **in place** | **in place** |
+| `ex -s` | **in place** | — | — |
+| `ed -s` | **in place** | — | — |
+| `mv src dst` | isolated | isolated | isolated |
+| `install -m 755` | isolated | isolated | isolated |
+| `python write+os.replace` | isolated | isolated | isolated |
+| `sed -i (in-place flag)` | isolated | isolated | isolated |
+| `sed -i.bak` | isolated | isolated | isolated |
+| `perl -i -pe` | isolated | isolated | — |
+| `awk > tmp; mv tmp f` | isolated | isolated | isolated |
+| `patch` | isolated | — | isolated |
+| `git merge --ff-only` | isolated | — | isolated |
+| `git checkout other -- <p>` | isolated | — | isolated |
+| `git restore -s other <p>` | isolated | — | isolated |
+| `git reset --hard other` | isolated | — | isolated |
+| `git apply <patch>` | isolated | — | isolated |
+| `git checkout-index -f -a` | isolated | — | isolated |
+| `git stash pop` | isolated | — | isolated |
+| `git pull --ff-only` | isolated | — | isolated |
+
+* **macOS 25.5.0 arm64, BSD userland** — `legs=31 in_place=15 isolated=16 unscored=0`
+* **Linux 6.12 aarch64, GNU sed 4.9 + GNU coreutils (docker odoo:18)** — `legs=31 in_place=13 isolated=7 unscored=11`
+* **Linux 6.12 aarch64, busybox 1.37 userland (docker alpine:3)** — `legs=31 in_place=11 isolated=17 unscored=3`
+
+**THE RULE IS CONDITIONAL ON THE TARGET, NOT ON THE WRITER — and that is a measured conclusion, not a
+stylistic one.** `cp` is **in place** on BSD and on GNU and **isolated** on busybox. A rule of the form
+"prefer `cp`" or "`cp` is dangerous" is therefore true on one host and false on another, which is exactly
+the class of defect `T256`/`T298` spent themselves establishing may never enter a graded path, and that
+`T326` closed again in this same fire. The target-conditional rule holds on all three:
+
+> **Never write IN PLACE to a file that may be executing.** Concretely, in this repo: the fire wrapper
+> `.softhouse/bin/fire-program.sh`, anything else under `.softhouse/bin/` while a fire is running,
+> `.softhouse/conformance.sh` mid-run, and any guard under `.softhouse/guards/` mid-run. For every other
+> target — handoffs, captures, `RESUME.md`, observations, source files, vectors — the shell writers are
+> **fine**, and the guidance preferring them is right: they are cheap and composable, and **most targets
+> are not running scripts**.
+
+**Safe alternatives, in order of preference.** (1) Edit in a **worktree and land it through git** — all
+eight measured git write paths rename, on all three hosts, so a merge can never reach a running fire.
+(2) Use a writer that **renames**: `sed -i`, `perl -i`, `mv`, `install`, `patch`, `write-to-temp` **then**
+`mv`, or the harness's own `Write`/`Edit` tools, which `T301` measured by hand as renaming.
+(3) If it must be a shell writer against a live path, write a temp file and `mv` it — never `cp` it.
+**`cp` is the one that bites**: "copy the fixed wrapper over the live one" is what a human types, and it is
+the dangerous half of the `cp`/`mv` pair on the two userlands that matter here.
+
+**`sed -i` IS SAFE ON ALL THREE, WHICH SETTLES THE OPEN QUESTION `T301` LEFT.** Measured on all three, `sed -i ''` (BSD spelling) and `sed -i` (GNU and busybox spelling): **ISOLATED — rename — on every one**. The spelling differs
+— BSD demands the empty-suffix argument — but the *behaviour* is identical: build a temp file, rename it
+over the target. **This matters because this program is driven by two fires on two hosts**, a launchd fire
+on the Mac and a cloud fire that never runs here, and a writer-safety rule true only on macOS would be the
+same defect `T326` closed in this fire. So the one writer the wrapper's old comment block named as
+**dangerous** is in fact the one writer that is **portable-safe**. Naming a safe writer as dangerous is the
+cheap direction of the error; it was still an unmeasured claim sitting in a file as if it had been measured.
+
+**HOW NARROW THIS ACTUALLY IS — stated plainly, because overstating it is how a real rule gets ignored.**
+The exposure needs *all* of: an agent writing **in place**, to a script that is **running**, **past the
+point the shell has already read**. Against the wrapper as shipped it **does not reproduce** — `T301` drove
+it and the marker never reached the running fire, because the driver call is nested inside the final
+`while` loop, so reaching it forces a read through the loop's `done` and the remaining bytes sit inside the
+read-ahead. **That immunity is layout, not design**: appending 15 KB of top-level content after the chain
+loop brings the hazard straight back, which `T301` also drove. This is a **default-choice defect**, not a
+live bug: nothing is broken today, and the wrong writer is the one an agent reaches for first.
+
+**WHERE THE DEFECTIVE GUIDANCE LIVES: NOT IN THIS REPO.** The instruction to prefer shell writers over the
+harness's file tools is injected by the **harness** when bypass-permissions mode is active, and its text
+occurs **nowhere in the tracked tree** — `CLAUDE.md`, every `SKILL.md`, and `settings.json` are all clean
+[VERIFIED: `git grep` for the phrase returns no tracked hit; the text is in this run's own system prompt].
+**So it cannot be edited out, and no `SKILL.md` change removes it.** The repo can only *override* it for
+executing targets, which is what this rule is for. Any restatement of it must **name the rule or carry its
+sentence, never just the id** (`P-86` — *"an id is a cardinal … make the second site NAME THE RULE, or cite
+the id AND its sentence together so a shifted number is self-correcting"*).
+
+**COLLISION HAZARD, declared rather than discovered**, following `T282`'s precedent: this entry claims
+**`P-97`** against a register whose high-water mark was measured as `P-96` at the moment of writing,
+while other workers were live in the same fire. If a rival `P-97` lands, **renumber this one** — and the
+`T282` checker is what detects a renumbering that failed to reach the places restating it.
+
+### `T334` CITATION ERRATUM — corrected FORWARD, never edited in place
+
+Same treatment as the `T282` errata table above, and **deliberately a separate table**: that one is `T282`'s
+record and is not to be tidied or renumbered.
+
+**The paraphrase _"a guard that only works when someone remembers to run it enforces nothing"_ is NOT
+`P-45`'s recorded text, and it is not any other pattern's text either.** `P-45` is at `patterns.md:1503`
+and reads: *"A test-only guard is not a guard … when hardening a check, verify the path that actually
+executes in CI/conformance calls it, not merely that a test does."* Related, but a different rule: `P-45` is
+about **which path invokes the guard**; the paraphrase is about **a guard invoked only by memory**.
+
+| # | what | measured |
+|---|---|---|
+| 1 | sites citing the paraphrase as `P-45` | **a moving number, deliberately not pinned here** — see below |
+| 2 | recorded rule that states the paraphrase | **none** — the checker scores every one `BARE`, *"matches no registered rule"*, best trigram 1 < 6, fatal **0** |
+| 3 | so the correction is | the paraphrase is an **unrecorded gloss**, not a mis-numbered citation. This is **not** the `T282` off-by-one shape (cited `P-x`, actually `P-y`): there is no `P-y` |
+
+**Row 1 is deliberately not a cardinal, and the reason is `P-80` catching this entry mid-write.** The count
+was **25** across **18** files when `T334` first measured it and **35**
+across **20** files an hour later — because `T334`'s own capture files quote the paraphrase and
+**entered the checker's corpus**. That is the same trap `T282` recorded (*"a count copied into a second
+document is `P-80`"*), sprung again in the table written to record it. **The second site READS the first:**
+run `.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py` and filter on the sentence. The
+number below that does NOT move is the one that matters, because it counts directive-zone files no evidence
+task writes.
+
+**AND PROMOTING THE GLOSS TO A RULE IS A TRAP, MEASURED RATHER THAN ASSUMED.** Recording that sentence as
+its own `P-n` immediately turns those harmless `BARE` citations into `MISDIRECTING` ones, **7 of them in the
+DIRECTIVE zone, which is FATAL and turns the bar red** — in `.softhouse/bin/branch_sweep.py`,
+`.softhouse/bin/fire-program.sh`, `.softhouse/bin/ready-tasks.py` and `.softhouse/conformance.sh`, four
+files `T334` was forbidden to edit. Driven in a throwaway clone at `probe-p45-promotion.sh` with output at
+`p45-promotion-experiment.txt`, both under `.softhouse/capture/t334-writer-guidance/` — the tree goes from
+`VERDICT PASS -- 0 fatal` to `VERDICT FAIL -- 7 fatal (register 0, directive-file 7)`.
+
+**So the sequence matters and is recorded here for whoever owns those files:** repair the citing sites
+FIRST, then record the rule. Doing it in the other order reds the bar. Until then the erratum is the
+correction, and the gloss stays unrecorded on purpose.
+
