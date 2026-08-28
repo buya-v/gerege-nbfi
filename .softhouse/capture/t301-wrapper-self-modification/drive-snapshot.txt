@@ -1,0 +1,89 @@
+zsh: 5.9   git: git version 2.50.1 (Apple Git-155)
+source worktree: /Users/buv/gerege-nbfi/.claude/worktrees/agent-aaa724784ff017cd5
+work: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-drive.4GnGi
+
+=== ARM RED ===
+  clone: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-drive.4GnGi/clone-RED
+  wrapper inode before: 16004767 bytes=131779
+  driver is up after 11s; mutating the wrapper IN PLACE now
+    mutated in place at byte 131721 (+35 bytes); inode preserved
+  wrapper inode after:  16004767 bytes=131814
+  fire rc=0
+  MARKER REACHED THE RUNNING FIRE: no (count=0)
+  --- the lines that prove the fire completed its tail ---
+    [09:50:27] wrapper identity: path=/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-RED/.softhouse/bin/fire-program.sh inode=16004767 sha256=4707378d2d68cb8b bytes=131779
+    [09:50:27] wrapper snapshot: DISABLED by FIRE_NO_SNAPSHOT=1 — this fire reads its own bytes from the repo path for its whole life
+    [09:50:29] refguard| ref guard INSTALLED at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-RED/.git/hooks/reference-transaction -> /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-drive.4GnGi/clone-RED/.softhouse/bin/branch_sweep.py hook
+    [09:50:29] refguard|   it now refuses any ref CREATION under refs/heads/softhouse/ whose name differs from an existing ref only by case, for every git command.
+    [09:50:30] attest-preflight| repo-state-attest.sh: SURVEY [fire 20260828-095027 pre-flight baseline] /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-RED
+    [09:50:30] attest-preflight|   legacy predicate (`git status --porcelain` empty?) : DIRTY (1 entries, -uall)
+    [09:50:30] attest-preflight|   S3 uncommitted (visible, not hidden)                : 1
+    [09:50:30] attest-preflight|   S4 ignored files (ADVISORY -- .DS_Store lives here) : 0
+    [09:50:30] attest-preflight| VERDICT: no hidden-work term fired (skip bits 0)
+    [09:50:30] attest-preflight: baseline reading taken — no hidden-work term fired in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-drive.4GnGi/clone-RED before this fire started
+    [09:50:51] worktree prune sweep: pruned=0 kept=0
+    [09:51:20] chain finished after 1 iteration(s)
+  'fire start —' lines (a re-exec loop would show more than 1): 1
+
+=== ARM GREEN ===
+  clone: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-drive.4GnGi/clone-GREEN
+  wrapper inode before: 16030280 bytes=131779
+  driver is up after 5s; mutating the wrapper IN PLACE now
+    mutated in place at byte 131721 (+35 bytes); inode preserved
+  wrapper inode after:  16030280 bytes=131814
+  fire rc=0
+  MARKER REACHED THE RUNNING FIRE: no (count=0)
+  --- the lines that prove the fire completed its tail ---
+    [09:51:28] wrapper identity: path=/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.S44Ogq/fire-program.sh inode=16038414 sha256=4707378d2d68cb8b bytes=131779
+    [09:51:28] wrapper snapshot: RUNNING FROM A SNAPSHOT — repo copy=/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-GREEN/.softhouse/bin/fire-program.sh inode=16030280 sha256=4707378d2d68cb8b bytes=131779; the repo copy is now free to be modified by the fire this wrapper is about to start
+    [09:51:29] refguard| ref guard INSTALLED at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-GREEN/.git/hooks/reference-transaction -> /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-drive.4GnGi/clone-GREEN/.softhouse/bin/branch_sweep.py hook
+    [09:51:29] refguard|   it now refuses any ref CREATION under refs/heads/softhouse/ whose name differs from an existing ref only by case, for every git command.
+    [09:51:30] attest-preflight| repo-state-attest.sh: SURVEY [fire 20260828-095128 pre-flight baseline] /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-GREEN
+    [09:51:30] attest-preflight|   legacy predicate (`git status --porcelain` empty?) : DIRTY (1 entries, -uall)
+    [09:51:30] attest-preflight|   S3 uncommitted (visible, not hidden)                : 1
+    [09:51:30] attest-preflight|   S4 ignored files (ADVISORY -- .DS_Store lives here) : 0
+    [09:51:30] attest-preflight| VERDICT: no hidden-work term fired (skip bits 0)
+    [09:51:30] attest-preflight: baseline reading taken — no hidden-work term fired in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-drive.4GnGi/clone-GREEN before this fire started
+    [09:51:44] worktree prune sweep: pruned=0 kept=0
+    [09:52:13] chain finished after 1 iteration(s)
+  'fire start —' lines (a re-exec loop would show more than 1): 1
+
+=== ARM CONTROL — can this harness detect a reach at all? ===
+Identical in-place insertion, but the subject's sleep is at TOP LEVEL rather
+than inside a compound command, so zsh has NOT been forced to read to EOF.
+    mutated in place at byte 105484 (+35 bytes); inode preserved
+  MARKER REACHED: YES
+  control output tail:
+    driver job pid=fake
+    T301-MUTATION-MARKER-REACHED
+    chain finished after 1 iteration(s)
+
+=== ARM COST-SNAPSHOT-FAILS — TMPDIR unwritable; must fall back, not die ===
+  rc=0
+    WARN: SNAPSHOT FAILED (mktemp/cp under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-drive.4GnGi/readonly/) — running directly from the repo copy, which an IN-PLACE writer (cat >, cp, tee, >>, python open(w)) could still reach mid-fire
+    [09:52:27] wrapper identity: path=/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-costfail/.softhouse/bin/fire-program.sh inode=16042433 sha256=4707378d2d68cb8b bytes=131779
+    [09:52:27] WARN: wrapper snapshot: SNAPSHOT FAILED (mktemp/cp under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-drive.4GnGi/readonly/) — running directly from the repo copy, which an IN-PLACE writer (cat >, cp, tee, >>, python open(w)) could still reach mid-fire
+    [09:52:29] probe only — exiting without taking the lock or invoking the driver
+
+=== ARM COST-SCRIPT-DIR — does SCRIPT_DIR still find bin/ and guards/ ? ===
+  rc=0
+  a snapshot run resolves SCRIPT_DIR to the REPO's bin/, so all four
+  siblings must still be found: lib-worktree-prune.zsh (source),
+  branch_sweep.py (refguard/sweep), ../guards/repo-state-attest.sh (attest).
+    [09:52:36] wrapper snapshot: RUNNING FROM A SNAPSHOT — repo copy=/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-costdir/.softhouse/bin/fire-program.sh inode=16059573 sha256=4707378d2d68cb8b bytes=131779; the repo copy is now free to be modified by the fire this wrapper is about to start
+    [09:52:36] refguard| ref guard INSTALLED at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-costdir/.git/hooks/reference-transaction -> /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-drive.4GnGi/clone-costdir/.softhouse/bin/branch_sweep.py hook
+    [09:52:36] refguard|   it now refuses any ref CREATION under refs/heads/softhouse/ whose name differs from an existing ref only by case, for every git command.
+    [09:52:37] sweep| BRANCH SWEEP -- T312 instrument (/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-costdir/.softhouse/bin/branch_sweep.py)
+    [09:52:37] sweep| SELECTOR, stated because 'not found' is a statement about the search:
+    [09:52:37] sweep|   repo          /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-costdir  (read .git/ directly)
+    [09:52:37] sweep|   patterns      'softhouse/*'
+    [09:52:37] sweep|   matching      fnmatch on the CASE-FOLDED short name -- 'softhouse/t3*' and 'softhouse/T3*' select identically here.  `git branch --list` does NOT; that is the defect this replaces.
+    [09:52:37] sweep|   storage       walked /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-costdir/.git/refs/heads -- 2 loose head(s), names as stored on disk
+    [09:52:37] sweep|   storage       parsed /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-drive.4GnGi/clone-costdir/.git/packed-refs -- 0 packed head(s), matched CASE-SENSITIVELY as git does
+
+=== ARM COST-EXEC-LOOP — exactly one re-exec, never two ===
+  'fire start —' lines in the COST-SCRIPT-DIR run: 1
+  'RUNNING FROM A SNAPSHOT' lines:               1
+  snapshot dirs left under TMPDIR by this drive: 6
+
+DONE
