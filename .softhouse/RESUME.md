@@ -1,133 +1,64 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260828-080001` — **IN FLIGHT. BATCH 1 = 6 WORKERS DISPATCHED. NOT CLOSED.**
+## FIRE `20260828-080001` — **CLOSED CLEAN. ZERO LIVE WORKERS.**
 
-Written and pushed **BEFORE the first worker was spawned** (STEP 0 standing obligation, P-85). If you are
-reading this and no `claude` process owns this repo, **these six workers are DEAD** and their worktrees may
-hold uncommitted work. Demote each to `needs_retry`, not `in_progress`, and check
-`git log --oneline main..softhouse/<TASKID>-*` for rescued WIP. Branches are **uppercase** `softhouse/T326-…`.
+Every worker awaited, every branch merged, every deliverable committed and pushed. `git status --porcelain`
+empty. Nothing is running; nothing is half-done.
 
-### What this fire found on arrival
+## Bar on `main` at close — measured, not asserted
 
-- **Oracle UP**, confirmed by running the bar rather than by trusting the fire args:
-  `bash .softhouse/conformance.sh` → **exit 0**, `probe = up` (line PRESENT, checked for presence first per
-  P-84), **46 parity vectors / 7884 cells**, 11/11 wrong ledger implementations DIED. Main is GREEN.
-- **T324 was mis-reconciled.** The wrapper demoted it to `needs_retry` because its branch "does not exist in
-  this repo" — it did not exist because it had **already been merged and deleted** (`a08a64e2` + merge
-  `d36863ad`, 14 files / 2338 insertions). Corrected to `done`. **Branch-absence is not work-absence**;
-  filed as `FU-RECONCILE-1` against the wrapper's reconcile step.
-- Five of the previous fire's seven workers left **real rescued WIP** on their branches (T326: 20 commits,
-  T272: 6, T306: 4, T277: 4, T282: 1). The fire died on a `five_hour` rate limit, not on a defect. **This
-  batch resumes those branches; it does not rebuild them.**
+```
+bash .softhouse/conformance.sh   →  exit 0
+  probe line PRESENT (count 1, presence tested BEFORE value)  reading "up"
+  46 parity vectors / 7884 cells / 0 FAIL / 0 inadmissible
+  LEDGER parity 7 == pinned | oracle-refusal 6 == pinned | money cells 39 == pinned
+  ALL 13 wrong ledger implementations DIED through the harness, not by hand
+  dead-path frontier 109 == pinned, added=0 | corpus 1281
+  P-number citations: VERDICT PASS      ← guard wired THIS fire
+```
 
-### Batch 1 — sole-writer table (edit sets disjoint by construction)
+## What moved, in ledger terms
 
-| Task | Branch | Owns (sole writer this batch) | WIP resumed |
-|---|---|---|---|
-| **T326** | `softhouse/T326-frontier-host-state` | `.softhouse/conformance.sh`, `guards/dead-path-frontier.*` | 20 commits |
-| **T306** | `softhouse/T306-admit-gate-adjudication` | `nexus/…/conformance/admit.go`, `openingbalance_test.go`, `.softhouse/reviews/T306/` | 4 commits |
-| **T272** | `softhouse/T272-goenv-graft` | `.softhouse/bin/go-env.sh` | 6 commits |
-| **T277** | `softhouse/T277-shapelaw-salvage` | `.softhouse/gates.md` | 4 commits |
-| **T282** | `softhouse/T282-pnumber-drift` | `.softhouse/patterns.md` | 1 commit |
-| **T329** | `softhouse/T329-date-zone-disagreement` | `.softhouse/capture/t329-audit-date-zone-disagreement/` | new (docs) |
+| | at fire start | at close |
+|---|---|---|
+| LEDGER parity vectors | 5 | **7** |
+| LEDGER oracle-refusal vectors | 5 | **6** |
+| LEDGER money cells compared | 29 | **39** |
+| wrong ledger implementations, all dying | 11 | **13** |
 
-Held back deliberately so a single owner exists per file: `T301`/`T279` (also name `fire-program.sh`),
-`T310`/`T311`/`T313`/`T303`/`T267` (also name `conformance.sh`), `T322`/`T307` (also name `admit.go`, and both
-are formally `dependencies: [T306]`).
+**The headline: `ledger-wrong-date-rules-always-refusing` is DEAD.** Before T328, the store pinned only the
+**refusing** side of both date rules, so **a port that refused every dated entry passed the entire corpus**.
+Measured both ways — it passed 5/5 + 5/5 before, and with both vectors withdrawn the hole reproduces.
 
-### Batch 2 — the point of the fire, gated on batch 1
+## Merged this fire — 19 tasks
 
-**`T328` — promote T327's two ACCEPTANCES and kill `ledger-wrong-date-rules-always-refusing`.**
-`dependencies: [T327 done, T326, T306]`. T327 banked every byte last fire, so **no oracle contact is required
-or permitted**. The hole it closes is live right now: the store pins only the **refusing** side of both date
-rules, so **a port that refuses every dated entry passes LDG-REFUSE-04 and -05 and survives the entire
-corpus** — the identical mutant shape T305 killed for opening balances. The deliverable is a dead mutant, not
-two files.
+T306 `3da08fbb` · T272 `16c59715` · T329 `61c0f382` · T277 `e8374743` · T326 `6c3d0787` · T330 `fc104776` ·
+T325 `e590b865` · T282 `35a92f30` · T328 `817d2b53` · T322 `f39ed526` · T278 `fa045d8c` · T331 `57521fee` ·
+T145 `08be3c56` · T301 `3e024dfa` · T321 `4246ce63` (+ follow-on `a06e48e6`) · T334 `1fdf1c49` ·
+T307 `ca745981` · T279 `eac45bdc` · T332 `167b98fc`
 
-Also unblocked by batch 1: `T325` (T324 now `done`), `T307`, `T322`.
+## Filed for the next fire
+
+`T330`✓ (done) · **`T332`✓** (done) · **`T333`** wire T145's narrow float-comparison guard — *P-45 for the
+third time* · **`T334`✓** (done) · `FU-T279-3` **install the post-checkout hook** — the highest-value open
+item, and the only thing that could have closed this fire's 135-second window · `FU-T279-1` T265's review is
+not on `main` · `FU-T307-4` A1-01 still unpromotable · `FU-T328-6` nothing grades the refusal precedence
+between `:630` and `:636` · `FU-T332-2` a live twin site in `gates-proposed-answers.md`, outside T332's scope
+· `FU-T322-1` two `impl.go` prose sites that change pinned transcript output.
+
+## Two driver errors, corrected forward, NOT buried
+
+1. **The P-84 gloss.** The driver wrote *"a failed HARD guard — a money non-negotiable"* into ~14 worker
+   prompts and three `tasks.json` descriptions. **P-84 says nothing about money** — it distinguishes a
+   HARD-guard refusal from an **oracle outage**, and its recorded instance is an instrument-hygiene guard.
+   **T331 refuted it from the definition.** Live prescriptions corrected; merged handoffs left as record.
+   See `.softhouse/observations/20260828-driver-gloss-on-P84-drifted.md`.
+2. **push-before-spawn.** Batch 1 obeyed it. **Batches 2–5 spawned first and recorded after.** One of five.
+   **T279 caught it by disbelieving a brief that asserted compliance.** Nothing broke — *the window is the
+   defect, not the consequence*. See
+   `.softhouse/observations/20260828-driver-broke-the-push-before-spawn-obligation.md`.
 
 ## Pause reason
 
-**None — work is in flight.**
-
----
-
-## BATCH 2 — dispatched after T306/T272/T329 merged. **LIVE.**
-
-| Task | Branch | Owns (sole writer) |
-|---|---|---|
-| **T325** | `softhouse/T325-adopt-attestation` | `.softhouse/guards/repo-state-attest.sh`, **`.softhouse/bin/fire-program.sh`** |
-| **T330** | `softhouse/T330-reconcile-merged-work` | `.softhouse/bin/ready-tasks.py` |
-
-Still live from batch 1: **T326** (`conformance.sh`, frontier pin), **T277** (`gates.md`), **T282** (`patterns.md`).
-
-**T325 owns `fire-program.sh` while a fire is running from it, and that is SAFE, measured not assumed.**
-T309's probes [`fire-program.sh:67-79`]: zsh 5.9 does not slurp a script, so an **in-place** rewrite (same
-inode) mid-run executes the rewritten tail — but **every git operation that lands a change writes a NEW inode
-and renames over the path**, which cannot reach the running shell's open fd. Landing through git is safe;
-`sed -i ''` / `cat >` / python `open(path,"w")` against the live checkout is not.
-
-**Merged this fire so far:** T306 (`3da08fbb`), T272 (`16c59715`), T329 (`61c0f382`).
-
----
-
-## BATCH 3 — **T328 DISPATCHED. LIVE.** This is the task the fire exists for.
-
-`softhouse/T328-date-rule-promotion`. All three dependencies merged: T327 `done`, T326 `6c3d0787`,
-T306 `3da08fbb`. **No oracle contact required or permitted** — T327 banked every byte with sidecars and a
-99-entry manifest precisely so this task needs none.
-
-**The hole:** the store pins only the REFUSING side of both date rules, so **a port that refuses every dated
-entry passes `LDG-REFUSE-04` and `LDG-REFUSE-05` and survives the entire corpus.** The deliverable is a
-**dead mutant**, not two files.
-
-Sole writer of `.softhouse/vectors/`, `.softhouse/conformance.sh`, `dead-path-frontier.pin`,
-`nexus/internal/apps/ledger/conformance/`.
-
-**Merged this fire:** T306 `3da08fbb` · T272 `16c59715` · T329 `61c0f382` · T277 `e8374743` · T326 `6c3d0787`.
-**Still live:** T282 (`patterns.md`), T325 (`fire-program.sh`, `repo-state-attest.sh`), T330 (`ready-tasks.py`), T328.
-
-**Bar on `main` right now:** exit 0, probe PRESENT and `up`, 46 parity vectors / 7884 cells, LEDGER 5/5/29,
-11/11 wrong impls dead, dead-path frontier 109 == pinned, corpus 1214.
-
----
-
-## BATCH 4 — **6 WORKERS DISPATCHED. LIVE.** Record pushed before the first spawn.
-
-| Task | Branch | Owns (sole writer) |
-|---|---|---|
-| **T278** | `softhouse/T278-review-t277` | `.softhouse/reviews/t278-review-t277/` — **independent review of T277, already merged** |
-| **T331** | `softhouse/T331-wire-pnumber-checker` | `.softhouse/conformance.sh`, `dead-path-frontier.pin` |
-| **T322** | `softhouse/T322-admit-widening` | `nexus/…/admit.go`, `.softhouse/vectors/capabilities-ledger.json` |
-| **T145** | `softhouse/T145-analysis-float` | `.softhouse/capture/t145-analysis-float/` + non-evidence analysis scripts |
-| **T321** | `softhouse/T321-variable-paths-and-resets` | `.softhouse/capture/t321-*`, `.softhouse/capture/t316-dead-path-guards/` |
-| **T301** | `softhouse/T301-wrapper-self-modification` | `.softhouse/bin/fire-program.sh` |
-
-**T145's `files_hint` says `.softhouse/capture/` and that was NOT taken literally** — it is scoped to its own
-dir plus analysis scripts that produced no committed evidence, with every other worker's dir named forbidden.
-
-**MERGED THIS FIRE (8):** T306 `3da08fbb` · T272 `16c59715` · T329 `61c0f382` · T277 `e8374743` ·
-T326 `6c3d0787` · T330 `fc104776` · T325 `e590b865` · T282 `35a92f30` · T328 `817d2b53`.
-
-**Bar on `main`:** exit 0, probe **PRESENT** and `up`, 46 parity vectors / 7884 cells, LEDGER parity **7**,
-oracle-refusal 5, money cells **39**, **12/12** wrong ledger implementations DIED, dead-path frontier
-**109 == pinned**, corpus 1237.
-
----
-
-## BATCH 5 — **4 WORKERS DISPATCHED. LIVE.** Record pushed before the first spawn.
-
-| Task | Branch | Owns (sole writer) |
-|---|---|---|
-| **T307** | `softhouse/T307-grade-refusal-args` | `.softhouse/vectors/`, `nexus/…/ledger/conformance/`, `.softhouse/conformance.sh`, the frontier pin |
-| **T332** | `softhouse/T332-residual-twin-sweep` | `.softhouse/gates.md` |
-| **T334** | `softhouse/T334-writer-guidance` | `.softhouse/patterns.md` |
-| **T279** | `softhouse/T279-lock-partition` | `.claude/skills/softhouse-program/SKILL.md`, `.softhouse/bin/fire-program.sh` |
-
-**MERGED THIS FIRE (15):** T306 `3da08fbb` · T272 `16c59715` · T329 `61c0f382` · T277 `e8374743` ·
-T326 `6c3d0787` · T330 `fc104776` · T325 `e590b865` · T282 `35a92f30` · T328 `817d2b53` · T322 `f39ed526` ·
-T278 `fa045d8c` · T331 `57521fee` · T145 `08be3c56` · T301 `3e024dfa` · T321 `4246ce63`.
-
-**Bar on `main`:** exit 0, probe **PRESENT** and `up`, 46 parity vectors / 7884 cells, LEDGER parity **7**,
-oracle-refusal 5, money cells **39**, **12/12** wrong ledger implementations DIED, dead-path frontier
-**109 == pinned**, corpus 1266, and the newly wired **`P-number citations: VERDICT PASS`**.
+**None — the fire completed its work and closed.** No `user` gate was crossed; no gate is newly pending.
+The oracle was **REACHABLE throughout** and the vector work that only a local fire can do was done.
