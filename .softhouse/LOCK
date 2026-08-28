@@ -4,7 +4,7 @@
   "pid": 75306,
   "fire": "20260828-140005",
   "started_at": "2026-08-28T06:00:21Z",
-  "heartbeat": "2026-08-28T12:37:51Z",
+  "heartbeat": "2026-08-28T12:40:36Z",
   "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
   "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260828-140005.log",
   "oracle": "REACHABLE at https://localhost:8443/fineract-provider/actuator/health",
@@ -17,6 +17,6 @@
     "T393"
   ],
   "rate_limit": "Iteration 2 ended on a five_hour limit at 2026-08-28T10:35Z (resetsAt=1787914200). RESET CONFIRMED before iteration 3 dispatched at 11:2xZ.",
-  "merge_hazard": "RESOLVED for T374: merged at 01a7a05a, pin reconciled BY RUNNING on the merge result -- frontier GREEN, deadOccurrences 109->108, exactly the one row T374's F-6 deleted. STILL LIVE: T360 needs EXEMPTION_PIN_LEDGER_WRONGIMPLS 13->14 at conformance.sh:3923, which T375 holds; T360 CANNOT MERGE until T375 lands and the pin is bumped on the merge result. T360's branch is exit 2 for exactly that reason, with the probe line PRINTED reading up -- P-84 says that is THE PIN WORKING, not an outage. Do not park it.",
+  "merge_hazard": "T374/T388 merged and bar-verified. STILL LIVE: T360 needs EXEMPTION_PIN_LEDGER_WRONGIMPLS 13->14. *** MATCH IT BY NAME, NEVER BY LINE NUMBER. *** It is :3923 on main and :4469 on softhouse/T375-t364-conditions -- a 546-line shift, and T375 itself flagged the hazard while estimating it at ~90. Applying 13->14 at :3923 after T375 merges would edit an unrelated line. T375 has NOT touched the pin; its diff is confined to guard_guards_dir_registration and its docs. T360's branch is exit 2 on this pin with the probe line PRINTED reading up -- P-84 says that is THE PIN WORKING, not an outage.",
   "operational_note": "T383 measured, and every driver should know: A LIVE FIRE EXPORTS FIRE_SNAPSHOT_OF, AND FIRE_NO_SNAPSHOT=1 DOES NOT OVERRIDE IT. Its first --probe inherited it and announced the REAL repo copy as its origin. Unset the three before probing the wrapper from inside a fire."
 }
