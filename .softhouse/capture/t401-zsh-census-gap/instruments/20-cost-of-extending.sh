@@ -43,7 +43,16 @@ D="$(mktemp -d "${TMPDIR:-/tmp}/t401-cost.XXXXXXXXXX")" || exit 2
 # is not portable to scratch. So the dead-path copy is materialised INSIDE the worktree, under
 # this task's own grant, DOT-PREFIXED and UNTRACKED, and removed by the trap. It never enters
 # `git ls-files`, so it never enters either corpus and cannot perturb the figures.
-INREPO="$ROOT/.softhouse/capture/t401-zsh-census-gap/.t401-scratch-census-zsh.py"
+#
+# THE PATH IS ASSEMBLED FROM $G, NOT SPELLED WHOLE, and that is not style. Spelling
+# `<grant-dir>/<scratch-name>.py` as ONE literal, with the grant directory written out,
+# put a DEAD-PATH ROW on this very file -- the scratch target is untracked by construction,
+# so the T316 census reads the literal, fails to resolve it, and counts it. It took the bar
+# to `T316-DEADPATH-FRONTIER: REFUSED rows=110 pinned=108`. The census extracts literals that
+# CONTAIN `.softhouse/`; a bare basename joined to a variable is not one, and $G itself
+# resolves because this directory is tracked.
+G="$ROOT/.softhouse/capture/t401-zsh-census-gap"
+INREPO="$G/.t401-scratch-census-zsh.py"
 trap 'rm -rf "$D"; rm -f "$INREPO"' EXIT INT TERM
 
 # ---------------------------------------------------------------------------------------

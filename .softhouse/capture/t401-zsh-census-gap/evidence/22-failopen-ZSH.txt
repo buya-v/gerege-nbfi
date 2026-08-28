@@ -1,6 +1,6 @@
 T238 FAIL-OPEN LINT
-commit    : 6816b4b956ab3980306b3a4f775d6a5702bf21db
-corpus    : 1517 tracked .sh/.py; 144 are repo-wide search instruments
+commit    : 94d107895a5d55bb40fdb9433323946e8820d4bb
+corpus    : 1520 tracked .sh/.py; 147 are repo-wide search instruments
 scope     : whole repository
 
 ### TIER 1 — FAIL-OPEN, LIVE  (C1 dead path AND C2 reassuring failure arm) : 3
@@ -100,8 +100,8 @@ scope     : whole repository
 
 ### ADVISORY (C3 no corpus assertion / C4 no calibration / C5 engine undeclared)
   C3 : 26 instrument(s)
-  C4 : 78 instrument(s)
-  C5 : 78 instrument(s)
+  C4 : 81 instrument(s)
+  C5 : 81 instrument(s)
 
 ### SUPPRESSIONS IN FORCE (every one is listed; they never go quiet) : 25
   .softhouse/capture/t238-failopen/instruments/00-engines.sh             :15  these absolute paths are the SUBJECT of the probe, not its corpus; the

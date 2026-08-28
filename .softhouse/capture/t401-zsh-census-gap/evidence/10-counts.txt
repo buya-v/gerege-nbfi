@@ -1,9 +1,9 @@
-T401 COUNT MEASUREMENT -- d4bac678 2026-08-28T17:07:29Z
+T401 COUNT MEASUREMENT -- 94d10789 2026-08-28T17:17:30Z
 repo root : /Users/buv/gerege-nbfi/.claude/worktrees/agent-aeeb05b8ed0c8cccc
 
 == A. WHOLE-REPO TRACKED FILES BY EXTENSION (selector: git ls-files | grep -c) ==
-  tracked files, all                                      : 8878
-  tracked *.sh                                            : 658
+  tracked files, all                                      : 8888
+  tracked *.sh                                            : 661
   tracked *.py                                            : 738
   tracked *.zsh                                            : 121
   tracked *.go                                            : 70
@@ -22,10 +22,10 @@ repo root : /Users/buv/gerege-nbfi/.claude/worktrees/agent-aeeb05b8ed0c8cccc
   ...OUTSIDE .softhouse/                                  : 0
 
 == C. THE TWO CENSUS POPULATIONS AS THE INSTRUMENTS ACTUALLY SPELL THEM ==
-  FAILOPEN corpus  git ls-files, endswith .sh/.py (repo)  : 1396
-  FAILOPEN corpus IF .zsh were added                      : 1517
-  DEADPATH corpus  git ls-files '.softhouse/*.py' '*.sh'  : 1396
-  DEADPATH corpus IF .zsh were added                      : 1517
+  FAILOPEN corpus  git ls-files, endswith .sh/.py (repo)  : 1399
+  FAILOPEN corpus IF .zsh were added                      : 1520
+  DEADPATH corpus  git ls-files '.softhouse/*.py' '*.sh'  : 1399
+  DEADPATH corpus IF .zsh were added                      : 1520
 
 == D. PATHSPEC DEPTH ASSERTION (is '*' crossing '/' in the deadpath selector?) ==
   rows containing '/'                                     : 738
