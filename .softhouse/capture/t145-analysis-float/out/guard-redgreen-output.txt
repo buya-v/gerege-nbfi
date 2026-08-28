@@ -1,0 +1,11 @@
+T145 -- guard RED/GREEN
+REV=9b4ce79835b01e4cc446a1bb2b17148ce347ed48
+
+  AS PREDICTED  GREEN  clean tree, both sites declared (exit 0)
+  AS PREDICTED  RED    a NEW two-sided float money comparison (exit 2)
+  AS PREDICTED  the guard named the planted line 5
+  AS PREDICTED  GREEN  A1's ratified one-sided shape does NOT fire (exit 0)
+  AS PREDICTED  RED    a DECLARED site pointed at a vanished line (exit 2)
+
+LEGS: 5   AS PREDICTED: 5   WRONG: 0
+GUARD RED/GREEN PASS -- the guard has been SEEN to fail, and seen not to fire on A1.
