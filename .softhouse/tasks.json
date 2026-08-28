@@ -5858,7 +5858,7 @@
     },
     {
       "id": "T400",
-      "status": "needs_review",
+      "status": "merged",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -5874,7 +5874,7 @@
       ],
       "title": "T385's three conditions on T383 -- a comment that says two offsets 'cannot drift apart' when they are re-spelled 90 lines later, and they DO drift",
       "description": "All three are comment-only in `.softhouse/bin/fire-program.sh`, but F-T385-2 is a MEASURED fail-open in the reasoning, not just prose.\n\n**READ P-97 FIRST (`.softhouse/patterns.md:3259`) BEFORE YOU WRITE THIS FILE.** It is the wrapper that launches every fire, it may be EXECUTING while you work, and a write that goes through the original inode can be executed as a spliced tail -- reproduced at a read-buffer boundary with no length change at all. **Edit in your worktree and land it through git** (all eight git write paths rename), or use a renaming writer (`sed -i`, `mv`, `install`, the harness Write/Edit tools). **Never `cp` over it** -- `cp` is in-place on macOS and Linux both, and 'copy the fixed wrapper over the live one' is exactly what a person types. Never invoke the wrapper in a mode that starts a fire, takes the lock or dispatches; `zsh -n`, `--self-test-lock-readers`, `--lock-decide` and `--probe` against a throwaway repo only. And unset `FIRE_SNAPSHOT_OF` / `FIRE_NO_SNAPSHOT` first -- a live fire exports the former and the latter does NOT override it (`fire-program.sh:999`), confirmed independently by T383 and T385.\n\n**F-T385-2 (MODERATE, DRIVEN).** `:748-749` claims the z06/z07 offsets *cannot drift apart* from the rows. **They are re-spelled inline at `:883-884`.** T385 drove the drift (case `s01`): the gate does not fire, `z06` goes **FAIL-OPEN**, and the wiring then says *'The thresholds validated at startup, so this is the READERS'* -- **the exact misattribution F-T380-2 exists to close**. Its control `s02` (drift the gate's own variable) exits 78, so the gate is live and it is only this pair that escapes. Fix it so the claim is TRUE -- derive the offsets from one place, or make the gate check the inline spelling too -- and re-drive `s01` and `s02`.\n\n**F-T385-1 (MINOR).** T383's stated reason for keeping substring containment green is **false**: the `lockselftest| ROWS=` echo is added *after* the capture and is never in the population. T385 built the naive unanchored-count wrapper and it **starts the healthy fire at rc 0**, so the anchoring is still correct and independently justified -- **only the example is wrong**. Replace the false example with T385's measured one. Do not weaken the anchoring.\n\n**F-T385-3 (MINOR, P-80).** `:724` says *'the four tests below ARE the four fixture expressions'*; the code has **six** (`:756-761`). A restated cardinal that rotted.\n\nAfter your change: re-run `.softhouse/capture/t279-lock-partition/drive-wrapper-vs-skill.zsh` (192 states, must be 0 disagreements), re-drive T385's 20-case driver, and confirm a HEALTHY fire still starts -- a control that refuses everything is the same defect as one that cannot fail, and this fire produced that inversion once already. Bar from a CLEAN tree after `git add -A` and commit; probe-line PRESENCE before value (P-84).",
-      "note": "COMPLETE on softhouse/T400-t385-conditions, 5 commits, bar exit 0. NOT MERGED -- awaiting T410. Verified P-97 writer safety with INODE evidence (live wrapper inode 19079181 and sha identical at task start and end; edits landed through git). Measured 123 tracked .zsh / 111 under capture+reviews -- T401 measured 121/109 earlier the same fire, so the figure moved again WITHIN one fire."
+      "note": "MERGED. T410 APPROVED, all seven settlements driven independently. Bar graded ON MAIN BEFORE the push."
     },
     {
       "id": "T401",
@@ -6044,11 +6044,11 @@
       "dependencies": [
         "T400"
       ],
-      "status": "in_progress",
+      "status": "done",
       "files_hint": [
         ".softhouse/reviews/t410-review-t400/"
       ],
-      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "note": "APPROVED T400. Reproduced the RED twice, once with its OWN from-scratch driver. Ruled out the P-85 shape directly rather than trusting the 192-state driver, since rules.py is a transcription of the skill. Added a check T400 did not make (value-equivalence across the int64 wrap). CORRECTED THE DRIVER'S OWN TASKING: the paraphrase \"zero executable rows\" is false of the shipped file -- there are two, and they ARE the fix.",
       "branch": "softhouse/T410-review-t400"
     },
     {
@@ -6166,6 +6166,24 @@
         ".softhouse/capture/t417-scheduler-attribution/"
       ],
       "note": "FILED BY THE DRIVER, iter4, from T390s out-of-brief finding. Carries G-22."
+    },
+    {
+      "id": "T418",
+      "title": "F-T410-2 and F-T410-3: the single-spelling property is enforced nowhere executable, and committed drivers are not self-contained",
+      "description": "Two LOW follow-ups from T410's review of T400. Neither was a condition on that branch — one names a file T400 was forbidden to edit, the other pre-dates T400 entirely.\n\n**F-T410-2 — the property T400 established is not GUARDED.** T400 made the z06/z07 offsets derive from a single spelling, so the comment's claim is now true by construction. But **nothing executable enforces that it stays true**: a later edit can re-spell them inline and reintroduce exactly the fail-open T385 drove, silently. T400 disclosed this in-source rather than hiding it. **The check already exists and already has a demonstrated red** — `grep -c '^\\s*_row z0[67] .*LOCK_RELEASE_SKEW_SECS'` reads **0** on the fixed file and **2** on `main` — but it lives only in capture drivers. **Its home is `conformance.sh`**, which was held by T404 this fire, which is why it needs its own grant. Wire it, drive it RED on a re-spelled copy, and keep a healthy control. This is the P-45 shape: a property that only holds while everyone remembers it is not enforced.\n\n**F-T410-3 — COMMITTED DRIVERS ARE NOT SELF-CONTAINED, and this one is not T400's doing.** `t400-skew-drift-redrive.zsh` reads `/tmp/t400/{mutate.py,lib-worktree-prune.zsh,subject}` and **creates none of them** — 5 reads, 0 creates. **T385's already-merged driver has the identical property.** So a committed 'red drive' cannot be re-run from a clean checkout: T410 had to verify the prerequisites matched repo sources before its run meant anything, and a later reader who skipped that step would be driving against whatever happened to be in `/tmp`. **Census the committed drivers for this shape** — how many read paths they do not create — and decide the remedy: vendor the prerequisites, generate them in the driver, or make the driver refuse when they are absent. **Refusing is the minimum**; a drive that silently runs against missing or foreign inputs is a drive that cannot report failure honestly.\n\nDo not treat this as cosmetic. This program's whole evidence model is that a committed drive can be re-run by a later reader; a driver that depends on unreproducible `/tmp` state is evidence that expires without saying so.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T400",
+        "T404"
+      ],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/capture/t418-driver-selfcontainment/"
+      ],
+      "note": "FILED BY THE DRIVER, iter4, from T410 F-T410-2 and F-T410-3."
     }
   ],
   "cross_corroboration": {
