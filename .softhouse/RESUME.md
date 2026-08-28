@@ -1,64 +1,56 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260828-080001` — **CLOSED CLEAN. ZERO LIVE WORKERS.**
+## FIRE `20260828-080001`, chain iteration 2 — **IN FLIGHT. SIX WORKERS DISPATCHED. NOT CLOSED.**
 
-Every worker awaited, every branch merged, every deliverable committed and pushed. `git status --porcelain`
-empty. Nothing is running; nothing is half-done.
+**Read this before believing `HEAD`.** The previous chain iteration of this same fire closed clean and its
+`RESUME.md` said so. That manifest is now stale by design: this iteration re-opened work. If you are a second
+orchestrator reading this, the lock at `.softhouse/LOCK` is held by pid 86145 on `Buyanmunkhs-Mac-mini` and
+six workers are live. **Do not dispatch anything from the READY list below.**
 
-## Bar on `main` at close — measured, not asserted
+This file, `.softhouse/tasks.json` with all six tasks already `in_progress` and carrying their `branch`, and
+the `LOCK` were **committed and pushed BEFORE the first `git worktree add` of this batch** — the obligation in
+STEP 0 of the `softhouse-program` skill that was missed on 2026-08-22 (101 s late) and again on 2026-08-28
+(135 s late, two of three artefacts late). It is being obeyed here in the same fire that recorded the second
+miss.
+
+## Batch 1 — dispatched, all six with `isolation: "worktree"`, all `opus`
+
+| Task | Branch | What it is |
+|---|---|---|
+| `T323` | `softhouse/T323-wire-unwired-guards` | Wire the guards three authors built and could not wire. Holds `conformance.sh` — **nothing else in this batch may touch it.** |
+| `T280` | `softhouse/T280-review-t279` | Independent review of T279's lock-partition fix; drives the post-checkout hook RED. Third layer of the same fix. |
+| `T266` | `softhouse/T266-linter-ownership` | Fail-open linter's variable-indirect ownership blind spot — tier is currently a property of the linting **host**, not the file. |
+| `T270` | `softhouse/T270-superseded-trap` | A superseded guard that still prints `ok … 0 failed` is a trap, not preserved evidence. |
+| `T258` | `softhouse/T258-frontier-rot-residuals` | A live broken assertion (`all 9 rows` vs a frontier of 109) plus the **rot mechanism** that produced it. |
+| `T335` | `softhouse/T335-rvpa-list-traversal` | T291's `F-T291-1`: R-VPA recurses into mappings, not lists. **Third repair in this lineage and the last the driver will file** — a rejection parks it. |
+
+**Serialisation:** `T323` alone holds `.softhouse/conformance.sh`. The other five have disjoint `files_hint`.
+
+## Filed this iteration, NOT yet dispatched
+
+- `T336` — **install** the post-checkout push-before-spawn hook (`FU-T279-3`). Depends on `T280`, deliberately:
+  a hook that refuses worktree creation can brick every future fire, so it does not get installed unreviewed.
+- `T337`–`T341` — paired independent reviewers for `T323`, `T266`, `T270`, `T258`, `T335`.
+
+## Closed by the driver without dispatch
+
+- `T310` → **`superseded`**. Its whole brief (reverse T295's declination, promote `A2-02`) was discharged by
+  `T307` (`ca745981`) in the previous iteration. Driver-verified against the vector's own `provenance` block
+  (`capture_ref` = `…/A2-02-preclosure-before.json`, `capture_sha256` `c12e977f…`), not assumed.
+
+## Bar on `main` at dispatch — inherited, measured by the previous iteration
 
 ```
 bash .softhouse/conformance.sh   →  exit 0
-  probe line PRESENT (count 1, presence tested BEFORE value)  reading "up"
+  probe line PRESENT (presence tested BEFORE value) reading "up"
   46 parity vectors / 7884 cells / 0 FAIL / 0 inadmissible
-  LEDGER parity 7 == pinned | oracle-refusal 6 == pinned | money cells 39 == pinned
-  ALL 13 wrong ledger implementations DIED through the harness, not by hand
-  dead-path frontier 109 == pinned, added=0 | corpus 1281
-  P-number citations: VERDICT PASS      ← guard wired THIS fire
+  LEDGER parity 7 | oracle-refusal 6 | money cells 39 | all 13 wrong impls dying
+  dead-path frontier 109 == pinned | corpus 1281 | P-number citations PASS
 ```
-
-## What moved, in ledger terms
-
-| | at fire start | at close |
-|---|---|---|
-| LEDGER parity vectors | 5 | **7** |
-| LEDGER oracle-refusal vectors | 5 | **6** |
-| LEDGER money cells compared | 29 | **39** |
-| wrong ledger implementations, all dying | 11 | **13** |
-
-**The headline: `ledger-wrong-date-rules-always-refusing` is DEAD.** Before T328, the store pinned only the
-**refusing** side of both date rules, so **a port that refused every dated entry passed the entire corpus**.
-Measured both ways — it passed 5/5 + 5/5 before, and with both vectors withdrawn the hole reproduces.
-
-## Merged this fire — 19 tasks
-
-T306 `3da08fbb` · T272 `16c59715` · T329 `61c0f382` · T277 `e8374743` · T326 `6c3d0787` · T330 `fc104776` ·
-T325 `e590b865` · T282 `35a92f30` · T328 `817d2b53` · T322 `f39ed526` · T278 `fa045d8c` · T331 `57521fee` ·
-T145 `08be3c56` · T301 `3e024dfa` · T321 `4246ce63` (+ follow-on `a06e48e6`) · T334 `1fdf1c49` ·
-T307 `ca745981` · T279 `eac45bdc` · T332 `167b98fc`
-
-## Filed for the next fire
-
-`T330`✓ (done) · **`T332`✓** (done) · **`T333`** wire T145's narrow float-comparison guard — *P-45 for the
-third time* · **`T334`✓** (done) · `FU-T279-3` **install the post-checkout hook** — the highest-value open
-item, and the only thing that could have closed this fire's 135-second window · `FU-T279-1` T265's review is
-not on `main` · `FU-T307-4` A1-01 still unpromotable · `FU-T328-6` nothing grades the refusal precedence
-between `:630` and `:636` · `FU-T332-2` a live twin site in `gates-proposed-answers.md`, outside T332's scope
-· `FU-T322-1` two `impl.go` prose sites that change pinned transcript output.
-
-## Two driver errors, corrected forward, NOT buried
-
-1. **The P-84 gloss.** The driver wrote *"a failed HARD guard — a money non-negotiable"* into ~14 worker
-   prompts and three `tasks.json` descriptions. **P-84 says nothing about money** — it distinguishes a
-   HARD-guard refusal from an **oracle outage**, and its recorded instance is an instrument-hygiene guard.
-   **T331 refuted it from the definition.** Live prescriptions corrected; merged handoffs left as record.
-   See `.softhouse/observations/20260828-driver-gloss-on-P84-drifted.md`.
-2. **push-before-spawn.** Batch 1 obeyed it. **Batches 2–5 spawned first and recorded after.** One of five.
-   **T279 caught it by disbelieving a brief that asserted compliance.** Nothing broke — *the window is the
-   defect, not the consequence*. See
-   `.softhouse/observations/20260828-driver-broke-the-push-before-spawn-obligation.md`.
 
 ## Pause reason
 
-**None — the fire completed its work and closed.** No `user` gate was crossed; no gate is newly pending.
-The oracle was **REACHABLE throughout** and the vector work that only a local fire can do was done.
+**None — work is in flight.** The oracle is REACHABLE. If this fire is interrupted before the batch is
+awaited, every task above is `in_progress` with a branch: recover WIP from the branch, mark each
+`needs_retry` with `worker killed mid-flight; completeness unverified`, and **do not** trust this table as a
+record of what finished.
