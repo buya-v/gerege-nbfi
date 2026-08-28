@@ -271,9 +271,12 @@ written as one.**
   identically.** T327's capture was taken on a throwaway with `TZ` unset. I made no oracle contact.
   A container with `TZ=Asia/Ulaanbaatar` would collapse the window to zero and hide the fork
   entirely — which is a *reason to pin the vector, not a reason to relax*.
-- `[UNVERIFIED]` **the DDL type of `acc_gl_closure.created_date` in the live Postgres schema.** I
-  read the JPA mapping (`LocalDateTime`), not the migration. Whether it is `timestamp` vs
-  `timestamptz` changes whether Postgres itself re-interprets the value on read.
+- ~~`[UNVERIFIED]` the DDL type of `acc_gl_closure.created_date`.~~ **RESOLVED during this task —
+  see `blast-radius.md` §C-2.** It is `datetime` `[VERIFIED: db/changelog/tenant/parts/0001_initial_schema.xml:93]`
+  → PostgreSQL **`timestamp without time zone`**, and the widening to `datetime(6)` is gated
+  `context="mysql"` `[VERIFIED: …/0117_set_datetime_precision.xml:25]` so it never runs for us.
+  Because the column carries no zone, Postgres performs **no** conversion on read: the JVM zone is
+  the whole story, with no second database-side effect layered on top.
 - `[UNVERIFIED]` **whether any Fineract code path writes `acc_gl_closure.created_date` outside JPA
   auditing** (e.g. a Liquibase seed or a raw SQL insert), which would bypass `CustomAuditingHandler`
   entirely.
@@ -282,7 +285,10 @@ written as one.**
 
 ## 3. Blast radius
 
-See `blast-radius.md` in this directory for the per-field table.
+See **`blast-radius.md`** in this directory: a 16-row per-field table (endpoint x field x stack x
+shape x kind x clock), the list of slice endpoints that return no date at all, and two sharp
+caveats (the array/string switch does not reach inside `Map` values; the `datetime(6)` migration is
+MySQL-gated and inert on PostgreSQL).
 
 ---
 
