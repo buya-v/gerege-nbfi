@@ -10,14 +10,45 @@
 > | P-3 | A green conformance run says nothing about unexercised behaviours | Reporting cadence → exceptions only |
 > | P-4 | Latent harness defects detonate on first real use | Stop revising the contract — ratify with obligations |
 > | P-5 | Cut the worker's worktree from the commit containing the artefact | **Close tier 0 — obligations, not fifth drafts** |
+> | P-6 | Re-deriving from the same document three times is one check, not three | Freeze a gate write-up once its measurements reproduce |
 >
-> `P-6`…`P-39` are defined only here and are unambiguous.
+> **`P-6` JOINED THE COLLISION, EXACTLY AS THE PARAGRAPH BELOW PREDICTED IT WOULD.** This banner used to end
+> *"`P-6`…`P-39` are defined only here and are unambiguous"*, and that sentence was **false** — measured by
+> `T282` at sha `4d695ba8bb56`: `gates-proposed-answers.md:195` defines `P-6`, so the decision series
+> reached 6 and the banner's own forecast (*"no collision could occur until the decision series reached 5"*)
+> came due one id later without anyone updating the sentence it invalidated. **The claim of unambiguity is
+> now `P-7`…`P-39`, and it is a MEASUREMENT that goes stale, not a fact** — re-run
+> `.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py`, which prints
+> `cross-register-collisions=` on every run, rather than trusting this line.
 >
 > **Always cite the file, never the bare number** — write "P-5 (`gates-proposed-answers.md`)" or
 > "P-5 (`patterns.md`)". A worker told to act "under P-5" with no file could apply the worktree-cutting rule
 > when the user meant *close tier 0*, or the reverse. This was latent until 21 Aug 2026: `patterns.md`'s P-5
 > existed but **nothing had ever cited it**, so no collision could occur until the decision series reached 5.
 > It is recorded rather than renamed because the decision headings are the user's own text.
+
+> **SECOND SERIES HAZARD — `patterns.md` ALSO COLLIDES WITH ITSELF.** `P-12` and `P-13` are each defined
+> **twice in this file**, and neither had ever been recorded until `T282` measured it:
+>
+> | id | first definition | second definition |
+> |---|---|---|
+> | P-12 | `:315` — *a right conclusion on a wrong reason recurs in the artefact written to record it* | `:1385` — *an ID SERIES that restarts in a second file is a name collision waiting for its first citation* |
+> | P-13 | `:320` — *for a specification-bearing comment, the comment IS the deliverable* | `:1412` — *grepping the store for a VALUE does not answer what the store KILLS* |
+>
+> Read `P-12`'s **second** definition again and note what it is: *"an ID SERIES that restarts in a second
+> file is a name collision waiting for its first citation."* **That rule is defined at the id it is itself
+> colliding on.** The register restated its own series and rotted, which is `P-80` (*a corrected cardinal
+> rots in every place it was restated*) and `P-86` (*the pattern ids themselves rotted, in the file that
+> names the rot*) reaching the same conclusion a third time, one layer further in.
+>
+> These two are **DECLARED, not renumbered.** Renumbering would rewrite the cardinal under every citation
+> already published against it — the exact defect `P-80` names. The declaration below is machine-read by
+> the citation checker so a **NEW** collision is fatal while these two stay quiet; a declaration for an id
+> that is *not* actually colliding is itself fatal, so this list cannot rot into a silencer.
+>
+> `PNUMBER-REGISTER-DECLARED-COLLISIONS: 12, 13`
+>
+> **Cite these two by FILE AND LINE, never by bare id** — "P-12 (`patterns.md:1385`)".
 
 Softhouse reads this file during pre-flight and applies it when planning. Anything above the markers is hand-written project knowledge; everything between the markers is appended automatically by each run's postmortem.
 
@@ -3125,3 +3156,99 @@ because the top entry is a *deliberately built announced fallback*: the same sha
 own census first** — v1 reported 154 dead rows of which **56 (36%) were trailing-punctuation artefacts**, one
 of which would have accused `T299`'s own guard, landed two commits earlier, of the defect it was being used
 to investigate.
+
+---
+
+<!-- T282-CITATION-ERRATA -->
+
+**P-96 — THE ERRATUM SHIELDED THE CITATIONS IT WAS WRITTEN TO CORRECT, AND A GUARD THAT CHECKED
+THE NUMBER WOULD HAVE PASSED EVERY INSTANCE.**
+*`T282`, measured at `c086ecb2a01b`.*
+
+`P-86` recorded the pattern ids rotting. `T282` was sent to settle the four ids it named and found the
+population had never been measured. It is **~8,500 `P-n` citation sites across the tracked tree**, of which
+**14 are genuinely drifted** — including one nobody had seen, `tasks.json:2374`, which cites `P-69` for
+`P-79`'s rule and is *not* part of the `P-86` off-by-one at all.
+
+**The exact figures are DELIBERATELY NOT RESTATED HERE.** They moved four times while this task ran — twice
+from merging `main`, once from adding this very entry (which changed the rare-token frequencies the scorer
+derives *from this register*), and once from the handoff's own citations entering the corpus. **A count
+copied into a second document is `P-80`**, so the second site READS the first: run
+`.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py`, or read the sha-stamped table in
+`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md` §2. **The 14 is stable and is the
+number that matters**; the corpus size is a property of the day it was swept.
+
+**THE RULE, and it is the half `P-86` left implicit.** `P-86` says cite the id **and its sentence**.
+The mechanical consequence is that **the checkable property is the SENTENCE, never the id**: a guard
+asking *"is `P-n` defined?"* returns **PASS on every recorded instance of this defect**, because every
+drifted citation names an id that exists. Demonstrated, not asserted — the existence-only predicate is
+run against the same bytes in
+`.softhouse/capture/t282-pnumber-drift/red/20-existence-only-on-RED.txt` and reports `VERDICT PASS`
+while the sentence-matching predicate reports three findings and exits 1.
+
+**THREE THINGS THIS COST, all found by driving the checker at real bytes rather than reading it:**
+
+1. **The erratum was a shield.** `P-86`'s body names `P-78`…`P-84` *in order to say those citations are
+   wrong*. Cross-reference suppression — *"if the better-matching rule names the cited id, they are
+   already bound"* — therefore exempted the drifted citations **because `P-86` mentions them**. The
+   correction absorbed the defect it documented. A suppressed winner may now be skipped but may never
+   **end** the search.
+2. **Use is not mention.** Removing the shield then flagged `patterns.md` itself, where the wrong ids are
+   *quoted* with the correction on the same line. Resolved by `P-86`'s own remedy: if the right id is
+   already beside the citation, the text is **self-correcting** and no reader can be misdirected.
+3. **A markdown table cell is a citation boundary.** A correct `(P-33)` at the end of a row scored
+   against `P-25` because the extractor walked backwards into a neighbouring cell about floating point.
+
+**And the repair for `P-80` nearly committed `P-80`:** inserting this file's new banner shifted every
+definition line beneath it (`P-12` `:284`→`:315`), including the line numbers the new banner cites. They
+are now derived by `bin/restamp.py` from the live file, never typed.
+
+**COLLISION HAZARD, declared rather than discovered.** This entry claims **`P-96`** while four other
+workers were live in the same fire. If a rival `P-96` lands, **renumber this one** — and note that the
+instrument below is exactly what was missing when `P-78` collided: it detects a renumbering that failed
+to reach the places restating it. **Renumbering is now safe in a way it has never been in this program.**
+
+**INSTRUMENT:** `.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py`.
+`--selftest` = 11/11. **NOT YET WIRED into `conformance.sh`** — `T326` held that file for the batch;
+the exact un-applied wiring diff is in `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md`.
+**Until it is applied this enforces nothing**, which is the sixth occurrence of this program's
+most-repeated lesson and is recorded here so it is not the seventh.
+
+### `T282` CITATION ERRATA — corrected FORWARD, never edited in place
+
+These citations are in **committed evidence, ratified ADRs and orchestrator-owned files**, which the
+program corrects forward rather than rewriting (`T316`). The id in *cited* is wrong; the rule the
+sentence actually states is under *actually*. Derived from the checker's adjudicated output — a table
+of corrected cardinals that someone retyped would be the next instance of this defect.
+
+| # | site | cited | actually | why |
+|---|---|---|---|---|
+| 1 | `.softhouse/capture/t234-sweep-instrument-audit/instruments/31-sound-sweep.py:14` | `P-131` | **`-- NOT DEFINED --`** | cited id exists in neither register |
+| 2 | `.softhouse/capture/t255-dec2-rev8/instruments/20-verify-anchors.py:36` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 3 | `.softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:72` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 4 | `.softhouse/capture/t256-verdict-predicate/RULES-failopen.md:17` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 5 | `.softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py:24` | `P-261` | **`-- NOT DEFINED --`** | cited id exists in neither register |
+| 6 | `.softhouse/capture/t304-evidence-destruction/evidence/10-raw-sites.tsv:1718` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 7 | `.softhouse/reviews/t260-dec2-rev8/evidence/20-normative-set-diff.txt:65` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 8 | `.softhouse/reviews/t260-dec2-rev8/evidence/90-per-section-line-delta.txt:271` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 9 | `.softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh:5` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 10 | `.softhouse/tasks.json:2374` | `P-69` | **`P-79`** | NOT the P-86 off-by-one -- an INDEPENDENT drift, and the strongest signal in the entire population (score 21). Gloss: 'the guard did not merely fail t |
+| 11 | `.softhouse/tasks.json:2427` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 12 | `.softhouse/tasks.json:2427` | `P-83` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 13 | `.softhouse/tasks.json:3149` | `P-79` | **`P-80`** | Gloss 'make the second site READ the first, do not restate the cardinal' is P-80. This IS the P-86 off-by-one; the keyword adjudicator missed it only  |
+| 14 | `docs/adr/DEC-2-gl-accounting-adapter.md:294` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+
+**Total: 14.** Full population, including the 21 adjudicated FALSE POSITIVES and the 2 ambiguous
+rule-pairs, in `.softhouse/capture/t282-pnumber-drift/out/population.md`.
+
+**Rows 1 and 5 are cited ids that resolve to NOTHING** — `P-131` and `P-261`, almost certainly typos for
+`P-13`/`P-31` and `P-26`, though only their authors can say. Naming them in this table made the checker go
+**fatal on the very table recording them**, because `patterns.md` is a directive file. That was the guard
+working, and the fix is a declaration rather than an exemption — symmetric with the collision declaration in
+the banner, and fatal if it ever goes stale (a declared id that turns out to be defined, or to be cited
+nowhere, stops the run):
+
+`PNUMBER-DANGLING-CITED-IDS: 131, 261`
+
+**`P-99` is NOT in that list and must never be.** It is a deliberate absence used as a negative control by
+three instruments; the checker carries it separately, with the instrument that depends on it named.

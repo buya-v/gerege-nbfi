@@ -1,0 +1,107 @@
+T282 CONCEPT SWEEP -- P-80 vs P-81, P-83 vs P-84
+====================================================
+
+Context read: the citation line plus ONE line each side, 300 chars each way.
+A keyword sweep cannot see a subject stated further away, and UNCLASSIFIED
+means the sweep had nothing to go on -- never that the citation is correct.
+
+P-80 AMBIGUOUS (both vocabularies)            9
+P-80 SUBJECT IS P-81                          79
+P-80 UNCLASSIFIED (neither vocabulary)        54
+P-80 consistent                               27
+P-83 SUBJECT IS P-84                          45
+P-83 UNCLASSIFIED (neither vocabulary)        16
+P-83 consistent                               16
+
+== P-80 AMBIGUOUS (both vocabularies) ==
+  1   .softhouse/capture/t253-portability/instruments/50-t234-residue-probe.sh  lines 17
+  1   .softhouse/capture/t256-verdict-predicate/red/drive-red.sh  lines 28
+  1   .softhouse/capture/t284-schema2-callsites/evidence/60-failopen-lint.txt  lines 109
+  1   .softhouse/conformance.sh  lines 1614
+  1   .softhouse/guards/check-dead-path-frontier.sh  lines 46
+  1   .softhouse/handoff/T259-verdict-predicate.md  lines 239
+  1   .softhouse/reviews/T293/evidence/10-lint-residue-ABSENT.txt  lines 109
+  1   .softhouse/reviews/T293/evidence/11-lint-residue-PRESENT.txt  lines 106
+  1   .softhouse/reviews/t262-verdict-predicate/REVIEW.md  lines 419
+
+== P-80 SUBJECT IS P-81 ==
+  9   .softhouse/tasks.json  lines 2404,2427,2427,2450,2474,2474,2496,3422,3422
+  4   .softhouse/capture/t256-verdict-predicate/red/drive-red.sh  lines 8,33,34,198
+  4   .softhouse/reviews/t260-dec2-rev8/REVIEW.md  lines 27,28,311,328
+  4   .softhouse/reviews/t260-dec2-rev8/instruments/70-spotcheck-stale-sites.sh  lines 3,5,21,55
+  3   .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py  lines 62,819,1091
+  3   .softhouse/handoff/T259-verdict-predicate.md  lines 119,152,286
+  3   .softhouse/reviews/t260-dec2-rev8/evidence/90-per-section-line-delta.txt  lines 261,628,852
+  3   docs/adr/DEC-2-gl-accounting-adapter.md  lines 284,2371,2909
+  2   .softhouse/capture/t256-verdict-predicate/run-output.txt  lines 48,591
+  2   .softhouse/capture/t304-evidence-destruction/evidence/10-raw-sites.tsv  lines 1713,4095
+  2   .softhouse/handoff/T255-dec2-rev8.md  lines 54,216
+  2   .softhouse/patterns.md  lines 2835,2836
+  2   .softhouse/reviews/t254-harness-portability/instruments/80-instrument-audit.sh  lines 3,17
+  2   .softhouse/reviews/t260-dec2-rev8/evidence/20-normative-set-diff.txt  lines 45,72
+  2   .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh  lines 6,23
+  1   .softhouse/capture/t253-portability/evidence/60-hardcoded-toolchain-census.txt  lines 100
+  1   .softhouse/capture/t253-portability/instruments/10-mktemp-matrix.sh  lines 19
+  1   .softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh  lines 22
+  1   .softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py  lines 109
+  1   .softhouse/capture/t253-portability/instruments/70-cross-impl-compare.sh  lines 17
+  1   .softhouse/capture/t255-dec2-rev8/PER-HUNK-NO-OBLIGATION-MOVED.md  lines 72
+  1   .softhouse/capture/t256-verdict-predicate/RULES-failopen.md  lines 17
+  1   .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py  lines 44
+  1   .softhouse/capture/t256-verdict-predicate/lint_failopen_t259.py  lines 36
+  1   .softhouse/capture/t256-verdict-predicate/red/drive-red-output.txt  lines 425
+  1   .softhouse/capture/t256-verdict-predicate/red/plant_failopen.py  lines 2
+  1   .softhouse/capture/t256-verdict-predicate/run.sh  lines 35
+  1   .softhouse/capture/t271-b1-t219/independent_recheck_t271.py  lines 26
+  1   .softhouse/capture/t271-b1-t219/out/run-output.txt  lines 377
+  1   .softhouse/capture/t271-b1-t219/rederive_t219_carriers.py  lines 32
+  1   .softhouse/capture/t271-b1-t219/run.sh  lines 84
+  1   .softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py  lines 30
+  1   .softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py  lines 46
+  1   .softhouse/handoff/T164-analyze7-float-guard.md  lines 75
+  1   .softhouse/handoff/T253-harness-portability.md  lines 186
+  1   .softhouse/reviews/t254-harness-portability/REVIEW.md  lines 401
+  1   .softhouse/reviews/t254-harness-portability/instruments/10-mktemp-census.sh  lines 4
+  1   .softhouse/reviews/t254-harness-portability/instruments/20-dec2-citation-damage.py  lines 5
+  1   .softhouse/reviews/t254-harness-portability/instruments/22-verify-rev8-citations.py  lines 12
+  1   .softhouse/reviews/t254-harness-portability/instruments/30-goroot-stale-repro.sh  lines 15
+  1   .softhouse/reviews/t254-harness-portability/instruments/40-run-bar.sh  lines 8
+  1   .softhouse/reviews/t254-harness-portability/instruments/50-merged-residual.sh  lines 7
+  1   .softhouse/reviews/t254-harness-portability/instruments/70-t234-residue-adjudicate.sh  lines 24
+  1   .softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh  lines 5
+  1   .softhouse/reviews/t260-dec2-rev8/instruments/80-instrument-audit.py  lines 11
+  1   .softhouse/reviews/t262-verdict-predicate/REVIEW.md  lines 449
+  1   .softhouse/reviews/t291-review-t286/out/rerun-t259-battery.txt  lines 471
+
+== P-83 SUBJECT IS P-84 ==
+  4   .softhouse/tasks.json  lines 2427,3125,3195,3219
+  3   .softhouse/handoff/T259-verdict-predicate.md  lines 123,205,225
+  2   .softhouse/capture/t256-verdict-predicate/red/drive-red.sh  lines 10,69
+  2   .softhouse/capture/t271-b1-t219/red/drive-red-t271.py  lines 44,180
+  2   .softhouse/handoff/T255-dec2-rev8.md  lines 147,226
+  2   .softhouse/reviews/t254-harness-portability/REVIEW.md  lines 66,159
+  2   .softhouse/reviews/t254-harness-portability/instruments/42-bar-extract.py  lines 4,27
+  2   .softhouse/reviews/t254-harness-portability/instruments/70-t234-residue-adjudicate.sh  lines 17,85
+  2   .softhouse/reviews/t260-dec2-rev8/REVIEW.md  lines 473,572
+  2   .softhouse/reviews/t261-tenant-attestation/instruments/t261-bar.sh  lines 5,25
+  2   .softhouse/reviews/t262-verdict-predicate/REVIEW.md  lines 248,479
+  1   .softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py  lines 54
+  1   .softhouse/capture/t271-b1-t219/independent_recheck_t271.py  lines 34
+  1   .softhouse/capture/t271-b1-t219/rederive_t219_carriers.py  lines 40
+  1   .softhouse/capture/t271-b1-t219/run_rvpa_over_targets.py  lines 34
+  1   .softhouse/capture/t273-residue/evidence/10-PREFIX-reproduction.txt  lines 52
+  1   .softhouse/capture/t273-residue/instruments/10-reproduce-residue-dependence.sh  lines 105
+  1   .softhouse/gates.md  lines 4103
+  1   .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T273.md  lines 123
+  1   .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T274.md  lines 251
+  1   .softhouse/handoff/T250-tenant-attestation.md  lines 280
+  1   .softhouse/handoff/T253-harness-portability.md  lines 17
+  1   .softhouse/handoff/T260-review-dec2-rev8.md  lines 102
+  1   .softhouse/patterns.md  lines 2834
+  1   .softhouse/reviews/t261-tenant-attestation/REVIEW.md  lines 494
+  1   .softhouse/reviews/t261-tenant-attestation/evidence/91-bar-baseline-noT250.txt  lines 4
+  1   .softhouse/reviews/t261-tenant-attestation/evidence/92-bar-merged-T250.txt  lines 4
+  1   .softhouse/reviews/t261-tenant-attestation/evidence/93-bar-FAILING-run-tmp-race.txt  lines 4
+  1   .softhouse/reviews/t261-tenant-attestation/evidence/94-bar-t261-branch-final-SUMMARY.txt  lines 4
+  1   .softhouse/reviews/t262-verdict-predicate/attack_rvpa_t262.py  lines 84
+  1   .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh  lines 2

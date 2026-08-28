@@ -1,0 +1,14 @@
+SELFTEST -- synthetic fixtures, no repo file read
+  register parsed from fixture: [80, 81, 84]  collisions=0
+  [PASS] expect MISDIRECTING  got MISDIRECTING   drifted (colon gloss): P-84's rule shipped under P-80 -- the recorded defect
+  [PASS] expect CONSISTENT    got CONSISTENT     repaired: same sentence, correct id
+  [PASS] expect MISDIRECTING  got MISDIRECTING   drifted (parenthetical gloss)
+  [PASS] expect CONSISTENT    got CONSISTENT     repaired parenthetical
+  [PASS] expect MISDIRECTING  got MISDIRECTING   drifted (trailing-id gloss)
+  [PASS] expect BARE          got BARE           STATED BLIND SPOT, asserted so it cannot rot into a surprise: an unquoted comma clause is NOT treated as a gloss, so this drifted site scores BARE
+  [PASS] expect MISDIRECTING  got MISDIRECTING   drifted: git-grep-exit-code rule (P-81) cited as P-80
+  [PASS] expect CONSISTENT    got CONSISTENT     repaired: same sentence, correct id
+  [PASS] expect BARE          got BARE           bare citation carries no rule text
+  [PASS] expect UNDEFINED     got UNDEFINED      undefined id
+  [PASS] expect CONSISTENT    got CONSISTENT     correct id with correct text -- the control that must stay green
+SELFTEST: PASS
