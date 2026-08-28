@@ -1,0 +1,83 @@
+UNDER TEST : softhouse/T381-t379-conditions:.softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh
+  sha256   : 1fa6acfe6a24588cfdab967caa3a1710695f3ac503ad2e2c061b0429ba88e923
+  lines    : 469
+  extract  : 14 lines, sha256 5c63699531ce38757d8d3bb0c335e465604b206ca97d1e0fd16a081c5d5a8fb7
+
+--- the function as extracted ------------------------------------------------------
+     1	ENGINE_N=""; ENGINE_RC=0; ENGINE_ERR=""
+     2	engine_count() {
+     3	  local out rc n arc
+     4	  ENGINE_N=""; ENGINE_ERR=""
+     5	  out=$(git grep "$@" 2>"$SWEEP_ERRF"); rc=$?
+     6	  ENGINE_RC=$rc
+     7	  ENGINE_ERR=$(cat "$SWEEP_ERRF")
+     8	  if [ "$rc" -ge 2 ]; then return 2; fi
+     9	  n=$(printf '%s\n' "$out" | awk -F: '{s+=$NF} END{print s+0}'); arc=$?
+    10	  if [ "$arc" -ne 0 ]; then return 3; fi
+    11	  case "$n" in ''|*[!0-9]*) return 3 ;; esac
+    12	  ENGINE_N=$n
+    13	  return 0
+    14	}
+------------------------------------------------------------------------------------
+
+=== C0 CONTROL: a healthy search that MATCHES =======================================
+C0  real git, known-present string                         expect=0  got: RETURN=0 ENGINE_RC=0 ENGINE_N=[2]
+    -> GUARD OK
+
+=== C1 CONTROL: a healthy search that MEASURES ZERO (rc 1) ==========================
+C1  real git, sentinel absent from the corpus              expect=0  got: RETURN=0 ENGINE_RC=1 ENGINE_N=[0]
+    -> GUARD OK
+
+=== C2 git grep exits 128 (the T367 malformed-selector case) ========================
+C2  git grep -> exit 128, nothing on stdout                expect=2  got: RETURN=2 ENGINE_RC=128 ENGINE_N=[]
+    -> GUARD OK
+
+=== C3 git grep exits 2 ==============================================================
+C3  git grep -> exit 2                                     expect=2  got: RETURN=2 ENGINE_RC=2 ENGINE_N=[]
+    -> GUARD OK
+
+=== C4 git grep exits 128 BUT ALSO PRINTS A PLAUSIBLE COUNT ON STDOUT ================
+C4  git grep -> stdout 'file:7' AND exit 128               expect=2  got: RETURN=2 ENGINE_RC=128 ENGINE_N=[]
+    -> GUARD OK
+
+=== C5 awk DIES (killed) ============================================================
+C5  awk killed by SIGTERM, prints nothing                  expect=3  got: RETURN=3 ENGINE_RC=0 ENGINE_N=[]
+    -> GUARD OK
+
+=== C6 awk exits non-zero AFTER printing a number ===================================
+C6  awk prints 9999 then exits 1                           expect=3  got: RETURN=3 ENGINE_RC=0 ENGINE_N=[]
+    -> GUARD OK
+
+=== C7 awk exits 0 with NON-NUMERIC output ==========================================
+C7  awk prints 'not-a-number', exit 0                      expect=3  got: RETURN=3 ENGINE_RC=0 ENGINE_N=[]
+    -> GUARD OK
+
+=== C8 awk exits 0 with EMPTY output ================================================
+C8  awk prints nothing, exit 0                             expect=3  got: RETURN=3 ENGINE_RC=0 ENGINE_N=[]
+    -> GUARD OK
+
+=== C9 awk exits 0 with LEADING WHITESPACE around a number ==========================
+C9  awk prints '   12  ', exit 0                           expect=3  got: RETURN=3 ENGINE_RC=0 ENGINE_N=[]
+    -> GUARD OK
+
+=== C10 awk exits 0 with a NEGATIVE number ==========================================
+C10 awk prints '-5', exit 0                                expect=3  got: RETURN=3 ENGINE_RC=0 ENGINE_N=[]
+    -> GUARD OK
+
+=== C11 awk exits 0 with SCIENTIFIC NOTATION (real awk does this past ~1e16) ========
+C11 awk prints '1e+17', exit 0                             expect=3  got: RETURN=3 ENGINE_RC=0 ENGINE_N=[]
+    -> GUARD OK
+
+=== C12 SIGPIPE: git grep emits an unbounded stream, awk exits early ================
+C12 awk closes its input immediately (SIGPIPE on printf)   expect=3  got: RETURN=3 ENGINE_RC=0 ENGINE_N=[]
+    -> GUARD OK
+
+=== C13 git grep writes a huge stderr but SUCCEEDS (R4 shape) =======================
+C13 git grep -> 'file:3' + stderr warning, exit 0          expect=0  got: RETURN=0 ENGINE_RC=0 ENGINE_N=[3]
+    -> GUARD OK
+
+=== C14 THE SCRATCH FILE IS UNREADABLE (cat fails; its status is NOT read) ==========
+C14 scratch file removed: RETURN=0 ENGINE_N=[3] ENGINE_ERR=[warning: THE ENGINE COMPLAINED]
+
+DRIVE-RESULT: cases_guarded=14 cases_defective=0
+DRIVE_EXIT=0
