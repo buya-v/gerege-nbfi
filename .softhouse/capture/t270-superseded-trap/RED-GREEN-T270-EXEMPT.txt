@@ -1,0 +1,62 @@
+==============================================================================
+T270 — RED/GREEN for the four PARSE-FLOAT-EXEMPT.txt defects T263 raised
+==============================================================================
+Order is the brief's: (d) first — it is the one a reviewer cannot audit.
+
+(d) F-6 — `reproduces:` and an ABSOLUTE PATH OUTSIDE THE REPOSITORY
+    THE ONE A REVIEWER CANNOT AUDIT: an untracked out-of-tree file licensing an
+    in-tree unguarded money load, its meaning changing whenever that file does.
+  ok   REPRODUCE: the PRE-T270 guard ACCEPTS the out-of-tree licence and exits 0
+         rc=0
+  ok   REPRODUCE: and it prints the outside path as though it were auditable
+  ok   FIXED: the delivered guard REFUSES an absolute `reproduces:` target (exit 2)
+         rc=2
+  ok   FIXED: and it says WHY — a money guard may not be licensed from outside the tree
+  ok   FIXED: a RELATIVE path that escapes the root via `..` is refused too — the check is on realpath, not on the spelling
+         rc=2
+  ok   CONTROL: a legitimate REPO-RELATIVE, in-tree reproduction still passes — the fix rejects the escape, not the feature
+         rc=0
+
+(b) F-4 R2 — CAN A BRAND-NEW UNGUARDED MONEY LOADER STILL BE MINTED?
+  ok   REPRODUCE: PRE-T270, a new unguarded loader + a record + a manifest write is MINTED — exit 0, for a file that produced nothing
+         rc=0
+  ok   RAISED: the delivered guard REFUSES it, because the file is UNTRACKED in git and so cannot have produced committed evidence
+         rc=2
+  ok   STILL OPEN, PROVEN NOT ASSUMED: once the minted file is `git add`ed it passes again (exit 0). The minting is RAISED from two commands to three-plus-a-diff, NOT closed. The remaining control is review of the diff, and saying so is the point of this arm.
+         rc=0
+  ok   ...and the guard prints that record in full, so the diff a reviewer must read is not hidden from them
+
+(c) F-5 — `produced:` was EXISTENCE-ONLY. What is it now?
+  ok   REPRODUCE: PRE-T270, `produced:` pointing at an unpinned file is accepted, exit 0 — the field existence-checks and nothing more
+         rc=0
+  ok   FIXED: the delivered guard DENIES evidence that MANIFEST.sha256 does not pin
+         rc=2
+  ok   STILL OPEN, ASSERTED NOT HIDDEN: T263's exact attack — swapping `produced:` for CAPTURE-PLAN.md — STILL leaves the guard green, because that file is itself MANIFEST-pinned. The pin requirement is a floor, not a fix.
+         rc=0
+  ok   MITIGATED: but the record is now GRADED `ASSERTED ONLY` on the verdict line, so the field no longer reads as an audit trail it is not
+  ok   THE GRADE DISCRIMINATES: on the unmodified rig it is not a constant — 3 records verify and 3 do not. A grade that said the same thing about every record would be P-22 again.
+         NAMES=3 ASSERTED=3
+  ok   AND THIS REFUTES T263 F-5's PREMISE, which said requiring the evidence to name its producer would hold 'for all six live records today'. It holds for 3.
+         req/a2-7-loan-220-resolved.json is a JSON request body and PROVENANCE-A2-15.txt does not name verify-provenance-a2-15.py; neither could be made to.
+
+(a) F-4 — DOES THE EXEMPTION STAY DEAD? `manifest.py write` used to revive it.
+  ok   REPRODUCE step 1: PRE-T270 guard, frozen file edited -> exit 2 (it dies)
+         rc=2
+  ok   REPRODUCE step 2: regenerate MANIFEST.sha256 -> PRE-T270 guard exits 0 again. THE EXEMPTION CAME BACK TO LIFE with the edit still in place.
+         rc=0
+  ok   FIXED step 1: delivered guard, frozen file edited -> exit 2 (it dies)
+         rc=2
+  ok   FIXED step 2: regenerate MANIFEST.sha256 -> IT STAYS DEAD, exit 2
+         rc=2
+  ok   FIXED: and the refusal names the register pin as the reason, so the next reader knows regenerating the manifest is not the remedy
+  ok   LEGACY: a 6-field record is still accepted (T164's frozen red-driver depends on it) and still exits 0
+         rc=0
+  ok   LEGACY: but every such record is printed `MANIFEST-ONLY -- WEAK`, naming the revival hole rather than reading as equivalent
+
+23 assertions, 0 failed
+
+OPEN AFTER THIS TASK, STATED AT THE BOTTOM SO IT IS NOT MISSED:
+  * `produced:` can still name evidence the file did not produce, provided that
+    evidence is MANIFEST-pinned. GRADED, not closed. (arm (c))
+  * an exemption can still be minted by someone willing to commit the file.
+    RAISED, not closed. (arm (b))

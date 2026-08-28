@@ -72,13 +72,30 @@ is not an allowlist and cannot rot into one:
     the line moves or changes, the record no longer matches and the guard REFUSES.
   * PRECONDITIONED.  Each category carries a machine-checked precondition:
       FROZEN-T114        the file produced committed evidence and may not be edited.
-                         VALID ONLY WHILE the file's sha256 still equals the digest
-                         MANIFEST.sha256 pins for it, and the named evidence still
-                         exists.  Edit the file and the exemption dies with it.
+                         VALID ONLY WHILE the file is TRACKED IN GIT, the named evidence
+                         exists AND is itself pinned in MANIFEST.sha256, and the file's
+                         sha256 still equals BOTH the manifest digest AND the digest the
+                         record itself pins in field 7.
       REPRODUCTION-T207  the site deliberately reproduces a target that loads without
                          parse_float.  VALID ONLY WHILE that target still exists, still
                          has a json.load/loads at the named line, and STILL LACKS
-                         parse_float.  Fix the target and the exemption dies.
+                         parse_float.  Fix the target and the exemption dies.  The target
+                         must be REPO-RELATIVE; absolute and root-escaping paths are
+                         refused (T263 F-6).
+
+CORRECTION, T270 -- THIS DOCSTRING USED TO OVERSTATE THE FREEZE
+----------------------------------------------------------------
+It said "Edit the file and the exemption dies with it."  T263 measured that end to end
+(ATTACK-REVIVE.txt): it dies, but it does not STAY dead.  `manifest.py write` regenerates
+MANIFEST.sha256 -- a command T164's own task ran -- and the exemption comes back with the
+edit still in place.  Field 7 of the register now pins the digest IN THE REGISTER, which
+`manifest.py write` cannot touch, so a revival requires a second deliberate edit that
+appears in `git diff` on the register.  What is still NOT closed, and is said plainly
+rather than implied away: someone willing to commit a new file and cite evidence it did
+not produce can still mint an exemption; the remaining control there is review of the
+diff.  `produced:` provenance is GRADED (`evidence NAMES its producer` vs `ASSERTED
+ONLY`) rather than enforced, because it is only mechanically checkable for 3 of the 6
+live records -- re-derived by T270, and NOT what T263 F-5 assumed.
   * STALE IS AN ERROR.  A record whose site does not exist, or whose site now carries
     parse_float, is a REFUSE.  Nothing here can be left behind quietly.
 
@@ -207,7 +224,14 @@ def selector_selftest():
 
 
 def read_register(root):
-    """[(file, line, category, pinned, detail, reason)] from PARSE-FLOAT-EXEMPT.txt."""
+    """[(file, line, category, pinned, detail, reason, frozen_sha)] from the register.
+
+    SIX fields is the T164 format; SEVEN adds the durable digest pin T270 added for
+    FROZEN-T114 (field 7, or `-` where it does not apply). Six is still accepted so that
+    T164's frozen red-driver -- which appends 6-field records and whose transcript must
+    stay re-derivable under T114 -- keeps working. A 6-field FROZEN record is graded and
+    printed as MANIFEST-ONLY / WEAK rather than silently treated as equivalent.
+    """
     p = os.path.join(root, REGISTER_NAME)
     if not os.path.exists(p):
         return []
@@ -217,11 +241,14 @@ def read_register(root):
         if not line:
             continue
         parts = [x.strip() for x in line.split("|")]
-        if len(parts) != 6:
-            raise Refusal("%s:%d is malformed -- expected 6 pipe-separated fields "
-                          "(file | line | category | pinned-source | detail | reason), "
-                          "got %d: %r" % (REGISTER_NAME, lineno, len(parts), line))
-        f, ln, cat, pinned, detail, reason = parts
+        if len(parts) not in (6, 7):
+            raise Refusal("%s:%d is malformed -- expected 6 or 7 pipe-separated fields "
+                          "(file | line | category | pinned-source | detail | reason "
+                          "[| frozen-sha256]), got %d: %r"
+                          % (REGISTER_NAME, lineno, len(parts), line))
+        if len(parts) == 6:
+            parts = parts + [""]
+        f, ln, cat, pinned, detail, reason, frozen_sha = parts
         if cat not in CATEGORIES:
             raise Refusal("%s:%d declares category %r, which is not one of %s. An "
                           "unrecognised category is a REFUSAL, never a silent skip."
@@ -231,7 +258,7 @@ def read_register(root):
         except ValueError:
             raise Refusal("%s:%d has a non-integer line number %r"
                           % (REGISTER_NAME, lineno, ln))
-        recs.append((f, ln, cat, pinned, detail, reason))
+        recs.append((f, ln, cat, pinned, detail, reason, frozen_sha))
     return recs
 
 
@@ -250,8 +277,30 @@ def manifest_digests(root):
     return d
 
 
+def git_tracked(root, rel):
+    """(verdict, why). verdict is True/False/None; None = not a git work tree.
+
+    T270/T263-F-4(b): a brand-new unguarded money-shaped loader could be MINTED into the
+    register in two commands, naming evidence it never produced. Requiring the exempted
+    file to be TRACKED IN GIT does not make that impossible, but it forces the minting
+    into a reviewable diff instead of leaving it possible with an untracked file.
+    """
+    try:
+        import subprocess
+        inside = subprocess.run(["git", "-C", root, "rev-parse", "--is-inside-work-tree"],
+                                capture_output=True, text=True)
+        if inside.returncode != 0 or inside.stdout.strip() != "true":
+            return None, "%s is not a git work tree, so the tracked-file control DID NOT " \
+                         "RUN here (stated, not silently skipped)" % root
+        p = subprocess.run(["git", "-C", root, "ls-files", "--error-unmatch", rel],
+                           capture_output=True, text=True)
+        return (p.returncode == 0), ("tracked" if p.returncode == 0 else "UNTRACKED")
+    except OSError as e:
+        return None, "git unavailable (%s), so the tracked-file control DID NOT RUN" % e
+
+
 def check_frozen(root, rec, digests):
-    f, ln, _cat, _pin, detail, _why = rec
+    f, ln, _cat, _pin, detail, _why, pinned_sha = rec
     if not detail.startswith("produced:"):
         return False, ("detail must be `produced:<committed evidence path>`, got %r"
                        % detail)
@@ -263,16 +312,58 @@ def check_frozen(root, rec, digests):
                        "precondition is denied, not assumed" % MANIFEST_NAME)
     if f not in digests:
         return False, "%s does not pin %s, so it is not a frozen rig file" % (MANIFEST_NAME, f)
+    # T263 F-5: `produced:` used to be existence-only, so ANY existing path in the rig
+    # satisfied it. Requiring the evidence to be PINNED closes the "swap it for
+    # CAPTURE-PLAN.md" case only if CAPTURE-PLAN.md is unpinned -- it is not -- so this
+    # is a floor, not a fix, and the provenance GRADE below is the honest part.
+    if ev not in digests:
+        return False, ("%s does not pin the evidence %s, so `produced:` names a file "
+                       "nothing in this rig vouches for" % (MANIFEST_NAME, ev))
     actual = sha256(os.path.join(root, f))
+    # ---- (a) THE DURABLE PIN. MANIFEST.sha256 is regenerated by `manifest.py write`,
+    # which ANY worker runs as a matter of routine, so a death condition expressed only
+    # against the manifest is undone by one ordinary command (T263 F-4, measured
+    # end to end in ATTACK-REVIVE.txt). Field 7 pins the digest IN THE REGISTER ITSELF:
+    # reviving a dead exemption then requires a SECOND, deliberate, reviewable edit to
+    # this file, which `manifest.py write` cannot make.
+    if pinned_sha and pinned_sha != "-":
+        if actual != pinned_sha:
+            return False, ("%s HAS BEEN EDITED (sha256 %s, THIS REGISTER pins %s) -- and "
+                           "regenerating %s will NOT revive this exemption, because the "
+                           "pin lives here, not there. A file being edited is not frozen: "
+                           "add parse_float instead."
+                           % (f, actual[:12], pinned_sha[:12], MANIFEST_NAME))
+        durability = "register-pinned (survives `manifest.py write`)"
+    else:
+        durability = ("MANIFEST-ONLY -- WEAK: this record carries no register pin, so "
+                      "`manifest.py write` REVIVES it after an edit")
     if actual != digests[f]:
         return False, ("%s HAS BEEN EDITED (sha256 %s, manifest pins %s) -- a file that is "
                        "being edited is not frozen, so add parse_float instead"
                        % (f, actual[:12], digests[f][:12]))
-    return True, "frozen: sha256 matches %s; produced %s" % (MANIFEST_NAME, ev)
+    tracked, tw = git_tracked(root, f)
+    if tracked is False:
+        return False, ("%s is UNTRACKED in git, so it produced no committed evidence and "
+                       "cannot be T114-frozen. A record for an untracked file is how a "
+                       "brand-new unguarded loader gets minted into this register."
+                       % f)
+    prov = "evidence NAMES its producer" if f in read_text(os.path.join(root, ev)) \
+        else "ASSERTED ONLY -- the evidence does not name its producer, so this field is a " \
+             "human claim the guard cannot verify"
+    return True, ("frozen: sha256 matches %s; %s; produced %s; provenance: %s; git: %s"
+                  % (MANIFEST_NAME, durability, ev, prov, tw))
+
+
+def read_text(path):
+    try:
+        with open(path, "rb") as fh:
+            return fh.read().decode("utf-8", "replace")
+    except OSError:
+        return ""
 
 
 def check_reproduction(root, rec):
-    f, ln, _cat, _pin, detail, _why = rec
+    f, ln, _cat, _pin, detail, _why, _sha = rec
     if not detail.startswith("reproduces:"):
         return False, "detail must be `reproduces:<path>:<line>`, got %r" % detail
     spec = detail[len("reproduces:"):].strip()
@@ -280,7 +371,23 @@ def check_reproduction(root, rec):
     if not tpath or not tline.isdigit():
         return False, "cannot read `reproduces:<path>:<line>` out of %r" % spec
     tline = int(tline)
-    ap = tpath if os.path.isabs(tpath) else os.path.join(root, tpath)
+    # ---- (d) T263 F-6. An ABSOLUTE path was taken as given, so an untracked, deletable
+    # file OUTSIDE THE REPOSITORY could license an in-tree unguarded money load, and the
+    # licence silently changed meaning whenever that file changed. This is the one a
+    # reviewer cannot audit, so it is refused outright -- and `..` is refused with it,
+    # because it reaches the same place by a different spelling.
+    if os.path.isabs(tpath):
+        return False, ("`reproduces:` target %r is an ABSOLUTE path. A money guard may "
+                       "not be licensed by a file outside the tree, which no reviewer "
+                       "can see and anyone can delete. Name a repo-relative path."
+                       % tpath)
+    ap = os.path.join(root, tpath)
+    real_root = os.path.realpath(root)
+    real_ap = os.path.realpath(ap)
+    if real_ap != real_root and not real_ap.startswith(real_root + os.sep):
+        return False, ("`reproduces:` target %r escapes the root after realpath "
+                       "normalisation (%s is not under %s). Same defect as an absolute "
+                       "path, spelled with `..` or a symlink." % (tpath, real_ap, real_root))
     if not os.path.exists(ap):
         return False, "the target it reproduces, %s, is not on disk" % tpath
     tsites = call_sites(open(ap).read(), tpath)
@@ -349,7 +456,7 @@ def main(argv):
     exempt = {}
     refusals = []
     for rec in register:
-        f, ln, cat, pinned, detail, reason = rec
+        f, ln, cat, pinned, detail, reason, _frozen_sha = rec
         key = (f, ln)
         site = by_key.get(key)
         if site is None:

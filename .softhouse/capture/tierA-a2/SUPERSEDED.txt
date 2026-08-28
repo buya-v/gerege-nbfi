@@ -59,3 +59,28 @@ run-220-a2-7-runtime.sh -> run-220-a2-7-runtime-v8.sh
 # is `QUIT` appended to the trap's signal list; every other line is carried over
 # verbatim.
 cap9.sh -> cap10.sh
+
+# --- T270: the blind whole-file-grep guard T164 replaced (T263 F-13) ---
+# prove-mkreq7-guard-red.py:139-150 asserted "analyze7.py has no binary float" with a
+# WHOLE-FILE SOURCE GREP (`"parse_float=decimal.Decimal" in src`).  The token occurs twice
+# in analyze7.py -- at :39 in the code and at :6 in the file's OWN DOCSTRING -- so deleting
+# the keyword from the CALL SITE leaves the assertion satisfied by the prose.  T164
+# reproduced that end to end (RED-GREEN-T164-parse-float-ast.txt, ARM 0) and replaced the
+# arm with guard-parse-float-ast.py, which parses the source and grades CALL SITES.
+#
+# TWO OBLIGATIONS, AND CONFLATING THEM IS WHAT PRODUCED THE DEFECT THIS ENTRY CLOSES:
+#   1. T114 requires the BYTES be preserved, so RED-GREEN-A2-7-guards.txt stays re-derivable
+#      from the script that made it.  The file is untouched and stays untouched.
+#   2. T114 does NOT require the file keep being EXECUTED as though it still graded
+#      something.  A superseded guard that still prints `ok ... 16 assertions, 0 failed` is
+#      not preserved evidence, it is a TRAP -- P-45 inverted: not a guard that never runs,
+#      but a NON-guard that always runs and always says PASS.
+# Honour both: bytes unchanged, execution stopped.  .softhouse/reviews/A2-11/run-all.sh
+# section 8 no longer invokes it; it now READS this register and runs the replacement.
+#
+# NOTE the replacement's scope is NARROWER than the frozen file's: prove-mkreq7-guard-red.py
+# also proved mkreq7.py's and resolve7.py's D-1 refusal behaviour (13 of its 16 assertions),
+# and guard-parse-float-ast.py replaces ONLY the 3-assertion float arm.  Those 13 assertions
+# are NOT re-run by anything today; that is recorded as a follow-up, not silently absorbed.
+# Committed evidence prove-mkreq7-guard-red.py produced: RED-GREEN-A2-7-guards.txt.
+prove-mkreq7-guard-red.py -> guard-parse-float-ast.py
