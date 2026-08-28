@@ -1,0 +1,220 @@
+========================================================================
+WHERE I LOOKED (1) — the working tree of THIS worktree, executable seams only
+$ grep -rn GEREGE_GO_STRICT .softhouse/bin .softhouse/guards .softhouse/conformance.sh
+    .softhouse/bin/go-env.sh:12:#     GEREGE_GO_STRICT=1          refuse rather than substitute an unpinned `go`.
+    .softhouse/bin/go-env.sh:85:#   THE ONE NON-ZERO ARM — `GEREGE_GO_STRICT` (grafted by T272 from the cloud's T253
+    .softhouse/bin/go-env.sh:89:#     WHAT IT MEANS. `GEREGE_GO_STRICT` set to any NON-EMPTY value makes the REJECTED
+    .softhouse/bin/go-env.sh:111:#     WHICH FIRE SETS IT: NEITHER, TODAY. MEASURED by T272 — `GEREGE_GO_STRICT` does
+    .softhouse/bin/go-env.sh:245:    # GEREGE_GO_STRICT IS NOT CONSULTED HERE, ON PURPOSE. Strict asks "refuse rather than
+    .softhouse/bin/go-env.sh:280:    # --- 4b-i. GEREGE_GO_STRICT — the REJECTED hard refusal, reachable as CONFIG. ---
+    .softhouse/bin/go-env.sh:287:    if [ -n "${GEREGE_GO_STRICT:-}" ]; then
+    .softhouse/bin/go-env.sh:291:        printf '%s\n' "go-env.sh: GEREGE_GO_STRICT is set, so this is a REFUSAL and not a substitution." >&2
+    .softhouse/bin/go-env.sh:299:        printf '%s\n' "go-env.sh: or unset GEREGE_GO_STRICT to allow a STATED fallback to the go on PATH." >&2
+    .softhouse/bin/go-env.sh:331:        printf '%s\n' "go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2)." >&2
+    .softhouse/bin/go-env.sh:346:# exactly one arm (GEREGE_GO_STRICT + toolchain absent) and 0 in every other. Without
+    .softhouse/bin/go-env.sh:368:# it did before the graft, and with GEREGE_GO_STRICT unset that is every arm there is.
+========================================================================
+WHERE I LOOKED (2) — EVERY ref in this repository, local and remote
+  total refs: 597
+  refs whose NAME mentions T253 / T254 / T272 / rescue:
+    refs/heads/softhouse/T21-pass3-audit-rescued f4fb9a40
+    refs/heads/softhouse/T22-pathb-audit-rescued 70ade651
+    refs/heads/softhouse/T272-goenv-graft a939342c
+    refs/heads/softhouse/T4-dec1-retry-rescued ef96003d
+    refs/heads/softhouse/rescued-agent-a0a52fc48d1087796-20260820-230001 b9f9ab36
+    refs/heads/softhouse/rescued-agent-a157842e280d9a835-20260822-140002 b574245f
+    refs/heads/softhouse/rescued-agent-a1be0f4db12e4b8b8-20260821-080001 bfccd4e1
+    refs/heads/softhouse/rescued-agent-a2027f85cea4effc9-20260818-200001 eb42d0a8
+    refs/heads/softhouse/rescued-agent-a2dfa8274443adb39-20260822-140002 43d12eb0
+    refs/heads/softhouse/rescued-agent-a31f5a02b9f6a59b0-20260823-140001 2c4ce780
+    refs/heads/softhouse/rescued-agent-a353b03c0dea4dd41-20260818-200001 383bb31a
+    refs/heads/softhouse/rescued-agent-a4668dbfbf66ea6a6-20260822-140002 1551c2e1
+    refs/heads/softhouse/rescued-agent-a4bdc82a96c0a241c-20260823-140001 81718ded
+    refs/heads/softhouse/rescued-agent-a533818f28c9c0299-20260822-140002 e0b29260
+    refs/heads/softhouse/rescued-agent-a69970ae1feee7231-20260823-140001 3e535f55
+    refs/heads/softhouse/rescued-agent-a73334f89c8eb3d16-20260820-230001 35655fb1
+    refs/heads/softhouse/rescued-agent-a7a1b4142600dc53f-20260827-230001 b3356740
+    refs/heads/softhouse/rescued-agent-a7b052ea3e92337d3-20260821-134344 ddc8ceb3
+    refs/heads/softhouse/rescued-agent-a8581c69bafc13152-20260821-080001 b8c18070
+    refs/heads/softhouse/rescued-agent-ac1fa12c69146149b-20260823-140001 de1153dc
+    refs/heads/softhouse/rescued-agent-ad156c83d2106562d-20260823-140001 006b6ad0
+    refs/heads/softhouse/rescued-agent-ad4264728c497493b-20260822-140002 d67762fc
+    refs/heads/softhouse/rescued-agent-ada96e5f185108346-20260827-230001 d2d4da26
+    refs/heads/softhouse/rescued-agent-ae1cb93efc023c229-20260823-140001 c73e0be3
+    refs/heads/softhouse/rescued-agent-af19d6f14414d32f0-20260822-140002 17b72fcc
+    refs/heads/softhouse/rescued-agent-af389a54fb1b2ca43-20260827-230001 edc27d27
+    refs/heads/softhouse/rescued-agent-af8f23cb68de0effa-20260823-140001 26185194
+    refs/heads/softhouse/rescued-agent-af9f82a58b9ee7eb4-20260823-140001 0597a630
+    refs/remotes/origin/softhouse/T21-pass3-audit-rescued f4fb9a40
+    refs/remotes/origin/softhouse/T22-pathb-audit-rescued 70ade651
+    refs/remotes/origin/softhouse/T253-harness-portability d7a7ea35
+    refs/remotes/origin/softhouse/T254-review-portability aa148c74
+    refs/remotes/origin/softhouse/T254-review-portability-mac a680e06a
+    refs/remotes/origin/softhouse/T4-dec1-retry-rescued ef96003d
+    refs/remotes/origin/softhouse/rescued-agent-a2027f85cea4effc9-20260818-200001 eb42d0a8
+    refs/remotes/origin/softhouse/rescued-agent-a353b03c0dea4dd41-20260818-200001 383bb31a
+    refs/rescue/20260827-230001/packedref-t297-review-t295 c1a3888a
+    refs/rescue/20260827-230001/packedref-t298-review-t256 60c54d19
+    refs/rescue/20260827-230001/packedref-t302-review-t288 ab9b3b68
+    refs/rescue/20260827-230001/packedref-t304-evidence-destruction f8d450c2
+    refs/rescue/20260827-230001/packedref-t305-openingbalance-accepting-side 060f0033
+    refs/rescue/20260827-230001/packedref-t306-adjudicate-admit-widening f7a70b8f
+    refs/rescue/20260827-230001/packedref-t308-review-t292 a8c77253
+    refs/rescue/20260827-230001/packedref-t309-sigterm-reconcile-bypass df28ced0
+    refs/rescue/20260827-230001/t297-loose-line d189230b
+    refs/rescue/20260827-230001/t297-packed-line c1a3888a
+    refs/rescue/20260827-230001/t298-line 711e2f2a
+    refs/rescue/20260827-230001/t298-priorsession-worktree 74f3e5d8
+    refs/rescue/20260827-230001/t302-line ab9b3b68
+    refs/rescue/20260827-230001/t304-line f8d450c2
+    refs/rescue/20260827-230001/t304-thisfire-worktree efa721a5
+    refs/rescue/20260827-230001/t305-loose-line 37d4c5bb
+    refs/rescue/20260827-230001/t305-packed-line 060f0033
+    refs/rescue/20260827-230001/t306-line f7a70b8f
+    refs/rescue/20260827-230001/t308-line 40a70681
+    refs/rescue/20260827-230001/t309-line 305ddd08
+    refs/rescue/20260827-230001/t323-wiring-branch b515a6e3
+========================================================================
+WHERE I LOOKED (3) — refs/rescue/ specifically (the brief names it)
+  refs under refs/rescue: 21
+    refs/rescue/20260827-230001/packedref-t297-review-t295 c1a3888a
+    refs/rescue/20260827-230001/packedref-t298-review-t256 60c54d19
+    refs/rescue/20260827-230001/packedref-t302-review-t288 ab9b3b68
+    refs/rescue/20260827-230001/packedref-t304-evidence-destruction f8d450c2
+    refs/rescue/20260827-230001/packedref-t305-openingbalance-accepting-side 060f0033
+    refs/rescue/20260827-230001/packedref-t306-adjudicate-admit-widening f7a70b8f
+    refs/rescue/20260827-230001/packedref-t308-review-t292 a8c77253
+    refs/rescue/20260827-230001/packedref-t309-sigterm-reconcile-bypass df28ced0
+    refs/rescue/20260827-230001/t297-loose-line d189230b
+    refs/rescue/20260827-230001/t297-packed-line c1a3888a
+    refs/rescue/20260827-230001/t298-line 711e2f2a
+    refs/rescue/20260827-230001/t298-priorsession-worktree 74f3e5d8
+    refs/rescue/20260827-230001/t302-line ab9b3b68
+    refs/rescue/20260827-230001/t304-line f8d450c2
+    refs/rescue/20260827-230001/t304-thisfire-worktree efa721a5
+    refs/rescue/20260827-230001/t305-loose-line 37d4c5bb
+    refs/rescue/20260827-230001/t305-packed-line 060f0033
+    refs/rescue/20260827-230001/t306-line f7a70b8f
+    refs/rescue/20260827-230001/t308-line 40a70681
+    refs/rescue/20260827-230001/t309-line 305ddd08
+    refs/rescue/20260827-230001/t323-wiring-branch b515a6e3
+  Any emptiness above is a statement about what THAT command printed HERE. It is NOT
+  a claim that no rescue ref was ever created anywhere, and it is NOT a claim about
+  origin's refs beyond the remote-tracking refs this clone has already fetched.
+  CROSS-CHECK: section (2) enumerates every ref with no pattern at all. If it lists a
+  refs/rescue row that this section does not, THIS SELECTOR is wrong, not the world.
+========================================================================
+WHERE I LOOKED (4) — git grep for the needle IN go-env.sh across ALL refs
+  (rc 0 = hit, rc 1 = no match, rc >1 = ERROR and this loop aborts rather than skipping)
+  HIT  refs/heads/softhouse/T272-goenv-graft
+  HIT  refs/remotes/origin/softhouse/T253-harness-portability
+  HIT  refs/remotes/origin/softhouse/T254-review-portability
+  refs searched: 597   refs carrying the needle in go-env.sh: 3
+========================================================================
+WHERE I LOOKED (5) — the capture / review / handoff directories
+$ grep -rln GEREGE_GO_STRICT .softhouse/capture .softhouse/reviews .softhouse/handoff
+    .softhouse/capture/t272-goenv-graft/evidence/10-locate-cloud-arm.txt
+    .softhouse/capture/t272-goenv-graft/evidence/20-strict-drive.txt
+    .softhouse/capture/t272-goenv-graft/instruments/10-locate-cloud-arm.sh
+    .softhouse/capture/t272-goenv-graft/instruments/20-strict-drive.sh
+    .softhouse/capture/t272-goenv-graft/GOENV-STRICT-WIRING.md
+    .softhouse/capture/t253-portability/evidence/70-cross-impl-compare.txt
+    .softhouse/capture/t253-portability/instruments/70-cross-impl-compare.sh
+    .softhouse/reviews/t254-harness-portability/evidence/10-mktemp-census.txt
+    .softhouse/reviews/t254-harness-portability/evidence/30-goroot-stale-repro.txt
+    .softhouse/reviews/t254-harness-portability/REVIEW.md
+    .softhouse/handoff/T253-harness-portability.md
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T256.md
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md
+========================================================================
+WHERE I LOOKED (6) — does ANY fire script or launchd plist SET GEREGE_GO_STRICT?
+$ grep -rn GEREGE_GO_STRICT .softhouse/bin .softhouse/launchd .claude
+  THIS IS THE MEASUREMENT BEHIND T272 DECISION D-2, so it is the one that most needed
+  the rc classified: an ERROR reported as 'no match' here would have manufactured the
+  claim 'neither fire sets it' out of a broken selector.
+  corpus .softhouse/bin : PRESENT (tested with -d)
+  corpus .softhouse/launchd : PRESENT (tested with -d)
+  corpus .claude : PRESENT (tested with -d)
+    .softhouse/bin/go-env.sh:12:#     GEREGE_GO_STRICT=1          refuse rather than substitute an unpinned `go`.
+    .softhouse/bin/go-env.sh:85:#   THE ONE NON-ZERO ARM — `GEREGE_GO_STRICT` (grafted by T272 from the cloud's T253
+    .softhouse/bin/go-env.sh:89:#     WHAT IT MEANS. `GEREGE_GO_STRICT` set to any NON-EMPTY value makes the REJECTED
+    .softhouse/bin/go-env.sh:111:#     WHICH FIRE SETS IT: NEITHER, TODAY. MEASURED by T272 — `GEREGE_GO_STRICT` does
+    .softhouse/bin/go-env.sh:245:    # GEREGE_GO_STRICT IS NOT CONSULTED HERE, ON PURPOSE. Strict asks "refuse rather than
+    .softhouse/bin/go-env.sh:280:    # --- 4b-i. GEREGE_GO_STRICT — the REJECTED hard refusal, reachable as CONFIG. ---
+    .softhouse/bin/go-env.sh:287:    if [ -n "${GEREGE_GO_STRICT:-}" ]; then
+    .softhouse/bin/go-env.sh:291:        printf '%s\n' "go-env.sh: GEREGE_GO_STRICT is set, so this is a REFUSAL and not a substitution." >&2
+    .softhouse/bin/go-env.sh:299:        printf '%s\n' "go-env.sh: or unset GEREGE_GO_STRICT to allow a STATED fallback to the go on PATH." >&2
+    .softhouse/bin/go-env.sh:331:        printf '%s\n' "go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2)." >&2
+    .softhouse/bin/go-env.sh:346:# exactly one arm (GEREGE_GO_STRICT + toolchain absent) and 0 in every other. Without
+    .softhouse/bin/go-env.sh:368:# it did before the graft, and with GEREGE_GO_STRICT unset that is every arm there is.
+
+  MENTIONING IT IS NOT SETTING IT, and after the graft go-env.sh mentions it a dozen
+  times while only ever READING it. So the D-2 claim is tested by a SHARPER selector:
+  an ASSIGNMENT (`GEREGE_GO_STRICT=` or `export GEREGE_GO_STRICT`) in any file that
+  is NOT go-env.sh itself. That is what 'which fire sets it' actually asks.
+$ grep -rn -E '(export[[:space:]]+)?GEREGE_GO_STRICT=' <same corpus>  | grep -v go-env.sh
+    assignment sites OUTSIDE go-env.sh: 0
+    (A count of 0 here, reached with rc<=1 on a selector that has just been shown to
+     match inside go-env.sh, is the evidence for D-2: NEITHER FIRE SETS IT.)
+========================================================================
+WHAT WAS FOUND — the cloud arm, verbatim, out of the object store
+$ git cat-file -t d7a7ea3 -> commit
+  d7a7ea35aa01e095219526d48c0142bb5cc6d4ab T253: make the conformance harness runnable off Buyan's Mac
+
+$ git show d7a7ea3:.softhouse/bin/go-env.sh   (lines 147-192, the else-branch)
+  147 | else
+  148 |   # NO PINNED TOOLCHAIN ON THIS HOST. Two arms, and BOTH are loud. Neither exports a
+  149 |   # GOROOT — exporting one that does not exist is the entire defect this replaces.
+  150 |   _ge_path_go=$(command -v go 2>/dev/null) || _ge_path_go=''
+  151 |   _ge_say() { printf 'gerege go-env: %s\n' "$1" >&2; }
+  152 |   _ge_say 'THE PINNED GO TOOLCHAIN IS NOT ON THIS HOST.'
+  153 |   _ge_say '  looked for an executable go/bin/go under, in order:'
+  154 |   for _ge_cand in $_ge_tried; do
+  155 |     _ge_say "    $_ge_cand   ABSENT"
+  156 |   done
+  157 |   [ -n "$_ge_tried" ] || _ge_say '    (no candidate could be derived: no script path, no git, no CWD checkout)'
+  158 | 
+  159 |   if [ -n "${GEREGE_GO_STRICT:-}" ]; then
+  160 |     _ge_say 'GEREGE_GO_STRICT is set, so this is a REFUSAL and not a substitution.'
+  161 |     _ge_say '  Nothing was exported. Install the pinned toolchain, or set GEREGE_TOOLCHAIN,'
+  162 |     _ge_say '  or unset GEREGE_GO_STRICT to allow a STATED fallback to the go on PATH.'
+  163 |     export GEREGE_GO_SOURCE='refused:strict'
+  164 |     unset _ge_self _ge_dir _ge_here _ge_main _ge_common _ge_found _ge_origin _ge_tried _ge_cand _ge_path_go
+  165 |     unset -f _ge_say 2>/dev/null || true
+  166 |     return 2 2>/dev/null || exit 2
+  167 |   fi
+  168 | 
+  169 |   if [ -n "$_ge_path_go" ]; then
+  170 |     export GEREGE_GO_SOURCE="substituted:$_ge_path_go"
+  171 |     _ge_say "SUBSTITUTING the go already on PATH:   $_ge_path_go"
+  172 |     _ge_say "  $("$_ge_path_go" version 2>&1)"
+  173 |     _ge_say '  WHY: the pinned toolchain is gitignored and host-local, so it is absent on'
+  174 |     _ge_say '  every host but the one it was installed on. Refusing here would make the'
+  175 |     _ge_say '  harness unrunnable rather than safer — the compiler-absent refusals in'
+  176 |     _ge_say '  check-ledger-invariants.sh and conformance.sh:load_toolchain still stand.'
+  177 |     _ge_say '  GOROOT/GOPATH/GOCACHE/GOMODCACHE are deliberately NOT exported on this path;'
+  178 |     _ge_say '  this go uses its own built-in GOROOT.'
+  179 |     _ge_say 'THIS IS A TOOLCHAIN SUBSTITUTION AND IT IS STATED, NOT HIDDEN. It is fine for'
+  180 |     _ge_say '  building and for the source-level guards. It is NOT a pinned-toolchain run,'
+  181 |     _ge_say '  and any PARITY claim must name the toolchain above. GEREGE_GO_STRICT=1'
+  182 |     _ge_say '  refuses instead of substituting.'
+  183 |   else
+  184 |     export GEREGE_GO_SOURCE='absent:no-go-on-path'
+  185 |     _ge_say 'and there is NO `go` on PATH either, so nothing was exported and nothing was'
+  186 |     _ge_say '  substituted. The caller`s own compiler-absent refusal is about to fire; that'
+  187 |     _ge_say '  message is the authoritative one and this note only says why PATH is unchanged.'
+  188 |   fi
+  189 |   unset -f _ge_say 2>/dev/null || true
+  190 | fi
+  191 | 
+  192 | unset _ge_self _ge_dir _ge_here _ge_main _ge_common _ge_found _ge_origin _ge_tried _ge_cand _ge_path_go
+========================================================================
+THE GRAFT SET, per T254b (.softhouse/reviews/t254-harness-portability/REVIEW.md:36-44)
+  cloud go-env.sh:159-167  the GEREGE_GO_STRICT arm      -> GRAFTED (T272 D-1)
+  cloud GEREGE_GO_SOURCE   richer value (path in token)   -> SEE T272 D-3 (deviation,
+                                                              inside the latitude the
+                                                              reviewer explicitly gave)
+  mac   go-env.sh:153-156  the stale-GOROOT drop          -> KEPT; graft goes AFTER it
+========================================================================
+INSTRUMENT COMPLETE — every section above ran to completion. No section printed a
+negative it did not measure: rc 1 is labelled rc 1, and rc >1 aborts at exit 3.
