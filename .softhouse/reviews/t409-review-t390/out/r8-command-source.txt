@@ -1,0 +1,49 @@
+-- T409 r8-command-source -- 2026-08-28T18:12:50Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: c9a51d6fd18899cc729a89b61f821c9ca258e562f1a2d5c2414551e34b637e07
+--
+Pager usage is off.
+ rows | max_id | min_id 
+------+--------+--------
+  379 |    379 |      1
+(1 row)
+
+ id  |     action_name      |        entity_name        | resource_id | loan_id | made_on_date | maker_id | status |           idempotency_key            
+-----+----------------------+---------------------------+-------------+---------+--------------+----------+--------+--------------------------------------
+ 351 | DELETE               | GLCLOSURE                 |           1 |         |              |        1 |      1 | e87cb179-248e-4766-b18d-33ae16bb681e
+ 352 | DEFINEOPENINGBALANCE | JOURNALENTRY              |             |         |              |        1 |      5 | 138af578-bd93-4ae5-b8a5-16b6213d0f43
+ 353 | CREATE               | JOURNALENTRY              |             |         |              |        1 |      1 | t352-a01-residue-3dp
+ 354 | CREATE               | JOURNALENTRY              |             |         |              |        1 |      1 | t352-a03-balance-scale
+ 355 | CREATE               | JOURNALENTRY              |             |         |              |        1 |      1 | t352-a04-overscale
+ 356 | CREATE               | JOURNALENTRY              |             |         |              |        1 |      1 | t352-a07-usd
+ 357 | CREATE               | JOURNALENTRY              |             |         |              |        1 |      5 | T359-P01-residue-post
+ 358 | CREATE               | JOURNALENTRY              |             |         |              |        1 |      5 | T359-P02-residue-post
+ 359 | CREATE               | JOURNALENTRY              |             |         |              |        1 |      1 | T359-P03-residue-post
+ 360 | CREATE               | GLACCOUNT                 |          35 |         |              |        1 |      1 | T388-G01-gl-fund-source
+ 361 | CREATE               | GLACCOUNT                 |          36 |         |              |        1 |      1 | T388-G02-gl-loan-portfolio
+ 362 | CREATE               | GLACCOUNT                 |          37 |         |              |        1 |      1 | T388-G03-gl-interest-on-loans
+ 363 | CREATE               | GLACCOUNT                 |          38 |         |              |        1 |      1 | T388-G04-gl-income-from-fees
+ 364 | CREATE               | GLACCOUNT                 |          39 |         |              |        1 |      1 | T388-G05-gl-income-from-penalties
+ 365 | CREATE               | GLACCOUNT                 |          40 |         |              |        1 |      1 | T388-G06-gl-losses-written-off
+ 366 | CREATE               | GLACCOUNT                 |          41 |         |              |        1 |      1 | T388-G07-gl-interest-receivable
+ 367 | CREATE               | GLACCOUNT                 |          42 |         |              |        1 |      1 | T388-G08-gl-fees-receivable
+ 368 | CREATE               | GLACCOUNT                 |          43 |         |              |        1 |      1 | T388-G09-gl-penalties-receivable
+ 369 | CREATE               | GLACCOUNT                 |          44 |         |              |        1 |      1 | T388-G10-gl-transfers-suspense
+ 370 | CREATE               | GLACCOUNT                 |          45 |         |              |        1 |      1 | T388-G11-gl-overpayment
+ 371 | CREATE               | GLACCOUNT                 |          46 |         |              |        1 |      1 | T388-G12-gl-income-from-recovery
+ 372 | CREATE               | GLACCOUNT                 |          47 |         |              |        1 |      1 | T388-G13-gl-goodwill-credit
+ 373 | CREATE               | LOANPRODUCT               |          63 |         |              |        1 |      1 | T388-P02-create-accrual-product
+ 374 | CREATE               | CLIENT                    |           3 |         |              |        1 |      1 | T388-P03-create-client
+ 375 | CREATE               | LOAN                      |             |         |              |        1 |      5 | T388-P04-loan-application
+ 376 | CREATE               | LOAN                      |           8 |       8 |              |        1 |      1 | T388-P05-loan-application
+ 377 | APPROVE              | LOAN                      |           8 |       8 |              |        1 |      1 | T388-P06-loan-approve
+ 378 | DISBURSE             | LOAN                      |           8 |       8 |              |        1 |      1 | T388-P07-loan-disburse
+ 379 | EXECUTE              | PERIODICACCRUALACCOUNTING |             |         |              |        1 |      1 | T388-A01-runaccruals
+(29 rows)
+
+ cs_rows_at_or_after_scheduler_window 
+--------------------------------------
+                                    0
+(1 row)
+
+-- psql rc=0

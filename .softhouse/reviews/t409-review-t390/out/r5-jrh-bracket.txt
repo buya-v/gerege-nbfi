@@ -1,0 +1,11 @@
+-- T409 r5-jrh-bracket -- 2026-08-28T18:12:07Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: 1627b4a3a0721d50e49dc1f8381fb1d73901791325720728653da638158abc7b
+--
+Pager usage is off.
+ jrh_id | job_id |         job_name         |       display_name       |       start_time        |        end_time        | status  | contains_all_legs | contains_first | contains_last 
+--------+--------+--------------------------+--------------------------+-------------------------+------------------------+---------+-------------------+----------------+---------------
+  12721 |     11 | Add Accrual Transactions | Add Accrual Transactions | 2026-08-28 16:01:00.049 | 2026-08-28 16:01:00.12 | success | t                 | t              | t
+(1 row)
+
+-- psql rc=0

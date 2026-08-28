@@ -1,0 +1,21 @@
+-- T409 r7-tz-and-explicit-containment -- 2026-08-28T18:12:50Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: dcb5d212093804fff70e3ce3df78b8484873c3470f52b987b1521380626154a9
+--
+Pager usage is off.
+ TimeZone 
+----------
+ Etc/UTC
+(1 row)
+
+ session_tz |            now_tz             
+------------+-------------------------------
+ Etc/UTC    | 2026-08-28 18:12:50.714337+00
+(1 row)
+
+ jrh_id | job_id |           name           |       start_time        |        end_time        |        first_write         |         last_write         | contains_all 
+--------+--------+--------------------------+-------------------------+------------------------+----------------------------+----------------------------+--------------
+  12721 |     11 | Add Accrual Transactions | 2026-08-28 16:01:00.049 | 2026-08-28 16:01:00.12 | 2026-08-28 16:01:00.100207 | 2026-08-28 16:01:00.117772 | t
+(1 row)
+
+-- psql rc=0

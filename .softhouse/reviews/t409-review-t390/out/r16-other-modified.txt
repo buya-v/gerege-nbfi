@@ -1,0 +1,19 @@
+-- T409 r16-other-modified -- 2026-08-28T18:14:18Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: c25d0083ccfedf48e92fbe830bdda0ce0c15dcf3847f144576f699f66fe8291a
+--
+Pager usage is off.
+            tbl            | id | last_modified_by |     last_modified_on_utc      
+---------------------------+----+------------------+-------------------------------
+ m_loan                    | 8  | 2                | 2026-08-28 16:01:00.096411+00
+ m_loan_charge             | 3  | 2                | 2026-08-28 16:01:00.097173+00
+ m_loan_charge             | 4  | 2                | 2026-08-28 16:01:00.097394+00
+ m_loan_repayment_schedule | 43 | 2                | 2026-08-28 16:01:00.09404+00
+ m_loan_repayment_schedule | 44 | 2                | 2026-08-28 16:01:00.096979+00
+ m_loan_repayment_schedule | 46 | 2                | 2026-08-28 16:01:00.084216+00
+ m_loan_transaction        | 32 | 2                | 2026-08-28 16:01:00.068246+00
+ m_loan_transaction        | 33 | 2                | 2026-08-28 16:01:00.092597+00
+ m_loan_transaction        | 34 | 2                | 2026-08-28 16:01:00.095647+00
+(9 rows)
+
+-- psql rc=0
