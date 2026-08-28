@@ -1,8 +1,8 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260828-140005`, chain iteration 3 — **IN FLIGHT. TWO LIVE WORKERS: `T384`, `T393`.**
+## FIRE `20260828-140005`, chain iteration 3 — **IN FLIGHT. ONE LIVE WORKER: `T384`.**
 
-**If you are reading this and no driver session is running, those two were killed mid-flight.** Mark each
+**If you are reading this and no driver session is running, `T384` was killed mid-flight.** Mark each
 `needs_retry` with the WIP evidence from its branch. `in_progress` never means "work is happening"; it means
 "a driver said so, once". Everything else below is either **merged** or **complete on a branch**.
 
@@ -107,7 +107,28 @@ The driver has **not** edited DEC-2 — `T395` makes that edit citing the gate.
 `T393`/`T394` → `T390`, `T391`, `T395`, `T396`, `T397`, `T400`, `T401` → `T392`+`T398` (**these two must
 agree their P-numbers or land in one commit** — this repo has already shipped one P-number collision).
 
+## ⚠ DRIVER ERROR FOUND AND CORRECTED AT 14:40Z — `T393` WAS NEVER DISPATCHED
+
+The driver wrote `T393`'s dispatch record — `status: in_progress`, `branch:
+softhouse/T393-t382-conditions` — and **pushed it at `25e910b4`, in a commit whose own message says "pushed
+before its worktree"** — then processed another worker's result and **never called the Agent tool.** For
+**2 h 20 m** `tasks.json` told anyone reading it that a task was in flight while **nothing was running**.
+
+Proven empty rather than assumed: `git rev-parse --verify softhouse/T393-t382-conditions` → fatal, the branch
+never existed locally or on origin; zero worktrees match; the session's own agent list holds no such
+subagent. **Nothing was lost, because nothing ever ran.** Reset to `pending`.
+
+**THE SHAPE IS WORTH MORE THAN THE INCIDENT.** The push-before-spawn protocol exists so the record cannot
+claim **less** than reality — the 2026-08-22 and 2026-08-28 incidents were both "workers running, record
+silent". This is the same record claiming **more** than reality, and **no guard in this program looks for
+it**. `ready-tasks.py` already flags an `in_progress` task with no `branch` as a suspected isolation
+violation — **the driver simply never re-ran it after dispatching.** A cheap fix exists and should be a task:
+re-run `ready-tasks.py` after every dispatch wave and treat a branchless `in_progress` as an alarm.
+
+Not dispatched now, deliberately: the fire is 8.7 h old against a 9.52 h record, and STEP 5.5 says only
+dispatch what you have the budget to see through.
+
 ## Pause reason
-**Not paused.** `T384` and `T393` dispatched and being awaited. Fire is 8.2 h old at the time of writing;
+**Not paused.** `T384` dispatched and being awaited. Fire is 8.2 h old at the time of writing;
 longest on record is 9.52 h. `T384` was dispatched with its verdict-critical checks ordered FIRST and the
 95-minute full drive LAST, so a kill mid-review still leaves a usable verdict.
