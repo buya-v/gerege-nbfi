@@ -57,6 +57,25 @@
 #       load -- satisfies none of the argument above.
 #   (c) an UPDATE BELOW THE FLOOR. The floor detects appends, not mutations. 8 rows already
 #       carry reversed = t, all at or below id 64, and this script never reads that column.
+#   (d) THE SCHEDULER — added by T390, and OBSERVED, not theorised. Fineract's in-process
+#       Spring Batch scheduler writes journal entries WITHOUT a command-source row, so the
+#       coverage argument above ("every API-driven write lands a command-source row") is true
+#       and does not reach it. Measured 2026-08-28: job 11 "Add Accrual Transactions"
+#       (job_run_history 12721, 16:01:00 UTC = 00:01 Asia/Ulaanbaatar, cron 0 1 0 1/1 * ? *)
+#       wrote journal transactions L32/L33/L34, eighteen legs, je ids 96-113, as app user 2
+#       `system`, while m_portfolio_command_source stayed at 379. The command floor moved by
+#       ZERO and the ledger moved by eighteen rows.
+#       WHY THIS ONE WAS CAUGHT ANYWAY: job 11 happens to write to acc_gl_journal_entry, which
+#       IS one of the two watched tables, so it starred as UNATTRIBUTED and the operator had to
+#       go and find out who did it. A scheduled job touching any of the other 279 tables would
+#       be invisible on both floors. Nineteen jobs read is_active = t in this tenant.
+#       WHAT NOT TO DO ABOUT IT: do not teach this script to wave through writes by user 2.
+#       That converts every future scheduler write into a silent green and is strictly worse
+#       than a red somebody has to read. Register the transactions in PROBES.tsv naming the job
+#       and its job_run_history id, as T390's block there does.
+#       [VERIFIED: T390, live. Evidence under .softhouse/capture/t390-baseline-attribution/out/:
+#        q1-je-above-95.txt, q2-command-source-tail.txt, q3-jobs.txt, q4-job-run-history.txt,
+#        q5-loan-transactions-8.txt, q7-who-is-user-2.txt.]
 #
 # The float check is the one place DDL is covered, and it is narrower than it could be: it
 # looks at the two ledger tables, while live there are 0 float columns across ALL 281
