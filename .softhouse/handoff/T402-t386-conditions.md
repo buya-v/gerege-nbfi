@@ -306,6 +306,14 @@ grep -c 'probe = '  ->  1                                    <- PRESENCE tested 
 :698  VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells
 ```
 
+**A final confirming run**, taken after this handoff was committed and from a tree that held
+still start to finish, is `out/T402-BAR-final.txt` — it grades commit `0574a3b7` (this handoff).
+Its exit code, its probe line and its two frontier lines are lines *in that file*, not claims in
+this one: `BAR_EXIT=0`, `grep -c 'probe = '` = 1 reading `up`, frontier 11/11, dead-path GREEN
+108, `VERDICT: PASS`, `git status --porcelain` empty both before and after. *(T386 paid twice for
+the lesson that a bar run is a measurement of a tree, so the tree has to hold still for the
+length of it.)*
+
 **Baseline held exactly**: 46 parity / 7884 cells, frontier GREEN at `deadOccurrences 108`,
 14 wrong implementations dead, pin 14. My **five** new `.sh` instruments entered the linter's
 corpus and put **zero** rows on the fail-open frontier; my new files added **zero** dead paths.
