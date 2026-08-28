@@ -56,8 +56,10 @@ each with `bash` and never `sh`. Probe **presence** was read before its value �
 **THE DEAD-PATH DISAGREEMENT IS RESOLVED BY RUNNING, NOT BY ARITHMETIC (P-83).** T375 reports
 `109 == pin, corpus 1343`; current `main` measures `108`, corpus `1384`. Both are true and
 neither is a defect: they are **two different pins on two different corpora**, because T375's
-merge base is older than today's `main`, which moved `109 → 108` earlier in this fire (T374's
-change, and the attribution is not mine to make — I did not need it). **The question that
+merge base is older than today's `main`, which moved `109 → 108` earlier in this fire. **I make
+no attribution for that move.** The coordinator states it belongs to T374 and also records that
+a reviewer in this same fire guessed wrong about it; I did not need the answer, so I did not
+guess — the question I had to settle was answerable by running, and I ran it. **The question that
 matters is what the MERGE RESULT does, and I ran it:** `deadOccurrences=108`, identical to
 current `main`, with `corpus=1385` — `main`'s 1384 plus exactly one file, T375's own tracked
 `drive-red-t375.sh`. **T375 adds a file to the corpus and moves the dead-path count by zero.**
