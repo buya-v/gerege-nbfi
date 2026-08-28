@@ -1,0 +1,4 @@
+instrument: /Users/buv/gerege-nbfi/.claude/worktrees/agent-af6e0b0869cd9f233/.softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh
+  run 1: rc=0 elapsed=2s
+  run 2: rc=0 elapsed=1s
+  run 3: rc=0 elapsed=1s
