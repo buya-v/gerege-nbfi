@@ -1,0 +1,22 @@
+T277 -- NEGATIVE CALIBRATION of shapelaw_census_t277.py
+
+A guard that cannot fail proves nothing. Two deliberate mutations, each run
+against the same committed raw captures. Both were expected to trip; both did.
+
+=== MUTATION 1: assert law (ii) holds 220/220 on the FACT-A domain ===
+    This is EXACTLY the claim the cloud's T241 (df0aed2c) made.
+    exit code: 1
+SCOPE t229corpus    296 admitted stuck cells   FAIL
+!! lawII_holds_on_factA                           213                    (expected 220)
+RESULT: FAIL
+
+=== MUTATION 2: drop T159-R600p0-N2000-B999 from the expected exception set ===
+    exit code: 1
+SCOPE t229corpus    296 admitted stuck cells   FAIL
+    [t229corpus] lawII exception ('T159-R600p0-N2000-B999', 'capture-t159-raw.json.gz'): expected None, measured 166
+SCOPE all           578 admitted stuck cells   FAIL
+    [all] lawII exception ('T159-R600p0-N2000-B999', 'capture-t159-raw.json.gz'): expected None, measured 166
+RESULT: FAIL
+
+=== UNMUTATED instrument, same data, same invocation ===
+    exit code: 0, both scopes PASS -- see 10-census-report.txt

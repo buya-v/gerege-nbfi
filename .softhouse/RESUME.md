@@ -49,3 +49,43 @@ Also unblocked by batch 1: `T325` (T324 now `done`), `T307`, `T322`.
 ## Pause reason
 
 **None — work is in flight.**
+
+---
+
+## BATCH 2 — dispatched after T306/T272/T329 merged. **LIVE.**
+
+| Task | Branch | Owns (sole writer) |
+|---|---|---|
+| **T325** | `softhouse/T325-adopt-attestation` | `.softhouse/guards/repo-state-attest.sh`, **`.softhouse/bin/fire-program.sh`** |
+| **T330** | `softhouse/T330-reconcile-merged-work` | `.softhouse/bin/ready-tasks.py` |
+
+Still live from batch 1: **T326** (`conformance.sh`, frontier pin), **T277** (`gates.md`), **T282** (`patterns.md`).
+
+**T325 owns `fire-program.sh` while a fire is running from it, and that is SAFE, measured not assumed.**
+T309's probes [`fire-program.sh:67-79`]: zsh 5.9 does not slurp a script, so an **in-place** rewrite (same
+inode) mid-run executes the rewritten tail — but **every git operation that lands a change writes a NEW inode
+and renames over the path**, which cannot reach the running shell's open fd. Landing through git is safe;
+`sed -i ''` / `cat >` / python `open(path,"w")` against the live checkout is not.
+
+**Merged this fire so far:** T306 (`3da08fbb`), T272 (`16c59715`), T329 (`61c0f382`).
+
+---
+
+## BATCH 3 — **T328 DISPATCHED. LIVE.** This is the task the fire exists for.
+
+`softhouse/T328-date-rule-promotion`. All three dependencies merged: T327 `done`, T326 `6c3d0787`,
+T306 `3da08fbb`. **No oracle contact required or permitted** — T327 banked every byte with sidecars and a
+99-entry manifest precisely so this task needs none.
+
+**The hole:** the store pins only the REFUSING side of both date rules, so **a port that refuses every dated
+entry passes `LDG-REFUSE-04` and `LDG-REFUSE-05` and survives the entire corpus.** The deliverable is a
+**dead mutant**, not two files.
+
+Sole writer of `.softhouse/vectors/`, `.softhouse/conformance.sh`, `dead-path-frontier.pin`,
+`nexus/internal/apps/ledger/conformance/`.
+
+**Merged this fire:** T306 `3da08fbb` · T272 `16c59715` · T329 `61c0f382` · T277 `e8374743` · T326 `6c3d0787`.
+**Still live:** T282 (`patterns.md`), T325 (`fire-program.sh`, `repo-state-attest.sh`), T330 (`ready-tasks.py`), T328.
+
+**Bar on `main` right now:** exit 0, probe PRESENT and `up`, 46 parity vectors / 7884 cells, LEDGER 5/5/29,
+11/11 wrong impls dead, dead-path frontier 109 == pinned, corpus 1214.

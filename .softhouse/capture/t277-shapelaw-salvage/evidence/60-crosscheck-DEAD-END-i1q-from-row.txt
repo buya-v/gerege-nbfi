@@ -1,0 +1,213 @@
+T277 NEGATIVE CALIBRATION of the cross-check: the DEAD END, run on purpose.
+I1q taken from repayment row 1's 'interest' field. On a STUCK cell that field
+is already clipped to E, so delta reads 0 on every cell and the measurement
+collapses. This run MUST exit non-zero. It is why I1q is COMPUTED, not read.
+
+$ python3 src/crosscheck_seven_t277b.py <repo-root> --i1q-from-row
+*** DELIBERATE DEAD-END MODE: I1q taken from repayment row 1's
+*** `interest` field, which on a STUCK cell is already clipped to E.
+*** This run MUST FAIL. It is the calibration for the claim that
+*** I1q is not observable in the emitted schedule.
+
+T277 CROSS-CHECK (second instrument, independently written arithmetic)
+  scope t229corpus files: capture-t117-raw.json.gz, capture-t117p2-raw.json.gz, capture-t159-raw.json.gz, capture-t223-raw.json.gz
+  cells excluded and counted: {}
+  stuck cells                        296   (expected 296)
+  FACT A holds                       220   (expected 220)
+  FACT A fails                        76   (expected 76)
+  law (ii) holds on FACT A            37   (expected 213)
+  law (ii) EXCEPTIONS on FACT A      183   (expected 7)
+  delta == 0 cells                   296
+  exceptions with delta == 0         183   (DISJOINTNESS: expected 0)
+  exceptions that FAIL FACT A          0   (DISJOINTNESS: expected 0)
+  header != row-sum principal          0   (expected 0)
+  principal confined to LAST row     220 / 220
+  max(0, E + B - I_last) matches     220 / 220
+
+  THE EXCEPTION SET -- integer minor units, principal from the ROW SUM:
+    T117-BS-R600p0-N1000-B3  n=1000  B=3     E=1     I1q=1     delta=0  FULL-family-B=False  law(ii) predicts 3  OBSERVED 0
+    T117-BS-R600p0-N1000-B5  n=1000  B=5     E=2     I1q=2     delta=0  FULL-family-B=False  law(ii) predicts 5  OBSERVED 0
+    T117-BS-R600p0-N104-B5   n=104   B=5     E=2     I1q=2     delta=0  FULL-family-B=False  law(ii) predicts 5  OBSERVED 0
+    T117-BS-R600p0-N108-B3   n=108   B=3     E=1     I1q=1     delta=0  FULL-family-B=False  law(ii) predicts 3  OBSERVED 0
+    T117-BS-R600p0-N108-B5   n=108   B=5     E=2     I1q=2     delta=0  FULL-family-B=False  law(ii) predicts 5  OBSERVED 0
+    T117-BS-R600p0-N121-B3   n=121   B=3     E=1     I1q=1     delta=0  FULL-family-B=False  law(ii) predicts 3  OBSERVED 0
+    T117-BS-R600p0-N121-B5   n=121   B=5     E=2     I1q=2     delta=0  FULL-family-B=False  law(ii) predicts 5  OBSERVED 0
+    T117-BS-R600p0-N150-B3   n=150   B=3     E=1     I1q=1     delta=0  FULL-family-B=False  law(ii) predicts 3  OBSERVED 0
+    T117-BS-R600p0-N150-B5   n=150   B=5     E=2     I1q=2     delta=0  FULL-family-B=False  law(ii) predicts 5  OBSERVED 0
+    T117-BS-R600p0-N250-B3   n=250   B=3     E=1     I1q=1     delta=0  FULL-family-B=False  law(ii) predicts 3  OBSERVED 0
+    T117-BS-R600p0-N250-B5   n=250   B=5     E=2     I1q=2     delta=0  FULL-family-B=False  law(ii) predicts 5  OBSERVED 0
+    T117-CTRL-R600p0-N250-B1 n=250   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N300-B1   n=300   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N301-B1   n=301   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N302-B1   n=302   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N303-B1   n=303   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N304-B1   n=304   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N305-B1   n=305   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N306-B1   n=306   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N307-B1   n=307   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N308-B1   n=308   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N309-B1   n=309   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N310-B1   n=310   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N311-B1   n=311   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N312-B1   n=312   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N313-B1   n=313   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N314-B1   n=314   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N315-B1   n=315   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N316-B1   n=316   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N317-B1   n=317   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N318-B1   n=318   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N319-B1   n=319   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N320-B1   n=320   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N321-B1   n=321   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N322-B1   n=322   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N323-B1   n=323   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N324-B1   n=324   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N325-B1   n=325   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N326-B1   n=326   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N327-B1   n=327   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N328-B1   n=328   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N329-B1   n=329   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N330-B1   n=330   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N331-B1   n=331   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N332-B1   n=332   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N333-B1   n=333   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N334-B1   n=334   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N335-B1   n=335   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N336-B1   n=336   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N337-B1   n=337   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N338-B1   n=338   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N339-B1   n=339   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N340-B1   n=340   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N341-B1   n=341   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N342-B1   n=342   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N343-B1   n=343   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N344-B1   n=344   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N345-B1   n=345   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N346-B1   n=346   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N347-B1   n=347   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N348-B1   n=348   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N349-B1   n=349   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N350-B1   n=350   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N351-B1   n=351   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N352-B1   n=352   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N353-B1   n=353   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N354-B1   n=354   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N355-B1   n=355   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N356-B1   n=356   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N357-B1   n=357   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N358-B1   n=358   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N359-B1   n=359   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N360-B1   n=360   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N361-B1   n=361   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N364-B1   n=364   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N365-B1   n=365   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N366-B1   n=366   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N367-B1   n=367   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N368-B1   n=368   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N369-B1   n=369   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N370-B1   n=370   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N371-B1   n=371   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N372-B1   n=372   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N373-B1   n=373   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N374-B1   n=374   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N375-B1   n=375   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N376-B1   n=376   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N377-B1   n=377   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N378-B1   n=378   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N379-B1   n=379   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N380-B1   n=380   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N381-B1   n=381   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N382-B1   n=382   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N383-B1   n=383   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N384-B1   n=384   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N385-B1   n=385   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N386-B1   n=386   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N387-B1   n=387   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N388-B1   n=388   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N389-B1   n=389   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NC-R600p0-N390-B1   n=390   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N1000-B1  n=1000  B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N620-B1   n=620   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N630-B1   n=630   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N640-B1   n=640   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N650-B1   n=650   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N860-B1   n=860   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N870-B1   n=870   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N910-B1   n=910   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N920-B1   n=920   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N930-B1   n=930   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N940-B1   n=940   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N950-B1   n=950   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N960-B1   n=960   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N970-B1   n=970   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N980-B1   n=980   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NL-R600p0-N990-B1   n=990   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NT-R600p0-N995-B1   n=995   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NT-R600p0-N996-B1   n=996   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NT-R600p0-N997-B1   n=997   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NT-R600p0-N998-B1   n=998   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117-NT-R600p0-N999-B1   n=999   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T117P2-R600p0-N1000-B101 n=1000  B=101   E=50    I1q=50    delta=0  FULL-family-B=False  law(ii) predicts 101  OBSERVED 0
+    T117P2-R600p0-N1000-B11  n=1000  B=11    E=5     I1q=5     delta=0  FULL-family-B=False  law(ii) predicts 11  OBSERVED 0
+    T117P2-R600p0-N1000-B21  n=1000  B=21    E=10    I1q=10    delta=0  FULL-family-B=False  law(ii) predicts 21  OBSERVED 0
+    T117P2-R600p0-N1000-B501 n=1000  B=501   E=250   I1q=250   delta=0  FULL-family-B=False  law(ii) predicts 501  OBSERVED 0
+    T117P2-R600p0-N1000-B51  n=1000  B=51    E=25    I1q=25    delta=0  FULL-family-B=False  law(ii) predicts 51  OBSERVED 0
+    T117P2-R600p0-N1000-B7   n=1000  B=7     E=3     I1q=3     delta=0  FULL-family-B=False  law(ii) predicts 7  OBSERVED 0
+    T117P2-R600p0-N1000-B9   n=1000  B=9     E=4     I1q=4     delta=0  FULL-family-B=False  law(ii) predicts 9  OBSERVED 0
+    T117P2-R600p0-N104-B5    n=104   B=5     E=2     I1q=2     delta=0  FULL-family-B=False  law(ii) predicts 5  OBSERVED 0
+    T117P2-R600p0-N108-B11   n=108   B=11    E=5     I1q=5     delta=0  FULL-family-B=False  law(ii) predicts 11  OBSERVED 5
+    T117P2-R600p0-N108-B21   n=108   B=21    E=10    I1q=10    delta=0  FULL-family-B=False  law(ii) predicts 21  OBSERVED 0
+    T117P2-R600p0-N108-B51   n=108   B=51    E=25    I1q=25    delta=0  FULL-family-B=False  law(ii) predicts 51  OBSERVED 0
+    T117P2-R600p0-N108-B7    n=108   B=7     E=3     I1q=3     delta=0  FULL-family-B=False  law(ii) predicts 7  OBSERVED 0
+    T117P2-R600p0-N108-B9    n=108   B=9     E=4     I1q=4     delta=0  FULL-family-B=False  law(ii) predicts 9  OBSERVED 0
+    T117P2-R600p0-N121-B11   n=121   B=11    E=5     I1q=5     delta=0  FULL-family-B=False  law(ii) predicts 11  OBSERVED 4
+    T117P2-R600p0-N121-B21   n=121   B=21    E=10    I1q=10    delta=0  FULL-family-B=False  law(ii) predicts 21  OBSERVED 0
+    T117P2-R600p0-N121-B51   n=121   B=51    E=25    I1q=25    delta=0  FULL-family-B=False  law(ii) predicts 51  OBSERVED 0
+    T117P2-R600p0-N121-B7    n=121   B=7     E=3     I1q=3     delta=0  FULL-family-B=False  law(ii) predicts 7  OBSERVED 0
+    T117P2-R600p0-N121-B9    n=121   B=9     E=4     I1q=4     delta=0  FULL-family-B=False  law(ii) predicts 9  OBSERVED 0
+    T117P2-R600p0-N150-B11   n=150   B=11    E=5     I1q=5     delta=0  FULL-family-B=False  law(ii) predicts 11  OBSERVED 2
+    T117P2-R600p0-N150-B13   n=150   B=13    E=6     I1q=6     delta=0  FULL-family-B=False  law(ii) predicts 13  OBSERVED 0
+    T117P2-R600p0-N150-B15   n=150   B=15    E=7     I1q=7     delta=0  FULL-family-B=False  law(ii) predicts 15  OBSERVED 0
+    T117P2-R600p0-N150-B17   n=150   B=17    E=8     I1q=8     delta=0  FULL-family-B=False  law(ii) predicts 17  OBSERVED 0
+    T117P2-R600p0-N150-B19   n=150   B=19    E=9     I1q=9     delta=0  FULL-family-B=False  law(ii) predicts 19  OBSERVED 0
+    T117P2-R600p0-N150-B21   n=150   B=21    E=10    I1q=10    delta=0  FULL-family-B=False  law(ii) predicts 21  OBSERVED 0
+    T117P2-R600p0-N150-B51   n=150   B=51    E=25    I1q=25    delta=0  FULL-family-B=False  law(ii) predicts 51  OBSERVED 0
+    T117P2-R600p0-N150-B7    n=150   B=7     E=3     I1q=3     delta=0  FULL-family-B=False  law(ii) predicts 7  OBSERVED 0
+    T117P2-R600p0-N150-B9    n=150   B=9     E=4     I1q=4     delta=0  FULL-family-B=False  law(ii) predicts 9  OBSERVED 0
+    T117P2-R600p0-N250-B101  n=250   B=101   E=50    I1q=50    delta=0  FULL-family-B=False  law(ii) predicts 101  OBSERVED 0
+    T117P2-R600p0-N250-B11   n=250   B=11    E=5     I1q=5     delta=0  FULL-family-B=False  law(ii) predicts 11  OBSERVED 0
+    T117P2-R600p0-N250-B21   n=250   B=21    E=10    I1q=10    delta=0  FULL-family-B=False  law(ii) predicts 21  OBSERVED 0
+    T117P2-R600p0-N250-B51   n=250   B=51    E=25    I1q=25    delta=0  FULL-family-B=False  law(ii) predicts 51  OBSERVED 0
+    T117P2-R600p0-N250-B7    n=250   B=7     E=3     I1q=3     delta=0  FULL-family-B=False  law(ii) predicts 7  OBSERVED 0
+    T117P2-R600p0-N250-B9    n=250   B=9     E=4     I1q=4     delta=0  FULL-family-B=False  law(ii) predicts 9  OBSERVED 0
+    T159-R600p0-N1000-B501   n=1000  B=501   E=250   I1q=250   delta=0  FULL-family-B=False  law(ii) predicts 501  OBSERVED 0
+    T159-R600p0-N1000-B503   n=1000  B=503   E=251   I1q=251   delta=0  FULL-family-B=False  law(ii) predicts 503  OBSERVED 0
+    T159-R600p0-N1000-B551   n=1000  B=551   E=275   I1q=275   delta=0  FULL-family-B=False  law(ii) predicts 551  OBSERVED 0
+    T159-R600p0-N1000-B801   n=1000  B=801   E=400   I1q=400   delta=0  FULL-family-B=False  law(ii) predicts 801  OBSERVED 0
+    T159-R600p0-N108-B11     n=108   B=11    E=5     I1q=5     delta=0  FULL-family-B=False  law(ii) predicts 11  OBSERVED 5
+    T159-R600p0-N1200-B1     n=1200  B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T159-R600p0-N1200-B501   n=1200  B=501   E=250   I1q=250   delta=0  FULL-family-B=False  law(ii) predicts 501  OBSERVED 0
+    T159-R600p0-N121-B11     n=121   B=11    E=5     I1q=5     delta=0  FULL-family-B=False  law(ii) predicts 11  OBSERVED 4
+    T159-R600p0-N150-B11     n=150   B=11    E=5     I1q=5     delta=0  FULL-family-B=False  law(ii) predicts 11  OBSERVED 2
+    T159-R600p0-N1500-B1     n=1500  B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T159-R600p0-N1500-B501   n=1500  B=501   E=250   I1q=250   delta=0  FULL-family-B=False  law(ii) predicts 501  OBSERVED 0
+    T159-R600p0-N2000-B1     n=2000  B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T159-R600p0-N2000-B501   n=2000  B=501   E=250   I1q=250   delta=0  FULL-family-B=False  law(ii) predicts 501  OBSERVED 0
+    T159-R600p0-N2000-B601   n=2000  B=601   E=300   I1q=300   delta=0  FULL-family-B=False  law(ii) predicts 601  OBSERVED 0
+    T159-R600p0-N2000-B801   n=2000  B=801   E=400   I1q=400   delta=0  FULL-family-B=False  law(ii) predicts 801  OBSERVED 0
+    T159-R600p0-N2000-B999   n=2000  B=999   E=499   I1q=499   delta=0  FULL-family-B=False  law(ii) predicts 999  OBSERVED 166
+    T159-R600p0-N3000-B1     n=3000  B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T159-R600p0-N3000-B1001  n=3000  B=1001  E=500   I1q=500   delta=0  FULL-family-B=False  law(ii) predicts 1001  OBSERVED 0
+    T159-R600p0-N3000-B501   n=3000  B=501   E=250   I1q=250   delta=0  FULL-family-B=False  law(ii) predicts 501  OBSERVED 0
+    T159-R600p0-N360-B1      n=360   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T159-R600p0-N361-B1      n=361   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T159-R600p0-N364-B1      n=364   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T159-R600p0-N365-B1      n=365   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T159-R600p0-N389-B1      n=389   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T159-R600p0-N390-B1      n=390   B=1     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 1  OBSERVED 0
+    T223-R300p0-N800-B2      n=800   B=2     E=0     I1q=0     delta=0  FULL-family-B=False  law(ii) predicts 2  OBSERVED 0
+    T223-R36p0-N1324-B50     n=1324  B=50    E=1     I1q=1     delta=0  FULL-family-B=False  law(ii) predicts 50  OBSERVED 0
+    T223-R36p0-N1500-B50     n=1500  B=50    E=1     I1q=1     delta=0  FULL-family-B=False  law(ii) predicts 50  OBSERVED 0
+
+RESULT: FAIL -- law (ii) count on FACT A moved ; EXCEPTION SET moved ; an exception has delta == 0 -- disjointness broken ; an exception does NOT satisfy the FULL family B antecedent
+exit=1
