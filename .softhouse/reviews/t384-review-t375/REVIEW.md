@@ -79,7 +79,10 @@ from a CLEAN COMMITTED tree (`git status --porcelain` EMPTY *before* the run, no
 **exit 0**, probe **PRESENT** reading `up`, `corpus=1384 deadOccurrences=108` — **unmoved**,
 because every instrument this review adds is committed as `.txt` and stays out of T316's
 `.sh`/`.py` corpus by construction — frontier 11 == 11, `VERDICT: PASS`.
-[`evidence/04-bar-on-T384-review-branch-CLEAN-COMMITTED.txt`.]
+[`evidence/04-bar-on-T384-review-branch-CLEAN-COMMITTED.txt`; and re-run **after the last
+commit of this review**, with `git status --porcelain` EMPTY again — same result, exit 0, probe
+PRESENT ×1 reading `up`, `deadOccurrences=108`, frontier 11 == 11, `VERDICT: PASS`:
+`evidence/05-bar-FINAL-on-T384-branch-after-every-commit.txt`.]
 
 **`EXEMPTION_PIN_LEDGER_WRONGIMPLS` — matched BY NAME, never by line, as instructed.**
 It reads **13** on current `main` (`conformance.sh:3923`), **13** on the T375 branch
