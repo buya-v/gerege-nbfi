@@ -681,9 +681,21 @@ type ExpectLeg struct {
 	// CashAccountsForLoan HAS NO 7, 8 OR 9 AT ALL; AccrualAccountsForLoan does,
 	// and calls them INTEREST_RECEIVABLE, FEES_RECEIVABLE and
 	// PENALTIES_RECEIVABLE. The same two names, FEES_RECEIVABLE and
-	// PENALTIES_RECEIVABLE, sit at 25 and 26 in the cash enum
-	// [VERIFIED: AccountingConstants.java:79-89 and :95-122 at the pinned sha
-	// 426a23544; ported at nexus/internal/apps/ledger/slots.go].
+	// PENALTIES_RECEIVABLE, sit at 25 and 26 in the cash enum.
+	//
+	// [VERIFIED AT 426a23544 BY SYMBOL RATHER THAN BY LINE. The two enums are
+	// `AccountingConstants.CashAccountsForLoan` (values 1-6 and 10-26, with
+	// FEES_RECEIVABLE(25) and PENALTIES_RECEIVABLE(26)) and
+	// `AccountingConstants.AccrualAccountsForLoan` (INTEREST_RECEIVABLE(7),
+	// FEES_RECEIVABLE(8), PENALTIES_RECEIVABLE(9)). T391 cited the first half of
+	// that pair as `AccountingConstants.java:79-89`, which is the cash enum's
+	// `intToEnumMap`/`fromInt` block and contains no enum constant whatsoever —
+	// T406's F-T406-3, re-verified by T421 against the pinned checkout. The
+	// range was copied from slots.go:170, where it is CORRECT because it cites
+	// `fromInt`, and re-attached there to a claim about the constants. That is
+	// how a line citation rots: not by the file moving, but by the range being
+	// carried to a neighbouring claim. Cite the symbol. Ported at
+	// nexus/internal/apps/ledger/slots.go].
 	//
 	// -----------------------------------------------------------------------
 	// THIS IS THE CELL THAT GRADES THE SLOT RATHER THAN THE ACCOUNT

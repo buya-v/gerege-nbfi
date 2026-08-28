@@ -1,0 +1,11 @@
+T421 READ-ONLY GUARD RED DRIVE -- 2026-08-28T18:33:21Z
+target script: .softhouse/capture/t421-t406-conditions/bin/../capsql-readonly.sh
+
+  REFUSED (exit 2) as designed: UPDATE acc_gl_journal_entry SET amount = 1;
+  REFUSED (exit 2) as designed: DELETE FROM acc_product_mapping;
+  REFUSED (exit 2) as designed: INSERT INTO m_office (name) VALUES ('x');
+  REFUSED (exit 2) as designed: DROP TABLE acc_gl_account;
+  REFUSED (exit 2) as designed: -- looks harmless UPDATE acc_gl_account SET name='x';
+  CONTROL: a bare SELECT was ADMITTED (exit 0) -- the guard discriminates
+
+RED DRIVE: five write shapes REFUSED, control SELECT ADMITTED. Guard enforces.

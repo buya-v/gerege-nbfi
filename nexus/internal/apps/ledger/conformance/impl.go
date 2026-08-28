@@ -1381,8 +1381,13 @@ func incrementDecimalDigits(d string) string {
 // AccrualAccountsForLoan both call 3/4/5 INTEREST_ON_LOANS, INCOME_FROM_FEES and
 // INCOME_FROM_PENALTIES. It dies on exactly the three RECEIVABLE legs of each
 // accrual vector, on exactly one cell, `legs[i].slot_name`, because
-// CashAccountsForLoan HAS NO 7, 8 OR 9 [VERIFIED: AccountingConstants.java:79-89
-// at the pinned sha; ported at slots.go, `cashLoanNames`].
+// CashAccountsForLoan HAS NO 7, 8 OR 9 [VERIFIED AT 426a23544 BY SYMBOL RATHER
+// THAN BY LINE: the enum is `AccountingConstants.CashAccountsForLoan` and its
+// values run 1-6 and 10-26. T391 cited `AccountingConstants.java:79-89` here,
+// which is that enum's `intToEnumMap`/`fromInt` block and holds no constant at
+// all — T406's F-T406-3, re-verified by T421 against /Users/buv/fineract at the
+// pinned sha. A range citation rots; a symbol does not, so this one names the
+// symbol. Ported at slots.go, `cashLoanNames`].
 //
 // SO IT IS THE MEASUREMENT OF THE CLAIM "GRADE THE SLOT, NOT THE ACCOUNT". Every
 // account cell, every code cell, every side and every money cell it produces is
