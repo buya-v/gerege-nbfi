@@ -191,7 +191,7 @@ at all, so a decode that ignored the accounting rule would be wrong in both dire
 
 The forbidden set was **derived, not remembered**, by
 `11-derive-forbidden-set.py` (output `out/T388-D01-forbidden-set.txt`), which walks every JSON
-key ending in `gl_account_id` at any depth across all 64 files in `.softhouse/vectors/`,
+key ending in `gl_account_id` at any depth across all 67 files in `.softhouse/vectors/` (13 ledger + 50 loanschedule + 4 store-level),
 including the store-level `capabilities-ledger.json`, and splits by
 `provenance.capture_ref` into standing-oracle and throwaway instances.
 
@@ -326,7 +326,7 @@ is handed to the promotion task as required work, listed in the handoff.
 
 - **No promoted vector reads any of `L28`, `L29`, `L30`, `L31`.** Every ledger vector selects
   legs by an explicit `transaction_id`; none names any of the four
-  [`out/T388-D01-forbidden-set.txt` enumerates all 64 vectors].
+  [`out/T388-D01-forbidden-set.txt` enumerates all 67 files].
 - **No promoted vector grades an account BALANCE.** LDG-01's `_note` says so outright and gate
   G-12 is open on the running-balance columns, so the vector schema has no field that could
   move when an account gains rows.

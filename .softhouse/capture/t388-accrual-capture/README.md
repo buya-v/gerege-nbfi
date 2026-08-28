@@ -46,7 +46,7 @@ loan**, so that the accrual posts into accounts nothing grades.
 | capture | proves |
 |---|---|
 | `T388-B01`, `T388-B02`, `T388-B03`, `T388-B04`, `T388-B05` | the BEFORE state, taken before anything was written, so the record is a diff |
-| `T388-D01` | the forbidden set `{1,2,4,6,8,10,15,16,17,18,21,22}`, derived from all 64 vectors |
+| `T388-D01` | the forbidden set `{1,2,4,6,8,10,15,16,17,18,21,22}`, derived from all 67 files in the store (13 ledger + 50 loanschedule + 4 store-level) |
 | `T388-D02` | T388's accounts 35–47 are disjoint from it. Exit 0 |
 | `T388-D03` | the same checker RED-DRIVEN: `--check 16,41` → intersection `[16]`, FAIL, exit 1 |
 | `T388-G01`..`G13` | thirteen clean GL accounts created, ids 35–47, each with its slot named in the body |
