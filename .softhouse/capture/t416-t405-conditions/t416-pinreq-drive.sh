@@ -16,9 +16,9 @@ OUT="$ROOT/.softhouse/capture/t416-t405-conditions/out"
 
 # The four pins .softhouse/conformance.sh holds today (lines 524, 681-683).
 PIN_DECLARED=0
-PIN_PARITY=7
+PIN_PARITY=10
 PIN_REFUSAL=6
-PIN_MONEYCELLS=39
+PIN_MONEYCELLS=63
 # The two this request adds.
 PIN_INADMISSIBLE=0
 PIN_DIVERGENCE_PASS=1

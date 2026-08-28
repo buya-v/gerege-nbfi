@@ -10,9 +10,15 @@ Instrument: `t416-e4drive.sh`; transcripts `out/e4-*.log`; the pin arithmetic dr
 
 | store state | declared | parity | refusal | money cells | inadmissible | divergence PASS | the FOUR pins the bar holds |
 |---|---|---|---|---|---|---|---|
-| baseline | 0 | 7 | 6 | 39 | 0 | 1 | **GREEN** (correctly) |
-| ONE DIVERGENCE VECTOR REFUSED ADMISSION | 0 | 7 | 6 | 39 | **1** | **0** | **GREEN — and it should not be** |
-| one PARITY vector refused admission | 0 | **6** | 6 | **34** | 1 | 1 | **RED** (caught, twice over) |
+| baseline | 0 | 10 | 6 | 63 | 0 | 1 | **GREEN** (correctly) |
+| ONE DIVERGENCE VECTOR REFUSED ADMISSION | 0 | 10 | 6 | 63 | **1** | **0** | **GREEN — and it should not be** |
+| one PARITY vector refused admission | 0 | **9** | 6 | **58** | 1 | 1 | **RED** (caught, twice over) |
+
+**RE-BASELINED BY RUNNING (P-83), not assumed.** T391 merged into `main` mid-task and moved
+`EXEMPTION_PIN_LEDGER_PARITY` 7 -> 10, `_MONEYCELLS` 39 -> 63 and `_WRONGIMPLS` 14 -> 15. Every
+figure in this table is from the post-merge tree. **The finding survives the re-baseline
+unchanged**, which is itself the point: the divergence hole is structural, not a function of how
+many parity vectors happen to be in the store.
 
 The mutation that makes the divergence vector inadmissible is a single character removed from
 `oracle_accepted.observed_amount_texts` (`100.125000` → `100.12500`) — a transcription slip in the
@@ -20,8 +26,8 @@ one field in this program whose entire purpose is to hold the reference oracle's
 for a value no numeric type can represent.
 
 **T405's narrowing is confirmed against its own first statement.** `inadmissible` is *not*
-unpinned in general: an inadmissible PARITY vector moves `ledger parity` 7 → 6 and
-`ledger cells compared … MONEY` 39 → 34, and `EXEMPTION_PIN_LEDGER_PARITY` /
+unpinned in general: an inadmissible PARITY vector moves `ledger parity` 10 → 9 and
+`ledger cells compared … MONEY` 63 → 58, and `EXEMPTION_PIN_LEDGER_PARITY` /
 `EXEMPTION_PIN_LEDGER_MONEYCELLS` both catch it. The hole is **specific to the DIVERGENCE class**,
 which contributes to none of the four pinned figures — and it is the class T397 routes a NEW
 refusal into, which is what makes this the moment to pin it.
@@ -56,7 +62,7 @@ extractions in the existing `ledger_cmp` block, and two comparisons in the exist
 +#
 +# The four LEDGER figures pinned here and below guard the PARITY and
 +# ORACLE-REFUSAL classes: refusing a parity vector admission moves
-+# `ledger parity` 7 -> 6 and the money-cell count 39 -> 34, and both _cmp lines
++# `ledger parity` 10 -> 9 and the money-cell count 63 -> 58, and both _cmp lines
 +# go red. A DIVERGENCE vector contributes to NONE of the four, so refusing THAT
 +# one admission left every pinned figure identical -- measured, in
 +# .softhouse/capture/t416-t405-conditions/out/PINREQ-drive.txt.
@@ -99,9 +105,9 @@ was extractable on every row — an empty extraction would itself be a `_census_
 is the failure mode a new census line is most likely to have:
 
 ```
-baseline                 declared=0  parity=7  refusal=6  money=39 | inadm=0  divPASS=1  || FOUR EXISTING PINS: GREEN  TWO PROPOSED PINS: GREEN
-divergence-inadmissible  declared=0  parity=7  refusal=6  money=39 | inadm=1  divPASS=0  || FOUR EXISTING PINS: GREEN  TWO PROPOSED PINS: RED
-parity-inadmissible      declared=0  parity=6  refusal=6  money=34 | inadm=1  divPASS=1  || FOUR EXISTING PINS: RED    TWO PROPOSED PINS: RED
+baseline                 declared=0  parity=10 refusal=6  money=63 | inadm=0  divPASS=1  || FOUR EXISTING PINS: GREEN  TWO PROPOSED PINS: GREEN
+divergence-inadmissible  declared=0  parity=10 refusal=6  money=63 | inadm=1  divPASS=0  || FOUR EXISTING PINS: GREEN  TWO PROPOSED PINS: RED
+parity-inadmissible      declared=0  parity=9  refusal=6  money=58 | inadm=1  divPASS=1  || FOUR EXISTING PINS: RED    TWO PROPOSED PINS: RED
 ```
 
 RED-before is row 2, column "FOUR EXISTING PINS" = GREEN. GREEN-after is row 2, column "TWO
@@ -116,6 +122,7 @@ so neither is a comparison that fails everything. Row 3 is the specificity contr
 two are deliberately independent numbers: that Go pin counts LOADED vectors and this one counts
 GRADED ones, which is precisely the distinction F-T405-6 turns on.
 
-**T391 may move `EXEMPTION_PIN_LEDGER_PARITY` to 10 and `_MONEYCELLS` to 63 when it lands. It
-moves neither of these two** — it adds no divergence vector and no inadmissible one. Re-measure by
-running rather than assuming, as always.
+**T391 HAS LANDED and moved `EXEMPTION_PIN_LEDGER_PARITY` to 10, `_MONEYCELLS` to 63 and
+`_WRONGIMPLS` to 15. It moved neither of these two** — it adds no divergence vector and no
+inadmissible one, and the drive above was re-run against the merged tree to establish that rather
+than to assume it.

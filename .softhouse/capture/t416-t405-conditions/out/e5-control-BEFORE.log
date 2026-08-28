@@ -243,27 +243,36 @@ T74-E-P72                    parity           path_a_e... PASS            257   
 
 --- LEDGER (tierA-gl-accounting) — SECOND SCHEMA, SECOND COMPARATOR, SEPARATE COUNTS ---
     implementation          ledger-go
-    LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    PASS             15 cells (5 money)
+    LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    PASS             18 cells (5 money)
         INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 12500062 == credits 12500062 (minor units), over 3 legs
         INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 12500062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
-    LDG-02-repayment-split-4leg-minor-units        parity         ledger_rest_posting    PASS             19 cells (6 money)
+    LDG-02-repayment-split-4leg-minor-units        parity         ledger_rest_posting    PASS             23 cells (6 money)
         INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 30000000 == credits 30000000 (minor units), over 4 legs
         INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), INDEPENDENT)  the REQUESTED transaction amount against the CREDIT splits: 30000000 == sum of 3 splits (minor units). INDEPENDENT of double_entry_balances: the whole comes from the recorded REQUEST, not from a leg
-    LDG-03-overpayment-4leg-minor-units            parity         ledger_rest_posting    PASS             19 cells (6 money)
+    LDG-03-overpayment-4leg-minor-units            parity         ledger_rest_posting    PASS             23 cells (6 money)
         INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 100000000 == credits 100000000 (minor units), over 4 legs
         INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), INDEPENDENT)  the REQUESTED transaction amount against the CREDIT splits: 100000000 == sum of 3 splits (minor units). INDEPENDENT of double_entry_balances: the whole comes from the recorded REQUEST, not from a leg
-    LDG-04-header-account-accepted                 parity         ledger_db_readback     PASS             11 cells (4 money)
+    LDG-04-header-account-accepted                 parity         ledger_db_readback     PASS             13 cells (4 money)
         INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 10000025 == credits 10000025 (minor units), over 2 legs
         INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 1 debit and 1 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
-    LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     PASS             27 cells (8 money)
+    LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     PASS             33 cells (8 money)
         INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 70000124 == credits 70000124 (minor units), over 6 legs
         INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
-    LDG-06-postclosure-entry-accepted-one-day-a... parity         ledger_db_readback     PASS             15 cells (5 money)
+    LDG-06-postclosure-entry-accepted-one-day-a... parity         ledger_db_readback     PASS             18 cells (5 money)
         INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 35000062 == credits 35000062 (minor units), over 3 legs
         INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 35000062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
-    LDG-07-entry-on-the-business-date-accepted     parity         ledger_db_readback     PASS             15 cells (5 money)
+    LDG-07-entry-on-the-business-date-accepted     parity         ledger_db_readback     PASS             18 cells (5 money)
         INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 35000062 == credits 35000062 (minor units), over 3 legs
         INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 35000062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
+    LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity         ledger_rest_posting    PASS             33 cells (8 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 2770000 == credits 2770000 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-ACC-02-accrual-six-slots-minor-unit-res... parity         ledger_rest_posting    PASS             33 cells (8 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 2389538 == credits 2389538 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-ACC-03-accrual-six-slots-scheduled-job     parity         ledger_rest_posting    PASS             33 cells (8 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 1605634 == credits 1605634 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
     LDG-DIV-01-oracle-accepts-sub-minor-unit-re... divergence     ledger_rest_posting    PASS              2 cells (0 money)
     LDG-REFUSE-01-unbalanced-by-one-minor-unit     oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
     LDG-REFUSE-02-manual-adjustments-not-permitted oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
@@ -271,21 +280,21 @@ T74-E-P72                    parity           path_a_e... PASS            257   
     LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
     LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
     LDG-REFUSE-06-preclosure-entry-before-closi... oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
-    ledger parity           PASS 7    FAIL 0
+    ledger parity           PASS 10   FAIL 0
     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
                                               and a capture recorded — NOT a contract sentinel)
     ledger inadmissible     0
     ledger harness errors   0
-    ledger cells compared   144 graded, of which 39 are MONEY cells in int64 minor units
-    ledger kills named      10 money, 22 structural
-    ledger invariants       0 violation(s), 19 non-vacuous assertion(s) made, of which 16 are
+    ledger cells compared   268 graded, of which 63 are MONEY cells in int64 minor units
+    ledger kills named      15 money, 28 structural
+    ledger invariants       0 violation(s), 25 non-vacuous assertion(s) made, of which 22 are
                             INDEPENDENT (able to go RED while every other invariant on the same
                             entry stays GREEN). A DEPENDENT hold is not a second piece of evidence.
     ledger exemptions       0 DECLARED (this schema ADMITS NONE; a declared exemption is
                                         INADMISSIBLE, so this figure is pinned at 0 by
                                         conformance.sh and both directions of drift are gated)
-    ledger citations        28 PART-TWO resolutions over the loaded corpus: 1 ARTEFACT-BYTES,
-                            24 HTTP-SIDECAR, 3 FILE-NAME-ONLY (pinned 3), 0 UNRESOLVED.
+    ledger citations        34 PART-TWO resolutions over the loaded corpus: 4 ARTEFACT-BYTES,
+                            27 HTTP-SIDECAR, 3 FILE-NAME-ONLY (pinned 3), 0 UNRESOLVED.
                             FILE-NAME-ONLY reads NO byte of the artefact: it checks that the ref
                             this vector wrote contains the case id this vector wrote. It is not
                             evidence about the artefact, it is pinned by (case_id, field) in
@@ -327,7 +336,7 @@ T74-E-P72                    parity           path_a_e... PASS            257   
       * LDG-DIV-01-oracle-accepts-sub-minor-unit-residue — PASS
 
     WHAT A GREEN LEDGER SECTION DOES **NOT** MEAN — printed every run, not only when it fails.
-    EVERY ONE OF THE 7 CAPABILITIES capabilities-ledger.json MARKS in_graded_domain:false IS
+    EVERY ONE OF THE 6 CAPABILITIES capabilities-ledger.json MARKS in_graded_domain:false IS
     LISTED BELOW — the list is DERIVED FROM THAT FILE, so a row added there prints itself here
     and a gap cannot go unprinted (A2-34 F-5: this block was hand-written and printed 6 of 8).
 
@@ -335,70 +344,42 @@ T74-E-P72                    parity           path_a_e... PASS            257   
           Resolving a loan product's placeholder slot to a GL account through
           acc_product_mapping, including the payment-type precedence chain and the cash/accrual
           family selection.
-          WHY NOT: NOT GRADED BY ANY VECTOR IN THIS STORE. The four parity vectors assert a
-          journal ENTRY read back from the oracle; none of them asserts that a (product, slot,
-          payment type) triple resolves to a particular account. The resolver exists in the Go
-          port (Resolver.ResolveLoanProductAccount) and A2-8 graded resolution against the
-          product read-back, but that grading was never promoted into a vector and this task did
-          not promote it either: doing so needs a request shape whose slot_code names ONE slot,
-          and every entry in the multi-leg corpus spans several. Marked false so that a vector
-          claiming this capability is REFUSED rather than graded against nothing.
-      * ledger.accrual.entry — NOT IN THE GRADED DOMAIN
-          An accrual journal entry -- INTEREST_RECEIVABLE, FEES_RECEIVABLE or
-          PENALTIES_RECEIVABLE.
-          WHY NOT: ENTIRELY UNGRADED, and the reason is that the observations do not exist
-          rather than that the machinery does not. Product 28 is the only ACCRUAL_PERIODIC
-          product (m_product_loan.accounting_type = 3, and it is the ONLY row with that value),
-          it HAS NO LOAN (m_loan carries no product_id = 28; loans 1-7 are on products 22, 22,
-          27, 24, 46, 46, 55), and no accrual or COB job has ever run -- so NOT ONE JOURNAL
-          ENTRY IN THIS TENANT ARRIVED THROUGH A RECEIVABLE SLOT. Product 28's own mapping is
-          inadmissible today (A2-314, 403). An accrual vector needs a NEW accrual product on
-          clean accounts PLUS a job run; neither is in this task's scope and neither is cheap.
-          THE CLAIM IS ABOUT THE SLOTS, NOT THE ACCOUNTS, and unposted_slots below records them
-          as structured data so the harness can decode each slot name through the ported
-          AccrualAccountsForLoan enum and MEASURE each backing account's activity against the
-          promoted corpus on every run. [CORRECTED by T242, A2-34 F-4. This row used to assert
-          'gl 18, 22 and 16 carry ZERO journal entries' and the harness printed that sentence on
-          every run, pass or fail, as a measured fact. Re-derived against the live PostgreSQL
-          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
-          the ledger, and gl 16 is a promoted leg of LDG-01, LDG-02 and LDG-03. The error was
-          structural rather than clerical: ONE GL ACCOUNT BACKS SEVERAL SLOTS. gl 16 is
-          PENALTIES_RECEIVABLE (slot 9) on product 28 AND FUND_SOURCE (slot 1) on products 22,
-          27, 46, 54 and 55, and all sixteen of its rows arrive through the latter. The slot is
-          unposted; the account is not empty.] [REASON CORRECTED BY MEASUREMENT, T352, fire
-          20260828-140005; the CONCLUSION stands and the COST ESTIMATE does not. (a) 'no accrual
-          or COB job has ever run' is FALSE. Three accrual jobs are ACTIVE and ran the day
-          before this fire: 'Add Accrual Transactions' (id 11) and 'Add Accrual Transactions For
-          Loans With Income Posted As Transactions' (id 22) at 2026-08-27 16:01, and 'Add
-          Periodic Accrual Transactions' (id 16) at 2026-08-27 16:02
-          [out/T352-A10-accrual-reachability.txt]. They post nothing because there is nothing to
-          post, which is a different fact and the one that actually carries the conclusion. The
-          COB half of the sentence IS right: 'Loan COB' (id 34) and 'Increase COB Date by 1 day'
-          (id 33) are both INACTIVE with a null previous_run_start_time. (b) 'An accrual vector
-          needs a NEW accrual product on clean accounts PLUS a job run' OVERSTATES THE COST.
-          Product 28 is ACCRUAL_PERIODIC and its mapping is COMPLETE -- all thirteen
-          financial_account_type slots 1..13 are mapped, including 7 -> gl 18, 8 -> gl 22 and 9
-          -> gl 16 [same capture]. The single missing ingredient is A LOAN: product 28 has zero,
-          re-confirmed by a LEFT JOIN over every product [same capture]. The periodic accrual
-          job is already active, so a loan on product 28, approved and disbursed, would be
-          accrued by the next scheduled run with no new product and no job wiring. (c) WHY T352
-          STILL DID NOT TAKE IT, stated rather than left as a gap: slot 9 resolves to gl 16,
-          which is a PROMOTED LEG of LDG-01, LDG-02 and LDG-03, and A2-314/403 already hold
-          product 28's mapping inadmissible -- so the cheap route posts accrual rows into an
-          account three graded vectors read, through a mapping the store refuses. That is a
-          deliberate change to shared oracle state for evidence that CANNOT BE PROMOTED anyway
-          while this capability is out of the graded domain. The expensive route -- a new
-          ACCRUAL_PERIODIC product on clean accounts -- remains the right one, and is now known
-          to need no job work. Raised as FU-T352-3.] [COUNT RESTATED, T352: T242's 'gl 16 ->
-          SIXTEEN' above was measured in its own fire and T352 MOVED IT. This fire posted four
-          further legs on gl 16 (probe transactions a29bca0816a7, a29bca9bf813, a29bcaa6a41b,
-          a29bcb5d6fcf), so the live count is now TWENTY, gl 17 is FIVE and gl 21 is TWELVE
-          [out/T352-A10-accrual-reachability.txt]. gl 18 -> 0 and gl 22 -> 0 are UNCHANGED,
-          which is the pair this row's argument actually rests on. The oracle-state move is
-          recorded in .softhouse/capture/t352-a2-next-tranche/ORACLE-STATE-MOVED-BY-T352.md.
-          Note that these counts are PROSE IN THIS FILE, not values the harness re-derives at
-          report time, which is exactly why they go stale and why T242 had to correct them once
-          already.]
+          WHY NOT: PARTIALLY GRADED SINCE T391, AND THE ROW STAYS FALSE BECAUSE THE PART THAT IS
+          GRADED IS THE SMALLER PART. What IS graded now: the (product, slot) -> GL account
+          resolution on the ACCRUAL family, for slot codes 3, 4, 5, 7, 8 and 9 on product 63,
+          keyed through that product's own observed thirteen-row acc_product_mapping table, plus
+          the DECODE of each code to its AccrualAccountsForLoan name. LDG-ACC-01/02/03 assert
+          it, and ledger-wrong-slot-family-blind -- a port that decodes every code through
+          CashAccountsForLoan whatever the accounting rule says -- dies to it on
+          legs[i].slot_name while producing the RIGHT account on every leg. WHAT IS STILL
+          UNGRADED, and it is why in_graded_domain stays FALSE: (a) THE PAYMENT-TYPE PRECEDENCE
+          CHAIN -- product 63 has NO paymentChannelToFundSourceMappings,
+          feeToIncomeAccountMappings or penaltyToIncomeAccountMappings at all [T391, GET
+          /loanproducts/63, out/T391-04-product63-mapping-rest.txt], so STEP 2 of
+          resolveProductAccount is never entered and G-06's contested null-payment-type question
+          is untouched; (b) THE CASH FAMILY -- no cash-based accounting-path vector exists; (c)
+          the financial-activity STEP 0 branch, which no loan placeholder code reaches; (d) the
+          charge and reason precedence levels. A vector claiming THIS capability would be
+          claiming all of that, so it is still refused. The accrual vectors claim
+          `ledger.accrual.entry` instead, which is scoped to what they actually exercised. [T391
+          MOVED unposted_slots ONTO THIS ROW. It used to hang off ledger.accrual.entry, which is
+          now in the graded domain -- and the harness prints the SLOT lines only for rows marked
+          in_graded_domain false, so leaving them there would have SILENTLY STOPPED PRINTING a
+          measurement that has already been wrong once in this file's history. They belong here
+          on the merits too: an unposted slot is a gap in SLOT RESOLUTION coverage. Nothing else
+          about them changed. THE THREE PRODUCT-28 ROWS ARE UNCHANGED AND STILL TRUE,
+          re-measured live by T391: slot 7 -> gl 18 (0 rows), slot 8 -> gl 22 (0 rows), slot 9
+          -> gl 16 (21 rows on the ACCOUNT and ZERO through product 28)
+          [out/T391-S01-slot-resolution.txt section 8]. THE FIVE PRODUCT-63 ROWS ARE NEW and are
+          the five accrual slots T388 left unposted and T391 DELIBERATELY DID NOT POST: 6
+          LOSSES_WRITTEN_OFF -> gl 40, 10 TRANSFERS_SUSPENSE -> gl 44, 11 OVERPAYMENT -> gl 45,
+          12 INCOME_FROM_RECOVERY -> gl 46, 13 GOODWILL_CREDIT -> gl 47, all five reading ZERO
+          journal entries [T391-S01 section 7]. They need a write-off, a transfer, an
+          overpayment, a recovery and a goodwill credit respectively -- five further MOVES OF
+          SHARED ORACLE STATE, each with its own blast radius, while T388's twenty
+          command-source rows are STILL UNATTRIBUTED in PROBES.tsv (T390's open obligation).
+          Declaring them here costs nothing and makes the gap print on every run; posting them
+          would have deepened an open obligation to buy evidence this task did not need.]
           SLOT product 28 / ACCRUAL slot 7 = INTEREST_RECEIVABLE -> gl 18
             and NO VECTOR IN THIS STORE carries a leg on gl 18. (This harness does not read the
             reference oracle's database when it renders a report, so this says the ACCOUNT is
@@ -416,6 +397,31 @@ T74-E-P72                    parity           path_a_e... PASS            257   
             UNPOSTED; THE ACCOUNT IS NOT EMPTY — these are different claims wherever one GL
             account backs several slots, and conflating them is exactly how this block came to
             print a false sentence on every run (A2-34 F-4).
+          SLOT product 63 / ACCRUAL slot 6 = LOSSES_WRITTEN_OFF -> gl 40
+            and NO VECTOR IN THIS STORE carries a leg on gl 40. (This harness does not read the
+            reference oracle's database when it renders a report, so this says the ACCOUNT is
+            untouched BY THE PROMOTED CORPUS. It is not a claim that the account has zero
+            journal entries in the oracle.)
+          SLOT product 63 / ACCRUAL slot 10 = TRANSFERS_SUSPENSE -> gl 44
+            and NO VECTOR IN THIS STORE carries a leg on gl 44. (This harness does not read the
+            reference oracle's database when it renders a report, so this says the ACCOUNT is
+            untouched BY THE PROMOTED CORPUS. It is not a claim that the account has zero
+            journal entries in the oracle.)
+          SLOT product 63 / ACCRUAL slot 11 = OVERPAYMENT -> gl 45
+            and NO VECTOR IN THIS STORE carries a leg on gl 45. (This harness does not read the
+            reference oracle's database when it renders a report, so this says the ACCOUNT is
+            untouched BY THE PROMOTED CORPUS. It is not a claim that the account has zero
+            journal entries in the oracle.)
+          SLOT product 63 / ACCRUAL slot 12 = INCOME_FROM_RECOVERY -> gl 46
+            and NO VECTOR IN THIS STORE carries a leg on gl 46. (This harness does not read the
+            reference oracle's database when it renders a report, so this says the ACCOUNT is
+            untouched BY THE PROMOTED CORPUS. It is not a claim that the account has zero
+            journal entries in the oracle.)
+          SLOT product 63 / ACCRUAL slot 13 = GOODWILL_CREDIT -> gl 47
+            and NO VECTOR IN THIS STORE carries a leg on gl 47. (This harness does not read the
+            reference oracle's database when it renders a report, so this says the ACCOUNT is
+            untouched BY THE PROMOTED CORPUS. It is not a claim that the account has zero
+            journal entries in the oracle.)
       * ledger.transfers.suspense — NOT IN THE GRADED DOMAIN
           TRANSFERS_SUSPENSE (gl 17) reached through the ACCOUNTING PATH, i.e. by an account
           transfer.
@@ -493,7 +499,7 @@ T74-E-P72                    parity           path_a_e... PASS            257   
     invariant violations    0
     invariant assertions    0 NOT RUN (a cell nobody observed; listed above, never inferred)
     invariant assertions    4 EXEMPTED BY A VECTOR (switched off on purpose; each one's reason is listed above)
-    no-float census         6 Go packages / 66 Go files / 141296 tokens / 282 import specs inspected under nexus (recursive)
+    no-float census         6 Go packages / 67 Go files / 144125 tokens / 283 import specs inspected under nexus (recursive)
                             0 forbidden identifiers, 0 floating-point or imaginary LITERALS, 0 forbidden imports, 0 unscannable files
                             covered: nexus/internal/apps/ledger
                             covered: nexus/internal/apps/ledger/conformance
