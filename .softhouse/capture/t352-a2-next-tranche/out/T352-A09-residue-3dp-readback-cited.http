@@ -1,0 +1,6 @@
+GET /journalentries?transactionId=a29bca0816a7&transactionDetails=true
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T352-A09-residue-3dp-readback-cited
+body: <none>
+captured-at-utc: 2026-08-28T06:59:25Z

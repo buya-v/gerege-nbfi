@@ -1,0 +1,10 @@
+POST /journalentries
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: t352-a07-usd
+Content-Type: application/json
+body-file: req/T352-R04-usd-entry.json
+body-wire-bytes-artefact: T352-A07-usd-entry.req
+body-sha256: fbd4781b1d1a858b6de578b44686167387fae113d4a601ff37ef07275011d85c
+body-bytes: 415
+captured-at-utc: 2026-08-28T06:55:55Z

@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/q2-t352-accrual-reachability.sql
+query-bytes-artefact: T352-A10-accrual-reachability.sql
+query-sha256: f47d5f633378b1c6847fc41d55b012eff2f899c14b921f356ba6b69f052f5c02
+query-bytes: 1652
+psql-exit-status: 0
+captured-at-utc: 2026-08-28T07:01:26Z

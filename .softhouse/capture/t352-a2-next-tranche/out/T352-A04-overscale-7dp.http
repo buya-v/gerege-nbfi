@@ -1,0 +1,10 @@
+POST /journalentries
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: t352-a04-overscale
+Content-Type: application/json
+body-file: req/T352-R03-overscale-7dp.json
+body-wire-bytes-artefact: T352-A04-overscale-7dp.req
+body-sha256: 1739e8e8c32123de7f7a005500727206de0f6a724d9fb8f9ef1b4a0608574e0b
+body-bytes: 444
+captured-at-utc: 2026-08-28T06:53:55Z

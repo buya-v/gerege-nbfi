@@ -1,0 +1,14 @@
+{
+  "officeId": 1,
+  "transactionDate": "01 June 2026",
+  "currencyCode": "MNT",
+  "comments": "T352 G-08 residue probe: a NON-ZERO digit at the THIRD decimal place, balanced at that scale",
+  "debits": [
+    {"glAccountId": 16, "amount": 100.125}
+  ],
+  "credits": [
+    {"glAccountId": 21, "amount": 100.125}
+  ],
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}

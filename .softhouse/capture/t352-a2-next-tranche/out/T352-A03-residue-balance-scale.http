@@ -1,0 +1,10 @@
+POST /journalentries
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: t352-a03-balance-scale
+Content-Type: application/json
+body-file: req/T352-R02-residue-balance-scale.json
+body-wire-bytes-artefact: T352-A03-residue-balance-scale.req
+body-sha256: b4bc7b538dfb747d7ce0e2f1c2bc592d77e42b85deec7440f98387b9f286ad41
+body-bytes: 484
+captured-at-utc: 2026-08-28T06:53:48Z

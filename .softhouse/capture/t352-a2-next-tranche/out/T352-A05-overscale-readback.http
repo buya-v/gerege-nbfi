@@ -1,0 +1,6 @@
+GET /journalentries?transactionId=a29bcaa6a41b
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: t352-a05
+body: <none>
+captured-at-utc: 2026-08-28T06:54:02Z
