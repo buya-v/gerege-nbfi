@@ -200,6 +200,21 @@ grep_want "(7) 10/10 as adjudicated, 0 deviations" "sections run: 10    deviatio
 cp "$SCRATCH/c7.txt" "$OUT/37-case7-GREEN-again.txt"
 echo
 
+# T374, applying its own F-5 ruling to itself: this prover REWRITES tracked evidence.
+# The per-case transcripts it copies into out/ are committed files, and every run rewrites
+# them -- they carry generation timestamps. Disclosed here, at the site, for the same reason
+# run-all.sh now discloses its transcript: an undisclosed dirty tree is how a reader ends up
+# grading a diff nobody made on purpose. It does NOT touch capture/tierA-a2, so section 10's
+# observation corpus is not in this file's write set at all.
+if command -v git >/dev/null 2>&1 &&
+   ! git -C "$OUT" diff --quiet -- "$OUT" 2>/dev/null; then
+  echo "NOTE (T374, its own F-5): this run REWROTE tracked evidence under"
+  echo "  .softhouse/capture/t374-t362-conditions/out/"
+  echo "which carries generation timestamps. To restore:"
+  echo "  git checkout -- .softhouse/capture/t374-t362-conditions/out/"
+  echo
+fi
+
 echo "############ SUMMARY   PASS=$PASS   FAIL=$FAIL"
 if [ "$FAIL" -ne 0 ]; then
   echo "T374 PROVER: FAIL — a fix did not go red where it was supposed to."
