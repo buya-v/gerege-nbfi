@@ -1,0 +1,16 @@
+KNOWN NEGATIVES -- must convert cleanly:
+   ok      250000.250000    -> 25000025 minor units
+   ok      100000.370000    -> 10000037 minor units
+   ok      350000.620000    -> 35000062 minor units
+   ok      1000000          -> 100000000 minor units
+   ok      0.01             -> 1 minor units
+   ok      -5.50            -> -550 minor units
+
+KNOWN POSITIVES -- must be REFUSED, never rounded:
+   REFUSED 250000.250001    RESIDUE REFUSED: '250000.250001' carries a non-zero digit beyond 2 minor digits ('0001'). The residue rule refuses this rather than rounding it.
+   REFUSED 0.005            RESIDUE REFUSED: '0.005' carries a non-zero digit beyond 2 minor digits ('5'). The residue rule refuses this rather than rounding it.
+   REFUSED 1.239            RESIDUE REFUSED: '1.239' carries a non-zero digit beyond 2 minor digits ('9'). The residue rule refuses this rather than rounding it.
+   REFUSED 100.00000001     RESIDUE REFUSED: '100.00000001' carries a non-zero digit beyond 2 minor digits ('000001'). The residue rule refuses this rather than rounding it.
+
+The rule fires on a known positive and does not fire on the captured bytes.
+'residue beyond 2 digits found: NONE' is therefore a MEASUREMENT, not a default.

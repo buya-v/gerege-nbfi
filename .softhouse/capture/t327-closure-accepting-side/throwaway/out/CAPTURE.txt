@@ -1,0 +1,107 @@
+T327 closure/business-date accepting-side capture -- 2026-08-27T17:33:35Z
+
+ok  F1 target is https://localhost:8444/fineract-provider/api/v1, tenant header 'Fineract-Platform-TenantId: t327'.
+ok  F2 t327-oracle-app running, t327-oracle-db/fineract_t327 reachable.
+ok  F3 registry 't327|Asia/Ulaanbaatar|fineract_t327', rounding-mode 4 (HALF_UP) -- read from the target.
+ok  F4 target ledger EMPTY (0 journal entries) and NO GL closure -- arm B2 is unconfounded.
+ok  F5 standing reference oracle, BEFORE anything is fired:
+    standing acc_gl_journal_entry = 60/64 (== baseline)
+    standing acc_gl_closure = 0/null (== baseline)
+    standing distinct_transaction_id = 26 (== baseline)
+    standing m_portfolio_command_source = 352/352 (== baseline)
+    standing m_loan = 7 (== baseline)
+    standing m_office = 1 (== baseline)
+derived-business-date-candidate (today in Asia/Ulaanbaatar) = 2026-08-28
+business-date-plus-1                                        = 2026-08-29
+glclosure closing date D                                    = 2026-08-26
+D + 1 (the B-1 acceptance)                                  = 2026-08-27
+D - 1 (free control)                                        = 2026-08-25
+host UTC now                                                = 2026-08-27T17:33:37Z
+host UTC date                                               = 2026-08-27
+target db now()                                             = 2026-08-27 17:33:37.503102+00
+target enable-business-date row                             = (no such row)
+target m_business_date row count                            = 0
+GET /businessdates -> HTTP 404 {"timestamp":"2026-08-27T17:33:37.785Z","status":404,"error":"Not Found","path":"/fineract-provider/api/v1/businessdates"}
+GL ids: debit1=1 debit2=2 credit=3
+
+FIRING B2-ACCEPT-01-entry-on-business-date -- B-2: transactionDate == the (derived) business date 2026-08-28; :630 must NOT fire if isAfter is strict
+HTTP 200
+{"officeId":1,"transactionId":"a29aac720487"}
+readback REST: HTTP 200  transactionId=a29aac720487
+readback DB written to out/B2-ACCEPT-01-readback-db.json
+[{"id":1,"transaction_id":"a29aac720487","account_id":1,"gl_code":"T327-1000","classification_enum":1,"type_enum":2,"amount_major_text":"250000.250000","entry_date":"2026-08-28","manual_entry":true,"office_id":1,"currency_code":"MNT","reversed":false,"reversal_id":null,"is_running_balance_calculated":false}, {"id":2,"transaction_id":"a29aac720487","account_id":2,"gl_code":"T327-1100","classification_enum":1,"type_enum":2,"amount_major_text":"100000.370000","entry_date":"2026-08-28","manual_entry":true,"office_id":1,"currency_code":"MNT","reversed":false,"reversal_id":null,"is_running_balance_calculated":false}, {"id":3,"transaction_id":"a29aac720487","account_id":3,"gl_code":"T327-2000","classification_enum":2,"type_enum":1,"amount_major_text":"350000.620000","entry_date":"2026-08-28","manual_entry":true,"office_id":1,"currency_code":"MNT","reversed":false,"reversal_id":null,"is_running_balance_calculated":false}]
+
+
+ok  F5 standing reference oracle, AFTER the first accepting POST:
+    standing acc_gl_journal_entry = 60/64 (== baseline)
+    standing acc_gl_closure = 0/null (== baseline)
+    standing distinct_transaction_id = 26 (== baseline)
+    standing m_portfolio_command_source = 352/352 (== baseline)
+    standing m_loan = 7 (== baseline)
+    standing m_office = 1 (== baseline)
+
+FIRING B2-CTRL-02-entry-one-day-after-business-date -- B-2 CONTROL: transactionDate == business date + 1 = 2026-08-29; :630 FUTURE_DATE expected
+HTTP 403
+{"developerMessage":"Request was understood but caused a domain rule violation.","httpStatusCode":"403","defaultUserMessage":"Errors contain reason for domain rule violation.","userMessageGlobalisationCode":"validation.msg.domain.rule.violation","errors":[{"developerMessage":"The journal entry cannot be made for a future date","defaultUserMessage":"The journal entry cannot be made for a future date","userMessageGlobalisationCode":"error.msg.glJournalEntry.invalid.future.date","parameterName":"id","args":[{"value":"2026-08-29"},{},{}]}]}
+
+FIRING B1-SETUP-03-create-glclosure -- B-1 precondition: GLClosure at office 1, closingDate 2026-08-26
+HTTP 200
+{"officeId":1,"resourceId":1}
+
+acc_gl_closure on the TARGET after the create (id | office | closing_date) -- OBSERVED, not predicted:
+1 | 1 | 2026-08-26
+last_value=1 is_called=true
+GET /glclosures -> HTTP 200
+[{"id":1,"officeId":1,"officeName":"Head Office","closingDate":"2026-08-26","deleted":false,"createdDate":"2026-08-27","lastUpdatedDate":"2026-08-27","createdByUserId":1,"createdByUsername":"mifos","lastUpdatedByUserId":1,"lastUpdatedByUsername":"mifos","comments":"T327 B-1 precondition: closure at office 1 so the closure boundary can be probed on both sides.","allowedOffices":[]}]
+
+FIRING B1-CTRL-04-entry-on-closing-date -- B-1 CONTROL: transactionDate == closingDate 2026-08-26; :636 ACCOUNTING_CLOSED expected (inclusive boundary)
+HTTP 403
+{"developerMessage":"Request was understood but caused a domain rule violation.","httpStatusCode":"403","defaultUserMessage":"Errors contain reason for domain rule violation.","userMessageGlobalisationCode":"validation.msg.domain.rule.violation","errors":[{"developerMessage":"Journal entry cannot be made prior to last account closing date for the branch","defaultUserMessage":"Journal entry cannot be made prior to last account closing date for the branch","userMessageGlobalisationCode":"error.msg.glJournalEntry.invalid.accounting.closed","parameterName":"id","args":[{"value":"2026-08-26"},{},{}]}]}
+
+FIRING B1-CTRL-05-entry-before-closing-date -- B-1 CONTROL: transactionDate 2026-08-25 < closingDate 2026-08-26; :636 ACCOUNTING_CLOSED expected, args echoing the CLOSING date
+HTTP 403
+{"developerMessage":"Request was understood but caused a domain rule violation.","httpStatusCode":"403","defaultUserMessage":"Errors contain reason for domain rule violation.","userMessageGlobalisationCode":"validation.msg.domain.rule.violation","errors":[{"developerMessage":"Journal entry cannot be made prior to last account closing date for the branch","defaultUserMessage":"Journal entry cannot be made prior to last account closing date for the branch","userMessageGlobalisationCode":"error.msg.glJournalEntry.invalid.accounting.closed","parameterName":"id","args":[{"value":"2026-08-26"},{},{}]}]}
+
+ok  F5 standing reference oracle, BEFORE the second accepting POST:
+    standing acc_gl_journal_entry = 60/64 (== baseline)
+    standing acc_gl_closure = 0/null (== baseline)
+    standing distinct_transaction_id = 26 (== baseline)
+    standing m_portfolio_command_source = 352/352 (== baseline)
+    standing m_loan = 7 (== baseline)
+    standing m_office = 1 (== baseline)
+
+FIRING B1-ACCEPT-06-entry-one-day-after-closing-date -- B-1: transactionDate 2026-08-27 == closingDate + 1 and <= business date 2026-08-28; BOTH date rules must fall through
+HTTP 200
+{"officeId":1,"transactionId":"a29aac77c01b"}
+readback REST: HTTP 200  transactionId=a29aac77c01b
+readback DB written to out/B1-ACCEPT-06-readback-db.json
+[{"id":4,"transaction_id":"a29aac77c01b","account_id":1,"gl_code":"T327-1000","classification_enum":1,"type_enum":2,"amount_major_text":"250000.250000","entry_date":"2026-08-27","manual_entry":true,"office_id":1,"currency_code":"MNT","reversed":false,"reversal_id":null,"is_running_balance_calculated":false}, {"id":5,"transaction_id":"a29aac77c01b","account_id":2,"gl_code":"T327-1100","classification_enum":1,"type_enum":2,"amount_major_text":"100000.370000","entry_date":"2026-08-27","manual_entry":true,"office_id":1,"currency_code":"MNT","reversed":false,"reversal_id":null,"is_running_balance_calculated":false}, {"id":6,"transaction_id":"a29aac77c01b","account_id":3,"gl_code":"T327-2000","classification_enum":2,"type_enum":1,"amount_major_text":"350000.620000","entry_date":"2026-08-27","manual_entry":true,"office_id":1,"currency_code":"MNT","reversed":false,"reversal_id":null,"is_running_balance_calculated":false}]
+
+
+FINAL ledger on the target:
+ id | transaction_id | account_id |  gl_code  | type_enum |    amount     | entry_date | manual_entry | reversed 
+----+----------------+------------+-----------+-----------+---------------+------------+--------------+----------
+  1 | a29aac720487   |          1 | T327-1000 |         2 | 250000.250000 | 2026-08-28 | t            | f
+  2 | a29aac720487   |          2 | T327-1100 |         2 | 100000.370000 | 2026-08-28 | t            | f
+  3 | a29aac720487   |          3 | T327-2000 |         1 | 350000.620000 | 2026-08-28 | t            | f
+  4 | a29aac77c01b   |          1 | T327-1000 |         2 | 250000.250000 | 2026-08-27 | t            | f
+  5 | a29aac77c01b   |          2 | T327-1100 |         2 | 100000.370000 | 2026-08-27 | t            | f
+  6 | a29aac77c01b   |          3 | T327-2000 |         1 | 350000.620000 | 2026-08-27 | t            | f
+(6 rows)
+
+
+DOUBLE-ENTRY INVARIANT, per transaction, in MNT MINOR UNITS (integer arithmetic only):
+a29aac720487 | type_enum 1 | sum 350000.620000 | legs 1
+a29aac720487 | type_enum 2 | sum 350000.620000 | legs 2
+a29aac77c01b | type_enum 1 | sum 350000.620000 | legs 1
+a29aac77c01b | type_enum 2 | sum 350000.620000 | legs 2
+
+ok  F5 standing reference oracle, AFTER EVERYTHING:
+    standing acc_gl_journal_entry = 60/64 (== baseline)
+    standing acc_gl_closure = 0/null (== baseline)
+    standing distinct_transaction_id = 26 (== baseline)
+    standing m_portfolio_command_source = 352/352 (== baseline)
+    standing m_loan = 7 (== baseline)
+    standing m_office = 1 (== baseline)
+
+CAPTURED. The instance that produced this is DISPOSABLE; run down.sh to destroy it.

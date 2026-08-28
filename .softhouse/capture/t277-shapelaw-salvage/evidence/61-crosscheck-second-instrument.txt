@@ -1,0 +1,33 @@
+T277 CROSS-CHECK -- second instrument, run by the RESUMING worker on the post-merge tree
+
+$ python3 src/crosscheck_seven_t277b.py --selftest
+SELFTEST PASS -- integer parser, law forms and antecedents hand-checked; AST clean: 0 float literals, 0 true-division, 0 float()/round(), 0 decimal/fractions/math imports, 0 imports of the primary instrument.
+exit=0
+
+$ python3 src/crosscheck_seven_t277b.py <repo-root>
+T277 CROSS-CHECK (second instrument, independently written arithmetic)
+  scope t229corpus files: capture-t117-raw.json.gz, capture-t117p2-raw.json.gz, capture-t159-raw.json.gz, capture-t223-raw.json.gz
+  cells excluded and counted: {}
+  stuck cells                        296   (expected 296)
+  FACT A holds                       220   (expected 220)
+  FACT A fails                        76   (expected 76)
+  law (ii) holds on FACT A           213   (expected 213)
+  law (ii) EXCEPTIONS on FACT A        7   (expected 7)
+  delta == 0 cells                   113
+  exceptions with delta == 0           0   (DISJOINTNESS: expected 0)
+  exceptions that FAIL FACT A          0   (DISJOINTNESS: expected 0)
+  header != row-sum principal          0   (expected 0)
+  principal confined to LAST row     220 / 220
+  max(0, E + B - I_last) matches     220 / 220
+
+  THE EXCEPTION SET -- integer minor units, principal from the ROW SUM:
+    T117P2-R600p0-N108-B11   n=108   B=11    E=5     I1q=6     delta=1  FULL-family-B=True  law(ii) predicts 0  OBSERVED 5
+    T117P2-R600p0-N121-B11   n=121   B=11    E=5     I1q=6     delta=1  FULL-family-B=True  law(ii) predicts 0  OBSERVED 4
+    T117P2-R600p0-N150-B11   n=150   B=11    E=5     I1q=6     delta=1  FULL-family-B=True  law(ii) predicts 0  OBSERVED 2
+    T159-R600p0-N108-B11     n=108   B=11    E=5     I1q=6     delta=1  FULL-family-B=True  law(ii) predicts 0  OBSERVED 5
+    T159-R600p0-N121-B11     n=121   B=11    E=5     I1q=6     delta=1  FULL-family-B=True  law(ii) predicts 0  OBSERVED 4
+    T159-R600p0-N150-B11     n=150   B=11    E=5     I1q=6     delta=1  FULL-family-B=True  law(ii) predicts 0  OBSERVED 2
+    T159-R600p0-N2000-B999   n=2000  B=999   E=499   I1q=500   delta=1  FULL-family-B=True  law(ii) predicts 0  OBSERVED 166
+
+RESULT: PASS -- the seven REPRODUCE against a second, independent derivation of I1q; every exception satisfies the block's own FULL family B antecedent and is predicted 0 principal; the exception set is disjoint from the delta==0 cells and from the FACT-A failures.
+exit=0

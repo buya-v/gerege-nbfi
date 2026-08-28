@@ -1,0 +1,32 @@
+==============================================================
+ARM A — the registry AS COMMITTED (in_graded_domain: true)
+==============================================================
+  binary exit=2
+      LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     PASS             27 cells (8 money)
+      LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+      ledger parity           PASS 5    FAIL 0
+      ledger oracle-refusal   PASS 5    FAIL 0   (an HTTP status and error code the ORACLE returned
+      ledger inadmissible     0
+      ledger cells compared   106 graded, of which 29 are MONEY cells in int64 minor units
+
+==============================================================
+ARM B — the SAME tree, in_graded_domain reverted to FALSE
+==============================================================
+  reverted in_graded_domain -> false in the SCRATCH copy only
+  binary exit=2
+      LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     INADMISSIBLE      0 cells (0 money)
+      LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+      LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal ledger_rest_posting    INADMISSIBLE      0 cells (0 money)
+            LDG-REFUSE-04 kills it. (3) THE FUTURE-DATED REFUSAL is also now promoted, as
+            LDG-REFUSE-05 from T287's A1-02 (:629), and it claims this capability too, so the
+            LDG-05-openingbalance-accepted-empty-ledger. POST
+            LDG-REFUSE-03; ledger-wrong-openingbalance-no-contra writes only the caller's legs and
+      ledger parity           PASS 4    FAIL 0
+      ledger oracle-refusal   PASS 2    FAIL 0   (an HTTP status and error code the ORACLE returned
+      ledger inadmissible     4
+      ledger cells compared   70 graded, of which 21 are MONEY cells in int64 minor units
+
+scratch: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t306-flip.gSU7ZJK5

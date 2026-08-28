@@ -1,0 +1,35 @@
+T277 -- META-CALIBRATION OF THE VERIFIER ITSELF.
+
+The verifier grades four deliberate mutations that MUST trip. That is only
+worth anything if the verifier would NOTICE one that did not, and would
+refuse a mutant that failed to build -- a mutant that cannot be built makes
+its case 'trip' for the wrong reason, which is a FALSE GREEN and is exactly
+the failure mode this task exists to correct.
+
+Two meta-mutations, both run against the real committed captures:
+  A -- a negative case repointed at `true`, a command that cannot fail.
+       The verifier must report DID NOT TRIP and exit non-zero.
+  B -- a mutation whose anchor string has moved, so the edit no-ops.
+       The verifier must ABORT rather than score an unearned trip.
+
+=== META-MUTATION A: a negative case pointed at a command that SUCCEEDS ===
+applied
+  FAIL-CASE  tripped  M1 census: law (ii) pinned 220/220 on FACT A (df0aed2c's claim)
+  FAIL-CASE  tripped  M2 census: T159-R600p0-N2000-B999 dropped from the exception set
+  FAIL-CASE  tripped  M3 cross-check: 165 minor units expected where 166 is measured
+  FAIL-CASE  DID NOT TRIP  M4 META-MUTATED to , which cannot fail  (expected non-zero, got 0)
+
+T277 VERIFY: FAIL -- 1 case(s) did not behave as required.
+EXIT=1
+
+=== META-MUTATION B: a mutation whose anchor has MOVED (silent no-op) ===
+applied
+Traceback (most recent call last):
+  File "<stdin>", line 6, in <module>
+AssertionError: expected exactly one t229corpus pin of 213, found 0
+  PASS-CASE  ok    cross-check t229corpus
+
+NEGATIVE: each of these MUST trip. A guard that cannot fail proves nothing.
+  ABORT: mutation of m1.py did not apply -- its anchor has moved.
+         A mutation that silently no-ops proves nothing.
+EXIT=2

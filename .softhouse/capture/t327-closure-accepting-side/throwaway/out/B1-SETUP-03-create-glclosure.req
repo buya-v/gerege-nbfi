@@ -1,0 +1,7 @@
+{
+  "officeId": 1,
+  "closingDate": "2026-08-26",
+  "dateFormat": "yyyy-MM-dd",
+  "locale": "en",
+  "comments": "T327 B-1 precondition: closure at office 1 so the closure boundary can be probed on both sides."
+}

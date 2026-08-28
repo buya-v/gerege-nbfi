@@ -1,0 +1,27 @@
+S-01-currencies              PUT  /currencies                                    -> 200
+{"currencies":["MNT"],"changes":{"currencies":["MNT"]}}
+S-02a-gl-asset1              POST /glaccounts                                    -> 200
+{"resourceId":1}
+S-02b-gl-asset2              POST /glaccounts                                    -> 200
+{"resourceId":2}
+S-02c-gl-liability           POST /glaccounts                                    -> 200
+{"resourceId":3}
+
+GL accounts created (id | code | classification_enum | account_usage | manual_journal_entries_allowed | disabled):
+1 | T327-1000 | 1 | 1 | true | false
+2 | T327-1100 | 1 | 1 | true | false
+3 | T327-2000 | 2 | 1 | true | false
+
+organisation currencies:
+MNT decimal_places=2
+MNT in m_currency (ISO 4217 numeric / decimal places):
+MNT | decimal_places=2 | name=Mongolian Tugrik
+
+journal entries before the capture:
+0
+GL closures before the capture:
+0
+acc_gl_closure id sequence state (T295 recorded that on the STANDING oracle a create/delete
+left is_called = t, so the NEXT closure there would get id 2; on a FRESH instance it should
+not be. This is the reading, before anything is created:)
+last_value=1 is_called=false
