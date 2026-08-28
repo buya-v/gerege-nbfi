@@ -1,0 +1,36 @@
+/Users/buv/gerege-nbfi/.claude/worktrees/agent-ac70608b49d46f77a/.softhouse/conformance.sh: line 3118: printf: write error: Broken pipe
+conformance: guard_guards_dir_registration: .softhouse/guards/check-capture-namespace.sh IS INVOKED BY NOTHING.
+conformance: It sits in the canonical guards directory and no non-comment line of
+conformance: this file names it, so it enforces nothing — P-45, 'A test-only guard
+conformance: is not a guard … verify the path that actually executes in
+conformance: CI/conformance calls it, not merely that a test does.' THE FIX is to
+conformance: call it from run_guards, or — if something else already runs it — to
+conformance: add its row to the DECLARATION TABLE in this function, naming the
+conformance: witness that runs it. A comment saying it is run is not a row.
+/Users/buv/gerege-nbfi/.claude/worktrees/agent-ac70608b49d46f77a/.softhouse/conformance.sh: line 3118: printf: write error: Broken pipe
+conformance: guard_guards_dir_registration: .softhouse/guards/check-dead-path-frontier.sh IS INVOKED BY NOTHING.
+conformance: It sits in the canonical guards directory and no non-comment line of
+conformance: this file names it, so it enforces nothing — P-45, 'A test-only guard
+conformance: is not a guard … verify the path that actually executes in
+conformance: CI/conformance calls it, not merely that a test does.' THE FIX is to
+conformance: call it from run_guards, or — if something else already runs it — to
+conformance: add its row to the DECLARATION TABLE in this function, naming the
+conformance: witness that runs it. A comment saying it is run is not a row.
+/Users/buv/gerege-nbfi/.claude/worktrees/agent-ac70608b49d46f77a/.softhouse/conformance.sh: line 3118: printf: write error: Broken pipe
+conformance: guard_guards_dir_registration: .softhouse/guards/check-ledger-invariants.sh IS INVOKED BY NOTHING.
+conformance: It sits in the canonical guards directory and no non-comment line of
+conformance: this file names it, so it enforces nothing — P-45, 'A test-only guard
+conformance: is not a guard … verify the path that actually executes in
+conformance: CI/conformance calls it, not merely that a test does.' THE FIX is to
+conformance: call it from run_guards, or — if something else already runs it — to
+conformance: add its row to the DECLARATION TABLE in this function, naming the
+conformance: witness that runs it. A comment saying it is run is not a row.
+conformance: guard_guards_dir_registration: CALIBRATION FAILED — NOT ONE member of the
+conformance: population was found on a non-comment line of this file, yet three of them
+conformance: are invoked verbatim a few hundred lines above. The reading mechanism is
+conformance: broken, not the tree. A guard that cannot re-find what it knows is there
+conformance: is not measuring anything. REFUSED.
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+real 63.37
+user 32.46
+sys 11.68

@@ -269,6 +269,49 @@ m_t319_no_rig() {
       .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py ) || return 1
 }
 
+# --------------------------------------------------------------------------------------------
+# T323 ITERATION-2 ARMS -- guard_guards_dir_registration
+# --------------------------------------------------------------------------------------------
+# THE GUARD UNDER TEST is the one T323 added to close its OWN structural finding: three guards
+# reached nothing, and nothing in conformance.sh stopped a fourth. These three arms drive it
+# through the WHOLE BAR, like every arm above.
+#
+# Paths are ASSEMBLED, for the reason recorded at the top of this file: a literal that stops
+# resolving moves T316's frontier, and an instrument must not perturb the thing another of its
+# arms measures.
+GUARDS_DIR="$SCRATCH/.softhouse/guards"
+PLANTED_CHECKER_LEAF="zz-t323-planted-checker.sh"
+
+# ARM 12 -- THE CLASS THIS GUARD EXISTS FOR: a new checker lands in the canonical guards
+# directory and nothing in conformance.sh calls it. Before this guard, that was exit 0.
+m_t323b_plant_unwired_checker() {
+  printf '%s\n' '#!/usr/bin/env bash' \
+                'echo "planted by the T323 red drive; invoked by nothing"' \
+                'exit 0' > "$GUARDS_DIR/$PLANTED_CHECKER_LEAF" || return 1
+  ( cd "$SCRATCH" && git add -A ".softhouse/guards/$PLANTED_CHECKER_LEAF" ) || return 1
+}
+
+# ARM 13 -- THE CALLER DECLARATION IS VERIFIED, NOT BELIEVED. repo-state-attest.sh is declared as
+# being run by the fire driver. Strip every mention from the fire driver and the declaration is
+# now FALSE -- the checker is unwired again and the table is excusing it. Deleting the lines
+# (rather than renaming the path) is deliberate: a renamed literal would ALSO move T316's
+# frontier, and this arm is about the declaration, not about dead paths.
+m_t323b_break_caller_decl() {
+  ( cd "$SCRATCH" && LC_ALL=C sed -i '' '/repo-state-attest/d' .softhouse/bin/fire-program.sh ) || return 1
+  ! LC_ALL=C grep -q 'repo-state-attest' "$SCRATCH/.softhouse/bin/fire-program.sh" || return 1
+}
+
+# ARM 14 -- THE SUBJECT DECLARATION IS VERIFIED TOO. drive-red-ledger-invariants.sh is declared
+# NOT to be a guard but the red drive FOR ledgerguard. Make it stop naming ledgerguard and the
+# declaration no longer describes anything: either it stopped being that drive, or the row was
+# wrong. Both are refusals. The replacement token is NOT a .softhouse-rooted path, so no dead
+# path literal is created.
+m_t323b_break_subject_decl() {
+  ( cd "$SCRATCH" && LC_ALL=C sed -i '' 's/ledgerguard/lgrguard_renamed_by_t323/g' \
+      .softhouse/guards/drive-red-ledger-invariants.sh ) || return 1
+  ! LC_ALL=C grep -q 'ledgerguard' "$SCRATCH/.softhouse/guards/drive-red-ledger-invariants.sh" || return 1
+}
+
 echo "============================================================================================"
 echo "T323 RED DRIVE -- every arm runs the WHOLE BAR, never a guard standalone."
 echo "scratch clone: $SCRATCH"
@@ -292,6 +335,10 @@ arm "T319-10-matrix-blind-to-redispatch"   2 ABSENT  'guard_reconciler_ownership
 # corrected: a marker regex is an assertion about the transcript's SHAPE, and this one had never
 # been run before it was believed.
 arm "T319-11-rig-removed"                  2 ABSENT  'predicate is UNGRADED'                                         m_t319_no_rig
+
+arm "T323-12-new-checker-invoked-by-nothing" 2 ABSENT  'IS INVOKED BY NOTHING'                                        m_t323b_plant_unwired_checker
+arm "T323-13-caller-declaration-now-false" 2 ABSENT  'is DECLARED as being run by'                                   m_t323b_break_caller_decl
+arm "T323-14-subject-declaration-now-false" 2 ABSENT  'is DECLARED as the red drive for'                              m_t323b_break_subject_decl
 
 reset_tree
 echo "============================================================================================"
