@@ -1,0 +1,10 @@
+=== T349 run R3-red-deny-bash
+mode=deny-bash-worktree perm=bypassPermissions rc=0
+wall_s=13.66
+--- hook invocations (tool_name : decision)
+   Bash           deny                   {"command": "git worktree add -b t349-bash-probe /tmp/t349-scratch/bash-wt HEAD", "description": "Create git w
+--- branches created during the run
+--- worktrees created during the run
+--- claude stdout
+Refused: `T349 RED DRIVE: \`git worktree add\` refused by PreToolUse deny.`
+--- claude stderr (tail)

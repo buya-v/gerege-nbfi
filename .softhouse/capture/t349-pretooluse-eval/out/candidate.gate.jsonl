@@ -1,0 +1,18 @@
+{"ts": "2026-08-28T09:14:05Z", "decision": "deny", "reason": "push-before-spawn gate: origin/main does not yet show this batch as dispatched. T900 reads status='pending' on origin/main (not dispatched). Commit AND PUSH the LOCK, tasks.json and the in-flight RESUME.md, then spawn.", "detail": "T900 reads status='pending' on origin/main (not dispatched)"}
+{"ts": "2026-08-28T09:14:17Z", "decision": "allow", "reason": "", "detail": "published: T900 (net 0.12s)"}
+{"ts": "2026-08-28T09:14:22Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:14:23Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:14:29Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:14:30Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:14:36Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:16:40Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:16:44Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:16:49Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:16:51Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:16:53Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:17:04Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:17:06Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:17:13Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:17:15Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:17:17Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}
+{"ts": "2026-08-28T09:17:20Z", "decision": "allow", "reason": "", "detail": "subagent call (agent_id=a80fcf03d2967df1d)"}

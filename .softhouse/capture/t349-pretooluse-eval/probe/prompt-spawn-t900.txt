@@ -1,0 +1,5 @@
+Your only job is to spawn one subagent. Do not use any other tool first, and do not do the work yourself.
+
+Call the Agent tool exactly once with: subagent_type "general-purpose", isolation "worktree", run_in_background false, description "T900", prompt "=== TASK T900 === Create a file HELLO900.txt containing hi. Commit to branch softhouse/T900-probe. Write your handoff to .softhouse/handoff/run-t349/T900.md and commit it."
+
+If the Agent tool call is refused, do NOT retry, do NOT use any other tool, and do NOT do the work yourself. Report in one line the exact refusal text.

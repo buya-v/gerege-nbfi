@@ -1,0 +1,22 @@
+=== T349 run H1-hook-timeout-5s-hang20s
+mode=hang perm=bypassPermissions rc=0
+wall_s=25.11
+--- hook invocations (tool_name : decision)
+   Agent          hang-start             {"description": "t349 probe", "prompt": "Create a file named HELLO.txt whose contents are the word hi. Then st
+   Write          not-a-spawn            {"file_path": "/private/tmp/t349-scratch/repo/.claude/worktrees/agent-a59771f12e5867f7a/HELLO.txt", "content":
+--- branches created during the run
+3a4
+> + worktree-agent-a59771f12e5867f7a
+--- worktrees created during the run
+8a9,12
+> worktree /private/tmp/t349-scratch/repo/.claude/worktrees/agent-a59771f12e5867f7a
+> HEAD 9bc04bb82d550d570c81329e109a357898032f3d
+> branch refs/heads/worktree-agent-a59771f12e5867f7a
+> 
+--- claude stdout
+The Agent call succeeded. The subagent created `HELLO.txt` containing `hi` in its isolated worktree at `/private/tmp/t349-scratch/repo/.claude/worktrees/agent-a59771f12e5867f7a` (branch `worktree-agent-a59771f12e5867f7a`).
+
+Two things it flagged:
+- The claude.ai Google Calendar MCP server is unauthorized — it needs authorization via your claude.ai connector settings, and this session is non-interactive so the OAuth flow can't run here.
+- It noted a mid-task system-reminder telling it to route file operations through Bash; the file was already written by then, so nothing was redone.
+--- claude stderr (tail)

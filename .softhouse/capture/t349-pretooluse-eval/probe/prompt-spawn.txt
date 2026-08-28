@@ -1,0 +1,5 @@
+Your only job is to spawn one subagent. Do not use any other tool first.
+
+Call the Agent tool exactly once with: subagent_type "general-purpose", isolation "worktree", run_in_background false, description "t349 probe", prompt "Create a file named HELLO.txt whose contents are the word hi. Then stop."
+
+If the Agent tool call is refused or errors, do NOT retry it, do NOT fall back to doing the work yourself, and do NOT use any other tool. Just report, in one line, the exact refusal or error text you received.

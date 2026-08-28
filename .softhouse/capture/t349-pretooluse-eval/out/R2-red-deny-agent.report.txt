@@ -1,0 +1,10 @@
+=== T349 run R2-red-deny-agent
+mode=deny-agent perm=bypassPermissions rc=0
+wall_s=12.61
+--- hook invocations (tool_name : decision)
+   Agent          deny                   {"description": "t349 probe", "prompt": "Create a file named HELLO.txt whose contents are the word hi. Then st
+--- branches created during the run
+--- worktrees created during the run
+--- claude stdout
+T349 RED DRIVE: spawn refused by PreToolUse deny.
+--- claude stderr (tail)
