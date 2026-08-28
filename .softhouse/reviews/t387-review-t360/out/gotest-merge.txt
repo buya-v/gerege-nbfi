@@ -1,0 +1,6 @@
+ok  	github.com/gerege/nexus/internal/apps/ledger	0.517s
+?   	github.com/gerege/nexus/internal/apps/loanschedule/conformance/cmd/conformance	[no test files]
+?   	github.com/gerege/nexus/internal/apps/loanschedule/contract	[no test files]
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	7.570s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule	5.757s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	51.294s
