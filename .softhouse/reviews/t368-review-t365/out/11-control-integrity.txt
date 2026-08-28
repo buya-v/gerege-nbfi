@@ -1,0 +1,13 @@
+T368 control-integrity drive over /tmp/t365-fire-program.sh
+sha256: 06c57d0e192fa1484b9c25ad5ac7995049471a98ddf4425d0d663561b034bf53
+
+m10  all 45 _row/_arow invocations DELETED — can the wired control fail?
+      expected : if this exits 0 the fire starts on a self-test that graded NOTHING (P-22)
+      rc=0  tally=ROWS=0 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+
+m11  reaped-pid acquisition forced to fail (_DEAD=0) — does SKIPPED tell the truth?
+      expected : ROWS drops by 4 (group B's 3 + e01) and SKIPPED reports 4, not 3
+      rc=0  tally=ROWS=41 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=4
+      warn     : WARNING: could not obtain a reaped pid that reads dead; group B SKIPPED. Arm 2 is UNTESTED this run.
+      warn     : WARNING: no reaped pid available; row e01 SKIPPED, so the host guard is graded only by e02 this run.
+

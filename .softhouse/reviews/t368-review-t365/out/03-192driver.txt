@@ -1,0 +1,17 @@
+wrapper under test: /private/tmp/t365-fire-program.sh
+thresholds in force: LOCK_MAX_AGE_SECS=21600 LOCK_CEILING_SECS=86400
+
+expected verdicts generated: 192
+
+states driven through the SHIPPED wrapper: 192
+disagreements with SKILL.md STEP 0 as modelled in rules.py: 0
+RESULT: PASS — the wrapper and the skill agree on all 192 states.
+
+--- the state where the OLD mtime signal and the NEW push signal disagree ---
+  lock file mtime age : 759s  (what the wrapper used to read)
+  started_at age      : 28800s
+  origin/main tip age : 43200s
+  OLD wrapper rule (AGE < LOCK_MAX_AGE_SECS ? held : stale) -> 1 => HELD, fire exits, 6 h lost
+  NEW wrapper rule                                          -> TAKE-both-stale
+  SKILL.md STEP 0 arm 5 (both signals over 6 h)             -> TAKE-both-stale
+  => the two now agree; before this change they did not.

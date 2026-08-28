@@ -1,0 +1,33 @@
+=== T368: closing UNVERIFIED item (a) — what Go's zero time.Time marshals to
+go version go1.23.4 darwin/arm64
+{"holder":"go-fire","released_at":"0001-01-01T00:00:00Z"}
+zero time.Time RFC3339: 0001-01-01T00:00:00Z
+
+--- the probe source:
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"time"
+)
+
+type lock struct {
+	Holder     string    `json:"holder"`
+	ReleasedAt time.Time `json:"released_at"`
+}
+
+func main() {
+	b, _ := json.Marshal(lock{Holder: "go-fire"})
+	fmt.Println(string(b))
+	fmt.Println("zero time.Time RFC3339:", time.Time{}.UTC().Format(time.RFC3339))
+}
+
+=== group H's constants, derived with calendar.timegm (NOT with _iso8601_epoch)
+python datetime.min -> 0001-01-01T00:00:00Z
+python datetime.max -> 9999-12-31T23:59:59Z
+1970-01-01T00:00:00Z   -> 0
+1970-01-02T00:00:00Z   -> 86400
+2000-02-29T00:00:00Z   -> 951782400
+2099-12-31T23:59:59Z   -> 4102444799
+2100-02-29             -> REFUSED by python: day is out of range for month

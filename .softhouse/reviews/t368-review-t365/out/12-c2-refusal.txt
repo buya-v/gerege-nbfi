@@ -1,0 +1,19 @@
+=== T368: condition C2, driven on this host. TMPDIR=/nonexistent-t368-3444/ (unwritable, absent)
+
+--- AFTER (T365)  sha256=06c57d0e192fa1484b9c25ad5ac7995049471a98ddf4425d0d663561b034bf53
+self-test: could not create a scratch directory under /nonexistent-t368-3444/; refusing to run against an unknown path
+rc=2   <- expected 2, refusing BEFORE any trap is installed
+
+--- BEFORE (main, PRE-C2)  sha256=c55a9c8b3a56e894030f4dc68a2bc4c8597d43a0ba18fce048d11c327086e22d
+    first 3 lines and the tail; look for scratch=/ and the rm refusal.
+mktemp: mkdtemp failed on /nonexistent-t368-3444//fire-selftest.LU1IRK: No such file or directory
+self-test: file=/private/tmp/main-fire.sh
+self-test: host=Buyanmunkhs-Mac-mini self_pid=3453 reaped_pid=3460 now=2026-08-28T09:46:00Z old=2026-08-24T05:46:00Z scratch=/
+rm: "/" may not be removed
+
+--- BEFORE, tail only:
+d01  *** FAIL-SHUT  want=FREE-released   got=HELD-live        released_at a real ISO-8601 UTC instant
+
+ROWS=27 FAIL_OPEN=0 FAIL_SHUT=6 SKIPPED=0
+rm: "/" may not be removed
+rc=1

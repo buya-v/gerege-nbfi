@@ -1,0 +1,59 @@
+T368 independent mutation drive over /tmp/t365-fire-program.sh
+sha256: 06c57d0e192fa1484b9c25ad5ac7995049471a98ddf4425d0d663561b034bf53
+
+m00  control: unmutated shipped file
+      expected : rc 0, every row ok
+      rc=0  tally=ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+      red rows : --- --- --- --- Syntactically This Correct
+
+m01  C1 predicate 1 REMOVED: (( _e > 0 ))
+      expected : z01 z02 z03 FAIL-OPEN
+      rc=1  tally=ROWS=45 FAIL_OPEN=3 FAIL_SHUT=0 SKIPPED=0
+      red rows : --- --- --- --- Syntactically z01 z02 z03 This Correct
+
+m02  C1 predicate 2 REMOVED: the skew bound
+      expected : z04 z05 z06 FAIL-OPEN
+      rc=1  tally=ROWS=45 FAIL_OPEN=3 FAIL_SHUT=0 SKIPPED=0
+      red rows : --- --- --- --- Syntactically z04 z05 z06 This Correct
+
+m03  C1 skew bound TIGHTENED TO A BAN ON ANY FUTURE INSTANT (_e <= _now)
+      expected : z07 FAIL-SHUT -- proves z07 is a live control
+      rc=1  tally=ROWS=45 FAIL_OPEN=0 FAIL_SHUT=1 SKIPPED=0
+      red rows : --- --- --- --- Syntactically z07 This Correct
+
+m04  C1 turned into a TOTAL BAN: no released_at is ever believed
+      expected : d01 AND z07 FAIL-SHUT -- a ban is caught, twice
+      rc=1  tally=ROWS=45 FAIL_OPEN=0 FAIL_SHUT=2 SKIPPED=0
+      red rows : --- --- --- --- d01 Syntactically z07 This Correct
+
+m05  the P-85 host guard DELETED from lock_pid_state
+      expected : e01 FAIL-OPEN
+      rc=1  tally=ROWS=45 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0
+      red rows : --- --- --- --- Syntactically This e01 Correct
+
+m06  century non-leap rule broken: leap = (y % 4 == 0)
+      expected : h04 FAIL-OPEN and -- per T365 -- NO body row
+      rc=1  tally=ROWS=45 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0
+      red rows : --- --- --- --- Syntactically This Correct h04
+
+m07lo  _iso8601_epoch drifts ONE DAY LOW
+      expected : g01 FAIL-OPEN (arm 3 fires on a live holder) and group H red
+      rc=1  tally=ROWS=45 FAIL_OPEN=27 FAIL_SHUT=1 SKIPPED=0
+      red rows : --- a01 a02 a03 a09 a10 a11 a12 a13 a14 a15 a16 a18 a19 --- --- --- Syntactically z01 z02 z03 z04 z05 z06 This e01 e02 Correct g01 g02 g04 h01 h02 h03 h05
+
+m07hi  _iso8601_epoch drifts ONE DAY HIGH
+      expected : g01 STAYS GREEN (T365 FINDING 2) and group H red
+      rc=1  tally=ROWS=45 FAIL_OPEN=5 FAIL_SHUT=3 SKIPPED=0
+      red rows : --- --- --- --- d01 Syntactically z03 z07 This Correct g03 h01 h02 h03 h05
+
+m08  the day-of-month bound dropped
+      expected : g02 FAIL-OPEN
+      rc=1  tally=ROWS=45 FAIL_OPEN=2 FAIL_SHUT=0 SKIPPED=0
+      red rows : --- --- --- --- Syntactically This Correct g02 h04
+
+m09  the ROWS= tally line deleted (P-83 presence-before-value on this driver)
+      expected : no ROWS= line -> this driver must say ABSENT, not pass
+      rc=0  tally=*** ABSENT ***
+      red rows : --- --- --- --- Syntactically This Correct
+
+VOID/anchor failures: 0
