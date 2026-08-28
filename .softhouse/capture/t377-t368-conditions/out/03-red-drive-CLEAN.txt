@@ -1,0 +1,34 @@
+subject : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7857166bf26cc586/.softhouse/bin/fire-program.sh
+sha256  : dbb18b7b80033384455a9c93086d681ecdf453558bedd049141bc1a542123d89
+repo    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7857166bf26cc586
+scratch : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t377-red.r2vIbb
+
+ENV NOTE, measured and material: this worker runs INSIDE a live fire, which exports
+FIRE_SNAPSHOT_OF / FIRE_SCRIPT_DIR / FIRE_REPO_SCRIPT. Inherited, they suppress the
+T301 snapshot re-exec and point SCRIPT_DIR at the parent fire's bin. Every case below
+sets all three EXPLICITLY so FIRE_SELF is the mutated copy and the guards resolve to
+the subject's own repo -- otherwise the census would grade a file that is not running.
+
+r00    ok            rc=0   UNMUTATED control: probe passes and the wiring PRINTS the reconciliation it performed
+r01    ok            rc=2   the tally line is DELETED: presence is tested before value, so the fire REFUSES (was: rc 0, fire starts)
+       (r02 rows removed: 45)
+r02    ok            rc=2   THE F-T368-2 CASE: all 45 rows gone. Before T377 this printed ROWS=0 and the fire STARTED.
+r03    ok            rc=2   all 45 rows RUN but ROWS stays 0: a control reporting a zero population must never pass
+r04    ok            rc=2   group Z guarded off: 45 declared, 38 executed, 0 announced skipped -- the census catches the 7 that vanished
+r05    ok            rc=2   THE INDEPENDENCE CASE: the self-test exits 0 while reporting FAIL_OPEN rows. The wiring reads the TALLY, not only rc.
+r06    ok            rc=78  subprocess-only misconfiguration: reported as CONFIGURATION, never as a reader regression
+
+--- knob validator (F-T368-3). Subject UNMUTATED; environment hostile. ---
+k01    ok            rc=78  non-numeric skew: named as CONFIGURATION, and the reader message never appears
+k02    ok            rc=78  int64-overflowing skew: the ROUND-TRIP catches the wrap, no digit-limit is typed
+k03    ok            rc=78  negative skew: refused outright (T368 measured this one producing a FAIL-OPEN ROW before)
+k04    ok            rc=78  the same class on the OTHER knob, which T368 noted behaved identically
+k05    ok            rc=78  a ZERO ceiling is an OPEN setting, not a strict one: arm 3 would fire on every readable started_at
+k06    ok            rc=78  arithmetic-injection payload: refused by the glob before any arithmetic context sees it; the token appears only as QUOTED DATA in the diagnostic
+
+--- knob validator is a BOUND, not a BAN: legitimate values still start the fire. ---
+k07    ok            rc=0   skew 0 is legitimate ("believe no future instant") and T368 measured the corpus green there
+k08    ok            rc=0   ceiling 604800 -- T365 C3 derived the C and G fixtures from it, so raising it must NOT turn rows red
+
+CHECKS=15 WRONG=0 VOID=0
+RESULT: PASS — every new refusal fired for the exact defect it names, and no legitimate configuration was refused.

@@ -26,6 +26,111 @@ LOCK_CEILING_SECS="${LOCK_CEILING_SECS:-86400}"   # 24h — T279 lifetime CEILIN
 # still be believed. Declared HERE, beside the other thresholds and BEFORE any function that
 # reads it, because `set -u` is in force and `lock_released_at` now depends on it.
 LOCK_RELEASE_SKEW_SECS="${LOCK_RELEASE_SKEW_SECS:-3600}"   # 1h — plausibility bound on released_at (arm 1)
+
+# ======================= T377 / T368 F-T368-3 · THE THRESHOLDS ARE VALIDATED ==========
+#
+# A MISCONFIGURED KNOB AND A BROKEN READER MUST NOT REPORT THE SAME WAY, and before this
+# block they did. MEASURED by T368: `LOCK_RELEASE_SKEW_SECS=abc` (and equally an int64-
+# overflowing value) turned rows `d01` and `z07` FAIL-SHUT, the lock-reader self-test exited
+# 1, and the wiring far below logged *"the lock-reader self-test FAILED … A FAIL-SHUT row
+# means a reclaimable lock cannot be reclaimed"* — blaming the READERS for a THRESHOLD that
+# is malformed. `LOCK_CEILING_SECS=abc` behaved identically. The direction was already SHUT
+# and loud, which is why T368 filed it LOW; the cost was diagnostic, and the operator reading
+# that log at 06:00 goes and audits `lock_released_at` instead of their own environment.
+#
+# So the three thresholds are validated HERE — before `lock_decide`, before `lock_released_at`,
+# before the `--lock-decide` dispatch and before the `--self-test-lock-readers` branch, i.e.
+# before any code that reads them exists to be blamed. The refusal is `EX_CONFIG` (78, from
+# `sysexits.h`), which is NOT any exit status this file already uses (0, 1, 2, 64) and is
+# therefore a discriminator the wiring can test for rather than a second reading of `2`.
+# After this block, a non-zero self-test rc can only mean the readers.
+#
+# THE PREDICATE, AND WHY IT IS SHAPED THIS WAY:
+#   * `<0->` is zsh's non-negative-integer glob. It refuses `abc`, `-100000`, `1e3`, `0x10`,
+#     a leading or trailing space, the empty string, and every arithmetic-injection payload —
+#     because the value never reaches an arithmetic context until it has matched.
+#     [MEASURED, all 16 classes: `.softhouse/capture/t377-t368-conditions/out/01-knob-probe.txt`;
+#      `INJECTED` is printed by none of them.]
+#   * the ROUND-TRIP (`[[ "$v" == "$t" ]]` after `local -i v; v=$t`) is what catches int64
+#     overflow, and it is DERIVED rather than a typed digit-limit: zsh truncates
+#     `99999999999999999999` to `-8446744073709551617`, whose decimal form differs from the
+#     input, so the wrap is detected by comparison instead of by a hard-coded 18 or 19 (P-80 —
+#     *"the fix is never the new number — it is to make the second site READ the first"*
+#     [`.softhouse/patterns.md:2775`]).
+#   * the MINIMUM is structural, not a restatement of any threshold. A ceiling or freshness
+#     window of 0 is not a tight setting, it is an OPEN one — arm 3 would fire on every lock
+#     with a readable `started_at`, and arm 4 could never fire — so those two must be
+#     positive. A skew of 0 is legitimate (it means "believe no future instant at all") and
+#     T368 measured the self-test green at 0 and at 1, so its minimum is 0.
+#
+# STATED COST, direction SHUT: a value this file previously tolerated by accident — a stray
+# space, a leading `+`, a float — now stops the fire at line 30 instead of misbehaving at
+# line 1200. That is the intended trade; the message names the variable and the value.
+_knob_int() {   # $1 name  $2 value  $3 minimum. Prints the reason and returns 1 on refusal.
+  local name="$1" raw="$2" t
+  local -i min="$3" v
+  if [[ "$raw" != <0-> ]]; then
+    print -u2 -r -- "FATAL: CONFIGURATION ERROR — $name is not a non-negative decimal integer of seconds. Got: '$raw'. This is a misconfigured THRESHOLD, not a lock-reader regression; nothing in this file has read a lock yet. Fix the environment and re-run."
+    return 1
+  fi
+  t="$raw"; while [[ "$t" == 0?* ]]; do t="${t#0}"; done   # strip leading zeros so the round-trip below compares like with like
+  v=$t
+  if [[ "$v" != "$t" ]]; then
+    print -u2 -r -- "FATAL: CONFIGURATION ERROR — $name='$raw' does not fit this shell's integer type; it wraps to $v. This is a misconfigured THRESHOLD, not a lock-reader regression. Fix the environment and re-run."
+    return 1
+  fi
+  if (( v < min )); then
+    print -u2 -r -- "FATAL: CONFIGURATION ERROR — $name='$raw' is below its structural minimum of $min. A zero lifetime ceiling or freshness window does not make the lock stricter, it makes it TAKEABLE (arm 3 fires on every readable started_at; arm 4 can never fire). Refusing rather than running an OPEN lock. Fix the environment and re-run."
+    return 1
+  fi
+  return 0
+}
+_knob_int LOCK_MAX_AGE_SECS      "$LOCK_MAX_AGE_SECS"      1 || exit 78
+_knob_int LOCK_CEILING_SECS      "$LOCK_CEILING_SECS"      1 || exit 78
+_knob_int LOCK_RELEASE_SKEW_SECS "$LOCK_RELEASE_SKEW_SECS" 0 || exit 78
+
+# ==================== T377 · `mktemp` IS NOT AT ONE ABSOLUTE PATH ACROSS USERLANDS =====
+#
+# T361 supplied `/usr/bin/mktemp` (absolute, matching this file's idiom at the T301 snapshot),
+# T365 shipped it, and T368 flagged the off-BSD behaviour as GENUINELY OPEN: it could not
+# finish an Alpine run, so it reported no result rather than guessing. **CLOSED HERE, MEASURED,
+# and it was not a false alarm:**
+#
+#   docker run --rm alpine:3 ls -l /usr/bin/mktemp /bin/mktemp
+#     ls: /usr/bin/mktemp: No such file or directory
+#     lrwxrwxrwx  /bin/mktemp -> /bin/busybox
+#
+# and, on the realistic provisioned host rather than a bare image — `apk add zsh python3`, so
+# `/bin/zsh` and `/usr/bin/python3` are both PRESENT and the wrapper genuinely starts:
+#
+#   /bin/zsh /w/fire-program.sh --self-test-lock-readers
+#     self-test: could not create a scratch directory under /tmp; refusing to run against an unknown path
+#     SELFTEST rc=2
+#
+# Wired fatally below, that is a fire that cannot start on any busybox host — the exact latent
+# SHUT T368 described, now a measurement instead of a worry.
+# [VERIFIED: `.softhouse/capture/t377-t368-conditions/out/05-alpine-mktemp.txt`, run on this
+#  host under Docker 29.6.2.]
+#
+# THE FIX KEEPS THE PROPERTY THE ABSOLUTE PATH WAS BOUGHT FOR. Resolving through `$PATH` would
+# close the portability hole and open a hijack: this file runs from launchd and takes a lock.
+# So the candidates are a FIXED LIST OF ABSOLUTE PATHS, tried in order, and `$PATH` is never
+# consulted. On this host `/usr/bin/mktemp` is first and present, so the resolved value — and
+# therefore every byte of behaviour on the only machine that has ever run this file — is
+# unchanged. If NEITHER candidate exists the value falls back to today's spelling, so the
+# failure message and the C2 refusal are exactly what they are now.
+#
+# WHAT THIS DOES NOT CLAIM. It does not make the wrapper portable. On a bare busybox image
+# `/bin/zsh`, `/usr/bin/python3`, `/usr/bin/shasum`, `/usr/bin/stat`, `/usr/bin/git` and
+# `/usr/bin/curl` are ALL absent [MEASURED, same capture], and `/usr/bin/stat -f %i` is BSD
+# syntax GNU `stat` does not accept. This closes ONE named item — T365's follow-up 4 and
+# T368 §13 — and the rest of the off-BSD surface stays open and is listed in the T377 handoff.
+FIRE_MKTEMP=""
+for _c in /usr/bin/mktemp /bin/mktemp; do
+  if [[ -x "$_c" ]]; then FIRE_MKTEMP="$_c"; break; fi
+done
+FIRE_MKTEMP="${FIRE_MKTEMP:-/usr/bin/mktemp}"
+
 CLAUDE_BIN="${CLAUDE_BIN:-$HOME/.local/bin/claude}"
 
 # Reference-oracle probes. PostgreSQL only — never MySQL/MariaDB, never Oracle DB.
@@ -438,9 +543,30 @@ lock_holder_is_dead() { [[ "$(lock_pid_state)" == dead_here ]] }
 #
 # THE STATED COST, so nobody rediscovers it as a bug: a genuine `released_at` more than
 # `LOCK_RELEASE_SKEW_SECS` in the future is now read as NOT released. Direction SHUT,
-# configurable, and strictly preferable to the OPEN direction it replaces — the lock still has
-# arms 2, 3 and 5, so it is a delay, never a stranding. Graded by self-test group Z below;
-# reverting either predicate turns group Z red.
+# configurable, and strictly preferable to the OPEN direction it replaces. Graded by self-test
+# group Z below; reverting either predicate turns group Z red.
+#
+# T377 / T368 F-T368-4 — THE COST ABOVE USED TO END *"the lock still has arms 2, 3 and 5, so it
+# is a delay, never a stranding."* THAT IS TRUE ONLY WHEN `started_at` IS READABLE, and the
+# unqualified form promised more than the arms deliver. Re-derived from `lock_decide` above:
+#   * arm 2 needs `pid_state == dead_here`, so it cannot fire for a FOREIGN host — and a
+#     foreign host is exactly who writes a clock-skewed `released_at`;
+#   * arms 3 and 5 BOTH gate on `[[ "$sage" == <0-> ]]`, i.e. on a readable, non-negative
+#     `started_at`.
+# So the honest statement is in two halves:
+#   (a) `started_at` READABLE — a bounded delay, never a stranding. Arm 3 (the 24 h ceiling)
+#       fires on `started_at` alone and ignores `released_at` entirely, so takeover is
+#       guaranteed within `LOCK_CEILING_SECS`. Every lock THIS file writes falls into (a): the
+#       acquisition heredoc below always emits `started_at`.
+#   (b) `started_at` ABSENT, UNPARSEABLE, or IN THE FUTURE (negative age) — arms 2/3/5 are all
+#       unavailable and the body lands on arm 6 `HELD-default`, reclaimable only by `--force`.
+#       That IS a stranding. C1 does not create the class — any body with both signals
+#       unreadable already stranded, which is the deliberate fail-closed polarity stated at the
+#       top of `lock_decide` — but C1 ADDS AN INPUT to it: before C1 such a body read
+#       `FREE-released` on arm 1. The trade is still right (OPEN is the unsafe direction, SHUT
+#       the recoverable one, and `--force` recovers (b) for an operator who is present, while
+#       nothing recovers a lock that was wrongly taken). Written down here so the next reader
+#       need not re-derive it from the arms, and so the short form is not quoted again.
 lock_released_at() {
   local v
   local -i _e _now
@@ -546,7 +672,10 @@ if [[ "${1:-}" == "--self-test-lock-readers" ]]; then
   # relies on must not depend on one. This file already handles the same shape correctly for
   # `_t301_dir` at the snapshot re-exec (`grep -n _t301_dir`); the self-test did not.
   # The check runs BEFORE the trap is installed, so a refusal removes nothing.
-  _st_dir="$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/fire-selftest.XXXXXX" 2>/dev/null)" || _st_dir=""
+  # T377: `$FIRE_MKTEMP`, not a hard-coded `/usr/bin/mktemp` — see its resolution near the top
+  # for the busybox measurement that made this a fire that could not start. Still absolute,
+  # still never from `$PATH`, and identical to the old spelling on this host.
+  _st_dir="$($FIRE_MKTEMP -d "${TMPDIR:-/tmp}/fire-selftest.XXXXXX" 2>/dev/null)" || _st_dir=""
   if [[ -z "$_st_dir" || ! -d "$_st_dir" || "$_st_dir" == "/" ]]; then
     print -u2 "self-test: could not create a scratch directory under ${TMPDIR:-/tmp}; refusing to run against an unknown path"
     exit 2
@@ -812,7 +941,7 @@ if [[ -z "${FIRE_SNAPSHOT_OF:-}" && "${FIRE_NO_SNAPSHOT:-0}" != "1" ]]; then
   # sweep snapshots older than a day from fires that are long gone
   /usr/bin/find "${TMPDIR:-/tmp}" -maxdepth 1 -name 'fire-wrapper-snap.*' -type d -mtime +1 \
     -exec /bin/rm -rf {} + 2>/dev/null || true
-  _t301_dir="$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/fire-wrapper-snap.XXXXXX" 2>/dev/null)" || _t301_dir=""
+  _t301_dir="$($FIRE_MKTEMP -d "${TMPDIR:-/tmp}/fire-wrapper-snap.XXXXXX" 2>/dev/null)" || _t301_dir=""   # T377: resolved absolute mktemp, see the top of this file
   if [[ -n "$_t301_dir" && -r "${0:A}" ]] && /bin/cp "${0:A}" "$_t301_dir/fire-program.sh" 2>/dev/null; then
     /bin/chmod +x "$_t301_dir/fire-program.sh" 2>/dev/null
     export FIRE_SNAPSHOT_OF="${0:A}"
@@ -958,7 +1087,13 @@ ATTEST_BEFORE=""   # per chain iteration. EMPTY means "no baseline was taken",
 attest_run() {
   local prefix="$1"; shift
   if [[ ! -r "$ATTEST" ]]; then
-    log "ERROR: $prefix — the repo-state attestation guard is NOT READABLE at $ATTEST. This fire is UNATTESTED: nothing in this log supports a claim that nothing was destroyed. (P-45: 'a guard that only works when someone remembers to run it enforces nothing' — one that is not on disk enforces less.)"
+    # T377 / T368 F-T368-1. This line used to cite P-45 for the gloss "a guard that only works
+    # when someone remembers to run it enforces nothing". `patterns.md:3374-3379` is a standing
+    # erratum: that string is NOT P-45's recorded text and is not any other pattern's — it is an
+    # UNRECORDED gloss, so the correction is to drop the citation, not to renumber it. Worst of
+    # the three sites because an operator reads this one during an incident and would carry the
+    # false attribution away with it. The fact it needs to state is the fact, unattributed.
+    log "ERROR: $prefix — the repo-state attestation guard is NOT READABLE at $ATTEST. This fire is UNATTESTED: nothing in this log supports a claim that nothing was destroyed. A guard that is not on disk enforces nothing at all."
     return 2
   fi
   local out rc l
@@ -1038,9 +1173,14 @@ log "reference oracle (Fineract): $ORACLE_STATUS"
 # and installs a git reference-transaction hook that REFUSES creation of a
 # refs/heads/softhouse/* ref differing from an existing one only by case; `sweep --quiet`
 # prints any shadow already present. It is here rather than in the skill because the
-# skill's corpse check is a glob the driver retypes each fire, and P-45 — "a guard that
-# only works when someone remembers to run it enforces nothing" — is exactly how fire
-# 20260827-230001 recorded eight branches as "gone or empty" over 73 committed commits.
+# skill's corpse check is a glob the driver retypes each fire, and a check that runs only
+# when somebody remembers to type it is exactly how fire 20260827-230001 recorded eight
+# branches as "gone or empty" over 73 committed commits.
+#   T377 / T368 F-T368-1: the sentence above used to attribute that gloss to P-45. It is not
+#   P-45's text and not any other pattern's — `patterns.md:3374-3379` is a standing erratum
+#   saying so, and the correction it prescribes is to DROP the citation rather than renumber
+#   it, because there is no rule with that text to renumber to. The observation itself stands
+#   on the measured fire; it just is not a registered pattern.
 # Never fatal: both are `|| true`, and a broken guard must not stop a fire.
 /usr/bin/python3 "$SCRIPT_DIR/branch_sweep.py" install-hook --repo "$REPO" 2>&1 | while IFS= read -r l; do log "refguard| $l"; done || true
 /usr/bin/python3 "$SCRIPT_DIR/branch_sweep.py" sweep --repo "$REPO" --pattern 'softhouse/*' --quiet 2>&1 | while IFS= read -r l; do log "sweep| $l"; done || true
@@ -1139,10 +1279,108 @@ log "python3 preflight: /usr/bin/python3 parses JSON and writes nothing spurious
 # failure T353 hit with `${0:A}` and fixed. Small residual risk, but the file has an idiom.
 _ST_OUT="$(/bin/zsh "$FIRE_SELF" --self-test-lock-readers 2>&1)"; _ST_RC=$?
 print -r -- "$_ST_OUT" | while IFS= read -r l; do log "lockselftest| $l"; done
-if (( _ST_RC != 0 )); then
-  log "FATAL: the lock-reader self-test FAILED (rc=$_ST_RC). A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P-85); a FAIL-SHUT row means a reclaimable lock cannot be reclaimed. Either way this wrapper must not decide a lock today. Refusing to start."
+
+# ============ T377 / T368 F-T368-2 · THE WIRED CONTROL INSPECTS ITS OWN TALLY ==========
+#
+# WHAT WAS WRONG. This wiring used to test `_ST_RC` AND NOTHING ELSE. T368 drove the
+# consequence: DELETE ALL 45 `_row`/`_arow` INVOCATIONS AND THE SELF-TEST PRINTS
+# `ROWS=0 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0`, EXITS 0, AND THE FIRE STARTS — a fatal
+# pre-fire control passing while grading nothing [VERIFIED: T368's `bin/t368-control-
+# integrity.py`, `out/11-control-integrity.txt` m10, and reproduced here by
+# `.softhouse/capture/t377-t368-conditions/bin/red-drive.zsh` case r02]. Deleting only the
+# `print -r -- "ROWS=…"` line was the same: rc 0, no tally, fire proceeds (T368 m09).
+# That is P-22 — *"a guard, a canary, or a control that cannot fail is worse than none —
+# because it is believed"* [`.softhouse/patterns.md:473`] — applied to the wiring itself.
+#
+# T365 DID ASSERT A `>= 27` FLOOR, but in `capture/t365-t361-conditions/bin/t365-red-drives.zsh`,
+# a capture-directory script INVOKED BY NOTHING — precisely the position T365 itself, four
+# hundred lines above, correctly condemns `epoch-parity.zsh` for occupying. The floor is moved
+# onto the path that executes, which is here.
+#
+# THE FLOOR IS DERIVED, NOT TYPED, and the shape is borrowed rather than invented. This is
+# the THIRD vacuous-pass defect of this fire, and `guard_guards_dir_registration` in
+# `conformance.sh` already handles the case correctly: *"the population is EMPTY. That is a
+# SELECTOR failure, not a clean tree … An empty census passes everything. REFUSED."*
+# [`.softhouse/conformance.sh:3217-3220`]. Same three moves here:
+#   POPULATION — count the row invocations DECLARED in the very bytes that just ran
+#     (`$FIRE_SELF`, the same path handed to `/bin/zsh` above, so under the T301 snapshot
+#     re-exec the census and the execution are the same file). `27`, `45` and every other
+#     cardinal stay out of this file: adding a row raises the floor by itself.
+#   EMPTY POPULATION REFUSES — a census of 0 is a SELECTOR failure (this file has carried
+#     `_row` invocations since T353 and always will while the self-test exists), or the file
+#     is unreadable. Either way it is never a clean bill of health.
+#   THE CENSUS IS RECONCILED AGAINST THE TALLY — `ROWS + SKIPPED` must EQUAL the census.
+#     That is the check the floor alone would miss: a row that is declared but silently not
+#     executed (a group guarded off, an early `return`, a mangled `if`) leaves the two
+#     counters short while both still look plausible. `ROWS=41 SKIPPED=4` reconciles to 45
+#     and is the honest reading of a skipped group [T368 `out/11` m11].
+#
+# PRESENCE BEFORE VALUE — P-84, *"'EXIT 2 WITH NO PROBE LINE' IS THE GUARD WORKING. READ THE
+# ABSENCE, NOT THE VALUE."* [`.softhouse/patterns.md:2813`]. (P-84, not P-83: P-83 at `:2806`
+# is the reconcile-by-running rule.) The summary line's EXISTENCE is tested before any number
+# is read out of it, so a self-test that dies before printing, or one whose summary was
+# deleted, refuses instead of parsing an empty string into a comfortable 0.
+#
+# AND THE VERDICT IS RE-READ FROM THE TALLY, NOT ONLY FROM `rc`. `FAIL_OPEN`/`FAIL_SHUT` are
+# checked here as well as by the self-test's own `exit 1`, so deleting that one line does not
+# silence the failure. Two independent readings of the same fact is the point.
+#
+# STATED COST, direction SHUT: the census selector is a regex over source text, so a future
+# row written across two lines, or invoked through a wrapper, would not be counted and the
+# reconciliation would refuse the fire. That is loud, immediate, and fixed by keeping rows
+# one-per-line — which is how all 45 are written today.
+
+# T377 / T368 F-T368-3 — a MISCONFIGURED THRESHOLD is not a reader regression, and does not
+# get the reader message. The knob validator at the top of this file already refused in THIS
+# process, so reaching here with rc 78 means the subprocess saw an environment this one did
+# not; report it as configuration either way and never as a lock-reader fault.
+if (( _ST_RC == 78 )); then
+  log "FATAL: the lock-reader self-test refused with EX_CONFIG (rc=78) — a lock THRESHOLD is misconfigured (LOCK_MAX_AGE_SECS / LOCK_CEILING_SECS / LOCK_RELEASE_SKEW_SECS). This is NOT a lock-reader regression: no lock was read. The refusal reason is on stderr above. Fix the environment and re-run."
+  exit 78
+fi
+
+# P-84: PRESENCE first. Anchored and fully specified, so a partial or reordered summary is
+# absent rather than half-parsed.
+_ST_SUMMARY="$(print -r -- "$_ST_OUT" | LC_ALL=C grep -E '^ROWS=[0-9]+ FAIL_OPEN=[0-9]+ FAIL_SHUT=[0-9]+ SKIPPED=[0-9]+$' | tail -1)"
+if [[ -z "$_ST_SUMMARY" ]]; then
+  log "FATAL: the lock-reader self-test printed NO TALLY LINE (rc=$_ST_RC). Either it did not reach its own summary, or the summary was removed. A fatal pre-fire control that cannot say how many rows it graded has not graded any (P-84, .softhouse/patterns.md:2813). Refusing to start."
   exit 2
 fi
+
+typeset -i _ST_ROWS=0 _ST_OPEN=0 _ST_SHUT=0 _ST_SKIP=0 _ST_CENSUS=0
+for _f in ${=_ST_SUMMARY}; do
+  case "$_f" in
+    ROWS=*)      _ST_ROWS=${_f#ROWS=} ;;
+    FAIL_OPEN=*) _ST_OPEN=${_f#FAIL_OPEN=} ;;
+    FAIL_SHUT=*) _ST_SHUT=${_f#FAIL_SHUT=} ;;
+    SKIPPED=*)   _ST_SKIP=${_f#SKIPPED=} ;;
+  esac
+done
+
+# The DECLARED population, read out of the bytes that just ran. `_row(` / `_arow(` are the
+# DEFINITIONS and do not match (the glob requires whitespace after the name); comment lines
+# start with `#` and do not match either. Verified against the shipped file by
+# `.softhouse/capture/t377-t368-conditions/bin/red-drive.zsh` case r00.
+_ST_CENSUS=$(LC_ALL=C grep -cE '^[[:space:]]*_(row|arow)[[:space:]]' "$FIRE_SELF" 2>/dev/null) || _ST_CENSUS=0
+
+if (( _ST_CENSUS == 0 )); then
+  log "FATAL: the lock-reader self-test's row POPULATION IS EMPTY in $FIRE_SELF. That is a SELECTOR failure or an unreadable file, not a clean self-test — this wrapper has carried _row/_arow invocations since T353 and an empty census passes everything. REFUSED."
+  exit 2
+fi
+if (( _ST_ROWS == 0 )); then
+  log "FATAL: the lock-reader self-test executed ZERO ROWS (ROWS=0) while $_ST_CENSUS are declared in $FIRE_SELF. A control that grades nothing must never pass (P-22, .softhouse/patterns.md:473). Refusing to start."
+  exit 2
+fi
+if (( _ST_ROWS + _ST_SKIP != _ST_CENSUS )); then
+  log "FATAL: the lock-reader self-test does not reconcile — ROWS=$_ST_ROWS + SKIPPED=$_ST_SKIP = $(( _ST_ROWS + _ST_SKIP )), but $_ST_CENSUS rows are DECLARED in $FIRE_SELF. Rows exist that neither ran nor announced themselves skipped, so the tally understates what was left ungraded. Refusing to start."
+  exit 2
+fi
+
+if (( _ST_OPEN != 0 || _ST_SHUT != 0 || _ST_RC != 0 )); then
+  log "FATAL: the lock-reader self-test FAILED (rc=$_ST_RC, FAIL_OPEN=$_ST_OPEN, FAIL_SHUT=$_ST_SHUT, over $_ST_ROWS of $_ST_CENSUS declared rows). The thresholds validated at startup, so this is the READERS. A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P-85); a FAIL-SHUT row means a reclaimable lock cannot be reclaimed. Either way this wrapper must not decide a lock today. Refusing to start."
+  exit 2
+fi
+log "lockselftest: tally VERIFIED by the wiring — $_ST_ROWS executed + $_ST_SKIP skipped = $_ST_CENSUS declared in $FIRE_SELF, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisfied by an empty one."
 
 if (( PROBE_ONLY )); then
   log "probe only — exiting without taking the lock or invoking the driver"
@@ -2234,8 +2472,13 @@ foreign_live_session_in_repo() {
 # Both fail for the same reason the WARN failed. A non-zero exit is read by launchd,
 # which does nothing with it; the next fire still opens a tasks.json that says four
 # workers are busy. A marker file needs (a) somebody to remember to read it and (b)
-# somebody to remember to clear it — two remembered obligations, which is P-45's exact
-# shape: "a guard that only works when someone remembers to run it enforces nothing."
+# somebody to remember to clear it — two remembered obligations, and a control that fires
+# only when both are remembered is not a control.
+#   T377 / T368 F-T368-1: this sentence used to read "which is P-45's exact shape: 'a guard
+#   that only works when someone remembers to run it enforces nothing.'" Per the erratum at
+#   `patterns.md:3374-3379` that string is an unrecorded gloss, not P-45 — P-45 is about
+#   WHICH PATH invokes a guard, this is about a guard invoked only by memory. Citation
+#   dropped rather than renumbered, because there is nothing to renumber it to.
 # So the wrapper edits the two artefacts the next fire actually reads, and both repairs
 # are SELF-CLEARING by construction: a demoted task leaves `needs_retry` when it is
 # retried, and the banner disappears the moment a driver rewrites RESUME.md per STEP

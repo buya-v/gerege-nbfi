@@ -1,0 +1,54 @@
+subject dir : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7857166bf26cc586/.softhouse/bin
+subject sha : dbb18b7b80033384455a9c93086d681ecdf453558bedd049141bc1a542123d89
+image       : alpine:3
+docker      : Docker version 29.6.2, build dfc4efb
+host        : Darwin 25.5.0 arm64
+
+=== 1. bare busybox image: where does mktemp live, and what else is missing? ===
+ABSENT  /usr/bin/mktemp
+PRESENT /bin/mktemp
+ABSENT  /usr/bin/stat
+PRESENT /bin/stat
+ABSENT  /usr/bin/shasum
+ABSENT  /usr/bin/python3
+PRESENT /usr/bin/find
+PRESENT /bin/cp
+PRESENT /bin/chmod
+PRESENT /bin/rm
+ABSENT  /bin/zsh
+ABSENT  /usr/bin/git
+PRESENT /usr/bin/cut
+ABSENT  /usr/bin/curl
+--- mktemp identity ---
+lrwxrwxrwx    1 root     root            12 Jun 13 16:39 /bin/mktemp -> /bin/busybox
+
+=== 2. PROVISIONED host (apk add zsh python3): the wrapper can now START. ===
+    This is the case that matters: a bare image cannot run a #!/bin/zsh script at all,
+    so 'the fire refuses on every Linux host' is only a real claim once zsh is present.
+ABSENT  /usr/bin/mktemp
+PRESENT /bin/mktemp
+PRESENT /usr/bin/python3
+PRESENT /bin/zsh
+ABSENT  /usr/bin/zsh
+
+=== 3. THE SHIPPED SELF-TEST, run in that container, against the live subject ===
+    Mounted read-only. rc 0 with a full ROWS= tally means $FIRE_MKTEMP resolved to
+    /bin/mktemp and the whole 45-row corpus ran on busybox.
+h02  ok             want=86400           got=86400            one day past the epoch: grades the *86400 scaling and the day term
+h03  ok             want=951782400       got=951782400        a REAL leap day (div-400 rule) must be ACCEPTED with this exact value
+h04  ok             want=REFUSE          got=REFUSE           century NON-leap: div-100 rule must REFUSE. Unreachable via released_at under C1 -- this is the only grader.
+h05  ok             want=4102444799      got=4102444799       end of century, all four fields at maximum: grades hh/mi/ss and the year term together
+
+ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+SELFTEST rc=0
+
+=== 4. WHAT THE HARD-CODED PATH DID, reconstructed on the SAME container ===
+    A copy of the subject with $FIRE_MKTEMP forced back to the literal /usr/bin/mktemp.
+    If step 3 is green and this is rc 2, the fix is the only difference between them.
+self-test: could not create a scratch directory under /tmp; refusing to run against an unknown path
+SELFTEST rc=2
+
+=== VERDICT ===
+PASS — with $FIRE_MKTEMP the 45-row self-test runs GREEN on busybox; with the
+hard-coded /usr/bin/mktemp the identical file REFUSES (rc 2) and the fire cannot start.
+The resolver is the only difference between the two runs.
