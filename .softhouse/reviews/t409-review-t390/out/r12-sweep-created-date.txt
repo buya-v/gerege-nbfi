@@ -1,0 +1,43 @@
+-- T409 r12-sweep-created-date -- 2026-08-28T18:13:50Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: 76da63956a60efe3dc567f5a5373fe6b7ccdb8f703538b5ec2423616b6d4e052
+--
+Pager usage is off.
+                  tbl                  | n 
+---------------------------------------+---
+ acc_gl_closure                        | 0
+ acc_gl_journal_entry                  | 0
+ m_adhoc                               | 0
+ m_business_date                       | 0
+ m_calendar                            | 0
+ m_cashier_transactions                | 0
+ m_client_identifier                   | 0
+ m_client_transaction                  | 0
+ m_deposit_account_on_hold_transaction | 0
+ m_floating_rates                      | 0
+ m_floating_rates_periods              | 0
+ m_hook                                | 0
+ m_loan_officer_assignment_history     | 0
+ m_loan_repayment_schedule             | 0
+ m_loan_repayment_schedule_history     | 0
+ m_loan_transaction                    | 0
+ m_mandatory_savings_schedule          | 0
+ m_note                                | 0
+ m_provisioning_criteria               | 0
+ m_provisioning_history                | 0
+ m_rate                                | 0
+ m_report_mailing_job                  | 0
+ m_savings_account_transaction         | 0
+ m_savings_officer_assignment_history  | 0
+ m_share_account                       | 0
+ m_share_product                       | 0
+ m_share_product_dividend_pay_out      | 0
+ m_staff_assignment_history            | 0
+ m_tax_component                       | 0
+ m_tax_component_history               | 0
+ m_tax_group                           | 0
+ m_tax_group_mappings                  | 0
+ m_trial_balance                       | 0
+(33 rows)
+
+-- psql rc=0

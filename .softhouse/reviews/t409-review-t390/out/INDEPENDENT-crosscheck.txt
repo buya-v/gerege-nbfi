@@ -1,0 +1,53 @@
+T409 INDEPENDENT ATTRIBUTION CROSS-CHECK -- 2026-08-28T18:17:06Z
+registry: /tmp/t409/t363-oracle-baseline/PROBES.tsv
+registry sha256: fc0bf8e2375f7e82316c9288e467b6f1ff9e82f57f06286bacdd0ab46522e205
+
+== registry txn rows (key -> task) ==
+  L28	T388
+  L29	T388
+  L30	T388
+  L31	T388
+  L32	SCHEDULER-JOB-11
+  L33	SCHEDULER-JOB-11
+  L34	SCHEDULER-JOB-11
+  a29bca0816a7	T352
+  a29bca9bf813	T352
+  a29bcaa6a41b	T352
+  a29bcb5d6fcf	T352
+  a29bd5eaeb1b	T359
+
+== live txn ids above je floor 64: 12 ==
+  L28
+  L29
+  L30
+  L31
+  L32
+  L33
+  L34
+  a29bca0816a7
+  a29bca9bf813
+  a29bcaa6a41b
+  a29bcb5d6fcf
+  a29bd5eaeb1b
+
+== A. LIVE but NOT in registry  (the instrument's own question) ==
+  count = 0
+
+== B. REGISTRY but NOT live  (over-claim; the instrument NEVER checks this) ==
+  count = 0
+
+== C. registry txn rows with an EMPTY task field ==
+  (end)
+
+== D. duplicate txn keys in the registry ==
+  (end)
+
+== E. command keys above cs floor 352 ==
+  live=27  registered=27
+  live-not-registered:
+  registered-not-live:
+
+== F. what the registry cannot express: MUTATION of rows at or below the floor ==
+  je rows AT/BELOW floor 64 modified since 2026-08-28 16:00Z: 60
+  je rows ABOVE floor 64 modified since 2026-08-28 16:00Z: 49
+  distinct last_modified_by over the whole ledger table: 2

@@ -1,0 +1,61 @@
+-- T409 r20-jobs -- 2026-08-28T18:47:56Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: ef2b8ef0058a86da0ea25b11b862fc2617a0b4f2457094f8adb2f3d55f9e8c6a
+--
+Pager usage is off.
+ total_jobs | active | inactive 
+------------+--------+----------
+         41 |     31 |       10
+(1 row)
+
+ id |                                 name                                  | is_active |  cron_expression  | scheduler_group 
+----+-----------------------------------------------------------------------+-----------+-------------------+-----------------
+  2 | Update Loan Arrears Ageing                                            | t         | 0 1 0 1/1 * ? *   |               0
+  4 | Apply Annual Fee For Savings                                          | t         | 0 20 22 1/1 * ? * |               0
+  5 | Apply Holidays To Loans                                               | t         | 0 0 12 * * ?      |               0
+  6 | Post Interest For Savings                                             | t         | 0 0 0 1/1 * ? *   |               1
+  7 | Transfer Fee For Loans From Savings                                   | t         | 0 1 0 1/1 * ? *   |               0
+  8 | Pay Due Savings Charges                                               | t         | 0 0 12 * * ?      |               0
+  9 | Update Accounting Running Balances                                    | t         | 0 1 0 1/1 * ? *   |               0
+ 10 | Execute Standing Instruction                                          | t         | 0 0 0 1/1 * ? *   |               0
+ 11 | Add Accrual Transactions                                              | t         | 0 1 0 1/1 * ? *   |               3
+ 12 | Apply penalty to overdue loans                                        | t         | 0 0 0 1/1 * ? *   |               0
+ 13 | Update Non Performing Assets                                          | t         | 0 0 0 1/1 * ? *   |               3
+ 14 | Transfer Interest To Savings                                          | t         | 0 2 0 1/1 * ? *   |               1
+ 15 | Update Deposit Accounts Maturity details                              | t         | 0 0 0 1/1 * ? *   |               0
+ 16 | Add Periodic Accrual Transactions                                     | t         | 0 2 0 1/1 * ? *   |               3
+ 17 | Recalculate Interest For Loans                                        | t         | 0 1 0 1/1 * ? *   |               3
+ 18 | Generate Mandatory Savings Schedule                                   | t         | 0 5 0 1/1 * ? *   |               0
+ 19 | Generate Loan Loss Provisioning                                       | t         | 0 0 0 1/1 * ? *   |               0
+ 20 | Post Dividends For Shares                                             | t         | 0 0 0 1/1 * ? *   |               0
+ 21 | Update Savings Dormant Accounts                                       | t         | 0 0 0 1/1 * ? *   |               1
+ 22 | Add Accrual Transactions For Loans With Income Posted As Transactions | t         | 0 1 0 1/1 * ? *   |               3
+ 23 | Execute Report Mailing Jobs                                           | t         | 0 0/15 * * * ?    |               0
+ 24 | Update SMS Outbound with Campaign Message                             | t         | 0 0 5 1/1 * ? *   |               4
+ 25 | Send Messages to SMS Gateway                                          | t         | 0 0 5 1/1 * ? *   |               4
+ 26 | Get Delivery Reports from SMS Gateway                                 | t         | 0 0 5 1/1 * ? *   |               4
+ 27 | Execute Email                                                         | t         | 0 0/10 * * * ?    |               0
+ 28 | Update Email Outbound with campaign message                           | t         | 0 0/15 * * * ?    |               0
+ 29 | Generate AdhocClient Schedule                                         | t         | 0 0 12 1/1 * ? *  |               0
+ 30 | Update Trial Balance Details                                          | t         | 0 1 0 1/1 * ? *   |               0
+ 31 | Execute All Dirty Jobs                                                | t         | 0 1 0 1/1 * ? *   |               0
+ 32 | Increase Business Date by 1 day                                       | f         | 0 0 0 1/1 * ? *   |               0
+ 33 | Increase COB Date by 1 day                                            | f         | 0 0 0 1/1 * ? *   |               0
+ 34 | Loan COB                                                              | f         | 0 0 0 * * ?       |               0
+ 35 | Loan Delinquency Classification                                       | t         | 0 0 22 1/1 * ? *  |               0
+ 36 | Send Asynchronous Events                                              | t         | 0 0/1 * * *  ?    |               0
+ 37 | Purge External Events                                                 | f         | 0 1 0 1/1 * ? *   |               0
+ 38 | Purge Processed Commands                                              | f         | 0 0 1 * * ?       |               0
+ 39 | Accrual Activity Posting                                              | f         | 0 0 1 * * ?       |               0
+ 40 | Journal Entry Aggregation                                             | f         | 0 0 6 * * ?       |               0
+ 41 | Retained Earning Job                                                  | f         | 0 0 6 * * ?       |               0
+ 42 | Add Accrual Transactions For Savings                                  | f         | 0 1 0 1/1 * ? *   |               0
+ 43 | Working Capital Loan COB                                              | f         | 0 0 0 * * ?       |               0
+(41 rows)
+
+ distinct_jobs_run_last_24h | runs 
+----------------------------+------
+                         31 | 1803
+(1 row)
+
+-- psql rc=0

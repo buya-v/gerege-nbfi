@@ -1,0 +1,47 @@
+-- T409 r6-jrh-window -- 2026-08-28T18:12:08Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: 56f8bed986f9e825be3c8f4ed6cb1b79f7cfe6c63ed023992d659aea72b6e7d7
+--
+Pager usage is off.
+ jrh_id | job_id |                               job_name                                |       start_time        |        end_time         | status  | trigger_type |                             err                              
+--------+--------+-----------------------------------------------------------------------+-------------------------+-------------------------+---------+--------------+--------------------------------------------------------------
+  12696 |     36 | Send Asynchronous Events                                              | 2026-08-28 15:55:00.001 | 2026-08-28 15:55:00.026 | success | cron         | 
+  12697 |     36 | Send Asynchronous Events                                              | 2026-08-28 15:56:00.003 | 2026-08-28 15:56:00.03  | success | cron         | 
+  12698 |     36 | Send Asynchronous Events                                              | 2026-08-28 15:57:00.082 | 2026-08-28 15:57:00.108 | success | cron         | 
+  12699 |     36 | Send Asynchronous Events                                              | 2026-08-28 15:58:00.005 | 2026-08-28 15:58:00.033 | success | cron         | 
+  12700 |     36 | Send Asynchronous Events                                              | 2026-08-28 15:59:00.001 | 2026-08-28 15:59:00.028 | success | cron         | 
+  12704 |     13 | Update Non Performing Assets                                          | 2026-08-28 16:00:00.005 | 2026-08-28 16:00:00.062 | success | cron         | 
+  12708 |     27 | Execute Email                                                         | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.065 | success | cron         | 
+  12703 |     23 | Execute Report Mailing Jobs                                           | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.061 | success | cron         | 
+  12701 |     12 | Apply penalty to overdue loans                                        | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.059 | success | cron         | 
+  12705 |     10 | Execute Standing Instruction                                          | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.062 | success | cron         | 
+  12706 |     20 | Post Dividends For Shares                                             | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.063 | success | cron         | 
+  12707 |     19 | Generate Loan Loss Provisioning                                       | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.063 | success | cron         | 
+  12702 |     36 | Send Asynchronous Events                                              | 2026-08-28 16:00:00.007 | 2026-08-28 16:00:00.059 | success | cron         | 
+  12709 |      6 | Post Interest For Savings                                             | 2026-08-28 16:00:00.007 | 2026-08-28 16:00:00.068 | success | cron         | 
+  12710 |     15 | Update Deposit Accounts Maturity details                              | 2026-08-28 16:00:00.062 | 2026-08-28 16:00:00.074 | success | cron         | 
+  12711 |     28 | Update Email Outbound with campaign message                           | 2026-08-28 16:00:00.063 | 2026-08-28 16:00:00.075 | success | cron         | 
+  12712 |     21 | Update Savings Dormant Accounts                                       | 2026-08-28 16:00:00.069 | 2026-08-28 16:00:00.079 | success | cron         | 
+  12716 |     31 | Execute All Dirty Jobs                                                | 2026-08-28 16:01:00.002 | 2026-08-28 16:01:00.033 | success | cron         | 
+  12713 |     22 | Add Accrual Transactions For Loans With Income Posted As Transactions | 2026-08-28 16:01:00.002 | 2026-08-28 16:01:00.03  | success | cron         | 
+  12715 |      7 | Transfer Fee For Loans From Savings                                   | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.032 | success | cron         | 
+  12718 |     30 | Update Trial Balance Details                                          | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.034 | failed  | cron         | exitCode=FAILED;exitDescription=java.lang.ClassCastException
+  12717 |      2 | Update Loan Arrears Ageing                                            | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.033 | success | cron         | 
+  12720 |      9 | Update Accounting Running Balances                                    | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.048 | success | cron         | 
+  12714 |     36 | Send Asynchronous Events                                              | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.031 | success | cron         | 
+  12719 |     17 | Recalculate Interest For Loans                                        | 2026-08-28 16:01:00.032 | 2026-08-28 16:01:00.048 | success | cron         | 
+  12721 |     11 | Add Accrual Transactions                                              | 2026-08-28 16:01:00.049 | 2026-08-28 16:01:00.12  | success | cron         | 
+  12722 |     14 | Transfer Interest To Savings                                          | 2026-08-28 16:02:00.002 | 2026-08-28 16:02:00.031 | success | cron         | 
+  12723 |     36 | Send Asynchronous Events                                              | 2026-08-28 16:02:00.002 | 2026-08-28 16:02:00.032 | success | cron         | 
+  12724 |     16 | Add Periodic Accrual Transactions                                     | 2026-08-28 16:02:00.002 | 2026-08-28 16:02:00.035 | success | cron         | 
+  12725 |     36 | Send Asynchronous Events                                              | 2026-08-28 16:03:00.011 | 2026-08-28 16:03:00.039 | success | cron         | 
+  12726 |     36 | Send Asynchronous Events                                              | 2026-08-28 16:04:00.01  | 2026-08-28 16:04:00.032 | success | cron         | 
+  12727 |     36 | Send Asynchronous Events                                              | 2026-08-28 16:05:00.011 | 2026-08-28 16:05:00.033 | success | cron         | 
+  12728 |     18 | Generate Mandatory Savings Schedule                                   | 2026-08-28 16:05:00.011 | 2026-08-28 16:05:00.035 | success | cron         | 
+  12729 |     36 | Send Asynchronous Events                                              | 2026-08-28 16:06:00.002 | 2026-08-28 16:06:00.03  | success | cron         | 
+  12730 |     36 | Send Asynchronous Events                                              | 2026-08-28 16:07:00.003 | 2026-08-28 16:07:00.032 | success | cron         | 
+  12731 |     36 | Send Asynchronous Events                                              | 2026-08-28 16:08:00.006 | 2026-08-28 16:08:00.024 | success | cron         | 
+  12732 |     36 | Send Asynchronous Events                                              | 2026-08-28 16:09:00.001 | 2026-08-28 16:09:00.021 | success | cron         | 
+(37 rows)
+
+-- psql rc=0

@@ -1,0 +1,20 @@
+T409 t327 STANDING PIN RE-DERIVATION -- 2026-08-28T18:20:12Z
+
+== baseline: .softhouse/capture/t327-closure-accepting-side/throwaway/out/STANDING-baseline.txt
+  acc_gl_journal_entry         pinned 60/64      live 109/113    *** MOVED ***
+  acc_gl_closure               pinned 0/null     live 0/null     unmoved
+  distinct_transaction_id      pinned 26         live 38         *** MOVED ***
+  m_portfolio_command_source   pinned 352/352    live 379/379    *** MOVED ***
+  m_loan                       pinned 7          live 8          *** MOVED ***
+  m_office                     pinned 1          live 1          unmoved
+  -> MOVED=4  unmoved=2  not-pinned=0
+
+== baseline: .softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/STANDING-baseline.txt
+  acc_gl_journal_entry         pinned 60/64      live 109/113    *** MOVED ***
+  acc_gl_closure               pinned 0/null     live 0/null     unmoved
+  distinct_transaction_id      pinned 26         live 38         *** MOVED ***
+  m_portfolio_command_source   pinned 352/352    live 379/379    *** MOVED ***
+  m_loan                       baseline carries NO pin for this label -- not pinned by this rig
+  m_office                     baseline carries NO pin for this label -- not pinned by this rig
+  -> MOVED=3  unmoved=1  not-pinned=2
+

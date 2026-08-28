@@ -1,0 +1,57 @@
+T409 BAR SUMMARY — read from out/BAR-T409-clean-tree.txt, which is the whole transcript.
+
+Command   : bash .softhouse/conformance.sh     (bash, never sh)
+Tree      : CLEAN, after `git add -A` and commit at 6a34876c
+            "T409: REVIEW.md -- APPROVED WITH CONDITIONS, six findings, the scheduler also
+             mutated 91 pre-existing ledger rows"
+Taken     : 2026-08-28, immediately after that commit.
+
+EXIT 0.
+
+P-84 APPLIED, PRESENCE BEFORE VALUE:
+  grep -c 'probe = '  ->  1        (the line is PRESENT)
+  then the value      ->  reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+  [line 193]
+
+BASELINE — every figure read from this transcript, none transcribed from the brief:
+
+  parity vectors            PASS 46   FAIL 0                                [line 677]
+  contract-refusal          PASS 4    FAIL 0
+  self-test fixtures        PASS 1    FAIL 0   (excluded from the parity count)
+  cells compared            7884 graded, 93 ungraded                        [line 683]
+  VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle,
+                           7884 cells compared                              [line 699]
+
+  ledger cells compared     144 graded, of which 39 are MONEY cells in int64 minor units [line 472]
+  ledger parity             7 PASS / 0 FAIL  (exemption census, == pinned 7)
+  divergence vectors        PASS 1 FAIL 0 (pinned 1)
+
+  dead-path frontier        GREEN, T323 reconciliation list empty            [line 164]
+  T316-DEADPATH-CENSUS      corpus=1410 deadFiles=75 deadOccurrences=108
+                            resolving=1340 indeterminate=104 prose=363       [line 165]
+                            -> deadOccurrences 108, BACK AT PIN. This review added four tracked
+                               .sh/.py files to the corpus (1403 -> 1410) and moved the frontier
+                               by ZERO.
+
+  repo-state attest         frontier 11, pinned at 11; frontier == pinned    [lines 95,100]
+  temp-path census          18 sites, census == pinned                       [line 107]
+
+  exemption census — every figure == pinned                                  [lines 708-716]
+    exempted assertions (graded) 4 == 4      declared exemptions (loaded) 4 == 4
+    GROUNDED 4 == 4                          UNDETERMINED-ON-THE-RECORD 0 == 0
+    UNGROUNDED 0 == 0                        LEDGER declared exemptions 0 == 0
+    LEDGER parity vectors 7 == 7             LEDGER oracle-refusal vector 6 == 6
+    LEDGER money cells compared 39 == 39
+
+  wrong ledger implementations  discovered 14, PINNED AT 14; all 14 KILLED through the
+                                harness, not by hand                         [lines 717-734]
+
+NOTE ON RE-RUNNING THIS. A transcript is evidence about the tree it ran on, not about a merge
+result. Re-run the bar on the merge result regardless. T391 is expected to move ledger pins when
+it merges; re-baseline by RUNNING, never by arithmetic (P-83).
+
+NOTE ON WHAT THIS BAR DOES *NOT* SAY. It says nothing about attribution of writes to the shared
+reference oracle, because T390's wiring patch was deliberately NOT applied — `.softhouse/conformance.sh`
+is held by T404 and its sha256 is unchanged at
+e8621e6f27cf5cbb08d8f6005dceb51feee5ec3ffe328b725cea5353b2259e95
+before and after this review. That is the whole point of FU-T390-1.

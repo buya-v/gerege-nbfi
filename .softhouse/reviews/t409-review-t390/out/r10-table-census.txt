@@ -1,0 +1,19 @@
+-- T409 r10-table-census -- 2026-08-28T18:13:23Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: af72dc795371ab80444ac14466f9124998788869ec4672afdc5d9b5964da257c
+--
+Pager usage is off.
+ base_tables 
+-------------
+         281
+(1 row)
+
+     column_name      | tables_with_it 
+----------------------+----------------
+ created_date         |             33
+ created_on_utc       |             69
+ last_modified_on_utc |             71
+ lastmodified_date    |             27
+(4 rows)
+
+-- psql rc=0

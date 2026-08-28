@@ -1,0 +1,38 @@
+-- T409 r4-jrh-columns -- 2026-08-28T18:12:07Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: eb3a82247862c07cc5d3140137220142465489f76d0c85e7583b63a3e8840866
+--
+Pager usage is off.
+   table_name    |       column_name       |          data_type          
+-----------------+-------------------------+-----------------------------
+ job             | id                      | bigint
+ job             | name                    | character varying
+ job             | display_name            | character varying
+ job             | cron_expression         | character varying
+ job             | create_time             | timestamp without time zone
+ job             | task_priority           | smallint
+ job             | group_name              | character varying
+ job             | previous_run_start_time | timestamp without time zone
+ job             | next_run_time           | timestamp without time zone
+ job             | job_key                 | character varying
+ job             | initializing_errorlog   | text
+ job             | is_active               | boolean
+ job             | currently_running       | boolean
+ job             | updates_allowed         | boolean
+ job             | scheduler_group         | smallint
+ job             | is_misfired             | boolean
+ job             | node_id                 | integer
+ job             | is_mismatched_job       | boolean
+ job             | short_name              | character varying
+ job_run_history | id                      | bigint
+ job_run_history | job_id                  | bigint
+ job_run_history | version                 | bigint
+ job_run_history | start_time              | timestamp without time zone
+ job_run_history | end_time                | timestamp without time zone
+ job_run_history | status                  | character varying
+ job_run_history | error_message           | text
+ job_run_history | trigger_type            | character varying
+ job_run_history | error_log               | text
+(28 rows)
+
+-- psql rc=0
