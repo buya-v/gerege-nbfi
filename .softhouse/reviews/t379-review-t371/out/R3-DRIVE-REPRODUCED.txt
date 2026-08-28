@@ -1,0 +1,94 @@
+==================================================================
+T371 RED DRIVE -- casualty-sweep.sh fail-open (T367 F2)
+repo   : f1272ae5   ref under test: softhouse/T371-t367-conditions (8441c7e3)
+date   : 2026-08-28T10:27:22Z
+workdir: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t371-drive-HdjKeo
+==================================================================
+
+BEFORE sha256: c4aa5f62d2f2350f3503089c694fc582bdefbee2c0912a117ada48c927e7d590
+AFTER  sha256: e9f30047bb0fbd46826624cdfa3b63e0dd7c03e6abaffb7cb1ae751e4bd57f31
+BEFORE reads git grep exit status? NO -- this is the defect
+AFTER  reads git grep exit status? yes
+
+########## A  BEFORE (main) -- the two facts that must differ, and do not
+
+---------- A1-before-EMPTY-result
+    === TEST-SELECTOR
+        hits total: 0   archived (snapshots, correctly stale): 0   LIVE: 0
+    EXIT=0
+
+---------- A2-before-MALFORMED
+    === TEST-SELECTOR
+        hits total: 0   archived (snapshots, correctly stale): 0   LIVE: 0
+    EXIT=0
+
+########## B/C  AFTER (softhouse/T371-t367-conditions) -- the same two facts
+
+---------- C-after-EMPTY-result
+    SWEEP CALIBRATE+: PASS -- known positive matched 1 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+    SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
+    === TEST-SELECTOR
+        MEASURED ZERO -- engine ran over 8224 tracked files under .softhouse/ and matched nothing
+        hits total: 0   archived (snapshots, correctly stale): 0   LIVE: 0
+    SWEEP-RESULT: commit=f1272ae5 selectors=1 did_not_run=0 calibration=yes exit=0
+    EXIT=0
+
+---------- B-after-MALFORMED
+    SWEEP CALIBRATE+: PASS -- known positive matched 1 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+    SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
+    === TEST-SELECTOR
+        *** SELECTOR DID NOT RUN (git grep rc=128). THIS IS NOT "ZERO HITS" -- no absence
+    SWEEP-RESULT: commit=f1272ae5 selectors=1 did_not_run=1 calibration=yes exit=4
+    *** 1 SELECTOR(S) DID NOT RUN. The casualty list from this run is INCOMPLETE
+    EXIT=4
+
+########## D  raw git grep exit statuses, so A/B/C is checkable against the engine
+    git grep EMPTY-RESULT rc = 1
+    git grep MALFORMED    rc = 128
+    git grep HITTING      rc = 0
+    'git grep' occurrences in BEFORE: 4 ; exit statuses inspected: 0
+    'git grep' occurrences in AFTER : 13 ; exit statuses inspected: 1
+
+########## E/F  calibration -- prove the engine works BEFORE any zero is interpretable
+
+---------- E-positive-calibration-MISSES
+    SWEEP ABORT (exit 3): CALIBRATION MISSED. 'zzq-t371-positive-calibration-broken-19398-6936' found 0 in .softhouse/capture/t363-oracle-baseline/instruments/,
+    EXIT=3
+
+---------- F-anti-calibration-MATCHES
+    SWEEP CALIBRATE+: PASS -- known positive matched 1 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+    SWEEP ABORT (exit 3): ANTI-CALIBRATION FAILED. The known-absent sentinel matched 2 time(s).
+    EXIT=3
+
+########## G  corpus unusable -- outside any git work tree
+
+---------- G-no-git-work-tree
+    SWEEP ABORT (exit 2): not inside a usable git work tree; there is no corpus to sweep
+    EXIT=2
+
+########## H  AFTER, unmodified -- green, and S12 now sees the casualty T363's 11 missed
+    EXIT=0
+    SWEEP CALIBRATE+: PASS -- known positive matched 1 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+    SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
+    SWEEP-RESULT: commit=f1272ae5 selectors=16 did_not_run=0 calibration=yes exit=0
+    S12/S13 hits on the F3 site (reference-oracle.md, the PROCESSED/ERROR split):
+      1112:      .softhouse/reference-oracle.md:929:`0 INVALID, 1 PROCESSED, 2 AWAITING_APPROVAL, 3 REJECTED, 4 UNDER_PROCESSING, 5 ERROR`]. Across the whole
+      1113:      .softhouse/reference-oracle.md:930:`gerege` audit table the split is **156 PROCESSED / 194 ERROR**, so refusals are the majority of this
+      1143:      .softhouse/reference-oracle.md:930:`gerege` audit table the split is **156 PROCESSED / 194 ERROR**, so refusals are the majority of this
+    Same site under the BEFORE selectors S1..S11 only:
+      hits: 0
+
+==================================================================
+SUMMARY
+  A1 before EMPTY      exit 0
+  A2 before MALFORMED  exit 0   <- must be INDISTINGUISHABLE from A1 above. That is F2.
+  C  after  EMPTY      exit 0   <- a MEASURED zero
+  B  after  MALFORMED  exit 4   <- DID NOT RUN, and says so
+  E  calibration+ red  exit 3
+  F  anti-calibration  exit 3
+  G  no corpus         exit 2
+  H  green             exit 0
+==================================================================
+real 165.49
+user 476.19
+sys 47.71

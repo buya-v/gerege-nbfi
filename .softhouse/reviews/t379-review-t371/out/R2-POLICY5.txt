@@ -1,0 +1,53 @@
+SET
+--- (9a) sequence state. SELECT on a sequence relation READS, it does not advance.
+          seq          | last_value | is_called 
+-----------------------+------------+-----------
+ acc_gl_closure_id_seq |          1 | t
+(1 row)
+
+             seq             | last_value | is_called 
+-----------------------------+------------+-----------
+ acc_gl_journal_entry_id_seq |         75 | t
+(1 row)
+
+--- (9b) the table the consumed sequence belongs to
+ closure_rows | closure_max_id 
+--------------+----------------
+            0 |               
+(1 row)
+
+--- (9c) base tables in the tenant schema vs the 2 the instrument watches
+ base_tables_public 
+--------------------
+                281
+(1 row)
+
+ base_tables_all_schemas 
+-------------------------
+                     281
+(1 row)
+
+--- (9d) reversed=t rows and where they sit relative to the id-64 floor
+ reversed_true | min_id | max_id 
+---------------+--------+--------
+             8 |     33 |     60
+(1 row)
+
+--- (9e) float/real/money columns across the WHOLE schema
+ float_columns 
+---------------
+             0
+(1 row)
+
+--- (11) T371 OWN classifier re-run, and SET equality against the shape classifier
+ token_but_uuid_shaped | notuuid_but_no_token | agree 
+-----------------------+----------------------+-------
+                     0 |                    0 |    20
+(1 row)
+
+--- (12) append-only max ids: CLOSING read for this review
+ je_rows | je_max | cs_rows | cs_max | closure_rows 
+---------+--------+---------+--------+--------------
+      71 |     75 |     359 |    359 |            0
+(1 row)
+

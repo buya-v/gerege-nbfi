@@ -1,0 +1,35 @@
+==================================================================
+T379 R2 DRIVE -- the anti-calibration passes on a search that never ran
+repo: f1272ae5   ref under test: softhouse/T371-t367-conditions (8441c7e3)
+date: 2026-08-28T10:40:56Z
+==================================================================
+AFTER sha256 (unmodified): e9f30047bb0fbd46826624cdfa3b63e0dd7c03e6abaffb7cb1ae751e4bd57f31
+
+---------- step 0: the engine's own status for the pathspec this drive substitutes
+    git grep -c -F <absent> -- ":(bogusmagic)x"   rc = 128   (>=2 == DID NOT RUN)
+    git grep -c -F <absent> -- .softhouse/          rc = 1   (1 == a MEASURED zero)
+
+    anti-calibration line as driven:
+      108:  n=$(git grep -c -F "$CALIB_NEG_STR" -- ":(bogusmagic)x" 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+
+---------- CONTROL: unmodified instrument, selectors suppressed
+    SWEEP CALIBRATE+: PASS -- known positive matched 1 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+    SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
+    SWEEP-RESULT: commit=f1272ae5 selectors=0 did_not_run=0 calibration=yes exit=0
+    EXIT=0
+
+---------- R2: the ANTI-CALIBRATION's search cannot run (git grep rc=128)
+    SWEEP CALIBRATE+: PASS -- known positive matched 1 time(s) in .softhouse/capture/t363-oracle-baseline/instruments/
+    SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the tracked corpus
+    SWEEP-RESULT: commit=f1272ae5 selectors=0 did_not_run=0 calibration=yes exit=0
+    EXIT=0
+
+    ^^ EXPECTED IF THE GUARD WERE FAIL-CLOSED: an abort, exit 3, nothing else printed.
+       OBSERVED: 'SWEEP CALIBRATE-: PASS -- known negative matched 0 times across the
+       tracked corpus', calibration=yes, exit 0. A NEGATIVE THE INSTRUMENT NEVER MEASURED,
+       inside the anti-calibration added to prevent exactly that. This is T379 finding R2.
+
+REMEDY (FU-T379-3): capture rc for BOTH calibration searches before the pipe into awk and
+exit 3 on rc >= 2. That is a control-flow change to a shipped guard and needs its own red
+drive, which is why T379 files it rather than proposing it as a MICRO-FIX.
+==================================================================

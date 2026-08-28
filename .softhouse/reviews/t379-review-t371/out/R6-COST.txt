@@ -1,0 +1,65 @@
+T379 -- MEASURED COST of casualty-sweep.sh before and after T371 (P-45)
+=======================================================================
+host    : darwin 25.5.0, reviewer worktree at f1272ae5 (== main)
+corpus  : 8224 tracked files under .softhouse/
+method  : each instrument EXTRACTED FROM GIT (P-22), run sequentially under /usr/bin/time -p,
+          not concurrently, so the two numbers are comparable.
+
+  git show main:...casualty-sweep.sh                       -> 11 selectors
+  git show softhouse/T371-t367-conditions:...               -> 16 selectors
+
+RESULT
+------
+                       selectors    real       user      sys      CPU
+  BEFORE (main)             11      46.06 s   154.18 s   13.94 s   ~335 %   exit 0
+  AFTER  (T371)             16      96.35 s   322.72 s   21.94 s   ~335 %   exit 0
+  S15 alone, raw git grep    -      22.31 s    74.20 s    2.20 s     -      rc 0
+  S14 alone, raw git grep    -       6.79 s    23.01 s    1.29 s     -      rc 0
+
+  delta: 2.09x slower, +50.3 s.
+
+CROSS-CHECK OF T371's OWN STATEMENTS
+------------------------------------
+  "the full run is minutes, not seconds"          -> 96 s = 1.6 min. Directionally right,
+                                                     mildly overstated. The number is now published.
+  "S15 is the slowest (10-60 s alone)"            -> CONFIRMED, 22.3 s.
+  "git grep runs multi-threaded at ~250-300 % CPU"-> CONFIRMED, measured ~335 %.
+
+JUDGEMENT
+---------
+ACCEPTABLE. P-45 ("a guard too slow to run is a guard nobody runs") is NOT triggered: this
+instrument gates nothing, is invoked by hand, and is run once by a task that touches the standing
+oracle. 96 s at that cadence is not a deterrent. The trade is also right on the merits -- S12..S16
+are the selectors that found the casualty the eleven narrow ones missed, and a selector that is
+fast because it is narrow is the failure this instrument exists to prevent.
+
+TRIAGE VOLUME -- the cost T371 does NOT quantify
+------------------------------------------------
+A full post-repair sweep emits 1402 LIVE lines for a human to adjudicate.
+
+  per selector (hits total / archived / LIVE)
+    S1   60 /   45 /  15        S9  1661 / 1197 / 464
+    S2   15 /   15 /   0        S10  139 /   99 /  40
+    S3   14 /    7 /   7        S11 2929 / 2464 / 465
+    S4  208 /  197 /  11        S12  255 /  212 /  43   <- new
+    S5  201 /  194 /   7        S13   78 /   60 /  18   <- new
+    S6  184 /  178 /   6        S14 1542 / 1308 / 234   <- new
+    S7   13 /    9 /   4        S15  459 /  392 /  67   <- new
+    S8  198 /  191 /   7        S16   41 /   27 /  14   <- new
+
+  LIVE total                    1402
+  contributed by new S12..S16    376
+  contributed by the ARCHIVE change (.softhouse/observations/ no longer archived)   17
+
+The dominant contributors (S9 464, S11 465) are PRE-EXISTING selectors, not T371's. The ARCHIVE
+predicate change costs only 17 extra lines, so the F2-adjacent widening is cheap as well as
+correct. T371 declares honestly that it did not triage the new LIVE hits (FU-T371-2); this file
+supplies the number so that follow-up can be scoped.
+
+  top LIVE files by hit count
+    90  .softhouse/tasks.json
+    49  .softhouse/conformance.sh
+    43  .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt
+    41  .softhouse/program.json
+    39  .softhouse/gates.md
+    36  .softhouse/reference-oracle.md
