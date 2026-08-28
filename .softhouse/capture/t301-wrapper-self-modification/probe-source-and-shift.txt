@@ -1,23 +1,23 @@
 zsh: 5.9
 uname: Darwin 25.5.0
-work: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-shift.QQlVy
+work: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-shift.bJguX
 
 === PART 1 — A SOURCED LIBRARY, EDITED AFTER THE `source` RETURNS ===
 
 --- lib edited by inplace, AFTER source, BEFORE the call ---
-  lib inode before: 15731672
-  sourced; lib inode now 15731672
+  lib inode before: 15755989
+  sourced; lib inode now 15755989
   READY
 LIB: ORIGINAL
-  lib inode after:  15731672
+  lib inode after:  15755989
   lib on disk now says: LIB: REWRITTEN
 
 --- lib edited by rename, AFTER source, BEFORE the call ---
-  lib inode before: 15731826
-  sourced; lib inode now 15731826
+  lib inode before: 15756384
+  sourced; lib inode now 15756384
   READY
 LIB: ORIGINAL
-  lib inode after:  15731829
+  lib inode after:  15756499
   lib on disk now says: LIB: REWRITTEN
 
 === PART 2 — INSERTING BYTES ABOVE THE UNREAD TAIL (the T288 shape) ===
@@ -26,24 +26,47 @@ settled that — it is 'does a SHIFTED offset resume on a line boundary'.
 
 --- insert 200 bytes above the tail, SAME inode ---
   subject start (pid $$)
-  TAIL: ORIGINAL
-  FN-BODY: ORIGINAL
+  TAIL: REWRITTEN
+  FN-BODY: REWRITTEN
   subject end
-  inode 15731831 -> 15731831   bytes 111561 -> 111705   subject rc=0
+  [2 INSERTED-LINE prints executed -- the running shell READ BYTES ADDED AFTER IT STARTED]
+  inode 15756626 -> 15756626   bytes 111561 -> 111705   pipeline rc=0
 
 --- insert 19000 bytes above the tail, SAME inode ---
   subject start (pid $$)
-  TAIL: ORIGINAL
-  FN-BODY: ORIGINAL
+  TAIL: REWRITTEN
+  FN-BODY: REWRITTEN
   subject end
-  inode 15731833 -> 15731833   bytes 111561 -> 130497   subject rc=0
+  [267 INSERTED-LINE prints executed -- the running shell READ BYTES ADDED AFTER IT STARTED]
+  inode 15756943 -> 15756943   bytes 111561 -> 130520   pipeline rc=0
 
 --- DELETE ~19000 bytes above the tail, SAME inode (file shrinks) ---
   subject start (pid $$)
-  TAIL: ORIGINAL
-  FN-BODY: ORIGINAL
+  TAIL: REWRITTEN
+  FN-BODY: REWRITTEN
   subject end
-  inode 15731866 -> 15731866   bytes 111561 -> 22361   subject rc=0
+  inode 15757685 -> 15757685   bytes 111561 -> 22363   subject rc=0
+
+=== PART 2b — FORCE THE RESUME OFFSET INTO THE MIDDLE OF A LINE ===
+  subject start (pid $$)
+  TAIL: REWRITTEN
+  FN-BODY: REWRITTEN
+  subject end
+  [6 INSERTED-LONGLINE prints executed]
+  bytes 111561 -> 135473   pipeline rc=0
+  (any 'command not found' / parse error above = the offset landed mid-token:
+   CORRUPTION of the running fire, not a clean swap)
+
+=== PART 2c — INSERT *ABOVE* THE READ POINT SO THE RESUME LANDS INSIDE A LINE ===
+  insertion point I=7276, block len=23910, so bytes [7276,31186) are inserted
+  subject start (pid $$)
+  TAIL: REWRITTEN
+  FN-BODY: REWRITTEN
+  subject end
+  [5 INSERTED-LONGLINE prints executed]
+  bytes 111561 -> 135473   pipeline rc=0
+  6 prints + clean = zsh realigned or R<I after all; FEWER than 6 with a
+  'command not found'/parse error = MID-TOKEN RESUME, the brief's claim.
 
 === PART 3 — HOW FAR AHEAD HAS ZSH ALREADY READ? ===
 If zsh has already buffered the whole tail by the time it blocks, the hazard
@@ -51,8 +74,37 @@ window is smaller than it looks. Walk the tail's distance from the sleep and
 find the boundary where an in-place rewrite stops reaching the running shell.
   filler=1 (240 bytes, tail ~40 B past the sleep):   TAIL: ORIGINAL
   filler=20 (1619 bytes, tail ~1419 B past the sleep):   TAIL: ORIGINAL
+  filler=40 (3079 bytes, tail ~2879 B past the sleep):   TAIL: ORIGINAL
+  filler=60 (4539 bytes, tail ~4339 B past the sleep):   TAIL: ORIGINAL
+  filler=80 (5999 bytes, tail ~5799 B past the sleep):   TAIL: ORIGINAL
+  filler=100 (7460 bytes, tail ~7260 B past the sleep):   TAIL: ORIGINAL
+  filler=120 (8940 bytes, tail ~8740 B past the sleep):   TAIL: REWRITTEN
   filler=200 (14860 bytes, tail ~14660 B past the sleep):   TAIL: REWRITTEN
   filler=2000 (149061 bytes, tail ~148861 B past the sleep):   TAIL: REWRITTEN
   filler=20000 (1509062 bytes, tail ~1508862 B past the sleep):   TAIL: REWRITTEN
+
+=== PART 3b — THE READ POINT R, MEASURED DIRECTLY (equal-length swap) ===
+  ladder: 56047 bytes, 2001 rows, each row 26 bytes
+  rows printed:     2001   last ORIG: 291:ROW 0290 ORIG   first MARK: 293:ROW 0292 MARK
+
+  --- the rows either side of the read boundary, VERBATIM ---
+    ROW 0288 ORIG
+    ROW 0289 ORIG
+    ROW 0290 ORIG
+    ROW 0291 ORIK
+    ROW 0292 MARK
+    ROW 0293 MARK
+    ROW 0294 MARK
+
+  LOOK FOR A ROW THAT IS NEITHER 'ORIG' NOR 'MARK'. If one is there, zsh did not
+  swap cleanly at a line boundary: its read buffer ENDED IN THE MIDDLE OF A TOKEN,
+  and it completed that token from the REWRITTEN file -- a SPLICE of old bytes and
+  new. Here the splice fell inside a quoted string so it printed harmlessly. In a
+  real script the same splice can fall inside a command name, a variable name, an
+  `if`/`fi`, or a heredoc delimiter, and then it is a syntax error or a WRONG
+  COMMAND. Note this happened on an EQUAL-LENGTH edit: nothing shifted at all.
+
+  => zsh had buffered through row 291; R ~ 7622 bytes
+  => EVERY BYTE OF THE SCRIPT MORE THAN ~R PAST THE CURRENT COMMAND IS EXPOSED
 
 DONE

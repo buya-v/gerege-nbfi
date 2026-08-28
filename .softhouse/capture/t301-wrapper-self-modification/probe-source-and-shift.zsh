@@ -98,14 +98,22 @@ mksubject() {
 
 insert_shape() {
   # $1 subject path, $2 bytes to insert, $3 anchor line to insert above
+  #
+  # THE INSERTED LINES PRINT. The first draft of this leg inserted COMMENTS, and both
+  # hypotheses -- "zsh already buffered the tail" and "zsh re-read at the shifted
+  # offset" -- predict the identical output when the inserted bytes are silent.
+  # Printing lines break the tie: only a re-read at a shifted offset can emit them.
+  # The tail marker is flipped to REWRITTEN in the same write for the same reason.
   /usr/bin/python3 - "$@" <<'PY'
 import sys
 p, nbytes, anchor = sys.argv[1], int(sys.argv[2]), sys.argv[3]
 b = open(p, 'rb').read()
 i = b.index(anchor.encode())
-chunk = b'# INSERTED ' + b'z' * 60 + b'\n'
-pad = chunk * (nbytes // len(chunk))
+chunk = b"print -r -- '  INSERTED-LINE zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'\n"
+pad = chunk * max(1, nbytes // len(chunk))
 out = b[:i] + pad + b[i:]
+out = out.replace(b'TAIL: ORIGINAL', b'TAIL: REWRITTEN')
+out = out.replace(b'FN-BODY: ORIGINAL', b'FN-BODY: REWRITTEN')
 # SAME INODE on purpose: r+b, truncate, write back.
 f = open(p, 'r+b'); f.truncate(0); f.write(out); f.close()
 PY
@@ -117,12 +125,18 @@ for nb in 200 19000; do
   before_i=$(/usr/bin/stat -f %i "$S"); before_b=$(/usr/bin/stat -f %z "$S")
   print -r -- ""
   print -r -- "--- insert ${nb} bytes above the tail, SAME inode ---"
-  ( zsh "$S" ) & subj=$!
+  # collapse the (potentially thousands of) INSERTED-LINE prints to a count, but show
+  # every OTHER line verbatim -- a mid-token resume shows up as a "command not found"
+  # or parse error on a partial line, and that must not be summarised away.
+  ( zsh "$S" 2>&1 | /usr/bin/awk '
+      /INSERTED-LINE/ { n++; next }
+      { print }
+      END { if (n) printf "  [%d INSERTED-LINE prints executed -- the running shell READ BYTES ADDED AFTER IT STARTED]\n", n }' ) & subj=$!
   sleep 1
   insert_shape "$S" "$nb" "# filler 1400 "
   wait $subj; rc=$?
   after_i=$(/usr/bin/stat -f %i "$S"); after_b=$(/usr/bin/stat -f %z "$S")
-  print -r -- "  inode $before_i -> $after_i   bytes $before_b -> $after_b   subject rc=$rc"
+  print -r -- "  inode $before_i -> $after_i   bytes $before_b -> $after_b   pipeline rc=$rc"
 done
 
 # Also the shape nobody has run: DELETING bytes above the tail (the file SHRINKS, so a
@@ -131,7 +145,7 @@ print -r -- ""
 print -r -- "--- DELETE ~19000 bytes above the tail, SAME inode (file shrinks) ---"
 S="$WORK/delete.zsh"; mksubject "$S"
 before_i=$(/usr/bin/stat -f %i "$S"); before_b=$(/usr/bin/stat -f %z "$S")
-( zsh "$S" ) & subj=$!
+( zsh "$S" 2>&1 ) & subj=$!
 sleep 1
 /usr/bin/python3 - "$S" <<'PY'
 import sys
@@ -139,10 +153,86 @@ p = sys.argv[1]
 b = open(p, 'rb').read()
 i = b.index(b'# filler 200 '); j = b.index(b'# filler 1400 ')
 out = b[:i] + b[j:]
+# discriminating, same reason as the insert legs
+out = out.replace(b'TAIL: ORIGINAL', b'TAIL: REWRITTEN')
+out = out.replace(b'FN-BODY: ORIGINAL', b'FN-BODY: REWRITTEN')
 f = open(p, 'r+b'); f.truncate(0); f.write(out); f.close()
 PY
 wait $subj; rc=$?
 print -r -- "  inode $before_i -> $(/usr/bin/stat -f %i "$S")   bytes $before_b -> $(/usr/bin/stat -f %z "$S")   subject rc=$rc"
+
+# -------------------------------- part 2b: can the resume offset land MID-TOKEN? ----
+# The insert legs above resumed cleanly (rc=0) because every inserted line was short, so
+# whatever offset zsh resumed at was near a newline. The BRIEF's specific claim is
+# stronger: "the remaining commands can be resumed at a shifted offset and MISPARSED."
+# To test that, insert lines that are 4000 bytes long: the resume offset then almost
+# certainly lands in the MIDDLE of one, and if zsh resumes blindly at a byte offset the
+# partial line runs as a command and errors. If it still runs clean, zsh is realigning.
+print -r -- ""
+print -r -- "=== PART 2b — FORCE THE RESUME OFFSET INTO THE MIDDLE OF A LINE ==="
+S="$WORK/midtoken.zsh"; mksubject "$S"
+before_b=$(/usr/bin/stat -f %z "$S")
+( zsh "$S" 2>&1 | /usr/bin/awk '
+    /INSERTED-LONGLINE/ { n++; next }
+    { print }
+    END { if (n) printf "  [%d INSERTED-LONGLINE prints executed]\n", n }' ) & subj=$!
+sleep 1
+/usr/bin/python3 - "$S" <<'PY'
+import sys
+p = sys.argv[1]
+b = open(p, 'rb').read()
+i = b.index(b'# filler 1400 ')
+# one printed line, ~4000 bytes wide, repeated: any offset inside the block is
+# overwhelmingly likely to be mid-line.
+chunk = b"print -r -- '  INSERTED-LONGLINE " + b"q" * 3950 + b"'\n"
+out = b[:i] + chunk * 6 + b[i:]
+out = out.replace(b'TAIL: ORIGINAL', b'TAIL: REWRITTEN')
+out = out.replace(b'FN-BODY: ORIGINAL', b'FN-BODY: REWRITTEN')
+f = open(p, 'r+b'); f.truncate(0); f.write(out); f.close()
+PY
+wait $subj; rc=$?
+print -r -- "  bytes $before_b -> $(/usr/bin/stat -f %z "$S")   pipeline rc=$rc"
+print -r -- "  (any 'command not found' / parse error above = the offset landed mid-token:"
+print -r -- "   CORRUPTION of the running fire, not a clean swap)"
+
+# ------------------- part 2c: the ONLY configuration that can land mid-token ----
+# Part 2b did not actually test what it set out to test, and saying so is the point.
+# Call R the byte offset zsh has read up to when it blocks (Part 3 below measures
+# R ~ 8 KB), and I the insertion point. Execution resumes at byte R OF THE NEW FILE:
+#   * if I > R (parts 2 and 2b: insertion deep in the file, R ~8 KB) the resume point is
+#     still in ORIGINAL bytes, zsh walks forward on line boundaries and reaches the
+#     inserted block from its TOP -- which is exactly why all 6 long lines ran clean.
+#     That leg could never have produced a mid-token resume.
+#   * only I < R < I+len(block) puts the resume point INSIDE the inserted bytes.
+# So: insert the long-line block just ABOVE the 8 KB mark. Then R lands ~700 bytes into
+# a 4000-byte line, and if zsh resumes blindly at a byte offset the fragment runs as a
+# command. This is the leg that can actually falsify "shifted offset -> misparse".
+print -r -- ""
+print -r -- "=== PART 2c — INSERT *ABOVE* THE READ POINT SO THE RESUME LANDS INSIDE A LINE ==="
+S="$WORK/midtoken2.zsh"; mksubject "$S"
+before_b=$(/usr/bin/stat -f %z "$S")
+( zsh "$S" 2>&1 | /usr/bin/awk '
+    /INSERTED-LONGLINE/ { n++; next }
+    { print }
+    END { if (n) printf "  [%d INSERTED-LONGLINE prints executed]\n", n }' ) & subj=$!
+sleep 1
+/usr/bin/python3 - "$S" <<'PY'
+import sys
+p = sys.argv[1]
+b = open(p, 'rb').read()
+i = b.index(b'# filler 100 ')      # ~7.5 KB in: BELOW zsh's ~8 KB read point
+chunk = b"print -r -- '  INSERTED-LONGLINE " + b"q" * 3950 + b"'\n"
+out = b[:i] + chunk * 6 + b[i:]
+out = out.replace(b'TAIL: ORIGINAL', b'TAIL: REWRITTEN')
+out = out.replace(b'FN-BODY: ORIGINAL', b'FN-BODY: REWRITTEN')
+f = open(p, 'r+b'); f.truncate(0); f.write(out); f.close()
+sys.stderr.write("  insertion point I=%d, block len=%d, so bytes [%d,%d) are inserted\n"
+                 % (i, len(chunk)*6, i, i+len(chunk)*6))
+PY
+wait $subj; rc=$?
+print -r -- "  bytes $before_b -> $(/usr/bin/stat -f %z "$S")   pipeline rc=$rc"
+print -r -- "  6 prints + clean = zsh realigned or R<I after all; FEWER than 6 with a"
+print -r -- "  'command not found'/parse error = MID-TOKEN RESUME, the brief's claim."
 
 # ------------------------------------------------- part 3: how far ahead does zsh read? ----
 print -r -- ""
@@ -150,7 +240,7 @@ print -r -- "=== PART 3 — HOW FAR AHEAD HAS ZSH ALREADY READ? ==="
 print -r -- "If zsh has already buffered the whole tail by the time it blocks, the hazard"
 print -r -- "window is smaller than it looks. Walk the tail's distance from the sleep and"
 print -r -- "find the boundary where an in-place rewrite stops reaching the running shell."
-for n in 1 20 200 2000 20000; do
+for n in 1 20 40 60 80 100 120 200 2000 20000; do
   S="$WORK/dist-$n.zsh"; mksubject "$S" "$n"
   bytes=$(/usr/bin/stat -f %z "$S")
   ( zsh "$S" 2>&1 | /usr/bin/grep -E 'TAIL:' ) & subj=$!
@@ -164,6 +254,61 @@ PY
   print -rn -- "  filler=$n (${bytes} bytes, tail ~$((bytes - 200)) B past the sleep): "
   wait $subj
 done
+
+# --------------------- part 3b: measure the read point R exactly, with no shift ----
+# Part 3 brackets R between two subjects; this one reads it off directly. The subject is
+# a numbered ladder; the rewrite swaps ORIG -> MARK, four characters for four, so NOTHING
+# SHIFTS and the only variable left is "how much had zsh already buffered". The first row
+# that prints MARK is the row at byte offset R.
+print -r -- ""
+print -r -- "=== PART 3b — THE READ POINT R, MEASURED DIRECTLY (equal-length swap) ==="
+S="$WORK/ladder.zsh"
+{
+  print -r -- "#!/bin/zsh"
+  print -r -- "print -r -- 'ROW 0000 ORIG'"
+  print -r -- "sleep 3"
+  for i in {1..2000}; do printf "print -r -- 'ROW %04d ORIG'\n" $i; done
+} > "$S"
+LADDER_BYTES=$(/usr/bin/stat -f %z "$S")
+( zsh "$S" 2>&1 ) > "$WORK/ladder.out" & subj=$!
+sleep 1
+/usr/bin/python3 - "$S" <<'PY'
+import sys
+p = sys.argv[1]
+b = open(p, 'rb').read()
+n = b.replace(b" ORIG'", b" MARK'")
+assert len(n) == len(b), "swap must not shift a single byte"
+f = open(p, 'r+b'); f.truncate(0); f.write(n); f.close()
+PY
+wait $subj
+first_mark=$(/usr/bin/grep -n 'MARK' "$WORK/ladder.out" | head -1)
+last_orig=$(/usr/bin/grep -n 'ORIG' "$WORK/ladder.out" | tail -1)
+rows_total=$(/usr/bin/wc -l < "$WORK/ladder.out")
+print -r -- "  ladder: $LADDER_BYTES bytes, 2001 rows, each row 26 bytes"
+print -r -- "  rows printed: $rows_total   last ORIG: ${last_orig:-none}   first MARK: ${first_mark:-none}"
+print -r -- ""
+print -r -- "  --- the rows either side of the read boundary, VERBATIM ---"
+if [[ -n "$first_mark" ]]; then
+  fm_line=${first_mark%%:*}
+  /usr/bin/sed -n "$(( fm_line > 4 ? fm_line - 4 : 1 )),$(( fm_line + 2 ))p" "$WORK/ladder.out" | while IFS= read -r l; do print -r -- "    $l"; done
+  print -r -- ""
+  print -r -- "  LOOK FOR A ROW THAT IS NEITHER 'ORIG' NOR 'MARK'. If one is there, zsh did not"
+  print -r -- "  swap cleanly at a line boundary: its read buffer ENDED IN THE MIDDLE OF A TOKEN,"
+  print -r -- "  and it completed that token from the REWRITTEN file -- a SPLICE of old bytes and"
+  print -r -- "  new. Here the splice fell inside a quoted string so it printed harmlessly. In a"
+  print -r -- "  real script the same splice can fall inside a command name, a variable name, an"
+  print -r -- "  \`if\`/\`fi\`, or a heredoc delimiter, and then it is a syntax error or a WRONG"
+  print -r -- "  COMMAND. Note this happened on an EQUAL-LENGTH edit: nothing shifted at all."
+  /bin/cp "$WORK/ladder.out" "${LADDER_COPY:-/dev/null}" 2>/dev/null || true
+fi
+print -r -- ""
+if [[ -n "$first_mark" ]]; then
+  fm_row=${${first_mark#*ROW }%% *}
+  print -r -- "  => zsh had buffered through row $((10#$fm_row - 1)); R ~ $(( (10#$fm_row) * 26 + 30 )) bytes"
+  print -r -- "  => EVERY BYTE OF THE SCRIPT MORE THAN ~R PAST THE CURRENT COMMAND IS EXPOSED"
+else
+  print -r -- "  => no MARK row: zsh had buffered the whole $LADDER_BYTES-byte file"
+fi
 
 print -r -- ""
 print -r -- "DONE"
