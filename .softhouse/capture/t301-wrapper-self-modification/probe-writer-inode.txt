@@ -1,0 +1,59 @@
+zsh: 5.9
+uname: Darwin 25.5.0
+sed: /usr/bin/sed   patch: /usr/bin/patch   git: /usr/bin/git git version 2.50.1 (Apple Git-155)
+work: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-writers.Am0SW
+
+WRITER                             INODE_BEFORE INODE_AFTER  CHANGED  VERDICT
+---------------------------------- ------------ ------------ -------- -------
+cat > file                         15731283     15731283     yes      INPLACE  <-- CAN REACH A RUNNING SHELL
+python open(path,'w')              15731285     15731285     yes      INPLACE  <-- CAN REACH A RUNNING SHELL
+sed -i '' (BSD/macOS)              15731288     15731298     yes      RENAME   (isolated)
+>> append                          15731301     15731301     yes      INPLACE  <-- CAN REACH A RUNNING SHELL
+tee file                           15731302     15731302     yes      INPLACE  <-- CAN REACH A RUNNING SHELL
+dd conv=notrunc                    15731303     15731303     yes      INPLACE  <-- CAN REACH A RUNNING SHELL
+cp src dst                         15731304     15731304     yes      INPLACE  <-- CAN REACH A RUNNING SHELL
+mv src dst                         15731306     15731307     yes      RENAME   (isolated)
+install -m 755                     15731308     15731310     yes      RENAME   (isolated)
+patch file file.patch              15731311     15731314     yes      RENAME   (isolated)
+ex -s (vi line editor)             15731318     15731318     yes      INPLACE  <-- CAN REACH A RUNNING SHELL
+python insert-above-tail           15731324     15731324     yes      INPLACE  <-- CAN REACH A RUNNING SHELL
+
+GIT OPERATIONS BEYOND THE THREE T309 MEASURED (merge / checkout -- <path> / pull --ff-only):
+WRITER                             INODE_BEFORE INODE_AFTER  CHANGED  VERDICT
+---------------------------------- ------------ ------------ -------- -------
+git reset --hard (dirty tree)      15731364     15731392     yes      RENAME   (isolated)
+git stash pop                      15731436     15731447     yes      RENAME   (isolated)
+git apply <patch>                  15731455     15731465     yes      RENAME   (isolated)
+git checkout-index -f -a           15731467     15731477     yes      RENAME   (isolated)
+git restore <path>                 15731479     15731489     yes      RENAME   (isolated)
+
+NOTE — the Claude Code Write and Edit TOOLS cannot be driven from a script.
+They were measured by hand in the T301 transcript; see writer-inode.txt footer.
+DONE
+
+=== MEASURED BY HAND (tool calls cannot be driven from a script) ===
+The most likely NON-GIT actor against the live wrapper is an agent using its own file
+tools, so those were driven directly in the T301 worker transcript, same method
+(seed -> stat %i -> write -> stat %i -> confirm content changed):
+
+  Claude Code Write tool   /tmp/t301-inode-tools/w.txt  inode 15730695 -> 15730699  content changed  RENAME (isolated)
+  Claude Code Edit tool    /tmp/t301-inode-tools/e.txt  inode 15730698 -> 15730702  content changed  RENAME (isolated)
+
+=== WHAT THIS TABLE SETTLES ===
+ISOLATED (new inode; cannot reach a running shell):
+  git merge / checkout -- <path> / pull --ff-only   [T309 probe-git-inode.txt]
+  git reset --hard / stash pop / apply / checkout-index -f -a / restore   [here]
+  sed -i '' (BSD), mv, install, patch, Claude Code Write, Claude Code Edit   [here]
+
+CAN REACH A RUNNING SHELL (same inode):
+  cat > file        python open(path,"w")        >> append
+  tee file          dd conv=notrunc              cp src dst        ex -s
+  any in-place byte insertion above the unread tail (the T288 shape)
+
+TWO CORRECTIONS TO THE COMMENT BLOCK T309 LEFT IN fire-program.sh:
+  * it names `sed -i ''` as an in-place rewrite. On this host sed -i RENAMES and is
+    ISOLATED. Naming a safe writer as dangerous is the cheap error, but it is still
+    an unmeasured claim sitting in the file as if measured.
+  * it does NOT name `cp`, `tee`, `>>` or `ex`, and all four ARE in-place. `cp` is the
+    one that matters: "cp the fixed wrapper over the live one" is the single most
+    natural thing a human reaches for, and it is the dangerous half of the cp/mv pair.
