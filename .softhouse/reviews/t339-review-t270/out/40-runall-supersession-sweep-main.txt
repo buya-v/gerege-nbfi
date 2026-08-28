@@ -1,0 +1,27 @@
+REGISTER  .softhouse/capture/audit-t44/analysis/T175-SUPERSEDES.md               0 entr(ies)
+REGISTER  .softhouse/capture/audit-t44/analysis/T207/T207-SUPERSEDES.md          0 entr(ies)
+REGISTER  .softhouse/capture/leapboundary/analysis/T175-SUPERSEDES.md            0 entr(ies)
+REGISTER  .softhouse/capture/t284-schema2-callsites/SUPERSEDES.md                0 entr(ies)
+REGISTER  .softhouse/capture/tierA-a2/SUPERSEDED.txt                             4 entr(ies)
+
+SUPERSEDED ORIGINALS DECLARED: 4
+   cap.sh                                   [('.softhouse/capture/tierA-a2/SUPERSEDED.txt', 'cap8.sh')]
+   cap9.sh                                  [('.softhouse/capture/tierA-a2/SUPERSEDED.txt', 'cap10.sh')]
+   resolve7.py                              [('.softhouse/capture/tierA-a2/SUPERSEDED.txt', 'resolve8.py')]
+   run-220-a2-7-runtime.sh                  [('.softhouse/capture/tierA-a2/SUPERSEDED.txt', 'run-220-a2-7-runtime-v8.sh')]
+
+RUN-ALL SCRIPTS FOUND BY WALKING: 4
+   .softhouse/capture/pathb/t99/run-all.sh
+   .softhouse/capture/t305-openingbalance-accepting-side/throwaway/run-all.sh
+   .softhouse/capture/t327-closure-accepting-side/throwaway/run-all.sh
+   .softhouse/reviews/A2-11/run-all.sh
+
+OCCURRENCES OF A SUPERSEDED BASENAME IN A run-all*.sh: 1
+  .softhouse/reviews/A2-11/run-all.sh           :29   resolve7.py                    ECHO-PROSE                 echo "############ 6. resolve7.py P-25 defect, driven RED (offline)"
+
+VERDICT: 0 INVOCATION(s) of a superseded artefact from a run-all*.sh
+  none.  (Statement about THIS search: 5 register(s), 4 declared original(s), 4 run-all*.sh, whole-file scan of each.)
+
+SELF-TEST (P-22: an instrument that cannot report a positive is not an instrument)
+  synthetic run-all with one invocation + one echo + one comment -> ['INVOCATION', 'ECHO-PROSE', 'COMMENT']
+  ok  the sweep discriminates all three

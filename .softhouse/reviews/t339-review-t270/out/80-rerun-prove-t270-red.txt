@@ -1,0 +1,83 @@
+==============================================================================
+T270 — RED/GREEN for the superseded-artefact controls
+==============================================================================
+
+ARM 0 -- REPRODUCE: the exact shape T263 found. A run-all.sh that invokes a
+         superseded guard by the exact line that was live at A2-11/run-all.sh:36
+  ok   the census FAILS (exit 1) on a live invocation of a superseded artefact
+         rc=1
+  ok   it NAMES the caller, the line and the artefact
+  ok   it grades the artefact STILL EXECUTED IN PLACE, not PRESERVED
+  ok   it does NOT print the PASS verdict line
+
+ARM 1 -- GREEN: the same tree with the invocation redirected to the successor
+  ok   the census PASSES (exit 0) once nothing executes the superseded file
+         rc=0
+  ok   the artefact is graded PRESERVED, not executed
+
+ARM 2 -- GREEN: a MENTION is not an execution. Preserving the bytes REQUIRES
+         naming the file, so a census that flags mentions is unusable.
+  ok   a comment naming the artefact does not fail the census
+         rc=0
+  ok   an echo naming the artefact does not fail the census either
+
+ARM 3 -- GREEN: the artefact name passed as an ARGUMENT to another program is
+         not an invocation of it. This is the exact shape T270's own fix uses
+         (`python3 resolve-supersession.py SUPERSEDED.txt <frozen-name>`), and
+         the first cut of this census graded it EXECUTED -- a false finding.
+  ok   a name in argument position does not fail the census
+         rc=0
+  ok   and it is graded PRESERVED
+
+ARM 4 -- GREEN: running a SANDBOX COPY is what the registers prescribe
+         ('RETAINED, BYTE-IDENTICAL, DO NOT RUN FOR A NEW ANSWER'), so a
+         red-drive that copies the frozen file into a tempdir is not a finding.
+  ok   a sandbox copy does not fail the census
+         rc=0
+  ok   but it IS counted and printed separately, not silently dropped
+
+ARM 5 -- RED: NIL COVERAGE. A tree with no register at all must REFUSE, never
+         report a clean sweep. 'I found no violations' and 'I read nothing' are
+         the same output unless the guard distinguishes them (P-45/P-80).
+  ok   0 registers found -> REFUSE, exit 2
+         rc=2
+  ok   it says so, and does not print the PASS verdict line
+
+ARM 6 -- RED: a file that LOOKS like a register but parses to 0 entries and is
+         not hand-declared must REFUSE. An unparsed register is a hole, and a
+         hole reported as a clean result is the defect this task is about.
+  ok   an unparseable, undeclared register -> REFUSE, exit 2
+         rc=2
+  ok   it names the file it could not read
+
+ARM 7 -- RED+RED: a refusal must NOT suppress a real finding. One unreadable
+         register silencing every violation would be fail-open at the top level.
+  ok   exit is 2 (refusal outranks), as the guard's own contract says
+         rc=2
+  ok   but the FINDING is still printed in full, not swallowed
+
+ARM 8 -- RED: is the SELECTOR SELF-TEST itself failable? Blind the selector and
+         the census must abort, not report a clean tree it never inspected.
+  ok   a blinded selector ABORTS rather than reporting a clean census
+         rc=1
+  ok   and it never prints the PASS verdict line
+
+ARM 9 -- RED: is run-all.sh section 8 FAIL-CLOSED? Delete the SUPERSEDED.txt
+         redirect and it must REFUSE. If it fell back to the frozen guard, the
+         fix would undo itself the moment somebody tidied the register.
+  ok   GREEN with the register intact: it resolves and RUNS THE REPLACEMENT
+  ok   GREEN and the superseded guard's own banner is ABSENT from the output
+  ok   RED  with the redirect deleted: it REFUSES
+  ok   RED  and it does NOT fall back to running the superseded guard — the string `16 assertions, 0 failed` never appears
+  ok   RED  the refusal says why
+  ok   RED  a redirect to a MISSING replacement also REFUSES, rather than running either file
+
+ARM 10 -- THE DELIVERED TREE, MEASURED (P-22: see the changed state, do not
+          infer it). The census is run against the REAL .softhouse/ root.
+  ok   on the delivered tree, prove-mkreq7-guard-red.py is graded PRESERVED
+         status: PRESERVED, not executed
+  ok   and it is not reported as executed in place anywhere
+  ok   the bytes of the frozen file are still what MANIFEST.sha256 pins — preserving the bytes is the OTHER half of the obligation and is not assumed here
+         sha256 6aba7e14963ed81c ; MANIFEST pins 6aba7e14963ed81c
+
+29 assertions, 0 failed

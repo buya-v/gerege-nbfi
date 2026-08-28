@@ -1,0 +1,28 @@
+==============================================================================
+ARM 1 -- SYNTHETIC.  The census must grade `if sh $DIR/cap9.sh ...` EXECUTED.
+==============================================================================
+  SHIPPED                                -> *** MISSED (graded MENTIONED) ***
+  WITH if/elif/while/until/! RESTORED    -> EXECUTED
+  CONTROL, same call NOT inside an `if` -> EXECUTED
+  (a probe whose control also missed would prove nothing -- the control must hit)
+
+==============================================================================
+ARM 2 -- REAL SITES IN THE TREE THAT THE SHIPPED GRAMMAR MISSES
+==============================================================================
+caller shell scripts scanned: 644
+sites the FIXED grammar calls EXECUTED and the SHIPPED grammar misses: 1
+  MISSED  .softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh:100  cap9.sh   [file uses mktemp: True]
+          if sh "$DIR/cap9.sh" A2-999-should-not-exist POST /journalentries req/a2-26-manual-je-idem.json 2>"$TMP/g3.err
+
+VERDICT: the census's published EXECUTED-IN-PLACE total is understated by 0 shell site(s).
+         (sites in files that also build a mktemp sandbox are listed but not counted in that total, because the census would arguably grade them AS-COPY.)
+
+==============================================================================
+ARM 3 -- END TO END.  Run the SHIPPED census over a scratch tree containing the
+         synthetic caller, and read its own totals.
+==============================================================================
+  census rc=2
+  EXECUTED lines printed: 3
+    the file keep being EXECUTED as though it still graded something.  Conflating the two is
+    EXECUTED       the artefact is run IN PLACE, as the committed file.  This is the
+    EXECUTED bucket: a caller that runs the artefact in place AND separately sandboxes a

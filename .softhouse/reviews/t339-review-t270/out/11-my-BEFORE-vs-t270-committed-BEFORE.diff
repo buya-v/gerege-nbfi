@@ -1,0 +1,28 @@
+77c77
+<   File "/tmp/t339/main/.softhouse/reviews/A2-11/enumerate-corpus.py", line 38, in <module>
+---
+>   File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a932bd0ee5b1bb219/.softhouse/reviews/A2-11/enumerate-corpus.py", line 38, in <module>
+79c79
+<   File "/tmp/t339/main/.softhouse/reviews/A2-11/enumerate-corpus.py", line 35, in git
+---
+>   File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a932bd0ee5b1bb219/.softhouse/reviews/A2-11/enumerate-corpus.py", line 35, in git
+136c136
+<   File "/tmp/t339/main/.softhouse/reviews/A2-11/verify-manifest-independently.py", line 53, in <module>
+---
+>   File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a932bd0ee5b1bb219/.softhouse/reviews/A2-11/verify-manifest-independently.py", line 53, in <module>
+143c143
+<   File "/tmp/t339/main/.softhouse/reviews/A2-11/audit-float.py", line 23, in <module>
+---
+>   File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a932bd0ee5b1bb219/.softhouse/reviews/A2-11/audit-float.py", line 23, in <module>
+152c152
+<   File "/tmp/t339/main/.softhouse/reviews/A2-11/prove-resolve7-float-red.py", line 44, in <module>
+---
+>   File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a932bd0ee5b1bb219/.softhouse/reviews/A2-11/prove-resolve7-float-red.py", line 44, in <module>
+164c164
+<   File "/tmp/t339/main/.softhouse/reviews/A2-11/prove-a2-7-guards-are-falsifiable.py", line 50, in <module>
+---
+>   File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a932bd0ee5b1bb219/.softhouse/reviews/A2-11/prove-a2-7-guards-are-falsifiable.py", line 50, in <module>
+166c166
+<   File "/tmp/t339/main/.softhouse/reviews/A2-11/prove-a2-7-guards-are-falsifiable.py", line 34, in run_prover_with
+---
+>   File "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a932bd0ee5b1bb219/.softhouse/reviews/A2-11/prove-a2-7-guards-are-falsifiable.py", line 34, in run_prover_with

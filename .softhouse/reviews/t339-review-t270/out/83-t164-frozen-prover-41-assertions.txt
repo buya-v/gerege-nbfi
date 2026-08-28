@@ -1,0 +1,121 @@
+==============================================================================
+T164 -- RED/GREEN drive of guard-parse-float-ast.py
+==============================================================================
+
+ARM 0 -- REPRODUCE: the OLD grep guard stays GREEN with parse_float deleted from analyze7.py's CODE
+         analyze7.py:39 is now: 'return json.load(f)'
+         `parse_float` now occurs on line(s) [6] -- the DOCSTRING only:
+           6: money). Every amount is parsed with `parse_float=decimal.Decimal`, so the JSON literal
+  ok   OLD guard assertion 1 `"parse_float=decimal.Decimal" in src` still TRUE -> it still reports ok
+         value=True
+  ok   OLD guard assertion 2 `"float(" not in src...` still TRUE
+         value=True
+  ok   OLD guard verdict on the SABOTAGED rig: PASS (this is the defect)
+         0 failures -> exit 0
+  ok   meanwhile the sabotaged loader really does build a binary double
+         an oracle amount now loads as type 'float'
+
+ARM 1 -- the SAME sabotage makes the AST guard FAIL, and it names the line
+  ok   AST guard exits 1 (FAIL) where the old guard exited 0
+         rc=1
+  ok   it names analyze7.py:39 as the violation
+         ['  analyze7.py:39  json.load(...)  keywords=[]  ->  no parse_float']
+  ok   it reports exactly 1 violation
+         ['  ... VIOLATIONS .......................... 1', '  VIOLATION   analyze7.py                     :39   json.load   parse_float=MISSING']
+  ok   the docstring occurrence did NOT rescue it
+
+ARM 2 -- the LEGITIMATE rig, untouched, still PASSES
+  ok   AST guard exits 0 on the real rig
+         rc=0 stderr=''
+  ok   and it says how much it inspected, positively (P-35)
+         ['Python files inspected .................. 35', 'json.load/loads CALL SITES inspected .... 21']
+  ok   the population it inspected is non-zero and stated
+         json.load/loads CALL SITES inspected .... 21
+
+ARM 3 -- ZERO CALL SITES INSPECTED is an ERROR, not a pass (the fail-open half)
+  ok   a root with Python files but NO json.load call sites exits 2, not 0
+         rc=2
+  ok   and it says so in the NIL COVERAGE / INSPECTED NOTHING shape
+         REFUSING: NIL COVERAGE -- 1 Python file(s) inspected, 0 json.load/loads call sites found. INSPECTED NOTHING, so there is nothing to certify. This is an ERROR, n
+  ok   it did NOT report a pass
+
+ARM 4 -- ZERO PYTHON FILES is an ERROR, not a pass
+  ok   an empty root exits 2, not 0
+         rc=2
+  ok   and it says 0 Python files, INSPECTED NOTHING
+         REFUSING: NIL COVERAGE -- 0 Python files under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t164-empty.bwdhzgum. INSPECTED NOTHING. A guard that finds nothi
+
+ARM 5 -- a file the guard cannot PARSE is an ERROR, not a silent skip
+  ok   an unparseable file exits 2
+         rc=2
+  ok   and it names the file rather than dropping it
+         REFUSING: broken.py will not parse: invalid syntax (broken.py, line 1) -- a file the guard cannot read is not a file the guard may skip
+
+ARM 6 -- an ALIASED loader cannot hide a site (`import json as J`)
+  ok   the aliased call site is FOUND and fails the guard
+         rc=1
+  ok   it names aliased.py:3
+         ['aliased.py:3  J.load(...)  keywords=[]  ->  no parse_float']
+
+ARM 7 -- `from json import loads as L` cannot hide a site either
+  ok   the bare-name call site is FOUND and fails the guard
+         rc=1
+  ok   it names fromimp.py:2
+         ['fromimp.py:2  L(...)  keywords=[]  ->  no parse_float']
+
+ARM 8 -- `parse_float=float` satisfies a grep and changes NOTHING; it FAILS
+  ok   parse_float=float is a violation, not a pass
+         rc=1
+  ok   and it is named as a no-op
+         ["dodge.py:2  json.load(...)  keywords=['parse_float']  ->  parse_float=float (a no-op)"]
+  ok   the dodge is counted separately in the population
+         ['... carrying parse_float=float (a dodge)  1']
+
+ARM 9 -- a register record naming a site that DOES NOT EXIST is a REFUSAL
+  ok   a stale record exits 2 (REFUSE), not 0 and not 1
+         rc=2
+  ok   and it is named STALE
+         ['* analyze7.py:9999 is declared FROZEN-T114 but is NOT a json.load/loads call site in this rig -- a stale record is an ERROR (P-22): remove it.']
+
+ARM 10 -- a register record for a site that NOW CARRIES parse_float is a REFUSAL
+  ok   an unnecessary exemption exits 2, so the register cannot silently rot
+         rc=2
+  ok   and it says the site is already compliant
+         ['* analyze7.py:39 is declared FROZEN-T114 but ALREADY carries parse_float=decimal.Decimal -- the record is stale: remove it.']
+
+ARM 11 -- a record whose PINNED SOURCE has drifted is a REFUSAL
+  ok   changing the exempted line's text exits 2
+         rc=2
+  ok   and the drift is named
+         ['DRIFT   resolve7.py:24   FROZEN-T114        pinned source no longer matches']
+
+ARM 12 -- an UNKNOWN register category is a REFUSAL, never a silent skip
+  ok   an unrecognised category exits 2
+         rc=2
+  ok   and it says a category it does not recognise is a refusal
+         REFUSING: PARSE-FLOAT-EXEMPT.txt:105 declares category 'LOOKS-FINE-TO-ME', which is not one of ['FROZEN-T114', 'REPRODUCTION-T207']. An unrecognised category is
+
+ARM 13 -- FROZEN-T114 dies the moment the file is EDITED (T114 is the whole point: a file being edited is not frozen)
+  ok   editing an exempted frozen file exits 2
+         rc=2
+  ok   and the refusal says the file has been edited
+         ['* verify-provenance-a2-15.py:24 declared FROZEN-T114 but its precondition FAILED: verify-provenance-a2-15.py HAS BEEN EDITED (sha256 5a51bf4ecd78, THIS REGISTER pins 9751bc6006c4) -- and regenerating MANIFEST.sha256 will NOT revive this exemption, because the pin lives here, not there. A file being edited is not frozen: add parse_float instead.']
+
+ARM 14 -- REPRODUCTION-T207 is GREEN while the target still lacks parse_float (T207: 'add parse_float' is sometimes the WRONG repair)
+  ok   a declared faithful reproduction does NOT fail the guard
+         rc=0 stderr=''
+  ok   and it is printed with its precondition outcome, not hidden
+         ['ALLOW   measurer.py:2    REPRODUCTION-T207  faithful: under-measurement/target.py:4 is still a json.load with no parse_float']
+ARM 15 -- ... and it DIES the moment the target is FIXED
+  ok   fixing the target makes the exemption stale -> exit 2
+         rc=2
+  ok   and the refusal says the target was fixed so this is no longer faithful
+         ['* measurer.py:2 declared REPRODUCTION-T207 but its precondition FAILED: under-measurement/target.py:4 NOW CARRIES parse_float -- the target was fixed, so this is no longer a faithful reproduction. Fix this site too.']
+
+ARM 16 -- the SELECTOR SELF-TEST is itself failable (a self-test that cannot fail is the same defect one level up)
+  ok   a selector that has stopped selecting REFUSES rather than reporting an absence
+         rc=2
+  ok   and it says the self-test failed
+         REFUSING: SELECTOR SELF-TEST FAILED: expected call sites on lines [8, 9, 10, 11], found [8, 10]. The selector is not selecting; a negative result from it would 
+
+41 assertions, 0 failed
