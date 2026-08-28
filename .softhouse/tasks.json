@@ -5608,7 +5608,7 @@
     },
     {
       "id": "T387",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -5622,7 +5622,7 @@
         "T360"
       ],
       "description": "T360 gives the vector store a first-class way to record an ORACLE-ACCEPTS / PORT-REFUSES divergence. A new vector class is the highest-risk change this harness can take, because a class that grades nothing still increments a PASS count. Read from the branch:\n    git show softhouse/T360-divergence-class:.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T360.md\n    git diff main...softhouse/T360-divergence-class\n\nT359 ALREADY RE-SCOPED THE BRIEF AND FALSIFIED ITS PREMISE (C-1, MAJOR): grade.go:551-556 ALREADY grades that polarity, four live vectors use it, and the HARNESS-ERROR came from one line of port code at impl.go:276-279. YOUR FIRST JOB IS TO CHECK T360 HONOURED THAT RE-SCOPE rather than building the thing the original false premise asked for. A duplicate mechanism beside a working one is a REJECT.\n\nTHEN ATTACK THE CLASS ITSELF:\n  - VACUITY. Write a deliberately WRONG port implementation and confirm the new class FAILS on it. A class no wrong implementation can fail is decoration. Register it in the wrong-implementation drive the way the 13 existing `ledger-wrong-*` drives are registered, and show it KILLED.\n  - THE MONEY NON-NEGOTIABLE, which is where this task is genuinely hard. The divergence being recorded is the oracle accepting 100.125 MNT, a sub-minor-unit residue that NO int64 can hold. Confirm T360 did NOT introduce a float, a decimal string parsed to float, or a widened numeric type into ANY money field, struct, schema column, API field or fixture, INCLUDING intermediate calculation. Grep the diff yourself and run the no-float guards. A float here is an instant REJECT under CLAUDE.md's first non-negotiable, however well motivated.\n  - THE CLAIM LIMIT. Confirm the bar's printed summary now states honestly what the corpus can and cannot express, and that the parity count did not silently absorb divergence vectors -- a divergence is not a parity pass.\n\nRun `bash .softhouse/conformance.sh` on the branch from a CLEAN tree AFTER commit, against the live oracle. Record the exit code and test the probe line's PRESENCE before its value (P-84, patterns.md:2813). If counts move, they must move in the summary AND in every pinned census that restates them, in ONE commit (P-83).",
-      "note": "Filed by the driver of fire 20260828-140005 iteration 3 at dispatch time (plan-gate check 1). | DISPATCHED on T360 completing; branch recorded before the worktree."
+      "note": "Filed by the driver of fire 20260828-140005 iteration 3 at dispatch time (plan-gate check 1). | DISPATCHED on T360 completing; branch recorded before the worktree. | APPROVED WITH CONDITIONS @ 026954a4. ADJUDICATION: **T360 IS RIGHT, AND MORE RIGHT THAN IT ARGUED.** T387 rebuilt T359's remedy in a scratch worktree and ran it against BOTH implementations. T359's diagnosis reproduces exactly (candidate vector FAIL, exit 1, no schema change) -- but with the same patch, THE GRADING INVERTS: ledger-go (CORRECT) -> candidate FAIL, ledger parity PASS 7 FAIL 1, exit 1; ledger-wrong-residue-rounding (WRONG) -> candidate PASS with 11 cells and 4 MONEY cells, ledger parity PASS 8 FAIL 0, exit 0. The deliberately wrong port PASSES AND GREENS THE BAR while the correct port REDS it, by matching amount_minor '10013' -- a number neither system produced -- and inflating money cells 39->43. Two further consequences NEITHER task named: it leaves ledger-go at a permanent baseline parity FAIL 1, which makes gate_wrong_ledger_impls_die's 'kills >= 1' criterion VACUOUS; and the diff is appended UNCONDITIONALLY, so no vector shape could ever be green and G-19 could only ever be a permanently red bar. T359's measured remedy is recorded DO-NOT-APPLY. Also: zero floats reached a money path (guards ran); the kill is load-bearing both ways and the withheld-vector ledger section is BYTE-IDENTICAL to ledger-go's; 16 authoring attacks all refused with controls, including a one-digit mutation of the cited capture WITH THE SHA PIN REFRESHED so only the verbatim byte check could catch it -- it did; pin 14 confirmed by counting from the binary's own -list-implementations."
     },
     {
       "id": "T388",
@@ -5796,6 +5796,45 @@
       "title": "T389's three citation defects around T388's /runaccruals claim -- the core claim holds, its supports do not, and one hides three real port traps",
       "description": "T389 APPROVED T388 WITH CONDITIONS. **The load-bearing claim HOLDS and is not in question**: `/runaccruals` and job 16 converge on the single-overload `addPeriodicAccruals(LocalDate)`, whose own Javadoc names both callers, and job 16 is seeded in source. So T388's observations ARE genuine periodic accruals. Three supporting citations around it are wrong, and one of them matters to the port.\n\n**m-3 IS THE ONE THAT COSTS SOMETHING.** T388's 'periods 1-3 vs 4-6' finding is attributed to a JPQL that **selects loans, not periods**. T389 says the misattribution **hides three real traps for a Go port**. Find them, name them, and write them down where a porting task will meet them -- that is the whole value of this correction. A wrong citation under a right conclusion is how the previous defect in this same fire survived (see G-21).\n\n**m-1.** `AccrualAccountingApiResource.java:62` **builds** a `CommandWrapper`; dispatch is at **`:64`** via the command bus. Correct the citation.\n\n**m-2.** 'the ONLY difference is where `tillDate` comes from' is **false**, and note it errs in T388's own favour -- it understates the difference rather than overstating the result. The manual path also carries a permission check, idempotency, command-source audit, maker-checker and a date validator. **Enumerate all five with citations from the pinned checkout `/Users/buv/fineract` @ `426a23544`**, and say for each whether it could change what gets accrued. That is the difference between 'the same method' and 'the same behaviour'.\n\nRead T389's review on `main` at `.softhouse/reviews/t389-review-t388/REVIEW.md`. Your grant includes T388's capture directory so the corrections land where the observations are, not in a separate file nobody reads. **Correct in place and say what you corrected**; do not rewrite T388's conclusions, which survived review.\n\nBar from a CLEAN tree after commit; probe-line presence before value (P-84).",
       "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T389 finding 3 (m-1, m-2, m-3)."
+    },
+    {
+      "id": "T397",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "branch": null,
+      "files_hint": [
+        "nexus/internal/apps/ledger/conformance/",
+        ".softhouse/capture/t397-t387-conditions/"
+      ],
+      "dependencies": [
+        "T360",
+        "T387"
+      ],
+      "title": "T387's two MINOR conditions on T360 -- an unqualified verdict sentence, and a byte check a numeric PREFIX satisfies",
+      "description": "T387 APPROVED T360 WITH CONDITIONS. Condition (a), the `EXEMPTION_PIN_LEDGER_WRONGIMPLS` 13->14 bump, is the DRIVER's to apply on the merge result and is not yours. These two are.\n\n**F-T387-2 -- `verbatimInCapture` is `bytes.Contains`, so a numeric PREFIX satisfies it.** `\"100.12\"` is contained in `\"100.125\"`, so a vector citing the shorter text passes the verbatim check against a capture holding the longer one. T387 drove it and showed it **self-correcting** -- the port then accepts, the vector FAILs, exit 1 -- which is why this is MINOR rather than a fail-open. **Close it anyway, and keep the self-correction as a control.** A check that is only saved by a downstream check is one refactor away from being saved by nothing (P-45). Match on a token boundary, not a substring, and drive the prefix case RED before and GREEN after.\n**Do not reach for a numeric comparison to fix it.** The whole design of this class is that the amount is NEVER a number -- no `strconv`, no arithmetic, no exponent, because no `int64` holds `100.125`. A float or a parse here is an instant REJECT under CLAUDE.md's first non-negotiable, however tempting it looks as a 'proper' fix.\n\n**F-T387-1 -- `report.go:592`'s verdict prose now sits UNQUALIFIED over a captured vector the port does not match.** The divergence class records a case where the oracle accepted and the port refused; a verdict sentence that does not say so invites exactly the misreading G-19 exists to prevent. Qualify it. `report.go` was outside T360's grant, which is why this is yours.\n\nRead T387's review on `main` at `.softhouse/reviews/t387-review-t360/REVIEW.md`, and T360's handoff. **Re-drive T387's 16 authoring attacks after your change** -- all 16 must still be refused, and parity must stay `PASS 7 FAIL 0` with money cells `39 == pinned 39`. Run `go build ./...` and `go test -count=1 ./...` and record both.\n\nBar from a CLEAN tree AFTER `git add -A` and commit, `bash` never `sh`; probe-line PRESENCE before value (P-84). By the time you run, the wrong-impl pin should read 14 on `main`; if it still reads 13 the bar exits 2 on `WRONG-IMPLEMENTATION POPULATION 14, PINNED 13` and that is the pin working, not an outage.",
+      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T387 conditions (b) and (c). Condition (a), the pin, is the driver's at merge time."
+    },
+    {
+      "id": "T398",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "coder",
+      "branch": null,
+      "files_hint": [
+        ".softhouse/patterns.md"
+      ],
+      "dependencies": [
+        "T387",
+        "T392"
+      ],
+      "title": "A MEASURED REMEDY CAN BE MEASURED AND STILL BE BACKWARDS -- give T387's adjudication a P-number",
+      "description": "This fire produced the sharpest instance of a lesson this program keeps paying for, and it has no P-number.\n\n**WHAT HAPPENED.** `T359`, reviewing `T352`, MEASURED a one-line remedy in a scratch worktree: change `impl.go:276-279` and the stuck candidate vector grades FAIL, exit 1, no schema change. The measurement was correct and reproduces exactly. `T360` declined to apply it on reasoning alone. `T387` then ran the same patch against **both** a correct and a deliberately wrong implementation, and found **the grading inverts**: the WRONG port passes and greens the bar (parity PASS 8 FAIL 0, exit 0, matching an `amount_minor` of `10013` that neither system ever produced, inflating money cells 39->43), while the CORRECT port reds it (parity PASS 7 FAIL 1, exit 1).\n\n**THE RULE.** *Verifying that a fix makes the failing case fail is not verifying that it grades correctly.* A grading change must be run against **at least one correct and one deliberately wrong implementation**, and the correct one must pass while the wrong one dies. T359 ran one implementation and got a true measurement of a backwards fix. **One implementation cannot detect an inversion — the signal is identical from that side.**\n\n**THE COROLLARIES, both of which T387 found and neither T359 nor T360 named:** a remedy that leaves the correct implementation at a permanent baseline `FAIL 1` makes any `kills >= 1` criterion **vacuous**; and a diff appended UNCONDITIONALLY means no vector shape can ever be green, so the gate it serves could only ever be a permanently red bar.\n\nWrite it into `.softhouse/patterns.md` in the file's existing voice, with the table from T387's review as the evidence. **TAKE THE NEXT FREE P-NUMBER AND CHECK IT AGAINST THE FILE FIRST** -- this repo has already shipped one P-number collision (six patterns renumbered after a cloud fire published a conflicting P-78) and then reproduced the resulting off-by-one for a whole fire (P-83 cited where P-84 was meant, in RESUME.md and 20 task descriptions). Coordinate with `T392`, which is also adding a pattern: **agree the numbers between you or land them in one commit**, or you will mint the second collision yourselves.\n\nAlso record, in the pattern or beside it, that `T359`'s remedy is **DO-NOT-APPLY** -- a later reader finding T359's review alone would find a measured, confident, wrong recommendation with nothing marking it.",
+      "note": "Filed by the driver of fire 20260828-140005 iteration 3. This is the most valuable single result of the fire: a reviewer measured a remedy that would have made the harness grade backwards, and only running it against a WRONG implementation exposed it."
     }
   ],
   "cross_corroboration": {
