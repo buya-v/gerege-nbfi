@@ -1,0 +1,31 @@
+T278 META-CALIBRATION of T277's verifier   root=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a506f46e9485d9df9
+
+B1  M1's mutation anchor REPOINTED so the edit no-ops -- must ABORT, not 'trip'
+    exit=2
+        ABORT: mutant m1.py is byte-identical to shapelaw_census_t277.py -- the edit was a no-op.
+    B1 RESULT: ABORTED as required (exit 2) -- FU-T277-5's fix HOLDS
+
+B2  a negative case repointed at `true` -- verifier must report DID NOT TRIP
+    exit=1
+        FAIL-CASE  DID NOT TRIP  M4 (B2-NEUTERED: pointed at true)  (expected non-zero, got 0)
+      T277 VERIFY: FAIL -- 1 case(s) did not behave as required.
+    B2 RESULT: caught the un-failable negative and named it
+
+B3  DID EACH MUTANT ACTUALLY BUILD?  a crash and a catch share an exit code.
+    M1  PARSES: yes
+    M1  exit=1  no traceback; the instrument GRADED it. tail:
+                   T159-R600p0-N2000-B999   capture-t159-raw.json.gz     n=2000  B=999   E=499   I1q=500   d=1 B<=n*d=True  predicted=0 OBSERVED=166
+               
+               RESULT: FAIL
+    M2  PARSES: yes
+    M2  exit=1  no traceback; the instrument GRADED it. tail:
+                   [all] lawII exception ('T159-R600p0-N2000-B999', 'capture-t159-raw.json.gz'): expected None, measured 166
+               
+               RESULT: FAIL
+    M3  PARSES: yes
+    M3  exit=1  no traceback; the instrument GRADED it. tail:
+                   T159-R600p0-N2000-B999   n=2000  B=999   E=499   I1q=500   delta=1  FULL-family-B=True  law(ii) predicts 0  OBSERVED 166
+               
+               RESULT: FAIL -- EXCEPTION SET moved
+
+T278 META-CALIBRATION complete.

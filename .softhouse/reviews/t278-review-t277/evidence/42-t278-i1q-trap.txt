@@ -1,0 +1,9 @@
+
+==============================================================================
+T278 vs FU-T277-4 : taking I1q from repayment row 1's `interest` field
+==============================================================================
+  correctly computed  : delta histogram {'0': 113, '1': 183} , law (ii) fails on 7
+  I1q read from row 1 : delta histogram {'0': 296} , law (ii) fails on 183
+  all stuck cells forced to delta=0 by that route? True
+  T277's claim: 'forces delta = 0 on all 296 and refutes law (ii) on 183 cells'
+  T278 measures: 296 cells at delta=0, law (ii) 'refuted' on 183
