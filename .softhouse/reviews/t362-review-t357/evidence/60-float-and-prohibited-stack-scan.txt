@@ -1,0 +1,63 @@
+=== P-25 float scan of every CODE file T357 adds or edits ===
+    (list DERIVED: git diff --name-only e0819a7647befc6037c58784a70990e88fef0841..softhouse/T357-a2-11-section1-red, filtered to .py/.sh)
+    files: 11
+
+.softhouse/capture/t357-a2-11-section1-red/diff-sections.py            hits=0
+.softhouse/capture/t357-a2-11-section1-red/patch-roots.py              hits=0
+.softhouse/capture/t357-a2-11-section1-red/prove-verdict-can-fail.sh   hits=0
+.softhouse/capture/t357-a2-11-section1-red/re-observe-t357.sh          hits=0
+.softhouse/reviews/A2-11/adjudicate-section1.py                        hits=0
+.softhouse/reviews/A2-11/audit-float.py                                hits=2
+.softhouse/reviews/A2-11/enumerate-corpus.py                           hits=0
+.softhouse/reviews/A2-11/prove-a2-7-guards-are-falsifiable.py          hits=3
+.softhouse/reviews/A2-11/prove-resolve7-float-red.py                   hits=21
+.softhouse/reviews/A2-11/run-all.sh                                    hits=2
+.softhouse/reviews/A2-11/verify-manifest-independently.py              hits=0
+
+--- every hit, in context ---
+  audit-float.py:10:  - every float literal and every `float(` call
+  audit-float.py:120:            flags.append("float() call at " + ",".join(str(x) for x in v.floatcalls))
+  prove-a2-7-guards-are-falsifiable.py:129:print("  A2-7 asserts \"it never calls bare float()\" by string search on its own source:")
+  prove-a2-7-guards-are-falsifiable.py:130:print('      check("it never calls bare float()", "float(" not in src.replace("parse_float=", ""))')
+  prove-a2-7-guards-are-falsifiable.py:133:                           "debits = decimal.Decimal(0)\n    _sabotage = __builtins__.__dict__['float']('0.1') + 0.2")])
+  prove-resolve7-float-red.py:7:number in a request template makes a round trip through a binary double before the
+  prove-resolve7-float-red.py:11:`4057599.35` to come back visibly corrupted. It does not. Python's `repr()` of a float
+  prove-resolve7-float-red.py:12:emits the shortest string that reparses to the same double, so any decimal literal whose
+  prove-resolve7-float-red.py:13:shortest round-trip form is itself survives BYTE-IDENTICAL. The double in memory is not
+  prove-resolve7-float-red.py:14:the exact value (residue 9.31e-11, shown below) but the emitted bytes are unchanged.
+  prove-resolve7-float-red.py:18:this program actually uses, `1200000.00` (MNT stored to 2 decimals, CLAUDE.md) and
+  prove-resolve7-float-red.py:19:`1200000.000000` (exactly what Fineract's own numeric(19,6) emits), and any value past
+  prove-resolve7-float-red.py:20:double precision, which the ratified MathContext(19, HALF_UP) permits.
+  prove-resolve7-float-red.py:91:print("=== RETRACTED HYPOTHESIS: 4057599.35 is NOT corrupted in the emitted bytes ===")
+  prove-resolve7-float-red.py:92:rc, got = run_template("4057599.35")
+  prove-resolve7-float-red.py:93:print("  template 4057599.35 -> emitted %s  (rc=%d)" % (got, rc))
+  prove-resolve7-float-red.py:95:      got == "4057599.35", "recorded, not deleted")
+  prove-resolve7-float-red.py:96:exact = decimal.Decimal("4057599.35")
+  prove-resolve7-float-red.py:97:binary = decimal.Decimal(float("4057599.35"))
+  prove-resolve7-float-red.py:98:print("  but the double actually held in memory is %s" % binary)
+  prove-resolve7-float-red.py:99:print("  residue (double - exact) = %s" % (binary - exact))
+  prove-resolve7-float-red.py:100:check("the in-memory value IS a lossy double, even where the bytes survive", binary != exact)
+  prove-resolve7-float-red.py:105:    ("1200000.00", "MNT stored to 2 decimals (CLAUDE.md non-negotiable)"),
+  prove-resolve7-float-red.py:106:    ("1200000.000000", "exactly what Fineract's own numeric(19,6) emits"),
+  prove-resolve7-float-red.py:107:    ("0.10", "ten mongo"),
+  prove-resolve7-float-red.py:108:    ("12345678901234567890.12", "past double precision; MathContext(19,HALF_UP) permits 19 sig digits"),
+  run-all.sh:82:  echo "############ 3. double-entry in INTEGER MINOR UNITS (offline)   EXPECTED RC 0"
+  run-all.sh:83:  sec 3 0 python3 "$DIR/verify-double-entry-minor-units.py"
+
+=== AST float audit of every ADDED python file ===
+  diff-sections.py                           float_literals=0 float()_calls=0 imports=['difflib', 'pathlib', 're', 'sys']
+  patch-roots.py                             float_literals=0 float()_calls=0 imports=['pathlib', 'sys']
+  adjudicate-section1.py                     float_literals=0 float()_calls=0 imports=['ast', 'pathlib', 're', 'subprocess', 'sys']
+
+=== prohibited-stack scan across the whole branch diff ===
+  ojdbc                    added-line hits=0
+  oracle.jdbc              added-line hits=0
+  1521                     added-line hits=0
+  mysql                    added-line hits=0
+  mariadb                  added-line hits=0
+  Stripe                   added-line hits=0
+  Plaid                    added-line hits=0
+  Lithic                   added-line hits=0
+  Persona                  added-line hits=0
+  docker-compose-mysql     added-line hits=0
+  docker-compose-mariadb   added-line hits=0

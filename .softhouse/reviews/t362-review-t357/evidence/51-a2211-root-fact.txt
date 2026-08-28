@@ -1,0 +1,10 @@
+file: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7d891ca5eb35f7d1/.softhouse/capture/tierA-a2/out/A2-211-read-product-nine-mandatory.json
+    7489
+fc70e10bb3829818b06054af8525fc8c96824e61bf35ffb604bb5a66b7f1a4a8  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7d891ca5eb35f7d1/.softhouse/capture/tierA-a2/out/A2-211-read-product-nine-mandatory.json
+  paymentChannelToFundSourceMappings       occurrences=0
+  feeToIncomeAccountMappings               occurrences=0
+  penaltyToIncomeAccountMappings           occurrences=0
+  null                                     occurrences=0
+  keys whose value is None: []
+  top-level key count: 80
+  keys matching Account/Mapping: ['accountMovesOutOfNPAOnlyOnArrearsCompletion', 'accountingMappings', 'accountingRule']

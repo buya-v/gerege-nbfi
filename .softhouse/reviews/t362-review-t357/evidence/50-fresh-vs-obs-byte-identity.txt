@@ -1,0 +1,18 @@
+READ           FRESH-sha256         OBS-sha256              fresh      obs  RESULT
+product 46     04b14461410412edcc   04b14461410412edcc       7510     7510  IDENTICAL
+product 22     b2c060af179538cd80   b2c060af179538cd80       7726     7726  IDENTICAL
+product 28     7d6b4a79af7576d3a4   7d6b4a79af7576d3a4       7806     7806  IDENTICAL
+glaccount 2    1d7fc3cb1e0fe2d79e   1d7fc3cb1e0fe2d79e        353      353  IDENTICAL
+
+--- status files (HTTP codes recorded by the re-observation) ---
+  t357-get-glaccount-2.status              200
+  t357-get-loanproduct-22.status           200
+  t357-get-loanproduct-28.status           200
+  t357-get-loanproduct-46.status           200
+  t357-get-loanproducts-list.status        200
+
+--- the loanproducts LIST read: how many products does the tenant hold NOW? ---
+  fresh          count=33 ids=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 46, 54, 55, 56, 57, 58, 60]
+  committed obs  count=27 ids=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 46]
+  appeared since capture: [54, 55, 56, 57, 58, 60]
+  disappeared           : []

@@ -1,0 +1,123 @@
+
+==================================================================
+PRE: is the target tree clean?
+==================================================================
+(empty above == clean)
+
+==================================================================
+DIRECTION 1 (THE DANGEROUS ONE) — make an adjudicated failure VANISH.
+==================================================================
+Injecting the three fields as JSON null into the REAL product-46 observation, i.e.
+forging exactly the wire shape A2-7 fabricated. check-shape.py should then PASS the
+three assertions, and the adjudicator MUST go RED for losing them.
+  injected 3 null fields into /tmp/t362-t357/.softhouse/reviews/A2-11/obs/a2-11-get-loanproduct-46.json
+--- check-shape.py under the mutation ---
+check-shape.py rc=0   (0 here means section 1 now looks HEALTHY — the trap)
+35:  PASS    paymentChannelToFundSourceMappings present and null  -- None
+36:  PASS    feeToIncomeAccountMappings present and null  -- None
+37:  PASS    penaltyToIncomeAccountMappings present and null  -- None
+62:FAILURES: 0
+--- adjudicate-section1.py under the mutation ---
+adjudicate-section1.py rc=1   (MUST be non-zero)
+17:  FAIL  check-shape.py exits 1 (RED)
+23:  FAIL  all three adjudicated failures are STILL PRESENT — losing one would mean the checker was edited into agreeing with the fabricated A2-7 claim (P-46)
+24:          missing=['  feeToIncomeAccountMappings present and null', '  paymentChannelToFundSourceMappings present and null', '  penaltyToIncomeAccountMappings present and null']
+80:          missing=['  penaltyToIncomeAccountMappings present and null']
+92:FAILURES: 2
+93:  - check-shape.py exits 1 (RED)
+94:  - all three adjudicated failures are STILL PRESENT — losing one would mean the checker was edited into agreeing with the fabricated A2-7 claim (P-46)
+--- run-all.sh under the mutation ---
+run-all.sh rc=2   (MUST be non-zero)
+############ VERDICT — every section against its adjudicated exit code
+
+  SECTION   EXPECTED       ACTUAL    RESULT
+  1         1              0         *** MOVED ***
+  2         1              1         as adjudicated
+  3         0              0         as adjudicated
+  4         1              1         as adjudicated
+  5         0              0         as adjudicated
+  6         0              0         as adjudicated
+  7         0              0         as adjudicated
+  8         0              0         as adjudicated
+  9         0              1         *** MOVED ***
+
+  sections run: 9    deviations: 2
+  RUN-ALL VERDICT: FAIL — 2 section(s) moved off the adjudicated verdict.
+  Read the moved sections above. A section that moved is either a new defect or a
+  repair that nobody recorded; both need a human, neither is absorbed here.
+reverted; porcelain:
+
+==================================================================
+DIRECTION 2 — introduce a FOURTH, unadjudicated failure.
+==================================================================
+Mutating GL account 2's observed name so a DIFFERENT section-1 assertion fails.
+  mutated glaccount-2 name in /tmp/t362-t357/.softhouse/reviews/A2-11/obs/a2-11-get-glaccount-2.json
+check-shape.py rc=1
+FAILURES: 4
+  -   paymentChannelToFundSourceMappings present and null
+  -   feeToIncomeAccountMappings present and null
+  -   penaltyToIncomeAccountMappings present and null
+  -   GET /glaccounts/2 glCode 10100, name 'Fund Source', type INCOME
+adjudicate-section1.py rc=1   (MUST be non-zero)
+21:  FAIL  NO UNADJUDICATED FAILURE — a fourth failure here is a NEW defect and must be read, not absorbed
+22:          unexpected=["  GET /glaccounts/2 glCode 10100, name 'Fund Source', type INCOME"]
+77:  FAIL  (a) a FOURTH failure is detected as UNADJUDICATED
+78:          unexpected=["  GET /glaccounts/2 glCode 10100, name 'Fund Source', type INCOME", '  something nobody has adjudicated']
+92:FAILURES: 2
+93:  - NO UNADJUDICATED FAILURE — a fourth failure here is a NEW defect and must be read, not absorbed
+94:  - NEGATIVE CONTROL DID NOT TRIP: (a) a FOURTH failure is detected as UNADJUDICATED
+run-all.sh rc=1   (MUST be non-zero)
+############ VERDICT — every section against its adjudicated exit code
+
+  SECTION   EXPECTED       ACTUAL    RESULT
+  1         1              1         as adjudicated
+  2         1              1         as adjudicated
+  3         0              0         as adjudicated
+  4         1              1         as adjudicated
+  5         0              0         as adjudicated
+  6         0              0         as adjudicated
+  7         0              0         as adjudicated
+  8         0              0         as adjudicated
+  9         0              1         *** MOVED ***
+
+  sections run: 9    deviations: 1
+  RUN-ALL VERDICT: FAIL — 1 section(s) moved off the adjudicated verdict.
+  Read the moved sections above. A section that moved is either a new defect or a
+  repair that nobody recorded; both need a human, neither is absorbed here.
+
+==================================================================
+DIRECTION 3 (T362's OWN probe) — can the CORPUS guard in section 4 pass VACUOUSLY?
+==================================================================
+Temporarily move .softhouse/vectors aside and re-run the adjudicator. If section 4
+still reports 'all zero' and PASSES, the corpus guard has no positive control.
+adjudicate-section1.py with vectors/ HIDDEN rc=0
+=== 4. THE CORPUS QUESTION, MEASURED: does any of the three touch a GRADED vector? ===
+    Searched: every file under .softhouse/vectors/ (recursive), and .softhouse/
+    conformance.sh. Tokens: the three key names, 'accountingMappings', 'loanproduct',
+    and the capture files section 1 replays.
+      paymentChannelToFundSourceMappings     vectors=0  conformance.sh=False
+      feeToIncomeAccountMappings             vectors=0  conformance.sh=False
+      penaltyToIncomeAccountMappings         vectors=0  conformance.sh=False
+      accountingMappings                     vectors=0  conformance.sh=False
+      loanproduct                            vectors=0  conformance.sh=False
+      A2-211-read-product-nine-mandatory     vectors=0  conformance.sh=False
+      a2-11-get-loanproduct                  vectors=0  conformance.sh=False
+    (population searched: 0 files under .softhouse/vectors/, plus conformance.sh)
+  PASS  NO vector in the store, and no line of conformance.sh, mentions ANY of these tokens — the three failures touch NOTHING in the graded corpus
+          all zero
+  PASS  NO vector's provenance.capture_ref points at a loan-product read
+          0 distinct capture_ref values inspected; loan-product-shaped: []
+
+=== 5. NEGATIVE CONTROLS — P-22, each arm above driven RED on purpose ===
+restored; porcelain:
+
+==================================================================
+SUMMARY
+==================================================================
+D1 vanished-failure : adjudicate rc=1  run-all rc=2   (both MUST be non-zero)
+D2 fourth-failure   : adjudicate rc=1  run-all rc=1   (both MUST be non-zero)
+D3 vectors hidden   : adjudicate rc=0                   (0 == VACUOUS PASS, a gap)
+
+T362 expects: D1 and D2 non-zero (T357's guard works), D3 zero (T357's guard has a
+vacuity gap — finding F-2). This script exits non-zero if D1 or D2 fails to trip,
+so a broken driver cannot be mistaken for a passing guard.

@@ -1,0 +1,45 @@
+committed transcript: 376 lines, section headers at [(1, 7), (2, 75), (3, 139), (4, 186), (5, 228), (6, 274), (7, 306), (8, 353)]
+
+section 1  check-shape.py                         IDENTICAL  committed=65 lines  fresh=65 lines  committed exit=1  fresh exit=1
+section 2  enumerate-corpus.py                    IDENTICAL  committed=61 lines  fresh=61 lines  committed exit=1  fresh exit=1
+section 3  verify-double-entry-minor-units.py     IDENTICAL  committed=44 lines  fresh=44 lines  committed exit=0  fresh exit=0
+section 4  verify-manifest-independently.py       DIFFERS    committed=39 lines  fresh=48 lines  committed exit=0  fresh exit=1
+        40 diff lines; first 12:
+        | --- committed
+
+        | +++ fresh(T357-patched)
+
+        | @@ -11,6 +11,6 @@
+
+        |            len=430
+        | -  PASS  manifest on disk today holds 571 entries
+        | -          len=571
+        | -  PASS  571 - 430 = 141 added
+        | -          delta=141
+        | +  FAIL  manifest on disk today holds 571 entries
+        | +          len=1139
+        | +  FAIL  571 - 430 = 141 added
+        | +          delta=709
+section 5  audit-float.py                         DIFFERS    committed=43 lines  fresh=73 lines  committed exit=0  fresh exit=0
+        54 diff lines; first 12:
+        | --- committed
+
+        | +++ fresh(T357-patched)
+
+        | @@ -18,5 +18,19 @@
+
+        |  === context: EVERY .py in the A2 capture rig (A2-7's and everyone else's) ===
+        | +  CLEAN a2-29-retype-path.py                                       loads=1 decimal_imported=True 
+        | +            line 25    json.loads(parse_float=decimal.Decimal)
+        |    CLEAN analyze7.py                                                loads=1 decimal_imported=True 
+        |              line 39    json.load(parse_float=decimal.Decimal)
+        | +  FLAG  audit-req-float-roundtrip.py                               loads=3 decimal_imported=True float() call at 73
+        | +            line 65    json.loads(parse_float=hook('float'))
+        | +            line 226   json.loads(parse_float=decimal.Decimal)
+        | +            line 236   json.loads(parse_float=decimal.Decimal)
+section 6  prove-resolve7-float-red.py            IDENTICAL  committed=29 lines  fresh=29 lines  committed exit=0  fresh exit=0
+section 7  prove-a2-7-guards-are-falsifiable.py   IDENTICAL  committed=44 lines  fresh=44 lines  committed exit=0  fresh exit=0
+
+T357 CLAIMED: sections 1,2,3,6,7 IDENTICAL; 4 and 5 differ (rig has grown).
+T362 MEASURED identical: [1, 2, 3, 6, 7]
+MATCHES T357'S CLAIM
