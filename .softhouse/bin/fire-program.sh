@@ -73,9 +73,14 @@ done
 # not hypothetical: `cp` is what a human reaches for ("copy the fixed wrapper over the
 # live one"), it is the dangerous half of the cp/mv pair, and agents in this pipeline run
 # under instructions that PREFER `cat > file` heredocs to the (isolated) Write tool.
-# P-45 -- "a guard that only works when someone remembers to run it enforces nothing" --
-# is the whole argument against leaving this as the convention "never edit the live path".
-# Fifteen lines of `cp` + `exec` turn that convention into a mechanism.
+# P-45 is the argument against leaving this as the convention "never edit the live path".
+# CITING THE TEXT, because the paraphrase in circulation is not what the pattern says.
+# P-45 is titled "A test-only guard is not a guard" and its rule is: *"when hardening a
+# check, verify the path that ACTUALLY EXECUTES in CI/conformance calls it, not merely
+# that a test does."* [.softhouse/patterns.md:1503-1506]. "Never in-place-edit the live
+# wrapper" is not called by any executing path at all -- it is prose in a task brief --
+# so it is the limiting case of the same defect. Fifteen lines of `cp` + `exec` move the
+# protection onto the path that actually runs.
 #
 # THE COSTS, AND HOW EACH IS PAID.
 #   * `${0:A:h}` resolved SCRIPT_DIR against this script's own path, and SCRIPT_DIR
