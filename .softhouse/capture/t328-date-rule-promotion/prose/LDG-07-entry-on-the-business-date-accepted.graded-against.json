@@ -1,0 +1,9 @@
+[
+ {
+  "impl": "ledger-wrong-date-rules-always-refusing",
+  "kind": "structural",
+  "margin_minor": "0",
+  "divergent_cells": ["leg_count"],
+  "note": "PLACEHOLDER, REPLACED BY MEASUREMENT"
+ }
+]
