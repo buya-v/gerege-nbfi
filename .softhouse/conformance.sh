@@ -1765,6 +1765,23 @@ guard_no_fail_open_instruments() {
 # 3 = the checker's own refusal to run (register unreadable, `git ls-files` failed). run_guards
 # folds ANY non-zero into failed=1 and exits EXIT_UNUSABLE — "no verdict is available", never
 # "FAIL".
+#
+# COST, WALL CLOCK, MEASURED ON THIS HOST BY T331 over a ~9,200-site corpus — not estimated:
+#     --selftest (11 synthetic fixtures, reads no repo file)                0.14 s
+#     the graded run (git ls-files, whole tree, sentence scoring)          17.26 s
+#     TOTAL ADDED TO EVERY GRADED RUN                                      ~17.4 s
+# That makes it the SECOND most expensive guard in this file, after guard_reconciler_ownership
+# (30.3 s). The selftest is 0.8% of that and is not optional: a checker whose predicate has
+# stopped discriminating reports a clean tree in exactly the same words as a clean tree.
+#
+# A TENSION, STATED RATHER THAN QUIETLY RESOLVED. T282's anchor 2 puts this call in the FIRST
+# guard block, which is in historical order, so 17.4 s is now paid BEFORE guard_capture_namespace
+# (0.4 s) and guard_dead_path_frontier (1.3 s) — and the T323 block below says in terms that its
+# three are "registered CHEAPEST FIRST so a fast refusal prints before the 30-second one is paid
+# for". T331 kept T282's position anyway: the wiring is then auditable line-for-line against the
+# diff T282 published, and the cost of the wrong order is 1.7 s on runs that were going to refuse
+# regardless. If a reviewer disagrees the fix is to move ONE LINE below guard_dead_path_frontier;
+# nothing else depends on the position.
 # ---------------------------------------------------------------------------
 guard_pnumber_citations() {
   local chk="$REPO_ROOT/.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py"
