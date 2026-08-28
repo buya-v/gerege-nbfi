@@ -182,6 +182,59 @@ func Admit(v *Vector, opts Options) []string {
 			add("G-05: accounting_rule ACCRUAL_PERIODIC requires slot_family AccrualLoanSlot, got %q",
 				v.Request.SlotFamily)
 		}
+		// --- THE PER-LEG SLOT INPUTS, default-deny in BOTH directions [T391] --
+		//
+		// The rules below are what stop the accounting-path fields becoming a
+		// hole, and they are the same shape T294 gave the opening-balance
+		// inputs:
+		//
+		//   * a leg may carry an ACCOUNT ID or a SLOT CODE and NOT BOTH, because
+		//     a leg that carries both hands the implementation the answer it was
+		//     supposed to resolve, and the `gl_account_id` cell silently stops
+		//     being an output;
+		//   * a leg that carries NEITHER has said nothing about where it landed;
+		//   * a slot code with no mapping table to resolve it through REFUSES,
+		//     rather than reaching the port and becoming a harness error;
+		//   * a mapping table on a vector NO leg resolves through REFUSES, so
+		//     the field cannot accumulate on the manual corpus;
+		//   * and the ENTRY-LEVEL slot_code must be 0 wherever per-leg codes are
+		//     used. P-1's single slot_code names ONE slot and an accrual
+		//     transaction spans SIX; two places to say which slot an entry used
+		//     is two places that can disagree, and admit.go's job is that they
+		//     cannot.
+		anySlotLeg := false
+		for i, l := range v.Request.Legs {
+			switch {
+			case l.SlotCode != 0 && l.AccountID != 0:
+				add("request.legs[%d] carries BOTH gl_account_id %d AND slot_code %d. An "+
+					"accounting-path leg names the SLOT and the implementation RESOLVES the account "+
+					"through request.product_mappings; carrying the account too hands it the answer "+
+					"and turns expect.legs[%d].gl_account_id from an output back into an echo",
+					i, l.AccountID, l.SlotCode, i)
+			case l.SlotCode == 0 && l.AccountID == 0:
+				add("request.legs[%d] carries NEITHER a gl_account_id NOR a slot_code, so it does not "+
+					"say where this leg landed or how it got there", i)
+			case l.SlotCode < 0:
+				add("request.legs[%d].slot_code is %d. A placeholder code is a positive "+
+					"acc_product_mapping.financial_account_type", i, l.SlotCode)
+			}
+			if l.SlotCode != 0 {
+				anySlotLeg = true
+			}
+		}
+		if anySlotLeg && len(v.Request.ProductMappings) == 0 {
+			add("request.legs carry per-leg slot codes and request.product_mappings is EMPTY. The " +
+				"account is resolved by keying the product's OBSERVED acc_product_mapping rows with " +
+				"the slot code; with no rows there is nothing to resolve through, and a vector that " +
+				"cannot be resolved has not recorded an observation anybody can re-derive")
+		}
+		if anySlotLeg && v.Request.SlotCode != 0 {
+			add("request.slot_code is %d AND request.legs carry per-leg slot codes. P-1's "+
+				"entry-level slot_code names ONE slot and an accrual transaction spans SIX "+
+				"(INTEREST_RECEIVABLE/FEES_RECEIVABLE/PENALTIES_RECEIVABLE against "+
+				"INTEREST_ON_LOANS/INCOME_FROM_FEES/INCOME_FROM_PENALTIES on a single transaction "+
+				"id). Leave the entry-level field 0 and let the legs carry it", v.Request.SlotCode)
+		}
 		// G-06.
 		if v.Request.SlotCode == 1 && v.Request.PaymentTypeID == nil {
 			add("G-06: slot_code 1 (FUND_SOURCE) with a nil payment_type_id is REFUSED. The oracle " +
@@ -190,6 +243,61 @@ func Admit(v *Vector, opts Options) []string {
 				"defensible, and no capture separates them")
 		}
 	}
+	// --- the accounting-path inputs OUTSIDE the product block [T391] --------
+	//
+	// The rules above bind only where a product took part. These three bind
+	// everywhere, because they are the ones that keep the fields from appearing
+	// where no product did.
+	{
+		slotLegs := 0
+		for _, l := range v.Request.Legs {
+			if l.SlotCode != 0 {
+				slotLegs++
+			}
+		}
+		if slotLegs > 0 && v.Request.ProductID == 0 {
+			add("request.legs carry %d per-leg slot code(s) and request.product_id is 0. A slot is a "+
+				"PRODUCT's placeholder — acc_product_mapping is keyed on (product_id, product_type, "+
+				"financial_account_type) — so a slot with no product is a key with a hole in it",
+				slotLegs)
+		}
+		if slotLegs == 0 && len(v.Request.ProductMappings) > 0 {
+			add("request.product_mappings carries %d row(s) and NO leg resolves through any of them. "+
+				"An input nothing consumes is how the opening-balance fields would have accumulated "+
+				"on the manual corpus, and it is refused here for the same reason",
+				len(v.Request.ProductMappings))
+		}
+		seenSlot := map[int32]bool{}
+		inChart := map[int64]bool{}
+		for _, a := range v.Request.Accounts {
+			inChart[a.ID] = true
+		}
+		for i, m := range v.Request.ProductMappings {
+			if m.SlotCode <= 0 {
+				add("request.product_mappings[%d].slot_code is %d; a placeholder code is positive",
+					i, m.SlotCode)
+			}
+			if seenSlot[m.SlotCode] {
+				add("request.product_mappings names slot_code %d twice. The oracle's own lookup is "+
+					"getSingleResult() and a duplicate is an ERROR there, not a first-match "+
+					"(A2-086-disburse-loan3-dupchannel); a vector carrying a duplicate is asserting "+
+					"an observation the oracle would have refused", m.SlotCode)
+			}
+			seenSlot[m.SlotCode] = true
+			if m.GLAccountID <= 0 {
+				add("request.product_mappings[%d].gl_account_id is %d", i, m.GLAccountID)
+				continue
+			}
+			if !inChart[m.GLAccountID] {
+				add("request.product_mappings[%d] resolves slot %d to GL account %d, which is NOT in "+
+					"request.accounts. A mis-keying port that lands on that row would then fail as a "+
+					"HARNESS ERROR rather than as a graded cell difference, and a defect that shows "+
+					"up as a crash is a defect the comparator did not catch",
+					i, m.SlotCode, m.GLAccountID)
+			}
+		}
+	}
+
 	// --- the opening-balance inputs, default-deny in both directions [T294] --
 	//
 	// These three fields exist so that a refusal whose precondition lives in
@@ -873,7 +981,13 @@ func Admit(v *Vector, opts Options) []string {
 		if !l.Side.Valid() {
 			add("request.legs[%d].entry_side %q is neither DEBIT nor CREDIT", i, l.Side)
 		}
-		if !chart[l.AccountID] {
+		// AN ACCOUNTING-PATH LEG NAMES NO ACCOUNT AND THAT IS THE POINT, so the
+		// chart rule below binds only on a leg that names one. The equivalent
+		// guarantee for a slot leg is stronger, not weaker: the per-leg block
+		// above requires EVERY mapping row's gl_account_id to be in the chart,
+		// so whichever row a port keys to, the account it lands on resolves.
+		// [T391]
+		if l.SlotCode == 0 && !chart[l.AccountID] {
 			add("request.legs[%d] points at GL account %d and request.accounts does not carry it. The "+
 				"chart is DATA the vector transcribes (DEC-2 §4.5) and a leg the chart cannot resolve "+
 				"would make the implementation guess", i, l.AccountID)

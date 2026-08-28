@@ -195,18 +195,26 @@ func TestUnpostedSlotAccountActivityIsMeasuredFromTheStore(t *testing.T) {
 	vs, opts := loadCommitted(t)
 	rows := notGradedRows(opts.Registry, vs)
 
+	// THE ROW MOVED, THE GATE DID NOT. [T391] The unposted slots used to hang
+	// off `ledger.accrual.entry`; that capability entered the graded domain when
+	// LDG-ACC-01/02/03 were promoted, and this renderer prints SLOT lines only
+	// for rows marked in_graded_domain false — so leaving them there would have
+	// SILENTLY STOPPED PRINTING the very measurement F-4 exists to force. They
+	// now hang off `ledger.slot.resolution`, which is still false and is where
+	// an unposted slot belongs on the merits. Every assertion below is unchanged.
+	const slotRow = "ledger.slot.resolution"
 	var accrual *NotGradedCapability
 	for i := range rows {
-		if rows[i].Name == "ledger.accrual.entry" {
+		if rows[i].Name == slotRow {
 			accrual = &rows[i]
 		}
 	}
 	if accrual == nil {
-		t.Fatal("ledger.accrual.entry is not a not-graded row; this test is vacuous")
+		t.Fatalf("%s is not a not-graded row; this test is vacuous", slotRow)
 	}
 	if len(accrual.Slots) == 0 {
-		t.Fatal("ledger.accrual.entry declares no unposted_slots, so the account-activity " +
-			"measurement runs over nothing (P-35)")
+		t.Fatalf("%s declares no unposted_slots, so the account-activity "+
+			"measurement runs over nothing (P-35)", slotRow)
 	}
 
 	// THE SLOT NAMES ARE DECODED, NOT TRANSCRIBED. If somebody changes a
@@ -277,10 +285,13 @@ func TestSlotAccountActivityTracksTheStore(t *testing.T) {
 
 	// gl 18 has no promoted leg today. Re-point it at gl 4 (LOAN_PORTFOLIO,
 	// carried by LDG-02 and LDG-03) and the same code must now report it busy.
+	// `ledger.slot.resolution` and not `ledger.accrual.entry`: the slots moved
+	// there when the accrual capability entered the graded domain. [T391]
+	const slotRow = "ledger.slot.resolution"
 	moved := *opts.Registry
 	moved.Capabilities = nil
 	for _, c := range opts.Registry.Capabilities {
-		if c.Name == "ledger.accrual.entry" {
+		if c.Name == slotRow {
 			slots := append([]UnpostedSlot{}, c.UnpostedSlots...)
 			for i := range slots {
 				if slots[i].GLAccountID == 18 {
@@ -294,7 +305,7 @@ func TestSlotAccountActivityTracksTheStore(t *testing.T) {
 
 	rows := notGradedRows(&moved, vs)
 	for _, r := range rows {
-		if r.Name != "ledger.accrual.entry" {
+		if r.Name != slotRow {
 			continue
 		}
 		for _, s := range r.Slots {

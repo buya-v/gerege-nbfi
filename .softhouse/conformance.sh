@@ -678,9 +678,9 @@ EXEMPTION_PIN_LEDGER_DECLARED=0
 #   FU-T307-1 rather than pinned here, because adding a tenth census pin is a
 #   change to this file's gate structure and not T307's to make in the same diff
 #   that moves two of the existing nine.
-EXEMPTION_PIN_LEDGER_PARITY=7
+EXEMPTION_PIN_LEDGER_PARITY=10
 EXEMPTION_PIN_LEDGER_REFUSAL=6
-EXEMPTION_PIN_LEDGER_MONEYCELLS=39
+EXEMPTION_PIN_LEDGER_MONEYCELLS=63
 
 # Scratch paths are script-global, not function-local: an EXIT trap fires after the
 # function that created them has returned, so a `local` would be out of scope by
@@ -4473,7 +4473,7 @@ gate_exemption_census() {
 #     promote a vector no implementation could fail independently. T307 added the
 #     fourth cell as a SELECTOR (expect.refusal.arg_echo), which is what makes
 #     A2-02's bytes gradeable without pinning anything to a calendar.
-EXEMPTION_PIN_LEDGER_WRONGIMPLS=14
+EXEMPTION_PIN_LEDGER_WRONGIMPLS=15
 
 gate_wrong_ledger_impls_die() {
   local bin="$1" probe="$2"
