@@ -6164,11 +6164,11 @@
         "T390",
         "T409"
       ],
-      "status": "in_progress",
+      "status": "needs_retry",
       "files_hint": [
         ".softhouse/capture/t417-scheduler-attribution/"
       ],
-      "note": "dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.",
+      "note": "worker killed mid-flight by fire 20260828-140005 -- OBSERVED: this wrapper stopped its own driver and is reconciling its own dispatches. -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). Its recorded branch softhouse/T417-scheduler-attribution does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED, and all three signals came back EMPTY: no commit subject on main begins `T417:` or `Merge T417:`, no handoff `T417.md` is tracked on main, and no live ref carries the id. This is the unstarted world, and saying so is now a measurement rather than the default reading of an absence. (Landed index: 1606 of 2404 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 330 handoff .md path(s) tracked on main. Ref store: loose refs walked from /Users/buv/gerege-nbfi/.git/refs/heads and packed entries parsed from /Users/buv/gerege-nbfi/.git/packed-refs.) Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by fire 20260828-140005 in `wrapper` mode.  [prior note: dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.]",
       "branch": "softhouse/T417-scheduler-attribution"
     },
     {
@@ -6197,11 +6197,11 @@
       "model": "opus",
       "target": "code",
       "dependencies": [],
-      "status": "in_progress",
+      "status": "needs_retry",
       "files_hint": [
         ".softhouse/capture/t419/"
       ],
-      "note": "dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.",
+      "note": "worker killed mid-flight by fire 20260828-140005 -- OBSERVED: this wrapper stopped its own driver and is reconciling its own dispatches. -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). Its recorded branch softhouse/T419-grep-bre-portability does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED, and all three signals came back EMPTY: no commit subject on main begins `T419:` or `Merge T419:`, no handoff `T419.md` is tracked on main, and no live ref carries the id. This is the unstarted world, and saying so is now a measurement rather than the default reading of an absence. (Landed index: 1606 of 2404 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 330 handoff .md path(s) tracked on main. Ref store: loose refs walked from /Users/buv/gerege-nbfi/.git/refs/heads and packed entries parsed from /Users/buv/gerege-nbfi/.git/packed-refs.) Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by fire 20260828-140005 in `wrapper` mode.  [prior note: dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.]",
       "branch": "softhouse/T419-grep-bre-portability"
     },
     {
@@ -6248,12 +6248,12 @@
       "dependencies": [
         "T416"
       ],
-      "status": "in_progress",
+      "status": "needs_retry",
       "branch": "softhouse/T422-review-t416",
       "files_hint": [
         ".softhouse/reviews/t422-review-t416/"
       ],
-      "note": "FILED AND DISPATCHED BY THE DRIVER, iter4; record pushed BEFORE git worktree add."
+      "note": "worker killed mid-flight by fire 20260828-140005 -- OBSERVED: this wrapper stopped its own driver and is reconciling its own dispatches. -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). Its recorded branch softhouse/T422-review-t416 does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED, and all three signals came back EMPTY: no commit subject on main begins `T422:` or `Merge T422:`, no handoff `T422.md` is tracked on main, and no live ref carries the id. This is the unstarted world, and saying so is now a measurement rather than the default reading of an absence. (Landed index: 1606 of 2404 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 330 handoff .md path(s) tracked on main. Ref store: loose refs walked from /Users/buv/gerege-nbfi/.git/refs/heads and packed entries parsed from /Users/buv/gerege-nbfi/.git/packed-refs.) Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by fire 20260828-140005 in `wrapper` mode.  [prior note: FILED AND DISPATCHED BY THE DRIVER, iter4; record pushed BEFORE git worktree add.]"
     },
     {
       "id": "T423",
@@ -6265,11 +6265,11 @@
       "dependencies": [
         "T393"
       ],
-      "status": "in_progress",
+      "status": "needs_retry",
       "files_hint": [
         ".softhouse/reviews/t423-review-t393/"
       ],
-      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "note": "worker killed mid-flight by fire 20260828-140005 -- OBSERVED: this wrapper stopped its own driver and is reconciling its own dispatches. -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). Its branch softhouse/T423-review-t393 has 1 commit(s) ahead of main, head a12a9a836. Uncommitted WIP left in its worktree was swept onto softhouse/rescued-agent-a75cccdd02b9587f5-20260828-140005 by this fire's worktree sweep. Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by fire 20260828-140005 in `wrapper` mode.  [prior note: dispatched iter4; record pushed BEFORE git worktree add.]",
       "branch": "softhouse/T423-review-t393"
     },
     {
@@ -6283,11 +6283,11 @@
         "T402",
         "T408"
       ],
-      "status": "in_progress",
+      "status": "needs_retry",
       "files_hint": [
         ".softhouse/capture/t424/"
       ],
-      "note": "dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.",
+      "note": "worker killed mid-flight by fire 20260828-140005 -- OBSERVED: this wrapper stopped its own driver and is reconciling its own dispatches. -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). Its recorded branch softhouse/T424-t408-conditions does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED, and all three signals came back EMPTY: no commit subject on main begins `T424:` or `Merge T424:`, no handoff `T424.md` is tracked on main, and no live ref carries the id. This is the unstarted world, and saying so is now a measurement rather than the default reading of an absence. (Landed index: 1606 of 2404 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 330 handoff .md path(s) tracked on main. Ref store: loose refs walked from /Users/buv/gerege-nbfi/.git/refs/heads and packed entries parsed from /Users/buv/gerege-nbfi/.git/packed-refs.) Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by fire 20260828-140005 in `wrapper` mode.  [prior note: dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.]",
       "branch": "softhouse/T424-t408-conditions"
     },
     {
@@ -6348,12 +6348,12 @@
       "dependencies": [
         "T421"
       ],
-      "status": "in_progress",
+      "status": "needs_retry",
       "branch": "softhouse/T428-review-t421",
       "files_hint": [
         ".softhouse/reviews/t428-review-t421/"
       ],
-      "note": "FILED AND DISPATCHED BY THE DRIVER, iter4; record pushed BEFORE git worktree add."
+      "note": "worker killed mid-flight by fire 20260828-140005 -- OBSERVED: this wrapper stopped its own driver and is reconciling its own dispatches. -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). Its branch softhouse/T428-review-t421 has 1 commit(s) ahead of main, head 8a6706c60. Uncommitted WIP left in its worktree was swept onto softhouse/rescued-agent-aba498d1a28770847-20260828-140005 by this fire's worktree sweep. Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by fire 20260828-140005 in `wrapper` mode.  [prior note: FILED AND DISPATCHED BY THE DRIVER, iter4; record pushed BEFORE git worktree add.]"
     },
     {
       "id": "T429",
@@ -6365,11 +6365,11 @@
       "dependencies": [
         "T409"
       ],
-      "status": "in_progress",
+      "status": "needs_retry",
       "files_hint": [
         ".softhouse/capture/t429-oracle-derived-columns/"
       ],
-      "note": "dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.",
+      "note": "worker killed mid-flight by fire 20260828-140005 -- OBSERVED: this wrapper stopped its own driver and is reconciling its own dispatches. -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). Its recorded branch softhouse/T429-oracle-derived-columns does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED, and all three signals came back EMPTY: no commit subject on main begins `T429:` or `Merge T429:`, no handoff `T429.md` is tracked on main, and no live ref carries the id. This is the unstarted world, and saying so is now a measurement rather than the default reading of an absence. (Landed index: 1606 of 2404 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 330 handoff .md path(s) tracked on main. Ref store: loose refs walked from /Users/buv/gerege-nbfi/.git/refs/heads and packed entries parsed from /Users/buv/gerege-nbfi/.git/packed-refs.) Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by fire 20260828-140005 in `wrapper` mode.  [prior note: dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.]",
       "branch": "softhouse/T429-oracle-derived-columns"
     },
     {
@@ -6406,7 +6406,7 @@
         ".softhouse/conformance.sh",
         ".softhouse/capture/t431-t407-conditions/"
       ],
-      "note": "dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.",
+      "note": "[T330-REFUSED-DEMOTION] This task was NOT demoted by fire 20260828-140005 in `wrapper` mode, and its status is DELIBERATELY LEFT `in_progress`. REFUSE to demote -- work bearing this task's id is ON MAIN; `needs_retry` would OFFER completed work for re-dispatch -- !! Its branch softhouse/T431-t407-conditions exists at 280817a1f and IS MERGED INTO main -- every commit on it is reachable from main. The work LANDED. Do NOT read this as an unstarted task and do NOT re-dispatch it without reading that history first; `needs_retry` here means 'somebody must adjudicate', not 'do it again'.  WHAT A HUMAN MUST DO: read the history named above and set this task to its true terminal status by hand. This reconciler will not promote it: it established that work bearing this id is reachable, NOT that this dispatch was completed or reviewed. It will also not demote it: `needs_retry` OFFERS work for re-dispatch, and that is the FU-RECONCILE-1 damage (T324, 2026-08-28: 14 files / 2,338 insertions were up for redoing). NOTE: `in_progress` here does NOT mean a worker is alive -- it is not, and this line is a placeholder for an adjudication, not a claim of liveness.  [prior note: dispatched iter4 wave 2; record pushed BEFORE git worktree add. conformance.sh grant this wave: T431 ONLY (C-T407-1 is MAJOR). T413/T418/T425 stay queued behind it.]",
       "branch": "softhouse/T431-t407-conditions"
     }
   ],
