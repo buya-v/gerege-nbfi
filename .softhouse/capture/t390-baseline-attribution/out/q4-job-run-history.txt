@@ -1,0 +1,184 @@
+-- T390 q4-job-run-history -- 2026-08-28T17:04:42Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: 77d3b827d2ba302d95f10c809909cf3a070f05cc78139a80fa26f74eea862213
+--
+  id   | job_id |                             display_name                              | version |       start_time        |        end_time         | status  |                                                      error_message                                                       
+-------+--------+-----------------------------------------------------------------------+---------+-------------------------+-------------------------+---------+--------------------------------------------------------------------------------------------------------------------------
+ 12627 |     27 | Execute Email                                                         |    1007 | 2026-08-28 15:00:00.007 | 2026-08-28 15:00:00.026 | success | 
+ 12628 |     23 | Execute Report Mailing Jobs                                           |     672 | 2026-08-28 15:00:00.008 | 2026-08-28 15:00:00.027 | success | 
+ 12629 |     28 | Update Email Outbound with campaign message                           |     672 | 2026-08-28 15:00:00.008 | 2026-08-28 15:00:00.031 | success | 
+ 12630 |     36 | Send Asynchronous Events                                              |   10074 | 2026-08-28 15:00:00.008 | 2026-08-28 15:00:00.031 | success | 
+ 12631 |     36 | Send Asynchronous Events                                              |   10075 | 2026-08-28 15:01:00.01  | 2026-08-28 15:01:00.024 | success | 
+ 12632 |     36 | Send Asynchronous Events                                              |   10076 | 2026-08-28 15:02:00.01  | 2026-08-28 15:02:00.019 | success | 
+ 12633 |     36 | Send Asynchronous Events                                              |   10077 | 2026-08-28 15:03:00.011 | 2026-08-28 15:03:00.023 | success | 
+ 12634 |     36 | Send Asynchronous Events                                              |   10078 | 2026-08-28 15:04:00.003 | 2026-08-28 15:04:00.017 | success | 
+ 12635 |     36 | Send Asynchronous Events                                              |   10079 | 2026-08-28 15:05:00.003 | 2026-08-28 15:05:00.013 | success | 
+ 12636 |     36 | Send Asynchronous Events                                              |   10080 | 2026-08-28 15:06:00.001 | 2026-08-28 15:06:00.022 | success | 
+ 12637 |     36 | Send Asynchronous Events                                              |   10081 | 2026-08-28 15:07:00.002 | 2026-08-28 15:07:00.025 | success | 
+ 12638 |     36 | Send Asynchronous Events                                              |   10082 | 2026-08-28 15:08:00.005 | 2026-08-28 15:08:00.017 | success | 
+ 12639 |     36 | Send Asynchronous Events                                              |   10083 | 2026-08-28 15:09:00.01  | 2026-08-28 15:09:00.02  | success | 
+ 12640 |     27 | Execute Email                                                         |    1008 | 2026-08-28 15:10:00.01  | 2026-08-28 15:10:00.025 | success | 
+ 12641 |     36 | Send Asynchronous Events                                              |   10084 | 2026-08-28 15:10:00.01  | 2026-08-28 15:10:00.027 | success | 
+ 12642 |     36 | Send Asynchronous Events                                              |   10085 | 2026-08-28 15:11:00.005 | 2026-08-28 15:11:00.017 | success | 
+ 12643 |     36 | Send Asynchronous Events                                              |   10086 | 2026-08-28 15:12:00.001 | 2026-08-28 15:12:00.022 | success | 
+ 12644 |     36 | Send Asynchronous Events                                              |   10087 | 2026-08-28 15:13:00.003 | 2026-08-28 15:13:00.017 | success | 
+ 12645 |     36 | Send Asynchronous Events                                              |   10088 | 2026-08-28 15:14:00     | 2026-08-28 15:14:00.022 | success | 
+ 12646 |     36 | Send Asynchronous Events                                              |   10089 | 2026-08-28 15:15:00.001 | 2026-08-28 15:15:00.036 | success | 
+ 12647 |     23 | Execute Report Mailing Jobs                                           |     673 | 2026-08-28 15:15:00.001 | 2026-08-28 15:15:00.039 | success | 
+ 12648 |     28 | Update Email Outbound with campaign message                           |     673 | 2026-08-28 15:15:00.001 | 2026-08-28 15:15:00.039 | success | 
+ 12649 |     36 | Send Asynchronous Events                                              |   10090 | 2026-08-28 15:16:00     | 2026-08-28 15:16:00.032 | success | 
+ 12650 |     36 | Send Asynchronous Events                                              |   10091 | 2026-08-28 15:17:00.002 | 2026-08-28 15:17:00.03  | success | 
+ 12651 |     36 | Send Asynchronous Events                                              |   10092 | 2026-08-28 15:18:00.001 | 2026-08-28 15:18:00.027 | success | 
+ 12652 |     36 | Send Asynchronous Events                                              |   10093 | 2026-08-28 15:19:00.007 | 2026-08-28 15:19:00.029 | success | 
+ 12653 |     27 | Execute Email                                                         |    1009 | 2026-08-28 15:20:00.001 | 2026-08-28 15:20:00.031 | success | 
+ 12654 |     36 | Send Asynchronous Events                                              |   10094 | 2026-08-28 15:20:00.001 | 2026-08-28 15:20:00.031 | success | 
+ 12655 |     36 | Send Asynchronous Events                                              |   10095 | 2026-08-28 15:21:00.01  | 2026-08-28 15:21:00.038 | success | 
+ 12656 |     36 | Send Asynchronous Events                                              |   10096 | 2026-08-28 15:22:00.002 | 2026-08-28 15:22:00.028 | success | 
+ 12657 |     36 | Send Asynchronous Events                                              |   10097 | 2026-08-28 15:23:00.01  | 2026-08-28 15:23:00.037 | success | 
+ 12658 |     36 | Send Asynchronous Events                                              |   10098 | 2026-08-28 15:24:00.009 | 2026-08-28 15:24:00.036 | success | 
+ 12659 |     36 | Send Asynchronous Events                                              |   10099 | 2026-08-28 15:25:00.01  | 2026-08-28 15:25:00.037 | success | 
+ 12660 |     36 | Send Asynchronous Events                                              |   10100 | 2026-08-28 15:26:00.008 | 2026-08-28 15:26:00.033 | success | 
+ 12661 |     36 | Send Asynchronous Events                                              |   10101 | 2026-08-28 15:27:00.01  | 2026-08-28 15:27:00.031 | success | 
+ 12662 |     36 | Send Asynchronous Events                                              |   10102 | 2026-08-28 15:28:00.003 | 2026-08-28 15:28:00.029 | success | 
+ 12663 |     36 | Send Asynchronous Events                                              |   10103 | 2026-08-28 15:29:00     | 2026-08-28 15:29:00.026 | success | 
+ 12664 |     27 | Execute Email                                                         |    1010 | 2026-08-28 15:30:00.01  | 2026-08-28 15:30:00.037 | success | 
+ 12665 |     36 | Send Asynchronous Events                                              |   10104 | 2026-08-28 15:30:00.01  | 2026-08-28 15:30:00.04  | success | 
+ 12667 |     23 | Execute Report Mailing Jobs                                           |     674 | 2026-08-28 15:30:00.01  | 2026-08-28 15:30:00.041 | success | 
+ 12666 |     28 | Update Email Outbound with campaign message                           |     674 | 2026-08-28 15:30:00.011 | 2026-08-28 15:30:00.041 | success | 
+ 12668 |     36 | Send Asynchronous Events                                              |   10105 | 2026-08-28 15:31:00.008 | 2026-08-28 15:31:00.035 | success | 
+ 12669 |     36 | Send Asynchronous Events                                              |   10106 | 2026-08-28 15:32:00.001 | 2026-08-28 15:32:00.026 | success | 
+ 12670 |     36 | Send Asynchronous Events                                              |   10107 | 2026-08-28 15:33:00.008 | 2026-08-28 15:33:00.027 | success | 
+ 12671 |     36 | Send Asynchronous Events                                              |   10108 | 2026-08-28 15:34:00.002 | 2026-08-28 15:34:00.028 | success | 
+ 12672 |     36 | Send Asynchronous Events                                              |   10109 | 2026-08-28 15:35:00.007 | 2026-08-28 15:35:00.029 | success | 
+ 12673 |     36 | Send Asynchronous Events                                              |   10110 | 2026-08-28 15:36:00.001 | 2026-08-28 15:36:00.028 | success | 
+ 12674 |     36 | Send Asynchronous Events                                              |   10111 | 2026-08-28 15:37:00.008 | 2026-08-28 15:37:00.033 | success | 
+ 12675 |     36 | Send Asynchronous Events                                              |   10112 | 2026-08-28 15:38:00.01  | 2026-08-28 15:38:00.038 | success | 
+ 12676 |     36 | Send Asynchronous Events                                              |   10113 | 2026-08-28 15:39:00.007 | 2026-08-28 15:39:00.021 | success | 
+ 12677 |     36 | Send Asynchronous Events                                              |   10114 | 2026-08-28 15:40:00.001 | 2026-08-28 15:40:00.032 | success | 
+ 12678 |     27 | Execute Email                                                         |    1011 | 2026-08-28 15:40:00.001 | 2026-08-28 15:40:00.034 | success | 
+ 12679 |     36 | Send Asynchronous Events                                              |   10115 | 2026-08-28 15:41:00.001 | 2026-08-28 15:41:00.029 | success | 
+ 12680 |     36 | Send Asynchronous Events                                              |   10116 | 2026-08-28 15:42:00.004 | 2026-08-28 15:42:00.031 | success | 
+ 12681 |     36 | Send Asynchronous Events                                              |   10117 | 2026-08-28 15:43:00.005 | 2026-08-28 15:43:00.032 | success | 
+ 12682 |     36 | Send Asynchronous Events                                              |   10118 | 2026-08-28 15:44:00.004 | 2026-08-28 15:44:00.032 | success | 
+ 12683 |     23 | Execute Report Mailing Jobs                                           |     675 | 2026-08-28 15:45:00.007 | 2026-08-28 15:45:00.041 | success | 
+ 12684 |     28 | Update Email Outbound with campaign message                           |     675 | 2026-08-28 15:45:00.007 | 2026-08-28 15:45:00.043 | success | 
+ 12685 |     36 | Send Asynchronous Events                                              |   10119 | 2026-08-28 15:45:00.007 | 2026-08-28 15:45:00.044 | success | 
+ 12686 |     36 | Send Asynchronous Events                                              |   10120 | 2026-08-28 15:46:00.001 | 2026-08-28 15:46:00.025 | success | 
+ 12687 |     36 | Send Asynchronous Events                                              |   10121 | 2026-08-28 15:47:00.005 | 2026-08-28 15:47:00.033 | success | 
+ 12688 |     36 | Send Asynchronous Events                                              |   10122 | 2026-08-28 15:48:00.001 | 2026-08-28 15:48:00.028 | success | 
+ 12689 |     36 | Send Asynchronous Events                                              |   10123 | 2026-08-28 15:49:00.004 | 2026-08-28 15:49:00.03  | success | 
+ 12690 |     27 | Execute Email                                                         |    1012 | 2026-08-28 15:50:00.001 | 2026-08-28 15:50:00.03  | success | 
+ 12691 |     36 | Send Asynchronous Events                                              |   10124 | 2026-08-28 15:50:00.001 | 2026-08-28 15:50:00.03  | success | 
+ 12692 |     36 | Send Asynchronous Events                                              |   10125 | 2026-08-28 15:51:00.005 | 2026-08-28 15:51:00.032 | success | 
+ 12693 |     36 | Send Asynchronous Events                                              |   10126 | 2026-08-28 15:52:00     | 2026-08-28 15:52:00.027 | success | 
+ 12694 |     36 | Send Asynchronous Events                                              |   10127 | 2026-08-28 15:53:00.001 | 2026-08-28 15:53:00.028 | success | 
+ 12695 |     36 | Send Asynchronous Events                                              |   10128 | 2026-08-28 15:54:00.003 | 2026-08-28 15:54:00.029 | success | 
+ 12696 |     36 | Send Asynchronous Events                                              |   10129 | 2026-08-28 15:55:00.001 | 2026-08-28 15:55:00.026 | success | 
+ 12697 |     36 | Send Asynchronous Events                                              |   10130 | 2026-08-28 15:56:00.003 | 2026-08-28 15:56:00.03  | success | 
+ 12698 |     36 | Send Asynchronous Events                                              |   10131 | 2026-08-28 15:57:00.082 | 2026-08-28 15:57:00.108 | success | 
+ 12699 |     36 | Send Asynchronous Events                                              |   10132 | 2026-08-28 15:58:00.005 | 2026-08-28 15:58:00.033 | success | 
+ 12700 |     36 | Send Asynchronous Events                                              |   10133 | 2026-08-28 15:59:00.001 | 2026-08-28 15:59:00.028 | success | 
+ 12704 |     13 | Update Non Performing Assets                                          |       8 | 2026-08-28 16:00:00.005 | 2026-08-28 16:00:00.062 | success | 
+ 12701 |     12 | Apply penalty to overdue loans                                        |       8 | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.059 | success | 
+ 12703 |     23 | Execute Report Mailing Jobs                                           |     676 | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.061 | success | 
+ 12705 |     10 | Execute Standing Instruction                                          |       8 | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.062 | success | 
+ 12706 |     20 | Post Dividends For Shares                                             |       8 | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.063 | success | 
+ 12707 |     19 | Generate Loan Loss Provisioning                                       |       8 | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.063 | success | 
+ 12708 |     27 | Execute Email                                                         |    1013 | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.065 | success | 
+ 12702 |     36 | Send Asynchronous Events                                              |   10134 | 2026-08-28 16:00:00.007 | 2026-08-28 16:00:00.059 | success | 
+ 12709 |      6 | Post Interest For Savings                                             |       8 | 2026-08-28 16:00:00.007 | 2026-08-28 16:00:00.068 | success | 
+ 12710 |     15 | Update Deposit Accounts Maturity details                              |       8 | 2026-08-28 16:00:00.062 | 2026-08-28 16:00:00.074 | success | 
+ 12711 |     28 | Update Email Outbound with campaign message                           |     676 | 2026-08-28 16:00:00.063 | 2026-08-28 16:00:00.075 | success | 
+ 12712 |     21 | Update Savings Dormant Accounts                                       |       8 | 2026-08-28 16:00:00.069 | 2026-08-28 16:00:00.079 | success | 
+ 12713 |     22 | Add Accrual Transactions For Loans With Income Posted As Transactions |       8 | 2026-08-28 16:01:00.002 | 2026-08-28 16:01:00.03  | success | 
+ 12716 |     31 | Execute All Dirty Jobs                                                |       8 | 2026-08-28 16:01:00.002 | 2026-08-28 16:01:00.033 | success | 
+ 12714 |     36 | Send Asynchronous Events                                              |   10135 | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.031 | success | 
+ 12715 |      7 | Transfer Fee For Loans From Savings                                   |       8 | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.032 | success | 
+ 12717 |      2 | Update Loan Arrears Ageing                                            |       8 | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.033 | success | 
+ 12718 |     30 | Update Trial Balance Details                                          |       8 | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.034 | failed  | exitCode=FAILED;exitDescription=java.lang.ClassCastException: class java.time.OffsetDateTime cannot be cast to class jav
+ 12720 |      9 | Update Accounting Running Balances                                    |       8 | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.048 | success | 
+ 12719 |     17 | Recalculate Interest For Loans                                        |       9 | 2026-08-28 16:01:00.032 | 2026-08-28 16:01:00.048 | success | 
+ 12721 |     11 | Add Accrual Transactions                                              |       9 | 2026-08-28 16:01:00.049 | 2026-08-28 16:01:00.12  | success | 
+ 12722 |     14 | Transfer Interest To Savings                                          |       9 | 2026-08-28 16:02:00.002 | 2026-08-28 16:02:00.031 | success | 
+ 12723 |     36 | Send Asynchronous Events                                              |   10136 | 2026-08-28 16:02:00.002 | 2026-08-28 16:02:00.032 | success | 
+ 12724 |     16 | Add Periodic Accrual Transactions                                     |       9 | 2026-08-28 16:02:00.002 | 2026-08-28 16:02:00.035 | success | 
+ 12725 |     36 | Send Asynchronous Events                                              |   10137 | 2026-08-28 16:03:00.011 | 2026-08-28 16:03:00.039 | success | 
+ 12726 |     36 | Send Asynchronous Events                                              |   10138 | 2026-08-28 16:04:00.01  | 2026-08-28 16:04:00.032 | success | 
+ 12727 |     36 | Send Asynchronous Events                                              |   10139 | 2026-08-28 16:05:00.011 | 2026-08-28 16:05:00.033 | success | 
+ 12728 |     18 | Generate Mandatory Savings Schedule                                   |       9 | 2026-08-28 16:05:00.011 | 2026-08-28 16:05:00.035 | success | 
+ 12729 |     36 | Send Asynchronous Events                                              |   10140 | 2026-08-28 16:06:00.002 | 2026-08-28 16:06:00.03  | success | 
+ 12730 |     36 | Send Asynchronous Events                                              |   10141 | 2026-08-28 16:07:00.003 | 2026-08-28 16:07:00.032 | success | 
+ 12731 |     36 | Send Asynchronous Events                                              |   10142 | 2026-08-28 16:08:00.006 | 2026-08-28 16:08:00.024 | success | 
+ 12732 |     36 | Send Asynchronous Events                                              |   10143 | 2026-08-28 16:09:00.001 | 2026-08-28 16:09:00.021 | success | 
+ 12734 |     27 | Execute Email                                                         |    1014 | 2026-08-28 16:10:00.001 | 2026-08-28 16:10:00.033 | success | 
+ 12733 |     36 | Send Asynchronous Events                                              |   10144 | 2026-08-28 16:10:00.002 | 2026-08-28 16:10:00.033 | success | 
+ 12735 |     36 | Send Asynchronous Events                                              |   10145 | 2026-08-28 16:11:00.011 | 2026-08-28 16:11:00.032 | success | 
+ 12736 |     36 | Send Asynchronous Events                                              |   10146 | 2026-08-28 16:12:00.002 | 2026-08-28 16:12:00.032 | success | 
+ 12737 |     36 | Send Asynchronous Events                                              |   10147 | 2026-08-28 16:13:00.023 | 2026-08-28 16:13:00.051 | success | 
+ 12738 |     36 | Send Asynchronous Events                                              |   10148 | 2026-08-28 16:14:00.005 | 2026-08-28 16:14:00.031 | success | 
+ 12739 |     36 | Send Asynchronous Events                                              |   10149 | 2026-08-28 16:15:00.001 | 2026-08-28 16:15:00.036 | success | 
+ 12741 |     23 | Execute Report Mailing Jobs                                           |     677 | 2026-08-28 16:15:00.001 | 2026-08-28 16:15:00.037 | success | 
+ 12740 |     28 | Update Email Outbound with campaign message                           |     677 | 2026-08-28 16:15:00.002 | 2026-08-28 16:15:00.036 | success | 
+ 12742 |     36 | Send Asynchronous Events                                              |   10150 | 2026-08-28 16:16:00.003 | 2026-08-28 16:16:00.029 | success | 
+ 12743 |     36 | Send Asynchronous Events                                              |   10151 | 2026-08-28 16:17:00.003 | 2026-08-28 16:17:00.03  | success | 
+ 12744 |     36 | Send Asynchronous Events                                              |   10152 | 2026-08-28 16:18:00.003 | 2026-08-28 16:18:00.03  | success | 
+ 12745 |     36 | Send Asynchronous Events                                              |   10153 | 2026-08-28 16:19:00.01  | 2026-08-28 16:19:00.03  | success | 
+ 12746 |     27 | Execute Email                                                         |    1015 | 2026-08-28 16:20:00.002 | 2026-08-28 16:20:00.03  | success | 
+ 12747 |     36 | Send Asynchronous Events                                              |   10154 | 2026-08-28 16:20:00.002 | 2026-08-28 16:20:00.031 | success | 
+ 12748 |     36 | Send Asynchronous Events                                              |   10155 | 2026-08-28 16:21:00.005 | 2026-08-28 16:21:00.03  | success | 
+ 12749 |     36 | Send Asynchronous Events                                              |   10156 | 2026-08-28 16:22:00.005 | 2026-08-28 16:22:00.034 | success | 
+ 12750 |     36 | Send Asynchronous Events                                              |   10157 | 2026-08-28 16:23:00.006 | 2026-08-28 16:23:00.031 | success | 
+ 12751 |     36 | Send Asynchronous Events                                              |   10158 | 2026-08-28 16:24:00.004 | 2026-08-28 16:24:00.031 | success | 
+ 12752 |     36 | Send Asynchronous Events                                              |   10159 | 2026-08-28 16:25:00.006 | 2026-08-28 16:25:00.029 | success | 
+ 12753 |     36 | Send Asynchronous Events                                              |   10160 | 2026-08-28 16:26:00.008 | 2026-08-28 16:26:00.024 | success | 
+ 12754 |     36 | Send Asynchronous Events                                              |   10161 | 2026-08-28 16:27:00.002 | 2026-08-28 16:27:00.027 | success | 
+ 12755 |     36 | Send Asynchronous Events                                              |   10162 | 2026-08-28 16:28:00.001 | 2026-08-28 16:28:00.024 | success | 
+ 12756 |     36 | Send Asynchronous Events                                              |   10163 | 2026-08-28 16:29:00.011 | 2026-08-28 16:29:00.047 | success | 
+ 12757 |     27 | Execute Email                                                         |    1016 | 2026-08-28 16:30:00.002 | 2026-08-28 16:30:00.043 | success | 
+ 12758 |     36 | Send Asynchronous Events                                              |   10164 | 2026-08-28 16:30:00.003 | 2026-08-28 16:30:00.043 | success | 
+ 12759 |     28 | Update Email Outbound with campaign message                           |     678 | 2026-08-28 16:30:00.003 | 2026-08-28 16:30:00.043 | success | 
+ 12760 |     23 | Execute Report Mailing Jobs                                           |     678 | 2026-08-28 16:30:00.003 | 2026-08-28 16:30:00.045 | success | 
+ 12761 |     36 | Send Asynchronous Events                                              |   10165 | 2026-08-28 16:31:00.001 | 2026-08-28 16:31:00.03  | success | 
+ 12762 |     36 | Send Asynchronous Events                                              |   10166 | 2026-08-28 16:32:00.004 | 2026-08-28 16:32:00.031 | success | 
+ 12763 |     36 | Send Asynchronous Events                                              |   10167 | 2026-08-28 16:33:00.002 | 2026-08-28 16:33:00.029 | success | 
+ 12764 |     36 | Send Asynchronous Events                                              |   10168 | 2026-08-28 16:34:00.009 | 2026-08-28 16:34:00.033 | success | 
+ 12765 |     36 | Send Asynchronous Events                                              |   10169 | 2026-08-28 16:35:00.011 | 2026-08-28 16:35:00.039 | success | 
+ 12766 |     36 | Send Asynchronous Events                                              |   10170 | 2026-08-28 16:36:00.007 | 2026-08-28 16:36:00.036 | success | 
+ 12767 |     36 | Send Asynchronous Events                                              |   10171 | 2026-08-28 16:37:00.002 | 2026-08-28 16:37:00.03  | success | 
+ 12768 |     36 | Send Asynchronous Events                                              |   10172 | 2026-08-28 16:38:00.007 | 2026-08-28 16:38:00.031 | success | 
+ 12769 |     36 | Send Asynchronous Events                                              |   10173 | 2026-08-28 16:39:00.002 | 2026-08-28 16:39:00.029 | success | 
+ 12770 |     27 | Execute Email                                                         |    1017 | 2026-08-28 16:40:00.002 | 2026-08-28 16:40:00.031 | success | 
+ 12771 |     36 | Send Asynchronous Events                                              |   10174 | 2026-08-28 16:40:00.002 | 2026-08-28 16:40:00.032 | success | 
+ 12772 |     36 | Send Asynchronous Events                                              |   10175 | 2026-08-28 16:41:00.01  | 2026-08-28 16:41:00.038 | success | 
+ 12773 |     36 | Send Asynchronous Events                                              |   10176 | 2026-08-28 16:42:00.002 | 2026-08-28 16:42:00.03  | success | 
+ 12774 |     36 | Send Asynchronous Events                                              |   10177 | 2026-08-28 16:43:00     | 2026-08-28 16:43:00.029 | success | 
+ 12775 |     36 | Send Asynchronous Events                                              |   10178 | 2026-08-28 16:44:00.001 | 2026-08-28 16:44:00.028 | success | 
+ 12776 |     36 | Send Asynchronous Events                                              |   10179 | 2026-08-28 16:45:00.002 | 2026-08-28 16:45:00.032 | success | 
+ 12777 |     28 | Update Email Outbound with campaign message                           |     679 | 2026-08-28 16:45:00.002 | 2026-08-28 16:45:00.034 | success | 
+ 12778 |     23 | Execute Report Mailing Jobs                                           |     679 | 2026-08-28 16:45:00.002 | 2026-08-28 16:45:00.036 | success | 
+ 12779 |     36 | Send Asynchronous Events                                              |   10180 | 2026-08-28 16:46:00.003 | 2026-08-28 16:46:00.03  | success | 
+ 12780 |     36 | Send Asynchronous Events                                              |   10181 | 2026-08-28 16:47:00.002 | 2026-08-28 16:47:00.026 | success | 
+ 12781 |     36 | Send Asynchronous Events                                              |   10182 | 2026-08-28 16:48:00     | 2026-08-28 16:48:00.022 | success | 
+ 12782 |     36 | Send Asynchronous Events                                              |   10183 | 2026-08-28 16:49:00.001 | 2026-08-28 16:49:00.028 | success | 
+ 12783 |     36 | Send Asynchronous Events                                              |   10184 | 2026-08-28 16:50:00     | 2026-08-28 16:50:00.032 | success | 
+ 12784 |     27 | Execute Email                                                         |    1018 | 2026-08-28 16:50:00     | 2026-08-28 16:50:00.034 | success | 
+ 12785 |     36 | Send Asynchronous Events                                              |   10185 | 2026-08-28 16:51:00.008 | 2026-08-28 16:51:00.035 | success | 
+ 12786 |     36 | Send Asynchronous Events                                              |   10186 | 2026-08-28 16:52:00.001 | 2026-08-28 16:52:00.027 | success | 
+ 12787 |     36 | Send Asynchronous Events                                              |   10187 | 2026-08-28 16:53:00.003 | 2026-08-28 16:53:00.029 | success | 
+ 12788 |     36 | Send Asynchronous Events                                              |   10188 | 2026-08-28 16:54:00.006 | 2026-08-28 16:54:00.034 | success | 
+ 12789 |     36 | Send Asynchronous Events                                              |   10189 | 2026-08-28 16:55:00.001 | 2026-08-28 16:55:00.024 | success | 
+ 12790 |     36 | Send Asynchronous Events                                              |   10190 | 2026-08-28 16:56:00.004 | 2026-08-28 16:56:00.033 | success | 
+ 12791 |     36 | Send Asynchronous Events                                              |   10191 | 2026-08-28 16:57:00.001 | 2026-08-28 16:57:00.026 | success | 
+ 12792 |     36 | Send Asynchronous Events                                              |   10192 | 2026-08-28 16:58:00.002 | 2026-08-28 16:58:00.031 | success | 
+ 12793 |     36 | Send Asynchronous Events                                              |   10193 | 2026-08-28 16:59:00.011 | 2026-08-28 16:59:00.029 | success | 
+ 12794 |     27 | Execute Email                                                         |    1019 | 2026-08-28 17:00:00.007 | 2026-08-28 17:00:00.033 | success | 
+ 12795 |     23 | Execute Report Mailing Jobs                                           |     680 | 2026-08-28 17:00:00.007 | 2026-08-28 17:00:00.035 | success | 
+ 12796 |     28 | Update Email Outbound with campaign message                           |     680 | 2026-08-28 17:00:00.007 | 2026-08-28 17:00:00.035 | success | 
+ 12797 |     36 | Send Asynchronous Events                                              |   10194 | 2026-08-28 17:00:00.007 | 2026-08-28 17:00:00.036 | success | 
+ 12798 |     36 | Send Asynchronous Events                                              |   10195 | 2026-08-28 17:01:00.003 | 2026-08-28 17:01:00.03  | success | 
+ 12799 |     36 | Send Asynchronous Events                                              |   10196 | 2026-08-28 17:02:00.004 | 2026-08-28 17:02:00.033 | success | 
+ 12800 |     36 | Send Asynchronous Events                                              |   10197 | 2026-08-28 17:03:00.006 | 2026-08-28 17:03:00.03  | success | 
+ 12801 |     36 | Send Asynchronous Events                                              |   10198 | 2026-08-28 17:04:00.01  | 2026-08-28 17:04:00.039 | success | 
+(175 rows)
+
+-- psql rc=0

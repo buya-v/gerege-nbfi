@@ -1,0 +1,13 @@
+-- T390 q6-business-date-and-schedule -- 2026-08-28T17:05:37Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: 5310c907abe94ecb74274d7d472d0c2dd468dcb8b99ec877381f5cfa0a0b4246
+--
+                         what                         |           a            |            b            |               c               
+------------------------------------------------------+------------------------+-------------------------+-------------------------------
+ loan 8 dates                                         | disbursedon=2026-01-15 | maturedon=2026-07-15    | expected_maturedon=2026-07-15
+ loan 8 schedule periods                              | 6                      | min=2026-02-15          | max=2026-07-15
+ loan 8 periods with duedate <= today's business date | 0                      |                         | 
+ loan 8 accrual transactions so far (type 10)         | 6                      | max txn date=2026-07-15 | 
+(4 rows)
+
+-- psql rc=0

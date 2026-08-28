@@ -1,0 +1,347 @@
+conformance: guard_no_float_in_vectors INSPECTED ZERO FILES under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/.softhouse/vectors.
+conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass.
+conformance: guard_no_float_in_harness INSPECTED 0 PACKAGES / 0 FILES under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus.
+conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass.
+conformance: guard_gofmt INSPECTED ZERO FILES under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus.
+conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass.
+conformance: wire-float round-trip guard — selftest OK, 13 cases (10 drive it RED on a planted
+conformance:   defect, 3 stay GREEN on the clean equivalent; both directions READ)
+conformance: CENSUS wire-float round-trip — inspected 571 documents / 10570 numeric tokens: 548 request bodies (*.json under a req/ dir, plus *.req) across 14 capture rigs / 62 req directories under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/.softhouse/capture, and 23 capture records cited by the vector store (recursive, whole capture tree)
+conformance: CENSUS float-shaped tokens PRESENT 372 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+conformance: CENSUS recorded-request blocks — 23 capture records DERIVED from provenance.capture_ref across 69 *.json in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/.softhouse/vectors; 8 of those records carry a recorded-request block and 15 carry none; 96 blocks (key `inputs` or `request`, any depth, located by parser walk) / 783 numeric tokens GRADED, float-shaped PRESENT 0, ALTERED 0
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-338-je-after-repayment-coverage.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-383-je-after-overpay.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-390-db-ledger-state-a2-15.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/OB-ACCEPT-01-readback-db.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t327-closure-accepting-side/throwaway/out/B1-ACCEPT-06-readback-db.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t327-closure-accepting-side/throwaway/out/B2-ACCEPT-01-readback-db.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t352-a2-next-tranche/out/T352-A09-residue-3dp-readback-cited.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-344-manual-je-unbalanced.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-346-manual-je-nomanual.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t294-openingbalance-refusal/out/OB-01-openingbalance-after-posted-entries.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t287-closure-refusals/out/A2-01-preclosure-on-date.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t287-closure-refusals/out/A1-02-future-boundary-plus1.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t287-closure-refusals/out/A2-02-preclosure-before.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/pathb/t149/out/gerege/T149-TIE-P9-raw.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   READ BUT NOT GRADED: 4374 numeric tokens in cited capture records sit OUTSIDE any recorded-request block; 86 of them are NOT byte-preserved (.softhouse/capture/pathb/t149/out/gerege/T149-TIE-P9-raw.json x59; .softhouse/capture/t352-a2-next-tranche/out/T352-A09-residue-3dp-readback-cited.json x2; .softhouse/capture/tierA-a2/out/A2-338-je-after-repayment-coverage.json x8; .softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json x3; .softhouse/capture/tierA-a2/out/A2-383-je-after-overpay.json x14). These are ORACLE OBSERVATIONS and T186 §7 A4 forbids rewriting, re-emitting or scale-normalising one, so byte-fidelity is not the verdict property for them — the count is printed so the blind spot is STATED, not implied. Example: $.pageItems[0].amount 100000.250000 -> 100000.25
+conformance:   census figure READ: inspected 571 >= 571 tracked by git (floor DERIVED, not pinned)
+conformance: narrow-catch guard — selftest OK, 8 cases (5 drive it RED on a planted
+conformance:   defect, 3 stay GREEN on the clean equivalent; both directions READ)
+conformance: the narrow-catch guard's CENSUS FIGURE IS BELOW ITS DERIVED FLOOR:
+conformance:   census says inspected 0; git tracks 63 file(s) it must open.
+conformance: a census line is not evidence unless its number is read. ERROR, not a pass.
+CENSUS narrow-catch — inspected 0 .java files across 0 directories under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+narrow load-bearing catch sites: 0 total, 0 in FROZEN files (0 files), 0 NEW
+REFUSED — INSPECTED 0 .java FILES across 0 DIRECTORIES under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root.
+A lint that opens no file refuses nothing and reports clean. This is an ERROR, not a pass (P-35).
+ledger-invariants: the guard FAILED ITS OWN SELFTEST (exit 1, 15 cases observed,
+ledger-invariants:   14 drove it RED, 1 drove it GREEN — both are required).
+ledger-invariants: it can no longer be shown to refuse the defect it exists to refuse.
+--- (a) a balance field incremented — I-3 ---
+  -> exit 1
+--- (b) UPDATE acc_gl_journal_entry — I-4 ---
+  -> exit 1
+--- (c) DELETE FROM acc_gl_journal_entry — I-4 ---
+  -> exit 1
+--- (d) a hold mutating a posted balance — I-6 ---
+  -> exit 1
+--- (e) a balance column populated at INSERT — I-3 ---
+  -> exit 1
+--- (f) UPDATE ... SET <balance column> — I-3 ---
+  -> exit 1
+--- (g) an ORM delete of a JournalEntry — I-4 via a builder ---
+  -> exit 1
+--- (h) dynamically built SQL in a mutating Exec — OPAQUE-SQL ---
+  -> exit 1
+--- (i) a package-level balance store — I-3 ---
+  -> exit 1
+--- (j) a violation three directories deep — the walk must reach it ---
+  -> exit 1
+--- (k) the CORRECT forms of every flagged construct — must PASS ---
+  -> exit 0
+--- (l) an empty tree — zero inspected is an ERROR ---
+  -> exit 1
+--- (m) files and packages but zero funcs/assignments/literals — still an ERROR ---
+  -> exit 1
+--- (n) the REAL Go tree at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus — must PASS ---
+  -> exit 1
+      CENSUS ledger-invariants — inspected 0 Go files / 0 packages / 0 funcs (0 hold-named) / 0 assignment or inc-dec statements / 0 write targets / 0 string literals in 0 concatenation groups / 0 calls under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus (recursive, whole Go tree)
+      CENSUS ledger-invariants SQL surface — 0 SQL-shaped literals, of which 0 carry a DML verb (UPPER BOUND: English prose containing "update" satisfies it) and 0 name an actual table; 0 exec-family calls (0 mutating). Findings: 0
+      REFUSED — INSPECTED ZERO Go files under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus.
+      This guard asserts an ABSENCE (no balance write path, no UPDATE/DELETE against
+      acc_gl_journal_entry). An absence is vacuously true over an empty population, so a
+      count of zero is an ERROR, not a pass (P-35).
+      REFUSED — INSPECTED ZERO packages under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus.
+      This guard asserts an ABSENCE (no balance write path, no UPDATE/DELETE against
+      acc_gl_journal_entry). An absence is vacuously true over an empty population, so a
+      count of zero is an ERROR, not a pass (P-35).
+      REFUSED — INSPECTED ZERO function declarations under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus.
+      This guard asserts an ABSENCE (no balance write path, no UPDATE/DELETE against
+      acc_gl_journal_entry). An absence is vacuously true over an empty population, so a
+      count of zero is an ERROR, not a pass (P-35).
+      REFUSED — INSPECTED ZERO assignment or inc-dec statements under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus.
+      This guard asserts an ABSENCE (no balance write path, no UPDATE/DELETE against
+      acc_gl_journal_entry). An absence is vacuously true over an empty population, so a
+      count of zero is an ERROR, not a pass (P-35).
+      REFUSED — INSPECTED ZERO string literals under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus.
+      This guard asserts an ABSENCE (no balance write path, no UPDATE/DELETE against
+      acc_gl_journal_entry). An absence is vacuously true over an empty population, so a
+      count of zero is an ERROR, not a pass (P-35).
+      NIL-COVERAGE — the SQL surface inspected 0 string literals and found ZERO SQL DML statements of any kind under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
+      NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module declares no database driver at all.
+      NIL-COVERAGE — zero hold-named functions exist under this root, so class I6-HOLD-BALANCE inspected an empty population. I-6 is UNPROVEN on this tree.
+      CANNOT-CATCH — the honest limits of this guard, printed on every run, pass or fail:
+        1. DYNAMIC SQL. A statement assembled at run time (fmt.Sprintf, strings.Builder, a query
+           builder's own AST) is not readable as text. The guard converts that blind spot into a
+           REFUSAL for the mutating driver family (class OPAQUE-SQL) — but only where it recognises
+           the call. A mutating call through an interface method it does not name, or through
+           reflection, is invisible.
+        2. INDIRECTION THROUGH A NAME THAT IS NOT A BALANCE. A field called Amount, Total, Net or
+           Position that IS a stored balance is not detected: the surface is the NAME, because
+           without a type checker there is nothing else to key on. Renaming a balance defeats it.
+        3. STORED PROCEDURES, TRIGGERS AND MIGRATIONS. This guard walks Go only. An UPDATE inside a
+           Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+           and the schema is Fineract's, which HAS such objects.
+        4. I-5. "A correction that mutates a leg instead of adding a reversing pair" is only
+           decidable once a leg type and a correction path exist in the Go tree. Neither does. The
+           mechanical half (a write to a committed row, a write to a balance) IS covered; the
+           semantic half is not, and is not claimed.
+        5. SEMANTICS OF DERIVATION. A function that CACHES a balance in a map keyed by account, then
+           returns the cache, is caught only if the cache is named as a balance (class I3-PKG-STATE
+           covers the package-level case). A struct-field cache inside a service object with a
+           non-balance name is not.
+        6. NON-GO CALLERS. Anything that reaches the database without going through this module.
+        7. TWO MEASURED OVER-MATCHES, NAMED SO NOBODY REDISCOVERS THEM AS BUGS. (i) The DML-verb
+           test fires on English prose: on nexus/ at the commit this guard was written, all three
+           DML-classified literals are message text, not SQL — which is why every one is PRINTED
+           with its position and why the NIL-COVERAGE notice keys on the narrower "names a table"
+           count. (ii) The hold-name matcher fires on "...Holds" meaning "the property holds":
+           nexus/internal/apps/ledger/slots_test.go:187 TestPlaceholderDisjointnessHolds is counted
+           as a hold-named function. Neither over-match can produce a FINDING on its own — a finding
+           additionally requires a protected table, a balance column, or a balance write — so both
+           are noise in a count, never a false rejection.
+        8. TESTS ARE INSPECTED, NOT EXEMPTED. A _test.go file that assigns a balance field as a
+           FIXTURE is reported as a violation. That is fail-CLOSED by choice; if a legitimate
+           fixture ever trips it, the fix is a constructor, not an exemption.
+
+--- (o) an unparseable Go file — refused, never skipped ---
+  -> exit 1
+
+ledgerguard selftest: 1 failure(s)
+  FAIL (n) the REAL Go tree at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus — must PASS: expected exit 0, got 1
+ledger-invariants: the CENSUS FIGURE IS BELOW ITS DERIVED FLOOR:
+ledger-invariants:   census says inspected 0 Go file(s); git tracks 63 under nexus/.
+ledger-invariants: a census line is not evidence unless its number is read. ERROR, not a pass.
+CENSUS ledger-invariants — inspected 0 Go files / 0 packages / 0 funcs (0 hold-named) / 0 assignment or inc-dec statements / 0 write targets / 0 string literals in 0 concatenation groups / 0 calls under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus (recursive, whole Go tree)
+CENSUS ledger-invariants SQL surface — 0 SQL-shaped literals, of which 0 carry a DML verb (UPPER BOUND: English prose containing "update" satisfies it) and 0 name an actual table; 0 exec-family calls (0 mutating). Findings: 0
+REFUSED — INSPECTED ZERO Go files under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus.
+This guard asserts an ABSENCE (no balance write path, no UPDATE/DELETE against
+acc_gl_journal_entry). An absence is vacuously true over an empty population, so a
+count of zero is an ERROR, not a pass (P-35).
+REFUSED — INSPECTED ZERO packages under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus.
+This guard asserts an ABSENCE (no balance write path, no UPDATE/DELETE against
+acc_gl_journal_entry). An absence is vacuously true over an empty population, so a
+count of zero is an ERROR, not a pass (P-35).
+REFUSED — INSPECTED ZERO function declarations under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus.
+This guard asserts an ABSENCE (no balance write path, no UPDATE/DELETE against
+acc_gl_journal_entry). An absence is vacuously true over an empty population, so a
+count of zero is an ERROR, not a pass (P-35).
+REFUSED — INSPECTED ZERO assignment or inc-dec statements under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus.
+This guard asserts an ABSENCE (no balance write path, no UPDATE/DELETE against
+acc_gl_journal_entry). An absence is vacuously true over an empty population, so a
+count of zero is an ERROR, not a pass (P-35).
+REFUSED — INSPECTED ZERO string literals under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus.
+This guard asserts an ABSENCE (no balance write path, no UPDATE/DELETE against
+acc_gl_journal_entry). An absence is vacuously true over an empty population, so a
+count of zero is an ERROR, not a pass (P-35).
+NIL-COVERAGE — the SQL surface inspected 0 string literals and found ZERO SQL DML statements of any kind under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
+NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module declares no database driver at all.
+NIL-COVERAGE — zero hold-named functions exist under this root, so class I6-HOLD-BALANCE inspected an empty population. I-6 is UNPROVEN on this tree.
+CANNOT-CATCH — the honest limits of this guard, printed on every run, pass or fail:
+  1. DYNAMIC SQL. A statement assembled at run time (fmt.Sprintf, strings.Builder, a query
+     builder's own AST) is not readable as text. The guard converts that blind spot into a
+     REFUSAL for the mutating driver family (class OPAQUE-SQL) — but only where it recognises
+     the call. A mutating call through an interface method it does not name, or through
+     reflection, is invisible.
+  2. INDIRECTION THROUGH A NAME THAT IS NOT A BALANCE. A field called Amount, Total, Net or
+     Position that IS a stored balance is not detected: the surface is the NAME, because
+     without a type checker there is nothing else to key on. Renaming a balance defeats it.
+  3. STORED PROCEDURES, TRIGGERS AND MIGRATIONS. This guard walks Go only. An UPDATE inside a
+     Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+     and the schema is Fineract's, which HAS such objects.
+  4. I-5. "A correction that mutates a leg instead of adding a reversing pair" is only
+     decidable once a leg type and a correction path exist in the Go tree. Neither does. The
+     mechanical half (a write to a committed row, a write to a balance) IS covered; the
+     semantic half is not, and is not claimed.
+  5. SEMANTICS OF DERIVATION. A function that CACHES a balance in a map keyed by account, then
+     returns the cache, is caught only if the cache is named as a balance (class I3-PKG-STATE
+     covers the package-level case). A struct-field cache inside a service object with a
+     non-balance name is not.
+  6. NON-GO CALLERS. Anything that reaches the database without going through this module.
+  7. TWO MEASURED OVER-MATCHES, NAMED SO NOBODY REDISCOVERS THEM AS BUGS. (i) The DML-verb
+     test fires on English prose: on nexus/ at the commit this guard was written, all three
+     DML-classified literals are message text, not SQL — which is why every one is PRINTED
+     with its position and why the NIL-COVERAGE notice keys on the narrower "names a table"
+     count. (ii) The hold-name matcher fires on "...Holds" meaning "the property holds":
+     nexus/internal/apps/ledger/slots_test.go:187 TestPlaceholderDisjointnessHolds is counted
+     as a hold-named function. Neither over-match can produce a FINDING on its own — a finding
+     additionally requires a protected table, a balance column, or a balance write — so both
+     are noise in a count, never a false rejection.
+  8. TESTS ARE INSPECTED, NOT EXEMPTED. A _test.go file that assigns a balance field as a
+     FIXTURE is reported as a violation. That is fail-CLOSED by choice; if a legitimate
+     fixture ever trips it, the fix is a constructor, not an exemption.
+ledger-invariants: the I-3/I-4 SOURCE GUARD FAILED. DEC-2 §4.4 obliges these invariants
+ledger-invariants: and §4.4.1 records that this guard is the only mechanism that can
+ledger-invariants: enforce them. This is NOT a pass.
+conformance: ledger-invariants LIMITS (CANNOT-CATCH, condensed; the full 33-line block is
+conformance:   the cannotCatch const in .softhouse/guards/ledgerguard/main.go, which its
+conformance:   head prints IN FULL ABOVE since T209 — so this is a redundant restatement):
+conformance:   the detection surface is the NAME, so RENAMING A BALANCE DEFEATS THIS GUARD;
+conformance:   dynamic SQL is caught only through the call set it recognises; triggers,
+conformance:   migrations and stored procedures are not walked at all; I-5's semantic half
+conformance:   and non-Go callers are not covered. A PASS here means 'no violation is visible
+conformance:   to a source-level guard over the Go tree', NOT 'the ledger tree is covered'.
+conformance: CENSUS fail-open instruments — inspected 1399 tracked .sh/.py file(s) under
+conformance:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root (git ls-files, whole repository); frontier 11, pinned at 11
+conformance:   (DERIVED from FAILOPEN_PIN_FILE_LIST by counting it, never typed).
+conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a
+conformance:   directory that is not there and carries on, whatever it prints afterwards. TIER2 =
+conformance:   printing arm only, corpus reachable today. All are pinned by PATH, not by count.
+conformance:   frontier == pinned (all 11 rows, by path).
+conformance: CENSUS host state in the lint corpus — 163 repo-wide search instrument(s)
+conformance:   read from git grep over tracked *.sh/*.py under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root; sites that assign a
+conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
+conformance:   (DERIVED from HOSTSTATE_PIN_TEMP_ASSIGN_LIST by counting it, never typed).
+conformance:   Such a path is host state — shared across worktrees, absent from every commit,
+conformance:   and deleted on reboot — and C1/C6 decide TIER by asking whether a path EXISTS.
+conformance:   census == pinned (all 18 site(s), by path and source line).
+conformance:   PNUMBER-CITATIONS: declared-dangling ids (recorded in the .softhouse/patterns.md errata with their repair) = [131, 261]
+conformance:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=97 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+conformance:   PNUMBER-CITATIONS: sites=11522 definition=98 consistent=600 bare=10713 misdirecting=77 undefined=20 negative-control=14
+conformance:   PNUMBER-CITATIONS: skipped self-output-files=22 self-source-files=2 (stated, not silent -- both contain deliberately drifted text)
+conformance:   PNUMBER-CITATIONS:   directive MISDIRECTING 2
+conformance:   PNUMBER-CITATIONS:   directive UNDEFINED    4
+conformance:   PNUMBER-CITATIONS:   evidence  MISDIRECTING 66
+conformance:   PNUMBER-CITATIONS:   evidence  UNDEFINED    16
+conformance:   PNUMBER-CITATIONS:   orchestrator MISDIRECTING 8
+conformance:   PNUMBER-CITATIONS:   ratified  MISDIRECTING 1
+conformance:   P-number citations: VERDICT PASS (evidence-zone drift is REPORTED, never
+conformance:   fatal, and is corrected FORWARD in the patterns.md errata — never in place).
+conformance:   ACCEPTING-SIDE GAP: accepting opening-balance vector found: LDG-05-openingbalance-accepted-empty-ledger.json
+conformance: CENSUS opening-balance ACCEPTING side — accepting vectors 1,
+conformance:   capabilities-ledger declaration ABSENT.
+conformance:   CLOSED, and the declaration was removed with it.
+conformance:   no tracked disposability attestation — nothing authorises an irreversible
+conformance:   accepting capture in this tree.
+conformance:     INVOKED    .softhouse/guards/check-capture-namespace.sh
+conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+conformance:     INVOKED    .softhouse/guards/check-ledger-invariants.sh
+conformance:     DECLARED   .softhouse/guards/drive-red-ledger-invariants.sh — not a guard: the red drive for ledgerguard (verified)
+conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+conformance:                .softhouse/guards/check-ledger-invariants.sh (verified: it names main.go)
+conformance:     DECLARED   .softhouse/guards/repo-state-attest.sh — run by .softhouse/bin/fire-program.sh (verified: it names repo-state-attest.sh)
+conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+conformance:   (selector: git ls-files with ':(glob)' magic over the TRACKED '*.sh', '*.py'
+conformance:   and '*.go' files at ANY DEPTH under .softhouse/guards, from $REPO_ROOT. NOT closed over
+conformance:   other languages or committed binaries — this is a count over that search.)
+conformance:   (INVOKED means the member's REPO-RELATIVE PATH appears on a NON-COMMENT line
+conformance:   of this file — NOT its bare basename. [T375, closing T364 F-T364-1: a
+conformance:   basename is shared, so a mention of ANOTHER file absolved this one, and an
+conformance:   unwired checker named 'main.go' read INVOKED with the bar GREEN.] It is
+conformance:   still a NAMING test and still NOT proof of execution: two of the three
+conformance:   members that read INVOKED today are named on a 'local g=' assignment and the
+conformance:   call is a variable expansion this test cannot see. [T337 F-T337-4, corrected
+conformance:   by T358 — the old wording said 'never a mention', which overstated it.] What
+conformance:   remains open, stated so nobody concludes more than was closed: a non-comment
+conformance:   line spelling THIS member's own path without calling it still absolves it.)
+conformance:   guards-dir registration: PASS — every member of .softhouse/guards is invoked by this
+conformance:   file, DECLARED against a verified witness, or carries a verified REACHED-BY.
+conformance:   namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
+conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
+conformance:   namespace:   root    /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.fstmJp/root
+conformance:   namespace:   corpus  8915 tracked paths -> 190 evidence directories
+conformance:   namespace:           168 carry a t<n> id prefix; 22 do not and CANNOT collide this way
+conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
+conformance:   namespace:   T255 -> 2 directories; ownership records required 1, present 1
+conformance:   namespace:       DECLARED   capture/t255-frontier-rot                    by .softhouse/capture/t255-frontier-rot/OWNER-IS-T258-NOT-T255.md
+conformance:   namespace:       UNCLAIMED  capture/t255-dec2-rev8                       (record: <absent>)
+conformance:   namespace:   T256 -> 2 directories; ownership records required 1, present 1
+conformance:   namespace:       DECLARED   capture/t256-verdict-predicate               by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+conformance:   namespace:       UNCLAIMED  capture/t256-toolchain-population            (record: <absent>)
+conformance:   NAMESPACE-CENSUS: dirs=190 prefixed=168 unprefixed=22 collidingIds=2 declared=2 unclaimed=2 shortfallIds=0
+conformance:   namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+conformance:   T316-DEADPATH-CENSUS: corpus=1399 deadFiles=75 deadOccurrences=108 resolving=1317 indeterminate=95 prose=357
+conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
+conformance:   (the planted T309 single-term predicate drives cell B-prime RED; the shipped
+conformance:   tool keeps it GREEN. Both legs ran here — --selftest is not optional.)
+conformance: oracle-state baseline: ALL MOVEMENT ATTRIBUTED (instrument exit 0).
+conformance:   FLOOR (identities, not counts -- an append-only table's max id is true forever)
+conformance:     ok   a29bca0816a7   legs=2  ids 65-66  gl 16+21    MNT      <- T352
+conformance:     ok   a29bca9bf813   legs=3  ids 67-69  gl 16+17+21 MNT      <- T352
+conformance:     ok   a29bcaa6a41b   legs=2  ids 70-71  gl 16+21    MNT      <- T352
+conformance:     ok   a29bcb5d6fcf   legs=2  ids 72-73  gl 16+21    USD      <- T352
+conformance:     ok   a29bd5eaeb1b   legs=2  ids 74-75  gl 16+21    MNT      <- T359
+conformance:     ok   L28            legs=2  ids 76-77  gl 35+36    MNT      <- T388
+conformance:     ok   L29            legs=6  ids 78-83  gl 37+38+39+41+42+43 MNT      <- T388
+conformance:     ok   L30            legs=6  ids 84-89  gl 37+38+39+41+42+43 MNT      <- T388
+conformance:     ok   L31            legs=6  ids 90-95  gl 37+38+39+41+42+43 MNT      <- T388
+conformance:     ok   L32            legs=6  ids 96-101  gl 37+38+39+41+42+43 MNT      <- SCHEDULER-JOB-11
+conformance:     ok   L33            legs=6  ids 102-107  gl 37+38+39+41+42+43 MNT      <- SCHEDULER-JOB-11
+conformance:     ok   L34            legs=6  ids 108-113  gl 37+38+39+41+42+43 MNT      <- SCHEDULER-JOB-11
+conformance:     ok   353  t352-a01-residue-3dp           PROCESSED  CREATE/JOURNALENTRY    <- T352
+conformance:     ok   354  t352-a03-balance-scale         PROCESSED  CREATE/JOURNALENTRY    <- T352
+conformance:     ok   355  t352-a04-overscale             PROCESSED  CREATE/JOURNALENTRY    <- T352
+conformance:     ok   356  t352-a07-usd                   PROCESSED  CREATE/JOURNALENTRY    <- T352
+conformance:     ok   357  T359-P01-residue-post          ERROR      CREATE/JOURNALENTRY    <- T359
+conformance:     ok   358  T359-P02-residue-post          ERROR      CREATE/JOURNALENTRY    <- T359
+conformance:     ok   359  T359-P03-residue-post          PROCESSED  CREATE/JOURNALENTRY    <- T359
+conformance:     ok   360  T388-G01-gl-fund-source        PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   361  T388-G02-gl-loan-portfolio     PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   362  T388-G03-gl-interest-on-loans  PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   363  T388-G04-gl-income-from-fees   PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   364  T388-G05-gl-income-from-penalties PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   365  T388-G06-gl-losses-written-off PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   366  T388-G07-gl-interest-receivable PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   367  T388-G08-gl-fees-receivable    PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   368  T388-G09-gl-penalties-receivable PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   369  T388-G10-gl-transfers-suspense PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   370  T388-G11-gl-overpayment        PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   371  T388-G12-gl-income-from-recovery PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   372  T388-G13-gl-goodwill-credit    PROCESSED  CREATE/GLACCOUNT       <- T388
+conformance:     ok   373  T388-P02-create-accrual-product PROCESSED  CREATE/LOANPRODUCT     <- T388
+conformance:     ok   374  T388-P03-create-client         PROCESSED  CREATE/CLIENT          <- T388
+conformance:     ok   375  T388-P04-loan-application      ERROR      CREATE/LOAN            <- T388
+conformance:     ok   376  T388-P05-loan-application      PROCESSED  CREATE/LOAN            <- T388
+conformance:     ok   377  T388-P06-loan-approve          PROCESSED  APPROVE/LOAN           <- T388
+conformance:     ok   378  T388-P07-loan-disburse         PROCESSED  DISBURSE/LOAN          <- T388
+conformance:     ok   379  T388-A01-runaccruals           PROCESSED  EXECUTE/PERIODICACCRUALACCOUNTING <- T388
+conformance:     ok   0 floating-point columns on the ledger tables
+conformance:     ok   engine: PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1)  (PostgreSQL is the only permitted database)
+conformance:   GUARD-COST CENSUS: 16 guards timed, 71s total wall,
+conformance:   ceiling breaches 0, unbudgeted guards 0.
+conformance:     COST 0s / ceiling 60s   guard_graded_root_is_this_tree
+conformance:     COST 0s / ceiling 60s   guard_no_float_in_vectors
+conformance:     COST 0s / ceiling 60s   guard_no_float_in_harness
+conformance:     COST 0s / ceiling 60s   guard_gofmt
+conformance:     COST 2s / ceiling 60s   guard_no_float_in_capture_requests
+conformance:     COST 0s / ceiling 60s   guard_no_narrow_catch_in_capture_rigs
+conformance:     COST 2s / ceiling 300s   guard_ledger_invariants
+conformance:     COST 5s / ceiling 60s   guard_no_fail_open_instruments
+conformance:     COST 1s / ceiling 60s   guard_no_host_state_in_lint_corpus
+conformance:     COST 22s / ceiling 300s   guard_pnumber_citations
+conformance:     COST 0s / ceiling 60s   guard_accepting_side_gap_declared
+conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
+conformance:     COST 0s / ceiling 60s   guard_capture_namespace
+conformance:     COST 2s / ceiling 60s   guard_dead_path_frontier
+conformance:     COST 35s / ceiling 500s   guard_reconciler_ownership
+conformance:     COST 1s / ceiling 60s   guard_oracle_state_attributed
+conformance:   (RESOLUTION 1 s, from bash SECONDS; a 0 means UNDER ONE SECOND. The elapsed
+conformance:   figures are RECORDED and NOT PINNED — wall clock is a fact about the host as
+conformance:   well as the tree. What is pinned, by NAME: every guard has a ceiling row,
+conformance:   every ceiling row was timed, and at least one guard was timed. The ceiling is
+conformance:   read AFTER the guard returns, so it turns a spin that RETURNS into a named
+conformance:   refusal; it does not interrupt one that never does. [T375, FU-T358-1.])
+conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.

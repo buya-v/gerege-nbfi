@@ -1,0 +1,77 @@
+ORACLE STATE BASELINE -- derived, 2026-08-28T17:03:06Z
+  container=fineract-db-1  database=fineract_gerege  tenant=gerege
+  registry=/Users/buv/gerege-nbfi/.claude/worktrees/agent-af6e0b0869cd9f233/.softhouse/capture/t363-oracle-baseline/PROBES.tsv
+  READ-ONLY: every statement below is a SELECT.
+------------------------------------------------------------------------
+FLOOR (identities, not counts -- an append-only table's max id is true forever)
+  acc_gl_journal_entry       last id before the registered probes : 64
+  m_portfolio_command_source last id before the registered probes : 352
+------------------------------------------------------------------------
+LIVE COUNTERS (derived now; do not transcribe these into prose -- re-run instead)
+  acc_gl_journal_entry rows/maxid	109/113
+  acc_gl_journal_entry distinct transaction_id	38
+  acc_gl_journal_entry distinct currency_code	MNT,USD
+  acc_gl_closure rows/maxid	0/null
+  m_portfolio_command_source rows/maxid	379/379
+  m_loan rows	8
+  m_office rows	1
+------------------------------------------------------------------------
+PER-ACCOUNT LEGS -- 'at floor' is DERIVED by excluding the registered transactions
+  account    at floor       live moved?
+  gl 16            16         21 YES +5
+  gl 17             4          5 YES +1
+  gl 18             0          0 no -- UNMOVED
+  gl 21             8         13 YES +5
+  gl 22             0          0 no -- UNMOVED
+------------------------------------------------------------------------
+JOURNAL-ENTRY MOVEMENT above id 64
+  ok   a29bca0816a7   legs=2  ids 65-66  gl 16+21    MNT      <- T352
+  ok   a29bca9bf813   legs=3  ids 67-69  gl 16+17+21 MNT      <- T352
+  ok   a29bcaa6a41b   legs=2  ids 70-71  gl 16+21    MNT      <- T352
+  ok   a29bcb5d6fcf   legs=2  ids 72-73  gl 16+21    USD      <- T352
+  ok   a29bd5eaeb1b   legs=2  ids 74-75  gl 16+21    MNT      <- T359
+  ***  L28            legs=2  ids 76-77  gl 35+36    MNT      UNATTRIBUTED
+  ***  L29            legs=6  ids 78-83  gl 37+38+39+41+42+43 MNT      UNATTRIBUTED
+  ***  L30            legs=6  ids 84-89  gl 37+38+39+41+42+43 MNT      UNATTRIBUTED
+  ***  L31            legs=6  ids 90-95  gl 37+38+39+41+42+43 MNT      UNATTRIBUTED
+  ***  L32            legs=6  ids 96-101  gl 37+38+39+41+42+43 MNT      UNATTRIBUTED
+  ***  L33            legs=6  ids 102-107  gl 37+38+39+41+42+43 MNT      UNATTRIBUTED
+  ***  L34            legs=6  ids 108-113  gl 37+38+39+41+42+43 MNT      UNATTRIBUTED
+------------------------------------------------------------------------
+COMMAND-SOURCE MOVEMENT above id 352  (a REFUSED post still writes a row here)
+  ok   353  t352-a01-residue-3dp           PROCESSED  CREATE/JOURNALENTRY    <- T352
+  ok   354  t352-a03-balance-scale         PROCESSED  CREATE/JOURNALENTRY    <- T352
+  ok   355  t352-a04-overscale             PROCESSED  CREATE/JOURNALENTRY    <- T352
+  ok   356  t352-a07-usd                   PROCESSED  CREATE/JOURNALENTRY    <- T352
+  ok   357  T359-P01-residue-post          ERROR      CREATE/JOURNALENTRY    <- T359
+  ok   358  T359-P02-residue-post          ERROR      CREATE/JOURNALENTRY    <- T359
+  ok   359  T359-P03-residue-post          PROCESSED  CREATE/JOURNALENTRY    <- T359
+  ***  360  T388-G01-gl-fund-source        PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  361  T388-G02-gl-loan-portfolio     PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  362  T388-G03-gl-interest-on-loans  PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  363  T388-G04-gl-income-from-fees   PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  364  T388-G05-gl-income-from-penalties PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  365  T388-G06-gl-losses-written-off PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  366  T388-G07-gl-interest-receivable PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  367  T388-G08-gl-fees-receivable    PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  368  T388-G09-gl-penalties-receivable PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  369  T388-G10-gl-transfers-suspense PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  370  T388-G11-gl-overpayment        PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  371  T388-G12-gl-income-from-recovery PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  372  T388-G13-gl-goodwill-credit    PROCESSED  CREATE/GLACCOUNT       UNATTRIBUTED
+  ***  373  T388-P02-create-accrual-product PROCESSED  CREATE/LOANPRODUCT     UNATTRIBUTED
+  ***  374  T388-P03-create-client         PROCESSED  CREATE/CLIENT          UNATTRIBUTED
+  ***  375  T388-P04-loan-application      ERROR      CREATE/LOAN            UNATTRIBUTED
+  ***  376  T388-P05-loan-application      PROCESSED  CREATE/LOAN            UNATTRIBUTED
+  ***  377  T388-P06-loan-approve          PROCESSED  APPROVE/LOAN           UNATTRIBUTED
+  ***  378  T388-P07-loan-disburse         PROCESSED  DISBURSE/LOAN          UNATTRIBUTED
+  ***  379  T388-A01-runaccruals           PROCESSED  EXECUTE/PERIODICACCRUALACCOUNTING UNATTRIBUTED
+------------------------------------------------------------------------
+NON-NEGOTIABLE CHECKS (derived)
+  ok   0 floating-point columns on the ledger tables
+  ok   engine: PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1)  (PostgreSQL is the only permitted database)
+------------------------------------------------------------------------
+VERDICT: UNATTRIBUTED MOVEMENT (exit 1).
+  Somebody wrote to the SHARED reference oracle and did not record it. The rows are
+  starred above. Do not 'fix' this by widening the floor -- find the task, then add
+  its rows to /Users/buv/gerege-nbfi/.claude/worktrees/agent-af6e0b0869cd9f233/.softhouse/capture/t363-oracle-baseline/PROBES.tsv.

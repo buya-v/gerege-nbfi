@@ -1,0 +1,40 @@
+-- T390 q0-je-columns -- 2026-08-28T17:04:05Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: adcc727b5256a8a9bee25f7fb6a2ba4ec9a693b534caa87ddd41f1bdd2d8f3a9
+--
+ ordinal_position |          column_name          |          data_type          
+------------------+-------------------------------+-----------------------------
+                1 | id                            | bigint
+                2 | account_id                    | bigint
+                3 | office_id                     | bigint
+                4 | reversal_id                   | bigint
+                5 | currency_code                 | character varying
+                6 | transaction_id                | character varying
+                7 | loan_transaction_id           | bigint
+                8 | savings_transaction_id        | bigint
+                9 | client_transaction_id         | bigint
+               10 | reversed                      | boolean
+               11 | ref_num                       | character varying
+               12 | manual_entry                  | boolean
+               13 | entry_date                    | date
+               14 | type_enum                     | smallint
+               15 | amount                        | numeric
+               16 | description                   | character varying
+               17 | entity_type_enum              | smallint
+               18 | entity_id                     | bigint
+               19 | created_by                    | bigint
+               20 | last_modified_by              | bigint
+               21 | created_date                  | timestamp without time zone
+               22 | lastmodified_date             | timestamp without time zone
+               23 | is_running_balance_calculated | boolean
+               24 | office_running_balance        | numeric
+               25 | organization_running_balance  | numeric
+               26 | payment_details_id            | bigint
+               27 | share_transaction_id          | bigint
+               28 | transaction_date              | date
+               29 | created_on_utc                | timestamp with time zone
+               30 | last_modified_on_utc          | timestamp with time zone
+               31 | submitted_on_date             | date
+(31 rows)
+
+-- psql rc=0

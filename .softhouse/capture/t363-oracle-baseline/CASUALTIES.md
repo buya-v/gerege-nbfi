@@ -43,6 +43,62 @@ Editing one to agree with today would forge a witness. The live set is small.
 **`m_portfolio_command_source` moved `352 → 359` as well**, and neither probing task's record names it
 [VERIFIED: T363, live]. `acc_gl_closure 0/null`, `m_loan 7`, `m_office 1` are unmoved.
 
+> ### ⚠ SUPERSEDED 2026-08-28 BY T390 — `m_loan` IS NO LONGER UNMOVED, AND THE COUNT IS FOUR
+>
+> **The paragraph immediately above is left standing on purpose.** It was true when T363 measured
+> it and correcting it in place would forge a witness — the same argument this file makes three
+> paragraphs down about `out/STANDING-baseline.txt`. Read it as history; read this block as today.
+>
+> `T388` created **loan 8** (`T388-P05-loan-application`, command-source id 376), so t327's
+> **`m_loan = 7` pin is now false**. Re-derived live by T390 with the six SELECTs copied verbatim
+> out of t327's own label loop — statement and output committed at
+> `.softhouse/capture/t390-baseline-attribution/{sql,out}/q9-t327-six-pins-live.*`:
+>
+> | label | pinned 2026-08-27 | live 2026-08-28T17:08:42Z | verdict |
+> |---|---|---|---|
+> | `acc_gl_journal_entry` | `60/64` | `109/113` | **MOVED** |
+> | `acc_gl_closure` | `0/null` | `0/null` | unmoved |
+> | `distinct_transaction_id` | `26` | `38` | **MOVED** |
+> | `m_portfolio_command_source` | `352/352` | `379/379` | **MOVED** |
+> | `m_loan` | `7` | `8` | **MOVED — this is the correction** |
+> | `m_office` | `1` | `1` | unmoved |
+>
+> So **FOUR of the six t327 pins have moved**, not three; only `acc_gl_closure` and `m_office`
+> still hold. T363's "`m_loan 7` … unmoved" is the one clause that is now false.
+>
+> **WHERE THE `m_loan` PIN ACTUALLY BITES — RE-VERIFIED BY T390 BY READING ALL THREE t327 SCRIPTS
+> AND THE WHOLE t305 DIRECTORY, NOT INHERITED FROM T388'S REPORT.** `grep -rn 'm_loan'` over
+> `t305-openingbalance-accepting-side/throwaway/` and `t327-closure-accepting-side/throwaway/`
+> returns **9 hits, all in t327, none in t305**:
+>
+> | site | kind |
+> |---|---|
+> | `t327/throwaway/capture.sh:74` label, compared at **`:82`** | **STRING-EQUALITY PIN — refuses** |
+> | `t327/throwaway/down.sh:45` label, compared at **`:51`**, `rc=1` at `:54` | **STRING-EQUALITY PIN — sets `rc=1`** |
+> | `t327/throwaway/guard-throwaway-isolation.sh:121` | **NOT a pin.** It *prints* `gerege m_loan = $v` and fails closed only on an EMPTY read (`:127`). It is the **generator** of `out/STANDING-baseline.txt`, not a consumer of it. |
+> | `t327/throwaway/out/{STANDING-baseline,TEARDOWN,CAPTURE}.txt` (6 hits) | archived transcripts — **not casualties**, per this file's own rule |
+>
+> Two corrections to the citations this correction was handed, both minor and both worth having:
+> the comparison in `down.sh` is at **`:51`** (`:54` is the failure branch), and there is a **third**
+> `m_loan` site in t327 (`guard-throwaway-isolation.sh:121`) which is *not* a pin and must not be
+> "fixed" as one.
+>
+> **T388's claim that t305 does not pin `m_loan` is CONFIRMED, and by a stronger measurement than
+> reading three scripts:** `t305/throwaway/out/STANDING-baseline.txt` carries exactly **four**
+> `gerege …` lines — `acc_gl_journal_entry`, `acc_gl_closure`, `distinct_transaction_id`,
+> `m_portfolio_command_source` — and no `m_loan`/`m_office` label exists anywhere under that
+> directory. So `m_loan` moving damages **t327 only**.
+>
+> **THE REPAIR IS UNCHANGED — the DECISION below still governs.** Do not retype `7 → 8`; that is
+> the "re-baseline" option this file already rejected, and the reason is now sharper than when
+> T363 wrote it, because the standing oracle moved **twice more** since (T388 by API, then the
+> scheduler autonomously — see the T390 block in `PROBES.tsv`). A hand-maintained cardinal in
+> `out/STANDING-baseline.txt` will be false again by the next fire. Through `run-all.sh` both rigs
+> regenerate that file first and are **unaffected**; through a hand-typed `bash capture.sh` t327
+> now refuses on four labels instead of three.
+>
+> [VERIFIED: T390, live, 2026-08-28. Statement sha256 `ff838af4c248aa6f2ad624d06fd9276f5c9e2533481dab314796b3a1fb5e3741`.]
+
 **CORRECTION to T359's blast-radius entry: "both rigs fail closed on their next run" holds only for a
 STANDALONE invocation.** The supported entry point is `run-all.sh`, and step 0 of both `run-all.sh`
 scripts does `rm -rf "$OUT"` and then **regenerates** `out/STANDING-baseline.txt` from the live oracle

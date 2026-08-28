@@ -1,0 +1,55 @@
+# ==========================================================================================
+# T390 -- AUTONOMOUS SCHEDULER MOVEMENT. A FOURTH BLIND SPOT, AND THE FIRST ROWS IN THIS FILE
+# THAT NAME NO TASK, BECAUSE NO TASK DID IT.
+#
+# T388 accrued loan 8 through 15 April 2026 by API (EXECUTE PERIODICACCRUALACCOUNTING, tillDate
+# 15 April 2026) and registered L28-L31 above. It stopped there. THE FINERACT SCHEDULER DID NOT.
+#
+# At 2026-08-28 16:01:00 UTC -- 00:01 on 2026-08-29 in Asia/Ulaanbaatar (+08), which is what the
+# cron `0 1 0 1/1 * ? *` means -- job 11 "Add Accrual Transactions" ran and accrued the remaining
+# THREE periods of loan 8, writing loan transactions 32/33/34 and journal entries 96-113, i.e.
+# transactions L32/L33/L34. [job_run_history id 12721, start 16:01:00.049, end 16:01:00.12,
+# status success; out/q4-job-run-history.txt.]
+#
+# WHY THIS BREAKS THE FILE'S MODEL, AND WHY IT IS NOT A DEFECT IN T388.
+# This file's obligation is "a task that fires a probe MUST append its rows in the same commit
+# as its handoff". Here there IS NO TASK. The writer is app user 2 `system`
+# [out/q7-who-is-user-2.txt] -- T388's own probes carry created_by 1 `mifos`. And the scheduler
+# DOES NOT PASS THE COMMAND BUS: m_portfolio_command_source stops at 379, T388's last key, with
+# no row for any of these eighteen legs [out/q2-command-source-tail.txt]. So the command-floor
+# coverage argument written into oracle-state-baseline.sh -- "every API-driven write lands a
+# command-source row" -- is TRUE AND IRRELEVANT to this movement. It is a fourth exception class
+# beside T371's (a) consumed sequence, (b) direct SQL, (c) update below the floor:
+#
+#     (d) THE SCHEDULER. An in-process Spring Batch job writes journal entries with no
+#         command-source row and no task to attribute them to. The ONLY reason this run went
+#         red rather than silent is that job 11 writes to acc_gl_journal_entry, which IS one of
+#         the two watched tables. A scheduled job touching any of the other 279 would be
+#         invisible.
+#
+# IS IT BOUNDED? YES, FOR LOAN 8, AND MEASURED RATHER THAN HOPED. Loan 8 matured 2026-07-15 and
+# has SIX schedule periods; six unreversed accrual transactions (29-34) now exist, the last dated
+# 2026-07-15 [out/q6-business-date-and-schedule.txt]. There is nothing left on loan 8 to accrue,
+# so tomorrow's 00:01 run adds nothing. m_business_date is EMPTY and the business-date config is
+# off [out/q8-business-date-table.txt], so the job accrues to the system date and caught up in
+# one sweep rather than dripping a period a day.
+#
+# WHAT IS *NOT* BOUNDED, AND IS THE REAL WARNING TO THE NEXT PROBER: job 11 is is_active = t and
+# so are jobs 2/6/7/9/10/12/13/14/15/16/17/18/19/20/21/22/30/31/35 [out/q3-jobs.txt]. THE NEXT
+# TASK THAT CREATES AN ACCRUAL-ACCOUNTING LOAN AND LEAVES IT PART-ACCRUED WILL HAVE THE
+# SCHEDULER FINISH THE JOB FOR IT OVERNIGHT, and this file will go red on rows that task never
+# fired. Register them here the same way, naming the job and the job_run_history id. Do NOT
+# widen the floor, and do NOT teach the instrument to wave through anything written by user 2 --
+# that would make every future scheduler write invisible, which is strictly worse than a red
+# run somebody has to read.
+#
+# THESE ROWS USE THE `txn` TYPE UNCHANGED. Field 3 carries `SCHEDULER-JOB-11` where a task id
+# would go. That is deliberate: the instrument's awk match is on field 2 and it prints field 3
+# verbatim, so no code change is needed and the output says SCHEDULER-JOB-11 in the place a
+# reader already looks for "who". Field 4 carries the fire that CAUSED it, not one that fired it.
+# ==========================================================================================
+
+# ---- fire 20260828-140005, AUTONOMOUS: scheduler job 11 completed T388's accrual series ----
+txn	L32	SCHEDULER-JOB-11	20260828-140005	NOT FIRED BY ANY TASK. Scheduled job 11 "Add Accrual Transactions", job_run_history 12721, 2026-08-28 16:01:00 UTC = 00:01 Asia/Ulaanbaatar. Six legs on loan 8, entry_date 2026-05-15, loan transaction 32: 12356.340000 interest / 2500.000000 fee / 1200.000000 penalty on gl 41/42/43 against 37/38/39. created_by 2 `system`; NO m_portfolio_command_source row exists for it.
+txn	L33	SCHEDULER-JOB-11	20260828-140005	same job, same run 12721. Six legs on loan 8, entry_date 2026-06-15, loan transaction 33: 8318.850000 interest / 2500.000000 fee / 1200.000000 penalty, same six accounts.
+txn	L34	SCHEDULER-JOB-11	20260828-140005	same job, same run 12721. Six legs on loan 8, entry_date 2026-07-15, loan transaction 34: 4200.610000 interest / 2500.000000 fee / 1200.000000 penalty. This is loan 8's MATURITY period -- the accrual series is now complete at 6 of 6 schedule periods and job 11 has nothing further to add for this loan.

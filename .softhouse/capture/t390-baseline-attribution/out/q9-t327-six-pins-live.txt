@@ -1,0 +1,15 @@
+-- T390 q9-t327-six-pins-live -- 2026-08-28T17:08:42Z
+-- container=fineract-db-1 db=fineract_gerege
+-- statement sha256: ff838af4c248aa6f2ad624d06fd9276f5c9e2533481dab314796b3a1fb5e3741
+--
+           label            |  live   | pinned_2026_08_27 
+----------------------------+---------+-------------------
+ acc_gl_journal_entry       | 109/113 | 60/64
+ acc_gl_closure             | 0/null  | 0/null
+ distinct_transaction_id    | 38      | 26
+ m_portfolio_command_source | 379/379 | 352/352
+ m_loan                     | 8       | 7
+ m_office                   | 1       | 1
+(6 rows)
+
+-- psql rc=0
