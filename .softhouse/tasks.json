@@ -5626,7 +5626,7 @@
     },
     {
       "id": "T388",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "test",
@@ -5641,16 +5641,16 @@
         "T352"
       ],
       "description": "RAW OBSERVED CAPTURE ONLY. This task may NOT promote anything into `.softhouse/vectors/` -- that directory is held by a concurrent worker (T360). Promotion is a separate follow-on task.\n\nTHE GAP, quoted from the bar's own every-run coverage block: `ledger.accrual.entry` -- an accrual journal entry through INTEREST_RECEIVABLE, FEES_RECEIVABLE or PENALTIES_RECEIVABLE -- is ENTIRELY UNGRADED, 'and the reason is that the observations do not exist rather than that the machinery does not.' NOT ONE JOURNAL ENTRY IN THIS TENANT EVER ARRIVED THROUGH A RECEIVABLE SLOT.\n\nT352 MEASURED THE COST DOWN and then declined to pay it, for a reason that is itself the design constraint on this task. Product 28 is the only ACCRUAL_PERIODIC product; its mapping is COMPLETE (all 13 slots); the periodic accrual job (id 16) is ACTIVE and ran 2026-08-27 16:02. The single missing ingredient is A LOAN. But the CHEAP route is forbidden: product 28's slot 9 resolves to **gl 16, a PROMOTED LEG of LDG-01, LDG-02 and LDG-03**, and A2-314/403 hold product 28's mapping INADMISSIBLE. So the cheap route posts accrual rows into an account three graded vectors read, through a mapping the store refuses.\n\nTAKE THE EXPENSIVE ROUTE, which T352 named as the right one: a NEW ACCRUAL_PERIODIC product on CLEAN GL accounts. See the full task prompt for the constraints.",
-      "note": "Filed and dispatched by the driver of fire 20260828-140005 iteration 3, as the FIRST action under the G-20 decision (a port-or-capture task before any further harness repair). FU-T352-3 had no task; checked against tasks.json (FU-T352-1, -2 and -4 exist, -3 did not). Grant is capture-only because T360 holds .softhouse/vectors/ this wave."
+      "note": "Filed and dispatched by the driver of fire 20260828-140005 iteration 3, as the FIRST action under the G-20 decision (a port-or-capture task before any further harness repair). FU-T352-3 had no task; checked against tasks.json (FU-T352-1, -2 and -4 exist, -3 did not). Grant is capture-only because T360 holds .softhouse/vectors/ this wave. | COMPLETE @ 977e37af. 9 accrual observations through 3 receivable slots (INTEREST 7/gl41, FEES 8/gl42, PENALTIES 9/gl43); JEs 78/81/83, 84/87/89, 90/93/95. P0 HELD: no promoted GL account moved -- it DERIVED the forbidden set {1,2,4,6,8,10,15,16,17,18,21,22} from all 67 store files and found TWO members the brief did not name (gl 22 from capabilities-ledger.json unposted_slots, gl 15 a contra account), then red-drove its own disjointness checker. Bar exit 0, probe line PRINTED reading up, ledger 7/6/0/142/39 and loanschedule 46/7884 all UNMOVED, dead-path pin 109 unmoved. NEW casualty found: t327/throwaway/capture.sh:82 and down.sh:54 pin m_loan=7 by string equality, now 8 -- which makes T363 CASUALTIES.md:40,44 half false. NOT MERGED, awaiting T389."
     },
     {
       "id": "T389",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
       "role": "reviewer",
-      "branch": null,
+      "branch": "softhouse/T389-review-t388",
       "title": "INDEPENDENT review of T388 -- the first accrual observations, and a deliberate permanent move of shared oracle state",
       "files_hint": [
         ".softhouse/reviews/t389-review-t388/"
@@ -5659,7 +5659,49 @@
         "T388"
       ],
       "description": "T388 took the program's first accrual observations from the reference oracle and, in doing so, moved shared oracle state PERMANENTLY. Both halves need review, and the second is the one previous fires got wrong. Read from the branch:\n    git show softhouse/T388-accrual-capture:.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T388.md\n    git diff main...softhouse/T388-accrual-capture\n\n1. NON-CONTAMINATION IS THE P0. Re-derive, against the LIVE PostgreSQL reference oracle and NOT from T388's notes, that no journal entry T388 caused landed on any GL account that a promoted vector reads. The promoted legs to check are at minimum gl 16, gl 17 and gl 21; derive the full set yourself from the promoted corpus rather than trusting that list. T352 moved gl 16 from 16 rows to 20 and gl 21 from 8 to 12 in an earlier fire, so this is a measured hazard, not a hypothetical one. If ANY promoted account moved, that is a REJECT and the driver must be told immediately.\n2. RE-RUN THE BAR on `main` and confirm the ledger section is still PASS 7 / oracle-refusal 6 / inadmissible 0 with 142 cells and 39 money cells. A capture that reddens the existing corpus has destroyed evidence, which is worse than capturing nothing.\n3. RE-ISSUE ITS RECIPES. Every `.req` must re-issue and produce a response that matches its recorded `.http`/`.json` in every graded respect, or T388 must have declared why not. This is the T276/T289 discipline: a reviewer of a capture RE-ISSUES, it does not read.\n4. THE OBSERVATIONS MUST BE ACCRUALS. Confirm the entries actually arrived through a RECEIVABLE slot (INTEREST_RECEIVABLE / FEES_RECEIVABLE / PENALTIES_RECEIVABLE) and were produced by the accrual job, not hand-posted to look like accruals. Decode the slot through the ported AccrualAccountsForLoan enum.\n5. MONEY. Every amount in every captured artefact must be recorded as the oracle returned it, and nothing in the capture rig may parse it to a float. Run the no-float guards over the branch.\n6. THE STATE-MOVE RECORD. T388 must ship an ORACLE-STATE-MOVED-BY-T388.md in the T352/T276 shape, and it must be COMPLETE -- T359 found T352's blast-radius list incomplete (C-2, MAJOR), naming a casualty path that does not exist while missing rigs that pin counts by string equality and now fail closed. Find T388's equivalents: grep the tracked corpus for every rig that pins a row count or an account balance by literal, and check each against the NEW live values.\n\nRun `bash .softhouse/conformance.sh` from a CLEAN tree after commit; test the probe line's PRESENCE before its value (P-84, patterns.md:2813). Verdict: APPROVED / APPROVED WITH CONDITIONS / REJECTED, every finding with a driven reproduction.",
-      "note": "Filed at T388 dispatch time so the plan gate (every code/test task has a paired reviewer) holds AT dispatch."
+      "note": "Filed at T388 dispatch time so the plan gate (every code/test task has a paired reviewer) holds AT dispatch. | DISPATCHED by the driver of fire 20260828-140005 iteration 3 immediately on T388 completing; branch recorded before the worktree."
+    },
+    {
+      "id": "T390",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "branch": null,
+      "files_hint": [
+        ".softhouse/capture/t363-oracle-baseline/PROBES.tsv",
+        ".softhouse/capture/t363-oracle-baseline/CASUALTIES.md",
+        ".softhouse/capture/t390-baseline-attribution/"
+      ],
+      "dependencies": [
+        "T388",
+        "T381"
+      ],
+      "title": "T388's P0: the oracle-state baseline cannot attribute L28-L31 or T388's 20 command keys, and CASUALTIES.md's m_loan claim is now half false",
+      "description": "T388 moved shared oracle state deliberately and correctly, and left ONE thing it could not do inside its own grant: `.softhouse/capture/t363-oracle-baseline/PROBES.tsv` does not know about what it created.\n\n1. APPEND `out/PROBES-APPEND-T388.tsv` from `softhouse/T388-accrual-capture` to `PROBES.tsv`. Until this lands, `oracle-state-baseline.sh` exits 1, printing loans L28-L31 and T388's 20 `T388-` command-source rows (360-379) as UNATTRIBUTED. Read the append from the branch, do not retype it:\n    git show softhouse/T388-accrual-capture:.softhouse/capture/t388-accrual-capture/out/PROBES-APPEND-T388.tsv\n2. CORRECT `CASUALTIES.md:40,44`. It records `m_loan` as UNMOVED. T388 created loan 8, so the claim is now half false, and `t327/throwaway/capture.sh:82` and `down.sh:54` pin `m_loan = 7` by STRING EQUALITY. T388 verified `t305` does NOT pin it, by reading all three scripts -- re-verify rather than inherit that.\n3. THE FINDING UNDERNEATH, which is worth more than either fix. The driver measured this while triaging T388: **`oracle-state-baseline.sh` is invoked by NOTHING THAT RUNS.** The only references outside its own directory are in `t367-review-t363/drive.sh` and `drive-independent-sweep.sh` -- a review's own drives. T367 even asked the question explicitly ('X9 is oracle-state-baseline.sh referenced by anything that RUNS?'). So the instrument built to detect unattributed oracle-state movement would not have fired if T388 had contaminated a promoted account. **This is P-45** (`.softhouse/patterns.md:1503-1506`) -- a guard that only works when someone remembers to run it enforces nothing -- and it is the same shape as T311 (`guard-probe-expiry.sh` is invoked by nothing) and T303 and T313 and T333, all still pending. **Wire it, or state precisely why it must not be wired.** If you wire it, drive it RED first: make an unattributed row exist and show the bar refusing.\n\nSEQUENCED AFTER T381, which holds `t363-oracle-baseline/instruments/`. Your grant is the directory ROOT (`PROBES.tsv`, `CASUALTIES.md`) plus your own capture dir; if wiring requires editing `instruments/oracle-state-baseline.sh` or `conformance.sh`, confirm with the driver that the holder has landed before you write either.",
+      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T388 return item 1, plus a finding the driver measured itself while triaging T388: the baseline instrument is wired to nothing."
+    },
+    {
+      "id": "T391",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "branch": null,
+      "files_hint": [
+        ".softhouse/vectors/",
+        ".softhouse/capture/t391-accrual-promotion/"
+      ],
+      "dependencies": [
+        "T388",
+        "T389",
+        "T360"
+      ],
+      "title": "Promote T388's accrual observations -- and the row the harness prints every run is now FALSE in four sentences",
+      "description": "T388 took the program's FIRST accrual observations (9 entries through INTEREST_RECEIVABLE, FEES_RECEIVABLE and PENALTIES_RECEIVABLE). It promoted nothing, by design -- `.softhouse/vectors/` was held by T360 that wave. You are the promotion.\n\n1. **THE HARNESS IS NOW PRINTING FALSEHOODS EVERY RUN.** `capabilities-ledger.json`'s `ledger.accrual.entry` row says the observations 'do not exist', that 'NOT ONE JOURNAL ENTRY IN THIS TENANT ARRIVED THROUGH A RECEIVABLE SLOT', that product 28 is the only ACCRUAL_PERIODIC product, and that an accrual vector needs a new product PLUS a job run. **All four are false as of T388.** T388's own recommendation, which is right: keep the sentence that is still TRUE by narrowing it -- 'not one entry in this **CORPUS**', because the promoted store is still empty of accruals. Rewrite the row; do not delete it.\n2. **DECIDE WHAT AN ACCRUAL VECTOR GRADES, AND GRADE THE SLOT, NOT THE ACCOUNT.** This is T242's whole lesson: ONE GL ACCOUNT BACKS SEVERAL SLOTS, and the harness once printed 'gl 18, 22 and 16 carry ZERO journal entries' as measured fact when gl 16 had sixteen. Grading the account would reproduce exactly that error. Grading the slot means populating the ledger schema's slot fields for the FIRST time -- expect that to be the real work.\n3. **NON-VACUITY.** Register a wrong implementation alongside the 13 existing `ledger-wrong-*` drives and show it KILLED by your new vectors. A vector no wrong implementation can fail is decoration.\n4. **DO NOT PROMOTE THESE AS A PRECISION CLAIM.** T388 says so and is right: the `(19, HALF_UP)` question applies to these captures unchanged.\n5. Counts that move, move in the summary AND every pinned census that restates them, in ONE commit (P-83). Baseline before you start: ledger parity PASS 7, oracle-refusal 6, inadmissible 0, 142 cells / 39 money.\n\nRead T388's handoff and T389's review from their branches, never from disk. Five accrual slots remain unposted (6, 10, 11, 12, 13); product 63 and gl 40/44/45/46/47 are already clean, so the marginal cost of more observations is a transaction, not a product -- say whether you took them.",
+      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T388 return items 2-5. This is the G-20 follow-through: the capture is worthless until it is promoted, and promotion is where the slot fields get populated for the first time."
     }
   ],
   "cross_corroboration": {
