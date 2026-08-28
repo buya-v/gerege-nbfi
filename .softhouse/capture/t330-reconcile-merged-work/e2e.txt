@@ -1,0 +1,86 @@
+==============================================================================
+RED  (main's bytes) -- /tmp/t330-red/.softhouse/bin/ready-tasks.py
+==============================================================================
+RECONCILE -- fire t330-e2e
+  git:  /usr/bin/git
+  repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-sz_tdn2w
+  lock: no .softhouse/LOCK on disk, AND the caller passed --no-live-session-established-out-of-band, asserting it ran a liveness probe of this checkout itself. This module has no liveness check of its own, so that assertion is the whole basis for the authority and it is the CALLER's to justify.
+  mode: wrapper   (lock fire id: NONE RECORDED)
+  in_progress tasks found: 4  (out of 4 in tasks.json -- every task was read to get this count, it is not a default)
+  T900     softhouse/T900-merged-and-pruned           WIP=absent
+           in_progress -> needs_retry
+  T901     softhouse/T901-never-started               WIP=absent
+           in_progress -> needs_retry
+  T902     softhouse/T902-old-name                    WIP=absent
+           in_progress -> needs_retry
+  T903     softhouse/T903-Case-Shadow                 WIP=absent/CASE-VARIANT
+           in_progress -> needs_retry
+  RESULT: WROTE /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-sz_tdn2w/.softhouse/tasks.json -- 4 task(s) demoted in_progress -> needs_retry.
+  (exit 0)
+
+  RESULTING tasks.json:
+    T900   needs_retry    (a) merged-and-pruned  [T324's shape]
+    T901   needs_retry    (b) never-started
+    T902   needs_retry    (c) renamed
+    T903   needs_retry    (d) case-shadowed [T308's shape]
+
+==============================================================================
+GREEN (working tree) -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac2d8253d149717c8/.softhouse/bin/ready-tasks.py
+==============================================================================
+RECONCILE -- fire t330-e2e
+  git:  /usr/bin/git
+  repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-_g8pf1q9
+  lock: no .softhouse/LOCK on disk, AND the caller passed --no-live-session-established-out-of-band, asserting it ran a liveness probe of this checkout itself. This module has no liveness check of its own, so that assertion is the whole basis for the authority and it is the CALLER's to justify.
+  mode: wrapper   (lock fire id: NONE RECORDED)
+  in_progress tasks found: 4  (out of 4 in tasks.json -- every task was read to get this count, it is not a default)
+  T900     softhouse/T900-merged-and-pruned           WIP=merged
+           in_progress -> in_progress   *** REFUSED TO DEMOTE ***
+           REFUSE to demote -- work bearing this task's id is ON MAIN; `needs_retry` would OFFER completed work for re-dispatch
+  T901     softhouse/T901-never-started               WIP=unstarted
+           in_progress -> needs_retry
+  T902     softhouse/T902-old-name                    WIP=relocated
+           in_progress -> in_progress   *** REFUSED TO DEMOTE ***
+           REFUSE to demote -- a live ref carrying this task's id exists under another name; `needs_retry` would duplicate a line that still exists
+  T903     softhouse/T903-Case-Shadow                 WIP=relocated/CASE-VARIANT
+           in_progress -> in_progress   *** REFUSED TO DEMOTE ***
+           REFUSE to demote -- a live ref carrying this task's id exists under another name; `needs_retry` would duplicate a line that still exists
+  T330 REFUSALS: 3 task(s) were NOT demoted because work bearing their id is on main, or a live ref still carries it -- T900, T902, T903. Their status is UNCHANGED and their note now says so. THIS IS THE FIX FOR FU-RECONCILE-1; before T330 every one of these was written `needs_retry` and OFFERED FOR RE-DISPATCH.
+  RESULT: WROTE /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-_g8pf1q9/.softhouse/tasks.json -- 1 task(s) demoted in_progress -> needs_retry, 3 REFUSED (T330: work is on main or a live ref carries the id; status left in_progress, note rewritten).
+  (exit 0)
+
+  RESULTING tasks.json:
+    T900   in_progress    (a) merged-and-pruned  [T324's shape]
+    T901   needs_retry    (b) never-started
+    T902   in_progress    (c) renamed
+    T903   in_progress    (d) case-shadowed [T308's shape]
+
+==============================================================================
+ADJUDICATION -- what the STATE FILE says afterwards, which is the only thing
+the next fire reads
+==============================================================================
+  task   world                    RED            GREEN          required
+  T900   (a) merged-and-pruned  [ needs_retry    in_progress    in_progress    
+  T901   (b) never-started        needs_retry    needs_retry    needs_retry    
+  T902   (c) renamed              needs_retry    in_progress    in_progress    
+  T903   (d) case-shadowed [T308' needs_retry    in_progress    in_progress    
+
+  RED   wrong on 3 of 4 tasks
+  GREEN wrong on 0 of 4 tasks
+
+  `needs_retry` is the status that OFFERS a task for re-dispatch -- this
+  module's own words at _branch_wip_core. Every RED miss above is a completed
+  or live branch being offered up for a second, divergent implementation.
+
+==============================================================================
+IDEMPOTENCE -- the defect a REFUSAL introduces if nobody looks for it
+==============================================================================
+  A refused task KEEPS its status, so this branch runs again on EVERY
+  subsequent fire. The pre-existing note-writing appends `[prior note: ...]`
+  each time, which on a permanently-refused task grows the note without
+  bound inside a 962 KB file. Five reconciles, measured:
+    reconcile 1 -> T900 note is 1911 chars, status in_progress
+    reconcile 2 -> T900 note is 1911 chars, status in_progress
+    reconcile 3 -> T900 note is 1911 chars, status in_progress
+    reconcile 4 -> T900 note is 1911 chars, status in_progress
+    reconcile 5 -> T900 note is 1911 chars, status in_progress
+  RESULT: stable after the first write; a note this function already wrote is REPLACED, not nested
