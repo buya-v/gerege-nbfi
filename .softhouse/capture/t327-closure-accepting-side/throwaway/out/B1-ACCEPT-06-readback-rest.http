@@ -1,0 +1,7 @@
+GET /journalentries?transactionId=a29aac77c01b&limit=50
+case-id: B1-ACCEPT-06-readback-rest
+Fineract-Platform-TenantId: t327
+instance: THROWAWAY t327-oracle-app, port 8444
+response-status: 200
+response-sha256: dd0d9c23503fb7d28095f5d3f6b26f9e6c440bfcaee6574a5d2227224771a72b
+captured-at-utc: 2026-08-27T17:33:42Z

@@ -1,0 +1,2 @@
+registry=t327|Asia/Ulaanbaatar|fineract_t327
+rounding-mode=4
