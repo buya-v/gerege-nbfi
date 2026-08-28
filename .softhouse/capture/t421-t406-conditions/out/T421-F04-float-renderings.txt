@@ -1,3 +1,14 @@
+T421 / F-T406-4 -- WHAT A FLOAT-DECODING READER PRINTS FOR EACH TOKEN.
+
+NOT A MONEY PATH, DELIBERATELY. These are the WRONG answers, measured once so
+that the sentence inside each vector that WARNS about them quotes its own
+vector's number and not a neighbouring vector's. No value below is used as
+money, compared with a money cell, or written into any numeric field: the money
+in this program is the six-decimal TEXT on the left, and the point of the
+vectors' sentence is that the value on the right is not what was read.
+
+Measured 2026-08-28T18:36Z, python3, repr() of float(token):
+
 24000.000000 -> float repr: 24000.0
 20195.380000 -> float repr: 20195.38
 12356.340000 -> float repr: 12356.34
