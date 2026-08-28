@@ -181,6 +181,22 @@ SELF_SOURCE_EXACT = (
 DECLARED_MARKER = re.compile(
     r'PNUMBER-REGISTER-DECLARED-COLLISIONS\s*[:=]\s*([0-9,\s]*)')
 
+# Ids that are CITED SOMEWHERE and defined NOWHERE, knowingly recorded in
+# patterns.md's errata with their repair. Same shape as the collision
+# declaration and for the same reason: a KNOWN dangling id must be quiet so a
+# NEW one is loud.
+#
+# This exists because the errata table T282 wrote INTO patterns.md lists the
+# dangling ids by name, and patterns.md is a DIRECTIVE file -- so the checker
+# went fatal on the very table recording the defect. Exempting the table would
+# have been a special case; declaring the ids is a rule, and it is symmetric
+# with the collisions above.
+#
+# A declaration for an id that IS defined, or that is cited NOWHERE, is FATAL:
+# a stale entry here would pre-silence a future genuine dangling citation.
+DANGLING_MARKER = re.compile(
+    r'PNUMBER-DANGLING-CITED-IDS\s*[:=]\s*([0-9,\s]*)')
+
 # Ids deliberately absent, used as negative controls by committed instruments.
 # Each entry must name the instrument that relies on it, or it is not a control,
 # it is an excuse.
@@ -502,7 +518,7 @@ def index_rare_tokens(reg):
     return df
 
 
-def analyse(reg, files, root, min_evidence, min_margin):
+def analyse(reg, files, root, min_evidence, min_margin, dangling_ok=()):
     """min_evidence: trigram hits below which we say 'no rule text detected'
     (a BARE citation) rather than claiming a match.
     min_margin: how far the best-matching OTHER rule must beat the cited rule
@@ -550,9 +566,12 @@ def analyse(reg, files, root, min_evidence, min_margin):
                     counts["undefined"] += 1
                     findings.append({
                         "kind": "UNDEFINED", "file": rel, "line": i + 1, "cited": n,
-                        "detail": "P-%d is defined in neither register" % n,
+                        "detail": "P-%d is defined in neither register%s"
+                                  % (n, " (DECLARED dangling in patterns.md errata)"
+                                     if n in dangling_ok else ""),
                         "text": raw.strip()[:220], "zone": kind_of_file,
-                        "fatal": kind_of_file == "directive"})
+                        "declared_dangling": n in dangling_ok,
+                        "fatal": kind_of_file == "directive" and n not in dangling_ok})
                     continue
                 joined = raw + " " + (lines[i + 1] if i + 1 < len(lines) else "")
                 # A citation may name SEVERAL rules for one sentence:
@@ -831,7 +850,12 @@ def main():
         print("PNUMBER-CITATIONS: CANNOT RUN -- `git ls-files` failed under %s" % root)
         return 3
 
-    findings, counts = analyse(reg, files, root, args.min_evidence, args.min_margin)
+    joined_reg = "\n".join(lines)
+    dm2 = DANGLING_MARKER.search(joined_reg)
+    dangling_ok = set(int(x) for x in re.findall(r'[0-9]+', dm2.group(1))) if dm2 else set()
+
+    findings, counts = analyse(reg, files, root, args.min_evidence, args.min_margin,
+                               dangling_ok=dangling_ok)
 
     gaps = [n for n in range(1, max(reg) + 1) if n not in reg]
     cross = sorted(set(reg) & set(greg))
@@ -864,6 +888,21 @@ def main():
             "collision -- remove it." % (n, PATTERNS_REL))
     for n in gaps:
         register_fatal.append("REGISTER GAP P-%d: cited ids may resolve to nothing" % n)
+    # A DANGLING declaration must be TRUE on both counts, or it is a silencer.
+    cited_undef = set(f["cited"] for f in findings if f["kind"] == "UNDEFINED")
+    for n in sorted(dangling_ok):
+        if n in reg:
+            register_fatal.append(
+                "DANGLING DECLARATION IS STALE: P-%d is declared cited-but-undefined "
+                "in %s, yet it IS defined at :%d. Remove it -- a stale declaration "
+                "pre-silences a future real one." % (n, PATTERNS_REL, reg[n]["line"]))
+        elif n not in cited_undef:
+            register_fatal.append(
+                "DANGLING DECLARATION IS STALE: P-%d is declared cited-but-undefined "
+                "in %s but is cited NOWHERE. Remove it." % (n, PATTERNS_REL))
+    if dangling_ok:
+        print("PNUMBER-CITATIONS: declared-dangling ids (recorded in the %s errata "
+              "with their repair) = %s" % (PATTERNS_REL, sorted(dangling_ok)))
 
     print("PNUMBER-CITATIONS: register=%s ids=%d gaps=%s in-file-collisions=%d "
           "cross-register-collisions=%s"

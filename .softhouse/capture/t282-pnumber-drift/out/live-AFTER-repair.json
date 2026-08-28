@@ -95,7 +95,8 @@
   92,
   93,
   94,
-  95
+  95,
+  96
  ],
  "register_gaps": [],
  "register_collisions": [
@@ -123,17 +124,17 @@
   6
  ],
  "counts": {
-  "sites": 8448,
-  "definition": 96,
-  "bare": 7947,
-  "consistent": 358,
-  "misdirecting": 35,
-  "undefined": 2,
-  "negative_control": 10,
+  "sites": 8529,
+  "definition": 97,
+  "bare": 8016,
+  "consistent": 365,
+  "misdirecting": 34,
+  "undefined": 6,
+  "negative_control": 11,
   "cross_referenced": 22,
   "skipped_self_source": 2,
-  "skipped_self_output": 13,
-  "self_corrected": 24
+  "self_corrected": 25,
+  "skipped_self_output": 21
  },
  "thresholds": {
   "min_evidence": 6,
@@ -8634,9 +8635,10 @@
    "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/31-sound-sweep.py",
    "line": 14,
    "cited": 131,
-   "detail": "P-131 is defined in neither register",
+   "detail": "P-131 is defined in neither register (DECLARED dangling in patterns.md errata)",
    "text": "`grep` function is (P-131 in patterns.md ~line 707: --ignore-files honours",
    "zone": "evidence",
+   "declared_dangling": true,
    "fatal": false
   },
   {
@@ -13524,7 +13526,7 @@
    "file": ".softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py",
    "line": 4,
    "cited": 22,
-   "detail": "gloss (colon) matches no registered rule (best trigram score 0 < 6): 'a guard you have not seen fail THROUGH THE ROUTE THAT RUNS IT is not wired. '",
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'a guard you have not seen fail THROUGH THE ROUTE THAT RUNS IT is not wired. '",
    "text": "P-22: a guard you have not seen fail THROUGH THE ROUTE THAT RUNS IT is not wired. P-45: a",
    "zone": "evidence",
    "fatal": false
@@ -18010,6 +18012,106 @@
   },
   {
    "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 48,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# (1) the drift the task was dispatched for: P-79/P-80/P-83 carrying the",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 48,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# (1) the drift the task was dispatched for: P-79/P-80/P-83 carrying the",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 48,
+   "cited": 83,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# (1) the drift the task was dispatched for: P-79/P-80/P-83 carrying the",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 49,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "# rule patterns.md defines one number higher. Recorded at P-86.",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 51,
+   "cited": 79,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 0 < 6): 'the P-86 off-by-one\"     if \"prints an absence over an error\" in g or \"exits 1 on NO MATCH\" in g \\\\'",
+   "text": "return TP, \"P-80's rule ('a corrected cardinal rots in every place it was restated') cited as P-79 -- the P-86 off-by-one\"",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 51,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "return TP, \"P-80's rule ('a corrected cardinal rots in every place it was restated') cited as P-79 -- the P-86 off-by-one\"",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 54,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "return TP, \"P-81's rule (git grep exits 1 on no-match, >1 on error) cited as P-80 -- the P-86 off-by-one\"",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 56,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "return TP, \"P-81's rule (the fail-open guard caught three workers' own instruments) cited as P-80/P-83 -- the P-86 off-by-one\"",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 56,
+   "cited": 83,
+   "detail": "gloss (dash) matches no registered rule (best trigram score 0 < 6): 'the P-86 off-by-one\"     # (2) sweep/census OUTPUT files: the \\'gloss\\' is a grep result line, i.e. '",
+   "text": "return TP, \"P-81's rule (the fail-open guard caught three workers' own instruments) cited as P-80/P-83 -- the P-86 off-by-one\"",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t282-pnumber-drift/bin/population-table.py",
+   "line": 56,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "return TP, \"P-81's rule (the fail-open guard caught three workers' own instruments) cited as P-80/P-83 -- the P-86 off-by-one\"",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
    "file": ".softhouse/capture/t282-pnumber-drift/bin/restamp.py",
    "line": 4,
    "cited": 80,
@@ -18663,9 +18765,10 @@
    "file": ".softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py",
    "line": 24,
    "cited": 261,
-   "detail": "P-261 is defined in neither register",
+   "detail": "P-261 is defined in neither register (DECLARED dangling in patterns.md errata)",
    "text": "nothing outside` what it claims to measure -- and P-261's rule that an orphan may not acquire a",
    "zone": "evidence",
+   "declared_dangling": true,
    "fatal": false
   },
   {
@@ -24043,7 +24146,7 @@
    "file": ".softhouse/conformance.sh",
    "line": 3098,
    "cited": 56,
-   "detail": "gloss (colon) matches no registered rule (best trigram score 0 < 6): 'the guard is   #     tested where it runs, not only where it is defined).'",
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'the guard is   #     tested where it runs, not only where it is defined).'",
    "text": "#     RED and GREEN, at the function AND at the whole-harness level (P-56: the guard is",
    "zone": "directive",
    "fatal": false
@@ -49659,7 +49762,7 @@
    "file": ".softhouse/patterns.md",
    "line": 2596,
    "cited": 76,
-   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'a rule generalised from the one example it was written against, and   then applied to a population it was never measured on.'",
+   "detail": "gloss (colon) matches no registered rule (best trigram score 3 < 6): 'a rule generalised from the one example it was written against, and   then applied to a population it was never measured on.'",
    "text": "- The nearest relative is **`P-76`**: a rule generalised from the one example it was written against, and",
    "zone": "directive",
    "fatal": false
@@ -50091,6 +50194,640 @@
    "cited": 88,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "`P-88` rejects: `T271` refused to create the file or move `FAILOPEN_PIN_FILE_LIST`, because those manufacture",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3168,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-86` recorded the pattern ids rotting. `T282` was sent to settle the four ids it named and found the",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3170,
+   "cited": 69,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "14 genuinely drifted** — including one nobody had seen, `tasks.json:2374`, which cites `P-69` for",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3171,
+   "cited": 79,
+   "detail": "gloss (possessive) matches no registered rule (best trigram score 0 < 6): 'and is *not* part of the `P-86` off-by-one at all.'",
+   "text": "`P-79`'s rule and is *not* part of the `P-86` off-by-one at all.",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3171,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-79`'s rule and is *not* part of the `P-86` off-by-one at all.",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3173,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**THE RULE, and it is the half `P-86` left implicit.** `P-86` says cite the id **and its sentence**.",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3173,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**THE RULE, and it is the half `P-86` left implicit.** `P-86` says cite the id **and its sentence**.",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3183,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "1. **The erratum was a shield.** `P-86`'s body names `P-78`…`P-84` *in order to say those citations are",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3183,
+   "cited": 78,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "1. **The erratum was a shield.** `P-86`'s body names `P-78`…`P-84` *in order to say those citations are",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3183,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "1. **The erratum was a shield.** `P-86`'s body names `P-78`…`P-84` *in order to say those citations are",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3185,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "already bound\"* — therefore exempted the drifted citations **because `P-86` mentions them**. The",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3189,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "*quoted* with the correction on the same line. Resolved by `P-86`'s own remedy: if the right id is",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3191,
+   "cited": 33,
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '**A markdown table cell is a citation boundary.** A correct `'",
+   "text": "3. **A markdown table cell is a citation boundary.** A correct `(P-33)` at the end of a row scored",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3192,
+   "cited": 25,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "against `P-25` because the extractor walked backwards into a neighbouring cell about floating point.",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3194,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**And the repair for `P-80` nearly committed `P-80`:** inserting this file's new banner shifted every",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3194,
+   "cited": 80,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): \"** inserting this file's new banner shifted every definition line beneath it (`P-12` `:284`→`:315`), including the line numbers the new bann\"",
+   "text": "**And the repair for `P-80` nearly committed `P-80`:** inserting this file's new banner shifted every",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3195,
+   "cited": 12,
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): '284`→`:315`), including the line numbers the new banner cites. '",
+   "text": "definition line beneath it (`P-12` `:284`→`:315`), including the line numbers the new banner cites. They",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3198,
+   "cited": 96,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**COLLISION HAZARD, declared rather than discovered.** This entry claims **`P-96`** while four other",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3199,
+   "cited": 96,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "workers were live in the same fire. If a rival `P-96` lands, **renumber this one** — and note that the",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3200,
+   "cited": 78,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "instrument below is exactly what was missing when `P-78` collided: it detects a renumbering that failed",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "UNDEFINED",
+   "file": ".softhouse/patterns.md",
+   "line": 3218,
+   "cited": 131,
+   "detail": "P-131 is defined in neither register (DECLARED dangling in patterns.md errata)",
+   "text": "| 1 | `.softhouse/capture/t234-sweep-instrument-audit/instruments/31-sound-sweep.py:14` | `P-131` | **`-- NOT DEFINED --`** | cited id exists in neither register |",
+   "zone": "directive",
+   "declared_dangling": true,
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3219,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 2 | `.softhouse/capture/t255-dec2-rev8/instruments/20-verify-anchors.py:36` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3219,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 2 | `.softhouse/capture/t255-dec2-rev8/instruments/20-verify-anchors.py:36` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3219,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 2 | `.softhouse/capture/t255-dec2-rev8/instruments/20-verify-anchors.py:36` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3220,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 3 | `.softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:72` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3220,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 3 | `.softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:72` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3220,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 3 | `.softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:72` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3221,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 4 | `.softhouse/capture/t256-verdict-predicate/RULES-failopen.md:17` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3221,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 4 | `.softhouse/capture/t256-verdict-predicate/RULES-failopen.md:17` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3221,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 4 | `.softhouse/capture/t256-verdict-predicate/RULES-failopen.md:17` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "UNDEFINED",
+   "file": ".softhouse/patterns.md",
+   "line": 3222,
+   "cited": 261,
+   "detail": "P-261 is defined in neither register (DECLARED dangling in patterns.md errata)",
+   "text": "| 5 | `.softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py:24` | `P-261` | **`-- NOT DEFINED --`** | cited id exists in neither register |",
+   "zone": "directive",
+   "declared_dangling": true,
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3223,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 6 | `.softhouse/capture/t304-evidence-destruction/evidence/10-raw-sites.tsv:1718` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3223,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 6 | `.softhouse/capture/t304-evidence-destruction/evidence/10-raw-sites.tsv:1718` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3223,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 6 | `.softhouse/capture/t304-evidence-destruction/evidence/10-raw-sites.tsv:1718` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3224,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 7 | `.softhouse/reviews/t260-dec2-rev8/evidence/20-normative-set-diff.txt:65` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3224,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 7 | `.softhouse/reviews/t260-dec2-rev8/evidence/20-normative-set-diff.txt:65` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3224,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 7 | `.softhouse/reviews/t260-dec2-rev8/evidence/20-normative-set-diff.txt:65` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3225,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 8 | `.softhouse/reviews/t260-dec2-rev8/evidence/90-per-section-line-delta.txt:271` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3225,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 8 | `.softhouse/reviews/t260-dec2-rev8/evidence/90-per-section-line-delta.txt:271` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3225,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 8 | `.softhouse/reviews/t260-dec2-rev8/evidence/90-per-section-line-delta.txt:271` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3226,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 9 | `.softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh:5` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3226,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 9 | `.softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh:5` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3226,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 9 | `.softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh:5` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3227,
+   "cited": 69,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 10 | `.softhouse/tasks.json:2374` | `P-69` | **`P-79`** | NOT the P-86 off-by-one -- an INDEPENDENT drift, and the strongest signal in the entire population (score 21). Gloss: 'the guard did not merely fail t |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3227,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 10 | `.softhouse/tasks.json:2374` | `P-69` | **`P-79`** | NOT the P-86 off-by-one -- an INDEPENDENT drift, and the strongest signal in the entire population (score 21). Gloss: 'the guard did not merely fail t |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3227,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 10 | `.softhouse/tasks.json:2374` | `P-69` | **`P-79`** | NOT the P-86 off-by-one -- an INDEPENDENT drift, and the strongest signal in the entire population (score 21). Gloss: 'the guard did not merely fail t |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3228,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 11 | `.softhouse/tasks.json:2427` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3228,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 11 | `.softhouse/tasks.json:2427` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3228,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 11 | `.softhouse/tasks.json:2427` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3229,
+   "cited": 83,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 12 | `.softhouse/tasks.json:2427` | `P-83` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3229,
+   "cited": 81,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 12 | `.softhouse/tasks.json:2427` | `P-83` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3229,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 12 | `.softhouse/tasks.json:2427` | `P-83` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3230,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 13 | `.softhouse/tasks.json:3149` | `P-79` | **`P-80`** | Gloss 'make the second site READ the first, do not restate the cardinal' is P-80. This IS the P-86 off-by-one; the keyword adjudicator missed it only  |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3230,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 13 | `.softhouse/tasks.json:3149` | `P-79` | **`P-80`** | Gloss 'make the second site READ the first, do not restate the cardinal' is P-80. This IS the P-86 off-by-one; the keyword adjudicator missed it only  |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3230,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 13 | `.softhouse/tasks.json:3149` | `P-79` | **`P-80`** | Gloss 'make the second site READ the first, do not restate the cardinal' is P-80. This IS the P-86 off-by-one; the keyword adjudicator missed it only  |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3230,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 13 | `.softhouse/tasks.json:3149` | `P-79` | **`P-80`** | Gloss 'make the second site READ the first, do not restate the cardinal' is P-80. This IS the P-86 off-by-one; the keyword adjudicator missed it only  |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3231,
+   "cited": 79,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 14 | `docs/adr/DEC-2-gl-accounting-adapter.md:294` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3231,
+   "cited": 80,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 14 | `docs/adr/DEC-2-gl-accounting-adapter.md:294` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3231,
+   "cited": 86,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "| 14 | `docs/adr/DEC-2-gl-accounting-adapter.md:294` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "UNDEFINED",
+   "file": ".softhouse/patterns.md",
+   "line": 3236,
+   "cited": 131,
+   "detail": "P-131 is defined in neither register (DECLARED dangling in patterns.md errata)",
+   "text": "**Rows 1 and 5 are cited ids that resolve to NOTHING** — `P-131` and `P-261`, almost certainly typos for",
+   "zone": "directive",
+   "declared_dangling": true,
+   "fatal": false
+  },
+  {
+   "kind": "UNDEFINED",
+   "file": ".softhouse/patterns.md",
+   "line": 3236,
+   "cited": 261,
+   "detail": "P-261 is defined in neither register (DECLARED dangling in patterns.md errata)",
+   "text": "**Rows 1 and 5 are cited ids that resolve to NOTHING** — `P-131` and `P-261`, almost certainly typos for",
+   "zone": "directive",
+   "declared_dangling": true,
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3237,
+   "cited": 13,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-13`/`P-31` and `P-26`, though only their authors can say. Naming them in this table made the checker go",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3237,
+   "cited": 31,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-13`/`P-31` and `P-26`, though only their authors can say. Naming them in this table made the checker go",
+   "zone": "directive",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/patterns.md",
+   "line": 3237,
+   "cited": 26,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "`P-13`/`P-31` and `P-26`, though only their authors can say. Naming them in this table made the checker go",
    "zone": "directive",
    "fatal": false
   },
@@ -72248,7 +72985,7 @@
    "file": ".softhouse/tasks.json",
    "line": 1621,
    "cited": 22,
-   "detail": "gloss (dash) matches no registered rule (best trigram score 0 < 6): 'a guard you have not seen fail is not a guard). '",
+   "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): 'a guard you have not seen fail is not a guard). '",
    "text": "\"description\": \"T220's single finding against T116, raised while APPROVING it. The kill counts have corpus-wide tripwires; THE EXEMPTION COUNT DOES NOT. admit.go checks only 'known invariant, non-empty reason', so TWO sh",
    "zone": "orchestrator",
    "fatal": false
@@ -72338,7 +73075,7 @@
    "file": ".softhouse/tasks.json",
    "line": 1661,
    "cited": 22,
-   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'A guard you have not personally seen fail is not a guard'",
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'A guard you have not personally seen fail is not a guard'",
    "text": "\"description\": \"T222 added a REFUSAL to Admit: an exemption is inadmissible unless re-running the exempted invariant against the vector's own recorded schedule comes back VIOLATED. A refusal in Admit is a gate on what ma",
    "zone": "orchestrator",
    "fatal": false
@@ -72388,7 +73125,7 @@
    "file": ".softhouse/tasks.json",
    "line": 1680,
    "cited": 22,
-   "detail": "gloss (colon) matches no registered rule (best trigram score 0 < 6): 'a guard you have not seen fail THROUGH THE ROUTE THAT RUNS IT is not wired). '",
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'a guard you have not seen fail THROUGH THE ROUTE THAT RUNS IT is not wired). '",
    "text": "\"description\": \"T207's OWN NAMED TAIL, and it is the second time this exact residual has been left standing. T207 built t44_float_roundtrip_v3.py, proved it RED on value-corrupted money literals and GREEN on the legitima",
    "zone": "orchestrator",
    "fatal": false
@@ -74142,24 +74879,6 @@
    "fatal": false
   },
   {
-   "kind": "MISDIRECTING",
-   "file": ".softhouse/tasks.json",
-   "line": 2404,
-   "cited": 69,
-   "detail": "gloss (trailing-id) \"Three consecutive passes (rev 6, rev 7, and rev 7's own 're-measured' citations) have shipped stale line numbers.\\\\n\\\\nRE-DERIVE, at YOUR OWN \" matches P-87 (7) better than the cited P-69 (1); patterns.md P-87 = 'A DELIBERATE COLLISION IS A TEST INSTRUMENT. SCHEDULE THE THING THAT WILL BREAK YOUR FIX, IN THE SAME FIRE.'",
-   "best": 87,
-   "gloss": "Three consecutive passes (rev 6, rev 7, and rev 7's own 're-measured' citations) have shipped stale line numbers.\\n\\nRE-DERIVE, at YOUR OWN commit, and STAMP it",
-   "how": "trailing-id",
-   "grams": 2,
-   "score": 7,
-   "cited_score": 1,
-   "high_confidence": false,
-   "suppressed_higher": [],
-   "text": "\"description\": \"You are an INDEPENDENT reviewer. You did not write T255. ASSUME DEFECTS EXIST. T255 was told to PREPARE AND LAND DEC-2 revision 8 in one fire, applying T251's C-1..C-8, and — the load-bearing instruction ",
-   "zone": "orchestrator",
-   "fatal": false
-  },
-  {
    "kind": "BARE",
    "file": ".softhouse/tasks.json",
    "line": 2404,
@@ -74460,7 +75179,7 @@
    "file": ".softhouse/tasks.json",
    "line": 2517,
    "cited": 22,
-   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'A rule nobody has seen fail is unverified'",
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'A rule nobody has seen fail is unverified'",
    "text": "\"description\": \"On local fire 20260822-060013 the driver rewrote STEP 0 of `.claude/skills/softhouse-program/SKILL.md` and patched `.softhouse/bin/fire-program.sh`, replacing `started_at`-based staleness with PUSH-RECENC",
    "zone": "orchestrator",
    "fatal": false
@@ -76356,7 +77075,7 @@
    "file": ".softhouse/tasks.json",
    "line": 4421,
    "cited": 16,
-   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'a driver claim is worker-checkable'",
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): 'a driver claim is worker-checkable'",
    "text": "\"description\": \"THE ORACLE IS UP AND THIS IS THE ONLY FIRE THAT CAN TAKE THIS CAPTURE. The driver verified it at dispatch:\\n  curl -sk https://localhost:8443/fineract-provider/actuator/health -> {\\\"status\\\":\\\"UP\\\",\\\"grou",
    "zone": "orchestrator",
    "fatal": false
@@ -79694,7 +80413,7 @@
    "file": "nexus/internal/apps/loanschedule/conformance/conformance_test.go",
    "line": 792,
    "cited": 22,
-   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 0 < 6): '// has seen fail is a guard nobody has tested'",
+   "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): '// has seen fail is a guard nobody has tested'",
    "text": "// has seen fail is a guard nobody has tested (P-22), and an external script that",
    "zone": "other",
    "fatal": false
@@ -79854,7 +80573,7 @@
    "file": "nexus/internal/apps/loanschedule/conformance/exemption_test.go",
    "line": 29,
    "cited": 22,
-   "detail": "gloss (colon) matches no registered rule (best trigram score 0 < 6): 'a guard you have not seen fail is // not a guard; '",
+   "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'a guard you have not seen fail is // not a guard; '",
    "text": "// on a deliberately-bad store copy first (P-22: a guard you have not seen fail is",
    "zone": "other",
    "fatal": false

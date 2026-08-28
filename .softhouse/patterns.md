@@ -3156,3 +3156,91 @@ because the top entry is a *deliberately built announced fallback*: the same sha
 own census first** — v1 reported 154 dead rows of which **56 (36%) were trailing-punctuation artefacts**, one
 of which would have accused `T299`'s own guard, landed two commits earlier, of the defect it was being used
 to investigate.
+
+---
+
+<!-- T282-CITATION-ERRATA -->
+
+**P-96 — THE ERRATUM SHIELDED THE CITATIONS IT WAS WRITTEN TO CORRECT, AND A GUARD THAT CHECKED
+THE NUMBER WOULD HAVE PASSED EVERY INSTANCE.**
+*`T282`, measured at `c086ecb2a01b`.*
+
+`P-86` recorded the pattern ids rotting. `T282` was sent to settle the four ids it named and found the
+population had never been measured: **8,448 `P-n` citation sites across the tracked tree, 37 flagged,
+14 genuinely drifted** — including one nobody had seen, `tasks.json:2374`, which cites `P-69` for
+`P-79`'s rule and is *not* part of the `P-86` off-by-one at all.
+
+**THE RULE, and it is the half `P-86` left implicit.** `P-86` says cite the id **and its sentence**.
+The mechanical consequence is that **the checkable property is the SENTENCE, never the id**: a guard
+asking *"is `P-n` defined?"* returns **PASS on every recorded instance of this defect**, because every
+drifted citation names an id that exists. Demonstrated, not asserted — the existence-only predicate is
+run against the same bytes in
+`.softhouse/capture/t282-pnumber-drift/red/20-existence-only-on-RED.txt` and reports `VERDICT PASS`
+while the sentence-matching predicate reports three findings and exits 1.
+
+**THREE THINGS THIS COST, all found by driving the checker at real bytes rather than reading it:**
+
+1. **The erratum was a shield.** `P-86`'s body names `P-78`…`P-84` *in order to say those citations are
+   wrong*. Cross-reference suppression — *"if the better-matching rule names the cited id, they are
+   already bound"* — therefore exempted the drifted citations **because `P-86` mentions them**. The
+   correction absorbed the defect it documented. A suppressed winner may now be skipped but may never
+   **end** the search.
+2. **Use is not mention.** Removing the shield then flagged `patterns.md` itself, where the wrong ids are
+   *quoted* with the correction on the same line. Resolved by `P-86`'s own remedy: if the right id is
+   already beside the citation, the text is **self-correcting** and no reader can be misdirected.
+3. **A markdown table cell is a citation boundary.** A correct `(P-33)` at the end of a row scored
+   against `P-25` because the extractor walked backwards into a neighbouring cell about floating point.
+
+**And the repair for `P-80` nearly committed `P-80`:** inserting this file's new banner shifted every
+definition line beneath it (`P-12` `:284`→`:315`), including the line numbers the new banner cites. They
+are now derived by `bin/restamp.py` from the live file, never typed.
+
+**COLLISION HAZARD, declared rather than discovered.** This entry claims **`P-96`** while four other
+workers were live in the same fire. If a rival `P-96` lands, **renumber this one** — and note that the
+instrument below is exactly what was missing when `P-78` collided: it detects a renumbering that failed
+to reach the places restating it. **Renumbering is now safe in a way it has never been in this program.**
+
+**INSTRUMENT:** `.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py`.
+`--selftest` = 11/11. **NOT YET WIRED into `conformance.sh`** — `T326` held that file for the batch;
+the exact un-applied wiring diff is in `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md`.
+**Until it is applied this enforces nothing**, which is the sixth occurrence of this program's
+most-repeated lesson and is recorded here so it is not the seventh.
+
+### `T282` CITATION ERRATA — corrected FORWARD, never edited in place
+
+These citations are in **committed evidence, ratified ADRs and orchestrator-owned files**, which the
+program corrects forward rather than rewriting (`T316`). The id in *cited* is wrong; the rule the
+sentence actually states is under *actually*. Derived from the checker's adjudicated output — a table
+of corrected cardinals that someone retyped would be the next instance of this defect.
+
+| # | site | cited | actually | why |
+|---|---|---|---|---|
+| 1 | `.softhouse/capture/t234-sweep-instrument-audit/instruments/31-sound-sweep.py:14` | `P-131` | **`-- NOT DEFINED --`** | cited id exists in neither register |
+| 2 | `.softhouse/capture/t255-dec2-rev8/instruments/20-verify-anchors.py:36` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 3 | `.softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:72` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 4 | `.softhouse/capture/t256-verdict-predicate/RULES-failopen.md:17` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 5 | `.softhouse/capture/t290-review-t271/guard_rvpa_floor_t290.py:24` | `P-261` | **`-- NOT DEFINED --`** | cited id exists in neither register |
+| 6 | `.softhouse/capture/t304-evidence-destruction/evidence/10-raw-sites.tsv:1718` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 7 | `.softhouse/reviews/t260-dec2-rev8/evidence/20-normative-set-diff.txt:65` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 8 | `.softhouse/reviews/t260-dec2-rev8/evidence/90-per-section-line-delta.txt:271` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 9 | `.softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh:5` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 10 | `.softhouse/tasks.json:2374` | `P-69` | **`P-79`** | NOT the P-86 off-by-one -- an INDEPENDENT drift, and the strongest signal in the entire population (score 21). Gloss: 'the guard did not merely fail t |
+| 11 | `.softhouse/tasks.json:2427` | `P-80` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 12 | `.softhouse/tasks.json:2427` | `P-83` | **`P-81`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+| 13 | `.softhouse/tasks.json:3149` | `P-79` | **`P-80`** | Gloss 'make the second site READ the first, do not restate the cardinal' is P-80. This IS the P-86 off-by-one; the keyword adjudicator missed it only  |
+| 14 | `docs/adr/DEC-2-gl-accounting-adapter.md:294` | `P-79` | **`P-80`** | the `P-86` off-by-one: the sentence is the rule defined one number higher |
+
+**Total: 14.** Full population, including the 21 adjudicated FALSE POSITIVES and the 2 ambiguous
+rule-pairs, in `.softhouse/capture/t282-pnumber-drift/out/population.md`.
+
+**Rows 1 and 5 are cited ids that resolve to NOTHING** — `P-131` and `P-261`, almost certainly typos for
+`P-13`/`P-31` and `P-26`, though only their authors can say. Naming them in this table made the checker go
+**fatal on the very table recording them**, because `patterns.md` is a directive file. That was the guard
+working, and the fix is a declaration rather than an exemption — symmetric with the collision declaration in
+the banner, and fatal if it ever goes stale (a declared id that turns out to be defined, or to be cited
+nowhere, stops the run):
+
+`PNUMBER-DANGLING-CITED-IDS: 131, 261`
+
+**`P-99` is NOT in that list and must never be.** It is a deliberate absence used as a negative control by
+three instruments; the checker carries it separately, with the instrument that depends on it named.

@@ -17,6 +17,7 @@ J = os.path.join(HERE, "..", "out", "live-AFTER-repair.json")
 FP = "FALSE-POSITIVE"
 TP = "TRUE-DRIFT"
 AMB = "AMBIGUOUS"
+MENTION = "ERRATA-MENTION"
 
 # Hand adjudication lives in DATA, beside the evidence, not in this code:
 # out/adjudication.json, keyed "file:line:cited". Each entry carries its reason,
@@ -70,8 +71,18 @@ def main():
     rows = []
     for f in sorted(fs, key=lambda x: (x["zone"], x["file"], x["line"])):
         if f["kind"] == "UNDEFINED":
+            if f.get("declared_dangling") and f["file"].endswith("patterns.md"):
+                # patterns.md's OWN errata table names these ids in order to
+                # record that they resolve to nothing. A MENTION, not a use --
+                # the same use/mention line the checker draws for misdirection.
+                rows.append((f["zone"], f["file"], f["line"], "P-%d" % f["cited"], "-",
+                             MENTION, "the T282 errata table naming the dangling id "
+                                      "it exists to record"))
+                continue
             rows.append((f["zone"], f["file"], f["line"], "P-%d" % f["cited"], "-",
-                         TP, "cited id is defined in NEITHER register"))
+                         TP, "cited id is defined in NEITHER register"
+                             + (" (declared in the patterns.md errata, with its repair)"
+                                if f.get("declared_dangling") else "")))
             continue
         v, why = adjudicate(f)
         if v is None:
