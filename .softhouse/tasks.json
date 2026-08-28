@@ -4383,7 +4383,7 @@
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "status": "pending",
+      "status": "in_progress",
       "dependencies": [
         "T324"
       ],
@@ -4394,7 +4394,8 @@
         ".softhouse/capture/t325-adopt-attestation/"
       ],
       "description": "RAISED BY T318 (merged 2f1ba61c). T318 built `.softhouse/guards/repo-state-attest.sh` \u2014 a seven-term differential check \u2014 and measured SIX live damage gates of which FIVE ARE BLIND to a committed clobber. It assessed but did not rewrite them; the exact replacement text for the driver's STEP 5.5 is in its handoff.\n\nWHY THE DRIVER'S OWN EXIT PROTOCOL IS THE MOST IMPORTANT ONE: STEP 5.5 requires 'git status --porcelain must come back empty', and T318 measured that this sentence has ZERO discriminating power against the damage it is meant to catch \u2014 every arm of its drive, including all six LEGITIMATE ones, read CLEAN under the legacy check. The driver has been asserting cleanliness every fire on a test that cannot fail for the reason it exists.\n\nDO THIS:\n 1. Adopt the attestation at each of the five blind gates. `.claude/skills/softhouse-program/SKILL.md` is likely outside your edit set \u2014 if so, state the exact change and why you could not make it, as T318 did.\n 2. THE FALSE-POSITIVE ARM DECIDES ADOPTABILITY, and T318's own experience is the warning: its arm G5 showed the guard flagging the SANCTIONED `checkout -b softhouse/<task>` as damage. A check that reports ordinary pipeline work as damage will be disabled within two fires. Every gate you wire needs a legitimate-operation arm proving it stays quiet.\n 3. RESPECT THE BOUNDARY T318 ARGUED: ancestry, not equality \u2014 every legitimate commit is a fast-forward from where the operation started. Reflog, fsck dangling objects and object counts are EXCLUDED WITH REASONS; do not add them back without arguing against those reasons.\n 4. THE ORACLE-VS-SELF ASYMMETRY IS REAL AND YOU MUST PRESERVE IT. Gates over the pinned reference oracle are 45/45 correct because a PINNED check is right there \u2014 the oracle is meant to be immobile. This repo is meant to move, which is why it needs a DIFFERENTIAL check. Do not 'harmonise' them.\n\nDo destructive driving in scratch clones. Verify with `bash .softhouse/conformance.sh` (bash, never sh). P-84: exit 2 with NO probe line PRINTED is a failed HARD guard, not an oracle outage. P-86: cite the rule TEXT beside any P-number.",
-      "note": "Filed by fire 20260827-230001 from T318. Behind T324, which fixes the one live instance."
+      "note": "DISPATCHED by fire 20260828-080001 batch 2. Sole writer of its files; see RESUME.md. T325 owns fire-program.sh this batch -- SAFE mid-fire because T309 measured that every git operation lands a NEW inode + rename, which cannot reach a live fire's open fd; only an IN-PLACE rewrite of the live path is the hazard [fire-program.sh:67-79]. Filed by fire 20260827-230001 from T318. Behind T324, which fixes the one live instance.",
+      "branch": "softhouse/T325-adopt-attestation"
     },
     {
       "id": "T326",
@@ -4482,19 +4483,19 @@
     },
     {
       "id": "T330",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
       "dependencies": [],
-      "branch": null,
+      "branch": "softhouse/T330-reconcile-merged-work",
       "title": "FU-RECONCILE-1: the post-fire reconcile DEMOTED A TASK WHOSE WORK WAS ALREADY MERGED \u2014 make branch-absence a THREE-way verdict, because a caveat is not a control",
       "files_hint": [
         ".softhouse/bin/ready-tasks.py",
         ".softhouse/capture/t330-reconcile-merged-work/"
       ],
       "description": "READ `.softhouse/observations/20260828-reconcile-demotes-merged-work.md` FIRST \u2014 the driver measured this and the measurement is not in dispute.\n\nWHAT HAPPENED. The wrapper's post-fire reconcile (967624ce) demoted T324 from in_progress to needs_retry because 'its recorded branch does not exist in this repo'. The branch was gone because the work had ALREADY BEEN MERGED AND THE BRANCH DELETED: a08a64e2 + merge d36863ad, 14 files / 2338 insertions, including fire-program.sh +218 and three instruments with RED/GREEN drives. Had fire 20260828-080001 believed its own state file it would have RE-DISPATCHED A COMPLETED TASK \u2014 and the retry would have landed a second, divergent implementation in the very file that decides whether worktrees get destroyed.\n\nTHE PART THAT MAKES THIS WORTH A TASK RATHER THAN A ONE-LINE FIX. `_branch_wip_core` ALREADY RETURNS THE CORRECT TEXT \u2014 T319's F1 replaced the flattering assertion with 'THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch that was MERGED and then pruned looks exactly the same from here' [ready-tasks.py:836-843, VERIFY the line numbers, they move]. So the prose was already corrected once, deliberately, and IT CHANGED NOTHING, because the code prints the caveat and demotes regardless. A CAVEAT IS NOT A CONTROL. This is the program's most-repeated lesson one turn further out: 'a guard that only works when someone remembers to run it enforces nothing' becomes 'a guard that discharges its duty by NARRATING the doubt to a human enforces nothing either'. Do not fix this by improving the message. The message is already right.\n\nDO THIS:\n 1. MAKE `absent` A THREE-WAY VERDICT \u2014 `merged` / `unstarted` / `genuinely-indeterminate`. Only the latter two may demote. Three cheap local signals distinguish them: `git log --oneline main --grep='^Merge <TID>:'`, `git log --oneline main --grep='^<TID>:'`, and `git ls-files '.softhouse/handoff/*/<TID>.md'`. DECIDE what a `merged` verdict should DO (promote to done? refuse to demote and shout?) and argue it \u2014 a wrong promotion is as bad as a wrong demotion, and the reconcile runs unattended on a SIGTERM path.\n 2. RESPECT THE BUDGET. The reconcile runs inside a hard wall-clock bound on the signal path (`reconcile_bounded`, fire-program.sh; SIGNAL_RECONCILE_MIN_SECS, and it is SKIPPED LOUDLY below that). You are adding up to three git calls PER TASK. Measure the added cost against the real tasks.json and show it, and make the new probes DEGRADE to `genuinely-indeterminate` \u2014 never to `merged` \u2014 when the budget is exhausted. FAIL-CLOSED: an exhausted budget must not manufacture a promotion.\n 3. DRIVE IT RED AND GREEN, four arms, because branch-absence is unsound in FOUR directions at once and they are byte-identical to `git rev-parse`: (a) merged-and-pruned, (b) never-started, (c) RENAMED branch with the live line elsewhere, (d) CASE-SHADOWED branch (the 2026-08-27 defect T308 caught and T312 closed with a reference-transaction hook \u2014 `case_variants`/`branch_sweep.py` already exist; IMPORT them, do not reimplement, per T213's rule). Show the current code gets (a) wrong and your fix gets all four right.\n 4. MEASURE THE POPULATION THE DRIVER COULD NOT. The driver swept live tasks.json and found EXACTLY ONE defect (T324, corrected). It did NOT sweep the archived runs at `.softhouse/runs/*.tasks.json` \u2014 that is P-66's population and it is [UNVERIFIED]. Sweep it. State where you looked; 'not found' is a statement about the search, never about the world.\n\nSCOPE: `.softhouse/bin/ready-tasks.py` and a new `.softhouse/capture/t330-reconcile-merged-work/`. Do NOT edit `.softhouse/bin/fire-program.sh` (T301 and T279 both name it) or `.softhouse/conformance.sh`. Verify with `bash .softhouse/conformance.sh` (bash, never sh; stage before running). P-84 \u2014 read the probe line's PRESENCE before its value: exit 2 with NO probe line printed is a FAILED HARD GUARD, a money non-negotiable, never an oracle outage. P-86 \u2014 an id is a cardinal: cite the rule TEXT beside any P-number. Handoff to .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T330.md.",
-      "note": "Filed by fire 20260828-080001 from its own pre-flight measurement. The driver corrected T324 by hand; this task closes the mechanism."
+      "note": "DISPATCHED by fire 20260828-080001 batch 2. Sole writer of its files; see RESUME.md. Filed by fire 20260828-080001 from its own pre-flight measurement. The driver corrected T324 by hand; this task closes the mechanism."
     }
   ],
   "cross_corroboration": {
