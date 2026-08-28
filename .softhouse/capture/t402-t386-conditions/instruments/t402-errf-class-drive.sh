@@ -94,13 +94,21 @@ echo
 REALGIT=$(command -v git) || exit 2
 mkdir -p "$WORK/shim" || exit 2
 
-# `git` shim: counts `grep` invocations and performs the arm's sabotage ONCE, after the seven
-# calibration searches. Everything else is passed straight through.
+# `git` shim: counts `grep` invocations and performs the arm's sabotage ONCE, at the boundary
+# between the calibration searches and the first selector. Everything else is passed through.
 cat > "$WORK/shim/git" <<SHIM
 #!/usr/bin/env bash
 if [ "\${1:-}" = "grep" ]; then
   n=\$(cat "\$T402_COUNT"); n=\$((n+1)); printf '%s' "\$n" > "\$T402_COUNT"
-  if [ "\$n" -gt "\$T402_AFTER" ] && [ ! -e "\$T402_DONE" ]; then
+  # THE SABOTAGE POINT IS DERIVED, NOT COUNTED. An earlier version fired after a hard-coded
+  # seven calibration searches; T402 then ADDED an eighth (the -P non-vacuity control), and the
+  # hard-coded number silently started landing in a different place -- a pinned cardinal
+  # rotting under an edit, P-86 in miniature, inside this drive. Every CALIBRATION search runs
+  # `git grep -c`; every SELECTOR runs `git grep -n`. Firing on the first `-n` therefore lands
+  # immediately after calibration on ANY ref, however many arms calibration grows.
+  sel_seen=no
+  for a in "\$@"; do [ "\$a" = "-n" ] && sel_seen=yes; done
+  if [ "\$sel_seen" = yes ] && [ ! -e "\$T402_DONE" ]; then
     case "\$T402_ARM" in
       unlink)
         : > "\$T402_DONE"
@@ -140,14 +148,21 @@ run_arm() { # run_arm <arm: none|unlink|readonly> <script> <outfile>
   printf '0' > "$WORK/count"
   (
     cd "$REPO" || exit 9
-    T402_ARM="$arm" T402_AFTER=7 T402_COUNT="$WORK/count" T402_DONE="$WORK/done" \
+    T402_ARM="$arm" T402_COUNT="$WORK/count" T402_DONE="$WORK/done" \
       T402_ERRDIR="$WORK/errdir" PATH="$WORK/shim:$PATH" bash "$script"
     echo "SWEEP EXIT=$?"
   ) > "$outf" 2>&1
 }
 
 # Every cardinal this drive reports is read out of the transcript by a fixed-string count.
-mz()  { grep -c 'MEASURED ZERO' "$1"; }
+# T402 SELF-CORRECTION, and it is the same class of error as the one under test.
+# The first version of this counter matched the bare string `MEASURED ZERO`. The repair's own
+# REFUSAL message contains that string -- "1 is the status this file reads as a MEASURED ZERO"
+# -- so the GREEN run scored 16 fabricated measured-zeros against a file that had fabricated
+# none, and this drive correctly reported FAILURE for it. A discriminator that matches the
+# refusal it is meant to distinguish from is a discriminator that measures the wrong thing.
+# It now matches the FABRICATED OUTPUT LINE, which no refusal text contains.
+mz()  { grep -c 'MEASURED ZERO -- engine ran over' "$1"; }
 dnr() { grep -c 'SELECTOR DID NOT RUN' "$1"; }
 xit() { sed -n 's/^SWEEP EXIT=//p' "$1"; }
 res() { grep 'SWEEP-RESULT' "$1" | tail -1; }
