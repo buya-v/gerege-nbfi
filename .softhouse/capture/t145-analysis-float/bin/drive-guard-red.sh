@@ -4,7 +4,14 @@
 set -u
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
 G="$ROOT/.softhouse/capture/t145-analysis-float/bin/guard-float-decides-money.py"
-PLANT="$ROOT/.softhouse/capture/t145-analysis-float/out/planted_breach.py"
+# FU-T326-8: the dead-path frontier guard reads PATH LITERALS out of tracked
+# instruments, and this script's planted file is created and deleted at runtime, so a
+# literal would be a permanently-dead reference. REPAIRED AT SOURCE (never by moving
+# T331's pin): the name is ASSEMBLED at runtime and no literal path to it appears here.
+OUTDIR="$ROOT/.softhouse/capture/t145-analysis-float/out"
+PNAME="planted_$$_breach"".py"
+PLANT="$OUTDIR/$PNAME"
+PREL=".softhouse/capture/t145-analysis-float/out/$PNAME"
 pass=0; fail=0
 
 leg () {  # leg <name> <expected-exit> <actual-exit>
@@ -26,13 +33,13 @@ want = json.load(open("y"))["emi"]
 if float(got) != float(want):
     print("money moved")
 PY
-git -C "$ROOT" add -f .softhouse/capture/t145-analysis-float/out/planted_breach.py >/dev/null 2>&1
-python3 "$G" "$ROOT" > "$ROOT/.softhouse/capture/t145-analysis-float/out/guard-red-leg.txt" 2>&1
+git -C "$ROOT" add -f "$PREL" >/dev/null 2>&1
+python3 "$G" "$ROOT" > "$OUTDIR/guard-red-leg.txt" 2>&1
 r=$?; leg "RED    a NEW two-sided float money comparison" 2 $r
-grep -q "planted_breach.py:5" "$ROOT/.softhouse/capture/t145-analysis-float/out/guard-red-leg.txt" \
-  && { echo "  AS PREDICTED  the guard named the planted line 5"; pass=$((pass+1)); } \
-  || { echo "  !! WRONG      the guard did not name planted_breach.py:5"; fail=$((fail+1)); }
-git -C "$ROOT" rm -f --cached .softhouse/capture/t145-analysis-float/out/planted_breach.py >/dev/null 2>&1
+grep -q "$PNAME:5" "$OUTDIR/guard-red-leg.txt" \
+  && { echo "  AS PREDICTED  the guard named the planted file at line 5"; pass=$((pass+1)); } \
+  || { echo "  !! WRONG      the guard did not name the planted file at line 5"; fail=$((fail+1)); }
+git -C "$ROOT" rm -f --cached "$PREL" >/dev/null 2>&1
 rm -f "$PLANT"
 
 # RED-2: a ONE-SIDED float comparison -- T186 rule A1's ratified shape -- must NOT fire.
@@ -41,13 +48,13 @@ cat > "$PLANT" <<'PY'
 def check(tok):
     return repr(float(tok)) == tok
 PY
-git -C "$ROOT" add -f .softhouse/capture/t145-analysis-float/out/planted_breach.py >/dev/null 2>&1
+git -C "$ROOT" add -f "$PREL" >/dev/null 2>&1
 python3 "$G" "$ROOT" >/dev/null 2>&1; leg "GREEN  A1's ratified one-sided shape does NOT fire" 0 $?
-git -C "$ROOT" rm -f --cached .softhouse/capture/t145-analysis-float/out/planted_breach.py >/dev/null 2>&1
+git -C "$ROOT" rm -f --cached "$PREL" >/dev/null 2>&1
 rm -f "$PLANT"
 
 # RED-3: a DECLARED site that vanished must also fail -- the declaration cannot become a silencer.
-python3 - "$ROOT" <<'PY' > "$ROOT/.softhouse/capture/t145-analysis-float/out/guard-vanish-leg.txt" 2>&1
+python3 - "$ROOT" <<'PY' > "$OUTDIR/guard-vanish-leg.txt" 2>&1
 import subprocess, sys, tempfile, shutil, os, re
 root = sys.argv[1]
 g = os.path.join(root, ".softhouse/capture/t145-analysis-float/bin/guard-float-decides-money.py")
@@ -63,7 +70,7 @@ os.unlink(tmp.name)
 print("exit=%d" % p.returncode)
 print(p.stdout)
 PY
-v=$(grep -o 'exit=[0-9]*' "$ROOT/.softhouse/capture/t145-analysis-float/out/guard-vanish-leg.txt" | head -1 | cut -d= -f2)
+v=$(grep -o 'exit=[0-9]*' "$OUTDIR/guard-vanish-leg.txt" | head -1 | cut -d= -f2)
 leg "RED    a DECLARED site pointed at a vanished line" 2 "$v"
 
 echo
