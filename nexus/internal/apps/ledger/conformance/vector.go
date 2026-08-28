@@ -293,6 +293,82 @@ type RequestLeg struct {
 	// AmountMajorText is the oracle's emitted characters, exactly. For a POST
 	// it is the request body's own token; for a read-back it is the response's.
 	AmountMajorText string `json:"amount_major_text"`
+
+	// SlotCode is the acc_product_mapping.financial_account_type this leg
+	// ARRIVED THROUGH, or 0 on a leg no slot took part in. [T391]
+	//
+	// -----------------------------------------------------------------------
+	// WHY THE SLOT IS PER LEG WHEN P-1 PUT IT ON THE REQUEST
+	// -----------------------------------------------------------------------
+	//
+	// Request.SlotCode exists and names ONE slot. That was right for the shape
+	// P-1 imagined and it is not enough for the shape the oracle actually
+	// produced: ONE ACCRUAL JOURNAL TRANSACTION SPANS SIX SLOTS. L29 debits
+	// INTEREST_RECEIVABLE (7), FEES_RECEIVABLE (8) and PENALTIES_RECEIVABLE (9)
+	// and credits INTEREST_ON_LOANS (3), INCOME_FROM_FEES (4) and
+	// INCOME_FROM_PENALTIES (5), on one transaction id.
+	//
+	// capabilities-ledger.json's `ledger.slot.resolution` row named this exact
+	// obstruction and named it correctly: "doing so needs a request shape whose
+	// slot_code names ONE slot, and every entry in the multi-leg corpus spans
+	// several". The answer is not to pick one leg; it is to put the slot where
+	// the slot is, which is on the leg.
+	//
+	// Request.SlotCode is NOT removed and is NOT repurposed. admit.go requires
+	// it to be 0 on a vector that carries per-leg slot codes, with the reason
+	// stated there: two places to say which slot an entry used is two places
+	// that can disagree, and the entry-level one cannot express six.
+	//
+	// -----------------------------------------------------------------------
+	// A LEG CARRIES EXACTLY ONE OF: AN ACCOUNT ID, OR A SLOT CODE
+	// -----------------------------------------------------------------------
+	//
+	// THIS IS THE WHOLE NON-CIRCULARITY ARGUMENT FOR THE SLOT CELLS, and it is
+	// the same argument the money cells rest on. A MANUAL leg names the account
+	// the poster chose, because that is what a manual posting is. An
+	// ACCOUNTING-PATH leg names the SLOT and NOT the account: the account is
+	// what the implementation must RESOLVE, through the product's own observed
+	// acc_product_mapping rows (Request.ProductMappings) and the slot family the
+	// product's accounting rule selects.
+	//
+	// So on an accounting-path vector `expect.legs[].gl_account_id` and
+	// `expect.legs[].gl_account_code` stop being copies of an input and become
+	// OUTPUTS. A port that resolves slot 8 to the wrong account now differs from
+	// the expectation; before this field existed it could not, because the
+	// vector handed it the answer.
+	SlotCode int32 `json:"slot_code,omitempty"`
+}
+
+// ProductMapping is ONE OBSERVED acc_product_mapping row: the (product, slot) ->
+// GL account fact the oracle itself holds. [T391]
+//
+// IT IS AN INPUT, TRANSCRIBED, NEVER DERIVED. The rows a vector carries are read
+// off `GET /loanproducts/{id}`'s `accountingMappings` at the contract boundary
+// the vector declares, cross-checked against a read-only SELECT over
+// acc_product_mapping. Nothing in this harness computes one.
+//
+// WHY THE WHOLE TABLE AND NOT JUST THE SIX ROWS THE ENTRY USED. Because the
+// resolution the port performs is a LOOKUP IN A TABLE, and a table containing
+// only the rows the answer needs is not a lookup, it is the answer. Carrying the
+// product's complete mapping means a port that mis-keys — that reads the row for
+// slot 7 when asked for slot 8, or that takes the first row, or that ignores the
+// key entirely — lands on a DIFFERENT account and the comparator says so.
+//
+// THE FAMILY IS NOT IN THE KEY, AND THAT IS THE TRAP THIS TYPE EXISTS INSIDE.
+// acc_product_mapping is keyed on (product_id, product_type, financial_account_type)
+// and NOT on the accounting rule, so the CASH enum and the ACCRUAL enum share one
+// integer space with different meanings at 7, 8, 9, 22, 24, 25 and 26. A port can
+// therefore resolve the RIGHT ACCOUNT while naming the WRONG SLOT. That is
+// exactly T242's error (A2-34 F-4) in port form, it is registered as
+// `ledger-wrong-slot-family-blind`, and the only cell that catches it is
+// ExpectLeg.SlotName.
+type ProductMapping struct {
+	// SlotCode is acc_product_mapping.financial_account_type. It is an integer
+	// SLOT CODE and nothing in this harness treats it as money.
+	SlotCode int32 `json:"slot_code"`
+
+	// GLAccountID is acc_product_mapping.gl_account_id.
+	GLAccountID int64 `json:"gl_account_id"`
 }
 
 // Request is the ledger input shape DEC-2 precondition P-1 specifies: "a request
@@ -557,6 +633,16 @@ type Request struct {
 
 	// Legs is the posting as requested, in the oracle's own major-unit text.
 	Legs []RequestLeg `json:"legs"`
+
+	// ProductMappings is the product's OBSERVED acc_product_mapping table, and
+	// it is the lookup an accounting-path leg's account is RESOLVED through.
+	// [T391]
+	//
+	// EMPTY ON EVERY VECTOR THAT PREDATES T391, and admit.go requires exactly
+	// that of a vector with no per-leg slot code, so the field cannot accumulate
+	// silently on the manual corpus — the same default-deny-in-both-directions
+	// shape T294 gave the opening-balance inputs.
+	ProductMappings []ProductMapping `json:"product_mappings,omitempty"`
 }
 
 // ExpectLeg is one leg of the EXPECTED entry.
@@ -576,6 +662,49 @@ type ExpectLeg struct {
 	// pairing DEC-2 §4.3 mandates, copied from the loanschedule store's
 	// principal_minor / principal_major_text.
 	AmountMajorText string `json:"amount_major_text"`
+
+	// SlotName is THE GRADED SLOT CELL: the Java constant name of the
+	// placeholder this leg arrived through, DECODED BY THE IMPLEMENTATION on the
+	// slot family the product's accounting rule selects. "" means no slot took
+	// part, which is what a MANUAL entry is. [T391]
+	//
+	// -----------------------------------------------------------------------
+	// WHY THE NAME AND NOT THE CODE
+	// -----------------------------------------------------------------------
+	//
+	// The code is the INPUT (RequestLeg.SlotCode). Grading it would be grading
+	// the vector against itself — the circularity this schema's money cells were
+	// designed to avoid, in a second place. The NAME is an OUTPUT: it exists
+	// only after the implementation has chosen a family and decoded the integer
+	// through it, and the two loan families do not agree.
+	//
+	// CashAccountsForLoan HAS NO 7, 8 OR 9 AT ALL; AccrualAccountsForLoan does,
+	// and calls them INTEREST_RECEIVABLE, FEES_RECEIVABLE and
+	// PENALTIES_RECEIVABLE. The same two names, FEES_RECEIVABLE and
+	// PENALTIES_RECEIVABLE, sit at 25 and 26 in the cash enum
+	// [VERIFIED: AccountingConstants.java:79-89 and :95-122 at the pinned sha
+	// 426a23544; ported at nexus/internal/apps/ledger/slots.go].
+	//
+	// -----------------------------------------------------------------------
+	// THIS IS THE CELL THAT GRADES THE SLOT RATHER THAN THE ACCOUNT
+	// -----------------------------------------------------------------------
+	//
+	// T242's correction (A2-34 F-4) is the reason it exists. The harness printed
+	// "gl 18, 22 and 16 carry ZERO journal entries" on every run as measured
+	// fact while gl 16 had SIXTEEN, because ONE GL ACCOUNT BACKS SEVERAL SLOTS:
+	// gl 16 is PENALTIES_RECEIVABLE (slot 9) on accrual product 28 AND
+	// FUND_SOURCE (slot 1) on ten cash products, and every one of its rows
+	// arrives through the latter. A corpus that grades only the account
+	// reproduces that error: it cannot tell "landed on a receivable account"
+	// from "arrived through a receivable slot".
+	//
+	// AND THE DEFECT IT CATCHES IS ONE NO OTHER CELL CAN. acc_product_mapping is
+	// keyed on the raw integer with the accounting rule NOT in the key, so a
+	// family-blind port resolves the RIGHT ACCOUNT and every other cell on this
+	// leg matches. `ledger-wrong-slot-family-blind` is that port, it is
+	// byte-identical to the reference implementation on all seven pre-T391
+	// parity vectors, and `legs[i].slot_name` is the only cell it dies on.
+	SlotName string `json:"slot_name"`
 
 	// ExcludedFields names cells of THIS LEG that the capture recorded but this
 	// vector declines to grade, with the reason living in Vector.Note.

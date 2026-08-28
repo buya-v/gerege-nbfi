@@ -1,0 +1,7 @@
+ok  	github.com/gerege/nexus/internal/apps/ledger	0.230s [no tests to run]
+--- FAIL: TestEveryWrongImplementationIsKilled (1.79s)
+    conformance_test.go:141: WRONG IMPLEMENTATION "ledger-wrong-slot-family-blind" SURVIVES THE COMMITTED CORPUS. Either the corpus does not discriminate it, or it is not actually wrong. Both are defects and neither may be left as a registered-but-unkilled name
+    conformance_test.go:151: 14 registered wrong implementations, all 14 killed by the committed corpus
+FAIL
+FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	2.022s
+FAIL
