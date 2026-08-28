@@ -1,0 +1,51 @@
+=== scope t229corpus ===
+  admitted                                       347
+  amortizing                                     51
+  delta0_and_law_ii_exceptions_intersect         0
+  delta_histogram                                {'0': 113, '1': 183}
+  descriptive_last_row_form_on_fact_a            '220/220'
+  exception_sets_identical                       True
+  fact_a_and_law_ii_exceptions_intersect         0
+  fact_a_fails                                   76
+  fact_a_holds                                   220
+  failing_cells_inside_conservative_region       7
+  failing_cells_outside_conservative_region      0
+  files                                          4
+  full_family_b_n                                183
+  header_ne_rowsum                               0
+  law_ii_fails                                   7
+  law_ii_holds                                   289
+  law_ii_on_delta0                               113
+  law_ii_on_fact_a                               213
+  law_ii_on_full_family_b                        176
+  observed_residual_EXCEEDS_formula              0
+  observed_residual_below_formula                7
+  partial_family_b_law_holds                     0
+  partial_family_b_n                             0
+  principal_in_last_row_only_on_fact_a           '220/220'
+  rate_inexact                                   0
+  rate_inexact_ids                               []
+  record_largest_failing_disbursement            1001
+  record_largest_failing_disbursement_cells      ['T117P2-R600p0-N1000-B1001', 'T159-R600p0-N1200-B1001', 'T159-R600p0-N1500-B1001', 'T159-R600p0-N2000-B1001', 'T159-R600p0-N3000-B1001']
+  record_largest_full_family_b_cells             ['T159-R600p0-N3000-B1001']
+  record_largest_full_family_b_residual          1001
+  record_largest_unamortized_residual            1001
+  record_largest_unamortized_residual_cells      ['T159-R600p0-N3000-B1001']
+  residual_equals_last_row_balance               '296/296'
+  scope                                          't229corpus'
+  setting_violations                             []
+  stuck                                          296
+  threw                                          2
+  total_captures                                 349
+  twin_fails                                     7
+  twin_holds                                     289
+  twin_identity_holds_every_cell                 True
+  exceptions:
+    T117P2-R600p0-N108-B11   law(ii) predicts 0, observed 5 | twin predicts residual 11, observed 6
+    T117P2-R600p0-N121-B11   law(ii) predicts 0, observed 4 | twin predicts residual 11, observed 7
+    T117P2-R600p0-N150-B11   law(ii) predicts 0, observed 2 | twin predicts residual 11, observed 9
+    T159-R600p0-N108-B11     law(ii) predicts 0, observed 5 | twin predicts residual 11, observed 6
+    T159-R600p0-N121-B11     law(ii) predicts 0, observed 4 | twin predicts residual 11, observed 7
+    T159-R600p0-N150-B11     law(ii) predicts 0, observed 2 | twin predicts residual 11, observed 9
+    T159-R600p0-N2000-B999   law(ii) predicts 0, observed 166 | twin predicts residual 999, observed 833
+  GRADE: PASS (every pinned figure reproduced)

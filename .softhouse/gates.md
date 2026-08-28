@@ -1161,11 +1161,17 @@ bigger question.** So:
 > *"the largest unamortized residual is **MNT 10.01 at n = 3000**"* was **not** unscoped: this file
 > insisted, in bold, that the figure be *"stated with its term, always"*, and every restatement of it
 > obeyed. It was a correct measurement, correctly attributed, carrying a domain — **and the domain
-> named the wrong variable.** The residual is `min(B_minor, n·δ)`: the principal is what it is a fact
-> about and the term is only the cap. T117 and T159 topped out at principals of 501 and 1001 minor
+> named the wrong variable.** The residual is AT MOST `min(B_minor, n·δ)`: the principal is what it is
+> a fact about and the term is only the cap. T117 and T159 topped out at principals of 501 and 1001 minor
 > units at terms whose caps were 1000 and 3000, so the figure was a fact about **the biggest
 > principal anybody had asked**, wearing a term as its label. **T219 tripled it without touching the
 > term.**
+>
+> **[T332 — `min(B_minor, n·δ)` is an UPPER BOUND, NOT AN EQUALITY.** It is measured FALSE on seven
+> corpus cells, which repay 5 / 4 / 2 / 5 / 4 / 2 / 166 minor units where the law predicts 0. The axis
+> claim this mechanism rests on is untouched — the residual is a fact about the PRINCIPAL — and the
+> direction is safe: 0 of 296 and 0 of 578 stuck cells observe a residual EXCEEDING the formula. See
+> `#### CORRECTION (T277)` under `### THE LAW`.]**
 >
 > **Why this is a distinct mechanism.** The fifth is a sentence with no scope. The sixth is a
 > predicate with an unmeasured input. The seventh is **a sentence WITH a scope, whose scope is on the
@@ -1672,9 +1678,9 @@ one-run fluke.
 
 **The last three are different in kind and that is why they are here: they were PREDICTED, by amount,
 before the oracle was asked.** T229 registered "family B PARTIAL, repaying 1 / 51 / 99 minor units"
-in an ancestor commit and the oracle returned exactly those three numbers. Their residual is
-`B_minor − n·δ` with `δ = 1` and `n = 200`, which is why all three leave **exactly 200 minor units**
-outstanding. **`T229-R600p0-N200-B299` is the cell that falsified the ceiling this section carried**
+in an ancestor commit and the oracle returned exactly those three numbers. What they **REPAY** is
+`B_minor − n·δ` — **1, 51 and 99** minor units at `δ = 1` and `n = 200` — which is why all three leave
+**exactly 200 minor units** outstanding. **`T229-R600p0-N200-B299` is the cell that falsified the ceiling this section carried**
 — MNT 2.99 failing at n = 200, where the old text said nothing above MNT 1.00 could fail — and it is
 why the ceiling paragraph in *THE REGION* below had to be rewritten. **They are NOT the largest
 residual on record; that is `3000` minor units — MNT 30.00 — at n = 3000** [T219; this sentence read
@@ -1682,6 +1688,17 @@ residual on record; that is `3000` minor units — MNT 30.00 — at n = 3000** [
 figures are family-B cells at 600.0 %]. **And no claim is made that MNT 2.99 is the
 largest failing disbursement at a short term** — T231 did not sweep for that and does not know, and
 **neither did T219, which asked nothing at n = 200 at all** `[UNVERIFIED]`.
+
+> **[T332 — `B_minor − n·δ` IS AN UPPER BOUND, NOT AN EQUALITY, AND THE SENTENCE ABOVE ALSO NAMED THE
+> WRONG VARIABLE — corrected in place. See `#### CORRECTION (T277)` under `### THE LAW`.** It read
+> *"Their residual is `B_minor − n·δ`"*. Measured, `B_minor − n·δ` is **1 / 51 / 99** — what those three
+> cells REPAY — while their **residual** is the **200** the same sentence then names. The figure was right
+> and the variable it was labelled with was wrong, which is exactly the failure the STANDING RULE's seventh
+> mechanism was added to catch.
+> `[VERIFIED: .softhouse/capture/t332-residual-twin-sweep/src/t332_twin_audit.py --sites → trio_B201_B251_B299,
+> integer minor units from capture-t229-raw.json.gz.]` Law (ii) holds on all three of these PARTIAL cells
+> and on all 5 PARTIAL witnesses in the whole committed corpus. **This site is NOT one of the five T278
+> named; the sweep found it.**]**
 
 **On all 209 family-B cells the unamortized residual equals the final row's `balance` exactly, and
 `totalOutstandingAmount` reads `0`** — 209 of 209, 0 exceptions [T170]. So `totalOutstandingAmount`
@@ -1863,7 +1880,10 @@ of the 180 new cells** `[UNVERIFIED]`.
   > makes the instalment fall below the interest; T223 named the site that can rescue it; T229
   > characterised that site and derived the FULL/PARTIAL split from it** — `TOTAL PRINCIPAL =
   > max(0, B_minor − n·δ)`, which predicted the amount repaid on three partial cells before they were
-  > asked and matched all three. **So the partial shape is no longer unexplained.** What remains
+  > asked and matched all three. **So the partial shape is no longer unexplained.** **[T332 — that law
+  > is an UPPER BOUND, NOT AN EQUALITY on the principal: it is measured FALSE on seven corpus cells,
+  > which are exactly the seven named in (ii) below. See `#### CORRECTION (T277)` under `### THE LAW`.]**
+  > What remains
   > `[UNVERIFIED]` is (i) the `B = 601 … 999` half of the sentence above, and (ii) **a second
   > balance-reduction path that none of the three accounts contains** — seven corpus cells, and
   > `T229-R600p0-N200-B199` live, reduce the balance where every model here says it is frozen. See
@@ -1887,13 +1907,15 @@ of the 180 new cells** `[UNVERIFIED]`.
   > **THE CAUSAL HALF OF THIS BULLET IS FALSIFIED BY MEASUREMENT — T219.** It read *"each time
   > because somebody asked a larger term, and neither worker found a limit"*. **T219 asked no
   > larger term at all** — it asked n = 3000, exactly T159's term — and tripled the residual by
-  > asking a **larger principal**. The residual of an unrescued family-B cell is
+  > asking a **larger principal**. The residual of an unrescued family-B cell is AT MOST
   > `min(B_minor, n·δ)`; the term enters only as the **cap**, and T159 had used one third of the
   > cap available at its own term. **The record did not rise because the term rose; it rose because
   > each worker asked a bigger principal, and n = 3000 with δ = 1 caps it at 3000 minor units.**
   > Both T117's and T159's numbers are correct measurements and neither is superseded as a
   > measurement; the *explanation* attached to them was wrong. See *THE RESIDUAL RECORD,
-  > RE-MEASURED* below.
+  > RE-MEASURED* below. **[T332 — `min(B_minor, n·δ)` is an UPPER BOUND, NOT AN EQUALITY: false on
+  > seven corpus cells, safe direction (0 of 578 observe a residual EXCEEDING it), and every record
+  > figure in this paragraph re-measures unchanged. See `#### CORRECTION (T277)` under `### THE LAW`.]**
   >
   > **What is still open, and it is the same question one level up:** whether the residual
   > terminates in **n** is now known to be the wrong question, and the right one — whether `δ` can
@@ -2444,6 +2466,87 @@ STILL exactly those seven**. Widening the population by 95 % adds no eighth exce
   exactly, so `δ` is not derivable for it and **every `δ`-dependent claim above is silent about it.**
   `[UNVERIFIED — that cell's δ.]`
 
+#### T332 — THE SAME CLAIM, SWEPT: the twin was live at EIGHT sites in this file, TWO of which nobody had named, and one of them is a PRESCRIPTION
+
+**Classification: ENGINEERING** (`CLAUDE.md` § Answering gates). Nothing RESERVED is touched: no cutover,
+no regulatory sign-off, no licence fact, no money spent, no endpoint exposed. No `DEC-n` is amended,
+`.softhouse/vectors/` is not touched, **G-8's SUBSTANCE is unchanged** — the only stateable region is still
+the conservative superset `B_minor < 1.5·n`, it still rests entirely on the unproven conjecture `δ ≤ 1`, and
+**options (b) and (c) still MUST NOT be put to Buyan** — and the **GATE REGISTER row for G-8 is byte-identical**
+(`cmp` clean against `main`). This narrows a law in more places; it does not move a gate.
+
+**THE DEFECT, AND IT IS THE ONE `T277` WAS COMMISSIONED TO AVOID, ONE LEVEL OUT.** `T264`'s charge against the
+rejected cloud branch was that it measured one of two laws and affirmed the other without testing it on the
+domain it had just written. `T277` measured law (ii), corrected the block in front of it, and **did not sweep
+its own file for the same claim in other words** — its follow-up says *"I corrected the one live statement I
+own."* `T278` named **six** (five twin restatements plus law (ii) proper). `T332` swept and found **eight**,
+and the two `T278` did not name are the interesting ones: one **contains no formula at all**, so no grep for
+the symbolic form could have caught it, and the other **also named the wrong variable** — it called
+`B_minor − n·δ` the *residual* of `B201`/`B251`/`B299` when it is what those cells REPAY. **A claim restated
+six times was restated eight.**
+
+**THE TWIN IS THE SAME CLAIM.** `residual = B_minor − max(0, B_minor − n·δ) = min(B_minor, n·δ)` is an exact
+identity over the integers — verified exhaustively, not asserted — so the residual form is FALSE on **exactly
+the same seven cells**, and the two exception sets are measured to be the identical set of ids in both scopes.
+
+**FOURTH INDEPENDENT DERIVATION.** `T332` re-derived the seven from the committed raw `.json.gz` schedules in
+integer minor units with an instrument importing nothing from `T241`, `T264`, `T277`, `T278`, `site3.py` or
+`validate_corpus.py` (asserted at AST level by its own `--selftest`), computing `I₁q` from an exact integer
+rate fraction and never reading it from row 1. **Every published figure reproduces on a fourth instrument:**
+296 / 578 stuck, `δ` histogram `{0: 113, 1: 183}`, FACT A 220 / 76, law (ii) 289 of 296 and 571 of 578, 213 of
+220 on FACT A, 113 of 113 at `δ = 0`, 176 of 183 on the `FULL family B` antecedent, 5 PARTIAL witnesses on the
+wider scope with the law holding on all 5, header principal equal to the row sum on all 296 and all 578, and
+the same one excluded cell (`T84-RP-R7p0-N56-B23`). **There is no fourth opinion to report.**
+[`.softhouse/capture/t332-residual-twin-sweep/`]
+
+**THE BOUND, RE-DERIVED RATHER THAN INHERITED — this is a follow-up and not a revert:**
+
+- **The direction is SAFE.** Cells where the OBSERVED residual **EXCEEDS** the formula: **0 of 296, 0 of 578.**
+  `min(B_minor, n·δ)` survives as a valid **UPPER BOUND** on unamortized exposure; what is false is the
+  asserted **equality**, and it over-states rather than under-states.
+- **No record figure moves.** Re-measured from the principal column on the wider scope: largest unamortized
+  residual **3000** (`B3001`, `B4499`), largest FULL family-B residual **2999** (`B2999`), largest failing
+  disbursement **4499** (`B4499`).
+- **The conservative region is still a genuine superset.** With `B_minor < 1.5·n` written in integers as
+  `2·B_minor < 3·n`: failing cells OUTSIDE the region **0** in both scopes, all seven inside.
+- **No vector is affected.** `grep -rn 'n·δ\|n\*delta\|B_minor' .softhouse/vectors/` → no match.
+
+**THE EIGHT SITES, EACH SCOPED WHERE IT STANDS, NAMED BY HEADING AND NOT BY LINE NUMBER.** The
+**prescriptive disclosure instruction** under `### UPDATE — T159 reviewed T117…` inside `## G-8-NOTICE` was
+corrected **FIRST**, because a false rule in an instruction propagates into work not yet done. The other
+seven: `### STANDING RULE — how to edit this section` (the seventh mechanism); `### What is NOT known about
+family B`, twice — law (ii) proper, and the T219 correction under it; `### Discriminator for family B`
+(**not named by T278**, and doubly wrong — see the note there); the registered-thesis identity under
+`## THE RESIDUAL RECORD, RE-MEASURED`; the prose-only restatement under `## The bound on the failing
+principal, RESTATED OVER THE DOMAIN ACTUALLY SWEPT` — *"the term is only the cap; the principals asked are
+what the figure is actually a fact about"*, **not named by T278 and invisible to any symbolic grep**; and
+the T241 pointer at the head of `## G-8-NOTICE`.
+
+**AND SITES THAT WERE ARGUED NOT TO NEED IT, RATHER THAN MISSED.** The fenced `### THE LAW` block is left
+byte-unchanged on its own stated ground; every restatement inside `#### CORRECTION (T277)` is a quotation made
+in order to refute; per-cell figures (`B3001`/`B4499` leaving exactly `n·δ`; `n = 104`/`108` at `B = 1`) were
+**measured true on the cells they name**, not waved through; the `n·δ` sentence in *What T219 did NOT do* is a
+disclaimer that narrows rather than asserts; and the contributor-list mention of T219's registered thesis is a
+past-tense report of a registration. **The sweep's own count, derived and never typed: 11 scoped lines over
+8 distinct sites, 33 argued-exempt lines, 0 unclassified.**
+
+**ONE LIVE SITE OUTSIDE THIS FILE, REPORTED AND NOT EDITED (`FU-T332-2`).**
+`.softhouse/gates-proposed-answers.md`, under `## P-6 · Freeze a gate write-up once its measurements
+reproduce`, states the twin unqualified inside a live `T228` correction that ends *"Do not restate any of
+these without the PRINCIPAL."* It is outside `T332`'s declared sole-writer scope and was left alone; the
+sweep already runs on it (`--file`) and reports it as unclassified. Every other repo-wide hit is committed
+evidence — prediction registers, handoffs, reviews, `T277`'s and `T278`'s own instruments — which is
+correct-forward territory (T114 / T176 / T316), and `T332` makes no claim about them beyond noting they exist.
+
+**THE SWEEP RE-RUNS, AND THAT IS THE POINT.**
+`python3 .softhouse/capture/t332-residual-twin-sweep/src/t332_sweep_gates.py --list` re-derives the site list
+from this file **today**, prints its selector beside its figure, and **exits 1** if a new unqualified
+restatement appears, if a scoped site loses its scope marker, or if a ledgered site is deleted or re-worded.
+The ledger is keyed by **quoted snippets of the line, never by line number** — `P-86`, *"**THE PATTERN IDS
+THEMSELVES ROTTED, IN THE FILE THAT NAMES THE ROT.**"*, whose rule is to cite the id **and its sentence**;
+gates.md line numbers move every time anybody edits above them, which is this correction's own subject matter. `bash .softhouse/capture/t332-residual-twin-sweep/src/verify_t332.sh`
+runs it with six positive and seven negative calibrations, plus the three `cmp` proofs.
+
 ##### The rejected `T241` branch: what is salvaged, and what is recorded as FALSE
 
 The cloud's `T241` (`refs/remotes/origin/softhouse/T241-g8-evidence-hygiene`, **`df0aed2c`**) was
@@ -2608,6 +2711,17 @@ T159 each got a larger residual because each asked a **larger principal** (501, 
 units); the larger term merely lifted the cap out of the way. **At n = 3000 with δ = 1 the cap is
 3000 minor units — MNT 30.00 — and T159's cell used one third of it.** So the record should be
 beatable at T159's own term, with no larger term asked at all.
+
+**[T332 — THE IDENTITY IN THAT FENCE IS EXACT; THE LAW UNDER IT IS NOT.** `B_minor − max(0, B_minor − n·δ)`
+and `min(B_minor, n·δ)` are the same expression for every integer `B_minor` and `n·δ` — verified
+exhaustively, not asserted `[VERIFIED: `t332_twin_audit.py --selftest`, "the ALGEBRAIC IDENTITY …
+exhaustively"]` — which is precisely why the residual form inherits law (ii)'s **seven** counterexamples
+rather than escaping them. The exception set of the residual form is measured to be **the identical set**
+of seven cells, in both scopes. **It is an UPPER BOUND, NOT AN EQUALITY**, wrong in the safe direction
+(0 of 296 and 0 of 578 stuck cells observe a residual EXCEEDING it), and **no figure in this block
+moves**: 3000 (`B3001`, `B4499`), 2999 (`B2999`) and 4499 all re-measure exactly. The thesis quoted
+above was registered before probing and is kept verbatim as the registered text. See
+`#### CORRECTION (T277)` under `### THE LAW`.]**
 
 ### What was measured
 
@@ -2846,6 +2960,12 @@ graded domain. Restated, with the domain named each time:
     > not enough, because the term is only the cap; **the principals asked are what the figure is
     > actually a fact about**, and T117 and T159 topped out at 501 and 1001 minor units
     > respectively.
+    >
+    > **[T332 — this is the same claim as `min(B_minor, n·δ)` written without a symbol, which is why a
+    > grep for the formula misses it. The axis is right and the EQUALITY it implies is not: the cap is
+    > an UPPER BOUND, NOT AN EQUALITY, measured false on seven corpus cells that repay 5 / 4 / 2 / 5 /
+    > 4 / 2 / 166 where the law predicts 0. Safe direction; no figure in this bullet moves. See
+    > `#### CORRECTION (T277)` under `### THE LAW`.]**
   - **MNT 10.01 was the largest OBSERVED residual over the principals then asked, and it was NEVER A
     BOUND — and it is no longer the largest observed.** **T219 replaced it at the same term**;
     the current figure is **MNT 30.00 at n = 3000**, below. n = 3000 is still simply the largest
@@ -3540,9 +3660,13 @@ why trap (3) requires the Go port to carry classification **on the entry**.
 > **The current records, all at n = 3000, all measured by T219 at `6eacc06`:** largest unamortized residual
 > **MNT 30.00** (`B3001`, `B4499`), largest FULL family-B residual **MNT 29.99** (`B2999`), largest failing
 > disbursement **MNT 44.99** (`B4499`). **And the axis this block labels its figures with is the wrong one:**
-> the residual is `min(B_minor, n·δ)` — a function of the **PRINCIPAL**, capped by the term. T219 tripled the
+> the residual is AT MOST `min(B_minor, n·δ)` — a function of the **PRINCIPAL**, capped by the term. T219 tripled the
 > record **without asking a larger term at all.** Read *THE RESIDUAL RECORD, RE-MEASURED* in the LIVE section
-> above for the current state. **T241 decided against annotating each of the six `MNT 10.01` sites
+> above for the current state. **[T332 — "AT MOST" is this pointer's only edit: `min(B_minor, n·δ)` is an
+> UPPER BOUND, NOT AN EQUALITY, false on seven corpus cells and safe in direction. The edit is made HERE and
+> nowhere else in this block, on this block's own rule that a T241-added present-tense POINTER is navigation
+> and may be corrected, while the historical report below it may not. See `#### CORRECTION (T277)` under
+> `### THE LAW`.]** **T241 decided against annotating each of the six `MNT 10.01` sites
 > individually** — a pointer at the head is navigation and corrupts nothing, whereas interleaving present-tense
 > corrections through a historical record would leave a later reader unable to tell what T117 and T159
 > actually wrote. **One line in this block is a different matter and IS struck below: an imperative, not a
@@ -3676,9 +3800,21 @@ question*, not because a boundary was found.
 >
 > **THE CONCLUSION SURVIVES, BY A STRONGER ROUTE THAN THE ONE GIVEN HERE.** "Do not quote the residual
 > bare" is right. The GROUND was wrong: the term is not the variable the residual is a function of.
-> **The residual of an unrescued family-B cell is `min(B_minor, n·δ)` — a fact about the PRINCIPAL, capped
-> by the term.** T219 tripled the record *at T159's own term, n = 3000*, by asking a bigger principal, which
-> this line's reasoning says is impossible. So the corrected instruction is **stronger, not weaker**:
+> **The residual of an unrescued family-B cell is AT MOST `min(B_minor, n·δ)` — a fact about the PRINCIPAL,
+> capped by the term.** T219 tripled the record *at T159's own term, n = 3000*, by asking a bigger principal,
+> which this line's reasoning says is impossible. So the corrected instruction is **stronger, not weaker**:
+>
+> **[T332 — `min(B_minor, n·δ)` IS AN UPPER BOUND, NOT AN EQUALITY, AND THIS SITE WAS CORRECTED FIRST
+> BECAUSE IT IS A PRESCRIPTION.** The sentence above told a future writer what to disclose about G-8, and
+> a false rule inside an instruction propagates into work not yet done — which is a different and worse
+> thing than a false rule inside a record. The equality is FALSE on **seven** corpus cells (all `δ = 1`,
+> all satisfying the `FULL family B` antecedent), which repay **5 / 4 / 2 / 5 / 4 / 2 / 166** minor units
+> where the law predicts **0**; `min(B_minor, n·δ)` therefore over-states their residual by exactly that
+> much. **The direction is SAFE and the instruction below is unweakened:** on **0** of 296 corpus stuck
+> cells and **0** of 578 across every committed raw capture does the OBSERVED residual EXCEED the formula,
+> so the formula stands as an upper bound on unamortized exposure and nothing under-states risk. See
+> `#### CORRECTION (T277)` under `### THE LAW` for the seven, and `#### T332 — THE SAME CLAIM, SWEPT` for
+> why this correction had to be applied at seven sites and not one.]**
 >
 > > **Any disclosure of G-8 must state the residual with the variable it is a FUNCTION of — the
 > > PRINCIPAL — and not merely with the term, and must still say it is the largest OBSERVED and not a

@@ -1,0 +1,31 @@
+T332 VERIFY  (root /Users/buv/gerege-nbfi/.claude/worktrees/agent-a77014c126f86c320, base main)
+
+POSITIVES — the measurement, re-run over the committed raw .json.gz
+  PASS-CASE  ok       audit --selftest
+  PASS-CASE  ok       audit census t229corpus
+  PASS-CASE  ok       audit census all
+  PASS-CASE  ok       audit --seven (full-tuple match)
+  PASS-CASE  ok       audit --sites (per-site claims)
+  PASS-CASE  ok       sweep of .softhouse/gates.md
+
+NEGATIVES — the guards, each shown to be capable of failing
+  FAIL-CASE  tripped  M1 audit: law (ii) pinned 220/220 on FACT A (the rejected branch's claim)
+  FAIL-CASE  tripped  M2 audit: 165 minor units expected where 166 is measured
+  FAIL-CASE  tripped  M3 audit: I1q READ FROM ROW 1 instead of computed (the FU-T277-4 trap)
+  FAIL-CASE  tripped  N1 sweep: a NEW unqualified restatement appended to gates.md
+  FAIL-CASE  tripped  N2 sweep: the ENTIRE scope note deleted from the PRESCRIPTIVE site
+  FAIL-CASE  tripped  N3 sweep: a ledgered site DELETED (the prose-only seventh site)
+  FAIL-CASE  tripped  N4 sweep: the T332 correction heading renamed (its own lines go unclassified)
+
+G-8 INVARIANTS — byte comparison against main, not an assertion
+  cmp  register                               IDENTICAL  (1362 bytes)
+  cmp  law                                    IDENTICAL  (223 bytes)
+  cmp  t277                                   IDENTICAL  (10781 bytes)
+
+G-8 SUBSTANCE SENTENCES — present and unmoved OUTSIDE the T332 section
+  options (b)/(c) STILL MUST NOT be put to Buyan       outside-T332 1 == base 1  (T332 adds 0)
+  conservative superset** (`B_minor < 1.5·n`)         outside-T332 1 == base 1  (T332 adds 0)
+  unproven conjecture `δ ≤ 1`                       outside-T332 2 == base 2  (T332 adds 1)
+  options (b) and (c) still MUST NOT be put to Buyan   outside-T332 1 == base 1  (T332 adds 1)
+
+T332 VERIFY: PASS

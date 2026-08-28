@@ -1,0 +1,31 @@
+T332 twin-audit selftest
+ minor-unit parser
+  minor("0.28")                                              ok     got=28 want=28
+  minor("15010.01")                                          ok     got=1501001 want=1501001
+  minor("0.00")                                              ok     got=0 want=0
+  minor(<float from JSON>) refuses                           ok     got='refused' want='refused'
+  minor("0.284") refuses                                     ok     got='refused' want='refused'
+ exact rate arithmetic
+  monthly_rate("600.0")                                      ok     got=(1, 2) want=(1, 2)
+  monthly_rate("21.6")                                       ok     got=(9, 500) want=(9, 500)
+  monthly_rate("36.0")                                       ok     got=(3, 100) want=(3, 100)
+  monthly_rate("7.0")                                        ok     got=(7, 1200) want=(7, 1200)
+  7/1200 terminates in 19 digits?                            ok     got=False want=False
+  1/2 terminates in 19 digits?                               ok     got=True want=True
+ HALF_UP quantizer
+  half_up(1,2)  -> 1                                         ok     got=1 want=1
+  half_up(3,2)  -> 2                                         ok     got=2 want=2
+  half_up(999,2) -> 500                                      ok     got=500 want=500
+  half_up(252,500) -> 1                                      ok     got=1 want=1
+  half_up(1,3)  -> 0                                         ok     got=0 want=0
+ hand-worked B999/n2000 at 600.0 % (the sharpest of the seven)
+  I1q(B=999)                                                 ok     got=500 want=500
+  delta with E=499                                           ok     got=1 want=1
+  law (ii) predicts                                          ok     got=0 want=0
+  twin predicts residual                                     ok     got=999 want=999
+ the ALGEBRAIC IDENTITY B - max(0, B-n*d) == min(B, n*d), exhaustively
+  counterexamples over B in [0,60), n*d in [-20,60)          ok     got=[] want=[]
+ instrument hygiene (this file)
+  HARD float/independence hits in this file                  ok     got=[] want=[]
+  BENIGN detector hits: [(465, 'float name in a type-test position (detector)')]
+  SELFTEST PASS

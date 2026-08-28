@@ -1,0 +1,48 @@
+T332 — where I looked, verbatim, so 'not found' is a statement about the SEARCH.
+
+$ grep -c . .softhouse/gates.md
+3742
+
+--- every symbolic form, repo-wide, over text files (REPORTED, NOT EDITED outside gates.md)
+$ grep -rn "min(B_minor\|max(0, B_minor\|B_minor − n·δ" --include=*.md --include=*.py --include=*.json --include=*.sh --include=*.go .
+./.softhouse/capture/t219-g8-residual/PREDICTION.md:1
+./.softhouse/capture/t219-g8-residual/src/site3.py:1
+./.softhouse/capture/t229-g8-site3/PREDICTION.md:3
+./.softhouse/capture/t229-g8-site3/src/site3.py:2
+./.softhouse/capture/t277-shapelaw-salvage/README.md:1
+./.softhouse/capture/t277-shapelaw-salvage/src/crosscheck_seven_t277b.py:1
+./.softhouse/capture/t277-shapelaw-salvage/src/dump_seven_t277.py:2
+./.softhouse/capture/t277-shapelaw-salvage/src/shapelaw_census_t277.py:1
+./.softhouse/capture/t282-pnumber-drift/out/live-AFTER-repair.json:1
+./.softhouse/gates-proposed-answers.md:1
+./.softhouse/gates.md:25
+./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T219-handoff.md:2
+./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T229.md:2
+./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241-evidence/scope-table-t241.json:7
+./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241.md:2
+./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md:2
+./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T278.md:7
+./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T332.md:8
+./.softhouse/reviews/t278-review-t277/REVIEW.md:14
+./.softhouse/reviews/t278-review-t277/probe/t278_domain_audit.py:3
+./.softhouse/reviews/t278-review-t277/probe/t278_rederive.py:1
+./.softhouse/tasks.json:7
+
+--- the ONE live, non-evidence file outside gates.md that carries the twin: FU-T332-2.
+    NOT EDITED -- outside T332 declared sole-writer scope. The guard already runs on it:
+$ python3 src/t332_sweep_gates.py --file .softhouse/gates-proposed-answers.md
+FAIL — 1 NEW, UNCLASSIFIED restatement(s) of the claim:
+   line 214  [TWIN-SYMBOLIC,NDELTA-BARE,FUNCTION-OF-PROSE]  >   `min(B_minor, n·δ)` — **a function of the PRINCIPAL**, with the term entering only as the cap. T117 and
+           anchor: ## P-6 · Freeze a gate write-up once its measurements reproduce
+   -> scope it to the exception set, or add it to LEDGER with the argument for why it does not need scoping.
+
+--- .softhouse/vectors/ carries NO restatement of law (ii) or its twin
+$ grep -rn "n·δ\|n\*delta\|B_minor" .softhouse/vectors/
+(no match)
+
+--- operator variants that do NOT occur in gates.md (searched, absent)
+nδ        0
+n×δ      0
+n · δ    0
+n delta    0
+n*delta    0
