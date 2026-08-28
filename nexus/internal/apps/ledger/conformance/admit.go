@@ -368,31 +368,96 @@ func Admit(v *Vector, opts Options) []string {
 		// the pre-closure shape. No capability gate can catch that; only re-reading the
 		// cited artefact can, and that is the citation rules' job, not this one's
 		// [T306-F-6].
+		// ***** T328 WIDENED THE TWO DATE ARMS, DELIBERATELY, WITH THE CAPTURE IN HAND,
+		// AND THE PRECONDITION IT DROPPED IS NOT THE ONE THE COMMENT ABOVE PREDICTED.
+		// *****
+		//
+		// The prediction above was "drop `v.Expect.Kind == \"refusal\"` from the date
+		// arms". THAT ALONE WOULD HAVE ADMITTED NOTHING, and it was measured before it was
+		// argued: `preClosureInputs` is `!isoBefore(closing, txn)`, which is TRUE only when
+		// the transaction date is ON OR BEFORE the closing date -- the REFUSING region.
+		// T327's B-1 arm is dated ONE DAY AFTER the closing date, so preClosureInputs is
+		// FALSE on it, and the same asymmetry holds for `futureDatedInputs` against B-2
+		// (dated ON the business date, so isoAfter is false). Both promoted vectors sit in
+		// the ACCEPTING region of their comparison, which is the whole reason they are
+		// worth capturing, and the old predicate had no term that could ever be true for
+		// them. Dropping the expect.kind precondition would have left the gate refusing
+		// them and the task would have "widened" nothing [MEASURED:
+		// .softhouse/capture/t328-date-rule-promotion/out/40-RED-door-is-closed-inadmissible.txt
+		// -- both vectors INADMISSIBLE on this rule with the pre-T328 predicate].
+		//
+		// SO THE SHAPE IS NOW KEYED ON THE REGION, AND THE EXPECTATION MUST AGREE WITH THE
+		// REGION. Four date shapes are observed on this row, not two, and the store now
+		// carries a vector for each:
+		//
+		//   the CLOSURE boundary at :636, !isBefore(closingDate, transactionDate)
+		//     txn <= closing   REFUSED   LDG-REFUSE-04 (txn ON the closing date, 403)
+		//     txn >  closing   ACCEPTED  LDG-06 (closing 2026-08-26, txn 2026-08-27, 200)
+		//   the FUTURE-DATE guard at :629-631, isAfter(transactionDate, businessDate)
+		//     txn >  business  REFUSED   LDG-REFUSE-05 (business + 1, 403)
+		//     txn <= business  ACCEPTED  LDG-07 (txn ON the business date, 200)
+		//
+		// [VERIFIED: the two acceptances are HTTP 200 in
+		// .softhouse/capture/t327-closure-accepting-side/throwaway/out/
+		// B1-ACCEPT-06-entry-one-day-after-closing-date.status and
+		// B2-ACCEPT-01-entry-on-business-date.status, promoted by T328's builder.]
+		//
+		// THIS IS STILL KEYED ON THE REQUEST, WHICH IS T306-F-2's RULE AND IT SURVIVES.
+		// The REGION is computed from the vector's own two dates by the same comparison the
+		// oracle makes; expect.kind is then required to AGREE with the region, and
+		// expect.refusal.code is still never read here. That is not "keying on the answer":
+		// a vector claiming the oracle REFUSED where the store observed it ACCEPTING, or
+		// ACCEPTED where the store observed it refusing, is claiming coverage of a shape
+		// nobody captured, and the region is what says which. DEFAULT-DENY IS PRESERVED IN
+		// BOTH DIRECTIONS and is exercised by
+		// TestOpeningBalanceCapabilityIsScopedToTheObservedShape: a vector with NO date
+		// inputs is still refused, an ACCEPTANCE in a REFUSING region is still refused, and
+		// T328 adds the mirror arm -- a REFUSAL in an ACCEPTING region -- which the old
+		// predicate also refused but for the accidental reason that it refused every
+		// accepting-region shape.
 		openingBalanceCommand := v.Request.Command == "defineOpeningBalance"
-		preClosureInputs := v.Request.LatestClosingDate != "" && v.Request.TransactionDate != "" &&
+		closureInputs := v.Request.LatestClosingDate != "" && v.Request.TransactionDate != ""
+		businessInputs := v.Request.TransactionDate != "" && v.Request.BusinessDate != ""
+		preClosureInputs := closureInputs &&
 			!isoBefore(v.Request.LatestClosingDate, v.Request.TransactionDate)
-		futureDatedInputs := v.Request.TransactionDate != "" && v.Request.BusinessDate != "" &&
+		futureDatedInputs := businessInputs &&
 			isoAfter(v.Request.TransactionDate, v.Request.BusinessDate)
+		postClosureInputs := closureInputs &&
+			isoBefore(v.Request.LatestClosingDate, v.Request.TransactionDate)
+		onOrBeforeBusinessDateInputs := businessInputs &&
+			!isoAfter(v.Request.TransactionDate, v.Request.BusinessDate)
+		// THE REFUSING REGION WINS WHEN BOTH APPLY, because the oracle refuses as soon as
+		// EITHER guard fires: a vector that is past the closure but future-dated is a
+		// refusal shape, not an accepting one.
+		refusingRegion := preClosureInputs || futureDatedInputs
+		acceptingRegion := (postClosureInputs || onOrBeforeBusinessDateInputs) && !refusingRegion
 		observedShape := openingBalanceCommand ||
-			(v.Expect.Kind == "refusal" && (preClosureInputs || futureDatedInputs))
+			(v.Expect.Kind == "refusal" && refusingRegion) ||
+			(v.Expect.Kind != "refusal" && acceptingRegion)
 		if !observedShape {
-			add("capabilities_required names %q on a vector whose request.command is %q and whose "+
-				"expect.kind is %q. THE SHAPES THIS STORE HAS OBSERVED ARE: the "+
+			add("capabilities_required names %q on a vector whose request.command is %q, whose "+
+				"expect.kind is %q, and whose date inputs are transaction_date %q, business_date %q, "+
+				"latest_closing_date %q. THE SHAPES THIS STORE HAS OBSERVED ARE: the "+
 				"defineOpeningBalance-after-a-NON-CONTRA-entry refusal at "+
 				"JournalEntryWritePlatformServiceJpaRepositoryImpl.java:717 (LDG-REFUSE-03) and its "+
 				"ACCEPTING side at :812 (LDG-05, HTTP 200 and six entries on an empty ledger) -- so on "+
-				"that COMMAND either expectation is covered -- and the PRE-CLOSURE (:636) and "+
-				"FUTURE-DATED (:629-631) REFUSALS (LDG-REFUSE-04, LDG-REFUSE-05), whose ACCEPTING "+
-				"sides are CAPTURED BUT NOT PROMOTED. The claim on the two DATE shapes is decided by "+
-				"THIS VECTOR'S REQUEST -- the same two date comparisons the oracle makes -- and never "+
-				"by the refusal code it declares, because that is the answer it is asking to be "+
-				"believed about. A vector outside those four -- an entry ACCEPTED at either date "+
-				"boundary, most obviously -- would read as covered when it is not. T327 fired backlog "+
-				"B-1 and B-2 and BOTH RETURNED HTTP 200, so the oracle bytes now EXIST "+
-				"(.softhouse/capture/t327-closure-accepting-side/), but NO VECTOR carries them and this "+
-				"gate keys on the STORE, never on the capture directory. PROMOTE THE CAPTURE FIRST, "+
-				"then widen this rule",
-				name, v.Request.Command, v.Expect.Kind)
+				"that COMMAND either expectation is covered -- and BOTH SIDES OF BOTH DATE "+
+				"BOUNDARIES: the PRE-CLOSURE refusal at :636 (LDG-REFUSE-04, transaction date ON the "+
+				"closing date) with its ACCEPTING side one day later (LDG-06, HTTP 200), and the "+
+				"FUTURE-DATED refusal at :629-631 (LDG-REFUSE-05, one day after the business date) "+
+				"with its ACCEPTING side ON the business date (LDG-07, HTTP 200, which is the only "+
+				"observation in this store that tells a STRICT comparison from a non-strict one). "+
+				"THE CLAIM IS DECIDED BY THIS VECTOR'S REQUEST -- the same two date comparisons the "+
+				"oracle makes -- and never by the refusal code it declares, because that is the "+
+				"answer it is asking to be believed about. WHAT IS STILL REFUSED, and this is "+
+				"default-deny rather than an oversight: a vector claiming this row with NO date "+
+				"inputs and no opening-balance command (nothing decides it); a vector claiming the "+
+				"oracle ACCEPTED with dates in a REFUSING region; and a vector claiming the oracle "+
+				"REFUSED with dates in an ACCEPTING region. Each of those describes an observation "+
+				"nobody took. A capture is not a vector: this gate keys on the STORE, never on the "+
+				"contents of a capture directory",
+				name, v.Request.Command, v.Expect.Kind, v.Request.TransactionDate,
+				v.Request.BusinessDate, v.Request.LatestClosingDate)
 		}
 	}
 

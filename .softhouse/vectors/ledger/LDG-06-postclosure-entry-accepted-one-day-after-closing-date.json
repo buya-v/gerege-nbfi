@@ -1,0 +1,179 @@
+{
+ "schema": "gerege.ledger.vector/v1",
+ "case_id": "LDG-06-postclosure-entry-accepted-one-day-after-closing-date",
+ "context": "ledger",
+ "class": "parity",
+ "title": "THE ORACLE ACCEPTS A MANUAL JOURNAL ENTRY DATED ONE DAY AFTER THE LATEST GLCLOSURE, AND WRITES THE CALLER'S THREE LEGS AND NOTHING ELSE. T327's B-1 arm created a GLClosure at office 1 with closingDate 2026-08-26, proved on the SAME INSTANCE MINUTES EARLIER that the closure was live and its boundary INCLUSIVE -- an entry dated ON 2026-08-26 drew HTTP 403 error.msg.glJournalEntry.invalid.accounting.closed, and one dated 2026-08-25 drew the same code echoing the CLOSING date -- and then POSTed a balanced three-leg body dated 2026-08-27, closingDate + 1 and still on or before the business date. The oracle returned HTTP 200 and wrote exactly three journal entries on one transaction: DEBIT 250000.25 on T327-1000, DEBIT 100000.37 on T327-1100, CREDIT 350000.62 on T327-2000, no contra expansion. THE ONLY DIFFERENCE BETWEEN THE REFUSAL AND THE ACCEPTANCE IS ONE DAY. Until this vector the store pinned only the REFUSING side of :636, so a port that refused EVERY entry carrying a closing date passed LDG-REFUSE-04 and survived the entire corpus -- the identical mutant shape T305 killed for opening balances (T296 arm A). That port is registered as ledger-wrong-date-rules-always-refusing and this vector kills it.",
+ "dec2_revision": 5,
+ "_note": "THE FIRST ACCEPTING-SIDE OBSERVATION OF THE ACCOUNTING-CLOSURE BOUNDARY THIS PROGRAM HAS EVER TAKEN. Before it, .softhouse/vectors/ledger/ pinned the closure rule on ONE SIDE ONLY -- LDG-REFUSE-04, an entry dated ON the closing date, HTTP 403 -- and every other vector in the store is silent about closures. A port that answered \"refused\" to every request carrying a latest_closing_date therefore agreed with the whole corpus. MEASURED, NOT ASSERTED: ledger-wrong-date-rules-always-refusing was registered and run against the store AS IT STOOD BEFORE THIS VECTOR WAS ADMITTED and it passed 5 of 5 parity and 5 of 5 refusal vectors, exit 0 [.softhouse/capture/t328-date-rule-promotion/out/10-mutant-SURVIVES-before.txt]. That is the measurement of the hole, and it is why this file exists.\n\n***** WHERE IT WAS TAKEN, AND WHY THAT IS ADMISSIBLE. ***** On a THROWAWAY Fineract instance stood up from the SAME DOCKER IMAGE the standing reference oracle runs -- `image fineract:latest (same image id as the standing fineract-fineract-1)`, recorded in the arm's own .http sidecar -- with tenant `t327` seeded at Asia/Ulaanbaatar and rounding-mode 4 (HALF_UP), the ratified tenant arithmetic. It had to be a throwaway: an ACCEPTED journal entry cannot be deleted (Fineract has no delete path for one; the only \"undo\" is posting more entries), and the standing oracle on tenant `gerege` may not be written to. An instance, unlike an entry, CAN be destroyed, and this one was, in the same run. The standing oracle's counters were read before the rig started, before each accepting POST, after each accepting POST and after teardown, all four identical -- 60/64 journal entries, 0 closures, 26 distinct transaction ids, 352 command-source rows [T327 README section 5; .softhouse/capture/t327-closure-accepting-side/out/T327-STANDING-COUNTERS-BEFORE.txt and -AFTER.txt, diff empty].\n\n***** WHICH RULE ANSWERED, AND HOW THE CONTROLS MAKE IT A PROOF. ***** validateBusinessRulesForJournalEntries runs the FUTURE-DATE guard at :630 BEFORE the ACCOUNTING-CLOSED guard at :636 [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java:626-640 at pinned commit 426a23544], so a badly chosen date measures the wrong rule. Three independent proofs, all from the committed bytes: (1) THE GLOBALISATION CODE NAMES THE RULE -- the arm dated business date + 1 returned error.msg.glJournalEntry.invalid.future.date while the arms on and before the closing date returned error.msg.glJournalEntry.invalid.accounting.closed; different rules, different codes, no inference. (2) THIS ARM'S DATE IS INSIDE BOTH RULES' ACCEPTING REGION BY CONSTRUCTION -- 2026-08-27 is strictly after the closing date 2026-08-26 AND on or before the business date 2026-08-28, and a LATER date (2026-08-28) was accepted by the sibling arm, so :630 cannot have fired here. (3) THE CLOSURE WAS LIVE AT THIS ARM'S FIRE TIME, read from the target and written into the sidecar: `latest-closing-date-at-fire-time: 2026-08-26`. The calibration arm is P-72 applied (\"a sweep is an INSTRUMENT; calibrate it on a known positive before you report its negatives\"): without an arm proving the closure REFUSED something on the same instance minutes earlier, this 200 would be equally consistent with \"the closure never took effect\".\n\n***** THE THREE DATE CELLS, AND WHERE EACH ONE COMES FROM. STATE THE ZONE BESIDE EVERY DATE. ***** CLAUDE.md: two time zones, no DST, NEVER hard-code an offset. Every date below is a CALENDAR DATE in the TENANT's zone, Asia/Ulaanbaatar (+08), which is the zone the tenant was seeded at and the zone the guard demonstrably reads (see the next paragraph). No offset appears in this vector, in the builder, or in the port.\n  request.transaction_date 2026-08-27 -- the caller's own bytes (`\"transactionDate\": \"2026-08-27\"` in the committed .req, sha256 d162b138...), AND CONFIRMED AS WHAT THE ORACLE STORED: the builder refuses to emit this vector unless every readback row's acc_gl_journal_entry.entry_date equals it. So it is an observation of the stored value, not a transcription of the request.\n  request.latest_closing_date 2026-08-26 -- READ FROM THE TARGET, twice, and the builder refuses if the two disagree: GET /glclosures returned closingDate \"2026-08-26\" [B1-glclosures-list.json] and the acc_gl_closure readback row is `1 | 1 | 2026-08-26` [B1-closure-state.txt].\n  request.business_date 2026-08-28 -- MEASURED BY A TWO-SIDED BRACKET, NOT READ. /businessdates returned 404 on that instance [S-07-businessdates.status], so no endpoint could be asked. Instead: an entry dated 2026-08-28 was ACCEPTED (HTTP 200) and an entry dated 2026-08-29 was REFUSED with error.msg.glJournalEntry.invalid.future.date, seconds apart on the same instance. Accepted at D means businessDate >= D; refused at D+1 means businessDate < D+1; therefore businessDate == D == 2026-08-28. The builder RECOMPUTES that bracket from the committed bytes -- it checks both statuses, checks the refusing arm's globalisation code is the FUTURE-DATE one and not some other 403, and checks the two dates are exactly one calendar day apart -- and refuses to emit if any of it fails. THIS IS STRICTLY BETTER PROVENANCE THAN LDG-REFUSE-04 AND LDG-REFUSE-05 HAVE, whose business_date cells T329 named as already ambiguous: those were DERIVED, this one is BRACKETED.\n\n***** THE ZONE OBSERVATION, WHICH IS EVIDENCE AND NOT A COINCIDENCE. ***** The run landed at 2026-08-27T17:33Z -- the one hour of that day where UTC read 2026-08-27 and Asia/Ulaanbaatar read 2026-08-28. An instance reading the business date in UTC would have REFUSED the sibling arm dated 2026-08-28 as future. It ACCEPTED. So the guard reads the TENANT zone, observed rather than assumed. It is also a warning, and the reason the paragraph above states the zone beside every date: a reader who assumes UTC would mis-order these three dates by one day and conclude the opposite of what was measured.\n\n***** createdDate AND submittedOnDate ARE NOT GRADED BY THIS VECTOR, DELIBERATELY, AND THE ARGUMENT IS T329's. ***** The REST readback taken beside this capture carries `\"createdDate\": [2026,8,28]` and `\"submittedOnDate\": [2026,8,28]` on all three entries [B1-ACCEPT-06-readback-rest.json] while the entries' transactionDate is [2026,8,27]. T329 established from the pinned source that /journalentries `createdDate` IS A PLAIN ALIAS FOR `submittedOnDate` -- JournalEntryData.java:63 declares it a LocalDate and :211 assigns `this.createdDate = submittedOnDate`, and the read query carries no created-date column -- whereas /glclosures `createdDate` is an audit row-insertion timestamp truncated to a date on the JVM zone. TWO DIFFERENT QUANTITIES SHARING ONE NAME, and this capture SHOWS BOTH AT ONCE: at the same instant, /glclosures reported createdDate \"2026-08-27\" (the UTC/JVM day) and /journalentries reported [2026,8,28] (the tenant business day) [B1-glclosures-list.json vs B1-ACCEPT-06-readback-rest.json]. GRADING EITHER AS A LITERAL WOULD BAKE AN UP-TO-EIGHT-HOUR WINDOW INTO A PARITY VECTOR: the value is the wall-clock day at insertion, so re-running the committed recipe on a different day -- or the SAME day either side of 16:00Z -- produces a different number and the vector would pass or fail on what time of day CI ran. The exclusion is by construction and not by omission: this vector is built from the DATABASE readback (acc_gl_journal_entry joined to acc_gl_account), which has no created-date column at all, and the vector schema has no field that could hold one. The REST bytes are committed beside the capture and are graded by NOTHING. Note the field that IS gradeable and IS graded: the DB's `entry_date`, which is the caller's transaction date, is a business fact and not a clock reading -- and it is asserted by the builder rather than merely copied.\n\n***** WHAT ELSE THIS VECTOR DOES NOT GRADE, stated rather than left to be assumed. ***** (1) gl_account_type (glAccountType on the wire) is EXCLUDED on every leg, for LDG-04's reason: a /journalentries response projects the ACCOUNT'S CURRENT classification and not the entry's, so A2-26 observed one row rendering ASSET in one readback and INCOME in another with every other cell byte-identical and NO entry edited. Grading it would make this vector go red on a GL retype that touched no journal entry. The classification this capture rendered is recorded here and graded by nothing: T327-1000 and T327-1100 ASSET, T327-2000 LIABILITY. (2) The transaction id a29aac77c01b is SERVER-ASSIGNED, is carried in request.transaction_id for the record, and is NOT a graded cell -- diffEntry never compares it, and a re-run of the recipe produces a different one with every graded cell unchanged. (3) NO BALANCE IS GRADED: acc_gl_journal_entry.office_running_balance and organization_running_balance are GATE G-12 and this schema has no field for either; the capture shows is_running_balance_calculated false on all three rows. (4) THE ORDER of the three legs is the request's own order (debits then credits, as sent) and the readback's ORDER BY j.id agrees, so this capture CANNOT separate \"storage order\" from \"request order\" and this vector does not claim it does. (5) Idempotency-Key is not a vector field; the arm carried `t327-b1-accept-06` and it is recorded in the .http sidecar, which is what makes this transcript line an EXECUTION rather than a possible dedupe replay.\n\n***** WHY THIS IS NOT A DUPLICATE OF LDG-01. ***** LDG-01 is a three-leg manual entry with the same cent pattern and it carries NO DATES AT ALL, so it exercises neither date guard: a port with both date rules deleted passes it. What is new here is exclusively the DATE INPUTS and the fact that the oracle ACCEPTED in their presence. The money cells are graded again because a promotion that graded the dates and not the amounts would be a date vector wearing a parity vector's coat -- and because ledger-wrong-truncating must keep dying on every accepting vector this store admits.",
+ "capabilities_required": [
+  "ledger.journal.entry.readback",
+  "ledger.money.minor.unit.conversion",
+  "ledger.manual.entry.posting",
+  "ledger.opening.balance.and.closure"
+ ],
+ "provenance": {
+  "kind": "capture",
+  "capture_ref": ".softhouse/capture/t327-closure-accepting-side/throwaway/out/B1-ACCEPT-06-readback-db.json",
+  "capture_sha256": "75a039a123db23dbf1d179c6b328f0ebc462cd4dc1e052ff95dab3ac728d198b",
+  "capture_case_id": "B1-ACCEPT-06-readback-db",
+  "request_capture_ref": ".softhouse/capture/t327-closure-accepting-side/throwaway/out/B1-ACCEPT-06-entry-one-day-after-closing-date.req",
+  "request_capture_sha256": "d162b13898f6b2d8060402b83410ff32bc6bf3cf54c7a6315cbb363dd1eb3455",
+  "request_capture_case_id": "B1-ACCEPT-06-entry-one-day-after-closing-date",
+  "rerun_invariant": "THIS VECTOR IS GRADED BY REPLAY AGAINST A PORT. THE RELATION IS WHAT IT ASSERTS, NOT THE CALENDAR. Given a tenant whose latest GLClosure for the entry's office has closing date C, whose business date is B, and a balanced manual journal entry dated T with C < T <= B: THE ORACLE ACCEPTS IT WITH HTTP 200 AND WRITES ONE JOURNAL ENTRY PER REQUEST LEG, no contra expansion, each carrying entry_date == T. Here C = 2026-08-26, T = 2026-08-27, B = 2026-08-28, all calendar dates in Asia/Ulaanbaatar (+08), the tenant zone. No calendar can falsify that relation and it is what a port is graded on; the LITERAL dates are the instance of it that was observed.\n\nRE-DERIVATION RUNS THE RECIPE, NOT A RE-READ OF A TENANT. `bash .softhouse/capture/t327-closure-accepting-side/throwaway/run-all.sh` rebuilds a throwaway instance from the same image, replays the setup campaign, creates a GLClosure at (today in Asia/Ulaanbaatar) - 2, and fires the same body dated (today) - 1. It must reproduce every graded cell of this vector: HTTP 200, and THREE journal entries on one transaction in this order -- DEBIT 250000.250000 on T327-1000, DEBIT 100000.370000 on T327-1100, CREDIT 350000.620000 on T327-2000, i.e. 25000025 / 10000037 / 35000062 minor units, totals 35000062 and 35000062. WHAT IT CANNOT REPRODUCE BYTE-FOR-BYTE, DELIBERATELY: the transaction id (server-assigned, not a graded cell), the captured-at timestamp, and THE THREE DATES -- the recipe computes them relative to the day it runs, which is the only way an entry dated on the accepting side of a live closure can be produced at all. A re-run therefore reproduces the RELATION with different literals, and the rebuild of this vector from those bytes would carry the new literals. That is T289's date strategy (c) and it is why the relation above, not the literals, is the assertion.\n\nTHE INSTANCE IT WAS TAKEN ON NO LONGER EXISTS, BY DESIGN. An accepted journal entry is a posted journal entry; Fineract has no delete path for one and the only \"undo\" is posting more entries. The only reversible place to take an accepting-side observation is a place that can be destroyed. `docker compose down -v` ran in the same run with no named volume declared, and the standing reference oracle's counters were identical before, during and after.\n\nTHIS VECTOR MUST NEVER BE RE-FIRED AT THE STANDING REFERENCE ORACLE. Its body is a valid, balanced, postable manual journal entry against GL accounts that do not exist on tenant `gerege`; re-sending it would either 404 on the chart or, if a reader \"helpfully\" remapped the accounts, POST THREE UNDELETABLE JOURNAL ENTRIES INTO THE ORACLE THIS PROGRAM GRADES AGAINST.\n\nIF A FUTURE FINERACT REFUSES AN ENTRY DATED STRICTLY AFTER THE LATEST CLOSING DATE, OR WRITES A NUMBER OF ENTRIES OTHER THAN ONE PER REQUEST LEG, THIS VECTOR IS FALSE AND MUST BE RETIRED, NOT EXEMPTED (P-8: re-observe rather than exempt).",
+  "citation": "T328, promoting T327's arm 6 (B-1). NO ORACLE CONTACT WAS MADE BY THE PROMOTING TASK: every byte cited here was captured by T327 on 2026-08-27 and committed with sidecars, and T328 read them off disk. Every graded cell is built by .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py out of the RAW BYTES of B1-ACCEPT-06-readback-db.json -- a json_agg over acc_gl_journal_entry joined to acc_gl_account for one transaction_id, ordered by j.id, amounts projected as ::text at the STORED scale of 6 exactly as PostgreSQL rendered them. The builder RECOMPUTES the sha256 of both cited artefacts, compares each against the .sha256 sidecar T327 committed beside the bytes, and refuses to emit on a mismatch; the values above are the recomputed ones. It converts each amount to minor units by integer/string arithmetic with the residue rule ENFORCED (a non-zero digit beyond MNT's two minor digits is refused, never rounded), and it refuses any money value that did not arrive as the oracle's own decimal STRING -- so no float touches a money path, including intermediate calculation, and NO GRADED CELL IN THIS FILE WAS TYPED BY A HUMAN.\n\nTHE THREE DATE INPUTS ARE ALSO BUILT RATHER THAN TYPED. transaction_date is read from the committed .req and then CHECKED against every readback row's entry_date. latest_closing_date is read from GET /glclosures and cross-checked against the acc_gl_closure readback. business_date is RECOMPUTED FROM A TWO-SIDED BRACKET -- the builder reads both bracket arms' statuses, checks the refusing arm's globalisation code is the future-date one, and checks the arms are exactly one calendar day apart -- and it refuses to emit if the bracket does not close.\n\nTHE CONTROLS THAT MAKE THE 200 A PROOF ARE COMMITTED BESIDE IT AND ARE NOT PART OF THIS VECTOR: B1-CTRL-04 (entry ON the closing date, HTTP 403 accounting.closed) is the calibration that proves the closure was live and its boundary INCLUSIVE on the same instance minutes earlier, and B1-CTRL-05 (entry before the closing date, 403, args[0].value echoing the CLOSING date rather than the submitted one) is free evidence for T295 backlog B-3. The whole rig -- throwaway compose file, fail-closed isolation guard, target-fenced capture script, 99-entry MANIFEST.sha256 over every oracle byte, and the standing-oracle before/after counter proof -- is in .softhouse/capture/t327-closure-accepting-side/."
+ },
+ "oracle": {
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+  "seam": "ledger_db_readback",
+  "captured_at": "2026-08-27T17:33:42Z"
+ },
+ "request": {
+  "product_id": 0,
+  "product_type": "",
+  "accounting_rule": "",
+  "slot_family": "",
+  "slot_code": 0,
+  "payment_type_id": null,
+  "seam": "ledger_db_readback",
+  "office_id": 1,
+  "currency": {
+   "code": "MNT",
+   "minor_unit_digits": 2
+  },
+  "transaction_id": "a29aac77c01b",
+  "manual_entry": true,
+  "transaction_date": "2026-08-27",
+  "business_date": "2026-08-28",
+  "latest_closing_date": "2026-08-26",
+  "transaction_amount_major_text": "",
+  "accounts": [
+   {
+    "id": 1,
+    "gl_code": "T327-1000",
+    "name": "T327 Cash On Hand",
+    "usage": "DETAIL",
+    "manual_entries_allowed": true,
+    "disabled": false
+   },
+   {
+    "id": 2,
+    "gl_code": "T327-1100",
+    "name": "T327 Loans Receivable",
+    "usage": "DETAIL",
+    "manual_entries_allowed": true,
+    "disabled": false
+   },
+   {
+    "id": 3,
+    "gl_code": "T327-2000",
+    "name": "T327 Borrowings",
+    "usage": "DETAIL",
+    "manual_entries_allowed": true,
+    "disabled": false
+   }
+  ],
+  "legs": [
+   {
+    "gl_account_id": 1,
+    "entry_side": "DEBIT",
+    "amount_major_text": "250000.250000"
+   },
+   {
+    "gl_account_id": 2,
+    "entry_side": "DEBIT",
+    "amount_major_text": "100000.370000"
+   },
+   {
+    "gl_account_id": 3,
+    "entry_side": "CREDIT",
+    "amount_major_text": "350000.620000"
+   }
+  ]
+ },
+ "expect": {
+  "kind": "journal-entry",
+  "http_status": 200,
+  "legs": [
+   {
+    "gl_account_id": 1,
+    "gl_account_code": "T327-1000",
+    "entry_side": "DEBIT",
+    "amount_minor": "25000025",
+    "amount_major_text": "250000.250000",
+    "excluded_fields": [
+     "gl_account_type"
+    ]
+   },
+   {
+    "gl_account_id": 2,
+    "gl_account_code": "T327-1100",
+    "entry_side": "DEBIT",
+    "amount_minor": "10000037",
+    "amount_major_text": "100000.370000",
+    "excluded_fields": [
+     "gl_account_type"
+    ]
+   },
+   {
+    "gl_account_id": 3,
+    "gl_account_code": "T327-2000",
+    "entry_side": "CREDIT",
+    "amount_minor": "35000062",
+    "amount_major_text": "350000.620000",
+    "excluded_fields": [
+     "gl_account_type"
+    ]
+   }
+  ],
+  "total_debits_minor": "35000062",
+  "total_credits_minor": "35000062",
+  "refusal": {
+   "http_status": 0,
+   "code": "",
+   "message": ""
+  }
+ },
+ "graded_against": [
+  {
+   "impl": "ledger-wrong-date-rules-always-refusing",
+   "kind": "structural",
+   "margin_minor": "0",
+   "divergent_cells": [
+    "leg_count"
+   ],
+   "note": "THE KILL THIS VECTOR EXISTS FOR, and it is the CLOSURE half. A port whose :636 guard fires on the mere PRESENCE of a GLClosure -- rather than on !isBefore(closingDate, transactionDate) -- refuses this request with HTTP 403 error.msg.glJournalEntry.invalid.accounting.closed where the oracle returned 200 and wrote three journal entries. MEASURED: the comparator reports exactly one cell, leg_count want 3 got 0, because gradeOne records `the implementation REFUSED a request the oracle ACCEPTED` and compares leg_count alone on that path (grade.go). Diverging from the oracle BY REFUSING is still diverging -- the same shape LDG-04 records for ledger-wrong-header-refusing and LDG-05 for ledger-wrong-openingbalance-always-refusing. WHAT MAKES THIS ONE WORTH REGISTERING: it PASSED THE ENTIRE CORPUS before this vector existed -- 5 of 5 parity, 5 of 5 refusal, exit 0, VERDICT PASS [.softhouse/capture/t328-date-rule-promotion/out/10-mutant-SURVIVES-before.txt] -- because until now every vector in this store that carried a closing date was a REFUSAL, and a port that refuses everything agrees with every refusal ever captured. LDG-07 kills the SAME implementation on its OTHER guard; neither vector subsumes the other, and deleting this one brings the closure half back to life [.softhouse/capture/t328-date-rule-promotion/out/60-load-bearing-one-vector-at-a-time.txt]."
+  },
+  {
+   "impl": "ledger-wrong-truncating",
+   "kind": "money",
+   "margin_minor": "-62",
+   "divergent_cells": [
+    "legs[].amount_minor",
+    "total_debits_minor",
+    "total_credits_minor"
+   ],
+   "note": "Reads the major-unit text as a whole number and drops the minor units. MEASURED on all three legs -- -25 on 250000.25, -37 on 100000.37, -62 on 350000.62 -- and -62 on each total, since 25000025 + 10000037 = 35000062 truncates to 35000000. The largest single margin is -62 minor units. THIS IS THE MONEY HALF OF DEC-2 5.2 requirement 7 AND IT IS NOT DECORATION ON A DATE VECTOR: an accepting-side date capture whose amounts were graded by nothing would be a date assertion wearing a parity vector's coat, and the harness refuses a parity vector that names no money kill. NOTE WHAT SURVIVES ON THIS PORT'S OUTPUT: double_entry_balances still HOLDS (35000000 == 35000000), so the invariant cannot see the defect and only the captured cells can."
+  },
+  {
+   "impl": "ledger-wrong-netting-totals",
+   "kind": "structural",
+   "margin_minor": "0",
+   "divergent_cells": [
+    "total_debits_minor",
+    "total_credits_minor"
+   ],
+   "note": "Nets credits against debits into one accumulator, so both totals report 25000025 + 10000037 - 35000062 = 0 while every per-leg cell still matches. I-1 would hold by construction on its output, which is exactly why Expect carries the two totals separately. Recorded as STRUCTURAL with a zero margin for the reason LDG-01 records for the identical shape: the defect is that the port never computed two numbers to compare, not that it computed one of them wrongly by some amount."
+  },
+  {
+   "impl": "ledger-wrong-code-ignored",
+   "kind": "structural",
+   "margin_minor": "0",
+   "divergent_cells": [
+    "legs[].gl_account_code"
+   ],
+   "note": "A port carrying account ids and never joining the chart: every resolved gl_account_code is empty where the readback carries T327-1000, T327-1100 and T327-2000."
+  }
+ ],
+ "invariant_exemptions": []
+}

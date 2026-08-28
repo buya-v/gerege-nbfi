@@ -1,0 +1,29 @@
+T328 -- promoting T327's two ACCEPTING arms. NO ORACLE CONTACT.
+business date MEASURED BY BRACKET = 2026-08-28 ; latest closing date READ FROM TARGET = 2026-08-26
+
+wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac898d1c9e1720bf1/.softhouse/vectors/ledger/LDG-06-postclosure-entry-accepted-one-day-after-closing-date.json
+  arm                B1-ACCEPT-06-entry-one-day-after-closing-date  (HTTP 200)
+  transaction        a29aac77c01b
+  transaction_date   2026-08-27   (stored entry_date on all 3 rows)
+  business_date      2026-08-28   (BRACKETED: 200 at 2026-08-28, 403 future.date at +1 day)
+  latest_closing_date 2026-08-26
+  expect legs        3 ; totals 35000062 / 35000062 minor units
+  capture sha256     75a039a123db23dbf1d179c6b328f0ebc462cd4dc1e052ff95dab3ac728d198b
+  request sha256     d162b13898f6b2d8060402b83410ff32bc6bf3cf54c7a6315cbb363dd1eb3455
+  cells this grades  15 graded, of which 5 are MONEY  (1 + 4*3 + 2 ; 3 + 2)
+
+wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac898d1c9e1720bf1/.softhouse/vectors/ledger/LDG-07-entry-on-the-business-date-accepted.json
+  arm                B2-ACCEPT-01-entry-on-business-date  (HTTP 200)
+  transaction        a29aac720487
+  transaction_date   2026-08-28   (stored entry_date on all 3 rows)
+  business_date      2026-08-28   (BRACKETED: 200 at 2026-08-28, 403 future.date at +1 day)
+  latest_closing_date (none -- no GLClosure existed)
+  expect legs        3 ; totals 35000062 / 35000062 minor units
+  capture sha256     d7c5c8196de89d391e623f61d91d94397975243f840d196b66e1bbed382890e3
+  request sha256     bd67ed4eae9255cea6c5cae32d43b42f4dcabd537a99c7db8820451d9248ab00
+  cells this grades  15 graded, of which 5 are MONEY  (1 + 4*3 + 2 ; 3 + 2)
+
+TOTAL ADDED BY THIS PROMOTION: 30 graded cells, of which 10 are MONEY cells.
+  EXEMPTION_PIN_LEDGER_PARITY       5 -> 7   (+2 parity vectors)
+  EXEMPTION_PIN_LEDGER_REFUSAL      5 -> 5   (neither vector is a refusal)
+  EXEMPTION_PIN_LEDGER_MONEYCELLS  29 -> 39  (+10)
