@@ -533,6 +533,28 @@ merged clean by `ort`, no conflicts) — `out/T386-BAR-mergeresult-67fe18f0.txt`
 :665  BAR_EXIT_MERGE=0
 ```
 
+**This review's own branch** — `out/T386-BAR-t386-branch.txt`, at `d1e550e2`, from this worktree
+with `git status --porcelain` empty:
+
+```
+:93   CENSUS fail-open instruments — inspected 1380 tracked .sh/.py file(s) …
+:94   … frontier 11, pinned at 11              :99  frontier == pinned (all 11 rows, by path).
+:157  dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+:158  T316-DEADPATH-CENSUS: corpus=1380 deadFiles=75 deadOccurrences=108 …
+:162  probe = up                               :635 VERDICT: PASS (exit 0) — 46 parity vectors
+:665  BAR_EXIT=0
+```
+
+My eight new `.sh` instruments entered the linter's corpus (`1372 → 1380`) and put **nothing** on
+the fail-open frontier; my twenty-one new files added **zero** dead paths. The host-state census
+(`18 sites, pinned at 18`) is also at its pin, which is why `t386-filter-transcript.sh` exists —
+committing 235 kB of the sweep's quoted hit lines would have dragged other files' repo-path
+references into this census, and T371 has already shown what that does to a bar.
+
+**A final confirming run, taken after this handoff and its transcripts were committed, is
+`out/T386-BAR-t386-final.txt`.** Its exit code, its probe line and its two frontier lines are
+lines *in that file*, not claims in this one — read them there.
+
 ### The dead-path number moved, and I established whose it is by RUNNING (P-83)
 
 The branch says 109 and the merge result says 108. My brief warned me not to subtract. So:
@@ -723,11 +745,40 @@ nothing about the drive — which is `P-45` applied to the very instrument writt
 | `FU-T386-7` | MINOR | `t381-red-drives.sh` **exits 0 regardless of its arms.** Every `DID NOT REPRODUCE` / `THE REPAIR IS NOT PROVEN` branch prints and continues; the script ends on an `echo`, and my re-run's `DRIVE_EXIT=0` is the measurement. A reader who checks the drive's exit status learns nothing — the drive is P-45 on itself. | Accumulate a failure count and exit non-zero. |
 | `FU-T386-8` | MINOR, doctrine | `t234-sweep-instrument-audit/HANDOFF.md:266–276` already held the correct account of the `\b` hazard, with the `-P` control, and a later re-framing replaced it with a weaker one that three tasks then re-derived. | A line in `patterns.md`: when re-framing an earlier measurement, cite its transcript or re-run it. |
 
-**What I could NOT test.** I did not reach the reference oracle beyond the bar's own probe; I did
-not exercise the sweep on a non-macOS `git`, and `git grep`'s `\b` behaviour is a property of the
-platform regex library, so §4's adjudication is a statement about *this host* (git 2.50.1, Apple
-Git-155) — which is the only host the program's parity work runs on today, and the sweep prints
-`SWEEP OBSERVE` on every run precisely so a different host shows up in the transcript.
+**What I could NOT test.**
+
+- I did not reach the reference oracle beyond the bar's own probe.
+- I did not exercise the sweep on a non-macOS `git`. `git grep`'s `\b` behaviour is a property of
+  the platform regex library, so §4 is a statement about **this host** (git 2.50.1, Apple
+  Git-155) — the only host the program's parity work runs on today, and the sweep prints
+  `SWEEP OBSERVE` on every run precisely so a different host shows up in the transcript.
+- F-1b's trigger was produced by a shim, not by an actually-full filesystem. The *mechanism* is
+  driven end to end (`ARM 1` proves the `rc=1`, the mid-run drive proves the consequence); what I
+  did not do is exhaust a real disk to reach it. I claim the mechanism, not a field incidence rate.
+- I did not wire the sweep into `conformance.sh` and therefore did not test `T399`'s gate. §9 is
+  reasoning about a thing I did not build.
+
+**Process note — four of my own errors, recorded because a clean review that hides them is worth
+less.**
+
+1. **I guessed the dead-path attribution and the guess was wrong.** From `109` on the branch and
+   `108` on the merge I inferred the `T383`+`T385` merge. Running the guard on T381's *merge base*
+   said `109` before T381 existed, and the pin's own history names `T374`. Corrected in §8; the
+   original guess is left visible there.
+2. **My M2 probe printed its own 200 kB test pattern**, burying the one-line result it existed to
+   show. An instrument whose output hides its finding is a smaller version of the defect this
+   whole review is about. Repaired to print a label and a byte count; re-run.
+3. **My mid-run drive shipped with a leftover heredoc** writing to a path that did not exist,
+   which printed an error into the first transcript. Repaired and **re-run**, so the committed
+   transcript comes from the committed instrument and not from an earlier draft of it.
+4. **I edited `REVIEW.md` while a bar run was in flight — and then did it a second time.**
+   `git status --porcelain` was empty when each started and not when each ended: the same class of
+   error T381 records at its §5.1(5), committed twice, by me, in the review that files
+   `FU-T386-5` about being careful. Both runs read `BAR_EXIT=0` and I cite **neither**. The runs
+   I cite are the one at `d1e550e2` (§8), clean start to finish, and
+   `out/T386-BAR-t386-final.txt`, taken from a clean tree with nothing else running and committed
+   without touching another byte. The lesson is cheap and I paid for it twice: **a bar run is a
+   measurement of a tree, so the tree has to hold still for the length of it.**
 
 ---
 
