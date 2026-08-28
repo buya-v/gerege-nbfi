@@ -2334,6 +2334,28 @@ file contains no float literal, no `float()`/`round()` call, no true-division no
 scopes, exit 1**. Unmutated, same data, same invocation: **exit 0**.
 [`.softhouse/capture/t277-shapelaw-salvage/evidence/40-negative-calibration.txt`]
 
+**AND IT WAS RE-DERIVED A SECOND TIME, by a second worker, on a second instrument that shares no
+line of code with the first.** `T277` was resumed after its first worker was killed by a rate limit,
+and the resuming worker did not sign a transcript it had not measured.
+`.softhouse/capture/t277-shapelaw-salvage/src/crosscheck_seven_t277b.py` imports **nothing** from the
+census and re-derives the exact monthly rate fraction (an integer numerator over `10^k · 1200`, never
+a per-month percentage), `HALF_UP` as `(2a + b) // 2b`, the 19-digit termination test, the admission
+rule, the stuck-cell selector and both law forms **from scratch**. It agrees on every figure in this
+section: **296 / 220 / 76 / 213 / the same seven**, all `δ = 1`, all `FULL family B`-true, header
+principal equal to the row sum on all 296, and both disjointness intersections **0**.
+[`evidence/61-crosscheck-second-instrument.txt`]
+
+> **`I₁q` IS NOT OBSERVABLE IN THE EMITTED SCHEDULE, and reading it out of one is a silent trap.**
+> The obvious way to make a re-derivation "more independent" is to take `I₁q` from repayment row 1's
+> `interest` field instead of computing it from the rate. **That is invalid.** On a STUCK cell row 1
+> repays no principal, so the oracle emits `interest == total == E` — the reported interest is
+> **already clipped to the instalment** and the deficit is carried, not shown. Taking `I₁q` from that
+> field forces `δ = 0` on all 296 cells *by construction*, which then "refutes" law (ii) on **183**
+> cells and reports the disjointness as broken. **Measured, not supposed:** the cross-check carries an
+> `--i1q-from-row` flag that reproduces exactly that failure on demand, exit 1
+> [`evidence/60-crosscheck-DEAD-END-i1q-from-row.txt`]. Anyone re-deriving `δ` from row 1's `interest`
+> is measuring `E` twice.
+
 | law | domain | holds |
 |---|---|---|
 | (i) `last row EMI = E + B` — **FACT A** | 296 stuck corpus cells | **220** *(this is what defines the FACT-A domain)* |
@@ -2368,6 +2390,15 @@ carried forward verbatim rather than smoothed* below already names these exact s
 already stated the law they refute. **Both entries have been correct and adjacent since T231 and
 neither one mentions the other**, which is why the law reads as sound at the point a reader meets it.
 That is the whole of the defect: not a wrong measurement, an unlinked one.
+
+**Set equality was CHECKED, not assumed** — gap 2 names seven cells with seven amounts
+(`5 of 11`, `4`, `2`, three identical `T159-` re-observations, `166 of 999`), and `T277` measured
+seven, cell-for-cell and amount-for-amount the same. **And the citation that carried this claim was a
+line number that pointed at the wrong thing** (P-86): the task brief and `T264` both located gap 2 at
+`gates.md:1868`, but line 1868 held the *forward reference* to gap 2 — *"See gap 2 of SITE 3,
+CHARACTERISED below"* — inside the answered-questions list, roughly **480 lines above** gap 2 itself.
+Gap 2 lives under the heading **`### The gaps, carried forward verbatim rather than smoothed`**. Every
+cross-reference added by this correction is a **grep-able heading or sentence, never an ordinal**.
 
 **MEASURED, NOT GUESSED — the exception set is DISJOINT from both sets it has been confused with:**
 
