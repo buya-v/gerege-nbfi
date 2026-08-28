@@ -1223,14 +1223,37 @@ func hasResidueBeyondMinorUnit(text string, minorDigits int) bool {
 }
 
 // verbatimInCapture requires every text to occur BYTE FOR BYTE inside the
-// artefact ref names.
+// artefact ref names, ON A TOKEN BOUNDARY.
 //
-// IT IS A bytes.Contains AND NOTHING ELSE. Not "equal after parsing", not "equal
+// IT IS BYTE MATCHING AND NOTHING ELSE. Not "equal after parsing", not "equal
 // after normalising", not "equal as numbers" -- any of which would put the
 // observed amount through a numeric type on the way to being checked, and the
 // value in question is one no numeric type in this program can hold. The claim
 // being checked is exactly "these are the oracle's own characters", and the only
 // honest test of that claim is to look for those characters.
+//
+// WHY IT IS NO LONGER A BARE bytes.Contains [T397, closing T387's F-T387-2].
+// bytes.Contains accepts a PREFIX: "100.12" is contained in a capture holding
+// "100.125", so a vector could cite a SHORTER number than the artefact carries
+// and the verbatim check would say nothing. T387 drove that (attack A17) and
+// found the class SELF-CORRECTING -- the port converts the representable
+// "100.12" happily, posts, and the divergence comparator then FAILs the vector
+// with `divergence.port_outcome: want "REFUSED", got "ACCEPTED"`, exit 1 -- which
+// is why it was filed MINOR rather than as a fail-open. It is closed anyway, and
+// the downstream self-correction is KEPT and asserted as a control
+// (TestThePrefixIsStillCaughtDownstreamIfAdmissionIsBypassed), because a check
+// that is only saved by a later check is one refactor away from being saved by
+// nothing (P-45).
+//
+// THE FIX IS NOT A NUMERIC COMPARISON, AND THAT IS DELIBERATE. The obvious
+// "proper" repair -- parse both sides and compare them as numbers -- is forbidden
+// here by the first CLAUDE.md non-negotiable and by the whole premise of this
+// class: no int64 holds 100.125, no float may touch it, and a parse would be the
+// defect this file exists to prevent wearing the costume of a fix. So the
+// boundary is decided by CLASSIFYING THE NEIGHBOURING BYTE, which needs no
+// arithmetic: the match must not have a digit, a decimal point or a sign glued to
+// its left, nor a digit, a decimal point or an exponent marker glued to its
+// right. See tokenBoundedIndex.
 func verbatimInCapture(repoRoot, ref, field, refField string, texts []string) []string {
 	var bad []string
 	if len(texts) == 0 {
@@ -1258,9 +1281,86 @@ func verbatimInCapture(repoRoot, ref, field, refField string, texts []string) []
 					"characters the oracle emitted; if they are not in the artefact this vector cites, "+
 					"they came from somewhere else",
 				field, i, t, refField, ref))
+			continue
+		}
+		// PRESENT, BUT PRESENT AS PART OF SOMETHING ELSE. Reported separately
+		// from "not there at all" because the two are different mistakes: one is
+		// a transcription from nowhere, the other is a TRUNCATION of the
+		// artefact's own number, and a reader has to be able to tell them apart.
+		if tokenBoundedIndex(raw, []byte(t)) < 0 {
+			bad = append(bad, fmt.Sprintf(
+				"%s[%d] is %q and those bytes occur in %s (%s) ONLY GLUED TO A LONGER NUMBER -- every "+
+					"occurrence has a digit, a decimal point or a sign immediately beside it, so %q is "+
+					"a PREFIX or a TAIL of an amount the artefact carries and NOT an amount the "+
+					"artefact carries. A bare substring match would accept \"100.12\" against a "+
+					"capture holding \"100.125\", which is a DIFFERENT VALUE cited as if it were the "+
+					"oracle's own characters. The match must land on a token boundary "+
+					"[T397, closing T387 F-T387-2]",
+				field, i, t, refField, ref, t))
 		}
 	}
 	return bad
+}
+
+// tokenBoundedIndex returns the offset of the first occurrence of needle in raw
+// that is NOT glued to a neighbouring numeric byte, or -1 if every occurrence is.
+//
+// NO NUMBER IS FORMED ANYWHERE IN HERE. It does not parse needle, it does not
+// parse raw, it does not compare magnitudes and it does not know what value
+// either side denotes. It walks byte offsets and asks one question of the single
+// byte on each side of a candidate match: "could this byte belong to the same
+// numeric token?" That is a character-class test -- the same discipline
+// hasResidueBeyondMinorUnit uses to find a residue without ever holding the
+// amount as a number -- and it is the only kind of test this class may apply to a
+// value no numeric type in this program can represent.
+//
+// ANY bounded occurrence is enough. A capture legitimately carries the same
+// characters more than once -- both legs of a balanced entry do, and that is
+// exactly the artefact this rule guards -- and one honest occurrence is the whole
+// of the claim being made.
+func tokenBoundedIndex(raw, needle []byte) int {
+	if len(needle) == 0 {
+		return -1
+	}
+	for off := 0; off+len(needle) <= len(raw); {
+		rel := bytes.Index(raw[off:], needle)
+		if rel < 0 {
+			return -1
+		}
+		i := off + rel
+		end := i + len(needle)
+		leftOK := i == 0 || !numericLeftNeighbour(raw[i-1])
+		rightOK := end == len(raw) || !numericRightNeighbour(raw[end])
+		if leftOK && rightOK {
+			return i
+		}
+		off = i + 1
+	}
+	return -1
+}
+
+// numericLeftNeighbour reports whether b, sitting immediately BEFORE a match,
+// means the match is only the tail of a longer number.
+//
+// A digit or a decimal point continues the token ("00.125" inside "100.125"). A
+// sign does not continue the digits but it changes the VALUE, so "100.125" cited
+// against a capture that holds only "-100.125" is not the artefact's amount
+// either, and it refuses. No arithmetic is performed to reach that conclusion --
+// the sign is simply not accepted as a boundary.
+func numericLeftNeighbour(b byte) bool {
+	return (b >= '0' && b <= '9') || b == '.' || b == '-' || b == '+'
+}
+
+// numericRightNeighbour reports whether b, sitting immediately AFTER a match,
+// means the match is only a prefix of a longer number.
+//
+// A digit or a decimal point continues the token -- this is the byte that makes
+// "100.12" refuse against "100.125", which is T387's F-T387-2. 'e'/'E' is
+// included because a JSON number may be written in exponent form and "100.12"
+// against "100.12e3" is likewise not the artefact's amount; recognising the
+// marker is a character test and forms no exponent.
+func numericRightNeighbour(b byte) bool {
+	return (b >= '0' && b <= '9') || b == '.' || b == 'e' || b == 'E'
 }
 
 // citationReasons resolves one two-part artefact citation and returns every
