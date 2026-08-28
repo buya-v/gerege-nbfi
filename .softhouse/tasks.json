@@ -2345,7 +2345,7 @@
       "target": "code",
       "executor": "agent",
       "model": "opus",
-      "status": "in_progress",
+      "status": "done",
       "dependencies": [
         "T252"
       ],
@@ -2355,7 +2355,7 @@
         ".softhouse/reviews/a2-34-review-a2-15/"
       ],
       "description": "THREE RESIDUALS FROM T252 (merged 2674f7c), one of which is a LIVE BROKEN ASSERTION.\n\n(1) THE LIVE ONE. `.softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh` asserts, in TWO `want_line` checks at :74 and :152, the literal string `frontier == pinned (all 9 rows, by path).` The frontier was 9 when T243 wrote it, became 10 at T248, and is 11 since T252. [VERIFIED by the driver at 2674f7c: FAILOPEN_PIN_FILE_LIST holds 11 rows and conformance.sh prints `all 11 rows`.] So this red-drive instrument would now FAIL on its own control arm. T252 named it and could not touch it (outside its files_hint) — which is P-40 working as intended, and why this task exists rather than a defect.\n\n(2) THE ROT MECHANISM, which is the valuable half and the reason this is opus. T248 corrected the frontier count WHERE IT IS NAMED (conformance.sh) but not WHERE IT IS RESTATED (this instrument). That is P-66 at program scale, and it is THE SAME SHAPE T253 is fixing for line numbers in DEC-2: a number copied into a second place rots silently, and the copy reads as authoritative. FIX THE MECHANISM, NOT THE 9. Make the instrument READ the pin — derive the expected count from FAILOPEN_PIN_FILE_LIST (or assert the `frontier == pinned` INVARIANT without restating the cardinal) rather than hard-coding a number that must be maintained in two places. ARGUE the choice. A task that changes 9 to 11 and leaves the copy has bought one cycle, not a fix — and will be rejected on that ground. THEN SWEEP FOR OTHER RESTATEMENTS: enumerate every site in the repo that restates the frontier cardinal, state BOTH TERMS (P-67) and say where you looked (P-66/P-70). The driver has already found one more: `.softhouse/state/DRIVER.STATE.json` `failopen_frontier`, which the driver maintains itself — report it, do NOT edit driver state.\n\n(3) THE UNREPAIRED PIN. `.softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh` is now VISIBLE at TIER1B thanks to T252's C6, and PINNED — but it is still BROKEN. It exits 0 printing `PROMOTED CELLS SWEPT: 0` having reached no corpus at all, with the truth on stderr where nobody looks; its own P-72 calibration line printed an EMPTY count and did not stop it. THE PIN IS A FRONTIER, NOT AN AMNESTY. Repair it so it either reaches its corpus or DIES, and drive it red. If repairing it removes it from the frontier, the pin must lose the row IN THE SAME COMMIT — conformance.sh says so itself: a '-' line means the pin has started excusing a weakness that is no longer there. NOTE: conformance.sh is NOT in your files_hint; if your repair requires moving the pin, STOP and report, because T254 is also queued against that file.\n\nDO NOT REPAIR THE OTHER PINNED INSTRUMENTS: r11-hygiene.sh, both t184 scripts, T234's re-runner and A2-32-evidence/sweep.sh. sweep-ORIGINAL.sh stays pinned PERMANENTLY — it is a SPECIMEN, NOT AN INSTRUMENT, and repairing it would destroy the evidence it exists to be.\nDO NOT retro-edit committed evidence to agree with a later document (T114/T176). A rig whose output is already in the record gets a labelled correction or a successor file — T236 (merged 40c6b4c) argued that convention out in full and CHECKED WHETHER MANIFEST.sha256 PINNED THE BYTES before choosing; do the same check before you touch anything under a directory carrying a manifest.\n\nBAR: probe line PRESENT (test presence FIRST, then value — a failed HARD guard exits 2 BEFORE the probe prints, so absence of the line is not evidence of an outage) and reading up; VERDICT PASS exit 0; 46 parity / 7884 cells loanschedule; 4 parity + 2 oracle-refusal / 21 money cells LEDGER; 0 refused, 0 inadmissible, 0 harness errors, 0 invariant violations, 0 NOT RUN; 9 census pins == pinned; frontier == pinned (read the LIVE count, do not trust this task's prose); go build/vet/test green; gofmt -l EXACTLY contract.go, never gofmt -w it (G-3); vector-store digest UNCHANGED BY YOU, read LIVE via `git rev-parse HEAD:.softhouse/vectors` (P-61).",
-      "note": "filed by driver, local fire 20260822-140002, from T252's three named residuals | RENUMBERED T255->T258 on merge: the cloud catch-up fire published a different T255 first. Two orchestrators held the lock at once (see P-84). | DISPATCHED fire 20260828-080001 chain iteration 2, batch 1 of the fire. Dispatch record pushed BEFORE `git worktree add`.",
+      "note": "COMPLETE on branch 8e7f0652, AWAITING INDEPENDENT REVIEW (T340). Driver scope-check PASSED: 19 files / 3955 insertions, nothing outside files_hint, conformance.sh untouched as instructed. *** IT REFUTED THE DRIVER'S BRIEF AND WAS RIGHT: the brief said the frontier is 109; 109 is the DEAD-PATH frontier, the FAIL-OPEN frontier this instrument asserts is 11. Driver re-verified both independently -- FAILOPEN_PIN_FILE_LIST holds 11 rows, dead-path-frontier.pin holds 109. Typing 109 in would have been MORE wrong than the stale 9, because 109 looks current. See .softhouse/observations/20260828-driver-conflated-two-different-frontiers.md *** Also: no number was typed at all -- PINNED_ROWS is counted from the harness SOURCE at run time and cross-checked against the harness OUTPUT (two-source agreement, fail-closed). Census found 10 site classes where the brief named 1-2, incl. TWO live instruments asserting `pinned at 11.` WITH A TRAILING PERIOD that T300's rewording removed -- right count, wrong string, false today. THREE guards fired on its own work and it assembled paths rather than move a pin. TIER1B: STOP-AND-REPORT as briefed. Successor: T345.",
       "branch": "softhouse/T258-frontier-rot-residuals",
       "attempts": 1
     },
@@ -4697,9 +4697,10 @@
       "dependencies": [
         "T258"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Paired reviewer filed with the batch, fire 20260828-080001 chain iteration 2."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Paired reviewer filed with the batch, fire 20260828-080001 chain iteration 2. | DISPATCHED fire 20260828-080001 iter 2 BATCH 4. Dispatch record pushed BEFORE `git worktree add`.",
+      "branch": "softhouse/T340-review-t258"
     },
     {
       "id": "T341",
@@ -4783,6 +4784,29 @@
       "status": "pending",
       "attempts": 0,
       "note": "Filed from T270's widened census, fire 20260828-080001 iter 2. resolve7.py is the priority item -- MATERIAL float site on the oracle-capture transport."
+    },
+    {
+      "id": "T345",
+      "title": "T258's TIER1B successor and its frontier pin must land in ONE commit — the pin patch must never be applied alone",
+      "description": "RAISED BY T258 AS AN EXPLICIT STOP-AND-REPORT, which is what its brief asked for and the right call.\n\nWHAT T258 ESTABLISHED BY RUNNING IT, not by reading it: the TIER1B original (`.softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh`, the `TIER1B` row of `FAILOPEN_PIN_FILE_LIST`) is confirmed **fail-open** — exit 0, `PROMOTED CELLS SWEPT: 0`, root ABSENT. It shipped a **fail-closed successor** (122 cells, 0 failures, integer minor units, no float) and **deliberately did not repair the original.**\n\nWHY IT STOPPED, AND WHY THAT WAS CORRECT. Repairing the original DROPS IT FROM THE FAIL-OPEN FRONTIER, and `conformance.sh` requires the pin to lose that row **in the same commit**. `conformance.sh` was held exclusively by T323 for that entire batch. So the choice was: violate the serialisation, or ship the successor and hand over an exact pin patch. It did the second. **T258's FU-1 carries the exact patch and it must NEVER be applied alone** — a pin that loses a row whose file is still fail-open is a frontier that under-reports, which is the fail-open defect one level up.\n\nYOUR JOB: land the repair and the pin **atomically**, and prove the atomicity matters by driving BOTH halves separately in a scratch tree first (P-22):\n  * pin patch alone, original unrepaired  -> what does the bar do? It must NOT be green.\n  * repair alone, pin unchanged           -> what does the bar do? It must NOT be green.\n  * both together                          -> exit 0, and the fail-open frontier is **10 == pinned**.\nIf any of the first two comes back GREEN, that is a finding bigger than this task: it means the harness does not actually enforce the coupling it claims, and you should report that rather than quietly shipping the combined commit.\n\n**READ THE FRONTIER LIVE. DO NOT TAKE 11, 10 OR 109 FROM THIS TEXT.** The driver has already got this wrong once in this fire: **109 is the DEAD-PATH frontier** (`.softhouse/guards/dead-path-frontier.pin`, 109 rows); **11 is the FAIL-OPEN frontier** (`FAILOPEN_PIN_FILE_LIST` in `conformance.sh`). They are different guards. See `.softhouse/observations/20260828-driver-conflated-two-different-frontiers.md`. Count both yourself.\n\nALSO IN SCOPE — the rot T258 found that no number-search could have found. **Two live instruments assert `pinned at 11.` WITH A TRAILING PERIOD.** The count is right; T300 reworded the harness line (`conformance.sh:1708` prints `… frontier $n, pinned at $p` with no period) and the period is gone, so both assertions are **FALSE TODAY**. T258 proved it by RUNNING t262's own checker (`MISMATCH frontier count`). Fix them the way T258 fixed its own: derive from source, do not restate. And apply T258's four adjudicated ROT patches from its Follow-ups — but re-derive each before applying, and do NOT touch the two it pinned as SPECIMEN, the one it accepted BY DESIGN, or the HISTORICAL quotation in P-80's own text (that quotation IS the record).\n\nSCOPE: `.softhouse/conformance.sh` (the pin), `.softhouse/reviews/a2-34-review-a2-15/`, `.softhouse/capture/t345-tier1b-atomic/`, and the instrument sites T258's census names. **SERIALISED BEHIND T323's MERGE AND T340's REVIEW** — T323 holds `conformance.sh` and T340 may yet reject T258's successor.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/reviews/a2-34-review-a2-15/",
+        ".softhouse/capture/t345-tier1b-atomic/"
+      ],
+      "context": "harness-integrity",
+      "dependencies": [
+        "T258",
+        "T323",
+        "T340"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Filed from T258's stop-and-report, fire 20260828-080001 iter 2. The pin patch MUST NOT be applied alone."
     }
   ],
   "cross_corroboration": {

@@ -21,7 +21,7 @@ miss.
 | `T280` | `softhouse/T280-review-t279` | Independent review of T279's lock-partition fix; drives the post-checkout hook RED. Third layer of the same fix. |
 | `T266` | `softhouse/T266-linter-ownership` | Fail-open linter's variable-indirect ownership blind spot — tier is currently a property of the linting **host**, not the file. |
 | `T270` | `softhouse/T270-superseded-trap` | A superseded guard that still prints `ok … 0 failed` is a trap, not preserved evidence. |
-| `T258` | `softhouse/T258-frontier-rot-residuals` | A live broken assertion (`all 9 rows` vs a frontier of 109) plus the **rot mechanism** that produced it. |
+| `T258` | `softhouse/T258-frontier-rot-residuals` | A live broken assertion (`all 9 rows`) plus the **rot mechanism** that produced it. **The driver's brief said the true value was 109; it is 11 — see the correction below.** |
 | `T335` | `softhouse/T335-rvpa-list-traversal` | T291's `F-T291-1`: R-VPA recurses into mappings, not lists. **Third repair in this lineage and the last the driver will file** — a rejection parks it. |
 
 **Serialisation:** `T323` alone holds `.softhouse/conformance.sh`. The other five have disjoint `files_hint`.
@@ -45,7 +45,7 @@ bash .softhouse/conformance.sh   →  exit 0
   probe line PRESENT (presence tested BEFORE value) reading "up"
   46 parity vectors / 7884 cells / 0 FAIL / 0 inadmissible
   LEDGER parity 7 | oracle-refusal 6 | money cells 39 | all 13 wrong impls dying
-  dead-path frontier 109 == pinned | corpus 1281 | P-number citations PASS
+  dead-path frontier 109 == pinned | FAIL-OPEN frontier 11 == pinned | corpus 1281 | P-number citations PASS
 ```
 
 ## Pause reason
