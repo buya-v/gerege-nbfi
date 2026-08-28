@@ -1,0 +1,20 @@
+T326 CROSS-HOST DRIVE -- one commit, four disk conditions
+root: /Users/buv/gerege-nbfi/.claude/worktrees/agent-afabde695fbda8dff
+HEAD: a4875fca71c4cee7c54a7652acd8f1a6274be5fe
+======================================================================================
+  A bare                       106 row(s)
+  A bare (legacy resolver)     106 row(s)
+  B +toolchain                 106 row(s)
+  B +toolchain (legacy)        81 row(s)
+  C +toolchain +residue        106 row(s)
+  C +toolchain +residue (legacy) 78 row(s)
+  D fresh clone                106 row(s)
+--------------------------------------------------------------------------------------
+ARMS
+  PASS  tracked resolver: A_bare == B_toolchain   (frontier is a property of the COMMIT)
+  PASS  tracked resolver: A_bare == C_residue   (frontier is a property of the COMMIT)
+  PASS  tracked resolver: A_bare == D_clone (different path, no untracked content)
+  PASS  legacy resolver: A_bare_legacy != B_toolchain_legacy (25 row(s) move) -- DEFECT REPRODUCED
+  PASS  legacy resolver: A_bare_legacy != C_residue_legacy (28 row(s) move) -- DEFECT REPRODUCED
+--------------------------------------------------------------------------------------
+T326-CROSSHOST: GREEN pass=5 fail=0
