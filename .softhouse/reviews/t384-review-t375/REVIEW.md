@@ -22,14 +22,14 @@ exit 0 on it with every pin holding. **T375 also told the truth about what it co
 produce** — it says plainly that no uninterrupted 61-arm transcript exists rather than shipping
 a partial run as a clean one, and that sentence is the most creditworthy thing in the handoff.
 
-**ON THE DRIVE: every one of the 61 distinct arms is now driven and NONE is red** — 53 in one
-uninterrupted run before the task runner killed my own drive at arm 23, and the remaining 8,
-which T375's killed run never reached at all, in a recovery run. **Arm set 1 — T323's 15 and
-T358's 13, 28 arms by other authors against earlier harnesses — re-runs UNMODIFIED and passes
+**ON THE DRIVE: I PRODUCED THE UNINTERRUPTED 61-ARM TRANSCRIPT T375 COULD NOT — `61 PASS / 0
+FAIL of 61`, `DRIVE RC=0`, one process, 68 minutes, no interruption** (§7.3). Nothing to
+investigate: not one arm in any of the three generations is red. **Arm set 1 — T323's 15 and
+T358's 13, 28 arms by other authors against earlier harnesses — re-ran UNMODIFIED and passed
 in full**, which is the measurement behind T375's claim that appending `symlink-members=N` at
-the END of the census line retuned nothing. **I do not have a single uninterrupted 61-arm
-transcript either; a second attempt is running detached. See §7 and read it before quoting a
-number from this review.**
+the END of the census line retuned nothing. My *first* attempt was itself killed at arm 23 with
+53 PASS / 0 FAIL; that transcript is committed unedited beside the clean one, because a
+transcript that only survives when it agrees with you is not evidence.
 
 **The conditions exist because of one thing: I found the FIFTH fail-open, and it is the one
 T375 disclosed against itself and rated unreachable.** `FU-T375-7` — `$rel` used as a git
@@ -502,15 +502,35 @@ skip**, so "arm set 1 passed" cannot be produced by arm set 1 failing to run.
 
 ### 7.3 ATTEMPT 2 — A SINGLE UNINTERRUPTED 61-ARM TRANSCRIPT
 
-Started 23:36, **detached in its own session** so the reaper that killed attempt 1 cannot reach
-it, same drive script, fresh clone of the branch tip. Expected ~70 minutes.
+**STATUS: COMPLETE. `61 PASS / 0 FAIL of 61`. `DRIVE RC=0`.**
 
-**IF THIS SECTION STILL READS "RUNNING", THEN NO SINGLE UNINTERRUPTED 61-ARM TRANSCRIPT EXISTS
-ON THIS REVIEW EITHER, AND I SAY SO IN PLAIN WORDS RATHER THAN LETTING §7.2 BE MISREAD AS ONE.**
-The verdict does not depend on it: §7.1 and §7.2 between them have every arm in the file driven
-green, and §§1–6 are independent of the drive entirely.
+Started 23:36, finished 00:44 — **68 minutes, one process, no interruption** — detached in its
+own session so the reaper that killed attempt 1 could not reach it; same drive script,
+unmodified, fresh `--no-hardlinks` clone of the branch tip
+[`evidence/22-FULL-DRIVE-attempt-2-UNINTERRUPTED-61-of-61.txt`, complete and unedited]:
 
-**STATUS: RUNNING.** Transcript will land at `evidence/22-FULL-DRIVE-attempt-2.txt`.
+    T323 RED DRIVE: 15 passed, 0 failed.
+    >>> ARM SET 1: T323 DRIVE PASSED in full.
+    T358 RED DRIVE: 14 passed, 0 failed.  (arm set 1 counts as one.)
+    >>> ARM SET 1: T358 DRIVE PASSED in full.
+    T375 RED DRIVE: 34 passed, 0 failed.  (arm set 1 counts as one.)
+    DRIVE RC=0
+
+**`grep -c '>>> PASS'` = 61. `grep -c '>>> FAIL'` = 0.** There is nothing to investigate: not
+one arm in any of the three generations is red.
+
+**THE THING T375 COULD NOT PRODUCE NOW EXISTS.** Its `[UNVERIFIED]` — *"no single uninterrupted
+61-arm transcript exists on this branch"* — is discharged, and the 40 passes it measured before
+its own kill are confirmed by a clean sweep rather than assumed to stand.
+
+**Read the arm count the way the drive script itself insists.** `34 passed` counts arm set 1 as
+**one** — the file says so in its own output, precisely because T364 charged T358 with that
+double-count. The 61 is the number of `>>> PASS` lines: 15 (T323) + 13 (T358) + 33 (T375) = 61
+distinct arms.
+
+**Two attempts, and both are on the record.** Attempt 1 was killed at arm 23 with 53 PASS /
+0 FAIL and is committed unedited beside this one. I did not delete the killed run once the
+clean one existed — a transcript that only survives when it agrees with you is not evidence.
 
 ---
 
