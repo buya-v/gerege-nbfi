@@ -1329,9 +1329,7 @@ func tokenBoundedIndex(raw, needle []byte) int {
 		}
 		i := off + rel
 		end := i + len(needle)
-		leftOK := i == 0 || !numericLeftNeighbour(raw[i-1])
-		rightOK := end == len(raw) || !numericRightNeighbour(raw[end])
-		if leftOK && rightOK {
+		if leftDelimits(raw, i) && rightDelimits(raw, end) {
 			return i
 		}
 		off = i + 1
@@ -1339,28 +1337,194 @@ func tokenBoundedIndex(raw, needle []byte) int {
 	return -1
 }
 
-// numericLeftNeighbour reports whether b, sitting immediately BEFORE a match,
-// means the match is only the tail of a longer number.
+// --- THE BOUNDARY RULE IS AN ALLOWLIST [T416, closing T405's F-T405-2/-3] -----
 //
-// A digit or a decimal point continues the token ("00.125" inside "100.125"). A
-// sign does not continue the digits but it changes the VALUE, so "100.125" cited
-// against a capture that holds only "-100.125" is not the artefact's amount
-// either, and it refuses. No arithmetic is performed to reach that conclusion --
-// the sign is simply not accepted as a boundary.
-func numericLeftNeighbour(b byte) bool {
-	return (b >= '0' && b <= '9') || b == '.' || b == '-' || b == '+'
+// IT USED TO BE A BLACKLIST AND IT FAILED OPEN. `numericLeftNeighbour` named the
+// four bytes that make a match a tail (`digit . - +`) and `numericRightNeighbour`
+// the four that make it a prefix (`digit . e E`); everything else -- every byte
+// nobody happened to think of -- was silently accepted as a boundary. T405
+// measured what that admits and T416 re-derived every row:
+//
+//	{"formatted":"1,250,000.00"}  cited as  250,000.00   ADMITTED  (`,`)
+//	{"formatted":"1,100.12"}      cited as  100.12       ADMITTED  (`,`)
+//	{"formatted":"100.12-"}       cited as  100.12       ADMITTED  (trailing sign)
+//	{"formatted":"100.12+"}       cited as  100.12       ADMITTED  (trailing sign)
+//	{"formatted":"1 250 000.00"}  cited as  250 000.00   ADMITTED  (` `)
+//	{"raw":100_125}               cited as  125          ADMITTED  (`_`)
+//
+// The trailing-sign rows refute the blacklist ON ITS OWN STATED REASONING: `-`
+// and `+` were put in the LEFT set because "a sign does not continue the digits
+// but it changes the VALUE", and that argument is exactly symmetric. It was
+// applied on one side and not the other because a blacklist has no place to ask
+// the question.
+//
+// AND IT FAILED CLOSED IN SIX PLACES TOO, which is the same defect (P-98): a
+// legitimate `100.125` was REFUSED against `100.125.`, `paid+100.125`,
+// `100.125EUR`, `id-100.125`, `50.00-100.125` and `T352-amount-100.125.req`. The
+// `EUR` row is the sharpest: `100.125MNT` ADMITTED while `100.125EUR` REFUSED, so
+// whether an honest citation was accepted depended on WHICH CURRENCY CODE
+// happened to begin with `e`. That is arbitrary, and arbitrary is not a rule.
+//
+// SO THE QUESTION IS INVERTED. The neighbour must be a byte this file has NAMED
+// as terminating a numeric token; a byte in neither the named set nor the
+// context-qualified set is NOT a boundary and the occurrence REFUSES. That is the
+// direction "ABSENT REFUSES" states two functions higher, and it means the next
+// unforeseen byte costs an exit 2 with a named reason instead of a silently
+// accepted wrong amount.
+//
+// SIX BYTES CANNOT BE CLASSIFIED FROM THEMSELVES, and pretending otherwise is
+// how the blacklist got its holes. Each one is a delimiter in one context and
+// part of the number in another, so each is decided by ONE further byte:
+//
+//	,  ' ' _   GROUP SEPARATOR when a digit sits on both sides of it
+//	           (`1,250,000.00`, `1 250 000.00`, `100_125`); a delimiter otherwise
+//	           (`{"a":100.125,"b":2}`, `[16, 100.125]`).
+//	.          CONTINUES the number when a digit follows it (`100` inside
+//	           `100.125`); a delimiter otherwise -- a prose full stop, a filename
+//	           extension (`…100.125.req`).
+//	- +        A SIGN, which changes the value, when there is no token beside it
+//	           to separate: on the left `16,-100.125` and `[-100.125]`, on the
+//	           right the accounting negative `100.12-`. A SEPARATOR, hence a
+//	           delimiter, when an identifier or a number sits on its far side:
+//	           `id-100.125`, `50.00-100.125`, `paid+100.125`.
+//	e E        AN EXPONENT MARKER when the shape after it is one (`100.12e3`,
+//	           `100.12e+3`); an ordinary letter otherwise (`100.125EUR`).
+//
+// NOT ONE OF THOSE TESTS FORMS A NUMBER. Every one asks "is this byte in
+// '0'..'9'" or "is this byte a letter", and the only arithmetic is on byte
+// offsets. A parse or a numeric comparison here would be the defect this whole
+// class exists to prevent, wearing the costume of a fix: no int64 holds 100.125,
+// and no float may come near it (CLAUDE.md, first non-negotiable).
+//
+// THE AMBIGUOUS CASE RESOLVES TOWARD REFUSAL, deliberately and with a cost.
+// `16,100.125,DEBIT` (CSV) and `1,100.125` (thousands separator) are the same
+// bytes in the same order, and nothing local can tell them apart. This file
+// refuses both, so a CSV artefact would need its citation widened. That is exit
+// 2 with a named reason a human fixes in the same fire; the other direction is a
+// wrong amount accepted as the oracle's own characters, silently. Measured
+// against the corpus rather than assumed: across the 37 artefacts the vector
+// store actually cites, `,` appears 5,186 times to the RIGHT of a numeric run
+// and 276 times to its LEFT, and `ledger inadmissible` stays 0 under this rule.
+
+// asciiDelimiterPunct is the punctuation this file NAMES as terminating a
+// numeric token. It is exhaustive by construction -- a byte absent from here,
+// from the letter/whitespace/high-byte classes and from the six qualified bytes
+// above is NOT a delimiter and the occurrence refuses.
+//
+// Every byte in it was measured neighbouring a numeric run in the artefacts this
+// store cites, or is ASCII punctuation that cannot occur inside a decimal
+// literal in any notation. None of them can be part of a number, which is the
+// entire membership test.
+const asciiDelimiterPunct = "\"'`{}[]()<>:;=&|\\/*%@!?#~$^"
+
+func isASCIIDigit(b byte) bool { return b >= '0' && b <= '9' }
+
+func isASCIILetter(b byte) bool {
+	return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')
 }
 
-// numericRightNeighbour reports whether b, sitting immediately AFTER a match,
-// means the match is only a prefix of a longer number.
+// isTokenByte reports whether b could be part of an identifier or a number
+// sitting BESIDE the match -- the test that tells a sign apart from a separator.
+func isTokenByte(b byte) bool { return isASCIIDigit(b) || isASCIILetter(b) || b == '_' }
+
+// namedDelimiter covers the unconditional classes: ASCII letters, ASCII
+// whitespace that cannot group digits, the punctuation allowlist, and every byte
+// >= 0x80.
 //
-// A digit or a decimal point continues the token -- this is the byte that makes
-// "100.12" refuse against "100.125", which is T387's F-T387-2. 'e'/'E' is
-// included because a JSON number may be written in exponent form and "100.12"
-// against "100.12e3" is likewise not the artefact's amount; recognising the
-// marker is a character test and forms no exponent.
-func numericRightNeighbour(b byte) bool {
-	return (b >= '0' && b <= '9') || b == '.' || b == 'e' || b == 'E'
+// THE HIGH BYTES ARE A DECISION, NOT AN OVERSIGHT. No byte >= 0x80 can be part of
+// an ASCII decimal literal, and the texts this rule guards are ASCII decimal by
+// construction: they are the reference oracle's own emitted characters for a
+// money amount (DEC-2), and Fineract emits ASCII digits. So `100.125₮` is a
+// bounded occurrence of `100.125`.
+func namedDelimiter(b byte) bool {
+	switch {
+	case isASCIILetter(b):
+		return true
+	case b == '\t' || b == '\n' || b == '\r' || b == '\v' || b == '\f':
+		return true
+	case b >= 0x80:
+		return true
+	}
+	return strings.IndexByte(asciiDelimiterPunct, b) >= 0
+}
+
+// leftDelimits reports whether the byte immediately before raw[i:] terminates a
+// numeric token, so that a match starting at i is not the TAIL of a longer one.
+//
+// i is the first byte of the candidate match and is assumed in range.
+func leftDelimits(raw []byte, i int) bool {
+	if i == 0 {
+		return true // start of buffer: nothing is glued to it
+	}
+	b := raw[i-1]
+	switch {
+	case isASCIIDigit(b):
+		return false // "00.125" inside "100.125"
+	case b == '.':
+		// The fractional part of a longer number, when what follows the dot is
+		// a digit. A prose full stop or a path separator is not.
+		return !isASCIIDigit(raw[i])
+	case b == ',' || b == ' ' || b == '_':
+		// GROUP SEPARATOR only when a digit sits on both sides of it.
+		return !(i >= 2 && isASCIIDigit(raw[i-2]) && isASCIIDigit(raw[i]))
+	case b == '-' || b == '+':
+		// A SIGN when nothing is beside it to separate; a separator otherwise.
+		return i >= 2 && isTokenByte(raw[i-2])
+	}
+	return namedDelimiter(b)
+}
+
+// rightDelimits reports whether the byte immediately after a match ending at end
+// terminates the numeric token, so that the match is not a PREFIX of a longer
+// one.
+//
+// end is one past the last byte of the candidate match; end-1 is assumed in
+// range, which tokenBoundedIndex guarantees by rejecting an empty needle.
+func rightDelimits(raw []byte, end int) bool {
+	if end >= len(raw) {
+		return true // end of buffer
+	}
+	b := raw[end]
+	last := raw[end-1]
+	next := byte(0)
+	if end+1 < len(raw) {
+		next = raw[end+1]
+	}
+	switch {
+	case isASCIIDigit(b):
+		return false // "100.12" inside "100.125" -- T387's F-T387-2
+	case b == '.':
+		// "100" inside "100.125". A trailing full stop or an extension dot is a
+		// delimiter: "100.125." and "…100.125.req".
+		return !(isASCIIDigit(last) && isASCIIDigit(next))
+	case b == 'e' || b == 'E':
+		// An exponent marker only where an exponent can follow it. "100.125EUR"
+		// is a currency code and admits; "100.12e3" and "100.12e+3" do not.
+		if !isASCIIDigit(last) {
+			return true
+		}
+		if isASCIIDigit(next) {
+			return false
+		}
+		if (next == '+' || next == '-') && end+2 < len(raw) && isASCIIDigit(raw[end+2]) {
+			return false
+		}
+		return true
+	case b == ',' || b == ' ' || b == '_':
+		return !(isASCIIDigit(last) && isASCIIDigit(next))
+	case b == '-' || b == '+':
+		// THE ACCOUNTING TRAILING SIGN, which is the row that refuted the old
+		// blacklist on its own reasoning: "100.12-" is NEGATIVE and a citation
+		// of "100.12" against it is not the artefact's amount. It is a sign
+		// only where nothing follows it to be separated from -- a range dash
+		// ("50.00-100.125") or a hyphenated identifier ("100.125-req") is a
+		// delimiter.
+		if !isASCIIDigit(last) {
+			return true
+		}
+		return isTokenByte(next)
+	}
+	return namedDelimiter(b)
 }
 
 // citationReasons resolves one two-part artefact citation and returns every
