@@ -14,11 +14,23 @@ disk today, and compares those two directly.
 P-40: it counts what it skipped and names it. There is no bare `except: continue`.
 P-24: the baseline is a literal immutable sha, never `git merge-base main HEAD`.
 """
+import os
+import pathlib
 import hashlib
 import subprocess
 import sys
 
-ROOT = "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da"
+# T357 REPAIR -- was a hard-coded absolute path into the worktree
+#   /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da
+# which was RETIRED, so this script aborted with a traceback in every later checkout
+# and the committed transcript stopped being re-derivable from the script that made
+# it. Derived from __file__ instead: this file sits three levels below the checkout
+# root, under reviews/A2-11, so parents[3] IS that root. In the ORIGINAL worktree it
+# resolved to agent-a3ac3d56d665ff7da, so the substitution is OUTPUT-NEUTRAL there --
+# it restores the evidence rather than altering it, and that claim is MEASURED in
+# .softhouse/capture/t357-a2-11-section1-red/ (BEFORE/AFTER, and a diff against the
+# committed transcript), not asserted. A2_11_ROOT overrides for a cross-checkout run.
+ROOT = os.environ.get("A2_11_ROOT") or str(pathlib.Path(__file__).resolve().parents[3])
 CAPREL = ".softhouse/capture/tierA-a2"
 FORK = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"   # LITERAL, not merge-base (P-24)
 MANIFEST = CAPREL + "/MANIFEST.sha256"

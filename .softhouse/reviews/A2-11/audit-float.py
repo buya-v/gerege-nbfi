@@ -10,12 +10,23 @@ through an alias or a nested call is still seen, and reports:
   - every float literal and every `float(` call
   - every use of the `decimal` module
 """
+import os
 import ast
 import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path("/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da")
+# T357 REPAIR -- was a hard-coded absolute path into the worktree
+#   /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da
+# which was RETIRED, so this script aborted with a traceback in every later checkout
+# and the committed transcript stopped being re-derivable from the script that made
+# it. Derived from __file__ instead: this file sits three levels below the checkout
+# root, under reviews/A2-11, so parents[3] IS that root. In the ORIGINAL worktree it
+# resolved to agent-a3ac3d56d665ff7da, so the substitution is OUTPUT-NEUTRAL there --
+# it restores the evidence rather than altering it, and that claim is MEASURED in
+# .softhouse/capture/t357-a2-11-section1-red/ (BEFORE/AFTER, and a diff against the
+# committed transcript), not asserted. A2_11_ROOT overrides for a cross-checkout run.
+ROOT = Path(os.environ.get("A2_11_ROOT") or Path(__file__).resolve().parents[3])
 CAP = ROOT / ".softhouse/capture/tierA-a2"
 FORK = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"
 BRANCH = "softhouse/A2-7-capture-mandatory-accounts"

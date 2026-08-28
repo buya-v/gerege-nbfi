@@ -1,0 +1,33 @@
+
+==================================================================
+BASELINE — unmutated tree
+==================================================================
+  PASS  run-all.sh exits 0 on a clean tree (got 0)
+
+==================================================================
+NEGATIVE CONTROL 1 — an obs/ file goes MISSING.
+==================================================================
+check-shape.py then aborts on a traceback. Note that a traceback also exits 1, which is
+section 1's ADJUDICATED code, so the verdict block ALONE would not catch this. Section 9
+is the layer that does: no 'FAILURES:' line means declared=None, and all three
+adjudicated failures go missing. This control proves the two layers compose.
+  PASS  run-all.sh exits NON-ZERO when an obs/ file is missing (got nonzero)
+  PASS  the verdict block names section 9 as MOVED (got moved)
+
+==================================================================
+NEGATIVE CONTROL 2 — an ADJUDICATED failure is made to VANISH.
+==================================================================
+Inject the exact three lines A2-7 FABRICATED into the product-46 observation. One of the
+three adjudicated failures then flips to PASS. That is the dangerous direction — section 1
+looks HEALTHIER — and it is precisely what re-admitting P-46's error would look like.
+  injected the fabricated key into a throwaway copy of the observation
+  PASS  run-all.sh exits NON-ZERO when an adjudicated failure vanishes (got nonzero)
+  PASS  section 9 reports the vanished failure by name (got 1)
+
+==================================================================
+RESTORE — the tree must be exactly as it was
+==================================================================
+  PASS  obs/ is byte-clean after both mutations (got 0)
+  PASS  run-all.sh is back to exit 0 after the reverts (got 0)
+
+controls passed: 7   controls failed: 0

@@ -1,5 +1,5 @@
 ############ A2-11 independent review of A2-7 — full transcript
-generated 2026-08-28T07:14:20Z
+generated 2026-08-28T07:12:08Z
 
 READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
 exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things

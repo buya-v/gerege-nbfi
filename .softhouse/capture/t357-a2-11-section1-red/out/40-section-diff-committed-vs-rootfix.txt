@@ -1,0 +1,228 @@
+A = /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8fafef10a9f74aa/.softhouse/capture/t357-a2-11-section1-red/out/10-TRANSCRIPT-as-committed.txt
+B = /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8fafef10a9f74aa/.softhouse/capture/t357-a2-11-section1-red/out/30-runall-AFTER-rootfix-only.txt
+
+section 1: IDENTICAL  (67 lines)
+section 2: IDENTICAL  (63 lines)
+section 3: IDENTICAL  (46 lines)
+section 4: DIFFERS  (+19 / -10)
+    --- A/sec4
+    +++ B/sec4
+    @@ -11,6 +11,6 @@
+               len=430
+    -  PASS  manifest on disk today holds 571 entries
+    -          len=571
+    -  PASS  571 - 430 = 141 added
+    -          delta=141
+    +  FAIL  manifest on disk today holds 571 entries
+    +          len=1139
+    +  FAIL  571 - 430 = 141 added
+    +          delta=709
+     
+    @@ -24,4 +24,4 @@
+           enumerated 430 pre-existing entries
+    -      byte-identical fork-vs-today       : 430
+    -      DIFFER                             : 0
+    +      byte-identical fork-vs-today       : 428
+    +      DIFFER                             : 2
+           missing on disk (named, not skipped): 0 []
+    @@ -29,4 +29,10 @@
+           current manifest hash agrees w/ disk: 430
+    -  PASS  all 430 pre-existing files are byte-identical to the fork sha
+    -          identical=430 differ=0 missing=0 unreadable=0
+    +        DIFF CAPTURE-PLAN.md
+    +             fork  7c2e2795863fa035424aa1cf23e7d1735dad502c535b16f31a0938a3fc0050bd
+    +             today da0760bacc8af5f5fdbe8c0b6d9a56f1904158b4c4b2ada3f3a5547d2e4e99dd
+    +        DIFF cap.sh
+    +             fork  67640ea31eb16c0ba0f929cfd93459f4ced687be3dda0f10db00c1b2d31f542a
+    +             today 6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62
+    +  FAIL  all 430 pre-existing files are byte-identical to the fork sha
+    +          identical=428 differ=2 missing=0 unreadable=0
+       PASS  and the CURRENT manifest records those same recomputed hashes (no laundering)
+    @@ -38,4 +44,7 @@
+     
+    -FAILURES: 0
+    -exit=0
+    +FAILURES: 3
+    +  - manifest on disk today holds 571 entries
+    +  - 571 - 430 = 141 added
+    +  - all 430 pre-existing files are byte-identical to the fork sha
+    +exit=1
+     
+
+section 5: DIFFERS  (+32 / -2)
+    --- A/sec5
+    +++ B/sec5
+    @@ -18,5 +18,19 @@
+     === context: EVERY .py in the A2 capture rig (A2-7's and everyone else's) ===
+    +  CLEAN a2-29-retype-path.py                                       loads=1 decimal_imported=True 
+    +            line 25    json.loads(parse_float=decimal.Decimal)
+       CLEAN analyze7.py                                                loads=1 decimal_imported=True 
+                 line 39    json.load(parse_float=decimal.Decimal)
+    +  FLAG  audit-req-float-roundtrip.py                               loads=3 decimal_imported=True float() call at 73
+    +            line 65    json.loads(parse_float=hook('float'))
+    +            line 226   json.loads(parse_float=decimal.Decimal)
+    +            line 236   json.loads(parse_float=decimal.Decimal)
+    +  CLEAN census-a2-26.py                                            loads=1 decimal_imported=True 
+    +            line 49    json.loads(parse_float=D)
+    +  CLEAN census-json-float-siblings.py                              loads=0 decimal_imported=False 
+    +  CLEAN guard-parse-float-ast.py                                   loads=0 decimal_imported=False 
+       CLEAN manifest.py                                                loads=0 decimal_imported=False 
+    +  FLAG  mkje-a2-29.py                                              loads=2 decimal_imported=True float() call at 81,88
+    +            line 42    json.loads(parse_float=decimal.Decimal)
+    +            line 151   json.loads(parse_float=decimal.Decimal)
+    +  CLEAN mkreq-t275.py                                              loads=0 decimal_imported=False 
+       CLEAN mkreq.py                                                   loads=0 decimal_imported=False 
+    @@ -30,2 +44,3 @@
+       CLEAN prove-cap-transport-red.py                                 loads=0 decimal_imported=False 
+    +  CLEAN prove-cap8-wire-bytes.py                                   loads=0 decimal_imported=False 
+       CLEAN prove-manifest-blind-red.py                                loads=0 decimal_imported=False 
+    @@ -34,7 +49,22 @@
+                 line 148   json.loads(parse_float=decimal.Decimal)
+    +  CLEAN prove-parse-float-guard-red.py                             loads=0 decimal_imported=False 
+    +  FLAG  prove-quit-trap-a226.py                                    loads=0 decimal_imported=False FLOAT LITERAL at 73:0.4
+    +  FLAG  prove-quit-trap-cap.py                                     loads=0 decimal_imported=False FLOAT LITERAL at 128:0.4
+    +  FLAG  prove-quit-trap-cap9.py                                    loads=0 decimal_imported=False FLOAT LITERAL at 136:0.4
+    +  FLAG  prove-resolve8-float-red.py                                loads=2 decimal_imported=True float() call at 178
+    +            line 107   json.loads(parse_float=_Raw)
+    +            line 152   json.loads(parse_float=decimal.Decimal)
+    +  CLEAN prove-t275-reissue.py                                      loads=1 decimal_imported=False 
+    +            line 242   json.load(parse_float=str)
+       CLEAN rename1.py                                                 loads=0 decimal_imported=False 
+       FLAG  resolve7.py                                                loads=2 decimal_imported=False json.load WITHOUT parse_float at lines 24,25
+    +  CLEAN resolve8.py                                                loads=2 decimal_imported=True 
+    +            line 101   json.loads(parse_float=JsonNumber)
+    +            line 265   json.loads(parse_float=JsonNumber)
+       CLEAN show.py                                                    loads=1 decimal_imported=True 
+                 line 14    json.load(parse_float=decimal.Decimal)
+    -  --- enumerated 17 files, 8 json.load call sites, 2 FLAGGED, 0 UNPARSEABLE
+    +  CLEAN sweep-t164-selfmatch-guards.py                             loads=0 decimal_imported=False 
+    +  CLEAN t275-mapping-diff.py                                       loads=0 decimal_imported=False 
+    +  FLAG  verify-provenance-a2-15.py                                 loads=1 decimal_imported=False json.load WITHOUT parse_float at lines 24
+    +  --- enumerated 35 files, 21 json.load call sites, 9 FLAGGED, 0 UNPARSEABLE
+     
+    @@ -42,3 +72,3 @@
+       A2-7-added Python with a float defect: 2 ['.softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py', '.softhouse/capture/tierA-a2/resolve7.py']
+    -  whole-rig Python with a float defect : 2 ['.softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py', '.softhouse/capture/tierA-a2/resolve7.py']
+    +  whole-rig Python with a float defect : 9 ['.softhouse/capture/tierA-a2/audit-req-float-roundtrip.py', '.softhouse/capture/tierA-a2/mkje-a2-29.py', '.softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py', '.softhouse/capture/tierA-a2/prove-quit-trap-a226.py', '.softhouse/capture/tierA-a2/prove-quit-trap-cap.py', '.softhouse/capture/tierA-a2/prove-quit-trap-cap9.py', '.softhouse/capture/tierA-a2/prove-resolve8-float-red.py', '.softhouse/capture/tierA-a2/resolve7.py', '.softhouse/capture/tierA-a2/verify-provenance-a2-15.py']
+     exit=0
+
+section 6: IDENTICAL  (31 lines)
+section 7: IDENTICAL  (46 lines)
+section 8: DIFFERS  (+89 / -20)
+    --- A/sec8
+    +++ B/sec8
+    @@ -1,22 +1,91 @@
+    -mkreq7.py — the request-body generator
+    -  ok   GREEN empty req/ writes and exits 0  rc=0 files=12
+    -  ok   GREEN rerun is byte-identical and exits 0  rc=0
+    -  ok   RED  a differing body makes it exit 1  rc=1
+    -  ok   RED  the refusal NAMES the offending file
+    -  ok   RED  the refusal cites D-1
+    -  ok   RED  it leaves every byte on disk alone
+    -  ok   RED  it aborts before writing: a deleted sibling is NOT recreated  rc=1
+    -  ok   GREEN restoring the byte lets it complete, and rebuilds only the missing file  rc=0
+    -resolve7.py — the observed-value resolver
+    -  ok   RED  a response with no resourceId is refused, not guessed  rc=1
+    -  ok   RED  the refusal says there is no observation to resolve from
+    -  ok   GREEN an observed resourceId is substituted verbatim  rc=0 body={'clientId': 1, 'productId': 46}
+    -  ok   RED  it refuses to rewrite an existing resolved body with a different id  rc=1 body={'clientId': 1, 'productId': 46}
+    -  ok   RED  a template with no __PLACEHOLDER__ is refused  rc=1
+    -analyze7.py — no binary floating point on any amount
+    -  ok   it parses JSON numbers as Decimal
+    -  ok   it never calls bare float()
+    -  ok   an oracle amount literal loads as Decimal, not float  Decimal 1200000.000000
+    +############    REPLACEMENT, because the original could not fail (offline)
+     
+    -16 assertions, 0 failed
+    +T270. Until this change, this section ran prove-mkreq7-guard-red.py unmodified and
+    +printed 'ok  it parses JSON numbers as Decimal' / '16 assertions, 0 failed' / exit=0.
+    +That arm is a WHOLE-FILE SOURCE GREP (`"parse_float=decimal.Decimal" in src`), and
+    +the token occurs twice in its target analyze7.py — at :39 in the code and at :6 in
+    +the file's OWN DOCSTRING. Delete the keyword from the CALL SITE and the assertion is
+    +still satisfied, by the prose. T164 reproduced that end to end and replaced the arm.
+    +
+    +T114 requires the BYTES of prove-mkreq7-guard-red.py be preserved, so that
+    +RED-GREEN-A2-7-guards.txt stays re-derivable from the script that made it. It does
+    +NOT require the file keep being EXECUTED as though it still graded something. Those
+    +are two different obligations. A superseded guard that still prints PASS is not
+    +preserved evidence, it is a trap — P-45 inverted: not a guard that never runs, but a
+    +NON-guard that always runs and always says PASS. Bytes unchanged; execution stopped.
+    +
+    +The successor is not named here. It is READ from the register, so this site cannot
+    +drift out of step with it, and a DELETED register line makes this section REFUSE
+    +rather than quietly fall back to the trap.
+    +
+    +SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> guard-parse-float-ast.py
+    +
+    +==============================================================================
+    +T164 -- json.load/loads call-site guard (AST, not source grep)
+    +==============================================================================
+    +ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab8fafef10a9f74aa/.softhouse/capture/tierA-a2
+    +
+    +SELECTOR SELF-TEST: 4 synthetic call sites found across 4 alias shapes; 3 decoy line(s)
+    +  (`parse_float` in a docstring, a comment and a string literal -- all three invisible to the selector)
+    +
+    +DECLARATION REGISTER (PARSE-FLOAT-EXEMPT.txt) -- 6 record(s), every one printed, default-deny
+    +  ALLOW   prove-mkreq7-guard-red.py:70   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced RED-GREEN-A2-7-guards.txt; provenance: evidence NAMES its producer; git: tracked
+    +          reason: sandbox-only; reads mkreq7.py's own generated bodies inside tempfile.mkdtemp. MEASURED: 12 generated bodies, 0 JSON-float leaves, so the omission is non-material today.
+    +  ALLOW   prove-mkreq7-guard-red.py:119  FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced RED-GREEN-A2-7-guards.txt; provenance: evidence NAMES its producer; git: tracked
+    +          reason: sandbox-only; reads the resolver sandbox output {"clientId": 1, "productId": 46}. MEASURED: 0 JSON-float leaves; no float leaf is constructible from that document.
+    +  ALLOW   prove-mkreq7-guard-red.py:126  FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced RED-GREEN-A2-7-guards.txt; provenance: evidence NAMES its producer; git: tracked
+    +          reason: sandbox-only; same document as line 119. MEASURED: 0 JSON-float leaves.
+    +  ALLOW   resolve7.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced req/a2-7-loan-220-resolved.json; provenance: ASSERTED ONLY -- the evidence does not name its producer, so this field is a human claim the guard cannot verify; git: tracked
+    +          reason: MATERIAL: 117 req/*.json templates carry 11 JSON-float leaves (e.g. /debits/0/amount 100000.25). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+    +  ALLOW   resolve7.py:25   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced req/a2-7-loan-220-resolved.json; provenance: ASSERTED ONLY -- the evidence does not name its producer, so this field is a human claim the guard cannot verify; git: tracked
+    +          reason: MATERIAL: the 5 out/A2-21*.json observation files carry 12 JSON-float leaves (e.g. /principal 1200000.0). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+    +  ALLOW   verify-provenance-a2-15.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced PROVENANCE-A2-15.txt; provenance: ASSERTED ONLY -- the evidence does not name its producer, so this field is a human claim the guard cannot verify; git: tracked
+    +          reason: reads .softhouse/vectors/ledger/*.json. MEASURED: 6 vectors, 0 JSON-float leaves — every promoted money cell is a STRING (amount_major_text, amount_minor), so no money value passes through a binary double here.
+    +
+    +POPULATION -- both terms (P-67)
+    +  Python files inspected .................. 35
+    +  json.load/loads CALL SITES inspected .... 21
+    +  ... carrying parse_float= ............... 15
+    +  ... carrying parse_float=float (a dodge)  0
+    +  ... declared in the register ............ 6
+    +  ... VIOLATIONS .......................... 0
+    +
+    +parse_float= VALUE EXPRESSIONS ACTUALLY PASSED (6 distinct) -- listed so a reader can audit them, not allowlisted
+    +  D                  1 site(s): census-a2-26.py:49
+    +  JsonNumber         2 site(s): resolve8.py:101, resolve8.py:265
+    +  _Raw               1 site(s): prove-resolve8-float-red.py:107
+    +  decimal.Decimal    9 site(s): a2-29-retype-path.py:25, analyze7.py:39, audit-req-float-roundtrip.py:226, audit-req-float-roundtrip.py:236, mkje-a2-29.py:42, mkje-a2-29.py:151, prove-mkreq7-guard-red.py:148, prove-resolve8-float-red.py:152, show.py:14
+    +  hook('float')      1 site(s): audit-req-float-roundtrip.py:65
+    +  str                1 site(s): prove-t275-reissue.py:242
+    +
+    +EVERY CALL SITE, GRADED
+    +  ok          a2-29-retype-path.py            :25   json.loads  parse_float=decimal.Decimal
+    +  ok          analyze7.py                     :39   json.load   parse_float=decimal.Decimal
+    +  ok          audit-req-float-roundtrip.py    :65   json.loads  parse_float=hook('float')
+    +  ok          audit-req-float-roundtrip.py    :226  json.loads  parse_float=decimal.Decimal
+    +  ok          audit-req-float-roundtrip.py    :236  json.loads  parse_float=decimal.Decimal
+    +  ok          census-a2-26.py                 :49   json.loads  parse_float=D
+    +  ok          mkje-a2-29.py                   :42   json.loads  parse_float=decimal.Decimal
+    +  ok          mkje-a2-29.py                   :151  json.loads  parse_float=decimal.Decimal
+    +  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :70   json.loads  parse_float=MISSING
+    +  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :119  json.load   parse_float=MISSING
+    +  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :126  json.load   parse_float=MISSING
+    +  ok          prove-mkreq7-guard-red.py       :148  json.loads  parse_float=decimal.Decimal
+    +  ok          prove-resolve8-float-red.py     :107  json.loads  parse_float=_Raw
+    +  ok          prove-resolve8-float-red.py     :152  json.loads  parse_float=decimal.Decimal
+    +  ok          prove-t275-reissue.py           :242  json.load   parse_float=str
+    +  DECLARED FROZEN-T114 resolve7.py                     :24   json.load   parse_float=MISSING
+    +  DECLARED FROZEN-T114 resolve7.py                     :25   json.load   parse_float=MISSING
+    +  ok          resolve8.py                     :101  json.loads  parse_float=JsonNumber
+    +  ok          resolve8.py                     :265  json.loads  parse_float=JsonNumber
+    +  ok          show.py                         :14   json.load   parse_float=decimal.Decimal
+    +  DECLARED FROZEN-T114 verify-provenance-a2-15.py      :24   json.load   parse_float=MISSING
+    +
+    +PASS -- 21 call site(s) across 35 file(s): 15 carry parse_float=, 6 are declared and their preconditions hold, 0 violations.
+     exit=0
+    +
+    +NOT COVERED BY THE REPLACEMENT, STATED SO THIS IS NOT READ AS EQUIVALENT (P-40):
+    +prove-mkreq7-guard-red.py carried 16 assertions. guard-parse-float-ast.py replaces
+    +only the 3 in its analyze7.py float arm. The other 13 — mkreq7.py's D-1 refusal
+    +behaviour and resolve7.py's four refusals — are re-run by NOTHING today. They are
+    +recorded as an open follow-up in the T270 handoff, not silently absorbed.
+
+
+sections differing: 1

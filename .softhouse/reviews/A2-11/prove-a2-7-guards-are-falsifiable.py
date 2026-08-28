@@ -9,6 +9,7 @@ assertion.
 
 Never touches the committed rig; never contacts the oracle.
 """
+import pathlib
 import os
 import re
 import shutil
@@ -16,7 +17,17 @@ import subprocess
 import sys
 import tempfile
 
-RIG = "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da/.softhouse/capture/tierA-a2"
+# T357 REPAIR -- was a hard-coded absolute path into the worktree
+#   /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da
+# which was RETIRED, so this script aborted with a traceback in every later checkout
+# and the committed transcript stopped being re-derivable from the script that made
+# it. Derived from __file__ instead: this file sits three levels below the checkout
+# root, under reviews/A2-11, so parents[3] IS that root. In the ORIGINAL worktree it
+# resolved to agent-a3ac3d56d665ff7da, so the substitution is OUTPUT-NEUTRAL there --
+# it restores the evidence rather than altering it, and that claim is MEASURED in
+# .softhouse/capture/t357-a2-11-section1-red/ (BEFORE/AFTER, and a diff against the
+# committed transcript), not asserted. A2_11_ROOT overrides for a cross-checkout run.
+RIG = (os.environ.get("A2_11_ROOT") or str(pathlib.Path(__file__).resolve().parents[3])) + "/.softhouse/capture/tierA-a2"
 PROVER = "prove-mkreq7-guard-red.py"
 fails = []
 

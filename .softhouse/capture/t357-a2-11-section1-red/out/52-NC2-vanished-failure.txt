@@ -1,5 +1,5 @@
 ############ A2-11 independent review of A2-7 — full transcript
-generated 2026-08-28T07:14:20Z
+generated 2026-08-28T07:13:36Z
 
 READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
 exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
@@ -82,7 +82,7 @@ of the three ever disappears.
   PASS    chargeOffExpenseAccount absent from accountingMappings
   PASS    chargeOffExpenseAccount does not occur in the raw bytes at all
   ... while the COLLECTION-valued mapping fields are PRESENT with value null:
-  FAIL    paymentChannelToFundSourceMappings present and null  -- '<absent>'
+  PASS    paymentChannelToFundSourceMappings present and null  -- None
   FAIL    feeToIncomeAccountMappings present and null  -- '<absent>'
   FAIL    penaltyToIncomeAccountMappings present and null  -- '<absent>'
 
@@ -109,8 +109,7 @@ of the three ever disappears.
   product ids: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 46]
   PASS    the list holds 26 products, ids 1-24, 27, 28, 46  -- 27 products
 
-FAILURES: 3
-  -   paymentChannelToFundSourceMappings present and null
+FAILURES: 2
   -   feeToIncomeAccountMappings present and null
   -   penaltyToIncomeAccountMappings present and null
 exit=1
@@ -557,7 +556,7 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
 
 === 2. and it is DETERMINISTIC — run twice, compare bytes ===
   PASS  two consecutive runs of check-shape.py emit byte-identical stdout
-          len=5720 vs 5720
+          len=5656 vs 5656
   PASS  two consecutive runs of check-shape.py return the same exit code
           rc=1 vs 1
 
@@ -565,11 +564,11 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
   PASS  check-shape.py exits 1 (RED)
           rc=1
   PASS  it declares a failure COUNT and names that many
-          declared=3 named=3
+          declared=2 named=2
   PASS  NO UNADJUDICATED FAILURE — a fourth failure here is a NEW defect and must be read, not absorbed
           unexpected=[]
-  PASS  all three adjudicated failures are STILL PRESENT — losing one would mean the checker was edited into agreeing with the fabricated A2-7 claim (P-46)
-          missing=[]
+  FAIL  all three adjudicated failures are STILL PRESENT — losing one would mean the checker was edited into agreeing with the fabricated A2-7 claim (P-46)
+          missing=['  paymentChannelToFundSourceMappings present and null']
 
   ADJUDICATION of each, and it is the SAME for all three:
     VERDICT   NOT a defect in the observed evidence. NOT a defect in the checker's
@@ -637,8 +636,9 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
   PASS  (g) the offline prover does NOT trip on a genuinely offline script (the control discriminates, it does not just always fire)
           hits=[]
 
-FAILURES: 0
-exit=0
+FAILURES: 1
+  - all three adjudicated failures are STILL PRESENT — losing one would mean the checker was edited into agreeing with the fabricated A2-7 claim (P-46)
+exit=1
 
 ############ VERDICT — every section against its adjudicated exit code
 
@@ -651,9 +651,9 @@ exit=0
   6         0              0         as adjudicated
   7         0              0         as adjudicated
   8         0              0         as adjudicated
-  9         0              0         as adjudicated
+  9         0              1         *** MOVED ***
 
-  sections run: 9    deviations: 0
-  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
-  for it. Note that this INCLUDES sections 1, 2 and 4, which are adjudicated RED.
-  PASS here means 'the review reproduces', NOT 'A2-7 was right'.
+  sections run: 9    deviations: 1
+  RUN-ALL VERDICT: FAIL — 1 section(s) moved off the adjudicated verdict.
+  Read the moved sections above. A section that moved is either a new defect or a
+  repair that nobody recorded; both need a human, neither is absorbed here.

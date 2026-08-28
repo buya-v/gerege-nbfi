@@ -1,0 +1,17 @@
+=== provenance ===
+captured_by      T357 (fire 20260828-140005)
+captured_at      2026-08-28T06:49:12Z
+oracle_base      https://localhost:8443/fineract-provider/api/v1
+tenant           gerege
+oracle_health    {"status":"UP","groups":["liveness","readiness"]}
+
+=== the three loan-product reads check-shape.py replays ===
+GET /loanproducts/46 -> 200  bytes=7510  sha256=04b14461410412edcc8ae715749ac0a641f80885b45c92051be6fedba0c44921
+GET /loanproducts/22 -> 200  bytes=7726  sha256=b2c060af179538cd80318c348c913f4d7e99c3382432c9f8dc621b8fa1dd71ce
+GET /loanproducts/28 -> 200  bytes=7806  sha256=7d6b4a79af7576d3a43570d035a41e9f90072684f3848d3aa62c1613925de0cc
+
+=== the GL read check-shape.py replays ===
+GET /glaccounts/2 -> 200  bytes=353  sha256=1d7fc3cb1e0fe2d79e897880297544915a8298be8b78a86faa3bffa0f222ca4d
+
+=== the product list check-shape.py replays ===
+GET /loanproducts -> 200  bytes=220917  sha256=46879b06c4126c7a347b4a4559a52990493564c1475909c2e808dd16601b8f68

@@ -12,6 +12,8 @@ prints, for every category, HOW MANY IT COULD NOT PARSE AND WHICH ONES. There is
 `except: continue` anywhere; an unreadable file is NAMED. The driver's enumerator failed
 precisely by not doing this.
 """
+import os
+import pathlib
 import json
 import re
 import subprocess
@@ -19,7 +21,17 @@ import sys
 from collections import Counter
 from decimal import Decimal
 
-ROOT = "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da"
+# T357 REPAIR -- was a hard-coded absolute path into the worktree
+#   /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da
+# which was RETIRED, so this script aborted with a traceback in every later checkout
+# and the committed transcript stopped being re-derivable from the script that made
+# it. Derived from __file__ instead: this file sits three levels below the checkout
+# root, under reviews/A2-11, so parents[3] IS that root. In the ORIGINAL worktree it
+# resolved to agent-a3ac3d56d665ff7da, so the substitution is OUTPUT-NEUTRAL there --
+# it restores the evidence rather than altering it, and that claim is MEASURED in
+# .softhouse/capture/t357-a2-11-section1-red/ (BEFORE/AFTER, and a diff against the
+# committed transcript), not asserted. A2_11_ROOT overrides for a cross-checkout run.
+ROOT = os.environ.get("A2_11_ROOT") or str(pathlib.Path(__file__).resolve().parents[3])
 CAP = ".softhouse/capture/tierA-a2"
 FORK = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"   # literal, pre-A2-7 (P-24)
 fails = []
