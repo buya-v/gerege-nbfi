@@ -1,0 +1,23 @@
+T390 END-TO-END DRIVE -- 2026-08-28T18:26:20Z
+  real root    : /tmp/t409/t390tree
+  scratch root : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t390-e2e.wetAt8/root   (all symlinks except .softhouse/conformance.sh)
+  CONFORMANCE_REPO_ROOT is UNSET, deliberately.
+------------------------------------------------------------------------
+GREEN CONTROL: patched harness, REAL registry, --self-test
+  ok   exit 0
+  ok   the wired guard RAN and passed
+  | conformance: oracle-state baseline: ALL MOVEMENT ATTRIBUTED (instrument exit 0).
+
+RED: patched harness, registry with L32's attribution row REMOVED, --self-test
+  (fixture calibration: L32 rows 1 -> 0)
+  ok   exit 2 (EXIT_UNUSABLE)
+  ok   the harness printed the refusal
+  ok   P-84: the refusal carries NO 'probe = ' line (count 0) -- guard, not outage
+  | conformance: UNATTRIBUTED MOVEMENT IN THE SHARED REFERENCE ORACLE.
+  | conformance:     ***  L32            legs=6  ids 96-101  gl 37+38+39+41+42+43 MNT      UNATTRIBUTED
+  | conformance:   VERDICT: UNATTRIBUTED MOVEMENT (exit 1).
+  | conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+------------------------------------------------------------------------
+ARMS: 5 ok, 0 failed
+E2E VERDICT: wired guard drives the WHOLE HARNESS red, and a healthy control green (exit 0).
+exit=0

@@ -1,0 +1,15 @@
+anchor A1 unique: GUARD_COST_BUDGETS="guard_graded_root_is_this_tree|60...
+anchor A2 unique: guard_reconciler_ownership|500"...
+anchor A3 unique:   guard_cost_census                               || failed=...
+anchor A4 unique: #     load_toolchain -> run_guards path a graded run takes, ...
+PATCH APPLIES CLEANLY: git apply --check ok
+PATCHED FILE SHAPE
+  ok   guard_oracle_state_attributed() definition           = 1
+  ok   GUARD_COST_BUDGETS row                               = 1
+  ok   timed_guard call in run_guards                       = 1
+  ok   the falsified 'contacts NO oracle' sentence          = 0
+  ok   H4: the sentence opener occurs ONCE, not twice       = 1
+  ok   H4: the dangling clause was carried over             = 1
+  patch: /tmp/t409/t390tree/.softhouse/capture/t390-baseline-attribution/out/conformance-T390-wiring.patch (138 lines)
+GENERATOR VERDICT: patch built, applies cleanly, and has the shape it claims (exit 0).
+exit=0
