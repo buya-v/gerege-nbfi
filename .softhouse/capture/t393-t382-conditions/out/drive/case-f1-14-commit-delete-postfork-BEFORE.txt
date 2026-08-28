@@ -1,5 +1,5 @@
 ############ A2-11 independent review of A2-7 — full transcript
-generated 2026-08-28T17:26:37Z
+generated 2026-08-28T17:36:18Z
 
 READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
 exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
@@ -684,7 +684,7 @@ not passed.
     has. An empty census passes everything. REFUSED. (Same spelling as
     guard_guards_dir_registration in conformance.sh — one idea, one spelling.)
       at the fork sha : 403 observations  {'out': 327, 'req': 76}
-      at HEAD         : 1035 observations  {'out': 906, 'req': 129}
+      at HEAD         : 1034 observations  {'out': 905, 'req': 129}
 
 === 3. ARM A — every observation that existed at the fork sha, RECOMPUTED ===
     git blob at 12a7f8d9a3af  vs  the bytes on disk today.
@@ -700,9 +700,9 @@ not passed.
 
 === 4. ARM B — every observation tracked at HEAD, including ones captured SINCE ===
     git blob at HEAD  vs  the bytes on disk. Arm A cannot see an observation that
-    did not exist at the fork sha; 632 of the 1035 tracked today are in that class.
-      enumerated     : 1035
-      byte-identical : 1035
+    did not exist at the fork sha; 631 of the 1034 tracked today are in that class.
+      enumerated     : 1034
+      byte-identical : 1034
       DIFFER         : 0
       MISSING on disk: 0
   PASS  NO captured oracle observation tracked at HEAD differs from its committed bytes
@@ -714,7 +714,7 @@ not passed.
   PASS  ARM A compared a non-empty population
           403 observations at the fork sha
   PASS  ARM B compared a non-empty population
-          1035 observations at HEAD
+          1034 observations at HEAD
   PASS  ARM B's population is a SUPERSET of ARM A's — every historical observation is still tracked, so neither arm is silently narrower than it reads
           in fork but not at HEAD: []
 

@@ -1,5 +1,5 @@
 ############ A2-11 independent review of A2-7 — full transcript
-generated 2026-08-28T17:26:37Z
+generated 2026-08-28T18:06:35Z
 
 READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
 exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
@@ -274,8 +274,8 @@ integrity question where GREEN is the adjudicated value. Section 4 keeps the dri
       (recomputed from the git blob and from disk; the manifest's recorded hash is
        used only as a THIRD cross-check, never as the source of truth)
       enumerated 430 pre-existing entries
-      byte-identical fork-vs-today       : 428
-      DIFFER                             : 2
+      byte-identical fork-vs-today       : 427
+      DIFFER                             : 3
       missing on disk (named, not skipped): 0 []
       not in the fork tree (named)        : 0 []
       current manifest hash agrees w/ disk: 430
@@ -285,8 +285,11 @@ integrity question where GREEN is the adjudicated value. Section 4 keeps the dri
         DIFF cap.sh
              fork  67640ea31eb16c0ba0f929cfd93459f4ced687be3dda0f10db00c1b2d31f542a
              today 6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62
+        DIFF manifest.py
+             fork  4a41dac3a0fb4d97ea06f25bfb5ff6cb5f9da37910a0c13e7e6e1c6bf2820136
+             today 4d55cfa83acb103c6893a0a049a7af37f8c6f66d53e5352dbd7c52ba26290c4f
   FAIL  all 430 pre-existing files are byte-identical to the fork sha
-          identical=428 differ=2 missing=0 unreadable=0
+          identical=427 differ=3 missing=0 unreadable=0
   PASS  and the CURRENT manifest records those same recomputed hashes (no laundering)
           agrees=430
 
