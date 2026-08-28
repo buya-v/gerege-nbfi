@@ -1,0 +1,3 @@
+REFUSING: bash is in POSIX mode -- you invoked this as 'sh'. Run it with 'bash'.
+  No observation was made. This is exit 3, NOT an oracle outage (exit 2).
+EXIT=3

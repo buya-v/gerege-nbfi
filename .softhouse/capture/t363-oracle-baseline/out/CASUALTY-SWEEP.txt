@@ -1,0 +1,1030 @@
+CASUALTY SWEEP for the T352+T359 oracle-state movement
+repo: f6c83157   date: 2026-08-28T09:01:11Z
+population: 7996 tracked files under .softhouse/
+untracked under .softhouse/: 11
+
+=== S1  the literal row/maxid pin '60/64'
+    engine: git grep -n -F 60/64
+    hits total: 44   archived (snapshots, correctly stale): 34   LIVE: 10
+      .softhouse/capture/t305-openingbalance-accepting-side/FINDING.md:168:| residue on the standing rig | **none measured.** Four counters, three times: `60/64` journal entries, `0` closures, `26` distinct
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/LDG-05-note.txt:1:THE FIRST ACCEPTING-SIDE OPENING-BALANCE OBSERVATION THIS PROGRAM HAS EVER TAKEN, AND IT WAS NOT TAKEN ON TENANT `gere
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capability-tail.txt:1:***** THE OPENING-BALANCE ACCEPTING SIDE IS NOW OBSERVED, AND ARM A IS DEAD. [T305, closing T296 F-T296-2.] ***** 
+      .softhouse/capture/t327-closure-accepting-side/README.md:147:acc_gl_journal_entry        = 60/64
+      .softhouse/gates.md:4519:the file it meant carries no MNT assertion, while two throwaway rigs (`t305`, `t327`) pin `60/64` and `26` by
+      .softhouse/program.json:2091:      "oracle": "UNREACHABLE at start; brought up by this fire on the postgresql compose profile in 80s. PostgreSQL 18.3, tenant gerege -> database fineract_gerege, pinned
+      .softhouse/tasks.json:3996:      "note": "DONE, MERGED 6798b070. THE ACCEPTING SIDE IS CAPTURED - first new parity vector in several fires. LDG-05 PASS 27 cells / 8 money; ledger parity 4->5, LEDGER m
+      .softhouse/tasks.json:5089:      "note": "COMPLETE and MERGED, head 31b5ea09. VERDICT ACCEPT-WITH-CONDITIONS on T352. *** IT ANSWERED THE DRIVER'S QUESTION IN ONE SENTENCE AS ASKED: G-19 was raised on
+      .softhouse/tasks.json:5164:      "description": "T352 and T359 fired probes at the shared reference oracle. A journal entry CANNOT BE DELETED, so the movement is permanent: 4 transactions / 9 legs fro
+      .softhouse/vectors/ledger/LDG-05-openingbalance-accepted-empty-ledger.json:8: "_note": "THE FIRST ACCEPTING-SIDE OPENING-BALANCE OBSERVATION THIS PROGRAM HAS EVER TAKEN, AND IT WAS NOT TAKEN ON TENANT
+
+=== S2  the standing-baseline pin format 'gerege <table> = '
+    engine: git grep -n -E gerege (acc_gl_journal_entry|acc_gl_closure|distinct_transaction_id|m_portfolio_command_source|m_loan|m_office) = 
+    hits total: 15   archived (snapshots, correctly stale): 15   LIVE: 0
+
+=== S3  string-equality comparison of a standing counter
+    engine: git grep -n -F STANDING ORACLE MOVED
+    hits total: 6   archived (snapshots, correctly stale): 1   LIVE: 5
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:77:    [ "$now" = "$want" ] || refuse "F5 ($phase) STANDING ORACLE MOVED: $label baseline '$want', now '$now'."
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:59:    [ "$now" = "$want" ] || refuse "F5 ($1) STANDING ORACLE MOVED: $label baseline '$want', now '$now'."
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/down.sh:52:    say "  *** $label baseline '$want', now '$now' -- THE STANDING ORACLE MOVED ***"; rc=1
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:82:    [ "$now" = "$want" ] || refuse "F5 ($phase) STANDING ORACLE MOVED: $label baseline '$want', now '$now'."
+      .softhouse/capture/t327-closure-accepting-side/throwaway/down.sh:54:    say "  *** $label baseline '$want', now '$now' -- THE STANDING ORACLE MOVED ***"; rc=1
+
+=== S4  per-account leg counts spelled as words in the capability store
+    engine: git grep -n -E gl 16 (carries|->) (SIXTEEN|TWENTY)|is TWELVE|gl 17 is|gl 21 is
+    hits total: 166   archived (snapshots, correctly stale): 158   LIVE: 8
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:408:          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:423:          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:450:          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
+      .softhouse/capture/t352-a2-next-tranche/ORACLE-STATE-MOVED-BY-T352.md:37:rests on, and neither moved. The stale `gl 16 -> SIXTEEN` sentence in
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:141:    "[COUNT RESTATED, T352: T242's 'gl 16 -> SIXTEEN' above was measured in its own fire "
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:144:    "TWENTY, gl 17 is FIVE and gl 21 is TWELVE [out/T352-A10-accrual-reachability.txt]. "
+      .softhouse/vectors/capabilities-ledger.json:22:      "evidence": "Exercised on product 55 (CASH BASED) / loan 7 by A2-337/A2-338 (transaction L25, four legs) and A2-382/A2-383 (transaction L27, four l
+      .softhouse/vectors/capabilities-ledger.json:52:      "evidence": "ENTIRELY UNGRADED, and the reason is that the observations do not exist rather than that the machinery does not. Product 28 is the onl
+
+=== S5  per-account leg counts spelled as digits
+    engine: git grep -n -E gl (16|17|18|21|22) (->|=) [0-9]+
+    hits total: 167   archived (snapshots, correctly stale): 160   LIVE: 7
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:408:          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:423:          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:450:          reference oracle: gl 18 -> 0, gl 22 -> 0, gl 16 -> SIXTEEN, the most of any account in
+      .softhouse/capture/t352-a2-next-tranche/ORACLE-STATE-MOVED-BY-T352.md:36:`gl 18 -> 0` and `gl 22 -> 0` are the pair the `ledger.accrual.entry` argument actually
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:145:    "gl 18 -> 0 and gl 22 -> 0 are UNCHANGED, which is the pair this row's argument "
+      .softhouse/tasks.json:1996:      "description": "A2-34's F-4 (MED), F-5 (MED), F-6 (LOW) and F-8 (LOW). These are one defect wearing four faces: **the harness's account of its own coverage is hand-wri
+      .softhouse/vectors/capabilities-ledger.json:52:      "evidence": "ENTIRELY UNGRADED, and the reason is that the observations do not exist rather than that the machinery does not. Product 28 is the onl
+
+=== S6  'every row currency_code = MNT' and its relatives
+    engine: git grep -n -E every row currency_code|every journal entry (in the corpus )?is MNT|Every entry is MNT
+    hits total: 163   archived (snapshots, correctly stale): 158   LIVE: 5
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:447:          against the live oracle: sql/q4-a2-26-ledger-state.sql, every row currency_code =
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:462:          against the live oracle: sql/q4-a2-26-ledger-state.sql, every row currency_code =
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:489:          against the live oracle: sql/q4-a2-26-ledger-state.sql, every row currency_code =
+      .softhouse/tasks.json:2667:      "description": "Promote the A2 raw captures into PARITY vectors under .softhouse/vectors/<ledger-context>/ and extend the conformance harness to grade a SECOND bounded
+      .softhouse/vectors/capabilities-ledger.json:90:      "evidence": "UNTOUCHED. Every journal entry in the corpus is MNT [re-confirmed by A2-15 against the live oracle: sql/q4-a2-26-ledger-state.sql, eve
+
+=== S7  the captured distinct_currency_codes projection
+    engine: git grep -n -F distinct_currency_codes
+    hits total: 5   archived (snapshots, correctly stale): 4   LIVE: 1
+      .softhouse/capture/tierA-a2/sql/q7-a2-15-ledger-state-json.sql:74:  'distinct_currency_codes', (
+
+=== S8  MULTI-CURRENCY untouched claims
+    engine: git grep -n -E MULTI-CURRENCY untouched|no cross-currency|multi.currency entry
+    hits total: 165   archived (snapshots, correctly stale): 159   LIVE: 6
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:448:          MNT]. There is NO OBSERVATION of a multi-currency entry, so DEC-2 §4.2 G-07 pins MNT
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:463:          MNT]. There is NO OBSERVATION of a multi-currency entry, so DEC-2 §4.2 G-07 pins MNT
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:490:          MNT]. There is NO OBSERVATION of a multi-currency entry, so DEC-2 §4.2 G-07 pins MNT
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:92:    "survives. (1) 'There is NO OBSERVATION of a multi-currency entry' -- still true, "
+      .softhouse/tasks.json:2667:      "description": "Promote the A2 raw captures into PARITY vectors under .softhouse/vectors/<ledger-context>/ and extend the conformance harness to grade a SECOND bounded
+      .softhouse/vectors/capabilities-ledger.json:90:      "evidence": "UNTOUCHED. Every journal entry in the corpus is MNT [re-confirmed by A2-15 against the live oracle: sql/q4-a2-26-ledger-state.sql, eve
+
+=== S9  does the conformance harness or a guard reach the tenant database at all?
+    engine: git grep -n -E psql|docker exec|fineract-db-1
+    hits total: 1165   archived (snapshots, correctly stale): 711   LIVE: 454
+      .softhouse/capture/actualactual/REPRODUCE.md:4:**Do not start, stop, restart or reconfigure `fineract-fineract-1` / `fineract-db-1`.** Every Path A /
+      .softhouse/capture/actualactual/src/negative-tests.sh:12:# neither fineract-fineract-1 nor fineract-db-1.
+      .softhouse/capture/actualactual/src/pathb-capture.sh:42:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/actualactual/src/pathb-capture.sh:51:LOANS_BEFORE=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_loan;")
+      .softhouse/capture/actualactual/src/pathb-capture.sh:121:LOANS_AFTER=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_loan;")
+      .softhouse/capture/actualactual/src/pathb-capture.sh:123:PROD_AFTER=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_product_loan;")
+      .softhouse/capture/actualactual/src/run-actualactual.sh:22:# shared fineract-fineract-1 / fineract-db-1 containers are never started, stopped,
+      .softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md:7:+ `fineract-db-1` (postgres:18.3), tenant `gerege`. "Oracle" throughout means the **Fineract reference
+      .softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md:85:both HTTP 200 from the live oracle; definitions read from `m_charge` by `psql`.]
+      .softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md:258:m_charge 12 | m_loan 0 | m_loan_charge 0 | m_product_loan 16      (fineract_gerege, psql)
+      .softhouse/capture/audit-t44/mathcontext/AUDIT-MATHCONTEXT.md:50:`fineract-db-1` were never started, stopped, restarted, re-tenanted, reconfigured or written to;
+      .softhouse/capture/audit-t44/mathcontext/AUDIT-MATHCONTEXT.md:51:the only contact with them was read-only `docker exec` (`unzip` into `/tmp`, `javap`, `sha256sum`).
+      .softhouse/capture/audit-t44/mathcontext/AUDIT-MATHCONTEXT.md:64:`docker exec -e JAVA_TOOL_OPTIONS= fineract-fineract-1 … javap -p -c` on the class extracted from
+      .softhouse/capture/audit-t44/mathcontext/src/read-pathb-wiring.sh:42:  docker exec "$CONTAINER" sh -c 'sha256sum /app/fineract-provider.jar' || fail "cannot read the jar"
+      .softhouse/capture/audit-t44/mathcontext/src/read-pathb-wiring.sh:43:  docker exec "$CONTAINER" sh -c '
+      .softhouse/capture/audit-t44/mathcontext/src/read-pathb-wiring.sh:51:docker exec "$CONTAINER" sh -c '
+      .softhouse/capture/audit-t44/mathcontext/src/read-pathb-wiring.sh:67:  docker exec -e JAVA_TOOL_OPTIONS= "$CONTAINER" sh -c "
+      .softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh:32:# The shared fineract-fineract-1 / fineract-db-1 containers are never started, stopped,
+      .softhouse/capture/audit-t44/rerun-periodratio/ATTESTATION.md:195:- Six throwaway `--rm` containers were run. The shared `fineract-fineract-1` / `fineract-db-1`
+      .softhouse/capture/audit-t44/rerun-periodratio/PROVENANCE.md:73:shared `fineract-fineract-1` / `fineract-db-1` containers — owned by a sibling worker this fire
+      .softhouse/capture/audit-t44/rerun-periodratio/REPRODUCE.md:8:**Do not start, stop or reconfigure `fineract-fineract-1` / `fineract-db-1`.** Every container
+      .softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh:35:# The shared fineract-fineract-1 / fineract-db-1 containers are never started, stopped,
+      .softhouse/capture/charges/ATTESTATION-T46.md:9:healthy, `fineract-db-1` (`postgres:18.3`) up 38 h healthy — run by this task].
+      .softhouse/capture/charges/ATTESTATION-T46.md:21:`psql -d fineract_gerege -tAc "select (select count(*) from m_charge), (select count(*) from m_loan),
+      .softhouse/capture/charges/REPRODUCE-T46.md:32:docker exec fineract-db-1 psql -U postgres -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/attest-t40.py:56:FIN, DB = 'fineract-fineract-1', 'fineract-db-1'
+      .softhouse/capture/charges/bin/attest-t40.py:142:gitprops = sh("docker exec %s sh -c 'unzip -p /app/fineract-provider.jar "
+      .softhouse/capture/charges/bin/attest-t40.py:149:jvm = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'java -version' 2>&1" % FIN)
+      .softhouse/capture/charges/bin/attest-t40.py:154:sh("docker exec %s sh -c 'mkdir -p /tmp/t40at && cd /tmp/t40at && unzip -o -q "
+      .softhouse/capture/charges/bin/attest-t40.py:156:javap = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'cd /tmp/t40at && javap -p -constants -cp "
+      .softhouse/capture/charges/bin/attest-t40.py:167:pg_version = sh("docker exec %s psql -U root -t -c 'select version();'" % DB)
+      .softhouse/capture/charges/bin/attest-t40.py:168:pg_version_num = sh("docker exec %s psql -U root -At -c 'show server_version_num;'" % DB)
+      .softhouse/capture/charges/bin/attest-t40.py:180:banned_jar = sh("docker exec %s sh -c 'unzip -l /app/fineract-provider.jar' "
+      .softhouse/capture/charges/bin/attest-t40.py:186:    return sh('docker exec %s psql -U root -d %s -At -c "%s"' % (DB, db, sql.replace('"', '\\"')))
+      .softhouse/capture/charges/bin/attest.py:49:FIN, DB = 'fineract-fineract-1', 'fineract-db-1'
+      .softhouse/capture/charges/bin/attest.py:125:gitprops = sh("docker exec %s sh -c 'unzip -p /app/fineract-provider.jar "
+      .softhouse/capture/charges/bin/attest.py:132:jvm = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'java -version' 2>&1" % FIN)
+      .softhouse/capture/charges/bin/attest.py:137:sh("docker exec %s sh -c 'mkdir -p /tmp/t36at && cd /tmp/t36at && unzip -o -q "
+      .softhouse/capture/charges/bin/attest.py:139:javap = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'cd /tmp/t36at && javap -p -constants -cp "
+      .softhouse/capture/charges/bin/attest.py:150:pg_version = sh("docker exec %s psql -U root -t -c 'select version();'" % DB)
+      .softhouse/capture/charges/bin/attest.py:151:pg_version_num = sh("docker exec %s psql -U root -At -c 'show server_version_num;'" % DB)
+      .softhouse/capture/charges/bin/attest.py:164:banned_jar = sh("docker exec %s sh -c 'unzip -l /app/fineract-provider.jar' "
+      .softhouse/capture/charges/bin/attest.py:169:    return sh('docker exec %s psql -U root -d %s -At -c "%s"' % (DB, db, sql.replace('"', '\\"')))
+      .softhouse/capture/charges/bin/create-charges.sh:23:docker exec fineract-db-1 psql -U root -d fineract_gerege -c \
+      .softhouse/capture/charges/bin/create-charges2.sh:17:docker exec fineract-db-1 psql -U root -d fineract_gerege -c \
+      .softhouse/capture/charges/bin/t48-capture.sh:33:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/charges/bin/t48-capture.sh:93:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/charges/bin/t48-capture.sh:147:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/charges/bin/t51-capture.sh:37:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture.sh:68:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture.sh:74:d=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture.sh:117:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture.sh:125:C5=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture.sh:187:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture2.sh:34:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture2.sh:77:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture2.sh:229:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture3.sh:26:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture3.sh:79:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture4.sh:28:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture4.sh:82:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture5.sh:27:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture5.sh:62:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture5.sh:65:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture5.sh:115:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture6.sh:26:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-capture6.sh:47:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-determinism.sh:14:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-determinism.sh:37:docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/charges/bin/t51-negative.sh:65:d=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc \
+      .softhouse/capture/dec1-binding/ATTESTATION.md:115:- Two isolated containers were run; the shared `fineract-fineract-1` / `fineract-db-1`
+      .softhouse/capture/dec1-binding/REPRODUCE.md:27:**Do not start, stop or reconfigure `fineract-fineract-1` / `fineract-db-1`.** The container
+      .softhouse/capture/driver-20260822-060013/oracle-rederivation.txt:5:engine                 : PostgreSQL 18.3, container fineract-db-1, docker exec psql -U postgres
+      .softhouse/capture/leapboundary/REPRODUCE.md:4:**Do not start, stop, restart or reconfigure `fineract-fineract-1` / `fineract-db-1`.** T55 touches
+      .softhouse/capture/leapboundary/REPRODUCE.md:20:docker exec fineract-db-1 psql -U root -t -c 'select version();'   # PostgreSQL 18.3 …
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:61:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:74:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:81:LOANS_BEFORE=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_loan;")
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:82:PROD_BEFORE=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_product_loan;")
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:83:CLI_BEFORE=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_client;")
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:182:LOANS_AFTER=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_loan;")
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:183:PROD_AFTER=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_product_loan;")
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:184:CLI_AFTER=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_client;")
+      .softhouse/capture/leapboundary/bin/t55-capture.sh:192:docker inspect fineract-db-1       --format '{{.State.StartedAt}} {{.RestartCount}}' >> "$O/container-state.txt"
+      .softhouse/capture/leapboundary/bin/t55-determinism.sh:39:LOANS=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(*) from m_loan;")
+      .softhouse/capture/leapboundary/bin/t55-negative-tests.sh:180:d=$(docker exec fineract-db-1 psql -U root -d fineract_gerege -At -c "select count(distinct (days_in_month_enum,days_in_year_enum,interest
+      .softhouse/capture/mathcontext/ATTESTATION.md:408:`fineract-fineract-1` and `fineract-db-1` were **not** started, stopped, restarted, re-tenanted,
+      .softhouse/capture/mathcontext/ATTESTATION.md:409:reconfigured, dropped or written to. `read-pathb-wiring.sh` does `docker exec` into the running
+      .softhouse/capture/mathcontext/ATTESTATION.md:519:check, once admitted). `fineract-fineract-1` and `fineract-db-1` were **not** started, stopped,
+      .softhouse/capture/mathcontext/ATTESTATION.md:521:`docker exec` into the running `fineract-fineract-1` to run `unzip` and `javap` into its
+      .softhouse/capture/mathcontext/REPRODUCE.md:9:**Do not start, stop or reconfigure `fineract-fineract-1` / `fineract-db-1`.** Every capture
+      .softhouse/capture/mathcontext/REPRODUCE.md:11:does `docker exec` into the *running* `fineract-fineract-1` but is **read-only**: it runs `javap`
+      .softhouse/capture/mathcontext/REPRODUCE.md:187:`docker run --rm` containers; the running `fineract-fineract-1` / `fineract-db-1` are not started,
+      .softhouse/capture/mathcontext/src/read-pathb-wiring.sh:42:  docker exec "$CONTAINER" sh -c 'sha256sum /app/fineract-provider.jar' || fail "cannot read the jar"
+      .softhouse/capture/mathcontext/src/read-pathb-wiring.sh:43:  docker exec "$CONTAINER" sh -c '
+      .softhouse/capture/mathcontext/src/read-pathb-wiring.sh:51:docker exec "$CONTAINER" sh -c '
+      .softhouse/capture/mathcontext/src/read-pathb-wiring.sh:67:  docker exec -e JAVA_TOOL_OPTIONS= "$CONTAINER" sh -c "
+      .softhouse/capture/mathcontext/src/run-mathcontext.sh:32:# The shared fineract-fineract-1 / fineract-db-1 containers are never started, stopped,
+      .softhouse/capture/mathcontext/src/run-mathcontext3.sh:23:# fineract-db-1 are NOT started, stopped, restarted, re-tenanted, reconfigured or written to.
+      .softhouse/capture/mathcontext/src/run-t50-tier1.sh:8:# Throwaway container only (`docker run --rm`).  The running fineract-fineract-1 / fineract-db-1
+      .softhouse/capture/mathcontext/src/run-t50-tier2.sh:8:# Throwaway container only (`docker run --rm`).  The running fineract-fineract-1 / fineract-db-1
+      .softhouse/capture/mathcontext/src/t46-assert-pathb-slot.sh:60:      docker exec "$CONTAINER" sh -c 'sha256sum /app/fineract-provider.jar'
+      .softhouse/capture/mathcontext/src/t46-assert-pathb-slot.sh:62:      docker exec "$CONTAINER" sh -c '
+      .softhouse/capture/mathcontext/src/t46-assert-pathb-slot.sh:73:        docker exec -e JAVA_TOOL_OPTIONS= "$CONTAINER" sh -c "cd /tmp/t46j && javap -p -c -cp BOOT-INF/classes '$CLS'"
+      .softhouse/capture/pathb/t125/green-t36-gerege/attestation.json:50:  "container": "fineract-db-1",
+      .softhouse/capture/pathb/t125/green-t40-gerege/attestation.json:40:  "container": "fineract-db-1",
+      .softhouse/capture/pathb/t125/red-pre-fix-default/attestation.json:50:  "container": "fineract-db-1",
+      .softhouse/capture/pathb/t149/capture-halfeven-arm.sh:63:ord=$(docker exec fineract-db-1 psql -U root -d fineract_default -At \
+      .softhouse/capture/pathb/t149/compare-arms.py:18:DB = 'fineract-db-1'
+      .softhouse/capture/pathb/t149/compare-arms.py:41:    p = subprocess.run(['docker', 'exec', DB, 'psql', '-U', 'root', '-d', db, '-At', '-c', sql],
+      .softhouse/capture/pathb/t149/compare-arms.py:44:        sys.exit('psql failed: %s' % p.stderr.strip())
+      .softhouse/capture/pathb/t36/attest.py:111:FIN, DB = 'fineract-fineract-1', 'fineract-db-1'
+      .softhouse/capture/pathb/t36/attest.py:265:gitprops = sh("docker exec %s sh -c 'unzip -p /app/fineract-provider.jar "
+      .softhouse/capture/pathb/t36/attest.py:272:jvm = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'java -version' 2>&1" % FIN)
+      .softhouse/capture/pathb/t36/attest.py:277:sh("docker exec %s sh -c 'mkdir -p /tmp/t36at && cd /tmp/t36at && unzip -o -q "
+      .softhouse/capture/pathb/t36/attest.py:279:javap = sh("docker exec -e JAVA_TOOL_OPTIONS= %s sh -c 'cd /tmp/t36at && javap -p -constants -cp "
+      .softhouse/capture/pathb/t36/attest.py:290:pg_version = sh("docker exec %s psql -U root -t -c 'select version();'" % DB)
+      .softhouse/capture/pathb/t36/attest.py:291:pg_version_num = sh("docker exec %s psql -U root -At -c 'show server_version_num;'" % DB)
+      .softhouse/capture/pathb/t36/attest.py:304:banned_jar = sh("docker exec %s sh -c 'unzip -l /app/fineract-provider.jar' "
+      .softhouse/capture/pathb/t36/attest.py:309:    return sh('docker exec %s psql -U root -d %s -At -c "%s"' % (DB, db, sql.replace('"', '\\"')))
+      .softhouse/capture/pathb/t36/preconditions.sh:33:DB=fineract-db-1
+      .softhouse/capture/pathb/t36/preconditions.sh:76:gp=$(docker exec "$FIN" sh -c 'unzip -p /app/fineract-provider.jar BOOT-INF/classes/git.properties' 2>/dev/null)
+      .softhouse/capture/pathb/t36/preconditions.sh:86:docker exec "$FIN" sh -c 'mkdir -p /tmp/t36pc && cd /tmp/t36pc && unzip -o -q /app/fineract-provider.jar "BOOT-INF/lib/fineract-core-*.jar"' 2>/dev/nul
+      .softhouse/capture/pathb/t36/preconditions.sh:87:prec=$(docker exec -e JAVA_TOOL_OPTIONS= "$FIN" sh -c \
+      .softhouse/capture/pathb/t36/preconditions.sh:133:jarlist=$(docker exec "$FIN" sh -c 'unzip -l /app/fineract-provider.jar' 2>/dev/null)
+      .softhouse/capture/pathb/t36/preconditions.sh:147:pgv=$(docker exec "$DB" psql -U root -t -c 'select version();' 2>/dev/null | tr -d '\r' | sed -n '1s/^ *//p')
+      .softhouse/capture/pathb/t36/preconditions.sh:159:tzid=$(docker exec "$DB" psql -U root -d fineract_tenants -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:172:schema=$(docker exec "$DB" psql -U root -d fineract_tenants -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:174:rm_val=$(docker exec "$DB" psql -U root -d "$schema" -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:176:rm_en=$(docker exec "$DB" psql -U root -d "$schema" -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:188:# `[ -z "$scp" ]`, and a psql that never ran returns the empty string too, so a dead database, a
+      .softhouse/capture/pathb/t36/preconditions.sh:193:scp=$(docker exec "$DB" psql -U root -d fineract_tenants -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:203:port=$(docker exec "$DB" psql -U root -d fineract_tenants -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:282:mnt=$(docker exec "$DB" psql -U root -d "$schema" -At \
+      .softhouse/capture/pathb/t36/preconditions.sh:286:mnt_on=$(docker exec "$DB" psql -U root -d "$schema" -At \
+      .softhouse/capture/pathb/t36/recapture.sh:172:SCHEMA=$(docker exec fineract-db-1 psql -U root -d fineract_tenants -At \
+      .softhouse/capture/pathb/t36/recapture.sh:175:docker exec fineract-db-1 psql -U root -d "$SCHEMA" -At \
+      .softhouse/capture/pathb/t36/recapture.sh:177:docker exec fineract-db-1 psql -U root -d "$SCHEMA" -At \
+      .softhouse/capture/pathb/t36/recreate-products.sh:89:docker exec fineract-db-1 psql -U root -d fineract_gerege -At \
+      .softhouse/capture/pathb/t80/PREDICTION.md:14:* `fineract-fineract-1` and `fineract-db-1` both `Up (healthy)`, image `fineract:latest`
+      .softhouse/capture/pathb/t80/prove-f1.sh:340:# at all if it hung on a docker exec.  `wait` is interruptible, so the trap fires at once,
+      .softhouse/capture/pathb/t80/run-attacks.sh:8:# read-only docker/psql queries.  It creates no tenant, restarts nothing, writes no oracle row.
+      .softhouse/capture/pathb/t99/prove-f1.sh:14:#      calculation) and read-only docker/psql queries, into a /tmp export: no committed evidence
+      .softhouse/capture/pathb/t99/prove-f2.sh:12:# calculation) and read-only docker/psql queries; nothing is written to the oracle.  T99_LIVE=0
+      .softhouse/capture/pathb/t99/prove-f3.sh:144:echo "         P5's \$banned and P6's \$jarhits are \`grep -icE\` counts and P11's \$scp is a psql"
+      .softhouse/capture/pathb/t99/prove-f5-legs.sh:5:# `grep -icE` over an empty stream counts 0 and a `psql` that never ran returns the empty string, so
+      .softhouse/capture/pathb/t99/prove-f5-legs.sh:31:# ORACLE SAFETY.  Read-only `docker inspect` / `docker exec ... psql` / `unzip -l`, plus the pinned
+      .softhouse/capture/pathb/t99/prove-f5-legs.sh:105:# which word-splits the WHOLE argument list — so `psql -c "select ... where t.identifier='gerege';"`
+      .softhouse/capture/pathb/t99/prove-f5-legs.sh:215:# outage and none of the rows below mean what they say.  P12 reads the SAME psql join as P11.
+      .softhouse/capture/pathb/t99/sweep.sh:48:for tool in docker curl psql grep sed awk tr cut head unzip javap; do
+      .softhouse/capture/periodratio/ATTESTATION.md:195:- Six throwaway `--rm` containers were run. The shared `fineract-fineract-1` / `fineract-db-1`
+      .softhouse/capture/periodratio/PROVENANCE.md:73:shared `fineract-fineract-1` / `fineract-db-1` containers — owned by a sibling worker this fire
+      .softhouse/capture/periodratio/REPRODUCE.md:8:**Do not start, stop or reconfigure `fineract-fineract-1` / `fineract-db-1`.** Every container
+      .softhouse/capture/periodratio/analysis/run-t46-monthdiff.sh:7:# The shared fineract-fineract-1 / fineract-db-1 containers are not touched.
+      .softhouse/capture/periodratio/src/run-periodratio.sh:35:# The shared fineract-fineract-1 / fineract-db-1 containers are never started, stopped,
+      .softhouse/capture/periodratio/src/run-t46-periodratio.sh:35:# shared fineract-fineract-1 / fineract-db-1 containers are never started, stopped,
+      .softhouse/capture/t100-g8-rescope/src/run-t100.sh:8:# fineract-db-1 containers: it launches a throw-away `docker run --rm` from the pinned image and
+      .softhouse/capture/t116-familyb-promotion/src/run-t116.sh:10:# fineract-db-1 containers: it launches a throw-away `docker run --rm` from the pinned image and
+      .softhouse/capture/t117-familyb/REPRODUCE.md:6:does not touch `fineract-fineract-1` / `fineract-db-1`; it runs a throw-away `docker run --rm` from
+      .softhouse/capture/t117-familyb/src/run-t117-pass2.sh:9:# fineract-db-1 containers: it launches a throw-away `docker run --rm` from the pinned image and
+      .softhouse/capture/t117-familyb/src/run-t117.sh:9:# fineract-db-1 containers: it launches a throw-away `docker run --rm` from the pinned image and
+      .softhouse/capture/t159-review-t117/PREDICTION-T159.md:14:is started and `fineract-fineract-1` / `fineract-db-1` are not touched.
+      .softhouse/capture/t159-review-t117/src/run-t159.sh:9:# fineract-db-1 containers: it launches a throw-away `docker run --rm` from the pinned image and
+      .softhouse/capture/t219-g8-residual/src/run-t219-run2.sh:8:# does not touch the running fineract-fineract-1 / fineract-db-1 containers -- it launches a
+      .softhouse/capture/t219-g8-residual/src/run-t219-run3.sh:8:# does not touch the running fineract-fineract-1 / fineract-db-1 containers -- it launches a
+      .softhouse/capture/t219-g8-residual/src/run-t219.sh:8:# does not touch the running fineract-fineract-1 / fineract-db-1 containers -- it launches a
+      .softhouse/capture/t223-g8-region-predicate/src/run-t223.sh:8:# does not touch the running fineract-fineract-1 / fineract-db-1 containers -- it launches a
+      .softhouse/capture/t229-g8-site3/src/run-t229.sh:8:# does not touch the running fineract-fineract-1 / fineract-db-1 containers -- it launches a
+      .softhouse/capture/t244-dec2-rev6/bar-output-final.txt:86:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t244-dec2-rev6/bar-output.txt:73:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh:15:Q() { docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc "$1"; }
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh:16:T() { docker exec fineract-db-1 psql -U root -d fineract_gerege -c "$1"; }
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:25:Q() { docker exec fineract-db-1 psql -U root -d fineract_gerege -tAc "$1"; }
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:26:T() { docker exec fineract-db-1 psql -U root -d fineract_gerege -c "$1"; }
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:52:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t250-tenant-attestation/instruments/10-population.py:11:          (curl / psql) AND emit at least one `Key: value` attestation line.
+      .softhouse/capture/t250-tenant-attestation/instruments/10-population.py:62:ORACLE_RE = re.compile(r"\bcurl\b|\bpsql\b")
+      .softhouse/capture/t250-tenant-attestation/instruments/11-selector-check.py:10:  NARROWING B: the file must itself contain `curl` or `psql`.
+      .softhouse/capture/t250-tenant-attestation/instruments/11-selector-check.py:60:    attest_no_oracle = []    # ... is .sh/.py, writes attestation, no curl/psql in file
+      .softhouse/capture/t250-tenant-attestation/instruments/11-selector-check.py:61:    helper_writers = []      # ... no curl/psql but calls a known transport helper
+      .softhouse/capture/t250-tenant-attestation/instruments/11-selector-check.py:113:    print("NARROWING B -- `curl|psql` in-file filter")
+      .softhouse/capture/t250-tenant-attestation/instruments/11-selector-check.py:114:    print("  .sh/.py attestation writers with NO curl/psql        : %d" % len(attest_no_oracle))
+      .softhouse/capture/t250-tenant-attestation/instruments/12-tenant-term.py:9:     or a `psql -d fineract_<tenant>` read-back)?
+      .softhouse/capture/t250-tenant-attestation/instruments/12-tenant-term.py:91:    print("SCOPE: git ls-files of %s ; suffix .sh/.py ; must invoke curl or psql" % ROOT)
+      .softhouse/capture/t253-portability/DRIVER-VERIFIED-residue-cleared-exit2.log:52:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:29:f147f8cb556d5a24347361d8581e32858cbf505e9ab1597b4547ce11504b305f  out/M-01-ledger-state.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:33:429e9000d31d09ec074014380573c123d27519e5395ae5a62c82e4917e7034ee  out/M-02-ledger-state-fixed.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:40:2a0d6c14c45ed462344c0d58e05c51f549f49d0ee1560e66850ab14b251333b0  out/M-04-writecheck-before-arm1.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:44:abed5db8b75bd5cb22475ee21189fdc1c88838aa86ac20a595da26c9d07c3e02  out/M-05-writecheck-after-arm1.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:54:590b71ad865733e0e512159a0bf0c23f1b2f795ac7157fb8ce1a2e6001592b2a  out/M-08-state-before-closure.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:58:802ed1aa0c8cdd3863b5bf7020c7dd6780198402353d6847a7883e3ccd2b2087  out/M-09-state-during-closure.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:62:618178f6c71122036e1ab22106d31441d9b862496f0c64cc224ff6e6eab14f82  out/M-10-command-audit.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:66:0a8362e00283b9a977e7643cff6afa69b7e62a79858e96ad187f7ab19642bae6  out/M-11-command-audit-status.psql
+      .softhouse/capture/t287-closure-refusals/MANIFEST.sha256:70:3b5a33bed4c1044e4fddae4973c14a89bcd537bf33e5e9989a24bc3336d7f913  out/M-12-state-after-delete.psql
+      .softhouse/capture/t287-closure-refusals/capsql.sh:2:# capsql.sh NAME SQLFILE
+      .softhouse/capture/t287-closure-refusals/capsql.sh:5:# WERE ACTUALLY EXECUTED. Adapted for T287 from .softhouse/capture/tierA-a2/capsql.sh.
+      .softhouse/capture/t287-closure-refusals/capsql.sh:12:#   out/NAME.txt         the psql output, verbatim, stdout and stderr interleaved as seen
+      .softhouse/capture/t287-closure-refusals/capsql.sh:13:#   out/NAME.sql         the exact query bytes fed to psql -- a snapshot, not a pointer
+      .softhouse/capture/t287-closure-refusals/capsql.sh:15:#   out/NAME.psql        the record: container, tenant database, psql exit status, timestamp
+      .softhouse/capture/t287-closure-refusals/capsql.sh:17:# A SQL ERROR IS NOT A TRANSPORT FAILURE. psql exits non-zero on a bad query and that is an
+      .softhouse/capture/t287-closure-refusals/capsql.sh:18:# observation exactly as an HTTP 4xx is; it is recorded as data in `psql-exit-status:` and
+      .softhouse/capture/t287-closure-refusals/capsql.sh:19:# the output is kept. `docker exec` propagates psql's exit status, so rc alone cannot tell a
+      .softhouse/capture/t287-closure-refusals/capsql.sh:23:# PostgreSQL is the only database in this program (CLAUDE.md). This script names psql
+      .softhouse/capture/t287-closure-refusals/capsql.sh:30:[ -n "$NAME" ] && [ -n "$SQLFILE" ] || { echo "usage: capsql.sh NAME SQLFILE" >&2; exit 2; }
+      .softhouse/capture/t287-closure-refusals/capsql.sh:38:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/capsql287.XXXXXX")
+      .softhouse/capture/t287-closure-refusals/capsql.sh:47:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/t287-closure-refusals/capsql.sh:60:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -f - < "$TMPSQL" > "$TMPOUT" 2>&1 || rc=$?
+      .softhouse/capture/t287-closure-refusals/capsql.sh:72:  echo "docker exec -i $DBC psql -U $DBUSER -d $DBNAME -f -"
+      .softhouse/capture/t287-closure-refusals/capsql.sh:78:  echo "psql-exit-status: $rc"
+      .softhouse/capture/t287-closure-refusals/capsql.sh:81:printf '%-46s psql exit %s\n' "$NAME" "$rc"
+      .softhouse/capture/t287-closure-refusals/env.sh:11:DBC=fineract-db-1
+      .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh:70:  if ! docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1; then
+      .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh:75:  ENABLED=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh:77:  PINNED=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t287-closure-refusals/guard-probe-expiry.sh:93:  LC=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t294-openingbalance-refusal/MANIFEST.sha256:1:f86127b1567986ba8cd3cab940e997c7fd2e63af977d550b4c52455aeaee49ae  out/M-01-precondition-before.psql
+      .softhouse/capture/t294-openingbalance-refusal/MANIFEST.sha256:5:824274d4b18605a009e455c03988a25ea16965706da7040f0503ff1155736f24  out/M-02-ledger-state-before.psql
+      .softhouse/capture/t294-openingbalance-refusal/MANIFEST.sha256:9:70eb7dc8b2cf89d069c0daff40228d53914bb912b5ba1c0c37166812db791c61  out/M-03-ledger-state-after.psql
+      .softhouse/capture/t294-openingbalance-refusal/MANIFEST.sha256:13:00cde1b8ddc6990b550960a32e4f46cfd7a25d3a300803f67c539b89590cbbc2  out/M-04-precondition-after.psql
+      .softhouse/capture/t294-openingbalance-refusal/MANIFEST.sha256:17:22daae1b625fa30595d238d47c3243f71e24145948caef7ff0f84e6941990708  out/M-05-command-residue.psql
+      .softhouse/capture/t294-openingbalance-refusal/OBSERVATION.md:6:PostgreSQL `fineract_gerege` in container `fineract-db-1`, REST at `https://localhost:8443`.
+      .softhouse/capture/t294-openingbalance-refusal/OBSERVATION.md:9:`env.sh`, `cap.sh`, `capsql.sh` and `manifest.sh` are **copies** of T287's, not sources of
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:2:# capsql.sh NAME SQLFILE
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:6:# .softhouse/capture/t287-closure-refusals/capsql.sh, which T287 had adapted from
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:7:# .softhouse/capture/tierA-a2/capsql.sh. Only this header block differs from that file.
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:14:#   out/NAME.txt         the psql output, verbatim, stdout and stderr interleaved as seen
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:15:#   out/NAME.sql         the exact query bytes fed to psql -- a snapshot, not a pointer
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:17:#   out/NAME.psql        the record: container, tenant database, psql exit status, timestamp
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:19:# A SQL ERROR IS NOT A TRANSPORT FAILURE. psql exits non-zero on a bad query and that is an
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:20:# observation exactly as an HTTP 4xx is; it is recorded as data in `psql-exit-status:` and
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:21:# the output is kept. `docker exec` propagates psql's exit status, so rc alone cannot tell a
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:25:# PostgreSQL is the only database in this program (CLAUDE.md). This script names psql
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:32:[ -n "$NAME" ] && [ -n "$SQLFILE" ] || { echo "usage: capsql.sh NAME SQLFILE" >&2; exit 2; }
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:40:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/capsql294.XXXXXX")
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:49:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:62:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -f - < "$TMPSQL" > "$TMPOUT" 2>&1 || rc=$?
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:74:  echo "docker exec -i $DBC psql -U $DBUSER -d $DBNAME -f -"
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:80:  echo "psql-exit-status: $rc"
+      .softhouse/capture/t294-openingbalance-refusal/capsql.sh:83:printf '%-46s psql exit %s\n' "$NAME" "$rc"
+      .softhouse/capture/t294-openingbalance-refusal/env.sh:12:DBC=fineract-db-1
+      .softhouse/capture/t294-openingbalance-refusal/guard-precondition.sh:32:# PostgreSQL is the only database in this program. This script names psql and has no other
+      .softhouse/capture/t294-openingbalance-refusal/guard-precondition.sh:120:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/t294-openingbalance-refusal/guard-precondition.sh:125:  contra=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t294-openingbalance-refusal/guard-precondition.sh:135:  n=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t300-census-cardinal/red/A-pin-minus-one.txt:53:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t300-census-cardinal/red/B-pin-plus-one.txt:53:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t300-census-cardinal/red/C1-prefix-minus-one.txt:53:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t300-census-cardinal/red/C2-prefix-plus-one.txt:53:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t300-census-cardinal/red/D-failopen-minus-one.txt:53:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py:8:               ( extension in {.sh,.py,.zsh,.bash,.psql}
+      .softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py:29:EXT = {'.sh', '.py', '.zsh', '.bash', '.psql'}
+      .softhouse/capture/t304-evidence-destruction/instruments/10-population-census.py:70:    sys.stderr.write('SELECTOR: tracked AND (ext in .sh/.py/.zsh/.bash/.psql OR mode 100755 OR shebang)\n')
+      .softhouse/capture/t304-evidence-destruction/instruments/80-foreign-writes.py:34:EXT = {'.sh', '.py', '.zsh', '.bash', '.psql'}
+      .softhouse/capture/t305-openingbalance-accepting-side/MANIFEST.sha256:5:486457d05616ddfe8ca510ee1b6b17eecb11eac725d2f3ba2212e2835f55b632  out/M-01-gerege-accepting-precondition.psql
+      .softhouse/capture/t305-openingbalance-accepting-side/MANIFEST.sha256:9:58df83f15f770fa8edc7a1c78b563618acb2160236b7096a171e64ddbb754923  out/M-02-default-accepting-precondition.psql
+      .softhouse/capture/t305-openingbalance-accepting-side/MANIFEST.sha256:13:45fa37145a3151504502fd4e9fcd6280a20b24142540f1cd8731da308aba382d  out/M-03-gerege-residue-class.psql
+      .softhouse/capture/t305-openingbalance-accepting-side/MANIFEST.sha256:17:6e875a1c07fc3066a3b11522a754b4091ab32519571cbc50c53c5c1217bcd64b  out/M-04-tenant-store-cost.psql
+      .softhouse/capture/t305-openingbalance-accepting-side/MANIFEST.sha256:21:2e7afa7cf44d1830dac68520103f8d6b153f148fba531ec385ede2d5f86aec2b  out/M-05-default-residue-class.psql
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:2:# capsql.sh NAME DBNAME SQLFILE
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:6:# .softhouse/capture/t294-openingbalance-refusal/capsql.sh. THE ONE BEHAVIOURAL DIFFERENCE
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:11:# recorded in out/NAME.psql, so no observation is ambiguous about which one it came from.
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:14:#   out/NAME.txt         the psql output, verbatim, stdout and stderr interleaved as seen
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:15:#   out/NAME.sql         the exact query bytes fed to psql -- a snapshot, not a pointer
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:17:#   out/NAME.psql        the record: container, database, psql exit status, timestamp
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:20:# `psql-exit-status:`. `probe` establishes reachability FIRST so a non-zero rc is
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:27:# PostgreSQL is the only database in this program (CLAUDE.md). This script names psql
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:34:[ -n "$NAME" ] && [ -n "$DB" ] && [ -n "$SQLFILE" ] || { echo "usage: capsql.sh NAME DBNAME SQLFILE" >&2; exit 2; }
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:53:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/capsql305.XXXXXX")
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:62:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DB" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:73:# statements are still worth executing. The failure is recorded in psql-exit-status.
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:74:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DB" -f - < "$TMPSQL" > "$TMPOUT" 2>&1 || rc=$?
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:86:  echo "docker exec -i $DBC psql -U $DBUSER -d $DB -f -"
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:92:  echo "psql-exit-status: $rc"
+      .softhouse/capture/t305-openingbalance-accepting-side/capsql.sh:95:printf '%-46s db=%-18s psql exit %s\n' "$NAME" "$DB" "$rc"
+      .softhouse/capture/t305-openingbalance-accepting-side/env.sh:34:DBC=${DBC:-fineract-db-1}
+      .softhouse/capture/t305-openingbalance-accepting-side/guard-accepting-capture.sh:61:if ! docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME_STORE" -Atc 'SELECT 1' >/dev/null 2>&1; then
+      .softhouse/capture/t305-openingbalance-accepting-side/guard-accepting-capture.sh:67:TENANTS=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME_STORE" -At -F'|' \
+      .softhouse/capture/t305-openingbalance-accepting-side/guard-accepting-capture.sh:85:  RM=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DB" -Atc \
+      .softhouse/capture/t305-openingbalance-accepting-side/guard-accepting-capture.sh:102:  NC=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DB" -Atc \
+      .softhouse/capture/t305-openingbalance-accepting-side/guard-accepting-capture.sh:112:  FA=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DB" -Atc \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:30:STANDING_DB=fineract-db-1
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:46:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || refuse "F2 $DBC/$DBNAME unreachabl
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:50:REG=$(docker exec -i "$DBC" psql -U "$DBUSER" -d fineract_tenants -At -F'|' -c \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:53:RM=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT value FROM c_configuration WHERE name='rounding-mod
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:58:JE=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry")
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:73:    now=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:90:CONTRA=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-3000
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:91:D1=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-1000'")
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:92:D2=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-1100'")
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:93:C1=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-2000'")
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:95:FA=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT gl_account_id FROM acc_gl_financial_activity_accoun
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:187:  docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -c \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:191:  # The readback's own sidecar. A psql projection has no HTTP request to record, so what it records
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:36:STANDING_DB=fineract-db-1
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:45:REG=$(docker exec -i "$DBC" psql -U "$DBUSER" -d fineract_tenants -At -F'|' -c \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:48:JE=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry")
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:57:    now=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:107:D1=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-1000'"
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:108:C1=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-2000'"
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:135:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:147:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -F'|' -c \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:152:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -F'|' -c \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:155:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -c \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/docker-compose.t305.yml:20:#   1. NO published database port (the standing db owns 5432; this one is reached by `docker exec`)
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/down.sh:17:STANDING_DB=fineract-db-1
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/down.sh:47:  now=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/env.sh:6:# container t305-oracle-db (standing: fineract-db-1), database fineract_t305 (standing:
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/guard-throwaway-isolation.sh:29:STANDING_DB=fineract-db-1
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/guard-throwaway-isolation.sh:123:  v=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/setup.sh:77:# this line guessed the shorter name from the API field and psql refused it. Column names are read
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/setup.sh:79:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/setup.sh:82:CONTRA=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T305-3000'"
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/setup.sh:91:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/setup.sh:94:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry"
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:55:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:30:STANDING_DB=fineract-db-1
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:46:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || refuse "F2 $DBC/$DBNAME unreachable."
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:50:REG=$(docker exec -i "$DBC" psql -U "$DBUSER" -d fineract_tenants -At -F'|' -c \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:53:RM=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT value FROM c_configuration WHERE name='rounding-mode'")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:59:JE=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:61:CL=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_closure")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:78:    now=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:119:    "$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT now()::text')"
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:121:    "$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT coalesce((SELECT name||'='||value FROM c_configuration 
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:123:    "$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT count(*) FROM m_business_date')"
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:131:D1=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T327-1000'")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:132:D2=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T327-1100'")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:133:C1=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='T327-2000'")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:207:    printf 'latest-closing-date-at-fire-time: %s\n' "$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT coalesc
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:232:  docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -c \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:316:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:318:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:358:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -At -c \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:364:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -c \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:381:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/docker-compose.t327.yml:34:#   1. NO published database port (the standing db owns 5432; this one is reached by `docker exec`)
+      .softhouse/capture/t327-closure-accepting-side/throwaway/down.sh:17:STANDING_DB=fineract-db-1
+      .softhouse/capture/t327-closure-accepting-side/throwaway/down.sh:49:  now=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t327-closure-accepting-side/throwaway/env.sh:6:# container t327-oracle-db (standing: fineract-db-1), database fineract_t327 (standing:
+      .softhouse/capture/t327-closure-accepting-side/throwaway/guard-throwaway-isolation.sh:29:STANDING_DB=fineract-db-1
+      .softhouse/capture/t327-closure-accepting-side/throwaway/guard-throwaway-isolation.sh:125:  v=$(docker exec -i "$STANDING_DB" psql -U root -d fineract_gerege -Atc "$sql" 2>/dev/null)
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:74:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:79:  v=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT id FROM acc_gl_account WHERE gl_code='$code'")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:85:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:88:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:93:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry"
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:95:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_closure"
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:99:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc \
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:57:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/capture/t352-a2-next-tranche/MANIFEST.sha256:4:faf58253b95a3dfa75c87785f26b21fee31fc8039499a193e71c700691304c9a  ./capsql.sh
+      .softhouse/capture/t352-a2-next-tranche/ORACLE-STATE-MOVED-BY-T352.md:67:./capsql.sh <NAME> sql/q1-t352-residue-rows.sql
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:37:    "response's own currency block still declaring MNT decimalPlaces 2. psql confirms "
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:66:    "[out/T352-A03-residue-balance-scale.json; psql shows 0.125000 + 0.125000 = 0.250000 "
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:2:# capsql.sh NAME SQLFILE
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:11:#     docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f - < sql/qN.sql > out/A2-nnn.txt
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:22:#   out/NAME.txt         the psql output, verbatim, stdout and stderr interleaved as seen
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:23:#   out/NAME.sql         the exact query bytes fed to psql -- a snapshot, not a pointer
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:25:#   out/NAME.psql        the record: container, tenant database, psql exit status, timestamp
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:29:#     AFTER psql returns, so nothing under out/ can ever carry a fresh timestamp on stale
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:31:#   * `docker exec` failing (container gone, database gone, bad credentials) means NO
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:35:#   * A SQL ERROR is NOT a transport failure. psql exits non-zero on a bad query, and that
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:37:#     out/NAME.psql (`psql-exit-status:`) and the output is kept. The two cases are
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:38:#     distinguished by whether `docker exec` itself could run at all.
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:40:# PostgreSQL is the only database in this program (CLAUDE.md). This script names psql
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:46:[ -n "$NAME" ] && [ -n "$SQLFILE" ] || { echo "usage: capsql.sh NAME SQLFILE" >&2; exit 2; }
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:49:DBC=fineract-db-1
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:58:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/capsql.XXXXXX")
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:70:# `docker exec` propagates psql's exit status, so rc alone cannot tell a dead container
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:74:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:90:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -f - < "$TMPSQL" > "$TMPOUT" 2>&1 || rc=$?
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:103:  echo "docker exec -i $DBC psql -U $DBUSER -d $DBNAME -f -"
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:109:  echo "psql-exit-status: $rc"
+      .softhouse/capture/t352-a2-next-tranche/capsql.sh:112:printf '%-44s psql exit %s\n' "$NAME" "$rc"
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:1169:    478  enabled — unchanged from what T22/T36/T76 all recorded [VERIFIED: `psql`].
+      .softhouse/capture/t91/run-attacks.sh:14:# read-only docker/psql queries.  It creates no tenant, restarts nothing, writes no oracle row.
+      .softhouse/capture/t91/t115-rerun-attacks.sh:14:# calculation endpoint) and read-only docker/psql reads.  No restart, no rebuild, no re-seed, no
+      .softhouse/capture/tierA-a2/CAPTURE-PLAN.md:328:docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f - < sql/q3-final-state.sql
+      .softhouse/capture/tierA-a2/CAPTURE-PLAN.md:364:`run-540`, `mkreq-t275.py`, `capsql.sh`, `sql/q8-*`, `sql/q9-*`, `t275-mapping-diff.py`,
+      .softhouse/capture/tierA-a2/CENSUS-A2-26.txt:48:      4  psql (SQL dump, see sql/)
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:587:1180c528dee2153d26bc6a46ed895c09f9d940715fdcf44d9978cb9f7fda34ab  out/A2-500-db-mapping-before.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:599:e770bd775c8c408421f96b474bf8e9ff0c60d0a65caf2e5a92d87b925571c4d8  out/A2-503-db-mapping-after-repoint.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:611:39134873f54f7458a209bec52c12fa52feeb1a5f803485fedf31a3c3b72bda53  out/A2-506-db-mapping-after-channel.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:623:2d500f1ff69279673b978a1338a01c280d9980bdba063e44706dcde9c7ba6afa  out/A2-509-db-mapping-after-description.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:632:673c06b388f32cc2c9126edc867ad89a85e4cb964932307d97f81a950b2f2968  out/A2-511-db-mapping-after-channel-empty.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:639:c357bb11f5c71ebb18b741352ead356feecd1a0d7c7f00f0d4708a3e2641fc11  out/A2-513-db-q2-product-mapping-rows.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:648:aa8361e48a69bd390a5e9f05bf836c76a215406e16829defa6f320d2519db9f8  out/A2-515-db-mapping-after-readd.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:657:d8f5e11d240027868fb8fdbd6a58ad1d9e3c557afad73f4b6ecf57f05d1deabb  out/A2-517-db-mapping-after-resend.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:666:bb41c92157323721845b803be65ebc263264fd5249d6524e6a67e4f137ad2d19  out/A2-519-db-mapping-after-channel-repoint.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:670:f237ef05e4294d63b5510db96e76e3a1da88e0f92208a8aa1d2b25ea90e455eb  out/A2-520-db-fixtures.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:705:82731ab68de9ba08d4d3d846d2745bf8c3f900c850b807e234cfb7275e7d3589  out/A2-528-db-mapping-after-charge-dimension.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:729:6cd0f015dd53dae865a4000d5846348379ae388876b8ed811774a54f7c1d2d1a  out/A2-544-db-mapping-after-reason-probes.psql
+      .softhouse/capture/tierA-a2/MANIFEST.sha256:1073:faf58253b95a3dfa75c87785f26b21fee31fc8039499a193e71c700691304c9a  capsql.sh
+      .softhouse/capture/tierA-a2/capsql.sh:2:# capsql.sh NAME SQLFILE
+      .softhouse/capture/tierA-a2/capsql.sh:11:#     docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f - < sql/qN.sql > out/A2-nnn.txt
+      .softhouse/capture/tierA-a2/capsql.sh:22:#   out/NAME.txt         the psql output, verbatim, stdout and stderr interleaved as seen
+      .softhouse/capture/tierA-a2/capsql.sh:23:#   out/NAME.sql         the exact query bytes fed to psql -- a snapshot, not a pointer
+      .softhouse/capture/tierA-a2/capsql.sh:25:#   out/NAME.psql        the record: container, tenant database, psql exit status, timestamp
+      .softhouse/capture/tierA-a2/capsql.sh:29:#     AFTER psql returns, so nothing under out/ can ever carry a fresh timestamp on stale
+      .softhouse/capture/tierA-a2/capsql.sh:31:#   * `docker exec` failing (container gone, database gone, bad credentials) means NO
+      .softhouse/capture/tierA-a2/capsql.sh:35:#   * A SQL ERROR is NOT a transport failure. psql exits non-zero on a bad query, and that
+      .softhouse/capture/tierA-a2/capsql.sh:37:#     out/NAME.psql (`psql-exit-status:`) and the output is kept. The two cases are
+      .softhouse/capture/tierA-a2/capsql.sh:38:#     distinguished by whether `docker exec` itself could run at all.
+      .softhouse/capture/tierA-a2/capsql.sh:40:# PostgreSQL is the only database in this program (CLAUDE.md). This script names psql
+      .softhouse/capture/tierA-a2/capsql.sh:46:[ -n "$NAME" ] && [ -n "$SQLFILE" ] || { echo "usage: capsql.sh NAME SQLFILE" >&2; exit 2; }
+      .softhouse/capture/tierA-a2/capsql.sh:49:DBC=fineract-db-1
+      .softhouse/capture/tierA-a2/capsql.sh:58:TMPD=$(mktemp -d "${TMPDIR:-/tmp}/capsql.XXXXXX")
+      .softhouse/capture/tierA-a2/capsql.sh:70:# `docker exec` propagates psql's exit status, so rc alone cannot tell a dead container
+      .softhouse/capture/tierA-a2/capsql.sh:74:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc 'SELECT 1' >/dev/null 2>&1 || probe=$?
+      .softhouse/capture/tierA-a2/capsql.sh:90:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -f - < "$TMPSQL" > "$TMPOUT" 2>&1 || rc=$?
+      .softhouse/capture/tierA-a2/capsql.sh:103:  echo "docker exec -i $DBC psql -U $DBUSER -d $DBNAME -f -"
+      .softhouse/capture/tierA-a2/capsql.sh:109:  echo "psql-exit-status: $rc"
+      .softhouse/capture/tierA-a2/capsql.sh:112:printf '%-44s psql exit %s\n' "$NAME" "$rc"
+      .softhouse/capture/tierA-a2/census-a2-26.py:10:It therefore SILENTLY SWALLOWED every psql .txt dump and every POST request body, and
+      .softhouse/capture/tierA-a2/census-a2-26.py:111:            r["method"] = "psql"
+      .softhouse/capture/tierA-a2/census-a2-26.py:301:    # itself a failure: out/ is written only by cap.sh / cap8.sh / cap9.sh and the psql
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:23:         decidable for capsql.sh's SQL captures the same way (out/NAME.sql).
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:40:         (cap8.sh / capsql.sh) running against a scratch out/ directory, and the returned
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:130:    """Parse a .http / .psql record into a dict of its `key: value` lines."""
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:146:        psql = os.path.join(root, "out", name + ".psql")
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:169:        elif os.path.exists(psql):
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:170:            rec = kv(psql)
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:186:            res[name] = ("STALE", "no .http and no .psql record at all")
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:194:              if n.endswith(".psql") and n.startswith("A2-5")]
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:195:    names = sorted({n[:-5] if n.endswith(".psql") else n for n in names})
+      .softhouse/capture/tierA-a2/prove-t275-reissue.py:328:        r = subprocess.run(["sh", os.path.join(copy, "capsql.sh"), name, qf],
+      .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh:6:# corpus before this task was out/A2-019-db-glaccount-rows.txt (a psql dump taken BEFORE
+      .softhouse/capture/tierA-a2/run-400-a2-29-boundary.sh:4:# A2-26 found office_running_balance / organization_running_balance in a psql dump.
+      .softhouse/capture/tierA-a2/run-400-a2-29-boundary.sh:5:# A psql dump is NOT the contract boundary. This batch OBSERVES the live reference
+      .softhouse/capture/tierA-a2/run-500-t275-mapping-update.sh:48:Q="$DIR/capsql.sh"
+      .softhouse/capture/tierA-a2/run-514-t275-channel-row-identity.sh:32:Q="$DIR/capsql.sh"
+      .softhouse/capture/tierA-a2/run-520-t275-charge-dimension.sh:32:Q="$DIR/capsql.sh"
+      .softhouse/capture/tierA-a2/run-540-t275-reason-mappings.sh:50:Q="$DIR/capsql.sh"
+      .softhouse/capture/tierA-a2/sql/q7-a2-15-ledger-state-json.sql:4:-- WHY THIS EXISTS BESIDE q4. q4 emits a psql TABLE, which is what a human reads
+      .softhouse/capture/tierA-a2/t275-mapping-diff.py:6:parses the psql box-drawing output already committed under out/ and reports which mapping
+      .softhouse/gates.md:3574:`glCode` and `name`. That silently swallowed every psql `.txt` dump — which is where the real state lives —
+      .softhouse/gates.md:3970:   `psql` dump — that is not the same as finding them in `/journalentries`.
+      .softhouse/guards/ledgerguard/main.go:755:     Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+      .softhouse/nonnegotiable-guard-audit.md:69:| D-3 | P11 `schema_connection_parameters` must be EMPTY | same file `:154-158` | **VACUOUS — the only one with no compensating assertion** | A dead/absent `
+      .softhouse/patterns.md:787:| **PostgreSQL only; Oracle Database / MySQL / MariaDB prohibited** | `pathb/preconditions.sh` P5/P6/P11 | `grep -icE` over an **empty stream** is `0` and a dead `psql` retu
+      .softhouse/patterns.md:1466:That swallowed every psql `.txt` dump — which is where the captured state actually lives — and every POST
+      .softhouse/program.json:674:      "driver_error_correction": "THE DECISION STANDS; THE DRIVER'S CONSEQUENCE WAS FALSE AND IS CORRECTED IN gates.md. The driver claimed the A2 capture held 'exactly four
+      .softhouse/program.json:1852:        "T245 vs the DRIVER, HIGH: the driver's reference-oracle.md correction fixed the INVENTORY and left the INSTRUCTION — the connection-facts table still prescribed t
+      .softhouse/reference-oracle.md:167:| Postgres | **`psql -U root -d fineract_gerege`** inside `fineract-db-1` |
+      .softhouse/reference-oracle.md:172:`tenantIdentifier=default` and `psql -U root -d fineract_default`. That is not a record of a negative
+      .softhouse/reference-oracle.md:228:| local `20260819-080001` | **yes** | `actuator/health` → `{"status":"UP"}`; `fineract-fineract-1` (fineract:latest) and `fineract-db-1` (postgres:18.3) both healthy
+      .softhouse/reference-oracle.md:230:| local `20260822-080001` | **yes** | Driver re-asserted the DATABASE NON-NEGOTIABLE against the running stack rather than inheriting the wrapper's probe: `actuator/
+      .softhouse/reference-oracle.md:959:| `fineract-db-1` | `postgres:18.3` | **up 5 h, healthy**, `0.0.0.0:5432->5432/tcp` |
+      .softhouse/reference-oracle.md:994:| Tenant database name | **`fineract_gerege`** — *not* `gerege`. `psql -d gerege` fails with `database "gerege" does not exist`; the API tenant id `gerege` maps to d
+      .softhouse/state/fire-20260820-230001.STATE.json:7:  "oracle": "REACHABLE — https://localhost:8443/fineract-provider/actuator/health UP; fineract-fineract-1 + fineract-db-1 Up (healthy); PostgreSQL lo
+      .softhouse/tasks.json:124:      "note": "Raised by the driver from its own G-9 closure, local fire 20260821-054355. NEEDS THE ORACLE. || local fire 20260821-054355: DISPATCHED after A2-5 was APPROVED 
+      .softhouse/tasks.json:2072:      "note": "DONE, merged at 9fb60ea. All five driver claims re-measured and STAMPED at 9b6c596 against the live oracle. (2)(3) TRUE -- and T245 verified the tenant->datab
+      .softhouse/tasks.json:2619:      "description": "A2-9 returned MICRO-FIX on the A2 ledger port and APPROVED its money math and wire-visible behaviour, including adjudicating in A2-8's favour where A2-
+      .softhouse/tasks.json:2959:      "description": "RAISED BY A2-26 FROM A DB DUMP, local fire 20260822-000013. acc_gl_journal_entry carries office_running_balance and organization_running_balance -- Fin
+      .softhouse/tasks.json:4453:      "note": "Filed by fire 20260827-230001 chain-iteration 2, with the ORACLE VERIFIED UP at dispatch time (https://localhost:8443/fineract-provider/actuator/health -> {\"
+
+=== S10 count(*) over the ledger tables in an executable
+    engine: git grep -n -E count\(\*\).{0,40}acc_gl_journal_entry|acc_gl_journal_entry.{0,40}count\(\*\)
+    hits total: 88   archived (snapshots, correctly stale): 51   LIVE: 37
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh:19:echo "SQL: select count(*) from acc_gl_journal_entry where id in (select reversal_id from acc_gl_journal_entry where reversal_id is not
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh:20:Q "select count(*) from acc_gl_journal_entry where id in (select reversal_id from acc_gl_journal_entry where reversal_id is not null);"
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh:30:Q "select count(*) from acc_gl_journal_entry
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.txt:7:SQL: select count(*) from acc_gl_journal_entry where id in (select reversal_id from acc_gl_journal_entry where reversal_id is not null)
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:29:echo "SQL: select count(*) from acc_gl_journal_entry;"
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:30:Q "select count(*) from acc_gl_journal_entry;"
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:33:echo "SQL: select count(*) from acc_gl_journal_entry where reversed = true;"
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:34:Q "select count(*) from acc_gl_journal_entry where reversed = true;"
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:37:echo "SQL: select count(*) from acc_gl_journal_entry where reversal_id is not null;"
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:38:Q "select count(*) from acc_gl_journal_entry where reversal_id is not null;"
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:41:echo "SQL: select count(*) from acc_gl_journal_entry where reversed = true or reversal_id is not null;"
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:42:Q "select count(*) from acc_gl_journal_entry where reversed = true or reversal_id is not null;"
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:64:echo "SQL: select count(*) from acc_gl_journal_entry where reversed = true and reversed = false;"
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:65:Q "select count(*) from acc_gl_journal_entry where reversed = true and reversed = false;"
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.txt:12:SQL: select count(*) from acc_gl_journal_entry;
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.txt:16:SQL: select count(*) from acc_gl_journal_entry where reversed = true;
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.txt:20:SQL: select count(*) from acc_gl_journal_entry where reversal_id is not null;
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.txt:24:SQL: select count(*) from acc_gl_journal_entry where reversed = true or reversal_id is not null;
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.txt:55:SQL: select count(*) from acc_gl_journal_entry where reversed = true and reversed = false;
+      .softhouse/capture/t305-openingbalance-accepting-side/sql/m1-accepting-precondition.sql:51:SELECT (SELECT count(*) FROM acc_gl_journal_entry)                      AS journal_entries,
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:58:JE=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry")
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture.sh:67:    "acc_gl_journal_entry|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_journal_entry" \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:48:JE=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry")
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/capture2.sh:54:    "acc_gl_journal_entry|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_journal_entry" \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/down.sh:41:  "acc_gl_journal_entry|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_journal_entry" \
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/guard-throwaway-isolation.sh:117:  "acc_gl_journal_entry|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_journal_entry"
+      .softhouse/capture/t305-openingbalance-accepting-side/throwaway/setup.sh:94:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry"
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:59:JE=$(docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry")
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:70:    "acc_gl_journal_entry|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_journal_entry" \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/capture.sh:382:  "SELECT transaction_id||' | type_enum '||type_enum||' | sum '||sum(amount)::text||' | legs '||count(*) FROM acc_gl_journal_ent
+      .softhouse/capture/t327-closure-accepting-side/throwaway/down.sh:41:  "acc_gl_journal_entry|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_journal_entry" \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/guard-throwaway-isolation.sh:117:  "acc_gl_journal_entry|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_journal_entry" \
+      .softhouse/capture/t327-closure-accepting-side/throwaway/setup.sh:93:docker exec -i "$DBC" psql -U "$DBUSER" -d "$DBNAME" -Atc "SELECT count(*) FROM acc_gl_journal_entry"
+      .softhouse/capture/tierA-a2/sql/q4-a2-26-ledger-state.sql:44:  SELECT transaction_id, count(*) AS legs FROM acc_gl_journal_entry GROUP BY transaction_id
+      .softhouse/capture/tierA-a2/sql/q5-a2-29-running-balance-drift.sql:27:       (SELECT count(*) FROM acc_gl_journal_entry) AS entries,
+      .softhouse/capture/tierA-a2/sql/q5-a2-29-running-balance-drift.sql:28:       (SELECT count(*) FROM acc_gl_journal_entry WHERE is_running_balance_calculated) AS flagged_calculated,
+      .softhouse/capture/tierA-a2/sql/q5-a2-29-running-balance-drift.sql:29:       (SELECT count(*) FROM acc_gl_journal_entry WHERE NOT is_running_balance_calculated) AS flagged_not_calculated,
+
+=== S11 the ledger invariant guard's own pins
+    engine: git grep -n -E EXEMPTION_PIN|parity vectors|LEDGER_.*PIN
+    hits total: 2430   archived (snapshots, correctly stale): 1984   LIVE: 446
+      .softhouse/RESUME.md:22:46 parity vectors / 7884 cells / 0 FAIL / 0 inadmissible.
+      .softhouse/capture/PASS2-REPORT.md:10:CLAUDE.md they are **discrimination probes and can never be parity vectors**. *(Status line corrected by T30,
+      .softhouse/capture/PASS2-REPORT.md:154:CHANGES, see CORRECTIONS below — and pass 2's precision-12 captures are probes, never parity vectors);
+      .softhouse/capture/PASS3-REPORT-shared.md:29:> parity vectors, naming `capture-prod3b-raw.json` (11), `capture-prod3c-raw.json` (2),
+      .softhouse/capture/PASS3-REPORT-shared.md:83:not parity vectors**. Pass 3 is the first capture set at the settings the Go module will actually have to
+      .softhouse/capture/PASS3-REPORT-shared.md:190:so the eleven `(19, HALF_UP)` records remain **attested observations, not promoted parity vectors**.
+      .softhouse/capture/PASS3-REPORT.md:29:> parity vectors, naming `capture-prod3b-raw.json` (11), `capture-prod3c-raw.json` (2),
+      .softhouse/capture/PASS3-REPORT.md:83:not parity vectors**. Pass 3 is the first capture set at the settings the Go module will actually have to
+      .softhouse/capture/PASS3-REPORT.md:190:so the eleven `(19, HALF_UP)` records remain **attested observations, not promoted parity vectors**.
+      .softhouse/capture/README-pass3c.md:11:**none of the eleven promoted parity vectors trips its guard**. Pass 3c captures the two shapes
+      .softhouse/capture/README-pass3c.md:46:    parity vectors, so calibrating against it calibrates against exactly the bytes the existing
+      .softhouse/capture/README-pass3f.md:15:and each was run against the **real** harness at 29 promoted parity vectors. One survivor moves
+      .softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md:315:**Admissible as RAW OBSERVATIONS today.** Admissible as **parity vectors once G-1 closes**, subject to A-1
+      .softhouse/capture/lib/RED-GREEN-T193-store-cited-captures.txt:60:THE PLANTED DEFECT — one token, in the file 11 parity vectors descend from, at the exact
+      .softhouse/capture/lib/RED-GREEN-T193-store-cited-captures.txt:140:VERDICT: PASS (exit 0) — 43 parity vectors, 5664 cells compared
+      .softhouse/capture/lib/check_wire_float_roundtrip.py:76:extending anything: **42 of the 43 stored parity vectors name a `capture-prod3*-raw.json` in
+      .softhouse/capture/mathcontext/PROVENANCE.md:25:  `CLAUDE.md` already records as discrimination probes rather than parity vectors, and at
+      .softhouse/capture/pathb/PATHB-REPORT.md:271:  are **audited observations, not parity vectors**.
+      .softhouse/capture/pathb/PATHB-REPORT.md:287:  parity vectors until the attestation/re-point items (parked, oracle-dependent) are closed.
+      .softhouse/capture/pathb/t147/green-post-fix/conformance.txt:132:    parity vectors          PASS 42   FAIL 0
+      .softhouse/capture/pathb/t147/green-post-fix/conformance.txt:144:VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t147/green-post-fix/scratch-merge-p24.txt:162:    parity vectors          PASS 42   FAIL 0
+      .softhouse/capture/pathb/t147/green-post-fix/scratch-merge-p24.txt:166:VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/README.md:88:`VERDICT: PASS (exit 0) — 42 parity vectors ... 5576 cells compared`, exit 0, no warning.
+      .softhouse/capture/pathb/t149/prove-exit-trap.py:157:            # "VERDICT: PASS (exit 0) — N parity vectors match ..., M cells compared."
+      .softhouse/capture/pathb/t149/prove-exit-trap.py:229:    print("    derived N = %d parity vectors, %d cells" % (n0, cells0))
+      .softhouse/capture/pathb/t149/prove-exit-trap.py:313:    print("=== SUMMARY  (N derived at runtime = %d parity vectors, %d cells)" % (n0, cells0))
+      .softhouse/capture/pathb/t149/prove-redgreen.sh:59:#     VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle,
+      .softhouse/capture/pathb/t149/prove-redgreen.sh:202:LC_ALL=C grep -aE 'VERDICT|parity vectors' "$A3"
+      .softhouse/capture/pathb/t149/prove-redgreen.sh:240:a3=$(LC_ALL=C grep -acE "parity vectors +PASS $n2 +FAIL 0" "$A3")
+      .softhouse/capture/pathb/t149/redgreen/green-conformance-43-vectors.txt:175:    parity vectors          PASS 43   FAIL 0
+      .softhouse/capture/pathb/t149/redgreen/green-conformance-43-vectors.txt:195:VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/redgreen/p24-postmerge-conformance.txt:133:    parity vectors          PASS 43   FAIL 0
+      .softhouse/capture/pathb/t149/redgreen/p24-postmerge-conformance.txt:145:VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:24:    VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:25:    derived N = 43 parity vectors, 5664 cells
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:29:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:35:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:40:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:46:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:51:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:57:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:62:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:68:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:73:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:78:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:83:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:89:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:98:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:103:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:106:=== SUMMARY  (N derived at runtime = 43 parity vectors, 5664 cells)
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:160:    parity vectors          PASS 43   FAIL 0
+      .softhouse/capture/pathb/t149/t156/p24-scratch-merge.txt:161:VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/postfix-full-redgreen-run.txt:6:    parity vectors          PASS 43   FAIL 0
+      .softhouse/capture/pathb/t149/t156/postfix-full-redgreen-run.txt:7:VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:10:    VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:11:    derived N = 43 parity vectors, 5664 cells
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:15:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:21:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:26:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:32:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:37:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:43:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:48:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:54:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:59:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:64:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:69:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:75:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:84:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:89:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t149/t156/prove-exit-trap.txt:92:=== SUMMARY  (N derived at runtime = 43 parity vectors, 5664 cells)
+      .softhouse/capture/pathb/t149/t168/green-sigquit-restores.txt:8:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t168/post-fix-conformance.txt:175:    parity vectors          PASS 43   FAIL 0
+      .softhouse/capture/pathb/t149/t168/post-fix-conformance.txt:195:VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t168/postfix-live-redgreen-run.txt:6:    parity vectors          PASS 43   FAIL 0
+      .softhouse/capture/pathb/t149/t168/postfix-live-redgreen-run.txt:7:VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:10:    VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:11:    derived N = 43 parity vectors, 5664 cells
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:15:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:21:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:26:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:32:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:37:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:43:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:48:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:54:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:59:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:65:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:70:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:75:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:80:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:86:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:95:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells co
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:100:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells c
+      .softhouse/capture/pathb/t149/t168/prove-exit-trap-with-sigquit.txt:103:=== SUMMARY  (N derived at runtime = 43 parity vectors, 5664 cells)
+      .softhouse/capture/pathb/t149/t168/red-sigquit-strands.txt:9:    next run over that store: exit=0  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/pathb/t153/verify/conformance-prove-selftest.txt:69:    parity vectors          PASS 0    FAIL 0
+      .softhouse/capture/pathb/t153/verify/conformance-prove-selftest.txt:167:    parity vectors          PASS 43   FAIL 0
+      .softhouse/capture/pathb/t153/verify/p24-scratch-merge-conformance.txt:133:    parity vectors          PASS 43   FAIL 0
+      .softhouse/capture/pathb/t153/verify/p24-scratch-merge-conformance.txt:145:VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/pathb/t153/verify/redgreen-three-arms-rerun.txt:6:    parity vectors          PASS 43   FAIL 0
+      .softhouse/capture/pathb/t153/verify/redgreen-three-arms-rerun.txt:7:VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/periodratio/ATTESTATION-T46.md:268:  arm is unreachable; they are negative observations, never parity vectors.
+      .softhouse/capture/src/Capture3.java:18: * DISCRIMINATION PROBES, not parity vectors. This pass re-captures at (19, HALF_UP) so a parity
+      .softhouse/capture/src/Capture3c.java:11: * (contract.go:1660-1661) — and NONE of the eleven promoted parity vectors trips its guard. The
+      .softhouse/capture/src/Capture3c.java:130:        // already-promoted parity vectors; only principal, term and rate move.
+      .softhouse/capture/src/Capture3d.java:11: * 13 promoted parity vectors. Two of them are the rounding-placement pair the program has argued
+      .softhouse/capture/src/Capture3d.java:150:        // already-promoted parity vectors; only principal, term and rate move. Both are ordinary
+      .softhouse/capture/src/Capture3f.java:10: * implementations and each was run against the REAL harness at 29 promoted parity vectors. One of
+      .softhouse/capture/src/Capture3h.java:213:        // ALREADY promoted parity vectors. ZP-B is the ONLY shape in the entire committed corpus
+      .softhouse/capture/src/Capture3i.java:247:        // ALREADY promoted parity vectors. ZP-B is the ONLY shape in the entire committed corpus
+      .softhouse/capture/src/run-pass3c.sh:40:#      not match the sha256 recorded by the promotion of the eleven existing parity vectors.
+      .softhouse/capture/src/run-pass3c.sh:57:# provenance block of all eleven already-promoted parity vectors, so calibrating against it
+      .softhouse/capture/src/run-pass3c.sh:106:  || fail "calibration reference $REF3B_JSON is sha256 $ACTUAL_REF3B_SHA, expected $EXPECTED_REF3B_SHA — these are not the bytes the eleven promoted parity vec
+      .softhouse/capture/src/run-pass3d.sh:7:# ROUNDING-PLACEMENT readings of the port survive all 13 promoted parity vectors and have been
+      .softhouse/capture/src/run-pass3d.sh:49:#      not match the sha256 recorded by the promotion of the eleven existing parity vectors.
+      .softhouse/capture/src/run-pass3d.sh:70:# provenance block of all eleven already-promoted parity vectors, so calibrating against it
+      .softhouse/capture/src/run-pass3d.sh:76:# recorded in the provenance block of the two P-EMI parity vectors task T57 promoted, so
+      .softhouse/capture/src/run-pass3d.sh:126:  || fail "calibration reference $REF3B_JSON is sha256 $ACTUAL_REF3B_SHA, expected $EXPECTED_REF3B_SHA — these are not the bytes the eleven promoted parity vec
+      .softhouse/capture/src/run-pass3d.sh:132:  || fail "calibration reference $REF3C_JSON is sha256 $ACTUAL_REF3C_SHA, expected $EXPECTED_REF3C_SHA — these are not the bytes the two P-EMI parity vectors w
+      .softhouse/capture/src/run-pass3e.sh:53:#      not match the sha256 recorded by the promotion of the eleven existing parity vectors.
+      .softhouse/capture/src/run-pass3e.sh:74:# provenance block of all eleven already-promoted parity vectors, so calibrating against it
+      .softhouse/capture/src/run-pass3e.sh:80:# recorded in the provenance block of the two P-EMI parity vectors task T57 promoted, so
+      .softhouse/capture/src/run-pass3e.sh:130:  || fail "calibration reference $REF3B_JSON is sha256 $ACTUAL_REF3B_SHA, expected $EXPECTED_REF3B_SHA — these are not the bytes the eleven promoted parity vec
+      .softhouse/capture/src/run-pass3e.sh:136:  || fail "calibration reference $REF3C_JSON is sha256 $ACTUAL_REF3C_SHA, expected $EXPECTED_REF3C_SHA — these are not the bytes the two P-EMI parity vectors w
+      .softhouse/capture/src/run-pass3f.sh:53:#      not match the sha256 recorded by the promotion of the eleven existing parity vectors.
+      .softhouse/capture/src/run-pass3f.sh:74:# provenance block of all eleven already-promoted parity vectors, so calibrating against it
+      .softhouse/capture/src/run-pass3f.sh:80:# recorded in the provenance block of the two P-EMI parity vectors task T57 promoted, so
+      .softhouse/capture/src/run-pass3f.sh:85:# which the eight P-DRIFT, four P-ME and two P-LAT parity vectors were transcribed.
+      .softhouse/capture/src/run-pass3f.sh:134:  || fail "calibration reference $REF3B_JSON is sha256 $ACTUAL_REF3B_SHA, expected $EXPECTED_REF3B_SHA — these are not the bytes the eleven promoted parity vec
+      .softhouse/capture/src/run-pass3f.sh:140:  || fail "calibration reference $REF3C_JSON is sha256 $ACTUAL_REF3C_SHA, expected $EXPECTED_REF3C_SHA — these are not the bytes the two P-EMI parity vectors w
+      .softhouse/capture/src/run-pass3f.sh:145:  || fail "calibration reference $REF3E_JSON is sha256 $ACTUAL_REF3E_SHA, expected $EXPECTED_REF3E_SHA — these are not the bytes the sixteen pass-3e parity vec
+      .softhouse/capture/src/run-pass3g.sh:53:#      not match the sha256 recorded by the promotion of the eleven existing parity vectors.
+      .softhouse/capture/src/run-pass3g.sh:74:# provenance block of all eleven already-promoted parity vectors, so calibrating against it
+      .softhouse/capture/src/run-pass3g.sh:80:# recorded in the provenance block of the two P-EMI parity vectors task T57 promoted, so
+      .softhouse/capture/src/run-pass3g.sh:85:# which the eight P-DRIFT, four P-ME and two P-LAT parity vectors were transcribed.
+      .softhouse/capture/src/run-pass3g.sh:134:  || fail "calibration reference $REF3B_JSON is sha256 $ACTUAL_REF3B_SHA, expected $EXPECTED_REF3B_SHA — these are not the bytes the eleven promoted parity vec
+      .softhouse/capture/src/run-pass3g.sh:140:  || fail "calibration reference $REF3C_JSON is sha256 $ACTUAL_REF3C_SHA, expected $EXPECTED_REF3C_SHA — these are not the bytes the two P-EMI parity vectors w
+      .softhouse/capture/src/run-pass3g.sh:145:  || fail "calibration reference $REF3E_JSON is sha256 $ACTUAL_REF3E_SHA, expected $EXPECTED_REF3E_SHA — these are not the bytes the sixteen pass-3e parity vec
+      .softhouse/capture/src/run-pass3h.sh:30:# promoted parity vectors, and ZP-B is the ONLY shape in the whole committed corpus whose schedule
+      .softhouse/capture/src/run-pass3h.sh:66:#      not match the sha256 recorded by the promotion of the eleven existing parity vectors.
+      .softhouse/capture/src/run-pass3h.sh:94:# provenance block of all eleven already-promoted parity vectors, so calibrating against it
+      .softhouse/capture/src/run-pass3h.sh:100:# recorded in the provenance block of the two P-EMI parity vectors task T57 promoted, so
+      .softhouse/capture/src/run-pass3h.sh:105:# which the eight P-DRIFT, four P-ME and two P-LAT parity vectors were transcribed.
+      .softhouse/capture/src/run-pass3h.sh:110:# the four T64-ZP parity vectors were transcribed. T64-ZP-B is the ONLY shape in the whole
+      .softhouse/capture/src/run-pass3h.sh:160:  || fail "calibration reference $REF3B_JSON is sha256 $ACTUAL_REF3B_SHA, expected $EXPECTED_REF3B_SHA — these are not the bytes the eleven promoted parity vec
+      .softhouse/capture/src/run-pass3h.sh:166:  || fail "calibration reference $REF3C_JSON is sha256 $ACTUAL_REF3C_SHA, expected $EXPECTED_REF3C_SHA — these are not the bytes the two P-EMI parity vectors w
+      .softhouse/capture/src/run-pass3h.sh:171:  || fail "calibration reference $REF3E_JSON is sha256 $ACTUAL_REF3E_SHA, expected $EXPECTED_REF3E_SHA — these are not the bytes the sixteen pass-3e parity vec
+      .softhouse/capture/src/run-pass3h.sh:178:  || fail "calibration reference $REF3G_JSON is sha256 $ACTUAL_REF3G_SHA, expected $EXPECTED_REF3G_SHA — these are not the bytes the four T64-ZP parity vectors
+      .softhouse/capture/src/run-pass3h.sh:267:    # ADDED BY PASS 3h. Both are already-promoted parity vectors; ZP-B is the ONLY committed
+      .softhouse/capture/src/run-pass3i.sh:123:# provenance block of all eleven already-promoted parity vectors, so calibrating against it
+      .softhouse/capture/src/run-pass3i.sh:129:# recorded in the provenance block of the two P-EMI parity vectors task T57 promoted, so
+      .softhouse/capture/src/run-pass3i.sh:134:# which the eight P-DRIFT, four P-ME and two P-LAT parity vectors were transcribed.
+      .softhouse/capture/src/run-pass3i.sh:139:# the four T64-ZP parity vectors were transcribed. T64-ZP-B is the ONLY shape in the whole
+      .softhouse/capture/src/run-pass3i.sh:198:  || fail "calibration reference $REF3B_JSON is sha256 $ACTUAL_REF3B_SHA, expected $EXPECTED_REF3B_SHA — these are not the bytes the eleven promoted parity vec
+      .softhouse/capture/src/run-pass3i.sh:204:  || fail "calibration reference $REF3C_JSON is sha256 $ACTUAL_REF3C_SHA, expected $EXPECTED_REF3C_SHA — these are not the bytes the two P-EMI parity vectors w
+      .softhouse/capture/src/run-pass3i.sh:209:  || fail "calibration reference $REF3E_JSON is sha256 $ACTUAL_REF3E_SHA, expected $EXPECTED_REF3E_SHA — these are not the bytes the sixteen pass-3e parity vec
+      .softhouse/capture/src/run-pass3i.sh:216:  || fail "calibration reference $REF3G_JSON is sha256 $ACTUAL_REF3G_SHA, expected $EXPECTED_REF3G_SHA — these are not the bytes the four T64-ZP parity vectors
+      .softhouse/capture/src/run-pass3i.sh:310:    # ADDED BY PASS 3h. Both are already-promoted parity vectors; ZP-B is the ONLY committed
+      .softhouse/capture/src/t169-red/CaptureT169Post.java:31: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/src/t169-red/CaptureT169Pre.java:31: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/t100-g8-rescope/src/CaptureT100.java:28: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/t116-familyb-promotion/src/CaptureT116.java:31: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/t116-familyb-promotion/src/run-harness-mutations-t116.sh:10:#   BEFORE  the store with the three T116 vectors REMOVED  -> 43 parity vectors
+      .softhouse/capture/t116-familyb-promotion/src/run-harness-mutations-t116.sh:11:#   AFTER   the store exactly as committed                 -> 46 parity vectors
+      .softhouse/capture/t116-familyb-promotion/src/run-harness-mutations-t116.sh:119:  n="$(grep -E '^    parity vectors' "$out" | head -1 | sed 's/^ *//')"
+      .softhouse/capture/t117-familyb/src/CaptureT117.java:29: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/t117-familyb/src/CaptureT117P2.java:27: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/t154-nofloat/drive-leg1-e2e.sh:88:  grep -E 'probe =|FLOAT-SHAPED NUMBER|HARD guard failed|parity vectors|cells compared|^VERDICT' "$TMP/$1.txt" \
+      .softhouse/capture/t154-nofloat/drive-leg3.sh:92:  parity="$(LC_ALL=C sed -n 's/.*parity vectors  *PASS \([0-9]*\).*/\1/p' "$TMP/$label.txt" | head -1)"
+      .softhouse/capture/t154-nofloat/drive-leg3.sh:219:echo "  BASELINE: $BASE_PARITY parity vectors, $BASE_CELLS graded cells."
+      .softhouse/capture/t159-review-t117/src/CaptureT159.java:28: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/t170-g8-rebuild/SCOPE-TABLE-T170.md:103:| ⭐ M-5 | *"Today conformance.sh reports PASS with 42 parity vectors"* | **43 parity vectors, 5,664 cells**, measured by T170 on its own bran
+      .softhouse/capture/t170-g8-rebuild/SCOPE-TABLE-T170.md:104:| ⭐ M-6 | *"Conformance is unmoved by this rewrite: … 42 parity vectors, 5576 graded cells"* | scoped to T140's rewrite; T170's own measureme
+      .softhouse/capture/t170-g8-rebuild/SCOPE-TABLE-T170.md:161:* **43 parity vectors / 5,664 graded cells** is T170's own run of `bash .softhouse/conformance.sh`
+      .softhouse/capture/t219-g8-residual/src/CaptureT219.java:31: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/t219-g8-residual/src/CaptureT219W.java:31: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/t219-g8-residual/src/CaptureT219X.java:31: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/t223-g8-region-predicate/src/CaptureT223.java:31: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/t229-g8-site3/src/CaptureT229.java:31: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/t234-sweep-instrument-audit/HANDOFF.md:472:| parity vectors / cells | 46 / 7884 | **46 PASS 0 FAIL / 7884 graded** (93 ungraded) |
+      .softhouse/capture/t243-wiring/instruments/90-bar.sh:24:LC_ALL=C /usr/bin/grep -aE 'probe = |^VERDICT|parity vectors +PASS|contract-refusal|self-test fixtures|cells compared|ungraded|ledger parity|led
+      .softhouse/capture/t244-dec2-rev6/bar-output-final.txt:412:    parity vectors          PASS 46   FAIL 0
+      .softhouse/capture/t244-dec2-rev6/bar-output-final.txt:434:VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+      .softhouse/capture/t244-dec2-rev6/bar-output-final.txt:444:conformance:   exemption census READ: LEDGER parity vectors        = 4 == pinned 4
+      .softhouse/capture/t244-dec2-rev6/bar-output-final.txt:459:conformance:   exemption census READ: LEDGER parity vectors        = 4 == pinned 4
+      .softhouse/capture/t244-dec2-rev6/bar-output-final.txt:518:    parity vectors          PASS 0    FAIL 0
+      .softhouse/capture/t244-dec2-rev6/bar-output-final.txt:618:    parity vectors          PASS 46   FAIL 0
+      .softhouse/capture/t244-dec2-rev6/bar-output.txt:399:    parity vectors          PASS 46   FAIL 0
+      .softhouse/capture/t244-dec2-rev6/bar-output.txt:421:VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+      .softhouse/capture/t244-dec2-rev6/bar-output.txt:431:conformance:   exemption census READ: LEDGER parity vectors        = 4 == pinned 4
+      .softhouse/capture/t244-dec2-rev6/bar-output.txt:446:conformance:   exemption census READ: LEDGER parity vectors        = 4 == pinned 4
+      .softhouse/capture/t244-dec2-rev6/bar-output.txt:505:    parity vectors          PASS 0    FAIL 0
+      .softhouse/capture/t244-dec2-rev6/bar-output.txt:605:    parity vectors          PASS 46   FAIL 0
+      .softhouse/capture/t247-dec2-rev7/EVIDENCE.md:68:conformance:   exemption census READ: LEDGER parity vectors        = 4 == pinned 4
+      .softhouse/capture/t247-dec2-rev7/GATE-CLOSURE-BLOCK.md:24:VERDICT: PASS (exit 0) — ___ parity vectors, ___ cells
+      .softhouse/capture/t247-dec2-rev7/REVISION-7-PROPOSED.md:68:| 20 | **L1449-1452** | **FALSE** | §5: *"`.softhouse/vectors/` holds **46 promoted parity vectors, all `loanschedule`** … **The `ledger` co
+      .softhouse/capture/t247-dec2-rev7/REVISION-7-PROPOSED.md:287:>    `context`, and the harness reported **`VERDICT: PASS (exit 0) — 44 parity vectors match the
+      .softhouse/capture/t247-dec2-rev7/REVISION-7-PROPOSED.md:324:>    less.** All **46** promoted `loanschedule` parity vectors are in the `loanschedule/` directory,
+      .softhouse/capture/t247-dec2-rev7/REVISION-7-PROPOSED.md:541:graded today, per vector, in `int64` minor units — **21 money cells across four parity vectors**
+      .softhouse/capture/t247-dec2-rev7/REVISION-7-PROPOSED.md:614:| **YES, SINCE `A2-15` — AND REVISION 7 CORRECTS WHAT REVISIONS 1–6 SAID HERE, WHICH WAS *"NO. §5 — no admissible vector can carry a money 
+      .softhouse/capture/t247-dec2-rev7/REVISION-7-PROPOSED.md:738:`.softhouse/vectors/` holds **46 promoted parity vectors, all `loanschedule`** [MEASURED above; the
+      .softhouse/capture/t247-dec2-rev7/REVISION-7-PROPOSED.md:750:promoted `loanschedule` parity vectors** — still all `loanschedule`, still zero touching a GL
+      .softhouse/capture/t247-dec2-rev7/REVISION-7-PROPOSED.md:908:4. *(unchanged in substance; re-stamped.)* **The 46 passing `loanschedule` parity vectors are still
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:383:          WHY NOT: NOT GRADED BY ANY VECTOR IN THIS STORE. The four parity vectors assert a
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:483:    parity vectors          PASS 46   FAIL 0
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:505:VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+      .softhouse/capture/t247-dec2-rev7/bar-9b6c596.log:515:conformance:   exemption census READ: LEDGER parity vectors        = 4 == pinned 4
+      .softhouse/capture/t247-dec2-rev7/sweep-dec2-9b6c596.txt:232: 1449 | `.softhouse/vectors/` holds **46 promoted parity vectors, all `loanschedule`** [MEASURED above; the
+      .softhouse/capture/t247-dec2-rev7/verify-line-numbers-9b6c596.txt:29:  ok     L1449  holds **46 promoted parity vectors, all `loanschedule`**
+      .softhouse/capture/t247-dec2-rev7/verify-line-numbers.py:44:    (1449, "holds **46 promoted parity vectors, all `loanschedule`**"),
+      .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:222:> 4. **The "PASS 46" everybody quotes is `loanschedule`'s.** All **46** promoted parity vectors are
+      .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:242:>    less.** All **46** promoted `loanschedule` parity vectors are in the `loanschedule/` directory,
+      .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:442:graded today, per vector, in `int64` minor units — **21 money cells across four parity vectors**
+      .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:477:`I-1` (`double_entry_balances`) HOLDs INDEPENDENT on all four parity vectors; `I-2`
+      .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:515:    """| **YES, SINCE `A2-15` — AND REVISION 7 CORRECTS WHAT REVISIONS 1–6 SAID HERE, WHICH WAS *"NO. §5 — no admissible vector
+      .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:550:THAT CLAUSE AND ONLY THAT CLAUSE — it grades `I-1` on all four parity vectors and `I-2` on three of
+      .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:689:    """`.softhouse/vectors/` holds **46 promoted parity vectors, all `loanschedule`** [MEASURED above; the
+      .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:697:**46 promoted `loanschedule` parity vectors** — still all `loanschedule`, still zero touching a GL
+      .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:954:    """4. **The 46 passing parity vectors are `loanschedule`'s** [MEASURED by `A2-28` at commit `2e97162`;
+      .softhouse/capture/t255-dec2-rev8/instruments/30-apply-revision-8.py:964:    """4. **The 46 passing `loanschedule` parity vectors are still `loanschedule`'s** [RE-MEASURED by
+      .softhouse/capture/t312-branch-case-collision/conformance-excerpt.txt:14:VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+      .softhouse/capture/t312-branch-case-collision/conformance-excerpt.txt:20:    parity vectors          PASS 46   FAIL 0
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:398:          WHY NOT: NOT GRADED BY ANY VECTOR IN THIS STORE. The four parity vectors assert a
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:490:    parity vectors          PASS 46   FAIL 0
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:512:VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+      .softhouse/capture/t319-reconciler-f5/out-conformance.txt:522:conformance:   exemption census READ: LEDGER parity vectors        = 4 == pinned 4
+      .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:418:print("  EXEMPTION_PIN_LEDGER_PARITY       5 -> 7   (+2 parity vectors)")
+      .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:419:print("  EXEMPTION_PIN_LEDGER_REFUSAL      5 -> 5   (neither vector is a refusal)")
+      .softhouse/capture/t328-date-rule-promotion/instruments/build-vectors.py:420:print("  EXEMPTION_PIN_LEDGER_MONEYCELLS  29 -> %d  (+%d)" % (29 + m1 + m2, m1 + m2))
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:425:          WHY NOT: NOT GRADED BY ANY VECTOR IN THIS STORE. The four parity vectors assert a
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:517:    parity vectors          PASS 46   FAIL 0
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:539:VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+      .softhouse/capture/t330-reconcile-merged-work/bar.txt:549:conformance:   exemption census READ: LEDGER parity vectors        = 5 == pinned 5
+      .softhouse/capture/t352-a2-next-tranche/ORACLE-STATE-MOVED-BY-T352.md:43:  selected by a specific `transaction_id`; none of the seven parity vectors or six
+      .softhouse/capture/t352-a2-next-tranche/apply-corrections.py:6:"WHY NOT" prose. The exemption census pins (EXEMPTION_PIN_LEDGER_PARITY / _REFUSAL /
+      .softhouse/capture/t64-zeroprincipal/MECHANISM-CORRECTION.md:17:> 2. **"which all 32 previously-promoted parity vectors pass"** and **"nothing in the corpus could
+      .softhouse/capture/t64-zeroprincipal/MECHANISM-CORRECTION.md:129:`ZP-GUARD-SCALES-THE-INSTALLMENT` — which ~~all 32 previously-promoted parity vectors pass~~
+      .softhouse/capture/t64-zeroprincipal/PREDICTION.md:22:That is a blind spot in the CORPUS, and it is measurable: across all 32 promoted parity vectors the
+      .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py:125:        "off less than a third of the way in. Not one of the 32 promoted parity vectors lands on "
+      .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py:127:        "HARNESS: at 32 promoted parity vectors this counterfactual is GREEN, exit 0, PASS 32 FAIL "
+      .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py:141:        "parity vectors reports exit 1, PASS 21 FAIL 11. This vector therefore ADDS CELLS AND "
+      .softhouse/capture/t64-zeroprincipal/src/run-harness-mutations.sh:7:#   BEFORE  the store with the four T64 vectors REMOVED  -> 32 parity vectors
+      .softhouse/capture/t64-zeroprincipal/src/run-harness-mutations.sh:8:#   AFTER   the store exactly as committed               -> 36 parity vectors
+      .softhouse/capture/t64-zeroprincipal/src/run-harness-mutations.sh:86:  n="$(grep -E '^    parity vectors' "$out" | head -1 | sed 's/^ *//')"
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:13:     17  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:388:    838  conformance          exit 0 — 36/36 parity vectors PASS, 4034 cells graded, 72 ungraded
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:391:    917  Both cannot hold here. Today `conformance.sh` reports PASS with 42 parity vectors and 0 invariant
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:394:     17  - `.softhouse/conformance.sh` exits 0: **36/36 parity vectors PASS, 0 FAIL**, oracle probe UP, 4034 cells graded.
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:397:    159  parity vectors          PASS 36   FAIL 0
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:398:    171  VERDICT: PASS (exit 0) — 36 parity vectors match the pinned reference oracle, 4034 cells compared.
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:403:    411  36 parity vectors graded, rather than independently querying the database.
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:417:     11  Corpus **32 → 36** parity vectors, `conformance.sh` **exit 0**, `--prove` **20 passed 0 failed**.
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:424:    293  CONTROL   @36 vectors (as committed)  exit 0  |  parity vectors          PASS 36   FAIL 0
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:425:    299  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 22   FAIL 14
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:426:    306  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 33   FAIL 3
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:427:    313  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 35   FAIL 1
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:428:    320  AFTER   @36 vectors (as committed)  exit 0  |  parity vectors          PASS 36   FAIL 0
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:429:    327  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 35   FAIL 1
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:430:    334  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 29   FAIL 7
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:432:    377  parity vectors          PASS 36   FAIL 0
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:433:    389  VERDICT: PASS (exit 0) — 36 parity vectors match the pinned reference oracle, 4034 cells compared.
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:442:     34  parity vectors          PASS 36   FAIL 0
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:443:     46  VERDICT: PASS (exit 0) — 36 parity vectors match the pinned reference oracle, 4034 cells compared.
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:453:    206  parity vectors          PASS 36   FAIL 0
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:454:    208  VERDICT: PASS (exit 0) — 36 parity vectors match the pinned reference oracle, 4034 cells compared.
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:464:    373  * **README counts.** *"36 promoted parity vectors … 4 contract-refusal … 1 self-test fixture — 41
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:467:    378  all 36 parity vectors].
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:494:    217  **Store: 36 → 42 parity vectors, 4,034 → 5,576 graded cells, 96 → 102 named money kills.**
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:497:    245  > "Store: 36 → 42 parity vectors". The six were promoted **two commits earlier on this very branch**,
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:502:    395  parity vectors          PASS 42   FAIL 0
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:503:    404  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:504:    413  was PASS exit 0 at 36 parity vectors and 4,034 cells, measured separately (P-4).
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:515:    248  document**, which said "Store: 36 → 42 parity vectors". All four are now corrected and each carries a
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:525:    427  | **STALE, present tense** | **`.softhouse/vectors/README.md:580`** — "all **36** promoted parity vectors withdraw exactly th
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:530:    525  parity vectors          PASS 42   FAIL 0
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:531:    533  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:532:    537  **42 parity vectors, 5576 graded cells, exit 0 — unchanged**, as required. [VERIFIED: my run]
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:534:    626  * **F-1 — `.softhouse/vectors/README.md:580` says "all 36 promoted parity vectors"** (registered as
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:939:    236  violation, no scope breach. Corpus **32 → 36 parity vectors, 2,495 → 4,034 graded cells**;
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:941:    270  conformance **exit 0, 36 parity vectors, 4,034 cells, 0 inadmissible, 0 harness errors** ·
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:950:    996  "conformance": "exit 0 - 36 parity vectors, 4034 graded cells, --prove 21/21, --self-test 0",
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:1256:     71  The store holds **42 promoted parity vectors** (all in `loanschedule/`, all
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:1264:    580  not a convenience: all 36 promoted parity vectors withdraw exactly those two cells,
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/sweep-census.py:41:  2. A census whose numbers are SPELLED ("thirty-six parity vectors").
+      .softhouse/capture/t74-multiplesof/pass3-supersession-banner.txt:7:> parity vectors, naming `capture-prod3b-raw.json` (11), `capture-prod3c-raw.json` (2),
+      .softhouse/capture/t83-nonamortizing/src/CaptureT83.java:32: * TWO RIG CALIBRATIONS, both ALREADY-PROMOTED parity vectors at the rounding floor at dp 2:
+      .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:128:                        "control on the two already-promoted rounding-floor parity vectors "
+      .softhouse/capture/t83-nonamortizing/src/run-port.py:13:already-promoted parity vectors. If that is not zero, the port is broken on
+      .softhouse/capture/t83-nonamortizing/src/run-t83.sh:63:# provenance block of the four promoted T64-ZP parity vectors, so calibrating against it calibrates
+      .softhouse/capture/t83-nonamortizing/src/run-t83.sh:114:  || fail "calibration reference $REF3G_JSON is sha256 $ACTUAL_REF3G_SHA, expected $EXPECTED_REF3G_SHA — these are not the bytes the four T64-ZP
+      .softhouse/capture/tierA-a2/RED-GREEN-A2-15.txt:30:           matched: exemption census MISMATCH: LEDGER parity vectors        = 5, but this file pins 4
+      .softhouse/capture/tierA-a2/RED-GREEN-A2-15.txt:31:           | conformance:   exemption census MISMATCH: LEDGER parity vectors        = 5, but this file pins 4.
+      .softhouse/capture/tierA-a2/RED-GREEN-T173-wired-guards.txt:53:VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/tierA-a2/RED-GREEN-T173-wired-guards.txt:112:VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+      .softhouse/capture/tierA-a2/red-green-a2-15.sh:172:# EXEMPTION_PIN_LEDGER_PARITY and be refused by the gate.
+      .softhouse/capture/tierA-a2/red-green-a2-15.sh:179:    "exemption census MISMATCH: LEDGER parity vectors        = 5, but this file pins 4"
+      .softhouse/conformance.sh:15:#      implementation to grade, an unreachable oracle, zero parity vectors, an
+      .softhouse/conformance.sh:467:EXEMPTION_PIN_EXEMPTED=4
+      .softhouse/conformance.sh:468:EXEMPTION_PIN_DECLARED=4
+      .softhouse/conformance.sh:469:EXEMPTION_PIN_GROUNDED=4
+      .softhouse/conformance.sh:470:EXEMPTION_PIN_UNDETERMINED=0
+      .softhouse/conformance.sh:471:EXEMPTION_PIN_UNGROUNDED=0
+      .softhouse/conformance.sh:524:EXEMPTION_PIN_LEDGER_DECLARED=0
+      .softhouse/conformance.sh:681:EXEMPTION_PIN_LEDGER_PARITY=7
+      .softhouse/conformance.sh:682:EXEMPTION_PIN_LEDGER_REFUSAL=6
+      .softhouse/conformance.sh:683:EXEMPTION_PIN_LEDGER_MONEYCELLS=39
+      .softhouse/conformance.sh:788:# earlier on the same line produced `VERDICT: PASS (exit 0) — 42 parity vectors
+      .softhouse/conformance.sh:1226:  # inside its recorded-request blocks. 42 of the 43 parity vectors name a
+      .softhouse/conformance.sh:1311:#     -> EXIT 0, "parity vectors PASS 43 FAIL 0", "VERDICT: PASS (exit 0) … 5664 cells"
+      .softhouse/conformance.sh:1331:#      "grade it anyway, then exit 2" still emits a full `parity vectors PASS 43` table over
+      .softhouse/conformance.sh:1541:# (b) is what is implemented, and it is the same idiom as EXEMPTION_PIN_*
+      .softhouse/conformance.sh:3441:    # "LEDGER parity vectors = 4 == pinned 4" on a run that measured nothing --
+      .softhouse/conformance.sh:3462:  _cmp "exempted assertions (graded)" "$exempted"     "$EXEMPTION_PIN_EXEMPTED"
+      .softhouse/conformance.sh:3463:  _cmp "declared exemptions (loaded)" "$declared"     "$EXEMPTION_PIN_DECLARED"
+      .softhouse/conformance.sh:3464:  _cmp "GROUNDED                    " "$grounded"     "$EXEMPTION_PIN_GROUNDED"
+      .softhouse/conformance.sh:3465:  _cmp "UNDETERMINED-ON-THE-RECORD  " "$undetermined" "$EXEMPTION_PIN_UNDETERMINED"
+      .softhouse/conformance.sh:3466:  _cmp "UNGROUNDED                  " "$ungrounded"   "$EXEMPTION_PIN_UNGROUNDED"
+      .softhouse/conformance.sh:3468:    _cmp "LEDGER declared exemptions  " "$l_declared"   "$EXEMPTION_PIN_LEDGER_DECLARED"
+      .softhouse/conformance.sh:3469:    _cmp "LEDGER parity vectors       " "$l_parity"     "$EXEMPTION_PIN_LEDGER_PARITY"
+      .softhouse/conformance.sh:3470:    _cmp "LEDGER oracle-refusal vector" "$l_refusal"    "$EXEMPTION_PIN_LEDGER_REFUSAL"
+      .softhouse/conformance.sh:3471:    _cmp "LEDGER money cells compared " "$l_money"      "$EXEMPTION_PIN_LEDGER_MONEYCELLS"
+      .softhouse/conformance.sh:3487:    warn "conformance: If the change is DELIBERATE, edit EXEMPTION_PIN_* at the top of this file IN THE"
+      .softhouse/conformance.sh:3530:#     ledger-wrong-manual-permission-ignored passes all four parity vectors and
+      .softhouse/conformance.sh:3553:# ledger-wrong-manual-permission-ignored it passes all four parity vectors and
+      .softhouse/conformance.sh:3558:# they pass all four parity vectors and die on an ORACLE-REFUSAL vector alone:
+      .softhouse/conformance.sh:3635:EXEMPTION_PIN_LEDGER_WRONGIMPLS=13
+      .softhouse/conformance.sh:3657:  say "conformance:   $EXEMPTION_PIN_LEDGER_WRONGIMPLS."
+      .softhouse/conformance.sh:3658:  if [ "$n" -ne "$EXEMPTION_PIN_LEDGER_WRONGIMPLS" ]; then
+      .softhouse/conformance.sh:3659:    warn "conformance: WRONG-IMPLEMENTATION POPULATION $n, PINNED $EXEMPTION_PIN_LEDGER_WRONGIMPLS."
+      .softhouse/conformance.sh:3662:    warn "conformance: move EXEMPTION_PIN_LEDGER_WRONGIMPLS in .softhouse/conformance.sh, deliberately."
+      .softhouse/conformance.sh:3952:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'parity vectors          PASS 0' \
+      .softhouse/conformance.sh:3963:  printf '%s\n' "$out8" | LC_ALL=C grep -aE 'self-test fixtures|parity vectors|VERDICT'
+      .softhouse/conformance.sh:4161:  printf '%s' "$out19b" | LC_ALL=C grep -aqE 'parity vectors +PASS [0-9]+ +FAIL 0' || ok19=0
+      .softhouse/conformance.sh:4172:  printf '%s\n' "$out19b" | LC_ALL=C grep -aE 'monthend.reanchor|parity vectors|VERDICT'
+      .softhouse/gates-proposed-answers.md:104:**This invalidates most of the current capture set as parity evidence.** `C-00`, `D-01`, `D-02`, `D-02b`, `D-03`, `D-04`, `D-01-p8` and `D-01-mnt` were capture
+      .softhouse/gates.md:93:vectors for this context. **`A2-15`** — promoting the A2 raw captures into parity vectors — is no longer gated
+      .softhouse/gates.md:98:any change to DEC-2 from here is a fresh `user` gate. ~~**Nothing grades the ledger's money yet**: all 46 passing vectors are `loanschedule`'s and **zero** touch a GL account, a
+      .softhouse/gates.md:977:conformance          exit 0 — 36/36 parity vectors PASS, 4034 cells graded, 72 ungraded
+      .softhouse/gates.md:1309:Today `conformance.sh` reports PASS with **46 parity vectors, 7,884 graded cells**, 0 invariant
+      .softhouse/gates.md:2025:> **46 parity vectors / 7884 cells** (was 43 / 5664), kills **106** money + 7 structural (was 103),
+      .softhouse/gates.md:2256:  gives probe present and `up`, **VERDICT PASS (exit 0), 46 parity vectors, 7884 cells, 0
+      .softhouse/gates.md:2842:  gives probe **present** and `up`, **VERDICT PASS (exit 0), 46 parity vectors, 7884 cells, 0
+      .softhouse/gates.md:3447:(exit 0, 43 parity vectors, 5664 cells), and every G-8 number it wrote came out of the committed
+      .softhouse/gates.md:3918:VERDICT: PASS (exit 0) — 44 parity vectors match the pinned reference oracle, 5711 cells compared.
+      .softhouse/gates.md:4154:**PASS (exit 0) — 46 parity vectors, 7884 cells compared**, `probe = up`.
+      .softhouse/gates.md:4267:LEDGER parity vectors  = 4 == pinned 4
+      .softhouse/gates.md:4433:**`VERDICT: PASS (exit 0)` — 46 parity vectors, 7884 cells.** Fail-open census **976** tracked `.sh`/`.py`,
+      .softhouse/nonnegotiable-guard-audit.md:102:| Z-2 | "…**two** time zones — `Asia/Ulaanbaatar` and `Asia/Hovd`" | — | **ABSENT** (the other half) | `"America/New_York"` in a graded vector → **exit 0, V
+      .softhouse/nonnegotiable-guard-audit.md:200:  rather than parity vectors.
+      .softhouse/nonnegotiable-guard-audit.md:283:`bash .softhouse/conformance.sh` → **exit 0**, *"VERDICT: PASS (exit 0) — 42 parity vectors match the
+      .softhouse/nonnegotiable-guard-audit.md:339:→ **exit 0**, *"VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576
+      .softhouse/obligations.md:69:| **T93** | `vectors/README.md:607` said "all **36** promoted parity vectors". | **FIXED inline this fire** — and the substantive claim re-verified mechanically over the w
+      .softhouse/patterns.md:300:  violation, no scope breach. Corpus **32 → 36 parity vectors, 2,495 → 4,034 graded cells**;
+      .softhouse/patterns.md:334:  conformance **exit 0, 36 parity vectors, 4,034 cells, 0 inadmissible, 0 harness errors** ·
+      .softhouse/patterns.md:619:that mattered most — *zero of 42 promoted parity vectors depend on the unhardened gate*. T99's was seven commits
+      .softhouse/patterns.md:935:- **Vectors added / contexts at parity**: none added. 43 parity vectors, 5664 cells, unchanged and
+      .softhouse/patterns.md:1293:| 3 | `parity vectors PASS 11` inside a proof | T57 moved the corpus to 13 |
+      .softhouse/patterns.md:1444:  no scope breach. `main` moved **42 → 43 parity vectors**, and the 43rd arrived **with** its review.
+      .softhouse/patterns.md:1811:It was caught only by reading the intermediate counts: `parity vectors PASS 0`, `cells compared 0`. The real
+      .softhouse/patterns.md:1812:verification shows `parity vectors PASS 43`, `contract-refusal PASS 4`, and the planted rows listed as
+      .softhouse/patterns.md:2003:- **Vectors added / contexts at parity**: **43 parity vectors → 46**, 5664 → **7884 cells**, kills 103 → **106 money** + 7 structural, **4 invariant assertions EXEMPTED BY 
+      .softhouse/patterns.md:2023:- **Verifier** (driver-run on merged `main`, re-run not quoted): conformance **PASS exit 0**, probe **present** and `up`, **46 parity vectors / 7884 cells**, contract-refus
+      .softhouse/patterns.md:2053:- **Verifier** (driver-run on merged `main`, not quoted from any worker): conformance **PASS exit 0**, probe line **present** and `up`, **43 parity vectors / 5664 cells**, 
+      .softhouse/patterns.md:2372:the databases and **omitted `fineract_gerege`**, the tenant database the six ledger parity vectors were
+      .softhouse/program.json:88:      "notes": "Planned. Everything else depends on the harness existing. || cloud fire 20260817-2000: BLOCKED at gate G-1 (ratify DEC-1), which is NOT YET ANSWERABLE - the 
+      .softhouse/program.json:92:        "conformance": "VERDICT PASS exit 0, probe = up, 42 parity vectors, 5576 cells graded / 84 ungraded, 0 invariant violations, 0 invariant assertions NOT RUN, 0 refuse
+      .softhouse/program.json:140:      "notes": "12,752 LOC in fineract-accounting + 11,224 in provider/accounting [VERIFIED: measured]. Split by run if a single plan exceeds worker context: journal postin
+      .softhouse/program.json:302:      "notes": "3,694 + 1,926 + 2,262 + 947 + 1,089 + 415 [VERIFIED: measured]. Mongolian VAT / e-Barimt is additive, not a Fineract port — spec it, do not invent parity ve
+      .softhouse/program.json:642:      "decision": "ACCEPTED. Evidence all driver-re-run and separately reproduced by the independent verifier T13: conformance exit 0 with 36/36 parity vectors and 4034 cel
+      .softhouse/program.json:701:      "rejection_grade_finding": "DEC-2 asserts in three places (banner fact 2, section 8.1 fact 2, A2-17's new section 4.10 text) that 'no ledger vector CAN exist'. FALSE.
+      .softhouse/program.json:1046:      "headline": "FIRST CONFORMANCE PASS IN THE PROGRAM - and the fire was then spent proving how little it meant. conformance.sh VERDICT: PASS (exit 0), 13 parity vector
+      .softhouse/program.json:1059:        "D-6 THIRD RECURRENCE found post-merge by the driver: --prove was 18/20, both failures stale proofs, one a hard-coded 'parity vectors PASS 11' that T57 moved to 13
+      .softhouse/program.json:1068:      "final_state": "conformance.sh VERDICT: PASS (exit 0) - 29 parity vectors, 2354 graded cells, 58 ungraded, 0 inadmissible, 0 harness errors, 6/6 invariants, --prove 
+      .softhouse/program.json:1158:      "conformance": "exit 0 - 36 parity vectors, 4034 graded cells, --prove 21/21, --self-test 0",
+      .softhouse/program.json:1275:      "corpus": "42 parity vectors / 5576 graded cells — unchanged this fire (no capture task promoted; T83 and T80 both promoted nothing by design)",
+      .softhouse/program.json:1310:      "uat": "PASS -- build/vet/test 0/0/0, conformance VERDICT PASS exit 0 with probe = up, 42 parity vectors, 5576 cells, 0 invariant violations",
+      .softhouse/program.json:1471:      "uat": "FINAL on merged main: conformance exit 0, probe line PRESENT reading up, 43 parity vectors / 5664 cells, invariant violations 0; go build+vet+test exit 0; DE
+      .softhouse/program.json:1528:      "uat": "PASS on real merged main -- conformance exit 0, probe line PRINTED reading up, 43 parity vectors / 5664 cells, 4 contract-refusal, 1 selftest, 0 inadmissible
+      .softhouse/program.json:1625:      "uat": "PASS -- conformance exit 0, probe present and up, 43 parity vectors / 5664 cells, contract-refusal 4, self-test 1, refused 0, inadmissible 0, harness errors 
+      .softhouse/program.json:1643:      "uat": "PASS exit 0 — 46 parity vectors / 7884 cells; --prove 23/23; build/vet/test clean; gofmt -l exactly contract.go (G-3)",
+      .softhouse/program.json:1704:      "uat": "PASS exit 0, 46 parity vectors / 7884 cells, probe PRESENT and up, driver-re-verified after every merge",
+      .softhouse/program.json:1766:      "headline": "A2-15 landed the FIRST ledger parity vectors; T219 tripled the G-8 residual record at a term already declared measured; T234 audited 94 sweep instrument
+      .softhouse/program.json:1772:        "The brief's claim 'promoting a vector WILL move EXEMPTION_PIN_*' is FALSE — A2-15 falsified it by building the real exclusion.",
+      .softhouse/program.json:2024:      "bar": "PASS exit 0, probe line PRESENT and reads up, 46 parity vectors / 7884 cells, /tmp residue ABSENT",
+      .softhouse/program.json:2065:      "bar_at_exit": "PASS exit 0, probe line PRESENT and reading up, 46 parity vectors / 7884 cells, census == pinned (18, now DERIVED), frontier == pinned (11)",
+      .softhouse/program.json:2141:      "uat": "PASS - main at exit: conformance exit 0, probe line PRESENT then 'up' (P-84 order), 46 parity vectors PASS / 0 FAIL, 7884 cells, LDG-05 PASS, 11/11 wrong led
+      .softhouse/program.json:2206:      "uat": "PASS - exit 0, probe PRESENT and up, 46 parity vectors / 7884 cells, 13/13 wrong impls dead, frontier 109 == pinned",
+      .softhouse/program.json:2218:      "bar_at_open": "exit 0, probe PRESENT reading up, 46 parity vectors / 7884 cells / 0 FAIL / 0 inadmissible",
+      .softhouse/program.json:2219:      "bar_at_close": "exit 0, probe PRESENT reading up, 46 parity vectors / 7884 cells / 0 FAIL / 0 inadmissible",
+      .softhouse/reference-oracle.md:76:ledger parity vectors were captured from. Re-derived live, evidence in
+      .softhouse/reference-oracle.md:230:| local `20260822-080001` | **yes** | Driver re-asserted the DATABASE NON-NEGOTIABLE against the running stack rather than inheriting the wrapper's probe: `actuator/
+      .softhouse/reference-oracle.md:305:**Two Path B gaps that must close before it yields parity vectors:** (1) the tenant timezone is
+      .softhouse/reference-oracle.md:308:Path B captures are discrimination evidence, not production-settings parity vectors.
+      .softhouse/state/fire-20260819-170001.STATE.json:9:  "step": "not started; T7's schema landed this fire and .softhouse/vectors/ still holds ZERO parity vectors",
+      .softhouse/state/fire-20260819-170001.STATE.json:21:    "Passes 1-2 ran at precision 12/8 and may NEVER be promoted as parity vectors. Pass 3's P-CAL is calibration only.",
+      .softhouse/state/fire-20260820-230001.STATE.json:30:  "invariants_at_dispatch": "main green: VERDICT PASS exit 0, 42 parity vectors, 5576 cells, 0 invariant violations, 0 assertions NOT RUN; sh confor
+      .softhouse/state/fire-20260821-080001.STATE.json:9:  "baseline_verified_by_driver_on_main": "bash .softhouse/conformance.sh -> VERDICT PASS exit 0, 42 parity vectors, 4 contract-refusal, 1 self-test, 
+      .softhouse/state/run1-tier0.STATE.json:7:  "step": "Tier-0 hardening; corpus stable at 42 parity vectors / 5576 graded cells",
+      .softhouse/state/run1-tier0.STATE.json:26:  "verification_at_exit": "conformance PASS exit 0, 42 parity vectors, 5576 cells, 0 invariant violations, 0 NOT RUN; build/vet/test 0/0/0; gofmt -l = contrac
+      .softhouse/tasks.json:174:      "note": "local fire 20260822-000013: DONE on softhouse/T116-familyb-promotion (eed21ee prediction, 3f2a95f promotion), merged. G-8 OPTION (a) EXECUTED. THE CORPUS MOVED
+      .softhouse/tasks.json:284:      "note": "Raised by the driver, local fire 20260821-080001, from T136 / T128. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier
+      .softhouse/tasks.json:317:      "note": "Consolidated by the driver from T120+T132+T143, local fire 20260821-054355. Paired reviewer T155. || local fire 20260821-054355: DISPATCHED (wave 2), isolated 
+      .softhouse/tasks.json:348:      "note": "Raised by the driver from T153's non-blocking findings, local fire 20260821-054355. || local fire 20260821-134344: DISPATCHED (wave 1), isolated worktree softh
+      .softhouse/tasks.json:421:      "description": "RAISED BY T156 as follow-up F-3 and RE-DERIVED BY THE DRIVER before being written as a task (P-42). CONFIRMED at nexus/internal/apps/loanschedule/confor
+      .softhouse/tasks.json:515:      "note": "DONE + MERGED 400425c, fire 20260821-134344. T154's F-3 IS WRONG AND THE DEFECT IS LARGER THAN THE TASK FRAMED IT. FindRepoRoot('.') at main.go:38 set opts.Rep
+      .softhouse/tasks.json:1025:      "description": "T186's FU-2, the biggest coverage gap its ruling found. T173's wire-float guard inspects request bodies under req/ dirs and the adversarial rigs, but t
+      .softhouse/tasks.json:1040:      "note": "local fire 20260822-000013: DONE on softhouse/T193-request-body-guard (5627f7d), merged. STATUS CORRECTED AT EXIT -- the driver merged it and left it in_progr
+      .softhouse/tasks.json:1124:      "note": "MERGED, fire 20260821-134344. VERDICT APPROVED, with five non-blocking findings and ONE REFUTATION OF THE DRIVER'S OWN BRIEF. Q1 THE FLOOR IS GENUINELY DERIVE
+      .softhouse/tasks.json:1166:      "note": "MERGED, fire 20260821-134344. VERDICT MICRO-FIX -- and it found a LIVE GATE BYPASS that T165's fix does not close. RED REPRODUCED, ALL THREE LEGS, from rebuil
+      .softhouse/tasks.json:1208:      "note": "DONE + MERGED 54b15bb, fire 20260822-080001. Scope clean on the THREE-DOT diff (conformance.sh + own handoff only; the two-dot diff showed phantom reverts of 
+      .softhouse/tasks.json:1234:      "title": "THREE unguarded truncating rewriters of the GOLDEN VECTOR STORE — thirteen live parity vectors, and T196's repair scope was wrong about the fourth",
+      .softhouse/tasks.json:1251:      "note": "DONE + MERGED 28f8fd9, fire 20260822-080001. IT ENLARGED THE EXPOSURE THE BRIEF GAVE IT, which is the outcome a scope guard is supposed to permit: the brief s
+      .softhouse/tasks.json:1291:      "description": "T203's F-2, and it is the ROOT CAUSE of T203's F-1 rather than a separate defect: targets computed as os.path.join(ROOT, ...) with a RUNTIME ROOT resol
+      .softhouse/tasks.json:1513:      "note": "raised by the driver, fire 20260822-080001, from T168's own P-40 skip accounting || DISPATCHED local fire 20260822-060013, wave 1, fork point 8611e754 (the DI
+      .softhouse/tasks.json:1568:      "description": "T116's third follow-up. The driver reconciled the 'Prepared and NOT promoted' block on merging T116 (family B is now PROMOTED; 46 vectors), but T116 al
+      .softhouse/tasks.json:1622:      "description": "T220's single finding against T116, raised while APPROVING it. The kill counts have corpus-wide tripwires; THE EXEMPTION COUNT DOES NOT. admit.go check
+      .softhouse/tasks.json:1656:      "description": "FOUND BY A2-28 while sweeping DEC-2 for the retracted claim, and correctly NOT fixed by it (harness file, outside an ADR-only scope). DRIVER-CONFIRMED 
+      .softhouse/tasks.json:1846:      "note": "local fire 20260822-140002: DONE + MERGED (7255267). T222's F-4 IS CLOSED AND ENFORCED, NOT DOCUMENTED. The harness now MINTS a three-part citation per exempt
+      .softhouse/tasks.json:2011:      "note": "A2-34's F-4/F-5/F-6/F-8. F-4 independently re-derived by the DRIVER against the live PostgreSQL oracle: gl 16 has 16 journal entries, not zero, and is a promo
+      .softhouse/tasks.json:2641:      "note": "raised by local fire 20260821-125942: .softhouse/vectors/ holds ONLY loanschedule/, so A2-8's merged GL port is graded by ZERO parity vectors. The store READM
+      .softhouse/tasks.json:2667:      "description": "Promote the A2 raw captures into PARITY vectors under .softhouse/vectors/<ledger-context>/ and extend the conformance harness to grade a SECOND bounded
+      .softhouse/tasks.json:2683:      "note": "Brief authored by A2-30 (driver task), local fire 20260822-000013, re-derived from A2-26 merged handoff. GATED on G-11. || local fire 20260822-140002: *** UNB
+      .softhouse/tasks.json:2766:      "note": "MERGED, fire 20260822-080001. VERDICT REJECTED on DEC-2 rev 2. IT APPLIED NO MICRO-FIX, DELIBERATELY, so the document the driver holds is exactly what it revi
+      .softhouse/tasks.json:2784:      "description": "A2-19's F1, REPRODUCED INDEPENDENTLY BY THE DRIVER with its own probe vector before this task was written (P-42). Copy ANY loanschedule parity vector i
+      .softhouse/tasks.json:2861:      "description": "SELF-FLAGGED BY A2-22 IN ITS OWN FOLLOW-UPS, which is why this is a review task and not a rejection. A2-22's graded finding was that CounterfactualCove
+      .softhouse/tasks.json:3039:      "title": "INDEPENDENT review of A2-15 — RE-DERIVE the first ledger parity vectors from the ORACLE and the raw captures, never from A2-15's vector files",
+      .softhouse/tasks.json:3201:      "note": "Committed 9da1d87, 5 commits. ROOT CAUSE NAMED: 02-escape-matrix-fix.sh:6 declared C=/tmp/t234_matrix2.txt and created it on line 7 via > \"$C\"; the fail-ope
+      .softhouse/tasks.json:4374:      "description": "THIS IS A STRUCTURAL FINDING OF FIRE 20260827-230001, not a chore. THREE SEPARATE WORKERS built a guard, drove it red and green, and then could not wir
+      .softhouse/tasks.json:4480:      "note": "MERGED at 817d2b53 by fire 20260828-080001. THE MUTANT IS DEAD, both halves measured. BEFORE: ledger-wrong-date-rules-always-refusing passed 5/5 parity and 5/
+      .softhouse/tasks.json:4481:      "description": "NO ORACLE CONTACT IS REQUIRED AND NONE IS PERMITTED. T327 banked every byte with sidecars and a 99-entry manifest\nprecisely so this task needs none. Y
+      .softhouse/tasks.json:5108:      "description": "T352 drove this, it did not argue it: a candidate vector recording the oracle accepting a sub-minor-unit residue -- with EVERY OTHER admission objectio
+      .softhouse/tasks.json:5164:      "description": "T352 and T359 fired probes at the shared reference oracle. A journal entry CANNOT BE DELETED, so the movement is permanent: 4 transactions / 9 legs fro
+      .softhouse/vectors/README.md:71:The store holds **43 promoted parity vectors** (all in `loanschedule/`, all
+      .softhouse/vectors/README.md:567:as its coverage evidence, "N parity vectors" and "M graded cells", are sums over
+      .softhouse/vectors/README.md:569:second name: **43 parity vectors / 5623 graded cells / VERDICT PASS / exit 0**,
+      .softhouse/vectors/README.md:650:not a convenience: **42 of the 43** promoted parity vectors withdraw exactly those two
+      .softhouse/vectors/README.md:789:* **Precision-12/8 captures may never be promoted as parity vectors.** Pass 1
+      .softhouse/vectors/README.md:821:available" — no implementation, unreachable oracle, zero parity vectors, an
+      .softhouse/vectors/capabilities-ledger.json:46:      "evidence": "NOT GRADED BY ANY VECTOR IN THIS STORE. The four parity vectors assert a journal ENTRY read back from the oracle; none of them asserts
+      .softhouse/vectors/loanschedule/P-EMI-36-127704-emi-smoothing-loop.json:18:      "evidence": "Derived at the ratified production MathContext (19, HALF_UP); every OBSERVED value below is transcribed fr
+      .softhouse/vectors/loanschedule/P-EMI-6-1M014632-emi-smoothing-loop.json:18:      "evidence": "Derived at the ratified production MathContext (19, HALF_UP); every OBSERVED value below is transcribed f
+      .softhouse/vectors/loanschedule/T61-HE-A-tie-quantization-1M000541pt50-6x21pt6pct.json:16:      "description": "Applies HALF_EVEN where the reference oracle applies the TENANT's rounding mode at the c
+      .softhouse/vectors/loanschedule/T61-HE-B-tie-quantization-1M000052pt50-6x21pt6pct.json:16:      "description": "Applies HALF_EVEN where the reference oracle applies the TENANT's rounding mode at the c
+      .softhouse/vectors/loanschedule/T61-HE-C-tie-quantization-1M000089pt50-6x21pt6pct.json:16:      "description": "Applies HALF_EVEN where the reference oracle applies the TENANT's rounding mode at the c
+
+END OF SWEEP. A selector not listed above was not searched, and this file is the
+record of that. Add a selector and re-run rather than asserting absence.

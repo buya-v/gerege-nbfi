@@ -896,6 +896,12 @@ commit `426a23544`]. Confirmed by observation at both layers — 0 rows in Postg
 
 ### The residue that did NOT restore — this is the part that matters
 
+> **⚠️ The `60 / 64` and `351 → 352` figures in the next two tables are a record of WHAT T287
+> MEASURED, not of what the ledger holds today.** They are correct as history and are deliberately
+> left unedited — see *"§ The standing oracle MOVED"* at the end of this file, and never transcribe
+> a count out of a dated table. **Derive it:**
+> `bash .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh`
+
 Identity is not value, and identity does not restore (the T276 lesson, one section of which lives in
 `.softhouse/capture/tierA-a2/ORACLE-STATE-MOVED-BY-T276.md`).
 
@@ -996,6 +1002,11 @@ Asserted by reading `config/docker/env/fineract-postgresql.env`, not assumed:
 
 ### Tenant state at bring-up, against the T287 baseline recorded above
 
+> **⚠️ SUPERSEDED AS A STATEMENT ABOUT TODAY.** This table was true when it was taken and is a
+> valid record of that fire. **The ledger has since moved and can never move back** — see
+> *"§ The standing oracle MOVED"* at the end of this file. Derive, do not read:
+> `bash .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh`
+
 | counter | T287 left it at | observed this fire | moved? |
 |---|---|---|---|
 | `acc_gl_journal_entry` | 60 | **60** | no — the ledger is untouched across the restart |
@@ -1013,3 +1024,128 @@ predates this fire's probes. `[UNVERIFIED]` which fire or command produced it. I
 the append-only, never-restoring behaviour T287 recorded — command ids are consumed and never returned
 — and it is a reminder that **`m_portfolio_command_source` is not a reliable fixture** for any vector
 that pins an absolute id.
+
+---
+
+## The standing oracle MOVED — fire `20260828-140005`, and it can never move back
+
+**Recorded by T363.** Every figure in this section was **re-derived by T363 against the live
+PostgreSQL**, not inherited from the tasks that fired the probes. This section exists because the
+record previously lived only inside the probing tasks' own capture directories, where the next task
+to count something against the live database has no reason to look.
+
+### The one-line answer
+
+**Do not read a count out of this file. Derive it.**
+
+```bash
+bash .softhouse/capture/t363-oracle-baseline/instruments/oracle-state-baseline.sh
+```
+
+Exit **0** = every row above the floor is attributed to a recorded probe. Exit **1** = somebody wrote
+to the shared oracle and did not record it, and the orphaned rows are named. Exit **2** = the database
+was unreachable, which is **not** a statement about the ledger. Exit **3** = you ran it with `sh`.
+If that output and any prose in this repository disagree, **the output is right.**
+
+### What moved, stated as IDENTITIES rather than as counts
+
+A count is true for an instant; an identity on an append-only table is true forever. So:
+
+| what | identity | task |
+|---|---|---|
+| `acc_gl_journal_entry` rows **65–73** — 4 transactions, 9 legs | `a29bca0816a7`, `a29bca9bf813`, `a29bcaa6a41b`, `a29bcb5d6fcf` | **T352** |
+| `acc_gl_journal_entry` rows **74–75** — 1 transaction, 2 legs | `a29bd5eaeb1b` | **T359** |
+| `m_portfolio_command_source` rows **353–359** | idempotency keys `t352-a01-residue-3dp`, `t352-a03-balance-scale`, `t352-a04-overscale`, `t352-a07-usd`, `T359-P01-residue-post`, `T359-P02-residue-post`, `T359-P03-residue-post` | T352, T359 |
+
+The last row before any of it: `acc_gl_journal_entry.id = 64`, `m_portfolio_command_source.id = 352`.
+Those two numbers are the **floor**, they are pinned in
+`.softhouse/capture/t363-oracle-baseline/PROBES.tsv`, and they are the only cardinals in this section
+that cannot rot.
+
+**`a29bcb5d6fcf` is the first non-MNT journal entry ever posted in this tenant** — gl 16 DEBIT /
+gl 21 CREDIT `12.340000` **USD**, accepted HTTP 200. Any claim of the form *"every row in this ledger
+is MNT"* was true before it and is false after it [VERIFIED: T363, live, `SELECT DISTINCT
+currency_code` returns two rows].
+
+### Three corrections to the record the probing tasks left
+
+1. **gl 21 moved `8 → 12 → 13`, not `7 → 12 → 13`.** T352's table inherited its "before" from T242
+   rather than measuring it. Re-derived independently by T363 by excluding the five registered
+   transactions from the live table (legitimate only because the ledger is append-only):
+   `gl 16: 16→21`, `gl 17: 4→5`, `gl 21: 8→13`.
+2. **`m_portfolio_command_source` moved too — `352 → 359` — and neither task's record names it.**
+   Both records name the ledger and the transaction count only. The third counter matters because
+   two committed rigs pin it (below).
+3. **T359's two HTTP 400s did not "move nothing".** They moved no *journal entry*, and they wrote
+   **permanent** `m_portfolio_command_source` rows 357 and 358 at `status = 5` (ERROR)
+   [VERIFIED: live rows; `CommandProcessingResultType.java:31-37` at `426a23544`]. *"A refused write
+   writes nothing"* is true of the **ledger** and false of the **database** — the same fact this file
+   already records under T287, restated because it was forgotten one section later.
+
+**`gl 18` and `gl 22` have never carried a single journal entry and neither probe touched them.**
+That is the pair `capabilities-ledger.json`'s `ledger.accrual.entry` argument actually rests on, so it
+is derived on every run of the instrument rather than asserted here.
+
+---
+
+## POLICY — firing a probe at the SHARED reference oracle
+
+**A probe against the standing instance on `:8443` is IRREVERSIBLE.** A journal entry has no delete
+path; a closure delete leaves its sequence consumed; a *refused* command still burns a command id and
+an idempotency key. Nothing you post to `gerege` can be taken back by any later task, including you.
+
+This policy is **ENGINEERING**, decided under `CLAUDE.md` § *Answering gates* by T363 and recorded
+rather than raised. Buyan may reverse it.
+
+### 1. Prefer, in this order
+
+1. **Read-only.** A `SELECT`, a `GET`, or re-reading a committed capture. Most questions asked of this
+   oracle are answerable this way and the last three fires prove it.
+2. **An absence probe over a difference probe** where one can be built — the T42 rule, already in this
+   file, and it usually needs no write at all.
+3. **A throwaway instance** on another port with no named volume, the shape `t305` and `t327` built.
+   An accepted write that cannot be un-accepted belongs there, not here.
+4. **The standing oracle, last.** Only when the question is about *this tenant's* accumulated state, or
+   when a throwaway would not reproduce the behaviour.
+
+### 2. If you fire one anyway, these are the conditions
+
+- **Proportionality, argued in the handoff.** State what the probe settles that a read could not, and
+  why the number of writes you made is the smallest number that settles it. T359's *"Two rows, three
+  claims. I judge that proportionate and I would not have fired a second"* is the standard.
+- **A distinct `Idempotency-Key` per probe, naming the task** — e.g. `t352-a07-usd`,
+  `T359-P03-residue-post`. This is not hygiene. It is the **only** total attribution link between a
+  command row and the task that fired it, every row in the table has one, and the baseline instrument
+  reads it. A shared or anonymous key makes your write unattributable forever.
+- **Touch no account a promoted vector grades**, if the question can be asked on another account. Three
+  ledger parity vectors read `gl 16`; T352 posted to it anyway, which is why gl 16's count has now been
+  restated three times in eight days.
+- **Never a product retype, a mapping edit, a GL-account edit, a closure, or a business-date change.**
+  Those are not appends; they change how *existing* rows render. A2-26 flipped GL account 2
+  ASSET → INCOME underneath five live mappings and the corpus is still carrying the correction.
+- **No deposit or savings behaviour.** The tenant is an NBFI (ББСБ) — Law on Non-Banking Financial
+  Activities Art. 12.1.3 / 12.1.4.
+
+### 3. What you MUST record, and where — this is the part that was missing
+
+| record | where | why there |
+|---|---|---|
+| **The attribution rows** — one `txn` line per transaction, one `cmd` line per idempotency key | **`.softhouse/capture/t363-oracle-baseline/PROBES.tsv`**, in the same commit as your handoff | **This is the enforceable one.** If you omit it, the next run of `oracle-state-baseline.sh` exits **1** and prints your orphaned rows. The record cannot silently go missing, because its absence is what goes red. |
+| The full narrative — what each probe asked, what it observed, what it does *not* affect | `ORACLE-STATE-MOVED-BY-<TASK>.md` in your own capture directory | The shape T276, T352 and T359 used. They are good documents; keep writing them. |
+| A one-line pointer to that document | your handoff's `## Changes Made` | so a reviewer reading only the handoff learns the oracle moved |
+
+**Do not add a count to this file.** Three separate places in this program have carried a hand-typed
+ledger count and all three went stale within days (`capabilities-ledger.json` twice, this file three
+times, the driver's standing-baseline observation once). Add the attribution row and let the instrument
+derive the count.
+
+### 4. What NOT to do about a stale count someone else wrote
+
+- **Do not retype a count inside an archived capture, transcript or `out/` file.** Those are snapshots
+  of a state the oracle has left; that is what they are *for*. Editing one to agree with today forges a
+  witness.
+- **Correct a count where it is NAMED, never where it is RESTATED** (T248 / T258 / T340). If the same
+  figure appears in a doctrine file and in four transcripts, exactly one of them is the defect.
+- **Do not "re-baseline" a rig by retyping its pin.** See the finding on `t305` / `t327` in
+  `.softhouse/capture/t363-oracle-baseline/CASUALTIES.md` — the pin is not the bug, comparing against a
+  baseline of *unknown age* is.

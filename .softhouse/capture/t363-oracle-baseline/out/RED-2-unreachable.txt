@@ -1,0 +1,9 @@
+ORACLE STATE BASELINE -- derived, 2026-08-28T08:57:21Z
+  container=fineract-db-DOES-NOT-EXIST  database=fineract_gerege  tenant=gerege
+  registry=/Users/buv/gerege-nbfi/.claude/worktrees/agent-ad65dab4e80c74658/.softhouse/capture/t363-oracle-baseline/PROBES.tsv
+  READ-ONLY: every statement below is a SELECT.
+------------------------------------------------------------------------
+UNREACHABLE: could not read the tenant database. No observation was made.
+  psql said: Error response from daemon: No such container: fineract-db-DOES-NOT-EXIST
+VERDICT: UNREACHABLE (exit 2) -- this is NOT a statement about the ledger.
+EXIT=2
