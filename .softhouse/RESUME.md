@@ -75,8 +75,14 @@ whoever receives it.
 
 `G-20` was raised this iteration and says: **a port-or-capture task goes out before any further harness
 repair.** `T388` is that task, dispatched in the same fire that raised the gate rather than recommended for
-the next one. It takes the **first accrual observations in this program** — `ledger.accrual.entry` is
-ENTIRELY UNGRADED and not one journal entry in this tenant has ever arrived through a RECEIVABLE slot.
+the next one. It took the **first accrual observations in this program**.
+
+**TENSE MATTERS HERE AND THIS DRIVER GOT IT WRONG ONCE.** At `T388`'s DISPATCH, `ledger.accrual.entry` was
+ENTIRELY UNGRADED and **not one journal entry in this tenant had ever arrived through a RECEIVABLE slot**.
+`T388` made that false an hour later, which was its purpose. The sentence sat here in the PRESENT tense
+until `T389` caught it — a falsehood written by the driver, in the manifest, *after* dispatching the task
+that would falsify it. Not `T388`'s defect. Recorded rather than quietly fixed, because it is the same
+correct-conclusion / stale-support shape as `G-21`.
 
 `T388`'s grant is `.softhouse/capture/t388-accrual-capture/` **only**: raw observed capture, **no promotion**,
 because `T360` holds `.softhouse/vectors/` this wave. Promotion is a separate follow-on. Its paired reviewer

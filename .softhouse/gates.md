@@ -4620,3 +4620,88 @@ a **priority** call, not a fact:
 > already good enough for gl-accounting and the ratio should invert now — or to get the instrument
 > demonstrably fail-open-free first, accepting that Tier A slips? The driver has assumed the **first** and
 > will act on it from the next wave. Reversing that costs one line here.
+
+---
+
+## G-21 — a RATIFIED DEC-2 carries an evidential cardinal that is now FALSE, and no casualty sweep in this program has ever looked at `docs/`
+
+**Raised by:** the `/softhouse-program` driver, local fire `20260828-140005` chain iteration 3, 2026-08-28.
+**Found by:** `T389`, reviewing `T388`, as its **MAJOR** finding. **Re-derived independently by the driver
+against the live oracle before this gate was written** — see the measurement below.
+**Class:** ENGINEERING. **Blocks:** nothing.
+**Why it is a gate at all:** `CLAUDE.md` — *"a ratified DEC-n still cannot be amended by an agent without
+raising a gate."* This is the gate. The driver has **not** edited `docs/adr/DEC-2-gl-accounting-adapter.md`.
+
+### The claim, and the measurement that falsifies it
+
+`docs/adr/DEC-2-gl-accounting-adapter.md:1061` and `:3004` state, in the I-5 row:
+
+> **60 of the 60 rows in `acc_gl_journal_entry` carry `last_modified_on_utc > created_on_utc`**, clustered at
+> two batch instants (`02:43:48Z`, `02:49:46Z`) that are the **G-12 running-balance recompute**, not the
+> reversal, so the column **discriminates nothing**.
+
+Driver's own query, live PostgreSQL reference oracle, this fire:
+
+```
+total_rows          91
+lastmod_gt_created  60
+lastmod_eq_created  31
+lastmod_null         0
+```
+
+**It is 60 of 91, not 60 of 60.** The cardinal `60` is still right; the *universality* is gone, and with it
+the inference. Thirty-one rows now have `last_modified_on_utc == created_on_utc` — rows that arrived *after*
+the two recompute batches and were never touched by them.
+
+### What this does and does not undermine — state both, because they differ
+
+**DOES NOT undermine I-5's conclusion.** The DEC gives the conclusion a second, independent and stronger
+ground in the same sentence: *"a snapshot never observes a write, so it cannot separate 'flags and adds'
+from 'flags and rewrites' whatever the timestamps say."* That reasoning is untouched by any row count, and
+I-5's NEVER-MUTATES half stays correctly ungraded, refused with `ErrNoDiscriminatingVector`.
+
+**DOES undermine the sub-argument as written.** *"The column discriminates nothing"* was true only because
+every row carried the property. **The column now discriminates 60 from 31.** Anyone reading the row today
+would be reading a false statement about the oracle, and — worse — a false statement offered as the reason
+a specific detection avenue is closed. It is not the reason. The stronger ground is.
+
+**This is the same shape DEC-2 revision 8 already fixed once, one row up.** The I-3 row carries a ⚠ note:
+revisions 3–7 cited line numbers that had gone stale, *"and this row's 'Graded today?' answer was NO and is
+still NO, so no wording sweep over the answer column ever reached the falsehood in its SUPPORTING CITATION."*
+Revision 8's remedy was to delete the line numbers rather than refresh them. **G-21 is that pattern
+recurring in the row below, in a cardinal rather than a line number** — and it recurred because the
+correct-conclusion / stale-support combination is invisible to any sweep that checks conclusions.
+
+### The systemic finding, which matters more than the sentence
+
+**No casualty task in this program has ever swept `docs/`.** Every `ORACLE-STATE-MOVED-BY-*.md` blast-radius
+list — `T276`, `T352`, `T388` — sweeps `.softhouse/`. `T388` declared that boundary honestly and stayed
+inside it. So a ratified architecture decision record can carry a measurement that the oracle has moved out
+from under, indefinitely, and **nothing in the pipeline is looking.**
+
+Note also who broke it: **`T388` did not.** `T352`/`T359` took the table from 60 to 71 in an earlier fire;
+`T388` took it to 91. The pin was already false before this fire began. That is the point — it went
+unnoticed across at least two state moves.
+
+Filed as **`T395`**: extend the casualty sweep to `docs/`, and re-measure every pinned cardinal it finds
+there. It needs no gate and is not blocked by this one.
+
+### What the driver is asking
+
+Under `CLAUDE.md` this is **ENGINEERING**, not RESERVED — no licence fact, no cutover, no regulatory
+sign-off is involved, and reading the database answers it completely. So the driver's recommendation,
+adopted unless Buyan says otherwise:
+
+> **Correct the sentence; do not reopen the decision.** Replace the falsified universality with the measured
+> figure *and its date*, and let the second ground carry the conclusion, exactly as revision 8 did for I-3.
+> Better still, apply revision 8's actual lesson: a cardinal re-measured from a live database does not belong
+> in a ratified document at all unless something re-derives it. **Prefer deleting the sub-argument to
+> refreshing it** — it was never load-bearing.
+
+The driver has **not** made that edit. `T395` will, citing this gate, once Buyan has had the chance to see
+it. A ratified document is not something a driver rewrites in the same hour it finds a typo in the evidence.
+
+### Also flagged by T389, and it is the driver's own error, already corrected
+`.softhouse/RESUME.md:77` asserted *"not one journal entry in this tenant has ever arrived through a
+RECEIVABLE slot"* in the present tense — **written by this driver in the manifest AFTER dispatching T388**,
+and made false by T388 an hour later. Not T388's defect. Corrected in place to name the tense.
