@@ -1,0 +1,24 @@
+=== L29 items 6
+  je=78 gl=41 code=T388-1200 side=DEBIT  amount_text='24000.000000' minor=2400000 manual=False txType=10 glType=ASSET
+  je=79 gl=37 code=T388-4000 side=CREDIT amount_text='24000.000000' minor=2400000 manual=False txType=10 glType=INCOME
+  je=80 gl=38 code=T388-4100 side=CREDIT amount_text='2500.000000' minor=250000 manual=False txType=10 glType=INCOME
+  je=81 gl=42 code=T388-1300 side=DEBIT  amount_text='2500.000000' minor=250000 manual=False txType=10 glType=ASSET
+  je=82 gl=39 code=T388-4200 side=CREDIT amount_text='1200.000000' minor=120000 manual=False txType=10 glType=INCOME
+  je=83 gl=43 code=T388-1400 side=DEBIT  amount_text='1200.000000' minor=120000 manual=False txType=10 glType=ASSET
+  total_debits_minor=2770000 total_credits_minor=2770000 balanced=True
+=== L30 items 6
+  je=84 gl=41 code=T388-1200 side=DEBIT  amount_text='20195.380000' minor=2019538 manual=False txType=10 glType=ASSET
+  je=85 gl=37 code=T388-4000 side=CREDIT amount_text='20195.380000' minor=2019538 manual=False txType=10 glType=INCOME
+  je=86 gl=38 code=T388-4100 side=CREDIT amount_text='2500.000000' minor=250000 manual=False txType=10 glType=INCOME
+  je=87 gl=42 code=T388-1300 side=DEBIT  amount_text='2500.000000' minor=250000 manual=False txType=10 glType=ASSET
+  je=88 gl=39 code=T388-4200 side=CREDIT amount_text='1200.000000' minor=120000 manual=False txType=10 glType=INCOME
+  je=89 gl=43 code=T388-1400 side=DEBIT  amount_text='1200.000000' minor=120000 manual=False txType=10 glType=ASSET
+  total_debits_minor=2389538 total_credits_minor=2389538 balanced=True
+=== L32 items 6
+  je=96 gl=41 code=T388-1200 side=DEBIT  amount_text='12356.340000' minor=1235634 manual=False txType=10 glType=ASSET
+  je=97 gl=37 code=T388-4000 side=CREDIT amount_text='12356.340000' minor=1235634 manual=False txType=10 glType=INCOME
+  je=98 gl=38 code=T388-4100 side=CREDIT amount_text='2500.000000' minor=250000 manual=False txType=10 glType=INCOME
+  je=99 gl=42 code=T388-1300 side=DEBIT  amount_text='2500.000000' minor=250000 manual=False txType=10 glType=ASSET
+  je=100 gl=39 code=T388-4200 side=CREDIT amount_text='1200.000000' minor=120000 manual=False txType=10 glType=INCOME
+  je=101 gl=43 code=T388-1400 side=DEBIT  amount_text='1200.000000' minor=120000 manual=False txType=10 glType=ASSET
+  total_debits_minor=1605634 total_credits_minor=1605634 balanced=True

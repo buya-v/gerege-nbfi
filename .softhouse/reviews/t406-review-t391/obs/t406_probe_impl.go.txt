@@ -1,0 +1,32 @@
+package conformance
+
+// T406 REVIEW PROBE — NOT FOR MERGE, and it lives only in a scratch worktree.
+//
+// A poster that resolves an accounting-path leg by taking the FIRST row of the
+// product's mapping table instead of KEYING it by the leg's slot code. It exists
+// only to answer the reviewer's question "is expect.legs[].gl_account_id
+// actually an OUTPUT, or is that claim merely asserted?" — it is the exact
+// mis-keying admit.go's own comment says would "fail as a graded cell
+// difference".
+type t406MappingFirstRowPoster struct{}
+
+func (t406MappingFirstRowPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	if len(req.ProductMappings) == 0 {
+		return GoPoster{}.PostEntry(req)
+	}
+	r := req
+	first := req.ProductMappings[0]
+	rows := make([]ProductMapping, 0, len(req.ProductMappings))
+	for _, m := range req.ProductMappings {
+		rows = append(rows, ProductMapping{SlotCode: m.SlotCode, GLAccountID: first.GLAccountID})
+	}
+	r.ProductMappings = rows
+	return GoPoster{}.PostEntry(r)
+}
+
+func init() {
+	RegisterWrong("t406-probe-mapping-first-row",
+		"T406 REVIEW PROBE, NOT FOR MERGE: resolves every accounting-path leg to the FIRST mapping "+
+			"row's account instead of keying the table by the leg's slot code",
+		t406MappingFirstRowPoster{})
+}

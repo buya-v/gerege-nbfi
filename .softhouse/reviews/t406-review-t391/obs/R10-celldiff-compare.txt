@@ -1,0 +1,14 @@
+IDENTICAL  (3 reason lines)  ledger-wrong-accounting-closed-echoes-transaction-date
+IDENTICAL  (7 reason lines)  ledger-wrong-closure-boundary-exclusive
+IDENTICAL  (27 reason lines)  ledger-wrong-code-ignored
+IDENTICAL  (4 reason lines)  ledger-wrong-date-rules-always-refusing
+IDENTICAL  (7 reason lines)  ledger-wrong-future-date-ignored
+IDENTICAL  (3 reason lines)  ledger-wrong-header-refusing
+IDENTICAL  (6 reason lines)  ledger-wrong-manual-permission-ignored
+IDENTICAL  (16 reason lines)  ledger-wrong-netting-totals
+IDENTICAL  (3 reason lines)  ledger-wrong-openingbalance-always-refusing
+IDENTICAL  (13 reason lines)  ledger-wrong-openingbalance-no-contra
+IDENTICAL  (4 reason lines)  ledger-wrong-openingbalance-posted-entries-ignored
+IDENTICAL  (4 reason lines)  ledger-wrong-residue-rounding
+IDENTICAL  (6 reason lines)  ledger-wrong-split-drift
+IDENTICAL  (44 reason lines)  ledger-wrong-truncating

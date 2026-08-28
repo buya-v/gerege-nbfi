@@ -1,0 +1,25 @@
+exit=1
+LDG-01-manual-je-3leg-minor-units parity FAIL
+LDG-02-repayment-split-4leg-minor-units parity FAIL
+LDG-03-overpayment-4leg-minor-units parity FAIL
+LDG-04-header-account-accepted parity FAIL
+LDG-05-openingbalance-accepted-empty-ledger parity FAIL
+LDG-06-postclosure-entry-accepted-one-day-a... parity FAIL
+LDG-07-entry-on-the-business-date-accepted parity FAIL
+LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+LDG-ACC-02-accrual-six-slots-minor-unit-res... parity FAIL
+LDG-ACC-03-accrual-six-slots-scheduled-job parity FAIL
+LDG-DIV-01-oracle-accepts-sub-minor-unit-re... divergence PASS
+LDG-REFUSE-01-unbalanced-by-one-minor-unit oracle-refusal PASS
+LDG-REFUSE-02-manual-adjustments-not-permitted oracle-refusal PASS
+LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal PASS
+LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal PASS
+LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal PASS
+LDG-REFUSE-06-preclosure-entry-before-closi... oracle-refusal PASS
+--- cell diffs ---
+--- tallies ---
+ledger parity PASS 1 FAIL 9
+ledger inadmissible 0
+ledger harness errors 0
+A DIVERGENCE IS NOT A PARITY PASS, and it is counted NOWHERE in `ledger parity PASS`.
+ACCEPTED. `ledger parity PASS n` still means exactly n vectors on which this port

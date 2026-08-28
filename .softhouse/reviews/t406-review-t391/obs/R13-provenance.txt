@@ -1,0 +1,27 @@
+=== 1. provenance digests ===
+  LDG-ACC-01-acc T391-A01-je-L29.json                                       MATCH
+  LDG-ACC-01-acc T391-A01-je-L29.http                                       MATCH
+  LDG-ACC-02-acc T391-A02-je-L30.json                                       MATCH
+  LDG-ACC-02-acc T391-A02-je-L30.http                                       MATCH
+  LDG-ACC-03-acc T391-A04-je-L32.json                                       MATCH
+  LDG-ACC-03-acc T391-A04-je-L32.http                                       MATCH
+
+=== 2. rig MANIFEST.sha256 ===
+  files in manifest: 82
+  FAILED lines: 0
+
+=== 3. cited capture bodies vs T406's OWN live fetch, value by value ===
+  T391-A01-je-L29.json       graded projection identical to T406 live fetch: True
+  T391-A02-je-L30.json       graded projection identical to T406 live fetch: True
+  T391-A04-je-L32.json       graded projection identical to T406 live fetch: True
+
+=== 4. TOKEN-BOUNDED occurrence of every amount token in its cited artefact ===
+  LDG-ACC-01-acc 1200.000000    bare_substring=True  token_bounded=True
+  LDG-ACC-01-acc 24000.000000   bare_substring=True  token_bounded=True
+  LDG-ACC-01-acc 2500.000000    bare_substring=True  token_bounded=True
+  LDG-ACC-02-acc 1200.000000    bare_substring=True  token_bounded=True
+  LDG-ACC-02-acc 20195.380000   bare_substring=True  token_bounded=True
+  LDG-ACC-02-acc 2500.000000    bare_substring=True  token_bounded=True
+  LDG-ACC-03-acc 1200.000000    bare_substring=True  token_bounded=True
+  LDG-ACC-03-acc 12356.340000   bare_substring=True  token_bounded=True
+  LDG-ACC-03-acc 2500.000000    bare_substring=True  token_bounded=True

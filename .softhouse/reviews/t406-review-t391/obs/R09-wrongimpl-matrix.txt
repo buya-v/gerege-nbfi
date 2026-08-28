@@ -1,0 +1,109 @@
+MAIN wrong impls: 14
+T391 wrong impls: 15
+NEW on T391:
+  + ledger-wrong-slot-family-blind
+REMOVED on T391:
+
+=== per-implementation SIGNATURE DIFF (main -> T391) ===
+--- ledger-wrong-accounting-closed-echoes-transaction-date
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity PASS
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity PASS
+    -ledger parity PASS 7 FAIL 0
+    +ledger parity PASS 10 FAIL 0
+--- ledger-wrong-closure-boundary-exclusive
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity PASS
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity PASS
+    -ledger parity PASS 7 FAIL 0
+    +ledger parity PASS 10 FAIL 0
+--- ledger-wrong-code-ignored
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity FAIL
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity FAIL
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity FAIL
+    +legs[0].gl_account_code: want "T388-1200", got ""
+    +legs[0].gl_account_code: want "T388-1200", got ""
+    +legs[0].gl_account_code: want "T388-1200", got ""
+    +legs[1].gl_account_code: want "T388-4000", got ""
+    +legs[1].gl_account_code: want "T388-4000", got ""
+    +legs[1].gl_account_code: want "T388-4000", got ""
+    +legs[2].gl_account_code: want "T388-4100", got ""
+    +legs[2].gl_account_code: want "T388-4100", got ""
+    +legs[2].gl_account_code: want "T388-4100", got ""
+    +legs[3].gl_account_code: want "T388-1300", got ""
+    +legs[3].gl_account_code: want "T388-1300", got ""
+    +legs[3].gl_account_code: want "T388-1300", got ""
+    +legs[4].gl_account_code: want "T388-4200", got ""
+    +legs[4].gl_account_code: want "T388-4200", got ""
+    +legs[4].gl_account_code: want "T388-4200", got ""
+    +legs[5].gl_account_code: want "T388-1400", got ""
+    +legs[5].gl_account_code: want "T388-1400", got ""
+    +legs[5].gl_account_code: want "T388-1400", got ""
+    -ledger parity PASS 0 FAIL 7
+    +ledger parity PASS 0 FAIL 10
+--- ledger-wrong-date-rules-always-refusing
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity PASS
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity PASS
+    -ledger parity PASS 5 FAIL 2
+    +ledger parity PASS 8 FAIL 2
+--- ledger-wrong-future-date-ignored
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity PASS
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity PASS
+    -ledger parity PASS 7 FAIL 0
+    +ledger parity PASS 10 FAIL 0
+--- ledger-wrong-header-refusing
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity PASS
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity PASS
+    -ledger parity PASS 6 FAIL 1
+    +ledger parity PASS 9 FAIL 1
+--- ledger-wrong-manual-permission-ignored
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity PASS
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity PASS
+    -ledger parity PASS 7 FAIL 0
+    +ledger parity PASS 10 FAIL 0
+--- ledger-wrong-netting-totals
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity FAIL
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity FAIL
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity FAIL
+    -ledger parity PASS 0 FAIL 7
+    +ledger parity PASS 0 FAIL 10
+--- ledger-wrong-openingbalance-always-refusing
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity PASS
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity PASS
+    -ledger parity PASS 6 FAIL 1
+    +ledger parity PASS 9 FAIL 1
+--- ledger-wrong-openingbalance-no-contra
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity PASS
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity PASS
+    -ledger parity PASS 6 FAIL 1
+    +ledger parity PASS 9 FAIL 1
+--- ledger-wrong-openingbalance-posted-entries-ignored
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity PASS
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity PASS
+    -ledger parity PASS 7 FAIL 0
+    +ledger parity PASS 10 FAIL 0
+--- ledger-wrong-residue-rounding
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity PASS
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity PASS
+    -ledger parity PASS 7 FAIL 1
+    +ledger parity PASS 10 FAIL 1
+--- ledger-wrong-split-drift
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity PASS
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity PASS
+    -ledger parity PASS 5 FAIL 2
+    +ledger parity PASS 8 FAIL 2
+--- ledger-wrong-truncating
+    +LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity PASS
+    +LDG-ACC-02-accrual-six-slots-minor-unit-res... parity FAIL
+    +LDG-ACC-03-accrual-six-slots-scheduled-job parity FAIL
+    -ledger parity PASS 0 FAIL 7
+    +ledger parity PASS 1 FAIL 9
