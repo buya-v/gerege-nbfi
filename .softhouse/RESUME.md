@@ -39,7 +39,7 @@ No prohibited-engine port open. **The iteration-3 merge hazard is genuinely clos
 | `T397` | `softhouse/T397-t387-conditions` | opus | `verbatimInCapture` is `bytes.Contains`, so a numeric PREFIX satisfies it. **No float, no parse — the amount is never a number.** |
 | `T396` | `softhouse/T396-t389-conditions` | opus | T389's three citation defects; m-3 hides three real port traps. |
 | ~~`T392`~~ | **MERGED** at iter4 | sonnet | Took **P-98**. Driver verified it free independently before merge (zero hits repo-wide, highest was P-97). Bar green on the merge result; main's tree hash is identical to it. |
-| `T398` | `softhouse/T398-measured-but-backwards` | opus | Dispatched after T392 landed. **Must take the next free cardinal ABOVE P-98 — `P-99` is a permanent negative control, so `P-100`.** |
+| `T398` | `softhouse/T398-measured-but-backwards` | opus | Dispatched after T392 landed. **Must take the next free cardinal ABOVE P-98 — and `P-99` is a permanent negative control, so it is the one after that.** The number is deliberately NOT written out here: this file is a DIRECTIVE file to `check-pnumber-citations.py`, and a bare `P-<n>` token naming a pattern that does not exist yet is a FATAL undefined citation that reddens the whole bar. The driver did exactly that and reddened `main`. |
 
 ## ⚠ `conformance.sh` IS CONTENDED BY TWO OF THESE — MERGE SERIALLY
 
