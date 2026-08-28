@@ -213,6 +213,88 @@ driven, and can be lifted into `drive-red-t375.sh` unchanged.
 
 ---
 
+## 3. THE P-22 ARM AND THE HONESTY OF THE EVIDENCE — ALL THREE CHECKS PASS
+
+### 3.1 CAN ARM 32 FAIL? **YES — DRIVEN, NOT READ.**
+
+An arm added to carry a P-22 burden that cannot itself fail is the same defect one level up.
+So I broke the thing arm 32 guards and watched it go red. Two one-arm copies of T375's own
+drive script, differing by **exactly the second of its two reverts**
+[`arm32-HONEST.sh.txt`, `arm32-SABOTAGED.sh.txt`, `evidence/16-arm-G-and-CAN-ARM-32-FAIL.txt`]:
+
+    --- 1. arm 32 EXACTLY AS T375 SHIPS IT ---
+    T375-32-REVERT-BOTH-selfreference-tests-HOLE-REOPENS  exit=0 (want 0) probe=PRESENT (want PRESENT) marker=YES  >>> PASS
+
+    --- 2. arm 32 with ONE of its two reverts REMOVED, so the hole does NOT reopen ---
+    T375-32-REVERT-BOTH-selfreference-tests-HOLE-REOPENS  exit=2 (want 0) probe=ABSENT  (want PRESENT) marker=NO   >>> FAIL
+
+**It goes red on all three columns at once** — exit, probe presence and marker. Arm 32 is a
+real control: it distinguishes "the hole reopened" from "the hole stayed shut", which is
+precisely what arm 08 had stopped being able to do. **The P-22 burden was genuinely MOVED and
+not dropped.**
+
+### 3.2 IS THE COMMITTED FAILING TRANSCRIPT UNEDITED? **YES.**
+
+`evidence/60-full-drive-PARTIAL-arm08-FAILED.txt` on T375's branch:
+
+* it contains **exactly `40` lines reading `>>> PASS` and `1` reading `>>> FAIL`**, which is
+  the count T375 claims, counted by me and not read off its prose;
+* it **stops mid-drive at `T375-12`**, with no closing summary — a killed process, not a
+  curated excerpt;
+* **the decisive tell:** the failing arm in it is named
+  `T375-08-REVERT-fix-DOTSLASH-is-ACCEPTED-again`. **That name no longer exists anywhere in
+  the drive script**, which now calls it
+  `T375-08-REVERT-pass1-compare-ALONE-pass2-blob-test-CATCHES-it`. An edited transcript would
+  have been harmonised with the retarget; this one carries the pre-retarget name, the
+  pre-retarget expectation (`want 0`, `want PRESENT`) and the failure. **It is the artefact of
+  the run that produced the finding.**
+* its embedded census figures are internally consistent with an older commit
+  (`corpus=1344`, `NAMESPACE-CENSUS: dirs=173`) rather than with today's tree — a forger
+  working backwards from the current bar would have had to reproduce those too.
+
+### 3.3 DOES ARM 08's RETARGET DESCRIBE WHAT IT NOW MEASURES? **YES.**
+
+The mutation reverts pass 1's compare **only** and plants the `./`-spelled self-certification.
+Re-derived from the source, then confirmed by the drive: with pass 1's compare reverted, the
+raw string test `"./M" = "M"` is false and is skipped — but the witness and the member are the
+**same tracked path**, so `self_blob` **is** `member_blob` and pass 2's blob test refuses with
+`BYTE-IDENTICAL TO THIS MEMBER`. The arm's name
+(`REVERT-pass1-compare-ALONE-pass2-blob-test-CATCHES-it`), its expectation (`exit 2`, probe
+`ABSENT`) and its marker (`BYTE-IDENTICAL TO THIS MEMBER`) all describe exactly that.
+**The retarget is accurate and it is not an arm rewritten to agree with the code** — the arm
+that *could* still fail was added beside it rather than instead of it.
+
+**T375's own subsuming argument is also correct as stated:** a witness that RESOLVES to the
+member has the member's blob whatever spelling was typed, so pass 2's blob test dominates pass
+1's compare on every spelling. Keeping both for the better refusal message is a defensible
+call, and it costs one string compare.
+
+---
+
+## 4. NO REFUSAL PATH WAS DELETED — COUNTED INDEPENDENTLY
+
+[VERIFIED: my own `grep -c` on three blobs.]
+
+| | current `main` | T375 pass-1 blob `2422adc9` | T375 branch tip |
+|---|---|---|---|
+| `bad=1` | 18 | 20 | **23** |
+| `return 1` | 82 | 84 | **84** |
+| `EXIT_UNUSABLE` | 23 | 23 | **23** |
+| `warn "` | 335 | 367 | **405** |
+| `say "` | 124 | 139 | **139** |
+
+**The load-bearing claim holds: nothing that refuses was removed.** Every count is flat or up.
+
+**MINOR — F-T384-2, documentation only.** T375's §6 table restates two of these five as
+`warn "` **366 → 396** and `say "` **137 → 137**. Neither reproduces with `grep -c 'warn "'` /
+`grep -c 'say "'` on the two blobs it names; I measure **367 → 405** and **139 → 139**. It is
+possible a different predicate was used and not written down. **It changes no conclusion** —
+the direction and the "nothing removed" claim are both right — but it is P-80 rot inside the
+handoff of the task whose entire subject is P-80 rot, and the honest fix is the same one T375
+applied to the guard's own comments: **delete the retyped pair and cite the command.**
+
+---
+
 ## CONDITIONS
 
 *(none recorded yet)*
