@@ -1,0 +1,31 @@
+=== T383 · the F-T380-1 FAIL-OPEN, reproduced against the SHIPPED file (sha256 dbb18b7b8003…) ===
+=== case m03: a real FAILING summary followed by a clean-looking one. tail -1 prefers the impostor.
+
+82:[19:30:46] lockselftest| ROWS=45 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0
+83:[19:30:46] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+84:[19:30:46] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/tmp/t383-drive/m03.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisfied by an empty one.
+85:[19:30:46] probe only — exiting without taking the lock or invoking the driver
+
+=== case m05: TWO IDENTICAL clean summaries — no line is wrong, yet the wiring cannot attribute either.
+summary lines in log: 2
+82:[19:31:17] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+83:[19:31:17] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+84:[19:31:17] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/tmp/t383-drive/m05.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisfied by an empty one.
+85:[19:31:17] probe only — exiting without taking the lock or invoking the driver
+
+=== case m07: a summary that is DATA inside a quoted string, printed before the real one.
+13:[19:32:04] lockselftest| ROWS=99 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+83:[19:32:05] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+84:[19:32:05] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/tmp/t383-drive/m07.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisfied by an empty one.
+85:[19:32:05] probe only — exiting without taking the lock or invoking the driver
+
+=== case m08: a summary on STDERR. The wiring captures 2>&1, so fd 2 is in the population.
+82:[19:32:20] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+83:[19:32:20] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+84:[19:32:20] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/tmp/t383-drive/m08.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisfied by an empty one.
+85:[19:32:20] probe only — exiting without taking the lock or invoking the driver
+
+=== case m04: the MIRROR (clean first, failing second) — why head -1 is not the fix.
+82:[19:31:01] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+83:[19:31:01] lockselftest| ROWS=45 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0
+84:[19:31:01] FATAL: the lock-reader self-test FAILED (rc=0, FAIL_OPEN=1, FAIL_SHUT=0, over 45 of 45 declared rows). The thresholds validated at startup, so this is the READERS. A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P-85); a FAIL-SHUT row means a reclaimable lock cannot be reclaimed. Either way this wrapper must not decide a lock today. Refusing to start.

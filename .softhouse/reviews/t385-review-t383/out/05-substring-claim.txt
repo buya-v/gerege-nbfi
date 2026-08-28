@@ -1,0 +1,26 @@
+T385 substring-claim probe
+subject: /tmp/t385/fixed.sh  sha256=5c4f0244c8b54dc6a6493e7371b89864fc90f5c00e4bcb06767d3ef371a60ae1
+
+=== A. $_ST_OUT itself: how many lines carry the token? ===
+  self-test rc                                  : 0
+  total lines in $_ST_OUT                       : 70
+  lines matching UNANCHORED /ROWS=/             : 1
+  lines matching the SHIPPED ANCHORED selector  : 1
+  lines matching /lockselftest\| ROWS=/          : 0
+
+=== B. the FIRE LOG (where the lockselftest| prefix is actually added) ===
+  wrapper rc                                    : 0
+  'lockselftest| ROWS=' lines in the run output  : 1
+  -> so the substring line IS emitted on a healthy run, but into the LOG,
+     which is downstream of the capture the population is taken from.
+
+=== C. THE DECISIVE TEST: build the 'naive grep -c ROWS=' wrapper and drive the healthy control ===
+  NAIVE unanchored wrapper, HEALTHY input -> rc 0
+    | [20:39:31] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/fire-wrapper-snap.jnRm9k/fire-program.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisfied by an empty one.
+    | [20:39:31] probe only — exiting without taking the lock or invoking the driver
+  VERDICT: the naive unanchored count STARTS the healthy fire.
+           T383's stated reason -- that it 'would have refused every healthy fire'
+           because of the wiring's own lockselftest| echo -- is FALSE as stated.
+
+=== C-control: the SHIPPED anchored wrapper on the same healthy input ===
+  rc 0  (must be 0)

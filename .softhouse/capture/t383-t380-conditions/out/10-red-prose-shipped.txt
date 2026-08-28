@@ -1,0 +1,8 @@
+=== T383 reconciliation-prose drive — subject /tmp/t383-shipped/.softhouse/bin/fire-program.sh
+=== sha256: dbb18b7b80033384455a9c93086d681ecdf453558bedd049141bc1a542123d89
+
+p01  *** WRONG missing /ROWS=38 \+ SKIPPED=0 = 38, but 45 rows are DECLARED in .*\. Rows are DECLARED that neither ran nor announced themselves skipped, so the tally UNDERSTATES/  rc=2
+p02  *** WRONG missing /ROWS=45 \+ SKIPPED=0 = 45, but 44 rows are DECLARED in .*\. MORE rows ran than the census can find declared, so the tally OVERSTATES/  rc=2
+
+CHECKS=2 WRONG=2 VOID=0
+RESULT: FAIL

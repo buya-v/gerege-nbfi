@@ -705,6 +705,65 @@ if [[ "${1:-}" == "--self-test-lock-readers" ]]; then
   # [MEASURED both ways: `.softhouse/capture/t365-t361-conditions/out/07-red-drives.txt` r05/r05b.]
   _NEAR_AGE=$(( LOCK_CEILING_SECS - 3600 ))                # inside the ceiling by one hour
   _NEAR="$(_epoch_iso8601 $(( _NOW_E - _NEAR_AGE )))"
+
+  # ======== T383 / T380 F-T380-2 · THE DERIVED FIXTURES ARE THEMSELVES VALIDATED ========
+  #
+  # WHAT WAS WRONG. `_knob_int` at the top of this file bounds each threshold from BELOW and
+  # by an int64 round-trip, but nothing bounds one from ABOVE — and the C, G and Z fixtures
+  # are DERIVED from the thresholds (P-80, correctly; typing the cardinals is exactly what
+  # T361 C3 fixed). So an accepted-but-absurd threshold breaks the FIXTURE rather than any
+  # reader, and the run is then graded as a reader fault. T380 measured it:
+  # `LOCK_CEILING_SECS=9223372036854775807` is ACCEPTED (it fits int64), `_NOW_E -
+  # (CEILING*2 + 60)` is pre-epoch, `_epoch_iso8601` refuses it, `_OLD` comes out EMPTY,
+  # rows c01/c02 go FAIL-SHUT, and the wiring far below logs the one sentence F-T368-3 exists
+  # to prevent: *"The thresholds validated at startup, so this is the READERS."* It is not the
+  # readers; it is the threshold [VERIFIED: `.softhouse/reviews/t380-review-t377/out/
+  # 07-k12-int64-max-ceiling.txt` lines 102-103].
+  #
+  # THE MAXIMUM IS DERIVED BY RUNNING THE FIXTURE ARITHMETIC, NEVER BY TYPING A BOUND. No new
+  # cardinal enters this file and none is restated: the four tests below ARE the four fixture
+  # expressions, each asserted to have the property the row that consumes it depends on
+  # (P-83, *"reconcile by running"* [`.softhouse/patterns.md:2806`]).
+  #   * `_OLD_AGE` must EXCEED the ceiling it was derived from — catches `CEILING*2 + 60`
+  #     wrapping int64, at which point it is negative and `_OLD` is in the FUTURE.
+  #   * `_NOW_E - _OLD_AGE` must be >= 0 — the instant group C needs must be representable.
+  #     This is the case T380 measured.
+  #   * `_NEAR_AGE` must be STRICTLY between 0 and the ceiling — g01's entire claim is "an age
+  #     INSIDE the ceiling", and a ceiling at or under the hour g01 subtracts makes `_NEAR` a
+  #     PRESENT-OR-FUTURE instant whose age reads negative, which arm 6 answers HELD-default:
+  #     the row passes for the wrong reason and grades nothing. P-22 again.
+  #   * the z06 skew instant must land in the FUTURE — the same wrap, other sign.
+  #
+  # IT EXITS 78 (`EX_CONFIG`), not 1 or 2, so the wiring's existing `rc == 78` branch names
+  # this a THRESHOLD and never a lock-reader regression. T377 flagged that branch
+  # `[UNVERIFIED]` as unreachable in a single-process run, because the outer process validates
+  # the same environment first; this gate makes it genuinely reachable, since these are faults
+  # `_knob_int` structurally cannot see.
+  #
+  # STATED COST, direction SHUT and NEW: `LOCK_CEILING_SECS <= 3600` now refuses the fire
+  # (EX_CONFIG) where it previously ran with a vacuous g01. Both halves of that are measured
+  # in `.softhouse/capture/t383-t380-conditions/out/` (cases f01/f02). It is the right trade
+  # twice over — the row was grading nothing, and a lifetime ceiling under an hour would have
+  # arm 3 take over the lock of a fire that is still running, which is the P-85 direction.
+  # The z06/z07 offsets are named here rather than re-spelled, so the tests below and the rows
+  # that consume them cannot drift apart. `_SKEW_NEAR` is compared with `>=`, not `>`: a skew
+  # of ZERO is legitimate (it means "believe no future instant at all"; `_knob_int`'s minimum
+  # for it is 0 and T368/T380 measured the self-test green there), and it makes z07's instant
+  # exactly NOW, which is still inside a bound of 0. [MEASURED both ways: case f07.]
+  _SKEW_FAR=$(( LOCK_RELEASE_SKEW_SECS * 2 + 60 ))
+  _SKEW_NEAR=$(( LOCK_RELEASE_SKEW_SECS / 2 ))
+  _FIXOK=1
+  (( _OLD_AGE > LOCK_CEILING_SECS ))                     || _FIXOK=0   # c01/c02: `CEILING*2 + 60` did not wrap
+  (( _NOW_E - _OLD_AGE >= 0 ))                           || _FIXOK=0   # c01/c02: the past-ceiling instant is post-epoch
+  (( _NEAR_AGE > 0 && _NEAR_AGE < LOCK_CEILING_SECS ))   || _FIXOK=0   # g01: an age genuinely INSIDE the ceiling
+  (( _SKEW_FAR > LOCK_RELEASE_SKEW_SECS ))               || _FIXOK=0   # z06: `SKEW*2 + 60` did not wrap
+  (( _NOW_E + _SKEW_FAR > _NOW_E ))                      || _FIXOK=0   # z06: the far-future instant is representable
+  (( _NOW_E + _SKEW_NEAR >= _NOW_E ))                    || _FIXOK=0   # z07: the inside-bound instant is representable
+  if (( ! _FIXOK )); then
+    print -u2 -r -- "FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that consume them require, so this run would grade the FIXTURE and report it as a lock-reader fault. LOCK_CEILING_SECS=$LOCK_CEILING_SECS LOCK_RELEASE_SKEW_SECS=$LOCK_RELEASE_SKEW_SECS now=$_NOW_E; past-ceiling age=$_OLD_AGE (must exceed the ceiling), past-ceiling instant=$(( _NOW_E - _OLD_AGE )) (must be >= 0, i.e. post-epoch), inside-ceiling age=$_NEAR_AGE (must be > 0 and < the ceiling), past-skew offset=$_SKEW_FAR (must exceed the skew) landing at $(( _NOW_E + _SKEW_FAR )), inside-skew offset=$_SKEW_NEAR landing at $(( _NOW_E + _SKEW_NEAR )) (both must be >= now). This is a misconfigured THRESHOLD, not a lock-reader regression: no lock has been read. Fix the environment and re-run."
+    exit 78
+  fi
+
   _LIVE=$$                                                 # `lock_pid_state` never judges itself -> alive_here
 
   # A genuinely reaped pid. Retried, and if the pid is somehow still live the B rows are
@@ -1339,13 +1398,80 @@ if (( _ST_RC == 78 )); then
   exit 78
 fi
 
-# P-84: PRESENCE first. Anchored and fully specified, so a partial or reordered summary is
-# absent rather than half-parsed.
-_ST_SUMMARY="$(print -r -- "$_ST_OUT" | LC_ALL=C grep -E '^ROWS=[0-9]+ FAIL_OPEN=[0-9]+ FAIL_SHUT=[0-9]+ SKIPPED=[0-9]+$' | tail -1)"
-if [[ -z "$_ST_SUMMARY" ]]; then
-  log "FATAL: the lock-reader self-test printed NO TALLY LINE (rc=$_ST_RC). Either it did not reach its own summary, or the summary was removed. A fatal pre-fire control that cannot say how many rows it graded has not graded any (P-84, .softhouse/patterns.md:2813). Refusing to start."
+# ============ T383 / T380 F-T380-1 · EXACTLY ONE TALLY LINE, OR REFUSE ================
+#
+# WHAT WAS WRONG, AND IT WAS MEASURED RATHER THAN HYPOTHESISED. This selection used to end
+# in `| tail -1`, so when the self-test emitted TWO summary lines the LAST one won. T380
+# drove the consequence: with `_open=1`, the self-test's own `|| exit 1` deleted, and a
+# second clean-looking `ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0` printed after the real
+# failing one, the fire log carried **BOTH** `FAIL_OPEN=1` **AND** `FAIL_OPEN=0`, this
+# wiring printed `tally VERIFIED … FAIL_OPEN=0`, and **THE FIRE STARTED** at rc 0
+# [VERIFIED: `.softhouse/reviews/t380-review-t377/out/06-x09-tail1-hazard.txt`, case x09;
+#  reproduced independently as case m03 of
+#  `.softhouse/capture/t383-t380-conditions/bin/t383-red-drive.zsh`, transcript
+#  `out/03-red-evidence-shipped.txt`]. A real failing summary silenced by a later
+# clean-looking one is a FAIL-OPEN in the control that gates every fire start.
+#
+# `head -1` IS NOT THE FIX. It only moves which line wins — it has the mirror-image weakness
+# against a PREPENDED clean line, and case m04 drives exactly that ordering. Any rule that
+# SELECTS a winner from an ambiguous population is the defect; picking a different winner is
+# not a repair.
+#
+# SO THE POPULATION IS REQUIRED TO BE A SINGLETON. This is the same move the empty-census
+# check twenty lines below already makes — an AMBIGUOUS population is a SELECTOR failure,
+# not a clean self-test:
+#   ZERO  -> REFUSE. P-84, *"'EXIT 2 WITH NO PROBE LINE' IS THE GUARD WORKING. READ THE
+#            ABSENCE, NOT THE VALUE."* [`.softhouse/patterns.md:2813`]. Presence is tested
+#            before any field is read, so a self-test that died before its summary refuses
+#            instead of parsing an empty string into a comfortable 0. (P-84, not P-83:
+#            P-83 at `:2806` is the reconcile-by-running rule. The repo carried that
+#            off-by-one for a whole fire; it is spelled out here so it is not re-introduced.)
+#   ONE   -> proceed exactly as before. A control that refuses everything is not a control,
+#            and a well-formed run must still start the fire (case m00).
+#   TWO+  -> REFUSE. Not because one of them is wrong — with two IDENTICAL clean lines
+#            (case m05) neither is — but because this wiring can no longer say WHICH RUN
+#            either line describes. A tally that cannot be attributed certifies nothing.
+#
+# THE ANCHORED SELECTOR IS PART OF THE FIX, NOT AN ACCIDENT OF IT. The regex is anchored at
+# BOTH ends, so only whole lines that are nothing but a summary join the population:
+#   * a line that merely CONTAINS the token — `note: … ROWS=45 …`, or this wiring's own
+#     `lockselftest| ROWS=…` echo — is NOT in the population (case m10), so narration can
+#     never manufacture a false multiplicity and refuse a healthy fire;
+#   * a summary carrying TRAILING WHITESPACE is not in it either, so it is ABSENT rather
+#     than accepted: as an impostor it cannot silence the real line (m06a), and as the ONLY
+#     summary it refuses under the zero arm (m06b). Unrecognisable is treated as absent,
+#     which is the SHUT direction.
+# STDERR IS IN THE POPULATION: the capture above is `2>&1`, so a summary printed to fd 2 is
+# a summary (m08 — which the old `tail -1` let through, rc 0). A summary split across a
+# WRITE boundary is still one line and stays green (m09a); one split across a LINE boundary
+# matches nothing and refuses under the zero arm (m09b).
+#
+# STATED COST, direction SHUT: a future self-test that legitimately printed its summary
+# twice — a retry loop, a `tee`'d re-run — would now refuse the fire instead of grading it.
+# That is intended and it is loud. The summary is a verdict, and a verdict is emitted once.
+#
+# COUNT THE LINES THROUGH AN ARRAY, NOT `${#${(f)…}}`. In an ASSIGNMENT context that nested
+# form is scalar and `${#…}` is then a STRING LENGTH, not an element count: it read 41 — the
+# character length of `ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0` — and refused the healthy
+# control m00 with *"printed 41 TALLY LINES"*. Caught by this driver's m00 control before it
+# left the worktree, which is the whole reason a multiplicity fix must carry a
+# fire-must-still-START case. `${(f)…}` split into a real array is unambiguous.
+_ST_SUMS="$(print -r -- "$_ST_OUT" | LC_ALL=C grep -E '^ROWS=[0-9]+ FAIL_OPEN=[0-9]+ FAIL_SHUT=[0-9]+ SKIPPED=[0-9]+$')"
+typeset -a _ST_SUMLINES
+typeset -i _ST_NSUM=0
+if [[ -n "$_ST_SUMS" ]]; then
+  _ST_SUMLINES=( ${(f)_ST_SUMS} )
+  _ST_NSUM=${#_ST_SUMLINES}
+fi
+if (( _ST_NSUM == 0 )); then
+  log "FATAL: the lock-reader self-test printed NO TALLY LINE (rc=$_ST_RC). Either it did not reach its own summary, or the summary was removed, or what it printed is not EXACTLY a summary line (trailing whitespace, a split line, extra text on the line) and is therefore unrecognisable. A fatal pre-fire control that cannot say how many rows it graded has not graded any (P-84, .softhouse/patterns.md:2813). Refusing to start."
   exit 2
 fi
+if (( _ST_NSUM != 1 )); then
+  log "FATAL: the lock-reader self-test printed $_ST_NSUM TALLY LINES (rc=$_ST_RC) where exactly ONE is admissible — [${_ST_SUMS//$'\n'/] [}]. An AMBIGUOUS population is a SELECTOR failure, not a clean self-test: this wiring cannot say which run any of them describes, and selecting one of them (tail/head) lets a later or an earlier clean-looking tally silence a real failing one. MEASURED (T380 F-T380-1): one log carried FAIL_OPEN=1 AND FAIL_OPEN=0 and THE FIRE STARTED. REFUSED."
+  exit 2
+fi
+_ST_SUMMARY="$_ST_SUMS"
 
 typeset -i _ST_ROWS=0 _ST_OPEN=0 _ST_SHUT=0 _ST_SKIP=0 _ST_CENSUS=0
 for _f in ${=_ST_SUMMARY}; do
@@ -1372,7 +1498,19 @@ if (( _ST_ROWS == 0 )); then
   exit 2
 fi
 if (( _ST_ROWS + _ST_SKIP != _ST_CENSUS )); then
-  log "FATAL: the lock-reader self-test does not reconcile — ROWS=$_ST_ROWS + SKIPPED=$_ST_SKIP = $(( _ST_ROWS + _ST_SKIP )), but $_ST_CENSUS rows are DECLARED in $FIRE_SELF. Rows exist that neither ran nor announced themselves skipped, so the tally understates what was left ungraded. Refusing to start."
+  # T383 / T380 F-T380-3. The explanatory clause used to be the UNDERCOUNT sentence
+  # unconditionally, and it is false in the other direction: T380 measured `x04` (two rows
+  # written on ONE line) landing here with ROWS=45 against a census of 44, where the tally
+  # OVERstates and no undeclared row was left ungraded. Both refusals were correct and both
+  # printed correct numbers; only the prose misdescribed one of the two directions, and an
+  # operator meeting a diagnostic at 06:00 acts on the prose. The direction is now read from
+  # the numbers rather than assumed.
+  if (( _ST_ROWS + _ST_SKIP < _ST_CENSUS )); then
+    _ST_WHY="Rows are DECLARED that neither ran nor announced themselves skipped, so the tally UNDERSTATES what was left ungraded — a group guarded off, an early return, or a mangled if."
+  else
+    _ST_WHY="MORE rows ran than the census can find declared, so the tally OVERSTATES relative to the population — the selector no longer sees every row it grades (two rows on one line, or a row reached through a wrapper). Nothing was left ungraded, but the census can no longer certify the corpus either way."
+  fi
+  log "FATAL: the lock-reader self-test does not reconcile — ROWS=$_ST_ROWS + SKIPPED=$_ST_SKIP = $(( _ST_ROWS + _ST_SKIP )), but $_ST_CENSUS rows are DECLARED in $FIRE_SELF. $_ST_WHY Refusing to start."
   exit 2
 fi
 

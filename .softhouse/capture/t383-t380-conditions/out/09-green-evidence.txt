@@ -1,0 +1,67 @@
+=== T383 · GREEN — the refusals the fix produces, on the same inputs that were RED ===
+
+--- F-T380-1, multiplicity (drive WORK=/tmp/t383-drive) ---
+
+[m03]
+82:[20:00:27] lockselftest| ROWS=45 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0
+83:[20:00:27] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+84:[20:00:27] FATAL: the lock-reader self-test printed 2 TALLY LINES (rc=0) where exactly ONE is admissible — [ROWS=45 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0] [ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]. An AMBIGUOUS population is a SELECTOR failure, not a clean self-test: this wiring cannot say which run any of them describes, and selecting one of them (tail/head) lets a later or an earlier clean-looking tally silence a real failing one. MEASURED (T380 F-T380-1): one log carried FAIL_OPEN=1 AND FAIL_OPEN=0 and THE FIRE STARTED. REFUSED.
+
+[m04]
+82:[20:01:09] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+83:[20:01:09] lockselftest| ROWS=45 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0
+84:[20:01:09] FATAL: the lock-reader self-test printed 2 TALLY LINES (rc=0) where exactly ONE is admissible — [ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0] [ROWS=45 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0]. An AMBIGUOUS population is a SELECTOR failure, not a clean self-test: this wiring cannot say which run any of them describes, and selecting one of them (tail/head) lets a later or an earlier clean-looking tally silence a real failing one. MEASURED (T380 F-T380-1): one log carried FAIL_OPEN=1 AND FAIL_OPEN=0 and THE FIRE STARTED. REFUSED.
+
+[m05]
+82:[20:01:46] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+83:[20:01:46] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+84:[20:01:46] FATAL: the lock-reader self-test printed 2 TALLY LINES (rc=0) where exactly ONE is admissible — [ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0] [ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]. An AMBIGUOUS population is a SELECTOR failure, not a clean self-test: this wiring cannot say which run any of them describes, and selecting one of them (tail/head) lets a later or an earlier clean-looking tally silence a real failing one. MEASURED (T380 F-T380-1): one log carried FAIL_OPEN=1 AND FAIL_OPEN=0 and THE FIRE STARTED. REFUSED.
+
+[m07]
+13:[20:03:20] lockselftest| ROWS=99 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+83:[20:03:21] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+84:[20:03:21] FATAL: the lock-reader self-test printed 2 TALLY LINES (rc=0) where exactly ONE is admissible — [ROWS=99 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0] [ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]. An AMBIGUOUS population is a SELECTOR failure, not a clean self-test: this wiring cannot say which run any of them describes, and selecting one of them (tail/head) lets a later or an earlier clean-looking tally silence a real failing one. MEASURED (T380 F-T380-1): one log carried FAIL_OPEN=1 AND FAIL_OPEN=0 and THE FIRE STARTED. REFUSED.
+
+[m08]
+82:[20:03:46] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+83:[20:03:46] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+84:[20:03:46] FATAL: the lock-reader self-test printed 2 TALLY LINES (rc=0) where exactly ONE is admissible — [ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0] [ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0]. An AMBIGUOUS population is a SELECTOR failure, not a clean self-test: this wiring cannot say which run any of them describes, and selecting one of them (tail/head) lets a later or an earlier clean-looking tally silence a real failing one. MEASURED (T380 F-T380-1): one log carried FAIL_OPEN=1 AND FAIL_OPEN=0 and THE FIRE STARTED. REFUSED.
+
+[m00 CONTROL — a well-formed SINGLE summary line: the fire still starts]
+82:[19:58:19] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+83:[19:58:20] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/tmp/t383-drive/m00.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisfied by an empty one.
+84:[19:58:20] probe only — exiting without taking the lock or invoking the driver
+
+[m06a — a whitespace-suffixed impostor is NOT in the population, so the REAL failing line still governs]
+82:[20:02:14] lockselftest| ROWS=45 FAIL_OPEN=1 FAIL_SHUT=0 SKIPPED=0
+83:[20:02:14] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0 
+84:[20:02:14] FATAL: the lock-reader self-test FAILED (rc=0, FAIL_OPEN=1, FAIL_SHUT=0, over 45 of 45 declared rows). The thresholds validated at startup, so this is the READERS. A FAIL-OPEN row means a lock held by a LIVE process on this host reads as takeable (P-85); a FAIL-SHUT row means a reclaimable lock cannot be reclaimed. Either way this wrapper must not decide a lock today. Refusing to start.
+
+[m10 — lines that merely CONTAIN the token do not join the population: no false multiplicity]
+82:[20:05:03] lockselftest| note: the previous run said ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+83:[20:05:03] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0
+84:[20:05:03] lockselftest| ROWS=45 FAIL_OPEN=0 FAIL_SHUT=0 SKIPPED=0 (historical, not this run)
+85:[20:05:03] lockselftest: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared in /private/tmp/t383-drive/m10.sh, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisfied by an empty one.
+86:[20:05:03] probe only — exiting without taking the lock or invoking the driver
+
+--- F-T380-2, the derived-fixture gate (drive WORK=/tmp/t383-thresh) ---
+
+[f01]
+13:[19:55:28] lockselftest| FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that consume them require, so this run would grade the FIXTURE and report it as a lock-reader fault. LOCK_CEILING_SECS=9223372036854775807 LOCK_RELEASE_SKEW_SECS=3600 now=1787918128; past-ceiling age=58 (must exceed the ceiling), past-ceiling instant=1787918070 (must be >= 0, i.e. post-epoch), inside-ceiling age=9223372036854772207 (must be > 0 and < the ceiling), past-skew offset=7260 (must exceed the skew) landing at 1787925388, inside-skew offset=1800 landing at 1787919928 (both must be >= now). This is a misconfigured THRESHOLD, not a lock-reader regression: no lock has been read. Fix the environment and re-run.
+
+[f02]
+13:[19:55:31] lockselftest| FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that consume them require, so this run would grade the FIXTURE and report it as a lock-reader fault. LOCK_CEILING_SECS=1800 LOCK_RELEASE_SKEW_SECS=3600 now=1787918131; past-ceiling age=3660 (must exceed the ceiling), past-ceiling instant=1787914471 (must be >= 0, i.e. post-epoch), inside-ceiling age=-1800 (must be > 0 and < the ceiling), past-skew offset=7260 (must exceed the skew) landing at 1787925391, inside-skew offset=1800 landing at 1787919931 (both must be >= now). This is a misconfigured THRESHOLD, not a lock-reader regression: no lock has been read. Fix the environment and re-run.
+
+[f05]
+13:[19:56:53] lockselftest| FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that consume them require, so this run would grade the FIXTURE and report it as a lock-reader fault. LOCK_CEILING_SECS=3600 LOCK_RELEASE_SKEW_SECS=3600 now=1787918213; past-ceiling age=7260 (must exceed the ceiling), past-ceiling instant=1787910953 (must be >= 0, i.e. post-epoch), inside-ceiling age=0 (must be > 0 and < the ceiling), past-skew offset=7260 (must exceed the skew) landing at 1787925473, inside-skew offset=1800 landing at 1787920013 (both must be >= now). This is a misconfigured THRESHOLD, not a lock-reader regression: no lock has been read. Fix the environment and re-run.
+
+[f06]
+13:[19:56:56] lockselftest| FATAL: CONFIGURATION ERROR — the self-test's DERIVED fixtures do not land where the rows that consume them require, so this run would grade the FIXTURE and report it as a lock-reader fault. LOCK_CEILING_SECS=86400 LOCK_RELEASE_SKEW_SECS=9223372036854775807 now=1787918216; past-ceiling age=172860 (must exceed the ceiling), past-ceiling instant=1787745356 (must be >= 0, i.e. post-epoch), inside-ceiling age=82800 (must be > 0 and < the ceiling), past-skew offset=58 (must exceed the skew) landing at 1787918274, inside-skew offset=4611686018427387903 landing at 4611686020215306119 (both must be >= now). This is a misconfigured THRESHOLD, not a lock-reader regression: no lock has been read. Fix the environment and re-run.
+
+[f03/f04/f07 — a BOUND, not a BAN: legitimate settings still start the fire]
+f03: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared
+f04: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared
+f07: tally VERIFIED by the wiring — 45 executed + 0 skipped = 45 declared
+
+--- F-T380-3, the reconciliation prose, both directions ---
+(the OVERCOUNT direction is T380's x04: two rows on ONE line, ROWS=45 vs census 44)
