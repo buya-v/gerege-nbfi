@@ -54,7 +54,7 @@ checked before anything else, three independent ways, none of them reusing T383'
 rc 0
 ```
 
-**(b) Six independent healthy-start cases in my own drivers, all `rc 0` against the fixed file:**
+**(b) Twelve independent healthy-start cases in my own drivers, all `rc 0` against the fixed file:**
 `d00` (one well-formed summary), `d10` (summary split across a WRITE boundary — the case a careless
 multiplicity fix refuses), `d12` (three lines, two of which merely CONTAIN the token — the case a
 naive count refuses) [`out/02-green-fixed.txt`], and `t00`/`t03`/`t04`/`t07`/`t09`/`t10` — the
@@ -448,13 +448,78 @@ refusal), from a **CLEAN tree, after `git add -A` and commit**, and the probe li
 **presence before value** (P-84): exit 2 + printed probe `down` = oracle unreachable; exit 2 with
 **no** probe line = a HARD guard firing, i.e. the guard *working*; exit 3 = wrong interpreter.
 
-### On my review branch — `EXIT __BRANCH_EXIT__`, probe line **PRINTED**, reads **`__BRANCH_PROBE__`**
+### On my review branch — `EXIT 0`, probe line **PRINTED**, reads **`up`**
 
-__BRANCH_BLOCK__
+`git status --porcelain` was **empty** before the transcript was captured; the review dir was
+`git add -A`'d and committed at `3ce7787f` first. Full transcript: `out/12-bar-on-branch.txt`
+(665 lines).
 
-### On the MERGE RESULT (`main` + `softhouse/T383-t380-conditions`, in a scratch clone) — `EXIT __MERGE_EXIT__`
+```
+bash .softhouse/conformance.sh        ->   EXIT 0
+  reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+  oracle probe    UP
+  parity vectors          PASS 46   FAIL 0
+  inadmissible            0
+  harness errors          0
+  invariant violations    0
+  cells compared          7884 graded, 93 ungraded (never recorded by the capture)
+  ledger parity           PASS 7    FAIL 0      ledger cells 142 graded, 39 MONEY cells int64 minor units
+  CENSUS fail-open instruments -- frontier 11, pinned at 11
+  frontier == pinned (all 11 rows, by path).
+  dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+  T316-DEADPATH-CENSUS: corpus=1348 deadFiles=76 deadOccurrences=109 resolving=1258 ...
+  VERDICT: PASS (exit 0) -- 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+```
 
-__MERGE_BLOCK__
+**Read correctly, per the task's own rule.** The probe line **was printed** and reads `probe = up`,
+and the exit is 0 — the oracle-reachable green, not the exit-2-with-no-probe-line shape that means a
+HARD guard fired, and not the exit-3 wrong-interpreter refusal. Every figure matches the one T383
+reported for its own branch.
+
+**T383's `10-regen-pin.py` reasoning verified empirically on my own branch.** My branch adds seven
+`.zsh` drivers and no `.sh`; `git ls-files | grep -cE '\.(sh|py)$'` is **1348 at my base `d1a6b7e6`
+and 1348 at my head**, and the run reports `corpus=1348 deadOccurrences=109` — unchanged. `.zsh` is
+genuinely invisible to the `.sh`/`.py` selector, so the pin needed no regeneration on T383's branch
+either. That is also **F-T385-4**: the invisibility is real, and it is a gap.
+
+### On the MERGE RESULT (`main` + `softhouse/T383-t380-conditions`, in a scratch clone) — `EXIT 0`
+
+`bash .softhouse/capture/t353-t342-conditions/bin/bar-on-merge-result.sh <root>
+softhouse/T383-t380-conditions main`, in a scratch clone — **not** on the branch alone. Full
+transcript: `out/13-bar-on-merge-result.txt`.
+
+```
+=== base:   origin/main   f3bf5563
+=== merging origin/softhouse/T383-t380-conditions  151ef180
+=== merge result: 5bb4260d          (merged cleanly, no conflict)
+=== running: bash .softhouse/conformance.sh
+  reference oracle (…/actuator/health) probe = up
+  parity vectors          PASS 46   FAIL 0
+  frontier 11, pinned at 11 ; frontier == pinned (all 11 rows, by path).
+  dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+  T316-DEADPATH-CENSUS: corpus=1372 deadFiles=75 deadOccurrences=108 resolving=1287 …
+  VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+MERGE_RESULT_CONFORMANCE_EXIT=0
+```
+
+Probe line **printed**, reads `up`; **exit 0**. The merge is clean and the merge result is green.
+The census figures differ from my branch's (`1372/108` vs `1348/109`) because the two trees have
+**different bases** — the merge result is `main @ f3bf5563` while my branch forked at `d1a6b7e6`,
+and `main` took several merges in between. The *pinned* gate — frontier 11 == 11, **by path** — is
+green on both, which is the figure that gates.
+
+**C12, measured while using the instrument.** I inspected the clone the script left behind:
+
+```
+$ cat <clone>/.git/objects/info/alternates
+/Users/buv/gerege-nbfi/.git/objects
+$ find <clone>/.git/objects -type f | grep -vc info/
+6
+```
+
+Six objects in the clone, and an `alternates` file pointing at the **live shared checkout's** object
+store. That is the `--shared` model, definitively not hardlinks — which puts the measurement behind
+the C12 severity call in §7.
 
 ---
 
@@ -505,3 +570,6 @@ three tasks in a row. It is now written down a third time.
   honest qualification T377, T380 and T383 all made. A green frontier says nothing about them.
 * I did **not** exercise a `LOCK_MAX_AGE_SECS` extreme; the new gate does not read it and
   `_knob_int` already bounds it from below.
+* One of my instruments, `bin/t385-mutate.py`, is a `.py` and therefore **does** enter the
+  `.sh`/`.py` census corpus. Its effect on the frontier and the census was **measured, not
+  assumed** — see the second bar run in §8.
