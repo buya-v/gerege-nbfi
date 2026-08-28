@@ -111,6 +111,43 @@ const (
 	// the port's refusal behaviour. Two classes with opposite provenance rules
 	// must not share a name across two schemas in one store.
 	ClassOracleRefusal VectorClass = "oracle-refusal"
+
+	// ClassDivergence is a RECORDED, GATED PARITY DIVERGENCE: the reference
+	// oracle ACCEPTED a request this port REFUSES. It is the third class, it was
+	// added by T360 for G-19, and every word of the sentence above is load
+	// bearing.
+	//
+	// WHY IT IS NOT `parity`. A parity vector says "the oracle produced THIS and
+	// the port must produce it too". Here the port produces NOTHING: it refuses.
+	// There is no port-side money value to compare, so there is nothing to put
+	// in expect.legs[].amount_minor, and — this is the whole reason the class
+	// exists — THERE COULD NOT BE. The oracle accepted `100.125000` in a
+	// currency whose declared minor unit is 2. `amount_minor` is an int64 count
+	// of minor units (parseMinor, ledger.MinorUnits) and NO int64 equals
+	// 100.125. `10012` and `10013` are both numbers neither system produced.
+	// T352 wrote `10013` into a candidate vector to find out what the harness
+	// would do with it and correctly declined to promote the file; T359
+	// reproduced the HARNESS-ERROR and diagnosed the routing half of it.
+	//
+	// WHY IT IS NOT `oracle-refusal`. That class means THE ORACLE REFUSED and
+	// the port must refuse identically. Here the oracle ACCEPTED. Filing this
+	// under that name would record the opposite of what was observed.
+	//
+	// WHAT IT GRADES, AND WHAT IT DELIBERATELY DOES NOT. It grades TWO
+	// STRUCTURAL CELLS about the PORT — that the port refused at all, and that
+	// its refusal carries the declared stable marker — and it grades ZERO MONEY
+	// CELLS, because there is no port-side amount and the oracle-side amount is
+	// unrepresentable. The oracle's side is carried as OracleAcceptance: raw
+	// observed CHARACTERS, byte-checked against the cited capture, never parsed,
+	// never converted, never compared.
+	//
+	// THE COUNTING RULE, AND IT IS ASYMMETRIC ON PURPOSE (see Summary):
+	// a divergence PASS is counted in `ledger divergence PASS` and NOWHERE in
+	// `ledger parity PASS` — the port did not match the oracle, so it gets no
+	// parity credit — while a divergence FAIL is ALSO added to `ledger parity
+	// FAIL`, so the bar goes red. A divergence is never evidence FOR the port
+	// and always evidence AGAINST it when it moves.
+	ClassDivergence VectorClass = "divergence"
 )
 
 // EntrySide is the DEBIT/CREDIT axis as the oracle spells it on the wire.
@@ -718,6 +755,120 @@ type Expect struct {
 
 	// Refusal is populated on kind == "refusal" and zero otherwise.
 	Refusal Refusal `json:"refusal"`
+
+	// PortRefusal is populated on kind == "port-refusal" -- a DIVERGENCE vector --
+	// and zero otherwise. It is the PORT's side of a divergence: what this Go
+	// port must do with a request the reference oracle ACCEPTED.
+	PortRefusal PortRefusal `json:"port_refusal"`
+}
+
+// PortRefusal is what a DIVERGENCE vector requires of the PORT.
+//
+// IT IS A DIFFERENT TYPE FROM Refusal AND THAT IS THE POINT. Refusal is an
+// ORACLE-OBSERVED wire refusal: an HTTP status, a Fineract globalisation code
+// and a message, every one of them transcribed from a captured response body. A
+// PORT refusal was never on a wire. It has no HTTP status, no globalisation
+// code, and inventing either would be putting a fabricated observation into a
+// store whose entire discipline is that it holds only observed bytes.
+//
+// T359's measured scratch-copy patch made exactly that trade -- it re-routed the
+// port's residue refusal as a `*Refusal` carrying `HTTP 422` -- and 422 is a
+// number no oracle, no port and no wire ever produced. This type has nowhere to
+// put one.
+//
+// IT ALSO HAS NOWHERE TO PUT AN AMOUNT, in any spelling. There is no numeric
+// field on it at all.
+type PortRefusal struct {
+	// Marker is a STABLE SUBSTRING of the refusal the port emits, and it is the
+	// graded cell.
+	//
+	// WHY A MARKER AND NOT THE WHOLE TEXT. The port's refusal is produced by
+	// `ledger.MinorUnitsFromDecimalText` as a plain `fmt.Errorf`, in a package
+	// this vector schema does not own. Grading its complete wording would pin
+	// this corpus to a sentence any unrelated edit re-flows, and the store would
+	// then go red for a reason that has nothing to do with money. Grading a
+	// declared, load-bearing PHRASE keeps the assertion on the thing that
+	// matters -- that the port refused FOR THE RESIDUE, and did not refuse for
+	// some unrelated reason and get counted as agreeing by accident.
+	//
+	// IT IS NOT OPTIONAL. admit.go requires it non-empty on every divergence
+	// vector and at least MinPortRefusalMarker characters long, because a short
+	// marker is contained in almost any message and would be a comparison that
+	// cannot fail.
+	Marker string `json:"marker"`
+
+	// ObservedText is the port refusal's FULL text as it stood when this vector
+	// was written, recorded for the reader and NEVER GRADED.
+	//
+	// It is here for the same reason amount_major_text sits beside amount_minor
+	// on a parity leg: so a human meeting this file can see the whole thing the
+	// marker was cut out of, and so a later reader can tell "the wording
+	// changed" from "the port stopped refusing". The comparator never reads it.
+	ObservedText string `json:"observed_text"`
+}
+
+// OracleAcceptance is THE ORACLE'S SIDE OF A DIVERGENCE, and it is a type in
+// which NO MONEY VALUE CAN BE HELD.
+//
+// THE PROBLEM IT SOLVES, stated exactly. The reference oracle accepted, stored
+// and served back `100.125000` MNT while the same response declared
+// `"decimalPlaces": 2` [OBSERVED: T352-A09-residue-3dp-readback-cited.json,
+// re-read live and byte-identical by T360; independently re-derived by T359 at
+// `300.6255545` -> `300.625555`]. The store's money cell is
+// `ExpectLeg.AmountMinor`, an integer STRING parsed to `ledger.MinorUnits`
+// (`int64`). NO int64 EQUALS 100.125. Any number written there is a number
+// neither system produced, and writing one is the exact way an unobserved
+// figure enters a corpus.
+//
+// SO THE OBSERVATION IS RECORDED AS CHARACTERS, AND THE TYPE FORBIDS ANYTHING
+// ELSE. Every field below is a `string` or a plain HTTP status `int`. There is
+// no float64, no json.Number, no widened decimal, no big.Rat, and no
+// "amount"-named numeric of any kind. Nothing in this package parses
+// ObservedAmountTexts, converts it, compares it against a port value, or feeds
+// it to arithmetic: grep the identifier and every use is a byte comparison, a
+// digit scan or a print. That is what makes recording an unrepresentable
+// observation safe -- the value is never a NUMBER in this program, at any
+// point, including intermediate calculation.
+//
+// AND IT IS BYTE-CHECKED RATHER THAN TRUSTED. admit.go requires every entry of
+// ObservedAmountTexts to occur VERBATIM in the bytes of the artefact
+// provenance.capture_ref names, so "these are the oracle's own characters" is a
+// checkable claim and not a transcription anybody has to be believed about.
+type OracleAcceptance struct {
+	// HTTPStatus is the status THE ORACLE returned. It is an acceptance, so
+	// admit.go requires 200..299 -- a divergence vector whose oracle side is a
+	// refusal is a vector filed under the wrong class.
+	HTTPStatus int `json:"http_status"`
+
+	// ObservedAmountTexts are THE ORACLE'S OWN CHARACTERS for the amount(s) it
+	// accepted and served back, verbatim, one entry per distinct rendering.
+	//
+	// NEVER PARSED. NEVER CONVERTED. NEVER COMPARED TO A PORT VALUE. The only
+	// things this package does with them are: (1) `bytes.Contains` against the
+	// cited capture artefact, (2) a digit scan that decides whether a non-zero
+	// digit lies beyond the currency's minor unit -- carried out on bytes, with
+	// no numeric conversion of any kind -- and (3) printing them.
+	ObservedAmountTexts []string `json:"observed_amount_texts"`
+
+	// WhyUnrepresentable is the vector's own sentence saying why this
+	// observation cannot be a parity vector. Required non-empty: a divergence
+	// filed without it is a parity vector somebody could not make pass.
+	WhyUnrepresentable string `json:"why_unrepresentable"`
+
+	// Gate is the open gate this divergence belongs to -- "G-19" today. Required
+	// non-empty, because a divergence with no gate is a defect nobody owns, and
+	// a corpus that can hold one silently is worse than one that cannot hold it
+	// at all.
+	Gate string `json:"gate"`
+}
+
+// IsZero reports whether nothing at all was written into this block. It exists
+// because OracleAcceptance carries a slice and so is not comparable with ==; the
+// alternative -- comparing the fields at each call site -- is three copies of one
+// rule, which is the shape T306 found had drifted apart in the leg checks.
+func (o OracleAcceptance) IsZero() bool {
+	return o.HTTPStatus == 0 && len(o.ObservedAmountTexts) == 0 &&
+		o.WhyUnrepresentable == "" && o.Gate == ""
 }
 
 // Counterfactual names a wrong implementation this vector kills.
@@ -787,12 +938,25 @@ type Vector struct {
 	// vector that excludes gl_account_type, to actually mention it.
 	Note string `json:"_note"`
 
-	CapabilitiesRequired []string         `json:"capabilities_required"`
-	Provenance           Provenance       `json:"provenance"`
-	Oracle               OracleStamp      `json:"oracle"`
-	Request              Request          `json:"request"`
-	Expect               Expect           `json:"expect"`
-	GradedAgainst        []Counterfactual `json:"graded_against"`
+	CapabilitiesRequired []string    `json:"capabilities_required"`
+	Provenance           Provenance  `json:"provenance"`
+	Oracle               OracleStamp `json:"oracle"`
+	Request              Request     `json:"request"`
+
+	// OracleAccepted is populated on a DIVERGENCE vector and MUST be zero on
+	// every other class -- admit.go refuses it in both directions, so the field
+	// cannot accumulate silently on the vectors that predate it.
+	//
+	// IT SITS ON THE VECTOR AND NOT ON Expect DELIBERATELY. Expect is "what the
+	// implementation must produce". The oracle's acceptance is not an
+	// expectation of the port at all -- it is the OBSERVATION the divergence is
+	// a divergence FROM -- and putting it under `expect` would invite a later
+	// reader, or a later comparator, to grade the port against it. There is
+	// nothing here a port could be asked to reproduce.
+	OracleAccepted OracleAcceptance `json:"oracle_accepted"`
+
+	Expect        Expect           `json:"expect"`
+	GradedAgainst []Counterfactual `json:"graded_against"`
 
 	// InvariantExemptions exists so that a vector CANNOT declare one silently.
 	//

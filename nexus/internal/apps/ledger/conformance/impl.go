@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sort"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/gerege/nexus/internal/apps/ledger"
@@ -1090,6 +1091,111 @@ func (splitDriftPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 	return base, nil, nil
 }
 
+// residueRoundingPoster ROUNDS a sub-minor-unit residue HALF_UP and POSTS,
+// where the port REFUSES. [T360, the DIVERGENCE class's counterfactual]
+//
+// THIS IS THE PLAUSIBLE WRONG PORT, NOT AN ABSURD ONE, which is the only kind
+// worth registering. CLAUDE.md ratifies HALF_UP as the tenant rounding mode and
+// `MoneyHelper.getMathContext()` is `(19, HALF_UP)`; a porter who reads that and
+// applies it at the conversion boundary writes exactly this. It is a defensible
+// reading of the codebase and it is wrong, because the reference oracle applies
+// NO rounding there at all -- it stores `100.125000` at scale 6 in a
+// numeric(19,6) column while the currency declares decimalPlaces 2, and serves
+// it back (T352, re-derived by T359 at 300.6255545 -> 300.625555, and the
+// rounding that DOES happen is PostgreSQL's column coercion, with no Java in the
+// path).
+//
+// WHY IT SURVIVES THE ENTIRE PRE-T360 CORPUS, AND THAT IS THE POINT. Its rewrite
+// is a no-op on any amount whose fraction fits the currency's minor unit, so on
+// all thirteen vectors that existed before this one it is BYTE-IDENTICAL to
+// ledger-go: same legs, same minor units, same totals, same refusals. No parity
+// vector and no oracle-refusal vector can tell it from a correct port, because
+// none of them carries a residue -- and none of them COULD, since a residue has
+// no int64 minor-unit cell to be graded in. It dies on LDG-DIV-01 alone, on the
+// two divergence cells, and it is the second member of the family
+// ledger-wrong-date-rules-always-refusing opened: a defect this store was
+// structurally unable to see until the class that sees it existed.
+//
+// NO FLOAT ANYWHERE IN IT. The rounding is done by string surgery and a decimal
+// STRING increment -- `roundHalfUpText` and `incrementDecimalDigits` below --
+// and never by parsing to a numeric type and back. A wrong implementation is
+// still code in this repository, and "it is deliberately wrong" does not license
+// a float on a money path: the defect being demonstrated is the ROUNDING, and a
+// float would smuggle a second, different defect into the same drive.
+type residueRoundingPoster struct{}
+
+func (residueRoundingPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	rewritten := req
+	rewritten.Legs = make([]RequestLeg, len(req.Legs))
+	copy(rewritten.Legs, req.Legs)
+	for i := range rewritten.Legs {
+		rewritten.Legs[i].AmountMajorText =
+			roundHalfUpText(rewritten.Legs[i].AmountMajorText, req.Currency.MinorUnitDigits)
+	}
+	rewritten.TransactionAmountMajorText =
+		roundHalfUpText(req.TransactionAmountMajorText, req.Currency.MinorUnitDigits)
+	return GoPoster{}.PostEntry(rewritten)
+}
+
+// roundHalfUpText re-renders a decimal TEXT at the currency's minor unit,
+// rounding half away from zero, using bytes and a decimal-string increment.
+//
+// It returns text unchanged whenever there is nothing to round -- no decimal
+// point, a fraction no longer than the minor unit, or a non-digit anywhere in
+// the fraction (a malformed amount is left for the real converter to refuse, so
+// this wrong implementation embodies ONE defect and not two).
+func roundHalfUpText(text string, minorDigits int) string {
+	if minorDigits < 0 {
+		return text
+	}
+	sign, body := "", text
+	if strings.HasPrefix(body, "-") {
+		sign, body = "-", body[1:]
+	}
+	dot := strings.IndexByte(body, '.')
+	if dot < 0 {
+		return text
+	}
+	intPart, frac := body[:dot], body[dot+1:]
+	if len(frac) <= minorDigits {
+		return text
+	}
+	for i := 0; i < len(frac); i++ {
+		if frac[i] < '0' || frac[i] > '9' {
+			return text
+		}
+	}
+	digits := intPart + frac[:minorDigits]
+	if frac[minorDigits] >= '5' {
+		digits = incrementDecimalDigits(digits)
+	}
+	for len(digits) <= minorDigits {
+		digits = "0" + digits
+	}
+	newInt := digits[:len(digits)-minorDigits]
+	if newInt == "" {
+		newInt = "0"
+	}
+	if minorDigits == 0 {
+		return sign + newInt
+	}
+	return sign + newInt + "." + digits[len(digits)-minorDigits:]
+}
+
+// incrementDecimalDigits adds one to a string of decimal digits, carrying by
+// hand. No integer conversion, so it cannot overflow and cannot round.
+func incrementDecimalDigits(d string) string {
+	b := []byte(d)
+	for i := len(b) - 1; i >= 0; i-- {
+		if b[i] < '9' {
+			b[i]++
+			return string(b)
+		}
+		b[i] = '0'
+	}
+	return "1" + string(b)
+}
+
 func init() {
 	Register("ledger-go", NewGoPoster())
 	RegisterWrong("ledger-wrong-split-drift",
@@ -1167,6 +1273,15 @@ func init() {
 	RegisterWrong("ledger-wrong-code-ignored",
 		"never joins the chart, so every resolved gl_account_code is empty",
 		codeIgnoringPoster{})
+	RegisterWrong("ledger-wrong-residue-rounding",
+		"ROUNDS a sub-minor-unit residue HALF_UP and POSTS, where this port REFUSES and the reference "+
+			"oracle ACCEPTS the residue unrounded (G-19). It is the plausible wrong port -- CLAUDE.md "+
+			"ratifies HALF_UP and MoneyHelper.getMathContext() is (19, HALF_UP), so a porter who "+
+			"applies that at the conversion boundary writes exactly this -- and it is BYTE-IDENTICAL "+
+			"to ledger-go on every vector whose amounts fit the currency's minor unit, which is all "+
+			"thirteen that existed before T360. It dies on LDG-DIV-01 alone, on the two DIVERGENCE "+
+			"cells, because a residue has no int64 minor-unit cell any parity vector could grade it in",
+		residueRoundingPoster{})
 }
 
 // minorText renders minor units as the decimal-free integer STRING the schema

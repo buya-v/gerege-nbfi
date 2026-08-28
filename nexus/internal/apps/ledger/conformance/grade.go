@@ -126,6 +126,16 @@ func CellFields() []string {
 	diffRefusal(&s, refProbe, &Refusal{
 		HTTPStatus: 403, Code: "c", Message: "m", Arg0Value: "2000-01-01"})
 
+	// THE DIVERGENCE PROBE, for the same reason the refusal probe carries an
+	// arg-echo selector: the vocabulary is "what the comparator CAN emit", so a
+	// branch that no probe exercises drops its cells silently and every
+	// divergent_cells entry naming one becomes INADMISSIBLE. [T360]
+	divProbe := &Vector{
+		Class:  ClassDivergence,
+		Expect: Expect{Kind: "port-refusal", PortRefusal: PortRefusal{Marker: "m"}},
+	}
+	diffDivergence(&s, divProbe, nil, fmt.Errorf("m"))
+
 	seen := map[string]bool{}
 	var out []string
 	for _, n := range s.names {
@@ -254,6 +264,74 @@ func diffRefusal(s *cellSink, v *Vector, got *Refusal) {
 	}
 }
 
+// diffDivergence grades a DIVERGENCE vector: the reference oracle ACCEPTED and
+// this port must REFUSE. [T360, G-19]
+//
+// TWO CELLS, BOTH STRUCTURAL, AND ZERO MONEY CELLS. That is not a gap, it is the
+// class's defining property. There is no port-side amount — the port refused —
+// and the oracle-side amount is `100.125000` in a currency whose minor unit is
+// 2, which no int64 count of minor units can hold. So this comparator never
+// touches cmpMoney, `EXEMPTION_PIN_LEDGER_MONEYCELLS` does not move for a
+// divergence vector, and the corpus's money-cell census stays a census of cells
+// where a real integer comparison happened.
+//
+//	divergence.port_outcome         REFUSED / ACCEPTED
+//	divergence.port_refusal_marker  the declared stable phrase, present or not
+//
+// THE FIRST CELL IS THE DIVERGENCE ITSELF and it is what kills a port that
+// silently converges by rounding or truncating the residue. The second stops
+// that kill being satisfied by ANY refusal: a port that refuses this request for
+// an unrelated reason — an unknown account, a bad date — would otherwise be
+// counted as agreeing with the recorded divergence when it does not.
+//
+// WHAT IS DELIBERATELY NOT COMPARED. Nothing on the ORACLE side. `OracleAccepted`
+// is an observation, not an expectation of the port, and there is nothing there a
+// port could be asked to reproduce. Its bytes are checked by Admit against the
+// cited capture and are otherwise only printed.
+//
+// A GO ERROR FROM PostEntry IS A REFUSAL *ON THIS CLASS ONLY*, and gradeOne
+// routes accordingly. That is the second half of T360's finding and it is stated
+// here rather than in a handoff: on every OTHER class an error still means
+// HARNESS-ERROR, because an implementation that cannot answer a parity vector has
+// not refused it — it has failed. The class is what makes the same return value
+// mean two different things, and that is exactly right: a divergence vector is
+// the only place in this store where "the port would not answer" is the ANSWER.
+func diffDivergence(s *cellSink, v *Vector, refusal *Refusal, err error) {
+	outcome, text := "ACCEPTED", ""
+	switch {
+	case err != nil:
+		outcome, text = "REFUSED", err.Error()
+	case refusal != nil:
+		outcome, text = "REFUSED", refusal.Message
+	}
+	s.cmpStr("divergence.port_outcome", "REFUSED", outcome)
+
+	// THE MARKER CELL IS A CONTAINMENT TEST REPORTED AS AN EQUALITY. `want` is
+	// the declared phrase; `got` is that same phrase when the port's refusal
+	// carries it and the empty string when it does not. A reader of the diff
+	// therefore sees the phrase that was missing, and the reason it was missing
+	// is appended below with the port's whole text, so nobody has to re-run the
+	// harness to find out what the port actually said.
+	want := v.Expect.PortRefusal.Marker
+	got := ""
+	if want != "" && strings.Contains(text, want) {
+		got = want
+	}
+	s.cmpStr("divergence.port_refusal_marker", want, got)
+	if got != want {
+		if outcome == "ACCEPTED" {
+			s.diffs = append(s.diffs,
+				"THE DIVERGENCE HAS MOVED: this port ACCEPTED a request it is recorded as REFUSING. "+
+					"That is not automatically a fix -- a port that rounds or truncates a "+
+					"sub-minor-unit residue also 'accepts' -- so gate "+v.OracleAccepted.Gate+
+					" must be re-derived against the reference oracle before this vector is rewritten")
+		} else {
+			s.diffs = append(s.diffs,
+				"the port refused, but not with the declared marker. Its whole refusal text was: "+text)
+		}
+	}
+}
+
 func parseMinor(s string) (ledger.MinorUnits, error) {
 	if s == "" {
 		return 0, fmt.Errorf("empty minor-unit string")
@@ -315,10 +393,46 @@ type Summary struct {
 	ImplementationName  string
 	ImplementationWrong string
 
-	ParityPass   int
-	ParityFail   int
-	RefusalPass  int
-	RefusalFail  int
+	ParityPass int
+
+	// ParityFail is every ledger vector whose comparison against OBSERVED oracle
+	// output failed, and it INCLUDES DivergenceFail. See the counting rule below.
+	ParityFail int
+
+	RefusalPass int
+	RefusalFail int
+
+	// DivergencePass and DivergenceFail are the THIRD class's own counters, and
+	// they exist so that a divergence cannot be read as a parity result.  [T360]
+	//
+	// THE COUNTING RULE IS ASYMMETRIC, DELIBERATELY:
+	//
+	//   A DIVERGENCE PASS IS NOT A PARITY PASS. It is counted HERE and nowhere in
+	//   ParityPass. `ledger parity PASS 7` means "seven vectors on which this port
+	//   matched the reference oracle". On a divergence vector the port did NOT
+	//   match the oracle -- it refused where the oracle accepted -- and folding
+	//   that into the parity tally would let an OPEN DIVERGENCE inflate the
+	//   number this program quotes as evidence that the port agrees with
+	//   Fineract. That is the defect DEC-2 §5.1.1 retracts, one class over.
+	//
+	//   A DIVERGENCE FAIL *IS* ADDED TO ParityFail. A divergence vector that
+	//   fails means the port's behaviour has moved relative to a recorded oracle
+	//   observation, and the bar must go red. Two independent reasons, and the
+	//   first is a fact about this repository rather than a preference:
+	//   loanschedule/conformance/grade.go's ExitCode() computes the run's verdict
+	//   from `s.Ledger.ParityFail + s.Ledger.RefusalFail`, and
+	//   .softhouse/conformance.sh's wrong-implementation gate reads the same two
+	//   printed FAIL figures to decide that a wrong port DIED. Both files are
+	//   outside this package. A divergence failure that reached neither would be
+	//   a vector that cannot turn anything red -- decoration. And the direction
+	//   is the safe one: over-reporting a FAIL raises alarm, it never lowers it.
+	//   The un-conflated form is a `.softhouse/conformance.sh` patch this task
+	//   requested rather than applied (that file is held by another worker), and
+	//   until it lands the divergence census below prints both numbers so the
+	//   fold is visible on the same page as the figure it moved.
+	DivergencePass int
+	DivergenceFail int
+
 	Inadmissible int
 	Errored      int
 
@@ -426,6 +540,20 @@ func Run(opts Options) *Summary {
 	// a change to the loanschedule reporter rather than to this context.
 	s.NotGraded = notGradedRows(opts.Registry, vectors)
 
+	// THE DIVERGENCE POPULATION CENSUS RUNS HERE, ABOVE EVERY EARLY RETURN IN
+	// THIS FUNCTION, and for the same reason the not-graded block does. [T360]
+	//
+	// The pinned population is a property of the CORPUS, not of whether this run
+	// managed to grade anything, and the direction that most needs refusing is
+	// DEFLATION -- a corpus from which the only record of an open port/oracle
+	// disagreement has vanished. Below the `len(vectors) == 0` return, a store
+	// that had lost EVERY ledger vector would satisfy the census by having
+	// nothing in it, which is precisely the shape T160 and the exemption
+	// deflation arm exist to refuse. Measured: with this call below the early
+	// return, TestDivergencePopulationIsPinnedInBothDirections' deflation arm
+	// reported `Fatal: []` over an empty store.
+	s.Fatal = append(s.Fatal, divergenceCensus(vectors)...)
+
 	if err != nil {
 		s.Fatal = append(s.Fatal, err.Error())
 		return s
@@ -457,15 +585,24 @@ func Run(opts Options) *Summary {
 		}
 		switch r.Outcome {
 		case OutcomePass:
-			if v.Class == ClassParity {
+			switch v.Class {
+			case ClassParity:
 				s.ParityPass++
-			} else {
+			case ClassDivergence:
+				// NOT ParityPass. See DivergencePass.
+				s.DivergencePass++
+			default:
 				s.RefusalPass++
 			}
 		case OutcomeFail:
-			if v.Class == ClassParity {
+			switch v.Class {
+			case ClassParity:
 				s.ParityFail++
-			} else {
+			case ClassDivergence:
+				// BOTH counters, deliberately. See DivergenceFail.
+				s.DivergenceFail++
+				s.ParityFail++
+			default:
 				s.RefusalFail++
 			}
 		case OutcomeInadmissible:
@@ -520,8 +657,61 @@ func Run(opts Options) *Summary {
 	// other direction, and it has no per-vector home because the thing that is
 	// wrong is the PIN.
 	s.Fatal = append(s.Fatal, StaleCitationPins(s.Citations, loaded)...)
+
+	// --- THE DIVERGENCE POPULATION, PINNED BY IDENTITY IN BOTH DIRECTIONS -----
+	//
+	// [T360.] It is pinned HERE, in Go, and not in .softhouse/conformance.sh,
+	// for two reasons. The practical one: that file is held by another worker
+	// this fire and this task may not write it. The better one: a divergence
+	// vector is the only thing in this store that records the port DISAGREEING
+	// with the reference oracle, and both directions of drift are bad in a way
+	// no other population is.
+	//
+	//   INFLATION -- a divergence appears that nobody raised a gate for -- means
+	//   somebody filed a parity failure they could not make pass under a class
+	//   whose PASS state is "the port refuses". That is the single most
+	//   attractive way to make this bar green while the port is wrong, and it is
+	//   why the class needs a pin at all.
+	//
+	//   DEFLATION -- a divergence disappears -- means an open, gated
+	//   port/oracle disagreement stopped being recorded, with a GREEN run and
+	//   nothing said. That is how G-19 would quietly cease to exist.
+	//
+	// Moving it is a source edit in the same commit as the vector, which a
+	// reviewer sees.
 	return s
 }
+
+// divergenceCensus is that rule. It is a free function so it can be called from
+// above every early return in Run.
+func divergenceCensus(vectors []*Vector) []string {
+	divergences := 0
+	for _, v := range vectors {
+		if v.Class == ClassDivergence {
+			divergences++
+		}
+	}
+	if divergences == DivergencePinCount() {
+		return nil
+	}
+	return []string{fmt.Sprintf(
+		"DIVERGENCE POPULATION %d, PINNED %d. A `divergence` vector records the reference oracle "+
+			"ACCEPTING a request this port REFUSES -- an OPEN, GATED disagreement, not a parity "+
+			"pass. An ADDED one is the cheapest way there is to make this bar green while the port "+
+			"is wrong, and a REMOVED one deletes the only record that the disagreement exists. Both "+
+			"directions move DivergencePinCount in ledger/conformance/grade.go, in the SAME COMMIT "+
+			"as the vector, deliberately. EXIT 2 -- no verdict is available. This is NOT a pass.",
+		divergences, DivergencePinCount())}
+}
+
+// DivergencePinCount is the number of ClassDivergence vectors the ledger store
+// is pinned to hold. See the census in Run for both directions of the argument.
+//
+// 0 -> 1 at T360: LDG-DIV-01, G-19, the reference oracle accepting a
+// sub-minor-unit residue (`100.125000` MNT at declared decimalPlaces 2).
+func DivergencePinCount() int { return divergencePinCount }
+
+const divergencePinCount = 1
 
 func gradeOne(v *Vector, opts Options) Result {
 	r := Result{
@@ -537,6 +727,47 @@ func gradeOne(v *Vector, opts Options) Result {
 		return r
 	}
 	got, refusal, err := opts.Implementation.PostEntry(v.Request)
+
+	// THE DIVERGENCE ROUTE IS TAKEN BEFORE THE ERROR ROUTE, AND ONLY ON THIS
+	// CLASS. [T360, and it is the half T359's F-T359-1 diagnosed]
+	//
+	// `EntryPoster` documents `(*Refusal, nil)` as the refusal channel and a
+	// returned `error` as "the implementation could not answer at all", which is
+	// HARNESS-ERROR. `GoPoster.PostEntry` returns the sub-minor-unit residue
+	// refusal down the ERROR leg (impl.go, the `MinorUnitsFromDecimalText` call
+	// per leg), so a vector recording the oracle accepting a residue returned
+	// HARNESS-ERROR and exit 2 -- a run with no verdict -- rather than a graded
+	// outcome. That is what T352 hit and T359 reproduced.
+	//
+	// THE FIX IS NOT IN impl.go, AND SAYING SO IS THE POINT. T359 measured a
+	// one-line change there that re-returns the residue refusal as a
+	// `(*Refusal, nil)` with an invented `HTTP 422`. It works, and it is the
+	// wrong place, for two reasons. (1) It fabricates a wire status the port
+	// never had, in a store whose whole discipline is that it holds only
+	// observed bytes. (2) It changes the meaning of that return for EVERY class:
+	// a residue reaching a PARITY vector would then be graded as "the port
+	// refused" instead of refusing the run, and a parity vector carrying an
+	// amount the port cannot convert IS a harness error -- the corpus is broken,
+	// not the port. The routing decision belongs to the CLASS, so it is made
+	// here, where the class is known, and nothing about any other class moves.
+	if v.Class == ClassDivergence {
+		var ds cellSink
+		diffDivergence(&ds, v, refusal, err)
+		r.GradedCells = ds.graded
+		r.MoneyCells = ds.money
+		r.Detail = ds.diffs
+		// NO INVARIANT RUNS HERE. AssertInvariants runs on what the
+		// implementation POSTED, and on this class the implementation posted
+		// nothing -- the correct outcome is a refusal. Asserting double-entry
+		// balance over an empty entry would be a green line over no evidence.
+		if len(r.Detail) > 0 {
+			r.Outcome = OutcomeFail
+		} else {
+			r.Outcome = OutcomePass
+		}
+		return r
+	}
+
 	if err != nil {
 		r.Outcome = OutcomeError
 		r.Detail = []string{err.Error()}
