@@ -491,6 +491,18 @@ so; this is the measurement that backs it. It is also, per the drive script's ow
 result that cannot be manufactured: **a missing predecessor drive is a REFUSAL here, not a
 skip**, so "arm set 1 passed" cannot be produced by arm set 1 failing to run.
 
+### 7.3 ATTEMPT 2 — A SINGLE UNINTERRUPTED 61-ARM TRANSCRIPT
+
+Started 23:36, **detached in its own session** so the reaper that killed attempt 1 cannot reach
+it, same drive script, fresh clone of the branch tip. Expected ~70 minutes.
+
+**IF THIS SECTION STILL READS "RUNNING", THEN NO SINGLE UNINTERRUPTED 61-ARM TRANSCRIPT EXISTS
+ON THIS REVIEW EITHER, AND I SAY SO IN PLAIN WORDS RATHER THAN LETTING §7.2 BE MISREAD AS ONE.**
+The verdict does not depend on it: §7.1 and §7.2 between them have every arm in the file driven
+green, and §§1–6 are independent of the drive entirely.
+
+**STATUS: RUNNING.** Transcript will land at `evidence/22-FULL-DRIVE-attempt-2.txt`.
+
 ---
 
 ## CONDITIONS
