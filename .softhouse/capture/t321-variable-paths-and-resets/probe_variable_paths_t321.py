@@ -99,24 +99,113 @@ def run(args, cwd, env=None, timeout=180):
 # THE ENFORCED SET -- derived, never typed.
 # ---------------------------------------------------------------------------------------------
 def enforced_set(root: Path):
-    """Instruments whose fail-open would change the colour of the conformance bar: every
-    `.softhouse/` script named on a NON-COMMENT line of conformance.sh, plus every guard under
-    `.softhouse/guards/`. Transitive callees are not enumerated here -- the TRACE finds them,
-    which is the point."""
+    """Instruments whose fail-open would change the colour of the conformance bar. DERIVED from
+    `conformance.sh`, never typed, from three sources -- and the third is this task's subject
+    arriving inside the graded harness itself:
+
+      (a) every script under `.softhouse/guards/` (the wired guards)
+      (b) a `.softhouse/` path assigned to a shell local on a NON-COMMENT line whose variable is
+          later invoked as `bash "$V"` / `python3 "$V"` / `/usr/bin/python3 "$V"`
+      (c) AN ASSEMBLED INVOCATION: `local script="$REPO_ROOT/<dir>/$1"` inside a function, whose
+          concrete value only exists once the function's CALL SITES are read. conformance.sh has
+          one, `_run_capture_guard`, and it runs TWO HARD-TIER guards through it. Neither of
+          those two paths appears as a string literal anywhere in the tree, so T316's census
+          cannot see either -- FU-T316-3, in the file that grades the money.
+
+    conformance.sh itself is EXCLUDED FROM THE RUN SET and the exclusion is declared rather than
+    quiet: it contacts the reference oracle and takes minutes, so a removal arm under it would
+    be a whole bar run per arm.
+    """
     conf = root / ".softhouse/conformance.sh"
-    named = set()
-    if conf.is_file():
-        for raw in conf.read_text(errors="replace").splitlines():
-            if raw.lstrip().startswith("#"):
-                continue
-            for m in re.finditer(r"\.softhouse/[\w./-]+\.(?:sh|py|zsh)", raw):
-                named.add(m.group(0))
+    if not conf.is_file():
+        return [], [], {}
+    lines = conf.read_text(errors="replace").splitlines()
+    nc = [("" if l.lstrip().startswith("#") else l) for l in lines]
+    text_nc = "\n".join(nc)
+    INVOKE = r'(?:bash|zsh|python3|/usr/bin/python3)\s+"\$%s"'
+
+    found = {}
+
     rc, out, err = run(["git", "ls-files", ".softhouse/guards/"], root)
     for f in out.splitlines():
         if f.endswith((".sh", ".py")):
-            named.add(f)
-    keep = sorted(p for p in named if (root / p).is_file())
-    return keep, sorted(named - set(keep))
+            found[f] = "guards dir (wired)"
+
+    for l in nc:
+        for m in re.finditer(r'(\w+)="\$REPO_ROOT/(\.softhouse/[\w./-]+\.(?:sh|py|zsh))"', l):
+            var, rel = m.group(1), m.group(2)
+            if re.search(INVOKE % re.escape(var), text_nc) and (root / rel).is_file():
+                found.setdefault(rel, "assigned to `%s` and invoked" % var)
+
+    assembled = {}
+    fn = None
+    for i, l in enumerate(nc):
+        m = re.match(r"^([A-Za-z_]\w*)\(\)\s*\{", l)
+        if m:
+            fn = m.group(1)
+        m2 = re.search(r'(\w+)="\$REPO_ROOT/(\.softhouse/[\w./-]+)/\$(\d)"', l)
+        if m2 and fn:
+            var, dirpart = m2.group(1), m2.group(2)
+            if not re.search(INVOKE % re.escape(var), text_nc):
+                continue
+            for cl in nc:
+                cm = re.match(r"\s*%s\s+(\S+)" % re.escape(fn), cl)
+                if cm:
+                    arg = cm.group(1).strip('"\'')
+                    rel = dirpart + "/" + arg
+                    assembled.setdefault(rel, "%s() at line %d, argument $1" % (fn, i + 1))
+                    if (root / rel).is_file():
+                        found.setdefault(rel, "ASSEMBLED at run time via %s() -- INVISIBLE TO "
+                                              "THE LITERAL CENSUS" % fn)
+
+    # THE ARGUMENTS MATTER AS MUCH AS THE PATH. Running a guard with NO ARGUMENTS is not the
+    # invocation conformance.sh performs, and a usage error is evidence of nothing -- T316 hit
+    # exactly this and printed the caveat beside its own exit-screen figure. So the argv TAIL is
+    # derived from the invocation line too: the tokens after `"$VAR"` up to the first redirection
+    # or subshell close. `$REPO_ROOT` is substituted; any token still carrying an unresolved `$`
+    # is DROPPED and the drop is recorded, never silently passed through as a literal.
+    argv_tail = {}
+    dropped = {}
+    for rel, why in list(found.items()):
+        var = None
+        m = re.search(r"assigned to `(\w+)`", why)
+        if m:
+            var = m.group(1)
+        elif why.startswith("guards dir"):
+            var = "g"
+        elif why.startswith("ASSEMBLED"):
+            var = "script"
+        if not var:
+            continue
+        for l in nc:
+            mm = re.search(r'(?:bash|zsh|python3|/usr/bin/python3)\s+"\$%s"(.*)$'
+                           % re.escape(var), l)
+            if not mm:
+                continue
+            tail = mm.group(1)
+            tail = re.split(r"[>|)]|2>&1", tail)[0]
+            toks, drop = [], []
+            for t in re.findall(r'"[^"]*"|\S+', tail):
+                t = t.strip('"')
+                if not t:
+                    continue
+                if t == "$REPO_ROOT":
+                    toks.append("$REPO_ROOT")
+                elif "$" in t:
+                    drop.append(t)
+                else:
+                    toks.append(t)
+            if toks and rel not in argv_tail:
+                argv_tail[rel] = toks
+                if drop:
+                    dropped[rel] = drop
+            break
+
+    keep = sorted(k for k in found if (root / k).is_file()
+                  and k != ".softhouse/conformance.sh")
+    absent = sorted(k for k in found if not (root / k).is_file())
+    return keep, absent, {"derivation": found, "assembled": assembled,
+                          "argv_tail": argv_tail, "argv_dropped": dropped}
 
 
 def literals_of(path: Path):
@@ -130,17 +219,16 @@ def literals_of(path: Path):
 # ---------------------------------------------------------------------------------------------
 # PHASE 1 -- the trace
 # ---------------------------------------------------------------------------------------------
-def trace_once(clone: Path, rel: str, pylib: Path, tracefile: Path):
+def trace_once(clone: Path, rel: str, pylib: Path, tracefile: Path, tail=None):
     if tracefile.exists():
         tracefile.unlink()
     env = dict(os.environ)
     env["PYTHONPATH"] = str(pylib) + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
     env["T321_TRACE_OUT"] = str(tracefile)
     env["PS4"] = PS4
-    if rel.endswith(".py"):
-        argv = ["python3", str(clone / rel)]
-    else:
-        argv = ["bash", "-x", str(clone / rel)]
+    head = ["python3"] if rel.endswith(".py") else ["bash", "-x"]
+    argv = head + [str(clone / rel)] + [
+        str(clone) if t == "$REPO_ROOT" else t for t in (tail or [])]
     rc, out, err = run(argv, clone, env=env)
     touched = []
     if tracefile.exists():
@@ -200,7 +288,7 @@ def main():
               % guard, file=sys.stderr)
         return 2
 
-    targets, missing = enforced_set(ROOT)
+    targets, missing, deriv = enforced_set(ROOT)
     if not targets:
         print("ERROR: the ENFORCED SET is EMPTY. That is a selector failure, not a clean tree.",
               file=sys.stderr)
@@ -219,7 +307,13 @@ def main():
     print("T321 variable-path probe")
     print("  ENFORCED SET (derived from conformance.sh non-comment lines + .softhouse/guards/):")
     for t in targets:
-        print("     %s" % t)
+        print("     %-64s  [%s]" % (t, deriv["derivation"].get(t, "?")))
+        at = deriv.get("argv_tail", {}).get(t)
+        if at:
+            print("        invocation derived from conformance.sh: <script> %s" % " ".join(at))
+        if deriv.get("argv_dropped", {}).get(t):
+            print("        DROPPED unresolved argument(s), recorded not passed through: %s"
+                  % " ".join(deriv["argv_dropped"][t]))
     if missing:
         print("  named but not present in the tree (reported, not silently dropped): %d" % len(missing))
         for m in missing:
@@ -272,7 +366,8 @@ def main():
     print("  census cannot see. `bash -x` + a sitecustomize path tracer; no instrument edited.")
     obs = {}
     for rel in targets:
-        rc, out, err, touched = trace_once(clone, rel, pylib, tracefile)
+        rc, out, err, touched = trace_once(clone, rel, pylib, tracefile,
+                                           deriv.get('argv_tail', {}).get(rel))
         loaded = any(k == "tracer-loaded" for k, _x, _p in touched)
         pyish = rel.endswith(".py")
         paths = {}
@@ -293,8 +388,8 @@ def main():
                     "invisible_to_literal_census": sorted(invisible),
                     "tracer_loaded": loaded,
                     "probe_tokens": sorted(probe_tokens(out, err))}
-        print("  %-58s touched=%-4d invisibleToLiteralCensus=%-4d tracerLoaded=%s"
-              % (rel, len(paths), len(invisible),
+        print("  %-52s exit=%-4s touched=%-4d invisible=%-4d tracer=%s"
+              % (rel, rc, len(paths), len(invisible),
                  "yes" if loaded else ("n/a(shell)" if not pyish else "**NO**")))
         if pyish and not loaded:
             print("     REFUSING to report this row: the tracer did not load into a python")
@@ -310,7 +405,9 @@ def main():
     survivors = []
     arms = 0
     for rel in targets:
-        argv = ["python3", str(clone / rel)] if rel.endswith(".py") else ["bash", str(clone / rel)]
+        tail = [str(clone) if t == "$REPO_ROOT" else t
+                for t in deriv.get("argv_tail", {}).get(rel, [])]
+        argv = (["python3"] if rel.endswith(".py") else ["bash"]) + [str(clone / rel)] + tail
         brc, bout, berr = run(argv, clone)
         btok = probe_tokens(bout, berr)
         print("\n  %s -- BASELINE exit=%s probeTokens=%s" % (rel, brc, sorted(btok) or "none"))
@@ -359,7 +456,9 @@ def main():
     print("      adjudication is checkable rather than asserted (T316's four innocent reasons).")
 
     Path(args.json).write_text(json.dumps(
-        {"enforced_set": targets, "named_but_absent": missing, "observed": obs, "arms": rows},
+        {"enforced_set": targets, "named_but_absent": missing,
+         "derivation": deriv["derivation"], "assembled_invocations": deriv["assembled"],
+         "observed": obs, "arms": rows},
         indent=2))
     shutil.rmtree(str(tmp), ignore_errors=True)
     return 1 if survivors else 0
