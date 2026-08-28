@@ -68,3 +68,24 @@ and renames over the path**, which cannot reach the running shell's open fd. Lan
 `sed -i ''` / `cat >` / python `open(path,"w")` against the live checkout is not.
 
 **Merged this fire so far:** T306 (`3da08fbb`), T272 (`16c59715`), T329 (`61c0f382`).
+
+---
+
+## BATCH 3 — **T328 DISPATCHED. LIVE.** This is the task the fire exists for.
+
+`softhouse/T328-date-rule-promotion`. All three dependencies merged: T327 `done`, T326 `6c3d0787`,
+T306 `3da08fbb`. **No oracle contact required or permitted** — T327 banked every byte with sidecars and a
+99-entry manifest precisely so this task needs none.
+
+**The hole:** the store pins only the REFUSING side of both date rules, so **a port that refuses every dated
+entry passes `LDG-REFUSE-04` and `LDG-REFUSE-05` and survives the entire corpus.** The deliverable is a
+**dead mutant**, not two files.
+
+Sole writer of `.softhouse/vectors/`, `.softhouse/conformance.sh`, `dead-path-frontier.pin`,
+`nexus/internal/apps/ledger/conformance/`.
+
+**Merged this fire:** T306 `3da08fbb` · T272 `16c59715` · T329 `61c0f382` · T277 `e8374743` · T326 `6c3d0787`.
+**Still live:** T282 (`patterns.md`), T325 (`fire-program.sh`, `repo-state-attest.sh`), T330 (`ready-tasks.py`), T328.
+
+**Bar on `main` right now:** exit 0, probe PRESENT and `up`, 46 parity vectors / 7884 cells, LEDGER 5/5/29,
+11/11 wrong impls dead, dead-path frontier 109 == pinned, corpus 1214.
