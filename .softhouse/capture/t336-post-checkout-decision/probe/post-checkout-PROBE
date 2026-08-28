@@ -1,0 +1,15 @@
+#!/bin/sh
+# T336 real-route probe (post-checkout). PURE OBSERVATION, always exit 0.
+# Writes its evidence to THREE places, because a hook invoked by the agent harness may
+# be running under a sandbox that denies some of them:
+#   1. /tmp                       — works for a worker's own `git checkout`
+#   2. the git common dir         — git itself must be able to write here
+#   3. the NEW WORKTREE ITSELF    — the hook's cwd
+# If none of the three appears after a real spawn, the hook did not run at all.
+G=/Users/buv/gerege-nbfi/.git
+L="---- $(date +%FT%T%z) argv:1=$1 2=$2 3=$3 pwd=$(pwd) ppid=$PPID parent=$(ps -o command= -p $PPID 2>&1 | cut -c1-140)"
+echo "$L" >> /tmp/t336-hook-probe.log 2>/dev/null
+echo "$L" >> "$G/T336-POSTCHECKOUT-FIRED.log" 2>/dev/null
+: > "$(pwd)/.T336-POSTCHECKOUT-FIRED" 2>/dev/null
+echo "T336-PROBE-STDERR-MARKER-9f3a1c post-checkout fired in $(pwd)" >&2
+exit 0

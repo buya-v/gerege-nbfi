@@ -1,0 +1,25 @@
+===== A. plain: git worktree add -b worktree-agent-FAKE <path> origin/main =====
+  .git/worktrees/wtA/HEAD          : ref: refs/heads/worktree-agent-FAKE
+  .git/worktrees/wtA/logs/HEAD     :
+      0000000000000000000000000000000000000000 801e4d176ff52d27461a1087e354e6d1e528e4a2 T336 <t336@local> 1787889424 +0800
+      801e4d176ff52d27461a1087e354e6d1e528e4a2 801e4d176ff52d27461a1087e354e6d1e528e4a2 T336 <t336@local> 1787889424 +0800	reset: moving to HEAD
+  .git/logs/refs/heads/worktree-agent-FAKE:
+      0000000000000000000000000000000000000000 801e4d176ff52d27461a1087e354e6d1e528e4a2 T336 <t336@local> 1787889424 +0800	branch: Created from origin/main
+  admin dir contents: HEAD ORIG_HEAD commondir gitdir index logs refs 
+
+===== B. plus a 'git reset --hard HEAD' inside it (what the harness seems to do next) =====
+  logs/HEAD now:
+      0000000000000000000000000000000000000000 801e4d176ff52d27461a1087e354e6d1e528e4a2 T336 <t336@local> 1787889424 +0800
+      801e4d176ff52d27461a1087e354e6d1e528e4a2 801e4d176ff52d27461a1087e354e6d1e528e4a2 T336 <t336@local> 1787889424 +0800	reset: moving to HEAD
+      801e4d176ff52d27461a1087e354e6d1e528e4a2 801e4d176ff52d27461a1087e354e6d1e528e4a2 T336 <t336@local> 1787889424 +0800	reset: moving to HEAD
+
+===== C. the REAL harness worktree, for comparison =====
+  HEAD       : ref: refs/heads/worktree-agent-ac0beb58b1e2738ea
+  logs/HEAD  :
+      0000000000000000000000000000000000000000 a2fa69f4911110d807f44702bb69e63379de56d8 SoftFactory <softfactory@local> 1787889251 +0800
+      a2fa69f4911110d807f44702bb69e63379de56d8 a2fa69f4911110d807f44702bb69e63379de56d8 SoftFactory <softfactory@local> 1787889254 +0800	reset: moving to HEAD
+  branch reflog:
+      0000000000000000000000000000000000000000 a2fa69f4911110d807f44702bb69e63379de56d8 SoftFactory <softfactory@local> 1787889251 +0800	branch: Created from origin/main
+  admin dir contents: CLAUDE_BASE HEAD ORIG_HEAD commondir gitdir index locked logs refs 
+
+scratch: /tmp/t336-sig.feeacv

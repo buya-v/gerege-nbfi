@@ -1,0 +1,84 @@
+git: git version 2.50.1 (Apple Git-155)
+scratch: /tmp/t336-veto.2SV0vc
+
+===== B1a. reference-transaction, refusing in the 'prepared' state =====
+Preparing worktree (new branch 'worktree-agent-b1a')
+T336 refusing prepared refs/heads/worktree-agent-b1a
+T336 refusing aborted refs/heads/worktree-agent-b1a
+fatal: ref updates aborted by hook
+  rc=255
+  branch ref exists            : no
+  worktree dir exists          : no
+  files checked out            : no
+  admin dir registered         : no
+  A WORKER COULD COMMIT IN IT  : no--REFUSED (no directory)
+
+===== B1b. reference-transaction, refusing in EVERY state =====
+Preparing worktree (new branch 'worktree-agent-b1b')
+T336 refusing prepared refs/heads/worktree-agent-b1b
+T336 refusing aborted refs/heads/worktree-agent-b1b
+fatal: ref updates aborted by hook
+  rc=255
+  branch ref exists            : no
+  worktree dir exists          : no
+  files checked out            : no
+  admin dir registered         : no
+  A WORKER COULD COMMIT IN IT  : no--REFUSED (no directory)
+
+===== B1c. control: reference-transaction present but PERMITS (must succeed) =====
+Preparing worktree (new branch 'worktree-agent-b1c')
+  rc=0
+  branch ref exists            : YES
+  worktree dir exists          : YES
+  files checked out            : YES
+  admin dir registered         : YES
+  A WORKER COULD COMMIT IN IT  : YES--NOT-REFUSED
+
+===== B1d. THE REAL SHAPE: refuse only when .softhouse/ is UNPUSHED =====
+Preparing worktree (new branch 'worktree-agent-b1d')
+T336: REFUSED - 1 unpushed / 0 dirty .softhouse paths. Push before you spawn.
+fatal: ref updates aborted by hook
+  rc=255
+  branch ref exists            : no
+  worktree dir exists          : no
+  files checked out            : no
+  admin dir registered         : no
+  A WORKER COULD COMMIT IN IT  : no--REFUSED (no directory)
+
+===== B1e. same hook, but the repo is now CLEAN (must NOT refuse) =====
+Preparing worktree (new branch 'worktree-agent-b1e')
+  rc=0
+  branch ref exists            : YES
+  worktree dir exists          : YES
+  files checked out            : YES
+  admin dir registered         : YES
+  A WORKER COULD COMMIT IN IT  : YES--NOT-REFUSED
+
+===== B1f. does the refusing hook also block ordinary branch work? (blast radius) =====
+error: switch `c' requires a value
+  ordinary  rc=129  branch now: some-ordinary-branch
+  a NON worktree-agent-* worktree add rc=0  exists: yes
+usage: git worktree add [-f] [--detach] [--checkout] [--lock [--reason <string>]]
+                        [--orphan] [(-b | -B) <new-branch>] <path> [<commit-ish>]
+
+    -f, --[no-]force      checkout <branch> even if already checked out in other worktree
+    -b <branch>           create a new branch
+    -B <branch>           create or reset a branch
+    --[no-]orphan         create unborn branch
+    -d, --[no-]detach     detach HEAD at named commit
+    --[no-]checkout       populate the new working tree
+    --[no-]lock           keep the new working tree locked
+    --[no-]reason <string>
+                          reason for locking
+    -q, --[no-]quiet      suppress progress reporting
+    --[no-]track          set up tracking mode (see git-branch(1))
+    --[no-]guess-remote   try to match the new branch name with a remote-tracking branch
+    --[no-]relative-paths use relative paths for worktrees
+
+
+===== B2. pre-receive on a local remote — does  push anything? =====
+Preparing worktree (new branch 'worktree-agent-b2')
+  worktree add rc=0   (if pre-receive had fired it would have printed above)
+  exists: yes
+
+scratch: /tmp/t336-veto.2SV0vc

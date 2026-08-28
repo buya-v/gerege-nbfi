@@ -1,0 +1,21 @@
+push-before-spawn audit -- repo /Users/buv/gerege-nbfi
+  SELECTOR: LIVE worktree admin dirs matching 'agent-*' under .git/worktrees/, spawned at or after 2026-08-28 11:00:00
+  It asks, for each spawn: what did origin/main SAY at that instant?
+  BLIND SPOT: pruned worktrees are gone and invisible; this UNDER-REPORTS.
+
+A. SPAWNS SEEN (10), each judged against origin/main AS OF ITS OWN INSTANT
+   2026-08-28 11:34:58  agent-ac70608b49d46f77a      softhouse/T323-wire-unwired-guards             published in time (origin fc23ad0b carried softhouse/T323-wire-unwired-guards in_progress)
+   2026-08-28 11:35:26  agent-adcb0122e4f0d6738      softhouse/T280-review-t279                     published in time (origin fc23ad0b carried softhouse/T280-review-t279 in_progress)
+   2026-08-28 11:35:47  agent-a2b34ba7fee3c2de6      -                                              UNMAPPED (this worktree never adopted a softhouse/* branch)
+   2026-08-28 11:36:05  agent-a932bd0ee5b1bb219      softhouse/T270-superseded-trap                 published in time (origin fc23ad0b carried softhouse/T270-superseded-trap in_progress)
+   2026-08-28 11:36:24  agent-aac32d39717605690      softhouse/T258-frontier-rot-residuals          published in time (origin fc23ad0b carried softhouse/T258-frontier-rot-residuals in_progress)
+   2026-08-28 11:36:43  agent-afc904cf109cb64cf      softhouse/T335-rvpa-list-traversal             published in time (origin fc23ad0b carried softhouse/T335-rvpa-list-traversal in_progress)
+   2026-08-28 11:53:49  agent-a6d3c423b14da671b      softhouse/T342-releasedat-failopen             published in time (origin a2fa69f4 carried softhouse/T342-releasedat-failopen in_progress)
+   2026-08-28 11:54:11  agent-ac0beb58b1e2738ea      -                                              UNMAPPED (this worktree never adopted a softhouse/* branch)
+   2026-08-28 12:06:18  agent-a70d9f6137d4ad21d      -                                              UNMAPPED (this worktree never adopted a softhouse/* branch)
+   2026-08-28 12:11:27  agent-a414c482df5740790      -                                              UNMAPPED (this worktree never adopted a softhouse/* branch)
+
+C. VERDICT
+   clean=6  VIOLATION=0  pre-history=0  unmapped=4  (of 10 live worktrees)
+   No violation among the 6 spawns this audit could judge.
+   THIS IS NOT ENFORCEMENT. Nothing prevented a violation; this run only failed to find one, over subjects that still exist (P-45).

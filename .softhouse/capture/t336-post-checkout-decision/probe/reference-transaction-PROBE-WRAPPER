@@ -1,0 +1,17 @@
+#!/bin/sh
+# softhouse-t312-ref-guard -- TEMPORARY T336 LOGGING WRAPPER around T312's ref guard.
+# It logs the transaction and then delegates to T312's hook UNCHANGED: same argv, same
+# stdin bytes, same exit status. It carries T312's HOOK_MARK because it still IS that
+# guard; only observation is added. T336 restores T312's original file when done.
+IN=$(cat)
+G=/Users/buv/gerege-nbfi/.git
+{
+  echo "---- $(date +%FT%T%z) state=$1 pwd=$(pwd) GIT_DIR=${GIT_DIR:-<unset>}"
+  printf '%s\n' "$IN" | sed 's/^/    /'
+} >> "$G/T336-REFTXN-FIRED.log" 2>/dev/null
+{
+  echo "---- $(date +%FT%T%z) state=$1 pwd=$(pwd) GIT_DIR=${GIT_DIR:-<unset>}"
+  printf '%s\n' "$IN" | sed 's/^/    /'
+} >> /tmp/t336-reftxn-probe.log 2>/dev/null
+printf '%s' "$IN" | /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /Users/buv/gerege-nbfi/.softhouse/bin/branch_sweep.py hook "$@"
+exit $?
