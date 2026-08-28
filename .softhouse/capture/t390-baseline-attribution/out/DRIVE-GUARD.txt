@@ -1,4 +1,4 @@
-T390 GUARD DRIVE -- 2026-08-28T17:15:25Z
+T390 GUARD DRIVE -- 2026-08-28T17:47:34Z
   REPO_ROOT = /Users/buv/gerege-nbfi/.claude/worktrees/agent-af6e0b0869cd9f233
   guard text: drive/guard-oracle-state-attributed.sh
 ------------------------------------------------------------------------
@@ -8,11 +8,11 @@ T390 GUARD DRIVE -- 2026-08-28T17:15:25Z
   --- RED 1, what the bar would print (elided to the load-bearing lines) ---
   | conformance: UNATTRIBUTED MOVEMENT IN THE SHARED REFERENCE ORACLE.
   | conformance:   .softhouse/capture/t363-oracle-baseline/PROBES.tsv
-  | conformance:     registry=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t390-drive.P1VFda/reg-no-L32.tsv
+  | conformance:     registry=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t390-drive.xP6J04/reg-no-L32.tsv
   | conformance:     ***  L32            legs=6  ids 96-101  gl 37+38+39+41+42+43 MNT      UNATTRIBUTED
   | conformance:   VERDICT: UNATTRIBUTED MOVEMENT (exit 1).
   | conformance:     starred above. Do not 'fix' this by widening the floor -- find the task, then add
-  | conformance:     its rows to /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t390-drive.P1VFda/reg-no-L32.tsv.
+  | conformance:     its rows to /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t390-drive.xP6J04/reg-no-L32.tsv.
   | conformance: Do NOT repair this by widening the floor. Find what did it — a task, or a
   | conformance: its rows to PROBES.tsv.
   --- end RED 1 ---

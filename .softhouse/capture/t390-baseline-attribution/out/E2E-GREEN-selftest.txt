@@ -1,11 +1,11 @@
-conformance: no-float guard — inspected 69 .json files under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root/.softhouse/vectors
-conformance: no-float guard — inspected 6 Go packages / 63 .go files under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root/nexus (recursive, whole module)
-conformance: gofmt guard — inspected 63 .go files under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: no-float guard — inspected 69 .json files under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root/.softhouse/vectors
+conformance: no-float guard — inspected 6 Go packages / 63 .go files under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 63 .go files under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root/nexus (recursive, whole module; contract.go exempt, gate G-3)
 conformance: wire-float round-trip guard — selftest OK, 13 cases (10 drive it RED on a planted
 conformance:   defect, 3 stay GREEN on the clean equivalent; both directions READ)
-conformance: CENSUS wire-float round-trip — inspected 571 documents / 10570 numeric tokens: 548 request bodies (*.json under a req/ dir, plus *.req) across 14 capture rigs / 62 req directories under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root/.softhouse/capture, and 23 capture records cited by the vector store (recursive, whole capture tree)
+conformance: CENSUS wire-float round-trip — inspected 571 documents / 10570 numeric tokens: 548 request bodies (*.json under a req/ dir, plus *.req) across 14 capture rigs / 62 req directories under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root/.softhouse/capture, and 23 capture records cited by the vector store (recursive, whole capture tree)
 conformance: CENSUS float-shaped tokens PRESENT 372 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
-conformance: CENSUS recorded-request blocks — 23 capture records DERIVED from provenance.capture_ref across 69 *.json in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root/.softhouse/vectors; 8 of those records carry a recorded-request block and 15 carry none; 96 blocks (key `inputs` or `request`, any depth, located by parser walk) / 783 numeric tokens GRADED, float-shaped PRESENT 0, ALTERED 0
+conformance: CENSUS recorded-request blocks — 23 capture records DERIVED from provenance.capture_ref across 69 *.json in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root/.softhouse/vectors; 8 of those records carry a recorded-request block and 15 carry none; 96 blocks (key `inputs` or `request`, any depth, located by parser walk) / 783 numeric tokens GRADED, float-shaped PRESENT 0, ALTERED 0
 conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
 conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-338-je-after-repayment-coverage.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
 conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-383-je-after-overpay.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
@@ -25,10 +25,10 @@ conformance: CENSUS   READ BUT NOT GRADED: 4374 numeric tokens in cited capture 
 conformance:   census figure READ: inspected 571 >= 571 tracked by git (floor DERIVED, not pinned)
 conformance: narrow-catch guard — selftest OK, 8 cases (5 drive it RED on a planted
 conformance:   defect, 3 stay GREEN on the clean equivalent; both directions READ)
-conformance: CENSUS narrow-catch — inspected 63 .java files across 24 directories under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: CENSUS narrow-catch — inspected 63 .java files across 24 directories under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
 conformance:   census figure READ: inspected 63 >= 63 tracked by git (floor DERIVED, not pinned)
 ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)
-ledger-invariants: CENSUS ledger-invariants — inspected 63 Go files / 6 packages / 703 funcs (1 hold-named) / 1201 assignment or inc-dec statements / 666 write targets / 6872 string literals in 5794 concatenation groups / 7128 calls under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root/nexus (recursive, whole Go tree)
+ledger-invariants: CENSUS ledger-invariants — inspected 63 Go files / 6 packages / 703 funcs (1 hold-named) / 1201 assignment or inc-dec statements / 666 write targets / 6872 string literals in 5794 concatenation groups / 7128 calls under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root/nexus (recursive, whole Go tree)
 ledger-invariants: CENSUS ledger-invariants SQL surface — 199 SQL-shaped literals, of which 7 carry a DML verb (UPPER BOUND: English prose containing "update" satisfies it) and 0 name an actual table; 0 exec-family calls (0 mutating). Findings: 0
 ledger-invariants: CENSUS   covered: internal/apps/ledger
 ledger-invariants: CENSUS   covered: internal/apps/ledger/conformance
@@ -44,7 +44,7 @@ ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/c
 ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:541:8  invariant_exemptions switches off %q, but that invariant reports %q on the schedule this vector recorded — with NOTHING withdrawn, so t...
 ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/vector.go:1130:3  DUPLICATE case_id IN THE VECTOR STORE — %s. A case_id is a vector's IDENTITY, and the two numbers this program quotes as its coverage e...
 ledger-invariants: CENSUS   hold-named func: internal/apps/ledger/slots_test.go:187:1  TestPlaceholderDisjointnessHolds
-ledger-invariants: NIL-COVERAGE — the SQL surface inspected 6872 string literals and found ZERO SQL DML statements of any kind under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
+ledger-invariants: NIL-COVERAGE — the SQL surface inspected 6872 string literals and found ZERO SQL DML statements of any kind under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
 ledger-invariants: NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module declares no database driver at all.
 ledger-invariants:   census figure READ: inspected 63 >= 63 tracked by git (floor DERIVED, not pinned)
 ledger-invariants: CANNOT-CATCH — the honest limits of this guard, printed on every run, pass or fail:
@@ -91,15 +91,15 @@ conformance:   dynamic SQL is caught only through the call set it recognises; tr
 conformance:   migrations and stored procedures are not walked at all; I-5's semantic half
 conformance:   and non-Go callers are not covered. A PASS here means 'no violation is visible
 conformance:   to a source-level guard over the Go tree', NOT 'the ledger tree is covered'.
-conformance: CENSUS fail-open instruments — inspected 1399 tracked .sh/.py file(s) under
-conformance:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root (git ls-files, whole repository); frontier 11, pinned at 11
+conformance: CENSUS fail-open instruments — inspected 1403 tracked .sh/.py file(s) under
+conformance:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root (git ls-files, whole repository); frontier 11, pinned at 11
 conformance:   (DERIVED from FAILOPEN_PIN_FILE_LIST by counting it, never typed).
 conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a
 conformance:   directory that is not there and carries on, whatever it prints afterwards. TIER2 =
 conformance:   printing arm only, corpus reachable today. All are pinned by PATH, not by count.
 conformance:   frontier == pinned (all 11 rows, by path).
-conformance: CENSUS host state in the lint corpus — 163 repo-wide search instrument(s)
-conformance:   read from git grep over tracked *.sh/*.py under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root; sites that assign a
+conformance: CENSUS host state in the lint corpus — 164 repo-wide search instrument(s)
+conformance:   read from git grep over tracked *.sh/*.py under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root; sites that assign a
 conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
 conformance:   (DERIVED from HOSTSTATE_PIN_TEMP_ASSIGN_LIST by counting it, never typed).
 conformance:   Such a path is host state — shared across worktrees, absent from every commit,
@@ -107,11 +107,11 @@ conformance:   and deleted on reboot — and C1/C6 decide TIER by asking whether
 conformance:   census == pinned (all 18 site(s), by path and source line).
 conformance:   PNUMBER-CITATIONS: declared-dangling ids (recorded in the .softhouse/patterns.md errata with their repair) = [131, 261]
 conformance:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=97 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
-conformance:   PNUMBER-CITATIONS: sites=11522 definition=98 consistent=600 bare=10713 misdirecting=77 undefined=20 negative-control=14
+conformance:   PNUMBER-CITATIONS: sites=11703 definition=98 consistent=622 bare=10871 misdirecting=78 undefined=20 negative-control=14
 conformance:   PNUMBER-CITATIONS: skipped self-output-files=22 self-source-files=2 (stated, not silent -- both contain deliberately drifted text)
 conformance:   PNUMBER-CITATIONS:   directive MISDIRECTING 2
 conformance:   PNUMBER-CITATIONS:   directive UNDEFINED    4
-conformance:   PNUMBER-CITATIONS:   evidence  MISDIRECTING 66
+conformance:   PNUMBER-CITATIONS:   evidence  MISDIRECTING 67
 conformance:   PNUMBER-CITATIONS:   evidence  UNDEFINED    16
 conformance:   PNUMBER-CITATIONS:   orchestrator MISDIRECTING 8
 conformance:   PNUMBER-CITATIONS:   ratified  MISDIRECTING 1
@@ -148,8 +148,8 @@ conformance:   guards-dir registration: PASS — every member of .softhouse/guar
 conformance:   file, DECLARED against a verified witness, or carries a verified REACHED-BY.
 conformance:   namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
 conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
-conformance:   namespace:   root    /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root
-conformance:   namespace:   corpus  8915 tracked paths -> 190 evidence directories
+conformance:   namespace:   root    /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root
+conformance:   namespace:   corpus  8926 tracked paths -> 190 evidence directories
 conformance:   namespace:           168 carry a t<n> id prefix; 22 do not and CANNOT collide this way
 conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
 conformance:   namespace:   T255 -> 2 directories; ownership records required 1, present 1
@@ -161,7 +161,7 @@ conformance:   namespace:       UNCLAIMED  capture/t256-toolchain-population    
 conformance:   NAMESPACE-CENSUS: dirs=190 prefixed=168 unprefixed=22 collidingIds=2 declared=2 unclaimed=2 shortfallIds=0
 conformance:   namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
 conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
-conformance:   T316-DEADPATH-CENSUS: corpus=1399 deadFiles=75 deadOccurrences=108 resolving=1319 indeterminate=95 prose=357
+conformance:   T316-DEADPATH-CENSUS: corpus=1403 deadFiles=75 deadOccurrences=108 resolving=1343 indeterminate=102 prose=364
 conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
 conformance:   (the planted T309 single-term predicate drives cell B-prime RED; the shipped
 conformance:   tool keeps it GREEN. Both legs ran here — --selftest is not optional.)
@@ -208,23 +208,23 @@ conformance:     ok   378  T388-P07-loan-disburse         PROCESSED  DISBURSE/LO
 conformance:     ok   379  T388-A01-runaccruals           PROCESSED  EXECUTE/PERIODICACCRUALACCOUNTING <- T388
 conformance:     ok   0 floating-point columns on the ledger tables
 conformance:     ok   engine: PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1)  (PostgreSQL is the only permitted database)
-conformance:   GUARD-COST CENSUS: 16 guards timed, 137s total wall,
+conformance:   GUARD-COST CENSUS: 16 guards timed, 95s total wall,
 conformance:   ceiling breaches 0, unbudgeted guards 0.
 conformance:     COST 0s / ceiling 60s   guard_graded_root_is_this_tree
 conformance:     COST 2s / ceiling 60s   guard_no_float_in_vectors
-conformance:     COST 1s / ceiling 60s   guard_no_float_in_harness
+conformance:     COST 2s / ceiling 60s   guard_no_float_in_harness
 conformance:     COST 0s / ceiling 60s   guard_gofmt
-conformance:     COST 3s / ceiling 60s   guard_no_float_in_capture_requests
+conformance:     COST 1s / ceiling 60s   guard_no_float_in_capture_requests
 conformance:     COST 1s / ceiling 60s   guard_no_narrow_catch_in_capture_rigs
 conformance:     COST 3s / ceiling 300s   guard_ledger_invariants
-conformance:     COST 17s / ceiling 60s   guard_no_fail_open_instruments
+conformance:     COST 8s / ceiling 60s   guard_no_fail_open_instruments
 conformance:     COST 1s / ceiling 60s   guard_no_host_state_in_lint_corpus
-conformance:     COST 43s / ceiling 300s   guard_pnumber_citations
+conformance:     COST 25s / ceiling 300s   guard_pnumber_citations
 conformance:     COST 0s / ceiling 60s   guard_accepting_side_gap_declared
 conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
 conformance:     COST 1s / ceiling 60s   guard_capture_namespace
-conformance:     COST 4s / ceiling 60s   guard_dead_path_frontier
-conformance:     COST 58s / ceiling 500s   guard_reconciler_ownership
+conformance:     COST 3s / ceiling 60s   guard_dead_path_frontier
+conformance:     COST 45s / ceiling 500s   guard_reconciler_ownership
 conformance:     COST 2s / ceiling 60s   guard_oracle_state_attributed
 conformance:   (RESOLUTION 1 s, from bash SECONDS; a 0 means UNDER ONE SECOND. The elapsed
 conformance:   figures are RECORDED and NOT PINNED — wall clock is a fact about the host as
@@ -238,17 +238,17 @@ conformance: SELF-TEST MODE — grading the harness, not a port. Not a conforman
 === GOLDEN-VECTOR CONFORMANCE HARNESS — SELF-TEST MODE ===
     Grading the HARNESS, not an implementation. A green run here means the harness works.
     IT IS NOT A CONFORMANCE PASS AND MAKES NO CLAIM ABOUT ANY PORT.
-    repo root       /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root
+    repo root       /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root
                     resolved from the BUILD ANCHOR — the tree this binary was compiled from
-                    anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root/nexus/internal/apps/loanschedule/conformance/reporoot.go
+                    anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root/nexus/internal/apps/loanschedule/conformance/reporoot.go
                     cwd cross-check: DIFFERENT — cwd /Users/buv/gerege-nbfi/.claude/worktrees/agent-af6e0b0869cd9f233 resolves to
                                      /Users/buv/gerege-nbfi/.claude/worktrees/agent-af6e0b0869cd9f233
                                      PRE-T165 THAT TREE, NOT THE ONE ABOVE, WOULD HAVE BEEN GRADED:
                                      its corpus, its contract.go digest, its no-float census and its
                                      capture_refs. The graded root is the build anchor and is correct;
                                      this line exists so the divergence is never silent again.
-    store           /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root/.softhouse/vectors
-    implementation  replay[/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root/.softhouse/vectors] (49 answers) — SELF-TEST ONLY, COMPUTES NOTHING
+    store           /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root/.softhouse/vectors
+    implementation  replay[/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root/.softhouse/vectors] (49 answers) — SELF-TEST ONLY, COMPUTES NOTHING
     oracle probe    DOWN
 
 CASE                         CLASS            SEAM        OUTCOME       CELLS UNGRADED  REASON
@@ -510,7 +510,7 @@ T74-E-P72                    parity           path_a_e... PASS            257   
                             covered: nexus/internal/apps/loanschedule/conformance
                             covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
                             covered: nexus/internal/apps/loanschedule/contract
-                            census root walked: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.Llhadj/root/nexus
+                            census root walked: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t390-e2e.YYC4Cd/root/nexus
 
 VERDICT: SELF-TEST PASS (exit 0). The harness grades correctly. NOT a conformance PASS.
 

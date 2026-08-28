@@ -94,12 +94,16 @@ awk -v a3="$A3" '
 # itself -- the exact defect class this program keeps finding in prose cardinals (P-80).
 awk -v a4="$A4" '
   index($0, a4) > 0 && !done {
-    print "  #     `--self-test` is used for the end-to-end arms because it exercises the identical"
+    # NOTE: A4 is the SECOND line of the original sentence; the first ("`--self-test` is used
+    # for the end-to-end arms because it exercises the identical") is ABOVE it and is left
+    # standing. Re-printing it here is what the first generated patch did, and it duplicated
+    # the sentence -- caught by reading the diff, fixed here, regenerated.
     print "  #     load_toolchain -> run_guards path a graded run takes. SINCE T390 THAT PATH DOES"
     print "  #     CONTACT THE ORACLE'\''S DATABASE, through guard_oracle_state_attributed, which is"
     print "  #     why that guard SKIPS rather than fails when the database is unreachable: this"
     print "  #     arm must keep working on a host with no docker. Cost is about 7s plus 1-2s for"
     print "  #     the baseline instrument [T390, measured]. The RED arm must also show it never"
+    print "  #     reached the guards downstream of the"
     done = 1
     next
   }
@@ -124,9 +128,22 @@ drc=$?
 [ -s "$PATCH" ]  || { echo "REFUSING: the patch is EMPTY -- no hunk landed" >&2; exit 2; }
 
 # Rewrite the diff headers so `git apply` accepts it against the tracked path.
+#
+# THE PATH IS A VARIABLE, AND THAT IS NOT STYLE. Spelled as a literal inside the format string,
+# the harness path would be immediately followed by a two-character newline escape, and T316's
+# dead-path census reads the two as ONE token: a repo-path reference with the escape glued on,
+# which resolves to nothing. Driven, twice, in this task's own end-to-end arm:
+#   T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0
+# and the added row named THIS FILE.
+# [out/E2E-GREEN-selftest-{THIRD,FOURTH}-ATTEMPT.txt.] The FOURTH attempt is the instructive
+# one: the third repair moved the escape out of the printf but QUOTED THE OFFENDING TOKEN IN
+# THIS COMMENT, and the census does not care whether a token sits in code or in prose -- it
+# went red again, identically. Hence the escape is not written here in any form.
+# Repaired at the site rather than pinned, which is what that guard's refusal text instructs.
+TRACKED=".softhouse/conformance.sh"
 {
-  printf -- '--- a/.softhouse/conformance.sh\n'
-  printf -- '+++ b/.softhouse/conformance.sh\n'
+  printf -- '--- a/%s\n' "$TRACKED"
+  printf -- '+++ b/%s\n' "$TRACKED"
   tail -n +3 "$PATCH"
 } > "$PATCH.tmp" && mv "$PATCH.tmp" "$PATCH"
 
@@ -149,6 +166,13 @@ chk "guard_oracle_state_attributed() definition"  1 "guard_oracle_state_attribut
 chk "GUARD_COST_BUDGETS row"                      1 "guard_oracle_state_attributed|60"
 chk "timed_guard call in run_guards"              1 "timed_guard guard_oracle_state_attributed"
 chk "the falsified 'contacts NO oracle' sentence" 0 "contacts NO oracle"
+# H4 rewrites prose in the middle of a paragraph, which is exactly where a generated patch can
+# duplicate or drop a line without any test noticing. The first generated patch did BOTH -- it
+# repeated "\`--self-test\` is used for the end-to-end arms" and dropped "reached the guards
+# downstream of the" -- and only reading the diff caught it. These two rows make the next
+# recurrence a generator refusal instead of a reading exercise.
+chk "H4: the sentence opener occurs ONCE, not twice"  1 "\`--self-test\` is used for the end-to-end arms"
+chk "H4: the dangling clause was carried over"        1 "reached the guards downstream of the"
 echo "  patch: $PATCH ($(wc -l < "$PATCH" | tr -d ' ') lines)"
 [ "$fails" -eq 0 ] || exit 1
 echo "GENERATOR VERDICT: patch built, applies cleanly, and has the shape it claims (exit 0)."

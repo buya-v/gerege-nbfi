@@ -5231,12 +5231,12 @@ prove() {
   #     because the root DIVERGES, not because it is broken.
   #
   #     `--self-test` is used for the end-to-end arms because it exercises the identical
-  #     `--self-test` is used for the end-to-end arms because it exercises the identical
   #     load_toolchain -> run_guards path a graded run takes. SINCE T390 THAT PATH DOES
   #     CONTACT THE ORACLE'S DATABASE, through guard_oracle_state_attributed, which is
   #     why that guard SKIPS rather than fails when the database is unreachable: this
   #     arm must keep working on a host with no docker. Cost is about 7s plus 1-2s for
   #     the baseline instrument [T390, measured]. The RED arm must also show it never
+  #     reached the guards downstream of the
   #     divergence check — a refusal printed AFTER a census would mean the census had already
   #     read the wrong tree.
   do_prove21() {
