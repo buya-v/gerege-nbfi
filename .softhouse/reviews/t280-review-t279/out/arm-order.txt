@@ -1,0 +1,13 @@
+  transposed arms 3 and 4; nothing else changed
+
+=== the case T279 cites: lock 105 h old, tip 2.99 h old, pid not judgeable ===
+  SHIPPED order (3 before 4)         -> TAKE-ceiling
+  TRANSPOSED order (4 before 3)      -> HELD-live
+
+=== sweep: how many of the 192 states change verdict when 3 and 4 are swapped? ===
+  states whose verdict CHANGES under the transposition: 3
+    lock=present released=null started=ge24 tip=lt6 pid=alive_here   shipped=TAKE-ceiling  transposed=HELD-live
+    lock=present released=null started=ge24 tip=lt6 pid=absent   shipped=TAKE-ceiling  transposed=HELD-live
+    lock=present released=null started=ge24 tip=lt6 pid=other_host   shipped=TAKE-ceiling  transposed=HELD-live
+
+scratch: /tmp/t280-order.QhjjqV

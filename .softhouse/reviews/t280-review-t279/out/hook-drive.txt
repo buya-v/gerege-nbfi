@@ -1,0 +1,94 @@
+### git version: git version 2.50.1 (Apple Git-155)
+
+=== CASE 1: clean (all pushed), SOFTHOUSE_PUSH_GATE=enforce ===
+  worktree add rc=0  ; dir exists: YES
+
+  unpushed .softhouse commits: 1
+
+=== CASE 2: unpushed dispatch record, DEFAULT gate (unset -> warn) ===
+  worktree add rc=0 ; new worktree dir exists: YES
+  branch w2 created: YES
+  hook output seen: 1
+    | Preparing worktree (new branch 'w2')
+    | HEAD is now at d4b6fa2 softhouse: DISPATCH RECORD (deliberately unpushed)
+    | ==============================================================================
+    | P-85 PUSH-BEFORE-SPAWN VIOLATION — a worker worktree is being created while the
+    | spawning repo's .softhouse/ state is NOT PUBLISHED.
+    | 
+    |   repo            : /private/tmp/t280-hook.V4oFIz/wt
+    |   branch          : main (upstream origin/main)
+    |   unpushed commits touching .softhouse/ : 1
+    |   uncommitted paths under .softhouse/   : 0
+    | 
+    |   the unpushed commits:
+    |     d4b6fa2 softhouse: DISPATCH RECORD (deliberately unpushed)
+    | 
+    |   files they touch that the next orchestrator reads to decide whether it may run:
+    |     .softhouse/tasks.json
+    | 
+    |   Until this is pushed, origin's HEAD is an ACTIVE LIE to the next orchestrator:
+    |   it says nothing is running while this worker runs. Push, then spawn.
+    |      git -C '/private/tmp/t280-hook.V4oFIz/wt' push origin main
+    | ==============================================================================
+
+=== CASE 3: unpushed dispatch record, SOFTHOUSE_PUSH_GATE=enforce ===
+  worktree add rc=1 ; new worktree dir exists: YES
+  branch w3 created: YES
+  files checked out in w3: 2
+  hook fired: 1
+    | Preparing worktree (new branch 'w3')
+    | HEAD is now at d4b6fa2 softhouse: DISPATCH RECORD (deliberately unpushed)
+    | ==============================================================================
+    | P-85 PUSH-BEFORE-SPAWN VIOLATION — a worker worktree is being created while the
+    | spawning repo's .softhouse/ state is NOT PUBLISHED.
+    | 
+    |   repo            : /private/tmp/t280-hook.V4oFIz/wt
+    |   branch          : main (upstream origin/main)
+    |   unpushed commits touching .softhouse/ : 1
+    |   uncommitted paths under .softhouse/   : 0
+    | 
+    |   the unpushed commits:
+    |     d4b6fa2 softhouse: DISPATCH RECORD (deliberately unpushed)
+    | 
+    |   files they touch that the next orchestrator reads to decide whether it may run:
+    |     .softhouse/tasks.json
+    | 
+    |   Until this is pushed, origin's HEAD is an ACTIVE LIE to the next orchestrator:
+    |   it says nothing is running while this worker runs. Push, then spawn.
+    |      git -C '/private/tmp/t280-hook.V4oFIz/wt' push origin main
+    | ==============================================================================
+
+  => worktree list after enforce:
+    /private/tmp/t280-hook.V4oFIz/wt  d4b6fa2 [main]
+    /private/tmp/t280-hook.V4oFIz/w1  108fbf3 [w1]
+    /private/tmp/t280-hook.V4oFIz/w2  d4b6fa2 [w2]
+    /private/tmp/t280-hook.V4oFIz/w3  d4b6fa2 [w3]
+
+=== CASE 4: enforce, but violation is UNCOMMITTED only (dirty .softhouse) ===
+  worktree add rc=1 ; hook fired: 1
+
+=== CASE 5: does the hook fire when spawning FROM a linked worktree? ===
+  spawned from linked worktree: rc=1 ; hook fired: 1
+  (hook installed at common dir? YES)
+    | Preparing worktree (new branch 'w5')
+    | HEAD is now at 1c059a2 unpushed again
+    | ==============================================================================
+    | P-85 PUSH-BEFORE-SPAWN VIOLATION — a worker worktree is being created while the
+    | spawning repo's .softhouse/ state is NOT PUBLISHED.
+    | 
+    |   repo            : /private/tmp/t280-hook.V4oFIz/wt
+    |   branch          : main (upstream origin/main)
+    |   unpushed commits touching .softhouse/ : 1
+    |   uncommitted paths under .softhouse/   : 0
+    | 
+    |   the unpushed commits:
+    |     1c059a2 unpushed again
+    | 
+    |   files they touch that the next orchestrator reads to decide whether it may run:
+    | 
+    |   Until this is pushed, origin's HEAD is an ACTIVE LIE to the next orchestrator:
+    |   it says nothing is running while this worker runs. Push, then spawn.
+    |      git -C '/private/tmp/t280-hook.V4oFIz/wt' push origin main
+    | ==============================================================================
+
+scratch repo: /tmp/t280-hook.V4oFIz

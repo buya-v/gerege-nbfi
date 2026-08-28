@@ -1,0 +1,34 @@
+=== CONSTRUCTED, NOT ASSUMED ===
+  lock file mtime age     : 1s
+  started_at              : 2026-08-27T19:41:56Z
+  started_at age          : 28801s
+  origin/main tip age     : 43201s
+  holder pid 58255 is  : ALIVE
+
+  ratio mtime:started_at  : 28801.0x
+
+=== the SHIPPED reader on this repo ===
+  repo=/tmp/t280-mtime.7O7tIb/fire
+  lock_present=1 released_at=<null> started_age=28801 tip_age=43201 pid_state=alive_here
+  mtime_age=1   # printed only; decides nothing
+  verdict=TAKE-both-stale
+
+=== does mtime decide anything? flip ONLY the mtime, keep every other signal ===
+  after touch -30m:
+  repo=/tmp/t280-mtime.7O7tIb/fire
+  lock_present=1 released_at=<null> started_age=28801 tip_age=43201 pid_state=alive_here
+  mtime_age=1857   # printed only; decides nothing
+  verdict=TAKE-both-stale
+  after touch -3d:
+  repo=/tmp/t280-mtime.7O7tIb/fire
+  lock_present=1 released_at=<null> started_age=28801 tip_age=43201 pid_state=alive_here
+  mtime_age=259257   # printed only; decides nothing
+  verdict=TAKE-both-stale
+
+=== grep: every use of the lock file mtime in the shipped wrapper ===
+  37:# `/usr/bin/stat -f %m "$LOCK"` — the lock FILE'S MTIME. T265 measured it live: a lock
+  183:  print -r -- "mtime_age=$(( $(date +%s) - $(/usr/bin/stat -f %m "$LOCK" 2>/dev/null || print 0) ))   # printed only; decides nothing"
+  563:  LOCK_MTIME_AGE=$(( $(date +%s) - $(/usr/bin/stat -f %m "$LOCK" 2>/dev/null || print 0) ))
+  2182:  RESUME_MTIME=$(/usr/bin/stat -f %m .softhouse/RESUME.md 2>/dev/null || print 0)
+
+scratch: /tmp/t280-mtime.7O7tIb
