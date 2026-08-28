@@ -1,0 +1,20 @@
+T277 -- ONE COMMAND, every claim in this directory, positives and negatives.
+
+$ bash src/verify_t277.sh <repo-root>
+T277 verify -- repo root: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab788dca3f24f50a8
+
+POSITIVE: the instruments must self-test and reproduce every pin.
+  PASS-CASE  ok    census --selftest
+  PASS-CASE  ok    census both scopes
+  PASS-CASE  ok    seven-cell row dump
+  PASS-CASE  ok    cross-check --selftest
+  PASS-CASE  ok    cross-check t229corpus
+
+NEGATIVE: each of these MUST trip. A guard that cannot fail proves nothing.
+  FAIL-CASE  tripped  M1 census: law (ii) pinned 220/220 on FACT A (df0aed2c's claim)
+  FAIL-CASE  tripped  M2 census: T159-R600p0-N2000-B999 dropped from the exception set
+  FAIL-CASE  tripped  M3 cross-check: 165 minor units expected where 166 is measured
+  FAIL-CASE  tripped  M4 cross-check: I1q read from the schedule instead of computed
+
+T277 VERIFY: PASS -- every pin reproduced and every negative tripped.
+exit=0
