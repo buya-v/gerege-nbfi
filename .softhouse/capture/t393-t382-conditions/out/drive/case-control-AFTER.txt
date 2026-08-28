@@ -704,3 +704,171 @@ population off its pin, or an untied constant is REFUSED with exit 2, not passed
 What is still NOT closed is named in the file's docstring, not left to be found: a
 committed change to a POST-FORK observation that ALSO rewrites its manifest row in
 the same commit. There is no committed baseline older than HEAD for those 632.
+=== 0. THE INSTRUMENT ITSELF — driven RED before it is trusted (P-22) ===
+  PASS  the comparator reports IDENTICAL on identical bytes
+          7d432cd60871d25c
+  PASS  the comparator reports DIFFERENT on bytes with ONE line appended — the exact mutation shape T362 used to prove F-1
+          7d432cd60871d25c vs 451c230f34f023fe
+  PASS  the manifest parser reads a two-column list, strips the binary-mode star, and skips comments and blank lines
+          {'out/x.http': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'req/y.json': 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'}
+
+=== 1. THE BASELINE EXISTS, AND ITS CALIBRATION IS CROSS-CHECKED (T382 FINDING 4) ===
+    T382: 'a tripwire whose calibration is a bare unchecked constant is a tripwire
+    with a switch on it.' Moving FORK forward to a commit that CONTAINS a mutation
+    collapsed ARM A onto ARM B (403 -> 1035) and the mutation went invisible while
+    section 4 printed it BY NAME and run-all.sh printed PASS. So the constant is now
+    tied to tracked files, in the same spelling section 4 already uses for its copy.
+  PASS  literal baseline sha 12a7f8d9a3af is present
+  PASS  prove-a2-7-additive.py carries `BASELINE = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"`
+  PASS  verify-manifest-independently.py carries `FORK = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"`
+
+=== 2. POPULATION — enumerated from the fork tree AND from HEAD, and PINNED ===
+    An EMPTY population is a SELECTOR failure, not a clean tree: this repository
+    tracks captured oracle observations under .softhouse/capture/tierA-a2/{out,req}/ and always
+    has. An empty census passes everything. REFUSED. (Same spelling as
+    guard_guards_dir_registration in conformance.sh — one idea, one spelling.)
+    T382 FINDING 1: applying that rule AT ZERO and stopping is not enough. A
+    population that silently shrank by up to 632, or grew by any number of
+    fabricated files, is the same class of selector failure one step short of empty.
+    ARM A's size is pinned below; ARM B's is pinned by the manifest in ARM C.
+      at the fork sha : 403 observations  {'out': 327, 'req': 76}
+      at HEAD         : 1035 observations  {'out': 906, 'req': 129}
+  PASS  ARM A's population is the pinned 403 (a property of an immutable commit)
+
+=== 3. ARM A — every observation that existed at the fork sha, RECOMPUTED ===
+    git blob at 12a7f8d9a3af  vs  the bytes on disk today.
+      enumerated                : 403
+      byte-identical            : 403
+      DIFFER                    : 0
+      MISSING on disk           : 0
+      unreadable at the fork sha: 0
+  PASS  NO captured oracle observation that existed at the fork sha has been MUTATED
+          differ=0
+  PASS  NO captured oracle observation that existed at the fork sha has been DELETED
+          missing=0 unreadable=0
+
+=== 4. ARM B — every observation tracked at HEAD, including ones captured SINCE ===
+    git blob at HEAD  vs  the bytes on disk. Arm A cannot see an observation that
+    did not exist at the fork sha; 632 of the 1035 tracked today are in that class.
+      enumerated     : 1035
+      byte-identical : 1035
+      DIFFER         : 0
+      MISSING on disk: 0
+  PASS  NO captured oracle observation tracked at HEAD differs from its committed bytes
+          differ=0
+  PASS  NO captured oracle observation tracked at HEAD is missing from the working tree
+          missing=0
+
+=== 5. ARM C — the tracked MANIFEST, as a PATH-SET and as RECOMPUTED DIGESTS ===
+    T382 FINDING 1/2. ARMs A and B compare files they were HANDED; neither can see a
+    file that was never handed to them, which is why a committed DELETION took the
+    HEAD population 1035 -> 1034 and a committed ADDITION took it to 1036, both
+    reporting VERDICT: PASS. MANIFEST.sha256 is a TRACKED, per-file digest list
+    whose out/ + req/ row-set is EXACTLY the tracked observation path-set. Comparing
+    the two SETS is what makes a deletion and an addition visible at all.
+      manifest rows total                  : 1139
+      manifest rows under out/ or req/     : 1035
+      observations tracked at HEAD         : 1035
+  PASS  every observation tracked at HEAD has a MANIFEST row — a file ADDED to the corpus without one is a fabrication, not a capture
+          tracked observations with no manifest row: 0 []
+  PASS  every MANIFEST row under out/ or req/ names an observation tracked at HEAD — a row whose file is gone is a DELETION, and the population moving is not a clean tree
+          manifest rows naming no tracked observation: 0 []
+      manifest digest agrees with disk     : 1035
+      DISAGREES                            : 0
+      unreadable                           : 0
+  PASS  every MANIFEST digest is the RECOMPUTED sha256 of the bytes on disk
+          agree=1035 disagree=0 unreadable=0
+
+=== 6. ARM D — THE DISK, walked. Nothing tracked ARMs A-C were never handed. ===
+    T382 FINDING 1, cases 16 and 09. ARMs A, B and C all start from a git or manifest
+    listing, so an UNTRACKED fabricated observation sitting in out/ is invisible to
+    all three — nobody hands it to them. And open(path,'rb') FOLLOWS SYMLINKS, so a
+    regular file replaced by a symlink to identical bytes reports PASS: the bytes are
+    right at that instant, but the file is no longer the tracked object and its
+    content is thereafter controlled from outside the repository. This arm starts
+    from the DISK instead, and uses lstat, which does not follow.
+      files on disk under out/ + req/      : 1035
+      of those that are SYMLINKS           : 0
+      of those that are neither file nor link: 0
+  PASS  the disk holds NOTHING under out/ or req/ that is not tracked at HEAD — an untracked observation is a fabrication no arm reading a git listing can see
+          untracked: 0 []
+  PASS  every observation tracked at HEAD is present on disk as a real directory entry
+          absent: 0 []
+  PASS  every observation on disk is a REGULAR FILE — a symlink is not the tracked object even when its target's bytes are identical today
+          symlinks=0 other=0
+
+=== 7. ARM E — the 27 fork-sha manifest entries OUTSIDE out/ and req/ (T382 F-3) ===
+    These are the scripts that PRODUCED the observations and the red/green evidence
+    that grades them: cap.sh, manifest.py, the mkreq*.py, the run-*.sh, the sql. Until
+    T393 the ONLY thing comparing them to the fork sha was section 4's third arm, and
+    section 4 is adjudicated RED for drift, so that arm was SATURATED — T382 mutated
+    manifest.py, section 4 printed `DIFF manifest.py` BY NAME, and run-all.sh still
+    exited 0 printing RUN-ALL VERDICT: PASS. That is T362's F-1 verbatim, one
+    directory over. The question is asked HERE too, where GREEN is adjudicated.
+      entries in the fork-sha manifest     : 430
+      of those under out/ or req/          : 403
+      NOT under out/ or req/ (ARM E)       : 27
+      byte-identical to the fork sha       : 25
+      adjudicated-different, UNMOVED       : 2
+      DIFFER and are NOT adjudicated       : 0
+      adjudicated but MOVED                : 0
+      missing / unreadable                 : 0
+  PASS  NO capture script or evidence file from the fork-sha manifest has been MUTATED, outside the two differences adjudicated by digest at the top of this file
+          unadjudicated differences: 0
+  PASS  the two ADJUDICATED differences are still exactly the differences adjudicated — a further mutation moves this, and so does a revert to the fork bytes
+          unmoved=2 of 2, moved=0
+  PASS  NO entry from the fork-sha manifest is missing from disk or from the fork tree
+          missing=0
+
+=== 8. POSITIVE CONTROLS — every arm actually READ a non-empty population ===
+    T374's F-2 rule, applied to all five arms and not only at zero: an arm that
+    compared nothing reports no differences, and that is the vacuous pass this
+    review exists to make impossible.
+  PASS  ARM A compared a non-empty population
+          403 observations at the fork sha
+  PASS  ARM B compared a non-empty population
+          1035 observations at HEAD
+  PASS  ARM C compared a non-empty manifest population
+          1035 manifest rows under out/ or req/
+  PASS  ARM D walked a non-empty disk population
+          1035 files on disk under out/ + req/
+  PASS  ARM E compared a non-empty population
+          27 non-observation entries in the fork-sha manifest
+  PASS  ARM B's population is a SUPERSET of ARM A's — every historical observation is still tracked, so neither arm is silently narrower than it reads
+          in fork but not at HEAD: []
+  PASS  ARM C's row-set and ARM D's disk-set are the SAME set as ARM B's tracked set, so the three populations agree and none of them is silently the empty intersection
+          manifest=1035 tracked=1035 disk=1035
+
+FAILURES: 0
+
+VERDICT: PASS (exit 0). Every captured oracle observation under .softhouse/capture/tierA-a2/{out,req}/
+is byte-identical to its fork-sha blob, to its HEAD blob and to its MANIFEST digest;
+the disk under those directories holds exactly the tracked set and nothing else, all
+of it regular files; and the 27 fork-sha manifest entries outside them are unchanged
+apart from the two adjudicated by digest above.
+exit=0
+
+############ VERDICT — every section against its adjudicated exit code
+
+  SECTION   EXPECTED       ACTUAL    RESULT
+  1         1              1         as adjudicated
+  2         1              1         as adjudicated
+  3         0              0         as adjudicated
+  4         1              1         as adjudicated
+  5         0              0         as adjudicated
+  6         0              0         as adjudicated
+  7         0              0         as adjudicated
+  8         0              0         as adjudicated
+  9         0              0         as adjudicated
+  10        0              0         as adjudicated
+
+  sections run: 10    deviations: 0
+  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
+  for it. Note that this INCLUDES sections 1, 2 and 4, which are adjudicated RED.
+  PASS here means 'the review reproduces', NOT 'A2-7 was right'.
+
+NOTE (T374 / T362 F-5): this run REWROTE the tracked file
+  .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt
+so your working tree is now dirty. That is expected — the transcript carries a
+generation timestamp — and it is NOT a finding. To restore it:
+  git checkout -- .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt

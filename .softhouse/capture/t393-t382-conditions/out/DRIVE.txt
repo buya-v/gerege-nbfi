@@ -6,3 +6,5 @@ AFTER  = fc51790dd7fc881c48f807aa80104368e9d07efb   (T393's section 10, five arm
 --- control @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
       section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
 --- control @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=1  expected=0  as expected
+--- f1-13-commit-mutate-postfork @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)

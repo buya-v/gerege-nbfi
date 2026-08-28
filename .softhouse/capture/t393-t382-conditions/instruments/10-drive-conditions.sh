@@ -178,7 +178,17 @@ run_case() {   # run_case <name> <mutfn> <expect_before> <expect_after>
     if [ -z "$sec10" ]; then sec10="none"; fi
     verdict="$(sed -n 's/.*RUN-ALL VERDICT: \([A-Z]*\).*/\1/p' "$OUT/case-$name-$ref.txt" | tail -1)"
     if [ -z "$verdict" ]; then verdict="none"; fi
-    named="$(grep -c -- "DIFF $FORKOBS" "$OUT/case-$name-$ref.txt")"
+    # SECTION 4's OUTPUT LINE, not any sentence that quotes it. The first spelling of this
+    # column was `grep -c -- "DIFF $FORKOBS"`, and the control row at the POST-fix ref came
+    # back 1 on an UNMUTATED tree: the hit was section 10's own new BANNER, which quotes
+    # T382's finding verbatim ("...section 4 printed DIFF out/A2-000-... BY NAME"). A column
+    # that counts the harness describing the defect instead of the harness detecting it is a
+    # false positive of exactly the shape this whole review is about, so it is anchored to
+    # the printed form -- `        DIFF <name>` at line start, nothing after it. Found by
+    # reading a control row that should have been 0 and was 1; the first drive was killed and
+    # re-run from the corrected bytes rather than post-processed, so the committed matrix and
+    # the committed instrument are the same bytes (T356/P-22 spelling).
+    named="$(grep -c -E -- "^ +DIFF ${FORKOBS}\$" "$OUT/case-$name-$ref.txt")"
     local expect result
     if [ "$ref" = "BEFORE" ]; then expect="$exp_before"; else expect="$exp_after"; fi
     if [ "$sec10" = "$expect" ]; then result="as expected"; else

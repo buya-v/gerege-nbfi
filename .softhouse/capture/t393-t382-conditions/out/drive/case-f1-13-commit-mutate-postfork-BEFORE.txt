@@ -1,0 +1,251 @@
+############ A2-11 independent review of A2-7 — full transcript
+generated 2026-08-28T17:25:16Z
+
+READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
+exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
+that should hold. Every failing assertion is printed by name, and the VERDICT block at
+the end compares every section against the exit code adjudicated for it.
+
+############ HISTORY OF THIS FILE — three corrections, each by measurement
+
+T270. Section 8 used to run a SUPERSEDED prover that could not fail. Bytes preserved,
+execution stopped; the successor is READ from the register. See section 8.
+
+T270 also recorded that sections 2, 4, 5, 6 and 7 ABORTED with a traceback, because
+enumerate-corpus.py:22, verify-manifest-independently.py:21, audit-float.py:18,
+prove-resolve7-float-red.py:33 and prove-a2-7-guards-are-falsifiable.py:19 each
+hard-coded ROOT/RIG to the RETIRED worktree path .../agent-a3ac3d56d665ff7da. T270
+left them alone, calling the repair a separate decision.
+
+T357 MADE THAT DECISION AND REPAIRED THEM. Each of the five now derives its root from
+__file__ (parents[3] IS the checkout root), with an A2_11_ROOT env override. The
+substitution was chosen because it is OUTPUT-NEUTRAL in the worktree that produced the
+committed evidence — in agent-a3ac3d56d665ff7da, parents[3] resolved to exactly that
+path — so it RESTORES re-derivability rather than altering the record. That is a
+MEASUREMENT, not a hope: T357 diffed the regenerated transcript against the committed
+one section by section, and sections 1, 2, 3, 6 and 7 came back IDENTICAL, including
+section 2's three findings against A2-7. Sections 4 and 5 differ, for a stated reason
+given at each site: both enumerate the CURRENT capture rig, which has grown since A2-7.
+Section 8 differs because T270 changed it. Evidence:
+.softhouse/capture/t357-a2-11-section1-red/out/40-section-diff-committed-vs-rootfix.txt
+
+T357 also corrected the SECTION 1 LABEL, which read '[ORACLE] live re-observation' and
+was wrong twice: check-shape.py imports only json, sys, decimal and pathlib and replays
+committed bytes under obs/. It never contacts the oracle. In a program that grades
+provenance, a section advertising an offline replay as a live observation is a false
+provenance claim. The corrected label is now itself PROVED, in section 9, from the
+AST — not swapped for a second unchecked adjective.
+
+############ 1. contract shape, replayed OFFLINE from A2-11's committed obs/ bytes
+############    [NO ORACLE CONTACTED — proved from the AST in section 9]
+
+EXPECTED RC 1. This section is PERMANENTLY AND CORRECTLY RED, with three named
+failures, and has been since it was committed on 2026-08-21. They are the executable
+form of A2-11's finding F-1 / patterns.md P-46: A2-7 printed three FABRICATED lines
+claiming the collection-valued mapping fields come back 'present with the value null',
+reasoned a contract rule from them, and fed that rule to the coder A2-8. The lines are
+not in any capture. The oracle omits a null field on the read path. Section 9
+ADJUDICATES this RED and goes red itself if a FOURTH failure ever appears, or if any
+of the three ever disappears.
+
+=== (a) write/read field-name asymmetry on GET /loanproducts/46 ===
+  accountingMappings keys: ['fundSourceAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
+  PASS  all nine WRITE names present in the POST body and NONE of them in the read
+  PASS  all nine READ names present in accountingMappings and NONE of them in the POST body
+  PASS      fundSourceAccountId (write, id 16) -> fundSourceAccount (read)  -- read id=16
+  PASS      incomeFromFeeAccountId (write, id 9) -> incomeFromFeeAccount (read)  -- read id=9
+  PASS      incomeFromPenaltyAccountId (write, id 10) -> incomeFromPenaltyAccount (read)  -- read id=10
+  PASS      incomeFromRecoveryAccountId (write, id 11) -> incomeFromRecoveryAccount (read)  -- read id=11
+  PASS      interestOnLoanAccountId (write, id 8) -> interestOnLoanAccount (read)  -- read id=8
+  PASS      loanPortfolioAccountId (write, id 4) -> loanPortfolioAccount (read)  -- read id=4
+  PASS      overpaymentLiabilityAccountId (write, id 6) -> overpaymentLiabilityAccount (read)  -- read id=6
+  PASS      transfersInSuspenseAccountId (write, id 17) -> transfersInSuspenseAccount (read)  -- read id=17
+  PASS      writeOffAccountId (write, id 13) -> writeOffAccount (read)  -- read id=13
+
+=== the read value is an OBJECT with exactly {id,name,glCode} ===
+  PASS    fundSourceAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    incomeFromFeeAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    incomeFromPenaltyAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    incomeFromRecoveryAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    interestOnLoanAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    loanPortfolioAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    overpaymentLiabilityAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    transfersInSuspenseAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    writeOffAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS  no 'type' key anywhere in accountingMappings
+  PASS  no 'usage' key anywhere in accountingMappings
+  PASS  no 'disabled' / 'manualEntriesAllowed' key anywhere in accountingMappings
+
+=== unmapped optional slots are ABSENT, not null ===
+  PASS    goodwillCreditAccount absent from accountingMappings
+  PASS    goodwillCreditAccount does not occur in the raw bytes at all
+  PASS    chargeOffExpenseAccount absent from accountingMappings
+  PASS    chargeOffExpenseAccount does not occur in the raw bytes at all
+  ... while the COLLECTION-valued mapping fields are PRESENT with value null:
+  FAIL    paymentChannelToFundSourceMappings present and null  -- '<absent>'
+  FAIL    feeToIncomeAccountMappings present and null  -- '<absent>'
+  FAIL    penaltyToIncomeAccountMappings present and null  -- '<absent>'
+
+=== product 22: sparse/slot-keyed, one extra key vs 46 ===
+  22 keys: ['fundSourceAccount', 'goodwillCreditAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
+  PASS    22 == 46's keys plus exactly {goodwillCreditAccount}
+  PASS    22 goodwillCreditAccount is gl 14 / glCode 50200  -- {'id': 14, 'name': 'Goodwill Credit', 'glCode': '50200'}
+  PASS    22 paymentChannelToFundSourceMappings is a non-empty LIST of {paymentType,fundSourceAccount}  -- [{"paymentType": {"id": 1, "name": "Money Transfer"}, "fundSourceAccount": {"id": 16, "name": "Fund Source Alternate", "glCode": "10300"}}]
+  PASS    22 DEFAULT fundSourceAccount is gl 2 (the retyped one), override is gl 16  -- default={'id': 2, 'name': 'Fund Source', 'glCode': '10100'}, override={'id': 16, 'name': 'Fund Source Alternate', 'glCode': '10300'}
+
+=== product 28: accrual shape, thirteen keys, three receivables ===
+  28 keys (13): ['fundSourceAccount', 'goodwillCreditAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'receivableFeeAccount', 'receivableInterestAccount', 'receivablePenaltyAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
+  PASS    28 accountingRule is accrual periodic  -- {'id': 3, 'code': 'accountingRuleType.accrual.periodic', 'value': 'ACCRUAL PERIODIC'}
+  PASS    28 has exactly thirteen keys  -- 13
+  PASS    28 carries the three receivables
+
+=== gl 2 is INCOME at the contract boundary, but products serve it silently ===
+  PASS    GET /glaccounts/2 glCode 10100, name 'Fund Source', type INCOME  -- 10100 / Fund Source / {'id': 4, 'code': 'accountType.income', 'value': 'INCOME'}
+  PASS    nameDecorated is '....Fund Source' (four dots per level)  -- '....Fund Source'
+  PASS    the GL read DOES expose type and usage as {id,code,value} objects
+  PASS    'hierarchy' is NOT returned by the GL REST read  -- ['description', 'disabled', 'glCode', 'id', 'manualEntriesAllowed', 'name', 'nameDecorated', 'parentId', 'tagId', 'type', 'usage']
+
+=== how many of the 26 products carry gl 2 in the DEFAULT FUND_SOURCE slot? ===
+  product ids: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 46]
+  PASS    the list holds 26 products, ids 1-24, 27, 28, 46  -- 27 products
+
+FAILURES: 3
+  -   paymentChannelToFundSourceMappings present and null
+  -   feeToIncomeAccountMappings present and null
+  -   penaltyToIncomeAccountMappings present and null
+exit=1
+
+############ 2. corpus enumeration at A2-7's fork point (offline, counts its skips)
+############    EXPECTED RC 1 — asserts A2-7's claims; three of them are refuted.
+############    Reproduces the committed transcript IDENTICALLY after T357's root fix.
+=== corpus at the fork sha 12a7f8d9a3af ===
+  327 files under out/, by extension: {'http': 108, 'json': 108, 'status': 108, 'txt': 3}
+
+=== every HTTP request recorded in the corpus, by method + endpoint family ===
+  .http files enumerated : 108
+  undecodable (NAMED)    : 0 []
+  no request line (NAMED): 0 []
+  parsed                 : 108
+  PASS  every .http file parsed — nothing was silently skipped
+          parsed=108 of 108
+    DELETE /glaccounts/{id}                               7
+    GET    /financialactivityaccounts                     1
+    GET    /financialactivityaccounts/template            1
+    GET    /glaccounts                                    1
+    GET    /glaccounts/template                           1
+    GET    /glaccounts/{id}                               6
+    GET    /journalentries                                3
+    POST   /financialactivityaccounts                     7
+    POST   /glaccounts                                    37
+    POST   /loanproducts                                  21
+    POST   /loans                                         4
+    POST   /loans/{id}                                    8
+    POST   /loans/{id}/transactions                       1
+    PUT    /financialactivityaccounts/{id}                1
+    PUT    /glaccounts/{id}                               9
+
+  POST .../loanproducts : 21
+  GET  .../loanproducts*: 0  []
+  FAIL  CLAIM 1a — the corpus held ELEVEN POST /loanproducts
+          count=21: ['A2-prod-060-cash-with-channel-override.http', 'A2-prod-061-cash-no-override.http', 'A2-prod-062-map-header-account.http', 'A2-prod-063-map-wrong-type.http', 'A2-prod-064-cash-no-mappings.http', 'A2-prod-065-map-missing-account.http', 'A2-prod-065b-map-missing-account.http', 'A2-prod-066-bad-paymenttype.http', 'A2-prod-067-duplicate-channel.http', 'A2-prod-068-accrual-missing-receivables.http', 'A2-prod-069-accrual-complete.http', 'attempt1-A2-prod-060-cash-with-channel-override.http', 'attempt1-A2-prod-061-cash-no-override.http', 'attempt1-A2-prod-062-map-header-account.http', 'attempt1-A2-prod-063-map-wrong-type.http', 'attempt1-A2-prod-064-cash-no-mappings.http', 'attempt1-A2-prod-065-map-missing-account.http', 'attempt1-A2-prod-066-bad-paymenttype.http', 'attempt1-A2-prod-067-duplicate-channel.http', 'attempt1-A2-prod-068-accrual-missing-receivables.http', 'attempt1-A2-prod-069-accrual-complete.http']
+  PASS  CLAIM 1b — the corpus held ZERO GET on /loanproducts of any form
+          found 0
+
+  GET /glaccounts/{id}  : 6  ['A2-012-read-header-asset', 'A2-013-read-child-asset-detail', 'A2-015-read-grandchild', 'A2-018-read-level3-detail', 'A2-133-read-after-updates', 'A2-135-read-after-delete']
+  FAIL  CLAIM 2a — exactly four GET /glaccounts/{id} existed
+          count=6
+      A2-012-read-header-asset.http            glCode=10000 type=ASSET
+      A2-013-read-child-asset-detail.http      glCode=10100 type=ASSET
+      A2-015-read-grandchild.http              glCode=None type=None
+      A2-018-read-level3-detail.http           glCode=10201 type=ASSET
+      A2-133-read-after-updates.http           glCode=19999 type=ASSET
+      A2-135-read-after-delete.http            glCode=None type=None
+      bodies that would not parse (NAMED): 0 []
+  FAIL  CLAIM 2b — all four are ASSET
+          {'A2-012-read-header-asset.http': ('10000', 'ASSET'), 'A2-013-read-child-asset-detail.http': ('10100', 'ASSET'), 'A2-015-read-grandchild.http': (None, None), 'A2-018-read-level3-detail.http': ('10201', 'ASSET'), 'A2-133-read-after-updates.http': ('19999', 'ASSET'), 'A2-135-read-after-delete.http': (None, None)}
+
+=== CLAIM 3 — distinct GL-code-shaped tokens across ALL out/ bytes at the fork sha ===
+  files read: 327   undecodable (NAMED): 0 []
+  distinct 5-digit tokens: 24 -> ['10000', '10100', '10200', '10201', '10300', '10400', '10500', '19998', '19999', '20000', '20100', '30000', '40000', '40100', '40200', '40300', '40400', '50000', '50100', '50200', '99003', '99008', '99010', '99999']
+  A2-150's acc_gl_account gl_code column: 21 -> ['10000', '10100', '10200', '10201', '10300', '10400', '10500', '19998', '20000', '20100', '30000', '40000', '40100', '40200', '40300', '40400', '50000', '50100', '50200', '99008', '99010']
+  PASS  A2-150 holds exactly 21 gl_code values
+          21
+  tokens present in out/ but NOT live accounts: ['19999', '99003', '99999']
+  live accounts never mentioned in out/ text  : []
+  PASS  CLAIM 3 — 24 distinct tokens, 3 of them non-accounts, 21 == the dump's 21 rows
+          tokens=24 extra=['19999', '99003', '99999'] missing=[]
+
+FAILURES: 3
+  - CLAIM 1a — the corpus held ELEVEN POST /loanproducts
+  - CLAIM 2a — exactly four GET /glaccounts/{id} existed
+  - CLAIM 2b — all four are ASSET
+exit=1
+
+############ 3. double-entry in INTEGER MINOR UNITS (offline)   EXPECTED RC 0
+=== A2-7's committed A2-235 (A2-235-je-after-recovery.json) ===
+    je#11   DEBIT  1200000.000000 ->    120000000 minor units  gl 10201
+    je#12   CREDIT 1200000.000000 ->    120000000 minor units  gl 10300
+    je#14   CREDIT  200000.000000 ->     20000000 minor units  gl 10201
+    je#15   DEBIT   200000.000000 ->     20000000 minor units  gl 10300
+    je#16   DEBIT  1000000.000000 ->    100000000 minor units  gl 50100
+    je#17   CREDIT 1000000.000000 ->    100000000 minor units  gl 10201
+    je#18   DEBIT    50000.000000 ->      5000000 minor units  gl 10300
+    je#19   CREDIT   50000.000000 ->      5000000 minor units  gl 40400
+    entries: 8   DEBIT total = 245000000 minor units   CREDIT total = 245000000 minor units
+  PASS  A2-7's committed A2-235 — every amount is a WHOLE number of minor units (no sub-minor residue)
+          []
+  PASS  A2-7's committed A2-235 — DEBIT == CREDIT in INTEGER minor units
+          debit=245000000 credit=245000000 delta=0
+  PASS  A2-7's committed A2-235 — both sides are exactly 245,000,000 minor units == MNT 2,450,000
+          debit=245000000 credit=245000000
+  PASS  A2-7's committed A2-235 — the totals are Python ints, not floats or Decimals
+          int / int
+
+=== A2-11's live re-observation (a2-11-get-je-loan5.json) ===
+    je#11   DEBIT  1200000.000000 ->    120000000 minor units  gl 10201
+    je#12   CREDIT 1200000.000000 ->    120000000 minor units  gl 10300
+    je#14   CREDIT  200000.000000 ->     20000000 minor units  gl 10201
+    je#15   DEBIT   200000.000000 ->     20000000 minor units  gl 10300
+    je#16   DEBIT  1000000.000000 ->    100000000 minor units  gl 50100
+    je#17   CREDIT 1000000.000000 ->    100000000 minor units  gl 10201
+    je#18   DEBIT    50000.000000 ->      5000000 minor units  gl 10300
+    je#19   CREDIT   50000.000000 ->      5000000 minor units  gl 40400
+    entries: 8   DEBIT total = 245000000 minor units   CREDIT total = 245000000 minor units
+  PASS  A2-11's live re-observation — every amount is a WHOLE number of minor units (no sub-minor residue)
+          []
+  PASS  A2-11's live re-observation — DEBIT == CREDIT in INTEGER minor units
+          debit=245000000 credit=245000000 delta=0
+  PASS  A2-11's live re-observation — both sides are exactly 245,000,000 minor units == MNT 2,450,000
+          debit=245000000 credit=245000000
+  PASS  A2-11's live re-observation — the totals are Python ints, not floats or Decimals
+          int / int
+
+=== A2-7's capture and my live re-observation must agree entry for entry ===
+  PASS  same entry ids, sides, amounts and GL codes
+          A2-7=[(11, 'DEBIT', '1200000.000000', '10201'), (12, 'CREDIT', '1200000.000000', '10300'), (14, 'CREDIT', '200000.000000', '10201'), (15, 'DEBIT', '200000.000000', '10300'), (16, 'DEBIT', '1000000.000000', '50100'), (17, 'CREDIT', '1000000.000000', '10201'), (18, 'DEBIT', '50000.000000', '10300'), (19, 'CREDIT', '50000.000000', '40400')]
+          A2-11=[(11, 'DEBIT', '1200000.000000', '10201'), (12, 'CREDIT', '1200000.000000', '10300'), (14, 'CREDIT', '200000.000000', '10201'), (15, 'DEBIT', '200000.000000', '10300'), (16, 'DEBIT', '1000000.000000', '50100'), (17, 'CREDIT', '1000000.000000', '10201'), (18, 'DEBIT', '50000.000000', '10300'), (19, 'CREDIT', '50000.000000', '40400')]
+
+FAILURES: 0
+exit=0
+
+############ 4. manifest, hashes RECOMPUTED not trusted (offline)
+############    EXPECTED RC 1 — and the reason is DRIFT, not a defect.
+
+This section pins counts taken AT A2-7'S MOMENT (a 571-entry manifest, 141 added over
+the 430 at the fork sha). The rig has been added to by many tasks since, so it now
+holds 1139, and the count assertions necessarily fail. That is the section measuring
+the passage of time, not finding a defect. READ THE THIRD ARM INSTEAD, which is the
+one that matters: of the 430 files that existed at the fork sha, 428 are still
+BYTE-IDENTICAL, 0 are missing, the current manifest agrees with disk on all 430 (no
+laundering), and the 2 that differ are NAMED — CAPTURE-PLAN.md and cap.sh, which are
+rig tooling and a plan document. NO CAPTURED ORACLE OBSERVATION under out/ or req/ has
+been mutated. If that ever stops being true, this section will say so by name.
+
+T374 / T362 F-1 -- READ THIS BEFORE TRUSTING THE SENTENCE ABOVE. It says so BY NAME,
+in printed text, and until T374 that was ALL it did. This section is adjudicated RED
+for drift, so the integrity arm is SATURATED: it cannot make the section any redder,
+and the VERDICT block below therefore could not see it. T362 PROVED that by appending
+one line to out/A2-000-glaccounts-preexisting.http -- section 4 printed DIFF for it BY
+NAME and run-all.sh still exited 0 printing RUN-ALL VERDICT: PASS. T374 reproduced it
+in a scratch clone before repairing it. THE REPAIR IS SECTION 10, which asks the
+integrity question where GREEN is the adjudicated value. Section 4 keeps the drift arm.
