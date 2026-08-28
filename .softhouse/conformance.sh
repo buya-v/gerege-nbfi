@@ -631,8 +631,55 @@ EXEMPTION_PIN_LEDGER_DECLARED=0
 #   diffEntry, the comparisons are really performed, and ledger-wrong-truncating
 #   dies on all ten of them with measured margins -25, -37, -62 per vector on the
 #   legs and -62 on each total.
+#
+# T307 MOVES EXACTLY ONE OF THE THREE, AND THE OTHER TWO ARE ARGUED IN PLACE
+# RATHER THAN LEFT SILENT — this pin has now held still across four promotions
+# for four different reasons and the reader should not have to guess which.
+#
+#   PARITY 7 -> 7. NOTHING WAS ACCEPTED. T307 fired NO probe at the reference
+#   oracle: it promoted bytes T287 committed in August and that MANIFEST.sha256
+#   still verifies 87/87. A vector promoted with no oracle contact cannot be an
+#   acceptance, because an acceptance is an observation of a POST that wrote.
+#
+#   REFUSAL 5 -> 6. LDG-REFUSE-06-preclosure-entry-before-closing-date-echoes-
+#   the-closing-date, promoted from T287's A2-02 under T295 backlog B-3. THIS IS
+#   THE VECTOR T295 MEASURED AS UNPROMOTABLE AND SAID WHY: A2-02's captured
+#   response body is BYTE-IDENTICAL to A2-01's (both sha256 c12e977f…) despite a
+#   different transactionDate, so on the three cells the Refusal shape had it
+#   could not diverge from LDG-REFUSE-04 and would have raised the corpus count
+#   by one and the kill count by ZERO — corpus inflation, which this census
+#   exists to catch. T307 added a FOURTH refusal cell and the count now moves for
+#   a kill: ledger-wrong-accounting-closed-echoes-transaction-date dies on this
+#   vector and on no other.
+#   THE FOURTH CELL IS A SELECTOR, NOT A DATE, and that is what makes this a
+#   promotion rather than a calendar dependency: expect.refusal.arg_echo names
+#   WHICH declared input the oracle echoed ("latest_closing_date" on :637-638,
+#   "transaction_date" on :631) and the comparator RESOLVES it from Request. No
+#   date literal appears in any expectation, so the claim survives re-capture on
+#   any dates whatsoever. T294's deliberate refusal to grade OB-01's own args —
+#   26 LIVE TRANSACTION IDS — is UPHELD and is now enforced by admit.go on two
+#   independent grounds rather than remembered: OB-01's args[0].value is a JSON
+#   ARRAY and the selector vocabulary is closed to the two scalar dates, and
+#   request.posted_non_contra_transaction_ids was itself transcribed FROM that
+#   same wire field, so a selector resolving against it would compare the
+#   captured body with a copy of itself.
+#
+#   MONEYCELLS 39 -> 39, AND THE REASON IS T297's, RE-CHECKED RATHER THAN
+#   INHERITED. grade.go's diffRefusal reaches only cmpInt and cmpStr; the new
+#   cell is compared with cmpStr, so cmpMoney is STILL unreachable from that
+#   function and a refusal vector still contributes ZERO money cells. Bumping
+#   this figure for LDG-REFUSE-06 would record money comparisons that no
+#   comparison performs — the self-certifying shape the paragraphs above declined
+#   three times. Held at 39 and MEASURED at 39 on the run that promoted it.
+#
+#   GRADED CELLS ARE NOT PINNED AND THIS IS WHERE THAT SHOWS. The arg cell adds
+#   1 to LDG-REFUSE-04, 1 to LDG-REFUSE-05 and 4 to the new vector, so the
+#   ledger's graded total rises; no pin in this file reads it. Recorded as
+#   FU-T307-1 rather than pinned here, because adding a tenth census pin is a
+#   change to this file's gate structure and not T307's to make in the same diff
+#   that moves two of the existing nine.
 EXEMPTION_PIN_LEDGER_PARITY=7
-EXEMPTION_PIN_LEDGER_REFUSAL=5
+EXEMPTION_PIN_LEDGER_REFUSAL=6
 EXEMPTION_PIN_LEDGER_MONEYCELLS=39
 
 # Scratch paths are script-global, not function-local: an EXIT trap fires after the
@@ -3256,7 +3303,27 @@ gate_exemption_census() {
 #     are exactly what kills those. This one FAILS CLOSED, and no refusal vector
 #     can see it. Opposite errors on the same two rules, and until T328 the corpus
 #     graded only one direction.
-EXEMPTION_PIN_LEDGER_WRONGIMPLS=12
+#
+# T307 MOVES IT 12 -> 13.  ledger-wrong-accounting-closed-echoes-transaction-date
+#     GETS THE CLOSURE BOUNDARY EXACTLY RIGHT AND QUOTES THE WRONG DATE BACK. It
+#     refuses precisely the requests the oracle refuses, with the oracle's status,
+#     globalisation code and message, and puts the SUBMITTED transactionDate in
+#     errors[0].args[0].value where :637-638 constructs ACCOUNTING_CLOSED with
+#     latestGLClosure.getClosingDate(). :631, five lines above, DOES echo the
+#     transaction date -- for the OTHER date refusal -- so a porter who reads one
+#     throw site and generalises writes exactly this.
+#     WHY IT IS NOT A DUPLICATE OF ledger-wrong-closure-boundary-exclusive: that
+#     one gets the BOUNDARY wrong and dies on LDG-REFUSE-04. This one is
+#     INDISTINGUISHABLE from the reference implementation on LDG-REFUSE-04,
+#     because A2-01 was posted ON the closing date and the two dates are EQUAL
+#     there. It dies on LDG-REFUSE-06 alone, on ONE cell, refusal.arg0_value.
+#     WHY IT COULD NOT HAVE BEEN REGISTERED BEFORE: nothing in this harness could
+#     have killed it. The Refusal shape had three cells, A2-02's captured body is
+#     BYTE-IDENTICAL to A2-01's on all three, and T295 correctly refused to
+#     promote a vector no implementation could fail independently. T307 added the
+#     fourth cell as a SELECTOR (expect.refusal.arg_echo), which is what makes
+#     A2-02's bytes gradeable without pinning anything to a calendar.
+EXEMPTION_PIN_LEDGER_WRONGIMPLS=13
 
 gate_wrong_ledger_impls_die() {
   local bin="$1" probe="$2"

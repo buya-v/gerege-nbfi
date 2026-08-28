@@ -565,10 +565,135 @@ type ExpectLeg struct {
 // text, none of which a contract sentinel has, and it is compared as three
 // separate cells so that a port matching the status while inventing the code is
 // caught.
+//
+// ---------------------------------------------------------------------------
+// THE FOURTH CELL, AND WHY IT IS A SELECTOR AND NOT A DATE  [T307, B-3]
+// ---------------------------------------------------------------------------
+//
+// T295 filed B-3: grade `errors[0].args`, because two real captures are
+// unpromotable without it — A2-02's response body is BYTE-IDENTICAL to A2-01's
+// on all three cells above despite a different transactionDate, and A1-01
+// differs from A1-02 in `args` alone. T294 had DELIBERATELY REFUSED to grade its
+// own `args` on OB-01, where the field enumerates 26 LIVE TRANSACTION IDS and
+// changes with any unrelated posting to the tenant. Both are right, and the
+// shape below is what lets both be right at once.
+//
+// THE FIELD BELOW IS NOT THE DATE. It names WHICH INPUT THE VECTOR ALREADY
+// DECLARES the oracle echoed into `errors[0].args[0].value`. The comparator
+// RESOLVES the named input from Request and compares that against what the
+// implementation produced, so no calendar literal is ever written into an
+// expectation and the claim survives re-capture on any dates whatsoever.
+//
+// THE SOURCE FACT IT ENCODES, which is what makes it a claim about the ORACLE
+// and not about one afternoon's tenant state
+// [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java:630-638,
+// pinned 426a23544]:
+//
+//	:631  FUTURE_DATE       is constructed with `transactionDate`
+//	:637  ACCOUNTING_CLOSED is constructed with `latestGLClosure.getClosingDate()`
+//
+// THE SAME WIRE FIELD MEANS DIFFERENT THINGS IN THE TWO REFUSALS. A2-02 is the
+// only capture in this corpus that separates them: it posted 2026-01-15 against
+// a closure dated 2026-01-31 and the oracle echoed 2026-01-31 — the CLOSING
+// date, not its own transaction date.
+//
+// THE ADMISSIBILITY VOCABULARY IS CLOSED TO TWO NAMES, both of which are
+// SCALAR CALENDAR DATES that this schema ALREADY declares as inputs, and
+// admit.go binds each to the refusal code the source pairs it with. An
+// unrecognised selector is refused; a selector on any other refusal code is
+// refused; a selector on a non-refusal vector is refused. Default-deny.
+//
+// WHY OB-01 STILL CANNOT BE GRADED, on TWO independent grounds, so T294's
+// refusal is UPHELD as a RULE rather than re-taken as a judgement:
+//
+//  1. STRUCTURAL. `args[0].value` is a JSON ARRAY there, not a scalar. It is an
+//     array because ApiParameterError special-cases exactly one type — a
+//     LocalDate becomes a `yyyy-MM-dd` STRING and everything else is handed to
+//     Gson as-is [ApiParameterError.java:95-105], and :815 passes a
+//     `List<String>` as one vararg Object. There is no selector in the closed
+//     vocabulary that names a list, so the claim CANNOT BE WRITTEN DOWN.
+//  2. PROVENANCE. Even if one existed, LDG-REFUSE-03's
+//     request.posted_non_contra_transaction_ids was itself TRANSCRIBED FROM
+//     `errors[0].args[0].value` (T294 handoff §6, provenance table). Resolving a
+//     selector against it would compare the captured body with a copy of itself
+//     — the harness checking its own transcription, which is the circularity
+//     registry.go refuses — and it is tenant-mutable besides.
+//
+// Both selectors below pass the mirror of (2): request.transaction_date comes
+// from the caller's own committed `.req` wire bytes and
+// request.latest_closing_date from `req/a2-00-create-closure.json` plus the
+// live `acc_gl_closure` read. Neither is read out of the body being graded.
+//
+// THE ZONE/CLOCK DETERMINATION, made BEFORE the cell was wired because T329
+// showed that two Fineract fields spelled the same can be different quantities
+// on different clocks, and grading a wall-clock-derived date as a literal bakes
+// an up-to-8-hour window into a parity vector:
+//
+//   - THE RENDER READS NO CLOCK. `DateTimeFormatter("yyyy-MM-dd").format(LocalDate)`
+//     [ApiParameterError.java:97-99]. A java.time.LocalDate has no instant and
+//     no zone; a date-only pattern over it is a pure field render.
+//   - transaction_date: parsed by `LocalDateTime.parse(s, fmt).toLocalDate()`
+//     [JsonParserHelper.java:544-547, 558-586] — NO ZoneId, NO Instant. On a
+//     `yyyy-MM-dd` body with `dateFormat: yyyy-MM-dd` the path is the identity
+//     on the caller's characters. CLOCK: none.
+//   - latest_closing_date: `GLClosure.closingDate` is a LocalDate on
+//     `@Column(name = "closing_date")`, set from the same parse
+//     [GLClosure.java:53-54, 70-72]. CLOCK: none.
+//   - AND THE TWO CLOCK-DERIVED DATES IN THIS ARM ARE NOT IN `args` AT ALL:
+//     request.business_date (DateUtils.getLocalDateOfTenant, tenant zone) and
+//     `glclosures.createdDate` (audit insert, JVM zone, T329). :631 echoes the
+//     transaction date and NOT the business date it just compared against, so
+//     the guard that READS the wall clock does not ECHO it. That is checkable at
+//     :631 rather than true-today.
 type Refusal struct {
 	HTTPStatus int    `json:"http_status"`
 	Code       string `json:"code"`
 	Message    string `json:"message"`
+
+	// ArgEcho is the EXPECTATION side of `errors[0].args[0].value`, and it is a
+	// SELECTOR — "transaction_date" or "latest_closing_date" — never a date.
+	// Empty means this vector grades no args cell, which is the state every
+	// refusal vector other than the two DATE refusals is required to be in.
+	ArgEcho string `json:"arg_echo,omitempty"`
+
+	// Arg0Value is the ANSWER side: what an implementation actually put in
+	// `errors[0].args[0].value`.
+	//
+	// IT CARRIES NO JSON NAME ON PURPOSE, and that is the load-bearing half of
+	// this design rather than a serialisation detail. `json:"-"` plus this
+	// package's strict decode means a vector file that tries to write
+	// `"arg0_value": "2026-01-31"` dies at load with an UNKNOWN FIELD. The store
+	// therefore CANNOT express a graded date literal here even deliberately, so
+	// the "grade the relation, never the calendar" rule is enforced by the type
+	// and not by a reviewer noticing.
+	Arg0Value string `json:"-"`
+}
+
+// Arg echo selectors. The vocabulary is CLOSED: admit.go refuses anything else.
+const (
+	// ArgEchoTransactionDate — :631 constructs FUTURE_DATE with the submitted
+	// transactionDate.
+	ArgEchoTransactionDate = "transaction_date"
+
+	// ArgEchoLatestClosingDate — :637 constructs ACCOUNTING_CLOSED with
+	// latestGLClosure.getClosingDate(), NOT with the submitted date.
+	ArgEchoLatestClosingDate = "latest_closing_date"
+)
+
+// ResolveArgEcho returns the request input a refusal's arg-echo selector names.
+//
+// It is the ONLY place a selector becomes a value, so the comparator, the
+// admissibility rule and every test agree by construction rather than by three
+// authors typing the same switch.
+func ResolveArgEcho(sel string, req Request) (string, bool) {
+	switch sel {
+	case ArgEchoTransactionDate:
+		return req.TransactionDate, true
+	case ArgEchoLatestClosingDate:
+		return req.LatestClosingDate, true
+	default:
+		return "", false
+	}
 }
 
 // Expect is what the implementation must produce.

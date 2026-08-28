@@ -334,11 +334,17 @@ func TestOpeningBalanceCapabilityIsScopedToTheObservedShape(t *testing.T) {
 		// ANTI-VACUITY. A store with no dated claimant would make every line above
 		// pass over nothing -- the shape every vacuous guard in this program has
 		// shared (P-35).
-		if checked != 4 {
-			t.Fatalf("this arm examined %d dated claimants, want 4: LDG-REFUSE-04 and LDG-06 "+
-				"on the closure boundary (:636), LDG-REFUSE-05 and LDG-07 on the future-date "+
-				"guard (:629-631) -- both sides of both rules. A different number means the "+
-				"store moved and this control no longer covers what it names", checked)
+		// T307 MOVED THIS 4 -> 5. LDG-REFUSE-06 is a SECOND refusing-region
+		// claimant on the closure boundary, and it is not a duplicate of
+		// LDG-REFUSE-04: 04 sits ON the boundary and grades whether :636 is
+		// INCLUSIVE; 06 sits 16 days inside the closed period, where the boundary
+		// question does not arise, and grades which date :637-638 ECHOES. Refusing
+		// region either way, so this arm's own predicate is unchanged.
+		if checked != 5 {
+			t.Fatalf("this arm examined %d dated claimants, want 5: LDG-REFUSE-04, LDG-REFUSE-06 "+
+				"and LDG-06 on the closure boundary (:636), LDG-REFUSE-05 and LDG-07 on the "+
+				"future-date guard (:629-631) -- both sides of both rules. A different number "+
+				"means the store moved and this control no longer covers what it names", checked)
 		}
 	})
 
@@ -400,15 +406,20 @@ func TestOpeningBalanceCapabilityIsScopedToTheObservedShape(t *testing.T) {
 		// FU-T328-1 and is recorded there. 4 -> 6 and 1 -> 3: LDG-06 and LDG-07 are the
 		// ACCEPTING sides of the two date boundaries, promoted from T327's B-1 and B-2
 		// [.softhouse/capture/t327-closure-accepting-side/throwaway/out/*.status = 200].
-		if claimants != 6 {
+		// T307 MOVED IT 6 -> 7 AND LEFT sawAccepting AT 3, which is the whole shape
+		// of that task: LDG-REFUSE-06 is a REFUSAL promoted from bytes already on
+		// disk, with NO oracle contact, so the accepting population cannot have
+		// moved and an arg-echo cell buys no acceptance-side coverage.
+		if claimants != 7 {
 			t.Fatalf("%d committed vectors claim ledger.opening.balance.and.closure; the observed "+
 				"shapes are the defineOpeningBalance COMMAND on both sides of :812's emptiness "+
 				"test -- LDG-REFUSE-03 (:717) and LDG-05 (:812, accepting) -- and BOTH SIDES OF "+
-				"BOTH DATE BOUNDARIES: LDG-REFUSE-04 (:636, refusing) with LDG-06 (:636, "+
-				"accepting one day after the closing date), and LDG-REFUSE-05 (:629-631, "+
-				"refusing) with LDG-07 (:629-631, accepting ON the business date). A different "+
-				"number means the store moved and this control no longer covers what it names",
-				claimants)
+				"BOTH DATE BOUNDARIES: LDG-REFUSE-04 (:636, refusing ON the boundary) and "+
+				"LDG-REFUSE-06 (:637-638, refusing INSIDE the closed period and grading which "+
+				"date the refusal ECHOES) with LDG-06 (:636, accepting one day after the closing "+
+				"date), and LDG-REFUSE-05 (:629-631, refusing) with LDG-07 (:629-631, accepting "+
+				"ON the business date). A different number means the store moved and this control "+
+				"no longer covers what it names", claimants)
 		}
 		if sawAccepting != 3 {
 			t.Fatalf("%d ACCEPTING vectors claim this row, want exactly 3 (LDG-05, LDG-06, LDG-07). "+

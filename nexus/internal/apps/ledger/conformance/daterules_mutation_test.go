@@ -142,14 +142,21 @@ func TestDateRuleMutationArms(t *testing.T) {
 type armOracleOrderPresenceKeyed struct{}
 
 func (armOracleOrderPresenceKeyed) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	// THE ARG ECHOES ARE THE ORACLE'S OWN, DELIBERATELY. [T307] The mutation under
+	// test is the ORDER and the PRESENCE-KEYING, nothing else. An arm that also got
+	// errors[0].args[0].value wrong would die on refusal.arg0_value too, and then
+	// "W-2 was already dead on the pre-T328 corpus" would be measuring a defect
+	// this arm does not claim to have.
 	if req.TransactionDate != "" && req.BusinessDate != "" {
 		return PostedEntry{}, &Refusal{
 			HTTPStatus: 403, Code: codeFutureDate, Message: msgFutureDate,
+			Arg0Value: req.TransactionDate,
 		}, nil
 	}
 	if req.TransactionDate != "" && req.LatestClosingDate != "" {
 		return PostedEntry{}, &Refusal{
 			HTTPStatus: 403, Code: codeAccountingClosed, Message: msgAccountingClosed,
+			Arg0Value: req.LatestClosingDate,
 		}, nil
 	}
 	return GoPoster{}.PostEntry(req)
@@ -163,15 +170,19 @@ func (armOracleOrderPresenceKeyed) PostEntry(req Request) (PostedEntry, *Refusal
 type armNonStrictFuture struct{}
 
 func (armNonStrictFuture) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	// Arg echoes are the oracle's own, for the reason given on W-2 [T307]: the
+	// mutation under test is one character in the future-date comparison.
 	if req.TransactionDate != "" && req.BusinessDate != "" &&
 		!isoBefore(req.TransactionDate, req.BusinessDate) {
 		return PostedEntry{}, &Refusal{
 			HTTPStatus: 403, Code: codeFutureDate, Message: msgFutureDate,
+			Arg0Value: req.TransactionDate,
 		}, nil
 	}
 	if req.TransactionDate != "" && req.LatestClosingDate != "" {
 		return PostedEntry{}, &Refusal{
 			HTTPStatus: 403, Code: codeAccountingClosed, Message: msgAccountingClosed,
+			Arg0Value: req.LatestClosingDate,
 		}, nil
 	}
 	return GoPoster{}.PostEntry(req)

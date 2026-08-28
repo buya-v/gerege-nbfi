@@ -546,6 +546,97 @@ func Admit(v *Vector, opts Options) []string {
 		add("request.latest_closing_date is set and request.transaction_date is empty. The closure " +
 			"boundary (:636) is compared against the transaction date and there is none")
 	}
+	// -----------------------------------------------------------------------
+	// THE ARG-ECHO SELECTOR: default-deny, and it is T294's refusal made a RULE
+	// -----------------------------------------------------------------------
+	//
+	// T295 backlog B-3 asked for `errors[0].args` to be graded so that A2-02 —
+	// whose captured body is byte-identical to A2-01's on all three existing
+	// cells — becomes promotable. T294 had DELIBERATELY declined to grade its
+	// OWN args on OB-01, where the field carries 26 LIVE TRANSACTION IDS. These
+	// four rules are what make both positions hold simultaneously, and they are
+	// stated as an ADMISSIBILITY rule rather than left to an author's judgement
+	// precisely because T295 was right that a judgement is not inheritable.
+	//
+	//   (1) THE VOCABULARY IS CLOSED to the two SCALAR calendar dates this
+	//       schema already declares. There is no selector that names a list, so
+	//       OB-01's claim CANNOT BE WRITTEN DOWN in this schema at all.
+	//   (2) EACH SELECTOR IS BOUND TO THE CODE ITS THROW SITE PAIRS IT WITH,
+	//       and the binding is source-derived, not conventional:
+	//         :631  FUTURE_DATE       <- transactionDate
+	//         :637  ACCOUNTING_CLOSED <- latestGLClosure.getClosingDate()
+	//       [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java,
+	//       pinned 426a23544.] A vector pairing them the other way is asserting
+	//       an observation nobody took, exactly as a mis-ordered date relation
+	//       is above.
+	//   (3) IT IS REQUIRED, not optional, on those two codes. An optional cell
+	//       is a cell an author can drop the day it becomes inconvenient, which
+	//       is the deflation direction this store pins everything against.
+	//   (4) IT IS FORBIDDEN on every other refusal code and on every
+	//       non-refusal vector. LDG-REFUSE-03's code is
+	//       error.msg.journalentry.defining.openingbalance.not.allowed, so this
+	//       rule — not a reviewer's memory of T294 — is what keeps its 26-id
+	//       list ungraded.
+	//
+	// THE SECOND, INDEPENDENT GROUND for (4), recorded here because it survives
+	// even if someone later widens the vocabulary: LDG-REFUSE-03's
+	// request.posted_non_contra_transaction_ids was TRANSCRIBED FROM
+	// errors[0].args[0].value itself, so resolving a selector against it would
+	// compare the captured body with a copy of itself. Both selectors admitted
+	// below have provenance INDEPENDENT of the body being graded — the caller's
+	// own committed .req bytes, and the create-closure request confirmed by SQL.
+	if e := v.Expect.Refusal.ArgEcho; e != "" {
+		if _, ok := ResolveArgEcho(e, v.Request); !ok {
+			add("expect.refusal.arg_echo is %q. The vocabulary is CLOSED to %q and %q -- the two "+
+				"SCALAR calendar-date inputs this schema declares, each with provenance independent "+
+				"of the response body being graded. It is closed on purpose: `errors[0].args[0].value` "+
+				"is a JSON STRING only when the oracle put a LocalDate there "+
+				"[ApiParameterError.java:95-105 special-cases exactly that one type], and on OB-01 it "+
+				"is an ARRAY of 26 LIVE TRANSACTION IDS. A selector naming tenant-mutable history is "+
+				"not a selector this store admits", e, ArgEchoTransactionDate, ArgEchoLatestClosingDate)
+		} else if v.Expect.Kind != "refusal" {
+			add("expect.refusal.arg_echo is %q on a vector whose expect.kind is %q. errors[0].args "+
+				"exists only on a refusal body; there is nothing for this selector to name",
+				e, v.Expect.Kind)
+		}
+	}
+	if v.Expect.Kind == "refusal" {
+		want := ""
+		switch v.Expect.Refusal.Code {
+		case codeFutureDate:
+			want = ArgEchoTransactionDate
+		case codeAccountingClosed:
+			want = ArgEchoLatestClosingDate
+		}
+		got := v.Expect.Refusal.ArgEcho
+		switch {
+		case want != "" && got != want:
+			add("this vector expects %q and its expect.refusal.arg_echo is %q; it must be %q. The "+
+				"throw site that raises this code constructs the exception with THAT date and no "+
+				"other (:631 passes transactionDate, :637 passes "+
+				"latestGLClosure.getClosingDate()), so the two refusals put DIFFERENT quantities in "+
+				"the SAME wire field. A vector that omits the selector grades one cell fewer than the "+
+				"capture supports; one that names the wrong input records an observation nobody took",
+				v.Expect.Refusal.Code, got, want)
+		case want == "" && got != "":
+			add("this vector expects %q and carries expect.refusal.arg_echo %q. An arg echo is "+
+				"admitted ONLY on %q and %q, whose throw sites pass a LocalDate that this schema "+
+				"already declares as an input. Every other refusal in this corpus either carries no "+
+				"args date or carries TENANT-MUTABLE HISTORY there -- LDG-REFUSE-03's is a list of 26 "+
+				"live transaction ids, transcribed FROM the body being graded, and grading it would "+
+				"pin a parity claim to a value any unrelated posting changes (T294, upheld by T307)",
+				v.Expect.Refusal.Code, got, codeFutureDate, codeAccountingClosed)
+		}
+		if got != "" {
+			if resolved, ok := ResolveArgEcho(got, v.Request); ok && resolved == "" {
+				add("expect.refusal.arg_echo is %q and request.%s is EMPTY. The selector resolves to "+
+					"nothing, so the comparator would grade the empty string against the empty string "+
+					"-- a comparison that cannot fail, printed in the same words as one that can",
+					got, got)
+			}
+		}
+	}
+
 	switch v.Expect.Refusal.Code {
 	case codeFutureDate:
 		switch {
