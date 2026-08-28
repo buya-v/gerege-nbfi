@@ -487,3 +487,20 @@ that the captured oracle observations we grade against are the bytes the oracle 
 - **A mutation committed to the fork sha itself.** Rewriting `12a7f8d9…` is not reachable
   without rewriting `main`'s history; I tested the reachable version instead — swapping the
   constant (case 19: REFUSED) and moving it forward (FINDING 4).
+- **The full 21-case matrix re-run from the post-substitution bytes.** Stopped at row 4 (all
+  four identical to run 1) because the host was saturated and the mandatory conformance run
+  needed the CPU. Disclosed in full above.
+- **Nothing was asked of the reference oracle.** Every check on this branch replays committed
+  bytes. T367's standing fact — a 4xx BURNS the idempotency key, so a refused probe is as
+  irreversible as an accepted one — means an idle probe is not free, and nothing here needed
+  one.
+
+## Process note, because it cuts both ways
+
+The bar refused this review **twice**, both times EXIT 2 with **no probe line**, and both times
+the cause was a defect in *my own* instruments — a host-state literal and a fail-open printed
+negative. I read the absence of the probe line as P-84 says to (a failed HARD guard, not an
+oracle outage), repaired both rather than pinning either, and re-ran the affected instruments
+from the repaired bytes. That is worth recording for two reasons: it is the honest provenance
+of the transcript this review cites, and it is direct evidence that the guard layer T374 is
+extending does catch new work — including the reviewer's.
