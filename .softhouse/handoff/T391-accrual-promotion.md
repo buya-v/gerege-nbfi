@@ -402,9 +402,13 @@ conformance:   all 15 wrong ledger implementations DIED through this harness, no
 
 Committed transcript: `.softhouse/capture/t391-accrual-promotion/out/T391-BAR-conformance.txt`
 (taken from the clean tree at `6087c67a`). **That transcript is not covered by the run that
-produced it** — T388's residual, in the same shape — and is closed by a SECOND run taken from
-the clean tree at `52d84a14`, the transcript commit itself, which is the run whose figures are
-tabulated above.
+produced it** — T388's residual, in the same shape. **It is closed by re-running the bar from
+a CLEAN TREE at every subsequent commit**, each green with the probe printed: `52d84a14` (the
+transcript commit itself), `99e7bd55` (the handoff), and `26ba78bb` (the driver-warning
+answer, the branch tip). The figures tabulated above are from the run at the **tip**, so every
+file on this branch — the transcript, the handoff and this sentence's own commit's parent —
+is inside a green run. The only file never covered is this handoff's final edit, which the
+next reader's run covers.
 
 ### A GUARD FIRED ON THIS TASK AND IT WAS RIGHT
 
