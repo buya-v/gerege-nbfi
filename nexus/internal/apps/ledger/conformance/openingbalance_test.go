@@ -248,99 +248,99 @@ func TestOpeningBalanceCapabilityIsScopedToTheObservedShape(t *testing.T) {
 	})
 
 	t.Run("every committed claimant's EXPECTATION AGREES with its date REGION", func(t *testing.T) {
-			// THE T306 TRIPWIRE, RE-KEYED BY T328 BECAUSE IT DID NOT FIRE.
-			//
-			// T306 added this arm so that "the moment a promoting task (T328) lifts
-			// B-1/B-2 into vectors, this goes RED and names the edit, INSTEAD of the
-			// promoter finding the door already open". T328 promoted them and THIS ARM
-			// PASSED [MEASURED: .softhouse/capture/t328-date-rule-promotion/out/
-			// 70-T306-tripwire-DID-NOT-FIRE.txt -- four of five sub-tests PASS, and the
-			// only red was the anti-vacuity claimant COUNT further down, which is a
-			// different arm doing a different job].
-			//
-			// WHY IT COULD NOT FIRE, which is worth stating precisely because the same
-			// mistake is easy to repeat: its predicate was `preClosure || futureDated`,
-			// i.e. `!isBefore(closing, txn)` and `isAfter(txn, business)` -- THE REFUSING
-			// REGION. The acceptances T327 captured sit in the ACCEPTING region by
-			// construction (that is the only place an acceptance can be observed), so the
-			// predicate is FALSE on exactly the vectors the tripwire was built to notice.
-			// It could only have caught an acceptance claiming a shape the oracle refuses
-			// -- which the mutation arm above already refuses, as data. The store was not
-			// unprotected (Admit refused both vectors and the bar was exit 2), but the
-			// bell built to ring did not ring. [FU-T328-1.]
-			//
-			// WHAT IT ASSERTS NOW, AND WHY THIS ONE CAN FIRE. The rule in admit.go is that
-			// a claimant's expect.kind must AGREE with the region its own dates put it in.
-			// This arm re-derives the region from the committed store and demands the
-			// agreement independently of Admit -- so a relaxation of the rule shows up here
-			// as a red test rather than as a vector nobody can refuse. It fires in BOTH
-			// directions: an acceptance promoted into the refusing region, and a refusal
-			// promoted into the accepting region, are each a red with the offending
-			// vector named.
-			//
-			// IT IS NOT A DUPLICATE OF THE MUTATION ARMS ABOVE. Those mutate a vector and
-			// ask whether the RULE refuses; this one reads the committed store and asks
-			// whether the rule's stated REASON is still true of it. A rule can be right
-			// for a reason that has expired (P-11), and the expired reason is what the
-			// next contributor acts on.
-			var checked int
-			for _, c := range vs {
-				var names bool
-				for _, n := range c.CapabilitiesRequired {
-					if n == "ledger.opening.balance.and.closure" {
-						names = true
-					}
-				}
-				// The defineOpeningBalance COMMAND arm takes either expectation on its
-				// own evidence (LDG-REFUSE-03 and LDG-05), independently of any date.
-				if !names || c.Request.Command == "defineOpeningBalance" {
-					continue
-				}
-				closureInputs := c.Request.LatestClosingDate != "" && c.Request.TransactionDate != ""
-				businessInputs := c.Request.TransactionDate != "" && c.Request.BusinessDate != ""
-				if !closureInputs && !businessInputs {
-					t.Errorf("vector %q claims ledger.opening.balance.and.closure with NO "+
-						"opening-balance command and NO pair of dates to compare. Nothing in the "+
-						"request decides the claim", c.CaseID)
-					continue
-				}
-				checked++
-				refusing := (closureInputs &&
-					!isoBefore(c.Request.LatestClosingDate, c.Request.TransactionDate)) ||
-					(businessInputs && isoAfter(c.Request.TransactionDate, c.Request.BusinessDate))
-				isRefusal := c.Expect.Kind == "refusal"
-				if refusing != isRefusal {
-					region, claim := "ACCEPTING", "an ACCEPTANCE"
-					if refusing {
-						region = "REFUSING"
-					}
-					if isRefusal {
-						claim = "a REFUSAL"
-					}
-					t.Fatalf("vector %q records %s while its own dates put it in the %s region "+
-						"(transaction_date %q, business_date %q, latest_closing_date %q). The "+
-						"capability gate in admit.go requires expect.kind to AGREE with the region, "+
-						"so this vector is INADMISSIBLE and the bar is exit 2. IF THE ORACLE'S "+
-						"ANSWER ON THIS SHAPE HAS ACTUALLY BEEN OBSERVED, PROMOTING THE CAPTURE AND "+
-						"WIDENING THE REGION RULE ARE ONE DIFF, NOT TWO -- widen "+
-						"refusingRegion/acceptingRegion in admit.go in the same change, add the "+
-						"mirror arm above, and re-run the date-rule mutation arms "+
-						"(TestDateRuleMutationArms) so the new shape's effect on "+
-						"ledger-wrong-date-rules-always-refusing is MEASURED and not assumed",
-						c.CaseID, claim, region, c.Request.TransactionDate, c.Request.BusinessDate,
-						c.Request.LatestClosingDate)
+		// THE T306 TRIPWIRE, RE-KEYED BY T328 BECAUSE IT DID NOT FIRE.
+		//
+		// T306 added this arm so that "the moment a promoting task (T328) lifts
+		// B-1/B-2 into vectors, this goes RED and names the edit, INSTEAD of the
+		// promoter finding the door already open". T328 promoted them and THIS ARM
+		// PASSED [MEASURED: .softhouse/capture/t328-date-rule-promotion/out/
+		// 70-T306-tripwire-DID-NOT-FIRE.txt -- four of five sub-tests PASS, and the
+		// only red was the anti-vacuity claimant COUNT further down, which is a
+		// different arm doing a different job].
+		//
+		// WHY IT COULD NOT FIRE, which is worth stating precisely because the same
+		// mistake is easy to repeat: its predicate was `preClosure || futureDated`,
+		// i.e. `!isBefore(closing, txn)` and `isAfter(txn, business)` -- THE REFUSING
+		// REGION. The acceptances T327 captured sit in the ACCEPTING region by
+		// construction (that is the only place an acceptance can be observed), so the
+		// predicate is FALSE on exactly the vectors the tripwire was built to notice.
+		// It could only have caught an acceptance claiming a shape the oracle refuses
+		// -- which the mutation arm above already refuses, as data. The store was not
+		// unprotected (Admit refused both vectors and the bar was exit 2), but the
+		// bell built to ring did not ring. [FU-T328-1.]
+		//
+		// WHAT IT ASSERTS NOW, AND WHY THIS ONE CAN FIRE. The rule in admit.go is that
+		// a claimant's expect.kind must AGREE with the region its own dates put it in.
+		// This arm re-derives the region from the committed store and demands the
+		// agreement independently of Admit -- so a relaxation of the rule shows up here
+		// as a red test rather than as a vector nobody can refuse. It fires in BOTH
+		// directions: an acceptance promoted into the refusing region, and a refusal
+		// promoted into the accepting region, are each a red with the offending
+		// vector named.
+		//
+		// IT IS NOT A DUPLICATE OF THE MUTATION ARMS ABOVE. Those mutate a vector and
+		// ask whether the RULE refuses; this one reads the committed store and asks
+		// whether the rule's stated REASON is still true of it. A rule can be right
+		// for a reason that has expired (P-11), and the expired reason is what the
+		// next contributor acts on.
+		var checked int
+		for _, c := range vs {
+			var names bool
+			for _, n := range c.CapabilitiesRequired {
+				if n == "ledger.opening.balance.and.closure" {
+					names = true
 				}
 			}
-			// ANTI-VACUITY. A store with no dated claimant would make every line above
-			// pass over nothing -- the shape every vacuous guard in this program has
-			// shared (P-35).
-			if checked != 4 {
-				t.Fatalf("this arm examined %d dated claimants, want 4: LDG-REFUSE-04 and LDG-06 "+
-					"on the closure boundary (:636), LDG-REFUSE-05 and LDG-07 on the future-date "+
-					"guard (:629-631) -- both sides of both rules. A different number means the "+
-					"store moved and this control no longer covers what it names", checked)
+			// The defineOpeningBalance COMMAND arm takes either expectation on its
+			// own evidence (LDG-REFUSE-03 and LDG-05), independently of any date.
+			if !names || c.Request.Command == "defineOpeningBalance" {
+				continue
 			}
-		})
+			closureInputs := c.Request.LatestClosingDate != "" && c.Request.TransactionDate != ""
+			businessInputs := c.Request.TransactionDate != "" && c.Request.BusinessDate != ""
+			if !closureInputs && !businessInputs {
+				t.Errorf("vector %q claims ledger.opening.balance.and.closure with NO "+
+					"opening-balance command and NO pair of dates to compare. Nothing in the "+
+					"request decides the claim", c.CaseID)
+				continue
+			}
+			checked++
+			refusing := (closureInputs &&
+				!isoBefore(c.Request.LatestClosingDate, c.Request.TransactionDate)) ||
+				(businessInputs && isoAfter(c.Request.TransactionDate, c.Request.BusinessDate))
+			isRefusal := c.Expect.Kind == "refusal"
+			if refusing != isRefusal {
+				region, claim := "ACCEPTING", "an ACCEPTANCE"
+				if refusing {
+					region = "REFUSING"
+				}
+				if isRefusal {
+					claim = "a REFUSAL"
+				}
+				t.Fatalf("vector %q records %s while its own dates put it in the %s region "+
+					"(transaction_date %q, business_date %q, latest_closing_date %q). The "+
+					"capability gate in admit.go requires expect.kind to AGREE with the region, "+
+					"so this vector is INADMISSIBLE and the bar is exit 2. IF THE ORACLE'S "+
+					"ANSWER ON THIS SHAPE HAS ACTUALLY BEEN OBSERVED, PROMOTING THE CAPTURE AND "+
+					"WIDENING THE REGION RULE ARE ONE DIFF, NOT TWO -- widen "+
+					"refusingRegion/acceptingRegion in admit.go in the same change, add the "+
+					"mirror arm above, and re-run the date-rule mutation arms "+
+					"(TestDateRuleMutationArms) so the new shape's effect on "+
+					"ledger-wrong-date-rules-always-refusing is MEASURED and not assumed",
+					c.CaseID, claim, region, c.Request.TransactionDate, c.Request.BusinessDate,
+					c.Request.LatestClosingDate)
+			}
+		}
+		// ANTI-VACUITY. A store with no dated claimant would make every line above
+		// pass over nothing -- the shape every vacuous guard in this program has
+		// shared (P-35).
+		if checked != 4 {
+			t.Fatalf("this arm examined %d dated claimants, want 4: LDG-REFUSE-04 and LDG-06 "+
+				"on the closure boundary (:636), LDG-REFUSE-05 and LDG-07 on the future-date "+
+				"guard (:629-631) -- both sides of both rules. A different number means the "+
+				"store moved and this control no longer covers what it names", checked)
+		}
+	})
 
 	t.Run("the claim is NOT bought by declaring a refusal CODE", func(t *testing.T) {
 		// T306-F-2. Two of the driver's three arms read expect.refusal.code, which
