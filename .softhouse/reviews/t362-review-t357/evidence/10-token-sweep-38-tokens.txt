@@ -1,0 +1,48 @@
+TOKENS: 38  (T362-constructed, superset of T357's 7)
+vectors files: 69
+
+TOKEN                                   vectors  conf-main  conf-T357  conf-T358
+paymentChannelToFundSourceMappings            0          0          0          0
+feeToIncomeAccountMappings                    0          0          0          0
+penaltyToIncomeAccountMappings                0          0          0          0
+accountingMappings                            0          0          0          0
+accountingRule                                0          0          0          0
+fundSourceAccount                             0          0          0          0
+loanPortfolioAccount                          2          0          0          0
+transfersInSuspenseAccount                    0          0          0          0
+interestOnLoanAccount                         0          0          0          0
+incomeFromFeeAccount                          0          0          0          0
+incomeFromPenaltyAccount                      0          0          0          0
+incomeFromRecoveryAccount                     0          0          0          0
+writeOffAccount                               0          0          0          0
+overpaymentLiabilityAccount                   0          0          0          0
+goodwillCreditAccount                         0          0          0          0
+chargeOffExpenseAccount                       1          0          0          0
+receivableInterestAccount                     0          0          0          0
+receivableFeeAccount                          0          0          0          0
+receivablePenaltyAccount                      0          0          0          0
+loanproduct                                   0          0          0          0
+loanProduct                                   0          0          0          0
+loanproducts                                  0          0          0          0
+loanProducts                                  0          0          0          0
+loan_product                                  0          0          0          0
+m_product_loan                                3          0          0          0
+productId                                     0          0          0          0
+product_id                                   18          0          0          0
+check-shape                                   0          0          0          0
+a2-11                                         0          0          0          0
+A2-11                                         0          0          0          0
+a2-7                                          0          0          0          0
+A2-7                                          0          0          0          0
+A2-211                                        0          0          0          0
+tierA-a2                                     12          1          0          1
+present and null                              0          0          0          0
+omitempty                                     0          0          0          0
+serializeNulls                                0          0          0          0
+nine-mandatory                                0          0          0          0
+
+=== POSITIVE CONTROL: tokens that MUST be present (proves the sweep can see) ===
+loanschedule                                118         21
+ledger                                      219        126
+principal_minor                            2339         15
+capture_ref                                  79          5

@@ -1,0 +1,47 @@
+=== P1. T362's OWN recompute of out/ + req/ integrity vs the fork sha ===
+  files under .softhouse/capture/tierA-a2 at the fork sha: 431
+    <top-level>    25
+    out            327
+    req            76
+    sql            3
+  MISSING on disk: 0 []
+  DIFFERING      : 3
+      .softhouse/capture/tierA-a2/CAPTURE-PLAN.md
+      .softhouse/capture/tierA-a2/MANIFEST.sha256
+      .softhouse/capture/tierA-a2/cap.sh
+  DIFFERING under out/ or req/: 0 []
+  => T357's claim 'NO captured oracle observation under out/ or req/ has been mutated' is CONFIRMED
+
+=== P2. Mutate a pre-existing captured observation under out/ and see whether
+===     run-all.sh still reports PASS. ===
+  victim (a pre-existing captured oracle observation): .softhouse/capture/tierA-a2/out/A2-000-glaccounts-preexisting.http
+  appended a mutation marker; file grew from 127 to 174 bytes
+  verify-manifest-independently.py rc=1   (it DOES detect the mutation:)
+25:      byte-identical fork-vs-today       : 427
+26:      DIFFER                             : 3
+29:      current manifest hash agrees w/ disk: 429
+30:        DIFF CAPTURE-PLAN.md
+33:        DIFF cap.sh
+36:        DIFF out/A2-000-glaccounts-preexisting.http
+  run-all.sh rc=0   <-- 0 here means A MUTATED ORACLE OBSERVATION IS ABSORBED
+############ VERDICT — every section against its adjudicated exit code
+
+  SECTION   EXPECTED       ACTUAL    RESULT
+  1         1              1         as adjudicated
+  2         1              1         as adjudicated
+  3         0              0         as adjudicated
+  4         1              1         as adjudicated
+  5         0              0         as adjudicated
+  6         0              0         as adjudicated
+  7         0              0         as adjudicated
+  8         0              0         as adjudicated
+  9         0              0         as adjudicated
+
+  sections run: 9    deviations: 0
+  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
+  for it. Note that this INCLUDES sections 1, 2 and 4, which are adjudicated RED.
+  PASS here means 'the review reproduces', NOT 'A2-7 was right'.
+  reverted; porcelain:
+
+F-1 CONFIRMED: run-all.sh exits 0 and prints PASS with a captured oracle
+observation mutated under out/. Section 4's adjudicated RC 1 absorbs it.

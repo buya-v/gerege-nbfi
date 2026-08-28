@@ -1,0 +1,59 @@
+vectors scanned: 68 json files
+tokens in the subject-matter list: 23
+hits inside FREE-PROSE fields (_note/_readme/caveat/citation/comment/description/evidence/note/rationale/readme/reason/title/why): 6  -- these grade nothing
+hits OUTSIDE prose fields: 12
+  .softhouse/vectors/ledger/LDG-01-manual-je-3leg-minor-units.json
+    path=.provenance.capture_ref
+    token=tierA-a2
+    value=.softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json
+  .softhouse/vectors/ledger/LDG-01-manual-je-3leg-minor-units.json
+    path=.provenance.request_capture_ref
+    token=tierA-a2
+    value=.softhouse/capture/tierA-a2/out/A2-343-manual-je-3leg.req
+  .softhouse/vectors/ledger/LDG-02-repayment-split-4leg-minor-units.json
+    path=.provenance.capture_ref
+    token=tierA-a2
+    value=.softhouse/capture/tierA-a2/out/A2-338-je-after-repayment-coverage.json
+  .softhouse/vectors/ledger/LDG-02-repayment-split-4leg-minor-units.json
+    path=.provenance.request_capture_ref
+    token=tierA-a2
+    value=.softhouse/capture/tierA-a2/out/A2-337-repayment-split.req
+  .softhouse/vectors/ledger/LDG-03-overpayment-4leg-minor-units.json
+    path=.provenance.capture_ref
+    token=tierA-a2
+    value=.softhouse/capture/tierA-a2/out/A2-383-je-after-overpay.json
+  .softhouse/vectors/ledger/LDG-03-overpayment-4leg-minor-units.json
+    path=.provenance.request_capture_ref
+    token=tierA-a2
+    value=.softhouse/capture/tierA-a2/out/A2-382-repayment-overpay.req
+  .softhouse/vectors/ledger/LDG-04-header-account-accepted.json
+    path=.provenance.capture_ref
+    token=tierA-a2
+    value=.softhouse/capture/tierA-a2/out/A2-390-db-ledger-state-a2-15.json
+  .softhouse/vectors/ledger/LDG-04-header-account-accepted.json
+    path=.provenance.request_capture_ref
+    token=tierA-a2
+    value=.softhouse/capture/tierA-a2/out/A2-345-manual-je-header.req
+  .softhouse/vectors/ledger/LDG-REFUSE-01-unbalanced-by-one-minor-unit.json
+    path=.provenance.capture_ref
+    token=tierA-a2
+    value=.softhouse/capture/tierA-a2/out/A2-344-manual-je-unbalanced.json
+  .softhouse/vectors/ledger/LDG-REFUSE-01-unbalanced-by-one-minor-unit.json
+    path=.provenance.request_capture_ref
+    token=tierA-a2
+    value=.softhouse/capture/tierA-a2/out/A2-344-manual-je-unbalanced.req
+  .softhouse/vectors/ledger/LDG-REFUSE-02-manual-adjustments-not-permitted.json
+    path=.provenance.capture_ref
+    token=tierA-a2
+    value=.softhouse/capture/tierA-a2/out/A2-346-manual-je-nomanual.json
+  .softhouse/vectors/ledger/LDG-REFUSE-02-manual-adjustments-not-permitted.json
+    path=.provenance.request_capture_ref
+    token=tierA-a2
+    value=.softhouse/capture/tierA-a2/out/A2-346-manual-je-nomanual.req
+
+POSITIVE CONTROL — non-prose scalars containing 'loanschedule': 104 (if this were 0 the walker would be blind)
+  .softhouse/vectors/PIN.json  path=.schema
+  .softhouse/vectors/PIN.json  path=.contract_file
+  .softhouse/vectors/_selftest/SELFTEST-01-two-period-zero-rate.json  path=.schema
+  .softhouse/vectors/capabilities.json  path=.schema
+  .softhouse/vectors/loanschedule/P-00-baseline-6x7pct.json  path=.schema
