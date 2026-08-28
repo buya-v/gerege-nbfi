@@ -333,6 +333,20 @@ applied to the guard's own comments: **delete the retyped pair and cite the comm
 
 ---
 
+## 4b. T375's INCIDENTAL FACTUAL CLAIMS — SPOT-CHECKED, ALL TRUE
+
+Every one re-derived by me on the branch tip, not read off the handoff:
+
+| T375 says | my measurement |
+|---|---|
+| `main_test.go` occurs **0** times in the harness, so arm 27 was already fail-closed | `grep -cF 'main_test.go' conformance.sh` = **0** ✓ |
+| the shell `case` is case-SENSITIVE, so `Main.go` was already fail-closed (arm 28) | `grep -cF 'Main.go'` = **0** ✓ |
+| this host's filesystem is case-INSENSITIVE while git indexes case-SENSITIVELY (arm 26) | `git config core.ignorecase` = **true** ✓ |
+| `main.go` is named on non-comment lines where a *different* guard reads its text | 25 occurrences of `main.go` in the file ✓, and arm 01's refusal reproduces |
+| the guards population is 6, with no symlink and no two identical blobs | `population=6 … symlink-members=0` on every clean run ✓ |
+
+---
+
 ## 5. THE COST CENSUS (`guard_cost_census`, FU-T358-1) — READ ADVERSARIALLY
 
 This is pass 1's work, not pass 2's, and it is the largest single addition in the diff. It is
