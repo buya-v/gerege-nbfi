@@ -1,0 +1,13 @@
+63|1|1|35|T388-1000|T388 Accrual Fund Source|1|1|f||
+63|1|2|36|T388-1100|T388 Accrual Loan Portfolio|1|1|f||
+63|1|3|37|T388-4000|T388 Interest On Loans|4|1|f||
+63|1|4|38|T388-4100|T388 Income From Fees|4|1|f||
+63|1|5|39|T388-4200|T388 Income From Penalties|4|1|f||
+63|1|6|40|T388-5000|T388 Losses Written Off|5|1|f||
+63|1|7|41|T388-1200|T388 Interest Receivable|1|1|f||
+63|1|8|42|T388-1300|T388 Fees Receivable|1|1|f||
+63|1|9|43|T388-1400|T388 Penalties Receivable|1|1|f||
+63|1|10|44|T388-1500|T388 Transfers Suspense|1|1|f||
+63|1|11|45|T388-2000|T388 Overpayment Liability|2|1|f||
+63|1|12|46|T388-4300|T388 Income From Recovery|4|1|f||
+63|1|13|47|T388-5100|T388 Goodwill Credit|5|1|f||

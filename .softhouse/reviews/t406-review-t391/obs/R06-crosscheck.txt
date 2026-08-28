@@ -1,0 +1,41 @@
+==============================================================================
+LDG-ACC-01 L29
+  request.product_mappings == LIVE acc_product_mapping(63): True (13 rows)
+  leg[0] slot=7  INTEREST_RECEIVABLE    gl=41  T388-1200 DEBIT  24000.000000   minor=2400000  OK
+  leg[1] slot=3  INTEREST_ON_LOANS      gl=37  T388-4000 CREDIT 24000.000000   minor=2400000  OK
+  leg[2] slot=4  INCOME_FROM_FEES       gl=38  T388-4100 CREDIT 2500.000000    minor=250000   OK
+  leg[3] slot=8  FEES_RECEIVABLE        gl=42  T388-1300 DEBIT  2500.000000    minor=250000   OK
+  leg[4] slot=5  INCOME_FROM_PENALTIES  gl=39  T388-4200 CREDIT 1200.000000    minor=120000   OK
+  leg[5] slot=9  PENALTIES_RECEIVABLE   gl=43  T388-1400 DEBIT  1200.000000    minor=120000   OK
+  total_debits_minor  vector=2770000  T406=2770000  OK
+  total_credits_minor vector=2770000  T406=2770000  OK
+  double-entry balanced: True
+  request.slot_code (entry level) = 0 (must be 0)
+==============================================================================
+LDG-ACC-02 L30
+  request.product_mappings == LIVE acc_product_mapping(63): True (13 rows)
+  leg[0] slot=7  INTEREST_RECEIVABLE    gl=41  T388-1200 DEBIT  20195.380000   minor=2019538  OK
+  leg[1] slot=3  INTEREST_ON_LOANS      gl=37  T388-4000 CREDIT 20195.380000   minor=2019538  OK
+  leg[2] slot=4  INCOME_FROM_FEES       gl=38  T388-4100 CREDIT 2500.000000    minor=250000   OK
+  leg[3] slot=8  FEES_RECEIVABLE        gl=42  T388-1300 DEBIT  2500.000000    minor=250000   OK
+  leg[4] slot=5  INCOME_FROM_PENALTIES  gl=39  T388-4200 CREDIT 1200.000000    minor=120000   OK
+  leg[5] slot=9  PENALTIES_RECEIVABLE   gl=43  T388-1400 DEBIT  1200.000000    minor=120000   OK
+  total_debits_minor  vector=2389538  T406=2389538  OK
+  total_credits_minor vector=2389538  T406=2389538  OK
+  double-entry balanced: True
+  request.slot_code (entry level) = 0 (must be 0)
+==============================================================================
+LDG-ACC-03 L32
+  request.product_mappings == LIVE acc_product_mapping(63): True (13 rows)
+  leg[0] slot=7  INTEREST_RECEIVABLE    gl=41  T388-1200 DEBIT  12356.340000   minor=1235634  OK
+  leg[1] slot=3  INTEREST_ON_LOANS      gl=37  T388-4000 CREDIT 12356.340000   minor=1235634  OK
+  leg[2] slot=4  INCOME_FROM_FEES       gl=38  T388-4100 CREDIT 2500.000000    minor=250000   OK
+  leg[3] slot=8  FEES_RECEIVABLE        gl=42  T388-1300 DEBIT  2500.000000    minor=250000   OK
+  leg[4] slot=5  INCOME_FROM_PENALTIES  gl=39  T388-4200 CREDIT 1200.000000    minor=120000   OK
+  leg[5] slot=9  PENALTIES_RECEIVABLE   gl=43  T388-1400 DEBIT  1200.000000    minor=120000   OK
+  total_debits_minor  vector=1605634  T406=1605634  OK
+  total_credits_minor vector=1605634  T406=1605634  OK
+  double-entry balanced: True
+  request.slot_code (entry level) = 0 (must be 0)
+==============================================================================
+T406 CROSS-CHECK MISMATCHES: 0

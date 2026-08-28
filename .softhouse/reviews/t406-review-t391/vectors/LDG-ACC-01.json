@@ -1,0 +1,355 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-ACC-01-accrual-six-slots-runaccruals-trigger",
+  "context": "ledger",
+  "class": "parity",
+  "title": "AN ACCRUAL JOURNAL TRANSACTION, SIX LEGS ACROSS SIX SLOTS, GRADED ON THE SLOT AND NOT ON THE ACCOUNT. Transaction L29 on loan 8 (client 3, product 63, ACCRUAL_PERIODIC, MNT), period 1 of 6, entry date 2026-02-15: DEBIT INTEREST_RECEIVABLE (slot 7), FEES_RECEIVABLE (8) and PENALTIES_RECEIVABLE (9) against CREDIT INTEREST_ON_LOANS (3), INCOME_FROM_FEES (4) and INCOME_FROM_PENALTIES (5), read back at the contract boundary through GET /journalentries?transactionId=L29. the interest leg is a WHOLE TUGRIK, 24000.000000. It is promoted BECAUSE it is round: with LDG-ACC-02 and LDG-ACC-03 beside it, the corpus carries the same six-slot shape at a round amount and at two amounts with minor-unit residue, so a port that is right only on round numbers has nowhere to hide.",
+  "dec2_revision": 5,
+  "_note": "WHAT THIS VECTOR GRADES, AND WHY IT GRADES THE SLOT RATHER THAN THE ACCOUNT. This is the first vector in this program to assert a journal entry the oracle's own LOAN ACCOUNTING produced rather than one a caller posted by hand, and the first to populate the ledger schema's SLOT fields at all. The choice it embodies was forced by T242's correction (A2-34 F-4): the harness printed 'gl 18, 22 and 16 carry ZERO journal entries' on every run, pass or fail, as measured fact, while gl 16 had SIXTEEN -- because ONE GL ACCOUNT BACKS SEVERAL SLOTS. gl 16 is PENALTIES_RECEIVABLE (slot 9) on accrual product 28 AND FUND_SOURCE (slot 1) on TEN cash products [re-measured live by T391, out/T391-S01 section 4c: products 22, 23, 27, 28, 46, 54, 55, 56, 57, 58, 60], and every one of its rows arrives through the latter. A vector that graded the ACCOUNT would reproduce exactly that error. So this vector's legs carry a SLOT CODE AND NO ACCOUNT ID, the request carries product 63's COMPLETE thirteen-row acc_product_mapping table, and expect.legs[].gl_account_id, expect.legs[].gl_account_code and expect.legs[].slot_name are all OUTPUTS the implementation must produce by keying that table with the slot code and decoding the code on the family the product's accounting rule selects. WHY THE DECODE IS UNAMBIGUOUS HERE, CHECKED AND NOT ASSUMED. Product 63's mapping is a BIJECTION -- 13 mappings, 13 distinct accounts, 13 distinct slots [T391-S01 section 4a] -- and NO OTHER PRODUCT MAPS ANY OF ACCOUNTS 35-47 [T391-S01 section 4b, ZERO rows]. So on this product gl_account_id -> financial_account_type really is a function. That is a property of how T388 built the product, not a property of Fineract, and it is why the accounts were created clean. THE DEFECT THIS SHAPE CATCHES AND THE OLD SHAPE COULD NOT. acc_product_mapping is keyed on (product_id, product_type, financial_account_type) and THE ACCOUNTING RULE IS NOT IN THE KEY, so a port that decodes every code through CashAccountsForLoan resolves the RIGHT ACCOUNT and names the WRONG SLOT: CashAccountsForLoan has no 7, 8 or 9 at all, and carries the names FEES_RECEIVABLE and PENALTIES_RECEIVABLE at 25 and 26 instead [VERIFIED: AccountingConstants.java:79-89 and :95-122 at 426a23544; ported at nexus/internal/apps/ledger/slots.go]. That port is registered as ledger-wrong-slot-family-blind, it is BYTE-IDENTICAL to ledger-go on all seven parity vectors that predate T391 and on this vector's three INCOME legs, and legs[i].slot_name is the ONLY cell it dies on. GL_ACCOUNT_TYPE IS EXCLUDED ON EVERY LEG, for LDG-01's reason unchanged: glAccountType in a /journalentries response projects the ACCOUNT'S CURRENT classification, not the entry's, and A2-26 observed the identical row rendering ASSET and then INCOME with no entry edited. The classification rendered at capture time is recorded here and graded by nothing: the three receivable legs (gl 41, 42, 43) rendered ASSET and the three income legs (gl 37, 38, 39) rendered INCOME. NO BALANCE IS GRADED. GATE G-12 is open on acc_gl_journal_entry's running-balance columns (A2-29 measured them to be a second source of truth, not a cache) and this schema has no field for either. THIS IS NOT A PRECISION CLAIM, and T388 said so first. The production MathContext is (19, HALF_UP) and this tenant runs at the ratified HALF_UP, but NOTHING IN THIS CAPTURE DISCRIMINATES PRECISION: every amount the oracle emitted here is exact at two decimal places and no leg carries a non-zero third decimal [T391-S01 section 6, ZERO rows]. A port running at precision 12 would produce these same six integers. Read this vector as evidence about ACCRUAL AND SLOT RESOLUTION and about nothing else; the (19, HALF_UP) question is untouched by it. AND IT IS NOT EVIDENCE ABOUT WHICH JOB RUNS WHEN. `job` and `job_run_history` record WHEN a job ran, not WHICH ROWS it wrote, and no foreign key joins a journal entry to a job. What is graded here is the ENTRY. The trigger is recorded in provenance.citation because it is a fact about how the observation was obtained, and it is graded by nothing.",
+  "capabilities_required": [
+    "ledger.journal.entry.readback",
+    "ledger.money.minor.unit.conversion",
+    "ledger.accrual.entry"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/t391-accrual-promotion/out/T391-A01-je-L29.json",
+    "capture_sha256": "4ac271a907422f3432493b0d41da7fdba5d0540fb16aefd1665d8413f48cd3b4",
+    "capture_case_id": "T391-A01-je-L29",
+    "request_capture_ref": ".softhouse/capture/t391-accrual-promotion/out/T391-A01-je-L29.http",
+    "request_capture_sha256": "e89ab942e7414ce58a1dc2b26754a181f0554b7175ff72be4db0275ce49d8db6",
+    "request_capture_case_id": "T391-A01-je-L29",
+    "rerun_invariant": "Re-issuing GET /journalentries?transactionId=L29&transactionDetails=true against tenant `gerege` must return SIX legs whose amounts are 24000.000000, 24000.000000, 2500.000000, 2500.000000, 1200.000000, 1200.000000 at the oracle's scale of 6, on GL 41/37/38/42/39/43 in that order, DEBIT/CREDIT/CREDIT/DEBIT/CREDIT/DEBIT, every one manualEntry false with transactionDetails.transactionType.id 10 (Accrual) on loan 8. AND, SEPARATELY, product 63's acc_product_mapping must still map slot 7 -> 41, 8 -> 42, 9 -> 43, 3 -> 37, 4 -> 38 and 5 -> 39: this vector's expectation is the RESOLUTION of those slots, so a re-mapped product falsifies it even if the stored journal entries never move. A journal entry cannot be deleted and the accrual is permanent, so the entry half of this invariant is re-checkable forever WITHOUT re-firing anything at the oracle -- it is a GET. If the mapping half ever fails, the answer is RE-CAPTURE, not exemption (P-8).",
+    "citation": "T391, promoting T388's accrual observations. Legs read from the RAW BYTES of the cited response (the `amount` tokens are 24000.000000, 24000.000000, 2500.000000, 2500.000000, 1200.000000, 1200.000000 -- scale 6, exactly as the oracle emitted them; a JSON reader that decodes them through a float prints 24000.0 and is not what was read). The slot decode is a join through product 63's acc_product_mapping, recorded read-only in .softhouse/capture/t391-accrual-promotion/out/T391-S03-slot-resolution-fixed.txt and cross-checked at the contract boundary in T391-A07-loanproduct-63.json. HOW THE TRANSACTION CAME TO EXIST: POST /v1/runaccruals {\"tillDate\":\"15 April 2026\"} -- a HAND-FIRED trigger, m_portfolio_command_source row 379, Idempotency-Key T388-A01-runaccruals."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_rest_posting",
+    "captured_at": "2026-08-29T09:00:00Z"
+  },
+  "request": {
+    "product_id": 63,
+    "product_type": "LOAN",
+    "accounting_rule": "ACCRUAL_PERIODIC",
+    "slot_family": "AccrualLoanSlot",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_rest_posting",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "L29",
+    "manual_entry": false,
+    "transaction_amount_major_text": "",
+    "accounts": [
+      {
+        "id": 35,
+        "gl_code": "T388-1000",
+        "name": "T388 Accrual Fund Source",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 36,
+        "gl_code": "T388-1100",
+        "name": "T388 Accrual Loan Portfolio",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 37,
+        "gl_code": "T388-4000",
+        "name": "T388 Interest On Loans",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 38,
+        "gl_code": "T388-4100",
+        "name": "T388 Income From Fees",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 39,
+        "gl_code": "T388-4200",
+        "name": "T388 Income From Penalties",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 40,
+        "gl_code": "T388-5000",
+        "name": "T388 Losses Written Off",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 41,
+        "gl_code": "T388-1200",
+        "name": "T388 Interest Receivable",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 42,
+        "gl_code": "T388-1300",
+        "name": "T388 Fees Receivable",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 43,
+        "gl_code": "T388-1400",
+        "name": "T388 Penalties Receivable",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 44,
+        "gl_code": "T388-1500",
+        "name": "T388 Transfers Suspense",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 45,
+        "gl_code": "T388-2000",
+        "name": "T388 Overpayment Liability",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 46,
+        "gl_code": "T388-4300",
+        "name": "T388 Income From Recovery",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 47,
+        "gl_code": "T388-5100",
+        "name": "T388 Goodwill Credit",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 0,
+        "entry_side": "DEBIT",
+        "amount_major_text": "24000.000000",
+        "slot_code": 7
+      },
+      {
+        "gl_account_id": 0,
+        "entry_side": "CREDIT",
+        "amount_major_text": "24000.000000",
+        "slot_code": 3
+      },
+      {
+        "gl_account_id": 0,
+        "entry_side": "CREDIT",
+        "amount_major_text": "2500.000000",
+        "slot_code": 4
+      },
+      {
+        "gl_account_id": 0,
+        "entry_side": "DEBIT",
+        "amount_major_text": "2500.000000",
+        "slot_code": 8
+      },
+      {
+        "gl_account_id": 0,
+        "entry_side": "CREDIT",
+        "amount_major_text": "1200.000000",
+        "slot_code": 5
+      },
+      {
+        "gl_account_id": 0,
+        "entry_side": "DEBIT",
+        "amount_major_text": "1200.000000",
+        "slot_code": 9
+      }
+    ],
+    "product_mappings": [
+      {
+        "slot_code": 1,
+        "gl_account_id": 35
+      },
+      {
+        "slot_code": 2,
+        "gl_account_id": 36
+      },
+      {
+        "slot_code": 3,
+        "gl_account_id": 37
+      },
+      {
+        "slot_code": 4,
+        "gl_account_id": 38
+      },
+      {
+        "slot_code": 5,
+        "gl_account_id": 39
+      },
+      {
+        "slot_code": 6,
+        "gl_account_id": 40
+      },
+      {
+        "slot_code": 7,
+        "gl_account_id": 41
+      },
+      {
+        "slot_code": 8,
+        "gl_account_id": 42
+      },
+      {
+        "slot_code": 9,
+        "gl_account_id": 43
+      },
+      {
+        "slot_code": 10,
+        "gl_account_id": 44
+      },
+      {
+        "slot_code": 11,
+        "gl_account_id": 45
+      },
+      {
+        "slot_code": 12,
+        "gl_account_id": 46
+      },
+      {
+        "slot_code": 13,
+        "gl_account_id": 47
+      }
+    ]
+  },
+  "expect": {
+    "kind": "journal-entry",
+    "http_status": 200,
+    "legs": [
+      {
+        "gl_account_id": 41,
+        "gl_account_code": "T388-1200",
+        "entry_side": "DEBIT",
+        "amount_minor": "2400000",
+        "amount_major_text": "24000.000000",
+        "slot_name": "INTEREST_RECEIVABLE",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 37,
+        "gl_account_code": "T388-4000",
+        "entry_side": "CREDIT",
+        "amount_minor": "2400000",
+        "amount_major_text": "24000.000000",
+        "slot_name": "INTEREST_ON_LOANS",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 38,
+        "gl_account_code": "T388-4100",
+        "entry_side": "CREDIT",
+        "amount_minor": "250000",
+        "amount_major_text": "2500.000000",
+        "slot_name": "INCOME_FROM_FEES",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 42,
+        "gl_account_code": "T388-1300",
+        "entry_side": "DEBIT",
+        "amount_minor": "250000",
+        "amount_major_text": "2500.000000",
+        "slot_name": "FEES_RECEIVABLE",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 39,
+        "gl_account_code": "T388-4200",
+        "entry_side": "CREDIT",
+        "amount_minor": "120000",
+        "amount_major_text": "1200.000000",
+        "slot_name": "INCOME_FROM_PENALTIES",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 43,
+        "gl_account_code": "T388-1400",
+        "entry_side": "DEBIT",
+        "amount_minor": "120000",
+        "amount_major_text": "1200.000000",
+        "slot_name": "PENALTIES_RECEIVABLE",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      }
+    ],
+    "total_debits_minor": "2770000",
+    "total_credits_minor": "2770000",
+    "refusal": {
+      "http_status": 0,
+      "code": "",
+      "message": ""
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "ledger-wrong-slot-family-blind",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "legs[].slot_name"
+      ],
+      "note": "THE KILL THIS VECTOR EXISTS FOR. A port that decodes every placeholder through CashAccountsForLoan resolves the RIGHT ACCOUNT on all six legs -- the mapping key does not carry the accounting rule -- and names the right slot on the three INCOME legs, because both enums call 3, 4 and 5 INTEREST_ON_LOANS, INCOME_FROM_FEES and INCOME_FROM_PENALTIES. It dies on the three RECEIVABLE legs alone, because CashAccountsForLoan has no 7, 8 or 9. Every account cell, every code cell, every side and every money cell it produces is correct: this is the measurement of the claim that the SLOT and the ACCOUNT are different things."
+    },
+    {
+      "impl": "ledger-wrong-code-ignored",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "legs[].gl_account_code"
+      ],
+      "note": "A port carrying account ids and never joining the chart."
+    },
+    {
+      "impl": "ledger-wrong-netting-totals",
+      "kind": "money",
+      "margin_minor": "-2770000",
+      "divergent_cells": [
+        "total_debits_minor",
+        "total_credits_minor"
+      ],
+      "note": "Netting credits against debits makes both totals 0 while every per-leg cell still matches, so I-1 would hold by construction. A six-leg entry is the shape where that matters most. DECLARED AS A **MONEY** KILL, WHERE LDG-01 DECLARES THE SAME IMPLEMENTATION AS STRUCTURAL WITH MARGIN 0, and the difference is stated rather than left for a reader to trip over: total_debits_minor and total_credits_minor go through cmpMoney, not cmpStr, so a wrong value there IS a money divergence and it has a margin -- here the whole transaction, -2770000 minor units. LDG-01's label is the weaker of the two descriptions of one behaviour; nothing about the implementation differs between the two vectors."
+    }
+  ],
+  "invariant_exemptions": []
+}
