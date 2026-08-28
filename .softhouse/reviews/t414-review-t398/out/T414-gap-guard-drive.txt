@@ -1,0 +1,62 @@
+repo    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3f5698c7f8da0483
+engine  : Python 3.9.6 (default, May 22 2026, 11:13:45) 
+main    : daf8e6fb
+T398    : c81278e3
+
+################ GROUP 1 -- THE LATENT FATAL ON PRE-T398 main ################
+
+=== ARM 0-CTL: main checker, main patterns.md UNTOUCHED =======================
+    main gap scan: 860:    gaps = [n for n in range(1, max(reg) + 1) if n not in reg]
+    PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=98 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+    PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal; 111 report-only findings in committed evidence (corrected FORWARD in patterns.md, never edited in place)
+    rc=0   EXPECT rc=0, gaps=none -- the reserved id sits BEYOND max(reg)=98
+
+=== ARM 0-FAT: main checker, ONE dummy pattern filed at 100 ===================
+    appended ONE dummy definition line at 100 -- no other edit
+    PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=99 gaps=[99] in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+    PNUMBER-CITATIONS: FATAL REGISTER GAP P-99: cited ids may resolve to nothing
+    PNUMBER-CITATIONS: VERDICT FAIL -- 1 fatal (register 1, directive-file 0)
+    rc=1   EXPECT rc=1 and FATAL REGISTER GAP on the reserved id -- the latent fatal
+
+################ GROUP 2 -- IS THE FIX A WIDENING? ###########################
+
+=== ARM A: T398 branch tree as landed =========================================
+    branch gap scan: 879:            if n not in reg and n not in NEGATIVE_CONTROL_IDS]
+    PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=100 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+    PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal; 102 report-only findings in committed evidence (corrected FORWARD in patterns.md, never edited in place)
+    rc=0   EXPECT rc=0 and gaps=none
+
+=== ARM B: WRONG INPUT -- an UNDECLARED hole (97's definition deleted) ========
+    deleted definition lines for 97: 1
+    PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=99 gaps=[97] in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+    PNUMBER-CITATIONS: FATAL REGISTER GAP P-97: cited ids may resolve to nothing
+    PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/RESUME.md:36 P-97 -- P-97 is defined in neither register
+    PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/RESUME.md:41 P-97 -- P-97 is defined in neither register
+    PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/patterns.md:3367 P-97 -- P-97 is defined in neither register
+    PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/patterns.md:3368 P-97 -- P-97 is defined in neither register
+    PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/patterns.md:3509 P-97 -- P-97 is defined in neither register
+    PNUMBER-CITATIONS: VERDICT FAIL -- 6 fatal (register 1, directive-file 5)
+    rc=1   EXPECT rc=1 and FATAL REGISTER GAP 97 -- 97 is NOT a declared control
+
+=== ARM C: CONTROL ON THE FIX -- exemption neutralised in a throwaway copy =====
+    exemption neutralised in the COPY only
+    PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=100 gaps=[99] in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+    PNUMBER-CITATIONS: FATAL REGISTER GAP P-99: cited ids may resolve to nothing
+    PNUMBER-CITATIONS: VERDICT FAIL -- 1 fatal (register 1, directive-file 0)
+    rc=1   EXPECT rc=1 and FATAL REGISTER GAP on the reserved id -- exemption is load-bearing
+
+=== SELFTEST on the branch checker ============================================
+      [PASS] expect UNDEFINED     got UNDEFINED      undefined id
+      [PASS] expect CONSISTENT    got CONSISTENT     correct id with correct text -- the control that must stay green
+    SELFTEST: PASS
+    rc=0   EXPECT rc=0 SELFTEST: PASS
+
+################ SUMMARY #####################################################
+  ARM 0-CTL  main, register tops out at 98    rc=0  (want 0)
+  ARM 0-FAT  main + one pattern at 100        rc=1  (want 1, GAP on reserved id)
+  ARM A      branch as landed                 rc=0  (want 0)
+  ARM B      undeclared hole at 97            rc=1  (want 1, GAP 97)
+  ARM C      exemption removed                rc=1  (want 1, GAP on reserved id)
+  SELFTEST                                    rc=0  (want 0)
+  >>> ALL SIX AS EXPECTED. The latent fatal is REAL on pre-T398 main, and the
+  >>> exemption is load-bearing (C) and narrow (B).
