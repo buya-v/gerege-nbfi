@@ -53,7 +53,10 @@ SELECTORS = [
     ('LAW-SYMBOLIC', r'max\(\s*0\s*,\s*B_minor\s*[−\-]\s*n\s*[·*x]\s*(?:δ|delta)\s*\)'),
     ('DIFFERENCE-FORM', r'B_minor\s*[−\-]\s*n\s*[·*x]\s*(?:δ|delta)'),
     ('NDELTA-BARE', r'n\s*[·*x]\s*(?:δ|delta)'),
-    ('CAP-PROSE', r'(?:term (?:is only|enters only as)|capped by|is (?:only )?the cap|the cap the law names)'),
+    # NOTE the `\b` after `cap`: without it this selector fires on "is the capture", a false
+    # positive it produced on two lines of `### Evidence`. Tightened at source rather than
+    # ledgered as an exemption -- a selector that has to be excused is a selector nobody trusts.
+    ('CAP-PROSE', r'(?:term (?:is only|enters only as)|capped by|is (?:only )?the cap\b|the cap the law names)'),
     ('FUNCTION-OF-PROSE', r'(?:function of the (?:\*\*)?PRINCIPAL|fact about the (?:\*\*)?PRINCIPAL|'
                           r'principals asked are what the figure is)'),
     ('TOTAL-PRINCIPAL-LAW', r'TOTAL PRINCIPAL\s*=' ),
@@ -77,27 +80,39 @@ WINDOW_AFTER = 14
 # why   : the argument for the classification, in one sentence.
 LEDGER = [
     # ---- LIVE SITES that must carry a scope marker -------------------------------
-    ('The residual is `min(B_minor, n·δ)`: the principal is what it is a fact',
-     'SCOPED', 'STANDING RULE, seventh mechanism: present-tense general law in a rule a later '
-               'writer is meant to apply.'),
+    ('The residual is AT MOST `min(B_minor, n·δ)`: the principal is what it is',
+     'SCOPED', 'STANDING RULE, seventh mechanism: present-tense general law inside a rule a later '
+               'writer is meant to APPLY.'),
+    ('a fact about and the term is only the cap. T117 and T159 topped out',
+     'SCOPED', 'continuation of the same sentence.'),
+    ('`B_minor − n·δ` — **1, 51 and 99** minor units at `δ = 1` and `n = 200`',
+     'SCOPED', 'per-cell claim about B201/B251/B299, and MEASURED WRONG IN ITS OWN RIGHT before '
+               'T332: the sentence called `B_minor − n·δ` "their residual" when it is what those '
+               'cells REPAY (1/51/99) and their residual is 200. FU-T332-1.'),
+    ('derived the FULL/PARTIAL split from it** — `TOTAL PRINCIPAL =',
+     'SCOPED', 'law (ii) proper, line-wrapped; the formula lands on the next line.'),
+    ('max(0, B_minor − n·δ)`, which predicted the amount repaid on three partial cells',
+     'SCOPED', 'law (ii) proper, stated live in the family-B answered-questions block; it pointed '
+               'at gap 2 but not at the correction that narrows it.'),
     ('`min(B_minor, n·δ)`; the term enters only as the **cap**',
      'SCOPED', 'T219 correction block: present-tense general law about "an unrescued family-B cell".'),
-    ('max(0, B_minor − n·δ)`, which predicted the amount repaid on three partial cells',
-     'SCOPED', 'law (ii) proper, stated live in the family-B answered-questions block; points at '
-               'gap 2 but not at the correction that narrows it.'),
     ('residual = B_minor − max(0, B_minor − n·δ) = min(B_minor, n·δ)',
-     'SCOPED', 'the twin identity itself, in THE RESIDUAL RECORD block; the identity is exact but '
-               'the law it rests on is not.'),
+     'SCOPED', 'the twin identity itself, fenced, in THE RESIDUAL RECORD block; the identity is '
+               'exact and the law under it is not, which is exactly why the twin inherits the '
+               'seven counterexamples.'),
     ('the term is only the cap; **the principals asked are what the figure is',
-     'SCOPED', 'the SEVENTH site, prose-only -- no symbol in it, so a symbolic grep misses it.'),
-    ('the residual is `min(B_minor, n·δ)` — a function of the **PRINCIPAL**',
-     'SCOPED', 'T241 pointer INSIDE the superseded G-8-NOTICE: the block is history but the '
-               'pointer is present-tense navigation, and the block itself rules that a pointer '
-               'may be added to a historical record.'),
-    ('The residual of an unrescued family-B cell is `min(B_minor, n·δ)` — a fact about the PRINCIPAL',
-     'SCOPED', 'PRESCRIPTIVE: it is the ground of a "must" that tells a future writer what to '
-               'disclose about G-8. A false rule in a prescription propagates into work not yet '
-               'done. FIXED FIRST.'),
+     'SCOPED', 'the SEVENTH site. PROSE ONLY -- it contains no formula, so every grep for the '
+               'symbolic form misses it. This is why the sweep carries CAP-PROSE selectors.'),
+    ('the residual is AT MOST `min(B_minor, n·δ)` — a function of the **PRINCIPAL**',
+     'SCOPED', 'T241 pointer INSIDE the superseded G-8-NOTICE. The block is history, but this '
+               'blockquote is the present-tense POINTER T241 added, and the block itself rules '
+               'that adding a pointer does not corrupt a historical record.'),
+    ('The residual of an unrescued family-B cell is AT MOST `min(B_minor, n·δ)` — a fact about the PRINCIPAL',
+     'SCOPED', 'PRESCRIPTIVE: the ground of a "must" telling a future writer what to disclose '
+               'about G-8. A false rule in a prescription propagates into work not yet done. '
+               'CORRECTED FIRST.'),
+    ('capped by the term.** T219 tripled the record *at T159\'s own term',
+     'SCOPED', 'continuation of the prescriptive sentence.'),
 
     # ---- ARGUED EXEMPT ------------------------------------------------------------
     ('last row EMI = E + B ;   TOTAL PRINCIPAL = max(0, B_minor − n·δ)',
@@ -116,15 +131,16 @@ LEDGER = [
      'EXEMPT-CORRECTION', 'the correction\'s own seven-cell table header.'),
     ('**Every one of the seven satisfies the block\'s own `FULL family B` antecedent**, `δ ≥ 1 ∧ B_minor ≤ n·δ`',
      'EXEMPT-CORRECTION', 'the correction stating the antecedent in order to refute the law on it.'),
+    ('TOTAL PRINCIPAL = max(0, E + B_minor − I_last)',
+     'EXEMPT-CORRECTION', 'a DIFFERENT law -- the DESCRIPTIVE last-row form the correction '
+                          'introduces, which holds 220/220 and 441/441 including all seven. It is '
+                          'not law (ii) and does not inherit its exception set.'),
     ('`max(0, B_minor − n·δ)` is computed from the inputs before the oracle is asked',
      'EXEMPT-CORRECTION', 'inside the correction, contrasting the predictive law with the '
                           'descriptive last-row form.'),
-    ('Their residual is',
-     'SCOPED', 'per-cell claim about B201/B251/B299 -- and MEASURED WRONG IN ITS OWN RIGHT: '
-               '`B_minor − n·δ` is 1/51/99, which is what those cells REPAY, while their residual '
-               'is 200. FU-T332-1.'),
-    ('with `δ = 1` and `n = 200`, which is why all three leave **exactly 200 minor units**',
-     'SCOPED', 'continuation of the same sentence; same fix.'),
+    ('predicts `TOTAL PRINCIPAL = 0` on every one of them. Law (ii) holds on **213 of the 220**',
+     'EXEMPT-CORRECTION', 'gap 2\'s own T277 correction note; it states the law only to refute it '
+                          'and cites `#### CORRECTION (T277)` on the next line.'),
     ('and both leave exactly `n·δ`',
      'EXEMPT-PERCELL', 'measured per-cell figure about B3001/B4499; both leave exactly 3000 = n·δ '
                        '[t332_twin_audit.py --sites: pair_B3001_B4499.both_leave_exactly_n_delta].'),
@@ -136,27 +152,12 @@ LEDGER = [
     ('is `n·δ` there too. `n·δ` was measured at n = 3000 and at no other term',
      'EXEMPT-LIMITATION', 'a disclaimer that NARROWS the claim; it asserts nothing.'),
     ('registered before probing that the residual record is a function of the PRINCIPAL asked',
-     'EXEMPT-ATTRIBUTED', 'past-tense report, in a contributor list, of what T219 registered; '
-                          'and the axis claim it reports survives -- what fails is the EQUALITY, '
-                          'not the direction.'),
-    ('under the law already in this file, the residual of an unrescued family-B cell is',
-     'EXEMPT-ATTRIBUTED', 'lead-in to the fenced twin identity below it, explicitly attributing '
-                          'the form to "the law already in this file"; the fenced line itself is '
-                          'the SCOPED site.'),
+     'EXEMPT-ATTRIBUTED', 'past-tense report, in a contributor list, of what T219 registered; and '
+                          'the axis claim it reports SURVIVES -- what fails is the EQUALITY, not '
+                          'the direction.'),
     ('— **a function of the PRINCIPAL asked, capped by `n·δ`.** The term enters only as the cap',
-     'EXEMPT-CORRECTION', 'the sentence immediately under the scoped fenced identity, inside its '
-                          'scope window.'),
-    ('the larger term merely lifted the cap out of the way',
-     'EXEMPT-PERCELL', 'about T117/T159\'s own two cells, on both of which law (ii) holds.'),
-    ('At n = 3000 with δ = 1 the cap is',
-     'EXEMPT-PERCELL', 'about the n = 3000 cells, measured.'),
-    ('The TERM enters only through `(1+r)^n` against `10^19`',
-     'EXEMPT-LIMITATION', 'a different claim entirely -- the RESCUE boundary\'s term dependence, '
-                          'not the residual law.'),
-    ('warning bites on T169-era and later captures]. With the cap lifted',
-     'EXEMPT-LIMITATION', 'unrelated: the JVM stack-depth cap, not `n·δ`.'),
-    ('**T182 also supplied a stronger argument for the cap than T177 gave**',
-     'EXEMPT-LIMITATION', 'unrelated: the JVM stack-depth cap.'),
+     'EXEMPT-CORRECTION', 'the sentence under the scoped fenced identity, inside its scope window '
+                          'and covered by the T332 note that follows the paragraph.'),
 ]
 
 SELF = os.path.abspath(__file__)
@@ -183,6 +184,37 @@ def sweep(lines):
         if names:
             hits.append((i + 1, names, text))
     return hits
+
+
+NOTE_OPEN = '[T332 —'
+NOTE_CLOSE = ']**'
+T332_SECTION = '#### T332 — THE SAME CLAIM, SWEPT'
+BACKSCAN = 12
+
+
+def strip_quote(s):
+    return s.lstrip('> ').rstrip()
+
+
+def inside_t332_note(lines, idx):
+    """A hit that is part of a T332 SCOPE NOTE is not a new restatement; it is the
+    correction. Detected structurally: scan back at most BACKSCAN lines and stop at
+    the first quote-stripped-blank line (the note's separator) or at a note CLOSE.
+    Stopping at the close is what keeps this from swallowing a genuine new site that
+    a later writer parks immediately after a note."""
+    if NOTE_OPEN in lines[idx]:
+        return True
+    j = idx - 1
+    steps = 0
+    while j >= 0 and steps < BACKSCAN:
+        s = strip_quote(lines[j])
+        if NOTE_OPEN in lines[j]:
+            return True
+        if s == '' or NOTE_CLOSE in lines[j]:
+            return False
+        j -= 1
+        steps += 1
+    return False
 
 
 def covered(lines, idx):
@@ -250,6 +282,18 @@ def main():
     uncovered = []
     rows = []
     for lineno, names, text in hits:
+        # Two structural exemptions, applied before the ledger so that the correction
+        # does not have to enumerate its own sentences:
+        #   the T332 correction SECTION is to the twin what CORRECTION (T277) is to
+        #   law (ii) -- it states the claim in order to bound it;
+        #   a T332 SCOPE NOTE is the scoping itself.
+        anchor = nearest_heading(lines, lineno - 1)
+        if anchor.startswith(T332_SECTION):
+            rows.append((lineno, 'EXEMPT-T332-SECTION', ','.join(names), text.strip()[:100], anchor))
+            continue
+        if inside_t332_note(lines, lineno - 1):
+            rows.append((lineno, 'EXEMPT-T332-NOTE', ','.join(names), text.strip()[:100], anchor))
+            continue
         match = None
         for k, (key, cls, why) in enumerate(LEDGER):
             if key in text:
