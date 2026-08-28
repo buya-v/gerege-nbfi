@@ -2,9 +2,14 @@
 #
 # Read and ENFORCED by guard-parse-float-ast.py. This is not an allowlist.
 #
-# FORMAT (6 pipe-separated fields; `#` starts a comment; blank lines ignored):
+# FORMAT (6 or 7 pipe-separated fields; `#` starts a comment; blank lines ignored):
 #
-#   file | line | category | pinned source text | detail | reason
+#   file | line | category | pinned source text | detail | reason [| frozen-sha256]
+#
+# Field 7 (T270) is the DURABLE PIN — see FROZEN-T114 below. Six fields is still accepted,
+# because T164's frozen red-driver appends 6-field records and its committed transcript
+# must stay re-derivable under T114; a 6-field FROZEN record is graded and printed as
+# `MANIFEST-ONLY -- WEAK` on every run rather than silently treated as equivalent.
 #
 # WHY A REGISTER EXISTS AT ALL
 # ----------------------------
@@ -26,12 +31,46 @@
 #                  parse_float, is a REFUSAL. Records cannot rot into noise.
 #   PRECONDITIONED
 #     FROZEN-T114        detail = produced:<committed evidence path>. Valid ONLY while
-#                        the evidence exists AND the file's sha256 still equals the digest
-#                        MANIFEST.sha256 pins for it. Edit the file and the exemption dies
-#                        with it — you are then editing, so you must add parse_float.
+#                        the evidence exists, is itself pinned in MANIFEST.sha256, the
+#                        file is TRACKED IN GIT, and the file's sha256 still equals BOTH
+#                        the digest MANIFEST.sha256 pins AND the digest in field 7.
 #     REPRODUCTION-T207  detail = reproduces:<path>:<line>. Valid ONLY while that target
 #                        still has a json.load/loads at that line and STILL LACKS
-#                        parse_float. Fix the target and the exemption dies.
+#                        parse_float. Fix the target and the exemption dies. The target
+#                        MUST be repo-relative: an absolute path, or one that escapes the
+#                        root after realpath normalisation, is REFUSED (T263 F-6 — an
+#                        untracked out-of-tree file must not license an in-tree float).
+#
+# CORRECTION, T270 — THE PREVIOUS VERSION OF THIS FILE OVERSTATED ITS OWN GUARANTEE.
+# --------------------------------------------------------------------------------
+# It said, of FROZEN-T114: "Edit the file and the exemption dies with it." T263 MEASURED
+# that end to end (ATTACK-REVIVE.txt) and the claim does not survive: the exemption dies,
+# but it does not STAY dead. `MANIFEST.sha256` is not immutable — `manifest.py write`
+# regenerates it, and T164's own task ran that command. Edit a frozen file, exit 2; run
+# `manifest.py write`; exit 0 again, with the edit still in place. A death condition any
+# worker undoes with one routine command is a speed bump, not a guard.
+#
+# WHAT T270 CHANGED, AND WHAT IS STILL ONLY A DIFF REVIEW:
+#   * FIXED — field 7 pins the frozen digest IN THIS FILE. `manifest.py write` cannot
+#     touch it, so reviving a dead exemption now needs a SECOND, deliberate edit here,
+#     which shows up in `git diff` on the register rather than in a routine manifest churn.
+#   * FIXED — `reproduces:` no longer accepts an absolute or root-escaping path.
+#   * RAISED, NOT CLOSED — minting a brand-new exemption (T263 F-4 R2). The exempted file
+#     must now be git-tracked and the named evidence must be MANIFEST-pinned, so it can no
+#     longer be done with an untracked file. It can still be done by someone willing to
+#     commit the file and cite evidence it did not produce. The remaining control is
+#     review of the diff, and that is stated here rather than implied away.
+#   * NOT FIXABLE MECHANICALLY, GRADED INSTEAD — `produced:` provenance. T263 F-5 proposed
+#     requiring the exempted file's name to occur in the evidence it names, saying this
+#     "holds for all six live records today". T270 RE-DERIVED THAT AND IT IS FALSE: it
+#     holds for 3 of 6 (the RED-GREEN-A2-7-guards.txt records, whose line 3 reads
+#     `Produced by:  python3 prove-mkreq7-guard-red.py`). It does NOT hold for
+#     req/a2-7-loan-220-resolved.json (a request body) or PROVENANCE-A2-15.txt, and no
+#     rewriting of those would make it hold, because a JSON request body has nowhere to
+#     name its producer. So the check is not enforced; instead every record is GRADED
+#     `evidence NAMES its producer` or `ASSERTED ONLY` and the grade is printed on every
+#     run. An unverifiable field that says so is honest; one that reads as an audit trail
+#     and is not one is the defect.
 #
 # MATERIALITY, MEASURED NOT ASSUMED (T164, HEAD a71c140)
 # -------------------------------------------------------
@@ -45,9 +84,9 @@
 # is committed byte-for-byte (16 assertions). It is also the file that CARRIED the blind
 # guard T164 replaces; its float arm is superseded by guard-parse-float-ast.py, and the
 # file itself is left byte-identical so its transcript stays re-derivable.
-prove-mkreq7-guard-red.py | 70 | FROZEN-T114 | body = json.loads(first[victim]) | produced:RED-GREEN-A2-7-guards.txt | sandbox-only; reads mkreq7.py's own generated bodies inside tempfile.mkdtemp. MEASURED: 12 generated bodies, 0 JSON-float leaves, so the omission is non-material today.
-prove-mkreq7-guard-red.py | 119 | FROZEN-T114 | body = json.load(open(out_p)) if os.path.exists(out_p) else {} | produced:RED-GREEN-A2-7-guards.txt | sandbox-only; reads the resolver sandbox output {"clientId": 1, "productId": 46}. MEASURED: 0 JSON-float leaves; no float leaf is constructible from that document.
-prove-mkreq7-guard-red.py | 126 | FROZEN-T114 | body = json.load(open(out_p)) | produced:RED-GREEN-A2-7-guards.txt | sandbox-only; same document as line 119. MEASURED: 0 JSON-float leaves.
+prove-mkreq7-guard-red.py | 70 | FROZEN-T114 | body = json.loads(first[victim]) | produced:RED-GREEN-A2-7-guards.txt | sandbox-only; reads mkreq7.py's own generated bodies inside tempfile.mkdtemp. MEASURED: 12 generated bodies, 0 JSON-float leaves, so the omission is non-material today. | 6aba7e14963ed81c814f82490703f15c7ff7a98712263bd5e91afc8e60818a35
+prove-mkreq7-guard-red.py | 119 | FROZEN-T114 | body = json.load(open(out_p)) if os.path.exists(out_p) else {} | produced:RED-GREEN-A2-7-guards.txt | sandbox-only; reads the resolver sandbox output {"clientId": 1, "productId": 46}. MEASURED: 0 JSON-float leaves; no float leaf is constructible from that document. | 6aba7e14963ed81c814f82490703f15c7ff7a98712263bd5e91afc8e60818a35
+prove-mkreq7-guard-red.py | 126 | FROZEN-T114 | body = json.load(open(out_p)) | produced:RED-GREEN-A2-7-guards.txt | sandbox-only; same document as line 119. MEASURED: 0 JSON-float leaves. | 6aba7e14963ed81c814f82490703f15c7ff7a98712263bd5e91afc8e60818a35
 #
 # ---------------------------------------------------------------------------------------
 # T114-FROZEN and ALREADY SUPERSEDED: resolve7.py wrote the committed request body
@@ -56,10 +95,10 @@ prove-mkreq7-guard-red.py | 126 | FROZEN-T114 | body = json.load(open(out_p)) | 
 # resolve8.py:101,265 both carry parse_float. This is A2-11's original P-25 finding; the
 # omission here IS material, which is exactly why the file was frozen and replaced rather
 # than patched.
-resolve7.py | 24 | FROZEN-T114 | body = json.load(open(tmpl)) | produced:req/a2-7-loan-220-resolved.json | MATERIAL: 117 req/*.json templates carry 11 JSON-float leaves (e.g. /debits/0/amount 100000.25). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
-resolve7.py | 25 | FROZEN-T114 | resp = json.load(open(observed)) | produced:req/a2-7-loan-220-resolved.json | MATERIAL: the 5 out/A2-21*.json observation files carry 12 JSON-float leaves (e.g. /principal 1200000.0). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+resolve7.py | 24 | FROZEN-T114 | body = json.load(open(tmpl)) | produced:req/a2-7-loan-220-resolved.json | MATERIAL: 117 req/*.json templates carry 11 JSON-float leaves (e.g. /debits/0/amount 100000.25). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt. | 61b80dabbface153991275ea2d083b36b5d3af72594b4dee90d4cdaa85f7b28b
+resolve7.py | 25 | FROZEN-T114 | resp = json.load(open(observed)) | produced:req/a2-7-loan-220-resolved.json | MATERIAL: the 5 out/A2-21*.json observation files carry 12 JSON-float leaves (e.g. /principal 1200000.0). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt. | 61b80dabbface153991275ea2d083b36b5d3af72594b4dee90d4cdaa85f7b28b
 #
 # ---------------------------------------------------------------------------------------
 # T114-FROZEN: verify-provenance-a2-15.py produced PROVENANCE-A2-15.txt. It also cannot be
 # run from this checkout at all — its ROOT is hard-coded to a retired worktree path.
-verify-provenance-a2-15.py | 24 | FROZEN-T114 | v = json.load(open(p)) | produced:PROVENANCE-A2-15.txt | reads .softhouse/vectors/ledger/*.json. MEASURED: 6 vectors, 0 JSON-float leaves — every promoted money cell is a STRING (amount_major_text, amount_minor), so no money value passes through a binary double here.
+verify-provenance-a2-15.py | 24 | FROZEN-T114 | v = json.load(open(p)) | produced:PROVENANCE-A2-15.txt | reads .softhouse/vectors/ledger/*.json. MEASURED: 6 vectors, 0 JSON-float leaves — every promoted money cell is a STRING (amount_major_text, amount_minor), so no money value passes through a binary double here. | 9751bc6006c41fa57ebdb3ffc0e23b9f91f7b99d90d185c8bc3628d8816043c0
