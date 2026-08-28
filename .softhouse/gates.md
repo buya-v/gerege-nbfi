@@ -3676,9 +3676,21 @@ question*, not because a boundary was found.
 >
 > **THE CONCLUSION SURVIVES, BY A STRONGER ROUTE THAN THE ONE GIVEN HERE.** "Do not quote the residual
 > bare" is right. The GROUND was wrong: the term is not the variable the residual is a function of.
-> **The residual of an unrescued family-B cell is `min(B_minor, n·δ)` — a fact about the PRINCIPAL, capped
-> by the term.** T219 tripled the record *at T159's own term, n = 3000*, by asking a bigger principal, which
-> this line's reasoning says is impossible. So the corrected instruction is **stronger, not weaker**:
+> **The residual of an unrescued family-B cell is AT MOST `min(B_minor, n·δ)` — a fact about the PRINCIPAL,
+> capped by the term.** T219 tripled the record *at T159's own term, n = 3000*, by asking a bigger principal,
+> which this line's reasoning says is impossible. So the corrected instruction is **stronger, not weaker**:
+>
+> **[T332 — `min(B_minor, n·δ)` IS AN UPPER BOUND, NOT AN EQUALITY, AND THIS SITE WAS CORRECTED FIRST
+> BECAUSE IT IS A PRESCRIPTION.** The sentence above told a future writer what to disclose about G-8, and
+> a false rule inside an instruction propagates into work not yet done — which is a different and worse
+> thing than a false rule inside a record. The equality is FALSE on **seven** corpus cells (all `δ = 1`,
+> all satisfying the `FULL family B` antecedent), which repay **5 / 4 / 2 / 5 / 4 / 2 / 166** minor units
+> where the law predicts **0**; `min(B_minor, n·δ)` therefore over-states their residual by exactly that
+> much. **The direction is SAFE and the instruction below is unweakened:** on **0** of 296 corpus stuck
+> cells and **0** of 578 across every committed raw capture does the OBSERVED residual EXCEED the formula,
+> so the formula stands as an upper bound on unamortized exposure and nothing under-states risk. See
+> `#### CORRECTION (T277)` under `### THE LAW` for the seven, and `#### T332 — THE SAME CLAIM, SWEPT` for
+> why this correction had to be applied at seven sites and not one.]**
 >
 > > **Any disclosure of G-8 must state the residual with the variable it is a FUNCTION of — the
 > > PRINCIPAL — and not merely with the term, and must still say it is the largest OBSERVED and not a
