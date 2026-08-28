@@ -4438,74 +4438,87 @@ Probe line **PRESENT**, tested for presence **before** value (**P-83**), and rea
 
 ---
 
-## G-19 — the reference oracle ACCEPTS a sub-minor-unit residue that the Go port REFUSES, and the vector schema cannot represent the divergence
+## G-19 — the reference oracle ACCEPTS a sub-minor-unit residue that the Go port's READER refuses
 
 **Raised by:** local fire `20260828-140005` (driver), from `T352`'s captures.
-**Context:** `tierA-gl-accounting` / A2. **Class:** ENGINEERING with a **DEC-2 amendment**, which per
-CLAUDE.md an agent may not perform without raising a gate. **State:** OPEN.
-**Blocks:** nothing. Every other task in the program continues; this parks one decision, not the factory.
+**Class:** ENGINEERING. **State:** OPEN. **Blocks:** nothing.
+**CORRECTED IN PLACE, same fire, after `T359`'s independent review — see "What the driver got wrong" below.
+The first version of this gate asked Buyan to ratify something DEC-2 already ratifies, and carried a
+`MAJOR` finding that is false. Neither ever reached him; both are struck here rather than quietly edited.**
 
-### What was proven, from the oracle's own readback and not from argument
+### What was proven, and it holds
 
-`capabilities-ledger.json` recorded the G-08 residue rule as *"specified from source and killed by
-nothing"*, and `money.go:8-84` carried an explicit `[UNVERIFIED]` — *"whether the oracle can produce one at
-all on a money column"* — promising that *"if a later fire captures residue … this is the one function that
-changes."* One POST settled it.
+`capabilities-ledger.json` recorded the G-08 residue rule as *"specified from source and killed by nothing"*,
+and `money.go:8-84` carried an explicit `[UNVERIFIED]` — *"whether the oracle can produce one at all on a
+money column"*. `T352` settled it; `T359` then re-derived it against the live oracle with **its own
+transaction and its own value**, chosen so HALF_UP separates from *both* HALF_EVEN and truncation:
 
 ```
-POST  debit gl 16 100.125 MNT / credit gl 21 100.125 MNT   ->  HTTP 200
-readback: "amount":100.125000,  "currency":{"code":"MNT", ... "decimalPlaces":2}
-stored:   numeric(19,6), at scale 6
-txn a29bca0816a7, tenant gerege, oracle pinned 426a23544
+T352:  debit gl 16 100.125     / credit gl 21 100.125     MNT -> HTTP 200, readback 100.125000,   txn a29bca0816a7
+T359:  debit gl 16 300.6255545 / credit gl 21 300.6255545 MNT -> HTTP 200, readback 300.625555,   txn a29bd5eaeb1b
+both: currency MNT declaring decimalPlaces 2, stored numeric(19,6) at scale 6
 ```
 
-**The oracle neither refuses the sub-minor-unit residue nor rounds it away. The Go port refuses it.**
-Port and reference oracle demonstrably diverge on this input.
+**The oracle accepts a sub-minor-unit residue, does not round it away, and serves it back.** Before `T352`
+there were **zero** legs anywhere in the tenant with scale > 2.
 
-Stated as precisely as T352 stated it: **the third decimal was supplied by the prober.** The oracle's own
-arithmetic *generating* residue is still unobserved. This is "the oracle accepts residue", not yet "the
-oracle produces residue".
+`T359` also **strengthened** the supporting attribution rather than merely accepting it. `T352` argued from a
+source *absence* that the scale-6 rounding is PostgreSQL coercion and not `MoneyHelper` HALF_UP; `T359` asked
+the engine directly — `'300.6255545'::numeric(19,6)` = `300.625555` and `'100.1234565'::numeric(19,6)` =
+`100.123457`, both reproduced with no Java in the path — and widened the grep, which had covered only 39
+files in `fineract-provider` while the entity, commands and deserializer live in a **different module**. All
+four journal-entry packages plus `JsonParserHelper` swept: still no `setScale`, no `RoundingMode`. **Claim
+upheld, evidence widened.**
 
-Two supporting observations, both from source as well as behaviour:
-- **The balance check runs at full scale.** `0.125 + 0.125` vs `0.25` was accepted; per-leg HALF_UP would
-  give `0.26` and refuse. Confirmed in the journal-entry package: no `setScale`, no `RoundingMode` anywhere.
-- `100.1234565` stored as `100.123457`. **Attribution stated rather than assumed:** since the write path
-  applies no Java rounding, that is **PostgreSQL's coercion, not `MoneyHelper`'s HALF_UP**, and may not be
-  cited as witnessing the ratified tenant rounding mode.
+Two caveats that stay attached to the claim:
+- **The third decimal was supplied by the prober.** The oracle's own arithmetic *generating* residue is still
+  unobserved. This is "the oracle accepts residue", never yet "the oracle produces residue".
+- **"The Go port refuses it" overstates it** [`T359`]. There is no Go write path. What diverges is the port's
+  **reader**, on the oracle's **own output**.
 
-### The second finding, which may matter more than the first
+### What the driver got wrong, struck rather than silently edited
 
-**The vector schema cannot represent the divergence — driven, not argued.** A candidate vector with every
-other admission objection stripped returns `HARNESS-ERROR`, exit 2: `amount_minor` must be an `int64`, and
-no `int64` equals `100.125`. It is banked as `.NOT-PROMOTED` with its red-drive logs.
+1. **STRUCK — "the vector schema cannot represent the divergence" (was flagged the more important half).
+   It is FALSE.** `grade.go:551-556` already grades *"the implementation REFUSED a request the oracle
+   ACCEPTED"*; **four live vectors and five wrong implementations** are built on exactly that polarity, and
+   `amount_minor` **is never compared on that path**, so the `int64` constraint blamed for it is not
+   load-bearing. The `HARNESS-ERROR` comes from **one line of port code**: `impl.go:276-279` returns the
+   refusal as a Go `error` instead of `(*Refusal, nil)`. `T359` measured it — one return changed in a `/tmp`
+   copy, `T352`'s candidate vector byte-identical, and it grades **FAIL, exit 1, with no schema change at
+   all.** The real gap is far narrower: the **ledger** schema lacks an unknowable-money-cell sentinel that
+   **loanschedule** already has. `T360` is re-scoped accordingly.
+   *So the claim-limit the driver wrote — "the corpus is green partly because it only admits shapes it can
+   represent" — is not established by this evidence and must not be quoted.*
+2. **STRUCK — the request to ratify option (a). `DEC-2 :971-976` ALREADY RATIFIES IT.** Choosing (a) changes
+   no normative rule. Only (b) and (c) would be real amendments. The driver asked Buyan to decide a settled
+   question.
+3. **Corrected figures.** gl 21 moved **8 -> 12, not 7 -> 12** (`T352` inherited its "before" from `T242`
+   instead of measuring it). The `conformance.sh` comparison sites are **`:3469-3471`**, not `:3160-3162`.
 
-So: **the corpus is green partly because it only admits shapes it can already represent.** That is a limit
-on what any "46 parity vectors PASS" statement is entitled to claim, and it must not be quoted as coverage
-of a class the store cannot express. This half is ENGINEERING, needs no gate, and is filed as **`T360`**.
+### What is actually being asked of Buyan — much smaller than first stated
 
-### What is being asked of Buyan
+**Nothing, unless he wants to change the ratified position.** DEC-2 already says the port's refusal is
+correct. The gate stays OPEN only to surface **one question no amount of reading can settle in this
+context**, which `T359` isolated and which the driver's first draft stated once and then reasoned past:
 
-Amend **DEC-2** to state which of these is the ratified position:
+> Is (a) **free**, or is (a) a **parallel-run hazard**? The manual journal-entry seam performs **no arithmetic
+> on the amount**, so this seam cannot answer it. If a live Fineract instance ever *computes* an amount that
+> carries residue — interest, accrual, a split — a port that refuses what the oracle stores diverges on real
+> traffic, not on a probe. That is a **parallel-run** question, and parallel-run sign-off is a `user` gate.
 
-- **(a) — the driver's recommendation. The port's refusal is CORRECT and stands; the divergence is recorded
-  as a deliberate, named deviation with its own vector class and a guard.** Rationale: CLAUDE.md's first
-  non-negotiable is *money is integer minor units*; accepting `100.125` MNT would require representing
-  sub-minor-unit money, which that rule forbids, and a third decimal in MNT is not a payable amount in
-  Mongolia. Fineract's permissiveness here is a property of Fineract, not a behaviour an NBFI ledger should
-  reproduce. But it must be **explicit** in DEC-2 and gradeable, never silent — an undocumented divergence
-  from the oracle is precisely what the parity corpus exists to prevent.
-- **(b)** The port must accept what the oracle accepts. **Rejected by the driver** — it collides head-on
-  with a stated non-negotiable, and no agent may relax that.
-- **(c)** Defer, and mark G-08 UNRESOLVED in DEC-2 rather than leaving it recorded as *"killed by nothing"*,
-  which is now false either way.
+Buyan's call is therefore narrow: **accept (a) as already ratified and let the engineering proceed
+(recommended), or direct that the parallel-run hazard be settled before Tier-A cutover is contemplated.**
+`FU-T352-2` — can the oracle's own arithmetic *generate* residue? — is the capture that would inform it, and
+it does not block anything. Note `T359` found `FU-T352-2` as written contradicts DEC-2 §6.6, and
+`FU-T352-1`'s own suggested remedy cannot work (loanschedule's over-scaled class refuses non-zero excess
+digits).
 
-**Doing nothing is not neutral**: `money.go`'s trap-4 comment currently cites an absence of evidence that no
-longer holds, and `capabilities-ledger.json` recorded a claim the oracle has now refuted.
-
-### What unblocks it
-Buyan choosing (a), (b) or (c). Nothing else — no further capture is needed to make the decision, though
-`FU-T352-2` (can the oracle's own arithmetic *generate* residue, rather than accept a supplied one?) would
-strengthen it and does not block it.
+### Recorded so no later fire rediscovers it as a defect
+The oracle's state moved permanently: **4 transactions / 9 legs** from `T352` plus `T359`'s probe. `T359`
+found the blast-radius list incomplete (**C-2, MAJOR**) — the one declared casualty's path does not exist and
+the file it meant carries no MNT assertion, while two throwaway rigs (`t305`, `t327`) pin `60/64` and `26` by
+**string equality** and now fail closed against a live `71/75` and `31`. **Nothing on `main` records that the
+oracle moved at all.** Filed as **`T363`**.
 
 ### Not touched by this gate
-Cutover, regulatory sign-off and the licensing position are untouched and remain hard `user` gates.
+Cutover, regulatory sign-off and the licensing position remain hard `user` gates.
