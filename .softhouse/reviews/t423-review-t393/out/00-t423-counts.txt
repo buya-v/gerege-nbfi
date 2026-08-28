@@ -1,0 +1,47 @@
+=== T423 INDEPENDENT COUNTS ===
+ROOT /Users/buv/gerege-nbfi/.claude/worktrees/agent-a75cccdd02b9587f5
+REF  softhouse/T393-t382-conditions -> 66ab2af9e48da32ec76a0e372a1f97ba5b8bbc49
+FORK 12a7f8d9a3af4665fd5281a9f9c001d4f1276a53
+
+--- 1. populations, by ls-tree with the observation dirs NAMED ---
+  PASS  ARM A population at the fork sha                               got=403 want=403
+  PASS  ARM B population at the ref                                    got=1035 want=1035
+  PASS  fork set is a SUBSET of the ref set                            got=True want=True
+  PASS  post-fork observations (ref minus fork)                        got=632 want=632
+  PASS  403 + 632 == 1035                                              got=1035 want=1035
+  PASS  cli-named selector == python-filtered selector (ref)           got=True want=True
+  PASS  cli-named selector == python-filtered selector (fork)          got=True want=True
+      tracked under .softhouse/capture/tierA-a2 at ref  : 1140
+      tracked under .softhouse/capture/tierA-a2 at fork : 431
+
+--- 2. the manifest at the ref ---
+  PASS  MANIFEST.sha256 total rows                                     got=1139 want=1139
+  PASS  MANIFEST rows under out/ or req/                               got=1035 want=1035
+  PASS  MANIFEST rows NOT under out/ or req/                           got=104 want=104
+  PASS  tracked observations with NO manifest row                      got=0 want=0
+  PASS  manifest rows naming NO tracked observation                    got=0 want=0
+  PASS  row-set == tracked-set (T393's ARM C equality)                 got=True want=True
+  PASS  MANIFEST rows == tracked capture files minus MANIFEST itself   got=1139 want=1139
+  PASS  MANIFEST.sha256 has no row for ITSELF                          got=False want=False
+
+--- 3. every manifest digest recomputed from disk ---
+      agree=1139 disagree=0 unreadable=0
+  PASS  all 1139 manifest digests agree with disk                      got=(1139, 0, 0) want=(1139, 0, 0)
+  PASS  of which under out/ or req/                                    got=1035 want=1035
+  PASS  post-fork observations covered by a manifest row               got=632 want=632
+
+--- 4. the fork-sha manifest and ARM E's population ---
+  PASS  fork-sha manifest total rows                                   got=430 want=430
+  PASS  of those under out/ or req/                                    got=403 want=403
+  PASS  ARM E population (NOT under out/ or req/)                      got=27 want=27
+      byte-identical to the fork sha : 25
+      DIFFERING                      : 2  ['CAPTURE-PLAN.md', 'cap.sh']
+  PASS  of the 27, byte-identical to the fork sha today                got=25 want=25
+  PASS  the differing set is EXACTLY {CAPTURE-PLAN.md, cap.sh}         got=['CAPTURE-PLAN.md', 'cap.sh'] want=['CAPTURE-PLAN.md', 'cap.sh']
+
+--- 5. hash-function cross-check (a wrong digest fn would pass §3 self-consistently) ---
+  PASS  shasum agrees with hashlib on out/A2-000-glaccounts-preexisting.http got=4fb117c7b50ee50ddde483cfb75abf4712714f98316000340156c892ce569f65 want=4fb117c7b50ee50ddde483cfb75abf4712714f98316000340156c892ce569f65
+  PASS  shasum agrees with hashlib on out/A2-000-glaccounts-preexisting.json got=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945 want=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  PASS  shasum agrees with hashlib on out/A2-000-glaccounts-preexisting.status got=c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f want=c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f
+
+FAILURES: 0
