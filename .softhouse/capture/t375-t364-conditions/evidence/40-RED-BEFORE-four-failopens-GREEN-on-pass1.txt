@@ -1,0 +1,11 @@
+RED-BEFORE: pass 1's delivered tree, conformance.sh UNMODIFIED, at 2422adc9
+Every row is a full `bash .softhouse/conformance.sh` run. P-84: probe PRESENCE first.
+
+00-GREEN-CONTROL-clean-tree      exit=0  probe=PRESENT  VERDICT: PASS GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0
+F-T375-4-witness-SYMLINK         exit=0  probe=PRESENT  VERDICT: PASS GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+F-T375-6-witness-COPY            exit=0  probe=PRESENT  VERDICT: PASS GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+F-T375-5-witness-HARD-LINK       exit=0  probe=PRESENT  VERDICT: PASS GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+F-T375-7-MEMBER-is-a-SYMLINK     exit=0  probe=PRESENT  VERDICT: PASS GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+
+ALL FOUR ROWS ABOVE READ exit=0 / probe=PRESENT / VERDICT: PASS on pass 1's own tree.
+That is the RED-BEFORE. Each is one line inside a tripping task's own edit grant.

@@ -1,0 +1,72 @@
+--- smoke clone at 3095c09c ---
+T375 RED DRIVE -- every arm runs the WHOLE BAR, never a guard standalone, never `sh`.
+
+>>> ARM SET 1: drive-red-t358.sh, unmodified, against T375's conformance.sh.
+>>> (that drive runs drive-red-t323.sh as ITS arm set 1, so all three generations run.)
+>>> ARM SET 1: T358 DRIVE PASSED in full.
+
+>>> ARM SET 2: T375's own arms.
+T375-00-GREEN-CONTROL-clean-tree                         exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+
+>>> ARM SET 3: T375 pass 2 -- what pass 1's arms missed by one.
+T375-18-witness-is-a-SYMLINK-to-the-member               exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-19-witness-is-a-COPY-of-the-member                  exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-20-witness-is-a-HARD-LINK-to-the-member             exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-21-REVERT-symlink-test-ACCEPTED-again               exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T375-22-REVERT-blob-test-COPY-ACCEPTED-again             exit=0  (want 0 )  probe=PRESENT  (want PRESENT )  marker=YES  >>> PASS
+T375-23-selfcert-via-DOUBLE-SLASH                        exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-24-selfcert-via-REPEATED-DOTSLASH                   exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-25-witness-with-a-TRAILING-SLASH                    exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-26-witness-CASE-FOLDED-on-a-case-insensitive-fs     exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-27-unwired-main_test.go                             exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-28-unwired-CASE-FOLDED-Main.go                      exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-29-unwired-main.go-ONE-DIRECTORY-DEEPER             exit=2  (want 2 )  probe=ABSENT   (want ABSENT  )  marker=YES  >>> PASS
+T375-30-member-IS-a-tracked-SYMLINK-named-main.go        exit=0  (want 2 )  probe=PRESENT  (want ABSENT  )  marker=NO   >>> FAIL
+    --- transcript tail ---
+        no-float census         6 Go packages / 62 Go files / 134078 tokens / 269 import specs inspected under nexus (recursive)
+                                0 forbidden identifiers, 0 floating-point or imaginary LITERALS, 0 forbidden imports, 0 unscannable files
+                                covered: nexus/internal/apps/ledger
+                                covered: nexus/internal/apps/ledger/conformance
+                                covered: nexus/internal/apps/loanschedule
+                                covered: nexus/internal/apps/loanschedule/conformance
+                                covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                                covered: nexus/internal/apps/loanschedule/contract
+                                census root walked: /tmp/t375-smokeclone/nexus
+    
+    VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+             This means "matches the reference oracle on captured vectors, within the graded domain".
+             IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
+    
+    conformance:   exemption census READ: exempted assertions (graded) = 4 == pinned 4
+    conformance:   exemption census READ: declared exemptions (loaded) = 4 == pinned 4
+    conformance:   exemption census READ: GROUNDED                     = 4 == pinned 4
+    conformance:   exemption census READ: UNDETERMINED-ON-THE-RECORD   = 0 == pinned 0
+    conformance:   exemption census READ: UNGROUNDED                   = 0 == pinned 0
+    conformance:   exemption census READ: LEDGER declared exemptions   = 0 == pinned 0
+    conformance:   exemption census READ: LEDGER parity vectors        = 7 == pinned 7
+    conformance:   exemption census READ: LEDGER oracle-refusal vector = 6 == pinned 6
+    conformance:   exemption census READ: LEDGER money cells compared  = 39 == pinned 39
+    conformance: CENSUS wrong ledger implementations — discovered 13 registered as DELIBERATELY
+    conformance:   WRONG from the binary's own -list-implementations; pinned at
+    conformance:   13.
+    conformance:   KILLED  ledger-wrong-accounting-closed-echoes-transaction-date — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
+    conformance:   KILLED  ledger-wrong-closure-boundary-exclusive — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
+    conformance:   KILLED  ledger-wrong-code-ignored — exit 1, ledger parity FAIL 7 + oracle-refusal FAIL 0
+    conformance:   KILLED  ledger-wrong-date-rules-always-refusing — exit 1, ledger parity FAIL 2 + oracle-refusal FAIL 0
+    conformance:   KILLED  ledger-wrong-future-date-ignored — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
+    conformance:   KILLED  ledger-wrong-header-refusing — exit 1, ledger parity FAIL 1 + oracle-refusal FAIL 0
+    conformance:   KILLED  ledger-wrong-manual-permission-ignored — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
+    conformance:   KILLED  ledger-wrong-netting-totals — exit 1, ledger parity FAIL 7 + oracle-refusal FAIL 0
+    conformance:   KILLED  ledger-wrong-openingbalance-always-refusing — exit 1, ledger parity FAIL 1 + oracle-refusal FAIL 0
+    conformance:   KILLED  ledger-wrong-openingbalance-no-contra — exit 1, ledger parity FAIL 1 + oracle-refusal FAIL 0
+    conformance:   KILLED  ledger-wrong-openingbalance-posted-entries-ignored — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
+    conformance:   KILLED  ledger-wrong-split-drift — exit 1, ledger parity FAIL 2 + oracle-refusal FAIL 0
+    conformance:   KILLED  ledger-wrong-truncating — exit 1, ledger parity FAIL 7 + oracle-refusal FAIL 0
+    conformance:   all 13 wrong ledger implementations DIED through this harness, not by hand.
+
+T375 RED DRIVE: 14 passed, 1 failed. (arm set 1 counts as one.)
+DISTINCT ARMS IN THIS FILE: 31. The line above counts arm set 1 as ONE, so its total is
+31 + 1 = 32 and NOT the sum of every arm that ran -- T364's NOTE-1 charged exactly that
+double-count against T358's '29 arms' label, and the label is spelled here so it cannot
+be inferred wrongly. The predecessor drives report their own counts in their own output.
+SMOKE RC=1

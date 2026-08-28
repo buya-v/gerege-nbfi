@@ -3309,8 +3309,9 @@ guard_guards_dir_registration() {
   #
   #     GUARDS-DIR-REGISTRATION: REACHED-BY <witness path, repo-relative>
   #
-  # and the guard then verifies, below, that the witness EXISTS, is TRACKED, is NOT the member
-  # itself, and NAMES THE MEMBER'S BASENAME. That is the same evidentiary standard as a CALLER
+  # and the guard then verifies, below, that the witness EXISTS, is TRACKED, is A REGULAR FILE
+  # AND NOT A SYMLINK, is NOT the member itself IN ANY SPELLING, is NOT A COPY OR HARD LINK OF
+  # the member, and NAMES THE MEMBER'S BASENAME. That is the same evidentiary standard as a CALLER
   # row — the row's LOCATION moved, its burden of proof did not — and the excuse now travels in
   # the same diff as the file it excuses, which is a strictly smaller blast radius than a table
   # in this file where one task can excuse another task's file.
@@ -3333,6 +3334,20 @@ guard_guards_dir_registration() {
   # member may not vouch for itself, and a witness that stops naming the member turns this
   # guard RED at the next graded run — the declaration is re-verified every run, never trusted
   # once.
+  #
+  # "A MEMBER MAY NOT VOUCH FOR ITSELF" HAS NOW BEEN FALSIFIED AS IMPLEMENTED FOUR TIMES, AND
+  # THE COUNT IS KEPT HERE BECAUSE IT IS THE ARGUMENT. T364 forged the row with a leading './'
+  # and with an interior '/../' — a raw string compare where every other step normalised. T375
+  # pass 1 fixed the compare and, asking what its OWN arms missed by one, T375 pass 2 found
+  # THREE MORE, all measured with the whole bar GREEN: a witness that is a SYMLINK to the
+  # member (git resolves a symlink to its own path, `grep` dereferences), a HARD LINK to it,
+  # and a plain COPY of it (one blob under two names). Each was one line inside the tripping
+  # task's own grant. THE LESSON THAT GENERALISES, and the reason every one of these is now
+  # driven by its own arm rather than argued: THE WITNESS IS IDENTIFIED BY A PATH, AND A PATH
+  # IS NOT A FILE — every fix so far tightened the resolution of the NAME while leaving open
+  # another route by which the member's own bytes come back as somebody else's testimony. The
+  # next reader should assume there is a fifth and go looking for it, not conclude from this
+  # paragraph that the class is now shut.
   # ────────────────────────────────────────────────────────────────────────────────────────
   #
   # ROW 1 — repo-state-attest.sh [T318 / FU-T304-2, adopted by T325]. A DIFFERENTIAL repo-state
@@ -3347,8 +3362,16 @@ guard_guards_dir_registration() {
 drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|ledgerguard"
 
   local total=0 invoked=0 decl_ok=0 selfdecl=0 unwired=0 bad=0
+  # SYMLINK MEMBERS GET THEIR OWN COUNTER RATHER THAN JOINING `unwired`. [T375 pass 2.] They are
+  # not "invoked by nothing" — they are not gradeable at all — and folding a second finding into
+  # an existing cardinal is how a census stops showing what it found. IT IS PRINTED AT THE END
+  # OF THE CENSUS LINE, DELIBERATELY: every arm in the T323, T358 and T375 drives matches that
+  # line by a substring ending at `invoked-by-nothing=N`, so appending cannot silently retune an
+  # older arm — a new field in the MIDDLE would have.
+  local symlinked=0
   local rel base row rowbase dir witness token found
   local self_row self_wit self_norm self_multi
+  local self_stat self_mode self_blob member_stat member_mode member_blob
   # One literal newline, so the multi-line test below is a `case` pattern and starts no second
   # process. Spelled once, here, rather than inside the pattern where it reads as a typo.
   local CONF_LF
@@ -3399,6 +3422,49 @@ TABLETEXT
     [ -n "$rel" ] || continue
     total=$((total + 1))
     base="${rel##*/}"
+
+    # THE MEMBER'S OWN INDEX ENTRY IS READ FIRST, AND A MEMBER THAT IS A SYMLINK IS REFUSED
+    # BEFORE ANY OTHER TEST TOUCHES IT. [T375 pass 2. DRIVEN: arm T375-30 was written expecting
+    # this to be fail-CLOSED already, and it FAILED — exit 0, probe PRESENT — which is how this
+    # was found. The arm is kept at its original expectation and now passes for the right
+    # reason.]
+    #
+    # THE DEFECT, AND IT IS THE WORST OF THE FOUR IN THIS CLASS. Every test below reads the
+    # member THROUGH THE FILESYSTEM: the REACHED-BY directive is grepped out of
+    # "$REPO_ROOT/$rel", and `-f` and `grep` both DEREFERENCE. But git tracks a symlink as a
+    # blob containing its TARGET PATH, so for a symlink member the bytes graded are some other
+    # file's. MEASURED: a tracked symlink `zz-t375-symmember/main.go -> ../ledgerguard/main.go`
+    # INHERITED the real main.go's REACHED-BY row wholesale — the guard read the target's
+    # directive, resolved the target's witness, found that witness names the basename `main.go`,
+    # and PASSED the planted file. Whole bar exit 0, `reached-by=2`, `invoked-by-nothing=0`.
+    # An unwired checker could land in this directory GREEN by being a symlink to a registered
+    # one, which is the exact class T323 built this guard to make impossible.
+    #
+    # WHY REFUSE RATHER THAN READ THE BLOB. Reading the tracked blob instead would make the
+    # guard grade the string "../ledgerguard/main.go" as if it were a checker's source, which
+    # is meaningless. A symlink is not a checker. It also cannot be executed as one on a host
+    # whose checkout does not materialise symlinks. The population is "tracked .sh/.py/.go
+    # SOURCES under this directory"; a link is not a source, and saying so is narrower and more
+    # honest than inventing a reading for it. THE REFUSAL IS DELIBERATELY NOT WAIVABLE BY A
+    # REACHED-BY ROW, because the row would be read through the link too.
+    member_stat=""; member_mode=""; member_blob=""
+    member_stat="$( cd "$REPO_ROOT" 2>/dev/null && \
+      git ls-files -s -- "$rel" 2>/dev/null )" || member_stat=""
+    member_mode="${member_stat%% *}"
+    member_blob="${member_stat#* }"; member_blob="${member_blob%% *}"
+    if [ "$member_mode" = "120000" ]; then
+      bad=1
+      symlinked=$((symlinked + 1))
+      warn "conformance: guard_guards_dir_registration: $rel IS A SYMLINK, and a symlink is not"
+      warn "conformance: a checker. What git tracks at that path is the TARGET PATH STRING,"
+      warn "conformance: while every test in this guard reads the file through the filesystem"
+      warn "conformance: and therefore grades the TARGET's bytes. A tracked symlink to an"
+      warn "conformance: already-registered member INHERITED that member's REACHED-BY row and"
+      warn "conformance: landed GREEN [T375 pass 2, arm T375-30]. This refusal is NOT waivable"
+      warn "conformance: by a REACHED-BY row, because that row would be read through the link"
+      warn "conformance: too. Commit a real file, or move it out of $gdrel. REFUSED."
+      continue
+    fi
 
     # DECLARED ROWS ARE MATCHED FIRST, so that the table's own text cannot satisfy the
     # invocation test below and vouch for its own subject.
@@ -3480,6 +3546,62 @@ INNER
         case "$self_norm" in
           *"$CONF_LF"*) self_multi=1 ;;
         esac
+
+        # THE WITNESS MUST BE AN INDEPENDENT TRACKED FILE, AND `grep` MUST READ THE BYTES GIT
+        # TRACKS AT THAT PATH. [T375 pass 2, closing three fail-opens of F-T364-2's OWN class
+        # that pass 1's normalisation does not reach. All three were DRIVEN GREEN — i.e. the
+        # whole bar exited 0 with `VERDICT: PASS` — before this block was written, and are
+        # driven RED by arms T375-18..21 after it.]
+        #
+        # THE DEFECT. Pass 1 fixed the SPELLING of the witness path and stopped there. But
+        # `self_norm` names a PATH, and a path is not a file: three different constructions let
+        # the member's own bytes come back as "some other file that names me", and the guard
+        # then printed `(verified: it names <base>)` while the bar stayed GREEN.
+        #
+        #   SYMLINK.   `git ls-files` resolves a symlink to ITS OWN PATH, never to its target,
+        #              so `self_norm != rel` and the self-reference compare above is satisfied.
+        #              `-f` and `grep` both DEREFERENCE. So a member `m.sh` plus a tracked
+        #              symlink `w.txt -> m.sh` made `m.sh` vouch for itself. MEASURED: exit 0,
+        #              probe PRESENT, `reached-by=2`.
+        #   HARD LINK. `ln m.sh w.txt` — two tracked paths, ONE inode, one blob. Same result.
+        #   PLAIN COPY. `cp m.sh w.txt` — two inodes, still ONE blob, because the witness holds
+        #              nothing but the member's own text. "Another file names me" satisfied by
+        #              my own words retyped is self-certification with an extra step.
+        #
+        # WHY TWO TESTS AND NOT ONE. They fail differently and neither subsumes the other:
+        # a symlink's tracked blob is the TARGET PATH STRING, so it does NOT collide with the
+        # member's blob and no content compare can catch it; a hard link and a copy are
+        # ordinary regular files, so no mode check can catch them.
+        #
+        #   (1) MODE. A symlink witness is refused outright, and the reason is independent of
+        #       self-reference: what git tracks at that path is the target path string, while
+        #       `grep` reads the DEREFERENCED file's bytes. The bytes graded are then not the
+        #       bytes committed at that path, and the target may not be in this repository at
+        #       all — which is the identical objection this direction already prints for an
+        #       untracked witness, "it is absent from every commit and cannot be reviewed".
+        #   (2) BLOB. A witness whose tracked blob IS the member's tracked blob is the member.
+        #       Comparing object ids compares what is COMMITTED, not what is on this host, so
+        #       it is stable across checkouts and it catches copy and hard link with one test.
+        #
+        # MEASURED ON THIS TREE BEFORE THE CHANGE [T375 pass 2]: the guards directory tracks no
+        # symlink and no two identical blobs, so neither test refuses anything standing today —
+        # verified by `git ls-files -s .softhouse/guards`, and by arm T375-09, the legitimate
+        # `./`-spelled witness, which stays ACCEPTED.
+        #
+        # NO PIPELINE, for the reason P-57 gives and this function keeps everywhere else
+        # [VERIFIED: .softhouse/patterns.md:1654]. `git ls-files -s` prints
+        # `<mode> <objectid> <stage>\t<path>`; the two fields are taken with shell parameter
+        # expansion, which starts no second process and cannot EPIPE.
+        # `member_blob` is ALREADY IN HAND — it was read at the top of this loop iteration, by
+        # the symlink refusal above, from the same `git ls-files -s` call. It is not re-read
+        # here: two reads of one quantity are two chances to disagree.
+        self_stat=""; self_mode=""; self_blob=""
+        if [ -n "$self_norm" ] && [ "$self_multi" -eq 0 ]; then
+          self_stat="$( cd "$REPO_ROOT" 2>/dev/null && \
+            git ls-files -s -- "$self_norm" 2>/dev/null )" || self_stat=""
+          self_mode="${self_stat%% *}"
+          self_blob="${self_stat#* }"; self_blob="${self_blob%% *}"
+        fi
         if [ -z "$self_wit" ]; then
           bad=1
           warn "conformance: guard_guards_dir_registration: $rel carries a REACHED-BY directive"
@@ -3512,6 +3634,33 @@ INNER
           warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
           warn "conformance: which is NOT TRACKED. An untracked witness is host state — it is"
           warn "conformance: absent from every commit and cannot be reviewed. REFUSED."
+          warn "conformance: (READ THIS BEFORE CONCLUDING THE GUARD IS WRONG. The file EXISTS on"
+          warn "conformance: disk — the existence test above passed — yet git will not resolve"
+          warn "conformance: the spelling. The usual cause is CASE: this program's macOS hosts"
+          warn "conformance: mount a case-INSENSITIVE filesystem, so '-f' accepts a wrong-case"
+          warn "conformance: path that git, which indexes case-SENSITIVELY, does not. Spell the"
+          warn "conformance: witness exactly as 'git ls-files' prints it. The other cause is a"
+          warn "conformance: path reaching THROUGH a symlinked directory, which git never"
+          warn "conformance: indexes. Either way the refusal stands: a spelling git cannot"
+          warn "conformance: resolve cannot be re-verified on another checkout [T375 pass 2].)"
+        elif [ "$self_mode" = "120000" ]; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
+          warn "conformance: and THAT WITNESS IS A SYMLINK. What git tracks at that path is the"
+          warn "conformance: TARGET PATH STRING; the test below would follow the link and grade"
+          warn "conformance: bytes that are not committed at that path — and the target may not"
+          warn "conformance: be in this repository at all. A symlink to the member ITSELF made"
+          warn "conformance: this file vouch for itself and the bar stayed GREEN [T375 pass 2,"
+          warn "conformance: the same class as T364's F-T364-2]. Name a real tracked file."
+          warn "conformance: REFUSED."
+        elif [ -n "$member_blob" ] && [ "$self_blob" = "$member_blob" ]; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
+          warn "conformance: and THAT WITNESS IS BYTE-IDENTICAL TO THIS MEMBER — same git object"
+          warn "conformance: $member_blob. A copy or a hard link of the member is the member: it"
+          warn "conformance: names $base only because the member's own text names it. That is"
+          warn "conformance: self-certification with an extra step, which is exactly the amnesty"
+          warn "conformance: this direction exists to refuse [T375 pass 2]. REFUSED."
         elif ! LC_ALL=C grep -qF -- "$base" "$REPO_ROOT/$self_norm"; then
           bad=1
           warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
@@ -3605,9 +3754,16 @@ INNER
         warn "conformance:"
         warn "conformance:     GUARDS-DIR-REGISTRATION: REACHED-BY <witness path, repo-relative>"
         warn "conformance:"
-        warn "conformance: The witness must be TRACKED, must not be $base itself, and must NAME"
-        warn "conformance: $base — this guard re-verifies all three every run, so it is a record"
-        warn "conformance: and not an amnesty. Both files are yours; no edit to this harness is"
+        warn "conformance: The witness must be TRACKED; must be a REGULAR FILE, never a symlink;"
+        warn "conformance: must not be $rel in ANY"
+        warn "conformance: spelling — a leading './', an interior '/../' and an absolute path all"
+        warn "conformance: resolve to the same file and are refused as the same self-reference;"
+        warn "conformance: must not be a COPY or a HARD LINK of it, which git shows as the same"
+        warn "conformance: object id; and must NAME $base. This guard re-verifies EVERY ONE of"
+        warn "conformance: those every run, so it is a record and not an amnesty — each was a"
+        warn "conformance: way to forge this row and each is now driven RED by its own arm"
+        warn "conformance: [T364 F-T364-2; T375 passes 1 and 2]."
+        warn "conformance: Both files are yours; no edit to this harness is"
         warn "conformance: needed, which is the point: the two older remedies below both require"
         warn "conformance: editing a file this program serialises to one holder per batch."
         warn "conformance:"
@@ -3698,7 +3854,7 @@ STALE
     return 1
   fi
 
-  say "conformance:   GUARDS-DIR-REGISTRATION: population=$total invoked=$invoked declared=$decl_ok reached-by=$selfdecl invoked-by-nothing=$unwired"
+  say "conformance:   GUARDS-DIR-REGISTRATION: population=$total invoked=$invoked declared=$decl_ok reached-by=$selfdecl invoked-by-nothing=$unwired symlink-members=$symlinked"
   say "conformance:   (selector: git ls-files with ':(glob)' magic over the TRACKED '*.sh', '*.py'"
   say "conformance:   and '*.go' files at ANY DEPTH under $gdrel, from \$REPO_ROOT. NOT closed over"
   say "conformance:   other languages or committed binaries — this is a count over that search.)"

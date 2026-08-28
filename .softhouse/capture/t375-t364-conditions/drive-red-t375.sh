@@ -61,6 +61,41 @@
 #             9m43s while its own comment advertised 0.23 s, and the only detector was a human
 #             noticing. ARMS 13..17, driven with a DELIBERATELY SLOW GUARD and its control.
 #
+# PASS 2 ADDED FOURTEEN MORE ARMS (ARM SET 3), AND THEY EXIST BECAUSE OF THE INSTRUCTION T364's
+# FINDING CARRIES RATHER THAN BECAUSE OF ITS TEXT: HAVING CLOSED A HOLE, ASK WHAT YOUR OWN ARM
+# MISSES BY ONE. Pass 1 closed the SPELLING of the REACHED-BY witness path. Asking the question
+# turned up FOUR MORE FAIL-OPENS, each MEASURED GREEN on pass 1's own tree -- whole bar exit 0,
+# probe PRESENT, `VERDICT: PASS`:
+#
+#   F-T375-4  the witness is a SYMLINK to the member. `git ls-files` resolves a symlink to ITS
+#             OWN PATH, never its target, so the self-reference compare pass 1 built is
+#             satisfied -- while `-f` and `grep` both DEREFERENCE and read the member itself.
+#   F-T375-5  the witness is a HARD LINK to the member. Two tracked paths, one inode, one blob.
+#   F-T375-6  the witness is a PLAIN COPY of the member. Two inodes, still one blob: the
+#             witness holds nothing but the member's own text, so "another file names me" is
+#             satisfied by my own words retyped.
+#   F-T375-7  THE MEMBER ITSELF IS A SYMLINK, and this is the one that was NOT predicted. The
+#             guard greps the MEMBER for its REACHED-BY directive through the filesystem, so a
+#             tracked symlink to an already-registered member INHERITS that member's row,
+#             resolves ITS witness, and passes. `reached-by=2 invoked-by-nothing=0`.
+#
+# THE FIRST THREE ARE THE SENTENCE THE GUARD PRINTS -- "A FILE MAY NOT VOUCH FOR ITSELF" --
+# DEFEATED AGAIN, one layer below the spelling. ARMS 18, 19, 20 drive them red; 21 and 22 are
+# the REVERT arms that reproduce the fail-open. Arms 23..26 drive the four SPELLINGS pass 1
+# measured but never drove (`.//M`, `./././M`, a trailing slash, and a CASE-FOLDED path, the
+# last reachable only because this host's filesystem is case-INSENSITIVE while git indexes
+# case-SENSITIVELY). Arms 27..29 do the same on the F-T364-1 side: `main_test.go`, a case-folded
+# `Main.go`, and a `main.go` one directory deeper than arm 01's. THOSE SIX SPELLING AND `.go`
+# ARMS WERE ALREADY FAIL-CLOSED and are driven so that is a measurement and not a reading.
+#
+# AND THEN ARM 30, WHICH IS THE ONE WORTH READING. IT WAS WRITTEN AS A SEVENTH CONFIRMATION AND
+# CAME BACK A FINDING -- it FAILED on its first run, `exit=0 (want 2) probe=PRESENT (want
+# ABSENT) marker=NO`, and that is F-T375-7 above. ARM 31 IS ITS REVERT ARM. The general lesson,
+# and the reason arm 30 is kept at its original expectation rather than rewritten to match the
+# code: FOUR SEPARATE FIXES IN THIS CLASS HAVE NOW TIGHTENED HOW A PATH IS RESOLVED, AND THE
+# HOLE WAS NEVER IN THE RESOLUTION -- IT WAS THAT A PATH IS NOT A FILE, AND EVERY TEST IN THIS
+# GUARD READS ITS SUBJECT THROUGH THE FILESYSTEM WHILE GIT TRACKS SOMETHING ELSE.
+#
 # THE TWO REVERT ARMS ARE THE P-22 EVIDENCE AND THEY ARE THE POINT OF THIS FILE. "A guard, a
 # canary, or a control that cannot fail is worse than none -- because it is believed"
 # [VERIFIED: .softhouse/patterns.md:473]. Arms 03 and 08 UNDO the one-token change each fix
@@ -143,6 +178,38 @@ PLANTED_UNIQUE_REL="$GUARDS_REL/$CHECKER_DIR_LEAF/$UNIQUE_GO_LEAF"
 SELF_DIR="$GUARDS_DIR/$SELF_DIR_LEAF"
 SELF_ABS="$SELF_DIR/$SELF_LEAF"
 SELF_REL="$GUARDS_REL/$SELF_DIR_LEAF/$SELF_LEAF"
+# ---- PASS 2 LEAVES. [T375 pass 2.] Same assembly discipline: no `.softhouse/`-rooted literal
+# ---- is spelled whole, because this file is itself in T316's dead-path corpus.
+SYM_DIR_LEAF="zz-t375-sym"
+SYM_LEAF="zz-t375-sym.sh"
+SYM_WIT_LEAF="w-t375-symlink.txt"
+CP_DIR_LEAF="zz-t375-copy"
+CP_LEAF="zz-t375-copy.sh"
+CP_WIT_LEAF="w-t375-copy.txt"
+HL_DIR_LEAF="zz-t375-hardlink"
+HL_LEAF="zz-t375-hardlink.sh"
+HL_WIT_LEAF="w-t375-hardlink.txt"
+MAINTEST_LEAF="main_test.go"
+CASEFOLD_GO_LEAF="Main.go"
+DEEPER_LEAF="deeper"
+SYMMEMBER_DIR_LEAF="zz-t375-symmember"
+
+SYM_DIR="$GUARDS_DIR/$SYM_DIR_LEAF"
+SYM_MEMBER_ABS="$SYM_DIR/$SYM_LEAF"
+SYM_MEMBER_REL="$GUARDS_REL/$SYM_DIR_LEAF/$SYM_LEAF"
+SYM_WIT_ABS="$SYM_DIR/$SYM_WIT_LEAF"
+SYM_WIT_REL="$GUARDS_REL/$SYM_DIR_LEAF/$SYM_WIT_LEAF"
+CP_DIR="$GUARDS_DIR/$CP_DIR_LEAF"
+CP_MEMBER_ABS="$CP_DIR/$CP_LEAF"
+CP_WIT_ABS="$CP_DIR/$CP_WIT_LEAF"
+CP_WIT_REL="$GUARDS_REL/$CP_DIR_LEAF/$CP_WIT_LEAF"
+HL_DIR="$GUARDS_DIR/$HL_DIR_LEAF"
+HL_MEMBER_ABS="$HL_DIR/$HL_LEAF"
+HL_WIT_ABS="$HL_DIR/$HL_WIT_LEAF"
+HL_WIT_REL="$GUARDS_REL/$HL_DIR_LEAF/$HL_WIT_LEAF"
+DEEP_DIR="$CHECKER_DIR/$DEEPER_LEAF"
+SYMMEMBER_DIR="$GUARDS_DIR/$SYMMEMBER_DIR_LEAF"
+
 FIXTURE_DIR="$GUARDS_DIR/$LG_LEAF/$TD_LEAF"
 FIXTURE_ABS="$FIXTURE_DIR/$FIXTURE_LEAF"
 FIXTURE_REL="$GUARDS_REL/$LG_LEAF/$TD_LEAF/$FIXTURE_LEAF"
@@ -326,6 +393,172 @@ m_witness_untracked() {
       | LC_ALL=C grep -q '^??' ) || return 1
 }
 
+# =============================================================================================
+# PASS 2 MUTATIONS. [T375 pass 2.]
+#
+# THE QUESTION THAT PRODUCED THEM IS THE ONE T364's FINDING ASKS OUT LOUD: "WHAT DOES MY OWN ARM
+# MISS BY ONE?" Pass 1 closed the SPELLING of the witness path. But `self_norm` names a PATH and
+# a path is not a file, so the next question is what else can make the member's OWN BYTES come
+# back as "some other file that names me". THREE CONSTRUCTIONS DID, AND ALL THREE WERE MEASURED
+# GREEN — the whole bar exit 0, probe PRESENT, `VERDICT: PASS`, the guard printing
+# `(verified: it names ...)` — on pass 1's own tree, BEFORE the fix that closes them:
+#
+#   SYMLINK   `git ls-files` resolves a symlink to ITS OWN PATH, never its target, so the
+#             self-reference compare is satisfied; `-f` and `grep` both dereference.
+#   HARD LINK two tracked paths, one inode, one blob.
+#   COPY      two inodes, still one blob — the witness holds nothing but the member's own text.
+#
+# and four SPELLING rows that pass 1 measured but never DROVE. `.//M` and `./././M` normalise
+# and are self-reference; a TRAILING SLASH does not resolve at all; and a CASE-FOLDED spelling
+# is the one this host makes reachable — the filesystem is case-INSENSITIVE so `-f` accepts it,
+# while git indexes case-SENSITIVELY and refuses. All four are FAIL-CLOSED and are driven here
+# so that stays a measurement rather than a reading.
+#
+# THE F-T364-1 SIDE IS DRIVEN THE SAME WAY: `main_test.go`, a case-folded `Main.go`, a `main.go`
+# one directory DEEPER than arm 01's, and a member that is itself a tracked SYMLINK named
+# `main.go`. None of the four was a fail-open under either predicate; each is driven so the
+# claim "the `.go` population is closed" rests on arms and not on inspection.
+# =============================================================================================
+
+# PRECONDITION HELPERS. `git ls-files -s` prints `<mode> <objectid> <stage>\t<path>`; both
+# fields are taken with shell parameter expansion. NO PIPELINE — P-57's EPIPE family, the same
+# discipline the guard under test keeps [VERIFIED: .softhouse/patterns.md:1654].
+assert_index_mode() {  # assert_index_mode <repo-relative path> <expected mode>
+  local st
+  st="$( cd "$SCRATCH" && git ls-files -s -- "$1" 2>/dev/null )" || return 1
+  [ -n "$st" ] || { echo "    assert_index_mode: '$1' is not in the index" >&2; return 1; }
+  [ "${st%% *}" = "$2" ] || {
+    echo "    assert_index_mode: '$1' has mode ${st%% *}, want $2" >&2; return 1; }
+}
+_index_blob() {  # _index_blob <repo-relative path>  -> prints the object id
+  local st rest
+  st="$( cd "$SCRATCH" && git ls-files -s -- "$1" 2>/dev/null )" || return 1
+  [ -n "$st" ] || return 1
+  rest="${st#* }"
+  printf '%s' "${rest%% *}"
+}
+assert_same_blob() {  # assert_same_blob <path a> <path b>
+  local a b
+  a="$(_index_blob "$1")" || return 1
+  b="$(_index_blob "$2")" || return 1
+  [ -n "$a" ] || return 1
+  [ "$a" = "$b" ] || {
+    echo "    assert_same_blob: '$1' is $a but '$2' is $b — not one blob" >&2; return 1; }
+}
+
+# A member that NAMES ITSELF in its own header — which every real checker does — and declares
+# REACHED-BY the witness leaf passed in. One helper for all three constructions, so the arms
+# differ in HOW the witness is made and in nothing else.
+plant_selfnaming_member() {  # $1 = member abs  $2 = member leaf  $3 = witness rel
+  { printf '#!/bin/sh\n'
+    printf '# %s -- a checker planted by the T375 red drive. Nothing runs it.\n' "$2"
+    directive "$3"
+    printf 'echo "planted by the T375 red drive"\n'
+  } > "$1" || return 1
+  # PRECONDITION, asserted rather than assumed: the member must NAME ITS OWN BASENAME, or the
+  # `it names <base>` test would fail for an unrelated reason and the arm would be measuring
+  # nothing. This is what makes a copy of it a working forgery.
+  LC_ALL=C grep -qF -- "$2" "$1" || return 1
+}
+
+# THE WITNESS IS A SYMLINK TO THE MEMBER. Measured GREEN on pass 1's tree: exit 0, reached-by=2.
+m_witness_symlink_to_member() {
+  mkdir -p "$SYM_DIR" || return 1
+  plant_selfnaming_member "$SYM_MEMBER_ABS" "$SYM_LEAF" "$SYM_WIT_REL" || return 1
+  ln -s "$SYM_LEAF" "$SYM_WIT_ABS" || return 1
+  [ -L "$SYM_WIT_ABS" ] || return 1
+  ( cd "$SCRATCH" && git add -A "$SYM_MEMBER_REL" "$SYM_WIT_REL" ) || return 1
+  # PRECONDITION: git must record it as a SYMLINK (mode 120000), or this arm is not about that.
+  # NO PIPELINE — P-57's EPIPE family; a `case` on captured output starts no second process.
+  assert_index_mode "$SYM_WIT_REL" 120000 || return 1
+}
+
+# THE WITNESS IS A PLAIN COPY OF THE MEMBER. Same blob, different inode. Measured GREEN.
+m_witness_copy_of_member() {
+  mkdir -p "$CP_DIR" || return 1
+  plant_selfnaming_member "$CP_MEMBER_ABS" "$CP_LEAF" "$CP_WIT_REL" || return 1
+  cp "$CP_MEMBER_ABS" "$CP_WIT_ABS" || return 1
+  ( cd "$SCRATCH" && git add -A "$GUARDS_REL/$CP_DIR_LEAF" ) || return 1
+  # PRECONDITION: the two paths must be ONE blob, or this arm is not about self-certification
+  # by duplication at all.
+  assert_same_blob "$GUARDS_REL/$CP_DIR_LEAF/$CP_LEAF" "$CP_WIT_REL" || return 1
+}
+
+# THE WITNESS IS A HARD LINK TO THE MEMBER. Same inode, same blob. Measured GREEN.
+m_witness_hardlink_to_member() {
+  mkdir -p "$HL_DIR" || return 1
+  plant_selfnaming_member "$HL_MEMBER_ABS" "$HL_LEAF" "$HL_WIT_REL" || return 1
+  ln "$HL_MEMBER_ABS" "$HL_WIT_ABS" || return 1
+  ( cd "$SCRATCH" && git add -A "$GUARDS_REL/$HL_DIR_LEAF" ) || return 1
+  assert_same_blob "$GUARDS_REL/$HL_DIR_LEAF/$HL_LEAF" "$HL_WIT_REL" || return 1
+}
+
+# THE TWO PASS-2 REVERT ARMS. Each disables ONE of the two new tests by changing the value it
+# compares against, and nothing else, then plants the construction that test exists to catch.
+# A fix whose removal changes nothing was never a fix — P-22.
+revert_symlink_test_and_plant() {
+  subst_once "$CONF_ABS" \
+    '        elif [ "$self_mode" = "120000" ]; then' \
+    '        elif [ "$self_mode" = "zz-t375-never-a-mode" ]; then' || return 1
+  m_witness_symlink_to_member || return 1
+}
+revert_member_symlink_test_and_plant() {
+  subst_once "$CONF_ABS" \
+    '    if [ "$member_mode" = "120000" ]; then' \
+    '    if [ "$member_mode" = "zz-t375-never-a-mode" ]; then' || return 1
+  m_member_is_a_symlink || return 1
+}
+revert_blob_test_and_plant() {
+  subst_once "$CONF_ABS" \
+    '        elif [ -n "$member_blob" ] && [ "$self_blob" = "$member_blob" ]; then' \
+    '        elif [ -n "$member_blob" ] && [ "$self_blob" = "zz-t375-never-a-blob" ]; then' \
+    || return 1
+  m_witness_copy_of_member || return 1
+}
+
+# THE FOUR SPELLING ROWS PASS 1 MEASURED BUT DID NOT DRIVE.
+m_selfcert_doubleslash()  { plant_selfcert ".//$SELF_REL"; }
+m_selfcert_dotrepeated()  { plant_selfcert "./././$SELF_REL"; }
+m_selfcert_trailslash()   { plant_selfcert "$SELF_REL/"; }
+# CASE-FOLDED. Reachable only because this host's filesystem is case-INSENSITIVE: `-f` on the
+# typed spelling succeeds, so the existence test passes, and git — which indexes
+# case-SENSITIVELY — then refuses to resolve it. MEASURED on this host before the arm was
+# written; on a case-SENSITIVE filesystem the existence test refuses first and the arm's marker
+# would differ, which is why the marker below is asserted and not assumed.
+m_selfcert_casefolded() {
+  local folded
+  folded="$(printf '%s' "$SELF_REL" | LC_ALL=C tr '[:lower:]' '[:upper:]')"
+  [ "$folded" != "$SELF_REL" ] || return 1
+  plant_selfcert "$folded" || return 1
+  [ -f "$SCRATCH/$folded" ] || return 1
+}
+
+# THE F-T364-1 SIDE.
+plant_unwired_go() {  # $1 = dir abs  $2 = leaf
+  mkdir -p "$1" || return 1
+  { printf 'package main\n\n'
+    printf '// A checker planted by the T375 red drive. Nothing runs it.\n'
+    printf 'func main() {}\n'
+  } > "$1/$2" || return 1
+  ( cd "$SCRATCH" && git add -A "$GUARDS_REL" ) || return 1
+}
+m_unwired_maintest()  { plant_unwired_go "$CHECKER_DIR" "$MAINTEST_LEAF"; }
+m_unwired_casefold()  { plant_unwired_go "$CHECKER_DIR" "$CASEFOLD_GO_LEAF"; }
+m_unwired_deeper()    { plant_unwired_go "$DEEP_DIR" "$MAIN_LEAF"; }
+
+# A MEMBER THAT IS ITSELF A TRACKED SYMLINK, named `main.go`, pointing at the REAL main.go. It
+# joins the population like any other tracked `.go`, and its own path is not in the harness.
+m_member_is_a_symlink() {
+  mkdir -p "$SYMMEMBER_DIR" || return 1
+  # THE TARGET IS RELATIVE, DELIBERATELY. An absolute one would put this host's scratch path
+  # into a TRACKED blob, which is host state, and the arm would then be liable to fail for a
+  # reason that has nothing to do with registration.
+  ln -s "../$LG_LEAF/$MAIN_LEAF" "$SYMMEMBER_DIR/$MAIN_LEAF" || return 1
+  [ -f "$SYMMEMBER_DIR/$MAIN_LEAF" ] || return 1
+  ( cd "$SCRATCH" && git add -A "$GUARDS_REL/$SYMMEMBER_DIR_LEAF" ) || return 1
+  assert_index_mode "$GUARDS_REL/$SYMMEMBER_DIR_LEAF/$MAIN_LEAF" 120000 || return 1
+}
+
 # --------------------------------------------------------------------------------------------
 # COST ARMS. A DELIBERATELY SLOW GUARD, and its control one number away.
 # --------------------------------------------------------------------------------------------
@@ -420,11 +653,67 @@ arm "T375-16-STALE-budget-row-refuses" 2 ABSENT \
 arm "T375-17-VACUOUS-cost-census-refuses" 2 ABSENT \
   'NOT ONE guard was timed' m_cost_vacuous_census
 
+# =============================================================================================
+# ARM SET 3 -- T375 PASS 2. THE THREE FAIL-OPENS PASS 1's OWN ARMS MISSED BY ONE, AND THE SEVEN
+# FAIL-CLOSED CASES PASS 1 ESTABLISHED BY READING RATHER THAN BY DRIVING.
+# =============================================================================================
+echo
+echo ">>> ARM SET 3: T375 pass 2 -- what pass 1's arms missed by one."
+
+# ---- the three constructions that were MEASURED GREEN on pass 1's tree ----------------------
+arm "T375-18-witness-is-a-SYMLINK-to-the-member" 2 ABSENT \
+  'THAT WITNESS IS A SYMLINK' m_witness_symlink_to_member
+arm "T375-19-witness-is-a-COPY-of-the-member" 2 ABSENT \
+  'BYTE-IDENTICAL TO THIS MEMBER' m_witness_copy_of_member
+arm "T375-20-witness-is-a-HARD-LINK-to-the-member" 2 ABSENT \
+  'BYTE-IDENTICAL TO THIS MEMBER' m_witness_hardlink_to_member
+
+# ---- and their REVERT arms. P-22: a fix whose removal changes nothing was never a fix. ------
+arm "T375-21-REVERT-symlink-test-ACCEPTED-again" 0 PRESENT \
+  'population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0' \
+  revert_symlink_test_and_plant
+arm "T375-22-REVERT-blob-test-COPY-ACCEPTED-again" 0 PRESENT \
+  'population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0' \
+  revert_blob_test_and_plant
+
+# ---- the four spellings pass 1 MEASURED but never DROVE -------------------------------------
+arm "T375-23-selfcert-via-DOUBLE-SLASH" 2 ABSENT \
+  'declares REACHED-BY ITSELF' m_selfcert_doubleslash
+arm "T375-24-selfcert-via-REPEATED-DOTSLASH" 2 ABSENT \
+  'declares REACHED-BY ITSELF' m_selfcert_dotrepeated
+arm "T375-25-witness-with-a-TRAILING-SLASH" 2 ABSENT \
+  'REACHED-BY WITNESS DOES NOT EXIST' m_selfcert_trailslash
+arm "T375-26-witness-CASE-FOLDED-on-a-case-insensitive-fs" 2 ABSENT \
+  'which is NOT TRACKED' m_selfcert_casefolded
+
+# ---- the F-T364-1 side: four more `.go` shapes, none of them a fail-open, all now DRIVEN ----
+arm "T375-27-unwired-main_test.go" 2 ABSENT \
+  "$MAINTEST_LEAF IS INVOKED BY NOTHING" m_unwired_maintest
+arm "T375-28-unwired-CASE-FOLDED-Main.go" 2 ABSENT \
+  "$CASEFOLD_GO_LEAF IS INVOKED BY NOTHING" m_unwired_casefold
+arm "T375-29-unwired-main.go-ONE-DIRECTORY-DEEPER" 2 ABSENT \
+  "$DEEPER_LEAF/$MAIN_LEAF IS INVOKED BY NOTHING" m_unwired_deeper
+# ---- THE ARM THAT FAILED, AND THE FOURTH FAIL-OPEN IT FOUND -------------------------------
+# THIS ARM WAS WRITTEN AS A CONFIRMATION AND CAME BACK A FINDING, WHICH IS THE ONLY REASON IT
+# IS WORTH ANYTHING. It was added expecting the member to be refused as INVOKED BY NOTHING —
+# its own path is nowhere in the harness — and on its first run it reported
+#     exit=0 (want 2)  probe=PRESENT (want ABSENT)  marker=NO  >>> FAIL
+# because the guard greps the MEMBER for its REACHED-BY directive THROUGH the filesystem: a
+# tracked symlink to the real `ledgerguard/main.go` INHERITED that file's registration row
+# wholesale, resolved ITS witness, and passed. `reached-by=2 invoked-by-nothing=0`, whole bar
+# GREEN. An unwired checker could land in the canonical guards directory by being a symlink to
+# a registered one. THE EXPECTATION BELOW IS THE ORIGINAL ONE; only the marker changed, to the
+# refusal the guard now prints. [F-T375-7.]
+arm "T375-30-member-IS-a-tracked-SYMLINK-named-main.go" 2 ABSENT \
+  "$SYMMEMBER_DIR_LEAF/$MAIN_LEAF IS A SYMLINK" m_member_is_a_symlink
+arm "T375-31-REVERT-symlink-MEMBER-test-INHERITS-again" 0 PRESENT \
+  'reached-by=2 invoked-by-nothing=0' revert_member_symlink_test_and_plant
+
 reset_tree
 echo
 echo "T375 RED DRIVE: $PASSES passed, $FAILS failed. (arm set 1 counts as one.)"
-echo "DISTINCT ARMS IN THIS FILE: 18. The line above counts arm set 1 as ONE, so its total is"
-echo "18 + 1 = 19 and NOT the sum of every arm that ran -- T364's NOTE-1 charged exactly that"
+echo "DISTINCT ARMS IN THIS FILE: 32. The line above counts arm set 1 as ONE, so its total is"
+echo "32 + 1 = 33 and NOT the sum of every arm that ran -- T364's NOTE-1 charged exactly that"
 echo "double-count against T358's '29 arms' label, and the label is spelled here so it cannot"
 echo "be inferred wrongly. The predecessor drives report their own counts in their own output."
 [ "$FAILS" -eq 0 ]

@@ -1,0 +1,23 @@
+F-T375-7 -- THE MEMBER ITSELF IS A SYMLINK AND INHERITS A REGISTERED MEMBER'S ROW.
+
+From the arm-30 transcript of the FIRST smoke run, taken BEFORE the fix existed. Arm 30
+was written as a CONFIRMATION -- the planted member's own path is nowhere in the harness,
+so it was expected to be refused as INVOKED BY NOTHING. It FAILED:
+
+  T375-30-member-IS-a-tracked-SYMLINK-named-main.go  exit=0 (want 2)  probe=PRESENT
+                                                     (want ABSENT)  marker=NO  >>> FAIL
+
+The guard greps the MEMBER for its REACHED-BY directive THROUGH the filesystem, so the
+planted symlink read the REAL ledgerguard/main.go's row, resolved THAT row's witness
+(check-ledger-invariants.sh), found it names the basename 'main.go', and PASSED:
+
+conformance:     INVOKED    .softhouse/guards/check-capture-namespace.sh
+conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+conformance:     INVOKED    .softhouse/guards/check-ledger-invariants.sh
+conformance:     DECLARED   .softhouse/guards/drive-red-ledger-invariants.sh — not a guard: the red drive for ledgerguard (verified)
+conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+conformance:                .softhouse/guards/check-ledger-invariants.sh (verified: it names main.go)
+conformance:     DECLARED   .softhouse/guards/repo-state-attest.sh — run by .softhouse/bin/fire-program.sh (verified: it names repo-state-attest.sh)
+conformance: guard_guards_dir_registration: .softhouse/guards/zz-t375-symmember/main.go IS A SYMLINK, and a symlink is not
+conformance: a checker. What git tracks at that path is the TARGET PATH STRING,
+conformance: while every test in this guard reads the file through the filesystem
