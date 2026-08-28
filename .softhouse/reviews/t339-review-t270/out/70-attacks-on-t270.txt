@@ -1,0 +1,95 @@
+==============================================================================
+ARM A -- resolve-supersession.py accepts a `..`-ESCAPING replacement path.
+         T270 fixed exactly this shape in guard-parse-float-ast.py's
+         check_reproduction ('refused with `..` ... spelled by a different
+         name'), then shipped a NEW resolver with no such check.  P-80.
+==============================================================================
+  ok   a `../` replacement OUTSIDE the register's directory is ACCEPTED (rc=0)
+         rc=0  stdout='../OUTSIDE-THE-RIG.py'
+  ok   ...and the resolver hands that path straight back to the caller to exec
+         ../OUTSIDE-THE-RIG.py
+
+==============================================================================
+ARM B -- resolve-supersession.py accepts an ABSOLUTE replacement path.
+==============================================================================
+  ok   an ABSOLUTE out-of-tree replacement is ACCEPTED (rc=0)
+         rc=0  stdout='/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmpbzt1alqu/abs-outside.py'
+         NOTE the shell caller writes "$RIG/$REPL", so an ABSOLUTE path
+         happens to produce a broken concatenation and dies loudly; the
+         `..` form in ARM A does NOT -- it resolves and runs.
+
+==============================================================================
+ARM C -- run-all.sh section 8 executes WHATEVER the register names, with no
+         check that the replacement is a guard, and IGNORES its exit code.
+==============================================================================
+  ok   the resolver accepts a replacement that is NOT a guard at all
+         rc=0 stdout='NOT-A-GUARD.py'
+  ok   section 8's own logic RUNS it and the section still ends rc=0 overall
+         SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> NOT-A-GUARD.py
+         I did not check anything
+         exit=1
+  ok   ...and the failing exit code is only PRINTED, never propagated
+         SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> NOT-A-GUARD.py
+         I did not check anything
+         exit=1
+
+==============================================================================
+ARM D -- (a) THE DURABLE PIN.  T263 measured: edit an exempted file -> guard
+         dies -> `manifest.py write` -> guard REVIVES.  With field 7 the
+         revival must FAIL.  This is T270's headline exemption fix.
+==============================================================================
+  ok   baseline: the sandbox rig is GREEN
+         PASS -- 21 call site(s) across 35 file(s): 15 carry parse_float=, 6 are declared and their preconditions hold, 0 violations.
+  ok   after the edit the guard REFUSES
+         rc=2
+  ok   `manifest.py write` (rc=0) does NOT revive it -- the register pin holds
+         rc=2
+           DENIED  verify-provenance-a2-15.py:24   FROZEN-T114        verify-provenance-a2-15.py HAS BEEN EDITED (sha256 caaf4d82d1b2, THIS REGISTER pins 9751bc6006c4) -
+           * verify-provenance-a2-15.py:24 declared FROZEN-T114 but its precondition FAILED: verify-provenance-a2-15.py HAS BEEN EDITED (sha256 caaf4d82d1b2, THIS REGIST
+  ok   ...and the refusal names the REGISTER, not the manifest, as the pin
+           DENIED  verify-provenance-a2-15.py:24   FROZEN-T114        verify-provenance-a2-15.py HAS BEEN EDITED (sha256 caaf4d82d1b2, THIS REGISTER pins 9751bc6006c4) -
+           * verify-provenance-a2-15.py:24 declared FROZEN-T114 but its precondition FAILED: verify-provenance-a2-15.py HAS BEEN EDITED (sha256 caaf4d82d1b2, THIS REGIST
+
+==============================================================================
+ARM E -- (a) IS OPT-OUT-ABLE.  Field 7 is optional (6 fields still accepted).
+         Delete field 7 and T263's revival attack works again, END TO END.
+==============================================================================
+  ok   a 6-field record is still ALLOWED, graded MANIFEST-ONLY -- WEAK
+           ALLOW   verify-provenance-a2-15.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; MANIFEST-ONLY -- WEAK: this record carries no register pin,
+  ok   edit the file -> guard refuses
+         rc=2
+  ok   `manifest.py write` REVIVES the exemption -- T263 F-4(a) is closed only for records that opted IN to field 7
+         rc=0  PASS -- 21 call site(s) across 35 file(s): 15 carry parse_float=, 6 are declared and their preconditions hold, 0 violations.
+
+==============================================================================
+ARM F -- (c) `produced:` STILL SWAPPABLE.  T270 says so in the source; this
+         MEASURES it rather than taking the comment's word for it.
+==============================================================================
+  ok   swapping the evidence for an unrelated but MANIFEST-pinned file still ALLOWS
+           ALLOW   verify-provenance-a2-15.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced CA
+
+==============================================================================
+ARM G -- (d) `reproduces:` absolute / `..` / symlink.  This one T270 CLOSED;
+         a review that only re-runs the author's own arms proves nothing, so
+         the symlink spelling is driven here too.
+==============================================================================
+  ok   ABSOLUTE `reproduces:` target is REFUSED
+         rc=2  
+  ok   DOT-DOT `reproduces:` target is REFUSED
+         rc=2  
+  ok   SYMLINK `reproduces:` target is REFUSED
+         rc=2  
+
+==============================================================================
+ARM H -- (b) MINTING.  A brand-new unguarded money-shaped loader, TRACKED in
+         git, cited against evidence it never produced.  T270 says this is
+         still open; measure it, do not relay it.
+==============================================================================
+  ok   a NEWLY MINTED unguarded json.load, citing evidence it never produced, is ALLOWED (fail-open still OPEN, as T270 states)
+         rc=0    ALLOW   t339-minted-loader.py:5    FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced R
+  ok   ...and its provenance IS graded ASSERTED ONLY, so the grade at least prints
+           ALLOW   t339-minted-loader.py:5    FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced RED-GRE
+           DECLARED FROZEN-T114 t339-minted-loader.py           :5    json.load   parse_float=MISSING
+
+==============================================================================
+19 ok, 0 FAILED

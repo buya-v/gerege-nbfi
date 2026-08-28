@@ -1,0 +1,10 @@
+163c163
+< SUPERSESSION REGISTER (SUPERSEDED.txt) — 4 entr(ies)
+---
+> SUPERSESSION REGISTER (SUPERSEDED.txt) — 5 entr(ies)
+165a166
+>   prove-mkreq7-guard-red.py      -> guard-parse-float-ast.py         CLEAN (AST-verified, 0 R1)
+172c173
+<           4 redirect(s) verified
+---
+>           5 redirect(s) verified

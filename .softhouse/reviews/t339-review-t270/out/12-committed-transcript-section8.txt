@@ -1,0 +1,23 @@
+############ 8. A2-7's own guard prover, re-run unmodified (offline)
+mkreq7.py — the request-body generator
+  ok   GREEN empty req/ writes and exits 0  rc=0 files=12
+  ok   GREEN rerun is byte-identical and exits 0  rc=0
+  ok   RED  a differing body makes it exit 1  rc=1
+  ok   RED  the refusal NAMES the offending file
+  ok   RED  the refusal cites D-1
+  ok   RED  it leaves every byte on disk alone
+  ok   RED  it aborts before writing: a deleted sibling is NOT recreated  rc=1
+  ok   GREEN restoring the byte lets it complete, and rebuilds only the missing file  rc=0
+resolve7.py — the observed-value resolver
+  ok   RED  a response with no resourceId is refused, not guessed  rc=1
+  ok   RED  the refusal says there is no observation to resolve from
+  ok   GREEN an observed resourceId is substituted verbatim  rc=0 body={'clientId': 1, 'productId': 46}
+  ok   RED  it refuses to rewrite an existing resolved body with a different id  rc=1 body={'clientId': 1, 'productId': 46}
+  ok   RED  a template with no __PLACEHOLDER__ is refused  rc=1
+analyze7.py — no binary floating point on any amount
+  ok   it parses JSON numbers as Decimal
+  ok   it never calls bare float()
+  ok   an oracle amount literal loads as Decimal, not float  Decimal 1200000.000000
+
+16 assertions, 0 failed
+exit=0

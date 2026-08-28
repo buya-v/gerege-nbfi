@@ -1,0 +1,34 @@
+REGISTER  .softhouse/capture/audit-t44/analysis/T175-SUPERSEDES.md               0 entr(ies)
+REGISTER  .softhouse/capture/audit-t44/analysis/T207/T207-SUPERSEDES.md          0 entr(ies)
+REGISTER  .softhouse/capture/leapboundary/analysis/T175-SUPERSEDES.md            0 entr(ies)
+REGISTER  .softhouse/capture/t284-schema2-callsites/SUPERSEDES.md                0 entr(ies)
+REGISTER  .softhouse/capture/tierA-a2/SUPERSEDED.txt                             5 entr(ies)
+
+SUPERSEDED ORIGINALS DECLARED: 5
+   cap.sh                                   [('.softhouse/capture/tierA-a2/SUPERSEDED.txt', 'cap8.sh')]
+   cap9.sh                                  [('.softhouse/capture/tierA-a2/SUPERSEDED.txt', 'cap10.sh')]
+   prove-mkreq7-guard-red.py                [('.softhouse/capture/tierA-a2/SUPERSEDED.txt', 'guard-parse-float-ast.py')]
+   resolve7.py                              [('.softhouse/capture/tierA-a2/SUPERSEDED.txt', 'resolve8.py')]
+   run-220-a2-7-runtime.sh                  [('.softhouse/capture/tierA-a2/SUPERSEDED.txt', 'run-220-a2-7-runtime-v8.sh')]
+
+RUN-ALL SCRIPTS FOUND BY WALKING: 4
+   .softhouse/capture/pathb/t99/run-all.sh
+   .softhouse/capture/t305-openingbalance-accepting-side/throwaway/run-all.sh
+   .softhouse/capture/t327-closure-accepting-side/throwaway/run-all.sh
+   .softhouse/reviews/A2-11/run-all.sh
+
+OCCURRENCES OF A SUPERSEDED BASENAME IN A run-all*.sh: 7
+  .softhouse/reviews/A2-11/run-all.sh           :43   resolve7.py                    ECHO-PROSE                 echo "############ 6. resolve7.py P-25 defect, driven RED (offline)"
+  .softhouse/reviews/A2-11/run-all.sh           :52   prove-mkreq7-guard-red.py      ECHO-PROSE                 echo "T270. Until this change, this section ran prove-mkreq7-guard-red.py unmodified and"
+  .softhouse/reviews/A2-11/run-all.sh           :59   prove-mkreq7-guard-red.py      ECHO-PROSE                 echo "T114 requires the BYTES of prove-mkreq7-guard-red.py be preserved, so that"
+  .softhouse/reviews/A2-11/run-all.sh           :71   prove-mkreq7-guard-red.py      MENTIONED                  if REPL="$(python3 "$DIR/resolve-supersession.py" "$RIG/SUPERSEDED.txt" prove-mkreq7-guard-red.py)"; then
+  .softhouse/reviews/A2-11/run-all.sh           :72   prove-mkreq7-guard-red.py      ECHO-PROSE                 echo "SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> $REPL"
+  .softhouse/reviews/A2-11/run-all.sh           :80   prove-mkreq7-guard-red.py      ECHO-PROSE                 echo "prove-mkreq7-guard-red.py carried 16 assertions. guard-parse-float-ast.py replaces"
+  .softhouse/reviews/A2-11/run-all.sh           :82   resolve7.py                    ECHO-PROSE                 echo "behaviour and resolve7.py's four refusals — are re-run by NOTHING today. They are"
+
+VERDICT: 0 INVOCATION(s) of a superseded artefact from a run-all*.sh
+  none.  (Statement about THIS search: 5 register(s), 5 declared original(s), 4 run-all*.sh, whole-file scan of each.)
+
+SELF-TEST (P-22: an instrument that cannot report a positive is not an instrument)
+  synthetic run-all with one invocation + one echo + one comment -> ['INVOCATION', 'ECHO-PROSE', 'COMMENT']
+  ok  the sweep discriminates all three

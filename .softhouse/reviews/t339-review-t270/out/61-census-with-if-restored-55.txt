@@ -1,0 +1,818 @@
+==============================================================================
+T270 -- census: which SUPERSEDED artefacts are still EXECUTED?
+==============================================================================
+ROOT: /private/tmp/t339/t270b/.softhouse
+
+SELECTOR SELF-TEST: 3 synthetic process spawns found, 4 decoys rejected
+  (the token in a docstring, a comment, a string literal, and as an argument to
+   a LOCAL helper function named `run` -- all four invisible to the selector)
+
+TERM 1 -- SUPERSESSION REGISTERS FOUND BY WALKING THE TREE (basename =~ /supersed/i)
+  capture/t284-schema2-callsites/SUPERSEDES.md                             0 entr(ies)  [+ HAND-READ]
+  capture/leapboundary/analysis/T175-SUPERSEDES.md                         3 entr(ies)
+  capture/tierA-a2/SUPERSEDED.txt                                          5 entr(ies)
+  capture/audit-t44/analysis/T175-SUPERSEDES.md                            4 entr(ies)
+  capture/audit-t44/analysis/T207/T207-SUPERSEDES.md                       5 entr(ies)
+
+REGISTERS THE PARSER CANNOT READ, HAND-READ AND DECLARED (P-48 rule 3) -- 1
+  capture/t284-schema2-callsites/SUPERSEDES.md
+      why: prose decision record, not a `A -> B` register and not a status table: its table columns are (site | committed files it produced | which of them are the output of the broken call), so no MD_STATUS word appears. HAND-READ BY T270 at SUPERSEDES.md:30-32 and :172-179.
+      names: t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh -> t284-schema2-callsites/instruments/20-site1-schema1-replay.sh
+      names: reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh -> t284-schema2-callsites/successors/t284-redB-attack-v2.sh
+      names: reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh -> t284-schema2-callsites/successors/t284-redC-residual-v2.sh
+
+SUPERSEDED ARTEFACTS DECLARED (12 distinct basename(s)) -- every one printed
+  30-redB-mismatch-detected.sh       <- hand-read      t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh -> t284-schema2-callsites/instruments/20-site1-schema1-replay.sh
+  T55-ANALYSIS.txt                   <- md-row         T55-ANALYSIS.txt -> (see register)
+  cap.sh                             <- arrow          cap.sh -> cap8.sh
+  cap9.sh                            <- arrow          cap9.sh -> cap10.sh
+  prove-mkreq7-guard-red.py          <- arrow          prove-mkreq7-guard-red.py -> guard-parse-float-ast.py
+  resolve7.py                        <- arrow          resolve7.py -> resolve8.py
+  run-220-a2-7-runtime.sh            <- arrow          run-220-a2-7-runtime.sh -> run-220-a2-7-runtime-v8.sh
+  t261-redB-attack.sh                <- hand-read      reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh -> t284-schema2-callsites/successors/t284-redB-attack-v2.sh
+  t261-redC-wrap.sh                  <- hand-read      reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh -> t284-schema2-callsites/successors/t284-redC-residual-v2.sh
+  t44_float_roundtrip-output.txt     <- md-row         t44_float_roundtrip-output.txt -> (see register)
+  t44_float_roundtrip-output.txt     <- md-row         t44_float_roundtrip-output.txt -> (see register)
+  t44_float_roundtrip.py             <- md-title       t44_float_roundtrip.py -> t44_float_roundtrip_v2.py
+  t44_float_roundtrip.py             <- md-row         t44_float_roundtrip.py -> (see register)
+  t44_float_roundtrip.py             <- md-row         t44_float_roundtrip.py -> (see register)
+  t44_float_roundtrip_v2.py          <- md-title       t44_float_roundtrip_v2.py -> T207/t44_float_roundtrip_v3.py
+  t44_float_roundtrip_v2.py          <- md-row         t44_float_roundtrip_v2.py -> (see register)
+
+TERM 2 -- CALLER POPULATION: 1346 file(s)
+  .py        702
+  .sh        584
+  .zsh       60
+
+TERM 3 -- EVERY OCCURRENCE OF A SUPERSEDED ARTEFACT IN A CALLER, GRADED
+  (MENTIONED is never a finding: preserving the bytes requires naming the file)
+
+  30-redB-mismatch-detected.sh
+      status: PRESERVED, not executed
+      0 executed-in-place, 0 executed-as-copy, 9 mentioned, across 8 caller file(s)
+      mentioned in: capture/t270-superseded-trap/census-fixed.py, capture/t270-superseded-trap/census-superseded-invocations.py, capture/t274-attestation-failopen/instruments/30-t250-arms-still-hold.sh, capture/t284-schema2-callsites/instruments/10-callsite-registry.py, capture/t284-schema2-callsites/instruments/20-site1-schema1-replay.sh, capture/t284-schema2-callsites/instruments/30-red-drive.sh, capture/t304-evidence-destruction/instruments/60-wire-guard.py, capture/t304-evidence-destruction/instruments/70-drive-in-scratch-clone.sh
+  T55-ANALYSIS.txt
+      status: PRESERVED, not executed
+      0 executed-in-place, 0 executed-as-copy, 0 mentioned, across 0 caller file(s)
+  cap.sh
+      status: *** STILL EXECUTED IN PLACE -- TRAP ***
+      52 executed-in-place, 5 executed-as-copy, 109 mentioned, across 40 caller file(s)
+      EXECUTED  capture/tierA-a2/run-020-accounts.sh:10
+                sh "$DIR/cap.sh" "A2-${n}" POST /glaccounts "req/$n.json" || exit 1
+      EXECUTED  capture/tierA-a2/run-040-refusals.sh:10
+                sh "$DIR/cap.sh" "A2-${n}" POST /glaccounts "req/$n.json" || exit 1
+      EXECUTED  capture/tierA-a2/run-060-mappings.sh:10
+                sh "$DIR/cap.sh" "A2-${n}" POST /loanproducts "req/$n.json" || exit 1
+      EXECUTED  capture/tierA-a2/run-100-finactivity.sh:7
+                sh "$DIR/cap.sh" "A2-${n}" POST /financialactivityaccounts "req/$n.json" || exit 1
+      EXECUTED  capture/tierA-a2/run-120-delete-update.sh:14
+                sh "$DIR/cap.sh" A2-110-update-header-to-detail   PUT /glaccounts/1  req/upd-110-header-to-detail.json || exit 1
+      EXECUTED  capture/tierA-a2/run-120-delete-update.sh:15
+                sh "$DIR/cap.sh" A2-111-update-retype-mapped      PUT /glaccounts/2  req/upd-111-retype-mapped-account.json || exit 1
+      EXECUTED  capture/tierA-a2/run-120-delete-update.sh:16
+                sh "$DIR/cap.sh" A2-112-update-disable-mapped     PUT /glaccounts/2  req/upd-112-disable-mapped.json || exit 1
+      EXECUTED  capture/tierA-a2/run-120-delete-update.sh:17
+                sh "$DIR/cap.sh" A2-113-update-nomanual           PUT /glaccounts/2  req/upd-113-nomanual.json || exit 1
+      EXECUTED  capture/tierA-a2/run-120-delete-update.sh:18
+                sh "$DIR/cap.sh" A2-114-finactivity-update        PUT /financialactivityaccounts/1 req/fin-107-update.json || exit 1
+      EXECUTED  capture/tierA-a2/run-120-delete-update.sh:20
+                sh "$DIR/cap.sh" A2-120-delete-has-children       DELETE /glaccounts/3 || exit 1
+      EXECUTED  capture/tierA-a2/run-120-delete-update.sh:21
+                sh "$DIR/cap.sh" A2-121-delete-product-mapped     DELETE /glaccounts/13 || exit 1
+      EXECUTED  capture/tierA-a2/run-120-delete-update.sh:22
+                sh "$DIR/cap.sh" A2-122-delete-three-guards       DELETE /glaccounts/2 || exit 1
+      EXECUTED  capture/tierA-a2/run-120-delete-update.sh:23
+                sh "$DIR/cap.sh" A2-123-delete-finactivity-mapped DELETE /glaccounts/6 || exit 1
+      EXECUTED  capture/tierA-a2/run-120-delete-update.sh:24
+                sh "$DIR/cap.sh" A2-124-delete-clean-success      DELETE /glaccounts/21 || exit 1
+      EXECUTED  capture/tierA-a2/run-120-delete-update.sh:25
+                sh "$DIR/cap.sh" A2-125-delete-not-found          DELETE /glaccounts/99999 || exit 1
+      EXECUTED  capture/tierA-a2/run-200-a2-7-readbacks.sh:18
+                sh "$DIR/cap.sh" A2-201-read-gl16-fundsource        GET /glaccounts/16 || exit 1
+      EXECUTED  capture/tierA-a2/run-200-a2-7-readbacks.sh:19
+                sh "$DIR/cap.sh" A2-202-read-gl4-loanportfolio      GET /glaccounts/4  || exit 1
+      EXECUTED  capture/tierA-a2/run-200-a2-7-readbacks.sh:20
+                sh "$DIR/cap.sh" A2-203-read-gl17-transferssuspense GET /glaccounts/17 || exit 1
+      EXECUTED  capture/tierA-a2/run-200-a2-7-readbacks.sh:21
+                sh "$DIR/cap.sh" A2-204-read-gl8-interestonloans    GET /glaccounts/8  || exit 1
+      EXECUTED  capture/tierA-a2/run-200-a2-7-readbacks.sh:22
+                sh "$DIR/cap.sh" A2-205-read-gl9-incomefromfees     GET /glaccounts/9  || exit 1
+      EXECUTED  capture/tierA-a2/run-200-a2-7-readbacks.sh:23
+                sh "$DIR/cap.sh" A2-206-read-gl10-incomefrompenalty GET /glaccounts/10 || exit 1
+      EXECUTED  capture/tierA-a2/run-200-a2-7-readbacks.sh:24
+                sh "$DIR/cap.sh" A2-207-read-gl11-incomefromrecov   GET /glaccounts/11 || exit 1
+      EXECUTED  capture/tierA-a2/run-200-a2-7-readbacks.sh:25
+                sh "$DIR/cap.sh" A2-208-read-gl13-losseswrittenoff  GET /glaccounts/13 || exit 1
+      EXECUTED  capture/tierA-a2/run-200-a2-7-readbacks.sh:26
+                sh "$DIR/cap.sh" A2-209-read-gl6-overpayment        GET /glaccounts/6  || exit 1
+      EXECUTED  capture/tierA-a2/run-200-a2-7-readbacks.sh:27
+                sh "$DIR/cap.sh" A2-209b-read-gl2-retyped-fundsrc   GET /glaccounts/2  || exit 1
+      EXECUTED  capture/tierA-a2/run-200-a2-7-readbacks.sh:28
+                sh "$DIR/cap.sh" A2-209c-loanproducts-template      GET /loanproducts/template || exit 1
+      EXECUTED  capture/tierA-a2/run-210-a2-7-mapping.sh:25
+                sh "$DIR/cap.sh" A2-210-create-cash-nine-mandatory POST /loanproducts \
+      EXECUTED  capture/tierA-a2/run-210-a2-7-mapping.sh:34
+                sh "$DIR/cap.sh" A2-211-read-product-nine-mandatory GET "/loanproducts/$PID" || exit 1
+      EXECUTED  capture/tierA-a2/run-210-a2-7-mapping.sh:37
+                sh "$DIR/cap.sh" A2-212-read-product22-channel-override GET /loanproducts/22 || exit 1
+      EXECUTED  capture/tierA-a2/run-210-a2-7-mapping.sh:38
+                sh "$DIR/cap.sh" A2-213-read-product28-accrual          GET /loanproducts/28 || exit 1
+      EXECUTED  capture/tierA-a2/run-210-a2-7-mapping.sh:40
+                sh "$DIR/cap.sh" A2-214-create-fundsource-retyped POST /loanproducts \
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:31
+                sh "$DIR/cap.sh" A2-220-loan-on-nine-mandatory POST /loans req/a2-7-loan-220-resolved.json || exit 1
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:39
+                sh "$DIR/cap.sh" A2-221-approve-loan   POST "/loans/$LID?command=approve"  req/a2-7-approve-221.json  || exit 1
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:40
+                sh "$DIR/cap.sh" A2-222-disburse-loan  POST "/loans/$LID?command=disburse" req/a2-7-disburse-222.json || exit 1
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:41
+                sh "$DIR/cap.sh" A2-223-je-after-disburse GET "/journalentries?loanId=$LID&limit=50" || exit 1
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:44
+                sh "$DIR/cap.sh" A2-224-chargeoff-unmapped POST "/loans/$LID/transactions?command=charge-off" \
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:49
+                sh "$DIR/cap.sh" A2-225-goodwillcredit-unmapped POST "/loans/$LID/transactions?command=goodwillCredit" \
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:54
+                sh "$DIR/cap.sh" A2-225b-loan-state-after-refusals GET "/loans/$LID" || exit 1
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:57
+                sh "$DIR/cap.sh" A2-226-repayment POST "/loans/$LID/transactions?command=repayment" \
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:60
+                sh "$DIR/cap.sh" A2-227-je-after-repayment GET "/journalentries?loanId=$LID&limit=50" || exit 1
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:63
+                sh "$DIR/cap.sh" A2-228-writeoff POST "/loans/$LID?command=writeoff" req/a2-7-writeoff-228.json || exit 1
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:65
+                sh "$DIR/cap.sh" A2-229-je-after-writeoff GET "/journalentries?loanId=$LID&limit=80" || exit 1
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:68
+                sh "$DIR/cap.sh" A2-230-recoverypayment POST "/loans/$LID/transactions?command=recoverypayment" \
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:71
+                sh "$DIR/cap.sh" A2-231-je-after-recovery GET "/journalentries?loanId=$LID&limit=80" || exit 1
+      EXECUTED  capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh:23
+                sh "$DIR/cap.sh" A2-232-writeoff-on-transactions POST "/loans/$LID/transactions?command=writeoff" \
+      EXECUTED  capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh:27
+                sh "$DIR/cap.sh" A2-233-je-after-writeoff GET "/journalentries?loanId=$LID&limit=80" || exit 1
+      EXECUTED  capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh:29
+                sh "$DIR/cap.sh" A2-234-recoverypayment-after-writeoff POST \
+      EXECUTED  capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh:33
+                sh "$DIR/cap.sh" A2-235-je-after-recovery GET "/journalentries?loanId=$LID&limit=80" || exit 1
+      EXECUTED  capture/tierA-a2/run-240-a2-7-update-path.sh:18
+                sh "$DIR/cap.sh" A2-240-update-cash-to-accrual PUT /loanproducts/46 \
+      EXECUTED  capture/tierA-a2/run-240-a2-7-update-path.sh:22
+                sh "$DIR/cap.sh" A2-241-read-product-after-accrual-switch GET /loanproducts/46 || exit 1
+      EXECUTED  capture/tierA-a2/run-240-a2-7-update-path.sh:26
+                sh "$DIR/cap.sh" A2-242-update-no-rule-change PUT /loanproducts/46 \
+      EXECUTED  capture/tierA-a2/run-240-a2-7-update-path.sh:30
+                sh "$DIR/cap.sh" A2-243-read-product-after-no-rule-change GET /loanproducts/46 || exit 1
+      EXEC-COPY reviews/A2-10-probe/poison-d2-no-regression.py:52
+                p = subprocess.run(["/bin/sh", d + "/cap.sh"] + args, capture_output=True)
+      EXEC-COPY reviews/A2-10-probe/poison-d2-shell-matrix.sh:77
+                if [ "$BRANCH" = body ]; then "$d/cap.sh" POISON POST /glaccounts req/b.json >/dev/null 2>"$errf"; ec=$?
+      EXEC-COPY reviews/A2-10-probe/poison-d2-shell-matrix.sh:78
+                else "$d/cap.sh" POISON POST /glaccounts >/dev/null 2>"$errf"; ec=$?; fi
+      EXEC-COPY reviews/A2-10-probe/poison-d2-transport-modes.py:93
+                p = subprocess.run(["/bin/sh", d + "/cap.sh"] + args, capture_output=True)
+      EXEC-COPY reviews/A2-10-probe/poison-d2-transport-modes.py:102
+                p = subprocess.run(["/bin/sh", d + "/cap.sh"] + args, capture_output=True, env=env)
+      mentioned in: capture/lib/oracle_send.sh, capture/lib/wire_attestation.py, capture/t250-tenant-attestation/instruments/20-redA-sidecar-tracks-the-send.sh, capture/t274-attestation-failopen/baseline/oracle_send.sh, capture/t274-attestation-failopen/baseline/wire_attestation.py, capture/t287-closure-refusals/guard-probe-expiry.sh, capture/tierA-a2/audit-req-float-roundtrip.py, capture/tierA-a2/cap10.sh, capture/tierA-a2/cap8.sh, capture/tierA-a2/census-a2-26.py, capture/tierA-a2/census-json-float-siblings.py, capture/tierA-a2/manifest.py, capture/tierA-a2/prove-a2-26-guards-red.sh, capture/tierA-a2/prove-cap-transport-red.py, capture/tierA-a2/prove-cap8-wire-bytes.py, capture/tierA-a2/prove-manifest-blind-red.py, capture/tierA-a2/prove-quit-trap-cap.py, capture/tierA-a2/prove-t275-reissue.py, capture/tierA-a2/run-200-a2-7-readbacks.sh, capture/tierA-a2/run-220-a2-7-runtime-v8.sh, capture/tierA-a2/run-220-a2-7-runtime.sh, capture/tierA-a2/run-340-a2-26-idempotency.sh, reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh, reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh, reviews/A2-10-probe/poison-d2-no-regression.py, reviews/A2-10-probe/poison-d2-shell-matrix.sh, reviews/A2-10-probe/poison-d2-transport-modes.py, reviews/A2-10-probe/poison-d3-manifest.py, reviews/A2-10-probe/poison-d3-symlink.py, reviews/A2-10-probe/reissue-a2-4-corpus-property.py, reviews/A2-11/prove-resolve7-float-red.py, reviews/t245-oracle-pin/measure.sh
+  cap9.sh
+      status: *** STILL EXECUTED IN PLACE -- TRAP ***
+      2 executed-in-place, 0 executed-as-copy, 45 mentioned, across 16 caller file(s)
+      EXECUTED  capture/tierA-a2/prove-a2-26-guards-red.sh:100
+                if sh "$DIR/cap9.sh" A2-999-should-not-exist POST /journalentries req/a2-26-manual-je-idem.json 2>"$TMP/g3.err"; then
+      EXECUTED  capture/tierA-a2/run-463-a2-29-recompute-org-after-reversal.sh:8
+                sh "$DIR/cap9.sh" A2-463-recompute-org-after-reversal POST \
+      mentioned in: capture/lib/oracle_send.sh, capture/lib/wire_attestation.py, capture/t250-tenant-attestation/instruments/20-redA-sidecar-tracks-the-send.sh, capture/t274-attestation-failopen/baseline/oracle_send.sh, capture/t274-attestation-failopen/baseline/wire_attestation.py, capture/tierA-a2/cap10.sh, capture/tierA-a2/census-a2-26.py, capture/tierA-a2/prove-a2-26-guards-red.sh, capture/tierA-a2/prove-quit-trap-cap9.py, capture/tierA-a2/run-340-a2-26-idempotency.sh, capture/tierA-a2/run-420-a2-29-recompute-heal.sh, capture/tierA-a2/run-430-a2-29-drift-probe.sh, capture/tierA-a2/run-437-a2-29-drift-probe-leg2.sh, capture/tierA-a2/run-460-a2-29-reversal-and-office-scope.sh, reviews/t245-oracle-pin/measure.sh
+  prove-mkreq7-guard-red.py
+      status: PRESERVED, not executed
+      0 executed-in-place, 0 executed-as-copy, 24 mentioned, across 11 caller file(s)
+      mentioned in: capture/t270-superseded-trap/census-fixed.py, capture/t270-superseded-trap/census-superseded-invocations.py, capture/t270-superseded-trap/prove-t270-red.py, capture/tierA-a2/census-json-float-siblings.py, capture/tierA-a2/guard-parse-float-ast.py, capture/tierA-a2/prove-parse-float-guard-red.py, capture/tierA-a2/sweep-t164-selfmatch-guards.py, reviews/A2-11/prove-a2-7-guards-are-falsifiable.py, reviews/A2-11/resolve-supersession.py, reviews/A2-11/run-all.sh, reviews/t263-analyze7-float-guard/remeasure-materiality.py
+  resolve7.py
+      status: *** STILL EXECUTED IN PLACE -- TRAP ***
+      1 executed-in-place, 1 executed-as-copy, 88 mentioned, across 19 caller file(s)
+      EXECUTED  capture/tierA-a2/run-220-a2-7-runtime.sh:27
+                python3 "$DIR/resolve7.py" "$DIR/req/a2-7-loan-220.json" \
+      EXEC-COPY reviews/A2-11/prove-resolve7-float-red.py:57
+                r = subprocess.run([sys.executable, os.path.join(d, "resolve7.py"), t, obs, "resourceId", o],
+      mentioned in: capture/lib/check_wire_float_roundtrip.py, capture/tierA-a2/audit-req-float-roundtrip.py, capture/tierA-a2/cap8.sh, capture/tierA-a2/census-json-float-siblings.py, capture/tierA-a2/mkreq-a2-26.sh, capture/tierA-a2/prove-cap8-wire-bytes.py, capture/tierA-a2/prove-census-red.sh, capture/tierA-a2/prove-mkreq7-guard-red.py, capture/tierA-a2/prove-parse-float-guard-red.py, capture/tierA-a2/prove-resolve8-float-red.py, capture/tierA-a2/resolve8.py, capture/tierA-a2/run-220-a2-7-runtime-v8.sh, reviews/A2-11/prove-a2-7-guards-are-falsifiable.py, reviews/A2-11/prove-resolve7-float-red.py, reviews/A2-11/run-all.sh, reviews/t263-analyze7-float-guard/attack-exempt.py, reviews/t263-analyze7-float-guard/attack-revive.py, reviews/t263-analyze7-float-guard/remeasure-materiality.py
+  run-220-a2-7-runtime.sh
+      status: PRESERVED, not executed
+      0 executed-in-place, 0 executed-as-copy, 5 mentioned, across 4 caller file(s)
+      mentioned in: capture/tierA-a2/census-json-float-siblings.py, capture/tierA-a2/resolve8.py, capture/tierA-a2/run-220-a2-7-runtime-v8.sh, reviews/A2-11/prove-resolve7-float-red.py
+  t261-redB-attack.sh
+      status: PRESERVED, not executed
+      0 executed-in-place, 0 executed-as-copy, 8 mentioned, across 6 caller file(s)
+      mentioned in: capture/t270-superseded-trap/census-fixed.py, capture/t270-superseded-trap/census-superseded-invocations.py, capture/t284-schema2-callsites/instruments/30-red-drive.sh, capture/t284-schema2-callsites/successors/t284-redB-attack-v2.sh, capture/t304-evidence-destruction/instruments/60-wire-guard.py, capture/t304-evidence-destruction/instruments/70-drive-in-scratch-clone.sh
+  t261-redC-wrap.sh
+      status: PRESERVED, not executed
+      0 executed-in-place, 0 executed-as-copy, 7 mentioned, across 5 caller file(s)
+      mentioned in: capture/t270-superseded-trap/census-fixed.py, capture/t270-superseded-trap/census-superseded-invocations.py, capture/t284-schema2-callsites/successors/t284-redC-residual-v2.sh, capture/t304-evidence-destruction/instruments/60-wire-guard.py, capture/t304-evidence-destruction/instruments/70-drive-in-scratch-clone.sh
+  t44_float_roundtrip-output.txt
+      status: PRESERVED, not executed
+      0 executed-in-place, 0 executed-as-copy, 6 mentioned, across 4 caller file(s)
+      mentioned in: capture/audit-t44/analysis/T175-red/drive-red.sh, capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh, capture/audit-t44/analysis/T207/t44_float_roundtrip_v3.py, capture/audit-t44/analysis/t44_float_roundtrip_v2.py
+  t44_float_roundtrip.py
+      status: PRESERVED, not executed
+      0 executed-in-place, 0 executed-as-copy, 11 mentioned, across 4 caller file(s)
+      mentioned in: capture/audit-t44/analysis/T175-red/drive-red.sh, capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh, capture/audit-t44/analysis/T207/t44_float_roundtrip_v3.py, capture/audit-t44/analysis/t44_float_roundtrip_v2.py
+  t44_float_roundtrip_v2.py
+      status: PRESERVED, not executed
+      0 executed-in-place, 0 executed-as-copy, 7 mentioned, across 5 caller file(s)
+      mentioned in: capture/audit-t44/analysis/T175-red/drive-red.sh, capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh, capture/audit-t44/analysis/T207/t44_float_roundtrip_v3.py, capture/leapboundary/analysis/T207/json-load-census.py, reviews/t185-probe/probe-t44-successor.sh
+
+  TOTALS: 55 EXECUTED-IN-PLACE, 6 EXECUTED-AS-COPY, 319 MENTIONED, over 12 artefact(s) and 1346 caller(s).
+
+TERM 4 -- INDISCRIMINATE INVOCATION (miss M1), MEASURED NOT MERELY ADMITTED
+  A loop or a `find -exec` runs a superseded artefact WITHOUT NAMING IT, so no
+  token search above can see it. Each construct below is reported with whether
+  its own directory holds a superseded artefact. A hit is a MAYBE -- this census
+  does not execute anything to find out.
+  dynamic-invocation constructs found in callers ......... 1097
+  ... of which sit in a directory holding a superseded file 231
+      MAYBE  capture/audit-t44/analysis/t44_float_roundtrip.py:25  (python glob/listdir)  could reach: t44_float_roundtrip-output.txt, t44_float_roundtrip.py, t44_float_roundtrip_v2.py
+             paths.extend(sorted(glob.glob(pat, recursive=True)))
+      MAYBE  capture/audit-t44/analysis/t44_float_roundtrip_v2.py:90  (python glob/listdir)  could reach: t44_float_roundtrip-output.txt, t44_float_roundtrip.py, t44_float_roundtrip_v2.py
+             paths.extend(sorted(glob.glob(pat, recursive=True)))
+      MAYBE  capture/audit-t44/analysis/t44_float_roundtrip_v2.py:97  (python glob/listdir)  could reach: t44_float_roundtrip-output.txt, t44_float_roundtrip.py, t44_float_roundtrip_v2.py
+             print(f"      {pat}   -> {len(sorted(glob.glob(pat, recursive=True)))} file(s)")
+      MAYBE  capture/audit-t44/analysis/t44_float_scan.py:30  (python glob/listdir)  could reach: t44_float_roundtrip-output.txt, t44_float_roundtrip.py, t44_float_roundtrip_v2.py
+             paths.extend(sorted(glob.glob(pat, recursive=True)))
+      MAYBE  capture/leapboundary/analysis/t55-analyse.py:73  (python glob/listdir)  could reach: T55-ANALYSIS.txt
+             for fn in sorted(os.listdir(OUT)):
+      MAYBE  capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh:86  (interpreter on a variable)  could reach: 30-redB-mismatch-detected.sh
+             python3 "$WA" verify --sidecar "$dir/probe.http" --headers "$dir/probe.reqhdr" \
+      MAYBE  capture/tierA-a2/audit-req-float-roundtrip.py:86  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             for f in sorted(os.listdir(DIR)):
+      MAYBE  capture/tierA-a2/audit-req-float-roundtrip.py:205  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             produced = sorted(f for f in os.listdir(os.path.join(DIR, "req")) if "resolved" in f)
+      MAYBE  capture/tierA-a2/audit-req-float-roundtrip.py:260  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             for h in sorted(os.listdir(outdir)):
+      MAYBE  capture/tierA-a2/census-json-float-siblings.py:101  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             pyfiles = sorted(f for f in os.listdir(DIR) if f.endswith(".py"))
+      MAYBE  capture/tierA-a2/census-json-float-siblings.py:102  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             shfiles = sorted(f for f in os.listdir(DIR) if f.endswith(".sh"))
+      MAYBE  capture/tierA-a2/guard-parse-float-ast.py:428  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             pyfiles = sorted(n for n in os.listdir(root)
+      MAYBE  capture/tierA-a2/manifest.py:23  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             (ii)  NON-RECURSIVE. os.listdir() saw only the top level of out/, so a fabricated
+      MAYBE  capture/tierA-a2/manifest.py:90  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             for n in sorted(os.listdir(DIR)):
+      MAYBE  capture/tierA-a2/prove-a2-26-guards-red.sh:31  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/mkreq-a2-26.sh" verify && echo "exit 0 as expected" || { echo "UNEXPECTED: G1 was not green"; FAIL=1; }
+      MAYBE  capture/tierA-a2/prove-a2-26-guards-red.sh:36  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             if sh "$DIR/mkreq-a2-26.sh" verify; then
+      MAYBE  capture/tierA-a2/prove-a2-26-guards-red.sh:45  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             if sh "$DIR/mkreq-a2-26.sh" verify; then
+      MAYBE  capture/tierA-a2/prove-a2-26-guards-red.sh:53  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/mkreq-a2-26.sh" verify && echo "exit 0 as expected" || { echo "UNEXPECTED: restore failed"; FAIL=1; }
+      MAYBE  capture/tierA-a2/prove-a2-26-guards-red.sh:57  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             python3 "$DIR/census-a2-26.py" > "$TMP/census.green" 2>&1 \
+      MAYBE  capture/tierA-a2/prove-a2-26-guards-red.sh:67  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             if python3 "$TMP/rig/census-a2-26.py" > "$TMP/census.red" 2>&1; then
+      MAYBE  capture/tierA-a2/prove-a2-26-guards-red.sh:82  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             if python3 "$TMP/rig/census-a2-26.py" > "$TMP/census.red2" 2>&1; then
+      MAYBE  capture/tierA-a2/prove-a2-26-guards-red.sh:100  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             if sh "$DIR/cap9.sh" A2-999-should-not-exist POST /journalentries req/a2-26-manual-je-idem.json 2>"$TMP/g3.err"; then
+      MAYBE  capture/tierA-a2/prove-cap-transport-red.py:228  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             f'sh "$DIR/cap.sh" {NAME} GET /glaccounts{tail}\n'
+      MAYBE  capture/tierA-a2/prove-cap-transport-red.py:247  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             for fn in sorted(os.listdir(DIR)):
+      MAYBE  capture/tierA-a2/prove-cap8-wire-bytes.py:137  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             % sorted(f for f in os.listdir(os.path.join(d, "out")) if f.startswith("CTRL-old")))
+      MAYBE  capture/tierA-a2/prove-cap8-wire-bytes.py:215  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             before = {f: open(os.path.join(dead, "out", f), "rb").read() for f in os.listdir(os.path.join(dead, "out"))}
+      MAYBE  capture/tierA-a2/prove-cap8-wire-bytes.py:218  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             after = {f: open(os.path.join(dead, "out", f), "rb").read() for f in os.listdir(os.path.join(dead, "out"))}
+      MAYBE  capture/tierA-a2/prove-census-red.sh:6  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             cp "$RIG"/*.py "$SB/"; cp "$RIG"/*.sh "$SB/"; cp "$RIG"/SUPERSEDED.txt "$SB/"
+      MAYBE  capture/tierA-a2/prove-mkreq7-guard-red.py:49  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             return {n: open(os.path.join(reqdir, n), "rb").read() for n in sorted(os.listdir(reqdir))}
+      MAYBE  capture/tierA-a2/prove-parse-float-guard-red.py:71  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             for n in sorted(os.listdir(DIR)):
+      MAYBE  capture/tierA-a2/prove-quit-trap-a226.py:80  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             leaked = [n for n in os.listdir(tmproot) if n.startswith(TMP_PREFIX)]
+      MAYBE  capture/tierA-a2/prove-quit-trap-cap.py:136  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             leaked = [n for n in os.listdir(tmproot) if n.startswith(tmp_prefix)]
+      MAYBE  capture/tierA-a2/prove-quit-trap-cap9.py:144  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             leaked = [n for n in os.listdir(tmproot) if n.startswith(tmp_prefix)]
+      MAYBE  capture/tierA-a2/prove-t275-reissue.py:193  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             names += [n for n in os.listdir(OUT)
+      MAYBE  capture/tierA-a2/prove-t275-reissue.py:217  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             a1 = sorted(n[:-5] for n in os.listdir(OUT)
+      MAYBE  capture/tierA-a2/red-green-a2-15.sh:40  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             out="$(bash "$CONF" 2>&1)"; rc=$?
+      MAYBE  capture/tierA-a2/red-green-a2-15.sh:57  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             out="$(bash "$CONF" 2>&1)"; rc=$?
+      MAYBE  capture/tierA-a2/rename1.py:15  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             for p in glob.glob(os.path.join(OUT, "A2-prod-06*")):
+      MAYBE  capture/tierA-a2/run-020-accounts.sh:10  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" "A2-${n}" POST /glaccounts "req/$n.json" || exit 1
+      MAYBE  capture/tierA-a2/run-040-refusals.sh:10  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" "A2-${n}" POST /glaccounts "req/$n.json" || exit 1
+      MAYBE  capture/tierA-a2/run-060-mappings.sh:10  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" "A2-${n}" POST /loanproducts "req/$n.json" || exit 1
+      MAYBE  capture/tierA-a2/run-100-finactivity.sh:7  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" "A2-${n}" POST /financialactivityaccounts "req/$n.json" || exit 1
+      MAYBE  capture/tierA-a2/run-120-delete-update.sh:14  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-110-update-header-to-detail   PUT /glaccounts/1  req/upd-110-header-to-detail.json || exit 1
+      MAYBE  capture/tierA-a2/run-120-delete-update.sh:15  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-111-update-retype-mapped      PUT /glaccounts/2  req/upd-111-retype-mapped-account.json || exit 1
+      MAYBE  capture/tierA-a2/run-120-delete-update.sh:16  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-112-update-disable-mapped     PUT /glaccounts/2  req/upd-112-disable-mapped.json || exit 1
+      MAYBE  capture/tierA-a2/run-120-delete-update.sh:17  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-113-update-nomanual           PUT /glaccounts/2  req/upd-113-nomanual.json || exit 1
+      MAYBE  capture/tierA-a2/run-120-delete-update.sh:18  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-114-finactivity-update        PUT /financialactivityaccounts/1 req/fin-107-update.json || exit 1
+      MAYBE  capture/tierA-a2/run-120-delete-update.sh:20  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-120-delete-has-children       DELETE /glaccounts/3 || exit 1
+      MAYBE  capture/tierA-a2/run-120-delete-update.sh:21  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-121-delete-product-mapped     DELETE /glaccounts/13 || exit 1
+      MAYBE  capture/tierA-a2/run-120-delete-update.sh:22  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-122-delete-three-guards       DELETE /glaccounts/2 || exit 1
+      MAYBE  capture/tierA-a2/run-120-delete-update.sh:23  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-123-delete-finactivity-mapped DELETE /glaccounts/6 || exit 1
+      MAYBE  capture/tierA-a2/run-120-delete-update.sh:24  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-124-delete-clean-success      DELETE /glaccounts/21 || exit 1
+      MAYBE  capture/tierA-a2/run-120-delete-update.sh:25  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-125-delete-not-found          DELETE /glaccounts/99999 || exit 1
+      MAYBE  capture/tierA-a2/run-200-a2-7-readbacks.sh:18  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-201-read-gl16-fundsource        GET /glaccounts/16 || exit 1
+      MAYBE  capture/tierA-a2/run-200-a2-7-readbacks.sh:19  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-202-read-gl4-loanportfolio      GET /glaccounts/4  || exit 1
+      MAYBE  capture/tierA-a2/run-200-a2-7-readbacks.sh:20  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-203-read-gl17-transferssuspense GET /glaccounts/17 || exit 1
+      MAYBE  capture/tierA-a2/run-200-a2-7-readbacks.sh:21  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-204-read-gl8-interestonloans    GET /glaccounts/8  || exit 1
+      MAYBE  capture/tierA-a2/run-200-a2-7-readbacks.sh:22  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-205-read-gl9-incomefromfees     GET /glaccounts/9  || exit 1
+      MAYBE  capture/tierA-a2/run-200-a2-7-readbacks.sh:23  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-206-read-gl10-incomefrompenalty GET /glaccounts/10 || exit 1
+      MAYBE  capture/tierA-a2/run-200-a2-7-readbacks.sh:24  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-207-read-gl11-incomefromrecov   GET /glaccounts/11 || exit 1
+      MAYBE  capture/tierA-a2/run-200-a2-7-readbacks.sh:25  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-208-read-gl13-losseswrittenoff  GET /glaccounts/13 || exit 1
+      MAYBE  capture/tierA-a2/run-200-a2-7-readbacks.sh:26  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-209-read-gl6-overpayment        GET /glaccounts/6  || exit 1
+      MAYBE  capture/tierA-a2/run-200-a2-7-readbacks.sh:27  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-209b-read-gl2-retyped-fundsrc   GET /glaccounts/2  || exit 1
+      MAYBE  capture/tierA-a2/run-200-a2-7-readbacks.sh:28  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-209c-loanproducts-template      GET /loanproducts/template || exit 1
+      MAYBE  capture/tierA-a2/run-210-a2-7-mapping.sh:25  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-210-create-cash-nine-mandatory POST /loanproducts \
+      MAYBE  capture/tierA-a2/run-210-a2-7-mapping.sh:34  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-211-read-product-nine-mandatory GET "/loanproducts/$PID" || exit 1
+      MAYBE  capture/tierA-a2/run-210-a2-7-mapping.sh:37  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-212-read-product22-channel-override GET /loanproducts/22 || exit 1
+      MAYBE  capture/tierA-a2/run-210-a2-7-mapping.sh:38  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-213-read-product28-accrual          GET /loanproducts/28 || exit 1
+      MAYBE  capture/tierA-a2/run-210-a2-7-mapping.sh:40  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-214-create-fundsource-retyped POST /loanproducts \
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:50  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             python3 "$DIR/resolve8.py" "$DIR/req/a2-7-loan-220.json" \
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:54  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-220-loan-on-nine-mandatory POST /loans req/a2-7-loan-220-resolved.json || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:62  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-221-approve-loan   POST "/loans/$LID?command=approve"  req/a2-7-approve-221.json  || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:63  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-222-disburse-loan  POST "/loans/$LID?command=disburse" req/a2-7-disburse-222.json || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:64  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-223-je-after-disburse GET "/journalentries?loanId=$LID&limit=50" || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:67  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-224-chargeoff-unmapped POST "/loans/$LID/transactions?command=charge-off" \
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:72  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-225-goodwillcredit-unmapped POST "/loans/$LID/transactions?command=goodwillCredit" \
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:77  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-225b-loan-state-after-refusals GET "/loans/$LID" || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:80  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-226-repayment POST "/loans/$LID/transactions?command=repayment" \
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:83  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-227-je-after-repayment GET "/journalentries?loanId=$LID&limit=50" || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:86  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-228-writeoff POST "/loans/$LID?command=writeoff" req/a2-7-writeoff-228.json || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:88  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-229-je-after-writeoff GET "/journalentries?loanId=$LID&limit=80" || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:91  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-230-recoverypayment POST "/loans/$LID/transactions?command=recoverypayment" \
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime-v8.sh:94  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap8.sh" A2-231-je-after-recovery GET "/journalentries?loanId=$LID&limit=80" || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:27  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             python3 "$DIR/resolve7.py" "$DIR/req/a2-7-loan-220.json" \
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:31  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-220-loan-on-nine-mandatory POST /loans req/a2-7-loan-220-resolved.json || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:39  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-221-approve-loan   POST "/loans/$LID?command=approve"  req/a2-7-approve-221.json  || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:40  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-222-disburse-loan  POST "/loans/$LID?command=disburse" req/a2-7-disburse-222.json || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:41  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-223-je-after-disburse GET "/journalentries?loanId=$LID&limit=50" || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:44  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-224-chargeoff-unmapped POST "/loans/$LID/transactions?command=charge-off" \
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:49  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-225-goodwillcredit-unmapped POST "/loans/$LID/transactions?command=goodwillCredit" \
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:54  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-225b-loan-state-after-refusals GET "/loans/$LID" || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:57  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-226-repayment POST "/loans/$LID/transactions?command=repayment" \
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:60  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-227-je-after-repayment GET "/journalentries?loanId=$LID&limit=50" || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:63  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-228-writeoff POST "/loans/$LID?command=writeoff" req/a2-7-writeoff-228.json || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:65  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-229-je-after-writeoff GET "/journalentries?loanId=$LID&limit=80" || exit 1
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:68  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-230-recoverypayment POST "/loans/$LID/transactions?command=recoverypayment" \
+      MAYBE  capture/tierA-a2/run-220-a2-7-runtime.sh:71  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-231-je-after-recovery GET "/journalentries?loanId=$LID&limit=80" || exit 1
+      MAYBE  capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh:23  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-232-writeoff-on-transactions POST "/loans/$LID/transactions?command=writeoff" \
+      MAYBE  capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh:27  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-233-je-after-writeoff GET "/journalentries?loanId=$LID&limit=80" || exit 1
+      MAYBE  capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh:29  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-234-recoverypayment-after-writeoff POST \
+      MAYBE  capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh:33  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-235-je-after-recovery GET "/journalentries?loanId=$LID&limit=80" || exit 1
+      MAYBE  capture/tierA-a2/run-240-a2-7-update-path.sh:18  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-240-update-cash-to-accrual PUT /loanproducts/46 \
+      MAYBE  capture/tierA-a2/run-240-a2-7-update-path.sh:22  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-241-read-product-after-accrual-switch GET /loanproducts/46 || exit 1
+      MAYBE  capture/tierA-a2/run-240-a2-7-update-path.sh:26  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-242-update-no-rule-change PUT /loanproducts/46 \
+      MAYBE  capture/tierA-a2/run-240-a2-7-update-path.sh:30  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap.sh" A2-243-read-product-after-no-rule-change GET /loanproducts/46 || exit 1
+      MAYBE  capture/tierA-a2/run-300-a2-26-g10c-admissibility.sh:27  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/mkreq-a2-26.sh" verify
+      MAYBE  capture/tierA-a2/run-300-a2-26-g10c-admissibility.sh:30  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-300-glaccount2-classification-today   GET /glaccounts/2                || exit 1
+      MAYBE  capture/tierA-a2/run-300-a2-26-g10c-admissibility.sh:31  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-301-glaccount16-classification-today  GET /glaccounts/16               || exit 1
+      MAYBE  capture/tierA-a2/run-300-a2-26-g10c-admissibility.sh:32  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-302-loanproduct22-readback-today      GET /loanproducts/22             || exit 1
+      MAYBE  capture/tierA-a2/run-300-a2-26-g10c-admissibility.sh:33  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-303-loanproduct46-readback-today      GET /loanproducts/46             || exit 1
+      MAYBE  capture/tierA-a2/run-300-a2-26-g10c-admissibility.sh:36  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-310-readmit-product22 POST /loanproducts req/a2-26-admit-p22.json || exit 1
+      MAYBE  capture/tierA-a2/run-300-a2-26-g10c-admissibility.sh:37  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-311-readmit-product23 POST /loanproducts req/a2-26-admit-p23.json || exit 1
+      MAYBE  capture/tierA-a2/run-300-a2-26-g10c-admissibility.sh:38  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-312-readmit-product24 POST /loanproducts req/a2-26-admit-p24.json || exit 1
+      MAYBE  capture/tierA-a2/run-300-a2-26-g10c-admissibility.sh:39  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-313-readmit-product27 POST /loanproducts req/a2-26-admit-p27.json || exit 1
+      MAYBE  capture/tierA-a2/run-300-a2-26-g10c-admissibility.sh:40  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-314-readmit-product28 POST /loanproducts req/a2-26-admit-p28.json || exit 1
+      MAYBE  capture/tierA-a2/run-300-a2-26-g10c-admissibility.sh:41  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-315-readmit-product46 POST /loanproducts req/a2-26-admit-p46.json || exit 1
+      MAYBE  capture/tierA-a2/run-310-a2-26-retype-visibility.sh:23  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-320-je-loan2-retype-visibility GET "/journalentries?loanId=2&limit=50" || exit 1
+      MAYBE  capture/tierA-a2/run-310-a2-26-retype-visibility.sh:25  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-321-je-loan4-retype-visibility GET "/journalentries?loanId=4&limit=50" || exit 1
+      MAYBE  capture/tierA-a2/run-310-a2-26-retype-visibility.sh:27  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-322-je-loan5-control GET "/journalentries?loanId=5&limit=80" || exit 1
+      MAYBE  capture/tierA-a2/run-310-a2-26-retype-visibility.sh:29  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-323-je-entry4-single GET "/journalentries/4" || exit 1
+      MAYBE  capture/tierA-a2/run-320-a2-26-ledger-coverage.sh:34  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-330-prod-coverage POST /loanproducts req/a2-26-prod-coverage.json || exit 1
+      MAYBE  capture/tierA-a2/run-320-a2-26-ledger-coverage.sh:37  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             python3 "$DIR/resolve8.py" "$DIR/req/a2-26-loan-coverage.json" \
+      MAYBE  capture/tierA-a2/run-320-a2-26-ledger-coverage.sh:41  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-331-prod-coverage-readback GET "/loanproducts/$(python3 -c 'import json,sys,decimal;print(json.load(open(sys.
+      MAYBE  capture/tierA-a2/run-320-a2-26-ledger-coverage.sh:43  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-332-loan-coverage POST /loans req/a2-26-loan-coverage-resolved.json || exit 1
+      MAYBE  capture/tierA-a2/run-320-a2-26-ledger-coverage.sh:51  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-333-approve-coverage  POST "/loans/$LID?command=approve"  req/a2-26-approve.json  || exit 1
+      MAYBE  capture/tierA-a2/run-320-a2-26-ledger-coverage.sh:52  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-334-disburse-coverage POST "/loans/$LID?command=disburse" req/a2-26-disburse.json || exit 1
+      MAYBE  capture/tierA-a2/run-320-a2-26-ledger-coverage.sh:53  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-335-je-after-disburse-coverage GET "/journalentries?loanId=$LID&limit=80" || exit 1
+      MAYBE  capture/tierA-a2/run-320-a2-26-ledger-coverage.sh:56  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-336-loan-state-after-disburse GET "/loans/$LID?associations=all" || exit 1
+      MAYBE  capture/tierA-a2/run-320-a2-26-ledger-coverage.sh:59  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-337-repayment-split POST "/loans/$LID/transactions?command=repayment" \
+      MAYBE  capture/tierA-a2/run-320-a2-26-ledger-coverage.sh:63  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-338-je-after-repayment-coverage GET "/journalentries?loanId=$LID&limit=80" || exit 1
+      MAYBE  capture/tierA-a2/run-320-a2-26-ledger-coverage.sh:64  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-339-loan-state-after-repayment GET "/loans/$LID?associations=all" || exit 1
+      MAYBE  capture/tierA-a2/run-330-a2-26-manual-and-reversal.sh:31  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-340-glaccount21-liability-detail GET /glaccounts/21 || exit 1
+      MAYBE  capture/tierA-a2/run-330-a2-26-manual-and-reversal.sh:32  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-341-glaccount18-nomanual        GET /glaccounts/18 || exit 1
+      MAYBE  capture/tierA-a2/run-330-a2-26-manual-and-reversal.sh:33  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-342-glaccount1-header           GET /glaccounts/1  || exit 1
+      MAYBE  capture/tierA-a2/run-330-a2-26-manual-and-reversal.sh:36  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-343-manual-je-3leg POST /journalentries req/a2-26-manual-je-balanced-3leg.json || exit 1
+      MAYBE  capture/tierA-a2/run-330-a2-26-manual-and-reversal.sh:40  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-344-manual-je-unbalanced POST /journalentries \
+      MAYBE  capture/tierA-a2/run-330-a2-26-manual-and-reversal.sh:45  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-345-manual-je-header POST /journalentries req/a2-26-manual-je-header-account.json || exit 1
+      MAYBE  capture/tierA-a2/run-330-a2-26-manual-and-reversal.sh:49  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-346-manual-je-nomanual POST /journalentries req/a2-26-manual-je-manual-disallowed.json || exit 1
+      MAYBE  capture/tierA-a2/run-330-a2-26-manual-and-reversal.sh:58  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-347-je-manual-readback GET "/journalentries?transactionId=$TXN&limit=50" || exit 1
+      MAYBE  capture/tierA-a2/run-330-a2-26-manual-and-reversal.sh:61  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-348-je-reverse POST "/journalentries/$TXN?command=reverse" req/a2-26-je-reverse.json || exit 1
+      MAYBE  capture/tierA-a2/run-330-a2-26-manual-and-reversal.sh:66  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-349-je-manual-after-reverse GET "/journalentries?transactionId=$TXN&limit=50" || exit 1
+      MAYBE  capture/tierA-a2/run-330-a2-26-manual-and-reversal.sh:67  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-350-je-office1-june GET "/journalentries?officeId=1&fromDate=01%20June%202026&toDate=30%20June%202026&locale=
+      MAYBE  capture/tierA-a2/run-340-a2-26-idempotency.sh:35  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C9" A2-360-manual-je-idem-first  POST /journalentries req/a2-26-manual-je-idem.json "$K1" || exit 1
+      MAYBE  capture/tierA-a2/run-340-a2-26-idempotency.sh:38  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C9" A2-361-manual-je-idem-repeat POST /journalentries req/a2-26-manual-je-idem.json "$K1" || exit 1
+      MAYBE  capture/tierA-a2/run-340-a2-26-idempotency.sh:41  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C9" A2-362-manual-je-idem-control POST /journalentries req/a2-26-manual-je-idem.json "$K2" || exit 1
+      MAYBE  capture/tierA-a2/run-340-a2-26-idempotency.sh:44  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C8" A2-363-je-office1-2june GET "/journalentries?officeId=1&fromDate=02%20June%202026&toDate=02%20June%202026&local
+      MAYBE  capture/tierA-a2/run-350-a2-26-remaining-slots.sh:27  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-380-goodwill-credit POST "/loans/$LID/transactions?command=goodwillCredit" \
+      MAYBE  capture/tierA-a2/run-350-a2-26-remaining-slots.sh:30  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-381-je-after-goodwill GET "/journalentries?loanId=$LID&limit=100" || exit 1
+      MAYBE  capture/tierA-a2/run-350-a2-26-remaining-slots.sh:32  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-382-repayment-overpay POST "/loans/$LID/transactions?command=repayment" \
+      MAYBE  capture/tierA-a2/run-350-a2-26-remaining-slots.sh:35  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-383-je-after-overpay GET "/journalentries?loanId=$LID&limit=100" || exit 1
+      MAYBE  capture/tierA-a2/run-350-a2-26-remaining-slots.sh:36  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-384-loan-state-after-overpay GET "/loans/$LID?associations=all" || exit 1
+      MAYBE  capture/tierA-a2/run-400-a2-29-boundary.sh:30  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-401-journalentries-no-runningbalance GET "/journalentries?limit=3&orderBy=id&sortOrder=ASC"
+      MAYBE  capture/tierA-a2/run-400-a2-29-boundary.sh:31  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-402-journalentries-runningbalance    GET "/journalentries?limit=3&orderBy=id&sortOrder=ASC&runningBalance=tru
+      MAYBE  capture/tierA-a2/run-400-a2-29-boundary.sh:34  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-403-entry1-runningbalance   GET "/journalentries/1?runningBalance=true"
+      MAYBE  capture/tierA-a2/run-400-a2-29-boundary.sh:35  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-404-entry14-runningbalance  GET "/journalentries/14?runningBalance=true"
+      MAYBE  capture/tierA-a2/run-400-a2-29-boundary.sh:36  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-405-entry25-runningbalance  GET "/journalentries/25?runningBalance=true"
+      MAYBE  capture/tierA-a2/run-400-a2-29-boundary.sh:37  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-406-entry14-no-param        GET "/journalentries/14"
+      MAYBE  capture/tierA-a2/run-400-a2-29-boundary.sh:41  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-407-glaccounts-no-fetch          GET "/glaccounts"
+      MAYBE  capture/tierA-a2/run-400-a2-29-boundary.sh:42  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-408-glaccounts-fetchrunningbal   GET "/glaccounts?fetchRunningBalance=true"
+      MAYBE  capture/tierA-a2/run-400-a2-29-boundary.sh:43  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-409-glaccount4-fetchrunningbal   GET "/glaccounts/4?fetchRunningBalance=true"
+      MAYBE  capture/tierA-a2/run-420-a2-29-recompute-heal.sh:25  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-420-update-running-balance-org POST "/journalentries?command=updateRunningBalance" \
+      MAYBE  capture/tierA-a2/run-430-a2-29-drift-probe.sh:34  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C8" A2-430-gl-drift-asset     POST /glaccounts req/a2-29-gl-drift-asset.json
+      MAYBE  capture/tierA-a2/run-430-a2-29-drift-probe.sh:35  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C8" A2-431-gl-drift-liability POST /glaccounts req/a2-29-gl-drift-liability.json
+      MAYBE  capture/tierA-a2/run-430-a2-29-drift-probe.sh:38  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             python3 "$DIR/mkje-a2-29.py" \
+      MAYBE  capture/tierA-a2/run-430-a2-29-drift-probe.sh:44  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C9" A2-432-je-while-asset POST /journalentries req/a2-29-je-1-while-asset.json a2-29-je-1-0001
+      MAYBE  capture/tierA-a2/run-430-a2-29-drift-probe.sh:47  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C9" A2-433-recompute-1 POST "/journalentries?command=updateRunningBalance" \
+      MAYBE  capture/tierA-a2/run-430-a2-29-drift-probe.sh:51  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             python3 "$DIR/a2-29-retype-path.py" "$DIR/out/A2-430-gl-drift-asset.json" > "$DIR/out/A2-434-retype-path.txt"
+      MAYBE  capture/tierA-a2/run-430-a2-29-drift-probe.sh:53  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C8" A2-435-retype-asset-to-income PUT "$RETYPE_PATH" req/a2-29-retype-asset-to-income.json
+      MAYBE  capture/tierA-a2/run-430-a2-29-drift-probe.sh:54  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C9" A2-436-recompute-2 POST "/journalentries?command=updateRunningBalance" \
+      MAYBE  capture/tierA-a2/run-430-a2-29-drift-probe.sh:60  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             python3 "$DIR/mkje-a2-29.py" \
+      MAYBE  capture/tierA-a2/run-430-a2-29-drift-probe.sh:66  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C9" A2-437-je-after-retype POST /journalentries req/a2-29-je-2-after-retype.json a2-29-je-2-0001
+      MAYBE  capture/tierA-a2/run-430-a2-29-drift-probe.sh:67  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C9" A2-438-recompute-3 POST "/journalentries?command=updateRunningBalance" \
+      MAYBE  capture/tierA-a2/run-437-a2-29-drift-probe-leg2.sh:19  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             python3 "$DIR/mkje-a2-29.py" \
+      MAYBE  capture/tierA-a2/run-437-a2-29-drift-probe-leg2.sh:25  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C9" A2-439-je-after-retype POST /journalentries req/a2-29-je-2-after-retype.json a2-29-je-2-0002
+      MAYBE  capture/tierA-a2/run-437-a2-29-drift-probe-leg2.sh:26  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C9" A2-440-recompute-4 POST "/journalentries?command=updateRunningBalance" \
+      MAYBE  capture/tierA-a2/run-450-a2-29-drift-at-boundary.sh:15  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-450-entry59-runningbalance GET "/journalentries/59?runningBalance=true"
+      MAYBE  capture/tierA-a2/run-450-a2-29-drift-at-boundary.sh:16  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-451-entry60-runningbalance GET "/journalentries/60?runningBalance=true"
+      MAYBE  capture/tierA-a2/run-450-a2-29-drift-at-boundary.sh:17  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-452-entry62-runningbalance GET "/journalentries/62?runningBalance=true"
+      MAYBE  capture/tierA-a2/run-450-a2-29-drift-at-boundary.sh:23  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-453-glaccount33-fetchrunningbal GET "/glaccounts/33?fetchRunningBalance=true"
+      MAYBE  capture/tierA-a2/run-450-a2-29-drift-at-boundary.sh:24  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-454-glaccount34-fetchrunningbal GET "/glaccounts/34?fetchRunningBalance=true"
+      MAYBE  capture/tierA-a2/run-450-a2-29-drift-at-boundary.sh:28  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-455-glaccounts-list-fetchrunningbal GET "/glaccounts?fetchRunningBalance=true"
+      MAYBE  capture/tierA-a2/run-460-a2-29-reversal-and-office-scope.sh:32  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C9" A2-460-je-reverse POST "/journalentries/$TXN?command=reverse" req/a2-29-je-reverse.json a2-29-rev-0001
+      MAYBE  capture/tierA-a2/run-460-a2-29-reversal-and-office-scope.sh:37  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C9" A2-461-recompute-office1 POST "/journalentries?command=updateRunningBalance" \
+      MAYBE  capture/tierA-a2/run-463-a2-29-recompute-org-after-reversal.sh:8  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$DIR/cap9.sh" A2-463-recompute-org-after-reversal POST \
+      MAYBE  capture/tierA-a2/run-470-a2-29-report-reader.sh:29  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-471-report-generalledger GET "/runreports/GeneralLedgerReport%20Table?R_officeId=1&R_GLAccountNO=4&R_startDat
+      MAYBE  capture/tierA-a2/run-470-a2-29-report-reader.sh:36  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-472-report-generalledger-later-start GET "/runreports/GeneralLedgerReport%20Table?R_officeId=1&R_GLAccountNO=
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:53  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$Q" A2-500-db-mapping-before sql/q8-t275-mapping-ids.sql || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:54  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-501-loanproduct23-before GET /loanproducts/23 || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:57  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-502-p23-repoint-fundsource PUT /loanproducts/23 req/upd-070-repoint-fundsource.json || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:59  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$Q" A2-503-db-mapping-after-repoint sql/q8-t275-mapping-ids.sql || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:60  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-504-loanproduct23-after-repoint GET /loanproducts/23 || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:63  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-505-p23-add-channel PUT /loanproducts/23 req/upd-071-add-channel.json || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:65  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$Q" A2-506-db-mapping-after-channel sql/q8-t275-mapping-ids.sql || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:66  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-507-loanproduct23-after-channel GET /loanproducts/23 || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:69  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-508-p23-description-only PUT /loanproducts/23 req/t275-072-p23-description-only.json || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:71  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$Q" A2-509-db-mapping-after-description sql/q8-t275-mapping-ids.sql || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:74  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-510-p23-channel-empty PUT /loanproducts/23 req/t275-073-p23-channel-empty.json || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:76  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$Q" A2-511-db-mapping-after-channel-empty sql/q8-t275-mapping-ids.sql || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:77  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-512-loanproduct23-final GET /loanproducts/23 || exit 1
+      MAYBE  capture/tierA-a2/run-500-t275-mapping-update.sh:81  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$Q" A2-513-db-q2-product-mapping-rows sql/q2-product-mapping-rows.sql || exit 1
+      MAYBE  capture/tierA-a2/run-514-t275-channel-row-identity.sh:38  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-514-p23-channel-readd PUT /loanproducts/23 req/upd-071-add-channel.json || exit 1
+      MAYBE  capture/tierA-a2/run-514-t275-channel-row-identity.sh:40  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$Q" A2-515-db-mapping-after-readd sql/q8-t275-mapping-ids.sql || exit 1
+      MAYBE  capture/tierA-a2/run-514-t275-channel-row-identity.sh:44  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-516-p23-channel-resend-identical PUT /loanproducts/23 req/upd-071-add-channel.json || exit 1
+      MAYBE  capture/tierA-a2/run-514-t275-channel-row-identity.sh:46  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$Q" A2-517-db-mapping-after-resend sql/q8-t275-mapping-ids.sql || exit 1
+      MAYBE  capture/tierA-a2/run-514-t275-channel-row-identity.sh:49  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-518-p23-channel-repoint PUT /loanproducts/23 req/t275-075-p23-channel-repoint.json || exit 1
+      MAYBE  capture/tierA-a2/run-514-t275-channel-row-identity.sh:51  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$Q" A2-519-db-mapping-after-channel-repoint sql/q8-t275-mapping-ids.sql || exit 1
+      MAYBE  capture/tierA-a2/run-514-t275-channel-row-identity.sh:53  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-521-loanproduct23-after-channel-repoint GET /loanproducts/23 || exit 1
+      MAYBE  capture/tierA-a2/run-520-t275-charge-dimension.sh:37  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$Q" A2-520-db-fixtures sql/q9-t275-fixture-state.sql || exit 1
+      MAYBE  capture/tierA-a2/run-520-t275-charge-dimension.sh:41  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-522-prod-charge-mappings POST /loanproducts req/t275-080-charge-mappings.json || exit 1
+      MAYBE  capture/tierA-a2/run-520-t275-charge-dimension.sh:53  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-523-prod-charge-mappings-readback GET "/loanproducts/$PID" || exit 1
+      MAYBE  capture/tierA-a2/run-520-t275-charge-dimension.sh:57  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-524-prod-fee-charge-not-attached POST /loanproducts req/t275-081-fee-charge-not-attached.json || exit 1
+      MAYBE  capture/tierA-a2/run-520-t275-charge-dimension.sh:61  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-525-prod-penalty-mapping-on-fee-charge POST /loanproducts req/t275-082-penalty-mapping-on-fee-charge.json || 
+      MAYBE  capture/tierA-a2/run-520-t275-charge-dimension.sh:66  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-526-prod-fee-income-expense-account POST /loanproducts req/t275-083-fee-income-expense-account.json || exit 1
+      MAYBE  capture/tierA-a2/run-520-t275-charge-dimension.sh:71  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-527-prod-duplicate-fee-charge POST /loanproducts req/t275-084-duplicate-fee-charge.json || exit 1
+      MAYBE  capture/tierA-a2/run-520-t275-charge-dimension.sh:79  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$Q" A2-528-db-mapping-after-charge-dimension sql/q8-t275-mapping-ids.sql || exit 1
+      MAYBE  capture/tierA-a2/run-540-t275-reason-mappings.sh:55  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-540-prod-writeoff-reason-dangling POST /loanproducts req/t275-090-writeoff-reason-dangling.json || exit 1
+      MAYBE  capture/tierA-a2/run-540-t275-reason-mappings.sh:59  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-541-prod-writeoff-reason-dangling-nonexpense POST /loanproducts req/t275-091-writeoff-reason-dangling-nonexpe
+      MAYBE  capture/tierA-a2/run-540-t275-reason-mappings.sh:65  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-542-prod-chargeoff-reason-dangling POST /loanproducts req/t275-092-chargeoff-reason-dangling.json || exit 1
+      MAYBE  capture/tierA-a2/run-540-t275-reason-mappings.sh:69  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$C" A2-543-prod-chargeoff-reason-dangling-nonexpense POST /loanproducts req/t275-093-chargeoff-reason-dangling-nonex
+      MAYBE  capture/tierA-a2/run-540-t275-reason-mappings.sh:75  (interpreter on a variable)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             sh "$Q" A2-544-db-mapping-after-reason-probes sql/q8-t275-mapping-ids.sql || exit 1
+      MAYBE  capture/tierA-a2/show.py:18  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             for st in sorted(glob.glob(os.path.join(DIR, "out", pattern + ".status"))):
+      MAYBE  capture/tierA-a2/verify-provenance-a2-15.py:23  (python glob/listdir)  could reach: cap.sh, cap9.sh, prove-mkreq7-guard-red.py, resolve7.py, run-220-a2-7-runtime.sh
+             for p in sorted(glob.glob(os.path.join(ROOT, '.softhouse/vectors/ledger/*.json'))):
+      MAYBE  reviews/t261-tenant-attestation/instruments/t261-bar.sh:20  (interpreter on a variable)  could reach: t261-redB-attack.sh, t261-redC-wrap.sh
+             bash "$ROOT/.softhouse/conformance.sh" > "$LOG" 2>&1
+      MAYBE  reviews/t261-tenant-attestation/instruments/t261-caller-and-trap.sh:90  (interpreter on a variable)  could reach: t261-redB-attack.sh, t261-redC-wrap.sh
+             ctrl=$(bash "$SCRATCH/ctrl.sh" "$LIB" 2>&1)
+      MAYBE  reviews/t261-tenant-attestation/instruments/t261-caller-and-trap.sh:104  (interpreter on a variable)  could reach: t261-redB-attack.sh, t261-redC-wrap.sh
+             treat=$(bash "$SCRATCH/treat.sh" "$LIB" 2>&1)
+      MAYBE  reviews/t261-tenant-attestation/instruments/t261-instrument-audit.py:35  (python glob/listdir)  could reach: t261-redB-attack.sh, t261-redC-wrap.sh
+             for fn in sorted(os.listdir(D)):
+      MAYBE  reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh:59  (interpreter on a variable)  could reach: t261-redB-attack.sh, t261-redC-wrap.sh
+             python3 "$WA" verify --sidecar "$vd/$vn.http" --headers "$vd/$vn.reqhdr" --req "$vd/$vn.req" >"$vd/$vn.vout" 2>"$vd/$vn.
+      MAYBE  reviews/t261-tenant-attestation/instruments/t261-redB-attack.sh:61  (interpreter on a variable)  could reach: t261-redB-attack.sh, t261-redC-wrap.sh
+             python3 "$WA" verify --sidecar "$vd/$vn.http" --headers "$vd/$vn.reqhdr" >"$vd/$vn.vout" 2>"$vd/$vn.verr"
+      MAYBE  reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh:66  (interpreter on a variable)  could reach: t261-redB-attack.sh, t261-redC-wrap.sh
+             python3 "$WA" verify --sidecar "$EV/$sname/$sname.http" --headers "$EV/$sname/$sname.reqhdr" >/dev/null 2>&1 \
+      MAYBE  reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh:116  (interpreter on a variable)  could reach: t261-redB-attack.sh, t261-redC-wrap.sh
+             python3 "$WA" verify --sidecar "$EV/dupid/dupid.http" --headers "$EV/dupid/dupid.reqhdr" >/dev/null 2>"$EV/dupid/verr"
+      MAYBE  reviews/t261-tenant-attestation/instruments/t261-redC-wrap.sh:180  (interpreter on a variable)  could reach: t261-redB-attack.sh, t261-redC-wrap.sh
+             python3 "$WA" verify --sidecar "$EV/mbtrunc/mb.http" --headers "$EV/mbtrunc/mb.reqhdr" --req "$EV/mbtrunc/mb.req" >/dev/
+
+TERM 5 -- POINTER ONLY: files naming a retirement WITHOUT the word 'supersed'
+  (miss M5. These are NOT parsed and NOT graded; they are printed so the next
+  reader knows where else to look.)
+      (none found by basename)
+
+MISSES, RESTATED AT THE VERDICT SO THIS IS NOT READ AS EXHAUSTIVE (P-26/P-66):
+  M1 indiscriminate invocation ....... partly measured, TERM 4
+  M2 name built at runtime ........... NOT MEASURED
+  M3 indirection via .json/.yaml/.md . NOT MEASURED
+  M4 basename collision .............. over-reports; not deduplicated
+  M5 registers not named 'supersed' .. pointer only, TERM 5
+  M6 dead-but-never-declared scripts . a DIFFERENT question; not answered here
+  M7 this transcript must not be named /supersed/i or TERM 1 refuses on it
+
+FAIL: 55 live in-place invocation(s) of a superseded artefact.
+  * capture/tierA-a2/prove-a2-26-guards-red.sh:100 EXECUTES the superseded cap9.sh IN PLACE
+        if sh "$DIR/cap9.sh" A2-999-should-not-exist POST /journalentries req/a2-26-manual-je-idem.json 2>"$TMP/g3.err"; then
+  * capture/tierA-a2/run-020-accounts.sh:10 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" "A2-${n}" POST /glaccounts "req/$n.json" || exit 1
+  * capture/tierA-a2/run-040-refusals.sh:10 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" "A2-${n}" POST /glaccounts "req/$n.json" || exit 1
+  * capture/tierA-a2/run-060-mappings.sh:10 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" "A2-${n}" POST /loanproducts "req/$n.json" || exit 1
+  * capture/tierA-a2/run-100-finactivity.sh:7 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" "A2-${n}" POST /financialactivityaccounts "req/$n.json" || exit 1
+  * capture/tierA-a2/run-120-delete-update.sh:14 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-110-update-header-to-detail   PUT /glaccounts/1  req/upd-110-header-to-detail.json || exit 1
+  * capture/tierA-a2/run-120-delete-update.sh:15 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-111-update-retype-mapped      PUT /glaccounts/2  req/upd-111-retype-mapped-account.json || exit 1
+  * capture/tierA-a2/run-120-delete-update.sh:16 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-112-update-disable-mapped     PUT /glaccounts/2  req/upd-112-disable-mapped.json || exit 1
+  * capture/tierA-a2/run-120-delete-update.sh:17 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-113-update-nomanual           PUT /glaccounts/2  req/upd-113-nomanual.json || exit 1
+  * capture/tierA-a2/run-120-delete-update.sh:18 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-114-finactivity-update        PUT /financialactivityaccounts/1 req/fin-107-update.json || exit 1
+  * capture/tierA-a2/run-120-delete-update.sh:20 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-120-delete-has-children       DELETE /glaccounts/3 || exit 1
+  * capture/tierA-a2/run-120-delete-update.sh:21 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-121-delete-product-mapped     DELETE /glaccounts/13 || exit 1
+  * capture/tierA-a2/run-120-delete-update.sh:22 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-122-delete-three-guards       DELETE /glaccounts/2 || exit 1
+  * capture/tierA-a2/run-120-delete-update.sh:23 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-123-delete-finactivity-mapped DELETE /glaccounts/6 || exit 1
+  * capture/tierA-a2/run-120-delete-update.sh:24 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-124-delete-clean-success      DELETE /glaccounts/21 || exit 1
+  * capture/tierA-a2/run-120-delete-update.sh:25 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-125-delete-not-found          DELETE /glaccounts/99999 || exit 1
+  * capture/tierA-a2/run-200-a2-7-readbacks.sh:18 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-201-read-gl16-fundsource        GET /glaccounts/16 || exit 1
+  * capture/tierA-a2/run-200-a2-7-readbacks.sh:19 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-202-read-gl4-loanportfolio      GET /glaccounts/4  || exit 1
+  * capture/tierA-a2/run-200-a2-7-readbacks.sh:20 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-203-read-gl17-transferssuspense GET /glaccounts/17 || exit 1
+  * capture/tierA-a2/run-200-a2-7-readbacks.sh:21 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-204-read-gl8-interestonloans    GET /glaccounts/8  || exit 1
+  * capture/tierA-a2/run-200-a2-7-readbacks.sh:22 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-205-read-gl9-incomefromfees     GET /glaccounts/9  || exit 1
+  * capture/tierA-a2/run-200-a2-7-readbacks.sh:23 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-206-read-gl10-incomefrompenalty GET /glaccounts/10 || exit 1
+  * capture/tierA-a2/run-200-a2-7-readbacks.sh:24 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-207-read-gl11-incomefromrecov   GET /glaccounts/11 || exit 1
+  * capture/tierA-a2/run-200-a2-7-readbacks.sh:25 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-208-read-gl13-losseswrittenoff  GET /glaccounts/13 || exit 1
+  * capture/tierA-a2/run-200-a2-7-readbacks.sh:26 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-209-read-gl6-overpayment        GET /glaccounts/6  || exit 1
+  * capture/tierA-a2/run-200-a2-7-readbacks.sh:27 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-209b-read-gl2-retyped-fundsrc   GET /glaccounts/2  || exit 1
+  * capture/tierA-a2/run-200-a2-7-readbacks.sh:28 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-209c-loanproducts-template      GET /loanproducts/template || exit 1
+  * capture/tierA-a2/run-210-a2-7-mapping.sh:25 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-210-create-cash-nine-mandatory POST /loanproducts \
+  * capture/tierA-a2/run-210-a2-7-mapping.sh:34 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-211-read-product-nine-mandatory GET "/loanproducts/$PID" || exit 1
+  * capture/tierA-a2/run-210-a2-7-mapping.sh:37 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-212-read-product22-channel-override GET /loanproducts/22 || exit 1
+  * capture/tierA-a2/run-210-a2-7-mapping.sh:38 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-213-read-product28-accrual          GET /loanproducts/28 || exit 1
+  * capture/tierA-a2/run-210-a2-7-mapping.sh:40 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-214-create-fundsource-retyped POST /loanproducts \
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:31 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-220-loan-on-nine-mandatory POST /loans req/a2-7-loan-220-resolved.json || exit 1
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:39 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-221-approve-loan   POST "/loans/$LID?command=approve"  req/a2-7-approve-221.json  || exit 1
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:40 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-222-disburse-loan  POST "/loans/$LID?command=disburse" req/a2-7-disburse-222.json || exit 1
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:41 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-223-je-after-disburse GET "/journalentries?loanId=$LID&limit=50" || exit 1
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:44 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-224-chargeoff-unmapped POST "/loans/$LID/transactions?command=charge-off" \
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:49 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-225-goodwillcredit-unmapped POST "/loans/$LID/transactions?command=goodwillCredit" \
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:54 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-225b-loan-state-after-refusals GET "/loans/$LID" || exit 1
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:57 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-226-repayment POST "/loans/$LID/transactions?command=repayment" \
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:60 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-227-je-after-repayment GET "/journalentries?loanId=$LID&limit=50" || exit 1
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:63 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-228-writeoff POST "/loans/$LID?command=writeoff" req/a2-7-writeoff-228.json || exit 1
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:65 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-229-je-after-writeoff GET "/journalentries?loanId=$LID&limit=80" || exit 1
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:68 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-230-recoverypayment POST "/loans/$LID/transactions?command=recoverypayment" \
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:71 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-231-je-after-recovery GET "/journalentries?loanId=$LID&limit=80" || exit 1
+  * capture/tierA-a2/run-220-a2-7-runtime.sh:27 EXECUTES the superseded resolve7.py IN PLACE
+        python3 "$DIR/resolve7.py" "$DIR/req/a2-7-loan-220.json" \
+  * capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh:23 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-232-writeoff-on-transactions POST "/loans/$LID/transactions?command=writeoff" \
+  * capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh:27 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-233-je-after-writeoff GET "/journalentries?loanId=$LID&limit=80" || exit 1
+  * capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh:29 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-234-recoverypayment-after-writeoff POST \
+  * capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh:33 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-235-je-after-recovery GET "/journalentries?loanId=$LID&limit=80" || exit 1
+  * capture/tierA-a2/run-240-a2-7-update-path.sh:18 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-240-update-cash-to-accrual PUT /loanproducts/46 \
+  * capture/tierA-a2/run-240-a2-7-update-path.sh:22 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-241-read-product-after-accrual-switch GET /loanproducts/46 || exit 1
+  * capture/tierA-a2/run-240-a2-7-update-path.sh:26 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-242-update-no-rule-change PUT /loanproducts/46 \
+  * capture/tierA-a2/run-240-a2-7-update-path.sh:30 EXECUTES the superseded cap.sh IN PLACE
+        sh "$DIR/cap.sh" A2-243-read-product-after-no-rule-change GET /loanproducts/46 || exit 1
+  * capture/tierA-a2/run-463-a2-29-recompute-org-after-reversal.sh:8 EXECUTES the superseded cap9.sh IN PLACE
+        sh "$DIR/cap9.sh" A2-463-recompute-org-after-reversal POST \
+
+A superseded artefact that still runs -- and, if it is a guard, still prints PASS -- is not preserved evidence, it is a trap. T114 binds the BYTES; it does not require the file keep being EXECUTED. Preserve the bytes; stop the execution.

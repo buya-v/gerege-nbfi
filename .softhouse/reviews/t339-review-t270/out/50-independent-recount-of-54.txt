@@ -1,0 +1,98 @@
+CALLER POPULATION: 1345 file(s)  [('.py', 701), ('.sh', 584), ('.zsh', 60)]
+
+  EXECUTED  t44_float_roundtrip_v2.py    .softhouse/capture/audit-t44/analysis/t44_float_roundtrip_v2.py :43   python3 t44_float_roundtrip_v2.py <glob> [<glob> ...] [--expect-skips N]
+  EXECUTED  t44_float_roundtrip.py       .softhouse/capture/audit-t44/analysis/t44_float_roundtrip_v2.py :48   python3 .../t44_float_roundtrip.py \
+  EXEC-COPY cap9.sh                      .softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh          :100  if sh "$DIR/cap9.sh" A2-999-should-not-exist POST /journalentries req/a2-26-manual-je-idem.json 2>"$
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/prove-cap-transport-red.py         :95   with open(os.path.join(sb, "cap.sh"), "wb") as f:
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/prove-cap-transport-red.py         :97   os.chmod(os.path.join(sb, "cap.sh"), 0o755)
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/prove-cap-transport-red.py         :120  cap = os.path.join(sb, "cap.sh")
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/prove-cap-transport-red.py         :158  post = read(os.path.join(DIR, "cap.sh"))
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/prove-cap-transport-red.py         :228  f'sh "$DIR/cap.sh" {NAME} GET /glaccounts{tail}\n'
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/prove-cap-transport-red.py         :244  print("\n  shipped run-*.sh cap.sh call sites:")
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/prove-manifest-blind-red.py        :127  p = os.path.join(sb, "cap.sh")
+  EXECUTED  prove-mkreq7-guard-red.py    .softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py          :13   python3 prove-mkreq7-guard-red.py     -> exit 0 only if every case behaves as asserted
+  EXECUTED  resolve7.py                  .softhouse/capture/tierA-a2/resolve7.py                        :4    python3 resolve7.py <template.json> <observed-response.json> <key> <out.json>
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-020-accounts.sh                :10   sh "$DIR/cap.sh" "A2-${n}" POST /glaccounts "req/$n.json" || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-040-refusals.sh                :10   sh "$DIR/cap.sh" "A2-${n}" POST /glaccounts "req/$n.json" || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-060-mappings.sh                :10   sh "$DIR/cap.sh" "A2-${n}" POST /loanproducts "req/$n.json" || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-100-finactivity.sh             :7    sh "$DIR/cap.sh" "A2-${n}" POST /financialactivityaccounts "req/$n.json" || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-120-delete-update.sh           :14   sh "$DIR/cap.sh" A2-110-update-header-to-detail   PUT /glaccounts/1  req/upd-110-header-to-detail.js
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-120-delete-update.sh           :15   sh "$DIR/cap.sh" A2-111-update-retype-mapped      PUT /glaccounts/2  req/upd-111-retype-mapped-accou
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-120-delete-update.sh           :16   sh "$DIR/cap.sh" A2-112-update-disable-mapped     PUT /glaccounts/2  req/upd-112-disable-mapped.json
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-120-delete-update.sh           :17   sh "$DIR/cap.sh" A2-113-update-nomanual           PUT /glaccounts/2  req/upd-113-nomanual.json || ex
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-120-delete-update.sh           :18   sh "$DIR/cap.sh" A2-114-finactivity-update        PUT /financialactivityaccounts/1 req/fin-107-updat
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-120-delete-update.sh           :20   sh "$DIR/cap.sh" A2-120-delete-has-children       DELETE /glaccounts/3 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-120-delete-update.sh           :21   sh "$DIR/cap.sh" A2-121-delete-product-mapped     DELETE /glaccounts/13 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-120-delete-update.sh           :22   sh "$DIR/cap.sh" A2-122-delete-three-guards       DELETE /glaccounts/2 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-120-delete-update.sh           :23   sh "$DIR/cap.sh" A2-123-delete-finactivity-mapped DELETE /glaccounts/6 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-120-delete-update.sh           :24   sh "$DIR/cap.sh" A2-124-delete-clean-success      DELETE /glaccounts/21 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-120-delete-update.sh           :25   sh "$DIR/cap.sh" A2-125-delete-not-found          DELETE /glaccounts/99999 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh          :18   sh "$DIR/cap.sh" A2-201-read-gl16-fundsource        GET /glaccounts/16 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh          :19   sh "$DIR/cap.sh" A2-202-read-gl4-loanportfolio      GET /glaccounts/4  || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh          :20   sh "$DIR/cap.sh" A2-203-read-gl17-transferssuspense GET /glaccounts/17 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh          :21   sh "$DIR/cap.sh" A2-204-read-gl8-interestonloans    GET /glaccounts/8  || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh          :22   sh "$DIR/cap.sh" A2-205-read-gl9-incomefromfees     GET /glaccounts/9  || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh          :23   sh "$DIR/cap.sh" A2-206-read-gl10-incomefrompenalty GET /glaccounts/10 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh          :24   sh "$DIR/cap.sh" A2-207-read-gl11-incomefromrecov   GET /glaccounts/11 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh          :25   sh "$DIR/cap.sh" A2-208-read-gl13-losseswrittenoff  GET /glaccounts/13 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh          :26   sh "$DIR/cap.sh" A2-209-read-gl6-overpayment        GET /glaccounts/6  || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh          :27   sh "$DIR/cap.sh" A2-209b-read-gl2-retyped-fundsrc   GET /glaccounts/2  || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-200-a2-7-readbacks.sh          :28   sh "$DIR/cap.sh" A2-209c-loanproducts-template      GET /loanproducts/template || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-210-a2-7-mapping.sh            :25   sh "$DIR/cap.sh" A2-210-create-cash-nine-mandatory POST /loanproducts \
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-210-a2-7-mapping.sh            :34   sh "$DIR/cap.sh" A2-211-read-product-nine-mandatory GET "/loanproducts/$PID" || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-210-a2-7-mapping.sh            :37   sh "$DIR/cap.sh" A2-212-read-product22-channel-override GET /loanproducts/22 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-210-a2-7-mapping.sh            :38   sh "$DIR/cap.sh" A2-213-read-product28-accrual          GET /loanproducts/28 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-210-a2-7-mapping.sh            :40   sh "$DIR/cap.sh" A2-214-create-fundsource-retyped POST /loanproducts \
+  EXECUTED  resolve7.py                  .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :27   python3 "$DIR/resolve7.py" "$DIR/req/a2-7-loan-220.json" \
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :31   sh "$DIR/cap.sh" A2-220-loan-on-nine-mandatory POST /loans req/a2-7-loan-220-resolved.json || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :39   sh "$DIR/cap.sh" A2-221-approve-loan   POST "/loans/$LID?command=approve"  req/a2-7-approve-221.json
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :40   sh "$DIR/cap.sh" A2-222-disburse-loan  POST "/loans/$LID?command=disburse" req/a2-7-disburse-222.jso
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :41   sh "$DIR/cap.sh" A2-223-je-after-disburse GET "/journalentries?loanId=$LID&limit=50" || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :44   sh "$DIR/cap.sh" A2-224-chargeoff-unmapped POST "/loans/$LID/transactions?command=charge-off" \
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :49   sh "$DIR/cap.sh" A2-225-goodwillcredit-unmapped POST "/loans/$LID/transactions?command=goodwillCredi
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :54   sh "$DIR/cap.sh" A2-225b-loan-state-after-refusals GET "/loans/$LID" || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :57   sh "$DIR/cap.sh" A2-226-repayment POST "/loans/$LID/transactions?command=repayment" \
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :60   sh "$DIR/cap.sh" A2-227-je-after-repayment GET "/journalentries?loanId=$LID&limit=50" || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :63   sh "$DIR/cap.sh" A2-228-writeoff POST "/loans/$LID?command=writeoff" req/a2-7-writeoff-228.json || e
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :65   sh "$DIR/cap.sh" A2-229-je-after-writeoff GET "/journalentries?loanId=$LID&limit=80" || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :68   sh "$DIR/cap.sh" A2-230-recoverypayment POST "/loans/$LID/transactions?command=recoverypayment" \
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-220-a2-7-runtime.sh            :71   sh "$DIR/cap.sh" A2-231-je-after-recovery GET "/journalentries?loanId=$LID&limit=80" || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh  :23   sh "$DIR/cap.sh" A2-232-writeoff-on-transactions POST "/loans/$LID/transactions?command=writeoff" \
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh  :27   sh "$DIR/cap.sh" A2-233-je-after-writeoff GET "/journalentries?loanId=$LID&limit=80" || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh  :29   sh "$DIR/cap.sh" A2-234-recoverypayment-after-writeoff POST \
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh  :33   sh "$DIR/cap.sh" A2-235-je-after-recovery GET "/journalentries?loanId=$LID&limit=80" || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-240-a2-7-update-path.sh        :18   sh "$DIR/cap.sh" A2-240-update-cash-to-accrual PUT /loanproducts/46 \
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-240-a2-7-update-path.sh        :22   sh "$DIR/cap.sh" A2-241-read-product-after-accrual-switch GET /loanproducts/46 || exit 1
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-240-a2-7-update-path.sh        :26   sh "$DIR/cap.sh" A2-242-update-no-rule-change PUT /loanproducts/46 \
+  EXECUTED  cap.sh                       .softhouse/capture/tierA-a2/run-240-a2-7-update-path.sh        :30   sh "$DIR/cap.sh" A2-243-read-product-after-no-rule-change GET /loanproducts/46 || exit 1
+  EXECUTED  cap9.sh                      .softhouse/capture/tierA-a2/run-463-a2-29-recompute-org-after-reversal.sh :8    sh "$DIR/cap9.sh" A2-463-recompute-org-after-reversal POST \
+  EXEC-COPY cap.sh                       .softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh :24   cp /tmp/poison/cap-brief-literal.sh "$d/cap.sh"; chmod +x "$d/cap.sh"
+  EXEC-COPY cap.sh                       .softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh :36   /bin/sh "$d/cap.sh" POISON POST /glaccounts req/b.json; echo "  exit=$?"
+  EXEC-COPY cap.sh                       .softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh :60   /bin/sh "$d/cap.sh" POISON POST /glaccounts req/b.json; ec=$?
+  EXEC-COPY cap.sh                       .softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh :66   /bin/sh "$d/cap.sh" POISON POST /glaccounts req/b.json; ec=$?
+  EXEC-COPY cap.sh                       .softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh :72   /bin/sh "$d/cap.sh" POISON POST /glaccounts req/b.json; ec=$?
+  EXECUTED  cap.sh                       .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py    :108  "plain            || exit 1": 'sh "$D/cap.sh" POISON POST /glaccounts req/b.json || exit 1\ncat "$D/
+  EXECUTED  cap.sh                       .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py    :109  "pipeline to tee  || exit 1": 'sh "$D/cap.sh" POISON POST /glaccounts req/b.json | tee "$D/log" || e
+  EXECUTED  cap.sh                       .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py    :110  "cmd-substitution || exit 1": 'X=$(sh "$D/cap.sh" POISON POST /glaccounts req/b.json) || exit 1\ncat
+  EXECUTED  cap.sh                       .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py    :111  "subshell         || exit 1": '( sh "$D/cap.sh" POISON POST /glaccounts req/b.json || exit 1 )\ncat 
+  EXECUTED  cap.sh                       .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py    :112  "no guard at all           ": 'sh "$D/cap.sh" POISON POST /glaccounts req/b.json\ncat "$D/out/POISON
+  EXEC-COPY cap.sh                       .softhouse/reviews/A2-10-probe/poison-d3-manifest.py           :106  with open(os.path.join(d, "cap.sh"), "a") as f:
+  EXEC-COPY resolve7.py                  .softhouse/reviews/A2-11/prove-resolve7-float-red.py           :57   r = subprocess.run([sys.executable, os.path.join(d, "resolve7.py"), t, obs, "resourceId", o],
+  EXECUTED  cap9.sh                      .softhouse/reviews/t245-oracle-pin/measure.sh                  :63   /usr/bin/grep -n 'echo "Fineract-Platform-TenantId' .softhouse/capture/tierA-a2/cap.sh .softhouse/ca
+
+PER-ARTEFACT
+  cap.sh                           in-place=64   as-copy=6    mentioned=96
+  cap9.sh                          in-place=2    as-copy=1    mentioned=42
+  resolve7.py                      in-place=2    as-copy=1    mentioned=77
+  prove-mkreq7-guard-red.py        in-place=1    as-copy=0    mentioned=17
+  run-220-a2-7-runtime.sh          in-place=0    as-copy=0    mentioned=4
+  t44_float_roundtrip.py           in-place=1    as-copy=0    mentioned=6
+  t44_float_roundtrip_v2.py        in-place=1    as-copy=0    mentioned=5
+  t44_float_roundtrip-output.txt   in-place=0    as-copy=0    mentioned=4
+  T55-ANALYSIS.txt                 in-place=0    as-copy=0    mentioned=0
+  30-redB-mismatch-detected.sh     in-place=0    as-copy=0    mentioned=6
+  t261-redB-attack.sh              in-place=0    as-copy=0    mentioned=7
+  t261-redC-wrap.sh                in-place=0    as-copy=0    mentioned=6
+
+TOTAL EXECUTED-IN-PLACE: 71
+TOTAL EXECUTED-AS-COPY : 8
