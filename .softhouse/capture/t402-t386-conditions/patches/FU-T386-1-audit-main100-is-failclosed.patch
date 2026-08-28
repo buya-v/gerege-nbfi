@@ -1,0 +1,28 @@
+diff --git a/.softhouse/capture/t381-t379-conditions/AUDIT.md b/.softhouse/capture/t381-t379-conditions/AUDIT.md
+index e294c753..1f3b453d 100644
+--- a/.softhouse/capture/t381-t379-conditions/AUDIT.md
++++ b/.softhouse/capture/t381-t379-conditions/AUDIT.md
+@@ -25,11 +25,21 @@ level up.
+ | 127 | `_top=$(git rev-parse --show-toplevel 2>/dev/null) \|\| _top=""` | **FAIL-CLOSED, correct.** The status *is* read, by the `\|\|`, and `:128` refuses with exit 2 if `_top` is empty or the `cd` fails. A silenced stderr whose status is read and whose failure is fatal is not a fail-open. |
+ | 302 | the word appearing inside the new comment that explains this audit | **prose.** |
+ 
+-**Both fail-open sites are GONE.** On `main` they were `:100` and `:108` — the `-F` positive and
+-`-F` anti calibration arms, each `2>/dev/null | awk`, neither status read. They are replaced by
++**Both sites are GONE.** On `main` they were `:100` and `:108` — the `-F` positive and `-F` anti
++calibration arms, each `2>/dev/null | awk`, neither status read. They are replaced by
+ `engine_count()` (`:186`–`:198`), which reads `git grep`'s status **and** `awk`'s status and
+ refuses a non-numeric tally.
+ 
++> **CORRECTION [T402, closing `FU-T386-1`]. Only `:108` was fail-OPEN. `:100` was fail-CLOSED,
++> and the distinction is not pedantry.** `:100` is the **positive** arm: a search that errored
++> there yields `n=0`, and `n < 1` is that arm's **refusal** condition, so a discarded status at
++> `:100` aborts the run rather than passing it. Calling it fail-open loses the one lesson that
++> would have pointed at the remaining exposure — because **the same mechanism is what stopped
++> half of `F-1`**: when `$SWEEP_ERRF` is unopenable from the start, the `-F POSITIVE` arm demands
++> ≥ 1 hit, gets 0, and the sweep refuses at exit 3. That is `P-72` earning its keep. A positive
++> arm catches a class of "the engine never ran" that no status check was looking for, and this
++> table should say so.
++
+ ## 2. Every pipeline on an executable line
+ 
+ Classified by the only question that matters: **is a fact inferred from this pipeline's output,

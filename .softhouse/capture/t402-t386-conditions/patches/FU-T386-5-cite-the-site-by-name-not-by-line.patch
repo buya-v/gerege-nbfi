@@ -1,0 +1,25 @@
+diff --git a/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T381.md b/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T381.md
+index e4f18f5e..7599c7bb 100644
+--- a/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T381.md
++++ b/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T381.md
+@@ -264,9 +264,17 @@ I did not touch these. Each is recorded with the site so the next holder does no
+   take it. What *is* enforced by the bar today is that this file stays off the fail-open frontier
+   and adds no dead path — both static readers, both green (§6). The header now says this in terms
+   rather than leaving a reader to infer that the new refusals are gated.
+-- **FU-T381-1 (MINOR).** `casualty-sweep.sh:348` — the `MEASURED ZERO` denominator
+-  `$(git ls-files .softhouse | grep -c .)` discards its status; bounded by the `:376` corpus
+-  assertion. Argument for leaving it is in `AUDIT.md` §2c.
++- **FU-T381-1 (MINOR) — CLOSED BY T402. RESTATED BY NAME [`FU-T386-5`, and `f3bf5563`'s rule
++  "MATCH BY NAME, NEVER BY LINE — it moved 546 lines"].** The site is **the `MEASURED ZERO`
++  denominator, `$(git ls-files .softhouse | grep -c .)`, inside `sel()`** — cited here originally
++  as `casualty-sweep.sh:348`, which at the shipped head was already a `printf` inside a refusal
++  message. T386 measured **14 of 16** audited line numbers in this task's `AUDIT.md` as having
++  moved. **The claimed bound was itself fail-open**: the corpus assertion read
++  `if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]`, and `[` returns **2** on a malformed
++  comparison, which `if` reads as FALSE — so a failed `git ls-files` passed the sweep through on
++  a corpus nobody counted (T402 `F-2`, driven). T402 removed both: the corpus is counted once,
++  with its status and its numeric shape read, into `$SWEEP_CORPUS_N`, and every consumer reads
++  the variable. **The site no longer exists, so it cannot be renumbered.**
+ 
+ ---
+ 
