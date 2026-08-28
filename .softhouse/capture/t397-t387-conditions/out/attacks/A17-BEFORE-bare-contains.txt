@@ -1,0 +1,13 @@
+exit = 1
+    a grading-time question and nothing here asserts it. Three verdicts are INADMISSIBLE, refused
+    carrying it is INADMISSIBLE).
+    LDG-DIV-01-oracle-accepts-sub-minor-unit-re... divergence     ledger_rest_posting    FAIL              2 cells (0 money)
+    ledger parity           PASS 7    FAIL 1
+    ledger inadmissible     0
+    INADMISSIBLE, so this figure is pinned at 0 by
+    ledger/conformance/admit.go, and a fourth is INADMISSIBLE.
+    A DIVERGENCE IS NOT A PARITY PASS, and it is counted NOWHERE in `ledger parity PASS`.
+    ACCEPTED. `ledger parity PASS n` still means exactly n vectors on which this port
+    A DIVERGENCE FAIL *IS* ADDED TO `ledger parity FAIL`, deliberately and asymmetrically.
+    * LDG-DIV-01-oracle-accepts-sub-minor-unit-residue — FAIL
+A17 CLOSED AT ADMISSION: False

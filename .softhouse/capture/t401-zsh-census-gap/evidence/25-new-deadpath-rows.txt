@@ -1,0 +1,16 @@
+T401 -- THE EXACT ROWS `10-regen-pin.py` WOULD ADD IF S2 IS WIDENED TO .zsh
+source : .softhouse/capture/t401-zsh-census-gap/evidence/21-deadpath-BASE.txt
+         .softhouse/capture/t401-zsh-census-gap/evidence/23-deadpath-ZSH.txt
+base rows 108   +zsh rows 115   ADDED 7   REMOVED 0
+
+ADDED (pin format: FILE | LITERAL):
+  .softhouse/capture/t324-worktree-prune-skipbit/instruments/10-skipbit-taxonomy-probe.zsh | .softhouse/handoff-draft.md
+  .softhouse/capture/t324-worktree-prune-skipbit/instruments/20-blindspot-guard-drive.zsh | .softhouse/handoff-draft.md
+  .softhouse/capture/t353-t342-conditions/bin/probe-scratch.zsh | .softhouse/x
+  .softhouse/reviews/t202-probe/green-Tb.zsh | .softhouse/LOCK.bak
+  .softhouse/reviews/t202-probe/green-Tb.zsh | .softhouse/LOCKDIR/f.md
+  .softhouse/reviews/t202-probe/green-Tb.zsh | .softhouse/LOCKED_STATE.md
+  .softhouse/reviews/t202-probe/red-Tb.zsh | .softhouse/vector.json
+
+REMOVED (must be empty -- a widening may only add):
+  (none)

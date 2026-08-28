@@ -590,6 +590,32 @@ func WriteReport(w io.Writer, s *Summary) {
 		p("VERDICT: PASS (exit 0) — %d parity vectors match the pinned reference oracle, %d cells compared.",
 			s.ParityPass, s.GradedCells)
 		p("         This means \"matches the reference oracle on captured vectors, within the graded domain\".")
+		// THE DIVERGENCE QUALIFIER [T397, closing T387's F-T387-1].
+		//
+		// The sentence above used to sit UNQUALIFIED over a corpus that, since
+		// T360, contains captured vectors on which this port demonstrably does
+		// NOT match the reference oracle — it REFUSES where the oracle ACCEPTS.
+		// It was saved only by its own trailing "within the graded domain" and by
+		// a census two hundred lines further up, which is precisely the
+		// misreading G-19 exists to prevent: a reader who takes the top line at
+		// face value concludes the port agrees with Fineract everywhere.
+		//
+		// IT IS PRINTED FROM THE LEDGER SUMMARY'S OWN FIGURES, not from a
+		// constant, so it cannot drift away from the census it summarises; and
+		// the ZERO case is printed too, because "there are no recorded
+		// divergences" and "nobody looked" have to stay distinguishable — the
+		// same reason every other empty state in this report is not silent.
+		if d := s.recordedDivergences(); d > 0 {
+			p("         IT EXCLUDES %d RECORDED DIVERGENCE(S) — see THE DIVERGENCE CENSUS above. On those", d)
+			p("         captured vectors this port does NOT match the reference oracle: the oracle ACCEPTED")
+			p("         a request this port REFUSES. Each is an OPEN disagreement held at the gate named on")
+			p("         its row, and a green line there means only \"the disagreement is still exactly as")
+			p("         recorded\" — never that it has been fixed, and never that the port is right.")
+		} else if s.Ledger != nil {
+			p("         NO DIVERGENCE IS RECORDED in this store, so the sentence above is not excluding any")
+			p("         known port/oracle disagreement. That is a fact about the CORPUS, not a fact about")
+			p("         the port: a disagreement nobody has captured is not a disagreement that is absent.")
+		}
 		p("         IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.")
 	case code == 1:
 		p("VERDICT: FAIL (exit 1) — %d mismatched vector(s), %d invariant violation(s).",
@@ -598,6 +624,34 @@ func WriteReport(w io.Writer, s *Summary) {
 		p("VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.")
 	}
 	p("")
+}
+
+// recordedDivergences returns how many DIVERGENCE-class vectors the ledger half
+// loaded and graded, in either direction. [T397, for T387's F-T387-1]
+//
+// PASS AND FAIL ARE BOTH COUNTED, and that is the meaning of the figure rather
+// than an oversight. The verdict line it qualifies claims "this port matches the
+// reference oracle on the captured vectors"; a divergence vector is a captured
+// vector on which it does NOT — whether the disagreement is still behaving
+// exactly as recorded (PASS) or has moved (FAIL). Both are exclusions from that
+// claim.
+//
+// IT READS THE LEDGER SUMMARY AND COMPOSES NOTHING. The ledger context renders
+// its own divergence census (ledger/conformance/notgraded.go); this returns the
+// same two fields that census prints, so the verdict qualifier and the census can
+// never disagree about how many there are. A second, independently maintained
+// count here is exactly the defect A2-34 found in the hand-written not-graded
+// block.
+//
+// Nil ledger — self-test mode, a context filter, or a store with no ledger vector
+// — returns 0. The caller distinguishes "zero because there are none" from "zero
+// because the ledger half did not run" by testing s.Ledger itself, and the ledger
+// section above has already printed which of those states this run is in.
+func (s *Summary) recordedDivergences() int {
+	if s.Ledger == nil {
+		return 0
+	}
+	return s.Ledger.DivergencePass + s.Ledger.DivergenceFail
 }
 
 // sortedKeys returns m's keys in ascending byte-wise order.

@@ -1,0 +1,21 @@
+T397 -- re-drive of T387's SIXTEEN authoring attacks, after the T397 change
+
+A1-expect-legs-10013                           exit=2  refused=True  REFUSED
+A2-totals-minor                                exit=2  refused=True  REFUSED
+A3-expect-refusal                              exit=2  refused=True  REFUSED
+A4-expect-http-status                          exit=2  refused=True  REFUSED
+A5-oracle-accepted-on-parity                   exit=2  refused=True  REFUSED
+A6-one-digit-mutated                           exit=2  refused=True  REFUSED
+A7-representable                               exit=2  refused=True  REFUSED
+A8-short-marker                                exit=2  refused=True  REFUSED
+A9-capture-digit-mutated-sha-refreshed         exit=2  refused=True  REFUSED
+A10-divergence-relabelled-parity               exit=2  refused=True  REFUSED
+A11-divergence-relabelled-oracle-refusal       exit=2  refused=True  REFUSED
+A12-divergence-with-journal-entry-kind         exit=2  refused=True  REFUSED
+A13-marker-not-in-observed-text                exit=2  refused=True  REFUSED
+A14-gate-empty                                 exit=2  refused=True  REFUSED
+A15-refusal-for-an-unrelated-reason            exit=2  refused=True  REFUSED
+A16-graded-on-an-unrelated-refusal             exit=2  refused=True  REFUSED
+
+16 of 16 attacks REFUSED
+store clean after the drive: YES
