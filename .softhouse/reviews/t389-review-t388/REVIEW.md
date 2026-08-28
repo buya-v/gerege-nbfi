@@ -377,12 +377,24 @@ never `sh`**. Probe-line presence was tested **before** its value was read (**P-
 | target | commit | exit | probe line | ledger parity | oracle-refusal | inadmissible | ledger cells / money | loanschedule | dead-path |
 |---|---|---|---|---|---|---|---|---|---|
 | **T388 branch** | `977e37af` (detached scratch worktree) | **0** | **PRINTED**, `probe = up` | **7 / 0** | **6 / 0** | **0** | **142 / 39** | **46 / 0, 7,884** | **109** |
-| **MERGE RESULT** | `f7b6c1a8` (current `main`) + `977e37af` = `9dd4ad33` | **0** | **PRINTED**, `probe = up` | **7 / 0** | **6 / 0** | **0** | **142 / 39** | **46 / 0, 7,884** | **109** |
+| **MERGE RESULT** | `f7b6c1a8` + `977e37af` = `9dd4ad33` | **0** | **PRINTED**, `probe = up` | **7 / 0** | **6 / 0** | **0** | **142 / 39** | **46 / 0, 7,884** | **109** |
+| **MERGE RESULT, re-run** | `01a7a05a` (`main` after it advanced) + `977e37af` | **0** | **PRINTED**, `probe = up` | **7 / 0** | **6 / 0** | **0** | **142 / 39** | **46 / 0, 7,884** | **108** |
+| **this review's own branch** | `6dbfda8b` | **0** | **PRINTED**, `probe = up` | **7 / 0** | **6 / 0** | **0** | **142 / 39** | **46 / 0, 7,884** | **109** |
 
-The merge is conflict-free and purely additive. **Every required figure is unmoved on both.** T388
-did not redden the existing corpus.
+Both merges are conflict-free and purely additive. **Every required figure is unmoved on all four
+runs.** T388 did not redden the existing corpus.
 
-Transcripts: `out/T389-BAR-on-T388-branch.txt`, `out/T389-BAR-on-MERGE-RESULT.txt`.
+**`main` advanced mid-review** (`f7b6c1a8 → 01a7a05a`, merging T374/T382/T383/T360), so the merge
+test was **re-run against current `main`** rather than left stale. It is still green.
+
+**The dead-path pin reads 108 on that re-run, not 109, and that is `main`'s doing, not T388's** —
+checked rather than assumed: the pin has **109** rows at T388's fork base `dbf7d312` and **108** on
+`main` at `01a7a05a`, and `git diff --name-only main...977e37af` matches
+`dead-path-frontier.pin` **zero** times. T388 neither regenerated nor moved it; the bar exits 0
+because frontier == pin on each tree independently.
+
+Transcripts: `out/T389-BAR-on-T388-branch.txt`, `out/T389-BAR-on-MERGE-RESULT.txt`,
+`out/T389-BAR-on-MERGE-RESULT-current-main.txt`, `out/T389-BAR-on-review-branch.txt`.
 
 **The T370/T361 trap is closed positively, not merely asserted.** T388's own recorded transcript
 reports `T316-DEADPATH-CENSUS: corpus=1356` and `frontier 11, pinned at 11` — **identical** to my run
