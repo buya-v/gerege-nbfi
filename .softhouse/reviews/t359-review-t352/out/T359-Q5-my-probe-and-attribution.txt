@@ -1,0 +1,27 @@
+--- (1) the rows my probe wrote ---
+ id | transaction_id | account_id | type_enum | currency_code |   amount   | amount_scale | reversed 
+----+----------------+------------+-----------+---------------+------------+--------------+----------
+ 74 | a29bd5eaeb1b   |         16 |         2 | MNT           | 300.625555 |            6 | f
+ 75 | a29bd5eaeb1b   |         21 |         1 | MNT           | 300.625555 |            6 | f
+
+--- (2) PostgreSQL alone, no Java: what does numeric(19,6) do to these characters? ---
+ t359_probe_coerced | t352_probe_coerced | negative_coerced | what_half_even_would_give 
+--------------------+--------------------+------------------+---------------------------
+         300.625555 |         100.123457 |      -300.625555 |                300.625554
+
+--- (3) ledger totals after MY probe, so the next task inherits a true baseline ---
+ legs | max_id | txns 
+------+--------+------
+   71 |     75 |   31
+
+ account_id | legs 
+------------+------
+         16 |   21
+         17 |    5
+         21 |   13
+
+ currency_code | legs 
+---------------+------
+ MNT           |   69
+ USD           |    2
+

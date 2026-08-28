@@ -1,0 +1,37 @@
+ id | transaction_id | account_id | currency_code |    amount     | entry_date |        created_on_utc         |                    descr                     
+----+----------------+------------+---------------+---------------+------------+-------------------------------+----------------------------------------------
+ 35 | a28f54bfdaf3   |         21 | MNT           | 125000.550000 | 2026-06-01 | 2026-08-22 02:14:18.830827+00 | A2-26 manual journal entry: three legs, non-
+ 37 | a28f54c099f7   |         21 | MNT           | 100000.250000 | 2026-06-01 | 2026-08-22 02:14:19.316975+00 | A2-26 manual journal entry: debit leg points
+ 40 | a28f54c1db73   |         21 | MNT           | 125000.550000 | 2026-06-01 | 2026-08-22 02:14:20.14198+00  | A2-26 reversal probe: the ledger is append-o
+ 42 | a28f55a1af0f   |         21 | MNT           |  33333.330000 | 2026-06-02 | 2026-08-22 02:16:46.827346+00 | A2-26 idempotency probe: this exact body is 
+ 44 | a28f55a289cf   |         21 | MNT           |  33333.330000 | 2026-06-02 | 2026-08-22 02:16:47.387132+00 | A2-26 idempotency probe: this exact body is 
+ 47 | a28f573f34c7   |         21 | MNT           | 125000.620000 | 2026-06-01 | 2026-08-22 02:21:17.835766+00 | A2-26 manual journal entry: three legs, non-
+ 49 | a28f573ffb9b   |         21 | MNT           | 100000.250000 | 2026-06-01 | 2026-08-22 02:21:18.34279+00  | A2-26 manual journal entry: debit leg points
+ 52 | a28f57412abb   |         21 | MNT           | 125000.620000 | 2026-06-01 | 2026-08-22 02:21:19.120252+00 | A2-26 reversal probe: the ledger is append-o
+ 66 | a29bca0816a7   |         21 | MNT           |    100.125000 | 2026-06-01 | 2026-08-28 06:52:11.597359+00 | T352 G-08 residue probe: a NON-ZERO digit at
+ 69 | a29bca9bf813   |         21 | MNT           |      0.250000 | 2026-06-01 | 2026-08-28 06:53:48.50216+00  | T352 discriminator: debits 0.125 + 0.125 bal
+ 71 | a29bcaa6a41b   |         21 | MNT           |    100.123457 | 2026-06-01 | 2026-08-28 06:53:55.494461+00 | T352 storage-scale probe: SEVEN decimal plac
+ 73 | a29bcb5d6fcf   |         21 | USD           |     12.340000 | 2026-06-01 | 2026-08-28 06:55:55.292734+00 | T352 currency-generality probe: the SAME two
+
+ id | transaction_id | account_id | currency_code |     amount     |        created_on_utc         |                    descr                     
+----+----------------+------------+---------------+----------------+-------------------------------+----------------------------------------------
+ 55 | L27            |          4 | MNT           |  889549.420000 | 2026-08-22 02:23:27.377342+00 | 
+ 56 | L27            |          8 | MNT           |   20298.820000 | 2026-08-22 02:23:27.378389+00 | 
+ 57 | L27            |          6 | MNT           |   90151.760000 | 2026-08-22 02:23:27.379253+00 | 
+ 58 | L27            |         16 | MNT           | 1000000.000000 | 2026-08-22 02:23:27.380554+00 | 
+ 59 | a28f605fcdeb   |         33 | MNT           | 1000000.000000 | 2026-08-22 02:46:49.145749+00 | A2-29 drift probe leg 1: posted while glCode
+ 60 | a28f605fcdeb   |         34 | MNT           | 1000000.000000 | 2026-08-22 02:46:49.147855+00 | A2-29 drift probe leg 1: posted while glCode
+ 61 | a28f60c8a8e3   |         34 | MNT           |  500000.000000 | 2026-08-22 02:47:57.863857+00 | A2-29 drift probe leg 2: posted after glCode
+ 62 | a28f60c8a8e3   |         33 | MNT           |  500000.000000 | 2026-08-22 02:47:57.865086+00 | A2-29 drift probe leg 2: posted after glCode
+ 63 | a28f614e0263   |         33 | MNT           | 1000000.000000 | 2026-08-22 02:49:25.256109+00 | A2-29 / G-12 reversal probe: does a reversin
+ 64 | a28f614e0263   |         34 | MNT           | 1000000.000000 | 2026-08-22 02:49:25.258129+00 | A2-29 / G-12 reversal probe: does a reversin
+ 65 | a29bca0816a7   |         16 | MNT           |     100.125000 | 2026-08-28 06:52:11.588683+00 | T352 G-08 residue probe: a NON-ZERO digit at
+ 66 | a29bca0816a7   |         21 | MNT           |     100.125000 | 2026-08-28 06:52:11.597359+00 | T352 G-08 residue probe: a NON-ZERO digit at
+ 67 | a29bca9bf813   |         16 | MNT           |       0.125000 | 2026-08-28 06:53:48.499229+00 | T352 discriminator: debits 0.125 + 0.125 bal
+ 68 | a29bca9bf813   |         17 | MNT           |       0.125000 | 2026-08-28 06:53:48.501137+00 | T352 discriminator: debits 0.125 + 0.125 bal
+ 69 | a29bca9bf813   |         21 | MNT           |       0.250000 | 2026-08-28 06:53:48.50216+00  | T352 discriminator: debits 0.125 + 0.125 bal
+ 70 | a29bcaa6a41b   |         16 | MNT           |     100.123457 | 2026-08-28 06:53:55.493201+00 | T352 storage-scale probe: SEVEN decimal plac
+ 71 | a29bcaa6a41b   |         21 | MNT           |     100.123457 | 2026-08-28 06:53:55.494461+00 | T352 storage-scale probe: SEVEN decimal plac
+ 72 | a29bcb5d6fcf   |         16 | USD           |      12.340000 | 2026-08-28 06:55:55.290311+00 | T352 currency-generality probe: the SAME two
+ 73 | a29bcb5d6fcf   |         21 | USD           |      12.340000 | 2026-08-28 06:55:55.292734+00 | T352 currency-generality probe: the SAME two
+

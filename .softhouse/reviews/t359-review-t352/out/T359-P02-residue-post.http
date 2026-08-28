@@ -1,0 +1,10 @@
+POST /journalentries
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T359-P02-residue-post
+Content-Type: application/json
+body-file: req/T359-R02-residue-halfeven-discriminator.json
+body-wire-bytes-artefact: T359-P02-residue-post.req
+body-sha256: 767ce1c694ed10a79e2b50ff408fca1c16d6152088bcc989583f52f7a40d8350
+body-bytes: 795
+captured-at-utc: 2026-08-28T07:25:08Z

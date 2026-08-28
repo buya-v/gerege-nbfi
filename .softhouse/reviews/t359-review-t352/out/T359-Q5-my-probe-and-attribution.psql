@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/t359-q5-my-probe-and-attribution.sql
+query-bytes-artefact: T359-Q5-my-probe-and-attribution.sql
+query-sha256: 188201430381318b478836b97e52843ff619b7439755e9de528ff7db9fd79b9b
+query-bytes: 1508
+psql-exit-status: 0
+captured-at-utc: 2026-08-28T07:26:01Z

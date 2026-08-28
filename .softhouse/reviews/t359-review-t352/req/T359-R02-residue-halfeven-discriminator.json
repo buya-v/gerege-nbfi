@@ -1,0 +1,14 @@
+{
+  "officeId": 1,
+  "transactionDate": "01 June 2026",
+  "currencyCode": "MNT",
+  "comments": "T359 independent re-derivation of T352's central claim, one post, three questions. (a) 300.6255545 carries a NON-ZERO digit at the THIRD decimal: if the oracle refused sub-minor-unit residue in a 2-minor-digit currency this would be rejected. (b) SEVEN decimals against a numeric(19,6) column, so the coercion rule shows. (c) The digit kept at scale 6 is 4 and the residue is EXACTLY half: HALF_EVEN and truncation both keep 300.625554, HALF_UP gives 300.625555. Value chosen independently of T352's 100.1234565.",
+  "debits": [
+    {"glAccountId": 16, "amount": 300.6255545}
+  ],
+  "credits": [
+    {"glAccountId": 21, "amount": 300.6255545}
+  ],
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}
