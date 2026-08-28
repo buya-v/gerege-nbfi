@@ -363,7 +363,10 @@ func TestTheWrongImplementationIsIndistinguishableOnEveryOtherVector(t *testing.
 			"that figure, and a divergence failure that reached neither could not turn anything red",
 			s.ParityFail)
 	}
-	if s.DivergencePass != 0 || s.ParityPass != 7 {
+	// 10, not 7: T391 promoted LDG-ACC-01/02/03. The FIGURE moves with the
+	// corpus; the CLAIM does not -- a divergence must not touch this tally in
+	// either direction, which is exactly what a hard-coded expectation checks.
+	if s.DivergencePass != 0 || s.ParityPass != 10 {
 		t.Errorf("DivergencePass = %d, ParityPass = %d; the divergence must not touch the parity "+
 			"PASS tally in either direction", s.DivergencePass, s.ParityPass)
 	}
@@ -379,14 +382,22 @@ func TestADivergencePassIsNotAParityPass(t *testing.T) {
 	if s.DivergencePass != DivergencePinCount() {
 		t.Fatalf("DivergencePass = %d, pinned population %d", s.DivergencePass, DivergencePinCount())
 	}
-	if s.ParityPass != 7 {
-		t.Fatalf("ParityPass = %d, want 7. A divergence PASS has leaked into the parity tally, which "+
+	// 10 since T391 (LDG-ACC-01/02/03), 7 before it. This number is pinned in
+	// FOUR places and they move together or not at all (P-83):
+	// EXEMPTION_PIN_LEDGER_PARITY in .softhouse/conformance.sh, and here.
+	if s.ParityPass != 10 {
+		t.Fatalf("ParityPass = %d, want 10. A divergence PASS has leaked into the parity tally, which "+
 			"is the defect DEC-2 §5.1.1 retracts one class over: an OPEN port/oracle disagreement "+
 			"inflating the number this program quotes as evidence that the port agrees with Fineract",
 			s.ParityPass)
 	}
-	if s.MoneyCells != 39 {
-		t.Fatalf("ledger money cells = %d, want 39. EXEMPTION_PIN_LEDGER_MONEYCELLS in "+
-			"conformance.sh pins this for EQUALITY and T360 does not move it", s.MoneyCells)
+	// 63 since T391, 39 before it: three six-leg accrual vectors add 8 money
+	// cells each (six legs plus the two totals). EXEMPTION_PIN_LEDGER_MONEYCELLS
+	// in .softhouse/conformance.sh carries the same figure and moved in the same
+	// commit (P-83).
+	if s.MoneyCells != 63 {
+		t.Fatalf("ledger money cells = %d, want 63. EXEMPTION_PIN_LEDGER_MONEYCELLS in "+
+			"conformance.sh pins this for EQUALITY; T360 did not move it and T391 moved it "+
+			"39 -> 63", s.MoneyCells)
 	}
 }

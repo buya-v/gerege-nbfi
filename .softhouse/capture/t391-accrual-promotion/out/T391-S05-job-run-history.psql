@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/q5-t391-job-run-history.sql
+query-bytes-artefact: T391-S05-job-run-history.sql
+query-sha256: 9d8f5032f987e03b6a7f55a16ac79bfda07d2a1813efa883ca9cc0f3b3933d33
+query-bytes: 718
+psql-exit-status: 0
+captured-at-utc: 2026-08-28T17:13:19Z

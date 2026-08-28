@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/q1-t391-slot-resolution.sql
+query-bytes-artefact: T391-S01-slot-resolution.sql
+query-sha256: 86557c7c4c373de082235938f62b03bba5ce6cbe54325642d790b775f06af019
+query-bytes: 8320
+psql-exit-status: 0
+captured-at-utc: 2026-08-28T17:09:25Z

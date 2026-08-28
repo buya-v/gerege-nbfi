@@ -1,0 +1,20 @@
+=== 1. the I-5 pin, live ===
+ modified | total 
+----------+-------
+       91 |   109
+(1 row)
+
+=== 2. split by whether the row predates T388 ===
+            cohort             | modified | total 
+-------------------------------+----------+-------
+ id <= 75 (predates T388)      |       71 |    71
+ id 76-95 (T388)               |       20 |    20
+ id 96-113 (the scheduled job) |        0 |    18
+(3 rows)
+
+=== 3. which job could have touched them -- running-balance job 9 ===
+ id |                name                | cron_expression | is_active | previous_run_start_time 
+----+------------------------------------+-----------------+-----------+-------------------------
+  9 | Update Accounting Running Balances | 0 1 0 1/1 * ? * | t         | 2026-08-28 16:01:00.003
+(1 row)
+

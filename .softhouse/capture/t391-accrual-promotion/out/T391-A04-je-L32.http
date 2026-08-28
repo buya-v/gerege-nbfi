@@ -1,0 +1,6 @@
+GET /journalentries?transactionId=L32&transactionDetails=true
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T391-A04-je-L32
+body: <none>
+captured-at-utc: 2026-08-28T17:10:28Z

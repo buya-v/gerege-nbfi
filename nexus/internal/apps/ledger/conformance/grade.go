@@ -87,14 +87,33 @@ func (s *cellSink) cmpMoney(name string, want, got ledger.MinorUnits) ledger.Min
 // are meaningless: nothing here is an observation and nothing is graded — it
 // exists only so the vocabulary is a function of the code.
 func CellFields() []string {
+	// THE PROBE CARRIES BOTH LEG SHAPES — a leg that names its own account and a
+	// leg RESOLVED FROM A SLOT — for the reason the refusal and divergence
+	// probes below carry their selectors: the vocabulary is "what the comparator
+	// CAN emit", and a branch no probe exercises would drop its cells silently.
+	// [T391] It is still a probe: the numbers are meaningless, nothing here is
+	// an observation and nothing is graded.
 	probe := &Vector{
 		Class: ClassParity,
 		Request: Request{
-			Currency: Currency{Code: "MNT", MinorUnitDigits: 2},
-			Accounts: []Account{{ID: 1, Code: "X", ManualEntriesAllowed: true}},
+			ProductID:      1,
+			ProductType:    "LOAN",
+			AccountingRule: "ACCRUAL_PERIODIC",
+			SlotFamily:     "AccrualLoanSlot",
+			Currency:       Currency{Code: "MNT", MinorUnitDigits: 2},
+			Accounts: []Account{
+				{ID: 1, Code: "X", ManualEntriesAllowed: true},
+				{ID: 2, Code: "Y", ManualEntriesAllowed: true},
+			},
+			ProductMappings: []ProductMapping{
+				{SlotCode: 7, GLAccountID: 2},
+				{SlotCode: 3, GLAccountID: 2},
+			},
 			Legs: []RequestLeg{
 				{AccountID: 1, Side: SideDebit, AmountMajorText: "1.00"},
 				{AccountID: 1, Side: SideCredit, AmountMajorText: "1.00"},
+				{SlotCode: 7, Side: SideDebit, AmountMajorText: "1.00"},
+				{SlotCode: 3, Side: SideCredit, AmountMajorText: "1.00"},
 			},
 		},
 		Expect: Expect{
@@ -103,9 +122,13 @@ func CellFields() []string {
 			Legs: []ExpectLeg{
 				{AccountID: 1, Code: "X", Side: SideDebit, AmountMinor: "100", AmountMajorText: "1.00"},
 				{AccountID: 1, Code: "X", Side: SideCredit, AmountMinor: "100", AmountMajorText: "1.00"},
+				{AccountID: 2, Code: "Y", Side: SideDebit, AmountMinor: "100", AmountMajorText: "1.00",
+					SlotName: "INTEREST_RECEIVABLE"},
+				{AccountID: 2, Code: "Y", Side: SideCredit, AmountMinor: "100", AmountMajorText: "1.00",
+					SlotName: "INTEREST_ON_LOANS"},
 			},
-			TotalDebitsMinor:  "100",
-			TotalCreditsMinor: "100",
+			TotalDebitsMinor:  "200",
+			TotalCreditsMinor: "200",
 		},
 	}
 	got, _, _ := GoPoster{}.PostEntry(probe.Request)
@@ -193,6 +216,19 @@ func diffEntry(s *cellSink, v *Vector, got PostedEntry) ledger.MinorUnits {
 		s.cmpInt(p+"gl_account_id", want.AccountID, have.AccountID)
 		s.cmpStr(p+"gl_account_code", want.Code, have.AccountCode)
 		s.cmpStr(p+"entry_side", string(want.Side), string(have.Side))
+		// THE SLOT CELL, COMPARED ON EVERY LEG OF EVERY PARITY VECTOR AND NOT
+		// ONLY WHERE A SLOT TOOK PART. [T391]
+		//
+		// A conditional cell would make the cell count a function of the
+		// vector's content, and worse, it would make "this leg arrived through
+		// no slot" UNGRADED rather than ASSERTED. On a manual entry the
+		// expectation is "" and the implementation must produce "": a port that
+		// invents a placeholder for a posting nobody routed through one is
+		// wrong, and this cell says so. It is the same reasoning the Request
+		// doc gives for keeping the product/slot fields on a manual vector —
+		// "a schema that omits a field for the case that does not use it cannot
+		// express the case that does".
+		s.cmpStr(p+"slot_name", want.SlotName, have.SlotName)
 		wm, err := parseMinor(want.AmountMinor)
 		if err != nil {
 			s.diffs = append(s.diffs, fmt.Sprintf("%samount_minor: %v", p, err))
