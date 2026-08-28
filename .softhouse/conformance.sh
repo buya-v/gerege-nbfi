@@ -3166,22 +3166,29 @@ guard_reconciler_ownership() {
 #
 # P-84 SURVIVES UNCHANGED, AND T358 RE-VERIFIED IT STRUCTURALLY AFTER EDITING, NOT FROM
 # TRANSCRIPTS [P-45 — cite the call site by file and line]:
-#   run_guards is DEFINED at conformance.sh:3920 and CALLED at exactly one site, :4415, as a
+#   run_guards is DEFINED at conformance.sh:4090 and CALLED at exactly one site, :4585, as a
 #   bare command — not in a subshell and not in a command substitution — so the two `exit`s
-#   inside it, the short-circuit at :3939 and the tally at :3973, terminate the whole shell
+#   inside it, the short-circuit at :4109 and the tally at :4143, terminate the whole shell
 #   rather than returning a status;
-#   probe_oracle is invoked at exactly one site, :4440, and the probe line is printed at :4441,
-#   both strictly DOWNSTREAM of :4415.
-#   [Re-derived by T375 AFTER its own edits, which moved every one of these numbers by hundreds
-#   of lines. P-45 cites a call site by line; a line cited before the edit that shifts it is a
-#   citation to nothing. T364's NOTE-2 is also settled here: T358's block named :3567, which was
-#   guard_graded_root_is_this_tree's SHORT-CIRCUIT exit, not the TALLY exit a failed
-#   guard_guards_dir_registration actually takes. BOTH are now named, because both are inside
+#   probe_oracle is invoked at exactly one site, :4610, and the probe line is printed at :4611,
+#   both strictly DOWNSTREAM of :4585.
+#   guard_cost_census is called from run_guards at :4140, upstream of the tally exit at :4143,
+#   so a WALL-CLOCK CEILING BREACH is also exit 2 with NO probe line and is read by P-84's rule
+#   exactly like any other HARD refusal.
+#
+#   [RE-DERIVED BY T375 PASS 2 AFTER ITS OWN EDITS, WHICH MOVED EVERY ONE OF THESE NUMBERS AGAIN
+#   — pass 1 re-derived them once and pass 2 shifted them by a further ~90 lines, so the figures
+#   pass 1 wrote were already citations to nothing by the time pass 2 committed. P-45 cites a
+#   call site by line; a line cited before the edit that shifts it is a citation to nothing, and
+#   THIS BLOCK HAS NOW ROTTED TWICE INSIDE ONE TASK. That is not an argument for re-deriving
+#   more carefully; it is the standing evidence for the rule the driver adopted in this fire
+#   after measuring a 546-line shift in this same file: MATCH BY NAME, NEVER BY LINE. Every
+#   identifier above is unique in this file and `grep -n` re-derives the whole block in one
+#   command. T364's NOTE-2 is also settled here: T358's block named a single exit that was
+#   guard_graded_root_is_this_tree's SHORT-CIRCUIT, not the TALLY exit a failed
+#   guard_guards_dir_registration actually takes. BOTH are named above, because both are inside
 #   run_guards and either one is upstream of the probe — which is the property that matters and
 #   the reason T364 graded it mechanical.]
-#   T375 ADDS ONE MORE SITE TO THE SAME PROPERTY: guard_cost_census is called from run_guards at
-#   :3970, upstream of the tally exit at :3973, so a WALL-CLOCK CEILING BREACH is also exit 2
-#   with NO probe line and is read by P-84's rule exactly like any other HARD refusal.
 # There is therefore no path on which a HARD guard fails and the probe line is printed.
 # This returns 1 into run_guards' tally, which exits EXIT_UNUSABLE
 # BEFORE probe_oracle prints, so a failure here is exit 2 with NO probe line — "'EXIT 2 WITH NO
