@@ -1,0 +1,22 @@
+driver: /Users/buv/gerege-nbfi/.claude/worktrees/agent-af8cbcb1cfe18931b/.softhouse/capture/t279-lock-partition/drive-wrapper-vs-skill.zsh
+wrapper under test: /tmp/fp-after.sh
+
+M00 pristine (no mutation)                          disagreements=0   [expect 0]
+M01 arm 1 inverted: -n rel -> -z rel
+      disagreements=96   ok  driver CAUGHT it
+M02 arm 2 deleted: dead holder is never reclaimed
+      disagreements=12   ok  driver CAUGHT it
+M03 arm 3 comparison flipped: >= ceiling -> < ceiling
+      disagreements=27   ok  driver CAUGHT it
+M04 arm 4 freshness condition gutted
+      disagreements=9   ok  driver CAUGHT it
+M05 arm 6 default flipped from HELD to TAKE
+      disagreements=15   ok  driver CAUGHT it
+M06 control: comment-only change, driver must still say 0
+      disagreements=0   ok  correctly unmoved (control)
+
+--- reader mutations: the driver supplies these signals, so it should be blind ---
+M07 lock_released_at gutted: ALWAYS reports released (maximal fail-open)
+      disagreements=0   *** DRIVER BLIND
+M08 lock_pid_state host read replaced by a constant
+      disagreements=0   *** DRIVER BLIND

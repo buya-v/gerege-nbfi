@@ -1,0 +1,18 @@
+--- a/.softhouse/bin/fire-program.sh
++++ b/.softhouse/bin/fire-program.sh
+@@ -242,6 +242,15 @@
+   local v
+   v="$(_lock_json_field released_at str)" || return 0
+   [[ -z "$v" ]] && return 0
++  # T346 F-1. A release stamp is an ISO-8601 UTC instant -- the shape the writer emits and
++  # the shape `lock_started_age` already requires. ANY OTHER STRING IS NOT A RELEASE:
++  # "null", "None", "NULL", "pending", "-", "0", a bare space. Each of those is a string a
++  # hand-writer or a naive serialiser produces to mean NOT RELEASED, and arm 1 read every
++  # one of them as RELEASED -- a live lock declared free, the P-85 direction. This also
++  # closes the last fail-open reachable through a broken `/usr/bin/python3`: `host`, `pid`
++  # and `started_at` are all shape-checked downstream, so `released_at` was the only field
++  # where stray interpreter stdout became a verdict.
++  [[ -n "$(TZ=UTC /bin/date -j -f "%Y-%m-%dT%H:%M:%SZ" "$v" +%s 2>/dev/null)" ]] || return 0
+   print -r -- "$v"
+ }
+ 

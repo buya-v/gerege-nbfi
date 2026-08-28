@@ -1,0 +1,48 @@
+=== T346 independent census   label=BEFORE-main
+=== file=/tmp/fp-before.sh
+=== host=Buyanmunkhs-Mac-mini live_pid=89234 dead_pid=89235 now=2026-08-28T06:10:26Z old=2026-08-24T02:10:26Z
+
+--- A. LIVE holder, this host, fresh started_at. Correct = HELD-*. Anything else = FAIL-OPEN (P-85 safety).
+A01  ok             want=HELD           got=HELD-default     baseline, no released_at key
+A02  *** FAIL-OPEN  want=HELD           got=FREE-released    released_at null as LAST key (T280 F-A)
+A03  *** FAIL-OPEN  want=HELD           got=FREE-released    same + trailing tab
+A04  *** FAIL-OPEN  want=HELD           got=FREE-released    compact separators, no space after colon
+A05  *** FAIL-OPEN  want=HELD           got=FREE-released    released_at twice: string then null (first-wins says FREE)
+A06  ok             want=HELD           got=HELD-default     released_at twice: null then string (LAST-wins says FREE)
+A07  *** FAIL-OPEN  want=HELD           got=FREE-released    not JSON at all, contains the substring
+A08  *** FAIL-OPEN  want=HELD           got=FREE-released    write truncated mid-value
+A09  ok             want=HELD           got=HELD-default     empty file
+A10  ok             want=HELD           got=HELD-default     whitespace-only file
+A11  *** FAIL-OPEN  want=HELD           got=FREE-released    released_at is the STRING "null"
+A12  *** FAIL-OPEN  want=HELD           got=FREE-released    released_at is a nested OBJECT
+A13  *** FAIL-OPEN  want=HELD           got=FREE-released    released_at is a number
+A14  *** FAIL-OPEN  want=HELD           got=FREE-released    released_at is the empty string
+A15  *** FAIL-OPEN  want=HELD           got=FREE-released    released_at NESTED under another key
+A16  ok             want=HELD           got=HELD-default     the token inside a string value
+A17  ok             want=HELD           got=HELD-default     top level is an ARRAY, not an object
+A18  *** FAIL-OPEN  want=HELD           got=FREE-released    pid is a STRING
+A19  *** FAIL-OPEN  want=HELD           got=FREE-released    pid is the bool true
+A20  *** FAIL-OPEN  want=HELD           got=FREE-released    pid is a float
+A21  ok             want=HELD           got=HELD-default     UTF-8 BOM prefix
+A22  *** FAIL-OPEN  want=HELD           got=FREE-released    malformed, value contains a comma
+A23  *** FAIL-OPEN  want=HELD           got=FREE-released    released_at is a single SPACE
+A24  *** FAIL-OPEN  want=HELD           got=FREE-released    host is a unicode near-miss (combining acute)
+A25  ok             want=HELD           got=HELD-default     valid object then trailing garbage
+A26  ok             want=HELD           got=HELD-default     JSON with a leading comment line
+A27  *** FAIL-OPEN  want=HELD           got=FREE-released    released_at is the bool false
+A28  *** FAIL-OPEN  want=HELD           got=FREE-released    key order permuted, pid first
+
+--- B. DEAD holder, this host. Correct = TAKE-dead-pid. Anything else = FAIL-SHUT (liveness).
+B01  *** FAIL-SHUT  want=TAKE-dead-pid  got=HELD-default     pid is the LAST key
+B02  *** FAIL-SHUT  want=TAKE-dead-pid  got=HELD-default     compact separators, pid last
+B03  ok             want=TAKE-dead-pid  got=TAKE-dead-pid    canonical order
+B04  *** FAIL-SHUT  want=TAKE-dead-pid  got=FREE-released    canonical + released_at null
+
+--- C. LIVE holder, started_at past the 24 h ceiling. Correct = TAKE-ceiling. Anything else = FAIL-SHUT.
+C01  ok             want=TAKE-ceiling   got=TAKE-ceiling     100 h old, spaced separators
+C02  *** FAIL-SHUT  want=TAKE-ceiling   got=HELD-default     100 h old, compact separators
+
+--- D. Genuinely RELEASED lock. Correct = FREE-released. Anything else = FAIL-SHUT.
+D01  ok             want=FREE-released  got=FREE-released    released_at a real timestamp string
+
+ROWS=35 FAIL_OPEN=19 FAIL_SHUT=4
