@@ -402,6 +402,28 @@ follow-up, and T375 filed it as one.
 
 ---
 
+## 7. THE FULL 61-ARM DRIVE — THE THING T375 COULD NOT PRODUCE
+
+**STATUS AT THIS COMMIT: RUNNING, NOT FINISHED. I am not claiming a result I do not have.**
+
+Started 22:20 on this host in a fresh `--no-hardlinks` clone of the T375 branch tip, using
+**T375's own drive script, unmodified**:
+
+    bash .softhouse/capture/t375-t364-conditions/drive-red-t375.sh /tmp/t384/fulldrive
+
+Measured rate once the machine was uncontended: **~68 s per arm**, so ~70 minutes for the 61.
+The transcript will land at `evidence/20-FULL-DRIVE-61-arms.txt` with the count and every
+failure investigated. **If this section still says RUNNING, the drive did not finish inside my
+session and the verdict above stands on §§1–6, which do not depend on it.** What §§1–6 already
+establish independently of the drive: the four fail-opens close, both healthy controls stay
+green, arm 32 can fail, the transcript is unedited, the merge is clean and its bar is exit 0.
+
+Progress at the last checkpoint before this commit: **8 arms, 8 PASS, 0 FAIL**, all in ARM
+SET 1 (T323's fifteen, re-run UNMODIFIED against T375's `conformance.sh`) — which is already
+the first half of T375's strongest healthy-control claim.
+
+---
+
 ## CONDITIONS
 
 **C-T384-1 — CLOSE `FU-T375-7`, WITH ARM G. NOT OPTIONAL, AND NOT FOR T375.**
