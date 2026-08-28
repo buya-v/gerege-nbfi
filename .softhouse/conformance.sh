@@ -3378,7 +3378,7 @@ drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|led
   local symlinked=0
   local rel base row rowbase dir witness token found
   local self_row self_wit self_norm self_multi
-  local self_stat self_mode self_blob member_stat member_mode member_blob
+  local self_stat self_mode self_blob member_stat member_mode member_blob member_multi
   # One literal newline, so the multi-line test below is a `case` pattern and starts no second
   # process. Spelled once, here, rather than inside the pattern where it reads as a typo.
   local CONF_LF
@@ -3454,11 +3454,80 @@ TABLETEXT
     # SOURCES under this directory"; a link is not a source, and saying so is narrower and more
     # honest than inventing a reading for it. THE REFUSAL IS DELIBERATELY NOT WAIVABLE BY A
     # REACHED-BY ROW, because the row would be read through the link too.
-    member_stat=""; member_mode=""; member_blob=""
+    #
+    # ── THE FIFTH FAIL-OPEN, AND IT IS WHY `:(literal)` IS ON THE NEXT LINE. ──────────────
+    #   [T404, closing FU-T375-7 / F-T384-1. C-T384-1 and C-T384-2.]
+    #
+    # `$rel` IS A PATHSPEC, NOT A LITERAL, AND A PATHSPEC CAN MATCH MORE THAN ONE PATH.
+    # T375 wrote this hole down against itself, named the repair, and rated it "not reachable
+    # on any tree that exists today". THE MECHANISM IT RECORDED WAS EXACTLY RIGHT — "could
+    # match MORE THAN ONE path, and member_mode would be taken from whichever line git printed
+    # first" — AND THE SEVERITY RATING WAS WRONG. T384 REACHED IT WITH TWO COMMITTED FILES,
+    # and T404 re-drove it here as arm G before changing a character:
+    #
+    #   zz-t404g1.sh     an ORDINARY member with an ENTIRELY HONEST REACHED-BY row. Nothing
+    #                    about it is forged. It exists only so the pathspec matches twice.
+    #   zz-t404g[1].sh   a TRACKED SYMLINK — the unwired checker being smuggled in.
+    #
+    # `git ls-files` prints in byte order and `1` (0x31) sorts before `[` (0x5B), so the
+    # unfixed call returned the DECOY first: `member_mode` was the decoy's `100644`, so the
+    # symlink refusal below NEVER FIRED, and `member_blob` was the decoy's blob, so the blob
+    # test compared the wrong file. BOTH of T375's new tests were neutralised at once, the
+    # whole bar went exit 0 / probe PRESENT / `VERDICT: PASS` with the link credited
+    # `reached-by=3`, AND THE CENSUS PRINTED `symlink-members=0` WHILE A SYMLINK MEMBER SAT
+    # IN THE POPULATION. A count that cannot rise is a count nobody should read.
+    #
+    # A GLOB CHARACTER ALONE IS NOT THE DEFECT, AND SAYING SO WOULD BE THE WRONG REPAIR.
+    # git's pathspec matcher tries EXACT LITERAL EQUALITY BEFORE wildmatch, so a glob-named
+    # path always matches itself. Arms E and F use the SAME filenames WITHOUT a second
+    # matching path and are correctly REFUSED — `BYTE-IDENTICAL` and `IS A SYMLINK`
+    # respectively. AMBIGUITY is the defect. Rejecting glob characters in filenames would
+    # refuse legitimate names and still leave this hole open one spelling over.
+    #
+    # SO THE LOOKUP IS PINNED TO THE LITERAL PATH, and the ambiguity is refused SEPARATELY
+    # rather than merely made impossible — the witness side of this same function already
+    # does exactly that as `self_multi`, and a lookup that returns two lines is not a
+    # measurement whichever call produced it. `:(literal)` is git pathspec magic, supported
+    # since git 1.9; if a host's git ever ignored or rejected it the lookup would come back
+    # EMPTY, which is why an empty lookup is ALSO a refusal below and not a fall-through.
+    # Both branches are driven: arm R1 (revert `:(literal)`, keep the multi refusal) is
+    # caught by the multi refusal; arm R2 (keep `:(literal)`, disarm the multi refusal) is
+    # caught by the symlink refusal; ARM R3 REVERTS BOTH AND THE HOLE REOPENS, which is the
+    # P-22 evidence that neither line is decoration.
+    # ─────────────────────────────────────────────────────────────────────────────────────
+    member_stat=""; member_mode=""; member_blob=""; member_multi=0
     member_stat="$( cd "$REPO_ROOT" 2>/dev/null && \
-      git ls-files -s -- "$rel" 2>/dev/null )" || member_stat=""
+      git ls-files -s -- ":(literal)$rel" 2>/dev/null )" || member_stat=""
+    case "$member_stat" in
+      *"$CONF_LF"*) member_multi=1 ;;
+    esac
     member_mode="${member_stat%% *}"
     member_blob="${member_stat#* }"; member_blob="${member_blob%% *}"
+    if [ "$member_multi" -ne 0 ]; then
+      bad=1
+      warn "conformance: guard_guards_dir_registration: $rel RESOLVES TO MORE THAN ONE INDEX"
+      warn "conformance: ENTRY. This member's own path was handed to git and git matched"
+      warn "conformance: several tracked files, so every test below would grade WHICHEVER LINE"
+      warn "conformance: GIT PRINTED FIRST — which is not a measurement, and is precisely how"
+      warn "conformance: a tracked SYMLINK walked past the symlink refusal with an honestly"
+      warn "conformance: registered decoy sorting ahead of it [T384 F-T384-1, closed by T404]."
+      warn "conformance: The witness side of this function refuses the identical shape. REFUSED."
+      continue
+    fi
+    if [ -z "$member_stat" ]; then
+      bad=1
+      warn "conformance: guard_guards_dir_registration: $rel IS IN THE POPULATION BUT RESOLVES"
+      warn "conformance: TO NO INDEX ENTRY. The population came from 'git ls-files', so every"
+      warn "conformance: member is tracked by construction and this cannot be a clean tree — it"
+      warn "conformance: is an INSTRUMENT failure, and an ungradeable member must never fall"
+      warn "conformance: through to the tests below with an EMPTY mode and an EMPTY blob, which"
+      warn "conformance: is how both of them get skipped at once. The usual cause is a path"
+      warn "conformance: 'git ls-files' C-QUOTES — one containing a non-ASCII byte, a control"
+      warn "conformance: character or a newline — which arrives here wrapped in literal double"
+      warn "conformance: quotes that match no index entry [T404, driven as arm N]. Give the"
+      warn "conformance: checker a plain ASCII name. REFUSED."
+      continue
+    fi
     if [ "$member_mode" = "120000" ]; then
       bad=1
       symlinked=$((symlinked + 1))
@@ -3875,6 +3944,12 @@ STALE
   say "conformance:   by T358 — the old wording said 'never a mention', which overstated it.] What"
   say "conformance:   remains open, stated so nobody concludes more than was closed: a non-comment"
   say "conformance:   line spelling THIS member's own path without calling it still absolves it.)"
+  say "conformance:   (symlink-members COUNTS, and the count is now readable. [T404, C-T384-2.]"
+  say "conformance:   Until T404 it was read off a pathspec lookup, so a symlink member with an"
+  say "conformance:   honestly-registered decoy sorting ahead of it printed symlink-members=0"
+  say "conformance:   while sitting in the population — the field reporting the opposite of the"
+  say "conformance:   tree. The lookup is pinned to ':(literal)' and a member resolving to more"
+  say "conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)"
   if [ "$bad" -ne 0 ]; then
     warn "conformance: guard_guards_dir_registration FAILED. A checker in the canonical guards"
     warn "conformance: directory is unreached, or a declaration about one is no longer true."
