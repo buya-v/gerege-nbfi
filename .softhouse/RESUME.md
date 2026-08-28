@@ -1,8 +1,8 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260828-140005`, chain iteration 3 — **IN FLIGHT. FIVE LIVE WORKERS.**
+## FIRE `20260828-140005`, chain iteration 3 — **IN FLIGHT. SIX LIVE WORKERS.**
 
-**If you are reading this and no driver session is running, five workers were killed mid-flight.**
+**If you are reading this and no driver session is running, six workers were killed mid-flight.**
 Mark each `needs_retry` with the WIP evidence from its branch. `in_progress` never means "work is
 happening"; it means "a driver said so, once".
 
@@ -54,6 +54,38 @@ closes that shape by construction rather than by inspection.
 - **`T373`, `T378`** — blocked on `T370`, which is **parked** (rejected by `T376`, and already T351's one
   retry). `T378` is the landing task that unblocks them.
 
+## Worker roster — READ THE ID BACK OFF THIS TABLE BEFORE SENDING A MESSAGE
+
+A previous iteration misrouted two coordinator messages by typing the wrong id. Every worker in this wave
+was instructed to **name its task in the first line of any message**, so a misroute is self-identifying to
+whoever receives it.
+
+| Task | Agent id | Role | State |
+|---|---|---|---|
+| `T382` review T374 | `a5c55c8ed65c59f4b` | reviewer | running |
+| `T375` registration-guard fail-opens | `abfb64ef9a5d23f1a` | code (RESUME of a killed worker) | running |
+| `T383` fire-wrapper `tail -1` fail-open | `af72b6ec837e41331` | code | running |
+| `T381` anti-calibration fail-open | `aab1c4d016f417758` | code | running |
+| `T360` divergence vector class | `ad3a06a761a0fd26d` | code | running |
+| `T388` FIRST accrual capture | `a8fa18aedf7a9db13` | test_writer (ORACLE-ONLY) | running |
+
+## WAVE 1b — `T388`, dispatched second, under the G-20 decision
+
+`G-20` was raised this iteration and says: **a port-or-capture task goes out before any further harness
+repair.** `T388` is that task, dispatched in the same fire that raised the gate rather than recommended for
+the next one. It takes the **first accrual observations in this program** — `ledger.accrual.entry` is
+ENTIRELY UNGRADED and not one journal entry in this tenant has ever arrived through a RECEIVABLE slot.
+
+`T388`'s grant is `.softhouse/capture/t388-accrual-capture/` **only**: raw observed capture, **no promotion**,
+because `T360` holds `.softhouse/vectors/` this wave. Promotion is a separate follow-on. Its paired reviewer
+`T389` was filed in the same commit as its dispatch.
+
+**`T388` moves shared oracle state permanently and knows it.** It was told to take the expensive route T352
+named as correct — a NEW `ACCRUAL_PERIODIC` product on CLEAN GL accounts — because the cheap route (a loan on
+product 28) posts into **gl 16, a promoted leg of LDG-01/02/03**, through a mapping A2-314/403 hold
+inadmissible. Its P0 acceptance test is that **no promoted GL account moved**, and `T389` re-derives that
+against the live database rather than reading T388's notes.
+
 ## MERGE HAZARD carried forward from iteration 2 — read before merging anything
 `T374` ships the dead-path pin at **108**; `main` is at **109**; `T375` is at **109**.
 **Re-run `.softhouse/capture/t326-frontier-host-state/instruments/10-regen-pin.py` ON THE MERGE RESULT.
@@ -85,4 +117,4 @@ to keep working.
 `G-20` (the READY queue has no porting work in it) — OPEN for Buyan, blocks nothing.
 
 ## Pause reason
-**Not paused.** Five workers dispatched and being awaited by chain iteration 3.
+**Not paused.** Six workers dispatched and being awaited by chain iteration 3.
