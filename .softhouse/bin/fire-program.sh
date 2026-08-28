@@ -89,6 +89,70 @@ lock_decide() {
   print -r -- HELD-default                                                         # arm 6
 }
 
+# T279 — `lock_pid_state` is the four-way form; `lock_holder_is_dead` is kept as the thin
+# wrapper the comments at :884 and :1057 name, so those references stay true. T265 F-5 is
+# RECORDED, NOT FIXED, and the polarity claim above is narrowed accordingly: `kill -0`
+# returns EPERM for a LIVE process owned by another uid, and this function reads that as
+# dead. Not reachable while both fires run as uid 501 under a user-domain launchd agent;
+# reachable the moment anything runs a fire under `sudo`. So the correct claim is "it can
+# never make a live lock look free FOR A HOLDER RUNNING AS THE SAME USER." pid REUSE goes
+# the safe way (a recycled pid reads alive, so the holder merely waits out arm 3).
+lock_pid_state() {
+  local body host pid
+  [[ -r "$LOCK" ]]            || { print -r -- absent; return 0; }
+  body="$(<"$LOCK")"          || { print -r -- absent; return 0; }
+  [[ "$body" == *'"host": "'* ]] || { print -r -- absent; return 0; }
+  [[ "$body" == *'"pid": '*   ]] || { print -r -- absent; return 0; }
+  host="${${body#*\"host\": \"}%%\"*}"
+  pid="${${body#*\"pid\": }%%,*}"
+  [[ "$host" == "$(hostname -s)" ]] || { print -r -- other_host; return 0; }  # never judge another machine
+  [[ "$pid" == <1-> ]]             || { print -r -- absent;     return 0; }   # junk, or the "pid": 0 T265 F-4 found
+  (( pid == $$ ))                  && { print -r -- alive_here; return 0; }   # never judge ourselves
+  kill -0 "$pid" 2>/dev/null       && { print -r -- alive_here; return 0; }
+  print -r -- dead_here
+}
+
+lock_holder_is_dead() { [[ "$(lock_pid_state)" == dead_here ]] }
+
+# `released_at`, empty unless the key is present AND its value is not `null`.
+lock_released_at() {
+  local body v
+  [[ -r "$LOCK" ]] || return 0
+  body="$(<"$LOCK")" || return 0
+  [[ "$body" == *'"released_at":'* ]] || return 0
+  v="${${body#*\"released_at\":}%%,*}"
+  v="${v//[$' \t\r\n\"']/}"
+  [[ "$v" == null || -z "$v" ]] && return 0
+  print -r -- "$v"
+}
+
+# Age of the lock's `started_at`, in seconds. Empty = could not read it (arm 6, HELD).
+lock_started_age() {
+  local body iso e now
+  [[ -r "$LOCK" ]] || return 0
+  body="$(<"$LOCK")" || return 0
+  [[ "$body" == *'"started_at": "'* ]] || return 0
+  iso="${${body#*\"started_at\": \"}%%\"*}"
+  e=$(TZ=UTC /bin/date -j -f "%Y-%m-%dT%H:%M:%SZ" "$iso" +%s 2>/dev/null) || return 0
+  [[ "$e" == <1-> ]] || return 0
+  now=$(date +%s)
+  print -r -- $(( now - e ))
+}
+
+# THE AUTHORITATIVE FRESHNESS SIGNAL: seconds since the newest PUBLISHED commit. The
+# `git pull --ff-only` above has already fetched, so `origin/main` is current; a fetch
+# failure leaves a stale remote-tracking ref, which reads OLDER, which fails toward
+# takeover — so it is refetched here and a failure returns empty (arm 6, HELD) instead.
+origin_main_tip_age() {
+  local ct now
+  git fetch --quiet origin main 2>/dev/null || return 0
+  ct=$(git log -1 --format=%ct origin/main 2>/dev/null) || return 0
+  [[ "$ct" == <1-> ]] || return 0
+  now=$(date +%s)
+  print -r -- $(( now - ct ))
+}
+
+
 # `--lock-decide <5 signals>` prints one verdict and exits. It is handled HERE, before
 # the T301 snapshot re-exec and before any preflight, so the conformance driver can
 # evaluate the whole state space against the SHIPPED file cheaply and without a repo,
@@ -97,6 +161,25 @@ if [[ "${1:-}" == "--lock-decide" ]]; then
   shift
   (( $# == 5 )) || { print -u2 "usage: --lock-decide <present> <released_at> <started_age> <tip_age> <pid_state>"; exit 64; }
   lock_decide "$@"
+  exit 0
+fi
+
+# `--lock-signals` reads the four signals off a REAL `$LOCK` in a REAL repo (honouring
+# GEREGE_NBFI_REPO, so it can be pointed at a scratch clone) and prints them with the
+# verdict. Same query discipline as `--lock-decide`: it takes no lock, writes nothing,
+# spawns nothing. This is the entry point `drive-two-fires.zsh` uses, so the two-fire
+# drive exercises the actual signal-reading code and not a re-implementation of it.
+if [[ "${1:-}" == "--lock-signals" ]]; then
+  cd "$REPO" 2>/dev/null || { print -u2 "no such repo: $REPO"; exit 66; }
+  if [[ -f "$LOCK" ]]; then
+    _p=1; _r="$(lock_released_at)"; _s="$(lock_started_age)"; _t="$(origin_main_tip_age)"; _ps="$(lock_pid_state)"
+  else
+    _p=0; _r=""; _s=""; _t="$(origin_main_tip_age)"; _ps=absent
+  fi
+  print -r -- "repo=$REPO"
+  print -r -- "lock_present=$_p released_at=${_r:-<null>} started_age=${_s:-<unreadable>} tip_age=${_t:-<unreadable>} pid_state=$_ps"
+  print -r -- "mtime_age=$(( $(date +%s) - $(/usr/bin/stat -f %m "$LOCK" 2>/dev/null || print 0) ))   # printed only; decides nothing"
+  print -r -- "verdict=$(lock_decide "$_p" "$_r" "$_s" "$_t" "$_ps")"
   exit 0
 fi
 
@@ -461,68 +544,11 @@ git pull --ff-only --quiet || log "WARN: git pull --ff-only failed; continuing o
 # leave the existing ${LOCK_MAX_AGE_SECS} age rule in sole charge. It can make
 # takeover happen SOONER; it can never make a live lock look free.
 #
-# T279 — `lock_pid_state` is the four-way form; `lock_holder_is_dead` is kept as the thin
-# wrapper the comments at :884 and :1057 name, so those references stay true. T265 F-5 is
-# RECORDED, NOT FIXED, and the polarity claim above is narrowed accordingly: `kill -0`
-# returns EPERM for a LIVE process owned by another uid, and this function reads that as
-# dead. Not reachable while both fires run as uid 501 under a user-domain launchd agent;
-# reachable the moment anything runs a fire under `sudo`. So the correct claim is "it can
-# never make a live lock look free FOR A HOLDER RUNNING AS THE SAME USER." pid REUSE goes
-# the safe way (a recycled pid reads alive, so the holder merely waits out arm 3).
-lock_pid_state() {
-  local body host pid
-  [[ -r "$LOCK" ]]            || { print -r -- absent; return 0; }
-  body="$(<"$LOCK")"          || { print -r -- absent; return 0; }
-  [[ "$body" == *'"host": "'* ]] || { print -r -- absent; return 0; }
-  [[ "$body" == *'"pid": '*   ]] || { print -r -- absent; return 0; }
-  host="${${body#*\"host\": \"}%%\"*}"
-  pid="${${body#*\"pid\": }%%,*}"
-  [[ "$host" == "$(hostname -s)" ]] || { print -r -- other_host; return 0; }  # never judge another machine
-  [[ "$pid" == <1-> ]]             || { print -r -- absent;     return 0; }   # junk, or the "pid": 0 T265 F-4 found
-  (( pid == $$ ))                  && { print -r -- alive_here; return 0; }   # never judge ourselves
-  kill -0 "$pid" 2>/dev/null       && { print -r -- alive_here; return 0; }
-  print -r -- dead_here
-}
-
-lock_holder_is_dead() { [[ "$(lock_pid_state)" == dead_here ]] }
-
-# `released_at`, empty unless the key is present AND its value is not `null`.
-lock_released_at() {
-  local body v
-  [[ -r "$LOCK" ]] || return 0
-  body="$(<"$LOCK")" || return 0
-  [[ "$body" == *'"released_at":'* ]] || return 0
-  v="${${body#*\"released_at\":}%%,*}"
-  v="${v//[$' \t\r\n\"']/}"
-  [[ "$v" == null || -z "$v" ]] && return 0
-  print -r -- "$v"
-}
-
-# Age of the lock's `started_at`, in seconds. Empty = could not read it (arm 6, HELD).
-lock_started_age() {
-  local body iso e now
-  [[ -r "$LOCK" ]] || return 0
-  body="$(<"$LOCK")" || return 0
-  [[ "$body" == *'"started_at": "'* ]] || return 0
-  iso="${${body#*\"started_at\": \"}%%\"*}"
-  e=$(TZ=UTC /bin/date -j -f "%Y-%m-%dT%H:%M:%SZ" "$iso" +%s 2>/dev/null) || return 0
-  [[ "$e" == <1-> ]] || return 0
-  now=$(date +%s)
-  print -r -- $(( now - e ))
-}
-
-# THE AUTHORITATIVE FRESHNESS SIGNAL: seconds since the newest PUBLISHED commit. The
-# `git pull --ff-only` above has already fetched, so `origin/main` is current; a fetch
-# failure leaves a stale remote-tracking ref, which reads OLDER, which fails toward
-# takeover — so it is refetched here and a failure returns empty (arm 6, HELD) instead.
-origin_main_tip_age() {
-  local ct now
-  git fetch --quiet origin main 2>/dev/null || return 0
-  ct=$(git log -1 --format=%ct origin/main 2>/dev/null) || return 0
-  [[ "$ct" == <1-> ]] || return 0
-  now=$(date +%s)
-  print -r -- $(( now - ct ))
-}
+# T279 MOVED THE FOUR SIGNAL READERS AND `lock_pid_state` UP to sit beside `lock_decide()`
+# near the top of this file, so that `--lock-decide` / `--lock-signals` can drive the REAL
+# reading code against a scratch clone without running a preflight, and so that all of the
+# lock logic is inside the ~7.6 KB zsh has already read when it blocks on the driver (T301).
+# The T202 reasoning above is unchanged and still describes `lock_pid_state`.
 
 if [[ -f "$LOCK" ]] && (( ! FORCE )); then
   LOCK_REL="$(lock_released_at)"

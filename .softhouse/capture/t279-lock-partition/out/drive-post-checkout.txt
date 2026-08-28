@@ -1,0 +1,104 @@
+sandbox: /tmp/t279-hook.0jmBxA    (nothing outside it is touched)
+git: git version 2.50.1 (Apple Git-155)
+
+warning: You appear to have cloned an empty repository.
+hook installed at .git/hooks/post-checkout
+
+===== GREEN 0: everything published — the hook must be SILENT =====
+--- git worktree add (clean) ---
+
+  rc=0   worktree dir exists: yes
+
+===== RED: the P-85 window, reproduced =====
+the driver refreshes its LOCK and its in-flight RESUME.md and pushes them,
+then flips tasks.json to in_progress and COMMITS IT WITHOUT PUSHING —
+which is exactly what happened at fe24419 on 2026-08-22, 101 s before the
+first worker spawned.
+
+unpushed commits touching .softhouse/: 1
+
+--- git worktree add (unpushed dispatch record — MUST WARN) ---
+==============================================================================
+P-85 PUSH-BEFORE-SPAWN VIOLATION — a worker worktree is being created while the
+spawning repo's .softhouse/ state is NOT PUBLISHED.
+
+  repo            : /private/tmp/t279-hook.0jmBxA/repo
+  branch          : main (upstream origin/main)
+  unpushed commits touching .softhouse/ : 1
+  uncommitted paths under .softhouse/   : 0
+
+  the unpushed commits:
+    6d36de5 tasks.json: dispatch record
+
+  files they touch that the next orchestrator reads to decide whether it may run:
+    .softhouse/tasks.json
+
+  Until this is pushed, origin's HEAD is an ACTIVE LIE to the next orchestrator:
+  it says nothing is running while this worker runs. Push, then spawn.
+     git -C '/private/tmp/t279-hook.0jmBxA/repo' push origin main
+==============================================================================
+  rc=0   worktree dir exists: yes
+
+===== RED 2: not even committed =====
+--- git worktree add (dirty .softhouse — MUST WARN) ---
+==============================================================================
+P-85 PUSH-BEFORE-SPAWN VIOLATION — a worker worktree is being created while the
+spawning repo's .softhouse/ state is NOT PUBLISHED.
+
+  repo            : /private/tmp/t279-hook.0jmBxA/repo
+  branch          : main (upstream origin/main)
+  unpushed commits touching .softhouse/ : 1
+  uncommitted paths under .softhouse/   : 1
+
+  the unpushed commits:
+    6d36de5 tasks.json: dispatch record
+
+  files they touch that the next orchestrator reads to decide whether it may run:
+    .softhouse/tasks.json
+
+     M .softhouse/tasks.json
+
+  Until this is pushed, origin's HEAD is an ACTIVE LIE to the next orchestrator:
+  it says nothing is running while this worker runs. Push, then spawn.
+     git -C '/private/tmp/t279-hook.0jmBxA/repo' push origin main
+==============================================================================
+  rc=0   worktree dir exists: yes
+
+===== GREEN: push, then spawn — the hook must go SILENT again =====
+unpushed commits touching .softhouse/: 0
+--- git worktree add (published — MUST BE SILENT) ---
+
+  rc=0   worktree dir exists: yes
+
+===== does git HONOUR a non-zero post-checkout exit for 'git worktree add'? =====
+SOFTHOUSE_PUSH_GATE=enforce:
+--- git worktree add (enforce) ---
+==============================================================================
+P-85 PUSH-BEFORE-SPAWN VIOLATION — a worker worktree is being created while the
+spawning repo's .softhouse/ state is NOT PUBLISHED.
+
+  repo            : /private/tmp/t279-hook.0jmBxA/repo
+  branch          : main (upstream origin/main)
+  unpushed commits touching .softhouse/ : 1
+  uncommitted paths under .softhouse/   : 0
+
+  the unpushed commits:
+    bde96d4 unpushed again
+
+  files they touch that the next orchestrator reads to decide whether it may run:
+    .softhouse/tasks.json
+
+  Until this is pushed, origin's HEAD is an ACTIVE LIE to the next orchestrator:
+  it says nothing is running while this worker runs. Push, then spawn.
+     git -C '/private/tmp/t279-hook.0jmBxA/repo' push origin main
+==============================================================================
+  rc=1   worktree dir exists: yes
+
+===== the escape hatch =====
+SOFTHOUSE_PUSH_GATE=off:
+--- git worktree add (off) ---
+
+  rc=0   worktree dir exists: yes
+
+===== a FILE checkout ($3==0) must never speak =====
+  (silence above = correct)
