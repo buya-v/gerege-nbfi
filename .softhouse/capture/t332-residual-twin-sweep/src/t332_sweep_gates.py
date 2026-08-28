@@ -11,7 +11,8 @@ WHY THIS EXISTS
 WHAT IT DOES
   1. Sweeps gates.md with a NAMED, PRINTED selector set (symbolic AND prose forms).
   2. Classifies each hit against a LEDGER keyed by a quoted SNIPPET OF THE LINE, never by a
-     line number (P-86 -- "an id is a cardinal": prefer a grep-able anchor. gates.md line
+     line number (P-86 -- "THE PATTERN IDS THEMSELVES ROTTED, IN THE FILE THAT NAMES THE ROT.",
+     whose rule is "cite the id AND its sentence": prefer a grep-able anchor. gates.md line
      numbers move every time anybody edits above them, which is this task's own subject).
   3. FAILS (exit 1) when
        - a hit matches no ledger entry            -> A NEW, UNCLASSIFIED RESTATEMENT

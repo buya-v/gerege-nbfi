@@ -22,6 +22,7 @@ $ grep -rn "min(B_minor\|max(0, B_minor\|B_minor − n·δ" --include=*.md --inc
 ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241.md:2
 ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T277.md:2
 ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T278.md:7
+./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T332.md:8
 ./.softhouse/reviews/t278-review-t277/REVIEW.md:14
 ./.softhouse/reviews/t278-review-t277/probe/t278_domain_audit.py:3
 ./.softhouse/reviews/t278-review-t277/probe/t278_rederive.py:1

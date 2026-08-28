@@ -105,7 +105,7 @@ conformance:   and deleted on reboot — and C1/C6 decide TIER by asking whether
 conformance:   census == pinned (all 18 site(s), by path and source line).
 conformance:   PNUMBER-CITATIONS: declared-dangling ids (recorded in the .softhouse/patterns.md errata with their repair) = [131, 261]
 conformance:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=96 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
-conformance:   PNUMBER-CITATIONS: sites=9358 definition=97 consistent=475 bare=8682 misdirecting=70 undefined=20 negative-control=14
+conformance:   PNUMBER-CITATIONS: sites=9361 definition=97 consistent=475 bare=8685 misdirecting=70 undefined=20 negative-control=14
 conformance:   PNUMBER-CITATIONS: skipped self-output-files=22 self-source-files=2 (stated, not silent -- both contain deliberately drifted text)
 conformance:   PNUMBER-CITATIONS:   directive MISDIRECTING 2
 conformance:   PNUMBER-CITATIONS:   directive UNDEFINED    4
@@ -124,7 +124,7 @@ conformance:   accepting capture in this tree.
 conformance:   namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
 conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
 conformance:   namespace:   root    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a77014c126f86c320
-conformance:   namespace:   corpus  7666 tracked paths -> 147 evidence directories
+conformance:   namespace:   corpus  7667 tracked paths -> 147 evidence directories
 conformance:   namespace:           126 carry a t<n> id prefix; 21 do not and CANNOT collide this way
 conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
 conformance:   namespace:   T256 -> 2 directories; ownership records required 1, present 1

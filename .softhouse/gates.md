@@ -2542,9 +2542,9 @@ correct-forward territory (T114 / T176 / T316), and `T332` makes no claim about 
 `python3 .softhouse/capture/t332-residual-twin-sweep/src/t332_sweep_gates.py --list` re-derives the site list
 from this file **today**, prints its selector beside its figure, and **exits 1** if a new unqualified
 restatement appears, if a scoped site loses its scope marker, or if a ledgered site is deleted or re-worded.
-The ledger is keyed by **quoted snippets of the line, never by line number** (P-86 — *"an id is a cardinal:
-cite the rule TEXT beside any P-number"*; gates.md line numbers move every time anybody edits above them,
-which is this correction's own subject matter). `bash .softhouse/capture/t332-residual-twin-sweep/src/verify_t332.sh`
+The ledger is keyed by **quoted snippets of the line, never by line number** — `P-86`, *"**THE PATTERN IDS
+THEMSELVES ROTTED, IN THE FILE THAT NAMES THE ROT.**"*, whose rule is to cite the id **and its sentence**;
+gates.md line numbers move every time anybody edits above them, which is this correction's own subject matter. `bash .softhouse/capture/t332-residual-twin-sweep/src/verify_t332.sh`
 runs it with six positive and seven negative calibrations, plus the three `cmp` proofs.
 
 ##### The rejected `T241` branch: what is salvaged, and what is recorded as FALSE
