@@ -1,0 +1,11 @@
+A figure that is EMPTY below was not extractable, which is itself a defect (_census_one
+refuses on a missing line). All six must be present on every row.
+
+baseline                 declared=0  parity=7  refusal=6  money=39 | inadm=0  divPASS=1  || FOUR EXISTING PINS: GREEN  TWO PROPOSED PINS: GREEN
+divergence-inadmissible  declared=0  parity=7  refusal=6  money=39 | inadm=1  divPASS=0  || FOUR EXISTING PINS: GREEN  TWO PROPOSED PINS: RED
+parity-inadmissible      declared=0  parity=6  refusal=6  money=34 | inadm=1  divPASS=1  || FOUR EXISTING PINS: RED    TWO PROPOSED PINS: RED
+
+READ: the divergence row is the finding. The four pins the bar holds today are all GREEN
+on a store whose ONLY divergence vector was refused admission — the class T397 routes a new
+refusal into is the one class whose disappearance moves no pinned number. The parity row is
+the control: an inadmissible PARITY vector is already caught, twice over (parity and money).
