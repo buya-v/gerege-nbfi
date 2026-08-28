@@ -5878,7 +5878,7 @@
     },
     {
       "id": "T401",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -5892,7 +5892,7 @@
       ],
       "title": "F-T385-4: the fail-open and dead-path censuses read .sh and .py only -- 110 tracked .zsh files are INVISIBLE, and .zsh is what new driving instruments are written in",
       "description": "T385 filed this rather than fixing it, correctly -- it was outside its grant.\n\n**THE MEASUREMENT.** The fail-open/dead-path census corpus is tracked `.sh`/`.py` only. T385 verified T383's selector reasoning is CORRECT and empirical -- it added 7 `.zsh` files and `corpus` stayed at 1348. **But 110 tracked `.zsh` files exist** (98 of them under `capture/` and `reviews/`), against 626 `.sh` and 722 `.py`. So the linter systematically omits **the language most new driving instruments are written in**, and every `.zsh` instrument added since is unlinted for fail-opens and contributes no dead-path rows.\n\n**RE-MEASURE ALL FOUR COUNTS YOURSELF** before acting -- they are prose in a review, which is exactly the class of number this program has watched rot repeatedly.\n\n**THEN DECIDE, AND ARGUE IT EITHER WAY.** Extending the selector to `.zsh` is not obviously right: it will add dead-path rows and may surface fail-opens in 110 files at once, which would redden the bar in a single step. Options worth weighing: extend the selector and pin the new frontier in ONE commit (P-83 -- regenerate by RUNNING, never by arithmetic); extend it in report-only mode first and publish the count; or rule that driving instruments must be `.sh`/`.py` and convert them. **Say what it costs before you choose**, and if you extend it, drive the guard RED on a planted `.zsh` fail-open first, and keep a healthy control beside it.\n\nThis is adjacent to `T399` (seven guards wired to nothing) but distinct: T399 is about guards that never RUN, this is about a guard that runs and cannot SEE. Coordinate if both are live -- both may want `conformance.sh`, which is contended; if it is held, ship the exact patch as a request the way T360 did.",
-      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
+      "note": "COMPLETE on softhouse/T401-zsh-census-gap, 7 commits. PURELY ADDITIVE -- evidence, instruments and handoff only; touched NO live selector and NOT conformance.sh (T404 held it). Its four census extensions ship as DRIVEN-RED REQUESTS and are NOT APPLIED, so the .zsh census gap is still OPEN on main. Application is T413."
     },
     {
       "id": "T402",
@@ -6058,11 +6058,12 @@
       "dependencies": [
         "T401"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/reviews/t411-review-t401/"
       ],
-      "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
+      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "branch": "softhouse/T411-review-t401"
     },
     {
       "id": "T412",
@@ -6077,6 +6078,24 @@
         ".softhouse/capture/t412-driver-selfgrading/"
       ],
       "note": "FILED BY THE DRIVER against itself, iter4, from a red main it caused and pushed."
+    },
+    {
+      "id": "T413",
+      "title": "APPLY T401's four census extensions -- the .zsh gap is measured, costed and decided, and still OPEN on main",
+      "description": "T401 measured the gap, costed every option, decided to extend all four censuses, and drove the extension RED on a planted `.zsh` fail-open with a healthy control -- **but shipped the changes as REQUESTS and applied none of them**, because `conformance.sh` was held by T404 and the two Python selectors were outside its grant. So on `main` today the linter still cannot see **121 tracked `.zsh` files**, which is the language most new driving instruments are written in. Read `git show softhouse/T401-zsh-census-gap:.softhouse/handoff/T401-zsh-census-gap.md` for the requests, the drives and the cost table.\n\n**THE FOUR SITES, and note only two are in `conformance.sh`:** S1 fail-open (`50-failopen-lint.py:210`), S2 dead-path (`census_dead_paths.py:110`), S3 host-state (`conformance.sh:2131`), S4 guards-dir (`conformance.sh:3267`). **A patch to `conformance.sh` alone cannot fix S1 or S2** -- it can only stop the harness printing a coverage claim it does not have.\n\n**COST, as T401 measured it:** S1, S3, S4 are FREE (no pinned row moves). Only S2 moves: deadOccurrences **108 -> 115**, +7 rows across 5 files, and T401 inspected all seven -- every one is a path the probe itself CREATES (`> .softhouse/LOCK.bak`, `> \"$S/.softhouse/vector.json\"`), none fail-open. **RE-MEASURE THIS YOURSELF; do not inherit it.** The pin must be REGENERATED BY RUNNING the census, never by arithmetic, and the selector change and the new pin land in **ONE commit** (P-83).\n\n**SEQUENCING:** S4's population glob is inside `guard_guards_dir_registration`, which **T404 rewrote this same fire** (the `:(literal)` repair for the fifth registration fail-open). T401's own coordination note says: if that function was rewritten, **fold request A3/A4 in rather than applying it on top**. Depends on T404 landing. Check T404's handoff for its adjudication of exactly this.\n\n**TWO THINGS T401 FOUND EN ROUTE THAT ARE WORTH MORE THAN THE PATCH, and must not be lost:**\n1. **A MEASURING INSTRUMENT THAT UNDERCOUNTS AND REPORTS SUCCESS.** `grep -c '\\.sh$\\|\\.py$'` returns **738** (the `.py` count alone) under the `/usr/bin/grep` a non-interactive bash gets, and **1395** under the interactive zsh's grep. A BRE `\\|` silently drops a branch and exits 0. Any count in this repo taken with that idiom is suspect -- sweep for it.\n2. **THE T316 CENSUS HAS NO 'SCRATCH' FILTER AND THE T238 LINTER DOES.** T238 filters 'a path the file itself creates is scratch, not corpus'; T316 does not. All 7 new rows and an unknown share of the **existing pinned 108** are `>`-written fixtures. Adopting the filter would likely take +7 to +0 *and shrink the current pin* -- which means the pinned 108 may already be partly noise. That is its own task with its own red drive; do not fold it in here, but state what you measure.\n\n**ALSO: T401 turned the bar red FOUR TIMES with its own prose** -- an example path in a comment, a scratch path spelled whole twice (the second time inside the comment explaining the first), and heredoc bait. **The census reads bytes, not intent.** You are editing census selectors while writing comments about census selectors; you are the most exposed task in the program to this. Candidate pattern, if it survives: *an example in a comment is a graded row.*",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T401",
+        "T404"
+      ],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/capture/t413-apply-zsh-census/"
+      ],
+      "note": "FILED BY THE DRIVER, iter4. T401 decided and drove but could not apply; this applies."
     }
   ],
   "cross_corroboration": {
