@@ -50,10 +50,33 @@ T363 caught this one.
 | `T365` lock zero-value instants | `a0170054b87414aa1` | **done** @ `5aedfc4a` |
 | `T349` PreToolUse evaluation | `a007dd636fe410978` | running |
 | `T367` review T363 | `a57a6c411cc2556f9` | running |
-| `T369` review T351 | `acc7ea7c08e7d5521` | running |
+| `T369` review T351 | `acc7ea7c08e7d5521` | **done** @ `e10e3f07` — **REJECTED** |
 | `T368` review T365 | `a33788600f45d98f9` | running |
 | `T363` oracle baseline | `ad65dab4e80c74658` | **done** @ `8313ab6d` |
-| `T351` progress accounting | `ad437d46842bec227` | **done** @ `a0139c5d` |
+| `T351` progress accounting | `ad437d46842bec227` | **needs_retry** — rejected |
+| `T370` T351 retry (opus) | `aeff4acda7f392048` | running |
+
+
+## THE PARITY FIGURES, AS SETTLED BY T369 — quote these, and quote the right one
+
+T369 re-derived them **by running the bar**, not by arithmetic, summing each corpus's own case table.
+T351's combined `53 / 8,026` was right about the vectors and **wrong to present 8,026 as a parity count**.
+
+| Figure | Value | When to quote it |
+|---|---|---|
+| Parity vectors | **53** / 0 FAIL | whenever you say "parity vectors" |
+| ALL-CLASS graded cells | **8,026** | only when you mean every graded cell |
+| Cells graded BY PARITY VECTORS | **7,980** | **whenever the sentence says "parity"** |
+
+Breakdown: loanschedule 51 rows → 7,884 cells = 7,859 parity + 4 contract-refusal + **21 self-test fixture
+cells the harness itself labels "EXCLUDED FROM THE PARITY COUNT"**. Ledger 13 rows → 142 = 121 parity +
+21 oracle-refusal. `EXEMPTION_PIN_LEDGER_PARITY=7` and the harness's own "SECOND SCHEMA, SEPARATE COUNTS"
+header corroborate the split.
+
+**"46 parity vectors" is loanschedule-only and is NOT the program total.** It stays correct wherever it is
+scoped to loanschedule — which is how `conformance.sh` and the older manifests use it — and is wrong
+wherever it is offered as the whole corpus. Corrected here, where it is NAMED; not retyped into every
+document that restates it (T248/T258/T340).
 
 ## State inherited from chain iteration 1 (unchanged, still true)
 
