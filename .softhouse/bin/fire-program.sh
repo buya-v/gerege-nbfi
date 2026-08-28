@@ -116,7 +116,13 @@ source "$SCRIPT_DIR/lib-worktree-prune.zsh" || { log "FATAL: could not source li
 # first draft (it flagged the sanctioned `git checkout -b softhouse/<task>` as
 # damage). The value here is that the finding reaches the log and the postmortem
 # at all: today the fire asserts "clean" and is not even wrong, it is uninformed.
-ATTEST="$SCRIPT_DIR/../guards/repo-state-attest.sh"
+# T325-ATTEST-WIRING BEGIN
+#   (marker: .softhouse/capture/t325-adopt-attestation/instruments/
+#    50-wrapper-glue-drive.zsh EXTRACTS the lines between these two markers and
+#    drives THE SHIPPED GLUE — because a guard that works and a wiring that
+#    fails open are indistinguishable from the guard's own test suite. The
+#    instrument REFUSES if it cannot find the markers.)
+ATTEST="${ATTEST:-$SCRIPT_DIR/../guards/repo-state-attest.sh}"
 ATTEST_DIR="${ATTEST_DIR:-$LOG_DIR}"
 ATTEST_BEFORE=""   # per chain iteration. EMPTY means "no baseline was taken",
                    # which resolves to UNATTESTED, never to clean.
@@ -164,6 +170,7 @@ attest_exit_protocol() {
   esac
   return $rc
 }
+# T325-ATTEST-WIRING END
 
 cd "$REPO" || { log "FATAL: repo not found"; exit 1; }
 
