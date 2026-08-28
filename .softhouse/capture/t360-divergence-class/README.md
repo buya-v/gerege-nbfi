@@ -41,6 +41,34 @@ not as "the exit code was 2".
 - **`T360-BAR-with-patch1.log` — exit 0, probe line PRINTED, reads `up`.** Identical tree plus
   the single character of patch 1. This is the state after the driver sequences the patch.
 
+  **HOW THAT RUN WAS TAKEN, stated exactly, because a green transcript from a tree that is not
+  the committed tree has to say so.** From the committed tree, `sed -i ''` changed
+  `EXEMPTION_PIN_LEDGER_WRONGIMPLS=13` to `=14` — `git diff --stat` read
+  `.softhouse/conformance.sh | 2 +-`, one insertion, one deletion, and **nothing else was
+  modified** — the bar was run, and `git checkout -- .softhouse/conformance.sh` reverted it.
+  `.softhouse/conformance.sh` is byte-identical to `main` on the committed branch:
+  `git diff main -- .softhouse/conformance.sh` is empty. The log therefore describes the tree
+  the driver will have **after** sequencing patch 1, and describes no other tree.
+
+  Both `exemption census` blocks are identical in the two logs — nine `READ` lines, all
+  matching, including `LEDGER parity vectors = 7`, `LEDGER oracle-refusal vector = 6` and
+  `LEDGER money cells compared = 39`. The **only** difference between the two runs is the
+  wrong-implementation population.
+
+## BASELINES, RE-DERIVED BY RUNNING (P-83) RATHER THAN BY ARITHMETIC
+
+The "before" column of T360's count table is not subtraction. It is read off
+`out/T360-D02-…txt`, which is this same code over this same store **with `LDG-DIV-01`
+withheld**:
+
+| figure | withheld (before) | committed (after) |
+|---|---|---|
+| ledger cells compared | 142 graded, 39 MONEY | 144 graded, **39 MONEY** |
+| ledger kills named | 10 money, 21 structural | 10 money, 22 structural |
+| ledger citations | 26 | 28 |
+| ledger parity | PASS 7 FAIL 0 | **PASS 7 FAIL 0** |
+| ledger oracle-refusal | PASS 6 FAIL 0 | **PASS 6 FAIL 0** |
+
 ## WHAT THE DRIVES PROVE, TOGETHER
 
 D01 and D02 are one measurement in two halves, and neither half is worth anything alone:
