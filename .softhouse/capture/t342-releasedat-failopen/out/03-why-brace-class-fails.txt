@@ -1,0 +1,17 @@
+input value in every variant: 'null}'   (what the shipped cut leaves when released_at is last)
+expected after the strip: 'null'  -> so the == null test fires -> lock stays HELD
+
+  0  SHIPPED class  [ \t\r\n"]                   parses; result [null}]
+  A1 naive: add {} inside $'"..."' in the class  parses; RUNTIME FAIL rc=1: [$' \t\r\n\"{
+  A2 naive: add } only, inside $'"..."'          parses; RUNTIME FAIL rc=1: [$' \t\r\n\"
+  A3 backslash-escaped braces outside the quote  parses; result [null]
+  A4 braces via $'"\173\175"' octal escapes      parses; result [null]
+  B  T280 proposal: cut at first } then strip    parses; result [null]
+
+--- the same variants as they would appear INSIDE lock_released_at(), i.e. cut-at-comma first
+--- body has released_at LAST, so the comma cut runs to end of object
+  0  SHIPPED, full function body                 parses; result [null}]
+  A1 naive class, full function body             parses; RUNTIME FAIL rc=1: [$' \t\r\n\"{
+  B  T280 proposal, full function body           parses; result [null]
+
+scratch: /tmp/t342-brace.JBAXpb

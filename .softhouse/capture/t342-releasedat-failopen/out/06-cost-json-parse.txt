@@ -1,0 +1,13 @@
+python3: Python 3.9.6
+
+--- 4 forks == ONE fire start's worth of LOCK field reads
+( repeat 4; do; /usr/bin/python3 -c  "$F"; done; )  0.23s user 0.12s system 83% cpu 0.421 total
+
+--- 40 forks == ten fire starts, to get past timer granularity
+( repeat 40; do; /usr/bin/python3 -c  "$F"; done; )  2.57s user 1.22s system 90% cpu 4.166 total
+
+--- for scale: the SHIPPED wrapper already forks /usr/bin/python3 unconditionally
+    fire-program.sh:488  branch_sweep.py install-hook
+    fire-program.sh:489  branch_sweep.py sweep
+    fire-program.sh:1661 ready-tasks.py (every reconcile)
+    so this adds no new dependency class, only forks.

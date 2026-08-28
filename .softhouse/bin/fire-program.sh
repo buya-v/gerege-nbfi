@@ -91,22 +91,140 @@ lock_decide() {
   print -r -- HELD-default                                                         # arm 6
 }
 
+# ================================================================ T342 ============
+# THE LOCK IS READ WITH A REAL JSON PARSER. IT USED TO BE READ WITH STRING SURGERY,
+# AND OF 17 ADVERSARIAL LOCK BODIES THE STRING SURGERY GOT 7 WRONG — EVERY ONE OF THEM
+# IN THE FAIL-OPEN DIRECTION, i.e. a lock held by a LIVE process owned by THIS user read
+# as takeable. DO NOT RESTATE THAT 7 ANYWHERE (P-80 -- a corrected cardinal rots in every
+# place it was restated): it is DERIVED on every run by
+# `census-lock-readers.zsh`, which prints one `*** FAIL-OPEN` line per failing row.
+#
+# WHAT WAS HERE BEFORE. Four fields were pulled out of the body with zsh substring
+# operators — `${${body#*\"pid\": }%%,*}` and friends — cutting at the first COMMA or
+# the first QUOTE after the key. T280 raised ONE of the resulting defects as F-A. This
+# task drove all four readers over the adversarial shapes T342's brief names (key last,
+# value containing a comma, key twice, body not valid JSON) plus compact separators, and
+# the failing rows were [.softhouse/capture/t342-releasedat-failopen/out/05-BEFORE-census.txt]:
+#
+#   1b  `"released_at": null` as the LAST key -> the comma cut runs to end of object and
+#       the strip class has no `}`, so the value is the 5-char string `null}`, which is
+#       not `null` and is not empty -> ARM 1 -> FREE-released.  <- T280 F-A
+#   1e  `released_at` twice, timestamp first, null last. `#*` takes the FIRST; `json.load`
+#       (and therefore `ready-tasks.py`) takes the LAST -> FREE-released here, "not
+#       released" there. Two readers of one file, two answers.
+#   1f  body not JSON at all but containing the substring `"released_at":` -> whatever
+#       follows is non-empty -> FREE-released.
+#   1g  a write truncated mid-value -> the partial timestamp is non-empty -> FREE-released.
+#   2c  `pid` twice, a dead pid first and the live one second -> first-wins reads DEAD ->
+#       ARM 2 -> TAKE-dead-pid, against a holder that is demonstrably alive.
+#   4b  `started_at` twice, a 105 h stamp first and NOW second -> first-wins reads 105 h ->
+#       ARM 3 -> TAKE-ceiling.
+#   4d  `json.dumps(separators=(",",":"))` — no space after any colon. 1b again, AND the
+#       `"host": "` / `"pid": ` / `"started_at": "` guards all miss, because each hard-codes
+#       exactly one space after the colon. Recorded as its own row because it is the shape
+#       a hand-writer most plausibly produces and it defeats three readers at once.
+#
+# THE OTHER DIRECTION, WHICH NOBODY HAD RECORDED. The same guards made arm 2 UNREACHABLE
+# whenever `pid` was the last key or the separators were compact: a hard-killed fire's lock
+# read `pid_state=absent` instead of `dead_here`, so the next fire waited out the 24 h
+# ceiling instead of reclaiming it immediately. Fail-SHUT, not fail-open, and therefore
+# invisible to a census that only looks for false FREEs — which is why `positive-control.zsh`
+# exists beside the census and drives the arms that MUST fire.
+#
+# WHY THE NARROW FIX WAS NOT ENOUGH, MEASURED RATHER THAN ARGUED. T280's one-line repair
+# (`v="${v%%\}*}"`, cut at the first `}` as well as the first `,`) is correct and it fixes
+# 1b, and 1b only (it repairs half of 4d and leaves that row failing on its guards). It
+# cannot touch 1e/2c/4b, because taking the first occurrence is what `#*` MEANS; and it
+# cannot touch 1f/1g, because a substring test is not a syntax check. Nor can it reach the
+# fail-SHUT half at all. Hardening each cut separately would be a repair per row, still leaving
+# this file disagreeing with `ready-tasks.py` about duplicate keys and about malformed
+# bodies — and at that point you have written a JSON parser in zsh, badly.
+#
+# AND THE DISAGREEMENT IS THE POINT. `ready-tasks.py` reads THIS SAME FILE with
+# `json.load` and REFUSES outright when it will not parse -- grep it for
+# `"LOCK exists but could not be read as JSON"`. The old readers, on the same
+# input, answered FREE. Two components of one program reading one lock file with opposite
+# polarity is verbatim the P-85 shape STEP 0 exists to prevent — *"two orchestrators held
+# the lock at once"* [.softhouse/patterns.md:2822]. Aligning the parsers removes the
+# disagreement rather than narrowing it.
+#
+# THE COST, IN SECONDS, NOT IN ADJECTIVES. One `/usr/bin/python3` fork per field read,
+# ~104 ms; a fire start reads four fields, so **0.42 s once per fire**
+# [out/06-cost-json-parse.txt]. `/usr/bin/python3` is already an unconditional dependency
+# of this wrapper (the two `branch_sweep.py` calls in the preflight, and the
+# `ready-tasks.py` call in `reconcile_tasks_json`; grep `/usr/bin/python3`), so this
+# adds forks, not a dependency class. ALTERNATIVES REJECTED: `jq` (not a dependency of
+# this repo, and adding one to the lock path is worse than the bug), `plutil` (macOS-only
+# and silently tolerant of duplicate keys, which is the case we most need refused).
+#
+# POLARITY IS UNCHANGED AND IS NOW EXHAUSTIVE: **any doubt reads as unreadable, and an
+# unreadable signal is never permission to take the lock.** Unreadable file, invalid JSON,
+# not an object, DUPLICATE KEY, key absent, JSON null, wrong type, or a control character
+# in a string -> the field reads empty, `lock_pid_state` reads `absent`, and `lock_decide`
+# lands on arm 4/6 -> HELD. Refusing on duplicate keys is deliberate: it is strictly
+# fail-closed AND it makes the first-wins/last-wins question moot instead of answered.
+_lock_json_field() {
+  # $1 = key, $2 = expected JSON type (`str` | `int`).
+  # Prints the value and returns 0 only if every one of the conditions above is met.
+  # Prints nothing and returns 1 otherwise. Callers turn rc 1 into the fail-closed signal.
+  local key="$1" want="$2"
+  [[ -r "$LOCK" ]] || return 1
+  /usr/bin/python3 - "$LOCK" "$key" "$want" <<'PY' 2>/dev/null
+import json, sys
+
+def no_dupes(pairs):
+    seen = set()
+    for k, _ in pairs:
+        if k in seen:
+            raise ValueError("duplicate key %r in LOCK" % k)
+        seen.add(k)
+    return dict(pairs)
+
+path, key, want = sys.argv[1], sys.argv[2], sys.argv[3]
+try:
+    with open(path, encoding="utf-8") as fh:
+        body = json.load(fh, object_pairs_hook=no_dupes)
+except Exception:
+    sys.exit(1)                      # unreadable, not JSON, or a duplicate key
+if not isinstance(body, dict) or key not in body:
+    sys.exit(1)
+v = body[key]
+if want == "int":
+    # bool is a subclass of int in python; `"pid": true` is not a pid.
+    if not isinstance(v, int) or isinstance(v, bool):
+        sys.exit(1)
+    sys.stdout.write(str(v))
+else:
+    # `released_at`, `started_at` and `host` are timestamps and a hostname. A non-string
+    # there is malformed, and malformed reads as unreadable -- never as "released".
+    if not isinstance(v, str) or any(ord(c) < 0x20 for c in v):
+        sys.exit(1)
+    sys.stdout.write(v)
+sys.exit(0)
+PY
+}
+
 # T279 — `lock_pid_state` is the four-way form; `lock_holder_is_dead` is kept as the thin
-# wrapper the comments at :884 and :1057 name, so those references stay true. T265 F-5 is
+# wrapper that the SIGKILL note ("handled OUT of process by lock_holder_is_dead() above")
+# and the reconcile-position note ("takes over a lock whose pid is gone on this host")
+# both name, so those references stay true. Cited by SENTENCE, not by line number: the
+# numbers this comment used to carry (":884 and :1057") were stale before T342 touched
+# the file and are the P-86 rot T326 spent a task removing — `grep -n lock_holder_is_dead`
+# finds both sites and cannot go stale. T265 F-5 is
 # RECORDED, NOT FIXED, and the polarity claim above is narrowed accordingly: `kill -0`
 # returns EPERM for a LIVE process owned by another uid, and this function reads that as
 # dead. Not reachable while both fires run as uid 501 under a user-domain launchd agent;
 # reachable the moment anything runs a fire under `sudo`. So the correct claim is "it can
 # never make a live lock look free FOR A HOLDER RUNNING AS THE SAME USER." pid REUSE goes
 # the safe way (a recycled pid reads alive, so the holder merely waits out arm 3).
+#
+# T342 — the two extractions are now typed JSON reads. The ORDER of the tests below is
+# unchanged from T279 (host-match before pid-validity), so no verdict moves except the
+# ones the census names.
 lock_pid_state() {
-  local body host pid
-  [[ -r "$LOCK" ]]            || { print -r -- absent; return 0; }
-  body="$(<"$LOCK")"          || { print -r -- absent; return 0; }
-  [[ "$body" == *'"host": "'* ]] || { print -r -- absent; return 0; }
-  [[ "$body" == *'"pid": '*   ]] || { print -r -- absent; return 0; }
-  host="${${body#*\"host\": \"}%%\"*}"
-  pid="${${body#*\"pid\": }%%,*}"
+  local host pid
+  host="$(_lock_json_field host str)" || { print -r -- absent; return 0; }
+  pid="$(_lock_json_field pid int)"   || { print -r -- absent; return 0; }
   [[ "$host" == "$(hostname -s)" ]] || { print -r -- other_host; return 0; }  # never judge another machine
   [[ "$pid" == <1-> ]]             || { print -r -- absent;     return 0; }   # junk, or the "pid": 0 T265 F-4 found
   (( pid == $$ ))                  && { print -r -- alive_here; return 0; }   # never judge ourselves
@@ -116,25 +234,21 @@ lock_pid_state() {
 
 lock_holder_is_dead() { [[ "$(lock_pid_state)" == dead_here ]] }
 
-# `released_at`, empty unless the key is present AND its value is not `null`.
+# `released_at`, empty unless the key is present AND its value is a non-empty JSON STRING.
+# Empty is the fail-closed answer and covers absent, `null`, a non-string, an unparseable
+# body and a duplicated key — see the T342 block above for why each of those is empty and
+# not "released".
 lock_released_at() {
-  local body v
-  [[ -r "$LOCK" ]] || return 0
-  body="$(<"$LOCK")" || return 0
-  [[ "$body" == *'"released_at":'* ]] || return 0
-  v="${${body#*\"released_at\":}%%,*}"
-  v="${v//[$' \t\r\n\"']/}"
-  [[ "$v" == null || -z "$v" ]] && return 0
+  local v
+  v="$(_lock_json_field released_at str)" || return 0
+  [[ -z "$v" ]] && return 0
   print -r -- "$v"
 }
 
 # Age of the lock's `started_at`, in seconds. Empty = could not read it (arm 6, HELD).
 lock_started_age() {
-  local body iso e now
-  [[ -r "$LOCK" ]] || return 0
-  body="$(<"$LOCK")" || return 0
-  [[ "$body" == *'"started_at": "'* ]] || return 0
-  iso="${${body#*\"started_at\": \"}%%\"*}"
+  local iso e now
+  iso="$(_lock_json_field started_at str)" || return 0
   e=$(TZ=UTC /bin/date -j -f "%Y-%m-%dT%H:%M:%SZ" "$iso" +%s 2>/dev/null) || return 0
   [[ "$e" == <1-> ]] || return 0
   now=$(date +%s)
