@@ -35,6 +35,25 @@ Their branches below may hold partial work. Mark each `needs_retry`, do not read
 Chosen so no two grants overlap. `T363`'s grant was **narrowed by the driver** from `.softhouse/reviews/`
 (the whole review tree — it collided with both reviewers in this wave) to `.softhouse/reference-oracle.md`.
 
+
+## Worker roster — READ THE ID BACK OFF THIS TABLE BEFORE SENDING A MESSAGE
+
+The driver misrouted two coordinator messages this iteration by typing the wrong id (write-up:
+`.softhouse/observations/20260828-140005-iter2-driver-misrouted-a-worker-message.md`). Always **name the
+task in the message's first line** so a misroute is self-identifying to whoever receives it — that is how
+T363 caught this one.
+
+| Task | Agent id | State |
+|---|---|---|
+| `T364` review T358 | `a1090571f8572948f` | running |
+| `T362` review T357 | `a7d891ca5eb35f7d1` | running |
+| `T365` lock zero-value instants | `a0170054b87414aa1` | running |
+| `T349` PreToolUse evaluation | `a007dd636fe410978` | running |
+| `T367` review T363 | `a57a6c411cc2556f9` | running |
+| `T369` review T351 | `acc7ea7c08e7d5521` | running |
+| `T363` oracle baseline | `ad65dab4e80c74658` | **done** @ `8313ab6d` |
+| `T351` progress accounting | `ad437d46842bec227` | **done** @ `a0139c5d` |
+
 ## State inherited from chain iteration 1 (unchanged, still true)
 
 Bar GREEN on `main`: `bash .softhouse/conformance.sh` → exit 0, probe line PRESENT reading `up`,
