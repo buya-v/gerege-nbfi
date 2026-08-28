@@ -1,0 +1,84 @@
+T321 variable-path probe
+  ENFORCED SET (derived from conformance.sh non-comment lines + .softhouse/guards/):
+     .softhouse/capture/lib/check_no_narrow_catch.py                   [ASSEMBLED at run time via _run_capture_guard() -- INVISIBLE TO THE LITERAL CENSUS]
+        invocation derived from conformance.sh: <script> --selftest
+     .softhouse/capture/lib/check_wire_float_roundtrip.py              [ASSEMBLED at run time via _run_capture_guard() -- INVISIBLE TO THE LITERAL CENSUS]
+        invocation derived from conformance.sh: <script> --selftest
+     .softhouse/guards/check-capture-namespace.sh                      [guards dir (wired)]
+     .softhouse/guards/check-dead-path-frontier.sh                     [guards dir (wired)]
+     .softhouse/guards/check-ledger-invariants.sh                      [guards dir (wired)]
+     .softhouse/guards/drive-red-ledger-invariants.sh                  [guards dir (wired)]
+     .softhouse/guards/repo-state-attest.sh                            [guards dir (wired)]
+  EXCLUDED FROM THIS RUN by --only 'guards/|capture/lib/' (still part of the derived population;
+  a narrowed run is not a narrower population):
+     .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py
+     .softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py
+     .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py
+  scratch: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t321-varpath-52aty4ou
+  clone at d650d5c90af26d41c3b08168903b88ad0acd06ae
+
+PHASE 1 -- OBSERVE. Every path touched at run time, and which of them the literal
+  census cannot see. `bash -x` + a sitecustomize path tracer; no instrument edited.
+  .softhouse/capture/lib/check_no_narrow_catch.py      exit=0    touched=0    invisible=0    tracer=yes
+  .softhouse/capture/lib/check_wire_float_roundtrip.py exit=0    touched=0    invisible=0    tracer=yes
+  .softhouse/guards/check-capture-namespace.sh         exit=0    touched=5    invisible=2    tracer=n/a(shell)
+  .softhouse/guards/check-dead-path-frontier.sh        exit=2    touched=8    invisible=6    tracer=yes
+  .softhouse/guards/check-ledger-invariants.sh         exit=0    touched=21   invisible=19   tracer=n/a(shell)
+  .softhouse/guards/drive-red-ledger-invariants.sh     exit=0    touched=18   invisible=16   tracer=n/a(shell)
+  .softhouse/guards/repo-state-attest.sh               exit=2    touched=6    invisible=0    tracer=n/a(shell)
+
+PHASE 2 -- REMOVE AND OBSERVE THE EXIT (P-95). Baseline first, then one removal per
+  arm, each followed by a named-ref reset that is ATTESTED, not asserted.
+
+  .softhouse/capture/lib/check_no_narrow_catch.py -- BASELINE exit=0 probeTokens=none wall=0.1s
+     candidates: 0 existing of 0 touched; driving 0 (cap 6, ordered opened/executed first, then invisible-to-literal-census)
+
+  .softhouse/capture/lib/check_wire_float_roundtrip.py -- BASELINE exit=0 probeTokens=none wall=0.2s
+     candidates: 0 existing of 0 touched; driving 0 (cap 6, ordered opened/executed first, then invisible-to-literal-census)
+
+  .softhouse/guards/check-capture-namespace.sh -- BASELINE exit=0 probeTokens=['NAMESPACE-CENSUS'] wall=0.4s
+     candidates: 1 existing of 5 touched; driving 1 (cap 6, ordered opened/executed first, then invisible-to-literal-census)
+     DIES     V exit=1        probe=NAMESPACE-CENSUS             removed .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+
+  .softhouse/guards/check-dead-path-frontier.sh -- BASELINE exit=0 probeTokens=['T316-DEADPATH-CENSUS', 'T316-DEADPATH-FRONTIER'] wall=1.5s
+     candidates: 5 existing of 8 touched; driving 5 (cap 6, ordered opened/executed first, then invisible-to-literal-census)
+     DIES     V exit=127      probe=NONE                         removed .softhouse
+     DIES     V exit=127      probe=NONE                         removed .softhouse/guards
+     DIES     V exit=127      probe=NONE                         removed .softhouse/guards/check-dead-path-frontier.sh
+     DIES       exit=2        probe=ERROR                        removed .softhouse/capture/t316-dead-path-guards/census_dead_paths.py
+     DIES       exit=2        probe=ERROR                        removed .softhouse/guards/dead-path-frontier.pin
+
+  .softhouse/guards/check-ledger-invariants.sh -- BASELINE exit=0 probeTokens=none wall=2.0s
+     candidates: 8 existing of 21 touched; driving 6 (cap 6, ordered opened/executed first, then invisible-to-literal-census)
+     SURVIVES V exit=0        probe=NONE                         removed .softhouse/bin
+     DIES     V exit=127      probe=NONE                         removed .softhouse/guards
+     DIES     V exit=127      probe=NONE                         removed .softhouse/guards/check-ledger-invariants.sh
+     DIES     V exit=2        probe=NONE                         removed .softhouse/guards/ledgerguard
+     DIES     V exit=2        probe=NONE                         removed .softhouse/guards/ledgerguard/go.mod
+     DIES     V exit=2        probe=NONE                         removed .softhouse/guards/ledgerguard/main.go
+
+  .softhouse/guards/drive-red-ledger-invariants.sh -- BASELINE exit=0 probeTokens=['DRIVE-RED'] wall=4.5s
+     candidates: 6 existing of 18 touched; driving 6 (cap 6, ordered opened/executed first, then invisible-to-literal-census)
+     SURVIVES V exit=0        probe=DRIVE-RED                    removed .softhouse/bin
+     DIES     V exit=127      probe=NONE                         removed .softhouse/guards
+     DIES     V exit=127      probe=NONE                         removed .softhouse/guards/drive-red-ledger-invariants.sh
+     DIES     V exit=2        probe=NONE                         removed .softhouse/guards/ledgerguard
+     SURVIVES   exit=0        probe=DRIVE-RED                    removed .softhouse/bin/go-env.sh
+     DIES       exit=2        probe=NONE                         removed nexus
+
+  .softhouse/guards/repo-state-attest.sh -- BASELINE exit=2 probeTokens=none wall=0.0s
+     candidates: 6 existing of 6 touched; driving 6 (cap 6, ordered opened/executed first, then invisible-to-literal-census)
+     INCONCLUSIVE   exit=2        probe=NONE                         removed .softhouse/RESUME.md
+     INCONCLUSIVE   exit=2        probe=NONE                         removed .softhouse/conformance.sh
+     INCONCLUSIVE   exit=2        probe=NONE                         removed .softhouse/patterns.md
+     INCONCLUSIVE   exit=2        probe=NONE                         removed .softhouse/program.json
+     INCONCLUSIVE   exit=2        probe=NONE                         removed .softhouse/tasks.json
+     INCONCLUSIVE   exit=2        probe=NONE                         removed .softhouse/vectors
+
+  legend: the `V` column marks a dependency INVISIBLE TO THE LITERAL CENSUS --
+          i.e. one only this method could have nominated.
+
+T321-VARPATH: instruments=7 touchedPaths=58 invisibleToLiteralCensus=43 removalArms=24 died=15 survived=3 inconclusive=6 survivedAndInvisible=2
+NOTE: SURVIVES is a CANDIDATE, not a finding. An instrument may touch a path it does
+      not depend on. Every row is printed with its exit and probe reading so the
+      adjudication is checkable rather than asserted (T316's four innocent reasons).

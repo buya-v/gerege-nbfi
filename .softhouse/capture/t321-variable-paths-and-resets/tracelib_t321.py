@@ -35,6 +35,7 @@ _REAL_OPEN = builtins.open          # captured BEFORE anything is patched
 _FH = None
 _N = 0
 _CAP = 400000
+_SEEN = set()
 
 
 def _log(kind, p):
@@ -53,6 +54,16 @@ def _log(kind, p):
             return
     if not isinstance(s, str):
         return
+    # DEDUPE FIRST, BEFORE THE lexists() SYSCALL. A linter over 1266 files calls `is_file()`
+    # hundreds of thousands of times on the same paths; the first version computed `existed`
+    # -- a real stat -- for every one of them and only then deduplicated, which made a single
+    # instrument take TEN MINUTES and the probe unrunnable. The SET of paths touched is all the
+    # analysis reads; multiplicity was never used. A deliberate reduction, stated here rather
+    # than discovered from a suspiciously fast number.
+    k = (kind, s)
+    if k in _SEEN:
+        return
+    _SEEN.add(k)
     try:
         existed = "1" if os.path.lexists(s) else "0"
     except Exception:

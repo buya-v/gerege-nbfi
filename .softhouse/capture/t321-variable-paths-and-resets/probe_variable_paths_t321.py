@@ -61,6 +61,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -86,13 +87,34 @@ def repo_root() -> Path:
 ROOT = repo_root()
 
 
-def run(args, cwd, env=None, timeout=180):
+def run(args, cwd, env=None, timeout=90):
+    """Own PROCESS GROUP, and the whole group is killed on timeout.
+
+    `subprocess.run(timeout=)` kills only the direct child and then calls `communicate()` again;
+    if a GRANDCHILD still holds the pipe -- and a shell guard that spawns `git grep` always does
+    -- that second call blocks forever. Measured here: an instrument that should have been cut
+    off at 180 s ran for over ten minutes and the probe could not finish. `timeout(1)` is ABSENT
+    ON THIS HOST (T299's defect #3, still true), so the group kill is done directly. A timeout is
+    recorded as the string `TIMEOUT` and never as an exit code, so it cannot be silently counted
+    as a pass."""
     try:
-        p = subprocess.run(args, cwd=str(cwd), capture_output=True, text=True, env=env,
-                           timeout=timeout)
-        return p.returncode, p.stdout, p.stderr
+        pr = subprocess.Popen(args, cwd=str(cwd), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                              text=True, env=env, start_new_session=True)
+    except OSError as e:
+        return "LAUNCHFAIL", "", str(e)
+    try:
+        out, err = pr.communicate(timeout=timeout)
+        return pr.returncode, out, err
     except subprocess.TimeoutExpired:
-        return "TIMEOUT", "", ""
+        try:
+            os.killpg(os.getpgid(pr.pid), signal.SIGKILL)
+        except OSError:
+            pass
+        try:
+            out, err = pr.communicate(timeout=15)
+        except Exception:
+            out, err = "", ""
+        return "TIMEOUT", out, err
 
 
 # ---------------------------------------------------------------------------------------------
@@ -283,6 +305,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--max-arms", type=int, default=200)
     ap.add_argument("--max-per-instrument", type=int, default=8)
+    ap.add_argument("--slow-seconds", type=float, default=90.0)
+    ap.add_argument("--only", default="",
+                    help="restrict the RUN SET to targets matching this ERE. The full derived "
+                         "set is still PRINTED, with the excluded rows marked, so a narrowed "
+                         "run can never be read as a narrower population.")
     ap.add_argument("--json", default=str(HERE / "evidence/40-varpath.json"))
     args = ap.parse_args()
 
@@ -294,6 +321,11 @@ def main():
         return 2
 
     targets, missing, deriv = enforced_set(ROOT)
+    excluded = []
+    if args.only:
+        rx = re.compile(args.only)
+        excluded = [t for t in targets if not rx.search(t)]
+        targets = [t for t in targets if rx.search(t)]
     if not targets:
         print("ERROR: the ENFORCED SET is EMPTY. That is a selector failure, not a clean tree.",
               file=sys.stderr)
@@ -319,13 +351,25 @@ def main():
         if deriv.get("argv_dropped", {}).get(t):
             print("        DROPPED unresolved argument(s), recorded not passed through: %s"
                   % " ".join(deriv["argv_dropped"][t]))
+    if excluded:
+        print("  EXCLUDED FROM THIS RUN by --only %r (still part of the derived population;"
+              % args.only)
+        print("  a narrowed run is not a narrower population):")
+        for e in excluded:
+            print("     %s" % e)
     if missing:
         print("  named but not present in the tree (reported, not silently dropped): %d" % len(missing))
         for m in missing:
             print("     %s" % m)
     print("  scratch: %s" % tmp)
 
-    rc, out, err = run(["git", "clone", "--quiet", "--no-local", str(ROOT), str(clone)], tmp,
+    # `--local` (hardlinked objects), NOT `--no-local`. The safety property that matters is
+    # that nothing the clone does can reach the source, and hardlinking preserves it: git never
+    # rewrites an existing object file in place, and deleting the clone deletes links, not
+    # originals. `--no-local` streams the whole 115 MB pack over the local protocol and was
+    # measured at MINUTES per run here, which is what turned this probe into something that
+    # could not finish. The trade is speed for nothing.
+    rc, out, err = run(["git", "clone", "--quiet", "--local", str(ROOT), str(clone)], tmp,
                        timeout=600)
     if rc != 0 or not (clone / ".git").exists():
         print("ERROR: clone failed (rc=%s):\n%s%s" % (rc, out, err), file=sys.stderr)
@@ -409,14 +453,30 @@ def main():
     print("  arm, each followed by a named-ref reset that is ATTESTED, not asserted.")
     rows = []
     survivors = []
+    skipped = []
     arms = 0
     for rel in targets:
         tail = [str(clone) if t == "$REPO_ROOT" else t
                 for t in deriv.get("argv_tail", {}).get(rel, [])]
         argv = (["python3"] if rel.endswith(".py") else ["bash"]) + [str(clone / rel)] + tail
+        import time as _t
+        _t0 = _t.time()
         brc, bout, berr = run(argv, clone)
+        _dt = _t.time() - _t0
         btok = probe_tokens(bout, berr)
-        print("\n  %s -- BASELINE exit=%s probeTokens=%s" % (rel, brc, sorted(btok) or "none"))
+        print("\n  %s -- BASELINE exit=%s probeTokens=%s wall=%.1fs"
+              % (rel, brc, sorted(btok) or "none", _dt))
+        if _dt > args.slow_seconds:
+            print("     SKIPPING removal arms: this instrument takes %.0fs per run, and each arm"
+                  % _dt)
+            print("     is a full re-run. DECLARED, not quietly omitted -- the paths it touches")
+            print("     are still reported in phase 1, and its removal arms are simply NOT")
+            print("     EVIDENCE THAT WAS TAKEN. Raise --slow-seconds to include it.")
+            skipped.append({"instrument": rel, "seconds": round(_dt, 1),
+                            "candidates": len(obs[rel]["paths"])})
+            if not reset_and_attest("baseline of " + rel):
+                return 2
+            continue
         if not reset_and_attest("baseline of " + rel):
             return 2
         # NOT EVERY TOUCH IS A DEPENDENCY. `50-failopen-lint.py` walks the whole corpus and
@@ -426,14 +486,20 @@ def main():
         # first, because they are the ones only this method could have nominated. The per-
         # instrument cap is PRINTED beside the count so nobody reads the arm total as a
         # population (P-67: both terms, always).
-        READKINDS = {"open", "Path.open", "Path.read_text", "Path.read_bytes", "argv"}
+        READKINDS = {"open", "Path.open", "Path.read_text", "Path.read_bytes", "argv", "xtrace"}
         kinds = obs[rel]["kinds"]
         inv = set(obs[rel]["invisible_to_literal_census"])
-        pool = [p for p in obs[rel]["paths"]
-                if (clone / p).exists() and (READKINDS & set(kinds.get(p, [])))]
-        pool.sort(key=lambda p: (0 if p in inv else 1, p))
+        pool = [p for p in obs[rel]["paths"] if (clone / p).exists()]
+        # ORDER, not a filter. A first version FILTERED to the read-kinds and drove ZERO arms on
+        # the five shell guards, whose touches arrive as `xtrace` tokens rather than as a python
+        # `open` -- a selector that reported "0 removal arms" and looked like a clean result.
+        # Ordering keeps every candidate reachable and lets the cap decide; a path that was
+        # OPENED or EXECUTED goes first, then one INVISIBLE to the literal census.
+        pool.sort(key=lambda p: (0 if (READKINDS & set(kinds.get(p, []))) else 1,
+                                 0 if p in inv else 1, p))
         cands = pool[:args.max_per_instrument]
-        print("     candidates: %d opened/executed of %d touched; driving %d (cap %d)"
+        print("     candidates: %d existing of %d touched; driving %d (cap %d, ordered "
+              "opened/executed first, then invisible-to-literal-census)"
               % (len(pool), obs[rel]["n_touched"], len(cands), args.max_per_instrument))
         for p in cands:
             if arms >= args.max_arms:
@@ -450,7 +516,18 @@ def main():
             rc, out, err = run(argv, clone)
             tok = probe_tokens(out, err)
             same = (rc == brc) and (tok == btok)
-            verdict = "SURVIVES" if same else "DIES"
+            # A BASELINE THAT ALREADY REFUSES CANNOT DISCRIMINATE. `repo-state-attest.sh` with no
+            # arguments exits 2 before it looks at anything, so "the verdict did not change when
+            # I deleted the vector store" is a fact about the ARGUMENTS, not about the guard. Six
+            # such arms would otherwise have been reported as fail-open candidates -- a
+            # wolf-cry against a guard this very task recommends adopting. Called INCONCLUSIVE
+            # and counted separately; the fix is to drive it with its real invocation.
+            if not same:
+                verdict = "DIES"
+            elif brc != 0:
+                verdict = "INCONCLUSIVE"
+            else:
+                verdict = "SURVIVES"
             inv = p in obs[rel]["invisible_to_literal_census"]
             rows.append({"instrument": rel, "removed": p, "baseline_exit": brc, "exit": rc,
                          "baseline_probe": sorted(btok), "probe": sorted(tok),
@@ -467,11 +544,17 @@ def main():
     print("\n  legend: the `V` column marks a dependency INVISIBLE TO THE LITERAL CENSUS --")
     print("          i.e. one only this method could have nominated.")
     print("\n%s instruments=%d touchedPaths=%d invisibleToLiteralCensus=%d removalArms=%d "
-          "died=%d survived=%d survivedAndInvisible=%d"
+          "died=%d survived=%d inconclusive=%d survivedAndInvisible=%d"
           % (PROBE, len(targets), n_touch, n_inv, len(rows),
              sum(1 for r in rows if r["verdict"] == "DIES"),
              len(survivors),
+             sum(1 for r in rows if r["verdict"] == "INCONCLUSIVE"),
              sum(1 for r in survivors if r["invisible_to_literal_census"])))
+    if skipped:
+        print("  SKIPPED (too slow to drive one removal at a time), DECLARED not omitted:")
+        for sk in skipped:
+            print("     %s  %.0fs/run, %d touched paths"
+                  % (sk["instrument"], sk["seconds"], sk["candidates"]))
     print("NOTE: SURVIVES is a CANDIDATE, not a finding. An instrument may touch a path it does")
     print("      not depend on. Every row is printed with its exit and probe reading so the")
     print("      adjudication is checkable rather than asserted (T316's four innocent reasons).")
@@ -479,7 +562,8 @@ def main():
     Path(args.json).write_text(json.dumps(
         {"enforced_set": targets, "named_but_absent": missing,
          "derivation": deriv["derivation"], "assembled_invocations": deriv["assembled"],
-         "observed": obs, "arms": rows},
+         "excluded_by_only": excluded, "only": args.only,
+         "observed": obs, "arms": rows, "skipped_too_slow": skipped},
         indent=2))
     shutil.rmtree(str(tmp), ignore_errors=True)
     return 1 if survivors else 0
