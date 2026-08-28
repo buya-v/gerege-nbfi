@@ -1,5 +1,5 @@
 FAIL-CLOSED DRIVE -- module /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac2d8253d149717c8/.softhouse/bin/ready-tasks.py
-arm under test: (a) merged-and-pruned, scratch repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-q7rkseub
+arm under test: (a) merged-and-pruned, scratch repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-a43j5djp
                 the ONE arm whose honest verdict is `merged` (= REFUSE),
                 so any degradation that still refuses shows up here.
 

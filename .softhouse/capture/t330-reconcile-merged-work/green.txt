@@ -2,7 +2,7 @@ MODULE UNDER DRIVE: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac2d8253d1497
 git:               /usr/bin/git
 
 ARM (a) MERGED-AND-PRUNED
-  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-w9z5tbqu
+  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-hnai_esf
   recorded branch: softhouse/T900-merged-and-pruned
   git rev-parse  : rc=1 out=''   <-- IDENTICAL ACROSS ALL FOUR ARMS
   signature      : branch_wip(branch, tid)
@@ -13,7 +13,7 @@ ARM (a) MERGED-AND-PRUNED
   note           : Its recorded branch softhouse/T900-merged-and-pruned does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED: work bearing id T900 IS O
 
 ARM (b) NEVER-STARTED
-  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-fz10i4za
+  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-na_k__qc
   recorded branch: softhouse/T901-never-started
   git rev-parse  : rc=1 out=''   <-- IDENTICAL ACROSS ALL FOUR ARMS
   signature      : branch_wip(branch, tid)
@@ -24,7 +24,7 @@ ARM (b) NEVER-STARTED
   note           : Its recorded branch softhouse/T901-never-started does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED, and all three signals came ba
 
 ARM (c) RENAMED
-  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-26jb75d6
+  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-czh3b13n
   recorded branch: softhouse/T902-old-name
   git rev-parse  : rc=1 out=''   <-- IDENTICAL ACROSS ALL FOUR ARMS
   signature      : branch_wip(branch, tid)
@@ -35,13 +35,13 @@ ARM (c) RENAMED
   note           : Its recorded branch softhouse/T902-old-name does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED: the branch is gone under its RECOR
 
 ARM (d) CASE-SHADOWED
-  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-9hot7nz_
+  scratch repo   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t330-arm-xouta4q4
   recorded branch: softhouse/T903-Case-Shadow
   git rev-parse  : rc=1 out=''   <-- IDENTICAL ACROSS ALL FOUR ARMS
   signature      : branch_wip(branch, tid)
   VERDICT        : relocated/CASE-VARIANT
   ACTION         : REFUSE to demote -- a live ref carrying this task's id exists under another name; `needs_retry` would duplicate a line that still exists
-  EXPECTED       : MUST NOT DEMOTE -- packed-only case-variant softhouse/t903-case-shadow holds e8c4843eb
+  EXPECTED       : MUST NOT DEMOTE -- packed-only case-variant softhouse/t903-case-shadow holds eefe2f886
   RESULT         : correct
   note           : Its recorded branch softhouse/T903-Case-Shadow does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED: the branch is gone under its RE
 

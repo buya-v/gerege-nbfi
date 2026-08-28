@@ -157,17 +157,26 @@ So they are not run per task. They are built **once, as an index**:
 
 | source | call | cost | scales with N? |
 |---|---|---|---|
-| commit subjects on main | `git log main --format=%H%x09%s` (1,795 commits) | 0.1140 s | **no** |
-| handoff paths on main | `git ls-tree -r --name-only main -- .softhouse/handoff` | 0.0399 s | **no** |
+| commit subjects on main | `git log main --format=%H%x09%s` (~1,800 commits) | 0.1196 s | **no** |
+| handoff paths on main | `git ls-tree -r --name-only main -- .softhouse/handoff` | 0.0402 s | **no** |
 | ref store | `branch_sweep.RefIndex` — `os.walk` + `packed-refs` parse | 0 subprocesses | **no** |
-| **total** | | **0.1539 s for any N** | |
+| **total** | | **0.1598 s for any N** | |
 
 `--grep` was **measured and rejected**: one generic `--grep` costs 0.154 s against
 0.131 s with no grep, because git walks every commit either way and the regex is pure
 overhead.
 
-End-to-end over the worst case (all 137 branched tasks in the live file, not the
-convenient `in_progress` = 3): **+0.418 s, +3.8 %**.
+End-to-end over the worst case (all 140 branched tasks in the live file, not the
+convenient `in_progress` = 3): **+0.642 s, +5.5 %** — of which 0.1598 s is the one-time
+index, so the *marginal* per-task cost does not grow with N.
+
+**These figures move between runs, and that is the measurement, not noise.** `budget.txt`
+was captured three times during this task and the branched-task count went 137 → 137 →
+140 and `commits` 8 → 6 → 8 as other workers merged into `main` underneath it. `P-69` —
+*"The measured claim went stale between the review and the revision — inside a single
+fire"* [VERIFIED: `.softhouse/patterns.md:1881`]. The committed `budget.txt` is the run at
+the merged HEAD; re-running it will produce different absolute numbers and the same
+shape.
 
 `ls-tree main` is used rather than the `git ls-files` the observation named: same cost
 (0.04 s) but it asks **`main`**, whereas `ls-files` answers about the index of whatever
