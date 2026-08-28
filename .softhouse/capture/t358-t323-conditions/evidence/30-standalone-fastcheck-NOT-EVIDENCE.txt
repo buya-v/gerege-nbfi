@@ -1,0 +1,39 @@
+T358 -- STANDALONE FAST-CHECK OF THE ELEVEN NEW MUTATIONS.
+
+*** THIS IS NOT EVIDENCE. *** It runs guard_guards_dir_registration lifted out of
+conformance.sh, NOT through the wired route. T323's first graded run is the standing proof that
+a standalone green says nothing about the wiring: its guard printed three INVOKED and a PASS
+standalone while the same code, through the bar, reported all three genuinely-invoked checkers
+as unwired (P-57 EPIPE under pipefail).
+
+It exists only so that a wrong marker regex is caught in seconds instead of after a
+45-minute whole-bar drive. Every claim in T358's handoff comes from
+drive-red-t358.sh, which runs the WHOLE BAR for every arm. The harness itself is not committed:
+it hard-codes /tmp paths, and a tracked .sh carrying host-state literals is exactly what
+guard_no_host_state_in_lint_corpus pins at 18 sites.
+
+rc=1 is the guard function returning 1 (which run_guards folds into failed=1 -> exit 2).
+
+--- transcript, run on a clone of bca2ce23 -------------------------------------------------
+15-fixture-UNDECLARED                        rc=1 (want 1)  marker=YES  >>> PASS
+16-fixture-DECLARED-in-grant                 rc=0 (want 0)  marker=YES  >>> PASS
+17-witness-does-not-name                     rc=1 (want 1)  marker=YES  >>> PASS
+18-witness-missing                           rc=1 (want 1)  marker=YES  >>> PASS
+19-witness-untracked                         rc=1 (want 1)  marker=YES  >>> PASS
+20-declares-ITSELF                           rc=1 (want 1)  marker=YES  >>> PASS
+26-unreadable-row                            rc=1 (want 1)  marker=YES  >>> PASS
+21-python-checker-unwired                    rc=1 (want 1)  marker=YES  >>> PASS
+22-go-checker-unwired-NESTED                 rc=1 (want 1)  marker=YES  >>> PASS
+23-strip-row-FALLS-BACK                      rc=0 (want 0)  marker=YES  >>> PASS
+24-real-witness-stops-naming                 rc=1 (want 1)  marker=YES  >>> PASS
+fastcheck done
+
+--- gofmt, checked separately because two arms mutate Go source ----------------------------
+gofmt -l on ledgerguard/ after arm 16's insertion into main.go   -> empty (clean)
+gofmt -l on arm 22's planted `package main / func main() {...}`  -> empty (clean)
+
+--- the ':(glob)' measurement behind C-1, taken the same way -------------------------------
+with .softhouse/guards/ledgerguard/testdata/setup.sh planted and tracked:
+  git ls-files -- '.softhouse/guards/*.sh'            -> 6 members (fixture INCLUDED)
+  git ls-files -- ':(glob).softhouse/guards/*.sh'     -> 5 members (fixture EXCLUDED)
+  git ls-files -- ':(glob).softhouse/guards/**/*.sh'  -> 6 members (fixture INCLUDED, DECLARED)

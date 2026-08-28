@@ -318,13 +318,14 @@ arm "T358-18-witness-does-not-exist"             2 ABSENT  'REACHED-BY WITNESS D
 arm "T358-19-witness-untracked"                  2 ABSENT  'which is NOT TRACKED'                           m_19_witness_untracked
 arm "T358-20-member-declares-ITSELF"             2 ABSENT  'declares REACHED-BY ITSELF'                     m_20_self_witness
 
-# C-3: the population is no longer shell-only.
 arm "T358-26-unreadable-row-empty-witness"       2 ABSENT  'with NO witness path after it'                  m_26_unreadable_row
 
+# C-3: the population is no longer shell-only.
 arm "T358-21-python-checker-unwired"             2 ABSENT  'IS INVOKED BY NOTHING'                          m_21_python_checker_unwired
 arm "T358-22-go-checker-unwired-NESTED"          2 ABSENT  'IS INVOKED BY NOTHING'                          m_22_go_checker_unwired_nested
 
-# The real row on main.go is load-bearing on both sides.
+# The real row on main.go: arm 23 shows the MEMBER side is NOT load-bearing (main.go falls
+# back to INVOKED off conformance.sh:1484) and pins that; arm 24 shows the WITNESS side IS.
 arm "T358-23-strip-row-FALLS-BACK-to-INVOKED"    0 PRESENT 'population=6 invoked=4 declared=2 reached-by=0 invoked-by-nothing=0' m_23_strip_real_row
 arm "T358-24-real-witness-stops-naming-member"   2 ABSENT  'REACHED-BY WITNESS DOES NOT NAME'               m_24_real_witness_stops_naming
 
