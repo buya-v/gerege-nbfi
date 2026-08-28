@@ -5663,12 +5663,12 @@
     },
     {
       "id": "T390",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
       "role": "coder",
-      "branch": null,
+      "branch": "softhouse/T390-baseline-attribution",
       "files_hint": [
         ".softhouse/capture/t363-oracle-baseline/PROBES.tsv",
         ".softhouse/capture/t363-oracle-baseline/CASUALTIES.md",
@@ -5680,16 +5680,16 @@
       ],
       "title": "T388's P0: the oracle-state baseline cannot attribute L28-L31 or T388's 20 command keys, and CASUALTIES.md's m_loan claim is now half false",
       "description": "T388 moved shared oracle state deliberately and correctly, and left ONE thing it could not do inside its own grant: `.softhouse/capture/t363-oracle-baseline/PROBES.tsv` does not know about what it created.\n\n1. APPEND `out/PROBES-APPEND-T388.tsv` from `softhouse/T388-accrual-capture` to `PROBES.tsv`. Until this lands, `oracle-state-baseline.sh` exits 1, printing loans L28-L31 and T388's 20 `T388-` command-source rows (360-379) as UNATTRIBUTED. Read the append from the branch, do not retype it:\n    git show softhouse/T388-accrual-capture:.softhouse/capture/t388-accrual-capture/out/PROBES-APPEND-T388.tsv\n2. CORRECT `CASUALTIES.md:40,44`. It records `m_loan` as UNMOVED. T388 created loan 8, so the claim is now half false, and `t327/throwaway/capture.sh:82` and `down.sh:54` pin `m_loan = 7` by STRING EQUALITY. T388 verified `t305` does NOT pin it, by reading all three scripts -- re-verify rather than inherit that.\n3. THE FINDING UNDERNEATH, which is worth more than either fix. The driver measured this while triaging T388: **`oracle-state-baseline.sh` is invoked by NOTHING THAT RUNS.** The only references outside its own directory are in `t367-review-t363/drive.sh` and `drive-independent-sweep.sh` -- a review's own drives. T367 even asked the question explicitly ('X9 is oracle-state-baseline.sh referenced by anything that RUNS?'). So the instrument built to detect unattributed oracle-state movement would not have fired if T388 had contaminated a promoted account. **This is P-45** (`.softhouse/patterns.md:1503-1506`) -- a guard that only works when someone remembers to run it enforces nothing -- and it is the same shape as T311 (`guard-probe-expiry.sh` is invoked by nothing) and T303 and T313 and T333, all still pending. **Wire it, or state precisely why it must not be wired.** If you wire it, drive it RED first: make an unattributed row exist and show the bar refusing.\n\nSEQUENCED AFTER T381, which holds `t363-oracle-baseline/instruments/`. Your grant is the directory ROOT (`PROBES.tsv`, `CASUALTIES.md`) plus your own capture dir; if wiring requires editing `instruments/oracle-state-baseline.sh` or `conformance.sh`, confirm with the driver that the holder has landed before you write either.",
-      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T388 return item 1, plus a finding the driver measured itself while triaging T388: the baseline instrument is wired to nothing."
+      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
     },
     {
       "id": "T391",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
       "role": "coder",
-      "branch": null,
+      "branch": "softhouse/T391-accrual-promotion",
       "files_hint": [
         ".softhouse/vectors/",
         ".softhouse/capture/t391-accrual-promotion/"
@@ -5701,16 +5701,16 @@
       ],
       "title": "Promote T388's accrual observations -- and the row the harness prints every run is now FALSE in four sentences",
       "description": "T388 took the program's FIRST accrual observations (9 entries through INTEREST_RECEIVABLE, FEES_RECEIVABLE and PENALTIES_RECEIVABLE). It promoted nothing, by design -- `.softhouse/vectors/` was held by T360 that wave. You are the promotion.\n\n1. **THE HARNESS IS NOW PRINTING FALSEHOODS EVERY RUN.** `capabilities-ledger.json`'s `ledger.accrual.entry` row says the observations 'do not exist', that 'NOT ONE JOURNAL ENTRY IN THIS TENANT ARRIVED THROUGH A RECEIVABLE SLOT', that product 28 is the only ACCRUAL_PERIODIC product, and that an accrual vector needs a new product PLUS a job run. **All four are false as of T388.** T388's own recommendation, which is right: keep the sentence that is still TRUE by narrowing it -- 'not one entry in this **CORPUS**', because the promoted store is still empty of accruals. Rewrite the row; do not delete it.\n2. **DECIDE WHAT AN ACCRUAL VECTOR GRADES, AND GRADE THE SLOT, NOT THE ACCOUNT.** This is T242's whole lesson: ONE GL ACCOUNT BACKS SEVERAL SLOTS, and the harness once printed 'gl 18, 22 and 16 carry ZERO journal entries' as measured fact when gl 16 had sixteen. Grading the account would reproduce exactly that error. Grading the slot means populating the ledger schema's slot fields for the FIRST time -- expect that to be the real work.\n3. **NON-VACUITY.** Register a wrong implementation alongside the 13 existing `ledger-wrong-*` drives and show it KILLED by your new vectors. A vector no wrong implementation can fail is decoration.\n4. **DO NOT PROMOTE THESE AS A PRECISION CLAIM.** T388 says so and is right: the `(19, HALF_UP)` question applies to these captures unchanged.\n5. Counts that move, move in the summary AND every pinned census that restates them, in ONE commit (P-83). Baseline before you start: ledger parity PASS 7, oracle-refusal 6, inadmissible 0, 142 cells / 39 money.\n\nRead T388's handoff and T389's review from their branches, never from disk. Five accrual slots remain unposted (6, 10, 11, 12, 13); product 63 and gl 40/44/45/46/47 are already clean, so the marginal cost of more observations is a transaction, not a product -- say whether you took them.",
-      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T388 return items 2-5. This is the G-20 follow-through: the capture is worthless until it is promoted, and promotion is where the slot fields get populated for the first time."
+      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
     },
     {
       "id": "T392",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "sonnet",
       "target": "docs",
       "role": "coder",
-      "branch": null,
+      "branch": "softhouse/T392-vacuous-pass-pattern",
       "files_hint": [
         ".softhouse/patterns.md"
       ],
@@ -5719,16 +5719,16 @@
       ],
       "title": "THE VACUOUS-PASS RULE HAS FOUR INDEPENDENT SITES AND IS STILL NOT A NUMBERED PATTERN -- give it a P-number",
       "description": "T383 reports its branch is the FOURTH independent site of the same rule and asks for it to be numbered. The rule: **a control that cannot fail, and a control that refuses everything, are the same defect wearing opposite signs** -- and both look GREEN from outside. T383 hit both ends inside one task: its fix for a fail-open briefly became a control that refused every healthy fire (a scalar-length bug counting 41 'lines'), caught only because it kept a healthy CONTROL case beside the RED cases; and it deliberately let substring containment stay green because the wiring's own echo is a substring line, so a naive count-fix would have refused every fire.\n\nCollect the four sites yourself from the record -- do not take T383's word for the count, and say where you looked. Then write it as a numbered pattern in `.softhouse/patterns.md`, in the file's existing voice, with the concrete drives as evidence. **Take the NEXT free P-number and check it against the file first**: this repo has already shipped a P-number collision (six patterns renumbered after a cloud fire published a conflicting P-78) and then reproduced the resulting off-by-one in RESUME.md and 20 task descriptions (P-83 cited where P-84 was meant). Do not create a second one.\n\nSEQUENCED AFTER T385 so the reviewer's verdict on T383 can be folded in -- if T385 rejects T383's fix, the fourth site is still a site, but its lesson changes.",
-      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T383 backlog. The other T383 backlog item (C12, the hardlinks/--no-hardlinks contradiction at t353-t342-conditions/bin/bar-on-merge-result.sh:14,23) is T353 grant and is recorded here rather than lost: it is NOT filed as a task yet because bar-on-merge-result.sh is the instrument the driver uses at merge time and changing it mid-wave is a hazard."
+      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
     },
     {
       "id": "T393",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
       "role": "coder",
-      "branch": null,
+      "branch": "softhouse/T393-t382-conditions",
       "files_hint": [
         ".softhouse/reviews/A2-11/",
         ".softhouse/capture/t393-t382-conditions/"
@@ -5739,7 +5739,7 @@
       ],
       "title": "T382's four conditions on T374 -- the disclosed gap is LARGER than disclosed, and section 10's FORK is one line from reinstating the defect it fixes",
       "description": "T382 APPROVED T374 WITH CONDITIONS and drove all four with controls. Read the review from `main` (both are merged at `01a7a05a`): `.softhouse/reviews/t382-review-t374/REVIEW.md`.\n\n**F-4 FIRST -- IT IS THE ONE THAT REINSTATES THE ORIGINAL DEFECT.** Section 10's `FORK` is an UNCHECKED CONSTANT. Section 4 ties its copy to `prove-a2-7-additive.py`; section 10 ties its copy to nothing. T382 moved it ONE LINE to the mutating commit and ARM A collapsed 403 -> 1035, after which `run-all` exits **0 printing PASS while section 4 prints `DIFF out/A2-000-glaccounts-preexisting.http` BY NAME** -- which is **T362's F-1 verbatim, on the branch that fixes it**. Tie section 10's FORK to a checked source the way section 4 does, and drive the one-line move red.\n\n**F-1: THE DISCLOSED GAP IS LARGER THAN T374 DISCLOSED.** T374 discloses one uncovered case (a committed *mutation* of a post-fork observation). T382 measured **four more** outside both arms and outside the disclosure: committed **deletion** (HEAD population silently 1035 -> 1034, `VERDICT: PASS`), committed **addition** of a fabricated observation (1035 -> 1036, PASS), an **untracked** fabricated observation, and **symlink substitution with identical bytes**. Root cause: section 10 applies its 'empty population is a selector failure' rule at zero and stops -- **it never pins the population's cardinality**, so a shrink of up to 632 or any growth passes. Close all five, and drive each.\n\n**F-2: THE ARTEFACT YOU NEED ALREADY EXISTS -- DO NOT BUILD A SECOND ONE.** T374's own follow-up says a new evidence artefact is needed. It is not. `.softhouse/capture/tierA-a2/MANIFEST.sha256` holds 1139 rows, **1035 of them under `out/req` -- exactly the tracked observation set** -- with 0 missing, 0 extra, 0 digest disagreements, and all **632** post-fork observations covered. **A third arm reading that manifest closes F-1's deletion, addition and untracked cases outright.** Verify T382's counts yourself before you rely on them.\n\n**F-3: THE SATURATION CLASS IS CLOSED AT EXACTLY ONE SITE.** T382 audited every section's RC arithmetic: 3/5/6/7/8/9/10 cannot saturate; 1 is adjudicated by 9; 2 has the shape but is INERT (it reads only frozen git blobs). **Section 4 is LIVE and still absorbs the 27 fork-sha manifest entries outside `out/req`** -- `cap.sh`, `manifest.py`, `mkreq*.py`, the `run-*.sh`, the sql. Driven on `manifest.py`: 428 -> 427 identical, `DIFF manifest.py` named, and `run-all` still **EXIT 0, RUN-ALL VERDICT: PASS**. Close section 4 the way section 10 was closed.\n\n**CONTEXT, NOT YOUR DEFECT AND NOT YOUR JOB TO FIX HERE:** T382's informational finding is that `run-all.sh` **is not invoked by `conformance.sh` at all** (`grep -c` = 0). It is pre-existing and NOT T374's doing -- but it means every section you are hardening runs only when a human runs it. That is **P-45** and it is the FIFTH instance the driver logged in this one fire, beside `oracle-state-baseline.sh` (T390), `guard-probe-expiry.sh` (T311), T303 and T313. Say in your handoff whether wiring `run-all.sh` into the bar is safe and cheap; do not do it unless it is both, and never while another worker holds `conformance.sh`.\n\nVerify from a CLEAN tree AFTER `git add -A` and commit, with `bash` never `sh`; test the probe line's PRESENCE before its value (P-84, patterns.md:2813). Baseline to hold unmoved: 46 parity / 7884 cells, ledger 7/6/0/142/39, dead-path frontier GREEN at deadOccurrences 108.",
-      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T382 F-1..F-4. T374+T382 were MERGED rather than held, because T374 strictly improves on main and every residual is fail-CLOSED or pre-existing -- but F-4 means the fixed defect is one line from returning, so this task is not optional. | DISPATCHED by the driver of fire 20260828-140005 iteration 3 immediately after T374+T382 merged; branch recorded before the worktree. Grant collides with no live worker (T375 holds conformance.sh, T381 holds t363 instruments, T385/T387/T389 hold their own review dirs). || DRIVER ERROR, CORRECTED 2026-08-28T14:40Z, fire 20260828-140005 iteration 3. THIS TASK WAS NEVER DISPATCHED. The driver wrote the dispatch record -- flipped status to in_progress, set branch to softhouse/T393-t382-conditions -- and PUSHED it at 25e910b4 with a commit message saying 'pushed before its worktree', then went on to process another worker's result and NEVER CALLED THE AGENT TOOL. For 2h20m tasks.json told anyone reading it that this task was in flight while nothing whatsoever was running. PROVEN EMPTY, not assumed: `git rev-parse --verify softhouse/T393-t382-conditions` -> fatal (branch never existed, locally or on origin), zero worktrees matching t393, and the session's own agent list contains no such subagent. NOTHING WAS LOST because nothing ever ran. Reset to pending for the next fire rather than dispatched now: the fire is 8.7h old against a 9.52h record, and STEP 5.5 says only dispatch what you have the budget to see through -- starting a substantial code task ~50 minutes from the record would destroy it. The irony is exact and is the point: the push-before-spawn protocol exists so the record cannot claim less than reality, and this is the same protocol failing in the OPPOSITE direction -- a record claiming MORE than reality. A dispatch record is only true if the dispatch happens."
+      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
     },
     {
       "id": "T394",
@@ -5780,12 +5780,12 @@
     },
     {
       "id": "T396",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
       "role": "coder",
-      "branch": null,
+      "branch": "softhouse/T396-t389-conditions",
       "files_hint": [
         ".softhouse/capture/t388-accrual-capture/",
         ".softhouse/capture/t396-t389-conditions/"
@@ -5795,16 +5795,16 @@
       ],
       "title": "T389's three citation defects around T388's /runaccruals claim -- the core claim holds, its supports do not, and one hides three real port traps",
       "description": "T389 APPROVED T388 WITH CONDITIONS. **The load-bearing claim HOLDS and is not in question**: `/runaccruals` and job 16 converge on the single-overload `addPeriodicAccruals(LocalDate)`, whose own Javadoc names both callers, and job 16 is seeded in source. So T388's observations ARE genuine periodic accruals. Three supporting citations around it are wrong, and one of them matters to the port.\n\n**m-3 IS THE ONE THAT COSTS SOMETHING.** T388's 'periods 1-3 vs 4-6' finding is attributed to a JPQL that **selects loans, not periods**. T389 says the misattribution **hides three real traps for a Go port**. Find them, name them, and write them down where a porting task will meet them -- that is the whole value of this correction. A wrong citation under a right conclusion is how the previous defect in this same fire survived (see G-21).\n\n**m-1.** `AccrualAccountingApiResource.java:62` **builds** a `CommandWrapper`; dispatch is at **`:64`** via the command bus. Correct the citation.\n\n**m-2.** 'the ONLY difference is where `tillDate` comes from' is **false**, and note it errs in T388's own favour -- it understates the difference rather than overstating the result. The manual path also carries a permission check, idempotency, command-source audit, maker-checker and a date validator. **Enumerate all five with citations from the pinned checkout `/Users/buv/fineract` @ `426a23544`**, and say for each whether it could change what gets accrued. That is the difference between 'the same method' and 'the same behaviour'.\n\nRead T389's review on `main` at `.softhouse/reviews/t389-review-t388/REVIEW.md`. Your grant includes T388's capture directory so the corrections land where the observations are, not in a separate file nobody reads. **Correct in place and say what you corrected**; do not rewrite T388's conclusions, which survived review.\n\nBar from a CLEAN tree after commit; probe-line presence before value (P-84).",
-      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T389 finding 3 (m-1, m-2, m-3)."
+      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
     },
     {
       "id": "T397",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
       "role": "coder",
-      "branch": null,
+      "branch": "softhouse/T397-t387-conditions",
       "files_hint": [
         "nexus/internal/apps/ledger/conformance/",
         ".softhouse/capture/t397-t387-conditions/"
@@ -5815,7 +5815,7 @@
       ],
       "title": "T387's two MINOR conditions on T360 -- an unqualified verdict sentence, and a byte check a numeric PREFIX satisfies",
       "description": "T387 APPROVED T360 WITH CONDITIONS. Condition (a), the `EXEMPTION_PIN_LEDGER_WRONGIMPLS` 13->14 bump, is the DRIVER's to apply on the merge result and is not yours. These two are.\n\n**F-T387-2 -- `verbatimInCapture` is `bytes.Contains`, so a numeric PREFIX satisfies it.** `\"100.12\"` is contained in `\"100.125\"`, so a vector citing the shorter text passes the verbatim check against a capture holding the longer one. T387 drove it and showed it **self-correcting** -- the port then accepts, the vector FAILs, exit 1 -- which is why this is MINOR rather than a fail-open. **Close it anyway, and keep the self-correction as a control.** A check that is only saved by a downstream check is one refactor away from being saved by nothing (P-45). Match on a token boundary, not a substring, and drive the prefix case RED before and GREEN after.\n**Do not reach for a numeric comparison to fix it.** The whole design of this class is that the amount is NEVER a number -- no `strconv`, no arithmetic, no exponent, because no `int64` holds `100.125`. A float or a parse here is an instant REJECT under CLAUDE.md's first non-negotiable, however tempting it looks as a 'proper' fix.\n\n**F-T387-1 -- `report.go:592`'s verdict prose now sits UNQUALIFIED over a captured vector the port does not match.** The divergence class records a case where the oracle accepted and the port refused; a verdict sentence that does not say so invites exactly the misreading G-19 exists to prevent. Qualify it. `report.go` was outside T360's grant, which is why this is yours.\n\nRead T387's review on `main` at `.softhouse/reviews/t387-review-t360/REVIEW.md`, and T360's handoff. **Re-drive T387's 16 authoring attacks after your change** -- all 16 must still be refused, and parity must stay `PASS 7 FAIL 0` with money cells `39 == pinned 39`. Run `go build ./...` and `go test -count=1 ./...` and record both.\n\nBar from a CLEAN tree AFTER `git add -A` and commit, `bash` never `sh`; probe-line PRESENCE before value (P-84). By the time you run, the wrong-impl pin should read 14 on `main`; if it still reads 13 the bar exits 2 on `WRONG-IMPLEMENTATION POPULATION 14, PINNED 13` and that is the pin working, not an outage.",
-      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T387 conditions (b) and (c). Condition (a), the pin, is the driver's at merge time."
+      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
     },
     {
       "id": "T398",
@@ -5858,12 +5858,12 @@
     },
     {
       "id": "T400",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
       "role": "coder",
-      "branch": null,
+      "branch": "softhouse/T400-t385-conditions",
       "files_hint": [
         ".softhouse/bin/fire-program.sh",
         ".softhouse/capture/t400-t385-conditions/"
@@ -5874,16 +5874,16 @@
       ],
       "title": "T385's three conditions on T383 -- a comment that says two offsets 'cannot drift apart' when they are re-spelled 90 lines later, and they DO drift",
       "description": "All three are comment-only in `.softhouse/bin/fire-program.sh`, but F-T385-2 is a MEASURED fail-open in the reasoning, not just prose.\n\n**READ P-97 FIRST (`.softhouse/patterns.md:3259`) BEFORE YOU WRITE THIS FILE.** It is the wrapper that launches every fire, it may be EXECUTING while you work, and a write that goes through the original inode can be executed as a spliced tail -- reproduced at a read-buffer boundary with no length change at all. **Edit in your worktree and land it through git** (all eight git write paths rename), or use a renaming writer (`sed -i`, `mv`, `install`, the harness Write/Edit tools). **Never `cp` over it** -- `cp` is in-place on macOS and Linux both, and 'copy the fixed wrapper over the live one' is exactly what a person types. Never invoke the wrapper in a mode that starts a fire, takes the lock or dispatches; `zsh -n`, `--self-test-lock-readers`, `--lock-decide` and `--probe` against a throwaway repo only. And unset `FIRE_SNAPSHOT_OF` / `FIRE_NO_SNAPSHOT` first -- a live fire exports the former and the latter does NOT override it (`fire-program.sh:999`), confirmed independently by T383 and T385.\n\n**F-T385-2 (MODERATE, DRIVEN).** `:748-749` claims the z06/z07 offsets *cannot drift apart* from the rows. **They are re-spelled inline at `:883-884`.** T385 drove the drift (case `s01`): the gate does not fire, `z06` goes **FAIL-OPEN**, and the wiring then says *'The thresholds validated at startup, so this is the READERS'* -- **the exact misattribution F-T380-2 exists to close**. Its control `s02` (drift the gate's own variable) exits 78, so the gate is live and it is only this pair that escapes. Fix it so the claim is TRUE -- derive the offsets from one place, or make the gate check the inline spelling too -- and re-drive `s01` and `s02`.\n\n**F-T385-1 (MINOR).** T383's stated reason for keeping substring containment green is **false**: the `lockselftest| ROWS=` echo is added *after* the capture and is never in the population. T385 built the naive unanchored-count wrapper and it **starts the healthy fire at rc 0**, so the anchoring is still correct and independently justified -- **only the example is wrong**. Replace the false example with T385's measured one. Do not weaken the anchoring.\n\n**F-T385-3 (MINOR, P-80).** `:724` says *'the four tests below ARE the four fixture expressions'*; the code has **six** (`:756-761`). A restated cardinal that rotted.\n\nAfter your change: re-run `.softhouse/capture/t279-lock-partition/drive-wrapper-vs-skill.zsh` (192 states, must be 0 disagreements), re-drive T385's 20-case driver, and confirm a HEALTHY fire still starts -- a control that refuses everything is the same defect as one that cannot fail, and this fire produced that inversion once already. Bar from a CLEAN tree after `git add -A` and commit; probe-line PRESENCE before value (P-84).",
-      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T385 F-T385-1..3."
+      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
     },
     {
       "id": "T401",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
       "role": "coder",
-      "branch": null,
+      "branch": "softhouse/T401-zsh-census-gap",
       "files_hint": [
         ".softhouse/capture/t401-zsh-census-gap/"
       ],
@@ -5892,16 +5892,16 @@
       ],
       "title": "F-T385-4: the fail-open and dead-path censuses read .sh and .py only -- 110 tracked .zsh files are INVISIBLE, and .zsh is what new driving instruments are written in",
       "description": "T385 filed this rather than fixing it, correctly -- it was outside its grant.\n\n**THE MEASUREMENT.** The fail-open/dead-path census corpus is tracked `.sh`/`.py` only. T385 verified T383's selector reasoning is CORRECT and empirical -- it added 7 `.zsh` files and `corpus` stayed at 1348. **But 110 tracked `.zsh` files exist** (98 of them under `capture/` and `reviews/`), against 626 `.sh` and 722 `.py`. So the linter systematically omits **the language most new driving instruments are written in**, and every `.zsh` instrument added since is unlinted for fail-opens and contributes no dead-path rows.\n\n**RE-MEASURE ALL FOUR COUNTS YOURSELF** before acting -- they are prose in a review, which is exactly the class of number this program has watched rot repeatedly.\n\n**THEN DECIDE, AND ARGUE IT EITHER WAY.** Extending the selector to `.zsh` is not obviously right: it will add dead-path rows and may surface fail-opens in 110 files at once, which would redden the bar in a single step. Options worth weighing: extend the selector and pin the new frontier in ONE commit (P-83 -- regenerate by RUNNING, never by arithmetic); extend it in report-only mode first and publish the count; or rule that driving instruments must be `.sh`/`.py` and convert them. **Say what it costs before you choose**, and if you extend it, drive the guard RED on a planted `.zsh` fail-open first, and keep a healthy control beside it.\n\nThis is adjacent to `T399` (seven guards wired to nothing) but distinct: T399 is about guards that never RUN, this is about a guard that runs and cannot SEE. Coordinate if both are live -- both may want `conformance.sh`, which is contended; if it is held, ship the exact patch as a request the way T360 did.",
-      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T385 F-T385-4. Distinct from T399: that is guards that never run, this is a guard that runs and is blind to 110 tracked files."
+      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
     },
     {
       "id": "T402",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
       "role": "coder",
-      "branch": null,
+      "branch": "softhouse/T402-t386-conditions",
       "files_hint": [
         ".softhouse/capture/t363-oracle-baseline/instruments/",
         ".softhouse/capture/t402-t386-conditions/"
@@ -5912,7 +5912,7 @@
       ],
       "title": "T386's C-1: a 2> redirect that cannot be opened returns 1 WITHOUT RUNNING THE COMMAND -- and 1 is the status this file reads as 'matched nothing'",
       "description": "**THIS BLOCKS `T399`.** Until it lands, `casualty-sweep.sh` must not be wired into anything: a filesystem hiccup would produce a green bar on a blind instrument.\n\n**C-1 (F-1), driven by T386 with a removal-disabled control, on the branch AND the merge result.** The scratch-file plumbing added by T381's own R4 repair is a **new** fail-open, not an inherited one — `main` has no scratch file at all. A `2>` redirect that cannot be opened makes bash return **1 without running the command**, and `1` is precisely the status this file interprets as *'ran, matched nothing'*. T386's drive:\n```\nCONTROL: exit=0  MEASURED-ZERO lines=0\nRED    : SWEEP-RESULT: selectors=16 did_not_run=0 calibration=yes exit=0\n         red: exit=0  MEASURED-ZERO lines=15  DID-NOT-RUN lines=0\n```\nFifteen selectors printed *'MEASURED ZERO — engine ran over 8291 tracked files and matched nothing'* for searches **that never ran**, under a clean summary line. **The fix is five lines: read `cat`'s status at both sites.** Drive it RED before GREEN, and keep a healthy control beside it.\nT381's `-F POSITIVE` arm DOES catch the whole-run case (refuses at exit 3, P-72 earning its keep) — but the calibration runs **once, at the front door**, so it does not cover this.\n\n**THE LESSON TO WRITE INTO THE FIX, because it is why a faithful audit missed it.** T381's `AUDIT.md` classified *'every `2>/dev/null` and every pipeline'* completely and correctly. A command substitution reading a scratch file is **neither**, so it had no row. **A taxonomy narrower than the defect class certifies only what the taxonomy could see.** When you re-audit, audit the **class** — every construct where a status can be lost — not the two syntactic forms previously enumerated.\n\n**ALSO CLOSE `FU-T386-1..8` (all MINOR):** `main:100` is fail-CLOSED, not fail-open, and is described wrongly; the header still says *'FABRICATING'* and *'returns zero SILENTLY'* against its own corrected paragraph; `SWEEP OBSERVE` has **no non-vacuity guard** (two zeros also 'agree'); `FU-T381-1`'s site is cited at `:348` when it is now `:384` — **14 of 16 audited line numbers had moved**, which is P-86 again and an argument for citing by name; and `t381-red-drives.sh` **exits 0 whatever its arms say**, which is a red drive that cannot report failure.\n\nBar from a CLEAN tree AFTER `git add -A` and commit, `bash` never `sh`; probe-line PRESENCE before value (P-84). Baseline: 46 parity / 7884 cells, frontier GREEN at deadOccurrences 108.",
-      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T386 C-1 and FU-T386-1..8. T381 was merged with this defect KNOWN and INERT (the sweep gates nothing today), because it closes four live inherited fail-opens; T399 now depends on this task so the inert one cannot become live before it is fixed."
+      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
     },
     {
       "id": "T403",
@@ -5933,12 +5933,12 @@
     },
     {
       "id": "T404",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
       "role": "coder",
-      "branch": null,
+      "branch": "softhouse/T404-t384-conditions",
       "files_hint": [
         ".softhouse/conformance.sh",
         ".softhouse/capture/t404-t384-conditions/"
@@ -5949,7 +5949,7 @@
       ],
       "title": "F-T384-1: the FIFTH registration fail-open is REACHABLE with two committed files -- a decoy plus an ambiguous-glob symlink neutralises BOTH of T375's new tests at once",
       "description": "**T375 disclosed this against itself as `FU-T375-7` and rated it unreachable. `T384` REACHED IT.** The arm is written, driven on three trees, and ready to lift — it is `arm G` in `.softhouse/reviews/t384-review-t375/`, with controls E and F beside it.\n\n**THE MECHANISM, MEASURED.** The guard runs `git ls-files -s -- \"$rel\"` with `$rel` as a **pathspec, not a literal**. Plant an *honestly registered* decoy `zz-t384g1.sh` and a tracked symlink `zz-t384g[1].sh`: the pathspec matches **both**, `git ls-files` returns **two** lines, `1` sorts before `[`, so `member_mode` is the decoy's `100644` and `member_blob` is the decoy's blob. **Both of T375's new tests are neutralised at once.** Whole bar: **exit 0, probe PRESENT, `VERDICT: PASS`, `reached-by=3`, and the census printing `symlink-members=0` while a symlink member sits in the population.** Driven on T375's branch, on `main`, and on the merge result.\n\n**A GLOB CHARACTER ALONE IS NOT ENOUGH — T384's own controls refuted that.** Controls E and F use the same filenames without the ambiguity and are correctly REFUSED. **T375's recorded mechanism — 'more than one path, first line wins' — was exactly right.** Do not 'fix' this by rejecting glob characters in filenames; that would be the wrong repair and would refuse legitimate names.\n\n**THE REPAIR IS THE ONE T375 ALREADY WROTE:** `\":(literal)$rel\"` plus a `self_multi`-shaped refusal. Lift arm G (and E/F as controls) into the drive. Drive RED before GREEN and **keep a healthy control** — an honestly registered checker with an independent regular-file witness must still be ACCEPTED at `reached-by=2`, which is the control T384 verified stays green.\n\n**C-2 (also T384's): assert `symlink-members` COUNTS CORRECTLY, not merely that the member is refused.** The census printed `symlink-members=0` while one was present — a count that cannot rise is a count nobody should read.\n\n**C-3: delete two restated cardinals in T375's handoff §6 that DO NOT REPRODUCE.** T384 measures the `warn \"`/`say \"` counts as **367→405 and 139→139**, not the handoff's 366→396/137→137. The load-bearing 'nothing removed' claim IS true and independently counted — so **delete the restated numbers rather than refreshing them**, which is the remedy DEC-2 revision 8 chose for the same shape.\n\n**WHY T375 WAS RIGHT NOT TO FIX THIS IN FLIGHT, and you should say so in your handoff:** an executable change would have invalidated the 61-arm drive, and a one-token change without its arm is precisely what that task existed to refuse. What was wrong was the SEVERITY rating, not the process — the threat model of this guard is deliberate forgery inside a task's own grant, where **the attacker chooses the filename**.\n\n`conformance.sh` is free as of `d8ea93b8` — confirm no worker holds it before you write it. Bar from a CLEAN tree AFTER `git add -A` and commit; probe-line PRESENCE before value (P-84). Baseline: exit 0, 46 parity / 7884 cells, ledger 7/0, 144 cells / 39 money, all 14 wrong implementations dead, frontier GREEN at deadOccurrences 108, `EXEMPTION_PIN_LEDGER_WRONGIMPLS` now **14** — match it BY NAME if you ever touch it.\n\nT384 also listed what it did NOT drive, so you inherit it honestly: FU-T375-5 (DECLARED direction), a case-sensitive host, newline and gitlink member paths, and `guard_graded_root_is_this_tree`'s short-circuit.",
-      "note": "Filed by the driver of fire 20260828-140005 iteration 3 from T384 C-1/C-2/C-3. C-4 (bump the pin by name) was the driver's and is DONE at d8ea93b8. T375+T384 were merged with this fifth hole KNOWN: four fail-opens closed strictly improves on main, and the arm that proves the fifth is already written."
+      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
     }
   ],
   "cross_corroboration": {

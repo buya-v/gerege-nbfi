@@ -1463,12 +1463,34 @@ def main():
     # therefore be INVISIBLE here, which is the failure mode this whole section exists to
     # prevent. Select CONTRACT gates, but count and SHOW unclassified open gates too
     # rather than letting them vanish. See P-77.
+    # MALFORMED ENTRIES CRASHED THIS SECTION, AND THE CRASH WAS SILENT IN EFFECT.
+    # `gates_pending` is a list of gate OBJECTS, but G-20 and G-21 were appended as bare
+    # strings ("G-20", "G-21"). `g.get(...)` then raised AttributeError AFTER the READY
+    # and BLOCKED lists had already printed -- so every driver running this resolver got
+    # a full, plausible-looking task list and NO GATE SECTION AT ALL, plus a traceback
+    # easily read as noise. That is the P-77 failure this block exists to prevent,
+    # arriving through a shape P-77's fix did not anticipate: not a gate with a missing
+    # `class`, but an entry that is not a gate object at all.
+    #
+    # A non-dict entry carries NO `state`, so its openness is UNKNOWABLE. Read it as
+    # OPEN, never as closed: "a signal you cannot read is never permission" (STEP 0,
+    # arm 6). It is surfaced under MALFORMED below rather than silently normalised,
+    # because the repair belongs in program.json, not here.
+    malformed = [g for g in gates if not isinstance(g, dict)]
+    gates = [g for g in gates if isinstance(g, dict)]
+
     def _is_open(g):
         return "OPEN" in str(g.get("state", "")).upper()
     contract_open = [g for g in gates
                      if g.get("class") == "CONTRACT" and _is_open(g)]
     unclassified_open = [g for g in gates
                          if not isinstance(g.get("class"), str) and _is_open(g)]
+    if malformed:
+        print("\n*** MALFORMED gates_pending ENTRIES (%d) -- NOT gate objects, state"
+              " UNREADABLE, so treated as OPEN ***" % len(malformed))
+        for g in malformed:
+            print("  %r  (a %s, not an object; repair it in program.json)"
+                  % (g, type(g).__name__))
     print("\nOPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (%d)"
           % len(contract_open))
     if not contract_open:

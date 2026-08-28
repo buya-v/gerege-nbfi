@@ -1,135 +1,73 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260828-140005`, chain iteration 3 — **CLOSED CLEAN. ZERO LIVE WORKERS.**
+## FIRE `20260828-140005`, chain iteration 4 — **TEN WORKERS IN FLIGHT.** Written and pushed BEFORE the first `git worktree add`.
 
-**Nothing was left running.** Every worker was awaited; every branch merged or recorded. Exit attestation: **NO DAMAGE**. Mark each
-`needs_retry` with the WIP evidence from its branch. `in_progress` never means "work is happening"; it means
-"a driver said so, once". Everything else below is either **merged** or **complete on a branch**.
+If you are reading this after a kill, **ten tasks were live**. Each was told to commit incrementally, so each
+branch should carry partial work. Verify with `git log --oneline main..softhouse/<branch>` per row below;
+a branch with no commit means that worker died before its first checkpoint and the task is `needs_retry`,
+**not** `in_progress`.
 
-### Why iteration 3 exists
-Iteration 2 ended at ~10:35Z on a `five_hour` rate limit, not on a stop condition. The limit had reset by
-11:15Z, the tree was clean, `origin/main` was 47 s old, and **zero workers were live**.
+### Why iteration 4 exists
+Iteration 3 closed clean at `c4d89c1a` (16:54Z) with zero live workers and a green bar. The wrapper chained.
+Nothing was interrupted.
 
-## BAR ON `main` RIGHT NOW — re-run after every merge, never inferred
+## BAR ON `main` AT ITERATION-4 DISPATCH — re-measured by this driver, not inherited
 
 ```
-bash .softhouse/conformance.sh   →  EXIT 0
+bash .softhouse/conformance.sh   →  VERDICT: PASS (exit 0)
 probe line PRESENT (grep -c 'probe = ' == 1), reads `up`     ← presence tested BEFORE value, P-84
-VERDICT: PASS — 46 parity vectors / 7884 cells
-ledger parity 7/0 · oracle-refusal 6/0 · inadmissible 0 · 142 cells, 39 money
-dead-path frontier GREEN, deadOccurrences 108, frontier 11 == pinned 11
-13 ledger-wrong-* implementations all KILLED
+46 parity vectors / 7884 cells · contract-refusal 4/0 · self-test 1/0
+all 14 wrong ledger implementations KILLED · EXEMPTION_PIN_LEDGER_WRONGIMPLS=14 == population 14
+dead-path frontier GREEN · namespace census PASS (dirs=189 collidingIds=2 declared=2)
 ```
 
-Reference oracle REACHABLE throughout: `https://localhost:8443/fineract-provider/actuator/health`.
-PostgreSQL up on `:5432`. No prohibited-engine port open.
+Reference oracle REACHABLE: `https://localhost:8443/fineract-provider/actuator/health`. PostgreSQL on `:5432`.
+No prohibited-engine port open. **The iteration-3 merge hazard is genuinely closed** — the pin reads 14 at
+`conformance.sh:4476` and the wrong-implementation population is 14.
 
-## MERGED THIS ITERATION — four merges, each verified on the MERGE RESULT before touching `main`
+## IN FLIGHT — ten workers, all `isolation: worktree`
 
-| Merge | Commit | What it was |
-|---|---|---|
-| `T374` + `T382` | `01a7a05a` | A2-11 capture integrity; review APPROVED WITH CONDITIONS → `T393` |
-| `T388` + `T389` | `a010f733` | **the first accrual observations in this program** → `T395`, `T396` |
-| `T383` + `T385` | `e6cd307f` | fire-wrapper refuse-on-multiplicity → `T400`, `T401` |
-| `T381` + `T386` | `5497a85d` | anti-calibration fail-opens → `T402` (**blocks `T399`**) |
-
-Discipline used on all four, and it is not optional: merge into a **scratch worktree**, run the bar there,
-only then merge into `main`, then run the bar on `main` again. `bar-on-merge-result.sh` carries a known prose
-defect (C12) — `T385` measured it as LOW for correctness, MODERATE as documentation: the operative flag is
-`--shared`, not hardlinks, and the residual risk is a concurrent source-side `gc --prune`, which would make
-the bar **crash, not lie**. Safe to use; the fix belongs to `T353`'s grant.
-
-## COMPLETE ON BRANCHES, NOT MERGED — and the ORDER is forced
-
-| Task | Branch | Head | Blocked on |
+| Task | Branch | Model | What it is |
 |---|---|---|---|
-| `T375` | `softhouse/T375-t364-conditions` | `2c1f5723` | `T384` (live) |
-| `T360` | `softhouse/T360-divergence-class` | `d6979763` | **`T375` must land first** |
-| `T387` | `softhouse/T387-review-t360` | `026954a4` | merges with `T360` |
-| `T370` | `softhouse/T370-t351-retry` | `4925bbef` | **parked** — rejected by `T376`; substance verified good, lands via `T378` |
-| `T376` | `softhouse/T376-review-t370` | `9255d1af` | a review; verdict REJECTED |
-| `T369` | `softhouse/T369-review-t351` | `e10e3f07` | `T373` |
-| `T351` | `softhouse/T351-progress-accounting` | `a0139c5d` | superseded by `T370`/`T378` |
+| `T391` | `softhouse/T391-accrual-promotion` | opus | **Promote T388's accrual observations into vectors.** Oracle-only work. Grades the SLOT, not the account (T242's lesson). |
+| `T390` | `softhouse/T390-baseline-attribution` | opus | Oracle-state baseline cannot attribute L28-L31 / T388's 20 command keys. Oracle-only. |
+| `T402` | `softhouse/T402-t386-conditions` | opus | **Blocks `T399`.** A `2>` redirect that cannot be opened returns 1 *without running the command*. |
+| `T404` | `softhouse/T404-t384-conditions` | opus | The FIFTH registration fail-open, REACHED by T384 via an ambiguous-glob symlink. **Holds `conformance.sh`.** |
+| `T400` | `softhouse/T400-t385-conditions` | opus | Two `fire-program.sh` offsets that "cannot drift apart" and do. **P-97 applies — land through git, never `cp`.** |
+| `T401` | `softhouse/T401-zsh-census-gap` | opus | 110 tracked `.zsh` files invisible to the fail-open/dead-path census. |
+| `T393` | `softhouse/T393-t382-conditions` | opus | T382's four conditions on T374. **The task iteration 3 recorded as dispatched and never spawned.** |
+| `T397` | `softhouse/T397-t387-conditions` | opus | `verbatimInCapture` is `bytes.Contains`, so a numeric PREFIX satisfies it. **No float, no parse — the amount is never a number.** |
+| `T396` | `softhouse/T396-t389-conditions` | opus | T389's three citation defects; m-3 hides three real port traps. |
+| `T392` | `softhouse/T392-vacuous-pass-pattern` | sonnet | Give the vacuous-pass rule a P-number. **Unblocks `T398`; the two must not collide on the number.** |
 
-### ⚠ THE MERGE HAZARD THAT WILL BITE THE NEXT DRIVER
-**`T360` needs `EXEMPTION_PIN_LEDGER_WRONGIMPLS` bumped 13 → 14. MATCH IT BY NAME, NEVER BY LINE.**
-It is `conformance.sh:3923` on `main` and `:4469` on `softhouse/T375-t364-conditions` — a **546-line** shift.
-`T375` flagged the hazard from inside its own worktree (estimating ~90) and the driver measured it. Applying
-the bump at `:3923` after `T375` merges would silently edit an unrelated line. `T375` has **not** touched the
-pin; its diff is confined to `guard_guards_dir_registration` and its docs, so the two changes collide
-positionally, never semantically.
+## ⚠ `conformance.sh` IS CONTENDED BY TWO OF THESE — MERGE SERIALLY
 
-**`T360`'s branch is `exit 2` and that is CORRECT.** Probe line **PRINTED**, reads `up`, sole refusal
-`WRONG-IMPLEMENTATION POPULATION 14, PINNED 13`. Under **P-84** that is **the pin working** — not an oracle
-outage, not a corpus defect. **Do not park vector work over it.** `T387` verified 14 by counting from the
-binary's own `-list-implementations`, and confirmed the pin-patched merge result is exit 0.
+`T404` holds the registration-guard regions. `T391` may move **pinned counts only**, and **BY NAME**. Merge
+into a scratch worktree, run the bar on the **merge result**, only then touch `main`, then re-run on `main`.
+**Never apply a pin bump by line number** — iteration 3 measured a **546-line** shift between two branches on
+`EXEMPTION_PIN_LEDGER_WRONGIMPLS`.
 
-## THE TWO RESULTS OF THIS FIRE
+`T390` and `T401` were both told they may NOT edit `conformance.sh` this wave: if wiring is the right answer
+they ship the exact patch as a **request** in their handoff (the `T360` pattern) and drive it RED in their own
+worktree to prove it.
 
-**1. The first accrual observations in this program (`T388`).** 9 journal entries through three RECEIVABLE
-slots — `INTEREST` (gl 41), `FEES` (gl 42), `PENALTIES` (gl 43). The bar's every-run assertion *"NOT ONE
-JOURNAL ENTRY IN THIS TENANT ARRIVED THROUGH A RECEIVABLE SLOT"* is now false. It took the **expensive
-route** `T352` had costed and correctly declined — a NEW `ACCRUAL_PERIODIC` product on CLEAN GL accounts —
-because the cheap route posts into gl 16, a promoted leg of three graded vectors. **No promoted account
-moved**, and `T389` re-derived that on four independent axes against the live database.
+## DRIVER STATE REPAIRS MADE INLINE THIS ITERATION (no worker; `.softhouse/` is the driver's own)
 
-**2. A MEASURED remedy would have made the bar grade BACKWARDS (`T387`).** `T359` measured a one-line fix and
-recommended it; `T360` declined on reasoning; `T387` ran it against **both** a correct and a deliberately
-wrong implementation:
+1. **`ready-tasks.py` CRASHED, and the crash read as noise.** `program.json.gates_pending` held `G-20` and
+   `G-21` as **bare strings**, so `g.get("class")` raised `AttributeError` — *after* READY and BLOCKED had
+   printed. Every driver running the resolver since got a full, plausible task list and **no gate section at
+   all**. That is the P-77 failure the block exists to prevent, arriving through a shape P-77 did not
+   anticipate: not a gate missing `class`, but an entry that is not a gate object. Resolver now surfaces
+   non-dict entries under `MALFORMED` and reads them as **OPEN**, never closed.
+2. **`G-20` and `G-21` normalised into gate objects** in `program.json`, from their `gates.md` text.
+   Both `state: OPEN`, both `blocks: nothing`. Resolver now reports **0 open CONTRACT gates** — so nothing in
+   this wave is forbidden on permission grounds, as opposed to merely dependency-ready.
 
-| implementation | candidate vector | ledger parity | exit |
-|---|---|---|---|
-| `ledger-go` (CORRECT) | FAIL | PASS 7 **FAIL 1** | **1** |
-| `ledger-wrong-residue-rounding` (WRONG) | **PASS** | PASS 8 FAIL 0 | **0** |
-
-The wrong port passes and greens the bar. **`T359`'s measurement was correct and reproduces exactly** —
-measuring that the stuck case FAILS is not measuring that the harness grades RIGHT, and from one
-implementation the two are indistinguishable. Recorded **DO-NOT-APPLY**; `T398` gives it a P-number, because
-a later reader finding `T359`'s review alone would find a measured, confident, wrong recommendation with
-nothing marking it.
-
-## THE P-45 CENSUS — SEVEN GUARDS BUILT AND WIRED TO NOTHING, ALL SURFACED IN THIS ONE FIRE
-`oracle-state-baseline.sh` (would have been the net when `T388` moved the oracle) · `run-all.sh` (the rig
-three tasks have been hardening) · `casualty-sweep.sh` (**`T381` filed this against itself**) · plus the
-still-pending `T311`, `T303`, `T313`, `T333`. **`T333` guards a MONEY non-negotiable.** Filed as **`T399`**,
-which **now depends on `T402`** — wiring `casualty-sweep.sh` before its scratch-file fail-open is closed
-would let a filesystem hiccup produce **a green bar on a blind instrument**, strictly worse than unwired.
-`T399` must gate on the **exit code**, not the `SWEEP-RESULT` cardinals: a refused selector is counted in
-neither.
+## QUEUE AFTER THIS WAVE, IN ORDER
+`T394` (reviews `T393`) → `T398` (needs `T392`'s P-number) → `T399` (needs `T402`) → `T395` (G-21, DEC-2
+**evidential correction only**) → then the reviewer pairings for whatever lands here.
 
 ## OPEN GATES — none blocks anything
-`G-19` · `G-20` (the effort ratio: 60% of the Go is the instrument, 39% the port it grades) · `G-21` (a
-**ratified** DEC-2 carries a cardinal the oracle moved out from under; **nothing has ever swept `docs/`**).
-The driver has **not** edited DEC-2 — `T395` makes that edit citing the gate.
-
-## QUEUE FOR THE NEXT FIRE, IN ORDER
-`T384` verdict → land `T375` → land `T360`+`T387` **with the pin bumped by name** → `T402` → `T399` →
-`T393`/`T394` → `T390`, `T391`, `T395`, `T396`, `T397`, `T400`, `T401` → `T392`+`T398` (**these two must
-agree their P-numbers or land in one commit** — this repo has already shipped one P-number collision).
-
-## ⚠ DRIVER ERROR FOUND AND CORRECTED AT 14:40Z — `T393` WAS NEVER DISPATCHED
-
-The driver wrote `T393`'s dispatch record — `status: in_progress`, `branch:
-softhouse/T393-t382-conditions` — and **pushed it at `25e910b4`, in a commit whose own message says "pushed
-before its worktree"** — then processed another worker's result and **never called the Agent tool.** For
-**2 h 20 m** `tasks.json` told anyone reading it that a task was in flight while **nothing was running**.
-
-Proven empty rather than assumed: `git rev-parse --verify softhouse/T393-t382-conditions` → fatal, the branch
-never existed locally or on origin; zero worktrees match; the session's own agent list holds no such
-subagent. **Nothing was lost, because nothing ever ran.** Reset to `pending`.
-
-**THE SHAPE IS WORTH MORE THAN THE INCIDENT.** The push-before-spawn protocol exists so the record cannot
-claim **less** than reality — the 2026-08-22 and 2026-08-28 incidents were both "workers running, record
-silent". This is the same record claiming **more** than reality, and **no guard in this program looks for
-it**. `ready-tasks.py` already flags an `in_progress` task with no `branch` as a suspected isolation
-violation — **the driver simply never re-ran it after dispatching.** A cheap fix exists and should be a task:
-re-run `ready-tasks.py` after every dispatch wave and treat a branchless `in_progress` as an alarm.
-
-Not dispatched now, deliberately: the fire is 8.7 h old against a 9.52 h record, and STEP 5.5 says only
-dispatch what you have the budget to see through.
-
-## Pause reason
-**Closed clean, not paused.** All twelve dispatched workers awaited to completion, six merges landed, exit
-attestation `rc 0 / NO DAMAGE` with both advisories attributed. Fire ran ~8.9 h against a 9.52 h record. Fire is 8.2 h old at the time of writing;
-longest on record is 9.52 h. `T384` was dispatched with its verdict-critical checks ordered FIRST and the
-95-minute full drive LAST, so a kill mid-review still leaves a usable verdict.
+`G-4`, `G-5`, `G-8`, `G-10`, `G-12`, `G-19`, `G-20` (effort ratio: 60% instrument, 39% port), `G-21` (a
+ratified DEC-2 carries a cardinal the oracle moved out from under; `T395` prepares the correction citing it).
+**No CONTRACT gate is open.**

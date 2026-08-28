@@ -754,8 +754,32 @@
       "raised_by": "local fire 20260828-140005",
       "blocks": "nothing"
     },
-    "G-20",
-    "G-21"
+    {
+      "id": "G-20",
+      "class": "ENGINEERING",
+      "task": "T352",
+      "context": "program-wide",
+      "state": "OPEN",
+      "title": "The program is advancing, but the measured ratio of instrument-building to Fineract porting is 60/39",
+      "asking_for": "A steer on effort allocation, not a decision the program is stuck behind. NOTE the correction recorded in gates.md: T352's framing 'the READY queue has ZERO port and ZERO vector tasks' is FALSE against git -- files_hint undercounts, and T307/T322/T328/T352 all touched ported Go or the vector store without declaring nexus/ in files_hint. Quote the ratio, never the zero.",
+      "recorded_in": ".softhouse/gates.md",
+      "raised_by": "local fire 20260828-140005 chain iteration 3",
+      "blocks": "nothing. The driver dispatched a full wave in the same fire that raised it."
+    },
+    {
+      "id": "G-21",
+      "class": "ENGINEERING",
+      "task": "T389",
+      "context": "tierA-gl-accounting",
+      "state": "OPEN",
+      "title": "A ratified DEC-2 carries an evidential cardinal that is now FALSE, and no casualty sweep in this program has ever looked at docs/",
+      "asking_for": "Permission to correct the I-5 evidential cardinal at docs/adr/DEC-2-gl-accounting-adapter.md:1061 and :3004, which the oracle moved out from under after ratification. CLAUDE.md: a ratified DEC-n cannot be amended by an agent without raising a gate -- this is that gate. EVIDENTIAL CORRECTION ONLY; no obligation, no semantic position, no cardinal the port is graded on may move under it.",
+      "recorded_in": ".softhouse/gates.md",
+      "raised_by": "local fire 20260828-140005 chain iteration 3",
+      "found_by": "T389 (MAJOR finding), re-derived independently by the driver against the live oracle before the gate was written",
+      "what_unblocks_it": "T395 -- extends the casualty sweep to docs/ and prepares the correction citing this gate. The driver has NOT edited DEC-2.",
+      "blocks": "nothing"
+    }
   ],
   "history": [
     {
