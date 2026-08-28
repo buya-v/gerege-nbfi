@@ -1739,11 +1739,16 @@ guard_no_fail_open_instruments() {
 # in raw SWEEP OUTPUTS — dumps of citations gathered from elsewhere, where a citation is a
 # MENTION and not a claim. So the DIRECTIVE zone is doing 100% of the work of keeping this
 # guard honest, and the fatal scorer alone would be ~76% false positives.
-# In the directive zone today: 6 findings, 0 fatal. The CLOSEST is conformance.sh:1866 — this
-# very file — at score 8 against a fatal floor of 9, ONE POINT below firing, and T331 adjudicated
-# it a FALSE POSITIVE: it cites `P-66/P-70 — "not found" is a statement about the search`, which
-# is CORRECT [VERIFIED: patterns.md:1931, :2341], and the extractor merely swept the gloss past
-# the citation's own sentence into the paragraph beneath it about population and corpus.
+# In the directive zone today: 6 findings, 0 fatal. The CLOSEST is IN THIS VERY FILE — the
+# `P-66/P-70` citation in guard_no_host_state_in_lint_corpus's STATED SCOPE paragraph below,
+# named by its text and not by its ordinal because inserting this block moved it :1866 -> :2008
+# and a line number into a moving file is the same defect as a stale count. It scores 8 against
+# a fatal floor of 9, ONE POINT below firing, and T331 adjudicated it a FALSE POSITIVE: it cites
+# `P-66/P-70 — "not found" is a statement about the search`, which is CORRECT [VERIFIED:
+# patterns.md defines P-70 as four ways this program stated a search result as a world fact, and
+# restates "P-66 / P-70 — 'not found' is a statement about the search" verbatim], and the
+# extractor merely swept the gloss past the citation's own sentence into the paragraph beneath
+# it about population and corpus — which is P-76's subject, not P-70's.
 # IT IS DELIBERATELY LEFT ALONE. Rewording a correct citation to move a heuristic score is
 # fitting the tree to the guard, and this file already records that clearing a guard by removing
 # its subject is the move a reviewer should distrust most.
