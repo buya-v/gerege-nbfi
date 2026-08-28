@@ -304,17 +304,25 @@ func Admit(v *Vector, opts Options) []string {
 		//     PLAIN-CREATE acceptances, and one request field bought the claim. That was
 		//     P-89 one level up: prose claimed DATA was firing and it was not.
 		//
-		// WHAT THIS STORE HAS OBSERVED ON THIS ROW IS FOUR VECTORS, NOT THREE, AND THEY
-		// ARE NOT SYMMETRICAL. The asymmetry IS the measurement and it is why the arms
-		// differ:
+		// WHAT THIS STORE HAS OBSERVED ON THIS ROW IS SIX VECTORS [T328; T306 read four,
+		// and the ASYMMETRY it recorded IS NOW GONE — that asymmetry was the entire reason
+		// its arms differed, so read this table before the paragraphs below, which are
+		// kept as history]:
 		//
 		//   the defineOpeningBalance command — BOTH SIDES of :811's emptiness test
 		//     LDG-REFUSE-03  REFUSAL   findNonContraTransactionIds NON-EMPTY  :717 -> :810-813
 		//     LDG-05         ACCEPTED  findNonContraTransactionIds EMPTY, :812 falls through,
 		//                              HTTP 200 and SIX journal entries for three request legs
-		//   the two DATE boundaries — REFUSING SIDE ONLY, accepting side still uncaptured
-		//     LDG-REFUSE-04  REFUSAL   !isBefore(latestClosingDate, transactionDate)   :636
-		//     LDG-REFUSE-05  REFUSAL   isDateInTheFuture(transactionDate)              :629-631
+		//   the CLOSURE boundary — BOTH SIDES of :636
+		//     LDG-REFUSE-04  REFUSAL   txn ON the closing date, !isBefore(closing, txn)  :636
+		//     LDG-06         ACCEPTED  txn one day AFTER the closing date, HTTP 200, three
+		//                              journal entries and no contra expansion    [T327 B-1]
+		//   the FUTURE-DATE guard — BOTH SIDES of :629-631
+		//     LDG-REFUSE-05  REFUSAL   txn one day after the business date, isDateInTheFuture
+		//     LDG-07         ACCEPTED  txn ON the business date, HTTP 200 — the only
+		//                              observation here that tells isAfter from !isBefore,
+		//                              i.e. a STRICT comparison from a non-strict one
+		//                                                                        [T327 B-2]
 		//
 		// [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java at the pinned
 		// commit 426a23544. :717 is validateJournalEntriesArePostedBefore(contraId) inside
@@ -324,6 +332,18 @@ func Admit(v *Vector, opts Options) []string {
 		// future-date GUARD STATEMENT is :630 and :629 is its comment line — this store
 		// cites it as ":629" throughout and that citation is one line high; :636 is
 		// literally `if (!DateUtils.isBefore(latestGLClosure.getClosingDate(), transactionDate))`.]
+		//
+		// ***** EVERYTHING FROM HERE TO THE PREDICATE IS T306's REASONING AND IS KEPT AS
+		// HISTORY. ITS CONCLUSION -- "the date arms KEEP the expect.kind precondition" --
+		// IS SUPERSEDED BY T328, whose own paragraph sits directly above the predicate. It
+		// is left visible rather than deleted for the reason this store applies to every
+		// refuted rule: it was quoted forward (in T306's handoff, in openingbalance_test.go
+		// and in this file's own message string), and a reader who meets it there must be
+		// able to find the correction. NOTE WHAT T328 MEASURED ABOUT IT: the edit this
+		// paragraph prescribes -- "drop `v.Expect.Kind == \"refusal\"` from the date arms"
+		// -- WOULD HAVE ADMITTED NEITHER PROMOTED VECTOR, because both preconditions it
+		// names are the REFUSING-region comparisons. The instruction was right about WHEN
+		// to widen and wrong about WHAT to widen. *****
 		//
 		// SO THE COMMAND ARM TAKES EITHER expect.kind AND THE DATE ARMS DO NOT. T306's
 		// own first pass put `v.Expect.Kind == "refusal" &&` in front of ALL THREE arms,
