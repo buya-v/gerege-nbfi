@@ -334,9 +334,32 @@ func Admit(v *Vector, opts Options) []string {
 		// whole corpus [T320 finding T320-4, HIGH]. Dropping the precondition on THIS ONE
 		// ARM is the widening T306's first pass said must arrive "deliberately and with
 		// the capture in hand"; T305 put the capture in hand, so it arrives here and
-		// nowhere else. The date arms KEEP it, because backlog B-1/B-2 in
-		// .softhouse/capture/t287-closure-refusals/T295-ADJUDICATION.md is still open and
-		// no capture in this store shows an entry ACCEPTED at either date boundary.
+		// nowhere else. The date arms KEEP it, and the reason CHANGED UNDER THIS TASK'S
+		// FEET between its first commit and its merge — which is why the reason is
+		// written out rather than left as "backlog B-1/B-2 is open":
+		//
+		//   WAS (true until T327 merged): "no capture in this store shows an entry
+		//     ACCEPTED at either date boundary."  THAT CLAUSE IS NOW FALSE.
+		//   IS: T327 FIRED BOTH BACKLOG ARMS AND BOTH RETURNED HTTP 200 — B-1, an entry
+		//     dated one day AFTER the closing date (2026-08-27 vs a closure closed
+		//     2026-08-26), and B-2, an entry dated ON the business date (2026-08-28)
+		//     [VERIFIED: .softhouse/capture/t327-closure-accepting-side/throwaway/out/
+		//      B1-ACCEPT-06-entry-one-day-after-closing-date.status = 200 and
+		//      B2-ACCEPT-01-entry-on-business-date.status = 200]. So the BYTES exist.
+		//   AND THE ARMS STILL KEEP THE PRECONDITION, because T327 PROMOTED NOTHING: the
+		//     ledger store holds the same ten vectors it held before that merge, and not
+		//     one of them is an acceptance at either date boundary. THE GATE KEYS ON THE
+		//     STORE, NEVER ON THE CAPTURE DIRECTORY. A capture is an observation; a vector
+		//     is a graded claim, and only the second is what a `capabilities_required`
+		//     entry can honestly assert coverage of.
+		//
+		// SO THE NEXT WIDENING IS NOW EARNED AND UNCLAIMED, and it is exactly one edit:
+		// when T327's B-1/B-2 bytes are PROMOTED to vectors, drop `v.Expect.Kind ==
+		// "refusal"` from the date arms too — deliberately, in the promoting task, with
+		// the capture in hand. Until then MUTANT W (the same drop, made early) is held
+		// red by TestOpeningBalanceCapabilityIsScopedToTheObservedShape/"an ACCEPTANCE at
+		// either DATE boundary REFUSES", and that red is CORRECT, not an obstacle
+		// [.softhouse/reviews/T306/out/30-mutation-arms.txt].
 		//
 		// WHAT THIS STILL DOES NOT DO, stated rather than left to be discovered: it
 		// cannot bind a TRANSCRIPTION to its capture. A vector whose provenance cites a
@@ -360,12 +383,15 @@ func Admit(v *Vector, opts Options) []string {
 				"ACCEPTING side at :812 (LDG-05, HTTP 200 and six entries on an empty ledger) -- so on "+
 				"that COMMAND either expectation is covered -- and the PRE-CLOSURE (:636) and "+
 				"FUTURE-DATED (:629-631) REFUSALS (LDG-REFUSE-04, LDG-REFUSE-05), whose ACCEPTING "+
-				"sides are NOT captured. The claim on the two DATE shapes is decided by THIS VECTOR'S "+
-				"REQUEST -- the same two date comparisons the oracle makes -- and never by the refusal "+
-				"code it declares, because that is the answer it is asking to be believed about. A "+
-				"vector outside those four -- an entry ACCEPTED at either date boundary, most "+
-				"obviously, which no capture in this store observes (backlog B-1/B-2) -- would read as "+
-				"covered when it is not. PROMOTE THE CAPTURE FIRST, then widen this rule",
+				"sides are CAPTURED BUT NOT PROMOTED. The claim on the two DATE shapes is decided by "+
+				"THIS VECTOR'S REQUEST -- the same two date comparisons the oracle makes -- and never "+
+				"by the refusal code it declares, because that is the answer it is asking to be "+
+				"believed about. A vector outside those four -- an entry ACCEPTED at either date "+
+				"boundary, most obviously -- would read as covered when it is not. T327 fired backlog "+
+				"B-1 and B-2 and BOTH RETURNED HTTP 200, so the oracle bytes now EXIST "+
+				"(.softhouse/capture/t327-closure-accepting-side/), but NO VECTOR carries them and this "+
+				"gate keys on the STORE, never on the capture directory. PROMOTE THE CAPTURE FIRST, "+
+				"then widen this rule",
 				name, v.Request.Command, v.Expect.Kind)
 		}
 	}
