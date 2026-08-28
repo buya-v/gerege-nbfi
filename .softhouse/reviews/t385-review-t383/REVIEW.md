@@ -581,11 +581,11 @@ three tasks in a row. It is now written down a third time.
 ## 11. WHAT T385 DID **NOT** CHECK, so this review's coverage is not overread
 
 * I did **not** run the wrapper's non-probe path, start a fire, or take a lock.
-* I did **not** re-run T383's own three drivers. I wrote five of my own and drove both file states
+* I did **not** re-run T383's own three drivers. I wrote six of my own (multiplicity, threshold, prose, skew-drift, substring-claim, zsh-idiom) plus a 192-state runner and two helpers, and drove both file states
   with them; the 192-state driver is the one existing instrument I re-ran, and the task named it.
 * I did **not** test the off-BSD surface (`/usr/bin/stat -f`, `shasum`, `/bin/ps` flags,
   `hostname -s`). Unchanged by this branch and still untested. `[UNVERIFIED]`
-* My own five drivers are `.zsh` and therefore outside the dead-path census's selector — the same
+* Seven of my nine instruments are `.zsh` and therefore outside the dead-path census's selector — the same
   honest qualification T377, T380 and T383 all made. A green frontier says nothing about them.
 * I did **not** exercise a `LOCK_MAX_AGE_SECS` extreme; the new gate does not read it and
   `_knob_int` already bounds it from below.
