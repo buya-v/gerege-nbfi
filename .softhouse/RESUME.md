@@ -67,7 +67,8 @@ whoever receives it.
 | `T383` fire-wrapper `tail -1` fail-open | `af72b6ec837e41331` | code | running |
 | `T381` anti-calibration fail-open | `aab1c4d016f417758` | code | running |
 | `T360` divergence vector class | `ad3a06a761a0fd26d` | code | running |
-| `T388` FIRST accrual capture | `a8fa18aedf7a9db13` | test_writer (ORACLE-ONLY) | running |
+| `T388` FIRST accrual capture | `a8fa18aedf7a9db13` | test_writer (ORACLE-ONLY) | **done** @ `977e37af` |
+| `T389` review T388 | `a049874f964182c77` | reviewer | running |
 
 ## WAVE 1b — `T388`, dispatched second, under the G-20 decision
 
@@ -80,11 +81,42 @@ ENTIRELY UNGRADED and not one journal entry in this tenant has ever arrived thro
 because `T360` holds `.softhouse/vectors/` this wave. Promotion is a separate follow-on. Its paired reviewer
 `T389` was filed in the same commit as its dispatch.
 
-**`T388` moves shared oracle state permanently and knows it.** It was told to take the expensive route T352
+### `T388` RESULT — the first accrual observations in this program
+
+**9 journal entries through 3 receivable slots**: 3 x `INTEREST_RECEIVABLE` (slot 7, gl 41), 3 x
+`FEES_RECEIVABLE` (slot 8, gl 42), 3 x `PENALTIES_RECEIVABLE` (slot 9, gl 43) -- JEs 78/81/83, 84/87/89,
+90/93/95, all DEBIT, all MNT, all non-manual. The bar's every-run assertion *"NOT ONE JOURNAL ENTRY IN THIS
+TENANT ARRIVED THROUGH A RECEIVABLE SLOT"* **is now false**, which was the point.
+
+**P0 HELD -- no promoted GL account moved.** T388 did not trust the forbidden set the driver gave it: it
+DERIVED the set from all 67 store files and found **two members the brief had missed** -- gl 22 (from
+`capabilities-ledger.json`'s `unposted_slots`) and gl 15 (a `contra_gl_account_id`) -- then red-drove its own
+disjointness checker. Bar exit 0 with the probe line PRINTED; ledger 7/6/0/142/39 and loanschedule 46/7884
+unmoved; dead-path pin 109 unmoved. Created 13 GL accounts (35-47), `ACCRUAL_PERIODIC` product 63, client 3,
+loan 8; accrual fired via `POST /runaccruals tillDate 15 April 2026`, and T388 states plainly that this is
+the same method job 16 calls and therefore **not** evidence about the scheduler. **AWAITING `T389`.**
+
+### A FINDING THE DRIVER MEASURED WHILE TRIAGING T388 -- P-45, the fourth live instance
+
+**`oracle-state-baseline.sh` is invoked by NOTHING THAT RUNS.** Its only references outside its own directory
+are inside `t367-review-t363`'s own drives, and T367 asked the question explicitly (*"X9 is
+oracle-state-baseline.sh referenced by anything that RUNS?"*). **The instrument built to detect unattributed
+oracle-state movement would not have fired had T388 contaminated a promoted account.** It is not T388's
+defect and T389 was told not to reject on it -- but it is why T389 owes this capture more independent
+verification than usual: the automated safety net was not armed. Filed as `T390` item 3, beside the still-
+pending `T311`, `T303`, `T313` and `T333`, which are all the same shape.
+
+**`T388` moved shared oracle state permanently and knew it.** It was told to take the expensive route T352
 named as correct — a NEW `ACCRUAL_PERIODIC` product on CLEAN GL accounts — because the cheap route (a loan on
 product 28) posts into **gl 16, a promoted leg of LDG-01/02/03**, through a mapping A2-314/403 hold
-inadmissible. Its P0 acceptance test is that **no promoted GL account moved**, and `T389` re-derives that
-against the live database rather than reading T388's notes.
+inadmissible. Its P0 acceptance test was that **no promoted GL account moved**, and `T389` is re-deriving that against
+the live database rather than reading T388's notes -- including deriving the forbidden set independently,
+because T388 already found two members the driver's own brief had missed.
+
+`T390` (append `PROBES.tsv`, correct `CASUALTIES.md:40,44` whose `m_loan` claim T388 made half false, and
+wire the unwired baseline) and `T391` (promote the observations, and rewrite the four sentences in
+`capabilities-ledger.json` the harness now prints falsely every run) are FILED and sequenced behind their
+holders.
 
 ## MERGE HAZARD carried forward from iteration 2 — read before merging anything
 `T374` ships the dead-path pin at **108**; `main` is at **109**; `T375` is at **109**.
