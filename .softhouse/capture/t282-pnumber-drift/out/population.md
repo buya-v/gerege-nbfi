@@ -1,4 +1,4 @@
-counts: {"sites": 8936, "definition": 97, "bare": 8326, "consistent": 421, "misdirecting": 69, "undefined": 12, "negative_control": 11, "cross_referenced": 25, "skipped_self_source": 2, "self_corrected": 32, "skipped_self_output": 22}
+counts: {"sites": 8967, "definition": 97, "bare": 8345, "consistent": 433, "misdirecting": 69, "undefined": 12, "negative_control": 11, "cross_referenced": 25, "skipped_self_source": 2, "self_corrected": 32, "skipped_self_output": 22}
 
 | # | zone | file:line | cited | rule actually stated | verdict | note |
 |---|---|---|---|---|---|---|
@@ -26,10 +26,10 @@ counts: {"sites": 8936, "definition": 97, "bare": 8326, "consistent": 421, "misd
 | 22 | evidence | `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T251.md:40` | P-71 | P-24 | **FALSE-POSITIVE** | P-71 IS 'a worker's fork point is UNPREDICTABLE: MEASURE IT, NEVER ASSERT IT', and the gloss is 'the fork point, MEASURED, not assumed'. Exactly right. P-24 ('an assertion about what happens ON MERGE can only be tested BY MERGING') won on a shared token alone. |
 | 23 | evidence | `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md:69` | P-131 | - | **ERRATA-MENTION** | the T282 errata/handoff naming the dangling id it exists to record |
 | 24 | evidence | `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md:69` | P-261 | - | **ERRATA-MENTION** | the T282 errata/handoff naming the dangling id it exists to record |
-| 25 | evidence | `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md:100` | P-131 | - | **ERRATA-MENTION** | the T282 errata/handoff naming the dangling id it exists to record |
-| 26 | evidence | `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md:100` | P-261 | - | **ERRATA-MENTION** | the T282 errata/handoff naming the dangling id it exists to record |
-| 27 | evidence | `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md:173` | P-131 | - | **ERRATA-MENTION** | the T282 errata/handoff naming the dangling id it exists to record |
-| 28 | evidence | `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md:173` | P-261 | - | **ERRATA-MENTION** | the T282 errata/handoff naming the dangling id it exists to record |
+| 25 | evidence | `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md:114` | P-131 | - | **ERRATA-MENTION** | the T282 errata/handoff naming the dangling id it exists to record |
+| 26 | evidence | `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md:114` | P-261 | - | **ERRATA-MENTION** | the T282 errata/handoff naming the dangling id it exists to record |
+| 27 | evidence | `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md:187` | P-131 | - | **ERRATA-MENTION** | the T282 errata/handoff naming the dangling id it exists to record |
+| 28 | evidence | `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T282.md:187` | P-261 | - | **ERRATA-MENTION** | the T282 errata/handoff naming the dangling id it exists to record |
 | 29 | evidence | `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T285.md:235` | P-81 | P-93 | **FALSE-POSITIVE** | The 'gloss' is a MARKDOWN HEADING about a guard handling exit codes correctly, which is P-81's own subject. Correctly cited; P-93 won on the token 'guard'. |
 | 30 | evidence | `.softhouse/reviews/a2-33-dec2-rev5/sweep-output-live-population.txt:54` | P-67 | P-96 | **FALSE-POSITIVE** | sweep OUTPUT: the text beside the id is a printed grep hit from another file, not a gloss the author wrote |
 | 31 | evidence | `.softhouse/reviews/a2-33-dec2-rev5/sweep-output-live-population.txt:64` | P-67 | P-96 | **FALSE-POSITIVE** | sweep OUTPUT: the text beside the id is a printed grep hit from another file, not a gloss the author wrote |

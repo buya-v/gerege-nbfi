@@ -124,10 +124,10 @@
   6
  ],
  "counts": {
-  "sites": 8938,
+  "sites": 8967,
   "definition": 97,
-  "bare": 8327,
-  "consistent": 422,
+  "bare": 8345,
+  "consistent": 433,
   "misdirecting": 69,
   "undefined": 12,
   "negative_control": 11,
@@ -503,7 +503,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 219,
+   "line": 220,
    "cited": 58,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'name the program you ran, not the verb). `git` is resolved # through shutil.which and the resolved path is PRINTED in the reconcile report, '",
    "text": "# PROGRAMS ARE NAMED (P-58: name the program you ran, not the verb). `git` is resolved",
@@ -513,7 +513,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 241,
+   "line": 242,
    "cited": 91,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# without it. This is P-91's escape applied to an authority instead of a document:",
@@ -523,7 +523,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 244,
+   "line": 245,
    "cited": 91,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# P-91].",
@@ -533,7 +533,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 429,
+   "line": 430,
    "cited": 91,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "The boolean was ONE PREDICATE SERVING TWO PURPOSES, which is the shape `P-91` /",
@@ -543,7 +543,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 434,
+   "line": 435,
    "cited": 91,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "P-91, this checkout]. So the predicate is SPLIT, and the second half moves onto the",
@@ -553,7 +553,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 453,
+   "line": 454,
    "cited": 85,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# are recorded, not hypothetical: P-85's two-orchestrator day (\"TWO ORCHESTRATORS",
@@ -563,7 +563,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 455,
+   "line": 456,
    "cited": 85,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# [VERIFIED: .softhouse/patterns.md, P-85]); any hand invocation between fires",
@@ -573,7 +573,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 497,
+   "line": 498,
    "cited": 22,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# is believed\" [VERIFIED: .softhouse/patterns.md, P-22].",
@@ -583,7 +583,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 563,
+   "line": 564,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "silently fall behind the truth the way a remembered field can (P-45, five recorded",
@@ -593,7 +593,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 564,
+   "line": 565,
    "cited": 85,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "times)\" [VERIFIED: fire-program.sh, the P-85/STEP 0 comment above the LOCK heredoc].",
@@ -603,7 +603,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 674,
+   "line": 675,
    "cited": 85,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "PUSHED BEFORE SPAWN (P-85)\" -- and SEVEN of the ids it",
@@ -613,7 +613,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 703,
+   "line": 704,
    "cited": 45,
    "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): '\"a guard that only works when someone       remembers to run it enforces nothing\" [VERIFIED: .softhouse/patterns.md, P-45] --'",
    "text": "REMEMBER to refresh, which is P-45 -- \"a guard that only works when someone",
@@ -623,7 +623,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 704,
+   "line": 705,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "remembers to run it enforces nothing\" [VERIFIED: .softhouse/patterns.md, P-45] --",
@@ -633,7 +633,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 708,
+   "line": 709,
    "cited": 85,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "SPAWN (P-85)\". So the deletion of `fire` and `dispatched_at` recommended by T302",
@@ -643,7 +643,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 716,
+   "line": 717,
    "cited": 85,
    "detail": "gloss (bracketed) matches no registered rule (best trigram score 1 < 6): '\"record PUSHED BEFORE SPAWN\"'",
    "text": "violate P-85 (\"record PUSHED BEFORE SPAWN\"), it is not a shape this repo has",
@@ -653,7 +653,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 720,
+   "line": 721,
    "cited": 91,
    "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): '\"a guard phrased as a STRUCTURAL       PATTERN over the shape of its input can always be re-nested one level out ... '",
    "text": "the burden inversion, not another pattern: P-91 -- \"a guard phrased as a STRUCTURAL",
@@ -663,7 +663,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 724,
+   "line": 725,
    "cited": 91,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "RECOGNISES\" [VERIFIED: .softhouse/patterns.md, P-91]. Terms 1 and 2 are both",
@@ -673,7 +673,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 729,
+   "line": 730,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "This is NOT the \"remembered obligation\" P-45 forbids, and the difference is the",
@@ -683,7 +683,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 737,
+   "line": 738,
    "cited": 91,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "the shape T292/P-91 names and it is deliberately not done.",
@@ -693,7 +693,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 768,
+   "line": 769,
    "cited": 85,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"(P-85)'), so this reads as a RE-DISPATCH by the fire holding the \"",
@@ -703,7 +703,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 1002,
+   "line": 1218,
    "cited": 22,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# because it is believed\" [VERIFIED: .softhouse/patterns.md, P-22]; a FACT that",
@@ -713,7 +713,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 1112,
+   "line": 1391,
    "cited": 77,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "#   `t.get(\"branch\", <default>)` was ALSO a fail-open of the P-77 shape: the default",
@@ -723,7 +723,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 1129,
+   "line": 1413,
    "cited": 22,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# than none -- because it is believed\" [VERIFIED: .softhouse/patterns.md, P-22].",
@@ -733,7 +733,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 1141,
+   "line": 1425,
    "cited": 45,
    "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): '\"a guard that only works when someone         # remembers to run it enforces nothing\" [VERIFIED: .softhouse/patterns.md, P-45]'",
    "text": "# what to dispatch. That is P-45 -- \"a guard that only works when someone",
@@ -743,7 +743,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 1142,
+   "line": 1426,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# remembers to run it enforces nothing\" [VERIFIED: .softhouse/patterns.md, P-45]",
@@ -753,7 +753,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 1143,
+   "line": 1427,
    "cited": 45,
    "detail": "gloss (colon) matches no registered rule (best trigram score 1 < 6): 'a guard ASSERTED to run, in prose, to the only reader         # that matters. '",
    "text": "# -- in the fix for P-45: a guard ASSERTED to run, in prose, to the only reader",
@@ -763,7 +763,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 1181,
+   "line": 1465,
    "cited": 77,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# rather than letting them vanish. See P-77.",
@@ -773,7 +773,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 1203,
+   "line": 1487,
    "cited": 77,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# has recorded no scope, and SAY that is what happened. See P-77.",
@@ -783,7 +783,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 1210,
+   "line": 1494,
    "cited": 45,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# code was fail-CLOSED; the patch made it fail-OPEN -- a fresh P-45 instance",
@@ -793,7 +793,7 @@
   {
    "kind": "BARE",
    "file": ".softhouse/bin/ready-tasks.py",
-   "line": 1211,
+   "line": 1495,
    "cited": 77,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "# created in the very commit that filed P-77 about unenforced permission",
@@ -22654,6 +22654,106 @@
    "cited": 6,
    "detail": "gloss (dash) matches no registered rule (best trigram score 1 < 6): \"the deserialiser must accept all three shapes and must not guess.** Decide the shape from the *endpoint + DTO*, matching §1's table, and **f\"",
    "text": "**Rule P-6 — the deserialiser must accept all three shapes and must not guess.** Decide the shape",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t330-reconcile-merged-work/bar.txt",
+   "line": 26,
+   "cited": 22,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t330-reconcile-merged-work/bar.txt",
+   "line": 26,
+   "cited": 50,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t330-reconcile-merged-work/bar.txt",
+   "line": 116,
+   "cited": 72,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t330-reconcile-merged-work/design.md",
+   "line": 22,
+   "cited": 45,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "guard.**\"* [VERIFIED: `.softhouse/patterns.md:1472`] — one turn further out. P-45's shape",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t330-reconcile-merged-work/design.md",
+   "line": 91,
+   "cited": 77,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "is the P-77 shape this file has been bitten by twice. Adding the word to *this* file does",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t330-reconcile-merged-work/population.py",
+   "line": 6,
+   "cited": 66,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "tasks.json into `.softhouse/runs/*.tasks.json` -- **P-66's population** [\"**P-66.** The",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t330-reconcile-merged-work/population.py",
+   "line": 6,
+   "cited": 66,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "tasks.json into `.softhouse/runs/*.tasks.json` -- **P-66's population** [\"**P-66.** The",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t330-reconcile-merged-work/population.py",
+   "line": 11,
+   "cited": 66,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "P-66 is exactly the shape of this omission: a question answered against ONE file when",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t330-reconcile-merged-work/population.py",
+   "line": 155,
+   "cited": 66,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "print(\"  P-66's population is now MEASURED, not assumed: the archive holds %d\"",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/capture/t330-reconcile-merged-work/population.txt",
+   "line": 40,
+   "cited": 66,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "P-66's population is now MEASURED, not assumed: the archive holds 153",
    "zone": "evidence",
    "fatal": false
   },
@@ -49578,6 +49678,66 @@
    "cited": 6,
    "detail": "gloss (trailing-id) matches no registered rule (best trigram score 1 < 6): 'the deserialiser must fail loudly on an unexpected shape, never fall back'",
    "text": "(P-5); the deserialiser must fail loudly on an unexpected shape, never fall back (P-6).",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T330.md",
+   "line": 25,
+   "cited": 45,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "[VERIFIED: `.softhouse/patterns.md:1472`] — one turn out. P-45's shape is *a guard nobody",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T330.md",
+   "line": 69,
+   "cited": 77,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "**runnable**, i.e. fail-OPEN toward dispatch — the P-77 shape this file has been bitten",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T330.md",
+   "line": 209,
+   "cited": 66,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "## 5. Population — P-66's population, swept (`population.py` / `population.txt`)",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T330.md",
+   "line": 269,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "- **`FU-T330-3` — `P-84` earned its keep again, in this task.** The first bar after",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T330.md",
+   "line": 278,
+   "cited": 69,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "- **`FU-T330-4` — `P-69` observed live.** `budget.txt` was captured three times during",
+   "zone": "evidence",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T330.md",
+   "line": 286,
+   "cited": 45,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "either.\"* P-45's five recorded instances are guards nobody runs. This is the sixth",
    "zone": "evidence",
    "fatal": false
   },
@@ -80863,6 +81023,26 @@
    "cited": 86,
    "detail": "the id carries no sentence -- nothing binds it to a rule",
    "text": "\"description\": \"READ `.softhouse/observations/20260828-reconcile-demotes-merged-work.md` FIRST \\u2014 the driver measured this and the measurement is not in dispute.\\n\\nWHAT HAPPENED. The wrapper's post-fire reconcile (9",
+   "zone": "orchestrator",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/tasks.json",
+   "line": 4499,
+   "cited": 66,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"note\": \"MERGED at fc104776 by fire 20260828-080001. THE MEASUREMENT THAT RESIZED THE DEFECT: the driver's sweep found 1 task DAMAGED; T330 asked how often the VERDICT was wrong and measured 78 of 81 branched tasks -- 96",
+   "zone": "orchestrator",
+   "fatal": false
+  },
+  {
+   "kind": "BARE",
+   "file": ".softhouse/tasks.json",
+   "line": 4499,
+   "cited": 84,
+   "detail": "the id carries no sentence -- nothing binds it to a rule",
+   "text": "\"note\": \"MERGED at fc104776 by fire 20260828-080001. THE MEASUREMENT THAT RESIZED THE DEFECT: the driver's sweep found 1 task DAMAGED; T330 asked how often the VERDICT was wrong and measured 78 of 81 branched tasks -- 96",
    "zone": "orchestrator",
    "fatal": false
   },
