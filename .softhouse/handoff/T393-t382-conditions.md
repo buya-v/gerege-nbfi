@@ -305,7 +305,13 @@ VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 
   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0
   namespace: PASS — every task-id prefix shared by two directories carries its OWNER record.
 ```
-[Transcript: `.softhouse/capture/t393-t382-conditions/out/07-CONFORMANCE.txt`.]
+[Transcripts: `out/07-CONFORMANCE.txt` and `out/08-CONFORMANCE-FINAL.txt`. **The bar was run
+TWICE, and both are committed** — 07 after the code and the drive were committed, 08 after the
+handoff was finished, so the graded tree in run 08 is the final tree with nothing outstanding
+but the transcript run 08 itself writes. Both are EXIT 0 with the probe line present and every
+pin equal; run 08 is the one to read. Recording both rather than only the later one, because
+"the bar was green" and "the bar was green on the bytes you are about to merge" are different
+claims and only the second one is worth anything.]
 
 **Baseline held.** 46 parity / 7884 cells — unmoved. Fail-open 11 == 11, host-state 18 == 18,
 dead-path frontier **GREEN at `deadOccurrences 108`** — exactly the pinned baseline, so the six
