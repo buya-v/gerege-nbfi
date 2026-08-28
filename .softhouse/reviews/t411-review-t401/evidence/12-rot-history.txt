@@ -1,0 +1,11 @@
+COMMIT      SUBJECT                                         .zsh   c+r   .sh   .py corpus
+3ce7787f    T385 review of T383: five independent drivers,   117   105   626   722   1348
+0c79818a    T385: the two bar transcripts, the healthy-con   118   106   626   723   1349
+5fc8bd46    T385: second bar transcript on the fully clean   118   106   626   723   1349
+7c9770e2    T385: correct the instrument count in the revi   118   106   626   723   1349
+e6cd307f    Merge T383-t380-conditions + T385-review-t383    121   109   645   728   1373
+094bffca    softhouse: T383+T385 recorded merged; T400 and   121   109   645   728   1373
+1eacb63e    softhouse: fire 20260828-140005 iter4 DISPATCH   121   109   657   738   1395
+7a23f445    softhouse: RESUME.md rewritten to current trut   121   109   657   738   1395
+
+T385 PROSE CLAIMED:                                              110    98   626   722   1348

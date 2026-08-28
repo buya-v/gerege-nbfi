@@ -1,0 +1,6 @@
+GET /loanproducts/63
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: T391-A07-loanproduct-63
+body: <none>
+captured-at-utc: 2026-08-28T17:10:29Z

@@ -1,0 +1,134 @@
+oracle probe = up (asserted live against https://localhost:8443/fineract-provider/actuator/health)
+================================================================
+ARM 1 -- THE KILL: -ledger-impl ledger-wrong-slot-family-blind
+================================================================
+--- LEDGER (tierA-gl-accounting) — SECOND SCHEMA, SECOND COMPARATOR, SEPARATE COUNTS ---
+    implementation          ledger-wrong-slot-family-blind
+    ⚠ THIS IS A DELIBERATELY WRONG IMPLEMENTATION, selected with -ledger-impl:
+      decodes every placeholder code through CashAccountsForLoan whatever the product's accounting rule says, so it resolves the RIGHT ACCOUNT and names the WRONG SLOT. acc_product_mapping is keyed on the raw integer and the accounting rule is NOT in the key, so the two loan enums share one integer space -- and CashAccountsForLoan has no 7, 8 or 9 at all, where AccrualAccountsForLoan calls them INTEREST_RECEIVABLE, FEES_RECEIVABLE and PENALTIES_RECEIVABLE. It is BYTE-IDENTICAL to ledger-go on all seven parity vectors that predate T391 and on the accrual vectors' INCOME legs, and dies on exactly the three RECEIVABLE legs of each accrual vector, on exactly one cell, legs[i].slot_name. It is T242's error (A2-34 F-4) in port form: a corpus that graded the ACCOUNT and not the SLOT would report it GREEN
+      A RED below is the EXPECTED result and is not a defect in the port.
+    LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    PASS             18 cells (5 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 12500062 == credits 12500062 (minor units), over 3 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 12500062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
+    LDG-02-repayment-split-4leg-minor-units        parity         ledger_rest_posting    PASS             23 cells (6 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 30000000 == credits 30000000 (minor units), over 4 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), INDEPENDENT)  the REQUESTED transaction amount against the CREDIT splits: 30000000 == sum of 3 splits (minor units). INDEPENDENT of double_entry_balances: the whole comes from the recorded REQUEST, not from a leg
+    LDG-03-overpayment-4leg-minor-units            parity         ledger_rest_posting    PASS             23 cells (6 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 100000000 == credits 100000000 (minor units), over 4 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), INDEPENDENT)  the REQUESTED transaction amount against the CREDIT splits: 100000000 == sum of 3 splits (minor units). INDEPENDENT of double_entry_balances: the whole comes from the recorded REQUEST, not from a leg
+    LDG-04-header-account-accepted                 parity         ledger_db_readback     PASS             13 cells (4 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 10000025 == credits 10000025 (minor units), over 2 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 1 debit and 1 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     PASS             33 cells (8 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 70000124 == credits 70000124 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-06-postclosure-entry-accepted-one-day-a... parity         ledger_db_readback     PASS             18 cells (5 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 35000062 == credits 35000062 (minor units), over 3 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 35000062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
+    LDG-07-entry-on-the-business-date-accepted     parity         ledger_db_readback     PASS             18 cells (5 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 35000062 == credits 35000062 (minor units), over 3 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 35000062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
+    LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+        legs[0].slot_name: want "INTEREST_RECEIVABLE", got "CashAccountsForLoan(7)"
+        legs[3].slot_name: want "FEES_RECEIVABLE", got "CashAccountsForLoan(8)"
+        legs[5].slot_name: want "PENALTIES_RECEIVABLE", got "CashAccountsForLoan(9)"
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 2770000 == credits 2770000 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-ACC-02-accrual-six-slots-minor-unit-res... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+        legs[0].slot_name: want "INTEREST_RECEIVABLE", got "CashAccountsForLoan(7)"
+        legs[3].slot_name: want "FEES_RECEIVABLE", got "CashAccountsForLoan(8)"
+        legs[5].slot_name: want "PENALTIES_RECEIVABLE", got "CashAccountsForLoan(9)"
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 2389538 == credits 2389538 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-ACC-03-accrual-six-slots-scheduled-job     parity         ledger_rest_posting    FAIL             33 cells (8 money)
+        legs[0].slot_name: want "INTEREST_RECEIVABLE", got "CashAccountsForLoan(7)"
+        legs[3].slot_name: want "FEES_RECEIVABLE", got "CashAccountsForLoan(8)"
+        legs[5].slot_name: want "PENALTIES_RECEIVABLE", got "CashAccountsForLoan(9)"
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 1605634 == credits 1605634 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-DIV-01-oracle-accepts-sub-minor-unit-re... divergence     ledger_rest_posting    PASS              2 cells (0 money)
+    LDG-REFUSE-01-unbalanced-by-one-minor-unit     oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+    LDG-REFUSE-02-manual-adjustments-not-permitted oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+    LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+    LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
+    LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
+    LDG-REFUSE-06-preclosure-entry-before-closi... oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
+    ledger parity           PASS 7    FAIL 3
+    ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+                                              and a capture recorded — NOT a contract sentinel)
+    ledger inadmissible     0
+    ledger harness errors   0
+    ledger cells compared   268 graded, of which 63 are MONEY cells in int64 minor units
+ARM 1 exit status of the FULL run:
+  exit=1
+
+================================================================
+ARM 1b -- THE DIVERGENT CELLS, printed rather than summarised
+================================================================
+    LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+        legs[0].slot_name: want "INTEREST_RECEIVABLE", got "CashAccountsForLoan(7)"
+        legs[3].slot_name: want "FEES_RECEIVABLE", got "CashAccountsForLoan(8)"
+        legs[5].slot_name: want "PENALTIES_RECEIVABLE", got "CashAccountsForLoan(9)"
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-ACC-02-accrual-six-slots-minor-unit-res... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+        legs[0].slot_name: want "INTEREST_RECEIVABLE", got "CashAccountsForLoan(7)"
+        legs[3].slot_name: want "FEES_RECEIVABLE", got "CashAccountsForLoan(8)"
+        legs[5].slot_name: want "PENALTIES_RECEIVABLE", got "CashAccountsForLoan(9)"
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-ACC-03-accrual-six-slots-scheduled-job     parity         ledger_rest_posting    FAIL             33 cells (8 money)
+        legs[0].slot_name: want "INTEREST_RECEIVABLE", got "CashAccountsForLoan(7)"
+        legs[3].slot_name: want "FEES_RECEIVABLE", got "CashAccountsForLoan(8)"
+        legs[5].slot_name: want "PENALTIES_RECEIVABLE", got "CashAccountsForLoan(9)"
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+          legs[i].slot_name while producing the RIGHT account on every leg. WHAT IS STILL
+
+================================================================
+ARM 3 -- THE REFERENCE: -ledger-impl ledger-go
+================================================================
+--- LEDGER (tierA-gl-accounting) — SECOND SCHEMA, SECOND COMPARATOR, SEPARATE COUNTS ---
+    implementation          ledger-go
+    LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    PASS             18 cells (5 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 12500062 == credits 12500062 (minor units), over 3 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 12500062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
+    LDG-02-repayment-split-4leg-minor-units        parity         ledger_rest_posting    PASS             23 cells (6 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 30000000 == credits 30000000 (minor units), over 4 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), INDEPENDENT)  the REQUESTED transaction amount against the CREDIT splits: 30000000 == sum of 3 splits (minor units). INDEPENDENT of double_entry_balances: the whole comes from the recorded REQUEST, not from a leg
+    LDG-03-overpayment-4leg-minor-units            parity         ledger_rest_posting    PASS             23 cells (6 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 100000000 == credits 100000000 (minor units), over 4 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), INDEPENDENT)  the REQUESTED transaction amount against the CREDIT splits: 100000000 == sum of 3 splits (minor units). INDEPENDENT of double_entry_balances: the whole comes from the recorded REQUEST, not from a leg
+    LDG-04-header-account-accepted                 parity         ledger_db_readback     PASS             13 cells (4 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 10000025 == credits 10000025 (minor units), over 2 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 1 debit and 1 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     PASS             33 cells (8 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 70000124 == credits 70000124 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-06-postclosure-entry-accepted-one-day-a... parity         ledger_db_readback     PASS             18 cells (5 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 35000062 == credits 35000062 (minor units), over 3 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 35000062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
+    LDG-07-entry-on-the-business-date-accepted     parity         ledger_db_readback     PASS             18 cells (5 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 35000062 == credits 35000062 (minor units), over 3 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 35000062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
+    LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity         ledger_rest_posting    PASS             33 cells (8 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 2770000 == credits 2770000 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-ACC-02-accrual-six-slots-minor-unit-res... parity         ledger_rest_posting    PASS             33 cells (8 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 2389538 == credits 2389538 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-ACC-03-accrual-six-slots-scheduled-job     parity         ledger_rest_posting    PASS             33 cells (8 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 1605634 == credits 1605634 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-DIV-01-oracle-accepts-sub-minor-unit-re... divergence     ledger_rest_posting    PASS              2 cells (0 money)
+    LDG-REFUSE-01-unbalanced-by-one-minor-unit     oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+    LDG-REFUSE-02-manual-adjustments-not-permitted oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+    LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+    LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
+    LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
+    LDG-REFUSE-06-preclosure-entry-before-closi... oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
+    ledger parity           PASS 10   FAIL 0
+    ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+                                              and a capture recorded — NOT a contract sentinel)
+    ledger inadmissible     0
+    ledger harness errors   0
+    ledger cells compared   268 graded, of which 63 are MONEY cells in int64 minor units
+ARM 3 exit status of the FULL run:
+  exit=0

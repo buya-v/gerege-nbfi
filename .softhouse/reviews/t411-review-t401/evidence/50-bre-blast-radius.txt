@@ -1,0 +1,139 @@
+############ 1. THE MECHANISM, DEMONSTRATED ############
+engine under test: grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+shim in an interactive shell: /usr/bin/grep -> a ugrep shell function (GNU-compatible)
+shim in `bash script.sh`   : NOT inherited; scripts get /usr/bin/grep
+
+  BRE  '\.sh$\|\.py$'                -> 1   (2 lines should match)
+    ...its exit status               ->    exit=0  <-- undercounts AND reports SUCCESS
+  BRE  '\.sh\|\.py'                  -> 2   (alternation ALONE is fine: not a dropped branch)
+  BRE  '\.py$\|\.sh$'                -> 1   (order swapped: the OTHER branch survives)
+  BRE  vs line 'a.sh$X'              -> 1   (mid-pattern \$ matched a LITERAL dollar: the proof)
+  ERE  -E '\.sh$|\.py$'              -> 2   (ERE: correct)
+
+  CONCLUSION: in BSD BRE, `$` is an anchor only at the END of the pattern and
+  `^` only at the START. Any earlier occurrence is a literal character. The
+  first branch of an anchored BRE alternation is therefore DEAD, silently, at exit 0.
+
+############ 2. BLAST RADIUS ############
+corpus: tracked *.sh / *.zsh (BRE is a shell-tool concern), 792 files
+
+  BRE sites using \| (no -E/-P)            : 76
+  sites using \| INSIDE an -E/-P pattern   : 7   <-- there \| is a LITERAL pipe, the mirror-image bug
+
+  -- of the BRE sites, which carry a NON-TERMINAL anchor (BROKEN TODAY)? --
+    BROKEN  .softhouse/capture/t238-failopen/instruments/20-run-the-class.sh:45:  nohits=$(LC_ALL=C /usr/bin/grep -c -i -a 'no hits\|^ *none$\|(none)' "$log" || true)
+    BROKEN  .softhouse/capture/t401-zsh-census-gap/instruments/10-measure-counts.sh:47:# ERE, NOT BRE. `grep -c '\.sh$\|\.py$'` returned 738 (the .py count ALONE) under the
+    BROKEN  .softhouse/reviews/T184-evidence/t184-sweep.sh:18:grep -n -A2 'except' .softhouse/capture/lib/check_wire_float_roundtrip.py | grep -n 'pass$\|continue' || echo "   (the one 'continue' is after append to unparsed[], checked by hand)"
+    BROKEN  .softhouse/reviews/t411-review-t401/instruments/10-t411-counts.sh:38:printf '  /usr/bin/grep -c BRE  %s : %s\n' "'[.]sh\$\\|[.]py\$'" "$(printf '%s\n' "$TREE" | $GREP -c '\.sh$\|\.py$'; )"
+    BROKEN  .softhouse/reviews/t43-probe/t43_ambient_sites.sh:10:grep -n "Money.of(getCurrencyData(), [A-Za-z]*)$\|Money.of(getCurrencyData(), total)" $M
+  BROKEN-TODAY sites: 5
+
+  -- do any live in a graded path (conformance.sh or a guard)? --
+    live sites: 4
+    LIVE  .softhouse/conformance.sh:2391:#     grep -c 'fire-program\|ready-tasks\|reconcile\|in_progress' .softhouse/conformance.sh
+    LIVE  .softhouse/conformance.sh:4530:      LC_ALL=C sed -n 's/^\( *ledger \(parity\|oracle-refusal\|inadmissible\|harness errors\).*\)$/\1/p' "$out" >&2
+    LIVE  .softhouse/guards/check-capture-namespace.sh:95:#    -- which is what /usr/bin/sed is on this host -- does not implement `\|` in a basic
+    LIVE  .softhouse/guards/check-ledger-invariants.sh:185:  printf '%s\n' "$out" | LC_ALL=C grep -a '^CENSUS \|^NIL-COVERAGE ' | while IFS= read -r line; do
+
+############ 3. THE SED VARIANT, AND A LIVE DEAD EXPRESSION ############
+  BSD sed is STRICTER than BSD grep: it does not implement \| as alternation at all.
+  (`.softhouse/guards/check-capture-namespace.sh:95` already says so in a comment; nothing
+  enforces it.) So a sed BRE using \| matches a LITERAL PIPE and therefore matches nothing.
+
+  alternation in BSD sed  : 0 rows  (2 if it works, 0 if \| is literal)
+  literal-pipe check      : LITERAL  <-- it matched the literal string a|b
+
+  -- every LIVE (conformance.sh or guards/) sed BRE using \| --
+    .softhouse/conformance.sh:4530:      LC_ALL=C sed -n 's/^\( *ledger \(parity\|oracle-refusal\|inadmissible\|harness errors\).*\)$/\1/p' "$out" >&2
+
+  -- exercised against the shape of output it is meant to summarise --
+    rows the expression prints: 0   (it is meant to print 3)
+    SEVERITY: this sits in the SURVIVED branch of the wrong-implementation gate, AFTER
+    bad=1 is already set. It gates nothing; it is the diagnostic that tells an operator
+    WHY a wrong implementation survived, and it has never once produced a line. Losing
+    evidence on a failing path is MINOR, not a fail-open -- but it is dead code that
+    only a red run would ever have revealed, which is why five years of green never did.
+
+  -- the sibling expressions that ARE load-bearing use no \| and are CORRECT --
+     (found by GREPPING THE SENTENCE, not by line number -- P-86; a line number in a
+      file another task is editing is stale before it is read)
+    4519:    pfail="$(LC_ALL=C sed -n 's/^ *ledger parity  *PASS [0-9][0-9]*  *FAIL \([0-9][0-9]*\)$/\1/p' "$out")"
+    4520:    rfail="$(LC_ALL=C sed -n 's/^ *ledger oracle-refusal  *PASS [0-9][0-9]*  *FAIL \([0-9][0-9]*\).*$/\1/p' "$out")"
+
+  -- all BRE \| sites, for the record --
+    .softhouse/capture/audit-t44/analysis/T175-red/drive-red.sh:64:n_mentions=$(grep -ci 'skip\|unparse\|unscanned\|error\|fail' "$SCRATCH/orig-real.txt" || true)
+    .softhouse/capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh:97:      "$(grep -ci 'fail\|pass' "$COMMITTED")"
+    .softhouse/capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh:235:      "$(grep -ci 'leaves\|DROPPED before any delta' "$SCRATCH/mos1-planted.txt")"
+    .softhouse/capture/audit-t44/mathcontext/src/run-negative-tests.sh:32:    echo "  ok  $name exited $rc -- $(grep -m1 '^BREACH\|^  MISMATCH\|^FAIL' "$file" | cut -c1-140)"
+    .softhouse/capture/mathcontext/src/run-negative-tests.sh:32:    echo "  ok  $name exited $rc -- $(grep -m1 '^BREACH\|^  MISMATCH\|^FAIL' "$file" | cut -c1-140)"
+    .softhouse/capture/pathb/t99/prove-f2.sh:90:      LC_ALL=C grep -a 'DIGEST COMPARISON\|DIGEST MISMATCH\|instrument\|effective rounding' "$EXPORT/f2-$side.txt" \
+    .softhouse/capture/pathb/t99/prove-f2.sh:92:      LC_ALL=C grep -a 'ALL PRECONDITIONS HOLD\|PRECONDITIONS BREACHED' "$EXPORT/f2-$side.txt" | sed 's/^/    /'
+    .softhouse/capture/pathb/t99/prove-f2.sh:122:    LC_ALL=C grep -a 'DIGEST COMPARISON\|effective rounding mode canary\|ALL PRECONDITIONS HOLD' \
+    .softhouse/capture/pathb/t99/prove-f3.sh:133:    LC_ALL=C grep -a 'ALL PASS\|preconditions: ALL PASS\|ABORT: preconditions breached' "$EXPORT/f3e-$side-$s.txt" \
+    .softhouse/capture/pathb/t99/prove-f4.sh:105:LC_ALL=C grep -a 'STAMP APPEARED\|UNACCOUNTED FILE\|^problems' "$EXPORT/f4b.txt" | cut -c1-200 | sed 's/^/    /'
+    .softhouse/capture/pathb/t99/prove-f4.sh:123:LC_ALL=C grep -a 'BYTES MOVED\|^problems' "$EXPORT/f4c.txt" | cut -c1-200 | sed 's/^/    /'
+    .softhouse/capture/pathb/t99/prove-f4.sh:133:LC_ALL=C grep -a 'UNACCOUNTED DIRECTORY\|^problems' "$EXPORT/f4d.txt" | cut -c1-200 | sed 's/^/    /'
+    .softhouse/capture/pathb/t99/prove-f4.sh:147:  | LC_ALL=C grep -a 'sha256\|index\|FOUND as\|tenant:\|first commit' | sed 's/^/      /' | cut -c1-200
+    .softhouse/capture/pathb/t99/prove-f4.sh:155:  | LC_ALL=C grep -a 'FOUND as\|tenant:\|basis:\|in-band stamp' | sed 's/^/      /' | cut -c1-200
+    .softhouse/capture/pathb/t99/prove-f4.sh:164:  | LC_ALL=C grep -a 'sha256\|RESULT' | sed 's/^/      /' | cut -c1-160
+    .softhouse/capture/pathb/t99/prove-p24-postmerge.sh:88:    _last=$(LC_ALL=C grep -a '^RESULT:\|^T99 PROOF ABORT:\|NOT CLOSED' "$SCRATCH/$1-$f.txt" | tail -1 | cut -c1-110)
+    .softhouse/capture/pathb/t99/sweep.sh:36:LC_ALL=C grep -rn 'os.path.basename\|\.endswith(.-.\s*+\|realpath\|normpath' --include='*.py' --exclude-dir=t99 . | sed 's|^\./||'
+    .softhouse/capture/pathb/t99/sweep.sh:38:LC_ALL=C grep -rn 'TENANT\"\?\s*)\|\*-\"\$TENANT\|-. + TENANT' --include='*.sh' --include='*.py' --exclude-dir=t99 . | sed 's|^\./||'
+    .softhouse/capture/pathb/t99/sweep.sh:42:LC_ALL=C grep -rn 'shasum\|sha256sum\|openssl dgst\|md5' --include='*.sh' --include='*.py' --exclude-dir=t99 . | sed 's|^\./||'
+    .softhouse/capture/pathb/t99/sweep.sh:56:LC_ALL=C grep -rn 'for f in .*\*\|for d in .*\*\|glob(' --include='*.sh' --include='*.py' --exclude-dir=t99 . | sed 's|^\./||'
+    .softhouse/capture/t238-failopen/instruments/20-run-the-class.sh:45:  nohits=$(LC_ALL=C /usr/bin/grep -c -i -a 'no hits\|^ *none$\|(none)' "$log" || true)
+    .softhouse/capture/t238-failopen/instruments/20-run-the-class.sh:46:  failev=$(LC_ALL=C /usr/bin/grep -c -a -i 'No such file or directory\|not a git repository\|Traceback\|command not found' "$log" || true)
+    .softhouse/capture/t256-toolchain-population/instruments/30-portability-red-drive.sh:220:grep -q "NOT the pinned toolchain\|NOT THE PINNED TOOLCHAIN" "$SCRATCH/err" \
+    .softhouse/capture/t282-pnumber-drift/bin/drive-red-green.sh:111:  grep '^PNUMBER-CITATIONS: \(FATAL\|report\) MISDIRECTING '"$FIXFILES" "$OUT/10-RED.txt"
+    .softhouse/capture/t282-pnumber-drift/bin/drive-red-green.sh:112:  n_det=$(grep -c '^PNUMBER-CITATIONS: \(FATAL\|report\) MISDIRECTING '"$FIXFILES" "$OUT/10-RED.txt")
+    .softhouse/capture/t331-wire-pnumber-checker/bin/drive-through-the-route.sh:70:grep -a 'PNUMBER-CITATIONS: FATAL\|A CITED P-NUMBER CARRIES' "$OUT/70-RED-through-conformance.txt"
+    .softhouse/capture/t331-wire-pnumber-checker/bin/drive-through-the-route.sh:89:grep -a 'probe = \|VERDICT: \|P-number citations: VERDICT PASS' "$OUT/71-GREEN-through-conformance.txt"
+    .softhouse/capture/t332-residual-twin-sweep/src/emit_evidence.sh:27:  echo '$ grep -rn "min(B_minor\|max(0, B_minor\|B_minor − n·δ" --include=*.md --include=*.py --include=*.json --include=*.sh --include=*.go .'
+    .softhouse/capture/t332-residual-twin-sweep/src/emit_evidence.sh:28:  grep -rc 'min(B_minor\|max(0, B_minor\|B_minor − n·δ' \
+    .softhouse/capture/t332-residual-twin-sweep/src/emit_evidence.sh:39:  echo '$ grep -rn "n·δ\|n\*delta\|B_minor" .softhouse/vectors/'
+    .softhouse/capture/t332-residual-twin-sweep/src/emit_evidence.sh:40:  grep -rn 'n·δ\|n\*delta\|B_minor' .softhouse/vectors/ || echo '(no match)'
+    .softhouse/capture/t401-zsh-census-gap/instruments/10-measure-counts.sh:47:# ERE, NOT BRE. `grep -c '\.sh$\|\.py$'` returned 738 (the .py count ALONE) under the
+    .softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/drive-red.sh:35:  echo "  proof-row artefacts  : $(ls "$S" 2>/dev/null | grep -c '^att-\|^cf-') (att-*/cf-* written by an expect row)"
+    .softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/every-invocation.sh:19:  rows="$(ls "$RIG/scratch" 2>/dev/null | grep -c '^att-\|^cf-')"
+    .softhouse/capture/t74-multiplesof/T82-guard-proofs/T109-digest-compare/verify-on-scratch-merge.sh:71:grep -n "FATAL: THE SLICED\|expected:\|observed:\|NOT WHAT WAS EXPECTED\|guard proofs:" /tmp/t109-clone-slice.txt | head -8 | sed -e 's/^/  | /'
+    .softhouse/capture/t91/t115-drive-mf2.sh:161:  LC_ALL=C grep -a 'effective rounding mode canary\|ALL PRECONDITIONS HOLD' "$S/n9.txt" | sed 's/^/    /'
+    .softhouse/capture/t91/t115-drive-mf3-mf4.sh:108:n91=$(LC_ALL=C grep -ac 'charges/bin/preconditions\.sh\|charges/bin/run-preconditions\.sh' "$HERE/prove-guards.sh")
+    .softhouse/capture/tierA-a2/prove-census-red.sh:39:( cd "$SB" && python3 census-json-float-siblings.py 2>&1 | grep -A2 'EVERY MECHANICAL CANDIDATE\|R5) — scope' )
+    .softhouse/conformance.sh:2391:#     grep -c 'fire-program\|ready-tasks\|reconcile\|in_progress' .softhouse/conformance.sh
+    .softhouse/conformance.sh:4530:      LC_ALL=C sed -n 's/^\( *ledger \(parity\|oracle-refusal\|inadmissible\|harness errors\).*\)$/\1/p' "$out" >&2
+    .softhouse/guards/check-capture-namespace.sh:95:#    -- which is what /usr/bin/sed is on this host -- does not implement `\|` in a basic
+    .softhouse/guards/check-ledger-invariants.sh:185:  printf '%s\n' "$out" | LC_ALL=C grep -a '^CENSUS \|^NIL-COVERAGE ' | while IFS= read -r line; do
+    .softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh:18:grep -n 'rc=\$?\|rc=0\|rm -f\|TRANSPORT' /tmp/poison/cap-counterfactual.sh
+    .softhouse/reviews/T135-evidence/blast-discriminate.sh:12:  vac=$(LC_ALL=C grep -ca 'PASS  0 prohibited\|PASS  schema_connection_parameters is empty' "$f")
+    .softhouse/reviews/T138-evidence/r11-hygiene.sh:67:git show "$T115:.softhouse/capture/t91/verdict.sh" | LC_ALL=C grep -n -a 'ADJUDICATION BY T108\|adjudication by T108' | sed 's/^/   verdict.sh:/'
+    .softhouse/reviews/T138-evidence/r13-vb.sh:67:LC_ALL=C grep -n 'NEVER\|PINNED\|REQUIRED' "$POSTV" | LC_ALL=C grep -v '^ *#' | sed 's/^/   /'
+    .softhouse/reviews/T138-evidence/r7b-census.sh:27:LC_ALL=C grep -rn --include='*.py' -a "preconditions" "$CAP/charges/bin" | LC_ALL=C grep -a "'sh'\|\"sh\"\|preconditions.sh" | LC_ALL=C sed "s|$CAP/||" | sed 's/^/    /'
+    .softhouse/reviews/T155-probe/prove-ii-literals.sh:78:  LC_ALL=C grep -a 'FLOATING POINT ON A MONEY PATH\|floating-point literal\|t155_probe' "$out" | head -4 | sed 's/^/  ! /'
+    .softhouse/reviews/T155-probe/prove-ix-sweep-and-help.sh:35:echo "leaked raw shell? $(LC_ALL=C grep -ac 'set -u -o pipefail\|SCRIPT_DIR=' /tmp/t155/out/ix-help.txt) lines (want 0)"
+    .softhouse/reviews/T184-evidence/t184-final.sh:17:grep -n 'probe = \|UNREACHABLE\|HARD guard\|VERDICT' /tmp/t184-outage.txt | head
+    .softhouse/reviews/T184-evidence/t184-probe-green-catch.sh:27:grep -n 'CENSUS narrow\|narrow load-bearing\|REFUSED\|probe =\|VERDICT' /tmp/t184-green-catch1.txt
+    .softhouse/reviews/T184-evidence/t184-probe-green-catch.sh:48:grep -n 'CENSUS narrow\|narrow load-bearing\|REFUSED\|probe =\|VERDICT' /tmp/t184-green-catch2.txt
+    .softhouse/reviews/T184-evidence/t184-probe-green-float.sh:17:grep -n 'CENSUS\|REFUSED\|t184-probe\|HARD guard\|probe =\|VERDICT' /tmp/t184-green-float.txt
+    .softhouse/reviews/T184-evidence/t184-probe-red-catch.sh:24:grep -n 'CENSUS\|REFUSED\|narrow load-bearing\|t184-probe\|HARD guard\|probe =\|VERDICT' /tmp/t184-red-catch.txt
+    .softhouse/reviews/T184-evidence/t184-probe-red-float.sh:18:grep -n 'CENSUS\|REFUSED\|t184-probe\|HARD guard\|probe =\|VERDICT' /tmp/t184-red-float.txt
+    .softhouse/reviews/T184-evidence/t184-sweep.sh:18:grep -n -A2 'except' .softhouse/capture/lib/check_wire_float_roundtrip.py | grep -n 'pass$\|continue' || echo "   (the one 'continue' is after append to unparsed[], checked by hand)"
+    .softhouse/reviews/T184-evidence/t184-sweep.sh:21:sed -n '670,815p' .softhouse/conformance.sh | grep -n '2>&1\|>/dev/null'
+    .softhouse/reviews/T184-evidence/t184-vacuity.sh:19:grep -n 'CENSUS wire-float\|REFUSED — INSPECTED\|MISSING\|NO CENSUS\|A guard that inspects\|HARD guard\|probe =' /tmp/t184-v1.txt
+    .softhouse/reviews/T184-evidence/t184-vacuity.sh:26:grep -n 'guard is MISSING\|cannot pass\|HARD guard\|probe =' /tmp/t184-v2.txt
+    .softhouse/reviews/T184-evidence/t184-vacuity.sh:38:grep -n 'NO CENSUS LINE\|HARD guard\|probe =' /tmp/t184-v3.txt
+    .softhouse/reviews/T184-evidence/t184-vacuity.sh:54:grep -n 'NO CENSUS LINE\|CENSUS wire-float\|HARD guard\|probe =\|VERDICT' /tmp/t184-v4.txt
+    .softhouse/reviews/T184-evidence/t184-vacuity.sh:67:grep -n 'CENSUS wire-float\|NO CENSUS\|HARD guard\|probe =\|VERDICT' /tmp/t184-v5.txt
+    .softhouse/reviews/T184-evidence/t184-vacuity2.sh:19:grep -n 'CENSUS\|REFUSED\|inspects nothing\|MISSING\|NO CENSUS\|HARD guard\|probe =\|VERDICT' /tmp/t184-v1b.txt
+    .softhouse/reviews/a2-31-dec2-rev4/probe-citations2.sh:17:grep -n 'reversed\|name = "amount"' "$JE" | head
+    .softhouse/reviews/a2-31-dec2-rev4/probe-citations2.sh:23:grep -n 'running_balance\|RunningBalance' "$JE" | head
+    .softhouse/reviews/t285-review-t273/instruments/80-regression-test-claim.sh:50:  /usr/bin/grep -n 'FAILOPEN-FRONTIER\|02-escape-matrix-fix' ".softhouse/reviews/t285-review-t273/scratch/80-$1.txt" \
+    .softhouse/reviews/t288-drive/neg-drive.sh:69:  grep -m1 'reconcile:\|NOT reconciling' "$BASE/neg.wrapper.out"
+    .softhouse/reviews/t340-review-t258/probe/30-census-duplicate-in-pinned-file.sh:28:LC_ALL=C /usr/bin/grep -a 'PIN MATCHED\|PIN COMPARISON' /tmp/t340-p30-base.txt | LC_ALL=C /usr/bin/sed 's/^/    | /'
+    .softhouse/reviews/t362-review-t357/rig/t362-drive-red-both-directions.sh:58:grep -n "STILL PRESENT\|missing=\|exits 1 (RED)\|^FAILURES:\|^  - " "$W/d1-adj.txt" | head -20
+    .softhouse/reviews/t362-review-t357/rig/t362-drive-red-both-directions.sh:89:grep -n "UNADJUDICATED\|unexpected=\|^FAILURES:\|^  - " "$W/d2-adj.txt" | head -20
+    .softhouse/reviews/t362-review-t357/rig/t362-section4-absorption-probe.sh:74:grep -n "byte-identical fork-vs-today\|DIFFER  \|DIFF \|current manifest hash agrees" "$W/sec4.txt" | head -12
+    .softhouse/reviews/t385-review-t383/bin/t385-skew-drift-probe.zsh:33:LC_ALL=C grep -n '_SKEW_FAR\|_SKEW_NEAR\|_OLD_AGE\|_NEAR_AGE' "$SUBJ" | cut -c1-120
+    .softhouse/reviews/t411-review-t401/instruments/10-t411-counts.sh:38:printf '  /usr/bin/grep -c BRE  %s : %s\n' "'[.]sh\$\\|[.]py\$'" "$(printf '%s\n' "$TREE" | $GREP -c '\.sh$\|\.py$'; )"
+    .softhouse/reviews/t43-probe/t43_ambient_sites.sh:7:grep -n "MoneyHelper.getMathContext()\|MoneyHelper.getRoundingMode()" $M
+    .softhouse/reviews/t43-probe/t43_ambient_sites.sh:10:grep -n "Money.of(getCurrencyData(), [A-Za-z]*)$\|Money.of(getCurrencyData(), total)" $M
+    .softhouse/reviews/t45-probe/gen-ambient-sites.sh:23:grep -n 'Money\.of(\|Money\.zero(\|roundToMultiplesOf(' "$M"

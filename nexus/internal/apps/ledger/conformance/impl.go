@@ -84,6 +84,15 @@ type PostedLeg struct {
 	AccountCode string
 	Side        EntrySide
 	AmountMinor ledger.MinorUnits
+
+	// SlotName is the placeholder this leg arrived through, as the
+	// implementation decoded it, or "" where no slot took part. [T391]
+	//
+	// ON AN ACCOUNTING-PATH LEG, AccountID AND AccountCode ARE ALSO OUTPUTS OF
+	// THIS RESOLUTION and not echoes of the request: the request gave a slot
+	// code and the product's mapping table, and the implementation had to key
+	// the one with the other. See RequestLeg.SlotCode.
+	SlotName string
 }
 
 // ---------------------------------------------------------------------------
@@ -267,22 +276,30 @@ func (GoPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 		out.RequestedAmountMinor = amt
 		out.HasRequestedAmount = true
 	}
+	// STEP 1a — RESOLVE THE SLOT, on an accounting-path leg. [T391]
+	//
+	// resolveLegAccount is the PORT'S OWN ledger.Resolver, exactly as the money
+	// conversion is the port's own ledger.MinorUnitsFromDecimalText. Nothing in
+	// this file re-implements the mapping lookup, for the reason this type's doc
+	// comment gives about the arithmetic: a resolver living inside the harness
+	// would be a resolver grading resolvers.
+	resolver := legResolver(req)
 	legs := make([]ledger.PostingLeg, 0, len(req.Legs))
 	for i, l := range req.Legs {
-		acct, ok := chart[l.AccountID]
-		if !ok {
-			return PostedEntry{}, nil, fmt.Errorf(
-				"leg %d points at GL account %d, which the vector's chart does not carry", i, l.AccountID)
+		accountID, accountCode, slotName, rerr := resolveLegAccount(req, resolver, chart, l)
+		if rerr != nil {
+			return PostedEntry{}, nil, fmt.Errorf("leg %d: %w", i, rerr)
 		}
 		amt, cerr := ledger.MinorUnitsFromDecimalText(l.AmountMajorText, req.Currency.MinorUnitDigits)
 		if cerr != nil {
 			return PostedEntry{}, nil, fmt.Errorf("leg %d: %w", i, cerr)
 		}
 		out.Legs = append(out.Legs, PostedLeg{
-			AccountID:   l.AccountID,
-			AccountCode: acct.Code,
+			AccountID:   accountID,
+			AccountCode: accountCode,
 			Side:        l.Side,
 			AmountMinor: amt,
+			SlotName:    slotName,
 		})
 		var side ledger.EntrySide
 		switch l.Side {
@@ -606,6 +623,155 @@ func oppositeSide(s EntrySide) EntrySide {
 		return SideCredit
 	}
 	return SideDebit
+}
+
+// ---------------------------------------------------------------------------
+// SLOT RESOLUTION — the accounting path, first populated by T391
+// ---------------------------------------------------------------------------
+//
+// EVERY LINE OF LOOKUP BELOW IS THE PORT'S OWN. `ledger.Resolver`,
+// `ledger.InMemoryMappingStore`, `ledger.InMemoryAccountStore`,
+// `ledger.AccrualLoanSlotFromCode` and `ledger.CashLoanSlotFromCode` all live in
+// nexus/internal/apps/ledger and were written and graded before this file needed
+// them (A2-8, A2-12, and the capture tests in ledger/capture_test.go). This file
+// wires the vector's transcribed rows into them and reads the answer back; it
+// re-implements nothing, for the reason GoPoster's doc comment gives about the
+// arithmetic.
+
+// loanSlotForCode returns the TYPED slot for a stored placeholder code under the
+// family the product's ACCOUNTING RULE selects — DEC-2 §4.2 G-05.
+//
+// THE FAMILY IS NOT OPTIONAL AND IT IS NOT INFERABLE FROM THE CODE. Both loan
+// enums are stored under product_type = LOAN and the accounting rule is not part
+// of acc_product_mapping's key, so the same integer means different things on a
+// cash product and an accrual one. slots.go's trap-2 comment says it in one
+// line: never convert one loan slot type into the other.
+//
+// An UNKNOWN code is an ERROR and never a silently-named slot. The oracle's own
+// fromInt returns null there, and a harness that answered with an invented name
+// would be manufacturing the very cell this schema added in order to grade.
+func loanSlotForCode(accountingRule string, code int32) (ledger.Slot, error) {
+	switch accountingRule {
+	case "ACCRUAL_PERIODIC":
+		s, ok := ledger.AccrualLoanSlotFromCode(code)
+		if !ok {
+			return nil, fmt.Errorf(
+				"placeholder code %d has no AccrualAccountsForLoan member; the oracle's fromInt returns null here", code)
+		}
+		return s, nil
+	case "CASH_BASED":
+		s, ok := ledger.CashLoanSlotFromCode(code)
+		if !ok {
+			return nil, fmt.Errorf(
+				"placeholder code %d has no CashAccountsForLoan member; the oracle's fromInt returns null here", code)
+		}
+		return s, nil
+	default:
+		return nil, fmt.Errorf(
+			"cannot select a slot family: request.accounting_rule is %q, and G-05 admits only "+
+				"CASH_BASED (CashLoanSlot) and ACCRUAL_PERIODIC (AccrualLoanSlot)", accountingRule)
+	}
+}
+
+// legResolver builds the port's Resolver over the vector's OWN transcribed rows.
+//
+// It returns nil when the vector carries no mapping table, which is every vector
+// that predates T391. A nil resolver is not a hole: admit.go refuses a vector
+// that carries a per-leg slot code without the mapping table to resolve it
+// through, so the nil case is only ever reached by a leg that names an account
+// directly.
+//
+// THE FINANCIAL-ACTIVITY STORE IS EMPTY AND THAT IS CORRECT, not a stub. STEP 0
+// of resolveProductAccount consults it only when the placeholder code is one of
+// the seven FinancialActivity values — 100, 101, 102, 103, 200, 201, 300 — and
+// no loan placeholder is. The two integer spaces are disjoint, and the port
+// asserts that disjointness at init (assertPlaceholderDisjointness), so an empty
+// store here cannot silently swallow a lookup that should have found something.
+func legResolver(req Request) *ledger.Resolver {
+	if len(req.ProductMappings) == 0 {
+		return nil
+	}
+	rows := make([]ledger.MappingRow, 0, len(req.ProductMappings))
+	for i, m := range req.ProductMappings {
+		productID := req.ProductID
+		productType := ledger.ProductLoan.StoredValue()
+		slotCode := m.SlotCode
+		accountID := m.GLAccountID
+		rows = append(rows, ledger.MappingRow{
+			ID:                   int64(i + 1),
+			GLAccountID:          &accountID,
+			ProductID:            &productID,
+			ProductType:          &productType,
+			FinancialAccountType: &slotCode,
+		})
+	}
+	accounts := make([]ledger.GLAccount, 0, len(req.Accounts))
+	for _, a := range req.Accounts {
+		usage := ledger.UsageDetail
+		if a.Usage == "HEADER" {
+			usage = ledger.UsageHeader
+		}
+		accounts = append(accounts, ledger.GLAccount{
+			ID:                   a.ID,
+			Name:                 a.Name,
+			GLCode:               a.Code,
+			Disabled:             a.Disabled,
+			ManualEntriesAllowed: a.ManualEntriesAllowed,
+			Usage:                usage,
+		})
+	}
+	return &ledger.Resolver{
+		Mappings:            &ledger.InMemoryMappingStore{Rows: rows},
+		FinancialActivities: &ledger.InMemoryFinancialActivityStore{},
+		Accounts:            &ledger.InMemoryAccountStore{Accounts: accounts},
+	}
+}
+
+// resolveLegAccount answers, for ONE leg: which GL account, which code, which
+// slot name.
+//
+// TWO PATHS, AND WHICH ONE RUNS IS A PROPERTY OF THE LEG, NOT A FLAG:
+//
+//	SlotCode == 0  a leg no slot took part in — a MANUAL posting names its own
+//	               account, and the slot name is "" because there is no slot to
+//	               name. Every vector before T391 takes this path and its output
+//	               is byte-identical to what this function returned before the
+//	               path existed.
+//
+//	SlotCode != 0  an ACCOUNTING-PATH leg. The account is RESOLVED through the
+//	               product's observed mapping table; the vector never told this
+//	               function which account to use, so `gl_account_id` and
+//	               `gl_account_code` are outputs and the comparator is grading a
+//	               computation rather than an echo.
+func resolveLegAccount(req Request, resolver *ledger.Resolver, chart map[int64]Account, l RequestLeg) (
+	accountID int64, accountCode string, slotName string, err error) {
+
+	if l.SlotCode == 0 {
+		acct, ok := chart[l.AccountID]
+		if !ok {
+			return 0, "", "", fmt.Errorf(
+				"points at GL account %d, which the vector's chart does not carry", l.AccountID)
+		}
+		return l.AccountID, acct.Code, "", nil
+	}
+
+	if resolver == nil {
+		// UNREACHABLE THROUGH THE LOADER — admit.go refuses a per-leg slot code
+		// on a vector with no product_mappings. Kept because a caller building a
+		// Request in memory bypasses admission, and an error is the one outcome
+		// that can never be mistaken for a pass.
+		return 0, "", "", fmt.Errorf(
+			"carries slot_code %d but the request has no product_mappings to resolve it through", l.SlotCode)
+	}
+	slot, serr := loanSlotForCode(req.AccountingRule, l.SlotCode)
+	if serr != nil {
+		return 0, "", "", serr
+	}
+	acct, rerr := resolver.ResolveLoanProductAccount(req.ProductID, slot, req.PaymentTypeID)
+	if rerr != nil {
+		return 0, "", "", fmt.Errorf("resolving %s on product %d: %w", slot.Name(), req.ProductID, rerr)
+	}
+	return acct.ID, acct.GLCode, slot.Name(), nil
 }
 
 // ---------------------------------------------------------------------------
@@ -1196,6 +1362,62 @@ func incrementDecimalDigits(d string) string {
 	return "1" + string(b)
 }
 
+// slotFamilyBlindPoster decodes every placeholder code through
+// CashAccountsForLoan, whatever the product's accounting rule says. [T391]
+//
+// THE DEFECT, AND IT IS T242'S ERROR IN PORT FORM. acc_product_mapping is keyed
+// on (product_id, product_type, financial_account_type) and the ACCOUNTING RULE
+// IS NOT IN THE KEY, so both loan enums share one integer space. A porter who
+// keeps a single flat code->name table — the obvious thing to write, because the
+// two enums agree on nineteen of the codes they share — resolves the RIGHT
+// ACCOUNT every time and names the WRONG SLOT wherever they disagree. This
+// implementation is exactly that porter.
+//
+// WHY IT IS THE RIGHT WRONG IMPLEMENTATION FOR THESE VECTORS. It is
+// BYTE-IDENTICAL to ledger-go on every vector that existed before T391 — all
+// seven parity vectors are manual or opening-balance postings whose legs carry
+// no slot code at all, so the loop below skips every one of them — and identical
+// on the accrual vectors' INCOME legs too, because CashAccountsForLoan and
+// AccrualAccountsForLoan both call 3/4/5 INTEREST_ON_LOANS, INCOME_FROM_FEES and
+// INCOME_FROM_PENALTIES. It dies on exactly the three RECEIVABLE legs of each
+// accrual vector, on exactly one cell, `legs[i].slot_name`, because
+// CashAccountsForLoan HAS NO 7, 8 OR 9 [VERIFIED: AccountingConstants.java:79-89
+// at the pinned sha; ported at slots.go, `cashLoanNames`].
+//
+// SO IT IS THE MEASUREMENT OF THE CLAIM "GRADE THE SLOT, NOT THE ACCOUNT". Every
+// account cell, every code cell, every side and every money cell it produces is
+// correct. A corpus that graded the account and not the slot would report this
+// port GREEN — which is precisely the report the harness printed for four fires
+// before T242 corrected it.
+//
+// NO FLOAT, NO ARITHMETIC, NO MONEY PATH IS TOUCHED. The defect is a NAME
+// LOOKUP; the amounts pass through ledger-go untouched.
+type slotFamilyBlindPoster struct{}
+
+func (slotFamilyBlindPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	base, ref, err := GoPoster{}.PostEntry(req)
+	if err != nil || ref != nil {
+		return base, ref, err
+	}
+	// THE LENGTH GUARD IS NOT DEFENSIVE PADDING. The opening-balance path
+	// EXPANDS one requested leg into two posted ones (:791 and its contra at
+	// :796), so posted index i is not requested index i there. This defect is
+	// unreachable on that path anyway — an opening balance carries no slot code
+	// — and pairing the two lists by index when they are not parallel would
+	// invent a defect rather than demonstrate one.
+	if len(base.Legs) != len(req.Legs) {
+		return base, ref, err
+	}
+	for i := range base.Legs {
+		code := req.Legs[i].SlotCode
+		if code == 0 {
+			continue
+		}
+		base.Legs[i].SlotName = ledger.CashLoanSlot(code).Name()
+	}
+	return base, ref, err
+}
+
 func init() {
 	Register("ledger-go", NewGoPoster())
 	RegisterWrong("ledger-wrong-split-drift",
@@ -1282,6 +1504,18 @@ func init() {
 			"thirteen that existed before T360. It dies on LDG-DIV-01 alone, on the two DIVERGENCE "+
 			"cells, because a residue has no int64 minor-unit cell any parity vector could grade it in",
 		residueRoundingPoster{})
+	RegisterWrong("ledger-wrong-slot-family-blind",
+		"decodes every placeholder code through CashAccountsForLoan whatever the product's accounting "+
+			"rule says, so it resolves the RIGHT ACCOUNT and names the WRONG SLOT. acc_product_mapping "+
+			"is keyed on the raw integer and the accounting rule is NOT in the key, so the two loan "+
+			"enums share one integer space -- and CashAccountsForLoan has no 7, 8 or 9 at all, where "+
+			"AccrualAccountsForLoan calls them INTEREST_RECEIVABLE, FEES_RECEIVABLE and "+
+			"PENALTIES_RECEIVABLE. It is BYTE-IDENTICAL to ledger-go on all seven parity vectors that "+
+			"predate T391 and on the accrual vectors' INCOME legs, and dies on exactly the three "+
+			"RECEIVABLE legs of each accrual vector, on exactly one cell, legs[i].slot_name. It is "+
+			"T242's error (A2-34 F-4) in port form: a corpus that graded the ACCOUNT and not the SLOT "+
+			"would report it GREEN",
+		slotFamilyBlindPoster{})
 }
 
 // minorText renders minor units as the decimal-free integer STRING the schema

@@ -1,0 +1,19 @@
+id = 63 | name = T388 Accrual Periodic On Clean Accounts
+accountingRule = {"code": "accountingRuleType.accrual.periodic", "id": "3", "value": "ACCRUAL PERIODIC"}
+currency.code = MNT | decimalPlaces = 2 | inMultiplesOf = 0
+  accountingMappings.fundSourceAccount = {"glCode": "T388-1000", "id": "35", "name": "T388 Accrual Fund Source"}
+  accountingMappings.goodwillCreditAccount = {"glCode": "T388-5100", "id": "47", "name": "T388 Goodwill Credit"}
+  accountingMappings.incomeFromFeeAccount = {"glCode": "T388-4100", "id": "38", "name": "T388 Income From Fees"}
+  accountingMappings.incomeFromPenaltyAccount = {"glCode": "T388-4200", "id": "39", "name": "T388 Income From Penalties"}
+  accountingMappings.incomeFromRecoveryAccount = {"glCode": "T388-4300", "id": "46", "name": "T388 Income From Recovery"}
+  accountingMappings.interestOnLoanAccount = {"glCode": "T388-4000", "id": "37", "name": "T388 Interest On Loans"}
+  accountingMappings.loanPortfolioAccount = {"glCode": "T388-1100", "id": "36", "name": "T388 Accrual Loan Portfolio"}
+  accountingMappings.overpaymentLiabilityAccount = {"glCode": "T388-2000", "id": "45", "name": "T388 Overpayment Liability"}
+  accountingMappings.receivableFeeAccount = {"glCode": "T388-1300", "id": "42", "name": "T388 Fees Receivable"}
+  accountingMappings.receivableInterestAccount = {"glCode": "T388-1200", "id": "41", "name": "T388 Interest Receivable"}
+  accountingMappings.receivablePenaltyAccount = {"glCode": "T388-1400", "id": "43", "name": "T388 Penalties Receivable"}
+  accountingMappings.transfersInSuspenseAccount = {"glCode": "T388-1500", "id": "44", "name": "T388 Transfers Suspense"}
+  accountingMappings.writeOffAccount = {"glCode": "T388-5000", "id": "40", "name": "T388 Losses Written Off"}
+  paymentChannelToFundSourceMappings = (absent or empty)
+  feeToIncomeAccountMappings = (absent or empty)
+  penaltyToIncomeAccountMappings = (absent or empty)

@@ -5780,7 +5780,7 @@
     },
     {
       "id": "T396",
-      "status": "in_progress",
+      "status": "merged",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -5795,7 +5795,7 @@
       ],
       "title": "T389's three citation defects around T388's /runaccruals claim -- the core claim holds, its supports do not, and one hides three real port traps",
       "description": "T389 APPROVED T388 WITH CONDITIONS. **The load-bearing claim HOLDS and is not in question**: `/runaccruals` and job 16 converge on the single-overload `addPeriodicAccruals(LocalDate)`, whose own Javadoc names both callers, and job 16 is seeded in source. So T388's observations ARE genuine periodic accruals. Three supporting citations around it are wrong, and one of them matters to the port.\n\n**m-3 IS THE ONE THAT COSTS SOMETHING.** T388's 'periods 1-3 vs 4-6' finding is attributed to a JPQL that **selects loans, not periods**. T389 says the misattribution **hides three real traps for a Go port**. Find them, name them, and write them down where a porting task will meet them -- that is the whole value of this correction. A wrong citation under a right conclusion is how the previous defect in this same fire survived (see G-21).\n\n**m-1.** `AccrualAccountingApiResource.java:62` **builds** a `CommandWrapper`; dispatch is at **`:64`** via the command bus. Correct the citation.\n\n**m-2.** 'the ONLY difference is where `tillDate` comes from' is **false**, and note it errs in T388's own favour -- it understates the difference rather than overstating the result. The manual path also carries a permission check, idempotency, command-source audit, maker-checker and a date validator. **Enumerate all five with citations from the pinned checkout `/Users/buv/fineract` @ `426a23544`**, and say for each whether it could change what gets accrued. That is the difference between 'the same method' and 'the same behaviour'.\n\nRead T389's review on `main` at `.softhouse/reviews/t389-review-t388/REVIEW.md`. Your grant includes T388's capture directory so the corrections land where the observations are, not in a separate file nobody reads. **Correct in place and say what you corrected**; do not rewrite T388's conclusions, which survived review.\n\nBar from a CLEAN tree after commit; probe-line presence before value (P-84).",
-      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
+      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits. MERGED at e96197a4; the driver merged it and FAILED TO UPDATE THIS RECORD for several commits. Caught by a status-vs-git audit, not by the driver noticing."
     },
     {
       "id": "T397",
@@ -5858,7 +5858,7 @@
     },
     {
       "id": "T400",
-      "status": "needs_review",
+      "status": "merged",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -5874,7 +5874,7 @@
       ],
       "title": "T385's three conditions on T383 -- a comment that says two offsets 'cannot drift apart' when they are re-spelled 90 lines later, and they DO drift",
       "description": "All three are comment-only in `.softhouse/bin/fire-program.sh`, but F-T385-2 is a MEASURED fail-open in the reasoning, not just prose.\n\n**READ P-97 FIRST (`.softhouse/patterns.md:3259`) BEFORE YOU WRITE THIS FILE.** It is the wrapper that launches every fire, it may be EXECUTING while you work, and a write that goes through the original inode can be executed as a spliced tail -- reproduced at a read-buffer boundary with no length change at all. **Edit in your worktree and land it through git** (all eight git write paths rename), or use a renaming writer (`sed -i`, `mv`, `install`, the harness Write/Edit tools). **Never `cp` over it** -- `cp` is in-place on macOS and Linux both, and 'copy the fixed wrapper over the live one' is exactly what a person types. Never invoke the wrapper in a mode that starts a fire, takes the lock or dispatches; `zsh -n`, `--self-test-lock-readers`, `--lock-decide` and `--probe` against a throwaway repo only. And unset `FIRE_SNAPSHOT_OF` / `FIRE_NO_SNAPSHOT` first -- a live fire exports the former and the latter does NOT override it (`fire-program.sh:999`), confirmed independently by T383 and T385.\n\n**F-T385-2 (MODERATE, DRIVEN).** `:748-749` claims the z06/z07 offsets *cannot drift apart* from the rows. **They are re-spelled inline at `:883-884`.** T385 drove the drift (case `s01`): the gate does not fire, `z06` goes **FAIL-OPEN**, and the wiring then says *'The thresholds validated at startup, so this is the READERS'* -- **the exact misattribution F-T380-2 exists to close**. Its control `s02` (drift the gate's own variable) exits 78, so the gate is live and it is only this pair that escapes. Fix it so the claim is TRUE -- derive the offsets from one place, or make the gate check the inline spelling too -- and re-drive `s01` and `s02`.\n\n**F-T385-1 (MINOR).** T383's stated reason for keeping substring containment green is **false**: the `lockselftest| ROWS=` echo is added *after* the capture and is never in the population. T385 built the naive unanchored-count wrapper and it **starts the healthy fire at rc 0**, so the anchoring is still correct and independently justified -- **only the example is wrong**. Replace the false example with T385's measured one. Do not weaken the anchoring.\n\n**F-T385-3 (MINOR, P-80).** `:724` says *'the four tests below ARE the four fixture expressions'*; the code has **six** (`:756-761`). A restated cardinal that rotted.\n\nAfter your change: re-run `.softhouse/capture/t279-lock-partition/drive-wrapper-vs-skill.zsh` (192 states, must be 0 disagreements), re-drive T385's 20-case driver, and confirm a HEALTHY fire still starts -- a control that refuses everything is the same defect as one that cannot fail, and this fire produced that inversion once already. Bar from a CLEAN tree after `git add -A` and commit; probe-line PRESENCE before value (P-84).",
-      "note": "COMPLETE on softhouse/T400-t385-conditions, 5 commits, bar exit 0. NOT MERGED -- awaiting T410. Verified P-97 writer safety with INODE evidence (live wrapper inode 19079181 and sha identical at task start and end; edits landed through git). Measured 123 tracked .zsh / 111 under capture+reviews -- T401 measured 121/109 earlier the same fire, so the figure moved again WITHIN one fire."
+      "note": "MERGED. T410 APPROVED, all seven settlements driven independently. Bar graded ON MAIN BEFORE the push."
     },
     {
       "id": "T401",
@@ -5933,7 +5933,7 @@
     },
     {
       "id": "T404",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -5949,7 +5949,7 @@
       ],
       "title": "F-T384-1: the FIFTH registration fail-open is REACHABLE with two committed files -- a decoy plus an ambiguous-glob symlink neutralises BOTH of T375's new tests at once",
       "description": "**T375 disclosed this against itself as `FU-T375-7` and rated it unreachable. `T384` REACHED IT.** The arm is written, driven on three trees, and ready to lift — it is `arm G` in `.softhouse/reviews/t384-review-t375/`, with controls E and F beside it.\n\n**THE MECHANISM, MEASURED.** The guard runs `git ls-files -s -- \"$rel\"` with `$rel` as a **pathspec, not a literal**. Plant an *honestly registered* decoy `zz-t384g1.sh` and a tracked symlink `zz-t384g[1].sh`: the pathspec matches **both**, `git ls-files` returns **two** lines, `1` sorts before `[`, so `member_mode` is the decoy's `100644` and `member_blob` is the decoy's blob. **Both of T375's new tests are neutralised at once.** Whole bar: **exit 0, probe PRESENT, `VERDICT: PASS`, `reached-by=3`, and the census printing `symlink-members=0` while a symlink member sits in the population.** Driven on T375's branch, on `main`, and on the merge result.\n\n**A GLOB CHARACTER ALONE IS NOT ENOUGH — T384's own controls refuted that.** Controls E and F use the same filenames without the ambiguity and are correctly REFUSED. **T375's recorded mechanism — 'more than one path, first line wins' — was exactly right.** Do not 'fix' this by rejecting glob characters in filenames; that would be the wrong repair and would refuse legitimate names.\n\n**THE REPAIR IS THE ONE T375 ALREADY WROTE:** `\":(literal)$rel\"` plus a `self_multi`-shaped refusal. Lift arm G (and E/F as controls) into the drive. Drive RED before GREEN and **keep a healthy control** — an honestly registered checker with an independent regular-file witness must still be ACCEPTED at `reached-by=2`, which is the control T384 verified stays green.\n\n**C-2 (also T384's): assert `symlink-members` COUNTS CORRECTLY, not merely that the member is refused.** The census printed `symlink-members=0` while one was present — a count that cannot rise is a count nobody should read.\n\n**C-3: delete two restated cardinals in T375's handoff §6 that DO NOT REPRODUCE.** T384 measures the `warn \"`/`say \"` counts as **367→405 and 139→139**, not the handoff's 366→396/137→137. The load-bearing 'nothing removed' claim IS true and independently counted — so **delete the restated numbers rather than refreshing them**, which is the remedy DEC-2 revision 8 chose for the same shape.\n\n**WHY T375 WAS RIGHT NOT TO FIX THIS IN FLIGHT, and you should say so in your handoff:** an executable change would have invalidated the 61-arm drive, and a one-token change without its arm is precisely what that task existed to refuse. What was wrong was the SEVERITY rating, not the process — the threat model of this guard is deliberate forgery inside a task's own grant, where **the attacker chooses the filename**.\n\n`conformance.sh` is free as of `d8ea93b8` — confirm no worker holds it before you write it. Bar from a CLEAN tree AFTER `git add -A` and commit; probe-line PRESENCE before value (P-84). Baseline: exit 0, 46 parity / 7884 cells, ledger 7/0, 144 cells / 39 money, all 14 wrong implementations dead, frontier GREEN at deadOccurrences 108, `EXEMPTION_PIN_LEDGER_WRONGIMPLS` now **14** — match it BY NAME if you ever touch it.\n\nT384 also listed what it did NOT drive, so you inherit it honestly: FU-T375-5 (DECLARED direction), a case-sensitive host, newline and gitlink member paths, and `guard_graded_root_is_this_tree`'s short-circuit.",
-      "note": "dispatched fire 20260828-140005 chain iteration 4; record pushed BEFORE git worktree add. conformance.sh grant this wave: T404 primary, T391 pin-bumps BY NAME only; T390/T401 must ship patches as requests, not edits."
+      "note": "COMPLETE, 15 commits, bar exit 0, deadOccurrences 108 unmoved. Held for T407. RELEASES conformance.sh -- T413, T418 and F-T405-4 were all sequenced behind it. Disclosed FU-T404-1 against itself (the WITNESS-side second lookup at :3677 is still a pathspec; REASONED, NOT DRIVEN, and it deliberately did not make the one-token change, for the same reason T375 did not make its own). Also kept a defect in ITS OWN INSTRUMENT in the record: two drive invocations shared a work root and deleted each other mid-bar, producing exit=2 probe=ABSENT census=<none> -- INDISTINGUISHABLE FROM A CLEAN REFUSAL. Both conflicting transcripts stay committed unedited and neither corrupted row is claimed as a result."
     },
     {
       "id": "T405",
@@ -5995,11 +5995,12 @@
       "dependencies": [
         "T404"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/reviews/t407-review-t404/"
       ],
-      "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
+      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "branch": "softhouse/T407-review-t404"
     },
     {
       "id": "T408",
@@ -6028,11 +6029,12 @@
       "dependencies": [
         "T390"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/reviews/t409-review-t390/"
       ],
-      "note": "FILED BY THE DRIVER, iter4. Plan gate 1 -- every coder task needs a paired INDEPENDENT reviewer -- was NOT met for 7 of the 10 tasks in this wave. These close that gap. The reviewer RE-DERIVES against source/vectors, never against the author's conclusions, and reads the handoff from the BRANCH, not from disk."
+      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "branch": "softhouse/T409-review-t390"
     },
     {
       "id": "T410",
@@ -6044,11 +6046,11 @@
       "dependencies": [
         "T400"
       ],
-      "status": "in_progress",
+      "status": "done",
       "files_hint": [
         ".softhouse/reviews/t410-review-t400/"
       ],
-      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "note": "APPROVED T400. Reproduced the RED twice, once with its OWN from-scratch driver. Ruled out the P-85 shape directly rather than trusting the 192-state driver, since rules.py is a transcription of the skill. Added a check T400 did not make (value-equivalence across the int64 wrap). CORRECTED THE DRIVER'S OWN TASKING: the paraphrase \"zero executable rows\" is false of the shipped file -- there are two, and they ARE the fix.",
       "branch": "softhouse/T410-review-t400"
     },
     {
@@ -6061,11 +6063,11 @@
       "dependencies": [
         "T401"
       ],
-      "status": "in_progress",
+      "status": "merged",
       "files_hint": [
         ".softhouse/reviews/t411-review-t401/"
       ],
-      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "note": "APPROVED WITH CONDITIONS. CONFIRMED T401 symptom and REFUTED its diagnosis: `\\|` does NOT drop a branch; the real cause is BSD BRE treating a NON-TERMINAL `$` as a literal dollar. Driver re-verified: `\\.sh\\|\\.py` = 3 (alternation works), `\\.sh$\\|\\.py$` = 2 matching a.sh$X and MISSING a.sh. Also found a NEW dead expression at conformance.sh:4530 and showed two of T385 five figures were WRONG WHEN WRITTEN, not rotted. Built its own discrimination drive because ALL of T401 controls are .sh and therefore in the corpus in BOTH arms -- they never exercise the widening. Review MERGED to main.",
       "branch": "softhouse/T411-review-t401"
     },
     {
@@ -6087,7 +6089,7 @@
     {
       "id": "T413",
       "title": "APPLY T401's four census extensions -- the .zsh gap is measured, costed and decided, and still OPEN on main",
-      "description": "T401 measured the gap, costed every option, decided to extend all four censuses, and drove the extension RED on a planted `.zsh` fail-open with a healthy control -- **but shipped the changes as REQUESTS and applied none of them**, because `conformance.sh` was held by T404 and the two Python selectors were outside its grant. So on `main` today the linter still cannot see **121 tracked `.zsh` files**, which is the language most new driving instruments are written in. Read `git show softhouse/T401-zsh-census-gap:.softhouse/handoff/T401-zsh-census-gap.md` for the requests, the drives and the cost table.\n\n**THE FOUR SITES, and note only two are in `conformance.sh`:** S1 fail-open (`50-failopen-lint.py:210`), S2 dead-path (`census_dead_paths.py:110`), S3 host-state (`conformance.sh:2131`), S4 guards-dir (`conformance.sh:3267`). **A patch to `conformance.sh` alone cannot fix S1 or S2** -- it can only stop the harness printing a coverage claim it does not have.\n\n**COST, as T401 measured it:** S1, S3, S4 are FREE (no pinned row moves). Only S2 moves: deadOccurrences **108 -> 115**, +7 rows across 5 files, and T401 inspected all seven -- every one is a path the probe itself CREATES (`> .softhouse/LOCK.bak`, `> \"$S/.softhouse/vector.json\"`), none fail-open. **RE-MEASURE THIS YOURSELF; do not inherit it.** The pin must be REGENERATED BY RUNNING the census, never by arithmetic, and the selector change and the new pin land in **ONE commit** (P-83).\n\n**SEQUENCING:** S4's population glob is inside `guard_guards_dir_registration`, which **T404 rewrote this same fire** (the `:(literal)` repair for the fifth registration fail-open). T401's own coordination note says: if that function was rewritten, **fold request A3/A4 in rather than applying it on top**. Depends on T404 landing. Check T404's handoff for its adjudication of exactly this.\n\n**TWO THINGS T401 FOUND EN ROUTE THAT ARE WORTH MORE THAN THE PATCH, and must not be lost:**\n1. **A MEASURING INSTRUMENT THAT UNDERCOUNTS AND REPORTS SUCCESS.** `grep -c '\\.sh$\\|\\.py$'` returns **738** (the `.py` count alone) under the `/usr/bin/grep` a non-interactive bash gets, and **1395** under the interactive zsh's grep. A BRE `\\|` silently drops a branch and exits 0. Any count in this repo taken with that idiom is suspect -- sweep for it.\n2. **THE T316 CENSUS HAS NO 'SCRATCH' FILTER AND THE T238 LINTER DOES.** T238 filters 'a path the file itself creates is scratch, not corpus'; T316 does not. All 7 new rows and an unknown share of the **existing pinned 108** are `>`-written fixtures. Adopting the filter would likely take +7 to +0 *and shrink the current pin* -- which means the pinned 108 may already be partly noise. That is its own task with its own red drive; do not fold it in here, but state what you measure.\n\n**ALSO: T401 turned the bar red FOUR TIMES with its own prose** -- an example path in a comment, a scratch path spelled whole twice (the second time inside the comment explaining the first), and heredoc bait. **The census reads bytes, not intent.** You are editing census selectors while writing comments about census selectors; you are the most exposed task in the program to this. Candidate pattern, if it survives: *an example in a comment is a graded row.*",
+      "description": "T401 measured the gap, costed every option, decided to extend all four censuses, and drove the extension RED on a planted `.zsh` fail-open with a healthy control -- **but shipped the changes as REQUESTS and applied none of them**, because `conformance.sh` was held by T404 and the two Python selectors were outside its grant. So on `main` today the linter still cannot see **121 tracked `.zsh` files**, which is the language most new driving instruments are written in. Read `git show softhouse/T401-zsh-census-gap:.softhouse/handoff/T401-zsh-census-gap.md` for the requests, the drives and the cost table.\n\n**THE FOUR SITES, and note only two are in `conformance.sh`:** S1 fail-open (`50-failopen-lint.py:210`), S2 dead-path (`census_dead_paths.py:110`), S3 host-state (`conformance.sh:2131`), S4 guards-dir (`conformance.sh:3267`). **A patch to `conformance.sh` alone cannot fix S1 or S2** -- it can only stop the harness printing a coverage claim it does not have.\n\n**COST, as T401 measured it:** S1, S3, S4 are FREE (no pinned row moves). Only S2 moves: deadOccurrences **108 -> 115**, +7 rows across 5 files, and T401 inspected all seven -- every one is a path the probe itself CREATES (`> .softhouse/LOCK.bak`, `> \"$S/.softhouse/vector.json\"`), none fail-open. **RE-MEASURE THIS YOURSELF; do not inherit it.** The pin must be REGENERATED BY RUNNING the census, never by arithmetic, and the selector change and the new pin land in **ONE commit** (P-83).\n\n**SEQUENCING:** S4's population glob is inside `guard_guards_dir_registration`, which **T404 rewrote this same fire** (the `:(literal)` repair for the fifth registration fail-open). T401's own coordination note says: if that function was rewritten, **fold request A3/A4 in rather than applying it on top**. Depends on T404 landing. Check T404's handoff for its adjudication of exactly this.\n\n**TWO THINGS T401 FOUND EN ROUTE THAT ARE WORTH MORE THAN THE PATCH, and must not be lost:**\n1. **A MEASURING INSTRUMENT THAT UNDERCOUNTS AND REPORTS SUCCESS.** `grep -c '\\.sh$\\|\\.py$'` returns **738** (the `.py` count alone) under the `/usr/bin/grep` a non-interactive bash gets, and **1395** under the interactive zsh's grep. A BRE `\\|` silently drops a branch and exits 0. Any count in this repo taken with that idiom is suspect -- sweep for it.\n2. **THE T316 CENSUS HAS NO 'SCRATCH' FILTER AND THE T238 LINTER DOES.** T238 filters 'a path the file itself creates is scratch, not corpus'; T316 does not. All 7 new rows and an unknown share of the **existing pinned 108** are `>`-written fixtures. Adopting the filter would likely take +7 to +0 *and shrink the current pin* -- which means the pinned 108 may already be partly noise. That is its own task with its own red drive; do not fold it in here, but state what you measure.\n\n**ALSO: T401 turned the bar red FOUR TIMES with its own prose** -- an example path in a comment, a scratch path spelled whole twice (the second time inside the comment explaining the first), and heredoc bait. **The census reads bytes, not intent.** You are editing census selectors while writing comments about census selectors; you are the most exposed task in the program to this. Candidate pattern, if it survives: *an example in a comment is a graded row.*\n\n---\n\n## T411's BLOCKING CONDITIONS ON THIS TASK — read before you start\n\n**1. `A5` MUST NOT LAND BEFORE `REQUEST B`.** Otherwise the bar prints a **false coverage claim** — it would advertise coverage the censuses do not have. Order matters here; do not batch them.\n\n**2. LOCATE EVERY SITE BY GREPPING THE SENTENCE, NEVER BY LINE NUMBER.** `:3860-3862` is **already stale**, and T404 has since edited this file and moved anchors by +75. T411 also found restatements T401 did **not** list — `:3082`, `:3242`, `:3259` — which are **historical narrative and MUST NOT change**. Changing them would rewrite the record of what was once true.\n\n**3. REGENERATE THE DEAD-PATH PIN BY *RUNNING* THE TOOL**, in the same commit as the selector change (P-83), with a header noting the +7 arrived **by widening, not by regression** — otherwise the next reader reads a jump in the pin as rot.\n\n**4. T401's DIAGNOSIS OF THE GREP DEFECT IS WRONG — do not act on it.** See T419. Sweeping for `\\|` over-reports about 25x. Use T419's corrected rule.\n\n**5. ALSO FIX `conformance.sh:4530` WHILE YOU HOLD THE FILE** (F-T411-2): BSD `sed` does not implement `\\|` **at all**, so that expression prints **0 rows where it should print 3** and has **never produced a line**. It sits in the SURVIVED branch after `bad=1`, so it gates nothing — it is the diagnostic that says *why* a wrong ledger implementation survived. Aggravating: `guards/check-capture-namespace.sh:95` **already documents this exact limitation** and nothing enforced it.\n\n**6. BUILD A `.zsh` CONTROL.** T411's sharpest catch: **all of T401's controls are `.sh`**, so they sit in the corpus in **both** arms and never exercise the widening at all. A healthy `.zsh` control does. A control that cannot distinguish the two arms is not a control.",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -6100,7 +6102,7 @@
         ".softhouse/conformance.sh",
         ".softhouse/capture/t413-apply-zsh-census/"
       ],
-      "note": "FILED BY THE DRIVER, iter4. T401 decided and drove but could not apply; this applies."
+      "note": "FILED BY THE DRIVER, iter4. T401 decided and drove but could not apply; this applies. conformance.sh RELEASED by T404 as of iter4; this is now unblocked once its dependency review lands. NOTE T404 moved anchors: A4 moved :3865 -> :3934-3935, and EXEMPTION_PIN_LEDGER_WRONGIMPLS is at :4551. Apply BY CONTENT."
     },
     {
       "id": "T414",
@@ -6112,11 +6114,12 @@
       "dependencies": [
         "T398"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/reviews/t414/"
       ],
-      "note": "FILED BY THE DRIVER, iter4."
+      "note": "dispatched iter4; record pushed BEFORE git worktree add.",
+      "branch": "softhouse/T414-review-t398"
     },
     {
       "id": "T415",
@@ -6166,6 +6169,52 @@
         ".softhouse/capture/t417-scheduler-attribution/"
       ],
       "note": "FILED BY THE DRIVER, iter4, from T390s out-of-brief finding. Carries G-22."
+    },
+    {
+      "id": "T418",
+      "title": "F-T410-2 and F-T410-3: the single-spelling property is enforced nowhere executable, and committed drivers are not self-contained",
+      "description": "Two LOW follow-ups from T410's review of T400. Neither was a condition on that branch — one names a file T400 was forbidden to edit, the other pre-dates T400 entirely.\n\n**F-T410-2 — the property T400 established is not GUARDED.** T400 made the z06/z07 offsets derive from a single spelling, so the comment's claim is now true by construction. But **nothing executable enforces that it stays true**: a later edit can re-spell them inline and reintroduce exactly the fail-open T385 drove, silently. T400 disclosed this in-source rather than hiding it. **The check already exists and already has a demonstrated red** — `grep -c '^\\s*_row z0[67] .*LOCK_RELEASE_SKEW_SECS'` reads **0** on the fixed file and **2** on `main` — but it lives only in capture drivers. **Its home is `conformance.sh`**, which was held by T404 this fire, which is why it needs its own grant. Wire it, drive it RED on a re-spelled copy, and keep a healthy control. This is the P-45 shape: a property that only holds while everyone remembers it is not enforced.\n\n**F-T410-3 — COMMITTED DRIVERS ARE NOT SELF-CONTAINED, and this one is not T400's doing.** `t400-skew-drift-redrive.zsh` reads `/tmp/t400/{mutate.py,lib-worktree-prune.zsh,subject}` and **creates none of them** — 5 reads, 0 creates. **T385's already-merged driver has the identical property.** So a committed 'red drive' cannot be re-run from a clean checkout: T410 had to verify the prerequisites matched repo sources before its run meant anything, and a later reader who skipped that step would be driving against whatever happened to be in `/tmp`. **Census the committed drivers for this shape** — how many read paths they do not create — and decide the remedy: vendor the prerequisites, generate them in the driver, or make the driver refuse when they are absent. **Refusing is the minimum**; a drive that silently runs against missing or foreign inputs is a drive that cannot report failure honestly.\n\nDo not treat this as cosmetic. This program's whole evidence model is that a committed drive can be re-run by a later reader; a driver that depends on unreproducible `/tmp` state is evidence that expires without saying so.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T400",
+        "T404"
+      ],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/capture/t418-driver-selfcontainment/"
+      ],
+      "note": "FILED BY THE DRIVER, iter4, from T410 F-T410-2 and F-T410-3. conformance.sh RELEASED by T404 as of iter4; this is now unblocked once its dependency review lands. NOTE T404 moved anchors: A4 moved :3865 -> :3934-3935, and EXEMPTION_PIN_LEDGER_WRONGIMPLS is at :4551. Apply BY CONTENT."
+    },
+    {
+      "id": "T419",
+      "title": "THE GREP PORTABILITY DEFECT IS REAL BUT WAS DIAGNOSED WRONG -- and one of the three genuinely broken sites is a MONEY-PATH census",
+      "description": "**T401 reported that `grep -c '\\.sh$\\|\\.py$'` returns 738 instead of 1395 and blamed BRE `\\|` for silently dropping a branch. T411 refuted that and the driver re-verified from scratch:**\n\n```\n/usr/bin/grep -c '\\.sh\\|\\.py'    -> 3   # alternation WORKS. The \\| diagnosis is FALSE.\n/usr/bin/grep -c '\\.sh$\\|\\.py$'  -> 2   # and it matches `a.sh$X` while MISSING `a.sh`\n```\n\n**The real cause: BSD BRE treats a NON-TERMINAL `$` as a LITERAL DOLLAR.** `\\.sh$` inside an alternation is not an anchor at all — it means *`.sh` followed by a dollar sign*.\n\n**WHY THE CORRECTION MATTERS MORE THAN THE BUG.** Acting on T401's advisory means sweeping for `\\|`, which **over-reports about 25x** — T411 measured **76 sites, only 3 genuinely broken** — and, worse, **misses the mirror-image bug entirely**: 7 sites put `\\|` *inside* an `-E` pattern, where it is a literal. A wrong diagnosis here produces a large, confident, useless sweep and leaves the real defects in place. That is this program's recurring failure mode, and the reason T398 has a pattern about it.\n\n**ONE OF THE THREE GENUINELY BROKEN SITES IS A MONEY-PATH CENSUS** — a census of ambient `MathContext` sites. **Fix that one first and say exactly what it was under-reporting**, because a money census that silently under-counts is a money non-negotiable wearing a measurement bug. Production `MathContext` is `(19, HALF_UP)`; a census that cannot see a site cannot defend it.\n\n**THE DEEPER PROBLEM, WHICH T401 DID NOT MENTION AND IS WORSE THAN EITHER BUG.** `grep` invoked inline is a **ugrep shim**; `grep` inside `bash script.sh` is **BSD grep**. So **a worker and the guard that re-measures its work can run different regex engines, and neither is told.** Every count in this repo taken with an anchored alternation is suspect, and the same command can legitimately return two different answers depending on how it was invoked. Decide what to do about it: pin the engine, refuse ambiguous idioms, or make the harness declare which engine it got. **Say what it costs.**\n\n**DRIVE IT.** For each of the 3 broken sites, show the wrong count and the right one. Keep a healthy control. Do not 'fix' the 76 false positives — say why they are safe.\n\nNote `conformance.sh:4530` is the *sed* instance of the same family and belongs to **T413**, which holds the file; coordinate rather than both editing it.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/capture/t419/"
+      ],
+      "note": "FILED BY THE DRIVER, iter4, from T411 review of T401."
+    },
+    {
+      "id": "T420",
+      "title": "FILE NOW, T411 asks: the T316 dead-path census has no scratch filter and the T238 linter does -- the pinned 108 may already be partly noise",
+      "description": "T401 found and T411 confirmed: the **T238 fail-open linter** filters *'a path the file itself creates is scratch, not corpus'*; the **T316 dead-path census does not**. All **7 new rows** T401 measured, and **an unknown share of the existing pinned 108**, are `>`-written fixtures — paths the probe creates itself.\n\n**So the pin this program treats as a frontier may already be partly noise, and nobody knows what share.** That is the interesting part: not that the pin is wrong, but that **no one can currently say how much of it is real**. Adopting T238's filter would likely take the +7 to +0 *and shrink the existing pin* — which means the number the bar has been defending is not the number it thought.\n\n**MEASURE FIRST, DECIDE SECOND.** How many of the pinned rows are probe-created? Enumerate them individually, as T401 did for its seven, rather than estimating. Then decide whether to adopt the filter, and if so **regenerate the pin by RUNNING** (P-83), in one commit, with a header saying the drop is a **narrowing, not a regression** — a pin that falls looks exactly like a guard that stopped working, and the next reader must not have to guess which it was.\n\n**Keep the two censuses' rules explicitly reconciled**, or write down why they legitimately differ. Two censuses over the same corpus with different, undocumented notions of what counts is how a number becomes unfalsifiable.\n\nDrive it RED with a planted genuine dead path that is NOT probe-created — it must survive the filter — and a healthy control that is probe-created and correctly dropped. **A filter that removes real findings is a fail-open, and a filter that removes nothing is decoration (P-98).**\n\nSequenced after **T413**, which is widening the same censuses to `.zsh`; landing both at once would make the pin move for two reasons in one step and neither would be attributable.",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [],
+      "status": "pending",
+      "files_hint": [
+        ".softhouse/capture/t420/"
+      ],
+      "note": "FILED BY THE DRIVER, iter4, from T411 review of T401."
     }
   ],
   "cross_corroboration": {

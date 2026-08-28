@@ -1,0 +1,100 @@
+=== 1. product 63: every slot mapping, decoded on AccrualAccountsForLoan ===
+ mapping_id | product_id | product_type | slot_code |       slot_name       | gl_account_id |  gl_code  |           gl_name           | classification_enum | manual_journal_entries_allowed | disabled | account_usage | payment_type | charge_id | je_rows_on_account 
+------------+------------+--------------+-----------+-----------------------+---------------+-----------+-----------------------------+---------------------+--------------------------------+----------+---------------+--------------+-----------+--------------------
+        177 |         63 |            1 |         1 | FUND_SOURCE           |            35 | T388-1000 | T388 Accrual Fund Source    |                   1 | t                              | f        |             1 |              |           |                  1
+        178 |         63 |            1 |         2 | LOAN_PORTFOLIO        |            36 | T388-1100 | T388 Accrual Loan Portfolio |                   1 | t                              | f        |             1 |              |           |                  1
+        183 |         63 |            1 |         3 | INTEREST_ON_LOANS     |            37 | T388-4000 | T388 Interest On Loans      |                   4 | t                              | f        |             1 |              |           |                  6
+        184 |         63 |            1 |         4 | INCOME_FROM_FEES      |            38 | T388-4100 | T388 Income From Fees       |                   4 | t                              | f        |             1 |              |           |                  6
+        185 |         63 |            1 |         5 | INCOME_FROM_PENALTIES |            39 | T388-4200 | T388 Income From Penalties  |                   4 | t                              | f        |             1 |              |           |                  6
+        187 |         63 |            1 |         6 | LOSSES_WRITTEN_OFF    |            40 | T388-5000 | T388 Losses Written Off     |                   5 | t                              | f        |             1 |              |           |                  0
+        180 |         63 |            1 |         7 | INTEREST_RECEIVABLE   |            41 | T388-1200 | T388 Interest Receivable    |                   1 | t                              | f        |             1 |              |           |                  6
+        181 |         63 |            1 |         8 | FEES_RECEIVABLE       |            42 | T388-1300 | T388 Fees Receivable        |                   1 | t                              | f        |             1 |              |           |                  6
+        182 |         63 |            1 |         9 | PENALTIES_RECEIVABLE  |            43 | T388-1400 | T388 Penalties Receivable   |                   1 | t                              | f        |             1 |              |           |                  6
+        179 |         63 |            1 |        10 | TRANSFERS_SUSPENSE    |            44 | T388-1500 | T388 Transfers Suspense     |                   1 | t                              | f        |             1 |              |           |                  0
+        189 |         63 |            1 |        11 | OVERPAYMENT           |            45 | T388-2000 | T388 Overpayment Liability  |                   2 | t                              | f        |             1 |              |           |                  0
+        186 |         63 |            1 |        12 | INCOME_FROM_RECOVERY  |            46 | T388-4300 | T388 Income From Recovery   |                   4 | t                              | f        |             1 |              |           |                  0
+        188 |         63 |            1 |        13 | GOODWILL_CREDIT       |            47 | T388-5100 | T388 Goodwill Credit        |                   5 | t                              | f        |             1 |              |           |                  0
+(13 rows)
+
+=== 2. ALL SIX accrual transactions L29..L34, each leg decoded to its slot ===
+ je_id | transaction_id | entry_date | dr2_cr1 | gl_id |  gl_code  |    amount    | currency_code | manual_entry | reversed | office_id | entity_type_enum | entity_id | loan_transaction_id | loan_txn_type | product_id | accounting_type | slot_code |       slot_name       
+-------+----------------+------------+---------+-------+-----------+--------------+---------------+--------------+----------+-----------+------------------+-----------+---------------------+---------------+------------+-----------------+-----------+-----------------------
+    78 | L29            | 2026-02-15 |       2 |    41 | T388-1200 | 24000.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  29 |            10 |         63 |               3 |         7 | INTEREST_RECEIVABLE
+    79 | L29            | 2026-02-15 |       1 |    37 | T388-4000 | 24000.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  29 |            10 |         63 |               3 |         3 | INTEREST_ON_LOANS
+    80 | L29            | 2026-02-15 |       1 |    38 | T388-4100 |  2500.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  29 |            10 |         63 |               3 |         4 | INCOME_FROM_FEES
+    81 | L29            | 2026-02-15 |       2 |    42 | T388-1300 |  2500.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  29 |            10 |         63 |               3 |         8 | FEES_RECEIVABLE
+    82 | L29            | 2026-02-15 |       1 |    39 | T388-4200 |  1200.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  29 |            10 |         63 |               3 |         5 | INCOME_FROM_PENALTIES
+    83 | L29            | 2026-02-15 |       2 |    43 | T388-1400 |  1200.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  29 |            10 |         63 |               3 |         9 | PENALTIES_RECEIVABLE
+    84 | L30            | 2026-03-15 |       2 |    41 | T388-1200 | 20195.380000 | MNT           | f            | f        |         1 |                1 |         8 |                  30 |            10 |         63 |               3 |         7 | INTEREST_RECEIVABLE
+    85 | L30            | 2026-03-15 |       1 |    37 | T388-4000 | 20195.380000 | MNT           | f            | f        |         1 |                1 |         8 |                  30 |            10 |         63 |               3 |         3 | INTEREST_ON_LOANS
+    86 | L30            | 2026-03-15 |       1 |    38 | T388-4100 |  2500.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  30 |            10 |         63 |               3 |         4 | INCOME_FROM_FEES
+    87 | L30            | 2026-03-15 |       2 |    42 | T388-1300 |  2500.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  30 |            10 |         63 |               3 |         8 | FEES_RECEIVABLE
+    88 | L30            | 2026-03-15 |       1 |    39 | T388-4200 |  1200.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  30 |            10 |         63 |               3 |         5 | INCOME_FROM_PENALTIES
+    89 | L30            | 2026-03-15 |       2 |    43 | T388-1400 |  1200.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  30 |            10 |         63 |               3 |         9 | PENALTIES_RECEIVABLE
+    90 | L31            | 2026-04-15 |       2 |    41 | T388-1200 | 16314.670000 | MNT           | f            | f        |         1 |                1 |         8 |                  31 |            10 |         63 |               3 |         7 | INTEREST_RECEIVABLE
+    91 | L31            | 2026-04-15 |       1 |    37 | T388-4000 | 16314.670000 | MNT           | f            | f        |         1 |                1 |         8 |                  31 |            10 |         63 |               3 |         3 | INTEREST_ON_LOANS
+    92 | L31            | 2026-04-15 |       1 |    38 | T388-4100 |  2500.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  31 |            10 |         63 |               3 |         4 | INCOME_FROM_FEES
+    93 | L31            | 2026-04-15 |       2 |    42 | T388-1300 |  2500.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  31 |            10 |         63 |               3 |         8 | FEES_RECEIVABLE
+    94 | L31            | 2026-04-15 |       1 |    39 | T388-4200 |  1200.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  31 |            10 |         63 |               3 |         5 | INCOME_FROM_PENALTIES
+    95 | L31            | 2026-04-15 |       2 |    43 | T388-1400 |  1200.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  31 |            10 |         63 |               3 |         9 | PENALTIES_RECEIVABLE
+    96 | L32            | 2026-05-15 |       2 |    41 | T388-1200 | 12356.340000 | MNT           | f            | f        |         1 |                1 |         8 |                  32 |            10 |         63 |               3 |         7 | INTEREST_RECEIVABLE
+    97 | L32            | 2026-05-15 |       1 |    37 | T388-4000 | 12356.340000 | MNT           | f            | f        |         1 |                1 |         8 |                  32 |            10 |         63 |               3 |         3 | INTEREST_ON_LOANS
+    98 | L32            | 2026-05-15 |       1 |    38 | T388-4100 |  2500.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  32 |            10 |         63 |               3 |         4 | INCOME_FROM_FEES
+    99 | L32            | 2026-05-15 |       2 |    42 | T388-1300 |  2500.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  32 |            10 |         63 |               3 |         8 | FEES_RECEIVABLE
+   100 | L32            | 2026-05-15 |       1 |    39 | T388-4200 |  1200.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  32 |            10 |         63 |               3 |         5 | INCOME_FROM_PENALTIES
+   101 | L32            | 2026-05-15 |       2 |    43 | T388-1400 |  1200.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  32 |            10 |         63 |               3 |         9 | PENALTIES_RECEIVABLE
+   102 | L33            | 2026-06-15 |       2 |    41 | T388-1200 |  8318.850000 | MNT           | f            | f        |         1 |                1 |         8 |                  33 |            10 |         63 |               3 |         7 | INTEREST_RECEIVABLE
+   103 | L33            | 2026-06-15 |       1 |    37 | T388-4000 |  8318.850000 | MNT           | f            | f        |         1 |                1 |         8 |                  33 |            10 |         63 |               3 |         3 | INTEREST_ON_LOANS
+   104 | L33            | 2026-06-15 |       1 |    38 | T388-4100 |  2500.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  33 |            10 |         63 |               3 |         4 | INCOME_FROM_FEES
+   105 | L33            | 2026-06-15 |       2 |    42 | T388-1300 |  2500.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  33 |            10 |         63 |               3 |         8 | FEES_RECEIVABLE
+   106 | L33            | 2026-06-15 |       1 |    39 | T388-4200 |  1200.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  33 |            10 |         63 |               3 |         5 | INCOME_FROM_PENALTIES
+   107 | L33            | 2026-06-15 |       2 |    43 | T388-1400 |  1200.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  33 |            10 |         63 |               3 |         9 | PENALTIES_RECEIVABLE
+   108 | L34            | 2026-07-15 |       2 |    41 | T388-1200 |  4200.610000 | MNT           | f            | f        |         1 |                1 |         8 |                  34 |            10 |         63 |               3 |         7 | INTEREST_RECEIVABLE
+   109 | L34            | 2026-07-15 |       1 |    37 | T388-4000 |  4200.610000 | MNT           | f            | f        |         1 |                1 |         8 |                  34 |            10 |         63 |               3 |         3 | INTEREST_ON_LOANS
+   110 | L34            | 2026-07-15 |       1 |    38 | T388-4100 |  2500.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  34 |            10 |         63 |               3 |         4 | INCOME_FROM_FEES
+   111 | L34            | 2026-07-15 |       2 |    42 | T388-1300 |  2500.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  34 |            10 |         63 |               3 |         8 | FEES_RECEIVABLE
+   112 | L34            | 2026-07-15 |       1 |    39 | T388-4200 |  1200.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  34 |            10 |         63 |               3 |         5 | INCOME_FROM_PENALTIES
+   113 | L34            | 2026-07-15 |       2 |    43 | T388-1400 |  1200.000000 | MNT           | f            | f        |         1 |                1 |         8 |                  34 |            10 |         63 |               3 |         9 | PENALTIES_RECEIVABLE
+(36 rows)
+
+=== 3. double entry on ALL SIX, in INTEGER MINOR UNITS ===
+ transaction_id | legs | debit_minor | credit_minor | difference_minor 
+----------------+------+-------------+--------------+------------------
+ L29            |    6 |     2770000 |      2770000 |                0
+ L30            |    6 |     2389538 |      2389538 |                0
+ L31            |    6 |     2001467 |      2001467 |                0
+ L32            |    6 |     1605634 |      1605634 |                0
+ L33            |    6 |     1201885 |      1201885 |                0
+ L34            |    6 |      790061 |       790061 |                0
+(6 rows)
+
+=== 4. the chart rows the vectors will carry as request.accounts ===
+ id |  gl_code  |            name            | classification_enum | account_usage | manual_journal_entries_allowed | disabled 
+----+-----------+----------------------------+---------------------+---------------+--------------------------------+----------
+ 37 | T388-4000 | T388 Interest On Loans     |                   4 |             1 | t                              | f
+ 38 | T388-4100 | T388 Income From Fees      |                   4 |             1 | t                              | f
+ 39 | T388-4200 | T388 Income From Penalties |                   4 |             1 | t                              | f
+ 41 | T388-1200 | T388 Interest Receivable   |                   1 |             1 | t                              | f
+ 42 | T388-1300 | T388 Fees Receivable       |                   1 |             1 | t                              | f
+ 43 | T388-1400 | T388 Penalties Receivable  |                   1 |             1 | t                              | f
+(6 rows)
+
+=== 5. scheduled-job state, with the column names this schema actually has ===
+ id |                                 name                                  | cron_expression | is_active | previous_run_start_time |    next_run_time    
+----+-----------------------------------------------------------------------+-----------------+-----------+-------------------------+---------------------
+ 11 | Add Accrual Transactions                                              | 0 1 0 1/1 * ? * | t         | 2026-08-28 16:01:00.049 | 2026-08-29 16:01:00
+ 16 | Add Periodic Accrual Transactions                                     | 0 2 0 1/1 * ? * | t         | 2026-08-28 16:02:00.002 | 2026-08-29 16:02:00
+ 22 | Add Accrual Transactions For Loans With Income Posted As Transactions | 0 1 0 1/1 * ? * | t         | 2026-08-28 16:01:00.002 | 2026-08-29 16:01:00
+ 33 | Increase COB Date by 1 day                                            | 0 0 0 1/1 * ? * | f         |                         | 
+ 34 | Loan COB                                                              | 0 0 0 * * ?     | f         |                         | 
+(5 rows)
+
+=== 6. did any API call produce L32/L33/L34? command-source rows since T388 ===
+ id  | action_name |        entity_name        | resource_id | status |      idempotency_key      | made_on_date 
+-----+-------------+---------------------------+-------------+--------+---------------------------+--------------
+ 376 | CREATE      | LOAN                      |           8 |      1 | T388-P05-loan-application | 
+ 377 | APPROVE     | LOAN                      |           8 |      1 | T388-P06-loan-approve     | 
+ 378 | DISBURSE    | LOAN                      |           8 |      1 | T388-P07-loan-disburse    | 
+ 379 | EXECUTE     | PERIODICACCRUALACCOUNTING |             |      1 | T388-A01-runaccruals      | 
+(4 rows)
+

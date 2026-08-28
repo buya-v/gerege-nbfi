@@ -1,0 +1,122 @@
+############ A. EXTERNAL SCRIPTS conformance.sh EXECUTES ############
+selector: lines assigning or invoking a path under .softhouse/ ending .py/.sh,
+          minus comment lines and minus the pin/table literals.
+
+1432  bash "$REPO_ROOT/.softhouse/guards/check-ledger-invariants.sh" || rc=$?
+1640  local lint="$REPO_ROOT/.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py"
+1834  local chk="$REPO_ROOT/.softhouse/capture/t282-pnumber-drift/bin/check-pnumber-citations.py"
+2580  local g="$REPO_ROOT/.softhouse/guards/check-capture-namespace.sh"
+2795  local g="$REPO_ROOT/.softhouse/guards/check-dead-path-frontier.sh"
+2968  local rig="$REPO_ROOT/.softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py"
+2969  local tool="$REPO_ROOT/.softhouse/bin/ready-tasks.py"
+3222  local conf="$REPO_ROOT/.softhouse/conformance.sh"
+5141  local other="$tmp/other-checkout" script="$REPO_ROOT/.softhouse/conformance.sh"
+731  local env_script="$REPO_ROOT/.softhouse/bin/go-env.sh"
+
+-- of those, which are actually RUN (python3/bash/exec/$( ) invocation) --
+1655:  ( cd "$REPO_ROOT" && FAILOPEN_LINT_JSON="$json" python3 "$lint" ) >"$out" 2>&1
+1856:  if ! ( cd "$REPO_ROOT" && /usr/bin/python3 "$chk" --selftest ) >"$out" 2>&1; then
+1863:  ( cd "$REPO_ROOT" && /usr/bin/python3 "$chk" ) >"$out" 2>&1
+2992:  /usr/bin/python3 "$rig" --repo "$REPO_ROOT" --tool "$tool" --selftest >"$tf" 2>&1
+
+############ B. EVERY EXTENSION-SHAPED CORPUS SELECTOR, WHOLE TREE ############
+selector: tracked *.sh/*.py/*.zsh, lines where an extension list meets a
+          corpus builder (ls-files | git grep -- | --include | glob | endswith | find -name)
+
+.softhouse/capture/leapboundary/analysis/T207/json-load-census.py:35  out = subprocess.run(["git", "-C", root, "ls-files", "-z", "*.py"],
+.softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py:69  if fn.endswith((".sh", ".py")):
+.softhouse/capture/pathb/t99/sweep.sh:18  for f in $(LC_ALL=C find . -type f \( -name '*.sh' -o -name '*.py' -o -name '*.txt' -o -name '*.md' \) | sort); do
+.softhouse/capture/pathb/t99/sweep.sh:34  LC_ALL=C grep -rn 'basename' --include='*.sh' --exclude-dir=t99 . | sed 's|^\./||'
+.softhouse/capture/pathb/t99/sweep.sh:36  LC_ALL=C grep -rn 'os.path.basename\|\.endswith(.-.\s*+\|realpath\|normpath' --include='*.py' --exclude-dir=t99 . | sed 's|^\./||'
+.softhouse/capture/pathb/t99/sweep.sh:38  LC_ALL=C grep -rn 'TENANT\"\?\s*)\|\*-\"\$TENANT\|-. + TENANT' --include='*.sh' --include='*.py' --exclude-dir=t99 . | sed 's|^\./||'
+.softhouse/capture/pathb/t99/sweep.sh:42  LC_ALL=C grep -rn 'shasum\|sha256sum\|openssl dgst\|md5' --include='*.sh' --include='*.py' --exclude-dir=t99 . | sed 's|^\./||'
+.softhouse/capture/pathb/t99/sweep.sh:56  LC_ALL=C grep -rn 'for f in .*\*\|for d in .*\*\|glob(' --include='*.sh' --include='*.py' --exclude-dir=t99 . | sed 's|^\./||'
+.softhouse/capture/pathb/t99/sweep.sh:74  LC_ALL=C grep -rnE 'grep([[:space:]]+-[A-Za-z]+)*[[:space:]]+(-[A-Za-z]*c[A-Za-z]*|--count)([[:space:]]|$)|wc[[:space:]]+-[lc]' --include='*.sh' --exclude-dir=t99 . | sed 's|^\./||'
+.softhouse/capture/pathb/t99/sweep.sh:84  LC_ALL=C grep -rnE '\[+[[:space:]]+"?(x)?\$\{?#?[A-Za-z_][A-Za-z0-9_]*\}?"?[[:space:]]+(=|==|-eq)[[:space:]]+"?(0|x)"?[[:space:]]+\]|\[+[[:space:]]+-z[[:space:]]|(^|[;&|[:space:]])test[[:space:]]+-z[[:space:]]' --include='*.sh' --exclude-dir=t99 . | sed 's|^\./||'
+.softhouse/capture/pathb/t99/sweep.sh:90  LC_ALL=C grep -rnE '(^|[;&|(!][[:space:]]*|[[:space:]]!?[[:space:]]*)grep([[:space:]]+-[A-Za-z]+)*[[:space:]]+-[A-Za-z]*q[A-Za-z]*([[:space:]]|$)|\[+[[:space:]]+-s[[:space:]]|NR[[:space:]]*==[[:space:]]*0|case[[:space:]]+"?\$[A-Za-z_][A-Za-z0-9_]*"?[[:space:]]+in[[:space:]]+"?\)|in[[:space:]]+""\)' --include='*.sh' --exclude-dir=t99 . | sed 's|^\./||'
+.softhouse/capture/pathb/t99/sweep.sh:93  LC_ALL=C grep -rnE 'len\([A-Za-z_][A-Za-z0-9_.]*\)[[:space:]]*==[[:space:]]*0|if[[:space:]]+not[[:space:]]+[A-Za-z_][A-Za-z0-9_.]*[[:space:]]*:|==[[:space:]]*\[\]|==[[:space:]]*\{\}|\.count\([^)]*\)[[:space:]]*==[[:space:]]*0' --include='*.py' --exclude-dir=t99 . | sed 's|^\./||'
+.softhouse/capture/t234-sweep-instrument-audit/instruments/11-census.py:103  if f.endswith((".md",".sh",".py",".json",".txt")):
+.softhouse/capture/t238-failopen/instruments/10-failopen-census.py:59  if f.endswith((".sh", ".py")) and not f.startswith(SELF)]
+.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py:211  .stdout.split("\n") if f.endswith((".sh", ".py"))]
+.softhouse/capture/t238-failopen/instruments/60-multiline-sweep.py:32  .stdout.split("\n") if f.endswith((".sh", ".py", ".md"))]
+.softhouse/capture/t248-failopen-widen/instruments/20-rule-candidates.py:38  check=True).stdout.split("\n") if f.endswith((".sh", ".py"))]
+.softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py:108  print("  BASELINE ON `main` (pre-T253b), same literal, `git grep -F -l ... -- '*.sh' '*.py'`,")
+.softhouse/capture/t255-frontier-rot/instruments/20-cardinal-restatement-census.py:309  r = subprocess.run(["git", "-C", root, "ls-files", "-z", "*.sh", "*.py"],
+.softhouse/capture/t270-superseded-trap/census-superseded-invocations.py:78  `find … -name '*.py' -exec python3 {} \;`, executes a superseded artefact WITHOUT
+.softhouse/capture/t272-goenv-graft/instruments/70-consumer-census.sh:27  echo "selector: grep -rlE '$SEL' --include='*.sh' over the whole tree"
+.softhouse/capture/t272-goenv-graft/instruments/70-consumer-census.sh:35  LIT="$(grep -rlE "$SEL" --include='*.sh' . 2>/dev/null | sed 's|^\./||' | sort)"
+.softhouse/capture/t272-goenv-graft/instruments/70-consumer-census.sh:37  VAR="$(grep -rlE 'go-env\.sh' --include='*.sh' . 2>/dev/null | sed 's|^\./||' | sort)"
+.softhouse/capture/t273-residue/instruments/40-selector-agreement.py:41  files = [f for f in out.split("\n") if f.endswith((".sh", ".py"))]
+.softhouse/capture/t273-residue/instruments/60-outside-repo-state-sweep.py:41  .stdout.split("\n") if f.endswith((".sh", ".py"))]
+.softhouse/capture/t273-residue/instruments/70-citation-rot-check.sh:36  git grep -h -o -E 'conformance\.sh:[0-9]+(-[0-9]+)?' -- '*.md' '*.sh' '*.py' '*.json' >"$W/cites.raw"
+.softhouse/capture/t284-schema2-callsites/instruments/10-callsite-registry.py:105  "`git ls-files -- '*.sh' '*.py'` matched NOTHING under %s. That is a "
+.softhouse/capture/t284-schema2-callsites/instruments/10-callsite-registry.py:274  print("  engine: git ls-files -z -- '*.sh' '*.py'  +  python re "
+.softhouse/capture/t284-schema2-callsites/instruments/10-callsite-registry.py:94  ["git", "-C", root, "ls-files", "-z", "--", "*.sh", "*.py"],
+.softhouse/capture/t299-namespace-and-default-safety/instruments/10-collision-census.py:96  exe = f.endswith((".sh", ".py", ".go"))
+.softhouse/capture/t299-namespace-and-default-safety/instruments/30-drive-the-rename.sh:85  if not f.endswith((".sh", ".py")) or f.startswith(old + "/"):
+.softhouse/capture/t316-dead-path-guards/census_dead_paths.py:11  corpus     : `git ls-files '.softhouse/*.py' '.softhouse/*.sh'` -- TRACKED files only.
+.softhouse/capture/t316-dead-path-guards/census_dead_paths.py:110  ["git", "ls-files", ".softhouse/*.py", ".softhouse/*.sh"],
+.softhouse/capture/t316-dead-path-guards/census_dead_paths.py:347  print("  corpus     : git ls-files '.softhouse/*.py' '.softhouse/*.sh'   -> %d tracked file(s)"
+.softhouse/capture/t321-variable-paths-and-resets/census_variable_paths.py:123  proc = subprocess.run(["git", "ls-files", ".softhouse/*.py"], cwd=str(root),
+.softhouse/capture/t321-variable-paths-and-resets/census_variable_paths.py:359  print("  corpus     : git ls-files '.softhouse/*.py'  ->  %d tracked python instruments"
+.softhouse/capture/t321-variable-paths-and-resets/probe_variable_paths_t321.py:153  if f.endswith((".sh", ".py")):
+.softhouse/capture/t328-date-rule-promotion/instruments/95-frontier-delta.sh:12  #       `git ls-files '.softhouse/*.py' '.softhouse/*.sh'`, so the count must include
+.softhouse/capture/t328-date-rule-promotion/instruments/95-frontier-delta.sh:63  sel="$(git ls-files '.softhouse/*.py' '.softhouse/*.sh' | wc -l | tr -d ' ')"
+.softhouse/capture/t328-date-rule-promotion/instruments/95-frontier-delta.sh:64  t328="$(git ls-files '.softhouse/*.py' '.softhouse/*.sh' | LC_ALL=C grep -c 't328-date-rule-promotion' || true)"
+.softhouse/capture/t91/t115-drive-mf3-mf4.sh:87  LC_ALL=C grep -rn --exclude-dir=.git --include='*.sh' --include='*.py' 'run-preconditions\.sh' "$C" \
+.softhouse/capture/tierA-a2/sweep-t164-selfmatch-guards.py:324  sh = [f for f in allfiles if f.endswith((".sh", ".zsh", ".bash"))]
+.softhouse/conformance.sh:2131  ( cd "$REPO_ROOT" || exit 9; LC_ALL=C git grep -l -E "$rw" -- '*.sh' '*.py' ) >"$list.raw" 2>/dev/null
+.softhouse/conformance.sh:3048  #     POPULATION = git ls-files, ':(glob)' magic, over the TRACKED '*.sh' / '*.py' / '*.go'
+.softhouse/conformance.sh:3267  ":(glob)$gdrel/"'**/*.sh' \
+.softhouse/conformance.sh:3268  ":(glob)$gdrel/"'**/*.py' \
+.softhouse/conformance.sh:3269  ":(glob)$gdrel/"'**/*.go' 2>/dev/null )"
+.softhouse/conformance.sh:3865  say "conformance:   (selector: git ls-files with ':(glob)' magic over the TRACKED '*.sh', '*.py'"
+.softhouse/conformance.sh:915  done < <(find "$NEXUS_DIR" -name '*.go' -type f | sort)
+.softhouse/conformance.sh:918  pkgs="$(find "$NEXUS_DIR" -name '*.go' -type f | sed 's|/[^/]*$||' | sort -u | LC_ALL=C grep -ac '' || true)"
+.softhouse/conformance.sh:959  seen="$(find "$NEXUS_DIR" -name '*.go' -type f | LC_ALL=C grep -ac '' || true)"
+.softhouse/reviews/T135-evidence/sweep-broad.sh:12  --include='*.sh' . | sed 's|^\./||'
+.softhouse/reviews/T135-evidence/sweep-broad.sh:17  --include='*.sh' . | sed 's|^\./||'
+.softhouse/reviews/T135-evidence/sweep-broad.sh:22  --include='*.sh' . | sed 's|^\./||'
+.softhouse/reviews/T135-evidence/sweep-broad.sh:26  LC_ALL=C grep -rnE '\[[[:space:]]+-s[[:space:]]|test[[:space:]]+-s[[:space:]]' --include='*.sh' . | sed 's|^\./||'
+.softhouse/reviews/T135-evidence/sweep-broad.sh:31  --include='*.py' . | sed 's|^\./||'
+.softhouse/reviews/T138-evidence/r7-mf3-mf4.sh:53  LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'charges/bin/preconditions\.sh' "$CAP" \
+.softhouse/reviews/T138-evidence/r7-mf3-mf4.sh:58  LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'run-preconditions\.sh' "$CAP" \
+.softhouse/reviews/T138-evidence/r7-mf3-mf4.sh:63  DIRECT=$(LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'charges/bin/preconditions\.sh' "$CAP" | LC_ALL=C grep -av '/t91/' | wc -l | tr -d ' ')
+.softhouse/reviews/T138-evidence/r7-mf3-mf4.sh:64  WRAP=$(LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'run-preconditions\.sh' "$CAP" | LC_ALL=C grep -av '/t91/' | wc -l | tr -d ' ')
+.softhouse/reviews/T138-evidence/r7-mf3-mf4.sh:68  LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'charges/bin/preconditions\.sh' "$CAP" \
+.softhouse/reviews/T138-evidence/r7b-census.sh:11  LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'preconditions\.sh' "$CAP" \
+.softhouse/reviews/T138-evidence/r7b-census.sh:27  LC_ALL=C grep -rn --include='*.py' -a "preconditions" "$CAP/charges/bin" | LC_ALL=C grep -a "'sh'\|\"sh\"\|preconditions.sh" | LC_ALL=C sed "s|$CAP/||" | sed 's/^/    /'
+.softhouse/reviews/T138-evidence/r7b-census.sh:42  LC_ALL=C grep -rn --include='*.sh' --include='*.py' -a 'run-preconditions\.sh' "$CAP" \
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh:10  printf '  %-56s %s\n' ".py files under .softhouse/"            "$(find .softhouse -name '*.py' -type f | wc -l | tr -d ' ')"
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh:16  printf '    %-54s %s\n' ".softhouse/bin/*.sh — every grep site"        "$(find .softhouse/bin -name '*.sh' | wc -l | tr -d ' ') files"
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh:17  printf '    %-54s %s\n' "T154's own drivers, re-run post-merge"        "$(find .softhouse/capture/t154-nofloat -name '*.sh' | wc -l | tr -d ' ') files"
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh:18  printf '    %-54s %s\n' "Go: the whole censused tree"                  "$(find nexus/internal/apps/loanschedule -name '*.go' | wc -l | tr -d ' ') files"
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh:19  printf '    %-54s %s\n' "Go: files in the module OUTSIDE that tree"    "$(find nexus -name '*.go' -not -path '*/loanschedule/*' | wc -l | tr -d ' ') files"
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh:23  echo "      .softhouse/handoff/*-evidence/: $(find .softhouse/reviews .softhouse/handoff -name '*.sh' -o -name '*.py' 2>/dev/null | wc -l | tr -d ' ') files."
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh:26  echo "    - Python: $(find .softhouse -name '*.py' -type f | wc -l | tr -d ' ') files. Different encoding behaviour from BSD grep;"
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh:32  echo "  Go files in the module:              $(find nexus -name '*.go' | wc -l | tr -d ' ')"
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh:33  echo "  of which inside the censused tree:   $(find nexus/internal/apps/loanschedule -name '*.go' | wc -l | tr -d ' ')"
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh:34  echo "  of which OUTSIDE it (uncensused):    $(find nexus -name '*.go' -not -path '*/loanschedule/*' | wc -l | tr -d ' ')"
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh:41  ( cd nexus && LC_ALL=C grep -arnE '\b(float32|float64|complex64|complex128)\b' --include='*.go' . | LC_ALL=C grep -av 'nofloat.go' | sed 's/^/    /' )
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh:9  printf '  %-56s %s\n' ".sh files under .softhouse/"            "$(find .softhouse -name '*.sh' -type f | wc -l | tr -d ' ')"
+.softhouse/reviews/T158-compare-enumerators.sh:9  echo "enumerator 2  find(1)   .sh/.py  : $(find .softhouse -type f \( -name '*.sh' -o -name '*.py' \) | wc -l | tr -d ' ')"
+.softhouse/reviews/T158-rederive-sweep.py:27  if f.endswith((".sh", ".py"))]
+.softhouse/reviews/T188-probe/drive-t188.sh:138  find "$W/nexus" -name '*.go' -type f | while IFS= read -r f; do
+.softhouse/reviews/T191-probe/measure-margin.sh:14  done < <(find "$REPO/nexus" -name '*.go' -type f | sort) | sort -rn | head -5
+.softhouse/reviews/t179-guard-classifier/guard_classify.py:1222  if fn.endswith((".py", ".sh", ".bash")):
+.softhouse/reviews/t179-guard-classifier/rederive_population.py:100  if p.endswith((".py", ".sh", ".bash")):
+.softhouse/reviews/t179-guard-classifier/rederive_population.py:97  scripts = [p for p in all_paths if p.endswith((".py", ".sh", ".bash"))]
+.softhouse/reviews/t260-dec2-rev8/instruments/80-instrument-audit.py:51  if nm.endswith((".py", ".sh")):
+.softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh:63  live=$(git ls-files '*.sh' '*.py' | /usr/bin/grep -c . || true)
+.softhouse/reviews/t285-review-t273/instruments/40-selector-superset-rederive.py:67  .stdout.split("\n") if f.endswith((".sh", ".py"))]
+.softhouse/reviews/t339-review-t270/probe/t339-if-condition-blindspot.py:82  if fn.endswith((".sh", ".zsh", ".bash")):
+.softhouse/reviews/t339-review-t270/probe/t339-recount-54.py:42  if fn.endswith((".py", ".sh", ".zsh")):
+.softhouse/reviews/t339-review-t270/probe/t339-recount-54.py:49  if p not in callers and not fn.endswith((".py", ".sh", ".zsh")):
+.softhouse/reviews/t340-review-t258/probe/10-independent-cardinal-sweep.sh:17  git ls-files '.softhouse/*.sh' '.softhouse/*.py' > /tmp/t340-corpus.txt || exit 2
+
+############ C. DOES THE SELECTOR ALREADY REACH .zsh? ############
+any selector in the tree that ALREADY names .zsh (precedent):
+.softhouse/capture/tierA-a2/sweep-t164-selfmatch-guards.py:324:    sh = [f for f in allfiles if f.endswith((".sh", ".zsh", ".bash"))]
+.softhouse/reviews/t339-review-t270/probe/t339-if-condition-blindspot.py:82:        if fn.endswith((".sh", ".zsh", ".bash")):
+.softhouse/reviews/t339-review-t270/probe/t339-recount-54.py:42:        if fn.endswith((".py", ".sh", ".zsh")):
+.softhouse/reviews/t339-review-t270/probe/t339-recount-54.py:49:            if p not in callers and not fn.endswith((".py", ".sh", ".zsh")):

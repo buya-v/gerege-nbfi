@@ -1,0 +1,75 @@
+T411 COST RE-DERIVATION @ f5c1c6fd
+tree state: 2 modified/untracked path(s)
+
+==============================================================
+S1  FAIL-OPEN LINT  -- capture/t238-failopen/instruments/50-failopen-lint.py:211
+==============================================================
+  patch OK (S1): 2 line(s) changed
+-- shipped --
+   corpus    : 1412 tracked .sh/.py; 149 are repo-wide search instruments
+   FAILOPEN-FRONTIER rows: 11
+-- widened --
+   corpus    : 1533 tracked .sh/.py; 151 are repo-wide search instruments
+   FAILOPEN-FRONTIER rows: 11
+-- frontier DIFF (shipped -> widened) --
+   S1 COST: frontier 11 -> 11
+
+-- does conformance.sh:1673's parser still parse the WIDENED corpus line? --
+   sed yields: 1533
+
+==============================================================
+S2  DEAD-PATH CENSUS -- capture/t316-dead-path-guards/census_dead_paths.py:110
+==============================================================
+  patch OK (S2): 2 line(s) changed
+-- shipped --
+   T316-DEADPATH-CENSUS: corpus=1412 deadFiles=75 deadOccurrences=108 resolving=1344 indeterminate=104 prose=366
+     corpus     : git ls-files '.softhouse/*.py' '.softhouse/*.sh'   -> 1412 tracked file(s)
+   rows: 108
+-- widened --
+   T316-DEADPATH-CENSUS: corpus=1533 deadFiles=80 deadOccurrences=115 resolving=1410 indeterminate=104 prose=374
+     corpus     : git ls-files '.softhouse/*.py' '.softhouse/*.sh'   -> 1533 tracked file(s)
+   rows: 115
+
+-- ADDED rows (widened minus shipped) --
+   + .softhouse/capture/t324-worktree-prune-skipbit/instruments/10-skipbit-taxonomy-probe.zsh | .softhouse/handoff-draft.md
+   + .softhouse/capture/t324-worktree-prune-skipbit/instruments/20-blindspot-guard-drive.zsh | .softhouse/handoff-draft.md
+   + .softhouse/capture/t353-t342-conditions/bin/probe-scratch.zsh | .softhouse/x
+   + .softhouse/reviews/t202-probe/green-Tb.zsh | .softhouse/LOCK.bak
+   + .softhouse/reviews/t202-probe/green-Tb.zsh | .softhouse/LOCKDIR/f.md
+   + .softhouse/reviews/t202-probe/green-Tb.zsh | .softhouse/LOCKED_STATE.md
+   + .softhouse/reviews/t202-probe/red-Tb.zsh | .softhouse/vector.json
+-- REMOVED rows (a widening may only ADD; any removal is a refusal) --
+   (none)
+   S2 COST: dead rows 108 -> 115
+
+==============================================================
+S3  HOST-STATE CENSUS -- conformance.sh:2131 (selector level)
+==============================================================
+   rw= definition found at: 2121
+   rw (first 90 chars): (git[[:space:]]+(-[A-Za-z][[:space:]]+[^[:space:]]+[[:space:]]+|--[A-Za-z-]+=[^[:space:]]+
+   population shipped : 171
+   population widened : 173   (delta 2)
+   the .zsh files that ENTER the population:
+     .softhouse/capture/t324-worktree-prune-skipbit/instruments/10-skipbit-taxonomy-probe.zsh
+     .softhouse/capture/t324-worktree-prune-skipbit/instruments/30-live-worktree-census.zsh
+
+   -- do any of them assign a host path, i.e. would the PIN move? --
+     .softhouse/capture/t324-worktree-prune-skipbit/instruments/10-skipbit-taxonomy-probe.zsh  host-path assignments: 0
+     .softhouse/capture/t324-worktree-prune-skipbit/instruments/30-live-worktree-census.zsh  host-path assignments: 0
+   raw NAME=/tmp assignment lines in ALL tracked .zsh (for contrast):
+     54
+
+==============================================================
+S4  GUARDS-DIR POPULATION -- conformance.sh:3267-3269 (selector level)
+==============================================================
+   population shipped : 6
+   population widened : 6   (delta 0)
+   members:
+     .softhouse/guards/check-capture-namespace.sh
+     .softhouse/guards/check-dead-path-frontier.sh
+     .softhouse/guards/check-ledger-invariants.sh
+     .softhouse/guards/drive-red-ledger-invariants.sh
+     .softhouse/guards/ledgerguard/main.go
+     .softhouse/guards/repo-state-attest.sh
+
+TEARDOWN: scratch residue rows = 0  (MUST be 0)

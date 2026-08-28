@@ -721,9 +721,16 @@ if [[ "${1:-}" == "--self-test-lock-readers" ]]; then
   # 07-k12-int64-max-ceiling.txt` lines 102-103].
   #
   # THE MAXIMUM IS DERIVED BY RUNNING THE FIXTURE ARITHMETIC, NEVER BY TYPING A BOUND. No new
-  # cardinal enters this file and none is restated: the four tests below ARE the four fixture
-  # expressions, each asserted to have the property the row that consumes it depends on
+  # cardinal enters this file and none is restated: the tests below ARE the fixture
+  # expressions themselves — one assertion per property the row that consumes it depends on,
+  # each carrying the id of that row in its own trailing comment, so the list and the code are
+  # read together and a bullet without an assertion is visible on sight
   # (P-83, *"reconcile by running"* [`.softhouse/patterns.md:2806`]).
+  #   T400 / T385 F-T385-3 (P-80): this sentence used to say *"the four tests below ARE the
+  #   four fixture expressions"* while the code carried SIX assertions — a restated cardinal
+  #   that rotted the moment z07 got its own line, and the fourth bullet silently covered two
+  #   of them. The count is now not restated at all, which is the only spelling that cannot
+  #   rot: adding an assertion needs no edit here beyond its own bullet.
   #   * `_OLD_AGE` must EXCEED the ceiling it was derived from — catches `CEILING*2 + 60`
   #     wrapping int64, at which point it is negative and `_OLD` is in the FUTURE.
   #   * `_NOW_E - _OLD_AGE` must be >= 0 — the instant group C needs must be representable.
@@ -732,7 +739,13 @@ if [[ "${1:-}" == "--self-test-lock-readers" ]]; then
   #     INSIDE the ceiling", and a ceiling at or under the hour g01 subtracts makes `_NEAR` a
   #     PRESENT-OR-FUTURE instant whose age reads negative, which arm 6 answers HELD-default:
   #     the row passes for the wrong reason and grades nothing. P-22 again.
-  #   * the z06 skew instant must land in the FUTURE — the same wrap, other sign.
+  #   * `_SKEW_FAR` must EXCEED the skew it was derived from — the same `*2 + 60` wrap as
+  #     `_OLD_AGE`, other sign: wrapped, z06's instant is in the PAST and the row grades the
+  #     opposite of its claim.
+  #   * z06's instant, `_NOW_E + _SKEW_FAR`, must land in the FUTURE — representable, and
+  #     genuinely past the bound the row says it is past.
+  #   * z07's instant, `_NOW_E + _SKEW_NEAR`, must be >= now — the CONTROL for z06 has to be
+  #     inside the bound, not merely different from it. Its own `>=` is discussed below.
   #
   # IT EXITS 78 (`EX_CONFIG`), not 1 or 2, so the wiring's existing `rc == 78` branch names
   # this a THRESHOLD and never a lock-reader regression. T377 flagged that branch
@@ -745,8 +758,34 @@ if [[ "${1:-}" == "--self-test-lock-readers" ]]; then
   # in `.softhouse/capture/t383-t380-conditions/out/` (cases f01/f02). It is the right trade
   # twice over — the row was grading nothing, and a lifetime ceiling under an hour would have
   # arm 3 take over the lock of a fire that is still running, which is the P-85 direction.
-  # The z06/z07 offsets are named here rather than re-spelled, so the tests below and the rows
-  # that consume them cannot drift apart. `_SKEW_NEAR` is compared with `>=`, not `>`: a skew
+  # T400 / T385 F-T385-2 (MODERATE) — THE CLAIM THIS COMMENT USED TO MAKE WAS FALSE, AND T385
+  # DROVE IT. It read *"the z06/z07 offsets are named here rather than re-spelled, so the tests
+  # below and the rows that consume them cannot drift apart."* They WERE re-spelled: `_SKEW_FAR`
+  # and `_SKEW_NEAR` occurred ONLY in this gate and in its own refusal message, while the z06/z07
+  # rows still wrote `LOCK_RELEASE_SKEW_SECS * 2 + 60` and `LOCK_RELEASE_SKEW_SECS / 2` INLINE —
+  # two independent spellings of one expression, which is the P-80 shape this block invokes
+  # [`.softhouse/patterns.md:2775`]. MEASURED, with its control
+  # [`.softhouse/reviews/t385-review-t383/out/11-skew-drift.txt`, `CHECKS=3 WRONG=0 VOID=0`]:
+  #   `s01` drift the ROW's spelling only -> the gate does NOT fire, `z06 *** FAIL-OPEN
+  #         want=HELD got=FREE-released`, and the wiring logs *"The thresholds validated at
+  #         startup, so this is the READERS."* — the exact misattribution F-T380-2 exists to
+  #         close, reproduced through the spelling this comment called protected;
+  #   `s02` CONTROL, drift the GATE's own variable -> `rc 78`, `past-skew offset=0`, THRESHOLD.
+  #         So the gate is live, and it was only this pair that escaped it.
+  # THE FIX IS P-80's OWN: the rows now READ `_SKEW_FAR` / `_SKEW_NEAR` (see z06/z07 below), so
+  # there is exactly ONE spelling of each offset and the assertions here grade the very
+  # expression the rows evaluate. The claim is now true BY CONSTRUCTION rather than by promise —
+  # there is no second site left to drift. It is NOT separately enforced: re-inlining the
+  # arithmetic into a row would re-open F-T385-2, and `grep -n '_SKEW_FAR\|_SKEW_NEAR'` is how a
+  # reviewer sees that in one line. RE-DRIVEN by T400, GREEN on this file and RED on the file
+  # that shipped before it [`.softhouse/capture/t400-t385-conditions/out/02-skew-drift-redrive
+  # .txt` `CHECKS=7 WRONG=0`; `out/03-skew-drift-RED-on-main.txt` `WRONG=4`, where T385's `s01`
+  # reproduces: `z06 *** FAIL-OPEN` and *"this is the READERS"*]. STATED RESIDUAL, driven as
+  # case `s03` and NOT closed by this fix: pointing a row at the WRONG variable (z06 reading
+  # `_SKEW_NEAR`) is a typo no derivation can catch — it lands FAIL-OPEN and IS blamed on the
+  # readers. C and G have carried the identical residual since T361 (`_OLD` vs `_NEAR`); what
+  # derivation buys is that the fixture and its assertion cannot hold DIFFERENT VALUES, not
+  # that a row cannot name the wrong fixture. `_SKEW_NEAR` is compared with `>=`, not `>`: a skew
   # of ZERO is legitimate (it means "believe no future instant at all"; `_knob_int`'s minimum
   # for it is 0 and T368/T380 measured the self-test green there), and it makes z07's instant
   # exactly NOW, which is still inside a bound of 0. [MEASURED both ways: case f07.]
@@ -880,8 +919,12 @@ if [[ "${1:-}" == "--self-test-lock-readers" ]]; then
   _row z03 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"1970-01-01T00:00:00Z\"}" "the UNIX epoch -- an int64 0 formatted"
   _row z04 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"9999-12-31T23:59:59Z\"}" "datetime.max / a 'never' sentinel"
   _row z05 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"2999-01-01T00:00:00Z\"}" "a far-future 'not yet' sentinel"
-  _row z06 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + LOCK_RELEASE_SKEW_SECS * 2 + 60 )))\"}" "DERIVED: past the skew bound -- a clock-skewed or scheduled writer"
-  _row z07 FREE-released "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + LOCK_RELEASE_SKEW_SECS / 2 )))\"}" "CONTROL for z06: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban"
+  # T400 / T385 F-T385-2: these two rows CONSUME `_SKEW_FAR` / `_SKEW_NEAR` — the same variables
+  # the fixture gate above asserts on — instead of re-spelling `LOCK_RELEASE_SKEW_SECS * 2 + 60`
+  # and `/ 2` inline. One spelling, so the gate and the row cannot disagree (P-80: the second
+  # site READS the first). T385's `s01` drove the drift back when there were two.
+  _row z06 HELD "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + _SKEW_FAR )))\"}" "DERIVED from _SKEW_FAR: past the skew bound -- a clock-skewed or scheduled writer"
+  _row z07 FREE-released "{\"host\": \"$_H\", \"pid\": $_LIVE, \"started_at\": \"$_NOW\", \"released_at\": \"$(_epoch_iso8601 $(( _NOW_E + _SKEW_NEAR )))\"}" "CONTROL for z06, DERIVED from _SKEW_NEAR: INSIDE the skew bound must still FREE, so C1 is a bound and not a ban"
 
   print -r -- ""
   print -r -- "--- E. T361 C4 (F-T361-4). FOREIGN host. lock_pid_state must return other_host and NEVER judge another machine."
@@ -1434,9 +1477,28 @@ fi
 #
 # THE ANCHORED SELECTOR IS PART OF THE FIX, NOT AN ACCIDENT OF IT. The regex is anchored at
 # BOTH ends, so only whole lines that are nothing but a summary join the population:
-#   * a line that merely CONTAINS the token — `note: … ROWS=45 …`, or this wiring's own
-#     `lockselftest| ROWS=…` echo — is NOT in the population (case m10), so narration can
-#     never manufacture a false multiplicity and refuse a healthy fire;
+#   * a line that merely CONTAINS the token — self-test NARRATION such as a group header or
+#     `note: … ROWS=45 …` — is NOT in the population (case m10), so narration printed by the
+#     self-test can never manufacture a false multiplicity and refuse a healthy fire;
+#     T400 / T385 F-T385-1 — THE EXAMPLE THAT USED TO STAND HERE WAS FALSE, AND ITS FALSITY
+#     WAS DRIVEN. It named *"this wiring's own `lockselftest| ROWS=…` echo"*, and T383's
+#     handoff added that *"a naive `grep -c ROWS=` fix would have refused every healthy fire."*
+#     Neither holds: `_ST_OUT` is captured from the subprocess and the `lockselftest| ` prefix
+#     is added AFTERWARDS, when each line is handed to `log()`, so that echo is DOWNSTREAM of
+#     the population and cannot join it whether the selector is anchored or not. MEASURED
+#     [T385 `.softhouse/reviews/t385-review-t383/out/05-substring-claim.txt`; re-measured on
+#     THIS file by T400, `.softhouse/capture/t400-t385-conditions/out/01-substring-and-
+#     healthy.txt`]: on a healthy run `/ROWS=/` unanchored matches **1** line of `_ST_OUT`
+#     and it IS the summary, the anchored selector matches the same **1**, and
+#     `/lockselftest\| ROWS=/` matches **0**; the echo IS emitted once, into the log;
+#     and the naive unanchored `grep 'ROWS='` wrapper, built and driven, **STARTS the healthy
+#     fire at rc 0** with `tally VERIFIED …`, its control (the shipped anchored wrapper) also
+#     rc 0. THE ANCHORING STAYS — it is right for a reason that does not depend on that echo:
+#     it is a PROPERTY ("only a whole line that is nothing but a summary is a summary"), it is
+#     what makes m06a/m06b (whitespace), stderr (m08) and split lines (m09a/m09b) land absent-
+#     rather-than-accepted, and it is the standing defence against a FUTURE narration line
+#     emitted by the self-test ITSELF carrying the token — which today it emits none of, and
+#     that is a measurement (1 unanchored match, and it is the summary), not an assumption;
 #   * a summary carrying TRAILING WHITESPACE is not in it either, so it is ABSENT rather
 #     than accepted: as an impostor it cannot silence the real line (m06a), and as the ONLY
 #     summary it refuses under the zero arm (m06b). Unrecognisable is treated as absent,

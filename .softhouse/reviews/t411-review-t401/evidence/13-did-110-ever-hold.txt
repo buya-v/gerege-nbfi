@@ -1,0 +1,30 @@
+  .zsh==110 at 93e82869  softhouse: T381 -- cite P-45's actual rule, and state exactl
+  c+r ==98  at 93e82869  softhouse: T381 -- cite P-45's actual rule, and state exactl
+  .zsh==110 at bc8de6c7  T388: correct a miscount in the three prose records -- 67 st
+  c+r ==98  at bc8de6c7  T388: correct a miscount in the three prose records -- 67 st
+  .zsh==110 at ec536111  T388: commit the bar transcript taken from a CLEAN tree at 4
+  c+r ==98  at ec536111  T388: commit the bar transcript taken from a CLEAN tree at 4
+  .zsh==110 at 8b79b72c  softhouse: T381 -- read the backslash-class check's OWN stat
+  c+r ==98  at 8b79b72c  softhouse: T381 -- read the backslash-class check's OWN stat
+  .zsh==110 at 71e15a6c  T360: the DIVERGENCE vector class -- G-19's oracle-accepts/p
+  c+r ==98  at 71e15a6c  T360: the DIVERGENCE vector class -- G-19's oracle-accepts/p
+  .zsh==110 at 46272aa4  T388: first accrual observations in this program -- receivab
+  c+r ==98  at 46272aa4  T388: first accrual observations in this program -- receivab
+  .zsh==110 at 86dc8259  softhouse: T381 -- close T379's R1..R4 on casualty-sweep.sh 
+  c+r ==98  at 86dc8259  softhouse: T381 -- close T379's R1..R4 on casualty-sweep.sh 
+  .zsh==110 at 5626b71b  softhouse: iter3 worker roster -- six live agent ids recorde
+  c+r ==98  at 5626b71b  softhouse: iter3 worker roster -- six live agent ids recorde
+  .zsh==110 at dbf7d312  softhouse: T388 dispatch record -- G-20's decision executed 
+  c+r ==98  at dbf7d312  softhouse: T388 dispatch record -- G-20's decision executed 
+  .zsh==110 at dcfb797e  softhouse: raise G-20 -- the effort ratio, measured from git
+  c+r ==98  at dcfb797e  softhouse: raise G-20 -- the effort ratio, measured from git
+  .zsh==110 at 05ce01de  softhouse: fire 20260828-140005 iter3 dispatch record -- PUS
+  c+r ==98  at 05ce01de  softhouse: fire 20260828-140005 iter3 dispatch record -- PUS
+  .zsh==110 at cefd8f6c  softhouse: wrapper reconciled state after fire 20260828-1400
+  c+r ==98  at cefd8f6c  softhouse: wrapper reconciled state after fire 20260828-1400
+  .zsh==110 at b96e4be4  Merge T380-review-t377
+  c+r ==98  at b96e4be4  Merge T380-review-t377
+
+commits scanned            : 2282
+commits where .zsh == 110  : 49
+commits where c+r  ==  98  : 49

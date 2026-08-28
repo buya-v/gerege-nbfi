@@ -1,0 +1,4 @@
+IDENTICAL (key-order-normalised): .softhouse/capture/t388-accrual-capture/out/T388-A03-je-readback-L29.json == .softhouse/capture/t391-accrual-promotion/out/T391-A01-je-L29.json
+IDENTICAL (key-order-normalised): .softhouse/capture/t388-accrual-capture/out/T388-A04-je-readback-L30.json == .softhouse/capture/t391-accrual-promotion/out/T391-A02-je-L30.json
+IDENTICAL (key-order-normalised): .softhouse/capture/t388-accrual-capture/out/T388-A05-je-readback-L31.json == .softhouse/capture/t391-accrual-promotion/out/T391-A03-je-L31.json
+verdict rc=0
