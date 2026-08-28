@@ -1,7 +1,7 @@
 ############ T374 — driving the T362 conditions RED, in a scratch clone
 source tree : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5bf073021afa7bc3
-scratch     : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t374-prove.RrzlaldR5V
-generated 2026-08-28T10:10:23Z
+scratch     : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t374-prove.yXLbT0S75s
+generated 2026-08-28T10:45:35Z
 
 The scratch is a real git clone, which means it has NO local branch refs -- only
 origin/*. That is exactly the fresh-clone condition of T362's F-6, so case 0 measures
@@ -73,6 +73,11 @@ F-6 on the same population as the fix.
   PASS  (7) every mutation reverted; scratch tree byte-clean                    
   PASS  (7) run-all.sh green again after every mutation is reverted              rc=0
   PASS  (7) 10/10 as adjudicated, 0 deviations                                  
+
+NOTE (T374, its own F-5): this run REWROTE tracked evidence under
+  .softhouse/capture/t374-t362-conditions/out/
+which carries generation timestamps. To restore:
+  git checkout -- .softhouse/capture/t374-t362-conditions/out/
 
 ############ SUMMARY   PASS=28   FAIL=0
 T374 PROVER: PASS — every fix on this branch was driven RED on real bytes, and the

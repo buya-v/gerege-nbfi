@@ -63,7 +63,7 @@
   FAIL  POSITIVE CONTROL — the vector store was actually READ. An EMPTY population is a SELECTOR failure, not a clean tree: this repository tracks graded vectors under .softhouse/vectors/ and always has. An empty census passes everything. REFUSED
           0 files under .softhouse/vectors/
   PASS  POSITIVE CONTROL — conformance.sh was actually READ; a missing or empty haystack would report every token absent. REFUSED
-          /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t374-prove.RrzlaldR5V/repo/.softhouse/conformance.sh, 310358 bytes
+          /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t374-prove.yXLbT0S75s/repo/.softhouse/conformance.sh, 310358 bytes
       paymentChannelToFundSourceMappings     vectors=0  conformance.sh=False
       feeToIncomeAccountMappings             vectors=0  conformance.sh=False
       penaltyToIncomeAccountMappings         vectors=0  conformance.sh=False

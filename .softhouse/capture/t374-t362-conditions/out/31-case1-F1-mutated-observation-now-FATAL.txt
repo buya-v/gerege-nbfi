@@ -1,5 +1,5 @@
 ############ A2-11 independent review of A2-7 — full transcript
-generated 2026-08-28T10:13:13Z
+generated 2026-08-28T10:48:25Z
 
 READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
 exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
@@ -491,7 +491,7 @@ SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> guard-parse-float-ast.py
 ==============================================================================
 T164 -- json.load/loads call-site guard (AST, not source grep)
 ==============================================================================
-ROOT: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t374-prove.RrzlaldR5V/repo/.softhouse/capture/tierA-a2
+ROOT: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t374-prove.yXLbT0S75s/repo/.softhouse/capture/tierA-a2
 
 SELECTOR SELF-TEST: 4 synthetic call sites found across 4 alias shapes; 3 decoy line(s)
   (`parse_float` in a docstring, a comment and a string literal -- all three invisible to the selector)
@@ -629,7 +629,7 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
   PASS  POSITIVE CONTROL — the vector store was actually READ. An EMPTY population is a SELECTOR failure, not a clean tree: this repository tracks graded vectors under .softhouse/vectors/ and always has. An empty census passes everything. REFUSED
           69 files under .softhouse/vectors/
   PASS  POSITIVE CONTROL — conformance.sh was actually READ; a missing or empty haystack would report every token absent. REFUSED
-          /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t374-prove.RrzlaldR5V/repo/.softhouse/conformance.sh, 310358 bytes
+          /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t374-prove.yXLbT0S75s/repo/.softhouse/conformance.sh, 310358 bytes
       paymentChannelToFundSourceMappings     vectors=0  conformance.sh=False
       feeToIncomeAccountMappings             vectors=0  conformance.sh=False
       penaltyToIncomeAccountMappings         vectors=0  conformance.sh=False

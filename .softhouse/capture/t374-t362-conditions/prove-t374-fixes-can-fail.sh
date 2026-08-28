@@ -19,7 +19,7 @@
 set -u
 SRC="$(cd "$(dirname "$0")/../../.." && pwd)"
 SCRATCH="$(mktemp -d -t t374-prove)"
-OUT="$(dirname "$0")/out"
+OUT="$(cd "$(dirname "$0")" && pwd)/out"
 mkdir -p "$OUT"
 PASS=0
 FAIL=0
@@ -207,7 +207,7 @@ echo
 # grading a diff nobody made on purpose. It does NOT touch capture/tierA-a2, so section 10's
 # observation corpus is not in this file's write set at all.
 if command -v git >/dev/null 2>&1 &&
-   ! git -C "$OUT" diff --quiet -- "$OUT" 2>/dev/null; then
+   ! git -C "$SRC" diff --quiet -- "$OUT" 2>/dev/null; then
   echo "NOTE (T374, its own F-5): this run REWROTE tracked evidence under"
   echo "  .softhouse/capture/t374-t362-conditions/out/"
   echo "which carries generation timestamps. To restore:"
