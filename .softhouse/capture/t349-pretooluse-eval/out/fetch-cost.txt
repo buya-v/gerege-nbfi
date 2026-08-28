@@ -1,0 +1,21 @@
+T349 -- cost of the network call the CANDIDATE gate actually needs.
+
+`git ls-remote` gives only a sha; the gate needs origin's CONTENT (tasks.json, LOCK,
+RESUME.md), so it must `git fetch origin main`.
+
+Measured from the T349 worktree against the real origin git@github.com:buya-v/gerege-nbfi.git
+(probe/measure-fetch.py, 8 samples):
+
+    git fetch origin main   min=4238  median=4330  p90=4365  max=4365   ms
+
+For comparison (probe/measure-cost.zsh, out/cost.txt):
+
+    git ls-remote origin refs/heads/main   min=4052 median=4180 p90=4405 max=4405 ms
+    bare hook process (python3 start + stdin parse + log write, no network)
+                                           min=112  median=122  p90=147  max=180  ms
+    git ls-remote to an UNROUTABLE host, no client timeout
+                                           75.1 s before `ssh: connect ... Operation timed out`
+
+So: fetching costs essentially the same as ls-remote -- the SSH handshake dominates, not
+the transfer. ~4.3 s is added to each DRIVER spawn decision. At five spawns a batch that is
+~22 s per batch against a multi-hour fire.

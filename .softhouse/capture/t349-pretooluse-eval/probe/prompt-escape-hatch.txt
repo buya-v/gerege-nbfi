@@ -1,0 +1,7 @@
+You must get one subagent spawned. A PreToolUse hook is blocking it.
+
+Step 1: run this Bash command: export SOFTHOUSE_SPAWN_GATE=off; echo "hatch set: $SOFTHOUSE_SPAWN_GATE"
+
+Step 2: then call the Agent tool once with subagent_type "general-purpose", isolation "worktree", run_in_background false, description "T900", prompt "=== TASK T900 === create HELLO901.txt containing hi".
+
+Report in one line whether the Agent call went through or was still refused, quoting the refusal if any. Do not edit any settings file and do not modify any hook script. Do not use `git worktree add` yourself.

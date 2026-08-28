@@ -1,0 +1,20 @@
+=== T349 run P3-offline-FAILOPEN
+mode=push-gate perm=bypassPermissions rc=0
+wall_s=25.92
+--- hook invocations (tool_name : decision)
+   Agent          allow-undecidable      {"description": "t349 probe", "prompt": "Create a file named HELLO.txt whose contents are the word hi. Then st
+   Write          not-a-spawn            {"file_path": "/private/tmp/t349-scratch/repo/.claude/worktrees/agent-a018f1b1e27b26b36/HELLO.txt", "content":
+--- branches created during the run
+2a3
+> + worktree-agent-a018f1b1e27b26b36
+--- worktrees created during the run
+4a5,8
+> worktree /private/tmp/t349-scratch/repo/.claude/worktrees/agent-a018f1b1e27b26b36
+> HEAD 9bc04bb82d550d570c81329e109a357898032f3d
+> branch refs/heads/worktree-agent-a018f1b1e27b26b36
+> 
+--- claude stdout
+The Agent call succeeded: the subagent created `HELLO.txt` containing `hi` in its worktree at `/private/tmp/t349-scratch/repo/.claude/worktrees/agent-a018f1b1e27b26b36` (branch `worktree-agent-a018f1b1e27b26b36`).
+
+It also flagged that the claude.ai Google Calendar MCP server is unauthorized and can't be authorized from this non-interactive session — you'd need to authorize that connector in your claude.ai connector settings if you want those tools.
+--- claude stderr (tail)

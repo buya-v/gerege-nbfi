@@ -1,0 +1,10 @@
+=== T349 run P1-pushgate-RED-unpushed
+mode=push-gate perm=bypassPermissions rc=0
+wall_s=10.85
+--- hook invocations (tool_name : decision)
+   Agent          deny-unpushed          {"description": "t349 probe", "prompt": "Create a file named HELLO.txt whose contents are the word hi. Then st
+--- branches created during the run
+--- worktrees created during the run
+--- claude stdout
+The Agent tool call errored: `T349 push-gate: HEAD 9bc04bb82d55 is not on origin/main (82bab42fe296). Push the dispatch record before spawning.`
+--- claude stderr (tail)

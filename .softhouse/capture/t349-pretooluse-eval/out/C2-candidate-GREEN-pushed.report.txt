@@ -1,0 +1,25 @@
+=== T349 run C2-candidate-GREEN-pushed
+mode=unused perm=bypassPermissions rc=0
+wall_s=210.95
+--- hook invocations (tool_name : decision)
+   (NO HOOK LOG FILE -- the hook never ran)
+--- branches created during the run
+2a3
+> + softhouse/T900-probe
+5a7
+>   worktree-agent-a80fcf03d2967df1d
+--- worktrees created during the run
+16a17,20
+> worktree /private/tmp/t349-scratch/repo/.claude/worktrees/agent-a80fcf03d2967df1d
+> HEAD 4288b5187be3dc232505993e6d2b8c4119a6b09b
+> branch refs/heads/softhouse/T900-probe
+> 
+--- claude stdout
+The Agent call succeeded — no refusal. T900 is complete.
+
+- Branch `softhouse/T900-probe` created off `c94feb5` in worktree `/private/tmp/t349-scratch/repo/.claude/worktrees/agent-a80fcf03d2967df1d`
+- `HELLO900.txt` (contents: `hi`) — commit `80af5e7`
+- `.softhouse/handoff/run-t349/T900.md` — commit `4288b51`
+
+The agent flagged two things it deliberately did not do: nothing was pushed (the task said commit, and the base commits are explicitly marked "deliberately NOT pushed"), and `.softhouse/tasks.json` still lists T900 as `in_progress` since it treated run-state bookkeeping as orchestrator scope with four sibling worktrees present. Tell me if you want either of those done.
+--- claude stderr (tail)

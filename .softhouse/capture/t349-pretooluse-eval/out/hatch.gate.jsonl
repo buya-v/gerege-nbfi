@@ -1,0 +1,2 @@
+{"ts": "2026-08-28T09:22:37Z", "decision": "allow", "reason": "", "detail": "not a spawn path"}
+{"ts": "2026-08-28T09:22:47Z", "decision": "deny", "reason": "push-before-spawn gate: origin/main does not yet show this batch as dispatched. T900 reads status='pending' on origin/main (not dispatched). Commit AND PUSH the LOCK, tasks.json and the in-flight RESUME.md, then spawn.", "detail": "T900 reads status='pending' on origin/main (not dispatched)"}

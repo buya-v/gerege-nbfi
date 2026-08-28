@@ -1,0 +1,10 @@
+=== T349 run P4-offline-FAILCLOSED
+mode=push-gate perm=bypassPermissions rc=0
+wall_s=18.32
+--- hook invocations (tool_name : decision)
+   Agent          deny-undecidable       {"description": "t349 probe", "prompt": "Create a file named HELLO.txt whose contents are the word hi. Then st
+--- branches created during the run
+--- worktrees created during the run
+--- claude stdout
+Error received: `T349 push-gate: origin unreachable; cannot prove the dispatch record is published.`
+--- claude stderr (tail)

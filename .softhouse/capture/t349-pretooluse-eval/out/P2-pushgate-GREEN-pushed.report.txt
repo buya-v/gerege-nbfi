@@ -1,0 +1,18 @@
+=== T349 run P2-pushgate-GREEN-pushed
+mode=push-gate perm=bypassPermissions rc=0
+wall_s=15.33
+--- hook invocations (tool_name : decision)
+   Agent          allow-pushed           {"description": "t349 probe", "prompt": "Create a file named HELLO.txt whose contents are the word hi. Then st
+   Write          not-a-spawn            {"file_path": "/private/tmp/t349-scratch/repo/.claude/worktrees/agent-ac7bdaaca9d0e90be/HELLO.txt", "content":
+--- branches created during the run
+3a4
+> + worktree-agent-ac7bdaaca9d0e90be
+--- worktrees created during the run
+8a9,12
+> worktree /private/tmp/t349-scratch/repo/.claude/worktrees/agent-ac7bdaaca9d0e90be
+> HEAD 9bc04bb82d550d570c81329e109a357898032f3d
+> branch refs/heads/worktree-agent-ac7bdaaca9d0e90be
+> 
+--- claude stdout
+The Agent call succeeded: the subagent created `HELLO.txt` containing `hi` in its worktree at `/private/tmp/t349-scratch/repo/.claude/worktrees/agent-ac7bdaaca9d0e90be` (branch `worktree-agent-ac7bdaaca9d0e90be`).
+--- claude stderr (tail)

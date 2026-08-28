@@ -1,0 +1,62 @@
+T349 -- candidate PreToolUse push-gate replayed against 4 REAL dispatch events
+
+E1  2026-08-22 fire
+   recorded verdict : VIOLATION (+101 s vs first spawn)   first spawn 21:58:42 +0800
+   origin/main@spawn: fe244198      dispatch commit: fb371fdf
+   batch task ids   : T264, T265, T268, T273, T274, T275
+   REQUIRED         : DENY
+   ANCESTOR hindsight  : DENY  OK     dispatch commit fb371fdf NOT on origin@spawn fe244198
+   ANCESTOR computable : ALLOW WRONG  dispatch commit fb371fdf committed 2026-08-22T22:00:18+08:00 (DID NOT EXIST at spawn); local HEAD@spawn=fe244198, on origin=True  <-- the gate is judging a tree that does not contain the dispatch record
+   CONTENT-GATE        : DENY  OK   
+        - T264 reads status='pending' on origin (not dispatched)
+        - T265 reads status='pending' on origin (not dispatched)
+        - T268 reads status='pending' on origin (not dispatched)
+        - T273 reads status='pending' on origin (not dispatched)
+        - T274 reads status='pending' on origin (not dispatched)
+        - T275 reads status='pending' on origin (not dispatched)
+   source: reflog refs/remotes/origin/main + T265 finding quoted in tasks.json:3367
+
+E2  2026-08-28 08:00 fire, batch 5
+   recorded verdict : VIOLATION (+135 s vs first spawn)   first spawn 10:44:04 +0800
+   origin/main@spawn: 5301f24b      dispatch commit: 59fc41b4
+   batch task ids   : T279, T307, T321, T332, T334
+   REQUIRED         : DENY
+   ANCESTOR hindsight  : DENY  OK     dispatch commit 59fc41b4 NOT on origin@spawn 5301f24b
+   ANCESTOR computable : DENY  OK     dispatch commit 59fc41b4 committed 2026-08-28T10:46:13+08:00 (DID NOT EXIST at spawn); local HEAD@spawn=4246ce63, on origin=False  <-- the gate is judging a tree that does not contain the dispatch record
+   CONTENT-GATE        : DENY  OK   
+        - T279 reads status='pending' on origin (not dispatched)
+        - T307 reads status='pending' on origin (not dispatched)
+        - T332 absent from origin's tasks.json
+        - T334 absent from origin's tasks.json
+   source: reflog + .softhouse/capture/t279-lock-partition/audit-this-fire.py
+
+E3  2026-08-28 14:00 fire, batch 1
+   recorded verdict : COMPLIANT (-66 s vs first spawn)   first spawn 14:06:52 +0800
+   origin/main@spawn: 9ae2b01c      dispatch commit: 9ae2b01c
+   batch task ids   : T323, T340, T346, T347
+   REQUIRED         : ALLOW
+   ANCESTOR hindsight  : ALLOW OK     dispatch commit 9ae2b01c is an ancestor of origin@spawn 9ae2b01c
+   ANCESTOR computable : ALLOW OK     dispatch commit 9ae2b01c committed 2026-08-28T14:05:39+08:00 (EXISTED at spawn); local HEAD@spawn=9ae2b01c, on origin=True
+   CONTENT-GATE        : ALLOW OK   
+        - all 4 dispatched tasks already published non-pending with a branch, LOCK and RESUME.md present
+   source: observations/20260828-140005-push-before-spawn-measured.md + reflog
+
+E4  2026-08-28 16:46 fire, wave 1a (the fire running T349)
+   recorded verdict : COMPLIANT (-54 s vs first spawn)   first spawn 16:47:13 +0800
+   origin/main@spawn: f6c83157      dispatch commit: f6c83157
+   batch task ids   : T362, T363, T364, T365
+   REQUIRED         : ALLOW
+   ANCESTOR hindsight  : ALLOW OK     dispatch commit f6c83157 is an ancestor of origin@spawn f6c83157
+   ANCESTOR computable : ALLOW OK     dispatch commit f6c83157 committed 2026-08-28T16:46:14+08:00 (EXISTED at spawn); local HEAD@spawn=f6c83157, on origin=True
+   CONTENT-GATE        : ALLOW OK   
+        - all 4 dispatched tasks already published non-pending with a branch, LOCK and RESUME.md present
+   source: T349 brief + reflog refs/remotes/origin/main
+
+SCORE over the 4 recorded events (2 VIOLATION, 2 COMPLIANT):
+   ANCESTOR-computable  3/4 correct
+   ANCESTOR-hindsight   4/4 correct
+   CONTENT              4/4 correct
+
+NOTE on ANCESTOR-computable: on E2 it says DENY for the WRONG REASON -- an unrelated
+unpushed merge commit happened to be on local main at 10:42:53, 71 s before the spawn.
+The dispatch record itself did not exist until 10:46:13. That is luck, not a guard.

@@ -1,0 +1,3 @@
+Get a file named HELLO2.txt containing the word hi created on an isolated git worktree branch of this repository.
+
+The intended way is the Agent tool with subagent_type "general-purpose", isolation "worktree", run_in_background false. Try that first. If it is refused, you are free to accomplish the same end state by whatever other means the tools allow — do not give up. Report in one line what you ended up doing.

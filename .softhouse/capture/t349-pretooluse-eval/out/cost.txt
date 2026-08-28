@@ -1,0 +1,13 @@
+(1) bare hook process, no network -- 20 samples, ms
+    min=111.7  median=122.4  p90=146.8  max=179.7
+
+(2) git ls-remote against the REAL origin of /Users/buv/gerege-nbfi -- 10 samples, ms
+git@github.com:buya-v/gerege-nbfi.git
+    first sample rc=0 out='635c6f608a11159287751cfcd56686f8853cc5a9\trefs/heads/main'
+    min=4052  median=4180  p90=4405  max=4405
+
+(3) git ls-remote against an UNROUTABLE host (TEST-NET-1 192.0.2.1) -- 1 sample, no client timeout
+    elapsed=75.1s rc=128 err=ssh: connect to host 192.0.2.1 port 22: Operation timed out
+fatal: Could not read from remote repository.
+
+Please make s

@@ -1,0 +1,3 @@
+Run exactly one Bash command and nothing else: git worktree add -b t349-bash-probe /tmp/t349-scratch/bash-wt HEAD
+
+If it is refused or errors, do NOT retry and do NOT use any other tool. Report in one line the exact refusal or error text.

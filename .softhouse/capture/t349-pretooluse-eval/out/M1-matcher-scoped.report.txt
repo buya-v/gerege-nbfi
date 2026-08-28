@@ -1,0 +1,19 @@
+=== T349 run M1-matcher-scoped
+mode=log perm=bypassPermissions rc=0
+wall_s=17.52
+--- hook invocations (tool_name : decision)
+   Agent          log-only               {"description": "t349 probe", "prompt": "Create a file named HELLO.txt whose contents are the word hi. Then st
+--- branches created during the run
+8a9
+> + worktree-agent-ad9c88c474c4877fd
+--- worktrees created during the run
+24a25,28
+> worktree /private/tmp/t349-scratch/repo/.claude/worktrees/agent-ad9c88c474c4877fd
+> HEAD ec75b399f8852aec5b53f1ef3c8a4bad97ce6e2a
+> branch refs/heads/worktree-agent-ad9c88c474c4877fd
+> 
+--- claude stdout
+The agent succeeded: it created `HELLO.txt` containing `hi` in its worktree at `/private/tmp/t349-scratch/repo/.claude/worktrees/agent-ad9c88c474c4877fd/HELLO.txt` (branch `worktree-agent-ad9c88c474c4877fd`).
+
+One note it passed along: the claude.ai Google Calendar MCP server is unauthorized and can't be authorized from this non-interactive session — you'd need to connect it via your claude.ai connector settings.
+--- claude stderr (tail)

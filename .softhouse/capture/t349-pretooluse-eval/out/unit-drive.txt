@@ -1,0 +1,34 @@
+origin: {"tasks":[{"id":"T900","status":"pending","branch":null},{"id":"T349","status":"pending","branch":null}]}
+
+scratch repo: /tmp/t349-scratch/repo
+
+-- clause 1: a SUBAGENT's own tool call is never a batch dispatch
+subagent Agent call (agent_id present)                     expect=ALLOW got=ALLOW PASS     129 ms  
+subagent Bash `git worktree add`                           expect=ALLOW got=ALLOW PASS     126 ms  
+
+-- clause 2: both call paths are gated for the DRIVER (no agent_id)
+driver Agent call, record unpushed                         expect=DENY  got=DENY  PASS     389 ms  push-before-spawn gate: origin/main does not yet show this batch as dispatched. T900 reads
+driver Bash `git worktree add`                             expect=DENY  got=DENY  PASS     412 ms  push-before-spawn gate: origin/main does not yet show this batch as dispatched. T900 reads
+driver Bash, unrelated command (control)                   expect=ALLOW got=ALLOW PASS     127 ms  
+driver Read (control)                                      expect=ALLOW got=ALLOW PASS     128 ms  
+
+-- task-id extraction: the three shapes the worker prompt template guarantees
+driver Agent, id via handoff path                          expect=DENY  got=DENY  PASS     412 ms  push-before-spawn gate: origin/main does not yet show this batch as dispatched. T349 reads
+driver Agent, id via === TASK marker                       expect=DENY  got=DENY  PASS     410 ms  push-before-spawn gate: origin/main does not yet show this batch as dispatched. T349 reads
+driver Agent, id via branch name                           expect=DENY  got=DENY  PASS     425 ms  push-before-spawn gate: origin/main does not yet show this batch as dispatched. T349 reads
+driver Agent, NO task id, FAIL=closed                      expect=DENY  got=DENY  PASS     408 ms  push-before-spawn gate: this spawn's prompt names no task id (expected `.softhouse/handoff
+driver Agent, NO task id, FAIL=open                        expect=ALLOW got=ALLOW PASS     388 ms  
+
+-- modes and the escape hatch
+SOFTHOUSE_SPAWN_GATE=off                                   expect=ALLOW got=ALLOW PASS     125 ms  
+SOFTHOUSE_SPAWN_GATE=warn (allows, unpushed)               expect=ALLOW got=ALLOW PASS     398 ms  
+
+-- clause 4: origin unreachable, both fail directions
+origin unreachable, FAIL=closed                            expect=DENY  got=DENY  PASS    4130 ms  push-before-spawn gate: cannot reach origin, so it cannot be shown that the dispatch recor
+origin unreachable, FAIL=open                              expect=ALLOW got=ALLOW PASS    4139 ms  
+
+-- fast-path cost (the clause that runs on EVERY tool call of EVERY worker)
+   subagent fast path: min=112 median=125 p90=134 max=134 ms
+   non-spawn tool    : min=105 median=126 p90=133 max=133 ms
+
+ALL CASES PASS -- 0 failing case(s)

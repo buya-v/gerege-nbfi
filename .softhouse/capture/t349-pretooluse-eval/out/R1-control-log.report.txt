@@ -1,0 +1,18 @@
+=== T349 run R1-control-log
+mode=log perm=bypassPermissions rc=0
+wall_s=21.11
+--- hook invocations (tool_name : decision)
+   Agent          log-only               {"description": "t349 probe", "prompt": "Create a file named HELLO.txt whose contents are the word hi. Then st
+   Write          log-only               {"file_path": "/private/tmp/t349-scratch/repo/.claude/worktrees/agent-a71dcd5c0718bda6b/HELLO.txt", "content":
+--- branches created during the run
+1a2
+> + worktree-agent-a71dcd5c0718bda6b
+--- worktrees created during the run
+4a5,8
+> worktree /private/tmp/t349-scratch/repo/.claude/worktrees/agent-a71dcd5c0718bda6b
+> HEAD 82bab42fe2964c7303e033553bbe57aa2c5933f3
+> branch refs/heads/worktree-agent-a71dcd5c0718bda6b
+> 
+--- claude stdout
+The Agent call succeeded. The subagent created `HELLO.txt` containing `hi` in its isolated worktree at `/private/tmp/t349-scratch/repo/.claude/worktrees/agent-a71dcd5c0718bda6b` (branch `worktree-agent-a71dcd5c0718bda6b`).
+--- claude stderr (tail)

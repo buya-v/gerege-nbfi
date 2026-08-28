@@ -1,0 +1,17 @@
+=== T349 run B2-hook-missing
+mode=unused perm=bypassPermissions rc=0
+wall_s=15.81
+--- hook invocations (tool_name : decision)
+   (NO HOOK LOG FILE -- the hook never ran)
+--- branches created during the run
+4a5
+> + worktree-agent-a233d9edc9371dff3
+--- worktrees created during the run
+8a9,12
+> worktree /private/tmp/t349-scratch/repo/.claude/worktrees/agent-a233d9edc9371dff3
+> HEAD 96afb18b0c67546408babe7d0a29e84476163937
+> branch refs/heads/worktree-agent-a233d9edc9371dff3
+> 
+--- claude stdout
+The Agent call succeeded — the subagent created `HELLO.txt` containing `hi` in its isolated worktree at `/private/tmp/t349-scratch/repo/.claude/worktrees/agent-a233d9edc9371dff3` (branch `worktree-agent-a233d9edc9371dff3`).
+--- claude stderr (tail)
