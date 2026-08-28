@@ -1,6 +1,6 @@
 T401 RED DRIVE -- S3 (host-state census) and S4 (guards-dir census), both spelled in
 the T404-held conformance.sh. Driven at SELECTOR level; the limit is stated above.
-commit : 026de3f9
+commit : 794b40eb
 selector fragments VERIFIED byte-present in .softhouse/conformance.sh
 
 == S3  HOST-STATE CENSUS (conformance.sh:2131) ==

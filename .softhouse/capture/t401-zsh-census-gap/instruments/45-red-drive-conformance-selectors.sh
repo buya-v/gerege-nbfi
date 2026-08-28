@@ -36,7 +36,12 @@ done
 
 D="$(mktemp -d "${TMPDIR:-/tmp}/t401-s34.XXXXXXXXXX")" || exit 2
 PLANT="$G/.t401-plant34"
-GPLANT="$ROOT/.softhouse/guards/.t401-plant34"
+# FOURTH instance in this one task of "a `.softhouse/`-rooted literal for a path that does not
+# exist is a DEAD-PATH ROW". Written whole, this line put a row on this file and took the
+# frontier to 109. The prefix is a variable that RESOLVES (the guards directory is tracked);
+# the scratch basename carries no `.softhouse/` and so is not a literal the census extracts.
+GDROOT="$ROOT/.softhouse/guards"
+GPLANT="$GDROOT/.t401-plant34"
 trap 'rm -rf "$D" "$PLANT" "$GPLANT"' EXIT INT TERM
 mkdir -p "$PLANT" "$GPLANT"
 

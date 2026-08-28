@@ -1,9 +1,9 @@
 T401 -- conformance.sh's OWN TWO .sh/.py-ONLY SELECTORS
-commit : 94d10789
+commit : 794b40eb
 
 == S3. HOST-STATE CENSUS (conformance.sh:2131) ==
    both regexes VERIFIED byte-present in .softhouse/conformance.sh
-   population (repo-wide search instruments)   base 166   +zsh 168
+   population (repo-wide search instruments)   base 167   +zsh 169
    .zsh files that ARE repo-wide search instruments:
      .softhouse/capture/t324-worktree-prune-skipbit/instruments/10-skipbit-taxonomy-probe.zsh
      .softhouse/capture/t324-worktree-prune-skipbit/instruments/30-live-worktree-census.zsh

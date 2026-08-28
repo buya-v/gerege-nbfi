@@ -1,11 +1,11 @@
 T316 -- dead repo-path references among tracked `.softhouse/` instruments
 ========================================================================================
 SELECTOR (P-66: `not found` is a statement about the search)
-  corpus     : git ls-files '.softhouse/*.py' '.softhouse/*.sh'   -> 1520 tracked file(s)
+  corpus     : git ls-files '.softhouse/*.py' '.softhouse/*.sh'   -> 1522 tracked file(s)
   literals   : quoted strings containing `.softhouse/`, trimmed to that root
   regex      : (['"])((?:[^'"\\\n]|\\.)*?\.softhouse/(?:[^'"\\\n]|\\.)*?)\1
   resolution : TRACKED CONTENT ONLY [T326] -- membership in `git ls-files -z`
-               (8888 path(s)) or in the set of their directory prefixes (777).
+               (8893 path(s)) or in the set of their directory prefixes (777).
                NOT os.path.exists. THE DISK IS NEVER CONSULTED, so this census is a
                property of the COMMIT and not of the machine, the checkout, or what a
                previous run left lying about. `.` / `..` are collapsed LEXICALLY.
@@ -20,8 +20,8 @@ SELECTOR (P-66: `not found` is a statement about the search)
 CALIBRATION: both FU-T299-2 known positives were seen as DEAD by this selector.
 
 COUNTS (both terms printed -- P-67)
-  files naming any `.softhouse/` literal : 681
-  occurrences that RESOLVE               : 1393
+  files naming any `.softhouse/` literal : 683
+  occurrences that RESOLVE               : 1398
   occurrences that are INDETERMINATE     : 104  (in 62 file(s))
   occurrences that are PROSE             : 371
   occurrences that are DEAD              : 115  (in 80 file(s))
@@ -224,4 +224,4 @@ THE 80 FILE(S) NAMING A DEAD CONCRETE PATH
   .softhouse/reviews/t47-probe/t178-redprobe.py
       -> .softhouse/reviews/t47-probe/t47_edit_N.py
 
-T316-DEADPATH-CENSUS: corpus=1520 deadFiles=80 deadOccurrences=115 resolving=1393 indeterminate=104 prose=371
+T316-DEADPATH-CENSUS: corpus=1522 deadFiles=80 deadOccurrences=115 resolving=1398 indeterminate=104 prose=371
