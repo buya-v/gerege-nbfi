@@ -1,0 +1,3 @@
+EXISTENCE-ONLY CHECKER: register holds 95 ids; 9 citations examined
+EXISTENCE-ONLY CHECKER: undefined citations = 0  []
+EXISTENCE-ONLY CHECKER: VERDICT PASS

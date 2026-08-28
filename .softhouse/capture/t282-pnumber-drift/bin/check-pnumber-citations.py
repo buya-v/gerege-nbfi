@@ -308,12 +308,33 @@ def cluster_ids(text, start, end):
     return ids
 
 
+def _cell_clip(s, backwards=False):
+    """A MARKDOWN TABLE CELL is a gloss boundary.
+
+    Found by driving this checker RED: patterns.md:785 is a table row whose
+    LAST cell ends `...invisible to BSD grep (P-33)` -- a correct citation of
+    P-33 (*a tool claim is a claim about a binary, a version, a LOCALE, an
+    invocation and an input shape*). The trailing-id extractor walked backwards
+    out of that cell and into the row's FIRST cell, `**Money is integer minor
+    units, no floating point**`, and then scored the result against P-25 (*the
+    no-floating-point rule binds analysis scripts too*) -- which it matched, of
+    course, because it had eaten a sentence about floating point. Fatal, and
+    wrong.
+
+    This is the docstring's own "score the PARAGRAPH" mistake at table scale:
+    the gloss must be the span SYNTACTICALLY BOUND to the id, and `|` binds.
+    """
+    if "|" not in s:
+        return s
+    return s[s.rindex("|") + 1:] if backwards else s[:s.index("|")]
+
+
 def _clip_sentence(s, limit=260, min_words=9):
     """Clip at a sentence boundary, but never to a stub: `**P-80**: prints an
     absence over an error. \x60grep\x60 exits 1 on NO MATCH and >1 on ERROR` clipped at
     the first full stop yields six words and scores as BARE, which is how the
     known-drifted RULES-failopen.md:17 escaped the first draft of this checker."""
-    s = s[:limit]
+    s = _cell_clip(s[:limit])
     for m in SENT_END.finditer(s):
         head = s[:m.start() + 1]
         if len(head.split()) >= min_words:
@@ -349,7 +370,8 @@ def extract_gloss(text, start, end):
         for mm in SENT_END.finditer(pre):
             m = mm
         seg = pre[m.end():] if m else pre
-        return (seg[-260:], "trailing-id") if len(seg.split()) >= 4 else (None, None)
+        seg = _cell_clip(seg[-260:], backwards=True)
+        return (seg, "trailing-id") if len(seg.split()) >= 4 else (None, None)
 
     a = after.lstrip(MARKUP)
     if not a:
@@ -419,10 +441,40 @@ def score_site(reg, ctx_tokens, cited, rare=None):
     return mine, best_id, best_score, runner
 
 
+def ranked(reg, ctx_tokens, rare=None):
+    """The whole candidate list, best first -- not just the winner.
+
+    Needed because the winner can be SUPPRESSED (see the erratum-shield comment
+    in analyse()) and a suppressed winner must not silence the runner-up.
+    """
+    g = trigrams(ctx_tokens)
+    toks = set(ctx_tokens)
+    out = []
+    for n, e in reg.items():
+        s = 3 * len(g & e["grams"]) + 3 * len(g & e["title_grams"])
+        if rare is not None:
+            s += len(toks & e["rare_tokens"])
+        if s:
+            out.append((s, n))
+    out.sort(reverse=True)
+    return out
+
+
 RARE_MAX = 3
 # Fatal tier -- see the two-tier comment in analyse().
 FATAL_MIN_GRAMS = 2
 FATAL_MIN_SCORE = 9
+# The third fatal term, and it REPLACED a raw margin (`best_s - mine >= 9`).
+# MEASURED REASON, not taste: the real drifted citation at tasks.json:2427
+# ("...the rule they broke (P-80)", which is P-81's rule) scores mine=1,
+# best=9, margin=8 -- it missed a 9-point margin by one point, and a threshold
+# that a genuine recorded instance misses by one is a threshold fitted to
+# nothing. Margin is only ever a PROXY for the thing we actually mean:
+# *the sentence does not state the rule it cites at all*. So measure that
+# directly. It is also STRICTER where false positives live -- a gloss that
+# partly states the cited rule (mine high) can no longer go fatal just because
+# some other rule scored higher.
+FATAL_MAX_CITED_SCORE = 1
 
 
 def index_rare_tokens(reg):
@@ -509,20 +561,61 @@ def analyse(reg, files, root, min_evidence, min_margin):
                         "text": raw.strip()[:220], "zone": kind_of_file,
                         "fatal": False})
                     continue
-                mine, best, best_s, runner = score_site(reg, norm_tokens(gloss), n, rare=True)
-                if best_s < min_evidence:
+                gtoks = norm_tokens(gloss)
+                mine, best, best_s, runner = score_site(reg, gtoks, n, rare=True)
+                # ------------------------------------------------------------
+                # THE ERRATUM SHIELD, and it was found by driving this checker
+                # RED on real bytes rather than by reading it.
+                #
+                # Cross-reference suppression (below) exempts a citation when
+                # the better-matching rule ITSELF names the cited id. P-86 is an
+                # ERRATUM: its body names P-78..P-84 precisely in order to say
+                # those citations are WRONG. So P-86 out-ranked P-81 on the real
+                # drifted line `**P-80**: prints an absence over an error.
+                # `grep` exits 1 on NO MATCH and >1 on ERROR` (a tie at 6, broken
+                # toward the higher id), was suppressed because P-86 names P-80,
+                # and the finding vanished. THE ERRATUM WAS SHIELDING EXACTLY THE
+                # CITATIONS IT WAS WRITTEN TO CORRECT -- a fail-open whose blast
+                # radius is the entire population this task exists to measure.
+                #
+                # Fix: a SUPPRESSED winner does not get to silence the field.
+                # Walk down the ranked candidates and grade against the best one
+                # that is not exempt. This is a rule, not an allowlist for P-86:
+                # any future erratum, and any rule that quotes its neighbours,
+                # behaves the same way.
+                # ------------------------------------------------------------
+                #
+                # `evidence_s` is the GLOBAL best INCLUDING the cited rule, and
+                # it decides only one thing: whether this gloss states ANY
+                # registered rule at all (below `min_evidence` = BARE). It must
+                # NOT be the fall-through winner, or a citation whose own rule
+                # matches perfectly would be reported BARE whenever no OTHER
+                # rule happened to score -- a bug this file shipped for exactly
+                # one run and which showed up as `consistent` collapsing
+                # 333 -> 91 on the live tree.
+                evidence_s = max(best_s, mine)
+                suppressed = []
+                best, best_s = None, 0
+                for s_, cand in ranked(reg, gtoks, rare=True):
+                    if cand == n or cand in cluster or n in reg[cand]["names_ids"]:
+                        if cand != n and s_ > mine:
+                            suppressed.append((cand, s_))
+                        continue
+                    best, best_s = cand, s_
+                    break
+                if best is None:
+                    best, best_s = n, mine
+                if evidence_s < min_evidence:
                     counts["bare"] += 1
                     findings.append({
                         "kind": "BARE", "file": rel, "line": i + 1, "cited": n,
                         "detail": "gloss (%s) matches no registered rule "
                                   "(best trigram score %d < %d): %r"
-                                  % (how, best_s, min_evidence, gloss[:140]),
+                                  % (how, evidence_s, min_evidence, gloss[:140]),
                         "text": raw.strip()[:220], "zone": kind_of_file,
                         "fatal": False})
-                elif (best != n and best not in cluster
-                        and best_s >= min_evidence
-                        and (best_s - mine) >= min_margin
-                        and n not in reg[best]["names_ids"]):
+                elif (best != n and best_s >= min_evidence
+                        and (best_s - mine) >= min_margin):
                     # TWO TIERS, because the two decisions have different costs.
                     # REPORTING is generous: a human reads it, a false positive
                     # costs a paragraph. Being FATAL stops the program, so it is
@@ -536,18 +629,16 @@ def analyse(reg, files, root, min_evidence, min_margin):
                     gh = gram_hits(reg, norm_tokens(gloss), best)
                     high_conf = (gh >= FATAL_MIN_GRAMS
                                  and best_s >= FATAL_MIN_SCORE
-                                 and (best_s - mine) >= FATAL_MIN_SCORE)
-                    # CROSS-REFERENCE SUPPRESSION, and it is load-bearing.
-                    # patterns.md rules quote each other by number: P-86's body
-                    # contains "what they call P-83 ... is P-84", P-34's table
-                    # row ends "(P-33)", P-26's opening line says "P-21 already
-                    # said ...". A gloss that correctly states the CITED rule
-                    # therefore scores highest against the QUOTING rule, and a
-                    # naive checker calls the correct citation drifted. So: if
-                    # the better-matching entry ITSELF names the cited id, the
-                    # register already binds the two and the citation is not
-                    # misdirecting. This is a rule, not an allowlist -- it needs
-                    # no maintenance and it cannot go stale.
+                                 and mine <= FATAL_MAX_CITED_SCORE)
+                    # CROSS-REFERENCE SUPPRESSION is applied ABOVE, in the
+                    # ranked walk, and it is load-bearing. patterns.md rules
+                    # quote each other by number: P-34's table row ends
+                    # "(P-33)", P-26's opening line says "P-21 already said".
+                    # A gloss that correctly states the CITED rule therefore
+                    # scores high against the QUOTING rule, and a naive checker
+                    # calls the correct citation drifted. So a candidate whose
+                    # own body names the cited id is skipped -- but only SKIPPED,
+                    # never allowed to end the search (the erratum shield).
                     counts["misdirecting"] += 1
                     findings.append({
                         "kind": "MISDIRECTING", "file": rel, "line": i + 1, "cited": n,
@@ -558,14 +649,12 @@ def analyse(reg, files, root, min_evidence, min_margin):
                         "best": best, "gloss": gloss[:300], "how": how,
                         "grams": gh, "score": best_s, "cited_score": mine,
                         "high_confidence": high_conf,
+                        "suppressed_higher": suppressed,
                         "text": raw.strip()[:220], "zone": kind_of_file,
                         "fatal": kind_of_file == "directive" and high_conf})
-                elif best != n and best_s >= min_evidence and (best_s - mine) >= min_margin:
-                    if best in cluster:
-                        counts["multi_cited"] = counts.get("multi_cited", 0) + 1
-                    else:
-                        counts["cross_referenced"] = counts.get("cross_referenced", 0) + 1
                 else:
+                    if suppressed:
+                        counts["cross_referenced"] = counts.get("cross_referenced", 0) + 1
                     counts["consistent"] += 1
     return findings, counts
 
