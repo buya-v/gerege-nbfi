@@ -1,0 +1,44 @@
+zsh: 5.9
+source worktree: /Users/buv/gerege-nbfi/.claude/worktrees/agent-aaa724784ff017cd5
+work: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-identity.9LhV7
+subject: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-identity.9LhV7/clone/.softhouse/bin/fire-program.sh
+subject inode=15790063 bytes=124101 sha256=cf39bea9f96750c5
+
+=== ARM: green ===
+[09:34:54] fire start — repo=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-identity.9LhV7/clone probe=1 force=0 log=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-identity.9LhV7/logs-green/fire-20260828-093454.log
+[09:34:55] wrapper identity: path=/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-identity.9LhV7/clone/.softhouse/bin/fire-program.sh inode=15790063 sha256=cf39bea9f96750c5 bytes=124101
+[09:34:57] attest-preflight: baseline reading taken — no hidden-work term fired in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-identity.9LhV7/clone before this fire started
+[09:34:57] probe only — exiting without taking the lock or invoking the driver
+
+=== ARM: red-stdin — feed the script on STDIN so ${0:A} is not a real path ===
+(this is also the honest test of the instrument's OWN assumption: it claims to
+ identify 'the bytes this fire is running', which it can only do when it was
+ invoked BY PATH.)
+  rc=1  — FULL output, unfiltered (the filtered first draft printed
+  '(no matching lines)', which is not a result, it is a missing result):
+    zsh: no such option: probe
+
+=== ARM: red-excise — delete the identity block, require the line to VANISH ===
+  excised 400 bytes
+  zsh -n on the excised copy: parses
+    [09:35:03] fire start — repo=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-identity.9LhV7/clone-excised probe=1 force=0 log=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-identity.9LhV7/logs-excise/fire-20260828-093503.log
+    [09:35:05] attest-preflight: baseline reading taken — no hidden-work term fired in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-identity.9LhV7/clone-excised before this fire started
+    [09:35:05] probe only — exiting without taking the lock or invoking the driver
+  'wrapper identity' lines in the excised arm: 0
+
+=== ARM: discrimination — mutate one comment byte, require the sha to move ===
+  sha on disk before: cf39bea9f96750c5  bytes=124101
+  sha on disk after:  7504cd2a9109b99a  bytes=124130
+
+=== ARM: mutated ===
+[09:35:07] fire start — repo=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-identity.9LhV7/clone probe=1 force=0 log=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-identity.9LhV7/logs-mutated/fire-20260828-093507.log
+[09:35:07] wrapper identity: path=/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t301-identity.9LhV7/clone/.softhouse/bin/fire-program.sh inode=15790063 sha256=7504cd2a9109b99a bytes=124130
+[09:35:09] attest-preflight: baseline reading taken — no hidden-work term fired in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t301-identity.9LhV7/clone before this fire started
+[09:35:09] probe only — exiting without taking the lock or invoking the driver
+
+PASS CRITERIA:
+  green   -> one 'wrapper identity:' line with a real inode/sha/bytes
+  red     -> NO 'wrapper identity:' line; the WARN/UNRECORDED branch instead
+  mutated -> a 'wrapper identity:' line whose sha DIFFERS from green's and
+             matches the post-mutation sha printed above
+DONE
