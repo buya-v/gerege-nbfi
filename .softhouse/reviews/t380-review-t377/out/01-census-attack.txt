@@ -1,0 +1,16 @@
+=== T380 census attack — subject /tmp/t380-subject/.softhouse/bin/fire-program.sh
+=== sha256: dbb18b7b80033384455a9c93086d681ecdf453558bedd049141bc1a542123d89
+
+x00  ok  rc=0
+x01  ok  rc=2
+x02  ok  rc=2
+x03  ok  rc=2
+x04  ok  rc=2
+x05  ok  rc=0
+x06  ok  rc=2
+x07  ok  rc=0
+x08  ok  rc=2
+x09  ok  rc=0
+
+CHECKS=10 WRONG=0 VOID=0
+RESULT: PASS
