@@ -1,0 +1,244 @@
+diff --git a/.softhouse/bin/fire-program.sh b/.softhouse/bin/fire-program.sh
+index 72ecf03f..3eb69474 100755
+--- a/.softhouse/bin/fire-program.sh
++++ b/.softhouse/bin/fire-program.sh
+@@ -20,7 +20,8 @@ REPO="${GEREGE_NBFI_REPO:-/Users/buv/gerege-nbfi}"
+ FINERACT_SRC="${FINERACT_SRC:-/Users/buv/fineract}"
+ LOG_DIR="${LOG_DIR:-$HOME/Library/Logs/gerege-nbfi}"
+ LOCK="$REPO/.softhouse/LOCK"
+-LOCK_MAX_AGE_SECS="${LOCK_MAX_AGE_SECS:-21600}"   # 6h — older than this is stale
++LOCK_MAX_AGE_SECS="${LOCK_MAX_AGE_SECS:-21600}"   # 6h — freshness threshold (STEP 0 arms 4/5)
++LOCK_CEILING_SECS="${LOCK_CEILING_SECS:-86400}"   # 24h — T279 lifetime CEILING (STEP 0 arm 3)
+ CLAUDE_BIN="${CLAUDE_BIN:-$HOME/.local/bin/claude}"
+ 
+ # Reference-oracle probes. PostgreSQL only — never MySQL/MariaDB, never Oracle DB.
+@@ -28,6 +29,162 @@ PG_HOST="${PG_HOST:-localhost}"
+ PG_PORT="${PG_PORT:-5432}"
+ FINERACT_HEALTH_URL="${FINERACT_HEALTH_URL:-https://localhost:8443/fineract-provider/actuator/health}"
+ 
++# ================================================================ T279 ============
++# THE STEP 0 LOCK DECISION, IN EXECUTABLE FORM — AND IT IS THE *SAME* DECISION THE
++# DRIVER SKILL DOCUMENTS.
++#
++# WHAT WAS HERE BEFORE, AND WHY IT WAS WRONG. Until T279 this file decided staleness on
++# `/usr/bin/stat -f %m "$LOCK"` — the lock FILE'S MTIME. T265 measured it live: a lock
++# whose `started_at` said 8 h read an age of 12.6 MINUTES, 38x off, because the
++# `git pull --ff-only` a few lines below REWRITES the file and resets its mtime. So the
++# only fire that can reach the reference oracle decided on a signal that the fire's own
++# first action destroys, while STEP 0 of `softhouse-program/SKILL.md` declared push
++# recency authoritative. Two orchestrators reading two different rules is the P-85 shape --
++# P-85 is *"two orchestrators held the lock at once, and the cause was an unpushed in-flight
++# state"* [.softhouse/patterns.md:2822].
++# [T265 F-3, `.softhouse/reviews/t265-review-lock-fix/` on branch softhouse/t265-review-lock-fix @422f517a.]
++#
++# WHY IT IS A PURE FUNCTION OF FIVE SIGNALS. T265 F-1 measured that the four arms STEP 0
++# shipped did not partition the state space: 18 distinguishable states matched NO arm and
++# had no verdict, and 22 matched arms that DISAGREED. A rule set like that answers
++# differently depending on the order it is read in, which is exactly how a local fire and
++# a cloud fire both conclude they may proceed. The seven arms below are written to be
++# MUTUALLY EXCLUSIVE, so the answer cannot depend on evaluation order at all — proven by
++# enumerating all 192 states in `.softhouse/capture/t279-lock-partition/enumerate.py`
++# (0 zero-match, 0 multi-match, all arms pairwise disjoint), and the SAME enumeration is
++# replayed through THIS function by `drive-wrapper-vs-skill.zsh`, which is what makes
++# "the wrapper and the skill decide the same way" a measurement rather than a claim.
++#
++# ARM 3 IS THE CEILING, AND IT IS NOT A RELAPSE INTO `started_at`. P-85's lesson is that
++# `started_at` is not a FRESHNESS signal — it cannot tell "died five hours ago" from "has
++# been working for five hours." True, and arm 3 does not use it as one. It uses it as a
++# LIFETIME BOUND: past 24 h the holder cannot still be legitimately alive, whatever the
++# tip says. Without it rule 2's freshness term is refreshed by THIRD PARTIES and the lock
++# has no guaranteed takeover time at all — measured live, `fire-20260827-230001` faced a
++# lock 105 h old whose tip was 2.99 h old, which rule 2 as written reads as HELD forever.
++# [`.softhouse/capture/t279-lock-partition/out/measure-f2.txt` §5, §6.]
++#
++#   $1 lock_present  1 | 0
++#   $2 released_at   "" = null/absent; anything else = released
++#   $3 started_age   seconds since `started_at`, or "" if it could not be read
++#   $4 tip_age       seconds since ct(origin/main), or "" if it could not be read
++#   $5 pid_state     alive_here | dead_here | absent | other_host
++#
++# POLARITY: fail-CLOSED on every unreadable signal. A negative age (clock skew) fails the
++# `<0->` glob and lands in arm 6 -> HELD. A signal you cannot read is never permission to
++# take the lock.
++lock_decide() {
++  local present="$1" rel="$2" sage="$3" tage="$4" pstate="$5"
++  (( present ))                     || { print -r -- FREE-no-lock;    return 0; }   # arm 0
++  [[ -n "$rel" ]]                   && { print -r -- FREE-released;   return 0; }   # arm 1
++  [[ "$pstate" == dead_here ]]      && { print -r -- TAKE-dead-pid;   return 0; }   # arm 2
++  if [[ "$sage" == <0-> ]] && (( sage >= LOCK_CEILING_SECS )); then
++    print -r -- TAKE-ceiling; return 0                                             # arm 3
++  fi
++  if [[ "$tage" == <0-> ]] && (( tage < LOCK_MAX_AGE_SECS )); then
++    print -r -- HELD-live; return 0                                                # arm 4
++  fi
++  if [[ "$tage" == <0-> ]] && (( tage >= LOCK_MAX_AGE_SECS )) \
++     && [[ "$sage" == <0-> ]] && (( sage >= LOCK_MAX_AGE_SECS )); then
++    print -r -- TAKE-both-stale; return 0                                          # arm 5
++  fi
++  print -r -- HELD-default                                                         # arm 6
++}
++
++# T279 — `lock_pid_state` is the four-way form; `lock_holder_is_dead` is kept as the thin
++# wrapper the comments at :884 and :1057 name, so those references stay true. T265 F-5 is
++# RECORDED, NOT FIXED, and the polarity claim above is narrowed accordingly: `kill -0`
++# returns EPERM for a LIVE process owned by another uid, and this function reads that as
++# dead. Not reachable while both fires run as uid 501 under a user-domain launchd agent;
++# reachable the moment anything runs a fire under `sudo`. So the correct claim is "it can
++# never make a live lock look free FOR A HOLDER RUNNING AS THE SAME USER." pid REUSE goes
++# the safe way (a recycled pid reads alive, so the holder merely waits out arm 3).
++lock_pid_state() {
++  local body host pid
++  [[ -r "$LOCK" ]]            || { print -r -- absent; return 0; }
++  body="$(<"$LOCK")"          || { print -r -- absent; return 0; }
++  [[ "$body" == *'"host": "'* ]] || { print -r -- absent; return 0; }
++  [[ "$body" == *'"pid": '*   ]] || { print -r -- absent; return 0; }
++  host="${${body#*\"host\": \"}%%\"*}"
++  pid="${${body#*\"pid\": }%%,*}"
++  [[ "$host" == "$(hostname -s)" ]] || { print -r -- other_host; return 0; }  # never judge another machine
++  [[ "$pid" == <1-> ]]             || { print -r -- absent;     return 0; }   # junk, or the "pid": 0 T265 F-4 found
++  (( pid == $$ ))                  && { print -r -- alive_here; return 0; }   # never judge ourselves
++  kill -0 "$pid" 2>/dev/null       && { print -r -- alive_here; return 0; }
++  print -r -- dead_here
++}
++
++lock_holder_is_dead() { [[ "$(lock_pid_state)" == dead_here ]] }
++
++# `released_at`, empty unless the key is present AND its value is not `null`.
++lock_released_at() {
++  local body v
++  [[ -r "$LOCK" ]] || return 0
++  body="$(<"$LOCK")" || return 0
++  [[ "$body" == *'"released_at":'* ]] || return 0
++  v="${${body#*\"released_at\":}%%,*}"
++  v="${v//[$' \t\r\n\"']/}"
++  [[ "$v" == null || -z "$v" ]] && return 0
++  print -r -- "$v"
++}
++
++# Age of the lock's `started_at`, in seconds. Empty = could not read it (arm 6, HELD).
++lock_started_age() {
++  local body iso e now
++  [[ -r "$LOCK" ]] || return 0
++  body="$(<"$LOCK")" || return 0
++  [[ "$body" == *'"started_at": "'* ]] || return 0
++  iso="${${body#*\"started_at\": \"}%%\"*}"
++  e=$(TZ=UTC /bin/date -j -f "%Y-%m-%dT%H:%M:%SZ" "$iso" +%s 2>/dev/null) || return 0
++  [[ "$e" == <1-> ]] || return 0
++  now=$(date +%s)
++  print -r -- $(( now - e ))
++}
++
++# THE AUTHORITATIVE FRESHNESS SIGNAL: seconds since the newest PUBLISHED commit. The
++# `git pull --ff-only` above has already fetched, so `origin/main` is current; a fetch
++# failure leaves a stale remote-tracking ref, which reads OLDER, which fails toward
++# takeover — so it is refetched here and a failure returns empty (arm 6, HELD) instead.
++origin_main_tip_age() {
++  local ct now
++  git fetch --quiet origin main 2>/dev/null || return 0
++  ct=$(git log -1 --format=%ct origin/main 2>/dev/null) || return 0
++  [[ "$ct" == <1-> ]] || return 0
++  now=$(date +%s)
++  print -r -- $(( now - ct ))
++}
++
++
++# `--lock-decide <5 signals>` prints one verdict and exits. It is handled HERE, before
++# the T301 snapshot re-exec and before any preflight, so the conformance driver can
++# evaluate the whole state space against the SHIPPED file cheaply and without a repo,
++# a lock, a network or a side effect. It is a query; it takes nothing and writes nothing.
++if [[ "${1:-}" == "--lock-decide" ]]; then
++  shift
++  (( $# == 5 )) || { print -u2 "usage: --lock-decide <present> <released_at> <started_age> <tip_age> <pid_state>"; exit 64; }
++  lock_decide "$@"
++  exit 0
++fi
++
++# `--lock-signals` reads the four signals off a REAL `$LOCK` in a REAL repo (honouring
++# GEREGE_NBFI_REPO, so it can be pointed at a scratch clone) and prints them with the
++# verdict. Same query discipline as `--lock-decide`: it takes no lock, writes nothing,
++# spawns nothing. This is the entry point `drive-two-fires.zsh` uses, so the two-fire
++# drive exercises the actual signal-reading code and not a re-implementation of it.
++if [[ "${1:-}" == "--lock-signals" ]]; then
++  cd "$REPO" 2>/dev/null || { print -u2 "no such repo: $REPO"; exit 66; }
++  if [[ -f "$LOCK" ]]; then
++    _p=1; _r="$(lock_released_at)"; _s="$(lock_started_age)"; _t="$(origin_main_tip_age)"; _ps="$(lock_pid_state)"
++  else
++    _p=0; _r=""; _s=""; _t="$(origin_main_tip_age)"; _ps=absent
++  fi
++  print -r -- "repo=$REPO"
++  print -r -- "lock_present=$_p released_at=${_r:-<null>} started_age=${_s:-<unreadable>} tip_age=${_t:-<unreadable>} pid_state=$_ps"
++  print -r -- "mtime_age=$(( $(date +%s) - $(/usr/bin/stat -f %m "$LOCK" 2>/dev/null || print 0) ))   # printed only; decides nothing"
++  print -r -- "verdict=$(lock_decide "$_p" "$_r" "$_s" "$_t" "$_ps")"
++  exit 0
++fi
++
+ PROBE_ONLY=0; FORCE=0
+ for a in "$@"; do
+   case "$a" in
+@@ -388,33 +545,41 @@ git pull --ff-only --quiet || log "WARN: git pull --ff-only failed; continuing o
+ # a DIFFERENT host, our own pid, or a pid that is still alive all return 1 and
+ # leave the existing ${LOCK_MAX_AGE_SECS} age rule in sole charge. It can make
+ # takeover happen SOONER; it can never make a live lock look free.
+-lock_holder_is_dead() {
+-  local body host pid
+-  [[ -r "$LOCK" ]] || return 1
+-  body="$(<"$LOCK")" || return 1
+-  [[ "$body" == *'"host": "'* ]] || return 1
+-  [[ "$body" == *'"pid": '*   ]] || return 1
+-  host="${${body#*\"host\": \"}%%\"*}"
+-  pid="${${body#*\"pid\": }%%,*}"
+-  [[ "$host" == "$(hostname -s)" ]] || return 1   # never judge another machine
+-  [[ "$pid" == <1-> ]]             || return 1   # zsh numeric glob; junk => alive
+-  (( pid == $$ ))                  && return 1   # never judge ourselves
+-  kill -0 "$pid" 2>/dev/null       && return 1   # still running => not stale
+-  return 0
+-}
++#
++# T279 MOVED THE FOUR SIGNAL READERS AND `lock_pid_state` UP to sit beside `lock_decide()`
++# near the top of this file, so that `--lock-decide` / `--lock-signals` can drive the REAL
++# reading code against a scratch clone without running a preflight, and so that all of the
++# lock logic is inside the ~7.6 KB zsh has already read when it blocks on the driver (T301).
++# The T202 reasoning above is unchanged and still describes `lock_pid_state`.
+ 
+ if [[ -f "$LOCK" ]] && (( ! FORCE )); then
+-  LOCK_EPOCH=$(/usr/bin/stat -f %m "$LOCK" 2>/dev/null || print 0)
+-  AGE=$(( $(date +%s) - LOCK_EPOCH ))
+-  if lock_holder_is_dead; then
+-    log "lock holder is a DEAD pid on this host (lock age ${AGE}s) — a hard-killed fire stranded it; taking it over now instead of waiting out ${LOCK_MAX_AGE_SECS}s:"; cat "$LOCK"
+-  elif (( AGE < LOCK_MAX_AGE_SECS )); then
+-    log "another orchestrator holds the lock (age ${AGE}s):"; cat "$LOCK"
+-    log "exiting — not running two orchestrators over one repo"
+-    exit 0
+-  else
+-    log "stale lock (age ${AGE}s > ${LOCK_MAX_AGE_SECS}s) — taking it over"
+-  fi
++  LOCK_REL="$(lock_released_at)"
++  LOCK_SAGE="$(lock_started_age)"
++  LOCK_TAGE="$(origin_main_tip_age)"
++  LOCK_PSTATE="$(lock_pid_state)"
++  LOCK_VERDICT="$(lock_decide 1 "$LOCK_REL" "$LOCK_SAGE" "$LOCK_TAGE" "$LOCK_PSTATE")"
++  # The mtime the wrapper used to decide on is still PRINTED, so the log shows how far
++  # apart the two signals are on any given day. It decides nothing (T265 F-3).
++  LOCK_MTIME_AGE=$(( $(date +%s) - $(/usr/bin/stat -f %m "$LOCK" 2>/dev/null || print 0) ))
++  log "lock signals: released_at='${LOCK_REL:-<null>}' started_age=${LOCK_SAGE:-<unreadable>}s tip_age=${LOCK_TAGE:-<unreadable>}s pid=${LOCK_PSTATE} (file mtime age ${LOCK_MTIME_AGE}s — NOT a freshness signal) -> ${LOCK_VERDICT}"
++  case "$LOCK_VERDICT" in
++    TAKE-dead-pid)
++      log "arm 2: lock holder is a DEAD pid on this host — a hard-killed fire stranded it; taking it over now, whatever the age:"; cat "$LOCK" ;;
++    TAKE-ceiling)
++      log "arm 3: lock exceeds the ${LOCK_CEILING_SECS}s lifetime CEILING (started_age=${LOCK_SAGE}s) — no fire can legitimately still be running; taking it over:"; cat "$LOCK" ;;
++    TAKE-both-stale)
++      log "arm 5: both signals stale (tip_age=${LOCK_TAGE}s, started_age=${LOCK_SAGE}s > ${LOCK_MAX_AGE_SECS}s) — taking it over" ;;
++    FREE-released)
++      log "arm 1: lock carries released_at=${LOCK_REL} — free; taking it" ;;
++    HELD-live)
++      log "arm 4: another orchestrator holds the lock and is PUBLISHING (newest origin/main commit ${LOCK_TAGE}s old):"; cat "$LOCK"
++      log "exiting — not running two orchestrators over one repo"
++      exit 0 ;;
++    *)
++      log "arm 6 (default): no arm established that this lock is free, so it is HELD. Signals above; a signal that could not be read is never permission to take the lock:"; cat "$LOCK"
++      log "exiting — not running two orchestrators over one repo"
++      exit 0 ;;
++  esac
+ fi
+ 
+ # P-85 / STEP 0. `started_at` is stamped once and is NOT a freshness signal: it
