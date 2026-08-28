@@ -132,3 +132,47 @@ check at `:631` rather than for a reason that happens to hold today.
 
 `GLClosure extends AbstractAuditableCustom`, so a `createdDate` **exists** on that row
 [VERIFIED: `GLClosure.java:44`]. It is simply not what `:637` passes.
+
+---
+
+## 4. THE FORMULATION
+
+**An `args` cell is gradeable iff the wire value is a SCALAR the vector can name as a
+DECLARED INPUT whose provenance is INDEPENDENT of the response body being graded.**
+
+Mechanised as **a SELECTOR, not a date**:
+
+```
+expect.refusal.arg_echo : "transaction_date" | "latest_closing_date"   (CLOSED vocabulary)
+graded cell             : refusal.arg0_value
+want                    : ResolveArgEcho(arg_echo, v.Request)          (resolved at grading time)
+got                     : the implementation's Refusal.Arg0Value
+```
+
+No calendar literal ever appears in an expectation, so the claim survives re-capture on any
+dates. `Refusal.Arg0Value` carries `json:"-"`, so a vector **cannot write a date literal
+there even deliberately** — it dies at strict decode with `unknown field`.
+
+`admit.go` binds each selector to the refusal code whose throw site passes that date, in
+both directions, and REQUIRES it on those two codes and FORBIDS it on every other.
+
+## 5. T294's REFUSAL — RE-ADJUDICATED AND **UPHELD**, on two independent grounds
+
+| ground | LDG-REFUSE-03 (OB-01) | LDG-REFUSE-04/05/06 |
+|---|---|---|
+| **structural** — `args[0].value` type | **JSON array** (26 live ids) | JSON string |
+| **provenance** — where the declared input came from | `errors[0].args[0].value` **itself** | the caller's `.req` bytes / the create-closure request + SQL |
+
+Either alone is disqualifying. `admit.go` enforces both, so the refusal no longer depends on
+a later author remembering *why* OB-01 was left alone.
+
+## 6. Instruments
+
+| file | what it does | verdict |
+|---|---|---|
+| `instruments/10-amend-committed-date-vectors.py` | adds the selector to LDG-REFUSE-04/05 and RETRACTS their now-false "args is NOT graded" sentences in the same pass; refuses if a sentence is missing | OK, 2 amended |
+| `instruments/20-build-ldg-refuse-06.py` | builds LDG-REFUSE-06 from A2-02's bytes behind 8 guards; **G-4 refuses unless echo != submitted date** | OK, 8/8 |
+| `instruments/30-load-bearing-drive.sh` | 3 arms: mutant vs full store / mutant without the new vector / correct port vs full store | LOAD-BEARING |
+| `instruments/40-amend-capability-row.py` | supersedes the half of the capability row T307 falsifies, appends the gap statement | OK |
+
+`out/10-armA…`, `out/20-armB…`, `out/30-armC…` carry the drive transcripts.
