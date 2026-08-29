@@ -1,0 +1,40 @@
+=== S01.1 observation instant, database clock ===
+            db_now             |       db        |                                                        pg_version                                                        
+-------------------------------+-----------------+--------------------------------------------------------------------------------------------------------------------------
+ 2026-08-29 00:08:40.700694+00 | fineract_gerege | PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+(1 row)
+
+=== S01.2 the I-5 pin: modified vs total, whole table ===
+ total | modified | untouched | null_lm |        oldest_created         |        newest_created         |        newest_modified        
+-------+----------+-----------+---------+-------------------------------+-------------------------------+-------------------------------
+   109 |       91 |        18 |       0 | 2026-08-21 06:03:41.494198+00 | 2026-08-28 16:01:00.117772+00 | 2026-08-28 16:01:00.117772+00
+(1 row)
+
+=== S01.3 by cohort of id, as T391 measured it ===
+               cohort               | total | modified | untouched 
+------------------------------------+-------+----------+-----------
+ a: id <= 75 (pre-T388)             |    71 |       71 |         0
+ b: id 76-95 (T388)                 |    20 |       20 |         0
+ c: id 96-113 (scheduled job, T391) |    18 |        0 |        18
+(3 rows)
+
+=== S01.4 who last modified, and who made ===
+ last_modified_by |  n  |              lo               |              hi               
+------------------+-----+-------------------------------+-------------------------------
+                2 | 109 | 2026-08-28 16:01:00.033938+00 | 2026-08-28 16:01:00.117772+00
+(1 row)
+
+ created_by | n  
+------------+----
+          1 | 91
+          2 | 18
+(2 rows)
+
+=== S01.5 app users named ===
+ id |  username   | firstname |   lastname    
+----+-------------+-----------+---------------
+  1 | mifos       | App       | Administrator
+  2 | system      | system    | system
+  3 | interopUser | Interop   | User
+(3 rows)
+
