@@ -10,10 +10,10 @@ in `.softhouse/reviews/t481-review-t476/instruments/`, run on trees I built.
 ## VERDICT: **APPROVED WITH CONDITIONS**
 
 **The regression is gone.** Re-derived, not inherited: over a **1,992-case** cross product of
-my own construction — eight times T476's population, with three tag placements, three shell
-literal spellings, three python literal spellings, five python carriers, two shell carriers
-and a **file-type axis** that T476's generator does not have — the set of cases the T455 rule
-catches and the T476 rule misses is **empty**, and so is the set of cases T467 catches and
+my own construction — eight times T476's population, adding **three tag placements, five shell
+literal spellings, two shell carriers, three python literal spellings, five python carriers**
+and a **file-type axis** that T476's generator does not have at all — the set of cases the T455
+rule catches and the T476 rule misses is **empty**, and so is the set of cases T467 catches and
 T476 misses. End to end, at three refs, the two named spellings behave exactly as T476
 reports.
 
@@ -143,7 +143,7 @@ The widened rule **fires on the shipped inert-docstring fixture**; the shipped r
 T476 enumerates 7 shell carriers × 5 shell literals and 6 python carriers × 8 python literals
 in 3 tag placements (249), mine enumerates **9 shell carriers × 10 shell literals** and
 **11 python carriers × 11 python literals** in **6 tag placements**, each python case in
-**two file states** — parsing and non-parsing — for **1,992** cases.
+**two file states** — parsing and non-parsing — for `(9×10 + 11×11×2) × 6 = ` **1,992** cases.
 
 **The axes T476's population cannot express, and now does:** `heredoc` and `tee` carriers;
 `sys.stderr.write`, `raise`, `return`, a dict value and a **bare string expression statement**
@@ -577,7 +577,40 @@ container mid-restart. That is a real outage, it is not a pass, and recording it
 discarding it is the right handling — a discarded red run is how a green one stops meaning
 anything. The oracle was `Up (healthy)` and `{"status":"UP"}` before every run of mine.
 
-**On my own committed tree:** `out/BAR-T481-OWN-TREE.txt` — see §11.1.
+### 11.1 ON MY OWN COMMITTED TREE — TWO RUNS, AND THE FIRST ONE IS RECORDED
+
+`out/99-BAR-T481-OWN-TREE-4a7ba53e.txt`, the graded run:
+
+```
+### HEAD: 4a7ba53ea291717518f51082a9ea62013a3af49d
+### git status --porcelain BEFORE the bar: 0 lines
+grep -c 'probe = '  ->  1        (PRESENCE tested BEFORE the value was read)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+conformance:   T316-DEADPATH-CENSUS: corpus=1747 deadFiles=75 deadOccurrences=108 resolving=1577 indeterminate=126 prose=427
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+BAR EXIT 0
+```
+
+**THE FRONTIER PINS ARE UNMOVED BY THIS REVIEW:** `deadFiles=75 deadOccurrences=108`, the same
+values at T476's tip and here. Only `corpus` moves, by the **twelve** `.py`/`.sh` instruments
+this review adds. None of them spells a `.softhouse/…` path as a literal (P-103): every path is
+assembled from `S`, and every repo and ref is a **required parameter with no default**, so an
+unresolved one is `exit 3` and never a skipped case.
+
+**AN EARLIER RUN AT AN EARLIER COMMIT IS ALSO RECORDED, AND IT IS NOT A SECOND PASS.**
+`out/98-BAR-T481-OWN-TREE-07a45a52-DIRTY-AT-END.txt` was taken at `07a45a52`, also EXIT 0 with
+the probe PRESENT ×1 reading `up` and the same 75/108/46/7884 — but I edited this review file
+and added one instrument **while it was running**, so `git status --porcelain` was **2 lines**
+at the end of it. That run therefore does not satisfy "committed, clean tree", and it is kept
+rather than discarded because a discarded run is how a kept one stops meaning anything. The
+graded run above is the re-run after committing.
+
+**And the residue, stated rather than glossed.** The run above is at `4a7ba53e`; the commit
+carrying this section is necessarily later, because a transcript cannot be taken at a commit
+that does not yet exist. The only file that moves between them is this `REVIEW.md` — no `.py`,
+no `.sh`, so neither the dead-path census nor any graded population changes, and the
+`0 lines` calibration above is what makes that checkable rather than assertable.
 
 ---
 
@@ -599,6 +632,43 @@ anything. The oracle was `Up (healthy)` and `{"status":"UP"}` before every run o
   says so and I concur; it is an obligation on the program, not a condition on this branch.
 * Whether the SUPERSET CONTROL should be strengthened or its label narrowed (C-T476-1). I drove
   the defect; I did not implement either remedy, and I do not fix another task's files.
+
+## 12a. THE TWO QUESTIONS, ANSWERED IN ONE PLACE
+
+**Is the regression gone?** **Yes.** `echo <words, UNQUOTED>  # <tag>` and
+`print(b"<claim>".decode())  # <tag>` are caught at `36e01f25` — at the predicate, at section
+10, and end to end through `run-all.sh` — and the relation *"nothing T455 caught is missed"* is
+true **by construction**, not by fixture list: `printed_payloads` seeds itself from the rule it
+replaced and thereafter only appends, the arm is behaviourally that rule, and the per-payload
+predicate around it only widens. My 1,992-case cross product, built to falsify it, finds **0**.
+
+**Is this stack safe to merge?** **Yes.** The bar is EXIT 0 at its tip on my own run with the
+probe present and reading `up`; the frontier pins are unmoved; the four guarded files are clean;
+the false-positive population is unchanged at **+0 / −0**; every cardinal T472 confirmed still
+reproduces; no path this branch touches has moved on `main`. The MAJOR is about the **control
+that protects the guarantee**, not about the guarantee, and the branch is strictly better than
+`main`, where there is neither. Merge it, and file the conditions.
+
+## 12b. THE INSTRUMENTS, AND WHAT EACH ONE ANSWERS
+
+| instrument | exit | answers |
+|---|---|---|
+| `10-t481-matrix-and-arm1.py` | 0 | ARM 1 ≡ T455's rule; the 1,992-case cross product at three refs; the ablation; whether the control *can* be reddened at all |
+| `20-t481-arm1-decides.py` | 0 | ARM 1 on **constructed** inputs, at three refs, with a P-72 calibration |
+| `30-t481-population.py` | 0 | the false-positive population at 1,687 and 1,691, member for member; the three reach cardinals |
+| `31-t481-fstring-count.py` | 0 | which reading of "an interpolation between two constants" gives T476's 1,033 |
+| `40-t481-adjudicate-t476-vs-t472.py` | 0 | the f-string disagreement and the wrapped-payload mitigation, at three refs |
+| `50-t481-control-can-fail.sh` | **1** | the SUPERSET CONTROL under three mutations — **by design non-zero**, because two of them did not behave as the shipped text says |
+| `51-t481-mutations-are-real.py` | 0 | that none of those three mutations is a no-op |
+| `60-t481-end-to-end.sh` | 0 | U / Q / A2 at three refs, the whole runner at two, and the clean-tree green |
+| `70-t481-failclosed-nonregression.sh` | 0 | 29 / 11 / 15, planted-by-value, control (l)'s falsifiability |
+| `80-t481-fallback-exhaustive.py` | 0 | whether `(SyntaxError, ValueError)` is the whole exception surface, over ten probes |
+| `90-t481-rejected-widening.py` | 0 | the rejected widening's published 6 → 9, by mutating the lifted code |
+| `95-t481-vacuity-cardinal.py` | 0 | payloads vs source lines behind the vacuity control's 2 → 8 |
+
+Every one takes its repo and refs as **required parameters with no defaults**, assembles every
+`.softhouse/…` path from `S` at run time (P-103), and refuses with **exit 3** rather than
+reporting a number it did not measure.
 
 ## 13. ONE PARAGRAPH FOR THE NEXT READER
 
