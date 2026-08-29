@@ -1,0 +1,58 @@
+#!/bin/bash
+# T444 probe 9 — THE REMEDY, driven rather than proposed.
+# T375 argued the BLOB test must compare "what is COMMITTED, not what is on this host". The same
+# argument was never applied to the closing `grep`, which still reads the FILESYSTEM. Read the
+# TRACKED BLOB instead and every index/filesystem divergence in this direction closes at once.
+# Re-run on the arm CASE construction and on the three healthy controls.
+set -u
+W="$1"
+[ -n "$W" ] || { echo "usage: probe9.sh <workroot>"; exit 9; }
+
+mk() {  # mk <dir> <scenario>
+  local R="$1" s="$2"
+  rm -rf "$R"; mkdir -p "$R/g/zz"; cd "$R"
+  git init -q .; git config user.email r@x; git config user.name r
+  { printf '#!/usr/bin/env bash\n'
+    printf '# m.sh -- PLANTED checker.\n'
+    printf 'exit 0\n'; } > g/zz/m.sh
+  case "$s" in
+    CASE)
+      ln -s m.sh g/zz/w.txt
+      git add -A >/dev/null 2>&1
+      D="$(printf 'DECOY BLOB. It does NOT name the member.\n' | git hash-object -w --stdin)"
+      git update-index --add --cacheinfo 100644,"$D",g/zz/W.txt
+      WIT='g/zz/W.txt' ;;
+    HONEST)
+      printf 'honest witness naming m.sh\n' > g/zz/w.txt
+      git add -A >/dev/null 2>&1
+      WIT='g/zz/w.txt' ;;
+    SYMLINK)
+      ln -s m.sh g/zz/w.txt
+      git add -A >/dev/null 2>&1
+      WIT='g/zz/w.txt' ;;
+    COPY)
+      cp g/zz/m.sh g/zz/w.txt
+      git add -A >/dev/null 2>&1
+      WIT='g/zz/w.txt' ;;
+  esac
+}
+
+CONF_TAB="$(printf '\tx')"; CONF_TAB="${CONF_TAB%x}"
+run() {  # run <scenario>
+  local s="$1"; local R="$W/$s"; local norm stat mode blob path fsres blobres
+  WIT=""
+  mk "$R" "$s"
+  norm="$(git ls-files --error-unmatch -- "$WIT" 2>/dev/null)" || norm=""
+  stat="$(git ls-files -s -- ":(literal)$norm" 2>/dev/null)" || stat=""
+  mode="${stat%% *}"; blob="${stat#* }"; blob="${blob%% *}"; path="${stat#*"$CONF_TAB"}"
+  if LC_ALL=C grep -qF -- "m.sh" "$norm" 2>/dev/null; then fsres="NAMES-IT"; else fsres="does-not-name"; fi
+  if git cat-file blob "$blob" 2>/dev/null | LC_ALL=C grep -qF -- "m.sh"; then blobres="NAMES-IT"; else blobres="does-not-name"; fi
+  printf '%-8s wit=%-12s mode=%-7s round-trip=%-3s | grep(FILESYSTEM)=%-14s grep(TRACKED BLOB)=%s\n' \
+    "$s" "$WIT" "$mode" "$( [ "$path" = "$norm" ] && echo YES || echo no )" "$fsres" "$blobres"
+}
+echo "Each row: what the CURRENT closing grep decides vs what a BLOB-reading grep would decide."
+echo "(mode 120000 is already refused earlier; shown for completeness.)"
+run HONEST
+run CASE
+run SYMLINK
+run COPY
