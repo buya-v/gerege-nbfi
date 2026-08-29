@@ -1,0 +1,40 @@
+===========================================================================
+T476 -- THE SUPERSET CONTROL, MADE TO FAIL
+  tree under test: 0d15e5c7
+===========================================================================
+
+  UNMUTATED TIP, clean corpus:
+  OK       section 10 exit = 0 (expected 0)
+  OK       SUPERSET CONTROL passes = 1 (expected 1)
+  OK       the REGRESSION SUITE check passes = 1 (expected 1)
+    checks run: 53
+
+  ARM 1 UNWIRED, same clean corpus:
+  OK       section 10 exit -- BY A VALUE, on a clean tree = 1 (expected 1)
+  OK       SUPERSET CONTROL fails = 1 (expected 1)
+  OK       traceback = 0 (expected 0)
+  OK       every check still runs (nothing is skipped) = 53 (expected 53)
+
+  AND THE RESULT THAT MATTERS MOST IS THE ONE THAT DID NOT MOVE:
+  OK       the REGRESSION SUITE check still PASSES without ARM 1 = 0 (expected 0)
+
+  The payloads the replaced rule sees and the unwired union does not:
+          fixtures where the replaced rule sees a payload the union does not: ['A2  print(b"<claim>".decode())  # <tag> — CAUGHT by T455, MISSED by T467', 'A1  os.write(1, b"<claim>")  # <tag> — a bytes literal straight to fd 1', 'A3  print("...%s..." % "...")  # <tag> — the claim on one line, in no one literal', 'A8  print("<half>" + "<half>")  # <tag> — constant + constant', 'W3  a claim wrapped across a CONTINUATION, NO tag anywhere on either line', 'SYSWRITE', 'OSWRITE']
+
+  READ THAT PAIR CAREFULLY, BECAUSE IT IS THE WHOLE ARGUMENT FOR THE UNION.
+  Unwire ARM 1 and all eight regression spellings are STILL caught -- the widened arms
+  happen to cover them, exactly as the ablation in 20-t476-population-cost.py reports.
+  A worker who graded this repair the way T467 graded its own would therefore see
+  nothing wrong. The ONLY check that reddens is the SUPERSET CONTROL, and what it
+  reddens on is the python side, where the AST arm does not read raw source lines and
+  nothing else does either. ARM 1 is not there for catches. It is there so that 'the
+  union sees everything the replaced rule saw' is a property of the CODE and not of
+  whichever shapes a matrix enumerates -- which is the exact failure being repaired.
+  The control is a WIRING TRIPWIRE on that guarantee, and it is deliberately stricter
+  than the semantic relation: it compares (lineno, payload) pairs, so a future author
+  who changes how payloads are represented is made to look. The SEMANTIC property --
+  everything T455 CATCHES, T476 catches -- is measured over a generated 249-case cross
+  product by 20-t476-population-cost.py, which is the independent half of this claim.
+
+RESULT: the control is falsifiable and the tip is green. EXIT 0
+EXIT30=0

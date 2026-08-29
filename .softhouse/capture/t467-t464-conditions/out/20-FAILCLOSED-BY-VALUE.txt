@@ -1,0 +1,63 @@
+############ T467 / F-T464-2 -- FAIL-CLOSED BY A VALUE, NOT BY A TRACEBACK
+  BEFORE = 3f4e236ad458dd945bac26243a90ccc950924164   (the branch returns an int)
+  AFTER  = a729a5db   (the branch returns a location string)
+
+  CALIBRATION, unmutated tree:
+    BEFORE exit=0 checks=25 controls(a)-(k)=11
+    AFTER  exit=0 checks=29 controls(a)-(k)=11
+  OK   CAL BEFORE is green on a clean tree = 0 (expected 0)
+  OK   CAL AFTER  is green on a clean tree = 0 (expected 0)
+  OK   CAL BEFORE runs all 25 of its checks = 25 (expected 25)
+  OK   CAL AFTER  runs all 29 of its checks (25 + l, l1, l2, m) = 29 (expected 29)
+  OK   CAL BEFORE runs all 11 controls (a)-(k) = 11 (expected 11)
+  OK   CAL AFTER  runs all 11 controls (a)-(k) too = 11 (expected 11)
+
+  1  BEFORE, tracked non-JSON vector with a token:
+     exit=1  traceback=1  checks executed=10 of 25  SKIPPED=15
+     FAILURES: lines=0  named assertion fired=0  controls (a)-(k) reached=0
+  OK   1  it exits non-zero -- but as a CRASH = 1 (expected 1)
+  OK   1  a traceback is printed, x1 = 1 (expected 1)
+  OK   1  10 of the 25 checks execute = 10 (expected 10)
+  OK   1  15 checks are SKIPPED = 15 (expected 15)
+  OK   1  the FAILURES: tally NEVER PRINTS = 0 (expected 0)
+  OK   1  the NAMED assertion never runs = 0 (expected 0)
+  OK   1  NONE of the 11 controls (a)-(k) is reached, including (k) -- the control FOR the branch that was supposed to fail closed = 0 (expected 0)
+
+  2  AFTER, the same tree:
+     exit=1  traceback=0  checks executed=29 of 29
+     FAILURES: lines=1  named assertion fired=1  controls (a)-(k) reached=11
+     UNPARSEABLE rows printed=5
+  OK   2  it exits 1 by a VALUE = 1 (expected 1)
+  OK   2  with NO traceback = 0 (expected 0)
+  OK   2  ALL 29 checks execute -- the 15 that were skipped now run = 29 (expected 29)
+  OK   2  the FAILURES: tally PRINTS = 1 (expected 1)
+  OK   2  the NAMED assertion fires, x1 = 1 (expected 1)
+  OK   2  and all 11 controls (a)-(k) run, including (k) = 11 (expected 11)
+
+  3  AFTER, CLEAN tree: exit=0 checks=29 tokens reported MATERIAL=0: 7 of 7
+  OK   3  the honest tree is still GREEN at AFTER = 0 (expected 0)
+  OK   3  all 29 checks run = 29 (expected 29)
+  OK   3  and all 7 tokens still measure MATERIAL=0 = 7 (expected 7)
+
+planted a JSON vector whose capture_ref is identifier-shaped apart from ONE TRAILING SPACE
+planted a JSON vector whose capture_ref is identifier-shaped apart from ONE TRAILING SPACE
+  4  identifier-shaped value with ONE TRAILING SPACE, through the live corpus walk:
+     BEFORE exit=0 named-assertion=0     AFTER exit=1 named-assertion=1
+  OK   4  BEFORE grades it PROSE and PASSES -- the evasion, reproduced = 0 (expected 0)
+  OK   4  BEFORE the named assertion does not fire = 0 (expected 0)
+  OK   4  AFTER grades it MATERIAL and FAILS = 1 (expected 1)
+  OK   4  AFTER on the named assertion, x1 = 1 (expected 1)
+     (THE RESIDUAL LIMIT IS PUBLISHED, NOT CLOSED: a token inside a genuinely MULTI-WORD
+      value is still graded PROSE. Control (m) asserts that, so it cannot drift silently.)
+
+############ COVERAGE -- the graded bytes, named
+  graded ref (AFTER) resolves to: a729a5db7d70722a9fc4183a3ff1d6bd021206f4
+  .softhouse/reviews/A2-11/adjudicate-section1.py                blob dbaf35248d41af1c848f05d7896a1f6ab6ea4d78
+                                                                 last touched at this ref by c8b828f1 softhouse T467: T464's conditions on T455 -- the emitter CLASS, and a fail-closed branch reachable by a VALUE
+  A reader confirms this transcript covers the merged bytes with one command:
+  git rev-parse <branch-tip>:<that path> must print the same blob.
+
+T467 FAIL-CLOSED DRIVE: PASS. The unparseable branch is reached by a VALUE; the 15 checks
+the traceback used to skip -- controls (a)-(k) among them -- all run; the clean tree is
+still green; and the one-space evasion in the MATERIAL/PROSE discriminator is closed.
+INSTRUMENT EXIT=0

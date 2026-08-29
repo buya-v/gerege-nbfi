@@ -1,0 +1,98 @@
+############ T467 / F-T464-1 -- WHAT A LINE PRINTS, NOT WHICH BUILTIN PRINTS IT
+  BEFORE = 3f4e236ad458dd945bac26243a90ccc950924164   (T455's echo/print( matcher)
+  AFTER  = a729a5db   (the payload predicate)
+
+  RE-DERIVED REACH (this tree, not the review's figures):
+    printf in 10-drive-conditions.sh : 12
+    printf in run-all.sh             : 5
+    >&2    in 10-drive-conditions.sh : 5
+  OK   0 printf really is already in 10-drive-conditions.sh, 12 times = 12 (expected 12)
+  OK   0 and in run-all.sh, 5 times = 5 (expected 5)
+    (so this is not a spelling someone would have to invent to defeat T455's matcher;
+     it is the spelling the guarded files already reach for.)
+
+  OK   A2 the AFTER grader is GREEN on the unmutated tree = 0 (expected 0)
+  OK   A  the BEFORE grader is GREEN on the unmutated tree = 0 (expected 0)
+     checks executed by the grader: BEFORE=43  AFTER=48
+
+smuggled the sentence back as a LIVE echo, tag in a trailing comment
+smuggled the sentence back as a LIVE echo, tag in a trailing comment
+  spelling: echo
+    BEFORE section 10 exit = 1     AFTER section 10 exit = 1  (P2 fired x1, P1 x0)
+  OK     echo is already CAUGHT at BEFORE -- T455's close, NOT REGRESSED here = 1 (expected 1)
+  OK     echo is REFUSED at AFTER = 1 (expected 1)
+  OK     echo fires PREDICATE 2 exactly once = 1 (expected 1)
+  OK     echo does NOT fire PREDICATE 1 -- the SOURCE line does carry the tag = 0 (expected 0)
+
+smuggled the sentence back as a LIVE printf, tag in a trailing comment
+smuggled the sentence back as a LIVE printf, tag in a trailing comment
+  spelling: printf
+    BEFORE section 10 exit = 0     AFTER section 10 exit = 1  (P2 fired x1, P1 x0)
+  OK     printf GETS THROUGH at BEFORE = 0 (expected 0)
+  OK     printf is REFUSED at AFTER = 1 (expected 1)
+  OK     printf fires PREDICATE 2 exactly once = 1 (expected 1)
+  OK     printf does NOT fire PREDICATE 1 -- the SOURCE line does carry the tag = 0 (expected 0)
+
+smuggled the sentence back as a LIVE stderr-echo, tag in a trailing comment
+smuggled the sentence back as a LIVE stderr-echo, tag in a trailing comment
+  spelling: stderr-echo
+    BEFORE section 10 exit = 0     AFTER section 10 exit = 1  (P2 fired x1, P1 x0)
+  OK     stderr-echo GETS THROUGH at BEFORE = 0 (expected 0)
+  OK     stderr-echo is REFUSED at AFTER = 1 (expected 1)
+  OK     stderr-echo fires PREDICATE 2 exactly once = 1 (expected 1)
+  OK     stderr-echo does NOT fire PREDICATE 1 -- the SOURCE line does carry the tag = 0 (expected 0)
+
+smuggled the sentence back as a LIVE sys-stdout-write, tag in a trailing comment
+smuggled the sentence back as a LIVE sys-stdout-write, tag in a trailing comment
+  spelling: sys-stdout-write
+    BEFORE section 10 exit = 0     AFTER section 10 exit = 1  (P2 fired x1, P1 x0)
+  OK     sys-stdout-write GETS THROUGH at BEFORE = 0 (expected 0)
+  OK     sys-stdout-write is REFUSED at AFTER = 1 (expected 1)
+  OK     sys-stdout-write fires PREDICATE 2 exactly once = 1 (expected 1)
+  OK     sys-stdout-write does NOT fire PREDICATE 1 -- the SOURCE line does carry the tag = 0 (expected 0)
+
+smuggled the sentence back as a LIVE os-write, tag in a trailing comment
+smuggled the sentence back as a LIVE os-write, tag in a trailing comment
+  spelling: os-write
+    BEFORE section 10 exit = 0     AFTER section 10 exit = 1  (P2 fired x1, P1 x0)
+  OK     os-write GETS THROUGH at BEFORE = 0 (expected 0)
+  OK     os-write is REFUSED at AFTER = 1 (expected 1)
+  OK     os-write fires PREDICATE 2 exactly once = 1 (expected 1)
+  OK     os-write does NOT fire PREDICATE 1 -- the SOURCE line does carry the tag = 0 (expected 0)
+
+smuggled the sentence back as a LIVE printf, tag in a trailing comment
+  T  BEFORE, printf smuggle, WHOLE RUNNER:
+     run-all.sh exit = 0
+     regenerated transcript: sentence UNTAGGED x1, tagged x1
+  OK   T  BEFORE run-all.sh PASSES a tree that prints the false sentence untagged = 0 (expected 0)
+  OK   T  BEFORE the regenerated transcript carries it UNTAGGED, x1 = 1 (expected 1)
+smuggled the sentence back as a LIVE printf, tag in a trailing comment
+  T  AFTER, the same smuggle, WHOLE RUNNER:
+     run-all.sh exit = 1   section 10 row MOVED x1
+  OK   T  AFTER run-all.sh REFUSES it = 1 (expected 1)
+  OK   T  AFTER the section 10 row is reported MOVED, x1 = 1 (expected 1)
+
+  G  AFTER, CLEAN TREE, whole runner: exit = 0  deviations = 0
+  OK   G  the honest tree still PASSES the whole runner at AFTER = 0 (expected 0)
+  OK   G  with zero deviations = 0 (expected 0)
+  OK   G  and its regenerated transcript carries NO untagged statement of the claim = 0 (expected 0)
+
+############ COVERAGE -- the graded bytes, named
+  graded ref (AFTER) resolves to: a729a5db7d70722a9fc4183a3ff1d6bd021206f4
+  .softhouse/reviews/A2-11/verify-capture-integrity.py           blob f233ff56b22fbffcf9478fe9c3b95ba3cec268af
+                                                                 last touched at this ref by c8b828f1 softhouse T467: T464's conditions on T455 -- the emitter CLASS, and a fail-closed branch reachable by a VALUE
+  .softhouse/reviews/A2-11/adjudicate-section1.py                blob dbaf35248d41af1c848f05d7896a1f6ab6ea4d78
+                                                                 last touched at this ref by c8b828f1 softhouse T467: T464's conditions on T455 -- the emitter CLASS, and a fail-closed branch reachable by a VALUE
+  .softhouse/reviews/A2-11/run-all.sh                            blob 3aee8cd13690b7fd3eb92ba3caa2a2f58453faa7
+                                                                 last touched at this ref by 140a7ae7 T455: (iv-a) fail-open closed in section 9; tag-binding guard as section 10; F-6 search fixed (WIP, undriven)
+  .softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.sh blob b193894bd608b2d40f55922fc69214e762fe2f33
+                                                                 last touched at this ref by 7df613d1 T433: quotations tagged so a guard tells them from assertions; 14 echoing transcripts annotated in band
+  If git rev-parse <branch-tip>:<path> prints the same blob for each file above, this
+  transcript grades the merged bytes. Any commit made on the branch after this ref that
+  does not appear as the last-touched commit above left these files untouched.
+
+T467 PRINTED-CLASS DRIVE: PASS. Five emitter spellings, one of them never used in this
+repository, all RED at AFTER on PREDICATE 2, and all but echo GREEN at BEFORE; the whole
+runner reproduces the reader-visible harm at BEFORE and refuses it at AFTER; and the
+honest tree still passes end to end, with zero deviations.
+INSTRUMENT EXIT=0
