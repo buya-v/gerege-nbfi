@@ -1,0 +1,89 @@
+==============================================================================================
+T447 -- T442's UNPARSED ROWS, READ
+==============================================================================================
+repo    : /private/tmp/t447/c97
+commit  : 97bad8ed9c73e75187069176d1f8c2e3831ee5a5
+declared unparsed rows : 23   parsed here : 23   MATCH
+
+----------------------------------------------------------------------------------------------
+.softhouse/bin/fire-program.sh:2884
+        print -r -- "REFUSE: could not read the index of $W (git ls-files -v rc=$LSV_RC) — an unreadable index is not evidence of an unmarked one"
+----------------------------------------------------------------------------------------------
+.softhouse/capture/t234-sweep-instrument-audit/instruments/21-r11-recall-loss.sh:16
+    echo "  what \\bmain\\b WOULD have contributed if the engine honoured it (git grep -P, five vs four):"
+----------------------------------------------------------------------------------------------
+.softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh:50
+    echo "RED DRIVE — the ORIGINAL instrument (git grep -E) against the plant"
+----------------------------------------------------------------------------------------------
+.softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh:61
+    echo "GREEN CONTROL — the SOUND instrument (git grep -P) against the same tree"
+----------------------------------------------------------------------------------------------
+.softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh:25
+    echo "   38 hit lines exist (git grep -P, BSD grep -E and python3 re all agree)."
+----------------------------------------------------------------------------------------------
+.softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh:27
+    echo "   'cd /tmp/T138-merge 2>/dev/null && git grep ...' short-circuited on a missing"
+    literal 'cd /tmp/T138-merge 2>/dev/null && git grep ...' hits=4    SELF-MATCHES
+----------------------------------------------------------------------------------------------
+.softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh:188
+      printf '  ( cd "$WT" && git grep -n -I -E "$re" -- . ) %s echo "   (no hits)"\n' "$OR"
+----------------------------------------------------------------------------------------------
+.softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:62
+    echo "  (BSD searches the tree on disk incl. untracked; git grep searches TRACKED files."
+----------------------------------------------------------------------------------------------
+.softhouse/capture/t248-failopen-widen/shapes/R5-arm-on-continuation.txt:10
+    ( cd "$WT" && git grep -n -I -i -E 'pattern' -- . ) \
+    literal 'pattern'                                      hits=1026 SELF-MATCHES
+----------------------------------------------------------------------------------------------
+.softhouse/capture/t304-evidence-destruction/instruments/refuse-if-tracked.sh:147
+        echo "  holds  : $t304__n TRACKED files (git ls-files)"
+----------------------------------------------------------------------------------------------
+.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh:167
+    echo "  BEFORE, anti-calibration search FORCED TO ERROR (git grep rc=128):"; say_rc "$rc_bb"
+----------------------------------------------------------------------------------------------
+.softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:116
+        printf '    *** SELECTOR DID NOT RUN (git grep rc=%s). THIS IS NOT "ZERO HITS".\n' "$rc"
+    literal '    *** SELECTOR DID NOT RUN (git grep rc=%s). THIS IS NOT "ZERO HITS".\n' hits=1    SELF-MATCHES
+----------------------------------------------------------------------------------------------
+.softhouse/guards/check-ledger-invariants.sh:166
+        warn "ledger-invariants: the POPULATION FLOOR did not derive (git ls-files over nexus returned"
+----------------------------------------------------------------------------------------------
+.softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh:94
+      echo "    what a HUMAN following the recipe sees (git grep -n -F, status classified):"
+----------------------------------------------------------------------------------------------
+.softhouse/reviews/t260-dec2-rev8/instruments/70-spotcheck-stale-sites.sh:113
+        echo "  AMBIG   $c matches, exit 0 (git grep SUCCEEDS) — $path :: ${needle:0:70}"; n_amb=$((n_amb+1))
+----------------------------------------------------------------------------------------------
+.softhouse/reviews/t367-review-t363/drive-independent-sweep.sh:18
+        printf '\n=== %s\n    *** SELECTOR DID NOT RUN (git grep rc=%s). This is NOT "zero hits".\n%s\n' "$label" "$rc" "$all"
+    literal '\n=== %s\n    *** SELECTOR DID NOT RUN (git grep rc=%s). This is NOT "zero hits".\n%s\n' hits=1    SELF-MATCHES
+----------------------------------------------------------------------------------------------
+.softhouse/reviews/t379-review-t371/instruments/t379-anticalibration-drive.sh:70
+    echo "---------- R2: the ANTI-CALIBRATION's search cannot run (git grep rc=128)"
+    literal 's search cannot run (git grep rc=128)"'       hits=1    SELF-MATCHES
+----------------------------------------------------------------------------------------------
+.softhouse/reviews/t379-review-t371/instruments/t379-third-status-drive.sh:85
+    grep -n 'n=\$(git grep' "$W/AFTER.sh" | sed 's/^/      /'
+    literal 's/^/      /'                                  hits=81   SELF-MATCHES
+----------------------------------------------------------------------------------------------
+.softhouse/reviews/t379-review-t371/instruments/t379-third-status-drive.sh:96
+    printf '    the fold: %s\n' "$(grep -n 'all=\$(git grep' "$W/AFTER.sh" | sed 's/^ *//')"
+    literal '    the fold: %s\n'                           hits=1    SELF-MATCHES
+    literal 's/^ *//'                                      hits=21   SELF-MATCHES
+----------------------------------------------------------------------------------------------
+.softhouse/reviews/t411-review-t401/instruments/20-t411-census-enumeration.sh:32
+    git grep -nE "endswith\(\(|ls-files[^|]*\*\.|git grep[^|]*-- *'\*\.|--include=?'?\*\.|:\(glob\)|-name *'\*\." \
+    literal '\*\.|--include=?'                             hits=1    SELF-MATCHES
+    literal '\*\." \'                                      hits=1    SELF-MATCHES
+----------------------------------------------------------------------------------------------
+.softhouse/reviews/t411-review-t401/instruments/21-t411-live-census-reachability.sh:42
+      hits="$($GREP -nE "endswith\(\(|ls-files[^|]*\*\.|ls-files[^|]*['\"]\.softhouse/\*|git grep .*-- *'\*\.|:\(glob\)|--include=?'?\*\." "$f" 2>/dev/null \
+    literal '\"]\.softhouse/\*|git grep .*-- *'            hits=1    SELF-MATCHES
+----------------------------------------------------------------------------------------------
+.softhouse/reviews/t411-review-t401/instruments/60-t411-citation-check.sh:32
+    chk 3048 "POPULATION = git ls-files" "prose block 1"
+----------------------------------------------------------------------------------------------
+.softhouse/reviews/t440-review-t424/instruments/f2b.sh:18
+    echo "== git ls-files fails at rc 128 but HAS ALREADY PRINTED 3 lines =="
+----------------------------------------------------------------------------------------------
+T447-UNPARSED-RESULT: rows=23

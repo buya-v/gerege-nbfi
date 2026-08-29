@@ -1,0 +1,42 @@
+==============================================================================
+T447 F-T447-1 -- an ENFORCED present-assertion whose corpus is its own task dir
+==============================================================================
+repo   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3612405ba0e4a645
+commit : 4e48b7e8daca36f8fd7165b3950a198e1e282585
+subject: .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:61   (the P-72 positive calibration, enforced at exit 92)
+
+  anchor: CAL_RE='a2-33'                                     expected=1          actual=1          OK
+  anchor: the calibration's pathspec is its own dir          expected=1          actual=1          OK
+  anchor: the SWEEP's pathspec is the whole tree ('-- .')    expected=1          actual=1          OK
+  anchor: the calibration is ENFORCED (exit 92)              expected=yes        actual=yes        OK
+
+ARM A  the calibration exactly as shipped (its own flags: -c -I -i -E)
+         matches=73 across 11 file(s)
+  ARM A: the calibration PASSES (>=1)                        expected=yes        actual=yes        OK
+
+ARM B  FAMILY-ONLY: is every matching file inside the searcher's own task directory?
+         matching files OUTSIDE .softhouse/reviews/a2-33-dec2-rev5 : 0
+  ARM B: family-only (0 outside its own task dir)            expected=0          actual=0          OK
+         => T442's census prints the fail-OPEN warning for exactly this shape.
+
+ARM C  SELF-CARRIED COMPONENT: does the searcher's own body satisfy the assertion alone?
+         matches in the searcher alone = 7
+  ARM C: the searcher alone would satisfy it                 expected=yes        actual=yes        OK
+         (NB: 10 sibling files also carry it, so this is UNDER-SCOPED, not vacuous.)
+
+ARM D  SCOPE GAP: the calibration's corpus vs the corpus the SWEEP actually searches
+         tracked files the CALIBRATION can see : 17
+         tracked files the SWEEP searches ('-- .') : 9730
+  ARM D: the calibration covers a STRICT SUBSET of the sweep's corpus expected=yes        actual=yes        OK
+         => the calibration cannot demonstrate that the sweep's corpus is reachable,
+            which is the exact failure the T238 repair added it to catch.
+
+ARM E  CONTROL, a runtime-assembled token that is genuinely absent
+         probe=zzq-t447-control-3838-30609-1787972266  rc=1
+  ARM E: a genuinely absent token returns rc 1               expected=1          actual=1          OK
+         => the engine is not matching everything; ARM A's pass is a real match.
+
+==============================================================================
+T447-FAILOPEN-A2-33-RESULT: disagreements=0
+Reproduced: an ENFORCED present-assertion, family-only, over a strict subset of the
+corpus it calibrates -- the shape T442's census says must be adjudicated, and did not see.

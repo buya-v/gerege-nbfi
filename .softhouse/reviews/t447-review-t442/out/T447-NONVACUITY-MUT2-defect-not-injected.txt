@@ -1,0 +1,86 @@
+subject : .softhouse/capture/t424/instruments/t424-comment-claims-drive.sh
+repo    : /tmp/t447/clone-green
+HEAD    : c223a16bb246d99b4162c87629dbfd2c193f5410
+scratch : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t442-repro.6Yfd9AS7  (outside the repository)
+host    : Darwin 25.5.0 arm64  bash 3.2.57(1)-release  git version 2.50.1 (Apple Git-155)
+
+specimen token (assembled at run time, never spelled in tracked bytes): zzq-t442-specimen-48148-9782-1787971367
+  specimen token absent from THIS repository (rc 1)        expected=1            actual=1            OK
+
+==============================================================================
+ARM A (GREEN) -- the SHIPPED instrument, committed bytes, clean detached clone
+==============================================================================
+Note: switching to 'c223a16bb246d99b4162c87629dbfd2c193f5410'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+  clone   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t442-repro.6Yfd9AS7/green
+  HEAD    : c223a16bb246d99b4162c87629dbfd2c193f5410
+  dirty   : 0 modified path(s)
+  ARM A clone is at the same commit                        expected=c223a16bb246d99b4162c87629dbfd2c193f5410 actual=c223a16bb246d99b4162c87629dbfd2c193f5410 OK
+  ARM A checkout is clean (0 dirty)                        expected=0            actual=0            OK
+  exit    : 0
+  result  : T424-COMMENT-CLAIMS-RESULT: disagreements=0
+  ARM A printed a RESULT line at all                       expected=1            actual=1            OK
+  ARM A result                                             expected=T424-COMMENT-CLAIMS-RESULT: disagreements=0 actual=T424-COMMENT-CLAIMS-RESULT: disagreements=0 OK
+  ARM A exit                                               expected=0            actual=0            OK
+
+==============================================================================
+ARM B (RED) -- the SAME instrument with the C-T440-1 defect re-injected and COMMITTED
+==============================================================================
+Note: switching to 'c223a16bb246d99b4162c87629dbfd2c193f5410'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+  clone   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t442-repro.6Yfd9AS7/red
+  dirty after commit : 0 modified path(s)
+  ARM B specimen is COMMITTED (0 dirty)                    expected=0            actual=0            OK
+  specimen token present in the SPECIMEN clone (rc 0)      expected=0            actual=1            *** DRIVE DISAGREES
+  specimen token STILL absent from the real repo (rc 1)    expected=1            actual=1            OK
+  exit    : 0
+  result  : T424-COMMENT-CLAIMS-RESULT: disagreements=0
+  |   no match (repo) : rc=1
+  |   no match        : rc=1
+  |   literal probe spelled in tracked source : rc=0  <- THE C-T440-1 INVERSION
+  |   probe not spelled in this file                       expected=0          actual=0          OK
+  |   no match, whole repo -> 1                            expected=1          actual=1          OK
+  |   no match -> 1                                        expected=1          actual=1          OK
+  |   literal probe did: rc=0 -- a match -- where the control needed rc=1.
+  ARM B printed a RESULT line at all                       expected=1            actual=1            OK
+  ARM B disagreements > 0                                  expected=yes          actual=no           *** DRIVE DISAGREES
+  ARM B exit                                               expected=1            actual=0            *** DRIVE DISAGREES
+  ARM B: the self-spelling check FIRED                     expected=1            actual=0            *** DRIVE DISAGREES
+
+  ARM B is the C-T440-1 defect, reproduced on demand from committed bytes: the literal
+  probe is found by `git grep` in the instrument's own source, so the no-match control
+  inverts. ARM A is the same instrument with the probe assembled at run time.
+
+==============================================================================
+T442-C1-REPRODUCTION-RESULT: disagreements=4
+*** THIS DRIVE FAILED.

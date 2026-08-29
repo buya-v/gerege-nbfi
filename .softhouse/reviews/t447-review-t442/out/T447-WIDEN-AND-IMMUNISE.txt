@@ -1,0 +1,38 @@
+================================================================================================
+T447 -- WIDENING + IMMUNISATION RE-COUNT
+================================================================================================
+repo   : /private/tmp/t447/c97
+commit : 97bad8ed9c73e75187069176d1f8c2e3831ee5a5
+
+------------------------------------------------------------------------------------------------
+ATTACK 1 -- what T442's `.softhouse/`-only corpus restriction actually costs
+------------------------------------------------------------------------------------------------
+  tracked files, whole repository : 9734
+  of them, candidate searchers    : 1704
+    inside  .softhouse/           : 1704
+    OUTSIDE .softhouse/           : 0
+
+------------------------------------------------------------------------------------------------
+ATTACK 2a -- self-exclusion by `:!` / `:(exclude)` PATHSPEC  (T442's "immunised")  : 0
+------------------------------------------------------------------------------------------------
+  (none -- T442's count of 0 for THIS mechanism reproduces)
+
+------------------------------------------------------------------------------------------------
+ATTACK 2b -- self-exclusion by POST-PIPE `grep -v <own path/own task dir>`  : 3
+   INVISIBLE to T442's census: its cut_at_pipe() truncates the line at the first
+   unquoted `|` before any of this is looked at.
+------------------------------------------------------------------------------------------------
+  .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:51  filters out 't244-dec2-rev6'
+      git grep -n -P "$p" -- . 2>/dev/null | /usr/bin/grep -v 't244-dec2-rev6' | cut -c1-150 | sed 's/^/    /'
+  .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:58  filters out 't244-dec2-rev6'
+      A=$(git grep -n -P 'contains no revers|no reversal appears' -- . 2>/dev/null | /usr/bin/grep -v 't244-dec2-rev6' | wc -l | tr -d ' ')
+  .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh:27  filters out 'a2-31-dec2-rev4/probe-sweep.sh'
+      git grep -n -i -E "$pat" -- . 2>/dev/null | grep -v 'a2-31-dec2-rev4/probe-sweep.sh' | cut -c1-260
+
+------------------------------------------------------------------------------------------------
+ATTACK 2c -- post-pipe `grep -v` whose argument is a VARIABLE (unresolved, not safe) : 0
+------------------------------------------------------------------------------------------------
+
+================================================================================================
+T447-WIDEN-RESULT: tracked=9734 scripts=1704 inside_softhouse=1704 outside_softhouse=0 immunised_pathspec=0 immunised_postpipe=3 immunised_unresolved=0
+================================================================================================

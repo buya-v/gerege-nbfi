@@ -1,0 +1,54 @@
+subject: /private/tmp/t447/clone-red/.softhouse/conformance.sh  (5500 lines, sha256 a6888119b0ae1ca1)
+
+==============================================================================
+CLAIM 1 -- 'In a UTF-8 locale BSD grep goes blind to the part of ONE LINE at and
+            to the RIGHT of an invalid byte: count 0, exit 1, NO diagnostic.'
+  at line(s): 778 
+==============================================================================
+  UTF-8 locale : count=0 rc=1 diagnostic=NONE
+  LC_ALL=C     : count=1 rc=0
+  UTF-8 + -a   : count=0 rc=1
+  UTF-8 goes blind (count 0, rc 1)                     expected=0 1        actual=0 1        OK
+  LC_ALL=C sees it (count 1, rc 0)                     expected=1 0        actual=1 0        OK
+  -a does NOT fix it (count 0, rc 1)                   expected=0 1        actual=0 1        OK
+  no diagnostic on stderr                              expected=0          actual=0          OK
+  VERDICT: the comment reproduces on this host, /usr/bin/grep grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+==============================================================================
+CLAIM 2 -- '`CONFORMANCE_REPO_ROOT` and `-repo-root` each occur ZERO times in it
+            (measured on this file ... both returned 0, exit 1).'
+  at line(s): 1299 
+==============================================================================
+  CONFORMANCE_REPO_ROOT : count=22 rc=0
+  -repo-root            : count=2 rc=0
+  executable (non-comment) lines only: CONFORMANCE_REPO_ROOT=16  -repo-root=0
+  whole-file count is NOT zero any more                expected=yes        actual=yes        OK
+  executable count is NOT zero either                  expected=yes        actual=yes        OK
+  -repo-root still absent from the code                expected=0          actual=0          OK
+  FINDING F-T424-N1 -- the claim NO LONGER REPRODUCES, in both senses. The stated
+  measurement is 'both returned 0, exit 1'; re-running it today returns a non-zero count
+  for CONFORMANCE_REPO_ROOT on the whole file AND on executable lines only. It was true
+  when written -- the paragraph describes the pre-repair hole -- and the repair it argues
+  for is what made it false. But the sentence is PRESENT TENSE and carries its own
+  reproduction recipe, so a reader who runs that recipe gets a contradiction and no way to
+  tell a stale sentence from a regressed harness. Cause right, TENSE wrong -- the same
+  shape as F-2, where the mechanism was right and the attribution wrong.
+  NOT EDITED: conformance.sh is contended this fire and this region is not T424's.
+  Reported by name for its owner. Counts deliberately not pinned here (P-86).
+
+==============================================================================
+CLAIM 3 -- '`git grep` exits 1 on NO MATCH and >1 on ERROR, so the 1 is an
+            ABSENCE and not a failure.'
+  at line(s): 2134 
+==============================================================================
+  no match        : rc=0
+  invalid pattern : rc=128
+  match           : rc=0
+  no match -> 1                                        expected=1          actual=0          *** DRIVE DISAGREES
+  error   -> >1                                        expected=yes        actual=yes        OK
+  match   -> 0                                         expected=0          actual=0          OK
+  VERDICT: reproduces. git 2.50.1
+
+==============================================================================
+T424-COMMENT-CLAIMS-RESULT: disagreements=1
+*** THIS DRIVE FAILED.
