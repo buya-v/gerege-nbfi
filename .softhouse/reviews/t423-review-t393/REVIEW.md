@@ -109,7 +109,8 @@ transcript cannot distinguish "the ties caught it" from "the pins caught it". An
 has read the file moves it in **all three** tracked files, which satisfies `FORK_TIES` entirely
 and leaves only `FORK_OBS_PIN` / `FORK_NONOBS_PIN` standing. **That is the case that decides
 whether F-4 is closed or merely inconvenienced, and neither T393 nor the first T423 worker ran
-it.** `instruments/50-t423-fork-tie-defeat.sh`, results in §7.
+it.** I ran it: `instruments/50-t423-fork-tie-defeat.sh`, **results in §10 — the repair holds on
+the population pins alone, with zero tie refusals.**
 
 ---
 
@@ -148,6 +149,10 @@ same-bytes symlink) and disclosed one residual. I looked in four places for a si
   manufactured here**."*
 * `run-all.sh`, section 10 banner: *"**There is no committed baseline older than HEAD for those
   632.**"*
+
+The claim originates one task earlier — T374's follow-up #1 reads *"632 of the 1035 tracked
+observations have no baseline older than HEAD"* — and T393 restated it as an **impossibility**
+rather than testing it.
 
 **Such a baseline does exist: the blob at the commit that FIRST ADDED each observation.** It is
 immutable for precisely the reason ARM A's fork blob is immutable — reaching it requires
@@ -338,10 +343,36 @@ path, no `.softhouse/vectors/` path and nothing with `ledger` in its name (`grep
 
 ---
 
-## 10. THE `f4c` DRIVE — MOVE THE CONSTANT IN ALL THREE FILES
+## 10. THE `f4c` DRIVE — MOVE THE CONSTANT IN ALL THREE FILES. **F-4 HOLDS ON THE PINS ALONE.**
 
-Pending at the time of this commit; filled in below when the run lands. This is the case that
-separates "the ties caught it" from "the pins caught it" (see §3a).
+`instruments/50-t423-fork-tie-defeat.sh`. Same committed mutation of
+`out/A2-000-glaccounts-preexisting.http` as `f4b`, but the constant is moved in **all three**
+tracked files — `verify-capture-integrity.py`, `prove-a2-7-additive.py`,
+`verify-manifest-independently.py` — each substitution asserted before and after, so a
+spelling that failed to match could not be mistaken for an attack that was repelled.
+
+| ref | section 10 | run-all rc | verdict | section 4 named it | ARM A pop | **tie refusals** | **pin refusals** |
+|---|---|---|---|---|---|---|---|
+| BEFORE `4eeed2b3` | 0 | 0 | **PASS** | **0** | 1035 | 0 | 0 |
+| AFTER `fc51790d` | **2** | 1 | **FAIL** | 0 | 1035 | **0** | **2** |
+
+**Read the two right-hand columns.** At the post-fix bytes the cross-check is fully satisfied —
+**zero** tie refusals — and section 10 refuses anyway, on `ARM A's population is 1035
+observations, and it is PINNED at 403` (line 744) and `ARM E's population is 104 entries, and
+it is PINNED at 27` (line 827). Section 10 is the **only** section that moves: `10  0  2  ***
+MOVED ***` (line 895), every other section `as adjudicated`.
+
+**And the BEFORE row is worse than `f4b`'s.** Moving the constant in all three files also moves
+**section 4's own** baseline, so `sec4-named` drops from 1 to **0**: at the pre-fix bytes the
+coordinated move is *completely silent* — every section reports `as adjudicated`, `RUN-ALL
+VERDICT: PASS`, and **nothing in the rig names the mutated observation at all**. T362's F-1 with
+the last witness removed.
+
+**So the F-4 repair is not "three files instead of one".** The population pins are independent
+of the ties and sufficient on their own, and the ties are the cheap outer layer. That is the
+question `f4b` could not answer, because it fires both halves at once. **F-4 is closed, with a
+tripwire to spare.** [VERIFIED: `out/T423-F4C-DRIVE.txt` exit 0,
+`out/T423-case-f4c-all-three-{BEFORE,AFTER}.txt`.]
 
 ---
 

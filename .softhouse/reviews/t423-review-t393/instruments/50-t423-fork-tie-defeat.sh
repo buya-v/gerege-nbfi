@@ -64,20 +64,20 @@ for ref in BEFORE AFTER; do
 
   # Move the constant in ALL THREE tracked files. Each substitution is asserted, so a
   # spelling that did not match cannot be mistaken for an attack that was repelled.
-  n1=$(grep -c -E "^FORK = \"$FORK\"\$" "$D/$INT")
-  n2=$(grep -c -E "^BASELINE = \"$FORK\"\$" "$D/$TIE1")
-  n3=$(grep -c -E "^FORK = \"$FORK\"\$" "$D/$TIE2")
+  n1=$(grep -c -E "^FORK = \"$FORK\"" "$D/$INT")
+  n2=$(grep -c -E "^BASELINE = \"$FORK\"" "$D/$TIE1")
+  n3=$(grep -c -E "^FORK = \"$FORK\"" "$D/$TIE2")
   echo "      assignments found: section10=$n1 prove-a2-7-additive=$n2 verify-manifest-independently=$n3"
   if [ "$ref" = "AFTER" ] && { [ "$n1" != "1" ] || [ "$n2" != "1" ] || [ "$n3" != "1" ]; }; then
     echo "REFUSED: expected exactly one assignment in each of the three files at AFTER" >&2
     exit 3
   fi
-  perl -pi -e "s/^FORK = \"$FORK\"\$/FORK = \"$PROBE\"/"     "$D/$INT"
-  perl -pi -e "s/^BASELINE = \"$FORK\"\$/BASELINE = \"$PROBE\"/" "$D/$TIE1"
-  perl -pi -e "s/^FORK = \"$FORK\"\$/FORK = \"$PROBE\"/"     "$D/$TIE2"
-  m1=$(grep -c -E "^FORK = \"$PROBE\"\$" "$D/$INT")
-  m2=$(grep -c -E "^BASELINE = \"$PROBE\"\$" "$D/$TIE1")
-  m3=$(grep -c -E "^FORK = \"$PROBE\"\$" "$D/$TIE2")
+  perl -pi -e "s/^FORK = \"$FORK\"/FORK = \"$PROBE\"/"     "$D/$INT"
+  perl -pi -e "s/^BASELINE = \"$FORK\"/BASELINE = \"$PROBE\"/" "$D/$TIE1"
+  perl -pi -e "s/^FORK = \"$FORK\"/FORK = \"$PROBE\"/"     "$D/$TIE2"
+  m1=$(grep -c -E "^FORK = \"$PROBE\"" "$D/$INT")
+  m2=$(grep -c -E "^BASELINE = \"$PROBE\"" "$D/$TIE1")
+  m3=$(grep -c -E "^FORK = \"$PROBE\"" "$D/$TIE2")
   echo "      constant moved to $PROBE in: section10=$m1 tie1=$m2 tie2=$m3"
 
   ( cd "$D" && bash "$RUNALL" ) > "$OUT/T423-case-f4c-all-three-$ref.txt" 2>&1
