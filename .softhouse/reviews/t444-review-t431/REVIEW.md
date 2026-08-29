@@ -204,6 +204,40 @@ Not driven by me either: a **second git binary**, and an actual **case-SENSITIVE
 
 ---
 
+## THE FULL ARM TABLE — my own drive, both trees
+
+`RED` = today's `main` at `290d8f84`, `GREEN` = T431's tip `d459ec82`. Same frozen instrument
+for both (`sha256 b173219c61d32b5c87194a80fac8361f53dec376296a5de038d03d6b2a475675`, `chmod
+a-w` before either run, so an edit could not reach a run in flight — T431's `C-T407-4` lesson,
+adopted). Mode detected from the ref's own blob and not passable in: `RED` reported
+`pin=no empty=no round-trip=no`; `GREEN` reported `pin=yes empty=yes round-trip=yes`.
+`=== T444 DRIVE: 12 PASS / 2 FAIL of 14 ===` (RED) and `13 PASS / 2 FAIL of 15` (GREEN)
+[VERIFIED: `evidence/10-RED-BEFORE-t444-drive-on-main.txt`,
+`evidence/17-GREEN-AFTER-t444-drive-on-T431-branch.txt`].
+
+| arm | what it is | on `main` | on T431 | reading |
+|---|---|---|---|---|
+| `Z` | unmutated | 0 / PRESENT | 0 / PRESENT | the guard still passes a clean tree |
+| `LEGA` | honest ASCII witness | 0 / PRESENT, `reached-by=2` | **0 / PRESENT, `reached-by=2`** | **honest work is still accepted** |
+| `LEGC` | honest **Cyrillic** witness | 2 / ABSENT `DOES NOT NAME` | 2 / ABSENT `matched NO INDEX ENTRY` | pre-existing refusal, better message — **C-4** |
+| `LEGM` | Cyrillic dir + witness | 2 / ABSENT | 2 / ABSENT | pre-existing; also crashes the dead-path census |
+| `X` | `:(literal)P` + decoy | **0 / PRESENT / VERDICT PASS** | 2 / ABSENT `THAT WITNESS IS A SYMLINK` | closed |
+| `XT` | `:(top,literal)P` + decoy | **0 / PRESENT / VERDICT PASS** | 2 / ABSENT `THAT WITNESS IS A SYMLINK` | closed |
+| `XI` | `:(literal,icase)P` + decoy | **0 / PRESENT / VERDICT PASS** | 2 / ABSENT `THAT WITNESS IS A SYMLINK` | closed |
+| `XQ` | C-QUOTED + quoted-name decoy | **0 / PRESENT / VERDICT PASS** | 2 / ABSENT **`DID NOT ROUND-TRIP`** | **closed only by round-trip** |
+| `XQ0` | C-QUOTED, no decoy | 2 / ABSENT | 2 / ABSENT `matched NO INDEX ENTRY` | closed both ways |
+| `RVQ` | round-trip killed on the fixed tree | — | **0 / PRESENT / VERDICT PASS** | **the hole reopens; round-trip is independently necessary** |
+| `NLMEM` | member filename contains `0x0A` | 2 / ABSENT | 2 / ABSENT | **T431 bound 1 — fail-CLOSED** |
+| `GITL` | gitlink `.sh` member | 2 / ABSENT `INVOKED BY NOTHING` | 2 / ABSENT | **T431 bound 2 — fail-CLOSED** |
+| `GITL2` | gitlink borrowing a real member's basename | 2 / ABSENT `INVOKED BY NOTHING` | 2 / ABSENT | fail-CLOSED |
+| `2ROWH` | two `REACHED-BY` rows, honest first | 0 / PRESENT | 0 / PRESENT | **T431 bound 6 — row 2 never graded**, LOW-5 |
+| `2ROWX` | two rows, hostile first | 2 / ABSENT | 2 / ABSENT | fail-CLOSED |
+| **`CASE`** | index/filesystem case divergence | **0 / PRESENT / VERDICT PASS** | **0 / PRESENT / VERDICT PASS** | **M-1 — LIVE ON BOTH TREES** |
+
+`LEGC` and `LEGM` are scored FAIL by the runner because I wrote their expectation as
+ACCEPT — that expectation is the finding, not an instrument failure, and it is identically
+unmet on `main`.
+
 ## BAR
 
 **T431's tree AND the merge result. I built the merge rather than reasoning about it.**
