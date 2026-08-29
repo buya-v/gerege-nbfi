@@ -3727,3 +3727,103 @@ because their **populations** differ (implementations under grade, versus docume
 program's own record and derive the control), and a single merged entry would be cited for one half and
 read for the other — which is the exact hazard `P-86` records: the pattern ids themselves rotted, in the
 file that names the rot.
+
+---
+
+<!-- T438-SELF-CONVICTING-CARDINAL -->
+
+**P-102 — WHEN TWO TASKS DISAGREE ABOUT A MEASURED VALUE, CHECK WHETHER THE DISPUTING TASK'S *OTHER*
+NUMBERS COULD HAVE BEEN COMPUTED FROM ITS OWN. OFTEN THEY COULD NOT, AND THE DISPUTE SETTLES ITSELF
+FROM THE RECORD BEFORE ANYONE RE-RUNS ANYTHING.**
+
+*Local fire `20260829-080002`. `T409` published a value; `T417` published a different one, declared the
+discrepancy, declined to chase it, and told later readers not to trust `T409`'s. `T438`'s independent
+review of `T417` found `T417` wrong and `T409` right. The driver then settled it with its own `SELECT`s
+against `fineract_gerege` rather than by weighing two accounts, and found the disagreement was already
+decidable from `T417`'s own published figures. Transcripts: the correction block in
+`.softhouse/handoff/T417-scheduler-attribution.md`, and `.softhouse/reviews/t438-review-t417/REVIEW.md`.*
+
+**THE MEASUREMENT.** Four queries, all on one unmoved table:
+
+```
+min(entry_date)                                             -> 2026-01-15   <- what T417 published
+min(entry_date) WHERE is_running_balance_calculated = false -> 2026-05-15   <- what T409 published
+count(*)        WHERE entry_date >= DATE '2026-01-15'       ->        109
+count(*)        WHERE entry_date >= DATE '2026-05-15'       ->         55
+```
+
+`T417` published the **global** minimum under the alias `min_uncalculated_entry_date`, because its own
+committed SQL put the `FILTER` on the `count(*)` and **not** on the `min()`. Its stated reason for not
+chasing the discrepancy was *"the count is 55 either way."*
+
+**THE COUNT IS NOT 55 EITHER WAY, AND THAT IS THE WHOLE PATTERN.** `55` follows **only** from
+`2026-05-15`. From the `2026-01-15` that same task published, the count is `109`. So the `55` it
+reported as *confirmed pre-state* **could only have been computed from the value its prose told the next
+reader to distrust.** The task's own arithmetic was using `T409`'s number while its sentence disputed it.
+
+**WHY THIS IS A METHOD AND NOT AN ANECDOTE.** A disagreement between two tasks about a measured value
+normally costs a re-run — and on an oracle that edits itself, a re-run can return a *third* answer and
+settle nothing, because the state may have moved between the readings. But a published record usually
+contains **more than one number derived from the disputed one**, and those derived numbers are a free,
+retrospective check that needs no access to the oracle at all. Ask: *given the value this task claims,
+does its own next figure follow?* When it does not, the disagreement is resolved out of the record, at
+zero cost, and **without the possibility of drift confusing the answer** — which is precisely what made
+this one a **measurement defect rather than drift**, the distinction `T417` was built to draw and got
+wrong about itself.
+
+**THE GENERATIVE CAUSE, worth its own line because it is invisible on reading.** An aggregate carrying a
+`FILTER` sitting in the same `SELECT` list as an aggregate without one, under a column alias that
+implies **both** are filtered. It reads correctly. It runs wrong. `git diff` shows nothing unusual, a
+reviewer scanning the query sees the `FILTER` and moves on, and the alias — the only thing a later
+reader will actually quote — is a lie about the value beneath it. Census for this shape directly; do not
+expect to notice it while reading for something else.
+
+**THE PROCEDURE, in order, cheapest first:**
+1. **Re-derive the disputed value's *dependents* from the record.** Does the disputing task's own next
+   number follow from its own claim? This costs one arithmetic check and no oracle access.
+2. **Read the query, not the result.** Look for an alias that claims more than its expression does.
+3. **Only then re-run** — and when you do, state the instant, because on a self-editing oracle a third
+   answer is a possible outcome and you must be able to tell drift from defect.
+
+**AND THE HARM THIS PARTICULAR SHAPE DOES IS ASYMMETRIC.** A wrong number is corrected by the next
+person who measures it. A wrong number **accompanied by an instruction to distrust the correct one**
+survives that correction: it converts the next reader's agreement with reality into a reason to look
+again. `T417` wrote *"a later reader should not take `2026-05-15` from `T409` without re-deriving
+it"* — advice that is unimpeachable in general and, here, pointed the reader away from the right answer.
+**Never pair an unchased discrepancy with a verdict about who is wrong.** Record the discrepancy, name
+both values, and say plainly that you did not settle it. A follow-up (`FU-T417-2`) had already inherited
+the verdict and would have sent its worker into the unfiltered `min`.
+
+**COLLISION HAZARD, declared rather than discovered:** this entry claims **`P-102`**, verified free the
+way `P-100` and `P-101` were — `git grep -c 'P-102'` over the whole repository and a working-tree
+`grep -rn` both returned **no hits** before this commit, defined or cited.
+
+> **AND THE FIRST DRAFT OF THIS VERY PARAGRAPH REDDENED THE BAR, which is worth more than the pattern
+> above it.** It ended with a sentence reporting that the *next* cardinal had also been checked and was
+> free. That sentence put a bare, undefined `P-<n>` token into `.softhouse/patterns.md` — a **DIRECTIVE**
+> file to `check-pnumber-citations.py` — so `guard_pnumber_citations`, which is **HARD**, refused:
+>
+> ```
+> PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/patterns.md:<line> <token> -- defined in neither register
+> PNUMBER-CITATIONS: VERDICT FAIL -- 1 fatal (register 0, directive-file 1)
+> EXIT=2        # and the `probe = ` line was NEVER PRINTED
+> ```
+>
+> This is the same defect that reddened `main` for **three pushed commits** during local fire
+> `20260828-140005`, committed here by the driver that had just finished reading the account of it. The
+> only thing that differed is that the bar was run on the working tree **before** the push, so `main`
+> never went red — which is the whole of the remedy, and it is `T412`'s standing complaint that the
+> driver is the one identity that pushes to `main` and the one that does not grade itself.
+>
+> **The rule this yields is narrow and absolute: a freshness check on an unclaimed cardinal must never be
+> written down using the cardinal.** Say that the next id was checked and found free; do not spell it. An
+> id is a citation the moment it is typed, and a citation to something you deliberately did not define is
+> by construction undefined. Note also the failure shape: **exit 2 with NO probe line at all.** Read the
+> line's *absence*, never its value — four exit-2 paths precede it and a failed HARD guard is one of
+> them, so "probe != up" is trivially true when nothing printed.
+
+**Relation to neighbours.** `P-83` says two independent movements of one pinned number reconcile by
+running, never by arithmetic — this is not its converse. `P-83` governs a **pin that has legitimately
+moved twice**, where only a run can order the movements. `P-102` governs a **single unmoved value two
+tasks read differently**, where a run is the *expensive* step and the record decides it for free. The
+two are compatible: check the record first, and when the record cannot decide, run.
