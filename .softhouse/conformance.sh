@@ -4952,13 +4952,41 @@ COSTSTALE
 # THIS GUARD from it as well as adding the row they wanted. A self-check that lives inside the
 # text under attack cannot survive an attacker who edits that text. T454 DROVE IT rather than
 # arguing it, and the result is in
-# `.softhouse/capture/t454-t446-conditions/evidence/`. This guard therefore CLOSES the forgery
-# that does not also strip it, and RAISES THE COST of the one that does — the forged blob must
-# now differ from the honest blob by a whole deleted guard rather than by one table row, which
-# is loud in `git diff` of the two objects. IT DOES NOT CLOSE THE CLASS, and the only thing
+# `.softhouse/capture/t454-t446-conditions/evidence/`, and it reached EXIT 0 with the probe
+# present, `VERDICT: PASS`, and the planted checker absolved. This guard therefore CLOSES the
+# forgery that does not also strip it, and RAISES THE COST of the one that does: the forged blob
+# must now differ from the honest blob by a whole deleted guard rather than by one table row,
+# which is loud in `git diff` of the two objects — AND IT MUST DELETE TWO SEPARATE PLACES, not
+# one. `guard_cost_census` refuses a GUARD_COST_BUDGETS row that was never timed, so removing
+# only the `timed_guard` line leaves a stale budget row and the bar refuses anyway. DRIVEN as
+# arm LONGSTRIP1, beside LONGSTRIP which removes both. That is a real, measured increase in the
+# size of the smallest working forgery, and it is the whole of what this guard buys against an
+# attacker who edits the text it lives in. IT DOES NOT CLOSE THE CLASS, and the only thing
 # that can is a verifier OUTSIDE this file: the fire driver, or CI, comparing
 # `git rev-parse HEAD:<path>` with `git hash-object <path>` BEFORE it trusts a transcript.
 # That is out of this file's scope and is filed as FU-T454-1.
+#
+# TWO THINGS THE DRIVES TAUGHT THIS GUARD THAT READING IT WOULD NOT HAVE.
+#
+#   (1) IT IS NOT ABOUT THIS FILE. It enumerates nothing and declares nothing: it takes
+#       `git diff-index --name-only HEAD` over the WHOLE tree and adjudicates every path that
+#       comes back, so a working-tree read added tomorrow is covered without anyone remembering
+#       to register it. MEASURED, and unexpectedly: on T454's arm RWB3CTL — T444's M-1 fixture,
+#       a 100644 decoy `W.txt` and a 120000 `w.txt` symlink colliding on this filesystem — this
+#       guard REFUSED at `.softhouse/guards/W.txt`, naming `.softhouse/guards/w.txt` as the
+#       entry the materialised bytes belong to, WITHOUT KNOWING ANYTHING ABOUT REGISTRATION.
+#       The checkout-collision class is one class, and this closes it wherever it lands.
+#
+#   (2) THE MODIFIED SET IS READ AGAINST **HEAD** AND THE OWNER IS LOOKED UP IN THE **INDEX**,
+#       and that is a deliberate asymmetry rather than an oversight. The index is what a commit
+#       is about to be, and it is what every other read in this file's registration direction
+#       uses since T445; on a fresh clone the two are identical, which is the case that matters,
+#       and using the index means a worker who stages a new file and the reference to it in one
+#       change is green before committing rather than after. THE CONSEQUENCE, STATED SO IT IS
+#       NOT DISCOVERED LATER: a hand-crafted divergence in which the colliding entry is in HEAD
+#       but not in the index would leave the owner unfound and the path reported as an
+#       UNCOMMITTED EDIT — printed and accepted. Not driven; a statement about this task's
+#       search, not about the world.
 #
 # NOT PINNED, MEASURED (P-72 / T238's sweeplib invariant, adopted in shape): before this guard
 # is allowed to report ZERO substitutions it proves it can find a KNOWN POSITIVE — this file's

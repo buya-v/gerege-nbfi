@@ -14,8 +14,12 @@
 #              folds U+017F onto `s` the entry sorts LAST and WINS the checkout, so the
 #              committed blob of `.softhouse/conformance.sh` is honest and the text that
 #              RUNS is not.
-#   LONGSTRIP  LONGS, except the forged blob ALSO DELETES the guard that detects it.  This
-#              is the seventh route and it is driven, not argued.
+#   LONGSTRIP  LONGS, except the forged blob ALSO DELETES the guard that detects it -- both
+#              its `timed_guard` wiring and its GUARD_COST_BUDGETS row.  This is the SEVENTH
+#              route and it is driven, not argued.
+#   LONGSTRIP1 LONGS with ONLY the `timed_guard` line deleted, leaving the budget row behind.
+#              It measures whether the harness already forces the forger into a second
+#              deletion: guard_cost_census refuses a budget row that was never timed.
 #   RWB3CTL    T444's M-1 fixture on the tree under test, unmutated.  Must REFUSE.
 #   RWB3       the same fixture plus ONE SUBSTITUTION: the witness naming test is pointed
 #              at this host's filesystem instead of at the tracked blob.  On the T445 tip
@@ -124,10 +128,14 @@ new = ('drive-red-ledger-invariants.sh|SUBJECT|' + wit + '|ledgerguard\n'
 if row not in t:
     sys.exit("DECLARATION TABLE anchor not found")
 t = t.replace(row, new, 1)
-if strip == "strip":
+if strip in ("strip", "strip1"):
     # Delete the wiring of the guard that detects this forgery.  A self-check that lives
     # inside the forged text can always be removed by the forger; this arm measures that
     # rather than asserting it.
+    #
+    # `strip1` deletes ONLY the `timed_guard` line and LEAVES the GUARD_COST_BUDGETS row,
+    # to measure whether the harness already forces the forger into a SECOND deletion:
+    # guard_cost_census refuses a budget row that was never timed.  `strip` deletes both.
     n = t.count("timed_guard guard_harness_text_is_committed")
     if n == 0:
         sys.exit("NOTHING TO STRIP: this tree carries no guard_harness_text_is_committed wiring")
@@ -135,7 +143,7 @@ if strip == "strip":
     for ln in t.split("\n"):
         if "timed_guard guard_harness_text_is_committed" in ln:
             continue
-        if ln.startswith("guard_harness_text_is_committed|"):
+        if strip == "strip" and ln.startswith("guard_harness_text_is_committed|"):
             continue
         out.append(ln)
     t = "\n".join(out)
@@ -190,6 +198,10 @@ case "$ARM" in
              git -C "$S" add -A -- "$GD" || die3 "git add failed"
              plant_forged_harness strip
              commit_src_noadd ;;
+  LONGSTRIP1) plant_unreg_checker
+             git -C "$S" add -A -- "$GD" || die3 "git add failed"
+             plant_forged_harness strip1
+             commit_src_noadd ;;
   RWB3CTL)   plant_m1_fixture
              git -C "$S" add -A -- "$GD" || die3 "git add failed"
              plant_symlink_entry zz-t454-member.sh "$GD/w.txt"
@@ -233,10 +245,16 @@ MATERIALISED="$(git -C "$G" hash-object -- "$G/$CONFREL" 2>/dev/null)" || MATERI
 [ -n "$MATERIALISED" ] || die3 "could not hash the MATERIALISED harness"
 printf 'committed blob of the harness                  : %s\n' "$COMMITTED"
 printf 'materialised blob at that path on this host    : %s\n' "$MATERIALISED"
+# WHAT THIS LINE DOES AND DOES NOT SAY. It reports whether the two object ids AGREE. It does
+# NOT say "forged": an ordinary uncommitted edit makes them disagree too, and arm WDIRTY is
+# exactly that. Deciding which of the two it is belongs to the bar, not to this drive, and the
+# bar says so in its own HARNESS-TEXT lines below. The first version of this line printed
+# "THE RUNNING HARNESS IS FORGED" for arm WDIRTY, which was a verdict the drive had not earned.
 if [ "$COMMITTED" = "$MATERIALISED" ]; then
   printf 'the text that RUNS is the text that is COMMITTED: YES\n'
 else
-  printf 'the text that RUNS is the text that is COMMITTED: NO -- THE RUNNING HARNESS IS FORGED\n'
+  printf 'the text that RUNS is the text that is COMMITTED: NO -- the two object ids DISAGREE\n'
+  printf '  (substitution or uncommitted edit: the BAR decides, see its HARNESS-TEXT lines)\n'
 fi
 
 # ------------------------------------------------------------------ the bar
@@ -269,10 +287,23 @@ if [ "$NC" -ge 1 ]; then
   printf 'census     : '; LC_ALL=C grep -m1 'GUARDS-DIR-REGISTRATION: population=' "$LOG"
 fi
 
-NH="$(LC_ALL=C grep -c 'HARNESS-TEXT:' "$LOG")" || NH=0
-printf 'harness-text census line count = %s\n' "$NH"
+# `HARNESS-TEXT` and not `HARNESS-TEXT:` — the per-path lines carry the colon and the census
+# line reads `HARNESS-TEXT CENSUS:`. The narrow pattern printed a truthful 0 about the wrong
+# string beside a guard that had run and refused [T454, repaired mid-task, arms re-driven].
+NH="$(LC_ALL=C grep -c 'HARNESS-TEXT' "$LOG")" || NH=0
+printf 'harness-text line count = %s\n' "$NH"
 if [ "$NH" -ge 1 ]; then
   LC_ALL=C grep 'HARNESS-TEXT' "$LOG"
+fi
+NS="$(LC_ALL=C grep -c 'guard_harness_text_is_committed FAILED' "$LOG")" || NS=0
+printf 'harness-text REFUSAL line count = %s\n' "$NS"
+if [ "$NS" -ge 1 ]; then
+  LC_ALL=C grep -m1 'guard_harness_text_is_committed FAILED' "$LOG"
+fi
+NU="$(LC_ALL=C grep -c 'THE DECISIVE LINE IS GONE' "$LOG")" || NU=0
+printf 'decisive-line-GONE refusal count = %s\n' "$NU"
+if [ "$NU" -ge 1 ]; then
+  LC_ALL=C grep -A1 -m1 'THE DECISIVE LINE IS GONE' "$LOG"
 fi
 
 ND="$(LC_ALL=C grep -c 'registration decisive lines:' "$LOG")" || ND=0

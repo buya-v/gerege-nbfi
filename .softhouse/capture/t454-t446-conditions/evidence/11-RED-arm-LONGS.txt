@@ -1,0 +1,47 @@
+=== T454 ARM LONGS ===
+host       : Darwin 25.5.0 arm64
+git        : git version 2.50.1 (Apple Git-155)
+bash       : 3.2.57(1)-release
+source     : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a1561c38cd338b7c7 @ softhouse/T454-longs-route
+forged path spelling (for LONGS arms): .softhouse/conformance.ſh
+forged blob: 8bfafdda3a8f95e3b09c0586d67b39cdcbde4bc0
+--- planted index entries (git ls-files -s, the paths this arm touched) ---
+100755 62cda497d57270ee181b5b14732fa9640be98cf0 0	.softhouse/conformance.sh
+100644 8bfafdda3a8f95e3b09c0586d67b39cdcbde4bc0 0	".softhouse/conformance.\305\277h"
+100644 98ace80bcc09621e3ace89cd4f49d1a48d18c1b2 0	.softhouse/guards/check-capture-namespace.sh
+100644 fa5c8b6f3ce51d26e4159f0843cb1293d41b8e99 0	.softhouse/guards/check-dead-path-frontier.sh
+100755 3fe3b79ef9f82de0f9440bf3a46517402564362b 0	.softhouse/guards/check-ledger-invariants.sh
+100644 f1cc2f073737488874934521c264750bb6a61e57 0	.softhouse/guards/dead-path-frontier.pin
+100755 e56dd2c78fc94df6c96557ba78f27a6129aba8a3 0	.softhouse/guards/drive-red-ledger-invariants.sh
+100644 7acc111cbdf93c379ffb502a6c268eac379f2358 0	.softhouse/guards/ledgerguard/go.mod
+100644 69087ee1ceba5908502108f511e8a418ae07687a 0	.softhouse/guards/ledgerguard/main.go
+100755 ce9e0309e05adad44d413c16e57485942d9b27ca 0	.softhouse/guards/repo-state-attest.sh
+100644 eb397a8f0943651cf6da37c8a011d676aec2b57d 0	.softhouse/guards/zz-t454-unreg.sh
+--- end index entries ---
+warning: the following paths have collided (e.g. case-sensitive paths
+on a case-insensitive filesystem) and only one from the same
+colliding group is in the working tree:
+
+  '.softhouse/conformance.sh'
+  '.softhouse/conformance.ſh'
+--- git status --porcelain of the graded clone ---
+ M .softhouse/conformance.sh
+--- end git status ---
+committed blob of .softhouse/conformance.sh    : 62cda497d57270ee181b5b14732fa9640be98cf0
+materialised blob at that path on this host    : 8bfafdda3a8f95e3b09c0586d67b39cdcbde4bc0
+the text that RUNS is the text that is COMMITTED: NO -- THE RUNNING HARNESS IS FORGED
+EXIT = 0
+bar log lines = 888
+probe line count (read BEFORE its value) = 1
+probe line : conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+VERDICT line count = 1
+VERDICT    : VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+census line count = 1
+census     : conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+harness-text census line count = 0
+decisive-lines watch line count = 1
+watch      : conformance:   registration decisive lines: 7 present, 2 evaluated on an input
+reached-by "verified: it names" count = 0
+fail-open frontier line count = 1
+frontier   : conformance:   /tmp/t454-LONGS/graded (git ls-files, whole repository); frontier 11, pinned at 11
+full transcript: /tmp/t454-LONGS/out/bar.log
