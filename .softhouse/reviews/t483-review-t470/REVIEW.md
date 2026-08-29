@@ -400,8 +400,28 @@ conformance:   literal /tmp … path to a name: 18, pinned at 18   (host-state p
 PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal
 ```
 
-**Run 2 — my own committed tree, at my tip.** §7b below, appended after the commit that carries this
-file, so the tree it graded is the tree that is delivered.
+### §7b — Run 2, THE BAR ON MY OWN COMMITTED TREE
+
+Run at `7f370430`, the commit carrying this review and both drives, with the tree clean.
+`bash .softhouse/conformance.sh`, `bash` and never `sh`/`zsh`. [`out/90-BAR-at-my-tip.txt`]
+
+```
+grep -c 'probe = '  ->  1                                   <- PRESENCE, first
+then the value: reference oracle (…/actuator/health) probe = up
+BAR EXIT = 0
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+conformance:   LOCAL-STATE CENSUS … uncommitted edits 0, deleted 0.
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+conformance:   … frontier 11, pinned at 11                       (fail-open pin, UNMOVED)
+conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18   (UNMOVED)
+```
+
+**My two committed drives added ZERO rows to any of the three pins**: the dead-path frontier is
+GREEN, the fail-open pin is `11 == 11`, and the host-state pin is `18 == 18`. That is the measured
+form of the `P-103` compliance claimed above — the census, not my say-so. **I moved no pin.**
+
+This same transcript is committed one commit after the run, which is the structural fact
+`C-T483-3` names; unlike `T470` I state the graded sha (`7f370430`) rather than calling it "the tip".
 
 **Nothing of anyone else's was moved.**
 `git diff --stat cb148f59 28fdfee3 -- guards/dead-path-frontier.pin LOCK tasks.json RESUME.md program.json`
