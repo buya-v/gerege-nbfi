@@ -1,4 +1,4 @@
-fixture at /tmp/t451/fixture  (dispatch 40092fbbc68cf73d6210505aa051ec801aabb58e)
+fixture at /tmp/t451/fixture  (dispatch 73d8cd5b5899b3b475adde6fd505f86ce067ee3a)
   ref * main
   ref   softhouse/T351-progress-accounting-renamed
   ref   softhouse/T431-t407-conditions

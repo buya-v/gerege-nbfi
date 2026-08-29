@@ -1,7 +1,7 @@
 PLANTED the proposed relaxation: `leading.match` -> `anywhere.search` on the ref's
 own diff paths, and NOWHERE else.  1 site, verified unique before writing.
-  shipped  .softhouse/bin/ready-tasks.py  sha256 4d521c65d17b03ea
-  relaxed  /tmp/t451/mods/rt_relaxed.py  sha256 8dc1b1264b0235da
+  shipped  .softhouse/bin/ready-tasks.py  sha256 da9daeec15d3bb2f
+  relaxed  /tmp/t451/mods/rt_relaxed.py  sha256 b2b1e51aca998448
 
 case     what it is                                                 SHIPPED (leading)        RELAXED (anywhere)
 ----------------------------------------------------------------------------------------------------------------------
