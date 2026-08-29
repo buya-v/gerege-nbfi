@@ -1,0 +1,14 @@
+# T465 -- the dead-path frontier against the fire-lock cycle
+# source 3f4e236a (3f4e236ad458dd945bac26243a90ccc950924164)   base tree 10347 tracked path(s)
+# columns: arm | guard exit | probe lines PRINTED | probe line
+CALIB-MINUS                      exit=0 probe-lines=1  GREEN rows=108 pinned=108 added=0 removed=0
+CALIB-PLUS                       exit=1 probe-lines=1  REFUSED rows=109 pinned=108 added=1 removed=0
+ARM-A-LOCK-HELD                  exit=0 probe-lines=1  GREEN rows=108 pinned=108 added=0 removed=0
+ARM-B-LOCK-RELEASED              exit=1 probe-lines=1  REFUSED rows=125 pinned=108 added=17 removed=0
+ARM-C-PIN-AT-RELEASED            exit=0 probe-lines=1  GREEN rows=125 pinned=125 added=0 removed=0
+ARM-C-PIN-AT-RELEASED-LOCK-BACK  exit=1 probe-lines=1  REFUSED rows=108 pinned=125 added=0 removed=17
+
+# THE FINDING, read off the arms above and nowhere else:
+#   lock HELD                    GREEN rows=108 pinned=108 added=0 removed=0
+#   lock RELEASED                REFUSED rows=125 pinned=108 added=17 removed=0
+#   pin@released + lock BACK     REFUSED rows=108 pinned=125 added=0 removed=17

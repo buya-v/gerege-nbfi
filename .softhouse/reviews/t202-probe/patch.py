@@ -2,6 +2,17 @@
 """T202 -- applies the three fixes to the WORKTREE COPY of fire-program.sh.
 Each replacement asserts its anchor occurs EXACTLY ONCE (P-35: a substitution
 that matched zero or two sites is an error, not a pass)."""
+
+# T465 -- the lock's repo-relative path is ASSEMBLED and spliced in at @LOCK@, never spelt.
+# A spelt `.softhouse/`-rooted literal in a tracked instrument is a row in T316's dead-path
+# frontier whenever the fire lock is out of the index -- the state main is in after every fire
+# exit. THE SPLICED VALUES ARE BYTE-IDENTICAL to the literals they replace: this is a change of
+# spelling, not of the patch T202 applied. (The `new` text below is the T202-ERA text; T465 has
+# since re-spelt the same two lines in fire-program.sh, so this archived patch no longer applies
+# cleanly to today's file -- it is a record of what T202 did, not a re-runnable migration.)
+SH_DIR = ".softhouse"
+LOCKPATH = SH_DIR + "/LOCK"
+
 import sys, io
 
 path = sys.argv[1]
@@ -101,7 +112,7 @@ new = '''# T202 — `trap release_lock EXIT INT TERM` released the lock and then
 # all 38 remaining ticks — every one of them logging lock_present=NO — and the
 # script exited **rc=0**. SIGTERM behaved identically. A fire that keeps working
 # while holding no lock is precisely how two orchestrators end up in one repo,
-# which is the one thing .softhouse/LOCK exists to prevent (and STEP 0 of
+# which is the one thing @LOCK@ exists to prevent (and STEP 0 of
 # /softhouse-program with it). A handler that cleans up must also TERMINATE.
 #
 # Disposition, one line of reasoning each:
@@ -130,17 +141,17 @@ trap 'on_signal TERM 143' TERM
 trap 'on_signal HUP  129' HUP
 trap 'on_signal QUIT 131' QUIT
 trap release_lock EXIT
-'''
+'''.replace("@LOCK@", LOCKPATH)
 src = sub(old, new, "T-c trap")
 
 # ---------------------------------------------------------------------- T-b
-old = '''  git add -A -- . ':!.softhouse/LOCK' >/dev/null 2>&1
+old = '''  git add -A -- . ':!@LOCK@' >/dev/null 2>&1
   git -c user.name="Buyan" -c user.email="buya.vol@gmail.com" \\
       commit -q -m "softhouse: rescue uncommitted deliverables left by fire $STAMP (exit-protocol violation)" >/dev/null 2>&1
   log "rescued: committed the leftovers so the next fire can see them"
-'''
+'''.replace("@LOCK@", LOCKPATH)
 new = '''  # T202: `:(top)`-anchored, so the rescue measures the same thing the `git
-  # status` above it measures. The old `-- . ':!.softhouse/LOCK'` was
+  # status` above it measures. The old `-- . ':!@LOCK@'` was
   # CWD-RELATIVE and therefore ASYMMETRIC with the `:(top)` status T190 added —
   # worse than the pre-T190 state, because the two disagreed about their subject.
   # Measured from a subdirectory of a scratch repo: status listed BOTH stranded
@@ -149,7 +160,7 @@ new = '''  # T202: `:(top)`-anchored, so the rescue measures the same thing the 
   # "rescued" is printed only after a commit that actually happened.
   # POLARITY: fail-CLOSED — it now says "NOTHING was rescued" instead of claiming
   # a rescue it did not perform.
-  git add -A -- ':(top)' ':(top,exclude).softhouse/LOCK' >/dev/null 2>&1
+  git add -A -- ':(top)' ':(top,exclude)@LOCK@' >/dev/null 2>&1
   ADD_RC=$?
   if (( ADD_RC != 0 )); then
     log "ERROR: exit-protocol rescue could not stage the leftovers (git add rc=$ADD_RC) — NOTHING was rescued. The paths listed above are still uncommitted; inspect the tree by hand."
@@ -163,7 +174,7 @@ new = '''  # T202: `:(top)`-anchored, so the rescue measures the same thing the 
       log "ERROR: exit-protocol rescue staged the leftovers but the COMMIT FAILED (git commit rc=$COMMIT_RC) — NOTHING was rescued. The paths listed above are still uncommitted; inspect the tree by hand."
     fi
   fi
-'''
+'''.replace("@LOCK@", LOCKPATH)
 src = sub(old, new, "T-b rescue add/commit")
 
 # ---------------------------------------------------------------------- T-a

@@ -4814,3 +4814,62 @@ unless Buyan says otherwise:
 > printed block and the capture rule classify rather than amend, and stand either way. What rejection costs
 > is DEC-2 continuing to publish, first, a cardinal that is false and moves nightly.
 
+
+---
+
+## G-23 — SERVER-SIDE PREVENTION OF `--no-verify` ON `refs/heads/main`
+
+- **id**: G-23 · **class**: ENGINEERING (design + drive) **and** RESERVED (application to live `origin`)
+- **raised_by**: `T465`, from `T461`'s C-T461-4 on the review of `T453`
+- **state**: **OPEN — the RESERVED half only.** The ENGINEERING half is not gated and should be done.
+- **blocks**: nothing today. The post-hoc reconciler already makes a bypass COUNTABLE.
+
+### Why this is being raised as a gate rather than left as a handoff bullet
+
+`T453` recorded it as `FU-T453-3` — *"Server-side prevention of `--no-verify` (GitHub ruleset or
+`pre-receive`). Likely a `user` gate"* — inside a follow-up table in a handoff. A `user` item that
+lives only in a handoff table is an item nobody will ever be asked about: `.softhouse/gates.md` is
+where the driver looks and where Buyan decides, and P-45's rule applies to gates exactly as it
+applies to guards — *a record nobody consults is a record that does not exist.*
+
+### The measured fact that shapes the answer
+
+**`pre-push` is CLIENT-SIDE and `git push --no-verify` turns it off.** `T450` drove a **gitlink** —
+the one check the driver push gate declares unbypassable — onto `refs/heads/main` that way, and the
+gate printed **zero** lines. That is not a hole in the gate; it is what a client-side hook *is*.
+
+**AND `pre-receive` IS NOT AVAILABLE ON github.com.** Server-side hooks are a GitHub **Enterprise
+Server** feature; on github.com there is no way to install one. So the instrument named first in
+`FU-T453-3` does not exist for this repository, and the realistic instrument is a **branch
+ruleset** (or a classic branch protection rule) on `main` — required status checks, and/or a
+restriction on who may push.
+
+### The split, stated so the agent half can proceed without waiting
+
+**ENGINEERING — do it, no gate needed.** Designing the ruleset, and DRIVING it end to end against a
+**throwaway bare remote** created for the purpose, is ordinary work: it spends no money, exposes no
+live endpoint, and binds Gerege to nobody. A drive against a throwaway remote can measure exactly
+what a required-status-check ruleset does to a `--no-verify` push, which is the question.
+
+**RESERVED — escalate, and this is the gate.** APPLYING a ruleset to the live `origin`:
+
+1. needs **repository-admin rights the agent does not hold**, and
+2. **can lock Buyan out of his own `main`.** A required status check that no CI system ever reports
+   makes every push to `main` fail, including the driver's own fire-exit push, and the failure mode
+   is the whole program stopping rather than one task failing.
+
+Under `CLAUDE.md` § Answering gates this is *"anything that would … bind Gerege to a third party"*
+plus a rights fact the agent cannot supply, so it is escalated rather than decided.
+
+### What the driver recommends, `chosen_by: agent`, for Buyan to accept or overrule
+
+> Do the ENGINEERING half now and **do not** apply anything to live `origin` yet. Ship the
+> post-hoc reconciler as the working control — it makes a bypass COUNTABLE one fire late, which is
+> the difference between an escape hatch and a hole — and put the ruleset to Buyan only with a
+> drive transcript showing (a) what it blocks, (b) what it costs a normal driver push, and
+> (c) the exact recovery step if it locks main.
+
+### What Buyan is being asked
+
+Only this: **may a branch ruleset be applied to `main` on the live `origin`, and by whom?**
+Nothing else in this gate needs an answer, and nothing is waiting on it.

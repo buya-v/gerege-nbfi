@@ -20,13 +20,21 @@ LIVE="${HERE}/../../bin/fire-program.sh"
 LIVE="${LIVE:A}"
 MUTANT="${HERE}/fire-program.sh.MOVE-scratch-copy.sh"
 
+# T465 -- THE SITES ARE NOW FOUND BY THE *USE* FRAGMENT, NOT BY THE SPELT PATHSPEC.
+# fire-program.sh declares the lock-exclusion pathspec once and both guard sites use
+# the declared name, because a spelt `.softhouse/`-rooted literal in a tracked
+# instrument is a row in T316's dead-path frontier whenever the fire lock is out of
+# the index -- the state main is in after every fire exit. This demo's property is
+# unchanged: it still binds by CONTENT, never by line number.
+USE_FRAGMENT='"$LOCK_EXCLUDE_PATHSPEC"'
+
 if [[ ! -f "$LIVE" ]]; then
   print -u2 -- "ERROR: live file not found at $LIVE -- cannot build MOVE mutant"
   exit 2
 fi
 
-ORIG_DETECT_LINE=$(LC_ALL=C /usr/bin/grep -n 'git status --porcelain' "$LIVE" | /usr/bin/grep -F ':(top,exclude).softhouse/LOCK' | /usr/bin/cut -d: -f1)
-ORIG_STAGE_LINE=$(LC_ALL=C /usr/bin/grep -n 'git add -A' "$LIVE" | /usr/bin/grep -F ':(top,exclude).softhouse/LOCK' | /usr/bin/cut -d: -f1)
+ORIG_DETECT_LINE=$(LC_ALL=C /usr/bin/grep -n 'git status --porcelain' "$LIVE" | /usr/bin/grep -F "$USE_FRAGMENT" | /usr/bin/cut -d: -f1)
+ORIG_STAGE_LINE=$(LC_ALL=C /usr/bin/grep -n 'git add -A' "$LIVE" | /usr/bin/grep -F "$USE_FRAGMENT" | /usr/bin/cut -d: -f1)
 
 if [[ -z "$ORIG_DETECT_LINE" || -z "$ORIG_STAGE_LINE" ]]; then
   print -u2 -- "ERROR: could not locate original DETECT/STAGE line numbers in the live file -- cannot build a faithful move demo"
@@ -57,8 +65,8 @@ if (( PY_RC != 0 )); then
   exit $PY_RC
 fi
 
-NEW_DETECT_LINE=$(LC_ALL=C /usr/bin/grep -n 'git status --porcelain' "$MUTANT" | /usr/bin/grep -F ':(top,exclude).softhouse/LOCK' | /usr/bin/cut -d: -f1)
-NEW_STAGE_LINE=$(LC_ALL=C /usr/bin/grep -n 'git add -A' "$MUTANT" | /usr/bin/grep -F ':(top,exclude).softhouse/LOCK' | /usr/bin/cut -d: -f1)
+NEW_DETECT_LINE=$(LC_ALL=C /usr/bin/grep -n 'git status --porcelain' "$MUTANT" | /usr/bin/grep -F "$USE_FRAGMENT" | /usr/bin/cut -d: -f1)
+NEW_STAGE_LINE=$(LC_ALL=C /usr/bin/grep -n 'git add -A' "$MUTANT" | /usr/bin/grep -F "$USE_FRAGMENT" | /usr/bin/cut -d: -f1)
 echo "moved (scratch mutant) line numbers:  DETECT=$NEW_DETECT_LINE STAGE=$NEW_STAGE_LINE"
 
 if [[ "$NEW_DETECT_LINE" == "$ORIG_DETECT_LINE" || "$NEW_STAGE_LINE" == "$ORIG_STAGE_LINE" ]]; then

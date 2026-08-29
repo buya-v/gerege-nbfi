@@ -16,7 +16,9 @@
 #
 # FIX SHAPE: population rule, not a second hard-coded anchor. Both sites
 # share one literal pathspec fragment -- the exact quoted argument
-# ':(top,exclude).softhouse/LOCK' -- which appears nowhere else in the file
+# ':(top,exclude)<the lock path>' -- which appeared nowhere else in the
+# file. T465 RE-SCOPED this: the fragment is now DECLARED ONCE in
+# fire-program.sh and USED twice. See the T465 block below.
 # (grep -Fc counted 2, both at the guard sites, measured 22 Aug 2026). This
 # script now:
 #   1. Enumerates EVERY line containing that fragment, by CONTENT, never by
@@ -97,21 +99,75 @@ fi
 # which are ERE metacharacters and add nothing here; -F sidesteps escaping
 # entirely and matches the exact bytes git needs in the pathspec argument.
 #
-# CENSUS_FRAGMENT is deliberately LOOSE (no closing quote): it exists only
-# to FIND every line that is *about* excluding .softhouse/LOCK from this
-# pathspec, even a line where that exclusion has been corrupted. Measured
-# 22 Aug 2026 (T215): an earlier draft of this probe used the closing-quote
-# form as BOTH the census and the well-formedness test in one, and a
-# widened mutant (`':(top,exclude).softhouse/LOCK*'`, the exact shape the
-# T215 driver measurement used) no longer contained that exact substring --
-# so the site VANISHED from the population instead of failing, and the
-# probe passed on the one site, silently. WELLFORMED_FRAGMENT below is the
-# separate, exact check that catches that case as a NAMED per-site failure
-# instead of a shrunken-but-green census (P-22: a census that a defect can
-# shrink out of is a vacuous guard wearing a different hat).
-CENSUS_FRAGMENT=':(top,exclude).softhouse/LOCK'
-WELLFORMED_FRAGMENT="':(top,exclude).softhouse/LOCK'"
+# =========================================================================
+# T465 -- RE-SCOPED, BECAUSE THE THING UNDER TEST CHANGED SHAPE.
+# =========================================================================
+# Until T465 the two guard sites spelt the pathspec INLINE, and this probe
+# bound to that spelling. T465 measured that a spelt `.softhouse/`-rooted
+# literal in ANY tracked instrument is a row in T316's dead-path frontier
+# whenever the fire lock is not in the index -- which is the state main is
+# in after every fire exit, 34 times per 400 commits -- and that the
+# frontier has NO FIXED POINT while it is spelt (pinned at 108 it refuses
+# with added=17 between fires; pinned at 125 it refuses with removed=17
+# during one). So fire-program.sh now DECLARES the fragment once and both
+# sites USE it:
+#
+#     LOCK_EXCLUDE_PATHSPEC=":(top,exclude)$LOCK_REL"      <- DECLARATION
+#     ... -- ':(top)' "$LOCK_EXCLUDE_PATHSPEC" ...         <- USE (x2)
+#
+# THAT MOVES THE MUTATION SURFACE, so this probe follows it rather than
+# pretending it did not move. There are now TWO ways to widen the
+# exclusion and this probe checks BOTH:
+#
+#   * WIDEN THE DECLARATION (`...LOCK*`) -- invisible at the use sites.
+#     Caught by the VALUE check below: the declaration is RECONSTRUCTED by
+#     evaluating the target's own three declaration lines (never
+#     transcribed) and compared against the expected value.
+#   * WIDEN A USE SITE (`"$LOCK_EXCLUDE_PATHSPEC*"`) -- that line no longer
+#     contains the census fragment, so the site VANISHES from the
+#     population. That is exactly the T215 failure mode, and the categorical
+#     floor after the loop (>=1 DETECT and >=1 STAGE) is what turns a
+#     vanished site into a NAMED failure instead of a shrunken-but-green
+#     census. It is load-bearing here, not decorative.
+#
+# NOTHING IN THIS PROBE SPELLS THE LOCK PATH EITHER -- it is assembled from
+# $SH_DIR below, for the same reason and to the same value.
+SH_DIR='.softhouse'
+DECL_NAME='LOCK_EXCLUDE_PATHSPEC'
+EXPECT_PATHSPEC=":(top,exclude)$SH_DIR/LOCK"
+CENSUS_FRAGMENT="\"\$$DECL_NAME\""      # the exact text of a USE site: "$LOCK_EXCLUDE_PATHSPEC"
 TOP_ANCHOR="':(top)'"
+
+# --- the DECLARATION, reconstructed from the target rather than typed ----
+# Each of the three names must be declared EXACTLY ONCE at column 0. Two
+# declarations of the same name is an ambiguity this probe refuses to guess
+# about; zero is the guard having been rewritten to a shape this probe does
+# not know, which is a REFUSAL and never a pass (P-35).
+DECL_TEXT=''
+for NAME in SH_DIR LOCK_REL "$DECL_NAME"; do
+  N_DECL=$(LC_ALL=C "$GREP" -ac -- "^$NAME=" "$TARGET")
+  if (( N_DECL != 1 )); then
+    print -u2 -- "ERROR: expected EXACTLY ONE column-0 declaration of $NAME in $TARGET, found $N_DECL."
+    print -u2 -- "The LOCK-exclusion pathspec cannot be reconstructed, so nothing below would be measuring the live guard. REFUSING (P-35); this is not a pass."
+    exit 2
+  fi
+  DECL_TEXT="$DECL_TEXT$(LC_ALL=C "$GREP" -a -- "^$NAME=" "$TARGET")"$'\n'
+done
+
+LIVE_PATHSPEC=$(REPO='' ; eval "$DECL_TEXT" ; print -r -- "${(P)DECL_NAME}")
+EVAL_RC=$?
+if (( EVAL_RC != 0 )); then
+  print -u2 -- "ERROR: could not evaluate the target's own declaration lines (rc=$EVAL_RC) -- cannot reconstruct the live pathspec."
+  exit 2
+fi
+echo "declaration (reconstructed from $TARGET, never transcribed):"
+print -r -- "  $DECL_NAME = [$LIVE_PATHSPEC]"
+if [[ "$LIVE_PATHSPEC" != "$EXPECT_PATHSPEC" ]]; then
+  print -u2 -- "  FAIL: the DECLARED pathspec is [$LIVE_PATHSPEC], not the expected [$EXPECT_PATHSPEC] -- it appears WIDENED, narrowed or otherwise corrupted at the declaration, where neither use site would show it."
+  exit 1
+fi
+echo "  value OK: exactly the single-file, top-anchored exclusion"
+echo
 
 MATCH_COUNT=$(LC_ALL=C "$GREP" -Fa -c -- "$CENSUS_FRAGMENT" "$TARGET")
 GREP_RC=$?
@@ -187,25 +243,18 @@ for RAW in "${MATCH_LINES[@]}"; do
     continue
   fi
 
-  # well-formedness 2: the pathspec argument must close EXACTLY after
-  # .softhouse/LOCK -- a widened/narrowed exclusion (e.g. trailing `*`
-  # turning it into a glob) still contains CENSUS_FRAGMENT as a substring,
-  # so it stays IN the population count, but it is not the intended
-  # single-file exclusion and must be named as malformed rather than
-  # evaluated as if it were correct.
-  if ! print -r -- "$LINE_TEXT" | "$GREP" -Fq -- "$WELLFORMED_FRAGMENT"; then
-    print -u2 -- "  FAIL: site $SITE_INDEX (line $SITE_LINENO, $SITE_TYPE) matched the LOCK-exclusion census but the pathspec argument is not the exact expected token $WELLFORMED_FRAGMENT -- it appears WIDENED or otherwise corrupted."
-    OVERALL_PASS=0
-    continue
-  fi
-
-  # reference to .softhouse/LOCK must still be present on the line (T210's
-  # existing sanity check, applied per-site now).
-  if ! print -r -- "$LINE_TEXT" | "$GREP" -Fq -- ".softhouse/LOCK"; then
-    print -u2 -- "  STOP: site $SITE_INDEX (line $SITE_LINENO) matched the population fragment but does not reference .softhouse/LOCK at all -- something is inconsistent, refusing to evaluate."
-    OVERALL_PASS=0
-    continue
-  fi
+  # well-formedness 2 [T465]: the pathspec VALUE is no longer spelt on this
+  # line, so it cannot be checked here. It is checked ONCE, above, by
+  # RECONSTRUCTING the declaration from the target's own three declaration
+  # lines and comparing it to the expected value -- which is strictly
+  # stronger than the old per-site substring test, because it also catches a
+  # widening introduced at the declaration, where NO use site would show it.
+  # What remains per-site is that this line USES the declared name in double
+  # quotes; that is exactly what the census fragment matched, so it holds by
+  # construction, and a site that widened the USE (e.g. "...PATHSPEC*") drops
+  # OUT of the population and is caught by the categorical floor after the
+  # loop. That floor is load-bearing for this probe, not decorative (T215).
+  echo "  pathspec: uses the declared $DECL_NAME, whose value was checked above"
 
   # fresh scratch fixture per site so a STAGE site's `git add` (which
   # mutates the index) cannot leak into the next site's evaluation.
@@ -216,6 +265,10 @@ for RAW in "${MATCH_LINES[@]}"; do
   fi
 
   ( builtin cd "$SCRATCH" || exit 2
+    # T465: the site line NAMES the pathspec, so the evaluated line needs the
+    # reconstructed value in scope. It is the value read back OFF THE TARGET
+    # above, never a copy typed here.
+    typeset "$DECL_NAME"="$LIVE_PATHSPEC"
 
     if [[ "$SITE_TYPE" == "DETECT" ]]; then
       eval "$LINE_TEXT"
@@ -231,7 +284,7 @@ for RAW in "${MATCH_LINES[@]}"; do
         echo "  CHECK 1 FAIL: sibling .softhouse/LOCKED_STATE.md was DROPPED from \$DIRTY -- DETECT site is broken"
         SITE_PASS=0
       fi
-      if print -r -- "$DIRTY" | "$GREP" -Fxq -- '?? .softhouse/LOCK'; then
+      if print -r -- "$DIRTY" | "$GREP" -Fxq -- "?? $SH_DIR/LOCK"; then
         echo "  CHECK 2 FAIL: .softhouse/LOCK itself is present in \$DIRTY -- DETECT site is not excluding the real lock file"
         SITE_PASS=0
       else
@@ -256,7 +309,7 @@ for RAW in "${MATCH_LINES[@]}"; do
         echo "  CHECK 1S FAIL: sibling .softhouse/LOCKED_STATE.md was NOT staged -- STAGE site is broken; \`git add -A\` skipped a genuine deliverable and a checkpoint would report success while losing it (the 2026-08-18 17:22 hazard)"
         SITE_PASS=0
       fi
-      if print -r -- "$STAGED" | "$GREP" -Fxq -- '.softhouse/LOCK'; then
+      if print -r -- "$STAGED" | "$GREP" -Fxq -- "$SH_DIR/LOCK"; then
         echo "  CHECK 2S FAIL: .softhouse/LOCK itself was staged -- STAGE site is not excluding the real lock file"
         SITE_PASS=0
       else

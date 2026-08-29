@@ -1,0 +1,4 @@
+# T465 R3 drive -- fixture tip 267d1d1c6b6ef027d3e7d39e8695758e6e6acd3d tree aa3b2d00299ee43e925ef764f123c9e153992bac
+GREEN    exit=0 (want 0)  drift=0 unknown=0  yes
+RED      exit=1 (want 1)  drift=1 unknown=0  yes
+BLANK    exit=0 (want 0)  drift=0 unknown=1  yes

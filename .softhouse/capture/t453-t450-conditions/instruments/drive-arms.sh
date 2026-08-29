@@ -43,6 +43,17 @@
 set -u
 
 ME='drive-arms'
+# T465 -- THE FIRE LOCK'S REPO-RELATIVE PATH, ASSEMBLED. Same reason, and the same shape, as
+# `TCLEAF` below: this file is a TRACKED `.softhouse/*.sh` instrument, so a spelt
+# `.softhouse/`-rooted literal is a row in T316's dead-path frontier. The lock is tracked ONLY
+# WHILE A FIRE HOLDS IT and `release_lock` deletes-and-commits it at every fire exit, so a spelt
+# literal here is a row that ARRIVES at every fire exit. T465 measured the whole population at
+# 17 rows and drove it BOTH WAYS -- pinned at 108 the guard refuses with added=17 after a fire
+# exit, pinned at 125 it refuses with removed=17 during a fire -- i.e. the frontier has NO FIXED
+# POINT while the path is spelt, so pinning is not available and this is repaired at the
+# instrument. Drive and member set: .softhouse/capture/t465-lock-frontier/
+LOCKLEAF='LOCK'
+LOCK_REL=".softhouse/$LOCKLEAF"
 say() { printf '%s: %s\n' "$ME" "$*"; }
 die() { printf '%s: ABORT(%s) -- %s\n' "$ME" "$1" "$2" >&2; exit "$1"; }
 
@@ -163,6 +174,17 @@ else
   say "toolchain     $TOOLCHAIN (DERIVED from the source repo's common dir, announced per go-env.sh)"
 fi
 
+# seed_full WRITES A ROW WITHOUT RUNNING A BAR. It is a SEED, and saying so here is the whole of
+# T465's answer to C-T461-7. The arm it exists for -- CTRL-A-LOCK -- measures what the GATE does
+# with an ADDITION from an attested ancestor; it does not, and was never able to, measure what the
+# BAR does to the prep tree. C-T461-7 pointed out something sharper, and it was correct: before
+# T465, a real FULL attestation for CTRL-A-LOCK's prep tree COULD NOT EXIST, because that tree has
+# the fire lock deleted and a full bar on a lock-released tree took the dead-path frontier to
+# REFUSED added=17 -- a failed HARD guard, exit 2, no probe line. So the seed was standing in for
+# something the program could not produce. T465 repaired the 17 sites, so a lock-released tree is
+# no longer red on that guard and the seed now stands in for something achievable. The seed is
+# still a seed; that limit is stated rather than left to be re-derived.
+# [.softhouse/capture/t453-t450-conditions/CORRECTIONS-T465.md]
 seed_full() {
   printf 'FULL\t%s\t%s\t%s\t%s\n' "$1" "$2" "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" \
     "SEEDED BY T453 drive-arms.sh -- stands in for a bar-attested ancestor" >>"$ATTEST" \
@@ -383,9 +405,9 @@ run_arm CTRL-A-OBSERVATION 'A an observation note -- an addition with no invento
 # and is attested; the measured push then ADDS it back. This is the arm that decides whether an
 # addition rule is a hazard test or a freeze.
 run_arm CTRL-A-LOCK 'A .softhouse/LOCK from an attested base without it -- the fire-lock cycle' '
-  rm -f ".softhouse/LOCK" || exit 1
+  rm -f "$LOCK_REL" || exit 1
 ' '
-  printf "fire 20260829-t453-control\nheld-by: T453 drive control\n" >".softhouse/LOCK"
+  printf "fire 20260829-t453-control\nheld-by: T453 drive control\n" >"$LOCK_REL"
 '
 
 # --------------------------------------------------------------------------------- report

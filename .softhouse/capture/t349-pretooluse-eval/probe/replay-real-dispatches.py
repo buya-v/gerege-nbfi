@@ -25,6 +25,10 @@ import subprocess
 import sys
 
 REPO = sys.argv[1] if len(sys.argv) > 1 else "/Users/buv/gerege-nbfi"
+# T465 -- the fire lock's repo-relative path, ASSEMBLED not spelt: tracked only while held, so
+# a spelt literal is a T316 dead-path frontier row at every fire exit.
+SH_DIR = ".softhouse"
+LOCK_REL = SH_DIR + "/LOCK"
 
 
 def git(*a):
@@ -145,7 +149,7 @@ def content_gate(ev, ids):
     out of the Agent tool_input prompt and the content of origin/main."""
     o = ev["origin_at_spawn"]
     at = tasks_of(o)
-    lock = show(o, ".softhouse/LOCK")
+    lock = show(o, LOCK_REL)
     resume = show(o, ".softhouse/RESUME.md")
     reasons = []
     if at is None:

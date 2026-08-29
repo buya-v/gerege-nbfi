@@ -18,6 +18,10 @@ def sh(*a):
 
 R = "/Users/buv/gerege-nbfi"
 D = os.path.join(R, ".git", "worktrees")
+# T465 -- the lock's repo-relative path is ASSEMBLED, never spelt: it is tracked only while a
+# fire holds it, so a spelt literal is a T316 frontier row that appears at every fire exit.
+SH_DIR = ".softhouse"
+LOCK_REL = SH_DIR + "/LOCK"
 
 print("T279 — push-before-spawn audit of fire 20260828-080001, batch 5 (T307 T332 T334 T279)\n")
 
@@ -30,7 +34,7 @@ first = datetime.datetime.fromtimestamp(batch[0][0])
 print("   FIRST SPAWN: %s\n" % first.isoformat(sep=" ", timespec="seconds"))
 
 print("B. the three things that must be PUSHED before that instant — newest commit on origin/main:")
-for label, path in (("LOCK", ".softhouse/LOCK"),
+for label, path in (("LOCK", LOCK_REL),
                     ("RESUME.md (in-flight manifest)", ".softhouse/RESUME.md"),
                     ("tasks.json (dispatch record)", ".softhouse/tasks.json")):
     print("   %-32s %s" % (label, sh("git", "-C", R, "log", "-1", "--format=%h %cI  %s",

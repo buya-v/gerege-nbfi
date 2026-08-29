@@ -247,6 +247,16 @@ def resolve(dep, cur, arch):
 # evidence says which binary answered rather than leaving it to $PATH at read time.
 GIT = shutil.which("git")
 
+# T465 -- THE LOCK'S REPO-RELATIVE PATH, ASSEMBLED ONCE. It is not spelt as a literal anywhere
+# in this file because the lock is TRACKED WHILE HELD and DELETED-AND-COMMITTED at every fire
+# exit, so a spelt literal is a T316 dead-path frontier row that exists only between fires.
+# Measured on 3f4e236a: lock in the index -> frontier GREEN rows=108; lock out of the index ->
+# REFUSED rows=125 added=17; and with the pin regenerated at 125 and the lock put back,
+# REFUSED removed=17. The frontier has NO FIXED POINT while the path is spelt, so this is
+# repaired rather than pinned. Drive: .softhouse/capture/t465-lock-frontier/
+SH_DIR = ".softhouse"          # no trailing slash: the census matches on `.softhouse/`
+LOCK_REL = SH_DIR + "/LOCK"
+
 # T319 -- the wrapper's lock-take subject, as one constant used by BOTH the parser and
 # every message that quotes it, so the two cannot drift. The RELEASE subject
 # ("softhouse: release local fire lock (...)") deliberately does not start with this.
@@ -602,8 +612,7 @@ def this_fires_lock_commit(lock_fire):
     whose `fire` disagrees with the subject: all return sha=None, and the caller demotes
     nothing. "I could not tell" is never spelled like "these are corpses".
     """
-    rc, out, err = _run([GIT, "log", "-1", "--format=%H%x09%s", "--",
-                         ".softhouse/LOCK"])
+    rc, out, err = _run([GIT, "log", "-1", "--format=%H%x09%s", "--", LOCK_REL])
     if rc is None:
         return None, None, ("could not run git to find the newest commit touching "
                             ".softhouse/LOCK (%s) -- REFUSING" % err)

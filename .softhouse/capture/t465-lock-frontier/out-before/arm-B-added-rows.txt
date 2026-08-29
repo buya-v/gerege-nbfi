@@ -1,0 +1,17 @@
+.softhouse/bin/fire-program.sh | .softhouse/LOCK
+.softhouse/bin/ready-tasks.py | .softhouse/LOCK
+.softhouse/capture/t279-lock-partition/audit-this-fire.py | .softhouse/LOCK
+.softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py | .softhouse/LOCK.
+.softhouse/capture/t325-adopt-attestation/instruments/30-survey-drive.sh | .softhouse/LOCK
+.softhouse/capture/t349-pretooluse-eval/probe/replay-real-dispatches.py | .softhouse/LOCK
+.softhouse/capture/t349-pretooluse-eval/probe/spawn-gate-candidate.py | .softhouse/LOCK
+.softhouse/capture/t350-reconcile-content/bin/50-drive-reconcile.sh | .softhouse/LOCK
+.softhouse/capture/t353-t342-conditions/bin/lock-host-census.sh | .softhouse/LOCK
+.softhouse/capture/t453-t450-conditions/instruments/drive-arms.sh | .softhouse/LOCK
+.softhouse/hooks/push-before-spawn-audit.py | .softhouse/LOCK
+.softhouse/reviews/T189-probe/hardening.sh | .softhouse/LOCK
+.softhouse/reviews/T189-probe/reachability.sh | .softhouse/LOCK
+.softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh | .softhouse/LOCK
+.softhouse/reviews/t172-probe/run-move-demo.sh | .softhouse/LOCK
+.softhouse/reviews/t202-probe/make-mutants-b.py | .softhouse/LOCK
+.softhouse/reviews/t202-probe/patch.py | .softhouse/LOCK

@@ -4,6 +4,12 @@
 # the earlier probe's untracked-.softhouse fixture collapsed to '?? .softhouse/'
 # and could not exercise the LOCK exclusion at all).
 set -u
+# T465 -- the lock-exclusion pathspec is ASSEMBLED, not spelt. The lock is a TRACKED file only
+# while a fire holds it, so a spelt `.softhouse/`-rooted literal in a tracked instrument is a
+# T316 dead-path frontier row that arrives at every fire exit. The value below is byte-identical
+# to the literal it replaces. Drive: .softhouse/capture/t465-lock-frontier/
+SH_DIR='.softhouse'
+LOCK_EXCLUDE=":(exclude)$SH_DIR/LOCK"
 PROBE_DIR="$(cd "$(dirname "$0")" && pwd)"
 S="$PROBE_DIR/scratch2"
 rm -rf "$S"; mkdir -p "$S/.softhouse"
@@ -19,7 +25,7 @@ CB="${CLAUDE_CODE_EXECPATH:-/Users/buv/.local/bin/claude}"
 live()     { git status --porcelain | LC_ALL=C /usr/bin/grep -av '^?? \.softhouse/LOCK$' || true ; }
 wrapped()  { git status --porcelain | ( exec -a ugrep "$CB" -G --ignore-files --hidden -I -av '^?? \.softhouse/LOCK$' ) || true ; }
 proposed() { local o rc
-             o=$(git status --porcelain -- . ':(exclude).softhouse/LOCK'); rc=$?
+             o=$(git status --porcelain -- . "$LOCK_EXCLUDE"); rc=$?
              if (( rc != 0 )); then echo "GIT-STATUS-FAILED-rc=$rc"; return 0; fi
              printf '%s' "$o" ; }
 
@@ -53,6 +59,6 @@ echo
 echo "=== S5  git status FAILS (run outside any repo): who reports it? ==="
 cd /tmp || exit 1
 echo "  live     : [$(git status --porcelain 2>/dev/null | LC_ALL=C /usr/bin/grep -av '^?? \.softhouse/LOCK$' || true)]  <-- empty means 'clean'"
-o=$(git status --porcelain -- . ':(exclude).softhouse/LOCK' 2>/dev/null); rc=$?
+o=$(git status --porcelain -- . "$LOCK_EXCLUDE" 2>/dev/null); rc=$?
 echo "  proposed : rc=$rc  out=[$o]  <-- rc is visible, so the guard can refuse"
 echo "=== DONE ==="
