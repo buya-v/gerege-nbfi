@@ -74,6 +74,29 @@
 # A window in which jobs ran and nothing graded moved is reported QUIESCENT-WITH-RUNS: proven
 # harmless FOR THAT WINDOW, by measurement, rather than by trusting a classification.
 #
+# IS THE RUN LIST COMPLETE? -- SETTLED FROM SOURCE, WITH ITS ONE HOLE NAMED
+# -------------------------------------------------------------------------
+# The run list is only worth reading if EVERY execution lands a job_run_history row.
+# [VERIFIED from the pinned source @ 426a23544:]
+#   * SchedulerJobListener implements Quartz JobListener and is installed with
+#     `schedulerFactoryBean.setGlobalJobListeners(jobListeners)`
+#     [JobRegisterServiceImpl.java:319,322], for BOTH the cron scheduler [:293] and the
+#     temporary scheduler used by a manually triggered execution [:116]. GLOBAL means every
+#     job on that scheduler, not a subscribed subset.
+#   * `jobWasExecuted` [SchedulerJobListener.java:58] builds a ScheduledJobRunHistory and
+#     saves it [:105-108], and it does so on FAILURE too -- `jobException != null` only sets
+#     status=FAILED [:79-80]. Confirmed live: job 30 'Update Trial Balance Details' failed
+#     with a ClassCastException and STILL has its row, jrh 12718 [../out/s2-*.txt s2e].
+#
+# THE HOLE, NAMED RATHER THAN GLOSSED: the row is written when the job FINISHES
+# (`setEndTime(new Date())` [:106]); `jobToBeExecuted` and `jobExecutionVetoed` are EMPTY
+# [:52,:55]. So a job that is IN FLIGHT has NO job_run_history row yet and is invisible in the
+# run list. That is why this instrument also reads `job.currently_running` -- set true when the
+# job claims itself [SchedularWritePlatformServiceJpaRepositoryImpl.java:159] and false in
+# `jobWasExecuted` [:100] -- and REFUSES a window in which any job was in flight at either end.
+# A window whose boundary cuts a running job cannot be certified quiescent by a table that has
+# not been written yet.
+#
 # NAMING THE JOB -- AND REFUSING TO GUESS
 # ---------------------------------------
 # `attribute` lists every job run overlapping a window. If exactly ONE overlaps it is named,
@@ -260,16 +283,24 @@ runs_overlapping() { # runs_overlapping <from-utc-naive> <to-utc-naive>
 # runs_overlapping twice would ask the database two different questions, because a job can
 # start between the two calls -- the exact hazard this instrument exists to detect.
 RUNS_TEXT=""; RUNS_N=0
+RUNS_PRINT_CAP="${ORACLE_WITNESS_RUNS_CAP:-40}"
 print_runs() { # print_runs <from> <to>; sets RUNS_N
-  local rows n=0
+  local rows n=0 shown=0
   rows=$(runs_overlapping "$1" "$2")
   if [ -n "$rows" ]; then
     printf '  %-7s %-6s %-9s %-26s %-26s %s\n' "jrh" "job" "kind" "start (UTC)" "end (UTC)" "name"
     while IFS=$'\t' read -r id jid nm st en stat kind; do
       [ -n "$id" ] || continue
       n=$((n+1))
-      printf '  %-7s %-6s %-9s %-26s %-26s %s [%s]\n' "$id" "$jid" "$kind" "$st" "$en" "$nm" "$stat"
+      # The COUNT is exact and drives the verdict; only the PRINTING is capped. A window of
+      # hours contains hundreds of per-minute runs and an uncapped list buries the verdict.
+      if [ "$shown" -lt "$RUNS_PRINT_CAP" ]; then
+        shown=$((shown+1))
+        printf '  %-7s %-6s %-9s %-26s %-26s %s [%s]\n' "$id" "$jid" "$kind" "$st" "$en" "$nm" "$stat"
+      fi
     done <<< "$rows"
+    [ "$n" -gt "$shown" ] && printf '  ... and %s more run(s) not printed (cap %s; the COUNT below is exact)\n' \
+        "$((n-shown))" "$RUNS_PRINT_CAP"
   fi
   printf '  RUNS OVERLAPPING WINDOW = %s\n' "$n"
   RUNS_N="$n"
@@ -294,6 +325,7 @@ cmd_open() {
   say "  graded rollup = $(rollup "$WIT/$label.open.tsv")"
   say "  db now (UTC)  = $(awk -F'\t' '$2=="db_now_utc"{print $3}' "$WIT/$label.open.tsv")"
   say "  jrh max id    = $(awk -F'\t' '$2=="max_id"{print $3}' "$WIT/$label.open.tsv")"
+  say "  jobs in flight= $(awk -F'\t' '$2=="currently_running"{print $3}' "$WIT/$label.open.tsv")  (job.currently_running)"
   say "  witness       -> $WIT/$label.open.tsv"
   return 0
 }
@@ -351,6 +383,21 @@ cmd_close() {
   fi
   hr
   rm -f "$movedfile"
+
+  # IN-FLIGHT REFUSAL. job_run_history is written only when a job FINISHES, so a job running
+  # across either boundary is absent from the run list above. `job.currently_running` is the
+  # only in-flight signal there is, and a window that cuts a running job cannot be certified.
+  local inflight_open inflight_close
+  inflight_open=$(awk -F'\t' '$2=="currently_running"{print $3}' "$open")
+  inflight_close=$(awk -F'\t' '$2=="currently_running"{print $3}' "$close")
+  if [ "${inflight_open:-0}" != "0" ] || [ "${inflight_close:-0}" != "0" ]; then
+    say "IN FLIGHT: job.currently_running = $inflight_open at open, $inflight_close at close."
+    say "VERDICT: REFUSED (exit 1). A job was RUNNING across a boundary of this window. Its"
+    say "  job_run_history row is not written until it finishes, so the run list above is"
+    say "  INCOMPLETE by construction and this window cannot be certified quiescent."
+    say "  Re-take the witness when no job is in flight."
+    return 1
+  fi
 
   if [ "$nmoved" = "0" ] && [ -z "$onlyopen" ] && [ -z "$onlyclose" ]; then
     if [ "${nruns:-0}" = "0" ]; then
