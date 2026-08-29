@@ -165,7 +165,44 @@ whose **own path carries the magic spelling**, which is correctly *not* refused.
 
 ## GREEN-AFTER
 
-*(filled in below from `evidence/50` — see the arm table.)*
+**On this branch's committed tip, same frozen drive (same SHA-256 as the RED run), the drive
+detecting `pin=yes / empty=yes / round-trip=yes` from the blob itself:
+`=== T431 DRIVE: 18 PASS / 0 FAIL of 18 ===`** [VERIFIED:
+`evidence/50-GREEN-AFTER-all-18-arms-on-this-branch.txt`].
+
+### The four fail-opens, all refused
+
+| arm | on `main` | on this branch | refused by |
+|---|---|---|---|
+| `X`  `:(literal)P` | exit 0, VERDICT: PASS | **exit 2, probe ABSENT** | `THAT WITNESS IS A SYMLINK` |
+| `XT` `:(top,literal)P` | exit 0, VERDICT: PASS | **exit 2, probe ABSENT** | `THAT WITNESS IS A SYMLINK` |
+| `XI` `:(literal,icase)P` | exit 0, VERDICT: PASS | **exit 2, probe ABSENT** | `THAT WITNESS IS A SYMLINK` |
+| `XQ` C-QUOTED | exit 0, VERDICT: PASS | **exit 2, probe ABSENT** | **`DID NOT ROUND-TRIP`** |
+
+### The clean-tree controls that still pass — this is not a guard that refuses everything
+
+| arm | result |
+|---|---|
+| `Z` unmutated | **exit 0, probe PRESENT**, `population=6 … reached-by=1 … symlink-members=0` |
+| `Y` honest independent tracked witness | **exit 0, probe PRESENT**, ACCEPTED at `reached-by=2` |
+| `XM` member whose OWN path carries the magic spelling | **exit 0, probe PRESENT**, ACCEPTED at `reached-by=2` |
+
+`Y` and `XM` are ACCEPTED **under all three of my changes**, so the round-trip test's fixed
+point really is the true witness and it refuses nothing legitimate.
+
+### Nine controls that refuse for their own reasons, unchanged across the repair
+
+`XS` symlink-witness · `XC` multi · `XG` multi · `XX` multi · `XA` untracked ·
+`XB` multi · `XQ0` empty-result — every one exit 2 / probe ABSENT, on both trees.
+
+### `P-22` — which line does what, stated honestly rather than flatteringly
+
+| revert | arm | result | reading |
+|---|---|---|---|
+| `RV1` pin only | `X` | **exit 2**, `DID NOT ROUND-TRIP` | **the pin is not the only line holding `X`.** It is still the right primary fix — it makes the lookup *correct*, where round-trip only *detects* incorrectness — but I will not claim independence I did not measure |
+| `RVQ` round-trip only | `XQ` | **exit 0, probe PRESENT, VERDICT: PASS** | **THE HOLE REOPENS. Round-trip is INDEPENDENTLY NECESSARY.** This is the arm that proves the ratified one-token pin would not have been enough |
+| `RVE` empty-result only | `XQ0` | **exit 2**, `DID NOT ROUND-TRIP` | **the empty-result branch is NOT independently necessary.** It is a better *message*, kept for the reason T404 kept `member_none`. Said plainly so nobody later cites it as coverage |
+| `RV3` all three | `X` | **exit 0, probe PRESENT, VERDICT: PASS** | `main`'s behaviour, reproduced from the fixed tree |
 
 ---
 
@@ -249,13 +286,80 @@ and I am not going to dress them up as though they were.**
 
 ## Bar figures
 
-*(filled in below.)*
+`bash .softhouse/conformance.sh` — **`bash`, never `sh`** — on the finished, COMMITTED tree at
+`20018d18`, with `git status --porcelain` **EMPTY before AND after the run** [VERIFIED:
+`evidence/61-FINAL-BAR-figures-summary.txt`; full transcript
+`evidence/60-FINAL-BAR-clean-committed-tree.txt`, 749 lines].
+
+**`P-84` DISCIPLINE — PRESENCE ESTABLISHED BEFORE VALUE.**
+`grep -c 'probe = '` = **1**, i.e. the probe line was **PRINTED**; *then* its value was read.
+
+| | this branch | stated baseline for `main` at fire start | moved? |
+|---|---|---|---|
+| **exit** | **0** | 0 | no |
+| **probe** | **PRESENT ×1**, reading `up` | PRESENT ×1 `up` | no |
+| **VERDICT** | **PASS — 46 parity vectors, 7884 cells** | 46 / 7884 | no |
+| guards-dir census | `population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0` | same | no |
+| dead-path `deadOccurrences` | **108** | 108 | **no** |
+| fail-open frontier | **11 == pinned 11**, by path | 11 == 11 | no |
+| host-state census | **18 == pinned 18**, by path and source line | — | — |
+| ledger money cells | **63 == pinned 63** | 63 | no |
+| ledger parity vectors | **10 == pinned 10** | 10 | no |
+| exemption census | GROUNDED **4 == 4**, UNGROUNDED **0 == 0** | — | — |
+| `guard_guards_dir_registration` cost | **1 s / ceiling 60 s** | — | — |
+| wrong ledger implementations | **15**, pin 15, all 15 died | **16** on today's `main` | **YES — see below** |
+| T316 corpus | **1454** | 1453 at my fork point | **YES — see below** |
+
+**THE TWO FIGURES THAT MOVED, AND WHY. NEITHER IS CAUSED BY THIS BRANCH'S CHANGE.**
+
+1. **Wrong ledger implementations 15, not 16.** My branch forked from `main` at **`683c8aff`**,
+   and `main` has since advanced to **`e4bde474`**. The *only* `conformance.sh` change on `main`
+   in that window is `EXEMPTION_PIN_LEDGER_WRONGIMPLS=15 → 16` [VERIFIED:
+   `git diff 683c8aff main -- .softhouse/conformance.sh` is exactly that one line, at `:4548`].
+   My tree carries pin 15 and 15 implementations — **internally consistent, and it is the
+   baseline of my fork point, not a regression.** On my tree that constant now sits at `:4694`;
+   **I never touched it, and T407's instruction to match it BY NAME is respected.**
+   **The merge is clean:** that line is ~850 lines below my lowest edit.
+2. **T316 corpus 1454.** `683c8aff` carries **1453** tracked `.softhouse/` `.py`/`.sh` files and
+   my branch carries **1454** — the difference is **exactly `drive-t431.sh`** [VERIFIED: measured
+   both trees with `git ls-tree -r --name-only … | grep -cE '\.(py|sh)$'`]. **`deadOccurrences`
+   did NOT move** (108 → 108), because every planted path in the drive is assembled at run time
+   from a directory variable plus a leaf, so it contributes **zero** CONCRETE repo-rooted
+   literals. **No pin regeneration is required by this branch.** This is the same shape T407
+   recorded for its own drive.
+
+**A NOTE ON THE BASE, so nobody reads a stale figure.** My two RED-BEFORE runs were taken
+against `main` as it stood at the moment each clone was made — the T407-arm run at
+**`ec285e17`** and the 14-arm run at **`e864dd3d`**, both *newer* than my fork point
+[VERIFIED: `git log` inside each arm's clone]. That strengthens the finding rather than weakening
+it: the defect was live on the newest tree available at run time. **The merger should
+re-baseline by RUNNING, not by reading this table.**
 
 ---
 
 ## Unverified
 
-*(filled in below.)*
+Marked here so nothing above is read as measured when it was not.
+
+* **The `sh` vs `bash` and toolchain conditions of the arm runs.** Every arm ran under
+  `go-env.sh`'s announced **FALLBACK** toolchain (`go1.23.4 darwin/arm64` on `PATH`), because the
+  scratch clones in `/tmp` have no `.softhouse/toolchain` [VERIFIED: the banner is in every arm
+  transcript]. **RED and GREEN both ran that way**, so the comparison is like-for-like, but no
+  arm was graded under the pinned toolchain. **[UNVERIFIED for the pinned toolchain.]**
+* **Machine contention.** Up to seven concurrent `conformance.sh` runs from other agents were on
+  this host during the GREEN drive [VERIFIED: `ps`]. No guard breached its wall-clock ceiling in
+  my final bar (worst: `guard_reconciler_ownership` 33 s / 500 s), but the arm timings are not a
+  cost measurement of anything. **[UNVERIFIED as a cost claim.]**
+* **A conflicted index (stage 1/2/3 entries for one path)** would make `git ls-files -s` print
+  several lines for the *same* path, `self_path` would then carry embedded newlines and the
+  round-trip test would REFUSE. **Reasoned from the output format, NOT DRIVEN. [UNVERIFIED.]**
+  The bar requires a clean tree anyway.
+* **I did not re-verify T404's arm table against `evidence/12` and `evidence/13` myself** — T407
+  did, and I record that as T407's measurement, not mine. **[UNVERIFIED by me.]**
+* **`git diff main` is not this branch's diff.** `main` moved during the run. This branch's own
+  diff is `git diff 683c8aff HEAD`: **16 files, +4057 / −29**, touching only
+  `.softhouse/conformance.sh` (+201/−29 of it), my capture directory, and my handoff
+  [VERIFIED].
 
 ---
 
