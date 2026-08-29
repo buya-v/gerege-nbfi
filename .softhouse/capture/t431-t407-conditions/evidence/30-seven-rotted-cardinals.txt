@@ -1,0 +1,29 @@
+T431 -- C-T407-2: the seven cardinals cited in conformance.sh's P-45/P-84 block,
+re-measured on main (683c8aff) BEFORE deletion.
+Command: sed -n '4090p;4109p;4140p;4143p;4585p;4610p;4611p' <main blob>
+
+CITED AS  WHAT IS ACTUALLY AT THAT LINE ON main
+:4090     "
+:4109         warn "conformance: guard-cost: NOT ONE guard was timed. That is a SELECTOR failure, not a"
+:4140           stale=$((stale + 1))
+:4143           warn "conformance: NEVER TIMED. A budget for a guard that no longer runs is a row that will"
+:4585         return 1
+:4610       if [ "$bad" -ne 0 ]; then
+:4611         warn "conformance:"
+
+ALL SEVEN POINT AT AN UNRELATED LINE. :4090 is a bare double-quote -- a citation
+landing mid-string. This is the THIRD rot of this block (T358 wrote them, T375
+pass 2 rotted pass 1 within one task, T404 rotted all seven again with +75).
+
+WHAT THE BLOCK CLAIMS, RE-DERIVED BY NAME ON main -- the remedy that replaces them:
+  grep -n "run_guards\|probe_oracle\|guard_cost_census" .softhouse/conformance.sh
+
+2637:    warn "conformance: outage: run_guards exits 2 BEFORE the probe line is printed (P-84)."
+3847:        warn "conformance: from run_guards, or add its row to the DECLARATION TABLE in this"
+4106:guard_cost_census() {
+4157:    warn "conformance: guard_cost_census FAILED: $GUARD_COST_BREACH ceiling breach(es),"
+4165:run_guards() {
+4215:  guard_cost_census                               || failed=1   # T375, FU-T358-1 / C-T364-4
+4637:probe_oracle() {
+4660:  run_guards
+4685:    probe="$(probe_oracle)"

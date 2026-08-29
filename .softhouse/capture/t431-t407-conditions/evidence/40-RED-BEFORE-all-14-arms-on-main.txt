@@ -1,0 +1,43 @@
+FROZEN drive: /tmp/t431/frozen-red-68013.sh  sha256=f4f0e5845774fe8864019f878868e5aee995f6b60656974457048f7c2283ba2a
+WORK=/tmp/t431/red-68013-1787963341
+=== T431 DRIVE -- src=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a258a385a1a22ca66 ref=main arms=ALL work=/tmp/t431/red-68013-1787963341 ===
+git: git version 2.50.1 (Apple Git-155)
+
+MODE (detected from the ref's own blob, not asserted):
+      witness lookup pinned to :(literal) ... no
+      empty-result refusal present ......... no
+      round-trip refusal present ........... no
+      -> MODE=UNFIXED
+
+T431-Z-healthy-UNMUTATED                     exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T431-Y-healthy-honest-witness                exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+T431-XM-MAGIC-NAMED-member-ACCEPTED          exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+T431-X-literal-FAILOPEN                      exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+T431-XT-top-literal-FAILOPEN                 exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+T431-XI-literal-icase-FAILOPEN               exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+T431-XQ-CQUOTED-FAILOPEN                     exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+T431-XS-no-decoy-REFUSED                     exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T431-XC-plain-REFUSED                        exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T431-XG-glob-REFUSED                         exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T431-XX-exclude-REFUSED                      exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T431-XA-attr-REFUSED                         exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T431-XB-backslash-REFUSED                    exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T431-XQ0-cquoted-no-decoy-REFUSED            exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+
+=== T431 DRIVE: 14 PASS / 0 FAIL of 14 ===
+drive exit=0
+WORK was /tmp/t431/red-68013-1787963341

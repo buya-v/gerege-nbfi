@@ -3164,31 +3164,31 @@ guard_reconciler_ownership() {
 # symptom: without it the run would have printed three plausible "IS INVOKED BY NOTHING" findings
 # about correctly wired checkers, and the next worker would have "fixed" the tree.
 #
-# P-84 SURVIVES UNCHANGED, AND T358 RE-VERIFIED IT STRUCTURALLY AFTER EDITING, NOT FROM
-# TRANSCRIPTS [P-45 — cite the call site by file and line]:
-#   run_guards is DEFINED at conformance.sh:4090 and CALLED at exactly one site, :4585, as a
-#   bare command — not in a subshell and not in a command substitution — so the two `exit`s
-#   inside it, the short-circuit at :4109 and the tally at :4143, terminate the whole shell
-#   rather than returning a status;
-#   probe_oracle is invoked at exactly one site, :4610, and the probe line is printed at :4611,
-#   both strictly DOWNSTREAM of :4585.
-#   guard_cost_census is called from run_guards at :4140, upstream of the tally exit at :4143,
-#   so a WALL-CLOCK CEILING BREACH is also exit 2 with NO probe line and is read by P-84's rule
-#   exactly like any other HARD refusal.
-#
-#   [RE-DERIVED BY T375 PASS 2 AFTER ITS OWN EDITS, WHICH MOVED EVERY ONE OF THESE NUMBERS AGAIN
-#   — pass 1 re-derived them once and pass 2 shifted them by a further ~90 lines, so the figures
-#   pass 1 wrote were already citations to nothing by the time pass 2 committed. P-45 cites a
-#   call site by line; a line cited before the edit that shifts it is a citation to nothing, and
-#   THIS BLOCK HAS NOW ROTTED TWICE INSIDE ONE TASK. That is not an argument for re-deriving
-#   more carefully; it is the standing evidence for the rule the driver adopted in this fire
-#   after measuring a 546-line shift in this same file: MATCH BY NAME, NEVER BY LINE. Every
-#   identifier above is unique in this file and `grep -n` re-derives the whole block in one
-#   command. T364's NOTE-2 is also settled here: T358's block named a single exit that was
-#   guard_graded_root_is_this_tree's SHORT-CIRCUIT, not the TALLY exit a failed
-#   guard_guards_dir_registration actually takes. BOTH are named above, because both are inside
-#   run_guards and either one is upstream of the probe — which is the property that matters and
-#   the reason T364 graded it mechanical.]
+# P-84 SURVIVES UNCHANGED AND IS RE-DERIVED STRUCTURALLY AFTER EVERY EDIT, NOT FROM
+# TRANSCRIPTS [P-45]. THE CITATION IS BY NAME, NOT BY LINE; THE SEVEN LINE NUMBERS THAT
+# STOOD HERE ARE DELETED, AND THIS ONE COMMAND REGENERATES THE WHOLE BLOCK:
+#     grep -n 'run_guards\|probe_oracle\|guard_cost_census' .softhouse/conformance.sh
+#   run_guards is DEFINED once and CALLED at exactly one site, as a bare command — not in a
+#   subshell, not in a command substitution — so both `exit`s inside it, the short-circuit
+#   and the tally, terminate the whole shell rather than returning a status; probe_oracle is
+#   invoked at exactly one site and the probe line printed immediately after it, both
+#   strictly DOWNSTREAM of that call; guard_cost_census runs inside run_guards UPSTREAM of
+#   the tally exit, so a WALL-CLOCK CEILING BREACH is also exit 2 with NO probe line. T364's
+#   NOTE-2 is settled by naming BOTH exits: guard_graded_root_is_this_tree's SHORT-CIRCUIT
+#   and the TALLY exit a failed guards-dir registration takes. Every identifier above is
+#   unique in this file, so the command cannot go stale the way these numbers did.
+#   [DELETED, NOT REFRESHED, BECAUSE THIS BLOCK HAS NOW ROTTED THREE TIMES. T375 pass 2
+#   shifted pass 1's figures inside one task — "ROTTED TWICE INSIDE ONE TASK", its own
+#   words. T404's +75 then rotted ALL SEVEN AGAIN — :4090 :4109 :4140 :4143 :4585 :4610
+#   :4611, each re-measured by T431 on main and each landing on an unrelated line — while
+#   T404's handoff warned other tasks about that shift and applied delete-don't-refresh to
+#   somebody else's cardinals. NOTHING CATCHES IT: the P-number guard grades patterns.md
+#   tokens, not this file's self-citations, so all three rots ran GREEN. "A CORRECTED
+#   CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED" [VERIFIED: .softhouse/patterns.md:2775].
+#   SHOULD A GUARD EXIST, AND WHAT WOULD IT COST? It would have to grade each comment-borne
+#   `:NNN` against an EXPECTED ANCHOR — a second register, kept in step by hand, which is the
+#   same class of artefact that just rotted three times. Cheaper and permanent: HAVE NO
+#   NUMBERS TO GRADE. That is why this remedy is deletion and not a new check.]
 # There is therefore no path on which a HARD guard fails and the probe line is printed.
 # This returns 1 into run_guards' tally, which exits EXIT_UNUSABLE
 # BEFORE probe_oracle prints, so a failure here is exit 2 with NO probe line — "'EXIT 2 WITH NO
@@ -3378,11 +3378,15 @@ drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|led
   local symlinked=0
   local rel base row rowbase dir witness token found
   local self_row self_wit self_norm self_multi
-  local self_stat self_mode self_blob member_stat member_mode member_blob member_multi
+  local self_stat self_mode self_blob self_path member_stat member_mode member_blob member_multi
   # One literal newline, so the multi-line test below is a `case` pattern and starts no second
   # process. Spelled once, here, rather than inside the pattern where it reads as a typo.
-  local CONF_LF
+  local CONF_LF CONF_TAB
   CONF_LF="$(printf '\nx')"; CONF_LF="${CONF_LF%x}"
+  # One literal TAB, for the same reason and spelled the same way. `git ls-files -s`
+  # separates `<mode> <objectid> <stage>` from `<path>` with a TAB and nothing else, so
+  # the round-trip test below can take the path field with parameter expansion alone.
+  CONF_TAB="$(printf '\tx')"; CONF_TAB="${CONF_TAB%x}"
 
   # THE DECLARATION TABLE'S OWN TEXT IS CUT OUT OF THE HAYSTACK BEFORE THE INVOCATION TEST.
   # [T358.] T323 already matched DECLARED rows first "so that the table's own text cannot
@@ -3494,6 +3498,21 @@ TABLETEXT
     # caught by the multi refusal; arm R2 (keep `:(literal)`, disarm the multi refusal) is
     # caught by the symlink refusal; ARM R3 REVERTS BOTH AND THE HOLE REOPENS, which is the
     # P-22 evidence that neither line is decoration.
+    #
+    # READ `member_multi` CORRECTLY, THOUGH, AND DO NOT CITE R1 AS COVERAGE OF A LIVE PATH.
+    # [C-T407-3, T407's qualification of the sentence above; adopted by T431 rather than
+    # argued with.] On any git that HONOURS `:(literal)` — 1.9 and later, i.e. every git this
+    # program will meet — a literal pathspec matches AT MOST ONE index entry, so THIS BRANCH
+    # CANNOT FIRE. Its only driven route is R1, which is a SYNTHETIC REVERT of the very line
+    # that makes it unreachable. That is not an argument for deleting it: it is the
+    # fail-CLOSED backstop for a git that ignores or mis-parses the magic, and it is the
+    # sibling of the empty-result refusal below, which exists for the same hypothetical host.
+    # It is deliberately unreachable-by-construction, kept on purpose, and a later reader
+    # should neither remove it as dead code nor report R1 as evidence that the tree can
+    # produce a multi-match member on a conforming git. The same reading applies verbatim to
+    # `self_multi` on the witness side — with ONE difference that matters: `self_multi` IS
+    # live, because the witness spelling is attacker-typed rather than emitted by git, and
+    # T431's arm XC drives it on a conforming git with no revert of any kind.
     # ─────────────────────────────────────────────────────────────────────────────────────
     member_stat=""; member_mode=""; member_blob=""; member_multi=0
     member_stat="$( cd "$REPO_ROOT" 2>/dev/null && \
@@ -3671,12 +3690,99 @@ INNER
         # `member_blob` is ALREADY IN HAND — it was read at the top of this loop iteration, by
         # the symlink refusal above, from the same `git ls-files -s` call. It is not re-read
         # here: two reads of one quantity are two chances to disagree.
-        self_stat=""; self_mode=""; self_blob=""
+        # THIS SECOND LOOKUP IS PINNED TO `:(literal)`, AND AN EMPTY RESULT IS A REFUSAL.
+        # [T431, closing C-T407-1 / FU-T404-1 — the residual T404 disclosed against itself and
+        # rated unreachable, and T407 then reached on T404's own fixed tree. Both halves are
+        # driven RED before and GREEN after; see the arm table below.]
+        #
+        # THE DEFECT, AND WHY "UNREACHABLE" WAS WRONG. T404 pinned the MEMBER-side lookup to
+        # `:(literal)$rel` and left this one a bare pathspec, arguing that no witness spelling
+        # could reach it: the literal spelling trips `self_multi`, and every non-literal
+        # spelling was said to fail the `-f` existence test on the TYPED spelling. THAT BOUND
+        # WAS ON THE SEARCH, NOT ON THE DEFECT. `-f` runs on `"$REPO_ROOT/$self_wit"`, which
+        # for a magic-prefixed witness is an ORDINARY RELATIVE FILESYSTEM PATH — and an
+        # attacker already planting files inside their own edit grant simply CREATES it, as a
+        # real tracked directory literally named `:(literal).softhouse`. The two git calls then
+        # disagree, because only the first carries the magic:
+        #
+        #   git ls-files --error-unmatch -- ":(literal)<dir>/w?.txt"   ONE line  -> self_multi
+        #                                                              never fires; self_norm
+        #                                                              is the bare globby path
+        #   git ls-files -s              -- "<dir>/w?.txt"             TWO lines -> the 100644
+        #                                                              DECOY sorts first, so
+        #                                                              self_mode and self_blob
+        #                                                              are the WRONG FILE'S
+        #
+        # T375's symlink-WITNESS refusal and T375's byte-identical-blob refusal are disabled at
+        # the same instant — the identical disablement T404 closed one call earlier on the
+        # member side. MEASURED ON UNMODIFIED main [T431 arm X, re-driven from T407's grant]:
+        # the WHOLE BAR at exit 0, probe PRESENT, VERDICT: PASS, an unwired planted checker
+        # ACCEPTED at reached-by=2, and this function printing its own
+        # "(verified: it names <base>)" sentence over a witness that is A SYMLINK TO THE MEMBER
+        # ITSELF. A file may not vouch for itself; that is the sentence this direction exists
+        # to print, defeated by one prefix.
+        #
+        # IT IS A CLASS, NOT A SPELLING, AND THE PIN CLOSES THE CLASS. Measured on git 2.50.1
+        # (Apple Git-155) [T431, evidence 20-probe-magic-neighbourhood]: THREE typed spellings
+        # reach this call with `self_multi` unset and a two-line plain re-lookup —
+        # `:(literal)P`, `:(top,literal)P` and `:(literal,icase)P`. What they share is that git
+        # resolves ONE index entry while the DE-MAGICKED output still globs; the pin fixes all
+        # three at once, because it is applied to the OUTPUT and every route has already
+        # collapsed to the same bare path by the time this line runs. THE NEIGHBOURS THAT DO
+        # NOT REACH IT WERE MEASURED, NOT ASSUMED, AND THEY ARE REFUSED FOR THEIR OWN REASONS:
+        # `:(glob)`, `:(icase)`, `:(top)`, `:/` and the bare `:` short form all keep globbing,
+        # return two lines and trip `self_multi`; `:!`, `:^` and `:(exclude)` are
+        # exclusion-only, match every OTHER tracked path, and trip `self_multi` with many;
+        # `:(attr:x)` matches nothing, so `--error-unmatch` exits non-zero, `self_norm` is
+        # empty and the untracked refusal fires.
+        #
+        # ONE CORRECTION TO T404's OWN REASONING, WHICH REACHES THE SAME CONCLUSION BY A
+        # DIFFERENT ROUTE. T404 said a BACKSLASH-ESCAPED spelling `<dir>/w\?.txt` is stopped by
+        # the `-f` test. That is only true while the attacker does not plant a real file of
+        # that literal name — and planting one is the same move that defeats `-f` for the magic
+        # spelling. MEASURED with the pacifier file tracked: `--error-unmatch` then returns
+        # TWO lines, because git tries EXACT LITERAL EQUALITY (the pacifier) as well as
+        # wildmatch (the globbed sibling), so `self_multi` fires and the route is closed —
+        # by the multi refusal, NOT by `-f`. The conclusion stands; the stated reason did not.
+        #
+        # TWO MORE REFUSALS BELOW, AND THE PIN ALONE IS NOT ENOUGH WITHOUT THEM. `self_norm` is
+        # the OUTPUT of a pathspec lookup, and `git ls-files` C-QUOTES any path carrying a
+        # non-ASCII byte, a backslash, a double quote, a control character or a newline,
+        # printing it WRAPPED IN LITERAL DOUBLE QUOTES — MEASURED: `"d/w\303\251.txt"`, and
+        # `core.quotePath=false` still quotes the backslash and dquote cases. This is T407's
+        # `FU-T407-1`, which T407 recorded as reasoned-not-driven; T431 drove it, and it is
+        # WORSE than the reasoning predicted.
+        #
+        #   (a) EMPTY RESULT. If nothing is tracked at the C-quoted literal text, the pinned
+        #       lookup returns nothing, `self_mode` and `self_blob` are EMPTY, and the mode
+        #       test and the blob test are BOTH skipped at once — the whole mechanism of this
+        #       family. `[ -z "$self_stat" ]` refuses it. This is the exact sibling of the
+        #       `member_none` branch T404 added above, written for the same reason.
+        #   (b) NON-EMPTY BUT THE WRONG FILE — AND NEITHER THE PIN NOR (a) CATCHES IT.
+        #       MEASURED [T431 arm XQ]: an attacker who CREATES a tracked file whose literal
+        #       name IS the C-quoted rendering makes the pinned lookup succeed on that DECOY,
+        #       mode `100644`, decoy blob, while the real witness stays a symlink to the
+        #       member; the closing `grep` then reads the decoy too, and the member is
+        #       ACCEPTED vouching for itself. `[ "$self_path" != "$self_norm" ]` refuses it —
+        #       the lookup must round-trip, i.e. the path git hands back must be the path
+        #       that was asked for. Its only fixed point is the true witness: a plain tracked
+        #       path is its own `ls-files` rendering, so it refuses nothing legitimate, and
+        #       the healthy control `Y` is ACCEPTED under it [T431 arm Y].
+        #
+        # NO PIPELINE, for the reason P-57 gives and this function keeps everywhere else
+        # [VERIFIED: .softhouse/patterns.md:1654]. `git ls-files -s` prints
+        # `<mode> <objectid> <stage>\t<path>`; the two fields are taken with shell parameter
+        # expansion, which starts no second process and cannot EPIPE.
+        # `member_blob` is ALREADY IN HAND — it was read at the top of this loop iteration, by
+        # the symlink refusal above, from the same `git ls-files -s` call. It is not re-read
+        # here: two reads of one quantity are two chances to disagree.
+        self_stat=""; self_mode=""; self_blob=""; self_path=""
         if [ -n "$self_norm" ] && [ "$self_multi" -eq 0 ]; then
           self_stat="$( cd "$REPO_ROOT" 2>/dev/null && \
-            git ls-files -s -- "$self_norm" 2>/dev/null )" || self_stat=""
+            git ls-files -s -- ":(literal)$self_norm" 2>/dev/null )" || self_stat=""
           self_mode="${self_stat%% *}"
           self_blob="${self_stat#* }"; self_blob="${self_blob%% *}"
+          self_path="${self_stat#*"$CONF_TAB"}"
         fi
         if [ -z "$self_wit" ]; then
           bad=1
@@ -3719,6 +3825,43 @@ INNER
           warn "conformance: path reaching THROUGH a symlinked directory, which git never"
           warn "conformance: indexes. Either way the refusal stands: a spelling git cannot"
           warn "conformance: resolve cannot be re-verified on another checkout [T375 pass 2].)"
+        elif [ -z "$self_stat" ]; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
+          warn "conformance: which git RESOLVED to '$self_norm' — and that resolved path then"
+          warn "conformance: matched NO INDEX ENTRY when handed straight back to git as a"
+          warn "conformance: LITERAL pathspec. A witness this function cannot re-find is"
+          warn "conformance: ungradeable, and it must never fall through to the tests below with"
+          warn "conformance: an EMPTY mode and an EMPTY blob — that skips the symlink refusal"
+          warn "conformance: AND the byte-identical refusal AT ONCE, which is the entire"
+          warn "conformance: mechanism of this family [T431, closing T407's FU-T407-1; the"
+          warn "conformance: sibling of the member-side refusal above, added by T404]. The usual"
+          warn "conformance: cause is a path 'git ls-files' C-QUOTES — one carrying a non-ASCII"
+          warn "conformance: byte, a backslash, a double quote, a control character or a newline"
+          warn "conformance: — which arrives here WRAPPED IN LITERAL DOUBLE QUOTES that match no"
+          warn "conformance: index entry, while the grep below would still read a filesystem"
+          warn "conformance: path containing those quotes. Name a witness with a plain ASCII"
+          warn "conformance: path. REFUSED."
+        elif [ "$self_path" != "$self_norm" ]; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
+          warn "conformance: and THE WITNESS LOOKUP DID NOT ROUND-TRIP. git resolved that"
+          warn "conformance: witness to '$self_norm', and asking git for THAT path as a literal"
+          warn "conformance: pathspec returned a DIFFERENT tracked path, '$self_path'. Every"
+          warn "conformance: test in this direction — the mode, the blob, and the grep that"
+          warn "conformance: reads the file — would then grade a file the declaration never"
+          warn "conformance: named. THIS IS NOT HYPOTHETICAL AND IT DEFEATS THE ':(literal)'"
+          warn "conformance: PIN ON ITS OWN [T431, driven as arm XQ]: git C-QUOTES a path"
+          warn "conformance: carrying a non-ASCII byte, a backslash, a quote, a control"
+          warn "conformance: character or a newline, so the resolved witness comes back as the"
+          warn "conformance: literal text '\"d/w\\303\\251.txt\"' — and an attacker who CREATES a"
+          warn "conformance: tracked file of exactly that literal name makes the pinned lookup"
+          warn "conformance: match the DECOY, with a 100644 mode and the decoy's blob, while"
+          warn "conformance: the real witness stays a symlink to the member. The mode refusal"
+          warn "conformance: and the blob refusal are both disabled and the grep reads the"
+          warn "conformance: decoy. Only this equality catches it. The healthy case is exact:"
+          warn "conformance: a plain tracked path is its own ls-files rendering, so this test"
+          warn "conformance: refuses nothing legitimate. Name a plain ASCII witness. REFUSED."
         elif [ "$self_mode" = "120000" ]; then
           bad=1
           warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"

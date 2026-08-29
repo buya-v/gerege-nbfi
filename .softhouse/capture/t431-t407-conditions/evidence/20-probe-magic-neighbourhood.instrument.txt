@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# T431: map git's pathspec-magic neighbourhood empirically. No claim below is asserted;
+# every line is measured.
+set -u
+R="/tmp/t431/magicprobe-$$"
+rm -rf "$R"; mkdir -p "$R"
+cd "$R" || exit 2
+git init -q .
+git config user.email t431@x; git config user.name t431
+echo "git version: $(git --version)"
+echo "core.ignorecase: $(git config core.ignorecase)"
+echo
+
+mkdir -p d
+printf 'decoy\n' > d/w1.txt
+ln -s ../../d/w1.txt d/link-target 2>/dev/null
+printf 'member\n' > d/m.sh
+ln -s m.sh 'd/w?.txt'
+# a real tracked directory whose NAME is each magic prefix
+for pfx in ':(literal)' ':(top,literal)' ':(glob)' ':(icase)' ':(top)' ':' ':/' ':!' ':^' ':(exclude)' ':(attr:x)' ':(literal,icase)'; do
+  mkdir -p "$pfx""d" 2>/dev/null && printf 'magicdir decoy\n' > "$pfx""d/w?.txt" 2>/dev/null
+done
+git add -A >/dev/null 2>&1
+git commit -qm x >/dev/null 2>&1
+echo "=== INDEX ==="
+git ls-files -s
+echo
+
+probe() { # probe <label> <typed-spelling>
+  local label="$1" typed="$2" em n norm sn nn fexist
+  if [ -e "$typed" ] || [ -f "$typed" ]; then fexist=YES; else fexist=NO; fi
+  em="$(git ls-files --error-unmatch -- "$typed" 2>&1)"; local rc=$?
+  n="$(printf '%s' "$em" | grep -c . )"
+  printf '%-22s  -f=%-3s  em_rc=%-2s  em_lines=%-2s  ' "$label" "$fexist" "$rc" "$n"
+  if [ "$rc" != 0 ]; then printf 'em_err=<%s>\n' "$(printf '%s' "$em" | head -1)"; return; fi
+  if [ "$n" != 1 ]; then printf 'MULTI -> self_multi fires\n'; return; fi
+  norm="$em"
+  sn="$(git ls-files -s -- "$norm" 2>/dev/null)"; nn="$(printf '%s' "$sn" | grep -c .)"
+  local snl; snl="$(git ls-files -s -- ":(literal)$norm" 2>/dev/null)"
+  local nl; nl="$(printf '%s' "$snl" | grep -c .)"
+  printf 'norm=<%s> plain2nd=%s mode1=%s | pinned2nd=%s mode1=%s\n' \
+    "$norm" "$nn" "$(printf '%s' "$sn" | sed -n '1s/ .*//p')" \
+    "$nl" "$(printf '%s' "$snl" | sed -n '1s/ .*//p')"
+}
+
+echo "=== TYPED SPELLINGS OF THE WITNESS d/w?.txt ==="
+probe 'plain'          'd/w?.txt'
+probe 'literal'        ':(literal)d/w?.txt'
+probe 'top,literal'    ':(top,literal)d/w?.txt'
+probe 'literal,icase'  ':(literal,icase)d/w?.txt'
+probe 'glob'           ':(glob)d/w?.txt'
+probe 'icase'          ':(icase)d/w?.txt'
+probe 'top'            ':(top)d/w?.txt'
+probe 'colonslash'     ':/d/w?.txt'
+probe 'bang'           ':!d/w?.txt'
+probe 'caret'          ':^d/w?.txt'
+probe 'exclude'        ':(exclude)d/w?.txt'
+probe 'attr'           ':(attr:x)d/w?.txt'
+probe 'shortmagic-colon' ':d/w?.txt'
+probe 'backslash-esc'  'd/w\?.txt'
+echo
+echo "=== C-QUOTING: does ls-files quote non-ASCII / control-char paths? ==="
+mkdir -p q
+printf 'quoted witness naming m.sh\n' > "q/w$(printf '\303\251').txt"
+printf 'quoted witness with a backslash\n' > 'q/w\b.txt'
+printf 'quoted witness with a dquote\n' > 'q/w"d.txt'
+git add -A >/dev/null 2>&1
+git commit -qm q >/dev/null 2>&1
+git ls-files -- q
+echo "--- with core.quotePath=false ---"
+git -c core.quotePath=false ls-files -- q
+echo "--- error-unmatch output for the non-ascii one ---"
+git ls-files --error-unmatch -- "q/w$(printf '\303\251').txt"
+echo "--- and for the backslash one ---"
+git ls-files --error-unmatch -- 'q/w\b.txt' 2>&1 | head -3
+echo "--- and for the dquote one ---"
+git ls-files --error-unmatch -- 'q/w"d.txt' 2>&1 | head -3
+echo
+echo "REPO=$R"

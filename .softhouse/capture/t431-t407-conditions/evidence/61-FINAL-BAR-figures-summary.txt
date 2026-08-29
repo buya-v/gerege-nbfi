@@ -1,0 +1,70 @@
+=== git status --porcelain BEFORE the run (must be EMPTY) ===
+=== HEAD ===
+20018d18 T431: GREEN-AFTER, 18 arms on this branch — 18 PASS / 0 FAIL
+=== running: bash .softhouse/conformance.sh (bash, never sh) ===
+EXIT=0
+=== P-84 DISCIPLINE: PRESENCE of the probe line BEFORE its value ===
+probe line count = 1
+201:conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+=== VERDICT ===
+713:VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+=== pins / populations ===
+28:conformance:   census figure READ: inspected 574 >= 574 tracked by git (floor DERIVED, not pinned)
+32:conformance:   census figure READ: inspected 63 >= 63 tracked by git (floor DERIVED, not pinned)
+52:ledger-invariants:   census figure READ: inspected 65 >= 65 tracked by git (floor DERIVED, not pinned)
+98:conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-a258a385a1a22ca66 (git ls-files, whole repository); frontier 11, pinned at 11
+102:conformance:   printing arm only, corpus reachable today. All are pinned by PATH, not by count.
+103:conformance:   frontier == pinned (all 11 rows, by path).
+106:conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
+110:conformance:   census == pinned (all 18 site(s), by path and source line).
+130:conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+136:conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+154:conformance:   tree. The lookup is pinned to ':(literal)' and a member resolving to more
+165:conformance:   namespace:       DECLARED   capture/t255-frontier-rot                    by .softhouse/capture/t255-frontier-rot/OWNER-IS-T258-NOT-T255.md
+172:conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+173:conformance:   T316-DEADPATH-CENSUS: corpus=1454 deadFiles=75 deadOccurrences=108 resolving=1387 indeterminate=114 prose=381
+190:conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
+192:conformance:     COST 1s / ceiling 60s   guard_dead_path_frontier
+196:conformance:   well as the tree. What is pinned, by NAME: every guard has a ceiling row,
+284:    The two are NEVER merged. A MONEY kill separates the oracle from a wrong implementation by a
+291:    schedule.core                              killed by EMI-DENOMINATOR-USES-NUMBER-OF-REPAYMENTS-NOT-PERIODS-AFTER-DISBURSEMENT, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, G8-FINAL-ROW-SETTLES-THE-BALANCE, G8-FINAL-ROW-SETTLES-THE-BALANCE, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-SEGMENT-TEXTBOOK-BALANCE-TIMES-RATEFACTOR, INTEREST-SEGMENT-TEXTBOOK-BALANCE-TIMES-RATEFACTOR, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, MONEY-QUANTIZATION-HALF-EVEN, MONEY-QUANTIZATION-HALF-EVEN, MONEY-QUANTIZATION-HALF-EVEN, MONEY-QUANTIZATION-HALF-EVEN, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, RATE-FACTOR-WITHOUT-TRAILING-SETSCALE, ROW-ORDER-SORT-BY-DATE-DISBURSEMENT-FIRST [structural], STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, ZP-GUARD-NONSTRICT, ZP-GUARD-NONSTRICT, ZP-GUARD-NONSTRICT, ZP-GUARD-SCALES-THE-INSTALLMENT, ZP-GUARD-SCALES-THE-INSTALLMENT, ZP-GUARD-SCALES-THE-INSTALLMENT, ZP-RESIDUAL-NO-RECURSION, ZP-RESIDUAL-NO-RECURSION-AT-THE-G8-BOUNDARY
+356:    alone, in the EXEMPTION GROUNDING section below: the exempted invariant is re-run against the
+365:        REASON: GATE G-8, FAMILY B, EXEMPTED BECAUSE THE REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE -- not because the port is being excused. The oracle advances 1 minor unit and its own principal column repays 0: every repayment row carries principal 0.00 and its totalPrincipalAmount reads 0.00. The Go port reproduces that CELL FOR CELL (0 divergent cells over this vector's graded money cells, measured; see graded_against evidence), so there is no port-vs-oracle divergence for this invariant to arbitrate: asserting it here would be asserting that the ORACLE is wrong, which is a graded-domain amendment and a hard `user` gate (G-8 options (b) and (c)), not a check the harness may make on its own authority. THE EXEMPTION IS SCOPED TO THIS ONE CAPTURED SHAPE. It is NOT a statement that 600.0 % p.a. is exempt: the sibling vector T116-G8-CLEAN-N103, one repayment shorter at the same rate and the same principal, amortizes normally and carries NO exemption at all.
+373:        REASON: GATE G-8, FAMILY B, EXEMPTED BECAUSE THE REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE -- not because the port is being excused. The oracle advances 1 minor unit and its own principal column repays 0: every repayment row carries principal 0.00 and its totalPrincipalAmount reads 0.00. The Go port reproduces that CELL FOR CELL (0 divergent cells over this vector's graded money cells, measured; see graded_against evidence), so there is no port-vs-oracle divergence for this invariant to arbitrate: asserting it here would be asserting that the ORACLE is wrong, which is a graded-domain amendment and a hard `user` gate (G-8 options (b) and (c)), not a check the harness may make on its own authority. THE EXEMPTION IS SCOPED TO THIS ONE CAPTURED SHAPE. It is NOT a statement that 600.0 % p.a. is exempt: the sibling vector T116-G8-CLEAN-N103, one repayment shorter at the same rate and the same principal, amortizes normally and carries NO exemption at all.
+381:--- EXEMPTION GROUNDING (every exemption re-run against the schedule ITS OWN VECTOR recorded) ---
+399:--- EXEMPTION CITATIONS (which observation each admissible exemption rests on) ---
+489:    ledger cells compared   268 graded, of which 63 are MONEY cells in int64 minor units
+495:                                        INADMISSIBLE, so this figure is pinned at 0 by
+498:                            27 HTTP-SIDECAR, 3 FILE-NAME-ONLY (pinned 3), 0 UNRESOLVED.
+501:                            evidence about the artefact, it is pinned by (case_id, field) in
+508:      divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+713:VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+722:conformance:   exemption census READ: exempted assertions (graded) = 4 == pinned 4
+723:conformance:   exemption census READ: declared exemptions (loaded) = 4 == pinned 4
+724:conformance:   exemption census READ: GROUNDED                     = 4 == pinned 4
+725:conformance:   exemption census READ: UNDETERMINED-ON-THE-RECORD   = 0 == pinned 0
+726:conformance:   exemption census READ: UNGROUNDED                   = 0 == pinned 0
+727:conformance:   exemption census READ: LEDGER declared exemptions   = 0 == pinned 0
+728:conformance:   exemption census READ: LEDGER parity vectors        = 10 == pinned 10
+729:conformance:   exemption census READ: LEDGER oracle-refusal vector = 6 == pinned 6
+730:conformance:   exemption census READ: LEDGER money cells compared  = 63 == pinned 63
+731:conformance: CENSUS wrong ledger implementations — discovered 15 registered as DELIBERATELY
+732:conformance:   WRONG from the binary's own -list-implementations; pinned at
+749:conformance:   all 15 wrong ledger implementations DIED through this harness, not by hand.
+=== guard cost lines ===
+179:conformance:     COST 0s / ceiling 60s   guard_graded_root_is_this_tree
+180:conformance:     COST 1s / ceiling 60s   guard_no_float_in_vectors
+181:conformance:     COST 1s / ceiling 60s   guard_no_float_in_harness
+182:conformance:     COST 0s / ceiling 60s   guard_gofmt
+183:conformance:     COST 1s / ceiling 60s   guard_no_float_in_capture_requests
+184:conformance:     COST 1s / ceiling 60s   guard_no_narrow_catch_in_capture_rigs
+185:conformance:     COST 3s / ceiling 300s   guard_ledger_invariants
+186:conformance:     COST 6s / ceiling 60s   guard_no_fail_open_instruments
+187:conformance:     COST 1s / ceiling 60s   guard_no_host_state_in_lint_corpus
+188:conformance:     COST 19s / ceiling 300s   guard_pnumber_citations
+189:conformance:     COST 0s / ceiling 60s   guard_accepting_side_gap_declared
+190:conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
+191:conformance:     COST 1s / ceiling 60s   guard_capture_namespace
+192:conformance:     COST 1s / ceiling 60s   guard_dead_path_frontier
+193:conformance:     COST 33s / ceiling 500s   guard_reconciler_ownership
+=== git status --porcelain AFTER ===
