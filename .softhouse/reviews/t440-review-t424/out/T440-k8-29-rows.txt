@@ -1,0 +1,44 @@
+T440 -- the 29 wide-K8 rows on the AFTER ref, partitioned mechanically.
+source: out/T440-census-after.txt (the '--- K8' block, verbatim)
+
+TOTAL K8 rows            : 29
+  sel calls              : 13
+  SWEEP_*=$((...)) rows  : 10
+  neither (parent-side)  : 6
+
+AUDIT-CLASS.md and T424's handoff say 16 + 8 + 6 = 30, which is neither the measured
+partition (13 / 10 / 6) nor its own stated total of 29. [T440 C-T440-2]
+
+There ARE sixteen sel calls in the file; three of them (S1, S3, S7) use -F patterns with
+no '|' in them, so they never match K8_RIGHT and never reach this list. That is the
+likely origin of the 16.
+
+     1	     145 | SWEEP_ERRF=$(mktemp "${TMPDIR:-/tmp}/casualty-sweep-stderr.XXXXXXXXXX") || {
+     2	     490 |     SWEEP_REFUSED=$((SWEEP_REFUSED+1)); SWEEP_RC=3
+     3	     509 |       SWEEP_REFUSED=$((SWEEP_REFUSED+1))
+     4	     517 |       SWEEP_REFUSED=$((SWEEP_REFUSED+1))
+     5	     522 |   SWEEP_SELECTORS=$((SWEEP_SELECTORS+1))
+     6	     535 |     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+     7	     544 |     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+     8	     552 |     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+     9	     588 |     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+    10	     596 |     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+    11	     603 |     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+    12	     659 | SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?
+    13	     680 | if ! SWEEP_COMMIT=$(git rev-parse --short HEAD); then SWEEP_COMMIT="UNMEASURED"; fi
+    14	     681 | if ! SWEEP_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ); then SWEEP_DATE="UNMEASURED"; fi
+    15	     682 | SWEEP_UNTRACKED_N=$(git ls-files --others --exclude-standard .softhouse | grep -c .); _unt_rc=$?
+    16	     684 | case "$SWEEP_UNTRACKED_N" in ''|*[!0-9]*) SWEEP_UNTRACKED_N="UNMEASURED" ;; esac
+    17	     693 | sel "S2  the standing-baseline pin format 'gerege <table> = '" -n -E 'gerege (acc_gl_journal_entry|acc_gl_closure|distinct_transaction_id|m_portfolio_
+    18	     697 | sel "S4  per-account leg counts spelled as words in the capability store" -n -E 'gl 16 (carries|->) (SIXTEEN|TWENTY)|is TWELVE|gl 17 is|gl 21 is'
+    19	     698 | sel "S5  per-account leg counts spelled as digits" -n -E 'gl (16|17|18|21|22) (->|=) [0-9]+'
+    20	     701 | sel "S6  'every row currency_code = MNT' and its relatives" -n -E 'every row currency_code|every journal entry (in the corpus )?is MNT|Every entry is 
+    21	     703 | sel "S8  MULTI-CURRENCY untouched claims" -n -E 'MULTI-CURRENCY untouched|no cross-currency|multi.currency entry'
+    22	     706 | sel "S9  does the conformance harness or a guard reach the tenant database at all?" -n -E 'psql|docker exec|fineract-db-1'
+    23	     707 | sel "S10 count(*) over the ledger tables in an executable" -n -E 'count\(\*\).{0,40}acc_gl_journal_entry|acc_gl_journal_entry.{0,40}count\(\*\)'
+    24	     708 | sel "S11 the ledger invariant guard's own pins" -n -E 'EXEMPTION_PIN|parity vectors|LEDGER_.*PIN'
+    25	     726 | sel "S12 a command-source STATUS SPLIT written as a cardinal" -n -E '[0-9]+ (PROCESSED|ERROR|REJECTED|INVALID|AWAITING_APPROVAL|UNDER_PROCESSING)'
+    26	     727 | sel "S13 present-tense 'the <thing> is/are/now <digits>' about a live counter" -n -E '(split|count|total|tally) (is|are|now) [*]*[0-9]'
+    27	     728 | sel "S14 'N rows' / 'max id N' prose pins over any watched table" -n -E '[0-9]+ rows|max id [0-9]+'
+    28	     729 | sel "S15 a digit sitting next to a watched table name, either order" -n -E '(acc_gl_journal_entry|acc_gl_closure|m_portfolio_command_source|m_office|m
+    29	     730 | sel "S16 status-enum prose, which is where a stale split tends to sit" -n -E 'status *= *5|status 5|CommandProcessingResultType'
