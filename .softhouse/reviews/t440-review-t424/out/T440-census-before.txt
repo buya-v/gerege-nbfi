@@ -1,0 +1,200 @@
+T402 STATUS-LOSS CLASS CENSUS
+  ref     : 964b532e
+  file    : .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh
+  sha256  : 1fa6acfe6a24588cfdab967caa3a1710695f3ac503ad2e2c061b0429ba88e923
+  lines   : 469
+
+  executable (non-blank, non-comment) lines: 221
+
+--- K1  COMMAND SUBSTITUTION  $(...)
+     121 | SWEEP_ERRF=$(mktemp "${TMPDIR:-/tmp}/casualty-sweep-stderr.XXXXXXXXXX") || {
+     127 | _top=$(git rev-parse --show-toplevel 2>/dev/null) || _top=""
+     166 | CALIB_NEG_STR="zzq-t371-anticalibration-sentinel-$$-${RANDOM}-$(date -u +%s)"
+     194 | CALIB_NEG_ERE="(zzq|qzz)-t381-ere-anticalib-[0-9]+-$$-${RANDOM}-$(date -u +%s)"
+     205 |   out=$(git grep "$@" 2>"$SWEEP_ERRF"); rc=$?
+     207 |   ENGINE_ERR=$(cat "$SWEEP_ERRF")
+     209 |   n=$(printf '%s\n' "$out" | awk -F: '{s+=$NF} END{print s+0}'); arc=$?
+     360 |   SWEEP_SELECTORS=$((SWEEP_SELECTORS+1))
+     369 |   all=$(git grep "$@" -- .softhouse 2>"$SWEEP_ERRF"); rc=$?
+     370 |   err=$(cat "$SWEEP_ERRF")
+     372 |     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+     384 |       "$(git ls-files .softhouse | grep -c .)"
+     392 |   live=$(printf '%s' "$all" | grep -v -E "$ARCHIVE"); live_rc=$?
+     393 |   arch=$(printf '%s' "$all" | grep -c -E "$ARCHIVE"); arch_rc=$?
+     395 |     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+     398 |       "$live_rc" "$arch_rc" "$(printf '%s' "$all" | grep -c .)"
+     404 |     "$(printf '%s' "$all" | grep -c .)" "$arch" "$(printf '%s' "$live" | grep -c .)"
+     409 | echo "repo: $(git rev-parse --short HEAD)   date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+     410 | echo "population: $(git ls-files .softhouse | wc -l | tr -d ' ') tracked files under .softhouse/"
+     411 | echo "untracked under .softhouse/: $(git ls-files --others --exclude-standard .softhouse | wc -l | tr -d ' ')"
+     412 | if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]; then
+     464 |   "$(git rev-parse --short HEAD)" "$SWEEP_SELECTORS" "$SWEEP_DIDNOTRUN" "$SWEEP_CALIBRATED" "$SWEEP_RC"
+    == K1 SITES: 22
+
+--- K2  PIPELINE  a | b (|| excluded)
+     155 | ARCHIVE='(/out/|/evidence/|/transcripts/|/logs/|/red-drive/|/baseline/|/schema-drive/|/probe/|/prose/|\.softhouse/runs/|\.softhouse/logs/|\.softhouse/
+     191 | _ere_alt='(EEP|OOP)'
+     194 | CALIB_NEG_ERE="(zzq|qzz)-t381-ere-anticalib-[0-9]+-$$-${RANDOM}-$(date -u +%s)"
+     209 |   n=$(printf '%s\n' "$out" | awk -F: '{s+=$NF} END{print s+0}'); arc=$?
+     211 |   case "$n" in ''|*[!0-9]*) return 3 ;; esac
+     222 |     printf '%s' "$ENGINE_ERR" | grep . | cut -c1-200 | sed 's/^/    ! /' >&2
+     345 |     printf '%s' "$a" | LC_ALL=C grep -q '\\[bBdDsSwW<>]'; esc_rc=$?
+     375 |     printf '%s' "$err" | grep . | cut -c1-200 | sed 's/^/      ! /'
+     380 |     printf '%s' "$err" | grep . | cut -c1-200 | sed 's/^/      ~ /'
+     384 |       "$(git ls-files .softhouse | grep -c .)"
+     392 |   live=$(printf '%s' "$all" | grep -v -E "$ARCHIVE"); live_rc=$?
+     393 |   arch=$(printf '%s' "$all" | grep -c -E "$ARCHIVE"); arch_rc=$?
+     398 |       "$live_rc" "$arch_rc" "$(printf '%s' "$all" | grep -c .)"
+     404 |     "$(printf '%s' "$all" | grep -c .)" "$arch" "$(printf '%s' "$live" | grep -c .)"
+     405 |   printf '%s' "$live" | grep . | cut -c1-200 | sed 's/^/      /'
+     410 | echo "population: $(git ls-files .softhouse | wc -l | tr -d ' ') tracked files under .softhouse/"
+     411 | echo "untracked under .softhouse/: $(git ls-files --others --exclude-standard .softhouse | wc -l | tr -d ' ')"
+     412 | if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]; then
+     421 | sel "S2  the standing-baseline pin format 'gerege <table> = '" -n -E 'gerege (acc_gl_journal_entry|acc_gl_closure|distinct_transaction_id|m_portfolio_
+     425 | sel "S4  per-account leg counts spelled as words in the capability store" -n -E 'gl 16 (carries|->) (SIXTEEN|TWENTY)|is TWELVE|gl 17 is|gl 21 is'
+     426 | sel "S5  per-account leg counts spelled as digits" -n -E 'gl (16|17|18|21|22) (->|=) [0-9]+'
+     429 | sel "S6  'every row currency_code = MNT' and its relatives" -n -E 'every row currency_code|every journal entry (in the corpus )?is MNT|Every entry is 
+     431 | sel "S8  MULTI-CURRENCY untouched claims" -n -E 'MULTI-CURRENCY untouched|no cross-currency|multi.currency entry'
+     434 | sel "S9  does the conformance harness or a guard reach the tenant database at all?" -n -E 'psql|docker exec|fineract-db-1'
+     435 | sel "S10 count(*) over the ledger tables in an executable" -n -E 'count\(\*\).{0,40}acc_gl_journal_entry|acc_gl_journal_entry.{0,40}count\(\*\)'
+     436 | sel "S11 the ledger invariant guard's own pins" -n -E 'EXEMPTION_PIN|parity vectors|LEDGER_.*PIN'
+     454 | sel "S12 a command-source STATUS SPLIT written as a cardinal" -n -E '[0-9]+ (PROCESSED|ERROR|REJECTED|INVALID|AWAITING_APPROVAL|UNDER_PROCESSING)'
+     455 | sel "S13 present-tense 'the <thing> is/are/now <digits>' about a live counter" -n -E '(split|count|total|tally) (is|are|now) [*]*[0-9]'
+     456 | sel "S14 'N rows' / 'max id N' prose pins over any watched table" -n -E '[0-9]+ rows|max id [0-9]+'
+     457 | sel "S15 a digit sitting next to a watched table name, either order" -n -E '(acc_gl_journal_entry|acc_gl_closure|m_portfolio_command_source|m_office|m
+     458 | sel "S16 status-enum prose, which is where a stale split tends to sit" -n -E 'status *= *5|status 5|CommandProcessingResultType'
+    == K2 SITES: 31
+
+--- K3  OUTPUT REDIRECTION  > >> 2>  (opened by the SHELL, before the command runs)
+     122 |   echo "SWEEP ABORT (exit 2): could not create a scratch file for the engine's stderr. Without" >&2
+     123 |   echo "  it a warning line cannot be told apart from a hit, and no count below is trustworthy." >&2
+     127 | _top=$(git rev-parse --show-toplevel 2>/dev/null) || _top=""
+     129 |   echo "SWEEP ABORT (exit 2): not inside a usable git work tree; there is no corpus to sweep" >&2
+     205 |   out=$(git grep "$@" 2>"$SWEEP_ERRF"); rc=$?
+     216 | _calib_refuse() { # _calib_refuse <arm label> <engine_count return>
+     219 |     echo "SWEEP ABORT (exit 3): the $arm calibration search DID NOT RUN -- git grep rc=$ENGINE_RC." >&2
+     220 |     echo "  An ERRORED search is not a search that found nothing. Until T381 this arm discarded" >&2
+     221 |     echo "  that status and printed PASS for exactly this state (T379 R2). Engine output follows:" >&2
+     222 |     printf '%s' "$ENGINE_ERR" | grep . | cut -c1-200 | sed 's/^/    ! /' >&2
+     224 |     echo "SWEEP ABORT (exit 3): the $arm calibration ran, but its TALLY produced no number." >&2
+     225 |     echo "  A missing count is not a count of zero, so nothing below would be interpretable." >&2
+     236 |     echo "SWEEP ABORT (exit 3): CALIBRATION MISSED. '$CALIB_POS_STR' found 0 in $CALIB_POS_PATH," >&2
+     237 |     echo "  where it is KNOWN present. The engine, the pattern language or the corpus is broken;" >&2
+     238 |     echo "  no negative printed below would be interpretable, so nothing is printed." >&2
+     248 |     echo "SWEEP ABORT (exit 3): ANTI-CALIBRATION FAILED. The known-absent sentinel matched $ENGINE_N time(s)." >&2
+     249 |     echo "  The engine is FABRICATING matches; every POSITIVE below would be suspect, not only the" >&2
+     250 |     echo "  zeros. Nothing is printed." >&2
+     270 |     echo "SWEEP ABORT (exit 3): -E CALIBRATION MISSED. The pattern matched 0 times under -E in" >&2
+     271 |     echo "  $CALIB_POS_PATH, where an ERE-interpreting engine finds it. Either this engine is not" >&2
+     272 |     echo "  interpreting ERE metacharacters, or the sentence the arm is anchored to has been" >&2
+     273 |     echo "  edited out. Either way the thirteen '-E' selectors below would each print a result" >&2
+     274 |     echo "  NOBODY MEASURED. Nothing is printed." >&2
+     278 |     echo "SWEEP ABORT (exit 3): -E AND -F RETURNED THE SAME COUNT ($n_ere) for a pattern whose two" >&2
+     279 |     echo "  readings cannot agree on a working engine. This engine is NOT distinguishing extended" >&2
+     280 |     echo "  regular expressions from fixed strings -- T238's failure -- so the thirteen '-E'" >&2
+     281 |     echo "  selectors below would print results NOBODY MEASURED. Nothing is printed." >&2
+     291 |     echo "SWEEP ABORT (exit 3): -E ANTI-CALIBRATION FAILED. A run-time sentinel that cannot exist" >&2
+     292 |     echo "  in the corpus matched $ENGINE_N time(s) under '-E'. The engine FABRICATES in the mode" >&2
+     293 |     echo "  thirteen selectors use. Nothing is printed." >&2
+     324 | sel() { # sel <label> <git-grep args...>
+     369 |   all=$(git grep "$@" -- .softhouse 2>"$SWEEP_ERRF"); rc=$?
+     413 |   echo "SWEEP ABORT (exit 2): corpus reachable but tracks ZERO files under .softhouse/." >&2
+     414 |   echo "  A sweep over nothing proves nothing (P-35); a denominator of zero is an ERROR, not a pass." >&2
+     421 | sel "S2  the standing-baseline pin format 'gerege <table> = '" -n -E 'gerege (acc_gl_journal_entry|acc_gl_closure|distinct_transaction_id|m_portfolio_
+     425 | sel "S4  per-account leg counts spelled as words in the capability store" -n -E 'gl 16 (carries|->) (SIXTEEN|TWENTY)|is TWELVE|gl 17 is|gl 21 is'
+     426 | sel "S5  per-account leg counts spelled as digits" -n -E 'gl (16|17|18|21|22) (->|=) [0-9]+'
+     455 | sel "S13 present-tense 'the <thing> is/are/now <digits>' about a live counter" -n -E '(split|count|total|tally) (is|are|now) [*]*[0-9]'
+     466 |   echo "*** $SWEEP_DIDNOTRUN SELECTOR(S) DID NOT RUN. The casualty list from this run is INCOMPLETE" >&2
+     467 |   echo "*** by an unknown amount, and no absence claimed above is admissible." >&2
+    == K3 SITES: 40
+
+--- K4  COMMAND-AS-CONDITION  if/while/until <cmd>
+    == K4 SITES: 0
+
+--- K5  ASSIGNMENT-MASKED STATUS  local/declare/export/readonly x=$(...)
+    == K5 SITES: 0
+
+--- K6  SUBSTITUTION IN AN ARGUMENT  printf/echo ... "$(...)"
+     409 | echo "repo: $(git rev-parse --short HEAD)   date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+     410 | echo "population: $(git ls-files .softhouse | wc -l | tr -d ' ') tracked files under .softhouse/"
+     411 | echo "untracked under .softhouse/: $(git ls-files --others --exclude-standard .softhouse | wc -l | tr -d ' ')"
+    == K6 SITES: 3
+
+--- K7  ARITHMETIC / NUMERIC TEST  $(( )) or [ x -gt n ]
+     208 |   if [ "$rc" -ge 2 ]; then return 2; fi
+     210 |   if [ "$arc" -ne 0 ]; then return 3; fi
+     218 |   if [ "$ec" -eq 2 ]; then
+     234 |   [ "$ec" -eq 0 ] || _calib_refuse "-F POSITIVE" "$ec"
+     235 |   if [ "$ENGINE_N" -lt 1 ]; then
+     246 |   [ "$ec" -eq 0 ] || _calib_refuse "-F ANTI" "$ec"
+     247 |   if [ "$ENGINE_N" -gt 0 ]; then
+     264 |   [ "$ec" -eq 0 ] || _calib_refuse "-E POSITIVE" "$ec"
+     267 |   [ "$ec" -eq 0 ] || _calib_refuse "-E POSITIVE's -F control" "$ec"
+     269 |   if [ "$n_ere" -lt 1 ]; then
+     277 |   if [ "$n_ere" -eq "$n_fix" ]; then
+     289 |   [ "$ec" -eq 0 ] || _calib_refuse "-E ANTI" "$ec"
+     290 |   if [ "$ENGINE_N" -gt 0 ]; then
+     309 |   [ "$ec" -eq 0 ] || _calib_refuse "-E T238-HAZARD (escaped)" "$ec"
+     312 |   [ "$ec" -eq 0 ] || _calib_refuse "-E T238-HAZARD (literal)" "$ec"
+     314 |   if [ "$n_esc" -eq "$n_lit" ]; then
+     346 |     if [ "$esc_rc" -ge 2 ]; then
+     349 |       [ "$SWEEP_RC" -ge 3 ] || SWEEP_RC=3
+     352 |     if [ "$esc_rc" -eq 0 ]; then
+     356 |       [ "$SWEEP_RC" -ge 3 ] || SWEEP_RC=3
+     360 |   SWEEP_SELECTORS=$((SWEEP_SELECTORS+1))
+     371 |   if [ "$rc" -ge 2 ]; then
+     372 |     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+     382 |   if [ "$rc" -eq 1 ]; then
+     394 |   if [ "$live_rc" -ge 2 ] || [ "$arch_rc" -ge 2 ]; then
+     395 |     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+     412 | if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]; then
+     465 | if [ "$SWEEP_DIDNOTRUN" -gt 0 ]; then
+    == K7 SITES: 28
+
+--- K8  STATE LOSS IN A SUBSHELL  (state-mutating call INSIDE a subshell)
+     121 | SWEEP_ERRF=$(mktemp "${TMPDIR:-/tmp}/casualty-sweep-stderr.XXXXXXXXXX") || {
+     360 |   SWEEP_SELECTORS=$((SWEEP_SELECTORS+1))
+     372 |     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+     395 |     SWEEP_DIDNOTRUN=$((SWEEP_DIDNOTRUN+1)); SWEEP_RC=4
+     421 | sel "S2  the standing-baseline pin format 'gerege <table> = '" -n -E 'gerege (acc_gl_journal_entry|acc_gl_closure|distinct_transaction_id|m_portfolio_
+     425 | sel "S4  per-account leg counts spelled as words in the capability store" -n -E 'gl 16 (carries|->) (SIXTEEN|TWENTY)|is TWELVE|gl 17 is|gl 21 is'
+     426 | sel "S5  per-account leg counts spelled as digits" -n -E 'gl (16|17|18|21|22) (->|=) [0-9]+'
+     429 | sel "S6  'every row currency_code = MNT' and its relatives" -n -E 'every row currency_code|every journal entry (in the corpus )?is MNT|Every entry is 
+     431 | sel "S8  MULTI-CURRENCY untouched claims" -n -E 'MULTI-CURRENCY untouched|no cross-currency|multi.currency entry'
+     434 | sel "S9  does the conformance harness or a guard reach the tenant database at all?" -n -E 'psql|docker exec|fineract-db-1'
+     435 | sel "S10 count(*) over the ledger tables in an executable" -n -E 'count\(\*\).{0,40}acc_gl_journal_entry|acc_gl_journal_entry.{0,40}count\(\*\)'
+     436 | sel "S11 the ledger invariant guard's own pins" -n -E 'EXEMPTION_PIN|parity vectors|LEDGER_.*PIN'
+     454 | sel "S12 a command-source STATUS SPLIT written as a cardinal" -n -E '[0-9]+ (PROCESSED|ERROR|REJECTED|INVALID|AWAITING_APPROVAL|UNDER_PROCESSING)'
+     455 | sel "S13 present-tense 'the <thing> is/are/now <digits>' about a live counter" -n -E '(split|count|total|tally) (is|are|now) [*]*[0-9]'
+     456 | sel "S14 'N rows' / 'max id N' prose pins over any watched table" -n -E '[0-9]+ rows|max id [0-9]+'
+     457 | sel "S15 a digit sitting next to a watched table name, either order" -n -E '(acc_gl_journal_entry|acc_gl_closure|m_portfolio_command_source|m_office|m
+     458 | sel "S16 status-enum prose, which is where a stale split tends to sit" -n -E 'status *= *5|status 5|CommandProcessingResultType'
+    (state-mutating lines: 44 ; subshell-bearing lines: 43 ; INTERSECTION = K8)
+    == K8 SITES: 17
+
+--- K2s / K3s  CONVENIENCE VIEW: quoted spans blanked (NOT the census) ---
+    K2s pipelines in shell-operator position : 9
+    K3s redirections in shell-operator position : 36
+    K8s state-mutating call with a REAL subshell operator : 1
+       121 | SWEEP_ERRF=$(mktemp                                                   ) || {
+
+=== CENSUS TOTALS =========================================================
+  K1   22
+  K2   31
+  K3   40
+  K4   0
+  K5   0
+  K6   3
+  K7   28
+  K8   17
+  ----
+  SITES (a line may belong to more than one kind): 141
+
+THE TWO KINDS T381 AUDITED WERE K2 AND (part of) K3. K1 -- the kind that carried C-1 --
+had no row in that taxonomy, and neither did K5, K6 or K7.
+K8 had no row in T402 TAXONOMY EITHER, for the same reason one level up: K1..K7 enumerate
+STATUS loss and K8 is STATE loss. Added by T424 (F-T408-2). Like K2/K3 it OVER-INCLUDES --
+an assignment such as SWEEP_X=$(cmd) is listed although the assignment happens in the
+PARENT and loses nothing. Adjudicate every K8 row in AUDIT-CLASS.md; the verdict for a
+real one is STATE-LOSS.
+CENSUS-RESULT: ref= 964b532e  exec_lines= 221

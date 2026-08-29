@@ -1,0 +1,15 @@
+repo: /tmp/t440/wt-t424   head: a504b59d   git: git version 2.50.1 (Apple Git-155)
+
+== the probe as shipped ==
+  git grep -q 'zzq-no-such-token-t424' -- .softhouse   -> rc=0
+    hit: .softhouse/capture/t424/instruments/t424-comment-claims-drive.sh:103:git grep -q 'zzq-no-such-token-t424' -- .softhouse > /dev/null 2>&1; g_absent=$?
+  -> the sentinel MATCHES THE DRIVE'S OWN SOURCE. The no-match arm cannot be no-match.
+
+== the claim itself, probed with a token built at RUN TIME so it cannot be in any file ==
+  genuine NO MATCH   -> rc=1   (claim says 1)
+  invalid pattern    -> rc=128   (claim says >1)
+  genuine MATCH      -> rc=0   (claim says 0)
+  -> CLAIM 3 IS TRUE. The finding is confined to the PROBE, not to the claim.
+
+== the drive's own verdict, on the committed tree ==
+  drive exit = 1  (its shipped transcript records disagreements=0, exit 0)
