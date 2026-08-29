@@ -14,13 +14,18 @@
 # recompute is an arm that certifies this forgery -- which is exactly what is under test.
 #
 #   CTL        no forgery, honest interpreter            expect EXIT 0, PASS
+#   WDIRTY     an HONEST uncommitted edit to the harness expect EXIT 0, PASS, NAMED and PRINTED
+#   SKIPWT     forged harness + --skip-worktree          expect EXIT 2
+#   ASSUME     forged harness + --assume-unchanged       expect EXIT 2
 #   CTLSMUDGE  forgery, honest interpreter               expect EXIT 2, SUPPRESSED at the victim
+#   NOPY       the interpreter path made unreachable     expect EXIT 2, named by the pre-check
 #   ECHO       forgery + an ECHO shim first on PATH      the T473 M-2 route
 #   SITE       forgery + PYTHONPATH sitecustomize        the same route through the environment
 #   HASHER     forgery + a shim that really hashes       the DECLARED BOUND, driven
 #
 #   env T477_MUT=abs     rewrite a bare `python3 -c` to `/usr/bin/python3 -c` (no flags).
-#       T477_MUT=barepy  rewrite `/usr/bin/python3 -I -S -c` back to a bare `python3 -c`.
+#       T477_MUT=barepy  rewrite `"$recpython" -I -S -c` back to a bare `python3 -c`.
+#       T477_MUT=nopy    point ONLY this guard`s interpreter at a path that cannot exist.
 #   Both mutate ONLY the recompute`s invocation line and are left UNCOMMITTED, which the
 #   harness accepts and prints as an uncommitted edit [the T454 honest-dirty boundary].
 #
@@ -49,13 +54,17 @@ case "$SCR" in
     exit 3 ;;
 esac
 
-C="$SCR/clone-$ARM"
+# T477_TAG names the RUN, not the arm: two runs of the same arm (say, with and without the
+# `barepy` mutation) must not share a clone directory, and the second one deleting the first
+# one`s tree mid-run would be a measurement nobody took.
+TAG="${T477_TAG:-$ARM}"
+C="$SCR/clone-$TAG"
 rm -rf "$C"
 git clone --quiet --no-hardlinks "$R" "$C" || { echo "REFUSED: clone failed." >&2; exit 3; }
 git -C "$C" checkout --quiet --detach "$REV" \
   || { echo "REFUSED: cannot check out $REV in the clone." >&2; exit 3; }
 
-echo "=== ARM $ARM ================================================================"
+echo "=== ARM $ARM  (run tag $TAG) ================================================================"
 echo "source repository : $R"
 echo "clone             : $C"
 echo "checked out       : $REV = $(git -C "$C" rev-parse HEAD)"
@@ -70,7 +79,13 @@ if [ -n "$MUT" ]; then
       LC_ALL=C sed -i.bak 's|&& python3 -c "\$recpy"|\&\& /usr/bin/python3 -c "$recpy"|' \
         "$C/$CONF" ;;
     barepy)
-      LC_ALL=C sed -i.bak 's|&& /usr/bin/python3 -I -S -c "\$recpy"|\&\& python3 -c "$recpy"|' \
+      LC_ALL=C sed -i.bak 's|&& "\$recpython" -I -S -c "\$recpy"|\&\& python3 -c "$recpy"|' \
+        "$C/$CONF" ;;
+    nopy)
+      # Point ONLY this guard`s interpreter at a path that cannot exist, so the [ ! -x ]
+      # pre-check fires. Every other guard`s /usr/bin/python3 is untouched, which is why the
+      # assignment was made a local in the first place.
+      LC_ALL=C sed -i.bak "s|recpython='/usr/bin/python3'|recpython='/usr/bin/python3-t477-absent'|" \
         "$C/$CONF" ;;
     *) echo "REFUSED: unknown T477_MUT=$MUT" >&2; exit 3 ;;
   esac
@@ -92,7 +107,21 @@ echo "recompute framing : $T477_SHIM_D"
 # ---- the forgery fixture -----------------------------------------------------------------
 VICTIM=""
 case "$ARM" in
-  CTL) : ;;
+  CTL|NOPY) : ;;
+  WDIRTY)
+    # An HONEST uncommitted edit to the harness. T454`s boundary says this must PASS, be named
+    # and be printed; a bar that refuses every dirty tree is a bar that gets switched off.
+    printf '\n# T477 WDIRTY: an honest uncommitted edit.\n' >>"$C/$CONF"
+    ;;
+  SKIPWT|ASSUME)
+    # The two routes that leave `git status --porcelain` EMPTY over forged bytes.
+    if [ "$ARM" = "SKIPWT" ]; then
+      git -C "$C" update-index --skip-worktree -- "$CONF" || exit 3
+    else
+      git -C "$C" update-index --assume-unchanged -- "$CONF" || exit 3
+    fi
+    printf '\n# T477 %s: FORGED TEXT, hidden behind an index bit.\n' "$ARM" >>"$C/$CONF"
+    ;;
   *)
     VICTIM=$(git -C "$C" ls-files -- "*/evidence/*.txt" | LC_ALL=C sed -n '1p')
     [ -n "$VICTIM" ] || { echo "REFUSED: no victim candidate in the tree." >&2; exit 3; }
@@ -129,10 +158,10 @@ echo "git diff-index --name-only lines  : $(git -C "$C" diff-index --name-only H
 echo "ls-files -v entries NOT in state H: $(git -C "$C" ls-files -v | LC_ALL=C grep -vc '^H ' || true)"
 
 # ---- the interpreter substitution --------------------------------------------------------
-SHIMLOG="$SCR/shimlog-$ARM.txt"
+SHIMLOG="$SCR/shimlog-$TAG.txt"
 : >"$SHIMLOG"
 export T477_SHIM_LOG="$SHIMLOG"
-BIN="$SCR/bin-$ARM"
+BIN="$SCR/bin-$TAG"
 rm -rf "$BIN"; mkdir -p "$BIN"
 RUNPATH="$PATH"
 RUNPYPATH="${PYTHONPATH:-}"
@@ -152,7 +181,7 @@ echo "PATH shim         : $(ls "$BIN" | LC_ALL=C grep -c '' || true) file(s) in 
 echo "PYTHONPATH        : [$RUNPYPATH]"
 
 # ---- the run -----------------------------------------------------------------------------
-LOG="$SCR/log-$ARM.txt"
+LOG="$SCR/log-$TAG.txt"
 cd "$C" || { echo "REFUSED: could not enter the clone." >&2; exit 3; }
 rc=0
 PATH="$RUNPATH" PYTHONPATH="$RUNPYPATH" bash "$CONF" >"$LOG" 2>&1 || rc=$?

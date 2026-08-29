@@ -45,6 +45,13 @@ emit() {
   if [ "$D" = "nul" ]; then printf '%s\000' "$1"; else printf '%s\n' "$1"; fi
 }
 
+# THE SHIM SAYS SO WHEN IT FIRES. An arm that cannot tell "the shim ran and lied" from "the shim
+# was never reached" is not a measurement -- and the second of those is exactly what the fix
+# produces, so the two outcomes MUST be distinguishable in the transcript.
+if [ -n "${T477_SHIM_LOG:-}" ]; then
+  echo "hashing shim fired: selfrel=$sel records=$nrec hiding=$HIDE" >>"$T477_SHIM_LOG"
+fi
+
 n=0
 exec 3<"$W/meta" 4<"$W/paths" 5<"$W/hashes"
 while IFS= read -r meta <&3 && IFS= read -r p <&4 && IFS= read -r d <&5; do

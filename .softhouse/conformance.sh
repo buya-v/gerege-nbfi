@@ -5207,6 +5207,9 @@ guard_harness_text_is_committed() {
   # [T477] THE CHALLENGE. See "CALIBRATING ON A VALUE THE CALLER DOES NOT HAND IT" below.
   local chalpath="" chaldisk="" chaldecoy="" chalmode="" chalrow="" chalseen="" chalgot=""
   local chaltotal=0 chalpick=0 chaltry=0
+  # [T477] The interpreter, absolute and literal. A LOCAL, not a parameter and not an env
+  # lookup: an interpreter this guard could be TOLD to use is the defect it is closing.
+  local recpython=""
   # [T477] THE RUN-TIME READ CENSUS — derived from the bytes that are running, never typed.
   local s1now=""
   # ONE LITERAL NEWLINE, so every membership test below is a `case` pattern and starts no
@@ -5512,7 +5515,8 @@ HTCBITSHOW
   # write there can also write this file, which is LONGNOP's class, and the answer to that class
   # is a verifier outside this file [FU-T454-1 / T460]. See the CHALLENGE below for what is
   # closed against an interpreter that is merely INTERPOSED.
-  if [ ! -x /usr/bin/python3 ]; then
+  recpython='/usr/bin/python3'   # ABSOLUTE, LITERAL, ASSIGNED ONCE, NEVER PATH-RESOLVED
+  if [ ! -x "$recpython" ]; then
     warn "conformance: guard_harness_text_is_committed: /usr/bin/python3 is absent. The"
     warn "conformance: whole-tree recompute cannot run, and this guard REFUSES rather than"
     warn "conformance: degrading to the smaller green it had before T466. [Same shape and same"
@@ -5665,7 +5669,7 @@ out.flush()
   # appended after the last NUL is DROPPED by `read -d ""` — a fail-open shape — and a
   # diagnostic arriving BEFORE it would be spliced onto a real row. Kept separate, ANY byte on
   # stderr is itself a refusal below.
-  ( cd "$REPO_ROOT" && /usr/bin/python3 -I -S -c "$recpy" "$selfrel" <"$headlist" ) \
+  ( cd "$REPO_ROOT" && "$recpython" -I -S -c "$recpy" "$selfrel" <"$headlist" ) \
     >"$recompf" 2>"$recerrf" || recrc=$?
   rm -f "$headlist"
   if [ "$recrc" -ne 0 ] || [ ! -s "$recompf" ] || [ -s "$recerrf" ]; then
