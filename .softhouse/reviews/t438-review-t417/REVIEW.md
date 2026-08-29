@@ -40,6 +40,7 @@ is correct as far as it goes — does not reach the wiring that actually exists.
 | **F-T438-8** | LOW | The second raw `UPDATE` at `:211` is on the **command-handler** path, not the scheduler's. Existence claim right; framing overstates. |
 | **F-T438-9** | LOW | "34/41/43 are `is_active = f`" implies 32/33 are active. **All five never-run jobs are inactive.** |
 | **F-T438-10** | MINOR | Two residual classes are missing from a residual list that is otherwise unusually honest: within-window revert, and the **effective tenant rounding mode living in a JVM cache**. |
+| **F-T438-11** | MINOR | `capsql.sh`'s "READ-ONLY by construction" write-verb refusal is line-based and **lets `DELETE`/`FROM` split over two lines through**. Driven. |
 
 Nothing I found is a money-math defect, and nothing I found makes the instrument unsafe to
 land. F-T438-1 must be fixed at the site because a later reader is explicitly instructed to
@@ -508,6 +509,40 @@ it is latent, not live.
 **Drive:** replace `IFS=$'\t' read -r …` with `awk -F'\t'`, or pad the seq rows to four fields.
 Add a sequence-only red arm and a NULL-`end_time` run-list arm.
 
+
+### F-T438-11 (MINOR) — `capsql.sh`'s read-only guarantee has a hole, and it is ordinary SQL formatting
+
+`capsql.sh:20-23` states the guarantee in its own header — *"READ-ONLY by construction: refuses
+any file containing a write verb before it contacts the database"* — and implements it as:
+
+```bash
+if grep -Eqi '(^|[^[:alnum:]_])(insert|update|delete|truncate|drop|alter|grant|revoke)[[:space:]]' "$f"; then
+```
+
+`grep` is **line-based**, and the pattern requires a whitespace character **on the same line**
+after the verb. I tested the regex against five files (no database contacted)
+`[VERIFIED: out/r10-capsql-writeverb-cases.txt]`:
+
+| case | result |
+|---|---|
+| `INSERT INTO x VALUES (1);` | REFUSED — correct |
+| `DELETE`⏎`  FROM acc_gl_journal_entry;` | **ALLOWED** — the verb ends the line |
+| `INSERT(1);` | **ALLOWED** — followed by `(`, not whitespace |
+| `SELECT 1;` | ALLOWED — correct |
+| `-- we must never UPDATE the oracle` | REFUSED — over-broad on comments, but fail-CLOSED, harmless |
+
+`DELETE` on its own line with `FROM` on the next is not contrived; it is how long DML is
+routinely formatted. The rig's whole reason for existing is that *"a capture rig that can write
+to a shared append-only oracle is a casualty generator"* — its own words — and on this program's
+shared instance that is the highest-consequence fail-open in the diff, even though nothing in
+T417's four committed `.sql` files comes near it (I re-scanned all four: **zero** write verbs,
+**zero** float/numeric casts, **zero** prohibited engines or vendors, **zero** hard-coded time
+offsets, **zero** insured/guaranteed language `[VERIFIED: out/r11-t417-diff-scan.txt]`).
+
+**Drive / fix:** read the file with the newlines squashed —
+`tr '\n' ' ' < "$f" | grep -Eqi '…[[:space:](]'` — and add the two cases above as red arms.
+**CONDITION C-T438-9 (MINOR).**
+
 ### F-T438-7 (LOW) — three citations off by 1–3 lines
 
 `[all VERIFIED @ 426a23544 with grep -n]`
@@ -606,6 +641,7 @@ Transcripts: `out/BAR-A-t417-tree-131218cf.txt`, `out/BAR-B-merge-result-0c35140
 | **C-T438-5** | MINOR | `--self-test` must assert the **sequence** exclusion too (5, each named), not only the table exclusion. | plant `job_idX_seq` in a scratch copy → self-test refuses |
 | **C-T438-6** | MINOR | Fix the window-endpoint skew: emit `db_now_utc` after `read_tables` and attribute over `[open.first, close.last]`. | `attribute` over a 0.6 s-shifted window across a job-36 fire shows the run |
 | **C-T438-7** | MINOR | Fix the `IFS=$'\t' read` field collapse in the `MOVED` printer; add a sequence-only red arm and a NULL-`end_time` run-list arm. | RED-C prints `last_value 113 -> 999999` correctly |
+| **C-T438-9** | MINOR | `capsql.sh`'s write-verb refusal must survive a newline between the verb and its object. | `DELETE`\u23ce`FROM x` is REFUSED |
 | **C-T438-8** | LOW | Correct three line numbers (`:159`→`:158`, `:100`→`:103`, save at `:109`); scope the `:211` `UPDATE` to the command-handler path; fix "34/41/43 are inactive" → all five are. | `grep -n` at the pin |
 
 ---

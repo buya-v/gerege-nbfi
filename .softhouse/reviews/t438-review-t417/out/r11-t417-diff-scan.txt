@@ -1,0 +1,47 @@
+=== float/double/decimal literals in T417 shell+sql:
+  none
+=== write verbs against the oracle in T417 shell+sql:
+/tmp/t438/t417tree/.softhouse/capture/t417-scheduler-attribution/capsql.sh:21:if grep -Eqi '(^|[^[:alnum:]_])(insert|update|delete|truncate|drop|alter|grant|revoke)[[:space:]]' "$f"; then
+=== prohibited engines / vendors:
+  none
+=== deposit/insured language:
+  none
+=== hard-coded tz offsets:
+  none
+=== capsql.sh write refusal:
+#!/usr/bin/env bash
+# capsql.sh -- run one committed .sql file against the reference oracle's PostgreSQL and
+# keep the transcript + the statement's sha256 beside it. READ-ONLY by construction:
+# refuses any file containing a write verb before it contacts the database.
+#
+#   bash .softhouse/capture/t417-scheduler-attribution/capsql.sh <name-without-.sql>
+#
+# ON_ERROR_STOP=1 is not optional: without it psql exits 0 after a failed statement and a
+# broken query is indistinguishable from a successful capture (T390's third declared failure).
+if [ -z "${BASH_VERSION:-}" ]; then echo "REFUSING: run with bash." >&2; exit 3; fi
+if shopt -qo posix 2>/dev/null; then echo "REFUSING: bash in POSIX mode (you ran 'sh')." >&2; exit 3; fi
+set -uo pipefail
+DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+DBC="${ORACLE_BASELINE_DB_CONTAINER:-fineract-db-1}"
+DBUSER="${ORACLE_BASELINE_DB_USER:-root}"
+DBNAME="${ORACLE_BASELINE_DB_NAME:-fineract_gerege}"
+name="${1:?usage: capsql.sh <name-without-.sql>}"
+f="$DIR/sql/$name.sql"
+[ -f "$f" ] || { echo "REFUSING: no such statement file: $f" >&2; exit 1; }
+# read-only gate -- a capture rig that can write to the shared oracle is a casualty generator
+if grep -Eqi '(^|[^[:alnum:]_])(insert|update|delete|truncate|drop|alter|grant|revoke)[[:space:]]' "$f"; then
+  echo "REFUSING: $f contains a write verb. Every statement here must be a SELECT." >&2; exit 1
+fi
+o="$DIR/out/$name.txt"
+shasum -a 256 "$f" | awk '{print $1}' > "$DIR/out/$name.sql.sha256"
+{
+  echo "-- $name  captured $(date -u +%Y-%m-%dT%H:%M:%SZ)  container=$DBC db=$DBNAME"
+  echo "-- statement sha256 $(cat "$DIR/out/$name.sql.sha256")"
+  echo "-- oracle pinned 426a23544 ; PostgreSQL only (CLAUDE.md)"
+  echo
+} > "$o"
+docker exec -i "$DBC" psql -v ON_ERROR_STOP=1 -U "$DBUSER" -d "$DBNAME" -f - < "$f" >> "$o" 2>&1
+rc=$?
+echo "" >> "$o"; echo "-- psql rc=$rc" >> "$o"
+echo "captured -> $o (rc=$rc)"
+exit "$rc"
