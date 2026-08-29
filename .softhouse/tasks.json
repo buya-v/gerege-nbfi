@@ -7186,7 +7186,7 @@
   },
   {
    "id": "T477",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -7202,7 +7202,7 @@
     "T473"
    ],
    "description": "Repair pass on T466 under T473's three MAJORs. Built ON TOP of softhouse/T466-skipwt-smudge; T466 is NOT merged pending this.",
-   "note": "local fire 20260829-080002 iter6: DISPATCHED at 2026-08-29T10:39:20Z as the T466 repair pass under T473's three MAJORs. T466 held UNMERGED deliberately -- the driver does not merge a change that opens a new forgery route while closing three. Branched from softhouse/T466-skipwt-smudge."
+   "note": "local fire 20260829-080002 iter6: DISPATCHED at 2026-08-29T10:39:20Z as the T466 repair pass under T473's three MAJORs. T466 held UNMERGED deliberately -- the driver does not merge a change that opens a new forgery route while closing three. Branched from softhouse/T466-skipwt-smudge. || local fire 20260829-080002 iter6: DONE on softhouse/T477-t473-repair (6 commits on top of T466 11afb281, tip a6bf50a3). M-2 RE-DERIVED AND FOUND WORSE THAN T473 COULD SHOW: T473 shim was GLOBAL so its bar died at an unrelated guard; T477 drove a TARGETED shim (answers only -c, execs the real interpreter otherwise) against a SMUDGE forgery whose ONLY detector is the recompute -- no index bit, forged file is not the harness. On T466 tip: EXIT 0, probe presence 1, up, VERDICT PASS 46/7884, 0 refusals, WHILE THE GUARD PRINTED RECOMPUTE: 10368 HEAD entries re-hashed HAVING HASHED NOTHING. The forgery was certified BY A VERDICT, not merely by a census. AND IT REFUTED T473 PROPOSED REMEDY BY DRIVING IT: an absolute path is NOT sufficient -- PYTHONPATH + sitecustomize.py runs attacker code INSIDE /usr/bin/python3 before the -c program; with the invocation rewritten to /usr/bin/python3 -c and nothing else changed, EXIT 0, PASS, hijack fired, 0 refusals. THIRD REVIEWER PATCH REFUTED BY ITS ASSIGNED WORKER IN THIS PROGRAM. Fix is THREE LAYERS each driven separately: (1) /usr/bin/python3 via a local recpython with the [ ! -x ] pre-check (the files own convention at :1844/:2982, re-derived); (2) -I -S, measured (no flags hijacked; -E, -S, -I, -I -S not); (3) A CHALLENGE WHOSE ANSWER IS NOT IN THE RECOMPUTES INPUT -- a per-run pseudorandom tracked path gets a duplicate listing record carrying a decoy id from /dev/urandom, and the honest answer is the real on-disk hash which the guard took with git hash-object --no-filters (A DIFFERENT PROGRAM) beforehand. SHIM REFUSED: ECHO and SITE both EXIT 2, probe presence 0, shim fired 0 times (never reached); with absolute path and flags stripped the shim IS reached and the guard STILL refuses via THE RECOMPUTE FAILED ITS CHALLENGE. DECLARED BOUND, DRIVEN: a shim that REIMPLEMENTS the hasher via git hash-object --no-filters --stdin-paths and hides one path reaches EXIT 0 PASS -- the interpreter is still in the trust base, that is LONGNOP class. M-1 T473 REPRODUCES EXACTLY: pre-fix blob 7c543532 = 35/69/114/309 36 locals; shipped blob d1c45afc = 40(33)/74(64)/119(109)/331(298), 40 locals, 6784 lines/2555 non-comment. ANTI-ROT: table anchored to BLOB IDS (immutable, so the claim is true forever) and S1 for the running bytes DERIVED AND PRINTED EVERY RUN, cross-validated against read-census.py on three blobs. M-3 DECISION: keep the refusal, correct the text in three places -- a carve-out for a committed honest filter is FORGEABLE BY COMMITTING A FILE, cheaper than the three routes T466 closed. Hasher REWRITTEN so verification re-taken: 19 entries compared, 0 mismatches, 0 omitted (T473 parser omitted the newline-named path; NUL framing does not), 14/14 perturbations detected. Citation sweep 1799/20 moved/0 dead IDENTICAL to T466, zero added. Frontier 11/11, host-state 18/18, no pin moved. Residue clean on all four attribute sources."
   },
   {
    "id": "T478",
@@ -7218,6 +7218,24 @@
    "dependencies": [],
    "description": "FILED 2026-08-29 by the driver of fire 20260829-080002 iter6, from T473's incidental finding AGAINST THE DRIVER, not against T466.\n\nT466 went to real trouble to avoid rotting two live citations -- its first draft moved patterns.md:3271 and fire-program.sh:3217 (213 of 1799 citations) and it moved its prose BELOW the pins instead, leaving 20 moved and none load-bearing. T473 then measured that THOSE VERY TWO LINES ARE ROTTED ON main TODAY -- 233 of 1799 moved -- because the DRIVER merged T458's 133-line patterns.md insertion. A worker took care that the driver's merge then undid.\n\nDRIVER'S OWN CHECK (not a substitute for yours): the drift is REPORT-ONLY, not fatal. check-pnumber-citations.py's VERDICT is PASS with report-only findings in the evidence zone, corrected FORWARD in patterns.md and never edited in place, and the bar was ATTESTED FULL green on every merge this fire (373bf176, dbfbae4f, 8f3136cb). So this is not an incident; it is an unmeasured cost.\n\nWHAT TO DO:\n1. MEASURE THE BLAST RADIUS of an append to patterns.md: how many citations move per N lines inserted, which zones they land in (DIRECTIVE vs evidence), and how many are load-bearing (a .pin, a guard, a hard-guard input) rather than prose. Quote member SETS with their tree.\n2. ASK THE REAL QUESTION: is 'append to patterns.md' inherently a citation-rotting operation, and if so, is the FORWARD-CORRECTION convention actually sufficient, or does it just move the cost to whoever reads a stale line number next? An honest 'the convention is sufficient and here is the measurement' is a fine outcome.\n3. If a cheap mechanical mitigation exists (anchor citations by SENTENCE rather than line number -- T458 already chose a sentence anchor for its refusal text and that precedent is worth measuring), cost it. If it does not, say so rather than building a guesser.\n4. Do NOT mass-rewrite existing citations. That is a far larger and riskier change than the drift it would fix.\n\nSCOPE: your own capture dir; measurement and a written finding. Do not move any pin. Do not spell a real .softhouse/... path as a literal in a fixture (P-103). Bar on your own committed tree, probe PRESENCE before value.",
    "note": "Filed by the driver of fire 20260829-080002 iter6 against ITS OWN merges, from T473's incidental finding. Verified report-only by the driver; the bar was green and attested on all three merges."
+  },
+  {
+   "id": "T479",
+   "status": "in_progress",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "role": "reviewer",
+   "title": "INDEPENDENT review of T477 -- the three-layer interpreter fix, the CHALLENGE whose answer is not in the input, and whether the declared LONGNOP-class bound is the true bound",
+   "branch": "softhouse/T479-review-t477",
+   "files_hint": [
+    ".softhouse/reviews/t479-review-t477/"
+   ],
+   "dependencies": [
+    "T477"
+   ],
+   "description": "Independent adversarial review of T477 (softhouse/T477-t473-repair, tip a6bf50a3), which carries T466's work plus the repair. Re-derive; do not inherit T477's, T473's or T466's numbers.",
+   "note": "local fire 20260829-080002 iter6: DISPATCHED (reviewer for the T466+T477 repair stack) at 2026-08-29T11:36:36Z, isolated worktree, model opus, branch softhouse/T479-review-t477."
   }
  ],
  "cross_corroboration": {
