@@ -253,11 +253,17 @@ is on `main` and outside this task's scope — flagged as a residual below.
 
 ## C-T449-7 — a live worker before its first commit
 
-Observed live again, on **all five** of this wave's workers, this branch included:
+Observed live again, and this time on **all five** of this wave's workers at once,
+including this branch, at the moment of dispatch:
 
 ```
 T451  WIP: STILLBORN … DEMOTED.   RECONCILE WOULD: demote to needs_retry
 ```
+
+Re-run a few hours later, three of the five had made their first commit and read
+`COMMITS`; two were still `STILLBORN` [`out/61-readylist-green.txt`]. That is the shape of
+the exposure: it is not rare, it is not permanent, and it is entirely a function of
+whether the reconciler happens to run inside the window before a worker's first commit.
 
 No behaviour change: nothing in `_branch_wip_core` can distinguish a live worker from a
 dead one, and adding a liveness signal is a new signal, not a condition. What changed is
@@ -350,17 +356,43 @@ returns, so it cannot rot into a paraphrase that always agrees with itself (P-80
 
 ## THE BAR, AND THE TOOL
 
-*(filled in from the committed-tree run — see `out/90-bar-*.txt`)*
+**`bash .softhouse/conformance.sh` on the clean committed tree `e0df51c5` — EXIT 0.**
+Scratch in `/tmp/t451`, **outside the repo**; `git status --porcelain` empty before the
+run. Probe tested for **PRESENCE before its value** (P-84: absence is not `down`) —
+`grep -c 'probe = '` → **1** — and only then read. Probe line **verbatim**:
+
+```
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+```
+```
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
+conformance:   all 16 wrong ledger implementations DIED through this harness, not by hand.
+```
+[`out/90-bar-committed-tree-e0df51c5.txt`, 860 lines]
+
+**The bar went RED on my first committed tree, and the repair is recorded rather than
+pinned.** `guard_dead_path_frontier` refused with `rows=120 pinned=108 added=12`: 12 new
+dead repo-path references, **all 12 from `bin/10-fixture.sh`**, which spelled the
+synthetic repo's paths as literals like `.softhouse/capture/t900-work/out/wip.txt`. The
+census is right — a tracked instrument's literal `.softhouse/...` string *is* a reference
+to the tree it runs in — and the fixture's strings are not references at all; they are
+paths inside `$FIX`, and they must **mimic** this program's conventions, because that is
+the whole point of cases K and R2. So they are now built from `S=".softhouse"` with the
+reason in the file, and the frontier pin was **not** touched.
+[`/tmp/t451/bar-1.txt` is the RED run; commit `e0df51c5` is the repair.]
 
 **`python3 .softhouse/bin/ready-tasks.py` on the live `tasks.json`.** `IN PROGRESS (5)` /
-`READY (45)` / `BLOCKED (8)`, exit 0. Diffed against RED's output on the same tree: the
-READY, BLOCKED, gates and edges sections are **byte-identical**, and the only differences
-are the five in-progress workers' note *text*. Every kind is `STILLBORN` and every action
-is `demote to needs_retry` in **both** — 5/5 identical
-[`/tmp/t451/readylist.diff`, 16 lines, all note text].
+`READY (45)` / `BLOCKED (8)`, exit 0 [`out/61-readylist-green.txt`]. Diffed against RED's
+output on the same tree: **8 lines, 2 hunks, both of them note TEXT**
+[`out/60-readylist-RED-vs-GREEN.diff`]. All 5 kinds agree (3 `COMMITS`, 2 `STILLBORN`) and
+all 5 actions agree (`demote to needs_retry` ×5). The READY, BLOCKED, gates and edges
+sections are byte-identical, and the single `!! WORK BEARING id T286 IS ALREADY ON MAIN`
+flag is raised in both.
 
 **`--json` still parses.** `json.load` succeeds; keys `blocked`, `in_progress`, `ready`,
-`unresolved_edges`; 45 / 5 / 8 / 0, agreeing with the text output.
+`unresolved_edges`; 45 / 5 / 8 / 0, agreeing with the text output
+[`out/62-json-green.json`].
 
 **The bar's own reconciler guard, run directly against this tree's bytes**
 [`out/40-ownership-selftest.txt`]:
