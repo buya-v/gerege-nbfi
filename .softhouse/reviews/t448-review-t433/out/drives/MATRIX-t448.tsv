@@ -1,0 +1,7 @@
+case	rc	verdict	named	at_tip	moved	graded	expect	result
+control	0	PASS	0	0	0	632	0	as expected
+vacuity-redrive	1	FAIL	0	10	0	0	1	as expected
+ivc1-readd-identical	0	PASS	0	0	0	632	0	as expected
+ivc2-readd-mutated	1	FAIL	1	0	0	632	1	as expected
+ivc3-readd-then-mutate	1	FAIL	1	0	0	632	1	as expected
+ivc4-readd-wholly-new	1	FAIL	1	0	0	632	1	as expected

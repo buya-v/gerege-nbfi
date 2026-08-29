@@ -1,0 +1,47 @@
+=== T448 INDEPENDENT BIRTH SWEEP (METHOD C: tree containment, topo order) ===
+    root          /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5f3d0743d5dea2cd
+    tip           b102875c7e0d1b7f1ba4339180cedc5e207dfb11  (b102875c7e0d1b7f1ba4339180cedc5e207dfb11)
+    fork constant 12a7f8d9a3af4665fd5281a9f9c001d4f1276a53
+    K1 calibration OK: the fork tree carries 403 observation(s).
+
+--- (0) POPULATION -----------------------------------------------------------
+    at tip   1035      at fork   403      POST-FORK POPULATION  632
+    non-blob (symlink/gitlink) entries in the population : 0
+
+--- (1) METHOD C: tree containment over 2547 commits, oldest-first ----------------
+    distinct subtree states listed : 23
+    birth commit resolved for      : 632 of 632
+    K2 calibration OK: fork-era path out/A2-000-glaccounts-preexisting.http
+       born at 0e9684134dd0, an ancestor of the fork sha, as it must be.
+
+--- (2) WHERE EACH OBSERVATION WAS BORN ----------------------------------------
+    born STRICTLY OLDER than the tip and an ANCESTOR of it : 632
+    born AT THE TIP itself                                 : 0
+    born at a commit that is NOT an ancestor of the tip    : 0
+    distinct birth commits : 7
+
+--- (3) GIT BLOB OID: birth tree vs tip tree (no bytes read) --------------------
+    equal to the birth blob : 631
+    DIFFER                  : 1
+      DIFFERS out/A2-370-db-ledger-state.txt
+        born at   aae501b576ecca1d70881c3cff49c43d2576b0f6
+        birth oid 368483a4136f180f3ed78cd4f004091ce9dbfd7f
+        tip   oid 72b368e11792ee82fd0aaec3efeea08f869df1ca
+
+--- (4) SHA256: bytes at birth vs bytes on disk ---------------------------------
+    equal to the birth blob : 631
+    DIFFER                  : 1
+      DIFFERS out/A2-370-db-ledger-state.txt
+        born at      aae501b576ecca1d70881c3cff49c43d2576b0f6
+        birth sha256 1ea4927a59068d0a5ec45773dbc50a4c80d9eaa0457f0cecdc820e4b8ed5f857
+        disk  sha256 1c23375b0f010cf5bb65b6fead9c9ec063fcafe9e4f16d713b34f367f41716e2
+
+--- (5) CROSS-CHECK against T433's PRIMITIVE, which METHOD C did not use ---------
+    `git log --diff-filter=A` is run here ONLY to see whether it AGREES with METHOD C.
+    A disagreement is a finding about T433's instrument, not about the repository.
+    METHOD A resolved    : 632 of 632
+    A vs C disagreements : 0
+
+CONCLUSION
+  A committed baseline strictly older than the tip exists for 632 of the 632 post-fork
+  observations. Non-equal by sha256, by name: ['out/A2-370-db-ledger-state.txt']

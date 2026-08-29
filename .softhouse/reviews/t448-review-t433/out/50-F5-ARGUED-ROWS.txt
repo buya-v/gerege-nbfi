@@ -1,0 +1,25 @@
+############ T448 -- F-5's ARGUED ROWS, MEASURED
+  ref = 3253358d
+  T393 matrix cases: 11  (driven by T433: control, f1-13b  ->  ARGUED: 9)
+
+  targets: FORKOBS=out/A2-000-glaccounts-preexisting.http  POSTFORK=out/A2-200-glaccounts-live-precheck.http  NONOBS=manifest.py
+
+  control                              sec10=0  armf-named=0  T393 recorded 0   matches T393's matrix
+  P-72 calibration OK: the unmutated clone grades PASS, exit 0.
+
+  --- THE NINE ROWS T433 ARGUED RATHER THAN MEASURED, at the AFTER ref ---
+  f1-13-commit-mutate-postfork         sec10=1  armf-named=1  T393 recorded 1   matches T393's matrix
+  f1-14-commit-delete-postfork         sec10=1  armf-named=0  T393 recorded 1   matches T393's matrix
+  f1-15-commit-add-fabricated          sec10=1  armf-named=0  T393 recorded 1   matches T393's matrix
+  f1-16-untracked-fabricated           sec10=1  armf-named=0  T393 recorded 1   matches T393's matrix
+  f1-09-symlink-identical-bytes        sec10=1  armf-named=0  T393 recorded 1   matches T393's matrix
+  f4a-control-commit-mutate-forkobs    sec10=1  armf-named=0  T393 recorded 1   matches T393's matrix
+        FORK constant moved: 12a7f8d9a3af4665fd5281a9f9c001d4f1276a53 -> 1edd8be157f5e7850566e75443a0ae90a09bd459
+  f4b-move-fork-constant               sec10=2  armf-named=0  T393 recorded 2   matches T393's matrix
+  f3-commit-mutate-nonobs              sec10=1  armf-named=0  T393 recorded 1   matches T393's matrix
+  f3b-commit-mutate-nonobs-laundered   sec10=1  armf-named=0  T393 recorded 1   matches T393's matrix
+
+T448 F-5 VERDICT: all nine argued rows produce, with ARM F present, exactly the sec10
+value T393's committed MATRIX.tsv records for them. T433's argument is CORRECT -- and it
+is now a measurement rather than an argument, taken in seconds, because the column the
+matrix grades is one command's exit code and not the whole runner's.

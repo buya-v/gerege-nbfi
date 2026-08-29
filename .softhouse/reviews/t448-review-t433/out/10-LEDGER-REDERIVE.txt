@@ -1,0 +1,33 @@
+T448 -- LEDGER RE-DERIVATION of the one adjudicated post-fork difference
+    file  .softhouse/capture/tierA-a2/out/A2-370-db-ledger-state.txt
+    birth aae501b576ecca1d70881c3cff49c43d2576b0f6   tip HEAD
+
+=== BIRTH BLOB (aae501b576ec) ===
+    raw journal-entry legs parsed : 48
+    summary rows parsed           : 21
+    ordinal calibration OK: L1's Loan Portfolio (10201) leg is type_enum 2 = DEBIT
+    P-72 calibration OK: a planted 1-minor-unit imbalance IS caught by this code.
+    transactions recomputed       : 21
+    IMBALANCED transactions       : 0
+    legs with a residue BELOW the MNT minor unit : 0
+    summary rows CONTRADICTED by the recomputation : 0
+    WHOLE-LEDGER debit_minor=1093166950  credit_minor=1093166950  delta=0
+
+=== TRACKED AT HEAD ===
+    raw journal-entry legs parsed : 54
+    summary rows parsed           : 23
+    ordinal calibration OK: L1's Loan Portfolio (10201) leg is type_enum 2 = DEBIT
+    P-72 calibration OK: a planted 1-minor-unit imbalance IS caught by this code.
+    transactions recomputed       : 23
+    IMBALANCED transactions       : 0
+    legs with a residue BELOW the MNT minor unit : 0
+    summary rows CONTRADICTED by the recomputation : 0
+    WHOLE-LEDGER debit_minor=1197166950  credit_minor=1197166950  delta=0
+
+=== IS THE DIFFERENCE ADDITIVE? (append-only ledger, corrections are reversing entries) ===
+    transactions at birth 21 -> at HEAD 23
+    ADDED   : ['L26', 'L27']
+    REMOVED : []
+    ALTERED (same id, different totals or leg count) : []
+
+EXIT 0
