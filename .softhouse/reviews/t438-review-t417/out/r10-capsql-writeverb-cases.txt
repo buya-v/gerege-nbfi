@@ -1,0 +1,5 @@
+a-normal.sql             -> REFUSED
+b-verb-at-eol.sql        -> ALLOWED
+c-verb-then-paren.sql    -> ALLOWED
+d-clean.sql              -> ALLOWED
+e-verb-in-comment.sql    -> REFUSED

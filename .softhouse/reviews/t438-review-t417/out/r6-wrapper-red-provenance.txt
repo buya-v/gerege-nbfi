@@ -1,0 +1,56 @@
+WITNESS OPEN  label=T438RED
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+  graded rollup = 4c0adcae1804d88464265fc0f7661891
+  db now (UTC)  = 2026-08-29 00:47:12.664715
+  jrh max id    = 13375
+  jobs in flight= 0  (job.currently_running)
+  witness       -> /tmp/t438/wrapwit/T438RED.open.tsv
+-----------------------------------------------------------------------------
+RUNNING THE CAPTURE: bash /tmp/t438/doctor.sh
+-----------------------------------------------------------------------------
+doctored /tmp/t438/wrapwit/T438RED.open.tsv
+-----------------------------------------------------------------------------
+capture command exit = 0
+WITNESS CLOSE label=T438RED
+  window (UTC, database clock): 2026-08-29 00:47:12.664715  ->  2026-08-29 00:47:13.331883
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+-----------------------------------------------------------------------------
+SCHEDULER RUNS INSIDE THE WINDOW (the witness -- says a job RAN, not what it WROTE)
+  RUNS OVERLAPPING WINDOW = 0
+-----------------------------------------------------------------------------
+GRADED SURFACE -- content digest over EVERY base table and sequence except the 8 named
+  ***  acc_gl_journal_entry  rows 109 -> 109   digest 000000000000 -> 77a7b645ba0f   MOVED
+-----------------------------------------------------------------------------
+VERDICT: CAPTURE CONTAMINATED (exit 1). The oracle MOVED while the capture was open.
+  Anything captured inside this window may be a photograph of a moving target. Do not
+  promote it to a vector: re-capture inside a window this instrument calls QUIESCENT.
+  ATTRIBUTION: NO job run overlaps this window. The scheduler did not do this. Something
+  else wrote to the SHARED reference oracle -- find it, and register it.
+-----------------------------------------------------------------------------
+PROVENANCE -> /tmp/t438/wrapwit/T438RED.provenance.tsv
+  # capture provenance v1 -- written by capture-under-witness.sh
+  label	T438RED
+  command	bash /tmp/t438/doctor.sh
+  command_exit	0
+  fineract_commit	426a23544e8426a38ae43ae404670a0a7e85b9eb
+  window_open_db_utc	2026-08-29 00:47:12.664715
+  window_close_db_utc	2026-08-29 00:47:13.331883
+  jrh_high_water_open	13375
+  jrh_high_water_close	13375
+  jobs_active	31
+  runs_in_window	0
+  graded_tables	273
+  graded_sequences	249
+  rollup_open	c3f489c5bef2023af86ea2c43718a7c2
+  rollup_close	4c0adcae1804d88464265fc0f7661891
+  witness_verdict	CAPTURE
+  witness_exit	1
+  shelf_life_check	bash instruments/oracle-window-witness.sh verify T438RED
+-----------------------------------------------------------------------------
+capture-under-witness: REFUSED (exit 1). THE ORACLE MOVED WHILE THIS CAPTURE WAS OPEN.
+  Do not promote anything captured in this window to a vector. Re-capture in a window
+  the witness certifies QUIESCENT, and read the run list above for the candidate author.
+WRAPPER rc=1
+=== PROVENANCE BLOCK AS WRITTEN ===
+cat: illegal option -- A
+usage: cat [-belnstuv] [file ...]

@@ -1,0 +1,7 @@
+WITNESS OPEN  label=T438A
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+  graded rollup = 4c0adcae1804d88464265fc0f7661891
+  db now (UTC)  = 2026-08-29 00:43:00.157944
+  jrh max id    = 13369
+  jobs in flight= 0  (job.currently_running)
+  witness       -> /tmp/t438/witness/T438A.open.tsv

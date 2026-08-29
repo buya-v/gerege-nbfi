@@ -1,0 +1,69 @@
+== e1: row counts of the 8 excluded tables ==
+              t               | count 
+------------------------------+-------
+ batch_job_execution          | 13366
+ batch_job_execution_context  | 13366
+ batch_job_execution_params   | 13409
+ batch_job_instance           | 13366
+ batch_step_execution         | 13367
+ batch_step_execution_context | 13367
+ job                          |    41
+ job_run_history              | 13366
+
+== e2: what is actually IN batch_job_execution_params / context (money? ledger?) ==
+ parameter_name | parameter_type | parameter_value 
+----------------+----------------+-----------------
+ run.id         | java.lang.Long | 1
+ run.id         | java.lang.Long | 2
+ run.id         | java.lang.Long | 3
+ run.id         | java.lang.Long | 4
+ run.id         | java.lang.Long | 5
+ run.id         | java.lang.Long | 6
+ run.id         | java.lang.Long | 1
+ run.id         | java.lang.Long | 1
+ run.id         | java.lang.Long | 1
+ run.id         | java.lang.Long | 7
+ run.id         | java.lang.Long | 8
+ run.id         | java.lang.Long | 9
+ run.id         | java.lang.Long | 10
+ run.id         | java.lang.Long | 11
+ run.id         | java.lang.Long | 12
+ run.id         | java.lang.Long | 13
+ run.id         | java.lang.Long | 14
+ run.id         | java.lang.Long | 15
+ run.id         | java.lang.Long | 16
+ run.id         | java.lang.Long | 17
+
+== e2b: contexts ==
+ job_execution_id |                          left                          
+------------------+--------------------------------------------------------
+                1 | {"@class":"java.util.HashMap","batch.version":"5.2.6"}
+                2 | {"@class":"java.util.HashMap","batch.version":"5.2.6"}
+                3 | {"@class":"java.util.HashMap","batch.version":"5.2.6"}
+                4 | {"@class":"java.util.HashMap","batch.version":"5.2.6"}
+                5 | {"@class":"java.util.HashMap","batch.version":"5.2.6"}
+                6 | {"@class":"java.util.HashMap","batch.version":"5.2.6"}
+                8 | {"@class":"java.util.HashMap","batch.version":"5.2.6"}
+                7 | {"@class":"java.util.HashMap","batch.version":"5.2.6"}
+               10 | {"@class":"java.util.HashMap","batch.version":"5.2.6"}
+                9 | {"@class":"java.util.HashMap","batch.version":"5.2.6"}
+
+ step_execution_id |                                                                                                                     left                                                                                                                     
+-------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                 1 | {"@class":"java.util.HashMap","batch.taskletType":"org.apache.fineract.infrastructure.event.external.jobs.SendAsynchronousEventsTasklet","batch.version":"5.2.6","batch.stepType":"org.springframework.batch.core.step.tasklet.TaskletStep"}
+                19 | {"@class":"java.util.HashMap","batch.taskletType":"org.apache.fineract.infrastructure.event.external.jobs.SendAsynchronousEventsTasklet","batch.version":"5.2.6","batch.stepType":"org.springframework.batch.core.step.tasklet.TaskletStep"}
+                 2 | {"@class":"java.util.HashMap","batch.taskletType":"org.apache.fineract.infrastructure.event.external.jobs.SendAsynchronousEventsTasklet","batch.version":"5.2.6","batch.stepType":"org.springframework.batch.core.step.tasklet.TaskletStep"}
+                13 | {"@class":"java.util.HashMap","batch.taskletType":"org.apache.fineract.infrastructure.event.external.jobs.SendAsynchronousEventsTasklet","batch.version":"5.2.6","batch.stepType":"org.springframework.batch.core.step.tasklet.TaskletStep"}
+                 3 | {"@class":"java.util.HashMap","batch.taskletType":"org.apache.fineract.infrastructure.event.external.jobs.SendAsynchronousEventsTasklet","batch.version":"5.2.6","batch.stepType":"org.springframework.batch.core.step.tasklet.TaskletStep"}
+                 4 | {"@class":"java.util.HashMap","batch.taskletType":"org.apache.fineract.infrastructure.event.external.jobs.SendAsynchronousEventsTasklet","batch.version":"5.2.6","batch.stepType":"org.springframework.batch.core.step.tasklet.TaskletStep"}
+                 5 | {"@class":"java.util.HashMap","batch.taskletType":"org.apache.fineract.infrastructure.event.external.jobs.SendAsynchronousEventsTasklet","batch.version":"5.2.6","batch.stepType":"org.springframework.batch.core.step.tasklet.TaskletStep"}
+                14 | {"@class":"java.util.HashMap","batch.taskletType":"org.apache.fineract.infrastructure.event.external.jobs.SendAsynchronousEventsTasklet","batch.version":"5.2.6","batch.stepType":"org.springframework.batch.core.step.tasklet.TaskletStep"}
+                 6 | {"@class":"java.util.HashMap","batch.taskletType":"org.apache.fineract.infrastructure.event.external.jobs.SendAsynchronousEventsTasklet","batch.version":"5.2.6","batch.stepType":"org.springframework.batch.core.step.tasklet.TaskletStep"}
+                15 | {"@class":"java.util.HashMap","batch.taskletType":"org.apache.fineract.infrastructure.event.external.jobs.SendAsynchronousEventsTasklet","batch.version":"5.2.6","batch.stepType":"org.springframework.batch.core.step.tasklet.TaskletStep"}
+
+== e3: the two NEAR-MISS tables that ARE graded ==
+              t              | count 
+-----------------------------+-------
+ batch_custom_job_parameters |     0
+ job_parameters              |     5
+

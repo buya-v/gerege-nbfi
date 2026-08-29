@@ -1,0 +1,110 @@
+== j1: job cardinals ==
+ job_rows | active | inactive 
+----------+--------+----------
+       41 |     31 |       10
+
+== j2: distinct jobs that ran in the last 24h ==
+ distinct_jobs_24h 
+-------------------
+                31
+
+== j3: job 36 cadence ==
+ id |           name           | is_active | cron_expression | currently_running 
+----+--------------------------+-----------+-----------------+-------------------
+ 36 | Send Asynchronous Events | t         | 0 0/1 * * *  ?  | f
+
+ job36_alltime 
+---------------
+         10655
+
+ job36_24h 
+-----------
+      1440
+
+== j3b: job 36 gap analysis in last 60 min ==
+ runs_last_60min |           min           |           max           
+-----------------+-------------------------+-------------------------
+              60 | 2026-08-28 23:42:00.005 | 2026-08-29 00:41:00.009
+
+== j4: jobs currently running RIGHT NOW ==
+ in_flight 
+-----------
+         0
+
+== L1: ledger cardinals ==
+ rows | maxid | distinct_txn 
+------+-------+--------------
+  109 |   113 |           38
+
+== L2: distinct last_modified_by / created_by over ALL ledger rows ==
+ last_modified_by | count 
+------------------+-------
+                2 |   109
+
+ created_by | count 
+------------+-------
+          1 |    91
+          2 |    18
+
+== L3: max created / modified ==
+          max_created          |         max_modified          
+-------------------------------+-------------------------------
+ 2026-08-28 16:01:00.117772+00 | 2026-08-28 16:01:00.117772+00
+
+== L4: the T409-vs-T417 contradiction: min(entry_date) WHERE NOT is_running_balance_calculated ==
+ min_entry_date | not_calculated 
+----------------+----------------
+ 2026-05-15     |             18
+
+ rows_ge_min 
+-------------
+          55
+
+== L4b: the not-calculated rows in full ==
+ id  | entry_date | transaction_id | is_running_balance_calculated 
+-----+------------+----------------+-------------------------------
+  96 | 2026-05-15 | L32            | f
+  97 | 2026-05-15 | L32            | f
+  98 | 2026-05-15 | L32            | f
+  99 | 2026-05-15 | L32            | f
+ 100 | 2026-05-15 | L32            | f
+ 101 | 2026-05-15 | L32            | f
+ 102 | 2026-06-15 | L33            | f
+ 103 | 2026-06-15 | L33            | f
+ 104 | 2026-06-15 | L33            | f
+ 105 | 2026-06-15 | L33            | f
+ 106 | 2026-06-15 | L33            | f
+ 107 | 2026-06-15 | L33            | f
+ 108 | 2026-07-15 | L34            | f
+ 109 | 2026-07-15 | L34            | f
+ 110 | 2026-07-15 | L34            | f
+ 111 | 2026-07-15 | L34            | f
+ 112 | 2026-07-15 | L34            | f
+ 113 | 2026-07-15 | L34            | f
+
+== L5: entry_date distribution ==
+ entry_date | count 
+------------+-------
+ 2026-01-15 |     2
+ 2026-02-01 |    16
+ 2026-02-15 |     6
+ 2026-03-01 |     8
+ 2026-03-15 |     6
+ 2026-04-01 |     4
+ 2026-04-15 |     6
+ 2026-05-01 |     6
+ 2026-05-15 |     6
+ 2026-06-01 |    27
+ 2026-06-02 |     4
+ 2026-06-15 |     6
+ 2026-07-01 |     4
+ 2026-07-15 |     6
+ 2026-08-01 |     2
+
+== L6: appusers ==
+ id |  username   
+----+-------------
+  1 | mifos
+  2 | system
+  3 | interopUser
+
