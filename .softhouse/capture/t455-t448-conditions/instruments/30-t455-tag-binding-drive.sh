@@ -58,6 +58,7 @@ OUT="${T455_OUT:?T455_OUT must name the directory to write transcripts into}"
 # A required-parameter idiom that silently fails to require is the same class as an instrument
 # that emits a negative it did not measure — it just fails at a different time.
 REF="${T455_REF:?T455_REF must name the commit-ish carrying the T455 section 10}"
+BEFORE="${T455_BEFORE:?T455_BEFORE must name a commit-ish carrying the T433 correction but NOT the T455 section 10}"
 OLD_GUARD="${T455_OLD_GUARD:?T455_OLD_GUARD must give the repo-relative path of the T433 ARM-F wiring guard}"
 
 INT=".softhouse/reviews/A2-11/verify-capture-integrity.py"
@@ -77,18 +78,19 @@ verdict() {   # verdict <label> <got> <want>
   else echo "  BAD  $1 = $2, EXPECTED $3"; FAILURES=$((FAILURES + 1)); fi
 }
 
-prepare() {
+prepare() {   # prepare [ref] — defaults to REF
+  local ref="${1:-$REF}"
   if [ ! -d "$D/.git" ]; then
     rm -rf "$D" || return 1
     git clone --quiet --shared "$SRC" "$D" || return 1
   fi
-  git -C "$D" checkout --quiet --detach "$REF" || return 1
-  git -C "$D" reset --quiet --hard "$REF" || return 1
+  git -C "$D" checkout --quiet --detach "$ref" || return 1
+  git -C "$D" reset --quiet --hard "$ref" || return 1
   git -C "$D" clean -qfdx || return 1
-  [ -f "$D/$INT" ]    || { echo "REFUSED: $INT absent at $REF" >&2; return 1; }
-  [ -f "$D/$RUNALL" ] || { echo "REFUSED: $RUNALL absent at $REF" >&2; return 1; }
+  [ -f "$D/$INT" ]    || { echo "REFUSED: $INT absent at $ref" >&2; return 1; }
+  [ -f "$D/$RUNALL" ] || { echo "REFUSED: $RUNALL absent at $ref" >&2; return 1; }
   [ -f "$D/$OLD_GUARD" ] || {
-    echo "REFUSED: T455_OLD_GUARD=$OLD_GUARD does not resolve inside the tree at $REF." >&2
+    echo "REFUSED: T455_OLD_GUARD=$OLD_GUARD does not resolve inside the tree at $ref." >&2
     return 1; }
   return 0
 }
@@ -103,6 +105,22 @@ grade_old() {   # grade_old <case> ; echoes T433's capture-directory guard's exi
   local n="$1"
   T433_ROOT="$D" bash "$D/$OLD_GUARD" > "$OUT/tag-$n-oldguard.txt" 2>&1
   echo $?
+}
+
+# old_tag_predicates <case> — did T433's OWN tag predicates fire, for run-all.sh?
+#
+# WHY THIS IS MEASURED INSTEAD OF THE GUARD'S EXIT CODE, and it is a correction to this file's
+# own first draft. T433's guard also RUNS the shipped grader and asserts it exits 0. Once the
+# binding repair lives INSIDE that grader, the guard goes red on B and C transitively — through
+# the grader, not through its own predicates. Reading its exit code would then have recorded
+# "T433's guard catches abuse B", which is FALSE about the predicate under discussion and true
+# only about the grader it happens to invoke. Measured here at the assertion, by name.
+old_tag_predicates() {   # echoes "<negative-half-fired> <positive-half-fired>"
+  local f="$OUT/tag-$1-oldguard.txt"
+  local neg pos
+  neg="$(grep -c -F -- 'BAD  run-all.sh still asserts the impossibility' "$f")"
+  pos="$(grep -c -F -- 'BAD  run-all.sh no longer quotes the false text' "$f")"
+  echo "$neg $pos"
 }
 
 # T448's SUPPLIED ONE-PREDICATE REPAIR, re-implemented in its own spelling so it can be
@@ -162,12 +180,19 @@ B_P1="$(grep -c -F -- 'FAIL  PREDICATE 1, BINDING' "$OUT/tag-B-smuggle-live-echo
 echo "  B live echo, tag in a trailing comment  (sentence now x$SRC_HITS in run-all.sh's source)"
 echo "                          shipped section 10 exit = $RC_B_NEW   T433 guard exit = $RC_B_OLD"
 echo "                          T448's one predicate: all=$(echo "$P_B" | awk '{print $1}') both=$(echo "$P_B" | awk '{print $2}') -> $(echo "$P_B" | awk '{print $3}')"
+OLD_B="$(old_tag_predicates B-smuggle-live-echo)"
+echo "                          T433's own tag predicates on run-all.sh: negative-half fired=$(echo "$OLD_B" | awk '{print $1}'), positive-half fired=$(echo "$OLD_B" | awk '{print $2}')"
 verdict "B the SHIPPED grader REFUSES it" "$RC_B_NEW" 1
 verdict "B on PREDICATE 2 (what the line PRINTS), x1" "$B_P2" 1
 verdict "B and NOT on PREDICATE 1 — the source line does carry the tag" "$B_P1" 0
-verdict "B T433's guard is DEFEATED by it, reproducing T448's finding at first hand" "$RC_B_OLD" 0
+verdict "B T433's NEGATIVE half is DEFEATED — it excludes the line for carrying the token" \
+        "$(echo "$OLD_B" | awk '{print $1}')" 0
+verdict "B T433's POSITIVE half is satisfied too" "$(echo "$OLD_B" | awk '{print $2}')" 0
 verdict "B AND SO IS T448's OWN ONE-PREDICATE REPAIR — the review says it fails here; measured, it PASSES" \
         "$(echo "$P_B" | awk '{print $3}')" PASS
+echo "                          (T433's guard exits $RC_B_OLD only because it also RUNS the"
+echo "                           grader, which now catches this. Its own predicates, above,"
+echo "                           are both still defeated — that is the finding.)"
 # The harm is what a READER sees, so prove it reaches the transcript rather than sitting in
 # the source. run-all.sh is not executed here (that is 10-t455-runall-and-footer.sh's job);
 # what is asserted is that the emitted payload carries no tag, which is predicate 2's claim.
@@ -210,10 +235,66 @@ C_P1="$(grep -c -F -- 'FAIL  PREDICATE 1, BINDING' "$OUT/tag-C-quote-gone-tag-ke
 echo "  C quotation deleted, tag kept  (sentence x$QUOTED_LEFT, tag x$TAGS_LEFT)"
 echo "                          shipped section 10 exit = $RC_C_NEW   T433 guard exit = $RC_C_OLD"
 echo "                          T448's one predicate: all=$(echo "$P_C" | awk '{print $1}') both=$(echo "$P_C" | awk '{print $2}') -> $(echo "$P_C" | awk '{print $3}')"
+OLD_C="$(old_tag_predicates C-quote-gone-tag-kept)"
+echo "                          T433's own tag predicates on run-all.sh: negative-half fired=$(echo "$OLD_C" | awk '{print $1}'), positive-half fired=$(echo "$OLD_C" | awk '{print $2}')"
 verdict "C the SHIPPED grader REFUSES it" "$RC_C_NEW" 1
 verdict "C on PREDICATE 1 (de-wrapped tagged block holds no quotation), x1" "$C_P1" 1
-verdict "C T433's guard is DEFEATED by it, reproducing T448's finding at first hand" "$RC_C_OLD" 0
+verdict "C T433's NEGATIVE half is satisfied — the claim really is gone" \
+        "$(echo "$OLD_C" | awk '{print $1}')" 0
+verdict "C T433's POSITIVE half is DEFEATED — three BARE tags satisfy a tag COUNT" \
+        "$(echo "$OLD_C" | awk '{print $2}')" 0
 verdict "C T448's one predicate DOES close this half" "$(echo "$P_C" | awk '{print $3}')" FAIL
+echo "                          (again, T433's guard exits $RC_C_OLD only via the grader it runs.)"
+echo
+
+# =========================================================================================
+# CASES B0 / C0 — THE SAME TWO ABUSES AT A REF THAT HAS NO SECTION 10, so T433's guard is
+# measured on its OWN predicates with nothing to rescue it. This reproduces T448's literal
+# claim — guard EXIT 0 on both — at first hand, and it is the calibration that makes the
+# "defeated" verdicts above mean something rather than being a reading of my own repair.
+# =========================================================================================
+prepare "$BEFORE" || { echo "REFUSED: could not prepare $BEFORE for case B0" >&2; exit 3; }
+RC_CAL_OLD="$(grade_old B0-calibration)"
+verdict "B0 calibration: T433's guard is GREEN on the unmutated tree at BEFORE" "$RC_CAL_OLD" 0
+python3 - "$D/$RUNALL" "$SENTENCE" "$TAG" <<'PYEOF' || exit 3
+import sys
+path, sentence, tag = sys.argv[1], sys.argv[2], sys.argv[3]
+anchor = '  sec 10 0 python3 "$DIR/verify-capture-integrity.py"'
+src = open(path, encoding="utf-8").read()
+if anchor not in src:
+    print("REFUSED: the section-10 anchor is not in run-all.sh at BEFORE.")
+    sys.exit(3)
+open(path, "w", encoding="utf-8").write(
+    src.replace(anchor, '  echo "%s"  # %s\n' % (sentence, tag) + anchor, 1))
+print("B0: smuggled the sentence back at BEFORE")
+PYEOF
+RC_B0_OLD="$(grade_old B0-smuggle-at-BEFORE)"
+echo "  B0 abuse B at BEFORE (no section 10)     T433 guard exit = $RC_B0_OLD"
+verdict "B0 T433's guard PASSES a tree that re-asserts the false claim as a live echo" "$RC_B0_OLD" 0
+
+prepare "$BEFORE" || { echo "REFUSED: could not prepare $BEFORE for case C0" >&2; exit 3; }
+python3 - "$D/$RUNALL" "$TAG" <<'PYEOF' || exit 3
+import sys
+path, tag = sys.argv[1], sys.argv[2]
+lines = open(path, encoding="utf-8").read().split("\n")
+kept = [ln for ln in lines if tag not in ln]
+dropped = len(lines) - len(kept)
+if dropped < 3:
+    print("REFUSED: expected at least 3 tagged lines to remove at BEFORE, found %d." % dropped)
+    sys.exit(3)
+anchor = '  sec 10 0 python3 "$DIR/verify-capture-integrity.py"'
+if anchor not in kept:
+    print("REFUSED: the section-10 anchor vanished at BEFORE.")
+    sys.exit(3)
+i = kept.index(anchor)
+open(path, "w", encoding="utf-8").write(
+    "\n".join(kept[:i] + ['  # %s (tidied: the quotation was removed, the tag was not)' % tag] * 3
+              + kept[i:]))
+print("C0: deleted %d tagged quotation lines at BEFORE and inserted 3 bare tags" % dropped)
+PYEOF
+RC_C0_OLD="$(grade_old C0-quote-gone-at-BEFORE)"
+echo "  C0 abuse C at BEFORE (no section 10)     T433 guard exit = $RC_C0_OLD"
+verdict "C0 T433's guard PASSES a tree from which the verbatim quotation is GONE" "$RC_C0_OLD" 0
 echo
 
 # =========================================================================================
@@ -270,6 +351,10 @@ printf '  %-34s %-10s %-10s %s\n' "B live echo, tag in comment" "$RC_B_NEW" "$RC
 printf '  %-34s %-10s %-10s %s\n' "C quotation deleted"       "$RC_C_NEW" "$RC_C_OLD" "$(echo "$P_C" | awk '{print $3}')"
 printf '  %-34s %-10s %-10s %s\n' "D replacement text removed" "$RC_D_NEW" "-"        "-"
 printf '  %-34s %-10s %-10s %s\n' "E footer marker removed"   "$RC_E_NEW" "-"        "-"
+echo
+echo "  T433's guard on its OWN predicates, at a ref with NOTHING to rescue it (BEFORE):"
+printf '  %-34s %s\n' "B0 live echo at BEFORE"   "guard exit $RC_B0_OLD"
+printf '  %-34s %s\n' "C0 quotation gone at BEFORE" "guard exit $RC_C0_OLD"
 echo
 if [ "$FAILURES" -ne 0 ]; then
   echo "T455 TAG-BINDING DRIVE: FAIL — $FAILURES case(s) did not behave as recorded."
