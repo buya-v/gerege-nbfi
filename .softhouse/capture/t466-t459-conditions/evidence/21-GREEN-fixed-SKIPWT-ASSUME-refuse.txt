@@ -1,0 +1,72 @@
+
+================ ARM BIT-skip-worktree-HEAD   (base HEAD)
+    BEFORE the bit is set:
+    git status --porcelain      : []
+    git diff-index --name-only  : []
+    ls-files -v, entries not H  : []
+    committed HEAD:harness      = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    hash-object (DEFAULT)       = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    hash-object --no-filters    = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    AFTER  the bit is set and the forged text is on disk:
+    git status --porcelain      : []
+    git diff-index --name-only  : []
+    ls-files -v, entries not H  : [S .softhouse/conformance.sh;]
+    committed HEAD:harness      = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    hash-object (DEFAULT)       = b42ecda2ed3492aaa5eea82bba895ce02dbabd37
+    hash-object --no-filters    = b42ecda2ed3492aaa5eea82bba895ce02dbabd37
+    EXIT       = 2
+    probe cnt  = 0   (PRESENCE read before value)
+    probe val  = <no probe line>
+    VERDICT    = <none>
+    reg census = population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    --- every HARNESS-TEXT / SUPPRESSION line the run printed:
+      13:conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+      17:conformance: guard_harness_text_is_committed: 1 TRACKED PATH(S) CARRY AN INDEX
+      27:conformance: guard_harness_text_is_committed: THE BYTES ON DISK AT .softhouse/conformance.sh ARE NOT THE
+      34:conformance: SUPPRESSION: an index bit, a content filter or a private attributes
+      36:conformance: that are there. The LOCAL-STATE CENSUS above names which levers are
+      39:conformance: guard_harness_text_is_committed: THE HARNESS THAT IS RUNNING IS NOT THE
+      46:conformance:   HARNESS-TEXT CENSUS: HEAD 48ff91d06c771369389163f2319a4191d1965e03; tracked paths whose materialised bytes
+      54:conformance:   this harness .softhouse/conformance.sh: committed 6d4ee3058e24e0e919dd434766f1552623e1575c / on disk b42ecda2ed3492aaa5eea82bba895ce02dbabd37
+      62:conformance:    SUBSTITUTION and a SUPPRESSION are refused. [T454, T446 MAJOR-1, T466.])
+      63:conformance: guard_harness_text_is_committed FAILED: 0 substituted path(s),
+      268:conformance:     COST 5s / ceiling 300s   guard_harness_text_is_committed
+    --- guard verdict refusals (the "<name> FAILED:" form) and any EXIT 2:
+      ! conformance: guard_harness_text_is_committed FAILED: 0 substituted path(s),
+      ! conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+
+================ ARM BIT-assume-unchanged-HEAD   (base HEAD)
+    BEFORE the bit is set:
+    git status --porcelain      : []
+    git diff-index --name-only  : []
+    ls-files -v, entries not H  : []
+    committed HEAD:harness      = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    hash-object (DEFAULT)       = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    hash-object --no-filters    = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    AFTER  the bit is set and the forged text is on disk:
+    git status --porcelain      : []
+    git diff-index --name-only  : []
+    ls-files -v, entries not H  : [h .softhouse/conformance.sh;]
+    committed HEAD:harness      = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    hash-object (DEFAULT)       = b42ecda2ed3492aaa5eea82bba895ce02dbabd37
+    hash-object --no-filters    = b42ecda2ed3492aaa5eea82bba895ce02dbabd37
+    EXIT       = 2
+    probe cnt  = 0   (PRESENCE read before value)
+    probe val  = <no probe line>
+    VERDICT    = <none>
+    reg census = population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    --- every HARNESS-TEXT / SUPPRESSION line the run printed:
+      13:conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+      17:conformance: guard_harness_text_is_committed: 1 TRACKED PATH(S) CARRY AN INDEX
+      27:conformance: guard_harness_text_is_committed: THE BYTES ON DISK AT .softhouse/conformance.sh ARE NOT THE
+      34:conformance: SUPPRESSION: an index bit, a content filter or a private attributes
+      36:conformance: that are there. The LOCAL-STATE CENSUS above names which levers are
+      39:conformance: guard_harness_text_is_committed: THE HARNESS THAT IS RUNNING IS NOT THE
+      46:conformance:   HARNESS-TEXT CENSUS: HEAD 77e1e4086e218e2a768f27a44e36028e878d87d7; tracked paths whose materialised bytes
+      54:conformance:   this harness .softhouse/conformance.sh: committed 6d4ee3058e24e0e919dd434766f1552623e1575c / on disk b42ecda2ed3492aaa5eea82bba895ce02dbabd37
+      62:conformance:    SUBSTITUTION and a SUPPRESSION are refused. [T454, T446 MAJOR-1, T466.])
+      63:conformance: guard_harness_text_is_committed FAILED: 0 substituted path(s),
+      268:conformance:     COST 3s / ceiling 300s   guard_harness_text_is_committed
+    --- guard verdict refusals (the "<name> FAILED:" form) and any EXIT 2:
+      ! conformance: guard_harness_text_is_committed FAILED: 0 substituted path(s),
+      ! conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.

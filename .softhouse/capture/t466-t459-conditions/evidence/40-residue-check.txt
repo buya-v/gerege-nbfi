@@ -1,0 +1,50 @@
+REPOSITORY UNDER TEST: /Users/buv/gerege-nbfi/.claude/worktrees/agent-abca32bc26a9f29f5
+
+--- 1. INDEX BITS: every tracked entry whose ls-files -v state is not H
+    (S = --skip-worktree, a LOWERCASE letter = --assume-unchanged)
+    entries not in state H: 0
+    [nothing listed above = no bit left set]
+
+--- 2. THIS CLONE'S PRIVATE ATTRIBUTES FILE
+    git-dir: /Users/buv/gerege-nbfi/.git/worktrees/agent-abca32bc26a9f29f5
+    /Users/buv/gerege-nbfi/.git/worktrees/agent-abca32bc26a9f29f5/info/attributes DOES NOT EXIST.
+    directory listing of /Users/buv/gerege-nbfi/.git/worktrees/agent-abca32bc26a9f29f5/info:
+      ls: /Users/buv/gerege-nbfi/.git/worktrees/agent-abca32bc26a9f29f5/info: No such file or directory
+
+--- 3. CONFIGURED CONTENT FILTERS
+    [nothing listed above = no filter driver configured]
+
+--- 4. WORKING TREE
+    git status --porcelain:
+       M .softhouse/conformance.sh
+      ?? .softhouse/capture/t466-t459-conditions/evidence/03-citation-sweep.txt
+      ?? .softhouse/capture/t466-t459-conditions/evidence/10-RED-tip-controls.txt
+      ?? .softhouse/capture/t466-t459-conditions/evidence/11-RED-tip-SKIPWT-ASSUME.txt
+      ?? .softhouse/capture/t466-t459-conditions/evidence/12-RED-tip-SMUDGE.txt
+      ?? .softhouse/capture/t466-t459-conditions/evidence/13-RED-tip-SMUDGE-weak-and-LONGNOP.txt
+      ?? .softhouse/capture/t466-t459-conditions/evidence/20-GREEN-fixed-controls-and-WDIRTY.txt
+      ?? .softhouse/capture/t466-t459-conditions/evidence/21-GREEN-fixed-SKIPWT-ASSUME-refuse.txt
+      ?? .softhouse/capture/t466-t459-conditions/evidence/22-GREEN-fixed-SMUDGE-refuses-LONGNOP-OPEN.txt
+      ?? .softhouse/capture/t466-t459-conditions/evidence/40-residue-check.txt
+      ?? .softhouse/capture/t466-t459-conditions/instruments/citation-sweep.py
+
+--- 5. SCRATCH LOCATION (must be OUTSIDE the repository)
+    T466_WORK = /tmp/t466-work
+    outside the repository: confirmed
+    arms staged there:
+      ASSUME
+      BIT-assume-unchanged-HEAD
+      BIT-skip-worktree-HEAD
+      CTL
+      CTL-HEAD
+      CTLUNREG
+      CTLUNREG-HEAD
+      LONGNOP
+      LONGNOP-HEAD
+      SKIPWT
+      SMUDGE
+      SMUDGE-HEAD
+      WDIRTY-HEAD
+
+--- 6. ANY T466 FIXTURE LEFT IN A TRACKED PATH
+    tracked paths matching zz-t466: 0  [0 = none]

@@ -1,0 +1,24 @@
+
+================ ARM SMUDGE-HEAD   (base HEAD)
+    absolving row present in the bytes on disk: 1
+    .git/info/attributes (LOCAL, NEVER COMMITTED):
+      .softhouse/conformance.sh filter=t466
+    is that file tracked?  [] (empty = no)
+    git status --porcelain      : []
+    git diff-index --name-only  : []
+    ls-files -v, entries not H  : []
+    committed HEAD:harness      = 7c54353236aa1b40161173d75eb4d7905f08a306
+    hash-object (DEFAULT)       = 7c54353236aa1b40161173d75eb4d7905f08a306
+    hash-object --no-filters    = e9f134f0c5017416fa514f3ff660a1a2c7dace04
+    EXIT       = 0
+    probe cnt  = 1   (PRESENCE read before value)
+    probe val  = up
+    VERDICT    = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+    reg census = population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    --- every HARNESS-TEXT / SUPPRESSION line the run printed:
+      13:conformance:   HARNESS-TEXT CENSUS: HEAD d1e70f8584d340ea2056a3bd62fe26d0c07f127e; tracked paths whose materialised bytes
+      16:conformance:   this harness .softhouse/conformance.sh: committed 7c54353236aa1b40161173d75eb4d7905f08a306 / on disk 7c54353236aa1b40161173d75eb4d7905f08a306
+      223:conformance:     COST 1s / ceiling 60s   guard_harness_text_is_committed
+      374:        EVERY rate-variation expectation in the corpus is reached by calling changeInterestRate on an ALREADY-BUILT model — that is, mid-term rescheduling. NO vector exists for a product configured with a rate schedule FROM ORIGINATION, and the Path A seam cannot express one. A port that computes origination-time rate variation wrongly would pass this entire corpus. Whether the two paths must agree is a Tier-A design question; it is not closable from source and this harness does not try.
+    --- guard verdict refusals (the "<name> FAILED:" form) and any EXIT 2:
+      !       ORACLE_DERIVED or PROVENANCE REFUSES THE RUN AT EXIT 2, and editing the JSON cannot

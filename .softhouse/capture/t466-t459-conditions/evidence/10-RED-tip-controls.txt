@@ -1,0 +1,45 @@
+
+================ ARM CTL-HEAD   (base HEAD)
+    git status --porcelain      : []
+    git diff-index --name-only  : []
+    ls-files -v, entries not H  : []
+    committed HEAD:harness      = 7c54353236aa1b40161173d75eb4d7905f08a306
+    hash-object (DEFAULT)       = 7c54353236aa1b40161173d75eb4d7905f08a306
+    hash-object --no-filters    = 7c54353236aa1b40161173d75eb4d7905f08a306
+    EXIT       = 0
+    probe cnt  = 1   (PRESENCE read before value)
+    probe val  = up
+    VERDICT    = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+    reg census = population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    --- every HARNESS-TEXT / SUPPRESSION line the run printed:
+      13:conformance:   HARNESS-TEXT CENSUS: HEAD 8575e2b995b0c176c4cb8d3476bbc07c6d2cb602; tracked paths whose materialised bytes
+      16:conformance:   this harness .softhouse/conformance.sh: committed 7c54353236aa1b40161173d75eb4d7905f08a306 / on disk 7c54353236aa1b40161173d75eb4d7905f08a306
+      221:conformance:     COST 1s / ceiling 60s   guard_harness_text_is_committed
+      372:        EVERY rate-variation expectation in the corpus is reached by calling changeInterestRate on an ALREADY-BUILT model — that is, mid-term rescheduling. NO vector exists for a product configured with a rate schedule FROM ORIGINATION, and the Path A seam cannot express one. A port that computes origination-time rate variation wrongly would pass this entire corpus. Whether the two paths must agree is a Tier-A design question; it is not closable from source and this harness does not try.
+    --- first refusals:
+      ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+      !                                      — pre-T165 this run would have REFUSED here instead of grading
+      !     kills carried by REFUSED vectors: 0, credited to NOTHING (0 corroboration claims likewise)
+      !     corroboration claims made by GRADED vectors: 0 (a further 0 are carried by REFUSED vectors and 0 by HARNESS-ERROR vectors, counted nowhere)
+      !       On these vectors the port did NOT match the oracle: it REFUSED where the oracle
+      !           WHY NOT: PERMANENTLY REFUSED WHILE GATE G-12 IS OPEN, and the ledger vector schema has
+
+================ ARM CTLUNREG-HEAD   (base HEAD)
+    git status --porcelain      : []
+    git diff-index --name-only  : []
+    ls-files -v, entries not H  : []
+    committed HEAD:harness      = 7c54353236aa1b40161173d75eb4d7905f08a306
+    hash-object (DEFAULT)       = 7c54353236aa1b40161173d75eb4d7905f08a306
+    hash-object --no-filters    = 7c54353236aa1b40161173d75eb4d7905f08a306
+    EXIT       = 2
+    probe cnt  = 0   (PRESENCE read before value)
+    probe val  = <no probe line>
+    VERDICT    = <none>
+    reg census = population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=1 symlink-members=0
+    --- every HARNESS-TEXT / SUPPRESSION line the run printed:
+      13:conformance:   HARNESS-TEXT CENSUS: HEAD fd1dde2e361ce6505a80c562c6937b0c16714df7; tracked paths whose materialised bytes
+      16:conformance:   this harness .softhouse/conformance.sh: committed 7c54353236aa1b40161173d75eb4d7905f08a306 / on disk 7c54353236aa1b40161173d75eb4d7905f08a306
+      199:conformance: Both files are yours; no edit to this harness is
+      251:conformance:     COST 1s / ceiling 60s   guard_harness_text_is_committed
+    --- first refusals:
+      ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)

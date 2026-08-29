@@ -1,0 +1,68 @@
+
+================ ARM CTL-HEAD   (base HEAD)
+    git status --porcelain      : []
+    git diff-index --name-only  : []
+    ls-files -v, entries not H  : []
+    committed HEAD:harness      = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    hash-object (DEFAULT)       = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    hash-object --no-filters    = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    EXIT       = 0
+    probe cnt  = 1   (PRESENCE read before value)
+    probe val  = up
+    VERDICT    = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+    reg census = population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    --- every HARNESS-TEXT / SUPPRESSION line the run printed:
+      13:conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+      17:conformance:   HARNESS-TEXT CENSUS: HEAD 31c5fc6c47c7860e0ee1c4269a3cafe5b7e996a5; tracked paths whose materialised bytes
+      25:conformance:   this harness .softhouse/conformance.sh: committed 6d4ee3058e24e0e919dd434766f1552623e1575c / on disk 6d4ee3058e24e0e919dd434766f1552623e1575c
+      33:conformance:    SUBSTITUTION and a SUPPRESSION are refused. [T454, T446 MAJOR-1, T466.])
+      234:conformance:     COST 2s / ceiling 300s   guard_harness_text_is_committed
+      385:        EVERY rate-variation expectation in the corpus is reached by calling changeInterestRate on an ALREADY-BUILT model — that is, mid-term rescheduling. NO vector exists for a product configured with a rate schedule FROM ORIGINATION, and the Path A seam cannot express one. A port that computes origination-time rate variation wrongly would pass this entire corpus. Whether the two paths must agree is a Tier-A design question; it is not closable from source and this harness does not try.
+    --- guard verdict refusals (the "<name> FAILED:" form) and any EXIT 2:
+      !       ORACLE_DERIVED or PROVENANCE REFUSES THE RUN AT EXIT 2, and editing the JSON cannot
+
+================ ARM CTLUNREG-HEAD   (base HEAD)
+    git status --porcelain      : []
+    git diff-index --name-only  : []
+    ls-files -v, entries not H  : []
+    committed HEAD:harness      = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    hash-object (DEFAULT)       = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    hash-object --no-filters    = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    EXIT       = 2
+    probe cnt  = 0   (PRESENCE read before value)
+    probe val  = <no probe line>
+    VERDICT    = <none>
+    reg census = population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=1 symlink-members=0
+    --- every HARNESS-TEXT / SUPPRESSION line the run printed:
+      13:conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+      17:conformance:   HARNESS-TEXT CENSUS: HEAD 3a832bd9ed3b5fdfc234a065cd6eeee26e79ab7a; tracked paths whose materialised bytes
+      25:conformance:   this harness .softhouse/conformance.sh: committed 6d4ee3058e24e0e919dd434766f1552623e1575c / on disk 6d4ee3058e24e0e919dd434766f1552623e1575c
+      33:conformance:    SUBSTITUTION and a SUPPRESSION are refused. [T454, T446 MAJOR-1, T466.])
+      212:conformance: Both files are yours; no edit to this harness is
+      264:conformance:     COST 2s / ceiling 300s   guard_harness_text_is_committed
+    --- guard verdict refusals (the "<name> FAILED:" form) and any EXIT 2:
+      ! conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+
+================ ARM WDIRTY-HEAD   (base HEAD)
+    git status --porcelain      : [ M .softhouse/conformance.sh;]
+    git diff-index --name-only  : [.softhouse/conformance.sh;]
+    ls-files -v, entries not H  : []
+    committed HEAD:harness      = 6d4ee3058e24e0e919dd434766f1552623e1575c
+    hash-object (DEFAULT)       = c6244f73e236264e041a86f409daf9132e5c74fb
+    hash-object --no-filters    = c6244f73e236264e041a86f409daf9132e5c74fb
+    EXIT       = 0
+    probe cnt  = 1   (PRESENCE read before value)
+    probe val  = up
+    VERDICT    = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+    reg census = population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    --- every HARNESS-TEXT / SUPPRESSION line the run printed:
+      13:conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+      17:conformance:     HARNESS-TEXT: uncommitted edit — .softhouse/conformance.sh (on disk c6244f73e236264e041a86f409daf9132e5c74fb)
+      18:conformance:     HARNESS-TEXT: this harness is edited but not committed — git agrees,
+      20:conformance:   HARNESS-TEXT CENSUS: HEAD a3f8f075c56988978e62dc978c0b1fec07ab957d; tracked paths whose materialised bytes
+      28:conformance:   this harness .softhouse/conformance.sh: committed 6d4ee3058e24e0e919dd434766f1552623e1575c / on disk c6244f73e236264e041a86f409daf9132e5c74fb
+      36:conformance:    SUBSTITUTION and a SUPPRESSION are refused. [T454, T446 MAJOR-1, T466.])
+      237:conformance:     COST 3s / ceiling 300s   guard_harness_text_is_committed
+      388:        EVERY rate-variation expectation in the corpus is reached by calling changeInterestRate on an ALREADY-BUILT model — that is, mid-term rescheduling. NO vector exists for a product configured with a rate schedule FROM ORIGINATION, and the Path A seam cannot express one. A port that computes origination-time rate variation wrongly would pass this entire corpus. Whether the two paths must agree is a Tier-A design question; it is not closable from source and this harness does not try.
+    --- guard verdict refusals (the "<name> FAILED:" form) and any EXIT 2:
+      !       ORACLE_DERIVED or PROVENANCE REFUSES THE RUN AT EXIT 2, and editing the JSON cannot

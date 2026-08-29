@@ -3150,15 +3150,7 @@ guard_reconciler_ownership() {
 #
 # CALIBRATION BEFORE VERDICT. If NOT ONE member is found invoked by this file, the reading
 # mechanism is broken rather than the tree being clean: members of this population ARE invoked
-# verbatim a few hundred lines above, in run_guards. Zero invoked is a REFUSAL, never a green.
-#
-# THE CARDINAL THAT USED TO SIT IN THAT SENTENCE — "three members" — IS GONE, HERE AND IN THE
-# REFUSAL ITSELF. [T466, closing T459's LOW.] It was the last hand-typed count left after the
-# sweep that removed the rest, it restated a figure the census line below MEASURES and PRINTS
-# on every run, and P-80 is explicit: "A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS
-# RESTATED. The count is the same defect as the line number." The number the reader wants is
-# `invoked=` in the GUARDS-DIR-REGISTRATION line, which is derived; a prose copy of it is a
-# second source of truth with no owner and no arm.
+# verbatim in run_guards below. Zero invoked is a REFUSAL, never a green. [T466: see the refusal.]
 #
 # THE CALIBRATION EARNED ITS KEEP ON THE FIRST GRADED RUN, and the episode is recorded rather
 # than tidied away. T323's first version tested invocation with `printf … | grep -qF`. Standalone
@@ -4387,6 +4379,18 @@ POPCHECK
 $DECLARED
 STALE
 
+  # THE CARDINAL THAT USED TO SIT IN THIS REFUSAL — "yet THREE of them are invoked verbatim" —
+  # IS GONE. [T466, closing T459's LOW.] It was the last hand-typed count left standing after
+  # the sweep that removed the rest of them from this file, and it restated a figure the census
+  # line below MEASURES AND PRINTS on every run. P-80 is explicit: "A CORRECTED CARDINAL ROTS IN
+  # EVERY PLACE IT WAS RESTATED. The count is the same defect as the line number." The number a
+  # reader wants is `invoked=` in the GUARDS-DIR-REGISTRATION line, which is derived; a prose
+  # copy of it is a second source of truth with no owner and no arm. THIS BLOCK IS DELIBERATELY
+  # HERE AND NOT BESIDE THE CALIBRATION PARAGRAPH THAT SAYS THE SAME THING A THOUSAND LINES UP:
+  # `.softhouse/patterns.md` and `.softhouse/bin/fire-program.sh` both pin THIS FILE BY LINE
+  # NUMBER above that paragraph, and T466 measured its own citation sweep before committing,
+  # found it had rotted both, and moved the prose below the pins rather than the pins below
+  # the prose — the same choice, for the same reason, that T454 records making.
   if [ "$invoked" -eq 0 ]; then
     warn "conformance: guard_guards_dir_registration: CALIBRATION FAILED — NOT ONE member of the"
     warn "conformance: population was found on a non-comment line of this file, yet members of it"

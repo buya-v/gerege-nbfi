@@ -1,0 +1,34 @@
+CALIBRATION: the citation pattern finds 2 occurrence(s) inside the cited file itself.
+INBOUND CITATIONS OF conformance.sh ACROSS 10353 TRACKED FILES: 1799 total, 20 now point at DIFFERENT TEXT, 0 point PAST THE END.
+BY FILE (only files with at least one moved or dead citation):
+     2  .softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt
+     2  .softhouse/reviews/t406-review-t391/REVIEW.md
+     2  .softhouse/reviews/t409-review-t390/REVIEW.md
+     2  .softhouse/reviews/t411-review-t401/REVIEW.md
+     3  .softhouse/reviews/t411-review-t401/evidence/50-bre-blast-radius.txt
+     1  .softhouse/reviews/t446-review-t445/REVIEW.md
+     3  .softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citation-sweep.txt
+     1  .softhouse/reviews/t450-review-t412/REVIEW.md
+     1  .softhouse/reviews/t459-review-t454/REVIEW.md
+     3  .softhouse/tasks.json
+EVERY MOVED CITATION, with the line it USED to name:
+  MOVED       .softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt:4449  was: # `guard_guards_dir_registration`, read out of $conf with comments stripped:
+  MOVED       .softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt:4460  was: # line of this file. That is not decoration: a control that hides from `git grep` by
+  MOVED       .softhouse/reviews/t406-review-t391/REVIEW.md:4551  was:   # ---- PRESENCE ----------------------------------------------------------------------
+  MOVED       .softhouse/reviews/t406-review-t391/REVIEW.md:4551  was:   # ---- PRESENCE ----------------------------------------------------------------------
+  MOVED       .softhouse/reviews/t409-review-t390/REVIEW.md:5275  was: 
+  MOVED       .softhouse/reviews/t409-review-t390/REVIEW.md:5278  was:     warn "conformance: EXIT 2. A figure this gate cannot read is not a figure it may pas
+  MOVED       .softhouse/reviews/t411-review-t401/REVIEW.md:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
+  MOVED       .softhouse/reviews/t411-review-t401/REVIEW.md:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
+  MOVED       .softhouse/reviews/t411-review-t401/evidence/50-bre-blast-radius.txt:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
+  MOVED       .softhouse/reviews/t411-review-t401/evidence/50-bre-blast-radius.txt:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
+  MOVED       .softhouse/reviews/t411-review-t401/evidence/50-bre-blast-radius.txt:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
+  MOVED       .softhouse/reviews/t446-review-t445/REVIEW.md:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
+  MOVED       .softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citation-sweep.txt:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
+  MOVED       .softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citation-sweep.txt:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
+  MOVED       .softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citation-sweep.txt:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
+  MOVED       .softhouse/reviews/t450-review-t412/REVIEW.md:4800  was: COSTBUDGETS
+  MOVED       .softhouse/reviews/t459-review-t454/REVIEW.md:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
+  MOVED       .softhouse/tasks.json:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
+  MOVED       .softhouse/tasks.json:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
+  MOVED       .softhouse/tasks.json:4530  was:   # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and 
