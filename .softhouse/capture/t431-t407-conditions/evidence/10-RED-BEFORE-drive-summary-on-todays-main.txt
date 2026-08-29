@@ -1,0 +1,18 @@
+WORK=/tmp/t431/red-92470-1787962043
+=== T407 INDEPENDENT DRIVE -- src=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a258a385a1a22ca66 ref=main arms=T407-Z-healthy-UNMUTATED T407-X-WITNESS-ambiguity-FAILOPEN T407-XS-witness-symlink-NO-decoy-REFUSED T407-XC-witness-PLAIN-spelling-REFUSED work=/tmp/t431/red-92470-1787962043 ===
+
+MODE: the member-side lookup at main is FIXED (detected from its own blob, not asserted)
+      the WITNESS-side lookup is a PATHSPEC in BOTH modes -- that is FU-T404-1.
+
+T407-Z-healthy-UNMUTATED                       exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T407-X-WITNESS-ambiguity-FAILOPEN              exit=0 (w 0 ) probe=PRESENT(w PRESENT) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+T407-XS-witness-symlink-NO-decoy-REFUSED       exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T407-XC-witness-PLAIN-spelling-REFUSED         exit=2 (w 2 ) probe=ABSENT (w ABSENT ) marker=YES census=YES dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+
+=== T407 DRIVE: 4 PASS / 0 FAIL of 4 ===
+drive exit=0
+WORK was /tmp/t431/red-92470-1787962043
