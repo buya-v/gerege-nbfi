@@ -1,6 +1,12 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260829-080002` ITERATION 6 — **IN FLIGHT. FIVE WORKERS LIVE.**
+## FIRE `20260829-080002` ITERATION 6 — **WAVE 2 IN FLIGHT. FIVE WORKERS LIVE.**
+
+**WAVE 1 IS COMPLETE AND MERGED: FIVE REVIEWED PAIRS, TEN BRANCHES, EVERY MERGE ATTESTED BY TREE SHA.**
+`T458+T468` (373bf176) · `T465+T471` (dbfbae4f) · `T462+T469` (8f3136cb) · `T466+T477+T479` (4cb2103c) · `T467+T476+T481` (44966ad8).
+TWO STACKS WERE HELD UNMERGED ON THEIR REVIEWER MAJORS AND REPAIRED BEFORE LANDING -- T466 opened a fourth forgery route while closing three; T467 regressed two spellings its predecessor caught. Neither was merged on its first delivery.
+**THE FIRE EXIT NO LONGER REDDENS THE BAR** (T465): a lock-released tree now grades exit 0 probe 1 PASS, where the base tree gave exit 2 probe 0.
+**ORACLE SIGTERMed TWICE** (`Exited (143)`), the second time taking the Docker daemon with it; both recovered, both recorded in `.softhouse/reference-oracle.md`.
 
 Oracle **REACHABLE** (`https://localhost:8443/fineract-provider/actuator/health`), PostgreSQL `localhost:5432`,
 pinned Fineract `/Users/buv/fineract @ 426a23544`.
