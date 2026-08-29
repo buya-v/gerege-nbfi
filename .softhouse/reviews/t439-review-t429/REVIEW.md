@@ -556,3 +556,28 @@ corrections that can land as follow-up tasks.
 
 **This review did not re-decide G-22.** The I-5 correction and the proposed `§4.4a` amend a
 ratified DEC-2 and remain the gate's to settle.
+
+---
+
+## THIS REVIEW BRANCH'S OWN BAR — and a red it drove into itself
+
+`bash .softhouse/conformance.sh` on `softhouse/T439-review-t429`:
+**EXIT 0**, **`probe = ` PRESENT ×1**, value **`up`**,
+`VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.`,
+dead-path `frontier 11, pinned at 11` [`out/R08-bar-own-review-branch.txt`].
+
+**The FIRST run of that bar was EXIT 2 with NO `probe = ` line at all** — a third live instance of
+the shape the brief warns about. `guard_dead_path_frontier` (HARD) refused:
+
+```
+T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0
+> .softhouse/reviews/t439-review-t429/out/t439-drive.py | .softhouse/vectors/oracle-derived-columns.json
+```
+
+**The cause is instructive and is recorded rather than quietly fixed.** I had committed my JSON
+drive script as evidence. It names `.softhouse/vectors/oracle-derived-columns.json` — a path that
+**does not resolve on this branch**, because the declaration exists only on T429's branch and T429
+is not merged. So a review's own evidence became a dead repo-path reference. The script was
+removed; the drive transcripts (`out/t439-d1a..d5.txt`) and the descriptions above are the
+evidence, and they lose nothing. Corollary worth carrying: **a reviewer citing a target branch's
+new file by path in a committed instrument will trip the frontier until that branch merges.**
