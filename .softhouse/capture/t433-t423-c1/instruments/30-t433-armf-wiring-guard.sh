@@ -61,7 +61,19 @@ echo "--- 1. THE ARM EXISTS, INSIDE THE SHIPPED GRADER (not beside it) ---------
 want     "verify-capture-integrity.py carries ARM F as section 8" "$INT" "=== 8. ARM F" 1
 want_min "ARM F names its baseline: the commit that FIRST ADDED each observation" "$INT" "diff-filter=A" 1
 want_min "ARM F has an adjudication table it can find MOVED" "$INT" "ARM_F_ADJUDICATED" 4
-want     "ARM F reports born-at-tip as UNGRADED, never as equal" "$INT" "UNGRADED-BORN-AT-TIP" 1
+# T455: `want` -> `want_min`. THE PIN WAS THE WRONG SHAPE, AND THIS FILE SAYS SO ITSELF nine
+# lines up: "A minimum, never an exact count: P-29, a count is a weak tripwire and pinning one
+# here would go red on a comment being reworded, which is how a guard gets deleted rather than
+# fixed." Both of the exact pins T455 changed went red for exactly that reason, on a CLEAN
+# tree: T455 added a second mention of `UNGRADED-BORN-AT-TIP` (the re-adjudication instructions
+# for ARM_F_BORN_AT_TIP_ADJUDICATED) and two more of the replacement sentence (the new section
+# 10's CORRECTED table and its in-memory self-drive fixture). Neither is a weakening: the claim
+# these two lines make is PRESENCE, and it is unchanged. The alternative was to suppress the
+# new mentions to satisfy a count, which is tuning the artefact to the tripwire.
+# THIS IS AN EDIT OUTSIDE T455's THREE ASSIGNED DIRECTORIES, made deliberately and disclosed by
+# name in `.softhouse/handoff/T455-t448-conditions.md`, because the alternative was to ship a
+# tracked guard that is RED on a clean tree — the same defect T455 was sent to fix in F-6.
+want_min "ARM F reports born-at-tip as UNGRADED, never as equal" "$INT" "UNGRADED-BORN-AT-TIP" 1
 want "section 9 asserts ARM F actually GRADED something (the vacuity control)" \
      "$INT" "ARM F actually GRADED a non-empty population" 1
 
@@ -87,7 +99,7 @@ for f in "$INT" "$RUNALL" "$DRIVE" "$LAUNDER"; do
   if [ "$q" -ge 3 ]; then ok "$n still QUOTES the false text, tagged (x$q lines)"
   else bad "$n no longer quotes the false text (x$q tagged lines) — a bare negation removed"; fi
 done
-want "verify-capture-integrity.py says what the baseline IS" "$INT" "THE BLOB AT THE COMMIT THAT FIRST ADDED EACH OBSERVATION" 1
+want_min "verify-capture-integrity.py says what the baseline IS" "$INT" "THE BLOB AT THE COMMIT THAT FIRST ADDED EACH OBSERVATION" 1   # T455: want -> want_min, see above
 want "run-all.sh's banner says what the baseline IS" "$RUNALL" "BLOB AT THE COMMIT THAT FIRST ADDED EACH OBSERVATION" 1
 want "10-drive-conditions.sh says what the baseline IS" "$DRIVE" "THE BLOB AT THE COMMIT THAT" 1
 want "12-relaunder-manifest.py says what the baseline IS" "$LAUNDER" "THE BASELINE EXISTS AND ALWAYS DID" 1
