@@ -403,6 +403,18 @@ tripwire to spare.** [VERIFIED: `out/T423-F4C-DRIVE.txt` exit 0,
 
 ---
 
+## 11a. THE BAR ON THIS REVIEW BRANCH TOO, AFTER `git add -A` AND COMMIT
+
+From a clean clone in `/tmp` at `b517c12c`, `git status --porcelain` empty, `bash` never `sh`.
+**`BAR_EXIT = 0`; `grep -c 'probe = '` = **1**, so the line was PRINTED — tested for presence
+before value (P-84) — then `probe = up`.** `VERDICT: PASS (exit 0) — 46 parity vectors … 7884
+cells`; fail-open frontier **11 == pinned**; host-state census **18 == pinned**; dead-path
+frontier **GREEN, `deadOccurrences=108`**; `GUARD-COST CENSUS: 15 guards timed, 70s total wall,
+ceiling breaches 0`. So the **six** tracked instruments this review adds contribute zero
+fail-open rows and zero dead-path rows. (Wrong ledger implementations reads **15 == pinned 15**
+here rather than 16: this branch forks from `d3b93690`, before T421 merged. `main`'s number,
+not mine.) [Transcript: `out/T423-BAR-on-this-review-branch.txt`.]
+
 ## 12. CONDITIONS, RATED, EACH WITH A DRIVE
 
 | id | severity | condition | drive |
@@ -414,3 +426,25 @@ tripwire to spare.** [VERIFIED: `out/T423-F4C-DRIVE.txt` exit 0,
 
 **None blocks the merge.** T393 may merge; C-1 should be attached to `T425` before that task is
 dispatched, because `T425` is the task C-1 would otherwise mislead.
+
+**Recommendation, not a condition:** put the two merge hazards where the worker who trips them
+is looking — a short `MANIFEST-IS-GRADED.md` beside `.softhouse/capture/tierA-a2/MANIFEST.sha256`
+— rather than only in a handoff §7.
+
+---
+
+## 13. WHAT I COULD NOT VERIFY
+
+Stated so that silence is distinguishable from not looking.
+
+* **T393's `1:51` / `1:05` wall-clock cost figures.** Not re-timed. This host ran drives and
+  bar runs throughout, and a number taken under contention would be worse evidence than the one
+  it disputed. The *structural* half of the argument — 1466 `git show` subprocesses — I did
+  verify by reading the loops, and the guard-cost census figure (`15 guards timed, 70s total
+  wall`) reproduced exactly on two independent runs.
+* **Why `out/A2-370-db-ledger-state.txt` differs from its birth blob.** I measured *that* it
+  does, on a clean tree, in two independent runs. I did not establish *why*, and an adjudicated
+  digest needs a stated reason. Whoever implements ARM F must supply it.
+* **T382's and T362's own transcripts.** I re-derived the numbers T393 built on and re-ran the
+  drives, but I did not re-execute T362's or T382's rigs. Their findings enter this review only
+  where T393 restates them and I could reproduce the restatement.
