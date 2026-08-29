@@ -1,0 +1,115 @@
+arm            = LEGA
+graded tree    = PRE-FIX(main)   (detected from the tree's own text)
+clone warnings = 
+git status     = 0 line(s): 
+EXIT           = 0
+probe line count (read BEFORE its value) = 1
+probe value    = up
+VERDICT        = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+census         = conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+--- guards-dir registration sentences ---
+159:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+162:conformance:     REACHED-BY .softhouse/guards/zz-t446-member.sh — declared in its own header, reached by
+184:conformance:   guards-dir registration: PASS — every member of .softhouse/guards is invoked by this
+185:conformance:   file, DECLARED against a verified witness, or carries a verified REACHED-BY.
+218:conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
+================================================================
+arm            = CASE
+graded tree    = PRE-FIX(main)   (detected from the tree's own text)
+clone warnings = warning: the following paths have collided (e.g. case-sensitive paths on a case-insensitive filesystem) and only one from the same colliding group is in the working tree: '.softhouse/guards/W.txt' '.softhouse/guards/w.txt' 
+git status     = 0 line(s): 
+EXIT           = 2
+probe line count (read BEFORE its value) = 0
+probe value    = ABSENT
+VERDICT        = (no VERDICT line)
+census         = conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+--- guards-dir registration sentences ---
+159:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+162:conformance: guard_guards_dir_registration: .softhouse/guards/zz-t446-member.sh declares REACHED-BY .softhouse/guards/W.txt,
+163:conformance: and THAT REACHED-BY WITNESS DOES NOT NAME zz-t446-member.sh. The declaration is
+186:conformance: guard_guards_dir_registration FAILED. A checker in the canonical guards
+220:conformance:     COST 0s / ceiling 60s   guard_guards_dir_registration
+================================================================
+fatal: will not add file alias '.softhouse/guards/ZZ-T446M/x.sh' ('.softhouse/guards/zz-t446m/x.sh' already exists in index)
+arm            = MCASE
+graded tree    = PRE-FIX(main)   (detected from the tree's own text)
+clone warnings = 
+git status     = 0 line(s): 
+EXIT           = 0
+probe line count (read BEFORE its value) = 1
+probe value    = up
+VERDICT        = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+census         = conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+--- guards-dir registration sentences ---
+159:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+182:conformance:   guards-dir registration: PASS — every member of .softhouse/guards is invoked by this
+183:conformance:   file, DECLARED against a verified witness, or carries a verified REACHED-BY.
+216:conformance:     COST 0s / ceiling 60s   guard_guards_dir_registration
+================================================================
+arm            = LEGDIRTY
+graded tree    = PRE-FIX(main)   (detected from the tree's own text)
+clone warnings = 
+git status     = 1 line(s):  M .softhouse/guards/zz-t446-member.sh;
+EXIT           = 2
+probe line count (read BEFORE its value) = 1
+probe value    = down
+VERDICT        = VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+census         = conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+--- guards-dir registration sentences ---
+159:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+162:conformance:     REACHED-BY .softhouse/guards/zz-t446-member.sh — declared in its own header, reached by
+184:conformance:   guards-dir registration: PASS — every member of .softhouse/guards is invoked by this
+185:conformance:   file, DECLARED against a verified witness, or carries a verified REACHED-BY.
+218:conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
+================================================================
+arm            = WDIRTY
+graded tree    = PRE-FIX(main)   (detected from the tree's own text)
+clone warnings = 
+git status     = 1 line(s):  M .softhouse/guards/zz-t446-witness.txt;
+EXIT           = 2
+probe line count (read BEFORE its value) = 1
+probe value    = down
+VERDICT        = VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+census         = conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+--- guards-dir registration sentences ---
+159:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+162:conformance:     REACHED-BY .softhouse/guards/zz-t446-member.sh — declared in its own header, reached by
+184:conformance:   guards-dir registration: PASS — every member of .softhouse/guards is invoked by this
+185:conformance:   file, DECLARED against a verified witness, or carries a verified REACHED-BY.
+218:conformance:     COST 0s / ceiling 60s   guard_guards_dir_registration
+================================================================
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+arm            = CDIRTY
+graded tree    = PRE-FIX(main)   (detected from the tree's own text)
+clone warnings = 
+git status     = 1 line(s):  M .softhouse/bin/fire-program.sh;
+EXIT           = 2
+probe line count (read BEFORE its value) = 0
+probe value    = ABSENT
+VERDICT        = (no VERDICT line)
+census         = conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=1 reached-by=1 invoked-by-nothing=0 symlink-members=0
+--- guards-dir registration sentences ---
+159:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+161:conformance: guard_guards_dir_registration: .softhouse/guards/repo-state-attest.sh is DECLARED as being run by
+184:conformance: guard_guards_dir_registration FAILED. A checker in the canonical guards
+218:conformance:     COST 0s / ceiling 60s   guard_guards_dir_registration
+================================================================
+arm            = WGONE
+graded tree    = PRE-FIX(main)   (detected from the tree's own text)
+clone warnings = 
+git status     = 1 line(s):  D .softhouse/guards/zz-t446-witness.txt;
+EXIT           = 2
+probe line count (read BEFORE its value) = 0
+probe value    = ABSENT
+VERDICT        = (no VERDICT line)
+census         = conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+--- guards-dir registration sentences ---
+159:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+162:conformance: guard_guards_dir_registration: .softhouse/guards/zz-t446-member.sh declares REACHED-BY .softhouse/guards/zz-t446-witness.txt,
+163:conformance: and THAT REACHED-BY WITNESS DOES NOT EXIST. A declaration whose
+185:conformance: guard_guards_dir_registration FAILED. A checker in the canonical guards
+219:conformance:     COST 0s / ceiling 60s   guard_guards_dir_registration
+================================================================

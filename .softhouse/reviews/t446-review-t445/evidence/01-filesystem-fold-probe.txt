@@ -1,0 +1,13 @@
+== filesystem: /dev/disk3s5  965595304 596962312 288995616    68% 7047846 1444978080    0%   /System/Volumes/Data
+== macOS: 26.5.1
+
+uppercase C                  files=1  conformance.sh reads=DECOY   <== FOLDS (collision!)
+uppercase H (.sH)            files=1  conformance.sh reads=DECOY   <== FOLDS (collision!)
+long s U+017F                files=1  conformance.sh reads=DECOY   <== FOLDS (collision!)
+Kelvin U+212A (n/a)          files=2  conformance.sh reads=REAL   (distinct)
+NFD-irrelevant ascii         files=2  conformance.sh reads=REAL   (distinct)
+
+== NFD/NFC folding test on a NON-ascii name (\xc3\xa9 vs e+\xcc\x81) ==
+files=1
+café.sh
+636166c3a92e7368 -> NFD

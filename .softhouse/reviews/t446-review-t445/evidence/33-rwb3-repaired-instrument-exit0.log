@@ -1,0 +1,40 @@
+================================ arm RWB3 ================================
+the deciding grep, as deployed in the graded tree:
+    4060:        elif ! LC_ALL=C grep -qF -- "$base" "$REPO_ROOT/$self_norm"; then
+the pinned needle for it is still present in the executable text? (assignment line)
+    occurrences = 1
+index around the collision:
+    100644 df922c5b382abc0bb46b22a42b0e39252bbe28d4 0	.softhouse/guards/W.txt
+    120000 c01873ae08b9b23a02bcb313e0904c19abee6271 0	.softhouse/guards/w.txt
+    100755 e15ae45a13efeadb9c39331be9be5a77cd6ca037 0	.softhouse/guards/zz-t446-member.sh
+clone warnings:
+    warning: the following paths have collided (e.g. case-sensitive paths
+    on a case-insensitive filesystem) and only one from the same
+    colliding group is in the working tree:
+    
+      '.softhouse/guards/W.txt'
+      '.softhouse/guards/w.txt'
+git status --porcelain:
+     T .softhouse/guards/W.txt
+what a FILESYSTEM read of .softhouse/guards/W.txt returns in the graded tree:
+    #!/usr/bin/env bash
+    # zz-t446-member.sh -- a scratch checker planted by the T446 RWB3 arm
+    # GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/guards/W.txt
+    exit 0
+EXIT = 0
+probe line count (read BEFORE its value) = 1
+probe value = up
+VERDICT line count = 1
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+census line count  = 1
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+--- what the NEW watch reported ---
+    155:conformance:   registration decisive lines: 7 present, 2 evaluated on an input
+--- registration sentences ---
+163:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+164:conformance:                .softhouse/guards/check-ledger-invariants.sh (verified: it names main.go)
+167:conformance:     REACHED-BY .softhouse/guards/zz-t446-member.sh — declared in its own header, reached by
+168:conformance:                .softhouse/guards/W.txt (verified: it names zz-t446-member.sh)
+189:conformance:   guards-dir registration: PASS — every member of .softhouse/guards is invoked by this
+223:conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
+QUEUE7 COMPLETE
