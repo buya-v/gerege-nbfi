@@ -402,21 +402,23 @@ Both runs on a clean tree, in `/tmp` worktrees, **`probe = ` PRESENCE tested bef
 (four exit-2 paths, including a failed HARD guard, run before it prints, so "probe != up" would
 otherwise be trivially true against nothing at all).
 
-| figure | T424's tree (`a504b59d`) | **merge with `main` `e4bde474`** | required |
-|---|---|---|---|
-| exit | **0** | **0** | 0 |
-| `grep -c 'probe = '` | **1** | **1** | ≥ 1 **first** |
-| the probe line | `:201 … probe = up` | `:201 … probe = up` | `up` |
-| VERDICT | PASS, **46** vectors, **7884** cells | PASS, **46** vectors, **7884** cells | unmoved |
-| **wrong ledger implementations** | **15 of 15** | **16 of 16** | **16** ✓ |
-| `ledger parity` | PASS 10 FAIL 0 | PASS 10 FAIL 0 | — |
-| LEDGER money cells | 63 == pinned 63 | 63 == pinned 63 | — |
-| dead-path frontier | GREEN, `frontier == pinned (all 11 rows)` | GREEN, `frontier == pinned (all 11 rows)` | — |
-| `T316-DEADPATH-CENSUS` | corpus 1459, **deadOccurrences 108** | corpus 1500, **deadOccurrences 108** | 108 |
-| narrow-catch census | — | 63 `.java`, `EXCLUDED 0 other checkout root(s): none` | — |
+| figure | T424's tree (`a504b59d`) | **merge with `main` `e4bde474`** | T440's own branch | required |
+|---|---|---|---|---|
+| exit | **0** | **0** | **0** | 0 |
+| `grep -c 'probe = '` | **1** | **1** | **1** | ≥ 1 **first** |
+| the probe line | `:201 … probe = up` | `:201 … probe = up` | `:201 … probe = up` | `up` |
+| VERDICT | PASS, **46** / **7884** | PASS, **46** / **7884** | PASS, **46** / **7884** | unmoved |
+| **wrong ledger implementations** | **15 of 15** | **16 of 16** | **16 of 16** | **16** ✓ |
+| `ledger parity` | PASS 10 FAIL 0 | PASS 10 FAIL 0 | PASS 10 FAIL 0 | — |
+| LEDGER money cells | 63 == pinned 63 | 63 == pinned 63 | 63 == pinned 63 | — |
+| dead-path frontier | GREEN, `frontier == pinned (all 11 rows)` | GREEN, same | GREEN, same | — |
+| `T316-DEADPATH-CENSUS` | corpus 1459, **deadOcc 108** | corpus 1500, **deadOcc 108** | corpus 1503, **deadOcc 108** | 108 |
+| narrow-catch census | `EXCLUDED 0 other checkout root(s): none` | same, 63 `.java` | same | — |
 
-[VERIFIED: `out/T440-BAR-t424tree.txt` (750 lines, `T424TREE_BAR_EXIT=0`) and
-`out/T440-BAR-merge.txt` (751 lines, `MERGE_BAR_EXIT=0`).]
+[VERIFIED: `out/T440-BAR-t424tree.txt` (750 lines, `T424TREE_BAR_EXIT=0`),
+`out/T440-BAR-merge.txt` (751 lines, `MERGE_BAR_EXIT=0`),
+`out/T440-BAR-own-GREEN.txt` (751 lines, `OWN_BAR_EXIT=0`), and the superseded RED run
+`out/T440-BAR-own-RED.txt` (§10a).]
 
 **The merge result shows 16 of 16, so the brief's stated failure condition did not occur.** T424's
 own 15/15 is explained exactly as the brief predicted — it forked before `T421` merged — and the
@@ -465,7 +467,9 @@ My first draft of `instruments/f-t440-1.sh` **hardcoded** the path of the drive 
 `.softhouse/capture/t424/instruments/t424-comment-claims-drive.sh`. That file exists only on the
 branch under review, so on **T440's own branch** it is a dead repo-path reference:
 `guard_dead_path_frontier` refused, `T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1
-removed=0`, and the bar exited **2** [VERIFIED: `out/T440-BAR-own-RED.txt:181,190,219,221`].
+removed=0`, and the bar exited **2**
+[VERIFIED: `out/T440-BAR-own-RED.txt:181` (census `deadOccurrences=109`), `:191` (the refusal),
+`:192` (`guard_dead_path_frontier FAILED`), `:221` (`OWN_BAR_EXIT=2`)].
 
 The tempting fix was to spell the literal in pieces so the census would not see it. That is
 gaming a guard this program has paid for twice, and it is the same move as a red arm that is red
