@@ -597,3 +597,62 @@ export T459_TIP_CONF=/tmp/t459-tip-conf.sh      # git show softhouse/T454-longs-
 | **`C-T459-6`** citation sweep | `python3 instruments/citation-sweep.py <repo>` | 1772 occurrences, **138 moved**, 26 files, no `.pin`, no guard, not `patterns.md` |
 | **`C-T459-4`** pins and cardinals | `bash instruments/pins.sh` | `:3271` byte-identical; 15→16 `timed_guard` sites; the surviving `yet three of them` |
 | the final bar | `bash instruments/finalbar.sh <repo>` | see §13 |
+
+---
+
+## 13. THE FINAL BAR, ON MY OWN COMMITTED TREE
+
+Run with `bash` (never `sh`/`zsh`) from `/tmp/t459/finalbar` — scratch, **outside the repository**
+— on the committed tree carrying this review. `git status --porcelain` **EMPTY before AND after**.
+Probe line **PRESENCE** counted **before** its value (P-84: an absent probe line is the guard
+working, not `down`). Full transcript: `evidence/90-FINAL-BAR.log` (861 lines).
+
+```
+=== git status --porcelain BEFORE ===
+=== HEAD ===
+4cb38843 T459: independent review of T454 -- APPROVED WITH CONDITIONS.
+=== git status --porcelain AFTER ===
+
+EXIT = 0
+grep -c 'probe = ' = 1
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+```
+
+| figure | required | measured |
+|---|---|---|
+| exit | 0 | **0** |
+| `probe = ` line count, read before its value | ≥ 1 | **1** |
+| probe value | — | **`up`** |
+| VERDICT | PASS 46 / 7884 | **PASS 46 / 7884** |
+| guards-dir census | `population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0` | **identical, unmoved** |
+| `deadOccurrences` / `deadFiles` | 108 / 75 | **108 / 75** |
+| fail-open frontier | 11 == 11 | **`frontier 11, pinned at 11`; `frontier == pinned (all 11 rows, by path)`** |
+| dead-path frontier | GREEN | **GREEN** |
+| host-state census | 18 == 18 | **`census == pinned (all 18 site(s), by path and source line)`** |
+| wrong ledger implementations | 16, all dead | **`all 16 wrong ledger implementations DIED through this harness, not by hand`** |
+| guard cost | no breach | **`guard-cost: PASS — every guard timed, every ceiling row used, none breached`** |
+| tree | clean before and after | **empty `git status --porcelain` both times** |
+
+**Two figures read 15 and 7 rather than 16 and 10, and that is correct, not a discrepancy.** This
+review branches from `main` at `cbc8733c`, where T454 is **not merged**: `GUARD-COST CENSUS: 15
+guards timed` and `registration decisive lines: 7 present` are `main`'s numbers. T454's own tip
+reads 16 and 10, which I measured on its branch (`evidence/19-raw-run-green-tip.txt`, arm `Z`).
+The review is committed against the tree it was written on; it does not carry the subject's
+changes, and the dead-path corpus moved `1625 → 1630` for this review's own instruments while
+`deadOccurrences` — which is the pinned quantity — did not move.
+
+**The bar was run on my own instruments before this file was committed**, and both censuses that
+would have caught a careless reviewer were clean with all seventeen instruments staged:
+`T316-DEADPATH-CENSUS … deadOccurrences=108` unmoved, and
+`LINT: PASS — no instrument in scope can emit a negative it did not measure.` Every repo-relative
+path any of them plants is assembled at run time from fragments; none is spelled as a literal.
+
+---
+
+## 14. SCOPE
+
+`.softhouse/reviews/t459-review-t454/` only — `REVIEW.md`, 17 instruments, 33 evidence files and
+the bar transcript. `.softhouse/conformance.sh` (T454's file, under review),
+`.softhouse/bin/ready-tasks.py` (T451) and `.softhouse/hooks/` (T453) were **read and never
+written**. `git status --porcelain` outside the review directory was empty at every point.
