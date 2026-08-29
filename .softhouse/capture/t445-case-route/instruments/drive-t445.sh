@@ -144,7 +144,10 @@ plant_RWB() {
 }
 
 run_arm() {
-  local arm="$1" base="$W/$arm" seed="$base/seed" run="$base/run" log="$base/bar.log"
+  # bash EXPANDS EVERY WORD of a `local` before assigning any of them, so a later name
+  # cannot reference an earlier one on the same line under `set -u`. Declared, then assigned.
+  local arm base seed run log
+  arm="$1"; base="$W/$arm"; seed="$base/seed"; run="$base/run"; log="$base/bar.log"
   rm -rf "$base"; mkdir -p "$base"
   git clone -q "$SRC" "$seed" 2>/dev/null || { echo "$arm: CLONE FAILED"; return 9; }
   git -C "$seed" config user.email t445@example.invalid
