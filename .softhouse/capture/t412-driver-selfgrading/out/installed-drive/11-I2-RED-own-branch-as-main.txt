@@ -1,8 +1,8 @@
 driver-push-gate: running /Users/buv/gerege-nbfi/.git/hooks/softhouse-t412-gate/driver-push-gate.sh (sha256 8fc9d676e850e45c)
-driver-push-gate: T412 driver push gate engaged. remote=t412scratch url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-installed.CPqffvQCwt/remote.git
-driver-push-gate: pushing f0f0bb9f1995dc2212b9a061d37cb75fe9bf09a5 -> refs/heads/main   tree=36006388fcb8ea86633fa87af2b38695ad1c8867
+driver-push-gate: T412 driver push gate engaged. remote=t412scratch url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-installed.UxmVJzoihH/remote.git
+driver-push-gate: pushing df8440c5932d39d198dbe390982cff21501fe09e -> refs/heads/main   tree=dba0d7c3e845423205ff44b3a9f5f298e32c9fc6
 driver-push-gate:   C1 gitlinks: none in the pushed tree.
-driver-push-gate:   C2 range: the remote has no readable tip; grading the last 50 commits of f0f0bb9f1995dc2212b9a061d37cb75fe9bf09a5.
+driver-push-gate:   C2 range: the remote has no readable tip; grading the last 50 commits of df8440c5932d39d198dbe390982cff21501fe09e.
 driver-push-gate:   C2 write-path allowlist: clean (50 non-merge commit(s) examined).
 driver-push-gate:   C3 graded ancestor: b102875c  tree=729cd8a07c986a0ebb3244ee2e6e3f47f8e18cb1
 driver-push-gate: 
@@ -16,7 +16,7 @@ driver-push-gate:     [A] .softhouse/hooks/cheap-subset.sh
 driver-push-gate:     [A] .softhouse/hooks/driver-push-gate.sh
 driver-push-gate:     [A] .softhouse/hooks/install-driver-push-gate.sh
 driver-push-gate: 
-driver-push-gate:   Run:      bash .softhouse/hooks/bar-attest.sh f0f0bb9f1995dc2212b9a061d37cb75fe9bf09a5
+driver-push-gate:   Run:      bash .softhouse/hooks/bar-attest.sh df8440c5932d39d198dbe390982cff21501fe09e
 driver-push-gate: 
 driver-push-gate:   The STATE set is *.md/*.txt/*.json/*.log under .softhouse/ (plus .softhouse/LOCK),
 driver-push-gate:   excluding vectors/, guards/, bin/, toolchain/, conformance.sh and any req/ directory,
@@ -24,6 +24,6 @@ driver-push-gate:   ADDED or MODIFIED only. Everything else can move a guard who
 driver-push-gate:   does not read.
 driver-push-gate: 
 driver-push-gate: PUSH REFUSED. Nothing was sent.
-error: failed to push some refs to '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-installed.CPqffvQCwt/remote.git'
+error: failed to push some refs to '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-installed.UxmVJzoihH/remote.git'
 
 ARM I2-own-branch-refused      EXPECT rc=1 GOT rc=1  marker [C3 REFUSED]                           PASS
