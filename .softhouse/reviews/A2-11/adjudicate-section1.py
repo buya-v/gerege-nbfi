@@ -218,7 +218,25 @@ print("    That discriminator is INTRINSIC — it reads the shape of the value, 
 print("    field names that would have to be maintained and would rot. A file that does NOT")
 print("    parse as JSON, and every non-JSON file, keeps the raw substring search and any hit")
 print("    is MATERIAL: unparseable fails CLOSED, never skipped. Driven both ways in section")
-print("    5, controls (h)-(k).")
+print("    5, controls (h)-(m).")
+print()
+print("    T467 / F-T464-2 — THE FAIL-CLOSED DIRECTION IS NOW REACHABLE BY A VALUE. As T455")
+print("    shipped it, the unparseable branch returned an INT where every other branch")
+print("    returns a JSON path, and the renderer slices that field. So on any tree carrying")
+print("    a non-JSON file with one of these tokens the arm died with a TypeError BEFORE the")
+print("    named assertion below ran: 10 of this file's checks executed, 15 were SKIPPED —")
+print("    section 5's controls (a)-(k) among them, including (k), the control for this very")
+print("    branch — and no FAILURES: tally printed. A fail-closed rule reachable only as a")
+print("    traceback is not fail-closed, it is unreached. The branch now returns a STRING,")
+print("    the arm FAILS on the named assertion, and every control still runs. (k) passed")
+print("    throughout, because it inspected the classifier and never the CONSUMER; control")
+print("    (l) drives the consumer, which is where the defect was.")
+print("    T467 / F-T464-6 — THE MATERIAL/PROSE DISCRIMINATOR IS A SHAPE TEST, and its limit")
+print("    is published beside it in classify_occurrences (P-29) rather than left to be")
+print("    found: the value is STRIPPED before interior whitespace is looked for, so a")
+print("    trailing space no longer launders an identifier into prose (control l2); a token")
+print("    inside a genuinely MULTI-WORD value is still graded PROSE and would not redden")
+print("    this arm (control m). That is a known limit of the shape rule, stated.")
 TOKENS = ["paymentChannelToFundSourceMappings", "feeToIncomeAccountMappings",
           "penaltyToIncomeAccountMappings", "accountingMappings", "loanproduct",
           "A2-211-read-product-nine-mandatory", "a2-11-get-loanproduct"]
@@ -246,17 +264,45 @@ check("POSITIVE CONTROL — conformance.sh was actually READ; a missing or empty
       "%s, %d bytes" % (conf, conf.stat().st_size if conf.is_file() else -1))
 
 def classify_occurrences(text, tok):
-    """(material, prose) locations of `tok` in one file's text. T455 / F-6.
+    """(material, prose) locations of `tok` in one file's text. T455 / F-6; T467 / F-T464-2.
 
     MATERIAL means the corpus USES the token: as an object key, or inside a value the
-    harness compares (identifier-shaped — no whitespace). PROSE means a sentence mentions
-    it. A file that will not parse as JSON is graded by raw substring and every hit is
-    MATERIAL, because an instrument that cannot read a file has not cleared it.
+    harness compares (identifier-shaped). PROSE means a sentence mentions it. A file that
+    will not parse as JSON is graded by raw substring and every hit is MATERIAL, because an
+    instrument that cannot read a file has not cleared it.
+
+    EVERY LOCATION IS A STRING, AND THAT IS LOAD-BEARING (T467 / F-T464-2). As shipped by
+    T455 the unparseable branch returned `[("UNPARSEABLE", text.count(tok))]` — an INT where
+    the other two branches return a JSON path. The caller PRINTS `where[:70]`, so the only
+    way to reach the fail-closed direction on a real tree was `TypeError: 'int' object is
+    not subscriptable`: the named assertion below never ran, `FAILURES:` never printed, and
+    15 of this file's 25 checks — including controls (a)-(k), and (k) is the control for
+    THIS branch — were skipped. A fail-closed rule that fires only as a traceback is not
+    fail-closed; it is unreached. Control (k) passed throughout because it only ever
+    inspected this function's RETURN VALUE and never the row its caller builds from it,
+    which is why control (l) below drives the CONSUMER (`census`/`render_rows`) instead.
+
+    THE MATERIAL/PROSE DISCRIMINATOR, AND ITS LIMIT, PUBLISHED HERE (T467 / F-T464-6, P-29).
+    The rule is "the value, STRIPPED of leading and trailing whitespace, contains no interior
+    whitespace". The strip is T467's: without it a value that is identifier-shaped apart from
+    ONE TRAILING SPACE was reclassified PROSE, i.e. immaterial, and that is an evasion a
+    whitespace character wide. Driven as control (l2). WHAT IS STILL OPEN, stated rather than
+    left to be discovered: a token that appears inside a MULTI-WORD value is still graded
+    PROSE. If the harness ever compares a value with an interior space (a display string, a
+    two-word code), a token hidden there would be counted and printed as prose and would not
+    redden this arm. That is a KNOWN limit of the shape test, not an oversight, and the fix
+    if it ever matters is to grade against the harness's own comparison set rather than
+    against the shape of the value.
     """
     try:
         doc = json.loads(text)
-    except (ValueError, UnicodeDecodeError):
-        return ([("UNPARSEABLE", text.count(tok))] if tok in text else [], [])
+    except (ValueError, UnicodeDecodeError) as exc:
+        n = text.count(tok)
+        if not n:
+            return ([], [])
+        # A STRING, not a count: the caller slices this for printing. See the docstring.
+        return ([("UNPARSEABLE", "<raw substring, %d hit(s), %s>"
+                  % (n, type(exc).__name__))], [])
     material, prose = [], []
 
     def walk(node, path):
@@ -271,7 +317,7 @@ def classify_occurrences(text, tok):
                 walk(v, "%s[%d]" % (path, i))
         elif isinstance(node, str):
             if tok in node:
-                if any(ch.isspace() for ch in node):
+                if any(ch.isspace() for ch in node.strip()):
                     prose.append(("PROSE", path))
                 else:
                     material.append(("VALUE-ID", path))
@@ -280,14 +326,35 @@ def classify_occurrences(text, tok):
     return material, prose
 
 
+def census(corpus, tok):
+    """corpus: [(rel, text)] -> (material_rows, prose_rows), each a (kind, rel, where) triple.
+
+    T467 / F-T464-2 — THE CONSUMER, FACTORED OUT SO IT CAN BE DRIVEN. The live arm below and
+    control (l) run THIS function and THIS renderer, so the crash that hid the fail-closed
+    branch cannot recur unobserved: a control that stops at `classify_occurrences` is a
+    control for half the code path.
+    """
+    mat, pro = [], []
+    for rel, text in corpus:
+        m, s = classify_occurrences(text, tok)
+        mat.extend((kind, rel, where) for kind, where in m)
+        pro.extend((kind, rel, where) for kind, where in s)
+    return mat, pro
+
+
+def render_rows(rows):
+    """The exact formatting the live arm prints. Returns the lines; printing is the caller's.
+
+    Extracted for the same reason as `census`: `where[:70]` is where T455's int escaped, so
+    the slice has to be inside something a control can call.
+    """
+    return ["          %-8s %s  at %s" % (kind, rel, where[:70]) for kind, rel, where in rows]
+
+
 hit_rows = []
 for tok in TOKENS:
-    vmat, vprose = [], []
-    for p in vector_files:
-        m, s = classify_occurrences(p.read_text(errors="replace"), tok)
-        rel = str(p.relative_to(ROOT))
-        vmat.extend((kind, rel, where) for kind, where in m)
-        vprose.extend((kind, rel, where) for kind, where in s)
+    corpus = [(str(p.relative_to(ROOT)), p.read_text(errors="replace")) for p in vector_files]
+    vmat, vprose = census(corpus, tok)
     # conformance.sh is a SHELL SCRIPT: there is no structure to parse, so it keeps the raw
     # search and any hit is MATERIAL. STATED AS A LIMIT, not left to be discovered: a token
     # written into a COMMENT there would redden this arm for the same reason the vector store
@@ -297,10 +364,8 @@ for tok in TOKENS:
     hit_rows.append((tok, len(vmat), chits, len(vprose), vmat[:3], vprose[:3]))
     print("      %-38s MATERIAL=%d  conformance.sh=%s  prose-only=%d"
           % (tok, len(vmat), chits, len(vprose)))
-    for kind, rel, where in vprose[:3]:
-        print("          %-8s %s  at %s" % (kind, rel, where[:70]))
-    for kind, rel, where in vmat[:3]:
-        print("          %-8s %s  at %s" % (kind, rel, where[:70]))
+    for _line in render_rows(vprose[:3]) + render_rows(vmat[:3]):
+        print(_line)
 print("    (population searched: %d files under .softhouse/vectors/, plus conformance.sh)"
       % len(vector_files))
 print("    (%d JSON files parsed structurally; %d graded by raw substring because they are "
@@ -460,6 +525,58 @@ control("(k) a file that does NOT parse as JSON falls back to the raw search and
         "unparseable case fails CLOSED",
         classify_occurrences(_NOT_JSON, _TOK)[0] != [],
         "material=%s" % classify_occurrences(_NOT_JSON, _TOK)[0])
+
+# T467 / F-T464-2 — CONTROL (k) WAS TRUE AND THE BRANCH IT GUARDS WAS STILL UNREACHED.
+# (k) inspects `classify_occurrences`'s RETURN VALUE. The live arm does not stop there: it
+# builds a row from that value and PRINTS it, slicing `where[:70]`. T455's unparseable branch
+# returned an INT in the `where` slot, so on any real tree carrying a non-JSON file with a
+# token the arm died with `TypeError: 'int' object is not subscriptable` BEFORE the named
+# assertion above ran — 10 of this file's 25 checks executed, 15 were skipped, and `FAILURES:`
+# never printed. (k) passed on every one of those runs. So (l) drives the CONSUMER, on a
+# synthetic corpus that contains a non-JSON member, and asserts that the fail-closed direction
+# is reached BY A VALUE: a MATERIAL row, rendered, with no exception anywhere.
+_MIXED_CORPUS = [
+    ("synthetic/ok.json", '{"unrelated": "nothing to see"}'),
+    ("synthetic/note.md", _NOT_JSON),
+]
+_l_mat, _l_prose = census(_MIXED_CORPUS, _TOK)
+try:
+    _l_rendered = render_rows(_l_mat)
+    _l_render_exc = None
+except Exception as _exc:                                    # noqa: BLE001 — that is the point
+    _l_rendered, _l_render_exc = [], repr(_exc)
+control("(l) the UNPARSEABLE branch is reached BY A VALUE, not by a traceback: the consumer "
+        "(census + render_rows, the code the live arm actually runs) yields a MATERIAL row "
+        "for a non-JSON corpus member and RENDERS it without raising. A fail-closed rule that "
+        "fires only as an exception is unreached, and it takes the rest of the grader with it",
+        len(_l_mat) == 1 and _l_mat[0][0] == "UNPARSEABLE" and len(_l_rendered) == 1
+        and _l_render_exc is None and _l_prose == [],
+        "material=%s rendered=%r render-exception=%s"
+        % (_l_mat, _l_rendered[:1], _l_render_exc))
+control("(l1) EVERY location this file emits is a STRING — the type the renderer slices. An "
+        "int in the `where` slot is the exact defect (l) exists to prevent, and a type is "
+        "cheaper to assert than a traceback is to read",
+        all(isinstance(w, str) for _, _, w in _l_mat + _l_prose)
+        and all(isinstance(w, str) for _, w in classify_occurrences(_AS_PROSE, _TOK)[1]),
+        "unparseable-where=%r prose-where=%r"
+        % (_l_mat[0][1] if _l_mat else None,
+           classify_occurrences(_AS_PROSE, _TOK)[1][0][1]))
+
+# T467 / F-T464-6 — the MATERIAL/PROSE discriminator, and the limit, DRIVEN as well as
+# published (P-29: publish the limit beside the classifier, do not leave it to be found).
+_AS_VALUE_ID_TRAILING_SPACE = '{"provenance": {"capture_ref": "A2-99-%s "}}' % _TOK
+_AS_TWO_WORD_VALUE = '{"provenance": {"note": "ref A2-99-%s"}}' % _TOK
+control("(l2) an identifier-shaped value with ONE TRAILING SPACE is still MATERIAL — the "
+        "discriminator strips the value before it looks for interior whitespace, so the "
+        "evasion is not one whitespace character wide",
+        classify_occurrences(_AS_VALUE_ID_TRAILING_SPACE, _TOK)[0] != [],
+        "material=%s" % classify_occurrences(_AS_VALUE_ID_TRAILING_SPACE, _TOK)[0])
+control("(m) THE LIMIT, ASSERTED SO IT CANNOT DRIFT SILENTLY: a token inside a value with "
+        "INTERIOR whitespace is graded PROSE. That is the shape rule this arm is built on, "
+        "it is published in classify_occurrences's docstring, and a harness that ever "
+        "compares a multi-word value would need a different rule — not a wider one here",
+        classify_occurrences(_AS_TWO_WORD_VALUE, _TOK) == ([], [("PROSE", "$.provenance.note")]),
+        "material=%s prose=%s" % classify_occurrences(_AS_TWO_WORD_VALUE, _TOK))
 
 print()
 print("FAILURES: %d" % len(fails))

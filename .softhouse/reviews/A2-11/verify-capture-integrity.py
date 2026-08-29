@@ -193,8 +193,15 @@ WHAT THIS FILE DOES AND DOES NOT COVER (P-40 — the boundary is stated, not imp
                     10, never a pass. So rename+mutate+relabel in one commit is CAUGHT.
                     (iv-b2) …BUT ONLY WHILE THE SIMILARITY HOLDS. Rename the file AND replace
                     its bytes wholly and git records a genuine ADD at the tip, which lands in
-                    (iv-a): reported UNGRADED, exit 0. This is the real edge, and it is the
-                    same hole as (iv-a) rather than a second one. Both DRIVEN by T433.
+                    (iv-a). It is the same edge as (iv-a) rather than a second one, and its
+                    CONSEQUENCE MOVED WHEN (iv-a) CLOSED. Driven by T433, then by T455 as its
+                    case 5, then re-driven at this ref by T467's
+                    `30-t467-ivb2-consequence.sh` (transcript `30-IVB2-CONSEQUENCE.txt`):
+                    the observation is reported UNGRADED and section 9 now REFUSES it, so the
+                    outcome is EXIT 1 on the named assertion, not exit 0. T467 / F-T464-3 —
+                    this sentence still said "exit 0" three commits after the file it
+                    describes stopped doing that, in the file whose whole subject is
+                    sentences that outlived their measurement.
                     (iv-c) DELETED AND RE-ADDED — DRIVEN FOUR WAYS BY T448, AND IT IS NOT A
                     HOLE. T433 disclosed this as open and undriven (its F-3). T448 built all
                     four shapes: re-add BYTE-IDENTICAL -> exit 0 and 632 graded, because
@@ -236,6 +243,7 @@ EXIT CODES
      files that also carry it, a population whose size is not the pinned one). A refusal is
      never reported as a pass.
 """
+import ast
 import hashlib
 import os
 import pathlib
@@ -1046,17 +1054,109 @@ def strip_trailing_comment(line):
     return "".join(out)
 
 
-def emitted_payload(line):
-    """The part of a line a READER of the transcript sees, or None if the line prints nothing.
+def quoted_segments(line):
+    """Every string-literal BODY on one line, after any out-of-quote comment is cut.
 
-    `echo ...` in a .sh and `print(...)` in a .py are the only two emitters in these files.
-    A line that is not an emitter is not judged by the printed predicate at all.
+    The lexical half of the payload extractor, used for shell files and for a python file
+    that will not parse. An UNTERMINATED quote yields the rest of the line as a segment:
+    fail CLOSED, because a payload this cannot lex is a payload it has not cleared.
     """
-    stripped = line.lstrip()
-    if not (stripped.startswith("echo ") or stripped.startswith("echo\t")
-            or stripped.startswith("print(")):
-        return None
-    return strip_trailing_comment(line)
+    code = strip_trailing_comment(line)
+    segs, quote, buf, i = [], None, [], 0
+    while i < len(code):
+        ch = code[i]
+        if quote:
+            if ch == "\\" and i + 1 < len(code):
+                buf.append(code[i + 1])
+                i += 2
+                continue
+            if ch == quote:
+                segs.append("".join(buf))
+                buf = []
+                quote = None
+            else:
+                buf.append(ch)
+        elif ch in "\"'":
+            quote = ch
+        i += 1
+    if quote is not None:
+        segs.append("".join(buf))
+    return segs
+
+
+def python_payloads(text):
+    """Every string CONSTANT in a python file that is not inert, as (lineno, value).
+
+    INERT means "cannot reach a reader": a module/class/function DOCSTRING, and any bare
+    string EXPRESSION STATEMENT. Comments are not in the AST at all, so they are excluded by
+    construction. EVERYTHING ELSE IS A PAYLOAD — this never asks whether the constant is
+    passed to `print`, to `sys.stdout.write`, to a logger, to `printf` through subprocess, or
+    stored in a variable that is printed forty lines later. That is the whole point (T467 /
+    F-T464-1): the question is what a line CARRIES to a reader, not which builtin carries it.
+    Over-approximating in the payload direction is the FAIL-CLOSED direction.
+    """
+    tree = ast.parse(text)
+    inert = set()
+    for node in ast.walk(tree):
+        body = getattr(node, "body", None)
+        if isinstance(node, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) \
+                and body and isinstance(body[0], ast.Expr) \
+                and isinstance(body[0].value, ast.Constant) \
+                and isinstance(body[0].value.value, str):
+            inert.add(id(body[0].value))
+        if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) \
+                and isinstance(node.value.value, str):
+            inert.add(id(node.value))
+    out = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str) \
+                and id(node) not in inert:
+            out.append((getattr(node, "lineno", 0), node.value))
+    return out
+
+
+def printed_payloads(text, rel):
+    """Every reader-visible payload in one file, as (lineno, payload).
+
+    T467 / F-T464-1 — THE EMITTER CLASS, CLOSED. T455 shipped an `emitted_payload` that
+    recognised exactly two spellings: a line whose first token is `echo` and a line whose
+    first token is `print(`. THREE OTHER SPELLINGS WENT STRAIGHT THROUGH, measured at T455's
+    own merge commit, each smuggling the tagged-away sentence back as a live untagged
+    assertion with section 10 at EXIT 0:
+
+        printf '%s\\n' "<the claim>"     # <tag>
+        >&2 echo "<the claim>"           # <tag>
+        sys.stdout.write("<the claim>")  # <tag>
+
+    and this is not a hypothetical reach: `printf` is already used 12 times in
+    10-drive-conditions.sh and 5 times in run-all.sh, two of the four files this section
+    guards. An enumeration of emitter names is a list that the next author extends without
+    reading, so the repair is NOT to add three names. It is to stop asking which builtin
+    prints and start asking what the line CARRIES:
+
+      * python  -> every string CONSTANT that is not a docstring or a bare string statement
+                   (ast; comments are absent from the tree, so they cost nothing to exclude);
+      * shell   -> every quoted SEGMENT left after the out-of-quote `#` comment is cut;
+      * a .py that will not PARSE -> the shell rule, so a syntax error cannot buy silence.
+
+    FAIL-CLOSED BY CONSTRUCTION: a non-emitting line that merely CARRIES a quoted claim (a
+    grep pattern, a comparison string) is judged as if it printed. The cost of that is
+    measured, not assumed — on the four guarded files at this ref it is ZERO false positives.
+    WHAT IS DELIBERATELY NOT COVERED, and stays open: a claim assembled at RUNTIME and printed
+    through a VARIABLE (`printf '%s' "$SENTENCE"`) carries no literal, so no static reader of
+    the source can see it; and a claim WRAPPED across two payloads is caught by predicate 1
+    (which de-wraps) but not by this one, which is per-payload.
+    """
+    if rel.endswith(".py"):
+        try:
+            return python_payloads(text)
+        except SyntaxError:
+            pass
+    out = []
+    for i, line in enumerate(text.split("\n"), 1):
+        for seg in quoted_segments(line):
+            out.append((i, seg))
+    return out
 
 
 def tagged_blocks(text):
@@ -1084,7 +1184,7 @@ def tagged_blocks(text):
     return blocks
 
 
-def grade_binding(text):
+def grade_binding(text, rel):
     """(stated_untagged, quoted_claims, printed_untagged) for one file's text.
 
     PREDICATE 1 — BINDING, two halves that must BOTH hold:
@@ -1092,18 +1192,21 @@ def grade_binding(text):
       POSITIVE  at least one DE-WRAPPED TAGGED BLOCK still contains a false claim VERBATIM.
                 This is the half T433's guard did not have: it counted TAGS. Three bare tags
                 satisfy a tag count and contain no quotation, which is abuse (C).
-    PREDICATE 2 — PRINTED. Every EMITTED payload that states a false claim must carry the tag
-    INSIDE THE PAYLOAD. Closes (B): a tag in a trailing comment is never printed, so the
-    source carries it and the reader's transcript does not. The source is not the artefact
-    the reader sees, and the tag exists for the reader.
+    PREDICATE 2 — PRINTED. Every reader-visible PAYLOAD that states a false claim must carry
+    the tag INSIDE THE PAYLOAD. Closes (B): a tag in a trailing comment is never printed, so
+    the source carries it and the reader's transcript does not. The source is not the artefact
+    the reader sees, and the tag exists for the reader. `printed_payloads` decides what a
+    payload IS without naming a single emitter — see its docstring (T467 / F-T464-1).
     """
+    lines = text.split("\n")
     stated_untagged, printed_untagged = [], []
-    for line in text.split("\n"):
+    for line in lines:
         if states_a_false_claim(line) and TAG not in line:
             stated_untagged.append(line.strip()[:90])
-        payload = emitted_payload(line)
-        if payload is not None and states_a_false_claim(payload) and TAG not in payload:
-            printed_untagged.append(line.strip()[:90])
+    for lineno, payload in printed_payloads(text, rel):
+        if states_a_false_claim(payload) and TAG not in payload:
+            src_line = lines[lineno - 1].strip()[:90] if 0 < lineno <= len(lines) else ""
+            printed_untagged.append("%s:%d %s" % (os.path.basename(rel), lineno, src_line))
     quoted_claims = sum(1 for c in FALSE_CLAIMS
                         if any(c in b.lower() for b in tagged_blocks(text)))
     return stated_untagged, quoted_claims, printed_untagged
@@ -1124,10 +1227,34 @@ _ABUSE_B = _GOOD + ('  echo "%s"  # %s\n' % (_SENTENCE, TAG))
 _ABUSE_C = ('  # %s (tidied: the quotation was removed, the tag was not)\n' % TAG) * 3
 _WRAPPED = ('  # [%s] "Expected UNDETECTED at BOTH refs ... has no\n'
             '  # [%s]  baseline older than HEAD anywhere in this repository."\n' % (TAG, TAG))
-_g_bad, _g_q, _g_printed = grade_binding(_GOOD)
-_b_bad, _b_q, _b_printed = grade_binding(_ABUSE_B)
-_c_bad, _c_q, _c_printed = grade_binding(_ABUSE_C)
-_w_bad, _w_q, _w_printed = grade_binding(_WRAPPED)
+# T467 / F-T464-1 — THE THREE SPELLINGS THAT WENT THROUGH T455's `echo`/`print(` matcher,
+# each built the same way as _ABUSE_B: a LIVE emitter with the tag in a trailing comment. They
+# are fixtures for the CLASS, not a list to be extended — the predicate they drive names no
+# emitter at all. `_ABUSE_OSWRITE` is deliberately a spelling nobody has used in this
+# repository, so the class claim is tested against something that is not on any list.
+_ABUSE_PRINTF = _GOOD + ("  printf '%%s\\n' \"%s\"  # %s\n" % (_SENTENCE, TAG))
+_ABUSE_STDERR = _GOOD + ('  >&2 echo "%s"  # %s\n' % (_SENTENCE, TAG))
+_ABUSE_SYSWRITE = ('print("  [%s] %s")\n' % (TAG, _SENTENCE)
+                   + 'sys.stdout.write("%s\\n")  # %s\n' % (_SENTENCE, TAG))
+_ABUSE_OSWRITE = ('print("  [%s] %s")\n' % (TAG, _SENTENCE)
+                  + '_msg = "%s"  # %s\n' % (_SENTENCE, TAG)
+                  + 'os.write(1, _msg.encode())\n')
+# And the discrimination fixtures: text that quotes the claim but PRINTS NOTHING. A predicate
+# that flagged these would be predicate 1 wearing a second name, and it would make every
+# tagged comment in the corrected files a failure — which is how a guard gets deleted (P-29).
+_INERT_COMMENT = '# [%s] "%s"\n' % (TAG, _SENTENCE)
+_INERT_DOCSTRING = '"""a docstring\n[%s] "%s"\n"""\n' % (TAG, _SENTENCE)
+
+_g_bad, _g_q, _g_printed = grade_binding(_GOOD, "fixture.sh")
+_b_bad, _b_q, _b_printed = grade_binding(_ABUSE_B, "fixture.sh")
+_c_bad, _c_q, _c_printed = grade_binding(_ABUSE_C, "fixture.sh")
+_w_bad, _w_q, _w_printed = grade_binding(_WRAPPED, "fixture.sh")
+_pf_bad, _pf_q, _pf_printed = grade_binding(_ABUSE_PRINTF, "fixture.sh")
+_se_bad, _se_q, _se_printed = grade_binding(_ABUSE_STDERR, "fixture.sh")
+_sw_bad, _sw_q, _sw_printed = grade_binding(_ABUSE_SYSWRITE, "fixture.py")
+_ow_bad, _ow_q, _ow_printed = grade_binding(_ABUSE_OSWRITE, "fixture.py")
+_ic_bad, _ic_q, _ic_printed = grade_binding(_INERT_COMMENT, "fixture.py")
+_id_bad, _id_q, _id_printed = grade_binding(_INERT_DOCSTRING, "fixture.py")
 check("SELF-DRIVE — the binding classifier ACCEPTS a correctly tagged quotation (a check "
       "that rejected everything would be a freeze, not a guard)",
       _g_q >= 1 and not _g_bad and not _g_printed,
@@ -1151,6 +1278,35 @@ check("SELF-DRIVE — the classifier REJECTS abuse (C): the quotation deleted, b
       "quoted-claims=%d tags=%d — bare tags satisfy a TAG COUNT and fail a BINDING"
       % (_c_q, _ABUSE_C.count(TAG)))
 
+# T467 / F-T464-1 — THE SAME ABUSE, THREE OTHER SPELLINGS, AND ONE NOBODY HAS WRITTEN YET.
+# T455 closed `echo`. Measured at T455's merge commit, `printf`, `>&2 echo` and
+# `sys.stdout.write` each took section 10 to EXIT 0 with the sentence smuggled back as a live
+# untagged assertion, and `printf` is ALREADY in two of the four guarded files (12 uses in
+# 10-drive-conditions.sh, 5 in run-all.sh). These four assertions are the class, driven.
+check("SELF-DRIVE — the classifier REJECTS abuse (B) spelled with `printf` — the emitter "
+      "T455's matcher did not know and the guarded files already use 17 times between them",
+      bool(_pf_printed) and not _pf_bad and _pf_q >= 1,
+      "printed-untagged=%d %s" % (len(_pf_printed), _pf_printed[:1]))
+check("SELF-DRIVE — the classifier REJECTS abuse (B) spelled `>&2 echo`, where the emitter "
+      "T455 DID know about is not the first token on the line",
+      bool(_se_printed) and not _se_bad and _se_q >= 1,
+      "printed-untagged=%d %s" % (len(_se_printed), _se_printed[:1]))
+check("SELF-DRIVE — the classifier REJECTS abuse (B) spelled `sys.stdout.write(...)` in a "
+      "python file, which is neither `print(` nor `echo `",
+      bool(_sw_printed) and not _sw_bad and _sw_q >= 1,
+      "printed-untagged=%d %s" % (len(_sw_printed), _sw_printed[:1]))
+check("SELF-DRIVE — and it REJECTS a spelling NOBODY IN THIS REPOSITORY HAS USED: the claim "
+      "bound to a variable and written to fd 1 by `os.write`. This is the class claim under "
+      "test — the predicate names no emitter, so an emitter it has never seen is not a hole",
+      bool(_ow_printed) and not _ow_bad and _ow_q >= 1,
+      "printed-untagged=%d %s" % (len(_ow_printed), _ow_printed[:1]))
+check("SELF-DRIVE — the PRINTED predicate does NOT fire on a COMMENT that quotes the claim "
+      "with the tag outside the quotes, and does NOT fire on a DOCSTRING that does the same. "
+      "Those print nothing, predicate 1 already grades them, and a predicate that flagged "
+      "them would redden every corrected file for carrying its own correction",
+      not _ic_printed and not _id_printed,
+      "comment-printed=%d docstring-printed=%d" % (len(_ic_printed), len(_id_printed)))
+
 _bind_bad, _print_bad, _pos_bad, _missing = [], [], [], []
 _emitted_tagged = 0
 for _rel, _positive in CORRECTED:
@@ -1161,7 +1317,7 @@ for _rel, _positive in CORRECTED:
     except OSError as exc:
         _missing.append((_rel, repr(exc)))
         continue
-    _untagged, _quoted, _printed = grade_binding(_text)
+    _untagged, _quoted, _printed = grade_binding(_text, _rel)
     print("      %-42s untagged-statements=%d quoted-claims=%d printed-untagged=%d"
           % (os.path.basename(_rel), len(_untagged), _quoted, len(_printed)))
     for _u in _untagged:
@@ -1172,9 +1328,8 @@ for _rel, _positive in CORRECTED:
         _print_bad.append((_rel, _p))
     if _positive not in _text:
         _pos_bad.append((_rel, _positive))
-    for _line in _text.split("\n"):
-        _pl = emitted_payload(_line)
-        if _pl is not None and states_a_false_claim(_pl) and TAG in _pl:
+    for _lineno, _pl in printed_payloads(_text, _rel):
+        if states_a_false_claim(_pl) and TAG in _pl:
             _emitted_tagged += 1
 for _rel, _exc in _missing:
     print("        MISSING %s  %s" % (_rel, _exc))
