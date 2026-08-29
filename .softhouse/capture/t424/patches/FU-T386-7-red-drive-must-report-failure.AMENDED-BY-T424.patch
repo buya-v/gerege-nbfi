@@ -2,7 +2,7 @@ diff --git a/.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives
 index 6b244ab7..f26843e9 100644
 --- a/.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh
 +++ b/.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh
-@@ -33,6 +33,111 @@
+@@ -33,6 +33,124 @@
  # =============================================================================================
  set -uo pipefail
  
@@ -35,6 +35,19 @@ index 6b244ab7..f26843e9 100644
 +# `| tee` is no longer prescribed to the caller and no longer load-bearing; piping this script
 +# anywhere is now the caller's business, not the guard's.
 +# =============================================================================================
++# [T442, closing C-T440-5.] THE RE-EXEC MARKER IS NOT AN OFF SWITCH. As T424 first wrote it this
++# guard ran only when T381_DRIVE_INNER was UNSET, so exporting the variable skipped the grader
++# entirely: a specimen carrying a failing arm exited 0 instead of 1. An environment variable that
++# switches a guard off is the fail-open shape this whole chain is about, so the marker is no
++# longer a flag -- it carries the OUTER run's pid, and the inner refuses unless it names the
++# inner's own $PPID. Every other value is exit 2, which is FAIL-CLOSED: a forged marker stops the
++# drive rather than silencing it. [RED/GREEN driven: t442-t440-lows-drive.sh, out/T442-T440-LOWS.txt]
++if [ -n "${T381_DRIVE_INNER:-}" ] && [ "${T381_DRIVE_INNER}" != "t424-inner:$PPID" ]; then
++  echo "*** T424/T442 GUARD: T381_DRIVE_INNER=[${T381_DRIVE_INNER}] does not name this" >&2
++  echo "*** process's parent ($PPID). The re-exec marker is not an off switch, and a guard that" >&2
++  echo "*** can be switched off from the environment is not a guard. That is not a pass." >&2
++  exit 2
++fi
 +if [ -z "${T381_DRIVE_INNER:-}" ]; then
 +  _t424_self=${BASH_SOURCE[0]}
 +  case "$_t424_self" in /*) ;; *) _t424_self="$PWD/$_t424_self" ;; esac
@@ -56,7 +69,7 @@ index 6b244ab7..f26843e9 100644
 +    exit 2
 +  fi
 +
-+  T381_DRIVE_INNER=1 bash "$_t424_self" "$@" 2>&1 | tee "$_t424_log"
++  T381_DRIVE_INNER="t424-inner:$$" bash "$_t424_self" "$@" 2>&1 | tee "$_t424_log"
 +  # BOTH statuses are copied in ONE statement. `x=${PIPESTATUS[0]}` is itself a command, and it
 +  # REPLACES PIPESTATUS with a one-element array -- so reading [1] on the next line is an
 +  # unbound variable, and under `set -u` that kills the script with status 1. A guard that dies

@@ -1,0 +1,147 @@
+host    : Darwin 25.5.0 arm64  bash 3.2.57(1)-release  git version 2.50.1 (Apple Git-155)
+scratch : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t442-lows.GdvpQC2r  (outside the repository)
+
+==============================================================================
+C-T440-4 -- the `pipefail` sentence is over-broad, and the abort misattributes
+==============================================================================
+the sentence under test, quoted from .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh:648 
+    648:# One more thing NOT to infer from the repair below: `set -o pipefail` does NOT surface a
+    649-# failing `git ls-files` here. pipefail returns the RIGHTMOST non-zero status, and that is
+    650-# `grep -c .`'s 1, not git's 128 -- driven in the same instrument. What catches a failing
+    651-# `git ls-files` is still the VALUE test (`0` -lt 1), exactly as before; what the status read
+
+shipped block driven (producer substituted, everything else verbatim):
+    | SWEEP_CORPUS_N=$(eval "$T442_PRODUCER" | grep -c .); _corpus_rc=$?
+    | if [ "$_corpus_rc" -ge 2 ]; then
+    |   echo "SWEEP ABORT (exit 2): the corpus COUNT DID NOT RUN (rc=$_corpus_rc). There is no" >&2
+    |   echo "  denominator, so there is no sweep. This is not 'zero files'; it is 'nobody counted'." >&2
+    |   exit 2
+    | fi
+    | case "$SWEEP_CORPUS_N" in ''|*[!0-9]*)
+    |   echo "SWEEP ABORT (exit 2): the corpus count is not a number ([$SWEEP_CORPUS_N]). A count that" >&2
+    |   echo "  is not a number is not a count, and every zero below would be denominated in it." >&2
+    |   exit 2 ;;
+    | esac
+    | if [ "$SWEEP_CORPUS_N" -lt 1 ]; then
+    |   echo "SWEEP ABORT (exit 2): corpus reachable but tracks ZERO files under .softhouse/." >&2
+    |   echo "  A sweep over nothing proves nothing (P-35); a denominator of zero is an ERROR, not a pass." >&2
+    |   exit 2
+    | fi
+
+-- ARM 1: the producer fails 128 AFTER emitting lines (the case the sentence misses)
+    exit=2   2 stderr line(s)
+    stderr| SWEEP ABORT (exit 2): the corpus COUNT DID NOT RUN (rc=128). There is no
+    stderr|   denominator, so there is no sweep. This is not 'zero files'; it is 'nobody counted'.
+
+-- ARM 2: the producer fails 128 with NO output (the case the sentence describes)
+    exit=2
+    stderr| SWEEP ABORT (exit 2): corpus reachable but tracks ZERO files under .softhouse/.
+    stderr|   A sweep over nothing proves nothing (P-35); a denominator of zero is an ERROR, not a pass.
+
+-- ARM 3: the COUNT ITSELF fails (grep rc>=2) -- the case the abort message is FOR
+    CAPTURED=[] rc=2
+
+  primitive: (3 lines; exit 128) | grep -c .  -> captured=[3] rc=128
+  primitive: (no output; exit 128) | grep -c . -> captured=[0] rc=1
+  with output, pipefail surfaces git's 128                 expected=128            actual=128            OK
+  with output, the count is the real count                 expected=3              actual=3              OK
+  with NO output, the rightmost non-zero is grep's 1       expected=1              actual=1              OK
+  with NO output, the count is 0                           expected=0              actual=0              OK
+  ARM 1 aborts with COUNT DID NOT RUN                      expected=1              actual=1              OK
+  ARM 1 exit status                                        expected=2              actual=2              OK
+  ARM 2 aborts on the VALUE test instead                   expected=1              actual=1              OK
+
+  VERDICT. The sentence is true ONLY when `git ls-files` fails with NO OUTPUT. With
+  output, pipefail's rightmost non-zero IS git's 128, the status test fires, and the abort
+  says 'the corpus COUNT DID NOT RUN' -- but the count ran; the PRODUCER failed. It is
+  FAIL-CLOSED, so it is not a hole: it is a message stating the wrong cause, one line
+  below a comment that exists to correct a message that stated the wrong cause.
+  NARROWED SENTENCE PROPOSED (not applied -- casualty-sweep.sh is not this task's grant):
+    'set -o pipefail does not surface a failing `git ls-files` WHEN GIT FAILS WITHOUT
+     OUTPUT: grep -c . then exits 1 and 1 is the rightmost non-zero. If git fails AFTER
+     emitting lines, grep exits 0, git's own 128 IS the rightmost non-zero, and the
+     status test below fires -- correctly aborting, but under a message that names the
+     count rather than the producer.'
+
+==============================================================================
+C-T440-5 -- an exported T381_DRIVE_INNER disables the amended guard entirely
+==============================================================================
+  occurrences of T381_DRIVE_INNER in the LIVE t381-red-drives.sh : 0
+  occurrences in the shipped patch                              : 5
+  the amended guard is NOT applied to the live file        expected=0              actual=0              OK
+  So the bypass is a property of a PROPOSED patch, not of anything that runs today
+  (P-45 read the other way round: unwired, so it grades nothing yet -- which is exactly
+  when the surface is cheapest to close).
+
+  guard text extracted from the patch preamble hunk: 118 lines
+  pre-repair shape reconstructed                   : 112 lines (6 fewer)
+
+-- RED: the guard BEFORE the T442 repair (T424's shape)
+    normal invocation                : exit 1
+    with T381_DRIVE_INNER=1 exported : exit 0   <- the grader never runs
+  RED: normal invocation CATCHES the failing arm           expected=1              actual=1              OK
+  RED: the env var BYPASSES it (exit 0)                    expected=0              actual=0              OK
+
+-- GREEN: the guard AS THE PATCH NOW SHIPS IT
+   JUDGEMENT (the question T440 asked -- should it be reachable at all?): NO. The marker
+   exists only to tell the re-exec'd child that it is the inner run, and the child can
+   verify that for itself: the outer publishes its own pid, the inner requires the marker
+   to name its $PPID. Anything else is exit 2 -- fail-CLOSED where the old shape was open.
+    normal invocation, FAILING arm        : exit 1
+    with T381_DRIVE_INNER=1 exported      : exit 2   <- REFUSED, not bypassed
+    with a forged marker t424-inner:1     : exit 2   <- REFUSED
+    HEALTHY CONTROL, clean body           : exit 0
+    | *** T424/T442 GUARD: T381_DRIVE_INNER=[1] does not name this
+    | *** process's parent (7616). The re-exec marker is not an off switch, and a guard that
+    | *** can be switched off from the environment is not a guard. That is not a pass.
+  GREEN: normal invocation still CATCHES the arm           expected=1              actual=1              OK
+  GREEN: T381_DRIVE_INNER=1 is REFUSED (exit 2)            expected=2              actual=2              OK
+  GREEN: a forged marker is REFUSED (exit 2)               expected=2              actual=2              OK
+  GREEN: a clean drive still passes (exit 0)               expected=0              actual=0              OK
+
+  VERDICT: closed. The patch in patches/ carries the repair; the live instrument does not
+  carry the guard at all yet, so nothing that runs today is affected either way.
+
+==============================================================================
+C-T440-6 -- what BEFORE_REF=main actually does, MEASURED, on the tree I have
+==============================================================================
+  blob of the subject at main : b7893bd09e02a4da3afc93bf4af7e3d16c0e1171
+  blob of the subject at HEAD : b7893bd09e02a4da3afc93bf4af7e3d16c0e1171
+  the two refs carry the same subject file : YES
+
+    | BEFORE sha256: 63e05208fa871628dbb74db8c429d55c5760cd95ab5cfd59bd9a5954a4975d77   (718 lines)
+    | AFTER  sha256: 63e05208fa871628dbb74db8c429d55c5760cd95ab5cfd59bd9a5954a4975d77    (718 lines)
+    | DRIVE ABORT (exit 2): BEFORE and AFTER are the SAME FILE. There is nothing to drive,
+    |   and every drive below would report 'no difference' for the wrong reason.
+    BEFORE_REF=main      exit = 2
+
+    | ============================================================================
+    | D-R2 patch: expected 1 anti-calibration search line in BEFORE, found 0
+    |   D-R2: could not patch BEFORE. DRIVE FAILED.
+    BEFORE_REF=964b532e  exit = 4
+
+  BEFORE_REF=main exit status                              expected=2              actual=2              OK
+  BEFORE_REF=main aborts on SAME FILE                      expected=1              actual=1              OK
+  BEFORE_REF=main never reaches D-R2                       expected=0              actual=0              OK
+  BEFORE_REF=964b532e exit status                          expected=4              actual=4              OK
+  BEFORE_REF=964b532e aborts at D-R2                       expected=1              actual=1              OK
+
+  FINDING F-T442-1 -- C-T440-6 DOES NOT REPRODUCE ON THIS TREE, AND T424'S ORIGINAL
+  SENTENCE DOES. On the merged tree, main and HEAD carry the SAME subject file, so the
+  drive aborts exit 2 with 'BEFORE and AFTER are the SAME FILE' -- which is exactly what
+  T424 wrote. T440 measured exit 4 at D-R2 on T424's own branch and on the merge result as
+  it then stood, where the two refs still differed; that measurement is reproduced here
+  with BEFORE_REF=964b532e, which does abort at D-R2 exit 4.
+  So neither sentence is wrong -- BOTH ARE TREE-DEPENDENT AND NEITHER SAYS SO, which is the
+  same defect as F-T424-N1 (a present-tense measurement carrying its own recipe) and as
+  C-T440-1 (a record that stopped matching its code). CORRECTED WORDING, tree-qualified:
+    'The drive cannot be run to completion on any ref available here. With BEFORE_REF=main
+     it aborts exit 2 -- BEFORE and AFTER are the same file -- WHENEVER main and HEAD carry
+     the same casualty-sweep.sh, which is the case on the merged tree; where they differ it
+     reaches D-R2 and aborts exit 4 (expected 1 anti-calibration search line in BEFORE,
+     found 0), as BEFORE_REF=964b532e still does. Either way FU-T386-7's guard has nothing
+     to grade yet, which is the substantive claim and it stands.'
+
+==============================================================================
+T442-LOWS-RESULT: disagreements=0
+Every arm came out as declared.
