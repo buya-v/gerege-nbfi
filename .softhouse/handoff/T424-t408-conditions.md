@@ -271,8 +271,10 @@ the end of the run. All scratch worktrees were created under `/tmp`, never insid
 (`guard_no_narrow_catch_in_capture_rigs` walks recursively, so a nested checkout would trip a HARD
 guard and exit 2 before the probe line prints).
 
-Run at commit `b9b8a3ef` with `git status --porcelain` **empty** before it started.
-Transcript: `.softhouse/capture/t424/out/T424-BAR.txt` (749 lines).
+Run **twice**, both times with `git status --porcelain` **empty** before starting: once at
+`b9b8a3ef` (`out/T424-BAR.txt`) and again at `4a2d95cb`, the commit that carries this handoff
+(`out/T424-BAR-final-commit.txt`). **Every figure below is identical in both runs**, so the
+handoff text itself moved nothing. Both transcripts are 749 lines.
 
 ```
 BAR_EXIT=0
