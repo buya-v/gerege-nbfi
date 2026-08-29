@@ -257,4 +257,35 @@ Recorded so silence is not read as completion. `[UNVERIFIED]` on every line.
 
 ## THE BAR
 
-BARBLOCK
+`bash .softhouse/conformance.sh` from the worktree, cwd `/tmp/t445final` (scratch, outside the
+repo), on the **COMMITTED tip**, with `git status --porcelain` **EMPTY before AND after**.
+Full transcript, 861 lines: `.softhouse/capture/t445-case-route/evidence/90-FINAL-BAR-committed-tip.log`.
+
+```
+EXIT = 0
+grep -c 'probe = ' = 1                    <- PRESENCE read BEFORE the value (P-84)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+```
+
+| figure | `main` @ `2a1dac46` | this tip | required |
+|---|---|---|---|
+| exit | 0 | **0** | 0 |
+| `probe = ` line count, read before its value | 1 | **1** | ≥ 1 |
+| probe value | `up` | **`up`** | — |
+| VERDICT | PASS 46 / 7884 | **PASS 46 / 7884** | unmoved |
+| wrong ledger implementations | 16, all dead | **16, all 16 DIED through this harness** | 16 |
+| guards-dir census | `population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0` | **identical** | unmoved |
+| `deadOccurrences` / `deadFiles` | 108 / 75 | **108 / 75** | unmoved |
+| dead-path FRONTIER | 11, pinned 11 | **11, pinned 11** | unmoved |
+| dead-path corpus | 1528 | **1534** (+6: my instruments and evidence) | no pin on it |
+| host-state census | 18, pinned 18 | **18, pinned 18** (195 instruments, was 192) | unmoved |
+| `guard_guards_dir_registration` cost | — | **2 s / ceiling 60 s**, 0 breaches | under ceiling |
+| guards timed | 15 | **15** | unmoved — the new function is NOT a `timed_guard` |
+| NEW census line | — | `registration decisive lines: 7 present, 2 evaluated on an input they must refuse AND an input they must accept` | — |
+| `patterns.md:3426` → `conformance.sh:3271` | resolves | **resolves** | resolves |
+| tree clean after the run | yes | **yes** | yes |
+
+**Branch:** `softhouse/T445-case-route`. `git log --oneline main..HEAD` carries every commit listed
+in this handoff; the tree barred above is the tip.
+
