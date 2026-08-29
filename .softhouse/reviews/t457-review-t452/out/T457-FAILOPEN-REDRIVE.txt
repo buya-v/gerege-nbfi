@@ -1,0 +1,66 @@
+==============================================================================
+T457 FAIL-OPEN RE-DRIVE
+subject tree : /private/tmp/t457/t452tree
+commit       : dda1f0311b484ee078025ddad817b8901e43e7ed
+dirty        : 0 path(s)
+pre-repair   : cbc8733c46cff515a2e48b5f3389ffbf514dc674 -> cbc8733c
+scratch      : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t457-redrive.Qe3Wyy0Z   (asserted outside the subject tree)
+==============================================================================
+
+ARM A3 -- the t388 probe's carrier set, measured with plain grep (NOT git grep)
+   probe  (read from the subject, never retyped) : 'WHERE I LOOKED for things the T388 oracle-state movement'
+   corpus (read from the subject)                : '.softhouse/capture/t388-accrual-capture/'
+   tracked files in the calibration corpus       : 194
+   files carrying the probe IN that corpus       : 1
+       .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh
+   of those, the searcher itself                 : 1
+   CONTROL: files carrying 'SWEEP CALIBRATE'     : 37
+  corpus is far larger than one file                         expected=yes       actual=yes       OK
+  exactly ONE carrier in the corpus                          expected=1         actual=1         OK
+  and that carrier is the searcher                           expected=1         actual=1         OK
+  CONTROL string is NOT self-only                            expected=yes       actual=yes       OK
+
+ARM A1 -- t388 sweep AS SHIPPED, in a repo containing NOTHING but the script
+   exit                              : 0
+   population reported by the sweep  : 1 tracked files under .softhouse/
+       SWEEP CALIBRATE+: PASS -- known positive matched 2 time(s) in .softhouse/capture/t388-accrual-capture/
+       selectors run: 18   selectors that DID NOT RUN: 0
+  the sweep runs GREEN over a corpus of one                  expected=0         actual=0         OK
+  and the positive calibration PASSES                        expected=1         actual=1         OK
+
+ARM A2 -- the same script RELOCATED out of the corpus its own pathspec names
+   relocated to (assembled at run time) : .softhouse/capture/t457-relocated-82934/30-casualty-sweep-t388.sh
+   exit                              : 3
+       SWEEP ABORT (exit 3): CALIBRATION MISSED. 'WHERE I LOOKED for things the T388 oracle-state movement'
+  the guard IS fireable, so not unfireable                   expected=3         actual=3         OK
+
+ARM B1/B2 -- the a2-33 sweep, PRE-REPAIR vs REPAIRED, on one and the same specimen
+   B1 pre-repair : exit=0  patterns=34
+       SWEEP CORPUS : 1 tracked files
+       SWEEP CALIBRATE+: PASS — known positive 'a2-33' matched 7 time(s)
+       SWEEP-RESULT: commit=69bb223 corpus_files=1 patterns=34 hit_lines=26 calibration=PASS
+   B2 repaired   : exit=94
+       SWEEP ABORT (94): CORPUS REACH FAILED. The engine matched text in 0 tracked files
+  PRE-REPAIR sweep certifies a one-file corpus               expected=0         actual=0         OK
+  and reports all 34 patterns while doing it                 expected=34        actual=34        OK
+  REPAIRED sweep REFUSES the same specimen                   expected=94        actual=94        OK
+
+ARM B3 -- the 34 pattern rows, pre-repair vs repaired, with a MUTATION CONTROL
+   pattern rows extracted: pre=34  post=34
+  pattern rows are byte-identical                            expected=yes       actual=yes       OK
+  and the two extractions agree in count                     expected=34        actual=34        OK
+  CONTROL: a one-byte mutation IS detected                   expected=no        actual=no        OK
+
+ARM C -- is T452's fail-open cardinal stable under its own 8-line window?
+   window  8 : fail_open=1   membership: self_only=1 family_only=2
+   window 24 : fail_open=0   membership: self_only=1 family_only=2
+   full  w8  : T452-CLASSIFY-V2-RESULT: tree=dda1f031_clean scripts=1791 searches=454 var_resolved=4 self_only=1 self_plus_others=35 family_only=2 fail_open=1 undecided=1 runtime_assembled=13 unresolved_var=29 nolit=127 immunised_pathspec=1 immunised_postpipe=3 elsewhere=263 unparsed=24
+   full  w24 : T452-CLASSIFY-V2-RESULT: tree=dda1f031_clean scripts=1791 searches=454 var_resolved=4 self_only=1 self_plus_others=35 family_only=2 fail_open=0 undecided=2 runtime_assembled=13 unresolved_var=29 nolit=127 immunised_pathspec=1 immunised_postpipe=3 elsewhere=263 unparsed=24
+  the MEMBER buckets are window-INSENSITIVE                  expected=self_only=1 family_only=2 actual=self_only=1 family_only=2 OK
+  the mechanical fail_open CARDINAL is not                   expected=no        actual=no        OK
+
+==============================================================================
+T457-REDRIVE-RESULT: t388_specimen_exit=0 t388_relocated_exit=3 t388_carriers=1 t388_self=1 t388_corpus=194
+T457-REDRIVE-RESULT: a2_33_pre_exit=0 a2_33_post_exit=94 patterns=34 identical=yes
+T457-REDRIVE-RESULT: fail_open=1 (w8) fail_open=0 (w24) members_w8='self_only=1 family_only=2' members_w24='self_only=1 family_only=2' disagreements=0
+==============================================================================
