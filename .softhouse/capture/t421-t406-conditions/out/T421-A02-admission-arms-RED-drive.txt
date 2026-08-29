@@ -1,0 +1,24 @@
+T421 ADMISSION-ARM RED DRIVE -- 2026-08-28T18:48:23Z
+admit.go original sha256: a02a9d41203da818cba448ca8cb45ba1cf11b15ae40d0ed732a21d2c0e7ca2fc
+
+neutered 12 reason fragment(s) across 11 branches
+
+go test exit: 1 (wanted NON-ZERO)
+--- FAIL: TestSlotAdmissionInputsAreDefaultDeny (0.07s)
+    --- PASS: TestSlotAdmissionInputsAreDefaultDeny/the_committed_accounting-path_vector_is_ADMITTED (0.00s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/1._a_leg_carrying_BOTH_gl_account_id_and_slot_code_REFUSES (0.00s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/2._a_leg_carrying_NEITHER_gl_account_id_nor_slot_code_REFUSES (0.00s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/3._a_NEGATIVE_per-leg_slot_code_REFUSES (0.00s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/4._per-leg_slot_codes_with_an_EMPTY_mapping_table_REFUSES (0.00s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/5._an_ENTRY-LEVEL_slot_code_alongside_per-leg_codes_REFUSES (0.00s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/6._per-leg_slot_codes_with_product_id_0_REFUSES (0.00s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/7._a_mapping_table_NO_leg_resolves_through_REFUSES (0.00s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/8._a_mapping_row_with_slot_code_0_REFUSES (0.00s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/9._a_DUPLICATE_slot_code_in_the_mapping_table_REFUSES (0.00s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/10._a_mapping_row_OFF_THE_CHART_REFUSES (0.00s)
+    --- FAIL: TestSlotAdmissionInputsAreDefaultDeny/11._a_mapping_row_with_a_NON-POSITIVE_gl_account_id_REFUSES (0.00s)
+
+sub-tests FAILED with the branches neutered: 11  (wanted 11 -- the eleven arms)
+sub-tests PASSED with the branches neutered:  1  (wanted 1  -- the ADMITTED control)
+RED DRIVE: every arm is LOAD-BEARING. None of them passes without its branch.
+admit.go RESTORED byte-for-byte (a02a9d41203da818cba448ca8cb45ba1cf11b15ae40d0ed732a21d2c0e7ca2fc)

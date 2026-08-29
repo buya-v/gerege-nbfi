@@ -1,0 +1,8 @@
+record-kind: sql
+case-id: T421-S01-gl16-and-counters
+container: fineract-db-1
+database: fineract_gerege
+db-user: root
+psql-exit-status: 0
+query-sha256: 1b7ab5c6effd9605b1ce2d115d7ec94c4a47eb4c29e230c9fd7165f1477b0f29
+captured-at-utc: 2026-08-28T18:33:42Z

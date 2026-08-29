@@ -1,0 +1,25 @@
+SWEEP RUN AT UTC: 2026-08-28T18:31:12Z
+ROOT: .softhouse/vectors
+FILES SCANNED: 72
+FILES WITH >=1 capture timestamp: 63  timestamps found: 63
+FILES WITH NONE (listed, not skipped): 9
+   none: .softhouse/vectors/PIN-ledger.json
+   none: .softhouse/vectors/PIN.json
+   none: .softhouse/vectors/_selftest/SELFTEST-01-two-period-zero-rate.json
+   none: .softhouse/vectors/capabilities-ledger.json
+   none: .softhouse/vectors/capabilities.json
+   none: .softhouse/vectors/loanschedule/REFUSE-01-actual-actual-ungraded.json
+   none: .softhouse/vectors/loanschedule/REFUSE-02-half-even-ungraded.json
+   none: .softhouse/vectors/loanschedule/REFUSE-03-annual-fixed30360-precedence.json
+   none: .softhouse/vectors/loanschedule/REFUSE-04-disbursement-after-maturity.json
+
+ROUND-HOUR (mm:ss == 00:00): 3
+   ROUND  2026-08-29T09:00:00Z .oracle.captured_at .softhouse/vectors/ledger/LDG-ACC-01-accrual-six-slots-runaccruals-trigger.json
+   ROUND  2026-08-29T09:00:00Z .oracle.captured_at .softhouse/vectors/ledger/LDG-ACC-02-accrual-six-slots-minor-unit-residue.json
+   ROUND  2026-08-29T09:00:00Z .oracle.captured_at .softhouse/vectors/ledger/LDG-ACC-03-accrual-six-slots-scheduled-job.json
+FUTURE (> run instant): 3
+   FUTURE 2026-08-29T09:00:00Z .oracle.captured_at .softhouse/vectors/ledger/LDG-ACC-01-accrual-six-slots-runaccruals-trigger.json
+   FUTURE 2026-08-29T09:00:00Z .oracle.captured_at .softhouse/vectors/ledger/LDG-ACC-02-accrual-six-slots-minor-unit-residue.json
+   FUTURE 2026-08-29T09:00:00Z .oracle.captured_at .softhouse/vectors/ledger/LDG-ACC-03-accrual-six-slots-scheduled-job.json
+
+VERDICT: OFFENDERS PRESENT

@@ -1,0 +1,19 @@
+SWEEP RUN AT UTC: 2026-08-28T18:35:22Z
+ROOT: .softhouse/vectors
+FILES SCANNED: 72
+FILES WITH >=1 capture timestamp: 63  timestamps found: 63
+FILES WITH NONE (listed, not skipped): 9
+   none: .softhouse/vectors/PIN-ledger.json
+   none: .softhouse/vectors/PIN.json
+   none: .softhouse/vectors/_selftest/SELFTEST-01-two-period-zero-rate.json
+   none: .softhouse/vectors/capabilities-ledger.json
+   none: .softhouse/vectors/capabilities.json
+   none: .softhouse/vectors/loanschedule/REFUSE-01-actual-actual-ungraded.json
+   none: .softhouse/vectors/loanschedule/REFUSE-02-half-even-ungraded.json
+   none: .softhouse/vectors/loanschedule/REFUSE-03-annual-fixed30360-precedence.json
+   none: .softhouse/vectors/loanschedule/REFUSE-04-disbursement-after-maturity.json
+
+ROUND-HOUR (mm:ss == 00:00): 0
+FUTURE (> run instant): 0
+
+VERDICT: CLEAN

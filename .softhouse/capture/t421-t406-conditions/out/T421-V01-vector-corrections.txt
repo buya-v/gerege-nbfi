@@ -1,0 +1,7 @@
+LDG-ACC-01-accrual-six-slots-runaccruals-trigger <- observed captured-at-utc 2026-08-28T17:10:23Z from T391-A01-je-L29.http (digest MATCHES the vector's own citation)
+LDG-ACC-02-accrual-six-slots-minor-unit-residue <- observed captured-at-utc 2026-08-28T17:10:28Z from T391-A02-je-L30.http (digest MATCHES the vector's own citation)
+LDG-ACC-03-accrual-six-slots-scheduled-job <- observed captured-at-utc 2026-08-28T17:10:28Z from T391-A04-je-L32.http (digest MATCHES the vector's own citation)
+VECTORS REWRITTEN: 3
+captured_at provenance recorded in LDG-ACC-01-accrual-six-slots-runaccruals-trigger
+captured_at provenance recorded in LDG-ACC-02-accrual-six-slots-minor-unit-residue
+captured_at provenance recorded in LDG-ACC-03-accrual-six-slots-scheduled-job

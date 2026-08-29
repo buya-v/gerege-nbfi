@@ -1,0 +1,4 @@
+ARM CELL DIFFERENCES, re-counted from the transcript: {'gl_account_id': 18, 'gl_account_code': 18}  total lines: 36
+LDG-ACC-01 graded_against -> ['ledger-wrong-mapping-key-ignored', 'ledger-wrong-slot-family-blind', 'ledger-wrong-code-ignored', 'ledger-wrong-netting-totals']
+LDG-ACC-02 graded_against -> ['ledger-wrong-mapping-key-ignored', 'ledger-wrong-slot-family-blind', 'ledger-wrong-code-ignored', 'ledger-wrong-netting-totals', 'ledger-wrong-truncating']
+LDG-ACC-03 graded_against -> ['ledger-wrong-mapping-key-ignored', 'ledger-wrong-slot-family-blind', 'ledger-wrong-code-ignored', 'ledger-wrong-netting-totals', 'ledger-wrong-truncating']
