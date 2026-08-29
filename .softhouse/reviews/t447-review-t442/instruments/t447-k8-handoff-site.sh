@@ -9,7 +9,7 @@
 #      `all sixteen` under `.softhouse/handoff/` returns only unrelated T39/T242/T379 matches,
 #      and T424's own handoff `T424-t408-conditions.md` states the K8 total (29) without
 #      decomposing it. So there is ONE site to correct, not two."
-#     -- .softhouse/capture/t424/ERRATUM-K8-DECOMPOSITION.md
+#     -- ERRATUM-K8-DECOMPOSITION.md, which exists ONLY on softhouse/T442-t440-conditions
 #
 # T424's handoff DOES decompose it. It spells the cardinals as WORDS in running prose --
 # "Sixteen are the `sel` calls ... Eight are `SWEEP_*=$((...))` counters ... Six are parent-side
@@ -22,12 +22,33 @@
 #
 # Exit 0 = the finding reproduces. Exit 1 = it does not. Exit 2 = could not measure.
 # =============================================================================================
+#
+# USAGE:  t447-k8-handoff-site.sh <path to ERRATUM-K8-DECOMPOSITION.md>
+#
+# THE ERRATUM IS NOT ON THIS BRANCH and this drive does not pretend otherwise. It lives under
+# T442's own grant directory on `softhouse/T442-t440-conditions`, the branch under review, so a hard-coded
+# repo path to it is a DEAD PATH on any tree where this review is committed -- which is exactly
+# what `guard_dead_path_frontier` refuses, and it refused this file's first draft (rows=109
+# pinned=108 added=1). The guard's own prescription is "make the instrument REFUSE when no
+# candidate resolves", not pin it, so the erratum is a REQUIRED ARGUMENT and the drive exits 2
+# without it. Same repair T440 applied to its own hard-coded path, recorded on `main` at
+# 045e509b. Invoke it against a checkout of the branch under review, e.g.
+#     git clone --no-local . /tmp/t442 && git -C /tmp/t442 checkout --detach <branch>
+#     ( cd /tmp/t442 && bash <this> "$(git ls-files | grep ERRATUM-K8-DECOMPOSITION)" )
+# =============================================================================================
 set -uo pipefail
 REPO=$(git rev-parse --show-toplevel) || exit 2
 cd "$REPO" || exit 2
 H='.softhouse/handoff/T424-t408-conditions.md'
 A='.softhouse/capture/t402-t386-conditions/AUDIT-CLASS.md'
+E="${1:-}"
 FAILED=0
+if [ -z "$E" ] || [ ! -r "$E" ]; then
+  echo "REFUSED: pass the erratum as \$1. It is not on this branch -- it lives under" >&2
+  echo "  T442's grant directory on softhouse/T442-t440-conditions. A hard-coded path would be" >&2
+  echo "  a dead path here, and pinning a dead path is not a repair (T316 frontier)." >&2
+  exit 2
+fi
 
 check() {
   printf '  %-58s expected=%-10s actual=%-10s %s\n' "$1" "$2" "$3" \
@@ -89,7 +110,6 @@ echo
 echo "-- the erratum's acceptance test does not reach the handoff --------------------"
 acc=$(git grep -c 'all sixteen `sel' -- "$A" 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
 echo "   the erratum's check   git grep -c 'all sixteen \`sel' -- AUDIT-CLASS.md  ->  $acc"
-E='.softhouse/capture/t424/ERRATUM-K8-DECOMPOSITION.md'
 # The erratum DOES name the handoff -- once, to DENY that it carries the decomposition. What it
 # does not do is check it. Measure the acceptance-test block on its own.
 n_deny=$(LC_ALL=C grep -c -F 'T424-t408-conditions.md' "$E"); true
