@@ -152,7 +152,12 @@ echo "cheap path wall clock (RED): $((E4 - S4)) s" | tee -a "$OUT/13-I4-RED-bad-
 
 hdr "ARM I5 (GREEN) -- the same commit with the citation repaired. Same gate, healthy push."
 git reset --quiet --hard main || exit 2
-printf '\nT412 installed drive -- an ordinary healthy dispatch note.\n' >> .softhouse/RESUME.md
+# A NONCE, so the tree is NEW on every run. Without it, run 6 of this drive hit the gate's own
+# CHEAP-attestation cache -- the identical healthy edit produced the identical tree 0d54d19a…,
+# which run 3 had already graded, so the gate short-circuited with "already carries a CHEAP
+# attestation" in 2 s instead of running the subset. Correct behaviour, wrong thing to test.
+printf '\nT412 installed drive -- an ordinary healthy dispatch note. nonce %s\n' "$(date -u +%s)" \
+  >> .softhouse/RESUME.md
 git add .softhouse/RESUME.md || exit 2
 git -c user.email=t412@local -c user.name=T412Drive commit --quiet -m "T412 installed drive: healthy" || exit 2
 S5=$(date +%s)
