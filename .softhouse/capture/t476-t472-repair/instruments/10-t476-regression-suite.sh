@@ -170,13 +170,26 @@ for REF in "$R467" "$R476"; do
   ( cd "$D" && bash "$RUNALL" ) > "$SCRATCH/runall-U-$J.txt" 2>&1
   eval "RA_$J=\$?"
   eval "UN_$J=\"\$(grep -F -- \"\$SENTENCE\" \"\$D/\$TRANSCRIPT\" 2>/dev/null | grep -c -v -F -- \"\$TAG\")\""
-  eval "printf '  runner at ref %s: exit=%s   sentences UNTAGGED in the transcript=%s\n' \
-        \"$REF\" \"\$RA_$J\" \"\$UN_$J\""
+  eval "VP_$J=\"\$(grep -c -E '^  RUN-ALL VERDICT: PASS' \"\$D/\$TRANSCRIPT\" 2>/dev/null)\""
+  eval "VF_$J=\"\$(grep -c -E '^  RUN-ALL VERDICT: FAIL' \"\$D/\$TRANSCRIPT\" 2>/dev/null)\""
+  eval "printf '  runner at ref %s: exit=%s  sentences UNTAGGED in the transcript=%s  transcript verdict PASS=%s FAIL=%s\n' \
+        \"$REF\" \"\$RA_$J\" \"\$UN_$J\" \"\$VP_$J\" \"\$VF_$J\""
 done
 verdict "run-all.sh at T467 exits 0 WITH the smuggled sentence live" "$RA_1" 0
 verdict "the reader's transcript at T467 carries it UNTAGGED"        "$UN_1" 1
+verdict "and that transcript's own verdict says PASS"                "$VP_1" 1
 verdict "run-all.sh at T476 FAILS on the same tree"                  "$RA_2" 1
-verdict "the reader's transcript at T476 carries it UNTAGGED x0"     "$UN_2" 0
+verdict "the transcript STILL carries the sentence untagged at T476" "$UN_2" 1
+verdict "but that transcript's own verdict now says FAIL"            "$VF_2" 1
+verdict "and it does NOT say PASS"                                   "$VP_2" 0
+echo
+echo "  READ THOSE TWO ROWS TOGETHER, BECAUSE THE OBVIOUS EXPECTATION IS WRONG AND THIS DRIVE"
+echo "  WAS WRITTEN WITH IT. Section 10 grades SOURCE; it cannot stop a live emitter from"
+echo "  printing. The smuggled echo runs inside run-all.sh's own teed block, so the sentence"
+echo "  reaches the transcript at BOTH refs. What changes is what the transcript SAYS ABOUT"
+echo "  ITSELF: at T467 it carries a false sentence untagged and calls the run a PASS, which"
+echo "  is a publishable record of a lie; at T476 the same bytes are there and the record"
+echo "  says FAIL, so nobody can cite it. The harm was never the echo. It was the PASS."
 echo
 
 echo "--- CASE G: THE CLEAN TREE AT T476, THROUGH THE WHOLE RUNNER ---"
