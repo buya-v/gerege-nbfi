@@ -7135,7 +7135,7 @@
   },
   {
    "id": "T474",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -7147,7 +7147,7 @@
    ],
    "dependencies": [],
    "description": "FILED 2026-08-29 by fire 20260829-080002 iter6 from T471's independent review of T465. Both merged (tree dbfbae4f). RE-DERIVE; do not inherit T471's numbers.\n\n## MINOR-1 -- A DUPLICATE GLOBAL, AND A BLIND SPOT BY CONSTRUCTION\nT465 introduced a global LOCK_REL at fire-program.sh:40. The file ALREADY reassigns that global at :1716 (LOCK_REL=\"$(lock_released_at)\", pre-existing, top-level, NOT local). T471 found NO LIVE BREAKAGE -- LOCK and LOCK_EXCLUDE_PATHSPEC are frozen at start-up and every post-:1716 read wants the timestamp -- so this is about the instrument, not the bug.\nTHE POINT IS THE BLIND SPOT: the parity instrument CANNOT SEE THIS CLASS AT ALL, because its precondition is 'exactly one COLUMN-0 declaration' and :1716 is INDENTED. Widen it, drive the widened instrument RED on this very specimen, and say what other classes the COLUMN-0 precondition excludes.\n\n## MINOR-2 -- A CARDINAL REFUTED, AND THE MECHANISM MATTERS\n'43 quoted literals' is WRONG; the tree carries 35. Measured with the census's own selector imported from each rev: baseOccurrences=35 baseRows=17 headOccurrences=0. The 43 is 20-assembly-parity.py's PER-SITE sum -- fire-program.sh has 3 rows in SITES and its 4 literals are counted THREE TIMES (35+8=43); re-running the instrument prints 'base literal(s) removed: 4' three times for that one file. '0 remain' IS confirmed and the 17-row member set is confirmed exactly. FIX THE INSTRUMENT so a per-site sum cannot be read as a tree total, and correct the figure wherever T465 published it.\n\n## MINOR-3 -- AN INSTRUMENT SHIPPED GREEN-ONLY\ncheck-lock-exclusion-anchor.sh was re-scoped and shipped with a GREEN run only. T471 drove it red three ways (widened declaration; widened use site -> the T215 floor fires; duplicate declaration -> exit 2). Fold those three arms into the instrument so its 'strictly stronger' claim stays measured rather than asserted.\n\n## LOW\n- Narrow the 'pinning is not a remedy that exists' sentence: it is true of any STATIC pin, and T471 named two third options T465 neither named nor refuted (a lock-state-conditional pin, a census-level exclusion) -- both worse, but they exist and the sentence should say STATIC.\n- The parity instrument's python/strings rows are an AST MODEL, not the file's own interpreter -- the handoff claims the latter. Correct the claim or make it true.\n- EVAL_RC=$? after a command substitution is a DEAD ARM.\n- G-23's CLAUDE.md citation is loose.\n\n## FILE THIS AS A TASK, NOT A BULLET\nT471's LOW list says T465's OPEN #1 (release_lock writing released_at instead of deleting the lock) should be FILED AS A TASK rather than left a handoff bullet -- which is T465's OWN G-23 argument turned on itself. The deferral is CONFIRMED CORRECT (push-before-spawn-audit.py:judge() reads the lock's ABSENCE as the finding, so a permanently tracked lock silently disarms it), so this task is to RECORD the route and its blocker properly, not to take it.\n\nSCOPE: fire-program.sh, the named instruments, and your own capture dir. Do not move any pin. Do not spell a real .softhouse/... path as a literal in a fixture (P-103). Do not touch LOCK/tasks.json/RESUME.md/program.json. Bar on your own committed tree, probe PRESENCE before value.",
-   "note": "Filed by the driver of fire 20260829-080002 iter6 from T471's 3 MINOR and 5 LOW conditions. || local fire 20260829-080002 iter6: DISPATCHED (wave 2) at 2026-08-29T13:52:48Z, isolated worktree, model opus, branch softhouse/T474-t471-conditions.",
+   "note": "Filed by the driver of fire 20260829-080002 iter6 from T471's 3 MINOR and 5 LOW conditions. || local fire 20260829-080002 iter6: DISPATCHED (wave 2) at 2026-08-29T13:52:48Z, isolated worktree, model opus, branch softhouse/T474-t471-conditions. || local fire 20260829-080002 iter6: DONE on softhouse/T474-t471-conditions (tip 409c7693). MINOR-1 SHARPENED: the parity precondition \"exactly one COLUMN-0 declaration\" meant an indented reassignment of a graded global was INVISIBLE, NOT TOLERATED -- it SATISFIED the precondition and printed OK. Proved as a DIFFERENCE BETWEEN TWO REVISIONS ON ONE SPECIMEN in a throwaway clone of f42e0bd4: ARM=OLD exit 0 probe-lines 1 baseLiterals=43; ARM=NEW exit 94 probe-lines 0 REFUSED \"LOCK_REL is assigned 2 times :1716\"; verdict CONFIRMED. ONE TRANSCRIPT CARRIES BOTH MINOR-1 AND MINOR-2. Census now counts assignments at ANY indentation and through local/typeset/declare/export/readonly/integer/float, and for python rows anywhere in the AST; >1 is REFUSED(94) with no probe line unless ACK_REASSIGN carries the reassignments EXACT LINE TEXT plus a reason PRINTED EVERY RUN (one entry, LOCK=\"$_st_dir/LOCK\" at :707, self-test mode). The collision itself was RENAMED :1716 -> LOCK_RELEASED_AT through a RENAMING WRITER, never cp (P-97); zsh -n clean. FIVE CLASSES the widened census still cannot see are enumerated in both instruments, INCLUDING NAME=\"${NAME:-default}\" WHICH IS HOW EVERY THRESHOLD KNOB IN THE DRIVER IS WRITTEN. MINOR-2 CORRECTED AND FINER THAN THE BRIEF: baseOccurrences=35 baseRows=17 baseDistinctRaw=23 headOccurrences=0 perSiteOccurrenceSum=43 -- and THERE IS A FOURTH CARDINAL, 23: twenty-three distinct UNTRIMMED literals trim onto 17 census rows, which is WHY \"17 rows are 43 quoted literals\" was the wrong SHAPE of claim, not merely the wrong number. 0 remain confirmed; 17-row member set confirmed member for member. Errata written where T465 published it, originals left standing and STRUCK, transcripts untouched. MINOR-3: --self-test with 7 arms each checked for exit code AND stated reason, arms=7 misbehaved=0; plus an old-vs-new delta showing the shipped probe PASSED an indented duplicate (C2) and PASSED a declaration line running an unknown command (D2). EVAL_RC LOW NARROWED BY MEASUREMENT: dead only when the failing eval leaves the name SET (D2 -> old probe returned VERDICT PASS); when it leaves the name UNSET, set -u makes the trailing print fail and the arm fires BY ACCIDENT (D1). ROUTE RECORDED NOT TAKEN, blocker verified by IMPORTING THE REAL judge(): A=silent B=FIRES C=silent -- and FINER THAN THE BRIEF, it disarms LEG 1 OF THREE but the verdict itself FLIPPED to ok=True on a released-lock tree. Bar run twice (668b7614, 4558efdb): EXIT 0, probe presence 1 before value, up, PASS 46/7884, dead-path frontier GREEN at 108 pin untouched, four new tracked instruments added ZERO dead rows.",
    "branch": "softhouse/T474-t471-conditions"
   },
   {
@@ -7309,6 +7309,24 @@
    ],
    "description": "Independent adversarial review of T470 (softhouse/T470-refusal-forecloses, tip 28fdfee3). Re-derive; do not inherit T470's or T468's numbers.",
    "note": "local fire 20260829-080002 iter6: DISPATCHED (reviewer pair for T470) at 2026-08-29T14:19:00Z, isolated worktree, model opus, branch softhouse/T483-review-t470."
+  },
+  {
+   "id": "T484",
+   "status": "in_progress",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "role": "reviewer",
+   "title": "INDEPENDENT review of T474 -- the widened parity census, the fourth cardinal (23), and whether ACK_REASSIGN is an escape hatch nothing can close",
+   "branch": "softhouse/T484-review-t474",
+   "files_hint": [
+    ".softhouse/reviews/t484-review-t474/"
+   ],
+   "dependencies": [
+    "T474"
+   ],
+   "description": "Independent adversarial review of T474 (softhouse/T474-t471-conditions, tip 409c7693). Re-derive; do not inherit T474's or T471's numbers.",
+   "note": "local fire 20260829-080002 iter6: DISPATCHED (reviewer pair for T474) at 2026-08-29T14:25:20Z, isolated worktree, model opus, branch softhouse/T484-review-t474."
   }
  ],
  "cross_corroboration": {
