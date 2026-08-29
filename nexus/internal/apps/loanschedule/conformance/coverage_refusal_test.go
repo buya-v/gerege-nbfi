@@ -710,12 +710,19 @@ func injectOneCorroborationIntoEveryVector(t *testing.T, storeDir string) int {
 		if info.IsDir() || filepath.Ext(path) != ".json" {
 			return nil
 		}
-		switch filepath.Base(path) {
-		case "PIN.json", "capabilities.json",
-			// A2-15: the LEDGER context's two store-root configuration files.
-			// They are not vectors, exactly as the first two are not.
-			"PIN-ledger.json", "capabilities-ledger.json":
-			return nil
+		// THE STORE-ROOT CONFIGURATION FILES ARE SKIPPED, AND THE LIST IS THE
+		// CENSUS'S OWN. It used to be a second hand-maintained copy of the four
+		// names, and T429 found it the way second copies are always found: it
+		// added a fifth store-root file, the census accepted it and this helper
+		// did not, so two tests failed with a message about a missing
+		// `provenance` object on a file that is not a vector. Two enumerators of
+		// one population that nothing compares is the exact defect this package's
+		// census was written for (see census.go's header), so the copy is
+		// deleted rather than extended.
+		for _, name := range storeRootNonVectorFiles {
+			if filepath.Base(path) == name {
+				return nil
+			}
 		}
 		raw, rerr := os.ReadFile(path)
 		if rerr != nil {

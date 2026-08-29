@@ -1,0 +1,110 @@
+=== S04.1 every scheduled job in this tenant, with id, name, cron, active ===
+ id |                                 name                                  |                             display_name                              |  cron_expression  | is_active |    next_run_time    | previous_run_start_time | currently_running | task_priority 
+----+-----------------------------------------------------------------------+-----------------------------------------------------------------------+-------------------+-----------+---------------------+-------------------------+-------------------+---------------
+  2 | Update Loan Arrears Ageing                                            | Update Loan Arrears Ageing                                            | 0 1 0 1/1 * ? *   | t         | 2026-08-29 16:01:00 | 2026-08-28 16:01:00.003 | f                 |             5
+  4 | Apply Annual Fee For Savings                                          | Apply Annual Fee For Savings                                          | 0 20 22 1/1 * ? * | t         | 2026-08-29 14:20:00 | 2026-08-28 14:20:00.005 | f                 |             5
+  5 | Apply Holidays To Loans                                               | Apply Holidays To Loans                                               | 0 0 12 * * ?      | t         | 2026-08-29 04:00:00 | 2026-08-28 04:00:00.01  | f                 |             5
+  6 | Post Interest For Savings                                             | Post Interest For Savings                                             | 0 0 0 1/1 * ? *   | t         | 2026-08-29 16:00:00 | 2026-08-28 16:00:00.007 | f                 |             5
+  7 | Transfer Fee For Loans From Savings                                   | Transfer Fee For Loans From Savings                                   | 0 1 0 1/1 * ? *   | t         | 2026-08-29 16:01:00 | 2026-08-28 16:01:00.003 | f                 |             5
+  8 | Pay Due Savings Charges                                               | Pay Due Savings Charges                                               | 0 0 12 * * ?      | t         | 2026-08-29 04:00:00 | 2026-08-28 04:00:00.011 | f                 |             5
+  9 | Update Accounting Running Balances                                    | Update Accounting Running Balances                                    | 0 1 0 1/1 * ? *   | t         | 2026-08-29 16:01:00 | 2026-08-28 16:01:00.003 | f                 |             5
+ 10 | Execute Standing Instruction                                          | Execute Standing Instruction                                          | 0 0 0 1/1 * ? *   | t         | 2026-08-29 16:00:00 | 2026-08-28 16:00:00.006 | f                 |             5
+ 11 | Add Accrual Transactions                                              | Add Accrual Transactions                                              | 0 1 0 1/1 * ? *   | t         | 2026-08-29 16:01:00 | 2026-08-28 16:01:00.049 | f                 |             3
+ 12 | Apply penalty to overdue loans                                        | Apply penalty to overdue loans                                        | 0 0 0 1/1 * ? *   | t         | 2026-08-29 16:00:00 | 2026-08-28 16:00:00.006 | f                 |             5
+ 13 | Update Non Performing Assets                                          | Update Non Performing Assets                                          | 0 0 0 1/1 * ? *   | t         | 2026-08-29 16:00:00 | 2026-08-28 16:00:00.005 | f                 |             6
+ 14 | Transfer Interest To Savings                                          | Transfer Interest To Savings                                          | 0 2 0 1/1 * ? *   | t         | 2026-08-29 16:02:00 | 2026-08-28 16:02:00.002 | f                 |             4
+ 15 | Update Deposit Accounts Maturity details                              | Update Deposit Accounts Maturity details                              | 0 0 0 1/1 * ? *   | t         | 2026-08-29 16:00:00 | 2026-08-28 16:00:00.062 | f                 |             5
+ 16 | Add Periodic Accrual Transactions                                     | Add Periodic Accrual Transactions                                     | 0 2 0 1/1 * ? *   | t         | 2026-08-29 16:02:00 | 2026-08-28 16:02:00.002 | f                 |             2
+ 17 | Recalculate Interest For Loans                                        | Recalculate Interest For Loans                                        | 0 1 0 1/1 * ? *   | t         | 2026-08-29 16:01:00 | 2026-08-28 16:01:00.032 | f                 |             4
+ 18 | Generate Mandatory Savings Schedule                                   | Generate Mandatory Savings Schedule                                   | 0 5 0 1/1 * ? *   | t         | 2026-08-29 16:05:00 | 2026-08-28 16:05:00.011 | f                 |             5
+ 19 | Generate Loan Loss Provisioning                                       | Generate Loan Loss Provisioning                                       | 0 0 0 1/1 * ? *   | t         | 2026-08-29 16:00:00 | 2026-08-28 16:00:00.006 | f                 |             5
+ 20 | Post Dividends For Shares                                             | Post Dividends For Shares                                             | 0 0 0 1/1 * ? *   | t         | 2026-08-29 16:00:00 | 2026-08-28 16:00:00.006 | f                 |             5
+ 21 | Update Savings Dormant Accounts                                       | Update Savings Dormant Accounts                                       | 0 0 0 1/1 * ? *   | t         | 2026-08-29 16:00:00 | 2026-08-28 16:00:00.069 | f                 |             3
+ 22 | Add Accrual Transactions For Loans With Income Posted As Transactions | Add Accrual Transactions For Loans With Income Posted As Transactions | 0 1 0 1/1 * ? *   | t         | 2026-08-29 16:01:00 | 2026-08-28 16:01:00.002 | f                 |             5
+ 23 | Execute Report Mailing Jobs                                           | Execute Report Mailing Jobs                                           | 0 0/15 * * * ?    | t         | 2026-08-29 00:15:00 | 2026-08-29 00:00:00.002 | f                 |             5
+ 24 | Update SMS Outbound with Campaign Message                             | Update SMS Outbound with Campaign Message                             | 0 0 5 1/1 * ? *   | t         | 2026-08-29 21:00:00 | 2026-08-28 21:00:00.001 | f                 |             3
+ 25 | Send Messages to SMS Gateway                                          | Send Messages to SMS Gateway                                          | 0 0 5 1/1 * ? *   | t         | 2026-08-29 21:00:00 | 2026-08-28 21:00:00.043 | f                 |             2
+ 26 | Get Delivery Reports from SMS Gateway                                 | Get Delivery Reports from SMS Gateway                                 | 0 0 5 1/1 * ? *   | t         | 2026-08-29 21:00:00 | 2026-08-28 21:00:00.053 | f                 |             1
+ 27 | Execute Email                                                         | Execute Email                                                         | 0 0/10 * * * ?    | t         | 2026-08-29 00:10:00 | 2026-08-29 00:00:00.002 | f                 |             5
+ 28 | Update Email Outbound with campaign message                           | Update Email Outbound with campaign message                           | 0 0/15 * * * ?    | t         | 2026-08-29 00:15:00 | 2026-08-29 00:00:00.002 | f                 |             5
+ 29 | Generate AdhocClient Schedule                                         | Generate AdhocClient Schedule                                         | 0 0 12 1/1 * ? *  | t         | 2026-08-29 04:00:00 | 2026-08-28 04:00:00.011 | f                 |             5
+ 30 | Update Trial Balance Details                                          | Update Trial Balance Details                                          | 0 1 0 1/1 * ? *   | t         | 2026-08-29 16:01:00 | 2026-08-28 16:01:00.003 | f                 |             5
+ 31 | Execute All Dirty Jobs                                                | Execute All Dirty Jobs                                                | 0 1 0 1/1 * ? *   | t         | 2026-08-29 16:01:00 | 2026-08-28 16:01:00.002 | f                 |             5
+ 32 | Increase Business Date by 1 day                                       | Increase Business Date by 1 day                                       | 0 0 0 1/1 * ? *   | f         |                     |                         | f                 |            99
+ 33 | Increase COB Date by 1 day                                            | Increase COB Date by 1 day                                            | 0 0 0 1/1 * ? *   | f         |                     |                         | f                 |            98
+ 34 | Loan COB                                                              | Loan COB                                                              | 0 0 0 * * ?       | f         |                     |                         | f                 |             5
+ 35 | Loan Delinquency Classification                                       | Loan Delinquency Classification                                       | 0 0 22 1/1 * ? *  | t         | 2026-08-29 14:00:00 | 2026-08-28 14:00:00.005 | f                 |             5
+ 36 | Send Asynchronous Events                                              | Send Asynchronous Events                                              | 0 0/1 * * *  ?    | t         | 2026-08-29 00:10:00 | 2026-08-29 00:09:00     | f                 |             5
+ 37 | Purge External Events                                                 | Purge External Events                                                 | 0 1 0 1/1 * ? *   | f         |                     | 2026-08-18 16:01:00.052 | f                 |             5
+ 38 | Purge Processed Commands                                              | Purge Processed Commands                                              | 0 0 1 * * ?       | f         |                     | 2026-08-18 16:01:00.055 | f                 |             5
+ 39 | Accrual Activity Posting                                              | Accrual Activity Posting                                              | 0 0 1 * * ?       | f         |                     | 2026-08-18 16:01:00.05  | f                 |             5
+ 40 | Journal Entry Aggregation                                             | Journal Entry Aggregation                                             | 0 0 6 * * ?       | f         |                     | 2026-08-18 16:01:00.053 | f                 |             5
+ 41 | Retained Earning Job                                                  | Retained Earning Job                                                  | 0 0 6 * * ?       | f         |                     |                         | f                 |             5
+ 42 | Add Accrual Transactions For Savings                                  | Add Accrual Transactions For Savings                                  | 0 1 0 1/1 * ? *   | f         |                     | 2026-08-18 16:01:00.055 | f                 |             5
+ 43 | Working Capital Loan COB                                              | Working Capital Loan COB                                              | 0 0 0 * * ?       | f         |                     |                         | f                 |             5
+(41 rows)
+
+=== S04.2 job 9 by name, exact ===
+ id |                name                |            display_name            | cron_expression | is_active | previous_run_start_time |    next_run_time    
+----+------------------------------------+------------------------------------+-----------------+-----------+-------------------------+---------------------
+  9 | Update Accounting Running Balances | Update Accounting Running Balances | 0 1 0 1/1 * ? * | t         | 2026-08-28 16:01:00.003 | 2026-08-29 16:01:00
+(1 row)
+
+=== S04.3 recent job_run_history, most recent 40 ===
+  id   | job_id | version |       start_time        |        end_time         | status  | trigger_type 
+-------+--------+---------+-------------------------+-------------------------+---------+--------------
+ 13327 |     36 |   10623 | 2026-08-29 00:09:00     | 2026-08-29 00:09:00.027 | success | cron
+ 13326 |     36 |   10622 | 2026-08-29 00:08:00.006 | 2026-08-29 00:08:00.032 | success | cron
+ 13325 |     36 |   10621 | 2026-08-29 00:07:00.009 | 2026-08-29 00:07:00.037 | success | cron
+ 13324 |     36 |   10620 | 2026-08-29 00:06:00.004 | 2026-08-29 00:06:00.032 | success | cron
+ 13323 |     36 |   10619 | 2026-08-29 00:05:00.001 | 2026-08-29 00:05:00.028 | success | cron
+ 13322 |     36 |   10618 | 2026-08-29 00:04:00.01  | 2026-08-29 00:04:00.039 | success | cron
+ 13321 |     36 |   10617 | 2026-08-29 00:03:00.01  | 2026-08-29 00:03:00.038 | success | cron
+ 13320 |     36 |   10616 | 2026-08-29 00:02:00.01  | 2026-08-29 00:02:00.037 | success | cron
+ 13319 |     36 |   10615 | 2026-08-29 00:01:00.003 | 2026-08-29 00:01:00.031 | success | cron
+ 13318 |     28 |     708 | 2026-08-29 00:00:00.002 | 2026-08-29 00:00:00.04  | success | cron
+ 13317 |     36 |   10614 | 2026-08-29 00:00:00.002 | 2026-08-29 00:00:00.04  | success | cron
+ 13316 |     23 |     708 | 2026-08-29 00:00:00.002 | 2026-08-29 00:00:00.038 | success | cron
+ 13315 |     27 |    1061 | 2026-08-29 00:00:00.002 | 2026-08-29 00:00:00.034 | success | cron
+ 13314 |     36 |   10613 | 2026-08-28 23:59:00.001 | 2026-08-28 23:59:00.027 | success | cron
+ 13313 |     36 |   10612 | 2026-08-28 23:58:00.001 | 2026-08-28 23:58:00.027 | success | cron
+ 13312 |     36 |   10611 | 2026-08-28 23:57:00     | 2026-08-28 23:57:00.026 | success | cron
+ 13311 |     36 |   10610 | 2026-08-28 23:56:00.002 | 2026-08-28 23:56:00.027 | success | cron
+ 13310 |     36 |   10609 | 2026-08-28 23:55:00.001 | 2026-08-28 23:55:00.026 | success | cron
+ 13309 |     36 |   10608 | 2026-08-28 23:54:00.01  | 2026-08-28 23:54:00.027 | success | cron
+ 13308 |     36 |   10607 | 2026-08-28 23:53:00.002 | 2026-08-28 23:53:00.028 | success | cron
+ 13307 |     36 |   10606 | 2026-08-28 23:52:00.004 | 2026-08-28 23:52:00.026 | success | cron
+ 13306 |     36 |   10605 | 2026-08-28 23:51:00.002 | 2026-08-28 23:51:00.029 | success | cron
+ 13305 |     27 |    1060 | 2026-08-28 23:50:00.002 | 2026-08-28 23:50:00.034 | success | cron
+ 13304 |     36 |   10604 | 2026-08-28 23:50:00.002 | 2026-08-28 23:50:00.032 | success | cron
+ 13303 |     36 |   10603 | 2026-08-28 23:49:00.008 | 2026-08-28 23:49:00.028 | success | cron
+ 13302 |     36 |   10602 | 2026-08-28 23:48:00.006 | 2026-08-28 23:48:00.027 | success | cron
+ 13301 |     36 |   10601 | 2026-08-28 23:47:00.002 | 2026-08-28 23:47:00.028 | success | cron
+ 13300 |     36 |   10600 | 2026-08-28 23:46:00.006 | 2026-08-28 23:46:00.032 | success | cron
+ 13299 |     28 |     707 | 2026-08-28 23:45:00.005 | 2026-08-28 23:45:00.034 | success | cron
+ 13298 |     36 |   10599 | 2026-08-28 23:45:00.005 | 2026-08-28 23:45:00.034 | success | cron
+ 13297 |     23 |     707 | 2026-08-28 23:45:00.004 | 2026-08-28 23:45:00.03  | success | cron
+ 13296 |     36 |   10598 | 2026-08-28 23:44:00.008 | 2026-08-28 23:44:00.035 | success | cron
+ 13295 |     36 |   10597 | 2026-08-28 23:43:00.005 | 2026-08-28 23:43:00.027 | success | cron
+ 13294 |     36 |   10596 | 2026-08-28 23:42:00.005 | 2026-08-28 23:42:00.031 | success | cron
+ 13293 |     36 |   10595 | 2026-08-28 23:41:00.01  | 2026-08-28 23:41:00.037 | success | cron
+ 13292 |     36 |   10594 | 2026-08-28 23:40:00.009 | 2026-08-28 23:40:00.037 | success | cron
+ 13291 |     27 |    1059 | 2026-08-28 23:40:00.009 | 2026-08-28 23:40:00.036 | success | cron
+ 13290 |     36 |   10593 | 2026-08-28 23:39:00.007 | 2026-08-28 23:39:00.034 | success | cron
+ 13289 |     36 |   10592 | 2026-08-28 23:38:00.01  | 2026-08-28 23:38:00.036 | success | cron
+ 13288 |     36 |   10591 | 2026-08-28 23:37:00.001 | 2026-08-28 23:37:00.028 | success | cron
+(40 rows)
+
+=== S04.4 job 9 run history, all of it ===
+  id   | job_id |            display_name            |       start_time        |        end_time         | status  | trigger_type 
+-------+--------+------------------------------------+-------------------------+-------------------------+---------+--------------
+   469 |      9 | Update Accounting Running Balances | 2026-08-18 16:01:00.009 | 2026-08-18 16:01:00.046 | success | cron
+  2289 |      9 | Update Accounting Running Balances | 2026-08-19 16:01:00.006 | 2026-08-19 16:01:00.048 | success | cron
+  4093 |      9 | Update Accounting Running Balances | 2026-08-20 16:01:00.006 | 2026-08-20 16:01:00.028 | success | cron
+  5896 |      9 | Update Accounting Running Balances | 2026-08-21 16:01:00.004 | 2026-08-21 16:01:00.078 | success | cron
+  7696 |      9 | Update Accounting Running Balances | 2026-08-22 16:01:00.003 | 2026-08-22 16:01:00.049 | success | cron
+  9499 |      9 | Update Accounting Running Balances | 2026-08-23 16:01:00.001 | 2026-08-23 16:01:00.04  | success | cron
+ 10912 |      9 | Update Accounting Running Balances | 2026-08-27 16:01:00.003 | 2026-08-27 16:01:00.045 | success | cron
+ 12720 |      9 | Update Accounting Running Balances | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.048 | success | cron
+(8 rows)
+

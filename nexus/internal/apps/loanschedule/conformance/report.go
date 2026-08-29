@@ -1043,4 +1043,16 @@ func writeLedgerSection(p func(string, ...any), s *Summary) {
 	for _, line := range l.NotGradedLines() {
 		p("%s", line)
 	}
+
+	// THE ORACLE-DERIVED COLUMN CARVE-OUT [T429, G-22]. Printed EVERY run, pass
+	// or fail, and printed as a NAMED ABSENCE when no declaration is loaded.
+	//
+	// It is rendered by the ledger context from its own declaration, and this
+	// loop composes nothing, for the same reason the not-graded loop above
+	// composes nothing: anything composed here is a second place for the account
+	// of what the ledger does not compare to disagree with the ledger's own
+	// record of it, and A2-34 F-4/F-5 is what that costs.
+	for _, line := range l.OracleDerivedLines() {
+		p("%s", line)
+	}
 }

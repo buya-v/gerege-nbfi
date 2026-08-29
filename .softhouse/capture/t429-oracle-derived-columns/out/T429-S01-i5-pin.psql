@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/S01-i5-pin.sql
+query-bytes-artefact: T429-S01-i5-pin.sql
+query-sha256: 9cde4300b9b3b701ba788e4cbdbaf4b813dd68e6e9cdab14a42c5f2449cdc099
+query-bytes: 1571
+psql-exit-status: 0
+captured-at-utc: 2026-08-29T00:08:40Z

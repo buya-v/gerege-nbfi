@@ -131,6 +131,14 @@ func Admit(v *Vector, opts Options) []string {
 	// is belt and braces on the NOTE rather than on the data: a vector that
 	// talks about grading a running balance is a vector written by somebody who
 	// did not read G-12.
+	//
+	// [T429, G-22] THE NOTE CHECK BELOW IS NO LONGER THE ONLY ARM. It reads what
+	// the author WROTE; the arm added after it reads what the author CAPTURED.
+	// A2-29 section 6 item 1 -- "a ledger parity vector must not set
+	// runningBalance=true or fetchRunningBalance=true" -- had been a sentence in
+	// the gate register that nothing checked, and a rule enforced only by the
+	// diligence of the person it constrains is not enforced (P-45).
+	bad = append(bad, opts.OracleDerived.CaptureRuleReasons(opts.RepoRoot, v)...)
 	for _, s := range []string{"office_running_balance", "organization_running_balance"} {
 		if strings.Contains(v.Note, "grades "+s) {
 			add("the _note claims to grade %s. GATE G-12 is OPEN and A2-29 MEASURED that column to be a "+

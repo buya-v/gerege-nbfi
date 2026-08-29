@@ -1,0 +1,61 @@
+=== S02.1 every column of acc_gl_journal_entry, in ordinal order ===
+ ordinal_position |          column_name          |          data_type          | numeric_precision | numeric_scale | is_nullable | column_default 
+------------------+-------------------------------+-----------------------------+-------------------+---------------+-------------+----------------
+                1 | id                            | bigint                      |                64 |             0 | NO          | 
+                2 | account_id                    | bigint                      |                64 |             0 | NO          | 
+                3 | office_id                     | bigint                      |                64 |             0 | NO          | 
+                4 | reversal_id                   | bigint                      |                64 |             0 | YES         | 
+                5 | currency_code                 | character varying           |                   |               | NO          | 
+                6 | transaction_id                | character varying           |                   |               | NO          | 
+                7 | loan_transaction_id           | bigint                      |                64 |             0 | YES         | 
+                8 | savings_transaction_id        | bigint                      |                64 |             0 | YES         | 
+                9 | client_transaction_id         | bigint                      |                64 |             0 | YES         | 
+               10 | reversed                      | boolean                     |                   |               | NO          | false
+               11 | ref_num                       | character varying           |                   |               | YES         | 
+               12 | manual_entry                  | boolean                     |                   |               | NO          | false
+               13 | entry_date                    | date                        |                   |               | NO          | 
+               14 | type_enum                     | smallint                    |                16 |             0 | NO          | 
+               15 | amount                        | numeric                     |                19 |             6 | NO          | 
+               16 | description                   | character varying           |                   |               | YES         | 
+               17 | entity_type_enum              | smallint                    |                16 |             0 | YES         | 
+               18 | entity_id                     | bigint                      |                64 |             0 | YES         | 
+               19 | created_by                    | bigint                      |                64 |             0 | NO          | 
+               20 | last_modified_by              | bigint                      |                64 |             0 | NO          | 
+               21 | created_date                  | timestamp without time zone |                   |               | YES         | 
+               22 | lastmodified_date             | timestamp without time zone |                   |               | YES         | 
+               23 | is_running_balance_calculated | boolean                     |                   |               | NO          | false
+               24 | office_running_balance        | numeric                     |                19 |             6 | NO          | 0
+               25 | organization_running_balance  | numeric                     |                19 |             6 | NO          | 0
+               26 | payment_details_id            | bigint                      |                64 |             0 | YES         | 
+               27 | share_transaction_id          | bigint                      |                64 |             0 | YES         | 
+               28 | transaction_date              | date                        |                   |               | YES         | 
+               29 | created_on_utc                | timestamp with time zone    |                   |               | NO          | 
+               30 | last_modified_on_utc          | timestamp with time zone    |                   |               | NO          | 
+               31 | submitted_on_date             | date                        |                   |               | NO          | 
+(31 rows)
+
+=== S02.2 the running-balance columns, populated? ===
+ total | org_rb_notnull | off_rb_notnull | rb_calculated_true | rb_calculated_false |   min_org_rb    |   max_org_rb   
+-------+----------------+----------------+--------------------+---------------------+-----------------+----------------
+   109 |            109 |            109 |                 91 |                  18 | -4800000.000000 | 7200000.000000
+(1 row)
+
+=== S02.3 the three derived columns per cohort ===
+   cohort    | n  | calc_true | org_rb_nonzero | off_rb_nonzero 
+-------------+----+-----------+----------------+----------------
+ a: id <= 75 | 71 |        71 |             67 |             67
+ b: 76-95    | 20 |        20 |             20 |             20
+ c: 96-113   | 18 |         0 |              0 |              0
+(3 rows)
+
+=== S02.4 a worked sample: gl account 41 ordered by entry date, showing the running balance walking ===
+ id  | office_id | account_id | entry_date | type_enum |    amount    | organization_running_balance | office_running_balance | is_running_balance_calculated |        created_on_utc         |     last_modified_on_utc      
+-----+-----------+------------+------------+-----------+--------------+------------------------------+------------------------+-------------------------------+-------------------------------+-------------------------------
+  78 |         1 |         41 | 2026-02-15 |         2 | 24000.000000 |                 24000.000000 |           24000.000000 | t                             | 2026-08-28 11:40:53.302232+00 | 2026-08-28 16:01:00.035755+00
+  84 |         1 |         41 | 2026-03-15 |         2 | 20195.380000 |                 44195.380000 |           44195.380000 | t                             | 2026-08-28 11:40:53.30947+00  | 2026-08-28 16:01:00.036662+00
+  90 |         1 |         41 | 2026-04-15 |         2 | 16314.670000 |                 60510.050000 |           60510.050000 | t                             | 2026-08-28 11:40:53.314635+00 | 2026-08-28 16:01:00.037287+00
+  96 |         1 |         41 | 2026-05-15 |         2 | 12356.340000 |                     0.000000 |               0.000000 | f                             | 2026-08-28 16:01:00.100207+00 | 2026-08-28 16:01:00.100207+00
+ 102 |         1 |         41 | 2026-06-15 |         2 |  8318.850000 |                     0.000000 |               0.000000 | f                             | 2026-08-28 16:01:00.109113+00 | 2026-08-28 16:01:00.109113+00
+ 108 |         1 |         41 | 2026-07-15 |         2 |  4200.610000 |                     0.000000 |               0.000000 | f                             | 2026-08-28 16:01:00.11431+00  | 2026-08-28 16:01:00.11431+00
+(6 rows)
+

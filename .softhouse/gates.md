@@ -4705,3 +4705,112 @@ it. A ratified document is not something a driver rewrites in the same hour it f
 `.softhouse/RESUME.md:77` asserted *"not one journal entry in this tenant has ever arrived through a
 RECEIVABLE slot"* in the present tense — **written by this driver in the manifest AFTER dispatching T388**,
 and made false by T388 an hour later. Not T388's defect. Corrected in place to name the tense.
+
+---
+
+## G-22 — the oracle WRITES a balance onto a posted row, and until now nothing declared that the port is RIGHT never to match it
+
+**Raised by:** `T429`, branch `softhouse/T429-oracle-derived-columns`, local fire `20260829-080002`.
+**Class:** ENGINEERING. **Blocks:** nothing today. **Related:** `G-12` (open, measured by `A2-29`),
+`G-21` (open, the same I-5 cardinal, re-measured here at a third instant).
+**Proposed text and full evidence:** `docs/adr/DEC-2-PROPOSED-REVISION-T429-oracle-derived-columns.md`.
+**Captures:** `.softhouse/capture/t429-oracle-derived-columns/` — five read-only `SELECT` sets and three
+`GET`s, every one with its own recorded instant.
+**`docs/adr/DEC-2-gl-accounting-adapter.md` WAS NOT EDITED.** It is ratified; amending it is this gate.
+
+### The divergence, measured rather than suspected
+
+`CLAUDE.md` — *the ledger is double-entry and append-only; balances are DERIVED, NEVER WRITTEN.* The
+reference oracle stores a running balance **on the posted journal-entry row** and scheduled job 9
+`Update Accounting Running Balances` **rewrites it in place**, nightly, by raw
+`UPDATE acc_gl_journal_entry SET is_running_balance_calculated=?, organization_running_balance=?,
+office_running_balance=?, last_modified_by=?, last_modified_on_utc=? WHERE id=?`
+[VERIFIED: `JournalEntryRunningBalanceUpdateServiceImpl.java:163-165`, batched at `:181`; a second
+office-scoped `UPDATE` at `:211` writes `office_running_balance` alone; pinned `426a23544`, verified with
+`git -C /Users/buv/fineract rev-parse HEAD` before any line number was read]. It reaches that statement from
+`AccountRunningBalanceUpdateConfig` → `AccountRunningBalanceUpdateTasklet` → `updateRunningBalance()` —
+a Spring Batch tasklet, **not** a command, so no `m_portfolio_command_source` row exists for it.
+
+**The oracle's own domain model does not know those columns exist.** `JournalEntry.java` maps neither
+balance nor the flag and carries exactly two `@Setter`s in the class — `reversalJournalEntry` (`:58`) and
+`reversed` (`:78`). So of 31 columns on a posted row, **two** are ORM-mutable (both by a reversal, both
+through the command bus) and **three** are mutable only by a raw batch `UPDATE` from outside the model.
+
+### What the port does, and why it can never match
+
+`PostedEntry` / `PostedLeg` (`nexus/internal/apps/ledger/conformance/impl.go:61-96`) carry **no balance
+member at any level** — checked, not assumed. A conforming port derives; it does not store. **So a
+mismatch on those three columns is the port being RIGHT**, and before this gate nothing in the repository
+said so.
+
+### What was decided without a gate, and what needs one
+
+**DECIDED AND BUILT** (classification and enforcement — it amends no ratified document):
+`.softhouse/vectors/oracle-derived-columns.json` declares all **31** columns of `acc_gl_journal_entry`
+— **3** ORACLE_DERIVED, **7** PROVENANCE, **3** GRADED, **18** GRADED_GAP — plus the **14** cells the
+comparator MEASURABLY emits and four related denormalisations found elsewhere and deliberately not
+declared. It is loaded by name from `Run`, printed on every run including as a named absence, and pinned
+by count in both directions. Twelve drives.
+
+**NEEDS THIS GATE** (both amend a ratified DEC-2):
+1. the `I-5` correction — see below;
+2. a new normative `§4.4a`, "ORACLE-DERIVED COLUMNS", naming the three columns and stating that a
+   conforming port must not produce them.
+
+### The I-5 premise has moved a THIRD time, and the direction is stable
+
+`G-21` measured **60 of 91** on 2026-08-28. `T391` measured **91 of 109** on 2026-08-29. `T429`
+re-measures independently at `2026-08-29T00:08:40Z` and gets **91 of 109**, 18 rows at equality, 0 null.
+DEC-2 says the column *"discriminates nothing"* **because it is universal**; it is not universal and it
+**does** discriminate — one-to-one with `is_running_balance_calculated`, which is TRUE on exactly the 91
+and FALSE on exactly the 18. Attribution to job 9 rests on the **source** (exactly two
+`UPDATE acc_gl_journal_entry` statements exist in the whole pinned tree outside tests, both in that one
+service), not on the interval alone — job 17's window also brackets the modifications, and that limit is
+stated rather than glossed. **DEC-2's I-5 CONCLUSION IS UNCHANGED**; only its ground is replaced.
+
+`P-69`, and the driver's own remedy from `G-21` applies verbatim: **prefer deleting a live-oracle cardinal
+from a ratified document to refreshing it.** This one moves every night job 9 runs.
+
+### A NEW observation, in the opposite polarity to `A2-29`'s
+
+`A2-29` observed `runningBalanceComputed: true` on rows wrong by MNT 2,000,000.00. `T429` observed the
+other side: `GET /journalentries/96?runningBalance=true` returns
+`"organizationRunningBalance":0.000000,"runningBalanceComputed":false` for transaction `L32` — a
+`12356.34` DEBIT on ASSET account 41 whose derived running balance is `72866.39`.
+**THE ORACLE IS SERVING A BALANCE OF ZERO FOR AN ACCOUNT THAT IS NOT EMPTY**, and will until job 9's next
+run (`2026-08-29 16:01:00`). The flag is not a correctness signal in either direction.
+
+This also **corrects a closing sentence of `A2-29`'s own block**: *"The tenant now has every entry flagged
+`calculated = true`."* True when written; false since 2026-08-28 16:01, when the scheduler wrote 18 accrual
+entries **after** job 9 had finished. `P-69` again, a fourth site.
+
+### `G-12` option (c) is NOT being re-litigated
+
+`A2-29` rejected *"treat the exposing cells as outside the graded domain"* because narrowing the graded
+domain is a hard `user` gate, and asked instead for **a positive rule on capture**. `T429` upholds that:
+the graded vocabulary is asserted **set-equal** to what the comparator measurably emits, in both
+directions, so nothing was narrowed; and `A2-29 §6.1` — *"a ledger parity vector must not set
+`runningBalance=true` or `fetchRunningBalance=true`"* — is now a scan of the cited capture bytes rather
+than a sentence in this file (`P-45`). Measured on the committed corpus: 34 artefacts scanned, 0 forbidden,
+0 unreadable.
+
+### MONEY AND STRUCTURE ARE NOT IN THE CARVE-OUT, and cannot be put in it by editing JSON
+
+Nineteen columns — leg amount, account, debit/credit sense, transaction linkage, office, currency,
+reversal sense — are protected in **source** (`moneyAndStructureColumns`,
+`nexus/internal/apps/ledger/conformance/oraclederived.go`). Declaring one ORACLE_DERIVED or PROVENANCE
+refuses the run at exit 2, and the declaration cannot override it. A money column may be GRADED, or a
+**printed** GRADED_GAP — a coverage gap said as one — never exempt. `P-98`: the drive proves the refusal
+fires and the healthy control proves it does not fire on the corpus it was written for.
+
+### What the driver is asking
+
+Under `CLAUDE.md` this is **ENGINEERING**, not RESERVED. The recommendation, `chosen_by: agent`, adopted
+unless Buyan says otherwise:
+
+> **Ratify both items.** The `I-5` correction is a repair of a false premise whose conclusion survives
+> intact, and `§4.4a` writes down a boundary that a shadow-parity diff will otherwise have to invent for
+> itself under time pressure. **Rejecting them costs the declaration nothing** — the JSON, the loader, the
+> printed block and the capture rule classify rather than amend, and stand either way. What rejection costs
+> is DEC-2 continuing to publish, first, a cardinal that is false and moves nightly.
+

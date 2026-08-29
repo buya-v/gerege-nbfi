@@ -1,0 +1,119 @@
+=== S05.1 the MODIFIED cohort only: the exact window of last_modified_on_utc ===
+ n  |              lo               |              hi               | distinct_modifiers 
+----+-------------------------------+-------------------------------+--------------------
+ 91 | 2026-08-28 16:01:00.033938+00 | 2026-08-28 16:01:00.039824+00 |                  1
+(1 row)
+
+=== S05.2 job 9 last run window, for the bracketing argument ===
+  id   | job_id |       start_time        |        end_time         | status  | trigger_type 
+-------+--------+-------------------------+-------------------------+---------+--------------
+ 12720 |      9 | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.048 | success | cron
+(1 row)
+
+=== S05.3 every job whose last run window CONTAINS the modified window ===
+ job_id |            display_name            |       start_time        |        end_time         
+--------+------------------------------------+-------------------------+-------------------------
+      9 | Update Accounting Running Balances | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.048
+     17 | Recalculate Interest For Loans     | 2026-08-28 16:01:00.032 | 2026-08-28 16:01:00.048
+(2 rows)
+
+=== S05.4 the LEGACY audit pair: did created_date / lastmodified_date move too? ===
+ total | created_date_notnull | lastmodified_date_notnull | legacy_moved 
+-------+----------------------+---------------------------+--------------
+   109 |                    0 |                         0 |            0
+(1 row)
+
+=== S05.5 command source: is there ANY command row for the running-balance update? ===
+ total_command_rows 
+--------------------
+                379
+(1 row)
+
+     action_name      |       entity_name        |  n  
+----------------------+--------------------------+-----
+ CREATE               | LOANPRODUCT              | 100
+ CREATE               | GLACCOUNT                |  99
+ CREATE               | CHARGE                   |  31
+ CREATE               | JOURNALENTRY             |  24
+ UPDATE               | LOANPRODUCT              |  22
+ CREATE               | FINANCIALACTIVITYACCOUNT |  19
+ DISBURSE             | LOAN                     |  13
+ UPDATE               | GLACCOUNT                |  10
+ CREATE               | LOAN                     |   9
+ DELETE               | GLACCOUNT                |   9
+ APPROVE              | LOAN                     |   8
+ UPDATERUNNINGBALANCE | JOURNALENTRY             |   7
+ CHARGEOFF            | LOAN                     |   7
+ REPAYMENT            | LOAN                     |   4
+ REVERSE              | JOURNALENTRY             |   3
+ GOODWILLCREDIT       | LOAN                     |   3
+ CREATE               | CLIENT                   |   3
+ RECOVERYPAYMENT      | LOAN                     |   2
+ WRITEOFF             | LOAN                     |   1
+ UPDATE               | FINANCIALACTIVITYACCOUNT |   1
+(20 rows)
+
+=== S05.6 the trial-balance table job 30 writes, and the annual summary job 40 writes ===
+ m_trial_balance_rows 
+----------------------
+                    0
+(1 row)
+
+ annual_summary_rows 
+---------------------
+                   0
+(1 row)
+
+=== S05.7 acc_gl_journal_entry_annual_summary columns ===
+ ordinal_position |       column_name       |        data_type         
+------------------+-------------------------+--------------------------
+                1 | id                      | bigint
+                2 | gl_code                 | character varying
+                3 | product_id              | bigint
+                4 | office_id               | bigint
+                5 | opening_balance_amount  | numeric
+                6 | currency_code           | character varying
+                7 | owner_external_id       | character varying
+                8 | manual_entry            | boolean
+                9 | year_end_date           | date
+               10 | created_by              | bigint
+               11 | created_on_utc          | timestamp with time zone
+               12 | last_modified_by        | bigint
+               13 | last_modified_on_utc    | timestamp with time zone
+               14 | originator_external_ids | character varying
+(14 rows)
+
+=== S05.8 m_trial_balance columns ===
+ ordinal_position |   column_name   | data_type 
+------------------+-----------------+-----------
+                1 | office_id       | bigint
+                2 | account_id      | bigint
+                3 | amount          | numeric
+                4 | entry_date      | date
+                5 | created_date    | date
+                6 | closing_balance | numeric
+(6 rows)
+
+=== S05.9 the money and structure columns of every posted row, unchanged since capture? ===
+ id  | transaction_id | account_id | type_enum |    amount    | currency_code | office_id | reversed | reversal_id | manual_entry | entity_type_enum | entity_id | entry_date 
+-----+----------------+------------+-----------+--------------+---------------+-----------+----------+-------------+--------------+------------------+-----------+------------
+  78 | L29            |         41 |         2 | 24000.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-02-15
+  79 | L29            |         37 |         1 | 24000.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-02-15
+  80 | L29            |         38 |         1 |  2500.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-02-15
+  81 | L29            |         42 |         2 |  2500.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-02-15
+  82 | L29            |         39 |         1 |  1200.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-02-15
+  83 | L29            |         43 |         2 |  1200.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-02-15
+  84 | L30            |         41 |         2 | 20195.380000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-03-15
+  85 | L30            |         37 |         1 | 20195.380000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-03-15
+  86 | L30            |         38 |         1 |  2500.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-03-15
+  87 | L30            |         42 |         2 |  2500.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-03-15
+  88 | L30            |         39 |         1 |  1200.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-03-15
+  89 | L30            |         43 |         2 |  1200.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-03-15
+  96 | L32            |         41 |         2 | 12356.340000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-05-15
+  97 | L32            |         37 |         1 | 12356.340000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-05-15
+  98 | L32            |         38 |         1 |  2500.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-05-15
+  99 | L32            |         42 |         2 |  2500.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-05-15
+ 100 | L32            |         39 |         1 |  1200.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-05-15
+ 101 | L32            |         43 |         2 |  1200.000000 | MNT           |         1 | f        |             | f            |                1 |         8 | 2026-05-15
+(18 rows)
+

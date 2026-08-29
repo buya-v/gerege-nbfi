@@ -719,6 +719,20 @@ func gradeLedger(opts Options) *ledgerconf.Summary {
 	} else {
 		lopts.Registry = reg
 	}
+	// THE ORACLE-DERIVED COLUMN DECLARATION [T429, G-22]. It is loaded here, by
+	// name, exactly as the pin and the capability registry are — which is what
+	// makes it REACHED BY SOMETHING rather than a file a human might read. A
+	// failure to load it, or a declaration that fails its own validation, is
+	// FATAL: a harness that cannot state which columns it deliberately does not
+	// compare has an undeclared ungraded region, and that is the state this
+	// declaration exists to remove.
+	odr, oerr := ledgerconf.LoadOracleDerivedRegistry(
+		filepath.Join(opts.StoreRoot, ledgerconf.OracleDerivedFileName))
+	if oerr != nil {
+		fatal = append(fatal, oerr.Error())
+	} else {
+		lopts.OracleDerived = odr
+	}
 	if len(fatal) > 0 {
 		return &ledgerconf.Summary{Fatal: fatal}
 	}
