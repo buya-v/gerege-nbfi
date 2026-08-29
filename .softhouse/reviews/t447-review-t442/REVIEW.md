@@ -449,14 +449,24 @@ committed review tree. **Presence of the probe line was tested before its value 
 
 ```
 BAR TRANSCRIPT : out/T447-BAR.txt
-grep -c 'probe = ' → __BARPROBECOUNT__
-__BARPROBELINE__
-__BARVERDICT__
-BAR EXIT=__BAREXIT__
+grep -c 'probe = ' → 1          (PRESENCE tested first; absence would have been a harness failure, not `down`)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+all 16 wrong ledger implementations DIED through this harness, not by hand.
+BAR EXIT=0
 ```
 
 No money path, no vector, no schedule figure is touched by this branch or by this review; the
 whole diff is instruments, transcripts and prose.
+
+**The bar refused my first attempt, and that is recorded rather than hidden.** My
+`t447-k8-handoff-site.sh` hard-coded the path of `ERRATUM-K8-DECOMPOSITION.md`, which exists only
+on the branch under review, so `guard_dead_path_frontier` refused: `T316-DEADPATH-FRONTIER:
+REFUSED rows=109 pinned=108 added=1 removed=0`, **BAR EXIT=2**. The guard's own prescription is
+*"make the instrument REFUSE when no candidate resolves"* rather than pin the row, so the erratum
+is now a **required argument** and the drive exits 2 without it (verified: `NO-ARG EXIT=2`). Same
+repair T440 applied to its own hard-coded path (`045e509b` on `main`). The run above is the
+re-run, on the clean committed tree, with the frontier back at 108.
 
 ---
 
