@@ -428,12 +428,20 @@ is a comment about blob comparison [VERIFIED: both].
 
 A repo-wide sweep of `conformance.sh:NNNN` citations restricted to live directive files
 (`patterns.md`, `RESUME.md`, `obligations.md`, `gates.md`, `.softhouse/bin/`, `.claude/skills/`,
-`docs/`, `CLAUDE.md`) returns 24 rows, of which exactly **two** point into or above T431's
-changed region — and T431 protected one and rotted the other [VERIFIED:
-`evidence/06-conformance-line-citation-sweep.txt`]. Nothing grades `RESUME.md`, so `main` does
-not redden, and the row is stale anyway now that T431 is complete. **The finding is the method,
-not the damage:** "I checked the citation I knew about" is how this file has now rotted three
-times, and one `grep` over the tree finds the whole set.
+`docs/`, `CLAUDE.md`) returns 24 rows [VERIFIED:
+`evidence/06-conformance-line-citation-sweep.txt`]. Exactly **three** land inside T431's changed
+span, and the outcome is 2 preserved / 1 rotted:
+
+| citation | on `main` | on T431's tree |
+|---|---|---|
+| `patterns.md:3426` → `:3271` | correct | **still correct** — the neutrality T431 sized for |
+| `.softhouse/bin/fire-program.sh:1406` → `:3217-3220` | already rotted (function header, not the quoted refusal) | **unchanged** — those four lines are below the neutral hunk and do not move [VERIFIED] |
+| `.softhouse/RESUME.md:52` → `:3677` | **correct — it is the witness-side lookup** | **ROTTED** — the lookup is at `:3782`; `:3677` is now a comment about blob comparison |
+
+Nothing grades `RESUME.md`, so `main` does not redden, and the row is stale anyway now that
+T431 is complete. **The finding is the method, not the damage:** "I checked the citation I knew
+about" is how this file has now rotted three times, and one `grep` over the tree finds the
+whole set in a second.
 
 **Remedy:** in the merge commit rewrite `RESUME.md:52` to name
 `guard_guards_dir_registration` — the same remedy T431 records for `FU-T431-2`.
