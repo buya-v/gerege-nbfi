@@ -1,0 +1,37 @@
+############ T455 — run-all.sh at two refs: F-6, and the erased footer
+  BEFORE = cbc8733c46cff515a2e48b5f3389ffbf514dc674
+  AFTER  = d41a018e5b053df644f6fb94def2dc6034d248b4
+
+--- BEFORE: unmodified, no F-6 fix ------------------------------------------------
+  run-all.sh process exit            : 1
+  deviations                         : 1
+  section  9 (adjudicate-section1.py): 1   (adjudicated 0)
+  section 10 (verify-capture-integrity.py): 0   (adjudicated 0)
+  T433's APPENDED footer in the tracked transcript: 1 before the run, 0 after
+  OK   BEFORE section 9 is RED on an unmutated tree (F-6 reproduced) = 1 (expected 1)
+  OK   BEFORE section 10 is unaffected by it = 0 (expected 0)
+  OK   BEFORE the aggregate FAILS = 1 (expected 1)
+  OK   BEFORE the appended footer is PRESENT in the committed transcript = 1 (expected 1)
+  OK   BEFORE the run ERASES it — tee truncates (C-T448-6) = 0 (expected 0)
+
+--- AFTER: the search is fixed and the footer is emitted, not appended ------------
+  run-all.sh process exit            : 0
+  deviations                         : 0
+  section  9 (adjudicate-section1.py): 0   (adjudicated 0)
+  section 10 (verify-capture-integrity.py): 0   (adjudicated 0)
+  REGENERATED footer in the transcript: 0 before the run, 1 after
+  OK   AFTER section 9 is GREEN — the SEARCH was fixed, not the pin = 0 (expected 0)
+  OK   AFTER section 10 is still green with the (iv-a) close and section 10 landed = 0 (expected 0)
+  OK   AFTER the aggregate PASSES = 0 (expected 0)
+  OK   AFTER deviations are zero = 0 (expected 0)
+  OK   AFTER the footer SURVIVES the run that used to erase it = 1 (expected 1)
+
+--- THE PIN DID NOT MOVE ----------------------------------------------------------
+  'sec 9 0' present at AFTER: 1   at BEFORE: 1
+  OK   section 9's ADJUDICATED VALUE is unchanged at AFTER = 1 (expected 1)
+  OK   and it was the same at BEFORE — a green obtained by moving a pin would show here = 1 (expected 1)
+
+T455 RUNNER DRIVE: PASS. run-all.sh goes 1 -> 0 across the fix; section 9 goes
+1 -> 0 with its adjudicated value untouched; section 10 stays 0 through the
+(iv-a) close and the new tag-binding section; and the correction footer goes from
+ERASED BY THE RUN to REPRODUCED BY IT.

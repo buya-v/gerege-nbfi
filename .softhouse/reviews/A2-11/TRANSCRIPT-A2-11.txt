@@ -1,5 +1,5 @@
 ############ A2-11 independent review of A2-7 — full transcript
-generated 2026-08-28T18:15:59Z
+generated 2026-08-29T07:05:26Z
 
 READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
 exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
@@ -499,7 +499,7 @@ SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> guard-parse-float-ast.py
 ==============================================================================
 T164 -- json.load/loads call-site guard (AST, not source grep)
 ==============================================================================
-ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-aaf5791d13570d535/.softhouse/capture/tierA-a2
+ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0f9e6e17cedc71ae/.softhouse/capture/tierA-a2
 
 SELECTOR SELF-TEST: 4 synthetic call sites found across 4 alias shapes; 3 decoy line(s)
   (`parse_float` in a docstring, a comment and a string literal -- all three invisible to the selector)
@@ -634,24 +634,58 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
     Searched: every file under .softhouse/vectors/ (recursive), and .softhouse/
     conformance.sh. Tokens: the three key names, 'accountingMappings', 'loanproduct',
     and the capture files section 1 replays.
+
+    T455 / F-6 — THE SEARCH WAS FIXED; THE PIN WAS NOT MOVED. As shipped this arm was
+    a RAW SUBSTRING search over the bytes of every file under .softhouse/vectors/, and
+    on 2026-08-29 it went RED on an unmutated tree at unmodified `main`. Nothing about
+    the graded corpus had changed. T391 wrote a PROSE `evidence` field into
+    capabilities-ledger.json, and prose `citation` fields into three ledger vectors,
+    which SAY IN TERMS that product 63 has none of these mappings and that the
+    capability is still UNGRADED. A sentence ABOUT a token is not a graded cell, and a
+    search that cannot tell them apart was answering a different question from the one
+    the check asks. This was a FALSE POSITIVE OF THE INSTRUMENT — found by T433,
+    bisected by T448 to 25a8b7de (T391), re-derived here by reading every hit.
+    THE REPAIR IS TO THE SEARCH, NOT TO THE PIN. Moving the adjudicated exit code to
+    hide a red is the defect this whole file exists to prosecute; the arm now parses
+    the JSON and classifies each occurrence STRUCTURALLY:
+      KEY        the token IS (or is inside) an object key      -> MATERIAL
+      VALUE-ID   the token is inside an IDENTIFIER-SHAPED value -> MATERIAL
+                 (no whitespace: a ref, a path, a code — the shapes the harness
+                  actually compares against the reference oracle)
+      PROSE      the token is inside a value that is a SENTENCE -> IMMATERIAL,
+                 counted and printed, never silently dropped
+    That discriminator is INTRINSIC — it reads the shape of the value, not a list of
+    field names that would have to be maintained and would rot. A file that does NOT
+    parse as JSON, and every non-JSON file, keeps the raw substring search and any hit
+    is MATERIAL: unparseable fails CLOSED, never skipped. Driven both ways in section
+    5, controls (h)-(k).
   PASS  POSITIVE CONTROL — the vector store was actually READ. An EMPTY population is a SELECTOR failure, not a clean tree: this repository tracks graded vectors under .softhouse/vectors/ and always has. An empty census passes everything. REFUSED
-          70 files under .softhouse/vectors/
+          74 files under .softhouse/vectors/
   PASS  POSITIVE CONTROL — conformance.sh was actually READ; a missing or empty haystack would report every token absent. REFUSED
-          /Users/buv/gerege-nbfi/.claude/worktrees/agent-aaf5791d13570d535/.softhouse/conformance.sh, 349597 bytes
-      paymentChannelToFundSourceMappings     vectors=0  conformance.sh=False
-      feeToIncomeAccountMappings             vectors=0  conformance.sh=False
-      penaltyToIncomeAccountMappings         vectors=0  conformance.sh=False
-      accountingMappings                     vectors=0  conformance.sh=False
-      loanproduct                            vectors=0  conformance.sh=False
-      A2-211-read-product-nine-mandatory     vectors=0  conformance.sh=False
-      a2-11-get-loanproduct                  vectors=0  conformance.sh=False
-    (population searched: 70 files under .softhouse/vectors/, plus conformance.sh)
-  PASS  NO vector in the store, and no line of conformance.sh, mentions ANY of these tokens — the three failures touch NOTHING in the graded corpus
+          /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0f9e6e17cedc71ae/.softhouse/conformance.sh, 395816 bytes
+      paymentChannelToFundSourceMappings     MATERIAL=0  conformance.sh=False  prose-only=1
+          PROSE    .softhouse/vectors/capabilities-ledger.json  at $.capabilities[6].evidence
+      feeToIncomeAccountMappings             MATERIAL=0  conformance.sh=False  prose-only=1
+          PROSE    .softhouse/vectors/capabilities-ledger.json  at $.capabilities[6].evidence
+      penaltyToIncomeAccountMappings         MATERIAL=0  conformance.sh=False  prose-only=1
+          PROSE    .softhouse/vectors/capabilities-ledger.json  at $.capabilities[6].evidence
+      accountingMappings                     MATERIAL=0  conformance.sh=False  prose-only=0
+      loanproduct                            MATERIAL=0  conformance.sh=False  prose-only=4
+          PROSE    .softhouse/vectors/capabilities-ledger.json  at $.capabilities[6].evidence
+          PROSE    .softhouse/vectors/ledger/LDG-ACC-01-accrual-six-slots-runaccruals-trigger.json  at $.provenance.citation
+          PROSE    .softhouse/vectors/ledger/LDG-ACC-02-accrual-six-slots-minor-unit-residue.json  at $.provenance.citation
+      A2-211-read-product-nine-mandatory     MATERIAL=0  conformance.sh=False  prose-only=0
+      a2-11-get-loanproduct                  MATERIAL=0  conformance.sh=False  prose-only=0
+    (population searched: 74 files under .softhouse/vectors/, plus conformance.sh)
+    (73 JSON files parsed structurally; 1 graded by raw substring because they are not JSON)
+  PASS  NO vector in the store USES any of these tokens — as an object KEY or as an identifier-shaped VALUE — and no line of conformance.sh mentions one. The three failures touch NOTHING in the graded corpus. Prose that MENTIONS a token is counted and printed above, and is not a graded cell (T455 / F-6)
           all zero
+  PASS  POSITIVE CONTROL — the structural classifier actually PARSED a non-empty population. If every vector failed to parse, every hit would fall through to the raw-substring branch and the arm above would be answering a different question than it reads. Zero parsed vectors is a SELECTOR failure, not a clean corpus. REFUSED
+          73 of 73 JSON vectors parsed; 7 prose occurrences resolved by structure
   PASS  POSITIVE CONTROL — provenance refs were actually ENUMERATED; zero distinct refs over zero JSON vectors is a vacuous pass, not a clean corpus. REFUSED
-          69 JSON vectors, 38 distinct capture_ref/request_capture_ref values
+          73 JSON vectors, 44 distinct capture_ref/request_capture_ref values
   PASS  NO vector's provenance.capture_ref or request_capture_ref points at a loan-product read
-          38 distinct ref values inspected across 69 JSON vectors (BOTH capture_ref and request_capture_ref); loan-product-shaped: []
+          44 distinct ref values inspected across 73 JSON vectors (BOTH capture_ref and request_capture_ref); loan-product-shaped: []
 
 === 5. NEGATIVE CONTROLS — P-22, each arm above driven RED on purpose ===
   PASS  (a) a FOURTH failure is detected as UNADJUDICATED
@@ -668,6 +702,14 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
           hits=["URL literal 'https://localhost:8443/x'", 'call .run(', 'import subprocess']
   PASS  (g) the offline prover does NOT trip on a genuinely offline script (the control discriminates, it does not just always fire)
           hits=[]
+  PASS  (h) a token used as an object KEY is MATERIAL — a graded cell that names the contested field must still redden section 4
+          material=[('KEY', '$.expected.paymentChannelToFundSourceMappings')]
+  PASS  (i) a token inside an IDENTIFIER-SHAPED value (a ref, a path, a code) is MATERIAL — those are the values the harness compares against the reference oracle
+          material=[('VALUE-ID', '$.provenance.capture_ref')]
+  PASS  (j) a token inside a PROSE sentence is NOT material, and IS counted — this is the exact shape of the F-6 false positive (T391's `evidence` field), and a classifier that called everything material would be the instrument that produced it
+          material=[] prose=[('PROSE', '$.evidence')]
+  PASS  (k) a file that does NOT parse as JSON falls back to the raw search and its hit is MATERIAL — an instrument that cannot read a file has not cleared it, so the unparseable case fails CLOSED
+          material=[('UNPARSEABLE', 1)]
 
 FAILURES: 0
 exit=0
@@ -701,9 +743,49 @@ section 4's saturated arm was the only thing looking at; the fork sha is CROSS-C
 against the two tracked files that also carry it; and ARM A's population is PINNED at
 403 -- a property of an immutable commit, so it cannot drift. An empty population, a
 population off its pin, or an untied constant is REFUSED with exit 2, not passed.
-What is still NOT closed is named in the file's docstring, not left to be found: a
-committed change to a POST-FORK observation that ALSO rewrites its manifest row in
-the same commit. There is no committed baseline older than HEAD for those 632.
+
+T433 / C-T423-1 -- ARM F, AND A CORRECTION. This banner used to end with the text
+quoted on the next three lines. It is kept rather than deleted, and TAGGED, so that a
+guard can tell a quotation from an assertion by grep alone:
+  [QUOTED-FALSE-CLAIM] "What is still NOT closed ... a committed change to a POST-FORK
+  [QUOTED-FALSE-CLAIM]  observation that ALSO rewrites its manifest row in the same
+  [QUOTED-FALSE-CLAIM]  commit. There is no committed baseline older than HEAD for those 632."
+THE LAST SENTENCE WAS FALSE, and it was load-bearing rather than a
+wording slip: T393's handoff reasoned FROM the impossibility to send the next task to
+build a substitute artefact the repository already contained. THE BASELINE IS THE
+BLOB AT THE COMMIT THAT FIRST ADDED EACH OBSERVATION -- `git log --diff-filter=A` --
+an object inside an ALREADY-COMMITTED commit, which rewriting the manifest inside the
+mutating commit cannot reach. T433 swept the WHOLE 632, not a sample, with two
+independent derivations of the birth commit that agree 632/632: all 632 born strictly
+older than the tip, 0 born at the tip, 631 still byte-identical to their birth blob,
+and exactly one legitimate re-capture -- out/A2-370-db-ledger-state.txt -- adjudicated
+by digest. Section 8 of verify-capture-integrity.py is that arm. On T393's own
+'unclosable' laundered residual it exits 1 NAMING the file, where ARMs A-E exit 0.
+What ARM F still does NOT reach is named at boundary (iv) of that file's docstring:
+an observation born AT THE TIP has no earlier blob to be compared against, so ARM F
+cannot grade it; and a rename-and-whole-rewrite in ONE commit reaches the same place.
+
+T455 / C-T448-1 -- THE (iv-a) FAIL-OPEN IS CLOSED, AND ONLY THE FAIL-OPEN. T433
+disclosed (iv-a) as open and then wrote, verbatim, kept and TAGGED here for the same
+reason the three lines above are:
+  [QUOTED-FALSE-CLAIM] "Not closable by internal consistency -- a fabricated
+  [QUOTED-FALSE-CLAIM]  observation is a claim about the oracle, and only the oracle
+  [QUOTED-FALSE-CLAIM]  can refute it."
+THAT RAN TWO PROBLEMS TOGETHER, and only one of them is external. DETECTING a
+fabricated capture does need the oracle -- the anchor for that half is named:
+re-observation against the pinned reference oracle (Fineract), digest-recorded, as
+T357 did for the four obs/ files on fire 20260828-140005. REFUSING TO EXIT 0 OVER A
+POPULATION THE ARM DID NOT MEASURE is internal, and section 8 already stated that
+rule nine lines above the born-at-tip branch for its sibling case: an arm that could
+not measure part of its own population has not passed on it. Section 9 now asserts it
+for the born-at-tip half too, with an adjudication table keyed by name AND digest.
+MEASURED COST ON A CLEAN TREE: zero -- 632 graded, 0 born at the tip.
+
+T455 / C-T448-2 -- SECTION 10 OF THAT FILE grades the CORRECTION itself: no untagged
+line asserts a false claim, a DE-WRAPPED tagged block still quotes one verbatim, and
+nothing this tooling PRINTS states one without the tag inside what it prints. The
+third predicate exists because a tag in a trailing shell comment satisfies a source
+grep and never reaches the transcript a reader actually sees.
 === 0. THE INSTRUMENT ITSELF — driven RED before it is trusted (P-22) ===
   PASS  the comparator reports IDENTICAL on identical bytes
           7d432cd60871d25c
@@ -820,8 +902,35 @@ the same commit. There is no committed baseline older than HEAD for those 632.
   PASS  NO entry from the fork-sha manifest is missing from disk or from the fork tree
           missing=0
 
-=== 8. POSITIVE CONTROLS — every arm actually READ a non-empty population ===
-    T374's F-2 rule, applied to all five arms and not only at zero: an arm that
+=== 8. ARM F — every POST-FORK observation vs the blob at the commit that FIRST ADDED it ===
+    T423 / T433, C-T423-1. Until T433 this file asserted, in its own docstring and in
+    run-all.sh's section-10 banner, that NO committed baseline older than HEAD existed
+    for the post-fork observations, and concluded from that impossibility that a
+    committed mutation which ALSO launders the manifest row could not be caught here.
+    THE ASSERTION WAS FALSE. `git log --diff-filter=A -- <path>` yields, for every one
+    of them, the commit that FIRST ADDED it; the blob there sits inside an ALREADY-
+    COMMITTED commit, so rewriting MANIFEST.sha256 in the mutating commit does not
+    reach it. That is the baseline. This is the arm. On T393's own 'unclosable'
+    laundered residual, ARMs A-E exit 0 / PASS and ARM F exits 1 naming the file.
+      post-fork population (HEAD minus the fork sha) : 632
+      GRADED against a birth blob older than HEAD     : 632
+        equal to their birth blob                    : 631
+        adjudicated-different, UNMOVED               : 1
+        DIFFER and are NOT adjudicated               : 0
+        adjudicated but MOVED                        : 0
+      UNGRADED, born AT THE TIP (boundary iv-a)       : 0
+        of those, ADJUDICATED born-at-tip, UNMOVED   : 0
+        of those, adjudicated but MOVED              : 0
+      unreadable at their own birth commit            : 0
+  PASS  NO post-fork captured oracle observation differs from the blob at the commit that FIRST ADDED it — the baseline a laundered MANIFEST.sha256 row cannot reach
+          unadjudicated differences: 0
+  PASS  ARM F's ONE adjudicated difference is still exactly the difference adjudicated — a further mutation moves it, and so does a revert to the birth bytes
+          unmoved=1 of 1, moved=0
+  PASS  EVERY post-fork observation ARM F was handed was readable at its own birth commit
+          unreadable=0
+
+=== 9. POSITIVE CONTROLS — every arm actually READ a non-empty population ===
+    T374's F-2 rule, applied to all six arms and not only at zero: an arm that
     compared nothing reports no differences, and that is the vacuous pass this
     review exists to make impossible.
   PASS  ARM A compared a non-empty population
@@ -834,18 +943,71 @@ the same commit. There is no committed baseline older than HEAD for those 632.
           1035 files on disk under out/ + req/
   PASS  ARM E compared a non-empty population
           27 non-observation entries in the fork-sha manifest
+  PASS  ARM F compared a non-empty post-fork population
+          632 observations tracked at HEAD that did not exist at the fork sha
+  PASS  ARM F actually GRADED a non-empty population against a baseline OLDER than HEAD — an arm whose whole population was born at the tip grades nothing and reads as a pass
+          graded=632 of 632 post-fork; ungraded because born at the tip=0
+  PASS  ARM F GRADED ITS WHOLE POPULATION — every post-fork observation was measured against a baseline older than HEAD, or is adjudicated by name AND digest as born at the tip. AN ARM THAT COULD NOT MEASURE PART OF ITS OWN POPULATION HAS NOT PASSED ON IT — the sentence section 8 already applies to a path with no recorded ADD commit
+          UNGRADED and UNADJUDICATED, born at the tip: 0 of 632 post-fork  []
+  PASS  ARM F's born-at-tip adjudications are EXACTLY the ones adjudicated — a further mutation of an adjudicated capture moves it, and so does an entry that no longer names anything born at the tip (a dead entry is a silent widening of the exception)
+          unmoved=0 of 0, moved=0
   PASS  ARM B's population is a SUPERSET of ARM A's — every historical observation is still tracked, so neither arm is silently narrower than it reads
           in fork but not at HEAD: []
   PASS  ARM C's row-set and ARM D's disk-set are the SAME set as ARM B's tracked set, so the three populations agree and none of them is silently the empty intersection
           manifest=1035 tracked=1035 disk=1035
+
+=== 10. THE CORRECTION ITSELF — is the false claim QUOTED, or RE-ASSERTED? ===
+    T455 / C-T448-2. C-T423-1's repair keeps every false sentence VERBATIM and TAGS
+    it, so a guard can tell a quotation from an assertion by grep. T433's guard
+    asserted the TAG: no UNTAGGED line states the claim, and at least three tagged
+    lines survive. T448 defeated BOTH halves with a one-line edit, at guard exit 0 —
+    (B) re-assert the claim as a LIVE echo with the tag in a TRAILING COMMENT, so the
+    transcript prints it untagged; (C) DELETE the quotation and keep three bare tags.
+    The tag was graded; its BINDING to the text was not. Both predicates are here,
+    INSIDE the grader run-all.sh adjudicates (P-45), not beside it.
+    RE-DERIVED, NOT INHERITED: T448's supplied one-predicate repair closes (C) and
+    does NOT close (B) — the smuggled line carries the tag in its trailing comment,
+    so `both` == `all` == 2 and the binding predicate passes it. Measured, in
+    `.softhouse/capture/t455-t448-conditions/out/30-TAG-BINDING-DRIVE.txt`. (B) is
+    closed only by the SECOND predicate, which reads what a line PRINTS.
+  PASS  SELF-DRIVE — the binding classifier ACCEPTS a correctly tagged quotation (a check that rejected everything would be a freeze, not a guard)
+          untagged-statements=0 quoted-claims=2 printed-untagged=0
+  PASS  SELF-DRIVE — the classifier ACCEPTS a quotation WRAPPED across two lines, where no single line carries the claim. Rejecting it would make the guard unusable on the real files, which is how a guard gets deleted rather than fixed (P-29)
+          quoted-claims=1 untagged-statements=0
+  PASS  SELF-DRIVE — the classifier REJECTS abuse (B): the claim re-asserted as a LIVE echo with the tag in a TRAILING COMMENT. NOTE WHICH PREDICATE CATCHES IT — the binding half does NOT (the source line carries the tag); only the PRINTED half does. That is why there are two, and it is where T448's one-predicate repair stops short
+          untagged-statements=0 quoted-claims=2 printed-untagged=1 ['echo "There is no committed baseline older than head for those 632."  # QUOTED-FALSE-CLAIM']
+  PASS  SELF-DRIVE — the classifier REJECTS abuse (C): the quotation deleted, bare tags kept (the outcome T433's third red drive claims to prevent, but never separates from the text because it deletes tag and text together)
+          quoted-claims=0 tags=3 — bare tags satisfy a TAG COUNT and fail a BINDING
+      verify-capture-integrity.py                untagged-statements=0 quoted-claims=2 printed-untagged=0
+      run-all.sh                                 untagged-statements=0 quoted-claims=3 printed-untagged=0
+      10-drive-conditions.sh                     untagged-statements=0 quoted-claims=1 printed-untagged=0
+      12-relaunder-manifest.py                   untagged-statements=0 quoted-claims=2 printed-untagged=0
+  PASS  PREDICATE 1, BINDING — in every corrected file, NO untagged line states a false claim, AND at least one DE-WRAPPED TAGGED BLOCK still contains one VERBATIM. A tag with no quotation under it grades nothing; a quotation with no tag is an assertion
+          (file, untagged-statements, quoted-claims): []
+  PASS  PREDICATE 2, PRINTED — no line that the tooling actually EMITS states a false claim without the tag INSIDE what it prints. The source is not the artefact a reader sees, and a tag in a trailing comment is not printed at all
+          emitted untagged: []
+  PASS  POSITIVE HALF — every corrected file still states what the baseline IS. A negative assertion alone passes on an empty file (P-35)
+          missing replacement text: []
+  PASS  VACUITY CONTROL — at least one TAGGED false claim is actually EMITTED somewhere in the corrected set, so predicate 2 is grading a non-empty population. Zero emitted quotations would make it pass by having nothing to look at
+          emitted tagged quotation lines: 2
+  PASS  run-all.sh REGENERATES its correction footer instead of relying on an appended one — the `| tee` truncates the transcript on every run, so an appended footer survives exactly until the next run of the script that documents it (C-T448-6)
+          footer marker present in run-all.sh: True
 
 FAILURES: 0
 
 VERDICT: PASS (exit 0). Every captured oracle observation under .softhouse/capture/tierA-a2/{out,req}/
 is byte-identical to its fork-sha blob, to its HEAD blob and to its MANIFEST digest;
 the disk under those directories holds exactly the tracked set and nothing else, all
-of it regular files; and the 27 fork-sha manifest entries outside them are unchanged
-apart from the two adjudicated by digest above.
+of it regular files; the 27 fork-sha manifest entries outside them are unchanged
+apart from the two adjudicated by digest above; and 632 of the 632 POST-FORK
+observations still equal the blob at the commit that FIRST ADDED them, apart from the
+one adjudicated by digest above. ARM F GRADED ITS WHOLE POPULATION: 0 unadjudicated
+observations were born at the tip and left ungraded (T455 / C-T448-1 — a non-zero here
+FAILS this file; an arm that could not measure part of its own population has not
+passed on it), and 0 were accepted as born-at-tip by name AND digest. What is still
+NOT reached is stated at boundary (iv-a): DETECTING a fabricated capture needs the
+reference oracle, not this file. That is a boundary on DETECTION, and it is no longer
+also a fail-open on the VERDICT.
 exit=0
 
 ############ VERDICT — every section against its adjudicated exit code
@@ -868,29 +1030,28 @@ exit=0
   PASS here means 'the review reproduces', NOT 'A2-7 was right'.
 
 ================================================================================
-T433 / C-T423-1 -- CORRECTION APPENDED TO A RECORD
+CORRECTION INDEX, REGENERATED ON EVERY RUN (T433 / C-T423-1, extended by T455)
 ================================================================================
-This transcript is a RECORD of what the tooling printed. Above, it echoes T393's
-claim that no committed baseline older than HEAD exists for the 632 post-fork
-captured oracle observations. THAT CLAIM IS FALSE. The bytes are left exactly as
-they were printed, because deleting them would destroy the evidence that this
-program shipped a false claim in tracked executable files.
+This transcript is a RECORD of what the tooling printed. Earlier versions of it
+echoed T393's claim that the 632 post-fork captured oracle observations had no
+committed baseline older than HEAD. THAT CLAIM WAS FALSE. Where it survives above
+it is a TAGGED QUOTATION, kept rather than deleted, because deleting it would
+destroy the evidence that this program shipped a false claim in tracked
+executable files.
 
 THE BASELINE EXISTS AND ALWAYS DID: the blob at the commit that FIRST ADDED each
 observation, `git log --diff-filter=A -- <path>`. It is an object inside an
-ALREADY-COMMITTED commit, so laundering MANIFEST.sha256 inside the mutating commit
-cannot reach it.
+ALREADY-COMMITTED commit, so laundering MANIFEST.sha256 inside the mutating
+commit cannot reach it. 632 of 632 born strictly older than the tip, 0 at the
+tip, 631 byte-identical to their birth blob, 1 legitimate re-capture adjudicated
+by digest -- T433's sweep, and re-derived by T448 under an independent primitive
+(tree containment over `git rev-list --reverse --topo-order`, no --diff-filter).
 
-MEASURED OVER THE WHOLE 632, NOT A SAMPLE (T433, two independent derivations of the
-birth commit agreeing 632/632): 632 born STRICTLY OLDER than the tip, 0 born at the
-tip, 631 still byte-identical to their birth blob, 1 legitimate re-capture
-(out/A2-370-db-ledger-state.txt) adjudicated by digest.
-  -> .softhouse/capture/t433-t423-c1/out/00-whole-632-sweep.txt
-
-T433 landed the comparison as ARM F, section 8 of
-.softhouse/reviews/A2-11/verify-capture-integrity.py. Driven RED then GREEN in situ:
-  -> .softhouse/capture/t433-t423-c1/out/20-ARMF-IN-SITU-DRIVE.txt
-
-Index of every corrected site and every surviving echo:
-  -> .softhouse/capture/t393-t382-conditions/out/T433-CORRECTION.md
+  the arm                -> section 8 of verify-capture-integrity.py
+  the (iv-a) close       -> section 9, ARM F GRADED ITS WHOLE POPULATION (T455)
+  the correction's own   -> section 10, tag-to-text BINDING + what is PRINTED
+    guard                   (T455 / C-T448-2)
+  index of every corrected site and surviving echo
+                         -> .softhouse/capture/t393-t382-conditions/out/T433-CORRECTION.md
+  T455's dispositions    -> .softhouse/handoff/T455-t448-conditions.md
 ================================================================================

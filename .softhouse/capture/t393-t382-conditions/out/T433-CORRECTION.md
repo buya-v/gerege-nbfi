@@ -100,11 +100,37 @@ transition rather than document it:
 | `.softhouse/capture/t433-t423-c1/out/50-RUNALL-f1-13b-ROW.txt`, `…/out/runall-row/` | the `f1-13b` row and the control, driven through the **whole `run-all.sh`** at both refs — the direct evidence for the ONE expectation T433 changed in `10-drive-conditions.sh` |
 
 **T393's own `out/DRIVE.txt` and `out/drive/` are left exactly as T393 produced them.** T433
-started a full 13-case re-drive of the matrix and **abandoned it**: 26 whole `run-all.sh` runs
-was hours of wall clock. Only two rows can change colour when ARM F is added — `f1-13b`, which
-ARM F is built to catch, and `control`, which must stay green — and **both were driven**. The
-other eleven are argued, not measured, in `50-t433-runall-f1-13b-row.sh`'s header, and the full
-re-run is filed as T433 follow-up **F-5**.
+started a full re-drive of the matrix and **abandoned it**. Only two rows can change colour when
+ARM F is added — `f1-13b`, which ARM F is built to catch, and `control`, which must stay green —
+and **both were driven**. The rest were argued, not measured, in
+`50-t433-runall-f1-13b-row.sh`'s header, and the full re-run was filed as T433 follow-up **F-5**.
+
+> ### T455 / C-T448-4 — THE THREE CARDINALS IN THE PARAGRAPH ABOVE WERE WRONG, AND F-5 IS NOW CLOSED
+>
+> The sentence above used to read *"a full **13-case** re-drive … **26** whole `run-all.sh` runs
+> was hours of wall clock … the other **eleven** are argued"*. The wrong numbers are quoted here
+> rather than deleted, for the same reason every other false claim in this document is: a
+> correction that erases what it corrects cannot be audited.
+>
+> | restated by T433 | **measured** | how, and from what |
+> |---|---|---|
+> | 13 cases | **11** | `grep -c '^run_case '` on `10-drive-conditions.sh` (the SOURCE) **and** the distinct case names in `out/drive/MATRIX.tsv` (the OUTPUT) — two different artefacts, agreeing |
+> | 26 runs | 22 rows = 11 × 2 refs, and only the **AFTER** column can move (ARM F does not exist at BEFORE), so **9 grader runs** | `MATRIX.tsv` holds 22 data rows; the column the matrix grades is one command's exit code, not a whole runner |
+> | eleven argued | **nine** | 11 cases − `control` (calibration) − `f1-13b` (driven) |
+>
+> Re-derive with `T455_ROOT=<checkout> bash
+> .softhouse/capture/t455-t448-conditions/instruments/40-t455-cardinals.sh`, which produces
+> every number from two artefacts and **exits 1 if they disagree**.
+>
+> **F-5 CLOSES AS MEASURED, NOT AS ARGUED.** T448 ran all nine argued rows directly against the
+> grader with ARM F present and **all nine reproduced T393's committed value**
+> (`.softhouse/reviews/t448-review-t433/out/50-F5-ARGUED-ROWS.txt`). T433's *conclusion* was
+> right and its *cost estimate* was out by about 3×, which is what made it abandon a re-run it
+> could have afforded. T455 does not re-drive the nine: they are settled, and re-running a
+> settled measurement is the same derivation twice, not a second one.
+>
+> ### T455 / C-T448-1 — (iv-a) IS CLOSED, and the closing sentence of this file is corrected below
+> ### T455 / F-3 — (iv-c) IS NOT A HOLE: T448 drove it four ways; the earliest ADD wins every time
 
 **Echoes OUTSIDE T433's scope, disclosed and NOT edited** — searched for with
 `grep -rn "older than HEAD\|no committed baseline\|does not exist and cannot be manufactured"`
@@ -130,6 +156,73 @@ ARM F is **section 8 of `.softhouse/reviews/A2-11/verify-capture-integrity.py`**
 `.softhouse/capture/t433-t423-c1/out/`.
 
 What it still does **not** reach is stated as boundary (iv) in that file and driven, not
-asserted: an observation born **at the tip** has no baseline older than HEAD and is reported
-`UNGRADED-BORN-AT-TIP` rather than counted as equal; and a rename-and-mutate in one commit
-resets its own baseline into that same hole.
+asserted: an observation born **at the tip** has no earlier blob to be compared against and is
+reported `UNGRADED-BORN-AT-TIP` rather than counted as equal; and a rename-and-whole-rewrite in
+one commit reaches that same place.
+
+---
+
+## T455 — WHAT CHANGED AFTER T448's REVIEW
+
+### (iv-a): the FAIL-OPEN is closed. The DETECTION half is not, and they are different problems.
+
+T433 disclosed (iv-a) as an open fail-open and wrote — kept verbatim and tagged, as everything
+else in this document is:
+
+> `[QUOTED-FALSE-CLAIM]` "Not closable by internal consistency — a fabricated observation is a
+> `[QUOTED-FALSE-CLAIM]` claim about the oracle, and only the oracle can refute it."
+
+That runs two problems together.
+
+* **DETECTING a fabricated capture** is external. The clause is true of this half, and the
+  anchor is now NAMED rather than left blank: **re-observation against the pinned reference
+  oracle (Fineract), digest-recorded**, the procedure T357 already ran for the four `obs/` files
+  on fire `20260828-140005` (sha256 match, 4 of 4). `verify-capture-integrity.py` is offline by
+  construction and cannot do it.
+* **REFUSING TO EXIT 0 over a population the arm did not measure** is internal — and the grader
+  **already stated that rule nine lines above the born-at-tip branch**, for the sibling
+  `f_noborn` case: *"An arm that could not measure part of its own population has not passed on
+  it. REFUSED, never a pass."* The two cases are the same case; only one of them was asserted.
+
+Section 9 now asserts it for the born-at-tip half too, with an adjudication table
+`ARM_F_BORN_AT_TIP_ADJUDICATED` keyed by **name AND digest** so a legitimately new capture is a
+visible, signed act rather than a silent exception. **Driven both ways, and controlled** —
+`.softhouse/capture/t455-t448-conditions/instruments/20-t455-iva-close-drive.sh`:
+
+| case | ref | grader |
+|---|---|---|
+| clean tree (calibration) | BEFORE | **0**, 632 graded, 0 at the tip |
+| fabricated observation born at the tip, manifest laundered | BEFORE | **0** — the fail-open, reproduced |
+| the same tree | AFTER | **1**, on the named assertion, ×1 |
+| `(iv-b2)` rename + whole rewrite | BEFORE | **0** |
+| the same | AFTER | **1**, same assertion |
+| **clean tree — THE CONTROL** | **AFTER** | **0**, 632 graded, 0 at the tip. **The close costs nothing.** |
+| the fabricated capture ADJUDICATED by name+digest | AFTER | **0**, named as adjudicated |
+| its adjudicated BYTES then changed | AFTER | **1**, `BORN-AT-TIP ADJUDICATION MOVED` |
+
+### The tag guard graded the TAG, not its binding to the text. Both halves are now in the grader.
+
+T448 defeated T433's `[QUOTED-FALSE-CLAIM]` guard twice at guard exit 0: **(B)** re-assert the
+claim as a live `echo` with the tag in a **trailing comment**, so the transcript prints it
+untagged; **(C)** delete the quotation and keep three bare tags. The repair is **section 10 of
+`verify-capture-integrity.py`** — inside the grader `run-all.sh` adjudicates (P-45), not beside
+it — and it is two predicates, not one:
+
+1. **BINDING** — no untagged line states a claim, **and** a **de-wrapped tagged block** still
+   contains one verbatim. (A tag count is satisfied by three bare tags; a quotation is not.)
+   De-wrapping is load-bearing: `10-drive-conditions.sh` splits its quotation across lines at
+   *"has no / baseline older than HEAD anywhere"*, so a line-wise matcher scores it **0 stated,
+   0 tagged** — indistinguishable from abuse (C).
+2. **PRINTED** — nothing the tooling **emits** states a claim without the tag inside what it
+   prints.
+
+**T448's supplied one-predicate repair closes (C) and does NOT close (B)** — measured, not
+argued: the smuggled line carries the tag in its trailing comment, so `all` = `both` = 2 and the
+predicate passes. See `30-t455-tag-binding-drive.sh`, case B.
+
+### The transcript footer is emitted, not appended.
+
+`run-all.sh`'s body is `{ … } | tee`, which truncates, so T433's appended footer survived exactly
+until the next run of the script it documents (marker 1 → 0, measured at both refs). The footer
+is now **printed inside the teed block**, so it is reproduced by construction, and section 10
+fails if `run-all.sh` stops emitting it.

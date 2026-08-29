@@ -1,0 +1,71 @@
+############ T455 — THE [QUOTED-FALSE-CLAIM] TAG, AND ITS BINDING TO THE TEXT
+  ref       = d41a018e5b053df644f6fb94def2dc6034d248b4
+  old guard = .softhouse/capture/t433-t423-c1/instruments/30-t433-armf-wiring-guard.sh  (exercised to REPRODUCE its defeat, not relied on)
+
+  A control (unmutated)   shipped section 10 exit = 0   T433 guard exit = 0
+                          T448's one predicate: all=1 both=1 -> PASS
+  OK   A the SHIPPED grader is green before anything is smuggled = 0 (expected 0)
+  OK   A T433's guard is green too = 0 (expected 0)
+  OK   A and T448's predicate accepts the honest tree = PASS (expected PASS)
+
+smuggled the sentence back as a LIVE echo with the tag in a trailing comment
+  B live echo, tag in a trailing comment  (sentence now x2 in run-all.sh's source)
+                          shipped section 10 exit = 1   T433 guard exit = 1
+                          T448's one predicate: all=2 both=2 -> PASS
+                          T433's own tag predicates on run-all.sh: negative-half fired=0, positive-half fired=0
+  OK   B the SHIPPED grader REFUSES it = 1 (expected 1)
+  OK   B on PREDICATE 2 (what the line PRINTS), x1 = 1 (expected 1)
+  OK   B and NOT on PREDICATE 1 — the source line does carry the tag = 0 (expected 0)
+  OK   B T433's NEGATIVE half is DEFEATED — it excludes the line for carrying the token = 0 (expected 0)
+  OK   B T433's POSITIVE half is satisfied too = 0 (expected 0)
+  OK   B AND SO IS T448's OWN ONE-PREDICATE REPAIR — the review says it fails here; measured, it PASSES = PASS (expected PASS)
+                          (T433's guard exits 1 only because it also RUNS the
+                           grader, which now catches this. Its own predicates, above,
+                           are both still defeated — that is the finding.)
+                          source lines carrying the sentence outside a tagged payload: 2
+
+deleted 6 tagged quotation lines and inserted 3 bare tags
+  C quotation deleted, tag kept  (sentence x0, tag x3)
+                          shipped section 10 exit = 1   T433 guard exit = 1
+                          T448's one predicate: all=0 both=0 -> FAIL
+                          T433's own tag predicates on run-all.sh: negative-half fired=0, positive-half fired=0
+  OK   C the SHIPPED grader REFUSES it = 1 (expected 1)
+  OK   C on PREDICATE 1 (de-wrapped tagged block holds no quotation), x1 = 1 (expected 1)
+  OK   C T433's NEGATIVE half is satisfied — the claim really is gone = 0 (expected 0)
+  OK   C T433's POSITIVE half is DEFEATED — three BARE tags satisfy a tag COUNT = 0 (expected 0)
+  OK   C T448's one predicate DOES close this half = FAIL (expected FAIL)
+                          (again, T433's guard exits 1 only via the grader it runs.)
+
+  OK   B0 calibration: T433's guard is GREEN on the unmutated tree at BEFORE = 0 (expected 0)
+B0: smuggled the sentence back at BEFORE
+  B0 abuse B at BEFORE (no section 10)     T433 guard exit = 0
+  OK   B0 T433's guard PASSES a tree that re-asserts the false claim as a live echo = 0 (expected 0)
+C0: deleted 3 tagged quotation lines at BEFORE and inserted 3 bare tags
+  C0 abuse C at BEFORE (no section 10)     T433 guard exit = 0
+  OK   C0 T433's guard PASSES a tree from which the verbatim quotation is GONE = 0 (expected 0)
+
+removed the replacement text from run-all.sh
+  D replacement text removed              shipped section 10 exit = 1  positive-half-fail=1
+  OK   D the SHIPPED grader REFUSES a file that no longer says what the baseline IS = 1 (expected 1)
+  OK   D on the POSITIVE half, x1 = 1 (expected 1)
+
+removed the regenerated-footer marker from run-all.sh
+  E regenerated footer removed            shipped section 10 exit = 1  footer-fail=1
+  OK   E the SHIPPED grader REFUSES a run-all.sh that stopped emitting its footer = 1 (expected 1)
+  OK   E on the footer assertion, x1 = 1 (expected 1)
+
+############ SUMMARY — shipped section 10 vs T433's guard vs T448's supplied predicate
+  case                               shipped    T433-guard T448-predicate
+  A control                          0          0          PASS
+  B live echo, tag in comment        1          1          PASS
+  C quotation deleted                1          1          FAIL
+  D replacement text removed         1          -          -
+  E footer marker removed            1          -          -
+
+  T433's guard on its OWN predicates, at a ref with NOTHING to rescue it (BEFORE):
+  B0 live echo at BEFORE             guard exit 0
+  C0 quotation gone at BEFORE        guard exit 0
+
+T455 TAG-BINDING DRIVE: PASS. Both of T448's abuses are RED in the shipped grader, each
+on a DIFFERENT named predicate, while the honest tree stays green; and the review's own
+one-predicate repair is measured to close (C) and NOT (B).

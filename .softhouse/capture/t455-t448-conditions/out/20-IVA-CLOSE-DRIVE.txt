@@ -1,0 +1,56 @@
+############ T455 — (iv-a) BORN AT THE TIP: the FAIL-OPEN, closed and controlled
+  BEFORE = cbc8733c46cff515a2e48b5f3389ffbf514dc674
+  AFTER  = 21a47a26e4f5b6c7de33e4a93734d34a99440b37
+
+  1 CONTROL at BEFORE, clean tree            grader exit = 0  graded=632 at-tip=0
+  OK   1 grader exit on a clean tree at BEFORE = 0 (expected 0)
+
+fabricated out/A2-999-t455-fabricated-at-tip.txt and LAUNDERED its manifest row
+  2 FABRICATED at the tip, at BEFORE         grader exit = 0  at-tip=1 named=1
+  OK   2 the fail-open reproduces at BEFORE (exit 0 over an unmeasured row) = 0 (expected 0)
+  OK   2 ARM F PRINTS it, which is all BEFORE does = 1 (expected 1)
+
+fabricated out/A2-999-t455-fabricated-at-tip.txt and LAUNDERED its manifest row
+  3 FABRICATED at the tip, at AFTER          grader exit = 1  at-tip=1 named-assertion=1
+  OK   3 the grader REFUSES to pass over a row ARM F did not measure = 1 (expected 1)
+  OK   3 it fails on the NAMED assertion, x1 — not on some other check = 1 (expected 1)
+
+renamed out/A2-408-glaccounts-fetchrunningbal.http -> out/A2-998-t455-renamed-and-rewritten.txt with WHOLLY NEW BYTES, manifest row moved
+  4 (iv-b2) rename+whole rewrite, at BEFORE  grader exit = 0  at-tip=1
+  OK   4 (iv-b2) lands in (iv-a) and passes at BEFORE = 0 (expected 0)
+  OK   4 exactly one row is born at the tip = 1 (expected 1)
+
+renamed out/A2-408-glaccounts-fetchrunningbal.http -> out/A2-998-t455-renamed-and-rewritten.txt with WHOLLY NEW BYTES, manifest row moved
+  5 (iv-b2) rename+whole rewrite, at AFTER   grader exit = 1  named-assertion=1
+  OK   5 (iv-b2) is refused at AFTER too = 1 (expected 1)
+  OK   5 by the same named assertion = 1 (expected 1)
+
+  6 CONTROL at AFTER, clean tree             grader exit = 0  pop=632 graded=632 at-tip=0
+  OK   6 THE CLOSE COSTS NOTHING: a clean tree still exits 0 at AFTER = 0 (expected 0)
+  OK   6 and the graded count is unchanged from the BEFORE control = 632 (expected 632)
+  OK   6 with nothing born at the tip = 0 (expected 0)
+
+fabricated out/A2-999-t455-fabricated-at-tip.txt and LAUNDERED its manifest row
+adjudicated out/A2-999-t455-fabricated-at-tip.txt -> e06d2dfca90b4d06c66e769f520c32d3e3301d5143692f0ca918d09022f923f3
+  7a ADJUDICATED by name+digest, at AFTER    grader exit = 0  adjudicated-lines=1
+  OK   7a an adjudicated born-at-tip capture is accepted = 0 (expected 0)
+  OK   7a and it is NAMED as adjudicated, not silently folded into the equal count = 1 (expected 1)
+mutated the ADJUDICATED bytes and relaundered its row -> 2293a27d0f0e0528cc962bead1624a460a415300f1d3f4633377a4a2fc8019a5
+  7b the ADJUDICATED BYTES changed           grader exit = 1  moved-lines=1
+  OK   7b changing an adjudicated capture's bytes MOVES the adjudication = 1 (expected 1)
+  OK   7b and the move is named = 1 (expected 1)
+
+############ SUMMARY
+  1 clean tree   at BEFORE  exit 0   (calibration: the grader is green to begin with)
+  2 fabricated   at BEFORE  exit 0   THE FAIL-OPEN, reproduced
+  3 fabricated   at AFTER   exit 1   CLOSED
+  4 (iv-b2)      at BEFORE  exit 0   the same hole by the other route
+  5 (iv-b2)      at AFTER   exit 1   CLOSED
+  6 clean tree   at AFTER   exit 0   THE CLOSE COSTS NOTHING
+  7a adjudicated at AFTER   exit 0  a legitimate new capture is admissible
+  7b bytes moved at AFTER   exit 1  and only the adjudicated bytes are
+
+T455 (iv-a) DRIVE: PASS. The fail-open reproduces at BEFORE by two routes, is REFUSED at
+AFTER by both, the clean tree is unchanged in exit code and in graded count, and the
+adjudication list is falsifiable in both directions. DETECTION of a fabricated capture is
+still external and is named at boundary (iv-a-anchor); this drive is about the VERDICT.
