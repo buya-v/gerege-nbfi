@@ -1,0 +1,14 @@
+  ref: 36e01f25
+  probe                                                ast.parse raises       grade_binding
+  P1  a NUL byte (the one T476 closed)                 ValueError             graded (P2 fires: True)
+  P2  a lone surrogate                                 UnicodeEncodeError     graded (P2 fires: True)
+  P3  a stray form feed inside an identifier position  -                      graded (P2 fires: True)
+  P4  200 nested parentheses                           -                      graded (P2 fires: True)
+  P5  2000 nested parentheses                          SyntaxError            graded (P2 fires: True)
+  P6  2000 nested list displays                        SyntaxError            graded (P2 fires: True)
+  P7  a 5000-deep chain of unary minus                 -                      graded (P2 fires: True)
+  P8  plain unparseable text (the SyntaxError baseline SyntaxError            graded (P2 fires: True)
+  P9  a lone BOM then valid code                       SyntaxError            graded (P2 fires: True)
+  P10 a null in a comment                              ValueError             graded (P2 fires: True)
+
+  Nothing escaped the fallback on these probes.

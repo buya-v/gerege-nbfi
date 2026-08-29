@@ -1,0 +1,53 @@
+  rule T455  lifted from 3f4e236a  names: FALSE_CLAIMS TAG emitted_payload grade_binding states_a_false_claim strip_trailing_comment tagged_blocks
+  rule T467  lifted from 6a345e4a  names: FALSE_CLAIMS TAG grade_binding printed_payloads python_payloads quoted_segments states_a_false_claim strip_trailing_comment tagged_blocks
+  rule T476  lifted from 36e01f25  names: FALSE_CLAIMS TAG _CONVERSION _FIELD _fold emitter_payloads grade_binding join_continuations printed_payloads python_payloads quoted_segments squeeze states_a_false_claim strip_trailing_comment strip_trailing_comment_posix tagged_blocks
+
+=== 0. IS ARM 1 THE RULE IT CLAIMS TO BE? ===
+  probe lines: 144   ARM 1 disagrees with T455's emitted_payload on: 0
+
+=== 1. THE CROSS PRODUCT: 1992 cases ===
+  of the 1452 python-file cases, 726 parse; the rest exercise the lexical fallback
+  T455  catches  699 of 1992   (predicate 2 alone:  124)   RAISED on 0
+  T467  catches  896 of 1992   (predicate 2 alone:  784)   RAISED on 0
+  T476  catches 1054 of 1992   (predicate 2 alone: 1048)   RAISED on 0
+
+  ACCEPTANCE -- cases T455 catches and T476 MISSES: 0
+  cases T455 catches and T467 misses (the defect under repair): 5
+    T467 LOSES py/print/bytes/trailing-comment
+    T467 LOSES py/print/decode/trailing-comment
+    T467 LOSES sh/echo-tab/bare/trailing-comment
+    T467 LOSES sh/echo/bare/trailing-comment
+    T467 LOSES sh/tee/bare/trailing-comment
+  cases T476 catches that T467 does not: 158
+  cases T467 catches that T476 does not: 0
+
+=== 2. DISCRIMINATION -- cases whose tag IS PRINTED, flagged by PREDICATE 2 ===
+  T455  flags   0 correctly tagged payloads
+  T467  flags   8 correctly tagged payloads
+  T476  flags   8 correctly tagged payloads
+    FLAGS A TAGGED PAYLOAD: sh/command/wordsplit/tag-inside-2nd
+    FLAGS A TAGGED PAYLOAD: sh/echo-tab/wordsplit/tag-inside-2nd
+    FLAGS A TAGGED PAYLOAD: sh/echo/wordsplit/tag-inside-2nd
+    FLAGS A TAGGED PAYLOAD: sh/eval/wordsplit/tag-inside-2nd
+    FLAGS A TAGGED PAYLOAD: sh/heredoc/wordsplit/tag-inside-2nd
+    FLAGS A TAGGED PAYLOAD: sh/printf/wordsplit/tag-inside-2nd
+    FLAGS A TAGGED PAYLOAD: sh/stderr-echo/wordsplit/tag-inside-2nd
+    FLAGS A TAGGED PAYLOAD: sh/tee/wordsplit/tag-inside-2nd
+  of those, NEW since T467: 0
+
+=== 3. ARM 1 UNWIRED, IN THE LIFTED CODE: which cases does it DECIDE? ===
+  predicate-2 cases the union sees WITH ARM 1 and loses WITHOUT it: 0
+    of which ABUSES (ARM 1 earns a real catch): 0
+    of which CORRECTLY TAGGED payloads (ARM 1 causes a FALSE POSITIVE): 0
+  cases lost from the WHOLE verdict (predicate 1 or 2) without ARM 1: 0
+
+=== 4. CAN THE SUPERSET CONTROL FAIL? ARM 1's payloads vs the OTHER arms' ===
+  shell cases where ARM 1's payload set is ALREADY a subset of the other arms': 522 of 540
+  python cases where it is:                                                    726 of 1452
+  => the SUPERSET CONTROL can only fail on fixtures where ARM 1 contributes a
+     payload no other arm produces. On shell text with no continuation the other
+     arms reproduce ARM 1's payload EXACTLY, so those fixtures cannot redden it.
+  shell cases that WOULD redden it: 18  ['sh/echo/continue/trailing-comment', 'sh/echo/continue/untagged', 'sh/echo/continue/tag-inside', 'sh/echo/continue/tag-prev-line', 'sh/echo/continue/tag-next-line', 'sh/echo/continue/tag-inside-2nd']
+  python cases that WOULD redden it: 726  ['py/assign/bytes/trailing-comment', 'py/assign/bytes/untagged', 'py/assign/bytes/tag-inside', 'py/assign/bytes/tag-prev-line', 'py/assign/bytes/tag-next-line', 'py/assign/bytes/tag-inside-2nd']
+
+RESULT: every recorded relation held. EXIT 0

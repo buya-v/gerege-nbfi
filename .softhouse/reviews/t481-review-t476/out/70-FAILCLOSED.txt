@@ -1,0 +1,32 @@
+===========================================================================
+T481 -- THE FAIL-CLOSED BRANCH, NON-REGRESSION AT 36e01f25
+===========================================================================
+
+--- ARM A: THE CLEAN TREE ---
+  OK   clean: exit = 0 (expected 0)
+  OK   clean: checks executed = 29 (expected 29)
+  OK   clean: controls (a)-(k) = 11 (expected 11)
+  OK   clean: ALL controls (a)-(m) = 15 (expected 15)
+  OK   clean: tracebacks = 0 (expected 0)
+
+--- ARM B: A TRACKED NON-JSON VECTOR CARRYING THE TOKEN ---
+  OK   planted: exit = 1 (expected 1)
+  OK   planted: tracebacks (BY A VALUE) = 0 (expected 0)
+  OK   planted: checks executed (none skipped) = 29 (expected 29)
+  OK   planted: controls (a)-(k) reached = 11 (expected 11)
+  OK   planted: FAILURES: tally lines = 1 (expected 1)
+  OK   planted: the NAMED assertion appears = 1 (expected 1)
+
+--- ARM C: IS (l) A CONTROL, OR (k) WEARING A NEW NUMBER? ---
+  OK   defect restored, CLEAN corpus: exit = 1 (expected 1)
+  OK   defect restored: tracebacks = 0 (expected 0)
+  OK   defect restored: checks executed = 29 (expected 29)
+  OK   defect restored: (k) still PASSES = PASS (expected PASS)
+  OK   defect restored: (l) FAILS = FAIL (expected FAIL)
+  OK   defect restored: (l1) FAILS = FAIL (expected FAIL)
+
+  Row by row: on a corpus where NOTHING real exercises the branch, (l) and (l1) go RED
+  while (k) stays GREEN on the same tree. That is the property (k) lacked, and it still
+  holds at a tip whose payload predicate has been rewritten around it.
+
+RESULT: every cardinal reproduced. EXIT 0
