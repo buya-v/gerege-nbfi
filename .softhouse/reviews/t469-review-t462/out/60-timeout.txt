@@ -1,0 +1,16 @@
+NOTE: `timeout=15` has 5 call sites in this file; only the 2 inside
+ref_content_evidence are tightened here -- the other 3 are on the landed-work
+path and are NOT what either T456 or T462 is arguing about.
+GREEN-T3 planted (both per-call timeouts 15 -> 3); sites UNIQUE; plant LIVE
+
+case F2: fan-out 2, carrier SECOND, branch pruned; host = 4.0 s/git call
+
+variant      kind               polarity
+CAP8         relocated          REFUSE    wall=33.07s
+GREEN        relocated          REFUSE    wall=33.12s
+GREEN-T3     indeterminate      demote    wall=22.55s
+
+TIGHTENING timeout=15 IS DESTRUCTIVE: the same evidence that GREEN REFUSES
+to demote is DEMOTED once the per-call timeout is cut. T462's refusal to
+tighten it is CORRECT and is a conclusion, not an omission.
+EXIT=0

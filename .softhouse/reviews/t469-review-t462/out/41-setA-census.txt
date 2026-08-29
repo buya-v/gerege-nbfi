@@ -1,0 +1,17 @@
+TREE 34fe206f8495f0736f0cc68f4d22e9fb11b40b6f  (HEAD 2c9ca37f4eb2)
+live refs 714 ; ids nameable from a head 195 ; (id, other-ref) pairs 61
+
+SET A -- pairs that CARRY under the SHIPPED anchors: 10
+   T100   softhouse/T101-review-t100                     owner=T101   FOREIGN  subject
+   T108   softhouse/T131-review-t108                     owner=T131   FOREIGN  subject
+   T109   softhouse/T127-review-t109                     owner=T127   FOREIGN  subject
+   T268   softhouse/t281-review-t268                     owner=T281   FOREIGN  subject
+   T268   softhouse/t286-t268-retry                      owner=T286   FOREIGN  subject path
+   T351   softhouse/T369-review-t351                     owner=T369   FOREIGN  subject
+   T351   softhouse/T370-t351-retry                      owner=T370   FOREIGN  subject path
+   T370   softhouse/T376-review-t370                     owner=T376   FOREIGN  subject
+   T65    softhouse/T67-review-t65                       owner=T67    FOREIGN  subject
+   T78    softhouse/T79-review-t78                       owner=T79    FOREIGN  subject
+
+   of which FOREIGN-owned: 10
+SET C -- name-only under BOTH anchors: 51

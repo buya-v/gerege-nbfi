@@ -1,0 +1,33 @@
+D-NULL planted on GREEN's bytes; site UNIQUE; plant verified LIVE
+
+case: T930's work IS ON MAIN (landed_evidence => `merged`, a REFUSAL);
+      6 further refs merely NAME T930, so the ref probe has budget to spend.
+      Branch pruned, so this is _absent_verdict -- the arm D-NULL edits.
+
+deadline   variant        kind                 polarity 
+0.4        GREEN          indeterminate        demote   
+0.4        GREEN+D-NULL   indeterminate        demote   
+
+0.6        GREEN          indeterminate        demote   
+0.6        GREEN+D-NULL   indeterminate        demote   
+
+0.9        GREEN          merged               REFUSE   
+0.9        GREEN+D-NULL   indeterminate        demote   
+           ^^^^ D-NULL IS NOT BEHAVIOUR-PRESERVING: it flips REFUSE -> demote at this budget
+
+1.2        GREEN          merged               REFUSE   
+1.2        GREEN+D-NULL   indeterminate        demote   
+           ^^^^ D-NULL IS NOT BEHAVIOUR-PRESERVING: it flips REFUSE -> demote at this budget
+
+2.0        GREEN          merged               REFUSE   
+2.0        GREEN+D-NULL   indeterminate        demote   
+           ^^^^ D-NULL IS NOT BEHAVIOUR-PRESERVING: it flips REFUSE -> demote at this budget
+
+5.0        GREEN          merged               REFUSE   
+5.0        GREEN+D-NULL   merged               REFUSE   
+
+30.0       GREEN          merged               REFUSE   
+30.0       GREEN+D-NULL   merged               REFUSE   
+
+budgets at which the 'negative control' destroys work: 3
+EXIT=1
