@@ -1,0 +1,40 @@
+sleep=0.02s/call  3 repeats per deadline
+dline  variant sink   vict   sinkwall  victim kind      polarity
+4.5    CAP8    8      2      3.02      relocated        REFUSE  
+4.5    GREEN   14     0      4.51      unverified       demote  
+       ^^ BREAK -- the count cap REFUSES, the floored code DEMOTES
+4.5    CAP8    8      2      2.97      relocated        REFUSE  
+4.5    GREEN   14     0      4.51      unverified       demote  
+       ^^ BREAK -- the count cap REFUSES, the floored code DEMOTES
+4.5    CAP8    8      2      2.89      relocated        REFUSE  
+4.5    GREEN   12     0      4.5       unverified       demote  
+       ^^ BREAK -- the count cap REFUSES, the floored code DEMOTES
+5.0    CAP8    8      2      3.05      relocated        REFUSE  
+5.0    GREEN   15     0      5.01      unverified       demote  
+       ^^ BREAK -- the count cap REFUSES, the floored code DEMOTES
+5.0    CAP8    8      2      2.92      relocated        REFUSE  
+5.0    GREEN   16     0      4.98      unverified       demote  
+       ^^ BREAK -- the count cap REFUSES, the floored code DEMOTES
+5.0    CAP8    8      2      4.14      relocated        REFUSE  
+5.0    GREEN   14     0      5.01      unverified       demote  
+       ^^ BREAK -- the count cap REFUSES, the floored code DEMOTES
+5.5    CAP8    8      2      2.72      relocated        REFUSE  
+5.5    GREEN   16     0      5.51      unverified       demote  
+       ^^ BREAK -- the count cap REFUSES, the floored code DEMOTES
+5.5    CAP8    8      2      3.12      relocated        REFUSE  
+5.5    GREEN   17     0      5.48      unverified       demote  
+       ^^ BREAK -- the count cap REFUSES, the floored code DEMOTES
+5.5    CAP8    8      2      2.94      relocated        REFUSE  
+5.5    GREEN   16     0      5.46      unverified       demote  
+       ^^ BREAK -- the count cap REFUSES, the floored code DEMOTES
+6.0    CAP8    8      2      3.03      relocated        REFUSE  
+6.0    GREEN   18     0      5.98      unverified       demote  
+       ^^ BREAK -- the count cap REFUSES, the floored code DEMOTES
+6.0    CAP8    8      2      2.78      relocated        REFUSE  
+6.0    GREEN   6      0      6.75      unverified       demote  
+       ^^ BREAK -- the count cap REFUSES, the floored code DEMOTES
+6.0    CAP8    8      0      5.96      unverified       demote  
+6.0    GREEN   20     0      6.01      unverified       demote  
+
+breaks: 11 over 12 cells
+EXIT=0

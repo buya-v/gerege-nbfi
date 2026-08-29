@@ -1,0 +1,84 @@
+HOST LIVENESS  real git = /usr/bin/git ; wrapper = /private/tmp/t469.8GGcjF/bin/gitwrap.sh ; sleep = 3.2s
+  fast leg: 8 git calls in 0.68s  -> 0.085s/call
+  SLOW leg: 6 git calls in 20.55s  -> 3.425s/call
+  wrapper PROVED live: slow/fast = 40.3x ; argv log CAPTURING (8/6 calls)
+
+====================================================================================================
+CASE F2    fan-out 2, carrier 2nd, branch PRUNED -> _absent_verdict
+host   variant | kind                   polarity probed  wall    
+  fast   CAP8   | relocated              REFUSE   2       0.64    
+  fast   RED    | relocated              REFUSE   2       0.55    
+  fast   GREEN  | relocated              REFUSE   2       0.53    
+  SLOW   CAP8   | relocated              REFUSE   2       26.94   
+  SLOW   RED    | indeterminate          demote   1       19.98   
+  SLOW   GREEN  | relocated              REFUSE   2       26.68   
+
+====================================================================================================
+CASE F2S   fan-out 2, carrier 2nd, branch STANDING -> stillborn-carried
+host   variant | kind                   polarity probed  wall    
+  fast   CAP8   | stillborn-carried      REFUSE   2       0.62    
+  fast   RED    | stillborn-carried      REFUSE   2       0.62    
+  fast   GREEN  | stillborn-carried      REFUSE   2       0.62    
+  SLOW   CAP8   | stillborn-carried      REFUSE   2       33.46   
+  SLOW   RED    | indeterminate          demote   1       26.7    
+  SLOW   GREEN  | stillborn-carried      REFUSE   2       33.77   
+
+====================================================================================================
+CASE F8    fan-out 8, carrier 8th (index 7) -- THE FLOOR BOUNDARY
+host   variant | kind                   polarity probed  wall    
+  fast   CAP8   | relocated              REFUSE   8       1.0     
+  fast   RED    | relocated              REFUSE   8       1.0     
+  fast   GREEN  | relocated              REFUSE   8       0.96    
+  SLOW   CAP8   | relocated              REFUSE   8       66.87   
+  SLOW   RED    | indeterminate          demote   1       20.11   
+  SLOW   GREEN  | relocated              REFUSE   8       66.77   
+
+====================================================================================================
+CASE F9    fan-out 9, carrier 9th (index 8) -- OUTSIDE the floor
+host   variant | kind                   polarity probed  wall    
+  fast   CAP8   | indeterminate          demote   8       1.26    
+  fast   RED    | relocated              REFUSE   9       1.19    
+  fast   GREEN  | relocated              REFUSE   9       1.89    
+  SLOW   CAP8   | indeterminate          demote   8       66.75   
+  SLOW   RED    | indeterminate          demote   1       20.04   
+  SLOW   GREEN  | indeterminate          demote   8       66.86   
+
+====================================================================================================
+CASE F1    fan-out 1, carrier 1st -- MUST-REFUSE control
+host   variant | kind                   polarity probed  wall    
+  fast   CAP8   | relocated              REFUSE   1       0.43    
+  fast   RED    | relocated              REFUSE   1       0.43    
+  fast   GREEN  | relocated              REFUSE   1       0.42    
+  SLOW   CAP8   | relocated              REFUSE   1       20.01   
+  SLOW   RED    | relocated              REFUSE   1       19.99   
+  SLOW   GREEN  | relocated              REFUSE   1       20.08   
+
+====================================================================================================
+CASE N     fan-out 2, NO carrier -- MUST-DEMOTE control
+host   variant | kind                   polarity probed  wall    
+  fast   CAP8   | name-only-refs         demote   2       0.46    
+  fast   RED    | name-only-refs         demote   2       0.46    
+  fast   GREEN  | name-only-refs         demote   2       0.52    
+  SLOW   CAP8   | name-only-refs         demote   2       26.81   
+  SLOW   RED    | indeterminate          demote   1       20.12   
+  SLOW   GREEN  | name-only-refs         demote   2       26.77   
+
+====================================================================================================
+LEG 1 -- REGRESSION vs the count cap: any cell where CAP8 REFUSES and X demotes
+  F2S  SLOW  CAP8=REFUSE  RED  =demote   <== WORK-DESTROYING REGRESSION
+  F8   SLOW  CAP8=REFUSE  RED  =demote   <== WORK-DESTROYING REGRESSION
+  F2   SLOW  CAP8=REFUSE  RED  =demote   <== WORK-DESTROYING REGRESSION
+
+LEG 2 -- SUBSET: probed(X) >= probed(CAP8) in every cell
+  F2   SLOW  RED   probed 1 < CAP8 2  <== SUBSET BROKEN
+  F2S  SLOW  RED   probed 1 < CAP8 2  <== SUBSET BROKEN
+  F8   SLOW  RED   probed 1 < CAP8 8  <== SUBSET BROKEN
+  F9   SLOW  RED   probed 1 < CAP8 8  <== SUBSET BROKEN
+  N    SLOW  RED   probed 1 < CAP8 2  <== SUBSET BROKEN
+  GREEN cells violating the subset property: 0
+
+LEG 3 -- fast-host behaviour of GREEN identical to RED (kind AND polarity)
+  fast-host cells where GREEN differs from RED: 0
+
+LEG 4 -- 'A REVERT IS WRONG': cells where CAP8 demotes and RED/GREEN REFUSE
+  F9   fast  CAP8=demote GREEN=REFUSE  <== reverting to the count cap re-opens this
