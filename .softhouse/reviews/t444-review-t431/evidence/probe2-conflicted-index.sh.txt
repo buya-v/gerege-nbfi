@@ -1,0 +1,26 @@
+#!/bin/bash
+# T444 probe 2 — does a `:(literal)` pathspec really match AT MOST ONE index entry?
+# T431's C-T407-3 comment says the `member_multi` branch "CANNOT FIRE" on any git honouring
+# `:(literal)`. Drive the conflicted-index case, where one PATH carries three stages.
+set -e
+W="$1"
+[ -n "$W" ] || { echo "usage: probe2.sh <workroot>"; exit 9; }
+rm -rf "$W"; mkdir -p "$W/r"; cd "$W/r"
+git init -q -b main .
+git config user.email r@x; git config user.name r
+mkdir -p .softhouse/guards/zz
+printf 'base\n' > .softhouse/guards/zz/c.sh
+git add -A; git commit -qm base
+git checkout -q -b other
+printf 'other\n' > .softhouse/guards/zz/c.sh
+git add -A; git commit -qm other
+git checkout -q main
+printf 'mine\n' > .softhouse/guards/zz/c.sh
+git add -A; git commit -qm mine
+git merge other >/dev/null 2>&1 || true
+echo "=== conflicted? ==="
+git ls-files -u
+echo "=== git ls-files -s -- ':(literal)<path>' ==="
+git ls-files -s -- ':(literal).softhouse/guards/zz/c.sh'
+echo "=== line count ==="
+git ls-files -s -- ':(literal).softhouse/guards/zz/c.sh' | wc -l

@@ -1,0 +1,10 @@
+=== conflicted? ===
+100644 df967b96a579e45a18b8251732d16804b2e56a55 1	.softhouse/guards/zz/c.sh
+100644 351be5bf6e17c59ea560546d69654115ecb2fd8d 2	.softhouse/guards/zz/c.sh
+100644 e45c9c2666d44e0327c1f9c239a74c508336053e 3	.softhouse/guards/zz/c.sh
+=== git ls-files -s -- ':(literal)<path>' ===
+100644 df967b96a579e45a18b8251732d16804b2e56a55 1	.softhouse/guards/zz/c.sh
+100644 351be5bf6e17c59ea560546d69654115ecb2fd8d 2	.softhouse/guards/zz/c.sh
+100644 e45c9c2666d44e0327c1f9c239a74c508336053e 3	.softhouse/guards/zz/c.sh
+=== line count ===
+       3
