@@ -1,0 +1,33 @@
+=== ARM WDIRTY ===
+tree mode under test: roundtrip=yes witness-blob=NO member-blob=NO decisive-arm=NO
+EXIT=0
+grep -c 'probe = ' = 1
+probe = up
+census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+VERDICT: VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+--- decisive registration sentences ---
+159:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+162:conformance:     REACHED-BY .softhouse/guards/zz-t445w/zz-t445w-member.sh — declared in its own header, reached by
+185:conformance:   file, DECLARED against a verified witness, or carries a verified REACHED-BY.
+681:          IN MORE THAN ONE CURRENCY IS NOT EXPRESSIBLE AT THE ledger_rest_posting SEAM AT ALL.
+--- checkout collision warnings ---
+Note: switching to '1c9f087856ad7ac5bae04c66de7d7f4d28265f8d'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+--- git status of the fresh clone ---
+ M .softhouse/guards/zz-t445w/witness.txt
+

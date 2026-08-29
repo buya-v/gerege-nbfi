@@ -1,0 +1,12 @@
+=== ARM RVQ ===
+tree mode under test: roundtrip=NO witness-blob=yes member-blob=yes decisive-arm=yes
+EXIT=2
+grep -c 'probe = ' = 0
+probe = (ABSENT — not "down")
+census: <no census line printed>
+VERDICT: <none>
+--- decisive registration sentences ---
+155:conformance: guard_registration_decisive_lines: THE DECISIVE LINE IS GONE —
+--- checkout collision warnings ---
+--- git status of the fresh clone ---
+

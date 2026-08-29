@@ -1,0 +1,11 @@
+=== ARM RWB ===
+tree mode under test: roundtrip=yes witness-blob=NO member-blob=yes decisive-arm=yes
+EXIT=2
+grep -c 'probe = ' = 0
+probe = (ABSENT — not "down")
+census: <no census line printed>
+VERDICT: <none>
+--- decisive registration sentences ---
+--- checkout collision warnings ---
+--- git status of the fresh clone ---
+
