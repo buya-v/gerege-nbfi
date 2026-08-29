@@ -1,0 +1,13 @@
+== T458 REMEDY-TEXT DRIVE ==
+   git      : git version 2.50.1 (Apple Git-155)
+   python3  : Python 3.9.6
+   SRC      : /tmp/t483-scratch/tmp/armC-control-renamed
+   HEAD     : 66e84664353fe9a1a815d27786c22e0ca380735a
+   guard    : /tmp/t483-scratch/tmp/armC-control-renamed/.softhouse/guards/check-dead-path-frontier.sh
+
+-- CALIBRATION: the three strings must be present in the guard's SOURCE
+   source hits = 1   for: A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE
+   source hits = 1   for: THE REMEDY, because SIX workers in one fire each rediscovered it
+   source hits = 0   for: THE FORBIDDEN FOURTH
+ERROR: the guard's source does not contain the remedy text this drive grades.
+ERROR: REFUSING (exit 2) -- not a finding.

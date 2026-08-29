@@ -1,0 +1,21 @@
+--- T316-DEADPATH-CENSUS: corpus= ---
+  T470: conformance:   T316-DEADPATH-CENSUS: corpus=1755 deadFiles=75 deadOccurrences=108 resolving=1577 indeterminate=126 prose=427
+  T483: conformance:   T316-DEADPATH-CENSUS: corpus=1755 deadFiles=75 deadOccurrences=108 resolving=1577 indeterminate=126 prose=427
+--- PNUMBER-CITATIONS: register= ---
+  T470: conformance:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=102 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+  T483: conformance:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=102 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+--- PNUMBER-CITATIONS: sites= ---
+  T470: conformance:   PNUMBER-CITATIONS: sites=14377 definition=103 consistent=725 bare=13360 misdirecting=81 undefined=45 negative-control=63
+  T483: conformance:   PNUMBER-CITATIONS: sites=14381 definition=103 consistent=725 bare=13364 misdirecting=81 undefined=45 negative-control=63
+--- VERDICT: PASS ---
+  T470: VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+  T483: VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+--- frontier 11, pinned ---
+  T470: conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5521f6ca857fe29e (git ls-files, whole repository); frontier 11, pinned at 11
+  T483: conformance:   /tmp/t483-scratch/t470tip (git ls-files, whole repository); frontier 11, pinned at 11
+--- literal /tmp path ---
+  T470: 
+  T483: 
+--- dead-path frontier: ---
+  T470: conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+  T483: conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.

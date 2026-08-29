@@ -1,0 +1,11 @@
+main HEAD = 55af2cc7
+T470 MERGE EXIT = 0
+Auto-merging .softhouse/conformance.sh
+Merge made by the 'ort' strategy.
+ .softhouse/conformance.sh | 411 +++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 300 insertions(+), 111 deletions(-)
+T480 MERGE EXIT = 0
+== unresolved conflicts ==
+== does the T470 warn text survive? ==
+1
+0
