@@ -1,0 +1,26 @@
+############ T448 -- IS (iv-a) CLOSABLE BY INTERNAL CONSISTENCY?
+  ref = 3253358d
+
+  1. UNPATCHED grader, fabrication born at the tip     rc=0  expected 0  as recorded
+     ARM F PRINTS it as ungraded x1, and the file still exits 0 -- the fail-open.
+
+  2. PATCHED grader, same fabrication                  rc=1  expected 1  as recorded
+     the named assertion that fails: x1
+
+  3. PATCHED grader, CLEAN tree (the cost of the close) rc=0  expected 0  as recorded
+     on the clean tree ARM F graded 632 and found 0 born at the tip,
+     so the added check costs NOTHING except in the commit that actually adds a capture.
+  4. UNPATCHED grader, iv-b2 route into (iv-a)         rc=0  expected 0  as recorded
+  5. PATCHED grader, iv-b2 route into (iv-a)           rc=1  expected 1  as recorded
+
+############ WHAT THIS MEASURED
+  UNPATCHED: fabrication rc=0, iv-b2 rc=0  -- both exit 0, T433's disclosed fail-open.
+  PATCHED  : fabrication rc=1, iv-b2 rc=1  -- both RED, on a NAMED assertion.
+  COST     : the patched grader on a CLEAN tree rc=0.
+
+  This does NOT detect a fabrication -- nothing internal can, and T433 is right about
+  that half. It removes the FAIL-OPEN: the grader stops exiting 0 over a population it
+  did not measure, which is the rule the file already applies to its sibling case.
+
+T448 (iv-a) CLOSABILITY VERDICT: THE FAIL-OPEN IS CLOSABLE INTERNALLY, at zero cost on a
+clean tree, by one check that applies the grader's own stated rule to its own boundary.

@@ -1,0 +1,162 @@
+T238 FAIL-OPEN LINT
+commit    : 83d3c9c3b7f10a105128740f583e05f1ddd605e1
+corpus    : 1581 tracked .sh/.py; 178 are repo-wide search instruments
+scope     : whole repository
+
+### TIER 1 — FAIL-OPEN, LIVE  (C1 dead path AND C2 reassuring failure arm) : 3
+###   measured behaviour of this tier: exit 0, prints a negative, measured nothing
+  .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      C1  :7  dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39
+      C2  :14  failure arm PRINTS instead of exiting: ( cd "$WT" && git grep -n -I -i -E "$re" -- . ) || echo "   (no hits)"
+      C2  :16  failure arm PRINTS instead of exiting: grep -n -i -E "$re" "$MODE" || echo "   (no hits)"
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      C1  :8  dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e
+      C2  :15  failure arm PRINTS instead of exiting: pat() { echo "--- pattern: $1"; git grep -n -i -E "$1" -- . || echo "    (no hits)"; }
+  .softhouse/reviews/T138-evidence/r11-hygiene.sh
+      C1  :77  dead absolute path: /tmp/T138-merge
+      C2  :79  UNCONDITIONAL print CLAIMS A MEASUREMENT after a `cd` at line 77 whose failure is swallowed -- it runs whether or not that directory was entered: echo "   (searched the MERGED tree)"
+
+### TIER 2 — FAIL-OPEN-CAPABLE  (C2 only; corpus reachable TODAY) : 7
+###   one deleted directory away from Tier 1
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+      C2  :20  failure arm PRINTS instead of exiting: env | grep -c '^BASH_FUNC_grep' 2>/dev/null || echo "BASH_FUNC_grep not exported"
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      C2  :38  failure arm PRINTS instead of exiting: echo "  pattern $p ->"; /usr/bin/grep -E -n "$p" "$C" | sed 's/^/      /' || echo "      (no match)"
+  .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+      C2  :38  failure arm PRINTS instead of exiting: echo "=== CALIBRATION FIXTURE (tracked in the index: $(git ls-files --error-unmatch -- "$CAL" >/dev/null 2>&1 
+  .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+      C2  :35  failure arm PRINTS instead of exiting: echo "  $P2 present? : $(/usr/bin/grep -qx "$P2" /tmp/t239-pop-T115.txt && echo YES || echo NO)"
+      C2  :36  failure arm PRINTS instead of exiting: echo "  $P3 present? : $(/usr/bin/grep -qx "$P3" /tmp/t239-pop-T115.txt && echo YES || echo NO)"
+  .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+      C2  :24  failure arm PRINTS instead of exiting: echo 'merge-base|main:|origin/main|rev-parse main|\bmain\b' | /usr/bin/grep -q 'HEAD' && echo YES || echo "NO 
+  .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+      C2  :46  failure arm PRINTS instead of exiting: git ls-tree -r --name-only "$SCRATCH" -- "$P1" | /usr/bin/grep -q 't239-planted-baseline.sh' && echo YES || ec
+  .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+      C2  :15  failure arm PRINTS instead of exiting: echo "does /tmp/T138-merge exist? -> $([ -d /tmp/T138-merge ] && echo YES || echo 'NO - section 4 will cd-fail
+
+### TIER 1B — ENTERS A CORPUS THAT IS NOT THERE AND CARRIES ON  (C6) : 1
+###   [T252] the fail-open whose false claim is a COUNT, not a sentence. This tier is
+###   found by CONTROL FLOW, not vocabulary: no output words are read at all, so the
+###   claim's distance, phrasing and even its LANGUAGE are irrelevant to it.
+  .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+      C6  :24  ENTERS a directory that does not exist and CARRIES ON -- no errexit in force and no fatal arm, so everything printed after this line is printed about a corpus never reached: `cd` -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea (declared at line 11)
+
+### TIER 3 — UNREPRODUCIBLE: dead path, no reassuring arm, no non-fatal dead ENTRY
+###   : 10 file(s) / 44 dead-path finding(s)
+###   WHAT IS CHECKED: the path is dead (C1); nothing here PRINTS reassurance (no C2);
+###   and no dead path is ENTERED without terminating (no C6). The bracket on each row
+###   names which of those grounds it actually rests on.
+###   WHAT IS **NOT** CHECKED, AND IS NO LONGER CLAIMED: that these files exit non-zero.
+###   This label read 'but FAILS CLOSED' until T252 and NOTHING verified it for any file,
+###   ever; for one member it was false. 'Termination not verified' is the weaker TRUE
+###   statement, and it replaces the stronger unverified one.
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/01-escape-matrix.sh
+      GROUND: no dead path is in a position that ENTERS it -- narration, a probe list, or an env var, not a corpus this file reads
+      C1  :7  dead absolute path: /tmp/t234_matrix.txt
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh
+      GROUND: no dead path is in a position that ENTERS it -- narration, a probe list, or an env var, not a corpus this file reads
+      C1  :17  dead absolute path: /opt/homebrew/bin/grep
+      C1  :18  dead absolute path: /opt/homebrew/bin/ugrep
+      C1  :19  dead absolute path: /opt/homebrew/bin/rg
+  .softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh
+      GROUND: no dead path is in a position that ENTERS it -- narration, a probe list, or an env var, not a corpus this file reads
+      C1  :87  dead absolute path: /opt/homebrew
+  .softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh
+      GROUND: errexit in force (`set -e`) at the dead-path lines
+      C1  :28  dead absolute path: /Users/buv/gerege-nbfi/.softhouse/toolchain/gopath
+  .softhouse/capture/t271-b1-t219/probe_tmp_dependency_t271.sh
+      GROUND: errexit in force (`set -e`) at the dead-path lines
+      C1  :91  dead absolute path: /tmp/t234_matrix2.txt
+  .softhouse/capture/t390-baseline-attribution/out/conformance-PATCHED.sh
+      GROUND: no dead path is in a position that ENTERS it -- narration, a probe list, or an env var, not a corpus this file reads
+      C1  :2098  dead absolute path: /tmp/t234_matrix.txt
+      C1  :2101  dead absolute path: /tmp/t115-mf34
+      C1  :2102  dead absolute path: /tmp/T138-mf2-post
+      C1  :2103  dead absolute path: /tmp/T138-mf3
+      C1  :2104  dead absolute path: /tmp/T138-mf2-post
+      C1  :2105  dead absolute path: /tmp/t155/post
+      C1  :2106  dead absolute path: /tmp/t155/pre
+      C1  :2107  dead absolute path: /tmp/t155/post2
+      C1  :2108  dead absolute path: /tmp/t158-clone
+      C1  :2109  dead absolute path: /tmp/t246-pin-red
+      C1  :2110  dead absolute path: /tmp/t260/red
+      C1  :2111  dead absolute path: /tmp/t260/sh
+      C1  :2112  dead absolute path: /tmp/t260/red/.softhouse/conformance.sh
+      C1  :2113  dead absolute path: /tmp/t260/red/.softhouse/conformance.sh
+      C1  :2114  dead absolute path: /tmp/t260/red/.softhouse/conformance.sh
+  .softhouse/conformance.sh
+      GROUND: no dead path is in a position that ENTERS it -- narration, a probe list, or an env var, not a corpus this file reads
+      C1  :2098  dead absolute path: /tmp/t234_matrix.txt
+      C1  :2101  dead absolute path: /tmp/t115-mf34
+      C1  :2102  dead absolute path: /tmp/T138-mf2-post
+      C1  :2103  dead absolute path: /tmp/T138-mf3
+      C1  :2104  dead absolute path: /tmp/T138-mf2-post
+      C1  :2105  dead absolute path: /tmp/t155/post
+      C1  :2106  dead absolute path: /tmp/t155/pre
+      C1  :2107  dead absolute path: /tmp/t155/post2
+      C1  :2108  dead absolute path: /tmp/t158-clone
+      C1  :2109  dead absolute path: /tmp/t246-pin-red
+      C1  :2110  dead absolute path: /tmp/t260/red
+      C1  :2111  dead absolute path: /tmp/t260/sh
+      C1  :2112  dead absolute path: /tmp/t260/red/.softhouse/conformance.sh
+      C1  :2113  dead absolute path: /tmp/t260/red/.softhouse/conformance.sh
+      C1  :2114  dead absolute path: /tmp/t260/red/.softhouse/conformance.sh
+  .softhouse/reviews/T158-compare-enumerators.sh
+      GROUND: every dead-path ENTRY terminates -- fatal arm (`|| exit`/`die`) on line(s) 5
+      C1  :4  dead absolute path: /tmp/t158-clone
+  .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh
+      GROUND: every dead-path ENTRY terminates -- fatal arm (`|| exit`/`die`) on line(s) 15
+      C1  :15  dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee
+  .softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh
+      GROUND: errexit in force (`set -e`) at the dead-path lines
+      C1  :12  dead absolute path: /tmp/t260/red
+      C1  :13  dead absolute path: /tmp/t260/sh
+      C1  :115  dead absolute path: /tmp/t260/red/.softhouse/conformance.sh
+      C1  :122  dead absolute path: /tmp/t260/red/.softhouse/conformance.sh
+      C1  :129  dead absolute path: /tmp/t260/red/.softhouse/conformance.sh
+
+### ADVISORY (C3 no corpus assertion / C4 no calibration / C5 engine undeclared)
+  C3 : 29 instrument(s)
+  C4 : 108 instrument(s)
+  C5 : 99 instrument(s)
+
+### SUPPRESSIONS IN FORCE (every one is listed; they never go quiet) : 25
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh             :15  these absolute paths are the SUBJECT of the probe, not its corpus; the
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh             :28  reporting ABSENCE is this line's purpose
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh             :29  reporting ABSENCE is this line's purpose
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh             :30  reporting ABSENCE is this line's purpose
+  .softhouse/capture/t238-failopen/instruments/60-multiline-sweep.py     :72  this is a PATTERN LITERAL describing the defect, not an instance of it
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :77  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :81  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :83  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :85  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :87  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :89  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :91  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :93  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :95  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :97  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :99  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :101  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :103  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :105  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t248-failopen-widen/instruments/10-c1-characterise.py :109  this is a PROBE LINE the rig PLANTS in order to measure what C1 can see; the dead path is the SUBJECT of the experiment, not this file's corpus
+  .softhouse/capture/t256-verdict-predicate/lint_failopen_t259.py        :16  <reason>` on itself or on the line above. The reason is
+  .softhouse/capture/t256-verdict-predicate/red/drive-red.sh             :34  status captured into $rc and classified immediately; >1 aborts (P-80)
+  .softhouse/capture/t286-t268-retry/run.sh                              :140  CENSUS ONLY, not gating; the gating read is the merge-base diff above, whose status IS classified
+  .softhouse/reviews/t291-review-t286/probe/wrapper-probe-t291.sh        :38  the bare grep is the THING UNDER TEST here, and its exit status is not read at all: the COUNT is (see F-T291-8).
+  .softhouse/reviews/t291-review-t286/probe/wrapper-probe-t291.sh        :54  a no-match on this reporting line cannot turn a refusal into a pass; rc was already checked above (see F-T291-8).
+
+FAILOPEN-FRONTIER TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+FAILOPEN-FRONTIER TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+FAILOPEN-FRONTIER TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+FAILOPEN-FRONTIER TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+FAILOPEN-FRONTIER TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+FAILOPEN-FRONTIER TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+FAILOPEN-FRONTIER TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+FAILOPEN-FRONTIER TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+FAILOPEN-FRONTIER TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+FAILOPEN-FRONTIER TIER2 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+FAILOPEN-FRONTIER TIER2 .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+
+LINT: FAIL — 11 instrument(s) can emit a negative they did not measure (3 live, 7 dormant, 1 entering-a-corpus-that-is-not-there).

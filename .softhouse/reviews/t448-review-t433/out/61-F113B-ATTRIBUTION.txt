@@ -1,0 +1,11 @@
+############ T448 -- f1-13b ATTRIBUTION
+  BEFORE = b102875c7e0d1b7f1ba4339180cedc5e207dfb11  (no ARM F)
+  AFTER  = 3253358d  (ARM F present)
+  target = out/A2-200-glaccounts-live-precheck.http  (MEASURED by 11-pick-targets.py, never typed)
+
+  BEFORE   section10=0  ARM-F-named=0   expected 0 / named 0
+  AFTER    section10=1  ARM-F-named=1   expected 1 / named 1
+
+T448 f1-13b ATTRIBUTION: the row's new expectation IS ARM F's doing. On the identical
+laundered tree, section 10 exits 0 and names nothing where the arm is absent, and exits 1
+NAMING the file where it is present. Removing ARM F therefore does fail T393's own drive.

@@ -1,0 +1,33 @@
+############ T448 INDEPENDENT ARM-F DRIVES
+  ref                        = 3253358d
+  post-fork mutation target  = out/A2-200-glaccounts-live-precheck.http   (MEASURED by 11-pick-targets.py)
+
+  control                            rc=0 PASS     named=0 tip=0 moved=0 graded=632  expected 0  as expected
+  P-72 calibration OK: the unmutated clone at 3253358d grades exit 0.
+
+  vacuity-redrive                    rc=1 FAIL     named=0 tip=10 moved=0 graded=0  expected 1  as expected
+  ivc1-readd-identical               rc=0 PASS     named=0 tip=0 moved=0 graded=632  expected 0  as expected
+  ivc2-readd-mutated                 rc=1 FAIL     named=1 tip=0 moved=0 graded=632  expected 1  as expected
+  ivc3-readd-then-mutate             rc=1 FAIL     named=1 tip=0 moved=0 graded=632  expected 1  as expected
+  ivc4-readd-wholly-new              rc=1 FAIL     named=1 tip=0 moved=0 graded=632  expected 1  as expected
+
+############ MATRIX
+case                    rc  verdict  named  at_tip  moved  graded  expect  result
+control                 0   PASS     0      0       0      632     0       as expected
+vacuity-redrive         1   FAIL     0      10      0      0       1       as expected
+ivc1-readd-identical    0   PASS     0      0       0      632     0       as expected
+ivc2-readd-mutated      1   FAIL     1      0       0      632     1       as expected
+ivc3-readd-then-mutate  1   FAIL     1      0       0      632     1       as expected
+ivc4-readd-wholly-new   1   FAIL     1      0       0      632     1       as expected
+
+unexpected exit codes: 0
+############ REASONS, not just colours
+  OK   control: ARM F graded the whole post-fork population and named nothing  (DIFFER and are NOT adjudicated               : 0 x1)
+  OK   vacuity: ARM F graded ZERO rows  (GRADED against a birth blob older than HEAD     : 0 x1)
+  OK   vacuity: section 9's f_graded>0 control is the thing that FAILED  (FAIL  ARM F actually GRADED x1)
+  OK   iv-c1: a byte-identical re-add leaves the EARLIEST add as the baseline, nothing named  (LAUNDERED-OR-MUTATED x0)
+  OK   iv-c2: the WEAPONISED re-add is CAUGHT and NAMED, not silently rebaselined  (LAUNDERED-OR-MUTATED out/A2-200-glaccounts-live-precheck.http x1)
+  OK   iv-c3: mutating AFTER a clean re-add is caught too  (LAUNDERED-OR-MUTATED out/A2-200-glaccounts-live-precheck.http x1)
+  OK   iv-c4: a re-add with NO similarity to the original is still caught  (LAUNDERED-OR-MUTATED out/A2-200-glaccounts-live-precheck.http x1)
+
+T448 ARM-F DRIVES VERDICT: PASS.

@@ -1,0 +1,26 @@
+############ T448 -- ABUSING THE [QUOTED-FALSE-CLAIM] TAG
+  ref = 3253358d
+
+  A control (unmutated)                                 guard exit = 0
+  P-72 calibration OK: the wiring guard is GREEN before anything is smuggled.
+
+  B smuggle-as-live-echo: the sentence now appears x2 in run-all.sh's source
+  B smuggle-as-live-echo (tag in a trailing comment)    guard exit = 0
+       DEFEATED: the guard PASSES a file that re-asserts the false claim as a live echo.
+       run-all.sh's OWN transcript now carries the sentence x2, of which
+       x1 carry NO tag at all (tagged quotation lines: x1).
+
+  C quote deleted, tag kept: the sentence appears x0, the tag x3
+  C quote-deleted-tag-kept                              guard exit = 0
+       DEFEATED: the guard PASSES a file from which the verbatim quotation is GONE,
+       which is exactly the 'bare negation removed' outcome its third red drive exists
+       to prevent -- that drive deleted the tag WITH the text, so it never separated
+       the tag from the text.
+
+############ SUMMARY
+  A control                     guard exit 0
+  B claim re-asserted, tag in a trailing comment   guard exit 0
+  C quotation deleted, three bare tags kept        guard exit 0
+
+T448 TAG-ABUSE VERDICT: BOTH CONSTRUCTIONS PASS THE GUARD. The guard grades the TAG,
+not the tag's BINDING to the quoted text, and it never reads what the file PRINTS.

@@ -1,0 +1,51 @@
+=== T448 -- F-6 CONFIRMED INDEPENDENTLY, AND ATTRIBUTED TO A COMMIT ===
+
+T433 filed F-6: `run-all.sh` is already failing on `main`, section 9 adjudicated 0 and
+exiting 1, with no ARM F in the tree. T448 reproduced it from scratch and then went one
+step further and found the commit that turned it red and the assertion that flipped.
+
+REPRODUCTION (three commands, no mutation of any kind):
+
+    git worktree add --detach /tmp/pre b102875c7e0d1b7f1ba4339180cedc5e207dfb11
+    cd /tmp/pre
+    bash .softhouse/reviews/A2-11/run-all.sh ; echo "EXIT=$?"
+
+MEASURED at b102875c (unmodified `main` tip, no ARM F anywhere in the tree):
+
+    9         0              1         *** MOVED ***
+    10        0              0         as adjudicated
+    sections run: 10    deviations: 1
+    RUN-ALL VERDICT: FAIL -- 1 section(s) moved off the adjudicated verdict.
+    EXIT=1
+
+THE FAILING ASSERTION, by name -- section 9, check 4:
+
+    FAIL  NO vector in the store, and no line of conformance.sh, mentions ANY of these
+          tokens -- the three failures touch NOTHING in the graded corpus
+          paymentChannelToFundSourceMappings v=1 c=False
+            ['.softhouse/vectors/capabilities-ledger.json'];
+          feeToIncomeAccountMappings         v=1 c=False [same];
+          penaltyToIncomeAccountMappings     v=1 c=False [same];
+          loanproduct                        v=4 c=False [capabilities-ledger.json +
+            3 ledger/LDG-ACC-0{1,2,3} accrual vectors]
+
+CAUSE, BISECTED (this is T448's addition; T433 established the fact but not the cause):
+
+    the token entered the vector store at
+      25a8b7de8e96eec1b62a8300d2586ad8dbff4a9c   2026-08-29 01:31:12 +0800
+      "T391: THREE ACCRUAL PARITY VECTORS PROMOTED, ..."
+    found by:  git log -S'paymentChannelToFundSourceMappings' -- .softhouse/vectors/capabilities-ledger.json
+
+    the script alone, at the parent of that commit and at `main`:
+      cd <worktree at 25a8b7de^>  && python3 .softhouse/reviews/A2-11/adjudicate-section1.py -> EXIT 0
+      cd <worktree at b102875c>   && python3 .softhouse/reviews/A2-11/adjudicate-section1.py -> EXIT 1
+
+    So section 9 has been RED since 2026-08-29 01:31, i.e. hours -- not "for some time".
+
+AND THE RED IS A FALSE POSITIVE OF ITS OWN SEARCH, WHICH MATTERS FOR WHOEVER FIXES IT.
+Section 9's check 4 is a SUBSTRING search over every file under .softhouse/vectors/. The
+three tokens appear in `capabilities-ledger.json` only inside a free-text `evidence` prose
+field, which says in terms that product 63 has NO such mappings and that the capability is
+still UNGRADED. So nothing about the graded corpus changed; the search cannot tell a graded
+cell from a sentence about one. The repair is to grade the search, not to move the pin --
+"not found is a statement about the search" applies symmetrically to "found".
