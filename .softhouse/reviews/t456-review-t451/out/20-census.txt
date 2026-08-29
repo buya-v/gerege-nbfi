@@ -1,0 +1,69 @@
+HEAD of this worktree                  : bb51a610
+main at                                : bb51a610
+ALL refs (any namespace)               : 766
+refs/heads only  <-- the population    : 708
+ids nameable from a head               : 215
+(id, own-head) incidences              : 291
+(id, other-ref) pairs  <-- probes      : 143
+fan-out histogram                      : {0: 148, 1: 116, 2: 27}
+MAX fan-out on this repo today         : 2
+
+A. CARRY under SHIPPED  (leading) : 25
+   T100   softhouse/T101-review-t100                         owner=T101   FOREIGN
+        commit c7eaa452d subject "T101: independent review of T100's G-8 rewrite — REJECTED on three sentences"
+   T108   softhouse/T108-grep-adjudication                   owner=T108   own
+        commit 50e886978 subject 'T108: the grep contradiction is settled — one token, two programs'
+   T108   softhouse/T131-review-t108                         owner=T131   FOREIGN
+        commit 188cdb26d subject 'T131: MICRO-FIX on T108 — the ruling holds, and the Bash-tool grep has a SECON'
+   T109   softhouse/T109-fork-point-digest-compare           owner=T109   own
+        commit fb2048deb subject 'T109: re-verified the scratch merge at the final branch head (main moved twice'
+   T109   softhouse/T127-review-t109                         owner=T127   FOREIGN
+        commit c4eff9de6 subject 'T127: MICRO-FIX on T109 — the fix is right, and its headline class-sweep findi'
+   T21    softhouse/T21-pass3-audit-rescued                  owner=T21    own
+        path .softhouse/capture/out/t21-probe-invariants-output.txt
+   T22    softhouse/T22-pathb-audit-rescued                  owner=T22    own
+        path .softhouse/capture/pathb/t22-probe/capture.sh
+   T268   softhouse/t268-rvpa-failopen                       owner=T268   own
+        commit 81eb16fee subject 'T268: R-VPA printed REFUSED in its body and GREEN on its exit code — the P-45 '
+   T268   softhouse/t281-review-t268                         owner=T281   FOREIGN
+        commit b4272ff42 subject "T281 REJECTED: T268's F-3 widening restored the fail-open it was fixing — a ze"
+   T268   softhouse/t286-t268-retry                          owner=T286   FOREIGN
+        commit 73483f582 subject 'T286: T268 traded one fail-open for another, and there was a third under the r'
+   T351   softhouse/T351-progress-accounting                 owner=T351   own
+        commit a0139c5d2 subject 'T351: derived, read-time progress instrument (no program.json edits)'
+   T351   softhouse/T369-review-t351                         owner=T369   FOREIGN
+        commit e10e3f070 subject 'T369: independent review of T351 -- REJECTED (2 numbers, 1 fail-open)'
+   T351   softhouse/T370-t351-retry                          owner=T370   FOREIGN
+        commit 4925bbef8 subject 'T370: the retry of T351 -- the headline divided Go lines by Java lines, and th'
+   T370   softhouse/T370-t351-retry                          owner=T370   own
+        commit 4925bbef8 subject 'T370: the retry of T351 -- the headline divided Go lines by Java lines, and th'
+   T370   softhouse/T376-review-t370                         owner=T376   FOREIGN
+        commit 0a674953e subject 'T376: independent review of T370 -- REJECTED, the bar exits 2 on its own branc'
+   T38    softhouse/T38-dec1-v7                              owner=T38    own
+        commit 7447705f8 subject 'T38: handoff for DEC-1 revision 7 - periodRatio (P0-T34-1), pre-disbursement b'
+   T38    softhouse/T38-dec1-v7-pass2                        owner=T38    own
+        commit 52c822858 subject 'T38 pass 2: handoff - independent re-verification of revision 7; two stale cla'
+   T428   softhouse/rescued-t428-t421tree-20260828-140005    owner=T428   own
+        path .softhouse/capture/t421-t406-conditions/out/T428-S01-counters.psql
+   T447   softhouse/T452-t447-conditions                     owner=T452   FOREIGN
+        commit 0c0794e62 subject "T452: T447's conditions on T442 worked. a2-33 sweep.sh:61 IS a real fail-open "
+   T449   softhouse/T451-t449-conditions                     owner=T451   FOREIGN
+        commit 0bf11587d subject "T451: T449's seven conditions on T350's reconciler predicate"
+   T451   softhouse/T451-t449-conditions                     owner=T451   own
+        commit de7c24b1f subject 'T451: handoff bar section from the real transcript -- EXIT 0 on e0df51c5, prob'
+   T65    softhouse/T67-review-t65                           owner=T67    FOREIGN
+        commit 2186b4e18 subject 'T67: independent adversarial review of T65 — REJECTED (P0 0, P1 3, P2 6)'
+   T67    softhouse/T67-review-t65                           owner=T67    own
+        commit 2186b4e18 subject 'T67: independent adversarial review of T65 — REJECTED (P0 0, P1 3, P2 6)'
+   T78    softhouse/T79-review-t78                           owner=T79    FOREIGN
+        commit a14875a45 subject 'T79: independent review of T78 -- REJECTED on three textual findings; the clos'
+   T99    softhouse/T135-review-t99                          owner=T135   FOREIGN
+        commit 0d6b9ded8 subject 'T135: MICRO-FIX on T99 — the rescued transcripts reproduce, F-5 is real, and t'
+B. CARRY only under RELAXED (anywhere) -- WHAT T449's PATCH ADDS : 1
+   T448   softhouse/T455-t448-conditions                     path .softhouse/capture/t455-t448-conditions/instruments/10-t455-runall-and-footer.sh
+C. name-only under BOTH           : 117
+D. UNPROBED (a git call refused)  : 0 []
+
+git calls that returned non-zero  : 0 []
+INTERPRETABILITY: section B's number is a MEASURED zero only if D and the
+non-zero git-call count are both 0 and the pair count above is non-zero.

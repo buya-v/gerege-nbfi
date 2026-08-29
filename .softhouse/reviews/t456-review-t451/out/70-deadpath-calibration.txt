@@ -1,0 +1,36 @@
+T456 -- dead-path frontier calibration on the REVIEWER'S OWN instruments (P-22).
+
+Four workers this fire reddened guard_dead_path_frontier with fixture literals spelling
+real `.softhouse/...` paths. This file records that T456's instruments do not, AND that
+the census actually looked at them -- because "108, unchanged" from a census that never
+read my files would be a negative I did not measure.
+
+corpus selector                     : git ls-files '.softhouse/*.py' '.softhouse/*.sh'
+T456 instruments inside that corpus : 10
+
+BASELINE (all 10 instruments staged, exactly as committed):
+T316-DEADPATH-CENSUS: corpus=1623 deadFiles=75 deadOccurrences=108 resolving=1547 indeterminate=122 prose=411
+
+CALIBRATION (P-72: prove it can find something before believing it found nothing).
+With ONE dead literal planted as a code string in bin/20-census.py --
+
+    _CALIB = open(".softhouse/reviews/t456-review-t451/out/NO-SUCH-FILE-t456.txt")
+
+the census moved to:
+T316-DEADPATH-CENSUS: corpus=1623 deadFiles=76 deadOccurrences=109 resolving=1547 indeterminate=122 prose=411
+
+  deadFiles 75 -> 76, deadOccurrences 108 -> 109.  The plant was then reverted and the
+  census returned to 75 / 108.  So the 108 is a MEASURED zero-growth.
+
+A NEGATIVE RESULT THAT WOULD HAVE MISLED ME, RECORDED BECAUSE IT NEARLY DID.  My first
+calibration probe was the same literal placed in a `#` comment.  It did NOT move the
+count -- the census buckets comment literals as `prose` (411 of them).  Had I stopped
+there I would have concluded "my files are not in the corpus" and reported the 108 as
+uninterpretable.  The corpus membership check above (10 files) plus the code-literal
+probe are what make the number mean anything.
+
+HOW THE FIXTURE AVOIDS THE ROW IN THE FIRST PLACE.  bin/10-fixture.sh builds every
+synthetic path from `S=".softhouse"`, `C="$S/capture"`, `R="$S/reviews"`, `B="$S/bin"`.
+They are paths inside $FIX, never references to this tree, and the census is right to
+read a tracked instrument's literal `.softhouse/...` as the latter.  The frontier pin was
+not touched.

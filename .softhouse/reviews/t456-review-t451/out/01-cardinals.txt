@@ -1,0 +1,34 @@
+listing            : /tmp/t456/tree-b102875c.txt   (b102875c -- the commit the shipped comment cites)
+tracked paths      : 9730
+
+C-T449-3  handoff paths tracked        : 542
+          ending .md                   : 337
+          NOT .md (loop `continue`s)   : 205  {'.txt': 114, '.py': 30, '.out': 26, '.sh': 18, '.zsh': 11, '.go': 2}
+          bare T###.md   (DO key)      : 229
+          A2-<n>.md      (DO key)      : 29
+          <id>-<slug>.md (key nothing) : 79   <-- the INERT population
+          shipped-before-T451 figure   : 313 == 542 - 229 == 313
+
+C-T449-4  paths MENTIONING T268        : 24
+          of those, OWNED by T268      : 0
+          mentions, by owning dir      :
+               23  .softhouse/capture/t286-t268-retry
+                1  .softhouse/reviews/t291-review-t286
+          THE ODD ONE OUT              : .softhouse/reviews/t291-review-t286/out/rerun-t268-battery.txt
+listing            : /tmp/t456/tree-main.txt   (main today (bb51a610))
+tracked paths      : 10088
+
+C-T449-3  handoff paths tracked        : 547
+          ending .md                   : 342
+          NOT .md (loop `continue`s)   : 205  {'.txt': 114, '.py': 30, '.out': 26, '.sh': 18, '.zsh': 11, '.go': 2}
+          bare T###.md   (DO key)      : 229
+          A2-<n>.md      (DO key)      : 29
+          <id>-<slug>.md (key nothing) : 84   <-- the INERT population
+          shipped-before-T451 figure   : 313 == 547 - 229 == 318
+
+C-T449-4  paths MENTIONING T268        : 24
+          of those, OWNED by T268      : 0
+          mentions, by owning dir      :
+               23  .softhouse/capture/t286-t268-retry
+                1  .softhouse/reviews/t291-review-t286
+          THE ODD ONE OUT              : .softhouse/reviews/t291-review-t286/out/rerun-t268-battery.txt
