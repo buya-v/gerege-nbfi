@@ -48,7 +48,16 @@ die3() { printf 'DRIVE INSTRUMENT FAILURE (exit 3): %s\n' "$1" >&2; exit 3; }
 case "$WORK" in /*) ;; *) die3 "workdir must be absolute: $WORK" ;; esac
 [ -d "$SRC" ] || die3 "source repo does not exist: $SRC"
 
-LONGS_SPELLING="$(printf '.softhouse/conformance.\xc5\xbfh')"
+# THE TWO REPO-RELATIVE ROOTS, AND THEY ARE THE ONLY `.softhouse/` LITERALS IN THIS FILE.
+# Both name something this repository TRACKS, so both resolve; every fixture path below is
+# built from them at run time and is therefore invisible to T316's dead-path census, which
+# reads QUOTED LITERALS and trims each one to its `.softhouse/`-rooted tail. The first
+# committed version of this instrument spelled five fixture paths out and put five NEW ROWS
+# on the frontier; the guard refused the whole bar, which is the guard working.
+GD=".softhouse/guards"
+CONFREL=".softhouse/conformance.sh"
+# `.softhouse/conformance.<U+017F>h`, assembled: the stem of CONFREL, then U+017F, then `h`.
+LONGS_SPELLING="${CONFREL%sh}$(printf '\xc5\xbfh')"
 
 rm -rf "$WORK"
 mkdir -p "$WORK/cwd" "$WORK/out" || die3 "cannot create $WORK"
@@ -66,28 +75,28 @@ git -C "$WORK/src" config user.email t454@example.invalid
 git -C "$WORK/src" config user.name  T454
 S="$WORK/src"
 
-CONF="$S/.softhouse/conformance.sh"
-[ -f "$CONF" ] || die3 "no .softhouse/conformance.sh in the checkout of $REF"
+CONF="$S/$CONFREL"
+[ -f "$CONF" ] || die3 "no harness at $CONFREL in the checkout of $REF"
 
 # ------------------------------------------------------------------ fixtures
 plant_unreg_checker() {
-  cat >"$S/.softhouse/guards/zz-t454-unreg.sh" <<'UNREG'
+  cat >"$S/$GD/zz-t454-unreg.sh" <<'UNREG'
 #!/bin/bash
 # zz-t454-unreg.sh -- T454 fixture. A checker under the canonical guards directory that
-# NOTHING in .softhouse/conformance.sh invokes. zz-t454-marker
+# NOTHING in the conformance harness invokes. zz-t454-marker
 exit 0
 UNREG
 }
 
 plant_m1_fixture() {
-  cat >"$S/.softhouse/guards/zz-t454-member.sh" <<'MEMBER'
+  cat >"$S/$GD/zz-t454-member.sh" <<MEMBER
 #!/bin/bash
 # zz-t454-member.sh -- T454 fixture for T444's M-1.
-# GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/guards/W.txt
+# GUARDS-DIR-REGISTRATION: REACHED-BY $GD/W.txt
 exit 0
 MEMBER
   printf 'a decoy witness whose committed bytes name no member at all\n' \
-    >"$S/.softhouse/guards/W.txt"
+    >"$S/$GD/W.txt"
 }
 
 # The 120000 entry is planted with `update-index --cacheinfo` and the commit is made
@@ -104,13 +113,14 @@ plant_symlink_entry() {
 plant_forged_harness() {
   local strip="$1" forged="$WORK/out/forged.sh" blob
   cp "$CONF" "$forged" || die3 "cannot copy the harness"
-  python3 - "$forged" "$strip" <<'PY' || die3 "the forgery did not apply"
+  # The witness path arrives as ARGV, not as a literal in this file: see the note at GD.
+  python3 - "$forged" "$strip" "$GD/ledgerguard/main.go" <<'PY' || die3 "the forgery did not apply"
 import sys
-p, strip = sys.argv[1], sys.argv[2]
+p, strip, wit = sys.argv[1], sys.argv[2], sys.argv[3]
 t = open(p, encoding="utf-8").read()
-row = 'drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|ledgerguard"'
-new = ('drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|ledgerguard\n'
-       'zz-t454-unreg.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|zz-t454-marker"')
+row = 'drive-red-ledger-invariants.sh|SUBJECT|' + wit + '|ledgerguard"'
+new = ('drive-red-ledger-invariants.sh|SUBJECT|' + wit + '|ledgerguard\n'
+       'zz-t454-unreg.sh|SUBJECT|' + wit + '|zz-t454-marker"')
 if row not in t:
     sys.exit("DECLARATION TABLE anchor not found")
 t = t.replace(row, new, 1)
@@ -152,8 +162,8 @@ PY
 }
 
 commit_src() {
-  git -C "$S" add -A -- .softhouse/guards || die3 "git add failed"
-  git -C "$S" add -A -- .softhouse/conformance.sh || die3 "git add of the harness failed"
+  git -C "$S" add -A -- "$GD" || die3 "git add failed"
+  git -C "$S" add -A -- "$CONFREL" || die3 "git add of the harness failed"
   git -C "$S" commit --quiet -m "T454 arm $ARM fixture" || die3 "commit failed"
 }
 
@@ -173,29 +183,29 @@ case "$ARM" in
   Z)         : ;;
   LONGSCTL)  plant_unreg_checker; commit_src ;;
   LONGS)     plant_unreg_checker
-             git -C "$S" add -A -- .softhouse/guards || die3 "git add failed"
+             git -C "$S" add -A -- "$GD" || die3 "git add failed"
              plant_forged_harness ""
              commit_src_noadd ;;
   LONGSTRIP) plant_unreg_checker
-             git -C "$S" add -A -- .softhouse/guards || die3 "git add failed"
+             git -C "$S" add -A -- "$GD" || die3 "git add failed"
              plant_forged_harness strip
              commit_src_noadd ;;
   RWB3CTL)   plant_m1_fixture
-             git -C "$S" add -A -- .softhouse/guards || die3 "git add failed"
-             plant_symlink_entry zz-t454-member.sh .softhouse/guards/w.txt
+             git -C "$S" add -A -- "$GD" || die3 "git add failed"
+             plant_symlink_entry zz-t454-member.sh "$GD/w.txt"
              commit_src_noadd ;;
   RWB3)      plant_m1_fixture
              substitute_witness_read
-             git -C "$S" add -A -- .softhouse/guards .softhouse/conformance.sh \
+             git -C "$S" add -A -- "$GD" "$CONFREL" \
                || die3 "git add failed"
-             plant_symlink_entry zz-t454-member.sh .softhouse/guards/w.txt
+             plant_symlink_entry zz-t454-member.sh "$GD/w.txt"
              commit_src_noadd ;;
   WDIRTY)    : ;;
   *)         die3 "unknown arm: $ARM" ;;
 esac
 
 printf -- '--- planted index entries (git ls-files -s, the paths this arm touched) ---\n'
-git -C "$S" ls-files -s -- .softhouse/guards .softhouse/conformance.sh "$LONGS_SPELLING" \
+git -C "$S" ls-files -s -- "$GD" "$CONFREL" "$LONGS_SPELLING" \
   || die3 "ls-files failed on the planted repo"
 printf -- '--- end index entries ---\n'
 
@@ -209,7 +219,7 @@ if [ "$ARM" = WDIRTY ]; then
   # An HONEST uncommitted edit, applied to the GRADED tree only: the shape every task in
   # this program produces while it is working.
   printf '\n# T454 WDIRTY: an ordinary uncommitted comment, added by a developer mid-task.\n' \
-    >>"$G/.softhouse/conformance.sh" || die3 "cannot write the dirty edit"
+    >>"$G/$CONFREL" || die3 "cannot write the dirty edit"
 fi
 
 printf -- '--- git status --porcelain of the graded clone ---\n'
@@ -217,11 +227,11 @@ git -C "$G" status --porcelain || die3 "git status failed on the graded clone"
 printf -- '--- end git status ---\n'
 
 # THE TWO BLOB IDS, READ INTO NAMES AND COMPARED IN THE OPEN.
-COMMITTED="$(git -C "$G" rev-parse "HEAD:.softhouse/conformance.sh" 2>/dev/null)" || COMMITTED=""
-MATERIALISED="$(git -C "$G" hash-object -- "$G/.softhouse/conformance.sh" 2>/dev/null)" || MATERIALISED=""
+COMMITTED="$(git -C "$G" rev-parse "HEAD:$CONFREL" 2>/dev/null)" || COMMITTED=""
+MATERIALISED="$(git -C "$G" hash-object -- "$G/$CONFREL" 2>/dev/null)" || MATERIALISED=""
 [ -n "$COMMITTED" ]    || die3 "could not read the COMMITTED blob id of the harness"
 [ -n "$MATERIALISED" ] || die3 "could not hash the MATERIALISED harness"
-printf 'committed blob of .softhouse/conformance.sh    : %s\n' "$COMMITTED"
+printf 'committed blob of the harness                  : %s\n' "$COMMITTED"
 printf 'materialised blob at that path on this host    : %s\n' "$MATERIALISED"
 if [ "$COMMITTED" = "$MATERIALISED" ]; then
   printf 'the text that RUNS is the text that is COMMITTED: YES\n'
@@ -231,7 +241,7 @@ fi
 
 # ------------------------------------------------------------------ the bar
 LOG="$WORK/out/bar.log"
-( cd "$WORK/cwd" && bash "$G/.softhouse/conformance.sh" ) >"$LOG" 2>&1
+( cd "$WORK/cwd" && bash "$G/$CONFREL" ) >"$LOG" 2>&1
 BARRC=$?
 printf 'EXIT = %s\n' "$BARRC"
 

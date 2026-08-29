@@ -3216,34 +3216,6 @@ guard_reconciler_ownership() {
 # haystack, one marker grep per member, one witness grep and one `git ls-files --error-unmatch`
 # per DECLARED or REACHED-BY row. No temporary file, no pipeline, no second process in the
 # invocation test.
-# ─── WHAT THIS FUNCTION STILL READS FROM THIS HOST'S FILESYSTEM ────────────────────────────
-# T445 removed every working-tree read from the MEMBER, WITNESS and DECLARED-WITNESS verdicts
-# and stated the remainder as "the only file it still reads from this host is
-# .softhouse/conformance.sh". THE HEADLINE IS RIGHT AND THE REMAINDER WAS UNDERCOUNTED: T446
-# enumerated FOUR, not one, and T454 re-derived the enumeration and removed one of them. As
-# deployed, this function reads this host's filesystem in exactly THREE places, and each is
-# judged here rather than left to the next reader to find:
-#
-#   [ ! -d "$gd" ]      does the canonical guards directory exist on this host. A question
-#                       ABOUT THIS RUN, not about a commit, and it can only fail CLOSED: a
-#                       missing directory is a refusal. KEPT.
-#   [ ! -f "$conf" ]    can this harness open itself. Same shape, same direction. KEPT.
-#   grep -v '#' "$conf" THE DEPLOYED TEXT, which is the thing the invocation test must grade —
-#                       a checker "invoked" only by a line that is not in the file that runs is
-#                       not invoked. This read is LOAD-BEARING and stays, and it is the read
-#                       T446 attacked: see guard_harness_text_is_committed, which refuses when
-#                       the bytes at a tracked path are another index entry's committed blob.
-#
-#   REMOVED BY T454: a SECOND `grep -v '#' "$conf"` inside guard_registration_decisive_lines,
-#                    added by the same commit that wrote "two reads of one quantity are two
-#                    chances to disagree" four hundred lines above. The stripped text is now
-#                    PASSED IN.
-#
-# THE DISCRIMINATOR, which is what generalises past this function: A TEST MAY READ THE WORKING
-# TREE ONLY FOR QUESTIONS ABOUT THIS RUN. For any question about what is COMMITTED — is it
-# registered, does it name me, is it tracked — the working tree is not evidence, and on a case-
-# or fold-insensitive filesystem it is not even a function of the commit. Seven fail-opens in
-# this one function have had that shape.
 guard_guards_dir_registration() {
   local gdrel=".softhouse/guards"
   local gd="$REPO_ROOT/$gdrel"
@@ -3302,6 +3274,44 @@ guard_guards_dir_registration() {
     return 1
   fi
 
+  # ─── WHAT THIS FUNCTION STILL READS FROM THIS HOST'S FILESYSTEM ────────────────────────────
+  # T445 removed every working-tree read from the MEMBER, WITNESS and DECLARED-WITNESS verdicts
+  # and stated the remainder as "the only file it still reads from this host is
+  # .softhouse/conformance.sh". THE HEADLINE IS RIGHT AND THE REMAINDER WAS UNDERCOUNTED: T446
+  # enumerated FOUR, not one, and T454 re-derived the enumeration and removed one of them. As
+  # deployed, this function reads this host's filesystem in exactly THREE places, and each is
+  # judged here rather than left to the next reader to find:
+  #
+  #   [ ! -d "$gd" ]      does the canonical guards directory exist on this host. A question
+  #                       ABOUT THIS RUN, not about a commit, and it can only fail CLOSED: a
+  #                       missing directory is a refusal. KEPT.
+  #   [ ! -f "$conf" ]    can this harness open itself. Same shape, same direction. KEPT.
+  #   grep -v '#' "$conf" THE DEPLOYED TEXT, which is the thing the invocation test must grade —
+  #                       a checker "invoked" only by a line that is not in the file that runs is
+  #                       not invoked. This read is LOAD-BEARING and stays, and it is the read
+  #                       T446 attacked: see guard_harness_text_is_committed, which refuses when
+  #                       the bytes at a tracked path are another index entry's committed blob.
+  #
+  #   REMOVED BY T454: a SECOND `grep -v '#' "$conf"` inside guard_registration_decisive_lines,
+  #                    added by the same commit that wrote "two reads of one quantity are two
+  #                    chances to disagree" four hundred lines above. The stripped text is now
+  #                    PASSED IN.
+  #
+  # THE DISCRIMINATOR, which is what generalises past this function: A TEST MAY READ THE WORKING
+  # TREE ONLY FOR QUESTIONS ABOUT THIS RUN. For any question about what is COMMITTED — is it
+  # registered, does it name me, is it tracked — the working tree is not evidence, and on a case-
+  # or fold-insensitive filesystem it is not even a function of the commit. Seven fail-opens in
+  # this one function have had that shape.
+  #
+  # THIS COMMENT SITS HERE, BELOW THE POPULATION REFUSAL, AND NOT AT THE HEAD OF THE FUNCTION.
+  # That is not taste. `.softhouse/patterns.md` cites this file BY LINE NUMBER for the
+  # population-empty refusal a few lines above — the founding instance of its vacuous-pass
+  # rule — and T454's first draft put this block ABOVE that line and moved it. T446's LOW-2
+  # is exactly that mistake made by the previous author and surviving on luck: its sweep of
+  # inbound `conformance.sh:NNNN` citations was one pin deep, and the sixteen it missed
+  # happened to be dead already. T454 swept all 1770 occurrences on both trees before and
+  # after its own commit and moved this block rather than rot a live one. THE STANDING REMEDY
+  # IS STILL TO CITE BY NAME: a line number in another file is a pin nothing here can see.
   # This file with every comment line removed. The invocation test reads THIS, not the file, so
   # a checker that is only ever discussed is not counted as run.
   local code
