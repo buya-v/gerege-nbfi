@@ -1,0 +1,142 @@
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/thousands_separator_tail
+    verbatimallowlist_test.go:110: tokenBoundedIndex("{\"formatted\":\"1,250,000.00\"}", "250,000.00") bounded = true, want false
+            F-T405-2: `,` was in neither neighbour set, so a prefix wearing a thousands separator admitted
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/thousands_separator_A17
+    verbatimallowlist_test.go:110: tokenBoundedIndex("{\"formatted\":\"1,100.12\"}", "100.12") bounded = true, want false
+            F-T405-2: F-T387-2's own case, wearing a thousands separator
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/trailing_minus_accounting
+    verbatimallowlist_test.go:110: tokenBoundedIndex("{\"formatted\":\"100.12-\"}", "100.12") bounded = true, want false
+            F-T405-2: the captured value is NEGATIVE. `-` was put in the LEFT set because a sign changes the value; that argument is symmetric and was not applied on the right
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/trailing_plus
+    verbatimallowlist_test.go:110: tokenBoundedIndex("{\"formatted\":\"100.12+\"}", "100.12") bounded = true, want false
+            F-T405-2: the same row, other sign
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/space_separated_group
+    verbatimallowlist_test.go:110: tokenBoundedIndex("{\"formatted\":\"1 250 000.00\"}", "250 000.00") bounded = true, want false
+            F-T405-2: a space group separator
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/underscore_separator
+    verbatimallowlist_test.go:110: tokenBoundedIndex("{\"raw\":100_125}", "125") bounded = true, want false
+            F-T405-2: an underscore digit separator
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/prose_full_stop
+    verbatimallowlist_test.go:110: tokenBoundedIndex("Total posted was 100.125. See note.", "100.125") bounded = false, want true
+            F-T405-3: a sentence-ending full stop is not a decimal point
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/form_encoded_plus
+    verbatimallowlist_test.go:110: tokenBoundedIndex("note=paid+100.125&locale=en", "100.125") bounded = false, want true
+            F-T405-3: `+` in x-www-form-urlencoded is a SPACE, not a sign
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/currency_code_EUR
+    verbatimallowlist_test.go:110: tokenBoundedIndex("{\"formatted\":\"100.125EUR\"}", "100.125") bounded = false, want true
+            F-T405-3: `E` here begins a currency code, not an exponent
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/hyphen_identifier_prefix
+    verbatimallowlist_test.go:110: tokenBoundedIndex("id-100.125", "100.125") bounded = false, want true
+            F-T405-3: a hyphen separating an identifier from a number is not a sign
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/range_dash
+    verbatimallowlist_test.go:110: tokenBoundedIndex("range 50.00-100.125", "100.125") bounded = false, want true
+            F-T405-3: a range dash is not a sign
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/filename_extension_dot
+    verbatimallowlist_test.go:110: tokenBoundedIndex("T352-amount-100.125.req", "100.125") bounded = false, want true
+            F-T405-3: an extension dot is not a decimal point
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/currency_code_MNT
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/csv_field_with_a_negative
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/exponent_bare
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/exponent_signed_plus
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/exponent_signed_minus
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/sign_at_start_of_buffer
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/sign_after_a_bracket
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/sign_after_a_quote
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_left_space
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_left_colon
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_right_comma
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_right_brace
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_right_paren
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_right_newline
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_quoted
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_end_of_buffer
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_start_of_buffer
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_currency_symbol_utf8
+--- FAIL: TestTheBoundaryAllowlistClosesBothDirections (0.00s)
+    --- FAIL: TestTheBoundaryAllowlistClosesBothDirections/thousands_separator_tail (0.00s)
+    --- FAIL: TestTheBoundaryAllowlistClosesBothDirections/thousands_separator_A17 (0.00s)
+    --- FAIL: TestTheBoundaryAllowlistClosesBothDirections/trailing_minus_accounting (0.00s)
+    --- FAIL: TestTheBoundaryAllowlistClosesBothDirections/trailing_plus (0.00s)
+    --- FAIL: TestTheBoundaryAllowlistClosesBothDirections/space_separated_group (0.00s)
+    --- FAIL: TestTheBoundaryAllowlistClosesBothDirections/underscore_separator (0.00s)
+    --- FAIL: TestTheBoundaryAllowlistClosesBothDirections/prose_full_stop (0.00s)
+    --- FAIL: TestTheBoundaryAllowlistClosesBothDirections/form_encoded_plus (0.00s)
+    --- FAIL: TestTheBoundaryAllowlistClosesBothDirections/currency_code_EUR (0.00s)
+    --- FAIL: TestTheBoundaryAllowlistClosesBothDirections/hyphen_identifier_prefix (0.00s)
+    --- FAIL: TestTheBoundaryAllowlistClosesBothDirections/range_dash (0.00s)
+    --- FAIL: TestTheBoundaryAllowlistClosesBothDirections/filename_extension_dot (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/currency_code_MNT (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/csv_field_with_a_negative (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/exponent_bare (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/exponent_signed_plus (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/exponent_signed_minus (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/sign_at_start_of_buffer (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/sign_after_a_bracket (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/sign_after_a_quote (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_left_space (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_left_colon (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_right_comma (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_right_brace (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_right_paren (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_right_newline (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_quoted (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_end_of_buffer (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_start_of_buffer (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_currency_symbol_utf8 (0.00s)
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x00_left
+    verbatimallowlist_test.go:149: byte 0x00 was accepted as a left boundary without being named as one. That is the blacklist's failure direction: an unforeseen byte admits silently
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x00_right
+    verbatimallowlist_test.go:156: byte 0x00 was accepted as a right boundary without being named as one
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x01_left
+    verbatimallowlist_test.go:149: byte 0x01 was accepted as a left boundary without being named as one. That is the blacklist's failure direction: an unforeseen byte admits silently
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x01_right
+    verbatimallowlist_test.go:156: byte 0x01 was accepted as a right boundary without being named as one
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x07_left
+    verbatimallowlist_test.go:149: byte 0x07 was accepted as a left boundary without being named as one. That is the blacklist's failure direction: an unforeseen byte admits silently
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x07_right
+    verbatimallowlist_test.go:156: byte 0x07 was accepted as a right boundary without being named as one
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x08_left
+    verbatimallowlist_test.go:149: byte 0x08 was accepted as a left boundary without being named as one. That is the blacklist's failure direction: an unforeseen byte admits silently
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x08_right
+    verbatimallowlist_test.go:156: byte 0x08 was accepted as a right boundary without being named as one
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x0e_left
+    verbatimallowlist_test.go:149: byte 0x0e was accepted as a left boundary without being named as one. That is the blacklist's failure direction: an unforeseen byte admits silently
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x0e_right
+    verbatimallowlist_test.go:156: byte 0x0e was accepted as a right boundary without being named as one
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1b_left
+    verbatimallowlist_test.go:149: byte 0x1b was accepted as a left boundary without being named as one. That is the blacklist's failure direction: an unforeseen byte admits silently
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1b_right
+    verbatimallowlist_test.go:156: byte 0x1b was accepted as a right boundary without being named as one
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1f_left
+    verbatimallowlist_test.go:149: byte 0x1f was accepted as a left boundary without being named as one. That is the blacklist's failure direction: an unforeseen byte admits silently
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1f_right
+    verbatimallowlist_test.go:156: byte 0x1f was accepted as a right boundary without being named as one
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x7f_left
+    verbatimallowlist_test.go:149: byte 0x7f was accepted as a left boundary without being named as one. That is the blacklist's failure direction: an unforeseen byte admits silently
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x7f_right
+    verbatimallowlist_test.go:156: byte 0x7f was accepted as a right boundary without being named as one
+--- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x00_left (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x00_right (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x01_left (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x01_right (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x07_left (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x07_right (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x08_left (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x08_right (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x0e_left (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x0e_right (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1b_left (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1b_right (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1f_left (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1f_right (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x7f_left (0.00s)
+    --- FAIL: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x7f_right (0.00s)
+=== RUN   TestTheAmbiguousGroupSeparatorResolvesTowardRefusal
+    verbatimallowlist_test.go:179: digit-COMMA-digit admitted. It is indistinguishable from a thousands separator, and the safe reading of an ambiguity about money is the refusing one
+--- FAIL: TestTheAmbiguousGroupSeparatorResolvesTowardRefusal (0.00s)
+FAIL
+FAIL	github.com/gerege/nexus/internal/apps/ledger/conformance	0.399s
+FAIL

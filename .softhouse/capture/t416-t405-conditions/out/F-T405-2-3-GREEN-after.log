@@ -1,0 +1,148 @@
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/thousands_separator_tail
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/thousands_separator_A17
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/trailing_minus_accounting
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/trailing_plus
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/space_separated_group
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/underscore_separator
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/prose_full_stop
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/form_encoded_plus
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/currency_code_EUR
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/hyphen_identifier_prefix
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/range_dash
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/filename_extension_dot
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/currency_code_MNT
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/csv_field_with_a_negative
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/exponent_bare
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/exponent_signed_plus
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/exponent_signed_minus
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/sign_at_start_of_buffer
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/sign_after_a_bracket
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/sign_after_a_quote
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_left_space
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_left_colon
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_right_comma
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_right_brace
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_right_paren
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_right_newline
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_quoted
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_end_of_buffer
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_start_of_buffer
+=== RUN   TestTheBoundaryAllowlistClosesBothDirections/live_currency_symbol_utf8
+--- PASS: TestTheBoundaryAllowlistClosesBothDirections (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/thousands_separator_tail (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/thousands_separator_A17 (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/trailing_minus_accounting (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/trailing_plus (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/space_separated_group (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/underscore_separator (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/prose_full_stop (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/form_encoded_plus (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/currency_code_EUR (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/hyphen_identifier_prefix (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/range_dash (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/filename_extension_dot (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/currency_code_MNT (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/csv_field_with_a_negative (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/exponent_bare (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/exponent_signed_plus (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/exponent_signed_minus (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/sign_at_start_of_buffer (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/sign_after_a_bracket (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/sign_after_a_quote (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_left_space (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_left_colon (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_right_comma (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_right_brace (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_right_paren (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_right_newline (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_quoted (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_end_of_buffer (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_start_of_buffer (0.00s)
+    --- PASS: TestTheBoundaryAllowlistClosesBothDirections/live_currency_symbol_utf8 (0.00s)
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x00_left
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x00_right
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x01_left
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x01_right
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x07_left
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x07_right
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x08_left
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x08_right
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x0e_left
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x0e_right
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1b_left
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1b_right
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1f_left
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1f_right
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x7f_left
+=== RUN   TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x7f_right
+--- PASS: TestAnUnnamedByteRefusesRatherThanAdmits (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x00_left (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x00_right (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x01_left (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x01_right (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x07_left (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x07_right (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x08_left (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x08_right (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x0e_left (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x0e_right (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1b_left (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1b_right (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1f_left (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x1f_right (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x7f_left (0.00s)
+    --- PASS: TestAnUnnamedByteRefusesRatherThanAdmits/byte_0x7f_right (0.00s)
+=== RUN   TestTheAmbiguousGroupSeparatorResolvesTowardRefusal
+--- PASS: TestTheAmbiguousGroupSeparatorResolvesTowardRefusal (0.00s)
+=== RUN   TestANumericPrefixOfTheCapturedAmountIsNotVerbatim
+=== RUN   TestANumericPrefixOfTheCapturedAmountIsNotVerbatim/control_the_unmutated_vector_still_admits
+=== RUN   TestANumericPrefixOfTheCapturedAmountIsNotVerbatim/request_side_prefix_A17
+=== RUN   TestANumericPrefixOfTheCapturedAmountIsNotVerbatim/oracle_side_prefix
+=== RUN   TestANumericPrefixOfTheCapturedAmountIsNotVerbatim/oracle_side_tail
+=== RUN   TestANumericPrefixOfTheCapturedAmountIsNotVerbatim/absent_text_keeps_the_original_diagnostic
+--- PASS: TestANumericPrefixOfTheCapturedAmountIsNotVerbatim (0.23s)
+    --- PASS: TestANumericPrefixOfTheCapturedAmountIsNotVerbatim/control_the_unmutated_vector_still_admits (0.05s)
+    --- PASS: TestANumericPrefixOfTheCapturedAmountIsNotVerbatim/request_side_prefix_A17 (0.05s)
+    --- PASS: TestANumericPrefixOfTheCapturedAmountIsNotVerbatim/oracle_side_prefix (0.05s)
+    --- PASS: TestANumericPrefixOfTheCapturedAmountIsNotVerbatim/oracle_side_tail (0.04s)
+    --- PASS: TestANumericPrefixOfTheCapturedAmountIsNotVerbatim/absent_text_keeps_the_original_diagnostic (0.04s)
+=== RUN   TestTheBoundaryRuleFormsNoNumber
+=== RUN   TestTheBoundaryRuleFormsNoNumber/exact_json_number
+=== RUN   TestTheBoundaryRuleFormsNoNumber/prefix_of_a_longer_number
+=== RUN   TestTheBoundaryRuleFormsNoNumber/prefix_by_one_digit
+=== RUN   TestTheBoundaryRuleFormsNoNumber/tail_of_a_longer_number
+=== RUN   TestTheBoundaryRuleFormsNoNumber/quoted_string_form
+=== RUN   TestTheBoundaryRuleFormsNoNumber/whole_number_glued_to_a_fraction
+=== RUN   TestTheBoundaryRuleFormsNoNumber/sign_on_the_left
+=== RUN   TestTheBoundaryRuleFormsNoNumber/exponent_on_the_right
+=== RUN   TestTheBoundaryRuleFormsNoNumber/absent
+=== RUN   TestTheBoundaryRuleFormsNoNumber/trailing_zero_form_is_a_different_string
+=== RUN   TestTheBoundaryRuleFormsNoNumber/one_bounded_occurrence_is_enough
+=== RUN   TestTheBoundaryRuleFormsNoNumber/nineteen_significant_digits
+=== RUN   TestTheBoundaryRuleFormsNoNumber/nineteen_significant_digits_prefix
+=== RUN   TestTheBoundaryRuleFormsNoNumber/at_start_of_buffer
+=== RUN   TestTheBoundaryRuleFormsNoNumber/at_end_of_buffer
+=== RUN   TestTheBoundaryRuleFormsNoNumber/empty_needle_never_matches
+--- PASS: TestTheBoundaryRuleFormsNoNumber (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/exact_json_number (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/prefix_of_a_longer_number (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/prefix_by_one_digit (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/tail_of_a_longer_number (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/quoted_string_form (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/whole_number_glued_to_a_fraction (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/sign_on_the_left (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/exponent_on_the_right (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/absent (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/trailing_zero_form_is_a_different_string (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/one_bounded_occurrence_is_enough (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/nineteen_significant_digits (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/nineteen_significant_digits_prefix (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/at_start_of_buffer (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/at_end_of_buffer (0.00s)
+    --- PASS: TestTheBoundaryRuleFormsNoNumber/empty_needle_never_matches (0.00s)
+=== RUN   TestThePrefixIsStillCaughtDownstreamIfAdmissionIsBypassed
+--- PASS: TestThePrefixIsStillCaughtDownstreamIfAdmissionIsBypassed (0.09s)
+PASS
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	0.572s

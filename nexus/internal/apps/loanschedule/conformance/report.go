@@ -611,15 +611,79 @@ func WriteReport(w io.Writer, s *Summary) {
 			p("         a request this port REFUSES. Each is an OPEN disagreement held at the gate named on")
 			p("         its row, and a green line there means only \"the disagreement is still exactly as")
 			p("         recorded\" — never that it has been fixed, and never that the port is right.")
-		} else if s.Ledger != nil {
+		} else if s.Ledger != nil && ledgerconf.DivergencePinCount() == 0 {
 			p("         NO DIVERGENCE IS RECORDED in this store, so the sentence above is not excluding any")
 			p("         known port/oracle disagreement. That is a fact about the CORPUS, not a fact about")
 			p("         the port: a disagreement nobody has captured is not a disagreement that is absent.")
+		} else if s.Ledger != nil {
+			// THE THIRD STATE, WHICH USED TO BORROW THE SECOND ONE'S SENTENCE
+			// [T416, closing T405's F-T405-6].
+			//
+			// The two figures beside each other here COUNT DIFFERENT THINGS:
+			// recordedDivergences() sums the ledger's GRADED divergence counters,
+			// and DivergencePinCount() is the population the store is PINNED to
+			// hold, which the ledger census satisfies from LOADED vectors. A
+			// divergence vector that loads and is then refused admission is in
+			// the second and not the first, and the branch above would then have
+			// printed "NO DIVERGENCE IS RECORDED in this store" over a store that
+			// records one.
+			//
+			// That resolves toward the SAFER-SOUNDING sentence, which is the
+			// wrong direction for a disagreement with the reference oracle, so
+			// the state gets its own words instead of the reassuring ones.
+			p("         THIS STORE IS PINNED TO HOLD %d DIVERGENCE VECTOR(S) AND THIS RUN GRADED NONE OF THEM.",
+				ledgerconf.DivergencePinCount())
+			p("         A pinned divergence that never reached the comparator is a recorded port/oracle")
+			p("         disagreement this verdict is NOT excluding because it could not see it. Read the")
+			p("         DIVERGENCE CENSUS above for which vectors loaded and what happened to them.")
 		}
 		p("         IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.")
 	case code == 1:
+		// THE EXIT-1 SENTENCE COUNTS BOTH HALVES [T416, closing T405's F-T405-5].
+		//
+		// IT DID NOT, AND THE OMISSION WAS ABOUT MONEY. This line summed
+		// s.ParityFail + s.ContractFail + s.SelfTestFail — the LOAN SCHEDULE
+		// counters and nothing else — while ExitCode() reaches 1 for the ledger
+		// half through a SEPARATE arm (s.Ledger.ParityFail + s.Ledger.RefusalFail,
+		// s.Ledger.InvariantViolations) that contributes to none of those three.
+		// So a run in which one ledger parity vector failed on
+		// `legs[0].amount_minor: MONEY want 10000026, got 10000025` printed, two
+		// lines under the census that said `ledger parity PASS 6 FAIL 1`:
+		//
+		//     VERDICT: FAIL (exit 1) — 0 mismatched vector(s), 0 invariant violation(s).
+		//
+		// The exit code was right, so no machine made a wrong decision. The
+		// sentence a HUMAN reads was false, and it was false about a
+		// one-minor-unit discrepancy in the double-entry ledger.
+		//
+		// THE FIGURES COME FROM THE SUMMARIES THEMSELVES, and from exactly the
+		// fields ExitCode() tests, so the verdict and the exit code cannot come
+		// to different conclusions about whether the ledger half failed. This is
+		// the same discipline recordedDivergences() uses one arm above; the two
+		// arms had disagreed about whether the ledger half existed at all.
+		//
+		// DivergenceFail is NOT added: ledger grade.go folds it into
+		// Ledger.ParityFail by its own stated counting rule, and adding it again
+		// would double-count the one class whose count this program is most
+		// careful about.
+		lm, lv := s.ledgerMismatches(), s.ledgerInvariantViolations()
 		p("VERDICT: FAIL (exit 1) — %d mismatched vector(s), %d invariant violation(s).",
-			s.ParityFail+s.ContractFail+s.SelfTestFail, s.InvariantViolations)
+			s.ParityFail+s.ContractFail+s.SelfTestFail+lm, s.InvariantViolations+lv)
+		// THE SPLIT, because a total alone sends a reader to the wrong half of a
+		// seven-hundred-line report. Printed from the same fields the total is
+		// summed from — a second, independently maintained count here is the
+		// defect this block just finished being.
+		if s.Ledger != nil {
+			p("         LEDGER %d mismatch(es), %d invariant violation(s)  |  LOAN SCHEDULE %d mismatch(es), %d invariant violation(s).",
+				lm, lv, s.ParityFail+s.ContractFail+s.SelfTestFail, s.InvariantViolations)
+			p("         The per-vector rows above name every failing cell, and MONEY cells are marked")
+			p("         MONEY there with their margin in minor units.")
+		} else {
+			// "Zero ledger failures" and "the ledger half did not run" are
+			// different facts and the reader is owed which one this is, for the
+			// same reason the exit-0 arm distinguishes them.
+			p("         no ledger half ran in this configuration, so this counts LOAN SCHEDULE only.")
+		}
 	default:
 		p("VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.")
 	}
@@ -638,10 +702,24 @@ func WriteReport(w io.Writer, s *Summary) {
 //
 // IT READS THE LEDGER SUMMARY AND COMPOSES NOTHING. The ledger context renders
 // its own divergence census (ledger/conformance/notgraded.go); this returns the
-// same two fields that census prints, so the verdict qualifier and the census can
-// never disagree about how many there are. A second, independently maintained
+// same two GRADED fields that census prints. A second, independently maintained
 // count here is exactly the defect A2-34 found in the hand-written not-graded
 // block.
+//
+// THE CLAIM THAT USED TO STAND HERE WAS FALSE, AND T405's F-T405-6 IS RIGHT
+// ABOUT IT [corrected by T416]. It said the qualifier and the census "can never
+// disagree about how many there are". They can, because THEY COUNT DIFFERENT
+// THINGS: this function sums the ledger's GRADED counters (DivergencePass +
+// DivergenceFail), while the census line prints "(pinned n)" from
+// DivergencePinCount() — the population the store is pinned to HOLD, satisfied
+// from LOADED vectors. A divergence vector that loads and is then refused
+// admission is counted by the second and not by the first, and the census then
+// prints "PASS 0 FAIL 0 (pinned 1)" while this returns 0.
+//
+// What is true, and is all that was ever needed, is the narrower statement: this
+// figure and the census's own PASS/FAIL pair are read from the SAME two fields,
+// so those two cannot drift apart. The pin is a third number and the caller
+// tests it separately — see the exit-0 arm's third branch.
 //
 // Nil ledger — self-test mode, a context filter, or a store with no ledger vector
 // — returns 0. The caller distinguishes "zero because there are none" from "zero
@@ -652,6 +730,46 @@ func (s *Summary) recordedDivergences() int {
 		return 0
 	}
 	return s.Ledger.DivergencePass + s.Ledger.DivergenceFail
+}
+
+// ledgerMismatches is how many LEDGER vectors this run compared against captured
+// oracle output and found different. [T416, for T405's F-T405-5]
+//
+// IT IS THE SAME EXPRESSION ExitCode() TESTS — `s.Ledger.ParityFail +
+// s.Ledger.RefusalFail` — and that is the point of it existing rather than being
+// written out at the call site. The exit-1 verdict sentence and the exit code
+// were computed from different fields for as long as both existed, and the
+// result was a MONEY mismatch in the double-entry ledger being announced as "0
+// mismatched vector(s)" by a run that had correctly exited 1.
+//
+// DivergenceFail is deliberately absent: ledger grade.go adds a divergence FAIL
+// to ParityFail as well as to its own counter (its "COUNTING RULE IS
+// ASYMMETRIC" note), so it is already in the figure below and adding it here
+// would report one failing vector as two.
+//
+// Nil ledger returns 0, and the caller must distinguish that from a graded-clean
+// ledger half by testing s.Ledger — this figure cannot carry that distinction
+// and does not pretend to.
+func (s *Summary) ledgerMismatches() int {
+	if s.Ledger == nil {
+		return 0
+	}
+	return s.Ledger.ParityFail + s.Ledger.RefusalFail
+}
+
+// ledgerInvariantViolations is the ledger half's property-invariant violations —
+// double-entry balance, and everything else ledger/conformance/invariants.go
+// asserts. [T416, for T405's F-T405-5]
+//
+// Separate from ledgerMismatches for the reason the verdict line keeps them
+// separate: a mismatch is "this port disagrees with the oracle", a violation is
+// "this posting is not a legal double entry at all", and collapsing them would
+// lose which of the two a reader is looking at. Same nil rule as above.
+func (s *Summary) ledgerInvariantViolations() int {
+	if s.Ledger == nil {
+		return 0
+	}
+	return s.Ledger.InvariantViolations
 }
 
 // sortedKeys returns m's keys in ascending byte-wise order.

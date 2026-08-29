@@ -1,0 +1,28 @@
+=== baseline (exit 0) ===
+ ledger parity PASS 10 FAIL 0
+ ledger oracle-refusal PASS 6 FAIL 0 (an HTTP status and error code the ORACLE returned
+ ledger inadmissible 0
+ ledger cells compared 268 graded, of which 63 are MONEY cells in int64 minor units
+ ledger exemptions 0 DECLARED (this schema ADMITS NONE; a declared exemption is
+ divergence vectors PASS 1 FAIL 0 (pinned 1; a `divergence` vector records
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+=== divergence-inadmissible (exit 2) ===
+ ledger parity PASS 10 FAIL 0
+ ledger oracle-refusal PASS 6 FAIL 0 (an HTTP status and error code the ORACLE returned
+ ledger inadmissible 1
+ ledger cells compared 266 graded, of which 63 are MONEY cells in int64 minor units
+ ledger exemptions 0 DECLARED (this schema ADMITS NONE; a declared exemption is
+ divergence vectors PASS 0 FAIL 0 (pinned 1; a `divergence` vector records
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+=== parity-inadmissible (exit 2) ===
+ ledger parity PASS 9 FAIL 0
+ ledger oracle-refusal PASS 6 FAIL 0 (an HTTP status and error code the ORACLE returned
+ ledger inadmissible 1
+ ledger cells compared 250 graded, of which 58 are MONEY cells in int64 minor units
+ ledger exemptions 0 DECLARED (this schema ADMITS NONE; a declared exemption is
+ divergence vectors PASS 1 FAIL 0 (pinned 1; a `divergence` vector records
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+store clean:        0 dirty

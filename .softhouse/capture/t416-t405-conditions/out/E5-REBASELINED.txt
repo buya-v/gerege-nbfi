@@ -1,0 +1,19 @@
+=== glcode ===
+    LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    FAIL             18 cells (5 money)
+        legs[0].gl_account_code: want "10399", got "10300"
+  BEFORE   exit=1   ledger parity PASS 9 FAIL 1               | VERDICT: FAIL (exit 1) — 0 mismatched vector(s), 0 invariant violation(s).
+  AFTER    exit=1   ledger parity PASS 9 FAIL 1               | VERDICT: FAIL (exit 1) — 1 mismatched vector(s), 0 invariant violation(s).
+=== amountminor ===
+    LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    FAIL             18 cells (5 money)
+        legs[0].amount_minor: MONEY want 10000026, got 10000025 (margin -1 minor units)
+  BEFORE   exit=1   ledger parity PASS 9 FAIL 1               | VERDICT: FAIL (exit 1) — 0 mismatched vector(s), 0 invariant violation(s).
+  AFTER    exit=1   ledger parity PASS 9 FAIL 1               | VERDICT: FAIL (exit 1) — 1 mismatched vector(s), 0 invariant violation(s).
+=== totals ===
+    LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    FAIL             18 cells (5 money)
+        total_debits_minor: MONEY want 12500063, got 12500062 (margin -1 minor units)
+  BEFORE   exit=1   ledger parity PASS 9 FAIL 1               | VERDICT: FAIL (exit 1) — 0 mismatched vector(s), 0 invariant violation(s).
+  AFTER    exit=1   ledger parity PASS 9 FAIL 1               | VERDICT: FAIL (exit 1) — 1 mismatched vector(s), 0 invariant violation(s).
+=== unmutated control (the run must be GREEN, or every row above is meaningless) ===
+  BEFORE   exit=0   ledger parity PASS 10 FAIL 0              | VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+  AFTER    exit=0   ledger parity PASS 10 FAIL 0              | VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+store clean:        0 dirty
