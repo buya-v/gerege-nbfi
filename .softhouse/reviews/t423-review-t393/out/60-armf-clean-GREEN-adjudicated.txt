@@ -1,0 +1,10 @@
+=== T423 ARM F (proposed) — every POST-FORK observation vs the blob at the commit
+    that FIRST ADDED it. The baseline T393 says does not exist. ===
+    target /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8c2fb441a2f25761
+    post-fork observations: 632
+    equal to their birth blob         : 631
+    adjudicated-different, UNMOVED    : 1
+    DIFFER and are NOT adjudicated    : 0
+    adjudicated but MOVED             : 0
+
+VERDICT: PASS (exit 0). Every post-fork observation still equals its birth blob.
