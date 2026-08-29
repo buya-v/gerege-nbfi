@@ -7116,7 +7116,7 @@
   },
   {
    "id": "T473",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -7130,7 +7130,7 @@
     "T466"
    ],
    "description": "Independent adversarial review of T466 (softhouse/T466-skipwt-smudge, tip 11afb281). Re-derive; do not inherit T466's or T459's numbers. This one edits the harness that grades everything.",
-   "note": "local fire 20260829-080002 iter6: DISPATCHED (reviewer pair for T466) at 2026-08-29T09:57:49Z, isolated worktree, model opus, branch softhouse/T473-review-t466."
+   "note": "local fire 20260829-080002 iter6: DISPATCHED (reviewer pair for T466) at 2026-08-29T09:57:49Z, isolated worktree, model opus, branch softhouse/T473-review-t466. || local fire 20260829-080002 iter6: DONE on softhouse/T473-review-t466 (3 commits, tip 4bce914a, 30 files, scope clean). VERDICT APPROVED WITH CONDITIONS (3 MAJOR, 4 MINOR). CONFIRMED: all three routes genuinely closed, re-driven in throwaway clones with ITS OWN fixture (forged blob 41c6da92, not T466 e9f134f0). SMUDGE IS WORSE THAN T466 HEADLINE -- the guard printed committed 7c543532 / on disk 7c543532, TWO IDENTICAL IDS over forged bytes: the recompute-this-yourself affordance did not merely miss the forgery, IT CERTIFIED IT. GREEN: three genuinely INDEPENDENT refusals for SKIPWT/ASSUME (separate paths :5252 :5411 :5545 each setting bad=1 alone); SMUDGE fires TWO not three (no index bit exists to find) -- T466 own table does not claim three, the dispatch framing did. RECOMPUTE IS CORRECT AND FAILS CLOSED: hasher extracted VERBATIM and run against git hash-object --no-filters, 0 mismatches over 18 paths of a nasty corpus (empty, 512-byte binary, CRLF, lone CR, no-trailing-newline, exec bit, invalid-UTF-8, glob/newline/tab/U+017F names, 12MiB, five symlink varieties), detects all 14 perturbations; python3 absent -> THE RECOMPUTE DID NOT RUN (exit 127) EXIT 2; silent python3 -> same. HONEST-DIRTY BOUNDARY INTACT (WDIRTY EXIT 0 probe x1 up PASS, named and printed). BUT THREE MAJORS -- see T477."
   },
   {
    "id": "T474",
@@ -7183,6 +7183,41 @@
    ],
    "description": "Repair pass on T467 under T472's MAJOR. Built ON TOP of softhouse/T467-t464-conditions; T467 is NOT merged pending this.",
    "note": "local fire 20260829-080002 iter6: DISPATCHED at 2026-08-29T10:30:01Z as the T467 repair pass under T472's MAJOR. T467 held UNMERGED deliberately -- the driver does not merge a known guard regression. Branched from softhouse/T467-t464-conditions."
+  },
+  {
+   "id": "T477",
+   "status": "in_progress",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "role": "coder",
+   "title": "T466 REPAIR PASS: closing three local-state forgery routes OPENED A FOURTH -- a PATH-resolved python3 in the trust base passes the P-72 calibration and certifies a fabricated census",
+   "branch": "softhouse/T477-t473-repair",
+   "files_hint": [
+    ".softhouse/conformance.sh",
+    ".softhouse/capture/t477-t473-repair/"
+   ],
+   "dependencies": [
+    "T466",
+    "T473"
+   ],
+   "description": "Repair pass on T466 under T473's three MAJORs. Built ON TOP of softhouse/T466-skipwt-smudge; T466 is NOT merged pending this.",
+   "note": "local fire 20260829-080002 iter6: DISPATCHED at 2026-08-29T10:39:20Z as the T466 repair pass under T473's three MAJORs. T466 held UNMERGED deliberately -- the driver does not merge a change that opens a new forgery route while closing three. Branched from softhouse/T466-skipwt-smudge."
+  },
+  {
+   "id": "T478",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "role": "coder",
+   "title": "CITATION DRIFT ON MAIN FROM THIS FIRE'S OWN MERGES -- T458's patterns.md insertion moved 233 of 1799 citations; measure the real blast radius of an append to the register",
+   "files_hint": [
+    ".softhouse/capture/t478-merge-citation-drift/"
+   ],
+   "dependencies": [],
+   "description": "FILED 2026-08-29 by the driver of fire 20260829-080002 iter6, from T473's incidental finding AGAINST THE DRIVER, not against T466.\n\nT466 went to real trouble to avoid rotting two live citations -- its first draft moved patterns.md:3271 and fire-program.sh:3217 (213 of 1799 citations) and it moved its prose BELOW the pins instead, leaving 20 moved and none load-bearing. T473 then measured that THOSE VERY TWO LINES ARE ROTTED ON main TODAY -- 233 of 1799 moved -- because the DRIVER merged T458's 133-line patterns.md insertion. A worker took care that the driver's merge then undid.\n\nDRIVER'S OWN CHECK (not a substitute for yours): the drift is REPORT-ONLY, not fatal. check-pnumber-citations.py's VERDICT is PASS with report-only findings in the evidence zone, corrected FORWARD in patterns.md and never edited in place, and the bar was ATTESTED FULL green on every merge this fire (373bf176, dbfbae4f, 8f3136cb). So this is not an incident; it is an unmeasured cost.\n\nWHAT TO DO:\n1. MEASURE THE BLAST RADIUS of an append to patterns.md: how many citations move per N lines inserted, which zones they land in (DIRECTIVE vs evidence), and how many are load-bearing (a .pin, a guard, a hard-guard input) rather than prose. Quote member SETS with their tree.\n2. ASK THE REAL QUESTION: is 'append to patterns.md' inherently a citation-rotting operation, and if so, is the FORWARD-CORRECTION convention actually sufficient, or does it just move the cost to whoever reads a stale line number next? An honest 'the convention is sufficient and here is the measurement' is a fine outcome.\n3. If a cheap mechanical mitigation exists (anchor citations by SENTENCE rather than line number -- T458 already chose a sentence anchor for its refusal text and that precedent is worth measuring), cost it. If it does not, say so rather than building a guesser.\n4. Do NOT mass-rewrite existing citations. That is a far larger and riskier change than the drift it would fix.\n\nSCOPE: your own capture dir; measurement and a written finding. Do not move any pin. Do not spell a real .softhouse/... path as a literal in a fixture (P-103). Bar on your own committed tree, probe PRESENCE before value.",
+   "note": "Filed by the driver of fire 20260829-080002 iter6 against ITS OWN merges, from T473's incidental finding. Verified report-only by the driver; the bar was green and attested on all three merges."
   }
  ],
  "cross_corroboration": {
