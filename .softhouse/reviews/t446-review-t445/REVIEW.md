@@ -536,7 +536,33 @@ Run from `/tmp/t446/finalbar`, scratch, outside the repo, on the committed tip o
 `softhouse/T446-review-t445`, with `bash` (never `sh`/`zsh`). The probe line's **PRESENCE** is read
 before its value (P-84 — an ABSENT probe line is the guard working, not `down`).
 
-<!--BARRESULT-->
+Full transcript: `evidence/90-FINAL-BAR-my-committed-tree.log`.
+`git status --porcelain` was **EMPTY before AND after** the run.
+
+```
+EXIT = 0
+grep -c 'probe = ' = 1                     <- PRESENCE read BEFORE the value (P-84)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+```
+
+| figure | required | measured on my committed tree |
+|---|---|---|
+| exit | 0 | **0** |
+| `probe = ` line count, read before its value | >= 1 | **1** |
+| probe value | — | **`up`** |
+| VERDICT | PASS 46 / 7884 | **PASS 46 / 7884** |
+| guards-dir census | unmoved | **`population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0`** |
+| `deadOccurrences` / `deadFiles` | 108 / 75 | **108 / 75** |
+| fail-open frontier | 11 == 11 | **`frontier 11, pinned at 11`; `frontier == pinned (all 11 rows, by path)`** |
+| dead-path frontier | GREEN | **GREEN, reconciliation list empty** |
+| host-state census | 18 == 18 | **`census == pinned (all 18 site(s), by path and source line)`** |
+| guards timed | 15, 0 breaches | **15, 0 breaches** |
+| wrong ledger implementations | 16, all dead | **all 16 DIED through this harness** |
+| tree clean before / after | yes / yes | **yes / yes** |
+
+The dead-path CORPUS moved 1575 -> 1596 (+21: my instruments and transcripts). Nothing pins it.
+
 
 ### 11.1 MY OWN FIRST BAR REFUSED, ON MY OWN INSTRUMENTS. RECORDED, NOT HIDDEN.
 
@@ -627,3 +653,32 @@ registration decisive lines: 7 present, 2 evaluated on an input …
 Identical cells to the pre-repair drive. **MAJOR-2 stands, and now stands on an instrument that
 cannot report a refusal it did not observe.**
 
+---
+
+## 12. VERDICT, RESTATED
+
+**APPROVED WITH CONDITIONS.**
+
+T445 did what it was asked. M-1 is closed, three more fail-opens of the same class that were live
+on `main` are closed, honest work is still accepted, the DECLARED direction no longer depends on
+this host, LOW-4's over-refusal is gone, LOW-5 is closed, C-1's sentence is corrected, C-3's rot is
+measured exactly right, and every pinned figure is where it was. I reproduced all of it with my own
+instrument on my own fixtures, and the claim that survives the hardest test — **zero working-tree
+reads of any member, witness or declared witness** — holds under my own enumeration.
+
+The conditions are the two MAJORs and they are *the next task, not this one's failure*:
+
+* **MAJOR-1.** The read T445 chose to keep is defended by a claim that is false on this host. Case
+  is not the only fold; `U+017F` beats an all-lowercase ASCII path, and I drove the whole bar to
+  `EXIT 0 / probe up / VERDICT PASS` on the T445 tip with the committed harness honest and the
+  running harness forged. **"Unreachable by construction" has now been written five times in this
+  chain and reached five times.** The remedy is two lines (`FU-T446-1`).
+* **MAJOR-2.** The watch T445 built for C-2 pins the reads and not the uses, and one substitution
+  restores M-1 with all seven pins reporting present. `FU-T445-2` was the right instinct; arm
+  `RWB3` is the measurement that makes it urgent (`FU-T446-2`).
+
+And the sixth reader should assume there is a **seventh** route and go looking for it, not conclude
+from this review that the class is now shut. I found MAJOR-1 by asking one question T445 did not:
+*is case the only thing this filesystem folds?* The next question is the one I did not finish
+answering: **what else does it fold, and what else in this harness is read from a path rather than
+from a blob?**
