@@ -1,0 +1,22 @@
+slow-git wrapper : /tmp/t456/clock/slowgit   (sleeps 3.5s; measured one call at 4.07s)
+case             : HLOAD/T955, recorded branch softhouse/T955-decoy-target (absent)
+refs naming it   : softhouse/aaa-t955-decoy (name-only, sorts FIRST),
+                   softhouse/zzz-t955-carrier (CARRIES, sorts SECOND)
+
+RED    host=fast    relocated          REFUSE    (0.2s wall)
+GREEN  host=fast    relocated          REFUSE    (0.2s wall)
+
+RED    host=SLOW    relocated          REFUSE    (29.4s wall)
+GREEN  host=SLOW    indeterminate      demote    (22.2s wall)
+        note> ...hat ref has, and no path component it OWNS, names T955 | 1 of 2 name-matching ref(s) were NOT probed: this probe's own 6.0s ceiling (REF_PROBE_SECONDS) was reached after 1 ref(s). Provenance UNVERIFIED. The task IS still demoted, because a ...
+
+====================================================================================
+fast host : RED REFUSE   GREEN REFUSE 
+SLOW host : RED REFUSE   GREEN demote 
+
+FINDING: on a SLOW host GREEN DEMOTES a task RED REFUSES to demote.
+         The count cap could not truncate a 2-ref population; the wall-clock
+         bound can. That is a state that moved in the WORK-DESTROYING
+         direction, and it is invisible to the 288-state partition because
+         the partition stubs `refs_carrying_content` -- the very function
+         whose truncation rule changed.

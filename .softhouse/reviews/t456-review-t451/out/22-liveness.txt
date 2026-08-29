@@ -1,0 +1,46 @@
+tool       : /tmp/t456/t451tree/.softhouse/bin/ready-tasks.py
+tasks.json : 344 tasks
+NOT_RUNNABLE (terminal statuses) : ['approved', 'cancelled', 'closed_as_obligation', 'done', 'merged', 'parked', 'rejected', 'superseded']
+live refs  : 710
+
+id      status        kind      polarity ref arm  carriers
+----------------------------------------------------------------------------------------------------------------------
+T241    done          merged    REFUSE   not      softhouse/t264-review-cloud-t241(T264)
+        recorded branch: softhouse/T241-site3-formula
+T268    needs_retry   commits   demote   not      softhouse/t281-review-t268(T281), softhouse/t286-t268-retry(T286)
+        recorded branch: softhouse/t268-rvpa-failopen
+T295    done          none      demote   not      softhouse/T297-review-t295(T297)
+        recorded branch: -
+T297    done          merged/CA REFUSE   not      softhouse/T297-review-t295(T297)
+        recorded branch: softhouse/t297-review-t295
+T304    done          merged    REFUSE   not      softhouse/T304-evidence-destruction(T304)
+        recorded branch: softhouse/T304b-evidence-destruction
+T305    done          merged/CA REFUSE   not      softhouse/T305-openingbalance-accepting-side(T305)
+        recorded branch: softhouse/t305-openingbalance-accepting-side
+T306    merged        merged    REFUSE   not      softhouse/T306-adjudicate-admit-widening(T306)
+        recorded branch: softhouse/T306-admit-gate-adjudication
+T351    needs_retry   commits   demote   not      softhouse/T369-review-t351(T369), softhouse/T370-t351-retry(T370)
+        recorded branch: softhouse/T351-progress-accounting
+T370    parked        commits   demote   not      softhouse/T376-review-t370(T376)
+        recorded branch: softhouse/T370-t351-retry
+T397    merged        merged    REFUSE   not      softhouse/T405-review-t397(T405)
+        recorded branch: softhouse/T397-t387-conditions
+T400    merged        merged    REFUSE   not      softhouse/T410-review-t400(T410)
+        recorded branch: softhouse/T400-t385-conditions
+T402    merged        merged    REFUSE   not      softhouse/T408-review-t402(T408)
+        recorded branch: softhouse/T402-t386-conditions
+T428    merged        merged    REFUSE   not      softhouse/rescued-t428-t421tree-20260828-140005(T428)
+        recorded branch: softhouse/T428-review-t421
+T447    merged        merged    REFUSE   not      softhouse/T452-t447-conditions(T452)
+        recorded branch: softhouse/T447-review-t442
+T449    merged        merged    REFUSE   not      softhouse/T451-t449-conditions(T451)
+        recorded branch: softhouse/T449-review-t350
+
+======================================================================================================================
+ids where a FOREIGN ref ACTUALLY buys a refusal today (arm reached, non-terminal, polarity REFUSE): 0
+   NONE on this tasks.json, on this day, with these refs. That is a statement
+   about THIS measurement, not a property of the predicate: the same pairs
+   become reachable the moment a recorded branch is pruned or parked.
+
+Reachability is decided by the KIND `branch_wip` returns, not by status alone --
+which is the half T451's out/22-liveness.txt did not measure.

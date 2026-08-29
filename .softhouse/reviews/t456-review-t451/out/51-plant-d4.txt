@@ -1,0 +1,83 @@
+D4 PLANTED into /tmp/t456/d4/rt_d4.py
+   swapped a 1223-char arm with a 759-char arm; files differ by 0 bytes
+   PROOF THE PLANT IS LIVE (the two arms now appear in the opposite order):
+      first occurrence of 'if carriers is None or unprobed:'   at offset 105510
+      first occurrence of 'if carriers:'                       at offset 106269
+
+==============================================================================
+LEG 1 -- T451's 288-state partition, GREEN vs D4-PLANTED GREEN
+==============================================================================
+==============================================================================
+RED   (main's bytes)   /tmp/t456/mods/rt_green.py   (refs_carrying_content arity 5)
+==============================================================================
+states enumerated             : 288   (8 branch x 4 landed x 9 ref)
+states with NO usable verdict : 0
+states with TWO verdicts      : 0   <- arms match AND DISAGREE (the defect)
+states w/ redundant agreeing arms: 9   (pre-existing; both return REFUSE)
+      merged-unverified    merged-unverified (==) + merged* (startswith)
+arm-transcription MISMATCHES  : 0   <- this file disagrees with the code
+exceptions raised             : 0
+kind -> polarity (a kind with two polarities is the defect):
+      absent               demote           36 states
+      commits              demote           36 states
+      indeterminate        demote           11 states
+      merged               REFUSE           36 states
+      merged-unverified    REFUSE            9 states
+      name-only-refs       demote            1 states
+      relocated            REFUSE            8 states
+      stillborn            demote            2 states
+      stillborn-carried    REFUSE            4 states
+      unstarted            demote            1 states
+      unverified           demote          144 states
+      TOTAL                                288 states
+
+==============================================================================
+GREEN (this tree)   /tmp/t456/d4/rt_d4.py   (refs_carrying_content arity 5)
+==============================================================================
+states enumerated             : 288   (8 branch x 4 landed x 9 ref)
+states with NO usable verdict : 0
+states with TWO verdicts      : 0   <- arms match AND DISAGREE (the defect)
+states w/ redundant agreeing arms: 9   (pre-existing; both return REFUSE)
+      merged-unverified    merged-unverified (==) + merged* (startswith)
+arm-transcription MISMATCHES  : 0   <- this file disagrees with the code
+exceptions raised             : 0
+kind -> polarity (a kind with two polarities is the defect):
+      absent               demote           36 states
+      commits              demote           36 states
+      indeterminate        demote           13 states
+      merged               REFUSE           36 states
+      merged-unverified    REFUSE            9 states
+      name-only-refs       demote            1 states
+      relocated            REFUSE            8 states
+      stillborn            demote            2 states
+      stillborn-carried    REFUSE            2 states
+      unstarted            demote            1 states
+      unverified           demote          144 states
+      TOTAL                                288 states
+
+
+==============================================================================
+LEG 2 -- T456's per-state direction check, GREEN (clean) vs D4-PLANTED GREEN
+==============================================================================
+RED   /tmp/t456/mods/rt_green.py   (arity 5)  states=288
+GREEN /tmp/t456/d4/rt_d4.py   (arity 5)  states=288
+states raising           : 0 []
+states with polarity NONE: 0
+
+POLARITY TRANSITIONS over all 288 states:
+   REFUSE   -> REFUSE   :  55
+   REFUSE   -> demote   :   2   <== THE DESTRUCTIVE DIRECTION (T324/T330)
+   demote   -> demote   : 231
+
+REFUSE -> demote (work-destroying) : 2
+   ('zero-ancestor', 'none+complete', 'carr1 name0 unpr1')   stillborn-carried -> indeterminate
+   ('zero-ancestor', 'none+complete', 'carr1 name1 unpr1')   stillborn-carried -> indeterminate
+demote -> REFUSE (conservative)    : 0
+
+KIND REDISTRIBUTION (same state, kind changed but polarity may not have):
+   stillborn-carried    -> indeterminate        :   2
+
+RED   kind census: {'absent': 36, 'commits': 36, 'indeterminate': 11, 'merged': 36, 'merged-unverified': 9, 'name-only-refs': 1, 'relocated': 8, 'stillborn': 2, 'stillborn-carried': 4, 'unstarted': 1, 'unverified': 144}  total=288
+GREEN kind census: {'absent': 36, 'commits': 36, 'indeterminate': 13, 'merged': 36, 'merged-unverified': 9, 'name-only-refs': 1, 'relocated': 8, 'stillborn': 2, 'stillborn-carried': 2, 'unstarted': 1, 'unverified': 144}  total=288
+
+LEG 2 exit code: 1  (non-zero == the defect was CAUGHT)

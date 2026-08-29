@@ -1,0 +1,26 @@
+ref resolves at 0a23488d4
+
+SUBJECT HALF (generous, `anywhere`) -- commits this ref has that main does not:
+   0a23488d  names T428? no   'RESCUED: WIP from a worker that never signalled done (fire 20260828-140005)'
+   subject hits: 0  <-- the sweep's boilerplate names NO id, so this half is mute
+
+PATH HALF -- 3 path(s), per COMPONENT:
+   .softhouse/capture/t421-t406-conditions/out/T428-S01-counters.psql
+      leading(OWNS)  -> ['T428-S01-counters.psql']
+      anywhere(ment) -> ['T428-S01-counters.psql']
+   .softhouse/capture/t421-t406-conditions/out/T428-S01-counters.sql
+      leading(OWNS)  -> ['T428-S01-counters.sql']
+      anywhere(ment) -> ['T428-S01-counters.sql']
+   .softhouse/capture/t421-t406-conditions/out/T428-S01-counters.txt
+      leading(OWNS)  -> ['T428-S01-counters.txt']
+      anywhere(ment) -> ['T428-S01-counters.txt']
+
+  CARRIES under SHIPPED  (leading ) : True   (3/3 paths own)
+  CARRIES under RELAXED  (anywhere) : True   (3/3 paths match)
+
+COUNTERFACTUAL -- T449's fixture filename, on the SAME directory:
+   .softhouse/capture/t421-t406-conditions/out/work.txt                   leading=[] anywhere=[]
+   .softhouse/capture/t421-t406-conditions/out/work.txt                   leading=[] anywhere=[]
+   .softhouse/capture/t421-t406-conditions/out/work.txt                   leading=[] anywhere=[]
+  -> with a filename that names nobody the OWNING anchor goes silent, which is
+     exactly and only why T449's case K looked uncaught.

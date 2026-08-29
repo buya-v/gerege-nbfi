@@ -1,0 +1,97 @@
+fixture           : /tmp/t456/fixture
+RED               : /tmp/t456/mods/rt_red.py
+GREEN             : /tmp/t456/mods/rt_green.py
+RELAX (T449 patch): /tmp/t456/drive/rt_relaxed.py   [planted here, 1 site]
+
+============================================================================================
+G/T900       branch parked at dispatch AND a rescue ref carries the work
+             recorded branch softhouse/T900-work
+   RED    stillborn              demote 
+        !! Its branch softhouse/T900-work exists at cc27492a9, has NO commit ahead of main, and is an ancestor of main ONLY BECAUSE IT IS MAIN: the probes ran and NOTHING bearing id T900 is on main -- no commit subject `T900:` or `Merge T900:`, no tracked path with a component naming T900. This is the shape `git worktree add -b` produces for a worker killed before its first commit: the branch was cut from the driver's own dispatch commit and never moved. It reads as MERGED to `merge-base --is-ancestor` and it is UNSTARTED. Fire 20260829-080002 printed 'The work LANDED' for exactly this on T431, while 
+   GREEN  stillborn-carried      REFUSE 
+        !! Its branch softhouse/T900-work exists at cc27492a9, has NO commit ahead of main, and is an ancestor of main ONLY BECAUSE IT IS MAIN: the probes ran and NOTHING bearing id T900 is on main -- no commit subject `T900:` or `Merge T900:`, no tracked path with a component naming T900. This is the shape `git worktree add -b` produces for a worker killed before its first commit: the branch was cut from the driver's own dispatch commit and never moved. It reads as MERGED to `merge-base --is-ancestor`. BUT IT IS NOT UNSTARTED, AND THIS ARM USED TO SAY IT WAS. 1 live ref(s) CARRY CONTENT for id T900 u
+   RELAX  stillborn-carried      REFUSE 
+        !! Its branch softhouse/T900-work exists at cc27492a9, has NO commit ahead of main, and is an ancestor of main ONLY BECAUSE IT IS MAIN: the probes ran and NOTHING bearing id T900 is on main -- no commit subject `T900:` or `Merge T900:`, no tracked path with a component naming T900. This is the shape `git worktree add -b` produces for a worker killed before its first commit: the branch was cut from the driver's own dispatch commit and never moved. It reads as MERGED to `merge-base --is-ancestor`. BUT IT IS NOT UNSTARTED, AND THIS ARM USED TO SAY IT WAS. 1 live ref(s) CARRY CONTENT for id T900 u
+
+============================================================================================
+G2/T901      same evidence, recorded branch DELETED
+             recorded branch softhouse/T901-work
+   RED    relocated              REFUSE 
+        Its recorded branch softhouse/T901-work does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T901 -- softhouse/rescued-t901-work-20260829 -- path .softhouse/capture/t901-work/out/wip.txt in the diff of r
+   GREEN  relocated              REFUSE 
+        Its recorded branch softhouse/T901-work does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T901 -- softhouse/rescued-t901-work-20260829 -- path .softhouse/capture/t901-work/out/wip.txt in the diff of r
+   RELAX  relocated              REFUSE 
+        Its recorded branch softhouse/T901-work does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T901 -- softhouse/rescued-t901-work-20260829 -- path .softhouse/capture/t901-work/out/wip.txt in the diff of r
+
+============================================================================================
+R2/T982      a swept REVIEWER worktree; boilerplate subject; path is T983's review OF T982
+             recorded branch softhouse/T982-review-target
+   RED    name-only-refs         demote 
+        Its recorded branch softhouse/T982-review-target does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED, AND THIS IS THE T350 CASE: 1 live ref(s) carry id T982 IN THEIR NAME -- softhouse/rescued-t983-review-t982-20260829 -- and NOT ONE of them carries any content belonging to it. No commit on
+   GREEN  name-only-refs         demote 
+        Its recorded branch softhouse/T982-review-target does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED, AND THIS IS THE T350 CASE: 1 live ref(s) carry id T982 IN THEIR NAME -- softhouse/rescued-t983-review-t982-20260829 -- and NOT ONE of them OWNS any content belonging to it. No commit only 
+   RELAX  relocated              REFUSE 
+        Its recorded branch softhouse/T982-review-target does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T982 -- softhouse/rescued-t983-review-t982-20260829 -- path .softhouse/reviews/t983-review-t982/REVIE
+
+============================================================================================
+K/T945       T449 case K: work under another id's dir, filename names nobody
+             recorded branch softhouse/T945-t944-conditions
+   RED    name-only-refs         demote 
+        Its recorded branch softhouse/T945-t944-conditions does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED, AND THIS IS THE T350 CASE: 1 live ref(s) carry id T945 IN THEIR NAME -- softhouse/rescued-t945-t944-conditions-20260829 -- and NOT ONE of them carries any content belonging to it. No com
+   GREEN  name-only-refs         demote 
+        Its recorded branch softhouse/T945-t944-conditions does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED, AND THIS IS THE T350 CASE: 1 live ref(s) carry id T945 IN THEIR NAME -- softhouse/rescued-t945-t944-conditions-20260829 -- and NOT ONE of them OWNS any content belonging to it. No commit
+   RELAX  relocated              REFUSE 
+        Its recorded branch softhouse/T945-t944-conditions does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T945 -- softhouse/rescued-t945-t944-conditions-20260829 -- path .softhouse/capture/t944-t945-condit
+
+============================================================================================
+KOWN/T947    case K WITH this program's filename convention (the live T428 shape)
+             recorded branch softhouse/T947-t944-conditions
+   RED    relocated              REFUSE 
+        Its recorded branch softhouse/T947-t944-conditions does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T947 -- softhouse/rescued-t947-t944-conditions-20260829 -- path .softhouse/capture/t944-t947-condit
+   GREEN  relocated              REFUSE 
+        Its recorded branch softhouse/T947-t944-conditions does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T947 -- softhouse/rescued-t947-t944-conditions-20260829 -- path .softhouse/capture/t944-t947-condit
+   RELAX  relocated              REFUSE 
+        Its recorded branch softhouse/T947-t944-conditions does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T947 -- softhouse/rescued-t947-t944-conditions-20260829 -- path .softhouse/capture/t944-t947-condit
+
+============================================================================================
+S/T990       rescue ref touching only a SHARED file -- names no id at all
+             recorded branch softhouse/T990-shared-file
+   RED    stillborn              demote 
+        !! Its branch softhouse/T990-shared-file exists at cc27492a9, has NO commit ahead of main, and is an ancestor of main ONLY BECAUSE IT IS MAIN: the probes ran and NOTHING bearing id T990 is on main -- no commit subject `T990:` or `Merge T990:`, no tracked path with a component naming T990. This is the shape `git worktree add -b` produces for a worker killed before its first commit: the branch was cut from the driver's own dispatch commit and never moved. It reads as MERGED to `merge-base --is-ancestor` and it is UNSTARTED. Fire 20260829-080002 printed 'The work LANDED' for exactly this on T431,
+   GREEN  stillborn              demote 
+        !! Its branch softhouse/T990-shared-file exists at cc27492a9, has NO commit ahead of main, and is an ancestor of main ONLY BECAUSE IT IS MAIN: the probes ran and NOTHING bearing id T990 is on main -- no commit subject `T990:` or `Merge T990:`, no tracked path with a component naming T990. This is the shape `git worktree add -b` produces for a worker killed before its first commit: the branch was cut from the driver's own dispatch commit and never moved. It reads as MERGED to `merge-base --is-ancestor`. AND IT IS UNSTARTED -- MEASURED, not assumed: 1 live ref(s) carry id T990 IN THEIR NAME -- s
+   RELAX  stillborn              demote 
+        !! Its branch softhouse/T990-shared-file exists at cc27492a9, has NO commit ahead of main, and is an ancestor of main ONLY BECAUSE IT IS MAIN: the probes ran and NOTHING bearing id T990 is on main -- no commit subject `T990:` or `Merge T990:`, no tracked path with a component naming T990. This is the shape `git worktree add -b` produces for a worker killed before its first commit: the branch was cut from the driver's own dispatch commit and never moved. It reads as MERGED to `merge-base --is-ancestor`. AND IT IS UNSTARTED -- MEASURED, not assumed: 1 live ref(s) carry id T990 IN THEIR NAME -- s
+
+============================================================================================
+HLOAD/T955   2 name-matching refs, the only carrier SECOND in sort order
+             recorded branch softhouse/T955-decoy-target
+   RED    relocated              REFUSE 
+        Its recorded branch softhouse/T955-decoy-target does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T955 -- softhouse/zzz-t955-carrier -- commit 8952a5ca2 on refs/heads/softhouse/zzz-t955-carrier, subje
+   GREEN  relocated              REFUSE 
+        Its recorded branch softhouse/T955-decoy-target does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T955 -- softhouse/zzz-t955-carrier -- commit 8952a5ca2 on refs/heads/softhouse/zzz-t955-carrier, subje
+   RELAX  relocated              REFUSE 
+        Its recorded branch softhouse/T955-decoy-target does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T955 -- softhouse/zzz-t955-carrier -- commit 8952a5ca2 on refs/heads/softhouse/zzz-t955-carrier, subje
+
+============================================================================================
+E/T351       MUST-BLOCK control: live ref, real OWNING content, branch renamed
+             recorded branch softhouse/T351-progress-accounting
+   RED    relocated              REFUSE 
+        Its recorded branch softhouse/T351-progress-accounting does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T351 -- softhouse/T351-progress-accounting-renamed -- commit 9d868fba9 on refs/heads/softhouse/
+   GREEN  relocated              REFUSE 
+        Its recorded branch softhouse/T351-progress-accounting does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T351 -- softhouse/T351-progress-accounting-renamed -- commit 9d868fba9 on refs/heads/softhouse/
+   RELAX  relocated              REFUSE 
+        Its recorded branch softhouse/T351-progress-accounting does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) CARRY CONTENT for id T351 -- softhouse/T351-progress-accounting-renamed -- commit 9d868fba9 on refs/heads/softhouse/
+
+============================================================================================
+SUMMARY -- kind / polarity
+============================================================================================
+case         RED                            GREEN                          RELAXED (T449)                
+G/T900       stillborn demote               stillborn-carried REFUSE       stillborn-carried REFUSE         <== GREEN CHANGED
+G2/T901      relocated REFUSE               relocated REFUSE               relocated REFUSE              
+R2/T982      name-only-refs demote          name-only-refs demote          relocated REFUSE                 <== T449's PATCH CHANGES THIS
+K/T945       name-only-refs demote          name-only-refs demote          relocated REFUSE                 <== T449's PATCH CHANGES THIS
+KOWN/T947    relocated REFUSE               relocated REFUSE               relocated REFUSE              
+S/T990       stillborn demote               stillborn demote               stillborn demote              
+HLOAD/T955   relocated REFUSE               relocated REFUSE               relocated REFUSE              
+E/T351       relocated REFUSE               relocated REFUSE               relocated REFUSE              

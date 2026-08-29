@@ -1,0 +1,14 @@
+fixture at /tmp/t456/fixture  (dispatch cc27492a90f32b4a9e58dd7556332f20dbc43a9d)
+refs:
+  ref main
+  ref softhouse/T351-progress-accounting-renamed
+  ref softhouse/T900-work
+  ref softhouse/T990-shared-file
+  ref softhouse/aaa-t955-decoy
+  ref softhouse/rescued-t900-work-20260829
+  ref softhouse/rescued-t901-work-20260829
+  ref softhouse/rescued-t945-t944-conditions-20260829
+  ref softhouse/rescued-t947-t944-conditions-20260829
+  ref softhouse/rescued-t983-review-t982-20260829
+  ref softhouse/rescued-t990-shared-file-20260829
+  ref softhouse/zzz-t955-carrier
