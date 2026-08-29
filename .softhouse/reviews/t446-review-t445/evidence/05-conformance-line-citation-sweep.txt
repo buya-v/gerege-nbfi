@@ -1,0 +1,1011 @@
+.claude/skills/softhouse-program/SKILL.md:252:conformance.sh:281
+    main  :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+    tip   :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+.softhouse/bin/fire-program.sh:1406:conformance.sh:3217-3220
+    main  :3217 = # per DECLARED or REACHED-BY row. No temporary file, no pipeline, no second process in the
+    tip   :3217 = # per DECLARED or REACHED-BY row. No temporary file, no pipeline, no second process in the
+.softhouse/bin/go-env.sh:75:conformance.sh:396
+    main  :396 = set -u -o pipefail
+    tip   :396 = set -u -o pipefail
+.softhouse/conformance.sh:3119:conformance.sh:1484
+    main  :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+    tip   :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+.softhouse/conformance.sh:3159:conformance.sh:396
+    main  :396 = set -u -o pipefail
+    tip   :396 = set -u -o pipefail
+.softhouse/gates.md:142:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/gates.md:770:conformance.sh:31
+    main  :31 = #      5.3.9, argv[0]=sh; T113 re-measured on 5.3.9, argv[0]=sh, `--posix`,
+    tip   :31 = #      5.3.9, argv[0]=sh; T113 re-measured on 5.3.9, argv[0]=sh, `--posix`,
+.softhouse/guards/check-dead-path-frontier.sh:48:conformance.sh:1715
+    main  :1715 =     warn "conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):"
+    tip   :1715 =     warn "conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):"
+.softhouse/guards/ledgerguard/main.go:14:conformance.sh:1484
+    main  :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+    tip   :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T103.md:29:conformance.sh:68
+    main  :68 = #   a duplicate `case_id`, which REFUSES the run at 2. A refusal read as an outage
+    tip   :68 = #   a duplicate `case_id`, which REFUSES the run at 2. A refusal read as an outage
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T106.md:257:conformance.sh:113-118
+    main  :113 = #
+    tip   :113 = #
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T106.md:28:conformance.sh:96-99
+    main  :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+    tip   :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T106.md:29:conformance.sh:113-118
+    main  :113 = #
+    tip   :113 = #
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T108.md:222:conformance.sh:184
+    main  :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+    tip   :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T108.md:224:conformance.sh:201
+    main  :201 = #   three.] So the threat is real and reachable — it is just not the one that was
+    tip   :201 = #   three.] So the threat is real and reachable — it is just not the one that was
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113.md:25:conformance.sh:96-99
+    main  :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+    tip   :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113.md:312:conformance.sh:512
+    main  :512 = # sentence. So the ledger report COUNTS its declared exemptions on every run, and
+    tip   :512 = # sentence. So the ledger report COUNTS its declared exemptions on every run, and
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113.md:449:conformance.sh:104-147
+    main  :104 = #   `bash -r` (restricted) is such a shell: it refuses the `>/dev/null 2>&1` the
+    tip   :104 = #   `bash -r` (restricted) is such a shell: it refuses the `>/dev/null 2>&1` the
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113.md:449:conformance.sh:96-99
+    main  :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+    tip   :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113.md:450:conformance.sh:113-118
+    main  :113 = #
+    tip   :113 = #
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113.md:450:conformance.sh:182-208
+    main  :182 = #   %s value)` reads a final line that has no terminator, `read` returns non-zero,
+    tip   :182 = #   %s value)` reads a final line that has no terminator, `read` returns non-zero,
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113.md:58:conformance.sh:123-136
+    main  :123 = #   — so every way of not running the probe yields an empty observation and FAILS
+    tip   :123 = #   — so every way of not running the probe yields an empty observation and FAILS
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113.md:75:conformance.sh:220-224
+    main  :220 = #   delimiter occurrence anywhere — same character or a different IFS character —
+    tip   :220 = #   delimiter occurrence anywhere — same character or a different IFS character —
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113.md:82:conformance.sh:291
+    main  :291 = #       one. `[` is a command word too, and it is the FIRST command the guard
+    tip   :291 = #       one. `[` is a command word too, and it is the FIRST command the guard
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T119.md:27:conformance.sh:189
+    main  :189 = #   FIRST, BY WHAT ROUTE COULD ONE BE IN FORCE? Not the one every matrix in this
+    tip   :189 = #   FIRST, BY WHAT ROUTE COULD ONE BE IN FORCE? Not the one every matrix in this
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T119.md:46:conformance.sh:296
+    main  :296 = #       is not [VERIFIED: T113, 3.2.57 and 5.3.9].
+    tip   :296 = #       is not [VERIFIED: T113, 3.2.57 and 5.3.9].
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T119.md:46:conformance.sh:38-52
+    main  :38 = # 0, 1 and 2 are the verdict codes and there are still only three of them; 3 is not
+    tip   :38 = # 0, 1 and 2 are the verdict codes and there are still only three of them; 3 is not
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T121.md:127:conformance.sh:59
+    main  :59 = # and **exit 2** — and 2 is this harness's "unusable" code, which at the time was
+    tip   :59 = # and **exit 2** — and 2 is this harness's "unusable" code, which at the time was
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T121.md:33:conformance.sh:171-174
+    main  :171 = #   against a hostile environment in general — see the next paragraph — and it
+    tip   :171 = #   against a hostile environment in general — see the next paragraph — and it
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T127.md:110:conformance.sh:37-64
+    main  :37 = #
+    tip   :37 = #
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T127.md:41:conformance.sh:155-169
+    main  :155 = #   about". It does not. The block that line number pointed at is `WHY IT EXISTS`
+    tip   :155 = #   about". It does not. The block that line number pointed at is `WHY IT EXISTS`
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T13.md:301:conformance.sh:109-121
+    main  :109 = #   nowhere — and exited **2**. A shell-selection mistake wearing the oracle's
+    tip   :109 = #   nowhere — and exited **2**. A shell-selection mistake wearing the oracle's
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T13.md:317:conformance.sh:96-104
+    main  :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+    tip   :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T13.md:327:conformance.sh:88-121
+    main  :88 = #       feature-tests the construct itself: if `< <(…)` does not work HERE, this
+    tip   :88 = #       feature-tests the construct itself: if `< <(…)` does not work HERE, this
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130.md:334:conformance.sh:512
+    main  :512 = # sentence. So the ledger report COUNTS its declared exemptions on every run, and
+    tip   :512 = # sentence. So the ledger report COUNTS its declared exemptions on every run, and
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T130.md:493:conformance.sh:30
+    main  :30 = #      bash), `sh conformance.sh` is ADMITTED [VERIFIED: T97 — bash 5.2.37 and
+    tip   :30 = #      bash), `sh conformance.sh` is ADMITTED [VERIFIED: T97 — bash 5.2.37 and
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T131.md:52:conformance.sh:184
+    main  :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+    tip   :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T150.md:175:conformance.sh:70-71
+    main  :70 = #   `exit 2` AND `probe != up`, taken from the `reference oracle (…) probe = up|down`
+    tip   :70 = #   `exit 2` AND `probe != up`, taken from the `reference oracle (…) probe = up|down`
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T150.md:200:conformance.sh:208-215
+    main  :208 = #   that `IFS=e` "would have been a false refusal without the prefix, so the prefix
+    tip   :208 = #   that `IFS=e` "would have been a false refusal without the prefix, so the prefix
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T150.md:78:conformance.sh:208-215
+    main  :208 = #   that `IFS=e` "would have been a false refusal without the prefix, so the prefix
+    tip   :208 = #   that `IFS=e` "would have been a false refusal without the prefix, so the prefix
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T62.md:31:conformance.sh:31
+    main  :31 = #      5.3.9, argv[0]=sh; T113 re-measured on 5.3.9, argv[0]=sh, `--posix`,
+    tip   :31 = #      5.3.9, argv[0]=sh; T113 re-measured on 5.3.9, argv[0]=sh, `--posix`,
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T68.md:466:conformance.sh:579-660
+    main  :579 = #                          place rather than bumped for appearance: LDG-REFUSE-04
+    tip   :579 = #                          place rather than bumped for appearance: LDG-REFUSE-04
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T68.md:475:conformance.sh:355
+    main  :355 =   conformance_shell_why="this IS bash ${BASH_VERSION}, but the process-substitution probe did not de
+    tip   :355 =   conformance_shell_why="this IS bash ${BASH_VERSION}, but the process-substitution probe did not de
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T81-transcripts/A4-main-zsh.out:1:conformance.sh:27
+    main  :27 = #      `./.softhouse/conformance.sh`.
+    tip   :27 = #      `./.softhouse/conformance.sh`.
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T81.md:273:conformance.sh:27
+    main  :27 = #      `./.softhouse/conformance.sh`.
+    tip   :27 = #      `./.softhouse/conformance.sh`.
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T82.md:522:conformance.sh:68
+    main  :68 = #   a duplicate `case_id`, which REFUSES the run at 2. A refusal read as an outage
+    tip   :68 = #   a duplicate `case_id`, which REFUSES the run at 2. A refusal read as an outage
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T86.md:96:conformance.sh:8
+    main  :8 = #
+    tip   :8 = #
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T97.md:446:conformance.sh:8
+    main  :8 = #
+    tip   :8 = #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-12.md:430:conformance.sh:573
+    main  :573 = #                          are the CALLER'S characters and are graded by nothing.
+    tip   :573 = #                          are the CALLER'S characters and are graded by nothing.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-12.md:487:conformance.sh:573
+    main  :573 = #                          are the CALLER'S characters and are graded by nothing.
+    tip   :573 = #                          are the CALLER'S characters and are graded by nothing.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-12.md:582:conformance.sh:573
+    main  :573 = #                          are the CALLER'S characters and are graded by nothing.
+    tip   :573 = #                          are the CALLER'S characters and are graded by nothing.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md:204:conformance.sh:401
+    main  :401 = NEXUS_DIR="$REPO_ROOT/nexus"
+    tip   :401 = NEXUS_DIR="$REPO_ROOT/nexus"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md:136:conformance.sh:804-811
+    main  :804 = # that have nothing to do with the store being clean — a renamed store root, a
+    tip   :804 = # that have nothing to do with the store being clean — a renamed store root, a
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md:222:conformance.sh:411
+    main  :411 = CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
+    tip   :411 = CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md:231:conformance.sh:855
+    main  :855 = #
+    tip   :855 = #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md:418:conformance.sh:401
+    main  :401 = NEXUS_DIR="$REPO_ROOT/nexus"
+    tip   :401 = NEXUS_DIR="$REPO_ROOT/nexus"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md:595:conformance.sh:804-811
+    main  :804 = # that have nothing to do with the store being clean — a renamed store root, a
+    tip   :804 = # that have nothing to do with the store being clean — a renamed store root, a
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-16.md:164:conformance.sh:894
+    main  :894 =     #
+    tip   :894 =     #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-16.md:28:conformance.sh:855
+    main  :855 = #
+    tip   :855 = #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-16.md:299:conformance.sh:843-849
+    main  :843 =   fi
+    tip   :843 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-17.md:301:conformance.sh:411
+    main  :411 = CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
+    tip   :411 = CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-17.md:301:conformance.sh:718
+    main  :718 =     warn "conformance: Restore it on the line directly after the header block."
+    tip   :718 =     warn "conformance: Restore it on the line directly after the header block."
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-17.md:308:conformance.sh:843-849
+    main  :843 =   fi
+    tip   :843 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-17.md:309:conformance.sh:894
+    main  :894 =     #
+    tip   :894 =     #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-17.md:317:conformance.sh:401
+    main  :401 = NEXUS_DIR="$REPO_ROOT/nexus"
+    tip   :401 = NEXUS_DIR="$REPO_ROOT/nexus"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-19.md:38:conformance.sh:843-849
+    main  :843 =   fi
+    tip   :843 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-21.md:107:conformance.sh:1154-1179
+    main  :1154 =   # POLARITY, stated because P-57 rule 3 requires it. `>=`, not `==`, and the residual is
+    tip   :1154 =   # POLARITY, stated because P-57 rule 3 requires it. `>=`, not `==`, and the residual is
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-21.md:176:conformance.sh:1154-1179
+    main  :1154 =   # POLARITY, stated because P-57 rule 3 requires it. `>=`, not `==`, and the residual is
+    tip   :1154 =   # POLARITY, stated because P-57 rule 3 requires it. `>=`, not `==`, and the residual is
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-21.md:178:conformance.sh:1080-1152
+    main  :1080 =   # the file silently switches the check off and the run still says PASS.
+    tip   :1080 =   # the file silently switches the check off and the run still says PASS.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-21.md:317:conformance.sh:1143-1150
+    main  :1143 =   # and exits 0 reached `return 0` and the whole harness reported VERDICT PASS. Verified end
+    tip   :1143 =   # and exits 0 reached `return 0` and the whole harness reported VERDICT PASS. Verified end
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:285:conformance.sh:894
+    main  :894 =     #
+    tip   :894 =     #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:289:conformance.sh:401
+    main  :401 = NEXUS_DIR="$REPO_ROOT/nexus"
+    tip   :401 = NEXUS_DIR="$REPO_ROOT/nexus"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:525:conformance.sh:1080-1081
+    main  :1080 =   # the file silently switches the check off and the run still says PASS.
+    tip   :1080 =   # the file silently switches the check off and the run still says PASS.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:96:conformance.sh:1117-1152
+    main  :1117 =   say "conformance: $label guard — selftest OK, $cases cases ($red drive it RED on a planted"
+    tip   :1117 =   say "conformance: $label guard — selftest OK, $cases cases ($red drive it RED on a planted"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:200:conformance.sh:894
+    main  :894 =     #
+    tip   :894 =     #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:201:conformance.sh:1117-1152
+    main  :1117 =   say "conformance: $label guard — selftest OK, $cases cases ($red drive it RED on a planted"
+    tip   :1117 =   say "conformance: $label guard — selftest OK, $cases cases ($red drive it RED on a planted"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:202:conformance.sh:1154-1179
+    main  :1154 =   # POLARITY, stated because P-57 rule 3 requires it. `>=`, not `==`, and the residual is
+    tip   :1154 =   # POLARITY, stated because P-57 rule 3 requires it. `>=`, not `==`, and the residual is
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:203:conformance.sh:1174
+    main  :1174 =   case "$floor"     in ''|*[!0-9]*) floor=-1 ;; esac
+    tip   :1174 =   case "$floor"     in ''|*[!0-9]*) floor=-1 ;; esac
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:204:conformance.sh:1080-1152
+    main  :1080 =   # the file silently switches the check off and the run still says PASS.
+    tip   :1080 =   # the file silently switches the check off and the run still says PASS.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:205:conformance.sh:1143-1150
+    main  :1143 =   # and exits 0 reached `return 0` and the whole harness reported VERDICT PASS. Verified end
+    tip   :1143 =   # and exits 0 reached `return 0` and the whole harness reported VERDICT PASS. Verified end
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:209:conformance.sh:401
+    main  :401 = NEXUS_DIR="$REPO_ROOT/nexus"
+    tip   :401 = NEXUS_DIR="$REPO_ROOT/nexus"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:322:conformance.sh:1189-1213
+    main  :1189 =     say "conformance: $line"
+    tip   :1189 =     say "conformance: $line"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:361:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:410:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:52:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md:293:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md:312:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md:442:conformance.sh:1152
+    main  :1152 =   # number that was true in August".
+    tip   :1152 =   # number that was true in August".
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md:478:conformance.sh:1189-1213
+    main  :1189 =     say "conformance: $line"
+    tip   :1189 =     say "conformance: $line"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md:553:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md:583:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md:97:conformance.sh:1180-1186
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:110:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:11:conformance.sh:1187
+    main  :1187 =   fi
+    tip   :1187 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:129:conformance.sh:1177
+    main  :1177 =     warn "conformance: a floor of zero would readmit exactly the vacuous pass this test exists to"
+    tip   :1177 =     warn "conformance: a floor of zero would readmit exactly the vacuous pass this test exists to"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:130:conformance.sh:1182
+    main  :1182 =     warn "conformance: the $label guard's CENSUS FIGURE IS BELOW ITS DERIVED FLOOR:"
+    tip   :1182 =     warn "conformance: the $label guard's CENSUS FIGURE IS BELOW ITS DERIVED FLOOR:"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:131:conformance.sh:1187
+    main  :1187 =   fi
+    tip   :1187 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:133:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:153:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:172:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:191:conformance.sh:1176
+    main  :1176 =     warn "conformance: the $label guard's POPULATION FLOOR did not derive (caller passed '${3:-<noth
+    tip   :1176 =     warn "conformance: the $label guard's POPULATION FLOOR did not derive (caller passed '${3:-<noth
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:201:conformance.sh:1187
+    main  :1187 =   fi
+    tip   :1187 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:2057:conformance.sh:1118
+    main  :1118 =   say "conformance:   defect, $green stay GREEN on the clean equivalent; both directions READ)"
+    tip   :1118 =   say "conformance:   defect, $green stay GREEN on the clean equivalent; both directions READ)"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:2147:conformance.sh:1158
+    main  :1158 =   # not derive all refuse. The cry-wolf case is a tracked file deleted from the working tree,
+    tip   :1158 =   # not derive all refuse. The cry-wolf case is a tracked file deleted from the working tree,
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:2148:conformance.sh:1167
+    main  :1167 =   # THE EXTRACTION IS NO LONGER WRITTEN HERE. It used to be a greedy one-liner that read the
+    tip   :1167 =   # THE EXTRACTION IS NO LONGER WRITTEN HERE. It used to be a greedy one-liner that read the
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:2149:conformance.sh:1169
+    main  :1169 =   # measurement, the established polarity and why first-wins is the correct reading.
+    tip   :1169 =   # measurement, the established polarity and why first-wins is the correct reading.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:215:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:228:conformance.sh:1167
+    main  :1167 =   # THE EXTRACTION IS NO LONGER WRITTEN HERE. It used to be a greedy one-liner that read the
+    tip   :1167 =   # THE EXTRACTION IS NO LONGER WRITTEN HERE. It used to be a greedy one-liner that read the
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:229:conformance.sh:1187
+    main  :1187 =   fi
+    tip   :1187 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:257:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:29:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:498:conformance.sh:1117
+    main  :1117 =   say "conformance: $label guard — selftest OK, $cases cases ($red drive it RED on a planted"
+    tip   :1117 =   say "conformance: $label guard — selftest OK, $cases cases ($red drive it RED on a planted"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:574:conformance.sh:1117
+    main  :1117 =   say "conformance: $label guard — selftest OK, $cases cases ($red drive it RED on a planted"
+    tip   :1117 =   say "conformance: $label guard — selftest OK, $cases cases ($red drive it RED on a planted"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:67:conformance.sh:1177
+    main  :1177 =     warn "conformance: a floor of zero would readmit exactly the vacuous pass this test exists to"
+    tip   :1177 =     warn "conformance: a floor of zero would readmit exactly the vacuous pass this test exists to"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:68:conformance.sh:1182
+    main  :1182 =     warn "conformance: the $label guard's CENSUS FIGURE IS BELOW ITS DERIVED FLOOR:"
+    tip   :1182 =     warn "conformance: the $label guard's CENSUS FIGURE IS BELOW ITS DERIVED FLOOR:"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:69:conformance.sh:1187
+    main  :1187 =   fi
+    tip   :1187 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:71:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt:91:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32.md:31:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32.md:396:conformance.sh:1180-1186
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-33.md:118:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-8.md:486:conformance.sh:505
+    main  :505 = # WHAT IS NEW IS THE SIXTH FIGURE, and it closes for the ledger corpus exactly the
+    tip   :505 = # WHAT IS NEW IS THE SIXTH FIGURE, and it closes for the ledger corpus exactly the
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-9.md:44:conformance.sh:573
+    main  :573 = #                          are the CALLER'S characters and are graded by nothing.
+    tip   :573 = #                          are the CALLER'S characters and are graded by nothing.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T145.md:196:conformance.sh:997
+    main  :997 = # subtree is precisely how T163's own audit came to inspect one rig out of six while
+    tip   :997 = # subtree is precisely how T163's own audit came to inspect one rig out of six while
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T145.md:271:conformance.sh:997
+    main  :997 = # subtree is precisely how T163's own audit came to inspect one rig out of six while
+    tip   :997 = # subtree is precisely how T163's own audit came to inspect one rig out of six while
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T154.md:42:conformance.sh:141
+    main  :141 = #   "no floats" without opening a file. That is the P-22 failure mode ("a guard
+    tip   :141 = #   "no floats" without opening a file. That is the P-22 failure mode ("a guard
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T184.md:240:conformance.sh:670-815
+    main  :670 = #   function and a refusal vector still contributes ZERO money cells. Bumping
+    tip   :670 = #   function and a refusal vector still contributes ZERO money cells. Bumping
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T184.md:364:conformance.sh:773
+    main  :773 = #
+    tip   :773 = #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T184.md:440:conformance.sh:486-495
+    main  :486 = #   DECLARED     = 4 -- the same four, counted as DECLARATIONS in the loaded
+    tip   :486 = #   DECLARED     = 4 -- the same four, counted as DECLARATIONS in the loaded
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T186.md:204:conformance.sh:784
+    main  :784 = # These guards fire only when they FIND something bad, so a blind grep is a
+    tip   :784 = # These guards fire only when they FIND something bad, so a blind grep is a
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T188.md:122:conformance.sh:729-734
+    main  :729 =   # PATH. A bare `go` saying "command not found" is the expected state of a fresh
+    tip   :729 =   # PATH. A bare `go` saying "command not found" is the expected state of a fresh
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T188.md:357:conformance.sh:546
+    main  :546 = #                          (entry dated one day after the business date, :629)
+    tip   :546 = #                          (entry dated one day after the business date, :629)
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T188.md:43:conformance.sh:738
+    main  :738 =     warn "conformance: EXIT 2 — the harness is unusable. This is NOT a pass."
+    tip   :738 =     warn "conformance: EXIT 2 — the harness is unusable. This is NOT a pass."
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T188.md:44:conformance.sh:399
+    main  :399 = REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+    tip   :399 = REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T188.md:46:conformance.sh:399
+    main  :399 = REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+    tip   :399 = REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T189.md:215:conformance.sh:180-190
+    main  :180 = #   Detail that matters, and the exact rock T86's own first draft split on:
+    tip   :180 = #   Detail that matters, and the exact rock T86's own first draft split on:
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T191.md:388:conformance.sh:933
+    main  :933 = #
+    tip   :933 = #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T191.md:395:conformance.sh:449
+    main  :449 = # natural home for a pin ABOUT THE VECTORS, and T160 proposes it for the store
+    tip   :449 = # natural home for a pin ABOUT THE VECTORS, and T160 proposes it for the store
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T191.md:58:conformance.sh:396
+    main  :396 = set -u -o pipefail
+    tip   :396 = set -u -o pipefail
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T197.md:147:conformance.sh:938
+    main  :938 = # that package requires a gate — the doc comments ARE the specification, so a
+    tip   :938 = # that package requires a gate — the doc comments ARE the specification, so a
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T197.md:296:conformance.sh:656
+    main  :656 = #   WHICH declared input the oracle echoed ("latest_closing_date" on :637-638,
+    tip   :656 = #   WHICH declared input the oracle echoed ("latest_closing_date" on :637-638,
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T197.md:384:conformance.sh:281
+    main  :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+    tip   :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T199.md:145:conformance.sh:402-409
+    main  :402 = # NO CONTRACT PATH CONSTANT LIVES HERE, DELIBERATELY. The frozen DEC-1 artefact is
+    tip   :402 = # NO CONTRACT PATH CONSTANT LIVES HERE, DELIBERATELY. The frozen DEC-1 artefact is
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T199.md:238:conformance.sh:971-977
+    main  :971 =     return 1
+    tip   :971 =     return 1
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T201.md:259:conformance.sh:853
+    main  :853 = # the prohibition itself. Repeated here only as a cross-check that skips comments
+    tip   :853 = # the prohibition itself. Repeated here only as a cross-check that skips comments
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T201.md:80:conformance.sh:402-409
+    main  :402 = # NO CONTRACT PATH CONSTANT LIVES HERE, DELIBERATELY. The frozen DEC-1 artefact is
+    tip   :402 = # NO CONTRACT PATH CONSTANT LIVES HERE, DELIBERATELY. The frozen DEC-1 artefact is
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T207.md:432:conformance.sh:784
+    main  :784 = # These guards fire only when they FIND something bad, so a blind grep is a
+    tip   :784 = # These guards fire only when they FIND something bad, so a blind grep is a
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T207.md:64:conformance.sh:997
+    main  :997 = # subtree is precisely how T163's own audit came to inspect one rig out of six while
+    tip   :997 = # subtree is precisely how T163's own audit came to inspect one rig out of six while
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T214.md:121:conformance.sh:506
+    main  :506 = # hole T233 closed for the loanschedule one. The ledger schema REFUSES an
+    tip   :506 = # hole T233 closed for the loanschedule one. The ledger schema REFUSES an
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T214.md:272:conformance.sh:506
+    main  :506 = # hole T233 closed for the loanschedule one. The ledger schema REFUSES an
+    tip   :506 = # hole T233 closed for the loanschedule one. The ledger schema REFUSES an
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md:114:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md:118:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md:7:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:200:conformance.sh:1116
+    main  :1116 =   fi
+    tip   :1116 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:309:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:334:conformance.sh:1121
+    main  :1121 =   # THE CENSUS LINE MUST BE PRESENT BEFORE ITS VALUE IS READ. Same discipline the
+    tip   :1121 =   # THE CENSUS LINE MUST BE PRESENT BEFORE ITS VALUE IS READ. Same discipline the
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:336:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-handoff.md:397:conformance.sh:1466
+    main  :1466 =   # figure in this paragraph has now been stale once."
+    tip   :1466 =   # figure in this paragraph has now been stale once."
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-handoff.md:638:conformance.sh:1466
+    main  :1466 =   # figure in this paragraph has now been stale once."
+    tip   :1466 =   # figure in this paragraph has now been stale once."
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T245.md:371:conformance.sh:281
+    main  :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+    tip   :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T248.md:259:conformance.sh:281
+    main  :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+    tip   :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T251.md:71:conformance.sh:1504-1530
+    main  :1504 =   return "$rc"
+    tip   :1504 =   return "$rc"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T252.md:292:conformance.sh:1481
+    main  :1481 =   # and turning a rename of a documentation const into EXIT 2 for the whole bar would make the
+    tip   :1481 =   # and turning a rename of a documentation const into EXIT 2 for the whole bar would make the
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T252.md:295:conformance.sh:1356
+    main  :1356 =   graded="$(cd "$env_root" 2>/dev/null && pwd -P)" || graded=""
+    tip   :1356 =   graded="$(cd "$env_root" 2>/dev/null && pwd -P)" || graded=""
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T252.md:304:conformance.sh:1356
+    main  :1356 =   graded="$(cd "$env_root" 2>/dev/null && pwd -P)" || graded=""
+    tip   :1356 =   graded="$(cd "$env_root" 2>/dev/null && pwd -P)" || graded=""
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T252.md:304:conformance.sh:1481
+    main  :1481 =   # and turning a rename of a documentation const into EXIT 2 for the whole bar would make the
+    tip   :1481 =   # and turning a rename of a documentation const into EXIT 2 for the whole bar would make the
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md:119:conformance.sh:396
+    main  :396 = set -u -o pipefail
+    tip   :396 = set -u -o pipefail
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T272.md:208:conformance.sh:396
+    main  :396 = set -u -o pipefail
+    tip   :396 = set -u -o pipefail
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T273.md:46:conformance.sh:1481-1484
+    main  :1481 =   # and turning a rename of a documentation const into EXIT 2 for the whole bar would make the
+    tip   :1481 =   # and turning a rename of a documentation const into EXIT 2 for the whole bar would make the
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T273.md:91:conformance.sh:551-553
+    main  :551 = #                          both bodies are valid, balanced, postable journal
+    tip   :551 = #                          both bodies are valid, balanced, postable journal
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T279.md:317:conformance.sh:1742
+    main  :1742 = #
+    tip   :1742 = #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T285.md:239:conformance.sh:396
+    main  :396 = set -u -o pipefail
+    tip   :396 = set -u -o pipefail
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T285.md:247:conformance.sh:1929
+    main  :1929 = # correct and each of them inert until someone wired it.
+    tip   :1929 = # correct and each of them inert until someone wired it.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T285.md:321:conformance.sh:1214
+    main  :1214 = guard_no_float_in_capture_requests() {
+    tip   :1214 = guard_no_float_in_capture_requests() {
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T290.md:380:conformance.sh:1548
+    main  :1548 = # which is the drift this gate exists to stop, observed once before it was
+    tip   :1548 = # which is the drift this gate exists to stop, observed once before it was
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T294.md:511:conformance.sh:1779
+    main  :1779 = #      and its corpus from `git ls-files -z` [VERIFIED: check-pnumber-citations.py:719], never
+    tip   :1779 = #      and its corpus from `git ls-files -z` [VERIFIED: check-pnumber-citations.py:719], never
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T299.md:244:conformance.sh:1340
+    main  :1340 = #
+    tip   :1340 = #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T299.md:36:conformance.sh:1560-1562
+    main  :1560 = # NO PIPELINE ANYWHERE IN IT (P-57): the linter's output goes to a FILE and
+    tip   :1560 = # NO PIPELINE ANYWHERE IN IT (P-57): the linter's output goes to a FILE and
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T300.md:290:conformance.sh:1300
+    main  :1300 = # file with /usr/bin/grep, BSD 2.6.0-FreeBSD, `LC_ALL=C grep -c`; both returned 0, exit 1).
+    tip   :1300 = # file with /usr/bin/grep, BSD 2.6.0-FreeBSD, `LC_ALL=C grep -c`; both returned 0, exit 1).
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T304.md:146:conformance.sh:599-600
+    main  :599 = # margins -25, -25, -37, -37, -62, -62 and -124 twice.
+    tip   :599 = # margins -25, -25, -37, -37, -62, -62 and -124 twice.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T316.md:45:conformance.sh:1715
+    main  :1715 =     warn "conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):"
+    tip   :1715 =     warn "conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T318.md:139:conformance.sh:1891
+    main  :1891 =   fi
+    tip   :1891 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T318.md:486:conformance.sh:1891
+    main  :1891 =   fi
+    tip   :1891 =   fi
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T319.md:314:conformance.sh:399
+    main  :399 = REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+    tip   :399 = REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T321.md:103:conformance.sh:199
+    main  :199 = #   3.2.57, 4.4.0 and 5.3.9 — env / env+--posix / env+argv[0]=sh / env+POSIXLY_CORRECT
+    tip   :199 = #   3.2.57, 4.4.0 and 5.3.9 — env / env+--posix / env+argv[0]=sh / env+POSIXLY_CORRECT
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T321.md:120:conformance.sh:202-205
+    main  :202 = #   being measured.
+    tip   :202 = #   being measured.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T321.md:22:conformance.sh:202-205
+    main  :202 = #   being measured.
+    tip   :202 = #   being measured.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T321.md:637:conformance.sh:202-205
+    main  :202 = #   being measured.
+    tip   :202 = #   being measured.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:109:conformance.sh:3069
+    main  :3069 = #      file under a unique basename was refused. Closing `.go` was T358's whole point and this
+    tip   :3069 = #      file under a unique basename was refused. Closing `.go` was T358's whole point and this
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:110:conformance.sh:3296
+    main  :3296 =   # ────────────────────────────────────────────────────────────────────────────────────────
+    tip   :3296 =   # measured that NOTHING IN THIS HARNESS RUNS A REGISTRATION-FORGERY DRIVE AT ALL — so
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:118:conformance.sh:1789
+    main  :1789 = # In the directive zone today: 6 findings, 0 fatal. The CLOSEST is IN THIS VERY FILE — the
+    tip   :1789 = # In the directive zone today: 6 findings, 0 fatal. The CLOSEST is IN THIS VERY FILE — the
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:127:conformance.sh:3741
+    main  :3741 =         # the `-f` test. That is only true while the attacker does not plant a real file of
+    tip   :3741 =         self_norm=""
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:128:conformance.sh:3744
+    main  :3744 =         # TWO lines, because git tries EXACT LITERAL EQUALITY (the pacifier) as well as
+    tip   :3744 =             git ls-files --error-unmatch -- "$self_wit" 2>/dev/null )" || self_norm=""
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:129:conformance.sh:3296
+    main  :3296 =   # ────────────────────────────────────────────────────────────────────────────────────────
+    tip   :3296 =   # measured that NOTHING IN THIS HARNESS RUNS A REGISTRATION-FORGERY DRIVE AT ALL — so
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:130:conformance.sh:3297
+    main  :3297 =   # THERE IS A THIRD DIRECTION AND ITS ROW DOES NOT LIVE IN THIS FILE. Read this before
+    tip   :3297 =   # deleting that line passed the bar at exit 0. P-45 in its purest form: "A test-only guard
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:131:conformance.sh:3298
+    main  :3298 =   # touching either of the two rows below. [T358, answering T337 F-T337-2.]
+    tip   :3298 =   # is not a guard … verify the path that actually executes in CI/conformance calls it, not
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:132:conformance.sh:3299
+    main  :3299 =   #
+    tip   :3299 =   # merely that a test does." The line that decides had nothing watching it.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:133:conformance.sh:3300-3303
+    main  :3300 =   # THE DEFECT: both remedies T323's guard printed — "call it from run_guards" and "add its row
+    tip   :3300 =   #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:20:conformance.sh:3297-3299
+    main  :3297 =   # THERE IS A THIRD DIRECTION AND ITS ROW DOES NOT LIVE IN THIS FILE. Read this before
+    tip   :3297 =   # deleting that line passed the bar at exit 0. P-45 in its purest form: "A test-only guard
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:215:conformance.sh:396
+    main  :396 = set -u -o pipefail
+    tip   :396 = set -u -o pipefail
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:446:conformance.sh:2536
+    main  :2536 = # lowered it because its own first draft went red against a correctly-named directory — and the
+    tip   :2536 = # lowered it because its own first draft went red against a correctly-named directory — and the
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:446:conformance.sh:3297
+    main  :3297 =   # THERE IS A THIRD DIRECTION AND ITS ROW DOES NOT LIVE IN THIS FILE. Read this before
+    tip   :3297 =   # deleting that line passed the bar at exit 0. P-45 in its purest form: "A test-only guard
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:447:conformance.sh:2751
+    main  :2751 = # COST: 1.3 s wall, measured on this host by T323.
+    tip   :2751 = # COST: 1.3 s wall, measured on this host by T323.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:447:conformance.sh:3298
+    main  :3298 =   # touching either of the two rows below. [T358, answering T337 F-T337-2.]
+    tip   :3298 =   # is not a guard … verify the path that actually executes in CI/conformance calls it, not
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:448:conformance.sh:2920
+    main  :2920 = # applied as written. T319 specified the guard body, the registration line, the measured cost
+    tip   :2920 = # applied as written. T319 specified the guard body, the registration line, the measured cost
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:448:conformance.sh:3299
+    main  :3299 =   #
+    tip   :3299 =   # merely that a test does." The line that decides had nothing watching it.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:449:conformance.sh:3069
+    main  :3069 = #      file under a unique basename was refused. Closing `.go` was T358's whole point and this
+    tip   :3069 = #      file under a unique basename was refused. Closing `.go` was T358's whole point and this
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:449:conformance.sh:3296
+    main  :3296 =   # ────────────────────────────────────────────────────────────────────────────────────────
+    tip   :3296 =   # measured that NOTHING IN THIS HARNESS RUNS A REGISTRATION-FORGERY DRIVE AT ALL — so
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:626:conformance.sh:2018
+    main  :2018 = # `mktemp -d` shape is INAPPLICABLE BY CONSTRUCTION here. That probe's entire purpose is to measure
+    tip   :2018 = # `mktemp -d` shape is INAPPLICABLE BY CONSTRUCTION here. That probe's entire purpose is to measure
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md:819:conformance.sh:3300
+    main  :3300 =   # THE DEFECT: both remedies T323's guard printed — "call it from run_guards" and "add its row
+    tip   :3300 =   #
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T326.md:54:conformance.sh:1715
+    main  :1715 =     warn "conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):"
+    tip   :1715 =     warn "conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T326.md:552:conformance.sh:1715
+    main  :1715 =     warn "conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):"
+    tip   :1715 =     warn "conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T326.md:612:conformance.sh:281
+    main  :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+    tip   :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T326.md:805:conformance.sh:281
+    main  :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+    tip   :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T331.md:126:conformance.sh:1866
+    main  :1866 =   # PRESENCE BEFORE VALUE (P-84: "exit 2 with no probe line" is the guard working
+    tip   :1866 =   # PRESENCE BEFORE VALUE (P-84: "exit 2 with no probe line" is the guard working
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T331.md:175:conformance.sh:1764
+    main  :1764 = #      argument this file records at the T323 block below, and a line scrolling past in a
+    tip   :1764 = #      argument this file records at the T323 block below, and a line scrolling past in a
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T331.md:279:conformance.sh:1866
+    main  :1866 =   # PRESENCE BEFORE VALUE (P-84: "exit 2 with no probe line" is the guard working
+    tip   :1866 =   # PRESENCE BEFORE VALUE (P-84: "exit 2 with no probe line" is the guard working
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T352.md:26:conformance.sh:681-683
+    main  :681 = EXEMPTION_PIN_LEDGER_PARITY=10
+    tip   :681 = EXEMPTION_PIN_LEDGER_PARITY=10
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T357.md:35:conformance.sh:410-411
+    main  :410 = HARNESS_PKG="$NEXUS_DIR/internal/apps/loanschedule/conformance"
+    tip   :410 = HARNESS_PKG="$NEXUS_DIR/internal/apps/loanschedule/conformance"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md:418:conformance.sh:1484
+    main  :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+    tip   :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md:459:conformance.sh:3554
+    main  :3554 =       warn "conformance: a checker. What git tracks at that path is the TARGET PATH STRING,"
+    tip   :3554 =     member_mode="${member_stat%% *}"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md:460:conformance.sh:3567
+    main  :3567 =     while IFS= read -r row; do
+    tip   :3567 =     if [ -z "$member_stat" ]; then
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md:461:conformance.sh:4032
+    main  :4032 =         bad=1
+    tip   :4032 =           warn "conformance: carrying a non-ASCII byte, a backslash, a quote, a control"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md:465:conformance.sh:4057
+    main  :4057 =       bad=1
+    tip   :4057 =           warn "conformance: names $base only because the member's own text names it. That is"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md:466:conformance.sh:4058
+    main  :4058 =       warn "conformance: guard_guards_dir_registration: the DECLARATION TABLE still carries"
+    tip   :4058 =           warn "conformance: self-certification with an extra step, which is exactly the amnesty"
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md:522:conformance.sh:1484
+    main  :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+    tip   :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T359.md:125:conformance.sh:3160-3162
+    main  :3160 = # MISS. That is P-57's EPIPE family, in a guard written a few hundred lines under a comment
+    tip   :3160 = # MISS. That is P-57's EPIPE family, in a guard written a few hundred lines under a comment
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T359.md:129:conformance.sh:667-673
+    main  :667 = #   MONEYCELLS 39 -> 39, AND THE REASON IS T297's, RE-CHECKED RATHER THAN
+    tip   :667 = #   MONEYCELLS 39 -> 39, AND THE REASON IS T297's, RE-CHECKED RATHER THAN
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T364.md:96:conformance.sh:3385
+    main  :3385 =   CONF_LF="$(printf '\nx')"; CONF_LF="${CONF_LF%x}"
+    tip   :3385 =   DECLARED="repo-state-attest.sh|CALLER|.softhouse/bin/fire-program.sh|repo-state-attest.sh
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T375.md:510:conformance.sh:1484
+    main  :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+    tip   :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T375.md:774:conformance.sh:3167
+    main  :3167 = # P-84 SURVIVES UNCHANGED AND IS RE-DERIVED STRUCTURALLY AFTER EVERY EDIT, NOT FROM
+    tip   :3167 = # P-84 SURVIVES UNCHANGED AND IS RE-DERIVED STRUCTURALLY AFTER EVERY EDIT, NOT FROM
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T377.md:36:conformance.sh:3217-3220
+    main  :3217 = # per DECLARED or REACHED-BY row. No temporary file, no pipeline, no second process in the
+    tip   :3217 = # per DECLARED or REACHED-BY row. No temporary file, no pipeline, no second process in the
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T380.md:77:conformance.sh:3216-3220
+    main  :3216 = # haystack, one marker grep per member, one witness grep and one `git ls-files --error-unmatch`
+    tip   :3216 = # haystack, one marker grep per member, one witness grep and one `git ls-files --error-unmatch`
+.softhouse/handoff/CLOUD-FIRE-20260822-2000.md:149:conformance.sh:656
+    main  :656 = #   WHICH declared input the oracle echoed ("latest_closing_date" on :637-638,
+    tip   :656 = #   WHICH declared input the oracle echoed ("latest_closing_date" on :637-638,
+.softhouse/handoff/T255-dec2-rev8.md:48:conformance.sh:718
+    main  :718 =     warn "conformance: Restore it on the line directly after the header block."
+    tip   :718 =     warn "conformance: Restore it on the line directly after the header block."
+.softhouse/handoff/T255-dec2-rev8.md:51:conformance.sh:1254
+    main  :1254 =   records="$(git -C "$REPO_ROOT" grep -h -E '"capture_ref"[[:space:]]*:' -- .softhouse/vectors 2>/de
+    tip   :1254 =   records="$(git -C "$REPO_ROOT" grep -h -E '"capture_ref"[[:space:]]*:' -- .softhouse/vectors 2>/de
+.softhouse/handoff/T255-dec2-rev8.md:52:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/handoff/T255-dec2-rev8.md:56:conformance.sh:401
+    main  :401 = NEXUS_DIR="$REPO_ROOT/nexus"
+    tip   :401 = NEXUS_DIR="$REPO_ROOT/nexus"
+.softhouse/handoff/T401-zsh-census-gap.md:331:conformance.sh:1673
+    main  :1673 =   corpus="$(LC_ALL=C sed -n 's/^corpus    : \([0-9][0-9]*\) tracked.*$/\1/p' "$out")"
+    tip   :1673 =   corpus="$(LC_ALL=C sed -n 's/^corpus    : \([0-9][0-9]*\) tracked.*$/\1/p' "$out")"
+.softhouse/handoff/T401-zsh-census-gap.md:68:conformance.sh:2131
+    main  :2131 =   ( cd "$REPO_ROOT" || exit 9; LC_ALL=C git grep -l -E "$rw" -- '*.sh' '*.py' ) >"$list.raw" 2>/dev/
+    tip   :2131 =   ( cd "$REPO_ROOT" || exit 9; LC_ALL=C git grep -l -E "$rw" -- '*.sh' '*.py' ) >"$list.raw" 2>/dev/
+.softhouse/handoff/T401-zsh-census-gap.md:69:conformance.sh:3267-3269
+    main  :3267 =             ":(glob)$gdrel/"'**/*.sh' \
+    tip   :3267 =             ":(glob)$gdrel/"'**/*.sh' \
+.softhouse/handoff/T429-oracle-derived-columns.md:393:conformance.sh:973
+    main  :973 =   say "conformance: gofmt guard — inspected $seen .go files under $NEXUS_DIR (recursive, whole modul
+    tip   :973 =   say "conformance: gofmt guard — inspected $seen .go files under $NEXUS_DIR (recursive, whole modul
+.softhouse/handoff/T429-oracle-derived-columns.md:395:conformance.sh:973
+    main  :973 =   say "conformance: gofmt guard — inspected $seen .go files under $NEXUS_DIR (recursive, whole modul
+    tip   :973 =   say "conformance: gofmt guard — inspected $seen .go files under $NEXUS_DIR (recursive, whole modul
+.softhouse/handoff/T431-t407-conditions.md:376:conformance.sh:3217-3220
+    main  :3217 = # per DECLARED or REACHED-BY row. No temporary file, no pipeline, no second process in the
+    tip   :3217 = # per DECLARED or REACHED-BY row. No temporary file, no pipeline, no second process in the
+.softhouse/handoff/T431-t407-conditions.md:77:conformance.sh:3271
+    main  :3271 =     warn "conformance: guard_guards_dir_registration: the population is EMPTY. That is a SELECTOR"
+    tip   :3271 =     warn "conformance: guard_guards_dir_registration: the population is EMPTY. That is a SELECTOR"
+.softhouse/nonnegotiable-guard-audit.md:110:conformance.sh:110
+    main  :110 = #   outage code: precisely the defect exit 3 was created to abolish, one layer in.
+    tip   :110 = #   outage code: precisely the defect exit 3 was created to abolish, one layer in.
+.softhouse/nonnegotiable-guard-audit.md:111:conformance.sh:312
+    main  :312 = #
+    tip   :312 = #
+.softhouse/nonnegotiable-guard-audit.md:55:conformance.sh:180-190
+    main  :180 = #   Detail that matters, and the exact rock T86's own first draft split on:
+    tip   :180 = #   Detail that matters, and the exact rock T86's own first draft split on:
+.softhouse/nonnegotiable-guard-audit.md:56:conformance.sh:197-208
+    main  :197 = #   a non-interactive script), and this file being **SOURCED** into a shell that
+    tip   :197 = #   a non-interactive script), and this file being **SOURCED** into a shell that
+.softhouse/nonnegotiable-guard-audit.md:573:conformance.sh:180-190
+    main  :180 = #   Detail that matters, and the exact rock T86's own first draft split on:
+    tip   :180 = #   Detail that matters, and the exact rock T86's own first draft split on:
+.softhouse/nonnegotiable-guard-audit.md:57:conformance.sh:203
+    main  :203 = #   [SUPERSEDES: T97 "`IFS=oc`, `IFS=' '`, `IFS=$'\n'` in the environment, all
+    tip   :203 = #   [SUPERSEDES: T97 "`IFS=oc`, `IFS=' '`, `IFS=$'\n'` in the environment, all
+.softhouse/nonnegotiable-guard-audit.md:91:conformance.sh:671-741
+    main  :671 = #   this figure for LDG-REFUSE-06 would record money comparisons that no
+    tip   :671 = #   this figure for LDG-REFUSE-06 would record money comparisons that no
+.softhouse/nonnegotiable-guard-audit.md:93:conformance.sh:258-266
+    main  :258 = #   property of the spelling, it is checked by a test instead of promised by this
+    tip   :258 = #   property of the spelling, it is checked by a test instead of promised by this
+.softhouse/nonnegotiable-guard-audit.md:96:conformance.sh:227-238
+    main  :227 = #
+    tip   :227 = #
+.softhouse/nonnegotiable-guard-audit.md:97:conformance.sh:70-104
+    main  :70 = #   `exit 2` AND `probe != up`, taken from the `reference oracle (…) probe = up|down`
+    tip   :70 = #   `exit 2` AND `probe != up`, taken from the `reference oracle (…) probe = up|down`
+.softhouse/obligations.md:164:conformance.sh:506
+    main  :506 = # hole T233 closed for the loanschedule one. The ledger schema REFUSES an
+    tip   :506 = # hole T233 closed for the loanschedule one. The ledger schema REFUSES an
+.softhouse/observations/20260828-driver-merged-without-running-the-bar-and-main-went-red.md:19:conformance.sh:281
+    main  :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+    tip   :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+.softhouse/patterns.md:1659:conformance.sh:396
+    main  :396 = set -u -o pipefail
+    tip   :396 = set -u -o pipefail
+.softhouse/patterns.md:1941:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/patterns.md:2026:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/patterns.md:2203:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/patterns.md:2228:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/patterns.md:2239:conformance.sh:1116
+    main  :1116 =   fi
+    tip   :1116 =   fi
+.softhouse/patterns.md:3426:conformance.sh:3271
+    main  :3271 =     warn "conformance: guard_guards_dir_registration: the population is EMPTY. That is a SELECTOR"
+    tip   :3271 =     warn "conformance: guard_guards_dir_registration: the population is EMPTY. That is a SELECTOR"
+.softhouse/patterns.md:785:conformance.sh:184
+    main  :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+    tip   :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2044:conformance.sh:96-99
+    main  :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+    tip   :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2228:conformance.sh:96-99
+    main  :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+    tip   :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2269:conformance.sh:184
+    main  :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+    tip   :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2352:conformance.sh:96-99
+    main  :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+    tip   :96 = #       admission is measured, a complete graded run under bash 5.x is not.
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2526:conformance.sh:296
+    main  :296 = #       is not [VERIFIED: T113, 3.2.57 and 5.3.9].
+    tip   :296 = #       is not [VERIFIED: T113, 3.2.57 and 5.3.9].
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2609:conformance.sh:59
+    main  :59 = # and **exit 2** — and 2 is this harness's "unusable" code, which at the time was
+    tip   :59 = # and **exit 2** — and 2 is this harness's "unusable" code, which at the time was
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2640:conformance.sh:171-174
+    main  :171 = #   against a hostile environment in general — see the next paragraph — and it
+    tip   :171 = #   against a hostile environment in general — see the next paragraph — and it
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2640:conformance.sh:59
+    main  :59 = # and **exit 2** — and 2 is this harness's "unusable" code, which at the time was
+    tip   :59 = # and **exit 2** — and 2 is this harness's "unusable" code, which at the time was
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2673:conformance.sh:184
+    main  :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+    tip   :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2951:conformance.sh:208-215
+    main  :208 = #   that `IFS=e` "would have been a false refusal without the prefix, so the prefix
+    tip   :208 = #   that `IFS=e` "would have been a false refusal without the prefix, so the prefix
+.softhouse/tasks.json:1166:conformance.sh:402-409
+    main  :402 = # NO CONTRACT PATH CONSTANT LIVES HERE, DELIBERATELY. The frozen DEC-1 artefact is
+    tip   :402 = # NO CONTRACT PATH CONSTANT LIVES HERE, DELIBERATELY. The frozen DEC-1 artefact is
+.softhouse/tasks.json:1193:conformance.sh:402-409
+    main  :402 = # NO CONTRACT PATH CONSTANT LIVES HERE, DELIBERATELY. The frozen DEC-1 artefact is
+    tip   :402 = # NO CONTRACT PATH CONSTANT LIVES HERE, DELIBERATELY. The frozen DEC-1 artefact is
+.softhouse/tasks.json:1471:conformance.sh:506
+    main  :506 = # hole T233 closed for the loanschedule one. The ledger schema REFUSES an
+    tip   :506 = # hole T233 closed for the loanschedule one. The ledger schema REFUSES an
+.softhouse/tasks.json:1644:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/tasks.json:1656:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/tasks.json:1657:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/tasks.json:1681:conformance.sh:784
+    main  :784 = # These guards fire only when they FIND something bad, so a blind grep is a
+    tip   :784 = # These guards fire only when they FIND something bad, so a blind grep is a
+.softhouse/tasks.json:1702:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/tasks.json:1702:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/tasks.json:1718:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/tasks.json:1811:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/tasks.json:1825:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/tasks.json:2032:conformance.sh:1495
+    main  :1495 =   fi
+    tip   :1495 =   fi
+.softhouse/tasks.json:2231:conformance.sh:1438
+    main  :1438 =   # one of ITS runs while its head, on the PASS path, re-printed only `^CENSUS ` and
+    tip   :1438 =   # one of ITS runs while its head, on the PASS path, re-printed only `^CENSUS ` and
+.softhouse/tasks.json:2265:conformance.sh:656
+    main  :656 = #   WHICH declared input the oracle echoed ("latest_closing_date" on :637-638,
+    tip   :656 = #   WHICH declared input the oracle echoed ("latest_closing_date" on :637-638,
+.softhouse/tasks.json:230:conformance.sh:184
+    main  :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+    tip   :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+.softhouse/tasks.json:264:conformance.sh:997
+    main  :997 = # subtree is precisely how T163's own audit came to inspect one rig out of six while
+    tip   :997 = # subtree is precisely how T163's own audit came to inspect one rig out of six while
+.softhouse/tasks.json:2688:conformance.sh:855
+    main  :855 = #
+    tip   :855 = #
+.softhouse/tasks.json:2765:conformance.sh:843-849
+    main  :843 =   fi
+    tip   :843 =   fi
+.softhouse/tasks.json:2805:conformance.sh:1154
+    main  :1154 =   # POLARITY, stated because P-57 rule 3 requires it. `>=`, not `==`, and the residual is
+    tip   :1154 =   # POLARITY, stated because P-57 rule 3 requires it. `>=`, not `==`, and the residual is
+.softhouse/tasks.json:2940:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/tasks.json:2993:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+.softhouse/tasks.json:2994:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/tasks.json:2999:conformance.sh:1180
+    main  :1180 =   fi
+    tip   :1180 =   fi
+.softhouse/tasks.json:316:conformance.sh:184
+    main  :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+    tip   :184 = #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+.softhouse/tasks.json:317:conformance.sh:483
+    main  :483 = #                       family-B loanschedule vectors T116 promoted. A2-15 added
+    tip   :483 = #                       family-B loanschedule vectors T116 promoted. A2-15 added
+.softhouse/tasks.json:3270:conformance.sh:551-553
+    main  :551 = #                          both bodies are valid, balanced, postable journal
+    tip   :551 = #                          both bodies are valid, balanced, postable journal
+.softhouse/tasks.json:3723:conformance.sh:2062
+    main  :2062 = #     claim the pin was rested on. The probe printed `restoredAsFound=1` as a HARD-CODED LITERAL,
+    tip   :2062 = #     claim the pin was rested on. The probe printed `restoredAsFound=1` as a HARD-CODED LITERAL,
+.softhouse/tasks.json:3945:conformance.sh:281
+    main  :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+    tip   :281 = #   5.3.9 — with `builtin eval`, both `eval() { return 1; }` and `eval() { echo
+.softhouse/tasks.json:4163:conformance.sh:2018
+    main  :2018 = # `mktemp -d` shape is INAPPLICABLE BY CONSTRUCTION here. That probe's entire purpose is to measure
+    tip   :2018 = # `mktemp -d` shape is INAPPLICABLE BY CONSTRUCTION here. That probe's entire purpose is to measure
+.softhouse/tasks.json:4177:conformance.sh:2018
+    main  :2018 = # `mktemp -d` shape is INAPPLICABLE BY CONSTRUCTION here. That probe's entire purpose is to measure
+    tip   :2018 = # `mktemp -d` shape is INAPPLICABLE BY CONSTRUCTION here. That probe's entire purpose is to measure
+.softhouse/tasks.json:4333:conformance.sh:202-205
+    main  :202 = #   being measured.
+    tip   :202 = #   being measured.
+.softhouse/tasks.json:4433:conformance.sh:1715
+    main  :1715 =     warn "conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):"
+    tip   :1715 =     warn "conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):"
+.softhouse/tasks.json:4792:conformance.sh:1708
+    main  :1708 =   say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at $p"
+    tip   :1708 =   say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at $p"
+.softhouse/tasks.json:4948:conformance.sh:681-683
+    main  :681 = EXEMPTION_PIN_LEDGER_PARITY=10
+    tip   :681 = EXEMPTION_PIN_LEDGER_PARITY=10
+.softhouse/tasks.json:5051:conformance.sh:410-411
+    main  :410 = HARNESS_PKG="$NEXUS_DIR/internal/apps/loanschedule/conformance"
+    tip   :410 = HARNESS_PKG="$NEXUS_DIR/internal/apps/loanschedule/conformance"
+.softhouse/tasks.json:5071:conformance.sh:1484
+    main  :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+    tip   :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+.softhouse/tasks.json:5108:conformance.sh:681-683
+    main  :681 = EXEMPTION_PIN_LEDGER_PARITY=10
+    tip   :681 = EXEMPTION_PIN_LEDGER_PARITY=10
+.softhouse/tasks.json:5109:conformance.sh:3923
+    main  :3923 =       #
+    tip   :3923 =         # AN UNREADABLE BLOB NEEDS NO BRANCH OF ITS OWN AND IS NOT SILENT: `self_text` is then
+.softhouse/tasks.json:5144:conformance.sh:410-411
+    main  :410 = HARNESS_PKG="$NEXUS_DIR/internal/apps/loanschedule/conformance"
+    tip   :410 = HARNESS_PKG="$NEXUS_DIR/internal/apps/loanschedule/conformance"
+.softhouse/tasks.json:5182:conformance.sh:1484
+    main  :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+    tip   :1484 =   local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+.softhouse/tasks.json:5275:conformance.sh:3469
+    main  :3469 =     # first" — AND THE SEVERITY RATING WAS WRONG. T384 REACHED IT WITH TWO COMMITTED FILES,
+    tip   :3469 =     # INHERITED the real main.go's REACHED-BY row wholesale — the guard read the target's
+.softhouse/tasks.json:532:conformance.sh:573
+    main  :573 = #                          are the CALLER'S characters and are graded by nothing.
+    tip   :573 = #                          are the CALLER'S characters and are graded by nothing.
+.softhouse/tasks.json:5397:conformance.sh:3385
+    main  :3385 =   CONF_LF="$(printf '\nx')"; CONF_LF="${CONF_LF%x}"
+    tip   :3385 =   DECLARED="repo-state-attest.sh|CALLER|.softhouse/bin/fire-program.sh|repo-state-attest.sh
+.softhouse/tasks.json:6069:conformance.sh:4530
+    main  :4530 =     _cmp "LEDGER money cells compared " "$l_money"      "$EXEMPTION_PIN_LEDGER_MONEYCELLS"
+    tip   :4530 = # not even a test-only guard; it is a claim with no arm at all. And the consequence is the one
+.softhouse/tasks.json:6092:conformance.sh:2131
+    main  :2131 =   ( cd "$REPO_ROOT" || exit 9; LC_ALL=C git grep -l -E "$rw" -- '*.sh' '*.py' ) >"$list.raw" 2>/dev/
+    tip   :2131 =   ( cd "$REPO_ROOT" || exit 9; LC_ALL=C git grep -l -E "$rw" -- '*.sh' '*.py' ) >"$list.raw" 2>/dev/
+.softhouse/tasks.json:6092:conformance.sh:3267
+    main  :3267 =             ":(glob)$gdrel/"'**/*.sh' \
+    tip   :3267 =             ":(glob)$gdrel/"'**/*.sh' \
+.softhouse/tasks.json:6092:conformance.sh:4530
+    main  :4530 =     _cmp "LEDGER money cells compared " "$l_money"      "$EXEMPTION_PIN_LEDGER_MONEYCELLS"
+    tip   :4530 = # not even a test-only guard; it is a claim with no arm at all. And the consequence is the one
+.softhouse/tasks.json:6195:conformance.sh:4530
+    main  :4530 =     _cmp "LEDGER money cells compared " "$l_money"      "$EXEMPTION_PIN_LEDGER_MONEYCELLS"
+    tip   :4530 = # not even a test-only guard; it is a claim with no arm at all. And the consequence is the one
+.softhouse/tasks.json:6576:conformance.sh:973
+    main  :973 =   say "conformance: gofmt guard — inspected $seen .go files under $NEXUS_DIR (recursive, whole modul
+    tip   :973 =   say "conformance: gofmt guard — inspected $seen .go files under $NEXUS_DIR (recursive, whole modul
+.softhouse/tasks.json:6609:conformance.sh:1214
+    main  :1214 = guard_no_float_in_capture_requests() {
+    tip   :1214 = guard_no_float_in_capture_requests() {
+.softhouse/tasks.json:984:conformance.sh:546
+    main  :546 = #                          (entry dated one day after the business date, :629)
+    tip   :546 = #                          (entry dated one day after the business date, :629)
+docs/adr/DEC-2-gl-accounting-adapter.md:1059:conformance.sh:1152-1187
+    main  :1152 =   # number that was true in August".
+    tip   :1152 =   # number that was true in August".
+docs/adr/DEC-2-gl-accounting-adapter.md:1116:conformance.sh:1189-1213
+    main  :1189 =     say "conformance: $line"
+    tip   :1189 =     say "conformance: $line"
+docs/adr/DEC-2-gl-accounting-adapter.md:1773:conformance.sh:718
+    main  :718 =     warn "conformance: Restore it on the line directly after the header block."
+    tip   :718 =     warn "conformance: Restore it on the line directly after the header block."
+docs/adr/DEC-2-gl-accounting-adapter.md:2470:conformance.sh:1254
+    main  :1254 =   records="$(git -C "$REPO_ROOT" grep -h -E '"capture_ref"[[:space:]]*:' -- .softhouse/vectors 2>/de
+    tip   :1254 =   records="$(git -C "$REPO_ROOT" grep -h -E '"capture_ref"[[:space:]]*:' -- .softhouse/vectors 2>/de
+docs/adr/DEC-2-gl-accounting-adapter.md:2769:conformance.sh:1152-1187
+    main  :1152 =   # number that was true in August".
+    tip   :1152 =   # number that was true in August".
+docs/adr/DEC-2-gl-accounting-adapter.md:2903:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+docs/adr/DEC-2-gl-accounting-adapter.md:3207:conformance.sh:1115-1116
+    main  :1115 =     return 1
+    tip   :1115 =     return 1
+docs/adr/DEC-2-gl-accounting-adapter.md:3423:conformance.sh:1189-1213
+    main  :1189 =     say "conformance: $line"
+    tip   :1189 =     say "conformance: $line"
+docs/adr/DEC-2-gl-accounting-adapter.md:96:conformance.sh:1152-1187
+    main  :1152 =   # number that was true in August".
+    tip   :1152 =   # number that was true in August".
+
+== RESUME.md ==
+grep -c conformance.sh:[0-9] .softhouse/RESUME.md = 0

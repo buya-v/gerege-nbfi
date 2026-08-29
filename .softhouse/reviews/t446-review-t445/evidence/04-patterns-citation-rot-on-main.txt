@@ -1,0 +1,57 @@
+patterns.md line count:     3829
+
+cited-line -> what that line actually says, and what the citation CLAIMS:
+
+=== patterns.md:1472 ===
+  cited line   : directory you are measuring is the same defect as a guard that cannot fail — and it is worse in a gate
+  cited FOR    : 
+  +31 line     : **P-45 — A test-only guard is not a guard.** T154's float-literal census is called from **`Run`**, not only
+
+=== patterns.md:1503 ===
+  cited line   : **P-45 — A test-only guard is not a guard.** T154's float-literal census is called from **`Run`**, not only
+  cited FOR    : 
+  +31 line     : **P-47 — THE DRIVER GAVE A WORKER AN INSTRUCTION THAT WOULD HAVE BROKEN PARITY, AND THE WORKER REFUSED THE
+
+=== patterns.md:1654 ===
+  cited line   : **P-57 — THE MACHINERY THAT EXISTS TO CATCH A SILENT GUARD CAN INVERT ITSELF, AND IT INVERTS ON
+  cited FOR    : 
+  +31 line     : original "fail-closed" was **never measured at all**. **Every attempt was right; the disagreement was
+
+=== patterns.md:1931 ===
+  cited line   : ### P-70. "Latent", "not promoted", "can never resolve", "no guard exists" — four ways this program stated a search resu
+  cited FOR    : 
+  +31 line     : handoff at `.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T114.md` and its review at
+
+=== patterns.md:2775 ===
+  cited line   : **P-80 — A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the same defect as the line number.**
+  cited FOR    : 
+  +31 line     : **P-83 — TWO INDEPENDENT MOVEMENTS OF ONE PINNED NUMBER RECONCILE BY RUNNING, NEVER BY ARITHMETIC.**
+
+=== patterns.md:2782 ===
+  cited line   : two currencies. **The fix is never the new number — it is to make the second site READ the first** (derive
+  cited FOR    : 
+  +31 line     : **P-84 — "EXIT 2 WITH NO PROBE LINE" IS THE GUARD WORKING. READ THE ABSENCE, NOT THE VALUE.**
+
+=== patterns.md:2813 ===
+  cited line   : **P-84 — "EXIT 2 WITH NO PROBE LINE" IS THE GUARD WORKING. READ THE ABSENCE, NOT THE VALUE.**
+  cited FOR    : 
+  +31 line     : that lists seven guards and omits `guard_no_fail_open_instruments`. **Neither found the other's.** Accidental
+
+=== patterns.md:3084 ===
+  cited line   : 
+  cited FOR    : 
+  +31 line     : **P-95 — A FALLBACK AND A FAIL-OPEN ARE INDISTINGUISHABLE BY READING, AND THEY HAVE OPPOSITE SEVERITIES.**
+
+=== patterns.md:473 ===
+  cited line   : ### P-22. A guard, a canary, or a control that cannot fail is worse than none — because it is believed
+  cited FOR    : 
+  +31 line     :   reframing on the driver's own stated discriminator.
+
+== headings for the three T445 names them rotted ==
+P-45   heading at line: 2591:### Why this is not P-45, and not P-73 
+P-84   heading at line: 
+P-95   heading at line: 
+P-80   heading at line: 
+P-57   heading at line: 
+P-22   heading at line: 473:### P-22. A guard, a canary, or a control that cannot fail is worse than none — because it is believed 
+P-35   heading at line: 803:### P-35. Every vacuous guard in this repo is a NEGATIVE assertion — and that is the whole diagnosis 

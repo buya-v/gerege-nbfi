@@ -1,0 +1,38 @@
+### v5 (member names itself, as every real checker does) — CASE, RED on main
+arm            = CASE
+graded tree    = PRE-FIX(main)   (detected from the tree's own text)
+clone warnings = warning: the following paths have collided (e.g. case-sensitive paths on a case-insensitive filesystem) and only one from the same colliding group is in the working tree: '.softhouse/guards/W.txt' '.softhouse/guards/w.txt' 
+git status     = 1 line(s):  T .softhouse/guards/W.txt;
+EXIT           = 2
+probe line count (read BEFORE its value) = 1
+probe value    = down
+VERDICT        = VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+census         = conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+--- guards-dir registration sentences ---
+159:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+162:conformance:     REACHED-BY .softhouse/guards/zz-t446-member.sh — declared in its own header, reached by
+184:conformance:   guards-dir registration: PASS — every member of .softhouse/guards is invoked by this
+185:conformance:   file, DECLARED against a verified witness, or carries a verified REACHED-BY.
+218:conformance:     COST 0s / ceiling 60s   guard_guards_dir_registration
+================================================================
+### v5 — CASE, GREEN on the T445 tip
+arm            = CASE
+graded tree    = FIXED(T445)   (detected from the tree's own text)
+clone warnings = warning: the following paths have collided (e.g. case-sensitive paths on a case-insensitive filesystem) and only one from the same colliding group is in the working tree: '.softhouse/guards/W.txt' '.softhouse/guards/w.txt' 
+git status     = 1 line(s):  T .softhouse/guards/W.txt;
+EXIT           = 2
+probe line count (read BEFORE its value) = 0
+probe value    = ABSENT
+VERDICT        = (no VERDICT line)
+census         = conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+--- guards-dir registration sentences ---
+155:conformance:   registration decisive lines: 7 present, 2 evaluated on an input
+163:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+167:conformance: guard_guards_dir_registration: .softhouse/guards/zz-t446-member.sh declares REACHED-BY .softhouse/guards/W.txt,
+168:conformance: and THAT REACHED-BY WITNESS DOES NOT NAME zz-t446-member.sh IN ITS COMMITTED
+204:conformance: guard_guards_dir_registration FAILED. A checker in the canonical guards
+238:conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
+================================================================
+### RWB3 — the decisive-lines pin evaded by one substitution, on the T445 TIP
+SUBSTITUTION DID NOT APPLY
+### QUEUE2 COMPLETE

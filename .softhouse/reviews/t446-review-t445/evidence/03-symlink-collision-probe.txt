@@ -1,0 +1,38 @@
+--- decoy=W.txt (first)  symlink=w.txt (last) ---
+  update-index --cacheinfo 120000 w.txt : rc=0
+  index:
+    100644 faf3d3a535e59b8bae1554329c2b2b3158c34b65 0	W.txt
+    100644 78f334e17e93c57925232cba6ab577a5c8b14d14 0	member.sh
+    120000 0605a653499b9184afdf1f8a4375dc7693290014 0	w.txt
+    clone: warning: the following paths have collided (e.g. case-sensitive paths
+    clone: on a case-insensitive filesystem) and only one from the same
+    clone: colliding group is in the working tree:
+    clone:   'W.txt'
+    clone:   'w.txt'
+  materialised:
+    -rw-r--r--   1 buv  wheel   28 Aug 29 11:57 member.sh
+    lrwxr-xr-x   1 buv  wheel    9 Aug 29 11:57 w.txt -> member.sh
+  what a filesystem read of 'W.txt' returns:
+    MEMBER BODY names member.sh
+  git status --porcelain:
+     T W.txt
+
+--- symlink=W.txt (first) decoy=w.txt (last) ---
+  update-index --cacheinfo 120000 W.txt : rc=0
+  index:
+    120000 0605a653499b9184afdf1f8a4375dc7693290014 0	W.txt
+    100644 78f334e17e93c57925232cba6ab577a5c8b14d14 0	member.sh
+    100644 faf3d3a535e59b8bae1554329c2b2b3158c34b65 0	w.txt
+    clone: warning: the following paths have collided (e.g. case-sensitive paths
+    clone: on a case-insensitive filesystem) and only one from the same
+    clone: colliding group is in the working tree:
+    clone:   'W.txt'
+    clone:   'w.txt'
+  materialised:
+    -rw-r--r--   1 buv  wheel   28 Aug 29 11:57 member.sh
+    -rw-r--r--   1 buv  wheel   39 Aug 29 11:57 w.txt
+  what a filesystem read of 'w.txt' returns:
+    DECOY-CONTENT-does-not-name-the-target
+  git status --porcelain:
+     T W.txt
+

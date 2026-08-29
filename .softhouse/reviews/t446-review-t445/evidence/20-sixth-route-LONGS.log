@@ -1,0 +1,278 @@
+### SIXTH ROUTE re-driven with the reference oracle back up
+=============================== arm CONTROL ===============================
+index entries under .softhouse matching conformance:
+    100644 6d66f596095767c808882c465d98d55c33c55d26 0	.softhouse/capture/pathb/t147/green-post-fix/conformance.txt
+    100644 b08bac5fc90b6496017db7f778fa87079cf9e7c3 0	.softhouse/capture/pathb/t149/redgreen/green-conformance-43-vectors.txt
+    100644 700072ee9a51f7803d86536007745a8307e4aa02 0	.softhouse/capture/pathb/t149/redgreen/p24-postmerge-conformance.txt
+    100644 b08bac5fc90b6496017db7f778fa87079cf9e7c3 0	.softhouse/capture/pathb/t149/t168/post-fix-conformance.txt
+    100644 87999dcf641144c1153f1fb9c00bde64dfe92de5 0	.softhouse/capture/pathb/t153/verify/conformance-prove-selftest.txt
+    100644 75f6b44e5c71a6ec1291cfef746d34e1b53841db 0	.softhouse/capture/pathb/t153/verify/p24-scratch-merge-conformance.txt
+    100644 8f2a065374ccd54d527f927752ceac449bf9643d 0	.softhouse/capture/pathb/t80/out/conformance.txt
+    100644 7813d12825eca10b0fd4f577862b5bc75000c211 0	.softhouse/capture/t108-grep/out/probe-conformance-guards.txt
+    100644 6b82a78a92cfcea32346b507dfc30c7649e37917 0	.softhouse/capture/t108-grep/probe-conformance-guards.sh
+    100644 6622489df90f9db4e6b2d1eb4574135b3378249f 0	.softhouse/capture/t145-analysis-float/out/conformance-output.txt
+    100644 aaf5553a014453c8921494a803feebbbf2b8f939 0	.softhouse/capture/t154-nofloat/out/conformance-after-leg1.txt
+    100644 3d14aaec8ca9a96151295969d7af33d0b75f0931 0	.softhouse/capture/t154-nofloat/out/conformance-after-leg2.txt
+    100644 578f40197cc32a153e841b1f34a6e85deb2adcbb 0	.softhouse/capture/t154-nofloat/out/conformance-after-leg3.txt
+    100644 dfb13b67cb799c2ea660a5e27e29cc46a27d710f 0	.softhouse/capture/t154-nofloat/out/conformance-baseline-main.txt
+    100644 f697b9fb988711549e96d4776e3b03089a470846 0	.softhouse/capture/t154-nofloat/out/postmerge/conformance.txt
+    100644 6d4b405adb2ca30c2e1c9dea9ae6e17dd837718e 0	.softhouse/capture/t239-r11-rerun/transcripts/90-conformance-full.txt
+    100644 83771339a9949b1bf6d1ceb4ce10db10b902d36d 0	.softhouse/capture/t252-tier3/evidence/BAR-conformance.txt
+    100644 dcd58e5e2b0ffa9801f67bc34ca9f73377e158c4 0	.softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py
+    100644 105121942712ce1738bdfdaef2a9e3cfaa94d60a 0	.softhouse/capture/t252-tier3/transcripts/50-conformance-red-drive.txt
+    100644 8e41c54aa3a422adb2829dfb4f8013db812bb927 0	.softhouse/capture/t277-shapelaw-salvage/evidence/50-conformance-bar.log
+    100644 e64d0c2c75b04cd22c74e78ad8aafa403eed64b4 0	.softhouse/capture/t277-shapelaw-salvage/evidence/51-conformance-bar-second-worker.log
+    100644 102555b0f00bb1dc79c788d7ad84eafa9e943b2e 0	.softhouse/capture/t286-t268-retry/out/scope-conformance-main-moved.txt
+    100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 0	.softhouse/capture/t286-t268-retry/out/scope-conformance.txt
+    100644 25ddc933fdb367125219b7c2ed85b4ae0d1f8954 0	.softhouse/capture/t304-evidence-destruction/evidence/110-conformance.txt
+    100644 25ddc933fdb367125219b7c2ed85b4ae0d1f8954 0	.softhouse/capture/t304-evidence-destruction/evidence/111-conformance-FINAL-committed-tree.txt
+    100755 baa3783a4e19325bed721a31ce66beee65d1d99d 0	.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh
+    100644 f116d8b709495d4f99906004252a48fc90b50bbd 0	.softhouse/capture/t312-branch-case-collision/conformance-excerpt.txt
+    100644 9651bedcdd0b31bc8630bc3cadf602cf2dc76a8e 0	.softhouse/capture/t316-dead-path-guards/evidence/60-conformance-bar.txt
+    100644 cd3d0e9c131e54fd5f00cb00fcbf6229247c7f17 0	.softhouse/capture/t318-committed-clobber-blindness/evidence/60-conformance.txt
+    100644 ead27670b371024170d4a759a63920f224d6f45e 0	.softhouse/capture/t319-reconciler-f5/CONFORMANCE-WIRING.md
+    100644 7f18f94a92c3f77b2b409d16d7e2f5b8c82447ea 0	.softhouse/capture/t319-reconciler-f5/out-conformance.txt
+    100644 2f958390dd68d0778d137ada579f642ad7d0edb4 0	.softhouse/capture/t321-variable-paths-and-resets/evidence/60-conformance.txt
+    100644 bb548595131ed6610a468f036cd5eee026355a17 0	.softhouse/capture/t324-worktree-prune-skipbit/evidence/60-conformance.txt
+    100644 f72997860cf057ab13a1b9b2d32a2c36b2e21cc8 0	.softhouse/capture/t325-adopt-attestation/evidence/60-conformance.txt
+    100644 b3f84887b98cde34197267870d62e5bb801d1caa 0	.softhouse/capture/t331-wire-pnumber-checker/out/70-RED-through-conformance.txt
+    100644 b43e9020d1c21410a7c80c8d43a41e0aa06e191e 0	.softhouse/capture/t331-wire-pnumber-checker/out/71-GREEN-through-conformance.txt
+    100644 ebf22d219bea1be94d4422cebf39ebad51b1184a 0	.softhouse/capture/t332-residual-twin-sweep/evidence/60-conformance-bar.log
+    100644 5aeb669ac73b44d4f393223f160b9300046096f3 0	.softhouse/capture/t349-pretooluse-eval/out/conformance-at-head.txt
+    100644 54c8ffb8a3032afac53e0f433a57c8a397e98e9d 0	.softhouse/capture/t353-t342-conditions/out/22-conformance-BRANCH-ALONE-exit2.txt
+    100644 5b6217fd070fa5cbad969195d0fa64488e83945d 0	.softhouse/capture/t353-t342-conditions/out/23-conformance-MERGE-RESULT-exit0.txt
+    100644 956db41a1d10f45aef9e662eb4c47d03d574ff34 0	.softhouse/capture/t353-t342-conditions/out/24-conformance-MERGE-RESULT-final-3a4f24f4.txt
+    100644 9c66ad0467486f8f81dbe0bf1ba39016b5700251 0	.softhouse/capture/t360-divergence-class/CONFORMANCE-SH-PATCH-REQUEST.md
+    100644 5c032be7b00b0616f7e0e30d0db7aa8e1ca87d0d 0	.softhouse/capture/t363-oracle-baseline/out/BAR-conformance.txt
+    100644 53de8a8edd4404e51d7e507ed62c82e6ece90eb7 0	.softhouse/capture/t365-t361-conditions/out/15-AFTER-conformance.txt
+    100644 87b7c89ea7ada062670d1356417510002da004f7 0	.softhouse/capture/t371-t367-conditions/out/BAR-conformance-t371.txt
+    100644 e1af3f2c067684eb9887abde052f7fdf758bcd21 0	.softhouse/capture/t374-t362-conditions/out/00-conformance-BASELINE.txt
+    100644 c225b41646c46224fc432f42d38cb40f3f18b66f 0	.softhouse/capture/t374-t362-conditions/out/50-conformance-AFTER-git-add.txt
+    100644 42d44d87cddeed76f8be69648ca211e111867580 0	.softhouse/capture/t374-t362-conditions/out/51-conformance-AFTER-pin-absorbed.txt
+    100644 47fd9e1e1d193ab6c64434b214b9792c0f4e85b8 0	.softhouse/capture/t374-t362-conditions/out/52-conformance-FINAL.txt
+    100644 e317997e036fabd612ee4bedb6c926b6d6e736b5 0	.softhouse/capture/t377-t368-conditions/out/08-conformance.txt
+    100644 a63edced2c850a17c95b77543309446eaa2e781a 0	.softhouse/capture/t381-t379-conditions/out/BAR-conformance-t381-confirm.txt
+    100644 16edf8950ac8579959b5bce0ade67ea34172f0bd 0	.softhouse/capture/t381-t379-conditions/out/BAR-conformance-t381.txt
+    100644 0d5d163d131da644ad9058455d3dd2f5cfbd3ee4 0	.softhouse/capture/t383-t380-conditions/out/12-conformance-run1.txt
+    100644 9ca6d726ea79f375e17b83fb2b4407e2c077681d 0	.softhouse/capture/t383-t380-conditions/out/13-conformance-run2.txt
+    100644 a9a1e84235bd1ea099df523b1686af7204056fe6 0	.softhouse/capture/t388-accrual-capture/out/T388-BAR-conformance-final.txt
+    100644 247b576c9fecb0fcba42887e84719323b2e79372 0	.softhouse/capture/t388-accrual-capture/out/T388-BAR-conformance.txt
+    100644 116ddb94a3374424ed7128c18ed58477d068c6d5 0	.softhouse/capture/t390-baseline-attribution/out/conformance-PATCHED.sh
+    100644 345d221b695e842e17f4005b9297805c4019af14 0	.softhouse/capture/t390-baseline-attribution/out/conformance-T390-wiring.patch
+    100644 b9674d82606e8b70a476fdfeab468af80e3e17b9 0	.softhouse/capture/t391-accrual-promotion/out/T391-BAR-conformance.txt
+    100644 1f3fb31640a303d4686a44d2e0374786d5a1613b 0	.softhouse/capture/t393-t382-conditions/out/07-CONFORMANCE.txt
+    100644 8c87e2d6e6b5230a84fdae520a561e4d85a6817e 0	.softhouse/capture/t393-t382-conditions/out/08-CONFORMANCE-FINAL.txt
+    100644 639f4852ae09260283ad1bac2c90682210952356 0	.softhouse/capture/t401-zsh-census-gap/evidence/30-conformance-selectors.txt
+    100644 825d6e9b9f855097f29188715cc3e771c1f67cc4 0	.softhouse/capture/t401-zsh-census-gap/instruments/30-conformance-own-selectors.sh
+    100644 466cb70d0b40609377ad994481ab05d299950e6e 0	.softhouse/capture/t401-zsh-census-gap/instruments/45-red-drive-conformance-selectors.sh
+    100644 73e7863816ae3fe81a8492d2428cfe3527518ec7 0	.softhouse/capture/t416-t405-conditions/REQUEST-conformance-sh-divergence-pin.md
+    100644 d064df0acab358f354b87df79b17354e2f030943 0	.softhouse/capture/t91/out/CONFORMANCE-T115.txt
+    100644 24e01270b1f28d90696fb3de1141cd70ced2f3d1 0	.softhouse/capture/t91/out/CONFORMANCE.txt
+    100755 62cda497d57270ee181b5b14732fa9640be98cf0 0	.softhouse/conformance.sh
+    100644 f086c6ae2e30c6ff25360eccbb88a25e12e0d9db 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-22-evidence/baseline-conformance-main-cc33f7f.txt
+    100644 85dc522acb0a98cf3fa0ef92521f2cbe783375cd 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-22-evidence/green-conformance.txt
+    100644 c1ab426aced89c9a06216343f49ab520ec953d37 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-24-evidence/conformance-baseline-ee2c532.txt
+    100644 88544a1c91271e04abff554d1cc3dd242c2fd281 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-27-evidence/conformance-after.txt
+    100644 dbadd787e10cba8b5a5860857406caf1073ce562 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/BAR-conformance-baseline.txt
+    100644 dbadd787e10cba8b5a5860857406caf1073ce562 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/BAR-conformance-final.txt
+    100644 905ef2f6d05c98c4f39fe19cd2c08c9ed557018a 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/conformance-AFTER.txt
+    100644 905ef2f6d05c98c4f39fe19cd2c08c9ed557018a 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/conformance-BEFORE.txt
+    100644 c0c898449ee17f27e7240f5f6cca1e329ae1f7d8 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/run-conformance.sh
+    100644 156657cc62e2676a5a6b9737f99a38c9b4293ff8 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/conformance-AFTER.txt
+    100644 bcc2b45e27c35bd7302051386e29fe4ac6e24aef 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/CONFORMANCE-AFTER.txt
+    100644 48dfb33763088b99c121dcdda3ad352fe96323ef 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/BAR-conformance-FINAL.txt
+    100644 2e7b34d0fe824f63ed782b270747598d6610fc6d 0	.softhouse/handoff/T8-run-conformance.sh
+    100644 0a8ebff303db61d9d30713d5c53b520f07f9aa30 0	.softhouse/reviews/T138-evidence/out/R9b-POSTMERGE-CONFORMANCE.txt
+    100755 4b61ac958c57a457d6b63719ab5b3e0428bb9857 0	.softhouse/reviews/T155-probe/run-conformance.sh
+    100644 7c6559b52662e90704a11917045e5efcfb82ddac 0	.softhouse/reviews/T158-evidence/00-baseline-conformance-main-summary.txt
+    100644 5dc5a8e3fae824acd556f2deea05e00b033efa57 0	.softhouse/reviews/T158-evidence/09-p24-merged-main-aaa1628-conformance-summary.txt
+    100644 aa0630445565e7d79807e264add919c9236204ae 0	.softhouse/reviews/T297/evidence/bar-conformance.txt
+    100644 79cdf9e236ffd9eab5851e0ae816ce9c55a495a9 0	.softhouse/reviews/T302/a2/out-conformance.txt
+    100644 a14392e358bac2ffebca15d8396feef400d4f04c 0	.softhouse/reviews/a2-31-dec2-rev4/evidence/BAR-conformance-baseline.txt
+    100644 a14392e358bac2ffebca15d8396feef400d4f04c 0	.softhouse/reviews/a2-31-dec2-rev4/evidence/BAR-conformance-final.txt
+    100644 b4822055eb44bd9f52e987c6fefb6e456c5e1b97 0	.softhouse/reviews/a2-33-dec2-rev5/BAR-conformance-A2-33.txt
+    100644 0a151a860e73ac343dfc25b0a046a772bed4e2c7 0	.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-conformance-full.txt
+    100644 bdc866a0acd7908eed3f4dc046f61cddbba7b232 0	.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-conformance-loanschedule-filtered.txt
+    100644 c028a2d021bae33dc8ba57c0e2cad27cc233dfba 0	.softhouse/reviews/t225-review-t222/conformance-after-restore.txt
+    100644 cecef1a4402a8e040a3149ab1242e09eb8f236fa 0	.softhouse/reviews/t225-review-t222/conformance-prove.txt
+    100644 c301cbb3efe80e884eb3c3c95ff964af2adbde83 0	.softhouse/reviews/t251-dec2-rev7/conformance-2871f17.log
+    100644 d40e96d0f2c1210a015c225535d8e3e1616d747d 0	.softhouse/reviews/t251-dec2-rev7/run-conformance.sh
+    100644 abf3b8605f42480534b61dae5bd33146d8b3cff2 0	.softhouse/reviews/t278-review-t277/evidence/70-t278-conformance-bar.log
+    100644 5b9ca6a5a5a59fed9109948504dcc37b6df22f53 0	.softhouse/reviews/t278-review-t277/evidence/71-t278-conformance-bar-delivered-tree.log
+    100644 40743ad2aa1eddb7e1dd49e6fe63d60c63861629 0	.softhouse/reviews/t339-review-t270/out/90-conformance-on-t339-branch.txt
+    100644 9df7b1723241099aa99ef0835b9be5926f8a3fd1 0	.softhouse/reviews/t339-review-t270/out/91-conformance-on-a-tracked-copy-of-t270-tree.txt
+    100644 07a35d628c8c3d6fd7a4b169070dbb964cc05f1f 0	.softhouse/reviews/t346-review-t342/out/05-conformance-main.txt
+    100644 59b798b781f4e0d95b65bb3cff99d5dea469f7bc 0	.softhouse/reviews/t347-review-t336/out/conformance.txt
+    100644 f3b19a87a41437d77ab69ac0c4e77343a784356a 0	.softhouse/reviews/t359-review-t352/schema-drive/runB-conformance-sh.log
+    100644 7a2c0b13a0c010d22b26288d81b1c9546739b297 0	.softhouse/reviews/t362-review-t357/evidence/70-conformance-main-plus-T357.txt
+    100644 a60e5bc79a022c5547d0eb3f55f4e5925917300a 0	.softhouse/reviews/t362-review-t357/evidence/71-conformance-main-plus-T357-plus-T358.txt
+    100644 b9ea463e48abb29f94de9b972a46851bac3b884e 0	.softhouse/reviews/t367-review-t363/out/BAR-conformance-t367.txt
+    100644 aab96e5c4278269ba4c88b1055a803276f81dc30 0	.softhouse/reviews/t368-review-t365/out/05-conformance.txt
+    100644 73d024b5a85a0dd77bb1a26eb8101c0956dc9b80 0	.softhouse/reviews/t379-review-t371/out/R8-BAR-conformance-t379.txt
+    100644 c191d4d17a0fe84c0e5efa6a1b9b935b81dc5cf4 0	.softhouse/reviews/t380-review-t377/out/11-conformance.txt
+    100644 8188ab85def3f48158e13162e0ace0c0846bbed3 0	.softhouse/reviews/t382-review-t374/out/CONFORMANCE-GREEN-final.exit
+    100644 7b6f4a578f20f044143378c3d4fcb5b74752c087 0	.softhouse/reviews/t382-review-t374/out/CONFORMANCE-GREEN-final.txt
+    100644 f5c8cc21b138d6c1f1670fd728372a1496c3219d 0	.softhouse/reviews/t382-review-t374/out/CONFORMANCE-RED-failopen.txt
+    100644 9a7f4027f5432f6957550a03aa5765587b838d41 0	.softhouse/reviews/t382-review-t374/out/CONFORMANCE-RED-hoststate.txt
+    100644 776c0b7915d401088ddd4d417700145814f4ee82 0	.softhouse/reviews/t444-review-t431/evidence/06-conformance-line-citation-sweep.txt
+COMMITTED blob of .softhouse/conformance.sh (what a reviewer reads):
+    62cda497d57270ee181b5b14732fa9640be98cf0
+MATERIALISED file at .softhouse/conformance.sh (what bash executes):
+    62cda497d57270ee181b5b14732fa9640be98cf0
+    identical to the committed blob? YES
+clone warnings:
+git status --porcelain of the graded clone:
+ls of the materialised .softhouse entries that fold onto conformance.sh:
+    conformance.sh
+EXIT = 2
+probe line count (read BEFORE its value) = 0
+probe value = ABSENT
+VERDICT = (none)
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=1 symlink-members=0
+--- registration sentences ---
+167:conformance: guard_guards_dir_registration: .softhouse/guards/zz-t446-unreg.sh IS INVOKED BY NOTHING.
+217:conformance: guard_guards_dir_registration FAILED. A checker in the canonical guards
+251:conformance:     COST 0s / ceiling 60s   guard_guards_dir_registration
+=============================== arm LONGS ===============================
+index entries under .softhouse matching conformance:
+    100644 6d66f596095767c808882c465d98d55c33c55d26 0	.softhouse/capture/pathb/t147/green-post-fix/conformance.txt
+    100644 b08bac5fc90b6496017db7f778fa87079cf9e7c3 0	.softhouse/capture/pathb/t149/redgreen/green-conformance-43-vectors.txt
+    100644 700072ee9a51f7803d86536007745a8307e4aa02 0	.softhouse/capture/pathb/t149/redgreen/p24-postmerge-conformance.txt
+    100644 b08bac5fc90b6496017db7f778fa87079cf9e7c3 0	.softhouse/capture/pathb/t149/t168/post-fix-conformance.txt
+    100644 87999dcf641144c1153f1fb9c00bde64dfe92de5 0	.softhouse/capture/pathb/t153/verify/conformance-prove-selftest.txt
+    100644 75f6b44e5c71a6ec1291cfef746d34e1b53841db 0	.softhouse/capture/pathb/t153/verify/p24-scratch-merge-conformance.txt
+    100644 8f2a065374ccd54d527f927752ceac449bf9643d 0	.softhouse/capture/pathb/t80/out/conformance.txt
+    100644 7813d12825eca10b0fd4f577862b5bc75000c211 0	.softhouse/capture/t108-grep/out/probe-conformance-guards.txt
+    100644 6b82a78a92cfcea32346b507dfc30c7649e37917 0	.softhouse/capture/t108-grep/probe-conformance-guards.sh
+    100644 6622489df90f9db4e6b2d1eb4574135b3378249f 0	.softhouse/capture/t145-analysis-float/out/conformance-output.txt
+    100644 aaf5553a014453c8921494a803feebbbf2b8f939 0	.softhouse/capture/t154-nofloat/out/conformance-after-leg1.txt
+    100644 3d14aaec8ca9a96151295969d7af33d0b75f0931 0	.softhouse/capture/t154-nofloat/out/conformance-after-leg2.txt
+    100644 578f40197cc32a153e841b1f34a6e85deb2adcbb 0	.softhouse/capture/t154-nofloat/out/conformance-after-leg3.txt
+    100644 dfb13b67cb799c2ea660a5e27e29cc46a27d710f 0	.softhouse/capture/t154-nofloat/out/conformance-baseline-main.txt
+    100644 f697b9fb988711549e96d4776e3b03089a470846 0	.softhouse/capture/t154-nofloat/out/postmerge/conformance.txt
+    100644 6d4b405adb2ca30c2e1c9dea9ae6e17dd837718e 0	.softhouse/capture/t239-r11-rerun/transcripts/90-conformance-full.txt
+    100644 83771339a9949b1bf6d1ceb4ce10db10b902d36d 0	.softhouse/capture/t252-tier3/evidence/BAR-conformance.txt
+    100644 dcd58e5e2b0ffa9801f67bc34ca9f73377e158c4 0	.softhouse/capture/t252-tier3/instruments/50-conformance-red-drive.py
+    100644 105121942712ce1738bdfdaef2a9e3cfaa94d60a 0	.softhouse/capture/t252-tier3/transcripts/50-conformance-red-drive.txt
+    100644 8e41c54aa3a422adb2829dfb4f8013db812bb927 0	.softhouse/capture/t277-shapelaw-salvage/evidence/50-conformance-bar.log
+    100644 e64d0c2c75b04cd22c74e78ad8aafa403eed64b4 0	.softhouse/capture/t277-shapelaw-salvage/evidence/51-conformance-bar-second-worker.log
+    100644 102555b0f00bb1dc79c788d7ad84eafa9e943b2e 0	.softhouse/capture/t286-t268-retry/out/scope-conformance-main-moved.txt
+    100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 0	.softhouse/capture/t286-t268-retry/out/scope-conformance.txt
+    100644 25ddc933fdb367125219b7c2ed85b4ae0d1f8954 0	.softhouse/capture/t304-evidence-destruction/evidence/110-conformance.txt
+    100644 25ddc933fdb367125219b7c2ed85b4ae0d1f8954 0	.softhouse/capture/t304-evidence-destruction/evidence/111-conformance-FINAL-committed-tree.txt
+    100755 baa3783a4e19325bed721a31ce66beee65d1d99d 0	.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh
+    100644 f116d8b709495d4f99906004252a48fc90b50bbd 0	.softhouse/capture/t312-branch-case-collision/conformance-excerpt.txt
+    100644 9651bedcdd0b31bc8630bc3cadf602cf2dc76a8e 0	.softhouse/capture/t316-dead-path-guards/evidence/60-conformance-bar.txt
+    100644 cd3d0e9c131e54fd5f00cb00fcbf6229247c7f17 0	.softhouse/capture/t318-committed-clobber-blindness/evidence/60-conformance.txt
+    100644 ead27670b371024170d4a759a63920f224d6f45e 0	.softhouse/capture/t319-reconciler-f5/CONFORMANCE-WIRING.md
+    100644 7f18f94a92c3f77b2b409d16d7e2f5b8c82447ea 0	.softhouse/capture/t319-reconciler-f5/out-conformance.txt
+    100644 2f958390dd68d0778d137ada579f642ad7d0edb4 0	.softhouse/capture/t321-variable-paths-and-resets/evidence/60-conformance.txt
+    100644 bb548595131ed6610a468f036cd5eee026355a17 0	.softhouse/capture/t324-worktree-prune-skipbit/evidence/60-conformance.txt
+    100644 f72997860cf057ab13a1b9b2d32a2c36b2e21cc8 0	.softhouse/capture/t325-adopt-attestation/evidence/60-conformance.txt
+    100644 b3f84887b98cde34197267870d62e5bb801d1caa 0	.softhouse/capture/t331-wire-pnumber-checker/out/70-RED-through-conformance.txt
+    100644 b43e9020d1c21410a7c80c8d43a41e0aa06e191e 0	.softhouse/capture/t331-wire-pnumber-checker/out/71-GREEN-through-conformance.txt
+    100644 ebf22d219bea1be94d4422cebf39ebad51b1184a 0	.softhouse/capture/t332-residual-twin-sweep/evidence/60-conformance-bar.log
+    100644 5aeb669ac73b44d4f393223f160b9300046096f3 0	.softhouse/capture/t349-pretooluse-eval/out/conformance-at-head.txt
+    100644 54c8ffb8a3032afac53e0f433a57c8a397e98e9d 0	.softhouse/capture/t353-t342-conditions/out/22-conformance-BRANCH-ALONE-exit2.txt
+    100644 5b6217fd070fa5cbad969195d0fa64488e83945d 0	.softhouse/capture/t353-t342-conditions/out/23-conformance-MERGE-RESULT-exit0.txt
+    100644 956db41a1d10f45aef9e662eb4c47d03d574ff34 0	.softhouse/capture/t353-t342-conditions/out/24-conformance-MERGE-RESULT-final-3a4f24f4.txt
+    100644 9c66ad0467486f8f81dbe0bf1ba39016b5700251 0	.softhouse/capture/t360-divergence-class/CONFORMANCE-SH-PATCH-REQUEST.md
+    100644 5c032be7b00b0616f7e0e30d0db7aa8e1ca87d0d 0	.softhouse/capture/t363-oracle-baseline/out/BAR-conformance.txt
+    100644 53de8a8edd4404e51d7e507ed62c82e6ece90eb7 0	.softhouse/capture/t365-t361-conditions/out/15-AFTER-conformance.txt
+    100644 87b7c89ea7ada062670d1356417510002da004f7 0	.softhouse/capture/t371-t367-conditions/out/BAR-conformance-t371.txt
+    100644 e1af3f2c067684eb9887abde052f7fdf758bcd21 0	.softhouse/capture/t374-t362-conditions/out/00-conformance-BASELINE.txt
+    100644 c225b41646c46224fc432f42d38cb40f3f18b66f 0	.softhouse/capture/t374-t362-conditions/out/50-conformance-AFTER-git-add.txt
+    100644 42d44d87cddeed76f8be69648ca211e111867580 0	.softhouse/capture/t374-t362-conditions/out/51-conformance-AFTER-pin-absorbed.txt
+    100644 47fd9e1e1d193ab6c64434b214b9792c0f4e85b8 0	.softhouse/capture/t374-t362-conditions/out/52-conformance-FINAL.txt
+    100644 e317997e036fabd612ee4bedb6c926b6d6e736b5 0	.softhouse/capture/t377-t368-conditions/out/08-conformance.txt
+    100644 a63edced2c850a17c95b77543309446eaa2e781a 0	.softhouse/capture/t381-t379-conditions/out/BAR-conformance-t381-confirm.txt
+    100644 16edf8950ac8579959b5bce0ade67ea34172f0bd 0	.softhouse/capture/t381-t379-conditions/out/BAR-conformance-t381.txt
+    100644 0d5d163d131da644ad9058455d3dd2f5cfbd3ee4 0	.softhouse/capture/t383-t380-conditions/out/12-conformance-run1.txt
+    100644 9ca6d726ea79f375e17b83fb2b4407e2c077681d 0	.softhouse/capture/t383-t380-conditions/out/13-conformance-run2.txt
+    100644 a9a1e84235bd1ea099df523b1686af7204056fe6 0	.softhouse/capture/t388-accrual-capture/out/T388-BAR-conformance-final.txt
+    100644 247b576c9fecb0fcba42887e84719323b2e79372 0	.softhouse/capture/t388-accrual-capture/out/T388-BAR-conformance.txt
+    100644 116ddb94a3374424ed7128c18ed58477d068c6d5 0	.softhouse/capture/t390-baseline-attribution/out/conformance-PATCHED.sh
+    100644 345d221b695e842e17f4005b9297805c4019af14 0	.softhouse/capture/t390-baseline-attribution/out/conformance-T390-wiring.patch
+    100644 b9674d82606e8b70a476fdfeab468af80e3e17b9 0	.softhouse/capture/t391-accrual-promotion/out/T391-BAR-conformance.txt
+    100644 1f3fb31640a303d4686a44d2e0374786d5a1613b 0	.softhouse/capture/t393-t382-conditions/out/07-CONFORMANCE.txt
+    100644 8c87e2d6e6b5230a84fdae520a561e4d85a6817e 0	.softhouse/capture/t393-t382-conditions/out/08-CONFORMANCE-FINAL.txt
+    100644 639f4852ae09260283ad1bac2c90682210952356 0	.softhouse/capture/t401-zsh-census-gap/evidence/30-conformance-selectors.txt
+    100644 825d6e9b9f855097f29188715cc3e771c1f67cc4 0	.softhouse/capture/t401-zsh-census-gap/instruments/30-conformance-own-selectors.sh
+    100644 466cb70d0b40609377ad994481ab05d299950e6e 0	.softhouse/capture/t401-zsh-census-gap/instruments/45-red-drive-conformance-selectors.sh
+    100644 73e7863816ae3fe81a8492d2428cfe3527518ec7 0	.softhouse/capture/t416-t405-conditions/REQUEST-conformance-sh-divergence-pin.md
+    100644 d064df0acab358f354b87df79b17354e2f030943 0	.softhouse/capture/t91/out/CONFORMANCE-T115.txt
+    100644 24e01270b1f28d90696fb3de1141cd70ced2f3d1 0	.softhouse/capture/t91/out/CONFORMANCE.txt
+    100755 62cda497d57270ee181b5b14732fa9640be98cf0 0	.softhouse/conformance.sh
+    100755 742934c55cd9ca848088fe5040c05450c551895b 0	".softhouse/conformance.\305\277h"
+    100644 f086c6ae2e30c6ff25360eccbb88a25e12e0d9db 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-22-evidence/baseline-conformance-main-cc33f7f.txt
+    100644 85dc522acb0a98cf3fa0ef92521f2cbe783375cd 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-22-evidence/green-conformance.txt
+    100644 c1ab426aced89c9a06216343f49ab520ec953d37 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-24-evidence/conformance-baseline-ee2c532.txt
+    100644 88544a1c91271e04abff554d1cc3dd242c2fd281 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-27-evidence/conformance-after.txt
+    100644 dbadd787e10cba8b5a5860857406caf1073ce562 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/BAR-conformance-baseline.txt
+    100644 dbadd787e10cba8b5a5860857406caf1073ce562 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/BAR-conformance-final.txt
+    100644 905ef2f6d05c98c4f39fe19cd2c08c9ed557018a 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/conformance-AFTER.txt
+    100644 905ef2f6d05c98c4f39fe19cd2c08c9ed557018a 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/conformance-BEFORE.txt
+    100644 c0c898449ee17f27e7240f5f6cca1e329ae1f7d8 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/run-conformance.sh
+    100644 156657cc62e2676a5a6b9737f99a38c9b4293ff8 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/conformance-AFTER.txt
+    100644 bcc2b45e27c35bd7302051386e29fe4ac6e24aef 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/CONFORMANCE-AFTER.txt
+    100644 48dfb33763088b99c121dcdda3ad352fe96323ef 0	.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/BAR-conformance-FINAL.txt
+    100644 2e7b34d0fe824f63ed782b270747598d6610fc6d 0	.softhouse/handoff/T8-run-conformance.sh
+    100644 0a8ebff303db61d9d30713d5c53b520f07f9aa30 0	.softhouse/reviews/T138-evidence/out/R9b-POSTMERGE-CONFORMANCE.txt
+    100755 4b61ac958c57a457d6b63719ab5b3e0428bb9857 0	.softhouse/reviews/T155-probe/run-conformance.sh
+    100644 7c6559b52662e90704a11917045e5efcfb82ddac 0	.softhouse/reviews/T158-evidence/00-baseline-conformance-main-summary.txt
+    100644 5dc5a8e3fae824acd556f2deea05e00b033efa57 0	.softhouse/reviews/T158-evidence/09-p24-merged-main-aaa1628-conformance-summary.txt
+    100644 aa0630445565e7d79807e264add919c9236204ae 0	.softhouse/reviews/T297/evidence/bar-conformance.txt
+    100644 79cdf9e236ffd9eab5851e0ae816ce9c55a495a9 0	.softhouse/reviews/T302/a2/out-conformance.txt
+    100644 a14392e358bac2ffebca15d8396feef400d4f04c 0	.softhouse/reviews/a2-31-dec2-rev4/evidence/BAR-conformance-baseline.txt
+    100644 a14392e358bac2ffebca15d8396feef400d4f04c 0	.softhouse/reviews/a2-31-dec2-rev4/evidence/BAR-conformance-final.txt
+    100644 b4822055eb44bd9f52e987c6fefb6e456c5e1b97 0	.softhouse/reviews/a2-33-dec2-rev5/BAR-conformance-A2-33.txt
+    100644 0a151a860e73ac343dfc25b0a046a772bed4e2c7 0	.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-conformance-full.txt
+    100644 bdc866a0acd7908eed3f4dc046f61cddbba7b232 0	.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-conformance-loanschedule-filtered.txt
+    100644 c028a2d021bae33dc8ba57c0e2cad27cc233dfba 0	.softhouse/reviews/t225-review-t222/conformance-after-restore.txt
+    100644 cecef1a4402a8e040a3149ab1242e09eb8f236fa 0	.softhouse/reviews/t225-review-t222/conformance-prove.txt
+    100644 c301cbb3efe80e884eb3c3c95ff964af2adbde83 0	.softhouse/reviews/t251-dec2-rev7/conformance-2871f17.log
+    100644 d40e96d0f2c1210a015c225535d8e3e1616d747d 0	.softhouse/reviews/t251-dec2-rev7/run-conformance.sh
+    100644 abf3b8605f42480534b61dae5bd33146d8b3cff2 0	.softhouse/reviews/t278-review-t277/evidence/70-t278-conformance-bar.log
+    100644 5b9ca6a5a5a59fed9109948504dcc37b6df22f53 0	.softhouse/reviews/t278-review-t277/evidence/71-t278-conformance-bar-delivered-tree.log
+    100644 40743ad2aa1eddb7e1dd49e6fe63d60c63861629 0	.softhouse/reviews/t339-review-t270/out/90-conformance-on-t339-branch.txt
+    100644 9df7b1723241099aa99ef0835b9be5926f8a3fd1 0	.softhouse/reviews/t339-review-t270/out/91-conformance-on-a-tracked-copy-of-t270-tree.txt
+    100644 07a35d628c8c3d6fd7a4b169070dbb964cc05f1f 0	.softhouse/reviews/t346-review-t342/out/05-conformance-main.txt
+    100644 59b798b781f4e0d95b65bb3cff99d5dea469f7bc 0	.softhouse/reviews/t347-review-t336/out/conformance.txt
+    100644 f3b19a87a41437d77ab69ac0c4e77343a784356a 0	.softhouse/reviews/t359-review-t352/schema-drive/runB-conformance-sh.log
+    100644 7a2c0b13a0c010d22b26288d81b1c9546739b297 0	.softhouse/reviews/t362-review-t357/evidence/70-conformance-main-plus-T357.txt
+    100644 a60e5bc79a022c5547d0eb3f55f4e5925917300a 0	.softhouse/reviews/t362-review-t357/evidence/71-conformance-main-plus-T357-plus-T358.txt
+    100644 b9ea463e48abb29f94de9b972a46851bac3b884e 0	.softhouse/reviews/t367-review-t363/out/BAR-conformance-t367.txt
+    100644 aab96e5c4278269ba4c88b1055a803276f81dc30 0	.softhouse/reviews/t368-review-t365/out/05-conformance.txt
+    100644 73d024b5a85a0dd77bb1a26eb8101c0956dc9b80 0	.softhouse/reviews/t379-review-t371/out/R8-BAR-conformance-t379.txt
+    100644 c191d4d17a0fe84c0e5efa6a1b9b935b81dc5cf4 0	.softhouse/reviews/t380-review-t377/out/11-conformance.txt
+    100644 8188ab85def3f48158e13162e0ace0c0846bbed3 0	.softhouse/reviews/t382-review-t374/out/CONFORMANCE-GREEN-final.exit
+    100644 7b6f4a578f20f044143378c3d4fcb5b74752c087 0	.softhouse/reviews/t382-review-t374/out/CONFORMANCE-GREEN-final.txt
+    100644 f5c8cc21b138d6c1f1670fd728372a1496c3219d 0	.softhouse/reviews/t382-review-t374/out/CONFORMANCE-RED-failopen.txt
+    100644 9a7f4027f5432f6957550a03aa5765587b838d41 0	.softhouse/reviews/t382-review-t374/out/CONFORMANCE-RED-hoststate.txt
+    100644 776c0b7915d401088ddd4d417700145814f4ee82 0	.softhouse/reviews/t444-review-t431/evidence/06-conformance-line-citation-sweep.txt
+COMMITTED blob of .softhouse/conformance.sh (what a reviewer reads):
+    62cda497d57270ee181b5b14732fa9640be98cf0
+MATERIALISED file at .softhouse/conformance.sh (what bash executes):
+    742934c55cd9ca848088fe5040c05450c551895b
+    identical to the committed blob? *** NO ***
+clone warnings:
+    warning: the following paths have collided (e.g. case-sensitive paths
+    on a case-insensitive filesystem) and only one from the same
+    colliding group is in the working tree:
+    
+      '.softhouse/conformance.sh'
+      '.softhouse/conformance.ſh'
+git status --porcelain of the graded clone:
+     M .softhouse/conformance.sh
+ls of the materialised .softhouse entries that fold onto conformance.sh:
+    conformance.ſh
+EXIT = 0
+probe line count (read BEFORE its value) = 1
+probe value = up
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+--- registration sentences ---
+190:conformance:   guards-dir registration: PASS — every member of .softhouse/guards is invoked by this
+191:conformance:   file, DECLARED against a verified witness, or carries a verified REACHED-BY.
+224:conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
+### QUEUE3 COMPLETE

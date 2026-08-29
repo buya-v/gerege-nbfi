@@ -1,0 +1,51 @@
+git: git version 2.50.1 (Apple Git-155)
+
+--- case: A.txt (first) vs a.txt (last) ---
+index order (git ls-files, C-quoted):
+    A.txt
+    a.txt
+    clone: warning: the following paths have collided (e.g. case-sensitive paths
+    clone: on a case-insensitive filesystem) and only one from the same
+    clone: colliding group is in the working tree:
+    clone: 
+    clone:   'A.txt'
+    clone:   'a.txt'
+  after clone, files present:
+    a.txt
+  content at each materialised path:
+    612e747874 = CONTENT-2 name=612e747874
+  core.ignorecase = true
+  core.precomposeunicode = true
+  git status --porcelain after clone:
+     M A.txt
+
+--- longs: conformance.sh vs conformance.<U+017F>h ---
+index order (git ls-files, C-quoted):
+    conformance.sh
+    "conformance.\305\277h"
+    clone: warning: the following paths have collided (e.g. case-sensitive paths
+    clone: on a case-insensitive filesystem) and only one from the same
+    clone: colliding group is in the working tree:
+    clone: 
+    clone:   'conformance.sh'
+    clone:   'conformance.ſh'
+  after clone, files present:
+    conformance.ſh
+  content at each materialised path:
+    636f6e666f726d616e63652ec5bf68 = CONTENT-2 name=636f6e666f726d616e63652ec5bf68
+  core.ignorecase = true
+  core.precomposeunicode = true
+  git status --porcelain after clone:
+     M conformance.sh
+
+--- nfd/nfc: cafe<U+00E9>.sh vs cafe+combining-acute.sh ---
+index order (git ls-files, C-quoted):
+    "caf\303\251.sh"
+  after clone, files present:
+    café.sh
+  content at each materialised path:
+    636166c3a92e7368 = CONTENT-2 name=63616665cc812e7368
+  core.ignorecase = true
+  core.precomposeunicode = true
+  git status --porcelain after clone:
+
