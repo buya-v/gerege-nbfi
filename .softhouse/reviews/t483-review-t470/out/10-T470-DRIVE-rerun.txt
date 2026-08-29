@@ -1,0 +1,71 @@
+== T470 PIN-ROUTE DRIVE ==
+   git      : git version 2.50.1 (Apple Git-155)
+   python3  : Python 3.9.6
+   SRC      : /tmp/t483-scratch/tmp/armA-t470tip
+   HEAD     : 28fdfee3ad37711321e4c2b2abd2fddc33a3e292
+   BASE     : cb148f5941a831eb43fe20cf57e7438166066ebb   (pre-repair control)
+   guard    : /tmp/t483-scratch/tmp/armA-t470tip/.softhouse/guards/check-dead-path-frontier.sh
+
+-- CALIBRATION 1: the five MUST-BE-PRESENT strings, in the repaired guard's SOURCE
+   source hits = 3   for: record why in the pin
+   source hits = 1   for: THE ROUTE THAT IS NOT A REPAIR, AND IS STILL SANCTIONED
+   source hits = 1   for: PIN THE ROW WITH ITS REASON
+   source hits = 3   for: repaired or pinned with its reason
+   source hits = 1   for: THE FORBIDDEN FOURTH
+-- CALIBRATION 2: the two MUST-BE-ABSENT strings are gone from the guard's PRINTABLE bytes
+   printable (echo) lines in the guard = 85   (a zero here would make the scan vacuous)
+   echo-line hits = 0   (whole file 1)   for: three, and never a fourth      (expected 0 printable)
+   echo-line hits = 0   (whole file 0)   for: in exchange for not pinning the row      (expected 0 printable)
+
+== PRE-REPAIR CONTROL: the BASE guard, same plant ==
+   [base] planted file tracked in clone = 1   (must be 1, or the arm measures nothing)
+   exit           = 1
+   probe lines    = 1      (PRESENCE read before VALUE)
+   foreclosure A  = 1      (expected >= 1 -- this is the defect, before repair)
+   foreclosure B  = 1      (expected >= 1)
+   pin-route head = 0      (expected 0 -- not written yet)
+   pin-route body = 0      (expected 0)
+   'record why in the pin' = 1   (expected >= 1 -- it was ALWAYS there; that is the finding)
+   [/Users/buv/gerege-nbfi/.claude/worktrees/agent-a536ea894f409cdce/.softhouse/reviews/t483-review-t470/out/t470-drive-rerun/10-CONTROL-pre-repair-refusal.txt]
+
+== RED ARM: the REPAIRED guard, the same plant ==
+   [head] planted file tracked in clone = 1   (must be 1, or the arm measures nothing)
+   exit           = 1
+   probe lines    = 1      (PRESENCE read before VALUE)
+   probe line     = REFUSED rows=109 pinned=108 added=1 removed=0
+   'record why in the pin'        = 2    (expected >= 1)
+   pin-route head                 = 1    (expected >= 1)
+   pin-route body                 = 1    (expected >= 1)
+   header sentence quoted back    = 1    (expected >= 1)
+   THE FORBIDDEN FOURTH preserved = 1   (expected >= 1)
+   foreclosure A                  = 0    (expected 0)
+   foreclosure B                  = 0    (expected 0)
+   planted row named              = 1 (expected >= 1)
+   [/Users/buv/gerege-nbfi/.claude/worktrees/agent-a536ea894f409cdce/.softhouse/reviews/t483-review-t470/out/t470-drive-rerun/20-RED-repaired-refusal.txt]
+
+== GREEN ARM: the committed tree, frontier == pin ==
+   exit           = 0
+   probe lines    = 1      (PRESENCE read before VALUE)
+   probe line     = GREEN rows=108 pinned=108 added=0 removed=0
+   pin-route head = 0      (expected 0 -- calibrated PRESENT in source above)
+   pin-route body = 0      (expected 0)
+   pin OFFER      = 0      (expected 0)
+   [/Users/buv/gerege-nbfi/.claude/worktrees/agent-a536ea894f409cdce/.softhouse/reviews/t483-review-t470/out/t470-drive-rerun/30-GREEN-clean-tree.txt]
+
+== REGISTER ARM: the forward correction, and the HARD P-number guard on these bytes ==
+   'ERRATUM TO' in register       = 1    (expected >= 1)
+   'corrected FORWARD...'         = 3    (expected >= 2 -- T334's and mine)
+   pin route survives in register = 1    (expected >= 1)
+   THE FORBIDDEN FOURTH preserved = 5    (expected >= 1)
+   header sentence quoted back    = 1    (expected >= 1)
+3835: **P-103 — A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE, NOT A STRING. SIX
+   P-103 definition lines         = 1    (expected exactly 1 -- forward, not in place)
+   checker exit                   = 0
+   VERDICT PASS lines             = 1  (expected >= 1)
+   '0 fatal' lines                = 1 (expected >= 1)
+PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=102 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal; 126 report-only findings in committed evidence (corrected FORWARD in patterns.md, never edited in place)
+   [/Users/buv/gerege-nbfi/.claude/worktrees/agent-a536ea894f409cdce/.softhouse/reviews/t483-review-t470/out/t470-drive-rerun/40-pnumber-checker.txt]
+
+T470-PINROUTE-DRIVE: PASS control=exit1/fa1/route0 red=exit1/route1/offer2/fa0 green=exit0/route0 register=erratum3/defs1
+T470 DRIVE EXIT = 0

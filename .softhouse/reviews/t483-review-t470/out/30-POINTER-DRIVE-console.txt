@@ -1,0 +1,41 @@
+== T483 ERRATUM-POINTER DRIVE (the one change this review proposes) ==
+   git     : git version 2.50.1 (Apple Git-155)
+   python3 : Python 3.9.6
+   SRC     : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a536ea894f409cdce
+   TIP     : 28fdfee3
+
+-- CALIBRATION: what a reader meets AT the anchor's landing site in the register
+   anchor lands at register line          = 3835
+   erratum heading at register line       = 3966   (distance 131 lines below)
+   'add the row to the pin' in the entry  = 1   (>=1 means the stale half is what a reader meets)
+   pointer to the erratum in the entry    = 0     (0 means the reader is not told it exists)
+
+== ARM A -- BEFORE: T470's tip as shipped ==
+   exit                                   = 1
+   probe lines                            = 1   (PRESENCE before VALUE)
+   probe line = REFUSED rows=109 pinned=108 added=1 removed=0
+   register anchor printed                = 1   (expected >= 1)
+   pointer to the erratum printed         = 0      (expected 0 -- THE GAP)
+   the word ERRATUM printed at all        = 0      (expected 0)
+   THE FORBIDDEN FOURTH printed           = 1   (expected >= 1)
+   [/Users/buv/gerege-nbfi/.claude/worktrees/agent-a536ea894f409cdce/.softhouse/reviews/t483-review-t470/out/pointer/10-BEFORE-refusal.txt]
+
+== ARM B -- AFTER: the same tree plus the proposed echo lines ==
+   exit                                   = 1
+   probe lines                            = 1   (PRESENCE before VALUE)
+   probe line = REFUSED rows=109 pinned=108 added=1 removed=0
+   register anchor printed                = 1   (expected >= 1 -- unchanged)
+   pointer to the erratum printed         = 1      (expected >= 1 -- THE REPAIR)
+   the erratum grep-anchor printed        = 1      (expected >= 1)
+   THE FORBIDDEN FOURTH printed           = 1   (expected >= 1 -- byte-identical)
+   T470's pin route still printed         = 1    (expected >= 1 -- not disturbed)
+   [/Users/buv/gerege-nbfi/.claude/worktrees/agent-a536ea894f409cdce/.softhouse/reviews/t483-review-t470/out/pointer/20-AFTER-refusal.txt]
+
+== ARM C -- REGRESSION: T458's drive AND T470's drive on the PROPOSED tree ==
+   T458 drive exit  = 0   probe lines = 1
+   T458 probe line  = PASS green=exit0/anchor0 red=exit1/anchor1/remedy1
+   T470 drive exit  = 0   probe lines = 1
+   T470 probe line  = PASS control=exit1/fa1/route0 red=exit1/route1/offer2/fa0 green=exit0/route0 register=erratum3/defs1
+
+T483-ERRATUM-POINTER-DRIVE: PASS before=ptr0 after=ptr1 t458=0 t470=0 gap=131lines
+DRIVE EXIT = 0

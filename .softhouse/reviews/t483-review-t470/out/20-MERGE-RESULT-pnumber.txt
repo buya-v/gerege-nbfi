@@ -1,0 +1,63 @@
+main HEAD = 55af2cc7
+Merge made by the 'ort' strategy.
+ .../bin/10-drive-pin-route.sh                      | 354 ++++++++
+ .../out/00-DRIVE-console.txt                       |  70 ++
+ .../t470-refusal-forecloses/out/09-clone.log       |   0
+ .../t470-refusal-forecloses/out/09-plant.log       |   0
+ .../out/10-CONTROL-pre-repair-refusal.txt          |  39 +
+ .../out/20-RED-repaired-refusal.txt                |  64 ++
+ .../out/30-GREEN-clean-tree.txt                    |   7 +
+ .../out/40-pnumber-checker.txt                     |  13 +
+ .../out/90-BAR-at-382de20d.txt                     | 898 +++++++++++++++++++++
+ .../out/99-FINAL-BAR-at-f73e82c0.txt               | 898 +++++++++++++++++++++
+ .../out/t458-regression/09-clone.log               |   0
+ .../out/t458-regression/09-plant.log               |   0
+ .../out/t458-regression/20-GREEN-clean-tree.txt    |   7 +
+ .../out/t458-regression/30-RED-planted-literal.txt |  62 ++
+ .../50-T458-DRIVE-rerun-on-T470-bytes.txt          |  33 +
+ .softhouse/conformance.sh                          |   7 +-
+ .softhouse/guards/check-dead-path-frontier.sh      |  53 +-
+ .softhouse/handoff/T470-handoff.md                 | 472 +++++++++++
+ .softhouse/patterns.md                             |  92 +++
+ 19 files changed, 3063 insertions(+), 6 deletions(-)
+ create mode 100755 .softhouse/capture/t470-refusal-forecloses/bin/10-drive-pin-route.sh
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/00-DRIVE-console.txt
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/09-clone.log
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/09-plant.log
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/10-CONTROL-pre-repair-refusal.txt
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/20-RED-repaired-refusal.txt
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/30-GREEN-clean-tree.txt
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/40-pnumber-checker.txt
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/90-BAR-at-382de20d.txt
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/99-FINAL-BAR-at-f73e82c0.txt
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/t458-regression/09-clone.log
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/t458-regression/09-plant.log
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/t458-regression/20-GREEN-clean-tree.txt
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/t458-regression/30-RED-planted-literal.txt
+ create mode 100644 .softhouse/capture/t470-refusal-forecloses/out/t458-regression/50-T458-DRIVE-rerun-on-T470-bytes.txt
+ create mode 100644 .softhouse/handoff/T470-handoff.md
+MERGE EXIT = 0
+merged HEAD = cf2c40cb
+== unresolved conflicts ==
+== P-103 definitions on the MERGE RESULT (checker's own regexes) ==
+   definition sites   = 104
+   distinct ids       = 102  max = 103
+   gaps               = [99]
+   in-file collisions = {12: 2, 13: 2}
+   P-103 definitions  = [(3835, "A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE, NOT A S")]
+   P-99 defined       = False
+== P-number checker on the MERGE RESULT ==
+PNUMBER-CITATIONS: report DECLARED-AMBIGUOUS REGISTER COLLISION P-12 defined twice in .softhouse/patterns.md: :315 'a right conclusion on a wrong reason recurs in the artefact written to record it'  vs  :1385 'An ID SERIES that restarts in a second file is a name collision waiting for its '
+PNUMBER-CITATIONS: report DECLARED-AMBIGUOUS REGISTER COLLISION P-13 defined twice in .softhouse/patterns.md: :320 'for a specification-bearing comment, the comment IS the deliverable.** A reviewe'  vs  :1412 'Grepping the store for a VALUE does not answer what the store KILLS'
+PNUMBER-CITATIONS: declared-dangling ids (recorded in the .softhouse/patterns.md errata with their repair) = [131, 261]
+PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=102 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+PNUMBER-CITATIONS: sites=14387 definition=103 consistent=725 bare=13369 misdirecting=81 undefined=45 negative-control=64
+PNUMBER-CITATIONS: skipped self-output-files=22 self-source-files=2 (stated, not silent -- both contain deliberately drifted text)
+PNUMBER-CITATIONS:   directive MISDIRECTING 2
+PNUMBER-CITATIONS:   directive UNDEFINED    4
+PNUMBER-CITATIONS:   evidence  MISDIRECTING 68
+PNUMBER-CITATIONS:   evidence  UNDEFINED    41
+PNUMBER-CITATIONS:   orchestrator MISDIRECTING 10
+PNUMBER-CITATIONS:   ratified  MISDIRECTING 1
+PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal; 126 report-only findings in committed evidence (corrected FORWARD in patterns.md, never edited in place)
+CHECKER EXIT = 0
