@@ -1,11 +1,12 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260829-080002` (local, Buyan's Mac) — **SIX WORKERS DISPATCHED.** Written BEFORE the first `git worktree add`.
+## FIRE `20260829-080002` **ITERATION 5** (local, Buyan's Mac) — **FIVE WORKERS DISPATCHED.**
+Written and pushed BEFORE the first `git worktree add`, per softhouse-program STEP 0.
 
 Oracle **REACHABLE** for this whole fire: `https://localhost:8443/fineract-provider/actuator/health`,
 PostgreSQL at `localhost:5432`, pinned Fineract `/Users/buv/fineract @ 426a23544`.
 
-## BAR ON `main` AT FIRE START — GREEN, measured, not assumed
+## BAR ON `main` AT DISPATCH — GREEN, measured on the tree that actually landed
 
 ```
 bash .softhouse/conformance.sh   →  EXIT 0
@@ -14,56 +15,57 @@ VERDICT: PASS — 46 parity vectors match the pinned reference oracle, 7884 cell
 dead-path frontier GREEN, deadOccurrences 108 · frontier 11 == pinned 11
 ```
 
-## ⚠ WHAT THIS FIRE FOUND IN THE INHERITED RECORD, BEFORE IT DISPATCHED ANYTHING
+Graded at `main` = `2a1dac46`, which is the tree iteration 4 pushed. This is T412's own complaint
+applied to this iteration: the bar was run on the commit that IS on `main`, not on a scratch tree.
 
-The previous fire (`20260828-140005`, iteration 4) ended with **nine workers in flight**. All nine died
-with the session. The wrapper's reconciler ran, and **it got one of them exactly backwards**:
+## ⚠ WHAT THIS ITERATION FOUND IN THE INHERITED RECORD, BEFORE IT DISPATCHED ANYTHING
 
-**`ready-tasks.py` reported `T431` as `WIP: MERGED … The work LANDED. Do NOT read this as an unstarted
-task.` `git rev-list --count main..softhouse/T431-t407-conditions` is `0`.** The branch points **at** the
-driver's own dispatch commit `280817a1` — which is on `main`, because that is the commit `git worktree add`
-branched from. The worker never committed a line. `C-T407-1` (**MAJOR**, the pathspec-magic witness
-forgery) is **UNSTARTED**, and the record was telling the next driver the opposite.
+`tasks.json` carried **two tasks whose work is merged on `main`** in non-terminal states, and one of
+them in the dangerous direction:
 
-This is the first **live** instance of the class `T350` and `T403` are already filed for — the reconciler
-keys its refusal-to-demote on a branch **name**, not on whether that branch carries a commit. It is the
-**P-45** shape once more: a control that runs and reports, and reports the reverse of the truth. `T350`
-and `T403` are both READY and neither is dispatched yet; this fire's evidence raises both.
+| Task | Record said | Truth on `main` |
+|---|---|---|
+| `T428` | `needs_retry` — *"worker killed mid-flight … a killed worker is dead, not paused"* | **MERGED.** `git merge-base --is-ancestor softhouse/T428-review-t421 main` → **YES**; 35 tracked files under `.softhouse/reviews/t428-review-t421/`. The worker **finished**. |
+| `T421` | `needs_review` | **MERGED.** 33 tracked files under `.softhouse/capture/t421-t406-conditions/`, and its review (`T428`) landed too. Branch deleted post-merge. |
 
-Six other tasks the record carried as `needs_retry` with a `branch` field (`T417 T419 T422 T424 T429
-T266`) have **no branch at all** — `git rev-parse` fails on every one. They were never dispatched. Their
-records now say so.
+`T428` is **`T403` observed in the opposite direction** — the reconciler "cannot tell a killed worker
+from a worker that never existed", and here it wrote the *killed* story for a worker that **finished and
+merged**. `T421` is the **`T350`** shape: the reconciler keys on a branch that no longer exists rather
+than on whether the content is on `main`. Both records are corrected in this commit, and both tasks are
+dispatched this wave with this as first-hand evidence.
 
-`T423` is the third shape: its branch carries **1 real commit** of instruments and drive output, and
-**no `REVIEW.md`** — verified with `git ls-tree -r --name-only`. Evidence real, verdict never written.
+**Iteration 4's own summary was right and the machine-readable record was wrong.** The prose cursor in
+`program.json` said "T421+T428 merged"; `ready-tasks.py` offered neither. Prose and record disagreed and
+only the prose was true.
 
-## MERGED THIS FIRE
-
-| Merge | What it was |
-|---|---|
-| `T421` + `T428` | T406's six conditions on the accrual vectors, **and its independent review**. `T428` verdict: `APPROVED WITH CONDITIONS`, four findings, **all LOW, none blocking**. Bar run on the **MERGE RESULT** in a scratch worktree at `/tmp/t429-merge` before `main` was touched. |
-
-## IN FLIGHT — SIX WORKERS
+## IN FLIGHT — FIVE WORKERS (all `opus`, all worktree-isolated, file sets disjoint)
 
 | Task | Branch | What it is |
 |---|---|---|
-| `T422` | `softhouse/T422-review-t416` | **INDEPENDENT review of T416 — a MONEY-REPORTING fix.** A one-minor-unit ledger mismatch announced to a human as `0 mismatched vector(s)`. Verify the count is now RIGHT, not merely non-zero. |
-| `T423` | `softhouse/T423-review-t393` | **RESUME, do not restart.** Its 1 commit of evidence is real; the verdict is what is missing. |
-| `T431` | `softhouse/T431-t407-conditions` | **UNSTARTED, MAJOR.** `C-T407-1` — the witness-side lookup at `conformance.sh:3677` is still a pathspec, so `:(literal)` magic spelled as a real tracked directory disables two refusals at once. |
-| `T417` | `softhouse/T417-scheduler-attribution` | **G-22, oracle-only work.** The reference oracle edits itself overnight — nineteen active jobs, one caught by luck. Pin the scheduler WITHOUT trusting app user 2. |
-| `T429` | `softhouse/T429-oracle-derived-columns` | **G-22(c), a divergence of principle.** The oracle writes running balances onto posted rows; `CLAUDE.md` says balances are DERIVED, NEVER WRITTEN. Declare the oracle-derived columns so the port is not "fixed" into violating the non-negotiable. |
-| `T424` | `softhouse/T424-t408-conditions` | T408's conditions on T402 — an attribution wrong in the **shipped source comment**, and a guard correct only by accident of this host's `tee` buffering. |
+| `T445` | `softhouse/T445-case-route` | **MAJOR, LIVE ON `main`.** M-1 from T444: a **fifth** witness-forgery route survives all three of T431's new lines — the closing grep reads the **filesystem**, and T375's own argument was never applied to the deciding test. Sole writer to `conformance.sh` this wave. |
+| `T442` | `softhouse/T442-t440-conditions` | **MAJOR, CONFIRMED.** C-T440-1: T424's comment-claims drive **fails on the tree it ships in**, and its committed transcript records the opposite. Plus T440's five remaining conditions. |
+| `T433` | `softhouse/T433-t423-c1` | **MAJOR, CONFIRMED.** C-T423-1: T393 ships a **false impossibility claim** in two tracked executable files, and sends the next task to build an artefact it does not need. |
+| `T350` | `softhouse/T350-reconcile-content` | The reconciler's refusal-to-demote is keyed on a branch **NAME**, not its **CONTENT**. Raised again, first-hand, by this iteration's `T421` finding. |
+| `T412` | `softhouse/T412-driver-selfgrading` | The driver pushes to `main` without ever running the bar on its own commits — and reddened `main` doing it. Filed by a driver against itself. |
 
-## COMPLETE, HELD UNMERGED PENDING REVIEW
-`T393` (`softhouse/T393-t382-conditions`, 11 commits, its own final bar EXIT 0) — **blocked on `T423`.**
-`T416` (`softhouse/T416-t405-conditions`, 10 commits) — **blocked on `T422`.** Money-path; will not merge unreviewed.
+**Disjointness checked before dispatch:** `conformance.sh` has exactly one writer (`T445`);
+`bin/ready-tasks.py` has exactly one writer (`T350`); `T442`, `T433`, `T412` write only their own
+capture/review directories. No serialising dependency was needed.
 
-## QUEUE FOR THE NEXT FIRE
-`T419` (the grep BRE defect, held out of this wave only because three writers to `conformance.sh` is
-already two more than merges cleanly) → `T350` + `T403` (both raised by this fire's own T431 finding) →
-`T412` (the driver never grades its own commits) → `T399` (needs `T424`) → `T425` (needs `T393`+`T423`) →
-`T413`, `T394`, `T395`.
+## NEXT WAVE (reviewers, one per branch, independent, re-deriving)
+`T446`→T445, `T447`→T442, `T448`→T433, `T449`→T350, `T450`→T412.
+
+## QUEUE AFTER THAT
+`T403` (the reconciler's other half — held out only because `T350` owns `ready-tasks.py` this wave) →
+`T443` + `T441` (both write `conformance.sh`, serialised behind `T445`) → `T419` → `T437` → `T434`,
+`T435`, `T436` → `T399`, `T425`, `T394`, `T395`.
 
 ## OPEN GATES — none blocks anything, and no CONTRACT gate is open
 `G-4`, `G-5`, `G-8`, `G-10`, `G-12`, `G-19`, `G-20`, `G-21`, `G-22`. `ready-tasks.py` reports
 `OPEN CONTRACT GATES … NONE open. Every gate id in program.json.gates_pending was inspected.`
+
+## Pause reason
+None yet — this manifest is the pre-dispatch record, not an exit record. If you are reading it because
+the fire died, the five tasks above were **in flight and are now dead**; check each branch for commits
+(`git rev-list --count main..<branch>`) and mark each `needs_retry` with what it actually carried.
+**A branch that exists is not evidence of work — that is the `T350` defect this very wave is fixing.**

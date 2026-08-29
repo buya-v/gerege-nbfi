@@ -4906,11 +4906,11 @@
       ],
       "context": null,
       "dependencies": [],
-      "status": "pending",
+      "status": "in_progress",
       "attempts": null,
       "description": "MEASURED BY THE DRIVER OF FIRE 20260828-140005, not hypothesised. `ready-tasks.py --reconcile` REFUSED to demote T339 with the reason 'a live ref carrying this task's id exists under another name; needs_retry would duplicate a line that still exists'. The ref it found was `softhouse/rescued-t339-base-20260828-080001`. Its ENTIRE content is: a 219-line DELETION from .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt, and `.t347-postcheckout-marker` -- which belongs to T347, a DIFFERENT task. `git ls-tree -r --name-only` on that ref matches NOTHING containing 't339'. The branch is named for the WORKTREE (`/private/tmp/t339-base`), not for work T339 did. T339 had produced no review at all, and the refusal left it `in_progress` -- which STEP 5.5 item 4 names exactly: 'Leaving it in_progress tells the next fire that work is happening when nothing is.' The driver had to override the reconciler by hand.\n\nT330 is not wrong to refuse on evidence; it is wrong about what counts as evidence. A branch NAME is an assertion by whoever created the branch -- and the creator here was the WRAPPER'S OWN SWEEP, which names rescue branches after the worktree directory. So the reconciler is reading its own sibling's naming convention back as independent corroboration. That is a self-confirming signal, the same shape as P-80.\n\nYOUR JOB: make the refusal turn on CONTENT. At minimum a ref should only block demotion if it carries a diff-vs-main that plausibly belongs to the task -- e.g. a tracked path naming the id, a handoff for the id, or a commit subject naming the id. DECIDE AND ARGUE the predicate; do not silently drop the refusal, because T330 was filed against a REAL incident where a demotion destroyed merged work. The failure modes point in OPPOSITE directions and you must state which way you chose to fail and why.\n\nDRIVE IT RED FIRST against the real ref `softhouse/rescued-t339-base-20260828-080001` (still present, deliberately unpruned as evidence) and against at least one ref that SHOULD block demotion. A guard you have not seen fail is not a guard (P-22). Establish by grep what automatic path invokes the changed code (P-45).\n\nSCOPE: ready-tasks.py and your own capture dir. Do NOT touch conformance.sh (held by T323) or fire-program.sh.",
-      "note": "Filed by the driver of fire 20260828-140005 from a first-hand override it had to perform.",
-      "branch": null
+      "note": "Filed by the driver of fire 20260828-140005 from a first-hand override it had to perform. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 on softhouse/T350-reconcile-content. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884.",
+      "branch": "softhouse/T350-reconcile-content"
     },
     {
       "id": "T351",
@@ -6079,11 +6079,12 @@
       "model": "opus",
       "target": "code",
       "dependencies": [],
-      "status": "pending",
+      "status": "in_progress",
       "files_hint": [
         ".softhouse/capture/t412-driver-selfgrading/"
       ],
-      "note": "FILED BY THE DRIVER against itself, iter4, from a red main it caused and pushed."
+      "note": "FILED BY THE DRIVER against itself, iter4, from a red main it caused and pushed. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 on softhouse/T412-driver-selfgrading. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884.",
+      "branch": "softhouse/T412-driver-selfgrading"
     },
     {
       "id": "T413",
@@ -6227,14 +6228,14 @@
         "T391",
         "T406"
       ],
-      "status": "needs_review",
+      "status": "merged",
       "branch": "softhouse/T421-t406-conditions",
       "files_hint": [
         ".softhouse/vectors/ledger/",
         "nexus/internal/apps/ledger/conformance/",
         ".softhouse/capture/t421-t406-conditions/"
       ],
-      "note": "COMPLETE, bar exit 0, all 16 wrong impls dead. HELD for T428 -- not merged, because it registers a wrong implementation and moves a pin, which is grading infrastructure. admit.go lines touched: ZERO, so the T416 contention was a disjointness not a conflict. CORRECTED T406 ON FOUR COUNTS: 18+18 cells not 12+12; FOURTEEN pre-T391 vectors not seven; ELEVEN admission branches not ten; and T406 own review was NOT on main, which was the driver brief error."
+      "note": "COMPLETE, bar exit 0, all 16 wrong impls dead. HELD for T428 -- not merged, because it registers a wrong implementation and moves a pin, which is grading infrastructure. admit.go lines touched: ZERO, so the T416 contention was a disjointness not a conflict. CORRECTED T406 ON FOUR COUNTS: 18+18 cells not 12+12; FOURTEEN pre-T391 vectors not seven; ELEVEN admission branches not ten; and T406 own review was NOT on main, which was the driver brief error. || RECORD CORRECTED 2026-08-29 by fire 20260829-080002 iter5: was carried as needs_review. Its 33 tracked deliverable files ARE on main under .softhouse/capture/t421-t406-conditions/, and its review T428 landed too. Branch deleted post-merge. The stale status was a T350/T403-class reconciler artefact."
     },
     {
       "id": "T422",
@@ -6346,12 +6347,12 @@
       "dependencies": [
         "T421"
       ],
-      "status": "needs_retry",
+      "status": "merged",
       "branch": "softhouse/T428-review-t421",
       "files_hint": [
         ".softhouse/reviews/t428-review-t421/"
       ],
-      "note": "worker killed mid-flight by fire 20260828-140005 -- OBSERVED: this wrapper stopped its own driver and is reconciling its own dispatches. -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). Its branch softhouse/T428-review-t421 has 1 commit(s) ahead of main, head 8a6706c60. Uncommitted WIP left in its worktree was swept onto softhouse/rescued-agent-aba498d1a28770847-20260828-140005 by this fire's worktree sweep. Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by fire 20260828-140005 in `wrapper` mode.  [prior note: FILED AND DISPATCHED BY THE DRIVER, iter4; record pushed BEFORE git worktree add.]"
+      "note": "worker killed mid-flight by fire 20260828-140005 -- OBSERVED: this wrapper stopped its own driver and is reconciling its own dispatches. -- the fire ended while this task was still in_progress, and a killed worker is dead, not paused (softhouse-program STEP 5.5, 'NEVER exit with live workers', item 4). Its branch softhouse/T428-review-t421 has 1 commit(s) ahead of main, head 8a6706c60. Uncommitted WIP left in its worktree was swept onto softhouse/rescued-agent-aba498d1a28770847-20260828-140005 by this fire's worktree sweep. Completeness UNVERIFIED: no handoff was signed off and no reviewer saw this. Reconciled by fire 20260828-140005 in `wrapper` mode.  [prior note: FILED AND DISPATCHED BY THE DRIVER, iter4; record pushed BEFORE git worktree add.] || RECORD CORRECTED 2026-08-29 by fire 20260829-080002 iter5: was carried as needs_retry \"worker killed mid-flight\". FALSE. git merge-base --is-ancestor softhouse/T428-review-t421 main == YES, and 35 tracked files are on main under .softhouse/reviews/t428-review-t421/. The reconciler wrote the killed story for a worker that FINISHED and MERGED -- T403 observed in the OPPOSITE direction, and fresh live evidence for both T350 and T403."
     },
     {
       "id": "T429",
@@ -6426,7 +6427,7 @@
     },
     {
       "id": "T433",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -6438,7 +6439,8 @@
       ],
       "title": "C-T423-1 (MAJOR, CONFIRMED BY THE DRIVER): T393 ships a FALSE IMPOSSIBILITY CLAIM in two tracked executable files, and it sends the next task to build an artefact it does not need",
       "description": "**T423 found this and the driver CONFIRMED IT INDEPENDENTLY before merging T393.** Both are on `main`.\n\nT393 asserts, in its docstring and in `run-all.sh`'s banner, that **no committed baseline older than HEAD exists** for the 632 post-fork observations. The claim is shipped in tracked EXECUTABLE files, not only in prose:\n\n```\n.softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.sh:220\n.softhouse/capture/t393-t382-conditions/instruments/12-relaunder-manifest.py:14\n```\n(plus echoes in `out/03-runall-after-fix.txt` and the drive transcripts).\n\n**IT IS FALSE.** The blob at the commit that FIRST ADDED each observation is exactly such a baseline. T423 measured 631 of 632 still equal to it on a clean tree. **The driver re-measured this from scratch rather than taking the reviewer's word:** of 60 sampled observation paths, every one resolved -- **21 with a birth commit strictly older than the tip whose blob EQUALS the tip blob, 0 differing, 0 born at the tip** [VERIFIED: driver's own `git log --diff-filter=A` sweep, 2026-08-29].\n\n**WHY IT IS MAJOR RATHER THAN A WORDING SLIP.** The claim is load-bearing: T393's handoff reasons FROM it to direct the next task to build a new artefact. A false impossibility does not merely misinform -- it forecloses the cheap correct fix and spends the next worker's budget on a substitute. This is the same class as T424's live finding one file over: a mechanism that is right with an attribution that is wrong, committed into the source where the next reader takes it as the explanation.\n\n**WHAT TO DO.**\n1. **Re-establish the fact yourself** before correcting anything -- do not inherit either T423's 631/632 or the driver's 21/21. Sweep the WHOLE 632, not a sample, and say exactly where you looked and what the one non-equal observation is.\n2. **Correct BOTH executable sites and every transcript that echoes them**, and say in the corrected text what the baseline actually is, so the next reader is not left with a bare negation removed.\n3. **LAND ARM F.** T423 built it -- 25 lines -- and drove it RED (unadjudicated) then GREEN (one digest adjudicated) on a clean tree, and then against T393's own 'unclosable' laundered residual, where section 10 exits 0/PASS while ARM F exits 1 naming the file. Find it under `.softhouse/reviews/t423-review-t393/`, re-drive it, and wire it so something RUNS it. An arm that exists and is invoked by nothing is P-45 -- a guard that only works when someone remembers to run it enforces nothing, which this program has now recorded five separate times.\n4. **Then ask what your own arm misses by one.** ARM F compares against the birth blob; what happens when an observation is legitimately amended, when it is deleted and re-added, when it is moved, or when the birth commit is itself the tip? Drive what you can and disclose by name what you could not close.",
-      "note": "FILED 2026-08-29 by fire 20260829-080002 from T423's review. Driver confirmed the finding independently before merging."
+      "note": "FILED 2026-08-29 by fire 20260829-080002 from T423's review. Driver confirmed the finding independently before merging. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 on softhouse/T433-t423-c1. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884.",
+      "branch": "softhouse/T433-t423-c1"
     },
     {
       "id": "T434",
@@ -6576,7 +6578,7 @@
     },
     {
       "id": "T442",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -6587,7 +6589,8 @@
       ],
       "title": "C-T440-1 (MAJOR, CONFIRMED): T424's comment-claims drive FAILS ON THE TREE IT SHIPS IN, and its committed transcript records the opposite -- plus T440's five remaining conditions",
       "description": "**Both T424 and T440 are merged. A marker file sits beside the transcript on `main`; read it first:** `.softhouse/capture/t424/out/T424-comment-claims.TRANSCRIPT-IS-NOT-REPRODUCIBLE.md`.\n\n## 1. C-T440-1 -- MAJOR, and the driver re-verified it by RUNNING the instrument, not reading it\n\n```\ntranscript on main : T424-COMMENT-CLAIMS-RESULT: disagreements=0\nwhat the code does : T424-COMMENT-CLAIMS-RESULT: disagreements=1, exit 1\n```\nLine 103 of `t424-comment-claims-drive.sh` is the **no-match control**, and it spells its probe token in the instrument's **own tracked source**. Once committed, `git grep` FINDS it, so the control that exists to prove *'no match returns 1'* gets a match, returns 0, and the drive counts a disagreement. **The shipped transcript can only have been taken while the instrument was still untracked.**\n\n**The claim under test is TRUE** -- T440 established it independently with a runtime-assembled token (`1` no match, `128` invalid pattern, `0` match). No money figure and no vector is affected. What is wrong is that a record on `main` asserts a result the code does not produce.\n\n**DO NOT fix it by respelling the token in pieces to slip past `git grep`.** That hides the control from the census instead of repairing it, and this program has already ruled that a guard which works by evading its own instrumentation is not a guard. **Assemble the probe at runtime, as T440 did.** Then regenerate the transcript and confirm the regenerated one reproduces **from committed bytes on a clean detached checkout** -- that is the property that failed, so that is the property to test.\n\n**THEN SWEEP THE CLASS, because this is the point.** A control whose probe is spelled in tracked bytes changes meaning the moment it is committed. Census every instrument in `.softhouse/` for a literal sentinel/probe token that the instrument itself would match, and say how many you found and how many invert. Note the direction differs: here it inverted fail-CLOSED (a red that should be green); a 'token must be ABSENT' probe inverts fail-OPEN. **The fail-open ones are the dangerous half** -- look for those specifically.\n\n## 2. C-T440-2 (MINOR) -- an arithmetic that is wrong three ways\nThe K8 decomposition says `16+8+6=30`, which is **neither the measured partition nor its own total of 29**. T440 measured **13 / 10 / 6**. Verdicts are unaffected. Re-measure and correct.\n\n## 3. C-T440-3 (MINOR) -- `F-T424-N1` is filed NOWHERE\n`conformance.sh`'s claim that `CONFORMANCE_REPO_ROOT` *'occurs ZERO times'* no longer reproduces its own recipe (stale, written in the present tense). T424 was **right** not to edit it -- `conformance.sh` was contended and T431 held that region, which T440 verified. But it exists only in prose. **File it as work with its evidence, or close it with a re-measurement.** T431 has since landed; check whether the region is now free.\n\n## 4. C-T440-4/5/6 (LOW) -- close each on its own evidence, report per item\n* the `pipefail` sentence is **over-broad**: a git failure *with output* does surface as 128, and the abort then **misattributes**. Narrow the sentence to what is true.\n* an exported **`T381_DRIVE_INNER` disables the amended guard entirely** -- an environment variable that switches a guard off is the fail-open shape this whole chain is about. Judge whether it should be reachable at all.\n* `BEFORE_REF=main` **aborts at D-R2 exit 4**, it does not 'refuse' as stated. Correct the wording.\n\n## What is settled -- do not re-litigate or re-drive\nT440 re-derived T424's substance and **falsified none of it**: both F-2 halves reproduce from primitives; `pipefail` is the RIGHTMOST NON-ZERO status, verified three ways, position not magnitude; all four buffered-writer matrices reproduce 8/8; **zero live STATE-LOSS sites**, confirmed by T440's own adjudicator and proven non-vacuous against an injected `sel … | cat` specimen; and the 'bash waits for every pipeline member' construction survived a writer that writes **one second after its producer dies**. There is **no GNU `tee` on this host**, so the `[UNVERIFIED]` bound on GNU `tee` stands for you too -- do not claim to have closed it.\n\n**BAR:** run it on your finished COMMITTED tree; scratch **OUTSIDE the repo, in /tmp**; test the `probe = ` line's PRESENCE before its value.",
-      "note": "FILED 2026-08-29 by fire 20260829-080002 from T440's review of T424. The MAJOR was confirmed by the driver running the instrument on a detached scratch checkout of T424's own branch."
+      "note": "FILED 2026-08-29 by fire 20260829-080002 from T440's review of T424. The MAJOR was confirmed by the driver running the instrument on a detached scratch checkout of T424's own branch. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 on softhouse/T442-t440-conditions. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884.",
+      "branch": "softhouse/T442-t440-conditions"
     },
     {
       "id": "T443",
@@ -6626,7 +6629,7 @@
     },
     {
       "id": "T445",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -6638,7 +6641,8 @@
       ],
       "title": "M-1 (MAJOR): A FIFTH WITNESS-FORGERY ROUTE IS LIVE ON main AND SURVIVES ALL THREE OF T431's NEW LINES -- the closing grep reads the FILESYSTEM, and T375's own argument was never applied to the deciding test",
       "description": "**T431 and T444 are both merged. This is a RESIDUAL, not a regression** -- T444 drove it identically on `main` and on T431's fixed tree, and T431 had listed the case-sensitivity bound as **unreached**, so it did not overclaim. Read `.softhouse/reviews/t444-review-t431/REVIEW.md` and **re-derive rather than inherit.**\n\n## 1. M-1 -- the route, and why every existing line misses it\n\nOn a **case-INSENSITIVE host** (this one), the git index can hold **two** entries -- `W.txt` as a `100644` decoy and `w.txt` as a `120000` symlink to the member -- while the **filesystem holds one file**. Then, in order:\n\n* the **pin** resolves the declared entry -- passes;\n* the **empty-result** branch does not fire -- passes;\n* **round-trip HOLDS EXACTLY** -- the one independently necessary line, and it is satisfied;\n* the **mode test** reads `100644` (the decoy) -- passes;\n* the **blob test** compares the decoy -- passes;\n* and the **closing `grep`, which reads the FILESYSTEM, dereferences the symlink to the member.**\n\nT444's measurement on a fresh clone of T431's fixed tree: **`exit 0`, `VERDICT: PASS`, `reached-by=2`, `symlink-members=0`**, and the guard printing `(verified: it names …)` **over a symlink to the member itself** -- the guard's own sentence, *a file may not vouch for itself*, defeated for the fifth distinct time in this chain.\n\n**THE REMEDY IS ALREADY DRIVEN AND IT IS EMBARRASSINGLY AVAILABLE: make the closing `grep` read the TRACKED BLOB rather than the filesystem.** That is **`T375`'s own argument** -- the one that closed the symlink-witness class in the first place -- **never applied to the deciding test.** T444 confirms it flips CASE to refuse while leaving honest work accepted. Re-drive both directions yourself; do not take the remedy on the reviewer's word.\n\n**THEN ASK WHAT *THIS* MISSES BY ONE, because five routes have now been found by asking exactly that.** Every test in this guard should be audited for the same filesystem-versus-index confusion: **which reads the index, which reads the working tree, and what happens when the two disagree?** Case folding is one way they disagree; so are gitlinks, sparse checkouts, `assume-unchanged`, `skip-worktree`, and a path present in the index but absent on disk. Drive what you can; disclose by name, with the spelling, every one you cannot close.\n\n## 2. C-1 (MINOR) -- an 'unreachable-by-construction' claim, driven FALSE\nT431 shipped the sentence *'THIS BRANCH CANNOT FIRE … unreachable-by-construction'* about `member_multi`. T444 drove it false: **a conflicted index makes `:(literal)P` return THREE lines.** It fails **closed**, so nothing is open -- but **it is the same sentence that produced this entire task chain.** `T404` disclosed a residual and rated it unreachable; `T407` reached it; `T431` closed that and wrote a new unreachability claim; `T444` reached that one too. Correct the sentence to what is true, and treat 'unreachable by construction' as a claim requiring a drive, not a reading.\n\n## 3. C-2 (MINOR) -- THE ONLY INDEPENDENTLY NECESSARY LINE HAS NO AUTOMATED ARM\n`conformance.sh` runs **no registration-forgery drive at all**, so **deleting the round-trip line passes the bar at exit 0.** The one line that T444 proved independently necessary is protected by nothing. This is P-45 in its purest form. **Wire an arm that fails when that line is removed**, drive it RED by deleting the line and GREEN by restoring it, and keep a clean-tree control green.\n\n## 4. C-3 -- A ROTTED CITATION, AND THE NEUTRALITY ANALYSIS CHECKED ONLY ONE OF THREE\nThree citations land in the changed span. `patterns.md:3426` is **preserved**; `fire-program.sh:1406` is **unchanged**; **`RESUME.md:52 → :3677` ROTS** -- correct on the `main` T431 measured, now `:3782`. `.softhouse/RESUME.md` is a **DIRECTIVE file**, so this is the mechanism that reddened `main` for three pushed commits in fire `20260828-140005`. Fix the citation, and **check whether the current `RESUME.md` still carries it** -- the driver rewrites that file at every fire exit.\n\n## 5. C-4 (MINOR) and the five LOW findings -- close each on its own evidence, report per item.\n\n## Settled by T444 -- do not re-drive\nAll four of T431's fail-opens reproduce on a **newer** `main` than T431 measured, with T444's own independently written instrument. The 8-way matrix over (pin, empty-result, round-trip) confirms **round-trip is independently necessary and the other two are redundant** -- the C-quoted attack `XQ` is ACCEPTED in **all four `rt=no` configurations, including `pin=yes empty=yes`**. The converse risk is **not** realised: 8/8 legitimate witness spellings accepted, and the Cyrillic-named witness is refused **identically on `main`**, so T431 replaced a misleading message with an accurate one. Newline member and gitlink **fail closed**; multi-row is **not** a fail-open, though **row 2 is never graded**. The merge was **built, not reasoned about**: rc=0, no conflicts, `EXIT 0 / probe PRESENT ×1 up / VERDICT PASS 46-7884 / 16 wrong ledger implementations`, `deadOccurrences 108` unmoved, host-state `18==18`.",
-      "note": "FILED 2026-08-29 by fire 20260829-080002 from T444's review of T431. M-1 is live on main as a residual; the remedy is T375's own argument applied to the deciding test."
+      "note": "FILED 2026-08-29 by fire 20260829-080002 from T444's review of T431. M-1 is live on main as a residual; the remedy is T375's own argument applied to the deciding test. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 on softhouse/T445-case-route. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884.",
+      "branch": "softhouse/T445-case-route"
     }
   ],
   "cross_corroboration": {
