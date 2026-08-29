@@ -26,6 +26,16 @@ Bar on the finished committed tree: **EXIT 0**, probe line **PRESENT ×1** readi
 `VERDICT: PASS … 46 parity vectors … 7884 cells`, `deadOccurrences 108`, fail-open frontier
 `11 == 11`. Transcript: `.softhouse/capture/t453-t450-conditions/transcripts/final-bar.txt`.
 
+> **On the tree that was actually graded — because instance 2 is exactly this.** Committing a bar
+> transcript CHANGES THE TREE the bar just graded, so a single run always attests a tree that is
+> not the one that ships. The bar was therefore run **three times**, in a scratch `git worktree`
+> under `/tmp`, outside this repository: on the tree carrying every deliverable; on the tree that
+> additionally carries that transcript; and on the tree that additionally carries this paragraph.
+> All three: **EXIT 0, probe PRESENT ×1 reading `up`, `VERDICT: PASS … 46 … 7884`,
+> `deadOccurrences 108`, frontier `11 == 11`.** Only the first transcript is committed. The later
+> two are deliberately **not**, because committing them is what makes the regress non-terminating
+> — and saying so is more useful than pretending one run covers a tree it could not have seen.
+
 ---
 
 ## 1. M-1 — the reasoning error, re-derived
