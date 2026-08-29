@@ -1,0 +1,85 @@
+==============================================================================
+T452 K8 SITE DRIVE
+repo     : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7e5b6561c3ff56ca
+commit   : cbc8733c46cff515a2e48b5f3389ffbf514dc674
+dirty    : 17 path(s)
+subject  : .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh  sha256 63e05208fa871628
+==============================================================================
+
+ARM A -- partition re-derived from the SUBJECT FILE (not from the transcript)
+   sel calls at column 0                     : 16
+   of those carrying NO | in their own ERE   : 3
+       692:sel "S1  the literal row/maxid pin '60/64'" -n -F '60/64'
+       694:sel "S3  string-equality comparison of a standing counter" -n -F 'STANDING ORACLE MOVED'
+       702:sel "S7  the captured distinct_currency_codes projection" -n -F 'distinct_currency_codes'
+   => sel rows that can reach the wide K8    : 13
+   SWEEP_*=$((...)) counter lines            : 10
+   distinct counter variables                : 3
+  sel calls in the file                                    expected=16         actual=16         OK
+  sel calls with no | (S1,S3,S7)                           expected=3          actual=3          OK
+  sel rows reaching the wide list                          expected=13         actual=13         OK
+  SWEEP_*=$((...)) counter lines                           expected=10         actual=10         OK
+  distinct counter variables                               expected=3          actual=3          OK
+
+ARM B -- the K8 block of the census, partitioned by pattern
+   rows extracted            : 29   (census printed: 29)
+   of them  sel rows         : 13
+   of them  $(( counter rows : 10
+   residual, parent-side     : 6
+            145 | SWEEP_ERRF=$(mktemp "${TMPDIR:-/tmp}/casualty-sweep-stderr.XXXXXXXXXX") || {
+            659 | SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?
+            680 | if ! SWEEP_COMMIT=$(git rev-parse --short HEAD); then SWEEP_COMMIT="UNMEASURED"; fi
+            681 | if ! SWEEP_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ); then SWEEP_DATE="UNMEASURED"; fi
+            682 | SWEEP_UNTRACKED_N=$(git ls-files --others --exclude-standard .softhouse | grep -c .);
+            684 | case "$SWEEP_UNTRACKED_N" in ''|*[!0-9]*) SWEEP_UNTRACKED_N="UNMEASURED" ;; esac
+  extracted rows == census's own total                     expected=29         actual=29         OK
+  K8 sel rows                                              expected=13         actual=13         OK
+  K8 counter rows                                          expected=10         actual=10         OK
+  K8 residual rows                                         expected=6          actual=6          OK
+  the three cells sum to the census total                  expected=29         actual=29         OK
+  subject route agrees on sel rows                         expected=13         actual=13         OK
+  subject route agrees on counter rows                     expected=10         actual=10         OK
+   PARTITION: 13 + 10 + 6 = 29
+
+ARM R1/R2/R3 -- NON-VACUITY, on /tmp specimens
+   R1  this drive's SITE predicate on the BAD specimen   -> 1
+          /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t452-k8.Src4zHIr/spec-bad.md:1:SEL16:**All 29 adjudicated, and none is a live defect.** Sixteen are the `sel` calls, in the wide list
+          /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t452-k8.Src4zHIr/spec-bad.md:2:CTR8:only because each carries a `|` inside its own quoted ERE. Eight are `SWEEP_*=$((...))` counters,
+   R2  T442's recipe  grep -F 'all sixteen'              -> 0   <-- THE ARTEFACT
+   R3  this drive's SITE predicate on the GOOD specimen  -> 0
+  R1 detector SEES the word-spelled defect                 expected=1          actual=1          OK
+  R2 T442's recipe is BLIND to it                          expected=0          actual=0          OK
+  R3 detector does NOT fire on correct text                expected=0          actual=0          OK
+
+ARM C -- declared site set, PARSED from .softhouse/capture/t424/ERRATUM-K8-DECOMPOSITION.md
+       .softhouse/capture/t402-t386-conditions/AUDIT-CLASS.md
+
+ARM D -- measured site set over ALL tracked .softhouse/ files, BOTH spellings
+   corpus: 10009 tracked files under .softhouse/
+   P-72 calibration on the known-positive specimen: 1 -- PASS
+   files matching the SITE predicate at all           : 9
+          .softhouse/capture/t402-t386-conditions/AUDIT-CLASS.md
+          .softhouse/capture/t424/ERRATUM-K8-DECOMPOSITION.md
+          .softhouse/capture/t424/instruments/t442-k8-decomposition.sh
+          .softhouse/capture/t452-t447-conditions/instruments/t452-k8-sites-drive.sh
+          .softhouse/capture/t452-t447-conditions/out/T452-K8-SITES.txt
+          .softhouse/reviews/t447-review-t442/REVIEW.md
+          .softhouse/reviews/t447-review-t442/instruments/t447-k8-handoff-site.sh
+          .softhouse/reviews/t447-review-t442/out/T447-K8-HANDOFF-SITE.txt
+          .softhouse/tasks.json
+   declared as QUOTING the defect (not asserting it)  : 8
+   => LIVE assertion sites                            : 1
+          .softhouse/capture/t402-t386-conditions/AUDIT-CLASS.md
+  no stale entries in the QUOTING list                     expected=0          actual=0          OK
+  measured LIVE site set == declared set                   expected=same       actual=same       OK
+
+ARM E -- the site inside T452's grant must be REPAIRED, and repaired by CORRECTION
+   SITE predicate on .softhouse/handoff/T424-t408-conditions.md -> 0
+       .softhouse/handoff/T424-t408-conditions.md:246:SEL16:**All 29 adjudicated, and none is a live defect.** Thirteen of the sixteen `sel` calls reach the
+   corrected-cardinal sentences present : 3
+  handoff is NOT a live site                               expected=0          actual=0          OK
+  handoff carries the CORRECTED cardinals                  expected=3          actual=3          OK
+
+==============================================================================
+T452-K8-SITES-RESULT: partition=13+10+6=29 declared_sites=1 measured_sites=1 disagreements=0
+==============================================================================

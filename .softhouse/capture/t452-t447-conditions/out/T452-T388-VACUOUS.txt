@@ -1,0 +1,40 @@
+==============================================================================
+T452 -- T388 VACUOUS POSITIVE CALIBRATION
+repo   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7e5b6561c3ff56ca
+commit : cbc8733c46cff515a2e48b5f3389ffbf514dc674
+dirty  : 17 path(s)
+subject: .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh  sha256 181a0b6c2b6b3de7
+==============================================================================
+
+probe  read from the subject : 'WHERE I LOOKED for things the T388 oracle-state movement'
+corpus read from the subject : '.softhouse/capture/t388-accrual-capture/'
+
+matches of the probe in the calibration corpus     : 2 in 1 file(s)
+       .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh
+of those files, the searcher itself                : 1
+files carrying the probe ANYWHERE in the tree      : 3   (tree-qualified: see header)
+tracked files in the calibration corpus            : 194
+tracked files in the repository                    : 10098
+'exit 3' enforcement sites in the subject          : 6
+
+  the calibration matches at all                           expected=yes        actual=yes        OK
+  SELF-ONLY: exactly one carrier                           expected=1          actual=1          OK
+  and that carrier is the searcher                         expected=1          actual=1          OK
+carriers outside the subject's own calibration corpus : 2
+       .softhouse/capture/t452-t447-conditions/out/T452-CLASSIFY-V2.txt
+       .softhouse/capture/t452-t447-conditions/out/T452-T388-VACUOUS.txt
+of those, any that are NOT T452's own record          : 0
+  carriers outside the corpus are only T452's record       expected=0          actual=0          OK
+  the corpus it certifies is far larger                    expected=yes        actual=yes        OK
+  the assertion is ENFORCED (aborts on a miss)             expected=yes        actual=yes        OK
+
+control: a string that IS widely carried ('SWEEP CALIBRATE+') -> 31 file(s)
+  control is NOT self-only                                 expected=yes        actual=yes        OK
+
+VERDICT: a P-72 positive calibration, PRESENT-direction and ENFORCED, whose only carrier
+         is the searcher. STRICTLY VACUOUS: it would pass over an empty corpus. This is
+         the fail-OPEN half of the C-T440-1 class, and it is LIVE and UNOWNED.
+         T452 has no grant here. Filed with an owner in the T452 handoff.
+==============================================================================
+T452-T388-VACUOUS-RESULT: carriers=1 self=1 corpus=194 enforced=6 disagreements=0
+==============================================================================

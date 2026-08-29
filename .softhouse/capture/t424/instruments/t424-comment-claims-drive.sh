@@ -27,7 +27,7 @@
 #   RED  (committed bytes, clean detached checkout) : out/T442-C1-RED.txt   -> disagreements=1, exit 1
 #   GREEN(this file, clean detached checkout)       : out/T442-C1-GREEN-detached.txt -> disagreements=0, exit 0
 # The repair is in CLAIM 3 below: the probe is assembled at RUN TIME. The class was then swept --
-# instruments/t442-selfmatching-probe-census.sh, out/T442-CLASS-SWEEP.txt.
+# instruments/t442-selfmatching-probe-census.py, out/T442-CLASS-SWEEP.txt.
 # ---------------------------------------------------------------------------------------------
 # =============================================================================================
 set -uo pipefail
@@ -132,7 +132,7 @@ cd "$REPO" || exit 2
 # tracked bytes CHANGES MEANING WHEN IT IS COMMITTED. Here it inverted fail-CLOSED (a red that
 # should be green). The dangerous inversion is the other one -- a POSITIVE control satisfied by
 # the instrument's own copy of the token passes VACUOUSLY and says nothing about the corpus.
-# The class census is `t442-selfmatching-probe-census.sh`.
+# The class census is `t442-selfmatching-probe-census.py`.
 # ---------------------------------------------------------------------------------------------
 g_tok="zzq-$$-${RANDOM}-$(date +%s)-t442-runtime-assembled"
 # CONTROL ON THE CONTROL (the C-T440-1 regression check): if a future editor ever hard-codes the
