@@ -419,8 +419,59 @@ byte-identical on the branch tip. Recompute it yourself:
 `git hash-object --no-filters -- .softhouse/conformance.sh`, **with the flag** — the unflagged form
 is the one SMUDGE defeats.
 
-<!-- FINALBAR-BEGIN -->
-<!-- FINALBAR-END -->
+Run on commit `09ac6219`, harness blob `1ced9310c33d561b776e73aafa90e2fbe920f5b7` — identical
+under `git rev-parse HEAD:`, `git hash-object --no-filters` and unflagged `git hash-object`.
+Full 898-line transcript in `evidence/91-FINAL-BAR-full-transcript.log`.
+
+```
+=== 0. THE TREE BEING GRADED ===================================================
+HEAD                                   = 09ac62196f8667e1b8034bc80fa8dd6e7b60b78b
+git status --porcelain lines           = 0
+git rev-parse HEAD:<harness>           = 1ced9310c33d561b776e73aafa90e2fbe920f5b7
+git hash-object --no-filters <harness> = 1ced9310c33d561b776e73aafa90e2fbe920f5b7
+git hash-object (no flag)   <harness>  = 1ced9310c33d561b776e73aafa90e2fbe920f5b7
+ls-files -v, entries NOT in state H    = 0
+
+=== 1. THE RUN =================================================================
+command: bash <harness>   (bash, not sh, not zsh)
+EXIT = 0
+
+=== 2. PROBE PRESENCE BEFORE PROBE VALUE =======================================
+grep -c 'probe = '  -> 1      <-- PRESENCE, read first
+probe value         -> up
+
+=== 3. VERDICT =================================================================
+VERDICT lines: 1
+    VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+=== 4. THIS GUARD'S OWN OUTPUT =================================================
+    conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git …
+    conformance:   HARNESS-TEXT CENSUS: HEAD 09ac6219…
+    conformance:   RECOMPUTE: 10398 HEAD entries re-hashed from their bytes on disk;
+    conformance:   CHALLENGE: the recompute was handed a planted record for
+                   .softhouse/reviews/T135-evidence/f1-attack.sh
+    conformance:   READ CENSUS (S1), DERIVED THIS RUN, NEVER TRANSCRIBED: 81
+    conformance:   this harness .softhouse/conformance.sh: committed 1ced9310… / on disk 1ced9310…
+
+=== 5. GUARD COST ==============================================================
+    conformance:   GUARD-COST CENSUS: 16 guards timed, 74s total wall,
+    conformance:     COST 5s / ceiling 300s   guard_harness_text_is_committed
+    conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+
+=== 6. THE PINS ================================================================
+    frontier 11, pinned at 11      frontier == pinned (all 11 rows, by path).
+    literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
+    dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+
+=== 7. EVERY GUARD REFUSAL, COUNT FIRST ========================================
+refusal lines matched: 0
+```
+
+Two things in that transcript are the M-1 and M-2 repairs answering for themselves rather than
+being described: **`READ CENSUS (S1) … 81`** is the cardinal that used to be typed into a comment,
+now measured from the bytes that ran; and **`CHALLENGE: … a planted record for
+.softhouse/reviews/T135-evidence/f1-attack.sh`** is a different path from the one the previous run
+chose, because it is drawn afresh every run.
 
 ---
 

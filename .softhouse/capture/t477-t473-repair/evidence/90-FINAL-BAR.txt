@@ -1,0 +1,53 @@
+=== 0. THE TREE BEING GRADED ===================================================
+repository root                        = /Users/buv/gerege-nbfi/.claude/worktrees/agent-a07469ad5da6af2c3
+HEAD                                   = 09ac62196f8667e1b8034bc80fa8dd6e7b60b78b
+git status --porcelain lines           = 0
+git rev-parse HEAD:<harness>           = 1ced9310c33d561b776e73aafa90e2fbe920f5b7
+git hash-object --no-filters <harness> = 1ced9310c33d561b776e73aafa90e2fbe920f5b7
+git hash-object (no flag)   <harness>  = 1ced9310c33d561b776e73aafa90e2fbe920f5b7
+ls-files -v, entries NOT in state H    = 0
+
+=== 1. THE RUN =================================================================
+command: bash <harness>   (bash, not sh, not zsh)
+EXIT = 0
+
+=== 2. PROBE PRESENCE BEFORE PROBE VALUE =======================================
+grep -c 'probe = '  -> 1      <-- PRESENCE, read first
+probe value         -> up 
+
+=== 3. VERDICT =================================================================
+VERDICT lines: 1
+    VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+=== 4. THIS GUARD'S OWN OUTPUT =================================================
+matching lines: 7
+    1:conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+    10:conformance:   HARNESS-TEXT CENSUS: HEAD 09ac62196f8667e1b8034bc80fa8dd6e7b60b78b; tracked paths whose materialised bytes
+    13:conformance:   RECOMPUTE: 10398 HEAD entries re-hashed from their bytes on disk;
+    18:conformance:   CHALLENGE: the recompute was handed a planted record for .softhouse/reviews/T135-evidence/f1-attack.sh
+    23:conformance:   READ CENSUS (S1), DERIVED THIS RUN, NEVER TRANSCRIBED: 81
+    27:conformance:   this harness .softhouse/conformance.sh: committed 1ced9310c33d561b776e73aafa90e2fbe920f5b7 / on disk 1ced9310c33d561b776e73aafa90e2fbe920f5b7
+    374:        EVERY rate-variation expectation in the corpus is reached by calling changeInterestRate on an ALREADY-BUILT model — that is, mid-term rescheduling. NO vector exists for a product configured with a rate schedule FROM ORIGINATION, and the Path A seam cannot express one. A port that computes origination-time rate variation wrongly would pass this entire corpus. Whether the two paths must agree is a Tier-A design question; it is not closable from source and this harness does not try.
+
+=== 5. GUARD COST ==============================================================
+matching lines: 3
+    221:conformance:   GUARD-COST CENSUS: 16 guards timed, 74s total wall,
+    224:conformance:     COST 5s / ceiling 300s   guard_harness_text_is_committed
+    245:conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+
+=== 6. THE PINS ================================================================
+matching lines: 9
+    135:conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-a07469ad5da6af2c3 (git ls-files, whole repository); frontier 11, pinned at 11
+    140:conformance:   frontier == pinned (all 11 rows, by path).
+    143:conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
+    172:conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+    209:conformance:   namespace:       DECLARED   capture/t255-frontier-rot                    by .softhouse/capture/t255-frontier-rot/OWNER-IS-T258-NOT-T255.md
+    216:conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+    237:conformance:     COST 1s / ceiling 60s   guard_dead_path_frontier
+    540:                                        INADMISSIBLE, so this figure is pinned at 0 by
+    880:conformance:   WRONG from the binary's own -list-implementations; pinned at
+
+=== 7. EVERY GUARD REFUSAL, COUNT FIRST ========================================
+refusal lines matched: 0
+
+full transcript kept at: /tmp/t477-work.zAhOxLeGA9/T477-FINAL-BAR.log   (898 lines)
