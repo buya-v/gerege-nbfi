@@ -152,12 +152,39 @@ WHAT THIS FILE DOES AND DOES NOT COVER (P-40 — the boundary is stated, not imp
                (iv) WHAT ARM F ITSELF MISSES BY ONE — stated because an arm's own boundary is
                     the next thing to be found (T433 drove each of these; see
                     `.softhouse/capture/t433-t423-c1/out/`):
-                    (iv-a) BORN AT THE TIP. An observation whose birth commit IS HEAD has no
-                    baseline older than HEAD, so ARM F CANNOT grade it. It is counted and
-                    printed as ungraded, never folded into the equal count. A FABRICATED
-                    observation added at the tip WITH a matching manifest row is therefore
-                    reached by no arm in this file — internal consistency cannot distinguish
-                    it from a real capture; only the oracle can. DRIVEN by T433.
+                    (iv-a) BORN AT THE TIP — THE FAIL-OPEN IS NOW CLOSED; THE DETECTION HALF
+                    IS NOT, AND THE TWO ARE DIFFERENT PROBLEMS (T448 C-T448-1, landed by
+                    T455). An observation whose birth commit IS HEAD has no baseline older
+                    than HEAD, so ARM F CANNOT grade it. T433 drove that and disclosed it,
+                    and then wrote — kept verbatim and TAGGED, because deleting a false
+                    sentence destroys the evidence that it was shipped:
+                    [QUOTED-FALSE-CLAIM] "Not closable by internal consistency — a fabricated
+                    [QUOTED-FALSE-CLAIM]  observation is a claim about the oracle, and only
+                    [QUOTED-FALSE-CLAIM]  the oracle can refute it."
+                    THAT RUNS TWO PROBLEMS TOGETHER, and only one of them is external.
+                      * DETECTING that a capture is fabricated IS external. The clause is
+                        true of that half. The anchor is named at (iv-a-anchor) below.
+                      * REFUSING TO EXIT 0 OVER A POPULATION THIS ARM DID NOT MEASURE is
+                        INTERNAL, and this file ALREADY STATED THE RULE nine lines above the
+                        born-at-tip branch, for the sibling f_noborn case: "An arm that could
+                        not measure part of its own population has not passed on it. REFUSED,
+                        never a pass." The two cases are the same case. Only one of them was
+                        asserted.
+                    SO IT IS ASSERTED NOW, in section 9: a post-fork observation that ARM F
+                    could not grade because it was born at the tip FAILS this file unless it
+                    is adjudicated by name AND by digest in ARM_F_BORN_AT_TIP_ADJUDICATED.
+                    A fabricated observation added at the tip with a laundered manifest row
+                    is STILL not DETECTED here — nothing internal can do that — but it can no
+                    longer be reported as a PASS, which is what the fail-open was.
+                    MEASURED COST, ON A CLEAN TREE: zero. Every observation is born in the
+                    commit that adds it, so f_at_tip is 0 on every tree except that commit
+                    itself — the exact moment a human is present to adjudicate it, in the
+                    same shape as ADJUDICATED_DIFFERENT (ARM E) and ARM_F_ADJUDICATED.
+                    (iv-a-anchor) THE EXTERNAL ANCHOR for the detection half, named rather
+                    than left blank: RE-OBSERVATION AGAINST THE PINNED REFERENCE ORACLE
+                    (Fineract), digest-recorded — the procedure T357 already ran for the four
+                    obs/ files on fire 20260828-140005 (sha256 match, 4 of 4). It is out of
+                    THIS file's reach by construction: this file is offline.
                     (iv-b) MOVED/RENAMED — AND THE PREDICTION WAS WRONG, WHICH IS WHY IT WAS
                     DRIVEN. T433 expected `--diff-filter=A` to record a rename as an ADD at
                     the new path, resetting the baseline silently. It does not: git reports a
@@ -168,9 +195,17 @@ WHAT THIS FILE DOES AND DOES NOT COVER (P-40 — the boundary is stated, not imp
                     its bytes wholly and git records a genuine ADD at the tip, which lands in
                     (iv-a): reported UNGRADED, exit 0. This is the real edge, and it is the
                     same hole as (iv-a) rather than a second one. Both DRIVEN by T433.
-                    (iv-c) DELETED AND RE-ADDED. The earliest ADD still wins, so a re-add
-                    with different bytes IS caught; a re-add with IDENTICAL bytes is caught
-                    by nothing here, because no arm keeps history of the gap. NOT DRIVEN.
+                    (iv-c) DELETED AND RE-ADDED — DRIVEN FOUR WAYS BY T448, AND IT IS NOT A
+                    HOLE. T433 disclosed this as open and undriven (its F-3). T448 built all
+                    four shapes: re-add BYTE-IDENTICAL -> exit 0 and 632 graded, because
+                    NOTHING HAPPENED (the bytes still equal the captured observation, which
+                    is the only thing this arm asserts); re-add MUTATED with the manifest row
+                    laundered in the same commit -> exit 1, NAMED; re-add identical then
+                    mutate+launder in a third commit -> exit 1, NAMED; re-add with WHOLLY NEW
+                    bytes -> exit 1, NAMED. The earliest ADD wins in every construction,
+                    including the one where git's history simplification has the best chance
+                    of hiding the gap. F-3 CLOSES. Evidence (T448, not re-driven by T455):
+                    `.softhouse/reviews/t448-review-t433/out/20-ARMF-DRIVES.txt`.
                     (iv-d) LEGITIMATE AMENDMENT. A real re-capture moves ARM F and must be
                     re-adjudicated by digest in ARM_F_ADJUDICATED, exactly as ARM E's two
                     are. That is a cost, not a defect: it makes an amendment a visible,
@@ -281,6 +316,31 @@ ARM_F_ADJUDICATED = {
         "1ea4927a59068d0a5ec45773dbc50a4c80d9eaa0457f0cecdc820e4b8ed5f857",
         "1c23375b0f010cf5bb65b6fead9c9ec063fcafe9e4f16d713b34f367f41716e2"),
 }
+
+# T455 / C-T448-1 — THE (iv-a) BORN-AT-THE-TIP ADJUDICATION LIST. name -> sha256 of the bytes.
+#
+# ARM F cannot grade an observation whose birth commit IS HEAD: there is no earlier blob to
+# compare against. Until T455 that was PRINTED and nothing asserted it, so an observation ARM
+# F never measured was absorbed into an exit 0. Section 9 now REFUSES to pass over it unless
+# it is adjudicated HERE, which is the rule this file already applied nine lines above the
+# born-at-tip branch to the sibling f_noborn case.
+#
+# THIS TABLE IS EMPTY, AND ON A CLEAN TREE IT COSTS NOTHING. Every observation is born in the
+# commit that adds it, so the count is 0 on every tree except that one commit — measured at
+# 0 of 632 by T433's whole-population sweep and again by T448 under an independent primitive.
+# The check therefore fires exactly once per capture-adding commit, when a human is present.
+#
+# TO ADJUDICATE A LEGITIMATELY NEW CAPTURE: run this file, read the UNGRADED-BORN-AT-TIP
+# lines and the sha256 printed beside each, and record name -> digest here WITH THE REASON.
+# The digest is load-bearing: a name-only entry would let the bytes be swapped afterwards
+# without moving anything. Once the capture is one commit old the entry is DEAD and section 9
+# fails on it (an adjudication that no longer describes the tree is a MOVE, exactly as in
+# ADJUDICATED_DIFFERENT and ARM_F_ADJUDICATED) — so REMOVE it in the following commit.
+#
+# WHAT THIS DOES NOT DO, STATED SO THE NEXT READER DOES NOT INHERIT A WRONG MODEL: it does not
+# DETECT a fabricated capture. Nothing internal can. It stops a population this arm did not
+# measure from being reported as one it passed. See boundary (iv-a) and (iv-a-anchor) above.
+ARM_F_BORN_AT_TIP_ADJUDICATED = {}
 
 fails = []
 refusals = []
@@ -761,6 +821,7 @@ if f_noborn:
 
 f_same, f_adjudicated, f_diff, f_moved = 0, 0, [], []
 f_at_tip, f_unreadable = [], []
+f_tip_adjudicated, f_tip_moved = [], []
 for rel in f_post:
     b = f_birth.get(rel)
     if b is None:
@@ -769,7 +830,21 @@ for rel in f_post:
     if b == head_sha:
         # (iv-a) NO baseline older than HEAD exists for this one. Counted as UNGRADED, never
         # as equal: folding it into f_same is exactly the vacuous pass this file punishes.
-        f_at_tip.append(name)
+        # T455 / C-T448-1: it is also ASSERTED now — section 9 fails on any entry left here
+        # that is not adjudicated by name AND digest in ARM_F_BORN_AT_TIP_ADJUDICATED.
+        try:
+            with open(os.path.join(ROOT, rel), "rb") as fh:
+                h_tip = sha(fh.read())
+        except OSError as exc:
+            f_unreadable.append((name, b, repr(exc)))
+            continue
+        if name in ARM_F_BORN_AT_TIP_ADJUDICATED:
+            if ARM_F_BORN_AT_TIP_ADJUDICATED[name] == h_tip:
+                f_tip_adjudicated.append(name)
+            else:
+                f_tip_moved.append((name, ARM_F_BORN_AT_TIP_ADJUDICATED[name], h_tip))
+        else:
+            f_at_tip.append((name, h_tip))
         continue
     try:
         at_birth = git("show", b + ":" + rel)
@@ -800,11 +875,22 @@ print("        adjudicated-different, UNMOVED               : %d" % f_adjudicate
 print("        DIFFER and are NOT adjudicated               : %d" % len(f_diff))
 print("        adjudicated but MOVED                        : %d" % len(f_moved))
 print("      UNGRADED, born AT THE TIP (boundary iv-a)       : %d" % len(f_at_tip))
+print("        of those, ADJUDICATED born-at-tip, UNMOVED   : %d" % len(f_tip_adjudicated))
+print("        of those, adjudicated but MOVED              : %d" % len(f_tip_moved))
 print("      unreadable at their own birth commit            : %d" % len(f_unreadable))
-for name in f_at_tip[:10]:
+for name, h_tip in f_at_tip[:10]:
     print("        UNGRADED-BORN-AT-TIP %s" % name)
+    print("                             disk sha256 %s" % h_tip)
+    print("                             ADJUDICATE IT in ARM_F_BORN_AT_TIP_ADJUDICATED, or")
+    print("                             this file FAILS: ARM F did not measure it.")
 if len(f_at_tip) > 10:
     print("        ... and %d more born at the tip" % (len(f_at_tip) - 10))
+for name in f_tip_adjudicated:
+    print("        ADJUDICATED-BORN-AT-TIP %s (ungraded by ARM F, accepted by name+digest)"
+          % name)
+for name, want, got in f_tip_moved:
+    print("        BORN-AT-TIP ADJUDICATION MOVED %s\n                                       "
+          "adjudicated %s got %s" % (name, want, got))
 for name, b, h0, h1 in f_diff:
     print("        LAUNDERED-OR-MUTATED %s" % name)
     print("                             born at %s" % b)
@@ -854,6 +940,26 @@ check("ARM F actually GRADED a non-empty population against a baseline OLDER tha
       f_graded > 0,
       "graded=%d of %d post-fork; ungraded because born at the tip=%d"
       % (f_graded, len(f_post), len(f_at_tip)))
+# T455 / C-T448-1 — THE (iv-a) FAIL-OPEN, CLOSED. The check above asserts ARM F graded
+# SOMETHING. That is not the same claim as "ARM F graded EVERYTHING it was handed", and the
+# gap between them was the fail-open: 631 rows graded fine while one fabricated row sat
+# UNGRADED and the file exited 0. The rule below is not new to this file — it is the rule
+# stated verbatim at the f_noborn refusal in section 8, nine lines above the born-at-tip
+# branch, applied to the other half of the same category.
+check("ARM F GRADED ITS WHOLE POPULATION — every post-fork observation was measured against "
+      "a baseline older than HEAD, or is adjudicated by name AND digest as born at the tip. "
+      "AN ARM THAT COULD NOT MEASURE PART OF ITS OWN POPULATION HAS NOT PASSED ON IT — the "
+      "sentence section 8 already applies to a path with no recorded ADD commit",
+      not f_at_tip,
+      "UNGRADED and UNADJUDICATED, born at the tip: %d of %d post-fork  %s"
+      % (len(f_at_tip), len(f_post), [n for n, _ in f_at_tip][:5]))
+check("ARM F's born-at-tip adjudications are EXACTLY the ones adjudicated — a further "
+      "mutation of an adjudicated capture moves it, and so does an entry that no longer "
+      "names anything born at the tip (a dead entry is a silent widening of the exception)",
+      not f_tip_moved
+      and len(f_tip_adjudicated) == len(ARM_F_BORN_AT_TIP_ADJUDICATED),
+      "unmoved=%d of %d, moved=%d"
+      % (len(f_tip_adjudicated), len(ARM_F_BORN_AT_TIP_ADJUDICATED), len(f_tip_moved)))
 check("ARM B's population is a SUPERSET of ARM A's — every historical observation is still "
       "tracked, so neither arm is silently narrower than it reads",
       set(fork_paths) <= set(head_paths),
@@ -862,6 +968,259 @@ check("ARM C's row-set and ARM D's disk-set are the SAME set as ARM B's tracked 
       "three populations agree and none of them is silently the empty intersection",
       set(man_obs) == tracked_rel == set(disk_rel),
       "manifest=%d tracked=%d disk=%d" % (len(man_obs), len(tracked_rel), len(disk_rel)))
+
+print()
+print("=== 10. THE CORRECTION ITSELF — is the false claim QUOTED, or RE-ASSERTED? ===")
+print("    T455 / C-T448-2. C-T423-1's repair keeps every false sentence VERBATIM and TAGS")
+print("    it, so a guard can tell a quotation from an assertion by grep. T433's guard")
+print("    asserted the TAG: no UNTAGGED line states the claim, and at least three tagged")
+print("    lines survive. T448 defeated BOTH halves with a one-line edit, at guard exit 0 —")
+print("    (B) re-assert the claim as a LIVE echo with the tag in a TRAILING COMMENT, so the")
+print("    transcript prints it untagged; (C) DELETE the quotation and keep three bare tags.")
+print("    The tag was graded; its BINDING to the text was not. Both predicates are here,")
+print("    INSIDE the grader run-all.sh adjudicates (P-45), not beside it.")
+print("    RE-DERIVED, NOT INHERITED: T448's supplied one-predicate repair closes (C) and")
+print("    does NOT close (B) — the smuggled line carries the tag in its trailing comment,")
+print("    so `both` == `all` == 2 and the binding predicate passes it. Measured, in")
+print("    `.softhouse/capture/t455-t448-conditions/out/30-TAG-BINDING-DRIVE.txt`. (B) is")
+print("    closed only by the SECOND predicate, which reads what a line PRINTS.")
+
+# The claim patterns are ASSEMBLED FROM WORDS rather than written out as literals, for one
+# reason: THIS FILE IS ONE OF THE FILES SCANNED BELOW, and a line here carrying a false claim
+# in one piece would be an untagged assertion of it — the check would fail on its own matcher,
+# or would have to exempt itself, which is a hole. Do not "tidy" these back into literals.
+FALSE_CLAIMS = tuple(" ".join(w) for w in (
+    ("there", "is", "no", "committed", "baseline", "older", "than", "head"),
+    ("no", "baseline", "older", "than", "head", "anywhere"),
+    ("does", "not", "exist", "and", "cannot", "be", "manufactured", "here"),
+    ("committed", "baseline", "older", "than", "head", "for", "those", "632"),
+    ("not", "closable", "by", "internal", "consistency"),
+))
+TAG = "QUOTED-" + "FALSE-CLAIM"
+# file -> the POSITIVE half: the replacement text that must still be present. P-35: every
+# vacuous guard in this repo is a negative one, so each negative is paired with a positive. A
+# file that was simply DELETED, or emptied, fails the positive half.
+CORRECTED = (
+    (A2_11_REL + "/verify-capture-integrity.py",
+     "THE BLOB AT THE COMMIT THAT FIRST ADDED EACH OBSERVATION"),
+    (A2_11_REL + "/run-all.sh",
+     "BLOB AT THE COMMIT THAT FIRST ADDED EACH OBSERVATION"),
+    (".softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.sh",
+     "THE BLOB AT THE COMMIT THAT"),
+    (".softhouse/capture/t393-t382-conditions/instruments/12-relaunder-manifest.py",
+     "THE BASELINE EXISTS AND ALWAYS DID"),
+)
+
+
+def states_a_false_claim(line):
+    low = line.lower()
+    return any(c in low for c in FALSE_CLAIMS)
+
+
+def strip_trailing_comment(line):
+    """Remove a `#` comment that is OUTSIDE quotes — i.e. the part a reader never sees.
+
+    This is the whole of abuse (B): the tag sits in a trailing shell comment, so the SOURCE
+    line carries it and the PRINTED line does not. Reading the source is reading the wrong
+    artefact. Only `"` and `'` are tracked, with backslash escapes; that is enough for the
+    `echo "..."` and `print("...")` forms these four files use, and anything it cannot parse
+    is left INTACT, which fails closed rather than open.
+    """
+    out, quote, i = [], None, 0
+    while i < len(line):
+        ch = line[i]
+        if quote:
+            if ch == "\\" and i + 1 < len(line):
+                out.append(ch)
+                out.append(line[i + 1])
+                i += 2
+                continue
+            if ch == quote:
+                quote = None
+        elif ch in "\"'":
+            quote = ch
+        elif ch == "#":
+            break
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+def emitted_payload(line):
+    """The part of a line a READER of the transcript sees, or None if the line prints nothing.
+
+    `echo ...` in a .sh and `print(...)` in a .py are the only two emitters in these files.
+    A line that is not an emitter is not judged by the printed predicate at all.
+    """
+    stripped = line.lstrip()
+    if not (stripped.startswith("echo ") or stripped.startswith("echo\t")
+            or stripped.startswith("print(")):
+        return None
+    return strip_trailing_comment(line)
+
+
+def tagged_blocks(text):
+    """Every CONTIGUOUS run of tagged lines, DE-WRAPPED into one string each.
+
+    A quotation of any length is wrapped across source lines, so a LINE-oriented matcher
+    cannot bind a tag to the text it tags: measured on
+    `10-drive-conditions.sh`, whose four tagged lines split the sentence at
+    "... has no / baseline older than HEAD anywhere ...", so NO line carries the claim and a
+    line-wise search scores it 0 stated, 0 tagged — indistinguishable from abuse (C), where
+    the quotation is gone entirely. De-wrapping is what makes the two distinguishable.
+    Blocks are CONTIGUOUS runs, not the whole file, so two unrelated quotations cannot be
+    concatenated into a claim neither of them makes.
+    """
+    blocks, cur = [], []
+    for line in text.split("\n"):
+        if TAG in line:
+            s = line.replace("[" + TAG + "]", " ").replace(TAG, " ")
+            cur.append(s.lstrip().lstrip("#").strip())
+        elif cur:
+            blocks.append(" ".join(" ".join(cur).split()))
+            cur = []
+    if cur:
+        blocks.append(" ".join(" ".join(cur).split()))
+    return blocks
+
+
+def grade_binding(text):
+    """(stated_untagged, quoted_claims, printed_untagged) for one file's text.
+
+    PREDICATE 1 — BINDING, two halves that must BOTH hold:
+      NEGATIVE  no UNTAGGED line states a false claim (T433's half, kept);
+      POSITIVE  at least one DE-WRAPPED TAGGED BLOCK still contains a false claim VERBATIM.
+                This is the half T433's guard did not have: it counted TAGS. Three bare tags
+                satisfy a tag count and contain no quotation, which is abuse (C).
+    PREDICATE 2 — PRINTED. Every EMITTED payload that states a false claim must carry the tag
+    INSIDE THE PAYLOAD. Closes (B): a tag in a trailing comment is never printed, so the
+    source carries it and the reader's transcript does not. The source is not the artefact
+    the reader sees, and the tag exists for the reader.
+    """
+    stated_untagged, printed_untagged = [], []
+    for line in text.split("\n"):
+        if states_a_false_claim(line) and TAG not in line:
+            stated_untagged.append(line.strip()[:90])
+        payload = emitted_payload(line)
+        if payload is not None and states_a_false_claim(payload) and TAG not in payload:
+            printed_untagged.append(line.strip()[:90])
+    quoted_claims = sum(1 for c in FALSE_CLAIMS
+                        if any(c in b.lower() for b in tagged_blocks(text)))
+    return stated_untagged, quoted_claims, printed_untagged
+
+
+# P-22, IN SITU, BEFORE ANY VERDICT — the classifier is driven on a known GOOD text and on
+# BOTH of T448's abuses, in memory. A binding check that has never rejected anything is not a
+# check. The scratch-clone end-to-end drive is
+# `.softhouse/capture/t455-t448-conditions/instruments/30-t455-tag-binding-drive.sh`.
+# The fixture sentence is ASSEMBLED from the pattern table, never typed: a literal here would
+# be an untagged assertion of the claim in this very file, and PREDICATE 1 would fail on its
+# own test data. (It did, on the first run — states=3 tagged=1. The guard caught its author.)
+_SENTENCE = "There is no " + FALSE_CLAIMS[3] + "."
+_GOOD = ('  echo "  [%s] %s"\n'
+         '  echo "THE BASELINE IS THE BLOB AT THE COMMIT THAT FIRST ADDED EACH OBSERVATION."\n'
+         % (TAG, _SENTENCE))
+_ABUSE_B = _GOOD + ('  echo "%s"  # %s\n' % (_SENTENCE, TAG))
+_ABUSE_C = ('  # %s (tidied: the quotation was removed, the tag was not)\n' % TAG) * 3
+_WRAPPED = ('  # [%s] "Expected UNDETECTED at BOTH refs ... has no\n'
+            '  # [%s]  baseline older than HEAD anywhere in this repository."\n' % (TAG, TAG))
+_g_bad, _g_q, _g_printed = grade_binding(_GOOD)
+_b_bad, _b_q, _b_printed = grade_binding(_ABUSE_B)
+_c_bad, _c_q, _c_printed = grade_binding(_ABUSE_C)
+_w_bad, _w_q, _w_printed = grade_binding(_WRAPPED)
+check("SELF-DRIVE — the binding classifier ACCEPTS a correctly tagged quotation (a check "
+      "that rejected everything would be a freeze, not a guard)",
+      _g_q >= 1 and not _g_bad and not _g_printed,
+      "untagged-statements=%d quoted-claims=%d printed-untagged=%d"
+      % (len(_g_bad), _g_q, len(_g_printed)))
+check("SELF-DRIVE — the classifier ACCEPTS a quotation WRAPPED across two lines, where no "
+      "single line carries the claim. Rejecting it would make the guard unusable on the "
+      "real files, which is how a guard gets deleted rather than fixed (P-29)",
+      _w_q >= 1 and not _w_bad, "quoted-claims=%d untagged-statements=%d" % (_w_q, len(_w_bad)))
+check("SELF-DRIVE — the classifier REJECTS abuse (B): the claim re-asserted as a LIVE echo "
+      "with the tag in a TRAILING COMMENT. NOTE WHICH PREDICATE CATCHES IT — the binding "
+      "half does NOT (the source line carries the tag); only the PRINTED half does. That is "
+      "why there are two, and it is where T448's one-predicate repair stops short",
+      bool(_b_printed) and not _b_bad and _b_q >= 1,
+      "untagged-statements=%d quoted-claims=%d printed-untagged=%d %s"
+      % (len(_b_bad), _b_q, len(_b_printed), _b_printed[:1]))
+check("SELF-DRIVE — the classifier REJECTS abuse (C): the quotation deleted, bare tags kept "
+      "(the outcome T433's third red drive claims to prevent, but never separates from the "
+      "text because it deletes tag and text together)",
+      _c_q == 0,
+      "quoted-claims=%d tags=%d — bare tags satisfy a TAG COUNT and fail a BINDING"
+      % (_c_q, _ABUSE_C.count(TAG)))
+
+_bind_bad, _print_bad, _pos_bad, _missing = [], [], [], []
+_emitted_tagged = 0
+for _rel, _positive in CORRECTED:
+    _abs = os.path.join(ROOT, _rel)
+    try:
+        with open(_abs, "r", encoding="utf-8") as fh:
+            _text = fh.read()
+    except OSError as exc:
+        _missing.append((_rel, repr(exc)))
+        continue
+    _untagged, _quoted, _printed = grade_binding(_text)
+    print("      %-42s untagged-statements=%d quoted-claims=%d printed-untagged=%d"
+          % (os.path.basename(_rel), len(_untagged), _quoted, len(_printed)))
+    for _u in _untagged:
+        print("        UNTAGGED-ASSERTION %s" % _u)
+    if _untagged or _quoted < 1:
+        _bind_bad.append((_rel, len(_untagged), _quoted))
+    for _p in _printed:
+        _print_bad.append((_rel, _p))
+    if _positive not in _text:
+        _pos_bad.append((_rel, _positive))
+    for _line in _text.split("\n"):
+        _pl = emitted_payload(_line)
+        if _pl is not None and states_a_false_claim(_pl) and TAG in _pl:
+            _emitted_tagged += 1
+for _rel, _exc in _missing:
+    print("        MISSING %s  %s" % (_rel, _exc))
+if _missing:
+    refuse("%d of the %d corrected files could not be read: %s"
+           % (len(_missing), len(CORRECTED), [r for r, _ in _missing]),
+           "A file this section cannot read is a file this section did not grade.",
+           "REFUSED, never a pass.")
+
+check("PREDICATE 1, BINDING — in every corrected file, NO untagged line states a false claim, "
+      "AND at least one DE-WRAPPED TAGGED BLOCK still contains one VERBATIM. A tag with no "
+      "quotation under it grades nothing; a quotation with no tag is an assertion",
+      not _bind_bad,
+      "(file, untagged-statements, quoted-claims): %s" % _bind_bad)
+check("PREDICATE 2, PRINTED — no line that the tooling actually EMITS states a false claim "
+      "without the tag INSIDE what it prints. The source is not the artefact a reader sees, "
+      "and a tag in a trailing comment is not printed at all",
+      not _print_bad,
+      "emitted untagged: %s" % _print_bad[:3])
+check("POSITIVE HALF — every corrected file still states what the baseline IS. A negative "
+      "assertion alone passes on an empty file (P-35)",
+      not _pos_bad, "missing replacement text: %s" % [r for r, _ in _pos_bad])
+check("VACUITY CONTROL — at least one TAGGED false claim is actually EMITTED somewhere in "
+      "the corrected set, so predicate 2 is grading a non-empty population. Zero emitted "
+      "quotations would make it pass by having nothing to look at",
+      _emitted_tagged > 0, "emitted tagged quotation lines: %d" % _emitted_tagged)
+
+# T455 / C-T448-6 — the transcript footer. `run-all.sh`'s body is `{ ... } | tee`, which
+# TRUNCATES: T433 appended a correction footer to TRANSCRIPT-A2-11.txt and the next run of the
+# script it documents erased it (measured 1 -> 0), with nothing asserting it. The repair is not
+# to re-append it — it is to make run-all.sh EMIT it, inside the teed block, every run. That is
+# asserted here rather than in the transcript, because a transcript cannot guard itself.
+_runall_abs = os.path.join(ROOT, A2_11_REL + "/run-all.sh")
+try:
+    with open(_runall_abs, "r", encoding="utf-8") as fh:
+        _runall_text = fh.read()
+except OSError as exc:
+    _runall_text = ""
+    refuse("run-all.sh could not be read: %r. Section 10 cannot grade the footer." % exc,
+           "REFUSED, never a pass.")
+check("run-all.sh REGENERATES its correction footer instead of relying on an appended one — "
+      "the `| tee` truncates the transcript on every run, so an appended footer survives "
+      "exactly until the next run of the script that documents it (C-T448-6)",
+      "CORRECTION INDEX, REGENERATED ON EVERY RUN" in _runall_text,
+      "footer marker present in run-all.sh: %s"
+      % ("CORRECTION INDEX, REGENERATED ON EVERY RUN" in _runall_text))
 
 print()
 if refusals:
@@ -895,8 +1254,13 @@ print("of it regular files; the 27 fork-sha manifest entries outside them are un
 print("apart from the two adjudicated by digest above; and %d of the %d POST-FORK"
       % (f_graded, len(f_post)))
 print("observations still equal the blob at the commit that FIRST ADDED them, apart from the")
-print("one adjudicated by digest above. %d were born at the tip and ARM F could not grade"
+print("one adjudicated by digest above. ARM F GRADED ITS WHOLE POPULATION: %d unadjudicated"
       % len(f_at_tip))
-print("them — that number is a BOUNDARY (iv-a), not a pass, and it is stated so it cannot be")
-print("read as one.")
+print("observations were born at the tip and left ungraded (T455 / C-T448-1 — a non-zero here")
+print("FAILS this file; an arm that could not measure part of its own population has not")
+print("passed on it), and %d were accepted as born-at-tip by name AND digest. What is still"
+      % len(f_tip_adjudicated))
+print("NOT reached is stated at boundary (iv-a): DETECTING a fabricated capture needs the")
+print("reference oracle, not this file. That is a boundary on DETECTION, and it is no longer")
+print("also a fail-open on the VERDICT.")
 sys.exit(0)

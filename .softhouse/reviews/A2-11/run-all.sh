@@ -224,8 +224,30 @@ sec() {
   echo "by digest. Section 8 of verify-capture-integrity.py is that arm. On T393's own"
   echo "'unclosable' laundered residual it exits 1 NAMING the file, where ARMs A-E exit 0."
   echo "What ARM F still does NOT reach is named at boundary (iv) of that file's docstring:"
-  echo "an observation born AT THE TIP has no baseline older than HEAD and is reported"
-  echo "UNGRADED, never equal; and a rename-and-mutate in ONE commit resets its own baseline."
+  echo "an observation born AT THE TIP has no earlier blob to be compared against, so ARM F"
+  echo "cannot grade it; and a rename-and-whole-rewrite in ONE commit reaches the same place."
+  echo
+  echo "T455 / C-T448-1 -- THE (iv-a) FAIL-OPEN IS CLOSED, AND ONLY THE FAIL-OPEN. T433"
+  echo "disclosed (iv-a) as open and then wrote, verbatim, kept and TAGGED here for the same"
+  echo "reason the three lines above are:"
+  echo "  [QUOTED-FALSE-CLAIM] \"Not closable by internal consistency -- a fabricated"
+  echo "  [QUOTED-FALSE-CLAIM]  observation is a claim about the oracle, and only the oracle"
+  echo "  [QUOTED-FALSE-CLAIM]  can refute it.\""
+  echo "THAT RAN TWO PROBLEMS TOGETHER, and only one of them is external. DETECTING a"
+  echo "fabricated capture does need the oracle -- the anchor for that half is named:"
+  echo "re-observation against the pinned reference oracle (Fineract), digest-recorded, as"
+  echo "T357 did for the four obs/ files on fire 20260828-140005. REFUSING TO EXIT 0 OVER A"
+  echo "POPULATION THE ARM DID NOT MEASURE is internal, and section 8 already stated that"
+  echo "rule nine lines above the born-at-tip branch for its sibling case: an arm that could"
+  echo "not measure part of its own population has not passed on it. Section 9 now asserts it"
+  echo "for the born-at-tip half too, with an adjudication table keyed by name AND digest."
+  echo "MEASURED COST ON A CLEAN TREE: zero -- 632 graded, 0 born at the tip."
+  echo
+  echo "T455 / C-T448-2 -- SECTION 10 OF THAT FILE grades the CORRECTION itself: no untagged"
+  echo "line asserts a false claim, a DE-WRAPPED tagged block still quotes one verbatim, and"
+  echo "nothing this tooling PRINTS states one without the tag inside what it prints. The"
+  echo "third predicate exists because a tag in a trailing shell comment satisfies a source"
+  echo "grep and never reaches the transcript a reader actually sees."
   sec 10 0 python3 "$DIR/verify-capture-integrity.py"
   echo
   echo "############ VERDICT — every section against its adjudicated exit code"
@@ -261,6 +283,43 @@ sec() {
     echo "  repair that nobody recorded; both need a human, neither is absorbed here."
     echo "$DEVIATIONS" > "$STATUS.rc"
   fi
+
+  # T455 / C-T448-6 -- THE FOOTER IS EMITTED HERE, INSIDE THE TEED BLOCK, ON EVERY RUN.
+  # T433 APPENDED a correction footer to TRANSCRIPT-A2-11.txt after the fact. The body of this
+  # script is `{ ... } | tee "$DIR/TRANSCRIPT-A2-11.txt"`, and tee TRUNCATES -- so the footer
+  # survived exactly until the next run of the very script it documents. Measured by T448 and
+  # re-measured by T455 in a scratch clone: the marker greps 1 before a run and 0 after, with
+  # nothing asserting it anywhere. An annotation that the tooling erases is not a record.
+  # The repair is not to re-append it. It is to make it OUTPUT, so it is reproduced by
+  # construction, and to assert that it is emitted -- which section 10 of
+  # verify-capture-integrity.py does, by requiring the marker below to be present in THIS file.
+  echo
+  echo "================================================================================"
+  echo "CORRECTION INDEX, REGENERATED ON EVERY RUN (T433 / C-T423-1, extended by T455)"
+  echo "================================================================================"
+  echo "This transcript is a RECORD of what the tooling printed. Earlier versions of it"
+  echo "echoed T393's claim that the 632 post-fork captured oracle observations had no"
+  echo "committed baseline older than HEAD. THAT CLAIM WAS FALSE. Where it survives above"
+  echo "it is a TAGGED QUOTATION, kept rather than deleted, because deleting it would"
+  echo "destroy the evidence that this program shipped a false claim in tracked"
+  echo "executable files."
+  echo
+  echo "THE BASELINE EXISTS AND ALWAYS DID: the blob at the commit that FIRST ADDED each"
+  echo "observation, \`git log --diff-filter=A -- <path>\`. It is an object inside an"
+  echo "ALREADY-COMMITTED commit, so laundering MANIFEST.sha256 inside the mutating"
+  echo "commit cannot reach it. 632 of 632 born strictly older than the tip, 0 at the"
+  echo "tip, 631 byte-identical to their birth blob, 1 legitimate re-capture adjudicated"
+  echo "by digest -- T433's sweep, and re-derived by T448 under an independent primitive"
+  echo "(tree containment over \`git rev-list --reverse --topo-order\`, no --diff-filter)."
+  echo
+  echo "  the arm                -> section 8 of verify-capture-integrity.py"
+  echo "  the (iv-a) close       -> section 9, ARM F GRADED ITS WHOLE POPULATION (T455)"
+  echo "  the correction's own   -> section 10, tag-to-text BINDING + what is PRINTED"
+  echo "    guard                   (T455 / C-T448-2)"
+  echo "  index of every corrected site and surviving echo"
+  echo "                         -> .softhouse/capture/t393-t382-conditions/out/T433-CORRECTION.md"
+  echo "  T455's dispositions    -> .softhouse/handoff/T455-t448-conditions.md"
+  echo "================================================================================"
 } 2>&1 | tee "$DIR/TRANSCRIPT-A2-11.txt"
 
 # ----------------------------------------------------------------------------------------

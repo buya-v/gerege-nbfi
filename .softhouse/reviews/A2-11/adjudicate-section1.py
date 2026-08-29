@@ -38,6 +38,7 @@ P-25 -- no floating point. Nothing here parses a number; the only numeric values
 counts produced by len().
 """
 import ast
+import json
 import pathlib
 import re
 import subprocess
@@ -193,6 +194,31 @@ print("=== 4. THE CORPUS QUESTION, MEASURED: does any of the three touch a GRADE
 print("    Searched: every file under .softhouse/vectors/ (recursive), and .softhouse/")
 print("    conformance.sh. Tokens: the three key names, 'accountingMappings', 'loanproduct',")
 print("    and the capture files section 1 replays.")
+print()
+print("    T455 / F-6 — THE SEARCH WAS FIXED; THE PIN WAS NOT MOVED. As shipped this arm was")
+print("    a RAW SUBSTRING search over the bytes of every file under .softhouse/vectors/, and")
+print("    on 2026-08-29 it went RED on an unmutated tree at unmodified `main`. Nothing about")
+print("    the graded corpus had changed. T391 wrote a PROSE `evidence` field into")
+print("    capabilities-ledger.json, and prose `citation` fields into three ledger vectors,")
+print("    which SAY IN TERMS that product 63 has none of these mappings and that the")
+print("    capability is still UNGRADED. A sentence ABOUT a token is not a graded cell, and a")
+print("    search that cannot tell them apart was answering a different question from the one")
+print("    the check asks. This was a FALSE POSITIVE OF THE INSTRUMENT — found by T433,")
+print("    bisected by T448 to 25a8b7de (T391), re-derived here by reading every hit.")
+print("    THE REPAIR IS TO THE SEARCH, NOT TO THE PIN. Moving the adjudicated exit code to")
+print("    hide a red is the defect this whole file exists to prosecute; the arm now parses")
+print("    the JSON and classifies each occurrence STRUCTURALLY:")
+print("      KEY        the token IS (or is inside) an object key      -> MATERIAL")
+print("      VALUE-ID   the token is inside an IDENTIFIER-SHAPED value -> MATERIAL")
+print("                 (no whitespace: a ref, a path, a code — the shapes the harness")
+print("                  actually compares against the reference oracle)")
+print("      PROSE      the token is inside a value that is a SENTENCE -> IMMATERIAL,")
+print("                 counted and printed, never silently dropped")
+print("    That discriminator is INTRINSIC — it reads the shape of the value, not a list of")
+print("    field names that would have to be maintained and would rot. A file that does NOT")
+print("    parse as JSON, and every non-JSON file, keeps the raw substring search and any hit")
+print("    is MATERIAL: unparseable fails CLOSED, never skipped. Driven both ways in section")
+print("    5, controls (h)-(k).")
 TOKENS = ["paymentChannelToFundSourceMappings", "feeToIncomeAccountMappings",
           "penaltyToIncomeAccountMappings", "accountingMappings", "loanproduct",
           "A2-211-read-product-nine-mandatory", "a2-11-get-loanproduct"]
@@ -219,18 +245,91 @@ check("POSITIVE CONTROL — conformance.sh was actually READ; a missing or empty
       conf.is_file() and conf.stat().st_size > 0,
       "%s, %d bytes" % (conf, conf.stat().st_size if conf.is_file() else -1))
 
+def classify_occurrences(text, tok):
+    """(material, prose) locations of `tok` in one file's text. T455 / F-6.
+
+    MATERIAL means the corpus USES the token: as an object key, or inside a value the
+    harness compares (identifier-shaped — no whitespace). PROSE means a sentence mentions
+    it. A file that will not parse as JSON is graded by raw substring and every hit is
+    MATERIAL, because an instrument that cannot read a file has not cleared it.
+    """
+    try:
+        doc = json.loads(text)
+    except (ValueError, UnicodeDecodeError):
+        return ([("UNPARSEABLE", text.count(tok))] if tok in text else [], [])
+    material, prose = [], []
+
+    def walk(node, path):
+        if isinstance(node, dict):
+            for k, v in node.items():
+                here = path + "." + str(k)
+                if tok in str(k):
+                    material.append(("KEY", here))
+                walk(v, here)
+        elif isinstance(node, list):
+            for i, v in enumerate(node):
+                walk(v, "%s[%d]" % (path, i))
+        elif isinstance(node, str):
+            if tok in node:
+                if any(ch.isspace() for ch in node):
+                    prose.append(("PROSE", path))
+                else:
+                    material.append(("VALUE-ID", path))
+
+    walk(doc, "$")
+    return material, prose
+
+
 hit_rows = []
 for tok in TOKENS:
-    vhits = [p for p in vector_files if tok in p.read_text(errors="replace")]
+    vmat, vprose = [], []
+    for p in vector_files:
+        m, s = classify_occurrences(p.read_text(errors="replace"), tok)
+        rel = str(p.relative_to(ROOT))
+        vmat.extend((kind, rel, where) for kind, where in m)
+        vprose.extend((kind, rel, where) for kind, where in s)
+    # conformance.sh is a SHELL SCRIPT: there is no structure to parse, so it keeps the raw
+    # search and any hit is MATERIAL. STATED AS A LIMIT, not left to be discovered: a token
+    # written into a COMMENT there would redden this arm for the same reason the vector store
+    # just did. That direction is fail-CLOSED — it demands a human — but it is the same class
+    # of false positive and whoever hits it should fix the search again, not the pin.
     chits = tok in conf.read_text(errors="replace")
-    hit_rows.append((tok, len(vhits), chits, [str(p.relative_to(ROOT)) for p in vhits]))
-    print("      %-38s vectors=%d  conformance.sh=%s" % (tok, len(vhits), chits))
+    hit_rows.append((tok, len(vmat), chits, len(vprose), vmat[:3], vprose[:3]))
+    print("      %-38s MATERIAL=%d  conformance.sh=%s  prose-only=%d"
+          % (tok, len(vmat), chits, len(vprose)))
+    for kind, rel, where in vprose[:3]:
+        print("          %-8s %s  at %s" % (kind, rel, where[:70]))
+    for kind, rel, where in vmat[:3]:
+        print("          %-8s %s  at %s" % (kind, rel, where[:70]))
 print("    (population searched: %d files under .softhouse/vectors/, plus conformance.sh)"
       % len(vector_files))
-check("NO vector in the store, and no line of conformance.sh, mentions ANY of these "
-      "tokens — the three failures touch NOTHING in the graded corpus",
-      all(v == 0 and not c for _, v, c, _ in hit_rows),
-      "; ".join("%s v=%d c=%s %s" % r for r in hit_rows if r[1] or r[2]) or "all zero")
+print("    (%d JSON files parsed structurally; %d graded by raw substring because they are "
+      "not JSON)" % (sum(1 for p in vector_files if p.suffix == ".json"),
+                     sum(1 for p in vector_files if p.suffix != ".json")))
+check("NO vector in the store USES any of these tokens — as an object KEY or as an "
+      "identifier-shaped VALUE — and no line of conformance.sh mentions one. The three "
+      "failures touch NOTHING in the graded corpus. Prose that MENTIONS a token is counted "
+      "and printed above, and is not a graded cell (T455 / F-6)",
+      all(m == 0 and not c for _, m, c, _, _, _ in hit_rows),
+      "; ".join("%s material=%d conformance=%s %s" % (r[0], r[1], r[2], r[4])
+                for r in hit_rows if r[1] or r[2]) or "all zero")
+_parsed_ok = 0
+for _p in vector_files:
+    if _p.suffix != ".json":
+        continue
+    try:
+        json.loads(_p.read_text(errors="replace"))
+        _parsed_ok += 1
+    except ValueError:
+        pass
+check("POSITIVE CONTROL — the structural classifier actually PARSED a non-empty population. "
+      "If every vector failed to parse, every hit would fall through to the raw-substring "
+      "branch and the arm above would be answering a different question than it reads. "
+      "Zero parsed vectors is a SELECTOR failure, not a clean corpus. REFUSED",
+      _parsed_ok > 0,
+      "%d of %d JSON vectors parsed; %d prose occurrences resolved by structure"
+      % (_parsed_ok, sum(1 for p in vector_files if p.suffix == ".json"),
+         sum(r[3] for r in hit_rows)))
 
 # T374 / T362 F-4 -- BOTH provenance ref fields, not one.
 # The shipped regex was r'"capture_ref"\s*:\s*"..."', which cannot match
@@ -332,6 +431,35 @@ control("(g) the offline prover does NOT trip on a genuinely offline script (the
         "discriminates, it does not just always fire)",
         network_evidence(OFFSRC, "<synthetic>") == [],
         "hits=%s" % network_evidence(OFFSRC, "<synthetic>"))
+
+# T455 / F-6 — controls (h)-(k) drive the STRUCTURAL corpus classifier that replaced the raw
+# substring search. Three of them are the shapes that MUST still redden section 4, and one is
+# the shape that must NOT. A classifier with only the second half is a hole; with only the
+# first half it is the false positive it was written to remove. Both halves, or neither.
+_TOK = "paymentChannelToFundSourceMappings"
+_AS_KEY = '{"expected": {"%s": [1, 2]}}' % _TOK
+_AS_VALUE_ID = '{"provenance": {"capture_ref": "A2-99-%s"}}' % _TOK
+_AS_PROSE = ('{"evidence": "product 63 has NO %s at all, so STEP 2 is never entered and the '
+             'capability stays UNGRADED"}' % _TOK)
+_NOT_JSON = "# a shell fragment mentioning %s, which no parser will accept\n" % _TOK
+control("(h) a token used as an object KEY is MATERIAL — a graded cell that names the "
+        "contested field must still redden section 4",
+        classify_occurrences(_AS_KEY, _TOK)[0] != [],
+        "material=%s" % classify_occurrences(_AS_KEY, _TOK)[0])
+control("(i) a token inside an IDENTIFIER-SHAPED value (a ref, a path, a code) is MATERIAL — "
+        "those are the values the harness compares against the reference oracle",
+        classify_occurrences(_AS_VALUE_ID, _TOK)[0] != [],
+        "material=%s" % classify_occurrences(_AS_VALUE_ID, _TOK)[0])
+control("(j) a token inside a PROSE sentence is NOT material, and IS counted — this is the "
+        "exact shape of the F-6 false positive (T391's `evidence` field), and a classifier "
+        "that called everything material would be the instrument that produced it",
+        classify_occurrences(_AS_PROSE, _TOK) == ([], [("PROSE", "$.evidence")]),
+        "material=%s prose=%s" % classify_occurrences(_AS_PROSE, _TOK))
+control("(k) a file that does NOT parse as JSON falls back to the raw search and its hit is "
+        "MATERIAL — an instrument that cannot read a file has not cleared it, so the "
+        "unparseable case fails CLOSED",
+        classify_occurrences(_NOT_JSON, _TOK)[0] != [],
+        "material=%s" % classify_occurrences(_NOT_JSON, _TOK)[0])
 
 print()
 print("FAILURES: %d" % len(fails))
