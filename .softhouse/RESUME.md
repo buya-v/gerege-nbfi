@@ -90,6 +90,18 @@ repo-admin rights the agent does not hold and could lock Buyan out of his own `m
   `T42-mathcontext-inforce` (7). Not this fire's work; nobody has adjudicated whether their content landed
   by another route.
 
+## EXIT-PROTOCOL ATTESTATION — run, not assumed
+
+`repo-state-attest.sh fire-compare <before> <after>` → **`VERDICT: NO DAMAGE — every delta is inside the
+declared writ`**, exit 0. `git status --porcelain` empty (necessary, never sufficient — T318 drove nine
+shapes that leave it clean while destroying work).
+
+One **ADVISORY** was raised and **attributed rather than accepted**: `.softhouse/conformance.sh` changed
+(`e25f0f88 → 7c543532`) without the writ naming it, because a merge cannot enumerate other agents'
+artefacts in advance. Attributed to six commits, all from `T445` and `T454` — the only two branches this
+fire that held `.softhouse/conformance.sh` in `files_hint`, and each the sole writer in its wave. No
+unattributed change reached `main`.
+
 ## Pause reason
 **None — the fire closed clean.** Zero live workers, zero tasks left `in_progress`, working tree clean,
 everything pushed. `ready-tasks.py`: **52 READY, 0 IN PROGRESS, 8 BLOCKED**, no open CONTRACT gate.
