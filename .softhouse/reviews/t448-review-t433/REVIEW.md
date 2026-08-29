@@ -286,7 +286,7 @@ Case 3 is the load-bearing one: **the close costs nothing.** On any tree where t
 were committed before HEAD — which is every tree the grader is ever run on except the commit
 that adds a capture — `f_at_tip` is already 0, as T433's own sweep and mine both measure. The
 check fires only in the commit that actually adds a capture, which is the exact moment a human
-is present to adjudicate it, in the same shape as `ARM_E_ADJUDICATED` and `ARM_F_ADJUDICATED`.
+is present to adjudicate it, in the same shape as the existing `ADJUDICATED_DIFFERENT` (ARM E) and `ARM_F_ADJUDICATED` tables.
 
 **Why MAJOR and not MINOR.** A disclosed fail-open is a liability the next reader inherits with
 a note attached; a fail-open disclosed *as unclosable* is one the next reader will not try to
@@ -428,7 +428,7 @@ counts wherever they were restated (handoff §4 F-5, and
 
 ---
 
-### C-T448-5 — LOW — the invoker table is incomplete, "17 sites" is not 17 pre-existing sites, and the enumeration is `.sh`-only
+### C-T448-5 — LOW — the invoker table is incomplete, the "17 sites" figure is not 17 pre-existing sites, and the enumeration is `.sh`-only
 
 **Evidence:** `git grep -n "verify-capture-integrity" -- '*.sh' '*.py'` on the T433 tip;
 `out/…` (T433's own `30-WIRING-GUARD.txt` §4).
@@ -438,13 +438,15 @@ machine-generated enumeration does list:
 `.softhouse/reviews/t382-review-t374/instruments/31-saturation-clean-target.sh:44` and
 `.softhouse/reviews/t382-review-t374/instruments/10-attack-section10.sh:27`.
 
-The figure "17 existing invocation sites" is the line count of that enumeration, which includes
-**three lines belonging to T433's own new instruments** and one line
-(`30-t433-armf-wiring-guard.sh:111`) that is a `want` assertion *string*, not an invocation.
-The honest figures are **11 pre-existing invoking `.sh` files / 14 pre-existing grep lines**.
-Direction of error is conservative for the substantive claim, and the guard's own list is the
-authority, so this is LOW — but a count printed beside a list it restates is exactly the shape
-that rots.
+The figure **"17 existing invocation sites"** does **not** appear in T433's handoff — I checked;
+it is the dispatch brief's summary, and it is the LINE COUNT of that enumeration block. Read as
+"existing" it is wrong twice: three of the seventeen lines belong to **T433's own new
+instruments**, and one of those (`30-t433-armf-wiring-guard.sh:111`) is a `want` assertion
+*string*, not an invocation. The honest figures, measured on the T433 tip, are **11
+pre-existing invoking `.sh` files across 14 pre-existing lines**. Direction of error is
+conservative for the substantive claim, and the guard's own generated list is the authority,
+so this is LOW — but a count standing beside a list whose length it restates is exactly the
+shape that rots (P-80), and whoever carries the figure forward should carry 11/14.
 
 Separately: the guard enumerates with `--include="*.sh"` only. No `.py` invokes the grader
 today (I checked `'*.py'` as well as `'*.sh'`), but a future one would be invisible to the
@@ -507,12 +509,13 @@ VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 
 all 16 wrong ledger implementations DIED through this harness, not by hand.
 
 fail-open frontier   : 11, pinned at 11, frontier == pinned (all 11 rows, by path)
-dead-path census     : corpus=1581 deadFiles=75 deadOccurrences=108 resolving=1491 …
+dead-path census     : corpus=1582 deadFiles=75 deadOccurrences=108 resolving=1495 …
 dead-path frontier   : GREEN, T323 reconciliation list empty
 ```
 
 **My own seven instruments move neither figure — but only after a repair.** The fail-open
-linter, run separately with my files tracked, reports corpus **1575 → 1581** and frontier
+linter, run separately with my files tracked, reports corpus **1575 → 1581** (and 1582 in
+the bar's own census, which counts the seventh instrument added after that lint) and frontier
 **11 → 11**, with zero `t448` rows on the frontier: `out/81-FAILOPEN-LINT.txt`.
 `deadOccurrences` stays at **108**.
 
