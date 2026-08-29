@@ -340,10 +340,17 @@ repository**, on the tree carrying every deliverable above. Probe **PRESENCE** r
 value. Transcript: `evidence/60-final-bar.txt`.
 
     EXIT 0
-    grep -c 'probe = '  ->  1        (PRESENT, and it reads `up`)
+    grep -c 'probe = '  ->  1        (PRESENT, read before its value; it reads `up`)
+    conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
     VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
-    T316-DEADPATH-FRONTIER: GREEN rows=108 pinned=108 added=0 removed=0
-    FAILOPEN frontier 11 == 11
+    conformance:   T316-DEADPATH-CENSUS: … deadOccurrences=108 …
+    conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+    conformance:   frontier == pinned (all 11 rows, by path).      [fail-open frontier 11 == 11]
+
+The bar prints the raw `T316-DEADPATH-FRONTIER: … rows=108 pinned=108 …` line only on its
+REFUSAL path; on green it forwards the census line instead. `rows=108 pinned=108 added=0
+removed=0` was therefore taken separately, from the standalone guard, as the CONTROL arm of
+`evidence/30-lock-frontier-coupling.txt`.
 
 **On the tree that was actually graded.** Committing this transcript changes the tree the bar just
 graded, so one run always attests a tree that is not the one that ships. The bar was run twice —
