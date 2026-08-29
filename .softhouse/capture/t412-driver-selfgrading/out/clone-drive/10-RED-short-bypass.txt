@@ -1,0 +1,18 @@
+driver-push-gate: running /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t412-drive.Y870457cu8/repo/.softhouse/hooks/driver-push-gate.sh (sha256 9901ab5d02f9b42c)
+driver-push-gate: T412 driver push gate engaged. remote=scratch url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8/remote.git
+driver-push-gate: pushing 03c60d0a41b8e1781ce583c132b70093f719ddb2 -> refs/heads/main   tree=926079fb2630b8b004f4737b5963375c3ff248d7
+driver-push-gate:   C1 gitlinks: none in the pushed tree.
+driver-push-gate: 
+driver-push-gate: C2 REFUSED -- a NON-MERGE commit in 0808be33f6cde21e69633511b01915ec75ace87d..03c60d0a41b8e1781ce583c132b70093f719ddb2 writes outside the driver allowlist
+driver-push-gate:   (.softhouse/, docs/, .claude/):
+driver-push-gate:     03c60d0a nexus/internal/apps/ledger/conformance/t412probe2.go
+driver-push-gate: 
+driver-push-gate:   Merge commits are exempt -- they lawfully carry a worker's whole branch, and that
+driver-push-gate:   branch ran the bar. A non-merge commit on main is the driver's own writing, and over
+driver-push-gate:   the last 400 such commits it has never lawfully left those three prefixes.
+driver-push-gate:   If this is a deliberate in-place repair, set SOFTHOUSE_DRIVER_GATE_BYPASS to a reason.
+driver-push-gate: 
+driver-push-gate: PUSH REFUSED. Nothing was sent.
+error: failed to push some refs to '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8/remote.git'
+
+ARM short-bypass-refused         EXPECT rc=1 GOT rc=1  marker [C2 REFUSED -- a NON-MERGE commit] PASS

@@ -1,0 +1,23 @@
+driver-push-gate: running /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t412-drive.Y870457cu8/repo/.softhouse/hooks/driver-push-gate.sh (sha256 9901ab5d02f9b42c)
+driver-push-gate: T412 driver push gate engaged. remote=scratch url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8/remote.git
+driver-push-gate: pushing 5b9e73abae71b86e1db02e5a7200762724541e21 -> refs/heads/main   tree=90159f02580800c757c787f83b0a1ad980a36761
+driver-push-gate:   C1 gitlinks: none in the pushed tree.
+driver-push-gate:   C2 write-path allowlist: clean (1 non-merge commit(s) examined).
+driver-push-gate:   C3 graded ancestor: 0808be33  tree=b1abb7b46826aeace8965f82fb21808a361258b6
+driver-push-gate: 
+driver-push-gate: C3 REFUSED -- THE PUSHED TREE WAS NEVER GRADED, and its delta from the graded ancestor
+driver-push-gate:   0808be33 leaves the STATE set, so the cheap subset is not
+driver-push-gate:   licensed to stand in for the bar. Offending entries:
+driver-push-gate:     [D] .softhouse/obligations.md
+driver-push-gate: 
+driver-push-gate:   Run:      bash .softhouse/hooks/bar-attest.sh 5b9e73abae71b86e1db02e5a7200762724541e21
+driver-push-gate: 
+driver-push-gate:   The STATE set is *.md/*.txt/*.json/*.log under .softhouse/ (plus .softhouse/LOCK),
+driver-push-gate:   excluding vectors/, guards/, bin/, toolchain/, conformance.sh and any req/ directory,
+driver-push-gate:   ADDED or MODIFIED only. Everything else can move a guard whose corpus the cheap subset
+driver-push-gate:   does not read.
+driver-push-gate: 
+driver-push-gate: PUSH REFUSED. Nothing was sent.
+error: failed to push some refs to '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8/remote.git'
+
+ARM deletion-refused             EXPECT rc=1 GOT rc=1  marker [C3 REFUSED -- THE PUSHED TREE WAS NEVER GRADED] PASS

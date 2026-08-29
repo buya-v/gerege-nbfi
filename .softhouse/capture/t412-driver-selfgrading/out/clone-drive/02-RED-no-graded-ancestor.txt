@@ -1,0 +1,20 @@
+driver-push-gate: running /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t412-drive.Y870457cu8/repo/.softhouse/hooks/driver-push-gate.sh (sha256 9901ab5d02f9b42c)
+driver-push-gate: T412 driver push gate engaged. remote=scratch url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8/remote.git
+driver-push-gate: pushing f6a34793fa80acbd712cbdd9e5589b9494c1f10f -> refs/heads/main   tree=014425d8baeb5e0f702d6cc780ce68b7f775fe9e
+driver-push-gate:   C1 gitlinks: none in the pushed tree.
+driver-push-gate:   C2 write-path allowlist: clean (1 non-merge commit(s) examined).
+driver-push-gate: 
+driver-push-gate: C3 REFUSED -- NO GRADED ANCESTOR.
+driver-push-gate:   Nothing in the last 400 commits of f6a34793fa80acbd712cbdd9e5589b9494c1f10f has a FULL bar attestation on this host, so
+driver-push-gate:   there is no graded tree to measure this push against. Run:
+driver-push-gate: 
+driver-push-gate:       bash .softhouse/hooks/bar-attest.sh f6a34793fa80acbd712cbdd9e5589b9494c1f10f
+driver-push-gate: 
+driver-push-gate:   It materialises that exact tree in scratch, runs `bash .softhouse/conformance.sh`
+driver-push-gate:   there, and records the attestation only if the bar ends EXIT 0 with the probe line
+driver-push-gate:   PRESENT and reading `up`. Grading the working tree instead is instance 2.
+driver-push-gate: 
+driver-push-gate: PUSH REFUSED. Nothing was sent.
+error: failed to push some refs to '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8/remote.git'
+
+ARM no-graded-ancestor           EXPECT rc=1 GOT rc=1  marker [C3 REFUSED -- NO GRADED ANCESTOR] PASS

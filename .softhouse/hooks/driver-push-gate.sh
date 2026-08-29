@@ -326,7 +326,12 @@ EOF
     say ""
     say "      bash .softhouse/hooks/bar-attest.sh $LSHA"
     say ""
-    say "  It materialises that exact tree in scratch, runs \`bash .softhouse/conformance.sh\`"
+    # The path below carries no trailing backtick INSIDE the quotes, deliberately: the dead-path
+    # census extracts quoted string literals containing `.softhouse/`, and an escaped backtick
+    # rides along into the extracted literal, which then resolves to nothing and GROWS THE
+    # FRONTIER. Driven: T316-DEADPATH-FRONTIER refused with `+ .softhouse/hooks/driver-push-gate.sh
+    # | .softhouse/conformance.sh\` ` before this line was reworded.
+    say "  It materialises that exact tree in scratch, runs the bar (.softhouse/conformance.sh)"
     say "  there, and records the attestation only if the bar ends EXIT 0 with the probe line"
     say "  PRESENT and reading \`up\`. Grading the working tree instead is instance 2."
     if bypass_ok; then record_bypass "C3 no graded ancestor" "$LSHA"; continue; fi
