@@ -5722,7 +5722,7 @@
     },
     {
       "id": "T393",
-      "status": "needs_review",
+      "status": "merged",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -5738,7 +5738,7 @@
       ],
       "title": "T382's four conditions on T374 -- the disclosed gap is LARGER than disclosed, and section 10's FORK is one line from reinstating the defect it fixes",
       "description": "T382 APPROVED T374 WITH CONDITIONS and drove all four with controls. Read the review from `main` (both are merged at `01a7a05a`): `.softhouse/reviews/t382-review-t374/REVIEW.md`.\n\n**F-4 FIRST -- IT IS THE ONE THAT REINSTATES THE ORIGINAL DEFECT.** Section 10's `FORK` is an UNCHECKED CONSTANT. Section 4 ties its copy to `prove-a2-7-additive.py`; section 10 ties its copy to nothing. T382 moved it ONE LINE to the mutating commit and ARM A collapsed 403 -> 1035, after which `run-all` exits **0 printing PASS while section 4 prints `DIFF out/A2-000-glaccounts-preexisting.http` BY NAME** -- which is **T362's F-1 verbatim, on the branch that fixes it**. Tie section 10's FORK to a checked source the way section 4 does, and drive the one-line move red.\n\n**F-1: THE DISCLOSED GAP IS LARGER THAN T374 DISCLOSED.** T374 discloses one uncovered case (a committed *mutation* of a post-fork observation). T382 measured **four more** outside both arms and outside the disclosure: committed **deletion** (HEAD population silently 1035 -> 1034, `VERDICT: PASS`), committed **addition** of a fabricated observation (1035 -> 1036, PASS), an **untracked** fabricated observation, and **symlink substitution with identical bytes**. Root cause: section 10 applies its 'empty population is a selector failure' rule at zero and stops -- **it never pins the population's cardinality**, so a shrink of up to 632 or any growth passes. Close all five, and drive each.\n\n**F-2: THE ARTEFACT YOU NEED ALREADY EXISTS -- DO NOT BUILD A SECOND ONE.** T374's own follow-up says a new evidence artefact is needed. It is not. `.softhouse/capture/tierA-a2/MANIFEST.sha256` holds 1139 rows, **1035 of them under `out/req` -- exactly the tracked observation set** -- with 0 missing, 0 extra, 0 digest disagreements, and all **632** post-fork observations covered. **A third arm reading that manifest closes F-1's deletion, addition and untracked cases outright.** Verify T382's counts yourself before you rely on them.\n\n**F-3: THE SATURATION CLASS IS CLOSED AT EXACTLY ONE SITE.** T382 audited every section's RC arithmetic: 3/5/6/7/8/9/10 cannot saturate; 1 is adjudicated by 9; 2 has the shape but is INERT (it reads only frozen git blobs). **Section 4 is LIVE and still absorbs the 27 fork-sha manifest entries outside `out/req`** -- `cap.sh`, `manifest.py`, `mkreq*.py`, the `run-*.sh`, the sql. Driven on `manifest.py`: 428 -> 427 identical, `DIFF manifest.py` named, and `run-all` still **EXIT 0, RUN-ALL VERDICT: PASS**. Close section 4 the way section 10 was closed.\n\n**CONTEXT, NOT YOUR DEFECT AND NOT YOUR JOB TO FIX HERE:** T382's informational finding is that `run-all.sh` **is not invoked by `conformance.sh` at all** (`grep -c` = 0). It is pre-existing and NOT T374's doing -- but it means every section you are hardening runs only when a human runs it. That is **P-45** and it is the FIFTH instance the driver logged in this one fire, beside `oracle-state-baseline.sh` (T390), `guard-probe-expiry.sh` (T311), T303 and T313. Say in your handoff whether wiring `run-all.sh` into the bar is safe and cheap; do not do it unless it is both, and never while another worker holds `conformance.sh`.\n\nVerify from a CLEAN tree AFTER `git add -A` and commit, with `bash` never `sh`; test the probe line's PRESENCE before its value (P-84, patterns.md:2813). Baseline to hold unmoved: 46 parity / 7884 cells, ledger 7/6/0/142/39, dead-path frontier GREEN at deadOccurrences 108.",
-      "note": "COMPLETE, 11 commits, bar exit 0. Held for T423. Re-verified ALL of T382 counts before building on them (FAILURES: 0). Closed all five F-1 cases plus F-3 and F-4, each RED->GREEN. Disclosed a residual it could not close. Recommends wiring verify-capture-integrity.py NOT run-all.sh, with measured cost -- and says per P-89 it needs a filed dispatchable task with an owner, not a paragraph. That is T425."
+      "note": "COMPLETE, 11 commits, bar exit 0. Held for T423. Re-verified ALL of T382 counts before building on them (FAILURES: 0). Closed all five F-1 cases plus F-3 and F-4, each RED->GREEN. Disclosed a residual it could not close. Recommends wiring verify-capture-integrity.py NOT run-all.sh, with measured cost -- and says per P-89 it needs a filed dispatchable task with an owner, not a paragraph. That is T425. || MERGED by fire 20260829-080002 after its independent review; conditions filed as T433-T437."
     },
     {
       "id": "T394",
@@ -6145,11 +6145,11 @@
         "T397",
         "T405"
       ],
-      "status": "needs_review",
+      "status": "merged",
       "files_hint": [
         ".softhouse/capture/t416/"
       ],
-      "note": "COMPLETE, bar exit 0, conformance.sh diff 0 lines. Held for T422. Closed the MAJOR money-reporting defect: built the ledger-only FAIL fixture that did not exist (8 subtests RED before / 0 after) with four loanschedule-only control arms green in BOTH directions, so the fix ADDS rather than replaces. Chose the allowlist ON EVIDENCE: 43 distinct left neighbour bytes and 37 right across the 37 cited artefacts, against a blacklist naming 4 and 4 -- so 39/33 were admitting by default. Merged T391 mid-task and re-ran every drive; findings survive the re-baseline. admit.go lines touched: 1332-1334, 1342-1352, 1354-1364 -- disjoint from T391 hunks at 182-243, 243-300, 981.",
+      "note": "COMPLETE, bar exit 0, conformance.sh diff 0 lines. Held for T422. Closed the MAJOR money-reporting defect: built the ledger-only FAIL fixture that did not exist (8 subtests RED before / 0 after) with four loanschedule-only control arms green in BOTH directions, so the fix ADDS rather than replaces. Chose the allowlist ON EVIDENCE: 43 distinct left neighbour bytes and 37 right across the 37 cited artefacts, against a blacklist naming 4 and 4 -- so 39/33 were admitting by default. Merged T391 mid-task and re-ran every drive; findings survive the re-baseline. admit.go lines touched: 1332-1334, 1342-1352, 1354-1364 -- disjoint from T391 hunks at 182-243, 243-300, 981. || MERGED by fire 20260829-080002 after its independent review; conditions filed as T433-T437.",
       "branch": "softhouse/T416-t405-conditions"
     },
     {
@@ -6246,11 +6246,11 @@
       "dependencies": [
         "T416"
       ],
-      "status": "in_progress",
+      "status": "merged",
       "files_hint": [
         ".softhouse/reviews/t422-review-t416/"
       ],
-      "note": "DISPATCHED by fire 20260829-080002 (local, oracle REACHABLE) at wave 1. Record pushed BEFORE the first `git worktree add` of this batch. || PRIOR: RECONCILED 2026-08-29 by fire 20260829-080002: never dispatched -- no branch was ever created. UNSTARTED. Its subject T416 is COMPLETE on softhouse/T416-t405-conditions (10 commits).",
+      "note": "DISPATCHED by fire 20260829-080002 (local, oracle REACHABLE) at wave 1. Record pushed BEFORE the first `git worktree add` of this batch. || PRIOR: RECONCILED 2026-08-29 by fire 20260829-080002: never dispatched -- no branch was ever created. UNSTARTED. Its subject T416 is COMPLETE on softhouse/T416-t405-conditions (10 commits). || MERGED by fire 20260829-080002 after its independent review; conditions filed as T433-T437.",
       "branch": "softhouse/T422-review-t416"
     },
     {
@@ -6263,11 +6263,11 @@
       "dependencies": [
         "T393"
       ],
-      "status": "in_progress",
+      "status": "merged",
       "files_hint": [
         ".softhouse/reviews/t423-review-t393/"
       ],
-      "note": "DISPATCHED by fire 20260829-080002 (local, oracle REACHABLE) at wave 1. Record pushed BEFORE the first `git worktree add` of this batch. || PRIOR: RECONCILED 2026-08-29 by fire 20260829-080002. Branch softhouse/T423-review-t393 carries 1 commit with instruments/ and out/ (independent counts, both F-4 arms re-run, two extra drives) but NO .softhouse/reviews/t423-review-t393/REVIEW.md -- verified with `git ls-tree -r --name-only`. The worker was killed before it wrote a verdict. EVIDENCE IS REAL AND WORTH RESUMING; the verdict does not exist. T393 CANNOT MERGE until this lands.",
+      "note": "DISPATCHED by fire 20260829-080002 (local, oracle REACHABLE) at wave 1. Record pushed BEFORE the first `git worktree add` of this batch. || PRIOR: RECONCILED 2026-08-29 by fire 20260829-080002. Branch softhouse/T423-review-t393 carries 1 commit with instruments/ and out/ (independent counts, both F-4 arms re-run, two extra drives) but NO .softhouse/reviews/t423-review-t393/REVIEW.md -- verified with `git ls-tree -r --name-only`. The worker was killed before it wrote a verdict. EVIDENCE IS REAL AND WORTH RESUMING; the verdict does not exist. T393 CANNOT MERGE until this lands. || MERGED by fire 20260829-080002 after its independent review; conditions filed as T433-T437.",
       "branch": "softhouse/T423-review-t393"
     },
     {
@@ -6423,6 +6423,85 @@
       "title": "FIVE VECTORS CARRY captured_at: \"\" AND NOTHING DECLARES WHAT THE EMPTY STRING MEANS -- an undeclared convention doing load-bearing work in the provenance field",
       "description": "**FOUND BY THE DRIVER ON 2026-08-29 while independently verifying T421's F-T406-1 closure**, by grepping the WHOLE vector store rather than the vectors T421 touched.\n\nF-T406-1 was *a synthesised `captured_at` sitting in the vector store*, and T421 closed it: there is now no round-hour and no future `captured_at` anywhere under `.softhouse/vectors/` [VERIFIED: driver's own grep on the T421+T428 merge result, 2026-08-29]. **But the same grep found five vectors whose `captured_at` is the EMPTY STRING:**\n\n```\n.softhouse/vectors/_selftest/SELFTEST-01-two-period-zero-rate.json\n.softhouse/vectors/loanschedule/REFUSE-01-actual-actual-ungraded.json\n.softhouse/vectors/loanschedule/REFUSE-02-half-even-ungraded.json\n.softhouse/vectors/loanschedule/REFUSE-03-annual-fixed30360-precedence.json\n.softhouse/vectors/loanschedule/REFUSE-04-disbursement-after-maturity.json\n```\n\n**THIS IS PROBABLY CORRECT AND THAT IS EXACTLY THE PROBLEM.** All five are vectors that were never captured from the oracle: a self-test, and four REFUSE vectors asserting the port must refuse an input. Nothing was observed, so there is no instant to record, so the field is empty. Plausible -- **and written down nowhere.** The empty string is silently carrying the meaning *'not applicable, nothing was observed'*, which is a THIRD meaning in a field whose other two are 'the instant the oracle was read' and (until T421) 'a value somebody made up'.\n\n**WHY IT MATTERS RATHER THAN BEING TIDINESS.** Provenance is the entire reason a later reader trusts the money in a vector. A field with an undeclared sentinel value has three failure modes available, and this program has already been bitten by all three in other fields: (1) a genuine capture whose timestamp is lost in tooling lands as `\"\"` and is indistinguishable from a deliberate not-applicable; (2) a guard written later to REQUIRE a non-empty `captured_at` reds these five and gets 'fixed' by synthesising values into them -- reinstating F-T406-1 through the front door; (3) a guard written to ALLOW empty accepts a lost timestamp forever. **Undeclared-and-ungraded is how this program stops grading things.**\n\n**WHAT TO DO.**\n1. **Establish the truth first, do not assume it.** For each of the five, determine from its own content and from the code that reads it whether it is genuinely un-captured, or whether an instant was lost. Say where you looked. Re-run the driver's grep yourself over the whole store; do not inherit the list of five.\n2. **Decide and record the convention explicitly** -- either a distinct sentinel that says what it means (e.g. an explicit not-captured marker) or a declared rule that empty means not-captured -- and say which you chose and what you rejected.\n3. **MAKE IT REACHED BY SOMETHING.** A convention only a human reads is P-45: a guard that only works when someone remembers to run it enforces nothing, which this program has now recorded five separate times. The rule must be checked by the bar: every vector's `captured_at` is either a real observed instant, or the declared not-captured marker, and nothing else -- and a vector claiming a capture must not be admitted as a PARITY vector with no instant. State plainly what reads it and when.\n4. **Drive it RED before GREEN.** A guard that has never refused anything is not known to be a guard. Construct a vector with a lost timestamp and show the guard refuses it; construct one with the declared marker and show it passes; keep a clean-tree control green. A control that cannot fail and a control that refuses everything are the same defect wearing opposite signs.\n5. **Then ask what your own rule misses by one.** Whitespace-only, `null`, the key absent entirely, a non-ISO string, a valid instant in the future, an instant BEFORE the pinned Fineract commit's date. Drive what you can and disclose by name every spelling you could not close.\n\n**SCOPE GUARD:** do not touch the money in any vector, and do not move any vector between admissibility classes. This task is about the provenance field only.",
       "note": "FILED 2026-08-29 by fire 20260829-080002. Driver's own finding while adjudicating T421/T428 -- the grep T421 was asked to run over the whole store, run again over the whole store."
+    },
+    {
+      "id": "T433",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "dependencies": [],
+      "files_hint": [
+        ".softhouse/capture/t393-t382-conditions/",
+        ".softhouse/reviews/A2-11/"
+      ],
+      "title": "C-T423-1 (MAJOR, CONFIRMED BY THE DRIVER): T393 ships a FALSE IMPOSSIBILITY CLAIM in two tracked executable files, and it sends the next task to build an artefact it does not need",
+      "description": "**T423 found this and the driver CONFIRMED IT INDEPENDENTLY before merging T393.** Both are on `main`.\n\nT393 asserts, in its docstring and in `run-all.sh`'s banner, that **no committed baseline older than HEAD exists** for the 632 post-fork observations. The claim is shipped in tracked EXECUTABLE files, not only in prose:\n\n```\n.softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.sh:220\n.softhouse/capture/t393-t382-conditions/instruments/12-relaunder-manifest.py:14\n```\n(plus echoes in `out/03-runall-after-fix.txt` and the drive transcripts).\n\n**IT IS FALSE.** The blob at the commit that FIRST ADDED each observation is exactly such a baseline. T423 measured 631 of 632 still equal to it on a clean tree. **The driver re-measured this from scratch rather than taking the reviewer's word:** of 60 sampled observation paths, every one resolved -- **21 with a birth commit strictly older than the tip whose blob EQUALS the tip blob, 0 differing, 0 born at the tip** [VERIFIED: driver's own `git log --diff-filter=A` sweep, 2026-08-29].\n\n**WHY IT IS MAJOR RATHER THAN A WORDING SLIP.** The claim is load-bearing: T393's handoff reasons FROM it to direct the next task to build a new artefact. A false impossibility does not merely misinform -- it forecloses the cheap correct fix and spends the next worker's budget on a substitute. This is the same class as T424's live finding one file over: a mechanism that is right with an attribution that is wrong, committed into the source where the next reader takes it as the explanation.\n\n**WHAT TO DO.**\n1. **Re-establish the fact yourself** before correcting anything -- do not inherit either T423's 631/632 or the driver's 21/21. Sweep the WHOLE 632, not a sample, and say exactly where you looked and what the one non-equal observation is.\n2. **Correct BOTH executable sites and every transcript that echoes them**, and say in the corrected text what the baseline actually is, so the next reader is not left with a bare negation removed.\n3. **LAND ARM F.** T423 built it -- 25 lines -- and drove it RED (unadjudicated) then GREEN (one digest adjudicated) on a clean tree, and then against T393's own 'unclosable' laundered residual, where section 10 exits 0/PASS while ARM F exits 1 naming the file. Find it under `.softhouse/reviews/t423-review-t393/`, re-drive it, and wire it so something RUNS it. An arm that exists and is invoked by nothing is P-45 -- a guard that only works when someone remembers to run it enforces nothing, which this program has now recorded five separate times.\n4. **Then ask what your own arm misses by one.** ARM F compares against the birth blob; what happens when an observation is legitimately amended, when it is deleted and re-added, when it is moved, or when the birth commit is itself the tip? Drive what you can and disclose by name what you could not close.",
+      "note": "FILED 2026-08-29 by fire 20260829-080002 from T423's review. Driver confirmed the finding independently before merging."
+    },
+    {
+      "id": "T434",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "dependencies": [],
+      "files_hint": [
+        ".softhouse/capture/t393-t382-conditions/",
+        ".softhouse/reviews/A2-11/"
+      ],
+      "title": "C-T423-2 (MINOR): 78 TRACKED FILES UNDER tierA-a2 ARE GRADED BY NO ARM -- including one of the two FORK_TIES anchors -- and the DOES NOT COVER block does not name them",
+      "description": "**T423 drove this, it is not a reading of the code:** mutating `cap8.sh` yields section 4 SILENT and the run PASS.\n\n78 tracked files under `tierA-a2` are covered by no arm -- **77 post-fork capture scripts plus `MANIFEST.sha256` itself** -- and the corpus's own `DOES NOT COVER` block does not name any of them. **One of the 78 is one of the two `FORK_TIES` anchors**, which is what makes this more than an accounting gap: the tie that T393's F-4 repair rests on is itself ungraded, so the repair's own anchor can move without anything noticing.\n\n**AN UNGRADED REGION THAT NOBODY HAS DECLARED UNGRADED IS HOW THIS PROGRAM SILENTLY STOPS GRADING.** The `DOES NOT COVER` block exists precisely so that a reader can tell 'we chose not to grade this' from 'we believe this is graded'. A gap missing from it reads as the second while being the first.\n\n**WHAT TO DO.** Re-derive the 78 yourself and say where you looked -- 'not found' is a statement about the search, never about the world. Then EITHER grade them, or name every one of them in the `DOES NOT COVER` block with the reason; and treat the `FORK_TIES` anchor as a separate decision from the other 77, because it is load-bearing for F-4 and the others are not. Drive your outcome: mutate a member of each class and show what now happens. Keep a clean-tree control green -- a control that cannot fail and a control that refuses everything are the same defect wearing opposite signs.",
+      "note": "FILED 2026-08-29 by fire 20260829-080002 from T423's review."
+    },
+    {
+      "id": "T435",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "dependencies": [],
+      "files_hint": [
+        "nexus/internal/apps/ledger/conformance/"
+      ],
+      "title": "F-T422-1 (MINOR): verbatimInCapture's doc comment AND ITS REFUSAL MESSAGE still describe the deleted blacklist, and the message is now FALSE -- F-T405-5's exact class, one file over",
+      "description": "**T422 drove this:** `100.125\\x00` REFUSES, while the refusal message asserts *'every occurrence has a digit, a decimal point or a sign immediately beside it'* -- which is false for an unnamed-byte refusal.\n\n`admit.go`'s `verbatimInCapture` doc comment and refusal message both still describe a blacklist that has been DELETED. **The machine decision is right and the sentence a human reads is false** -- which is exactly F-T405-5, the MAJOR money-reporting defect T416 has just closed, reappearing one file over. That recurrence is the reason this is filed rather than folded into a cleanup.\n\n**WHAT TO DO.** Re-derive what the refusal rule actually is today from the code, not from either comment. Rewrite both the doc comment and the refusal message to say what the code does. **Then drive the message itself**: construct one input per clause of the new message and show the message it prints is true of each. A message is a claim; an unchecked claim in a money path is what this program grades against. Say what you could not drive.",
+      "note": "FILED 2026-08-29 by fire 20260829-080002 from T422's review of T416."
+    },
+    {
+      "id": "T436",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "dependencies": [],
+      "files_hint": [
+        "nexus/internal/apps/ledger/conformance/"
+      ],
+      "title": "F-T422-2 (MINOR, AND IT IS A FAIL-OPEN ON MONEY TEXT): the new hyphen-as-separator rule ADMITS A DATE COMPONENT AS A MONEY CITATION -- a false admission the deleted blacklist had closed",
+      "description": "**READ THIS ONE FIRST OF T422's five.** T422 drove it: with the new hyphen-as-separator rule, `{\"transactionDate\":\"2026-01-15\"}` **now admits a citation of `15`**. The deleted blacklist had closed exactly this.\n\n**IT IS A FAIL-OPEN, AND IT IS ON MONEY TEXT.** T422 rates it LATENT rather than live, and states the reasoning: the blast radius today is the divergence class only, `observed_amount_texts` is shielded by `hasResidueBeyondMinorUnit`, and today's artefact happens to use `\"01 June 2026\"` rather than an ISO date. **Every one of those three is a property of TODAY'S corpus, not of the rule.** A fail-open that is harmless because of what the corpus currently contains is one vector away from live, and this program's position is already settled: a guard that is correct by accident of its inputs is not a guard.\n\n**WHAT TO DO.**\n1. **Reproduce T422's admission yourself** before changing anything, and establish the true blast radius from the code -- confirm or refute each of the three shielding claims above, by driving them.\n2. **Close the false admission** without reinstating the blacklist the rule replaced. Say what you chose and what you rejected.\n3. **Drive RED then GREEN**, and include the ISO-date case as a permanent arm so it cannot silently reopen. Keep the admissions the rule was introduced to allow -- show them still admitted, so the fix ADDS a refusal rather than REPLACING the rule with a stricter one that breaks real captures.\n4. **Then ask what your own rule misses by one.** Other separators beside a digit that are not money: times (`10:30:15`), versions (`1.2.15`), ranges, IDs, percentages, and the ISO datetime forms. Drive what you can; disclose by name, with the spelling, every one you could not close.\n\n**NON-NEGOTIABLE:** money is integer minor units. Nothing in this task may introduce a float into any path, including intermediate calculation.",
+      "note": "FILED 2026-08-29 by fire 20260829-080002 from T422's review of T416. The money-relevant one of T422's five."
+    },
+    {
+      "id": "T437",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "dependencies": [],
+      "files_hint": [
+        ".softhouse/capture/t393-t382-conditions/",
+        "nexus/internal/apps/ledger/conformance/",
+        ".softhouse/reviews/"
+      ],
+      "title": "THE FOUR RESIDUAL CONDITIONS FROM T422 AND T423 -- each small, and three of the four are a RECORD THAT SAYS SOMETHING THE RUN DID NOT DO",
+      "description": "Bundled because each is small; **they are not one defect and must be closed on their own evidence.** Re-derive each rather than inheriting the reviewers' figures, and report per item.\n\n**1. C-T423-3 (MINOR) -- ARM B's missing `try`/`except` is CORRECTLY NOT FIXED, and is filed NOWHERE EXECUTABLE.** T423 judged that leaving it is right. The defect is that the judgement lives only in a review document, so the next reader of ARM B sees an omission with no record of it being deliberate and 'fixes' it. Put the decision where the code is, and say what reads it.\n\n**2. C-T423-4 (LOW) -- the handoff says '42 paths'; it is 43 at the tip.** Benign in itself. Correct it, and while you are there establish whether the number is DERIVED at read time or TYPED -- a typed count is the thing that rots, and this program has been bitten by exactly that repeatedly.\n\n**3. F-T422-3 (LOW) -- three of five published alphabet cardinals do not reproduce, and '37 artefacts' is the PRE-MERGE count (44 post-merge), which CONTRADICTS the handoff's claim that 'every drive was re-run against the merged tree'.** T422 confirmed the DIRECTION of the argument independently, so the conclusion stands and the record does not. **The contradiction is the finding**, not the arithmetic: a handoff that says it re-ran against the merged tree, carrying a figure that could only have come from before the merge, is a record asserting work that did not happen. Correct the cardinals to what reproduces, and state which tree each was measured on.\n\n**4. F-T422-4 (LOW) -- the new exit-0 third branch is UNREACHABLE at exit 0 today** (Inadmissible reaches exit 2, and `LEDGER FATAL: DIVERGENCE POPULATION` intervenes). T422 says adding it was RIGHT -- do not remove it. The defect is that the record implies the corpus exercised it. Say plainly that it is unreachable today, under what conditions it becomes reachable, and mark it so a later reader does not count it as covered.\n\n**5. F-T422-5 (LOW) -- the recorded digit-COMMA-digit decision names only CSV**, but the same rule also refuses `[100.125,200]` (compact `json.Marshal` output) and `digit SPACE digit` columnar text -- and the test's own 'unambiguous forms' control set omits exactly those shapes. Widen the recorded reason to what the rule actually does, and add the omitted shapes to the control set.\n\n**THE COMMON SHAPE, WORTH STATING IN YOUR HANDOFF:** four of these five are a committed record that says something the run did not do. That is the same class T421 was created to fix in T391, and it keeps recurring. If you see why, say so -- that is worth more than the five fixes.",
+      "note": "FILED 2026-08-29 by fire 20260829-080002. Bundle of the residual conditions from T422 and T423."
     }
   ],
   "cross_corroboration": {
